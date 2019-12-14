@@ -1,0 +1,10 @@
+flowframtk-*.bib
+jdrview-*.bib
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+*.pdf
+*.glstex
+*.glg
