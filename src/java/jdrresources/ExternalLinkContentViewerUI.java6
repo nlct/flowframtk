@@ -1,0 +1,43 @@
+import java.awt.*;
+import java.net.*;
+import javax.help.*;
+import javax.help.plaf.basic.*; // requires jh2.0
+import javax.swing.plaf.basic.*;
+
+/**
+*a UI subclass that will open external links (website or mail links) in an external browser copied from <a href="http://forums.sun.com/thread.jspa?threadID=728061&tstart=30">http://forums.sun.com/thread.jspa?threadID=728061&amp;tstart=30</a>
+*/
+public class ExternalLinkContentViewerUI extends BasicContentViewerUI
+{
+   public ExternalLinkContentViewerUI(JHelpContentViewer x)
+   {
+      super(x);
+   }
+
+   public static javax.swing.plaf.ComponentUI createUI(JComponent x)
+   {
+      return new ExternalLinkContentViewerUI((JHelpContentViewer)x);
+   }
+
+   public void hyperlinkUpdate(HyperlinkEvent he)
+   {
+      if (he.getEventType()==HyperlinkEvent.EventType.ACTIVATED)
+      {
+         try
+         {
+            URL u = he.getURL();
+            if (u.getProtocol().equalsIgnoreCase("mailto")
+              ||u.getProtocol().equalsIgnoreCase("http")
+              ||u.getProtocol().equalsIgnoreCase("ftp"))
+            {
+               // requires java 6
+               //Desktop.browse(u);
+               return;
+            }
+         }
+         catch(Throwable t){}
+      }
+
+      super.hyperlinkUpdate(he);
+   }
+}

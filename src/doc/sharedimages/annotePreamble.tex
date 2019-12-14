@@ -1,0 +1,166 @@
+% /home/nlct/programming/java/jpgfdraw/trunk/doc/image-src/annotePreamble.jdr
+% Created by FlowframTk version 0.8
+% 28-Sep-2015 21:40:36
+\iffalse
+% This image may require the following commands in the preamble:
+\usepackage{ifpdf}
+\makeatletter
+\newcommand*{\jdroutline}[3]{%
+  \GenericWarning{}{text outline can't be implemented}#3%
+}%
+\ifpdf
+ \let\jdrorgmod\mod
+ \InputIfFileExists{pdf-trans}%
+ {%
+   \renewcommand*{\jdroutline}[3]{%
+     {\def\mod{\expandtwonumexprafter \modulo}%
+     \setbox\@tempboxa\hbox{##3}%
+     \boxgs{##1}{}\copy\@tempboxa
+     }%
+   }%
+ }{}
+ \let\mod\jdrorgmod
+\else
+ \IfFileExists{pst-char.sty}%
+ {%
+   \usepackage{pst-char}
+   \renewcommand*{\jdroutline}[3]{%
+     \begin{pspicture}(0,0)
+     \pscharpath[##2]{##3}
+     \end{pspicture}
+   }
+ }{}
+\fi
+\makeatother
+\usepackage{pgf}
+\usepgflibrary{decorations.text}
+% The normal size font is assumed to be 10pt
+% End of preamble information
+\fi
+\begin{pgfpicture}{9.642144mm}{99.42283mm}{192.03334mm}{292.368359mm}
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{10.0mm}{262.0mm}}
+\pgflowlevelsynccm
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\includegraphics[width=182.033333mm,height=141.816667mm]{preambleeditor}}}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{2.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{45.0mm}{104.5mm}}
+\pgfpathlineto{\pgfpoint{45.0mm}{129.5mm}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+% marker type 42
+{\begin{pgfscope}
+\definecolor{fillpaint}{rgb}{0.0,0.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfpathqmoveto{45.0mm}{130.911118mm}
+\pgfpathqlineto{46.175926mm}{127.736115mm}
+\pgfpathqlineto{45.0mm}{128.618057mm}
+\pgfpathqlineto{43.824074mm}{127.736115mm}
+\pgfclosepath
+\pgfusepathqfill
+\end{pgfscope}}
+\begin{pgfscope}
+\pgfsetlinewidth{2.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{152.5mm}{277.0mm}}
+\pgfpathlineto{\pgfpoint{152.5mm}{257.0mm}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+% marker type 42
+{\begin{pgfscope}
+\definecolor{fillpaint}{rgb}{0.0,0.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfpathqmoveto{152.5mm}{255.58889mm}
+\pgfpathqlineto{151.324081mm}{258.763889mm}
+\pgfpathqlineto{152.5mm}{257.881943mm}
+\pgfpathqlineto{153.675919mm}{258.763889mm}
+\pgfclosepath
+\pgfusepathqfill
+\end{pgfscope}}
+\begin{pgfscope}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{46.583074mm}{103.518359mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\LARGE\color[rgb]{0.0,0.0,0.0}Canvas Panel}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{154.578929mm}{283.518359mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\LARGE\color[rgb]{0.0,0.0,0.0}Preamble Panel}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{2.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{62.147222mm}{277.0mm}}
+\pgfpathlineto{\pgfpoint{79.647222mm}{262.0mm}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+% marker type 42
+{\begin{pgfscope}
+\definecolor{fillpaint}{rgb}{0.0,0.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfpathqmoveto{80.71862mm}{261.081661mm}
+\pgfpathqlineto{77.542694mm}{262.255093mm}
+\pgfpathqlineto{78.9776mm}{262.573963mm}
+\pgfpathqlineto{79.073257mm}{264.040752mm}
+\pgfclosepath
+\pgfusepathqfill
+\end{pgfscope}}
+\begin{pgfscope}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{61.467404mm}{278.119444mm}}
+\pgftext[right,base]{\rmfamily\mdseries\upshape\LARGE\color[rgb]{0.0,0.0,0.0}Expand to the Left}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{104.023981mm}{292.368359mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\LARGE\color[rgb]{0.0,0.0,0.0}Expand to the Right}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{2.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{102.022222mm}{286.555556mm}}
+\pgfpathlineto{\pgfpoint{83.325mm}{257.383333mm}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+% marker type 42
+{\begin{pgfscope}
+\definecolor{fillpaint}{rgb}{0.0,0.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfpathqmoveto{82.563553mm}{256.195293mm}
+\pgfpathqlineto{83.286774mm}{259.502918mm}
+\pgfpathqlineto{83.800903mm}{258.125858mm}
+\pgfpathqlineto{85.266838mm}{258.233845mm}
+\pgfclosepath
+\pgfusepathqfill
+\end{pgfscope}}
+\begin{pgfscope}
+\pgfsetlinewidth{2.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{91.888889mm}{104.177778mm}}
+\pgfpathlineto{\pgfpoint{82.011111mm}{128.825mm}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+% marker type 42
+{\begin{pgfscope}
+\definecolor{fillpaint}{rgb}{0.0,0.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfpathqmoveto{81.486176mm}{130.134842mm}
+\pgfpathqlineto{83.758812mm}{127.625153mm}
+\pgfpathqlineto{82.339195mm}{128.006348mm}
+\pgfpathqlineto{81.575752mm}{126.750259mm}
+\pgfclosepath
+\pgfusepathqfill
+\end{pgfscope}}
+\begin{pgfscope}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{92.380556mm}{103.548915mm}}
+\pgftext[left,top]{\rmfamily\mdseries\upshape\LARGE\color[rgb]{0.0,0.0,0.0}Divider}
+\end{pgfscope}
+\end{pgfpicture}

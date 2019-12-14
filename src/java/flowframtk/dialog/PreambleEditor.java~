@@ -1,0 +1,368 @@
+// File          : PreambleEditor.java
+// Description   : Component for typing TeX code
+// Creation Date : 2014-09-16
+// Author        : Nicola L.C. Talbot
+//                 http://www.dickimaw-books.com/
+
+package com.dickimawbooks.flowframtk.dialog;
+
+import java.util.regex.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.undo.*;
+import javax.swing.text.*;
+
+import com.dickimawbooks.jdrresources.*;
+import com.dickimawbooks.flowframtk.*;
+
+/**
+ * Component for editing (La)TeX code.
+ */
+public class PreambleEditor extends JFrame
+  implements ActionListener,TeXEditorListener
+{
+   public PreambleEditor(JDRFrame frame)
+   {
+      super(JDRResources.getString("texeditor.preamble"));
+
+      this.frame = frame;
+      FlowframTk application = frame.getApplication();
+
+      JMenuBar mbar = new JMenuBar();
+      setJMenuBar(mbar);
+
+      Box toolBar = Box.createHorizontalBox();
+
+      SlidingToolBar sToolBar = 
+         new SlidingToolBar(toolBar, SwingConstants.HORIZONTAL);
+
+      getContentPane().add(sToolBar, BorderLayout.NORTH);
+
+      JPanel mainPanel = new JPanel(new BorderLayout());
+
+      getContentPane().add(mainPanel, BorderLayout.CENTER);
+
+      undoManager = new UndoManager();
+
+      JMenu editM = JDRResources.createAppMenu("edit");
+      mbar.add(editM);
+
+      undoItem = createButtonItem("edit", "undo", toolBar, editM);
+      undoItem.setEnabled(false);
+
+      redoItem = createButtonItem("edit", "redo", toolBar, editM);
+      redoItem.setEnabled(false);
+
+      editM.addSeparator();
+
+      editM.add(JDRResources.createAppMenuItem("edit", "select_all", this));
+
+      cutItem = createButtonItem("edit", "cut", toolBar, editM);
+
+      copyItem = createButtonItem("edit", "copy", toolBar, editM);
+
+      createButtonItem("edit", "paste", toolBar, editM);
+
+      JMenu searchM = JDRResources.createAppMenu("texeditor.search");
+      mbar.add(searchM);
+
+      searchM.add(JDRResources.createAppMenuItem(
+         "texeditor.search", "find", this));
+
+      findAgainItem = JDRResources.createAppMenuItem(
+         "texeditor.search", "find_again", this);
+      searchM.add(findAgainItem);
+
+      findAgainItem.setEnabled(false);
+
+      searchM.add(JDRResources.createAppMenuItem(
+         "texeditor.search", "replace", this));
+
+      document = new TeXEditorDocument(this,
+         application.getSettings());
+      textPane = new JTextPane(document);
+
+      Font font = application.getTeXEditorFont();
+
+      textPane.setFont(font);
+
+      int w = application.getPreambleEditorWidth();
+      int h = application.getPreambleEditorHeight();
+
+      if (w == 0 || h == 0)
+      {
+         FontMetrics fm = getFontMetrics(font);
+
+         textPane.setPreferredSize(new Dimension
+            (application.getTeXEditorWidth()*fm.getMaxAdvance(),
+             application.getTeXEditorHeight()*fm.getHeight()));
+      }
+      else
+      {
+         textPane.setPreferredSize(new Dimension(w, h));
+      }
+
+      textPane.setEditable(true);
+
+      modified = false;
+
+      document.addDocumentListener(new DocumentListener()
+      {
+         public void changedUpdate(DocumentEvent e)
+         {
+            markAsModified();
+         }
+
+         public void insertUpdate(DocumentEvent e)
+         {
+            markAsModified();
+         }
+
+         public void removeUpdate(DocumentEvent e)
+         {
+            markAsModified();
+         }
+      });
+
+      textPane.addCaretListener(new CaretListener()
+      {
+         public void caretUpdate(CaretEvent evt)
+         {
+            updateEditButtons();
+         }
+      });
+
+      updateEditButtons();
+
+      findDialog = new FindDialog(this, textPane);
+
+      textPane.setMinimumSize(new Dimension(0,0));
+      mainPanel.add(new JScrollPane(textPane), BorderLayout.CENTER);
+
+      pack();
+
+      setLocationRelativeTo(application);
+   }
+
+   private JDRButtonItem createButtonItem(String parentId, String action,
+     JComponent comp, JMenu menu)
+   {
+      String menuId = (parentId == null ? action : parentId+"."+action);
+
+      KeyStroke keyStroke = JDRResources.getAccelerator(menuId);
+
+      JDRButtonItem button = new JDRButtonItem(menuId, action,
+        keyStroke, this, JDRResources.getString(parentId+".tooltip", null),
+        comp, menu);
+
+      return button;
+   }
+
+   public void setPreambleText(String text)
+   {
+      try
+      {
+         document.setText(text == null ? "" : text);
+      }
+      catch (BadLocationException e)
+      {
+         JDRResources.error(this, e);
+      }
+
+      if (isVisible())
+      {
+         revalidate();
+      }
+   }
+
+   public void updatePreambleText(String text)
+   {
+      int pos = textPane.getCaretPosition();
+      textPane.selectAll();
+      textPane.replaceSelection(text);
+
+      if (text.isEmpty())
+      {
+         pos = 0;
+      }
+      else if (pos > text.length())
+      {
+         pos = text.length()-1;
+      }
+
+      textPane.setCaretPosition(pos);
+      revalidate();
+   }
+
+   public void appendToPreamble(String text)
+   {
+      try
+      {
+         document.append(text);
+      }
+      catch (BadLocationException e)
+      {
+         JDRResources.error(this, e);
+      }
+
+      revalidate();
+   }
+
+   public String getPreambleText()
+   {
+      return textPane.getText();
+   }
+
+   public void markAsModified()
+   {
+      modified = true;
+      frame.markAsModified();
+   }
+
+   public boolean isModified()
+   {
+      return modified;
+   }
+
+   public void display()
+   {
+      revalidate();
+      setVisible(true);
+   }
+
+   public void actionPerformed(ActionEvent evt)
+   {
+      String action = evt.getActionCommand();
+
+      if (action == null) return;
+
+      if (action.equals("undo"))
+      {
+         try
+         {
+            undoManager.undo();
+         }
+         catch (CannotUndoException e)
+         {
+            JDRResources.debugMessage(e);
+         }
+
+         undoItem.setEnabled(undoManager.canUndo());
+         redoItem.setEnabled(undoManager.canRedo());
+      }
+      else if (action.equals("redo"))
+      {
+         try
+         {
+            undoManager.redo();
+         }
+         catch (CannotRedoException e)
+         {
+            JDRResources.debugMessage(e);
+         }
+
+         undoItem.setEnabled(undoManager.canUndo());
+         redoItem.setEnabled(undoManager.canRedo());
+      }
+      else if (action.equals("select_all"))
+      {
+         textPane.requestFocusInWindow();
+         textPane.selectAll();
+      }
+      else if (action.equals("copy"))
+      {
+         textPane.requestFocusInWindow();
+         textPane.copy();
+      }
+      else if (action.equals("cut"))
+      {
+         textPane.requestFocusInWindow();
+         textPane.cut();
+      }
+      else if (action.equals("paste"))
+      {
+         textPane.requestFocusInWindow();
+         textPane.paste();
+      }
+      else if (action.equals("find"))
+      {
+         String selectedText = textPane.getSelectedText();
+
+         if (selectedText != null)
+         {
+            findDialog.setSearchText(selectedText);
+         }
+
+         findDialog.display(false);
+      }
+      else if (action.equals("find_again"))
+      {
+         findDialog.find();
+      }
+      else if (action.equals("replace"))
+      {
+         String selectedText = textPane.getSelectedText();
+
+         if (selectedText != null)
+         {
+            findDialog.setSearchText(selectedText);
+         }
+
+         findDialog.display(true);
+      }
+   }
+
+   private void updateEditButtons()
+   {
+      String selected = (textPane == null ? null : textPane.getSelectedText());
+
+      if (selected == null || selected.isEmpty())
+      {
+         copyItem.setEnabled(false);
+         cutItem.setEnabled(false);
+      }
+      else
+      {
+         copyItem.setEnabled(true);
+         cutItem.setEnabled(true);
+      }
+
+      findAgainItem.setEnabled(findDialog == null ? false :
+        !findDialog.getSearchText().isEmpty());
+   }
+
+   public void addEdit(UndoableEdit edit)
+   {
+      undoManager.addEdit(edit);
+
+      undoItem.setEnabled(true);
+   }
+
+   public void updateStyles(FlowframTkSettings settings)
+   {
+      document.updateStyles(settings);
+      textPane.setFont(settings.getTeXEditorFont());
+   }
+
+   public Dimension getTextPaneSize()
+   {
+      return textPane.getSize();
+   }
+
+   private JTextPane textPane;
+
+   private TeXEditorDocument document;
+
+   private JDRButtonItem undoItem, redoItem, copyItem, cutItem;
+   private JMenuItem findAgainItem;
+
+   private JDRFrame frame;
+
+   private FindDialog findDialog;
+
+   private boolean modified = false;
+
+   private UndoManager undoManager;
+}

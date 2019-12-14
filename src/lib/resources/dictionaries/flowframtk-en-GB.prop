@@ -1,0 +1,2896 @@
+# This is the English (GB) resource file for flowframtk and
+# associated applications.
+# Licensed under the GNU GPL v2+.
+# Maintainer: Nicola Talbot
+# www.dickimaw-books.com
+
+# Menus
+
+# File menu
+file.label=File
+file.mnemonic=F
+file.new=New
+file.new.mnemonic=N
+label.new=New
+file.open=Open...
+file.open.mnemonic=O
+label.open=Open
+file.recent=Recent Files
+file.recent.mnemonic=R
+file.image_description=Image Description...
+file.image_description.mnemonic=D
+file.save=Save
+file.save.mnemonic=S
+label.save=Save
+file.save_as=Save As...
+file.save_as.mnemonic=A
+file.export=Export...
+file.export.mnemonic=E
+file.import=Import...
+file.import.mnemonic=I
+file.print=Print...
+file.print.mnemonic=P
+file.page=Page Setup...
+file.page.mnemonic=G
+file.messages=Show Messages...
+file.messages.mnemonic=M
+file.close=Close
+file.close.mnemonic=C
+file.quit=Quit
+file.quit.mnemonic=Q
+
+# jdrview additional file menu items
+file.reload=Reload
+file.reload.mnemonic=R
+file.properties=Properties...
+file.properties.mnemonic=T
+
+# edit menu
+
+edit.label=Edit
+edit.mnemonic=E
+edit.undo=Undo
+edit.undo.mnemonic=U
+edit.undo.tooltip=Undo last action
+label.undo=Undo
+edit.redo=Redo
+edit.redo.mnemonic=R
+edit.redo.tooltip=Redo last action
+label.redo=Redo
+edit.select_all=Select All
+edit.select_all.mnemonic=A
+label.select_all=Select All
+edit.deselect_all=Deselect All
+edit.deselect_all.mnemonic=D
+edit.moveby=Move By...
+edit.moveby.mnemonic=M
+edit.cut=Cut
+edit.cut.mnemonic=T
+label.cut=Cut
+edit.copy=Copy
+label.copy=Copy
+edit.copy.mnemonic=C
+edit.paste=Paste
+edit.paste.mnemonic=P
+label.paste=Paste
+edit.description=Object Description...
+edit.description.mnemonic=O
+
+# edit->path submenu
+
+edit.path=Path
+edit.path.mnemonic=H
+edit.path.edit=Edit Path
+edit.path.edit.mnemonic=E
+label.edit_path=Edit
+edit.path.line_colour=Line Colour...
+edit.path.line_colour.mnemonic=L
+edit.path.style=Line Styles
+edit.path.style.mnemonic=S
+
+edit.path.style.all=All Styles...
+edit.path.style.all.mnemonic=A
+edit.path.style.all_markers=All Markers...
+edit.path.style.all_markers.mnemonic=K
+edit.path.style.linewidth=Line Width...
+edit.path.style.linewidth.mnemonic=W
+edit.path.style.dashpattern=Dash Pattern...
+edit.path.style.dashpattern.mnemonic=D
+edit.path.style.capstyle=Cap Style
+edit.path.style.capstyle.mnemonic=C
+
+edit.path.style.capstyle.butt=Butt
+edit.path.style.capstyle.butt.mnemonic=B
+edit.path.style.capstyle.round=Round
+edit.path.style.capstyle.round.mnemonic=R
+edit.path.style.capstyle.square=Square
+edit.path.style.capstyle.square.mnemonic=S
+
+edit.path.style.joinstyle=Join Style...
+edit.path.style.joinstyle.mnemonic=J
+
+edit.path.style.startarrow=Start Marker...
+edit.path.style.startarrow.mnemonic=S
+edit.path.style.midarrow=Mid Marker...
+edit.path.style.midarrow.mnemonic=M
+edit.path.style.endarrow=End Marker...
+edit.path.style.endarrow.mnemonic=E
+edit.path.style.windingrule=Winding Rule
+edit.path.style.windingrule.mnemonic=W
+
+edit.path.style.windingrule.evenodd=Even-Odd
+edit.path.style.windingrule.evenodd.mnemonic=E
+edit.path.style.windingrule.nonzero=Non Zero
+edit.path.style.windingrule.nonzero.mnemonic=N
+
+# edit->text submenu
+
+edit.text=Text
+edit.text.mnemonic=X
+edit.text.edit=Edit text...
+edit.text.edit.mnemonic=E
+edit.text.colour=Text Colour...
+edit.text.colour.mnemonic=C
+edit.text.outline=Outline
+edit.text.outline.mnemonic=O
+edit.text.matrix=Transformation Matrix...
+edit.text.matrix.mnemonic=M
+edit.text.font=Font Style
+edit.text.font.mnemonic=F
+edit.text.font.all_styles=All Styles...
+edit.text.font.all_styles.mnemonic=L
+edit.text.font.family=Family...
+edit.text.font.family.mnemonic=Y
+edit.text.font.size=Size...
+edit.text.font.size.mnemonic=Z
+edit.text.font.shape=Shape...
+edit.text.font.shape.mnemonic=H
+edit.text.font.series=Series...
+edit.text.font.series.mnemonic=R
+edit.text.font.anchor=Anchor
+edit.text.font.anchor.mnemonic=A
+edit.text.font.anchor.both=Both...
+edit.text.font.anchor.both.mnemonic=B
+edit.text.font.anchor.horizontal=Horizontal...
+edit.text.font.anchor.horizontal.mnemonic=H
+edit.text.font.anchor.vertical=Vertical...
+edit.text.font.anchor.vertical.mnemonic=V
+
+edit.fill_colour=Fill Colour...
+edit.fill_colour.mnemonic=L
+
+edit.adjustcol=Adjust Colour
+edit.adjustcol.mnemonic=J
+
+edit.adjustcol.togrey=Reduce to Grey Scale
+edit.adjustcol.togrey.mnemonic=G
+edit.adjustcol.cmyk=Convert to CMYK
+edit.adjustcol.cmyk.mnemonic=C
+edit.adjustcol.rgb=Convert to RGB
+edit.adjustcol.rgb.mnemonic=R
+edit.adjustcol.hsb=Convert to HSB
+edit.adjustcol.hsb.mnemonic=H
+edit.adjustcol.fade=Fade Alpha
+edit.adjustcol.fade.mnemonic=F
+edit.adjustcol.removetrans=Remove Translucency
+edit.adjustcol.removetrans.mnemonic=L
+
+edit.front=Move to Front
+edit.front.mnemonic=F
+label.front=To Front
+edit.back=Move to Back
+edit.back.mnemonic=B
+label.back=To Back
+edit.moveup=Move Up
+edit.moveup.mnemonic=V
+edit.movedown=Move Down
+edit.movedown.mnemonic=W
+
+# transform menu
+
+transform.label=Transform
+transform.mnemonic=T
+transform.rotate=Rotate...
+transform.rotate.mnemonic=R
+label.rotate=Rotate
+transform.scale=Scale...
+transform.scale.mnemonic=S
+label.scale=Scale
+transform.shear=Shear...
+transform.shear.mnemonic=H
+label.shear=Shear
+transform.distort=Distort
+transform.distort.mnemonic=D
+label.distort=Distort
+transform.reset=Reset Matrix
+transform.reset.mnemonic=A
+transform.reverse=Reverse Path
+transform.reverse.mnemonic=V
+transform.convert=Convert Outline To Path
+transform.convert.mnemonic=C
+transform.convert_to_full=Convert To Full Path
+transform.convert_to_full.mnemonic=F
+transform.merge=Merge Paths
+transform.merge.mnemonic=M
+transform.textpath=Convert To Text Path
+transform.textpath.mnemonic=N
+label.textpath=To Text Path
+transform.separate=Separate
+transform.separate.mnemonic=E
+transform.union=Path Union
+transform.union.mnemonic=P
+transform.xor=XOR Paths
+transform.xor.mnemonic=O
+transform.subtract=Subtract Paths
+transform.subtract.mnemonic=T
+transform.intersect=Path Intersect
+transform.intersect.mnemonic=I
+transform.split=Split Text
+transform.split.mnemonic=X
+transform.group=Group
+transform.group.mnemonic=G
+label.group=Group
+transform.ungroup=Ungroup
+transform.ungroup.mnemonic=U
+label.ungroup=Ungroup
+
+# transform->pattern submenu
+
+transform.pattern=Pattern
+transform.pattern.mnemonic=A
+transform.pattern.set=Set Pattern...
+transform.pattern.set.mnemonic=S
+label.pattern.set=To Pattern
+transform.pattern.edit=Edit Pattern...
+transform.pattern.edit.mnemonic=E
+transform.pattern.remove=Remove Pattern
+transform.pattern.remove.mnemonic=R
+
+# transform->justify submenu
+
+transform.justify=Justify
+transform.justify.mnemonic=J
+transform.justify.left=Left
+transform.justify.left.mnemonic=L
+transform.justify.centre=Centre
+transform.justify.centre.mnemonic=C
+transform.justify.right=Right
+transform.justify.right.mnemonic=R
+transform.justify.top=Top
+transform.justify.top.mnemonic=T
+transform.justify.middle=Middle
+transform.justify.middle.mnemonic=M
+transform.justify.bottom=Bottom
+transform.justify.bottom.mnemonic=B
+
+# tools menu
+
+tools.label=Tools
+tools.mnemonic=O
+tools.select=Select
+tools.select.mnemonic=S
+tools.open_line=Open Line
+tools.open_line.mnemonic=L
+tools.closed_line=Closed Line
+tools.closed_line.mnemonic=I
+tools.open_curve=Open Curve
+tools.open_curve.mnemonic=C
+tools.closed_curve=Closed Curve
+tools.closed_curve.mnemonic=U
+tools.rectangle=Rectangle
+tools.rectangle.mnemonic=R
+tools.ellipse=Ellipse
+tools.ellipse.mnemonic=E
+tools.text=Text
+tools.text.mnemonic=T
+tools.math=Maths
+tools.math.mnemonic=M
+tools.gap=Gap
+tools.gap.mnemonic=G
+tools.abandon=Abandon
+tools.abandon.mnemonic=A
+tools.finish=Finish
+tools.finish.mnemonic=F
+
+# navigation menu
+
+navigate.label=Navigate
+navigate.mnemonic=N
+navigate.goto=Go To...
+navigate.goto.mnemonic=G
+navigate.select=Select
+navigate.select.mnemonic=S
+navigate.add_next=Add Next
+navigate.add_next.mnemonic=A
+navigate.skip=Skip
+navigate.skip.mnemonic=K
+navigate.find=Find Selected Objects
+navigate.find.mnemonic=F
+navigate.description=Find By Description...
+navigate.description.mnemonic=D
+navigate.add_description=Add By Description...
+navigate.add_description.mnemonic=B
+
+# bitmap menu
+
+bitmap.label=Bitmap
+bitmap.mnemonic=B
+bitmap.insert=Insert Bitmap...
+bitmap.insert.mnemonic=I
+bitmap.refresh=Refresh
+bitmap.refresh.mnemonic=R
+bitmap.properties=Properties...
+bitmap.properties.mnemonic=P
+bitmap.properties.label=Bitmap Properties
+bitmap.properties.latexfilename=LaTeX image path
+bitmap.properties.latexfilename.mnemonic=P
+bitmap.properties.auto_latexfilename=Auto
+bitmap.properties.auto_latexfilename.mnemonic=A
+bitmap.properties.command=LaTeX Command
+bitmap.properties.command.mnemonic=L
+bitmap.properties.matrix=Transformation Matrix
+bitmap.properties.matrix.mnemonic=T
+bitmap.properties.path_note=JDR/AJR versions 1.8 and above can now store the bitmap location either as an absolute path or a path relative to the saved file.
+bitmap.properties.path.absolute=Your current application settings will use the path as specified in the '\1' box.
+bitmap.properties.path.relative=Your current application settings will use a relative path.
+bitmap.vectorize=Vectorize...
+bitmap.vectorize.mnemonic=V
+
+# TeX/LaTeX menu
+
+tex.label=TeX/LaTeX
+tex.mnemonic=L
+tex.set_preamble=Preamble Editor
+tex.set_preamble.mnemonic=M
+tex.parshape=Parshape...
+tex.parshape.mnemonic=P
+tex.shapepar=Shapepar...
+tex.shapepar.mnemonic=S
+
+# flowframe menu
+
+tex.flowframe=Flow Frames
+tex.flowframe.mnemonic=F
+tex.flowframe.set_frame=Set Frame...
+tex.flowframe.set_frame.mnemonic=S
+tex.flowframe.clear=Clear All
+tex.flowframe.clear.mnemonic=C
+tex.flowframe.set_typeblock=Set Typeblock...
+tex.flowframe.set_typeblock.mnemonic=T
+tex.flowframe.scale_to_typeblock=Scale to Fit Typeblock
+tex.flowframe.scale_to_typeblock.mnemonic=K
+tex.flowframe.display_page=Display Page...
+tex.flowframe.display_page.mnemonic=P
+
+# settings menu
+
+settings.label=Settings
+settings.mnemonic=S
+settings.styles=Styles...
+settings.styles.mnemonic=S
+settings.rulers=Show Rulers
+settings.rulers.mnemonic=R
+
+# settings->grid sub menu
+
+settings.grid=Grid
+settings.grid.mnemonic=G
+settings.grid.show=Show Grid
+settings.grid.show.mnemonic=S
+settings.grid.lock=Lock Grid
+settings.grid.lock.mnemonic=L
+settings.grid.settings=Grid Settings...
+settings.grid.settings.mnemonic=G
+
+# settings->zoom sub menu
+settings.zoom=Zoom
+settings.zoom.mnemonic=Z
+settings.zoom.user=User Defined...
+settings.zoom.user.mnemonic=U
+settings.zoom.width=Fit Width
+settings.zoom.width.mnemonic=W
+settings.zoom.height=Fit Height
+settings.zoom.height.mnemonic=H
+settings.zoom.page=Fit Page
+settings.zoom.page.mnemonic=P
+settings.zoom.25=25%
+settings.zoom.25.mnemonic=2
+settings.zoom.50=50%
+settings.zoom.50.mnemonic=5
+settings.zoom.75=75%
+settings.zoom.75.mnemonic=7
+settings.zoom.100=100%
+settings.zoom.100.mnemonic=1
+settings.zoom.200=200%
+settings.zoom.200.mnemonic=0
+settings.zoom.400=400%
+settings.zoom.400.mnemonic=4
+settings.zoom.800=800%
+settings.zoom.800.mnemonic=8
+
+# settings->paper sub menu
+
+settings.paper=Paper
+settings.paper.mnemonic=P
+settings.paper.margins=Show Margins
+settings.paper.margins.mnemonic=M
+settings.paper.portrait=Portrait
+settings.paper.portrait.mnemonic=P
+settings.paper.landscape=Landscape
+settings.paper.landscape.mnemonic=L
+settings.paper.A5=A5
+settings.paper.A5.mnemonic=5
+settings.paper.A4=A4
+settings.paper.A4.mnemonic=4
+settings.paper.A3=A3
+settings.paper.A3.mnemonic=3
+settings.paper.A2=A2
+settings.paper.A2.mnemonic=2
+settings.paper.A1=A1
+settings.paper.A1.mnemonic=1
+settings.paper.A0=A0
+settings.paper.A0.mnemonic=0
+settings.paper.letter=Letter
+settings.paper.letter.mnemonic=L
+settings.paper.legal=Legal
+settings.paper.legal.mnemonic=G
+settings.paper.executive=Executive
+settings.paper.executive.mnemonic=E
+settings.paper.other=Other...
+settings.paper.other.mnemonic=O
+
+settings.config=Configure Image Settings...
+settings.config.mnemonic=C
+settings.configtex=Configure TeX/LaTeX Settings...
+settings.configtex.mnemonic=L
+settings.configui=Configure User Interface...
+settings.configui.mnemonic=U
+
+# jdrview additional settings menu item
+settings.antialias=Anti-Alias
+settings.antialias.mnemonic=A
+
+# window menu
+
+window.label=Window
+window.mnemonic=W
+window.tile=Tile
+window.tile.mnemonic=To
+window.vertically=Arrange Vertically
+window.vertically.mnemonic=V
+window.horizontally=Arrange Horizontally
+window.horizontally.mnemonic=H
+window.minimize=Minimize All
+window.minimize.mnemonic=M
+window.maximize=Maximize All
+window.maximize.mnemonic=X
+
+# help menu
+
+help.label=Help
+help.mnemonic=H
+help.handbook=\1 Handbook
+help.handbook.mnemonic=H
+help.licence=Licence...
+help.licence.mnemonic=L
+help.about=About...
+help.about.mnemonic=A
+
+# Debug menu
+debug.label=Debug
+debug.mnemonic=D
+debug.writelog=Write Log
+debug.writelog.mnemonic=W
+debug.dumpall=Dump All
+debug.dumpall.mnemonic=A
+debug.objectinfo=Object Info...
+debug.objectinfo.mnemonic=O
+debug.revalidate=Revalidate Image
+debug.revalidate.mnemonic=R
+
+# popup menus
+
+# text area popup menu
+text.cut=Cut
+text.cut.mnemonic=T
+text.copy=Copy
+text.copy.mnemonic=C
+text.paste=Paste
+text.paste.mnemonic=P
+text.select_all=Select All
+text.select_all.mnemonic=A
+text.insert_symbol=Insert Symbol...
+text.insert_symbol.mnemonic=I
+
+# edit path popup menu
+editpath.add_control=Add Point
+editpath.add_control.mnemonic=A
+editpath.break_path=Break path
+editpath.break_path.mnemonic=B
+editpath.close_path=Close Path
+editpath.close_path.mnemonic=P
+editpath.close_path.line=Close With Line
+editpath.close_path.line.mnemonic=L
+editpath.close_path.cont=Close With Curve
+editpath.close_path.cont.mnemonic=C
+editpath.close_path.merge=Merge Ends
+editpath.close_path.merge.mnemonic=M
+editpath.continuity=Continuity
+editpath.continuity.mnemonic=U
+editpath.continuity.equi=Equidistant
+editpath.continuity.equi.mnemonic=E
+editpath.continuity.relative=Relative
+editpath.continuity.relative.mnemonic=R
+editpath.continuity.anchor=Anchor
+editpath.continuity.anchor.mnemonic=A
+editpath.coordinates=Co-ordinates...
+editpath.coordinates.mnemonic=R
+editpath.convert_to_curve=Convert To Curve
+editpath.convert_to_curve.mnemonic=C
+editpath.delete_control=Delete Point
+editpath.delete_control.mnemonic=D
+editpath.convert_to_line=Convert To Line
+editpath.convert_to_line.mnemonic=L
+editpath.convert_to_move=Convert To Move
+editpath.convert_to_move.mnemonic=M
+editpath.next_control=Next Control
+editpath.next_control.mnemonic=N
+editpath.open_path=Open Path
+editpath.open_path.mnemonic=O
+editpath.open_path.remove_last=Remove Last Segment
+editpath.open_path.remove_last.mnemonic=R
+editpath.open_path.keep_last=Keep Last Segment
+editpath.open_path.keep_last.mnemonic=K
+editpath.prev_control=Previous Control
+editpath.prev_control.mnemonic=V
+editpath.snap=Snap To Grid
+editpath.snap.mnemonic=S
+editpath.symmetry=Path Symmetry
+editpath.symmetry.mnemonic=Y
+editpath.symmetry.has_symmetry=Has Symmetry
+editpath.symmetry.has_symmetry.mnemonic=H
+editpath.symmetry.join_anchor=Anchor Join
+editpath.symmetry.join_anchor.mnemonic=J
+editpath.symmetry.close_anchor=Anchor Start Control
+editpath.symmetry.close_anchor.mnemonic=S
+
+# Distortion popup menu
+distort.state=Distort
+distort.state.mnemonic=D
+distort.reset=Reset Transform
+distort.reset.mnemonic=R
+
+# selected text along path menu
+
+selectedtextpath.description=Text Along Path Description...
+selectedtextpath.description.mnemonic=I
+
+# selected text popup menu
+selectedtext.description=Text Area Description...
+selectedtext.description.mnemonic=I
+selectedtext.edit=Edit Text...
+selectedtext.edit.mnemonic=X
+selectedtext.reset=Reset Matrix
+selectedtext.reset.mnemonic=M
+selectedtext.colour=Text Colour...
+selectedtext.colour.mnemonic=L
+selectedtext.outline=Outline
+selectedtext.outline.mnemonic=O
+selectedtext.fill_colour=Fill Colour...
+selectedtext.fill_colour.mnemonic=F
+selectedtext.all_styles=All Styles...
+selectedtext.all_styles.mnemonic=T
+selectedtext.family=Family...
+selectedtext.family.mnemonic=Y
+selectedtext.size=Size...
+selectedtext.size.mnemonic=Z
+selectedtext.shape=Shape...
+selectedtext.shape.mnemonic=S
+selectedtext.series=Series...
+selectedtext.series.mnemonic=R
+selectedtext.anchor=Anchor
+selectedtext.anchor.mnemonic=H
+
+# selected paths popup menu
+selectedpath.description=Path Description...
+selectedpath.description.mnemonic=I
+selectedpath.edit=Edit Path
+selectedpath.edit.mnemonic=E
+selectedpath.distort=Distort
+selectedpath.distort.mnemonic=R
+selectedpath.line_colour=Line Colour...
+selectedpath.line_colour.mnemonic=L
+selectedpath.fill_colour=Fill Colour...
+selectedpath.fill_colour.mnemonic=F
+selectedpath.style.all=All Styles...
+selectedpath.style.all.mnemonic=S
+selectedpath.linewidth=Line Width...
+selectedpath.linewidth.mnemonic=H
+selectedpath.dashpattern=Dash Pattern...
+selectedpath.dashpattern.mnemonic=N
+selectedpath.capstyle=Cap Style
+selectedpath.capstyle.mnemonic=Y
+selectedpath.joinstyle=Join Style...
+selectedpath.joinstyle.mnemonic=J
+selectedpath.marker=Markers
+selectedpath.marker.mnemonic=Marker
+selectedpath.marker.all=All Markers...
+selectedpath.marker.all.mnemonic=A
+selectedpath.marker.start=Start Marker...
+selectedpath.marker.start.mnemonic=S
+selectedpath.marker.mid=Mid Marker...
+selectedpath.marker.mid.mnemonic=M
+selectedpath.marker.end=End Marker...
+selectedpath.marker.end.mnemonic=E
+selectedpath.windingrule=Winding Rule
+selectedpath.windingrule.mnemonic=W
+
+# selected bitmaps popup menu
+selectedbitmap.description=Bitmap Description...
+selectedbitmap.description.mnemonic=I
+selectedbitmap.properties=Bitmap Properties...
+selectedbitmap.properties.mnemonic=R
+selectedbitmap.reset=Reset Matrix
+selectedbitmap.reset.mnemonic=X
+selectedbitmap.insert=Insert Bitmap...
+selectedbitmap.insert.mnemonic=B
+selectedbitmap.vectorize=Vectorize...
+selectedbitmap.vectorize.mnemonic=V
+
+# selected objects popup menu
+selected.description=Group Description...
+selected.description.mnemonic=I
+selected.cut=Cut
+selected.cut.mnemonic=T
+selected.copy=Copy
+selected.copy.mnemonic=C
+selected.paste=Paste
+selected.paste.mnemonic=P
+selected.select_all=Select All
+selected.select_all.mnemonic=A
+selected.deselect_all=Deselect All
+selected.deselect_all.mnemonic=D
+selected.group=Group
+selected.group.mnemonic=G
+selected.ungroup=Ungroup
+selected.ungroup.mnemonic=U
+selected.path=Path
+selected.path.mnemonic=H
+selected.text=Text
+selected.text.mnemonic=X
+selected.fill_colour=Fill Colour...
+selected.fill_colour.mnemonic=F
+selected.bitmap=Bitmap
+selected.bitmap.mnemonic=B
+selected.justify=Justify
+selected.justify.mnemonic=J
+
+# none selected popup menu
+none.description=Image Description
+none.description.mnemonic=D
+none.find_by_description=Find By Description
+none.find_by_description.mnemonic=F
+none.insert_bitmap=Insert Bitmap...
+none.insert_bitmap.mnemonic=B
+
+# tooltips
+
+tooltip.abandon=Cancel current path
+tooltip.add_control=Add a new point in the middle of current segment
+tooltip.all_markers=Set the same start, mid and end markers
+tooltip.autoanchor=Automatically update anchors when aligning text areas
+tooltip.arrow.angle=Marker angle
+tooltip.arrow.autogap=Select to compute gap between repeat markers according to the line width
+tooltip.arrow.autooffset=Select to automatically compute marker offset
+tooltip.arrow.autoorient=Select to orient marker to follow path's gradient
+tooltip.arrow.colour.dependent=Make the marker colour depend on the line colour
+tooltip.arrow.colour.independent=Make the marker colour independent of the line colour
+tooltip.arrow.composite=Enable secondary marker
+tooltip.arrow.gap=Distance between repeated markers
+tooltip.arrow.offset=Distance from vertex
+tooltip.arrow.overlay=Overlap primary and secondary markers
+tooltip.arrow.type=Set marker type
+tooltip.arrow.type.arrows=Arrow style markers
+tooltip.arrow.type.bracket=Bracket style markers
+tooltip.arrow.type.caps=Cap style markers
+tooltip.arrow.type.data=Data point style markers
+tooltip.arrow.type.decorative=Decorative markers
+tooltip.arrow.type.partial=Partial arrow markers
+tooltip.back=Move selected object(s) to the back
+tooltip.break_path=Break path at the end of current segment
+tooltip.bitmap.insert=Insert an external bitmap file
+tooltip.bitmap.properties=Change the bitmap source file, the LaTeX path to the source file or the bitmap's transformation matrix
+tooltip.close_path=Close path
+tooltip.close_path.line=Close path with a line
+tooltip.close_path.cont=Close path with a continuous curve
+tooltip.close_path.merge=Close path by merging end point with start point
+tooltip.closed_curve=Closed cubic Bezier spline
+tooltip.closed_line=Closed line tool
+tooltip.continuity.relative=Make segment continuous at join (relative shift)
+tooltip.continuity.equi=Make segment continuous at join (equidistant controls)
+tooltip.continuity.anchor=Toggle continuity anchor
+tooltip.convert_to_curve=Convert current segment to a curve
+tooltip.convert_to_line=Convert current segment to a line
+tooltip.convert_to_move=Convert current segment to a gap
+tooltip.coordinates=Set the co-ordinates using a dialogue box
+tooltip.cmyk=CMYK (Cyan Magenta Yellow Key) colour selector 
+tooltip.copy=Copy selected object(s) to clipboard
+tooltip.cut=Cut selected object(s)
+tooltip.delete_control=Delete current point
+tooltip.direction.linear.north=Northward
+tooltip.direction.linear.northwest=North-Westward
+tooltip.direction.linear.west=Westward
+tooltip.direction.linear.southwest=South-Westward
+tooltip.direction.linear.south=Southward
+tooltip.direction.linear.southeast=South-Eastward
+tooltip.direction.linear.east=Eastward
+tooltip.direction.linear.northeast=North-Eastward
+tooltip.direction.radial.north=North starting location
+tooltip.direction.radial.northwest=North-West starting location
+tooltip.direction.radial.west=West starting location
+tooltip.direction.radial.southwest=South-West starting location
+tooltip.direction.radial.south=South starting location
+tooltip.direction.radial.southeast=South-East starting location
+tooltip.direction.radial.east=East starting location
+tooltip.direction.radial.northeast=North-East starting location
+tooltip.direction.radial.centre=Central starting location
+tooltip.distort=Distort selected path
+tooltip.hotspots=Enable/Disable drag scale
+tooltip.controls=Control point settings
+tooltip.initsettings=Specify settings at start up
+tooltip.ellipse=Ellipse tool
+tooltip.fill_colour=Set fill colour
+tooltip.finish=Finish current path
+tooltip.font=Set font attributes
+tooltip.font_family=Select font family name
+tooltip.font.all_styles=Change font attributes
+tooltip.font.family=Change font family
+tooltip.font.size=Change font size
+tooltip.font.shape=Change font shape (upright/italic)
+tooltip.font.series=Change font series (medium/bold)
+tooltip.font.anchor.both=Change the horizontal and vertical LaTeX font anchors
+tooltip.font.anchor.horizontal=Change the horizontal LaTeX font anchor
+tooltip.font.anchor.vertical=Change the vertical LaTeX font anchor
+tooltip.front=Move selected object(s) to the front
+tooltip.gap=Make a gap in the currect path
+tooltip.grey=Grey selector 
+tooltip.grid.rectangular=Rectangular grid (origin at top left)
+tooltip.grid.radial=Radial grid (origin at centre of canvas)
+tooltip.grid.iso=Isometric grid (origin at top left)
+tooltip.grid.tschichold=Tschichold grid (origin at top left)
+tooltip.grid.path=Path-based grid (origin at top left)
+tooltip.grid.show=Show/hide grid
+tooltip.group=Group selected object(s)
+tooltip.hsb=HSB (Hue Saturation Brightness) colour selector 
+tooltip.jdr=Save/use canvas settings stored in jdr files
+tooltip.joinstyle=Set the join style between segments
+tooltip.latex_font=LaTeX font family equivalent
+tooltip.latex_font_series=LaTeX font series equivalent
+tooltip.latex_font_shape=LaTeX font shape equivalent
+tooltip.latex_font_size=LaTeX font size equivalent
+tooltip.line_colour=Set line colour
+tooltip.line_style=Set the line style
+tooltip.linewidth=Set the pen width
+tooltip.lock_grid=Lock grid
+tooltip.math=Create a text area that will automatically insert maths shift characters at the start and end of the LaTeX alternative text
+tooltip.navigate.goto=Move mouse to specified co-ordinates
+tooltip.navigate.select=Select the next object in the stack
+tooltip.navigate.add_next=Add the next object in the stack to the current selection
+tooltip.navigate.skip=Deselect the lowest selected object in the stack and add next object to selection
+tooltip.navigate.find=Scroll to selected object(s)
+tooltip.navigate.description=Select and scroll to an object from its description
+tooltip.navigate.add_description=Scroll to an object from its description and add to current selection
+tooltip.new=New image
+tooltip.next_control=Select the next control point
+tooltip.normalize=Set normalization factors
+tooltip.open=Load image
+tooltip.open_curve=Open cubic Bezier spline
+tooltip.open_line=Open line tool
+tooltip.open_path=Open path
+tooltip.open_path.remove_last=Open path removing last segment
+tooltip.open_path.keep_last=Open path keeping last segment
+tooltip.path.edit=Edit selected path
+tooltip.paste=Paste selected object(s) from clipboard
+tooltip.prev_control=Select the previous control point
+tooltip.rectangle=Rectangle tool
+tooltip.graphics=Change graphics settings
+tooltip.reset=Reset the underlying transformation matrix
+tooltip.rgb=RGB (Red Green Blue) colour selector 
+tooltip.rotate=Rotate selected object(s)
+tooltip.save=Save image
+tooltip.scale=Scale selected object(s)
+tooltip.shear=Shear selected object(s)
+tooltip.select=Select tool
+tooltip.select_all=Select all objects
+tooltip.snap=Move the control to the nearest grid point
+tooltip.startdir=Set start up directory
+tooltip.swatch.black=Black
+tooltip.swatch.darkgrey=Dark Grey
+tooltip.swatch.grey=Grey
+tooltip.swatch.lightgrey=Light Grey
+tooltip.swatch.white=White
+tooltip.swatch.darkblue=Dark Blue
+tooltip.swatch.blue=Blue
+tooltip.swatch.cyan=Cyan
+tooltip.swatch.green=Green
+tooltip.swatch.darkgreen=Dark Green
+tooltip.swatch.yellow=Yellow
+tooltip.swatch.goldenrod=Goldenrod
+tooltip.swatch.orange=Orange
+tooltip.swatch.tan=Tan
+tooltip.swatch.rawsienna=RawSienna
+tooltip.swatch.red=Red
+tooltip.swatch.darkred=Dark Red
+tooltip.swatch.orchid=Orchid
+tooltip.swatch.magenta=Magenta
+tooltip.swatch.pink=Pink
+tooltip.close_anchor=Toggle whether the start point of the underlying path should be anchored
+tooltip.has_symmetry=Add or remove symmetry from the path
+tooltip.join_anchor=Toggle whether the last point of the underlying path should be anchored
+tooltip.text=Text tool
+tooltip.text.edit=Edit selected text
+tooltip.text.colour=Set text colour
+tooltip.text.outline=Display text as an outline
+tooltip.ungroup=Ungroup selected object(s)
+tooltip.vScrollBlockDown=Block scroll down
+tooltip.vScrollBlockUp=Block scroll up
+tooltip.vScrollEndDown=Scroll down to end
+tooltip.vScrollEndUp=Scroll up to start
+tooltip.vScrollUnitDown=Scroll down
+tooltip.vScrollUnitUp=Scroll up
+tooltip.hScrollBlockLeft=Block scroll left
+tooltip.hScrollBlockRight=Block scroll right
+tooltip.hScrollEndLeft=Scroll left to start
+tooltip.hScrollEndRight=Scroll right to end
+tooltip.hScrollUnitLeft=Scroll left
+tooltip.hScrollUnitRight=Scroll right
+tooltip.pattern.set=Apply a pattern to selected shape
+tooltip.textpath=Convert to text-path
+tooltip.up=Move selected object(s) up the stack (z axis)
+tooltip.down=Move selected object(s) down the stack (z axis)
+tooltip.choose_file=Open file selector to choose a file
+
+# undo/redo information
+
+undo.add_point=Add Point
+undo.anchor=set anchor
+undo.anchor_control=Anchor control
+undo.bitmap_properties=Bitmap properties
+undo.break=Break Path
+undo.clear_flowframes=Clear Flowframe Data
+undo.close=Close Path
+undo.colour=Change colour
+undo.continuous=Make Continuous
+undo.convert_to_curve=Convert to Curve
+undo.convert_to_line=Convert to Line
+undo.convert_to_move=Convert to Move
+undo.convert_to_path=Convert to Path
+undo.convert_to_textpath=Convert to Text Path
+undo.convert_to_pattern=Convert to Pattern
+undo.distort=Start Distortion
+undo.distort_end=Distortion
+undo.deiconify_child_window=Deiconify Child Window
+undo.delete=Delete
+undo.delete_point=Delete Point
+undo.deselect=Deselect
+undo.deselect_all=Deselect All
+undo.deselect_child_window=Deselect Child Window
+undo.displaypage=Set Display Page
+undo.edit.finish=Finish editing
+undo.edit_pattern=Edit Pattern
+undo.edit.start=Start editing
+undo.edit_text=Edit Text
+undo.fill_colour=Change fill colour
+undo.set_frame=Set Frame
+undo.set_normalsize=Set Normal Size
+undo.set_doc_cls=Set Document Class
+undo.splittext=Split Text
+undo.finish_new_text=finish new text area
+undo.font=Change Font
+undo.group=Group
+undo.halign=Set halign
+undo.iconify_child_window=Iconify Child Window
+undo.justify=Justify
+undo.justify.bottom=Bottom Justify
+undo.justify.centre=Centre Justify
+undo.justify.left=Left Justify
+undo.justify.middle=Middle Justify
+undo.justify.top=Top Justify
+undo.justify.right=Right Justify
+undo.latexsize=Set LaTeX font size
+undo.line_colour=Change line colour
+undo.line_style=Change line style
+undo.merge_paths=Merge Paths
+undo.move=Move
+undo.move_point=Move Point
+undo.move_to_back=Move to Back
+undo.move_to_front=Move to Front
+undo.move_up=Move Up To Index \1
+undo.move_down=Move Down To Index \1
+undo.new_bitmap=New Bitmap
+undo.new_curve=New Curve
+undo.new_ellipse=New Ellipse
+undo.new_line=New Line
+undo.new_object=New Object
+undo.new_rectangle=New Rectangle
+undo.new_text=New Text
+undo.open=Open Path
+undo.paste=Paste
+undo.path_intersect=Path Intersect
+undo.path_union=Path Union
+undo.pattern.remove=Remove Pattern
+undo.reset.distort=Reset Distortion
+undo.reset.text=Reset Text Matrix
+undo.reset.bitmap=Reset Bitmap Matrix
+undo.reverse=Reverse Path
+undo.rotate=Rotate
+undo.scale=Scale
+undo.scale_x=Scale X
+undo.scale_y=Scale Y
+undo.select_child_window=Select Child Window
+undo.separate=Separate
+undo.set_absolute_pages=flowframe pages setting
+undo.set_preamble=Edit Preamble
+undo.set_description=Set Description
+undo.set_current_settings=Set Current Settings
+undo.set_transform=Set Transformation
+undo.set_typeblock=Set Typeblock
+undo.shear=Shear
+undo.select=Select
+undo.select_all=Select All
+undo.select_point=Select Point
+undo.set_tool=Change Tool
+undo.start_new_text=start new text area
+undo.subtract_paths=Subtract Paths
+undo.symmetry=Symmetry
+undo.symmetry.join_anchor=Symmetry Join Anchor
+undo.symmetry.close_anchor=Symmetry Close Anchor
+undo.text.outline=Set Text Outline Mode
+undo.ungroup=Ungroup
+undo.valign=Set valign
+undo.xor_paths=XOR Paths
+undo.vectorize=Vectorize bitmap
+undo.set_storage_unit=Set Storage Unit
+undo.drag_and_drop=Drag and Drop
+undo.undo=Undo \1
+undo.redo=Redo \1
+
+# status bar messages
+
+info.title=Information
+info.help=Help
+info.help.tooltip=View the relevant page of the manual
+info.tooltip=Double-click to view full message
+info.closed_path=Click at each vertex. Double-click on final vertex to close path.
+info.distort=Drag corner points to distort object.
+info.edit_path=Click on control point to select a segment.
+info.ellipse=Click on centre point, move mouse and click to complete.
+info.grid.lock_on=Grid lock on
+info.grid.lock_off=Grid lock off
+info.loading=Loading \1
+info.modified=Modified
+info.modified.tooltip=Image has been modified
+info.unmodified.tooltip=Image hasn't been modified
+info.storage_unit=Storage unit
+info.no_frames=Click on "new image" button or select File->New to start
+info.no_frames_selected=To restore a frame, click on its icon
+info.open_path=Click at each vertex. Double-click on final vertex to finish path.
+info.rectangle=Click at first corner, move mouse and click on opposite corner to complete.
+info.saving=Saving \1
+info.select=Click on path to select. Control-click to add to selection. Double click to select path underneath. Shift click to remove from selection.
+info.text=Click at start point to obtain cursor.
+info.math=Click at start point to obtain cursor.
+
+# error messages
+error.title=Error
+error.cant_create_intersect=Can't create intersection
+error.with_line=Line \1: \2
+error.with_line_and_col=Line \1, Column \2: \3
+error.with_file_and_line=\1:\2: \3
+error.with_id=\1 (\2)
+error.with_found=\1; found '\2'
+error.conf.bad_paint_format=Bad paint format
+error.conf.boolean_value=A value of 0 or 1 is expected on line \1
+error.conf.integer=Integer value expected on line \1
+error.conf.bounded_integer=Integer value must lie between 0 and \1 on line \2
+error.conf.no_more_tokens=Not enough tokens on line \1
+error.conf.no_negative=Negative value not permitted on line \1
+error.conf.number=Number expected on line \1
+error.conf.number_badrange=Number expected or out of range on line \1
+error.conf.positive_only=Positive integer expected in line \1
+error.conf.three_value=An integer from 0 to 2 is expected on line \1
+error.conf.too_many_tokens=Too many tokens on line \1
+error.conf.unknown_key=Unknown key '\1' on line \2
+error.conf.unknown_tool=Unknown tool
+error.conf.invalid_path=Invalid path specification on line \1
+error.conf.invalid_path.rule=Invalid path winding rule specification on line \1
+error.conf.invalid_path.segment=Invalid path segment specification \1 on line \2
+error.conf.invalid_path.coord=Invalid path co-ordinate for segment type \1 on line \2
+error.config_cant_create=Can't create configuration directory \1
+error.config_failed=Unable to determine configuration directory\n(you will not be able to change current settings or have a list of recent files)
+error.config_save_failed=Unable to save current configuration (can't determine configuration directory)
+error.convert_to_path_failed=Unable to convert to path
+error.empty_string=Empty string
+error.eof=File ended prematurely
+error.fatal=Fatal error
+error.file_not_found=File not found
+error.finish_or_discard=You must finish or discard the current path before closing the image
+error.invalid_paint-id=Invalid colour identifier
+error.id.endcolour=Invalid end colour identifier
+error.id.linestyle=No line style identifier
+error.invalid_object-id=Invalid object identifier
+error.invalid_path-open-close-id=Invalid open/closed identifier
+error.invalid_paper-id=Invalid paper identifier
+error.invalid_segment-id=Invalid segment identifier
+error.invalid_settings-id=Invalid settings identifier
+error.id.shape=Invalid shape identifier
+error.id.startcolour=Invalid start colour identifier
+error.invalid_setting-tool=Invalid tool identifier
+error.invalid_unit-id=Invalid unit identifier
+error.id.point=Invalid point index
+error.idl_exists=This label already exists
+error.invalid_alpha=Invalid alpha value
+error.invalid_arrow_type=Invalid arrow type
+error.invalid_arrow_composite=Invalid arrow composite
+error.invalid_black=Invalid black value
+error.invalid_blue=Invalid blue value
+error.invalid_cap-style=Invalid cap style
+error.invalid_cyan=Invalid cyan value
+error.invalid_description_length=Negative description length
+error.invalid_dimension=Invalid dimension
+error.invalid_gradient-direction=Invalid gradient direction
+error.invalid_radial-gradient-location=Invalid radial location
+error.invalid_gradient-end=Invalid end colour type
+error.invalid_radial-gradient-end=Invalid end colour type
+error.invalid_family_length=Negative of zero font family length
+error.invalid_filename_length=Negative or zero filename length
+error.invalid_format=Invalid format
+error.invalid_frame-type=Invalid frame type
+error.invalid_green=Invalid green value
+error.invalid_idl_length=Negative IDL length
+error.invalid_imageformat=Unrecognised image format
+error.invalid_join-style=Invalid join style
+error.invalid_latexfilename_length=Negative or zero latex filename length
+error.invalid_halign=Invalid halign value
+error.invalid_latex_family_length=Negative LaTeX font family length
+error.invalid_latex_imagecmd_length=Negative LaTeX image command length
+error.invalid_latex_series_length=Negative LaTeX font series length
+error.invalid_latex_shape_length=Negative LaTeX font shape length
+error.invalid_latex_size_length=Negative LaTeX font size length
+error.invalid_valign=Invalid valign value
+error.invalid_linkname=Invalid bitmap link name '\1'
+error.invalid_magenta=Invalid magenta value
+error.invalid_mitre-limit=Invalid mitre limit (mitre limit can't be less than 1)
+error.invalid_object=Invalid object
+error.invalid_frame-page-list=Invalid page list
+error.invalid_pagelist_length=Negative page list length
+error.invalid_paper_dimension=Invalid paper dimensions '\1'
+error.invalid_penwidth=Negative pen width not permitted
+error.invalid_ruler_width=Invalid ruler width '\1'
+error.invalid_ruler_height=Invalid ruler height '\1'
+error.invalid_series=Invalid series identifier
+error.invalid_shape=Invalid shape identifier
+error.invalid_size=Negative font size not permitted
+error.invalid_gradient-start=Invalid gradient start colour type
+error.invalid_radial-gradient-start=Invalid radial start colour type
+error.invalid_red=Invalid red value
+error.invalid_text_length=Negative or zero text length
+error.invalid_unit-name=Invalid unit
+error.invalid_winding-rule=Invalid winding rule
+error.invalid_yellow=Invalid yellow value
+error.invalid_codepoint=Invalid code point '\1'
+error.invalid_group-size=Invalid group size
+error.invalid_angle=Invalid angle
+error.invalid_angle_id=Invalid angle ID
+error.invalid_angle_value=Invalid angle value
+error.invalid_setting-absolute-pages=Invalid absolute pages setting
+error.invalid_setting-cls=Invalid document class setting
+error.invalid_setting-preamble=Invalid early preamble setting
+error.invalid_setting-mid-preamble=Invalid mid preamble setting
+error.invalid_setting-end-preamble=Invalid late preamble setting
+error.invalid_setting-scale-control=Invalid scale control setting
+error.invalid_setting-pointsize=Invalid control size setting
+error.invalid_setting-normalsize=Invalid normalsize setting
+error.invalid_setting-show-rulers=Invalid show rulers setting
+error.invalid_setting-show-grid=Invalid show grid setting
+error.invalid_setting-grid-lock=Invalid grid lock setting
+error.invalid_paper-portrait-flag=Invalid portrait setting
+error.invalid_paper-width=Invalid paper width setting
+error.invalid_paper-height=Invalid paper height setting
+error.invalid_frame-even-x-shift=Invalid frame even page x shift
+error.invalid_frame-even-y-shift=Invalid frame even page y shift
+error.invalid_frame-contents=Invalid frame contents
+error.invalid_frame-valign=Invalid frame valign
+error.invalid_frame-shape=Invalid frame shape
+error.invalid_frame-margin-right=Invalid frame right margin
+error.invalid_frame-margin-left=Invalid frame left margin
+error.invalid_frame-margin-top=Invalid frame top margin
+error.invalid_frame-margin-bottom=Invalid frame bottom margin
+error.invalid_frame-idl=Invalid frame label
+error.invalid_frame-flag=Invalid frame flag
+error.invalid_frame-border-flag=Invalid frame flag
+error.invalid_text-path-delim-left=Invalid text-path left delimiter
+error.invalid_text-path-delim-right=Invalid text-path right delimiter
+error.invalid_text-path-text=Invalid text-path text
+error.invalid_text-path-LaTeX-text=Invalid text-path LaTeX text
+error.invalid_text-path-LaTeX-flag=Invalid text-path LaTeX flag
+error.invalid_text-path-valign=Invalid text-path vertical alignment
+error.invalid_text-path-halign=Invalid text-path horizontal alignment
+error.invalid_text-path-transform=Invalid text-path transformation
+error.invalid_text-path-unsupported-version=Text-paths not supported for this version
+error.invalid_text-path-shape=Invalid text-path shape
+error.invalid_symmetric-close-anchored=Invalid symmetric close anchored setting
+error.invalid_symmetric-closed=Invalid symmetric closed setting
+error.invalid_symmetric-line-x0=Invalid symmetric line x0 setting
+error.invalid_symmetric-line-y0=Invalid symmetric line y0 setting
+error.invalid_symmetric-line-x1=Invalid symmetric line x1 setting
+error.invalid_symmetric-line-y1=Invalid symmetric line y1 setting
+error.invalid_symmetric-anchored=Invalid symmetric anchored setting
+error.invalid_symmetric-shape=Invalid symmetric shape setting
+error.invalid_spiral-show-original=Invalid spiral show original setting
+error.invalid_spiral-single=Invalid spiral single setting
+error.invalid_spiral-replicas=Invalid spiral replicas setting
+error.invalid_spiral-distance=Invalid spiral distance setting
+error.invalid_spiral-angle=Invalid spiral angle setting
+error.invalid_spiral-adjust-x=Invalid spiral adjust x setting
+error.invalid_spiral-adjust-y=Invalid spiral adjust y setting
+error.invalid_spiral-anchor-x=Invalid spiral anchor x setting
+error.invalid_spiral-anchor-y=Invalid spiral anchor y setting
+error.invalid_spiral-shape=Invalid spiral shape setting
+error.invalid_scaled-show-original=Invalid scaled pattern show original setting
+error.invalid_scaled-single=Invalid scaled pattern single setting
+error.invalid_scaled-replicas=Invalid scaled pattern replicas setting
+error.invalid_scaled-factor-x=Invalid scaled pattern factor x setting
+error.invalid_scaled-factor-y=Invalid scaled pattern factor y setting
+error.invalid_scaled-adjust-x=Invalid scaled pattern adjust x setting
+error.invalid_scaled-adjust-y=Invalid scaled pattern adjust y setting
+error.invalid_scaled-anchor-x=Invalid scaled pattern anchor x setting
+error.invalid_scaled-anchor-y=Invalid scaled pattern anchor y setting
+error.invalid_scaled-shape=Invalid scaled pattern shape setting
+error.invalid_rotational-show-original=Invalid rotational pattern show original setting
+error.invalid_rotational-single=Invalid rotational pattern single setting
+error.invalid_rotational-replicas=Invalid rotational pattern replicas setting
+error.invalid_rotational-angle=Invalid rotational pattern angle setting
+error.invalid_rotational-anchor-x=Invalid rotational pattern anchor x setting
+error.invalid_rotational-anchor-y=Invalid rotational pattern anchor y setting
+error.invalid_rotational-shape=Invalid rotational pattern shape setting
+error.invalid_path-anchor-index=Invalid path anchor index
+error.invalid_path-start-x=Invalid path start x
+error.invalid_path-start-y=Invalid path start y
+error.invalid_path-size=Invalid path size
+error.invalid_path-open-close-id=Invalid path open/close ID
+error.invalid_hsb=Invalid HSB
+error.invalid_cmyk=Invalid CMYK
+error.invalid_rgb=Invalid RGB
+error.invalid_gray=Invalid grey
+error.invalid_hue=Invalid hue
+error.invalid_saturation=Invalid saturation
+error.invalid_brightness=Invalid brightness
+error.invalid_partial-bezier-cy=Invalid partial Bézier cy
+error.invalid_partial-bezier-cx=Invalid partial Bézier cx
+error.invalid_move-x0=Invalid move x0
+error.invalid_move-y0=Invalid move y0
+error.invalid_move-x1=Invalid move x1
+error.invalid_move-y1=Invalid move y1
+error.invalid_line-x0=Invalid line x0
+error.invalid_line-y0=Invalid line y0
+error.invalid_line-x1=Invalid line x1
+error.invalid_line-y1=Invalid line y1
+error.invalid_bezier-x0=Invalid Bézier x0
+error.invalid_bezier-y0=Invalid Bézier y0
+error.invalid_bezier-x1=Invalid Bézier x1
+error.invalid_bezier-y1=Invalid Bézier y1
+error.invalid_bezier-c1x=Invalid Bézier c1x
+error.invalid_bezier-c1y=Invalid Bézier c1y
+error.invalid_bezier-c2x=Invalid Bézier c2x
+error.invalid_bezier-c2y=Invalid Bézier c2y
+error.invalid_grid-major=Invalid grid major value
+error.invalid_grid-minor=Invalid grid minor value
+error.invalid_grid-spokes=Invalid grid spokes value
+error.invalid_pen-width=Invalid pen width
+error.invalid_path-style-id=Invalid path style ID
+error.invalid_grid-id=Invalid grid ID
+error.invalid_LaTeX-image-cmd=Invalid LaTeX image command
+error.invalid_LaTeX-filename=Invalid LaTeX filename
+error.invalid_bitmap-transform=Invalid bitmap transformation
+error.invalid_bitmap-LaTeX-flag=Invalid bitmap LaTeX flag
+error.invalid_bitmap-filename=Invalid bitmap filename
+error.invalid_LaTeX-font-size=Invalid LaTeX font size
+error.invalid_LaTeX-font-shape=Invalid LaTeX font shape
+error.invalid_LaTeX-font-weight=Invalid LaTeX font weight
+error.invalid_LaTeX-font-family=Invalid LaTeX font family
+error.invalid_LaTeX-font-flag=Invalid LaTeX font flag
+error.invalid_text-outline-flag=Invalid text outline flag
+error.invalid_font-transform=Invalid font transformation
+error.invalid_font-size=Invalid font size
+error.invalid_font-shape=Invalid font shape
+error.invalid_font-weight=Invalid font weight
+error.invalid_format-tag=Invalid format tag
+error.invalid_jdr-format=Invalid JDR format
+error.invalid_version=Invalid version
+error.invalid_text=Invalid text
+error.invalid_LaTeX-text=Invalid LaTeX text
+error.invalid_dash-offset=Invalid dash offset
+error.invalid_dash-pattern=Invalid dash pattern
+error.invalid_marker-repeat-offset=Invalid marker repeat offset
+error.invalid_marker-repeat-offset-flag=Invalid marker repeat offset flag
+error.invalid_marker-offset=Invalid marker offset
+error.invalid_marker-offset-flag=Invalid marker offset flag
+error.invalid_marker-overlay-flag=Invalid marker overlay flag
+error.invalid_marker-orient-angle=Invalid marker orient angle
+error.invalid_marker-auto-orient=Invalid marker auto orient setting
+error.invalid_marker-reversed=Invalid marker reversed setting
+error.invalid_marker-repeat=Invalid marker repeat setting
+error.invalid_marker-size=Invalid marker size
+error.invalid_marker-id=Invalid marker ID
+error.invalid_length=Invalid length
+error.invalid_description=Invalid description
+error.invalid_parse-boolean=Unable to parse boolean
+error.invalid_parse-int=Unable to parse integer
+error.invalid_parse-char=Unable to parse character
+error.invalid_parse-string=Unable to parse string
+error.invalid_parse-byte=Unable to parse byte
+error.invalid_parse-float=Unable to parse float
+error.invalid_parse-double=Unable to parse double-precision value
+error.invalid_parse-format=Unable to parse file format identifier
+error.io.helpset=HelpSet could not be opened
+error.io.close=Unable to close file
+error.io.dir_not_exists=Directory '\1' doesn't exist
+error.io.in_progress=I/O operation in progress
+error.io.invalid_map=Invalid mapping '\1'
+error.io.invalid_array_length=Invalid array length \1
+error.io.load=Unable to load file
+error.io.open=Unable to open file '\1'
+error.io.not_directory='\1' is not a directory
+error.io.not_exists=Unable to open '\1'\nFile doesn't exist
+error.io.save=Unable to save file
+error.io.rename=Unable to rename '\1' -> '\2'
+error.cant_parse_file_type=Unable to parse file type from '\1'
+error.missing_papersize=Missing papersize after -paper switch
+error.missing_paper_width=Missing paper width after "-paper user"
+error.missing_paper_height=Missing paper height after "-paper user"
+error.missing_cwd=Missing path after -cwd switch
+error.missing_verbosity=Missing level after -verbosity switch
+error.invalid_verbosity=Number expected after -verbosity switch
+error.negative_dash=Can't have a negative dash pattern length
+error.no_filename=No filename supplied
+error.no_helpset=HelpSet not found
+error.no_idl=No label specified
+error.no_typeblock=Typeblock not set
+error.misplaced_typeblock=Missplaced typeblock
+error.not_a_directory='\1' is not a directory
+error.not_ajr=Not an AJR file
+error.not_found=File not found
+error.not_jdr=Not a JDR file
+error.one_filename=Only one filename permitted
+error.out_of_memory=Out of memory
+error.paper_dimension=Paper dimensions expected after "-paper user"
+error.parshape.convert=Shape can't be converted into a \\parshape
+error.printing=Error printing
+error.printing.no_service=No printer services found
+error.shape.incompatible=Incompatible Shape
+error.shape.nowidth=Shape has no height
+error.shape.noheight=Shape has no width
+error.shape.too_many_intersects=Horizontal scan line intersects shape in more than two places (x=\1, y=\2)
+error.shapepar.convert=Shape can't be converted into a \\1hapepar
+error.split_failed=Unable to split text area
+error.top_level_missing=Top level group identifier missing
+error.unknown_ajr_version=Unknown ajr file version
+error.unknown_font=Unknown font family
+error.unknown_font_select=Please select a new font family
+error.unknown_jdr_version=Unknown jdr file version
+error.unknown_option=Unknown option '\1'
+error.unknown_papersize=Unknown paper size '\1'
+error.interrupted=Process interrupted
+error.timedout=Process timed-out (process time limit: \1ms)
+error.exec_failed=Failed to execute: \1
+error.exec_failed_withcode=Failed to execute: \1 (error code \2)
+error.exec_failed_withcode_and_dir=Failed to execute: \1 running in directory '\2' (error code \3)
+error.try_latex_export=Try exporting to a LaTeX document and compile it using your usual build process.
+error.cant_find_app=Can't locate application '\1'
+error.possible_malformed_1_7=Possible malformed 1.7 file. Attempting to read again.
+error.no_current_point=No current point
+
+# internal error messages
+internal_error.title=Internal Error
+internal_error.can_only_merge_paths=Can only merge paths
+internal_error.cant_find_selected_segment=Can't find selected segment
+internal_error.cant_find_selected_text=Can't find selected text
+internal_error.close_empty=Unable to close empty path
+internal_error.convert_to_path=Unable to convert to path
+internal_error.empty_path=Empty path
+internal_error.empty_group=Empty group
+internal_error.finish_edit_path_failed=Unable to finish editing path
+internal_error.no_helpset=Helpset has not been initialised
+internal_error.ill_fitting=Unable to close path: ill-fitting segment
+internal_error.integer_key=Integer value required for key '\1'
+internal_error.invalid_startdir=Invalid startup directory type
+internal_error.missing_move=Missing initial move to
+internal_error.no_bitmap=No bitmap selected
+internal_error.no_path=No path selected
+internal_error.no_segment_selected=No segment selected
+internal_error.non_abutting=Segment does not abut last segment in path
+internal_error.undefined_key=Undefined key '\1' 
+internal_error.unknown_paint=Unknown DrawPaint type
+
+# warning messages
+warning.title=Warning
+warning.tag=Warning: \1
+warning.draft_bitmap=Insufficent memory to load bitmap.\nReverting to draft mode.
+warning.draft_bitmaps=Insufficent memory to load one or more bitmaps.\nReverting to draft mode.
+warning.file_exists=File already exists. Overwrite it?
+warning.save.ajr=Saving to an old AJR format (\1) may result in loss of data.\nAre you sure you want to continue?
+warning.save.jdr=Saving to an old JDR format (\1) may result in loss of data.\nAre you sure you want to continue?
+warning.load.jdr=Old JDR format \1 detected. When you save this file it\nwill be saved to the new JDR format unless\nyou select the "flowframtk image file \1 (*.jdr)" file filter
+warning.load.ajr=Old AJR format \1 detected. When you save this file it\nwill be saved to the new AJR format unless\nyou select the "flowframtk ascii file \1 (*.ajr)" file filter
+warning.no_flowframe_data=No flow frame data found.
+warning.no_robot=Unable to initialise robot. You will not be able to move the mouse using cursor keys.
+warning.pgf-no-text-shading=text shading paint can't be exported to pgf
+warning.pgf-no-textpath-outline=text-path outline can't be exported to pgf
+warning.pgf-no-stroke-shading=stroke shading paint can't be exported to pgf
+warning.pgf-shading-mixed-opacity=pgf shading mixed opacity has been averaged
+warning.pgf-no-marker-shading=marker shading paint can't be exported to pgf
+warning.no_background_image=Not enough memory to create a background image. Switching to optimize memory setting.
+warning.save_unsupported_object=Object type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_paint=Paint type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_segment=Segment type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_grid=Grid type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_preamble=Preamble not supported in JDR/AJDR version \1
+warning.save_unsupported_extra_preamble=Mid/End Preamble not supported in JDR/AJDR version \1
+warning.save_unsupported_docclass=Document class not supported in JDR/AJDR version \1
+warning.save_unsupported_storage_unit=Storage unit '\1' not supported in JDR/AJDR version \2 (co-ordinates will be converted to bp)
+warning.save_unsupported_flow_frame=Flow frame data not supported by JDR/AJR version \1 has been omitted
+warning.save_unsupported_text_path_delim=Text path format delimiters not supported by JDR/AJR version \1
+warning.unknown_drop=Don't know what to do with dropped file '\1'
+
+# stack trace
+stacktrace.message=Error Message
+stacktrace.message.mnemonic=E
+stacktrace.details=Details
+stacktrace.details.mnemonic=D
+stacktrace.copy=Copy
+stacktrace.copy.mnemonic=C
+
+# export to png dialog box
+exportpng.title=Export to PNG
+exportpng.usealpha=Transparent Background
+exportpng.usealpha.mnemonic=T
+exportpng.crop=Crop
+exportpng.crop.mnemonic=P
+
+# fade dialog box
+fade.title=Fade Colours
+
+# rotate dialog box
+rotate.title=Rotate Selection
+rotate.rotateby=Rotate by
+rotate.rotateby.mnemonic=R
+rotate.degrees=degrees
+rotate.degrees.mnemonic=D
+rotate.radians=radians
+rotate.radians.mnemonic=A
+
+# scale dialog box
+scale.title=Scale Selection
+scale.both=Scale both
+scale.both.mnemonic=B
+scale.x=Scale X
+scale.x.mnemonic=X
+scale.y=Scale Y
+scale.y.mnemonic=Y
+
+# shear dialog box
+shear.title=Shear Selection
+shear.x=Shear X
+shear.x.mnemonic=X
+shear.y=Shear Y
+shear.y.mnemonic=Y
+
+# symbol selector
+symbol.title=Insert Symbol
+symbol.unicode=Unicode
+symbol.unicode.mnemonic=U
+symbol.insertAtCaret=Select
+symbol.insertAtCaret.mnemonic=S
+symbol.insertAtCaret.tooltip=Insert symbol at the caret in the text field
+symbol.text=Text
+symbol.text.mnemonic=T
+symbol.select.tooltip=Insert symbol with given unicode value into text
+symbol.unicode.tooltip=Enter hexadecimal unicode value
+symbol.mode.text=Text
+symbol.mode.maths=Maths
+symbol.mapping_mode=Mapping Mode: \1
+
+# Unicode blocks
+
+unicode.blocks.title=Unicode Block
+unicode.BASIC_LATIN=Basic Latin
+unicode.LATIN_1_SUPPLEMENT=Latin-1 Supplement
+unicode.LATIN_EXTENDED_A=Latin Extended A
+unicode.LATIN_EXTENDED_B=Latin Extended B
+unicode.IPA_EXTENSIONS=IPA Extensions
+unicode.SPACING_MODIFIER_LETTERS=Spacing Modifier Letters
+unicode.COMBINING_DIACRITICAL_MARKS=Combing Diacritical Marks
+unicode.GREEK=Greek
+unicode.CYRILLIC=Cyrillic
+unicode.CYRILLIC_SUPPLEMENTARY=Cyrillic Supplementary
+unicode.ARMENIAN=Armenian
+unicode.HEBREW=Hebrew
+unicode.ARABIC=Arabic
+unicode.SYRIAC=Syriac
+unicode.ARABIC_SUPPLEMENT=Arabic Supplement
+unicode.THAANA=Thaana
+unicode.NKO=NKO
+unicode.SAMARITAN=Samaritan
+unicode.MANDAIC=Mandaic
+unicode.DEVANAGARI=Devangari
+unicode.BENGALI=Bengali
+unicode.GURMUKHI=Gurmukhi
+unicode.GUJARATI=Gujarati
+unicode.ORIYA=Oriya
+unicode.TAMIL=Tamil
+unicode.TELUGU=Telugu
+unicode.KANNADA=Kannada
+unicode.MALAYALAM=Malayalam
+unicode.SINHALA=Sinhala
+unicode.THAI=Thai
+unicode.LAO=Lao
+unicode.TIBETAN=Tibetan
+unicode.MYANMAR=Myanmar
+unicode.GEORGIAN=Georgian
+unicode.HANGUL_JAMO=Hangul Jamo
+unicode.ETHIOPIC=Ethiopic
+unicode.ETHIOPIC_SUPPLEMENT=Ethiopic Supplement
+unicode.CHEROKEE=Cherokee
+unicode.UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS=Unified Canadian Aboriginal Syllabics
+unicode.OGHAM=Ogham
+unicode.RUNIC=Runic
+unicode.TAGALOG=Tagalog
+unicode.HANUNOO=Hanunoo
+unicode.BUHID=Buhid
+unicode.TAGBANWA=Tagbanwa
+unicode.KHMER=Khmer
+unicode.MONGOLIAN=Mongolian
+unicode.UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED=Unified Canadian Aboriginal Syllabics Extended
+unicode.LIMBU=Limbu
+unicode.TAI_LE=Tai Le
+unicode.NEW_TAI_LUE=New Tai Lue
+unicode.KHMER_SYMBOLS=Khmer Symbols
+unicode.BUGINESE=Buginese
+unicode.TAI_THAM=Tai Tham
+unicode.BALINESE=Balinese
+unicode.SUNDANESE=Sudanese
+unicode.BATAK=Batak
+unicode.LEPCHA=Lepcha
+unicode.OL_CHIKI=Ol Chiki
+unicode.VEDIC_EXTENSIONS=Vedic Extensions
+unicode.PHONETIC_EXTENSIONS=Phonetic Extensions
+unicode.PHONETIC_EXTENSIONS_SUPPLEMENT=Phonetic Extensions Supplement
+unicode.COMBINING_DIACRITICAL_MARKS_SUPPLEMENT=Combining Diacritical Marks Supplement
+unicode.LATIN_EXTENDED_ADDITIONAL=Latin Extended Additional
+unicode.GREEK_EXTENDED=Greek Extended
+unicode.GENERAL_PUNCTUATION=General Punctuation
+unicode.SUPERSCRIPTS_AND_SUBSCRIPTS=Superscripts and Subscripts
+unicode.CURRENCY_SYMBOLS=Currency Symbols
+unicode.COMBINING_MARKS_FOR_SYMBOLS=Combining Marks for Symbols
+unicode.LETTERLIKE_SYMBOLS=Letter-like Symbols
+unicode.NUMBER_FORMS=Number Forms
+unicode.ARROWS=Arrows
+unicode.MATHEMATICAL_OPERATORS=Mathematical Operators
+unicode.MISCELLANEOUS_TECHNICAL=Miscellaneous Technical
+unicode.CONTROL_PICTURES=Control Pictures
+unicode.OPTICAL_CHARACTER_RECOGNITION=Optical Character Recognition
+unicode.ENCLOSED_ALPHANUMERICS=Enclosed Alphanumerics
+unicode.BOX_DRAWING=Box Drawing
+unicode.BLOCK_ELEMENTS=Block Elements
+unicode.GEOMETRIC_SHAPES=Geometric Shapes
+unicode.MISCELLANEOUS_SYMBOLS=Miscellaneous Symbols
+unicode.DINGBATS=Dingbats
+unicode.MISCELLANEOUS_MATHEMATICAL_SYMBOLS_A=Miscellaneous Mathematical Symbols A
+unicode.SUPPLEMENTAL_ARROWS_A=Supplemental Arrows-A
+unicode.BRAILLE_PATTERNS=Braille Patterns
+unicode.SUPPLEMENTAL_ARROWS_B=Supplemental Arrows-B
+unicode.SUPPLEMENTAL_ARROWS_C=Supplemental Arrows-C
+unicode.MISCELLANEOUS_MATHEMATICAL_SYMBOLS_B=Miscellaneous Mathematical Symbols B
+unicode.SUPPLEMENTAL_MATHEMATICAL_OPERATORS=Supplemental Mathematical Operators
+unicode.MISCELLANEOUS_SYMBOLS_AND_ARROWS=Miscellaneous Symbols and Arrows
+unicode.GLAGOLITIC=Glagolitic
+unicode.LATIN_EXTENDED_C=Latin Extended C
+unicode.COPTIC=Coptic
+unicode.GEORGIAN_SUPPLEMENT=Georgian Supplement
+unicode.TIFINAGH=Tifinagh
+unicode.ETHIOPIC_EXTENDED=Ethiopic Extended
+unicode.CYRILLIC_EXTENDED_A=Cyrillic Extended
+unicode.SUPPLEMENTAL_PUNCTUATION=Supplemental Punctuation
+unicode.CJK_RADICALS_SUPPLEMENT=CJK Radicals Supplement
+unicode.KANGXI_RADICALS=Kangxi Radicals
+unicode.IDEOGRAPHIC_DESCRIPTION_CHARACTERS=Ideographic Description Characters
+unicode.CJK_SYMBOLS_AND_PUNCTUATION=CJK Symbols and Punctuation
+unicode.HIRAGANA=Hiragana
+unicode.KATAKANA=Katakana
+unicode.BOPOMOFO=Bopomofo
+unicode.HANGUL_COMPATIBILITY_JAMO=Hangul Compatibility
+unicode.KANBUN=Kanbun
+unicode.BOPOMOFO_EXTENDED=Bopomofo Extended
+unicode.CJK_STROKES=CJK Strokes
+unicode.KATAKANA_PHONETIC_EXTENSIONS=Katakana Phoentic Extensions
+unicode.ENCLOSED_CJK_LETTERS_AND_MONTHS=Enclosed CJK Letters and Months
+unicode.CJK_COMPATIBILITY=CJK Compatibility
+unicode.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A=CJK Unified Ideographs Extension A
+unicode.YIJING_HEXAGRAM_SYMBOLS=Yijin Hexagram Symbols
+unicode.CJK_UNIFIED_IDEOGRAPHS=CJK Unified Ideographs
+unicode.YI_SYLLABLES=Yi Syllables
+unicode.YI_RADICALS=Yi Radicals
+unicode.LISU=Lisu
+unicode.VAI=Vai
+unicode.CYRILLIC_EXTENDED_B=Cyrillic Extended
+unicode.BAMUM=Bamum
+unicode.MODIFIER_TONE_LETTERS=Modifier Tone Letters
+unicode.LATIN_EXTENDED_D=Latin Extended D
+unicode.SYLOTI_NAGRI=Syloti Nagri
+unicode.COMMON_INDIC_NUMBER_FORMS=Common Indic Number Forms
+unicode.PHAGS_PA=Phags Pa
+unicode.SAURASHTRA=Saurashtra
+unicode.DEVANAGARI_EXTENDED=Devanagari
+unicode.KAYAH_LI=Kayah Li
+unicode.REJANG=Rejang
+unicode.HANGUL_JAMO_EXTENDED_A=Hangul Jamo Extended
+unicode.JAVANESE=Javanese
+unicode.CHAM=Cham
+unicode.MYANMAR_EXTENDED_A=Myanmar Extended A
+unicode.TAI_VIET=Tai Viet
+unicode.ETHIOPIC_EXTENDED_A=Ethiopic Extended A
+unicode.MEETEI_MAYEK=Meetei Mayek
+unicode.HANGUL_SYLLABLES=Hangul Syllables
+unicode.HANGUL_JAMO_EXTENDED_B=Hangul Jamo Extended B
+unicode.CJK_COMPATIBILITY_IDEOGRAPHS=CJK Compatibility Ideographs
+unicode.ALPHABETIC_PRESENTATION_FORMS=Alphabetic Presentation Forms
+unicode.ARABIC_PRESENTATION_FORMS_A=Arabic Presentation Forms
+unicode.VARIATION_SELECTORS=Variation Selectors
+unicode.VERTICAL_FORMS=Vertical Forms
+unicode.COMBINING_HALF_MARKS=Combining Half Marks
+unicode.CJK_COMPATIBILITY_FORMS=CJK Compatibility Forms
+unicode.SMALL_FORM_VARIANTS=Small Form Variants
+unicode.ARABIC_PRESENTATION_FORMS_B=Arabic Presentation Forms B
+unicode.MATHEMATICAL_ALPHANUMERIC_SYMBOLS=Mathematical Alphanumeric Symbols
+unicode.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS=Miscellaneous Symbols and Pictographs
+
+# file chooser
+fc.append_ext=Append extension
+
+# save/discard/cancel dialog box
+discard.title=Save Image?
+discard.image=Image '\1'
+discard.image_not_saved=Image has not been saved.
+discard.images_not_saved=\1 images have not been saved.
+discard.save_all=Save All
+discard.save_all.mnemonic=S
+discard.save=Save
+discard.discard_all=Discard All
+discard.discard_all.mnemonic=D
+discard.discard=Discard
+discard.cancel=Cancel
+discard.cancel.mnemonic=C
+label.discard=Discard
+
+# line colour selector
+linecolour.title=Set Line Colour
+linecolour.label=Line Colour
+linecolour.mnemonic=I
+
+# fill colour selector
+fillcolour.title=Set Fill Colour
+fillcolour.label=Fill Colour
+fillcolour.mnemonic=F
+
+# line style selector
+linestyle.title=Set Line Style
+linestyle.label=Line Style
+linestyle.mnemonic=S
+linestyle.thickness=Pen Width
+linestyle.thickness.mnemonic=P
+linestyle.solid=Solid Line
+linestyle.solid.mnemonic=L
+linestyle.dashed=Dashed Line
+linestyle.dashed.mnemonic=A
+linestyle.cap=Cap Style
+linestyle.cap.mnemonic=Y
+linestyle.cap.butt=Butt
+linestyle.cap.round=Round
+linestyle.cap.square=Square
+linestyle.join=Join Style
+linestyle.join.mnemonic=J
+linestyle.join.bevel=Bevel
+linestyle.join.mitre=Mitre
+linestyle.join.round=Round
+linestyle.mitre_limit=Mitre Limit
+linestyle.mitre_limit.mnemonic=R
+linestyle.arrow.start=Start Marker
+linestyle.arrow.start.mnemonic=K
+linestyle.arrow.mid=Mid Marker
+linestyle.arrow.mid.mnemonic=M
+linestyle.arrow.end=End Marker
+linestyle.arrow.end.mnemonic=E
+linestyle.arrow.all=All Markers
+linestyle.winding_rule=Winding Rule
+linestyle.winding_rule.mnemonic=W
+linestyle.winding_rule.eo=Even-Odd
+linestyle.winding_rule.nz=Non-Zero
+
+# dash patterns panel
+
+dashpattern.title=Dash Pattern
+dash.label=Dash
+dash.gap=Gap
+dash.offset=Offset
+dash.secondary=Secondary
+
+# size panel
+
+arrow.size=Size
+arrow.size.mnemonic=Z
+
+# arrow styles
+
+arrow.altbar=Alt Bar
+arrow.altround=Alt Round
+arrow.altsquare=Alt Square
+arrow.altbrace=Alt Brace
+arrow.altlatex=Alt LaTeX
+arrow.altlatex.open=Alt LaTeX Open
+arrow.asterisk=Asterisk
+arrow.autogap=Auto Repeat Gap
+arrow.autogap.mnemonic=G
+arrow.autooffset=Auto Offset
+arrow.autooffset.mnemonic=F
+arrow.autoorient=Auto Orientation
+arrow.autoorient.mnemonic=I
+arrow.ballcap=Ball Cap
+arrow.bar=Bar
+arrow.boxfilled=Box Filled
+arrow.boxopen=Box Open
+arrow.brace=Brace
+arrow.bulgecap=Bulge Cap
+arrow.chevroncap=Chevron Cap
+arrow.circle=Circle
+arrow.circle.open=Circle Open
+arrow.clubcap=Club Cap
+arrow.composite=Composite
+arrow.composite.mnemonic=M
+arrow.cross=Cross
+arrow.cusp=Cusp
+arrow.cutoutbulgecap=Cutout Bulge Cap
+arrow.diamond=Diamond
+arrow.diamond.open=Diamond Open
+arrow.dotfilled=Dot Filled
+arrow.dotopen=Dot Open
+arrow.double=Double
+arrow.double.mnemonic=B
+arrow.doubleleafcap=Double Leaf Cap
+arrow.doubleleafbackcap=Backwards Double Leaf Cap
+arrow.doubleleafforwardcap=Forward Double Leaf Cap
+arrow.fastcap=Fast Cap
+arrow.equilateral.filled=Equilateral Filled
+arrow.equilateral.open=Equilateral Open
+arrow.halfcusp.down=Half Cusp Down
+arrow.halfcusp.up=Half Cusp Up
+arrow.halfpointed.down=Half Pointed Down
+arrow.halfpointed.up=Half Pointed Up
+arrow.halfpointed45.down=Half Pointed 45 Down
+arrow.halfpointed45.up=Half Pointed 45 Up
+arrow.halfpointed60.down=Half Pointed 60 Down
+arrow.halfpointed60.up=Half Pointed 60 Up
+arrow.heart.filled=Heart Filled
+arrow.heart.open=Heart Open
+arrow.heart.right.filled=Right Heart Filled
+arrow.heart.right.open=Right Heart Open
+arrow.hexagon.filled=Hexagon Filled
+arrow.hexagon.open=Hexagon Open
+arrow.hook.up=Hook Up
+arrow.hook.down=Hook Down
+arrow.hooks=Hooks
+arrow.invertchevroncap=Inverted Chevron Cap
+arrow.invertfastcap=Inverted Fast Cap
+arrow.inverttrianglecap=Inverted Triangle Cap
+arrow.latex=LaTeX
+arrow.leafcap=Leaf Cap
+arrow.nomarker=No Marker
+arrow.nomarker.mnemonic=N
+arrow.none=None
+arrow.octagon.filled=Octagon Filled
+arrow.octagon.open=Octagon Open
+arrow.overlay=Overlay
+arrow.overlay.mnemonic=Y
+arrow.pentagon.filled=Pentagon Filled
+arrow.pentagon.open=Pentagon Open
+arrow.plus=Plus
+arrow.pointed=Pointed
+arrow.pointed45=Pointed 45
+arrow.pointed60=Pointed 60
+arrow.primary=Primary Marker
+arrow.primary.mnemonic=P
+arrow.rectanglecap=Rectangle Cap
+arrow.roundcap=Round Cap
+arrow.reversed=Reversed
+arrow.reversed.mnemonic=V
+arrow.rhombus.filled=Rhombus Filled
+arrow.rhombus.open=Rhombus Open
+arrow.round=Round Bracket
+arrow.scissors.down.filled=Scissors Down Filled
+arrow.scissors.down.open=Scissors Down Open
+arrow.scissors.up.filled=Scissors Up Filled
+arrow.scissors.up.open=Scissors Up Open
+arrow.secondary=Secondary Marker
+arrow.secondary.mnemonic=E
+arrow.semicircle.filled=Filled Semicircle
+arrow.semicircle.open=Open Semicircle
+arrow.single=Single
+arrow.single.mnemonic=S
+arrow.snowflake=Snowflake
+arrow.square=Square Bracket
+arrow.star=Star
+arrow.star5.open=Open 5 Pointed Star
+arrow.star5.filled=Filled 5 Pointed Star
+arrow.star6.open=Open 6 Pointed Star
+arrow.star6.filled=Filled 6 Pointed Star
+arrow.starchevron.filled=Star Chevron Filled
+arrow.starchevron.open=Star Chevron Open
+arrow.tab.arrows=Arrows
+arrow.tab.bracket=Brackets
+arrow.tab.caps=Caps
+arrow.tab.data=Data Points
+arrow.tab.decorative=Decorative
+arrow.tab.partial=Partial
+arrow.triangle=Triangle
+arrow.triangle.open=Triangle Open
+arrow.triangle.down.filled=Triangle Down Filled
+arrow.triangle.down.open=Triangle Down Open
+arrow.triangle.up.filled=Triangle Up Filled
+arrow.triangle.up.open=Triangle Up Open
+arrow.trianglecap=Triangle Cap
+arrow.triple=Triple
+arrow.triple.mnemonic=T
+arrow.tripleleafcap=Triple Leaf Cap
+arrow.tripleleafbackcap=Backwards Triple Leaf Cap
+arrow.tripleleafforwardcap=Forward Triple Leaf Cap
+arrow.usemarker=Use Marker
+arrow.usemarker.mnemonic=U
+
+# arrow colour
+arrow.colour.dependent=Colour As Path
+arrow.colour.dependent.mnemonic=A
+arrow.colour.independent=Specific Colour
+arrow.colour.independent.mnemonic=F
+
+# edit text dialog box
+edittext.title=Edit Text
+edittext.latexlabel=Text in LaTeX file
+edittext.same=Same
+edittext.same.mnemonic=S
+edittext.different=Different
+edittext.different.mnemonic=D
+edittext.remap=Re-Map
+edittext.remap.mnemonic=M
+edittext.textpath=Text Path attributes
+edittext.textpath.left_delim=Left Delimiter
+edittext.textpath.left_delim.mnemonic=L
+edittext.textpath.right_delim=Right Delimiter
+edittext.textpath.right_delim.mnemonic=R
+edittext.textpath.info=The delimiters can't be set to \ { } or + and should not appear in the LaTeX equivalent text except where their use is as a text path decoration delimiter. The delimiters should in general have category codes 11 or 12. See "/pgf/decoration/text format delimiters" in the pgf manual for further details.
+
+# text colour selector
+textcolour.title=Set Text Colour
+textcolour.label=Text Colour
+textcolour.mnemonic=T
+
+# font selector
+font.title=Change Font
+font.label=Font
+font.mnemonic=N
+font.sample=Sample
+font.samples=Samples
+font.family=Font Family
+font.family.mnemonic=Y
+font.series=Font Series
+font.series.mnemonic=R
+font.series.bold=Bold
+font.series.medium=Medium
+font.shape=Font Shape
+font.shape.mnemonic=P
+font.shape.italic=Italic
+font.shape.upright=Upright
+font.size=Font Size
+font.size.mnemonic=Z
+font.default=SansSerif
+font.anchor=Anchor
+font.anchor.mnemonic=A
+font.hanchor=Horizontal Anchor Setting
+font.hanchor.mnemonic=A
+font.vanchor=Vertical Anchor Setting
+font.vanchor.mnemonic=V
+font.anchor.left=Left
+font.anchor.hcentre=Centre
+font.anchor.right=Right
+font.anchor.base=Base
+font.anchor.bottom=Bottom
+font.anchor.vcentre=Centre
+font.anchor.top=Top
+font.latex_message=The LaTeX fonts are a rough guide. Text displayed in LaTeX pgfpicture environments may differ significantly from those displayed in flowframtk.
+font.anchor_message=The position of the anchor is displayed as a red dot in the sample panel.
+
+# font used for annotations, such as flowframe labels
+font.annote.name=SansSerif
+font.annote.size=10
+
+# styles selector
+styles.title=Set Current Style
+
+# zoom dialog box
+
+zoom.title=Set Magnification
+zoom.magnification=Magnification
+zoom.magnification.mnemonic=M
+zoom.invalid=Invalid value '\1'
+
+# set transformation dialog box
+
+settransform.title=Set Transformation Matrix
+
+# go to dialog box
+
+goto.title=Go To
+
+# move by dialog box
+
+moveby.title=Move By
+
+# paper dialog box
+
+paper.title=Set Paper
+paper.width=Width
+paper.width.mnemonic=W
+paper.height=Height
+paper.height.mnemonic=H
+paper.predefined=Predefined
+paper.predefined.mnemonic=P
+paper.user=User
+paper.user.mnemonic=U
+paper.a6=A6
+paper.a7=A7
+paper.a8=A8
+paper.a9=A9
+paper.a10=A10
+paper.b0=B0
+paper.b1=B1
+paper.b2=B2
+paper.b3=B3
+paper.b4=B4
+paper.b5=B5
+paper.b6=B6
+paper.b7=B7
+paper.b8=B8
+paper.b9=B9
+paper.b10=B10
+paper.c0=C0
+paper.c1=C1
+paper.c2=C2
+paper.c3=C3
+paper.c4=C4
+paper.c5=C5
+paper.c6=C6
+paper.c7=C7
+paper.c8=C8
+paper.c9=C9
+paper.c10=C10
+
+# about dialog box
+
+about.title=About \1
+about.version=\1 version \2
+about.copyright=Copyright (C)
+about.disclaimer=\1 comes with ABSOLUTELY NO WARRANTY
+about.see_licence=See LICENSE for details
+about.translated_by=Translated by \1
+about.translator=
+about.translator_info=
+about.translator_url=
+
+# startup frame
+
+startup.title=Initialising FlowframTk
+
+# licence dialog box
+
+licence.title=Licence
+
+# grid settings dialog box
+
+grid.title=Grid Settings
+grid.major=Major Divisions
+grid.major.mnemonic=M
+grid.sub_divisions=Sub-Divisions
+grid.sub_divisions.mnemonic=S
+grid.rectangular=Rectangular
+grid.rectangular.mnemonic=G
+grid.radial=Radial
+grid.radial.mnemonic=L
+grid.spokes=Spokes
+grid.spokes.mnemonic=K
+grid.info=Grid units are independent of the storage unit.
+grid.iso=Isometric
+grid.iso.mnemonic=I
+grid.tschichold=Tschichold
+grid.tschichold.mnemonic=T
+grid.tschichold.info=Settings only affect rulers. Tschichold grid always has 14 tick marks.
+grid.path=Path-Based
+grid.path.mnemonic=P
+grid.path.keep=Keep current shape
+grid.path.keep.mnemonic=K
+grid.path.usepage=Use page boundary
+grid.path.usepage.mnemonic=U
+grid.path.select=Select new shape
+grid.path.select.mnemonic=N
+grid.path.info=Major division setting only affects rulers.
+
+# Pattern Dialog Box
+
+pattern.title=Set Pattern
+pattern.rotational=Rotational
+pattern.rotational.mnemonic=T
+pattern.scaled=Scaled
+pattern.scaled.mnemonic=A
+pattern.linear=Linear
+pattern.linear.mnemonic=L
+pattern.spiral=Spiral
+pattern.spiral.mnemonic=P
+pattern.spiral.distance=Gap
+pattern.spiral.distance.mnemonic=G
+pattern.replicas=Replicas
+pattern.replicas.mnemonic=E
+pattern.mode=Mode
+pattern.mode.single=Single
+pattern.mode.single.mnemonic=S
+pattern.mode.multi.mnemonic=M
+pattern.mode.multi=Multi
+pattern.show_original=Show Original Path
+pattern.show_original.mnemonic=H
+pattern.rotate=Rotate by
+pattern.rotate.mnemonic=R
+pattern.scale.x=Scale X
+pattern.scale.x.mnemonic=X
+pattern.scale.y=Scale Y
+pattern.scale.y.mnemonic=Y
+
+# set coordinates dialog box
+
+coordinates.title=Co-ordinates
+coordinates.x=x
+coordinates.x.mnemonic=X
+coordinates.y=y
+coordinates.y.mnemonic=Y
+coordinates.radius=Radius
+coordinates.radius.mnemonic=R
+coordinates.angle=Angle
+coordinates.angle.mnemonic=A
+
+# browse bitmap dialog box
+
+browse.title=Bitmap not found
+browse.label=Browse...
+browse.label.mnemonic=B
+browse.not_found=Bitmap not found. Select new file?
+browse.cant_refresh=Can't refresh bitmap
+browse.invalid_format=Invalid or unrecognised image format
+browse.invalid_title=Bitmap Invalid
+browse.discard=Discard
+
+# Image file chooser
+
+image.preview=Preview
+image.preview.mnemonic=P
+
+# file filters
+
+filter.ajr=flowframtk ascii file (*.ajr)
+filter.version.ajr=flowframtk ascii file v\1 (*.ajr)
+filter.bitmap=Image Files (\1)
+filter.eps=PostScript (*.eps, *.ps)
+filter.sty=Package (*.sty)
+filter.cls=Class (*.cls)
+filter.jdr=flowframtk binary file (*.jdr)
+filter.jdrajr=flowframtk image file (*.jdr, *.ajr)
+filter.version.jdr=flowframtk binary file v\1 (*.jdr)
+filter.pgf=pgf environment (*.tex, *.ltx)
+filter.pgfdoc=LaTeX document (*.tex, *.ltx)
+filter.pgfencapdoc=Encapsulated LaTeX document (*.tex, *.ltx)
+filter.png=PNG File (*.png)
+filter.svg=Scalable Vector Graphics (*.svg)
+filter.tex=TeX/LaTeX (*.tex, *.ltx)
+filter.pdf=Portable Document Format (*.pdf)
+
+# Export dialog box
+export.title=Export
+
+# Import dialog box
+import.title=Import
+
+# colour selector
+
+colour.red=Red
+colour.green=Green
+colour.blue=Blue
+colour.rgb=RGB
+colour.rgb.mnemonic=R
+colour.rgb2.mnemonic=B
+colour.cyan=Cyan
+colour.magenta=Magenta
+colour.yellow=Yellow
+colour.black=Black
+colour.cmyk=CMYK
+colour.cmyk.mnemonic=K
+colour.cmyk2.mnemonic=M
+colour.alpha=Alpha
+colour.hue=Hue
+colour.saturation=Saturation
+colour.brightness=Brightness
+colour.hsb=HSB
+colour.grey=Grey
+colour.transparent=Transparent
+colour.transparent.mnemonic=P
+colour.single=Colour
+colour.single.mnemonic=L
+colour.gradient=Gradient
+colour.gradient.mnemonic=G
+colour.start=Start Colour
+colour.end=End Colour
+colour.linear=Linear
+colour.linear.mnemonic=E
+colour.radial=Radial
+colour.radial.mnemonic=A
+
+# Configuration Settings Dialog Box
+
+config.title=Configure Image Settings
+configui.title=Configure User Interface
+
+# Enable Hotspots Panel
+
+hotspots.title=Hotspots
+hotspots.mnemonic=T
+hotspots.enable=Enabled
+hotspots.enable.mnemonic=E
+hotspots.disable=Disabled
+hotspots.disable.mnemonic=D
+
+# edit path settings panel
+editpathui.title=Edit Path Settings
+editpathui.canvasclick=Canvas click to exit
+editpathui.canvasclick.mnemonic=E
+editpathui.canvasclick.tooltip=Click on the canvas to exit edit path mode
+editpathui.ignorelock=Ignore grid lock when selecting control
+editpathui.ignorelock.mnemonic=I
+editpathui.ignorelock.tooltip=When using the mouse to select a control point use the actual mouse co-ordinates not the nearest tick even if the grid lock is on
+
+# graphics panel
+
+graphics.title=Graphics
+graphics.mnemonic=G
+
+# annotations panel
+annotations.title=Annotations
+annotations.tooltip=Fonts used in annotations
+annotations.mnemonic=T
+
+annote.font=Annotation Font:
+annote.font.mnemonic=F
+annote.font.bold=Bold
+annote.font.bold.mnemonic=B
+annote.font.italic=Italic
+annote.font.italic.mnemonic=I
+annote.fontsize=Size
+annote.fontsize.mnemonic=Z
+
+render.anti_alias=Anti-Alias
+render.on=On
+render.on.mnemonic=N
+render.off=Off
+render.off.mnemonic=F
+render.rendering=Rendering
+render.quality=Quality
+render.quality.mnemonic=Q
+render.speed=Speed
+render.speed.mnemonic=S
+
+# Control points panel
+
+controls.title=Control Points
+controls.mnemonic=N
+render.control_size=Control Size
+render.control_size.mnemonic=Z
+render.scale_controls=Scale Controls
+render.scale_controls.mnemonic=L
+render.control.standard=Regular Control
+render.control.symmetry=Symmetry Line
+render.control.patternanchor=Pattern Anchor
+render.control.patternadjust=Pattern Adjust
+render.control.selected=Selected
+render.control.unselected=Unselected
+# \1 -> control type (e.g. value of render.control.standard)
+# \2 -> value of render.control.selected or render.control.unselected
+render.control.choosertitle=\1 (\2)
+
+# splash screen settings
+splash.title=Splash Screen Settings
+splash.infofont.name=Information Font:
+splash.infofont.name.mnemonic=N
+splash.infofont.bold=Bold
+splash.infofont.italic=Italic
+splash.infofont.size=Size
+splash.versionfont.name=Title Font:
+splash.versionfont.name.mnemonic=E
+splash.versionfont.bold=Bold
+splash.versionfont.italic=Italic
+splash.versionfont.size=Size
+
+# Startup Directory
+
+startdir.title=Startup Directory
+startdir.mnemonic=P
+startdir.cwd=Current Working Directory
+startdir.cwd.mnemonic=W
+startdir.last=Last Directory Visited
+startdir.last.mnemonic=V
+startdir.named=Use this directory:
+startdir.named.mnemonic=U
+startdir.browse=Browse
+startdir.browse.mnemonic=B
+
+# JDR settings panel
+
+jdr.title=JDR/AJR Settings
+jdr.mnemonic=J
+jdr.on_save=When saving:
+jdr.on_save.mnemonic=V
+jdr.on_save.all=Save all canvas settings
+jdr.on_save.none=Don't save canvas settings
+jdr.on_save.paper=Only save paper size
+jdr.on_load=When loading:
+jdr.on_load.mnemonic=A
+jdr.on_load.all=Apply all settings stored in the file
+jdr.on_load.none=Ignore any settings stored in the file
+jdr.on_load.paper=Only apply paper settings stored in the file
+jdr.warn_load_old=Warn when loading old JDR version
+jdr.warn_load_old.mnemonic=W
+
+bitmapconfig.title=Bitmaps
+bitmapconfig.mnemonic=B
+bitmapconfig.tooltip=Default bitmap settings
+bitmapconfig.relative_paths=Use relative paths for bitmaps
+bitmapconfig.relative_paths.mnemonic=R
+bitmapconfig.default_command=Default LaTeX Command:
+bitmapconfig.default_command.mnemonic=L
+
+processes.title=Application Paths
+processes.mnemonic=P
+processes.tooltip=Set the paths to applications used by some export functions
+processes.latex=LaTeX
+processes.latex.mnemonic=L
+processes.pdflatex=PDFLaTeX
+processes.pdflatex.mnemonic=F
+processes.dvips=DVIPS
+processes.dvips.mnemonic=D
+processes.dvisvgm=DVISVGM
+processes.dvisvgm.mnemonic=V
+processes.libgs=libgs
+processes.libgs.mnemonic=G
+processes.timeout=Time-out:
+processes.timeout.mnemonic=M
+processes.millisecs=Milliseconds
+
+graphics.storage_unit.title=Storage Unit
+graphics.storage_unit=Storage Unit:
+graphics.storage_unit.mnemonic=U
+graphics.storage_unit.note=If you change the storage unit, all coordinates in the current frame will be converted to the new storage unit. This may take a while if you have a large or complex image, so it's generally best to set the storage unit before you start your image. The storage unit is independent of the grid unit. Some settings, such as line width or font size, are independent of the storage unit.
+
+# TeX/LaTeX settings
+
+texconfig.title=TeX/LaTeX Settings
+texconfig.mnemonic=T
+texconfig.tooltip=Configure TeX/LaTeX settings
+
+# LaTeX settings panel related to the document
+
+clssettings.title=Document Settings
+clssettings.mnemonic=G
+clssettings.tooltip=Settings that control the font sizes and document class
+clssettings.normalsize=Normal Font Size
+clssettings.normalsize.mnemonic=N
+clssettings.normalsize.tooltip=Set LaTeX normal font size settings
+clssettings.note=Remember to set this as the default font size in your document, e.g:
+clssettings.update=Update all LaTeX font size declarations in current image
+clssettings.update.mnemonic=U
+clssettings.default_cls=Use default class
+clssettings.default_cls.mnemonic=D
+clssettings.custom_cls=Use class: 
+clssettings.custom_cls.mnemonic=S 
+clssettings.relative_fontsize=Use relative font size declarations
+clssettings.relative_fontsize.mnemonic=R
+clssettings.pdfinfo=Add \pdfinfo to exported LaTeX documents
+clssettings.pdfinfo.mnemonic=I
+clssettings.use_typeblock_as_bbox=Use typeblock as bounding box for pgfpicture
+clssettings.use_typeblock_as_bbox.mnemonic=T
+
+# Flowframe Settings
+
+flfsettings.title=Flowframe Settings
+flfsettings.mnemonic=F
+flfsettings.tooltip=Change flowframe pages and shapepar settings
+flfsettings.shapeparcs=shapepar command: 
+flfsettings.pages_opt=flowframe pages setting:
+flfsettings.pages_opt.absolute=absolute
+flfsettings.pages_opt.absolute.mnemonic=B
+flfsettings.pages_opt.relative=relative
+flfsettings.pages_opt.relative.mnemonic=R
+
+# Export to LaTeX text-related settings 
+
+textconfig.title=LaTeX Text Settings
+textconfig.mnemonic=L
+textconfig.tooltip=Settings related to alternative LaTeX text for text-areas and text-paths
+textconfig.anchor=Auto Adjust Anchor
+textconfig.anchor.mnemonic=A
+textconfig.textualshading=When exporting text with shadings:
+textconfig.textualshading.mnemonic=D
+textconfig.textualshading.average=Average Colours
+textconfig.textualshading.start=Use Start Colour
+textconfig.textualshading.end=Use End Colour
+textconfig.textualshading.path=Convert to Path
+textconfig.textpathoutline=When exporting text-paths with outlines:
+textconfig.textpathoutline.mnemonic=L
+textconfig.textpathoutline.path=Convert to Path
+textconfig.textpathoutline.ignore=Ignore Outline
+textconfig.escape=Auto escape text symbols
+textconfig.escape.mnemonic=E
+textconfig.escape.tooltip=Automatically escape TeX's special characters when creating new text areas
+textconfig.escape.mathchar=Auto escape maths symbols
+textconfig.escape.mathchar.mnemonic=E
+textconfig.escape.mathchar.tooltip=Automatically escape TeX's special characters when creating new maths areas
+textconfig.textmode=Text Mode Mappings
+textconfig.mathmode=Maths Mode Mappings
+textconfig.textmode.mnemonic=T
+textconfig.mathmode.mnemonic=M
+textconfig.textmappings.import=Import
+textconfig.textmappings.import.mnemonic=I
+textconfig.textmappings.import.tooltip=Import Text Mappings
+textconfig.mathmappings.import=Import
+textconfig.mathmappings.import.mnemonic=I
+textconfig.mathmappings.import.tooltip=Import Maths Mappings
+textconfig.codepoint=Code Point
+textconfig.codepoint.mnemonic=D
+textconfig.symbol=Symbol
+textconfig.symbol.mnemonic=S
+textconfig.command=Command
+textconfig.command.mnemonic=C
+textconfig.package=Package
+textconfig.package.mnemonic=P
+textconfig.remove.textmap=Remove
+textconfig.remove.textmap.mnemonic=R
+textconfig.remove.textmap.tooltip=Remove text mapping
+textconfig.add.textmap=Add
+textconfig.add.textmap.mnemonic=A
+textconfig.add.textmap.tooltip=Add new text mapping
+textconfig.remove.mathmap=Remove
+textconfig.remove.mathmap.mnemonic=R
+textconfig.remove.mathmap.tooltip=Remove maths mapping
+textconfig.add.mathmap=Add
+textconfig.add.mathmap.mnemonic=D
+textconfig.add.mathmap.tooltip=Add new maths mapping
+
+# Modify contents of preamble.tex
+preambleconfig.title=Default Preamble
+preambleconfig.tooltip=Modify contents of preamble.tex file
+preambleconfig.mnemonic=P
+preambleconfig.info=This is the contents of the file "\1". If you have modified it outside of this application whilst this application is running, click on the reload button to refresh the contents. This code is used when exporting to LaTeX documents, PDF, PostScript and SVG formats, but is not used when exporting to other formats, including export to .cls or .sty files.
+preambleconfig.reload=Reload
+preambleconfig.reload.mnemonic=R
+preambleconfig.reload.tooltip=Reload preamble file
+
+# Ruler display panel
+
+borders.title=Borders
+borders.mnemonic=B
+borders.tooltip=Set the ruler and toolbar attributes
+borders.status.title=Status Bar
+borders.toolbars.title=Tool Bars
+borders.rulers.title=Rulers
+borders.vtoolbar=Position:
+borders.vtoolbar.left=Left
+borders.vtoolbar.left.mnemonic=F
+borders.vtoolbar.right=Right
+borders.vtoolbar.right.mnemonic=T
+borders.vtoolbar.info=(Restart required)
+borders.rulerwidth=Side Ruler Width:
+borders.rulerwidth.mnemonic=W
+borders.rulerheight=Top Ruler Height:
+borders.rulerheight.mnemonic=P
+borders.rulerpattern=Number format: 
+borders.rulerpattern.mnemonic=N 
+borders.rulerlocale=Locale: 
+borders.rulerlocale.mnemonic=L
+borders.rulerfont.name=Font:
+borders.rulerfont.name.mnemonic=M
+borders.rulerfont.size=Size:
+borders.rulerfont.size.mnemonic=Z
+borders.rulerfont.bold=Bold
+borders.rulerfont.bold.mnemonic=B
+borders.rulerfont.italic=Italic
+borders.rulerfont.italic.mnemonic=I
+borders.showruler.info=Use the \1 -> \2 menu item to show or hide rulers for the current canvas.
+borders.statusfont.name=Font:
+borders.statusfont.size=Size
+borders.statusfont.bold=Bold
+borders.statusfont.italic=Italic
+borders.showtools=Show Tools
+borders.showtools.mnemonic=S
+borders.showstatus=Show Status Bar
+borders.showstatus.mnemonic=B
+borders.showstatuspos=Show Position
+borders.showstatusunit=Show Storage Unit
+borders.showstatusmodified=Show Modified
+borders.showstatuslock=Show Lock
+borders.showstatuszoom=Show Zoom
+borders.showstatushelp=Show Help Button
+borders.showstatusinfo=Show Info
+
+# startup settings panel
+
+initsettings.title=Startup Settings
+initsettings.mnemonic=S
+initsettings.current=Use currently defined settings on start up
+initsettings.current.mnemonic=U
+initsettings.default=Use default settings on start up
+initsettings.default.mnemonic=D
+initsettings.last=Use settings from previous instance
+initsettings.last.mnemonic=V
+
+# Languages panel
+
+lang.title=Languages
+lang.mnemonic=L
+lang.dict=Resources language
+lang.dict.mnemonic=E
+lang.dict.tooltip=Language used by menus, buttons and messages
+lang.help=Manual language
+lang.help.mnemonic=N
+lang.help.tooltip=Language used by manual
+lang.tooltip=Language used by manual and language used by menus, buttons, messages etc
+lang.info=Language changes will not take effect until you have quit and restarted this application
+lang.unicode.blocks=Unicode blocks used by character selector:
+lang.unicode.info=(The more Unicode blocks that are added to the character selector, the longer it will take this application to start up. Changes will not take effect until you have quit and restarted.)
+lang.unicode.start=Start
+lang.unicode.end=End
+lang.unicode.remove_block=Remove
+lang.unicode.remove_block.mnemonic=V
+lang.unicode.remove_block.tooltip=Remove row
+lang.unicode.add_block=Add
+lang.unicode.add_block.mnemonic=D
+lang.unicode.add_block.tooltip=Add row
+lang.unicode.invalid_hex=Invalid hexadecimal number '\1' (row '\2', column '\3')
+
+# Normalization panel
+normalize.title=Normalization
+normalize.mnemonic=M
+normalize.info=Due to the varied nature of display units, 1 inch (or 72 PostScript points) displayed on the screen at 100% magnification may not actually measure 1 inch if you hold a ruler up to your screen. You can compensate for this by setting the horizontal and vertical normalization factors. If you already know these factors you can type them into the boxes below (or set them both to 1 to remove normalization):
+normalize.info.cont=or you can hold your ruler up against the unnormalized horizontal and vertical lines, enter their measurements in the boxes and click on the 'Compute' buttons below.
+normalize.norm.x=X Normalize Factor:
+normalize.norm.x.mnemonic=N
+normalize.norm.y=Y Normalize Factor:
+normalize.norm.y.mnemonic=Y
+normalize.x_compute_norm=Compute X Norm
+normalize.x_compute_norm.mnemonic=P
+normalize.y_compute_norm=Compute Y Norm
+normalize.y_compute_norm.mnemonic=T
+normalize.reset=Reset
+normalize.reset.mnemonic=E
+normalize.nonorm_horizontal=Unnormalized Horizontal
+normalize.nonorm_vertical=Unnormalized Vertical
+normalize.invalid=Invalid length '\1'
+normalize.norm_lines=Normalized Lines
+
+# TeX editor UI
+texeditorui.title=TeX Editor
+texeditorui.mnemonic=X
+texeditorui.tooltip=Change UI settings for the internal TeX editor
+texeditorui.info=The (La)TeX editor is used by the edit preamble function and the edit frame contents function. Some of these settings require a restart to take effect.
+texeditorui.font=Font:
+texeditorui.font.mnemonic=F
+texeditorui.fontsize=Font Size:
+texeditorui.fontsize.mnemonic=Z
+texeditorui.dim=Static/Dynamic Frame Contents Editor Preferred Size
+texeditorui.width=Default Width:
+texeditorui.width.mnemonic=W
+texeditorui.width.tooltip=Approximate number of characters per line
+texeditorui.height=Default Height:
+texeditorui.height.mnemonic=F
+texeditorui.height.tooltip=Approximate number of lines
+texeditorui.highlight=Syntax highlighting
+texeditorui.highlight.mnemonic=Y
+texeditorui.comment=Comment colour
+texeditorui.comment.mnemonic=E
+texeditorui.cs=Control Sequence colour
+texeditorui.cs.mnemonic=Q
+texeditorui.split=Canvas/Preamble Split
+texeditorui.preambleleft=Left of Canvas
+texeditorui.preambleleft.mnemonic=N
+texeditorui.preambleright=Right of Canvas
+texeditorui.preambleright.mnemonic=S
+texeditorui.preambleabove=Above Canvas
+texeditorui.preambleabove.mnemonic=B
+texeditorui.preamblebelow=Below Canvas
+texeditorui.preamblebelow.mnemonic=V
+
+# Look and Feel
+lookandfeel.title=Look & Feel
+lookandfeel.mnemonic=K
+lookandfeel.tooltip=Change the look and feel of the widgets
+lookandfeel.info=A restart is required for these settings to take effect. Sample buttons don't perform any actions when you click on them. They just demonstrate their appearance. The "Plain" icon styles aren't suitable for L&F styles that don't place a border around toggle and radio buttons.
+lookandfeel.name=Look & Feel Name:
+lookandfeel.name.mnemonic=N
+lookandfeel.button_styles=General Button Styles
+lookandfeel.dialog_button_styles=Dialog Button Styles
+lookandfeel.button.style=Style
+lookandfeel.samples=Sample Buttons
+lookandfeel.press=Press
+lookandfeel.toggle=Toggle
+lookandfeel.radio=Radio
+lookandfeel.button_style.default=Default
+lookandfeel.button_style.small=Small
+lookandfeel.button_style.plain=Plain
+lookandfeel.button_style.highlights=Highlights
+lookandfeel.button_style.bordered=Bordered Switches
+lookandfeel.button_style.smallplain=Small Plain
+lookandfeel.button_style.smallhighlights=Small Highlights
+lookandfeel.button_style.smallbordered=Small Bordered Switches
+lookandfeel.button_style.textsmallhighlights=Highlight Icons and Trailing Text
+lookandfeel.button_style.textsmallplain=Plain Icons and Trailing Text
+lookandfeel.button_style.textsmallbordered=Bordered Icons and Trailing Text
+lookandfeel.button_style.textsmallhighlightsleading=Highlight Icons and Leading Text
+lookandfeel.button_style.textsmallplainleading=Plain Icons and Leading Text
+lookandfeel.button_style.textsmallborderedleading=Bordered Icons and Leading Text
+lookandfeel.button_style.textsmallhighlightstop=Highlight Icons and Top Text
+lookandfeel.button_style.textsmallplaintop=Plain Icons and Top Text
+lookandfeel.button_style.textsmallborderedtop=Bordered Icons and Top Text
+lookandfeel.button_style.textsmallhighlightsbottom=Highlight Icons and Bottom Text
+lookandfeel.button_style.textsmallplainbottom=Plain Icons and Bottom Text
+lookandfeel.button_style.textsmallborderedbottom=Bordered Icons and Bottom Text
+lookandfeel.button_style.text=Text Only
+lookandfeel.button_style.text.mnemonic=T
+lookandfeel.dialog.as_general=As General Button Style
+lookandfeel.dialog.as_general.mnemonic=B
+lookandfeel.dialog_button_default=Default
+lookandfeel.dialog_button_text_only=Text Only
+lookandfeel.dialog_button_large_icons_and_text_trailing=Large Icons and Trailing Text
+lookandfeel.dialog_button_small_icons_and_text_trailing=Small Icons and Trailing Text
+lookandfeel.dialog_button_large_icons_and_text_leading=Large Icons and Leading Text
+lookandfeel.dialog_button_small_icons_and_text_leading=Small Icons and Leading Text
+lookandfeel.dialog_button_large_icons_and_text_top=Large Icons and Top Text
+lookandfeel.dialog_button_small_icons_and_text_top=Small Icons and Top Text
+lookandfeel.dialog_button_large_icons_and_text_bottom=Large Icons and Bottom Text
+lookandfeel.dialog_button_small_icons_and_text_bottom=Small Icons and Bottom Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_bottom=Small Bordered Icons and Bottom Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_top=Small Bordered Icons and Top Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_leading=Small Bordered Icons and Leading Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_trailing=Small Bordered Icons and Trailing Text
+
+
+# Application selector
+
+appselect.title=Select Application
+appselect.pathlabel=Select path to application
+appselect.pathlabel.mnemonic=P
+appselect.query.location=Please specify location of '\1' application.
+appselect.setup=Setup
+appselect.info=You need to check some settings before you continue with this function. If these are correct, click on the 'Okay' button to continue.
+appselect.libgs=Please specify the location of the libgs library. (Leave empty if you want to use the LIBGS environment variable.) The file will probably be called something like libgs.so (Unix-like) or gsdll32.dll (32-bit Windows) or gsdll64.dll (64-bit Windows)
+
+file.select=Select
+file.select.mnemonic=S
+
+process.confirm.abort=Are you sure you want to abort this operation?
+process.confirm=Confirm
+process.running=Running \1
+process.aborted=Task aborted.
+
+# Parshape/Shapepar dialog box
+
+parshape.title=Parshape
+shapepar.title=Shapepar
+parshape.use_path=Use Path
+parshape.use_outline=Use Outline
+
+# Flow frame dialog box
+
+flowframe.title=Set Frame
+flowframe.type=Type
+flowframe.type.mnemonic=Y
+flowframe.flow=Flow
+flowframe.static=Static
+flowframe.dynamic=Dynamic
+flowframe.none=None
+flowframe.align=Alignment
+flowframe.align.mnemonic=G
+flowframe.align_top=Top
+flowframe.align_middle=Middle
+flowframe.align_bottom=Bottom
+flowframe.border=Border
+flowframe.border.mnemonic=D
+flowframe.border_none=None
+flowframe.border_as_shown=As Shown
+flowframe.label=Label
+flowframe.label.mnemonic=A
+flowframe.shape=Shape
+flowframe.shape.mnemonic=S
+flowframe.shape_standard=Standard
+flowframe.shape_parshape=Parshape
+flowframe.shape_shapepar=Shapepar
+flowframe.margins=Margins
+flowframe.margin.left=Left
+flowframe.margin.left.mnemonic=L
+flowframe.margin.right=Right
+flowframe.margin.right.mnemonic=R
+flowframe.margin.top=Top
+flowframe.margin.top.mnemonic=T
+flowframe.margin.bottom=Bottom
+flowframe.margin.bottom.mnemonic=B
+flowframe.pages.label=Page: \1
+flowframe.pages=Pages
+flowframe.pages.mnemonic=P
+flowframe.pages_all=All
+flowframe.pages_none=None
+flowframe.pages_odd=Odd
+flowframe.pages_even=Even
+flowframe.twoside_note=You must use the 'twoside' class option for the even page shifts to have an affect.
+flowframe.even_x_shift=Even page horizontal shift:
+flowframe.even_x_shift.mnemonic=Z
+flowframe.compute_sym_x_shift=Compute Symmetric X Shift
+flowframe.compute_sym_x_shift.mnemonic=X
+flowframe.even_y_shift=Even page vertical shift:
+flowframe.even_y_shift.mnemonic=V
+flowframe.contents=Contents:
+flowframe.edit=Edit...
+flowframe.edit.mnemonic=E
+
+flowframe.confirm.group.title=Confirm Assign Flowframe Data to Group
+flowframe.confirm.group=You will lose all flowframe data associated with the objects within this group,\nif you assign flowframe data to the group.\nAre you sure you want to assign flowframe data to this group?
+flowframe.confirm.ungroup=You will lose all flowframe data associated with this object if you ungroup it.\nAre you sure you want to ungroup it?
+flowframe.confirm.ungroup.title=Confirm Ungroup
+
+# set typeblock
+
+typeblock.title=Typeblock
+typeblock.compute_from_path=Compute Margins From Selected Path
+typeblock.compute_from_path.mnemonic=P
+typeblock.hshift=Even Page Shift
+typeblock.hshift.mnemonic=E
+typeblock.compute_sym_shift=Compute
+typeblock.compute_sym_shift.mnemonic=C
+typeblock.adjust_width_label=Adjust width to nearest: 
+typeblock.adjust_width_label.mnemonic=W 
+typeblock.adjust_width=Adjust Width
+typeblock.adjust_width.mnemonic=A
+typeblock.current_normalsize=Your current settings are: normalsize=\1pt and baselineskip=\2pt
+typeblock.adjust_height_label=Adjust height to nearest: 
+typeblock.adjust_height=Adjust Height
+typeblock.adjust_height.mnemonic=D
+typeblock.use_baseline=Baselineskip
+typeblock.use_baseline.mnemonic=B
+typeblock.use_other=Other
+typeblock.use_other.mnemonic=O
+
+# display page
+
+displaypage.title=Display Frames
+displaypage.label=Only display frames on:
+displaypage.note=Objects with no flow frame data will always be displayed
+displaypage.all=All Pages
+displaypage.all.mnemonic=A
+displaypage.odd=Odd Pages
+displaypage.odd.mnemonic=D
+displaypage.even=Even Pages
+displaypage.even.mnemonic=E
+displaypage.user=Page
+displaypage.user.mnemonic=P
+
+# Preamble panel and frame contents editor
+texeditor.preamble=Preamble
+texeditor.preamble.early=Early
+texeditor.preamble.mid=Mid
+texeditor.preamble.late=Late
+texeditor.frame_contents=Frame Contents
+texeditor.search=Search
+texeditor.search.mnemonic=S
+texeditor.search.find=Find...
+texeditor.search.find.mnemonic=F
+texeditor.search.find_again=Find Again
+texeditor.search.find_again.mnemonic=A
+texeditor.search.replace=Replace...
+texeditor.search.replace.mnemonic=R
+texeditor.discard_edit_query=Discard the edits you have just made?
+texeditor.confirm_discard=Confirm Discard
+texeditor.cutText=Cut
+texeditor.cutText.mnemonic=T
+texeditor.copyText=Copy
+texeditor.copyText.mnemonic=C
+texeditor.pasteText=Paste
+texeditor.pasteText.mnemonic=P
+texeditor.selectText=Select All
+texeditor.selectText.mnemonic=A
+
+# Preamble Find/Replace dialog
+find.title=Find
+find.search_for=Search For: 
+find.search_for.mnemonic=S 
+find.replace_text=Replacement: 
+find.replace_text.mnemonic=T
+find.case=Case Sensitive
+find.case.mnemonic=A
+find.regex=Regular Expression
+find.regex.mnemonic=X
+find.wrap=Wrap round
+find.wrap.mnemonic=W
+find.find=Find
+find.find.mnemonic=F
+find.find.tooltip=Find text
+find.one_replaced=1 occurrence replaced.
+find.num_replaced=\1 occurrences replaced.
+find.not_found=Not found
+
+replace.title=Replace
+replace.replace=Replace
+replace.replace.mnemonic=R
+replace.replace.tooltip=Replace text
+replace.replace_all=Replace All
+replace.replace_all.mnemonic=A
+replace.replace_all.tooltip=Replace all occurrences
+
+# description dialog box
+description.title=Description
+
+# find by description dialog box
+findbydescription.title=Find Object By Description
+findbydescription.path=Path: \1
+findbydescription.text=Text: \1 (\2)
+findbydescription.bitmap=Bitmap: \1 (\2)
+findbydescription.group=Group: \1
+findbydescription.textpath=TextPath: \1 (\2)
+findbydescription.symmetricpath=SymmetricPath: \1
+findbydescription.rotationalpattern=RotationalPattern: \1 (\2)
+
+# file properties dialog box (jdrview)
+fileproperties.title=Properties
+fileproperties.filename=File name:
+fileproperties.filesize=File size:
+fileproperties.fileformat=Format:
+fileproperties.bounds=Image Bounding Box:
+fileproperties.paper=Paper:
+fileproperties.description=Description:
+fileproperties.modified=Last Modified:
+fileproperties.empty=Empty
+fileproperties.bytes=\1B
+fileproperties.kbytes=\1Kb
+fileproperties.mbytes=\1Mb
+fileproperties.nonesupplied=None Supplied
+
+# vectorizing bitmap
+vectorize.title=Vectorize bitmap
+vectorize.xinc=x increment
+vectorize.xinc.mnemonic=x
+vectorize.yinc=y increment
+vectorize.yinc.mnemonic=y
+vectorize.straighten=Straighten
+vectorize.straighten.mnemonic=S
+vectorize.tolerance=Tolerance
+vectorize.tolerance.mnemonic=T
+vectorize.smooth=Smooth
+vectorize.smooth.mnemonic=M
+vectorize.chi=Chi
+vectorize.chi.mnemonic=I
+vectorize.delta=Delta
+vectorize.delta.mnemonic=D
+vectorize.gamma=Gamma
+vectorize.gamma.mnemonic=G
+vectorize.rho=Rho
+vectorize.rho.mnemonic=R
+vectorize.sigma=Sigma
+vectorize.sigma.mnemonic=A
+vectorize.smoothTolFun=Function Tolerance
+vectorize.smoothTolFun.mnemonic=F
+vectorize.smoothTol=Tolerance
+vectorize.smoothTol.mnemonic=L
+vectorize.maxIter=Maximum Iterations
+vectorize.maxIter.mnemonic=X
+vectorize.maxFunEvals=Maximum Function Evaluations
+vectorize.maxFunEvals.mnemonic=E
+vectorize.flatness=Flatness
+vectorize.flatness.mnemonic=N
+vectorize.selectbase=Select Base...
+vectorize.selectbase.mnemonic=B
+vectorize.scanning=Scanning Image
+vectorize.selectbase.title=Select Base Colour
+vectorize.failed=Vectorization failed
+vectorize.initializing=Initializing
+vectorize.straightening=Straightening
+vectorize.smoothing=Smoothing
+vectorize.base=Base
+
+# general purpose text
+
+label.okay=Okay
+label.alt_okay=Okay
+label.okay.mnemonic=O
+label.close=Close
+label.close.mnemonic=C
+label.cancel=Cancel
+label.cancel.mnemonic=C
+label.default=Default
+label.default.mnemonic=D
+label.default.tooltip=Restore defaults
+label.filename=Filename
+label.filename.mnemonic=F
+label.help=Help
+label.help.mnemonic=H
+label.help.tooltip=View manual
+label.contexthelp=Help
+label.contexthelp.mnemonic=H
+label.contexthelp.tooltip=View manual
+label.hidden_object=\1 hidden object
+label.hidden_objects=\1 hidden objects
+label.untitled=Untitled
+label.choose=Select...
+label.choose.tooltip=Choose a new setting
+label.quit_without_saving=Quit Without Saving
+label.duplicate=(Copy)
+label.abort=Abort
+
+# general information messages
+
+message.title=Messages
+message.progress=Progress
+message.load_settings=loading settings from \1
+message.init_robot=Initializing robot
+message.init_menus=Initializing menus and dialogs
+message.init_desktop=Initializing desktop
+message.io_in_progress=I/O operation in progress.
+message.io_in_progress.confirm_quit=I/O operation is in progress for image '\1'. Are you sure you want to quit? (This may result in loss of data.)
+message.please_wait=Please wait.
+message.done=Done
+message.failed=Failed: \1
+
+# for helpset stuff
+xml.lang=en_GB
+
+# comments in TeX/LaTeX files
+tex.comment.border_command=Border command for frame
+tex.comment.created_by=Created by \1 version \2
+tex.comment.preamble=This image may require the following commands in the preamble:
+tex.comment.fontsize=The normal size font is assumed to be \1
+tex.comment.endpreamble=End of preamble information
+
+
+accelerators.title=Accelerators
+accelerators.mnemonic=A
+accelerators.tooltip=Change the shortcut keys
+accelerators.column.propname=Property Name
+accelerators.column.function=Function
+accelerators.column.keystroke=Key Stroke
+accelerators.info=Accelerator changes will not take effect until you have quit and restarted this application.
+
+# Set accelerator dialog
+accelerator.set=Set Accelerator
+accelerator.set.propname=Property Name:
+accelerator.set.function=Function:
+accelerator.set.keystroke=Key Stroke:
+accelerator.set.useselector=Use Selector
+accelerator.set.useselector.mnemonic=U
+accelerator.set.usekeystroke=Use Key Stroke
+accelerator.set.usekeystroke.mnemonic=K
+accelerator.set.usekeystroke.label=Enter Key Stroke: 
+accelerator.set.shift=Shift
+accelerator.set.shift.mnemonic=S
+accelerator.set.ctrl=Ctrl
+accelerator.set.ctrl.mnemonic=T
+accelerator.set.meta=Meta
+accelerator.set.meta.mnemonic=M
+accelerator.set.alt=Alt
+accelerator.set.alt.mnemonic=A
+accelerator.set.altgr=Alt Gr
+accelerator.set.altgr.mnemonic=G
+
+# accelerators without corresponding menu items
+accelerator.popup=Popup Menu
+accelerator.alt_popup=Popup Menu
+accelerator.construct_click=Construction Click
+accelerator.cursor_left=Cursor left
+accelerator.cursor_right=Cursor right
+accelerator.cursor_up=Cursor up
+accelerator.cursor_down=Cursor down
+accelerator.scroll_home_up=Scroll home up
+accelerator.scroll_home_left=Scroll home left
+accelerator.scroll_end_down=Scroll end down
+accelerator.scroll_end_right=Scroll end right
+accelerator.scroll_block_down=Scroll block down
+accelerator.scroll_block_right=Scroll block right
+accelerator.scroll_block_up=Scroll block up
+accelerator.scroll_block_left=Scroll block left
+accelerator.delete_last=Delete last segment
+accelerator.cursor_word_right=Cursor word right
+accelerator.cursor_word_left=Cursor word left
+
+# class names
+class.com.dickimawbooks.jdr.DashPattern=dash pattern
+class.com.dickimawbooks.jdr.FlowFrame=flowfram data
+class.com.dickimawbooks.jdr.JDRAngle=angle
+class.com.dickimawbooks.jdr.JDRBasicStroke=basic stroke
+class.com.dickimawbooks.jdr.JDRBezier=cubic Bézier curve
+class.com.dickimawbooks.jdr.JDRBitmap=bitmap
+class.com.dickimawbooks.jdr.JDRColorCMYK=cmyk
+class.com.dickimawbooks.jdr.JDRColorHSB=hsb
+class.com.dickimawbooks.jdr.JDRColor=rgb
+class.com.dickimawbooks.jdr.JDRDistortShape=distorted shape
+class.com.dickimawbooks.jdr.JDRFont=font
+class.com.dickimawbooks.jdr.JDRGradient=gradient
+class.com.dickimawbooks.jdr.JDRGray=grey
+class.com.dickimawbooks.jdr.JDRGroup=group
+class.com.dickimawbooks.jdr.JDRLength=length
+class.com.dickimawbooks.jdr.JDRLine=line
+class.com.dickimawbooks.jdr.JDRPaper=paper
+class.com.dickimawbooks.jdr.JDRPartialBezier=partial Bézier curve
+class.com.dickimawbooks.jdr.JDRPartialLine=partial line
+class.com.dickimawbooks.jdr.JDRPartialSegment=partial gap
+class.com.dickimawbooks.jdr.JDRPath=path
+class.com.dickimawbooks.jdr.JDRPatternAdjustPoint=pattern adjust
+class.com.dickimawbooks.jdr.JDRPatternAnchorPoint=pattern anchor
+class.com.dickimawbooks.jdr.JDRPoint=control point
+class.com.dickimawbooks.jdr.JDRRadialGrid=radial-grid
+class.com.dickimawbooks.jdr.JDRRadial=radial-shading
+class.com.dickimawbooks.jdr.JDRRadialPoint=radial control point
+class.com.dickimawbooks.jdr.JDRRectangularGrid=rectangular-grid
+class.com.dickimawbooks.jdr.JDRRotationalPattern=rotational pattern
+class.com.dickimawbooks.jdr.JDRScaledPattern=scaled pattern
+class.com.dickimawbooks.jdr.JDRSegment=gap
+class.com.dickimawbooks.jdr.JDRSpiralPattern=spiral pattern
+class.com.dickimawbooks.jdr.JDRSymmetricPath=symmetric path
+class.com.dickimawbooks.jdr.JDRSymmetryLinePoint=symmetry control point
+class.com.dickimawbooks.jdr.JDRText=text area
+class.com.dickimawbooks.jdr.JDRTextPath=text path
+class.com.dickimawbooks.jdr.JDRTextPathStroke=text path stroke
+class.com.dickimawbooks.jdr.JDRTransform=affine transform
+class.com.dickimawbooks.jdr.JDRTransparent=transparent
+class.com.dickimawbooks.jdr.JDRUnit=unit
+class.com.dickimawbooks.jdr.LaTeXFontBase=LaTeX font base
+class.com.dickimawbooks.jdr.LaTeXFont=LaTeX font
+class.com.dickimawbooks.jdr.marker.JDRMarker=marker
+
+welcome.title=Welcome
+welcome.text=<h1>Welcome to \1 version \2.</h1> Here are a few pointers:<ul><li>Use SHIFT ESC to abandon a path under construction<br>(This has changed from JpgfDraw.)</li><li>Use the \3 dialog to set the storage unit.<br>(\4-&gt;\5)</li><li>Use the \6 dialog to enable/disable hotspots.<br>(\7-&gt;\8)</li><li>The export to PS/PDF/SVG functions all use LaTeX, so you need to have TeX installed to use them.</li><li>Make sure you have at least version 1.16 of flowfram.sty if you want to use the export to .cls or .sty functions.</li><li>The preamble editor is now in a pane attached to the side of the canvas.</li><li>If your operating system supports drag and drop, you can drag image files onto \1's internal desktop (the grey background of the main window) to open the images in separate windows or you can drag and drop onto the canvas (in select mode only) to add the file contents to the current image. You can also drag and drop text onto the canvas in select mode or in text or maths mode.</li></ul>See the manual for further details.
+
+# Context labels in manual
+manual.title=Manual
+manual.figure=Figure
+manual.table=Table
+manual.next=Next
+manual.prev=Previous
+manual.home=Home
+manual.options=Options
+manual.toc=Table of Contents
+manual.index=Index
+manual.search=Search
+manual.idxpackage=package
+manual.idxenv=environment
+manual.example=Example
+manual.abbreviations=Abbreviations
+manual.cont_explanation=(The symbol \\continuesymbol\\ above indicates a~line wrap. Don't insert a~line break at that point.)
+manual.labelled=labelled
+manual.seealso=See also:
+
+

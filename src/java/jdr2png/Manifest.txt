@@ -1,0 +1,2 @@
+Main-Class: com/dickimawbooks/jdr2png/Jdr2Png
+Class-Path: jdr.jar .

@@ -1,0 +1,52 @@
+% /home/nlct/programming/java/jpgfdraw/trunk/doc/image-src/anchorfracex.jdr
+% Created by FlowframTk version 0.6
+% 01-Jun-2014 16:03:32
+\iffalse
+% This image may require the following commands in the preamble:
+\usepackage{ifpdf}
+\makeatletter
+\newcommand*{\jdroutline}[3]{%
+  \GenericWarning{}{text outline can't be implemented}#3%
+}%
+\ifpdf
+ \InputIfFileExists{pdf-trans}%
+ {%
+   \renewcommand*{\jdroutline}[3]{%
+     \setbox\@tempboxa\hbox{##3}%
+     \boxgs{##1}{}\copy\@tempboxa
+   }%
+ }{}
+\else
+ \IfFileExists{pst-char.sty}%
+ {%
+   \usepackage{pst-char}
+   \renewcommand*{\jdroutline}[3]{%
+     \begin{pspicture}(0,0)
+     \pscharpath[##2]{##3}
+     \end{pspicture}
+   }
+ }{}
+\fi
+\makeatother
+\usepackage{pgf}
+\usepgflibrary{decorations.text}
+% The normal size font is assumed to be 10pt
+% End of preamble information
+\fi
+\begin{pgfpicture}{12.883612mm}{236.061076mm}{44.946386mm}{241.736389mm}
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{13.06mm}{241.56mm}}
+\pgfpathlineto{\pgfpoint{13.06mm}{236.48mm}}
+\pgfpathlineto{\pgfpoint{44.77mm}{236.48mm}}
+\definecolor{strokepaint}{rgb}{1.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{13.06mm}{236.061076mm}}
+\pgftext[left,bottom]{\sffamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}$f(x) = \frac{(x-a_1)^2}{a_2}$}
+\end{pgfscope}
+\end{pgfpicture}

@@ -1,0 +1,116 @@
+FlowframTk Home page: https://www.dickimaw-books.com/software/flowframtk/
+
+Nicola L.C. Talbot (https://www.dickimaw-books.com/)
+
+ABOUT FLOWFRAMTK
+================
+
+FlowframTk is a graphics application written in Java.
+
+You can use FlowframTk to:
+
+* Construct shapes using lines, moves and cubic Bezier segments.
+
+* Edit shapes by changing the defining control points.
+
+* Add symmetry to shapes.
+
+* Convert shapes into patterns (rotational, scaled, spiral)
+
+* Incorporate text and bitmap images (for annotation and 
+background effects).
+
+* Display text along a shape.
+
+* Extract the parameters for TeX's \parshape command
+and for \shapepar (defined in the shapepar package).
+
+* Construct frames for use with the flowfram package.
+
+* Pictures can be saved in FlowframTk's native binary format (JDR)
+or native ascii format (AJR) or can be exported as:
+
+   - a pgfpicture environment for use in LaTeX documents with the
+     pgf package
+
+   - a LaTeX class or package that loads the flowfram package
+
+   - a postscript file
+
+   - a PDF file
+
+   - a PNG image file
+
+   - SVG image file
+
+* Alternative text can be specified to use when exporting to a
+  LaTeX file (e.g. if the text contains symbols or if it should
+  be set in maths mode).
+
+* Mappings can be used to specify what LaTeX font declarations 
+  should be used when exporting to a LaTeX file.
+
+This application replaces the now obsolete JpgfDraw.
+
+ABOUT JDRVIEW
+=============
+
+Jdrview is a Java application for viewing JDR or AJR files.
+It is primarily intended as a convenient way of viewing images
+created when developing applications that create JDR or AJR files.
+
+(The JDR and AJR formats are documented in flowframtk-*.pdf)
+
+ABOUT JDRUTILS
+==============
+
+Jdrutils is a suite of command line applications for converting
+to or from AJR or JDR files. This consists of:
+
+ajr2jdr	: AJR to JDR converter
+ajr2tex	: AJR to TeX converter (creates pgfpicture environment)
+eps2jdr	: EPS to JDR converter (still experimental)
+jdr2ajr	: JDR to AJR converter
+jdr2eps	: JDR to EPS converter
+jdr2png	: JDR to PNG converter
+jdr2svg	: JDR to SVG converter
+jdr2tex	: JDR to TeX converter (creates pgfpicture environment)
+
+There currently isn't a command line tool to convert AJR/JDR files
+to a LaTeX package based on the flowfram package. This can only
+be done via FlowframTk's export tool.
+
+See the documentation for further details.
+
+REQUIREMENTS: 
+============
+
+The J2SE Runtime environment version 8 (JRE 8). This can be downloaded from:
+http://java.sun.com/javase/downloads/
+
+INSTALLATION:
+=============
+
+Download and run the jar installer flowframtk-xx-installer.jar
+
+where xx is the version number.
+
+
+EXAMPLE FILES:
+=============
+
+Example files are contained in the examples directory.  Some of the
+examples contain links to bitmaps. If links are stored as absolute
+paths, they will not be found in which case you will be prompted for
+a new location. You can either select the png file from its new
+location, or you can discard the link.
+
+LICENCE:
+=======
+
+This material is subject to the GNU General Public License. 
+See the file LICENSE for details (in the doc directory).
+
+The jh.jar package is part of JavaHelp,
+see http://java.sun.com/products/javahelp/ for details of that
+licence.

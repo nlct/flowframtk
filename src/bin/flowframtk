@@ -1,0 +1,4 @@
+#!/bin/sh
+
+bindir=`dirname $0`
+java $JDR_JVMOPTS -jar "$bindir/../lib/flowframtk.jar" $JPGFDRAW_OPTS $FLOWFRAMTK_OPTS "$@"

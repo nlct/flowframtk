@@ -1,0 +1,33 @@
+% Untitled
+% Created by FlowframTk version 0.6
+% 24-May-2014 20:26:04
+\iffalse
+% This image may require the following commands in the preamble:
+\usepackage{ifpdf}
+\makeatletter
+\ifpdf
+ \input{pdf-trans}
+ \newcommand*{\jdroutline}[3]{%
+   \setbox\@tempboxa\hbox{#3}%
+   \boxgs{#1}{}\copy\@tempboxa
+ }
+\else
+ \usepackage{pst-char}
+ \newcommand*{\jdroutline}[3]{%
+   \begin{pspicture}(0,0)
+   \pscharpath[#2]{#3}
+   \end{pspicture}
+ }
+\fi
+\makeatother
+\usepackage{pgf}
+\usepgflibrary{decorations.text}
+% The normal size font is assumed to be 10pt
+% End of preamble information
+\fi
+\begin{pgfpicture}{13.200043mm}{177.351172mm}{63.062977mm}{185.354818mm}
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{12.5mm}{177.5mm}}
+\pgftext[left,base]{\rmfamily\bfseries\upshape\Huge\color[rgb]{0.0,0.0,0.0}SAMPLE}
+\end{pgfscope}
+\end{pgfpicture}

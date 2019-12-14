@@ -1,0 +1,2 @@
+Main-Class: com/dickimawbooks/eps2jdr/Eps2Jdr
+Class-Path: jdrresources.jar jdr.jar .

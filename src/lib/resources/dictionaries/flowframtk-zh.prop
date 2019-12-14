@@ -1,0 +1,2869 @@
+# This language package is subject to the GNU General Public License. 
+# See the file LICENSE for details (in the same directory).
+#
+# FlowframTk 简体中文语言包
+#
+# 王勇献 (wang_yongxian[at]hotmail[dot]com)
+#
+# 2008-08-08 updated for version 0.5b
+# 2007-11-11 for version 0.41b
+#
+
+# menus
+
+# File menu
+file.label=文件(F)
+file.mnemonic=F
+file.new=新建(N)
+file.new.mnemonic=N
+label.new=新建
+file.open=打开(O)...
+file.open.mnemonic=O
+label.open=打开
+label.open=打开
+file.recent=最近打开的文件(R)
+file.recent.mnemonic=R
+file.image_description=图像描述(D)...
+file.image_description.mnemonic=D
+file.save=保存(S)
+file.save.mnemonic=S
+label.save=保存
+file.save_as=另存为(A)...
+file.save_as.mnemonic=A
+file.export=导出(E)...
+file.export.mnemonic=E
+file.import=导入(I)...
+file.import.mnemonic=I
+file.print=打印(P)...
+file.print.mnemonic=P
+file.page=Page Setup...
+file.page.mnemonic=G
+file.messages=Show Messages...
+file.messages.mnemonic=M
+file.close=关闭(C)
+file.close.mnemonic=C
+file.quit=退出(Q)
+file.quit.mnemonic=Q
+
+# jdrview additional file menu items
+file.reload=刷新(R)
+file.reload.mnemonic=R
+file.properties=属性(P)...
+file.properties.mnemonic=T
+
+# edit menu
+
+edit.label=编辑(E)
+edit.mnemonic=E
+edit.undo=撤消(U)
+edit.undo.mnemonic=U
+edit.undo.tooltip=Undo last action
+label.undo=撤消
+edit.redo=重做(R)
+edit.redo.mnemonic=R
+edit.redo.tooltip=Redo last action
+label.redo=重做
+edit.select_all=全选(A)
+edit.select_all.mnemonic=A
+label.select_all=全选
+edit.deselect_all=清除全选(D)
+edit.deselect_all.mnemonic=D
+edit.moveby=对象平移(M)...
+edit.moveby.mnemonic=M
+edit.cut=剪切(T)
+edit.cut.mnemonic=T
+label.cut=剪切(T)
+edit.copy=复制(C)
+edit.copy.mnemonic=C
+label.copy=复制(C)
+edit.paste=粘贴(P)
+edit.paste.mnemonic=P
+label.paste=粘贴
+edit.description=对象描述(O)...
+edit.description.mnemonic=O
+
+# edit->path submenu
+
+edit.path=路径(P)
+edit.path.mnemonic=H
+edit.path.edit=编辑路径(E)
+edit.path.edit.mnemonic=E
+label.edit_path=编辑路径
+edit.path.line_colour=线条颜色(L)...
+edit.path.line_colour.mnemonic=L
+edit.path.style=线型(S)
+edit.path.style.mnemonic=S
+
+edit.path.style.all=所有线型(A)...
+edit.path.style.all.mnemonic=A
+edit.path.style.all_markers=所有箭头...
+edit.path.style.all_markers.mnemonic=K
+edit.path.style.linewidth=线条粗细(W)...
+edit.path.style.linewidth.mnemonic=W
+edit.path.style.dashpattern=线条虚实(D)...
+edit.path.style.dashpattern.mnemonic=D
+edit.path.style.capstyle=线头样式(C)
+edit.path.style.capstyle.mnemonic=C
+
+edit.path.style.capstyle.butt=平线头(B)
+edit.path.style.capstyle.butt.mnemonic=B
+edit.path.style.capstyle.round=圆线头(R)
+edit.path.style.capstyle.round.mnemonic=R
+edit.path.style.capstyle.square=方线头(S)
+edit.path.style.capstyle.square.mnemonic=S
+
+edit.path.style.joinstyle=接头样式(J)...
+edit.path.style.joinstyle.mnemonic=J
+
+edit.path.style.startarrow=始端箭头(S)...
+edit.path.style.startarrow.mnemonic=S
+edit.path.style.midarrow=中间箭头(S)...
+edit.path.style.midarrow.mnemonic=M
+edit.path.style.endarrow=末端箭头(E)...
+edit.path.style.endarrow.mnemonic=E
+edit.path.style.windingrule=区域内外绕行规则(W)
+edit.path.style.windingrule.mnemonic=W
+
+edit.path.style.windingrule.evenodd=奇偶规则[奇内偶外](E)
+edit.path.style.windingrule.evenodd.mnemonic=E
+edit.path.style.windingrule.nonzero=非零规则[非零为内](N)
+edit.path.style.windingrule.nonzero.mnemonic=N
+
+# edit->text submenu
+
+edit.text=文本(T)
+edit.text.mnemonic=X
+edit.text.edit=编辑文本(E)...
+edit.text.edit.mnemonic=E
+edit.text.matrix=变换矩阵(M)...
+edit.text.matrix.mnemonic=M
+edit.text.colour=文本颜色(C)...
+edit.text.colour.mnemonic=C
+edit.text.outline=Outline
+edit.text.outline.mnemonic=O
+edit.text.font=字体(F)
+edit.text.font.mnemonic=F
+edit.text.font.all_styles=所有样式(L)...
+edit.text.font.all_styles.mnemonic=L
+edit.text.font.family=字体家族(Y)...
+edit.text.font.family.mnemonic=Y
+edit.text.font.size=字体大小(Z)...
+edit.text.font.size.mnemonic=Z
+edit.text.font.shape=字体形状(H)...
+edit.text.font.shape.mnemonic=H
+edit.text.font.series=字体系列(R)...
+edit.text.font.series.mnemonic=R
+edit.text.font.anchor=锚定点(A)
+edit.text.font.anchor.mnemonic=A
+edit.text.font.anchor.both=同时设置(B)...
+edit.text.font.anchor.both.mnemonic=B
+edit.text.font.anchor.horizontal=水平设置(H)...
+edit.text.font.anchor.horizontal.mnemonic=H
+edit.text.font.anchor.vertical=垂直设置(V)...
+edit.text.font.anchor.vertical.mnemonic=V
+
+edit.fill_colour=填充颜色(L)...
+edit.fill_colour.mnemonic=L
+
+edit.adjustcol=Adjust Color
+edit.adjustcol.mnemonic=J
+
+edit.adjustcol.togrey=降为灰度(G)
+edit.adjustcol.togrey.mnemonic=G
+edit.adjustcol.cmyk=Convert to CMYK
+edit.adjustcol.cmyk.mnemonic=C
+edit.adjustcol.rgb=Convert to RGB
+edit.adjustcol.rgb.mnemonic=R
+edit.adjustcol.hsb=Convert to HSB
+edit.adjustcol.hsb.mnemonic=H
+edit.adjustcol.fade=Fade Alpha
+edit.adjustcol.fade.mnemonic=F
+edit.adjustcol.removetrans=Remove Translucency
+edit.adjustcol.removetrans.mnemonic=L
+
+edit.front=置于顶层(F)
+edit.front.mnemonic=F
+label.front=置于顶层
+edit.back=置于底层(B)
+edit.back.mnemonic=B
+label.back=置于底层
+edit.moveup=Move Up
+edit.moveup.mnemonic=V
+edit.movedown=Move Down
+edit.movedown.mnemonic=W
+
+# transform menu
+
+transform.label=变换(T)
+transform.mnemonic=T
+transform.rotate=旋转(R)...
+transform.rotate.mnemonic=R
+label.rotate=旋转
+transform.scale=缩放(S)...
+transform.scale.mnemonic=S
+label.scale=缩放
+transform.shear=倾斜(H)...
+transform.shear.mnemonic=H
+label.shear=倾斜
+transform.distort=Distort
+transform.distort.mnemonic=D
+label.distort=Distort
+transform.reset=Reset Matrix
+transform.reset.mnemonic=A
+transform.reverse=路径反向(V)
+transform.reverse.mnemonic=V
+transform.convert=将轮廓转换为路径(C)
+transform.convert.mnemonic=C
+transform.convert_to_full=Convert To Full Path
+transform.convert_to_full.mnemonic=F
+transform.merge=合并路径(M)
+transform.merge.mnemonic=M
+transform.textpath=Convert To Text Path
+transform.textpath.mnemonic=N
+label.textpath=To Text Path
+transform.separate=Separate
+transform.separate.mnemonic=E
+transform.union=路径求并(P)
+transform.union.mnemonic=P
+transform.xor=路径异或(O)
+transform.xor.mnemonic=O
+transform.subtract=路径求差(T)
+transform.subtract.mnemonic=T
+transform.intersect=路径求交(I)
+transform.intersect.mnemonic=I
+transform.split=将文本分解成单字(X)
+transform.split.mnemonic=X
+transform.group=组合(G)
+transform.group.mnemonic=G
+label.group=组合
+transform.ungroup=取消组合(U)
+transform.ungroup.mnemonic=U
+label.ungroup=取消组合
+
+# transform->pattern submenu
+
+transform.pattern=Pattern
+transform.pattern.mnemonic=A
+transform.pattern.set=Set Pattern...
+transform.pattern.set.mnemonic=S
+label.pattern.set=To Pattern
+transform.pattern.edit=Edit Pattern...
+transform.pattern.edit.mnemonic=E
+transform.pattern.remove=Remove Pattern
+transform.pattern.remove.mnemonic=R
+
+# transform->justify submenu
+
+transform.justify=对齐(J)
+transform.justify.mnemonic=J
+transform.justify.left=左对齐(L)
+transform.justify.left.mnemonic=L
+transform.justify.centre=水平居中(C)
+transform.justify.centre.mnemonic=C
+transform.justify.right=右对齐(R)
+transform.justify.right.mnemonic=R
+transform.justify.top=顶端对齐(T)
+transform.justify.top.mnemonic=T
+transform.justify.middle=垂直居中(M)
+transform.justify.middle.mnemonic=M
+transform.justify.bottom=底端对齐(B)
+transform.justify.bottom.mnemonic=B
+
+# tools menu
+
+tools.label=工具(O)
+tools.mnemonic=O
+tools.select=选择对象(S)
+tools.select.mnemonic=S
+tools.open_line=开放直线(L)
+tools.open_line.mnemonic=L
+tools.closed_line=封闭直线(I)
+tools.closed_line.mnemonic=I
+tools.open_curve=开放曲线(C)
+tools.open_curve.mnemonic=C
+tools.closed_curve=封闭曲线(U)
+tools.closed_curve.mnemonic=U
+tools.rectangle=矩形(R)
+tools.rectangle.mnemonic=R
+tools.ellipse=椭圆(E)
+tools.ellipse.mnemonic=E
+tools.text=文本(T)
+tools.text.mnemonic=T
+tools.math=Math
+tools.math.mnemonic=M
+tools.gap=路径间断(G)
+tools.gap.mnemonic=G
+tools.abandon=取消路径(A)
+tools.abandon.mnemonic=A
+tools.finish=完成路径(F)
+tools.finish.mnemonic=F
+
+# navigation menu
+
+navigate.label=对象导航(N)
+navigate.mnemonic=N
+navigate.goto=坐标定位(G)...
+navigate.goto.mnemonic=G
+navigate.select=选定下一对象(S)
+navigate.select.mnemonic=S
+navigate.add_next=增选下一对象(A)
+navigate.add_next.mnemonic=A
+navigate.skip=跳选对象(K)
+navigate.skip.mnemonic=K
+navigate.find=选择对象定位(F)
+navigate.find.mnemonic=F
+navigate.description=根据描述查找对象(D)...
+navigate.description.mnemonic=D
+navigate.add_description=根据描述增选对象(B)...
+navigate.add_description.mnemonic=B
+
+# bitmap menu
+
+bitmap.label=位图(B)
+bitmap.mnemonic=B
+bitmap.insert=插入位图(I)...
+bitmap.insert.mnemonic=I
+bitmap.refresh=刷新(R)
+bitmap.refresh.mnemonic=R
+bitmap.properties=属性(P)...
+bitmap.properties.mnemonic=P
+bitmap.properties.label=位图属性
+bitmap.properties.latexfilename=LaTeX 文档中图片路径(P)
+bitmap.properties.latexfilename.mnemonic=P
+bitmap.properties.auto_latexfilename=Auto
+bitmap.properties.auto_latexfilename.mnemonic=A
+bitmap.properties.command=LaTeX 命令(L)
+bitmap.properties.command.mnemonic=L
+bitmap.properties.matrix=变换矩阵(T)
+bitmap.properties.matrix.mnemonic=T
+bitmap.properties.path_note=JDR/AJR versions 1.8 and above can now store the bitmap location either as an absolute path or a path relative to the saved file.
+bitmap.properties.path.absolute=Your current application settings will use the path as specified in the '\1' box.
+bitmap.properties.path.relative=Your current application settings will use a relative path.
+bitmap.vectorize=Vectorize...
+bitmap.vectorize.mnemonic=V
+
+# TeX/LaTeX menu
+
+tex.label=TeX/LaTeX
+tex.mnemonic=L
+tex.set_preamble=Preamble Editor
+tex.set_preamble.mnemonic=M
+tex.parshape=文本区域形状(Parshape命令)...
+tex.parshape.mnemonic=P
+tex.shapepar=文本区域形状(Shapepar命令)...
+tex.shapepar.mnemonic=S
+
+# flowfram menu
+
+tex.flowframe=文本框链接(Flow Frames宏包)
+tex.flowframe.mnemonic=F
+tex.flowframe.set_frame=设定文本框(S)...
+tex.flowframe.set_frame.mnemonic=S
+tex.flowframe.clear=清空文本框(C)
+tex.flowframe.clear.mnemonic=C
+tex.flowframe.set_typeblock=设定Typeblock...
+tex.flowframe.set_typeblock.mnemonic=T
+tex.flowframe.scale_to_typeblock=Scale to Fit Typeblock
+tex.flowframe.scale_to_typeblock.mnemonic=K
+tex.flowframe.display_page=显示文本框页面(D)...
+tex.flowframe.display_page.mnemonic=P
+
+# settings menu
+
+settings.label=选项设置(S)
+settings.mnemonic=S
+settings.styles=样式(S)...
+settings.styles.mnemonic=S
+settings.rulers=显示标尺(R)
+settings.rulers.mnemonic=R
+
+# settings->grid sub menu
+
+settings.grid=网格(G)
+settings.grid.mnemonic=G
+settings.grid.show=显示网格(S)
+settings.grid.show.mnemonic=S
+settings.grid.lock=锁定网格(L)
+settings.grid.lock.mnemonic=L
+settings.grid.settings=网格设置(G)...
+settings.grid.settings.mnemonic=G
+
+# settings->zoom sub menu
+settings.zoom=显示比例(Z)
+settings.zoom.mnemonic=Z
+settings.zoom.user=自定义(U)...
+settings.zoom.user.mnemonic=U
+settings.zoom.width=适合宽度(W)
+settings.zoom.width.mnemonic=W
+settings.zoom.height=适合高度(H)
+settings.zoom.height.mnemonic=H
+settings.zoom.page=适合页面(P)
+settings.zoom.page.mnemonic=P
+settings.zoom.25=25%
+settings.zoom.25.mnemonic=2
+settings.zoom.50=50%
+settings.zoom.50.mnemonic=5
+settings.zoom.75=75%
+settings.zoom.75.mnemonic=7
+settings.zoom.100=100%
+settings.zoom.100.mnemonic=1
+settings.zoom.200=200%
+settings.zoom.200.mnemonic=0
+settings.zoom.400=400%
+settings.zoom.400.mnemonic=4
+settings.zoom.800=800%
+settings.zoom.800.mnemonic=8
+
+# settings->paper sub menu
+
+settings.paper=纸张(P)
+settings.paper.mnemonic=P
+settings.paper.margins=显示页边距(M)
+settings.paper.margins.mnemonic=M
+settings.paper.portrait=纵向(P)
+settings.paper.portrait.mnemonic=P
+settings.paper.landscape=横向(P)
+settings.paper.landscape.mnemonic=L
+settings.paper.A5=A5
+settings.paper.A5.mnemonic=5
+settings.paper.A4=A4
+settings.paper.A4.mnemonic=4
+settings.paper.A3=A3
+settings.paper.A3.mnemonic=3
+settings.paper.A2=A2
+settings.paper.A2.mnemonic=2
+settings.paper.A1=A1
+settings.paper.A1.mnemonic=1
+settings.paper.A0=A0
+settings.paper.A0.mnemonic=0
+settings.paper.letter=Letter
+settings.paper.letter.mnemonic=L
+settings.paper.legal=Legal
+settings.paper.legal.mnemonic=G
+settings.paper.executive=Executive
+settings.paper.executive.mnemonic=E
+settings.paper.other=其它(O)...
+settings.paper.other.mnemonic=O
+
+settings.config=配置选项(C)...
+settings.config.mnemonic=C
+settings.configtex=设置常规字体大小(L)...
+settings.configtex.mnemonic=L
+settings.configui=Configure User Interface...
+settings.configui.mnemonic=U
+
+# jdrview additional settings menu item
+settings.antialias=消除锯齿(A)
+settings.antialias.mnemonic=A
+
+# window menu
+
+window.label=窗口(W)
+window.mnemonic=W
+window.tile=平铺(T)
+window.tile.mnemonic=T
+window.vertically=垂直排列(V)
+window.vertically.mnemonic=V
+window.horizontally=水平排列(H)
+window.horizontally.mnemonic=H
+window.minimize=全部最小化(M)
+window.minimize.mnemonic=M
+window.maximize=全部最大化(X)
+window.maximize.mnemonic=X
+
+# help menu
+
+help.label=帮助(H)
+help.mnemonic=H
+help.handbook=手册文档(H)
+help.handbook.mnemonic=H
+help.licence=许可协议(L)...
+help.licence.mnemonic=L
+help.about=关于(A)...
+help.about.mnemonic=A
+
+# Debug menu
+debug.label=Debug
+debug.mnemonic=D
+debug.writelog=Write Log
+debug.writelog.mnemonic=W
+debug.dumpall=Dump All
+debug.dumpall.mnemonic=A
+debug.objectinfo=Object Info...
+debug.objectinfo.mnemonic=O
+debug.revalidate=Revalidate Image
+debug.revalidate.mnemonic=R
+
+# popup menus
+
+# text popup menu
+text.cut=剪切(T)
+text.cut.mnemonic=T
+text.copy=复制(C)
+text.copy.mnemonic=C
+text.paste=粘贴(P)
+text.paste.mnemonic=P
+text.select_all=全选(A)
+text.select_all.mnemonic=A
+text.insert_symbol=插入符号(I)...
+text.insert_symbol.mnemonic=I
+
+# edit path popup menu
+editpath.add_control=添加控制点(A)
+editpath.add_control.mnemonic=A
+editpath.break_path=断开路径(B)
+editpath.break_path.mnemonic=B
+editpath.close_path=结束一条封闭路径(P)
+editpath.close_path.mnemonic=P
+editpath.close_path.line=Close With Line
+editpath.close_path.line.mnemonic=L
+editpath.close_path.cont=Close With Curve
+editpath.close_path.cont.mnemonic=C
+editpath.close_path.merge=Merge Ends
+editpath.close_path.merge.mnemonic=M
+editpath.continuity=曲线平滑(K)
+editpath.continuity.mnemonic=K
+editpath.continuity.equi=Equidistant
+editpath.continuity.equi.mnemonic=E
+editpath.continuity.relative=Relative
+editpath.continuity.relative.mnemonic=R
+editpath.continuity.anchor=Anchor
+editpath.continuity.anchor.mnemonic=A
+editpath.coordinates=坐标(R)...
+editpath.coordinates.mnemonic=R
+editpath.convert_to_curve=转换为曲线段(C)
+editpath.convert_to_curve.mnemonic=C
+editpath.delete_control=删除控制点(D)
+editpath.delete_control.mnemonic=D
+editpath.convert_to_line=转换为直线段(L)
+editpath.convert_to_line.mnemonic=L
+editpath.convert_to_move=转换为间断段(M)
+editpath.convert_to_move.mnemonic=M
+editpath.next_control=下一个控制点(N)
+editpath.next_control.mnemonic=N
+editpath.open_path=开始一条封闭路径
+editpath.open_path.mnemonic=O
+editpath.open_path.remove_last=Remove Last Segment
+editpath.open_path.remove_last.mnemonic=R
+editpath.open_path.keep_last=Keep Last Segment
+editpath.open_path.keep_last.mnemonic=K
+editpath.prev_control=Previous Control
+editpath.prev_control.mnemonic=V
+editpath.snap=对齐至网络线
+editpath.snap.mnemonic=S
+editpath.symmetry=Path Symmetry
+editpath.symmetry.mnemonic=Y
+editpath.symmetry.has_symmetry=Has Symmetry
+editpath.symmetry.has_symmetry.mnemonic=H
+editpath.symmetry.join_anchor=Anchor Join
+editpath.symmetry.join_anchor.mnemonic=J
+editpath.symmetry.close_anchor=Anchor Start Control
+editpath.symmetry.close_anchor.mnemonic=S
+
+# Distortion popup menu
+distort.state=Distort
+distort.state.mnemonic=D
+distort.reset=Reset Transform
+distort.reset.mnemonic=R
+
+# selected text along path menu
+
+selectedtextpath.description=组合对象描述(I)...
+selectedtextpath.description.mnemonic=I
+
+# selected text popup menu
+selectedtext.description=文本框描述(I)...
+selectedtext.description.mnemonic=I
+selectedtext.edit=编辑文本(X)...
+selectedtext.edit.mnemonic=X
+selectedtext.reset=Reset Matrix
+selectedtext.reset.mnemonic=M
+selectedtext.colour=文本颜色(L)...
+selectedtext.colour.mnemonic=L
+selectedtext.outline=Outline
+selectedtext.outline.mnemonic=O
+selectedtext.fill_colour=填充颜色(F)...
+selectedtext.fill_colour.mnemonic=F
+selectedtext.all_styles=所有样式(T)...
+selectedtext.all_styles.mnemonic=T
+selectedtext.family=字体家族(Y)...
+selectedtext.family.mnemonic=Y
+selectedtext.size=字体大小(Z)...
+selectedtext.size.mnemonic=Z
+selectedtext.shape=字体形状(S)...
+selectedtext.shape.mnemonic=S
+selectedtext.series=字体系列(R)...
+selectedtext.series.mnemonic=R
+selectedtext.anchor=锚定点(H)
+selectedtext.anchor.mnemonic=H
+
+# selected paths popup menu
+selectedpath.description=路径描述(I)...
+selectedpath.description.mnemonic=I
+selectedpath.edit=编辑路径(E)
+selectedpath.edit.mnemonic=E
+selectedpath.distort=Distort
+selectedpath.distort.mnemonic=R
+selectedpath.line_colour=线条颜色(L)...
+selectedpath.line_colour.mnemonic=L
+selectedpath.fill_colour=填充颜色(F)...
+selectedpath.fill_colour.mnemonic=F
+selectedpath.style.all=所有线型(S)...
+selectedpath.style.all.mnemonic=S
+selectedpath.linewidth=线条粗细(H)...
+selectedpath.linewidth.mnemonic=H
+selectedpath.dashpattern=线条虚实(N)...
+selectedpath.dashpattern.mnemonic=N
+selectedpath.capstyle=线头样式(Y)
+selectedpath.capstyle.mnemonic=Y
+selectedpath.joinstyle=接头样式(J)...
+selectedpath.joinstyle.mnemonic=J
+selectedpath.marker=Markers
+selectedpath.marker.mnemonic=M
+selectedpath.marker.all=所有箭头...
+selectedpath.marker.all.mnemonic=K
+selectedpath.marker.start=始端箭头(S)...
+selectedpath.marker.start.mnemonic=S
+selectedpath.marker.mid=中间箭头(M)...
+selectedpath.marker.mid.mnemonic=M
+selectedpath.marker.end=末端箭头(K)...
+selectedpath.marker.end.mnemonic=K
+selectedpath.windingrule=区域内外绕行规则(W)
+selectedpath.windingrule.mnemonic=W
+
+# selected bitmaps popup menu
+selectedbitmap.description=位图描述(I)...
+selectedbitmap.description.mnemonic=I
+selectedbitmap.properties=属性(R)...
+selectedbitmap.properties.mnemonic=R
+selectedbitmap.reset=Reset Matrix
+selectedbitmap.reset.mnemonic=X
+selectedbitmap.insert=插入位图(B)...
+selectedbitmap.insert.mnemonic=B
+selectedbitmap.vectorize=Vectorize...
+selectedbitmap.vectorize.mnemonic=V
+
+# selected objects popup menu
+selected.description=组合对象描述(I)...
+selected.description.mnemonic=I
+selected.cut=剪切(T)
+selected.cut.mnemonic=T
+selected.copy=复制(C)
+selected.copy.mnemonic=C
+selected.paste=粘贴(P)
+selected.paste.mnemonic=P
+selected.select_all=全选(A)
+selected.select_all.mnemonic=A
+selected.deselect_all=清除全选(D)
+selected.deselect_all.mnemonic=D
+selected.group=组合(G)
+selected.group.mnemonic=G
+selected.ungroup=取消组合(U)
+selected.ungroup.mnemonic=U
+selected.path=路径(H)
+selected.path.mnemonic=H
+selected.text=文本(X)
+selected.text.mnemonic=X
+selected.fill_colour=填充颜色(F)...
+selected.fill_colour.mnemonic=F
+selected.bitmap=位图(B)
+selected.bitmap.mnemonic=B
+selected.justify=对齐(J)
+selected.justify.mnemonic=J
+
+# none selected popup menu
+none.description=图像描述(D)...
+none.description.mnemonic=D
+none.find_by_description=根据描述查找对象(F)...
+none.find_by_description.mnemonic=F
+none.insert_bitmap=插入位图(B)...
+none.insert_bitmap.mnemonic=B
+
+# tooltips
+
+tooltip.abandon=取消绘制当前路径
+tooltip.add_control=在当前线段中点新产生一个控制点
+tooltip.all_markers=全局设置相同的始端/中间/末端箭头样式
+tooltip.autoanchor=对齐文本时自动更新锚定点
+tooltip.arrow.angle=角(Marker angle)
+tooltip.arrow.autogap=根据线条宽度自动计算相邻两个末端符号之间的间距量
+tooltip.arrow.autooffset=自动计算末端符号与线条末端的偏移量
+tooltip.arrow.autoorient=按照路径梯度自动确定箭头方向(Orient marker to follow path's gradient)
+tooltip.arrow.colour.dependent=箭头颜色取决于线条颜色
+tooltip.arrow.colour.independent=箭头颜色独立于线条颜色
+tooltip.arrow.composite=允许使用两种箭头的组合
+tooltip.arrow.gap=相邻两个末端符号之间的间距
+tooltip.arrow.offset=到顶点的间距
+tooltip.arrow.overlay=允许将主箭头与辅箭头相重叠
+tooltip.arrow.type=设置箭头类型
+tooltip.arrow.type.arrows=箭头类末端符号
+tooltip.arrow.type.bracket=括号类末端符号
+tooltip.arrow.type.caps=平头类末端符号
+tooltip.arrow.type.data=数据点样式的末端符号
+tooltip.arrow.type.decorative=装饰类末端符号
+tooltip.arrow.type.partial=零散箭头类末端符号
+tooltip.back=将所选择的对象放置于最底(下)层
+tooltip.bitmap.insert=Insert an external bitmap file
+tooltip.bitmap.properties=Change the bitmap source file, the LaTeX path to the source file or the bitmap's transformation matrix
+tooltip.break_path=在线段终点将路径拆分断开
+tooltip.close_path=用一条新线段封闭当前路径
+tooltip.close_path.line=Close path with a line
+tooltip.close_path.cont=Close path with a continuous curve
+tooltip.close_path.merge=Close path by merging end point with start point
+tooltip.closed_curve=封闭的三次B样条曲线工具
+tooltip.closed_line=封闭的直线段工具
+tooltip.continuity.equi=使线段在接头处连续化
+tooltip.continuity.relative=使线段在接头处连续化
+tooltip.continuity.anchor=Toggle continuity anchor
+tooltip.convert_to_curve=将当前线段转换成一条曲线段
+tooltip.convert_to_line=将当前线段转换成一条直线段
+tooltip.convert_to_move=将当前线段转换成一条间断段
+tooltip.coordinates=Set the co-ordinates using a dialogue box
+tooltip.cmyk=CMYK (Cyan Magenta Yellow Key) 模式的颜色选择
+tooltip.copy=将所选对象复制到剪贴板
+tooltip.cut=将所选对象剪切到剪贴板
+tooltip.delete_control=删除当前控制点
+tooltip.direction.linear.north=向上渐变
+tooltip.direction.linear.northwest=向左上渐变
+tooltip.direction.linear.west=向左渐变
+tooltip.direction.linear.southwest=向左下渐变
+tooltip.direction.linear.south=向下渐变
+tooltip.direction.linear.southeast=向右下渐变
+tooltip.direction.linear.east=向右渐变
+tooltip.direction.linear.northeast=向右上渐变
+tooltip.direction.radial.north=由上方开始辐射渐变
+tooltip.direction.radial.northwest=由左上方开始辐射渐变
+tooltip.direction.radial.west=由左方开始辐射渐变
+tooltip.direction.radial.southwest=由左上下开始辐射渐变
+tooltip.direction.radial.south=由下方开始辐射渐变
+tooltip.direction.radial.southeast=由右下方开始辐射渐变
+tooltip.direction.radial.east=由右方开始辐射渐变
+tooltip.direction.radial.northeast=由右上方开始辐射渐变
+tooltip.direction.radial.centre=由中部开始辐射渐变
+tooltip.distort=Distort selected path
+tooltip.hotspots=允许/禁止鼠标拖动缩放
+tooltip.controls=Control point settings
+tooltip.initsettings=指定启动时的设置
+tooltip.ellipse=椭圆工具
+tooltip.fill_colour=设置填充颜色
+tooltip.finish=完成当前路径绘制
+tooltip.font=设置字体属性
+tooltip.font_family=选择字体家族名称
+tooltip.font.all_styles=Change font attributes
+tooltip.font.family=Change font family
+tooltip.font.size=Change font size
+tooltip.font.shape=Change font shape (upright/italic)
+tooltip.font.series=Change font series (medium/bold)
+tooltip.font.anchor.both=Change the horizontal and vertical LaTeX font anchors
+tooltip.font.anchor.horizontal=Change the horizontal LaTeX font anchor
+tooltip.font.anchor.vertical=Change the vertical LaTeX font anchor
+tooltip.front=将所选择的对象放置于最顶(上)层
+tooltip.gap=在当前路径中设定一个间断(gap)
+tooltip.grey=灰度模式颜色选择
+tooltip.grid.rectangular=Rectangular grid (origin at top left)
+tooltip.grid.radial=Radial grid (origin at center of canvas)
+tooltip.grid.iso=Isometric grid (origin at top left)
+tooltip.grid.tschichold=Tschichold grid (origin at top left)
+tooltip.grid.path=Path-based grid (origin at top left)
+tooltip.grid.show=显示/隐藏网格线
+tooltip.group=组合所选对象
+tooltip.hsb=HSB (色相/饱和度/亮度) 模式颜色选择
+tooltip.jdr=保存或使用JDR文件中保存的画布设置
+tooltip.joinstyle=Set the join style between segments
+tooltip.latex_font=LaTeX中等价的字体家族
+tooltip.latex_font_series=LaTeX中等价的字体系列
+tooltip.latex_font_shape=LaTeX中等价的字体形状
+tooltip.latex_font_size=LaTeX中等价的字体大小
+tooltip.line_colour=设置线条颜色
+tooltip.line_style=设置线条样式
+tooltip.linewidth=Set the pen width
+tooltip.lock_grid=锁定网格线
+tooltip.math=Create a text area that will automatically insert math shift characters at the start and end of the LaTeX alternative text
+tooltip.navigate.goto=Move mouse to specified co-ordinates
+tooltip.navigate.select=Select the next object in the stack
+tooltip.navigate.add_next=Add the next object in the stack to the current selection
+tooltip.navigate.skip=Deselect the lowest selected object in the stack and add next object to selection
+tooltip.navigate.find=Scroll to selected object(s)
+tooltip.navigate.description=Select and scroll to an object from its description
+tooltip.navigate.add_description=Scroll to an object from its description and add to current selection
+tooltip.new=新建图片
+tooltip.next_control=选择下一个控制点
+tooltip.normalize=Set normalization factors
+tooltip.open=打开图片
+tooltip.open_curve=开放的三次B样条曲线工具
+tooltip.open_line=开放的直线段工具
+tooltip.open_path=除去最后一条线段以形成开放路径
+tooltip.open_path.remove_last=除去最后一条线段以形成开放路径
+tooltip.open_path.keep_last=Open keeping last segment
+tooltip.paste=粘贴剪贴板中的对象
+tooltip.path.edit=编辑所选路径
+tooltip.prev_control=Select the previous control point
+tooltip.rectangle=矩形工具
+tooltip.graphics=更改渲染设置
+tooltip.reset=Reset the underlying transformation matrix
+tooltip.rgb=RGB (Red Green Blue) 模式颜色选择
+tooltip.rotate=旋转所选对象
+tooltip.save=保存图片
+tooltip.scale=对所选对象比例缩放
+tooltip.shear=对所选对象倾斜变形
+tooltip.select=选择工具
+tooltip.select_all=选择所有对象
+tooltip.snap=Move the control to the nearest grid point
+tooltip.swatch.black=黑色
+tooltip.swatch.darkgrey=深灰色
+tooltip.swatch.grey=灰色
+tooltip.swatch.lightgrey=浅灰色
+tooltip.swatch.white=白色
+tooltip.swatch.darkblue=深蓝色
+tooltip.swatch.blue=蓝色
+tooltip.swatch.cyan=青色
+tooltip.swatch.green=绿色
+tooltip.swatch.darkgreen=深绿色
+tooltip.swatch.yellow=黄色
+tooltip.swatch.goldenrod=金黄色
+tooltip.swatch.orange=橙色
+tooltip.swatch.tan=棕褐色
+tooltip.swatch.rawsienna=棕黄色
+tooltip.swatch.red=红色
+tooltip.swatch.darkred=深红色
+tooltip.swatch.orchid=淡紫色
+tooltip.swatch.magenta=洋红色
+tooltip.swatch.pink=粉红色
+tooltip.close_anchor=Toggle whether the start point of the underlying path should be anchored
+tooltip.has_symmetry=Add or remove symmetry from the path
+tooltip.join_anchor=Toggle whether the last point of the underlying path should be anchored
+tooltip.startdir=设置启动目录
+tooltip.text=文本工具
+tooltip.text.edit=Edit selected text
+tooltip.text.colour=设置文本颜色
+tooltip.text.outline=Display text as an outline
+tooltip.ungroup=取消所选对象的组合
+tooltip.vScrollBlockDown=Block scroll down
+tooltip.vScrollBlockUp=Block scroll up
+tooltip.vScrollEndDown=Scroll down to end
+tooltip.vScrollEndUp=Scroll up to start
+tooltip.vScrollUnitDown=Scroll down
+tooltip.vScrollUnitUp=Scroll up
+tooltip.hScrollBlockLeft=Block scroll left
+tooltip.hScrollBlockRight=Block scroll right
+tooltip.hScrollEndLeft=Scroll left to start
+tooltip.hScrollEndRight=Scroll right to end
+tooltip.hScrollUnitLeft=Scroll left
+tooltip.hScrollUnitRight=Scroll right
+tooltip.pattern.set=Apply a pattern to selected shape
+tooltip.textpath=Convert to text-path
+tooltip.up=Move selected object(s) up the stack (z axis)
+tooltip.down=Move selected object(s) down the stack (z axis)
+tooltip.choose_file=Open file selector to choose a file
+
+# undo/redo information
+
+undo.add_point=增加控制点
+undo.anchor=设置锚定点
+undo.anchor_control=Anchor control
+undo.bitmap_properties=位图属性
+undo.break=断开路径
+undo.clear_flowframes=清除文本框链接
+undo.close=结束一条封闭路径
+undo.colour=更改颜色
+undo.continuous=曲线平滑
+undo.convert_to_curve=转换为曲线段
+undo.convert_to_line=转换为直接段
+undo.convert_to_move=转换为间断段
+undo.convert_to_path=转换为路径
+undo.convert_to_textpath=Convert to Text Path
+undo.convert_to_pattern=Convert to Pattern
+undo.distort=Start Distortion
+undo.distort_end=Distortion
+undo.deiconify_child_window=关闭子窗口
+undo.delete=删除
+undo.delete_point=删除控制点
+undo.deselect=取消选择
+undo.deselect_all=取消全选
+undo.deselect_child_window=取消选择子窗口
+undo.displaypage=设置显示页面
+undo.edit.finish=完成编辑
+undo.edit_pattern=Edit Pattern
+undo.edit.start=开始编辑
+undo.edit_text=编辑文本
+undo.fill_colour=更改填充颜色
+undo.set_frame=设定文本框链接
+undo.set_normalsize=Set Normal Size
+undo.set_doc_cls=Set Document Class
+undo.finish_new_text=完成新的文本区域
+undo.font=更改字体
+undo.group=组合
+undo.halign=设置水平对齐
+undo.iconify_child_window=最小化子窗口
+undo.justify=对齐
+undo.justify.bottom=底端对齐
+undo.justify.centre=水平居中
+undo.justify.left=左对齐
+undo.justify.middle=垂直居中
+undo.justify.top=顶端对齐
+undo.justify.right=右对齐
+undo.latexsize=设置 LaTeX 字体大小
+undo.line_colour=更改线条颜色
+undo.line_style=更改线条样式
+undo.merge_paths=合并路径
+undo.move=移动
+undo.move_point=移动控制点
+undo.move_to_back=置于底层
+undo.move_to_front=置于顶层
+undo.move_up=Move Up To Index \1
+undo.move_down=Move Down To Index \1
+undo.new_bitmap=新建位图
+undo.new_curve=新建曲线
+undo.new_ellipse=新建椭圆
+undo.new_line=新建直线
+undo.new_object=新建对象
+undo.new_rectangle=新建矩形
+undo.new_text=新建文本
+undo.open=开始一条封闭路径
+undo.paste=粘贴
+undo.path_intersect=路径求交
+undo.path_union=路径求并
+undo.pattern.remove=Remove Pattern
+undo.reset.distort=Reset Distortion
+undo.reset.text=Reset Text Matrix
+undo.reset.bitmap=Reset Bitmap Matrix
+undo.reverse=路径反向
+undo.rotate=旋转
+undo.scale=缩放
+undo.scale_x=水平缩放
+undo.scale_y=垂直缩放
+undo.separate=Separate
+undo.set_absolute_pages=flowframe pages setting
+undo.set_preamble=Edit Preamble
+undo.set_description=Set Description
+undo.splittext=Split Text
+undo.select_child_window=选择子窗口
+undo.set_current_settings=设定当前选项
+undo.set_typeblock=设定 Typeblock
+undo.shear=倾斜
+undo.select=选择
+undo.select_all=全选
+undo.select_point=选择控制点
+undo.set_tool=更改工具
+undo.start_new_text=开始新的文本区域
+undo.subtract_paths=路径求差
+undo.symmetry=Symmetry
+undo.symmetry.join_anchor=Symmetry Join Anchor
+undo.symmetry.close_anchor=Symmetry Close Anchor
+undo.text.outline=Set Text Outline Mode
+undo.ungroup=取消组合
+undo.valign=设置垂直对齐
+undo.xor_paths=路径异或
+undo.vectorize=Vectorize bitmap
+undo.set_storage_unit=Set Storage Unit
+undo.drag_and_drop=Drag and Drop
+undo.undo=Undo \1
+undo.redo=Redo \1
+
+# status bar messages
+
+info.title=Information
+info.help=帮助
+info.help.tooltip=帮助
+info.tooltip=Double-click to view full message
+info.closed_path=单击产生节点. 在最后节点上双击可结束路径.
+info.distort=Drag corner points to distort object.
+info.edit_path=单击控制点可选择线段.
+info.ellipse=单击产生中心点, 移动鼠标并单击完成绘制.
+info.grid.lock_on=Grid lock on
+info.grid.lock_off=Grid lock off
+info.loading=正在载入 \1
+info.modified=已被更改
+info.modified.tooltip=Image has been modified
+info.unmodified.tooltip=Image hasn't been modified
+info.storage_unit=Storage unit
+info.no_frames=点击"新建图片"按键或从菜单 文件->新建 开始
+info.no_frames_selected=要恢复文本框, 请在其图标上单击
+info.open_path=单击产生节点. 在最后节点上双击可结束路径.
+info.rectangle=单击产生第一个角控制点, 移动鼠标并单击形成对角控制点完成绘制.
+info.saving=正在保存 \1
+info.select=单击选择对象. Ctrl+单击增选对象. 双击选择底层对象.
+info.text=单击产生文本区域.
+info.math=单击产生文本区域.
+
+# error messages
+error.title=错误
+error.cant_create_intersect=无法建立交集
+error.with_line=行号 \1: \2
+error.with_line_and_col=行号 \1, Column \2: \3
+error.with_file_and_line=\1:\2: \3
+error.with_id=\1 (\2)
+error.with_found=\1; found '\2'
+error.conf.bad_paint_format=不适当的绘图格式, 行号: \1
+error.conf.boolean_value=逻辑值应当取值为0或1, 行号: \1
+error.conf.integer=不正确的整数取值, 行号: \1
+error.conf.bounded_integer=Integer value must lie between 0 and \1 on line \2
+error.conf.no_more_tokens=缺少足够的记号(token), 行号: \1
+error.conf.no_negative=不允许取负值, 行号: \1
+error.conf.number=缺少数值, 行号: \1
+error.conf.number_badrange=数值超出取值范围, 行号: \1
+error.conf.positive_only=缺少正整数值, 行号: \1
+error.conf.three_value=只能取0,1,2三个整数值, 行号: \1
+error.conf.too_many_tokens=出现了多余的记号(token), 行号: \1
+error.conf.unknown_key=不明键值: \1 (行号 \2)
+error.conf.unknown_tool=未知工具
+error.conf.invalid_path=Invalid path specification on line \1
+error.conf.invalid_path.rule=Invalid path winding rule specification on line \1
+error.conf.invalid_path.segment=Invalid path segment specification \1 on line \2
+error.conf.invalid_path.coord=Invalid path co-ordinate for segment type \1 on line \2
+error.config_cant_create=无法创建配置目录 \1
+error.config_failed=无法确定配置目录\n(你将不能更改当前的设置, 也无法保存最近文件列表)
+error.config_save_failed=无法保存当前配置(无法确定配置目录)
+error.convert_to_path_failed=无法转换为路径
+error.empty_string=空串
+error.eof=File ended prematurely
+error.fatal=致使错误
+error.file_not_found=无法找到文件
+error.finish_or_discard=在关闭当前图像前必需完成或放弃当前路径
+error.invalid_paint-id=无效的颜色标识符
+error.id.endcolour=无效的颜色结束标识符
+error.id.linestyle=缺少线条样式标识符
+error.invalid_object-id=无效的对象标识符
+error.invalid_path-open-close-id=缺少 open/closed 标识符
+error.invalid_paper-id=无效的纸张标识符
+error.invalid_segment-id=无效的线段标识符
+error.invalid_settings-id=无效的设置标识符
+error.id.shape=无效的开关标识符
+error.id.startcolour=无效的颜色起始标识符
+error.invalid_setting-tool=无效的工具标识符
+error.invalid_unit-id=无效的单位标识符
+error.id.point=Invalid point index
+error.idl_exists=此标签已存在
+error.invalid_alpha=无效的透明度取值
+error.invalid_arrow_type=无效的箭头类型
+error.invalid_arrow_composite=无效的箭头复合
+error.invalid_black=无效的"黑色"取值
+error.invalid_blue=无效的"蓝色"取值
+error.invalid_cap-style=无效的线头样式
+error.invalid_cyan=无效的"青色"取值
+error.invalid_description_length=描述长度不能为负值
+error.invalid_dimension=无效的度量
+error.invalid_gradient-direction=无效的梯度方向
+error.invalid_radial-gradient-location=无效的梯度方向
+error.invalid_gradient-end=无效的结束颜色类型
+error.invalid_radial-gradient-end=无效的结束颜色类型
+error.invalid_family_length=字体家族长度不能为0或负值
+error.invalid_filename_length=文件名长度不能为0或负值
+error.invalid_format=无效的格式, 行号: \1
+error.invalid_frame-type=无效的框架类型
+error.invalid_green=无效的"绿色"取值
+error.invalid_idl_length=IDL 长度值不能为负
+error.invalid_imageformat=无法识别的图像格式
+error.invalid_join-style=无效的接头样式
+error.invalid_latexfilename_length=LaTeX文件名长度不能为0或负值
+error.invalid_halign=无效的 halign 取值
+error.invalid_latex_family_length=LaTeX 字体家族长度不能为0或负值
+error.invalid_latex_imagecmd_length=LaTeX 图片命令长度不能为负值
+error.invalid_latex_series_length=LaTeX 字体系列长度不能为负值
+error.invalid_latex_shape_length=LaTeX 字体形状长度不能为负值
+error.invalid_latex_size_length=LaTeX 字体大小长度不能为负值
+error.invalid_valign=无效的 valign 取值
+error.invalid_linkname=无效的位图链接名称 '\1'
+error.invalid_magenta=无效的"洋红色"取值
+error.invalid_mitre-limit=无效的斜角延长上限值(取值不能小于11)
+error.invalid_object=无效的对象
+error.invalid_frame-page-list=无效的页面列表
+error.invalid_pagelist_length=页面列表长度不能为负值
+error.invalid_paper_dimension=无效的纸张大小 \1
+error.invalid_penwidth=线条宽度不能为负值
+error.invalid_ruler_width=Invalid ruler width '\1'
+error.invalid_ruler_height=Invalid ruler height '\1'
+error.invalid_series=无效的字体系列标识符
+error.invalid_shape=无效的字体形状标识符
+error.invalid_size=字体大小不能为负值
+error.invalid_gradient-start=无效的起始颜色类型
+error.invalid_radial-gradient-start=无效的起始颜色类型
+error.invalid_red=无效的"红色"取值
+error.invalid_text_length=文本长度不能为0或负值
+error.invalid_unit-name=无效的单位
+error.invalid_winding-rule=无效的区域内外识别绕行规则
+error.invalid_yellow=无效的"黄色"取值
+error.invalid_codepoint=Invalid code point '\1'
+error.invalid_group-size=Invalid group size
+error.invalid_angle=Invalid angle
+error.invalid_angle_id=Invalid angle ID
+error.invalid_angle_value=Invalid angle value
+error.invalid_setting-absolute-pages=Invalid absolute pages setting
+error.invalid_setting-cls=Invalid document class setting
+error.invalid_setting-preamble=Invalid early preamble setting
+error.invalid_setting-mid-preamble=Invalid mid preamble setting
+error.invalid_setting-end-preamble=Invalid late preamble setting
+error.invalid_setting-scale-control=Invalid scale control setting
+error.invalid_setting-pointsize=Invalid control size setting
+error.invalid_setting-normalsize=Invalid normalsize setting
+error.invalid_setting-show-rulers=Invalid show rulers setting
+error.invalid_setting-show-grid=Invalid show grid setting
+error.invalid_setting-grid-lock=Invalid grid lock setting
+error.invalid_paper-portrait-flag=Invalid portrait setting
+error.invalid_paper-width=Invalid paper width setting
+error.invalid_paper-height=Invalid paper height setting
+error.invalid_frame-even-x-shift=Invalid frame even page x shift
+error.invalid_frame-even-y-shift=Invalid frame even page y shift
+error.invalid_frame-contents=Invalid frame contents
+error.invalid_frame-valign=Invalid frame valign
+error.invalid_frame-shape=Invalid frame shape
+error.invalid_frame-margin-right=Invalid frame right margin
+error.invalid_frame-margin-left=Invalid frame left margin
+error.invalid_frame-margin-top=Invalid frame top margin
+error.invalid_frame-margin-bottom=Invalid frame bottom margin
+error.invalid_frame-idl=Invalid frame label
+error.invalid_frame-flag=Invalid frame flag
+error.invalid_frame-border-flag=Invalid frame flag
+error.invalid_text-path-delim-left=Invalid text-path left delimiter
+error.invalid_text-path-delim-right=Invalid text-path right delimiter
+error.invalid_text-path-text=Invalid text-path text
+error.invalid_text-path-LaTeX-text=Invalid text-path LaTeX text
+error.invalid_text-path-LaTeX-flag=Invalid text-path LaTeX flag
+error.invalid_text-path-valign=Invalid text-path vertical alignment
+error.invalid_text-path-halign=Invalid text-path horizontal alignment
+error.invalid_text-path-transform=Invalid text-path transformation
+error.invalid_text-path-unsupported-version=Text-paths not supported for this version
+error.invalid_text-path-shape=Invalid text-path shape
+error.invalid_symmetric-close-anchored=Invalid symmetric close anchored setting
+error.invalid_symmetric-closed=Invalid symmetric closed setting
+error.invalid_symmetric-line-x0=Invalid symmetric line x0 setting
+error.invalid_symmetric-line-y0=Invalid symmetric line y0 setting
+error.invalid_symmetric-line-x1=Invalid symmetric line x1 setting
+error.invalid_symmetric-line-y1=Invalid symmetric line y1 setting
+error.invalid_symmetric-anchored=Invalid symmetric anchored setting
+error.invalid_symmetric-shape=Invalid symmetric shape setting
+error.invalid_spiral-show-original=Invalid spiral show original setting
+error.invalid_spiral-single=Invalid spiral single setting
+error.invalid_spiral-replicas=Invalid spiral replicas setting
+error.invalid_spiral-distance=Invalid spiral distance setting
+error.invalid_spiral-angle=Invalid spiral angle setting
+error.invalid_spiral-adjust-x=Invalid spiral adjust x setting
+error.invalid_spiral-adjust-y=Invalid spiral adjust y setting
+error.invalid_spiral-anchor-x=Invalid spiral anchor x setting
+error.invalid_spiral-anchor-y=Invalid spiral anchor y setting
+error.invalid_spiral-shape=Invalid spiral shape setting
+error.invalid_scaled-show-original=Invalid scaled pattern show original setting
+error.invalid_scaled-single=Invalid scaled pattern single setting
+error.invalid_scaled-replicas=Invalid scaled pattern replicas setting
+error.invalid_scaled-factor-x=Invalid scaled pattern factor x setting
+error.invalid_scaled-factor-y=Invalid scaled pattern factor y setting
+error.invalid_scaled-adjust-x=Invalid scaled pattern adjust x setting
+error.invalid_scaled-adjust-y=Invalid scaled pattern adjust y setting
+error.invalid_scaled-anchor-x=Invalid scaled pattern anchor x setting
+error.invalid_scaled-anchor-y=Invalid scaled pattern anchor y setting
+error.invalid_scaled-shape=Invalid scaled pattern shape setting
+error.invalid_rotational-show-original=Invalid rotational pattern show original setting
+error.invalid_rotational-single=Invalid rotational pattern single setting
+error.invalid_rotational-replicas=Invalid rotational pattern replicas setting
+error.invalid_rotational-angle=Invalid rotational pattern angle setting
+error.invalid_rotational-anchor-x=Invalid rotational pattern anchor x setting
+error.invalid_rotational-anchor-y=Invalid rotational pattern anchor y setting
+error.invalid_rotational-shape=Invalid rotational pattern shape setting
+error.invalid_path-anchor-index=Invalid path anchor index
+error.invalid_path-start-x=Invalid path start x
+error.invalid_path-start-y=Invalid path start y
+error.invalid_path-size=Invalid path size
+error.invalid_hsb=Invalid HSB
+error.invalid_cmyk=Invalid CMYK
+error.invalid_rgb=Invalid RGB
+error.invalid_gray=Invalid gray
+error.invalid_hue=Invalid hue
+error.invalid_saturation=Invalid saturation
+error.invalid_brightness=Invalid brightness
+error.invalid_partial-bezier-cy=Invalid partial Bezier cy
+error.invalid_partial-bezier-cx=Invalid partial Bezier cx
+error.invalid_move-x0=Invalid move x0
+error.invalid_move-y0=Invalid move y0
+error.invalid_move-x1=Invalid move x1
+error.invalid_move-y1=Invalid move y1
+error.invalid_line-x0=Invalid line x0
+error.invalid_line-y0=Invalid line y0
+error.invalid_line-x1=Invalid line x1
+error.invalid_line-y1=Invalid line y1
+error.invalid_bezier-x0=Invalid Bezier x0
+error.invalid_bezier-y0=Invalid Bezier y0
+error.invalid_bezier-x1=Invalid Bezier x1
+error.invalid_bezier-y1=Invalid Bezier y1
+error.invalid_bezier-c1x=Invalid Bezier c1x
+error.invalid_bezier-c1y=Invalid Bezier c1y
+error.invalid_bezier-c2x=Invalid Bezier c2x
+error.invalid_bezier-c2y=Invalid Bezier c2y
+error.invalid_grid-major=Invalid grid major value
+error.invalid_grid-minor=Invalid grid minor value
+error.invalid_grid-spokes=Invalid grid spokes value
+error.invalid_pen-width=Invalid pen width
+error.invalid_path-style-id=Invalid path style ID
+error.invalid_grid-id=Invalid grid ID
+error.invalid_LaTeX-image-cmd=Invalid LaTeX image command
+error.invalid_LaTeX-filename=Invalid LaTeX filename
+error.invalid_bitmap-transform=Invalid bitmap transformation
+error.invalid_bitmap-LaTeX-flag=Invalid bitmap LaTeX flag
+error.invalid_bitmap-filename=Invalid bitmap filename
+error.invalid_LaTeX-font-size=Invalid LaTeX font size
+error.invalid_LaTeX-font-shape=Invalid LaTeX font shape
+error.invalid_LaTeX-font-weight=Invalid LaTeX font weight
+error.invalid_LaTeX-font-family=Invalid LaTeX font family
+error.invalid_LaTeX-font-flag=Invalid LaTeX font flag
+error.invalid_text-outline-flag=Invalid text outline flag
+error.invalid_font-transform=Invalid font transformation
+error.invalid_font-size=Invalid font size
+error.invalid_font-shape=Invalid font shape
+error.invalid_font-weight=Invalid font weight
+error.invalid_format-tag=Invalid format tag
+error.invalid_jdr-format=Invalid JDR format
+error.invalid_version=Invalid version
+error.invalid_text=Invalid text
+error.invalid_LaTeX-text=Invalid LaTeX text
+error.invalid_dash-offset=Invalid dash offset
+error.invalid_dash-pattern=Invalid dash pattern
+error.invalid_marker-repeat-offset=Invalid marker repeat offset
+error.invalid_marker-repeat-offset-flag=Invalid marker repeat offset flag
+error.invalid_marker-offset=Invalid marker offset
+error.invalid_marker-offset-flag=Invalid marker offset flag
+error.invalid_marker-overlay-flag=Invalid marker overlay flag
+error.invalid_marker-orient-angle=Invalid marker orient angle
+error.invalid_marker-auto-orient=Invalid marker auto orient setting
+error.invalid_marker-reversed=Invalid marker reversed setting
+error.invalid_marker-repeat=Invalid marker repeat setting
+error.invalid_marker-size=Invalid marker size
+error.invalid_marker-id=Invalid marker ID
+error.invalid_length=Invalid length
+error.invalid_description=Invalid description
+error.io.helpset=帮助文档集合无法打开
+error.io.close=无法关闭文件
+error.io.dir_not_exists=目录 '\1' 不存在
+error.io.load=无法装载文件
+error.io.in_progress=I/O operation in progress
+error.io.invalid_map=Invalid mapping '\1'
+error.io.invalid_array_length=Invalid array length \1
+error.io.not_directory='\1' 不是一个有效的目录
+error.io.not_exists=无法打开文件(找不到文件)\n\1
+error.io.open=无法打开文件 '\1'
+error.io.save=无法保存文件
+error.io.rename=Unable to rename '\1' -> '\2'
+error.missing_papersize=在"-paper"选项之后缺少纸张大小参数
+error.missing_paper_width=在"-paper user"选项之后缺少纸张宽度
+error.missing_paper_height=在"-paper user"选项之后缺少纸张高度
+error.missing_cwd=在"-cwd"选项后缺少路径
+error.missing_verbosity=Missing level after -verbosity switch
+error.invalid_verbosity=Number expected after -verbosity switch
+error.negative_dash=虚线模式中线段长度不能取负值
+error.no_filename=没有指定文件名
+error.no_helpset=帮助文档集未找到
+error.no_typeblock=未设定Typeblock
+error.misplaced_typeblock=Missplaced typeblock
+error.no_idl=未指定标签
+error.not_a_directory=\1 不是一个目录
+error.not_ajr=不是一个AJR文件
+error.not_found=文件未找到
+error.not_jdr=不是一个JDR文件
+error.one_filename=只允许使用一个文件名
+error.out_of_memory=内存溢出
+error.paper_dimension=在"-paper user"选项之后缺少纸张大小
+error.parshape.convert=区域无法转换为\\parshape
+error.printing=打印错误
+error.printing.no_service=打印机服务不存在
+error.shape.incompatible=不兼容的区域形状
+error.shape.nowidth=区域形状无高度值
+error.shape.noheight=区域形状无宽度值
+error.shape.too_many_intersects=水平扫描时与区域形状边界相交超过两次 (x=\1, y=\2)
+error.shapepar.convert=区域无法转换为\\1hapepar
+error.split_failed=无法拆分文本区域
+error.top_level_missing=缺少顶层组合标识符
+error.unknown_ajr_version=AJR文件版本号不明
+error.unknown_font=未知的字体家族
+error.unknown_font_select=请选择新的字体家族
+error.unknown_jdr_version=JDR文件版本号不明
+error.unknown_option=不明选项 \1
+error.unknown_papersize=未知的纸张大小 \1
+error.interrupted=Process interrupted
+error.timedout=Process timed-out (process time limit: \1ms)
+error.exec_failed=Failed to execute: \1
+error.exec_failed_withcode=Failed to execute: \1 (error code \2)
+error.exec_failed_withcode_and_dir=Failed to execute: \1 running in directory '\2' (error code \3)
+error.try_latex_export=Try exporting to a LaTeX document and compile it using your usual build process.
+error.cant_find_app=Can't locate application '\1'
+error.possible_malformed_1_7=Possible malformed 1.7 file. Attempting to read again.
+error.no_current_point=No current point
+
+# internal error messages
+internal_error.title=内部错误
+internal_error.can_only_merge_paths=只能合并路径
+internal_error.cant_find_selected_segment=找不到所选线段
+internal_error.cant_find_selected_text=Can't find selected text
+internal_error.close_empty=无法封闭空路径
+internal_error.convert_to_path=无法转换成路径
+internal_error.empty_path=空路径
+internal_error.empty_group=Empty group
+internal_error.finish_edit_path_failed=不能完成编辑路径
+internal_error.no_helpset=帮助文档无法初始化
+internal_error.ill_fitting=不能闭合路径: ill-fitting segment
+internal_error.integer_key='\1'的键值需要是一个整数
+internal_error.invalid_startdir=无效的启动目录
+internal_error.missing_move=Missing initial move to
+internal_error.no_bitmap=未选择位图
+internal_error.no_path=未选择路径
+internal_error.no_segment_selected=未选择线段
+internal_error.non_abutting=线段与路径中的最末端不相邻
+internal_error.undefined_key=未定义的键值: 
+internal_error.unknown_paint=未知的 DrawPaint 类型
+
+# warning messages
+warning.title=警告
+warning.tag=警告: \1
+warning.draft_bitmap=没有足够的内存载入位图.\n改用草稿模式.
+warning.draft_bitmaps=载入一个或多个位图时没有足够的内存.\n改用草稿模式.
+warning.file_exists=文件已经存在, 要覆盖它吗?
+warning.save.ajr=保存为旧版本的AJR格式(\1)可能会引发数据丢失.\n确认继续吗?
+warning.save.jdr=保存为旧版本的JDR格式(\1)可能会引发数据丢失.\n确认继续吗?
+warning.load.jdr=检测到旧的JDR格式(\1).  当再次保存时将转换为\n新的JDR格式, 若仍要保留原始格式, 请另存为"flowframtk 图片文件 \1 (*.jdr)"格式.
+warning.load.ajr=检测到旧的AJR格式(\1).  当再次保存时将转换为\n新的AJR格式, 若仍要保留原始格式, 请另存为"flowframtk ascii 文件 \1 (*.ajr)"格式.
+warning.no_flowframe_data=No flow frame data found.
+warning.no_robot=无法初始化机器人. 你将无法使用键盘上的方向键移动鼠标光标.
+warning.pgf-no-text-shading=text shading paint can't be exported to pgf
+warning.pgf-no-textpath-outline=text-path outline can't be exported to pgf
+warning.pgf-no-stroke-shading=stroke shading paint can't be exported to pgf
+warning.pgf-shading-mixed-opacity=pgf shading mixed opacity has been averaged
+warning.pgf-no-marker-shading=marker shading paint can't be exported to pgf
+warning.no_background_image=Not enough memory to create a background image. Switching to optimize memory setting.
+warning.save_unsupported_object=Object type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_paint=Paint type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_segment=Segment type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_grid=Grid type '\1' not supported in JDR/AJR version \2
+warning.save_unsupported_preamble=Preamble not supported in JDR/AJDR version \1
+warning.save_unsupported_extra_preamble=Mid/End Preamble not supported in JDR/AJDR version \1
+warning.save_unsupported_docclass=Document class not supported in JDR/AJDR version \1
+warning.save_unsupported_storage_unit=Storage unit '\1' not supported in JDR/AJDR version \2 (co-ordinates will be converted to bp)
+warning.save_unsupported_flow_frame=Flow frame data not supported by JDR/AJR version \1 has been omitted
+warning.save_unsupported_text_path_delim=Text path format delimiters not supported by JDR/AJR version \1
+warning.unknown_drop=Don't know what to do with dropped file '\1'
+
+# stack trace
+stacktrace.message=错误信息(E)
+stacktrace.message.mnemonic=E
+stacktrace.details=详细描述(D)
+stacktrace.details.mnemonic=D
+stacktrace.copy=复制(C)
+stacktrace.copy.mnemonic=C
+
+# fade dialog box
+fade.title=Fade Colours
+
+# export to png dialog box
+exportpng.title=Export to PNG
+exportpng.usealpha=Transparent Background
+exportpng.usealpha.mnemonic=T
+exportpng.crop=Crop
+exportpng.crop.mnemonic=P
+
+# rotate dialog box
+rotate.title=旋转
+rotate.rotateby=旋转(R)
+rotate.rotateby.mnemonic=R
+rotate.degrees=角度(D)
+rotate.degrees.mnemonic=D
+rotate.radians=弧度(A)
+rotate.radians.mnemonic=A
+
+# scale dialog box
+scale.title=缩放
+scale.both=等比例(B)
+scale.both.mnemonic=B
+scale.x=水平缩放比例(X)
+scale.x.mnemonic=X
+scale.y=垂直缩放比例(Y)
+scale.y.mnemonic=Y
+
+# shear dialog box
+shear.title=倾斜
+shear.x=水平方向倾斜(X)
+shear.x.mnemonic=X
+shear.y=垂直方向倾斜(Y)
+shear.y.mnemonic=Y
+
+# symbol selector
+symbol.title=插入符号
+symbol.unicode=Unicode
+symbol.unicode.mnemonic=U
+symbol.insertAtCaret=选择
+symbol.insertAtCaret.mnemonic=S
+symbol.insertAtCaret.tooltip=选择
+symbol.text=Text
+symbol.text.mnemonic=T
+symbol.select.tooltip=Insert symbol with given unicode value into text
+symbol.unicode.tooltip=Enter hexadecimal unicode value
+symbol.mode.text=Text
+symbol.mode.maths=Math
+symbol.mapping_mode=Mapping Mode: \1
+
+# Unicode blocks
+
+unicode.blocks.title=Unicode Block
+unicode.BASIC_LATIN=Basic Latin
+unicode.LATIN_1_SUPPLEMENT=Latin-1 Supplement
+unicode.LATIN_EXTENDED_A=Latin Extended A
+unicode.LATIN_EXTENDED_B=Latin Extended B
+unicode.IPA_EXTENSIONS=IPA Extensions
+unicode.SPACING_MODIFIER_LETTERS=Spacing Modifier Letters
+unicode.COMBINING_DIACRITICAL_MARKS=Combing Diacritical Marks
+unicode.GREEK=Greek
+unicode.CYRILLIC=Cyrillic
+unicode.CYRILLIC_SUPPLEMENTARY=Cyrillic Supplementary
+unicode.ARMENIAN=Armenian
+unicode.HEBREW=Hebrew
+unicode.ARABIC=Arabic
+unicode.SYRIAC=Syriac
+unicode.ARABIC_SUPPLEMENT=Arabic Supplement
+unicode.THAANA=Thaana
+unicode.NKO=NKO
+unicode.SAMARITAN=Samaritan
+unicode.MANDAIC=Mandaic
+unicode.DEVANAGARI=Devangari
+unicode.BENGALI=Bengali
+unicode.GURMUKHI=Gurmukhi
+unicode.GUJARATI=Gujarati
+unicode.ORIYA=Oriya
+unicode.TAMIL=Tamil
+unicode.TELUGU=Telugu
+unicode.KANNADA=Kannada
+unicode.MALAYALAM=Malayalam
+unicode.SINHALA=Sinhala
+unicode.THAI=Thai
+unicode.LAO=Lao
+unicode.TIBETAN=Tibetan
+unicode.MYANMAR=Myanmar
+unicode.GEORGIAN=Georgian
+unicode.HANGUL_JAMO=Hangul Jamo
+unicode.ETHIOPIC=Ethiopic
+unicode.ETHIOPIC_SUPPLEMENT=Ethiopic Supplement
+unicode.CHEROKEE=Cherokee
+unicode.UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS=Unified Canadian Aboriginal Syllabics
+unicode.OGHAM=Ogham
+unicode.RUNIC=Runic
+unicode.TAGALOG=Tagalog
+unicode.HANUNOO=Hanunoo
+unicode.BUHID=Buhid
+unicode.TAGBANWA=Tagbanwa
+unicode.KHMER=Khmer
+unicode.MONGOLIAN=Mongolian
+unicode.UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED=Unified Canadian Aboriginal Syllabics Extended
+unicode.LIMBU=Limbu
+unicode.TAI_LE=Tai Le
+unicode.NEW_TAI_LUE=New Tai Lue
+unicode.KHMER_SYMBOLS=Khmer Symbols
+unicode.BUGINESE=Buginese
+unicode.TAI_THAM=Tai Tham
+unicode.BALINESE=Balinese
+unicode.SUNDANESE=Sudanese
+unicode.BATAK=Batak
+unicode.LEPCHA=Lepcha
+unicode.OL_CHIKI=Ol Chiki
+unicode.VEDIC_EXTENSIONS=Vedic Extensions
+unicode.PHONETIC_EXTENSIONS=Phonetic Extensions
+unicode.PHONETIC_EXTENSIONS_SUPPLEMENT=Phonetic Extensions Supplement
+unicode.COMBINING_DIACRITICAL_MARKS_SUPPLEMENT=Combining Diacritical Marks Supplement
+unicode.LATIN_EXTENDED_ADDITIONAL=Latin Extended Additional
+unicode.GREEK_EXTENDED=Greek Extended
+unicode.GENERAL_PUNCTUATION=General Punctuation
+unicode.SUPERSCRIPTS_AND_SUBSCRIPTS=Superscripts and Subscripts
+unicode.CURRENCY_SYMBOLS=Currency Symbols
+unicode.COMBINING_MARKS_FOR_SYMBOLS=Combining Marks for Symbols
+unicode.LETTERLIKE_SYMBOLS=Letter-like Symbols
+unicode.NUMBER_FORMS=Number Forms
+unicode.ARROWS=Arrows
+unicode.MATHEMATICAL_OPERATORS=Mathematical Operators
+unicode.MISCELLANEOUS_TECHNICAL=Miscellaneous Technical
+unicode.CONTROL_PICTURES=Control Pictures
+unicode.OPTICAL_CHARACTER_RECOGNITION=Optical Character Recognition
+unicode.ENCLOSED_ALPHANUMERICS=Enclosed Alphanumerics
+unicode.BOX_DRAWING=Box Drawing
+unicode.BLOCK_ELEMENTS=Block Elements
+unicode.GEOMETRIC_SHAPES=Geometric Shapes
+unicode.MISCELLANEOUS_SYMBOLS=Miscellaneous Symbols
+unicode.DINGBATS=Dingbats
+unicode.MISCELLANEOUS_MATHEMATICAL_SYMBOLS_A=Miscellaneous Mathematical Symbols A
+unicode.SUPPLEMENTAL_ARROWS_A=Supplemental Arrows-A
+unicode.BRAILLE_PATTERNS=Braille Patterns
+unicode.SUPPLEMENTAL_ARROWS_B=Supplemental Arrows-B
+unicode.SUPPLEMENTAL_ARROWS_C=Supplemental Arrows-C
+unicode.MISCELLANEOUS_MATHEMATICAL_SYMBOLS_B=Miscellaneous Mathematical Symbols B
+unicode.SUPPLEMENTAL_MATHEMATICAL_OPERATORS=Supplemental Mathematical Operators
+unicode.MISCELLANEOUS_SYMBOLS_AND_ARROWS=Miscellaneous Symbols and Arrows
+unicode.GLAGOLITIC=Glagolitic
+unicode.LATIN_EXTENDED_C=Latin Extended C
+unicode.COPTIC=Coptic
+unicode.GEORGIAN_SUPPLEMENT=Georgian Supplement
+unicode.TIFINAGH=Tifinagh
+unicode.ETHIOPIC_EXTENDED=Ethiopic Extended
+unicode.CYRILLIC_EXTENDED_A=Cyrillic Extended
+unicode.SUPPLEMENTAL_PUNCTUATION=Supplemental Punctuation
+unicode.CJK_RADICALS_SUPPLEMENT=CJK Radicals Supplement
+unicode.KANGXI_RADICALS=Kangxi Radicals
+unicode.IDEOGRAPHIC_DESCRIPTION_CHARACTERS=Ideographic Description Characters
+unicode.CJK_SYMBOLS_AND_PUNCTUATION=CJK Symbols and Punctuation
+unicode.HIRAGANA=Hiragana
+unicode.KATAKANA=Katakana
+unicode.BOPOMOFO=Bopomofo
+unicode.HANGUL_COMPATIBILITY_JAMO=Hangul Compatibility
+unicode.KANBUN=Kanbun
+unicode.BOPOMOFO_EXTENDED=Bopomofo Extended
+unicode.CJK_STROKES=CJK Strokes
+unicode.KATAKANA_PHONETIC_EXTENSIONS=Katakana Phoentic Extensions
+unicode.ENCLOSED_CJK_LETTERS_AND_MONTHS=Enclosed CJK Letters and Months
+unicode.CJK_COMPATIBILITY=CJK Compatibility
+unicode.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A=CJK Unified Ideographs Extension A
+unicode.YIJING_HEXAGRAM_SYMBOLS=Yijin Hexagram Symbols
+unicode.CJK_UNIFIED_IDEOGRAPHS=CJK Unified Ideographs
+unicode.YI_SYLLABLES=Yi Syllables
+unicode.YI_RADICALS=Yi Radicals
+unicode.LISU=Lisu
+unicode.VAI=Vai
+unicode.CYRILLIC_EXTENDED_B=Cyrillic Extended
+unicode.BAMUM=Bamum
+unicode.MODIFIER_TONE_LETTERS=Modifier Tone Letters
+unicode.LATIN_EXTENDED_D=Latin Extended D
+unicode.SYLOTI_NAGRI=Syloti Nagri
+unicode.COMMON_INDIC_NUMBER_FORMS=Common Indic Number Forms
+unicode.PHAGS_PA=Phags Pa
+unicode.SAURASHTRA=Saurashtra
+unicode.DEVANAGARI_EXTENDED=Devanagari
+unicode.KAYAH_LI=Kayah Li
+unicode.REJANG=Rejang
+unicode.HANGUL_JAMO_EXTENDED_A=Hangul Jamo Extended
+unicode.JAVANESE=Javanese
+unicode.CHAM=Cham
+unicode.MYANMAR_EXTENDED_A=Myanmar Extended A
+unicode.TAI_VIET=Tai Viet
+unicode.ETHIOPIC_EXTENDED_A=Ethiopic Extended A
+unicode.MEETEI_MAYEK=Meetei Mayek
+unicode.HANGUL_SYLLABLES=Hangul Syllables
+unicode.HANGUL_JAMO_EXTENDED_B=Hangul Jamo Extended B
+unicode.CJK_COMPATIBILITY_IDEOGRAPHS=CJK Compatibility Ideographs
+unicode.ALPHABETIC_PRESENTATION_FORMS=Alphabetic Presentation Forms
+unicode.ARABIC_PRESENTATION_FORMS_A=Arabic Presentation Forms
+unicode.VARIATION_SELECTORS=Variation Selectors
+unicode.VERTICAL_FORMS=Vertical Forms
+unicode.COMBINING_HALF_MARKS=Combining Half Marks
+unicode.CJK_COMPATIBILITY_FORMS=CJK Compatibility Forms
+unicode.SMALL_FORM_VARIANTS=Small Form Variants
+unicode.ARABIC_PRESENTATION_FORMS_B=Arabic Presentation Forms B
+unicode.MATHEMATICAL_ALPHANUMERIC_SYMBOLS=Mathematical Alphanumeric Symbols
+unicode.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS=Miscellaneous Symbols and Pictographs
+
+# file chooser
+fc.append_ext=添加扩展名
+
+# save/discard/cancel dialog box
+discard.title=保存图片?
+discard.image=图片:
+discard.image_not_saved=图片未保存.
+discard.images_not_saved=\1 images have not been saved.
+discard.save_all=保存(S)
+discard.save_all.mnemonic=S
+discard.save=保存
+discard.discard_all=放弃(D)
+discard.discard_all.mnemonic=D
+discard.discard=放弃
+discard.cancel=取消(C)
+discard.cancel.mnemonic=C
+label.discard=放弃
+
+# line colour selector
+linecolour.title=设置线条颜色
+linecolour.label=线条颜色(I)
+linecolour.mnemonic=I
+
+# fill colour selector
+fillcolour.title=设置填充颜色
+fillcolour.label=填充颜色(F)
+fillcolour.mnemonic=F
+
+# line style selector
+linestyle.title=设置线条样式
+linestyle.label=线条样式(S)
+linestyle.mnemonic=S
+linestyle.thickness=粗细(P)
+linestyle.thickness.mnemonic=P
+linestyle.solid=实线(L)
+linestyle.solid.mnemonic=L
+linestyle.dashed=虚线(A)
+linestyle.dashed.mnemonic=A
+linestyle.cap=线头样式(Y)
+linestyle.cap.mnemonic=Y
+linestyle.cap.butt=平线头
+linestyle.cap.round=圆线头
+linestyle.cap.square=方线头
+linestyle.join=接头样式(J)
+linestyle.join.mnemonic=J
+linestyle.join.bevel=斜面接头
+linestyle.join.mitre=斜角接头
+linestyle.join.round=圆弧接头
+linestyle.mitre_limit=斜角延长上限值(R)
+linestyle.mitre_limit.mnemonic=R
+linestyle.arrow.start=始端箭头(K)
+linestyle.arrow.start.mnemonic=K
+linestyle.arrow.mid=中间箭头(M)
+linestyle.arrow.mid.mnemonic=M
+linestyle.arrow.end=末端箭头(E)
+linestyle.arrow.end.mnemonic=E
+linestyle.arrow.all=所有箭头
+linestyle.winding_rule=判定封闭区域内外的绕行规则(W)
+linestyle.winding_rule.mnemonic=W
+linestyle.winding_rule.eo=奇偶规则[奇内偶外]
+linestyle.winding_rule.nz=非零规则[非零为内]
+
+# dash patterns panel
+
+dashpattern.title=虚线模式
+dash.label=线段
+dash.gap=间隔
+dash.offset=偏移
+dash.secondary=辅助虚线
+
+# size panel
+
+arrow.size=大小(Z)
+arrow.size.mnemonic=Z
+
+# arrow styles
+
+arrow.altbar=Alt Bar
+arrow.altround=Alt Round
+arrow.altsquare=Alt Square
+arrow.altbrace=Alt Brace
+arrow.altlatex=Alt LaTeX
+arrow.altlatex.open=Alt LaTeX Open
+arrow.asterisk=Asterisk
+arrow.autogap=自动确定相邻符号间距(G)
+arrow.autogap.mnemonic=G
+arrow.autooffset=自动确定末端偏移量(F)
+arrow.autooffset.mnemonic=F
+arrow.autoorient=自动确定方向(I)
+arrow.autoorient.mnemonic=I
+arrow.ballcap=Ball Cap
+arrow.bar=Bar
+arrow.boxfilled=Box Filled
+arrow.boxopen=Box Open
+arrow.brace=Brace
+arrow.bulgecap=Bulge Cap
+arrow.chevroncap=Chevron Cap
+arrow.circle=Circle
+arrow.circle.open=Circle Open
+arrow.clubcap=Club Cap
+arrow.composite=允许多种箭头复合(M)
+arrow.composite.mnemonic=M
+arrow.cross=Cross
+arrow.cusp=Cusp
+arrow.cutoutbulgecap=Cutout Bulge Cap
+arrow.diamond=Diamond
+arrow.diamond.open=Diamond Open
+arrow.dotfilled=Dot Filled
+arrow.dotopen=Dot Open
+arrow.double=两个(B)
+arrow.double.mnemonic=B
+arrow.doubleleafcap=Double Leaf Cap
+arrow.doubleleafbackcap=Backwards Double Leaf Cap
+arrow.doubleleafforwardcap=Forward Double Leaf Cap
+arrow.equilateral.filled=Equilateral Filled
+arrow.equilateral.open=Equilateral Open
+arrow.fastcap=Fast Cap
+arrow.halfcusp.down=Half Cusp Down
+arrow.halfcusp.up=Half Cusp Up
+arrow.halfpointed.down=Half Pointed Down
+arrow.halfpointed.up=Half Pointed Up
+arrow.halfpointed45.down=Half Pointed 45 Down
+arrow.halfpointed45.up=Half Pointed 45 Up
+arrow.halfpointed60.down=Half Pointed 60 Down
+arrow.halfpointed60.up=Half Pointed 60 Up
+arrow.heart.filled=Heart Filled
+arrow.heart.open=Heart Open
+arrow.heart.right.filled=Right Heart Filled
+arrow.heart.right.open=Right Heart Open
+arrow.hexagon.filled=Hexagon Filled
+arrow.hexagon.open=Hexagon Open
+arrow.hook.up=Hook Up
+arrow.hook.down=Hook Down
+arrow.hooks=Hooks
+arrow.invertchevroncap=Inverted Chevron Cap
+arrow.invertfastcap=Inverted Fast Cap
+arrow.inverttrianglecap=Inverted Triangle Cap
+arrow.latex=LaTeX
+arrow.leafcap=Leaf Cap
+arrow.nomarker=不使用箭头符号(N)
+arrow.nomarker.mnemonic=N
+arrow.none=无
+arrow.octagon.filled=Octagon Filled
+arrow.octagon.open=Octagon Open
+arrow.overlay=允许多种箭头重叠(Y)
+arrow.overlay.mnemonic=Y
+arrow.pentagon.filled=Pentagon Filled
+arrow.pentagon.open=Pentagon Open
+arrow.plus=Plus
+arrow.pointed=Pointed
+arrow.pointed45=Pointed 45
+arrow.pointed60=Pointed 60
+arrow.primary=主箭头类型(P)
+arrow.primary.mnemonic=P
+arrow.rectanglecap=Rectangle Cap
+arrow.roundcap=Round Cap
+arrow.reversed=反向
+arrow.reversed.mnemonic=V
+arrow.rhombus.filled=Rhombus Filled
+arrow.rhombus.open=Rhombus Open
+arrow.round=Round Bracket
+arrow.scissors.down.filled=Scissors Down Filled
+arrow.scissors.down.open=Scissors Down Open
+arrow.scissors.up.filled=Scissors Up Filled
+arrow.scissors.up.open=Scissors Up Open
+arrow.secondary=辅箭头类型(E)
+arrow.secondary.mnemonic=E
+arrow.semicircle.filled=Filled Semicircle
+arrow.semicircle.open=Open Semicircle
+arrow.single=单个(S)
+arrow.single.mnemonic=S
+arrow.snowflake=Snowflake
+arrow.square=Square Bracket
+arrow.star=Star
+arrow.star5.open=Open 5 Pointed Star
+arrow.star5.filled=Filled 5 Pointed Star
+arrow.star6.open=Open 6 Pointed Star
+arrow.star6.filled=Filled 6 Pointed Star
+arrow.starchevron.filled=Star Chevron Filled
+arrow.starchevron.open=Star Chevron Open
+arrow.tab.arrows=箭头类
+arrow.tab.bracket=括弧类
+arrow.tab.caps=平头类
+arrow.tab.data=数据点
+arrow.tab.decorative=装饰类
+arrow.tab.partial=零散类
+arrow.triangle=三角形
+arrow.triangle.open=空心三角形
+arrow.triangle.down.filled=下三角形 填充
+arrow.triangle.down.open=下三角形 空心
+arrow.triangle.up.filled=上三角形 填充
+arrow.triangle.up.open=上三角形 空心
+arrow.trianglecap=Triangle Cap
+arrow.triple=三个(T)
+arrow.triple.mnemonic=T
+arrow.tripleleafcap=Triple Leaf Cap
+arrow.tripleleafbackcap=Backwards Triple Leaf Cap
+arrow.tripleleafforwardcap=Forward Triple Leaf Cap
+arrow.usemarker=使用箭头符号(U)
+arrow.usemarker.mnemonic=U
+
+# arrow colour
+arrow.colour.dependent=与线条颜色相同(A)
+arrow.colour.dependent.mnemonic=A
+arrow.colour.independent=新指定颜色(F)
+arrow.colour.independent.mnemonic=F
+
+# edit text dialog box
+edittext.title=编辑文本
+edittext.latexlabel=LaTeX 文档中使用的文本
+edittext.same=相同(S)
+edittext.same.mnemonic=S
+edittext.different=不同(D)
+edittext.different.mnemonic=D
+edittext.remap=Re-Map
+edittext.remap.mnemonic=M
+edittext.textpath=Text Path attributes
+edittext.textpath.left_delim=Left Delimiter
+edittext.textpath.left_delim.mnemonic=L
+edittext.textpath.right_delim=Right Delimiter
+edittext.textpath.right_delim.mnemonic=R
+edittext.textpath.info=The delimiters can't be set to \ { } or + and should not appear in the LaTeX equivalent text except where their use is as a text path decoration delimiter. The delimiters should in general have category codes 11 or 12. See "/pgf/decoration/text format delimiters" in the pgf manual for further details.
+
+# text colour selector
+textcolour.title=文本颜色
+textcolour.label=文本颜色(T)
+textcolour.mnemonic=T
+
+# font selector
+font.title=更改字体
+font.label=字体(N)
+font.mnemonic=N
+font.sample=样例文本 Sample Text
+font.samples=样例
+font.family=字体家族(Y)
+font.family.mnemonic=Y
+font.series=字体系列(R)
+font.series.mnemonic=R
+font.series.bold=粗体
+font.series.medium=常规
+font.shape=字体形状(P)
+font.shape.mnemonic=P
+font.shape.italic=倾斜
+font.shape.upright=直立
+font.size=字体大小(Z)
+font.size.mnemonic=Z
+font.default=SansSerif
+font.anchor=锚定点(A)
+font.anchor.mnemonic=A
+font.hanchor=水平锚定点设置(A)
+font.hanchor.mnemonic=A
+font.vanchor=垂直锚定点设置(V)
+font.vanchor.mnemonic=V
+font.anchor.left=左端
+font.anchor.hcentre=中部
+font.anchor.right=右端
+font.anchor.base=基线
+font.anchor.bottom=底端
+font.anchor.vcentre=中部
+font.anchor.top=顶端
+font.latex_message=对于LaTeX而言,字体只具有近似意义. 在LaTeX pgfpicture环境中显示的字体会与flowframtk中显示的字体有很大差别.
+font.anchor_message=在本页顶端的样例文本中, 锚定点的位置用红色点表示.
+
+# font used for annotations, such as flowframe labels
+font.annote.name=SansSerif
+font.annote.size=10
+
+# styles selector
+styles.title=设置样式
+
+# zoom dialog box
+
+zoom.title=放大比例
+zoom.magnification=放大比例(M)
+zoom.magnification.mnemonic=M
+zoom.invalid=Invalid value '\1'
+
+# set transformation dialog box
+
+settransform.title=设置变换矩阵
+
+# go to dialog box
+
+goto.title=定位
+
+# move by dialog box
+
+moveby.title=平移量
+
+# paper dialog box
+
+paper.title=设置纸张
+paper.width=宽度(W)
+paper.width.mnemonic=W
+paper.height=高度(H)
+paper.height.mnemonic=H
+paper.predefined=预定义(P)
+paper.predefined.mnemonic=P
+paper.user=自定义(U)
+paper.user.mnemonic=U
+paper.a6=A6
+paper.a7=A7
+paper.a8=A8
+paper.a9=A9
+paper.a10=A10
+paper.b0=B0
+paper.b1=B1
+paper.b2=B2
+paper.b3=B3
+paper.b4=B4
+paper.b5=B5
+paper.b6=B6
+paper.b7=B7
+paper.b8=B8
+paper.b9=B9
+paper.b10=B10
+paper.c0=C0
+paper.c1=C1
+paper.c2=C2
+paper.c3=C3
+paper.c4=C4
+paper.c5=C5
+paper.c6=C6
+paper.c7=C7
+paper.c8=C8
+paper.c9=C9
+paper.c10=C10
+
+# about dialog box
+
+about.title=关于 \1
+about.version=\1 版本 \2
+about.copyright=版权所有 (C)
+about.disclaimer=\1 不做任何保证
+about.see_licence=详细内容请参见许可协议文本
+about.translated_by=翻译： \1
+about.translator=王勇献[wang_yongxian[at]hotmail[dot]com]
+about.translator_info=国防科技大学PDL
+about.translator_url=
+
+# startup frame
+
+startup.title=正在初始化FlowframTk
+
+# licence dialog box
+
+licence.title=许可协议
+
+# grid settings dialog box
+
+grid.title=网格线设置
+grid.major=主网格线(M)
+grid.major.mnemonic=M
+grid.sub_divisions=次网格线(S)
+grid.sub_divisions.mnemonic=S
+grid.rectangular=Rectangular
+grid.rectangular.mnemonic=G
+grid.radial=Radial
+grid.radial.mnemonic=L
+grid.spokes=Spokes
+grid.spokes.mnemonic=K
+grid.info=Grid units are independent of the storage unit.
+grid.iso=Isometric
+grid.iso.mnemonic=I
+grid.tschichold=Tschichold
+grid.tschichold.mnemonic=T
+grid.tschichold.info=Settings only affect rulers. Tschichold grid always has 14 tick marks.
+grid.path=Path-Based
+grid.path.mnemonic=P
+grid.path.keep=Keep current shape
+grid.path.keep.mnemonic=K
+grid.path.usepage=Use page boundary
+grid.path.usepage.mnemonic=U
+grid.path.select=Select new shape
+grid.path.select.mnemonic=N
+grid.path.info=Major division setting only affects rulers.
+
+# Pattern Dialog Box
+
+pattern.title=Set Pattern
+pattern.rotational=Rotational
+pattern.rotational.mnemonic=T
+pattern.scaled=Scaled
+pattern.scaled.mnemonic=A
+pattern.linear=Linear
+pattern.linear.mnemonic=L
+pattern.spiral=Spiral
+pattern.spiral.mnemonic=P
+pattern.spiral.distance=Gap
+pattern.spiral.distance.mnemonic=G
+pattern.replicas=Replicas
+pattern.replicas.mnemonic=E
+pattern.mode=Mode
+pattern.mode.single=Single
+pattern.mode.single.mnemonic=S
+pattern.mode.multi.mnemonic=M
+pattern.mode.multi=Multi
+pattern.show_original=Show Original Path
+pattern.show_original.mnemonic=H
+pattern.rotate=旋转(R)
+pattern.rotate.mnemonic=R
+pattern.scale.x=水平缩放比例(X)
+pattern.scale.x.mnemonic=X
+pattern.scale.y=垂直缩放比例(Y)
+pattern.scale.y.mnemonic=Y
+
+# set coordinates dialog box
+
+coordinates.title=坐标
+coordinates.x=x
+coordinates.x.mnemonic=x
+coordinates.y=y
+coordinates.y.mnemonic=y
+coordinates.radius=Radius
+coordinates.radius.mnemonic=R
+coordinates.angle=Angle
+coordinates.angle.mnemonic=A
+
+# browse bitmap dialog box
+
+browse.title=未找到位图
+browse.label=浏览(B)...
+browse.label.mnemonic=B
+browse.not_found=未找到位图。是否选择新的文件？
+browse.cant_refresh=无法刷新位图
+browse.invalid_format=无效或无法识别的图像格式
+browse.invalid_title=位图无效
+browse.discard=放弃
+
+# Image file chooser
+
+image.preview=预览
+image.preview.mnemonic=P
+
+# file filters
+
+filter.ajr=flowframtk ascii 文件 (*.ajr)
+filter.version.ajr=flowframtk ascii 文件 v\1 (*.ajr)
+filter.bitmap=图片文件 (\1)
+filter.eps=Encapsulated PostScript (*.eps)
+filter.sty=Package (*.sty)
+filter.cls=Class (*.cls)
+filter.jdr=flowframtk 图片文件 (*.jdr)
+filter.jdrajr=flowframtk 图片文件 (*.jdr, *.ajr)
+filter.version.jdr=flowframtk 图片文件 v\1 (*.jdr)
+filter.pgf=pgf environment (*.tex, *.ltx)
+filter.pgfdoc=LaTeX document (*.tex, *.ltx)
+filter.pgfencapdoc=Encapsulated LaTeX document (*.tex, *.ltx)
+filter.png=PNG 文件 (*.png)
+filter.svg=Scalable Vector Graphics (*.svg)
+filter.tex=TeX/LaTeX (*.tex, *.ltx)
+filter.pdf=Portable Document Format (*.pdf)
+
+# Export dialog box
+export.title=导出
+
+# Import dialog box
+import.title=导入
+
+# colour selector
+
+colour.red=红色
+colour.green=绿色
+colour.blue=蓝色
+colour.rgb=RGB
+colour.rgb.mnemonic=R
+colour.rgb2.mnemonic=B
+colour.cyan=青色
+colour.magenta=洋红色
+colour.yellow=黄色
+colour.black=黑色
+colour.cmyk=CMYK
+colour.cmyk.mnemonic=K
+colour.cmyk2.mnemonic=M
+colour.alpha=透明度
+colour.hue=色相
+colour.saturation=饱和度
+colour.brightness=明度
+colour.hsb=HSB
+colour.grey=灰度
+colour.transparent=透明(P)
+colour.transparent.mnemonic=P
+colour.single=颜色(L)
+colour.single.mnemonic=L
+colour.gradient=渐变(G)
+colour.gradient.mnemonic=G
+colour.start=起始颜色
+colour.end=结束颜色
+colour.linear=线性渐变(E)
+colour.linear.mnemonic=E
+colour.radial=辐射渐变(A)
+colour.radial.mnemonic=A
+
+# Configuration Settings Dialog Box
+
+config.title=配置选项
+configui.title=Configure User Interface
+
+# Enable Hotspots Panel
+
+hotspots.title=快照(T)
+hotspots.mnemonic=T
+hotspots.enable=启用(E)
+hotspots.enable.mnemonic=E
+hotspots.disable=禁用(D)
+hotspots.disable.mnemonic=D
+
+# edit path settings panel
+editpathui.title=Edit Path Settings
+editpathui.canvasclick=Canvas click to exit
+editpathui.canvasclick.mnemonic=E
+editpathui.canvasclick.tooltip=Click on the canvas to exit edit path mode
+editpathui.ignorelock=Ignore grid lock when selecting control
+editpathui.ignorelock.mnemonic=I
+editpathui.ignorelock.tooltip=When using the mouse to select a control point use the actual mouse co-ordinates not the nearest tick even if the grid lock is on
+
+# graphics panel
+
+graphics.title=图形(G)
+graphics.mnemonic=G
+
+# annotations panel
+annotations.title=Annotations
+annotations.tooltip=Fonts used in annotations
+annotations.mnemonic=T
+
+annote.font=Annotation Font:
+annote.font.mnemonic=F
+annote.font.bold=Bold
+annote.font.bold.mnemonic=B
+annote.font.italic=Italic
+annote.font.italic.mnemonic=I
+annote.fontsize=Size
+annote.fontsize.mnemonic=Z
+
+render.anti_alias=消除锯齿
+render.on=启用(N)
+render.on.mnemonic=N
+render.off=禁用(F)
+render.off.mnemonic=F
+render.rendering=渲染
+render.quality=质量(Q)
+render.quality.mnemonic=Q
+render.speed=速度(S)
+render.speed.mnemonic=S
+
+# Control points panel
+
+controls.title=Control Points
+controls.mnemonic=N
+render.control_size=控制点大小(Z)
+render.control_size.mnemonic=Z
+render.scale_controls=Scale Controls
+render.scale_controls.mnemonic=L
+render.control.standard=Regular Control
+render.control.symmetry=Symmetry Line
+render.control.patternanchor=Pattern Anchor
+render.control.patternadjust=Pattern Adjust
+render.control.selected=Selected
+render.control.unselected=Unselected
+# \1 -> control type (e.g. value of render.control.standard)
+# \2 -> value of render.control.selected or render.control.unselected
+render.control.choosertitle=\1 (\2)
+
+# splash screen settings
+splash.title=Splash Screen Settings
+splash.infofont.name=Information Font:
+splash.infofont.name.mnemonic=N
+splash.infofont.bold=Bold
+splash.infofont.italic=Italic
+splash.infofont.size=Size
+splash.versionfont.name=Title Font:
+splash.versionfont.name.mnemonic=E
+splash.versionfont.bold=Bold
+splash.versionfont.italic=Italic
+splash.versionfont.size=Size
+
+# Startup Directory
+
+startdir.title=启动目录(P)
+startdir.mnemonic=P
+startdir.cwd=当前工作目录(W)
+startdir.cwd.mnemonic=W
+startdir.last=最近使用的目录(V)
+startdir.last.mnemonic=V
+startdir.named=使用此目录(U):
+startdir.named.mnemonic=U
+startdir.browse=浏览(B)
+startdir.browse.mnemonic=B
+
+# JDR settings panel
+
+jdr.title=JDR/AJR 设置
+jdr.mnemonic=J
+jdr.on_save=When saving:
+jdr.on_save.mnemonic=V
+jdr.on_save.all=Save all canvas settings
+jdr.on_save.none=Don't save canvas settings
+jdr.on_save.paper=Only save paper size
+jdr.on_load=When loading:
+jdr.on_load.mnemonic=A
+jdr.on_load.all=Apply all settings stored in the file
+jdr.on_load.none=Ignore any settings stored in the file
+jdr.on_load.paper=Only apply paper settings stored in the file
+jdr.warn_load_old=装载旧版本的JDR时进行警告提示(W)
+jdr.warn_load_old.mnemonic=W
+
+bitmapconfig.title=Bitmaps
+bitmapconfig.mnemonic=B
+bitmapconfig.tooltip=Default bitmap settings
+bitmapconfig.relative_paths=Use relative paths for bitmaps
+bitmapconfig.relative_paths.mnemonic=R
+bitmapconfig.default_command=Default LaTeX Command:
+bitmapconfig.default_command.mnemonic=L
+
+processes.title=Application Paths
+processes.mnemonic=P
+processes.tooltip=Set the paths to applications used by some export functions
+processes.latex=LaTeX
+processes.latex.mnemonic=L
+processes.pdflatex=PDFLaTeX
+processes.pdflatex.mnemonic=F
+processes.dvips=DVIPS
+processes.dvips.mnemonic=D
+processes.dvisvgm=DVISVGM
+processes.dvisvgm.mnemonic=V
+processes.libgs=libgs
+processes.libgs.mnemonic=G
+processes.timeout=Time-out:
+processes.timeout.mnemonic=M
+processes.millisecs=Milliseconds
+
+graphics.storage_unit.title=Storage Unit
+graphics.storage_unit=Storage Unit:
+graphics.storage_unit.mnemonic=U
+graphics.storage_unit.note=If you change the storage unit, all coordinates in the current frame will be converted to the new storage unit. This may take a while if you have a large or complex image, so it's generally best to set the storage unit before you start your image. The storage unit is independent of the grid unit. Some settings, such as line width or font size, are independent of the storage unit.
+
+# TeX settings
+
+texconfig.title=设置(T)
+texconfig.mnemonic=T
+texconfig.tooltip=Configure TeX/LaTeX settings
+
+# TeX/LaTeX settings panel
+
+clssettings.title=Document Settings 设置(N)
+clssettings.mnemonic=N
+clssettings.tooltip=Settings that control the font sizes and class
+clssettings.normalsize=常规字体大小(N)
+clssettings.normalsize.mnemonic=N
+clssettings.normalsize.tooltip=设置LaTeX中常规字体大小
+clssettings.note=请在文档中将此字体大小设定为默认大小,例如:
+clssettings.update=在当前图像中更新所有的 LaTeX 字体大小声明(U)
+clssettings.update.mnemonic=U
+clssettings.default_cls=Use default class
+clssettings.default_cls.mnemonic=D
+clssettings.custom_cls=Use class: 
+clssettings.custom_cls.mnemonic=S 
+clssettings.relative_fontsize=Use relative font size declarations
+clssettings.relative_fontsize.mnemonic=R
+clssettings.pdfinfo=Add \pdfinfo to exported LaTeX documents
+clssettings.pdfinfo.mnemonic=I
+clssettings.use_typeblock_as_bbox=Use typeblock as bounding box for pgfpicture
+clssettings.use_typeblock_as_bbox.mnemonic=T
+
+# Flowframe Settings
+
+flfsettings.title=Flowframe Settings
+flfsettings.mnemonic=F
+flfsettings.tooltip=Change flowframe pages and shapepar settings
+flfsettings.shapeparcs=shapepar command: 
+flfsettings.pages_opt=flowframe pages setting:
+flfsettings.pages_opt.absolute=absolute
+flfsettings.pages_opt.absolute.mnemonic=B
+flfsettings.pages_opt.relative=relative
+flfsettings.pages_opt.relative.mnemonic=R
+
+# TeX/LaTeX settings panel
+
+textconfig.title=LaTeX Text Settings
+textconfig.mnemonic=L
+textconfig.tooltip=Settings related to alternative LaTeX text for text-areas and text-paths
+textconfig.anchor=自动调整锚定点(A)
+textconfig.anchor.mnemonic=A
+textconfig.textualshading=When exporting text with shadings:
+textconfig.textualshading.mnemonic=D
+textconfig.textualshading.average=Average Colors
+textconfig.textualshading.start=Use Start Color
+textconfig.textualshading.end=Use End Color
+textconfig.textualshading.path=Convert to Path
+textconfig.textpathoutline=When exporting text-paths with outlines:
+textconfig.textpathoutline.mnemonic=L
+textconfig.textpathoutline.path=Convert to Path
+textconfig.textpathoutline.ignore=Ignore Outline
+textconfig.escape=对特殊字符自动进行逃逸处理(E)
+textconfig.escape.mnemonic=E
+textconfig.escape.tooltip=在创建新的文本框时, 对TeX中的特殊字符自动进行逃逸处理
+textconfig.escape.mathchar=Auto escape math symbols
+textconfig.escape.mathchar.mnemonic=M
+textconfig.escape.mathchar.tooltip=在创建新的文本框时, 对TeX中的特殊字符自动进行逃逸处理
+textconfig.textmode=Text Mode
+textconfig.mathmode=Math Mode
+textconfig.textmode.mnemonic=T
+textconfig.mathmode.mnemonic=M
+textconfig.textmappings.import=Import
+textconfig.textmappings.import.mnemonic=I
+textconfig.textmappings.import.tooltip=Import Text Mappings
+textconfig.mathmappings.import=Import
+textconfig.mathmappings.import.mnemonic=I
+textconfig.mathmappings.import.tooltip=Import Math Mappings
+textconfig.codepoint=Code Point
+textconfig.codepoint.mnemonic=D
+textconfig.symbol=Symbol
+textconfig.symbol.mnemonic=S
+textconfig.command=Command
+textconfig.command.mnemonic=C
+textconfig.package=Package
+textconfig.package.mnemonic=P
+textconfig.remove.textmap=Remove
+textconfig.remove.textmap.mnemonic=R
+textconfig.remove.textmap.tooltip=Remove text mapping
+textconfig.add.textmap=Add
+textconfig.add.textmap.tooltip=Add new text mapping
+textconfig.remove.mathmap=Remove
+textconfig.remove.mathmap.mnemonic=R
+textconfig.remove.mathmap.tooltip=Remove maths mapping
+textconfig.add.mathmap=Add
+textconfig.add.mathmap.mnemonic=D
+textconfig.add.mathmap.tooltip=Add new maths mapping
+
+# Modify contents of preamble.tex
+preambleconfig.title=Default Preamble
+preambleconfig.tooltip=Modify contents of preamble.tex file
+preambleconfig.mnemonic=P
+preambleconfig.info=This is the contents of the file "\1". If you have modified it outside of this application whilst this application is running, click on the reload button to refresh the contents. This code is used when exporting to LaTeX documents, PDF, PostScript and SVG formats, but is not used when exporting to other formats, including export to .cls or .sty files.
+preambleconfig.reload=Reload
+preambleconfig.reload.mnemonic=R
+preambleconfig.reload.tooltip=Reload preamble file
+
+# Ruler display panel
+
+borders.title=Borders
+borders.mnemonic=B
+borders.tooltip=Set the ruler, toolbar and status bar attributes
+borders.status.title=Status Bar
+borders.toolbars.title=Tool Bars
+borders.rulers.title=Rulers
+borders.vtoolbar=Position:
+borders.vtoolbar.left=Left
+borders.vtoolbar.left.mnemonic=F
+borders.vtoolbar.right=Right
+borders.vtoolbar.right.mnemonic=T
+borders.vtoolbar.info=(Restart required)
+borders.showtools=显示工具栏(S)
+borders.showtools.mnemonic=S
+borders.rulerwidth=Side Ruler Width:
+borders.rulerwidth.mnemonic=W
+borders.rulerheight=Top Ruler Height:
+borders.rulerheight.mnemonic=P
+borders.rulerpattern=Number format: 
+borders.rulerpattern.mnemonic=N 
+borders.rulerlocale=Locale: 
+borders.rulerlocale.mnemonic=L
+borders.rulerfont.name=Font:
+borders.rulerfont.name.mnemonic=M
+borders.rulerfont.size=Size:
+borders.rulerfont.size.mnemonic=Z
+borders.rulerfont.bold=Bold
+borders.rulerfont.bold.mnemonic=B
+borders.rulerfont.italic=Italic
+borders.rulerfont.italic.mnemonic=I
+borders.showruler.info=Use the \1 -> \2 menu item to show or hide rulers for the current canvas.
+borders.showstatus=显示状态栏(B)
+borders.showstatus.mnemonic=B
+borders.statusfont.name=Status Bar Font:
+borders.statusfont.size=Size
+borders.statusfont.bold=Bold
+borders.statusfont.italic=Italic
+borders.showstatuspos=Show Position
+borders.showstatusunit=Show Storage Unit
+borders.showstatusmodified=Show Modified
+borders.showstatuslock=Show Lock
+borders.showstatuszoom=Show Zoom
+borders.showstatushelp=Show Help Button
+borders.showstatusinfo=Show Info
+
+# startup settings panel
+
+initsettings.title=启动设置(S)
+initsettings.mnemonic=S
+initsettings.current=使用当前定义的启动设置(U)
+initsettings.current.mnemonic=U
+initsettings.default=使用缺省的启动(D)
+initsettings.default.mnemonic=D
+initsettings.last=使用前一次应用实例中的设置(V)
+initsettings.last.mnemonic=V
+
+# Languages panel
+
+lang.title=Languages
+lang.mnemonic=L
+lang.dict=Resources language
+lang.dict.mnemonic=E
+lang.dict.tooltip=Language used by menus, buttons and messages
+lang.help=Manual language
+lang.help.mnemonic=N
+lang.help.tooltip=Language used by manual
+lang.tooltip=Language used by manual and language used by menus, buttons, messages etc
+lang.info=Language changes will not take effect until you have quit and restarted this application
+lang.unicode.blocks=Unicode blocks used by character selector:
+lang.unicode.info=(The more Unicode blocks that are added to the character selector, the longer it will take this application to start up. Changes will not take effect until you have quit and restarted.)
+lang.unicode.start=Start
+lang.unicode.end=End
+lang.unicode.remove_block=Remove
+lang.unicode.remove_block.mnemonic=V
+lang.unicode.remove_block.tooltip=Remove row
+lang.unicode.add_block=Add
+lang.unicode.add_block.mnemonic=D
+lang.unicode.add_block.tooltip=Add row
+lang.unicode.invalid_hex=Invalid hexadecimal number '\1' (row '\2', column '\3')
+
+# Normalization panel
+normalize.title=Normalization
+normalize.mnemonic=M
+normalize.info=Due to the varied nature of display units, 1 inch (or 72 PostScript points) displayed on the screen at 100% magnification may not actually measure 1 inch if you hold a ruler up to your screen. You can compensate for this by setting the horizontal and vertical normalization factors. If you already know these factors you can type them into the boxes below (or set them both to 1 to remove normalization):
+normalize.info.cont=or you can hold your ruler up against the unnormalized horizontal and vertical lines, enter their measurements in the boxes and click on the 'Compute' buttons below.
+normalize.norm.x=X Normalize Factor:
+normalize.norm.x.mnemonic=N
+normalize.norm.y=Y Normalize Factor:
+normalize.norm.y.mnemonic=Y
+normalize.x_compute_norm=Compute X Norm
+normalize.x_compute_norm.mnemonic=P
+normalize.y_compute_norm=Compute Y Norm
+normalize.y_compute_norm.mnemonic=T
+normalize.reset=Reset
+normalize.reset.mnemonic=E
+normalize.nonorm_horizontal=Unnormalized Horizontal
+normalize.nonorm_vertical=Unnormalized Vertical
+normalize.invalid=Invalid length '\1'
+normalize.norm_lines=Normalized Lines
+
+# TeX editor UI
+
+texeditorui.title=TeX Editor
+texeditorui.mnemonic=X
+texeditorui.tooltip=Change UI settings for the internal TeX editor
+texeditorui.info=The (La)TeX editor is used by the edit preamble function and the edit frame contents function. Some of these settings require a restart to take effect.
+texeditorui.font=Font:
+texeditorui.font.mnemonic=F
+texeditorui.fontsize=Font Size:
+texeditorui.fontsize.mnemonic=Z
+texeditorui.dim=Static/Dynamic Frame Contents Editor Preferred Size
+texeditorui.width=Default Width:
+texeditorui.width.mnemonic=W
+texeditorui.width.tooltip=Approximate number of characters per line
+texeditorui.height=Default Height:
+texeditorui.height.mnemonic=F
+texeditorui.height.tooltip=Approximate number of lines
+texeditorui.highlight=Syntax highlighting
+texeditorui.highlight.mnemonic=Y
+texeditorui.comment=Comment color
+texeditorui.comment.mnemonic=E
+texeditorui.cs=Control Sequence color
+texeditorui.cs.mnemonic=Q
+texeditorui.split=Canvas/Preamble Split
+texeditorui.preambleleft=Left of Canvas
+texeditorui.preambleleft.mnemonic=N
+texeditorui.preambleright=Right of Canvas
+texeditorui.preambleright.mnemonic=S
+texeditorui.preambleabove=Above Canvas
+texeditorui.preambleabove.mnemonic=B
+texeditorui.preamblebelow=Below Canvas
+texeditorui.preamblebelow.mnemonic=V
+
+# Look and Feel
+lookandfeel.title=Look & Feel
+lookandfeel.mnemonic=K
+lookandfeel.tooltip=Change the look and feel of the widgets
+lookandfeel.info=A restart is required for these settings to take effect. Sample buttons don't perform any actions when you click on them. They just demonstrate their appearance. The "Plain" icon styles aren't suitable for L&F styles that don't place a border around toggle and radio buttons.
+lookandfeel.name=Look & Feel Name:
+lookandfeel.name.mnemonic=N
+lookandfeel.button_styles=General Button Styles
+lookandfeel.dialog_button_styles=Dialog Button Styles
+lookandfeel.button.style=Style
+lookandfeel.samples=Sample Buttons
+lookandfeel.press=Press
+lookandfeel.toggle=Toggle
+lookandfeel.radio=Radio
+lookandfeel.button_style.default=Default
+lookandfeel.button_style.small=Small
+lookandfeel.button_style.plain=Plain
+lookandfeel.button_style.highlights=Highlights
+lookandfeel.button_style.bordered=Bordered Switches
+lookandfeel.button_style.smallplain=Small Plain
+lookandfeel.button_style.smallhighlights=Small Highlights
+lookandfeel.button_style.smallbordered=Small Bordered Switches
+lookandfeel.button_style.textsmallhighlights=Highlight Icons and Trailing Text
+lookandfeel.button_style.textsmallplain=Plain Icons and Trailing Text
+lookandfeel.button_style.textsmallbordered=Bordered Icons and Trailing Text
+lookandfeel.button_style.textsmallhighlightsleading=Highlight Icons and Leading Text
+lookandfeel.button_style.textsmallplainleading=Plain Icons and Leading Text
+lookandfeel.button_style.textsmallborderedleading=Bordered Icons and Leading Text
+lookandfeel.button_style.textsmallhighlightstop=Highlight Icons and Top Text
+lookandfeel.button_style.textsmallplaintop=Plain Icons and Top Text
+lookandfeel.button_style.textsmallborderedtop=Bordered Icons and Top Text
+lookandfeel.button_style.textsmallhighlightsbottom=Highlight Icons and Bottom Text
+lookandfeel.button_style.textsmallplainbottom=Plain Icons and Bottom Text
+lookandfeel.button_style.textsmallborderedbottom=Bordered Icons and Bottom Text
+lookandfeel.button_style.text=Text Only
+lookandfeel.button_style.text.mnemonic=T
+lookandfeel.dialog.as_general=As General Button Style
+lookandfeel.dialog_button_default=Default
+lookandfeel.dialog_button_text_only=Text Only
+lookandfeel.dialog_button_large_icons_and_text_trailing=Large Icons and Trailing Text
+lookandfeel.dialog_button_small_icons_and_text_trailing=Small Icons and Trailing Text
+lookandfeel.dialog_button_large_icons_and_text_leading=Large Icons and Leading Text
+lookandfeel.dialog_button_small_icons_and_text_leading=Small Icons and Leading Text
+lookandfeel.dialog_button_large_icons_and_text_top=Large Icons and Top Text
+lookandfeel.dialog_button_small_icons_and_text_top=Small Icons and Top Text
+lookandfeel.dialog_button_large_icons_and_text_bottom=Large Icons and Bottom Text
+lookandfeel.dialog_button_small_icons_and_text_bottom=Small Icons and Bottom Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_bottom=Small Bordered Icons and Bottom Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_top=Small Bordered Icons and Top Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_leading=Small Bordered Icons and Leading Text
+lookandfeel.dialog_button_small_bordered_icons_and_text_trailing=Small Bordered Icons and Trailing Text
+
+# Application selector
+
+appselect.title=Select Application
+appselect.pathlabel=Select path to application
+appselect.pathlabel.mnemonic=P
+appselect.query.location=Please specify location of '\1' application
+appselect.setup=Setup
+appselect.info=You need to check some settings before you continue with this function. If these are correct, click on the 'Okay' button to continue.
+appselect.libgs=Please specify the location of the libgs library. (Leave empty if you want to use the LIBGS environment variable.) The file will probably be called something like libgs.so (Unix-like) or gsdll32.dll (32-bit Windows) or gsdll64.dll (64-bit Windows)
+
+file.select=Select
+file.select.mnemonic=S
+
+process.confirm.abort=Are you sure you want to abort this operation?
+process.confirm=Confirm
+process.running=Running \1
+process.aborted=Task aborted.
+
+# Parshape/Shapepar dialog box
+
+parshape.title=文件区域形状/Parshape
+shapepar.title=文件区域形状/Shapepar
+parshape.use_path=使用路径
+parshape.use_outline=使用轮廓
+
+# Flow frame dialog box
+
+flowframe.title=文本框链接
+flowframe.type=类型(Y):
+flowframe.type.mnemonic=Y
+flowframe.flow=链接(Flow)
+flowframe.static=静态(Static)
+flowframe.dynamic=动态(Dynamic)
+flowframe.none=无
+flowframe.align=对齐(G):
+flowframe.align.mnemonic=G
+flowframe.align_top=顶部
+flowframe.align_middle=中部
+flowframe.align_bottom=底部
+flowframe.border=边框(D):
+flowframe.border.mnemonic=D
+flowframe.border_none=无
+flowframe.border_as_shown=维持不变
+flowframe.shape=形状(S):
+flowframe.shape.mnemonic=S
+flowframe.shape_standard=标准
+flowframe.shape_parshape=Parshape
+flowframe.shape_shapepar=Shapepar
+flowframe.label=标签(Label):
+flowframe.label.mnemonic=A
+flowframe.margins=边距
+flowframe.margin.left=左(L)
+flowframe.margin.left.mnemonic=L
+flowframe.margin.right=右(R)
+flowframe.margin.right.mnemonic=R
+flowframe.margin.top=上(T)
+flowframe.margin.top.mnemonic=T
+flowframe.margin.bottom=下(B)
+flowframe.margin.bottom.mnemonic=B
+flowframe.pages.label=页面: \1
+flowframe.pages=页面(P):
+flowframe.pages.mnemonic=P
+flowframe.pages_all=所有页面
+flowframe.pages_none=无
+flowframe.pages_odd=奇数页面
+flowframe.pages_even=偶数页面
+flowframe.twoside_note=You must use the 'twoside' class option for the even page shifts to have an affect.
+flowframe.even_x_shift=Even page horizontal shift:
+flowframe.even_x_shift.mnemonic=Z
+flowframe.compute_sym_x_shift=Compute Symmetric X Shift
+flowframe.compute_sym_x_shift.mnemonic=X
+flowframe.even_y_shift=Even page vertical shift:
+flowframe.even_y_shift.mnemonic=V
+flowframe.contents=Contents:
+flowframe.edit=Edit...
+flowframe.edit.mnemonic=E
+
+flowframe.confirm.group.title=组合对象确认
+flowframe.confirm.group=如果为组合对象指定文本框链接数据, \n则原先为单个对象指定的文本框链接数据将会丢失.\n你确定要将文本框链接数据指定给组合对象吗?
+flowframe.confirm.ungroup=如果取消组合对象, 则原先为其指定的文本框链接数据将会丢失.\n你确定要取消组合对象吗?
+flowframe.confirm.ungroup.title=取消组合确认
+
+# set typeblock
+
+typeblock.title=Typeblock
+typeblock.compute_from_path=Compute Margins From Selected Path
+typeblock.compute_from_path.mnemonic=P
+typeblock.hshift=Even Page Shift
+typeblock.hshift.mnemonic=E
+typeblock.compute_sym_shift=Compute
+typeblock.compute_sym_shift.mnemonic=C
+typeblock.adjust_width_label=Adjust width to nearest: 
+typeblock.adjust_width_label.mnemonic=W 
+typeblock.current_normalsize=Your current settings are: normalsize=\1pt and baselineskip=\2pt
+typeblock.adjust_width=Adjust Width
+typeblock.adjust_width.mnemonic=A
+typeblock.adjust_height_label=Adjust height to nearest: 
+typeblock.adjust_height=Adjust Height
+typeblock.adjust_height.mnemonic=D
+typeblock.use_baseline=Baselineskip
+typeblock.use_baseline.mnemonic=B
+typeblock.use_other=Other
+typeblock.use_other.mnemonic=O
+
+# display page
+
+displaypage.title=显示文本框页面
+displaypage.label=只显示下列页面中的文本框:
+displaypage.note=注意: 不含文本框链接的对象总是会显示.
+displaypage.all=所有页面(A)
+displaypage.all.mnemonic=A
+displaypage.odd=奇数页面(D)
+displaypage.odd.mnemonic=D
+displaypage.even=偶数页面(E)
+displaypage.even.mnemonic=E
+displaypage.user=页码(P):
+displaypage.user.mnemonic=P
+
+# Preamble panel and frame contents editor
+texeditor.preamble=Preamble
+texeditor.preamble.early=Early
+texeditor.preamble.mid=Mid
+texeditor.preamble.late=Late
+texeditor.frame_contents=Frame Contents
+texeditor.search=Search
+texeditor.search.mnemonic=S
+texeditor.search.find=Find...
+texeditor.search.find.mnemonic=F
+texeditor.search.find_again=Find Again
+texeditor.search.find_again.mnemonic=A
+texeditor.search.replace=Replace...
+texeditor.search.replace.mnemonic=R
+texeditor.discard_edit_query=Discard the edits you have just made?
+texeditor.confirm_discard=Confirm Discard
+texeditor.selectText=全选(A)
+texeditor.selectText.mnemonic=A
+texeditor.cutText=剪切(T)
+texeditor.cutText.mnemonic=T
+texeditor.copyText=复制(C)
+texeditor.copyText.mnemonic=C
+texeditor.pasteText=粘贴(P)
+texeditor.pasteText.mnemonic=P
+
+# Preamble Find/Replace dialog
+find.title=Find
+find.search_for=Search For: 
+find.search_for.mnemonic=S 
+find.replace_text=Replacement: 
+find.replace_text.mnemonic=T
+find.case=Case Sensitive
+find.case.mnemonic=A
+find.regex=Regular Expression
+find.regex.mnemonic=X
+find.wrap=Wrap round
+find.wrap.mnemonic=W
+find.find=Find
+find.find.mnemonic=F
+find.find.tooltip=Find text
+find.one_replaced=1 occurrence replaced.
+find.num_replaced=\1 occurrences replaced.
+find.not_found=Not found
+
+replace.title=Replace
+replace.replace=Replace
+replace.replace.tooltip=Replace text
+replace.replace.mnemonic=R
+replace.replace_all=Replace All
+replace.replace_all.mnemonic=A
+replace.replace_all.tooltip=Replace all occurrences
+
+
+# description dialog box
+description.title=描述
+
+# find by description dialog box
+findbydescription.title=通过描述查找对象
+findbydescription.path=路径 \1
+findbydescription.text=文本 \1 (\2)
+findbydescription.bitmap=位图 \1
+findbydescription.group=组合 \1
+findbydescription.textpath=TextPath: \1 (\2)
+findbydescription.symmetricpath=SymmetricPath: \1
+findbydescription.rotationalpattern=RotationalPattern: \1 (\2)
+
+# file properties dialog box (jdrview)
+fileproperties.title=属性
+fileproperties.filename=文件名称:
+fileproperties.filesize=文字大小:
+fileproperties.fileformat=格式:
+fileproperties.bounds=图像的边界约束框(Bounding Box):
+fileproperties.paper=纸张:
+fileproperties.description=描述:
+fileproperties.modified=最近修改时间:
+fileproperties.empty=空
+fileproperties.bytes=\1B
+fileproperties.kbytes=\1Kb
+fileproperties.mbytes=\1Mb
+fileproperties.nonesupplied=未提供
+
+# vectorizing bitmap
+vectorize.title=Vectorize bitmap
+vectorize.xinc=x increment
+vectorize.xinc.mnemonic=x
+vectorize.yinc=y increment
+vectorize.yinc.mnemonic=y
+vectorize.straighten=Straighten
+vectorize.straighten.mnemonic=S
+vectorize.tolerance=Tolerance
+vectorize.tolerance.mnemonic=T
+vectorize.smooth=Smooth
+vectorize.smooth.mnemonic=M
+vectorize.chi=Chi
+vectorize.chi.mnemonic=I
+vectorize.delta=Delta
+vectorize.delta.mnemonic=D
+vectorize.gamma=Gamma
+vectorize.gamma.mnemonic=G
+vectorize.rho=Rho
+vectorize.rho.mnemonic=R
+vectorize.sigma=Sigma
+vectorize.sigma.mnemonic=A
+vectorize.smoothTolFun=Function Tolerance
+vectorize.smoothTolFun.mnemonic=F
+vectorize.smoothTol=Tolerance
+vectorize.smoothTol.mnemonic=L
+vectorize.maxIter=Maximum Iterations
+vectorize.maxIter.mnemonic=X
+vectorize.maxFunEvals=Maximum Function Evaluations
+vectorize.maxFunEvals.mnemonic=E
+vectorize.flatness=Flatness
+vectorize.flatness.mnemonic=N
+vectorize.selectbase=Select Base...
+vectorize.selectbase.mnemonic=B
+vectorize.scanning=Scanning Image
+vectorize.selectbase.title=Select Base Color
+vectorize.failed=Vectorization failed
+vectorize.initializing=Initializing
+vectorize.straightening=Straightening
+vectorize.smoothing=Smoothing
+vectorize.base=Base
+
+# general purpose text
+
+label.okay=确定(O)
+label.alt_okay=确定(O)
+label.okay.mnemonic=O
+label.close=确定(C)
+label.close.mnemonic=C
+label.cancel=取消(C)
+label.cancel.mnemonic=C
+label.default=预设(D)
+label.default.mnemonic=D
+label.default.tooltip=预设
+label.filename=文件名(F)
+label.filename.mnemonic=F
+label.help=帮助(H)
+label.help.mnemonic=H
+label.help.tooltip=帮助
+label.contexthelp=帮助(H)
+label.contexthelp.mnemonic=H
+label.contexthelp.tooltip=帮助
+label.hidden_object=隐藏对象
+label.hidden_objects=隐藏对象
+label.untitled=无标题
+label.choose=选择...
+label.choose.tooltip=选择
+label.quit_without_saving=直接退出而不保存
+label.duplicate=(复制)
+label.abort=Abort
+
+# general information messages
+
+message.title=消息
+message.progress=进度
+message.load_settings=从文件 \1 中载入设置
+message.init_robot=初始化机器人
+message.init_menus=正在初始化菜单及对话框设置
+message.init_desktop=正在初始化桌面设置
+message.io_in_progress=I/O operation in progress.
+message.io_in_progress.confirm_quit=I/O operation is in progress for image '\1'. Are you sure you want to quit? (This may result in loss of data.)
+message.please_wait=Please wait.
+message.done=Done
+message.failed=Failed: \1
+
+# for helpset stuff
+xml.lang=en_US
+
+# comments in TeX/LaTeX files
+tex.comment.border_command=Border command for frame
+tex.comment.created_by=由 \1 版本 \2 创建
+tex.comment.preamble=This image may require the following commands in the preamble:
+tex.comment.fontsize=The normal size font is assumed to be \1
+tex.comment.endpreamble=End of preamble information
+
+accelerators.title=Accelerators
+accelerators.mnemonic=A
+accelerators.tooltip=Change the shortcut keys
+accelerators.column.propname=Property Name
+accelerators.column.function=Function
+accelerators.column.keystroke=Key Stroke
+accelerators.info=Accelerator changes will not take effect until you have quit and restarted this application.
+
+# Set accelerator dialog
+
+accelerator.set=Set Accelerator
+accelerator.set.propname=Property Name:
+accelerator.set.function=Function:
+accelerator.set.keystroke=Key Stroke:
+accelerator.set.useselector=Use Selector
+accelerator.set.useselector.mnemonic=U
+accelerator.set.usekeystroke=Use Key Stroke
+accelerator.set.usekeystroke.mnemonic=K
+accelerator.set.usekeystroke.label=Enter Key Stroke: 
+accelerator.set.shift=Shift
+accelerator.set.shift.mnemonic=S
+accelerator.set.ctrl=Ctrl
+accelerator.set.ctrl.mnemonic=T
+accelerator.set.meta=Meta
+accelerator.set.meta.mnemonic=M
+accelerator.set.alt=Alt
+accelerator.set.alt.mnemonic=A
+accelerator.set.altgr=Alt Gr
+accelerator.set.altgr.mnemonic=G
+
+# accelerators without corresponding menu items
+accelerator.popup=Popup Menu
+accelerator.alt_popup=Popup Menu
+accelerator.construct_click=Construction Click
+accelerator.cursor_left=Cursor left
+accelerator.cursor_right=Cursor right
+accelerator.cursor_up=Cursor up
+accelerator.cursor_down=Cursor down
+accelerator.scroll_home_up=Scroll home up
+accelerator.scroll_home_left=Scroll home left
+accelerator.scroll_end_down=Scroll end down
+accelerator.scroll_end_right=Scroll end right
+accelerator.scroll_block_down=Scroll block down
+accelerator.scroll_block_right=Scroll block right
+accelerator.scroll_block_up=Scroll block up
+accelerator.scroll_block_left=Scroll block left
+accelerator.delete_last=Delete last segment
+accelerator.cursor_word_right=Cursor word right
+accelerator.cursor_word_left=Cursor word left
+
+# class names
+class.com.dickimawbooks.jdr.DashPattern=dash pattern
+class.com.dickimawbooks.jdr.FlowFrame=flowfram data
+class.com.dickimawbooks.jdr.JDRAngle=angle
+class.com.dickimawbooks.jdr.JDRBasicStroke=basic stroke
+class.com.dickimawbooks.jdr.JDRBezier=cubic B閦ier curve
+class.com.dickimawbooks.jdr.JDRBitmap=bitmap
+class.com.dickimawbooks.jdr.JDRColorCMYK=cmyk
+class.com.dickimawbooks.jdr.JDRColorHSB=hsb
+class.com.dickimawbooks.jdr.JDRColor=rgb
+class.com.dickimawbooks.jdr.JDRDistortShape=distorted shape
+class.com.dickimawbooks.jdr.JDRFont=font
+class.com.dickimawbooks.jdr.JDRGradient=gradient
+class.com.dickimawbooks.jdr.JDRGray=grey
+class.com.dickimawbooks.jdr.JDRGroup=group
+class.com.dickimawbooks.jdr.JDRLength=length
+class.com.dickimawbooks.jdr.JDRLine=line
+class.com.dickimawbooks.jdr.JDRPaper=paper
+class.com.dickimawbooks.jdr.JDRPartialBezier=partial B閦ier curve
+class.com.dickimawbooks.jdr.JDRPartialLine=partial line
+class.com.dickimawbooks.jdr.JDRPartialSegment=partial gap
+class.com.dickimawbooks.jdr.JDRPath=path
+class.com.dickimawbooks.jdr.JDRPatternAdjustPoint=pattern adjust
+class.com.dickimawbooks.jdr.JDRPatternAnchorPoint=pattern anchor
+class.com.dickimawbooks.jdr.JDRPoint=control point
+class.com.dickimawbooks.jdr.JDRRadialGrid=radial-grid
+class.com.dickimawbooks.jdr.JDRRadial=radial-shading
+class.com.dickimawbooks.jdr.JDRRadialPoint=radial control point
+class.com.dickimawbooks.jdr.JDRRectangularGrid=rectangular-grid
+class.com.dickimawbooks.jdr.JDRRotationalPattern=rotational pattern
+class.com.dickimawbooks.jdr.JDRScaledPattern=scaled pattern
+class.com.dickimawbooks.jdr.JDRSegment=gap
+class.com.dickimawbooks.jdr.JDRSpiralPattern=spiral pattern
+class.com.dickimawbooks.jdr.JDRSymmetricPath=symmetric path
+class.com.dickimawbooks.jdr.JDRSymmetryLinePoint=symmetry control point
+class.com.dickimawbooks.jdr.JDRText=text area
+class.com.dickimawbooks.jdr.JDRTextPath=text path
+class.com.dickimawbooks.jdr.JDRTextPathStroke=text path stroke
+class.com.dickimawbooks.jdr.JDRTransform=affine transform
+class.com.dickimawbooks.jdr.JDRTransparent=transparent
+class.com.dickimawbooks.jdr.JDRUnit=unit
+class.com.dickimawbooks.jdr.LaTeXFontBase=LaTeX font base
+class.com.dickimawbooks.jdr.LaTeXFont=LaTeX font
+class.com.dickimawbooks.jdr.marker.JDRMarker=marker
+
+welcome.title=Welcome
+welcome.text=<h1>Welcome to \1 version \2.</h1> Here are a few pointers:<ul><li>Use SHIFT ESC to abandon a path under construction<br>(This has changed from JpgfDraw.)</li><li>Use the \3 dialog to set the storage unit.<br>(\4-&gt;\5)</li><li>Use the \6 dialog to enable/disable hotspots.<br>(\7-&gt;\8)</li><li>The export to PS/PDF/SVG functions all use LaTeX, so you need to have TeX installed to use them.</li><li>Make sure you have at least version 1.16 of flowfram.sty if you want to use the export to .cls or .sty functions.</li><li>The preamble editor is now in a pane attached to the side of the canvas.</li><li>If your operating system supports drag and drop, you can drag image files onto \1's internal desktop (the gray background of the main window) to open the images in separate windows or you can drag and drop onto the canvas (in select mode only) to add the file contents to the current image. You can also drag and drop text onto the canvas in select mode or in text or maths mode.</li></ul>See the manual for further details.

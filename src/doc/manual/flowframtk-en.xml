@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE manual SYSTEM "flowframtk.dtd">
+<manual fontenc="T1">
+  <preamble>
+    <!-- Document Info -->
+    <title>User Manual for <dict tag="appname"/> version
+      <dict tag="appversion" /></title>
+    <author>Nicola L. C. Talbot<br/><url www="www.dickimaw-books.com" /></author>
+<!--
+    <author>Another Author<br />Affliation or URL</author>
+    <author>Translated by Some One<br />Affliation or URL</author>
+-->
+    <date><dict tag="appdate" /></date>
+
+    <!-- Define Abbreviations -->
+
+    <newacro short="GUI" long="graphical user interface" tag="gui">
+      An application with windows and buttons in which the user
+      can point and click with the mouse.
+    </newacro>
+
+    <newacro short="JDK" long="Java Standard Edition SDK" tag="jdk">
+      A development environment for building
+       applications, applets and components using the Java
+       programming language.
+    </newacro>
+
+    <newacro short="JRE" long="Java Runtime Environment" tag="jre"> 
+      Allows end-users to run Java applications.
+    </newacro>
+
+    <newacro short="JVM" long="Java Virtual Machine" tag="jvm">
+      Also known as the Java Runtime Environment.
+    </newacro>
+
+    <newacro short="MDI" long="multiple-Document interface" tag="mdi" >
+      A main (parent) window containing child
+       windows allowing you to process several documents in
+       parallel.
+    </newacro>
+
+    <newacro short="SVG" long="scalable vector graphics" tag="svg" >
+      A Modularized language for describing
+      two-dimensional vector and mixed vector/raster graphics in XML.
+    </newacro>
+
+
+    <!-- Define Terms. If a description is included it's a glossary
+         term otherwise it goes in the index -->
+
+    <newterm tag="jdr" text="JDR">
+      <app/>'s native binary format. Files in this format 
+      should have the extension <ext>jdr</ext>.
+    </newterm>
+
+    <newterm tag="ajr" text="AJR">
+      <app/>'s native ASCII format. Files in this format 
+      should have the extension <ext>ajr</ext>. This format is 
+      primarily provided to assist conversion to and from JDR files 
+      or for version control.
+    </newterm>
+
+    <newterm tag="Java" text="Java">
+     A platform-independent object-orientated language.
+    </newterm>
+
+    <newterm tag="JavaHelp" text="JavaHelp">
+     An optional package of the JRE enabling applications to use a native browser
+     to display help topics.
+    </newterm>
+
+    <newterm tag="grid" text="grid" >
+     Tick marks located at regular intervals on the canvas. The grid can be locked so
+     that new points will be placed at the tick nearest the specified
+     position.
+    </newterm>
+
+    <newterm tag="toolbars" text="toolbars">
+    The two panels containing buttons, the horizontal toolbar is positioned at
+    the top of <app/>'s main window, the vertical toolbar is
+    positioned along the left edge of the main window.
+    </newterm>
+
+    <newterm tag="statusbar" text="status bar">
+    The status bar is the horizontal panel positioned along the bottom of
+    <app/>'s main window.
+    </newterm>
+
+    <newterm tag="rulers" text="rulers">
+    The two panels containing the horizontal and vertical rulers.
+    </newterm>
+
+    <newterm tag="canvas" text="canvas" plural="canvases">
+    The white area on which you construct your picture.
+    </newterm>
+
+    <newterm tag="shape" text="shape">
+    Either a path, text-path or a composite shape.
+    </newterm>
+
+    <newterm tag="path" text="path">
+    A shape made up of line segments, moves and cubic Bézier segments
+    </newterm>
+
+    <newterm tag="textarea" text="text area">
+    An object consisting of a single line of text. The text may be moved,
+    scaled, rotated, sheared or converted to a path.
+    </newterm>
+
+    <newterm tag="textpath" text="text-path">
+    A composite object formed by combining a path and a text area
+    to create a text along a path effect. The underlying path is
+    only visible when editing the text-path object using the edit path
+    function. Transformations (rotating, scaling and shearing) are
+    applied to the path not to the text.
+    </newterm>
+
+    <newterm tag="compositeshape" text="composite shape">
+    A shape that is described by an underlying shape
+    and a means of transforming it, such as apply symmetry or replicas.
+    </newterm>
+
+    <newterm tag="symmetricshape" text="symmetric shape">
+    A composite shape that is formed by the underlying shape
+    added to its reflection in a line a symmetry. Depending on how it's
+    created, the symmetric shape may be drawn as a single shape, or the
+    underlying shape and its reflection may be drawn independently of
+    each other. The line of symmetry has two control points that can be
+    adjusted to change the overall shape.
+    </newterm>
+
+    <newterm tag="pattern" text="pattern">
+    A composite shape formed by repeatedly applying a given
+    transformation on a shape. Each pattern has a specified number of
+    replicas. The underlying shape may or may not be visible. The
+    pattern mode determines whether the underlying path and replicas are
+    drawn in one go (single mode) or whether they are drawn
+    independently of each other (multi-mode). Transformations (rotating,
+    scaling and shearing) are applied to the path not to the text.
+    </newterm>
+
+    <newterm tag="rotationalpattern" text="rotational pattern">
+    A pattern where the replicas are created
+    by rotating the underlying path. In addition to the control points
+    defining the underlying shape, rotational patterns also have a control
+    point that governs the point of rotation.
+    </newterm>
+
+    <newterm tag="scaledpattern" text="scaled pattern">
+    A pattern where the replicas are created
+    by scaling the underlying path. In addition to the control points
+    defining the underlying shape, scaled patterns also have two control
+    points governing the scale anchor and the scale direction.
+    </newterm>
+
+    <newterm tag="spiralpattern" text="spiral pattern">
+    A pattern where the replicas are created
+    by rotating and translating the underlying path so that the replicas
+    are aligned along a spiral. In addition to the control points
+    defining the underlying shape, spiral patterns also have two control points
+    that govern the anchor and offset.
+    </newterm>
+
+    <newterm tag="vectorgraphics" text="vector graphics">
+    </newterm>
+
+  </preamble>
+
+  <document>
+   <node tag="introduction" type="chapter" title="Introduction">
+   <p>
+   <app/><footnote>This application is a replacement for the now-obsolete
+   JpgfDraw (<b>J</b>ava <b>pgf</b>-code generating <b>draw</b>ing application).
+   In fact, it's actually just been renamed and the code refactored.</footnote>
+   is a <term tag="vectorgraphics"/> application written in <term tag="Java"/>, with a 
+   <acr tag="gui"/>.
+   </p>
+   <p>
+   Under construction.
+   </p>
+   </node>
+   <node type="chapter" tag="licence" title="Licence" >
+   <p>
+   <app/> is licensed under the terms of the GNU General Public License.
+   <app/> depends on the following third party library whose jar files is
+   in the <tt>lib</tt> directory: Java Help
+   (<url www="https://javahelp.java.net/"/>).
+   </p>
+     <verbtabinput src="LICENSE"/>
+   </node>
+   <printglossary />
+   <printacronyms />
+   <printindex />
+  </document>
+</manual>
+

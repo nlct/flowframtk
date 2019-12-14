@@ -1,0 +1,2 @@
+Main-Class: com/dickimawbooks/jdrinfo/JdrInfo
+Class-Path: jdr.jar .

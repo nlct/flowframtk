@@ -1,0 +1,62 @@
+% /home/nlct/programming/java/jpgfdraw/trunk/doc/image-src/symgap.jdr
+% Created by FlowframTk version 0.8
+% 28-Sep-2015 11:55:53
+\iffalse
+% This image may require the following commands in the preamble:
+\usepackage{ifpdf}
+\makeatletter
+\newcommand*{\jdroutline}[3]{%
+  \GenericWarning{}{text outline can't be implemented}#3%
+}%
+\ifpdf
+ \let\jdrorgmod\mod
+ \InputIfFileExists{pdf-trans}%
+ {%
+   \renewcommand*{\jdroutline}[3]{%
+     {\def\mod{\expandtwonumexprafter \modulo}%
+     \setbox\@tempboxa\hbox{##3}%
+     \boxgs{##1}{}\copy\@tempboxa
+     }%
+   }%
+ }{}
+ \let\mod\jdrorgmod
+\else
+ \IfFileExists{pst-char.sty}%
+ {%
+   \usepackage{pst-char}
+   \renewcommand*{\jdroutline}[3]{%
+     \begin{pspicture}(0,0)
+     \pscharpath[##2]{##3}
+     \end{pspicture}
+   }
+ }{}
+\fi
+\makeatother
+\usepackage{pgf}
+\usepgflibrary{decorations.text}
+% The normal size font is assumed to be 10pt
+% End of preamble information
+\fi
+\begin{pgfpicture}{50.085133mm}{207.511766mm}{100.198204mm}{266.190935mm}
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{71.613889mm}{265.955556mm}}
+\pgfpathcurveto{\pgfpoint{67.380556mm}{257.136111mm}}{\pgfpoint{48.683333mm}{259.958333mm}}{\pgfpoint{50.8mm}{249.727778mm}}
+\pgfpathlineto{\pgfpoint{50.8mm}{239.497222mm}}
+\pgfpathcurveto{\pgfpoint{50.32963mm}{232.206481mm}}{\pgfpoint{63.264815mm}{232.324074mm}}{\pgfpoint{56.797222mm}{223.975mm}}
+\pgfpathlineto{\pgfpoint{65.969444mm}{215.861111mm}}
+\pgfpathlineto{\pgfpoint{75.141667mm}{207.747222mm}}
+\pgfpathlineto{\pgfpoint{84.313889mm}{215.861111mm}}
+\pgfpathlineto{\pgfpoint{93.486111mm}{223.975mm}}
+\pgfpathcurveto{\pgfpoint{87.018519mm}{232.324074mm}}{\pgfpoint{99.953704mm}{232.206481mm}}{\pgfpoint{99.483333mm}{239.497222mm}}
+\pgfpathlineto{\pgfpoint{99.483333mm}{249.727778mm}}
+\pgfpathcurveto{\pgfpoint{101.6mm}{259.958333mm}}{\pgfpoint{82.902778mm}{257.136111mm}}{\pgfpoint{78.669444mm}{265.955556mm}}
+\definecolor{fillpaint}{rgb}{1.0,1.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfseteorule
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{fill,stroke}
+\end{pgfscope}
+\end{pgfpicture}

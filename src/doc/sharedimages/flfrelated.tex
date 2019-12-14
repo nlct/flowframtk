@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{color}
+\pagestyle{empty}
+\begin{document}
+\newsavebox\mysbox
+\sbox\mysbox{\color[named]{RoyalBlue}\sffamily\Large\slshape
+FLF}
+\newlength\mylen
+\settowidth{\mylen}{\usebox{\mysbox}}
+\newlength\drop
+\settoheight\drop{\usebox\mysbox}
+\advance\drop by -\mylen
+\fbox{\rule[0.5\drop]{0pt}{\mylen}%
+\usebox\mysbox}
+\end{document}

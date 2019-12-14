@@ -1,0 +1,83 @@
+% /home/nlct/programming/java/jpgfdraw/trunk/doc/image-src/capstyle.jdr
+% Created by FlowframTk version 0.8
+% 28-Sep-2015 17:43:38
+\iffalse
+% This image may require the following commands in the preamble:
+\usepackage{ifpdf}
+\makeatletter
+\newcommand*{\jdroutline}[3]{%
+  \GenericWarning{}{text outline can't be implemented}#3%
+}%
+\ifpdf
+ \let\jdrorgmod\mod
+ \InputIfFileExists{pdf-trans}%
+ {%
+   \renewcommand*{\jdroutline}[3]{%
+     {\def\mod{\expandtwonumexprafter \modulo}%
+     \setbox\@tempboxa\hbox{##3}%
+     \boxgs{##1}{}\copy\@tempboxa
+     }%
+   }%
+ }{}
+ \let\mod\jdrorgmod
+\else
+ \IfFileExists{pst-char.sty}%
+ {%
+   \usepackage{pst-char}
+   \renewcommand*{\jdroutline}[3]{%
+     \begin{pspicture}(0,0)
+     \pscharpath[##2]{##3}
+     \end{pspicture}
+   }
+ }{}
+\fi
+\makeatother
+\usepackage{pgf}
+\usepgflibrary{decorations.text}
+% The normal size font is assumed to be 10pt
+% End of preamble information
+\fi
+\begin{pgfpicture}{50.796875bp}{657.889764bp}{254.0bp}{749.483514bp}
+\begin{pgfscope}
+\pgfsetlinewidth{8.0bp}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{100.0bp}{741.889764bp}}
+\pgfpathlineto{\pgfpoint{250.0bp}{741.889764bp}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{8.0bp}
+\pgfsetroundcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{100.0bp}{701.889764bp}}
+\pgfpathlineto{\pgfpoint{250.0bp}{701.889764bp}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{8.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{100.0bp}{661.889764bp}}
+\pgfpathlineto{\pgfpoint{250.0bp}{661.889764bp}}
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{50.0bp}{741.889764bp}}
+\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\subfigcapfmt{a}}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{50.0bp}{700.23376bp}}
+\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\subfigcapfmt{b}}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{50.0bp}{661.889764bp}}
+\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\subfigcapfmt{c}}
+\end{pgfscope}
+\end{pgfpicture}
