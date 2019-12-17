@@ -9,3 +9,5 @@ jdrview-*.bib
 *.glstex
 *.glg
 *.swp
+*.lof
+*.lot

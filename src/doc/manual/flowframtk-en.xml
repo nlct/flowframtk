@@ -317,8 +317,11 @@
 
     <boilerplate>
     <p>
-     <app/> is subject to the GNU General Public License. See
-     the file <file>LICENSE</file> for details.
+     <app/> is licensed under the terms of the GNU General Public License
+     (<url www="http://gnu.org/licenses/gpl.html" />).
+     <app/> depends on the following third party library whose jar files is
+     in the <tt>lib</tt> directory: Java Help
+     (<url www="https://javahelp.java.net/"/>).
     </p>
     <p>
      DOCUMENTATION IS PROVIDED <dq>AS IS</dq> AND ALL EXPRESS OR IMPLIED
@@ -338,7 +341,7 @@
     </htmlonly>
     </p>
     <p>
-    The latest version can be downloaded from <url www="https://ctan.org/pkg/flowframtk"/>.
+    The latest version of <app/> can be downloaded from <url www="https://ctan.org/pkg/flowframtk"/>.
     Older versions can be downloaded from <url www="http://www.dickimaw-books.com/software/flowframtk/"/>.
     </p>
     <p>
@@ -351,6 +354,8 @@
   <document>
    <frontmatter />
    <tableofcontents/>
+   <listoftables />
+   <listoffigures />
    <mainmatter />
    <node tag="introduction" type="chapter" title="Introduction">
    <p>
@@ -687,18 +692,7 @@
    </node>
    <node type="section" tag="knownbugs" title="Known Bugs">
    </node>
-   <node type="chapter" tag="licence" title="Licence" >
-   <p>
-   <app/> is licensed under the terms of the GNU General Public License
-   (<url www="http://gnu.org/licenses/gpl.html" />).
-   <app/> depends on the following third party library whose jar files is
-   in the <tt>lib</tt> directory: Java Help
-   (<url www="https://javahelp.java.net/"/>).
-   </p>
-   <htmlonly>
-     <verbtabinput src="../../lib/resources/LICENSE"/>
-   </htmlonly>
-   </node>
+   <backmatter/>
    <printglossary />
    <printacronyms />
    <printindex />

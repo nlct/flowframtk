@@ -10,10 +10,17 @@
 
 \RequirePackage{etoolbox}
 \RequirePackage{amsthm}
+\RequirePackage{graphicx}
+\RequirePackage[x11names]{xcolor}
+\RequirePackage{pgf}
 
 \PassOptionsToPackage{nogroupskip,abbreviations,stylemods={tree,bookindex}}{glossaries-extra}
+\PassOptionsToPackage{linkcolor=Blue4,urlcolor=DeepPink4}{hyperref}
 
+\pagenumbering{alph}
 \renewcommand{\@author}{}
+
+\publishers{\includepgf{title}}
 
 \newcommand{\Author}[1]{%
   \ifdefempty\@author
@@ -40,6 +47,8 @@
 \newcommand*{\opt}[1]{%
  \texttt{-\/-#1}%\index{--#1@\texttt{-\/-#1}}%
 }
+
+\newcommand*{\titleref}[2]{\htmlref{#1}{#2}}
 
 \newcommand*{\menu}[1]{\textsf{#1}}
 \newcommand*{\mto}{$\to$}
@@ -322,5 +331,111 @@ y+s_yx
 \end{array}
 \right)
 \end{displaymath}}
+
+\@ifundefined{sharedimagesdir}
+{%
+   \newcommand*{\sharedimagesdir}{../sharedimages}
+   \newcommand*{\imagesdir}{./images-\applang}
+}
+{}
+\providecommand*{\iconsdir}{../../java/jdrresources/icons}
+\providecommand*{\buttonsdir}{../../java/jdrresources/icons/buttons}
+\graphicspath{{\imagesdir/}{\sharedimagesdir/}{\iconsdir/}{\buttonsdir/}}
+
+\newlength\subcapskip
+\setlength\subcapskip{1.5\baselineskip}
+
+\newcommand*{\subfigcapfmt}[1]{(\emph{#1})}
+
+\newcommand*{\subfigcaption}[1]{\rule{0pt}{\subcapskip}\subfigcapfmt{#1}}
+
+% \centfigure[short cap]{label}{image}{caption}
+\newcommand{\centfigure}[4][]{%
+  \begin{figure}[htbp]%
+    \@centfigure@body{#1}{#2}{#3}{#4}%
+  \end{figure}%
+}
+
+\newcommand{\@centfigure}[4][htbp]{%
+  \begin{figure}[htbp]%
+    \@centfigure@body{#1}{#2}{#3}{#4}%
+  \end{figure}%
+}
+
+\newcommand{\@centfigure@body}[4]{%
+  \hypertarget{#2top}{}
+  \centering
+  #3%
+  \par
+  \def\cap@text{#1}%
+  \ifx\cap@text\@empty
+    \caption{#4}%
+  \else
+    {%
+     \def\dash{---}%
+     \def\LaTeX{LaTeX}%
+     \def\TeX{TeX}%
+     \let\ \space
+     \protected@xdef\cap@text{#1}%
+    }%
+    \expandafter\caption\expandafter[\cap@text]{#4}%
+  \fi
+  \label{#2}%
+}
+
+\renewcommand{\l@figure}{%
+  \@dottedtocline{1}{1.5em}{3.5em}%
+}
+
+\renewcommand{\l@table}{%
+  \@dottedtocline{1}{1.5em}{3.5em}%
+}
+
+% \sidebysidefigs{pre-text}[short cap 1]{label1}{image1}{caption1}[short cap
+% 2]{label2}{image2}{caption2}
+\newcommand{\sidebysidefigs}[1]{%
+  #1%
+ \begin{figure}[htbp]
+ \@sidebysidefigs
+}
+
+\newcommand{\@sidebysidefigs}[4][]{%
+  \begin{minipage}{0.45\linewidth}%
+    \@centfigure@body{#1}{#2}{#3}{#4}%
+  \end{minipage}\hfill
+  \@@sidebysidefigs
+}
+
+\newcommand{\@@sidebysidefigs}[4][]{%
+  \begin{minipage}{0.45\linewidth}%
+    \@centfigure@body{#1}{#2}{#3}{#4}%
+  \end{minipage}%
+  \end{figure}
+}
+
+\newlength\iconheight
+\newlength\iconwidth
+\newsavebox\iconsbox
+\newcommand{\iconstartpar}[1][-3]{%
+  \def\@iconstartpar@hangafter{#1}%
+  \@iconstartpar
+}
+
+\newcommand{\@iconstartpar}[2][]{%
+  \par\vspace{\baselineskip}%
+  \sbox{\iconsbox}{\@for\this@icon:=#2\do{\includegraphics[#1]{\this@icon}}}%
+  \settoheight{\iconheight}{\usebox{\iconsbox}}%
+  \settowidth{\iconwidth}{\usebox{\iconsbox}}
+  \advance\iconheight by -0.5\baselineskip
+  \advance\iconwidth by 10pt\relax
+  \hangindent=\iconwidth
+  \hangafter=\@iconstartpar@hangafter\relax
+  \noindent\makebox[0pt][l]{\hspace*{-\iconwidth}\smash{\raisebox{-\iconheight}{\usebox{\iconsbox}}}}%
+}
+
+\newcommand{\texrelated}{\iconstartpar{texrelated.png}}
+\newcommand{\pgfrelated}{\iconstartpar{pgfrelated.png}}
+\newcommand{\flfrelated}{\iconstartpar{flfrelated.png}}
+\newcommand{\warning}{\iconstartpar{warning.png}}
 
 \endinput

@@ -151,7 +151,8 @@ my $includetex = 1;
 my $boilerplate = 0;
 
 my $languagedefinitions = 
-  "\\def\\idxpackagename{".&get_label('manual.idxpackage')."}\n"
+  "\\def\\applang{$locale}\n"
+ ."\\def\\idxpackagename{".&get_label('manual.idxpackage')."}\n"
  ."\\def\\idxenvname{".&get_label('manual.idxenv')."}\n"
  ."\\def\\examplename{".&get_label('manual.example')."}\n"
  ."\\def\\abbrvname{".&get_label('manual.abbreviations')."}\n";
@@ -908,6 +909,26 @@ sub end_tableofcontents{
    my ($expat, %attrs) = @_;
 }
 
+sub start_listoffigures{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex("\\listoffigures\n");
+}
+
+sub end_listoffigures{
+   my ($expat, %attrs) = @_;
+}
+
+sub start_listoftables{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex("\\listoftables\n");
+}
+
+sub end_listoftables{
+   my ($expat, %attrs) = @_;
+}
+
 sub start_node{
    my ($expat, %attrs) = @_;
 
@@ -1239,9 +1260,29 @@ sub start_p{
       $endtag='\\glspar ';
    }
 
+   &handle_html("<p");
+
+   if ($attrs{class})
+   {
+      if ($attrs{class} eq 'warning')
+      {
+         &handle_tex('\\warning ');
+      }
+      elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
+      {
+         &handle_tex('\\' . $attrs{class} . 'related ');
+      }
+      else
+      {
+         warn("Unknown paragraph class '" . $attrs{class} . '"');
+      }
+
+      &handle_html(' class="' . $attrs{class} . '"');
+   }
+
    if ($attrs{align})
    {
-      &handle_html('<p align="'.$attrs{'align'}.'">');
+      &handle_html(' align="'.$attrs{'align'}.'">');
 
       if ($attrs{align} eq 'left')
       {
@@ -1266,7 +1307,7 @@ sub start_p{
    }
    else
    {
-      &handle_html("<p>");
+      &handle_html(">");
       &handle_tex($endtag);
 
       &handle_tex("\\noindent ") if $attrs{noindent};
