@@ -39,24 +39,24 @@ flowframtk-en-US.tex	: createflowframtkdocs flowframtk-en.xml \
 			createflowframtkdocs FlowframTk en US
 
 clean	:
-	flowframtk-en-GB.aux
-	flowframtk-en-GB.glg
-	flowframtk-en-GB.glstex
-	flowframtk-en-GB.log
-	flowframtk-en-GB.out
-	flowframtk-en-GB.toc
-	flowframtk-en-US.aux
-	flowframtk-en-US.glg
-	flowframtk-en-US.glstex
-	flowframtk-en-US.log
-	flowframtk-en-US.out
-	flowframtk-en-US.toc
+	rm -f flowframtk-en-GB.aux
+	rm -f flowframtk-en-GB.glg
+	rm -f flowframtk-en-GB.glstex
+	rm -f flowframtk-en-GB.log
+	rm -f flowframtk-en-GB.out
+	rm -f flowframtk-en-GB.toc
+	rm -f flowframtk-en-US.aux
+	rm -f flowframtk-en-US.glg
+	rm -f flowframtk-en-US.glstex
+	rm -f flowframtk-en-US.log
+	rm -f flowframtk-en-US.out
+	rm -f flowframtk-en-US.toc
 
 squeaky	:
-	flowframtk-en-GB.tex
-	flowframtk-en-GB.bib
-	flowframtk-en-GB.pdf
-	flowframtk-en-US.tex
-	flowframtk-en-US.bib
-	flowframtk-en-US.pdf
+	rm -f flowframtk-en-GB.tex
+	rm -f flowframtk-en-GB.bib
+	rm -f flowframtk-en-GB.pdf
+	rm -f flowframtk-en-US.tex
+	rm -f flowframtk-en-US.bib
+	rm -f flowframtk-en-US.pdf
 
