@@ -27,10 +27,15 @@
 
 \newcommand{\stynoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 
-\newrobustcmd*{\sty}[1]{%
-  \stynoindex{#1}%
-  %\index{#1 \idxpackagename @\textsf{#1} \idxpackagename}%
-}
+\newrobustcmd*{\sty}[1]{\gls{sty_#1}}
+
+\newcommand{\clsnoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
+
+\newrobustcmd*{\cls}[1]{\gls{cls_#1}}
+
+\newcommand{\envnoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
+
+\newrobustcmd*{\env}[1]{\gls{env_#1}}
 
 \newcommand*{\opt}[1]{%
  \texttt{-\/-#1}%\index{--#1@\texttt{-\/-#1}}%
@@ -85,9 +90,7 @@
 
 \newcommand{\csnoindex}[1]{\texorpdfstring{\texttt{\char`\\#1}}{\glsbackslash#1}}
 
-\newrobustcmd*{\cs}[1]{%
- \csnoindex{#1}%\index{#1@\csnoindex{#1}}%
-}
+\newrobustcmd*{\cs}[1]{\gls{cs_#1}}
 
 \newcommand*{\button}[1]{\textsf{\bfseries #1}}
 
@@ -98,9 +101,6 @@
 % Default definition.
 % (Overridden by context label in dictionary file.)
 \providecommand{\idxenvname}{environment}
-\newrobustcmd*{\env}[1]{%
- \textsf{#1}%\index{#1@\textsf{#1} \idxenvname}%
-}
 
 \newenvironment{boilerplate}{\clearpage\thispagestyle{empty}}{\clearpage}
 

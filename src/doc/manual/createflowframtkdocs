@@ -563,7 +563,31 @@ sub hs_index_term{
 
       &handle_html("<a name=\"$tag\">$text</a>");
 
-      print $bibfd "\@index{$tag, name={$term}";
+      my $tex_name = $term;
+      my $tex_text = $term;
+
+      if ($tag=~/^cs_/)
+      {
+         $tex_name=~s/^\\(.*)$/\\csnoindex{$1}/;
+         $tex_text = $tex_name;
+      }
+      elsif ($tag=~/^sty_/)
+      {
+         $tex_name=~s/^(.*)\.sty$/\\stynoindex{$1} package/;
+         $tex_text=~s/^(.*)\.sty$/\\stynoindex{$1}/;
+      }
+      elsif ($tag=~/^cls_/)
+      {
+         $tex_name=~s/^(.*)\.cls$/\\clsnoindex{$1} class/;
+         $tex_text=~s/^(.*)\.cls$/\\clsnoindex{$1}/;
+      }
+      elsif ($tag=~/^env_/)
+      {
+         $tex_name=~s/^(.*)$/\\envnoindex{$1} environment/;
+         $tex_text=~s/^(.*)$/\\envnoindex{$1}/;
+      }
+
+      print $bibfd "\@index{$tag, name={$tex_name}, text={$tex_text}";
 
       if ($hash->{$tag}->{Parent})
       {
@@ -731,7 +755,7 @@ sub start_manual{
    }
 
    print $texfd "% arara: pdflatex\n";
-   print $texfd "% arara: bib2gls: { trimfields: on }\n";
+   print $texfd "% arara: bib2gls: { group: on, trimfields: on }\n";
    print $texfd "% arara: pdflatex\n";
    print $texfd "% arara: pdflatex\n";
    print $texfd "\\documentclass[$babel{$locale}]{flowframtk}\n";
