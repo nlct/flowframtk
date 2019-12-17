@@ -45,19 +45,19 @@
     </newacro>
 
 
-    <!-- Define Terms. If a description is included it's a glossary
-         term otherwise it goes in the index -->
-
-    <newterm tag="jdr" text="JDR">
-      <app/>'s native binary format. Files in this format 
-      should have the extension <ext>jdr</ext>.
-    </newterm>
+    <!-- Define Terms. If a description is
+         included it's a glossary term otherwise it goes in the index. -->
 
     <newterm tag="ajr" text="AJR">
       <app/>'s native ASCII format. Files in this format 
       should have the extension <ext>ajr</ext>. This format is 
       primarily provided to assist conversion to and from JDR files 
       or for version control.
+    </newterm>
+
+    <newterm tag="jdr" text="JDR">
+      <app/>'s native binary format. Files in this format 
+      should have the extension <ext>jdr</ext>.
     </newterm>
 
     <newterm tag="Java" text="Java">
@@ -161,6 +161,9 @@
     that govern the anchor and offset.
     </newterm>
 
+    <newterm tag="pathattributes" text="path attributes">
+    </newterm>
+
     <newterm tag="vectorgraphics" text="vector graphics">
     </newterm>
 
@@ -181,12 +184,15 @@
    </node>
    <node type="chapter" tag="licence" title="Licence" >
    <p>
-   <app/> is licensed under the terms of the GNU General Public License.
+   <app/> is licensed under the terms of the GNU General Public License
+   (<url www="http://gnu.org/licenses/gpl.html" />).
    <app/> depends on the following third party library whose jar files is
    in the <tt>lib</tt> directory: Java Help
    (<url www="https://javahelp.java.net/"/>).
    </p>
-     <verbtabinput src="LICENSE"/>
+   <htmlonly>
+     <verbtabinput src="../../lib/resources/LICENSE"/>
+   </htmlonly>
    </node>
    <printglossary />
    <printacronyms />

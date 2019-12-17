@@ -24,7 +24,7 @@
 
 <!-- Document elements -->
 
-<!ELEMENT node (p | float | pre | alltt | dl)+ | printacronyms | printindex >
+<!ELEMENT node (p | float | pre | alltt | dl | verbtabinput | htmlonly | latexonly )+ | printglossary | printacronyms | printindex >
 <!ATTLIST node tag (#PCDATA)+ #REQUIRED>
 <!ATTLIST node type (#PCDATA)+ #REQUIRED>
 <!ATTLIST node title (%basic.content;)+ #REQUIRED>
@@ -71,6 +71,8 @@
 <!ELEMENT dl (dt, dd)+>
 <!ELEMENT dt (%basic.content;)+>
 <!ELEMENT dd (%basic.content;)+>
+<!ELEMENT htmlonly (%basic.content;)+>
+<!ELEMENT latexonly (%basic.content;)+>
 
 <!ELEMENT image EMPTY>
 <!ATTLIST image src (%basic.content;)+>
@@ -78,6 +80,8 @@
 
 <!ELEMENT verbinput EMPTY>
 <!ATTLIST image src (%basic.content;)+>
+
+<!ELEMENT verbtabinput EMPTY>
 
 <!ELEMENT cs EMPTY>
 <!ATTLIST cs tag (%basic.content;)+>
@@ -98,6 +102,7 @@
 <!ELEMENT hr EMPTY>
 <!ELEMENT printindex EMPTY>
 <!ELEMENT printacronyms EMPTY>
+<!ELEMENT printglossary EMPTY>
 <!ELEMENT LaTeX EMPTY>
 <!ELEMENT TeX EMPTY>
 <!ELEMENT app EMPTY>

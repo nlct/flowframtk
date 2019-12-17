@@ -10,6 +10,8 @@
 \RequirePackage{etoolbox}
 \RequirePackage{amsthm}
 
+\PassOptionsToPackage{nogroupskip,abbreviations,stylemods={tree,bookindex}}{glossaries-extra}
+
 \renewcommand{\@author}{}
 
 \newcommand{\Author}[1]{%
@@ -24,13 +26,16 @@
 
 \newcommand*{\sty}[1]{%
   \textsf{#1}%
-  \index{#1 \idxpackagename @\textsf{#1} \idxpackagename}%
+  %\index{#1 \idxpackagename @\textsf{#1} \idxpackagename}%
 }
 
-\newcommand*{\opt}[1]{\texttt{-\/-#1}\index{--#1@\texttt{-\/-#1}}}
+\newcommand*{\opt}[1]{%
+ \texttt{-\/-#1}%\index{--#1@\texttt{-\/-#1}}%
+}
 
 \newcommand*{\menu}[1]{\textsf{#1}}
 \newcommand*{\mto}{$\to$}
+\newcommand*{\ext}[1]{\texttt{#1}}
 
 \newcommand*{\lessthan}{\ifmmode<\else\textless\fi}
 \newcommand*{\greaterthan}{\ifmmode>\else\textgreater\fi}
@@ -75,7 +80,9 @@
 
 \newrobustcmd*{\csnoindex}[1]{\texttt{\char`\\#1}}
 
-\newrobustcmd*{\cs}[1]{\csnoindex{#1}\index{#1@\csnoindex{#1}}}
+\newrobustcmd*{\cs}[1]{%
+ \csnoindex{#1}%\index{#1@\csnoindex{#1}}%
+}
 
 \newcommand*{\button}[1]{\textsf{\bfseries #1}}
 
@@ -84,7 +91,9 @@
 % Default definition.
 % (Overridden by context label in dictionary file.)
 \providecommand{\idxenvname}{environment}
-\newrobustcmd*{\env}[1]{\textsf{#1}\index{#1@\textsf{#1} \idxenvname}}
+\newrobustcmd*{\env}[1]{%
+ \textsf{#1}%\index{#1@\textsf{#1} \idxenvname}%
+}
 
 \newtheoremstyle{example}% style name
 {2ex}% above space
@@ -102,5 +111,15 @@
 
 \theoremstyle{example}
 \newtheorem{example}{\examplename}
+
+\newcommand*{\printabbrvlist}{\printunsrtglossary[type=\glsxtrabbrvtype,title=\abbrvname,nonumberlist]}
+\newcommand*{\printmainglossary}{%
+ \printunsrtglossary*[nonumberlist]{%
+   \renewcommand{\printunsrtglossaryentryprocesshook}[1]{%
+     \ifglshasdesc{##1}{}{\printunsrtglossaryskipentry}%
+   }%
+ }%
+}
+\newcommand*{\printmainindex}{\printunsrtglossary[target=false,title=\indexname,style=bookindex]}
 
 \endinput
