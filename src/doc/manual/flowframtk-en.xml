@@ -162,25 +162,530 @@
     </newterm>
 
     <newterm tag="pathattributes" text="path attributes">
+    The line <dict tag="colour"/>, fill <dict tag="colour"/> and line styles for the path.
     </newterm>
+
+    <newterm tag="textattributes" text="text attributes">
+    The text <dict tag="colour"/> and font.
+    </newterm>
+
+    <newterm tag="storageunit" text="storage unit">
+    The length unit used when storing co-ordinates. The default unit
+    is bp (PostScript point) but may be changed in the configuration
+    dialog.
+    </newterm>
+
+    <newterm tag="controlpt" text="control point">
+    The points that define a path. Line segments and gaps have two control
+    points, at the start and end, cubic Bézier segments have four
+    control points: one at the start of the segment, one at the end of
+    the segment, and two others that define the curvature of the segment.
+    Adjacent segments share a common control point. When a path is under
+    construction, or is being edited, the control points are shown as
+    orange or red squares. Composite paths also have control points that
+    govern how the full path is created from the underlying shape. The
+    composite control points are <dict tag="colour" />ed differently to the standard
+    path controls.
+    </newterm>
+
+    <newterm tag="ptindex" text="control point index" plural="control point indexes">
+    Each control point defining a given path or composite
+    shape has an index relative to the initial control point (at the
+    start of the path). Use <kbd key="F6"/> (in edit path mode) to cycle
+    through the points in increasing order of index.
+    </newterm>
+
+    <newterm tag="object" text="object">
+    A path, text area, text-path, bitmap or group.
+    </newterm>
+
+    <newterm tag="group" text="group">
+    A collection of <plural tag="object"/> treated as a single entity.
+    </newterm>
+
+    <newterm tag="bbox" text="bounding box" plural="bounding boxes">
+    The smallest rectangle that encompasses the <term tag="object"/>.
+    </newterm>
+
+    <newterm tag="stack" text="stack" >
+    List of <plural tag="object"/> that make up the image, 
+    in the order in which they should be painted on the canvas.
+    A <term tag="group"/> is essentially a sub-stack.
+    </newterm>
+
+    <newterm tag="stackingorder" text="stacking order">
+    The order in which <plural tag="object"/> are painted on the canvas.
+    To determine the reverse stacking order, deselect all objects, then
+    use <kbd key="F6"/> to cycle through the stack starting from the
+    frontmost object. Reverse this list to obtain the stacking order.
+    Note that the frontmost object is the last object in the <term tag="stack"/>, not
+    the first.
+    </newterm>
+
+    <newterm tag="frontobject" text="frontmost object">
+    The last object to be painted on the canvas.
+    </newterm>
+
+    <newterm tag="front" alias="frontobject" />
+
+    <newterm tag="backobject" text="backmost object">
+    The first object to be painted on the canvas.
+    </newterm>
+
+    <newterm tag="back" alias="backobject" />
 
     <newterm tag="vectorgraphics" text="vector graphics">
+    A means of describing images through the use of points, lines and curves.
     </newterm>
 
+    <newterm tag="raster" text="raster graphics">
+    Representing images as a collection of pixels. Also called a bitmap.
+    </newterm>
+
+    <newterm tag="bitmap" alias="raster" />
+
+    <newterm tag="construction" text="construction mode">
+    Any of the tools except the select tool.
+    </newterm>
+
+    <newterm tag="pt" >
+    <TeX/>'s point. Not to be confused with bp (a PostScript point).
+    72.27pt=1in.
+    </newterm>
+
+    <newterm tag="bp" >
+    <TeX/>'s <dq>big point</dq>. This is the same as a PostScript point.
+    72bp=1in.
+    </newterm>
+
+    <newterm tag="dropdown" text="drop-down list">
+    A <acr tag="gui"/> element that allows a user to choose one value from a list.
+    When inactive, it only displays the selected value. When activated
+    (usually by pressing an arrow button to on one side) it displays
+    a list of all available values from which the user can select
+    the required value.
+    </newterm>
+
+    <newterm tag="combobox" text="combo box">
+    A <acr tag="gui"/> element similar to a drop-down list, but can be edited if the
+    required value is not in the list.
+    </newterm>
+
+    <newterm tag="checkbox" >
+    A <acr tag="gui"/> element with two states: on (true) and off (false).
+    </newterm>
+
+    <newterm tag="popupmenu" text="popup menu">
+    A menu whose items vary depending on the context. These
+    menus are usually invoked with the menu or secondary mouse button. In
+    <app/> it is also possible to invoke popup menus using
+    <kbd key="F3"/> or your keyboard may have a context-menu key.
+    </newterm>
+
+    <newterm tag="recto" >
+    The <dq>front</dq> side of a leaf of paper (the right or odd-numbered page).
+    </newterm>
+
+    <newterm tag="verso" >
+    The <dq>back</dq> side of a leaf of paper (the left or even-numbered page).
+    </newterm>
+
+    <newterm tag="menuclick" text="menu-click">
+    Click the mouse button that activates context-menus. This depends
+    on your mouse configuration. For example, this is typically the right
+    button on a two-button right-handed
+    mouse, but may be the left button on a left-handed mouse or
+    the middle button on three button mouse.
+    </newterm>
+
+    <newterm tag="primaryclick" text="primary-click">
+    Click the primary mouse button. This depends on your
+    mouse configuration. For example, this is typically the left button
+    on a two-button right-handed mouse, but may be the right button on a
+    left-handed mouse.
+    </newterm>
+
+    <newterm tag="doubleclick" text="double-click">
+    Press and release the mouse button twice in rapid succession.
+    If no button is specified, assume the primary button.
+    </newterm>
+
+    <newterm tag="click" >
+    Press and release a mouse button. If the button isn't
+    specified, assume the primary button.
+    </newterm>
+
+    <boilerplate>
+    <p>
+     <app/> is subject to the GNU General Public License. See
+     the file <file>LICENSE</file> for details.
+    </p>
+    <p>
+     DOCUMENTATION IS PROVIDED <dq>AS IS</dq> AND ALL EXPRESS OR IMPLIED
+     CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY
+     IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+     PURPOSE OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT
+     SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.
+    </p>
+    <p>
+    This document is a user manual for <app/>. For information about
+    JDRView or jdrutils, see <file>jdrview.pdf</file> or
+    <file>jdrutils.pdf</file>, respectively.
+    <htmlonly>
+    This manual is also available as a PDF document, <file>flowframtk.pdf</file>. 
+    These PDF files are available in the <file>doc</file> subdirectory (folder)
+    of <app/>'s installation directory.
+    </htmlonly>
+    </p>
+    <p>
+    The latest version can be downloaded from <url www="https://ctan.org/pkg/flowframtk"/>.
+    Older versions can be downloaded from <url www="http://www.dickimaw-books.com/software/flowframtk/"/>.
+    </p>
+    <p>
+    Occasionally the canvas doesn't get redrawn correctly. To force a
+    redraw, use <kbd key="F11"/>.
+    </p>
+   </boilerplate>
   </preamble>
 
   <document>
+   <frontmatter />
+   <tableofcontents/>
+   <mainmatter />
    <node tag="introduction" type="chapter" title="Introduction">
    <p>
    <app/><footnote>This application is a replacement for the now-obsolete
    JpgfDraw (<b>J</b>ava <b>pgf</b>-code generating <b>draw</b>ing application).
    In fact, it's actually just been renamed and the code refactored.</footnote>
    is a <term tag="vectorgraphics"/> application written in <term tag="Java"/>, with a 
-   <acr tag="gui"/>.
+   <acr tag="gui"/>.  The main purpose of <app/> is to generate <LaTeX/> packages or 
+   classes that use the <sty>flowfram</sty> package, and to generate
+   <sty>pgf</sty> picture drawing code. As a side-effect, it can also be
+   used to generate <cs tag="parshape"/> and <cs tag="shapepar"/> or 
+   <cs tag="Shapepar"/> specifications. In order to run the application you 
+   must have the <acr tag="jre"/> installed.
    </p>
    <p>
-   Under construction.
+   In <app/>, you can:
    </p>
+   <ul>
+    <li><ref tag="newobjects" text="construct shapes"/> using line, move and cubic Bézier segments;</li>
+    <li><ref tag="editpath" text="edit paths"/> by modifying the defining <plural tag="controlpt"/>;</li>
+    <li>incorporate <ref tag="newtext" text="text"/> and 
+    <ref tag="insertbitmap" text="bitmap images"/> (for annotating and background effects);</li>
+    <li><ref tag="textpath" text="combine"/> text and a path to form a text-along-path
+    effect;</li>
+    <li>apply replicas to a shape to form <ref tag="patterns" text="patterns"/>;</li>
+    <li>extract the parameter's for <TeX/>'s <cs tag="parshape"/> command and for 
+    the <cs tag="shapepar"/> (or <cs tag="Shapepar"/> command defined in the
+    <sty>shapepar</sty> package;</li>
+    <li><ref tag="flowframe" text="construct frames"/> for use with the 
+    <sty>flowfram</sty> package.</li>
+   </ul>
+   </node>
+   <node type="chapter" tag="install" title="Installation">
+   </node>
+   <node type="chapter" tag="access" title="Accessibility">
+   </node>
+   <node type="chapter" tag="settings" title="Settings">
+   </node>
+   <node type="section" tag="cmdargs" title="Command Line Arguments">
+   </node>
+   <node type="section" tag="settingsmenu" title="The Settings Menu">
+   </node>
+   <node type="subsection" tag="setcurrentstyles" title="Styles">
+   </node>
+   <node type="subsection" tag="showrulers" title="Show Rulers">
+   </node>
+   <node type="subsection" tag="gridmenu" title="Grid">
+   </node>
+   <node type="subsection" tag="zoommenu" title="Zoom">
+   </node>
+   <node type="subsection" tag="papermenu" title="Paper">
+   </node>
+   <node type="subsection" tag="configuredialog" title="Image Settings Dialog">
+   </node>
+   <node type="subsubsection" tag="controlsettings" title="Control Point Settings">
+   </node>
+   <node type="subsubsection" tag="startdir" title="Startup Directory">
+   </node>
+   <node type="subsubsection" tag="jdrsettings" title="JDR/AJR Settings">
+   </node>
+   <node type="subsubsection" tag="initsettings" title="Startup Settings">
+   </node>
+   <node type="subsubsection" tag="bitmapconfig" title="Bitmap Settings">
+   </node>
+   <node type="subsubsection" tag="processes" title="Application Paths">
+   </node>
+   <node type="subsection" tag="texconfig" title="TeX Settings Dialog">
+   </node>
+   <node type="subsubsection" tag="normalsize" title="Setting the Document Class and Normal Font Size">
+   </node>
+   <node type="subsubsection" tag="texconfigflf" title="Flowframe Settings">
+   </node>
+   <node type="subsubsection" tag="texconfigtext" title="Text Settings">
+   </node>
+   <node type="subsubsection" tag="texconfigpreamble" title="Default Preamble">
+   </node>
+   <node type="subsection" tag="configureuidialog" title="User Interface Settings Dialog">
+   </node>
+   <node type="subsubsection" tag="graphics" title="Graphics Settings">
+   </node>
+   <node type="subsubsection" tag="annotations" title="Annotations Settings">
+   </node>
+   <node type="subsubsection" tag="languages" title="Language Settings">
+   </node>
+   <node type="subsubsection" tag="accelerators" title="Accelerator Settings">
+   </node>
+   <node type="subsubsection" tag="rulers" title="Toolbar, Ruler and Status Bar Settings">
+   </node>
+   <node type="subsubsection" tag="normalize" title="Normalization">
+   </node>
+   <node type="subsubsection" tag="texeditorui" title="TeX Editor Settings">
+   </node>
+   <node type="subsubsection" tag="lookandfeel" title="Look and Feel Settings">
+   </node>
+   <node type="section" tag="configdir" title="Configuration Directory">
+   </node>
+   <node type="chapter" tag="thebasics" title="The Basics">
+   </node>
+   <node type="section" tag="thecanvas" title="The Canvas">
+   </node>
+   <node type="section" tag="thetoolbars" title="The Toolbars">
+   </node>
+   <node type="section" tag="therulers" title="The Rulers">
+   </node>
+   <node type="section" tag="thestatusbar" title="The Status Bar">
+   </node>
+   <node type="chapter" tag="filemenu" title="The File Menu">
+   </node>
+   <node type="section" tag="newimage" title="New">
+   </node>
+   <node type="section" tag="loadimage" title="Open">
+   </node>
+   <node type="section" tag="recentfiles" title="Recent Files">
+   </node>
+   <node type="section" tag="imagedescription" title="Image Description">
+   </node>
+   <node type="section" tag="saveimage" title="Save and Save As">
+   </node>
+   <node type="section" tag="exportimage" title="Export">
+   </node>
+   <node type="section" tag="exportimage" title="Export">
+   </node>
+   <node type="subsection" tag="exportpng" title="Export to PNG">
+   </node>
+   <node type="subsection" tag="exportsty" title="Export to a Class or Package">
+   </node>
+   <node type="subsection" tag="exportpgf" title="Export to PGF">
+   </node>
+   <node type="subsection" tag="exportdoc" title="Export to Single-Paged Document">
+   </node>
+   <node type="section" tag="print" title="Print">
+   </node>
+   <node type="section" tag="messages" title="Message Window">
+   </node>
+   <node type="section" tag="closeimage" title="Close">
+   </node>
+   <node type="section" tag="quit" title="Quit">
+   </node>
+   <node type="chapter" tag="newobjects" title="Creating New Objects">
+   </node>
+   <node type="section" tag="newlinepath" title="Line Paths">
+   </node>
+   <node type="section" tag="newcurvepath" title="Curve Paths">
+   </node>
+   <node type="section" tag="rectangles" title="Rectangles">
+   </node>
+   <node type="section" tag="ellipses" title="Ellipses">
+   </node>
+   <node type="section" tag="newtext" title="Text">
+   </node>
+   <node type="chapter" tag="insertbitmap" title="Bitmaps">
+   </node>
+   <node type="section" tag="bitmapprops" title="Properties">
+   </node>
+   <node type="chapter" tag="selectobjects" title="Selecting and Editing Objects">
+   </node>
+   <node type="section" tag="moveobjects" title="Moving an Object">
+   </node>
+   <node type="section" tag="cutobjects" title="Cut">
+   </node>
+   <node type="section" tag="copyobjects" title="Copy">
+   </node>
+   <node type="section" tag="pasteobjects" title="Paste">
+   </node>
+   <node type="section" tag="objectdescription" title="Object Description">
+   </node>
+   <node type="section" tag="editpath" title="Editing Control Points">
+   </node>
+   <node type="section" tag="symmetric" title="Symmetric Shapes">
+   </node>
+   <node type="section" tag="edittext" title="Editing Text Areas">
+   </node>
+   <node type="section" tag="textpath" title="Combining a Text Area and Path to Form a Text-Path">
+   </node>
+   <node type="section" tag="textoutline" title="Text Outlines">
+   </node>
+   <node type="section" tag="reduce" title="Reducing to |dict case=ucfirst tag=grey| Scale">
+   </node>
+   <node type="section" tag="convertcolspace" title="|dict case=ucfirst tag=colour| Space Conversions">
+   </node>
+   <node type="section" tag="fade" title="Fade">
+   </node>
+   <node type="section" tag="removetrans" title="Removing Translucency">
+   </node>
+   <node type="section" tag="moveupordown" title="Moving an Object Up or Down the Stacking Order">
+   </node>
+   <node type="section" tag="rotateobjects" title="Rotating Objects">
+   </node>
+   <node type="section" tag="scaleobjects" title="Scaling Objects">
+   </node>
+   <node type="section" tag="shearobjects" title="Shearing Objects">
+   </node>
+   <node type="section" tag="distort" title="Distorting Shapes">
+   </node>
+   <node type="section" tag="grouping" title="Grouping and Ungrouping Objects">
+   </node>
+   <node type="section" tag="alignobjects" title="Aligning Objects">
+   </node>
+   <node type="section" tag="reversing" title="Reversing a Path's Direction">
+   </node>
+   <node type="section" tag="mergepaths" title="Merging Paths">
+   </node>
+   <node type="section" tag="pathunion" title="Path Union">
+   </node>
+   <node type="section" tag="xorpath" title="Exclusive Or Function">
+   </node>
+   <node type="section" tag="pathintersect" title="Path Intersection">
+   </node>
+   <node type="section" tag="pathsubtract" title="Path Subtraction">
+   </node>
+   <node type="section" tag="separate" title="Separating a Text-Path into a Text Area and Path">
+   </node>
+   <node type="section" tag="patterns" title="Converting a Path or Text-Path into a Pattern">
+   </node>
+   <node type="section" tag="converttopath" title="Converting to a Path">
+   </node>
+   <node type="section" tag="texttopath" title="Converting a Text Area, Text-Path or Pattern to a Path">
+   </node>
+   <node type="section" tag="outlinetopath" title="Converting an Outline to a Path">
+   </node>
+   <node type="section" tag="splittext" title="Splitting Text Areas">
+   </node>
+   <node type="chapter" tag="styles" title="Path and Text Styles">
+   </node>
+   <node type="section" tag="linepaint" title="Line |dict case=ucfirst tag=colour|">
+   </node>
+   <node type="section" tag="fillpaint" title="Fill |dict case=ucfirst tag=colour|">
+   </node>
+   <node type="section" tag="pathstyle" title="Line Style">
+   </node>
+   <node type="subsection" tag="penwidth" title="Line Thickness (or Pen Width)">
+   </node>
+   <node type="subsection" tag="dashpattern" title="Dash Pattern">
+   </node>
+   <node type="subsection" tag="capstyle" title="Cap Style">
+   </node>
+   <node type="subsection" tag="joinstyle" title="Join Style">
+   </node>
+   <node type="subsection" tag="markers" title="Markers">
+   </node>
+   <node type="subsubsection" tag="enablingmarkers" title="Enabling or Disabling a Marker">
+   </node>
+   <node type="subsubsection" tag="markertypes" title="Marker Types">
+   </node>
+   <node type="subsubsection" tag="markersize" title="Marker Size">
+   </node>
+   <node type="subsubsection" tag="repeatingmarkers" title="Repeating Markers">
+   </node>
+   <node type="subsubsection" tag="reversingmarkers" title="Reversing Markers">
+   </node>
+   <node type="subsubsection" tag="compositemarkers" title="Composite Markers">
+   </node>
+   <node type="subsubsection" tag="markerorientation" title="Marker Orientation">
+   </node>
+   <node type="subsubsection" tag="markeroffset" title="Marker Offset">
+   </node>
+   <node type="subsubsection" tag="repeatgap" title="Repeat Gap">
+   </node>
+   <node type="subsubsection" tag="markerpaint" title="Marker |dict case=ucfirst tag=colour|">
+   </node>
+   <node type="subsection" tag="winding" title="Winding Rule">
+   </node>
+   <node type="section" tag="textpaint" title="Text |dict case=ucfirst tag=colour|">
+   </node>
+   <node type="section" tag="textstyle" title="Text Style">
+   </node>
+   <node type="subsection" tag="fontfamily" title="Font Family">
+   </node>
+   <node type="subsection" tag="fontsize" title="Font Size">
+   </node>
+   <node type="subsection" tag="fontseries" title="Font Series">
+   </node>
+   <node type="subsection" tag="fontshape" title="Font Shape">
+   </node>
+   <node type="subsection" tag="textmatrix" title="Text Transformation Matrix">
+   </node>
+   <node type="subsection" tag="anchor" title="Anchor">
+   </node>
+   <node type="chapter" tag="tex" title="TeX/LaTeX">
+   </node>
+   <node type="section" tag="setpreamble" title="Adding Commands to the Preamble">
+   </node>
+   <node type="section" tag="parshape" title="Computing the Parameters for |cs parshape|">
+   </node>
+   <node type="section" tag="shapepar" title="Computing the Parameters for |cs shapepar| or |cs Shapepar|">
+   </node>
+   <node type="section" tag="flowframe" title="Creating Frames for Use with the |sty flowfram| Package">
+   </node>
+   <node type="subsection" tag="flowframesummary" title="The |sty flowfram| Package: A Brief Summary">
+   </node>
+   <node type="subsection" tag="typeblock" title="Defining the Typeblock">
+   </node>
+   <node type="subsection" tag="framedef" title="Defining a Frame">
+   </node>
+   <node type="subsection" tag="frameshape" title="The Frame Shape">
+   </node>
+   <node type="subsection" tag="scaletotypeblock" title="Scale Object to Fit Typeblock">
+   </node>
+   <node type="subsection" tag="displaypage" title="Only Displaying Objects Defined on a Given Page">
+   </node>
+   <node type="chapter" tag="tutorials" title="Step-by-Step Examples">
+   </node>
+   <node type="section" tag="houseexample" title="A House">
+   </node>
+   <node type="section" tag="toastexample" title="Lettuce on Toast">
+   </node>
+   <node type="section" tag="cheeseexample" title="Cheese and Lettuce on Toast">
+   </node>
+   <node type="section" tag="neuronexample" title="An Artificial Neuron">
+   </node>
+   <node type="section" tag="busexample" title="Bus">
+   </node>
+   <node type="section" tag="postertutorial" title="A Poster">
+   </node>
+   <node type="section" tag="newstutorial" title="A Newspaper">
+   </node>
+   <node type="section" tag="brochure" title="A Brochure">
+   </node>
+   <node type="section" tag="accesstutorial" title="A House With No Mouse">
+   </node>
+   <node type="section" tag="rosetutorial" title="A Lute Rose">
+   </node>
+   <node type="chapter" tag="jdrajrformat" title="JDR/AJR File Formats">
+   </node>
+   <node type="chapter" tag="multilingualsupport" title="Multilingual Support">
+   </node>
+   <node type="chapter" tag="sourcecode" title="Source Code">
+   </node>
+   <node type="section" tag="javasource" title="Java Source">
+   </node>
+   <node type="section" tag="docsource" title="Document Source">
+   </node>
+   <node type="chapter" tag="troubleshooting" title="Troubleshooting">
+   </node>
+   <node type="section" tag="knownbugs" title="Known Bugs">
    </node>
    <node type="chapter" tag="licence" title="Licence" >
    <p>

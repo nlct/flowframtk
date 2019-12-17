@@ -42,12 +42,13 @@ my %babel =
 my $encoding_file = 'utf8';
 my $encoding_xml  = 'UTF-8';
 
-open FD, "$mainclass" or die "Can't open main class file '$mainclass' $!\n";
-binmode(FD, ":$encoding_file");
+my $fd;
+open $fd, "$mainclass" or die "Can't open main class file '$mainclass' $!\n";
+binmode($fd, ":$encoding_file");
 
 my %dict = ();
 
-while (<FD>)
+while (<$fd>)
 {
    if (/public +static +final +String +APP_NAME *= *"([^"]+)"/)
    {
@@ -63,7 +64,7 @@ while (<FD>)
    }
 }
 
-close FD;
+close $fd;
 
 my $propfile = "$dictdir/$base-$locale.prop";
 
@@ -82,13 +83,13 @@ unless (-e $propfile)
    die "Can't find '$propfile'\n";
 }
 
-open FD, "$propfile" or die "Can't open property file '$propfile' $!\n";
+open $fd, "$propfile" or die "Can't open property file '$propfile' $!\n";
 
-$_ = <FD>;
+$_ = <$fd>;
 
 if (/# Encoding: ([^s]+)/)
 {
-   binmode(FD, ":encoding($1)");
+   binmode($fd, ":encoding($1)");
 }
 else
 {
@@ -100,7 +101,7 @@ my $linenum = 0;
 my $openquote = chr(hex(2018));
 my $closequote = chr(hex(2019));
 
-while (<FD>)
+while (<$fd>)
 {
    $linenum++;
 
@@ -137,7 +138,7 @@ while (<FD>)
    }
 }
 
-close FD;
+close $fd;
 
 my %docinfo = ();
 my @nodes   = ();
@@ -147,6 +148,7 @@ my %tags    = ();
 my $currenttag= '';
 my $includehtml = 1;
 my $includetex = 1;
+my $boilerplate = 0;
 
 my $languagedefinitions = 
   "\\def\\idxpackagename{".&get_label('manual.idxpackage')."}\n"
@@ -173,6 +175,8 @@ unless (-e $xmlfile)
 
 my $texfile = "$base-$locale.tex";
 my $bibfile = "$base-$locale.bib";
+my $boilerplatefile = "$base-$locale-boilerplate.tex";
+
 my $helpsetdir = "$targetdir/$base/$locale";
 
 unless (-e $helpsetdir)
@@ -208,14 +212,18 @@ my @tabular_specs = ();
 
 my %counters = ();
 
+my $boilerfd;
+my $texfd;
+my $bibfd;
+
 # open the TeX file
-open TEXFD, ">$texfile" or die "Can't open TeX file '$texfile' $!\n";
-binmode(TEXFD, ":$encoding_file");
+open $texfd, ">$texfile" or die "Can't open TeX file '$texfile' $!\n";
+binmode($texfd, ":$encoding_file");
 
 # open the bib file
-open BIBFD, ">$bibfile" or die "Can't open Bib file '$bibfile' $!\n";
-binmode(BIBFD, ":$encoding_file");
-print BIBFD "% Encoding: $encoding_xml\n";
+open $bibfd, ">$bibfile" or die "Can't open Bib file '$bibfile' $!\n";
+binmode($bibfd, ":$encoding_file");
+print $bibfd "% Encoding: $encoding_xml\n";
  
 # initialize the parser
 my $parser = XML::Parser->new( Handlers => 
@@ -226,21 +234,22 @@ my $parser = XML::Parser->new( Handlers =>
                                      });
 $parser->parsefile( $xmlfile );
  
-close TEXFD;
-close BIBFD;
+close $texfd;
+close $bibfd;
 
 # Write helpset files
 
-open HSFD, ">$helpsetdir/$base.hs"
+my $hsfd;
+open $hsfd, ">$helpsetdir/$base.hs"
   or die "Can't open '$helpsetdir/$base.hs' $!\n";
-binmode(HSFD, ":$encoding_file");
+binmode($hsfd, ":$encoding_file");
 
 my $toctitle = &get_label('manual.toc');
 my $manualtitle = &get_label('manual.title');
 my $indextitle = &get_label('manual.index');
 my $searchtitle = &get_label('manual.search');
 
-print HSFD <<_END_HS_HEAD;
+print $hsfd <<_END_HS_HEAD;
 <?xml version='1.0' encoding='$encoding_xml' ?>
 <!DOCTYPE helpset
 PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 2.0//EN"
@@ -309,40 +318,50 @@ PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 2.0//EN"
 </helpset>
 _END_HS_HEAD
 
-close HSFD;
+close $hsfd;
 
-open HTMLFD, ">$helpsetdir/$base.html"
+my $htmlfd;
+
+open $htmlfd, ">$helpsetdir/$base.html"
   or die "Can't open '$helpsetdir/$base.html' $!\n";
-binmode(HTMLFD, ":$encoding_file");
+binmode($htmlfd, ":$encoding_file");
 
-print HTMLFD &html_head($docinfo{Title}, '', $nodes[0]->{Tag});
+print $htmlfd &html_head($docinfo{Title}, '', $nodes[0]->{Tag});
 
-print HTMLFD "<body>\n";
+print $htmlfd "<body>\n";
 
-print HTMLFD "<div class=\"title\" \"><p>",
+print $htmlfd "<div class=\"title\" \"><p>",
    $docinfo{Title}, "</p>\n";
 
-print HTMLFD "<p>$docinfo{Author}</p>\n" if ($docinfo{Author});
+print $htmlfd "<p>$docinfo{Author}</p>\n" if ($docinfo{Author});
 
-print HTMLFD "</div><div class=\"date\">";
+print $htmlfd "</div><div class=\"date\">";
 
-print HTMLFD "<p>$docinfo{Date}</p>\n" if ($docinfo{Date});
+print $htmlfd "<p>$docinfo{Date}</p>\n" if ($docinfo{Date});
 
-print HTMLFD "</div>";
+print $htmlfd "</div>";
 
-print HTMLFD &html_nav('', $nodes[0]);
+if ($docinfo{Boilerplate})
+{
+   print $htmlfd '<div class="boilerplate">';
+   print $htmlfd $docinfo{Boilerplate};
+   print $htmlfd '</div>';
+}
 
-print HTMLFD "</body>\n</html>\n";
+print $htmlfd &html_nav('', $nodes[0]);
 
-close HTMLFD;
+print $htmlfd "</body>\n</html>\n";
+
+close $htmlfd;
 
 my $prev = $base;
 
-open TOCFD, ">$helpsetdir/${base}TOC.xml" 
+my $tocfd;
+open $tocfd, ">$helpsetdir/${base}TOC.xml" 
    or die "Can't open '$helpsetdir/${base}TOC.xml' $!\n";
-binmode(TOCFD, ":$encoding_file");
+binmode($tocfd, ":$encoding_file");
 
-print TOCFD <<_END_TOC_HEAD;
+print $tocfd <<_END_TOC_HEAD;
 <?xml version='1.0' encoding='$encoding_xml' ?>
    <!DOCTYPE toc
      PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version
@@ -363,36 +382,36 @@ for (my $idx = 0; $idx <= $#nodes; $idx++)
    {
       if ($section_levels{$node->{Type}}+$level <= $prevlevel)
       {
-         print TOCFD "</tocitem>\n";
+         print $tocfd "</tocitem>\n";
       }
    }
 
-   print TOCFD "<tocitem text=\"$node->{Title}\" target=\"$node->{Tag}\">\n";
+   print $tocfd "<tocitem text=\"$node->{Title}\" target=\"$node->{Tag}\">\n";
 
    my $next = ($idx == $#nodes ? '' : $nodes[$idx+1]);
 
    my $tag = $node->{Tag};
 
-   open HTMLFD, ">$helpsetdir/$tag.html"
+   open $htmlfd, ">$helpsetdir/$tag.html"
      or die "Can't open '$helpsetdir/$tag.html' $!\n";
 
-   binmode(HTMLFD, ":$encoding_file");
+   binmode($htmlfd, ":$encoding_file");
 
-   print HTMLFD &html_head($node->{Title}, 
+   print $htmlfd &html_head($node->{Title}, 
      ($prev eq $base ? $base : $prev->{Tag}),
      ($next ? $next->{Tag} : ''));
 
-   print HTMLFD "<body>\n";
+   print $htmlfd "<body>\n";
 
    my $header = 'h'.$section_levels{$node->{Type}};
 
-   print HTMLFD "<$header>", $node->{Title}, "</$header>\n";
+   print $htmlfd "<$header>", $node->{Title}, "</$header>\n";
 
    my $content = $node->{Contents};
 
    $content=~s/<ref>([^<]+)<\/ref>/&get_ref($1)/eg;
 
-   print HTMLFD "<div>$content</div>";
+   print $htmlfd "<div>$content</div>";
 
    if ($node->{Footnotes})
    {
@@ -400,14 +419,14 @@ for (my $idx = 0; $idx <= $#nodes; $idx++)
 
       $content=~s/<ref>([^<]+)<\/ref>/&get_ref($1)/eg;
 
-      print HTMLFD "<hr />$content";
+      print $htmlfd "<hr />$content";
    }
 
-   print HTMLFD &html_nav($prev, $next);
+   print $htmlfd &html_nav($prev, $next);
 
-   print HTMLFD "</body>\n</html>\n";
+   print $htmlfd "</body>\n</html>\n";
 
-   close HTMLFD;
+   close $htmlfd;
 
    $prev = $node;
    $prevlevel = $section_levels{$node->{Type}};
@@ -417,21 +436,22 @@ for (my $level = scalar(keys %section_levels); $level >= 0; $level--)
 {
    if ($level < $prevlevel)
    {
-      print TOCFD "</tocitem>\n";
+      print $tocfd "</tocitem>\n";
    }
 }
 
-print TOCFD "</tocitem>\n</toc>\n";
+print $tocfd "</tocitem>\n</toc>\n";
 
-close TOCFD;
+close $tocfd;
 
 # write map file
 
-open MAPFD, ">$helpsetdir/Map.jhm"
+my $mapfd;
+open $mapfd, ">$helpsetdir/Map.jhm"
   or die "Can't open '$helpsetdir/Map.jhm' $!\n";
-binmode(MAPFD, ":$encoding_file");
+binmode($mapfd, ":$encoding_file");
 
-print MAPFD <<_END_MAP_HEAD;
+print $mapfd <<_END_MAP_HEAD;
 <?xml version='1.0' encoding='utf-8' ?>
 <!DOCTYPE map
  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN"
@@ -439,25 +459,26 @@ print MAPFD <<_END_MAP_HEAD;
 <map version="2.0" xml:lang="$locale">
 _END_MAP_HEAD
 
-print MAPFD "<mapID target=\"top\" url=\"$base.html\" />\n";
-print MAPFD "<mapID target=\"appIcon\" url=\"../../icons/flowframtklogosmall.png\" />\n";
-print MAPFD "<mapID target=\"homeIcon\" url=\"../../icons/home.png\" />\n";
-print MAPFD "<mapID target=\"backIcon\" url=\"../../icons/back.png\" />\n";
-print MAPFD "<mapID target=\"forwardIcon\" url=\"../../icons/forward.png\" />\n";
+print $mapfd "<mapID target=\"top\" url=\"$base.html\" />\n";
+print $mapfd "<mapID target=\"appIcon\" url=\"../../icons/flowframtklogosmall.png\" />\n";
+print $mapfd "<mapID target=\"homeIcon\" url=\"../../icons/home.png\" />\n";
+print $mapfd "<mapID target=\"backIcon\" url=\"../../icons/back.png\" />\n";
+print $mapfd "<mapID target=\"forwardIcon\" url=\"../../icons/forward.png\" />\n";
 
 &hs_map_id(\%tags);
 &hs_map_id(\%terms);
 
-print MAPFD "</map>\n";
-close MAPFD;
+print $mapfd "</map>\n";
+close $mapfd;
 
 # Write the helpset index file
 
-open IDXFD, ">$helpsetdir/${base}Index.xml"
+my $idxfd;
+open $idxfd, ">$helpsetdir/${base}Index.xml"
  or die "Can't open '$helpsetdir/${base}Index.xml' $!\n";
-binmode(IDXFD, ":$encoding_file");
+binmode($idxfd, ":$encoding_file");
 
-print IDXFD <<_END_IDX_HEAD;
+print $idxfd <<_END_IDX_HEAD;
 <?xml version='1.0' encoding='$encoding_xml' ?>
    <!DOCTYPE index
      PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN"
@@ -468,8 +489,8 @@ _END_IDX_HEAD
 
 &print_idx_entries(\%terms);
 
-print IDXFD "</index>\n";
-close IDXFD;
+print $idxfd "</index>\n";
+close $idxfd;
 
 sub print_idx_entries{
    my ($hash) = @_;
@@ -482,7 +503,7 @@ sub print_idx_entries{
 
          $text=~s/<\/?[^>]*>//g;
 
-         print IDXFD "<indexitem text=\"",
+         print $idxfd "<indexitem text=\"",
            $text, "\" target=\"",
            $key, "\">\n";
 
@@ -491,7 +512,7 @@ sub print_idx_entries{
             &print_idx_entries($hash->{$key}->{Children});
          }
 
-         print IDXFD "</indexitem>\n";
+         print $idxfd "</indexitem>\n";
       }
       else
       {
@@ -514,7 +535,7 @@ sub hs_map_id{
    {
       if ($hash->{$tag}->{Ref})
       {
-         print MAPFD "<mapID target=\"$tag\" url=\"$hash->{$tag}->{Ref}\" />\n";
+         print $mapfd "<mapID target=\"$tag\" url=\"$hash->{$tag}->{Ref}\" />\n";
       }
       else
       {
@@ -542,19 +563,19 @@ sub hs_index_term{
 
       &handle_html("<a name=\"$tag\">$text</a>");
 
-      print BIBFD "\@index{$tag, name={$term}";
+      print $bibfd "\@index{$tag, name={$term}";
 
       if ($hash->{$tag}->{Parent})
       {
-         print BIBFD ", parent={", $hash->{$tag}->{Parent}, "}";
+         print $bibfd ", parent={", $hash->{$tag}->{Parent}, "}";
       }
 
       if ($hash->{$tag}->{Category})
       {
-         print BIBFD ", category={", $hash->{$tag}->{Category}, "}";
+         print $bibfd ", category={", $hash->{$tag}->{Category}, "}";
       }
 
-      print BIBFD "}\n";
+      print $bibfd "}\n";
    }
 
 }
@@ -587,16 +608,20 @@ sub handle_tex{
 
       if ($element eq 'NewTerm' or $element eq 'NewAcro')
       {
-         print BIBFD $string;
+         print $bibfd $string;
+      }
+      elsif ($element eq 'Boilerplate')
+      {
+         print $boilerfd $string;
       }
       else
       {
-         print TEXFD $string;
+         print $texfd $string;
       }
    }
    else
    {
-      print TEXFD $string;
+      print $texfd $string;
    }
 }
 
@@ -672,7 +697,11 @@ sub get_label{
 
    unless ($dict{$tag})
    {
-      if ($expat)
+      if (defined($dict{"manual.$tag"}))
+      {
+         $tag = "manual.$tag";
+      }
+      elsif ($expat)
       {
          die "No dictionary entry for tag '$tag' on line ",
            $expat->current_line, "\n";
@@ -701,11 +730,11 @@ sub start_manual{
       $fontenc = $attrs{'fontenc'};
    }
 
-   print TEXFD "% arara: pdflatex\n";
-   print TEXFD "% arara: bib2gls: { trimfields: on }\n";
-   print TEXFD "% arara: pdflatex\n";
-   print TEXFD "% arara: pdflatex\n";
-   print TEXFD "\\documentclass[$babel{$locale}]{flowframtk}\n";
+   print $texfd "% arara: pdflatex\n";
+   print $texfd "% arara: bib2gls: { trimfields: on }\n";
+   print $texfd "% arara: pdflatex\n";
+   print $texfd "% arara: pdflatex\n";
+   print $texfd "\\documentclass[$babel{$locale}]{flowframtk}\n";
 }
 
 sub end_manual{
@@ -715,19 +744,20 @@ sub end_manual{
 sub start_preamble{
    my ($expat, %attrs) = @_;
 
-   print TEXFD "\\usepackage[$inputenc]{inputenc}\n",
+   print $texfd "\\usepackage[$inputenc]{inputenc}\n",
       "\\usepackage[$fontenc]{fontenc}\n",
       "\\usepackage{lmodern}\n",
       "\\usepackage{graphicx}\n",
       "\\usepackage{verbatim}\n",
       "\\usepackage{alltt}\n",
       "\\usepackage{moreverb}\n",
+      "\\usepackage{keystroke}\n",
       "\\usepackage{babel}\n",
       "\\usepackage[colorlinks]{hyperref}\n",
       "\\usepackage[record=nameref]{glossaries-extra}\n",
       $languagedefinitions;
 
-   print TEXFD "\\GlsXtrLoadResources[src={$bibfile}]\n";
+   print $texfd "\\GlsXtrLoadResources[src={$bibfile}]\n";
 }
  
 sub end_preamble{
@@ -775,7 +805,7 @@ sub start_title{
 
    push @current, 'Title';
 
-   print TEXFD "\\title{";
+   print $texfd "\\title{";
 }
 
 sub end_title{
@@ -783,7 +813,7 @@ sub end_title{
 
    pop @current;
 
-   print TEXFD "}\n";
+   print $texfd "}\n";
 }
 
 sub start_date{
@@ -791,7 +821,7 @@ sub start_date{
 
    push @current, 'Date';
 
-   print TEXFD "\\date{";
+   print $texfd "\\date{";
 }
 
 sub end_date{
@@ -799,7 +829,7 @@ sub end_date{
 
    pop @current;
 
-   print TEXFD "}\n";
+   print $texfd "}\n";
 }
 
 sub start_author{
@@ -814,7 +844,7 @@ sub start_author{
 
    $docinfo{Author} .= "<table class=\"author\"><tr><td>";
 
-   print TEXFD "\\Author{";
+   print $texfd "\\Author{";
 }
 
 sub end_author{
@@ -824,19 +854,34 @@ sub end_author{
 
    pop @current;
 
-   print TEXFD "}\n";
+   print $texfd "}\n";
 }
 
 sub start_document{
    my ($expat, %attrs) = @_;
 
-   print TEXFD "\\begin{document}\n\\maketitle\n\\tableofcontents\n";
+   print $texfd "\\begin{document}\n\\maketitle\n\n";
+
+   if ($boilerplate)
+   {
+      print $texfd "\\input{$boilerplatefile}\n";
+   }
 }
 
 sub end_document{
    my ($expat) = @_;
 
-   print TEXFD "\\end{document}\n";
+   print $texfd "\\end{document}\n";
+}
+
+sub start_tableofcontents{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex("\\tableofcontents\n");
+}
+
+sub end_tableofcontents{
+   my ($expat, %attrs) = @_;
 }
 
 sub start_node{
@@ -886,10 +931,19 @@ sub start_node{
         $expat->current_line, "\n";
    }
 
+   my $nodetitle = $attrs{title};
+
+   $nodetitle=~s/\|dict (.+?)\|/&eval_dict_attrs($expat, $1, $2)/eg;
+
+   my $htmltitle = $nodetitle;
+
+   $htmltitle=~s/\|cs ([a-zA-Z]+)\|/<tt>\\$1<\/tt>/g;
+   $htmltitle=~s/\|sty (.+?)\|/<tt>$1<\/tt>/g;
+
    my %node = 
    (
       Type      => $attrs{type},
-      Title     => $attrs{title},
+      Title     => $htmltitle,
       Tag       => $attrs{tag},
       Contents  => '',
       Footnotes => '' 
@@ -898,10 +952,14 @@ sub start_node{
    push @nodes, \%node;
 
    $tags{$attrs{tag}}->{Ref} = $attrs{tag}.'.html';
-   $tags{$attrs{tag}}->{Text} = $attrs{title};
+   $tags{$attrs{tag}}->{Text} = $htmltitle;
 
-   print TEXFD "\\", $attrs{type}, "{",
-      $attrs{title}, "}\\label{",
+   my $textitle = $nodetitle;
+   $textitle=~s/\|(cs|sty) ([a-zA-Z]+)\|/\\$1noindex{$2}/g;
+
+   $textitle=~s/((?:La)TeX)/\\protect\\$1\{\}/g;
+
+   print $texfd "\\", $attrs{type}, "{$textitle}\\label{",
       $attrs{tag}, "}\n";
 }
 
@@ -957,24 +1015,24 @@ sub end_newacro{
 
    # write html file used by popup window
 
-   open FD, ">$helpsetdir/acr_$tag.html" 
+   open $fd, ">$helpsetdir/acr_$tag.html" 
       or die "Can't open '$helpsetdir/acr_$tag.html' $!\n";
 
-   print FD &html_head($acros{$tag}->{Short});
+   print $fd &html_head($acros{$tag}->{Short});
 
-   print FD "<body>\n<h1>$acros{$tag}->{Short}</h1>\n",
+   print $fd "<body>\n<h1>$acros{$tag}->{Short}</h1>\n",
       ucfirst($acros{$tag}->{Long}), ".\n";
 
    if ($docinfo{NewAcro})
    {
       $acros{$tag}->{Description} = $docinfo{NewAcro};
 
-      print FD "<p>", $acros{$tag}->{Description}, "</p>\n";
+      print $fd "<p>", $acros{$tag}->{Description}, "</p>\n";
    }
 
-   print FD "</body>\n</html>\n";
+   print $fd "</body>\n</html>\n";
 
-   close FD;
+   close $fd;
 
    &handle_tex("}}\n");
 
@@ -993,8 +1051,7 @@ sub start_newterm{
 
    unless ($attrs{text})
    {
-      die "Missing 'text' attribute for element 'newterm' on line ",
-         $expat->current_line, "\n";
+      $attrs{text} = $attrs{tag};
    }
 
    $currenttag = $attrs{tag};
@@ -1010,8 +1067,33 @@ sub start_newterm{
    push @current, 'NewTerm';
    $docinfo{'NewTerm'}='';
 
-   &handle_tex("\@index{$currenttag,name={" . $terms{$tag}->{Text} 
-     . "},description={");
+   &handle_tex("\@index{$currenttag,\n name={" . $terms{$tag}->{Text} . "},");
+
+   if (defined($attrs{plural}))
+   {
+      $terms{$tag}->{Plural} = $attrs{plural};
+      &handle_tex("\n plural={", $attrs{plural}, "},");
+   }
+
+   if (defined($attrs{seealso}))
+   {
+      $terms{$tag}->{SeeAlso} = $attrs{seealso};
+      &handle_tex("\n seealso={", $attrs{seealso}, "},");
+   }
+
+   if (defined($attrs{see}))
+   {
+      $terms{$tag}->{See} = $attrs{see};
+      &handle_tex("\n see={", $attrs{see}, "},");
+   }
+
+   if (defined($attrs{alias}))
+   {
+      $terms{$tag}->{Alias} = $attrs{alias};
+      &handle_tex("\n alias={", $attrs{alias}, "},");
+   }
+
+   &handle_tex("\n description={");
 }
 
 sub end_newterm{
@@ -1025,17 +1107,17 @@ sub end_newterm{
       # write html file used by popup window if a description has been
       # supplied
 
-      open FD, ">$helpsetdir/$tag.html" 
+      open $fd, ">$helpsetdir/$tag.html" 
          or die "Can't open '$helpsetdir/$tag.html' $!\n";
 
-      print FD &html_head($terms{$tag}->{Text});
+      print $fd &html_head($terms{$tag}->{Text});
 
-      print FD "<body>\n<h1>", $terms{$tag}->{Text}, "</h1>\n",
+      print $fd "<body>\n<h1>", $terms{$tag}->{Text}, "</h1>\n",
          ucfirst($terms{$tag}->{Description}), ".\n";
 
-      print FD "</body>\n</html>\n";
+      print $fd "</body>\n</html>\n";
 
-      close FD;
+      close $fd;
 
    }
 
@@ -1071,6 +1153,55 @@ sub check_boolean_attribute_value{
    }
 }
  
+sub start_frontmatter{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex('\\frontmatter ');
+}
+
+sub end_frontmatter{
+   my ($expat) = @_;
+}
+
+sub start_mainmatter{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex('\\mainmatter ');
+}
+
+sub end_mainmatter{
+   my ($expat) = @_;
+}
+
+sub start_backmatter{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex('\\backmatter ');
+}
+
+sub end_backmatter{
+   my ($expat) = @_;
+}
+
+sub start_boilerplate{
+   my ($expat, %attrs) = @_;
+
+   open $boilerfd, ">$boilerplatefile"
+     or die "Can't open boilerplate file '$boilerplatefile' $!\n";
+
+   push @current, 'Boilerplate';
+   &handle_tex('\\begin{boilerplate}');
+}
+
+sub end_boilerplate{
+   my ($expat) = @_;
+   &handle_tex('\\end{boilerplate}');
+   pop @current;
+
+   $boilerplate = 1;
+   close $boilerfd;
+}
+
 sub start_p{
    my ($expat, %attrs) = @_;
 
@@ -1204,6 +1335,109 @@ sub end_em{
    my ($expat) = @_;
 
    &handle_html('</em>');
+
+   &handle_tex("}");
+}
+
+sub start_kbd{
+   my ($expat, %attrs) = @_;
+
+   unless ($attrs{key})
+   {
+      die "element 'kbd' missing 'key' attribute\n";
+   }
+
+   my $key = ucfirst($attrs{key});
+
+   if ($key eq 'Space')
+   {
+      &handle_tex("\\Spacebar{}");
+      &handle_html("<kbd>Space Bar</kbd>");
+   }
+   elsif ($key eq 'Return')
+   {
+      &handle_tex("\\Return{}");
+      &handle_html("<kbd>Return &#x23CE;</kbd>");
+   }
+   elsif ($key eq 'Backspace')
+   {
+      &handle_tex("\\BSpace{}");
+      &handle_html("<kbd>Backspace &#x21A4;</kbd>");
+   }
+   elsif ($key eq 'Tab')
+   {
+      &handle_tex("\\Tab{}");
+      &handle_html("<kbd>Tab &#x21B9;</kbd>");
+   }
+   elsif ($key eq 'Pageup')
+   {
+      &handle_tex("\\PgUp{}");
+      &handle_html("<kbd>PgUp &#x2191;</kbd>");
+   }
+   elsif ($key eq 'Pagedown')
+   {
+      &handle_tex("\\PgDown{}");
+      &handle_html("<kbd>PgDn &#x2193;</kbd>");
+   }
+   elsif ($key eq 'Shift')
+   {
+      &handle_tex("\\Shift{}");
+      &handle_html("<kbd>Shift &#x21D1;</kbd>");
+   }
+   elsif ($key eq 'Up')
+   {
+      &handle_tex("\\UArrow{}");
+      &handle_html("<kbd>&#x2191;</kbd>");
+   }
+   elsif ($key eq 'Down')
+   {
+      &handle_tex("\\DArrow{}");
+      &handle_html("<kbd>&#x2193;</kbd>");
+   }
+   elsif ($key eq 'Left')
+   {
+      &handle_tex("\\LArrow{}");
+      &handle_html("<kbd>&#x2190;</kbd>");
+   }
+   elsif ($key eq 'Right')
+   {
+      &handle_tex("\\RArrow{}");
+      &handle_html("<kbd>&#x2192;</kbd>");
+   }
+   elsif ($key eq 'Altgr')
+   {
+      &handle_tex("\\AltGr{}");
+      &handle_html("<kbd>AltGr</kbd>");
+   }
+   elsif ($key eq 'PrtSc')
+   {
+      &handle_tex("\\PrtSc{}");
+      &handle_html("<kbd>PrtSc</kbd>");
+   }
+   else
+   {
+      &handle_tex("\\keystroke{$key}");
+      &handle_html("<kbd>$key</kbd>");
+   }
+}
+
+sub end_kbd{
+   my ($expat) = @_;
+
+}
+
+sub start_file{
+   my ($expat, %attrs) = @_;
+
+   &handle_html("<tt>");
+
+   &handle_tex("\\file{");
+}
+
+sub end_file{
+   my ($expat) = @_;
+
+   &handle_html('</tt>');
 
    &handle_tex("}");
 }
@@ -1532,9 +1766,9 @@ sub start_verbinput{
 
    &handle_html('<pre>');
 
-   open FD, $attrs{src} or die "Can't open verbatim file '$attrs{src}' $!\n";
+   open $fd, $attrs{src} or die "Can't open verbatim file '$attrs{src}' $!\n";
 
-   while (<FD>)
+   while (<$fd>)
    {
       s/\&/\&amp;/g;
       s/</\&lt;/g;
@@ -1543,7 +1777,7 @@ sub start_verbinput{
       &handle_html($_);
    }
 
-   close FD;
+   close $fd;
 
    &handle_html('</pre>');
 
@@ -1565,9 +1799,9 @@ sub start_verbtabinput{
 
    &handle_html('<pre>');
 
-   open FD, $attrs{src} or die "Can't open '$attrs{src}' $!\n";
+   open $fd, $attrs{src} or die "Can't open '$attrs{src}' $!\n";
 
-   while (<FD>)
+   while (<$fd>)
    {
       s/\&/\&amp;/g;
       s/</\&lt;/g;
@@ -1576,7 +1810,7 @@ sub start_verbtabinput{
       &handle_html($_);
    }
 
-   close FD;
+   close $fd;
 
    &handle_html('</pre>');
 
@@ -1872,6 +2106,47 @@ sub end_app{
    my ($expat) = @_;
 }
 
+sub eval_dict_attrs{
+   my ($expat, $str) = @_;
+   my %attrs = ();
+
+   while ($str=~/([a-z]+)\s*=\s*([a-z]+)/g)
+   {
+      $attrs{$1} = $2;
+   }
+
+   unless ($attrs{tag})
+   {
+      die "Missing 'dict' element's 'tag' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   my $text = &get_label($attrs{tag}, \%attrs, $expat);
+
+   if (defined($attrs{case}))
+   {
+      if ($attrs{case} eq 'ucfirst')
+      {
+         $text = ucfirst($text);
+      }
+      elsif ($attrs{case} eq 'uc')
+      {
+         $text = uc($text);
+      }
+      elsif ($attrs{case} eq 'lc')
+      {
+         $text = lc($text);
+      }
+      elsif ($attrs{case} ne 'none')
+      {
+         die "Unknown 'case' value '", $attrs{case}, "' for 'dict' element on line ",
+          $expat->current_line, "\n";
+      }
+   }
+
+   return $text;
+}
+
 sub start_dict{
    my ($expat, %attrs) = @_;
 
@@ -1882,6 +2157,27 @@ sub start_dict{
    }
 
    my $text = &get_label($attrs{tag}, \%attrs, $expat);
+
+   if (defined($attrs{case}))
+   {
+      if ($attrs{case} eq 'ucfirst')
+      {
+         $text = ucfirst($text);
+      }
+      elsif ($attrs{case} eq 'uc')
+      {
+         $text = uc($text);
+      }
+      elsif ($attrs{case} eq 'lc')
+      {
+         $text = lc($text);
+      }
+      elsif ($attrs{case} ne 'none')
+      {
+         die "Unknown 'case' value '", $attrs{case}, "' for 'dict' element on line ",
+          $expat->current_line, "\n";
+      }
+   }
 
    &handle_html($text);
 
@@ -1994,7 +2290,7 @@ sub start_acr{
 
    my $html;
 
-   if ($acros{$attrs{tag}}->{Used})
+   if ($acros{$attrs{tag}}->{Used} or $#nodes == -1)
    {
       $html = $acros{$attrs{tag}}->{Short};
 
@@ -2036,14 +2332,27 @@ sub start_term{
 
    my $html = $terms{$hstag}->{Text};
 
-   unless ($terms{$hstag}->{Ref})
+   if (!defined($terms{$hstag}->{Ref}) and $#nodes > -1)
    {
       $terms{$hstag}->{Ref} = $nodes[$#nodes]->{Tag} . ".html#$hstag";
    }
 
-   if ($terms{$hstag}->{Description})
+   my $desctag = $hstag;
+
+   if (defined($terms{$hstag}->{Alias}))
    {
-      $html = &hs_popup("gls_".$attrs{tag}.".html", $html);
+      $desctag = "gls_".$terms{$hstag}->{Alias};
+
+      unless ($terms{$desctag})
+      {
+         die "Unknown alias '$desctag' for term tag '$hstag' on line ",
+            $expat->current_line, "\n" ;
+      }
+   }
+
+   if ($terms{$desctag}->{Description})
+   {
+      $html = &hs_popup("$desctag.html", $html);
 
       &handle_tex("\\gls{", $attrs{tag}, "}");
    }
@@ -2058,6 +2367,59 @@ sub start_term{
 }
 
 sub end_term{
+   my ($expat) = @_;
+}
+
+sub start_plural{
+   my ($expat, %attrs) = @_;
+
+   unless ($attrs{tag})
+   {
+      die "Missing 'plural' element's 'tag' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   my $hstag = "gls_".$attrs{tag};
+
+   unless ($terms{$hstag})
+   {
+      die "Unknown term tag '$hstag' on line ",
+         $expat->current_line, "\n";
+   }
+
+   my $html;
+
+   if (defined($terms{$hstag}->{Plural}))
+   {
+      $html = $terms{$hstag}->{Plural};
+   }
+   else
+   {
+      $html = $terms{$hstag}->{Text} . 's';
+   }
+
+   if (!defined($terms{$hstag}->{Ref}) and $#nodes > -1)
+   {
+      $terms{$hstag}->{Ref} = $nodes[$#nodes]->{Tag} . ".html#$hstag";
+   }
+
+   if ($terms{$hstag}->{Description})
+   {
+      $html = &hs_popup("gls_".$attrs{tag}.".html", $html);
+
+      &handle_tex("\\glspl{", $attrs{tag}, "}");
+   }
+   else
+   {
+      &handle_tex("\\glspl{$hstag}");
+   }
+
+   &hs_index_term($hstag, $html, $terms{$hstag}->{Text}, 
+     \%terms);
+
+}
+
+sub end_plural{
    my ($expat) = @_;
 }
 

@@ -2893,5 +2893,7 @@ manual.abbreviations=Abbreviations
 manual.cont_explanation=(The symbol \\continuesymbol\\ above indicates a~line wrap. Don't insert a~line break at that point.)
 manual.labelled=labelled
 manual.seealso=See also:
+manual.grey=grey
+manual.colour=colour
 
 

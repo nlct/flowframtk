@@ -15,6 +15,7 @@
 <!ATTLIST newacro tag (#PCDATA)+ #REQUIRED>
 <!ATTLIST newacro short (%basic.content;)+ #REQUIRED>
 <!ATTLIST newacro long (%basic.content;)+ #REQUIRED>
+<!ATTLIST newacro description (%basic.content;)+>
 <!ELEMENT newterm EMPTY>
 <!ATTLIST newterm tag (#PCDATA)+ #REQUIRED>
 <!ATTLIST newterm text (%basic.content;)+ #REQUIRED>
@@ -24,7 +25,16 @@
 
 <!-- Document elements -->
 
-<!ELEMENT node (p | float | pre | alltt | dl | verbtabinput | htmlonly | latexonly )+ | printglossary | printacronyms | printindex >
+<!ELEMENT boilerplate (p | pre | alltt | verbtabinput | htmlonly | latexonly )+ >
+<!ELEMENT printindex EMPTY>
+<!ELEMENT printacronyms EMPTY>
+<!ELEMENT printglossary EMPTY>
+<!ELEMENT tableofcontents EMPTY>
+<!ELEMENT frontmatter EMPTY>
+<!ELEMENT mainmatter EMPTY>
+<!ELEMENT backmatter EMPTY>
+
+<!ELEMENT node (p | float | pre | alltt | dl | ul | ol | verbtabinput | htmlonly | latexonly )+ | printglossary | printacronyms | printindex >
 <!ATTLIST node tag (#PCDATA)+ #REQUIRED>
 <!ATTLIST node type (#PCDATA)+ #REQUIRED>
 <!ATTLIST node title (%basic.content;)+ #REQUIRED>
@@ -73,6 +83,8 @@
 <!ELEMENT dd (%basic.content;)+>
 <!ELEMENT htmlonly (%basic.content;)+>
 <!ELEMENT latexonly (%basic.content;)+>
+<!ELEMENT kbd EMPTY>
+<!ATTLIST kbd key (#PCDATA)+ #REQUIRED>
 
 <!ELEMENT image EMPTY>
 <!ATTLIST image src (%basic.content;)+>
@@ -100,9 +112,6 @@
 
 <!ELEMENT br EMPTY>
 <!ELEMENT hr EMPTY>
-<!ELEMENT printindex EMPTY>
-<!ELEMENT printacronyms EMPTY>
-<!ELEMENT printglossary EMPTY>
 <!ELEMENT LaTeX EMPTY>
 <!ELEMENT TeX EMPTY>
 <!ELEMENT app EMPTY>
