@@ -39,7 +39,8 @@
        parallel.
     </newacro>
 
-    <newacro short="SVG" long="scalable vector graphics" tag="svg" >
+    <newacro prefix="an " prefixfirst="a~"
+      short="SVG" long="scalable vector graphics" tag="svg" >
       A Modularized language for describing
       two-dimensional vector and mixed vector/raster graphics in XML.
     </newacro>
@@ -364,8 +365,8 @@
    In fact, it's actually just been renamed and the code refactored.</footnote>
    is a <term tag="vectorgraphics"/> application written in <term tag="Java"/>, with a 
    <acr tag="gui"/>.  The main purpose of <app/> is to generate <LaTeX/> packages or 
-   classes that use the <sty>flowfram</sty> package, and to generate
-   <sty>pgf</sty> picture drawing code. As a side-effect, it can also be
+   classes that use the <sty name="flowfram"/> package, and to generate
+   <sty name="pgf"/> picture drawing code. As a side-effect, it can also be
    used to generate <cs tag="parshape"/> and <cs tag="shapepar"/> or 
    <cs tag="Shapepar"/> specifications. In order to run the application you 
    must have the <acr tag="jre"/> installed.
@@ -383,10 +384,30 @@
     <li>apply replicas to a shape to form <ref tag="patterns" text="patterns"/>;</li>
     <li>extract the parameter's for <TeX/>'s <cs tag="parshape"/> command and for 
     the <cs tag="shapepar"/> (or <cs tag="Shapepar"/> command defined in the
-    <sty>shapepar</sty> package;</li>
+    <sty name="shapepar"/> package;</li>
     <li><ref tag="flowframe" text="construct frames"/> for use with the 
-    <sty>flowfram</sty> package.</li>
+    <sty name="flowfram"/> package.</li>
    </ul>
+   <p>
+   Pictures can be <ref tag="saveimage" text="saved as"/> or 
+   <ref tag="loadimage" text="loaded"/> from <app/>'s native <term tag="jdr"/>
+   (binary) or <term tag="ajr"/> (ASCII) file formats. Additionally, images can be
+   <ref tag="exportimage" text="exported"/> as:
+   </p>
+   <ul>
+    <li>a <LaTeX/> file containing a <env name="pgfpicture"/> environment
+    for inclusion in a <LaTeX/> document;</li>
+    <li>a single-paged complete <LaTeX/> document containing the image
+    (either just encapsulating the image or with the page set to the
+    same size as the <term tag="canvas"/>);</li>
+    <li>a <LaTeX/> package or class that loads the <sty name="flowfram"/> package;</li>
+    <li>a PNG file;</li>
+    <li>a PostScript file;</li>
+    <li><acr prefix="true" tag="svg" /> file.</li>
+   </ul>
+   <p>Note that the export to PS/PDF/SVG functions use external
+   processes, such as <cli name="latex"/> and <cli name="dvips"/>.
+   <b>You can't import back from the files you can export to.</b></p>
    </node>
    <node type="chapter" tag="install" title="Installation">
    </node>
@@ -473,8 +494,6 @@
    <node type="section" tag="imagedescription" title="Image Description">
    </node>
    <node type="section" tag="saveimage" title="Save and Save As">
-   </node>
-   <node type="section" tag="exportimage" title="Export">
    </node>
    <node type="section" tag="exportimage" title="Export">
    </node>
@@ -694,7 +713,6 @@
    </node>
    <backmatter/>
    <printglossary />
-   <printacronyms />
    <printindex />
   </document>
 </manual>

@@ -574,18 +574,23 @@ sub hs_index_term{
       }
       elsif ($tag=~/^sty_/)
       {
-         $tex_name=~s/^(.*)\.sty$/\\stynoindex{$1} package/;
-         $tex_text=~s/^(.*)\.sty$/\\stynoindex{$1}/;
+         $tex_name=~s/^(.*)(\.sty)?$/\\stynoindex{$1} package/;
+         $tex_text=~s/^(.*)(\.sty)?$/\\stynoindex{$1}/;
       }
       elsif ($tag=~/^cls_/)
       {
-         $tex_name=~s/^(.*)\.cls$/\\clsnoindex{$1} class/;
-         $tex_text=~s/^(.*)\.cls$/\\clsnoindex{$1}/;
+         $tex_name=~s/^(.*)(\.cls)?$/\\clsnoindex{$1} class/;
+         $tex_text=~s/^(.*)(\.cls)?$/\\clsnoindex{$1}/;
       }
       elsif ($tag=~/^env_/)
       {
          $tex_name=~s/^(.*)$/\\envnoindex{$1} environment/;
          $tex_text=~s/^(.*)$/\\envnoindex{$1}/;
+      }
+      elsif ($tag=~/^cli_/)
+      {
+         $tex_name=~s/^(.*)$/\\clinoindex{$1}/;
+         $tex_text=~s/^(.*)$/\\clinoindex{$1}/;
       }
 
       print $bibfd "\@index{$tag, name={$tex_name}, text={$tex_text}";
@@ -780,7 +785,10 @@ sub start_preamble{
       "\\usepackage{babel}\n",
       "\\usepackage[colorlinks]{hyperref}\n",
       "\\usepackage[record=nameref]{glossaries-extra}\n",
+      "\\usepackage{glossaries-prefix}\n",
       $languagedefinitions;
+
+   print $texfd "\\csname preresourcehook\\endcsname\n";
 
    print $texfd "\\GlsXtrLoadResources[src={$bibfile}]\n";
 }
@@ -1043,14 +1051,64 @@ sub start_newacro{
 
    $acros{$tag}->{Short} = $attrs{short};
    $acros{$tag}->{Long} = $attrs{long};
+   $acros{$tag}->{Prefix} = $attrs{prefix};
+   $acros{$tag}->{PrefixFirst} = $attrs{prefixfirst};
+   $acros{$tag}->{PrefixPlural} = $attrs{prefixplural};
+   $acros{$tag}->{PrefixFirstPlural} = $attrs{prefixfirstplural};
 
    push @current, 'NewAcro';
    $currenttag = $tag;
 
    $docinfo{'NewAcro'}='';
 
-   &handle_tex("\@abbreviation{$currenttag,short={" . $acros{$tag}->{Short}
-     . "},long={" . $acros{$tag}->{Long} . "},description={");
+   &handle_tex("\@abbreviation{$currenttag,\n short={" . $acros{$tag}->{Short}
+     . "},\n long={" . $acros{$tag}->{Long} . "}");
+
+   if ($acros{$tag}->{Prefix})
+   {
+      my $prefix = $acros{$tag}->{Prefix};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex(",\n prefix={$prefix}");
+
+      $acros{$tag}->{Prefix}=~s/~/ /g;
+   }
+
+   if ($acros{$tag}->{PrefixFirst})
+   {
+      my $prefix = $acros{$tag}->{PrefixFirst};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex(",\n prefixfirst={$prefix}");
+
+      $acros{$tag}->{PrefixFirst}=~s/~/ /g;
+   }
+
+   if ($acros{$tag}->{PrefixPlural})
+   {
+      my $prefix = $acros{$tag}->{PrefixPlural};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex(",\n prefixplural={$prefix}");
+
+      $acros{$tag}->{PrefixPlural}=~s/~/ /g;
+   }
+
+   if ($acros{$tag}->{PrefixFirstPlural})
+   {
+      my $prefix = $acros{$tag}->{PrefixFirstPlural};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex(",\n prefixfirstplural={$prefix}");
+
+      $acros{$tag}->{PrefixFirstPlural}=~s/~/ /g;
+   }
+
+   &handle_tex(",\n description={");
 }
 
 sub end_newacro{
@@ -1079,7 +1137,7 @@ sub end_newacro{
 
    close $fd;
 
-   &handle_tex("}}\n");
+   &handle_tex("}\n}\n");
 
    pop @current;
    $currenttag = '';
@@ -1136,6 +1194,54 @@ sub start_newterm{
    {
       $terms{$tag}->{Alias} = $attrs{alias};
       &handle_tex("\n alias={", $attrs{alias}, "},");
+   }
+
+   if (defined($attrs{prefix}))
+   {
+      $terms{$tag}->{Prefix} = $attrs{prefix};
+      my $prefix = $terms{$tag}->{Prefix};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex("\n prefix={$prefix},");
+
+      $terms{$tag}->{Prefix}=~s/~/ /g;
+   }
+
+   if (defined($attrs{prefixfirst}))
+   {
+      $terms{$tag}->{PrefixFirst} = $attrs{prefixfirst};
+      my $prefix = $terms{$tag}->{PrefixFirst};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex("\n prefixfirst={$prefix},");
+
+      $terms{$tag}->{PrefixFirst}=~s/~/ /g;
+   }
+
+   if (defined($attrs{prefixplural}))
+   {
+      $terms{$tag}->{PrefixPlural} = $attrs{prefixplural};
+      my $prefix = $terms{$tag}->{PrefixPlural};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex("\n prefixplural={$prefix},");
+
+      $terms{$tag}->{PrefixPlural}=~s/~/ /g;
+   }
+
+   if (defined($attrs{prefixfirstplural}))
+   {
+      $terms{$tag}->{PrefixFirstPlural} = $attrs{prefixfirstplural};
+      my $prefix = $terms{$tag}->{PrefixFirstPlural};
+
+      $prefix=~s/ +$/\\space/;
+
+      &handle_tex("\n prefixfirstplural={$prefix},");
+
+      $terms{$tag}->{PrefixFirstPlural}=~s/~/ /g;
    }
 
    &handle_tex("\n description={");
@@ -1635,22 +1741,43 @@ sub end_url{
 sub start_sty{
    my ($expat, %attrs) = @_;
 
-   push @current, 'sty';
+   unless ($attrs{name})
+   {
+      die "Missing 'sty' element's 'name' attribute on line ",
+        $expat->current_line, "\n";
+   }
 
-   &handle_tex("\\sty{");
+   my $text = $attrs{name};
+
+   &handle_tex('\\sty{', $attrs{name}, '}');
+
+   &hs_index_term('sty_'.$attrs{name}, "<tt>$text</tt>", $text, \%terms);
+
 }
 
 sub end_sty{
    my ($expat) = @_;
+}
 
-   pop @current;
+sub start_cli{
+   my ($expat, %attrs) = @_;
 
-   my $sty = $docinfo{sty};
-   $docinfo{sty} = '';
+   unless ($attrs{name})
+   {
+      die "Missing 'cli' element's 'name' attribute on line ",
+        $expat->current_line, "\n";
+   }
 
-   &hs_index_term("sty_$sty", "<tt>$sty</tt>", "$sty.sty", \%terms);
+   my $text = $attrs{name};
 
-   &handle_tex("}");
+   &handle_tex('\\cli{', $attrs{name}, '}');
+
+   &hs_index_term('cli_'.$attrs{name}, "<tt>$text</tt>", $text, \%terms);
+
+}
+
+sub end_cli{
+   my ($expat) = @_;
 }
 
 sub start_ext{
@@ -2162,9 +2289,9 @@ sub start_app{
 
    my $text = &get_label($tag, \%attrs, $expat);
 
-   &handle_html("<tt>$text</tt>");
+   &handle_html("<span class=\"app\">$text</span>");
 
-   &handle_tex("\\texttt{$text}");
+   &handle_tex("\\appfmt{$text}");
 }
 
 sub end_app{
@@ -2353,11 +2480,42 @@ sub start_acr{
          $expat->current_line, "\n";
    }
 
-   my $html;
+   &check_boolean_attribute_value('prefix', $expat, \%attrs);
+   &check_boolean_attribute_value('plural', $expat, \%attrs);
+
+   if ($attrs{'case'} and
+       not ($attrs{'case'} eq 'uc' or $attrs{'case'} eq 'ucfirst' or $attrs{'case'} eq 'none'))
+   {
+      die "Unknown case value '", $attrs{'case'}, "' for acr '",
+       $attrs{'tag'}, "' on line", $expat->current_line, "\n";
+   }
+
+   my $html = '';
 
    if ($acros{$attrs{tag}}->{Used} or $#nodes == -1)
    {
-      $html = $acros{$attrs{tag}}->{Short};
+      if ($attrs{prefix} and $acros{$attrs{tag}}->{Prefix})
+      {
+         $html = $acros{$attrs{tag}}->{Prefix};
+      }
+
+      if ($attrs{plural})
+      {
+         $html .= $acros{$attrs{tag}}->{ShortPlural};
+      }
+      else
+      {
+         $html .= $acros{$attrs{tag}}->{Short};
+      }
+
+      if ($attrs{'case'} eq 'uc')
+      {
+         $html = uc($html);
+      }
+      elsif ($attrs{'case'} eq 'ucfirst')
+      {
+         $html = ucfirst($html);
+      }
 
       &handle_html(&hs_popup("acr_".$attrs{tag}.".html", $html));
    }
@@ -2365,13 +2523,75 @@ sub start_acr{
    {
       $acros{$attrs{tag}}->{Used} = 1;
 
-      $html = $acros{$attrs{tag}}->{Long}
-            . ' (' . $acros{$attrs{tag}}->{Short} . ')';
+      if ($attrs{prefix} and $acros{$attrs{tag}}->{PrefixFirst})
+      {
+         $html = $acros{$attrs{tag}}->{PrefixFirst};
+      }
+
+      if ($attrs{plural})
+      {
+         if (defined($acros{$attrs{tag}}->{LongPlural}))
+         {
+            $html .= $acros{$attrs{tag}}->{LongPlural};
+         }
+         else
+         {
+            $html .= $acros{$attrs{tag}}->{Long} . 's';
+         }
+
+         $html .= '(';
+
+         if (defined($acros{$attrs{tag}}->{ShortPlural}))
+         {
+            $html .= $acros{$attrs{tag}}->{ShortPlural};
+         }
+         else
+         {
+            $html .= $acros{$attrs{tag}}->{Short} . 's';
+         }
+
+         $html .= ')';
+      }
+      else
+      {
+         $html .= $acros{$attrs{tag}}->{Long}
+               . ' (' . $acros{$attrs{tag}}->{Short} . ')';
+      }
+
+      if ($attrs{'case'} eq 'uc')
+      {
+         $html = uc($html);
+      }
+      elsif ($attrs{'case'} eq 'ucfirst')
+      {
+         $html = ucfirst($html);
+      }
 
       &hs_index_term('acr_'.$attrs{tag}, $html, ucfirst($html), \%terms);
    }
 
-   &handle_tex("\\gls{", $attrs{tag}, "}");
+   my $csname = 'gls';
+
+   if ($attrs{prefix})
+   {
+      $csname = "p$csname";
+   }
+
+   if ($attrs{'case'} eq 'uc')
+   {
+      $csname = uc($csname);
+   }
+   elsif ($attrs{'case'} eq 'ucfirst')
+   {
+      $csname = ucfirst($csname);
+   }
+
+   if ($attrs{plural})
+   {
+      $csname .= 'pl';
+   }
+
+   &handle_tex("\\", $csname, "{", $attrs{tag}, "}");
 }
 
 sub end_acr{
@@ -2395,7 +2615,52 @@ sub start_term{
          $expat->current_line, "\n";
    }
 
-   my $html = $terms{$hstag}->{Text};
+   &check_boolean_attribute_value('prefix', $expat, \%attrs);
+   &check_boolean_attribute_value('plural', $expat, \%attrs);
+
+   if ($attrs{'case'} and
+       not ($attrs{'case'} eq 'uc' or $attrs{'case'} eq 'ucfirst' or $attrs{'case'} eq 'none'))
+   {
+      die "Unknown case value '", $attrs{'case'}, "' for term '",
+       $attrs{'tag'}, "' on line", $expat->current_line, "\n";
+   }
+
+   my $html = '';
+
+   if ($attrs{plural})
+   {
+      if ($attrs{prefix} and $terms{$hstag}->{PrefixPlural})
+      {
+         $html = $terms{$hstag}->{PrefixPlural};
+      }
+
+      if (defined($terms{$hstag}->{Plural}))
+      {
+         $html .= $terms{$hstag}->{Plural};
+      }
+      else
+      {
+         $html .= $terms{$hstag}->{Text} . 's';
+      }
+   }
+   else
+   {
+      if ($attrs{prefix} and $terms{$hstag}->{Prefix})
+      {
+         $html = $terms{$hstag}->{Prefix};
+      }
+
+      $html .= $terms{$hstag}->{Text};
+   }
+
+   if ($attrs{case} eq 'uc')
+   {
+      $html = uc($html);
+   }
+   elsif ($attrs{case} eq 'ucfirst')
+   {
+      $html = ucfirst($html);
+   }
 
    if (!defined($terms{$hstag}->{Ref}) and $#nodes > -1)
    {
@@ -2415,15 +2680,36 @@ sub start_term{
       }
    }
 
+   my $csname = 'gls';
+
+   if ($attrs{prefix})
+   {
+      $csname = "p$csname";
+   }
+
+   if ($attrs{'case'} eq 'uc')
+   {
+      $csname = uc($csname);
+   }
+   elsif ($attrs{'case'} eq 'ucfirst')
+   {
+      $csname = ucfirst($csname);
+   }
+
+   if ($attrs{plural})
+   {
+      $csname .= 'pl';
+   }
+
    if ($terms{$desctag}->{Description})
    {
       $html = &hs_popup("$desctag.html", $html);
 
-      &handle_tex("\\gls{", $attrs{tag}, "}");
+      &handle_tex("\\$csname\{", $attrs{tag}, "}");
    }
    else
    {
-      &handle_tex("\\gls{$hstag}");
+      &handle_tex("\\$csname\{$hstag}");
    }
 
    &hs_index_term($hstag, $html, $terms{$hstag}->{Text}, 
@@ -2438,50 +2724,8 @@ sub end_term{
 sub start_plural{
    my ($expat, %attrs) = @_;
 
-   unless ($attrs{tag})
-   {
-      die "Missing 'plural' element's 'tag' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   my $hstag = "gls_".$attrs{tag};
-
-   unless ($terms{$hstag})
-   {
-      die "Unknown term tag '$hstag' on line ",
-         $expat->current_line, "\n";
-   }
-
-   my $html;
-
-   if (defined($terms{$hstag}->{Plural}))
-   {
-      $html = $terms{$hstag}->{Plural};
-   }
-   else
-   {
-      $html = $terms{$hstag}->{Text} . 's';
-   }
-
-   if (!defined($terms{$hstag}->{Ref}) and $#nodes > -1)
-   {
-      $terms{$hstag}->{Ref} = $nodes[$#nodes]->{Tag} . ".html#$hstag";
-   }
-
-   if ($terms{$hstag}->{Description})
-   {
-      $html = &hs_popup("gls_".$attrs{tag}.".html", $html);
-
-      &handle_tex("\\glspl{", $attrs{tag}, "}");
-   }
-   else
-   {
-      &handle_tex("\\glspl{$hstag}");
-   }
-
-   &hs_index_term($hstag, $html, $terms{$hstag}->{Text}, 
-     \%terms);
-
+   $attrs{plural} = 1;
+   &start_term($expat, %attrs);
 }
 
 sub end_plural{
@@ -2591,17 +2835,17 @@ sub end_cs{
 sub start_env{
    my ($expat, %attrs) = @_;
 
-   unless ($attrs{tag})
+   unless ($attrs{name})
    {
-      die "Missing 'env' element's 'tag' attribute on line ",
+      die "Missing 'env' element's 'name' attribute on line ",
         $expat->current_line, "\n";
    }
 
-   my $text = $attrs{tag};
+   my $text = $attrs{name};
 
-   &handle_tex('\\env{', $attrs{tag}, '}');
+   &handle_tex('\\env{', $attrs{name}, '}');
 
-   &hs_index_term('env_'.$attrs{tag}, "<tt>$text</tt>", $text, \%terms);
+   &hs_index_term('env_'.$attrs{name}, "<tt>$text</tt>", $text, \%terms);
 
 }
 
@@ -2731,16 +2975,6 @@ sub start_printglossary{
 }
 
 sub end_printglossary{
-   my ($expat) = @_;
-}
- 
-sub start_printacronyms{
-   my ($expat, %attrs) = @_;
-
-   &handle_tex("\\printabbrvlist");
-}
-
-sub end_printacronyms{
    my ($expat) = @_;
 }
  

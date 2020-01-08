@@ -1,12 +1,12 @@
 <!-- Parameter entities -->
-<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | acr | image | opt | ref | term | tabular | menu | dq | TeX LaTeX | nbsp | meta | dl | app | verbinput | cs | env | hash | cont | button' >
+<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | meta | dl | app | verbinput | cs | env | hash | cont | button' >
 
 <!-- Main elements-->
 
 <!ELEMENT manual (preamble, document)>
 <!ATTLIST manual fontenc (#PCDATA)+>
 <!ELEMENT preamble (title, author+, date, newacro*, newterm*)>
-<!ELEMENT document (node+ | printglossary | printacronyms | printindex)>
+<!ELEMENT document (node+ | printglossary | printindex)>
 
 <!-- Preamble elements-->
 
@@ -27,14 +27,13 @@
 
 <!ELEMENT boilerplate (p | pre | alltt | verbtabinput | htmlonly | latexonly )+ >
 <!ELEMENT printindex EMPTY>
-<!ELEMENT printacronyms EMPTY>
 <!ELEMENT printglossary EMPTY>
 <!ELEMENT tableofcontents EMPTY>
 <!ELEMENT frontmatter EMPTY>
 <!ELEMENT mainmatter EMPTY>
 <!ELEMENT backmatter EMPTY>
 
-<!ELEMENT node (p | float | pre | alltt | dl | ul | ol | verbtabinput | htmlonly | latexonly )+ | printglossary | printacronyms | printindex >
+<!ELEMENT node (p | float | pre | alltt | dl | ul | ol | verbtabinput | htmlonly | latexonly )+ | printglossary | printindex >
 <!ATTLIST node tag (#PCDATA)+ #REQUIRED>
 <!ATTLIST node type (#PCDATA)+ #REQUIRED>
 <!ATTLIST node title (%basic.content;)+ #REQUIRED>

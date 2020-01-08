@@ -14,7 +14,7 @@
 \RequirePackage[x11names]{xcolor}
 \RequirePackage{pgf}
 
-\PassOptionsToPackage{nogroupskip,abbreviations,stylemods={tree,bookindex}}{glossaries-extra}
+\PassOptionsToPackage{stylemods={tree,bookindex}}{glossaries-extra}
 \PassOptionsToPackage{linkcolor=Blue4,urlcolor=DeepPink4}{hyperref}
 
 \pagenumbering{alph}
@@ -31,6 +31,12 @@
 % Default definition.
 % (Overridden by context label in dictionary file.)
 \providecommand{\idxpackagename}{package}
+
+\newcommand{\appfmt}[1]{\texorpdfstring{\textsf{#1}}{#1}}
+
+\newcommand{\clinoindex}[1]{\texorpdfstring{\texttt{#1}}{#1}}
+
+\newrobustcmd*{\cli}[1]{\gls{cli_#1}}
 
 \newcommand{\stynoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 
@@ -130,12 +136,20 @@
 \theoremstyle{example}
 \newtheorem{example}{\examplename}
 
-\newcommand*{\printabbrvlist}{\printunsrtglossary[type=\glsxtrabbrvtype,title=\abbrvname,nonumberlist]}
+\newcommand{\preresourcehook}{\setabbreviationstyle{long-short-desc}}
+
 \newcommand*{\printmainglossary}{%
- \printunsrtglossary*[nonumberlist]{%
+ \printunsrtglossary*[style=indexgroup,nonumberlist]
+ {%
    \renewcommand{\printunsrtglossaryentryprocesshook}[1]{%
      \ifglshasdesc{##1}{}{\printunsrtglossaryskipentry}%
    }%
+   \renewcommand{\glstreeitem}{%
+    \parindent0pt\glspar\hangindent20pt
+    \everypar{\parindent30pt\hangindent20pt}}%
+   \renewcommand{\glstreepredesc}{\endgraf\glstreeitem\parindent\hangindent}%
+   \let\glstreenamefmt\textsf
+   \renewcommand*{\glstreegroupheaderfmt}[1]{\hfill\textit{##1}\hfill}%
  }%
 }
 \newcommand*{\printmainindex}{\printunsrtglossary[target=false,title=\indexname,style=bookindex]}
