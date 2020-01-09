@@ -36,29 +36,20 @@
 
 \newcommand{\clinoindex}[1]{\texorpdfstring{\texttt{#1}}{#1}}
 
-\newrobustcmd*{\cli}[1]{\gls{cli_#1}}
-
 \newcommand{\stynoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
-
-\newrobustcmd*{\sty}[1]{\gls{sty_#1}}
 
 \newcommand{\clsnoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 
-\newrobustcmd*{\cls}[1]{\gls{cls_#1}}
-
 \newcommand{\envnoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 
-\newrobustcmd*{\env}[1]{\gls{env_#1}}
+\newcommand{\extnoindex}[1]{\texorpdfstring{\texttt{.#1}}{.#1}}
 
-\newcommand*{\opt}[1]{%
- \texttt{-\/-#1}%\index{--#1@\texttt{-\/-#1}}%
-}
+\newcommand{\optnoindex}[1]{\texorpdfstring{\texttt-\/-#1}{--#1}}
 
 \newcommand*{\titleref}[2]{\htmlref{#1}{#2}}
 
 \newcommand*{\menu}[1]{\textsf{#1}}
 \newcommand*{\mto}{$\to$}
-\newcommand*{\ext}[1]{\texttt{#1}}
 
 \newrobustcmd*{\dash}{\,---\,}
 
@@ -160,7 +151,7 @@
    \renewcommand*{\glsxtrbookindexname}[1]{%
      \ifglshasdesc{##1}%
      {\glshyperlink[\glossentryname{##1}]{##1}}%
-     {\glsdohypertarget{##1}{\glossentryname{##1}}}%
+     {\glsdohypertarget{\glolinkprefix##1}{\glossentryname{##1}}}%
    }%
    \renewcommand*{\glsxtrbookindexprelocation}[1]{%
      \glsxtrifhasfield{location}{##1}%

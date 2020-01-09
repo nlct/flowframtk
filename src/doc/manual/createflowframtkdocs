@@ -30,6 +30,9 @@ my $mainclass = "../../java/$base/" . $ARGV[0] . 'Invoker.java';
 
 my $fontenc = 'T1';
 
+my %bibentries = ();
+my $bibpending = '';
+
 # mapping between locales and babel options
 
 my %babel =
@@ -226,6 +229,8 @@ binmode($texfd, ":$encoding_file");
 open $bibfd, ">$bibfile" or die "Can't open Bib file '$bibfile' $!\n";
 binmode($bibfd, ":$encoding_file");
 print $bibfd "% Encoding: $encoding_xml\n";
+
+print $bibfd '@preamble{"\\providecommand{\\optnoindex}[1]{--#1}"}', "\n";
  
 # initialize the parser
 my $parser = XML::Parser->new( Handlers => 
@@ -518,7 +523,7 @@ sub print_idx_entries{
       }
       else
       {
-         warn "Text not set for '$key'\n";
+         warn "Text not set for '$key'.\n";
       }
    }
 }
@@ -551,29 +556,67 @@ sub hs_map_id{
    }
 }
 
+sub firstofone{
+   return shift;
+}
+
+sub cs_fmt{
+   my $csname = shift ;
+   return "<code>\\$csname</code>";
+}
+
+sub handle_semantic_term{
+   my ($tagfield, $type, $htmlfnhandler, $expat, %attrs) = @_;
+
+   unless ($attrs{$tagfield})
+   {
+      die "Missing '$type' element's '$tagfield' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   my $text = &$htmlfnhandler($attrs{$tagfield});
+
+   unless ($text=~/^</)
+   {
+      $text = "<span class=\"$type\">" . $text . "</span>";
+   }
+
+   &check_boolean_attribute_value('index', $expat, \%attrs);
+
+   if (defined($attrs{index}) and not $attrs{index})
+   {
+      &handle_tex("\\${type}noindex{", $attrs{$tagfield}, '}');
+      &handle_html($text);
+   }
+   else
+   {
+      &handle_tex("\\$type\{", $attrs{$tagfield}, '}');
+      &hs_index_term($type.'_'.$attrs{$tagfield}, $text, $attrs{$tagfield}, \%terms);
+   }
+}
+
 sub hs_index_term{
    my ($tag, $text, $term, $hash) = @_;
 
-   if ($hash->{$tag})
+   if (defined($hash->{$tag}->{Ref}) or $#nodes < 0)
    {
       &handle_html($text);
    }
    else
    {
-      $hash->{$tag}->{Text} = $term;
       $hash->{$tag}->{Ref}  = $nodes[$#nodes]->{Tag}.".html#$tag";
 
       &handle_html("<a name=\"$tag\">$text</a>");
+   }
 
+   $hash->{$tag}->{Text} = $term;
+
+   unless (defined($bibentries{$tag}))
+   {
       my $tex_name = $term;
       my $tex_text = $term;
 
-      if ($tag=~/^cs_/)
-      {
-         $tex_name=~s/^\\(.*)$/\\csnoindex{$1}/;
-         $tex_text = $tex_name;
-      }
-      elsif ($tag=~/^sty_/)
+      if ($tag=~/^sty_/)
       {
          $tex_name=~s/^(.*)(\.sty)?$/\\stynoindex{$1} package/;
          $tex_text=~s/^(.*)(\.sty)?$/\\stynoindex{$1}/;
@@ -585,30 +628,43 @@ sub hs_index_term{
       }
       elsif ($tag=~/^env_/)
       {
-         $tex_name=~s/^(.*)$/\\envnoindex{$1} environment/;
-         $tex_text=~s/^(.*)$/\\envnoindex{$1}/;
+         $tex_name = "\\envnoindex{$tex_name} environment";
+         $tex_text = "\\envnoindex{$tex_text}";
       }
-      elsif ($tag=~/^cli_/)
+      elsif ($tag=~/^(cs|cli|opt|ext)_/)
       {
-         $tex_name=~s/^(.*)$/\\clinoindex{$1}/;
-         $tex_text=~s/^(.*)$/\\clinoindex{$1}/;
+         $tex_name = "\\$1noindex{$tex_name}";
+         $tex_text = $tex_name;
       }
 
-      print $bibfd "\@index{$tag, name={$tex_name}, text={$tex_text}";
+      my $bib = "\@index{$tag, name={$tex_name}, text={$tex_text}";
 
-      if ($hash->{$tag}->{Parent})
+      if (defined($hash->{$tag}))
       {
-         print $bibfd ", parent={", $hash->{$tag}->{Parent}, "}";
+         if ($hash->{$tag}->{Parent})
+         {
+            $bib .= ", parent={" . $hash->{$tag}->{Parent} . "}";
+         }
+
+         if ($hash->{$tag}->{Category})
+         {
+            $bib .= ", category={" . $hash->{$tag}->{Category} . "}";
+         }
       }
 
-      if ($hash->{$tag}->{Category})
+      $bib .= "}\n";
+
+      if ($#current > -1 and ($current[$#current]=~/^New(Term|Acro)/))
       {
-         print $bibfd ", category={", $hash->{$tag}->{Category}, "}";
+         $bibpending .= $bib;
+      }
+      else
+      {
+         print $bibfd $bib;
       }
 
-      print $bibfd "}\n";
+      $bibentries{$tag} = $tex_name;
    }
-
 }
 
 sub hs_popup{
@@ -775,25 +831,32 @@ sub end_manual{
 sub start_preamble{
    my ($expat, %attrs) = @_;
 
-   print $texfd "\\usepackage[$inputenc]{inputenc}\n",
-      "\\usepackage[$fontenc]{fontenc}\n",
-      "\\usepackage{lmodern}\n",
-      "\\usepackage{graphicx}\n",
-      "\\usepackage{verbatim}\n",
-      "\\usepackage{alltt}\n",
-      "\\usepackage{moreverb}\n",
-      "\\usepackage{keystroke}\n",
-      "\\usepackage{babel}\n",
-      "\\usepackage[colorlinks]{hyperref}\n",
-      "\\usepackage[record=nameref]{glossaries-extra}\n",
-      "\\usepackage{glossaries-prefix}\n",
-      $languagedefinitions;
+   print $texfd <<EOF;
+\\usepackage[$inputenc]{inputenc}
+\\usepackage[$fontenc]{fontenc}
+\\usepackage{lmodern}
+\\usepackage{graphicx}
+\\usepackage{verbatim}
+\\usepackage{alltt}
+\\usepackage{moreverb}
+\\usepackage{keystroke}
+\\usepackage{babel}
+\\usepackage[colorlinks]{hyperref}
+\\usepackage[record=nameref]{glossaries-extra}
+\\usepackage{glossaries-prefix}
+$languagedefinitions
 
-   print $texfd "\\providecommand{\\applink}[1]{\\href{$downloadurl/#1}{#1}}\n";
+\\glsxtrnewgls{cli_}{\\cli}
+\\glsxtrnewgls{sty_}{\\sty}
+\\glsxtrnewgls{cls_}{\\cls}
+\\glsxtrnewgls{env_}{\\env}
+\\glsxtrnewgls{ext_}{\\ext}
+\\glsxtrnewgls{opt_}{\\opt}
 
-   print $texfd "\\csname preresourcehook\\endcsname\n";
-
-   print $texfd "\\GlsXtrLoadResources[src={$bibfile}]\n";
+\\providecommand{\\applink}[1]{\\href{$downloadurl/#1}{#1}}
+\\csname preresourcehook\\endcsname
+\\GlsXtrLoadResources[src={$bibfile}]
+EOF
 }
  
 sub end_preamble{
@@ -1063,6 +1126,9 @@ sub start_newacro{
    $currenttag = $tag;
 
    $docinfo{'NewAcro'}='';
+   $bibpending = '';
+
+   $bibentries{$currenttag} = $acros{$tag}->{Long};
 
    &handle_tex("\@abbreviation{$currenttag,\n short={" . $acros{$tag}->{Short}
      . "},\n long={" . $acros{$tag}->{Long} . "}");
@@ -1144,6 +1210,8 @@ sub end_newacro{
 
    pop @current;
    $currenttag = '';
+
+   print $bibfd $bibpending;
 }
  
 sub start_newterm{
@@ -1172,8 +1240,11 @@ sub start_newterm{
 
    push @current, 'NewTerm';
    $docinfo{'NewTerm'}='';
+   $bibpending = '';
 
    &handle_tex("\@index{$currenttag,\n name={" . $terms{$tag}->{Text} . "},");
+
+   $bibentries{$currenttag} = $terms{$tag}->{Text};
 
    if (defined($attrs{plural}))
    {
@@ -1280,6 +1351,8 @@ sub end_newterm{
    pop @current;
 
    $currenttag = '';
+
+   print $bibfd $bibpending;
 }
 
 sub check_boolean_attribute_value{
@@ -1744,18 +1817,7 @@ sub end_url{
 sub start_sty{
    my ($expat, %attrs) = @_;
 
-   unless ($attrs{name})
-   {
-      die "Missing 'sty' element's 'name' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   my $text = $attrs{name};
-
-   &handle_tex('\\sty{', $attrs{name}, '}');
-
-   &hs_index_term('sty_'.$attrs{name}, "<span class=\"file\">$text</span>", $text, \%terms);
-
+   &handle_semantic_term('name', 'sty', \&firstofone, $expat, %attrs);
 }
 
 sub end_sty{
@@ -1765,18 +1827,7 @@ sub end_sty{
 sub start_cli{
    my ($expat, %attrs) = @_;
 
-   unless ($attrs{name})
-   {
-      die "Missing 'cli' element's 'name' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   my $text = $attrs{name};
-
-   &handle_tex('\\cli{', $attrs{name}, '}');
-
-   &hs_index_term('cli_'.$attrs{name}, "<span class=\"file\">$text</span>", $text, \%terms);
-
+   &handle_semantic_term('name', 'cli', \&firstofone, $expat, %attrs);
 }
 
 sub end_cli{
@@ -1786,17 +1837,35 @@ sub end_cli{
 sub start_ext{
    my ($expat, %attrs) = @_;
 
-   &handle_html("<span class=\"file\">");
+   unless ($attrs{name})
+   {
+      die "Missing 'ext' element's 'name' attribute on line ",
+        $expat->current_line, "\n";
+   }
 
-   &handle_tex("\\ext{");
+   my $text = $attrs{name};
+
+   unless ($terms{fileextensions})
+   {
+      &hs_index_term('fileextensions', '', &get_label('manual.file.extensions'), \%terms);
+
+      my %hash = ();
+
+      $terms{fileextensions}->{Children} = \%hash;
+   }
+
+   my $tag = 'ext_'.$attrs{name};
+
+   $terms{fileextensions}->{Children}->{$tag}->{Parent} = 'fileextensions';
+
+   &hs_index_term($tag, "<span class=\"ext\">.$text</span>", $text, 
+      $terms{fileextensions}->{Children});
+
+   &handle_tex("\\ext{", $attrs{name}, "}");
 }
 
 sub end_ext{
    my ($expat) = @_;
-
-   &handle_html('</span>');
-
-   &handle_tex("}");
 }
 
 sub start_footnote{
@@ -2815,7 +2884,7 @@ sub start_opt{
         $expat->current_line, "\n";
    }
 
-   my $text = '--'.$attrs{tag};
+   my $text = $attrs{tag};
 
    unless ($terms{options})
    {
@@ -2826,7 +2895,11 @@ sub start_opt{
       $terms{options}->{Children} = \%hash;
    }
 
-   &hs_index_term('opt_'.$attrs{tag}, "<span class=\"option\">$text</span>", $text, 
+   my $tag = 'opt_'.$attrs{tag};
+
+   $terms{options}->{Children}->{$tag}->{Parent} = 'options';
+
+   &hs_index_term($tag, "<span class=\"opt\">--$text</span>", $text, 
       $terms{options}->{Children});
 
    &handle_tex("\\opt{", $attrs{tag}, "}");
@@ -2863,18 +2936,7 @@ sub end_doublebackslash{
 sub start_cs{
    my ($expat, %attrs) = @_;
 
-   unless ($attrs{tag})
-   {
-      die "Missing 'cs' element's 'tag' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   my $text = "\\".$attrs{tag};
-
-   &handle_tex('\\cs{', $attrs{tag}, '}');
-
-   &hs_index_term('cs_'.$attrs{tag}, "<code>$text</code>", $text, \%terms);
-
+   &handle_semantic_term('tag', 'cs', \&cs_fmt, $expat, %attrs);
 }
 
 sub end_cs{
@@ -2884,18 +2946,7 @@ sub end_cs{
 sub start_env{
    my ($expat, %attrs) = @_;
 
-   unless ($attrs{name})
-   {
-      die "Missing 'env' element's 'name' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   my $text = $attrs{name};
-
-   &handle_tex('\\env{', $attrs{name}, '}');
-
-   &hs_index_term('env_'.$attrs{name}, "<span class=\"env\">$text</span>", $text, \%terms);
-
+   &handle_semantic_term('name', 'env', \&firstofone, $expat, %attrs);
 }
 
 sub end_env{
@@ -3137,11 +3188,15 @@ xml:lang="en-GB">
     {
        font-family: monospace;
     }
+    .cli
+    {
+       font-family: monospace;
+    }
     .env
     {
        font-family: monospace;
     }
-    .option
+    .opt
     {
        font-family: monospace;
     }

@@ -51,14 +51,14 @@
 
     <newterm tag="ajr" text="AJR">
       <app/>'s native ASCII format. Files in this format 
-      should have the extension <ext>ajr</ext>. This format is 
+      should have the extension <ext name="ajr"/>. This format is 
       primarily provided to assist conversion to and from JDR files 
       or for version control.
     </newterm>
 
     <newterm tag="jdr" text="JDR">
       <app/>'s native binary format. Files in this format 
-      should have the extension <ext>jdr</ext>.
+      should have the extension <ext name="jdr"/>.
     </newterm>
 
     <newterm tag="Java" text="Java">
@@ -453,7 +453,7 @@ java -jar flowframtk-<appversion/>-installer.jar
 </pre>
    <p>
    Depending on the setup of your operating system, you may also be
-   able to <term tag="doubleclick"/> on the <ext>jar</ext> file to run it.
+   able to <term tag="doubleclick"/> on the <ext name="jar"/> file to run it.
    </p>
    </node>
    <node type="chapter" tag="access" title="Accessibility">
