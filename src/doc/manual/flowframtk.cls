@@ -147,12 +147,28 @@
    \renewcommand{\glstreeitem}{%
     \parindent0pt\glspar\hangindent20pt
     \everypar{\parindent30pt\hangindent20pt}}%
-   \renewcommand{\glstreepredesc}{\endgraf\glstreeitem\parindent\hangindent}%
+   \renewcommand{\glstreepredesc}{\endgraf\nopagebreak\glstreeitem\parindent\hangindent}%
    \let\glstreenamefmt\textsf
+   \renewcommand*{\glstreePreHeader}[2]{\pdfbookmark[1]{##2}{\currentglossary.##1}}%
    \renewcommand*{\glstreegroupheaderfmt}[1]{\hfill\textit{##1}\hfill}%
  }%
 }
-\newcommand*{\printmainindex}{\printunsrtglossary[target=false,title=\indexname,style=bookindex]}
+\newcommand*{\printmainindex}{%
+ \printunsrtglossary*[target=false,title=\indexname,style=bookindex]
+ {%
+   \renewcommand*{\glstreegroupheaderfmt}[1]{\textit{##1}}%
+   \renewcommand*{\glsxtrbookindexname}[1]{%
+     \ifglshasdesc{##1}%
+     {\glshyperlink[\glossentryname{##1}]{##1}}%
+     {\glsdohypertarget{##1}{\glossentryname{##1}}}%
+   }%
+   \renewcommand*{\glsxtrbookindexprelocation}[1]{%
+     \glsxtrifhasfield{location}{##1}%
+     {\,\textcolor{lightgray}{\dotfill}\,}%
+     {\glsxtrprelocation}%
+   }%
+ }%
+}
 
 \newcommand*{\figureref}[1]{%
 \hyperlink{#1top}{\figurename~\ref*{#1}}}
