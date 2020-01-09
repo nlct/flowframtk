@@ -1,5 +1,5 @@
 <!-- Parameter entities -->
-<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | meta | dl | app | verbinput | cs | env | hash | cont | button' >
+<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | meta | dl | app | appversion | applink | verbinput | cs | env | hash | cont | button' >
 
 <!-- Main elements-->
 
@@ -65,10 +65,12 @@
 <!ATTLIST menu tag (#PCDATA)+ #REQUIRED>
 <!ELEMENT opt EMPTY >
 <!ATTLIST opt tag (#PCDATA)+ #REQUIRED>
+<!ELEMENT applink (%basic.content;)+>
 <!ELEMENT dq (%basic.content;)+>
 <!ELEMENT tt (%basic.content;)+>
 <!ELEMENT meta (%basic.content;)+>
-<!ELEMENT sty (%basic.content;)+>
+<!ELEMENT sty EMPTY >
+<!ATTLIST sty tag (%basic.content;)+>
 <!ELEMENT em (%basic.content;)+>
 <!ELEMENT b (%basic.content;)+>
 <!ELEMENT pre (%basic.content;)+>
@@ -114,6 +116,7 @@
 <!ELEMENT LaTeX EMPTY>
 <!ELEMENT TeX EMPTY>
 <!ELEMENT app EMPTY>
+<!ELEMENT appversion EMPTY>
 <!ELEMENT nbsp EMPTY>
 <!ELEMENT hash EMPTY>
 <!ELEMENT cont EMPTY>

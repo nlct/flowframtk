@@ -408,8 +408,53 @@
    <p>Note that the export to PS/PDF/SVG functions use external
    processes, such as <cli name="latex"/> and <cli name="dvips"/>.
    <b>You can't import back from the files you can export to.</b></p>
+   <p>
+   The low-level <sty name="pgf"/> basic layer commands are used during
+   exports to <LaTeX/> files. These commands aren't particularly easy to
+   read but are faster to compile than the higher-level commands that
+   require extra processing to parse the syntax and perform additional
+   calculations. The primary purpose of <app/> is to provide a
+   graphical interface that can generate complicated code that's hard
+   to write manually.
+   </p>
+   <p>
+   <app/> was tested with version 3.0.0 of the <sty name="pgf"/>
+   package, version 1.16 of the <sty name="flowfram"/> package and version
+   2.2 of the <sty name="shapepar"/> package. Files created by <app/>
+   may not work with earlier versions of those packages. Note that some
+   DVI viewers may not understand PGF specials. I strongly recommend
+   that you read the user manuals for those packages.
+   </p>
+   <p>
+   Notation: a <term tag="primaryclick"/> is a single click with the primary
+   mouse button. This is typically the left button for a right-handed
+   mouse, but may be the right button for a left-handed mouse. A
+   <term tag="menuclick"/> is a click with the context-menu mouse button. This
+   button depends on your configuration, but is typically the right
+   button for a right-handed two-button mouse. If the button isn't
+   mentioned, a<nbsp/><term tag="click"/> can be assumed to mean 
+   a<nbsp/><term tag="primaryclick"/>.
+   </p>
    </node>
    <node type="chapter" tag="install" title="Installation">
+   <p>
+   Ensure that you have the <acr tag="jre"/> installed.
+   This can be downloaded from <url www="http://java.sun.com/j2se/"/>.
+   You must ensure that you use at least Java<nbsp/>7, as <app/>
+   does not work with earlier versions.
+   </p>
+   <p>
+   To install, download the installer
+   <applink>flowframtk-<appversion/>-installer.jar</applink> and run it. 
+   This can be done from a terminal or command prompt using:
+   </p>
+<pre>
+java -jar flowframtk-<appversion/>-installer.jar
+</pre>
+   <p>
+   Depending on the setup of your operating system, you may also be
+   able to <term tag="doubleclick"/> on the <ext>jar</ext> file to run it.
+   </p>
    </node>
    <node type="chapter" tag="access" title="Accessibility">
    </node>
