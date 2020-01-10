@@ -2898,5 +2898,23 @@ manual.grey=grey
 manual.colour=colour
 manual.cont.cap.text=Continued
 manual.cont.nextpage.text=Continued on next page.
-
+manual.kbd.Space=Space Bar
+manual.kbd.Tab=Tab
+manual.kbd.Backspace=Backspace
+manual.kbd.Return=Return
+manual.kbd.Enter=Enter
+manual.kbd.Del=Del
+manual.kbd.Ins=Ins
+manual.kbd.Esc=Esc
+manual.kbd.Shift=Shift
+manual.kbd.Ctrl=Ctrl
+manual.kbd.Home=Home
+manual.kbd.End=End
+manual.kbd.Pageup=PgUp
+manual.kbd.Pagedown=PgDn
+manual.kbd.PrtSc=PrtSc
+manual.kbd.Up=Up Arrow
+manual.kbd.Down=Down Arrow
+manual.kbd.Left=Left Arrow
+manual.kbd.Right=Right Arrow
 

@@ -474,7 +474,29 @@ java -jar flowframtk-<appversion/>-installer.jar
    a<nbsp/><term tag="dropdown"/>), in which case you need to use 
    <kbd shift="true" key="return"/>.
    </p>
-   <float type="table" long="true" tag="tab:access" spec="lp{60%}l">
+   <p>
+   Within editable text fields, you can use <kbd ctrl="true" key="A"/> to select all the
+   text, or <kbd key="shift"/> followed by the left <kbd key="left"/> or right
+   <kbd key="right"/> arrow key to select a portion of the text. If some of the 
+   text has been selected, you can use <kbd ctrl="true" key="C"/> or 
+   <kbd ctrl="true" key="X"/> to copy or cut the text onto the clipboard,
+   and you can use <kbd ctrl="true" key="V"/> to paste text from the clipboard into the
+   text field.
+   </p>
+   <p class="warning">
+   Note that a few of the accelerators used by JpgfDraw have been
+   changed in <app/>, as they caused a conflict. For example,
+   <kbd key="esc"/> cancels a displayed menu, so if you use it to dismiss
+   a menu while you had a <term tag="path"/> under construction, the entire
+   path could be discarded, which is undesirable. Therefore the abandon
+   path accelerator is now <kbd shift="true" key="esc"/>. The <kbd key="F1"/> key is now
+   only for the main manual help button. The help buttons in dialog windows
+   and the preamble editor are activated with <kbd shift="true" key="F1"/> and the
+   help button is the status bar is activated with <kbd ctrl="true" key="F1"/> (otherwise 
+   the main help button, preamble editor help button and
+   status bar help button would conflict).
+   </p>
+   <float type="table" long="true" tag="tab:access" spec="lp{50%}l">
    <caption>Keyboard Accelerators and Menu Mnemonics</caption>
    <tableheader>
     <tr>
@@ -485,11 +507,205 @@ java -jar flowframtk-<appversion/>-installer.jar
    </tableheader>
    <tablefooter>
     <tr>
-     <td colspan="3" specs="l">
-     Functions that move the pointer.
-     </td>
+     <td colspan="3" specs="l"><fndagmark/>Functions that move the pointer.</td>
     </tr>
    </tablefooter>
+   <tr prohibitbreak="true">
+     <td><kbd key="return"/></td>
+     <td>Finish current <term tag="path"/>/<term tag="textarea"/> <em>or</em></td>
+     <td><mnemonic menu="true" tag="tools.finish"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Select <dict tag="label.okay"/> button in dialog boxes <em>or</em></td>
+     <td><mnemonic menu="true" tag="label.okay"/></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>Select <dict tag="label.close"/> button in dialog boxes</td>
+     <td><mnemonic menu="true" tag="label.close"/></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="return"/></td>
+     <td>Select <dict tag="label.okay"/> button in dialog boxes</td>
+     <td><mnemonic menu="true" tag="label.okay"/></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="esc"/></td>
+     <td>Abandon current <term tag="path"/></td>
+     <td><mnemonic menu="true" tag="tools.abandon"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd key="esc"/></td>
+     <td>Select <dict tag="label.cancel"/> button in dialog boxes <em>or</em></td>
+     <td><mnemonic menu="true" tag="label.cancel"/></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>Close displayed menu</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="del"/></td>
+     <td>Delete selected <term tag="controlpt"/></td>
+     <td><kbd key="F3"/> <mnemonic tag="editpath.delete_control"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="backspace"/></td>
+     <td>Delete last segment (path construction mode)</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd key="ins"/></td>
+     <td>Add <term tag="controlpt"/> <em>or</em></td>
+     <td><kbd key="F3"/> <mnemonic tag="editpath.add_control"/></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>Display symbol dialog box</td>
+     <td><kbd key="F3"/> <mnemonic tag="text.insert_symbol"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="tab"/></td>
+     <td>Move focus to next focusable component</td>
+     <td></td>
+   </tr>
+   <tr rule="true">
+     <td><kbd key="space"/></td>
+     <td>Select component with current focus</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="pgup"/></td>
+     <td>Scroll up by one screen full</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="pgdn"/></td>
+     <td>Scroll down by one screen full</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd ctrl="true" key="pgdn"/></td>
+     <td>If in a tabbed pane:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Move to the next tab</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Otherwise:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Scroll right by one screen full</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd ctrl="true" key="pgup"/></td>
+     <td>If in a tabbed pane:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Move to the previous tab</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Otherwise:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Scroll left by one screen full</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td>Arrow Keys</td>
+     <td>If left mouse button pressed:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em"><fndagmark/>move mouse by one pixel in given direction</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Otherwise:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">scroll by one tick mark in given direction</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="home"/></td>
+     <td>Scroll to the top of the <term tag="canvas"/></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="end"/></td>
+     <td>Scroll to the bottom of the <term tag="canvas"/></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="home"/></td>
+     <td>Scroll leftmost</td>
+     <td></td>
+   </tr>
+   <tr rule="true">
+     <td><kbd ctrl="true" key="end"/></td>
+     <td>Scroll rightmost</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="F1"/></td>
+     <td>Display Handbook</td>
+     <td><mnemonic menu="true" tag="help.handbook"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="F2"/></td>
+     <td>Show/hide <term tag="grid"/></td>
+     <td><mnemonic menu="true" tag="settings.grid.show"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="F3"/></td>
+     <td>Show <term tag="canvas"/> popup menu (if available for current mode)</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="F4"/></td>
+     <td>Emulate <term tag="primaryclick"/> in <term tag="construction"/></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="F5"/></td>
+     <td><fndagmark/>Go to coordinate</td>
+     <td><mnemonic menu="true" tag="navigate.goto"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd key="F6"/></td>
+     <td>Select mode:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">deselect the <term text="backmost" tag="backobject"/> selected 
+      <term tag="object"/>, and select next object in the <term tag="stack"/></td>
+     <td><mnemonic menu="true" tag="navigate.skip"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Edit mode:</td>
+     <td></td>
+   </tr>
    </float>
    <float type="table" tag="tab:jhaccess" spec="lp{80%}">
    <caption>JavaHelp Viewer Shortcut Keys</caption>

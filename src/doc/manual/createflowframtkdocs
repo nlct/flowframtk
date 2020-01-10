@@ -32,10 +32,15 @@ my $fontenc = 'T1';
 
 my %bibentries = ();
 my $bibpending = '';
-my $texcaption = '';
-my $texsubcaption = '';
-my $textableheader = '';
-my $textablefooter = '';
+
+my %texelements = 
+(
+   'Title' => '',
+   'Date' => '',
+   'Author' => '',
+);
+
+my $skipnewline = 0;
 
 # mapping between locales and babel options
 
@@ -695,6 +700,16 @@ sub handle_tex{
 
    return unless ($includetex);
 
+   if ($skipnewline)
+   {
+      $string=~s/^\s*\n(\s*)/ /s;
+
+      unless ($string eq ' ')
+      {
+         $skipnewline = 0;
+      }
+   }
+
    if ($#current > -1)
    {
       my $element = $current[$#current];
@@ -707,17 +722,9 @@ sub handle_tex{
       {
          print $boilerfd $string;
       }
-      elsif ($element eq 'Caption')
-      {
-         $texcaption .= $string;
-      }
-      elsif ($element eq 'SubCaption')
-      {
-         $texsubcaption .= $string;
-      }
       else
       {
-         print $texfd $string;
+         $texelements{$element} .= $string;
       }
    }
    else
@@ -849,6 +856,8 @@ sub start_preamble{
 \\usepackage[$inputenc]{inputenc}
 \\usepackage[$fontenc]{fontenc}
 \\usepackage{lmodern}
+\\usepackage{cmap}
+\\usepackage{accsupp}
 \\usepackage{graphicx}
 \\usepackage{verbatim}
 \\usepackage{alltt}
@@ -862,6 +871,8 @@ sub start_preamble{
 \\usepackage[record=nameref]{glossaries-extra}
 \\usepackage{glossaries-prefix}
 $languagedefinitions
+
+\\newcommand{\\accsupp}[2]{\\BeginAccSupp{unicode,ActualText={#1}}#2\\EndAccSupp{}}
 
 \\glsxtrnewgls{cli_}{\\cli}
 \\glsxtrnewgls{sty_}{\\sty}
@@ -920,8 +931,6 @@ sub start_title{
    my ($expat, %attrs) = @_;
 
    push @current, 'Title';
-
-   print $texfd "\\title{";
 }
 
 sub end_title{
@@ -929,15 +938,13 @@ sub end_title{
 
    pop @current;
 
-   print $texfd "}\n";
+   &handle_tex("\\title{", $texelements{Title}, "}");
 }
 
 sub start_date{
    my ($expat, %attrs) = @_;
 
    push @current, 'Date';
-
-   print $texfd "\\date{";
 }
 
 sub end_date{
@@ -945,7 +952,7 @@ sub end_date{
 
    pop @current;
 
-   print $texfd "}\n";
+   &handle_tex("\\date{", $texelements{Date}, "}");
 }
 
 sub start_author{
@@ -959,8 +966,6 @@ sub start_author{
    }
 
    $docinfo{Author} .= "<table class=\"author\"><tr><td>";
-
-   print $texfd "\\Author{";
 }
 
 sub end_author{
@@ -970,7 +975,7 @@ sub end_author{
 
    pop @current;
 
-   print $texfd "}\n";
+   &handle_tex("\\Author{", $texelements{Author}, "}");
 }
 
 sub start_document{
@@ -1461,23 +1466,6 @@ sub start_p{
 
    &handle_html("<p");
 
-   if ($attrs{class})
-   {
-      if ($attrs{class} eq 'warning')
-      {
-         &handle_tex('\\warning ');
-      }
-      elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
-      {
-         &handle_tex('\\' . $attrs{class} . 'related ');
-      }
-      else
-      {
-         warn("Unknown paragraph class '" . $attrs{class} . '"');
-      }
-
-      &handle_html(' class="' . $attrs{class} . '"');
-   }
 
    if ($attrs{align})
    {
@@ -1504,6 +1492,23 @@ sub start_p{
           " for 'p' element on line ", $expat->current_line, "\n";
       }
    }
+   elsif ($attrs{class})
+   {
+      if ($attrs{class} eq 'warning')
+      {
+         &handle_tex('\\warning ');
+      }
+      elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
+      {
+         &handle_tex('\\' . $attrs{class} . 'related ');
+      }
+      else
+      {
+         warn("Unknown paragraph class '" . $attrs{class} . '"');
+      }
+
+      &handle_html(' class="' . $attrs{class} . '" >');
+   }
    else
    {
       &handle_html(">");
@@ -1513,6 +1518,7 @@ sub start_p{
    }
 
    push @paragraph, $endtag;
+   $skipnewline = 1;
 }
 
 sub end_p{
@@ -1646,68 +1652,74 @@ sub keypress{
 
    if ($key eq 'Space')
    {
-      &handle_tex("\\Spacebar{}");
-      &handle_html("<kbd>Space Bar</kbd>");
+      my $text = &get_label("manual.kbd.Space");
+      &handle_tex("\\accsupp{$text}{\\Spacebar}");
+      &handle_html("<kbd>$text</kbd>");
    }
    elsif ($key eq 'Return')
    {
-      &handle_tex("\\Return{}");
-      &handle_html("<kbd>Return &#x23CE;</kbd>");
+      my $text = &get_label("manual.kbd.Return");
+      &handle_tex("\\accsupp{$text}{\\Return}");
+      &handle_html("<kbd>$text &#x23CE;</kbd>");
    }
    elsif ($key eq 'Backspace')
    {
-      &handle_tex("\\BSpace{}");
-      &handle_html("<kbd>Backspace &#x21A4;</kbd>");
+      my $text = &get_label("manual.kbd.Backspace");
+      &handle_tex("\\accsupp{$text}{\\BSpace}");
+      &handle_html("<kbd>$text &#x21A4;</kbd>");
    }
    elsif ($key eq 'Tab')
    {
-      &handle_tex("\\Tab{}");
-      &handle_html("<kbd>Tab &#x21B9;</kbd>");
+      my $text = &get_label("manual.kbd.Tab");
+      &handle_tex("\\accsupp{$text}{\\Tab}");
+      &handle_html("<kbd>$text &#x21B9;</kbd>");
    }
-   elsif ($key eq 'Pageup')
+   elsif ($key eq 'Pgup')
    {
-      &handle_tex("\\PgUp{}");
-      &handle_html("<kbd>PgUp &#x2191;</kbd>");
+      my $text = &get_label("manual.kbd.Pageup");
+      &handle_tex("\\keystroke{$text \$\\uparrow\$}");
+      &handle_html("<kbd>$text &#x2191;</kbd>");
    }
-   elsif ($key eq 'Pagedown')
+   elsif ($key eq 'Pgdn')
    {
-      &handle_tex("\\PgDown{}");
-      &handle_html("<kbd>PgDn &#x2193;</kbd>");
+      my $text = &get_label("manual.kbd.Pagedown");
+      &handle_tex("\\keystroke{$text \$\\downarrow\$}");
+      &handle_html("<kbd>$text &#x2193;</kbd>");
    }
    elsif ($key eq 'Shift')
    {
-      &handle_tex("\\Shift{}");
-      &handle_html("<kbd>Shift &#x21D1;</kbd>");
+      my $text = &get_label("manual.kbd.Shift");
+      &handle_tex("\\keystroke{$text \$\\Uparrow\$}");
+      &handle_html("<kbd>$text &#x21D1;</kbd>");
    }
    elsif ($key eq 'Up')
    {
-      &handle_tex("\\UArrow{}");
-      &handle_html("<kbd>&#x2191;</kbd>");
+      my $text = &get_label("manual.kbd.Up");
+      &handle_tex("\\accsupp{$text}{\\UArrow}");
+      &handle_html("<kbd title=\"$text\">&#x2191;</kbd>");
    }
    elsif ($key eq 'Down')
    {
-      &handle_tex("\\DArrow{}");
-      &handle_html("<kbd>&#x2193;</kbd>");
+      my $text = &get_label("manual.kbd.Down");
+      &handle_tex("\\accsupp{$text}{\\DArrow}");
+      &handle_html("<kbd title=\"$text\">&#x2193;</kbd>");
    }
    elsif ($key eq 'Left')
    {
-      &handle_tex("\\LArrow{}");
-      &handle_html("<kbd>&#x2190;</kbd>");
+      my $text = &get_label("manual.kbd.Left");
+      &handle_tex("\\accsupp{$text}{\\LArrow}");
+      &handle_html("<kbd title=\"$text\">&#x2190;</kbd>");
    }
    elsif ($key eq 'Right')
    {
-      &handle_tex("\\RArrow{}");
-      &handle_html("<kbd>&#x2192;</kbd>");
+      my $text = &get_label("manual.kbd.Right");
+      &handle_tex("\\accsupp{$text}{\\RArrow}");
+      &handle_html("<kbd title=\"$text\">&#x2192;</kbd>");
    }
-   elsif ($key eq 'Altgr')
+   elsif (defined($dict{"manual.kbd.".$key}))
    {
-      &handle_tex("\\AltGr{}");
-      &handle_html("<kbd>AltGr</kbd>");
-   }
-   elsif ($key eq 'PrtSc')
-   {
-      &handle_tex("\\PrtSc{}");
-      &handle_html("<kbd>PrtSc</kbd>");
+      &handle_tex("\\keystroke{", $dict{"manual.kbd.".$key}, "}");
+      &handle_html("<kbd>$key</kbd>");
    }
    else
    {
@@ -1933,7 +1945,8 @@ sub start_footnote{
 
    push @current, 'Footnote';
 
-   &handle_tex("\\footnote{");
+   $docinfo{Footnote} = '';
+   $texelements{Footnote} = '';
 }
 
 sub end_footnote{
@@ -1948,7 +1961,7 @@ sub end_footnote{
 
    $docinfo{Footnote} = '';
 
-   &handle_tex("}");
+   &handle_tex("\\footnote{", $texelements{Footnote}, "}");
 }
 
 sub start_example{
@@ -2142,6 +2155,30 @@ sub start_nbsp{
 }
 
 sub end_nbsp{
+   my ($expat) = @_;
+}
+
+sub start_qquad{
+   my ($expat, %attrs) = @_;
+
+   &handle_html('<span class="qquad"></span>');
+
+   &handle_tex("\\qquad ");
+}
+
+sub end_qquad{
+   my ($expat) = @_;
+}
+
+sub start_fndagmark{
+   my ($expat, %attrs) = @_;
+
+   &handle_html('<sup>&#x2020;</sup>');
+
+   &handle_tex("\\fndagmark{}");
+}
+
+sub end_fndagmark{
    my ($expat) = @_;
 }
 
@@ -2362,10 +2399,9 @@ sub start_applink{
    my ($expat, %attrs) = @_;
 
    $docinfo{AppLink} = '';
+   $texelements{AppLink} = '';
 
    push @current, 'AppLink';
-
-   print $texfd "\\applink{";
 }
 
 sub end_applink{
@@ -2373,11 +2409,11 @@ sub end_applink{
 
    pop @current;
 
-   print $texfd "}\n";
-
    my $file = $docinfo{AppLink};
 
    &handle_html("<a href=\"$downloadurl/$file\" class=\"file\">$file</a>");
+
+   &handle_tex("\\applink{", $texelements{AppLink}, "}");
 }
 
 sub eval_dict_attrs{
@@ -2421,6 +2457,59 @@ sub eval_dict_attrs{
    return $text;
 }
 
+sub start_mnemonic{
+   my ($expat, %attrs) = @_;
+
+   &check_boolean_attribute_value('menu', $expat, \%attrs);
+
+   unless (defined($attrs{menu}))
+   {
+      $attrs{menu} = 0;
+   }
+
+   unless ($attrs{tag})
+   {
+      die "Missing 'mnemonic' element's 'tag' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   if ($attrs{menu})
+   {
+      my @split = split /\./, $attrs{tag};
+
+      &keypress('Alt');
+
+      my $sep = '+';
+      my $parent = '';
+
+      foreach my $subtag (@split)
+      {
+         if ($subtag eq 'label' and $sep eq '+')
+         {
+            $parent = 'label.';
+            next;
+         }
+
+         &handle_html($sep);
+         &handle_tex($sep);
+
+         &keypress(&get_label("$parent$subtag.mnemonic", \%attrs, $expat));
+
+         $sep = ' ';
+
+         $parent .= $subtag.'.';
+      }
+   }
+   else
+   {
+      &keypress(&get_label($attrs{tag}.'.mnemonic', \%attrs, $expat));
+   }
+}
+
+sub end_mnemonic{
+   my ($expat) = @_;
+}
+
 sub start_dict{
    my ($expat, %attrs) = @_;
 
@@ -2454,7 +2543,6 @@ sub start_dict{
    }
 
    &handle_html($text);
-
    &handle_tex($text);
 }
 
@@ -2935,7 +3023,7 @@ sub start_caption{
 
    push @current, 'Caption';
    $docinfo{Caption} = '';
-   $texcaption = '';
+   $texelements{Caption} = '';
 }
 
 sub end_caption{
@@ -2979,7 +3067,7 @@ sub end_caption{
          &handle_tex("[", $attrs->{listcaption}, "]");
       }
 
-      &handle_tex("{$texcaption}\\label{", $attrs->{tag}, "}%\n");
+      &handle_tex("{", $texelements{Caption}, "}\\label{", $attrs->{tag}, "}%\n");
       &handle_tex("\\tabularnewline ");
    }
 }
@@ -2988,12 +3076,13 @@ sub start_subcaption{
    my ($expat, %attrs) = @_;
    push @current, 'SubCaption';
    $docinfo{SubCaption} = '';
-   $texsubcaption = '';
+   $texelements{SubCaption} = '';
 }
 
 sub end_subcaption{
    my ($expat) = @_;
    pop @current;
+# TODO
 }
 
 sub start_float{
@@ -3128,7 +3217,7 @@ sub end_float{
          &handle_tex("[", $attrs->{listcaption}, "]");
       }
 
-      &handle_tex("{$texcaption}}%\n\\end{", $attrs->{type}, "}\n");
+      &handle_tex("{", $texelements{Caption}, "}}%\n\\end{", $attrs->{type}, "}\n");
    }
 
    if ($attrs->{type} eq 'table')
@@ -3154,7 +3243,7 @@ sub start_tableheader{
 
    push @current, 'TableHeader';
    $docinfo{TableHeader} = '';
-   $textableheader = '';
+   $texelements{TableHeader} = '';
 
    &handle_tex("\\toprule ");
 }
@@ -3167,7 +3256,7 @@ sub end_tableheader{
    pop @current;
 
    &handle_html($docinfo{TableHeader});
-   &handle_tex($textableheader);
+   &handle_tex($texelements{TableHeader});
 
    &handle_tex("\\midrule ");
 
@@ -3181,13 +3270,13 @@ sub end_tableheader{
       }
       else
       {
-         &handle_tex($texcaption);
+         &handle_tex($texelements{Caption});
       }
 
       &handle_tex(" \\emph{(\\continuedcaptiontext)}");
 
       &handle_tex("}\\tabularnewline ");
-      &handle_tex($textableheader);
+      &handle_tex($texelements{TableHeader});
       &handle_tex("\\midrule\\endhead\n");
    }
 }
@@ -3206,10 +3295,12 @@ sub start_tablefooter{
    {
       push @current, 'TableFooter';
       $docinfo{TableFooter} = '';
-      $textablefooter = '';
+      $texelements{TableFooter} = '';
    }
-
-   &handle_tex("\\bottomrule ");
+   else
+   {
+      &handle_tex("\\bottomrule ");
+   }
 }
 
 sub end_tablefooter{
@@ -3221,7 +3312,8 @@ sub end_tablefooter{
    {
       pop @current;
 
-      &handle_tex($textablefooter);
+      &handle_tex("\\bottomrule");
+      &handle_tex($texelements{TableFooter});
 
       my $specarray = $tabular_specs[$#tabular_specs]->{spec};
 
@@ -3229,7 +3321,7 @@ sub end_tablefooter{
         "}{r}{\\emph{\\continuednextpagetext}}\\endfoot\n");
 
       &handle_tex("\\bottomrule");
-      &handle_tex($textablefooter, "\\endlastfoot\n");
+      &handle_tex($texelements{TableFooter}, "\\endlastfoot ");
    }
 }
 
@@ -3287,9 +3379,24 @@ sub end_tabular{
 sub start_tr{
    my ($expat, %attrs) = @_;
 
+   &check_boolean_attribute_value('prohibitbreak', $expat, \%attrs);
+   &check_boolean_attribute_value('rule', $expat, \%attrs);
+
+   unless (defined($attrs{prohibitbreak}))
+   {
+      $attrs{prohibitbreak} = 0;
+   }
+
+   unless (defined($attrs{rule}))
+   {
+      $attrs{rule} = 0;
+   }
+
    $tabular_specs[$#tabular_specs]->{column} = 1;
+   $tabular_specs[$#tabular_specs]->{rowattrs} = \%attrs;
 
    &handle_html('<tr>');
+   $skipnewline = 1;
 }
 
 sub end_tr{
@@ -3297,7 +3404,23 @@ sub end_tr{
 
    &handle_html('</tr>');
 
-   &handle_tex("\\tabularnewline ");
+   &handle_tex("\\tabularnewline");
+
+   if ($tabular_specs[$#tabular_specs]->{rowattrs}->{prohibitbreak})
+   {
+      &handle_tex('*');
+   }
+   else
+   {
+      &handle_tex(' ');
+   }
+
+   if ($tabular_specs[$#tabular_specs]->{rowattrs}->{rule})
+   {
+      &handle_tex('\\midrule ');
+   }
+
+   $skipnewline = 1;
 }
 
 sub start_td{
@@ -3305,13 +3428,13 @@ sub start_td{
 
    my $colspan = 1;
 
-   if ($attrs{span})
+   if ($attrs{colspan})
    {
-      $colspan = $attrs{span};
+      $colspan = $attrs{colspan};
 
       unless ($colspan=~/^\d+$/)
       {
-         die "Attribute 'span' must be an integer on line ",
+         die "Attribute 'colspan' must be an integer on line ",
            $expat->current_line, "\n";
       }
    }
@@ -3339,15 +3462,36 @@ sub start_td{
 
    if ($colspec eq 'l')
    {
-      &handle_html("<$tag align=\"left\" $htmlcolspan>");
+      &handle_html("<$tag align=\"left\" $htmlcolspan");
+
+      if (defined($attrs{indent}))
+      {
+         &handle_html(' style="left-margin: ', $attrs{indent}, ';"');
+      }
+
+      &handle_html('>');
    }
    elsif ($colspec eq 'r')
    {
-      &handle_html("<$tag align=\"right\" $htmlcolspan>");
+      &handle_html("<$tag align=\"right\" $htmlcolspan");
+
+      if (defined($attrs{indent}))
+      {
+         &handle_html(' style="left-margin: ', $attrs{indent}, ';"');
+      }
+
+      &handle_html('>');
    }
    elsif ($colspec eq 'c')
    {
-      &handle_html("<$tag align=\"center\" $htmlcolspan>");
+      &handle_html("<$tag align=\"center\" $htmlcolspan");
+
+      if (defined($attrs{indent}))
+      {
+         &handle_html(' style="left-margin: ', $attrs{indent}, ';"');
+      }
+
+      &handle_html('>');
    }
 
    unless ($tabular_specs[$#tabular_specs]->{column} == 1)
@@ -3375,6 +3519,12 @@ sub start_td{
       {
          &handle_tex("\\multicolumnheaderfont ");
       }
+   }
+
+   if (defined($attrs{indent}))
+   {
+      &handle_tex("\\hangindent ", $attrs{indent}, " ");
+      &handle_tex("\\hskip ", $attrs{indent}, " ");
    }
 
    $tabular_specs[$#tabular_specs]->{column} += $colspan;
@@ -3531,6 +3681,10 @@ xml:lang="en-GB">
     {
        font-family: sans-serif;
        font-weight: bold;
+    }
+    .qquad
+    {
+       border-left: 2em;
     }
   </style>
   <title>$title</title>

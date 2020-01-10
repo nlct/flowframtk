@@ -1,5 +1,5 @@
 <!-- Parameter entities -->
-<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | meta | dl | app | appversion | applink | verbinput | cs | env | hash | cont | button' >
+<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | hash | cont | button' >
 
 <!-- Main elements-->
 
@@ -43,6 +43,7 @@
 <!ELEMENT p (%basic.content;)*>
 <!ATTLIST p align (#PCDATA)+>
 <!ATTLIST p noindent (#PCDATA)+>
+<!ATTLIST p class (#PCDATA)+>
 <!ELEMENT url EMPTY>
 <!ATTLIST url www (#PCDATA)+ #REQUIRED>
 <!ATTLIST url text (#PCDATA)+>
@@ -121,5 +122,7 @@
 <!ELEMENT app EMPTY>
 <!ELEMENT appversion EMPTY>
 <!ELEMENT nbsp EMPTY>
+<!ELEMENT qquad EMPTY>
+<!ELEMENT fndagmark EMPTY>
 <!ELEMENT hash EMPTY>
 <!ELEMENT cont EMPTY>
