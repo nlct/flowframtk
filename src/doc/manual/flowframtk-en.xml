@@ -457,6 +457,47 @@ java -jar flowframtk-<appversion/>-installer.jar
    </p>
    </node>
    <node type="chapter" tag="access" title="Accessibility">
+   <p>
+   Most of <app/>'s mouse functions can be emulated using the
+   keyboard, however note that some systems do not allow
+   applications to move the pointer, so keyboard functions that move
+   the pointer are not guaranteed to work on every system. Keyboard
+   accelerators and their menu mnemonic equivalents are listed in
+   <ref tag="tab:access"/>. These accelerators may be changed using the
+   <ref tag="accelerators"/> in the <ref tag="configureuidialog"/> window.
+   In addition, there are also keyboard accelerators for the
+   <term tag="JavaHelp"/> system. These are listed in <ref tag="tab:jhaccess"/>
+   but are not configurable as far as I know. <kbd key="f10"/> switches the
+   focus to the menu bar. The <kbd key="return"/> key will usually be equivalent to
+   the <dict tag="label.okay"/> button except when the focus is with a component that
+   interprets <kbd key="return"/> for some other purpose (such as
+   a<nbsp/><term tag="dropdown"/>), in which case you need to use 
+   <kbd shift="true" key="return"/>.
+   </p>
+   <float type="table" long="true" tag="tab:access" spec="lp{60%}l">
+   <caption>Keyboard Accelerators and Menu Mnemonics</caption>
+   <tableheader>
+    <tr>
+     <td>Accelerator</td>
+     <td>Function</td>
+     <td>Mnemonic</td>
+    </tr>
+   </tableheader>
+   <tablefooter>
+    <tr>
+     <td colspan="3" specs="l">
+     Functions that move the pointer.
+     </td>
+    </tr>
+   </tablefooter>
+   </float>
+   <float type="table" tag="tab:jhaccess" spec="lp{80%}">
+   <caption>JavaHelp Viewer Shortcut Keys</caption>
+   <tableheader>
+    <tr><td>Key</td><td>Function</td></tr>
+   </tableheader>
+   <tablefooter/>
+   </float>
    </node>
    <node type="chapter" tag="settings" title="Settings">
    </node>

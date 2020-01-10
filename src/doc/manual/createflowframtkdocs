@@ -32,6 +32,10 @@ my $fontenc = 'T1';
 
 my %bibentries = ();
 my $bibpending = '';
+my $texcaption = '';
+my $texsubcaption = '';
+my $textableheader = '';
+my $textablefooter = '';
 
 # mapping between locales and babel options
 
@@ -159,7 +163,9 @@ my $languagedefinitions =
  ."\\def\\idxpackagename{".&get_label('manual.idxpackage')."}\n"
  ."\\def\\idxenvname{".&get_label('manual.idxenv')."}\n"
  ."\\def\\examplename{".&get_label('manual.example')."}\n"
- ."\\def\\abbrvname{".&get_label('manual.abbreviations')."}\n";
+ ."\\def\\abbrvname{".&get_label('manual.abbreviations')."}\n"
+ ."\\def\\continuedcaptiontext{".&get_label('manual.cont.cap.text')."}\n"
+ ."\\def\\continuednextpagetext{".&get_label('manual.cont.nextpage.text')."}\n";
 
 my $xmlfile = "$base-$locale.xml";
 
@@ -701,6 +707,14 @@ sub handle_tex{
       {
          print $boilerfd $string;
       }
+      elsif ($element eq 'Caption')
+      {
+         $texcaption .= $string;
+      }
+      elsif ($element eq 'SubCaption')
+      {
+         $texsubcaption .= $string;
+      }
       else
       {
          print $texfd $string;
@@ -838,6 +852,9 @@ sub start_preamble{
 \\usepackage{graphicx}
 \\usepackage{verbatim}
 \\usepackage{alltt}
+\\usepackage{array}
+\\usepackage{longtable}
+\\usepackage{booktabs}
 \\usepackage{moreverb}
 \\usepackage{keystroke}
 \\usepackage{babel}
@@ -1596,6 +1613,37 @@ sub start_kbd{
 
    my $key = ucfirst($attrs{key});
 
+   &check_boolean_attribute_value('shift', $expat, \%attrs);
+   &check_boolean_attribute_value('ctrl', $expat, \%attrs);
+   &check_boolean_attribute_value('alt', $expat, \%attrs);
+
+   if ($attrs{'alt'})
+   {
+      &keypress('Alt');
+      &handle_tex('+');
+      &handle_html('+');
+   }
+
+   if ($attrs{'ctrl'})
+   {
+      &keypress('Ctrl');
+      &handle_tex('+');
+      &handle_html('+');
+   }
+
+   if ($attrs{'shift'})
+   {
+      &keypress('Shift');
+      &handle_tex('+');
+      &handle_html('+');
+   }
+
+   &keypress($key);
+}
+
+sub keypress{
+   my ($key) = @_;
+
    if ($key eq 'Space')
    {
       &handle_tex("\\Spacebar{}");
@@ -2085,82 +2133,6 @@ sub end_verbtabinput{
    my ($expat) = @_;
 }
  
-sub start_float{
-   my ($expat, %attrs) = @_;
-
-   unless ($attrs{type})
-   {
-      die "Element 'float' missing 'type' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   unless ($attrs{tag})
-   {
-      die "Element 'float' missing 'tag' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   unless ($attrs{caption})
-   {
-      die "Element 'float' missing 'caption' attribute on line ",
-        $expat->current_line, "\n";
-   }
-
-   my $pos = ($attrs{pos}? "[$attrs{pos}]" : '');
-
-   if ($counters{$attrs{type}})
-   {
-      $counters{$attrs{type}}++;
-   }
-   else
-   {
-      $counters{$attrs{type}} = 1;
-   }
-
-   $attrs{counter} = $counters{$attrs{type}};
-
-   push @float_elements, \%attrs;
-
-   &handle_html("<div class=\"float\"><a name=\"$attrs{tag}\"></a>");
-
-   $tags{$attrs{tag}}->{Ref} = $nodes[$#nodes]->{Tag}
-     .'.html#'.$attrs{tag};
-   $tags{$attrs{tag}}->{Text} = ucfirst(&get_label('manual.'.$attrs{type}))
-        . '&nbsp;' . $attrs{counter};
-
-   unless ($attrs{type} eq 'figure')
-   {
-      &handle_html('<p></p><p>' . $tags{$attrs{tag}}->{Text} . ': '
-        . $attrs{caption} . '</p>');
-   }
-
-   &handle_tex("\\begin{", $attrs{type}, "}$pos\n", 
-     "\\floatconts{", $attrs{tag}, "}{\\caption");
-
-   if ($attrs{listcaption})
-   {
-      &handle_tex("[", $attrs{listcaption}, "]");
-   }
-
-   &handle_tex("{", $attrs{caption}, "}}{");
-}
-
-sub end_float{
-   my ($expat) = @_;
-
-   my $attrs = pop @float_elements;
-
-   if ($attrs->{type} eq 'figure')
-   {
-      &handle_html('<p>'. $tags{$attrs->{tag}}->{Text} . ': '
-        . $attrs->{caption} . '</p><p></p>');
-   }
-
-   &handle_html('</div>');
-
-   &handle_tex("}%\n\\end{", $attrs->{type}, "}\n");
-}
-
 sub start_nbsp{
    my ($expat, %attrs) = @_;
 
@@ -2953,6 +2925,314 @@ sub end_env{
    my ($expat) = @_;
 }
 
+sub start_caption{
+   my ($expat, %attrs) = @_;
+
+   if ($#current >= 0 and $current[$#current] eq 'TableHeader')
+   {
+      die "<caption> must come before <tableheader>";
+   }
+
+   push @current, 'Caption';
+   $docinfo{Caption} = '';
+   $texcaption = '';
+}
+
+sub end_caption{
+   my ($expat) = @_;
+   pop @current;
+
+   if ($#float_elements < 0)
+   {
+      die "Element 'caption' found outside <float>";
+   }
+
+   my $attrs = $float_elements[$#float_elements];
+
+   my $endcaptag;
+
+   if ($attrs->{type} eq 'figure')
+   {
+      &handle_html('<figcaption>');
+      $endcaptag = 'figcaption';
+   }
+   elsif ($attrs->{type} eq 'table')
+   {
+      &handle_html('<caption>');
+      $endcaptag = 'caption';
+   }
+   else
+   {
+      &handle_html('<div class="floatcaption">');
+      $endcaptag = 'div';
+   }
+
+   &handle_html($tags{$attrs->{tag}}->{Text}, ': ',
+     $docinfo{Caption}, "</$endcaptag>");
+
+   if ($attrs->{long})
+   {
+      &handle_tex("\\caption");
+
+      if ($attrs->{listcaption})
+      {
+         &handle_tex("[", $attrs->{listcaption}, "]");
+      }
+
+      &handle_tex("{$texcaption}\\label{", $attrs->{tag}, "}%\n");
+      &handle_tex("\\tabularnewline ");
+   }
+}
+
+sub start_subcaption{
+   my ($expat, %attrs) = @_;
+   push @current, 'SubCaption';
+   $docinfo{SubCaption} = '';
+   $texsubcaption = '';
+}
+
+sub end_subcaption{
+   my ($expat) = @_;
+   pop @current;
+}
+
+sub start_float{
+   my ($expat, %attrs) = @_;
+
+   unless ($attrs{type})
+   {
+      die "Element 'float' missing 'type' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   unless ($attrs{tag})
+   {
+      die "Element 'float' missing 'tag' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   &check_boolean_attribute_value('long', $expat, \%attrs);
+
+   my $specs = '';
+
+   if ($attrs{type} eq 'table')
+   {
+      unless ($attrs{spec})
+      {
+         die "Element 'float' with type='table' missing 'spec' attribute on line ",
+            $expat->current_line;
+      }
+
+      my @specarray = ();
+
+      while ($attrs{spec}=~/([rlc])|(?:(p)\{(\d+)\%\})/g)
+      {
+         my $align = (defined($1) ? $1 : $2);
+
+         if ($align eq 'p')
+         {
+            $specs .= ">{\\raggedright}$align\{" . (0.01*$3) . "\\textwidth}";
+            push @specarray, 'l';
+         }
+         else
+         {
+            $specs .= $align;
+            push @specarray, $align;
+         }
+      }
+
+      my %hash =
+      (
+         spec => \@specarray,
+         column => 1
+      );
+
+      push @tabular_specs, \%hash;
+
+   }
+   elsif ($attrs{long})
+   {
+      die "Element 'float' can only have long='true' with type='table' on line ",
+            $expat->current_line;
+   }
+
+   my $pos = ($attrs{pos}? "[$attrs{pos}]" : '');
+
+   if ($counters{$attrs{type}})
+   {
+      $counters{$attrs{type}}++;
+   }
+   else
+   {
+      $counters{$attrs{type}} = 1;
+   }
+
+   $attrs{counter} = $counters{$attrs{type}};
+
+   push @float_elements, \%attrs;
+
+   if ($attrs{type}=~/figure|table/)
+   {
+      &handle_html("<", $attrs{type});
+   }
+   else
+   {
+      &handle_html("<div class=\"float\"");
+   }
+
+   &handle_html(" id=\"$attrs{tag}\">");
+
+   $tags{$attrs{tag}}->{Ref} = $nodes[$#nodes]->{Tag}
+     .'.html#'.$attrs{tag};
+   $tags{$attrs{tag}}->{Text} = ucfirst(&get_label('manual.'.$attrs{type}))
+        . '&nbsp;' . $attrs{counter};
+
+   if ($attrs{long})
+   {
+      &handle_tex("\\begin{longtable}{", $specs, '}');
+   }
+   else
+   {
+      &handle_tex("\\begin{", $attrs{type}, "}$pos\n", 
+        "\\floatconts{", $attrs{tag}, "}{");
+
+      if ($attrs{type} eq 'table')
+      {
+         &handle_tex("\\begin{tabular}{", $specs, '}');
+      }
+   }
+}
+
+sub end_float{
+   my ($expat) = @_;
+
+   my $attrs = pop @float_elements;
+
+   my $endtag = $attrs->{type};
+
+   if ($attrs->{long})
+   {
+      &handle_tex('\\end{longtable}');
+   }
+   else
+   {
+      if ($attrs->{type} eq 'table')
+      {
+         &handle_tex('\\end{tabular}');
+      }
+
+      &handle_tex("}{\\caption");
+
+      if ($attrs->{listcaption})
+      {
+         &handle_tex("[", $attrs->{listcaption}, "]");
+      }
+
+      &handle_tex("{$texcaption}}%\n\\end{", $attrs->{type}, "}\n");
+   }
+
+   if ($attrs->{type} eq 'table')
+   {
+      pop @tabular_specs;
+   }
+}
+
+sub start_tableheader{
+   my ($expat, %attrs) = @_;
+
+   if ($#float_elements < 0 or $float_elements[$#float_elements]->{type} ne 'table')
+   {
+      die "Element 'tableheader' found outside <float type='table'>";
+   }
+
+   my $attrs = $float_elements[$#float_elements];
+
+   if ($#current >= 0 and $current[$#current] eq 'Caption')
+   {
+      die "<caption> must come before <tableheader>";
+   }
+
+   push @current, 'TableHeader';
+   $docinfo{TableHeader} = '';
+   $textableheader = '';
+
+   &handle_tex("\\toprule ");
+}
+
+sub end_tableheader{
+   my ($expat) = @_;
+
+   my $attrs = $float_elements[$#float_elements];
+
+   pop @current;
+
+   &handle_html($docinfo{TableHeader});
+   &handle_tex($textableheader);
+
+   &handle_tex("\\midrule ");
+
+   if ($attrs->{long})
+   {
+      &handle_tex("\\endfirsthead\\caption[]{");
+
+      if ($attrs->{listcaption})
+      {
+         &handle_tex($attrs->{listcaption});
+      }
+      else
+      {
+         &handle_tex($texcaption);
+      }
+
+      &handle_tex(" \\emph{(\\continuedcaptiontext)}");
+
+      &handle_tex("}\\tabularnewline ");
+      &handle_tex($textableheader);
+      &handle_tex("\\midrule\\endhead\n");
+   }
+}
+
+sub start_tablefooter{
+   my ($expat, %attrs) = @_;
+
+   if ($#float_elements < 0 or $float_elements[$#float_elements]->{type} ne 'table')
+   {
+      die "Element 'tablefooter' found outside <float type='table'>";
+   }
+
+   my $attrs = $float_elements[$#float_elements];
+
+   if ($attrs->{long})
+   {
+      push @current, 'TableFooter';
+      $docinfo{TableFooter} = '';
+      $textablefooter = '';
+   }
+
+   &handle_tex("\\bottomrule ");
+}
+
+sub end_tablefooter{
+   my ($expat) = @_;
+
+   my $attrs = $float_elements[$#float_elements];
+
+   if ($attrs->{long})
+   {
+      pop @current;
+
+      &handle_tex($textablefooter);
+
+      my $specarray = $tabular_specs[$#tabular_specs]->{spec};
+
+      &handle_tex("\\multicolumn{", scalar(@$specarray), 
+        "}{r}{\\emph{\\continuednextpagetext}}\\endfoot\n");
+
+      &handle_tex("\\bottomrule");
+      &handle_tex($textablefooter, "\\endlastfoot\n");
+   }
+}
+
 sub start_tabular{
    my ($expat, %attrs) = @_;
 
@@ -2964,11 +3244,30 @@ sub start_tabular{
 
    &handle_html('<table>');
 
-   &handle_tex("\\begin{tabular}{", $attrs{spec}, '}');
+   my @specarray = ();
+   my $specs = '';
+
+   while ($attrs{spec}=~/([rlc])|(?:(p)\{(\d+)\%\})/g)
+   {
+      my $align = $1;
+
+      if ($align eq 'p')
+      {
+         $specs .= ">{\\raggedright}$align\{" . (0.01*$2) . "\\textwidth}";
+         push @specarray, 'l';
+      }
+      else
+      {
+         $specs .= $align;
+         push @specarray, $align;
+      }
+   }
+
+   &handle_tex("\\begin{tabular}{", $specs, '}');
 
    my %hash =
    (
-      spec => $attrs{spec},
+      spec => \@specarray,
       column => 1
    );
 
@@ -3017,10 +3316,19 @@ sub start_td{
       }
    }
 
-   my $orgcolspec = substr $tabular_specs[$#tabular_specs]->{spec},
-      $tabular_specs[$#tabular_specs]->{column}-1, 1;
+   my $column_index = $tabular_specs[$#tabular_specs]->{column}-1;
+
+   my $orgcolspec = $tabular_specs[$#tabular_specs]->{spec}->[$column_index];
 
    my $colspec = $orgcolspec;
+
+   my $tag = 'td';
+
+   if ($#current >=0 and $current[$#current] eq 'TableHeader')
+   {
+      $tag = 'th';
+      $colspec = 'c';
+   }
 
    if ($attrs{spec})
    {
@@ -3031,15 +3339,15 @@ sub start_td{
 
    if ($colspec eq 'l')
    {
-      &handle_html("<td align=\"left\" $htmlcolspan>");
+      &handle_html("<$tag align=\"left\" $htmlcolspan>");
    }
    elsif ($colspec eq 'r')
    {
-      &handle_html("<td align=\"right\" $htmlcolspan>");
+      &handle_html("<$tag align=\"right\" $htmlcolspan>");
    }
    elsif ($colspec eq 'c')
    {
-      &handle_html("<td align=\"center\" $htmlcolspan>");
+      &handle_html("<$tag align=\"center\" $htmlcolspan>");
    }
 
    unless ($tabular_specs[$#tabular_specs]->{column} == 1)
@@ -3057,13 +3365,32 @@ sub start_td{
       $tabular_specs[$#tabular_specs]->{egroup} = '}';
    }
 
+   if ($tag eq 'th')
+   {
+      if ($colspan == 1)
+      {
+         &handle_tex("\\columnheaderfont ");
+      }
+      else
+      {
+         &handle_tex("\\multicolumnheaderfont ");
+      }
+   }
+
    $tabular_specs[$#tabular_specs]->{column} += $colspan;
 }
 
 sub end_td{
    my ($expat) = @_;
 
-   &handle_html('</td>');
+   if ($#current >=0 and $current[$#current] eq 'TableHeader')
+   {
+      &handle_html('</th>');
+   }
+   else
+   {
+      &handle_html('</td>');
+   }
 
    &handle_tex($tabular_specs[$#tabular_specs]->{egroup});
 }

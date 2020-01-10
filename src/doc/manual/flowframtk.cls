@@ -63,21 +63,25 @@
 \newcommand*{\underscore}{\_}
 \newcommand*{\textpercent}{\%}
 \newcommand*{\texthash}{\#}
+% Syntax: \floatconts{label}{contents}{caption}
 \newcommand{\floatconts}[3]{%
   \@ifundefined{\@captype conts}{\tableconts{#1}{#2}{#3}}%
   {\csname\@captype conts\endcsname{#1}{#2}{#3}}%
 }
 
 \newcommand{\tableconts}[3]{%
-  #2\label{#1}\vskip\baselineskip
-  {\centering #3\par}%
+  #3\label{#1}\vskip\baselineskip
+  {\centering #2\par}%
 }
 
 \newcommand{\figureconts}[3]{%
-  {\centering #3\par}%
+  {\centering #2\par}%
   \vskip\baselineskip
-  #2\label{#1}%
+  #3\label{#1}%
 }
+
+\newcommand{\columnheaderfont}{\bfseries}
+\newcommand{\multicolumnheaderfont}{}
 
 \newcommand{\continuesymbol}{$\hookleftarrow$}
 

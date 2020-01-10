@@ -77,8 +77,11 @@
 <!ELEMENT float (%basic.content;)+>
 <!ATTLIST float type (#PCDATA)+ #REQUIRED>
 <!ATTLIST float tag (#PCDATA)+ #REQUIRED>
-<!ATTLIST float caption (%basic.content;)+ #REQUIRED>
 <!ATTLIST float listcaption (%basic.content;)+>
+<!ATTLIST float spec (%basic.content;)+>
+<!ELEMENT caption (%basic.content;)+>
+<!ELEMENT tableheading (tr)+>
+<!ELEMENT tablefooter (tr)+>
 <!ELEMENT dl (dt, dd)+>
 <!ELEMENT dt (%basic.content;)+>
 <!ELEMENT dd (%basic.content;)+>
