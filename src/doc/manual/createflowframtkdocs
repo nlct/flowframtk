@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 
+use utf8;
 use strict;
 use XML::Parser;
 
@@ -56,8 +57,8 @@ my $encoding_file = 'utf8';
 my $encoding_xml  = 'UTF-8';
 
 my $fd;
-open $fd, "$mainclass" or die "Can't open main class file '$mainclass' $!\n";
-binmode($fd, ":$encoding_file");
+open $fd, "<:encoding($encoding_file)", $mainclass
+  or die "Can't open main class file '$mainclass' $!\n";
 
 my %dict = ();
 
@@ -96,13 +97,21 @@ unless (-e $propfile)
    die "Can't find '$propfile'\n";
 }
 
-open $fd, "$propfile" or die "Can't open property file '$propfile' $!\n";
+open $fd, "<:encoding($encoding_xml)", $propfile
+   or die "Can't open property file '$propfile' $!\n";
 
 $_ = <$fd>;
 
 if (/# Encoding: ([^s]+)/)
 {
-   binmode($fd, ":encoding($1)");
+   my $prop_encoding = $1;
+
+   if ($prop_encoding ne $encoding_xml)
+   {
+      close $fd;
+      open $fd, "<:encoding($prop_encoding)", $propfile
+        or die "Can't open property file '$propfile' $!\n";
+   }
 }
 else
 {
@@ -237,12 +246,12 @@ my $texfd;
 my $bibfd;
 
 # open the TeX file
-open $texfd, ">$texfile" or die "Can't open TeX file '$texfile' $!\n";
-binmode($texfd, ":$encoding_file");
+open $texfd, ">:encoding($encoding_file)", $texfile
+   or die "Can't open TeX file '$texfile' $!\n";
 
 # open the bib file
-open $bibfd, ">$bibfile" or die "Can't open Bib file '$bibfile' $!\n";
-binmode($bibfd, ":$encoding_file");
+open $bibfd, ">:encoding($encoding_file)", $bibfile
+   or die "Can't open Bib file '$bibfile' $!\n";
 print $bibfd "% Encoding: $encoding_xml\n";
 
 print $bibfd '@preamble{"\\providecommand{\\optnoindex}[1]{--#1}"}', "\n";
@@ -262,9 +271,8 @@ close $bibfd;
 # Write helpset files
 
 my $hsfd;
-open $hsfd, ">$helpsetdir/$base.hs"
+open $hsfd, ">:$encoding_file", "$helpsetdir/$base.hs"
   or die "Can't open '$helpsetdir/$base.hs' $!\n";
-binmode($hsfd, ":$encoding_file");
 
 my $toctitle = &get_label('manual.toc');
 my $manualtitle = &get_label('manual.title');
@@ -344,9 +352,8 @@ close $hsfd;
 
 my $htmlfd;
 
-open $htmlfd, ">$helpsetdir/$base.html"
+open $htmlfd, ">:encoding($encoding_file)", "$helpsetdir/$base.html"
   or die "Can't open '$helpsetdir/$base.html' $!\n";
-binmode($htmlfd, ":$encoding_file");
 
 print $htmlfd &html_head($docinfo{Title}, '', $nodes[0]->{Tag});
 
@@ -379,9 +386,8 @@ close $htmlfd;
 my $prev = $base;
 
 my $tocfd;
-open $tocfd, ">$helpsetdir/${base}TOC.xml" 
+open $tocfd, ">:encoding($encoding_file)", "$helpsetdir/${base}TOC.xml" 
    or die "Can't open '$helpsetdir/${base}TOC.xml' $!\n";
-binmode($tocfd, ":$encoding_file");
 
 print $tocfd <<_END_TOC_HEAD;
 <?xml version='1.0' encoding='$encoding_xml' ?>
@@ -390,7 +396,7 @@ print $tocfd <<_END_TOC_HEAD;
 2.0//EN"
      "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 
-<toc version="2.0" xml:lang="en">
+<toc version="2.0" xml:lang="$locale">
 <tocitem text="Manual" target="top" >
 _END_TOC_HEAD
 
@@ -414,10 +420,8 @@ for (my $idx = 0; $idx <= $#nodes; $idx++)
 
    my $tag = $node->{Tag};
 
-   open $htmlfd, ">$helpsetdir/$tag.html"
+   open $htmlfd, ">:encoding($encoding_file)", "$helpsetdir/$tag.html"
      or die "Can't open '$helpsetdir/$tag.html' $!\n";
-
-   binmode($htmlfd, ":$encoding_file");
 
    print $htmlfd &html_head($node->{Title}, 
      ($prev eq $base ? $base : $prev->{Tag}),
@@ -469,9 +473,8 @@ close $tocfd;
 # write map file
 
 my $mapfd;
-open $mapfd, ">$helpsetdir/Map.jhm"
+open $mapfd, ">:encoding($encoding_file)", "$helpsetdir/Map.jhm"
   or die "Can't open '$helpsetdir/Map.jhm' $!\n";
-binmode($mapfd, ":$encoding_file");
 
 print $mapfd <<_END_MAP_HEAD;
 <?xml version='1.0' encoding='utf-8' ?>
@@ -496,9 +499,8 @@ close $mapfd;
 # Write the helpset index file
 
 my $idxfd;
-open $idxfd, ">$helpsetdir/${base}Index.xml"
+open $idxfd, ">:encoding($encoding_file)", "$helpsetdir/${base}Index.xml"
  or die "Can't open '$helpsetdir/${base}Index.xml' $!\n";
-binmode($idxfd, ":$encoding_file");
 
 print $idxfd <<_END_IDX_HEAD;
 <?xml version='1.0' encoding='$encoding_xml' ?>
@@ -1222,7 +1224,7 @@ sub end_newacro{
 
    # write html file used by popup window
 
-   open $fd, ">$helpsetdir/acr_$tag.html" 
+   open $fd, ">:encoding($encoding_file)", "$helpsetdir/acr_$tag.html" 
       or die "Can't open '$helpsetdir/acr_$tag.html' $!\n";
 
    print $fd &html_head($acros{$tag}->{Short});
@@ -1367,7 +1369,7 @@ sub end_newterm{
       # write html file used by popup window if a description has been
       # supplied
 
-      open $fd, ">$helpsetdir/$tag.html" 
+      open $fd, ">:encoding($encoding_file)", "$helpsetdir/$tag.html" 
          or die "Can't open '$helpsetdir/$tag.html' $!\n";
 
       print $fd &html_head($terms{$tag}->{Text});
@@ -1446,7 +1448,7 @@ sub end_backmatter{
 sub start_boilerplate{
    my ($expat, %attrs) = @_;
 
-   open $boilerfd, ">$boilerplatefile"
+   open $boilerfd, ">:encoding($encoding_file)", $boilerplatefile
      or die "Can't open boilerplate file '$boilerplatefile' $!\n";
 
    push @current, 'Boilerplate';
@@ -1510,13 +1512,13 @@ sub start_p{
       if ($attrs{class} eq 'warning')
       {
          &handle_tex('\\warning ');
-         $html_img = "../../sharedimages/warning.png";
+         $html_img = "warning.png";
          $html_img_alt = &get_label("manual.warning");
       }
       elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
       {
          &handle_tex("\\$1related ");
-         $html_img = "../../sharedimages/$1related.png";
+         $html_img = "$1related.png";
          $html_img_alt = &get_label("manual.$1relatedtext");
       }
       else
@@ -1536,9 +1538,9 @@ sub start_p{
 
    if ($html_img)
    {
-      &handle_html("<img alt=\"$html_img_alt\" src=\"$html_img\"");
+      &handle_html("<img alt=\"$html_img_alt\" src=\"../../sharedimages/$html_img\"");
 
-      $_ = `file $html_img`;
+      $_ = `file ../sharedimages/$html_img`;
 
       if (/(\d+) x (\d+)/)
       {
@@ -2126,7 +2128,8 @@ sub start_verbinput{
 
    &handle_html('<pre>');
 
-   open $fd, $attrs{src} or die "Can't open verbatim file '$attrs{src}' $!\n";
+   open $fd, ">:encoding($encoding_file)", $attrs{src}
+     or die "Can't open verbatim file '$attrs{src}' $!\n";
 
    while (<$fd>)
    {
@@ -2159,7 +2162,8 @@ sub start_verbtabinput{
 
    &handle_html('<pre>');
 
-   open $fd, $attrs{src} or die "Can't open '$attrs{src}' $!\n";
+   open $fd, ">:encoding($encoding_file)", $attrs{src}
+     or die "Can't open '$attrs{src}' $!\n";
 
    while (<$fd>)
    {
@@ -3689,8 +3693,7 @@ sub html_head{
 <!DOCTYPE html  html public "-//w3c//dtd xhtml 1.0 Transitional//en"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 >
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB"
-xml:lang="en-GB">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="$locale" xml:lang="$locale">
 <head>
   <style type="text/css">
     .title
