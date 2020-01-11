@@ -33,7 +33,7 @@ FlowframTk is a vector graphics application written in Java. You can use Flowfra
    + `jdrview`: A lightweight jdr/ajr image viewer
    + `jdrutils`: A suite of command line converters
 
-##Source Code
+## Source Code
 
 To build from the source code you will need to add `javahelp2.jar`
 to the `lib` directory. For example:
@@ -66,7 +66,7 @@ arara flowframtk-en-GB
 The `createflowframtkdocs` Perl script was developed on Linux.
 There's no guarantee that it will work with other platforms.
 
-##Licence
+## Licence
 
 License GPLv3+: GNU GPL version 3 or later
 http://gnu.org/licenses/gpl.html
