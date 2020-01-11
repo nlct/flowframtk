@@ -738,7 +738,7 @@ sub handle_tex{
 }
 
 sub handle_html{
-   my ($string) = @_;
+   my ($string) = join('', @_);
 
    return unless ($includehtml);
 
