@@ -170,7 +170,11 @@ my $languagedefinitions =
  ."\\def\\examplename{".&get_label('manual.example')."}\n"
  ."\\def\\abbrvname{".&get_label('manual.abbreviations')."}\n"
  ."\\def\\continuedcaptiontext{".&get_label('manual.cont.cap.text')."}\n"
- ."\\def\\continuednextpagetext{".&get_label('manual.cont.nextpage.text')."}\n";
+ ."\\def\\continuednextpagetext{".&get_label('manual.cont.nextpage.text')."}\n"
+ ."\\def\\texrelatedtext{".&get_label('manual.texrelated')."}\n"
+ ."\\def\\pgfrelatedtext{".&get_label('manual.pgfrelated')."}\n"
+ ."\\def\\flfrelatedtext{".&get_label('manual.flfrelated')."}\n"
+ ."\\def\\warningtext{".&get_label('manual.warning')."}\n";
 
 my $xmlfile = "$base-$locale.xml";
 
@@ -1473,6 +1477,8 @@ sub start_p{
 
    &handle_html("<p");
 
+   my $html_img = '';
+   my $html_img_alt = '';
 
    if ($attrs{align})
    {
@@ -1504,10 +1510,14 @@ sub start_p{
       if ($attrs{class} eq 'warning')
       {
          &handle_tex('\\warning ');
+         $html_img = "../sharedimages/warning.png";
+         $html_img_alt = &get_label("manual.warning");
       }
       elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
       {
-         &handle_tex('\\' . $attrs{class} . 'related ');
+         &handle_tex("\\$1related ");
+         $html_img = "../sharedimages/$1related.png";
+         $html_img_alt = &get_label("manual.$1relatedtext");
       }
       else
       {
@@ -1522,6 +1532,24 @@ sub start_p{
       &handle_tex($endtag);
 
       &handle_tex("\\noindent ") if $attrs{noindent};
+   }
+
+   if ($html_img)
+   {
+      &handle_html("<img alt=\"$html_img_alt\" src=\"$html_img\"");
+
+      $_ = `file $html_img`;
+
+      if (/(\d+) x (\d+)/)
+      {
+         &handle_html(" width=\"$1\" height=\"$2\"");
+      }
+      else
+      {
+         warn "Can't determine dimensions of image '$html_img'\n";
+      }
+
+      &handle_html("/>");
    }
 
    push @paragraph, $endtag;
