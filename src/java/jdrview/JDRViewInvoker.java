@@ -70,8 +70,8 @@ public class JDRViewInvoker
     */
    public void appVersion()
    {
-      System.err.println(appName.toLowerCase()+" "+version);
-      System.err.println(String("Copyright (C) 2007-%s Nicola L C Talbot",
+      System.err.println(APP_NAME.toLowerCase()+" "+APP_VERSION);
+      System.err.println(String.format("Copyright (C) 2007-%s Nicola L C Talbot",
        APP_DATE.substring(0,4)));
       System.err.println("This is free software distributed under the GNU General Public License.");
       System.err.println("There is NO WARRANTY. See accompanying licence file for details.");
@@ -216,7 +216,7 @@ public class JDRViewInvoker
    private JDRResources resources;
    private JDRGuiMessage messageSystem;
 
-   private static final String APP_VERSION = "1.7";
+   private static final String APP_VERSION = "1.7.20200111";
    private static final String APP_NAME = "JDRView";
-   private static final String APP_DATE = "2019-12-14";
+   private static final String APP_DATE = "2020-01-11";
 }

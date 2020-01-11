@@ -6,7 +6,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2020 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -625,7 +625,7 @@ public class FlowframTkInvoker
             }
             else if (key.equals("version"))
             {
-               diffVersion = !value.equals(version);
+               diffVersion = !value.equals(APP_VERSION);
    
                if (value.compareTo("0.5.6b") < 0)
                {
@@ -1708,7 +1708,7 @@ public class FlowframTkInvoker
    private void writeRememberedSettings(PrintWriter out)
       throws IOException
    {
-      out.println("version="+version);
+      out.println("version="+APP_VERSION);
       out.println("robot="+(settings.robot==null?0:1));
 
       saveIfNotNullOrEmpty(out, "latex_app", settings.getLaTeXApp());
@@ -3287,9 +3287,9 @@ public class FlowframTkInvoker
       });
    }
 
-   public static final String APP_VERSION = "0.8.6";
+   public static final String APP_VERSION = "0.8.6.20200111";
    public static final String APP_NAME = "FlowframTk";
-   public static final String APP_DATE = "2019-12-14";
+   public static final String APP_DATE = "2020-01-11";
 
    private FlowframTkSettings settings;
 

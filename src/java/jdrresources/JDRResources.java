@@ -1186,7 +1186,7 @@ public class JDRResources
 
       if (helpLocaleId != null)
       {
-         hsLocation = String.format("%s%s/%s/%s-%s.hs",
+         hsLocation = String.format("%s%s/%s/%s.hs",
            helpsetLocation, appName, helpLocaleId,
               appName, helpLocaleId);
 
@@ -1207,7 +1207,7 @@ public class JDRResources
 
       helpLocaleId = localeId;
 
-      hsLocation = String.format("%s%s/%s/%s-%s.hs",
+      hsLocation = String.format("%s%s/%s/%s.hs",
         helpsetLocation, appName, localeId,
            appName, localeId);
 
@@ -1219,7 +1219,7 @@ public class JDRResources
 
          helpLocaleId = locale.getLanguage();
 
-         hsLocation = String.format("%s%s/%s/%s-%s.hs",
+         hsLocation = String.format("%s%s/%s/%s.hs",
            helpsetLocation, appName, helpLocaleId,
               appName, helpLocaleId);
 
@@ -1233,7 +1233,7 @@ public class JDRResources
             {
                helpLocaleId = "en-GB";
 
-               hsLocation = String.format("%s%s/%s/%s-%s.hs",
+               hsLocation = String.format("%s%s/%s/%s.hs",
                  helpsetLocation, appName, helpLocaleId,
                     appName, helpLocaleId);
 
