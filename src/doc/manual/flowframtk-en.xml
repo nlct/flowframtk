@@ -375,24 +375,24 @@
    In <app/>, you can:
    </p>
    <ul>
-    <li><ref tag="newobjects" text="construct shapes"/> using line, move and cubic Bézier segments;</li>
-    <li><ref tag="editpath" text="edit paths"/> by modifying the defining <plural tag="controlpt"/>;</li>
-    <li>incorporate <ref tag="newtext" text="text"/> and 
-    <ref tag="insertbitmap" text="bitmap images"/> (for annotating and background effects);</li>
-    <li><ref tag="textpath" text="combine"/> text and a path to form a text-along-path
+    <li><ref tag="newobjects">construct shapes</ref> using line, move and cubic Bézier segments;</li>
+    <li><ref tag="editpath">edit paths</ref> by modifying the defining <plural tag="controlpt"/>;</li>
+    <li>incorporate <ref tag="newtext">text</ref> and 
+    <ref tag="insertbitmap">bitmap images</ref> (for annotating and background effects);</li>
+    <li><ref tag="textpath">combine</ref> text and a path to form a text-along-path
     effect;</li>
-    <li>apply replicas to a shape to form <ref tag="patterns" text="patterns"/>;</li>
+    <li>apply replicas to a shape to form <ref tag="patterns">patterns</ref>;</li>
     <li>extract the parameter's for <TeX/>'s <cs tag="parshape"/> command and for 
     the <cs tag="shapepar"/> (or <cs tag="Shapepar"/> command defined in the
     <sty name="shapepar"/> package;</li>
-    <li><ref tag="flowframe" text="construct frames"/> for use with the 
+    <li><ref tag="flowframe">construct frames</ref> for use with the 
     <sty name="flowfram"/> package.</li>
    </ul>
    <p>
-   Pictures can be <ref tag="saveimage" text="saved as"/> or 
-   <ref tag="loadimage" text="loaded"/> from <app/>'s native <term tag="jdr"/>
+   Pictures can be <ref tag="saveimage">saved as</ref> or 
+   <ref tag="loadimage">loaded</ref> from <app/>'s native <term tag="jdr"/>
    (binary) or <term tag="ajr"/> (ASCII) file formats. Additionally, images can be
-   <ref tag="exportimage" text="exported"/> as:
+   <ref tag="exportimage">exported</ref> as:
    </p>
    <ul>
     <li>a <LaTeX/> file containing a <env name="pgfpicture"/> environment
@@ -464,7 +464,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    the pointer are not guaranteed to work on every system. Keyboard
    accelerators and their menu mnemonic equivalents are listed in
    <ref tag="tab:access"/>. These accelerators may be changed using the
-   <ref tag="accelerators"/> in the <ref tag="configureuidialog"/> window.
+   <ref tag="accelerators">accelerators</ref> in the <ref tag="configureuidialog"><dict tag="configui.title"/></ref> window.
    In addition, there are also keyboard accelerators for the
    <term tag="JavaHelp"/> system. These are listed in <ref tag="tab:jhaccess"/>
    but are not configurable as far as I know. <kbd key="f10"/> switches the
@@ -704,6 +704,61 @@ java -jar flowframtk-<appversion/>-installer.jar
    <tr prohibitbreak="true">
      <td></td>
      <td>Edit mode:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">select next <term tag="controlpt"/></td>
+     <td><kbd key="F3"/> <mnemonic tag="editpath.next_control"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd key="F7"/></td>
+     <td>Select mode:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Move selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="edit.moveby"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Edit mode:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Move selected <term tag="controlpt"/></td>
+     <td><kbd key="F3"/> <mnemonic tag="editpath.coordinates"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="F8"/></td>
+     <td>Undo</td>
+     <td><mnemonic menu="true" tag="edit.undo"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="F9"/></td>
+     <td>Redo</td>
+     <td><mnemonic menu="true" tag="edit.redo"/></td>
+   </tr>
+   <tr>
+     <td><kbd key="F10"/></td>
+     <td>Switch focus to menu bar</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd key="F11"/></td>
+     <td>Repaint canvas</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="F1"/></td>
+     <td>Display current tool help (status bar help button)</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="F11"/></td>
+     <td>Saves all images to the <ref tag="configdir">configuration directory</ref></td>
      <td></td>
    </tr>
    </float>

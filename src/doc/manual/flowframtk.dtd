@@ -60,7 +60,7 @@
 <!ATTLIST dict arg9 (%basic.content;)+>
 <!ELEMENT button EMPTY>
 <!ATTLIST button tag (#PCDATA)+ #REQUIRED>
-<!ELEMENT ref EMPTY>
+<!ELEMENT ref (%basic.content;)+>
 <!ATTLIST ref tag (#PCDATA)+ #REQUIRED>
 <!ELEMENT menu EMPTY>
 <!ATTLIST menu tag (#PCDATA)+ #REQUIRED>

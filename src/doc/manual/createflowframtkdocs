@@ -158,7 +158,7 @@ my @nodes   = ();
 my @current = ();
 my @paragraph = ();
 my %tags    = ();
-my $currenttag= '';
+my @currenttag= ();
 my $includehtml = 1;
 my $includetex = 1;
 my $boilerplate = 0;
@@ -427,7 +427,7 @@ for (my $idx = 0; $idx <= $#nodes; $idx++)
 
    my $content = $node->{Contents};
 
-   $content=~s/<ref>([^<]+)<\/ref>/&get_ref($1)/eg;
+   $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
 
    print $htmlfd "<div>$content</div>";
 
@@ -435,7 +435,7 @@ for (my $idx = 0; $idx <= $#nodes; $idx++)
    {
       $content = $node->{Footnotes};
 
-      $content=~s/<ref>([^<]+)<\/ref>/&get_ref($1)/eg;
+      $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
 
       print $htmlfd "<hr />$content";
    }
@@ -787,7 +787,7 @@ sub handle_end {
 }
 
 sub get_ref{
-   my ($tag) = @_;
+   my ($tag, $content) = @_;
 
    unless ($tags{$tag})
    {
@@ -795,7 +795,16 @@ sub get_ref{
    }
 
    my $ref = $tags{$tag}->{Ref};
-   my $text = $tags{$tag}->{Text};
+   my $text;
+
+   if ($content)
+   {
+      $text = $content;
+   }
+   else
+   {
+      $text = $tags{$tag}->{Text};
+   }
 
    "<a href=\"$ref\">$text</a>";
 }
@@ -1145,14 +1154,14 @@ sub start_newacro{
    $acros{$tag}->{PrefixFirstPlural} = $attrs{prefixfirstplural};
 
    push @current, 'NewAcro';
-   $currenttag = $tag;
+   push @currenttag, $tag;
 
    $docinfo{'NewAcro'}='';
    $bibpending = '';
 
-   $bibentries{$currenttag} = $acros{$tag}->{Long};
+   $bibentries{$tag} = $acros{$tag}->{Long};
 
-   &handle_tex("\@abbreviation{$currenttag,\n short={" . $acros{$tag}->{Short}
+   &handle_tex("\@abbreviation{$tag,\n short={" . $acros{$tag}->{Short}
      . "},\n long={" . $acros{$tag}->{Long} . "}");
 
    if ($acros{$tag}->{Prefix})
@@ -1205,7 +1214,7 @@ sub start_newacro{
 sub end_newacro{
    my ($expat) = @_;
 
-   my $tag = $currenttag;
+   my $tag = pop @currenttag;
 
    # write html file used by popup window
 
@@ -1231,7 +1240,6 @@ sub end_newacro{
    &handle_tex("}\n}\n");
 
    pop @current;
-   $currenttag = '';
 
    print $bibfd $bibpending;
 }
@@ -1250,7 +1258,8 @@ sub start_newterm{
       $attrs{text} = $attrs{tag};
    }
 
-   $currenttag = $attrs{tag};
+   my $currenttag = $attrs{tag};
+   push @currenttag, $attrs{tag};
    my $tag = 'gls_'.$attrs{tag};
 
    if ($terms{$tag})
@@ -1264,9 +1273,9 @@ sub start_newterm{
    $docinfo{'NewTerm'}='';
    $bibpending = '';
 
-   &handle_tex("\@index{$currenttag,\n name={" . $terms{$tag}->{Text} . "},");
+   &handle_tex("\@index{", $attrs{tag}, ",\n name={" . $terms{$tag}->{Text} . "},");
 
-   $bibentries{$currenttag} = $terms{$tag}->{Text};
+   $bibentries{$attrs{tag}} = $terms{$tag}->{Text};
 
    if (defined($attrs{plural}))
    {
@@ -1348,7 +1357,7 @@ sub end_newterm{
 
    if ($docinfo{NewTerm})
    {
-      my $tag = 'gls_'.$currenttag;
+      my $tag = 'gls_'.(pop @currenttag);
       $terms{$tag}->{Description} = $docinfo{NewTerm};
 
       # write html file used by popup window if a description has been
@@ -1371,8 +1380,6 @@ sub end_newterm{
    &handle_tex("}}\n");
 
    pop @current;
-
-   $currenttag = '';
 
    print $bibfd $bibpending;
 }
@@ -2019,7 +2026,7 @@ sub start_seealso{
 
    foreach my $tag (@tags)
    {
-      &handle_html("<li><ref>$tag</ref>");
+      &handle_html("<li><ref tag=\"$tag\"></ref>");
       &handle_tex("\\item \\nameref{$tag}\n");
    }
 
@@ -2919,20 +2926,38 @@ sub start_ref{
         $expat->current_line, "\n";
    }
 
-   &handle_html("<ref>$attrs{tag}</ref>");
-
-   if ($attrs{text})
-   {
-      &handle_tex("\\hyperref[$attrs{tag}]{$attrs{text}}");
-   }
-   else
-   {
-      &handle_tex("\\autoref{", $attrs{tag}, "}");
-   }
+   push @currenttag, $attrs{tag};
+   push @current, 'Ref';
+   $texelements{Ref} = '';
+   $docinfo{Ref} = '';
 }
 
 sub end_ref{
    my ($expat) = @_;
+
+   my $tag = pop @currenttag;
+   pop @current; 
+
+   my $texcontent = $texelements{Ref};
+   my $htmlcontent = $docinfo{Ref};
+
+   if ($texcontent)
+   {
+      &handle_tex("\\hyperref[{$tag}]{$texcontent}");
+   }
+   else
+   {
+      &handle_tex("\\autoref{", $tag, "}");
+   }
+
+   if ($htmlcontent)
+   {
+      &handle_html("<ref tag=\"$tag\">", $htmlcontent, "</ref>");
+   }
+   else
+   {
+      &handle_html("<ref tag=\"$tag\"></ref>");
+   }
 }
  
 sub start_opt{
