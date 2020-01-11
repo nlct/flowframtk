@@ -33,6 +33,41 @@ FlowframTk is a vector graphics application written in Java. You can use Flowfra
    + `jdrview`: A lightweight jdr/ajr image viewer
    + `jdrutils`: A suite of command line converters
 
+##Source Code
+
+To build from the source code you will need to add `javahelp2.jar`
+to the `lib` directory. For example:
+
+```bash
+cd src/lib
+ln -s /usr/share/java/javahelp2.jar
+```
+
+The JavaHelp files are created from the XML file in the
+`src/doc/manual` directory by the `createflowframtkdocs` Perl
+script. This also creates the LaTeX source for the PDF manual
+(with `arara` directives at the start). Locale-specific text is
+obtained from the corresponding property file
+`src/lib/resources/dictionaries`. For example:
+```bash
+createflowframtkdocs FlowframTk en GB
+```
+This fetches the application version details from 
+`FlowframTkInvoker.java`, the locale text from 
+`flowframtk-en-GB.prop`, and the locale-sensitive images from
+`images-en-GB`. (Non-locale images are in `shared-images`.) 
+The helpset files are written to
+`src/lib/resources/helpsets/flowframtk/en-GB` and the LaTeX
+file `flowframtk-en-GB.tex` is written in the `src/doc/manual`
+directory. The PDF can be then be created with:
+```bash
+arara flowframtk-en-GB
+```
+The `createflowframtkdocs` Perl script was developed on Linux.
+There's no guarantee that it will work with other platforms.
+
+##Licence
+
 License GPLv3+: GNU GPL version 3 or later
 http://gnu.org/licenses/gpl.html
 This is free software: you are free to change and redistribute it.
