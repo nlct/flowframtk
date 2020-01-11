@@ -275,4 +275,4 @@ clean	:
 	\rm -f lib/jdr2svg.jar
 	\rm -f lib/jdr2tex.jar
 	\rm -f lib/svg2jdr.jar
-	make -C doc/manual clean
+	make -C doc/manual squeaky clean

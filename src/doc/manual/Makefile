@@ -45,12 +45,14 @@ clean	:
 	rm -f flowframtk-en-GB.log
 	rm -f flowframtk-en-GB.out
 	rm -f flowframtk-en-GB.toc
+	rm -f flowframtk-en-GB-boilerplate.tex
 	rm -f flowframtk-en-US.aux
 	rm -f flowframtk-en-US.glg
 	rm -f flowframtk-en-US.glstex
 	rm -f flowframtk-en-US.log
 	rm -f flowframtk-en-US.out
 	rm -f flowframtk-en-US.toc
+	rm -f flowframtk-en-US-boilerplate.tex
 
 squeaky	:
 	rm -f flowframtk-en-GB.tex
@@ -59,4 +61,5 @@ squeaky	:
 	rm -f flowframtk-en-US.tex
 	rm -f flowframtk-en-US.bib
 	rm -f flowframtk-en-US.pdf
+	rm -f -r ../../lib/resources/helpsets
 
