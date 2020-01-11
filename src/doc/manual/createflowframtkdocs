@@ -1373,7 +1373,7 @@ sub end_newterm{
       print $fd &html_head($terms{$tag}->{Text});
 
       print $fd "<body>\n<h1>", $terms{$tag}->{Text}, "</h1>\n",
-         ucfirst($terms{$tag}->{Description}), ".\n";
+         ucfirst($terms{$tag}->{Description}), "\n";
 
       print $fd "</body>\n</html>\n";
 
@@ -1510,13 +1510,13 @@ sub start_p{
       if ($attrs{class} eq 'warning')
       {
          &handle_tex('\\warning ');
-         $html_img = "../sharedimages/warning.png";
+         $html_img = "../../sharedimages/warning.png";
          $html_img_alt = &get_label("manual.warning");
       }
       elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
       {
          &handle_tex("\\$1related ");
-         $html_img = "../sharedimages/$1related.png";
+         $html_img = "../../sharedimages/$1related.png";
          $html_img_alt = &get_label("manual.$1relatedtext");
       }
       else
@@ -3213,6 +3213,12 @@ sub start_float{
 
    push @float_elements, \%attrs;
 
+   # JavaHelp doesn't seem to support 'id' as a fragment.
+   # Link to float only seems to work with 'a' element before
+   # table/figure element.
+
+   &handle_html("<a name=\"$attrs{tag}\"></a>");
+
    if ($attrs{type}=~/figure|table/)
    {
       &handle_html("<", $attrs{type});
@@ -3222,7 +3228,7 @@ sub start_float{
       &handle_html("<div class=\"float\"");
    }
 
-   &handle_html(" id=\"$attrs{tag}\">");
+   &handle_html(">");
 
    $tags{$attrs{tag}}->{Ref} = $nodes[$#nodes]->{Tag}
      .'.html#'.$attrs{tag};
@@ -3738,6 +3744,12 @@ xml:lang="en-GB">
     .qquad
     {
        border-left: 2em;
+    }
+    kbd
+    {
+      border-style: outset;
+      padding-left: 2px;
+      padding-right: 2px;
     }
   </style>
   <title>$title</title>
