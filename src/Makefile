@@ -90,17 +90,17 @@ classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class : \
 classes/splashimage.png	: classes images/splashimage.png
 	cp -u images/splashimage.png classes/
 
-lib/resources/helpsets/flowframtk/en-GB/flowframtk.hs	: doc/manual/flowframtk-en.xml \
-			doc/manual/createflowframtkdocs \
-			doc/manual/images-en-GB/*.png \
+lib/resources/helpsets/flowframtk/en-GB/flowframtk.hs	: doc/flowframtk-en.xml \
+			doc/createflowframtkdocs \
+			doc/images-en-GB/*.png \
 			doc/sharedimages/*.png 
-			make -C doc/manual
+			make -C doc
 
-lib/resources/helpsets/flowframtk/en-US/flowframtk.hs	: doc/manual/flowframtk-en.xml \
-			doc/manual/createflowframtkdocs \
-			doc/manual/images-en-US/*.png \
+lib/resources/helpsets/flowframtk/en-US/flowframtk.hs	: doc/flowframtk-en.xml \
+			doc/createflowframtkdocs \
+			doc/images-en-US/*.png \
 			doc/sharedimages/*.png 
-			make -C doc/manual
+			make -C doc
 
 lib/jdrview.jar   : lib/jdr.jar lib/jdrresources.jar \
 	classes/com/dickimawbooks/jdrview/JDRView.class \
@@ -275,4 +275,4 @@ clean	:
 	\rm -f lib/jdr2svg.jar
 	\rm -f lib/jdr2tex.jar
 	\rm -f lib/svg2jdr.jar
-	make -C doc/manual squeaky clean
+	make -C doc squeaky clean

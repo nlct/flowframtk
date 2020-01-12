@@ -25,9 +25,9 @@ if ($#ARGV == 2)
 }
 
 my $downloadurl = 'https://www.dickimaw-books.com/software/flowframtk/';
-my $targetdir = '../../lib/resources/helpsets';
-my $dictdir = '../../lib/resources/dictionaries';
-my $mainclass = "../../java/$base/" . $ARGV[0] . 'Invoker.java';
+my $targetdir = '../lib/resources/helpsets';
+my $dictdir = '../lib/resources/dictionaries';
+my $mainclass = "../java/$base/" . $ARGV[0] . 'Invoker.java';
 
 my $fontenc = 'T1';
 
@@ -485,10 +485,10 @@ print $mapfd <<_END_MAP_HEAD;
 _END_MAP_HEAD
 
 print $mapfd "<mapID target=\"top\" url=\"$base.html\" />\n";
-print $mapfd "<mapID target=\"appIcon\" url=\"../../icons/flowframtklogosmall.png\" />\n";
-print $mapfd "<mapID target=\"homeIcon\" url=\"../../icons/home.png\" />\n";
-print $mapfd "<mapID target=\"backIcon\" url=\"../../icons/back.png\" />\n";
-print $mapfd "<mapID target=\"forwardIcon\" url=\"../../icons/forward.png\" />\n";
+print $mapfd "<mapID target=\"appIcon\" url=\"../icons/flowframtklogosmall.png\" />\n";
+print $mapfd "<mapID target=\"homeIcon\" url=\"../icons/home.png\" />\n";
+print $mapfd "<mapID target=\"backIcon\" url=\"../icons/back.png\" />\n";
+print $mapfd "<mapID target=\"forwardIcon\" url=\"../icons/forward.png\" />\n";
 
 &hs_map_id(\%tags);
 &hs_map_id(\%terms);
@@ -1540,7 +1540,7 @@ sub start_p{
    {
       &handle_html("<img alt=\"$html_img_alt\" src=\"../../sharedimages/$html_img\"");
 
-      $_ = `file ../sharedimages/$html_img`;
+      $_ = `file sharedimages/$html_img`;
 
       if (/(\d+) x (\d+)/)
       {

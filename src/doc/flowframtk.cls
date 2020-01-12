@@ -359,12 +359,12 @@ y+s_yx
 
 \@ifundefined{sharedimagesdir}
 {%
-   \newcommand*{\sharedimagesdir}{../sharedimages}
+   \newcommand*{\sharedimagesdir}{sharedimages}
    \newcommand*{\imagesdir}{./images-\applang}
 }
 {}
-\providecommand*{\iconsdir}{../../java/jdrresources/icons}
-\providecommand*{\buttonsdir}{../../java/jdrresources/icons/buttons}
+\providecommand*{\iconsdir}{../java/jdrresources/icons}
+\providecommand*{\buttonsdir}{../java/jdrresources/icons/buttons}
 \graphicspath{{\imagesdir/}{\sharedimagesdir/}{\iconsdir/}{\buttonsdir/}}
 
 \newlength\subcapskip
