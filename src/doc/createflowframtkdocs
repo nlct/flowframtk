@@ -22,7 +22,7 @@ my $locale = $lang;
 
 if ($#ARGV == 2)
 {
-  $locale .= "-".$ARGV[2];
+   $locale .= "-".$ARGV[2];
 }
 
 my $downloadurl = 'https://www.dickimaw-books.com/software/flowframtk/';
@@ -57,111 +57,7 @@ my %babel =
 my $encoding_file = 'utf8';
 my $encoding_xml  = 'UTF-8';
 
-my $fd;
-open $fd, "<:encoding($encoding_file)", $mainclass
-  or die "Can't open main class file '$mainclass' $!\n";
-
-my %dict = ();
-
-while (<$fd>)
-{
-   if (/public +static +final +String +APP_NAME *= *"([^"]+)"/)
-   {
-      $dict{appname} = $1;
-   }
-   elsif (/public +static +final +String +APP_VERSION *= *"([^"]+)"/)
-   {
-      $dict{appversion} = $1;
-   }
-   elsif (/public +static +final +String +APP_DATE *= *"([^"]+)"/)
-   {
-      $dict{appdate} = $1;
-   }
-}
-
-close $fd;
-
-my $propfile = "$dictdir/$base-$locale.prop";
-
-if (not (-e $propfile) and ($lang ne $locale))
-{
-   $propfile = "$dictdir/$base-$lang.prop";
-
-   unless (-e $propfile)
-   {
-      die "Can't find either '$dictdir/$base-$locale.prop' or '$propfile'\n";
-   }
-}
-
-unless (-e $propfile)
-{
-   die "Can't find '$propfile'\n";
-}
-
-open $fd, "<:encoding($encoding_xml)", $propfile
-   or die "Can't open property file '$propfile' $!\n";
-
-$_ = <$fd>;
-
-if (/# Encoding: ([^s]+)/)
-{
-   my $prop_encoding = $1;
-
-   if ($prop_encoding ne $encoding_xml)
-   {
-      close $fd;
-      open $fd, "<:encoding($prop_encoding)", $propfile
-        or die "Can't open property file '$propfile' $!\n";
-   }
-}
-else
-{
-   die "Encoding comment line missing from line 1 of '$propfile'\n";
-}
-
-my $linenum = 0;
-
-my $openquote = chr(hex(2018));
-my $closequote = chr(hex(2019));
-
-while (<$fd>)
-{
-   $linenum++;
-
-   next if (/^ *#/ or /^ *$/);
-
-   if (/^([^=]+)=(.*)$/)
-   {
-      my $dictkey = $1;
-      my $value = $2;
-
-      $value=~s/\\{1}[nt]/ /g;
-      $value=~s/(\w)''(\w)/$1$closequote$2/g;
-      $value=~s/'{2}([^']+)'{2}/$openquote$1$closequote/g;
-      $value=~s/'{2}/$closequote/g;
-      $value=~s/\|([a-zA-Z]+)\|/\\cs{$1}/g;
-
-      # strip any trailing ellipsis
-      $value=~s/\.{3}$//g;
-
-      # Prop files don't contain any literal {n,...,...}
-      # Don't need the complexity of the Java application here.
-      # (Many of the messages aren't used in the manual.)
-
-      $value=~s/\{\d,choice,[^\}]+\|<([^\}]*)\}/$1/g;
-
-      $value=~s/\{(\d+)(,[^\}]+)?\}/&arg_placeholder($1)/eg;
-
-      $dict{$dictkey} = $value;
-
-   }
-   else
-   {
-      warn "$propfile: Can't parse line $linenum\n";
-   }
-}
-
-close $fd;
+my %dict = &load_dict();
 
 my %docinfo = ();
 my @nodes   = ();
@@ -215,6 +111,8 @@ unless (-d $helpsetdir)
    die "'$helpsetdir' is not a directory\n";
 }
 
+my $cssfile = "$helpsetdir/$base.css";
+
 # Is there any way of querying the input encoding picked up by
 # XML::Parser? Let's just stick to utf8
 my $inputenc = 'utf8';
@@ -267,307 +165,18 @@ close $bibfd;
 
 # Write helpset files
 
-my $hsfd;
-open $hsfd, ">:$encoding_file", "$helpsetdir/$base.hs"
-  or die "Can't open '$helpsetdir/$base.hs' $!\n";
-
-my $toctitle = &get_label('manual.toc');
-my $manualtitle = &get_label('manual.title');
-my $indextitle = &get_label('manual.index');
-my $searchtitle = &get_label('manual.search');
-
-print $hsfd <<_END_HS_HEAD;
-<?xml version='1.0' encoding='$encoding_xml' ?>
-<!DOCTYPE helpset
-PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 2.0//EN"
-"http://java.sun.com/products/javahelp/helpset_2_0.dtd">
-
-
-<helpset version="2.0">
-   <!-- title -->
-   <title>$manualtitle</title>
-   <!-- maps -->
-   <maps>
-   <homeID>top </homeID>
-   <mapref location="Map.jhm" />
-   </maps>
-
-   <!-- views -->
-   <view xml:lang="$locale" mergetype="javax.help.UniteAppendMerge">
-      <name>TOC</name>
-      <label>$toctitle</label>
-      <type>javax.help.TOCView</type>
-      <data>${base}TOC.xml</data>
-   </view>
-   <view xml:lang="$locale" mergetype="javax.help.SortMerge">
-      <name>Index</name>
-      <label>$indextitle</label>
-      <type>javax.help.IndexView</type>
-      <data>${base}Index.xml</data>
-   </view>
-   <view xml:lang="$locale">
-      <name>Search</name>
-      <label>$searchtitle</label>
-      <type>javax.help.SearchView</type>
-         <data engine="com.sun.java.help.search.DefaultSearchEngine">
-         JavaHelpSearch
-         </data>
-   </view>
-   <!-- presentation windows -->
-   <!-- main window -->
-   <presentation default=true>
-      <name>main window</name>
-      <size width="600" height="600" />
-      <location x="200" y="200" />
-      <title>$manualtitle</title>
-      <toolbar>
-         <helpaction image="homeIcon">javax.help.HomeAction</helpaction>
-         <helpaction image="backIcon">javax.help.BackAction</helpaction>
-         <helpaction image="forwardIcon">javax.help.ForwardAction</helpaction>
-      </toolbar>
-      <image>appIcon</image>
-   </presentation>
-   <!-- secondary window -->
-   <presentation displayviews=false>
-      <name>secondary window</name>
-      <size width="450" height="500" />
-      <location x="200" y="200" />
-      <image>appIcon</image>
-   </presentation>
-   <!-- implementation section -->
-   <impl>
-      <helpsetregistry helpbrokerclass="javax.help.DefaultHelpBroker" />
-      <viewerregistry viewertype="text/html"
-         viewerclass="com.sun.java.help.impl.CustomKit"/>
-      <viewerregistry viewertype="text/xml"
-          viewerclass="com.sun.java.help.impl.CustomXMLKit" />
-   </impl>
-</helpset>
-_END_HS_HEAD
-
-close $hsfd;
-
-my $htmlfd;
-
-open $htmlfd, ">:encoding($encoding_file)", "$helpsetdir/$base.html"
-  or die "Can't open '$helpsetdir/$base.html' $!\n";
-
-print $htmlfd &html_head($docinfo{Title}, '', $nodes[0]->{Tag});
-
-print $htmlfd "<body>\n";
-
-print $htmlfd "<div class=\"title\" \"><p>",
-   $docinfo{Title}, "</p>\n";
-
-print $htmlfd "<p>$docinfo{Author}</p>\n" if ($docinfo{Author});
-
-print $htmlfd "</div><div class=\"date\">";
-
-print $htmlfd "<p>$docinfo{Date}</p>\n" if ($docinfo{Date});
-
-print $htmlfd "</div>";
-
-if ($docinfo{Boilerplate})
-{
-   print $htmlfd '<div class="boilerplate">';
-   print $htmlfd $docinfo{Boilerplate};
-   print $htmlfd '</div>';
-}
-
-print $htmlfd &html_nav('', $nodes[0]);
-
-print $htmlfd "</body>\n</html>\n";
-
-close $htmlfd;
-
-my $prev = $base;
-
-my $tocfd;
-open $tocfd, ">:encoding($encoding_file)", "$helpsetdir/${base}TOC.xml" 
-   or die "Can't open '$helpsetdir/${base}TOC.xml' $!\n";
-
-print $tocfd <<_END_TOC_HEAD;
-<?xml version='1.0' encoding='$encoding_xml' ?>
-   <!DOCTYPE toc
-     PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version
-2.0//EN"
-     "http://java.sun.com/products/javahelp/toc_2_0.dtd">
-
-<toc version="2.0" xml:lang="$locale">
-<tocitem text="Manual" target="top" >
-_END_TOC_HEAD
-
-my $prevlevel = 0;
-
-for (my $idx = 0; $idx <= $#nodes; $idx++)
-{
-   my $node = $nodes[$idx];
-
-   for (my $level = scalar(keys %section_levels); $level >= 0; $level--)
-   {
-      if ($section_levels{$node->{Type}}+$level <= $prevlevel)
-      {
-         print $tocfd "</tocitem>\n";
-      }
-   }
-
-   print $tocfd "<tocitem text=\"$node->{Title}\" target=\"$node->{Tag}\">\n";
-
-   my $next = ($idx == $#nodes ? '' : $nodes[$idx+1]);
-
-   my $tag = $node->{Tag};
-
-   open $htmlfd, ">:encoding($encoding_file)", "$helpsetdir/$tag.html"
-     or die "Can't open '$helpsetdir/$tag.html' $!\n";
-
-   print $htmlfd &html_head($node->{Title}, 
-     ($prev eq $base ? $base : $prev->{Tag}),
-     ($next ? $next->{Tag} : ''));
-
-   print $htmlfd "<body>\n";
-
-   my $header = 'h'.$section_levels{$node->{Type}};
-
-   print $htmlfd "<$header>", $node->{Title}, "</$header>\n";
-
-   my $content = $node->{Contents};
-
-   $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
-
-   print $htmlfd "<div>$content</div>";
-
-   if ($node->{Footnotes})
-   {
-      $content = $node->{Footnotes};
-
-      $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
-
-      print $htmlfd "<hr />$content";
-   }
-
-   print $htmlfd &html_nav($prev, $next);
-
-   print $htmlfd "</body>\n</html>\n";
-
-   close $htmlfd;
-
-   $prev = $node;
-   $prevlevel = $section_levels{$node->{Type}};
-}
-
-for (my $level = scalar(keys %section_levels); $level >= 0; $level--)
-{
-   if ($level < $prevlevel)
-   {
-      print $tocfd "</tocitem>\n";
-   }
-}
-
-print $tocfd "</tocitem>\n</toc>\n";
-
-close $tocfd;
-
-# write map file
-
-my $mapfd;
-open $mapfd, ">:encoding($encoding_file)", "$helpsetdir/Map.jhm"
-  or die "Can't open '$helpsetdir/Map.jhm' $!\n";
-
-print $mapfd <<_END_MAP_HEAD;
-<?xml version='1.0' encoding='utf-8' ?>
-<!DOCTYPE map
- PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN"
-     "http://java.sun.com/products/javahelp/map_2_0.dtd">
-<map version="2.0" xml:lang="$locale">
-_END_MAP_HEAD
-
-print $mapfd "<mapID target=\"top\" url=\"$base.html\" />\n";
-print $mapfd "<mapID target=\"appIcon\" url=\"../../../../icons/flowframtklogosmall.png\" />\n";
-print $mapfd "<mapID target=\"homeIcon\" url=\"../../sharedimages/home.png\" />\n";
-print $mapfd "<mapID target=\"backIcon\" url=\"../../sharedimages/back.png\" />\n";
-print $mapfd "<mapID target=\"forwardIcon\" url=\"../../sharedimages/forward.png\" />\n";
-
-&hs_map_id(\%tags);
-&hs_map_id(\%terms);
-
-print $mapfd "</map>\n";
-close $mapfd;
-
-# Write the helpset index file
-
-my $idxfd;
-open $idxfd, ">:encoding($encoding_file)", "$helpsetdir/${base}Index.xml"
- or die "Can't open '$helpsetdir/${base}Index.xml' $!\n";
-
-print $idxfd <<_END_IDX_HEAD;
-<?xml version='1.0' encoding='$encoding_xml' ?>
-   <!DOCTYPE index
-     PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN"
-     "http://java.sun.com/products/javahelp/index_2_0.dtd">
-
-<index version="2.0">
-_END_IDX_HEAD
-
-&print_idx_entries(\%terms);
-
-print $idxfd "</index>\n";
-close $idxfd;
-
-sub print_idx_entries{
-   my ($hash) = @_;
-
-   foreach my $key (keys %$hash)
-   {
-      if ($hash->{$key}->{Text})
-      {
-         my $text = $hash->{$key}->{Text};
-
-         $text=~s/<\/?[^>]*>//g;
-
-         print $idxfd "<indexitem text=\"",
-           $text, "\" target=\"",
-           $key, "\">\n";
-
-         if ($hash->{$key}->{Children})
-         {
-            &print_idx_entries($hash->{$key}->{Children});
-         }
-
-         print $idxfd "</indexitem>\n";
-      }
-      else
-      {
-         warn "Text not set for '$key'.\n";
-      }
-   }
-}
+&write_css();
+&write_hs_file();
+&write_home_file();
+&write_toc_file();
+&write_map_file();
+&write_index_file();
 
 sub handle_char{
    my( $expat, $string ) = @_;
 
    &handle_html($string);
    &handle_tex($string);
-}
-
-sub hs_map_id{
-   my ($hash) = @_;
-
-   foreach my $tag (keys %$hash)
-   {
-      if ($hash->{$tag}->{Ref})
-      {
-         print $mapfd "<mapID target=\"$tag\" url=\"$hash->{$tag}->{Ref}\" />\n";
-      }
-      else
-      {
-         warn "No Ref found for '$tag'\n";
-      }
-
-      if ($hash->{$tag}->{Children})
-      {
-         &hs_map_id($hash->{$tag}->{Children});
-      }
-   }
 }
 
 sub firstofone{
@@ -977,7 +586,7 @@ sub start_author{
       $docinfo{Author} = " ";
    }
 
-   $docinfo{Author} .= "<table class=\"author\"><tr><td>";
+   $docinfo{Author} .= "<table class=\"author\"><tr><td align=\"center\">";
 }
 
 sub end_author{
@@ -1221,7 +830,7 @@ sub end_newacro{
 
    # write html file used by popup window
 
-   open $fd, ">:encoding($encoding_file)", "$helpsetdir/acr_$tag.html" 
+   open my $fd, ">:encoding($encoding_file)", "$helpsetdir/acr_$tag.html" 
       or die "Can't open '$helpsetdir/acr_$tag.html' $!\n";
 
    print $fd &html_head($acros{$tag}->{Short});
@@ -1366,7 +975,7 @@ sub end_newterm{
       # write html file used by popup window if a description has been
       # supplied
 
-      open $fd, ">:encoding($encoding_file)", "$helpsetdir/$tag.html" 
+      open my $fd, ">:encoding($encoding_file)", "$helpsetdir/$tag.html" 
          or die "Can't open '$helpsetdir/$tag.html' $!\n";
 
       print $fd &html_head($terms{$tag}->{Text});
@@ -1505,7 +1114,7 @@ sub start_p{
    {
       &handle_html('>');
 
-      my %img_attrs = ();
+      my %img_attrs = ('align'=>'left');
 
       if ($attrs{icon} eq 'warning')
       {
@@ -2128,7 +1737,7 @@ sub start_verbinput{
 
    &handle_html('<pre>');
 
-   open $fd, ">:encoding($encoding_file)", $attrs{src}
+   open my $fd, ">:encoding($encoding_file)", $attrs{src}
      or die "Can't open verbatim file '$attrs{src}' $!\n";
 
    while (<$fd>)
@@ -2162,7 +1771,7 @@ sub start_verbtabinput{
 
    &handle_html('<pre>');
 
-   open $fd, ">:encoding($encoding_file)", $attrs{src}
+   open my $fd, ">:encoding($encoding_file)", $attrs{src}
      or die "Can't open '$attrs{src}' $!\n";
 
    while (<$fd>)
@@ -3744,6 +3353,305 @@ sub end_percent{
    my ($expat) = @_;
 }
 
+sub load_dict{
+   my %dict;
+   my $fd;
+   open $fd, "<:encoding($encoding_file)", $mainclass
+     or die "Can't open main class file '$mainclass' $!\n";
+
+   while (<$fd>)
+   {
+      if (/public +static +final +String +APP_NAME *= *"([^"]+)"/)
+      {
+         $dict{appname} = $1;
+      }
+      elsif (/public +static +final +String +APP_VERSION *= *"([^"]+)"/)
+      {
+         $dict{appversion} = $1;
+      }
+      elsif (/public +static +final +String +APP_DATE *= *"([^"]+)"/)
+      {
+         $dict{appdate} = $1;
+      }
+   }
+
+   close $fd;
+
+   my $propfile = "$dictdir/$base-$locale.prop";
+
+   if (not (-e $propfile) and ($lang ne $locale))
+   {
+      $propfile = "$dictdir/$base-$lang.prop";
+   
+      unless (-e $propfile)
+      {
+         die "Can't find either '$dictdir/$base-$locale.prop' or '$propfile'\n";
+      }
+   }
+   
+   unless (-e $propfile)
+   {
+      die "Can't find '$propfile'\n";
+   }
+
+   open $fd, "<:encoding($encoding_xml)", $propfile
+      or die "Can't open property file '$propfile' $!\n";
+
+   $_ = <$fd>;
+
+   if (/# Encoding: ([^s]+)/)
+   {
+      my $prop_encoding = $1;
+
+      if ($prop_encoding ne $encoding_xml)
+      {
+         close $fd;
+         open $fd, "<:encoding($prop_encoding)", $propfile
+           or die "Can't open property file '$propfile' $!\n";
+      }
+   }
+   else
+   {
+      die "Encoding comment line missing from line 1 of '$propfile'\n";
+   }
+
+   my $linenum = 0;
+
+   my $openquote = chr(hex(2018));
+   my $closequote = chr(hex(2019));
+
+   while (<$fd>)
+   {
+      $linenum++;
+
+      next if (/^ *#/ or /^ *$/);
+
+      if (/^([^=]+)=(.*)$/)
+      {
+         my $dictkey = $1;
+         my $value = $2;
+
+         $value=~s/\\{1}[nt]/ /g;
+         $value=~s/(\w)''(\w)/$1$closequote$2/g;
+         $value=~s/'{2}([^']+)'{2}/$openquote$1$closequote/g;
+         $value=~s/'{2}/$closequote/g;
+         $value=~s/\|([a-zA-Z]+)\|/\\cs{$1}/g;
+
+         # strip any trailing ellipsis
+         $value=~s/\.{3}$//g;
+
+         # Prop files don't contain any literal {n,...,...}
+         # Don't need the complexity of the Java application here.
+         # (Many of the messages aren't used in the manual.)
+
+         $value=~s/\{\d,choice,[^\}]+\|<([^\}]*)\}/$1/g;
+
+         $value=~s/\{(\d+)(,[^\}]+)?\}/&arg_placeholder($1)/eg;
+
+         $dict{$dictkey} = $value;
+
+      }
+      else
+      {
+         warn "$propfile: Can't parse line $linenum\n";
+      }
+   }
+
+   close $fd;
+
+   return %dict;
+}
+
+sub write_css{
+   my $cssfd;
+
+   open $cssfd, ">:encoding($encoding_file)", $cssfile
+     or die "Can't open CSS file '$cssfile' $!\n";
+
+   print $cssfd <<_END_CSS;
+\@charset "$encoding_xml";
+
+.title
+{
+  display: inline;
+  font-weight: bold;
+  font-size: xx-large;
+  text-align: center;
+}
+.author
+{
+  display: inline;
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  padding: 2em;
+}
+.date
+{
+  display: inline;
+  font-weight: bold;
+  font-size: normal;
+  text-align: center;
+}
+.float
+{
+   text-align: center;
+   padding-top: 16;
+}
+.file
+{
+   font-family: monospace;
+}
+.cli
+{
+   font-family: monospace;
+}
+.env
+{
+   font-family: monospace;
+}
+.opt
+{
+   font-family: monospace;
+}
+.menu
+{
+   font-family: sans-serif;
+   font-weight: bold;
+}
+.qquad
+{
+   border-left: 2em;
+}
+kbd
+{
+  padding-left: 2px;
+  padding-right: 2px;
+  color: purple;
+  font-weight: bold;
+  background-color: #eeeeee;
+}
+_END_CSS
+
+   close $cssfd;
+}
+
+sub write_hs_file{
+   my $hsfd;
+   open $hsfd, ">:$encoding_file", "$helpsetdir/$base.hs"
+     or die "Can't open '$helpsetdir/$base.hs' $!\n";
+
+   my $toctitle = &get_label('manual.toc');
+   my $manualtitle = &get_label('manual.title');
+   my $indextitle = &get_label('manual.index');
+   my $searchtitle = &get_label('manual.search');
+
+   print $hsfd <<_END_HS_HEAD;
+<?xml version='1.0' encoding='$encoding_xml' ?>
+<!DOCTYPE helpset
+PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 2.0//EN"
+"http://java.sun.com/products/javahelp/helpset_2_0.dtd">
+
+
+<helpset version="2.0">
+   <!-- title -->
+   <title>$manualtitle</title>
+   <!-- maps -->
+   <maps>
+   <homeID>top </homeID>
+   <mapref location="Map.jhm" />
+   </maps>
+
+   <!-- views -->
+   <view xml:lang="$locale" mergetype="javax.help.UniteAppendMerge">
+      <name>TOC</name>
+      <label>$toctitle</label>
+      <type>javax.help.TOCView</type>
+      <data>${base}TOC.xml</data>
+   </view>
+   <view xml:lang="$locale" mergetype="javax.help.SortMerge">
+      <name>Index</name>
+      <label>$indextitle</label>
+      <type>javax.help.IndexView</type>
+      <data>${base}Index.xml</data>
+   </view>
+   <view xml:lang="$locale">
+      <name>Search</name>
+      <label>$searchtitle</label>
+      <type>javax.help.SearchView</type>
+         <data engine="com.sun.java.help.search.DefaultSearchEngine">
+         JavaHelpSearch
+         </data>
+   </view>
+   <!-- presentation windows -->
+   <!-- main window -->
+   <presentation default=true>
+      <name>main window</name>
+      <size width="600" height="600" />
+      <location x="200" y="200" />
+      <title>$manualtitle</title>
+      <toolbar>
+         <helpaction image="homeIcon">javax.help.HomeAction</helpaction>
+         <helpaction image="backIcon">javax.help.BackAction</helpaction>
+         <helpaction image="forwardIcon">javax.help.ForwardAction</helpaction>
+      </toolbar>
+      <image>appIcon</image>
+   </presentation>
+   <!-- secondary window -->
+   <presentation displayviews=false>
+      <name>secondary window</name>
+      <size width="450" height="500" />
+      <location x="200" y="200" />
+      <image>appIcon</image>
+   </presentation>
+   <!-- implementation section -->
+   <impl>
+      <helpsetregistry helpbrokerclass="javax.help.DefaultHelpBroker" />
+      <viewerregistry viewertype="text/html"
+         viewerclass="com.sun.java.help.impl.CustomKit"/>
+      <viewerregistry viewertype="text/xml"
+          viewerclass="com.sun.java.help.impl.CustomXMLKit" />
+   </impl>
+</helpset>
+_END_HS_HEAD
+
+   close $hsfd;
+}
+
+sub write_home_file{
+   my $htmlfd;
+
+   open $htmlfd, ">:encoding($encoding_file)", "$helpsetdir/$base.html"
+     or die "Can't open '$helpsetdir/$base.html' $!\n";
+
+   print $htmlfd &html_head($docinfo{Title}, '', $nodes[0]->{Tag});
+
+   print $htmlfd "<body>\n";
+
+   print $htmlfd "<div class=\"title\" ><h1>", $docinfo{Title}, "</h1>\n";
+
+   print $htmlfd "<p>$docinfo{Author}</p>\n" if ($docinfo{Author});
+
+   print $htmlfd "</div><div class=\"date\">";
+
+   print $htmlfd "<p>$docinfo{Date}</p>\n" if ($docinfo{Date});
+
+   print $htmlfd "</div>";
+
+   if ($docinfo{Boilerplate})
+   {
+      print $htmlfd '<div class="boilerplate">';
+      print $htmlfd $docinfo{Boilerplate};
+      print $htmlfd '</div>';
+   }
+
+   print $htmlfd &html_nav('', $nodes[0]);
+
+   print $htmlfd "</body>\n</html>\n";
+
+   close $htmlfd;
+}
+
 sub html_head{
   my ($title, $prev, $next) = @_;
 
@@ -3758,70 +3666,9 @@ sub html_head{
 >
 <html xmlns="http://www.w3.org/1999/xhtml" lang="$locale" xml:lang="$locale">
 <head>
-  <style type="text/css">
-    .title
-    {
-      display: inline;
-      font-weight: bold;
-      font-size: xx-large;
-      text-align: center;
-    }
-    .author
-    {
-      display: inline;
-      font-weight: bold;
-      font-size: large;
-      text-align: center;
-      padding: 2em;
-    }
-    .date
-    {
-      display: inline;
-      font-weight: bold;
-      font-size: normal;
-      text-align: center;
-    }
-    .float
-    {
-       text-align: center;
-       padding-top: 16;
-    }
-    .file
-    {
-       font-family: monospace;
-    }
-    .cli
-    {
-       font-family: monospace;
-    }
-    .env
-    {
-       font-family: monospace;
-    }
-    .opt
-    {
-       font-family: monospace;
-    }
-    .menu
-    {
-       font-family: sans-serif;
-       font-weight: bold;
-    }
-    .qquad
-    {
-       border-left: 2em;
-    }
-    kbd
-    {
-      padding-left: 2px;
-      padding-right: 2px;
-      color: purple;
-      font-weight: bold;
-      background-color: #eeeeee;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="$base.css" />
   <title>$title</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=$encoding_xml" />
 _END_HTML_HEAD
 
   if ($next)
@@ -3835,6 +3682,95 @@ _END_HTML_HEAD
   }
 
   "$head</head>";
+}
+
+sub write_toc_file{
+   my $prev = $base;
+
+   my $tocfd;
+   open $tocfd, ">:encoding($encoding_file)", "$helpsetdir/${base}TOC.xml" 
+      or die "Can't open '$helpsetdir/${base}TOC.xml' $!\n";
+
+   print $tocfd <<_END_TOC_HEAD;
+<?xml version='1.0' encoding='$encoding_xml' ?>
+   <!DOCTYPE toc
+     PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version
+2.0//EN"
+     "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+
+<toc version="2.0" xml:lang="$locale">
+<tocitem text="Manual" target="top" >
+_END_TOC_HEAD
+
+   my $prevlevel = 0;
+
+   for (my $idx = 0; $idx <= $#nodes; $idx++)
+   {
+      my $node = $nodes[$idx];
+
+      for (my $level = scalar(keys %section_levels); $level >= 0; $level--)
+      {
+         if ($section_levels{$node->{Type}}+$level <= $prevlevel)
+         {
+            print $tocfd "</tocitem>\n";
+         }
+      }
+
+      print $tocfd "<tocitem text=\"$node->{Title}\" target=\"$node->{Tag}\">\n";
+
+      my $next = ($idx == $#nodes ? '' : $nodes[$idx+1]);
+
+      my $tag = $node->{Tag};
+
+      open my $htmlfd, ">:encoding($encoding_file)", "$helpsetdir/$tag.html"
+        or die "Can't open '$helpsetdir/$tag.html' $!\n";
+
+      print $htmlfd &html_head($node->{Title}, 
+        ($prev eq $base ? $base : $prev->{Tag}),
+        ($next ? $next->{Tag} : ''));
+
+      print $htmlfd "<body>\n";
+
+      my $header = 'h'.$section_levels{$node->{Type}};
+
+      print $htmlfd "<$header>", $node->{Title}, "</$header>\n";
+
+      my $content = $node->{Contents};
+
+      $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
+
+      print $htmlfd "<div>$content</div>";
+
+      if ($node->{Footnotes})
+      {
+         $content = $node->{Footnotes};
+
+         $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
+
+         print $htmlfd "<hr />$content";
+      }
+
+      print $htmlfd &html_nav($prev, $next);
+
+      print $htmlfd "</body>\n</html>\n";
+
+      close $htmlfd;
+
+      $prev = $node;
+      $prevlevel = $section_levels{$node->{Type}};
+   }
+
+   for (my $level = scalar(keys %section_levels); $level >= 0; $level--)
+   {
+      if ($level < $prevlevel)
+      {
+         print $tocfd "</tocitem>\n";
+      }
+   }
+
+   print $tocfd "</tocitem>\n</toc>\n";
+
+   close $tocfd;
 }
 
 sub html_nav{
@@ -3872,6 +3808,103 @@ sub html_nav{
   }
 
   "$nav</td></tr></table>"
+}
+
+sub write_map_file{
+
+   my $mapfd;
+   open $mapfd, ">:encoding($encoding_file)", "$helpsetdir/Map.jhm"
+     or die "Can't open '$helpsetdir/Map.jhm' $!\n";
+
+   print $mapfd <<_END_MAP_HEAD;
+<?xml version='1.0' encoding='$encoding_xml' ?>
+<!DOCTYPE map
+ PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN"
+     "http://java.sun.com/products/javahelp/map_2_0.dtd">
+<map version="2.0" xml:lang="$locale">
+_END_MAP_HEAD
+
+   print $mapfd "<mapID target=\"top\" url=\"$base.html\" />\n";
+   print $mapfd "<mapID target=\"appIcon\" url=\"../../../../icons/flowframtklogosmall.png\" />\n";
+   print $mapfd "<mapID target=\"homeIcon\" url=\"../../sharedimages/home.png\" />\n";
+   print $mapfd "<mapID target=\"backIcon\" url=\"../../sharedimages/back.png\" />\n";
+   print $mapfd "<mapID target=\"forwardIcon\" url=\"../../sharedimages/forward.png\" />\n";
+
+   &hs_map_id($mapfd, \%tags);
+   &hs_map_id($mapfd, \%terms);
+
+   print $mapfd "</map>\n";
+   close $mapfd;
+}
+
+sub write_index_file{
+   my $idxfd;
+   open $idxfd, ">:encoding($encoding_file)", "$helpsetdir/${base}Index.xml"
+    or die "Can't open '$helpsetdir/${base}Index.xml' $!\n";
+
+   print $idxfd <<_END_IDX_HEAD;
+<?xml version='1.0' encoding='$encoding_xml' ?>
+   <!DOCTYPE index
+     PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN"
+     "http://java.sun.com/products/javahelp/index_2_0.dtd">
+
+<index version="2.0">
+_END_IDX_HEAD
+
+   &print_idx_entries($idxfd, \%terms);
+
+   print $idxfd "</index>\n";
+   close $idxfd;
+}
+
+sub print_idx_entries{
+   my ($idxfd, $hash) = @_;
+
+   foreach my $key (keys %$hash)
+   {
+      if ($hash->{$key}->{Text})
+      {
+         my $text = $hash->{$key}->{Text};
+
+         $text=~s/<\/?[^>]*>//g;
+
+         print $idxfd "<indexitem text=\"",
+           $text, "\" target=\"",
+           $key, "\">\n";
+
+         if ($hash->{$key}->{Children})
+         {
+            &print_idx_entries($idxfd, $hash->{$key}->{Children});
+         }
+
+         print $idxfd "</indexitem>\n";
+      }
+      else
+      {
+         warn "Text not set for '$key'.\n";
+      }
+   }
+}
+
+sub hs_map_id{
+   my ($mapfd, $hash) = @_;
+
+   foreach my $tag (keys %$hash)
+   {
+      if ($hash->{$tag}->{Ref})
+      {
+         print $mapfd "<mapID target=\"$tag\" url=\"$hash->{$tag}->{Ref}\" />\n";
+      }
+      else
+      {
+         warn "No Ref found for '$tag'\n";
+      }
+
+      if ($hash->{$tag}->{Children})
+      {
+         &hs_map_id($mapfd, $hash->{$tag}->{Children});
+      }
+   }
 }
 
 sub arg_placeholder{
