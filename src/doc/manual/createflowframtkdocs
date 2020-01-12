@@ -3689,6 +3689,9 @@ sub html_head{
 
   $title = 'Untitled' unless($title);
 
+# JEditorPane has very limited CSS support so can't use any fancy
+# styling (like borders).
+
   my $head = <<_END_HTML_HEAD;
 <!DOCTYPE html  html public "-//w3c//dtd xhtml 1.0 Transitional//en"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
@@ -3750,9 +3753,11 @@ sub html_head{
     }
     kbd
     {
-      border-style: outset;
       padding-left: 2px;
       padding-right: 2px;
+      color: purple;
+      font-weight: bold;
+      background-color: #eeeeee;
     }
   </style>
   <title>$title</title>
