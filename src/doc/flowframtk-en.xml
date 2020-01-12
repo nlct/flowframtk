@@ -483,7 +483,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    and you can use <kbd ctrl="true" key="V"/> to paste text from the clipboard into the
    text field.
    </p>
-   <p class="warning">
+   <p icon="warning">
    Note that a few of the accelerators used by JpgfDraw have been
    changed in <app/>, as they caused a conflict. For example,
    <kbd key="esc"/> cancels a displayed menu, so if you use it to dismiss

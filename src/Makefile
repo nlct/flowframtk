@@ -14,7 +14,7 @@ all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar \
 	lib/svg2jdr.jar
 
 test	: lib/flowframtk.jar
-	bin/flowframtk
+	bin/flowframtk -debug
 
 lib/jdr.jar	: classes/com/dickimawbooks/jdr/JDRObject.class
 		cd classes ; \

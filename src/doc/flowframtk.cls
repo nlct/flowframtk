@@ -458,11 +458,6 @@ y+s_yx
   \noindent\makebox[0pt][l]{\hspace*{-\iconwidth}\smash{\raisebox{-\iconheight}{\usebox{\iconsbox}}}}%
 }
 
-\newcommand{\texrelated}{\accsupp{\texrelatedtext}{\iconstartpar{texrelated.png}}}
-\newcommand{\pgfrelated}{\accsupp{\pgfrelatedtext}{\iconstartpar{pgfrelated.png}}}
-\newcommand{\flfrelated}{\accsupp{\flfrelatedtext}{\iconstartpar{flfrelated.png}}}
-\newcommand{\warning}{\accsupp{\warningtext}{\iconstartpar{warning.png}}}
-
 \AtBeginDocument{\providecommand{\accsupp}[2]{#2}}
 
 \endinput

@@ -3,6 +3,7 @@
 use utf8;
 use strict;
 use XML::Parser;
+use File::Copy;
 
 # createflowframtkdocs FlowframTk en GB
 # createflowframtkdocs FlowframTk en US
@@ -179,11 +180,7 @@ my $languagedefinitions =
  ."\\def\\examplename{".&get_label('manual.example')."}\n"
  ."\\def\\abbrvname{".&get_label('manual.abbreviations')."}\n"
  ."\\def\\continuedcaptiontext{".&get_label('manual.cont.cap.text')."}\n"
- ."\\def\\continuednextpagetext{".&get_label('manual.cont.nextpage.text')."}\n"
- ."\\def\\texrelatedtext{".&get_label('manual.texrelated')."}\n"
- ."\\def\\pgfrelatedtext{".&get_label('manual.pgfrelated')."}\n"
- ."\\def\\flfrelatedtext{".&get_label('manual.flfrelated')."}\n"
- ."\\def\\warningtext{".&get_label('manual.warning')."}\n";
+ ."\\def\\continuednextpagetext{".&get_label('manual.cont.nextpage.text')."}\n";
 
 my $xmlfile = "$base-$locale.xml";
 
@@ -485,10 +482,10 @@ print $mapfd <<_END_MAP_HEAD;
 _END_MAP_HEAD
 
 print $mapfd "<mapID target=\"top\" url=\"$base.html\" />\n";
-print $mapfd "<mapID target=\"appIcon\" url=\"../icons/flowframtklogosmall.png\" />\n";
-print $mapfd "<mapID target=\"homeIcon\" url=\"../icons/home.png\" />\n";
-print $mapfd "<mapID target=\"backIcon\" url=\"../icons/back.png\" />\n";
-print $mapfd "<mapID target=\"forwardIcon\" url=\"../icons/forward.png\" />\n";
+print $mapfd "<mapID target=\"appIcon\" url=\"../../../../icons/flowframtklogosmall.png\" />\n";
+print $mapfd "<mapID target=\"homeIcon\" url=\"../../sharedimages/home.png\" />\n";
+print $mapfd "<mapID target=\"backIcon\" url=\"../../sharedimages/back.png\" />\n";
+print $mapfd "<mapID target=\"forwardIcon\" url=\"../../sharedimages/forward.png\" />\n";
 
 &hs_map_id(\%tags);
 &hs_map_id(\%terms);
@@ -1479,9 +1476,6 @@ sub start_p{
 
    &handle_html("<p");
 
-   my $html_img = '';
-   my $html_img_alt = '';
-
    if ($attrs{align})
    {
       &handle_html(' align="'.$attrs{'align'}.'">');
@@ -1507,26 +1501,50 @@ sub start_p{
           " for 'p' element on line ", $expat->current_line, "\n";
       }
    }
-   elsif ($attrs{class})
+   elsif ($attrs{icon})
    {
-      if ($attrs{class} eq 'warning')
+      &handle_html('>');
+
+      my %img_attrs = ();
+
+      if ($attrs{icon} eq 'warning')
       {
-         &handle_tex('\\warning ');
-         $html_img = "warning.png";
-         $html_img_alt = &get_label("manual.warning");
+         $img_attrs{src} = "warning.png";
+         $img_attrs{alt} = &get_label("manual.warning");
       }
-      elsif ($attrs{class}=~/^(tex|pgf|flf)$/)
+      elsif ($attrs{icon}=~/^(tex|pgf|flf)$/)
       {
-         &handle_tex("\\$1related ");
-         $html_img = "$1related.png";
-         $html_img_alt = &get_label("manual.$1relatedtext");
+         $img_attrs{src} = "$1related.png";
+         $img_attrs{alt} = &get_label("manual.$1relatedtext");
       }
       else
       {
-         warn("Unknown paragraph class '" . $attrs{class} . '"');
+         my $base;
+
+         # All images are png files. Check if suffix is present.
+
+         if ($attrs{icon}=~/(.*)\.png$/)
+         {
+            $base = $1;
+            $img_attrs{src} = $attrs{icon};
+         }
+         else
+         {
+            $base = $attrs{icon};
+            $img_attrs{src} = $attrs{icon}.'.png';
+         }
+
+         if (defined($dict{"tooltip.$base"}))
+         {
+            $img_attrs{alt} = $dict{"tooltip.$base"} . '.';
+         }
+         else
+         {
+            $img_attrs{alt} = ucfirst($base) . '.';
+         }
       }
 
-      &handle_html(' class="' . $attrs{class} . '" >');
+      &do_image('iconstartpar', $expat, %img_attrs);
    }
    else
    {
@@ -1534,24 +1552,6 @@ sub start_p{
       &handle_tex($endtag);
 
       &handle_tex("\\noindent ") if $attrs{noindent};
-   }
-
-   if ($html_img)
-   {
-      &handle_html("<img alt=\"$html_img_alt\" src=\"../../sharedimages/$html_img\"");
-
-      $_ = `file sharedimages/$html_img`;
-
-      if (/(\d+) x (\d+)/)
-      {
-         &handle_html(" width=\"$1\" height=\"$2\"");
-      }
-      else
-      {
-         warn "Can't determine dimensions of image '$html_img'\n";
-      }
-
-      &handle_html("/>");
    }
 
    push @paragraph, $endtag;
@@ -2297,8 +2297,8 @@ sub end_element{
    &handle_tex("}");
 }
 
-sub start_image{
-   my ($expat, %attrs) = @_;
+sub do_image{
+   my ($texcs, $expat, %attrs) = @_;
 
    unless ($attrs{src})
    {
@@ -2306,17 +2306,63 @@ sub start_image{
         $expat->current_line, "\n";
    }
 
+   &handle_html("<img ");
+
    my $imgfile = $attrs{src};
 
-   unless (-e $imgfile)
+   # First try images-<locale> sub-directory
+   # Then sharedimages directory
+   # Then ../java/jdrresources/icons
+   # Then ../java/jdrresources/icons/buttons
+   # The last two are in jdrresources.jar but the jar protocol
+   # doesn't allow for relative paths to the jar file.
+   # (Ideally need
+   # src="jar:../../../../jdrresources.jar!/com/dickimawbooks/jdrresources/icons/etc"
+   # but this doesn't work.)
+   # As a workaround, copy the image to the helpsets/sharedimages
+   # directory.
+
+   if (-e "images-$locale/$imgfile")
+   {
+      $imgfile = "images-$locale/$imgfile";
+      &handle_html("src=\"$imgfile\" ");
+   }
+   elsif (-e "sharedimages/$imgfile")
+   {
+      &handle_html("src=\"../../sharedimages/$imgfile\" ");
+      $imgfile = "sharedimages/$imgfile";
+   }
+   elsif (-e "../java/jdrresources/icons/$imgfile")
+   {
+      &handle_html("src=\"../../sharedimages/$imgfile\" ");
+
+      my $targetimg = "$targetdir/sharedimages/$imgfile";
+      $imgfile = "../java/jdrresources/icons/$imgfile";
+
+      unless (-e $targetimg)
+      {
+         copy($imgfile, $targetimg) or die "Failed to copy '$imgfile' to '$targetimg' $!\n";
+      }
+   }
+   elsif (-e "../java/jdrresources/icons/buttons/$imgfile")
+   {
+      &handle_html("src=\"../../sharedimages/$imgfile\" ");
+
+      my $targetimg = "$targetdir/sharedimages/$imgfile";
+      $imgfile = "../java/jdrresources/icons/buttons/$imgfile";
+
+      unless (-e $targetimg)
+      {
+         copy($imgfile, $targetimg) or die "Failed to copy '$imgfile' to '$targetimg' $!\n";
+      }
+   }
+   else
    {
       die "Can't find image file '$imgfile' referenced on line ",
          $expat->current_line, "\n";
    }
 
    my @opts=();
-
-   my $html = "";
 
    foreach my $key (keys %attrs)
    {
@@ -2327,16 +2373,16 @@ sub start_image{
       elsif ($key eq 'width')
       {
          push @opts, "width=$attrs{width}";
-         $html .= "$key=\"$attrs{$key}\" ";
+         &handle_html("$key=\"$attrs{$key}\" ");
       }
       elsif ($key eq 'height')
       {
          push @opts, "height=$attrs{height}";
-         $html .= "$key=\"$attrs{$key}\" ";
+         &handle_html("$key=\"$attrs{$key}\" ");
       }
-      else
+      elsif (not $key eq 'src')
       {
-         $html .= "$key=\"$attrs{$key}\" ";
+         &handle_html("$key=\"$attrs{$key}\" ");
       }
    }
 
@@ -2348,8 +2394,8 @@ sub start_image{
 
       if (/(\d+) x (\d+)/)
       {
-         $html .= "width=\"$1\" " unless $attrs{width};
-         $html .= "height=\"$2\" " unless $attrs{height};
+         &handle_html("width=\"$1\" ") unless $attrs{width};
+         &handle_html("height=\"$2\" ") unless $attrs{height};
       }
       else
       {
@@ -2357,11 +2403,25 @@ sub start_image{
       }
    }
 
-   $html = "<img $html />";
+   &handle_html('/>');
 
-   &handle_html($html);
+   my $optionalarg = ($#opts > -1 ? "[" . join(',', @opts) . "]" : '');
 
-   &handle_tex("\\includegraphics[", join(',', @opts), "]{$imgfile}");
+   if ($attrs{alt})
+   {
+      &handle_tex("\\accsupp{", $attrs{alt}, "}{\\", $texcs, 
+        "$optionalarg\{", $attrs{src}, "}}");
+   }
+   else
+   {
+      &handle_tex("\\", $texcs, "$optionalarg\{", $attrs{src}, "}");
+   }
+}
+
+sub start_image{
+   my ($expat, %attrs) = @_;
+
+   &do_image('includegraphics', $expat, %attrs);
 }
 
 sub end_image{
