@@ -21,7 +21,7 @@ flowframtk-en-GB.tex	: createflowframtkdocs flowframtk-en.xml \
 			../../lib/resources/dictionaries/flowframtk-en-GB.prop \
 			../../java/flowframtk/FlowframTkInvoker.java
 			createflowframtkdocs FlowframTk en GB
-			rm -r ../../lib/resources/helpsets/flowframtk/en-GB/JavaHelpSearch 
+			rm -r -f ../../lib/resources/helpsets/flowframtk/en-GB/JavaHelpSearch 
 			cd ../../lib/resources/helpsets/flowframtk/en-GB; \
 			jh2indexer -locale en_GB .
 
@@ -40,7 +40,7 @@ flowframtk-en-US.tex	: createflowframtkdocs flowframtk-en.xml \
 			../../lib/resources/dictionaries/flowframtk-en-US.prop \
 			../../java/flowframtk/FlowframTkInvoker.java
 			createflowframtkdocs FlowframTk en US
-			rm -r ../../lib/resources/helpsets/flowframtk/en-US/JavaHelpSearch 
+			rm -r -f ../../lib/resources/helpsets/flowframtk/en-US/JavaHelpSearch 
 			cd ../../lib/resources/helpsets/flowframtk/en-US; \
 			jh2indexer -locale en_US .
 
