@@ -871,6 +871,10 @@ java -jar flowframtk-<appversion/>-installer.jar
    <node type="section" tag="quit" title="Quit">
    </node>
    <node type="chapter" tag="newobjects" title="Creating New Objects">
+   <p>
+   </p>
+   <p tag="goto" tagtext="goto function">
+   </p>
    </node>
    <node type="section" tag="newlinepath" title="Line Paths">
    </node>
@@ -1008,7 +1012,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    </node>
    <node type="subsection" tag="textmatrix" title="Text Transformation Matrix">
    </node>
-   <node type="subsection" tag="anchor" title="Anchor">
+   <node type="subsection" tag="fontanchor" title="Anchor">
    </node>
    <node type="chapter" tag="tex" title="TeX/LaTeX">
    </node>

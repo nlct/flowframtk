@@ -119,7 +119,7 @@ public class GridSettings extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:grid"));
+      p2.add(getResources().createHelpButton("gridmenu"));
 
       getContentPane().add(p2, "South");
 

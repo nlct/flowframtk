@@ -49,7 +49,7 @@ public class TextPaintSelector extends JDRSelector
             application.getResources().getString("textcolour.title"),
             false, true);
 
-      application.enableHelpOnButton(help, "sec:textcolour");
+      application.enableHelpOnButton(help, "textpaint");
 
       paintPanel = new PaintPanel(this);
       paintPanel.setBorder(BorderFactory.createLoweredBevelBorder());

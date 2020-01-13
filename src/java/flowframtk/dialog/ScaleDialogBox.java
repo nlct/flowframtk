@@ -94,7 +94,7 @@ public class ScaleDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:scale"));
+      p2.add(getResources().createHelpButton("scaleobjects"));
 
       getContentPane().add(p2, "South");
    }

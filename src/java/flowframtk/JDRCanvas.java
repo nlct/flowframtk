@@ -3619,7 +3619,7 @@ public class JDRCanvas extends JPanel
       }
 
       getApplication().setStatusInfo(
-        getResources().getString("info.select"), "sec:edit");
+        getResources().getString("info.select"), "selectobjects");
    }
 
    public void insertBitmap(File imageFile)
@@ -9548,12 +9548,12 @@ public class JDRCanvas extends JPanel
       if (flag)
       {
          getApplication().setStatusInfo(
-           getResources().getString("info.distort"), "sec:distort");
+           getResources().getString("info.distort"), "distort");
       }
       else
       {
          getApplication().setStatusInfo(
-           getResources().getString("info.select"), "sec:edit");
+           getResources().getString("info.select"), "selectobjects");
       }
 
       enableTools();
@@ -18038,12 +18038,12 @@ public class JDRCanvas extends JPanel
          if (state)
          {
             getApplication().setStatusInfo(
-               getResources().getString("info.edit_path"), "sec:editpath");
+               getResources().getString("info.edit_path"), "editpath");
          }
          else
          {
             getApplication().setStatusInfo(
-               getResources().getString("info.select"), "sec:edit");
+               getResources().getString("info.select"), "selectobjects");
          }
       }
 

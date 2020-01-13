@@ -52,7 +52,7 @@ public class ArrowStyleSelector extends JDRSelector
 
       type_ = type;
 
-      application.enableHelpOnButton(help, "sec:markers");
+      application.enableHelpOnButton(help, "markers");
 
       // arrow selection panel
 

@@ -362,7 +362,7 @@ public class FlowframTk extends JFrame
       );
 
       imageDescriptionDialog
-         = new DescriptionDialogBox(this, "sec:imagedescription");
+         = new DescriptionDialogBox(this, "imagedescription");
 
 
       incStartupProgress(fileM, imageDescriptionItem);
@@ -782,7 +782,7 @@ public class FlowframTk extends JFrame
         );
 
       objectDescriptionDialog
-         = new DescriptionDialogBox(this, "sec:objectDesc");
+         = new DescriptionDialogBox(this, "objectdescription");
 
 
       editM.addSeparator();

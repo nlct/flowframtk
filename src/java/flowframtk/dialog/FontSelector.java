@@ -48,7 +48,7 @@ public class FontSelector extends JDRSelector
       super(application, application.getResources().getString("font.title"),
          false, true, true);
 
-      application.enableHelpOnButton(help, "sec:font");
+      application.enableHelpOnButton(help, "textstyle");
 
       // font panel
 

@@ -132,7 +132,7 @@ public class ConfigSettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("sec:configure"));
+      p.add(getResources().createHelpButton("configuredialog"));
 
       pack();
       Dimension dim = getSize();

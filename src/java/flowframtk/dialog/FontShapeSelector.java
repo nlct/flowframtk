@@ -54,7 +54,7 @@ public class FontShapeSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:fontshape");
+      application.enableHelpOnButton(help, "fontshape");
 
       // font panel
 

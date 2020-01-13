@@ -49,7 +49,7 @@ public class LineStyleSelector extends JDRSelector
       super(application,application.getResources().getString("linestyle.title"),
             true,false);
 
-      application.enableHelpOnButton(help, "sec:linestyle");
+      application.enableHelpOnButton(help, "pathstyle");
 
       // line style selection panel
 

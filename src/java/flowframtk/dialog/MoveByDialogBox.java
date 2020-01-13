@@ -58,7 +58,7 @@ public class MoveByDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:move"));
+      p2.add(getResources().createHelpButton("moveobjects"));
 
       getContentPane().add(p2, "South");
 

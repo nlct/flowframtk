@@ -53,7 +53,7 @@ public class StorageUnitDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("sec:controlsettings"));
+      p.add(getResources().createHelpButton("controlsettings"));
 
       pack();
       setLocationRelativeTo(application_);

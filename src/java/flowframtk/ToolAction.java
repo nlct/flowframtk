@@ -114,7 +114,7 @@ public class ToolAction extends FlowframTkAction
      "closed_curve", "rectangle", "ellipse", "text", "math"};
 
    private static final String[] HELP_ID =
-    {"sec:edit", "sec:lines", "sec:lines", "sec:curves",
-     "sec:curves", "sec:rectangles", "sec:ellipses", "sec:text", "sec:text"};
+    {"selectobjects", "newlinepath", "newlinepath", "newcurvepath",
+     "newcurvepath", "rectangles", "ellipses", "newtext", "newtext"};
 }
 

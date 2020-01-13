@@ -191,7 +191,7 @@ public class ConfigUISettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("sec:configureui"));
+      p.add(getResources().createHelpButton("configureuidialog"));
 
       pack();
       setLocationRelativeTo(application_);

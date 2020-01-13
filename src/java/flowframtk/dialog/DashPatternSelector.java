@@ -54,7 +54,7 @@ public class DashPatternSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:dashpattern");
+      application.enableHelpOnButton(help, "dashpattern");
 
       // dash pattern selection panel
 

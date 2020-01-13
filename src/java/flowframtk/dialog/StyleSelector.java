@@ -48,7 +48,7 @@ public class StyleSelector extends JDRSelector
       super(application, application.getResources().getString("styles.title"),
             true, true, true);
 
-      application.enableHelpOnButton(help, "sec:styles");
+      application.enableHelpOnButton(help, "styles");
 
       tabbedPane = new JTabbedPane();
 

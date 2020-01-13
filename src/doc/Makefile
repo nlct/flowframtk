@@ -53,15 +53,17 @@ clean	:
 	rm -f flowframtk-en-GB.toc
 	rm -f flowframtk-en-GB.lof
 	rm -f flowframtk-en-GB.lot
+	rm -f flowframtk-en-GB.ldf
 	rm -f flowframtk-en-GB-boilerplate.tex
 	rm -f flowframtk-en-US.aux
 	rm -f flowframtk-en-US.glg
 	rm -f flowframtk-en-US.glstex
 	rm -f flowframtk-en-US.log
-	rm -f flowframtk-en-US.lof
-	rm -f flowframtk-en-US.lot
 	rm -f flowframtk-en-US.out
 	rm -f flowframtk-en-US.toc
+	rm -f flowframtk-en-US.lof
+	rm -f flowframtk-en-US.lot
+	rm -f flowframtk-en-US.ldf
 	rm -f flowframtk-en-US-boilerplate.tex
 
 squeaky	:

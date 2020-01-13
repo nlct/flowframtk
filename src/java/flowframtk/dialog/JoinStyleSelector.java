@@ -54,7 +54,7 @@ public class JoinStyleSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:joinstyle");
+      application.enableHelpOnButton(help, "joinstyle");
 
       // line width selection panel
 

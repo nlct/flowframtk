@@ -115,7 +115,7 @@ public class ConfigTeXSettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("sec:texconfig"));
+      p.add(getResources().createHelpButton("texconfig"));
 
       pack();
       Dimension dim = getSize();

@@ -98,7 +98,7 @@ public class ZoomSettings extends JDialog
 
       p2.add(application.getResources().createOkayButton(this));
       p2.add(application.getResources().createCancelButton(this));
-      p2.add(application.getResources().createHelpButton("sec:zoom"));
+      p2.add(application.getResources().createHelpButton("zoommenu"));
 
       getContentPane().add(p2, "South");
 

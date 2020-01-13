@@ -49,7 +49,7 @@ public class FillPaintSelector extends JDRSelector
          application.getResources().getString("fillcolour.title"),
       true, false);
 
-      application.enableHelpOnButton(help, "sec:fillcolour");
+      application.enableHelpOnButton(help, "fillpaint");
 
       paintPanel = new PaintPanel(this);
       paintPanel.setBorder(BorderFactory.createLoweredBevelBorder());

@@ -94,7 +94,7 @@ public class SetTransformDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:textmatrix"));
+      p2.add(getResources().createHelpButton("textmatrix"));
 
       getContentPane().add(p2, "South");
    }

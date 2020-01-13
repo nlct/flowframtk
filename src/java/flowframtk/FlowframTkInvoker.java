@@ -2674,7 +2674,8 @@ public class FlowframTkInvoker
            "about.version",
            new String[]{getName(), getVersion()}),
            resources.getString("about.copyright")
-                          +" 2006 Nicola L.C. Talbot",
+              +String.format(" 2006-%s Nicola L.C. Talbot",
+               APP_DATE.substring(0, 4)),
            resources.getStringWithValue("about.disclaimer", getName())
          );
       }

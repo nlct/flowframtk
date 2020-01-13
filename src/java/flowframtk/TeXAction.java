@@ -60,12 +60,12 @@ public class TeXAction extends FlowframTkAction
          case PARSHAPE :
             putValue(Action.NAME, getResources().getString("tex.parshape"));
             frameTitle = getResources().getString("parshape.title");
-            helpID = "sec:parshape";
+            helpID = "parshape";
          break;
          case SHAPEPAR :
             putValue(Action.NAME, getResources().getString("tex.shapepar"));
             frameTitle = getResources().getString("shapepar.title");
-            helpID = "sec:shapepar";
+            helpID = "shapepar";
          break;
       }
 

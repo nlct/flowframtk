@@ -54,7 +54,7 @@ public class FontHAnchorSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:fontanchor");
+      application.enableHelpOnButton(help, "fontanchor");
 
       JPanel panel = new JPanel();
 

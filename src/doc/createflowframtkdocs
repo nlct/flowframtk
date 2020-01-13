@@ -65,18 +65,10 @@ my @current = ();
 my @paragraph = ();
 my %tags    = ();
 my @currenttag= ();
+my @currentattrs= ();
 my $includehtml = 1;
 my $includetex = 1;
 my $boilerplate = 0;
-
-my $languagedefinitions = 
-  "\\def\\applang{$locale}\n"
- ."\\def\\idxpackagename{".&get_label('manual.idxpackage')."}\n"
- ."\\def\\idxenvname{".&get_label('manual.idxenv')."}\n"
- ."\\def\\examplename{".&get_label('manual.example')."}\n"
- ."\\def\\abbrvname{".&get_label('manual.abbreviations')."}\n"
- ."\\def\\continuedcaptiontext{".&get_label('manual.cont.cap.text')."}\n"
- ."\\def\\continuednextpagetext{".&get_label('manual.cont.nextpage.text')."}\n";
 
 my $xmlfile = "$base-$locale.xml";
 
@@ -98,6 +90,7 @@ unless (-e $xmlfile)
 my $texfile = "$base-$locale.tex";
 my $bibfile = "$base-$locale.bib";
 my $boilerplatefile = "$base-$locale-boilerplate.tex";
+my $langdeffile = "$base-$locale.ldf";
 
 my $helpsetdir = "$targetdir/$base/$locale";
 
@@ -162,6 +155,8 @@ $parser->parsefile( $xmlfile );
  
 close $texfd;
 close $bibfd;
+
+&write_language_defs();
 
 # Write helpset files
 
@@ -399,7 +394,7 @@ sub handle_end {
 }
 
 sub get_ref{
-   my ($tag, $content) = @_;
+   my ($case, $tag, $content) = @_;
 
    unless ($tags{$tag})
    {
@@ -416,6 +411,11 @@ sub get_ref{
    else
    {
       $text = $tags{$tag}->{Text};
+   }
+
+   if ($case eq 'ucfirst')
+   {
+      $text = ucfirst($text);
    }
 
    "<a href=\"$ref\">$text</a>";
@@ -491,7 +491,7 @@ sub start_preamble{
 \\usepackage[colorlinks]{hyperref}
 \\usepackage[record=nameref]{glossaries-extra}
 \\usepackage{glossaries-prefix}
-$languagedefinitions
+\\input{$langdeffile}
 
 \\newcommand{\\accsupp}[2]{\\BeginAccSupp{unicode,ActualText={#1}}#2\\EndAccSupp{}}
 
@@ -1083,6 +1083,20 @@ sub start_p{
       $endtag='\\glspar ';
    }
 
+   if ($attrs{tag})
+   {
+      my $text = ($attrs{tagtext} ? $attrs{tagtext} : $attrs{tag});
+
+      if (!defined($terms{tag}) and $#nodes > -1)
+      {
+         $terms{$attrs{tag}}->{Ref} = $nodes[$#nodes]->{Tag} . ".html#" . $attrs{tag};
+         $terms{$attrs{tag}}->{Text} = $text;
+      }
+
+      &handle_html("<a name=\"", $attrs{tag}, "\"></a>");
+      &handle_tex("\\plabel{", $attrs{tag}, "}{$text}");
+   }
+
    &handle_html("<p");
 
    if ($attrs{align})
@@ -1665,7 +1679,7 @@ sub start_seealso{
 
    foreach my $tag (@tags)
    {
-      &handle_html("<li><ref tag=\"$tag\"></ref>");
+      &handle_html("<li><ref case=\"none\" tag=\"$tag\"></ref>");
       &handle_tex("\\item \\nameref{$tag}\n");
    }
 
@@ -2627,6 +2641,20 @@ sub start_ref{
         $expat->current_line, "\n";
    }
 
+   if ($attrs{case})
+   {
+      unless ($attrs{case}=~/^none|ucfirst$/)
+      {
+         die "Invalid 'case' attribute '", $attrs{case}, "' for 'ref' element on line ",
+           $expat->current_line, "\n";
+      }
+   }
+   else
+   {
+      $attrs{case} = 'none';
+   }
+
+   push @currentattrs, \%attrs;
    push @currenttag, $attrs{tag};
    push @current, 'Ref';
    $texelements{Ref} = '';
@@ -2636,6 +2664,7 @@ sub start_ref{
 sub end_ref{
    my ($expat) = @_;
 
+   my $attrs = pop @currentattrs;
    my $tag = pop @currenttag;
    pop @current; 
 
@@ -2644,21 +2673,28 @@ sub end_ref{
 
    if ($texcontent)
    {
-      &handle_tex("\\hyperref[{$tag}]{$texcontent}");
+      if ($attrs->{case} eq 'ucfirst')
+      {
+         &handle_tex("\\hyperref[{$tag}]{\\makefirstuc{$texcontent}}");
+      }
+      else
+      {
+         &handle_tex("\\hyperref[{$tag}]{$texcontent}");
+      }
    }
    else
    {
-      &handle_tex("\\autoref{", $tag, "}");
+      if ($attrs->{case} eq 'ucfirst')
+      {
+         &handle_tex("\\Docautoref{", $tag, "}");
+      }
+      else
+      {
+         &handle_tex("\\docautoref{", $tag, "}");
+      }
    }
 
-   if ($htmlcontent)
-   {
-      &handle_html("<ref tag=\"$tag\">", $htmlcontent, "</ref>");
-   }
-   else
-   {
-      &handle_html("<ref tag=\"$tag\"></ref>");
-   }
+   &handle_html("<ref case=\"", $attrs->{case}, "\" tag=\"$tag\">", $htmlcontent, "</ref>");
 }
  
 sub start_opt{
@@ -3462,6 +3498,8 @@ sub load_dict{
    return %dict;
 }
 
+# HTMLEditorKit only provides limited CSS support.
+# See API for javax.swing.text.html.CSS
 sub write_css{
    my $cssfd;
 
@@ -3737,7 +3775,7 @@ _END_TOC_HEAD
 
       my $content = $node->{Contents};
 
-      $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
+      $content=~s/<ref case="(none|ucfirst)" tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2,$3)/eg;
 
       print $htmlfd "<div>$content</div>";
 
@@ -3745,7 +3783,7 @@ _END_TOC_HEAD
       {
          $content = $node->{Footnotes};
 
-         $content=~s/<ref tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2)/eg;
+         $content=~s/<ref case="(none|ucfirst)" tag="([^"]+)">(.*?)<\/ref>/&get_ref($1,$2,$3)/eg;
 
          print $htmlfd "<hr />$content";
       }
@@ -3905,6 +3943,44 @@ sub hs_map_id{
          &hs_map_id($mapfd, $hash->{$tag}->{Children});
       }
    }
+}
+
+sub write_language_defs{
+
+   open my $fd, ">:encoding($encoding_file)", $langdeffile
+     or die "Can't open language def file '$langdeffile' $!\n";
+
+   print $fd "\\def\\applang{$locale}\n";
+   print $fd "\\def\\idxpackagename{", &get_label('manual.idxpackage')."}\n";
+   print $fd "\\def\\idxenvname{", &get_label('manual.idxenv')."}\n";
+   print $fd "\\def\\examplename{", &get_label('manual.example')."}\n";
+   print $fd "\\def\\abbrvname{", &get_label('manual.abbreviations'), "}\n";
+   print $fd "\\def\\continuedcaptiontext{", &get_label('manual.cont.cap.text'), "}\n";
+   print $fd "\\def\\continuednextpagetext{",
+      &get_label('manual.cont.nextpage.text'), "}\n";
+
+   if (defined ($dict{'manual.page'}))
+   {
+      print $fd "\\def\\plabelautorefname{" . $dict{'manual.page'} . "}\n";
+   }
+
+   foreach my $counter (keys %counters)
+   {
+      if (defined ($dict{"manual.$counter"}))
+      {
+         print $fd "\\def\\${counter}autorefname{" . $dict{"manual.$counter"} . "}\n";
+      }
+   }
+
+   foreach my $counter (keys %section_levels)
+   {
+      if (defined ($dict{"manual.$counter"}))
+      {
+         print $fd "\\def\\${counter}autorefname{" . $dict{"manual.$counter"} . "}\n";
+      }
+   }
+
+   close $fd;
 }
 
 sub arg_placeholder{

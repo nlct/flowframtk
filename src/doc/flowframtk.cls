@@ -13,6 +13,7 @@
 \RequirePackage{graphicx}
 \RequirePackage[x11names]{xcolor}
 \RequirePackage{pgf}
+\RequirePackage[nospace]{varioref}
 
 \PassOptionsToPackage{stylemods={tree,bookindex}}{glossaries-extra}
 \PassOptionsToPackage{linkcolor=Blue4,urlcolor=DeepPink4}{hyperref}
@@ -459,5 +460,60 @@ y+s_yx
 }
 
 \AtBeginDocument{\providecommand{\accsupp}[2]{#2}}
+
+\newcounter{plabel}
+\newcommand{\plabel}[2]{%
+ \def\@currentlabelname{#2}%
+ \refstepcounter{plabel}%
+ \label{#1}%
+}
+
+\newcommand{\plabelautorefname}{page}
+
+\newcommand*{\docautoref}[1]{%
+  \ifcsdef{r@#1}%
+  {%
+     \expandafter\doc@getref\csname r@#1\endcsname
+     \ifcsdef{\doc@currentreftype autorefname}
+     {\def\docref@text{\csname \doc@currentreftype autorefname\endcsname}}%
+     {%
+       \ifcsdef{\doc@currentreftype name}%
+       {\def\docref@text{\csname \doc@currentreftype name\endcsname}}%
+       {\let\docref@text\doc@currentreftype}%
+     }%
+     \doc@autoref{\docref@text}{#1}%
+  }%
+  {\ref{#1}}%
+}
+
+\newcommand*{\Docautoref}[1]{%
+  \ifcsdef{r@#1}%
+  {%
+     \expandafter\doc@getref\csname r@#1\endcsname
+     \ifcsdef{\doc@currentreftype autorefname}
+     {\def\docref@text{\csname \doc@currentreftype autorefname\endcsname}}%
+     {%
+       \ifcsdef{\doc@currentreftype name}%
+       {\def\docref@text{\csname \doc@currentreftype name\endcsname}}%
+       {\let\docref@text\doc@currentreftype}%
+     }%
+     \doc@autoref{\xmakefirstuc\docref@text}{#1}%
+  }%
+  {\ref{#1}}%
+}
+
+\newcommand*{\doc@autoref}[2]{%
+  \ifdefstring{\doc@currentreftype}{plabel}%
+  {\hyperlink{\doc@currentrefanchor}{{#1~\doc@currentrefpage}}}%
+  {\hyperlink{\doc@currentrefanchor}{#1}~\vref{#2}}%
+}
+
+\newcommand*{\doc@getref}[1]{%
+  \edef\doc@currentrefpage{\expandafter \@secondoffive #1\@empty \@empty \@empty}%
+  \edef\doc@currentrefanchor{\expandafter \@fourthoffive #1\@empty \@empty \@empty}%
+  \expandafter\doc@@getreftype\doc@currentrefanchor.\\%
+}
+
+\def\doc@@getreftype#1.#2\\{\def\doc@currentreftype{#1}}
 
 \endinput

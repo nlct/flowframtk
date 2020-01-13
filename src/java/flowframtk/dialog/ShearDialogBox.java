@@ -77,7 +77,7 @@ public class ShearDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:shear"));
+      p2.add(getResources().createHelpButton("shearobjects"));
 
       getContentPane().add(p2, "South");
 

@@ -103,7 +103,7 @@ public class DisplayPageDialog extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:displaypage"));
+      p2.add(getResources().createHelpButton("displaypage"));
 
       getContentPane().add(p2, "South");
 

@@ -133,7 +133,7 @@ public class FLFSetTypeblock extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:typeblock"));
+      p2.add(getResources().createHelpButton("typeblock"));
 
       getContentPane().add(p2, "South");
 

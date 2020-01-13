@@ -56,7 +56,7 @@ public class LineWidthSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:penwidth");
+      application.enableHelpOnButton(help, "penwidth");
 
       // line width selection panel
 

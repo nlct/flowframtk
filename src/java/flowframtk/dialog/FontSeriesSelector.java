@@ -54,7 +54,7 @@ public class FontSeriesSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:fontseries");
+      application.enableHelpOnButton(help, "fontseries");
 
       // font panel
 

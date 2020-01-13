@@ -54,7 +54,7 @@ public class FontVAnchorSelector extends JDRSelector
       setSize(dim);
 */
 
-      application.enableHelpOnButton(help, "sec:fontanchor");
+      application.enableHelpOnButton(help, "fontanchor");
 
       // anchor panel
 

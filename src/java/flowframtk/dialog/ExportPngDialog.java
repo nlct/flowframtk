@@ -61,7 +61,7 @@ public class ExportPngDialog extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:exportpng"));
+      p2.add(getResources().createHelpButton("exportpng"));
 
       getContentPane().add(p2, "South");
 

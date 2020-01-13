@@ -189,7 +189,7 @@ public class BitmapProperties extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:bitmapproperties"));
+      p2.add(getResources().createHelpButton("bitmapprops"));
 
       getContentPane().add(p2, "South");
 

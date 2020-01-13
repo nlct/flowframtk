@@ -50,7 +50,7 @@ public class LinePaintSelector extends JDRSelector
             application.getResources().getString("linecolour.title"),
             true, false);
 
-      application.enableHelpOnButton(help, "sec:linecolour");
+      application.enableHelpOnButton(help, "linepaint");
 
       // JDRLine colour selection panel
 

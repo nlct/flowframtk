@@ -156,7 +156,7 @@ public class PatternDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("sec:pattern"));
+      p2.add(getResources().createHelpButton("patterns"));
 
       getContentPane().add(p2, "South");
 
