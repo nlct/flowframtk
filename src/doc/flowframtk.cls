@@ -44,9 +44,11 @@
 
 \newcommand{\envnoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 
+\newcommand{\envvarnoindex}[1]{\texorpdfstring{\texttt{#1}}{#1}}
+
 \newcommand{\extnoindex}[1]{\texorpdfstring{\texttt{.#1}}{.#1}}
 
-\newcommand{\optnoindex}[1]{\texorpdfstring{\texttt-\/-#1}{--#1}}
+\newcommand{\optnoindex}[1]{\texorpdfstring{\texttt{-#1}}{-#1}}
 
 \newcommand*{\titleref}[2]{\htmlref{#1}{#2}}
 
@@ -65,6 +67,16 @@
 \newcommand*{\underscore}{\_}
 \newcommand*{\textpercent}{\%}
 \newcommand*{\texthash}{\#}
+
+\newenvironment{prompt}%
+{%
+ \par\smallskip\par
+ \flushleft
+ \ttfamily
+ \everypar{\$ }%
+ \obeylines\ignorespaces}%
+{\par\smallskip\ignorespacesafterend}
+
 % Syntax: \floatconts{label}{contents}{caption}
 \newcommand{\floatconts}[3]{%
   \@ifundefined{\@captype conts}{\tableconts{#1}{#2}{#3}}%

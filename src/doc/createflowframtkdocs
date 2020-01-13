@@ -203,7 +203,9 @@ sub handle_semantic_term{
 
    if (defined($attrs{index}) and not $attrs{index})
    {
-      &handle_tex("\\${type}noindex{", $attrs{$tagfield}, '}');
+      my $tex = $attrs{$tagfield};
+      $tex=~s/_/\\_/g;
+      &handle_tex("\\${type}noindex{$tex}");
       &handle_html($text);
    }
    else
@@ -234,6 +236,9 @@ sub hs_index_term{
       my $tex_name = $term;
       my $tex_text = $term;
 
+      $tex_name=~s/_/\\_/g;
+      $tex_text=~s/_/\\_/g;
+
       if ($tag=~/^sty_/)
       {
          $tex_name=~s/^(.*)(\.sty)?$/\\stynoindex{$1} package/;
@@ -248,6 +253,11 @@ sub hs_index_term{
       {
          $tex_name = "\\envnoindex{$tex_name} environment";
          $tex_text = "\\envnoindex{$tex_text}";
+      }
+      elsif ($tag=~/^envvar_/)
+      {
+         $tex_name = "\\envvarnoindex{$tex_name} environment variable";
+         $tex_text = "\\envvarnoindex{$tex_text}";
       }
       elsif ($tag=~/^(cs|cli|opt|ext)_/)
       {
@@ -499,6 +509,7 @@ sub start_preamble{
 \\glsxtrnewgls{sty_}{\\sty}
 \\glsxtrnewgls{cls_}{\\cls}
 \\glsxtrnewgls{env_}{\\env}
+\\glsxtrnewgls{envvar_}{\\envvar}
 \\glsxtrnewgls{ext_}{\\ext}
 \\glsxtrnewgls{opt_}{\\opt}
 
@@ -1318,7 +1329,7 @@ sub keypress{
 
    my $init = '';
 
-   if ($pre and $pre ne 'none')
+   if (defined($pre) and $pre ne 'none')
    {
       $init = "\\def\\prekeystroke{$pre}";
    }
@@ -1327,7 +1338,7 @@ sub keypress{
       $init = "\\def\\prekeystroke{}";
    }
 
-   if ($post eq 'none')
+   if (defined($post) and $post eq 'none')
    {
       $init .= "\\def\\postkeystroke{}";
    }
@@ -1761,20 +1772,64 @@ sub end_alltt{
    &handle_tex("\\end{alltt}");
 }
 
+sub start_prompt{
+   my ($expat, %attrs) = @_;
+
+   &handle_html('<pre>');
+
+   &handle_tex("\\begin{prompt}");
+}
+
+sub end_prompt{
+   my ($expat) = @_;
+
+   &handle_html('</pre>');
+
+   &handle_tex("\\end{prompt}");
+}
+
 sub start_verb{
    my ($expat, %attrs) = @_;
 
    &handle_html('<pre style="display: inline;">');
 
-   &handle_tex("\\verb|");
+   &handle_tex("\\verb");
+
+   &check_boolean_attribute_value('visiblespace', $expat, \%attrs);
+
+   if ($attrs{visiblespace})
+   {
+      &handle_tex('*');
+   }
+
+   if (defined($attrs{char}))
+   {
+      &handle_tex($attrs{char});
+   }
+   else
+   {
+      &handle_tex('|');
+   }
+
+   push @currentattrs, \%attrs;
 }
 
 sub end_verb{
    my ($expat) = @_;
 
+   my $attrs = pop @currentattrs;
+
    &handle_html('</pre>');
 
-   &handle_tex("|");
+   if (defined($attrs->{char}))
+   {
+      &handle_tex($attrs->{char});
+   }
+   else
+   {
+      &handle_tex('|');
+   }
+
 }
 
 sub start_verbinput{
@@ -1898,7 +1953,17 @@ sub start_ldots{
 
    &handle_html('&#x2026;');
 
-   &handle_tex("\\ldots ");
+   &check_boolean_attribute_value('space', $expat, \%attrs);
+
+   if ($attrs{space})
+   {
+      &handle_tex("\\ldots\\ ");
+   }
+   else
+   {
+      &handle_tex("\\ldots ");
+   }
+
 }
 
 sub end_ldots{
@@ -2141,9 +2206,16 @@ sub start_app{
 
    my $text = &get_label($tag, \%attrs, $expat);
 
-   &handle_html("<span class=\"app\">$text</span>");
-
-   &handle_tex("\\appfmt{$text}");
+   if (defined($attrs{class}) and $attrs{class} eq 'cli')
+   {
+      $attrs{name} = lc($text);
+      &handle_semantic_term('name', 'cli', \&firstofone, $expat, %attrs);
+   }
+   else
+   {
+      &handle_html("<span class=\"app\">$text</span>");
+      &handle_tex("\\appfmt{$text}");
+   }
 }
 
 sub end_app{
@@ -2782,7 +2854,7 @@ sub start_opt{
 
    $terms{options}->{Children}->{$tag}->{Parent} = 'options';
 
-   &hs_index_term($tag, "<span class=\"opt\">--$text</span>", $text, 
+   &hs_index_term($tag, "<span class=\"opt\">-$text</span>", $text, 
       $terms{options}->{Children});
 
    &handle_tex("\\opt{", $attrs{tag}, "}");
@@ -2833,6 +2905,16 @@ sub start_env{
 }
 
 sub end_env{
+   my ($expat) = @_;
+}
+
+sub start_envvar{
+   my ($expat, %attrs) = @_;
+
+   &handle_semantic_term('name', 'envvar', \&firstofone, $expat, %attrs);
+}
+
+sub end_envvar{
    my ($expat) = @_;
 }
 
@@ -3624,6 +3706,10 @@ sub write_css{
    font-family: monospace;
 }
 .env
+{
+   font-family: monospace;
+}
+.envvar
 {
    font-family: monospace;
 }

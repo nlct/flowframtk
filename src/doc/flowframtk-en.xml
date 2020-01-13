@@ -1158,8 +1158,46 @@ java -jar flowframtk-<appversion/>-installer.jar
    </float>
    </node>
    <node type="chapter" tag="settings" title="Settings">
+   <p>
+   You can customise the appearance of <app/>'s main window either
+   using the <ref tag="cmdargs">command line arguments</ref> or
+   using the <ref tag="settingsmenu">settings menu</ref>.
+   </p>
    </node>
    <node type="section" tag="cmdargs" title="Command Line Arguments">
+   <p>
+   <app/> can be invoked from a command prompt using:
+   </p>
+   <prompt>
+<app class="cli"/> <meta>option-list</meta> <meta>filename 1</meta> <ldots space="true"/> <meta>filename N</meta>
+   </prompt>
+   <p>
+   (You'll need to add <app/>'s <file>bin</file> subdirectory to your
+    <envvar name="PATH"/> environment variable.)
+   </p>
+   <p>
+   Note that <meta>option-list</meta> and the filenames may be omitted.
+   Each filename must be either a <term tag="jdr"/> or an <term tag="ajr"/> file. 
+   This script uses the environment variable <envvar name="JDR_JVMOPTS"/> to pass 
+   options to the <acr tag="jvm"/>.  For example, if you want to run <app/> with 
+   a maximum size of 128Mb for the memory allocation pool, you can set
+   <envvar name="JDR_JVMOPTS"/> to <verb>-Xmx128m</verb>:
+   </p>
+   <prompt>
+setenv <envvar name="JDR_JVMOPTS"/> -Xmx128m
+   </prompt>
+   <p>
+   The <app class="cli"/> script also uses the environment variable
+   <envvar name="FLOWFRAMTK_OPTS"/> to pass options to <app/>.<footnote>If you have 
+   previously used Jpgfdraw, the <envvar name="JPGFDRAW_OPTS"/> environment variable 
+   will also be recognised, but any settings in <envvar name="FLOWFRAMTK_OPTS"/> will 
+   override those in <envvar name="JPGFDRAW_OPTS"/>.</footnote> For example, if you 
+   always want <app/> to start up with the grid showing, you can set
+   <envvar name="FLOWFRAMTK_OPTS"/> to <opt noindex="true" tag="show_grid"/>:
+   </p>
+   <prompt>
+setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt noindex="true" tag="show_grid"/>
+   </prompt>
    </node>
    <node type="section" tag="settingsmenu" title="The Settings Menu">
    </node>
