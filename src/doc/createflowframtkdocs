@@ -1277,6 +1277,9 @@ sub start_kbd{
       die "element 'kbd' missing 'key' attribute\n";
    }
 
+   my $pre = $attrs{pre};
+   my $post = $attrs{post};
+
    my $key = ucfirst($attrs{key});
 
    &check_boolean_attribute_value('shift', $expat, \%attrs);
@@ -1285,30 +1288,58 @@ sub start_kbd{
 
    if ($attrs{'alt'})
    {
-      &keypress('Alt');
+      &keypress('Alt', $pre);
       &handle_tex('+');
       &handle_html('+');
+      undef $pre if ($pre);
    }
 
    if ($attrs{'ctrl'})
    {
-      &keypress('Ctrl');
+      &keypress('Ctrl', $pre);
       &handle_tex('+');
       &handle_html('+');
+      undef $pre if ($pre);
    }
 
    if ($attrs{'shift'})
    {
-      &keypress('Shift');
+      &keypress('Shift', $pre);
       &handle_tex('+');
       &handle_html('+');
+      undef $pre if ($pre);
    }
 
-   &keypress($key);
+   &keypress($key, $pre, $post);
 }
 
 sub keypress{
-   my ($key) = @_;
+   my ($key, $pre, $post) = @_;
+
+   my $init = '';
+
+   if ($pre and $pre ne 'none')
+   {
+      $init = "\\def\\prekeystroke{$pre}";
+   }
+   elsif ($skipnewline or $pre)
+   {
+      $init = "\\def\\prekeystroke{}";
+   }
+
+   if ($post eq 'none')
+   {
+      $init .= "\\def\\postkeystroke{}";
+   }
+   elsif ($post)
+   {
+      $init .= "\\def\\postkeystroke{$post}";
+   }
+
+   if ($init)
+   {
+      &handle_tex("{$init");
+   }
 
    if ($key eq 'Space')
    {
@@ -1337,19 +1368,19 @@ sub keypress{
    elsif ($key eq 'Pgup')
    {
       my $text = &get_label("manual.kbd.Pageup");
-      &handle_tex("\\keystroke{$text \$\\uparrow\$}");
+      &handle_tex("\\accsupp{$text}{\\keystroke{$text \$\\uparrow\$}}");
       &handle_html("<kbd>$text &#x2191;</kbd>");
    }
    elsif ($key eq 'Pgdn')
    {
       my $text = &get_label("manual.kbd.Pagedown");
-      &handle_tex("\\keystroke{$text \$\\downarrow\$}");
+      &handle_tex("\\accsupp{$text}{\\keystroke{$text \$\\downarrow\$}}");
       &handle_html("<kbd>$text &#x2193;</kbd>");
    }
    elsif ($key eq 'Shift')
    {
       my $text = &get_label("manual.kbd.Shift");
-      &handle_tex("\\keystroke{$text \$\\Uparrow\$}");
+      &handle_tex("\\accsupp{$text}{\\keystroke{$text \$\\Uparrow\$}}");
       &handle_html("<kbd>$text &#x21D1;</kbd>");
    }
    elsif ($key eq 'Up')
@@ -1386,6 +1417,12 @@ sub keypress{
       &handle_tex("\\keystroke{$key}");
       &handle_html("<kbd>$key</kbd>");
    }
+
+   if ($init)
+   {
+      &handle_tex("}");
+   }
+
 }
 
 sub end_kbd{
@@ -2211,14 +2248,15 @@ sub start_mnemonic{
    {
       my @split = split /\./, $attrs{tag};
 
-      &keypress('Alt');
+      &keypress('Alt', $attrs{pre});
 
       my $sep = '+';
       my $parent = '';
       my $skipping = 0;
 
-      foreach my $subtag (@split)
+      for (my $idx = 0; $idx <= $#split; $idx++)
       {
+         my $subtag = $split[$idx];
          unless (defined($dict{"$parent$subtag.mnemonic"}))
          {
             $parent .= $subtag.'.';
@@ -2229,7 +2267,8 @@ sub start_mnemonic{
          &handle_html($sep);
          &handle_tex($sep);
 
-         &keypress(&get_label("$parent$subtag.mnemonic", \%attrs, $expat));
+         &keypress(&get_label("$parent$subtag.mnemonic", \%attrs, $expat), '',
+           $idx == $#split ? $attrs{post} : '');
 
          $sep = ' ';
 
@@ -2245,7 +2284,8 @@ sub start_mnemonic{
    }
    else
    {
-      &keypress(&get_label($attrs{tag}.'.mnemonic', \%attrs, $expat));
+      &keypress(&get_label($attrs{tag}.'.mnemonic', \%attrs, $expat), 
+         $attrs{pre}, $attrs{post});
    }
 }
 
@@ -2967,12 +3007,23 @@ sub start_float{
 
    if ($attrs{long})
    {
+      if ($attrs{tabcolsep})
+      {
+         &handle_tex("\\begingroup\\setlength\\tabcolsep{",
+            $attrs{tabcolsep}, "}");
+      }
       &handle_tex("\\begin{longtable}{", $specs, '}');
    }
    else
    {
-      &handle_tex("\\begin{", $attrs{type}, "}$pos\n", 
-        "\\floatconts{", $attrs{tag}, "}{");
+      &handle_tex("\\begin{", $attrs{type}, "}$pos\n");
+
+      if ($attrs{tabcolsep})
+      {
+         &handle_tex("\\setlength\\tabcolsep{", $attrs{tabcolsep}, "}");
+      }
+
+      &handle_tex("\\floatconts{", $attrs{tag}, "}{");
 
       if ($attrs{type} eq 'table')
       {
@@ -2991,6 +3042,11 @@ sub end_float{
    if ($attrs->{long})
    {
       &handle_tex('\\end{longtable}');
+
+      if ($attrs->{tabcolsep})
+      {
+         &handle_tex("\\endgroup ");
+      }
    }
    else
    {
@@ -3317,6 +3373,8 @@ sub start_td{
    }
 
    $tabular_specs[$#tabular_specs]->{column} += $colspan;
+
+   $skipnewline = 1;
 }
 
 sub end_td{

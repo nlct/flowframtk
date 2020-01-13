@@ -14,6 +14,7 @@
 \RequirePackage[x11names]{xcolor}
 \RequirePackage{pgf}
 \RequirePackage[nospace]{varioref}
+\RequirePackage{keystroke}
 
 \PassOptionsToPackage{stylemods={tree,bookindex}}{glossaries-extra}
 \PassOptionsToPackage{linkcolor=Blue4,urlcolor=DeepPink4}{hyperref}
@@ -515,5 +516,28 @@ y+s_yx
 }
 
 \def\doc@@getreftype#1.#2\\{\def\doc@currentreftype{#1}}
+
+\newcommand{\prekeystroke}{\ }
+\newcommand{\postkeystroke}{\ }
+
+\renewcommand{\suse@keystr@ke}[1]{\prekeystroke %<--modified
+  \ifvmode\leavevmode\fi{\obeyspaces%
+  \global\setbox\suse@key=\hbox{{\keystroke@font\strut#1}}%
+  \@tempdima=0.35ex%
+  \advance\@tempdima by \dp\suse@key%
+  \@tempdimb=\wd\suse@key%
+  \@tempdimc=\ht\suse@key%
+  \ifdim\@tempdimb<\@tempdimc\@tempdimb=\@tempdimc\fi
+  \advance\@tempdimc by 1.16ex%
+  \lower\@tempdima\hbox{\resizebox*{!}{\@tempdimc}{\copy\keystroke@left}}%     
+  \ignorespaces%
+  \hbox to 0pt{\unhbox\suse@key\hss}%    
+  \ignorespaces%
+  \lower\@tempdima\hbox to \@tempdimb{\hss%
+    \resizebox*{\@tempdimb}{\@tempdimc}{\copy\keystroke@middle}}%
+  \ignorespaces%
+  \lower\@tempdima\hbox{\resizebox*{!}{\@tempdimc}{\copy\keystroke@right}}%    
+}\postkeystroke %<--modified
+}
 
 \endinput

@@ -472,7 +472,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    the <dict tag="label.okay"/> button except when the focus is with a component that
    interprets <kbd key="return"/> for some other purpose (such as
    a<nbsp/><term tag="dropdown"/>), in which case you need to use 
-   <kbd shift="true" key="return"/>.
+   <kbd shift="true" key="return" post="none"/>.
    </p>
    <p>
    Within editable text fields, you can use <kbd ctrl="true" key="A"/> to select all the
@@ -488,14 +488,15 @@ java -jar flowframtk-<appversion/>-installer.jar
    <kbd key="esc"/> cancels a displayed menu, so if you use it to dismiss
    a menu while you had a <term tag="path"/> under construction, the entire
    path could be discarded, which is undesirable. Therefore the abandon
-   path accelerator is now <kbd shift="true" key="esc"/>. The <kbd key="F1"/> key is now
+   path accelerator is now <kbd shift="true" key="esc" post="none"/>. The <kbd key="F1"/> key is now
    only for the main manual help button. The help buttons in dialog windows
    and the preamble editor are activated with <kbd shift="true" key="F1"/> and the
    help button is the status bar is activated with <kbd ctrl="true" key="F1"/> (otherwise 
    the main help button, preamble editor help button and
    status bar help button would conflict).
    </p>
-   <float type="table" long="true" tag="tab:access" spec="lp{50%}l">
+   <seealso tags="configureuidialog,selectobjects,newobjects,accesstutorial"/>
+   <float type="table" long="true" tag="tab:access" spec="lp{50%}p{20%}" tabcolsep="2pt">
    <caption>Keyboard Accelerators and Menu Mnemonics</caption>
    <tableheader>
     <tr>
@@ -850,7 +851,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    <tr prohibitbreak="true">
      <td></td>
      <td indent="2em">Move selected <term tag="object"/> to the <term tag="front"/></td>
-     <td><mnemonic shift="true" tag="edit.front"/></td>
+     <td><mnemonic menu="true" tag="edit.front"/></td>
    </tr>
    <tr prohibitbreak="true">
      <td></td>
@@ -1044,6 +1045,116 @@ java -jar flowframtk-<appversion/>-installer.jar
     <tr><td>Key</td><td>Function</td></tr>
    </tableheader>
    <tablefooter/>
+   <tr>
+     <td><kbd ctrl="true" key="F1"/></td>
+     <td>Displays alternative text for the toolbar button
+      that currently has the focus.</td>
+   </tr>
+   <tr>
+     <td><kbd key="F6"/></td>
+     <td>Moves the focus between the navigation pane and content pane.</td>
+   </tr>
+   <tr>
+     <td><kbd key="tab"/></td>
+     <td>Traverses <dict tag="manual.through"/> the viewer.</td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="tab"/></td>
+     <td>Traverses backwards <dict tag="manual.through"/> the viewer.</td>
+   </tr>
+   <tr>
+     <td><kbd key="space"/></td>
+     <td>Activates the toolbar button with the current focus.</td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="space"/></td>
+     <td>Follows a link in the content pane.</td>
+   </tr>
+   <tr>
+     <td><kbd key="F8"/></td>
+     <td>Selects the splitter bar between the navigator pane
+         and the content pane.</td>
+   </tr>
+   <tr>
+     <td>Left/Right Arrow</td>
+     <td>If the splitter bar is selected:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Moves the splitter bar to the left/right.</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>If in the navigator pane:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Moves to another navigator tab.</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>If in the viewer's toolbar:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Moves the focus to the next toolbar button.</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>If in the content pane:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Moves one character to the left/right.</td>
+   </tr>
+   <tr>
+     <td>Up/Down Arrow</td>
+     <td>If the splitter bar is selected:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Moves the splitter bar to the left/right.</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>If in the navigator pane:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Selects the previous/next item in the list.</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td>If in the content pane:</td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Moves the focus to the previous/next line.</td>
+   </tr>
+   <tr>
+     <td><kbd key="home"/></td>
+     <td>Selects the first item in the navigator list.</td>
+   </tr>
+   <tr>
+     <td><kbd key="end"/></td>
+     <td>Selects the last item in the navigator list.</td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="home"/></td>
+     <td>Selects the first line in the content pane.</td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="end"/></td>
+     <td>Selects the last line in the content pane.</td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="T"/></td>
+     <td>Shifts focus to the next link in the content pane.</td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="T"/></td>
+     <td>Shifts the focus to the previous link in the content pane.</td>
+   </tr>
    </float>
    </node>
    <node type="chapter" tag="settings" title="Settings">
