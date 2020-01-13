@@ -483,8 +483,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    and you can use <kbd ctrl="true" key="V"/> to paste text from the clipboard into the
    text field.
    </p>
-   <p icon="warning">
-   Note that a few of the accelerators used by JpgfDraw have been
+   <p icon="warning">Note that a few of the accelerators used by JpgfDraw have been
    changed in <app/>, as they caused a conflict. For example,
    <kbd key="esc"/> cancels a displayed menu, so if you use it to dismiss
    a menu while you had a <term tag="path"/> under construction, the entire
@@ -759,6 +758,283 @@ java -jar flowframtk-<appversion/>-installer.jar
    <tr>
      <td><kbd ctrl="true" key="F11"/></td>
      <td>Saves all images to the <ref tag="configdir">configuration directory</ref></td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="F1"/></td>
+     <td>Display subject help (help buttons in dialog windows or preamble editor)</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="F2"/></td>
+     <td>Lock/unlock grid</td>
+     <td><mnemonic menu="true" tag="settings.grid.lock"/></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="F5"/></td>
+     <td>Select next <term tag="object"/> in the <term tag="stack"/> (from the
+     <term tag="front"/>), and deselect all others</td>
+     <td><mnemonic menu="true" tag="navigate.select"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd shift="true" key="F6"/></td>
+     <td>Select mode:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Add next <term tag="object"/> in the <term tag="stack"/>
+     (from the <term tag="front"/>) to selection</td>
+     <td><mnemonic menu="true" tag="navigate.add_next"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td>Edit mode:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">select previous <term tag="controlpt"/></td>
+     <td><kbd key="F3"/> <mnemonic tag="editpath.prev_control"/></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="F7"/></td>
+     <td><fndagmark/>Find selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="navigate.find"/></td>
+   </tr>
+   <tr>
+     <td><kbd shift="true" key="F11"/></td>
+     <td>Displays debugging information</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="F11"/></td>
+     <td>Writes log file in the <ref tag="configdir">configuration directory</ref></td>
+     <td></td>
+   </tr>
+   <tr rule="true">
+     <td><kbd alt="true" key="F4"/></td>
+     <td>Quit</td>
+     <td><mnemonic menu="true" tag="file.quit"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="A"/></td>
+     <td>Select all <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="edit.select_all"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="B"/></td>
+     <td>Move selected <plural tag="object"/> to the <term tag="back"/></td>
+     <td><mnemonic menu="true" tag="edit.back"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="C"/></td>
+     <td>Copy selected <plural tag="object"/> to clipboard</td>
+     <td><mnemonic menu="true" tag="edit.copy"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="D"/></td>
+     <td>Convert outline to a <term tag="path"/></td>
+     <td><mnemonic menu="true" tag="transform.convert"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="E"/></td>
+     <td>Switch to ellipse tool</td>
+     <td><mnemonic menu="true" tag="tools.ellipse"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd ctrl="true" key="F"/></td>
+     <td>Select mode:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Move selected <term tag="object"/> to the <term tag="front"/></td>
+     <td><mnemonic shift="true" tag="edit.front"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td><TeX/> editor:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Find text</td>
+     <td><mnemonic menu="true" tag="texeditor.search.find"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd ctrl="true" key="G"/></td>
+     <td>Select mode:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Group selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="transform.group"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td><TeX/> editor:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Find again</td>
+     <td><mnemonic menu="true" tag="texeditor.search.find_again"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td><kbd ctrl="true" key="H"/></td>
+     <td>Select mode:</td>
+     <td></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td indent="2em">Shear selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="transform.shear"/></td>
+   </tr>
+   <tr prohibitbreak="true">
+     <td></td>
+     <td><TeX/> editor:</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td></td>
+     <td indent="2em">Find and Replace text</td>
+     <td><mnemonic menu="true" tag="texeditor.search.replace"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="I"/></td>
+     <td>Edit selected <term tag="path"/></td>
+     <td><mnemonic menu="true" tag="edit.path.edit"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="J"/></td>
+     <td>Merge selected <plural tag="path"/></td>
+     <td><mnemonic menu="true" tag="transform.merge"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="K"/></td>
+     <td>Switch to open curve tool</td>
+     <td><mnemonic menu="true" tag="tools.open_curve"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="L"/></td>
+     <td>Switch to open line tool</td>
+     <td><mnemonic menu="true" tag="tools.open_line"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="M"/></td>
+     <td>Gap function</td>
+     <td><mnemonic menu="true" tag="tools.gap"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="N"/></td>
+     <td>New canvas</td>
+     <td><mnemonic menu="true" tag="file.new"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="O"/></td>
+     <td>Open <term tag="jdr"/> or <term tag="jdr"/> file</td>
+     <td><mnemonic menu="true" tag="file.open"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="P"/></td>
+     <td>Switch to select tool</td>
+     <td><mnemonic menu="true" tag="tools.select"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="Q"/></td>
+     <td>Quit</td>
+     <td><mnemonic menu="true" tag="file.quit"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="R"/></td>
+     <td>Switch to rectangle tool</td>
+     <td><mnemonic menu="true" tag="tools.rectangle"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="S"/></td>
+     <td>Save current image</td>
+     <td><mnemonic menu="true" tag="file.save"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="T"/></td>
+     <td>Switch to text tool</td>
+     <td><mnemonic menu="true" tag="tools.text"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="U"/></td>
+     <td>Ungroup selected <plural tag="group"/></td>
+     <td><mnemonic menu="true" tag="transform.ungroup"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="V"/></td>
+     <td>Paste <plural tag="object"/> from clipboard</td>
+     <td><mnemonic menu="true" tag="edit.paste"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="W"/></td>
+     <td>Rotate selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="transform.rotate"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="X"/></td>
+     <td>Cut selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="edit.cut"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="Y"/></td>
+     <td>Edit the selected paths' line styles</td>
+     <td><mnemonic menu="true" tag="edit.path.style.all"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" key="Z"/></td>
+     <td>Scale selected <plural tag="object"/></td>
+     <td><mnemonic menu="true" tag="transform.scale"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="A"/></td>
+     <td>Deselect all</td>
+     <td><mnemonic menu="true" tag="edit.deselect_all"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="B"/></td>
+     <td>Move selected <term tag="object"/> down the <term tag="stack"/></td>
+     <td><mnemonic menu="true" tag="edit.movedown"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="F"/></td>
+     <td>Move selected <term tag="object"/> up the <term tag="stack"/></td>
+     <td><mnemonic menu="true" tag="edit.moveup"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="I"/></td>
+     <td>Edit selected text</td>
+     <td><mnemonic menu="true" tag="edit.text.edit"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="K"/></td>
+     <td>Switch to closed curve tool</td>
+     <td><mnemonic menu="true" tag="tools.closed_curve"/></td>
+   </tr>
+   <tr>
+     <td><kbd ctrl="true" shift="true" key="L"/></td>
+     <td>Switch to closed line tool</td>
+     <td><mnemonic menu="true" tag="tools.closed_line"/></td>
+   </tr>
+   <tr rule="true">
+     <td><kbd ctrl="true" shift="true" key="T"/></td>
+     <td>Switch to <dict tag="manual.maths"/> mode tool</td>
+     <td><mnemonic menu="true" tag="tools.math"/></td>
+   </tr>
+   <tr>
+     <td><kbd alt="true" key="1"/><ldots/><kbd alt="true" key="8"/></td>
+     <td>Linear gradient paint direction selectors</td>
+     <td></td>
+   </tr>
+   <tr>
+     <td><kbd alt="true" key="1"/><ldots/><kbd alt="true" key="9"/></td>
+     <td>Radial gradient paint start location selectors</td>
      <td></td>
    </tr>
    </float>

@@ -1,5 +1,5 @@
 <!-- Parameter entities -->
-<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | hash | cont | button' >
+<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | hash | emdash | ldots | cont | button' >
 
 <!-- Main elements-->
 
@@ -125,4 +125,6 @@
 <!ELEMENT qquad EMPTY>
 <!ELEMENT fndagmark EMPTY>
 <!ELEMENT hash EMPTY>
+<!ELEMENT emdash EMPTY>
+<!ELEMENT ldots EMPTY>
 <!ELEMENT cont EMPTY>

@@ -1856,6 +1856,18 @@ sub end_emdash{
    my ($expat) = @_;
 }
 
+sub start_ldots{
+   my ($expat, %attrs) = @_;
+
+   &handle_html('&#x2026;');
+
+   &handle_tex("\\ldots ");
+}
+
+sub end_ldots{
+   my ($expat) = @_;
+}
+
 sub start_hash{
    my ($expat, %attrs) = @_;
 
@@ -2203,12 +2215,14 @@ sub start_mnemonic{
 
       my $sep = '+';
       my $parent = '';
+      my $skipping = 0;
 
       foreach my $subtag (@split)
       {
-         if ($subtag eq 'label' and $sep eq '+')
+         unless (defined($dict{"$parent$subtag.mnemonic"}))
          {
-            $parent = 'label.';
+            $parent .= $subtag.'.';
+            $skipping = 1;
             next;
          }
 
@@ -2220,6 +2234,13 @@ sub start_mnemonic{
          $sep = ' ';
 
          $parent .= $subtag.'.';
+         $skipping = 0;
+      }
+
+      if ($skipping)
+      {
+         die "Can't find mnemonic for '", $attrs{tag}, "' on line ",
+           $expat->current_line, "\n";
       }
    }
    else
