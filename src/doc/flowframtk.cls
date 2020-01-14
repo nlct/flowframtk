@@ -70,12 +70,12 @@
 
 \newenvironment{prompt}%
 {%
- \par\smallskip\par
- \flushleft
+ \par\medskip\begingroup\par
+ \raggedright
  \ttfamily
  \everypar{\$ }%
  \obeylines\ignorespaces}%
-{\par\smallskip\ignorespacesafterend}
+{\par\endgroup\medskip\par\noindent\ignorespacesafterend}
 
 % Syntax: \floatconts{label}{contents}{caption}
 \newcommand{\floatconts}[3]{%
@@ -108,7 +108,7 @@
 
 \newcommand*{\dq}[1]{``#1''}
 
-\newcommand*{\meta}[1]{\ensuremath{\langle}\textit{#1}\ensuremath{\rangle}}
+\newcommand*{\meta}[1]{\ensuremath{\langle}\textit{\rmfamily #1}\ensuremath{\rangle}}
 
 \newcommand{\marg}[1]{\texttt{\char`\{#1\char`\}}}
 
