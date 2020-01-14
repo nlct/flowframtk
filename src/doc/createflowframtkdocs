@@ -43,6 +43,7 @@ my %texelements =
 );
 
 my $skipnewline = 0;
+my $htmlskipspace = 0;
 
 # mapping between locales and babel options
 
@@ -142,7 +143,7 @@ open $bibfd, ">:encoding($encoding_file)", $bibfile
    or die "Can't open Bib file '$bibfile' $!\n";
 print $bibfd "% Encoding: $encoding_xml\n";
 
-print $bibfd '@preamble{"\\providecommand{\\optnoindex}[1]{--#1}"}', "\n";
+print $bibfd '@preamble{"\\providecommand{\\optnoindex}[1]{-#1}\\providecommand{\\longoptnoindex}[1]{--#1}"}', "\n";
  
 # initialize the parser
 my $parser = XML::Parser->new( Handlers => 
@@ -355,6 +356,16 @@ sub handle_html{
 
    return unless ($includehtml);
 
+   if ($htmlskipspace)
+   {
+      $string=~s/^\s+//s;
+
+      if ($string)
+      {
+         $htmlskipspace = 0;
+      }
+   }
+
    if ($#current > -1)
    {
       my $element = $current[$#current];
@@ -512,6 +523,8 @@ sub start_preamble{
 \\glsxtrnewgls{envvar_}{\\envvar}
 \\glsxtrnewgls{ext_}{\\ext}
 \\glsxtrnewgls{opt_}{\\opt}
+\\glsxtrnewgls{longopt_}{\\longopt}
+\\glsxtrnewgls{menu_}{\\menu}
 
 \\providecommand{\\applink}[1]{\\href{$downloadurl/#1}{#1}}
 \\csname preresourcehook\\endcsname
@@ -839,22 +852,31 @@ sub end_newacro{
 
    my $tag = pop @currenttag;
 
+   my $description;
+   my $title;
+
    # write html file used by popup window
 
    open my $fd, ">:encoding($encoding_file)", "$helpsetdir/acr_$tag.html" 
       or die "Can't open '$helpsetdir/acr_$tag.html' $!\n";
 
-   print $fd &html_head($acros{$tag}->{Short});
-
-   print $fd "<body>\n<h1>$acros{$tag}->{Short}</h1>\n",
-      ucfirst($acros{$tag}->{Long}), ".\n";
-
    if ($docinfo{NewAcro})
    {
+      $description = $docinfo{NewAcro};
       $acros{$tag}->{Description} = $docinfo{NewAcro};
-
-      print $fd "<p>", $acros{$tag}->{Description}, "</p>\n";
+      $title = $acros{$tag}->{Long} . ' (' . $acros{$tag}->{Short} . ')';
    }
+   else
+   {
+      $description = ucfirst($acros{$tag}->{Long}) . ".";
+      $title = $acros{$tag}->{Short};
+   }
+
+   print $fd &html_head($title);
+
+   print $fd "<body>\n<h1>$title</h1>\n";
+
+   print $fd "<p>$description</p>\n";
 
    print $fd "</body>\n</html>\n";
 
@@ -1252,18 +1274,18 @@ sub end_ul{
    &handle_tex("\\end{itemize}");
 }
 
-sub start_tt{
+sub start_code{
    my ($expat, %attrs) = @_;
 
-   &handle_html("<tt>");
+   &handle_html("<code>");
 
-   &handle_tex("\\texttt{");
+   &handle_tex("\\code{");
 }
 
-sub end_tt{
+sub end_code{
    my ($expat) = @_;
 
-   &handle_html('</tt>');
+   &handle_html('</code>');
 
    &handle_tex("}");
 }
@@ -1801,6 +1823,8 @@ sub start_prompt{
      '">$</span> ');
 
    &handle_tex("\\begin{prompt}");
+
+   $htmlskipspace = 1;
 }
 
 sub end_prompt{
@@ -1958,6 +1982,16 @@ sub start_fndagmark{
 }
 
 sub end_fndagmark{
+   my ($expat) = @_;
+}
+
+sub start_clearpage{
+   my ($expat, %attrs) = @_;
+
+   &handle_tex("\\clearpage ");
+}
+
+sub end_clearpage{
    my ($expat) = @_;
 }
 
@@ -2473,6 +2507,7 @@ sub start_menu{
    for (my $idx = 0; $idx <= $#items; $idx++)
    {
       my $item = $items[$idx];
+
       my $currentattrs = ($idx == $#items ? \%attrs : \%subattrs);
 
       if ($currentlabel)
@@ -2486,7 +2521,16 @@ sub start_menu{
          $currentlabel = $item;
       }
 
-      my $text = &get_label($currentlabel, \%attrs, $expat);
+      my $text;
+
+      if (!defined($dict{$currentlabel}) and $dict{"$currentlabel.label"})
+      {
+         $text = &get_label("$currentlabel.label", \%attrs, $expat);
+      }
+      else
+      {
+         $text = &get_label($currentlabel, \%attrs, $expat);
+      }
 
       &handle_tex("\\menu", $currentattrs->{texoptions}, "{", $currentlabel, "}");
 
@@ -2497,6 +2541,9 @@ sub start_menu{
          $hash->{$termtag}->{Parent} = $parent;
       }
 
+      &hs_index_term($termtag, "<span class=\"menu\">$text</span>", $text, $hash,
+       $currentattrs);
+
       unless ($hash->{$termtag}->{Children})
       {
          my %h = ();
@@ -2504,9 +2551,6 @@ sub start_menu{
       }
 
       $hash = $hash->{$termtag}->{Children};
-
-      &hs_index_term($termtag, "<span class=\"menu\">$text</span>", $text, $hash,
-       $currentattrs);
 
       $parent = $termtag;
    }
@@ -2548,12 +2592,13 @@ sub start_acr{
    }
 
    my $html = '';
+   my $htmlprefix = '';
 
    if (!$attrs{primary} and ($acros{$attrs{tag}}->{Used} or $#nodes == -1))
    {
       if ($attrs{prefix} and $acros{$attrs{tag}}->{Prefix})
       {
-         $html = $acros{$attrs{tag}}->{Prefix};
+         $htmlprefix = $acros{$attrs{tag}}->{Prefix};
       }
 
       if ($attrs{plural})
@@ -2567,14 +2612,29 @@ sub start_acr{
 
       if ($attrs{'case'} eq 'uc')
       {
+         $htmlprefix = uc($htmlprefix);
          $html = uc($html);
       }
       elsif ($attrs{'case'} eq 'ucfirst')
       {
-         $html = ucfirst($html);
+         if ($htmlprefix)
+         {
+            $htmlprefix = ucfirst($htmlprefix);
+         }
+         else
+         {
+            $html = ucfirst($html);
+         }
       }
 
-      &handle_html(&hs_popup("acr_".$attrs{tag}.".html", $html));
+      if ($htmlprefix=~/ $/)
+      {
+         &handle_html($htmlprefix, &hs_popup("acr_".$attrs{tag}.".html", $html));
+      }
+      else
+      {
+         &handle_html(&hs_popup("acr_".$attrs{tag}.".html", $htmlprefix.$html));
+      }
    }
    else
    {
@@ -2582,7 +2642,7 @@ sub start_acr{
 
       if ($attrs{prefix} and $acros{$attrs{tag}}->{PrefixFirst})
       {
-         $html = $acros{$attrs{tag}}->{PrefixFirst};
+         $htmlprefix = $acros{$attrs{tag}}->{PrefixFirst};
       }
 
       if ($attrs{plural})
@@ -2617,11 +2677,29 @@ sub start_acr{
 
       if ($attrs{'case'} eq 'uc')
       {
+         $htmlprefix = uc($htmlprefix);
          $html = uc($html);
       }
       elsif ($attrs{'case'} eq 'ucfirst')
       {
-         $html = ucfirst($html);
+         if ($htmlprefix)
+         {
+            $htmlprefix = ucfirst($htmlprefix);
+         }
+         else
+         {
+            $html = ucfirst($html);
+         }
+      }
+
+      if ($htmlprefix=~/ $/)
+      {
+         &handle_html($htmlprefix);
+         &handle_html(&hs_popup("acr_".$attrs{tag}.".html", ''));
+      }
+      else
+      {
+         &handle_html(&hs_popup("acr_".$attrs{tag}.".html", $htmlprefix));
       }
 
       &hs_index_term('acr_'.$attrs{tag}, $html, ucfirst($html), \%terms, \%attrs);
@@ -2727,12 +2805,13 @@ sub start_term{
    }
 
    my $html = '';
+   my $htmlprefix = '';
 
    if ($attrs{plural})
    {
       if ($attrs{prefix} and $terms{$hstag}->{PrefixPlural})
       {
-         $html = $terms{$hstag}->{PrefixPlural};
+         $htmlprefix = $terms{$hstag}->{PrefixPlural};
       }
 
       if (defined($terms{$hstag}->{Plural}))
@@ -2748,7 +2827,7 @@ sub start_term{
    {
       if ($attrs{prefix} and $terms{$hstag}->{Prefix})
       {
-         $html = $terms{$hstag}->{Prefix};
+         $htmlprefix = $terms{$hstag}->{Prefix};
       }
 
       $html .= $terms{$hstag}->{Text};
@@ -2756,11 +2835,19 @@ sub start_term{
 
    if ($attrs{case} eq 'uc')
    {
+      $htmlprefix = uc($htmlprefix);
       $html = uc($html);
    }
    elsif ($attrs{case} eq 'ucfirst')
    {
-      $html = ucfirst($html);
+      if ($htmlprefix)
+      {
+         $htmlprefix = ucfirst($htmlprefix);
+      }
+      else
+      {
+         $html = ucfirst($html);
+      }
    }
 
    my $desctag = $hstag;
@@ -2807,6 +2894,8 @@ sub start_term{
    {
       &handle_tex("\\$csname", $attrs{texoptions}, "\{$hstag}");
    }
+
+   &handle_html($htmlprefix);
 
    &hs_index_term($hstag, $html, $terms{$hstag}->{Text}, 
      \%terms, \%attrs);
@@ -2913,16 +3002,20 @@ sub start_opt{
       $terms{options}->{Children} = \%hash;
    }
 
+   &check_boolean_attribute_value('long', $expat, \%attrs);
    &check_indexing_attributes('opt', $expat, \%attrs);
 
-   my $tag = 'opt_'.$attrs{tag};
+   my $csname = $attrs{long} ? "longopt" : "opt";
+
+   my $tag = $csname . '_' . $attrs{tag};
 
    $terms{options}->{Children}->{$tag}->{Parent} = 'options';
 
-   &hs_index_term($tag, "<span class=\"opt\">-$text</span>", $text, 
-      $terms{options}->{Children}, \%attrs);
+   &hs_index_term($tag, 
+      "<span class=\"opt\">" . ($attrs{long} ? '--' : '-') . "$text</span>",
+      $text, $terms{options}->{Children}, \%attrs);
 
-   &handle_tex("\\opt", $attrs{texoptions}, "{", $attrs{tag}, "}");
+   &handle_tex("\\$csname", $attrs{texoptions}, "{", $attrs{tag}, "}");
 }
 
 sub end_opt{
@@ -3071,6 +3164,7 @@ sub start_float{
    }
 
    &check_boolean_attribute_value('long', $expat, \%attrs);
+   &check_boolean_attribute_value('doublespec', $expat, \%attrs);
 
    my $specs = '';
 
@@ -3098,6 +3192,11 @@ sub start_float{
             $specs .= $align;
             push @specarray, $align;
          }
+      }
+
+      if ($attrs{doublespec})
+      {
+         $specs .= $specs;# TODO adjust end_tr
       }
 
       my %hash =
@@ -3178,6 +3277,13 @@ sub start_float{
       }
    }
    $skipnewline = 1;
+
+   $texelements{Caption}='';
+   $docinfo{Caption}='';
+   $texelements{TableHeader}='';
+   $docinfo{TableHeader}='';
+   $texelements{TableFooter}='';
+   $docinfo{TableFooter}='';
 }
 
 sub end_float{
@@ -3200,6 +3306,7 @@ sub end_float{
    {
       if ($attrs->{type} eq 'table')
       {
+         &handle_html($docinfo{TableFooter});
          &handle_tex($texelements{TableFooter});
          &handle_tex('\\end{tabular}');
       }
@@ -3212,6 +3319,15 @@ sub end_float{
       }
 
       &handle_tex("{", $texelements{Caption}, "}}%\n\\end{", $attrs->{type}, "}\n");
+   }
+
+   if ($attrs->{type}=~/figure|table/)
+   {
+      &handle_html("</", $attrs->{type}, ">");
+   }
+   else
+   {
+      &handle_html("</div>");
    }
 
    if ($attrs->{type} eq 'table')

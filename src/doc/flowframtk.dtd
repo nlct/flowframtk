@@ -1,5 +1,5 @@
 <!-- Parameter entities -->
-<!ENTITY % basic.content '#PCDATA | dict | tt | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | envvar | hash | emdash | ldots | cont | button' >
+<!ENTITY % basic.content '#PCDATA | dict | code | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | envvar | hash | emdash | ldots | cont | button' >
 
 <!-- Main elements-->
 
@@ -33,7 +33,7 @@
 <!ELEMENT mainmatter EMPTY>
 <!ELEMENT backmatter EMPTY>
 
-<!ELEMENT node (p | float | pre | alltt | prompt | dl | ul | ol | verbtabinput | htmlonly | latexonly )+ | printglossary | printindex >
+<!ELEMENT node (p | float | pre | alltt | prompt | dl | ul | ol | verbtabinput | htmlonly | latexonly | clearpage)+ | printglossary | printindex >
 <!ATTLIST node tag (#PCDATA)+ #REQUIRED>
 <!ATTLIST node type (#PCDATA)+ #REQUIRED>
 <!ATTLIST node title (%basic.content;)+ #REQUIRED>
@@ -44,6 +44,7 @@
 <!ATTLIST p align (#PCDATA)+>
 <!ATTLIST p noindent (#PCDATA)+>
 <!ATTLIST p class (#PCDATA)+>
+<!ELEMENT clearpage EMPTY>
 <!ELEMENT url EMPTY>
 <!ATTLIST url www (#PCDATA)+ #REQUIRED>
 <!ATTLIST url text (#PCDATA)+>
@@ -68,7 +69,7 @@
 <!ATTLIST opt tag (#PCDATA)+ #REQUIRED>
 <!ELEMENT applink (%basic.content;)+>
 <!ELEMENT dq (%basic.content;)+>
-<!ELEMENT tt (%basic.content;)+>
+<!ELEMENT code (%basic.content;)+>
 <!ELEMENT meta (%basic.content;)+>
 <!ELEMENT sty EMPTY >
 <!ATTLIST sty tag (%basic.content;)+>

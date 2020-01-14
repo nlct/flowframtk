@@ -316,12 +316,17 @@
     specified, assume the primary button.
     </newterm>
 
+    <newterm tag="config_dir" text="configuration directory">
+    This directory contains application settings, the list of recent files and 
+    mapping files. It's also the location used for log files and the dump all function.
+    </newterm>
+
     <boilerplate>
     <p>
      <app/> is licensed under the terms of the GNU General Public License
      (<url www="http://gnu.org/licenses/gpl.html" />).
      <app/> depends on the following third party library whose jar files is
-     in the <tt>lib</tt> directory: Java Help
+     in the <file>lib</file> directory: Java Help
      (<url www="https://javahelp.java.net/"/>).
     </p>
     <p>
@@ -448,9 +453,7 @@
    <applink>flowframtk-<appversion/>-installer.jar</applink> and run it. 
    This can be done from a terminal or command prompt using:
    </p>
-<pre>
-java -jar flowframtk-<appversion/>-installer.jar
-</pre>
+   <prompt><cli name="java"/> -jar flowframtk-<appversion/>-installer.jar</prompt>
    <p>
    Depending on the setup of your operating system, you may also be
    able to <term tag="doubleclick"/> on the <ext name="jar"/> file to run it.
@@ -758,7 +761,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    </tr>
    <tr>
      <td><kbd ctrl="true" key="F11"/></td>
-     <td>Saves all images to the <ref tag="configdir">configuration directory</ref></td>
+     <td>Saves all images to the <term tag="config_dir"/></td>
      <td></td>
    </tr>
    <tr>
@@ -810,7 +813,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    </tr>
    <tr>
      <td><kbd ctrl="true" shift="true" key="F11"/></td>
-     <td>Writes log file in the <ref tag="configdir">configuration directory</ref></td>
+     <td>Writes log file in the <term tag="config_dir"/></td>
      <td></td>
    </tr>
    <tr rule="true">
@@ -1168,9 +1171,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    <p>
    <app/> can be invoked from a command prompt using:
    </p>
-   <prompt>
-<app class="cli"/> <meta>option-list</meta> <meta>filename 1</meta> <ldots space="true"/> <meta>filename N</meta>
-   </prompt>
+   <prompt><app class="cli"/> <meta>option-list</meta> <meta>filename 1</meta> <ldots space="true"/> <meta>filename N</meta></prompt>
    <p>
    (You'll need to add <app/>'s <file>bin</file> subdirectory to your
    <envvar name="PATH"/> environment variable.)
@@ -1183,9 +1184,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    a maximum size of 128Mb for the memory allocation pool, you can set
    <envvar name="JDR_JVMOPTS"/> to <verb>-Xmx128m</verb>:
    </p>
-   <prompt>
-setenv <envvar name="JDR_JVMOPTS"/> -Xmx128m
-   </prompt>
+   <prompt>setenv <envvar name="JDR_JVMOPTS"/> -Xmx128m</prompt>
    <p>
    The <app class="cli"/> script also uses the environment variable
    <envvar name="FLOWFRAMTK_OPTS"/> to pass options to <app/>.<footnote>If you have 
@@ -1193,11 +1192,9 @@ setenv <envvar name="JDR_JVMOPTS"/> -Xmx128m
    will also be recognised, but any settings in <envvar name="FLOWFRAMTK_OPTS"/> will 
    override those in <envvar name="JPGFDRAW_OPTS"/>.</footnote> For example, if you 
    always want <app/> to start up with the grid showing, you can set
-   <envvar name="FLOWFRAMTK_OPTS"/> to <opt index="false" tag="show_grid"/>:
+   <envvar name="FLOWFRAMTK_OPTS"/> to <opt tag="show_grid"/>:
    </p>
-   <prompt>
-setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt index="false" tag="show_grid"/>
-   </prompt>
+   <prompt>setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt tag="show_grid"/></prompt>
    <p>
    Note that these environment variables only have an effect if you
    use the <file>flowframtk</file> script to run the <acr tag="jre"/>.
@@ -1206,16 +1203,16 @@ setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt index="false" tag="show_grid"/>
    If you can't use the <cli name="flowframtk"/> script, you can invoke <app/> from
    the command line using:
    </p>
-   <prompt>
-<cli name="java"/> <meta>java options</meta> -jar flowframtk.jar <meta>flowframtk options</meta> <meta>filename</meta>
-   </prompt>
+   <prompt><cli name="java"/> <meta>java options</meta> -jar flowframtk.jar <meta>flowframtk options</meta> <meta>filename</meta></prompt>
    <p>
    (You will need to include the full pathname to <file>flowframtk.jar</file>.)
    </p>
    <p>
    The available command line options are listed in <ref tag="tab:clioptions"/>.
    </p>
-   <float type="table" caption="Command Line Options" tag="tab:clioptions" spec="lp{60%}">
+   <clearpage/>
+   <float type="table" long="true" tag="tab:clioptions" spec="lp{60%}">
+    <caption>Command Line Options</caption>
     <tableheader>
     <tr>
     <td>Option</td>
@@ -1224,53 +1221,185 @@ setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt index="false" tag="show_grid"/>
     </tableheader>
     <tablefooter/>
     <tr>
-    <td><opt tag="disable_print"/></td>
+    <td><opt primary="true" tag="disable_print"/></td>
     <td>Don't request printer attributes on startup.</td>
     </tr>
     <tr>
-    <td><opt tag="nodisable_print"/></td>
+    <td><opt primary="true" tag="nodisable_print"/></td>
     <td>Request printer attributes on startup (default).</td>
     </tr>
     <tr>
-    <td><opt tag="show_grid"/></td>
+    <td><opt primary="true" tag="show_grid"/></td>
     <td>Show the <term tag="grid"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="noshow_grid"/></td>
+    <td><opt primary="true" tag="noshow_grid"/></td>
     <td>Don't show the <term tag="grid"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="grid_lock"/></td>
+    <td><opt primary="true" tag="grid_lock"/></td>
     <td>Set the <term tag="grid"/> lock on.</td>
     </tr>
     <tr>
-    <td><opt tag="nogrid_lock"/></td>
+    <td><opt primary="true" tag="nogrid_lock"/></td>
     <td>Don't set the <term tag="grid"/> lock on.</td>
     </tr>
     <tr>
-    <td><opt tag="toolbar"/></td>
+    <td><opt primary="true" tag="toolbar"/></td>
     <td>Show the <plural tag="toolbar"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="notoolbar"/></td>
+    <td><opt primary="true" tag="notoolbar"/></td>
     <td>Don't show the <plural tag="toolbar"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="statusbar"/></td>
+    <td><opt primary="true" tag="statusbar"/></td>
     <td>Show the <term tag="statusbar"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="nostatusbar"/></td>
+    <td><opt primary="true" tag="nostatusbar"/></td>
     <td>Don't show the <term tag="statusbar"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="ruler"/></td>
+    <td><opt primary="true" tag="ruler"/></td>
     <td>Show the <plural tag="ruler"/>.</td>
     </tr>
     <tr>
-    <td><opt tag="noruler"/></td>
+    <td><opt primary="true" tag="noruler"/></td>
     <td>Don't show the <plural tag="ruler"/>.</td>
     </tr>
+    <tr>
+    <td><opt primary="true" tag="paper"/> <meta>specs</meta></td>
+    <td>Set the paper size. This option must be followed by paper size specifier
+    (<meta>specs</meta>). Known paper sizes are listed in 
+    <ref tag="tab:papersizes"/>. Custom sizes can be specified
+    using <code><opt tag="paper"/> user <meta>width</meta> <meta>height</meta></code>, 
+    where <meta>width</meta> and <meta>height</meta> must be positive dimensions.
+    Recognised units: <code><term tag="pt"/></code>, <code><term tag="bp"/></code>, 
+    <code>in</code>, <code>mm</code>, <code>cm</code>, <code>pc</code>, 
+    <code>dd</code> and <code>cc</code>. If the unit is omitted, 
+    <code><term tag="bp"/></code> is assumed. Examples:
+    <ul>
+     <li><code><opt tag="paper"/> a4r</code></li>
+     <li><code><opt tag="paper"/> user 8.5in 12in</code></li>
+     <li><code><opt tag="paper"/> user 600 1000</code></li>
+    </ul>
+    </td> 
+    </tr>
+    <tr>
+    <td><opt primary="true" tag="experimental"/></td>
+    <td>Enables experimental functions for testing purposes. These functions don't 
+    work properly and are not documented.</td>
+    </tr>
+    <tr>
+    <td><opt primary="true" tag="noexperimental"/></td>
+    <td>Disables experimental functions. (Default.)</td>
+    </tr>
+    <tr>
+    <td><opt primary="true" tag="debug"/></td>
+    <td>Enables the <menu primary="true" tag="debug"/> menu. This menu provides the 
+    functions: <menu primary="true" tag="debug.objectinfo"/> (which displays diagnostic 
+    information about the currently selected objects), 
+    <menu primary="true" tag="debug.writelog"/> (which writes diagnostic
+    information for all currently open images to a log file in the
+    <term tag="config_dir"/>) and
+    <menu primary="true" tag="debug.dumpall"/> (which saves all current images to a
+    subdirectory of the <term tag="config_dir"/>).</td>
+    </tr>
+    <tr>
+    <td><opt primary="true" tag="nodebug"/></td>
+    <td>Disables the debug menu (default). However you can still use 
+    <kbd shift="true" key="F11"/> and <kbd ctrl="true" key="F11"/> to do the 
+    same action as <menu tag="debug.writelog"/> and
+    <menu tag="debug.dumpall"/>, respectively.</td>
+    </tr>
+    <tr>
+    <td><opt primary="true" tag="version"/></td>
+    <td>Prints the current version to standard output. (Synonyms 
+    <opt long="true" primary="true" tag="version"/> and <opt primary="true" tag="v"/> 
+    are also available.)</td>
+    </tr>
+    <tr>
+    <td><opt primary="true" tag="help"/></td>
+    <td>Prints available command line options to standard output. (Synonyms 
+    <opt long="true" primary="true" tag="help"/> and <opt primary="true" tag="h"/> are 
+    also available.)</td>
+    </tr>
+   </float>
+   <float listcaption="Paper Size Identifiers" type="table" tag="tab:papersizes" doublespec="true" spec="ll">
+   <caption>Paper size identifiers for use with <opt tag="paper"/> command line switch.</caption>
+   <tr><td><code>a10</code></td><td>A10 portrait </td></tr>
+   <tr><td><code>a10r</code></td><td>A10 landscape</td></tr>
+   <tr><td><code>a9</code></td><td>A9 portrait </td></tr>
+   <tr><td><code>a9r</code></td><td>A9 landscape</td></tr>
+   <tr><td><code>a8</code></td><td>A8 portrait </td></tr>
+   <tr><td><code>a8r</code></td><td>A8 landscape</td></tr>
+   <tr><td><code>a7</code></td><td>A7 portrait </td></tr>
+   <tr><td><code>a7r</code></td><td>A7 landscape</td></tr>
+   <tr><td><code>a6</code></td><td>A6 portrait </td></tr>
+   <tr><td><code>a6r</code></td><td>A6 landscape</td></tr>
+   <tr><td><code>a5</code></td><td>A5 portrait </td></tr>
+   <tr><td><code>a5r</code></td><td>A5 landscape</td></tr>
+   <tr><td><code>a4</code></td><td>A4 portrait </td></tr>
+   <tr><td><code>a4r</code></td><td>A4 landscape</td></tr>
+   <tr><td><code>a3</code></td><td>A3 portrait </td></tr>
+   <tr><td><code>a3r</code></td><td>A3 landscape</td></tr>
+   <tr><td><code>a2</code></td><td>A2 portrait </td></tr>
+   <tr><td><code>a2r</code></td><td>A2 landscape</td></tr>
+   <tr><td><code>a1</code></td><td>A1 portrait </td></tr>
+   <tr><td><code>a1r</code></td><td>A1 landscape</td></tr>
+   <tr><td><code>a0</code></td><td>A0 portrait </td></tr>
+   <tr><td><code>a0r</code></td><td>A0 landscape</td></tr>
+   <tr><td><code>b10</code></td><td>B10 portrait </td></tr>
+   <tr><td><code>b10r</code></td><td>B10 landscape</td></tr>
+   <tr><td><code>b9</code></td><td>B9 portrait </td></tr>
+   <tr><td><code>b9r</code></td><td>B9 landscape</td></tr>
+   <tr><td><code>b8</code></td><td>B8 portrait </td></tr>
+   <tr><td><code>b8r</code></td><td>B8 landscape</td></tr>
+   <tr><td><code>b7</code></td><td>B7 portrait </td></tr>
+   <tr><td><code>b7r</code></td><td>B7 landscape</td></tr>
+   <tr><td><code>b6</code></td><td>B6 portrait </td></tr>
+   <tr><td><code>b6r</code></td><td>B6 landscape</td></tr>
+   <tr><td><code>b5</code></td><td>B5 portrait </td></tr>
+   <tr><td><code>b5r</code></td><td>B5 landscape</td></tr>
+   <tr><td><code>b4</code></td><td>B4 portrait </td></tr>
+   <tr><td><code>b4r</code></td><td>B4 landscape</td></tr>
+   <tr><td><code>b3</code></td><td>B3 portrait </td></tr>
+   <tr><td><code>b3r</code></td><td>B3 landscape</td></tr>
+   <tr><td><code>b2</code></td><td>B2 portrait </td></tr>
+   <tr><td><code>b2r</code></td><td>B2 landscape</td></tr>
+   <tr><td><code>b1</code></td><td>B1 portrait </td></tr>
+   <tr><td><code>b1r</code></td><td>B1 landscape</td></tr>
+   <tr><td><code>b0</code></td><td>B0 portrait </td></tr>
+   <tr><td><code>b0r</code></td><td>B0 landscape</td></tr>
+   <tr><td><code>c10</code></td><td>C10 portrait </td></tr>
+   <tr><td><code>c10r</code></td><td>C10 landscape</td></tr>
+   <tr><td><code>c9</code></td><td>C9 portrait </td></tr>
+   <tr><td><code>c9r</code></td><td>C9 landscape</td></tr>
+   <tr><td><code>c8</code></td><td>C8 portrait </td></tr>
+   <tr><td><code>c8r</code></td><td>C8 landscape</td></tr>
+   <tr><td><code>c7</code></td><td>C7 portrait </td></tr>
+   <tr><td><code>c7r</code></td><td>C7 landscape</td></tr>
+   <tr><td><code>c6</code></td><td>C6 portrait </td></tr>
+   <tr><td><code>c6r</code></td><td>C6 landscape</td></tr>
+   <tr><td><code>c5</code></td><td>C5 portrait </td></tr>
+   <tr><td><code>c5r</code></td><td>C5 landscape</td></tr>
+   <tr><td><code>c4</code></td><td>C4 portrait </td></tr>
+   <tr><td><code>c4r</code></td><td>C4 landscape</td></tr>
+   <tr><td><code>c3</code></td><td>C3 portrait </td></tr>
+   <tr><td><code>c3r</code></td><td>C3 landscape</td></tr>
+   <tr><td><code>c2</code></td><td>C2 portrait </td></tr>
+   <tr><td><code>c2r</code></td><td>C2 landscape</td></tr>
+   <tr><td><code>c1</code></td><td>C1 portrait </td></tr>
+   <tr><td><code>c1r</code></td><td>C1 landscape</td></tr>
+   <tr><td><code>c0</code></td><td>C0 portrait </td></tr>
+   <tr><td><code>c0r</code></td><td>C0 landscape</td></tr>
+   <tr><td><code>letter</code></td><td>Letter portrait </td></tr>
+   <tr><td><code>letterr</code></td><td>Letter landscape</td></tr>
+   <tr><td><code>legal</code></td><td>Legal portrait </td></tr>
+   <tr><td><code>legalr</code></td><td>Legal landscape</td></tr>
+   <tr><td><code>executive</code></td><td>Executive portrait </td></tr>
+   <tr><td><code>executiver</code></td><td>Executive landscape</td></tr>
    </float>
    </node>
    <node type="section" tag="settingsmenu" title="The Settings Menu">
@@ -1328,6 +1457,9 @@ setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt index="false" tag="show_grid"/>
    <node type="subsubsection" tag="lookandfeel" title="Look and Feel Settings">
    </node>
    <node type="section" tag="configdir" title="Configuration Directory">
+   <p>
+   <term primary="true" tag="config_dir"/>
+   </p>
    </node>
    <node type="chapter" tag="thebasics" title="The Basics">
    </node>

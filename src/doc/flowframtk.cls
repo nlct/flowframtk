@@ -49,6 +49,7 @@
 \newcommand{\extnoindex}[1]{\texorpdfstring{\texttt{.#1}}{.#1}}
 
 \newcommand{\optnoindex}[1]{\texorpdfstring{\texttt{-#1}}{-#1}}
+\newcommand{\longoptnoindex}[1]{\texorpdfstring{\texttt{--#1}}{--#1}}
 
 \newcommand*{\primary}[1]{\hyperbf{#1}}
 
@@ -56,6 +57,8 @@
 
 \newcommand*{\menunoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 \newcommand*{\mto}{$\to$}
+
+\newcommand*{\code}[1]{\texttt{\obeyspaces#1}}
 
 \newrobustcmd*{\dash}{\,---\,}
 
