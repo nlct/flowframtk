@@ -3112,6 +3112,7 @@ sub start_float{
          &handle_tex("\\begin{tabular}{", $specs, '}');
       }
    }
+   $skipnewline = 1;
 }
 
 sub end_float{
@@ -3134,6 +3135,7 @@ sub end_float{
    {
       if ($attrs->{type} eq 'table')
       {
+         &handle_tex($texelements{TableFooter});
          &handle_tex('\\end{tabular}');
       }
 
@@ -3173,6 +3175,7 @@ sub start_tableheader{
    $texelements{TableHeader} = '';
 
    &handle_tex("\\toprule ");
+   $skipnewline = 1;
 }
 
 sub end_tableheader{
@@ -3206,6 +3209,7 @@ sub end_tableheader{
       &handle_tex($texelements{TableHeader});
       &handle_tex("\\midrule\\endhead\n");
    }
+   $skipnewline = 1;
 }
 
 sub start_tablefooter{
@@ -3218,16 +3222,10 @@ sub start_tablefooter{
 
    my $attrs = $float_elements[$#float_elements];
 
-   if ($attrs->{long})
-   {
-      push @current, 'TableFooter';
-      $docinfo{TableFooter} = '';
-      $texelements{TableFooter} = '';
-   }
-   else
-   {
-      &handle_tex("\\bottomrule ");
-   }
+   push @current, 'TableFooter';
+   $docinfo{TableFooter} = '';
+   $texelements{TableFooter} = "\\bottomrule ";
+   $skipnewline = 1;
 }
 
 sub end_tablefooter{
@@ -3235,11 +3233,10 @@ sub end_tablefooter{
 
    my $attrs = $float_elements[$#float_elements];
 
+   pop @current;
+
    if ($attrs->{long})
    {
-      pop @current;
-
-      &handle_tex("\\bottomrule");
       &handle_tex($texelements{TableFooter});
 
       my $specarray = $tabular_specs[$#tabular_specs]->{spec};
@@ -3247,9 +3244,9 @@ sub end_tablefooter{
       &handle_tex("\\multicolumn{", scalar(@$specarray), 
         "}{r}{\\emph{\\continuednextpagetext}}\\endfoot\n");
 
-      &handle_tex("\\bottomrule");
       &handle_tex($texelements{TableFooter}, "\\endlastfoot ");
    }
+   $skipnewline = 1;
 }
 
 sub start_tabular{
