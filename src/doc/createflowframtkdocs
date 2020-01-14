@@ -321,7 +321,7 @@ sub handle_tex{
    {
       $string=~s/^\s*\n(\s*)/ /s;
 
-      unless ($string eq ' ')
+      unless ($string=~/^ +$/)
       {
          $skipnewline = 0;
       }
@@ -881,6 +881,8 @@ sub start_newterm{
       $attrs{text} = $attrs{tag};
    }
 
+   &check_boolean_attribute_value('indexplural', $expat, \%attrs);
+
    my $currenttag = $attrs{tag};
    push @currenttag, $attrs{tag};
    my $tag = 'gls_'.$attrs{tag};
@@ -896,7 +898,15 @@ sub start_newterm{
    $docinfo{'NewTerm'}='';
    $bibpending = '';
 
-   &handle_tex("\@index{", $attrs{tag}, ",\n name={" . $terms{$tag}->{Text} . "},");
+   if ($attrs{indexplural})
+   {
+      &handle_tex("\@indexplural{", $attrs{tag}, ",\n text={" . $terms{$tag}->{Text} . "},");
+      $terms{$tag}->{Name} = ($attrs{plural} ? $attrs{plural} : $attrs{text}.'s');
+   }
+   else
+   {
+      &handle_tex("\@index{", $attrs{tag}, ",\n name={" . $terms{$tag}->{Text} . "},");
+   }
 
    $bibentries{$attrs{tag}} = $terms{$tag}->{Text};
 
@@ -991,8 +1001,18 @@ sub end_newterm{
 
       print $fd &html_head($terms{$tag}->{Text});
 
-      print $fd "<body>\n<h1>", $terms{$tag}->{Text}, "</h1>\n",
-         ucfirst($terms{$tag}->{Description}), "\n";
+      print $fd "<body>\n<h1>";
+
+      if (defined($terms{$tag}->{Name}))
+      {
+         print $fd ucfirst($terms{$tag}->{Name});
+      }
+      else
+      {
+         print $fd ucfirst($terms{$tag}->{Text});
+      }
+
+      print $fd "</h1>\n", ucfirst($terms{$tag}->{Description}), "\n";
 
       print $fd "</body>\n</html>\n";
 
@@ -1743,7 +1763,7 @@ sub end_seealso{
 sub start_pre{
    my ($expat, %attrs) = @_;
 
-   &handle_html('<pre>');
+   &handle_html('<pre class="codeblock">');
 
    &handle_tex("\\begin{verbatim}");
 }
@@ -1759,7 +1779,7 @@ sub end_pre{
 sub start_alltt{
    my ($expat, %attrs) = @_;
 
-   &handle_html('<pre>');
+   &handle_html('<pre class="codeblock">');
 
    &handle_tex("\\begin{alltt}");
 }
@@ -1775,7 +1795,8 @@ sub end_alltt{
 sub start_prompt{
    my ($expat, %attrs) = @_;
 
-   &handle_html('<pre>');
+   &handle_html('<pre class="prompt"><span title="', &get_label("manual.prompt"), 
+     '">$</span> ');
 
    &handle_tex("\\begin{prompt}");
 }
@@ -1786,6 +1807,8 @@ sub end_prompt{
    &handle_html('</pre>');
 
    &handle_tex("\\end{prompt}");
+
+   $skipnewline=1;
 }
 
 sub start_verb{
@@ -4120,6 +4143,7 @@ sub write_language_defs{
    print $fd "\\def\\continuedcaptiontext{", &get_label('manual.cont.cap.text'), "}\n";
    print $fd "\\def\\continuednextpagetext{",
       &get_label('manual.cont.nextpage.text'), "}\n";
+   print $fd "\\def\\promptname{", &get_label('manual.prompt'), "}\n";
 
    if (defined ($dict{'manual.page'}))
    {

@@ -68,14 +68,16 @@
 \newcommand*{\textpercent}{\%}
 \newcommand*{\texthash}{\#}
 
+\newcommand{\promptsymbol}{\textcolor{lightgray}{\$}}
+
 \newenvironment{prompt}%
 {%
- \par\medskip\begingroup\par
+ \par\medskip\par
  \raggedright
  \ttfamily
- \everypar{\$ }%
+ \everypar{\accsupp{\promptname}{\promptsymbol} \everypar{}}%
  \obeylines\ignorespaces}%
-{\par\endgroup\medskip\par\noindent\ignorespacesafterend}
+{\medskip\par\noindent\ignorespacesafterend}
 
 % Syntax: \floatconts{label}{contents}{caption}
 \newcommand{\floatconts}[3]{%

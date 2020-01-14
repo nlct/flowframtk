@@ -2880,6 +2880,7 @@ manual.idxenv=environment
 manual.example=Example
 manual.abbreviations=Abbreviations
 manual.cont_explanation=(The symbol \\continuesymbol\\ above indicates a~line wrap. Don't insert a~line break at that point.)
+manual.prompt=prompt
 manual.labelled=labeled
 manual.seealso=See also:
 manual.grey=gray

@@ -76,7 +76,7 @@
      position.
     </newterm>
 
-    <newterm tag="toolbars" text="toolbars">
+    <newterm indexplural="true" tag="toolbar" text="toolbar">
     The two panels containing buttons, the horizontal toolbar is positioned at
     the top of <app/>'s main window, the vertical toolbar is
     positioned along the left edge of the main window.
@@ -1039,7 +1039,7 @@ java -jar flowframtk-<appversion/>-installer.jar
      <td></td>
    </tr>
    </float>
-   <float type="table" tag="tab:jhaccess" spec="lp{80%}">
+   <float type="table" tag="tab:jhaccess" spec="lp{80%}" tabcolsep="2pt">
    <caption>JavaHelp Viewer Shortcut Keys</caption>
    <tableheader>
     <tr><td>Key</td><td>Function</td></tr>
@@ -1173,7 +1173,7 @@ java -jar flowframtk-<appversion/>-installer.jar
    </prompt>
    <p>
    (You'll need to add <app/>'s <file>bin</file> subdirectory to your
-    <envvar name="PATH"/> environment variable.)
+   <envvar name="PATH"/> environment variable.)
    </p>
    <p>
    Note that <meta>option-list</meta> and the filenames may be omitted.
@@ -1198,6 +1198,56 @@ setenv <envvar name="JDR_JVMOPTS"/> -Xmx128m
    <prompt>
 setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt noindex="true" tag="show_grid"/>
    </prompt>
+   <p>
+   Note that these environment variables only have an effect if you
+   use the <file>flowframtk</file> script to run the <acr tag="jre"/>.
+   </p>
+   <p>
+   If you can't use the <cli name="flowframtk"/> script, you can invoke <app/> from
+   the command line using:
+   </p>
+   <prompt>
+<cli name="java"/> <meta>java options</meta> -jar flowframtk.jar <meta>flowframtk options</meta> <meta>filename</meta>
+   </prompt>
+   <p>
+   (You will need to include the full pathname to <file>flowframtk.jar</file>.)
+   </p>
+   <p>
+   The available command line options are listed in <ref tag="tab:clioptions"/>.
+   </p>
+   <float type="table" caption="Command Line Options" tag="tab:clioptions" spec="lp{60%}">
+    <tableheader>
+    <tr>
+    <td>Option</td>
+    <td>Description.</td>
+    </tr>
+    </tableheader>
+    <tablefooter/>
+    <tr>
+    <td><opt tag="disable_print"/></td>
+    <td>Don't request printer attributes on startup.</td>
+    </tr>
+    <tr>
+    <td><opt tag="nodisable_print"/></td>
+    <td>Request printer attributes on startup (default).</td>
+    </tr>
+    <tr>
+    <td><opt tag="show_grid"/></td>
+    <td>Show the <term tag="grid"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="noshow_grid"/></td>
+    <td>Don't show the <term tag="grid"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="grid_lock"/></td>
+    <td>Set the <term tag="grid"/> lock on.</td>
+    </tr>
+    <tr>
+    <td><opt tag="nogrid_lock"/></td>
+    <td>Don't set the <term tag="grid"/> lock on.</td>
+    </tr>
+   </float>
    </node>
    <node type="section" tag="settingsmenu" title="The Settings Menu">
    </node>
