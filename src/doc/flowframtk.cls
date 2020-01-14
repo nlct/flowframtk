@@ -50,9 +50,11 @@
 
 \newcommand{\optnoindex}[1]{\texorpdfstring{\texttt{-#1}}{-#1}}
 
+\newcommand*{\primary}[1]{\hyperbf{#1}}
+
 \newcommand*{\titleref}[2]{\htmlref{#1}{#2}}
 
-\newcommand*{\menu}[1]{\textsf{#1}}
+\newcommand*{\menunoindex}[1]{\texorpdfstring{\textsf{#1}}{#1}}
 \newcommand*{\mto}{$\to$}
 
 \newrobustcmd*{\dash}{\,---\,}

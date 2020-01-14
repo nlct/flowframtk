@@ -87,7 +87,7 @@
     <app/>'s main window.
     </newterm>
 
-    <newterm tag="rulers" text="rulers">
+    <newterm indexplural="true" tag="ruler" text="ruler">
     The two panels containing the horizontal and vertical rulers.
     </newterm>
 
@@ -1193,10 +1193,10 @@ setenv <envvar name="JDR_JVMOPTS"/> -Xmx128m
    will also be recognised, but any settings in <envvar name="FLOWFRAMTK_OPTS"/> will 
    override those in <envvar name="JPGFDRAW_OPTS"/>.</footnote> For example, if you 
    always want <app/> to start up with the grid showing, you can set
-   <envvar name="FLOWFRAMTK_OPTS"/> to <opt noindex="true" tag="show_grid"/>:
+   <envvar name="FLOWFRAMTK_OPTS"/> to <opt index="false" tag="show_grid"/>:
    </p>
    <prompt>
-setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt noindex="true" tag="show_grid"/>
+setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt index="false" tag="show_grid"/>
    </prompt>
    <p>
    Note that these environment variables only have an effect if you
@@ -1246,6 +1246,30 @@ setenv <envvar name="FLOWFRAMTK_OPTS"/> <opt noindex="true" tag="show_grid"/>
     <tr>
     <td><opt tag="nogrid_lock"/></td>
     <td>Don't set the <term tag="grid"/> lock on.</td>
+    </tr>
+    <tr>
+    <td><opt tag="toolbar"/></td>
+    <td>Show the <plural tag="toolbar"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="notoolbar"/></td>
+    <td>Don't show the <plural tag="toolbar"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="statusbar"/></td>
+    <td>Show the <term tag="statusbar"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="nostatusbar"/></td>
+    <td>Don't show the <term tag="statusbar"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="ruler"/></td>
+    <td>Show the <plural tag="ruler"/>.</td>
+    </tr>
+    <tr>
+    <td><opt tag="noruler"/></td>
+    <td>Don't show the <plural tag="ruler"/>.</td>
     </tr>
    </float>
    </node>

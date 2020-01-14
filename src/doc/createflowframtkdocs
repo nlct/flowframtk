@@ -192,6 +192,8 @@ sub handle_semantic_term{
         $expat->current_line, "\n";
    }
 
+   &check_indexing_attributes($type, $expat, \%attrs);
+
    my $text = &$htmlfnhandler($attrs{$tagfield});
 
    unless ($text=~/^</)
@@ -199,37 +201,35 @@ sub handle_semantic_term{
       $text = "<span class=\"$type\">" . $text . "</span>";
    }
 
-   &check_boolean_attribute_value('index', $expat, \%attrs);
-
-   if (defined($attrs{index}) and not $attrs{index})
-   {
-      my $tex = $attrs{$tagfield};
-      $tex=~s/_/\\_/g;
-      &handle_tex("\\${type}noindex{$tex}");
-      &handle_html($text);
-   }
-   else
-   {
-      &handle_tex("\\$type\{", $attrs{$tagfield}, '}');
-      &hs_index_term($type.'_'.$attrs{$tagfield}, $text, $attrs{$tagfield}, \%terms);
-   }
+   &handle_tex("\\$type", $attrs{texoptions}, "\{", $attrs{$tagfield}, '}');
+   &hs_index_term($type.'_'.$attrs{$tagfield}, $text, $attrs{$tagfield}, \%terms, \%attrs);
 }
 
 sub hs_index_term{
-   my ($tag, $text, $term, $hash) = @_;
+   my ($tag, $text, $term, $hash, $attrs) = @_;
 
-   if (defined($hash->{$tag}->{Ref}) or $#nodes < 0)
+   if (!$attrs->{primary} and (defined($hash->{$tag}->{Ref}) or $#nodes < 0 or not $attrs->{index}))
    {
       &handle_html($text);
    }
    else
    {
-      $hash->{$tag}->{Ref}  = $nodes[$#nodes]->{Tag}.".html#$tag";
+      my $anchor = $tag;
 
-      &handle_html("<a name=\"$tag\">$text</a>");
+      if ($attrs->{primary})
+      {
+         $anchor = "primary_$tag";
+      }
+
+      $hash->{$tag}->{Ref}  = $nodes[$#nodes]->{Tag}.".html#$anchor";
+
+      &handle_html("<a name=\"$anchor\">$text</a>");
    }
 
-   $hash->{$tag}->{Text} = $term;
+   if (!defined($hash->{$tag}->{Text}) or $attrs->{primary})
+   {
+      $hash->{$tag}->{Text} = $term;
+   }
 
    unless (defined($bibentries{$tag}))
    {
@@ -1646,10 +1646,12 @@ sub start_ext{
 
    $terms{fileextensions}->{Children}->{$tag}->{Parent} = 'fileextensions';
 
-   &hs_index_term($tag, "<span class=\"ext\">.$text</span>", $text, 
-      $terms{fileextensions}->{Children});
+   &check_indexing_attributes('ext', $expat, \%attrs);
 
-   &handle_tex("\\ext{", $attrs{name}, "}");
+   &hs_index_term($tag, "<span class=\"ext\">.$text</span>", $text, 
+      $terms{fileextensions}->{Children}, \%attrs);
+
+   &handle_tex("\\ext", $attrs{texoptions}, "{", $attrs{name}, "}");
 }
 
 sub end_ext{
@@ -2459,19 +2461,25 @@ sub start_menu{
         $expat->current_line, "\n";
    }
 
+   &check_indexing_attributes('menu', $expat, \%attrs);
+
    my $hash = \%terms;
 
    my $currentlabel;
-   my $html  = '';
    my $parent = '';
+   my @items = split /\./, $attrs{tag};
+   my %subattrs = ('index'=>0, 'texoptions'=>'[noindex]');
 
-   foreach my $item (split /\./, $attrs{tag})
+   for (my $idx = 0; $idx <= $#items; $idx++)
    {
+      my $item = $items[$idx];
+      my $currentattrs = ($idx == $#items ? \%attrs : \%subattrs);
+
       if ($currentlabel)
       {
          $currentlabel .= ".$item";
          &handle_tex("\\mto ");
-         $html .= '&#x279C;';
+         &handle_html('&#x279C;');
       }
       else
       {
@@ -2480,9 +2488,7 @@ sub start_menu{
 
       my $text = &get_label($currentlabel, \%attrs, $expat);
 
-      $html .= $text;
-
-      &handle_tex("\\menu{$text}");
+      &handle_tex("\\menu", $currentattrs->{texoptions}, "{", $currentlabel, "}");
 
       my $termtag = 'menu_'.$currentlabel;
 
@@ -2490,8 +2496,6 @@ sub start_menu{
       {
          $hash->{$termtag}->{Parent} = $parent;
       }
-
-      &hs_index_term($termtag, "", $text, $hash);
 
       unless ($hash->{$termtag}->{Children})
       {
@@ -2501,12 +2505,11 @@ sub start_menu{
 
       $hash = $hash->{$termtag}->{Children};
 
+      &hs_index_term($termtag, "<span class=\"menu\">$text</span>", $text, $hash,
+       $currentattrs);
+
       $parent = $termtag;
    }
-
-   &handle_html("<span class=\"menu\">$html</span>");
-
-   &handle_tex("\\glsadd{$attrs{tag}");
 }
 
 sub end_menu{
@@ -2530,6 +2533,8 @@ sub start_acr{
 
    &check_boolean_attribute_value('prefix', $expat, \%attrs);
    &check_boolean_attribute_value('plural', $expat, \%attrs);
+   &check_indexing_attributes('acr', $expat, \%attrs);
+
 
    if (!defined($attrs{'case'}))
    {
@@ -2544,7 +2549,7 @@ sub start_acr{
 
    my $html = '';
 
-   if ($acros{$attrs{tag}}->{Used} or $#nodes == -1)
+   if (!$attrs{primary} and ($acros{$attrs{tag}}->{Used} or $#nodes == -1))
    {
       if ($attrs{prefix} and $acros{$attrs{tag}}->{Prefix})
       {
@@ -2619,7 +2624,7 @@ sub start_acr{
          $html = ucfirst($html);
       }
 
-      &hs_index_term('acr_'.$attrs{tag}, $html, ucfirst($html), \%terms);
+      &hs_index_term('acr_'.$attrs{tag}, $html, ucfirst($html), \%terms, \%attrs);
    }
 
    my $csname = 'gls';
@@ -2643,11 +2648,49 @@ sub start_acr{
       $csname .= 'pl';
    }
 
-   &handle_tex("\\", $csname, "{", $attrs{tag}, "}");
+   &handle_tex("\\", $csname, $attrs{texoptions}, "{", $attrs{tag}, "}");
 }
 
 sub end_acr{
    my ($expat) = @_;
+}
+
+sub check_indexing_attributes{
+   my ($type, $expat, $attrs) = @_;
+
+   &check_boolean_attribute_value('index', $expat, $attrs);
+   &check_boolean_attribute_value('primary', $expat, $attrs);
+
+   unless (defined($attrs->{index}))
+   {
+      $attrs->{index} = 1;
+   }
+
+   unless (defined($attrs->{primary}))
+   {
+      $attrs->{primary} = 0;
+   }
+
+   if (not $attrs->{index} and $attrs->{primary})
+   {
+      die "Conflict for '$type' '", $attrs->{tag}, 
+          "' element's 'index' and 'primary' attributes on line ",
+        $expat->current_line, "\n";
+   }
+
+   my $opts = $attrs->{primary} ? 'format=primary' : '';
+
+   unless ($attrs->{index})
+   {
+      $opts = $opts ? "$opts,noindex" : "noindex";
+   }
+
+   if (defined($attrs->{texoptions}))
+   {
+      $opts = $opts ? $attrs->{texoptions} . ",$opts" : $attrs->{texoptions};
+   }
+
+   $attrs->{texoptions} = $opts ? "[$opts]" : '';
 }
  
 sub start_term{
@@ -2670,7 +2713,9 @@ sub start_term{
    &check_boolean_attribute_value('prefix', $expat, \%attrs);
    &check_boolean_attribute_value('plural', $expat, \%attrs);
 
-   if (!defined($attrs{'case'}))
+   &check_indexing_attributes('term', $expat, \%attrs);
+
+   unless (defined($attrs{'case'}))
    {
       $attrs{'case'} = 'none';
    }
@@ -2718,11 +2763,6 @@ sub start_term{
       $html = ucfirst($html);
    }
 
-   if (!defined($terms{$hstag}->{Ref}) and $#nodes > -1)
-   {
-      $terms{$hstag}->{Ref} = $nodes[$#nodes]->{Tag} . ".html#$hstag";
-   }
-
    my $desctag = $hstag;
 
    if (defined($terms{$hstag}->{Alias}))
@@ -2761,15 +2801,15 @@ sub start_term{
    {
       $html = &hs_popup("$desctag.html", $html);
 
-      &handle_tex("\\$csname\{", $attrs{tag}, "}");
+      &handle_tex("\\$csname", $attrs{texoptions}, "\{", $attrs{tag}, "}");
    }
    else
    {
-      &handle_tex("\\$csname\{$hstag}");
+      &handle_tex("\\$csname", $attrs{texoptions}, "\{$hstag}");
    }
 
    &hs_index_term($hstag, $html, $terms{$hstag}->{Text}, 
-     \%terms);
+     \%terms, \%attrs);
 
 }
 
@@ -2873,14 +2913,16 @@ sub start_opt{
       $terms{options}->{Children} = \%hash;
    }
 
+   &check_indexing_attributes('opt', $expat, \%attrs);
+
    my $tag = 'opt_'.$attrs{tag};
 
    $terms{options}->{Children}->{$tag}->{Parent} = 'options';
 
    &hs_index_term($tag, "<span class=\"opt\">-$text</span>", $text, 
-      $terms{options}->{Children});
+      $terms{options}->{Children}, \%attrs);
 
-   &handle_tex("\\opt{", $attrs{tag}, "}");
+   &handle_tex("\\opt", $attrs{texoptions}, "{", $attrs{tag}, "}");
 }
 
 sub end_opt{
