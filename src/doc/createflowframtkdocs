@@ -67,6 +67,8 @@ my @paragraph = ();
 my %tags    = ();
 my @currenttag= ();
 my @currentattrs= ();
+my $currentindex = 0;
+my $rowindex = 0;
 my $includehtml = 1;
 my $includetex = 1;
 my $boilerplate = 0;
@@ -3196,7 +3198,7 @@ sub start_float{
 
       if ($attrs{doublespec})
       {
-         $specs .= $specs;# TODO adjust end_tr
+         $specs .= $specs;
       }
 
       my %hash =
@@ -3284,6 +3286,7 @@ sub start_float{
    $docinfo{TableHeader}='';
    $texelements{TableFooter}='';
    $docinfo{TableFooter}='';
+   $rowindex = 0;
 }
 
 sub end_float{
@@ -3357,6 +3360,7 @@ sub start_tableheader{
 
    &handle_tex("\\toprule ");
    $skipnewline = 1;
+   $currentindex = length $texelements{TableHeader};
 }
 
 sub end_tableheader{
@@ -3391,6 +3395,7 @@ sub end_tableheader{
       &handle_tex("\\midrule\\endhead\n");
    }
    $skipnewline = 1;
+   $rowindex = 0;
 }
 
 sub start_tablefooter{
@@ -3407,6 +3412,7 @@ sub start_tablefooter{
    $docinfo{TableFooter} = '';
    $texelements{TableFooter} = "\\bottomrule ";
    $skipnewline = 1;
+   $currentindex = length $texelements{TableFooter};
 }
 
 sub end_tablefooter{
@@ -3428,6 +3434,7 @@ sub end_tablefooter{
       &handle_tex($texelements{TableFooter}, "\\endlastfoot ");
    }
    $skipnewline = 1;
+   $rowindex = 0;
 }
 
 sub start_tabular{
@@ -3502,6 +3509,7 @@ sub start_tr{
 
    &handle_html('<tr>');
    $skipnewline = 1;
+   $rowindex++;
 }
 
 sub end_tr{
@@ -3509,20 +3517,42 @@ sub end_tr{
 
    &handle_html('</tr>');
 
-   &handle_tex("\\tabularnewline");
+   my $docr = 1;
 
-   if ($tabular_specs[$#tabular_specs]->{rowattrs}->{prohibitbreak})
+   if ($float_elements[$#float_elements]->{doublespec})
    {
-      &handle_tex('*');
-   }
-   else
-   {
-      &handle_tex(' ');
+      if ($#current >= 0 and $current[$#current]=~/^Table(Header|Footer)$/)
+      {
+         my $row = substr $texelements{$current[$#current]}, $currentindex;
+         $texelements{$current[$#current]} .= '&' . $row;
+         $currentindex = length $texelements{$current[$#current]};
+      }
+      elsif ($rowindex % 2 == 1)
+      {
+         &handle_tex('&');
+         $docr = 0;
+      }
    }
 
-   if ($tabular_specs[$#tabular_specs]->{rowattrs}->{rule})
+   if ($docr)
    {
-      &handle_tex('\\midrule ');
+      &handle_tex("\\tabularnewline");
+
+      if ($tabular_specs[$#tabular_specs]->{rowattrs}->{prohibitbreak})
+      {
+         &handle_tex('*');
+      }
+      else
+      {
+         &handle_tex(' ');
+      }
+
+      if ($tabular_specs[$#tabular_specs]->{rowattrs}->{rule})
+      {
+         &handle_tex('\\midrule ');
+      }
+
+      &handle_tex("\n");
    }
 
    $skipnewline = 1;

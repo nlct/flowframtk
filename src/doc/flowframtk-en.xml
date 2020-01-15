@@ -1328,6 +1328,10 @@
    </float>
    <float listcaption="Paper Size Identifiers" type="table" tag="tab:papersizes" doublespec="true" spec="ll">
    <caption>Paper size identifiers for use with <opt tag="paper"/> command line switch.</caption>
+   <tableheader>
+   <tr><td>Identifier</td><td>Description</td></tr>
+   </tableheader>
+   <tablefooter/>
    <tr><td><code>a10</code></td><td>A10 portrait </td></tr>
    <tr><td><code>a10r</code></td><td>A10 landscape</td></tr>
    <tr><td><code>a9</code></td><td>A9 portrait </td></tr>
