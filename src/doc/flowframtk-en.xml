@@ -1407,8 +1407,28 @@
    </float>
    </node>
    <node type="section" tag="settingsmenu" title="The Settings Menu">
+   <p>
+   While <app/> is running, you can change the current settings
+   using the <menu primary="true" tag="settings"/> menu. Most of the settings will be
+   remembered next time you use <app/>, but may be overridden
+   either by <ref tag="cmdargs">command line arguments</ref> or by
+   settings specified in any <term tag="jdr"/> or <term tag="ajr"/> file that you load.
+   </p>
+   <p>
+   If you have selected <widget tag="initsettings.default"/> in the
+   <nameref class="widget" tag="initsettings"/> tab of the
+   <nameref class="widget" tag="configuredialog"/> dialog, then the 
+   <em><term tag="canvas"/></em> settings will be set to the default 
+   values on startup (unless overridden, as above). Some (but not all) of 
+   the user interface settings may still be remembered from the previous session.
+   </p>
    </node>
    <node type="subsection" tag="setcurrentstyles" title="Styles">
+   <menu primary="true" tag="settings.styles"/> can be used to set the current
+   <term tag="path"/> and <term tag="textarea"/> attributes. New paths and text areas
+   will use these attributes when they are created. The attributes for
+   existing paths and text areas are changed using the <menu tag="edit"/>
+   menu.  These settings are discussed in more detail in <nameref tag="styles"/>.
    </node>
    <node type="subsection" tag="showrulers" title="Show Rulers">
    </node>
@@ -1418,17 +1438,17 @@
    </node>
    <node type="subsection" tag="papermenu" title="Paper">
    </node>
-   <node type="subsection" tag="configuredialog" title="Image Settings Dialog">
+   <node type="subsection" tag="configuredialog" dict="config">
    </node>
-   <node type="subsubsection" tag="controlsettings" title="Control Point Settings">
+   <node type="subsubsection" tag="controlsettings" dict="controls">
    </node>
-   <node type="subsubsection" tag="startdir" title="Startup Directory">
+   <node type="subsubsection" dict="startdir">
    </node>
-   <node type="subsubsection" tag="jdrsettings" title="JDR/AJR Settings">
+   <node type="subsubsection" tag="jdrsettings" dict="jdr">
    </node>
    <node type="subsubsection" tag="initsettings" title="Startup Settings">
    </node>
-   <node type="subsubsection" tag="bitmapconfig" title="Bitmap Settings">
+   <node type="subsubsection" dict="bitmapconfig">
    </node>
    <node type="subsubsection" tag="processes" title="Application Paths">
    </node>
@@ -1442,7 +1462,7 @@
    </node>
    <node type="subsubsection" tag="texconfigpreamble" title="Default Preamble">
    </node>
-   <node type="subsection" tag="configureuidialog" title="User Interface Settings Dialog">
+   <node type="subsection" tag="configureuidialog" dict="configui">
    </node>
    <node type="subsubsection" tag="graphics" title="Graphics Settings">
    </node>

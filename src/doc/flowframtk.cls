@@ -49,7 +49,7 @@
 \newcommand{\extnoindex}[1]{\texorpdfstring{\texttt{.#1}}{.#1}}
 
 \newcommand{\optnoindex}[1]{\texorpdfstring{\texttt{-#1}}{-#1}}
-\newcommand{\longoptnoindex}[1]{\texorpdfstring{\texttt{--#1}}{--#1}}
+\newcommand{\longoptnoindex}[1]{\texorpdfstring{\texttt{-{}-#1}}{--#1}}
 
 \newcommand*{\primary}[1]{\hyperbf{#1}}
 
@@ -123,7 +123,7 @@
 
 \newrobustcmd*{\cs}[1]{\gls{cs_#1}}
 
-\newcommand*{\button}[1]{\textsf{\bfseries #1}}
+\newcommand*{\widgetfmt}[1]{\textsf{\bfseries #1}}
 
 \newcommand*{\element}[1]{\texttt{\char`\<#1\char`\>}}
 
@@ -529,12 +529,38 @@ y+s_yx
 }
 
 \newcommand*{\doc@getref}[1]{%
-  \edef\doc@currentrefpage{\expandafter \@secondoffive #1\@empty \@empty \@empty}%
-  \edef\doc@currentrefanchor{\expandafter \@fourthoffive #1\@empty \@empty \@empty}%
+  \edef\doc@currentref{\expandafter \@firstoffive #1\@empty \@empty \@empty \@empty \@empty}%
+  \edef\doc@currentrefpage{\expandafter \@secondoffive #1\@empty \@empty \@empty \@empty \@empty}%
+  \edef\doc@currentreftitle{\expandafter \@thirdoffive #1\@empty \@empty \@empty \@empty \@empty}%
+  \edef\doc@currentrefanchor{\expandafter \@fourthoffive #1\@empty \@empty \@empty \@empty \@empty}%
   \expandafter\doc@@getreftype\doc@currentrefanchor.\\%
 }
 
 \def\doc@@getreftype#1.#2\\{\def\doc@currentreftype{#1}}
+
+\newcommand{\chapternamereffmt}{%
+  \ifdef\chapterautorefname{\chapterautorefname}{\chaptername}~%
+  \doc@currentref\ (\doc@currentreftitle)%
+}
+\newcommand{\sectionnamerefprefix}{\S}
+\newcommand{\sectionnamereffmt}{%
+  \sectionnamerefprefix\doc@currentref\ (\doc@currentreftitle)%
+}
+\newcommand{\subsectionnamereffmt}{\sectionnamereffmt}
+\newcommand{\subsubsectionnamereffmt}{\sectionnamereffmt}
+\newcommand{\paragraphnamereffmt}{\sectionnamereffmt}
+\newcommand{\subparagraphnamereffmt}{\sectionnamereffmt}
+
+\newcommand*{\docnameref}[1]{%
+  \ifcsdef{r@#1}%
+  {%
+    \expandafter\doc@getref\csname r@#1\endcsname
+    \ifcsdef{\doc@currentreftype namereffmt}
+    {\hyperlink{\doc@currentrefanchor}{\csname\doc@currentreftype namereffmt\endcsname}}%
+    {\nameref{#1}}%
+  }%
+  {\nameref{#1}}%
+}
 
 \newcommand{\prekeystroke}{\ }
 \newcommand{\postkeystroke}{\ }

@@ -262,7 +262,7 @@ sub hs_index_term{
          $tex_name = "\\envvarnoindex{$tex_name} environment variable";
          $tex_text = "\\envvarnoindex{$tex_text}";
       }
-      elsif ($tag=~/^(cs|cli|opt|ext)_/)
+      elsif ($tag=~/^(cs|cli|opt|longopt|ext|menu)_/)
       {
          $tex_name = "\\$1noindex{$tex_name}";
          $tex_text = $tex_name;
@@ -466,7 +466,7 @@ sub get_label{
 
    my $text = $dict{$tag};
 
-   if ($attrs)
+   if (defined($attrs))
    {
       $text=~s/<ARG#(\d)\/>/$attrs->{"arg$1"}/eg;
    }
@@ -486,7 +486,9 @@ sub start_manual{
    print $texfd "% arara: bib2gls: { group: on, trimfields: on }\n";
    print $texfd "% arara: pdflatex\n";
    print $texfd "% arara: pdflatex\n";
-   print $texfd "\\documentclass[$babel{$locale}]{flowframtk}\n";
+   print $texfd "\\documentclass{flowframtk}\n";
+   print $texfd "\\usepackage{tracklang}\n";
+   print $texfd "\\TrackLanguageTag{$locale}\n";
 }
 
 sub end_manual{
@@ -510,7 +512,7 @@ sub start_preamble{
 \\usepackage{booktabs}
 \\usepackage{moreverb}
 \\usepackage{keystroke}
-\\usepackage{babel}
+\\usepackage[main=$babel{$locale}]{babel}
 \\usepackage[colorlinks]{hyperref}
 \\usepackage[record=nameref]{glossaries-extra}
 \\usepackage{glossaries-prefix}
@@ -536,6 +538,7 @@ EOF
  
 sub end_preamble{
    my ($expat) = @_;
+   $skipnewline=1;
 }
 
 sub start_htmlonly{
@@ -679,6 +682,37 @@ sub start_node{
    {
       die "Missing 'type' attribute for element 'node' on line ",
          $expat->current_line, "\n";
+   }
+
+   if ($attrs{dict})
+   {
+      $attrs{tag} = $attrs{dict} unless ($attrs{tag});
+
+      if ($attrs{title})
+      {
+         die "Attribute clash for 'node' element (can't have both 'dict' and 'title) on line",
+         $expat->current_line, "\n";
+      }
+      else
+      {
+         if ($dict{$attrs{dict}})
+         {
+            $attrs{title} = $dict{$attrs{dict}};
+         }
+         elsif ($dict{$attrs{dict}.'.title'})
+         {
+            $attrs{title} = $dict{$attrs{dict}.'.title'};
+         }
+         elsif ($dict{$attrs{dict}.'.label'})
+         {
+            $attrs{title} = $dict{$attrs{dict}.'.label'};
+         }
+         else
+         {
+            die "No dictionary entry for tag '", $attrs{dict}, "' on line ",
+              $expat->current_line, "\n";
+         }
+      }
    }
 
    unless ($attrs{tag})
@@ -889,6 +923,8 @@ sub end_newacro{
    pop @current;
 
    print $bibfd $bibpending;
+
+   $skipnewline=1;
 }
  
 sub start_newterm{
@@ -1049,6 +1085,8 @@ sub end_newterm{
    pop @current;
 
    print $bibfd $bibpending;
+
+   $skipnewline=1;
 }
 
 sub check_boolean_attribute_value{
@@ -1774,7 +1812,7 @@ sub start_seealso{
    foreach my $tag (@tags)
    {
       &handle_html("<li><ref case=\"none\" tag=\"$tag\"></ref>");
-      &handle_tex("\\item \\nameref{$tag}\n");
+      &handle_tex("\\item \\docnameref{$tag}\n");
    }
 
    &handle_tex("\\end{itemize}\n");
@@ -1842,7 +1880,7 @@ sub end_prompt{
 sub start_verb{
    my ($expat, %attrs) = @_;
 
-   &handle_html('<pre style="display: inline;">');
+   &handle_html('<code>');
 
    &handle_tex("\\verb");
 
@@ -1870,7 +1908,7 @@ sub end_verb{
 
    my $attrs = pop @currentattrs;
 
-   &handle_html('</pre>');
+   &handle_html('</code>');
 
    if (defined($attrs->{char}))
    {
@@ -2077,22 +2115,6 @@ sub start_gt{
 
 sub end_gt{
    my ($expat) = @_;
-}
-
-sub start_element{
-   my ($expat, %attrs) = @_;
-
-   &handle_html('<code>&lt;');
-
-   &handle_tex("\\element{");
-}
-
-sub end_element{
-   my ($expat) = @_;
-
-   &handle_html('&gt;</code>');
-
-   &handle_tex("}");
 }
 
 sub do_image{
@@ -2466,12 +2488,12 @@ sub end_dict{
    my ($expat) = @_;
 }
  
-sub start_button{
+sub start_widget{
    my ($expat, %attrs) = @_;
 
    unless ($attrs{tag})
    {
-      die "Missing 'button' element's 'tag' attribute on line ",
+      die "Missing 'widget' element's 'tag' attribute on line ",
         $expat->current_line, "\n";
    }
 
@@ -2479,12 +2501,12 @@ sub start_button{
 
    $text=~s/:\s*$//;
 
-   &handle_html("<b>$text</b>");
+   &handle_html("<span class=\"widget\">$text</span>");
 
-   &handle_tex("\\button{$text}");
+   &handle_tex("\\widgetfmt{$text}");
 }
 
-sub end_button{
+sub end_widget{
    my ($expat) = @_;
 }
  
@@ -2984,6 +3006,32 @@ sub end_ref{
    &handle_html("<ref case=\"", $attrs->{case}, "\" tag=\"$tag\">", $htmlcontent, "</ref>");
 }
  
+sub start_nameref{
+   my ($expat, %attrs) = @_;
+
+   unless ($attrs{tag})
+   {
+      die "Missing 'nameref' element's 'tag' attribute on line ",
+        $expat->current_line, "\n";
+   }
+
+   if ($attrs{class})
+   {
+      &handle_tex("\\", $attrs{class}, "fmt{\\docnameref{", $attrs{tag}, "}}");
+      &handle_html("<span class=\"", $attrs{class}, 
+       "\"><ref case=\"none\" tag=\"", $attrs{tag}, "\"></ref></span>");
+   }
+   else
+   {
+      &handle_tex("\\docnameref{", $attrs{tag}, "}");
+      &handle_html("<ref case=\"none\" tag=\"", $attrs{tag}, "\"></ref>");
+   }
+}
+
+sub end_nameref{
+   my ($expat) = @_;
+}
+ 
 sub start_opt{
    my ($expat, %attrs) = @_;
 
@@ -3187,7 +3235,7 @@ sub start_float{
          if ($align eq 'p')
          {
             $specs .= ">{\\raggedright}$align\{" . (0.01*$3) . "\\textwidth}";
-            push @specarray, 'l';
+            push @specarray, "p{$3%}";
          }
          else
          {
@@ -3239,7 +3287,7 @@ sub start_float{
 
    if ($attrs{type}=~/figure|table/)
    {
-      &handle_html("<", $attrs{type});
+      &handle_html("<", $attrs{type}, ' align="center"');
    }
    else
    {
@@ -3250,7 +3298,7 @@ sub start_float{
 
    $tags{$attrs{tag}}->{Ref} = $nodes[$#nodes]->{Tag}
      .'.html#'.$attrs{tag};
-   $tags{$attrs{tag}}->{Text} = ucfirst(&get_label('manual.'.$attrs{type}))
+   $tags{$attrs{tag}}->{Text} = ucfirst(&get_label('manual.'.$attrs{type}, \%attrs, $expat))
         . '&nbsp;' . $attrs{counter};
 
    if ($attrs{long})
@@ -3458,7 +3506,7 @@ sub start_tabular{
       if ($align eq 'p')
       {
          $specs .= ">{\\raggedright}$align\{" . (0.01*$2) . "\\textwidth}";
-         push @specarray, 'l';
+         push @specarray, "p{$3%}";
       }
       else
       {
@@ -3588,16 +3636,40 @@ sub start_td{
       $colspec = 'c';
    }
 
+   my $texspec = '';
+   my $align = $colspec;
+   my $width='';
+
+   if ($colspec=~/p\{(\d+\%)\}/)
+   {
+      $align = 'l';
+      $width = "width=\"$1\"" unless defined($attrs{indent});
+   }
+
    if ($attrs{spec})
    {
-      $colspec = $attrs{spec};
+      $texspec = $attrs{spec};
+
+      if ($attrs{spec}=~/([rlc])|(?:(p)\{(\d+)\%\})/)
+      {
+         $align = (defined($1) ? $1 : $2);
+
+         if ($align eq 'p')
+         {
+            $texspec = ">{\\raggedright}$align\{" . (0.01*$3) . "\\textwidth}";
+            $align='l';
+            $width = "width=\"$2%\"" unless defined($attrs{indent});
+         }
+
+         $colspec = $align;
+      }
    }
 
    my $htmlcolspan = ($colspan == 1 ? '' : "colspan=\"$colspan\"");
 
-   if ($colspec eq 'l')
+   if ($align eq 'l')
    {
-      &handle_html("<$tag align=\"left\" $htmlcolspan");
+      &handle_html("<$tag align=\"left\" $width $htmlcolspan");
 
       if (defined($attrs{indent}))
       {
@@ -3606,7 +3678,7 @@ sub start_td{
 
       &handle_html('>');
    }
-   elsif ($colspec eq 'r')
+   elsif ($align eq 'r')
    {
       &handle_html("<$tag align=\"right\" $htmlcolspan");
 
@@ -3617,7 +3689,7 @@ sub start_td{
 
       &handle_html('>');
    }
-   elsif ($colspec eq 'c')
+   elsif ($align eq 'c')
    {
       &handle_html("<$tag align=\"center\" $htmlcolspan");
 
@@ -3634,13 +3706,13 @@ sub start_td{
       &handle_tex("&");
    }
 
-   if (($orgcolspec eq $colspec) and $colspan == 1)
+   if (not $texspec and ($orgcolspec eq $colspec) and $colspan == 1)
    {
       $tabular_specs[$#tabular_specs]->{egroup} = '';
    }
    else
    {
-      &handle_tex("\\multicolumn{$colspan}{$colspec}{");
+      &handle_tex("\\multicolumn{$colspan}{", $texspec ? $texspec : $colspec, "}{");
       $tabular_specs[$#tabular_specs]->{egroup} = '}';
    }
 
@@ -4324,25 +4396,31 @@ sub write_language_defs{
      or die "Can't open language def file '$langdeffile' $!\n";
 
    print $fd "\\def\\applang{$locale}\n";
-   print $fd "\\def\\idxpackagename{", &get_label('manual.idxpackage')."}\n";
-   print $fd "\\def\\idxenvname{", &get_label('manual.idxenv')."}\n";
-   print $fd "\\def\\examplename{", &get_label('manual.example')."}\n";
-   print $fd "\\def\\abbrvname{", &get_label('manual.abbreviations'), "}\n";
-   print $fd "\\def\\continuedcaptiontext{", &get_label('manual.cont.cap.text'), "}\n";
-   print $fd "\\def\\continuednextpagetext{",
-      &get_label('manual.cont.nextpage.text'), "}\n";
-   print $fd "\\def\\promptname{", &get_label('manual.prompt'), "}\n";
+   print $fd "\\appto\\captions", $babel{$locale}, "{%\n";
+   print $fd "  \\def\\idxpackagename{", &get_label('manual.idxpackage')."}%\n";
+   print $fd "  \\def\\idxenvname{", &get_label('manual.idxenv')."}%\n";
+   print $fd "  \\def\\examplename{", &get_label('manual.example')."}%\n";
+   print $fd "  \\def\\abbrvname{", &get_label('manual.abbreviations'), "}%\n";
+   print $fd "  \\def\\continuedcaptiontext{", &get_label('manual.cont.cap.text'), "}%\n";
+   print $fd "  \\def\\continuednextpagetext{",
+      &get_label('manual.cont.nextpage.text'), "}%\n";
+   print $fd "  \\def\\promptname{", &get_label('manual.prompt'), "}%\n";
 
    if (defined ($dict{'manual.page'}))
    {
-      print $fd "\\def\\plabelautorefname{" . $dict{'manual.page'} . "}\n";
+      print $fd "  \\def\\plabelautorefname{" . $dict{'manual.page'} . "}%\n";
+   }
+
+   if (defined ($dict{"manual.sectionprefix"}))
+   {
+      print $fd "  \\def\\sectionnamerefprefix{", $dict{"manual.sectionprefix"}, "}%\n";
    }
 
    foreach my $counter (keys %counters)
    {
       if (defined ($dict{"manual.$counter"}))
       {
-         print $fd "\\def\\${counter}autorefname{" . $dict{"manual.$counter"} . "}\n";
+         print $fd "  \\def\\${counter}autorefname{" . $dict{"manual.$counter"} . "}%\n";
       }
    }
 
@@ -4350,9 +4428,11 @@ sub write_language_defs{
    {
       if (defined ($dict{"manual.$counter"}))
       {
-         print $fd "\\def\\${counter}autorefname{" . $dict{"manual.$counter"} . "}\n";
+         print $fd "  \\def\\${counter}autorefname{" . $dict{"manual.$counter"} . "}%\n";
       }
    }
+
+   print $fd "}";
 
    close $fd;
 }

@@ -1,5 +1,5 @@
 <!-- Parameter entities -->
-<!ENTITY % basic.content '#PCDATA | dict | code | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | envvar | hash | emdash | ldots | cont | button' >
+<!ENTITY % basic.content '#PCDATA | dict | code | em | br | url | sty | cli | acr | image | opt | ref | term | plural | tabular | menu | dq | TeX LaTeX | nbsp | qquad | fndagmark | meta | dl | app | appversion | applink | verbinput | cs | env | envvar | hash | emdash | ldots | cont | widget' >
 
 <!-- Main elements-->
 
@@ -59,8 +59,8 @@
 <!ATTLIST dict arg7 (%basic.content;)+>
 <!ATTLIST dict arg8 (%basic.content;)+>
 <!ATTLIST dict arg9 (%basic.content;)+>
-<!ELEMENT button EMPTY>
-<!ATTLIST button tag (#PCDATA)+ #REQUIRED>
+<!ELEMENT widget EMPTY>
+<!ATTLIST widget tag (#PCDATA)+ #REQUIRED>
 <!ELEMENT ref (%basic.content;)+>
 <!ATTLIST ref tag (#PCDATA)+ #REQUIRED>
 <!ELEMENT menu EMPTY>
