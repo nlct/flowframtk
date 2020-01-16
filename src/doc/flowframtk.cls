@@ -80,7 +80,7 @@
  \par\medskip\par
  \raggedright
  \ttfamily
- \everypar{\accsupp{\promptname}{\promptsymbol} \everypar{}}%
+ \everypar{\actualtext{\promptname}{\promptsymbol} \everypar{}}%
  \obeylines\ignorespaces}%
 {\medskip\par\noindent\ignorespacesafterend}
 
@@ -462,24 +462,41 @@ y+s_yx
 \newlength\iconheight
 \newlength\iconwidth
 \newsavebox\iconsbox
-\newcommand{\iconstartpar}[1][-3]{%
-  \def\@iconstartpar@hangafter{#1}%
-  \@iconstartpar
+\newcommand{\iconstartpar}{%
+  \protect\@iconstartpar
 }
+
+\def\@iconstartpar@hangafter{-3}%
+\def\@image@alt{}
+
+\define@key{Gin}{alt}{\def\@image@alt{#1}}
+\define@key{icon}{hangafter}{\def\@iconstartpar@hangafter{#1}}
 
 \newcommand{\@iconstartpar}[2][]{%
   \par\vspace{\baselineskip}%
-  \sbox{\iconsbox}{\@for\this@icon:=#2\do{\includegraphics[#1]{\this@icon}}}%
+  \begingroup
+  \setkeys{icon,Gin}{#1}%
+  \sbox{\iconsbox}{\@for\this@icon:=#2\do{\includegraphics{\this@icon}}}%
   \settoheight{\iconheight}{\usebox{\iconsbox}}%
   \settowidth{\iconwidth}{\usebox{\iconsbox}}
   \advance\iconheight by -0.5\baselineskip
   \advance\iconwidth by 10pt\relax
   \hangindent=\iconwidth
   \hangafter=\@iconstartpar@hangafter\relax
-  \noindent\makebox[0pt][l]{\hspace*{-\iconwidth}\smash{\raisebox{-\iconheight}{\usebox{\iconsbox}}}}%
+  \noindent\makebox[0pt][l]%
+    {\hspace*{-\iconwidth}\smash{\raisebox{-\iconheight}%
+    {\alttext{\@image@alt}{\usebox{\iconsbox}}}}}%
+  \endgroup
 }
 
-\AtBeginDocument{\providecommand{\accsupp}[2]{#2}}
+\newcommand{\iconmargin}[2][]{%
+  \begingroup
+  \setkeys{Gin}{#1}%
+  \strut\marginpar{\alttext{\@image@alt}{\@for\this@icon:=#2\do{\includegraphics{\this@icon}}}}\ignorespaces
+  \endgroup
+}
+
+\AtBeginDocument{\providecommand{\actualtext}[2]{#2}}
 
 \newcounter{plabel}
 \newcommand{\plabel}[2]{%

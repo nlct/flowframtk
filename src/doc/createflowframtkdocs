@@ -518,7 +518,8 @@ sub start_preamble{
 \\usepackage{glossaries-prefix}
 \\input{$langdeffile}
 
-\\newcommand{\\accsupp}[2]{\\BeginAccSupp{unicode,ActualText={#1}}#2\\EndAccSupp{}}
+\\newcommand{\\actualtext}[2]{\\BeginAccSupp{ActualText={#1}}#2\\EndAccSupp{}}
+\\newcommand{\\alttext}[2]{\\BeginAccSupp{Alt={#1}}#2\\EndAccSupp{}}
 
 \\glsxtrnewgls{cli_}{\\cli}
 \\glsxtrnewgls{sty_}{\\sty}
@@ -1221,46 +1222,17 @@ sub start_p{
    {
       &handle_html('>');
 
-      my %img_attrs = ('align'=>'left');
-
       if ($attrs{icon} eq 'warning')
       {
-         $img_attrs{src} = "warning.png";
-         $img_attrs{alt} = &get_label("manual.warning");
+         $attrs{iconalt} = &get_label("manual.warning") unless ($attrs{iconalt});
       }
       elsif ($attrs{icon}=~/^(tex|pgf|flf)$/)
       {
-         $img_attrs{src} = "$1related.png";
-         $img_attrs{alt} = &get_label("manual.$1relatedtext");
-      }
-      else
-      {
-         my $base;
-
-         # All images are png files. Check if suffix is present.
-
-         if ($attrs{icon}=~/(.*)\.png$/)
-         {
-            $base = $1;
-            $img_attrs{src} = $attrs{icon};
-         }
-         else
-         {
-            $base = $attrs{icon};
-            $img_attrs{src} = $attrs{icon}.'.png';
-         }
-
-         if (defined($dict{"tooltip.$base"}))
-         {
-            $img_attrs{alt} = $dict{"tooltip.$base"} . '.';
-         }
-         else
-         {
-            $img_attrs{alt} = ucfirst($base) . '.';
-         }
+         $attrs{icon} = "$1related";
+         $attrs{iconalt} = &get_label("manual.$1relatedtext") unless ($attrs{iconalt});
       }
 
-      &do_image('iconstartpar', $expat, %img_attrs);
+      &do_paricons('iconstartpar', $expat, %attrs);
    }
    else
    {
@@ -1437,67 +1409,67 @@ sub keypress{
    if ($key eq 'Space')
    {
       my $text = &get_label("manual.kbd.Space");
-      &handle_tex("\\accsupp{$text}{\\Spacebar}");
+      &handle_tex("\\alttext{$text}{\\Spacebar}");
       &handle_html("<kbd>$text</kbd>");
    }
    elsif ($key eq 'Return')
    {
       my $text = &get_label("manual.kbd.Return");
-      &handle_tex("\\accsupp{$text}{\\Return}");
+      &handle_tex("\\alttext{$text}{\\Return}");
       &handle_html("<kbd>$text &#x23CE;</kbd>");
    }
    elsif ($key eq 'Backspace')
    {
       my $text = &get_label("manual.kbd.Backspace");
-      &handle_tex("\\accsupp{$text}{\\BSpace}");
+      &handle_tex("\\alttext{$text}{\\BSpace}");
       &handle_html("<kbd>$text &#x21A4;</kbd>");
    }
    elsif ($key eq 'Tab')
    {
       my $text = &get_label("manual.kbd.Tab");
-      &handle_tex("\\accsupp{$text}{\\Tab}");
+      &handle_tex("\\alttext{$text}{\\Tab}");
       &handle_html("<kbd>$text &#x21B9;</kbd>");
    }
    elsif ($key eq 'Pgup')
    {
       my $text = &get_label("manual.kbd.Pageup");
-      &handle_tex("\\accsupp{$text}{\\keystroke{$text \$\\uparrow\$}}");
+      &handle_tex("\\alttext{$text}{\\keystroke{$text \$\\uparrow\$}}");
       &handle_html("<kbd>$text &#x2191;</kbd>");
    }
    elsif ($key eq 'Pgdn')
    {
       my $text = &get_label("manual.kbd.Pagedown");
-      &handle_tex("\\accsupp{$text}{\\keystroke{$text \$\\downarrow\$}}");
+      &handle_tex("\\alttext{$text}{\\keystroke{$text \$\\downarrow\$}}");
       &handle_html("<kbd>$text &#x2193;</kbd>");
    }
    elsif ($key eq 'Shift')
    {
       my $text = &get_label("manual.kbd.Shift");
-      &handle_tex("\\accsupp{$text}{\\keystroke{$text \$\\Uparrow\$}}");
+      &handle_tex("\\alttext{$text}{\\keystroke{$text \$\\Uparrow\$}}");
       &handle_html("<kbd>$text &#x21D1;</kbd>");
    }
    elsif ($key eq 'Up')
    {
       my $text = &get_label("manual.kbd.Up");
-      &handle_tex("\\accsupp{$text}{\\UArrow}");
+      &handle_tex("\\alttext{$text}{\\UArrow}");
       &handle_html("<kbd title=\"$text\">&#x2191;</kbd>");
    }
    elsif ($key eq 'Down')
    {
       my $text = &get_label("manual.kbd.Down");
-      &handle_tex("\\accsupp{$text}{\\DArrow}");
+      &handle_tex("\\alttext{$text}{\\DArrow}");
       &handle_html("<kbd title=\"$text\">&#x2193;</kbd>");
    }
    elsif ($key eq 'Left')
    {
       my $text = &get_label("manual.kbd.Left");
-      &handle_tex("\\accsupp{$text}{\\LArrow}");
+      &handle_tex("\\alttext{$text}{\\LArrow}");
       &handle_html("<kbd title=\"$text\">&#x2190;</kbd>");
    }
    elsif ($key eq 'Right')
    {
       my $text = &get_label("manual.kbd.Right");
-      &handle_tex("\\accsupp{$text}{\\RArrow}");
+      &handle_tex("\\alttext{$text}{\\RArrow}");
       &handle_html("<kbd title=\"$text\">&#x2192;</kbd>");
    }
    elsif (defined($dict{"manual.kbd.".$key}))
@@ -1545,6 +1517,24 @@ sub start_li{
    &handle_html("<li>");
 
    &handle_tex("\\item ");
+
+   if ($attrs{tag})
+   {
+      my $text = ($attrs{tagtext} ? $attrs{tagtext} : $attrs{tag});
+
+      if (!defined($terms{tag}) and $#nodes > -1)
+      {
+         $terms{$attrs{tag}}->{Ref} = $nodes[$#nodes]->{Tag} . ".html#" . $attrs{tag};
+         $terms{$attrs{tag}}->{Text} = $text;
+      }
+
+      &handle_html("<a name=\"", $attrs{tag}, "\"></a>");
+      &handle_tex("\\plabel{", $attrs{tag}, "}{$text}");
+   }
+
+   &do_paricons('iconmargin', $expat, %attrs);
+
+   $skipnewline=1;
 }
 
 sub end_li{
@@ -2117,6 +2107,95 @@ sub end_gt{
    my ($expat) = @_;
 }
 
+sub do_paricons{
+   my ($texcs, $expat, %attrs) = @_;
+
+   return unless ($attrs{icon});
+
+   my @icons = split /,/, $attrs{icon};
+   my $texalt = '';
+   my @alt = ();
+   my @texopts;
+   my %img_attrs = ('alt'=>'', 'class'=>(defined($attrs{class})?$attrs{class}:$texcs));
+
+   $img_attrs{scale} = $attrs{scale} if defined($attrs{scale});
+   $img_attrs{width} = $attrs{width} if defined($attrs{width});
+   $img_attrs{height} = $attrs{height} if defined($attrs{height});
+
+   @alt = split /,/, $attrs{iconalt} if defined($attrs{iconalt});
+
+   for (my $idx = 0; $idx <= $#icons; $idx++)
+   {
+      my $icon = $icons[$idx];
+      my $base;
+
+      # All images are png files. Check if suffix is present.
+
+      if ($icon=~/(.*)\.png$/)
+      {
+         $base = $1;
+         $img_attrs{src} = $icon;
+      }
+      else
+      {
+         $base = $icon;
+         $img_attrs{src} = "$icon.png";
+      }
+
+      if ($idx <= $#alt)
+      {
+         if (defined($dict{'tooltip.'.$alt[$idx]}))
+         {
+            $img_attrs{alt} = $dict{'tooltip.'.$alt[$idx]};
+         }
+         elsif (defined($dict{'manual.'.$alt[$idx]}))
+         {
+            $img_attrs{alt} = $dict{'manual.'.$alt[$idx]};
+         }
+         elsif (defined($dict{$alt[$idx].'.label'}))
+         {
+            $img_attrs{alt} = $dict{$alt[$idx].'.label'};
+         }
+         elsif (defined($dict{$alt[$idx].'.title'}))
+         {
+            $img_attrs{alt} = $dict{$alt[$idx].'.title'};
+         }
+         else
+         {
+            $img_attrs{alt} = &get_label($alt[$idx]);
+         }
+      }
+      elsif (defined($dict{"tooltip.$base"}))
+      {
+         $img_attrs{alt} = $dict{"tooltip.$base"} . '.';
+      }
+      else
+      {
+         $img_attrs{alt} = $base;
+      }
+
+      unless ($#icons==1)
+      {
+         if ($texalt)
+         {
+            $texalt .= ' ' . $img_attrs{alt};
+         }
+         else
+         {
+            $texalt = $img_attrs{alt};
+         }
+      }
+
+      @texopts = &do_image(($#icons == 1 ? $texcs : ''), $expat, %img_attrs);
+   }
+
+   if ($#icons > 1)
+   {
+      push @texopts, "alt={$texalt}";
+      &handle_tex("\\$texcs\[", join(',', @texopts) . "]{", $attrs{icon}, "}");
+   }
+}
+
 sub do_image{
    my ($texcs, $expat, %attrs) = @_;
 
@@ -2200,7 +2279,12 @@ sub do_image{
          push @opts, "height=$attrs{height}";
          &handle_html("$key=\"$attrs{$key}\" ");
       }
-      elsif (not $key eq 'src')
+      elsif ($key eq 'alt')
+      {
+         push @opts, "alt={$attrs{$key}}";
+         &handle_html("$key=\"$attrs{$key}\" ");
+      }
+      elsif ($key ne 'src')
       {
          &handle_html("$key=\"$attrs{$key}\" ");
       }
@@ -2227,15 +2311,12 @@ sub do_image{
 
    my $optionalarg = ($#opts > -1 ? "[" . join(',', @opts) . "]" : '');
 
-   if ($attrs{alt})
-   {
-      &handle_tex("\\accsupp{", $attrs{alt}, "}{\\", $texcs, 
-        "$optionalarg\{", $attrs{src}, "}}");
-   }
-   else
+   if ($texcs)
    {
       &handle_tex("\\", $texcs, "$optionalarg\{", $attrs{src}, "}");
    }
+
+   return @opts;
 }
 
 sub start_image{

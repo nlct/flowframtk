@@ -1431,8 +1431,40 @@
    menu.  These settings are discussed in more detail in <nameref tag="styles"/>.
    </node>
    <node type="subsection" tag="showrulers" title="Show Rulers">
+   <p>
+   <menu primary="true" tag="settings.rulers"/> will toggle between showing
+   and hiding the <plural tag="ruler"/> for the current <term tag="canvas"/>. This
+   setting will be applied to new canvases that are subsequently
+   opened, but the setting may be overridden when a new image is
+   loaded.
+   </p>
+   <seealso tags="rulers"/>
    </node>
    <node type="subsection" tag="gridmenu" title="Grid">
+   <p>
+   The <menu primary="true" tag="settings.grid"/> submenu allows you to change
+   the <term tag="grid"/> settings:
+   </p>
+   <ul>
+    <li iconalt="grid.show" icon="showgridup">
+    <menu primary="true" tag="settings.grid.show"/> will toggle between
+    displaying the <term tag="grid"/> on the <term tag="canvas"/> and
+    hiding it. If there is enough memory available, the grid will be
+    stored as a bitmap in order to improve redraw speed.</li>
+    <li tag="mi:gridlock" tagtext="Locking the Grid" icon="lockgridup" iconalt="lock_grid">
+    <menu primary="true" tag="settings.grid.lock"/> will
+    toggle between locking and unlocking the grid. If the grid is
+    locked, mouse <plural tag="click"/> will be translated to the nearest tick mark.
+    This means that if you use a mouse <term tag="click"/> to set the location of
+    a <term tag="controlpt"/> when constructing a <term tag="path"/>, the
+    point will be placed at the nearest tick mark. This also means that
+    when you move a point while in <ref tag="editpath">edit mode</ref>, the point 
+    will be moved in intervals of the gap between tick marks. Note that locking the
+    grid does not affect the keyboard or menu driven functions, such as
+    <menu tag="navigate.goto"/> (<kbd key="F5"/>) or emulate a 
+    <term tag="primaryclick"/> (<kbd key="F4"/>).
+    </li>
+   </ul>
    </node>
    <node type="subsection" tag="zoommenu" title="Zoom">
    </node>
