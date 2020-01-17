@@ -504,6 +504,7 @@ text.insert_symbol=Insert Symbol...
 text.insert_symbol.mnemonic=I
 
 # edit path popup menu
+editpath.label=Edit Path Popup Menu
 editpath.add_control=Add Point
 editpath.add_control.mnemonic=A
 editpath.break_path=Break path

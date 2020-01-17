@@ -1434,7 +1434,7 @@
    <p>
    <menu primary="true" tag="settings.rulers"/> will toggle between showing
    and hiding the <plural tag="ruler"/> for the current <term tag="canvas"/>. This
-   setting will be applied to new canvases that are subsequently
+   setting will be applied to new <plural tag="canvas"/> that are subsequently
    opened, but the setting may be overridden when a new image is
    loaded.
    </p>
@@ -1450,7 +1450,8 @@
     <menu primary="true" tag="settings.grid.show"/> will toggle between
     displaying the <term tag="grid"/> on the <term tag="canvas"/> and
     hiding it. If there is enough memory available, the grid will be
-    stored as a bitmap in order to improve redraw speed.</li>
+    stored as a <term tag="bitmap"/> in order to improve redraw speed.</li>
+
     <li tag="mi:gridlock" tagtext="Locking the Grid" icon="lockgridup" iconalt="lock_grid">
     <menu primary="true" tag="settings.grid.lock"/> will
     toggle between locking and unlocking the grid. If the grid is
@@ -1463,6 +1464,25 @@
     grid does not affect the keyboard or menu driven functions, such as
     <menu tag="navigate.goto"/> (<kbd key="F5"/>) or emulate a 
     <term tag="primaryclick"/> (<kbd key="F4"/>).
+    <p>When the grid is locked, the <term tag="statusbar"/> will show the image
+    <image valign="bottom" src="key" alttag="info.grid.lock_on"/> otherwise it will show 
+    the image <image valign="bottom" src="keycross" alttag="info.grid.lock_off" />. 
+    You can <term tag="doubleclick"/> on this image to toggle the state.
+    </p>
+    <p icon="warning">If you lock the grid, you will be unable to use the
+    mouse to select narrow <plural tag="path"/> that lie between tick marks as
+    mouse clicks will be translated to the nearest tick mark, unless you
+    use the drag rectangle (which may select other objects as well).
+    </p>
+    <p>
+    Similarly, if the <ref tag="graphics"><widget tag="editpathui.ignorelock"/>
+    option is off</ref>, you won't be able to select <plural tag="controlpt"/> in
+    <ref tag="editpath">edit mode</ref> with the mouse unless a
+    tick mark lies inside the <term tag="controlpt" suffix="'s"/> bounding box.
+    You will however be able to select them using the
+    <menu popup="true" tag="editpath.next_control"/> (<kbd key="F6"/>)
+    or <menu popup="true" tag="editpath.prev_control"/> (<kbd shift="true" key="F6"/>).
+    </p>
     </li>
    </ul>
    </node>

@@ -1218,9 +1218,23 @@ sub start_p{
           " for 'p' element on line ", $expat->current_line, "\n";
       }
    }
-   elsif ($attrs{icon})
+   elsif ($attrs{icon} or $attrs{marginicon})
    {
       &handle_html('>');
+
+      my $csname = 'iconstartpar';
+
+      if ($attrs{marginicon})
+      {
+         if ($attrs{icon})
+         {
+            die "Can't use both 'icon' and 'marginicon' for 'p' element on line",
+             $expat->current_line, "\n";
+         }
+
+         $attrs{icon} = $attrs{marginicon};
+         $csname = 'iconmargin';
+      }
 
       if ($attrs{icon} eq 'warning')
       {
@@ -1232,7 +1246,7 @@ sub start_p{
          $attrs{iconalt} = &get_label("manual.$1relatedtext") unless ($attrs{iconalt});
       }
 
-      &do_paricons('iconstartpar', $expat, %attrs);
+      &do_paricons($csname, $expat, %attrs);
    }
    else
    {
@@ -1802,7 +1816,7 @@ sub start_seealso{
    foreach my $tag (@tags)
    {
       &handle_html("<li><ref case=\"none\" tag=\"$tag\"></ref>");
-      &handle_tex("\\item \\docnameref{$tag}\n");
+      &handle_tex("\\item \\namerefprefix{$tag}\n");
    }
 
    &handle_tex("\\end{itemize}\n");
@@ -2186,10 +2200,10 @@ sub do_paricons{
          }
       }
 
-      @texopts = &do_image(($#icons == 1 ? $texcs : ''), $expat, %img_attrs);
+      @texopts = &do_image(($#icons == 0 ? $texcs : ''), $expat, %img_attrs);
    }
 
-   if ($#icons > 1)
+   if ($#icons > 0)
    {
       push @texopts, "alt={$texalt}";
       &handle_tex("\\$texcs\[", join(',', @texopts) . "]{", $attrs{icon}, "}");
@@ -2208,6 +2222,8 @@ sub do_image{
    &handle_html("<img ");
 
    my $imgfile = $attrs{src};
+
+   $imgfile .= '.png' unless ($imgfile=~/\.png$/);
 
    # First try images-<locale> sub-directory
    # Then sharedimages directory
@@ -2284,6 +2300,12 @@ sub do_image{
          push @opts, "alt={$attrs{$key}}";
          &handle_html("$key=\"$attrs{$key}\" ");
       }
+      elsif ($key eq 'alttag')
+      {
+         my $alt = &get_label($attrs{alttag});
+         push @opts, "alt={$alt}";
+         &handle_html("alt=\"$alt\" ");
+      }
       elsif ($key ne 'src')
       {
          &handle_html("$key=\"$attrs{$key}\" ");
@@ -2322,7 +2344,29 @@ sub do_image{
 sub start_image{
    my ($expat, %attrs) = @_;
 
-   &do_image('includegraphics', $expat, %attrs);
+   $attrs{valign} = 'middle' unless defined($attrs{valign});
+
+   my $texcs;
+
+   if ($attrs{valign} eq 'top')
+   {
+      $texcs = 'includetimg';
+   }
+   elsif ($attrs{valign} eq 'middle')
+   {
+      $texcs = 'includeimg';
+   }
+   elsif ($attrs{valign} eq 'bottom')
+   {
+      $texcs = 'includebimg';
+   }
+   else
+   {
+      die "Unknown 'valign' attribute '", $attrs{valign}, "' for 'image' element on line",
+        $expat->current_line, "\n";
+   }
+
+   &do_image($texcs, $expat, %attrs);
 }
 
 sub end_image{
@@ -2601,6 +2645,7 @@ sub start_menu{
    }
 
    &check_indexing_attributes('menu', $expat, \%attrs);
+   &check_boolean_attribute_value('popup', $expat, \%attrs);
 
    my $hash = \%terms;
 
@@ -2608,6 +2653,8 @@ sub start_menu{
    my $parent = '';
    my @items = split /\./, $attrs{tag};
    my %subattrs = ('index'=>0, 'texoptions'=>'[noindex]');
+
+   my $popup = 0;
 
    for (my $idx = 0; $idx <= $#items; $idx++)
    {
@@ -2618,12 +2665,26 @@ sub start_menu{
       if ($currentlabel)
       {
          $currentlabel .= ".$item";
-         &handle_tex("\\mto ");
-         &handle_html('&#x279C;');
+
+         if ($popup)
+         {
+            $popup = 0;
+            &keypress("F3", " (", ") ");
+         }
+         else
+         {
+            &handle_tex("\\mto ");
+            &handle_html('&#x279C;');
+         }
       }
       else
       {
          $currentlabel = $item;
+
+         if ($attrs{popup})
+         {
+            $popup = 1;
+         }
       }
 
       my $text;
@@ -3000,11 +3061,17 @@ sub start_term{
       &handle_tex("\\$csname", $attrs{texoptions}, "\{$hstag}");
    }
 
+   if ($attrs{suffix})
+   {
+      &handle_tex($attrs{suffix}=~/\]/ ? "[\{$attrs{suffix}\}]" : "[$attrs{suffix}]");
+
+      $html .= $attrs{suffix};
+   }
+
    &handle_html($htmlprefix);
 
    &hs_index_term($hstag, $html, $terms{$hstag}->{Text}, 
      \%terms, \%attrs);
-
 }
 
 sub end_term{
@@ -3096,15 +3163,19 @@ sub start_nameref{
         $expat->current_line, "\n";
    }
 
+   &check_boolean_attribute_value('prefix', $expat, \%attrs);
+
+   my $csname = ($attrs{prefix} ? "namerefprefix" : "nameref");
+
    if ($attrs{class})
    {
-      &handle_tex("\\", $attrs{class}, "fmt{\\docnameref{", $attrs{tag}, "}}");
+      &handle_tex("\\", $attrs{class}, "fmt{\\$csname\{", $attrs{tag}, "}}");
       &handle_html("<span class=\"", $attrs{class}, 
        "\"><ref case=\"none\" tag=\"", $attrs{tag}, "\"></ref></span>");
    }
    else
    {
-      &handle_tex("\\docnameref{", $attrs{tag}, "}");
+      &handle_tex("\\$csname\{", $attrs{tag}, "}");
       &handle_html("<ref case=\"none\" tag=\"", $attrs{tag}, "\"></ref>");
    }
 }

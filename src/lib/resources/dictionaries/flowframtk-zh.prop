@@ -509,6 +509,7 @@ text.insert_symbol=插入符号(I)...
 text.insert_symbol.mnemonic=I
 
 # edit path popup menu
+editpath.label=Edit Path Popup Menu
 editpath.add_control=添加控制点(A)
 editpath.add_control.mnemonic=A
 editpath.break_path=断开路径(B)

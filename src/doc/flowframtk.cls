@@ -555,20 +555,23 @@ y+s_yx
 
 \def\doc@@getreftype#1.#2\\{\def\doc@currentreftype{#1}}
 
+\newcommand*{\namerefprefixtitlefmt}[1]{(#1)}
+
 \newcommand{\chapternamereffmt}{%
   \ifdef\chapterautorefname{\chapterautorefname}{\chaptername}~%
-  \doc@currentref\ (\doc@currentreftitle)%
+  \doc@currentref\ \namerefprefixtitlefmt{\doc@currentreftitle}%
 }
 \newcommand{\sectionnamerefprefix}{\S}
 \newcommand{\sectionnamereffmt}{%
-  \sectionnamerefprefix\doc@currentref\ (\doc@currentreftitle)%
+  \sectionnamerefprefix\doc@currentref\ 
+  \namerefprefixtitlefmt{\doc@currentreftitle}%
 }
 \newcommand{\subsectionnamereffmt}{\sectionnamereffmt}
 \newcommand{\subsubsectionnamereffmt}{\sectionnamereffmt}
 \newcommand{\paragraphnamereffmt}{\sectionnamereffmt}
 \newcommand{\subparagraphnamereffmt}{\sectionnamereffmt}
 
-\newcommand*{\docnameref}[1]{%
+\newcommand*{\namerefprefix}[1]{%
   \ifcsdef{r@#1}%
   {%
     \expandafter\doc@getref\csname r@#1\endcsname
