@@ -36,6 +36,7 @@ import java.awt.image.*;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.plaf.basic.*;
+import javax.swing.event.ChangeListener;
 import javax.help.*;
 
 import com.dickimawbooks.jdr.*;
@@ -1849,6 +1850,28 @@ public class JDRResources
       return button;
    }
 
+   public JRadioButton createAppRadioButton(
+      String label, ButtonGroup bg, boolean selected, ChangeListener listener)
+   {
+      JRadioButton button = new JRadioButton(getString(label), selected);
+
+      char mnemonic = getChar(label+".mnemonic", '\0');
+
+      if (mnemonic != '\0')
+      {
+         button.setMnemonic(mnemonic);
+      }
+
+      bg.add(button);
+
+      if (listener != null)
+      {
+         button.addChangeListener(listener);
+      }
+
+      return button;
+   }
+
    public JCheckBox createAppCheckBox(
       String parentId, String action,
       boolean selected, ActionListener listener)
@@ -1870,6 +1893,28 @@ public class JDRResources
       }
 
       button.setActionCommand(action);
+
+      button.setToolTipText(getToolTipText(label));
+
+      return button;
+   }
+
+   public JCheckBox createAppCheckBox(String label,
+      boolean selected, ChangeListener listener)
+   {
+      JCheckBox button = new JCheckBox(getString(label), selected);
+
+      char mnemonic = getChar(label+".mnemonic", '\0');
+
+      if (mnemonic != '\0')
+      {
+         button.setMnemonic(mnemonic);
+      }
+
+      if (listener != null)
+      {
+         button.addChangeListener(listener);
+      }
 
       button.setToolTipText(getToolTipText(label));
 
