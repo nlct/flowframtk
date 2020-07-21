@@ -202,15 +202,15 @@ public class ColorPanel extends JPanel
       predefined_n++;
    }
 
-   public void setMnemonics(char rgbMnemonic, char cmykMnemonic)
+   public void setMnemonics(int rgbMnemonic, int cmykMnemonic)
    {
       // set mnemonics
       tabbedPane.setMnemonicAt(0, rgbMnemonic);
       tabbedPane.setMnemonicAt(1, cmykMnemonic);
    }
 
-   public void setMnemonics(char rgbMnemonic, char cmykMnemonic,
-      char hsbMnemonic, char greyMnemonic)
+   public void setMnemonics(int rgbMnemonic, int cmykMnemonic,
+      int hsbMnemonic, int greyMnemonic)
    {
       // set mnemonics
       tabbedPane.setMnemonicAt(0, rgbMnemonic);

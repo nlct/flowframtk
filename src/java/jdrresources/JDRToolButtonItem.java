@@ -59,7 +59,7 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
 
       KeyStroke keyStroke = resources.getAccelerator(menuID);
 
-      setMnemonic(resources.getChar(menuID+".mnemonic"));
+      setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setAccelerator(keyStroke);
       addActionListener(this);
       setToolTipText(tooltipText);
@@ -96,7 +96,7 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
       button.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-      setMnemonic(resources.getChar(menuID+".mnemonic"));
+      setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
 
       if (keyStroke != null)
       {

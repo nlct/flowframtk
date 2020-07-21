@@ -247,7 +247,7 @@ public class JDRPropertiesDialog extends JDialog
 
       okayButton = new JButton(getResources().getString("label.okay"));
       okayButton.setMnemonic(
-         getResources().getChar("label.okay.mnemonic"));
+         getResources().getCodePoint("label.okay.mnemonic"));
       okayButton.addKeyListener(this);
 
       okayButton.addActionListener(new ActionListener()

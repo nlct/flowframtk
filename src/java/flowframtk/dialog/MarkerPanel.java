@@ -311,8 +311,8 @@ public class MarkerPanel extends JPanel
 
       colourPanel = new ColorPanel(getResources());
       colourPanel.setMnemonics(
-         getResources().getChar("colour.rgb.mnemonic"),
-         getResources().getChar("colour.cmyk.mnemonic"));
+         getResources().getCodePoint("colour.rgb.mnemonic"),
+         getResources().getCodePoint("colour.cmyk.mnemonic"));
 
       //colourPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(colourPanel);

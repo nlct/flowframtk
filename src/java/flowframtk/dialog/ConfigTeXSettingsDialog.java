@@ -81,7 +81,7 @@ public class ConfigTeXSettingsDialog extends JDialog
          null, new JScrollPane(texSettings),
          getResources().getString("clssettings.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("clssettings.mnemonic"));
+         getResources().getCodePoint("clssettings.mnemonic"));
 
       flfConfigPanel = new FlfConfigPanel(getResources());
 
@@ -89,7 +89,7 @@ public class ConfigTeXSettingsDialog extends JDialog
          null, new JScrollPane(flfConfigPanel),
          getResources().getString("flfsettings.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("flfsettings.mnemonic"));
+         getResources().getCodePoint("flfsettings.mnemonic"));
 
       textConfigPanel = new TextConfigPanel(this, application);
 
@@ -97,7 +97,7 @@ public class ConfigTeXSettingsDialog extends JDialog
          null, new JScrollPane(textConfigPanel),
          getResources().getString("textconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("textconfig.mnemonic"));
+         getResources().getCodePoint("textconfig.mnemonic"));
 
       preambleConfigPanel = new PreambleConfigPanel(this, application);
 
@@ -105,7 +105,7 @@ public class ConfigTeXSettingsDialog extends JDialog
          null, new JScrollPane(preambleConfigPanel),
          getResources().getString("preambleconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("preambleconfig.mnemonic"));
+         getResources().getCodePoint("preambleconfig.mnemonic"));
 
 
       // OK/Cancel Button panel
@@ -576,7 +576,7 @@ class TextConfigPanel extends JPanel
         createTextMappingsComponent(),
         resources.getToolTipText("textconfig.textmode"));
       tabbedPane.setMnemonicAt(0, 
-        resources.getChar("textconfig.textmode.mnemonic"));
+        resources.getCodePoint("textconfig.textmode.mnemonic"));
 
       tabbedPane.addTab(
         resources.getString("textconfig.mathmode"),
@@ -584,7 +584,7 @@ class TextConfigPanel extends JPanel
         createMathsMappingsComponent(),
         resources.getToolTipText("textconfig.mathmode"));
       tabbedPane.setMnemonicAt(1, 
-        resources.getChar("textconfig.mathmode.mnemonic"));
+        resources.getCodePoint("textconfig.mathmode.mnemonic"));
 
       removedTextMappings = new Vector<Integer>();
       removedMathMappings = new Vector<Integer>();

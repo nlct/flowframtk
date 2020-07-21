@@ -115,7 +115,7 @@ public class FileField extends Box
          }
 
          fileChooser.setApproveButtonMnemonic(
-            getResources().getChar("file.select.mnemonic"));
+            getResources().getCodePoint("file.select.mnemonic"));
 
          if (fileChooser.showDialog(parent,
             getResources().getString("file.select"))

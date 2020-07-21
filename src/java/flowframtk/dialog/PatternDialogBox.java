@@ -101,7 +101,7 @@ public class PatternDialogBox extends JDialog
          null, rotPanel);
 
       tabbedPane.setMnemonicAt(0,
-         getResources().getChar("pattern.rotational.mnemonic"));
+         getResources().getCodePoint("pattern.rotational.mnemonic"));
 
       scaledPanel = new JPanel();
 
@@ -125,7 +125,7 @@ public class PatternDialogBox extends JDialog
          null, scaledPanel);
 
       tabbedPane.setMnemonicAt(1,
-         getResources().getChar("pattern.scaled.mnemonic"));
+         getResources().getCodePoint("pattern.scaled.mnemonic"));
 
       spiralPanel = new JPanel();
 
@@ -146,7 +146,7 @@ public class PatternDialogBox extends JDialog
          null, spiralPanel);
 
       tabbedPane.setMnemonicAt(2,
-         getResources().getChar("pattern.spiral.mnemonic"));
+         getResources().getCodePoint("pattern.spiral.mnemonic"));
 
       box.add(tabbedPane);
 

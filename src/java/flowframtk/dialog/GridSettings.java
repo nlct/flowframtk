@@ -68,7 +68,7 @@ public class GridSettings extends JDialog
         getResources().getString("tooltip.grid.rectangular"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getChar("grid.rectangular.mnemonic"));
+         getResources().getCodePoint("grid.rectangular.mnemonic"));
 
       idx++;
 
@@ -77,7 +77,7 @@ public class GridSettings extends JDialog
          getResources().getString("tooltip.grid.radial"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getChar("grid.radial.mnemonic"));
+         getResources().getCodePoint("grid.radial.mnemonic"));
 
       idx++;
 
@@ -86,7 +86,7 @@ public class GridSettings extends JDialog
          getResources().getString("tooltip.grid.iso"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getChar("grid.iso.mnemonic"));
+         getResources().getCodePoint("grid.iso.mnemonic"));
 
       idx++;
 
@@ -95,7 +95,7 @@ public class GridSettings extends JDialog
          getResources().getString("tooltip.grid.tschichold"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getChar("grid.tschichold.mnemonic"));
+         getResources().getCodePoint("grid.tschichold.mnemonic"));
 
       idx++;
 
@@ -104,7 +104,7 @@ public class GridSettings extends JDialog
          getResources().getString("tooltip.grid.path"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getChar("grid.path.mnemonic"));
+         getResources().getCodePoint("grid.path.mnemonic"));
 
       tabbedPane.addChangeListener(pathGridPanel);
 

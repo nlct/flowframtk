@@ -109,7 +109,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(graphicsPanel),
          getResources().getString("tooltip.graphics"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("graphics.mnemonic"));
+         getResources().getCodePoint("graphics.mnemonic"));
 
       JComponent annotationsPanel = new JPanel(new GridBagLayout());
 
@@ -134,7 +134,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(annotationsPanel),
          getResources().getString("annotations.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("annotations.mnemonic"));
+         getResources().getCodePoint("annotations.mnemonic"));
 
       langPanel = new LanguagePanel(application);
 
@@ -142,7 +142,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(langPanel),
          getResources().getString("lang.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("lang.mnemonic"));
+         getResources().getCodePoint("lang.mnemonic"));
 
       acceleratorPanel = new AcceleratorPanel(this);
 
@@ -150,7 +150,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, acceleratorPanel,
          getResources().getString("accelerators.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("accelerators.mnemonic"));
+         getResources().getCodePoint("accelerators.mnemonic"));
 
       rulerFormatPanel = new RulerFormatPanel(application);
       rulerFormatPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -159,7 +159,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(rulerFormatPanel),
          getResources().getString("borders.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("ruler.mnemonic"));
+         getResources().getCodePoint("ruler.mnemonic"));
 
       normalizePanel = new NormalizePanel(getResources()); 
 
@@ -167,7 +167,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(normalizePanel),
          getResources().getString("tooltip.normalize"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("normalize.mnemonic"));
+         getResources().getCodePoint("normalize.mnemonic"));
 
       texEditorUIPanel = new TeXEditorUIPanel(application_);
 
@@ -175,7 +175,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(texEditorUIPanel),
          getResources().getString("texeditorui.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("texeditorui.mnemonic"));
+         getResources().getCodePoint("texeditorui.mnemonic"));
 
       lookAndFeelPanel = new LookAndFeelPanel(application_);
 
@@ -183,7 +183,7 @@ public class ConfigUISettingsDialog extends JDialog
          null, new JScrollPane(lookAndFeelPanel),
          getResources().getString("lookandfeel.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("lookandfeel.mnemonic"));
+         getResources().getCodePoint("lookandfeel.mnemonic"));
 
       // OK/Cancel Button panel
       JPanel p = new JPanel();

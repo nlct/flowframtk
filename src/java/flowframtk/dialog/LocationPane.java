@@ -51,13 +51,13 @@ public class LocationPane extends JTabbedPane
 
       add(rectCoordPanel, RECTANGULAR);
       setMnemonicAt(RECTANGULAR,
-         resources.getChar("grid.rectangular.mnemonic"));
+         resources.getCodePoint("grid.rectangular.mnemonic"));
 
       radialCoordPanel = new RadialCoordPanel(resources);
 
       add(radialCoordPanel, RADIAL);
       setMnemonicAt(RADIAL,
-         resources.getChar("grid.radial.mnemonic"));
+         resources.getCodePoint("grid.radial.mnemonic"));
 
       addChangeListener(this);
    }

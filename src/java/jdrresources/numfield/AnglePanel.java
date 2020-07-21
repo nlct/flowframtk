@@ -80,6 +80,12 @@ public class AnglePanel extends JPanel
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
+   public AnglePanel(JDRMessageDictionary msgSys, String label, int mnemonic, NumberField numField)
+   {
+      this(msgSys, label, numField);
+      sizeLabel.setDisplayedMnemonic(mnemonic);
+   }
+
    public AnglePanel(JDRMessageDictionary msgSys, NumberField numField)
    {
       super();
@@ -119,6 +125,12 @@ public class AnglePanel extends JPanel
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
+   public AnglePanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel, NumberField numField)
+   {
+      this(msgSys, label, panel, numField);
+      sizeLabel.setDisplayedMnemonic(mnemonic);
+   }
+
    public AnglePanel(JDRMessageDictionary msgSys, SamplePanel panel, NumberField numField)
    {
       this(msgSys, numField);
@@ -133,6 +145,11 @@ public class AnglePanel extends JPanel
    }
 
    public AnglePanel(JDRMessageDictionary msgSys, String label, char mnemonic)
+   {
+      this(msgSys, label, mnemonic, new DoubleField(0.0));
+   }
+
+   public AnglePanel(JDRMessageDictionary msgSys, String label, int mnemonic)
    {
       this(msgSys, label, mnemonic, new DoubleField(0.0));
    }

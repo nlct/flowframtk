@@ -331,7 +331,7 @@ public class JDRDictionary
    public char getChar(String key)
    {
       String s = getString(key);
-      return s.charAt(0);
+      return s.isEmpty() ? (char)0 : s.charAt(0);
    }
 
    /**
@@ -352,9 +352,29 @@ public class JDRDictionary
 
       String s = (String)dictionary.get(key);
 
-      if (s == null) return defVal;
+      if (s == null || s.isEmpty()) return defVal;
 
       return s.charAt(0);
+   }
+
+   public int getCodePoint(String key)
+   {
+      String s = getString(key);
+      return s.isEmpty() ? -1 : s.codePointAt(0);
+   }
+
+   public int getCodePoint(String key, int defVal)
+   {
+      if (dictionary == null)
+      {
+         return defVal;
+      }
+
+      String s = (String)dictionary.get(key);
+
+      if (s == null || s.isEmpty()) return defVal;
+
+      return s.codePointAt(0);
    }
 
    /**

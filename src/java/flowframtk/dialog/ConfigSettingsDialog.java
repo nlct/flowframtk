@@ -87,21 +87,21 @@ public class ConfigSettingsDialog extends JDialog
          null, panel,
          getResources().getString("tooltip.controls"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("controls.mnemonic"));
+         getResources().getCodePoint("controls.mnemonic"));
 
       dirPanel = new DirPanel(getResources());
 
       tabbedPane.addTab(getResources().getString("startdir.title"),
          null, dirPanel, getResources().getString("tooltip.startdir"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("startdir.mnemonic"));
+         getResources().getCodePoint("startdir.mnemonic"));
 
       jdrPanel = new JDRSettingsPanel(getResources());
 
       tabbedPane.addTab(getResources().getString("jdr.title"), null,
         jdrPanel, getResources().getString("tooltip.jdr"));
       tabbedPane.setMnemonicAt(idx++,
-        getResources().getChar("jdr.mnemonic"));
+        getResources().getCodePoint("jdr.mnemonic"));
 
       initAppSettingsPanel = new InitAppSettingsPanel(getResources());
 
@@ -109,21 +109,21 @@ public class ConfigSettingsDialog extends JDialog
          null, initAppSettingsPanel,
          getResources().getString("tooltip.initsettings"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getChar("initsettings.mnemonic"));
+         getResources().getCodePoint("initsettings.mnemonic"));
 
       bitmapPanel = new BitmapPanel(getResources());
 
       tabbedPane.addTab(getResources().getString("bitmapconfig.title"), null,
         bitmapPanel, getResources().getString("bitmapconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-        getResources().getChar("bitmapconfig.mnemonic"));
+        getResources().getCodePoint("bitmapconfig.mnemonic"));
 
       processesPanel = new ProcessesPanel(application, appSelector);
 
       tabbedPane.addTab(getResources().getString("processes.title"), null,
         processesPanel, getResources().getString("processes.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-        getResources().getChar("processes.mnemonic"));
+        getResources().getCodePoint("processes.mnemonic"));
 
       // OK/Cancel Button panel
 
@@ -496,7 +496,7 @@ class DirPanel extends JPanel
       fc.setCurrentDirectory(new File("."));
       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
       fc.setApproveButtonText(resources.getString("label.okay"));
-      fc.setApproveButtonMnemonic(resources.getChar("label.okay.mnemonic"));
+      fc.setApproveButtonMnemonic(resources.getCodePoint("label.okay.mnemonic"));
    }
 
    public void actionPerformed(ActionEvent evt)

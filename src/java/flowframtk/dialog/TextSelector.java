@@ -87,7 +87,7 @@ public class TextSelector extends JDialog
 
       copyText = new JMenuItem(
           getResources().getString("edit.copy"),
-          getResources().getChar("edit.copy.mnemonic"));
+          getResources().getCodePoint("edit.copy.mnemonic"));
       textpopupMenu.add(copyText);
       copyText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
          InputEvent.CTRL_MASK));
@@ -101,7 +101,7 @@ public class TextSelector extends JDialog
 
       cutText = new JMenuItem(
           getResources().getString("edit.cut"),
-          getResources().getChar("edit.cut.mnemonic"));
+          getResources().getCodePoint("edit.cut.mnemonic"));
       textpopupMenu.add(cutText);
       cutText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
          InputEvent.CTRL_MASK));
@@ -115,7 +115,7 @@ public class TextSelector extends JDialog
 
       JMenuItem pasteText = new JMenuItem(
           getResources().getString("edit.paste"),
-          getResources().getChar("edit.paste.mnemonic"));
+          getResources().getCodePoint("edit.paste.mnemonic"));
       textpopupMenu.add(pasteText);
       pasteText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
          InputEvent.CTRL_MASK));
@@ -129,7 +129,7 @@ public class TextSelector extends JDialog
 
       JMenuItem select_allText = new JMenuItem(
           getResources().getString("edit.select_all"),
-          getResources().getChar("edit.select_all.mnemonic"));
+          getResources().getCodePoint("edit.select_all.mnemonic"));
       textpopupMenu.add(select_allText);
       select_allText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
          InputEvent.CTRL_MASK));
@@ -146,7 +146,7 @@ public class TextSelector extends JDialog
 
       JMenuItem insertSymbol = new JMenuItem(
          getResources().getString("text.insert_symbol"),
-         getResources().getChar("text.insert_symbol.mnemonic"));
+         getResources().getCodePoint("text.insert_symbol.mnemonic"));
       textpopupMenu.add(insertSymbol);
       insertSymbol.setAccelerator(insertKeyStroke);
 
@@ -502,7 +502,7 @@ class TextPathPanel extends JPanel
       JLabel leftDelimLabel = new JLabel(
          resources.getString("edittext.textpath.left_delim"));
       leftDelimLabel.setDisplayedMnemonic(
-         resources.getChar("edittext.textpath.left_delim.mnemonic"));
+         resources.getCodePoint("edittext.textpath.left_delim.mnemonic"));
       leftDelimLabel.setAlignmentX(0.0f);
 
       box.add(leftDelimLabel);
@@ -517,7 +517,7 @@ class TextPathPanel extends JPanel
       JLabel rightDelimLabel = new JLabel(
          resources.getString("edittext.textpath.right_delim"));
       rightDelimLabel.setDisplayedMnemonic(
-         resources.getChar("edittext.textpath.right_delim.mnemonic"));
+         resources.getCodePoint("edittext.textpath.right_delim.mnemonic"));
       rightDelimLabel.setAlignmentX(0.0f);
 
       box.add(rightDelimLabel);
@@ -544,18 +544,18 @@ class TextPathPanel extends JPanel
 
    public void apply(JDRTextPathStroke stroke)
    {
-      leftDelimField.setChar(stroke.getLeftDelim());
-      rightDelimField.setChar(stroke.getRightDelim());
+      leftDelimField.setCodePoint(stroke.getLeftDelim());
+      rightDelimField.setCodePoint(stroke.getRightDelim());
    }
 
-   public char getLeftDelim()
+   public int getLeftDelim()
    {
-      return leftDelimField.getChar();
+      return leftDelimField.getCodePoint();
    }
 
-   public char getRightDelim()
+   public int getRightDelim()
    {
-      return rightDelimField.getChar();
+      return rightDelimField.getCodePoint();
    }
 
    public void updateInfoSize()
@@ -578,6 +578,7 @@ class DelimField extends JTextField
       setMaximumSize(getPreferredSize());
    }
 
+   @Deprecated
    public char getChar()
    {
       String text = getText();
@@ -585,9 +586,33 @@ class DelimField extends JTextField
       return text.isEmpty() ? '\u0000' : text.charAt(0);
    }
 
+   @Deprecated
    public void setChar(char delim)
    {
       setText(delim == '\u0000' ? "" : ""+delim);
+   }
+
+   public int getCodePoint()
+   {
+      String text = getText();
+
+      return text.isEmpty() ? 0 : text.codePointAt(0);
+   }
+
+   public void setCodePoint(int delim)
+   {
+      if (delim == 0)
+      {
+         setText("");
+      }
+      else if (Character.charCount(delim) == 1)
+      {
+         setText(String.format("%c", (char)delim));
+      }
+      else
+      {
+         setText(new String(Character.toChars(delim)));
+      }
    }
 }
 
@@ -603,10 +628,10 @@ class DelimFieldDocument extends PlainDocument
    {
       if (str == null || str.isEmpty() || str.length() > 1) return;
 
-      char delim = str.charAt(0);
+      int delim = str.codePointAt(0);
 
       if (delim == '\\' || delim == '{' || delim == '}' || delim == '+'
-        || getLength() > 0)
+        || getLength() >= Character.charCount(delim))
       {
          return;
       }

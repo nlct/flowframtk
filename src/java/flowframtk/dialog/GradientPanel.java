@@ -64,8 +64,8 @@ public class GradientPanel extends JPanel
       startPanel = new ColorPanel(this);
 
       startPanel.setMnemonics(
-         getResources().getChar("colour.rgb.mnemonic"),
-         getResources().getChar("colour.cmyk.mnemonic"));
+         getResources().getCodePoint("colour.rgb.mnemonic"),
+         getResources().getCodePoint("colour.cmyk.mnemonic"));
       startPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       add(startPanel);
@@ -79,8 +79,8 @@ public class GradientPanel extends JPanel
       endPanel = new ColorPanel(this);
 
       endPanel.setMnemonics(
-         getResources().getChar("colour.rgb2.mnemonic"),
-         getResources().getChar("colour.cmyk2.mnemonic"));
+         getResources().getCodePoint("colour.rgb2.mnemonic"),
+         getResources().getCodePoint("colour.cmyk2.mnemonic"));
       endPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       add(endPanel);

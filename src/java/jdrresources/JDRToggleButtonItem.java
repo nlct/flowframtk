@@ -51,7 +51,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
 
       String tooltipText = resources.getString("tooltip."+action, null);
 
-      setMnemonic(resources.getChar(menuID+".mnemonic"));
+      setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setToolTipText(tooltipText);
       setAccelerator(keyStroke);
       addActionListener(this);
@@ -81,7 +81,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
    {
       super(resources.getString(menuID), selected);
 
-      setMnemonic(resources.getChar(menuID+".mnemonic"));
+      setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setToolTipText(tooltipText);
       setAccelerator(keyStroke);
       addActionListener(this);

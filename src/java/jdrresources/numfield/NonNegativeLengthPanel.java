@@ -53,6 +53,11 @@ public class NonNegativeLengthPanel extends LengthPanel
       super(msgSys, label, mnemonic, new NonNegativeDoubleField(0.0));
    }
 
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic)
+   {
+      super(msgSys, label, mnemonic, new NonNegativeDoubleField(0.0));
+   }
+
    public NonNegativeLengthPanel(JDRMessageDictionary msgSys)
    {
       super(msgSys, new NonNegativeDoubleField(0.0));
@@ -64,6 +69,11 @@ public class NonNegativeLengthPanel extends LengthPanel
    }
 
    public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, SamplePanel panel)
+   {
+      super(msgSys, label, mnemonic, panel, new NonNegativeDoubleField(0.0));
+   }
+
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel)
    {
       super(msgSys, label, mnemonic, panel, new NonNegativeDoubleField(0.0));
    }

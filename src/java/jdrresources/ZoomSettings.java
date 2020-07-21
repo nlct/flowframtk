@@ -51,7 +51,7 @@ public class ZoomSettings extends JDialog
       JLabel label = new JLabel(
          application.getResources().getString("zoom.magnification"));
       label.setDisplayedMnemonic(
-         application.getResources().getChar("zoom.magnification.mnemonic"));
+         application.getResources().getCodePoint("zoom.magnification.mnemonic"));
 
       p1.add(label);
 

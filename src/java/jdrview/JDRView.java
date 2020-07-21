@@ -133,14 +133,14 @@ public class JDRView extends JFrame
       // File Menu
 
       fileM = new JMenu(getResources().getString("file.label"));
-      fileM.setMnemonic(getResources().getChar("file.mnemonic"));
+      fileM.setMnemonic(getResources().getCodePoint("file.mnemonic"));
       mbar.add(fileM);
 
       // Open
 
       openItem =
          new JMenuItem(getResources().getString("file.open"),
-                       getResources().getChar("file.open.mnemonic"));
+                       getResources().getCodePoint("file.open.mnemonic"));
       openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
          InputEvent.CTRL_MASK));
       openItem.addActionListener(this);
@@ -165,7 +165,7 @@ public class JDRView extends JFrame
 
       reloadItem =
          new JMenuItem(getResources().getString("file.reload"),
-                       getResources().getChar("file.reload.mnemonic"));
+                       getResources().getCodePoint("file.reload.mnemonic"));
       reloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
          InputEvent.CTRL_MASK));
       reloadItem.addActionListener(this);
@@ -175,7 +175,7 @@ public class JDRView extends JFrame
 
       propertiesItem =
          new JMenuItem(getResources().getString("file.properties"),
-                       getResources().getChar("file.properties.mnemonic"));
+                       getResources().getCodePoint("file.properties.mnemonic"));
       propertiesItem.addActionListener(this);
       fileM.add(propertiesItem);
 
@@ -185,7 +185,7 @@ public class JDRView extends JFrame
 
       printItem =
          new JMenuItem(getResources().getString("file.print"),
-            getResources().getChar("file.print.mnemonic"));
+            getResources().getCodePoint("file.print.mnemonic"));
       printItem.addActionListener(this);
       fileM.add(printItem);
 
@@ -193,7 +193,7 @@ public class JDRView extends JFrame
 
       quitItem =
          new JMenuItem(getResources().getString("file.quit"),
-                       getResources().getChar("file.quit.mnemonic"));
+                       getResources().getCodePoint("file.quit.mnemonic"));
       quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
          InputEvent.CTRL_MASK));
       quitItem.addActionListener(this);
@@ -202,7 +202,7 @@ public class JDRView extends JFrame
       // settings menu
 
       settingsM = new JMenu(getResources().getString("settings.label"));
-      settingsM.setMnemonic(getResources().getChar("settings.mnemonic"));
+      settingsM.setMnemonic(getResources().getCodePoint("settings.mnemonic"));
       mbar.add(settingsM);
 
       // anti-aliasing
@@ -210,7 +210,7 @@ public class JDRView extends JFrame
       antiAliasItem = new JCheckBoxMenuItem(
          getResources().getString("settings.antialias"), antiAlias);
       antiAliasItem.setMnemonic(
-         getResources().getChar("settings.antialias.mnemonic"));
+         getResources().getCodePoint("settings.antialias.mnemonic"));
       antiAliasItem.addActionListener(this);
       settingsM.add(antiAliasItem);
 
@@ -219,7 +219,7 @@ public class JDRView extends JFrame
       // Zoom sub menu
 
       zoomM = new JMenu(getResources().getString("settings.zoom"));
-      zoomM.setMnemonic(getResources().getChar("settings.zoom.mnemonic"));
+      zoomM.setMnemonic(getResources().getCodePoint("settings.zoom.mnemonic"));
       settingsM.add(zoomM);
 
       ButtonGroup zoomGroup = new ButtonGroup();
@@ -228,7 +228,7 @@ public class JDRView extends JFrame
 
       zoomWidthItem = new JMenuItem(
          getResources().getString("settings.zoom.width"),
-         getResources().getChar("settings.zoom.width.mnemonic"));
+         getResources().getCodePoint("settings.zoom.width.mnemonic"));
       zoomWidthItem.addActionListener(this);
       zoomM.add(zoomWidthItem);
 
@@ -236,7 +236,7 @@ public class JDRView extends JFrame
 
       zoomHeightItem = new JMenuItem(
          getResources().getString("settings.zoom.height"),
-         getResources().getChar("settings.zoom.height.mnemonic"));
+         getResources().getCodePoint("settings.zoom.height.mnemonic"));
       zoomHeightItem.addActionListener(this);
       zoomM.add(zoomHeightItem);
 
@@ -244,7 +244,7 @@ public class JDRView extends JFrame
 
       zoomPageItem = new JMenuItem(
          getResources().getString("settings.zoom.page"),
-         getResources().getChar("settings.zoom.page.mnemonic"));
+         getResources().getCodePoint("settings.zoom.page.mnemonic"));
       zoomPageItem.addActionListener(this);
       zoomM.add(zoomPageItem);
 
@@ -255,7 +255,7 @@ public class JDRView extends JFrame
       zoomSettingsItem = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.user"), false);
       zoomSettingsItem.setMnemonic(
-         getResources().getChar("settings.zoom.user.mnemonic"));
+         getResources().getCodePoint("settings.zoom.user.mnemonic"));
 
       zoomSettingsChooserBox = new ZoomSettings(this, this);
       zoomSettingsItem.addActionListener(this);
@@ -267,7 +267,7 @@ public class JDRView extends JFrame
 
       zoom25Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.25"), false);
-      zoom25Item.setMnemonic(getResources().getChar("settings.zoom.25.mnemonic"));
+      zoom25Item.setMnemonic(getResources().getCodePoint("settings.zoom.25.mnemonic"));
       zoom25Item.addActionListener(this);
       zoomM.add(zoom25Item);
       zoomGroup.add(zoom25Item);
@@ -276,7 +276,7 @@ public class JDRView extends JFrame
 
       zoom50Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.50"), false);
-      zoom50Item.setMnemonic(getResources().getChar("settings.zoom.50.mnemonic"));
+      zoom50Item.setMnemonic(getResources().getCodePoint("settings.zoom.50.mnemonic"));
       zoom50Item.addActionListener(this);
       zoomM.add(zoom50Item);
       zoomGroup.add(zoom50Item);
@@ -285,7 +285,7 @@ public class JDRView extends JFrame
 
       zoom75Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.75"), false);
-      zoom75Item.setMnemonic(getResources().getChar("settings.zoom.75.mnemonic"));
+      zoom75Item.setMnemonic(getResources().getCodePoint("settings.zoom.75.mnemonic"));
       zoom75Item.addActionListener(this);
       zoomM.add(zoom75Item);
       zoomGroup.add(zoom75Item);
@@ -294,7 +294,7 @@ public class JDRView extends JFrame
 
       zoom100Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.100"), true);
-      zoom100Item.setMnemonic(getResources().getChar("settings.zoom.100.mnemonic"));
+      zoom100Item.setMnemonic(getResources().getCodePoint("settings.zoom.100.mnemonic"));
       zoom100Item.addActionListener(this);
       zoomM.add(zoom100Item);
       zoomGroup.add(zoom100Item);
@@ -303,7 +303,7 @@ public class JDRView extends JFrame
 
       zoom200Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.200"), false);
-      zoom200Item.setMnemonic(getResources().getChar("settings.zoom.200.mnemonic"));
+      zoom200Item.setMnemonic(getResources().getCodePoint("settings.zoom.200.mnemonic"));
       zoom200Item.addActionListener(this);
       zoomM.add(zoom200Item);
       zoomGroup.add(zoom200Item);
@@ -312,7 +312,7 @@ public class JDRView extends JFrame
 
       zoom400Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.400"), false);
-      zoom400Item.setMnemonic(getResources().getChar("settings.zoom.400.mnemonic"));
+      zoom400Item.setMnemonic(getResources().getCodePoint("settings.zoom.400.mnemonic"));
       zoom400Item.addActionListener(this);
       zoomM.add(zoom400Item);
       zoomGroup.add(zoom400Item);
@@ -321,7 +321,7 @@ public class JDRView extends JFrame
 
       zoom800Item = new JRadioButtonMenuItem(
          getResources().getString("settings.zoom.800"), false);
-      zoom800Item.setMnemonic(getResources().getChar("settings.zoom.800.mnemonic"));
+      zoom800Item.setMnemonic(getResources().getCodePoint("settings.zoom.800.mnemonic"));
       zoom800Item.addActionListener(this);
       zoomM.add(zoom800Item);
       zoomGroup.add(zoom800Item);
@@ -330,7 +330,7 @@ public class JDRView extends JFrame
       // help menu
 
       JMenu helpM = new JMenu(getResources().getString("help.label"));
-      helpM.setMnemonic(getResources().getChar("help.mnemonic"));
+      helpM.setMnemonic(getResources().getCodePoint("help.mnemonic"));
       mbar.add(helpM);
 
       // manual
@@ -342,7 +342,7 @@ public class JDRView extends JFrame
       licenceDialog = new LicenceDialog(getResources(), this);
       licenceItem = new JMenuItem(
          getResources().getString("help.licence"),
-         getResources().getChar("help.licence.mnemonic"));
+         getResources().getCodePoint("help.licence.mnemonic"));
       licenceItem.addActionListener(this);
       helpM.add(licenceItem);
 
@@ -353,7 +353,7 @@ public class JDRView extends JFrame
          invoker.getVersion());
       aboutItem = new JMenuItem(
          getResources().getString("help.about"),
-         getResources().getChar("help.about.mnemonic"));
+         getResources().getCodePoint("help.about.mnemonic"));
       aboutItem.addActionListener(this);
       helpM.add(aboutItem);
 

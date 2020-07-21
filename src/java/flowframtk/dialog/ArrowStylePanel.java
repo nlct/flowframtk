@@ -85,11 +85,11 @@ public class ArrowStylePanel extends JPanel
       tabbedPane.add(getResources().getString("arrow.primary")+" ",
                      new JScrollPane(markerPanel1));
       tabbedPane.setMnemonicAt(0,
-         getResources().getChar("arrow.primary.mnemonic"));
+         getResources().getCodePoint("arrow.primary.mnemonic"));
       tabbedPane.add(getResources().getString("arrow.secondary")+" ",
                      new JScrollPane(markerPanel2));
       tabbedPane.setMnemonicAt(1,
-         getResources().getChar("arrow.secondary.mnemonic"));
+         getResources().getCodePoint("arrow.secondary.mnemonic"));
 
       add(tabbedPane, "Center");
    }

@@ -128,7 +128,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
    {
       JMenuItem item = new JMenuItem(
          getResources().getString(menuId),
-         getResources().getChar(menuId+".mnemonic"));
+         getResources().getCodePoint(menuId+".mnemonic"));
 
       if (tooltipId != null)
       {
@@ -192,7 +192,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       JCheckBoxMenuItem item = new JCheckBoxMenuItem(
          getResources().getString(menuId), selected);
 
-      item.setMnemonic(getResources().getChar(menuId+".mnemonic"));
+      item.setMnemonic(getResources().getCodePoint(menuId+".mnemonic"));
 
       if (tooltipId != null)
       {
@@ -226,7 +226,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       JRadioButtonMenuItem item = new JRadioButtonMenuItem(
          getResources().getString(menuId), selected);
 
-      item.setMnemonic(getResources().getChar(menuId+".mnemonic"));
+      item.setMnemonic(getResources().getCodePoint(menuId+".mnemonic"));
       bg.add(item);
 
       if (tooltipId != null)

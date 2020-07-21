@@ -89,7 +89,7 @@ public class ImagePreview extends JComponent
       previewBox = new JCheckBox(
          resources.getString("image.preview"));
       previewBox.setMnemonic(
-         resources.getChar("image.preview.mnemonic"));
+         resources.getCodePoint("image.preview.mnemonic"));
       previewBox.addActionListener(this);
 
       add(previewBox, "South");

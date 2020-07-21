@@ -73,6 +73,12 @@ public class LengthPanel extends JPanel
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
+   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, NumberField numField)
+   {
+      this(msgSys, label, numField);
+      sizeLabel.setDisplayedMnemonic(mnemonic);
+   }
+
    public LengthPanel(JDRMessageDictionary msgSys, NumberField numField)
    {
       super();
@@ -106,6 +112,12 @@ public class LengthPanel extends JPanel
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
+   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel, NumberField numField)
+   {
+      this(msgSys, label, panel, numField);
+      sizeLabel.setDisplayedMnemonic(mnemonic);
+   }
+
    public LengthPanel(JDRMessageDictionary msgSys, SamplePanel panel, NumberField numField)
    {
       this(msgSys, numField);
@@ -124,6 +136,11 @@ public class LengthPanel extends JPanel
       this(msgSys, label, mnemonic, new DoubleField(0.0));
    }
 
+   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic)
+   {
+      this(msgSys, label, mnemonic, new DoubleField(0.0));
+   }
+
    public LengthPanel(JDRMessageDictionary msgSys)
    {
       this(msgSys, new DoubleField(0.0));
@@ -135,6 +152,11 @@ public class LengthPanel extends JPanel
    }
 
    public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, SamplePanel panel)
+   {
+      this(msgSys, label, mnemonic, panel, new DoubleField(0.0));
+   }
+
+   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel)
    {
       this(msgSys, label, mnemonic, panel, new DoubleField(0.0));
    }

@@ -58,7 +58,7 @@ public class JDRButtonItem extends JMenuItem
       addActionListener(listener);
       setActionCommand(action);
       setAccelerator(keyStroke);
-      setMnemonic(resources.getChar(menuID+".mnemonic"));
+      setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setToolTipText(tooltipText);
 
       menu.add(this);
@@ -78,7 +78,7 @@ public class JDRButtonItem extends JMenuItem
 
       buttonParent.add(button);
 
-      setMnemonic(resources.getChar(menuID+".mnemonic"));
+      setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setAccelerator(keyStroke);
       setActionCommand(name);
       setToolTipText(tooltipText);

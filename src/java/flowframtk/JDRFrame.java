@@ -1047,12 +1047,12 @@ public class JDRFrame extends JInternalFrame
       canvas.setSelectedAnchor(halign, valign);
    }
 
-   public void setSelectedText(String text, char leftDelim, char rightDelim)
+   public void setSelectedText(String text, int leftDelim, int rightDelim)
    {
       canvas.setSelectedText(text, leftDelim, rightDelim);
    }
 
-   public void setSelectedText(String text, String ltxText, char leftDelim, char rightDelim, Vector<String> styNames)
+   public void setSelectedText(String text, String ltxText, int leftDelim, int rightDelim, Vector<String> styNames)
    {
       canvas.setSelectedText(text, ltxText, leftDelim, rightDelim, styNames);
    }

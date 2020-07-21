@@ -84,8 +84,8 @@ public class PaintPanel extends JPanel
       singleColourPanel = new ColorPanel(getResources(), this);
       singleColourPanel.setAlignmentY(Component.TOP_ALIGNMENT);
       singleColourPanel.setMnemonics(
-         getResources().getChar("colour.rgb.mnemonic"),
-         getResources().getChar("colour.cmyk.mnemonic"));
+         getResources().getCodePoint("colour.rgb.mnemonic"),
+         getResources().getCodePoint("colour.cmyk.mnemonic"));
 
       JPanel singleColourCard = new JPanel();
       singleColourCard.setLayout(new BorderLayout());

@@ -6584,19 +6584,19 @@ public class JDRCanvas extends JPanel
       textField.requestFocusInWindow();
    }
 
-   public void setSelectedText(String text, char leftDelim, char rightDelim)
+   public void setSelectedText(String text, int leftDelim, int rightDelim)
    {
       setSelectedText(text, "", leftDelim, rightDelim);
    }
 
    public void setSelectedText(String text, String ltxText, 
-      char leftDelim, char rightDelim)
+      int leftDelim, int rightDelim)
    {
       setSelectedText(text, ltxText, leftDelim, rightDelim, null);
    }
 
    public void setSelectedText(String text, String ltxText, 
-      char leftDelim, char rightDelim, Vector<String> styNames)
+      int leftDelim, int rightDelim, Vector<String> styNames)
    {
       JDRTextual object = getSelectedTextual();
 
@@ -16102,10 +16102,10 @@ public class JDRCanvas extends JPanel
       private String oldtext_, newtext_;
       private String oldltxtext_, newltxtext_;
       private boolean textChanged;
-      private char oldLeftDelim, oldRightDelim, newLeftDelim, newRightDelim;
+      private int oldLeftDelim, oldRightDelim, newLeftDelim, newRightDelim;
 
       public SetText(JDRTextual object, String newtext,
-         String newlatexText, char leftDelim, char rightDelim)
+         String newlatexText, int leftDelim, int rightDelim)
       {
          super(getFrame());
 

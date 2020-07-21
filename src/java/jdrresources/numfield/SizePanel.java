@@ -42,7 +42,7 @@ public class SizePanel extends JPanel
       super();
 
       sizeLabel = new JLabel(resources.getString("size.label"));
-      sizeLabel.setDisplayedMnemonic(resources.getChar("size.mnemonic"));
+      sizeLabel.setDisplayedMnemonic(resources.getCodePoint("size.mnemonic"));
       text      = new NonNegativeDoubleField(1.0F);
       text.getDocument().addDocumentListener(
           new TextFieldSampleListener(panel));

@@ -64,7 +64,7 @@ public class StyleSelector extends JDRSelector
 
       linePanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(0,
-         getResources().getChar("linecolour.mnemonic"));
+         getResources().getCodePoint("linecolour.mnemonic"));
 
       // Fill colour selection panel
 
@@ -76,7 +76,7 @@ public class StyleSelector extends JDRSelector
 
       fillPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(1,
-         getResources().getChar("fillcolour.mnemonic"));
+         getResources().getCodePoint("fillcolour.mnemonic"));
 
       // line style panel
       linestylePanel = new LineStylePanel(this);
@@ -88,7 +88,7 @@ public class StyleSelector extends JDRSelector
       linestylePanel.setBorder(
          BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(2,
-         getResources().getChar("linestyle.mnemonic"));
+         getResources().getCodePoint("linestyle.mnemonic"));
 
       // JDRText colour selection panel
       textPanel = new PaintPanel(this);
@@ -99,7 +99,7 @@ public class StyleSelector extends JDRSelector
 
       textPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(3,
-         getResources().getChar("textcolour.mnemonic"));
+         getResources().getCodePoint("textcolour.mnemonic"));
 
       // font panel
 
@@ -111,7 +111,7 @@ public class StyleSelector extends JDRSelector
       fontPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
       tabbedPane.setMnemonicAt(4,
-         getResources().getChar("font.mnemonic"));
+         getResources().getCodePoint("font.mnemonic"));
 
       setDefaults();
 

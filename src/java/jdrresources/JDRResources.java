@@ -243,7 +243,7 @@ public class JDRResources
 
       JButton copyButton =
          new JButton(getString("stacktrace.copy","Copy"));
-      copyButton.setMnemonic(getChar("stacktrace.copy.mnemonic",'C'));
+      copyButton.setMnemonic(getCodePoint("stacktrace.copy.mnemonic",'C'));
       copyButton.addActionListener(new CopyAction(stackTraceDetails));
 
       p2.add(copyButton,"South");
@@ -792,11 +792,13 @@ public class JDRResources
     * if not found or 
     * if the dictionary has not been initialised using
     * {@link #initialiseDictionary()}.
+    * This method is now obsolete. Use {@link #getCodePoint(String,int)} instead.
     * @param key the key identifying the required string
     * @param defVal the default value
     * @return the first character of the required string 
     * or default value if not found
     */
+   @Deprecated
    public char getChar(String key, char defVal)
    {
       if (dictionary == null)
@@ -807,9 +809,48 @@ public class JDRResources
       return dictionary.getChar(key, defVal);
    }
 
+
    /**
     * Gets the first character of the string associated with the 
-    * given key in the resource dictionary. if not found or 
+    * given key in the resource dictionary. If not found or 
+    * if the dictionary has not been initialised using
+    * {@link #initialiseDictionary()}, the
+    * first character of the key is used instead.
+    * This method is now obsolete. Use {@link #getCodePoint(String)} instead.
+    * @param key the key identifying the required string
+    * @return the first character of the required string 
+    * or the first character of the key if not found
+    */
+   @Deprecated
+   public char getChar(String key)
+   {
+      return getChar(key, key.charAt(0));
+   }
+
+   /**
+    * Gets the code point of the first character of the string associated with the 
+    * given key in the resource dictionary, or the default value 
+    * if not found or 
+    * if the dictionary has not been initialised using
+    * {@link #initialiseDictionary()}.
+    * @param key the key identifying the required string
+    * @param defVal the default value
+    * @return the first character of the required string 
+    * or default value if not found
+    */
+   public int getCodePoint(String key, int defVal)
+   {
+      if (dictionary == null)
+      {
+         return defVal;
+      }
+
+      return dictionary.getCodePoint(key, defVal);
+   }
+
+   /**
+    * Gets the code point of the first character of the string associated with the 
+    * given key in the resource dictionary. If not found or 
     * if the dictionary has not been initialised using
     * {@link #initialiseDictionary()}, the
     * first character of the key is used instead.
@@ -817,9 +858,9 @@ public class JDRResources
     * @return the first character of the required string 
     * or the first character of the key if not found
     */
-   public char getChar(String key)
+   public int getCodePoint(String key)
    {
-      return getChar(key, key.charAt(0));
+      return getCodePoint(key, key.codePointAt(0));
    }
 
    public String getToolTipText(String id)
@@ -1408,7 +1449,7 @@ public class JDRResources
       helpM.add(helpItem);
       helpItem.setAccelerator(getAccelerator("label.help"));
 
-      helpItem.setMnemonic(getChar("help.handbook.mnemonic"));
+      helpItem.setMnemonic(getCodePoint("help.handbook.mnemonic"));
 
       if (csh != null)
       {
@@ -1492,7 +1533,7 @@ public class JDRResources
          buttonText = getString(tag, null);
       }
 
-      char buttonMnemonic = getChar(tag+".mnemonic", '\0');
+      int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
       String base = mapIconBaseName(actionName);
 
       JDRButton button = null;
@@ -1510,7 +1551,7 @@ public class JDRResources
 
       button.setActionCommand(actionName);
 
-      if (buttonText != null && buttonMnemonic != '\0')
+      if (buttonText != null && buttonMnemonic != 0)
       {
          button.setMnemonic(buttonMnemonic);
       }
@@ -1554,7 +1595,7 @@ public class JDRResources
          buttonText = getString(tag, null);
       }
 
-      char buttonMnemonic = getChar(tag+".mnemonic", '\0');
+      int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
       String base = mapIconBaseName(actionName);
 
       JDRToggleButton button = null;
@@ -1572,7 +1613,7 @@ public class JDRResources
 
       button.setActionCommand(actionName);
 
-      if (buttonText != null && buttonMnemonic != '\0')
+      if (buttonText != null && buttonMnemonic != 0)
       {
          button.setMnemonic(buttonMnemonic);
       }
@@ -1618,7 +1659,7 @@ public class JDRResources
          buttonText = getString(tag, null);
       }
 
-      char buttonMnemonic = getChar(tag+".mnemonic", '\0');
+      int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
       String base = mapIconBaseName(actionName);
 
       JDRToolButton button = null;
@@ -1636,7 +1677,7 @@ public class JDRResources
 
       button.setActionCommand(actionName);
 
-      if (buttonText != null && buttonMnemonic != '\0')
+      if (buttonText != null && buttonMnemonic != 0)
       {
          button.setMnemonic(buttonMnemonic);
       }
@@ -1831,9 +1872,9 @@ public class JDRResources
 
       JRadioButton button = new JRadioButton(getString(label), selected);
 
-      char mnemonic = getChar(label+".mnemonic", '\0');
+      int mnemonic = getCodePoint(label+".mnemonic", 0);
 
-      if (mnemonic != '\0')
+      if (mnemonic != 0)
       {
          button.setMnemonic(mnemonic);
       }
@@ -1855,9 +1896,9 @@ public class JDRResources
    {
       JRadioButton button = new JRadioButton(getString(label), selected);
 
-      char mnemonic = getChar(label+".mnemonic", '\0');
+      int mnemonic = getCodePoint(label+".mnemonic", 0);
 
-      if (mnemonic != '\0')
+      if (mnemonic != 0)
       {
          button.setMnemonic(mnemonic);
       }
@@ -1880,9 +1921,9 @@ public class JDRResources
 
       JCheckBox button = new JCheckBox(getString(label), selected);
 
-      char mnemonic = getChar(label+".mnemonic", '\0');
+      int mnemonic = getCodePoint(label+".mnemonic", 0);
 
-      if (mnemonic != '\0')
+      if (mnemonic != 0)
       {
          button.setMnemonic(mnemonic);
       }
@@ -1904,9 +1945,9 @@ public class JDRResources
    {
       JCheckBox button = new JCheckBox(getString(label), selected);
 
-      char mnemonic = getChar(label+".mnemonic", '\0');
+      int mnemonic = getCodePoint(label+".mnemonic", 0);
 
-      if (mnemonic != '\0')
+      if (mnemonic != 0)
       {
          button.setMnemonic(mnemonic);
       }
@@ -1928,9 +1969,9 @@ public class JDRResources
 
       JButton button = new JButton(getString(label));
 
-      char mnemonic = getChar(label+".mnemonic", '\0');
+      int mnemonic = getCodePoint(label+".mnemonic", 0);
 
-      if (mnemonic != '\0')
+      if (mnemonic != 0)
       {
          button.setMnemonic(mnemonic);
       }
@@ -1949,9 +1990,9 @@ public class JDRResources
    {
       JLabel label = new JLabel(getString(id));
 
-      char c = getChar(id+".mnemonic", '\0');
+      int c = getCodePoint(id+".mnemonic", 0);
 
-      if (c != '\0')
+      if (c != 0)
       {
          label.setDisplayedMnemonic(c);
       }
@@ -2001,7 +2042,7 @@ public class JDRResources
 
       JMenu menu = new JMenu(text);
 
-      menu.setMnemonic(getChar(menuId+".mnemonic"));
+      menu.setMnemonic(getCodePoint(menuId+".mnemonic"));
 
       return menu;
    }
@@ -2022,7 +2063,7 @@ public class JDRResources
       String tooltipText)
    {
       JMenuItem item = new JMenuItem(getString(id),
-         getChar(id+".mnemonic"));
+         getCodePoint(id+".mnemonic"));
 
       if (keyStroke != null)
       {
@@ -2061,7 +2102,7 @@ public class JDRResources
    {
       JCheckBoxMenuItem item = new JCheckBoxMenuItem(getString(id), selected);
 
-      item.setMnemonic(getChar(id+".mnemonic"));
+      item.setMnemonic(getCodePoint(id+".mnemonic"));
 
       if (keyStroke != null)
       {
@@ -2095,7 +2136,7 @@ public class JDRResources
 
       group.add(item);
 
-      item.setMnemonic(getChar(id+".mnemonic"));
+      item.setMnemonic(getCodePoint(id+".mnemonic"));
 
       if (keyStroke != null)
       {
@@ -2124,9 +2165,9 @@ public class JDRResources
    {
       LengthPanel panel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          panel = new LengthPanel(getMessageSystem(), getString(tag));
       }
@@ -2149,9 +2190,9 @@ public class JDRResources
    {
       LengthPanel panel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          panel = new LengthPanel(getMessageSystem(), getString(tag), numField);
       }
@@ -2175,9 +2216,9 @@ public class JDRResources
    {
       LengthPanel lengthPanel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          lengthPanel = new LengthPanel(getMessageSystem(), getString(tag), samplePanel, numField);
       }
@@ -2201,9 +2242,9 @@ public class JDRResources
    {
       LengthPanel lengthPanel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          lengthPanel = new LengthPanel(getMessageSystem(), getString(tag), samplePanel);
       }
@@ -2246,9 +2287,9 @@ public class JDRResources
    {
       NonNegativeLengthPanel panel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          panel = new NonNegativeLengthPanel(getMessageSystem(), getString(tag));
       }
@@ -2271,9 +2312,9 @@ public class JDRResources
    {
       NonNegativeLengthPanel lengthPanel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          lengthPanel = new NonNegativeLengthPanel(getMessageSystem(), getString(tag), samplePanel);
       }
@@ -2316,9 +2357,9 @@ public class JDRResources
    {
       AnglePanel anglePanel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          anglePanel = new AnglePanel(getMessageSystem(), getString(tag), numField);
       }
@@ -2341,9 +2382,9 @@ public class JDRResources
    {
       AnglePanel anglePanel;
 
-      char mnemonic = getChar(tag+".mnemonic", '\0');
+      int mnemonic = getCodePoint(tag+".mnemonic", 0);
 
-      if (mnemonic == '\0')
+      if (mnemonic == 0)
       {
          anglePanel = new AnglePanel(getMessageSystem(), getString(tag));
       }

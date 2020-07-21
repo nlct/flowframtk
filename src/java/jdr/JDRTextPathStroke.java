@@ -479,8 +479,8 @@ public class JDRTextPathStroke implements JDRStroke
       int hAlign = LEFT;
       int vAlign = RIGHT;
 
-      char delimL = '|';
-      char delimR = '|';
+      int delimL = (int)'|';
+      int delimR = (int)'|';
 
       if (jdr.readBoolean(InvalidFormatException.TEXT_PATH_LATEX_FLAG))
       {
@@ -507,7 +507,14 @@ public class JDRTextPathStroke implements JDRStroke
          ltxText = jdr.readString(
             InvalidFormatException.TEXT_PATH_LATEX_TEXT);
 
-         if (version >= 1.8f)
+         if (version >= 2.1f)
+         {
+            delimL = jdr.readInt(
+               InvalidFormatException.TEXT_PATH_DELIM_L);
+            delimR = jdr.readInt(
+               InvalidFormatException.TEXT_PATH_DELIM_R);
+         }
+         else if (version >= 1.8f)
          {
             delimL = jdr.readChar(
                InvalidFormatException.TEXT_PATH_DELIM_L);
@@ -558,10 +565,15 @@ public class JDRTextPathStroke implements JDRStroke
 
       jdr.writeString(text.equals(latexText) ? null : latexText);
 
-      if (version >= 1.8f)
+      if (version >= 2.1f)
       {
-         jdr.writeChar(getLeftDelim());
-         jdr.writeChar(getRightDelim());
+         jdr.writeInt(getLeftDelim());
+         jdr.writeInt(getRightDelim());
+      }
+      else if (version >= 1.8f)
+      {
+         jdr.writeChar((char)getLeftDelim());
+         jdr.writeChar((char)getRightDelim());
       }
       else if (getLeftDelim() != '|'
              &&getRightDelim() != '|')
@@ -1171,14 +1183,37 @@ public class JDRTextPathStroke implements JDRStroke
          tex.println("\\pgfset{decoration/text align="+align+"}");
       }
 
-      char leftDelim = getLeftDelim();
-      char rightDelim = getRightDelim();
+      int leftDelim = getLeftDelim();
+      int rightDelim = getRightDelim();
 
-      String leftDelimStr = (leftDelim == '\u0000' ?
-         (rightDelim == '\u0000' ? "|" : ""+rightDelim) :
-          ""+leftDelim);
+      String leftDelimStr;
 
-      String rightDelimStr = (rightDelim == '\u0000' ? leftDelimStr : ""+rightDelim);
+      if (leftDelim == 0)
+      {
+         if (rightDelim == 0)
+         {
+            leftDelimStr = "|";
+         }
+         else
+         {
+            leftDelimStr = new String(Character.toChars(rightDelim));
+         }
+      }
+      else
+      {
+         leftDelimStr = new String(Character.toChars(leftDelim));
+      }
+
+      String rightDelimStr;
+
+      if (rightDelim == 0)
+      {
+         rightDelimStr = leftDelimStr;
+      }
+      else
+      {
+         rightDelimStr = new String(Character.toChars(rightDelim));
+      }
 
       tex.println("\\pgfset{decoration/text format delimiters={"
         +leftDelimStr+"}{"+rightDelimStr+"}}");
@@ -1197,22 +1232,22 @@ public class JDRTextPathStroke implements JDRStroke
 
    }
 
-   public void setLeftDelim(char delim)
+   public void setLeftDelim(int delim)
    {
       delimL = delim;
    }
 
-   public void setRightDelim(char delim)
+   public void setRightDelim(int delim)
    {
       delimR = delim;
    }
 
-   public char getLeftDelim()
+   public int getLeftDelim()
    {
       return delimL;
    }
 
-   public char getRightDelim()
+   public int getRightDelim()
    {
       return delimR;
    }
@@ -1243,8 +1278,8 @@ public class JDRTextPathStroke implements JDRStroke
    /**
     * pgf text path decoration delimiters
     */
-   private char delimL = '|';
-   private char delimR = '|';
+   private int delimL = (int)'|';
+   private int delimR = (int)'|';
 
    private AffineTransform af = new AffineTransform();
 
