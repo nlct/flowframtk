@@ -2700,7 +2700,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.confirm_store_current">Store current results?</entry>
 <entry key="vectorize.confirm_clear_all">Clear all results?</entry>
 <entry key="vectorize.confirm_include_current">Include current results?</entry>
-<entry key="vectorize.confirm_discard_current">Discard current results?</entry>
+<entry key="vectorize.confirm_discard_all">Discard all paths?</entry>
 <entry key="vectorize.delete_shape">Delete Shape</entry>
 <entry key="vectorize.store_shape">Store Shape</entry>
 <entry key="vectorize.no_tasks_selected">No tasks selected.</entry>

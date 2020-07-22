@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2020 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -364,6 +364,21 @@ public class VectorizeBitmapDialog extends JDialog
       return !resultPanel.getResults().isEmpty();
    }
 
+   private void reset()
+   {
+      this.shapeList = null;
+      setImage(null);
+      resultPanel.newImage();
+      summaryPanel.updateSummary(null);
+      undoManager.discardAllEdits();
+      historyPanel.removeAll();
+      currentHistoryIndex = 0;
+      UndoableEditComp editComp= new UndoableEditComp(this);
+      editComp.setSelected(true);
+      historyGroup.add(editComp);
+      historyPanel.add(editComp);
+   }
+
    public boolean clearImage()
    {
       if (getCurrentShapeList() != null)
@@ -387,17 +402,7 @@ public class VectorizeBitmapDialog extends JDialog
          }
       }
 
-      this.shapeList = null;
-      setImage(null);
-      resultPanel.newImage();
-      summaryPanel.updateSummary(null);
-      undoManager.discardAllEdits();
-      historyPanel.removeAll();
-      currentHistoryIndex = 0;
-      UndoableEditComp editComp= new UndoableEditComp(this);
-      editComp.setSelected(true);
-      historyGroup.add(editComp);
-      historyPanel.add(editComp);
+      reset();
 
       return true;
    }
@@ -416,7 +421,7 @@ public class VectorizeBitmapDialog extends JDialog
 
       if (result == JOptionPane.YES_OPTION)
       {
-         resultPanel.newImage();
+         reset();
       }
    }
 
@@ -443,8 +448,7 @@ public class VectorizeBitmapDialog extends JDialog
       currentFrame = application.getCurrentFrame();
       JDRBitmap bitmap = currentFrame.getSelectedBitmap();
 
-      resultPanel.newImage();
-      clearImage();
+      reset();
 
       Image image = bitmap.getImage();
 
@@ -535,10 +539,10 @@ public class VectorizeBitmapDialog extends JDialog
 
    public void cancel()
    {
-      if (getCurrentShapeList() != null)
+      if (!resultPanel.getResults().isEmpty() || getCurrentShapeList() != null)
       {
          if (JOptionPane.showConfirmDialog(this, 
-           getResources().getString("vectorize.confirm_discard_current"),
+           getResources().getString("vectorize.confirm_discard_all"),
            getResources().getString("process.confirm"),
             JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
 
@@ -2801,15 +2805,16 @@ class ControlPanel extends JPanel implements ActionListener
       JComponent taskButtonPanel = new JPanel();
       buttonPanel.add(taskButtonPanel);
 
-      doTasksButton = resources.createAppJButton("vectorize", "dotasks", this);
+      doTasksButton = resources.createDialogButton(
+         "vectorize", "dotask", this, null);
       taskButtonPanel.add(doTasksButton);
 
-      selectAllButton = resources.createAppJButton("vectorize", 
-       "selectallitems", this);
+      selectAllButton = resources.createDialogButton("vectorize", 
+       "selectallitems", this, null);
       taskButtonPanel.add(selectAllButton);
 
-      deselectAllButton = resources.createAppJButton("vectorize",
-        "deselectallitems", this);
+      deselectAllButton = resources.createDialogButton("vectorize",
+        "deselectallitems", this, null);
       taskButtonPanel.add(deselectAllButton);
 
       storeResultsButton = resources.createAppJButton("vectorize",
@@ -2993,7 +2998,7 @@ class ControlPanel extends JPanel implements ActionListener
          return;
       }
 
-      if (command.equals("dotasks"))
+      if (command.equals("dotask"))
       {
          dialog.doSelectedTasks();
       }
@@ -3181,9 +3186,9 @@ class ControlPanel extends JPanel implements ActionListener
 
    private VectorizeBitmapDialog dialog;
 
-   private JButton doTasksButton, storeResultsButton, selectAllButton, 
-      deselectAllButton;
-   private JDRButton clearAllResultsButton;
+   private JButton storeResultsButton;
+   private JDRButton doTasksButton, selectAllButton, 
+      deselectAllButton, clearAllResultsButton;
 
    private JDRButton okayButton, cancelButton;
 
