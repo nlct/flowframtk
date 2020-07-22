@@ -1,0 +1,162 @@
+% Created by JpgfDraw
+% Feb 28, 2007 1:33:56 PM
+% /nlctltpc/home/nlct/java/JpgfDraw/src/examples/newspaper.jdr
+% This package is designed for use with normal font = 12.0pt
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{newspaper}
+\DeclareOption{draft}{\PassOptionsToPackage{draft}{flowfram}}
+\DeclareOption{final}{\PassOptionsToPackage{final}{flowfram}}
+\DeclareOption{rotate}{\PassOptionsToPackage{rotate}{flowfram}}
+\DeclareOption{norotate}{\PassOptionsToPackage{norotate}{flowfram}}
+\DeclareOption{ttbtitle}{\PassOptionsToPackage{ttbtitle}{flowfram}}
+\DeclareOption{ttbnotitle}{\PassOptionsToPackage{ttbnotitle}{flowfram}}
+\DeclareOption{ttbnum}{\PassOptionsToPackage{ttbnum}{flowfram}}
+\DeclareOption{ttbnonum}{\PassOptionsToPackage{ttbnonum}{flowfram}}
+\DeclareOption{color}{\PassOptionsToPackage{color}{flowfram}}
+\DeclareOption{nocolor}{\PassOptionsToPackage{nocolor}{flowfram}}
+\ProcessOptions
+\RequirePackage{flowfram}
+\RequirePackage{pgf}
+\RequirePackage[a4paper,portrait]{geometry}
+\geometry{lmargin=57.783314bp,rmargin=57.783314bp,tmargin=57.783314bp,bmargin=57.783314bp}
+\newstaticframe[all]{477.712341bp}{87.674973bp}{-0.5bp}{639.149468bp}[title]
+
+\setstaticframe*{title}{valign=c}
+\newstaticframe[all]{232.133255bp}{29.891647bp}{-0.5bp}{595.811994bp}[leftheading]
+
+\setstaticframe*{leftheading}{valign=c}
+\newstaticframe[all]{232.13327bp}{29.891647bp}{245.079082bp}{595.811994bp}[rightheading]
+
+\setstaticframe*{rightheading}{valign=c}
+\newstaticframe[all]{71.0bp}{76.0bp}{414.216686bp}{503.107755bp}[eggimage]
+
+%Border command for frame 'eggimage'
+\expandafter\def\csname @flf@border@eggimage\endcsname#1{%
+\begin{pgfpicture}{0bp}{0bp}{71.0bp}{76.0bp}
+\pgfputat{\pgfpoint{-0.0bp}{-0.0bp}}{%
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{0.0bp}{76.0bp}}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\pgfimage{egg}}}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0bp}{0bp}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setstaticframe*
+{eggimage}{offset=0pt,border={@flf@border@eggimage}}
+
+\setstaticframe*{eggimage}{valign=c}
+\newstaticframe[all]{477.712341bp}{304.362366bp}{-0.5bp}{278.003797bp}[lefttext]
+
+\setstaticframe*{lefttext}{shape={\parshape=21
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 477.0bp 
+0.0bp 477.0bp 
+0.0bp 477.0bp 
+0.0bp 477.0bp 
+0.0bp 477.0bp 
+0.0bp 477.0bp }}
+\setstaticframe*{lefttext}{valign=t}
+\newstaticframe[all]{232.13327bp}{203.241592bp}{245.079082bp}{379.12457bp}[righttext]
+
+\setstaticframe*{righttext}{shape={\parshape=14
+0.0bp 188.0bp 
+0.0bp 174.0bp 
+0.0bp 159.0bp 
+0.0bp 159.0bp 
+0.0bp 174.0bp 
+0.0bp 174.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp 
+0.0bp 232.0bp }}
+\setstaticframe*{righttext}{valign=t}
+\newstaticframe[all]{477.712341bp}{29.891663bp}{-0.5bp}{234.666287bp}[bottomheading]
+
+\setstaticframe*{bottomheading}{valign=c}
+\newflowframe[all]{232.133255bp}{217.687439bp}{-0.5bp}{3.533048bp}[left]
+
+\newflowframe[all]{232.134033bp}{217.688965bp}{245.07832bp}{3.531522bp}[right]
+
+\newstaticframe[all]{239.356201bp}{253.802002bp}{237.856152bp}{371.901639bp}[Lbar]
+
+%Border command for frame 'Lbar'
+\expandafter\def\csname @flf@border@Lbar\endcsname#1{%
+\begin{pgfpicture}{0bp}{0bp}{239.356201bp}{253.802002bp}
+\pgfputat{\pgfpoint{-0.0bp}{-0.0bp}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap 
+\pgfsetmiterjoin \pgfsetmiterlimit{10.0}
+\pgfsetstartarrow{{}}\pgfsetendarrow{{}}
+\pgfpathmoveto{\pgfpoint{0.500012bp}{253.302006bp}}
+\pgfpathlineto{\pgfpoint{0.500012bp}{0.500014bp}}
+\pgfpathlineto{\pgfpoint{238.856176bp}{0.500014bp}}
+\color[rgb]{0.0,0.0,0.0}
+\pgfusepath{stroke}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0bp}{0bp}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setstaticframe*
+{Lbar}{offset=0pt,border={@flf@border@Lbar}}
+
+\setstaticframe*{Lbar}{valign=c}
+\newstaticframe[all]{58.0bp}{46.0bp}{-7.783314bp}{184.107755bp}[sheepimage]
+
+%Border command for frame 'sheepimage'
+\expandafter\def\csname @flf@border@sheepimage\endcsname#1{%
+\begin{pgfpicture}{0bp}{0bp}{58.0bp}{46.0bp}
+\pgfputat{\pgfpoint{-0.0bp}{-0.0bp}}{%
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{0.0bp}{46.0bp}}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\pgfimage{sheep}}}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0bp}{0bp}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setstaticframe*
+{sheepimage}{offset=0pt,border={@flf@border@sheepimage}}
+
+\setstaticframe*{sheepimage}{valign=c}
+\newstaticframe[all]{477.712341bp}{1.0bp}{-0.5bp}{270.78085bp}[hline]
+
+%Border command for frame 'hline'
+\expandafter\def\csname @flf@border@hline\endcsname#1{%
+\begin{pgfpicture}{0bp}{0bp}{477.712341bp}{1.0bp}
+\pgfputat{\pgfpoint{-0.0bp}{-0.0bp}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap 
+\pgfsetmiterjoin \pgfsetmiterlimit{10.0}
+\pgfsetstartarrow{{}}\pgfsetendarrow{{}}
+\pgfpathmoveto{\pgfpoint{0.499999bp}{0.500005bp}}
+\pgfpathlineto{\pgfpoint{477.212328bp}{0.500005bp}}
+\color[rgb]{0.0,0.0,0.0}
+\pgfusepath{stroke}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0bp}{0bp}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setstaticframe*
+{hline}{offset=0pt,border={@flf@border@hline}}
+
+\setstaticframe*{hline}{valign=c}
+\endinput

@@ -1,0 +1,40 @@
+\documentclass{poster}% new class created in this example
+
+\begin{document}
+
+This is the main body of the poster. This text will
+appear in the first of the two flow frames. Once it
+has reached the end of the first flow frame, it will then
+continue in the second flow frame.
+
+The class, poster.cls, was created by flowframtk, and
+uses the flowfram package. All the package options 
+defined by the flowfram package are also available for
+this new class. If used, they are simply passed on to the
+flowfram package, so you can do, say
+\begin{verbatim}
+\documentclass[draft]{poster}
+\end{verbatim}
+and you will see the outline of all the defined frames.
+Similarly if a package instead of a class had been exported.
+
+The new class also uses the geometry package to 
+set the page layout, and the pgf package to draw in the
+frame's borders.
+
+Note that flowframtk will only define the frame, and set the
+frame's border (and offset). It will not set any of the
+other keys, so if, for example, you want to rotate the
+frame contents, you will have to edit that in here.
+
+The flowfram package isn't perfect, and will sometimes
+create an additional unwanted page. It also conflicts
+with certain other packages that also change the output
+routine.
+
+Remember that you can't use the normal figure and
+table environments within a dynamic or static frame,
+instead use staticfigure (see Figure~\ref{fig:sample}) 
+and statictable (see Table~\ref{tab:sample}).
+
+\end{document}

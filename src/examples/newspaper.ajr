@@ -1,0 +1,140 @@
+AJR 1.8
+0 1 1 1 1 0 4 0 0 145.0 10 10.0 3 0 12 255 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\AtBeginDocument{%
+% suppress section numbering
+\setcounter{secnumdepth}{0}
+% set the paragraph indentation for static
+% and dynamic frames
+\setlength{\sdfparindent}{\parindent}
+}
+
+0 0 G 14 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 4 58.00000000000001 58.00000000000001
+L 58.00000000000001 145.0 L 536.5000000000001 145.0 L 536.5000000000001 58.00000000000001
+L 58.00000000000001 58.00000000000001 -1 1 0 0 5 title
+3 all
+0.0 0.0 0.0 0.0 0 1 93 \begin{center}
+\bfseries\Huge
+Fairy Tale Times
+\end{center}
+\hfill Issue 2. 7 December 2005.
+
+0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 4 58.00000000000001 159.50000000000003
+L 58.00000000000001 188.50000000000003 L 290.0 188.50000000000003 L 290.0 159.50000000000003
+L 58.00000000000001 159.50000000000003 -1 1 2 0 11 leftheading
+3 all
+0.0 0.0 0.0 0.0 0 1 34 \section{Killer Wolf on the Loose}
+0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 4 304.50000000000006
+159.50000000000003 L 304.50000000000006 188.50000000000003 L 536.5000000000001 188.50000000000003
+L 536.5000000000001 159.50000000000003 L 304.50000000000006 159.50000000000003 -1
+1 2 0 12 rightheading
+3 all
+0.0 0.0 0.0 0.0 0 1 30 \section{Tragic Wall Accident}
+0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 6 58.00000000000001 203.0
+L 58.00000000000001 507.50000000000006 L 536.5 507.5 L 536.5 420.5 L 290.0 420.5 L
+290.0 203.0 L 58.00000000000001 203.0 -1 1 2 0 8 lefttext
+3 all
+0.0 0.0 0.0 0.0 1 0 1059 The authorities are warning of a
+killer wolf on the loose. He has so 
+far devoured an old grandmother and 
+two pig brothers. He is described as 
+being furry with big eyes and big
+teeth.
+
+On Monday this week he broke into
+a house, and devoured an old lady. 
+He then disguised himself as the old 
+lady in order to deceive her 
+granddaughter. Luckily for the little
+girl a woodsman arrived in time to 
+rescue her. Parents are being 
+cautioned not to let their children 
+wander about on their own, and to 
+remind them not to talk to strangers.
+
+The next day the wolf struck again, 
+this time targeting two pig brothers 
+who had most incautiously made their 
+dwellings on the cheap using 
+inadequate materials. The wolf also 
+made an attempt on the third pig 
+brother, but was unable to break
+into his house.
+
+Police are appealing to the public
+for witnesses, and remind people to 
+keep their doors securely fastened 
+at all times.
+
+``Always ask to see identification,'' 
+said one police advisor,
+``and invest in improving the 
+general security of your property.''
+0.0 0.0 0 I 7 egg.png
+1 0 9 \pgfimage
+1.0 0.0 0.0 1.0 472.8 206.0 1 0 1 8 eggimage
+3 all
+0.0 0.0 0.0 0.0 0 1 0 0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C
+12 304.50000000000006 203.0 L 304.50000000000006 406.0 L 536.5 406.0 L 536.5 290.0
+L 478.50000000000006 290.0 L 478.50000000000006 261.0 L 464.00000000000006 261.0 L
+464.00000000000006 232.00000000000003 L 478.50000000000006 232.00000000000003 L 478.50000000000006
+217.50000000000003 L 493.0 217.50000000000003 L 493.0 203.0 L 304.50000000000006 203.0
+-1 1 2 0 9 righttext
+3 all
+0.0 0.0 0.0 0.0 1 0 507 An egg person tragically fell from a 
+six foot wall yesterday afternoon 
+and was smashed to pieces. The
+king's cavalry rushed to the scene, 
+but regretted that they were unable 
+to help him.
+
+Humpty Dumpty was believed to be 
+sitting on the wall when he fell.
+Police have ruled out foul play, but
+are advising people not to play on 
+high walls, particularly those 
+vulnerable members of the population 
+suffering from eggshell syndrome.
+
+\small\em 
+Exclusive interview with one of the
+King's men on page 6.
+
+0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 O 2 297.10999999999996
+159.59625 L 297.25 413.25 L 536.0024999999999 413.54499999999996 -1 1 0 1 4 Lbar
+3 all
+0.0 0.0 0.0 0.0 0 1 0 0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 O
+1 58.217499999999994 514.9237499999999 L 536.0024999999999 514.9237499999999 -1 1
+0 1 5 hline
+3 all
+0.0 0.0 0.0 0.0 0 1 0 0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C
+4 58.217499999999994 521.9499999999999 L 58.217499999999994 551.0587499999999 L 536.0024999999999
+551.0587499999999 L 536.0024999999999 521.9499999999999 L 58.217499999999994 521.9499999999999
+-1 1 2 0 13 bottomheading
+3 all
+0.0 0.0 0.0 0.0 0 1 54 \section{Relief as Missing Sheep Finally Return Home}
+
+0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 4 58.217499999999994
+565.1112499999999 L 58.217499999999994 782.925 L 290.08374999999995 782.925 L 290.08374999999995
+565.1112499999999 L 58.217499999999994 565.1112499999999 -1 1 1 0 4 left
+3 all
+0.0 0.0 0.0 0.0 0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 4 304.13624999999996
+565.1112499999999 L 304.13624999999996 782.925 L 536.0024999999999 782.925 L 536.0024999999999
+565.1112499999999 L 304.13624999999996 565.1112499999999 -1 1 1 0 5 right
+3 all
+0.0 0.0 0.0 0.0 0.0 0.0 0 I 9 sheep.png
+1 0 9 \pgfimage
+1.0 0.0 0.0 1.0 50.0 556.0 1 0 1 10 sheepimage
+3 all
+0.0 0.0 0.0 0.0 0 1 0 0.0 0.0 0 P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C
+8 116.43499999999999 565.1112499999999 L 116.43499999999999 580.1674999999999 L 101.37875
+580.1674999999999 L 101.37875 609.27625 L 58.217499999999994 609.27625 L 58.217499999999994
+782.925 L 290.08374999999995 782.925 L 290.0 565.5 L 116.43499999999999 565.1112499999999
+-1 0 11 sheepcutout
+P 0 R 0.0 0.0 0.0 1.0 T 1.0 3 0 2 0 10.0 0 0 0 0 C 4 551.0 797.5 L 551.0 826.5 L 580.0
+826.5 L 580.0 797.5 L 551.0 797.5 -1 1 2 0 6 footer
+3 all
+0.0 0.0 0.0 0.0 0 0 8 \itshape
+-533.492125984252 0.0 0 1 3 58.0 58.0 58.0 58.0 0.0 0 

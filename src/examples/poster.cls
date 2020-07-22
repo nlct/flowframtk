@@ -1,0 +1,249 @@
+% Created by FlowframTk version 0.8.1
+% 21-Oct-2015 17:22:49
+% /home/nlct/programming/java/jpgfdraw/trunk/examples/poster.jdr
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{poster}
+\RequirePackage{pgf}
+\RequirePackage{ifpdf}
+\newcommand*{\jdroutline}[3]{%
+  \GenericWarning{}{text outline can't be implemented}#3%
+}%
+\ifpdf
+ \let\jdrorgmod\mod
+ \InputIfFileExists{pdf-trans}%
+ {%
+   \renewcommand*{\jdroutline}[3]{%
+     {\def\mod{\expandtwonumexprafter \modulo}%
+     \setbox\@tempboxa\hbox{##3}%
+     \boxgs{##1}{}\copy\@tempboxa
+     }%
+   }%
+ }{}
+ \let\mod\jdrorgmod
+\else
+ \IfFileExists{pst-char.sty}%
+ {%
+   \usepackage{pst-char}
+   \renewcommand*{\jdroutline}[3]{%
+     \begin{pspicture}(0,0)
+     \pscharpath[##2]{##3}
+     \end{pspicture}
+   }
+ }{}
+\fi
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\DeclareOption{draft}{\PassOptionsToPackage{draft}{flowfram}}
+\DeclareOption{final}{\PassOptionsToPackage{final}{flowfram}}
+\DeclareOption{rotate}{\PassOptionsToPackage{rotate}{flowfram}}
+\DeclareOption{norotate}{\PassOptionsToPackage{norotate}{flowfram}}
+\DeclareOption{ttbtitle}{\PassOptionsToPackage{ttbtitle}{flowfram}}
+\DeclareOption{ttbnotitle}{\PassOptionsToPackage{ttbnotitle}{flowfram}}
+\DeclareOption{ttbnum}{\PassOptionsToPackage{ttbnum}{flowfram}}
+\DeclareOption{ttbnonum}{\PassOptionsToPackage{ttbnonum}{flowfram}}
+\DeclareOption{color}{\PassOptionsToPackage{color}{flowfram}}
+\DeclareOption{nocolor}{\PassOptionsToPackage{nocolor}{flowfram}}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
+\ProcessOptions
+\LoadClass[10pt]{article}
+\RequirePackage[a4paper,landscape]{geometry}
+\geometry{lmargin=1.0in,rmargin=1.0in,tmargin=1.0in,bmargin=1.0in}
+\setlength{\evensidemargin}{\oddsidemargin}
+\addtolength{\evensidemargin}{0.747198in}
+\RequirePackage{flowfram}
+
+\renewcommand*{\@ff@pages@countreg}{\c@page}
+\newstaticframe[all]{9.513889in}{1.313889in}{0.093056in}{4.860772in}[title]
+
+% Border command for frame 'title'
+\expandafter\def\csname @flf@border@title\endcsname#1{%
+\begin{pgfpicture}{0pt}{0pt}{9.713889in}{1.513889in}
+\pgfputat{\pgfpoint{-0.1in}{-0.1in}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.006944in}{1.506944in}}
+\pgfpathlineto{\pgfpoint{0.006944in}{0.006944in}}
+\pgfpathlineto{\pgfpoint{9.706944in}{0.006944in}}
+\pgfpathlineto{\pgfpoint{9.706944in}{1.506944in}}
+\pgfpathlineto{\pgfpoint{0.006944in}{1.506944in}}
+\pgfclosepath
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{0.206944in}{1.306944in}}
+\pgflowlevelsynccm
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\pgfimage[width=1.111111in,height=1.111111in]{logolarge}}}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setstaticframe*
+{title}{offset=0pt,border={@flf@border@title}}
+
+\setstaticframe*{title}{valign=c}
+\setstaticcontents*{title}{\title{A Sample Poster}
+\author{Nicola Talbot}
+\maketitle
+\thispagestyle{empty}}
+\newflowframe[all]{2.813889in}{4.513889in}{0.093056in}{0.060772in}[left]
+
+% Border command for frame 'left'
+\expandafter\def\csname @flf@border@left\endcsname#1{%
+\begin{pgfpicture}{0pt}{0pt}{3.013889in}{4.713889in}
+\pgfputat{\pgfpoint{-0.1in}{-0.1in}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.006944in}{4.706945in}}
+\pgfpathlineto{\pgfpoint{0.006944in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.006944in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.006944in}{4.706945in}}
+\pgfpathlineto{\pgfpoint{0.006944in}{4.706945in}}
+\pgfclosepath
+\definecolor{fillpaint}{rgb}{0.0,1.0,1.0}\pgfsetfillcolor{fillpaint}
+\pgfseteorule 
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{fill,stroke}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setflowframe*
+{left}{offset=0pt,border={@flf@border@left}}
+
+\newflowframe[all]{2.813889in}{4.513889in}{3.293055in}{0.060772in}[middle]
+
+% Border command for frame 'middle'
+\expandafter\def\csname @flf@border@middle\endcsname#1{%
+\begin{pgfpicture}{0pt}{0pt}{3.013889in}{4.713889in}
+\pgfputat{\pgfpoint{-0.1in}{-0.1in}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.006945in}{4.706945in}}
+\pgfpathlineto{\pgfpoint{0.006945in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.006945in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.006945in}{4.706945in}}
+\pgfpathlineto{\pgfpoint{0.006945in}{4.706945in}}
+\pgfclosepath
+\definecolor{fillpaint}{rgb}{1.0,1.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfseteorule 
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{fill,stroke}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setflowframe*
+{middle}{offset=0pt,border={@flf@border@middle}}
+
+\newdynamicframe[all]{2.913889in}{1.913889in}{6.593055in}{2.560772in}[figure]
+
+% Border command for frame 'figure'
+\expandafter\def\csname @flf@border@figure\endcsname#1{%
+\begin{pgfpicture}{0pt}{0pt}{3.313889in}{2.313889in}
+\pgfputat{\pgfpoint{-0.2in}{-0.2in}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.006945in}{2.306945in}}
+\pgfpathlineto{\pgfpoint{0.006945in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.306945in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.306945in}{2.306945in}}
+\pgfpathlineto{\pgfpoint{0.006945in}{2.306945in}}
+\pgfclosepath
+\definecolor{fillpaint}{rgb}{1.0,0.0,1.0}\pgfsetfillcolor{fillpaint}
+\pgfseteorule 
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{fill,stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.106945in}{2.206945in}}
+\pgfpathlineto{\pgfpoint{0.106945in}{0.106945in}}
+\pgfpathlineto{\pgfpoint{3.206945in}{0.106945in}}
+\pgfpathlineto{\pgfpoint{3.206945in}{2.206945in}}
+\pgfpathlineto{\pgfpoint{0.106945in}{2.206945in}}
+\pgfclosepath
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setdynamicframe*
+{figure}{offset=0pt,border={@flf@border@figure}}
+
+\setdynamicframe*{figure}{valign=t}
+\setdynamiccontents*{figure}{\begin{staticfigure}
+\centering
+Insert figure here!
+\caption{A Sample Figure}
+\label{fig:sample}
+\end{staticfigure}}
+\newdynamicframe[all]{2.913889in}{1.91389in}{6.593055in}{0.160772in}[table]
+
+% Border command for frame 'table'
+\expandafter\def\csname @flf@border@table\endcsname#1{%
+\begin{pgfpicture}{0pt}{0pt}{3.313889in}{2.31389in}
+\pgfputat{\pgfpoint{-0.2in}{-0.2in}}{%
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.006945in}{2.306945in}}
+\pgfpathlineto{\pgfpoint{0.006945in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.306945in}{0.006945in}}
+\pgfpathlineto{\pgfpoint{3.306945in}{2.306945in}}
+\pgfpathlineto{\pgfpoint{0.006945in}{2.306945in}}
+\pgfclosepath
+\definecolor{fillpaint}{rgb}{0.0,1.0,0.0}\pgfsetfillcolor{fillpaint}
+\pgfseteorule 
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{fill,stroke}
+\end{pgfscope}
+\begin{pgfscope}
+\pgfsetlinewidth{1.0bp}
+\pgfsetrectcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{0.106945in}{2.206945in}}
+\pgfpathlineto{\pgfpoint{0.106945in}{0.106945in}}
+\pgfpathlineto{\pgfpoint{3.206945in}{0.106945in}}
+\pgfpathlineto{\pgfpoint{3.206945in}{2.206945in}}
+\pgfpathlineto{\pgfpoint{0.106945in}{2.206945in}}
+\pgfclosepath
+\definecolor{strokepaint}{rgb}{0.0,0.0,0.0}\pgfsetstrokecolor{strokepaint}
+\pgfusepath{stroke}
+\end{pgfscope}
+}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[left,bottom]{#1}}
+\end{pgfpicture}}
+\setdynamicframe*
+{table}{offset=0pt,border={@flf@border@table}}
+
+\setdynamicframe*{table}{valign=t}
+\setdynamiccontents*{table}{\begin{statictable}
+\caption{A Sample Table}
+\label{tab:sample}
+\centering
+Insert table here!
+\par
+\end{statictable}}
+
+\endinput
