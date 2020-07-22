@@ -30,14 +30,14 @@ public class WelcomeDialog extends JDialog
       setIconImage(resources.getSmallAppIcon().getImage());
 
       JEditorPane editorPane = new JEditorPane("text/html",
-        resources.getStringWithValues("welcome.text",
-        new String[] {invoker.getName(), invoker.getVersion(),
+        resources.getMessage("welcome.text",
+         invoker.getName(), invoker.getVersion(),
          resources.getString("config.title"),
          resources.getString("settings.label"),
          resources.getString("settings.config"),
          resources.getString("configui.title"),
          resources.getString("settings.label"),
-         resources.getString("settings.configui")}));
+         resources.getString("settings.configui")));
 
       Font font = editorPane.getFont();
       FontMetrics fm = getFontMetrics(font);

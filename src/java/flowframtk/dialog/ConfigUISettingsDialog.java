@@ -527,9 +527,9 @@ class ControlPointsPanel extends JPanel
 
       controlPaintPanels[index] = new ControlPaintPanel(resources,
          point,
-         resources.getStringWithValues("render.control.choosertitle",
-         new String[] {resources.getString("render.control."+tag),
-                       resources.getString("render.control.unselected")}));
+         resources.getMessage("render.control.choosertitle",
+           resources.getString("render.control."+tag),
+           resources.getString("render.control.unselected")));
 
       box.add(controlPaintPanels[index]);
 
@@ -538,9 +538,9 @@ class ControlPointsPanel extends JPanel
 
       controlPaintPanels[index+1] = new ControlPaintPanel(resources,
          selectedPoint,
-         resources.getStringWithValues("render.control.choosertitle",
-         new String[] {resources.getString("render.control."+tag),
-                       resources.getString("render.control.selected")}));
+         resources.getMessage("render.control.choosertitle",
+           resources.getString("render.control."+tag),
+           resources.getString("render.control.selected")));
 
       box.add(controlPaintPanels[index+1]);
 
@@ -996,9 +996,8 @@ class LanguagePanel extends JPanel
            catch (NumberFormatException e)
            {
               throw new NumberFormatException(
-                getResources().getStringWithValues(
-               "lang.unicode.invalid_hex",
-               new String[]{value, ""+(i+1), ""+(j+1)}));
+                getResources().getMessage(
+               "lang.unicode.invalid_hex", value, (i+1), (j+1)));
            }
          }
       }
@@ -1261,11 +1260,8 @@ class RulerFormatPanel extends JPanel implements ActionListener
       gbc.fill=GridBagConstraints.BOTH;
 
       rulerComp.add(resources.createAppInfoArea("borders.showruler.info",
-        new String[]
-        {
            resources.getString("settings.label"),
-           resources.getString("settings.rulers")
-        }),
+           resources.getString("settings.rulers")),
         gbc);
 
       return rulerComp;
@@ -1418,7 +1414,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
       if (pattern.isEmpty())
       {
          throw new InvalidFormatException(
-           resources.getStringWithValue("error.invalid_ruler_pattern",
+           resources.getMessage("error.invalid_ruler_pattern",
              pattern));
       }
 
@@ -2419,7 +2415,7 @@ class NormalizePanel extends JPanel
           || Double.isNaN(normX))
          {
             resources.error(this,
-               resources.getStringWithValue("normalize.invalid", 
+               resources.getMessage("normalize.invalid", 
                  xLengthPanel.getLength().toString()));
          }
          else
@@ -2437,7 +2433,7 @@ class NormalizePanel extends JPanel
           || Double.isNaN(normY))
          {
             resources.error(this,
-               resources.getStringWithValue("normalize.invalid", 
+               resources.getMessage("normalize.invalid", 
                  yLengthPanel.getLength().toString()));
          }
          else
@@ -2471,8 +2467,7 @@ class NormalizePanel extends JPanel
         ||Double.isNaN(inv))
       {
          throw new InvalidFormatException(
-            resources.getStringWithValue("normalize.invalid", 
-              xNorm));
+            resources.getMessage("normalize.invalid", xNorm));
       }
 
       double yNorm = yNormField.getDouble();
@@ -2483,8 +2478,7 @@ class NormalizePanel extends JPanel
         ||Double.isNaN(inv))
       {
          throw new InvalidFormatException(
-            resources.getStringWithValue("normalize.invalid", 
-              yNorm));
+            resources.getMessage("normalize.invalid", yNorm));
       }
 
       CanvasGraphics.normTransformX = xNorm;

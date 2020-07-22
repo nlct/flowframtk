@@ -57,7 +57,7 @@ public class ExportToEpsSettings extends JDialog
 
       mainPanel.add(textArea);
 
-      mainPanel.add(new JLabel(getResources().getStringWithValue(
+      mainPanel.add(new JLabel(getResources().getMessage(
          "appselect.query.location", "latex")));
 
       String latexApp = application.getLaTeXApp();
@@ -76,7 +76,7 @@ public class ExportToEpsSettings extends JDialog
          appSelector.getFileChooser());
       mainPanel.add(latexField);
 
-      mainPanel.add(new JLabel(getResources().getStringWithValue(
+      mainPanel.add(new JLabel(getResources().getMessage(
          "appselect.query.location", "dvips")));
 
       String dvipsApp = application.getDvipsApp();

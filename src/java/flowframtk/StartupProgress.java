@@ -135,7 +135,7 @@ public class StartupProgress
 
       y += dy + maxChar.getHeight();
 
-      g.drawString("http://www.dickimaw-books.com/", x, y);
+      g.drawString("https://www.dickimaw-books.com/", x, y);
 
       y += dy + maxChar.getHeight();
 
@@ -145,7 +145,7 @@ public class StartupProgress
 
       if (translator != null && !translator.isEmpty())
       {
-         String translatedBy = getResources().getStringWithValue(
+         String translatedBy = getResources().getMessage(
             "about.translated_by", translator);
          String translatorUrl = getResources().getString(
             "about.translator_url", null);

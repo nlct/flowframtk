@@ -3536,7 +3536,7 @@ public class JDRCanvas extends JPanel
                   }
                   else
                   {
-                     getMessageSystem().warning(getResources().getStringWithValue(
+                     getMessageSystem().warning(getResources().getMessage(
                         "warning.unknown_drop", file.toString()));
                      getMessageSystem().displayMessages();
                   }
@@ -10830,8 +10830,8 @@ public class JDRCanvas extends JPanel
       if (jdrversion < JDRAJR.CURRENT_VERSION)
       {
          if (JOptionPane.showConfirmDialog(frame_,
-                getResources().getStringWithValue("warning.save.jdr",
-                   ""+jdrversion),
+                getResources().getMessage("warning.save.jdr",
+                   jdrversion),
                 getResources().getString("warning.title"),
                 JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
          {
@@ -10854,8 +10854,8 @@ public class JDRCanvas extends JPanel
       if (ajrversion < JDRAJR.CURRENT_VERSION)
       {
          if (JOptionPane.showConfirmDialog(frame_,
-             getResources().getStringWithValue("warning.save.ajr",
-                ""+ajrversion),
+             getResources().getMessage("warning.save.ajr",
+                ajrversion),
              getResources().getString("warning.title"),
              JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
          {
@@ -10972,7 +10972,7 @@ public class JDRCanvas extends JPanel
          catch (FileNotFoundException e)
          {
             getResources().error(frame_, 
-              getResources().getStringWithValue("error.io.not_exists", 
+              getResources().getMessage("error.io.not_exists", 
               file.toString()));
          }
          catch (Exception e)
@@ -12993,8 +12993,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getStringWithValue("undo.move_up",
-           newIndex);
+         return getResources().getMessage("undo.move_up", newIndex);
       }
    }
 
@@ -13037,8 +13036,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getStringWithValue("undo.move_down",
-           newIndex);
+         return getResources().getMessage("undo.move_down", newIndex);
       }
    }
 

@@ -2402,7 +2402,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
       path_.setSelectedElements(segmentIndex, controlIndex, segment, control);
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
       return getUnderlyingShape().getDescriptionInfo();
    }

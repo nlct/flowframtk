@@ -578,10 +578,9 @@ public class JDRTextPathStroke implements JDRStroke
       else if (getLeftDelim() != '|'
              &&getRightDelim() != '|')
       {
-         jdr.warning("warning.save_unsupported_text_path_delim",
-           new String[]{""+version},
-           "Text path format delimiters not supported by JDR/AJR version "
-           +version);
+         jdr.warningMessage(
+           "Text path format delimiters not supported by JDR/AJR version {0}",
+           "warning.save_unsupported_text_path_delim", version);
       }
 
       // text

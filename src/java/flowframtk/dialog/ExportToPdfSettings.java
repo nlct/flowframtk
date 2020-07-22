@@ -57,7 +57,7 @@ public class ExportToPdfSettings extends JDialog
 
       mainPanel.add(textArea);
 
-      mainPanel.add(new JLabel(getResources().getStringWithValue(
+      mainPanel.add(new JLabel(getResources().getMessage(
          "appselect.query.location", "pdflatex")));
 
       String pdflatexApp = application.getPdfLaTeXApp();

@@ -23,6 +23,8 @@
 */
 package com.dickimawbooks.jdr.io;
 
+import java.text.MessageFormat;
+
 /**
  * Default message system. This just prints messages to STDOUT and
  * warnings/errors to STDERR.
@@ -339,10 +341,10 @@ public class JDRDefaultMessage
       return alt;
    }
 
-   public String getStringWithValues(String tag,
-     String[] values, String alt)
+   public String getMessageWithAlt(String altFormat, String tag,
+     Object... values)
    {
-      return alt;
+      return MessageFormat.format(altFormat, values);
    }
 
    public void setVerbosity(int level)

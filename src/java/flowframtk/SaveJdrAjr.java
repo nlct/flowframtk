@@ -88,7 +88,7 @@ public abstract class SaveJdrAjr extends SwingWorker<Void,MessageInfo>
 
       FlowframTk app = jdrFrame.getApplication();
 
-      String msg = getResources().getStringWithValue("info.saving", 
+      String msg = getResources().getMessage("info.saving", 
          file.toString());
 
       app.showMessageFrame(msg);

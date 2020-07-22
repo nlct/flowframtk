@@ -2535,9 +2535,9 @@ t
       return str;
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[] {""+size()};
+      return new Object[] {size()};
    }
 
    public void fade(double value)

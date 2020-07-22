@@ -119,7 +119,7 @@ public class JDRView extends JFrame
       catch (NumberFormatException e)
       {
          getResources().internalError(this,
-            getResources().getStringWithValue(
+            getResources().getMessage(
                "internal_error.integer_key",
                "font.annote.size"));
       }

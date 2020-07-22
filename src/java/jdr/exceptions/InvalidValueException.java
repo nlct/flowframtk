@@ -207,9 +207,8 @@ public class InvalidValueException extends InvalidFormatException
          return String.format("%s found '%s'", msg, val);
       }
 
-      return msgSys.getStringWithValues("error.with_found",
-        new String[]{msg, val},
-        String.format("%s found '%s'", msg, val));
+      return msgSys.getMessageWithAlt("{0} found ''{1}''", 
+        "error.with_found", msg, val);
    }
 
    private Object invalidValue;

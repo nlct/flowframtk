@@ -56,7 +56,7 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
       jdrFrame.setCursor(
          Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-      String msg = resources.getStringWithValue("info.saving",
+      String msg = resources.getMessage("info.saving",
          outputFile.toString());
 
       app.showMessageFrame(msg);

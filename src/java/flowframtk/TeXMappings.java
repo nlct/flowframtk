@@ -250,7 +250,7 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
 
          if (split == null || split.length != 3)
          {
-            throw new IOException(resources.getStringWithValue(lineNum,
+            throw new IOException(resources.getMessage(lineNum,
                "error.io.invalid_map", line));
          }
 
@@ -261,7 +261,7 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
          }
          catch (NumberFormatException e)
          {
-            throw new IOException(resources.getStringWithValue(
+            throw new IOException(resources.getMessage(
                lineNum, "error.io.invalid_map", line));
          }
       }

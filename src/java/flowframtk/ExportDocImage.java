@@ -64,7 +64,7 @@ public abstract class ExportDocImage extends ExportImage
 
       String cmdListString = buff.toString();
 
-      publish(MessageInfo.createMessage(getResources().getStringWithValue(
+      publish(MessageInfo.createMessage(getResources().getMessage(
          "process.running", cmdListString)));
 
       try
@@ -106,11 +106,10 @@ public abstract class ExportDocImage extends ExportImage
 
          if (exitCode != 0)
          {
-            throw new IOException(getResources().getStringWithValues(
-              "error.exec_failed_withcode_and_dir",
-              new String[]{buff.toString(), dir.toString(), ""+exitCode})
-              +"\n"
-              +getResources().getString("error.try_latex_export"));
+            throw new IOException(String.format("%s%n%s",
+                getResources().getMessage("error.exec_failed_withcode_and_dir",
+              buff.toString(), dir.toString(), exitCode),
+              getResources().getString("error.try_latex_export")));
          }
       }
       finally
@@ -131,9 +130,8 @@ public abstract class ExportDocImage extends ExportImage
 
    protected void writeComments(PGF pgf) throws IOException
    {
-      pgf.comment(getResources().getStringWithValues("tex.comment.created_by",
-            new String[]{getInvoker().getName(),
-                         getInvoker().getVersion()}));
+      pgf.comment(getResources().getMessage("tex.comment.created_by",
+            getInvoker().getName(), getInvoker().getVersion()));
       pgf.writeCreationDate();
 
       pgf.comment(jdrFrame.getFilename());

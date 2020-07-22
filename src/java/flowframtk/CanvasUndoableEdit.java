@@ -398,13 +398,13 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
 
    public String getUndoPresentationName()
    {
-      return canvas.getResources().getStringWithValue("undo.undo", 
+      return canvas.getResources().getMessage("undo.undo", 
          getPresentationName());
    }
 
    public String getRedoPresentationName()
    {
-      return canvas.getResources().getStringWithValue("undo.redo", 
+      return canvas.getResources().getMessage("undo.redo", 
          getPresentationName());
    }
 

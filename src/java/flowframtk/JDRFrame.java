@@ -275,24 +275,24 @@ public class JDRFrame extends JInternalFrame
       switch (displayPage)
       {
          case JDRCanvas.PAGES_NONE:
-            prefix = getResources().getStringWithValue(
+            prefix = getResources().getMessage(
                "flowframe.pages.label",
                getResources().getString("flowframe.pages_none"));
             break;
          case JDRCanvas.PAGES_ODD:
-            prefix = getResources().getStringWithValue(
+            prefix = getResources().getMessage(
                "flowframe.pages.label",
                getResources().getString("flowframe.pages_odd"));
             break;
          case JDRCanvas.PAGES_EVEN:
-            prefix = getResources().getStringWithValue(
+            prefix = getResources().getMessage(
                "flowframe.pages.label",
                getResources().getString("flowframe.pages_even"));
             break;
          case JDRCanvas.PAGES_ALL:
             break;
          default:
-            prefix = getResources().getStringWithValue(
+            prefix = getResources().getMessage(
                "flowframe.pages.label", displayPage);
       }
 
@@ -317,15 +317,15 @@ public class JDRFrame extends JInternalFrame
       }
       else if (numHidden == 1)
       {
-         setTitle(prefix+name+" ("
-           +getResources().getStringWithValue("label.hidden_object",
-            "1")+")"+suffix);
+         setTitle(String.format("%s%s (%s)%s", prefix, name,
+           getResources().getMessage("label.hidden_object", 1),
+           suffix));
       }
       else
       {
-         setTitle(prefix+name+" ("
-           +getResources().getStringWithValue("label.hidden_objects",
-             numHidden)+")"+suffix);
+         setTitle(String.format("%s%s (%s)%s", prefix, name, 
+           getResources().getMessage("label.hidden_objects", numHidden),
+           suffix));
       }
    }
 

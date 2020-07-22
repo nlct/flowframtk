@@ -37,22 +37,21 @@ public class InvalidMappingException extends InvalidFormatException
    public InvalidMappingException(File file, String name, 
       String found, int lineNum, JDRMessageDictionary msgDict)
    {
-      super(msgDict.getStringWithValues("error.io.invalid_map",
-       new String[] {String.format("%s=%s", name, found)}, 
-       String.format("Invalid mapping '%s=%s'", name, found)), lineNum);
+      super(msgDict.getMessageWithAlt("Invalid mapping ''{0}={1}''",
+       "error.io.invalid_map", name, found), lineNum);
       init(file, name, found);
    }
 
    public InvalidMappingException(File file, String name, 
       String found, int lineNum, JDRMessageDictionary msgDict, Throwable cause)
    {
-      super(msgDict.getStringWithValues("error.io.invalid_map",
-       new String[] {String.format("%s=%s", name, found)}, 
-       String.format("Invalid mapping '%s=%s'", name, found)), lineNum, cause);
+      super(msgDict.getMessageWithAlt("Invalid mapping ''{0}={1}''",
+       "error.io.invalid_map", name, found), lineNum, cause);
       init(file, name, found);
    }
 
-   public InvalidMappingException(File file, String name, String found, int lineNum, CanvasGraphics cg)
+   public InvalidMappingException(File file, String name, String found,
+      int lineNum, CanvasGraphics cg)
    {
       this(file, name, found, lineNum, cg.getMessageDictionary());
    }

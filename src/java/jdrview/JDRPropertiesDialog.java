@@ -295,17 +295,17 @@ public class JDRPropertiesDialog extends JDialog
 
       if (fileSize > 1000000)
       {
-         sizeField.setText(getResources().getStringWithValue(
+         sizeField.setText(getResources().getMessage(
             "fileproperties.mbytes", df.format(fileSize/1000000.0)));
       }
       else if (fileSize > 1000)
       {
-         sizeField.setText(getResources().getStringWithValue(
+         sizeField.setText(getResources().getMessage(
             "fileproperties.kbytes", (fileSize/1000.0)));
       }
       else
       {
-         sizeField.setText(getResources().getStringWithValue(
+         sizeField.setText(getResources().getMessage(
             "fileproperties.bytes", fileSize));
       }
 

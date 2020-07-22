@@ -829,7 +829,7 @@ public abstract class JDRCompleteObject extends JDRObject
     * Gets information strings for "Find by Description" box.
     * (Information given when description hasn't been set.)
     */
-   public abstract String[] getDescriptionInfo();
+   public abstract Object[] getDescriptionInfo();
 
    /**
     * Multiplies alpha by given factor.

@@ -149,8 +149,7 @@ public class JDRViewInvoker
          else if (args[i].startsWith("-"))
          {
             resources.error(
-               resources.getStringWithValue(
-                  "error.unknown_option",args[i]));
+               resources.getMessage("error.unknown_option", args[i]));
             syntax();
          }
          else if (filename == null)
@@ -170,15 +169,13 @@ public class JDRViewInvoker
       if (!cwdFile.exists())
       {
          resources.warning(
-            resources.getStringWithValue(
-               "error.io.dir_not_exists", cwd));
+            resources.getMessage("error.io.dir_not_exists", cwd));
          cwdFile = null;
       }
       else if (!cwdFile.isDirectory())
       {
          resources.warning(
-            resources.getStringWithValue(
-               "error.io.not_directory", cwd));
+            resources.getMessage("error.io.not_directory", cwd));
          cwdFile = null;
       }
 

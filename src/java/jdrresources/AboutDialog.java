@@ -46,7 +46,7 @@ public class AboutDialog extends JDialog implements ActionListener
       String appName, String version)
    {
       super(parent,
-            resources.getStringWithValue("about.title", appName));
+            resources.getMessage("about.title", appName));
 
       info = new JTextPane();
       info.setEditable(false);
@@ -58,17 +58,17 @@ public class AboutDialog extends JDialog implements ActionListener
       try
       {
          doc.insertString(0,
-            resources.getStringWithValues("about.version",
-               new String[] {appName, version}), 
+            resources.getMessage("about.version", appName, version), 
             doc.getStyle("bold"));
 
-         addInfo("\n"+resources.getString("about.copyright")
-                       +" 2006 Nicola L.C. Talbot");
+         addInfo(String.format("%n%s %s", 
+                   resources.getString("about.copyright"),
+                   "2006 Nicola L.C. Talbot"));
 
-         addInfo("\n"+resources.getStringWithValue("about.disclaimer",
-                     appName));
+         addInfo(String.format("%n%s", 
+             resources.getMessage("about.disclaimer", appName)));
 
-         addInfo("\nhttp://www.dickimaw-books.com/\n");
+         addInfo("\nhttps://www.dickimaw-books.com/\n");
 
          addInfo(resources.getString("about.see_licence"));
 
@@ -76,8 +76,8 @@ public class AboutDialog extends JDialog implements ActionListener
 
          if (translator.length() > 0 && !translator.equals("?unknown?"))
          {
-            addInfo(resources.getStringWithValue("about.translated_by",
-                translator)+"\n");
+            addInfo(String.format("%s%n", 
+               resources.getMessage("about.translated_by", translator)));
             addInfo(translator);
 
             String url = resources.getString("about.translator_url");

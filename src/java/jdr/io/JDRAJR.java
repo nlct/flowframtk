@@ -27,6 +27,7 @@ package com.dickimawbooks.jdr.io;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 
 import java.awt.Shape;
 import java.awt.geom.Path2D;
@@ -115,10 +116,8 @@ public abstract class JDRAJR
       {
          String label = cg.getStorageUnit().getLabel();
 
-         warning("warning.save_unsupported_storage_unit",
-           new String[]{label, ""+version},
-           "Storage unit '"+label+"' not supported in JDR/AJR version "
-           +version);
+         warningMessage("Storage unit ''{0}'' not supported in JDR/AJR version {1}",
+           "warning.save_unsupported_storage_unit", label, version);
       }
 
       switch (settingsFlag)
@@ -183,9 +182,8 @@ public abstract class JDRAJR
          }
          else if (cg.hasMidPreamble() || cg.hasEndPreamble())
          {
-            warning("warning.save_unsupported_extra_preamble",
-              new String[]{""+version},
-              "Mid/End Preamble not supported in JDR/AJR version "+version);
+            warningMessage("Mid/End Preamble not supported in JDR/AJR version {0}",
+              "warning.save_unsupported_extra_preamble", version);
          }
 
          writeString(cg.getDocClass());
@@ -195,16 +193,14 @@ public abstract class JDRAJR
       {
          if (cg.hasPreamble() || cg.hasMidPreamble() || cg.hasEndPreamble())
          {
-            warning("warning.save_unsupported_preamble",
-              new String[]{""+version},
-              "Preamble not supported in JDR/AJR version "+version);
+            warningMessage("Preamble not supported in JDR/AJR version {0}",
+              "warning.save_unsupported_preamble", version);
          }
 
          if (cg.hasDocClass())
          {
-            warning("warning.save_unsupported_docclass",
-              new String[]{""+version},
-              "Document class not supported in JDR/AJR version "+version);
+            warningMessage("Document class not supported in JDR/AJR version {0}",
+              "warning.save_unsupported_docclass", version);
          }
       }
 
@@ -1110,18 +1106,18 @@ public abstract class JDRAJR
       }
    }
 
-   public void warning(String tag, String[] values, String alt)
+   public void warningMessage(String altFormat, String tag, Object... values)
    {
       JDRMessage msg = getMessageSystem();
 
       if (msg == null)
       {
-         System.out.println(alt);
+         System.out.println(MessageFormat.format(altFormat, values));
       }
       else
       {
          msg.getPublisher().publishMessages(
-          MessageInfo.createWarning(msg.getStringWithValues(tag, values, alt)));
+          MessageInfo.createWarning(msg.getMessageWithAlt(altFormat, tag, values)));
       }
    }
 

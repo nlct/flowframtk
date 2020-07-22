@@ -127,9 +127,8 @@ public class InvalidFormatException extends Exception
          return String.format("%s (%s)", msg, identifier);
       }
 
-      return msgSys.getStringWithValues("error.with_id",
-        new String[]{msg, identifier},
-        String.format("%s (%s)", msg, identifier));
+      return msgSys.getMessageWithAlt("{0} ({1})",
+        "error.with_id", msg, identifier);
    }
 
    public String getMessageWithIndex(JDRMessageDictionary msgSys)
@@ -143,14 +142,10 @@ public class InvalidFormatException extends Exception
             return String.format("Line %d, Column %d: %s", lineNum, colIdx, msg);
          }
 
-         return msgSys.getStringWithValues(
+         return msgSys.getMessageWithAlt(
+           "Line {0}, Column {1}: {2}",
            "error.with_line_and_col",
-           new String[]{
-             String.format("%d", lineNum),
-             String.format("%d", colIdx),
-             msg
-           },
-           String.format("Line %d, Column %d: %s", lineNum, colIdx, msg));
+           lineNum, colIdx, msg);
       }
 
       if (lineNum > 0)
@@ -160,10 +155,8 @@ public class InvalidFormatException extends Exception
             return String.format("Line %d: %s", lineNum, msg);
          }
 
-         return msgSys.getStringWithValues(
-           "error.with_line",
-           new String[] {String.format("%d", lineNum), msg},
-           String.format("Line %d: %s", lineNum, msg));
+         return msgSys.getMessageWithAlt(
+           "Line {0}: {1}", "error.with_line", lineNum, msg);
       }
 
       return msg;

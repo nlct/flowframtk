@@ -257,7 +257,7 @@ public class CharacterSelector extends JDialog
 
       Dimension dim = textfield.getSize();
 
-      modeLabel.setText(resources.getStringWithValue(
+      modeLabel.setText(resources.getMessage(
         "symbol.mapping_mode", mapping.getModeName()));
 
       setVisible(true);

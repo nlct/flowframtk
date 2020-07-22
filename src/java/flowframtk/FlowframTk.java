@@ -167,8 +167,7 @@ public class FlowframTk extends JFrame
       catch (NumberFormatException e)
       {
          resources.internalError(this,
-            resources.getStringWithValue(
-               "internal_error.integer_key",
+            resources.getMessage("internal_error.integer_key",
                "font.annote.size"));
       }
 
@@ -314,13 +313,13 @@ public class FlowframTk extends JFrame
          float thisVersion = (float)(i*0.1+1.0);
 
          oldJdrFileFilter[i] = new JdrFileFilter(
-         resources.getStringWithValue(
-            "filter.version.jdr", ""+thisVersion), thisVersion);
+            resources.getMessage("filter.version.jdr", thisVersion), 
+            thisVersion);
          savejdrFC.addChoosableFileFilter(oldJdrFileFilter[i]);
 
          oldAjrFileFilter[i] = new AjrFileFilter(
-         resources.getStringWithValue(
-            "filter.version.ajr", ""+thisVersion), thisVersion);
+           resources.getMessage("filter.version.ajr", thisVersion), 
+           thisVersion);
          savejdrFC.addChoosableFileFilter(oldAjrFileFilter[i]);
       }
 
@@ -2505,7 +2504,7 @@ public class FlowframTk extends JFrame
       }
 
       bitmapFileFilter = new BitmapFileFilter(
-         resources.getStringWithValue("filter.bitmap", validExt),
+         resources.getMessage("filter.bitmap", validExt),
          bitmapExt);
       bitmapFC.addChoosableFileFilter(bitmapFileFilter);
 
@@ -4404,14 +4403,12 @@ public class FlowframTk extends JFrame
    public File requestApp(String appName)
    {
       File path = appSelector.fetchApplicationPath(appName,
-         getResources().getStringWithValue("appselect.query.location", 
-           appName));
+         getResources().getMessage("appselect.query.location", appName));
 
       if (!path.exists())
       {
          getResources().error(
-            getResources().getStringWithValue("error.cant_find_app",
-              appName));
+            getResources().getMessage("error.cant_find_app", appName));
          return null;
       }
 
@@ -4496,7 +4493,7 @@ public class FlowframTk extends JFrame
       if (height == 0)
       {
          throw new IllegalArgumentException(
-           getResources().getStringWithValue("error.invalid_ruler_height", height));
+           getResources().getMessage("error.invalid_ruler_height", height));
       }
 
       getSettings().setHRulerHeight(height);
@@ -4529,7 +4526,7 @@ public class FlowframTk extends JFrame
       if (width == 0)
       {
          throw new IllegalArgumentException(
-           getResources().getStringWithValue("error.invalid_ruler_width", width));
+           getResources().getMessage("error.invalid_ruler_width", width));
       }
 
       getSettings().setVRulerWidth(width);
@@ -5679,7 +5676,7 @@ public class FlowframTk extends JFrame
          catch (IOException e)
          {
             getResources().error(this, new String[]
-            {getResources().getStringWithValue("error.io.open",
+            {getResources().getMessage("error.io.open",
                filename),
             e.getMessage()});
 
@@ -6303,7 +6300,7 @@ public class FlowframTk extends JFrame
             }
             else
             {
-               getMessageSystem().warning(getResources().getStringWithValue(
+               getMessageSystem().warning(getResources().getMessage(
                   "warning.unknown_drop", file.toString()));
                getMessageSystem().displayMessages();
             }
@@ -6768,7 +6765,7 @@ public class FlowframTk extends JFrame
          if (frame.isIoInProgress())
          {
             if (JOptionPane.showConfirmDialog(this,
-             getResources().getStringWithValue(
+             getResources().getMessage(
                "message.io_in_progress.confirm_quit",
                frame.getFilename()),
                getResources().getString("message.title"),

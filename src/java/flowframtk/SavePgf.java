@@ -57,9 +57,8 @@ public class SavePgf extends ExportImage
          pgf.setTextPathExportOutlineSetting(
             app.getTextPathExportOutlineSetting());
 
-         pgf.comment(getResources().getStringWithValues("tex.comment.created_by",
-               new String[]{getInvoker().getName(),
-                            getInvoker().getVersion()}));
+         pgf.comment(getResources().getMessage("tex.comment.created_by",
+               getInvoker().getName(), getInvoker().getVersion()));
          pgf.writeCreationDate();
 
          pgf.println("\\iffalse");
@@ -71,7 +70,7 @@ public class SavePgf extends ExportImage
          pgf.println("\\makeatother");
          pgf.writePreambleCommands(image);
 
-         pgf.comment(getResources().getStringWithValue(
+         pgf.comment(getResources().getMessage(
             "tex.comment.fontsize", 
             ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
 

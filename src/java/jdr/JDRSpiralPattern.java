@@ -311,10 +311,9 @@ public class JDRSpiralPattern extends JDRPattern
       return distance_;
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[] {""+getNumReplicas(), 
-                           "("+getRotationAngle()+":"+getDistance()+")"};
+      return new Object[] {getNumReplicas(), getRotationAngle(), getDistance()};
    }
 
    public Object clone()

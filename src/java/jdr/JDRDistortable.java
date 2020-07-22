@@ -49,7 +49,7 @@ public interface JDRDistortable extends JDRGraphicObject
    public JDRSymmetricPath getSymmetricPath();
    public boolean hasSymmetricPath();
    public boolean hasPattern();
-   public String[] getDescriptionInfo();
+   public Object[] getDescriptionInfo();
    public JDRPattern getPattern();
    public Object clone();
 

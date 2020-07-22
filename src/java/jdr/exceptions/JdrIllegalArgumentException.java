@@ -220,34 +220,23 @@ public class JdrIllegalArgumentException extends IllegalArgumentException
 
       if (found != null)
       {
-         msg = msgSys.getStringWithValues("error.with_found",
-           new String[] {msg, found},
-           String.format("%s (found '%s')", msg, found));
+         msg = msgSys.getMessageWithAlt("{0} (found ''{1}'')",
+          "error.with_found", msg, found);
       }
 
       if (lineNum > -1)
       {
          if (colIdx > -1)
          {
-            msg = msgSys.getStringWithValues("error.with_line_and_col",
-                  new String[]
-                  {
-                     String.format("%d", lineNum),
-                     String.format("%d", colIdx),
-                     msg
-                  },
-                  String.format("Line %d, Column %d: %s",
-                    lineNum, colIdx, msg));
+            msg = msgSys.getMessageWithAlt(
+                  "Line {0}, Column {1}: {2}",
+                  "error.with_line_and_col",
+                  lineNum, colIdx, msg);
          }
          else
          {
-            msg = msgSys.getStringWithValues("error.with_line",
-                  new String[]
-                  {
-                     String.format("%d", lineNum),
-                     msg
-                  },
-                  String.format("Line %d: %s", lineNum, msg));
+            msg = msgSys.getMessageWithAlt("Line {0}: {1}",
+                  "error.with_line", lineNum, msg);
          }
       }
 

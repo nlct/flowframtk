@@ -102,7 +102,7 @@ public class BitmapProperties extends JDialog
          "bitmap.properties.path_note") + " "
         + (application.useRelativeBitmaps() ?
            getResources().getString("bitmap.properties.path.relative") :
-           getResources().getStringWithValue("bitmap.properties.path.absolute",
+           getResources().getMessage("bitmap.properties.path.absolute",
               filenameLabel.getText())));
       infoArea.setEditable(false);
       infoArea.setLineWrap(true);

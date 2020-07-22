@@ -404,10 +404,9 @@ public class JDRScaledPattern extends JDRPattern
       scaley_ = scaleY;
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[]
-         {""+getNumReplicas(), ""+getScaleX()+", "+getScaleY()};
+      return new Object[] {getNumReplicas(), getScaleX(), getScaleY()};
    }
 
    public Object clone()

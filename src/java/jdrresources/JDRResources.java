@@ -29,6 +29,7 @@ import java.io.*;
 import java.net.*;  
 import java.beans.*;
 import java.util.*;
+import java.text.MessageFormat;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -56,7 +57,6 @@ public class JDRResources
       initStackTracePane();
       initUserConfigDir();
       createIconNameMap();
-      initialiseResourceEncodings();
    }
 
    public static String getIconDir()
@@ -593,162 +593,48 @@ public class JDRResources
       return Integer.parseInt(dictionary.getString(key));
    }
 
-   /**
-    * Gets the value associated with the given key, with all
-    * occurrences of \1 replaced with value[0], all occurrences
-    * of \2 replaced with value[1] etc. If the key is not in
-    * the dictionary, the default value is returned (no
-    * substitution is performed on the default value).
-    * @param key the key identifying the string in the dictionary
-    * @param values the replacement values
-    * @param defaultValue the default value to use if the
-    * dictionary hasn't been initialised or the key is not
-    * in the dictionary
-    * @return the substituted string or the default value
-    */
-   public String getStringWithValues(String key,
-      String[] values, String defaultValue)
+   public String getMessage(String key, Object... values)
    {
       if (dictionary == null)
       {
-         return defaultValue;
+         return key;
       }
 
-      return dictionary.getStringWithValues(key, values, defaultValue);
+      return dictionary.getMessage(key, values);
    }
 
-   public String getStringWithValues(int lineNum, String key,
-      String[] values, String defaultValue)
+   public String getMessageWithAlt(String altFormat, String key, Object... values)
    {
-      if (lineNum < 0)
-      {
-         return getStringWithValues(key, values, defaultValue);
-      }
-
       if (dictionary == null)
       {
-         return defaultValue;
+         return MessageFormat.format(altFormat, values);
       }
 
-      String msg = dictionary.getStringWithValues(key, values, defaultValue);
-
-      return getStringWithValues("error.with_line",
-       new String[] {String.format("%d", lineNum), msg}, 
-       String.format("Line %d: %s", lineNum, msg));
+      return dictionary.getMessageWithAlt(altFormat, key, values);
    }
 
-   /**
-    * Gets the value associated with the given key, with all
-    * occurrences of \1 replaced with value[0], all occurrences
-    * of \2 replaced with value[1] etc.
-    * @param key the key identifying the string in the dictionary
-    * @param values the replacement values
-    * @return the substituted string
-    */
-   public String getStringWithValues(String key, String[] values)
+   public String getMessage(int lineNum, String key, Object... values)
    {
-      String str = getString(key);
-
-      for (int i = 0; i < values.length && i < 9; i++)
+      if (dictionary == null)
       {
-         char c = (new String(""+(i+1))).charAt(0);
-
-         str = getReplacementString(str, c, values[i]);
+         return String.format("%d: %s", lineNum, key);
       }
 
-      return str.replace("\\\\", "\\");
+      return getMessageWithAlt("Line {0}: {1}", "error.with_line",
+        lineNum, getMessage(key, values));
    }
 
-   public String getStringWithValues(int lineNum, String key, String[] values)
+   public String getMessageWithAlt(int lineNum, String altFormat, 
+     String key, Object... values)
    {
-      if (lineNum < 0)
+      if (dictionary == null)
       {
-         return getStringWithValues(key, values);
+         return String.format("%d: %s", lineNum, 
+            MessageFormat.format(altFormat, values));
       }
 
-      String str = getString(key);
-
-      for (int i = 0; i < values.length && i < 9; i++)
-      {
-         char c = (new String(""+(i+1))).charAt(0);
-
-         str = getReplacementString(str, c, values[i]);
-      }
-
-      return getStringWithValues("error.with_line",
-        new String[] {String.format("%d", lineNum),  str.replace("\\\\", "\\")});
-   }
-
-   /**
-    * Gets the value associated with the given key, with all
-    * occurrences of \1 replaced with value.
-    * @param key the key identifying the string in the dictionary
-    * @param value the replacement value
-    * @return the substituted string
-    */
-   public String getStringWithValue(String key, String value)
-   {
-      String str = getString(key);
-
-      str = getReplacementString(str, '1', value);
-
-      return str.replace("\\\\", "\\");
-   }
-
-   public String getStringWithValue(int lineNum, String key, String value)
-   {
-      if (lineNum < 0)
-      {
-         return getStringWithValue(key, value);
-      }
-
-      String str = getString(key);
-
-      str = getReplacementString(str, '1', value);
-
-      return getStringWithValues("error.with_line", 
-        new String[] {String.format("%d", lineNum), str.replace("\\\\", "\\")});
-   }
-
-   /**
-    * Gets the value associated with the given key, with all
-    * occurrences of \1 replaced with value.
-    * @param key the key identifying the string in the dictionary
-    * @param value the replacement value
-    * @return the substituted string
-    */
-   public String getStringWithValue(String key, int value)
-   {
-      return getStringWithValue(key, ""+value);
-   }
-
-   /**
-    * Gets the value associated with the given key, with all
-    * occurrences of \1 replaced with value.
-    * @param key the key identifying the string in the dictionary
-    * @param value the replacement value
-    * @return the substituted string
-    */
-   public String getStringWithValue(String key, long value)
-   {
-      return getStringWithValue(key, ""+value);
-   }
-
-   /**
-    * Gets the value associated with the given key, with all
-    * occurrences of \1 replaced with value.
-    * @param key the key identifying the string in the dictionary
-    * @param value the replacement value
-    * @return the substituted string
-    */
-   public String getStringWithValue(String key, double value)
-   {
-      return getStringWithValue(key, ""+value);
-   }
-
-   private String getReplacementString(String str, char c, String value)
-   {
-      return dictionary.getReplacementString(str, c, value);
+      return getMessageWithAlt("%d: %s", "error.with_line", lineNum,
+       dictionary.getMessageWithAlt(altFormat, key, values));
    }
 
    /**
@@ -879,7 +765,7 @@ public class JDRResources
          String tag = object.getClass().getName().toLowerCase()
             .substring(object.getClass().getPackage().getName().length()+4);
 
-         description = getStringWithValues("findbydescription."+tag,
+         description = getMessage("findbydescription."+tag,
                   object.getDescriptionInfo());
       }
       else
@@ -1151,7 +1037,7 @@ public class JDRResources
             else
             {
                throw new IOException(
-                 getStringWithValue("error.not_a_directory", file.toString()));
+                 getMessage("error.not_a_directory", file.toString()));
             }
          }
       }
@@ -1184,8 +1070,7 @@ public class JDRResources
                else
                {
                   throw new IOException(
-                        getStringWithValue(
-                           "error.config_cant_create",
+                        getMessage("error.config_cant_create",
                            file.getCanonicalPath()));
                }
             }
@@ -1444,7 +1329,7 @@ public class JDRResources
    public JMenuItem addHelpItem(JMenu helpM, String appName)
    {
       JMenuItem helpItem = new JMenuItem(
-         getStringWithValue("help.handbook", appName));
+         getMessage("help.handbook", appName));
 
       helpM.add(helpItem);
       helpItem.setAccelerator(getAccelerator("label.help"));
@@ -2019,9 +1904,9 @@ public class JDRResources
       return textArea;
    }
 
-   public JTextArea createAppInfoArea(String id, String[] values)
+   public JTextArea createAppInfoArea(String id, Object... values)
    {
-      JTextArea textArea = new JTextArea(getStringWithValues(id, values));
+      JTextArea textArea = new JTextArea(getMessage(id, values));
 
       textArea.setEditable(false);
       textArea.setOpaque(false);
@@ -2444,33 +2329,6 @@ public class JDRResources
       return iconnamemap.getProperty(propName, propName);
    }
 
-   public String getResourceEncoding(String id)
-   {
-      return resourceEncodings.getProperty(id, "UTF-8");
-   }
-
-   private void initialiseResourceEncodings()
-     throws IOException
-   {
-      InputStream in = null;
-
-      try
-      {
-         in = getClass().getResourceAsStream("/resources/encodings.prop");
-
-         resourceEncodings = new Properties();
-
-         resourceEncodings.load(in);
-      }
-      finally
-      {
-         if (in != null)
-         {
-            in.close();
-         }
-      }
-   }
-
    public JDRMessageDictionary getMessageDictionary()
    {
       return dictionary;
@@ -2539,8 +2397,6 @@ public class JDRResources
    private JDRMessage messageSystem;
 
    private JDRDictionary dictionary;
-
-   private Properties resourceEncodings = null;
 
    private static HelpBroker mainHelpBroker = null;
    private static CSH.DisplayHelpFromSource csh = null;

@@ -3932,15 +3932,15 @@ class UnsupportedColourType extends Exception
 
    public UnsupportedColourType(JDRResources resources, int type)
    {
-      super(resources.getStringWithValue(
+      super(resources.getMessage(
          "vectorize.unsupported_colour_type", type));
       this.type = type;
    }
 
    public UnsupportedColourType(JDRResources resources, String name, int type)
    {
-      super(resources.getStringWithValues("vectorize.unsupported_colour_type_name", 
-        new String[]{name, ""+type}));
+      super(resources.getMessage("vectorize.unsupported_colour_type_name", 
+        name, type));
       this.type = type;
    }
 
@@ -9367,7 +9367,7 @@ class SummaryPanel extends JPanel
 
          topField.setText(shapes.size() == 1 ?
            resources.getString("vectorize.summary.path") : 
-           resources.getStringWithValue("vectorize.summary.paths", shapes.size()));
+           resources.getMessage("vectorize.summary.paths", shapes.size()));
       }
 
       revalidate();
@@ -9398,7 +9398,7 @@ class SummaryPathPanel extends JPanel implements ActionListener
       }
       else if (shape.lastElement().getType() == PathIterator.SEG_CLOSE)
       {
-         extraText = resources.getStringWithValue("vectorize.summary.closed",
+         extraText = resources.getMessage("vectorize.summary.closed",
           shape.getRule() == PathIterator.WIND_EVEN_ODD ? 
             resources.getString("linestyle.winding_rule.eo") : 
             resources.getString("linestyle.winding_rule.nz"));
@@ -9416,13 +9416,13 @@ class SummaryPathPanel extends JPanel implements ActionListener
 
          if (numSubPaths > 1)
          {
-            extraText2 = resources.getStringWithValue("vectorize.summary.subpaths", 
+            extraText2 = resources.getMessage("vectorize.summary.subpaths", 
               numSubPaths);
          }
       }
 
-      String text = resources.getStringWithValues("vectorize.summary.path_n", 
-       new String[]{String.format("%d", idx+1), extraText, extraText2});
+      String text = resources.getMessage("vectorize.summary.path_n", 
+       (idx+1), extraText, extraText2);
 
       JTextField topField = new JTextField(text);
       topField.setEditable(false);

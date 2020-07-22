@@ -1431,9 +1431,9 @@ public abstract class JDRShape extends JDRCompleteObject
       System.out.println("Winding rule: "+(rule==PathIterator.WIND_EVEN_ODD? "Even-Odd" : "Non-Zero"));
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[] {""+size()};
+      return new Object[] {size()};
    }
 
    public boolean hasShape()

@@ -632,10 +632,9 @@ public class FlowFrame implements Cloneable,Serializable
 
       if (omitted)
       {
-         jdr.warning("warning.save_unsupported_flow_frame",
-           new String[]{""+version},
-           "Flow frame data not supported by JDR/AJR version "+version
-          + " has been omitted");
+         jdr.warningMessage(
+           "Flow frame data not supported by JDR/AJR version {0} has been omitted",
+           "warning.save_unsupported_flow_frame", version);
       }
    }
 

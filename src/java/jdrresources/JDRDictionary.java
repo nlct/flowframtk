@@ -30,6 +30,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.text.MessageFormat;
 
 import javax.swing.*;
 import javax.swing.filechooser.*;
@@ -169,6 +170,11 @@ public class JDRDictionary
    {
       BufferedReader reader;
 
+      dictionary = new Properties();
+
+      dictionary.loadFromXML(dictionaryStream);
+
+/*
       dictionary = null;
 
       reader = new BufferedReader(
@@ -178,6 +184,7 @@ public class JDRDictionary
       initDictionary(reader);
 
       reader.close();
+*/
 
       reader = new BufferedReader(
          new InputStreamReader(licenceStream));
@@ -187,6 +194,7 @@ public class JDRDictionary
       reader.close();
    }
 
+/*
    private void initDictionary(BufferedReader reader)
       throws IOException
    {
@@ -229,22 +237,23 @@ public class JDRDictionary
          dictionary.put(key, value);
       }
    }
+*/
 
    private void initLicence(BufferedReader reader)
       throws IOException
    {
-      String licenceText = "";
+      StringBuilder licenceText = new StringBuilder();
 
       String s;
 
       while ((s=reader.readLine()) != null)
       {
-         licenceText += s+"\n";
+         licenceText.append(String.format("%s%n", s));
       }
 
       if (dictionary != null)
       {
-         dictionary.put("licence", licenceText);
+         dictionary.put("licence", licenceText.toString());
       }
    }
 
@@ -263,7 +272,8 @@ public class JDRDictionary
          return key;
       }
 
-      String s = (String)dictionary.get(key);
+      //String s = (String)dictionary.get(key);
+      String s = dictionary.getProperty(key);
 
       if (s == null)
       {
@@ -290,6 +300,8 @@ public class JDRDictionary
          return defVal;
       }
 
+      return dictionary.getProperty(key, defVal);
+/*
       String s = (String)dictionary.get(key);
 
       if (s == null)
@@ -298,36 +310,39 @@ public class JDRDictionary
       }
 
       return s;
+*/
    }
 
-   public String getStringWithValues(String key,
-     String[] values, String defaultValue)
+   public String getMessage(String key, Object... values)
    {
       String str = getString(key);
 
       if (str == null)
       {
-         return defaultValue;
+         System.err.println(String.format("Unknown key '%s'", key));
+         return key;
       }
 
-      for (int i = 0; i < values.length && i < 9; i++)
-      {
-         char c = (new String(""+(i+1))).charAt(0);
+      return MessageFormat.format(str, values);
+   }
 
-         str = getReplacementString(str, c, values[i]);
-      }
+   public String getMessageWithAlt(String altFormat, String key, Object... values)
+   {
+      String str = dictionary.getProperty(key, altFormat);
 
-      return str.replace("\\\\", "\\");
+      return MessageFormat.format(str, values);
    }
 
    /**
     * Gets the first character of the string identified by the
     * given key.
+    * Deprecated. Use {@link getCodePoint(String)} instead.
     * @param key the key identifying the required string
     * @return the first character of the string identified by the
     * key, or the first character of the key if this dictionary
     * doesn't contain the key
     */
+   @Deprecated
    public char getChar(String key)
    {
       String s = getString(key);
@@ -337,12 +352,14 @@ public class JDRDictionary
    /**
     * Gets the first character of the string identified by the
     * given key or the default value if not found.
+    * Deprecated. Use {@link getCodePoint(String,int)} instead.
     * @param key the key identifying the required string
     * @param defVal the default value if not found
     * @return the first character of the string identified by the
     * key, or the default value if this dictionary
     * doesn't contain the key
     */
+   @Deprecated
    public char getChar(String key, char defVal)
    {
       if (dictionary == null)
@@ -350,7 +367,8 @@ public class JDRDictionary
          return defVal;
       }
 
-      String s = (String)dictionary.get(key);
+      String s = dictionary.getProperty(key);
+      //String s = (String)dictionary.get(key);
 
       if (s == null || s.isEmpty()) return defVal;
 
@@ -370,7 +388,8 @@ public class JDRDictionary
          return defVal;
       }
 
-      String s = (String)dictionary.get(key);
+      String s = dictionary.getProperty(key);
+      //String s = (String)dictionary.get(key);
 
       if (s == null || s.isEmpty()) return defVal;
 
@@ -392,56 +411,6 @@ public class JDRDictionary
       return dictionary.containsKey(key);
    }
 
-   public static String getReplacementString(String str,
-      char searchChar, String value)
-   {
-      String stringSoFar = "";
-
-      while (!str.equals(""))
-      {
-         int i = str.indexOf('\\');
-
-         if (i == -1 || i == str.length()-1)
-         {
-            return stringSoFar+str;
-         }
-
-         while (str.charAt(i+1) == '\\')
-         {
-            i++;
-
-            if (i == str.length())
-            {
-               return stringSoFar+str;
-            }
-         }
-
-         if (str.charAt(i+1) == searchChar)
-         {
-            stringSoFar += str.substring(0, i) + value;
-
-            if (i+2 == str.length()) return stringSoFar;
-
-            str = str.substring(i+2);
-         }
-         else
-         {
-            i = str.indexOf('\\', i+1);
-
-            if (i == -1)
-            {
-               return stringSoFar + str;
-            }
-
-            stringSoFar += str.substring(0, i);
-
-            str = str.substring(i);
-         }
-      }
-
-      return stringSoFar;
-   }
-
-   private Hashtable<String,String> dictionary;
+   private Properties dictionary;
 }
 

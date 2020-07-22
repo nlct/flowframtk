@@ -107,7 +107,7 @@ public class DiscardDialogBox extends JDialog
       infoLabel.setText(
         frames.size() == 1 ?
          getResources().getString("discard.image_not_saved") :
-         getResources().getStringWithValue("discard.images_not_saved", frames.size()));
+         getResources().getMessage("discard.images_not_saved", frames.size()));
 
       revalidate();
       pack();

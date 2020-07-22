@@ -1021,14 +1021,7 @@ class TextConfigPanel extends JPanel
             if (split == null || split.length < 3)
             {
                throw new IOException(
-                  resources.getStringWithValues(
-                   "error.with_line",
-                   new String[]
-                   {
-                     ""+lineNum,
-                     resources.getStringWithValue("error.io.invalid_map", line)
-                   }
-                  )
+                  resources.getMessage(lineNum, "error.io.invalid_map", line)
                );
             }
 
@@ -1041,15 +1034,8 @@ class TextConfigPanel extends JPanel
             catch (NumberFormatException e)
             {
                throw new IOException(
-                  resources.getStringWithValues(
-                   "error.with_line",
-                   new String[]
-                   {
-                     ""+lineNum,
-                     resources.getStringWithValue("error.io.invalid_map", line)
-                   }
-                  ), e
-               );
+                  resources.getMessage(lineNum,
+                     "error.io.invalid_map", line), e);
             }
 
             String cmd = split[1];
@@ -1312,7 +1298,7 @@ class TeXMapDialog extends JDialog
          if (symbolHexField.getInt() == 0)
          {
             resources.error(this,
-               resources.getStringWithValue("error.invalid_codepoint",
+               resources.getMessage("error.invalid_codepoint",
                   symbolHexField.getText()));
 
             return;
@@ -1425,7 +1411,7 @@ class PreambleConfigPanel extends JPanel
       File file = application.getConfigPreambleFile();
 
       add(getResources().createAppInfoArea("preambleconfig.info",
-        new String[] {file.toString()}), BorderLayout.NORTH);
+        file.toString()), BorderLayout.NORTH);
 
       popupM = new JPopupMenu();
 

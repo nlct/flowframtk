@@ -57,15 +57,14 @@ public class SaveFlf extends ExportImage
          flf.setTextPathExportOutlineSetting(
             app.getTextPathExportOutlineSetting());
 
-         flf.comment(getResources().getStringWithValues("tex.comment.created_by",
-               new String[]{getInvoker().getName(),
-                            getInvoker().getVersion()}));
+         flf.comment(getResources().getMessage("tex.comment.created_by",
+               getInvoker().getName(), getInvoker().getVersion()));
          flf.writeCreationDate();
          flf.comment(jdrFrame.getFilename());
 
          if (!outputFile.getName().toLowerCase().endsWith(".cls"))
          {
-            flf.comment(getResources().getStringWithValue(
+            flf.comment(getResources().getMessage(
                "tex.comment.fontsize",
                ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
          }

@@ -25,6 +25,7 @@
 package com.dickimawbooks.jdr;
 
 import java.io.*;
+import java.text.MessageFormat;
 import java.awt.Point;
 import java.awt.Image;
 import java.awt.Shape;
@@ -1001,15 +1002,16 @@ public class CanvasGraphics
       return message;
    }
 
-   public String warning(String tag, String[] params, String alt)
+   public String warningMessage(String altFormat, String tag, Object... params)
    {
       if (messageSystem == null)
       {
-         System.out.println(alt);
-         return alt;
+         String message = MessageFormat.format(altFormat, params);
+         System.out.println(message);
+         return message;
       }
 
-      String message = messageSystem.getStringWithValues(tag, params, alt);
+      String message = messageSystem.getMessageWithAlt(altFormat, tag, params);
 
       messageSystem.getPublisher().publishMessages(
         MessageInfo.createWarning(message));
@@ -1041,38 +1043,38 @@ public class CanvasGraphics
 
       String msg = messageSystem.getString(tag, alt);
 
-      return messageSystem.getStringWithValues("error.with_line",
-        new String[] {String.format("%d", lineNum), msg},
-        String.format("Line %d: %s", lineNum, msg));
+      return messageSystem.getMessageWithAlt("Line {0}: {1}",
+        "error.with_line", lineNum, msg);
    }
 
-   public String getStringWithValues(String tag, String[] params, String alt)
+   public String getMessageWithAlt(String altFormat, String tag, Object... params)
    {
       if (messageSystem == null)
       {
-         return alt;
+         return MessageFormat.format(altFormat, params);
       }
 
-      return messageSystem.getStringWithValues(tag, params, alt);
+      return messageSystem.getMessageWithAlt(altFormat, tag, params);
    }
 
-   public String getStringWithValues(int lineNum, String tag, String[] params, String alt)
+   public String getMessageWithAlt(int lineNum, String altFormat, 
+       String tag, Object... params)
    {
       if (lineNum < 0)
       {
-         return getStringWithValues(tag, params, alt);
+         return getMessageWithAlt(altFormat, tag, params);
       }
 
       if (messageSystem == null)
       {
-         return String.format("Line %d: %s", lineNum, alt);
+         return MessageFormat.format("Line {0}: {1}", lineNum, 
+            MessageFormat.format(altFormat, params));
       }
 
-      String msg = messageSystem.getStringWithValues(tag, params, alt);
+      String msg = messageSystem.getMessageWithAlt(altFormat, tag, params);
 
-      return messageSystem.getStringWithValues("error.with_line",
-        new String[] {String.format("%d", lineNum), msg},
-        String.format("Line %d: %s", lineNum, msg));
+      return messageSystem.getMessageWithAlt(
+        "Line {0}: {1}", "error.with_line", lineNum, msg);
    }
 
    public synchronized void setPreamble(String preambleText)

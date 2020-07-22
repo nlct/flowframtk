@@ -84,8 +84,8 @@ public class FLFSetTypeblock extends JDialog
       mainPanel.add(Box.createVerticalStrut(10));
 
       normalsizeInfoLabel = new JLabel(
-      getResources().getStringWithValues(
-         "typeblock.current_normalsize", new String[] { "10", "12" }));
+      getResources().getMessage(
+         "typeblock.current_normalsize", 10, 12));
 
       mainPanel.add(normalsizeInfoLabel);
 
@@ -172,13 +172,11 @@ public class FLFSetTypeblock extends JDialog
       LaTeXFontBase latexFonts = canvas.getCanvasGraphics()
          .getLaTeXFontBase();
 
-      normalsizeInfoLabel.setText(getResources().getStringWithValues(
+      normalsizeInfoLabel.setText(getResources().getMessage(
          "typeblock.current_normalsize",
-         new String[]
-         {
-           ""+latexFonts.getNormalSize(),
-           ""+latexFonts.getBaselineskip(LaTeXFontBase.NORMALSIZE)
-         }));
+           latexFonts.getNormalSize(),
+           latexFonts.getBaselineskip(LaTeXFontBase.NORMALSIZE)
+         ));
 
       setVisible(true);
    }

@@ -65,18 +65,16 @@ public class FlowframTkInvoker
    public void version()
    {
       System.out.println(
-         resources.getStringWithValues("about.version",
-         new String[]{APP_NAME, APP_VERSION},
-         APP_NAME+" version "+APP_VERSION));
+         resources.getMessageWithAlt("{0} version {1}", "about.version",
+         APP_NAME, APP_VERSION));
       System.exit(0);
    }
 
    public void syntax()
    {
       System.out.println(
-         resources.getStringWithValues("about.version",
-         new String[]{APP_NAME, APP_VERSION},
-         APP_NAME+" version "+APP_VERSION));
+         resources.getMessageWithAlt("{0} version {1}", "about.version",
+         APP_NAME, APP_VERSION));
 
       System.out.println();
       System.out.println("Syntax: flowframtk [options] [filename] ... [filename]");
@@ -150,7 +148,7 @@ public class FlowframTkInvoker
       if (length.getValue() < 0)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.no_negative", lineNum), text, lineNum);
       }
 
@@ -169,14 +167,14 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.boolean_value", lineNum), text, lineNum, e);
       }
    
       if (i < 0 || i > 1)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.boolean_value", lineNum), text, lineNum);
       }
    
@@ -195,14 +193,14 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.three_value", lineNum), text, lineNum, e);
       }
    
       if (i < 0 || i > 2)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.three_value", lineNum), text, lineNum);
       }
 
@@ -219,7 +217,7 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.integer", lineNum), value, lineNum, e);
       }
    }
@@ -232,7 +230,7 @@ public class FlowframTkInvoker
       if (num < 0)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.no_negative", lineNum), value, lineNum);
       }
 
@@ -247,9 +245,8 @@ public class FlowframTkInvoker
       if (i < 0 || i > maxVal)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValues(
-               "error.conf.bounded_integer", 
-               new String[]{ ""+maxVal, ""+lineNum}), value, lineNum);
+            resources.getMessage(
+               "error.conf.bounded_integer", maxVal, lineNum), value, lineNum);
       }
 
       return i;
@@ -263,7 +260,7 @@ public class FlowframTkInvoker
       if (i < minVal)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
               minVal == 1 ?
                "error.conf.positive_only" :
                "error.conf.number_badrange", lineNum), value, lineNum);
@@ -282,7 +279,7 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.integer", lineNum), value, lineNum, e);
       }
    }
@@ -297,7 +294,7 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.number", lineNum), value, lineNum, e);
       }
    
@@ -315,14 +312,14 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.number", lineNum), value, lineNum, e);
       }
    
       if (num < 0)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.no_negative", lineNum), value, lineNum);
       }
    
@@ -341,14 +338,14 @@ public class FlowframTkInvoker
       catch (NumberFormatException e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.number", lineNum), value, lineNum, e);
       }
    
       if (num < minValue)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.number_badrange", lineNum), value, lineNum);
       }
    
@@ -366,7 +363,7 @@ public class FlowframTkInvoker
       if (!st.hasMoreTokens())
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.invalid_path", lineNum), value, lineNum);
       }
 
@@ -379,7 +376,7 @@ public class FlowframTkInvoker
       catch (Exception e)
       {
          throw new InvalidConfigValueException(
-            resources.getStringWithValue(
+            resources.getMessage(
                "error.conf.invalid_path.rule", lineNum), value, lineNum, e);
       }
 
@@ -394,9 +391,9 @@ public class FlowframTkInvoker
          catch (NumberFormatException e)
          {
             throw new InvalidConfigValueException(
-              resources.getStringWithValues(
+              resources.getMessage(
                 "error.conf.invalid_path.segment", 
-                new String[]{token, ""+lineNum}), value, lineNum, e);
+                token, lineNum), value, lineNum, e);
          }
 
          switch (type)
@@ -411,9 +408,8 @@ public class FlowframTkInvoker
               catch (Exception e)
               {
                  throw new InvalidConfigValueException(
-                  resources.getStringWithValues(
-                   "error.conf.invalid_path.coord",
-                   new String[]{""+type, ""+lineNum}),
+                  resources.getMessage(
+                   "error.conf.invalid_path.coord", type, lineNum),
                     value, lineNum, e);
               }
 
@@ -428,9 +424,8 @@ public class FlowframTkInvoker
               catch (Exception e)
               {
                  throw new InvalidConfigValueException(
-                  resources.getStringWithValues(
-                   "error.conf.invalid_path.coord",
-                   new String[] {""+type, ""+lineNum}),
+                  resources.getMessage(
+                   "error.conf.invalid_path.coord", type, lineNum),
                     value, lineNum, e);
               }
 
@@ -447,9 +442,8 @@ public class FlowframTkInvoker
               catch (Exception e)
               {
                  throw new InvalidConfigValueException(
-                  resources.getStringWithValues(
-                   "error.conf.invalid_path.coord", 
-                   new String[]{""+type, ""+lineNum}),
+                  resources.getMessage(
+                   "error.conf.invalid_path.coord", type, lineNum),
                     value, lineNum, e);
               }
 
@@ -468,9 +462,8 @@ public class FlowframTkInvoker
               catch (Exception e)
               {
                  throw new InvalidConfigValueException(
-                  resources.getStringWithValues(
-                   "error.conf.invalid_path.coord", 
-                    new String[] {""+type, ""+lineNum}),
+                  resources.getMessage(
+                   "error.conf.invalid_path.coord", type, lineNum),
                     value, lineNum, e);
               }
 
@@ -480,9 +473,8 @@ public class FlowframTkInvoker
             break;
             default:
             throw new InvalidConfigValueException(
-              resources.getStringWithValues(
-                "error.conf.invalid_path.segment",
-                 new String[]{token, ""+lineNum}),
+              resources.getMessage(
+                "error.conf.invalid_path.segment", token, lineNum),
                  value, lineNum);
          }
       }
@@ -599,7 +591,7 @@ public class FlowframTkInvoker
             if (!t.hasMoreTokens())
             {
                throw new InvalidFormatException(
-                  resources.getStringWithValue(
+                  resources.getMessage(
                      "error.invalid_format", line));
             }
    
@@ -801,7 +793,7 @@ public class FlowframTkInvoker
                   catch (Exception e)
                   {
                      throw new InvalidFormatException(
-                        resources.getStringWithValue(
+                        resources.getMessage(
                            "error.invalid_paper_dimension", value));
                   }
                }
@@ -816,7 +808,7 @@ public class FlowframTkInvoker
                   else
                   {
                      throw new InvalidFormatException(
-                       resources.getStringWithValue(
+                       resources.getMessage(
                           "error.unknown_papersize", value));
                   }
                }
@@ -1238,7 +1230,7 @@ public class FlowframTkInvoker
                      if (!t.hasMoreTokens())
                      {
                         throw new InvalidFormatException(
-                           resources.getStringWithValue(
+                           resources.getMessage(
                         "error.conf.no_more_tokens", line));
                      }
 
@@ -1250,7 +1242,7 @@ public class FlowframTkInvoker
                   if (t.hasMoreTokens())
                   {
                      throw new InvalidFormatException(
-                        resources.getStringWithValue(
+                        resources.getMessage(
                         "error.conf.too_many_tokens", line));
                   }
                }
@@ -1280,7 +1272,7 @@ public class FlowframTkInvoker
                catch (JdrIllegalArgumentException e)
                {
                   throw new InvalidFormatException(
-                      resources.getStringWithValue(
+                      resources.getMessage(
                        "error.conf.number_badrange", line));
                }
 
@@ -1292,7 +1284,7 @@ public class FlowframTkInvoker
                if (gridUnit == null)
                {
                   throw new InvalidFormatException(
-                      resources.getStringWithValue(
+                      resources.getMessage(
                        "error.conf.number_badrange", line));
                }
             }
@@ -1381,7 +1373,7 @@ public class FlowframTkInvoker
                if (split.length < 2)
                {
                   throw new InvalidFormatException(
-                    resources.getStringWithValue(
+                    resources.getMessage(
                        "error.invalid_ruler_pattern", value));
                }
 
@@ -1570,9 +1562,8 @@ public class FlowframTkInvoker
             else
             {
                throw new InvalidFormatException(
-                  resources.getStringWithValues(
-                     "error.conf.unknown_key",
-                     new String[]{key, ""+line}));
+                  resources.getMessage(
+                     "error.conf.unknown_key", key, line));
             }
          }
       }
@@ -2307,10 +2298,9 @@ public class FlowframTkInvoker
       }
       catch (InvalidFormatException e)
       {
-         throw new InvalidFormatException(
-            resources.getStringWithValue(
-               "error.bad_paint_format", line)
-               +"\n"+e.getMessage());
+         throw new InvalidFormatException(String.format("%s%n%s", 
+            resources.getMessage("error.bad_paint_format", line),
+               e.getMessage()));
       }
 
       return paint;
@@ -2670,13 +2660,12 @@ public class FlowframTkInvoker
 
       try
       {
-         startup.setVersion(resources.getStringWithValues(
-           "about.version",
-           new String[]{getName(), getVersion()}),
+         startup.setVersion(resources.getMessage(
+           "about.version", getName(), getVersion()),
            resources.getString("about.copyright")
               +String.format(" 2006-%s Nicola L.C. Talbot",
                APP_DATE.substring(0, 4)),
-           resources.getStringWithValue("about.disclaimer", getName())
+           resources.getMessage("about.disclaimer", getName())
          );
       }
       catch (IllegalStateException e)
@@ -3128,7 +3117,7 @@ public class FlowframTkInvoker
                if (paper == null)
                {
                   resources.error(
-                    resources.getStringWithValue(
+                    resources.getMessage(
                        "error.unknown_papersize", args[i]));
                   System.exit(resources.EXIT_SYNTAX);
                }
@@ -3156,10 +3145,8 @@ public class FlowframTkInvoker
             catch (NumberFormatException e)
             {
                resources.error(
-                 resources.getStringWithValues("error.with_found",
-                  new String[]
-                  {resources.getString("error.invalid_verbosity"),
-                  args[i]}));
+                 resources.getMessage("error.with_found",
+                  resources.getString("error.invalid_verbosity"), args[i]));
             }
          }
          else if (args[i].equals("-debug"))
@@ -3186,7 +3173,7 @@ public class FlowframTkInvoker
          }
          else if (args[i].substring(0,1).equals("-"))
          {
-            resources.error(resources.getStringWithValue(
+            resources.error(resources.getMessage(
                "error.unknown_option", args[i]));
             System.exit(resources.EXIT_SYNTAX);
          }

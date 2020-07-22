@@ -76,13 +76,13 @@ public class JDRCanvasCompoundEdit extends CompoundEdit
    public String getUndoPresentationName()
    {
       return name == null ? super.getUndoPresentationName() : 
-        getResources().getStringWithValue("undo.undo", name);
+        getResources().getMessage("undo.undo", name);
    }
 
    public String getRedoPresentationName()
    {
       return name == null ? super.getRedoPresentationName() : 
-        getResources().getStringWithValue("undo.redo", name);
+        getResources().getMessage("undo.redo", name);
    }
 
    public JDRResources getResources()

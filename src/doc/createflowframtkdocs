@@ -4023,70 +4023,35 @@ sub load_dict{
       die "Can't find '$propfile'\n";
    }
 
-   open $fd, "<:encoding($encoding_xml)", $propfile
-      or die "Can't open property file '$propfile' $!\n";
+   $parser = XML::Parser->new(ErrorContext => 2, Style => 'Tree');
+   my $tree = $parser->parsefile($propfile);
 
-   $_ = <$fd>;
-
-   if (/# Encoding: ([^s]+)/)
+   unless ($tree->[0] eq 'properties')
    {
-      my $prop_encoding = $1;
-
-      if ($prop_encoding ne $encoding_xml)
-      {
-         close $fd;
-         open $fd, "<:encoding($prop_encoding)", $propfile
-           or die "Can't open property file '$propfile' $!\n";
-      }
-   }
-   else
-   {
-      die "Encoding comment line missing from line 1 of '$propfile'\n";
+      die "<properties> expected";
    }
 
-   my $linenum = 0;
-
-   my $openquote = chr(hex(2018));
-   my $closequote = chr(hex(2019));
-
-   while (<$fd>)
+   for (my $idx = 0; $idx < scalar(@{$tree->[1]}); $idx++)
    {
-      $linenum++;
-
-      next if (/^ *#/ or /^ *$/);
-
-      if (/^([^=]+)=(.*)$/)
+      if ($tree->[1][$idx] eq 'entry')
       {
-         my $dictkey = $1;
-         my $value = $2;
+         $idx++;
 
-         $value=~s/\\{1}[nt]/ /g;
-         $value=~s/(\w)''(\w)/$1$closequote$2/g;
-         $value=~s/'{2}([^']+)'{2}/$openquote$1$closequote/g;
-         $value=~s/'{2}/$closequote/g;
-         $value=~s/\|([a-zA-Z]+)\|/\\cs{$1}/g;
+         my %hash = %{$tree->[1][$idx][0]};
 
-         # strip any trailing ellipsis
-         $value=~s/\.{3}$//g;
+         if (scalar(@{$tree->[1][$idx]}) > 2)
+         {
+            my $key = $tree->[1][$idx][0]->{'key'};
 
-         # Prop files don't contain any literal {n,...,...}
-         # Don't need the complexity of the Java application here.
-         # (Many of the messages aren't used in the manual.)
+            my $value = $tree->[1][$idx][2]; 
 
-         $value=~s/\{\d,choice,[^\}]+\|<([^\}]*)\}/$1/g;
+            $value=~s/</\\textless/g;
+            $value=~s/>/\\textgreater/g;
 
-         $value=~s/\{(\d+)(,[^\}]+)?\}/&arg_placeholder($1)/eg;
-
-         $dict{$dictkey} = $value;
-
-      }
-      else
-      {
-         warn "$propfile: Can't parse line $linenum\n";
+            $dict{$key} = $value;
+         }
       }
    }
-
-   close $fd;
 
    return %dict;
 }

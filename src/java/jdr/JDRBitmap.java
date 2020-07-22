@@ -1292,11 +1292,11 @@ public class JDRBitmap extends JDRCompleteObject
       return null;
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[] {name_,
-       ""+Math.round(100*flatmatrix[4])/100
-       +","+Math.round(100*flatmatrix[5])/100};
+      return new Object[] {name_,
+       Math.round(100*flatmatrix[4])/100,
+       Math.round(100*flatmatrix[5])/100};
    }
 
    public ImageIcon getImageIcon()

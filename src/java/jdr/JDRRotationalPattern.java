@@ -217,9 +217,9 @@ public class JDRRotationalPattern extends JDRPattern
       angle_.makeEqual(angle);
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[] {""+getNumReplicas(), ""+getRotationAngle()};
+      return new Object[] {getNumReplicas(), getRotationAngle()};
    }
 
    private JDRAngle angle_;

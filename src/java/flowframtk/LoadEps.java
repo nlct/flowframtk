@@ -67,7 +67,7 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
 
       String fileName = epsFile.getAbsolutePath();
 
-      app.showMessageFrame(getResources().getStringWithValue("info.loading", fileName));
+      app.showMessageFrame(getResources().getMessage("info.loading", fileName));
 
       Cursor oldCursor = jdrFrame.getCursor();
       jdrFrame.setCursor(

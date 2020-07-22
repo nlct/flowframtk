@@ -80,10 +80,8 @@ public class JDRPaintLoader
       {
          String name = thePaint.getName();
 
-         jdr.warning("warning.save_unsupported_paint",
-            new String[] {name, ""+version},
-            String.format("Paint type '%s' not supported in version %f",
-             name, version));
+         jdr.warningMessage("Paint type ''{0}'' not supported in version {1}",
+            "warning.save_unsupported_paint", name, version);
 
          save(jdr, paint);
 

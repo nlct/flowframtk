@@ -75,7 +75,7 @@ public abstract class LoadJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
 
       FlowframTk app = jdrFrame.getApplication();
 
-      String msg = getResources().getStringWithValue("info.loading", 
+      String msg = getResources().getMessage("info.loading", 
          file.toString());
 
       app.showMessageFrame(msg);
@@ -105,8 +105,8 @@ public abstract class LoadJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
             if (versionNum < JDRAJR.CURRENT_VERSION)
             {
                publish(MessageInfo.createWarning(
-                  getResources().getStringWithValue("warning.load.jdr",
-                     ""+versionNum)));
+                  getResources().getMessage("warning.load.jdr",
+                     versionNum)));
             }
          }
 

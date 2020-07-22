@@ -359,7 +359,7 @@ public class FindDialog extends JDialog
       JOptionPane.showMessageDialog(this, 
         count == 1 ?
         getResources().getString("replace.one_replaced") :
-        getResources().getStringWithValue("replace.num_replaced", count));
+        getResources().getMessage("replace.num_replaced", count));
    }
 
    public void find()

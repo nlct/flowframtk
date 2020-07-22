@@ -53,7 +53,7 @@ public class LoadAction extends AbstractAction
       if (!file.exists())
       {
          getResources().error(application_, 
-                       getResources().getStringWithValue("error.io.not_exists",
+                       getResources().getMessage("error.io.not_exists",
                        file.toString()));
 
          list.remove(file);

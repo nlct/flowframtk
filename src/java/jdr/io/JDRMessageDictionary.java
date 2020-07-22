@@ -29,7 +29,7 @@ import com.dickimawbooks.jdr.*;
 
 public interface JDRMessageDictionary
 {
-   public String getString(String tag, String alt);
-   public String getStringWithValues(String tag,
-     String[] values, String alt);
+   public String getString(String tag, String defValue);
+   public String getMessageWithAlt(String altFormat, String tag,
+     Object... values);
 }

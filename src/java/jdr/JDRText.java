@@ -1956,9 +1956,9 @@ public class JDRText extends JDRCompleteObject
       return flag;
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
-      return new String[] {getText(), latexText};
+      return new Object[] {getText(), latexText};
    }
 
    public JDRPoint getControlFromStoragePoint(double x, double y, boolean endPoint)

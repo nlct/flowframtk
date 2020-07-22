@@ -317,12 +317,12 @@ public class JDRGuiMessage extends JFrame
 
    public void messageln(String messageText)
    {
-      message(messageText+"\n");
+      message(String.format("%s%n", messageText));
    }
 
    public void messageln(Exception excp)
    {
-      message(excp.getMessage()+"\n");
+      message(String.format("%s%n", excp.getMessage()));
    }
 
    public void warning(String messageText)
@@ -332,8 +332,9 @@ public class JDRGuiMessage extends JFrame
       try
       {
          document.insertString(document.getLength(), 
-            resources.getStringWithValue(
-           "warning.tag", messageText)+"\n", attrWarning);
+            String.format("%s%n", 
+               resources.getMessage("warning.tag", messageText)),
+            attrWarning);
       }
       catch (BadLocationException e)
       {// shouldn't happen
@@ -423,10 +424,10 @@ public class JDRGuiMessage extends JFrame
       return resources.getString(tag, alt);
    }
 
-   public String getStringWithValues(String tag,
-     String[] values, String alt)
+   public String getMessageWithAlt(String altFormat, String tag,
+     Object... values)
    {
-      return resources.getStringWithValues(tag, values, alt);
+      return resources.getMessageWithAlt(altFormat, tag, values);
    }
 
    public boolean warningFlagged()

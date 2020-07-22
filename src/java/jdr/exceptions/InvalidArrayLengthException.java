@@ -34,10 +34,8 @@ public class InvalidArrayLengthException extends InvalidFormatException
 {
    public InvalidArrayLengthException(int length, CanvasGraphics cg)
    {
-      super(cg.getStringWithValues(
-        "error.io.invalid_array_length",
-        new String[] {String.format("%d", length)},
-        String.format("Invalid array length %d", length)), (JDRAJR)null);
+      super(cg.getMessageWithAlt("Invalid array length {0}",
+        "error.io.invalid_array_length", length), (JDRAJR)null);
       invalidArrayLength = length;
       setIdentifier(null);
    }
@@ -49,10 +47,8 @@ public class InvalidArrayLengthException extends InvalidFormatException
 
    public InvalidArrayLengthException(String name, int length, CanvasGraphics cg)
    {
-      super(cg.getStringWithValues(
-        "error.io.invalid_array_length",
-        new String[] {String.format("%d", length)},
-        String.format("Invalid array length %d", length)), (JDRAJR)null);
+      super(cg.getMessageWithAlt("Invalid array length {0}",
+        "error.io.invalid_array_length", length), (JDRAJR)null);
       invalidArrayLength = length;
       setIdentifier(name);
    }
@@ -60,10 +56,9 @@ public class InvalidArrayLengthException extends InvalidFormatException
    public InvalidArrayLengthException(String name, int length, 
       JDRAJR jdr)
    {
-      super(jdr.getCanvasGraphics().getStringWithValues(
-        "error.io.invalid_array_length",
-        new String[] {String.format("%d", length)},
-        String.format("Invalid array length %d", length)), jdr);
+      super(jdr.getCanvasGraphics().getMessageWithAlt(
+        "Invalid array length {0}",
+        "error.io.invalid_array_length", length), jdr);
       invalidArrayLength = length;
       setIdentifier(name);
    }
@@ -71,10 +66,9 @@ public class InvalidArrayLengthException extends InvalidFormatException
    public InvalidArrayLengthException(String name, int length, 
      JDRAJR jdr, Throwable cause)
    {
-      super(jdr.getCanvasGraphics().getStringWithValues(
-        "error.io.invalid_array_length",
-        new String[] {String.format("%d", length)},
-        String.format("Invalid array length %d", length)), jdr, cause);
+      super(jdr.getCanvasGraphics().getMessageWithAlt(
+        "Invalid array length {0}",
+        "error.io.invalid_array_length", length), jdr, cause);
       invalidArrayLength = length;
       setIdentifier(name);
    }

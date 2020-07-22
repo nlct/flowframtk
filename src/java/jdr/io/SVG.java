@@ -131,10 +131,9 @@ public class SVG
 
       msgSys.getPublisher().publishMessages(
        MessageInfo.createMessage(
-          msgSys.getStringWithValues(
+          msgSys.getMessageWithAlt("Loading ''{0}''",
           "info.loading",         
-          new String[] {file.getAbsolutePath()},
-          "Loading '"+file.getAbsolutePath()+"'")));
+          file.getAbsolutePath())));
 
       xr.parse(new InputSource(r));
 

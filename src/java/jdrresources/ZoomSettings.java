@@ -81,7 +81,7 @@ public class ZoomSettings extends JDialog
             catch (NumberFormatException e)
             {
                return new InvalidZoomValue(item,
-                  getResources().getStringWithValue("zoom.invalid", item));
+                  getResources().getMessage("zoom.invalid", item));
             }
          }
       });

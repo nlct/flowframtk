@@ -823,7 +823,7 @@ public class JDRDistortShape extends JDRCompleteObject
       return underlyingShape.getPattern();
    }
 
-   public String[] getDescriptionInfo()
+   public Object[] getDescriptionInfo()
    {
       return underlyingShape.getDescriptionInfo();
    }
