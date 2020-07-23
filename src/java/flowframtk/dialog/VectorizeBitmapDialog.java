@@ -367,7 +367,7 @@ public class VectorizeBitmapDialog extends JDialog
    private void reset()
    {
       this.shapeList = null;
-      setImage(null);
+      mainPanel.clearAllShapes();
       resultPanel.newImage();
       summaryPanel.updateSummary(null);
       undoManager.discardAllEdits();
@@ -377,6 +377,9 @@ public class VectorizeBitmapDialog extends JDialog
       editComp.setSelected(true);
       historyGroup.add(editComp);
       historyPanel.add(editComp);
+
+      controlPanel.updateWidgets(false, mainPanel.getImage() != null,
+         shapeList != null);
    }
 
    public boolean clearImage()
@@ -384,7 +387,7 @@ public class VectorizeBitmapDialog extends JDialog
       if (getCurrentShapeList() != null)
       {
          int result = JOptionPane.showConfirmDialog(this, 
-           getResources().getString("vectorize.confirm_store_current"), 
+           getResources().getString("vectorize.confirm_pin_current"), 
            getResources().getString("process.confirm"),
             JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -422,6 +425,7 @@ public class VectorizeBitmapDialog extends JDialog
       if (result == JOptionPane.YES_OPTION)
       {
          reset();
+         revalidate();
       }
    }
 
@@ -473,6 +477,7 @@ public class VectorizeBitmapDialog extends JDialog
          }
       }
 
+      controlPanel.setAll(true);
       setVisible(true);
    }
 
@@ -643,7 +648,7 @@ public class VectorizeBitmapDialog extends JDialog
    {
       storeOldShapes();
       ShapeComponentVector shape = shapeList.remove(i);
-      addUndoableEdit(shapeList, getResources().getString("vectorize.store_shape"), 
+      addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
          resultPanel.storeShape(shape));
       resultPanel.updateCurrentShapeList(shapeList);
    }
@@ -758,7 +763,7 @@ public class VectorizeBitmapDialog extends JDialog
       if (getCurrentShapeList() != null)
       {
          int result = JOptionPane.showConfirmDialog(this, 
-           getResources().getString("vectorize.confirm_store_current"),
+           getResources().getString("vectorize.confirm_pin_current"),
            getResources().getString("process.confirm"),
             JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -2817,8 +2822,8 @@ class ControlPanel extends JPanel implements ActionListener
         "deselectallitems", this, null);
       taskButtonPanel.add(deselectAllButton);
 
-      storeResultsButton = resources.createAppJButton("vectorize",
-         "storeresults", this);
+      storeResultsButton = resources.createDialogButton("vectorize",
+         "pinshapes", this, null);
       taskButtonPanel.add(storeResultsButton);
 
       clearAllResultsButton = resources.createDialogButton("vectorize",
@@ -3002,7 +3007,7 @@ class ControlPanel extends JPanel implements ActionListener
       {
          dialog.doSelectedTasks();
       }
-      else if (command.equals("storeresults"))
+      else if (command.equals("pinshapes"))
       {
          dialog.storeResults();
       }
@@ -3186,9 +3191,8 @@ class ControlPanel extends JPanel implements ActionListener
 
    private VectorizeBitmapDialog dialog;
 
-   private JButton storeResultsButton;
    private JDRButton doTasksButton, selectAllButton, 
-      deselectAllButton, clearAllResultsButton;
+      deselectAllButton, clearAllResultsButton, storeResultsButton;
 
    private JDRButton okayButton, cancelButton;
 
@@ -9127,6 +9131,13 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
       updateCoords(evt);
    }
 
+   public void clearAllShapes()
+   {
+      workingShape = null;
+      shapes = null;
+      repaint();
+   }
+
    private VectorizeBitmapDialog dialog;
    private BufferedImage image;
    private Shape workingShape = null;
@@ -9375,7 +9386,8 @@ class SummaryPanel extends JPanel
            resources.getMessage("vectorize.summary.paths", shapes.size()));
       }
 
-      revalidate();
+      mainPanel.revalidate();
+      repaint();
    }
 
    private JTextField topField;
@@ -9452,8 +9464,8 @@ class SummaryPathPanel extends JPanel implements ActionListener
 
       buttonPanel.add(resources.createDialogButton(
         "vectorize.summary", "discard", this, null));
-      buttonPanel.add(resources.createAppJButton(
-        "vectorize.summary", "store", this));
+      buttonPanel.add(resources.createDialogButton(
+        "vectorize.summary", "pin", this, null));
    }
 
    public void actionPerformed(ActionEvent evt)
@@ -9462,11 +9474,11 @@ class SummaryPathPanel extends JPanel implements ActionListener
 
       if (command == null) return;
 
-      if (command.equals("delete"))
+      if (command.equals("discard"))
       {
          dialog.deleteShape(index);
       }
-      else if (command.equals("store"))
+      else if (command.equals("pin"))
       {
          dialog.storeShape(index);
       }

@@ -2697,12 +2697,12 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary">Summary</entry>
 <entry key="vectorize.controls">Controls</entry>
 <entry key="vectorize.history">History</entry>
-<entry key="vectorize.confirm_store_current">Store current results?</entry>
+<entry key="vectorize.confirm_pin_current">Pin current results?</entry>
 <entry key="vectorize.confirm_clear_all">Clear all results?</entry>
 <entry key="vectorize.confirm_include_current">Include current results?</entry>
 <entry key="vectorize.confirm_discard_all">Discard all paths?</entry>
 <entry key="vectorize.delete_shape">Delete Shape</entry>
-<entry key="vectorize.store_shape">Store Shape</entry>
+<entry key="vectorize.pin_shape">Pin Shape</entry>
 <entry key="vectorize.no_tasks_selected">No tasks selected.</entry>
 <entry key="vectorize.no_image">No image!</entry>
 <entry key="vectorize.foreground_not_set">Foreground color not set!</entry>
@@ -2786,7 +2786,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.dotasks">Do Selected Tasks</entry>
 <entry key="vectorize.selectallitems">Select All Tasks</entry>
 <entry key="vectorize.deselectallitems">Deselect All Tasks</entry>
-<entry key="vectorize.storeresults">Store Current Results</entry>
+<entry key="vectorize.pinshapes">Pin Current Results</entry>
 <entry key="vectorize.discard_all">Clear All</entry>
 
 <entry key="vectorize.unsupported_colour_type">Unsupported color type: {0}</entry>
@@ -2799,7 +2799,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.closed">Closed. Winding rule: {0}.</entry>
 <entry key="vectorize.summary.subpaths">{0} sub-paths.</entry>
 <entry key="vectorize.summary.discard">Delete</entry>
-<entry key="vectorize.summary.store">Store</entry>
+<entry key="vectorize.summary.pin">Pin</entry>
 
 <!--  general purpose text -->
 
