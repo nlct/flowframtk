@@ -159,6 +159,11 @@ public class JDRButtonStyle
       return location;
    }
 
+   public byte getDisplayStyle()
+   {
+      return display;
+   }
+
    public ImageIcon getPressIcon(JDRResources resources, String base)
    {
       return resources.appIcon(presslocation+"/"+base+"up.png");
@@ -419,6 +424,14 @@ public class JDRButtonStyle
    {
       return new DirectionButton(getUpIcon(resources, name),
          getDownIcon(resources, name), direction, selected);
+   }
+
+   public String toString()
+   {
+      return String.format("%s[name=%s,location=%s,presslocation=%s,paintBorder=%s,fillArea=%s,hasDownIcon=%s,hasRolloverIcon=%s,isCompact=%s,display=%d,horizontalPosition=%d,verticalPosition=%d]", 
+        getClass().getSimpleName(),
+        name, location, presslocation, paintBorder, fillArea, 
+        hasDownIcon, hasRolloverIcon, isCompact, display, horizontalPosition, verticalPosition);
    }
 
    private String name, location, presslocation;

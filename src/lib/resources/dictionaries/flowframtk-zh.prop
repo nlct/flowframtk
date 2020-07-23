@@ -2702,7 +2702,7 @@
 <entry key="vectorize.controls">Controls</entry>
 <entry key="vectorize.history">History</entry>
 <entry key="vectorize.confirm_pin_current">Pin current results?</entry>
-<entry key="vectorize.confirm_clear_all">Clear all results?</entry>
+<entry key="vectorize.confirm_clear_all">Clear all results (including pinned)?</entry>
 <entry key="vectorize.confirm_include_current">Include current results?</entry>
 <entry key="vectorize.confirm_discard_all">Discard all paths?</entry>
 <entry key="vectorize.delete_shape">Delete Shape</entry>

@@ -1416,23 +1416,34 @@ public class JDRResources
       if (buttonText == null)
       {
          buttonText = getString(tag, null);
+
+         if (buttonText == null)
+         {
+            buttonText = getString(tag+"."+actionName, null);
+
+            if (buttonText != null)
+            {
+               tag += "."+actionName;
+            }
+         }
       }
 
       int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
       String base = mapIconBaseName(actionName);
 
-      JDRButton button = null;
+      JDRButtonStyle buttonStyle;
 
       if (style == DIALOG_BUTTON_AS_GENERAL)
       {
-         button = getButtonStyle().createButton(this,
-           buttonText, base, listener, tooltipText);
+         buttonStyle = getButtonStyle();
       }
       else
       {
-         button = DIALOG_BUTTON_STYLES[style].createButton(this,
-           buttonText, base, listener, tooltipText);
+         buttonStyle = DIALOG_BUTTON_STYLES[style];
       }
+
+      JDRButton button = buttonStyle.createButton(this,
+           buttonText, base, listener, tooltipText);
 
       button.setActionCommand(actionName);
 

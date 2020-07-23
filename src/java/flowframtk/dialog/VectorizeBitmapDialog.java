@@ -39,6 +39,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
 import com.dickimawbooks.jdr.*;
+import com.dickimawbooks.jdr.io.JDRMessageDictionary;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -118,14 +119,33 @@ public class VectorizeBitmapDialog extends JDialog
 
       coordField = new JTextField(12);
       coordField.setEditable(false);
+      coordField.setBorder(null);
       topPanel.add(coordField, "West");
+
+      Box box = Box.createHorizontalBox();
+      topPanel.add(box, "Center");
 
       timeElapsedField = new JTextField("00:00:00");
       timeElapsedField.setEditable(false);
-      topPanel.add(timeElapsedField, "Center");
+      timeElapsedField.setBorder(null);
+      box.add(timeElapsedField);
+
+      scanStatusBar = new ScanStatusBar(getResources());
+      box.add(scanStatusBar);
+      scanStatusBar.setVisible(false);
 
       zoomWidget = new ZoomWidget(this);
       topPanel.add(zoomWidget, "East");
+
+      JPanel bottomPanel = new JPanel();
+
+      okayButton = getResources().createOkayButton(this);
+      bottomPanel.add(okayButton);
+
+      cancelButton = getResources().createCancelButton(this);
+      bottomPanel.add(cancelButton);
+
+      getContentPane().add(bottomPanel, "South");
 
       mainPanel = new ImagePanel(this);
 
@@ -167,12 +187,24 @@ public class VectorizeBitmapDialog extends JDialog
 
       getContentPane().add(splitPane, "Center");
 
-      scanStatusBar = new ScanStatusBar(getResources());
-      getContentPane().add(scanStatusBar, "South");
-      scanStatusBar.setVisible(false);
-
       pack();
       setLocationRelativeTo(application);
+   }
+
+   public void setCancelEnabled(boolean enable)
+   {
+      if (cancelButton != null)
+      {
+         cancelButton.setEnabled(enable);
+      }
+   }
+
+   public void setOkayEnabled(boolean enable)
+   {
+      if (okayButton != null)
+      {
+         okayButton.setEnabled(enable);
+      }
    }
 
    public JDRResources getResources()
@@ -222,6 +254,14 @@ public class VectorizeBitmapDialog extends JDialog
             redoItem.setEnabled(false);
             redoItem.setText(getResources().getString("label.redo"));
          }
+      }
+      else if (command.equals("okay"))
+      {
+         okay();
+      }
+      else if (command.equals("cancel"))
+      {
+         cancel();
       }
    }
 
@@ -359,6 +399,11 @@ public class VectorizeBitmapDialog extends JDialog
       timeElapsedField.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
    }
 
+   public JDRMessageDictionary getMessageDictionary()
+   {
+      return getResources().getMessageDictionary();
+   }
+
    public boolean hasResults()
    {
       return !resultPanel.getResults().isEmpty();
@@ -389,7 +434,8 @@ public class VectorizeBitmapDialog extends JDialog
          int result = JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_pin_current"), 
            getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_CANCEL_OPTION);
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
 
          if (result == JOptionPane.YES_OPTION)
          {
@@ -420,7 +466,8 @@ public class VectorizeBitmapDialog extends JDialog
       int result = JOptionPane.showConfirmDialog(this, 
         getResources().getString("vectorize.confirm_clear_all"), 
         getResources().getString("process.confirm"),
-         JOptionPane.YES_NO_CANCEL_OPTION);
+         JOptionPane.YES_NO_CANCEL_OPTION,
+         JOptionPane.QUESTION_MESSAGE);
 
       if (result == JOptionPane.YES_OPTION)
       {
@@ -488,7 +535,8 @@ public class VectorizeBitmapDialog extends JDialog
          int result = JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_include current"), 
            getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_CANCEL_OPTION);
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
 
          if (result == JOptionPane.YES_OPTION)
          {
@@ -549,7 +597,8 @@ public class VectorizeBitmapDialog extends JDialog
          if (JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_discard_all"),
            getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION)
 
          {
             return;
@@ -765,7 +814,8 @@ public class VectorizeBitmapDialog extends JDialog
          int result = JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_pin_current"),
            getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_CANCEL_OPTION);
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
 
          if (result == JOptionPane.YES_OPTION)
          {
@@ -1255,6 +1305,8 @@ public class VectorizeBitmapDialog extends JDialog
    private ControlPanel controlPanel;
    private ZoomWidget zoomWidget;
    private JTextField coordField, timeElapsedField;
+
+   private JDRButton okayButton, cancelButton;
 
    private Cursor colourPickerCursor;
 
@@ -2811,7 +2863,7 @@ class ControlPanel extends JPanel implements ActionListener
       buttonPanel.add(taskButtonPanel);
 
       doTasksButton = resources.createDialogButton(
-         "vectorize", "dotask", this, null);
+         "vectorize.dotasks", "dotask", this, null);
       taskButtonPanel.add(doTasksButton);
 
       selectAllButton = resources.createDialogButton("vectorize", 
@@ -2829,15 +2881,6 @@ class ControlPanel extends JPanel implements ActionListener
       clearAllResultsButton = resources.createDialogButton("vectorize",
           "discard_all", this, null);
       taskButtonPanel.add(clearAllResultsButton);
-
-      JComponent finishButtonPanel = new JPanel();
-      buttonPanel.add(finishButtonPanel);
-
-      okayButton = getResources().createOkayButton(this);
-      finishButtonPanel.add(okayButton);
-
-      cancelButton = getResources().createCancelButton(this);
-      finishButtonPanel.add(cancelButton);
 
       updateWidgets(false, false, false);
    }
@@ -2955,8 +2998,8 @@ class ControlPanel extends JPanel implements ActionListener
       smoothingPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
       removeTinyPathsPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
 
-      cancelButton.setEnabled(!taskInProgress);
-      okayButton.setEnabled(!taskInProgress && (isVectorized || dialog.hasResults()));
+      dialog.setCancelEnabled(!taskInProgress);
+      dialog.setOkayEnabled(!taskInProgress && (isVectorized || dialog.hasResults()));
 
       boolean enable = !taskInProgress && imageLoaded;
 
@@ -3022,14 +3065,6 @@ class ControlPanel extends JPanel implements ActionListener
       else if (command.equals("discard_all"))
       {
          dialog.clearAllResults();
-      }
-      else if (command.equals("okay"))
-      {
-         dialog.okay();
-      }
-      else if (command.equals("cancel"))
-      {
-         dialog.cancel();
       }
    }
 
@@ -3194,8 +3229,6 @@ class ControlPanel extends JPanel implements ActionListener
    private JDRButton doTasksButton, selectAllButton, 
       deselectAllButton, clearAllResultsButton, storeResultsButton;
 
-   private JDRButton okayButton, cancelButton;
-
    private ScanImagePanel scanImagePanel;
    private OptimizeLinesPanel optimizeLinesPanel;
    private SplitSubPathsPanel splitSubPathsPanel;
@@ -3211,6 +3244,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       super();
       textField = new JTextField(12);
       textField.setEditable(false);
+      textField.setBorder(null);
       add(textField);
 
       progressBar = new JProgressBar(0, 100);
@@ -3220,6 +3254,9 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
       cancelButton = resources.createAppJButton("label", "abort", this);
       add(cancelButton);
+
+      confirmAbort = resources.getString("process.confirm.abort");
+      confirmTitle = resources.getString("process.confirm");
    }
 
    public void propertyChange(PropertyChangeEvent evt)
@@ -3242,8 +3279,13 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
       if (command.equals("abort"))
       {
-         cancelButton.setEnabled(false);
-         cancelled=true;
+         if (JOptionPane.showConfirmDialog(null, confirmAbort, confirmTitle,
+           JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
+         == JOptionPane.YES_OPTION)
+         {
+            cancelButton.setEnabled(false);
+            cancelled=true;
+         }
       }
    }
 
@@ -3270,6 +3312,8 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
    private JTextField textField;
    private JProgressBar progressBar;
+
+   private String confirmTitle, confirmAbort;
 
    private JButton cancelButton;
    private boolean cancelled=false;
@@ -3956,14 +4000,6 @@ class UnsupportedColourType extends Exception
    private int type;
 }
 
-class UserCancelledException extends InterruptedException
-{
-   public UserCancelledException()
-   {
-      super("Task Cancelled");
-   }
-}
-
 class ScanImage extends SwingWorker<Void,Raster>
 {
    public ScanImage(VectorizeBitmapDialog dialog, BufferedImage image, boolean continueToNextStep)
@@ -4068,7 +4104,7 @@ class ScanImage extends SwingWorker<Void,Raster>
             // check for cancel
             if (dialog.isCancelled())
             {
-               throw new UserCancelledException();
+               throw new UserCancelledException(dialog.getMessageDictionary());
             }
 
             int rectWidth = dx;
@@ -4258,7 +4294,7 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException();
+            throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
          publish(shapeList.get(i));
@@ -4760,7 +4796,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
       // check for cancel
       if (dialog.isCancelled())
       {
-         throw new UserCancelledException();
+         throw new UserCancelledException(dialog.getMessageDictionary());
       }
    }
 
@@ -5040,7 +5076,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException();
+            throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
          publish(shapeList.get(i));
@@ -5066,7 +5102,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       // check for cancel
       if (dialog.isCancelled())
       {
-         throw new UserCancelledException();
+         throw new UserCancelledException(dialog.getMessageDictionary());
       }
    }
 
@@ -8070,7 +8106,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException();
+            throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
          publish(new ShapeComponentVectorListElement(i, shapes.get(i)));
@@ -8622,7 +8658,7 @@ class RemoveTinyPaths extends SwingWorker<Void,ShapeComponentVector>
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException();
+            throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
          publish(shapes.get(i));
