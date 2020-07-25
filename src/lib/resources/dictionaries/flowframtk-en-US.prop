@@ -2811,6 +2811,14 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.message.insufficient_to_vectorize">Path {0}: not enough path components ({1}).</entry>
 <entry key="vectorize.message.no_closed_subpaths">Path {0}: no closed sub-paths detected.</entry>
 <entry key="vectorize.message.single_closed_subpath_found">Single closed sub-path found.</entry>
+<entry key="vectorize.success_no_intersect_check">Path {0}: converted to line (average delta: {1})</entry>
+<entry key="vectorize.failed_no_intersect_check">Path {0}: can''t convert to line (average delta: {1})</entry>
+<entry key="vectorize.success_intersect_check">Path {0}: converted to line (average delta: {1}, variance: {2})</entry>
+<entry key="vectorize.no_spikes">Path {0}: no spikes found.</entry>
+<entry key="vectorize.too_many_spikes">Path {0}: too many spikes or spikes too large or not enough path components.</entry>
+<entry key="vectorize.reduced_path_success">Path {0}: reduced path converted to line (average delta: {1})</entry>
+<entry key="vectorize.reduced_path_failed">Path {0}: can''t convert reduced path to line (average delta: {1})</entry>
+<entry key="vectorize.trying_spike">Trying spike {0}.</entry>
 
 <!--  general purpose text -->
 

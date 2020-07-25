@@ -231,6 +231,7 @@ public class VectorizeBitmapDialog extends JDialog
          try
          {
             undoManager.undo();
+            addMessageLn(undoItem.getText());
             updateUndoRedo();
 
             currentHistoryIndex--;
@@ -248,6 +249,7 @@ public class VectorizeBitmapDialog extends JDialog
          try
          {
             undoManager.redo();
+            addMessageLn(redoItem.getText());
             updateUndoRedo();
 
             currentHistoryIndex++;
@@ -344,6 +346,7 @@ public class VectorizeBitmapDialog extends JDialog
          for (int i = currentHistoryIndex; i > idx; i--)
          {
             undoManager.undo();
+            addMessageLn(undoItem.getText());
             updateUndoRedo();
          }
       }
@@ -352,6 +355,7 @@ public class VectorizeBitmapDialog extends JDialog
          for (int i = currentHistoryIndex+1; i <= idx; i++)
          {
             undoManager.redo();
+            addMessageLn(redoItem.getText());
             updateUndoRedo();
          }
       }
@@ -5422,9 +5426,18 @@ System.out.println("Not yet implemented inner size="+inner.size());
    {
       int n = vec.size();
 
-      if (n < 3 || vec.lastElement().getType() != PathIterator.SEG_CLOSE)
+      if (n < 3)
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.message.insufficient_to_vectorize",
+          newShapesVec.size(), n);
+         return;
+      }
+      else if (vec.lastElement().getType() != PathIterator.SEG_CLOSE)
+      {
+         addShape(vec);
+         dialog.addMessageIdLn("vectorize.message.not_closed",
+          newShapesVec.size());
          return;
       }
 
@@ -5452,6 +5465,8 @@ System.out.println("Not yet implemented inner size="+inner.size());
          if (!doLineIntersectionCheck)
          {
             addShape(results.bestPath);
+            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
+             newShapesVec.size(), results.minAverageDelta);
             return;
          }
          else
@@ -5459,6 +5474,8 @@ System.out.println("Not yet implemented inner size="+inner.size());
             if (results.variance < varianceThreshold)
             {
                addShape(results.bestPath);
+               dialog.addMessageIdLn("vectorize.success_intersect_check",
+                 newShapesVec.size(), results.minAverageDelta, results.variance);
                return;
             }
          }
@@ -5472,6 +5489,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
       if (spikes.isEmpty())
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
          return;
       }
 
@@ -5488,6 +5506,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
       if (remainingN < 4)
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.too_many_spikes", newShapesVec.size());
          return;
       }
 
@@ -5539,10 +5558,14 @@ System.out.println("Not yet implemented inner size="+inner.size());
       if (reducedPathResults.minAverageDelta < deltaThreshold)
       {
          addShape(reducedPathResults.bestPath);
+         dialog.addMessageIdLn("vectorize.reduced_path_success", 
+            newShapesVec.size(), reducedPathResults.minAverageDelta);
       }
       else
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.reduced_path_failed", 
+            newShapesVec.size(), reducedPathResults.minAverageDelta);
          return;
       }
 
@@ -5575,6 +5598,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
 
          newShape.add(new ShapeComponent(PathIterator.SEG_CLOSE, coords, prevPt));
 
+         dialog.addMessageIdLn("vectorize.trying_spike", spike);
          tryLineifyRegion(newShape);
       }
 
@@ -5615,6 +5639,8 @@ System.out.println("Not yet implemented inner size="+inner.size());
          if (!doLineIntersectionCheck)
          {
             addShape(path);
+            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
+             newShapesVec.size(), averageDelta);
             return;
          }
          else
@@ -5624,6 +5650,8 @@ System.out.println("Not yet implemented inner size="+inner.size());
             if (variance < varianceThreshold)
             {
                addShape(path);
+               dialog.addMessageIdLn("vectorize.success_intersect_check",
+                 newShapesVec.size(), averageDelta, variance);
                return;
             }
          }
@@ -5682,10 +5710,14 @@ System.out.println("Not yet implemented inner size="+inner.size());
          if (bestAverageDelta < deltaThreshold)
          {
             addShape(path);
+            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
+             newShapesVec.size(), bestAverageDelta);
          }
          else
          {
             addShape(sp1.getCompleteVector());
+            dialog.addMessageIdLn("vectorize.failed_no_intersect_check",
+             newShapesVec.size(), bestAverageDelta);
          }
 
          return;
@@ -5696,6 +5728,8 @@ System.out.println("Not yet implemented inner size="+inner.size());
       if (bestAverageDelta < deltaThreshold && variance < varianceThreshold)
       {
          addShape(path);
+         dialog.addMessageIdLn("vectorize.success_intersect_check",
+            newShapesVec.size(), bestAverageDelta, variance);
          return;
       }
 
@@ -5712,6 +5746,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
             if (spikes.isEmpty())
             {
                addShape(sp1.getCompleteVector());
+               dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
                return;
             }
 
@@ -5723,6 +5758,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
          else
          {
             addShape(sp1.getCompleteVector());
+            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
             return;
          }
       }
@@ -5780,6 +5816,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
             if (spikes.isEmpty())
             {
                addShape(sp1.getCompleteVector());
+               dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
                return;
             }
 
@@ -5830,12 +5867,14 @@ System.out.println("Not yet implemented inner size="+inner.size());
             if (remainingN1 < 2 || remainingN2 < 2)
             {
                addShape(sp1.getCompleteVector());
+               dialog.addMessageIdLn("vectorize.too_many_spikes", newShapesVec.size());
                return;
             }
          }
          else
          {
             addShape(sp1.getCompleteVector());
+            dialog.addMessageIdLn("vectorize.too_many_spikes", newShapesVec.size());
             return;
          }
       }
@@ -5879,10 +5918,14 @@ System.out.println("Not yet implemented inner size="+inner.size());
       if (bestAverageDelta < deltaThreshold)
       {
          addShape(bestPath);
+         dialog.addMessageIdLn("vectorize.reduced_path_success", 
+            newShapesVec.size(), bestAverageDelta);
       }
       else
       {
          addShape(sp1.getCompleteVector());
+         dialog.addMessageIdLn("vectorize.reduced_path_failed", 
+            newShapesVec.size(), bestAverageDelta);
          return;
       }
 
@@ -5985,6 +6028,7 @@ System.out.println("Not yet implemented inner size="+inner.size());
 
          path.add(new ShapeComponent(PathIterator.SEG_CLOSE, coords, prevPt));
 
+         dialog.addMessageIdLn("vectorize.trying_spike", spike);
          tryLineifyRegion(path);
       }
    }
