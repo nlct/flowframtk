@@ -604,6 +604,16 @@ public class JDRResources
       return Integer.parseInt(dictionary.getString(key));
    }
 
+   public String applyMessagePattern(String key, Number value)
+   {
+      if (dictionary == null)
+      {
+         return key;
+      }
+
+      return dictionary.applyMessagePattern(key, value);
+   }
+
    public String getMessage(String key, Object... values)
    {
       if (dictionary == null)
@@ -1914,6 +1924,19 @@ public class JDRResources
       return label;
    }
 
+   public JTextArea createAppInfoArea(int cols)
+   {
+      JTextArea textArea = new JTextArea();
+
+      textArea.setColumns(cols);
+      textArea.setEditable(false);
+      textArea.setOpaque(false);
+      textArea.setLineWrap(true);
+      textArea.setWrapStyleWord(true);
+
+      return textArea;
+   }
+
    public JTextArea createAppInfoArea(String id)
    {
       JTextArea textArea = new JTextArea(getString(id));
@@ -1936,6 +1959,27 @@ public class JDRResources
       textArea.setWrapStyleWord(true);
 
       return textArea;
+   }
+
+   public void addTab(JTabbedPane tabbedPane, String id, Component comp)
+   {
+      tabbedPane.addTab(getString(id), comp);
+
+      int index = tabbedPane.getTabCount()-1;
+
+      int mnemonic = getCodePoint(id+".mnemonic", -1);
+
+      if (mnemonic != -1)
+      {
+         tabbedPane.setMnemonicAt(index, mnemonic);
+      }
+
+      String tooltipText = getString(id+".tooltip", null);
+
+      if (tooltipText != null)
+      {
+         tabbedPane.setToolTipTextAt(index, tooltipText);
+      }
    }
 
    public JMenu createAppMenu(String menuId)
