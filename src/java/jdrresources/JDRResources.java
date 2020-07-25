@@ -472,8 +472,19 @@ public class JDRResources
     */
    public void error(Component parent, Throwable e)
    {
-      displayStackTrace(parent,
+      if (e instanceof UserCancelledException)
+      {
+         JOptionPane.showMessageDialog(parent, e.getMessage());
+      }
+      else if (e.getCause() instanceof UserCancelledException)
+      {
+         JOptionPane.showMessageDialog(parent, e.getCause().getMessage());
+      }
+      else
+      {
+         displayStackTrace(parent,
                            getString("error.title", "Error"),e);
+      }
    }
 
    /**
