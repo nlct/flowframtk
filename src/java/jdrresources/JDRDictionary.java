@@ -31,6 +31,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.text.MessageFormat;
+import java.text.ChoiceFormat;
 
 import javax.swing.*;
 import javax.swing.filechooser.*;
@@ -311,6 +312,20 @@ public class JDRDictionary
 
       return s;
 */
+   }
+
+   public String applyMessagePattern(String key, Number value)
+   {
+      String str = getString(key);
+
+      if (str == null)
+      {
+         System.err.println(String.format("Unknown key '%s'", key));
+         return key;
+      }
+
+      ChoiceFormat fmt = new ChoiceFormat(str);
+      return fmt.format(value);
    }
 
    public String getMessage(String key, Object... values)
