@@ -152,12 +152,17 @@ public class VectorizeBitmapDialog extends JDialog
       JTabbedPane resultTabbedPane = new JTabbedPane();
 
       resultPanel = new ResultPanel(mainPanel);
-      resultTabbedPane.addTab(resources.getString("vectorize.results"), 
+      resources.addTab(resultTabbedPane, "vectorize.results", 
         new JScrollPane(resultPanel));
 
       summaryPanel = new SummaryPanel(this);
-      resultTabbedPane.addTab(resources.getString("vectorize.summary"), 
+      resources.addTab(resultTabbedPane, "vectorize.summary",
          new JScrollPane(summaryPanel));
+
+      messagePanel = resources.createAppInfoArea(60);
+      messagePanel.setOpaque(true);
+      resources.addTab(resultTabbedPane, "vectorize.messages",
+         new JScrollPane(messagePanel));
 
       JSplitPane imagePane = new JSplitPane(
          JSplitPane.VERTICAL_SPLIT, 
@@ -173,10 +178,10 @@ public class VectorizeBitmapDialog extends JDialog
       historyGroup = new ButtonGroup();
 
       JTabbedPane sideTabbedPane = new JTabbedPane();
-      sideTabbedPane.addTab(resources.getString("vectorize.controls"),
+      resources.addTab(sideTabbedPane, "vectorize.controls",
         controlPanel);
 
-      sideTabbedPane.addTab(resources.getString("vectorize.history"),
+      resources.addTab(sideTabbedPane, "vectorize.history",
          new JScrollPane(historyPanel));
 
       JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
@@ -422,6 +427,7 @@ public class VectorizeBitmapDialog extends JDialog
       editComp.setSelected(true);
       historyGroup.add(editComp);
       historyPanel.add(editComp);
+      messagePanel.setText("");
 
       controlPanel.updateWidgets(false, mainPanel.getImage() != null,
          shapeList != null);
@@ -637,6 +643,26 @@ public class VectorizeBitmapDialog extends JDialog
       resultPanel.repaint(bounds);
    }
 
+   public void addMessageId(String id, Object... params)
+   {
+      addMessage(getResources().getMessage(id, params));
+   }
+
+   public void addMessageIdLn(String id, Object... params)
+   {
+      addMessageLn(getResources().getMessage(id, params));
+   }
+
+   public void addMessage(String msg)
+   {
+      messagePanel.setText(messagePanel.getText()+msg);
+   }
+
+   public void addMessageLn(String msg)
+   {
+      messagePanel.setText(String.format("%s%s%n", messagePanel.getText(), msg));
+   }
+
    public void setWorkingShape(Shape shape)
    {
       mainPanel.setWorkingShape(shape);
@@ -715,6 +741,7 @@ public class VectorizeBitmapDialog extends JDialog
       storeOldShapes();
       scanStatusBar.startTask(info, task);
       setHistoryPanelEnabled(false);
+      addMessageLn(info);
    }
 
    public void taskFailed(Exception e)
@@ -1291,6 +1318,7 @@ public class VectorizeBitmapDialog extends JDialog
    private ImagePanel mainPanel;
    private ResultPanel resultPanel;
    private SummaryPanel summaryPanel;
+   private JTextArea messagePanel;
 
    private JComponent historyPanel;
    private ButtonGroup historyGroup;
@@ -4220,6 +4248,14 @@ class ScanImage extends SwingWorker<Void,Raster>
       }
       else
       {
+         Rectangle2D bounds = area.getBounds2D();
+         dialog.addMessageIdLn("vectorize.message.scan_image_results",
+          bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+
+         dialog.addMessageLn(dialog.getResources().applyMessagePattern(
+          "vectorize.message.contains_subpaths",
+          area.isSingular() ? 1 : 0));
+
          Vector<ShapeComponentVector> shapeList
             = new Vector<ShapeComponentVector>(1);
 
@@ -5156,6 +5192,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       if (n < 4)
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.message.insufficient_to_vectorize",
+          newShapesVec.size(), n);
          return;
       }
 
@@ -5180,11 +5218,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       if (subPaths.isEmpty())
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.message.no_closed_subpaths",
+          newShapesVec.size());
          return;
       }
 
       if (subPaths.size() == 1)
       {
+         dialog.addMessageIdLn("vectorize.message.single_closed_subpath_found");
          tryLineifyRegion(subPaths.firstElement());
          return;
       }
@@ -5217,6 +5258,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                if (inner.contains(sp1))
                {
                   addShape(vec);
+                  dialog.addMessageIdLn("vectorize.message.inner_contains",
+                     newShapesVec.size());
                   return;
                }
 
@@ -5231,6 +5274,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                if (inner.contains(sp2))
                {
                   addShape(vec);
+                  dialog.addMessageIdLn("vectorize.message.inner_contains",
+                     newShapesVec.size());
                   return;
                }
 
@@ -5246,6 +5291,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       if (outer == null || inner.isEmpty())
       {
          addShape(vec);
+         dialog.addMessageIdLn("vectorize.message.no_outer_inner",
+            newShapesVec.size());
          return;
       }
 
@@ -5256,18 +5303,24 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          if (!(outer == sp || inner.contains(sp)))
          {
             addShape(vec);
+            dialog.addMessageIdLn("vectorize.message.inner_contains",
+               newShapesVec.size());
             return;
          }
       }
 
       if (inner.size() == 1)
       {
+         dialog.addMessageIdLn("vectorize.message.possible_loop");
          tryLineifyLoop(outer, inner.firstElement());
       }
       else
       {
+         dialog.addMessageIdLn("vectorize.message.multi_inner");
 // TODO
 System.out.println("Not yet implemented inner size="+inner.size());
+         addShape(vec);
+         return;
       }
 
 /*
