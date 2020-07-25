@@ -484,9 +484,7 @@ public class VectorizeBitmapDialog extends JDialog
 
    public void error(Exception e)
    {
-      error(e.getMessage());
-
-      e.printStackTrace();
+      getResources().error(this, e);
    }
 
    public void error(String msg)
@@ -533,7 +531,7 @@ public class VectorizeBitmapDialog extends JDialog
       if (getCurrentShapeList() != null)
       {
          int result = JOptionPane.showConfirmDialog(this, 
-           getResources().getString("vectorize.confirm_include current"), 
+           getResources().getString("vectorize.confirm_include_current"), 
            getResources().getString("process.confirm"),
             JOptionPane.YES_NO_CANCEL_OPTION,
             JOptionPane.QUESTION_MESSAGE);
@@ -3252,7 +3250,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       progressBar.setStringPainted(true);
       add(progressBar);
 
-      cancelButton = resources.createAppJButton("label", "abort", this);
+      cancelButton = resources.createAppButton("label", "abort", this);
       add(cancelButton);
 
       confirmAbort = resources.getString("process.confirm.abort");
@@ -5269,6 +5267,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       else
       {
 // TODO
+System.out.println("Not yet implemented inner size="+inner.size());
       }
 
 /*
@@ -9230,10 +9229,12 @@ class Result
       if (isFilled)
       {
          path.setFillPaint(new JDRColor(cg, foreground));
+         path.setLinePaint(null);
       }
       else
       {
          path.setLinePaint(new JDRColor(cg, foreground));
+         path.setFillPaint(null);
       }
 
       path.setStroke(new JDRBasicStroke(cg));

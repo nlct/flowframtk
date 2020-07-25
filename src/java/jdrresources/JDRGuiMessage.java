@@ -106,9 +106,7 @@ public class JDRGuiMessage extends JFrame
       processInfo = new JLabel();
       buttonPanel.add(processInfo, "Center");
 
-      abortButton = new JButton(
-         resources.getString("label.abort", "Abort"));
-      abortButton.addActionListener(this);
+      abortButton = resources.createAppButton("label", "abort", this);
       abortButton.setActionCommand("confirmabort");
       buttonPanel.add(abortButton, "East");
 
