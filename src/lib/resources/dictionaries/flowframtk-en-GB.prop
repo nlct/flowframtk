@@ -2817,7 +2817,13 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
 <entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path|1#Contains single closed sub-path.</entry>
 <entry key="vectorize.message.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>
-<entry key="vectorize.message.inner_contains">Path {0}: inner contains sub-path.</entry>
+<entry key="vectorize.message.inner_contains">Path {0}: inner contains sub-path {1}.</entry>
+<entry key="vectorize.message.sub_path">Sub-path {0}: {1}</entry>
+<entry key="vectorize.message.outer_sub_path">Sub-path {0} identified as outer sub-path.</entry>
+<entry key="vectorize.message.inner_sub_path">Sub-path {0} identified as inner sub-path.</entry>
+<entry key="vectorize.message.not_inner_outer">Path {0}: sub-path {1} not identified as either outer or inner sub-path.</entry>
+<entry key="vectorize.message.sub_paths_dont_contain">Sub-path {0} does not contain ({1},{2}) and sub-path {3} does not contain ({4},{5}).</entry>
+
 <entry key="vectorize.message.possible_loop">Possible loop detected.</entry>
 <entry key="vectorize.message.multi_inner">Multiple inner sub-paths detected.</entry>
 <entry key="vectorize.message.insufficient_to_vectorize">Path {0}: not enough path components ({1}).</entry>
