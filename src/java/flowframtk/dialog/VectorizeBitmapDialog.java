@@ -3387,6 +3387,30 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       return windingRule;
    }
 
+   public void moveTo(Point2D.Double p)
+   {
+      moveTo(p.getX(), p.getY());
+   }
+
+   public void moveTo(double x, double y)
+   {
+      Point2D.Double pt = (isEmpty() ? null : lastElement().getEnd());
+
+      add(new ShapeComponent(PathIterator.SEG_MOVETO,
+        new double[]{x, y}, pt));
+   }
+
+   public void lineTo(Point2D.Double p)
+   {
+      lineTo(p.getX(), p.getY());
+   }
+
+   public void lineTo(double x, double y)
+   {
+      add(new ShapeComponent(PathIterator.SEG_LINETO,
+        new double[]{x, y}, lastElement().getEnd()));
+   }
+
    public void addComponent(ShapeComponent comp)
    {
       if (!isEmpty())
@@ -3730,6 +3754,12 @@ class ShapeComponent
       }
 
       this.start = start;
+   }
+
+   public ShapeComponent(ShapeComponent otherComp)
+   {
+      this();
+      set(otherComp);
    }
 
    public void set(ShapeComponent otherComp)
@@ -4517,6 +4547,15 @@ class SubPath
       return vec;
    }
 
+   public ShapeComponentVector toVector()
+   {
+      ShapeComponentVector vec = new ShapeComponentVector(endIdx-startIdx+1);
+
+      vec.appendSubPath(this, false);
+
+      return vec;
+   }
+
    public int getStartIndex()
    {
       return startIdx;
@@ -5255,6 +5294,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       Shape[] shapes = new Shape[n];
 
       SubPath outer = null;
+      int outerIdx = -1;
       Vector<SubPath> inner = new Vector<SubPath>();
 
       for (int i = 0; i < n; i++)
@@ -5288,6 +5328,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                if (outer == null)
                {
                   outer = sp1;
+                  outerIdx = i;
                   dialog.addMessageIdLn("vectorize.message.outer_sub_path", (i+1));
                }
 
@@ -5310,6 +5351,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                if (outer == null)
                {
                   outer = sp2;
+                  outerIdx = j;
                   dialog.addMessageIdLn("vectorize.message.outer_sub_path", (j+1));
                }
 
@@ -5357,14 +5399,18 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       dialog.addMessageIdLn("vectorize.message.multi_inner");
 
-      for (int i = inner.size()-1; i > 0; i--)
+      Vector<ShapeComponentVector> shapeVecs = new Vector<ShapeComponentVector>(n);
+      boolean modified = false;
+
+      for (int i = 0; i < inner.size(); i++)
       {
          SubPath sp1 = inner.get(i);
          int startIdx1 = sp1.getStartIndex();
          int endIdx1 = sp1.getEndIndex();
          Point2D.Double startPt1 = vec.get(startIdx1).getEnd();
+         ShapeComponentVector currentVec = null;
 
-         for (int j = i-1; j >= 0; j--)
+         for (int j = i+1; j < inner.size(); j++)
          {
             SubPath sp2 = inner.get(j);
 
@@ -5374,6 +5420,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             int closestStart1=-1;
             int closestStart2=-1;
+            boolean reverse = false;
 
             for (int k1 = startIdx1; k1 < endIdx1; k1++)
             {
@@ -5424,7 +5471,25 @@ dialog.addMessageLn(String.format("p1next=%s, p2next=%s, next dist: %f", p1next,
                         break;
                      }
 
-//TODO check previous points (paths may have opposite directions)
+                     if (k2 > startIdx2)
+                     {
+                        p2next = vec.get(k2-1).getEnd();
+                     }
+                     else
+                     {
+                        p2next = vec.get(endIdx2-1).getEnd();
+                     }
+
+                     nextDist = getDistance(p1next, p2next);
+dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f", p1next, p2next, nextDist));
+                     if (nextDist < deltaThreshold)
+                     {
+                        closestStart1 = k1;
+                        closestStart2 = k2;
+                        reverse = true;
+                        break;
+                     }
+
                   }
                }
 
@@ -5444,18 +5509,38 @@ dialog.addMessageLn(String.format("p1next=%s, p2next=%s, next dist: %f", p1next,
                   ShapeComponent comp1 = vec.get(k1);
                   Point2D.Double p1 = comp1.getEnd();
 
-                  for (int k2 = endIdx2-1; k2 > closestStart2+1; k2--)
+                  if (reverse)
                   {
-                     ShapeComponent comp2 = vec.get(k2);
-                     Point2D.Double p2 = comp2.getEnd();
-
-                     double dist = getDistance(p1, p2);
-
-                     if (dist < deltaThreshold)
+                     for (int k2 = startIdx2; k2 < closestStart2-1; k2++)
                      {
-                        closestEnd1 = k1;
-                        closestEnd2 = k2;
-                        break;
+                        ShapeComponent comp2 = vec.get(k2);
+                        Point2D.Double p2 = comp2.getEnd();
+
+                        double dist = getDistance(p1, p2);
+
+                        if (dist < deltaThreshold)
+                        {
+                           closestEnd1 = k1;
+                           closestEnd2 = k2;
+                           break;
+                        }
+                     }
+                  }
+                  else
+                  {
+                     for (int k2 = endIdx2-1; k2 > closestStart2+1; k2--)
+                     {
+                        ShapeComponent comp2 = vec.get(k2);
+                        Point2D.Double p2 = comp2.getEnd();
+
+                        double dist = getDistance(p1, p2);
+
+                        if (dist < deltaThreshold)
+                        {
+                           closestEnd1 = k1;
+                           closestEnd2 = k2;
+                           break;
+                        }
                      }
                   }
 
@@ -5468,18 +5553,134 @@ dialog.addMessageLn(String.format("p1next=%s, p2next=%s, next dist: %f", p1next,
                if (closestEnd1 == -1)
                {
                   closestEnd1 = closestStart1+1;
-                  closestEnd2 = closestStart2+1;
+
+                  if (reverse)
+                  {
+                     if (closestStart2 == startIdx2)
+                     {
+                        closestEnd2 = endIdx2;
+                     }
+                     else
+                     {
+                        closestEnd2 = closestStart2-1;
+                     }
+                  }
+                  else
+                  {
+                     closestEnd2 = closestStart2+1;
+                  }
                }
 dialog.addMessageLn(String.format("possible line along sub-path borders: sub-path %d [%d] %s -- [%d] %s; sub-path %d [%d] %s -- [%d] %s",
 i, closestStart1, vec.get(closestStart1), closestEnd1, vec.get(closestEnd1), 
 j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
+
+               tryLineifyBorder(sp1, closestStart1, closestEnd1, 
+                                sp2, closestStart2, closestEnd2, reverse);
+
+               currentVec = new ShapeComponentVector();
+
+               currentVec.moveTo(startPt1);
+//TODO check gradients (minimise points)
+
+               for (int k1 = startIdx1+1; k1 <= closestStart1; k1++)
+               {
+                  if (k1 == endIdx1)
+                  {
+                     currentVec.lineTo(startPt1);
+                  }
+                  else
+                  {
+                     currentVec.add(new ShapeComponent(vec.get(k1)));
+                  }
+               }
+
+               currentVec.lineTo(vec.get(closestStart2).getEnd());
+
+               if (reverse)
+               {
+                  for (int k2 = closestStart2+1; k2 < endIdx2; k2++)
+                  {
+                     currentVec.add(new ShapeComponent(vec.get(k2)));
+                  }
+
+                  for (int k2 = endIdx2+1; k2 <= closestEnd2; k2++)
+                  {
+                     currentVec.add(new ShapeComponent(vec.get(k2)));
+                  }
+               }
+               else
+               {
+                  for (int k2 = closestStart2-1; k2 >= startIdx2; k2--)
+                  {
+                     currentVec.lineTo(vec.get(k2).getEnd());
+                  }
+
+                  for (int k2 = endIdx2; k2 >= closestEnd2; k2--)
+                  {
+                     currentVec.lineTo(vec.get(k2-1).getEnd());
+                  }
+               }
+
+               currentVec.lineTo(vec.get(closestEnd1).getEnd());
+
+               for (int k1 = closestEnd1+1; k1 <= endIdx1; k1++)
+               {
+                  currentVec.add(new ShapeComponent(vec.get(k1)));
+               }
+
+               modified = true;
+               inner.remove(j);
+               break;
             }
+         }
+
+         if (currentVec == null)
+         {
+            shapeVecs.add(sp1.toVector());
+         }
+         else
+         {
+            shapeVecs.add(currentVec);
          }
       }
 
-      // TODO
-      dialog.addMessageLn("Not yet implemented.");
-      addShape(vec);
+for (ShapeComponentVector v : shapeVecs)
+{
+System.out.println(v);
+}
+
+      if (modified)
+      {
+         ShapeComponentVector newVec = new ShapeComponentVector();
+
+         for (int i = 0; i < shapeVecs.size(); i++)
+         {
+            if (i == outerIdx)
+            {
+               newVec.appendSubPath(outer);
+            }
+
+            newVec.appendPath(shapeVecs.get(i));
+         }
+
+         if (outerIdx >= shapeVecs.size())
+         {
+            newVec.appendSubPath(outer);
+         }
+
+         tryLineify(newVec);
+      }
+      else
+      {
+         addShape(vec);
+      }
+   }
+
+   private void tryLineifyBorder(SubPath sp1, int start1, int end1,
+     SubPath sp2, int start2, int end2, boolean reverse)
+    throws InterruptedException
+   {
+//TODO
    }
 
    private void tryLineifyRegion(SubPath subPath)
