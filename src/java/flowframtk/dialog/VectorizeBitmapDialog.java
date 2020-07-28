@@ -3400,7 +3400,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
         new double[]{x, y}, pt));
    }
 
-   public void lineTo(Point2D.Double p)
+   public void lineTo(Point2D p)
    {
       lineTo(p.getX(), p.getY());
    }
@@ -3878,6 +3878,70 @@ class ShapeComponent
             coords[5] = y;
          return;
       }
+   }
+
+   public static Point2D getLineGradient(Point2D p0, Point2D p1)
+   {
+      return new Point2D.Double(p1.getX()-p0.getX(), p1.getY()-p0.getY());
+   }
+
+   public static Point2D getLineGradient(double p0x, double p0y,
+     double p1x, double p1y)
+   {
+      return new Point2D.Double(p1x-p0x, p1y-p0y);
+   }
+
+   public Point2D getGradientToEnd(ShapeComponent comp)
+   {
+      double p1x=0.0, p1y=0.0;
+
+      switch (comp.type)
+      {
+         case PathIterator.SEG_MOVETO:
+         case PathIterator.SEG_LINETO:
+            p1x = comp.coords[0];
+            p1y = comp.coords[1];
+         break;
+         case PathIterator.SEG_QUADTO:
+            p1x = comp.coords[2];
+            p1y = comp.coords[3];
+         break;
+         case PathIterator.SEG_CUBICTO:
+            p1x = comp.coords[4];
+            p1y = comp.coords[5];
+         break;
+      }
+
+      return getGradientToEnd(p1x, p1y);
+   }
+
+   public Point2D getGradientToEnd(Point2D p1)
+   {
+      return getGradientToEnd(p1.getX(), p1.getY());
+   }
+
+   public Point2D getGradientToEnd(double p1x, double p1y)
+   {
+      double p0x=0.0, p0y=0.0;
+
+      switch (type)
+      {
+         case PathIterator.SEG_MOVETO:
+         case PathIterator.SEG_LINETO:
+            p0x = coords[0];
+            p0y = coords[1];
+         break;
+         case PathIterator.SEG_QUADTO:
+            p0x = coords[2];
+            p0y = coords[3];
+         break;
+         case PathIterator.SEG_CUBICTO:
+            p0x = coords[4];
+            p0y = coords[5];
+         break;
+      }
+
+      return getLineGradient(p0x, p0y, p1x, p1y);
    }
 
    public Point2D.Double getStartGradient()
@@ -5401,6 +5465,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       Vector<ShapeComponentVector> shapeVecs = new Vector<ShapeComponentVector>(n);
       boolean modified = false;
+      double gradientEpsilon = dialog.getGradientEpsilon();
 
       for (int i = 0; i < inner.size(); i++)
       {
@@ -5580,7 +5645,6 @@ j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
                currentVec = new ShapeComponentVector();
 
                currentVec.moveTo(startPt1);
-//TODO check gradients (minimise points)
 
                for (int k1 = startIdx1+1; k1 <= closestStart1; k1++)
                {
@@ -5594,11 +5658,66 @@ j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
                   }
                }
 
-               currentVec.lineTo(vec.get(closestStart2).getEnd());
+               ShapeComponent prevComp = currentVec.lastElement();
+
+               if (prevComp.getType() == PathIterator.SEG_LINETO)
+               {
+                  Point2D dp1 = prevComp.getEndGradient();
+                  Point2D endPt = vec.get(closestStart2).getEnd();
+                  Point2D dp2 = prevComp.getGradientToEnd(endPt);
+
+                  double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+                  double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+                  if (Math.abs(theta1-theta2) < gradientEpsilon)
+                  {
+                     prevComp.setEndPoint(endPt);
+                  }
+                  else
+                  {
+                     currentVec.lineTo(endPt);
+                     prevComp = currentVec.lastElement();
+                  }
+               }
+               else
+               {
+                  currentVec.lineTo(vec.get(closestStart2).getEnd());
+                  prevComp = currentVec.lastElement();
+               }
 
                if (reverse)
                {
-                  for (int k2 = closestStart2+1; k2 < endIdx2; k2++)
+                  if (closestStart2+1 < endIdx2)
+                  {
+                     ShapeComponent comp = vec.get(closestStart2+1);
+
+                     if (comp.getType() == PathIterator.SEG_LINETO)
+                     {
+                        Point2D dp1 = prevComp.getEndGradient();
+                        Point2D endPt = comp.getEnd();
+                        Point2D dp2 = prevComp.getGradientToEnd(endPt);
+
+                        double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+                        double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+                        if (Math.abs(theta1-theta2) < gradientEpsilon)
+                        {
+                           prevComp.setEndPoint(endPt);
+                        }
+                        else
+                        {
+                           currentVec.add(new ShapeComponent(comp));
+                           prevComp = currentVec.lastElement();
+                        }
+                     }
+                     else
+                     {
+                        currentVec.add(new ShapeComponent(comp));
+                        prevComp = currentVec.lastElement();
+                     }
+                  }
+
+                  for (int k2 = closestStart2+2; k2 < endIdx2; k2++)
                   {
                      currentVec.add(new ShapeComponent(vec.get(k2)));
                   }
@@ -5621,9 +5740,62 @@ j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
                   }
                }
 
-               currentVec.lineTo(vec.get(closestEnd1).getEnd());
+               prevComp = currentVec.lastElement();
 
-               for (int k1 = closestEnd1+1; k1 <= endIdx1; k1++)
+               if (prevComp.getType() == PathIterator.SEG_LINETO)
+               {
+                  Point2D dp1 = prevComp.getEndGradient();
+                  Point2D endPt = vec.get(closestEnd1).getEnd();
+                  Point2D dp2 = prevComp.getGradientToEnd(endPt);
+
+                  double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+                  double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+                  if (Math.abs(theta1-theta2) < gradientEpsilon)
+                  {
+                     prevComp.setEndPoint(endPt);
+                  }
+                  else
+                  {
+                     currentVec.lineTo(endPt);
+                     prevComp = currentVec.lastElement();
+                  }
+               }
+               else
+               {
+                  currentVec.lineTo(vec.get(closestEnd1).getEnd());
+                  prevComp = currentVec.lastElement();
+               }
+
+               if (closestEnd1+1 <= endIdx1)
+               {
+                  ShapeComponent comp = vec.get(closestEnd1+1);
+
+                  if (comp.getType() == PathIterator.SEG_LINETO)
+                  {
+                     Point2D dp1 = prevComp.getEndGradient();
+                     Point2D endPt = comp.getEnd();
+                     Point2D dp2 = prevComp.getGradientToEnd(endPt);
+
+                     double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+                     double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+                     if (Math.abs(theta1-theta2) < gradientEpsilon)
+                     {
+                        prevComp.setEndPoint(endPt);
+                     }
+                     else
+                     {
+                        currentVec.add(new ShapeComponent(comp));
+                     }
+                  }
+                  else
+                  {
+                     currentVec.add(new ShapeComponent(comp));
+                  }
+               }
+
+               for (int k1 = closestEnd1+2; k1 <= endIdx1; k1++)
                {
                   currentVec.add(new ShapeComponent(vec.get(k1)));
                }
@@ -5643,11 +5815,6 @@ j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
             shapeVecs.add(currentVec);
          }
       }
-
-for (ShapeComponentVector v : shapeVecs)
-{
-System.out.println(v);
-}
 
       if (modified)
       {
@@ -6610,7 +6777,7 @@ System.out.println(v);
 
       for (int i = 0; i < linefit.length; i++)
       {
-         if (linefit[i].delta > deltaThreshold)
+         if (linefit[i] != null && linefit[i].delta > deltaThreshold)
          {
             sum++;
          }
@@ -6622,26 +6789,36 @@ System.out.println(v);
    private double calculateMean(LineFit[] linefit)
    {
       double sumDelta = 0.0;
+      int n = 0;
 
       for (int i = 0; i < linefit.length; i++)
       {
-         sumDelta += linefit[i].delta;
+         if (linefit[i] != null)
+         {
+            sumDelta += linefit[i].delta;
+            n++;
+         }
       }
 
-      return sumDelta / linefit.length;
+      return sumDelta / n;
    }
 
    private double calculateVariance(LineFit[] linefit, double averageDelta)
    {
       double sum = 0.0;
+      int n = 0;
 
       for (int i = 0; i < linefit.length; i++)
       {
-         double diff = linefit[i].delta - averageDelta;
-         sum += diff*diff;
+         if (linefit[i] != null)
+         {
+            double diff = linefit[i].delta - averageDelta;
+            sum += diff*diff;
+            n++;
+         }
       }
 
-      return sum / linefit.length;
+      return sum / n;
    }
 
    private LineFit[] fitLoop(Point2D.Double[] pts1, Point2D.Double[] pts2,
