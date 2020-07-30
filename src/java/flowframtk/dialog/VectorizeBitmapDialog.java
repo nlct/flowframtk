@@ -122,20 +122,28 @@ public class VectorizeBitmapDialog extends JDialog
       coordField.setBorder(null);
       topPanel.add(coordField, "West");
 
-      Box box = Box.createHorizontalBox();
-      topPanel.add(box, "Center");
-
       timeElapsedField = new JTextField("00:00:00");
       timeElapsedField.setEditable(false);
       timeElapsedField.setBorder(null);
-      box.add(timeElapsedField);
+      topPanel.add(timeElapsedField, "East");
 
-      scanStatusBar = new ScanStatusBar(getResources());
-      box.add(scanStatusBar);
-      scanStatusBar.setVisible(false);
+      JPanel middleComp = new JPanel(new BorderLayout());
+      topPanel.add(middleComp, "Center");
 
-      zoomWidget = new ZoomWidget(this);
-      topPanel.add(zoomWidget, "East");
+      mainZoomWidget = new ZoomWidget(this);
+      middleComp.add(mainZoomWidget, "West");
+
+      cardLayout = new CardLayout();
+      cardComp = new JPanel(cardLayout);
+      middleComp.add(cardComp, "Center");
+
+      cardComp.add(
+        resources.createAppInfoArea("vectorize.message.set_foreground"),
+        "info");
+
+      scanStatusBar = new ScanStatusBar(this);
+      cardComp.add(scanStatusBar, "status");
+      cardLayout.first(cardComp);
 
       JPanel bottomPanel = new JPanel();
 
@@ -151,9 +159,27 @@ public class VectorizeBitmapDialog extends JDialog
 
       JTabbedPane resultTabbedPane = new JTabbedPane();
 
+      JPanel panel = new JPanel(new BorderLayout());
       resultPanel = new ResultPanel(mainPanel);
-      resources.addTab(resultTabbedPane, "vectorize.results", 
-        new JScrollPane(resultPanel));
+      panel.add(new JScrollPane(resultPanel), "Center");
+
+      topPanel = new JPanel(new BorderLayout());
+      panel.add(topPanel, "North");
+
+      topPanel.add(resources.createAppInfoArea("vectorize.results.info"), "Center");
+
+      Box box = Box.createHorizontalBox();
+      topPanel.add(box, "East");
+      
+      resultZoomWidget = new ZoomWidget(this);
+      resultZoomWidget.setEnabled(false);
+      box.add(resultZoomWidget, "East");
+
+      zoomLinkCheckBox = resources.createDialogToggle("vectorize.results",
+        "link", this, true);
+      box.add(zoomLinkCheckBox);
+
+      resources.addTab(resultTabbedPane, "vectorize.results", panel);
 
       summaryPanel = new SummaryPanel(this);
       resources.addTab(resultTabbedPane, "vectorize.summary",
@@ -164,10 +190,8 @@ public class VectorizeBitmapDialog extends JDialog
       resources.addTab(resultTabbedPane, "vectorize.messages",
          new JScrollPane(messagePanel));
 
-      JSplitPane imagePane = new JSplitPane(
-         JSplitPane.VERTICAL_SPLIT, 
-         new JScrollPane(mainPanel), 
-         resultTabbedPane);
+      JSplitPane imagePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+         new JScrollPane(mainPanel), resultTabbedPane);
 
       imagePane.setResizeWeight(0.5);
       imagePane.setOneTouchExpandable(true);
@@ -269,6 +293,18 @@ public class VectorizeBitmapDialog extends JDialog
       else if (command.equals("cancel"))
       {
          cancel();
+      }
+      else if (command.equals("link"))
+      {
+         if (zoomLinkCheckBox.isSelected())
+         {
+            resultZoomWidget.setValue(mainZoomWidget.getValue());
+            resultZoomWidget.setEnabled(false);
+         }
+         else
+         {
+            resultZoomWidget.setEnabled(true);
+         }
       }
    }
 
@@ -619,15 +655,33 @@ public class VectorizeBitmapDialog extends JDialog
    public void setImage(BufferedImage image)
    {
       mainPanel.setImage(image);
+      resultPanel.updatePanel();
       revalidate();
 
       controlPanel.updateWidgets(false, image != null, shapeList != null);
    }
 
+   public void zoomChanged(ZoomWidget widget)
+   {
+      if (widget == mainZoomWidget)
+      {
+         mainPanel.updatePanel();
+
+         if (!resultZoomWidget.isEnabled())
+         {
+            resultZoomWidget.setMagnification(widget);
+         }
+      }
+      else if (widget == resultZoomWidget)
+      {
+         resultPanel.updatePanel();
+      }
+   }
+
    public void updateImagePanel()
    {
       mainPanel.updatePanel();
-      resultPanel.revalidate();
+      resultPanel.updatePanel();
    }
 
    public void repaintImagePanel()
@@ -738,6 +792,16 @@ public class VectorizeBitmapDialog extends JDialog
    public void removeResult(Result result)
    {
       resultPanel.removeResult(result);
+   }
+
+   public void showStatusBar()
+   {
+      cardLayout.show(cardComp, "status");
+   }
+
+   public void hideStatusBar()
+   {
+      cardLayout.show(cardComp, "info");
    }
 
    public void startTask(String info, SwingWorker task)
@@ -1199,9 +1263,15 @@ public class VectorizeBitmapDialog extends JDialog
       }
    }
 
-   public double getMagnification()
+   public double getMainMagnification()
    {
-      return zoomWidget.getMagnification();
+      return mainZoomWidget.getMagnification();
+   }
+
+   public double getResultMagnification()
+   {
+      return resultZoomWidget == null || !resultZoomWidget.isEnabled() ?
+        mainZoomWidget.getMagnification() : resultZoomWidget.getMagnification();
    }
 
    public Color getImageForeground()
@@ -1333,8 +1403,11 @@ public class VectorizeBitmapDialog extends JDialog
 
    private ScanStatusBar scanStatusBar;
    private ControlPanel controlPanel;
-   private ZoomWidget zoomWidget;
+   private ZoomWidget mainZoomWidget, resultZoomWidget;
+   private JCheckBox zoomLinkCheckBox;
    private JTextField coordField, timeElapsedField;
+   private CardLayout cardLayout;
+   private JComponent cardComp;
 
    private JDRButton okayButton, cancelButton;
 
@@ -1609,7 +1682,7 @@ class ZoomWidget extends JPanel implements ChangeListener
 
       if (source == zoomSpinner)
       {
-         dialog.updateImagePanel();
+         dialog.zoomChanged(this);
       }
    }
 
@@ -1618,6 +1691,34 @@ class ZoomWidget extends JPanel implements ChangeListener
       Number num = zoomSpinnerModel.getNumber();
 
       return 0.01*num.doubleValue();
+   }
+
+   public Object getValue()
+   {
+      return zoomSpinner.getValue();
+   }
+
+   public void setValue(Object newValue)
+   {
+      if (!newValue.equals(zoomSpinner.getValue()))
+      {
+         zoomSpinner.setValue(newValue);
+      }
+   }
+
+   public void setMagnification(ZoomWidget other)
+   {
+      if (this != other)
+      {
+         zoomSpinner.setValue(other.getValue());
+      }
+   }
+
+   public void setEnabled(boolean enable)
+   {
+      super.setEnabled(enable);
+
+      zoomSpinner.setEnabled(enable);
    }
 
    private VectorizeBitmapDialog dialog;
@@ -3269,9 +3370,12 @@ class ControlPanel extends JPanel implements ActionListener
 
 class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListener
 {
-   public ScanStatusBar(JDRResources resources)
+   public ScanStatusBar(VectorizeBitmapDialog dialog)
    {
       super();
+      this.dialog = dialog;
+      JDRResources resources = dialog.getResources();
+
       textField = new JTextField(12);
       textField.setEditable(false);
       textField.setBorder(null);
@@ -3321,7 +3425,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
    public void taskFinished()
    {
-      setVisible(false);
+      dialog.hideStatusBar();
    }
 
    public void startTask(String info, SwingWorker task)
@@ -3330,7 +3434,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       progressBar.setValue(0);
       cancelButton.setEnabled(true);
       cancelled = false;
-      setVisible(true);
+      dialog.showStatusBar();
       task.addPropertyChangeListener(this);
       task.execute();
    }
@@ -3347,6 +3451,8 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
    private JButton cancelButton;
    private boolean cancelled=false;
+
+   private VectorizeBitmapDialog dialog;
 }
 
 class ShapeComponentVector extends Vector<ShapeComponent>
@@ -3752,11 +3858,15 @@ class ShapeComponent
    public ShapeComponent(int type, double[] coords, Point2D.Double start)
    {
       this.type = type;
-      this.coords = new double[coords.length];
 
-      for (int i = 0; i < coords.length; i++)
+      if (coords != null)
       {
-         this.coords[i] = coords[i];
+         this.coords = new double[coords.length];
+
+         for (int i = 0; i < coords.length; i++)
+         {
+            this.coords[i] = coords[i];
+         }
       }
 
       this.start = start;
@@ -3772,6 +3882,25 @@ class ShapeComponent
    {
       this.type = otherComp.type;
       this.start = otherComp.start;
+
+      if (coords == null)
+      {
+         if (otherComp.coords == null)
+         {
+            return;
+         }
+
+         coords = new double[otherComp.coords.length];
+      }
+      else if (otherComp.coords == null)
+      {
+         coords = null;
+         return;
+      }
+      else if (coords.length != otherComp.coords.length)
+      {
+         coords = new double[otherComp.coords.length];
+      }
 
       for (int i = 0; i < coords.length; i++)
       {
@@ -6060,6 +6189,13 @@ j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
          return;
       }
 
+      if (newPath.size() > 0)
+      {
+         addShape(newPath);
+      }
+
+      newPath = new ShapeComponentVector();
+
       int startBulge = idx-1;
       int endBulge1 = n1-1;
       int endBulge2 = n2-1;
@@ -6084,14 +6220,24 @@ j, closestStart2, vec.get(closestStart2), closestEnd2, vec.get(closestEnd2)));
                x = p1.getX() + 0.5*(p1.getX() - p2.getX());
                y = p1.getY() + 0.5*(p1.getY() - p2.getY());
 
-               newPath.lineTo(x, y);
+               if (newPath.isEmpty())
+               {
+                  newPath.moveTo(x, y);
+               }
+               else
+               {
+                  newPath.lineTo(x, y);
+               }
             }
 
             break;
          }
       }
 
-      addShape(newPath);
+      if (newPath.size() > 1)
+      {
+         addShape(newPath);
+      }
 
       newPath = new ShapeComponentVector();
       newPath.moveTo(pts1[startBulge]);
@@ -9565,20 +9711,24 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
          setPreferredSize(new Dimension(
           (int)Math.ceil(mag*image.getWidth(this)),
           (int)Math.ceil(mag*image.getHeight(this))));
-
-         revalidate();
       }
       else
       {
          setPreferredSize(DEFAULT_PREFERRED_SIZE);
       }
 
+      revalidate();
       repaint();
    }
 
    public double getMagnification()
    {
-      return dialog.getMagnification();
+      return dialog.getMainMagnification();
+   }
+
+   public double getResultMagnification()
+   {
+      return dialog.getResultMagnification();
    }
 
    public Color getImageForeground()
@@ -9793,7 +9943,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
 
    public void updateCoords(MouseEvent evt)
    {
-      double factor = 1.0/dialog.getMagnification();
+      double factor = 1.0/getMagnification();
 
       Point p = evt.getPoint();
 
@@ -9810,7 +9960,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
       {
          Point p = evt.getPoint();
 
-         double factor = 1.0/dialog.getMagnification();
+         double factor = 1.0/getMagnification();
 
          int x = (int)Math.round(factor*p.getX());
          int y = (int)Math.round(factor*p.getY());
@@ -10074,13 +10224,28 @@ class ResultPanel extends JPanel
       this.imagePanel = imagePanel;
       resultList = new Vector<Result>();
       setBackground(Color.WHITE);
-
+      setPreferredSize(ImagePanel.DEFAULT_PREFERRED_SIZE);
    }
 
-   public Dimension getPreferredSize()
+   public void updatePanel()
    {
-      return imagePanel == null ? ImagePanel.DEFAULT_PREFERRED_SIZE
-        : imagePanel.getPreferredSize();
+      if (imagePanel == null || resultList.isEmpty())
+      {
+         setPreferredSize(ImagePanel.DEFAULT_PREFERRED_SIZE);
+      }
+      else
+      {
+         double mag = imagePanel.getResultMagnification();
+
+         BufferedImage image = imagePanel.getImage();
+
+         setPreferredSize(new Dimension(
+          (int)Math.ceil(mag*image.getWidth(this)),
+          (int)Math.ceil(mag*image.getHeight(this))));
+      }
+
+      revalidate();
+      repaint();
    }
 
    public Vector<Result> getResults()
@@ -10158,7 +10323,7 @@ class ResultPanel extends JPanel
 
       g2.setRenderingHints(RENDER_HINTS);
 
-      double mag = imagePanel.getMagnification();
+      double mag = imagePanel.getResultMagnification();
 
       g2.scale(mag, mag);
 

@@ -1493,6 +1493,14 @@ public class JDRResources
    }
 
    public JDRToggleButton createDialogToggle(String tag,
+     String actionName, ActionListener listener, boolean selected)
+   {
+      return createDialogToggle(getDialogButtonStyle(), 
+       tag, actionName, listener,
+       null, getString(tag+".tooltip", null), selected);
+   }
+
+   public JDRToggleButton createDialogToggle(String tag,
      String actionName, ActionListener listener,
      KeyStroke keyStroke)
    {
@@ -1504,6 +1512,14 @@ public class JDRResources
    public JDRToggleButton createDialogToggle(int style,
      String tag, String actionName, ActionListener listener,
      KeyStroke keyStroke, String tooltipText)
+   {
+      return createDialogToggle(style, tag, actionName, listener, keyStroke,
+        tooltipText, false);
+   }
+
+   public JDRToggleButton createDialogToggle(int style,
+     String tag, String actionName, ActionListener listener,
+     KeyStroke keyStroke, String tooltipText, boolean selected)
    {
       String buttonText = getString("label."+actionName, null);
 
@@ -1528,6 +1544,7 @@ public class JDRResources
            buttonText, base, listener, tooltipText);
       }
 
+      button.setSelected(selected);
       button.setActionCommand(actionName);
 
       if (buttonText != null && buttonMnemonic != 0)
@@ -1927,6 +1944,19 @@ public class JDRResources
    public JTextArea createAppInfoArea(int cols)
    {
       JTextArea textArea = new JTextArea();
+
+      textArea.setColumns(cols);
+      textArea.setEditable(false);
+      textArea.setOpaque(false);
+      textArea.setLineWrap(true);
+      textArea.setWrapStyleWord(true);
+
+      return textArea;
+   }
+
+   public JTextArea createAppInfoArea(int cols, String id)
+   {
+      JTextArea textArea = new JTextArea(getString(id));
 
       textArea.setColumns(cols);
       textArea.setEditable(false);

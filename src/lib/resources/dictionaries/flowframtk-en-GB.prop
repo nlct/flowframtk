@@ -2706,6 +2706,8 @@ Are you sure you want to ungroup it?</entry>
 <!--  vectorizing bitmap -->
 <entry key="vectorize.title">Vectorize bitmap</entry>
 <entry key="vectorize.results">Results</entry>
+<entry key="vectorize.results.info">Pin desired paths to retain them if you need to scan a new area or colour.</entry>
+<entry key="vectorize.results.link">Link zoom</entry>
 <entry key="vectorize.summary">Summary</entry>
 <entry key="vectorize.messages">Messages</entry>
 <entry key="vectorize.controls">Controls</entry>
@@ -2814,8 +2816,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.discard">Delete</entry>
 <entry key="vectorize.summary.pin">Pin</entry>
 
+<entry key="vectorize.message.set_foreground">Select foreground colour before scanning.</entry>
 <entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
-<entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path|1#Contains single closed sub-path.</entry>
+<entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
 <entry key="vectorize.message.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>
 <entry key="vectorize.message.inner_contains">Path {0}: inner contains sub-path {1}.</entry>
 <entry key="vectorize.message.sub_path">Sub-path {0}: {1}</entry>
@@ -2830,11 +2833,11 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.message.not_closed">Path {0}: not closed.</entry>
 <entry key="vectorize.message.no_closed_subpaths">Path {0}: no closed sub-paths detected.</entry>
 <entry key="vectorize.message.single_closed_subpath_found">Single closed sub-path found.</entry>
-<entry key="vectorize.success_no_intersect_check">Path {0}: converted to line (average delta: {1})</entry>
-<entry key="vectorize.failed_no_intersect_check">Path {0}: can''t convert to line (average delta: {1})</entry>
-<entry key="vectorize.success_intersect_check">Path {0}: converted to line (average delta: {1}, variance: {2})</entry>
+<entry key="vectorize.success_no_intersect_check">Path {0}: converted to line (average delta: {1}).</entry>
+<entry key="vectorize.failed_no_intersect_check">Path {0}: can''t convert to line (average delta: {1}).</entry>
+<entry key="vectorize.success_intersect_check">Path {0}: converted to line (average delta: {1}, variance: {2}).</entry>
 <entry key="vectorize.no_spikes">Path {0}: no spikes found.</entry>
-<entry key="vectorize.too_many_spikes">Path {0}: too many spikes or spikes too large or not enough path components.</entry>
+<entry key="vectorize.too_many_spikes">Path {0}: shape too wide or too jagged.</entry>
 <entry key="vectorize.reduced_path_success">Path {0}: reduced path converted to line (average delta: {1})</entry>
 <entry key="vectorize.reduced_path_failed">Path {0}: can''t convert reduced path to line (average delta: {1})</entry>
 <entry key="vectorize.trying_spike">Trying spike {0}.</entry>
