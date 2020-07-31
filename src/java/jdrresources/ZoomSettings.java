@@ -24,6 +24,7 @@
 */
 package com.dickimawbooks.jdrresources;
 
+import java.text.ParseException;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -78,7 +79,7 @@ public class ZoomSettings extends JDialog
             {
                return PercentageZoomValue.parse(item);
             }
-            catch (NumberFormatException e)
+            catch (ParseException e)
             {
                return new InvalidZoomValue(item,
                   getResources().getMessage("zoom.invalid", item));

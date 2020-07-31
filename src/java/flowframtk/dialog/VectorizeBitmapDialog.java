@@ -114,32 +114,43 @@ public class VectorizeBitmapDialog extends JDialog
       redoItem.setEnabled(false);
       editM.add(redoItem);
 
+      mainPanel = new ImagePanel(this);
+      imageScrollPane = new JScrollPane(mainPanel);
+
+      resultPanel = new ResultPanel(mainPanel);
+      resultScrollPane = new JScrollPane(resultPanel);
+
       JPanel topPanel = new JPanel(new BorderLayout());
+      topPanel.setBackground(Color.WHITE);
       getContentPane().add(topPanel, "North");
 
-      coordField = new JTextField(12);
-      coordField.setEditable(false);
-      coordField.setBorder(null);
+      coordField = resources.createAppInfoField(12);
       topPanel.add(coordField, "West");
 
-      timeElapsedField = new JTextField("00:00:00");
-      timeElapsedField.setEditable(false);
-      timeElapsedField.setBorder(null);
+      timeElapsedField = resources.createAppInfoField(9);
       topPanel.add(timeElapsedField, "East");
 
       JPanel middleComp = new JPanel(new BorderLayout());
+      middleComp.setOpaque(false);
+      middleComp.setAlignmentY(Component.CENTER_ALIGNMENT);
+
       topPanel.add(middleComp, "Center");
 
-      mainZoomWidget = new ZoomWidget(this);
+      mainZoomWidget = new ZoomWidget(this, imageScrollPane);
       middleComp.add(mainZoomWidget, "West");
+      mainZoomWidget.add(Box.createHorizontalStrut(10), "East");
 
       cardLayout = new CardLayout();
       cardComp = new JPanel(cardLayout);
+      cardComp.setOpaque(false);
+      cardComp.setAlignmentY(Component.CENTER_ALIGNMENT);
       middleComp.add(cardComp, "Center");
 
-      cardComp.add(
-        resources.createAppInfoArea("vectorize.message.set_foreground"),
-        "info");
+      JComponent topInfo = resources.createAppInfoField(
+        "vectorize.message.set_foreground");
+      topInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+      cardComp.add(topInfo, "info");
 
       scanStatusBar = new ScanStatusBar(this);
       cardComp.add(scanStatusBar, "status");
@@ -155,29 +166,23 @@ public class VectorizeBitmapDialog extends JDialog
 
       getContentPane().add(bottomPanel, "South");
 
-      mainPanel = new ImagePanel(this);
-
       JTabbedPane resultTabbedPane = new JTabbedPane();
 
       JPanel panel = new JPanel(new BorderLayout());
-      resultPanel = new ResultPanel(mainPanel);
-      panel.add(new JScrollPane(resultPanel), "Center");
+      panel.add(resultScrollPane, "Center");
 
       topPanel = new JPanel(new BorderLayout());
       panel.add(topPanel, "North");
 
       topPanel.add(resources.createAppInfoArea("vectorize.results.info"), "Center");
 
-      Box box = Box.createHorizontalBox();
-      topPanel.add(box, "East");
-      
-      resultZoomWidget = new ZoomWidget(this);
+      resultZoomWidget = new ZoomWidget(this, resultScrollPane);
       resultZoomWidget.setEnabled(false);
-      box.add(resultZoomWidget, "East");
+      topPanel.add(resultZoomWidget, "East");
 
       zoomLinkCheckBox = resources.createDialogToggle("vectorize.results",
         "link", this, true);
-      box.add(zoomLinkCheckBox);
+      resultZoomWidget.add(zoomLinkCheckBox, "East");
 
       resources.addTab(resultTabbedPane, "vectorize.results", panel);
 
@@ -191,7 +196,7 @@ public class VectorizeBitmapDialog extends JDialog
          new JScrollPane(messagePanel));
 
       JSplitPane imagePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-         new JScrollPane(mainPanel), resultTabbedPane);
+         imageScrollPane, resultTabbedPane);
 
       imagePane.setResizeWeight(0.5);
       imagePane.setOneTouchExpandable(true);
@@ -667,7 +672,7 @@ public class VectorizeBitmapDialog extends JDialog
       {
          mainPanel.updatePanel();
 
-         if (!resultZoomWidget.isEnabled())
+         if (zoomLinkCheckBox.isSelected())
          {
             resultZoomWidget.setMagnification(widget);
          }
@@ -1265,13 +1270,33 @@ public class VectorizeBitmapDialog extends JDialog
 
    public double getMainMagnification()
    {
-      return mainZoomWidget.getMagnification();
+      return mainZoomWidget.getCurrentMagnification();
    }
 
    public double getResultMagnification()
    {
-      return resultZoomWidget == null || !resultZoomWidget.isEnabled() ?
-        mainZoomWidget.getMagnification() : resultZoomWidget.getMagnification();
+      if (resultZoomWidget == null || !resultZoomWidget.isEnabled())
+      {
+         return mainZoomWidget.getCurrentMagnification() ;
+      }
+      else
+      {
+         return resultZoomWidget.getCurrentMagnification();
+      }
+   }
+
+   public int getImageWidth()
+   {
+      BufferedImage image = mainPanel.getImage();
+
+      return image == null ? 0 : image.getWidth();
+   }
+
+   public int getImageHeight()
+   {
+      BufferedImage image = mainPanel.getImage();
+
+      return image == null ? 0 : image.getHeight();
    }
 
    public Color getImageForeground()
@@ -1390,6 +1415,7 @@ public class VectorizeBitmapDialog extends JDialog
    }
 
    private ImagePanel mainPanel;
+   private JScrollPane imageScrollPane, resultScrollPane;
    private ResultPanel resultPanel;
    private SummaryPanel summaryPanel;
    private JTextArea messagePanel;
@@ -1657,52 +1683,38 @@ class ShapesUndoableEdit extends AbstractUndoableEdit
    public static final int ICON_SIZE=50, ICON_BORDER=2;
 }
 
-class ZoomWidget extends JPanel implements ChangeListener
+class ZoomWidget extends JPanel implements JDRApp
 {
-   public ZoomWidget(VectorizeBitmapDialog dialog)
+   public ZoomWidget(VectorizeBitmapDialog dialog, Component component)
    {
-      super();
+      super(new BorderLayout());
       this.dialog = dialog;
+      this.component = component;
       JDRResources resources = dialog.getResources();
 
-      zoomSpinnerModel = new SpinnerNumberModel(100, 10, 1000, 5);
+      zoomComp = new ZoomComponent(this);
+      add(zoomComp, "Center");
 
-      JLabel zoomLabel = resources.createAppLabel("settings.zoom");
-      add(zoomLabel);
-
-      zoomSpinner = new JSpinner(zoomSpinnerModel);
-      zoomLabel.setLabelFor(zoomSpinner);
-      add(zoomSpinner);
-      zoomSpinner.addChangeListener(this);
+      setOpaque(false);
+      setAlignmentY(Component.CENTER_ALIGNMENT);
+      zoomComp.setAlignmentY(Component.CENTER_ALIGNMENT);
    }
-  
-   public void stateChanged(ChangeEvent e)
-   {
-      Object source = e.getSource();
 
-      if (source == zoomSpinner)
+   public JDRResources getResources()
+   {
+      return dialog.getResources();
+   }
+
+   public ZoomValue getValue()
+   {
+      return zoomComp.getZoomValue();
+   }
+
+   public void setValue(ZoomValue newValue)
+   {
+      if (!newValue.equals(zoomComp.getZoomValue()))
       {
-         dialog.zoomChanged(this);
-      }
-   }
-
-   public double getMagnification()
-   {
-      Number num = zoomSpinnerModel.getNumber();
-
-      return 0.01*num.doubleValue();
-   }
-
-   public Object getValue()
-   {
-      return zoomSpinner.getValue();
-   }
-
-   public void setValue(Object newValue)
-   {
-      if (!newValue.equals(zoomSpinner.getValue()))
-      {
-         zoomSpinner.setValue(newValue);
+         updateCurrentFactor(newValue);
       }
    }
 
@@ -1710,20 +1722,103 @@ class ZoomWidget extends JPanel implements ChangeListener
    {
       if (this != other)
       {
-         zoomSpinner.setValue(other.getValue());
+         setValue(other.getValue());
       }
+   }
+
+   public double getCurrentMagnification()
+   {
+      return factor;
+   }
+
+   public void setCurrentMagnification(double mag)
+   {
+      factor = mag;
+      zoomComp.setZoom(mag);
+
+      dialog.zoomChanged(this);
+   }
+
+   public double zoomAction(ZoomValue zoomValue)
+   {
+      updateCurrentFactor(zoomValue);
+
+      dialog.zoomChanged(this);
+
+      return factor;
+   }
+
+   private void updateCurrentFactor(ZoomValue zoomValue)
+   {
+      String id = zoomValue.getActionCommand();
+
+      if (id.equals(ZoomValue.ZOOM_PAGE_WIDTH_ID))
+      {
+         int width = dialog.getImageWidth();
+
+         if (width != 0)
+         {
+            Dimension dim = component.getSize();
+            factor = dim.getWidth()/(double)width;
+         }
+      }
+      else if (id.equals(ZoomValue.ZOOM_PAGE_HEIGHT_ID))
+      {
+         int height = dialog.getImageHeight();
+
+         if (height != 0)
+         {
+            Dimension dim = component.getSize();
+            factor = dim.getHeight()/(double)height;
+         }
+      }
+      else if (id.equals(ZoomValue.ZOOM_PAGE_ID))
+      {
+         int width = dialog.getImageWidth();
+         int height = dialog.getImageHeight();
+
+         if (height == 0 || width == 0)
+         {
+            factor = 1.0;
+         }
+         else
+         {
+            Dimension dim = component.getSize();
+
+            if (height > width)
+            {
+               factor = dim.getHeight()/(double)height;
+            }
+            else
+            {
+               factor = dim.getWidth()/(double)width;
+            }
+         }
+      }
+      else if (zoomValue instanceof PercentageZoomValue)
+      {
+         factor = ((PercentageZoomValue)zoomValue).getValue();
+      }
+
+      zoomComp.setZoom(zoomValue, factor);
+   }
+
+   public void showZoomChooser()
+   {
    }
 
    public void setEnabled(boolean enable)
    {
       super.setEnabled(enable);
 
-      zoomSpinner.setEnabled(enable);
+      zoomComp.setEnabled(enable);
    }
 
    private VectorizeBitmapDialog dialog;
-   private SpinnerNumberModel zoomSpinnerModel; 
-   private JSpinner zoomSpinner;
+
+   private ZoomComponent zoomComp;
+   private Component component;
+   private double factor=1.0;
 }
 
 class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
@@ -3376,17 +3471,20 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       this.dialog = dialog;
       JDRResources resources = dialog.getResources();
 
-      textField = new JTextField(12);
-      textField.setEditable(false);
-      textField.setBorder(null);
+      setAlignmentY(Component.CENTER_ALIGNMENT);
+
+      textField = resources.createAppInfoField(12);
+      textField.setAlignmentY(Component.CENTER_ALIGNMENT);
       add(textField);
 
       progressBar = new JProgressBar(0, 100);
       progressBar.setValue(0);
       progressBar.setStringPainted(true);
+      progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
       add(progressBar);
 
       cancelButton = resources.createAppButton("label", "abort", this);
+      cancelButton.setAlignmentY(Component.CENTER_ALIGNMENT);
       add(cancelButton);
 
       confirmAbort = resources.getString("process.confirm.abort");

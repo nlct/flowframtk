@@ -1003,6 +1003,13 @@ public class JDRView extends JFrame
       }
    }
 
+   /*
+    * Not implemented.
+    */ 
+   public void showZoomChooser()
+   {
+   }
+
    /**
     * Gets the magnification used to display the image.
     * @return the current magnification

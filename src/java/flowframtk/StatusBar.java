@@ -39,7 +39,7 @@ import com.dickimawbooks.flowframtk.dialog.InfoDialog;
  * Status bar panel.
  * @author Nicola L C Talbot
  */
-public class StatusBar extends JPanel implements ActionListener
+public class StatusBar extends JPanel
 {
    public StatusBar(FlowframTk a)
    {
@@ -119,11 +119,6 @@ public class StatusBar extends JPanel implements ActionListener
       {
          unitDim = new Dimension(unitWidth, height);
       }
-
-      tmp = new JLabel(" 000%");
-      tmp.setFont(statusFont);
-      zoomFieldDim = tmp.getPreferredSize();
-      zoomFieldDim.height = height;
 
       application.setStatusHeight(height);
 
@@ -260,102 +255,9 @@ public class StatusBar extends JPanel implements ActionListener
 
       lockLabel.setToolTipText(getResources().getString("info.grid.lock_off"));
 
-      Icon zoomDownIcon = getResources().appIcon("zoomdown.png");
-      zoomControlDim = new Dimension(zoomDownIcon.getIconWidth(), height);
-
-      zoomComp = Box.createHorizontalBox();
-      zoomDown = new JButton(zoomDownIcon)
-      {
-         public Dimension getMinimumSize()
-         {
-            return zoomControlDim;
-         }
-
-         public Dimension getPreferredSize()
-         {
-            return zoomControlDim;
-         }
-      };
-
-      zoomDown.setMargin(new Insets(0,0,0,0));
-      zoomDown.setContentAreaFilled(false);
-      zoomDown.setBorderPainted(false);
-      zoomDown.addActionListener(this);
-      zoomComp.add(zoomDown);
-
-      zoomField = new JLabel("100%", SwingConstants.TRAILING)
-      {
-         public Dimension getMinimumSize()
-         {
-            return zoomFieldDim;
-         }
-
-         public Dimension getPreferredSize()
-         {
-            return zoomFieldDim;
-         }
-      };
-      zoomField.setFont(statusFont);
-      zoomComp.add(zoomField);
-
-      zoomPopup = new JPopupMenu();
-
-      zoomArray = ZoomSettings.createZoomArray(getResources());
-
-      for (int i = 0; i < zoomArray.length; i++)
-      {
-         JMenuItem item = new JMenuItem(zoomArray[i].toString());
-         item.setActionCommand(item.getText());
-         item.addActionListener(this);
-         zoomPopup.add(item);
-      }
-
-      zoomField.addMouseListener(new MouseAdapter()
-      {
-         public void mousePressed(MouseEvent evt)
-         {
-            if (evt.isPopupTrigger())
-            {
-               zoomPopup.show(zoomField, evt.getX(), evt.getY());
-            }
-            else if (evt.getClickCount() > 1)
-            {
-               application.showZoomChooser();
-            }
-         }
-
-         public void mouseReleased(MouseEvent evt)
-         {
-            if (evt.isPopupTrigger())
-            {
-               zoomPopup.show(zoomField, evt.getX(), evt.getY());
-            }
-            else if (evt.getClickCount() > 1)
-            {
-               application.showZoomChooser();
-            }
-
-         }
-      });
-
-      zoomUp = new JButton(getResources().appIcon("zoomup.png"))
-      {
-         public Dimension getMinimumSize()
-         {
-            return zoomControlDim;
-         }
-
-         public Dimension getPreferredSize()
-         {
-            return zoomControlDim;
-         }
-      };
-
-      zoomUp.setMargin(new Insets(0,0,0,0));
-      zoomUp.setContentAreaFilled(false);
-      zoomUp.setBorderPainted(false);
-      zoomUp.addActionListener(this);
-      zoomComp.add(zoomUp);
+      zoomComp = new ZoomComponent(application, statusFont, height);
+      Dimension zoomFieldDim = zoomComp.getZoomFieldSize();
+      Dimension zoomControlDim = zoomComp.getZoomControlSize();
 
       infoField = new JTextField()
       {
@@ -484,11 +386,6 @@ public class StatusBar extends JPanel implements ActionListener
       tmp.setFont(statusFont);
       dim = tmp.getPreferredSize();
 
-      tmp = new JLabel(" 000%");
-      tmp.setFont(statusFont);
-      zoomFieldDim = tmp.getPreferredSize();
-      zoomFieldDim.height = height;
-
       unitDim.width = dim.width;
       unitDim.height = height;
       application.setStatusUnitWidth(unitWidth);
@@ -497,8 +394,7 @@ public class StatusBar extends JPanel implements ActionListener
 
       application.setStatusHeight(height);
 
-      zoomField.setFont(statusFont);
-      zoomControlDim.height = height;
+      zoomComp.setZoomFieldFont(statusFont, height);
 
       revalidate();
    }
@@ -578,9 +474,7 @@ public class StatusBar extends JPanel implements ActionListener
       modifiedLabel.setEnabled(true);
       lockLabel.setEnabled(true);
       storageUnitLabel.setEnabled(true);
-      zoomDown.setEnabled(true);
-      zoomField.setEnabled(true);
-      zoomUp.setEnabled(true);
+      zoomComp.setEnabled(true);
       updateZoom(application.getCurrentMagnification());
    }
 
@@ -604,69 +498,12 @@ public class StatusBar extends JPanel implements ActionListener
       modifiedLabel.setEnabled(false);
       lockLabel.setEnabled(false);
       storageUnitLabel.setEnabled(false);
-      zoomDown.setEnabled(false);
-      zoomField.setEnabled(false);
-      zoomUp.setEnabled(false);
+      zoomComp.setEnabled(false);
    }
 
    public void updateZoom(double factor)
    {
-      zoomField.setText(String.format("%d%%", Math.round(factor*100.0)));
-   }
-
-   public void actionPerformed(ActionEvent evt)
-   {
-      Object source = evt.getSource();
-
-      if (source == zoomDown)
-      {
-         zoomDown();
-      }
-      else if (source == zoomUp)
-      {
-         zoomUp();
-      }
-      else if (source instanceof JMenuItem)
-      {
-         String action = evt.getActionCommand();
-
-         for (int i = 0; i < zoomArray.length; i++)
-         {
-            if (zoomArray[i].toString().equals(action))
-            {
-               application.zoomAction(zoomArray[i]);
-               return;
-            }
-         }
-      }
-   }
-
-   public void zoomDown()
-   {
-      double current = application.getCurrentMagnification();
-
-      for (int i = ZoomSettings.ZOOM_CHOICE.length-1; i >= 0; i--)
-      {
-         if (current > ZoomSettings.ZOOM_CHOICE[i])
-         {
-            application.setCurrentMagnification(ZoomSettings.ZOOM_CHOICE[i]);
-            return;
-         }
-      }
-   }
-
-   public void zoomUp()
-   {
-      double current = application.getCurrentMagnification();
-
-      for (int i = 0; i < ZoomSettings.ZOOM_CHOICE.length; i++)
-      {
-         if (current < ZoomSettings.ZOOM_CHOICE[i])
-         {
-            application.setCurrentMagnification(ZoomSettings.ZOOM_CHOICE[i]);
-            return;
-         }
-      }
+      zoomComp.setZoom(factor);
    }
 
    public void setZoomVisible(boolean isVisible)
@@ -748,17 +585,9 @@ public class StatusBar extends JPanel implements ActionListener
    private JTextField infoField;
    private Icon lockIcon, unlockIcon;
 
-   private JButton zoomDown, zoomUp;
-   private JLabel zoomField;
+   private ZoomComponent zoomComp;
 
-   private ZoomValue[] zoomArray;
-
-   private JComponent zoomComp;
-
-   private Dimension posDim, modDim, unitDim, infoDim, lockDim,
-      zoomControlDim, zoomFieldDim;
-
-   private JPopupMenu zoomPopup;
+   private Dimension posDim, modDim, unitDim, infoDim, lockDim;
 
    private FlowframTk application;
 

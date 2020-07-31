@@ -1941,6 +1941,39 @@ public class JDRResources
       return label;
    }
 
+   public JTextField createAppInfoField(int cols)
+   {
+      JTextField field = new JTextField(cols);
+
+      field.setEditable(false);
+      field.setBorder(null);
+      field.setOpaque(false);
+
+      return field;
+   }
+
+   public JTextField createAppInfoField(String id)
+   {
+      JTextField field = new JTextField(getString(id));
+
+      field.setEditable(false);
+      field.setBorder(null);
+      field.setOpaque(false);
+
+      return field;
+   }
+
+   public JTextField createAppInfoField(String id, Object... params)
+   {
+      JTextField field = new JTextField(getMessage(id, params));
+
+      field.setEditable(false);
+      field.setBorder(null);
+      field.setOpaque(false);
+
+      return field;
+   }
+
    public JTextArea createAppInfoArea(int cols)
    {
       JTextArea textArea = new JTextArea();

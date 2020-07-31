@@ -46,5 +46,7 @@ public interface JDRApp
 
    public double zoomAction(ZoomValue zoomValue);
 
+   public void showZoomChooser();
+
    public JDRResources getResources();
 }

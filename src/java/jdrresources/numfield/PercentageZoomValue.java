@@ -23,8 +23,8 @@
 */
 package com.dickimawbooks.jdrresources.numfield;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 import com.dickimawbooks.jdrresources.JDRResources;
 
@@ -42,28 +42,14 @@ public class PercentageZoomValue extends ZoomValue
    }
 
    public static PercentageZoomValue parse(String string)
-    throws NumberFormatException
+    throws ParseException
    {
-      Matcher m = PATTERN.matcher(string);
-
-      if (!m.matches())
-      {
-         throw new NumberFormatException(string);
-      }
-
-      double num = Double.parseDouble(m.group(1));
-
-      if (m.groupCount() == 1)
-      {
-         return new PercentageZoomValue(num);
-      }
-
-      return new PercentageZoomValue(num/100.0);
+      return new PercentageZoomValue(FORMAT.parse(string).doubleValue());
    }
 
    public String toString()
    {
-      return String.format("%d%%", Math.round(value*100.0));
+      return FORMAT.format(value);
    }
 
    public boolean equals(Object obj)
@@ -78,5 +64,5 @@ public class PercentageZoomValue extends ZoomValue
 
    private double value;
 
-   public static final Pattern PATTERN = Pattern.compile("\\s*(\\d*\\.?\\d+)\\s*(%)?\\s*");
+   public static final NumberFormat FORMAT = NumberFormat.getPercentInstance();
 }
