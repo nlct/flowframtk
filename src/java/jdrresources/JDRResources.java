@@ -614,6 +614,26 @@ public class JDRResources
       return dictionary.applyMessagePattern(key, value);
    }
 
+   public String formatMessageChoice(Number value, String key)
+   {
+      if (dictionary == null)
+      {
+         return key;
+      }
+
+      return MessageFormat.format(dictionary.applyMessagePattern(key, value), value);
+   }
+
+   public String formatMessageChoice(Number value, String key, Object... params)
+   {
+      if (dictionary == null)
+      {
+         return key;
+      }
+
+      return MessageFormat.format(dictionary.applyMessagePattern(key, value), params);
+   }
+
    public String getMessage(String key, Object... values)
    {
       if (dictionary == null)
@@ -1974,15 +1994,23 @@ public class JDRResources
       return field;
    }
 
-   public JTextArea createAppInfoArea(int cols)
+   public JTextArea createAppInfoArea()
    {
       JTextArea textArea = new JTextArea();
 
-      textArea.setColumns(cols);
       textArea.setEditable(false);
       textArea.setOpaque(false);
       textArea.setLineWrap(true);
       textArea.setWrapStyleWord(true);
+
+      return textArea;
+   }
+
+   public JTextArea createAppInfoArea(int cols)
+   {
+      JTextArea textArea = createAppInfoArea();
+
+      textArea.setColumns(cols);
 
       return textArea;
    }
