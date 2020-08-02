@@ -547,7 +547,7 @@ public class VectorizeBitmapDialog extends JDialog
    public void display()
    {
       currentFrame = application.getCurrentFrame();
-      JDRBitmap bitmap = currentFrame.getSelectedBitmap();
+      bitmap = currentFrame.getSelectedBitmap();
 
       reset();
 
@@ -603,6 +603,7 @@ public class VectorizeBitmapDialog extends JDialog
       }
 
       apply();
+      bitmap = null;
       setVisible(false);
    }
 
@@ -628,16 +629,39 @@ public class VectorizeBitmapDialog extends JDialog
 
       int n = group.size();
 
-      if (n > 1)
+      if (n == 0)
       {
-         currentFrame.addObject(group, 
-            getResources().getString("undo.vectorize"));
+         return;
       }
-      else if (n == 1)
+
+      double[] matrix = new double[6];
+      bitmap.getTransformation(matrix);
+
+      JDRCanvas canvas = currentFrame.getCanvas();
+      JDRCompleteObject obj;
+
+      if (n == 1)
       {
-         currentFrame.addObject(group.firstElement(), 
-            getResources().getString("undo.vectorize"));
+         obj = group.firstElement();
+         obj.transform(matrix);
       }
+      else
+      {
+         group.transform(matrix);
+         obj = group;
+      }
+
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(canvas,
+        getResources().getString("undo.vectorize"));
+
+      canvas.selectObject(ce, bitmap, false);
+
+      canvas.addObject(ce, obj, 
+         getResources().getString("undo.vectorize"));
+
+      canvas.selectObject(ce, obj, true);
+
+      currentFrame.postEdit(ce);
    }
 
    public void cancel()
@@ -655,6 +679,7 @@ public class VectorizeBitmapDialog extends JDialog
          }
       }
 
+      bitmap = null;
       setVisible(false);
    }
 
@@ -1459,6 +1484,7 @@ public class VectorizeBitmapDialog extends JDialog
 
    private FlowframTk application;
    private JDRFrame currentFrame;
+   private JDRBitmap bitmap;
 }
 
 class UndoableEditComp extends JRadioButton implements ActionListener
@@ -6288,321 +6314,8 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       boolean success = false;
 
-      if (n1 == n2)
-      {
-         Point2D[] pts1 = new Point2D.Double[n1];
-         Point2D[] pts2 = new Point2D.Double[n2];
-
-         int idx = 0;
-
-         ShapeComponentVector vec = sp1.getCompleteVector();
-         Point2D startPt = vec.get(sp1.getStartIndex()).getEnd();
-
-         if (start1 < end1)
-         {
-            for (int i = start1; i <= end1; i++)
-            {
-               ShapeComponent comp = vec.get(i);
-
-               if (comp.getType() == PathIterator.SEG_CLOSE)
-               {
-                  pts1[idx++] = startPt;
-               }
-               else
-               {
-                  pts1[idx++] = comp.getEnd();
-               }
-            }
-         }
-         else
-         {
-            for (int i = start1; i < sp1.getEndIndex(); i++)
-            {
-               ShapeComponent comp = vec.get(i);
-               pts1[idx++] = comp.getEnd();
-            }
-
-            for (int i = sp1.getStartIndex(); i <= end1; i++)
-            {
-               ShapeComponent comp = vec.get(i);
-
-               if (comp.getType() == PathIterator.SEG_CLOSE)
-               {
-                  pts1[idx++] = startPt;
-               }
-               else
-               {
-                  pts1[idx++] = comp.getEnd();
-               }
-            }
-         }
-
-         vec = sp2.getCompleteVector();
-         startPt = vec.get(sp2.getStartIndex()).getEnd();
-         idx = 0;
-
-         if (reverse)
-         {
-            if (start2 > end2)
-            {
-               for (int i = start2; i >= end2; i--)
-               {
-                  ShapeComponent comp = vec.get(i);
-
-                  if (comp.getType() == PathIterator.SEG_CLOSE)
-                  {
-                     pts2[idx++] = startPt;
-                  }
-                  else
-                  {
-                     pts2[idx++] = comp.getEnd();
-                  }
-               }
-            }
-            else
-            {
-               for (int i = start2; i >= sp2.getStartIndex(); i--)
-               {
-                  ShapeComponent comp = vec.get(i);
-                  pts2[idx++] = comp.getEnd();
-               }
-
-               for (int i = sp2.getEndIndex()-1; i >= end2; i--)
-               {
-                  ShapeComponent comp = vec.get(i);
-                  pts2[idx++] = comp.getEnd();
-               }
-            }
-         }
-         else
-         {
-            if (start2 < end2)
-            {
-               for (int i = start2; i <= end2; i++)
-               {
-                  ShapeComponent comp = vec.get(i);
-
-                  if (comp.getType() == PathIterator.SEG_CLOSE)
-                  {
-                     pts2[idx++] = startPt;
-                  }
-                  else
-                  {
-                     pts2[idx++] = comp.getEnd();
-                  }
-               }
-            }
-            else
-            {
-               for (int i = start2; i < sp2.getEndIndex(); i++)
-               {
-                  ShapeComponent comp = vec.get(i);
-                  pts2[idx++] = comp.getEnd();
-               }
-
-               for (int i = sp2.getStartIndex(); i <= end2; i++)
-               {
-                  ShapeComponent comp = vec.get(i);
-
-                  if (comp.getType() == PathIterator.SEG_CLOSE)
-                  {
-                     pts2[idx++] = startPt;
-                  }
-                  else
-                  {
-                     pts2[idx++] = comp.getEnd();
-                  }
-               }
-            }
-         }
-
-         ShapeComponentVector newPath = new ShapeComponentVector();
-
-         double x = pts1[0].getX() + 0.5*(pts1[0].getX() - pts2[0].getX());
-         double y = pts1[0].getY() + 0.5*(pts1[0].getY() - pts2[0].getY());
-
-         newPath.moveTo(x, y);
-         double averageDelta = 0.0;
-         int numPts = 0;
-
-         for (idx = 1; idx < n1; idx++)
-         {
-            double dist = getDistance(pts1[idx], pts2[idx]);
-
-            if (dist < deltaThreshold)
-            {
-               x = pts1[idx].getX() + 0.5*(pts1[idx].getX() - pts2[idx].getX());
-               y = pts1[idx].getY() + 0.5*(pts1[idx].getY() - pts2[idx].getY());
-
-               newPath.lineTo(x, y);
-
-               numPts++;
-               averageDelta += dist;
-            }
-            else
-            {
-               break;
-            }
-         }
-
-         if (numPts > 0)
-         {
-            averageDelta /= numPts;
-         }
-
-         if (newPath.size() > 1)
-         {
-            addShape(newPath);
-            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             newShapesVec.size(), averageDelta);
-            success = true;
-
-            if (newPath.size() == n1)
-            {
-               return true;
-            }
-         }
-
-         newPath = new ShapeComponentVector();
-
-         int startBulge = idx;
-         int endBulge = n1-1;
-
-         averageDelta = 0.0;
-         numPts = 0;
-
-         for (int i = 1, m = n1-idx; i <= m; i++)
-         {
-            Point2D p1 = pts1[n1-i];
-            Point2D p2 = pts2[n2-i];
-
-            double dist = getDistance(p1, p2);
-
-            if (dist > deltaThreshold)
-            {
-               endBulge = n1-i;
-
-               for (int j = i+1; j < n1; j++)
-               {
-                  p1 = pts1[j];
-                  p2 = pts2[j];
-
-                  x = p1.getX() + 0.5*(p1.getX() - p2.getX());
-                  y = p1.getY() + 0.5*(p1.getY() - p2.getY());
-
-                  if (newPath.isEmpty())
-                  {
-                     newPath.moveTo(x, y);
-                  }
-                  else
-                  {
-                     newPath.lineTo(x, y);
-                  }
-               }
-
-               break;
-            }
-            else
-            {
-               numPts++;
-               averageDelta += dist;
-            }
-         }
-
-         if (numPts > 0)
-         {
-            averageDelta /= numPts;
-         }
-
-         if (newPath.size() > 1)
-         {
-            addShape(newPath);
-            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             newShapesVec.size(), averageDelta);
-            success = true;
-         }
-
-         if (!success)
-         {
-            dialog.addMessageIdLn("vectorize.border_too_wide");
-            return false;
-         }
-
-         newPath = new ShapeComponentVector();
-         newPath.moveTo(pts1[startBulge]);
-
-         for (int i = startBulge+1; i <= endBulge; i++)
-         {
-            newPath.lineTo(pts1[i]);
-         }
-
-         for (int i = endBulge; i >= startBulge; i--)
-         {
-            newPath.lineTo(pts2[i]);
-         }
-
-         newPath.closePath();
-
-         dialog.addMessageIdLn("vectorize.mid_border", newPath.svg());
-
-         tryLineify(newPath);
-      }
-      else if (n1 > n2)
-      {
-//TODO
-System.out.println("Not yet implemented");
-      }
-      else
-      {
-//TODO
-System.out.println("Not yet implemented");
-      }
-
-      return success;
-   }
-
-   private void tryLineifyBorder2(SubPath sp1, int start1, int end1,
-     SubPath sp2, int start2, int end2, boolean reverse)
-    throws InterruptedException
-   {
-      int n1, n2;
-
-      if (start1 < end1)
-      {
-         n1 = end1-start1+1;
-      }
-      else
-      {
-         n1 = sp1.getEndIndex() - end1 + start1 - sp1.getStartIndex()+1;
-      }
-
-      if (reverse)
-      {
-         if (start2 > end2)
-         {
-            n2 = start2-end2+1;
-         }
-         else
-         {
-            n2 = sp2.getStartIndex()-start2 + sp2.getEndIndex() - end2 + 1;
-         }
-      }
-      else
-      {
-         if (start2 < end2)
-         {
-            n2 = end2-start2+1;
-         }
-         else
-         {
-            n2 = sp2.getEndIndex() - end2 + start2 - sp2.getStartIndex()+1;
-         }
-      }
-
-      Point2D[] pts1 = new Point2D.Double[n1];
-      Point2D[] pts2 = new Point2D.Double[n2];
-
-      int idx = 0;
+      Vector<Point2D> pts1 = new Vector<Point2D>(n1);
+      Vector<Point2D> pts2 = new Vector<Point2D>(n2);
 
       ShapeComponentVector vec = sp1.getCompleteVector();
       Point2D startPt = vec.get(sp1.getStartIndex()).getEnd();
@@ -6615,11 +6328,11 @@ System.out.println("Not yet implemented");
 
             if (comp.getType() == PathIterator.SEG_CLOSE)
             {
-               pts1[idx++] = startPt;
+               pts1.add(startPt);
             }
             else
             {
-               pts1[idx++] = comp.getEnd();
+               pts1.add(comp.getEnd());
             }
          }
       }
@@ -6628,7 +6341,7 @@ System.out.println("Not yet implemented");
          for (int i = start1; i < sp1.getEndIndex(); i++)
          {
             ShapeComponent comp = vec.get(i);
-            pts1[idx++] = comp.getEnd();
+            pts1.add(comp.getEnd());
          }
 
          for (int i = sp1.getStartIndex(); i <= end1; i++)
@@ -6637,18 +6350,17 @@ System.out.println("Not yet implemented");
 
             if (comp.getType() == PathIterator.SEG_CLOSE)
             {
-               pts1[idx++] = startPt;
+               pts1.add(startPt);
             }
             else
             {
-               pts1[idx++] = comp.getEnd();
+               pts1.add(comp.getEnd());
             }
          }
       }
 
       vec = sp2.getCompleteVector();
       startPt = vec.get(sp2.getStartIndex()).getEnd();
-      idx = 0;
 
       if (reverse)
       {
@@ -6660,11 +6372,11 @@ System.out.println("Not yet implemented");
 
                if (comp.getType() == PathIterator.SEG_CLOSE)
                {
-                  pts2[idx++] = startPt;
+                  pts2.add(startPt);
                }
                else
                {
-                  pts2[idx++] = comp.getEnd();
+                  pts2.add(comp.getEnd());
                }
             }
          }
@@ -6673,13 +6385,13 @@ System.out.println("Not yet implemented");
             for (int i = start2; i >= sp2.getStartIndex(); i--)
             {
                ShapeComponent comp = vec.get(i);
-               pts2[idx++] = comp.getEnd();
+               pts2.add(comp.getEnd());
             }
 
             for (int i = sp2.getEndIndex()-1; i >= end2; i--)
             {
                ShapeComponent comp = vec.get(i);
-               pts2[idx++] = comp.getEnd();
+               pts2.add(comp.getEnd());
             }
          }
       }
@@ -6693,11 +6405,11 @@ System.out.println("Not yet implemented");
 
                if (comp.getType() == PathIterator.SEG_CLOSE)
                {
-                  pts2[idx++] = startPt;
+                  pts2.add(startPt);
                }
                else
                {
-                  pts2[idx++] = comp.getEnd();
+                  pts2.add(comp.getEnd());
                }
             }
          }
@@ -6706,7 +6418,7 @@ System.out.println("Not yet implemented");
             for (int i = start2; i < sp2.getEndIndex(); i++)
             {
                ShapeComponent comp = vec.get(i);
-               pts2[idx++] = comp.getEnd();
+               pts2.add(comp.getEnd());
             }
 
             for (int i = sp2.getStartIndex(); i <= end2; i++)
@@ -6715,35 +6427,59 @@ System.out.println("Not yet implemented");
 
                if (comp.getType() == PathIterator.SEG_CLOSE)
                {
-                  pts2[idx++] = startPt;
+                  pts2.add(startPt);
                }
                else
                {
-                  pts2[idx++] = comp.getEnd();
+                  pts2.add(comp.getEnd());
                }
             }
          }
       }
 
-      int n = Math.min(n1, n2);
+      if (n1 != n2)
+      {
+         addBorderPoints(pts1, pts2);
+
+         n1 = pts1.size();
+         n2 = pts2.size();
+
+         if (n1 != n2)
+         {
+            return false;
+         }
+      }
 
       ShapeComponentVector newPath = new ShapeComponentVector();
 
-      double x = pts1[0].getX() + 0.5*(pts1[0].getX() - pts2[0].getX());
-      double y = pts1[0].getY() + 0.5*(pts1[0].getY() - pts2[0].getY());
+      Point2D p1 = pts1.get(0);
+      Point2D p2 = pts2.get(0);
+
+      double x = p1.getX() + 0.5*(p1.getX() - p2.getX());
+      double y = p1.getY() + 0.5*(p1.getY() - p2.getY());
 
       newPath.moveTo(x, y);
+      double averageDelta = 0.0;
+      int numPts = 0;
 
-      for (idx = 1; idx < n; idx++)
+      int idx = 0;
+
+      for (idx = 1; idx < n1; idx++)
       {
-         double dist = getDistance(pts1[idx], pts2[idx]);
+         p1 = pts1.get(idx);
+         p2 = pts2.get(idx);
+
+         double dist = getDistance(p1, p2);
 
          if (dist < deltaThreshold)
          {
-            x = pts1[idx].getX() + 0.5*(pts1[idx].getX() - pts2[idx].getX());
-            y = pts1[idx].getY() + 0.5*(pts1[idx].getY() - pts2[idx].getY());
+            x = p1.getX() + 0.5*(p1.getX() - p2.getX());
+            y = p1.getY() + 0.5*(p1.getY() - p2.getY());
 
             newPath.lineTo(x, y);
+
+            numPts++;
+            averageDelta += dist;
          }
          else
          {
@@ -6751,54 +6487,48 @@ System.out.println("Not yet implemented");
          }
       }
 
-      if (newPath.size() == n)
+      if (numPts > 0)
       {
-         if (n1 > n2)
-         {
-            for ( ; idx < n1; idx++)
-            {
-               newPath.lineTo(pts1[idx]);
-            }
-         }
-         else if (n2 > n1)
-         {
-            for ( ; idx < n2; idx++)
-            {
-               newPath.lineTo(pts2[idx]);
-            }
-         }
-
-         addShape(newPath);
-         return;
+         averageDelta /= numPts;
       }
 
-      if (newPath.size() > 0)
+      if (newPath.size() > 1)
       {
+         newPath.setFilled(false);
          addShape(newPath);
+         dialog.addMessageIdLn("vectorize.success_no_intersect_check",
+          newShapesVec.size(), averageDelta);
+         success = true;
+
+         if (newPath.size() == n1)
+         {
+            return true;
+         }
       }
 
       newPath = new ShapeComponentVector();
 
-      int startBulge = idx-1;
-      int endBulge1 = n1-1;
-      int endBulge2 = n2-1;
+      int startBulge = idx;
+      int endBulge = n1-1;
 
-      for (int i = 2, m = n-idx; i <= m; i++)
+      averageDelta = 0.0;
+      numPts = 0;
+
+      for (int i = 1, m = n1-idx; i <= m; i++)
       {
-         Point2D p1 = pts1[pts1.length-i];
-         Point2D p2 = pts2[pts2.length-i];
+         p1 = pts1.get(n1-i);
+         p2 = pts2.get(n2-i);
 
          double dist = getDistance(p1, p2);
 
          if (dist > deltaThreshold)
          {
-            endBulge1 = pts1.length-i+1;
-            endBulge2 = pts2.length-i+1;
+            endBulge = n1-i;
 
-            for (int j = i; j >= 1; j--)
+            for (int j = i+1; j < n1; j++)
             {
-               p1 = pts1[pts1.length-j];
-               p2 = pts2[pts2.length-j];
+               p1 = pts1.get(j);
+               p2 = pts2.get(j);
 
                x = p1.getX() + 0.5*(p1.getX() - p2.getX());
                y = p1.getY() + 0.5*(p1.getY() - p2.getY());
@@ -6815,29 +6545,140 @@ System.out.println("Not yet implemented");
 
             break;
          }
+         else
+         {
+            numPts++;
+            averageDelta += dist;
+         }
+      }
+
+      if (numPts > 0)
+      {
+         averageDelta /= numPts;
       }
 
       if (newPath.size() > 1)
       {
+         newPath.setFilled(false);
          addShape(newPath);
+         dialog.addMessageIdLn("vectorize.success_no_intersect_check",
+          newShapesVec.size(), averageDelta);
+         success = true;
+      }
+
+      if (!success)
+      {
+         dialog.addMessageIdLn("vectorize.border_too_wide");
+         return false;
       }
 
       newPath = new ShapeComponentVector();
-      newPath.moveTo(pts1[startBulge]);
+      newPath.moveTo(pts1.get(startBulge));
 
-      for (int i = startBulge+1; i <= endBulge1; i++)
+      for (int i = startBulge+1; i <= endBulge; i++)
       {
-         newPath.lineTo(pts1[i]);
+         newPath.lineTo(pts1.get(i));
       }
 
-      for (int i = endBulge2; i >= startBulge; i--)
+      for (int i = endBulge; i >= startBulge; i--)
       {
-         newPath.lineTo(pts2[i]);
+         newPath.lineTo(pts2.get(i));
       }
 
       newPath.closePath();
 
+      dialog.addMessageIdLn("vectorize.mid_border", newPath.svg());
+
       tryLineify(newPath);
+
+      return success;
+   }
+
+   private void addBorderPoints(Vector<Point2D> pts1, Vector<Point2D> pts2)
+   {
+      int n1 = pts1.size();
+      int n2 = pts2.size();
+
+      if (n1 < n2)
+      {
+         addBorderPoints(pts2, pts1);
+         return;
+      }
+
+      if (n1 == n2)
+      {
+         return;
+      }
+
+      for (int i = 1; i < pts2.size() && i < n1 && pts2.size() < n1; i++)
+      {
+         Point2D p1 = pts1.get(i);
+         Point2D p2 = pts2.get(i);
+
+         double dist = getDistance(p1, p2);
+
+         if (dist > deltaThreshold)
+         {
+            Point2D p0 = pts2.get(i-1);
+
+            // get closest point on p0-p2 to p1
+
+            pts2.add(i, getClosestPointAlongLine(p0, p2, p1));
+         }
+
+         if (pts2.size() == n1)
+         {
+            return;
+         }
+
+         int j = pts2.size()-1-i;
+
+         p1 = pts1.get(n1-1-i);
+         p2 = pts2.get(j);
+
+         dist = getDistance(p1, p2);
+
+         if (dist > deltaThreshold)
+         {
+            Point2D p0 = pts2.get(j+1);
+
+            // get closest point on p0-p2 to p1
+
+            pts2.add(j+1, getClosestPointAlongLine(p0, p2, p1));
+         }
+
+         if (pts2.size() == n1)
+         {
+            return;
+         }
+      }
+
+      for (int i = 1; i < pts2.size() && i < n1 && pts2.size() < n1; i++)
+      {
+         Point2D p1 = pts1.get(i);
+         Point2D p2 = pts2.get(i);
+         Point2D p0 = pts2.get(i-1);
+
+         pts2.add(i, getClosestPointAlongLine(p0, p2, p1));
+
+         if (pts2.size() == n1)
+         {
+            return;
+         }
+
+         int j = pts2.size()-1-i;
+
+         p1 = pts1.get(n1-1-i);
+         p2 = pts2.get(j);
+         p0 = pts2.get(j+1);
+
+         pts2.add(j+1, getClosestPointAlongLine(p0, p2, p1));
+
+         if (pts2.size() == n1)
+         {
+            return;
+         }
+      }
    }
 
    private void tryLineifyRegion(SubPath subPath)
@@ -7944,6 +7785,48 @@ System.out.println("Not yet implemented");
       ShapeComponentVector newVec = getBestPath(pts, indexes);
 
       return newVec == null ? vec : newVec;
+   }
+
+   private Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
+   {
+      // get closest point on r1-r2 to p
+
+      double diff_y = r1.getY() - r2.getY();
+      double diff_x = r1.getX() - r2.getX();
+      double m = diff_y/diff_x;
+
+      double m_sq = 0.0;
+      double orthog_m=0.0;
+      double orthog_m_sq = 0.0;
+      boolean use_orthog = false;
+      double factor, x, y;
+
+      if (Double.isNaN(m))
+      {
+         use_orthog = true;
+         orthog_m = -diff_x/diff_y;
+         orthog_m_sq = orthog_m*orthog_m;
+         factor = 1.0/(1.0 + orthog_m_sq);
+      }
+      else
+      {
+         m_sq = m*m;
+         factor = 1.0/(1.0 + m_sq);
+      }
+
+      if (use_orthog)
+      {
+         x = (r1.getX()+orthog_m*(r1.getY()-p.getY())
+                +orthog_m_sq*p.getX())*factor;
+         y = orthog_m * (x - p.getX()) + p.getY();
+      }
+      else
+      {
+         x = (m_sq*r1.getX()+m*(p.getY()-r1.getY())+p.getX())*factor;
+         y = m * (x - r1.getX()) + r1.getY();
+      }
+
+      return new Point2D.Double(x, y);
    }
 
    private ShapeComponentVector getBestPath(PathCoord[] pts)
