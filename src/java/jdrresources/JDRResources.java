@@ -1436,8 +1436,15 @@ public class JDRResources
      String actionName, ActionListener listener,
      KeyStroke keyStroke)
    {
+      String tooltip = getToolTipText(tag+"."+actionName);
+
+      if (tooltip == null)
+      {
+         tooltip = getToolTipText(tag);
+      }
+
       return createDialogButton(tag, actionName, listener,
-       keyStroke, getToolTipText(tag+"."+actionName));
+       keyStroke, tooltip);
    }
 
    public JDRButton createDialogButton(String tag,
