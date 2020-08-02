@@ -2737,6 +2737,7 @@
 <entry key="vectorize.scan_region">Scan Region</entry>
 <entry key="vectorize.scan_region.mnemonic">R</entry>
 <entry key="vectorize.select_region">Select region</entry>
+<entry key="vectorize.subtract_last_scan">Subtract last scan</entry>
 <entry key="vectorize.sample_width">Sample width:</entry>
 <entry key="vectorize.sample_height">Sample height:</entry>
 
@@ -2795,6 +2796,8 @@
 <entry key="vectorize.deselectallitems">Deselect All Tasks</entry>
 <entry key="vectorize.pinresults">Pin Current Results</entry>
 <entry key="vectorize.discard_all">Clear All</entry>
+<entry key="vectorize.apply_pinned">Apply Pinned</entry>
+<entry key="vectorize.apply_pinned.tooltip">Add pinned shapes to the image.</entry>
 
 <entry key="vectorize.unsupported_colour_type">Unsupported color type: {0}</entry>
 <entry key="vectorize.unsupported_colour_type_name">Unsupported color type: {0} ({1})</entry>

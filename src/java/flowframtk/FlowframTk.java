@@ -2560,22 +2560,19 @@ public class FlowframTk extends JFrame
 
       // Vectorize
 
-      if (invoker.isExperimentalMode() || resources.debugMode)
+      vectorizeItem = FlowframTkAction.createMenuItem(this,
+         "bitmap", "vectorize", bitmapM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_BITMAP,
+         FlowframTkAction.SELECTION_SINGLE_BITMAP, true, false,
+      new FlowframTkActionListener()
       {
-         vectorizeItem = FlowframTkAction.createMenuItem(this,
-            "bitmap", "vectorize", bitmapM,
-            TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_BITMAP,
-            FlowframTkAction.SELECTION_SINGLE_BITMAP, true, false,
-         new FlowframTkActionListener()
+         public void doAction(FlowframTkAction action, ActionEvent evt)
          {
-            public void doAction(FlowframTkAction action, ActionEvent evt)
-            {
-               displayVectorizeBitmapDialog();
-            }
-         });
+            displayVectorizeBitmapDialog();
+         }
+      });
 
-         incStartupProgress(bitmapM, vectorizeItem);
-      }
+      incStartupProgress(bitmapM, vectorizeItem);
 
       vectorizeBitmapDialog = new VectorizeBitmapDialog(this);
 

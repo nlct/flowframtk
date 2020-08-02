@@ -1597,6 +1597,8 @@
    </node>
    <node type="section" tag="bitmapprops" title="Properties">
    </node>
+   <node type="section" tag="vectorize" title="Vectorizing">
+   </node>
    <node type="chapter" tag="selectobjects" title="Selecting and Editing Objects">
    </node>
    <node type="section" tag="moveobjects" title="Moving an Object">

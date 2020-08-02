@@ -50,13 +50,12 @@ import com.dickimawbooks.flowframtk.*;
  * Dialog box for scanning a bitmap.
  * @author Nicola L C Talbot
  */
-public class VectorizeBitmapDialog extends JDialog
+public class VectorizeBitmapDialog extends JFrame
    implements ActionListener
 {
    public VectorizeBitmapDialog(FlowframTk application)
    {
-      super(application, application.getResources().getString("vectorize.title"),
-            true);
+      super(application.getResources().getString("vectorize.title"));
       this.application = application;
 
       createAndShowGUI();
@@ -158,11 +157,17 @@ public class VectorizeBitmapDialog extends JDialog
 
       JPanel bottomPanel = new JPanel();
 
-      okayButton = getResources().createOkayButton(this);
+      applyButton = resources.createDialogButton("vectorize.apply_pinned",
+       "apply_pinned", this, null);
+      bottomPanel.add(applyButton);
+
+      okayButton = resources.createOkayButton(this);
       bottomPanel.add(okayButton);
 
-      cancelButton = getResources().createCancelButton(this);
+      cancelButton = resources.createCancelButton(this);
       bottomPanel.add(cancelButton);
+
+      bottomPanel.add(resources.createHelpButton("vectorize"));
 
       getContentPane().add(bottomPanel, "South");
 
@@ -239,6 +244,11 @@ public class VectorizeBitmapDialog extends JDialog
       {
          okayButton.setEnabled(enable);
       }
+
+      if (applyButton != null)
+      {
+         applyButton.setEnabled(enable && resultPanel.hasResults());
+      }
    }
 
    public JDRResources getResources()
@@ -291,6 +301,11 @@ public class VectorizeBitmapDialog extends JDialog
             redoItem.setText(getResources().getString("label.redo"));
          }
       }
+      else if (command.equals("apply_pinned"))
+      {
+         apply();
+         resultPanel.repaint();
+      }
       else if (command.equals("okay"))
       {
          okay();
@@ -319,8 +334,7 @@ public class VectorizeBitmapDialog extends JDialog
       updateUndoRedo(undoManager.getUndoPresentationName(),
         undoManager.getRedoPresentationName());
 
-      controlPanel.updateWidgets(false, mainPanel.getImage() != null,
-          shapeList != null);
+      controlPanel.updateWidgets(false, shapeList != null);
    }
 
    private void updateUndoRedo(String undoName, String redoName)
@@ -462,7 +476,7 @@ public class VectorizeBitmapDialog extends JDialog
 
    private void reset()
    {
-      this.shapeList = null;
+      shapeList = null;
       mainPanel.clearAllShapes();
       resultPanel.newImage();
       summaryPanel.updateSummary(null);
@@ -475,13 +489,12 @@ public class VectorizeBitmapDialog extends JDialog
       historyPanel.add(editComp);
       messagePanel.setText("");
 
-      controlPanel.updateWidgets(false, mainPanel.getImage() != null,
-         shapeList != null);
+      controlPanel.updateWidgets(false, shapeList != null);
    }
 
    public boolean clearImage()
    {
-      if (getCurrentShapeList() != null)
+      if (hasCurrentResults())
       {
          int result = JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_pin_current"), 
@@ -508,6 +521,12 @@ public class VectorizeBitmapDialog extends JDialog
       return true;
    }
 
+   public boolean hasCurrentResults()
+   {
+      return resultPanel.getCurrentShapeList() != null
+       && !resultPanel.getCurrentShapeList().isEmpty();
+   }
+
    public Vector<ShapeComponentVector> getCurrentShapeList()
    {
       return resultPanel.getCurrentShapeList();
@@ -530,8 +549,18 @@ public class VectorizeBitmapDialog extends JDialog
 
    public void storeResults()
    {
-      resultPanel.storeCurrentResults();
-      undoManager.discardAllEdits();
+      if (shapeList == null) return;
+
+      storeOldShapes();
+
+      for (int i = shapeList.size()-1; i >= 0; i--)
+      {
+         ShapeComponentVector shape = shapeList.remove(i);
+         addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
+            resultPanel.storeShape(shape));
+      }
+
+      resultPanel.updateCurrentShapeList(shapeList);
    }
 
    public void error(Exception e)
@@ -580,7 +609,7 @@ public class VectorizeBitmapDialog extends JDialog
 
    public void okay()
    {
-      if (getCurrentShapeList() != null)
+      if (hasCurrentResults())
       {
          int result = JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_include_current"), 
@@ -662,11 +691,13 @@ public class VectorizeBitmapDialog extends JDialog
       canvas.selectObject(ce, obj, true);
 
       currentFrame.postEdit(ce);
+
+      resultList.clear();
    }
 
    public void cancel()
    {
-      if (!resultPanel.getResults().isEmpty() || getCurrentShapeList() != null)
+      if (!resultPanel.getResults().isEmpty() || hasCurrentResults())
       {
          if (JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_discard_all"),
@@ -687,9 +718,10 @@ public class VectorizeBitmapDialog extends JDialog
    {
       mainPanel.setImage(image);
       resultPanel.updatePanel();
+      scanRegion = null;
       revalidate();
 
-      controlPanel.updateWidgets(false, image != null, shapeList != null);
+      controlPanel.updateWidgets(false, shapeList != null);
    }
 
    public void zoomChanged(ZoomWidget widget)
@@ -859,7 +891,7 @@ public class VectorizeBitmapDialog extends JDialog
    {
       setWorkingShape(null);
       scanStatusBar.taskFinished();
-      controlPanel.taskFinished(mainPanel.getImage() != null, shapeList != null);
+      controlPanel.taskFinished(shapeList != null);
       updateTimeElapsed();
       setHistoryPanelEnabled(true);
    }
@@ -881,8 +913,7 @@ public class VectorizeBitmapDialog extends JDialog
    public void doSelectedTasks()
    {
       startTime = (new Date()).getTime();
-      controlPanel.updateWidgets(true, 
-         mainPanel.getImage() != null, shapeList != null);
+      controlPanel.updateWidgets(true, shapeList != null);
 
       boolean continueToNextStep = true;
 
@@ -934,7 +965,7 @@ public class VectorizeBitmapDialog extends JDialog
          return;
       }
 
-      if (getCurrentShapeList() != null)
+      if (hasCurrentResults())
       {
          int result = JOptionPane.showConfirmDialog(this, 
            getResources().getString("vectorize.confirm_pin_current"),
@@ -971,6 +1002,29 @@ public class VectorizeBitmapDialog extends JDialog
       }
    }
 
+   private void updateScanRegion(Vector<ShapeComponentVector> shapeList)
+   {
+      scanRegion = null;
+
+      BasicStroke stroke = new BasicStroke(0.25f*(getSampleWidth()+getSampleHeight()));
+
+      for (ShapeComponentVector shapeVec : shapeList)
+      {
+         Shape shape = shapeVec.getPath();
+
+         if (scanRegion == null)
+         {
+            scanRegion = new Area(shape);
+         }
+         else
+         {
+            scanRegion.add(new Area(shape));
+         }
+
+         scanRegion.add(new Area(stroke.createStrokedShape(shape)));
+      }
+   }
+
    public void scanFinished(Vector<ShapeComponentVector> shapeList,
      boolean continueToNextStep)
    {
@@ -983,6 +1037,8 @@ public class VectorizeBitmapDialog extends JDialog
          error(getResources().getString("vectorize.scan_no_areas_detected"));
          return;
       }
+
+      updateScanRegion(shapeList);
 
       controlPanel.deselectScanImage();
 
@@ -1036,6 +1092,8 @@ public class VectorizeBitmapDialog extends JDialog
          error(getResources().getString("vectorize.no_shapes"));
          return;
       }
+
+      updateScanRegion(shapeList);
 
       controlPanel.deselectOptimizeLines();
 
@@ -1280,6 +1338,35 @@ public class VectorizeBitmapDialog extends JDialog
       }
    }
 
+   public Area getLastScannedRegion()
+   {
+      return scanRegion;
+   }
+
+   public Area subtractLastScannedRegion()
+   {
+      if (mainPanel != null)
+      {
+         mainPanel.subtractRegion(scanRegion);
+
+         Area notRegion = mainPanel.getNotRegion();
+
+         if (notRegion == null)
+         {
+            return null;
+         }
+
+         Area region = new Area(new Rectangle2D.Double(0, 0, 
+                  getImageWidth(), getImageHeight()));
+
+         region.subtract(notRegion);
+
+         return region;
+      }
+
+      return null;
+   }
+
    public Rectangle2D getRegionBounds()
    {
       return mainPanel.getRegionBounds();
@@ -1457,6 +1544,8 @@ public class VectorizeBitmapDialog extends JDialog
    private SummaryPanel summaryPanel;
    private JTextArea messagePanel;
 
+   private Area scanRegion;
+
    private JComponent historyPanel;
    private ButtonGroup historyGroup;
    private int currentHistoryIndex=-1;
@@ -1472,7 +1561,7 @@ public class VectorizeBitmapDialog extends JDialog
    private CardLayout cardLayout;
    private JComponent cardComp;
 
-   private JDRButton okayButton, cancelButton;
+   private JDRButton applyButton, okayButton, cancelButton;
 
    private Cursor colourPickerCursor;
 
@@ -1928,6 +2017,14 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
+      subtractLastScanButton = resources.createAppJButton(
+        "vectorize", "subtract_last_scan", this);
+      subPanel.add(subtractLastScanButton);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
       sampleWidthLabel = resources.createAppLabel("vectorize.sample_width");
       subPanel.add(sampleWidthLabel);
 
@@ -1972,6 +2069,8 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
          scanAllButton.setEnabled(enable);
          scanRegionButton.setEnabled(enable);
          regionPicker.setEnabled(enable && scanRegionButton.isSelected());
+
+         subtractLastScanButton.setEnabled(enable);
 
          controlPanel.updateTaskButton();
       }
@@ -2058,8 +2157,7 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       }
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
-      boolean isVectorized)
+   public void updateWidgets(boolean taskInProgress, boolean isVectorized)
    {
       if (!isVectorized)
       {
@@ -2072,7 +2170,7 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
          doScanImageCheckBox.setEnabled(!taskInProgress);
       }
 
-      boolean enable = (!taskInProgress && imageLoaded) 
+      boolean enable = !taskInProgress 
         && doScanImageCheckBox.isSelected();
 
       if ((!enable || !doScanImageCheckBox.isSelected()))
@@ -2103,6 +2201,9 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       scanAllButton.setEnabled(enable);
       scanRegionButton.setEnabled(enable);
       regionPicker.setEnabled(enable && scanRegionButton.isSelected());
+
+      subtractLastScanButton.setEnabled(enable 
+        && controlPanel.getDialog().getLastScannedRegion() != null);
    }
 
    public boolean isScanImageOn()
@@ -2150,6 +2251,16 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
             setImageForeground(col);
          }
       }
+      else if (command.equals("subtract_last_scan"))
+      {
+         VectorizeBitmapDialog dialog = controlPanel.getDialog();
+         region = dialog.subtractLastScannedRegion();
+
+         if (region != null)
+         {
+            scanRegionButton.setSelected(true);
+         }
+      }
    }
 
    public void setImageForeground(Color col)
@@ -2189,6 +2300,8 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
    private Color imageForeground=null;
 
    private JRadioButton scanAllButton, scanRegionButton;
+
+   private JButton subtractLastScanButton;
 
    private ControlPanel controlPanel;
 }
@@ -2273,11 +2386,11 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
       doOptimizeCheckBox.setSelected(selected);
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
+   public void updateWidgets(boolean taskInProgress, 
       boolean isVectorized)
    {
       boolean enable = (!taskInProgress && 
-          (isVectorized || (imageLoaded && controlPanel.isScanImageOn())));
+          (isVectorized || controlPanel.isScanImageOn()));
 
       doOptimizeCheckBox.setEnabled(enable);
 
@@ -2438,11 +2551,10 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
       doSplitSubPathsCheckBox.setSelected(selected);
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
-      boolean isVectorized)
+   public void updateWidgets(boolean taskInProgress, boolean isVectorized)
    {
       boolean enable = (!taskInProgress && 
-          (isVectorized || (imageLoaded && controlPanel.isScanImageOn())));
+          (isVectorized || controlPanel.isScanImageOn()));
 
       doSplitSubPathsCheckBox.setEnabled(enable);
 
@@ -2644,11 +2756,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener
       doLineDetectionCheckBox.setSelected(selected);
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
+   public void updateWidgets(boolean taskInProgress, 
       boolean isVectorized)
    {
       boolean enable = (!taskInProgress && 
-          (isVectorized || (imageLoaded && controlPanel.isScanImageOn())));
+          (isVectorized || controlPanel.isScanImageOn()));
 
       doLineDetectionCheckBox.setEnabled(enable);
 
@@ -2915,11 +3027,11 @@ class SmoothingPanel extends JPanel implements ChangeListener
       doSmoothingCheckBox.setSelected(selected);
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
+   public void updateWidgets(boolean taskInProgress, 
       boolean isVectorized)
    {
       boolean enable = (!taskInProgress && 
-          (isVectorized || (imageLoaded && controlPanel.isScanImageOn())));
+          (isVectorized || controlPanel.isScanImageOn()));
 
       doSmoothingCheckBox.setEnabled(enable);
 
@@ -3041,11 +3153,11 @@ class RemoveTinyPathsPanel extends JPanel implements ChangeListener
       doRemoveTinyPathsCheckBox.setSelected(selected);
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
+   public void updateWidgets(boolean taskInProgress, 
       boolean isVectorized)
    {
       boolean enable = (!taskInProgress && 
-          (isVectorized || (imageLoaded && controlPanel.isScanImageOn())));
+          (isVectorized || controlPanel.isScanImageOn()));
 
       doRemoveTinyPathsCheckBox.setEnabled(enable);
 
@@ -3146,7 +3258,12 @@ class ControlPanel extends JPanel implements ActionListener
           "discard_all", this, null);
       taskButtonPanel.add(clearAllResultsButton);
 
-      updateWidgets(false, false, false);
+      updateWidgets(false, false);
+   }
+
+   public VectorizeBitmapDialog getDialog()
+   {
+      return dialog;
    }
 
    public JDRResources getResources()
@@ -3247,25 +3364,25 @@ class ControlPanel extends JPanel implements ActionListener
       removeTinyPathsPanel.setSelected(false);
    }
 
-   public void taskFinished(boolean imageLoaded, boolean isVectorized)
+   public void taskFinished(boolean isVectorized)
    {
-      updateWidgets(false, imageLoaded, isVectorized);
+      updateWidgets(false, isVectorized);
    }
 
-   public void updateWidgets(boolean taskInProgress, boolean imageLoaded, 
+   public void updateWidgets(boolean taskInProgress, 
       boolean isVectorized)
    {
-      scanImagePanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
-      optimizeLinesPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
-      splitSubPathsPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
-      lineDetectionPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
-      smoothingPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
-      removeTinyPathsPanel.updateWidgets(taskInProgress, imageLoaded, isVectorized);
+      scanImagePanel.updateWidgets(taskInProgress, isVectorized);
+      optimizeLinesPanel.updateWidgets(taskInProgress, isVectorized);
+      splitSubPathsPanel.updateWidgets(taskInProgress, isVectorized);
+      lineDetectionPanel.updateWidgets(taskInProgress, isVectorized);
+      smoothingPanel.updateWidgets(taskInProgress, isVectorized);
+      removeTinyPathsPanel.updateWidgets(taskInProgress, isVectorized);
 
       dialog.setCancelEnabled(!taskInProgress);
       dialog.setOkayEnabled(!taskInProgress && (isVectorized || dialog.hasResults()));
 
-      boolean enable = !taskInProgress && imageLoaded;
+      boolean enable = !taskInProgress;
 
       selectAllButton.setEnabled(enable);
       deselectAllButton.setEnabled(enable);
@@ -10589,6 +10706,26 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
       repaint();
    }
 
+   public void subtractRegion(Area area)
+   {
+      if (notRegion == null)
+      {
+         notRegion = area;
+      }
+      else
+      {
+         notRegion.add(area);
+      }
+
+      updateRegionBounds();
+      repaint();
+   }
+
+   public Area getNotRegion()
+   {
+      return notRegion;
+   }
+
    public void mouseDragged(MouseEvent evt)
    {
       updateCoords(evt);
@@ -10758,6 +10895,11 @@ class ResultPanel extends JPanel
 
       revalidate();
       repaint();
+   }
+
+   public boolean hasResults()
+   {
+      return !resultList.isEmpty();
    }
 
    public Vector<Result> getResults()
