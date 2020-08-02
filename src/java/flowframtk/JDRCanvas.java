@@ -3213,6 +3213,21 @@ public class JDRCanvas extends JPanel
       return visibleObjects;
    }
 
+   public void selectObject(JDRCanvasCompoundEdit ce,
+     JDRCompleteObject obj, boolean selected)
+   {
+      if (selected)
+      {
+         ce.addEdit(new SelectObject(obj, true,
+             getResources().getString("undo.select")));
+      }
+      else
+      {
+         ce.addEdit(new SelectObject(obj, false,
+             getResources().getString("undo.deselect")));
+      }
+   }
+
    public void selectNextObject()
    {
       // select next object in stack
@@ -7975,6 +7990,12 @@ public class JDRCanvas extends JPanel
    public void addObject(JDRCompleteObject object, String undoText)
    {
       frame_.postEdit(new AddObject(object, undoText));
+   }
+
+   public void addObject(JDRCanvasCompoundEdit ce, JDRCompleteObject object,
+     String undoText)
+   {
+      ce.addEdit(new AddObject(object, undoText));
    }
 
    public void drawPrinterMargins(Graphics2D g, double bpToCompXScale,
