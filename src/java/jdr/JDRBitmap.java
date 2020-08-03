@@ -835,12 +835,17 @@ public class JDRBitmap extends JDRCompleteObject
    }
 
    /**
-    * Gets the name of the file in which the bitmap is stored.
+    * Gets the file name (including path) in which the bitmap is stored.
     * @return bitmap location
     */
    public String getFilename()
    {
       return filename_;
+   }
+
+   public String getName()
+   {
+      return name_;
    }
 
    /**
