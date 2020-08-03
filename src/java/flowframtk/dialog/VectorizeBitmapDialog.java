@@ -63,6 +63,10 @@ public class VectorizeBitmapDialog extends JFrame
 
    private void createAndShowGUI()
    {
+      JDRResources resources = getResources();
+
+      setIconImage(resources.getSmallAppIcon().getImage());
+
       setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
       addWindowListener(new WindowAdapter()
@@ -74,8 +78,6 @@ public class VectorizeBitmapDialog extends JFrame
       });
 
       undoManager = new UndoManager();
-
-      JDRResources resources = getResources();
 
       ImageIcon ic = resources.appIcon("pipet.png");
 
@@ -496,11 +498,9 @@ public class VectorizeBitmapDialog extends JFrame
    {
       if (hasCurrentResults())
       {
-         int result = JOptionPane.showConfirmDialog(this, 
+         int result = getResources().confirm(this, 
            getResources().getString("vectorize.confirm_pin_current"), 
-           getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
+            JOptionPane.YES_NO_CANCEL_OPTION);
 
          if (result == JOptionPane.YES_OPTION)
          {
@@ -534,11 +534,9 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void clearAllResults()
    {
-      int result = JOptionPane.showConfirmDialog(this, 
+      int result = getResources().confirm(this, 
         getResources().getString("vectorize.confirm_clear_all"), 
-        getResources().getString("process.confirm"),
-         JOptionPane.YES_NO_CANCEL_OPTION,
-         JOptionPane.QUESTION_MESSAGE);
+         JOptionPane.YES_NO_CANCEL_OPTION);
 
       if (result == JOptionPane.YES_OPTION)
       {
@@ -573,8 +571,44 @@ public class VectorizeBitmapDialog extends JFrame
       getResources().error(this, msg);
    }
 
+   public JDRBitmap getBitmap()
+   {
+      return bitmap;
+   }
+
+   public JDRFrame getBitmapFrame()
+   {
+      return currentFrame;
+   }
+
+   public void redisplay()
+   {
+      setVisible(true);
+
+      int state = getExtendedState();
+
+      if ((state & Frame.ICONIFIED) == Frame.ICONIFIED)
+      {
+         setExtendedState(state ^ Frame.ICONIFIED);
+      }
+
+      toFront();
+   }
+
    public void display()
    {
+      if (isVisible() && bitmap != null)
+      {
+         redisplay();
+
+         if (bitmap != currentFrame.getSelectedBitmap())
+         {
+            error(getResources().getString("error.vectorize_in_progress"));
+         }
+
+         return;
+      }
+
       currentFrame = application.getCurrentFrame();
       bitmap = currentFrame.getSelectedBitmap();
 
@@ -611,11 +645,9 @@ public class VectorizeBitmapDialog extends JFrame
    {
       if (hasCurrentResults())
       {
-         int result = JOptionPane.showConfirmDialog(this, 
+         int result = getResources().confirm(this, 
            getResources().getString("vectorize.confirm_include_current"), 
-           getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
+            JOptionPane.YES_NO_CANCEL_OPTION);
 
          if (result == JOptionPane.YES_OPTION)
          {
@@ -697,14 +729,16 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void cancel()
    {
-      if (!resultPanel.getResults().isEmpty() || hasCurrentResults())
-      {
-         if (JOptionPane.showConfirmDialog(this, 
-           getResources().getString("vectorize.confirm_discard_all"),
-           getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION)
+      cancel(true);
+   }
 
+   public void cancel(boolean confirm)
+   {
+      if (confirm && (!resultPanel.getResults().isEmpty() || hasCurrentResults()))
+      {
+         if (getResources().confirm(this, 
+               getResources().getString("vectorize.confirm_discard_all"))
+             != JOptionPane.YES_OPTION)
          {
             return;
          }
@@ -967,11 +1001,9 @@ public class VectorizeBitmapDialog extends JFrame
 
       if (hasCurrentResults())
       {
-         int result = JOptionPane.showConfirmDialog(this, 
-           getResources().getString("vectorize.confirm_pin_current"),
-           getResources().getString("process.confirm"),
-            JOptionPane.YES_NO_CANCEL_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
+         int result = getResources().confirm(this, 
+            getResources().getString("vectorize.confirm_pin_current"),
+            JOptionPane.YES_NO_CANCEL_OPTION);
 
          if (result == JOptionPane.YES_OPTION)
          {
@@ -3644,7 +3676,6 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       add(cancelButton);
 
       confirmAbort = resources.getString("process.confirm.abort");
-      confirmTitle = resources.getString("process.confirm");
    }
 
    public void propertyChange(PropertyChangeEvent evt)
@@ -3667,9 +3698,8 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
       if (command.equals("abort"))
       {
-         if (JOptionPane.showConfirmDialog(null, confirmAbort, confirmTitle,
-           JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)
-         == JOptionPane.YES_OPTION)
+         if (getResources().confirm(dialog, confirmAbort)
+              == JOptionPane.YES_OPTION)
          {
             cancelButton.setEnabled(false);
             cancelled=true;
@@ -3698,10 +3728,15 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       return cancelled;
    }
 
+   public JDRResources getResources()
+   {
+      return dialog.getResources();
+   }
+
    private JTextField textField;
    private JProgressBar progressBar;
 
-   private String confirmTitle, confirmAbort;
+   private String confirmAbort;
 
    private JButton cancelButton;
    private boolean cancelled=false;

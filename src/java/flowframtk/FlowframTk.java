@@ -3922,6 +3922,44 @@ public class FlowframTk extends JFrame
       vectorizeBitmapDialog.display();
    }
 
+   public boolean isVectorizeBitmapInProgress()
+   {
+      return vectorizeBitmapDialog.getBitmap() != null;
+   }
+
+   public boolean isVectorizeBitmapInProgress(JDRFrame frame)
+   {
+      return vectorizeBitmapDialog.getBitmap() != null
+          && (frame == null || vectorizeBitmapDialog.getBitmapFrame() == frame);
+   }
+
+   public boolean closeVectorizeBitmap(JDRFrame frame)
+   {
+      if (frame == null)
+      {
+         frame = vectorizeBitmapDialog.getBitmapFrame();
+      }
+
+      if (isVectorizeBitmapInProgress(frame))
+      {
+         if (getResources().confirm(this,
+          getResources().getMessage(
+            "message.vectorize_in_progress.confirm_close",
+            frame.getFilename(), vectorizeBitmapDialog.getBitmap().getName()),
+            JOptionPane.YES_NO_OPTION)
+            != JOptionPane.YES_OPTION)
+         {
+            vectorizeBitmapDialog.redisplay();
+
+            return false;
+         }
+
+         vectorizeBitmapDialog.cancel(false);
+      }
+
+      return true;
+   }
+
    public void displayTextPaintChooser()
    {
       textPaintChooserBox.initialise();
@@ -5652,7 +5690,7 @@ public class FlowframTk extends JFrame
          // does the file already exist?
          if (file.exists())
          {
-            int selection = JOptionPane.showConfirmDialog(this,
+            int selection = getResources().confirm(this,
                new String[] {filename,
                getResources().getString("warning.file_exists")},
                getResources().getString("warning.title"),
@@ -6476,7 +6514,7 @@ public class FlowframTk extends JFrame
 
       if (file.exists())
       {
-         int selection = JOptionPane.showConfirmDialog(frame,
+         int selection = getResources().confirm(frame,
             new String[]
             {file.toString(),
             getResources().getString("warning.file_exists")},
@@ -6577,7 +6615,7 @@ public class FlowframTk extends JFrame
          // does the file already exist?
          if (file.exists())
          {
-            int selection = JOptionPane.showConfirmDialog(frame,
+            int selection = getResources().confirm(frame,
                new String[]
                {filename,
                getResources().getString("warning.file_exists")},
@@ -6742,6 +6780,11 @@ public class FlowframTk extends JFrame
 
    public void quit()
    {
+      if (!closeVectorizeBitmap(null))
+      {
+         return;
+      }
+
       try
       {
          invoker.saveResources(recentFiles);
@@ -6761,13 +6804,10 @@ public class FlowframTk extends JFrame
 
          if (frame.isIoInProgress())
          {
-            if (JOptionPane.showConfirmDialog(this,
+            if (getResources().confirm(this,
              getResources().getMessage(
                "message.io_in_progress.confirm_quit",
-               frame.getFilename()),
-               getResources().getString("message.title"),
-               JOptionPane.YES_NO_OPTION,
-               JOptionPane.QUESTION_MESSAGE)
+               frame.getFilename()))
                != JOptionPane.YES_OPTION)
             {
                return;

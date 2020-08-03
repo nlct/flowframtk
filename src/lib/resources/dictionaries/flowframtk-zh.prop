@@ -1294,6 +1294,7 @@
 <entry key="error.cant_find_app">Can''t locate application ''{0}''</entry>
 <entry key="error.possible_malformed_1_7">Possible malformed 1.7 file. Attempting to read again.</entry>
 <entry key="error.no_current_point">No current point</entry>
+<entry key="error.vectorize_in_progress">Unfinished vectorize bitmap task must be completed or cancelled.</entry>
 
 <!--  internal error messages -->
 <entry key="internal_error.title">Äڲ¿´íÎó</entry>
@@ -2872,6 +2873,7 @@
 <entry key="message.init_desktop">ÕýÔڳõʼ»¯×ÀÃæÉèÖÃ</entry>
 <entry key="message.io_in_progress">I/O operation in progress.</entry>
 <entry key="message.io_in_progress.confirm_quit">I/O operation is in progress for image ''{0}''. Are you sure you want to quit? (This may result in loss of data.)</entry>
+<entry key="message.vectorize_in_progress.confirm_close">Unfinished vectorize bitmap task in progress for image ''{0}'' (bitmap ''{1}''). Are you sure you want to discard it?</entry>
 <entry key="message.please_wait">Please wait.</entry>
 <entry key="message.done">Done</entry>
 <entry key="message.failed">Failed: {0}</entry>

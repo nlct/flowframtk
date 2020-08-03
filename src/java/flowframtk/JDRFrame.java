@@ -1539,6 +1539,11 @@ public class JDRFrame extends JInternalFrame
          return false;
       }
 
+      if (!application_.closeVectorizeBitmap(this))
+      {
+         return false;
+      }
+
       if (!canvas.canDiscard())
       {
          return false;
