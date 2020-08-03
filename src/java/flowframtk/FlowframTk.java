@@ -3922,6 +3922,14 @@ public class FlowframTk extends JFrame
       vectorizeBitmapDialog.display();
    }
 
+   public void repaintVectorizeBitmapDialog()
+   {
+      if (vectorizeBitmapDialog != null && vectorizeBitmapDialog.isVisible())
+      {
+         vectorizeBitmapDialog.repaint();
+      }
+   }
+
    public boolean isVectorizeBitmapInProgress()
    {
       return vectorizeBitmapDialog.getBitmap() != null;

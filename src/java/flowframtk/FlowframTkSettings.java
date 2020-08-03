@@ -988,6 +988,96 @@ public class FlowframTkSettings
       return texEditorHeight;
    }
 
+   public Color getVectorizeNotRegion()
+   {
+      return vectorizeNotRegionColor;
+   }
+
+   public void setVectorizeNotRegion(Color col)
+   {
+      vectorizeNotRegionColor = col;
+   }
+
+   public void setVectorizeNotRegion(int rgb)
+   {
+      vectorizeNotRegionColor = new Color(rgb);
+   }
+
+   public Color getVectorizeLine()
+   {
+      return vectorizeLineColor;
+   }
+
+   public void setVectorizeLine(Color col)
+   {
+      vectorizeLineColor = col;
+   }
+
+   public void setVectorizeLine(int rgb)
+   {
+      vectorizeLineColor = new Color(rgb);
+   }
+
+   public Color getVectorizeConnector()
+   {
+      return vectorizeConnectorColor;
+   }
+
+   public void setVectorizeConnector(Color col)
+   {
+      vectorizeConnectorColor = col;
+   }
+
+   public void setVectorizeConnector(int rgb)
+   {
+      vectorizeConnectorColor = new Color(rgb);
+   }
+
+   public Color getVectorizeDrag()
+   {
+      return vectorizeDragColor;
+   }
+
+   public void setVectorizeDrag(Color col)
+   {
+      vectorizeDragColor = col;
+   }
+
+   public void setVectorizeDrag(int rgb)
+   {
+      vectorizeDragColor = new Color(rgb);
+   }
+
+   public Color getVectorizeControlColor()
+   {
+      return vectorizeControlColor;
+   }
+
+   public void setVectorizeControlColor(Color col)
+   {
+      vectorizeControlColor = col;
+   }
+
+   public void setVectorizeControlColor(int rgb)
+   {
+      vectorizeControlColor = new Color(rgb);
+   }
+
+   public int getVectorizeControlSize()
+   {
+      return vectorizeControlSize;
+   }
+
+   public void setVectorizeControlSize(Number size)
+   {
+      vectorizeControlSize = size.intValue();
+   }
+
+   public void setVectorizeControlSize(int size)
+   {
+      vectorizeControlSize = size;
+   }
+
    public boolean useHPaddingShapepar()
    {
       return shapeparUseHpadding;
@@ -1265,6 +1355,13 @@ public class FlowframTkSettings
 
    private int texEditorWidth = 8, texEditorHeight = 10;
    private int preambleEditorWidth = 0, preambleEditorHeight = 0;
+
+   private Color vectorizeNotRegionColor = Color.LIGHT_GRAY;
+   private Color vectorizeLineColor = Color.RED;
+   private Color vectorizeConnectorColor = Color.CYAN;
+   private Color vectorizeDragColor = Color.MAGENTA;
+   private Color vectorizeControlColor = Color.ORANGE;
+   private int vectorizeControlSize = 4;
 
    private boolean shapeparUseHpadding = false;
 

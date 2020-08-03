@@ -207,6 +207,51 @@ public class FlowframTkInvoker
       return i;
    }
 
+   public Color parseColor(String value, int lineNum)
+     throws InvalidFormatException
+   {
+      String[] split = value.split(",", 2);
+
+      try
+      {
+         int rgb = Integer.parseInt(split[0]);
+         Color col = new Color(rgb);
+
+         if (split.length > 1)
+         {
+            int alpha = Integer.parseInt(split[1]);
+
+            int r = col.getRed();
+            int g = col.getGreen();
+            int b = col.getBlue();
+
+            col = new Color(r, g, b, alpha);
+         }
+
+         return col;
+      }
+      catch (NumberFormatException e)
+      {
+         throw new InvalidConfigValueException(
+            resources.getMessage(
+               "error.conf.color", lineNum), value, lineNum, e);
+      }
+   }
+
+   public void writeColor(PrintWriter out, String key, Color col)
+   {
+      int alpha = col.getAlpha();
+
+      out.format("%s=%d", key, col.getRGB());
+
+      if (alpha != 255)
+      {
+         out.format(",%d", alpha);
+      }
+
+      out.println();
+   }
+
    public int parseInt(String value, int lineNum)
      throws InvalidFormatException
    {
@@ -579,6 +624,11 @@ public class FlowframTkInvoker
 
       Font annoteFont = null;
 
+      // Keep track of error messages (don't abort for invalid
+      // formats or unknown keys)
+
+      StringBuilder messages = null;
+
       try
       {
          while ((s=in.readLine()) != null)
@@ -586,41 +636,61 @@ public class FlowframTkInvoker
             line++;
             if (s.charAt(0) == '#') continue;
    
-            StringTokenizer t = new StringTokenizer(s, "=");
-   
-            if (!t.hasMoreTokens())
+            try
             {
-               throw new InvalidFormatException(
-                  resources.getMessage(
-                     "error.invalid_format", line));
-            }
-   
-            String key = t.nextToken();
-   
-            String value = "";
-   
-            if (t.hasMoreTokens())
-            {
-               value = t.nextToken();
-            }
-   
-            if (key.equals("initsettings"))
-            {
-               settings.initSettings= parseThreeVal(value, line);
-   
-               if (settings.initSettings
-                      == FlowframTkSettings.INIT_DEFAULT)
+               StringTokenizer t = new StringTokenizer(s, "=");
+      
+               if (!t.hasMoreTokens())
                {
-                  break;
+                  throw new InvalidFormatException(
+                     resources.getMessage(
+                        "error.invalid_format", line));
                }
-   
-            }
-            else if (key.equals("version"))
-            {
-               diffVersion = !value.equals(APP_VERSION);
-   
-               if (value.compareTo("0.5.6b") < 0)
+      
+               String key = t.nextToken();
+      
+               String value = "";
+      
+               if (t.hasMoreTokens())
                {
+                  value = t.nextToken();
+               }
+      
+               if (key.equals("initsettings"))
+               {
+                  settings.initSettings= parseThreeVal(value, line);
+      
+                  if (settings.initSettings
+                         == FlowframTkSettings.INIT_DEFAULT)
+                  {
+                     break;
+                  }
+      
+               }
+               else if (key.equals("version"))
+               {
+                  diffVersion = !value.equals(APP_VERSION);
+      
+                  if (value.compareTo("0.5.6b") < 0)
+                  {
+                     try
+                     {
+                        resources.initialiseDictionary();
+                     }
+                     catch (IOException ioe)
+                     {
+                        resources.internalError(null, ioe);
+                     }
+                  }
+      
+               }
+               else if (key.equals("dict_lang"))
+               {
+                  // dict_lang and help_lang now in languages.conf
+                  // but just in case the user has just upgraded
+   
+                  settings.setDictId(value);
+      
                   try
                   {
                      resources.initialiseDictionary();
@@ -630,941 +700,969 @@ public class FlowframTkInvoker
                      resources.internalError(null, ioe);
                   }
                }
-   
-            }
-            else if (key.equals("dict_lang"))
-            {
-               // dict_lang and help_lang now in languages.conf
-               // but just in case the user has just upgraded
-
-               settings.setDictId(value);
-   
-               try
+               else if (key.equals("help_lang"))
                {
-                  resources.initialiseDictionary();
+                  settings.setHelpId(value);
                }
-               catch (IOException ioe)
+               else if (key.equals("preview_bitmaps"))
                {
-                  resources.internalError(null, ioe);
+                  settings.previewBitmaps = parseBoolean(value, line);
                }
-            }
-            else if (key.equals("help_lang"))
-            {
-               settings.setHelpId(value);
-            }
-            else if (key.equals("preview_bitmaps"))
-            {
-               settings.previewBitmaps = parseBoolean(value, line);
-            }
-            else if (key.equals("png_alpha"))
-            {
-               settings.setExportPngAlpha(parseBoolean(value, line));
-            }
-            else if (key.equals("png_encap"))
-            {
-               settings.setExportPngEncap(parseBoolean(value, line));
-            }
-            else if (key.equals("show_grid"))
-            {
-               settings.setDisplayGrid(parseBoolean(value, line));
-            }
-            else if (key.equals("lock_grid"))
-            {
-               settings.setGridLock(parseBoolean(value, line));
-            }
-            else if (key.equals("show_tools"))
-            {
-               settings.setShowToolBar(parseBoolean(value, line));
-            }
-            else if (key.equals("show_rulers"))
-            {
-               settings.setShowRulers(parseBoolean(value, line));
-            }
-            else if (key.equals("show_status"))
-            {
-               settings.showStatus = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_zoom"))
-            {
-               settings.showStatusZoom = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_pos"))
-            {
-               settings.showStatusPosition = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_mod"))
-            {
-               settings.showStatusModified = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_lock"))
-            {
-               settings.showStatusLock = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_unit"))
-            {
-               settings.showStatusUnit = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_info"))
-            {
-               settings.showStatusInfo = parseBoolean(value, line);
-            }
-            else if (key.equals("status_show_help"))
-            {
-               settings.showStatusHelp = parseBoolean(value, line);
-            }
-            else if (key.equals("dragscale"))
-            {
-               settings.enableDragScale = parseBoolean(value, line);
-            }
-            else if (key.equals("canvasclickexitspathedit"))
-            {
-               settings.canvasClickExitsPathEdit = parseBoolean(value, line);
-            }
-            else if (key.equals("selectcontrolignoreslock"))
-            {
-               settings.selectControlIgnoresLock = parseBoolean(value, line);
-            }
-            else if (key.equals("antialias"))
-            {
-               antiAlias = parseBoolean(value, line);
-            }
-            else if (key.equals("render_quality"))
-            {
-               renderQuality = parseBoolean(value, line);
-            }
-            else if (key.equals("startdir_type"))
-            {
-               settings.startDirType = parseThreeVal(value, line);
-            }
-            else if (key.equals("startdir"))
-            {
-               settings.startDir=value;
-            }
-            else if (key.equals("normalsize"))
-            {
-               settings.setLaTeXNormalSize(parseNonNegInt(value, line));
-            }
-            else if (key.equals("latexfontupdate"))
-            {
-               settings.updateLaTeXFonts = parseBoolean(value, line);
-            }
-            else if (key.equals("autoupdateanchors"))
-            {
-               settings.autoUpdateAnchors = parseBoolean(value, line);
-            }
-            else if (key.equals("autoescapespchars"))
-            {
-               settings.autoEscapeSpChars = parseBoolean(value, line);
-            }
-            else if (key.equals("save_jdrsettings"))
-            {
-               settings.setSaveSettings(parseThreeVal(value, line));
-            }
-            else if (key.equals("use_jdrsettings"))
-            {
-               settings.setUseSettingsOnLoad(parseThreeVal(value, line));
-            }
-            else if (key.equals("warn_load_old"))
-            {
-               settings.warnOnOldJdr = parseBoolean(value, line);
-            }
-            else if (key.equals("tool"))
-            {
-               settings.setTool(value);
-            }
-            else if (key.equals("paper"))
-            {
-               StringTokenizer pt = new StringTokenizer(value, " ");
-   
-               String pvalue = pt.nextToken();
-   
-               if (pvalue.equals("user"))
+               else if (key.equals("png_alpha"))
                {
-                  try
-                  {
-                     pvalue = pt.nextToken();
-                     JDRLength w = parseNonNegLength(pvalue, line);
-
-                     pvalue = pt.nextToken();
-                     JDRLength h = parseNonNegLength(pvalue, line);
-
-                     settings.setPaper(new JDRPaper(w, h));
-                  }
-                  catch (Exception e)
-                  {
-                     throw new InvalidFormatException(
-                        resources.getMessage(
-                           "error.invalid_paper_dimension", value));
-                  }
+                  settings.setExportPngAlpha(parseBoolean(value, line));
                }
-               else
+               else if (key.equals("png_encap"))
                {
-                  JDRPaper paper=JDRPaper.getPredefinedPaper(value);
-
-                  if (paper != null)
-                  {
-                     settings.setPaper(paper);
-                  }
-                  else
-                  {
-                     throw new InvalidFormatException(
-                       resources.getMessage(
-                          "error.unknown_papersize", value));
-                  }
+                  settings.setExportPngEncap(parseBoolean(value, line));
                }
-            }
-            else if (key.equals("fontname"))
-            {
-               settings.fontFamily=value;
-            }
-            else if (key.equals("fontsize"))
-            {
-               settings.setFontSize(parseNonNegLength(value, line));
-            }
-            else if (key.equals("fontshape"))
-            {
-               settings.setFontShape(
-                  parseNonNegInt(JDRFont.MAX_SHAPE_ID, value, line));
-            }
-            else if (key.equals("fontseries"))
-            {
-               settings.setFontSeries(
-                  parseNonNegInt(JDRFont.MAX_SERIES_ID, value, line));
-            }
-            else if (key.equals("latexfontname"))
-            {
-               settings.latexFontFamily=value;
-            }
-            else if (key.equals("latexfontseries"))
-            {
-               settings.latexFontSeries=value;
-            }
-            else if (key.equals("latexfontshape"))
-            {
-               settings.latexFontShape=value;
-            }
-            else if (key.equals("latexfontsize"))
-            {
-               settings.latexFontSize=value;
-            }
-            else if (key.equals("capstyle"))
-            {
-               settings.getStroke().setCapStyle(parseThreeVal(value, line));
-            }
-            else if (key.equals("joinstyle"))
-            {
-               settings.getStroke().setJoinStyle(parseThreeVal(value, line));
-            }
-            else if (key.equals("windingrule"))
-            {
-               settings.getStroke().setWindingRule(
-                  parseBoolean(value, line) ? 1 : 0);
-            }
-            else if (key.equals("penwidth"))
-            {
-               settings.getStroke().setPenWidth(
-                  parseNonNegLength(value, line));
-            }
-            else if (key.equals("mitrelimit"))
-            {
-               settings.getStroke().setMitreLimit(
-                 parseMinDouble(1.0, value, line));
-            }
-            else if (key.equals("startarrow"))
-            {
-               settings.getStroke().setStartArrow(
-                  parseNonNegInt(JDRMarker.maxMarkers(), value, line));
-            }
-            else if (key.equals("startarrowsize"))
-            {
-               settings.getStroke().setStartArrowSize(
-                  parseNonNegLength(value, line));
-            }
-            else if (key.equals("startarrowrepeat"))
-            {
-               settings.getStroke().setStartArrowRepeat(
-                  parseMinInt(1, value, line));
-            }
-            else if (key.equals("startarrowdouble"))
-            {
-               // provide compatibility with older versions
-
-               settings.getStroke().setStartArrowRepeat(
-                  parseBoolean(value, line) ? 2 : 1);
-            }
-            else if (key.equals("startarrowreverse"))
-            {
-               settings.getStroke().setStartArrowReverse(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("startarroworient"))
-            {
-               settings.getStroke().setStartArrowAutoOrient(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("startarrowuseroffsetenabled"))
-            {
-               settings.getStroke().setStartUserOffsetEnabled(
-                 parseBoolean(value, line));
-            }
-            else if (key.equals("startoverlaid"))
-            {
-               settings.getStroke().setStartOverlay(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("startarrowuseroffset"))
-            {
-               settings.getStroke().setStartOffset(
-                 parseLength(value, line));
-            }
-            else if (key.equals("startarrowrepeatoffsetenabled"))
-            {
-               settings.getStroke().setStartRepeatOffsetEnabled(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("startarrowrepeatoffset"))
-            {
-               settings.getStroke().setStartRepeatOffset(
-                  parseLength(value, line));
-            }
-            else if (key.equals("startarrowpaint"))
-            {
-               settings.getStroke().setStartArrowColour(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("startarrowangle"))
-            {
-               settings.getStroke().setStartArrowAngle(
-                  parseAngle(value, line));
-            }
-            else if (key.equals("secondarystartarrow"))
-            {
-               startComposite = JDRMarker.getPredefinedMarker(
-                  settings.getCanvasGraphics(),
-                  parseNonNegInt(JDRMarker.maxMarkers(), value, line));
-            }
-            else if (key.equals("secondarystartarrowsize"))
-            {
-               startComposite.setSize(parseNonNegLength(value, line));
-            }
-            else if (key.equals("secondarystartarrowrepeat"))
-            {
-               startComposite.setRepeated(parseMinInt(1, value, line));
-            }
-            else if (key.equals("secondarystartarrowreverse"))
-            {
-               startComposite.setReversed(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarystartarroworient"))
-            {
-               startComposite.setOrient(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarystartarrowuseroffsetenabled"))
-            {
-               startComposite.enableUserOffset(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarystartarrowuseroffset"))
-            {
-               startComposite.setOffset(parseLength(value, line));
-            }
-            else if (key.equals("secondarystartarrowrepeatoffsetenabled"))
-            {
-               startComposite.enableUserRepeatOffset(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarystartarrowrepeatoffset"))
-            {
-               startComposite.setRepeatOffset(parseLength(value, line));
-            }
-            else if (key.equals("secondarystartarrowpaint"))
-            {
-               startComposite.setFillPaint(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("secondarystartarrowangle"))
-            {
-               startComposite.setAngle(parseAngle(value, line));
-            }
-            else if (key.equals("midarrow"))
-            {
-               settings.getStroke().setMidArrow(
-                 parseNonNegInt(JDRMarker.maxMarkers(), value, line));
-            }
-            else if (key.equals("midarrowsize"))
-            {
-               settings.getStroke().setMidArrowSize(
-                 parseNonNegLength(value, line));
-            }
-            else if (key.equals("midarrowrepeat"))
-            {
-               settings.getStroke().setMidArrowRepeat(
-                  parseMinInt(1, value, line));
-            }
-            else if (key.equals("midarrowreverse"))
-            {
-               settings.getStroke().setMidArrowReverse(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("midarroworient"))
-            {
-               settings.getStroke().setMidArrowAutoOrient(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("midarrowuseroffsetenabled"))
-            {
-               settings.getStroke().setMidUserOffsetEnabled(
-                 parseBoolean(value, line));
-            }
-            else if (key.equals("midoverlaid"))
-            {
-               settings.getStroke().setMidOverlay(
-                 parseBoolean(value, line));
-            }
-            else if (key.equals("midarrowuseroffset"))
-            {
-               settings.getStroke().setMidOffset(parseLength(value, line));
-            }
-            else if (key.equals("midarrowrepeatoffsetenabled"))
-            {
-               settings.getStroke().setMidRepeatOffsetEnabled(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("midarrowrepeatoffset"))
-            {
-               settings.getStroke().setMidRepeatOffset(
-                  parseLength(value, line));
-            }
-            else if (key.equals("midarrowpaint"))
-            {
-               settings.getStroke().setMidArrowColour(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("midarrowangle"))
-            {
-               settings.getStroke().setMidArrowAngle(
-                  parseAngle(value, line));
-            }
-            else if (key.equals("secondarymidarrow"))
-            {
-               midComposite = JDRMarker.getPredefinedMarker(
-                 settings.getCanvasGraphics(),
-                 parseNonNegInt(JDRMarker.maxMarkers(), value, line));
-            }
-            else if (key.equals("secondarymidarrowsize"))
-            {
-               midComposite.setSize(parseNonNegLength(value, line));
-            }
-            else if (key.equals("secondarymidarrowrepeat"))
-            {
-               midComposite.setRepeated(parseMinInt(1, value, line));
-            }
-            else if (key.equals("secondarymidarrowreverse"))
-            {
-               midComposite.setReversed(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarymidarroworient"))
-            {
-               midComposite.setOrient(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarymidarrowuseroffsetenabled"))
-            {
-               midComposite.enableUserOffset(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarymidarrowuseroffset"))
-            {
-               midComposite.setOffset(parseLength(value, line));
-            }
-            else if (key.equals("secondarymidarrowrepeatoffsetenabled"))
-            {
-               midComposite.enableUserRepeatOffset(parseBoolean(value, line));
-            }
-            else if (key.equals("secondarymidarrowrepeatoffset"))
-            {
-               midComposite.setRepeatOffset(parseLength(value, line));
-            }
-            else if (key.equals("secondarymidarrowpaint"))
-            {
-               midComposite.setFillPaint(
-                 loadPaintConfig(settings, value,line));
-            }
-            else if (key.equals("secondarymidarrowangle"))
-            {
-               midComposite.setAngle(parseAngle(value, line));
-            }
-            else if (key.equals("endarrow"))
-            {
-               settings.getStroke().setEndArrow(
-                  parseNonNegInt(JDRMarker.maxMarkers(), value, line));
-            }
-            else if (key.equals("endarrowsize"))
-            {
-               settings.getStroke().setEndArrowSize(
-                  parseNonNegLength(value, line));
-            }
-            else if (key.equals("endarrowrepeat"))
-            {
-               settings.getStroke().setEndArrowRepeat(
-                  parseMinInt(1, value, line));
-            }
-            else if (key.equals("endarrowdouble"))
-            {
-               // provide compatibility with older versions
-
-               settings.getStroke().setEndArrowRepeat(
-                  parseBoolean(value, line) ? 2 : 1);
-            }
-            else if (key.equals("endarrowreverse"))
-            {
-               settings.getStroke().setEndArrowReverse(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("endarroworient"))
-            {
-               settings.getStroke().setEndArrowAutoOrient(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("endarrowuseroffsetenabled"))
-            {
-               settings.getStroke().setEndUserOffsetEnabled(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("endoverlaid"))
-            {
-               settings.getStroke().setEndOverlay(parseBoolean(value, line));
-            }
-            else if (key.equals("endarrowuseroffset"))
-            {
-               settings.getStroke().setEndOffset(
-                 parseLength(value, line));
-            }
-            else if (key.equals("endarrowrepeatoffsetenabled"))
-            {
-               settings.getStroke().setEndRepeatOffsetEnabled(
-                  parseBoolean(value, line));
-            }
-            else if (key.equals("endarrowrepeatoffset"))
-            {
-               settings.getStroke().setEndRepeatOffset(
-                 parseLength(value, line));
-            }
-            else if (key.equals("endarrowpaint"))
-            {
-               settings.getStroke().setEndArrowColour(
-                  loadPaintConfig(settings, value,line));
-            }
-            else if (key.equals("endarrowangle"))
-            {
-               settings.getStroke().setEndArrowAngle(
-                  parseAngle(value, line));
-            }
-            else if (key.equals("secondaryendarrow"))
-            {
-               endComposite = JDRMarker.getPredefinedMarker(
-                 settings.getCanvasGraphics(),
-                 parseNonNegInt(JDRMarker.maxMarkers(), value, line));
-            }
-            else if (key.equals("secondaryendarrowsize"))
-            {
-               endComposite.setSize(parseNonNegLength(value, line));
-            }
-            else if (key.equals("secondaryendarrowrepeat"))
-            {
-               endComposite.setRepeated(parseMinInt(1, value, line));
-            }
-            else if (key.equals("secondaryendarrowreverse"))
-            {
-               endComposite.setReversed(parseBoolean(value, line));
-            }
-            else if (key.equals("secondaryendarroworient"))
-            {
-               endComposite.setOrient(parseBoolean(value, line));
-            }
-            else if (key.equals("secondaryendarrowuseroffsetenabled"))
-            {
-               endComposite.enableUserOffset(parseBoolean(value, line));
-            }
-            else if (key.equals("secondaryendarrowuseroffset"))
-            {
-               endComposite.setOffset(parseLength(value, line));
-            }
-            else if (key.equals("secondaryendarrowrepeatoffsetenabled"))
-            {
-               endComposite.enableUserRepeatOffset(parseBoolean(value, line));
-            }
-            else if (key.equals("secondaryendarrowrepeatoffset"))
-            {
-               endComposite.setRepeatOffset(parseLength(value, line));
-            }
-            else if (key.equals("secondaryendarrowpaint"))
-            {
-               endComposite.setFillPaint(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("secondaryendarrowangle"))
-            {
-               endComposite.setAngle(parseAngle(value, line));
-            }
-            else if (key.equals("dashoffset"))
-            {
-               dashOffset = (float)parseNonNegDouble(value, line);
-            }
-            else if (key.equals("dash"))
-            {
-               t = new StringTokenizer(value, ",");
-   
-               value = t.nextToken();
-   
-               int n = parseNonNegInt(value, line);
-   
-               if (n == 0)
+               else if (key.equals("show_grid"))
                {
-                  dashPattern = null;
+                  settings.setDisplayGrid(parseBoolean(value, line));
                }
-               else
+               else if (key.equals("lock_grid"))
                {
-                  dashPattern = new float[n];
-   
-                  value = "";
-   
-                  for (int j = 0; j < n; j++)
+                  settings.setGridLock(parseBoolean(value, line));
+               }
+               else if (key.equals("show_tools"))
+               {
+                  settings.setShowToolBar(parseBoolean(value, line));
+               }
+               else if (key.equals("show_rulers"))
+               {
+                  settings.setShowRulers(parseBoolean(value, line));
+               }
+               else if (key.equals("show_status"))
+               {
+                  settings.showStatus = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_zoom"))
+               {
+                  settings.showStatusZoom = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_pos"))
+               {
+                  settings.showStatusPosition = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_mod"))
+               {
+                  settings.showStatusModified = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_lock"))
+               {
+                  settings.showStatusLock = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_unit"))
+               {
+                  settings.showStatusUnit = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_info"))
+               {
+                  settings.showStatusInfo = parseBoolean(value, line);
+               }
+               else if (key.equals("status_show_help"))
+               {
+                  settings.showStatusHelp = parseBoolean(value, line);
+               }
+               else if (key.equals("dragscale"))
+               {
+                  settings.enableDragScale = parseBoolean(value, line);
+               }
+               else if (key.equals("canvasclickexitspathedit"))
+               {
+                  settings.canvasClickExitsPathEdit = parseBoolean(value, line);
+               }
+               else if (key.equals("selectcontrolignoreslock"))
+               {
+                  settings.selectControlIgnoresLock = parseBoolean(value, line);
+               }
+               else if (key.equals("antialias"))
+               {
+                  antiAlias = parseBoolean(value, line);
+               }
+               else if (key.equals("render_quality"))
+               {
+                  renderQuality = parseBoolean(value, line);
+               }
+               else if (key.equals("startdir_type"))
+               {
+                  settings.startDirType = parseThreeVal(value, line);
+               }
+               else if (key.equals("startdir"))
+               {
+                  settings.startDir=value;
+               }
+               else if (key.equals("normalsize"))
+               {
+                  settings.setLaTeXNormalSize(parseNonNegInt(value, line));
+               }
+               else if (key.equals("latexfontupdate"))
+               {
+                  settings.updateLaTeXFonts = parseBoolean(value, line);
+               }
+               else if (key.equals("autoupdateanchors"))
+               {
+                  settings.autoUpdateAnchors = parseBoolean(value, line);
+               }
+               else if (key.equals("autoescapespchars"))
+               {
+                  settings.autoEscapeSpChars = parseBoolean(value, line);
+               }
+               else if (key.equals("save_jdrsettings"))
+               {
+                  settings.setSaveSettings(parseThreeVal(value, line));
+               }
+               else if (key.equals("use_jdrsettings"))
+               {
+                  settings.setUseSettingsOnLoad(parseThreeVal(value, line));
+               }
+               else if (key.equals("warn_load_old"))
+               {
+                  settings.warnOnOldJdr = parseBoolean(value, line);
+               }
+               else if (key.equals("tool"))
+               {
+                  settings.setTool(value);
+               }
+               else if (key.equals("paper"))
+               {
+                  StringTokenizer pt = new StringTokenizer(value, " ");
+      
+                  String pvalue = pt.nextToken();
+      
+                  if (pvalue.equals("user"))
                   {
-                     if (!t.hasMoreTokens())
+                     try
+                     {
+                        pvalue = pt.nextToken();
+                        JDRLength w = parseNonNegLength(pvalue, line);
+   
+                        pvalue = pt.nextToken();
+                        JDRLength h = parseNonNegLength(pvalue, line);
+   
+                        settings.setPaper(new JDRPaper(w, h));
+                     }
+                     catch (Exception e)
                      {
                         throw new InvalidFormatException(
                            resources.getMessage(
-                        "error.conf.no_more_tokens", line));
+                              "error.invalid_paper_dimension", value));
                      }
-
-                     value = t.nextToken();
-   
-                     dashPattern[j] = (float)parseNonNegDouble(value, line);
                   }
-   
-                  if (t.hasMoreTokens())
+                  else
                   {
-                     throw new InvalidFormatException(
-                        resources.getMessage(
-                        "error.conf.too_many_tokens", line));
+                     JDRPaper paper=JDRPaper.getPredefinedPaper(value);
+   
+                     if (paper != null)
+                     {
+                        settings.setPaper(paper);
+                     }
+                     else
+                     {
+                        throw new InvalidFormatException(
+                          resources.getMessage(
+                             "error.unknown_papersize", value));
+                     }
                   }
                }
-            }
-            else if (key.equals("linepaint"))
-            {
-               settings.setLinePaint(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("fillpaint"))
-            {
-               settings.setFillPaint(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("textpaint"))
-            {
-               settings.setTextPaint(
-                  loadPaintConfig(settings, value, line));
-            }
-            else if (key.equals("storageunit"))
-            {
-               try
+               else if (key.equals("fontname"))
                {
-                  settings.getCanvasGraphics().setStorageUnit(
-                     (byte)parseInt(value, line));
+                  settings.fontFamily=value;
                }
-               catch (JdrIllegalArgumentException e)
+               else if (key.equals("fontsize"))
                {
-                  throw new InvalidFormatException(
-                      resources.getMessage(
-                       "error.conf.number_badrange", line));
+                  settings.setFontSize(parseNonNegLength(value, line));
                }
-
-            }
-            else if (key.equals("gridunit"))
-            {
-               gridUnit = JDRUnit.getUnit((byte)parseInt(value, line));
-
-               if (gridUnit == null)
+               else if (key.equals("fontshape"))
                {
-                  throw new InvalidFormatException(
-                      resources.getMessage(
-                       "error.conf.number_badrange", line));
+                  settings.setFontShape(
+                     parseNonNegInt(JDRFont.MAX_SHAPE_ID, value, line));
                }
-            }
-            else if (key.equals("grid"))
-            {
-               gridType = parseNonNegInt(4, value, line);
-            }
-            else if (key.equals("majordivisions"))
-            {
-               majorDivisions = parseMinInt(1, value, line);
-            }
-            else if (key.equals("subdivisions"))
-            {
-               subDivisions = parseNonNegInt(value, line);
-            }
-            else if (key.equals("spokes"))
-            {
-               spokes = parseMinInt(1, value, line);
-            }
-            else if (key.equals("grid-path"))
-            {
-               gridPath = parsePath(value, line);
-            }
-            else if (key.equals("controlsize"))
-            {
-               settings.setPointSize(parseNonNegLength(value, line));
-            }
-            else if (key.equals("scalecontrols"))
-            {
-               settings.setScaleControlPoints(parseBoolean(value, line));
-            }
-            else if (key.equals("widest_char"))
-            {
-               CanvasTextField.widestChar = value;
-            }
-            else if (key.equals("norm_x"))
-            {
-               CanvasGraphics.normTransformX = parseDouble(value, line);
-            }
-            else if (key.equals("norm_y"))
-            {
-               CanvasGraphics.normTransformY = parseDouble(value, line);
-            }
-            else if (key.equals("hruler_height"))
-            {
-               settings.setHRulerHeight(parseMinInt(1, value, line));
-            }
-            else if (key.equals("vruler_width"))
-            {
-               settings.setVRulerWidth(parseMinInt(1, value, line));
-            }
-            else if (key.equals("robot"))
-            {
-               if (parseBoolean(value, line))
+               else if (key.equals("fontseries"))
+               {
+                  settings.setFontSeries(
+                     parseNonNegInt(JDRFont.MAX_SERIES_ID, value, line));
+               }
+               else if (key.equals("latexfontname"))
+               {
+                  settings.latexFontFamily=value;
+               }
+               else if (key.equals("latexfontseries"))
+               {
+                  settings.latexFontSeries=value;
+               }
+               else if (key.equals("latexfontshape"))
+               {
+                  settings.latexFontShape=value;
+               }
+               else if (key.equals("latexfontsize"))
+               {
+                  settings.latexFontSize=value;
+               }
+               else if (key.equals("capstyle"))
+               {
+                  settings.getStroke().setCapStyle(parseThreeVal(value, line));
+               }
+               else if (key.equals("joinstyle"))
+               {
+                  settings.getStroke().setJoinStyle(parseThreeVal(value, line));
+               }
+               else if (key.equals("windingrule"))
+               {
+                  settings.getStroke().setWindingRule(
+                     parseBoolean(value, line) ? 1 : 0);
+               }
+               else if (key.equals("penwidth"))
+               {
+                  settings.getStroke().setPenWidth(
+                     parseNonNegLength(value, line));
+               }
+               else if (key.equals("mitrelimit"))
+               {
+                  settings.getStroke().setMitreLimit(
+                    parseMinDouble(1.0, value, line));
+               }
+               else if (key.equals("startarrow"))
+               {
+                  settings.getStroke().setStartArrow(
+                     parseNonNegInt(JDRMarker.maxMarkers(), value, line));
+               }
+               else if (key.equals("startarrowsize"))
+               {
+                  settings.getStroke().setStartArrowSize(
+                     parseNonNegLength(value, line));
+               }
+               else if (key.equals("startarrowrepeat"))
+               {
+                  settings.getStroke().setStartArrowRepeat(
+                     parseMinInt(1, value, line));
+               }
+               else if (key.equals("startarrowdouble"))
+               {
+                  // provide compatibility with older versions
+   
+                  settings.getStroke().setStartArrowRepeat(
+                     parseBoolean(value, line) ? 2 : 1);
+               }
+               else if (key.equals("startarrowreverse"))
+               {
+                  settings.getStroke().setStartArrowReverse(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("startarroworient"))
+               {
+                  settings.getStroke().setStartArrowAutoOrient(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("startarrowuseroffsetenabled"))
+               {
+                  settings.getStroke().setStartUserOffsetEnabled(
+                    parseBoolean(value, line));
+               }
+               else if (key.equals("startoverlaid"))
+               {
+                  settings.getStroke().setStartOverlay(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("startarrowuseroffset"))
+               {
+                  settings.getStroke().setStartOffset(
+                    parseLength(value, line));
+               }
+               else if (key.equals("startarrowrepeatoffsetenabled"))
+               {
+                  settings.getStroke().setStartRepeatOffsetEnabled(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("startarrowrepeatoffset"))
+               {
+                  settings.getStroke().setStartRepeatOffset(
+                     parseLength(value, line));
+               }
+               else if (key.equals("startarrowpaint"))
+               {
+                  settings.getStroke().setStartArrowColour(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("startarrowangle"))
+               {
+                  settings.getStroke().setStartArrowAngle(
+                     parseAngle(value, line));
+               }
+               else if (key.equals("secondarystartarrow"))
+               {
+                  startComposite = JDRMarker.getPredefinedMarker(
+                     settings.getCanvasGraphics(),
+                     parseNonNegInt(JDRMarker.maxMarkers(), value, line));
+               }
+               else if (key.equals("secondarystartarrowsize"))
+               {
+                  startComposite.setSize(parseNonNegLength(value, line));
+               }
+               else if (key.equals("secondarystartarrowrepeat"))
+               {
+                  startComposite.setRepeated(parseMinInt(1, value, line));
+               }
+               else if (key.equals("secondarystartarrowreverse"))
+               {
+                  startComposite.setReversed(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarystartarroworient"))
+               {
+                  startComposite.setOrient(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarystartarrowuseroffsetenabled"))
+               {
+                  startComposite.enableUserOffset(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarystartarrowuseroffset"))
+               {
+                  startComposite.setOffset(parseLength(value, line));
+               }
+               else if (key.equals("secondarystartarrowrepeatoffsetenabled"))
+               {
+                  startComposite.enableUserRepeatOffset(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarystartarrowrepeatoffset"))
+               {
+                  startComposite.setRepeatOffset(parseLength(value, line));
+               }
+               else if (key.equals("secondarystartarrowpaint"))
+               {
+                  startComposite.setFillPaint(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("secondarystartarrowangle"))
+               {
+                  startComposite.setAngle(parseAngle(value, line));
+               }
+               else if (key.equals("midarrow"))
+               {
+                  settings.getStroke().setMidArrow(
+                    parseNonNegInt(JDRMarker.maxMarkers(), value, line));
+               }
+               else if (key.equals("midarrowsize"))
+               {
+                  settings.getStroke().setMidArrowSize(
+                    parseNonNegLength(value, line));
+               }
+               else if (key.equals("midarrowrepeat"))
+               {
+                  settings.getStroke().setMidArrowRepeat(
+                     parseMinInt(1, value, line));
+               }
+               else if (key.equals("midarrowreverse"))
+               {
+                  settings.getStroke().setMidArrowReverse(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("midarroworient"))
+               {
+                  settings.getStroke().setMidArrowAutoOrient(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("midarrowuseroffsetenabled"))
+               {
+                  settings.getStroke().setMidUserOffsetEnabled(
+                    parseBoolean(value, line));
+               }
+               else if (key.equals("midoverlaid"))
+               {
+                  settings.getStroke().setMidOverlay(
+                    parseBoolean(value, line));
+               }
+               else if (key.equals("midarrowuseroffset"))
+               {
+                  settings.getStroke().setMidOffset(parseLength(value, line));
+               }
+               else if (key.equals("midarrowrepeatoffsetenabled"))
+               {
+                  settings.getStroke().setMidRepeatOffsetEnabled(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("midarrowrepeatoffset"))
+               {
+                  settings.getStroke().setMidRepeatOffset(
+                     parseLength(value, line));
+               }
+               else if (key.equals("midarrowpaint"))
+               {
+                  settings.getStroke().setMidArrowColour(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("midarrowangle"))
+               {
+                  settings.getStroke().setMidArrowAngle(
+                     parseAngle(value, line));
+               }
+               else if (key.equals("secondarymidarrow"))
+               {
+                  midComposite = JDRMarker.getPredefinedMarker(
+                    settings.getCanvasGraphics(),
+                    parseNonNegInt(JDRMarker.maxMarkers(), value, line));
+               }
+               else if (key.equals("secondarymidarrowsize"))
+               {
+                  midComposite.setSize(parseNonNegLength(value, line));
+               }
+               else if (key.equals("secondarymidarrowrepeat"))
+               {
+                  midComposite.setRepeated(parseMinInt(1, value, line));
+               }
+               else if (key.equals("secondarymidarrowreverse"))
+               {
+                  midComposite.setReversed(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarymidarroworient"))
+               {
+                  midComposite.setOrient(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarymidarrowuseroffsetenabled"))
+               {
+                  midComposite.enableUserOffset(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarymidarrowuseroffset"))
+               {
+                  midComposite.setOffset(parseLength(value, line));
+               }
+               else if (key.equals("secondarymidarrowrepeatoffsetenabled"))
+               {
+                  midComposite.enableUserRepeatOffset(parseBoolean(value, line));
+               }
+               else if (key.equals("secondarymidarrowrepeatoffset"))
+               {
+                  midComposite.setRepeatOffset(parseLength(value, line));
+               }
+               else if (key.equals("secondarymidarrowpaint"))
+               {
+                  midComposite.setFillPaint(
+                    loadPaintConfig(settings, value,line));
+               }
+               else if (key.equals("secondarymidarrowangle"))
+               {
+                  midComposite.setAngle(parseAngle(value, line));
+               }
+               else if (key.equals("endarrow"))
+               {
+                  settings.getStroke().setEndArrow(
+                     parseNonNegInt(JDRMarker.maxMarkers(), value, line));
+               }
+               else if (key.equals("endarrowsize"))
+               {
+                  settings.getStroke().setEndArrowSize(
+                     parseNonNegLength(value, line));
+               }
+               else if (key.equals("endarrowrepeat"))
+               {
+                  settings.getStroke().setEndArrowRepeat(
+                     parseMinInt(1, value, line));
+               }
+               else if (key.equals("endarrowdouble"))
+               {
+                  // provide compatibility with older versions
+   
+                  settings.getStroke().setEndArrowRepeat(
+                     parseBoolean(value, line) ? 2 : 1);
+               }
+               else if (key.equals("endarrowreverse"))
+               {
+                  settings.getStroke().setEndArrowReverse(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("endarroworient"))
+               {
+                  settings.getStroke().setEndArrowAutoOrient(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("endarrowuseroffsetenabled"))
+               {
+                  settings.getStroke().setEndUserOffsetEnabled(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("endoverlaid"))
+               {
+                  settings.getStroke().setEndOverlay(parseBoolean(value, line));
+               }
+               else if (key.equals("endarrowuseroffset"))
+               {
+                  settings.getStroke().setEndOffset(
+                    parseLength(value, line));
+               }
+               else if (key.equals("endarrowrepeatoffsetenabled"))
+               {
+                  settings.getStroke().setEndRepeatOffsetEnabled(
+                     parseBoolean(value, line));
+               }
+               else if (key.equals("endarrowrepeatoffset"))
+               {
+                  settings.getStroke().setEndRepeatOffset(
+                    parseLength(value, line));
+               }
+               else if (key.equals("endarrowpaint"))
+               {
+                  settings.getStroke().setEndArrowColour(
+                     loadPaintConfig(settings, value,line));
+               }
+               else if (key.equals("endarrowangle"))
+               {
+                  settings.getStroke().setEndArrowAngle(
+                     parseAngle(value, line));
+               }
+               else if (key.equals("secondaryendarrow"))
+               {
+                  endComposite = JDRMarker.getPredefinedMarker(
+                    settings.getCanvasGraphics(),
+                    parseNonNegInt(JDRMarker.maxMarkers(), value, line));
+               }
+               else if (key.equals("secondaryendarrowsize"))
+               {
+                  endComposite.setSize(parseNonNegLength(value, line));
+               }
+               else if (key.equals("secondaryendarrowrepeat"))
+               {
+                  endComposite.setRepeated(parseMinInt(1, value, line));
+               }
+               else if (key.equals("secondaryendarrowreverse"))
+               {
+                  endComposite.setReversed(parseBoolean(value, line));
+               }
+               else if (key.equals("secondaryendarroworient"))
+               {
+                  endComposite.setOrient(parseBoolean(value, line));
+               }
+               else if (key.equals("secondaryendarrowuseroffsetenabled"))
+               {
+                  endComposite.enableUserOffset(parseBoolean(value, line));
+               }
+               else if (key.equals("secondaryendarrowuseroffset"))
+               {
+                  endComposite.setOffset(parseLength(value, line));
+               }
+               else if (key.equals("secondaryendarrowrepeatoffsetenabled"))
+               {
+                  endComposite.enableUserRepeatOffset(parseBoolean(value, line));
+               }
+               else if (key.equals("secondaryendarrowrepeatoffset"))
+               {
+                  endComposite.setRepeatOffset(parseLength(value, line));
+               }
+               else if (key.equals("secondaryendarrowpaint"))
+               {
+                  endComposite.setFillPaint(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("secondaryendarrowangle"))
+               {
+                  endComposite.setAngle(parseAngle(value, line));
+               }
+               else if (key.equals("dashoffset"))
+               {
+                  dashOffset = (float)parseNonNegDouble(value, line);
+               }
+               else if (key.equals("dash"))
+               {
+                  t = new StringTokenizer(value, ",");
+      
+                  value = t.nextToken();
+      
+                  int n = parseNonNegInt(value, line);
+      
+                  if (n == 0)
+                  {
+                     dashPattern = null;
+                  }
+                  else
+                  {
+                     dashPattern = new float[n];
+      
+                     value = "";
+      
+                     for (int j = 0; j < n; j++)
+                     {
+                        if (!t.hasMoreTokens())
+                        {
+                           throw new InvalidFormatException(
+                              resources.getMessage(
+                           "error.conf.no_more_tokens", line));
+                        }
+   
+                        value = t.nextToken();
+      
+                        dashPattern[j] = (float)parseNonNegDouble(value, line);
+                     }
+      
+                     if (t.hasMoreTokens())
+                     {
+                        throw new InvalidFormatException(
+                           resources.getMessage(
+                           "error.conf.too_many_tokens", line));
+                     }
+                  }
+               }
+               else if (key.equals("linepaint"))
+               {
+                  settings.setLinePaint(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("fillpaint"))
+               {
+                  settings.setFillPaint(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("textpaint"))
+               {
+                  settings.setTextPaint(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("storageunit"))
                {
                   try
                   {
-                     settings.robot = new Robot();
+                     settings.getCanvasGraphics().setStorageUnit(
+                        (byte)parseInt(value, line));
                   }
-                  catch (AWTException awte)
+                  catch (JdrIllegalArgumentException e)
                   {
-                     resources.warning(null, new String[] {
-                        resources.getString("warning.no_robot"),
-                        awte.getMessage()});
-                     settings.robot = null;
+                     throw new InvalidFormatException(
+                         resources.getMessage(
+                          "error.conf.number_badrange", line));
                   }
-                  catch (SecurityException sexc)
+   
+               }
+               else if (key.equals("gridunit"))
+               {
+                  gridUnit = JDRUnit.getUnit((byte)parseInt(value, line));
+   
+                  if (gridUnit == null)
                   {
-                     resources.warning(null, new String[] {
-                        resources.getString("warning.no_robot"),
-                        sexc.getMessage()});
-                     settings.robot = null;
+                     throw new InvalidFormatException(
+                         resources.getMessage(
+                          "error.conf.number_badrange", line));
                   }
+               }
+               else if (key.equals("grid"))
+               {
+                  gridType = parseNonNegInt(4, value, line);
+               }
+               else if (key.equals("majordivisions"))
+               {
+                  majorDivisions = parseMinInt(1, value, line);
+               }
+               else if (key.equals("subdivisions"))
+               {
+                  subDivisions = parseNonNegInt(value, line);
+               }
+               else if (key.equals("spokes"))
+               {
+                  spokes = parseMinInt(1, value, line);
+               }
+               else if (key.equals("grid-path"))
+               {
+                  gridPath = parsePath(value, line);
+               }
+               else if (key.equals("controlsize"))
+               {
+                  settings.setPointSize(parseNonNegLength(value, line));
+               }
+               else if (key.equals("scalecontrols"))
+               {
+                  settings.setScaleControlPoints(parseBoolean(value, line));
+               }
+               else if (key.equals("widest_char"))
+               {
+                  CanvasTextField.widestChar = value;
+               }
+               else if (key.equals("norm_x"))
+               {
+                  CanvasGraphics.normTransformX = parseDouble(value, line);
+               }
+               else if (key.equals("norm_y"))
+               {
+                  CanvasGraphics.normTransformY = parseDouble(value, line);
+               }
+               else if (key.equals("hruler_height"))
+               {
+                  settings.setHRulerHeight(parseMinInt(1, value, line));
+               }
+               else if (key.equals("vruler_width"))
+               {
+                  settings.setVRulerWidth(parseMinInt(1, value, line));
+               }
+               else if (key.equals("robot"))
+               {
+                  if (parseBoolean(value, line))
+                  {
+                     try
+                     {
+                        settings.robot = new Robot();
+                     }
+                     catch (AWTException awte)
+                     {
+                        resources.warning(null, new String[] {
+                           resources.getString("warning.no_robot"),
+                           awte.getMessage()});
+                        settings.robot = null;
+                     }
+                     catch (SecurityException sexc)
+                     {
+                        resources.warning(null, new String[] {
+                           resources.getString("warning.no_robot"),
+                           sexc.getMessage()});
+                        settings.robot = null;
+                     }
+                  }
+                  else
+                  {
+                     settings.robot=null;
+                  }
+      
+                  doneRobot=true;
+               }
+               else if (key.equals("ruler_format"))
+               {
+                  String[] split = value.split("\t");
+   
+                  if (split.length < 2)
+                  {
+                     throw new InvalidFormatException(
+                       resources.getMessage(
+                          "error.invalid_ruler_pattern", value));
+                  }
+   
+                  settings.setRulerFormat(split[0], 
+                     Locale.forLanguageTag(split[1]));
+               }
+               else if (key.equals("ruler_font"))
+               {
+                  settings.setRulerFont(Font.decode(value));
+               }
+               else if (key.equals("use_typeblock_as_bbox"))
+               {
+                  settings.useTypeblockAsBoundingBox 
+                     = parseBoolean(value, line);
+               }
+               else if (key.equals("relative_bitmaps"))
+               {
+                  settings.setRelativeBitmaps(parseBoolean(value, line));
+               }
+               else if (key.equals("bitmap_default_cs"))
+               {
+                  settings.setDefaultBitmapCommand(value);
+               }
+               else if (key.equals("latex_app"))
+               {
+                  settings.setLaTeXApp(value);
+               }
+               else if (key.equals("pdflatex_app"))
+               {
+                  settings.setPdfLaTeXApp(value);
+               }
+               else if (key.equals("dvips_app"))
+               {
+                  settings.setDvipsApp(value);
+               }
+               else if (key.equals("dvisvgm_app"))
+               {
+                  settings.setDvisvgmApp(value);
+               }
+               else if (key.equals("libgs"))
+               {
+                  settings.setLibgs(value);
+               }
+               else if (key.equals("timeout"))
+               {
+                  settings.setMaxProcessTime(parseLong(value, line));
+               }
+               else if (key.equals("unicode"))
+               {
+                  settings.setUnicodeRanges(value);
+               }
+               else if (key.equals("look_and_feel"))
+               {
+                  settings.setLookAndFeel(value);
+               }
+               else if (key.equals("button_style"))
+               {
+                  settings.setButtonStyle(value);
+                  resources.setButtonStyle(settings.getButtonStyle());
+               }
+               else if (key.equals("dialog_button_style"))
+               {
+                  settings.setDialogButtonStyle(parseInt(value, line));
+                  resources.setDialogButtonStyle(settings.getDialogButtonStyle());
+               }
+               else if (key.equals("canvas_split"))
+               {
+                  settings.setCanvasSplit(parseInt(value, line));
+               }
+               else if (key.equals("canvas_first"))
+               {
+                  settings.setCanvasFirst(parseBoolean(value, line));
+               }
+               else if (key.equals("texeditorfont"))
+               {
+                  texEditorFont = value;
+               }
+               else if (key.equals("texeditorfontsize"))
+               {
+                  texEditorFontSize = parseNonNegInt(value, line);
+               }
+               else if (key.equals("syntaxhighlight"))
+               {
+                  settings.setSyntaxHighlighting(parseBoolean(value, line));
+               }
+               else if (key.equals("commenthighlight"))
+               {
+                  settings.setCommentHighlight(parseColor(value, line));
+               }
+               else if (key.equals("cshighlight"))
+               {
+                  settings.setControlSequenceHighlight(parseColor(value, line));
+               }
+               else if (key.equals("texeditorwidth"))
+               {
+                  settings.setTeXEditorWidth(parseInt(value, line));
+               }
+               else if (key.equals("texeditorheight"))
+               {
+                  settings.setTeXEditorHeight(parseInt(value, line));
+               }
+               else if (key.equals("vectorizenotregion"))
+               {
+                  settings.setVectorizeNotRegion(parseColor(value, line));
+               }
+               else if (key.equals("vectorizeline"))
+               {
+                  settings.setVectorizeLine(parseColor(value, line));
+               }
+               else if (key.equals("vectorizeconnector"))
+               {
+                  settings.setVectorizeConnector(parseColor(value, line));
+               }
+               else if (key.equals("vectorizedrag"))
+               {
+                  settings.setVectorizeDrag(parseColor(value, line));
+               }
+               else if (key.equals("vectorizecontrol"))
+               {
+                  settings.setVectorizeControlColor(parseColor(value, line));
+               }
+               else if (key.equals("vectorizecontrolsize"))
+               {
+                  settings.setVectorizeControlSize(parseInt(value, line));
+               }
+               else if (key.equals("status_font"))
+               {
+                  settings.setStatusFont(Font.decode(value));
+               }
+               else if (key.equals("annote_font"))
+               {
+                  annoteFont = Font.decode(value);
+               }
+               else if (key.equals("annotefont"))// deprecated
+               {
+                  annoteFontName = value;
+               }
+               else if (key.equals("annotesize"))// deprecated
+               {
+                  annoteFontSize = parseNonNegInt(value, line);
+               }
+               else if (key.equals("controlselected"))
+               {
+                  JDRPoint.selectColor = new Color(parseInt(value, line));
+               }
+               else if (key.equals("controlunselected"))
+               {
+                  JDRPoint.controlColor = new Color(parseInt(value, line));
+               }
+               else if (key.equals("adjustselected"))
+               {
+                  JDRPatternAdjustPoint.patternAdjustSelectColor 
+                     = new Color(parseInt(value, line));
+               }
+               else if (key.equals("adjustunselected"))
+               {
+                  JDRPatternAdjustPoint.patternAdjustColor 
+                     = new Color(parseInt(value, line));
+               }
+               else if (key.equals("anchorselected"))
+               {
+                  JDRPatternAnchorPoint.patternAnchorSelectColor 
+                     = new Color(parseInt(value, line));
+               }
+               else if (key.equals("anchorunselected"))
+               {
+                  JDRPatternAnchorPoint.patternAnchorColor 
+                     = new Color(parseInt(value, line));
+               }
+               else if (key.equals("symmetryselected"))
+               {
+                  JDRSymmetryLinePoint.symmetryPointColor 
+                     = new Color(parseInt(value, line));
+               }
+               else if (key.equals("symmetryunselected"))
+               {
+                  JDRSymmetryLinePoint.symmetrySelectedColor 
+                     = new Color(parseInt(value, line));
+               }
+               else if (key.equals("shapeparhpadding"))
+               {
+                  settings.setHPaddingShapepar(parseBoolean(value, line));
+               }
+               else if (key.equals("relativefontsizes"))
+               {
+                  settings.setRelativeFontDeclarations(parseBoolean(value, line));
+               }
+               else if (key.equals("pdfinfo"))
+               {
+                  settings.setUsePdfInfoEnabled(parseBoolean(value, line));
+               }
+               else if (key.equals("flowframe_abs_pages"))
+               {
+                  settings.setUseAbsolutePages(parseBoolean(value, line));
+               }
+               else if (key.equals("textualshadingexport"))
+               {
+                  settings.setTextualExportShadingSetting(parseNonNegInt(
+                     TeX.TEXTUAL_EXPORT_SHADING_MAX_INDEX, value, line));
+               }
+               else if (key.equals("textpathoutlineexport"))
+               {
+                  settings.setTextPathExportOutlineSetting(parseNonNegInt(
+                     TeX.TEXTPATH_EXPORT_OUTLINE_MAX_INDEX, value, line));
+               }
+               else if (key.equals("verticaltoolbar"))
+               {
+                  settings.setVerticalToolBarLocation(value);
                }
                else
                {
-                  settings.robot=null;
-               }
-   
-               doneRobot=true;
-            }
-            else if (key.equals("ruler_format"))
-            {
-               String[] split = value.split("\t");
-
-               if (split.length < 2)
-               {
                   throw new InvalidFormatException(
-                    resources.getMessage(
-                       "error.invalid_ruler_pattern", value));
+                     resources.getMessage(
+                        "error.conf.unknown_key", key, line));
+               }
+            }
+            catch (InvalidFormatException e)
+            {
+               if (resources.debugMode)
+               {
+                  e.printStackTrace();
                }
 
-               settings.setRulerFormat(split[0], 
-                  Locale.forLanguageTag(split[1]));
+               if (messages == null)
+               {
+                  messages = new StringBuilder(e.getMessage());
+               }
+               else
+               {
+                  messages.append(String.format("%n%s", e.getMessage()));
+               }
             }
-            else if (key.equals("ruler_font"))
-            {
-               settings.setRulerFont(Font.decode(value));
-            }
-            else if (key.equals("use_typeblock_as_bbox"))
-            {
-               settings.useTypeblockAsBoundingBox 
-                  = parseBoolean(value, line);
-            }
-            else if (key.equals("relative_bitmaps"))
-            {
-               settings.setRelativeBitmaps(parseBoolean(value, line));
-            }
-            else if (key.equals("bitmap_default_cs"))
-            {
-               settings.setDefaultBitmapCommand(value);
-            }
-            else if (key.equals("latex_app"))
-            {
-               settings.setLaTeXApp(value);
-            }
-            else if (key.equals("pdflatex_app"))
-            {
-               settings.setPdfLaTeXApp(value);
-            }
-            else if (key.equals("dvips_app"))
-            {
-               settings.setDvipsApp(value);
-            }
-            else if (key.equals("dvisvgm_app"))
-            {
-               settings.setDvisvgmApp(value);
-            }
-            else if (key.equals("libgs"))
-            {
-               settings.setLibgs(value);
-            }
-            else if (key.equals("timeout"))
-            {
-               settings.setMaxProcessTime(parseLong(value, line));
-            }
-            else if (key.equals("unicode"))
-            {
-               settings.setUnicodeRanges(value);
-            }
-            else if (key.equals("look_and_feel"))
-            {
-               settings.setLookAndFeel(value);
-            }
-            else if (key.equals("button_style"))
-            {
-               settings.setButtonStyle(value);
-               resources.setButtonStyle(settings.getButtonStyle());
-            }
-            else if (key.equals("dialog_button_style"))
-            {
-               settings.setDialogButtonStyle(parseInt(value, line));
-               resources.setDialogButtonStyle(settings.getDialogButtonStyle());
-            }
-            else if (key.equals("canvas_split"))
-            {
-               settings.setCanvasSplit(parseInt(value, line));
-            }
-            else if (key.equals("canvas_first"))
-            {
-               settings.setCanvasFirst(parseBoolean(value, line));
-            }
-            else if (key.equals("texeditorfont"))
-            {
-               texEditorFont = value;
-            }
-            else if (key.equals("texeditorfontsize"))
-            {
-               texEditorFontSize = parseNonNegInt(value, line);
-            }
-            else if (key.equals("syntaxhighlight"))
-            {
-               settings.setSyntaxHighlighting(parseBoolean(value, line));
-            }
-            else if (key.equals("commenthighlight"))
-            {
-               settings.setCommentHighlight(parseInt(value, line));
-            }
-            else if (key.equals("cshighlight"))
-            {
-               settings.setControlSequenceHighlight(parseInt(value, line));
-            }
-            else if (key.equals("texeditorwidth"))
-            {
-               settings.setTeXEditorWidth(parseInt(value, line));
-            }
-            else if (key.equals("texeditorheight"))
-            {
-               settings.setTeXEditorHeight(parseInt(value, line));
-            }
-            else if (key.equals("status_font"))
-            {
-               settings.setStatusFont(Font.decode(value));
-            }
-            else if (key.equals("annote_font"))
-            {
-               annoteFont = Font.decode(value);
-            }
-            else if (key.equals("annotefont"))// deprecated
-            {
-               annoteFontName = value;
-            }
-            else if (key.equals("annotesize"))// deprecated
-            {
-               annoteFontSize = parseNonNegInt(value, line);
-            }
-            else if (key.equals("controlselected"))
-            {
-               JDRPoint.selectColor = new Color(parseInt(value, line));
-            }
-            else if (key.equals("controlunselected"))
-            {
-               JDRPoint.controlColor = new Color(parseInt(value, line));
-            }
-            else if (key.equals("adjustselected"))
-            {
-               JDRPatternAdjustPoint.patternAdjustSelectColor 
-                  = new Color(parseInt(value, line));
-            }
-            else if (key.equals("adjustunselected"))
-            {
-               JDRPatternAdjustPoint.patternAdjustColor 
-                  = new Color(parseInt(value, line));
-            }
-            else if (key.equals("anchorselected"))
-            {
-               JDRPatternAnchorPoint.patternAnchorSelectColor 
-                  = new Color(parseInt(value, line));
-            }
-            else if (key.equals("anchorunselected"))
-            {
-               JDRPatternAnchorPoint.patternAnchorColor 
-                  = new Color(parseInt(value, line));
-            }
-            else if (key.equals("symmetryselected"))
-            {
-               JDRSymmetryLinePoint.symmetryPointColor 
-                  = new Color(parseInt(value, line));
-            }
-            else if (key.equals("symmetryunselected"))
-            {
-               JDRSymmetryLinePoint.symmetrySelectedColor 
-                  = new Color(parseInt(value, line));
-            }
-            else if (key.equals("shapeparhpadding"))
-            {
-               settings.setHPaddingShapepar(parseBoolean(value, line));
-            }
-            else if (key.equals("relativefontsizes"))
-            {
-               settings.setRelativeFontDeclarations(parseBoolean(value, line));
-            }
-            else if (key.equals("pdfinfo"))
-            {
-               settings.setUsePdfInfoEnabled(parseBoolean(value, line));
-            }
-            else if (key.equals("flowframe_abs_pages"))
-            {
-               settings.setUseAbsolutePages(parseBoolean(value, line));
-            }
-            else if (key.equals("textualshadingexport"))
-            {
-               settings.setTextualExportShadingSetting(parseNonNegInt(
-                  TeX.TEXTUAL_EXPORT_SHADING_MAX_INDEX, value, line));
-            }
-            else if (key.equals("textpathoutlineexport"))
-            {
-               settings.setTextPathExportOutlineSetting(parseNonNegInt(
-                  TeX.TEXTPATH_EXPORT_OUTLINE_MAX_INDEX, value, line));
-            }
-            else if (key.equals("verticaltoolbar"))
-            {
-               settings.setVerticalToolBarLocation(value);
-            }
-            else
-            {
-               throw new InvalidFormatException(
-                  resources.getMessage(
-                     "error.conf.unknown_key", key, line));
-            }
+         }
+
+         if (messages != null)
+         {
+            resources.error(messages.toString());
          }
       }
       finally
@@ -1730,12 +1828,24 @@ public class FlowframTkInvoker
       out.println("texeditorfontsize="+settings.getTeXEditorFontSize());
       out.println("syntaxhighlight="
        +(settings.isSyntaxHighlightingOn()?1:0));
-      out.println("commenthighlight="
-       +settings.getCommentHighlight().getRGB());
-      out.println("cshighlight="
-       +settings.getControlSequenceHighlight().getRGB());
+
+      writeColor(out, "commenthighlight", settings.getCommentHighlight());
+      writeColor(out, "cshighlight", settings.getControlSequenceHighlight());
+
       out.println("texeditorwidth="+settings.getTeXEditorWidth());
       out.println("texeditorheight="+settings.getTeXEditorHeight());
+
+      writeColor(out, "vectorizenotregion",
+       settings.getVectorizeNotRegion());
+      writeColor(out, "vectorizeline",
+       settings.getVectorizeLine());
+      writeColor(out, "vectorizeconnector",
+       settings.getVectorizeConnector());
+      writeColor(out, "vectorizedrag",
+       settings.getVectorizeDrag());
+      writeColor(out, "vectorizecontrol",
+       settings.getVectorizeControlColor());
+      out.println("vectorizecontrolsize="+settings.getVectorizeControlSize());
 
       out.println("timeout="+settings.getMaxProcessTime());
 
@@ -1788,6 +1898,11 @@ public class FlowframTkInvoker
          orgSettings.getControlSequenceHighlight());
       newSettings.setTeXEditorWidth(orgSettings.getTeXEditorWidth());
       newSettings.setTeXEditorHeight(orgSettings.getTeXEditorHeight());
+
+      newSettings.setVectorizeNotRegion(orgSettings.getVectorizeNotRegion());
+      newSettings.setVectorizeLine(orgSettings.getVectorizeLine());
+      newSettings.setVectorizeConnector(orgSettings.getVectorizeConnector());
+      newSettings.setVectorizeDrag(orgSettings.getVectorizeDrag());
 
       newSettings.setMaxProcessTime(orgSettings.getMaxProcessTime());
       newSettings.previewBitmaps = orgSettings.previewBitmaps;
@@ -3275,9 +3390,9 @@ public class FlowframTkInvoker
       });
    }
 
-   public static final String APP_VERSION = "0.8.6.20200802";
+   public static final String APP_VERSION = "0.8.6.20200803";
    public static final String APP_NAME = "FlowframTk";
-   public static final String APP_DATE = "2020-08-02";
+   public static final String APP_DATE = "2020-08-03";
 
    private FlowframTkSettings settings;
 

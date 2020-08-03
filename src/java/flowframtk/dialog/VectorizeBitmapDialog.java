@@ -147,11 +147,17 @@ public class VectorizeBitmapDialog extends JFrame
       cardComp.setAlignmentY(Component.CENTER_ALIGNMENT);
       middleComp.add(cardComp, "Center");
 
-      JComponent topInfo = resources.createAppInfoField(
+      JComponent topInfo = resources.createAppInfoArea(
         "vectorize.message.set_foreground");
       topInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-      cardComp.add(topInfo, "info");
+      cardComp.add(topInfo, "foreground_info");
+
+      topInfo = resources.createAppInfoArea(
+        "vectorize.message.region_picker");
+      topInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+      cardComp.add(topInfo, "region_info");
 
       scanStatusBar = new ScanStatusBar(this);
       cardComp.add(scanStatusBar, "status");
@@ -230,6 +236,36 @@ public class VectorizeBitmapDialog extends JFrame
 
       pack();
       setLocationRelativeTo(application);
+   }
+
+   public Color getNotRegionColor()
+   {
+      return application.getSettings().getVectorizeNotRegion();
+   }
+
+   public Color getUnpinnedLineColor()
+   {
+      return application.getSettings().getVectorizeLine();
+   }
+
+   public Color getConnectorColor()
+   {
+      return application.getSettings().getVectorizeConnector();
+   }
+
+   public Color getDragColor()
+   {
+      return application.getSettings().getVectorizeDrag();
+   }
+
+   public int getControlSize()
+   {
+      return application.getSettings().getVectorizeControlSize();
+   }
+
+   public Color getControlColor()
+   {
+      return application.getSettings().getVectorizeControlColor();
    }
 
    public void setCancelEnabled(boolean enable)
@@ -899,7 +935,17 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void hideStatusBar()
    {
-      cardLayout.show(cardComp, "info");
+      showDefaultInfo();
+   }
+
+   public void showDefaultInfo()
+   {
+      cardLayout.show(cardComp, "foreground_info");
+   }
+
+   public void showRegionInfo()
+   {
+      cardLayout.show(cardComp, "region_info");
    }
 
    public void startTask(String info, SwingWorker task)
@@ -1038,8 +1084,6 @@ public class VectorizeBitmapDialog extends JFrame
    {
       scanRegion = null;
 
-      BasicStroke stroke = new BasicStroke(0.25f*(getSampleWidth()+getSampleHeight()));
-
       for (ShapeComponentVector shapeVec : shapeList)
       {
          Shape shape = shapeVec.getPath();
@@ -1052,8 +1096,6 @@ public class VectorizeBitmapDialog extends JFrame
          {
             scanRegion.add(new Area(shape));
          }
-
-         scanRegion.add(new Area(stroke.createStrokedShape(shape)));
       }
    }
 
@@ -1124,8 +1166,6 @@ public class VectorizeBitmapDialog extends JFrame
          error(getResources().getString("vectorize.no_shapes"));
          return;
       }
-
-      updateScanRegion(shapeList);
 
       controlPanel.deselectOptimizeLines();
 
@@ -1352,9 +1392,9 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.isRegionPickerOn();
    }
 
-   public void regionPickerChoice(Shape region, boolean add)
+   public void regionPickerChoice(Shape region, int action)
    {
-      controlPanel.regionPickerChoice(region, add);
+      controlPanel.regionPickerChoice(region, action);
    }
 
    public Area getRegion()
@@ -1377,26 +1417,34 @@ public class VectorizeBitmapDialog extends JFrame
 
    public Area subtractLastScannedRegion()
    {
-      if (mainPanel != null)
+      if (mainPanel == null) return null;
+
+      int border = controlPanel.getSubtractLastScanBorder();
+      Area region = scanRegion;
+
+      if (border > 0)
       {
-         mainPanel.subtractRegion(scanRegion);
+         BasicStroke stroke = new BasicStroke(2.0f*border);
 
-         Area notRegion = mainPanel.getNotRegion();
-
-         if (notRegion == null)
-         {
-            return null;
-         }
-
-         Area region = new Area(new Rectangle2D.Double(0, 0, 
-                  getImageWidth(), getImageHeight()));
-
-         region.subtract(notRegion);
-
-         return region;
+         region = new Area(stroke.createStrokedShape(scanRegion));
+         region.add(scanRegion);
       }
 
-      return null;
+      mainPanel.subtractRegion(region);
+
+      Area notRegion = mainPanel.getNotRegion();
+
+      if (notRegion == null)
+      {
+         return null;
+      }
+
+      region = new Area(new Rectangle2D.Double(0, 0, 
+               getImageWidth(), getImageHeight()));
+
+      region.subtract(notRegion);
+
+      return region;
    }
 
    public Rectangle2D getRegionBounds()
@@ -1411,10 +1459,12 @@ public class VectorizeBitmapDialog extends JFrame
          if (on)
          {
             mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            showRegionInfo();
          }
          else
          {
             mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            showDefaultInfo();
          }
       }
    }
@@ -2031,6 +2081,30 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
+      sampleWidthLabel = resources.createAppLabel("vectorize.sample_width");
+      subPanel.add(sampleWidthLabel);
+
+      sampleWidthSpinnerModel = new SpinnerNumberModel(10, 2, 50, 1);
+
+      sampleWidthSpinner = controlPanel.createSpinner(
+        sampleWidthLabel, sampleWidthSpinnerModel);
+      subPanel.add(sampleWidthSpinner);
+
+      subPanel.add(Box.createHorizontalStrut(10));
+
+      sampleHeightLabel = resources.createAppLabel("vectorize.sample_height");
+      subPanel.add(sampleHeightLabel);
+
+      sampleHeightSpinnerModel = new SpinnerNumberModel(10, 2, 50, 1);
+
+      sampleHeightSpinner = controlPanel.createSpinner(
+        sampleHeightLabel, sampleHeightSpinnerModel);
+      subPanel.add(sampleHeightSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
       ButtonGroup bg = new ButtonGroup();
 
       scanAllButton = resources.createAppRadioButton("vectorize.scan_all", 
@@ -2053,29 +2127,15 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
         "vectorize", "subtract_last_scan", this);
       subPanel.add(subtractLastScanButton);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subtractLastScanBorderCheckBox = resources.createAppCheckBox(
+        "vectorize.subtract_last_scan_border", true, this);
+      subPanel.add(subtractLastScanBorderCheckBox);
 
-      sampleWidthLabel = resources.createAppLabel("vectorize.sample_width");
-      subPanel.add(sampleWidthLabel);
+      subtractLastScanBorderField = new NonNegativeIntField(
+         (getSampleWidth()+getSampleHeight())/4);
+      subPanel.add(subtractLastScanBorderField);
 
-      sampleWidthSpinnerModel = new SpinnerNumberModel(10, 2, 50, 1);
-
-      sampleWidthSpinner = controlPanel.createSpinner(
-        sampleWidthLabel, sampleWidthSpinnerModel);
-      subPanel.add(sampleWidthSpinner);
-
-      subPanel.add(Box.createHorizontalStrut(10));
-
-      sampleHeightLabel = resources.createAppLabel("vectorize.sample_height");
-      subPanel.add(sampleHeightLabel);
-
-      sampleHeightSpinnerModel = new SpinnerNumberModel(10, 2, 50, 1);
-
-      sampleHeightSpinner = controlPanel.createSpinner(
-        sampleHeightLabel, sampleHeightSpinnerModel);
-      subPanel.add(sampleHeightSpinner);
+      subPanel.add(Box.createHorizontalGlue());
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -2103,6 +2163,16 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
          regionPicker.setEnabled(enable && scanRegionButton.isSelected());
 
          subtractLastScanButton.setEnabled(enable);
+         subtractLastScanBorderCheckBox.setEnabled(enable);
+
+         if (enable && subtractLastScanBorderCheckBox.isSelected())
+         {
+            subtractLastScanBorderField.setEnabled(true);
+         }
+         else
+         {
+            subtractLastScanBorderField.setEnabled(false);
+         }
 
          controlPanel.updateTaskButton();
       }
@@ -2128,6 +2198,18 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
             regionPicker.setEnabled(true);
          }
       }
+      else if (src == subtractLastScanBorderCheckBox)
+      {
+         if (subtractLastScanBorderCheckBox.isEnabled()
+              && subtractLastScanBorderCheckBox.isSelected())
+         {
+            subtractLastScanBorderField.setEnabled(true);
+         }
+         else
+         {
+            subtractLastScanBorderField.setEnabled(false);
+         }
+      }
    }
 
    public void colourPickerChoice(Color colour)
@@ -2146,7 +2228,7 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       return region;
    }
 
-   public void regionPickerChoice(Shape rect, boolean add)
+   public void regionPickerChoice(Shape rect, int action)
    {
       Area area;
 
@@ -2159,16 +2241,36 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
          area = new Area(rect);
       }
 
-      if (!add || region == null)
+      switch (action)
       {
-         region = area;
-      }
-      else
-      {
-         region.add(area);
-      }
+         case REGION_PICKER_SET:
+            region = area;
+         break;
+         case REGION_PICKER_ADD:
+            if (region == null)
+            {
+               region = area;
+            }
+            else
+            {
+               region.add(area);
+            }
+         break;
+         case REGION_PICKER_SUBTRACT:
+            if (region == null)
+            {
+               VectorizeBitmapDialog dialog = controlPanel.getDialog();
 
-      regionPicker.setSelected(false);
+               region = new Area(new Rectangle2D.Double(0, 0,
+                dialog.getImageWidth(), dialog.getImageHeight()));
+            }
+
+            region.subtract(area);
+         break;
+         default:
+            throw new IllegalArgumentException("Invalid region picker action "
+             + action);
+      }
    }
 
    public boolean isRegionPickerOn()
@@ -2186,6 +2288,11 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       if (override || doScanImageCheckBox.isEnabled())
       {
          doScanImageCheckBox.setSelected(selected);
+      }
+
+      if (regionPicker.isSelected())
+      {
+         regionPicker.setSelected(false);
       }
    }
 
@@ -2256,6 +2363,12 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
    public int getSampleHeight()
    {
       return sampleHeightSpinnerModel.getNumber().intValue();
+   }
+
+   public int getSubtractLastScanBorder()
+   {
+      return subtractLastScanBorderCheckBox.isSelected() ?
+         subtractLastScanBorderField.getInt() : 0;
    }
 
    public Color getImageForeground()
@@ -2335,7 +2448,14 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
 
    private JButton subtractLastScanButton;
 
+   private JCheckBox subtractLastScanBorderCheckBox;
+
+   private NonNegativeIntField subtractLastScanBorderField;
+
    private ControlPanel controlPanel;
+
+   public static final int REGION_PICKER_SET=0, REGION_PICKER_ADD=1,
+    REGION_PICKER_SUBTRACT=2;
 }
 
 class OptimizeLinesPanel extends JPanel implements ChangeListener
@@ -3351,9 +3471,9 @@ class ControlPanel extends JPanel implements ActionListener
       return scanImagePanel.isRegionPickerOn();
    }
 
-   public void regionPickerChoice(Shape region, boolean add)
+   public void regionPickerChoice(Shape region, int action)
    {
-      scanImagePanel.regionPickerChoice(region, add);
+      scanImagePanel.regionPickerChoice(region, action);
    }
 
    public void imagePanelClearRegion()
@@ -3509,6 +3629,11 @@ class ControlPanel extends JPanel implements ActionListener
    public int getSampleHeight()
    {
       return scanImagePanel.getSampleHeight();
+   }
+
+   public int getSubtractLastScanBorder()
+   {
+      return scanImagePanel.getSubtractLastScanBorder();
    }
 
    public double getGradientEpsilon()
@@ -10364,6 +10489,11 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
       return dialog.getImageForeground();
    }
 
+   public Color getUnpinnedLineColor()
+   {
+      return dialog.getUnpinnedLineColor();
+   }
+
    protected void paintComponent(Graphics g)
    {
       super.paintComponent(g);
@@ -10389,7 +10519,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
 
       if (notRegion != null)
       {
-         g2.setColor(NOT_REGION_COLOUR);
+         g2.setColor(dialog.getNotRegionColor());
 
          if (mag == 1.0)
          {
@@ -10403,7 +10533,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
 
       if (draggingRegion != null)
       {
-         g2.setColor(DRAG_COLOUR);
+         g2.setColor(dialog.getDragColor());
          g2.setStroke(DRAG_STROKE);
          g2.draw(draggingRegion);
       }
@@ -10418,7 +10548,9 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
    {
       Stroke stroke = g2.getStroke();
 
-      g2.setColor(LINE_COLOUR);
+      Color connectorCol = dialog.getConnectorColor();
+
+      g2.setColor(getUnpinnedLineColor());
       g2.draw(af.createTransformedShape(shape));
 
       PathIterator pi = shape.getPathIterator(null);
@@ -10431,8 +10563,9 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
          orgCoords[i] = 0.0;
       }
 
-      double controlSize = CONTROL_SIZE;
+      double controlSize = dialog.getControlSize();
       double halfControlSize = 0.5*controlSize;
+      Color controlColor = dialog.getControlColor();
 
       while (!pi.isDone())
       {
@@ -10445,7 +10578,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
             case PathIterator.SEG_MOVETO:
               if (prev != null)
               {
-                 g2.setColor(CONNECT_COLOUR);
+                 g2.setColor(connectorCol);
                  g2.setStroke(CONNECT_STROKE);
 
                  g2.drawLine((int)Math.round(prev[0]), (int)Math.round(prev[1]),
@@ -10454,7 +10587,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
                  g2.setStroke(stroke);
               }
             case PathIterator.SEG_LINETO:
-              g2.setColor(CONTROL_COLOUR);
+              g2.setColor(controlColor);
 
               g2.drawRect((int)Math.round(coords[0]-halfControlSize),
                           (int)Math.round(coords[1]-halfControlSize),
@@ -10468,7 +10601,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
               prev[1] = coords[1];
             break;
             case PathIterator.SEG_QUADTO:
-              g2.setColor(CONNECT_COLOUR);
+              g2.setColor(connectorCol);
               g2.setStroke(CONNECT_STROKE);
 
               g2.drawLine((int)Math.round(prev[0]), (int)Math.round(prev[1]),
@@ -10478,7 +10611,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
                   (int)Math.round(coords[2]), (int)Math.round(coords[3]));
 
               g2.setStroke(stroke);
-              g2.setColor(CONTROL_COLOUR);
+              g2.setColor(controlColor);
 
               g2.drawRect((int)Math.round(coords[0]-halfControlSize),
                           (int)Math.round(coords[1]-halfControlSize),
@@ -10492,7 +10625,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
               prev[1] = coords[3];
             break;
             case PathIterator.SEG_CUBICTO:
-              g2.setColor(CONNECT_COLOUR);
+              g2.setColor(connectorCol);
               g2.setStroke(CONNECT_STROKE);
 
               g2.drawLine((int)Math.round(prev[0]), (int)Math.round(prev[1]),
@@ -10505,7 +10638,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
                   (int)Math.round(coords[4]), (int)Math.round(coords[5]));
 
               g2.setStroke(stroke);
-              g2.setColor(CONTROL_COLOUR);
+              g2.setColor(controlColor);
 
               g2.drawRect((int)Math.round(coords[0]-halfControlSize),
                           (int)Math.round(coords[1]-halfControlSize),
@@ -10682,7 +10815,20 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
             Rectangle2D.Double rect = new Rectangle2D.Double(scaledX, scaledY, 
               scaledWidth, scaledHeight);
 
-            dialog.regionPickerChoice(rect, evt.isShiftDown());
+            int action = ScanImagePanel.REGION_PICKER_SET;
+            int modifier = (evt.getModifiersEx() & 
+                  (MouseEvent.SHIFT_DOWN_MASK | MouseEvent.CTRL_DOWN_MASK));
+
+            if (modifier == MouseEvent.SHIFT_DOWN_MASK)
+            {
+               action = ScanImagePanel.REGION_PICKER_ADD;
+            }
+            else if (modifier == MouseEvent.CTRL_DOWN_MASK)
+            {
+               action = ScanImagePanel.REGION_PICKER_SUBTRACT;
+            }
+
+            dialog.regionPickerChoice(rect, action);
 
             Area region = dialog.getRegion();
 
@@ -10829,12 +10975,6 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
    private Rectangle draggingRegion = null;
    private Area notRegion=null;
    private Rectangle2D regionBounds;
-
-   private static int CONTROL_SIZE=4;
-   public static Color LINE_COLOUR=Color.RED, CONTROL_COLOUR=Color.ORANGE,
-     CONNECT_COLOUR=Color.CYAN, DRAG_COLOUR=Color.MAGENTA;
-
-   public static Color NOT_REGION_COLOUR=new Color(127, 127, 127, 127);
 
    private static Stroke CONNECT_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
      BasicStroke.JOIN_BEVEL, 10.0f, new float[] {4.0f, 2.0f}, 0.0f);
@@ -11012,6 +11152,7 @@ class ResultPanel extends JPanel
 
       g2.setRenderingHints(RENDER_HINTS);
 
+      Color lineCol = imagePanel.getUnpinnedLineColor();
       double mag = imagePanel.getResultMagnification();
 
       g2.scale(mag, mag);
@@ -11023,7 +11164,7 @@ class ResultPanel extends JPanel
 
       if (currentShapeList != null && !currentShapeList.isEmpty())
       {
-         g2.setColor(imagePanel.LINE_COLOUR);
+         g2.setColor(lineCol);
          
          for (ShapeComponentVector shapeVec : currentShapeList)
          {
@@ -11035,7 +11176,7 @@ class ResultPanel extends JPanel
                {
                   g2.setColor(CURRENT_FILL);
                   g2.fill(shape);
-                  g2.setColor(imagePanel.LINE_COLOUR);
+                  g2.setColor(lineCol);
                }
 
                g2.draw(shape);

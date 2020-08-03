@@ -998,6 +998,7 @@
 <entry key="error.with_found">{0}; found ''{1}''</entry>
 <entry key="error.conf.bad_paint_format">Bad paint format</entry>
 <entry key="error.conf.boolean_value">A value of 0 or 1 is expected on line {0}</entry>
+<entry key="error.conf.color">Colour specifier (&lt;rgb&gt; or &lt;rgb,alpha&gt;) expected on line {0}</entry>
 <entry key="error.conf.integer">Integer value expected on line {0}</entry>
 <entry key="error.conf.bounded_integer">Integer value must lie between 0 and {0} on line {1}</entry>
 <entry key="error.conf.no_more_tokens">Not enough tokens on line {0}</entry>
@@ -2500,6 +2501,22 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="lookandfeel.dialog_button_small_bordered_icons_and_text_leading">Small Bordered Icons and Leading Text</entry>
 <entry key="lookandfeel.dialog_button_small_bordered_icons_and_text_trailing">Small Bordered Icons and Trailing Text</entry>
 
+<!--  Vectorize Bitmap UI -->
+<entry key="vectorizeui.title">Vectorize Bitmap</entry>
+<entry key="vectorizeui.mnemonic">V</entry>
+<entry key="vectorizeui.tooltip">Vectorize bitmap dialog UI settings</entry>
+<entry key="vectorizeui.notregion">Excluded region colour</entry>
+<entry key="vectorizeui.notregion.mnemonic">E</entry>
+<entry key="vectorizeui.current_path">Unpinned path colour</entry>
+<entry key="vectorizeui.current_path.mnemonic">U</entry>
+<entry key="vectorizeui.connector">Sub-path connector colour</entry>
+<entry key="vectorizeui.connector.mnemonic">B</entry>
+<entry key="vectorizeui.drag">Drag colour</entry>
+<entry key="vectorizeui.drag.mnemonic">D</entry>
+<entry key="vectorizeui.control">Control colour</entry>
+<entry key="vectorizeui.control.mnemonic">T</entry>
+<entry key="vectorizeui.control_size">Size</entry>
+<entry key="vectorizeui.control_size.mnemonic">Z</entry>
 
 <!--  Application selector -->
 
@@ -2747,6 +2764,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.scan_region.mnemonic">R</entry>
 <entry key="vectorize.select_region">Select region</entry>
 <entry key="vectorize.subtract_last_scan">Subtract last scan</entry>
+<entry key="vectorize.subtract_last_scan_border">padding</entry>
 <entry key="vectorize.sample_width">Sample width:</entry>
 <entry key="vectorize.sample_height">Sample height:</entry>
 
@@ -2820,6 +2838,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.pin">Pin</entry>
 
 <entry key="vectorize.message.set_foreground">Select foreground colour before scanning.</entry>
+<entry key="vectorize.message.region_picker">Click and drag mouse over bitmap to select area. Use SHIFT to add and CTRL to remove area.</entry>
 <entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
 <entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
 <entry key="vectorize.message.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>

@@ -185,6 +185,14 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("lookandfeel.mnemonic"));
 
+      vectorizeBitmapUIPanel = new VectorizeBitmapUIPanel(application_);
+
+      tabbedPane.addTab(getResources().getString("vectorizeui.title"),
+         null, new JScrollPane(vectorizeBitmapUIPanel),
+         getResources().getString("vectorizeui.tooltip"));
+      tabbedPane.setMnemonicAt(idx++,
+         getResources().getCodePoint("vectorizeui.mnemonic"));
+
       // OK/Cancel Button panel
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
@@ -224,6 +232,7 @@ public class ConfigUISettingsDialog extends JDialog
       texEditorUIPanel.initialise(application_);
       annoteFontPanel.initialise(application_.getSettings());
       lookAndFeelPanel.initialise();
+      vectorizeBitmapUIPanel.initialise();
       splashScreenSettingsPanel.initialise();
       editPathPanel.initialise();
 
@@ -259,6 +268,7 @@ public class ConfigUISettingsDialog extends JDialog
       texEditorUIPanel.okay(application_);
       annoteFontPanel.okay(application_.getSettings());
       lookAndFeelPanel.okay();
+      vectorizeBitmapUIPanel.okay();
       splashScreenSettingsPanel.okay();
       editPathPanel.okay();
 
@@ -294,6 +304,7 @@ public class ConfigUISettingsDialog extends JDialog
    private TeXEditorUIPanel texEditorUIPanel;
    private AnnoteFontPanel annoteFontPanel;
    private LookAndFeelPanel lookAndFeelPanel;
+   private VectorizeBitmapUIPanel vectorizeBitmapUIPanel;
    private SplashScreenSettingsPanel splashScreenSettingsPanel;
    private EditPathPanel editPathPanel;
 
@@ -3247,4 +3258,339 @@ class LookAndFeelPanel extends JPanel
    private JComponent dialogButtonPanel;
 
    private FlowframTk application;
+}
+
+class VectorizeBitmapUIPanel extends JPanel
+  implements ActionListener,ChangeListener
+{
+   public VectorizeBitmapUIPanel(FlowframTk application)
+   {
+      super(null);
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+      this.application = application;
+      JDRResources resources = application.getResources();
+
+      JComponent comp = Box.createHorizontalBox();
+      add(comp);
+
+      JLabel notRegionLabel = resources.createAppLabel("vectorizeui.notregion");
+      comp.add(notRegionLabel);
+
+      Dimension dim = notRegionLabel.getPreferredSize();
+      int maxWidth = dim.width;
+      int maxHeight = dim.height;
+
+      notRegionColorPanel = createSwatch();
+      comp.add(notRegionColorPanel);
+
+      selectNotRegionButton = resources.createDialogButton("label.choose",
+        "choose", this, null);
+      selectNotRegionButton.setActionCommand("notregion");
+      notRegionLabel.setLabelFor(selectNotRegionButton);
+      comp.add(selectNotRegionButton);
+      comp.add(Box.createHorizontalGlue());
+
+      comp = Box.createHorizontalBox();
+      add(comp);
+
+      JLabel pathLabel = resources.createAppLabel("vectorizeui.current_path");
+      comp.add(pathLabel);
+
+      dim = pathLabel.getPreferredSize();
+
+      if (dim.width > maxWidth)
+      {
+         maxWidth = dim.width;
+      }
+
+      if (dim.height > maxHeight)
+      {
+         maxHeight = dim.height;
+      }
+
+      pathColorPanel = createSwatch();
+      comp.add(pathColorPanel);
+
+      selectPathButton = resources.createDialogButton("label.choose",
+        "choose", this, null);
+      selectPathButton.setActionCommand("path");
+      pathLabel.setLabelFor(selectPathButton);
+      comp.add(selectPathButton);
+      comp.add(Box.createHorizontalGlue());
+
+      comp = Box.createHorizontalBox();
+      add(comp);
+
+      JLabel connectorLabel = resources.createAppLabel("vectorizeui.connector");
+      comp.add(connectorLabel);
+
+      dim = connectorLabel.getPreferredSize();
+
+      if (dim.width > maxWidth)
+      {
+         maxWidth = dim.width;
+      }
+
+      if (dim.height > maxHeight)
+      {
+         maxHeight = dim.height;
+      }
+
+      connectorColorPanel = createSwatch();
+      comp.add(connectorColorPanel);
+
+      selectConnectorButton = resources.createDialogButton("label.choose",
+        "choose", this, null);
+      selectConnectorButton.setActionCommand("connector");
+      connectorLabel.setLabelFor(selectConnectorButton);
+      comp.add(selectConnectorButton);
+      comp.add(Box.createHorizontalGlue());
+
+      comp = Box.createHorizontalBox();
+      add(comp);
+
+      JLabel dragLabel = resources.createAppLabel("vectorizeui.drag");
+      comp.add(dragLabel);
+
+      dim = dragLabel.getPreferredSize();
+
+      if (dim.width > maxWidth)
+      {
+         maxWidth = dim.width;
+      }
+
+      if (dim.height > maxHeight)
+      {
+         maxHeight = dim.height;
+      }
+
+      dragColorPanel = createSwatch();
+      comp.add(dragColorPanel);
+
+      selectDragButton = resources.createDialogButton("label.choose",
+        "choose", this, null);
+      selectDragButton.setActionCommand("drag");
+      dragLabel.setLabelFor(selectDragButton);
+
+      comp.add(selectDragButton);
+      comp.add(Box.createHorizontalGlue());
+
+      comp = Box.createHorizontalBox();
+      add(comp);
+
+      JLabel controlLabel = resources.createAppLabel("vectorizeui.control");
+      comp.add(controlLabel);
+
+      dim = controlLabel.getPreferredSize();
+
+      if (dim.width > maxWidth)
+      {
+         maxWidth = dim.width;
+      }
+
+      controlPointPanel = new JPanel()
+      {
+         public void paintComponent(Graphics g)
+         {
+            super.paintComponent(g);
+
+            Graphics2D g2 = (Graphics2D)g;
+
+            int controlSize = getControlSize();
+
+            g2.setColor(getForeground());
+            Dimension dim = getSize();
+
+            g2.drawRect((dim.width-controlSize)/2,
+                        (dim.height-controlSize)/2,
+                        controlSize, controlSize);
+         }
+      };
+
+      controlPointPanel.setBackground(Color.WHITE);
+      controlPointPanel.setOpaque(true);
+
+      dim = dragColorPanel.getPreferredSize();
+      dim.height = dim.width;
+
+      controlPointPanel.setPreferredSize(dim);
+      controlPointPanel.setMaximumSize(dim);
+
+      comp.add(controlPointPanel);
+
+      controlButton = resources.createDialogButton("label.choose",
+        "choose", this, null);
+      controlButton.setActionCommand("control");
+      controlLabel.setLabelFor(controlButton);
+
+      comp.add(controlButton);
+
+      JLabel sizeLabel = resources.createAppLabel("vectorizeui.control_size");
+      comp.add(sizeLabel);
+
+      controlPointSizeModel = new SpinnerNumberModel(4, 0, 100, 1);
+      controlSizeSpinner = new JSpinner(controlPointSizeModel);
+      controlSizeSpinner.addChangeListener(this);
+      comp.add(controlSizeSpinner);
+      sizeLabel.setLabelFor(controlSizeSpinner);
+
+      dim = controlSizeSpinner.getPreferredSize();
+      controlSizeSpinner.setMaximumSize(dim);
+
+      comp.add(Box.createHorizontalGlue());
+
+      dim = new Dimension(maxWidth, maxHeight);
+      notRegionLabel.setPreferredSize(dim);
+      pathLabel.setPreferredSize(dim);
+      connectorLabel.setPreferredSize(dim);
+      dragLabel.setPreferredSize(dim);
+      controlLabel.setPreferredSize(dim);
+
+      add(Box.createVerticalGlue());
+   }
+
+   private JComponent createSwatch()
+   {
+      JPanel panel = new JPanel();
+      Dimension dim = new Dimension(60, 20);
+      panel.setPreferredSize(dim);
+      panel.setMaximumSize(dim);
+      panel.setOpaque(true);
+
+      return panel;
+   }
+
+   public int getControlSize()
+   {
+      return controlPointSizeModel == null ? 4 : controlPointSizeModel.getNumber().intValue();
+   }
+
+   public void initialise()
+   {
+      FlowframTkSettings settings = application.getSettings();
+
+      notRegionColorPanel.setBackground(settings.getVectorizeNotRegion());
+      pathColorPanel.setBackground(settings.getVectorizeLine());
+      connectorColorPanel.setBackground(settings.getVectorizeConnector());
+      dragColorPanel.setBackground(settings.getVectorizeDrag());
+      controlPointPanel.setForeground(settings.getVectorizeControlColor());
+      controlPointSizeModel.setValue(
+         Integer.valueOf(settings.getVectorizeControlSize()));
+
+      modified = false;
+   }
+
+   public void okay()
+   {
+      if (modified)
+      {
+         FlowframTkSettings settings = application.getSettings();
+
+         settings.setVectorizeNotRegion(notRegionColorPanel.getBackground());
+         settings.setVectorizeLine(pathColorPanel.getBackground());
+         settings.setVectorizeConnector(connectorColorPanel.getBackground());
+         settings.setVectorizeDrag(dragColorPanel.getBackground());
+
+         settings.setVectorizeControlColor(controlPointPanel.getForeground());
+         settings.setVectorizeControlSize(controlPointSizeModel.getNumber());
+
+         application.repaintVectorizeBitmapDialog();
+      }
+   }
+
+   public void stateChanged(ChangeEvent e)
+   {
+      if (e.getSource() == controlSizeSpinner)
+      {
+         controlPointPanel.repaint();
+         modified = true;
+      }
+   }
+
+   public void actionPerformed(ActionEvent evt)
+   {
+      String action = evt.getActionCommand();
+
+      if (action == null) return;
+
+      JDRResources resources = application.getResources();
+
+      if (action.equals("notregion"))
+      {
+         Color color = colorChooser.showDialog(this, 
+            resources.getString("vectorizeui.notregion"),
+            notRegionColorPanel.getBackground());
+
+         if (color != null)
+         {
+            notRegionColorPanel.setBackground(color);
+            modified = true;
+         }
+      }
+      else if (action.equals("path"))
+      {
+         Color color = colorChooser.showDialog(this, 
+            resources.getString("vectorizeui.current_path"),
+            pathColorPanel.getBackground());
+
+         if (color != null)
+         {
+            pathColorPanel.setBackground(color);
+            modified = true;
+         }
+      }
+      else if (action.equals("connector"))
+      {
+         Color color = colorChooser.showDialog(this, 
+            resources.getString("vectorizeui.connector"),
+            connectorColorPanel.getBackground());
+
+         if (color != null)
+         {
+            connectorColorPanel.setBackground(color);
+            modified = true;
+         }
+      }
+      else if (action.equals("drag"))
+      {
+         Color color = colorChooser.showDialog(this, 
+            resources.getString("vectorizeui.drag"),
+            dragColorPanel.getBackground());
+
+         if (color != null)
+         {
+            dragColorPanel.setBackground(color);
+            modified = true;
+         }
+      }
+      else if (action.equals("control"))
+      {
+         Color color = colorChooser.showDialog(this, 
+            resources.getString("vectorizeui.control"),
+            controlPointPanel.getForeground());
+
+         if (color != null)
+         {
+            controlPointPanel.setForeground(color);
+            modified = true;
+         }
+      }
+   }
+
+   private FlowframTk application;
+
+   private JColorChooser colorChooser;
+
+   private JComponent notRegionColorPanel, pathColorPanel,
+    connectorColorPanel, dragColorPanel, controlPointPanel;
+
+   private JButton selectNotRegionButton, selectPathButton,
+     selectConnectorButton, selectDragButton, controlButton;
+
+   private SpinnerNumberModel controlPointSizeModel;
+
+   private JSpinner controlSizeSpinner;
+
+   private boolean modified=false;
 }
