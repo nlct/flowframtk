@@ -179,11 +179,8 @@ public class JDRGuiMessage extends JFrame
       }
       else if (action.equals("confirmabort"))
       {
-         if (JOptionPane.showConfirmDialog(this,
-             resources.getString("process.confirm.abort"),
-             resources.getString("process.confirm"),
-           JOptionPane.YES_NO_OPTION,
-           JOptionPane.QUESTION_MESSAGE)
+         if (getResources().confirm(this,
+             resources.getString("process.confirm.abort"))
          == JOptionPane.YES_OPTION)
          {
             abortButton.setActionCommand("abort");

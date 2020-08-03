@@ -4859,11 +4859,9 @@ public class JDRCanvas extends JPanel
 
          if (f != null && group.containsFlowFrameData())
          {
-            int response = JOptionPane.showConfirmDialog(frame_,
+            int response = getResources().confirm(frame_,
                getResources().getString("flowframe.confirm.group"),
-               getResources().getString("flowframe.confirm.group.title"),
-               JOptionPane.YES_NO_OPTION,
-               JOptionPane.QUESTION_MESSAGE);
+               getResources().getString("flowframe.confirm.group.title"));
 
             if (response == JOptionPane.YES_OPTION)
             {
@@ -10442,11 +10440,9 @@ public class JDRCanvas extends JPanel
          {
             if (object.getFlowFrame() != null && response==JOptionPane.NO_OPTION)
             {
-               response = JOptionPane.showConfirmDialog(frame_,
+               response = getResources().confirm(frame_,
                   getResources().getString("flowframe.confirm.ungroup"),
-                  getResources().getString("flowframe.confirm.ungroup.title"),
-                  JOptionPane.YES_NO_OPTION,
-                  JOptionPane.QUESTION_MESSAGE);
+                  getResources().getString("flowframe.confirm.ungroup.title"));
 
                if (response != JOptionPane.YES_OPTION) return;
             }
@@ -10850,11 +10846,11 @@ public class JDRCanvas extends JPanel
 
       if (jdrversion < JDRAJR.CURRENT_VERSION)
       {
-         if (JOptionPane.showConfirmDialog(frame_,
+         if (getResources().confirm(frame_,
                 getResources().getMessage("warning.save.jdr",
                    jdrversion),
-                getResources().getString("warning.title"),
-                JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+                getResources().getString("warning.title"))
+             != JOptionPane.YES_OPTION)
          {
             return;
          }
@@ -10874,11 +10870,11 @@ public class JDRCanvas extends JPanel
 
       if (ajrversion < JDRAJR.CURRENT_VERSION)
       {
-         if (JOptionPane.showConfirmDialog(frame_,
+         if (getResources().confirm(frame_,
              getResources().getMessage("warning.save.ajr",
                 ajrversion),
-             getResources().getString("warning.title"),
-             JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+             getResources().getString("warning.title"))
+             != JOptionPane.YES_OPTION)
          {
             return;
          }

@@ -101,11 +101,9 @@ public class TeXEditorDialog extends JDialog
    {
       if (texEditorPanel.isModified())
       {
-         if (JOptionPane.showConfirmDialog(this, 
+         if (getResources().confirm(this, 
             getResources().getString("texeditor.discard_edit_query"),
-            getResources().getString("texeditor.confirm_discard"),
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE)
+            getResources().getString("texeditor.confirm_discard"))
             != JOptionPane.YES_OPTION)
          {
             return;
