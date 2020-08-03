@@ -589,6 +589,56 @@ public class JDRResources
       warning(null, message);
    }
 
+   public int confirm(Component parent, String message)
+   {
+      return confirm(parent, message, getString("process.confirm"), JOptionPane.YES_NO_OPTION);
+   }
+
+   public int confirm(Component parent, String message, String title)
+   {
+      return confirm(parent, message, title, JOptionPane.YES_NO_OPTION);
+   }
+
+   public int confirm(Component parent, String message, int options)
+   {
+      return confirm(parent, message, getString("process.confirm"), options);
+   }
+
+   public int confirm(Component parent, String message, int options, int type)
+   {
+      return confirm(parent, message, getString("process.confirm"), options);
+   }
+
+   public int confirm(Component parent, String message, String title, int options)
+   {
+      return confirm(parent, message, title, options, JOptionPane.QUESTION_MESSAGE);
+   }
+
+   public int confirm(Component parent, String[] message, String title, int options, int type)
+   {
+      return confirm(parent, String.join("\n", message), title, options, type);
+   }
+
+   public int confirm(Component parent, String message, String title, int options, int type)
+   {
+      if (message == null)
+      {
+         try
+         {
+            throw new NullPointerException();
+         }
+         catch (NullPointerException npe)
+         {
+            System.err.println(npe);
+         }
+      }
+
+      messageArea.setText(message);
+
+      return JOptionPane.showConfirmDialog(parent, messageSP, title,
+        options, type);
+   }
+
    /**
     * Gets an integer associated with the given key in the
     * resources dictionary.
