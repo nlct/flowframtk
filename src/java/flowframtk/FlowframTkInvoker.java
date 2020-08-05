@@ -3390,9 +3390,9 @@ public class FlowframTkInvoker
       });
    }
 
-   public static final String APP_VERSION = "0.8.6.20200803";
+   public static final String APP_VERSION = "0.8.6.20200805";
    public static final String APP_NAME = "FlowframTk";
-   public static final String APP_DATE = "2020-08-03";
+   public static final String APP_DATE = "2020-08-05";
 
    private FlowframTkSettings settings;
 

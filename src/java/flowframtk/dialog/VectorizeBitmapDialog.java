@@ -148,10 +148,10 @@ public class VectorizeBitmapDialog extends JFrame
       middleComp.add(cardComp, "Center");
 
       JComponent topInfo = resources.createAppInfoArea(
-        "vectorize.message.set_foreground");
+        "vectorize.message.default_info");
       topInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
 
-      cardComp.add(topInfo, "foreground_info");
+      cardComp.add(topInfo, "default_info");
 
       topInfo = resources.createAppInfoArea(
         "vectorize.message.region_picker");
@@ -342,6 +342,7 @@ public class VectorizeBitmapDialog extends JFrame
       else if (command.equals("apply_pinned"))
       {
          apply();
+         updateWidgets();
          resultPanel.repaint();
       }
       else if (command.equals("okay"))
@@ -577,6 +578,7 @@ public class VectorizeBitmapDialog extends JFrame
       if (result == JOptionPane.YES_OPTION)
       {
          reset();
+         updateWidgets();
          revalidate();
       }
    }
@@ -595,6 +597,7 @@ public class VectorizeBitmapDialog extends JFrame
       }
 
       resultPanel.updateCurrentShapeList(shapeList);
+      updateWidgets();
    }
 
    public void error(Exception e)
@@ -907,6 +910,7 @@ public class VectorizeBitmapDialog extends JFrame
       shapeList.remove(i);
       addUndoableEdit(shapeList, getResources().getString("vectorize.delete_shape"));
       resultPanel.updateCurrentShapeList(shapeList);
+      updateWidgets();
    }
 
    public void storeShape(int i)
@@ -916,6 +920,7 @@ public class VectorizeBitmapDialog extends JFrame
       addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
          resultPanel.storeShape(shape));
       resultPanel.updateCurrentShapeList(shapeList);
+      updateWidgets();
    }
 
    public void addResult(Result result)
@@ -926,6 +931,12 @@ public class VectorizeBitmapDialog extends JFrame
    public void removeResult(Result result)
    {
       resultPanel.removeResult(result);
+   }
+
+   public void updateWidgets()
+   {
+      controlPanel.updateWidgets(
+        scanStatusBar.isTaskInProgress(), shapeList != null);
    }
 
    public void showStatusBar()
@@ -940,7 +951,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void showDefaultInfo()
    {
-      cardLayout.show(cardComp, "foreground_info");
+      cardLayout.show(cardComp, "default_info");
    }
 
    public void showRegionInfo()
@@ -2131,8 +2142,11 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
         "vectorize.subtract_last_scan_border", true, this);
       subPanel.add(subtractLastScanBorderCheckBox);
 
-      subtractLastScanBorderField = new NonNegativeIntField(
-         (getSampleWidth()+getSampleHeight())/4);
+      subtractLastScanBorderModel = new SpinnerNumberModel(
+         (getSampleWidth()+getSampleHeight())/4, 0, 50, 1);
+
+      subtractLastScanBorderField = new JSpinner(
+         subtractLastScanBorderModel);
       subPanel.add(subtractLastScanBorderField);
 
       subPanel.add(Box.createHorizontalGlue());
@@ -2368,7 +2382,7 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
    public int getSubtractLastScanBorder()
    {
       return subtractLastScanBorderCheckBox.isSelected() ?
-         subtractLastScanBorderField.getInt() : 0;
+         subtractLastScanBorderModel.getNumber().intValue() : 0;
    }
 
    public Color getImageForeground()
@@ -2450,7 +2464,9 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
 
    private JCheckBox subtractLastScanBorderCheckBox;
 
-   private NonNegativeIntField subtractLastScanBorderField;
+   private JSpinner subtractLastScanBorderField;
+
+   private SpinnerNumberModel subtractLastScanBorderModel;
 
    private ControlPanel controlPanel;
 
@@ -3835,10 +3851,12 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
    public void taskFinished()
    {
       dialog.hideStatusBar();
+      taskInProgress = false;
    }
 
    public void startTask(String info, SwingWorker task)
    {
+      taskInProgress = true;
       textField.setText(info);
       progressBar.setValue(0);
       cancelButton.setEnabled(true);
@@ -3858,6 +3876,11 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       return dialog.getResources();
    }
 
+   public boolean isTaskInProgress()
+   {
+      return taskInProgress;
+   }
+
    private JTextField textField;
    private JProgressBar progressBar;
 
@@ -3865,6 +3888,8 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
 
    private JButton cancelButton;
    private boolean cancelled=false;
+
+   private boolean taskInProgress=false;
 
    private VectorizeBitmapDialog dialog;
 }
@@ -6127,7 +6152,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
                      double dist = getDistance(p1, p2);
 
-                     if (dist < deltaThreshold)
+                     if (dist <= deltaThreshold)
                      {
                         closestStart1 = k1;
                         closestStart2 = k2;
@@ -6144,7 +6169,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
                      double dist = getDistance(p1, p2);
 
-                     if (dist < deltaThreshold)
+                     if (dist <= deltaThreshold)
                      {
                         closestStart1 = k1;
                         closestStart2 = k2;
@@ -6246,7 +6271,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
                         double dist = getDistance(p1, p2);
 
-                        if (dist < deltaThreshold)
+                        if (dist <= deltaThreshold)
                         {
                            closestEnd1 = k1;
                            closestEnd2 = k2;
@@ -6263,7 +6288,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
                         double dist = getDistance(p1, p2);
 
-                        if (dist < deltaThreshold)
+                        if (dist <= deltaThreshold)
                         {
                            closestEnd1 = k1;
                            closestEnd2 = k2;
@@ -6589,8 +6614,6 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
       }
 
-      boolean success = false;
-
       Vector<Point2D> pts1 = new Vector<Point2D>(n1);
       Vector<Point2D> pts2 = new Vector<Point2D>(n2);
 
@@ -6714,6 +6737,17 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
       }
 
+      return tryLineify(pts1, pts2);
+   }
+
+   private boolean tryLineify(Vector<Point2D> pts1, Vector<Point2D> pts2)
+    throws InterruptedException
+   {
+      boolean success = false;
+
+      int n1 = pts1.size();
+      int n2 = pts2.size();
+
       if (n1 != n2)
       {
          addBorderPoints(pts1, pts2);
@@ -6732,8 +6766,11 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       Point2D p1 = pts1.get(0);
       Point2D p2 = pts2.get(0);
 
-      double x = p1.getX() + 0.5*(p1.getX() - p2.getX());
-      double y = p1.getY() + 0.5*(p1.getY() - p2.getY());
+      double x = p1.getX() + 0.5*(p2.getX() - p1.getX());
+      double y = p1.getY() + 0.5*(p2.getY() - p1.getY());
+
+      double prevX=x;
+      double prevY=y;
 
       newPath.moveTo(x, y);
       double averageDelta = 0.0;
@@ -6748,15 +6785,21 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
          double dist = getDistance(p1, p2);
 
-         if (dist < deltaThreshold)
+         if (dist <= deltaThreshold)
          {
-            x = p1.getX() + 0.5*(p1.getX() - p2.getX());
-            y = p1.getY() + 0.5*(p1.getY() - p2.getY());
+            x = p1.getX() + 0.5*(p2.getX() - p1.getX());
+            y = p1.getY() + 0.5*(p2.getY() - p1.getY());
 
-            newPath.lineTo(x, y);
+            if (getSquareDistance(prevX, prevY, x, y) > EPSILON)
+            {
+               newPath.lineTo(x, y);
 
-            numPts++;
-            averageDelta += dist;
+               numPts++;
+               averageDelta += dist;
+            }
+
+            prevX = x;
+            prevY = y;
          }
          else
          {
@@ -6802,22 +6845,28 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          {
             endBulge = n1-i;
 
+            prevX = -1;
+            prevY = -1;
+
             for (int j = i+1; j < n1; j++)
             {
                p1 = pts1.get(j);
                p2 = pts2.get(j);
 
-               x = p1.getX() + 0.5*(p1.getX() - p2.getX());
-               y = p1.getY() + 0.5*(p1.getY() - p2.getY());
+               x = p1.getX() + 0.5*(p2.getX() - p1.getX());
+               y = p1.getY() + 0.5*(p2.getY() - p1.getY());
 
                if (newPath.isEmpty())
                {
                   newPath.moveTo(x, y);
                }
-               else
+               else if (getSquareDistance(prevX, prevY, x, y) > EPSILON)
                {
                   newPath.lineTo(x, y);
                }
+
+               prevX = x;
+               prevY = y;
             }
 
             break;
@@ -6845,26 +6894,48 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (!success)
       {
-         dialog.addMessageIdLn("vectorize.border_too_wide");
+         dialog.addMessageIdLn("vectorize.too_wide");
          return false;
       }
 
       newPath = new ShapeComponentVector();
-      newPath.moveTo(pts1.get(startBulge));
+
+      Point2D p0 = pts1.get(startBulge);
+      newPath.moveTo(p0);
 
       for (int i = startBulge+1; i <= endBulge; i++)
       {
-         newPath.lineTo(pts1.get(i));
+         p1 = pts1.get(i);
+
+         if (getSquareDistance(p0, p1) > EPSILON)
+         {
+            newPath.lineTo(p1);
+         }
+
+         p0 = p1;
       }
 
       for (int i = endBulge; i >= startBulge; i--)
       {
-         newPath.lineTo(pts2.get(i));
+         p1 = pts2.get(i);
+
+         if (getSquareDistance(p0, p1) > EPSILON)
+         {
+            newPath.lineTo(p1);
+         }
+
+         p0 = p1;
+      }
+
+      if (newPath.size() <= 2)
+      {
+         dialog.addMessageIdLn("vectorize.mid_region_collapsed");
+         return false;
       }
 
       newPath.closePath();
 
-      dialog.addMessageIdLn("vectorize.mid_border", newPath.svg());
+      dialog.addMessageIdLn("vectorize.mid_region", newPath.svg());
 
       tryLineify(newPath);
 
@@ -6958,6 +7029,32 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       }
    }
 
+   private boolean tryLineifyBulge(ShapeComponentVector vec, int idx1, int idx2)
+    throws InterruptedException
+   {
+      int n = vec.size();
+
+      Vector<Point2D> pts1 = new Vector<Point2D>(n);
+      Vector<Point2D> pts2 = new Vector<Point2D>(n);
+
+      for (int i = idx1+1; i < idx2; i++)
+      {
+         pts1.add(vec.get(i).getEnd());
+      }
+
+      for (int i = idx1; i >= 0; i--)
+      {
+         pts2.add(vec.get(i).getEnd());
+      }
+
+      for (int i = n-2; i >= idx2; i--)
+      {
+         pts2.add(vec.get(i).getEnd());
+      }
+
+      return tryLineify(pts1, pts2);
+   }
+
    private void tryLineifyRegion(SubPath subPath)
     throws InterruptedException
    {
@@ -7019,7 +7116,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       LineifyResults results = lineifyBestFit(pts, n1, n2);
 
-      if (results.minAverageDelta < deltaThreshold)
+      if (results.minAverageDelta <= deltaThreshold)
       {
          if (!doLineIntersectionCheck)
          {
@@ -7030,7 +7127,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
          else
          {
-            if (results.variance < varianceThreshold)
+            if (results.variance <= varianceThreshold)
             {
                addShape(results.bestPath);
                dialog.addMessageIdLn("vectorize.success_intersect_check",
@@ -7047,8 +7144,71 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (spikes.isEmpty())
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+         int idx1 = -1;
+
+         Point2D p0 = vec.get(0).getEnd();
+         Point2D p1 = p0;
+
+         Point2D q1=null, q2=null;
+
+         for (int i = 0; i < n-1; i++)
+         {
+            Point2D p2 = vec.get(i+1).getEnd();
+
+            double dist = getDistance(p1, p2);
+
+            if (dist <= deltaThreshold)
+            {
+               q1 = p1;
+               q2 = p2;
+               idx1 = i;
+               break;
+            }
+
+            p1 = p2;
+         }
+
+         if (idx1 == -1)
+         {
+            addShape(vec);
+            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+            return;
+         }
+
+         int idx2 = -1;
+
+         p1 = p0;
+
+         for (int i = n; i > idx1; i--)
+         {
+            Point2D p2 = vec.get(i-1).getEnd();
+
+            double dist = getDistance(p1, p2);
+
+            if (dist <= deltaThreshold
+                 && (getDistance(p1, q1) > varianceThreshold
+                     && getDistance(p2, q2) > varianceThreshold))
+            {
+               idx2 = i;
+               break;
+            }
+
+            p1 = p2;
+         }
+
+         if (idx2 == -1 || (idx1 == 0 && idx2 == n) || (idx2 - idx1 <= 1))
+         {
+            addShape(vec);
+            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+            return;
+         }
+
+         if (!tryLineifyBulge(vec, idx1, idx2))
+         {
+            addShape(vec);
+            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+         }
+
          return;
       }
 
@@ -7114,7 +7274,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       LineifyResults reducedPathResults = lineifyBestFit(q, m1, m2);
 
-      if (reducedPathResults.minAverageDelta < deltaThreshold)
+      if (reducedPathResults.minAverageDelta <= deltaThreshold)
       {
          addShape(reducedPathResults.bestPath);
          dialog.addMessageIdLn("vectorize.reduced_path_success", 
@@ -7193,7 +7353,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       double averageDelta = calculateMean(linefit);
 
-      if (averageDelta < deltaThreshold)
+      if (averageDelta <= deltaThreshold)
       {
          if (!doLineIntersectionCheck)
          {
@@ -7206,7 +7366,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          {
             double variance = calculateVariance(linefit, averageDelta);
 
-            if (variance < varianceThreshold)
+            if (variance <= varianceThreshold)
             {
                addShape(path);
                dialog.addMessageIdLn("vectorize.success_intersect_check",
@@ -7266,7 +7426,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (!doLineIntersectionCheck)
       {
-         if (bestAverageDelta < deltaThreshold)
+         if (bestAverageDelta <= deltaThreshold)
          {
             addShape(path);
             dialog.addMessageIdLn("vectorize.success_no_intersect_check",
@@ -7284,7 +7444,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       double variance = calculateVariance(bestLineFit, bestAverageDelta);
 
-      if (bestAverageDelta < deltaThreshold && variance < varianceThreshold)
+      if (bestAverageDelta <= deltaThreshold && variance <= varianceThreshold)
       {
          addShape(path);
          dialog.addMessageIdLn("vectorize.success_intersect_check",
@@ -7474,7 +7634,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
       }
 
-      if (bestAverageDelta < deltaThreshold)
+      if (bestAverageDelta <= deltaThreshold)
       {
          addShape(bestPath);
          dialog.addMessageIdLn("vectorize.reduced_path_success", 
@@ -7614,12 +7774,27 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       return Math.acos(dotproduct*factor);
    }
 
+   public double getSquareDistance(double p0x, double p0y, double p1x, double p1y)
+   {
+      double dx = p1x-p0x;
+      double dy = p1y-p0y;
+
+      return dx*dx + dy*dy;
+   }
+
+   public double getSquareDistance(Point2D p0, Point2D p1)
+   {
+      return getSquareDistance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+   }
+
+   public double getDistance(double p0x, double p0y, double p1x, double p1y)
+   {
+      return Math.sqrt(getSquareDistance(p0x, p0y, p1x, p1y));
+   }
+
    public double getDistance(Point2D p0, Point2D p1)
    {
-      double dx = p1.getX()-p0.getX();
-      double dy = p1.getY()-p0.getY();
-
-      return Math.sqrt(dx*dx + dy*dy);
+      return getDistance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
    }
 
    public double getDistance(PathCoord p0, PathCoord p1)
@@ -8064,6 +8239,8 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       return newVec == null ? vec : newVec;
    }
 
+   // Returns r1 if can't compute (most likely because r1 and r2
+   // coincide)
    private Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
    {
       // get closest point on r1-r2 to p
@@ -8101,6 +8278,11 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       {
          x = (m_sq*r1.getX()+m*(p.getY()-r1.getY())+p.getX())*factor;
          y = m * (x - r1.getX()) + r1.getY();
+      }
+
+      if (Double.isNaN(x) || Double.isNaN(y))
+      {// most likely caused by r1 = r2
+         return r1;
       }
 
       return new Point2D.Double(x, y);
@@ -8141,9 +8323,9 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (!doLineIntersectionCheck)
       {
-         return minAverageDelta < deltaThreshold ? bestPath : null;
+         return minAverageDelta <= deltaThreshold ? bestPath : null;
       }
-      else if (minAverageDelta < deltaThreshold && variance < varianceThreshold)
+      else if (minAverageDelta <= deltaThreshold && variance <= varianceThreshold)
       {
          if (indexes != null)
          {
@@ -8463,8 +8645,8 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
       }
 
-      if (results.minAverageDelta < deltaThreshold
-              && results.variance < varianceThreshold)
+      if (results.minAverageDelta <= deltaThreshold
+              && results.variance <= varianceThreshold)
       {
          return results.bestPath;
       }
@@ -9019,7 +9201,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
           || bestEndIdx - bestStartIdx < 2
           || (bestStartIdx == 0 && bestEndIdx == n-2))
       {
-         return minDelta < deltaThreshold ? bestPath : vec;
+         return minDelta <= deltaThreshold ? bestPath : vec;
       }
 
       ShapeComponent bestStartComp = vec.get(bestStartIdx);
@@ -9229,12 +9411,12 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       delta = delta/(2*pts1.length);
 
-      if (delta < minDelta && delta < deltaThreshold)
+      if (delta < minDelta && delta <= deltaThreshold)
       {
          newPath.setFilled(false);
          return newPath;
       }
-      else if (minDelta < deltaThreshold)
+      else if (minDelta <= deltaThreshold)
       {
          bestPath.setFilled(false);
          return bestPath;
@@ -9638,6 +9820,8 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
    private static final double HALF_PI = 0.5*Math.PI,
     SPIKE_ANGLE_LOWER1=0.2*Math.PI, SPIKE_ANGLE_UPPER1=0.8*Math.PI,
     SPIKE_ANGLE_LOWER2=1.2*Math.PI, SPIKE_ANGLE_UPPER2=1.8*Math.PI;
+
+   private static final double EPSILON=1e-6;
 }
 
 class PathCoord

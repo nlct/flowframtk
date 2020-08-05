@@ -2826,8 +2826,8 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.discard">Delete</entry>
 <entry key="vectorize.summary.pin">Pin</entry>
 
-<entry key="vectorize.message.set_foreground">Select foreground color before scanning.</entry>
-<entry key="vectorize.message.region_picker">Click and drag mouse over bitmap to select area. Use SHIFT to add and CTRL to remove area.</entry>
+<entry key="vectorize.message.default_info">Select foreground color before scanning. Any transformations will be applied when the paths are added to the image.</entry>
+<entry key="vectorize.message.region_picker">Click and drag mouse over bitmap to select area. Use SHIFT to add to current scan region and CTRL to exclude area.</entry>
 <entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
 <entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
 <entry key="vectorize.message.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>
@@ -2847,8 +2847,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.trying_spike">Trying spike {0}.</entry>
 <entry key="vectorize.possible_border">Possible line along sub-path borders: sub-path {0}: ({1},{2}) – ({3},{4}) and sub-path {5}: ({6},{7}) – ({8},{9}).</entry>
 <entry key="vectorize.splitting_border">Splitting off shared border region.</entry>
-<entry key="vectorize.border_too_wide">Shared border region too wide.</entry>
-<entry key="vectorize.mid_border">Investigating mid shared border region: {0}</entry>
+<entry key="vectorize.too_wide">Region too wide.</entry>
+<entry key="vectorize.mid_region">Investigating mid region: {0}</entry>
+<entry key="vectorize.mid_region_collapsed">Mid region collapsed.</entry>
 
 <!--  general purpose text -->
 
