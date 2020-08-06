@@ -102,6 +102,23 @@ public class JDRBasicStroke implements JDRStroke
       endMarker   = new JDRMarker(penWidth, 1, false);
    }
 
+   public JDRBasicStroke(CanvasGraphics cg, double bpPenWidth,
+     int capStyle, int joinStyle)
+   {
+      setCanvasGraphics(cg);
+
+      this.capStyle  = capStyle;
+      this.joinStyle = joinStyle;
+      dashPattern = new DashPattern(cg);
+      penWidth    = new JDRLength(cg, bpPenWidth, JDRUnit.bp);
+      mitreLimit  = 10.0;
+      windingRule = GeneralPath.WIND_EVEN_ODD;
+
+      startMarker = new JDRMarker(penWidth, 1, false);
+      midMarker = new JDRMarker(penWidth, 1, false);
+      endMarker   = new JDRMarker(penWidth, 1, false);
+   }
+
    /**
     * Creates a stroke with the given settings. The new stroke
     * has no markers and even-odd winding rule.
