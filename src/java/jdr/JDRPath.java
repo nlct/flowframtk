@@ -529,6 +529,13 @@ public class JDRPath extends JDRShape
          }
       }
 
+      JDRStroke stroke = path.getStroke();
+
+      if (stroke instanceof JDRBasicStroke)
+      {
+         ((JDRBasicStroke)stroke).setWindingRule(pi.getWindingRule());
+      }
+
       return path;
    }
 
