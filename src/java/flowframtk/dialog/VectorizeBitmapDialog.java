@@ -3956,6 +3956,48 @@ class ShapeComponentVector extends Vector<ShapeComponent>
         new double[]{x, y}, lastElement().getEnd()));
    }
 
+   public boolean lineTo(Point2D p, double gradientEpsilon)
+   {
+      return lineTo(p.getX(), p.getY(), gradientEpsilon);
+   }
+
+   public boolean lineTo(double x, double y, double gradientEpsilon)
+   {
+      ShapeComponent comp = lastElement();
+
+      if (comp.getType() != PathIterator.SEG_LINETO)
+      {
+         lineTo(x, y);
+         return true;
+      }
+
+      Point2D p = comp.getEnd();
+      double dx = x-p.getX();
+      double dy = y-p.getY();
+
+      if (dx*dx + dy*dy < EPSILON)
+      {
+         return false;
+      }
+
+      Point2D dp1 = comp.getEndGradient();
+      Point2D dp2 = comp.getGradientToEnd(x, y);
+
+      double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+      double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+      if (Math.abs(theta1-theta2) < gradientEpsilon)
+      {
+         comp.setEndPoint(x, y);
+         return false;
+      }
+      else
+      {
+         lineTo(x, y);
+         return true;
+      }
+   }
+
    public void closePath()
    {
       add(new ShapeComponent(PathIterator.SEG_CLOSE,
@@ -4299,6 +4341,8 @@ class ShapeComponentVector extends Vector<ShapeComponent>
 
    private int windingRule = Path2D.WIND_NON_ZERO;
    private boolean isFilled = true;
+
+   private static final double EPSILON=1e-6;
 }
 
 class ShapeComponent
@@ -6761,7 +6805,9 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
       }
 
-      ShapeComponentVector newPath = new ShapeComponentVector();
+      double gradientEpsilon = dialog.getGradientEpsilon();
+
+      ShapeComponentVector newPath1 = new ShapeComponentVector();
 
       Point2D p1 = pts1.get(0);
       Point2D p2 = pts2.get(0);
@@ -6772,31 +6818,36 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       double prevX=x;
       double prevY=y;
 
-      newPath.moveTo(x, y);
-      double averageDelta = 0.0;
-      int numPts = 0;
+      newPath1.moveTo(x, y);
+      double averageDelta1 = 0.0;
+      int numPts1 = 0;
 
       int idx = 0;
+
+      double newPath1LastX = x;
+      double newPath1LastY = y;
 
       for (idx = 1; idx < n1; idx++)
       {
          p1 = pts1.get(idx);
          p2 = pts2.get(idx);
 
-         double dist = getDistance(p1, p2);
+         double dx = 0.5*(p2.getX() - p1.getX());
+         double dy = 0.5*(p2.getY() - p1.getY());
 
-         if (dist <= deltaThreshold)
+         double delta = Math.sqrt(dx*dx + dy*dy);
+
+         if (delta <= deltaThreshold)
          {
-            x = p1.getX() + 0.5*(p2.getX() - p1.getX());
-            y = p1.getY() + 0.5*(p2.getY() - p1.getY());
+            x = p1.getX() + dx;
+            y = p1.getY() + dy;
 
-            if (getSquareDistance(prevX, prevY, x, y) > EPSILON)
-            {
-               newPath.lineTo(x, y);
+            newPath1.lineTo(x, y, gradientEpsilon);
+            numPts1++;
+            averageDelta1 += delta;
 
-               numPts++;
-               averageDelta += dist;
-            }
+            newPath1LastX = x;
+            newPath1LastY = y;
 
             prevX = x;
             prevY = y;
@@ -6807,41 +6858,40 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
       }
 
-      if (numPts > 0)
+      if (newPath1.size() == n1 && numPts1 > 0)
       {
-         averageDelta /= numPts;
-      }
-
-      if (newPath.size() > 1)
-      {
-         newPath.setFilled(false);
-         addShape(newPath);
+         newPath1.setFilled(false);
+         addShape(newPath1);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          newShapesVec.size(), averageDelta);
+          newShapesVec.size(), averageDelta1/numPts1);
          success = true;
-
-         if (newPath.size() == n1)
-         {
-            return true;
-         }
+         return true;
       }
 
-      newPath = new ShapeComponentVector();
+      ShapeComponentVector newPath2 = null;
+
+      if (newPath1.size() <= 1)
+      {
+         newPath1 = null;
+      }
 
       int startBulge = idx;
       int endBulge = n1-1;
 
-      averageDelta = 0.0;
-      numPts = 0;
+      double averageDelta2 = 0.0;
+      int numPts2 = 0;
 
       for (int i = 1, m = n1-idx; i <= m; i++)
       {
          p1 = pts1.get(n1-i);
          p2 = pts2.get(n2-i);
 
-         double dist = getDistance(p1, p2);
+         double dx = 0.5*(p2.getX()-p1.getX());
+         double dy = 0.5*(p2.getY()-p1.getY());
 
-         if (dist > deltaThreshold)
+         double delta = Math.sqrt(dx*dx + dy*dy);
+
+         if (delta > deltaThreshold)
          {
             endBulge = n1-i;
 
@@ -6856,13 +6906,24 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
                x = p1.getX() + 0.5*(p2.getX() - p1.getX());
                y = p1.getY() + 0.5*(p2.getY() - p1.getY());
 
-               if (newPath.isEmpty())
+               if (newPath2 == null)
                {
-                  newPath.moveTo(x, y);
+                  if (newPath1 == null 
+                      || getDistance(newPath1LastX, newPath1LastY, x, y)
+                            > deltaThreshold)
+                  {
+                     newPath2 = new ShapeComponentVector();
+                     newPath2.moveTo(x, y);
+                  }
+                  else
+                  {
+                     newPath2 = newPath1;
+                     newPath2.lineTo(x, y, gradientEpsilon);
+                  }
                }
-               else if (getSquareDistance(prevX, prevY, x, y) > EPSILON)
+               else
                {
-                  newPath.lineTo(x, y);
+                  newPath2.lineTo(x, y, gradientEpsilon);
                }
 
                prevX = x;
@@ -6873,22 +6934,43 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
          else
          {
-            numPts++;
-            averageDelta += dist;
+            numPts2++;
+            averageDelta2 += delta;
          }
       }
 
-      if (numPts > 0)
+      if (newPath2 == newPath1)
       {
-         averageDelta /= numPts;
+         numPts1 += numPts2;
+         averageDelta1 += averageDelta2;
+         newPath2 = null;
       }
 
-      if (newPath.size() > 1)
+      if (newPath1.size() > 1)
       {
-         newPath.setFilled(false);
-         addShape(newPath);
+         if (numPts1 > 0)
+         {
+            averageDelta1 /= numPts1;
+         }
+
+         newPath1.setFilled(false);
+         addShape(newPath1);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          newShapesVec.size(), averageDelta);
+          newShapesVec.size(), averageDelta1);
+         success = true;
+      }
+
+      if (newPath2 != null && newPath2.size() > 1)
+      {
+         if (numPts2 > 0)
+         {
+            averageDelta2 /= numPts2;
+         }
+
+         newPath2.setFilled(false);
+         addShape(newPath2);
+         dialog.addMessageIdLn("vectorize.success_no_intersect_check",
+          newShapesVec.size(), averageDelta2);
          success = true;
       }
 
@@ -6898,7 +6980,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          return false;
       }
 
-      newPath = new ShapeComponentVector();
+      ShapeComponentVector newPath = new ShapeComponentVector();
 
       Point2D p0 = pts1.get(startBulge);
       newPath.moveTo(p0);
@@ -6907,10 +6989,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       {
          p1 = pts1.get(i);
 
-         if (getSquareDistance(p0, p1) > EPSILON)
-         {
-            newPath.lineTo(p1);
-         }
+         newPath.lineTo(p1, gradientEpsilon);
 
          p0 = p1;
       }
@@ -6919,10 +6998,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       {
          p1 = pts2.get(i);
 
-         if (getSquareDistance(p0, p1) > EPSILON)
-         {
-            newPath.lineTo(p1);
-         }
+         newPath.lineTo(p1, gradientEpsilon);
 
          p0 = p1;
       }
@@ -6937,7 +7013,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       dialog.addMessageIdLn("vectorize.mid_region", newPath.svg());
 
-      tryLineify(newPath);
+      tryLineifyRegion(newPath);
 
       return success;
    }
@@ -9820,8 +9896,6 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
    private static final double HALF_PI = 0.5*Math.PI,
     SPIKE_ANGLE_LOWER1=0.2*Math.PI, SPIKE_ANGLE_UPPER1=0.8*Math.PI,
     SPIKE_ANGLE_LOWER2=1.2*Math.PI, SPIKE_ANGLE_UPPER2=1.8*Math.PI;
-
-   private static final double EPSILON=1e-6;
 }
 
 class PathCoord
