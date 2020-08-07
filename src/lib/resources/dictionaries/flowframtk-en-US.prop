@@ -2761,8 +2761,6 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.optimize_lines.mnemonic">O</entry>
 <entry key="vectorize.gradient_threshold">Gradient Threshold:</entry>
 <entry key="vectorize.gradient_threshold.mnemonic">G</entry>
-<entry key="vectorize.min_gap">Min Gap:</entry>
-<entry key="vectorize.min_gap.mnemonic">M</entry>
 
 <entry key="vectorize.split_subpaths">Split Sub Paths</entry>
 <entry key="vectorize.split_subpaths.mnemonic">S</entry>

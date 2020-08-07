@@ -1575,11 +1575,6 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getGradientEpsilon();
    }
 
-   public double getMinGap()
-   {
-      return controlPanel.getMinGap();
-   }
-
    public double getMinSubPathGap()
    {
       return controlPanel.getMinSubPathGap();
@@ -2647,30 +2642,6 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      minGapSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
-
-      minGapLabel = resources.createAppLabel("vectorize.min_gap");
-      subPanel.add(minGapLabel);
-
-      minGapSpinner = controlPanel.createSpinner(
-         minGapLabel, minGapSpinnerModel);
-      subPanel.add(minGapSpinner);
-
-      Dimension gradPrefSize = gradientEpsilonLabel.getPreferredSize();
-      Dimension gapPrefSize = minGapLabel.getPreferredSize();
-
-      if (gradPrefSize.width > gapPrefSize.width)
-      {
-         gapPrefSize.width = gradPrefSize.width;
-         minGapLabel.setPreferredSize(gapPrefSize);
-         minGapLabel.setMaximumSize(gapPrefSize);
-      }
-      else
-      {
-         gradPrefSize.width = gapPrefSize.width;
-         gradientEpsilonLabel.setPreferredSize(gradPrefSize);
-         gradientEpsilonLabel.setMaximumSize(gradPrefSize);
-      }
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -2680,9 +2651,7 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
          boolean enable = doOptimizeCheckBox.isSelected();
 
          gradientEpsilonSpinner.setEnabled(enable);
-         minGapSpinner.setEnabled(enable);
          gradientEpsilonLabel.setEnabled(enable);
-         minGapLabel.setEnabled(enable);
 
          controlPanel.updateTaskButton();
       }
@@ -2704,9 +2673,7 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
       enable = enable && doOptimizeCheckBox.isSelected();
 
       gradientEpsilonSpinner.setEnabled(enable);
-      minGapSpinner.setEnabled(enable);
       gradientEpsilonLabel.setEnabled(enable);
-      minGapLabel.setEnabled(enable);
    }
 
    public void reset(boolean revertAll)
@@ -2714,7 +2681,6 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
       if (revertAll)
       {
          gradientEpsilonSpinnerModel.setValue(Double.valueOf(0.01));
-         minGapSpinnerModel.setValue(Double.valueOf(2.0));
       }
    }
 
@@ -2723,21 +2689,16 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
       return gradientEpsilonSpinnerModel.getNumber().doubleValue();
    }
 
-   public double getMinGap()
-   {
-      return minGapSpinnerModel.getNumber().doubleValue();
-   }
-
    public boolean isOptimizeOn()
    {
       return doOptimizeCheckBox.isSelected();
    }
 
-   private JLabel gradientEpsilonLabel, minGapLabel;
+   private JLabel gradientEpsilonLabel;
 
-   private SpinnerNumberModel minGapSpinnerModel, gradientEpsilonSpinnerModel; 
+   private SpinnerNumberModel gradientEpsilonSpinnerModel; 
 
-   private JSpinner gradientEpsilonSpinner, minGapSpinner;
+   private JSpinner gradientEpsilonSpinner;
 
    private JCheckBox doOptimizeCheckBox;
 
@@ -3998,11 +3959,6 @@ class ControlPanel extends JPanel implements ActionListener
    public double getGradientEpsilon()
    {
       return optimizeLinesPanel.getGradientEpsilon();
-   }
-
-   public double getMinGap()
-   {
-      return optimizeLinesPanel.getMinGap();
    }
 
    public double getMinSubPathGap()
@@ -5460,7 +5416,6 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
       this.shapeList = shapeList;
 
       gradientEpsilon = dialog.getGradientEpsilon();
-      minGap = dialog.getMinGap();
       this.continueToNextStep = continueToNextStep;
    }
 
@@ -5548,14 +5503,6 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
             ShapeComponent prevComp = newVec.lastElement();
             coords = current.getCoords();
 
-            if (current.getType() == PathIterator.SEG_MOVETO && i > 0)
-            {
-               if (length < minGap)
-               {
-                  current.setType(PathIterator.SEG_LINETO);
-               }
-            }
-
             if (current.getType() == PathIterator.SEG_LINETO && length < 1e-6)
             {
                continue;
@@ -5607,7 +5554,7 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
    }
 
    private int progress, maxProgress;
-   private double gradientEpsilon=0.01, minGap=2.0;
+   private double gradientEpsilon=0.01;
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> shapeList;
    private volatile Vector<ShapeComponentVector> newShapesVec;
