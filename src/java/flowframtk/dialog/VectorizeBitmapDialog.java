@@ -5217,68 +5217,91 @@ class ScanImage extends SwingWorker<Void,Raster>
 
                   if (ar.isRectangular())
                   {
-                     Raster raster = image.getData(ar.getBounds());
-                     publish(raster);
+                     publish(image.getData(ar.getBounds()));
                   }
                   else
                   {
-                     int halfRectWidth = rectWidth/2;
-                     int halfRectHeight = rectHeight/2;
-
-                     if (halfRectWidth == 0 || halfRectHeight == 0)
-                     {
-                        continue;
-                     }
-
-                     int x1 = x+halfRectWidth;
-                     int y1 = y+halfRectHeight;
-
-                     rect = new Rectangle(x, y, halfRectWidth, halfRectHeight);
-
-                     if (scanRegion.contains(rect))
-                     {
-                        Raster raster = image.getData(rect);
-                        publish(raster);
-                     }
-
-                     rect = new Rectangle(x1, y,
-                         halfRectWidth, halfRectHeight);
-
-                     if (scanRegion.contains(rect))
-                     {
-                        Raster raster = image.getData(rect);
-                        publish(raster);
-                     }
-
-                     rect = new Rectangle(x, y1,
-                        halfRectWidth, halfRectHeight);
-
-                     if (scanRegion.contains(rect))
-                     {
-                        Raster raster = image.getData(rect);
-                        publish(raster);
-                     }
-
-                     rect = new Rectangle(x1, y1,
-                       halfRectWidth, halfRectHeight);
-
-                     if (scanRegion.contains(rect))
-                     {
-                        Raster raster = image.getData(rect);
-                        publish(raster);
-                     }
+                     processSample(ar, rect);
                   }
                }
             }
             else
             {
-               Raster raster = image.getData(rect);
-               publish(raster);
+               publish(image.getData(rect));
             }
          }
       }
 
       return null;
+   }
+
+   private void processSample(Area ar, Rectangle rect)
+   {
+      processSample(ar, rect.x, rect.y, rect.width, rect.height);
+   }
+
+   private void processSample(Area ar, int x, int y, int rectWidth, int rectHeight)
+   {
+      int halfRectWidth = rectWidth/2;
+      int halfRectHeight = rectHeight/2;
+
+      if (halfRectWidth == 0 || halfRectHeight == 0)
+      {
+         return;
+      }
+
+      dialog.addMessageIdLn(
+        "vectorize.message.sample_intersects_region",
+        x, y, rectWidth, rectHeight);
+
+      int x1 = x+halfRectWidth;
+      int y1 = y+halfRectHeight;
+
+      Rectangle rect = new Rectangle(x, y, halfRectWidth, halfRectHeight);
+
+      if (ar.contains(rect))
+      {
+         publish(image.getData(rect));
+      }
+      else if (ar.intersects(rect))
+      {
+         processSample(ar, rect);
+      }
+
+      rect.x = x1;
+      rect.y = y;
+
+      if (scanRegion.contains(rect))
+      {
+         publish(image.getData(rect));
+      }
+      else if (ar.intersects(rect))
+      {
+         processSample(ar, rect);
+      }
+
+      rect.x = x;
+      rect.y = y1;
+
+      if (scanRegion.contains(rect))
+      {
+         publish(image.getData(rect));
+      }
+      else if (ar.intersects(rect))
+      {
+         processSample(ar, rect);
+      }
+
+      rect.x = x1;
+
+      if (scanRegion.contains(rect))
+      {
+         publish(image.getData(rect));
+      }
+      else if (ar.intersects(rect))
+      {
+         processSample(ar, rect);
+      }
    }
 
    protected void process(java.util.List<Raster> rasterList)

@@ -2836,6 +2836,7 @@
 
 <entry key="vectorize.message.default_info">Select foreground color before scanning. Any transformations will be applied when the paths are added to the image.</entry>
 <entry key="vectorize.message.region_picker">Click and drag mouse over bitmap to select area. Use SHIFT to add to current scan region and CTRL to exclude area.</entry>
+<entry key="vectorize.message.sample_intersects_region">Sample x={0}, y={1}, width={2}, height={3} intersects scan region. Dividing sample area.</entry>
 <entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
 <entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
 <entry key="vectorize.message.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>
