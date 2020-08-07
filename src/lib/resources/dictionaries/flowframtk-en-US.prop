@@ -2720,7 +2720,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.controls">Controls</entry>
 <entry key="vectorize.history">History</entry>
 <entry key="vectorize.confirm_pin_current">Pin current results?</entry>
-<entry key="vectorize.confirm_clear_all">Clear all results (including pinned)?</entry>
+<entry key="vectorize.confirm_clear_all">Clear all results (including pinned)? This action can't be undone. Any paths already applied to the canvas won't be affected.</entry>
 <entry key="vectorize.confirm_include_current">Include current results?</entry>
 <entry key="vectorize.confirm_discard_all">Discard all paths?</entry>
 <entry key="vectorize.delete_shape">Delete Shape</entry>
@@ -2782,6 +2782,12 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.line_detection">Line Detection</entry>
 <entry key="vectorize.delta_threshold">Delta Threshold:</entry>
 <entry key="vectorize.delta_threshold.mnemonic">D</entry>
+<entry key="vectorize.fixed_line_width">Fixed line width:</entry>
+<entry key="vectorize.fixed_line_width.tooltip">Set line width to the given value</entry>
+<entry key="vectorize.relative_line_width">Relative line width</entry>
+<entry key="vectorize.relative_line_width.tooltip">Set line width to twice the average delta</entry>
+<entry key="vectorize.round_relative_line_width">round</entry>
+<entry key="vectorize.round_relative_line_width.tooltip">round to nearest positive integer</entry>
 <entry key="vectorize.detect_intersections">Detect intersections</entry>
 <entry key="vectorize.variance_threshold">Variance Threshold:</entry>
 <entry key="vectorize.variance_threshold.mnemonic">V</entry>

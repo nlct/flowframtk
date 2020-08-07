@@ -1356,7 +1356,7 @@ public class FlowframTkSettings
    private int texEditorWidth = 8, texEditorHeight = 10;
    private int preambleEditorWidth = 0, preambleEditorHeight = 0;
 
-   private Color vectorizeNotRegionColor = Color.LIGHT_GRAY;
+   private Color vectorizeNotRegionColor = new Color(204, 204, 204, 220);
    private Color vectorizeLineColor = Color.RED;
    private Color vectorizeConnectorColor = Color.CYAN;
    private Color vectorizeDragColor = Color.MAGENTA;

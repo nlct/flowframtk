@@ -405,7 +405,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    private void addUndoableEdit(Vector<ShapeComponentVector> shapes, String name)
    {
-      addUndoableEdit(shapes, name, null);
+      addUndoableEdit(shapes, name, (Result)null);
    }
 
    private void addUndoableEdit(Vector<ShapeComponentVector> shapes, String name,
@@ -418,6 +418,27 @@ public class VectorizeBitmapDialog extends JFrame
 
       ShapesUndoableEdit edit = new ShapesUndoableEdit(this, 
          oldShapeList, shapes, name, result);
+      UndoableEditComp editComp = new UndoableEditComp(edit, this,
+          ++currentHistoryIndex);
+      historyGroup.add(editComp);
+      historyPanel.add(editComp);
+      editComp.setSelected(true);
+
+      undoManager.addEdit(edit);
+      updateUndoRedo();
+      updateShapes(shapes);
+   }
+
+   private void addUndoableEdit(Vector<ShapeComponentVector> shapes, String name,
+     Vector<Result> resultList)
+   {
+      for (int i = historyPanel.getComponentCount()-1; i > currentHistoryIndex; i--)
+      {
+         historyPanel.remove(i);
+      }
+
+      ShapesUndoableEdit edit = new ShapesUndoableEdit(this, 
+         oldShapeList, shapes, name, resultList);
       UndoableEditComp editComp = new UndoableEditComp(edit, this,
           ++currentHistoryIndex);
       historyGroup.add(editComp);
@@ -528,6 +549,7 @@ public class VectorizeBitmapDialog extends JFrame
       historyPanel.add(editComp);
       messagePanel.setText("");
 
+      controlPanel.reset(false);
       controlPanel.updateWidgets(false, shapeList != null);
    }
 
@@ -572,8 +594,7 @@ public class VectorizeBitmapDialog extends JFrame
    public void clearAllResults()
    {
       int result = getResources().confirm(this, 
-        getResources().getString("vectorize.confirm_clear_all"), 
-         JOptionPane.YES_NO_CANCEL_OPTION);
+        getResources().getString("vectorize.confirm_clear_all"));
 
       if (result == JOptionPane.YES_OPTION)
       {
@@ -585,16 +606,21 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void storeResults()
    {
-      if (shapeList == null) return;
+      if (shapeList == null || shapeList.isEmpty()) return;
+
+      int n = shapeList.size();
 
       storeOldShapes();
+      Vector<Result> resultList = new Vector<Result>(n);
 
-      for (int i = shapeList.size()-1; i >= 0; i--)
+      for (int i = n-1; i >= 0; i--)
       {
          ShapeComponentVector shape = shapeList.remove(i);
-         addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
-            resultPanel.storeShape(shape));
+         resultList.add(resultPanel.storeShape(shape));
       }
+
+      addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
+         resultList);
 
       resultPanel.updateCurrentShapeList(shapeList);
       updateWidgets();
@@ -1421,6 +1447,14 @@ public class VectorizeBitmapDialog extends JFrame
       }
    }
 
+   public void imagePanelRestoreOldRegion()
+   {
+      if (mainPanel != null)
+      {
+         mainPanel.restoreOldRegion();
+      }
+   }
+
    public Area getLastScannedRegion()
    {
       return scanRegion;
@@ -1574,6 +1608,21 @@ public class VectorizeBitmapDialog extends JFrame
    public double getDeltaThreshold()
    {
       return controlPanel.getDeltaThreshold();
+   }
+
+   public boolean isFixedLineWidth()
+   {
+      return controlPanel.isFixedLineWidth();
+   }
+
+   public double getFixedLineWidth()
+   {
+      return controlPanel.getFixedLineWidth();
+   }
+
+   public boolean isRoundRelativeOn()
+   {
+      return controlPanel.isRoundRelativeOn();
    }
 
    public boolean isIntersectionDetectionOn()
@@ -1757,14 +1806,36 @@ class UndoableEditComp extends JRadioButton implements ActionListener
 
 class ShapesUndoableEdit extends AbstractUndoableEdit
 {
-   public ShapesUndoableEdit(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> oldShapes, 
+   public ShapesUndoableEdit(VectorizeBitmapDialog dialog,
+     Vector<ShapeComponentVector> oldShapes, 
      Vector<ShapeComponentVector> newShapes, String name, Result result)
+   {
+      this(dialog, oldShapes, newShapes, name);
+
+      if (result != null)
+      {
+         resultList = new Vector<Result>(1);
+         resultList.add(result);
+      }
+   }
+
+   public ShapesUndoableEdit(VectorizeBitmapDialog dialog,
+     Vector<ShapeComponentVector> oldShapes, 
+     Vector<ShapeComponentVector> newShapes, String name, 
+     Vector<Result> resultList)
+   {
+      this(dialog, oldShapes, newShapes, name);
+      this.resultList = resultList;
+   }
+
+   public ShapesUndoableEdit(VectorizeBitmapDialog dialog,
+     Vector<ShapeComponentVector> oldShapes, 
+     Vector<ShapeComponentVector> newShapes, String name)
    {
       this.dialog = dialog;
       this.name = name;
       this.newShapes = newShapes;
       this.oldShapes = oldShapes;
-      this.result = result;
 
       createIcon();
    }
@@ -1873,9 +1944,12 @@ class ShapesUndoableEdit extends AbstractUndoableEdit
    {
       super.redo();
 
-      if (result != null)
+      if (resultList != null)
       {
-         dialog.addResult(result);
+         for (Result result : resultList)
+         {
+            dialog.addResult(result);
+         }
       }
 
       dialog.updateShapes(newShapes);
@@ -1885,9 +1959,12 @@ class ShapesUndoableEdit extends AbstractUndoableEdit
    {
       super.undo();
 
-      if (result != null)
+      if (resultList != null)
       {
-         dialog.removeResult(result);
+         for (int i = resultList.size()-1; i >= 0; i--)
+         {
+            dialog.removeResult(resultList.get(i));
+         }
       }
 
       dialog.updateShapes(oldShapes);
@@ -1896,7 +1973,7 @@ class ShapesUndoableEdit extends AbstractUndoableEdit
    private String name;
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> oldShapes=null, newShapes;
-   private Result result;
+   private Vector<Result> resultList;
 
    private Icon icon, selectedIcon;
 
@@ -2118,16 +2195,15 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
 
       ButtonGroup bg = new ButtonGroup();
 
-      scanAllButton = resources.createAppRadioButton("vectorize.scan_all", 
+      scanAllButton = resources.createAppRadioButton("vectorize", "scan_all", 
          bg, true, this);
       subPanel.add(scanAllButton);
 
       scanRegionButton = resources.createAppRadioButton(
-        "vectorize.scan_region", bg, false, this);
+        "vectorize", "scan_region", bg, false, this);
       subPanel.add(scanRegionButton);
 
-      regionPicker = resources.createToggleButton("vectorize", "select_region", null);
-      regionPicker.addChangeListener(this);
+      regionPicker = resources.createToggleButton("vectorize", "select_region", this);
       subPanel.add(regionPicker);
 
       subPanel = Box.createHorizontalBox();
@@ -2139,7 +2215,7 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       subPanel.add(subtractLastScanButton);
 
       subtractLastScanBorderCheckBox = resources.createAppCheckBox(
-        "vectorize.subtract_last_scan_border", true, this);
+        "vectorize", "subtract_last_scan_border", true, this);
       subPanel.add(subtractLastScanBorderCheckBox);
 
       subtractLastScanBorderModel = new SpinnerNumberModel(
@@ -2190,6 +2266,39 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
 
          controlPanel.updateTaskButton();
       }
+   }
+
+   public void actionPerformed(ActionEvent evt)
+   {
+      Object src = evt.getSource();
+      String command = evt.getActionCommand();
+
+      if (command == null)
+      {
+         command = "";
+      }
+
+      if (command.equals("choose_colour"))
+      {
+         Color col = foregroundChooser.showDialog(this, 
+            controlPanel.getResources().getString("vectorize.select_foreground"), 
+            getImageForeground());
+
+         if (col != null)
+         {
+            setImageForeground(col);
+         }
+      }
+      else if (command.equals("subtract_last_scan"))
+      {
+         VectorizeBitmapDialog dialog = controlPanel.getDialog();
+         region = dialog.subtractLastScannedRegion();
+
+         if (region != null)
+         {
+            scanRegionButton.setSelected(true);
+         }
+      }
       else if (src == colourPicker)
       {
          controlPanel.colourPickerChange(colourPicker.isSelected());
@@ -2203,13 +2312,16 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       {
          if (scanAllButton.isSelected())
          {
+            regionPicker.setSelected(false);
             regionPicker.setEnabled(false);
             controlPanel.imagePanelClearRegion();
             region = null;
          }
-         else
+         else if (src == scanRegionButton)
          {
             regionPicker.setEnabled(true);
+
+            controlPanel.getDialog().imagePanelRestoreOldRegion();
          }
       }
       else if (src == subtractLastScanBorderCheckBox)
@@ -2390,38 +2502,6 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       return imageForeground;
    }
 
-   public void actionPerformed(ActionEvent evt)
-   {
-      String command = evt.getActionCommand();
-
-      if (command == null)
-      {
-         return;
-      }
-
-      if (command.equals("choose_colour"))
-      {
-         Color col = foregroundChooser.showDialog(this, 
-            controlPanel.getResources().getString("vectorize.select_foreground"), 
-            getImageForeground());
-
-         if (col != null)
-         {
-            setImageForeground(col);
-         }
-      }
-      else if (command.equals("subtract_last_scan"))
-      {
-         VectorizeBitmapDialog dialog = controlPanel.getDialog();
-         region = dialog.subtractLastScannedRegion();
-
-         if (region != null)
-         {
-            scanRegionButton.setSelected(true);
-         }
-      }
-   }
-
    public void setImageForeground(Color col)
    {
       imageForeground = col;
@@ -2434,6 +2514,65 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       {
          foregroundPanel.setBackground(col);
          foregroundPanel.setOpaque(true);
+      }
+   }
+
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         foregroundPanel.setOpaque(false);
+         imageForeground = null;
+
+         if (colourPicker.isSelected())
+         {
+            colourPicker.setSelected(false);
+            controlPanel.colourPickerChange(false);
+         }
+
+         foregroundChooser.setColor(Color.BLACK);
+
+         fuzzSpinnerModel.setValue(Double.valueOf(2.0));
+         sampleWidthSpinnerModel.setValue(Integer.valueOf(10));
+         sampleHeightSpinnerModel.setValue(Integer.valueOf(10));
+
+         if (regionPicker.isSelected())
+         {
+            regionPicker.setSelected(false);
+            controlPanel.regionPickerChange(false);
+         }
+
+         if (!scanAllButton.isSelected())
+         {
+            scanAllButton.setSelected(true);
+            regionPicker.setEnabled(false);
+            controlPanel.imagePanelClearRegion();
+         }
+
+         region = null;
+
+         subtractLastScanBorderModel.setValue(
+            Integer.valueOf((getSampleWidth()+getSampleHeight())/4));
+
+         if (subtractLastScanBorderCheckBox.isSelected())
+         {
+            subtractLastScanBorderCheckBox.setSelected(false);
+            subtractLastScanBorderField.setEnabled(false);
+         }
+      }
+      else if (region != null)
+      {
+         VectorizeBitmapDialog dialog = controlPanel.getDialog();
+         int width = dialog.getImageWidth();
+         int height = dialog.getImageHeight();
+
+         Rectangle bounds = region.getBounds();
+
+         if (bounds.getX()+bounds.getWidth() > width
+          || bounds.getY()+bounds.getHeight() > height)
+         {
+            region = null;
+         }
       }
    }
 
@@ -2568,6 +2707,15 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
       minGapSpinner.setEnabled(enable);
       gradientEpsilonLabel.setEnabled(enable);
       minGapLabel.setEnabled(enable);
+   }
+
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         gradientEpsilonSpinnerModel.setValue(Double.valueOf(0.01));
+         minGapSpinnerModel.setValue(Double.valueOf(2.0));
+      }
    }
 
    public double getGradientEpsilon()
@@ -2746,6 +2894,33 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
       minTinySizeLabel.setEnabled(enable);
    }
 
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         minSubPathGapSpinnerModel.setValue(Double.valueOf(2.0));
+         minTinyAreaSpinnerModel.setValue(Double.valueOf(10.0));
+         minTinySizeSpinnerModel.setValue(Integer.valueOf(10));
+
+         if (!removeTinyPathsCheckBox.isSelected())
+         {
+            removeTinyPathsCheckBox.setSelected(true);
+
+            boolean enable = removeTinyPathsCheckBox.isEnabled();
+
+            minTinyAreaSpinner.setEnabled(enable);
+            minTinyAreaLabel.setEnabled(enable);
+            minTinySizeSpinner.setEnabled(enable);
+            minTinySizeLabel.setEnabled(enable);
+         }
+
+         if (!evenInteriorSplitButton.isSelected())
+         {
+            evenInteriorSplitButton.setSelected(true);
+         }
+      }
+   }
+
    public double getMinSubPathGap()
    {
       return minSubPathGapSpinnerModel.getNumber().doubleValue();
@@ -2802,7 +2977,7 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
    private ControlPanel controlPanel;
 }
 
-class LineDetectionPanel extends JPanel implements ChangeListener
+class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 {
    public LineDetectionPanel(ControlPanel controlPanel)
    {
@@ -2829,6 +3004,35 @@ class LineDetectionPanel extends JPanel implements ChangeListener
       deltaThresholdSpinner = controlPanel.createSpinner(
          deltaThresholdLabel, deltaThresholdSpinnerModel);
       subPanel.add(deltaThresholdSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
+      ButtonGroup bg = new ButtonGroup();
+
+      fixedLineWidthButton = resources.createAppRadioButton(
+        "vectorize", "fixed_line_width", bg, false, this);
+      subPanel.add(fixedLineWidthButton);
+
+      fixedLineWidthSpinnerModel = new SpinnerNumberModel(1, 1, 50, 1);
+      fixedLineWidthSpinner = new JSpinner(fixedLineWidthSpinnerModel);
+      fixedLineWidthSpinner.setEnabled(false);
+      subPanel.add(fixedLineWidthSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
+      relativeLineWidthButton = resources.createAppRadioButton(
+        "vectorize", "relative_line_width", bg, true, this);
+      subPanel.add(relativeLineWidthButton);
+
+      roundRelativeLineWidthCheckBox = resources.createAppCheckBox(
+        "vectorize", "round_relative_line_width", true, null);
+      subPanel.add(roundRelativeLineWidthCheckBox);
 
       detectIntersections = resources.createAppCheckBox(
          "vectorize.detect_intersections", true, this);
@@ -2919,6 +3123,29 @@ class LineDetectionPanel extends JPanel implements ChangeListener
       }
    }
 
+   public void actionPerformed(ActionEvent evt)
+   {
+      String action = evt.getActionCommand();
+
+      if (action == null) return;
+
+      if ((action.equals("fixed_line_width") || action.equals("relative_line_width"))
+          && fixedLineWidthButton.isEnabled() && relativeLineWidthButton.isEnabled())
+      {
+
+         if (fixedLineWidthButton.isSelected())
+         {
+            fixedLineWidthSpinner.setEnabled(true);
+            roundRelativeLineWidthCheckBox.setEnabled(false);
+         }
+         else
+         {
+            fixedLineWidthSpinner.setEnabled(false);
+            roundRelativeLineWidthCheckBox.setEnabled(true);
+         }
+      }
+   }
+
    public void setSelected(boolean selected)
    {
       doLineDetectionCheckBox.setSelected(selected);
@@ -2937,6 +3164,28 @@ class LineDetectionPanel extends JPanel implements ChangeListener
       deltaThresholdSpinner.setEnabled(enable);
       deltaThresholdLabel.setEnabled(enable);
 
+      fixedLineWidthButton.setEnabled(enable);
+      relativeLineWidthButton.setEnabled(enable);
+
+      if (enable)
+      {
+         if (fixedLineWidthButton.isSelected())
+         {
+            fixedLineWidthSpinner.setEnabled(true);
+            roundRelativeLineWidthCheckBox.setEnabled(false);
+         }
+         else
+         {
+            fixedLineWidthSpinner.setEnabled(false);
+            roundRelativeLineWidthCheckBox.setEnabled(true);
+         }
+      }
+      else
+      {
+         fixedLineWidthSpinner.setEnabled(false);
+         roundRelativeLineWidthCheckBox.setEnabled(false);
+      }
+
       detectIntersections.setEnabled(enable);
 
       enable = enable && detectIntersections.isSelected();
@@ -2949,6 +3198,59 @@ class LineDetectionPanel extends JPanel implements ChangeListener
 
       tinyStepThresholdSpinner.setEnabled(enable);
       tinyStepThresholdLabel.setEnabled(enable);
+   }
+
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         deltaThresholdSpinnerModel.setValue(Double.valueOf(2.0));
+         fixedLineWidthSpinnerModel.setValue(Integer.valueOf(1));
+
+         if (fixedLineWidthSpinner.isEnabled())
+         {
+            fixedLineWidthSpinner.setEnabled(false);
+         }
+
+         if (!relativeLineWidthButton.isSelected())
+         {
+            relativeLineWidthButton.setSelected(true);
+
+            if (!roundRelativeLineWidthCheckBox.isEnabled())
+            {
+               roundRelativeLineWidthCheckBox.setEnabled(true);
+            }
+         }
+
+         if (!roundRelativeLineWidthCheckBox.isSelected())
+         {
+            roundRelativeLineWidthCheckBox.setSelected(true);
+         }
+
+         if (!detectIntersections.isSelected())
+         {
+            detectIntersections.setSelected(true);
+         }
+
+         deltaVarianceThresholdSpinnerModel.setValue(Double.valueOf(16.0));
+         spikeReturnDistanceSpinnerModel.setValue(Double.valueOf(4.0));
+         tinyStepThresholdSpinnerModel.setValue(Double.valueOf(3.5));
+      }
+   }
+
+   public boolean isFixedLineWidth()
+   {
+      return fixedLineWidthButton.isSelected();
+   }
+
+   public double getFixedLineWidth()
+   {
+      return fixedLineWidthSpinnerModel.getNumber().doubleValue();
+   }
+
+   public boolean isRoundRelativeOn()
+   {
+      return roundRelativeLineWidthCheckBox.isSelected();
    }
 
    public double getDeltaThreshold()
@@ -2986,12 +3288,17 @@ class LineDetectionPanel extends JPanel implements ChangeListener
 
    private SpinnerNumberModel deltaThresholdSpinnerModel,
       deltaVarianceThresholdSpinnerModel, tinyStepThresholdSpinnerModel,
-      spikeReturnDistanceSpinnerModel;
+      spikeReturnDistanceSpinnerModel,
+      fixedLineWidthSpinnerModel;
 
    private JSpinner deltaThresholdSpinner, deltaVarianceThresholdSpinner,
-    tinyStepThresholdSpinner, spikeReturnDistanceSpinner;
+    tinyStepThresholdSpinner, spikeReturnDistanceSpinner,
+    fixedLineWidthSpinner;
 
-   private JCheckBox doLineDetectionCheckBox, detectIntersections;
+   private JCheckBox doLineDetectionCheckBox, detectIntersections,
+    roundRelativeLineWidthCheckBox;
+
+   private JRadioButton fixedLineWidthButton, relativeLineWidthButton;
 
    private ControlPanel controlPanel;
 }
@@ -3222,6 +3529,24 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveMinPointsLabel.setEnabled(enable);
    }
 
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         tinyStepThresholdSpinnerModel.setValue(Double.valueOf(10.0));
+         lengthThresholdSpinnerModel.setValue(Double.valueOf(20.0));
+         thresholdDiffSpinnerModel.setValue(Double.valueOf(2.0));
+
+         curveGradientThresholdSpinnerModel.setValue(Double.valueOf(10.0));
+         curveMinPointsSpinnerModel.setValue(Integer.valueOf(5));
+
+         if (!tryBezierCheckBox.isSelected())
+         {
+            tryBezierCheckBox.setSelected(true);
+         }
+      }
+   }
+
    public boolean isSmoothingOn()
    {
       return doSmoothingCheckBox.isSelected();
@@ -3333,6 +3658,14 @@ class RemoveTinyPathsPanel extends JPanel implements ChangeListener
 
       maxTinyPathsSpinner.setEnabled(enable);
       maxTinyPathsLabel.setEnabled(enable);
+   }
+
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         maxTinyPathsSpinnerModel.setValue(Double.valueOf(4.0));
+      }
    }
 
    public double getMaxTinyPaths()
@@ -3568,6 +3901,16 @@ class ControlPanel extends JPanel implements ActionListener
       }
    }
 
+   public void reset(boolean revertAll)
+   {
+      scanImagePanel.reset(revertAll);
+      optimizeLinesPanel.reset(revertAll);
+      splitSubPathsPanel.reset(revertAll);
+      lineDetectionPanel.reset(revertAll);
+      smoothingPanel.reset(revertAll);
+      removeTinyPathsPanel.reset(revertAll);
+   }
+
    public void updateTaskButton()
    {
       if (doTasksButton != null)
@@ -3760,6 +4103,21 @@ class ControlPanel extends JPanel implements ActionListener
    public boolean isTryBezierOn()
    {
       return smoothingPanel.isTryBezierOn();
+   }
+
+   public boolean isFixedLineWidth()
+   {
+      return lineDetectionPanel.isFixedLineWidth();
+   }
+
+   public double getFixedLineWidth()
+   {
+      return lineDetectionPanel.getFixedLineWidth();
+   }
+
+   public boolean isRoundRelativeOn()
+   {
+      return lineDetectionPanel.isRoundRelativeOn();
    }
 
    public boolean isLineDetectionOn()
@@ -4339,8 +4697,19 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       this.isFilled = isFilled;
    }
 
+   public double getLineWidth()
+   {
+      return lineWidth;
+   }
+
+   public void setLineWidth(double width)
+   {
+      lineWidth = width;
+   }
+
    private int windingRule = Path2D.WIND_NON_ZERO;
    private boolean isFilled = true;
+   private double lineWidth=1.0;
 
    private static final double EPSILON=1e-6;
 }
@@ -4881,15 +5250,75 @@ class ScanImage extends SwingWorker<Void,Raster>
                rectHeight = height-y;
             }
 
-            if (scanRegion != null 
-                   && !scanRegion.contains(x+0.5*rectWidth, y+0.5*rectHeight))
+            Rectangle rect = new Rectangle(x, y, rectWidth, rectHeight);
+
+            if (scanRegion != null && !scanRegion.contains(rect))
             {
-               continue;
+               if (scanRegion.intersects(rect))
+               {
+                  Area ar = new Area(rect);
+                  ar.intersect(scanRegion);
+
+                  if (ar.isRectangular())
+                  {
+                     Raster raster = image.getData(ar.getBounds());
+                     publish(raster);
+                  }
+                  else
+                  {
+                     int halfRectWidth = rectWidth/2;
+                     int halfRectHeight = rectHeight/2;
+
+                     if (halfRectWidth == 0 || halfRectHeight == 0)
+                     {
+                        continue;
+                     }
+
+                     int x1 = x+halfRectWidth;
+                     int y1 = y+halfRectHeight;
+
+                     rect = new Rectangle(x, y, halfRectWidth, halfRectHeight);
+
+                     if (scanRegion.contains(rect))
+                     {
+                        Raster raster = image.getData(rect);
+                        publish(raster);
+                     }
+
+                     rect = new Rectangle(x1, y,
+                         halfRectWidth, halfRectHeight);
+
+                     if (scanRegion.contains(rect))
+                     {
+                        Raster raster = image.getData(rect);
+                        publish(raster);
+                     }
+
+                     rect = new Rectangle(x, y1,
+                        halfRectWidth, halfRectHeight);
+
+                     if (scanRegion.contains(rect))
+                     {
+                        Raster raster = image.getData(rect);
+                        publish(raster);
+                     }
+
+                     rect = new Rectangle(x1, y1,
+                       halfRectWidth, halfRectHeight);
+
+                     if (scanRegion.contains(rect))
+                     {
+                        Raster raster = image.getData(rect);
+                        publish(raster);
+                     }
+                  }
+               }
             }
-
-            Raster raster = image.getData(new Rectangle(x, y, rectWidth, rectHeight));
-
-            publish(raster);
+            else
+            {
+               Raster raster = image.getData(rect);
+               publish(raster);
+            }
          }
       }
 
@@ -5993,6 +6422,32 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       dialog.repaintImagePanel(newShape.getBounds(), false);
    }
 
+   private void setLineWidth(ShapeComponentVector shape, double delta)
+   {
+      double width;
+
+      if (dialog.isFixedLineWidth())
+      {
+         width = dialog.getFixedLineWidth();
+      }
+      else
+      {
+         width = 2.0*delta;
+
+         if (dialog.isRoundRelativeOn())
+         {
+            width = Math.round(width);
+
+            if ((int)width == 0)
+            {
+               width = 1.0;
+            }
+         }
+      }
+
+      shape.setLineWidth(width);
+   }
+
    private void tryLineify(ShapeComponentVector vec)
      throws InterruptedException
    {
@@ -6221,74 +6676,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                      }
                   }
                }
-
-/*
-               for (int k2 = startIdx2; k2 < endIdx2; k2++)
-               {
-                  ShapeComponent comp2 = vec.get(k2);
-                  Point2D.Double p2 = comp2.getEnd();
-
-                  double dist = getDistance(p1, p2);
-
-                  if (dist < deltaThreshold)
-                  {
-dialog.addMessageLn(String.format("i=%d, j=%d, k1=%d, k2=%d, p1=%s, p2=%s, dist=%f", i, j, k1, k2, p1, p2, dist));
-                     ShapeComponent comp1next = vec.get(k1+1);
-                     Point2D.Double p1next;
-
-                     if (comp1next.getType() == PathIterator.SEG_CLOSE)
-                     {
-                        p1next = startPt1;
-                     }
-                     else
-                     {
-                        p1next = comp1next.getEnd();
-                     }
-
-                     ShapeComponent comp2next = vec.get(k2+1);
-                     Point2D.Double p2next;
-
-                     if (comp2next.getType() == PathIterator.SEG_CLOSE)
-                     {
-                        p2next = startPt2;
-                     }
-                     else
-                     {
-                        p2next = comp2next.getEnd();
-                     }
-
-                     double nextDist = getDistance(p1next, p2next);
-dialog.addMessageLn(String.format("p1next=%s, p2next=%s, next dist: %f", p1next, p2next, nextDist));
-
-                     if (nextDist < deltaThreshold)
-                     {
-                        closestStart1 = k1;
-                        closestStart2 = k2;
-                        break;
-                     }
-
-                     if (k2 > startIdx2)
-                     {
-                        p2next = vec.get(k2-1).getEnd();
-                     }
-                     else
-                     {
-                        p2next = vec.get(endIdx2-1).getEnd();
-                     }
-
-                     nextDist = getDistance(p1next, p2next);
-dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f", p1next, p2next, nextDist));
-                     if (nextDist < deltaThreshold)
-                     {
-                        closestStart1 = k1;
-                        closestStart2 = k2;
-                        reverse = true;
-                        break;
-                     }
-
-                  }
-               }
-*/
 
                if (closestStart1 > -1)
                {
@@ -6860,11 +7247,13 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (newPath1.size() == n1 && numPts1 > 0)
       {
+         averageDelta1 /= numPts1;
+
          newPath1.setFilled(false);
+         setLineWidth(newPath1, averageDelta1);
          addShape(newPath1);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          newShapesVec.size(), averageDelta1/numPts1);
-         success = true;
+          newShapesVec.size(), averageDelta1);
          return true;
       }
 
@@ -6954,6 +7343,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
 
          newPath1.setFilled(false);
+         setLineWidth(newPath1, averageDelta1);
          addShape(newPath1);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
           newShapesVec.size(), averageDelta1);
@@ -6968,6 +7358,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
          }
 
          newPath2.setFilled(false);
+         setLineWidth(newPath2, averageDelta2);
          addShape(newPath2);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
           newShapesVec.size(), averageDelta2);
@@ -7131,6 +7522,69 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       return tryLineify(pts1, pts2);
    }
 
+   private boolean findBulge(ShapeComponentVector vec)
+     throws InterruptedException
+   {
+      int n = vec.size()-1;
+
+      int idx1 = -1;
+
+      Point2D p0 = vec.get(0).getEnd();
+      Point2D p1 = p0;
+
+      Point2D q1=null, q2=null;
+
+      for (int i = 0; i < n-1; i++)
+      {
+         Point2D p2 = vec.get(i+1).getEnd();
+
+         double delta = 0.5*getDistance(p1, p2);
+
+         if (delta <= deltaThreshold)
+         {
+            q1 = p1;
+            q2 = p2;
+            idx1 = i;
+            break;
+         }
+
+         p1 = p2;
+      }
+
+      if (idx1 == -1)
+      {
+         return false;
+      }
+
+      int idx2 = -1;
+
+      p1 = p0;
+
+      for (int i = n; i > idx1; i--)
+      {
+         Point2D p2 = vec.get(i-1).getEnd();
+
+         double delta = 0.5*getDistance(p1, p2);
+
+         if (delta <= deltaThreshold
+              && (getDistance(p1, q1) > varianceThreshold
+                  && getDistance(p2, q2) > varianceThreshold))
+         {
+            idx2 = i;
+            break;
+         }
+
+         p1 = p2;
+      }
+
+      if (idx2 == -1 || (idx1 == 0 && idx2 == n) || (idx2 - idx1 <= 1))
+      {
+         return false;
+      }
+
+      return tryLineifyBulge(vec, idx1, idx2);
+   }
+
    private void tryLineifyRegion(SubPath subPath)
     throws InterruptedException
    {
@@ -7220,66 +7674,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (spikes.isEmpty())
       {
-         int idx1 = -1;
-
-         Point2D p0 = vec.get(0).getEnd();
-         Point2D p1 = p0;
-
-         Point2D q1=null, q2=null;
-
-         for (int i = 0; i < n-1; i++)
-         {
-            Point2D p2 = vec.get(i+1).getEnd();
-
-            double dist = getDistance(p1, p2);
-
-            if (dist <= deltaThreshold)
-            {
-               q1 = p1;
-               q2 = p2;
-               idx1 = i;
-               break;
-            }
-
-            p1 = p2;
-         }
-
-         if (idx1 == -1)
-         {
-            addShape(vec);
-            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
-            return;
-         }
-
-         int idx2 = -1;
-
-         p1 = p0;
-
-         for (int i = n; i > idx1; i--)
-         {
-            Point2D p2 = vec.get(i-1).getEnd();
-
-            double dist = getDistance(p1, p2);
-
-            if (dist <= deltaThreshold
-                 && (getDistance(p1, q1) > varianceThreshold
-                     && getDistance(p2, q2) > varianceThreshold))
-            {
-               idx2 = i;
-               break;
-            }
-
-            p1 = p2;
-         }
-
-         if (idx2 == -1 || (idx1 == 0 && idx2 == n) || (idx2 - idx1 <= 1))
-         {
-            addShape(vec);
-            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
-            return;
-         }
-
-         if (!tryLineifyBulge(vec, idx1, idx2))
+         if (!findBulge(vec))
          {
             addShape(vec);
             dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
@@ -7358,9 +7753,13 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       }
       else
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.reduced_path_failed", 
-            newShapesVec.size(), reducedPathResults.minAverageDelta);
+         if (!findBulge(vec))
+         {
+            addShape(vec);
+            dialog.addMessageIdLn("vectorize.reduced_path_failed", 
+               newShapesVec.size(), reducedPathResults.minAverageDelta);
+         }
+
          return;
       }
 
@@ -7433,6 +7832,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       {
          if (!doLineIntersectionCheck)
          {
+            setLineWidth(path, averageDelta);
             addShape(path);
             dialog.addMessageIdLn("vectorize.success_no_intersect_check",
              newShapesVec.size(), averageDelta);
@@ -7444,6 +7844,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
             if (variance <= varianceThreshold)
             {
+               setLineWidth(path, averageDelta);
                addShape(path);
                dialog.addMessageIdLn("vectorize.success_intersect_check",
                  newShapesVec.size(), averageDelta, variance);
@@ -7504,6 +7905,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       {
          if (bestAverageDelta <= deltaThreshold)
          {
+            setLineWidth(path, bestAverageDelta);
             addShape(path);
             dialog.addMessageIdLn("vectorize.success_no_intersect_check",
              newShapesVec.size(), bestAverageDelta);
@@ -7522,6 +7924,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (bestAverageDelta <= deltaThreshold && variance <= varianceThreshold)
       {
+         setLineWidth(path, bestAverageDelta);
          addShape(path);
          dialog.addMessageIdLn("vectorize.success_intersect_check",
             newShapesVec.size(), bestAverageDelta, variance);
@@ -7712,6 +8115,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
 
       if (bestAverageDelta <= deltaThreshold)
       {
+         setLineWidth(bestPath, bestAverageDelta);
          addShape(bestPath);
          dialog.addMessageIdLn("vectorize.reduced_path_success", 
             newShapesVec.size(), bestAverageDelta);
@@ -8789,6 +9193,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
             bestOffset = i;
             bestLineFit = linefit;
 
+            setLineWidth(bestPath, averageDelta);
             updateCurrentShape(newPath);
          }
       }
@@ -8885,6 +9290,8 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
             bestOffset = offset;
             bestN1 = m1;
             bestN2 = m2;
+
+            setLineWidth(bestPath, averageDelta);
             updateCurrentShape(newPath);
          }
       }
@@ -8943,6 +9350,8 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
             bestDelta = delta;
             bestLineFit = linefit;
             bestPath = newPath;
+
+            setLineWidth(bestPath, bestDelta);
          }
       }
 
@@ -8962,6 +9371,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
             bestDelta = delta;
             bestLineFit = linefit;
             bestPath = newPath;
+            setLineWidth(bestPath, bestDelta);
          }
       }
 
@@ -8969,6 +9379,7 @@ dialog.addMessageLn(String.format("reverse p1next=%s, p2next=%s, next dist: %f",
       {
          path.clear();
          path.addAll(bestPath);
+         setLineWidth(path, bestDelta);
       }
 
       return linefit;
@@ -11140,8 +11551,18 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
 
    public void clearRegion()
    {
+      oldNotRegion = notRegion;
+      oldRegionBounds = regionBounds;
+
       notRegion = null;
       updateRegionBounds();
+      repaint();
+   }
+
+   public void restoreOldRegion()
+   {
+      notRegion = oldNotRegion;
+      regionBounds = oldRegionBounds;
       repaint();
    }
 
@@ -11231,8 +11652,8 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
    private Vector<Shape> shapes;
    private Point dragStart = null;
    private Rectangle draggingRegion = null;
-   private Area notRegion=null;
-   private Rectangle2D regionBounds;
+   private Area notRegion=null, oldNotRegion;
+   private Rectangle2D regionBounds, oldRegionBounds;
 
    private static Stroke CONNECT_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
      BasicStroke.JOIN_BEVEL, 10.0f, new float[] {4.0f, 2.0f}, 0.0f);
@@ -11250,6 +11671,8 @@ class Result
       foreground = colour;
       isFilled = shapeVec.isFilled();
       shape = shapeVec.getPath();
+      stroke = new BasicStroke((float)shapeVec.getLineWidth(), BasicStroke.CAP_BUTT,
+       BasicStroke.JOIN_MITER);
    }
 
    public void paint(Graphics2D g2)
@@ -11262,6 +11685,7 @@ class Result
       }
       else
       {
+         g2.setStroke(stroke);
          g2.draw(shape);
       }
    }
@@ -11284,7 +11708,8 @@ class Result
          path.setFillPaint(null);
       }
 
-      path.setStroke(new JDRBasicStroke(cg));
+      path.setStroke(new JDRBasicStroke(cg, stroke.getLineWidth(),
+        stroke.getEndCap(), stroke.getLineJoin()));
 
       return path;
    }
@@ -11292,6 +11717,7 @@ class Result
    private Color foreground;
    private boolean isFilled;
    private Shape shape;
+   private BasicStroke stroke;
 }
 
 class ResultPanel extends JPanel
@@ -11408,6 +11834,9 @@ class ResultPanel extends JPanel
 
       Graphics2D g2 = (Graphics2D)g;
 
+      RenderingHints oldHints = g2.getRenderingHints();
+      AffineTransform oldAf = g2.getTransform();
+
       g2.setRenderingHints(RENDER_HINTS);
 
       Color lineCol = imagePanel.getUnpinnedLineColor();
@@ -11441,6 +11870,9 @@ class ResultPanel extends JPanel
             }
          }
       }
+
+      g2.setTransform(oldAf);
+      g2.setRenderingHints(oldHints);
    }
 
    private ImagePanel imagePanel;
@@ -11590,10 +12022,9 @@ class SummaryPathPanel extends JPanel implements ActionListener
 
       if (ic != null)
       {
-         JLabel iconLabel = new JLabel(ic);
-         iconLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-         iconLabel.setVerticalAlignment(SwingConstants.TOP);
-         add(iconLabel, "East");
+         JComponent iconComp = new IconPanel(ic);
+         iconComp.setAlignmentY(Component.TOP_ALIGNMENT);
+         add(iconComp, "East");
       }
    }
 
@@ -11631,7 +12062,7 @@ class SummaryPathPanel extends JPanel implements ActionListener
 
       g2.setPaint(dialog.getForeground());
 
-      g2.translate(-bounds.getX(), -bounds.getY());
+      g2.translate(-factor*bounds.getX(), -factor*bounds.getY());
       g2.scale(factor, factor);
       g2.draw(shape.getPath());
 
@@ -11659,4 +12090,26 @@ class SummaryPathPanel extends JPanel implements ActionListener
    private VectorizeBitmapDialog dialog;
    private int index;
    public static final int ICON_SIZE=100;
+}
+
+class IconPanel extends JPanel
+{
+   public IconPanel(Icon ic)
+   {
+      super(null);
+      this.ic = ic;
+
+      Dimension dim = new Dimension(ic.getIconWidth(), ic.getIconHeight());
+      setPreferredSize(dim);
+      setOpaque(false);
+   }
+
+   protected void paintComponent(Graphics g)
+   {
+      super.paintComponent(g);
+
+      ic.paintIcon(this, g, 0, 0);
+   }
+
+   private Icon ic;
 }
