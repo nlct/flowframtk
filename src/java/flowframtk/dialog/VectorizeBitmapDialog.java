@@ -608,16 +608,15 @@ public class VectorizeBitmapDialog extends JFrame
    {
       if (shapeList == null || shapeList.isEmpty()) return;
 
-      int n = shapeList.size();
-
       storeOldShapes();
-      Vector<Result> resultList = new Vector<Result>(n);
+      Vector<Result> resultList = new Vector<Result>(shapeList.size());
 
-      for (int i = n-1; i >= 0; i--)
+      for (ShapeComponentVector shape: shapeList)
       {
-         ShapeComponentVector shape = shapeList.remove(i);
          resultList.add(resultPanel.storeShape(shape));
       }
+
+      shapeList = null;
 
       addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
          resultList);
@@ -962,7 +961,7 @@ public class VectorizeBitmapDialog extends JFrame
    public void updateWidgets()
    {
       controlPanel.updateWidgets(
-        scanStatusBar.isTaskInProgress(), shapeList != null);
+        scanStatusBar.isTaskInProgress(), shapeList != null && !shapeList.isEmpty());
    }
 
    public void showStatusBar()
@@ -5236,11 +5235,22 @@ class ScanImage extends SwingWorker<Void,Raster>
    }
 
    private void processSample(Area ar, Rectangle rect)
+     throws InterruptedException
    {
+      Thread.sleep(VectorizeBitmapDialog.SLEEP_DURATION);
+
+      // check for cancel
+      if (dialog.isCancelled())
+      {
+         dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+         throw new UserCancelledException(dialog.getMessageDictionary());
+      }
+
       processSample(ar, rect.x, rect.y, rect.width, rect.height);
    }
 
    private void processSample(Area ar, int x, int y, int rectWidth, int rectHeight)
+     throws InterruptedException
    {
       int halfRectWidth = rectWidth/2;
       int halfRectHeight = rectHeight/2;
@@ -6406,12 +6416,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (dialog.isRoundRelativeOn())
          {
-            width = Math.round(width);
-
-            if ((int)width == 0)
-            {
-               width = 1.0;
-            }
+            width = Math.max(1.0, Math.floor(width));
          }
       }
 
@@ -7305,7 +7310,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          newPath2 = null;
       }
 
-      if (newPath1.size() > 1)
+      if (newPath1 != null && newPath1.size() > 1)
       {
          if (numPts1 > 0)
          {
@@ -9387,10 +9392,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                idx2 = i;
             }
 
-/*
-            int idx1 = (offset+i)%pts.length;
-            int idx2 = (offset+pts.length-j-1)%pts.length;
-*/
             idx1 = (offset+idx1)%pts.length;
             idx2 = (offset+pts.length-idx2-1)%pts.length;
 
@@ -11655,8 +11656,10 @@ class Result
       }
       else
       {
+         Stroke orgStroke = g2.getStroke();
          g2.setStroke(stroke);
          g2.draw(shape);
+         g2.setStroke(orgStroke);
       }
    }
 
@@ -11948,6 +11951,25 @@ class SummaryPathPanel extends JPanel implements ActionListener
             extraText2 = resources.getMessage("vectorize.summary.subpaths", 
               numSubPaths);
          }
+
+         if (!shape.isFilled())
+         {
+            if (extraText2.isEmpty())
+            {
+               extraText2 = resources.getMessage(
+                 "vectorize.summary.line_width", shape.getLineWidth());
+            }
+            else
+            {
+               extraText2 += " " + resources.getMessage(
+                 "vectorize.summary.line_width", shape.getLineWidth());
+            }
+         }
+      }
+      else
+      {
+         extraText = resources.getMessage(
+           "vectorize.summary.line_width", shape.getLineWidth());
       }
 
       String text = resources.getMessage("vectorize.summary.path_n", 

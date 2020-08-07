@@ -2838,6 +2838,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.empty">Empty!</entry>
 <entry key="vectorize.summary.closed">Closed. Winding rule: {0}.</entry>
 <entry key="vectorize.summary.subpaths">{0} sub-paths.</entry>
+<entry key="vectorize.summary.line_width">Line width: {0}bp.</entry>
 <entry key="vectorize.summary.discard">Delete</entry>
 <entry key="vectorize.summary.pin">Pin</entry>
 
