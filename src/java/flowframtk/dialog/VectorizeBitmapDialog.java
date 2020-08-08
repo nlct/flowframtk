@@ -1705,6 +1705,11 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getSmoothingTinyStepThreshold();
    }
 
+   public double getSmoothingDeviationEpsilon()
+   {
+      return controlPanel.getSmoothingDeviationEpsilon();
+   }
+
    public double getLengthThreshold()
    {
       return controlPanel.getLengthThreshold();
@@ -1713,6 +1718,11 @@ public class VectorizeBitmapDialog extends JFrame
    public double getThresholdDiff()
    {
       return controlPanel.getThresholdDiff();
+   }
+
+   public double getSmoothingMaxDeviation()
+   {
+      return controlPanel.getSmoothingMaxDeviation();
    }
 
    public double getMaxTinyPaths()
@@ -3478,6 +3488,34 @@ class SmoothingPanel extends JPanel implements ChangeListener
          thresholdDiffLabel, thresholdDiffSpinnerModel);
       subPanel.add(thresholdDiffSpinner);
 
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
+      maxDeviationSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
+
+      maxDeviationLabel = resources.createAppLabel(
+         "vectorize.smooth_shapes.max_deviation");
+      subPanel.add(maxDeviationLabel);
+
+      maxDeviationSpinner = controlPanel.createSpinner(
+         maxDeviationLabel, maxDeviationSpinnerModel);
+      subPanel.add(maxDeviationSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
+      deviationEpsilonSpinnerModel = new SpinnerNumberModel(0.01, 0.0, 100.0, 0.01);
+
+      deviationEpsilonLabel = resources.createAppLabel(
+         "vectorize.smooth_shapes.deviation_epsilon");
+      subPanel.add(deviationEpsilonLabel);
+
+      deviationEpsilonSpinner = controlPanel.createSpinner(
+         deviationEpsilonLabel, deviationEpsilonSpinnerModel);
+      subPanel.add(deviationEpsilonSpinner);
+
       tryBezierCheckBox = resources.createAppCheckBox(
          "vectorize.smooth_shapes.try_bezier", true, this);
       add(tryBezierCheckBox);
@@ -3529,6 +3567,20 @@ class SmoothingPanel extends JPanel implements ChangeListener
          maxPrefSize = prefSize;
       }
 
+      prefSize = maxDeviationLabel.getPreferredSize();
+
+      if (prefSize.width > maxPrefSize.width)
+      {
+         maxPrefSize = prefSize;
+      }
+
+      prefSize = deviationEpsilonLabel.getPreferredSize();
+
+      if (prefSize.width > maxPrefSize.width)
+      {
+         maxPrefSize = prefSize;
+      }
+
       prefSize = curveGradientThresholdLabel.getPreferredSize();
 
       if (prefSize.width > maxPrefSize.width)
@@ -3557,6 +3609,16 @@ class SmoothingPanel extends JPanel implements ChangeListener
       prefSize.width = maxPrefSize.width;
       thresholdDiffLabel.setPreferredSize(prefSize);
       thresholdDiffLabel.setMaximumSize(prefSize);
+
+      prefSize = maxDeviationLabel.getPreferredSize();
+      prefSize.width = maxPrefSize.width;
+      maxDeviationLabel.setPreferredSize(prefSize);
+      maxDeviationLabel.setMaximumSize(prefSize);
+
+      prefSize = deviationEpsilonLabel.getPreferredSize();
+      prefSize.width = maxPrefSize.width;
+      deviationEpsilonLabel.setPreferredSize(prefSize);
+      deviationEpsilonLabel.setMaximumSize(prefSize);
 
       prefSize = curveGradientThresholdLabel.getPreferredSize();
       prefSize.width = maxPrefSize.width;
@@ -3594,11 +3656,15 @@ class SmoothingPanel extends JPanel implements ChangeListener
          tinyStepThresholdSpinner.setEnabled(enable);
          lengthThresholdSpinner.setEnabled(enable);
          thresholdDiffSpinner.setEnabled(enable);
+         maxDeviationSpinner.setEnabled(enable);
+         deviationEpsilonSpinner.setEnabled(enable);
          curveGradientThresholdSpinner.setEnabled(enable);
          curveMinPointsSpinner.setEnabled(enable);
          tinyStepThresholdLabel.setEnabled(enable);
          lengthThresholdLabel.setEnabled(enable);
          thresholdDiffLabel.setEnabled(enable);
+         maxDeviationLabel.setEnabled(enable);
+         deviationEpsilonLabel.setEnabled(enable);
          tryBezierCheckBox.setEnabled(enable);
 
          updateBezierWidgets();
@@ -3632,11 +3698,15 @@ class SmoothingPanel extends JPanel implements ChangeListener
       tinyStepThresholdSpinner.setEnabled(enable);
       lengthThresholdSpinner.setEnabled(enable);
       thresholdDiffSpinner.setEnabled(enable);
+      maxDeviationSpinner.setEnabled(enable);
+      deviationEpsilonSpinner.setEnabled(enable);
       curveGradientThresholdSpinner.setEnabled(enable);
       curveMinPointsSpinner.setEnabled(enable);
       tinyStepThresholdLabel.setEnabled(enable);
       lengthThresholdLabel.setEnabled(enable);
       thresholdDiffLabel.setEnabled(enable);
+      maxDeviationLabel.setEnabled(enable);
+      deviationEpsilonLabel.setEnabled(enable);
 
       tryBezierCheckBox.setEnabled(enable);
 
@@ -3653,6 +3723,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
          tinyStepThresholdSpinnerModel.setValue(Double.valueOf(10.0));
          lengthThresholdSpinnerModel.setValue(Double.valueOf(20.0));
          thresholdDiffSpinnerModel.setValue(Double.valueOf(2.0));
+         maxDeviationSpinnerModel.setValue(Double.valueOf(2.0));
+         deviationEpsilonSpinnerModel.setValue(Double.valueOf(0.01));
 
          curveGradientThresholdSpinnerModel.setValue(Double.valueOf(10.0));
          curveMinPointsSpinnerModel.setValue(Integer.valueOf(5));
@@ -3689,6 +3761,16 @@ class SmoothingPanel extends JPanel implements ChangeListener
       return thresholdDiffSpinnerModel.getNumber().doubleValue();
    }
 
+   public double getMaxDeviation()
+   {
+      return maxDeviationSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getDeviationEpsilon()
+   {
+      return deviationEpsilonSpinnerModel.getNumber().doubleValue();
+   }
+
    public double getCurveGradientThreshold()
    {
       return curveGradientThresholdSpinnerModel.getNumber().doubleValue();
@@ -3700,15 +3782,18 @@ class SmoothingPanel extends JPanel implements ChangeListener
    }
 
    private JLabel tinyStepThresholdLabel, lengthThresholdLabel, thresholdDiffLabel,
-    curveGradientThresholdLabel, curveMinPointsLabel;
+    curveGradientThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
+    deviationEpsilonLabel;
 
    private SpinnerNumberModel  
      tinyStepThresholdSpinnerModel, lengthThresholdSpinnerModel,
-     thresholdDiffSpinnerModel,
+     thresholdDiffSpinnerModel, maxDeviationSpinnerModel,
+     deviationEpsilonSpinnerModel,
      curveMinPointsSpinnerModel, curveGradientThresholdSpinnerModel;
 
    private JSpinner curveMinPointsSpinner, curveGradientThresholdSpinner,
-     thresholdDiffSpinner, lengthThresholdSpinner, tinyStepThresholdSpinner;
+     thresholdDiffSpinner, lengthThresholdSpinner, tinyStepThresholdSpinner,
+     maxDeviationSpinner, deviationEpsilonSpinner;
 
    private JCheckBox doSmoothingCheckBox, tryBezierCheckBox;
 
@@ -4181,6 +4266,11 @@ class ControlPanel extends JPanel implements ActionListener
       return smoothingPanel.getTinyStepThreshold();
    }
 
+   public double getSmoothingDeviationEpsilon()
+   {
+      return smoothingPanel.getDeviationEpsilon();
+   }
+
    public double getLengthThreshold()
    {
       return smoothingPanel.getLengthThreshold();
@@ -4189,6 +4279,11 @@ class ControlPanel extends JPanel implements ActionListener
    public double getThresholdDiff()
    {
       return smoothingPanel.getThresholdDiff();
+   }
+
+   public double getSmoothingMaxDeviation()
+   {
+      return smoothingPanel.getMaxDeviation();
    }
 
    public double getCurveGradientThreshold()
@@ -4956,7 +5051,7 @@ class ShapeComponent
       start = null;
    }
 
-   public ShapeComponent(int type, double[] coords, Point2D.Double start)
+   public ShapeComponent(int type, double[] coords, Point2D start)
    {
       this.type = type;
 
@@ -4970,7 +5065,14 @@ class ShapeComponent
          }
       }
 
-      this.start = start;
+      if (start instanceof Point2D.Double || start == null)
+      {
+         this.start = (Point2D.Double)start;
+      }
+      else
+      {
+         this.start = new Point2D.Double(start.getX(), start.getY());
+      }
    }
 
    public ShapeComponent(ShapeComponent otherComp)
@@ -5356,6 +5458,33 @@ class ShapeComponent
          case PathIterator.SEG_QUADTO:
             return String.format("Q %f %f %f %f",
                 coords[0], coords[1], coords[2], coords[3]);
+      }
+
+      return "";
+   }
+
+   public String info(JDRResources resources)
+   {
+      double x0 = (start == null ? 0.0 : start.getX());
+      double y0 = (start == null ? 0.0 : start.getY());
+
+      switch (type)
+      {
+         case PathIterator.SEG_CLOSE:
+            return resources.getString("path_element_info.close");
+         case PathIterator.SEG_CUBICTO:
+            return resources.getMessage("path_element_info.cubic",
+              x0, y0, coords[0], coords[1], coords[2], coords[3], 
+              coords[4], coords[5]);
+         case PathIterator.SEG_LINETO:
+            return resources.getMessage("path_element_info.line",
+              x0, y0, coords[0], coords[1]);
+         case PathIterator.SEG_MOVETO:
+            return resources.getMessage("path_element_info.move",
+              x0, y0, coords[0], coords[1]);
+         case PathIterator.SEG_QUADTO:
+            return resources.getMessage("path_element_info.quad",
+              x0, y0, coords[0], coords[1], coords[2], coords[3]);
       }
 
       return "";
@@ -9416,7 +9545,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
    // Returns r1 if can't compute (most likely because r1 and r2
    // coincide)
-   private Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
+   public static Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
    {
       // get closest point on r1-r2 to p
 
@@ -11152,6 +11281,8 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
       tryBezier = dialog.isTryBezierOn();
       bezierGradientThreshold = dialog.getCurveGradientThreshold();
       minBezierSamples = dialog.getCurveMinPoints();
+      maxDeviation = dialog.getSmoothingMaxDeviation();
+      deviationEpsilon = dialog.getSmoothingDeviationEpsilon();
    }
 
    protected Void doInBackground() throws InterruptedException
@@ -11231,6 +11362,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
    private ShapeComponentVector smoothShape(ShapeComponentVector vec)
    {
       ShapeComponentVector path = null;
+      JDRResources resources = dialog.getResources();
 
       Point2D startPt = vec.firstElement().getEnd();
 
@@ -11264,7 +11396,9 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
          int N = 0;
 
          int changeIdx = -1;
-         Point2D changeMidPt = null;
+         int changeIdx2 = -1;
+         Point2D changePt = null;
+         Point2D changePt2 = null;
 
          int xLastDir = 0;
          int yLastDir = 0;
@@ -11308,12 +11442,23 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
                {
                   if (xdir != xLastDir && xLastDir != 0)
                   {
-                     if (!tryBezier || changeIdx != -1)
+                     if (changeIdx == -1)
+                     {
+                        changeIdx = j-1;
+
+                        if (!tryBezier)
+                        {
+                           break;
+                        }
+                     }
+                     else if (changeIdx2 == -1)
+                     {
+                        changeIdx2 = j-1;
+                     }
+                     else
                      {
                         break;
                      }
-
-                     changeIdx = j-1;
                   }
 
                   xLastDir = xdir;
@@ -11323,12 +11468,23 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
                {
                   if (ydir != yLastDir && yLastDir != 0)
                   {
-                     if (!tryBezier || changeIdx != -1)
+                     if (changeIdx == -1)
+                     {
+                        changeIdx = j-1;
+
+                        if (!tryBezier)
+                        {
+                           break;
+                        }
+                     }
+                     else if (changeIdx2 == -1)
+                     {
+                        changeIdx2 = j-1;
+                     }
+                     else
                      {
                         break;
                      }
-
-                     changeIdx = j-1;
                   }
 
                   yLastDir = ydir;
@@ -11343,25 +11499,111 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
          int endIdx = j-1;
 
-         if (startRunPt != null && endRunPt != null)
+         if (startRunPt != null && endRunPt != null && endIdx - i > 2)
          {
             dialog.addMessageIdLn("vectorize.smoothing_tiny_steps_run",
              startRunPt.getX(), startRunPt.getY(), 
              endRunPt.getX(), endRunPt.getY(),
              sum/N);
 
+            DeviationResult line1Result = null;
+            DeviationResult line2Result = null;
+
             if (changeIdx != -1)
             {
-               changeMidPt = vec.get(changeIdx).getMid();
+               changePt = vec.get(changeIdx).getMid();
 
-               dialog.addMessageIdLn("vectorize.smoothing_bend_found",
-                  changeMidPt.getX(), changeMidPt.getY());
+               line1Result = DeviationResult.getLineDeviation(
+                 startRunPt, changePt, vec, i, changeIdx);
+
+               if (changeIdx2 != -1)
+               {
+                  changePt2 = vec.get(changeIdx2).getMid();
+
+                  dialog.addMessageIdLn("vectorize.smoothing_bends_found",
+                     changePt.getX(), changePt.getY(),
+                     changePt2.getX(), changePt2.getY());
+
+                  line2Result = DeviationResult.getLineDeviation(
+                    changePt, changePt2, vec, changeIdx, changeIdx2);
+               }
+               else
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_bend_found",
+                     changePt.getX(), changePt.getY());
+
+                  line2Result = DeviationResult.getLineDeviation(
+                    changePt, endRunPt, vec, changeIdx, endIdx);
+
+                  changeIdx2 = endIdx;
+                  changePt2 = endRunPt;
+               }
+
+               dialog.addMessageLn(line1Result.info(resources));
+
+               if (line2Result != null)
+               {
+                  dialog.addMessageLn(line2Result.info(resources));
+
+                  if (line2Result.getMaxDistance() > maxDeviation)
+                  {
+                     line2Result = null;
+
+                     if (line1Result.getMaxDistance() > maxDeviation)
+                     {
+                        line1Result = null;
+                     }
+                  }
+                  else if (line1Result.getMaxDistance() > maxDeviation)
+                  {
+                     line1Result = null;
+                     line2Result = null;
+                  }
+               }
+               else if (line1Result.getMaxDistance() > maxDeviation)
+               {
+                  line1Result = null;
+               }
             }
-         }
+            else
+            {
+               line1Result = DeviationResult.getLineDeviation(
+                 startRunPt, endRunPt, vec, i, endIdx);
+               changeIdx = endIdx;
 
-         if (endIdx - i > 2)
-         {
+               dialog.addMessageLn(line1Result.info(resources));
+
+               if (line1Result.getMaxDistance() > maxDeviation)
+               {
+                  line1Result = null;
+               }
+            }
+
             DeviationResult bestResult = getBestComponent(vec, i, endIdx);
+
+            if (bestResult != null
+             && (line1Result != null && line1Result.compareTo(bestResult) < 0)
+             && (line1Result != null && line2Result.compareTo(bestResult) < 0)
+               )
+            {
+               bestResult = null;
+            }
+
+            if (bestResult != null && line1Result != null
+                && bestResult.isLine())
+            {
+               double delta = line1Result.getAverageDeviation();
+
+               if (line2Result != null)
+               {
+                  delta = 0.5*(delta + line2Result.getAverageDeviation());
+               }
+
+               if (delta <= bestResult.getAverageDeviation()+deviationEpsilon)
+               {
+                  bestResult = null;
+               }
+            }
 
             if (bestResult != null)
             {
@@ -11372,7 +11614,45 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
                ShapeComponent comp = bestResult.getComponent();
                path.addComponent(comp);
+
+               dialog.addMessageIdLn("vectorize.smoothing_replacing",
+                  vec.get(i).info(resources), 
+                  vec.get(bestResult.getEndIndex()).info(resources),
+                  comp.info(resources));
+
                i = bestResult.getEndIndex();
+            }
+            else if (line1Result != null)
+            {
+               if (path == null)
+               {
+                  path = vec.getSubPath(i-1);
+               }
+
+               ShapeComponent comp = line1Result.getComponent();
+               path.addComponent(comp);
+
+               if (line2Result == null)
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_replacing2",
+                     vec.get(i).info(resources), 
+                     vec.get(changeIdx).info(resources), 
+                     comp);
+
+                  i = changeIdx;
+               }
+               else
+               {
+                  ShapeComponent comp2 = line2Result.getComponent();
+                  path.addComponent(comp2);
+
+                  dialog.addMessageIdLn("vectorize.smoothing_replacing3",
+                     vec.get(i).info(resources), 
+                     vec.get(changeIdx2).info(resources), 
+                     comp, comp2);
+
+                  i = changeIdx2;
+               }
             }
             else if (path != null)
             {
@@ -11411,7 +11691,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
          double delta = result.getAverageDeviation();
 
-         if (delta < minDelta)
+         if (delta < minDelta && result.getMaxDistance() <= maxDeviation)
          {
             if (result.getEstimatedLength() < lengthThreshold)
             {
@@ -11429,8 +11709,17 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
          }
       }
 
+      JDRResources resources = dialog.getResources();
+
+      if (bestResult != null)
+      {
+         dialog.addMessageLn(bestResult.info(resources));
+      }
+
       if (bestSubThresholdResult != null)
       {
+         dialog.addMessageLn(bestSubThresholdResult.info(resources));
+
          if (minDelta < minSubThresholdDelta+thresholdDiff)
          {
             return bestResult;
@@ -11446,7 +11735,8 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> shapes;
-   private double tinyStepThreshold=2.0, lengthThreshold=10.0, thresholdDiff=0.01;
+   private double tinyStepThreshold=2.0, lengthThreshold=10.0, thresholdDiff=0.01,
+    maxDeviation=2.0, deviationEpsilon=0.01;
    private boolean tryBezier=true;
    private int minBezierSamples = 5;
    private double bezierGradientThreshold=8.0;
@@ -11454,7 +11744,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
    private boolean continueToNextStep;
 }
 
-class DeviationResult
+class DeviationResult implements Comparable<DeviationResult>
 {
    private DeviationResult()
    {
@@ -11732,6 +12022,11 @@ class DeviationResult
       return component;
    }
 
+   public boolean isLine()
+   {
+      return component != null && component.getType() == PathIterator.SEG_LINETO;
+   }
+
    public int getStartIndex()
    {
       return startIdx;
@@ -11742,10 +12037,99 @@ class DeviationResult
       return endIdx;
    }
 
+   public static DeviationResult getLineDeviation(Point2D startPt, Point2D endPt,
+     ShapeComponentVector vec, int startIdx, int endIdx)
+   {
+      DeviationResult result = new DeviationResult();
+
+      double sum = 0.0;
+
+      for (int i = startIdx; i <= endIdx; i++)
+      {
+         ShapeComponent comp = vec.get(i);
+         Point2D p = comp.getEnd();
+         Point2D q = LineDetection.getClosestPointAlongLine(startPt, endPt, p);
+
+         if (p != q)
+         {
+            double dist = Math.sqrt(ShapeComponent.getSquareDistance(p, q));
+            sum += dist;
+
+            if (dist < result.minDist)
+            {
+               result.minDist = dist;
+            }
+
+            if (dist > result.maxDist)
+            {
+               result.maxDist = dist;
+            }
+         }
+         else
+         {
+            result.minDist = 0.0;
+         }
+      }
+
+      int n = endIdx-startIdx+1;
+
+      result.averageDeviation = sum/n;
+
+      result.component = new ShapeComponent(PathIterator.SEG_LINETO, 
+        new double[] { endPt.getX(), endPt.getY() }, startPt);
+      result.length = result.component.getDiagonalLength();
+
+      result.startIdx = startIdx;
+      result.endIdx = endIdx;
+
+      if (startPt instanceof Point2D.Double)
+      {
+         result.p1 = (Point2D.Double)startPt;
+      }
+      else
+      {
+         result.p1 = new Point2D.Double(startPt.getX(), startPt.getY());
+      }
+
+      if (endPt instanceof Point2D.Double)
+      {
+         result.p2 = (Point2D.Double)endPt;
+      }
+      else
+      {
+         result.p2 = new Point2D.Double(endPt.getX(), endPt.getY());
+      }
+
+      return result;
+   }
+
    public String toString()
    {
       return String.format("average deviation: %f, dist range: [%f, %f], length: %f, index range: [%d, %d], component: %s", 
         averageDeviation, minDist, maxDist, length, startIdx, endIdx, component);
+   }
+
+   public String info(JDRResources resources)
+   {
+      return resources.getMessage("vectorize.smoothing_possible_path",
+       component.info(resources), averageDeviation, minDist, maxDist, length);
+   }
+
+   public int compareTo(DeviationResult other)
+   {
+      if (averageDeviation < other.averageDeviation
+            && maxDist < other.maxDist)
+      {
+         return -1;
+      }
+
+      if (averageDeviation > other.averageDeviation
+            && maxDist > other.maxDist)
+      {
+         return 1;
+      }
+
+      return 0;
    }
 
    private double averageDeviation=Double.MAX_VALUE;

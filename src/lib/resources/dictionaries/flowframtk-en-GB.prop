@@ -2813,6 +2813,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.smooth_shapes.length_threshold.mnemonic">L</entry>
 <entry key="vectorize.smooth_shapes.threshold_diff">Threshold Diff:</entry>
 <entry key="vectorize.smooth_shapes.threshold_diff.mnemonic">D</entry>
+<entry key="vectorize.smooth_shapes.max_deviation">Max Deviation:</entry>
+<entry key="vectorize.smooth_shapes.max_deviation.mnemonic">X</entry>
+<entry key="vectorize.smooth_shapes.deviation_epsilon">Deviation Diff:</entry>
 <entry key="vectorize.smooth_shapes.try_bezier">Try Bézier curves</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold">Curve Gradient Threshold:</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold.mnemonic">G</entry>
@@ -2887,6 +2890,17 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_path">Smoothing path starting at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_tiny_steps_run">Tiny steps from ({0},{1}) to ({2},{3}). Average length: {4}.</entry> 
 <entry key="vectorize.smoothing_bend_found">Possible bend found at ({0},{1}).</entry> 
+<entry key="vectorize.smoothing_bends_found">Possible bends found at ({0},{1}) and ({2}, {3}).</entry> 
+<entry key="vectorize.smoothing_possible_path">Possible path {0}. Average deviation: {1}. Deviation range: [{2}, {3}]. Length: {4}.</entry> 
+<entry key="vectorize.smoothing_replacing">Replacing sub-path from {0} to {1} with {2}.</entry> 
+<entry key="vectorize.smoothing_replacing2">Replacing sub-path from {0} to {1} with {2}.</entry> 
+<entry key="vectorize.smoothing_replacing3">Replacing sub-path from {0} to {1} with {2} {3}.</entry> 
+
+<entry key="path_element_info.line">L ({0},{1}) – ({2},{3})</entry>
+<entry key="path_element_info.move">M ({0},{1}) ({3},{4})</entry>
+<entry key="path_element_info.quad">Q ({0},{1}) .. ({3},{4}) .. ({5},{6})</entry>
+<entry key="path_element_info.cubic">C ({0},{1}) .. ({3},{4}) ({5},{6}) .. ({7},{8})</entry>
+<entry key="path_element_info.close">Z</entry>
 
 <!--  general purpose text -->
 
