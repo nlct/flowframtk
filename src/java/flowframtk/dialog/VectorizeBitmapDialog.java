@@ -1049,6 +1049,10 @@ public class VectorizeBitmapDialog extends JFrame
       {
          doLineDetection(continueToNextStep);
       }
+      else if (controlPanel.isMergeNearPathsOn())
+      {
+         doMergeNearPaths(continueToNextStep);
+      }
       else if (controlPanel.isSmoothingOn())
       {
          doSmoothing(continueToNextStep);
@@ -1170,6 +1174,10 @@ public class VectorizeBitmapDialog extends JFrame
       {
          doLineDetection(continueToNextStep);
       }
+      else if (controlPanel.isMergeNearPathsOn())
+      {
+         doMergeNearPaths(continueToNextStep);
+      }
       else if (controlPanel.isSmoothingOn())
       {
          doSmoothing(continueToNextStep);
@@ -1219,6 +1227,10 @@ public class VectorizeBitmapDialog extends JFrame
       {
          doLineDetection(continueToNextStep);
       }
+      else if (controlPanel.isMergeNearPathsOn())
+      {
+         doMergeNearPaths(continueToNextStep);
+      }
       else if (controlPanel.isSmoothingOn())
       {
          doSmoothing(continueToNextStep);
@@ -1264,6 +1276,10 @@ public class VectorizeBitmapDialog extends JFrame
       {
          doLineDetection(continueToNextStep);
       }
+      else if (controlPanel.isMergeNearPathsOn())
+      {
+         doMergeNearPaths(continueToNextStep);
+      }
       else if (controlPanel.isSmoothingOn())
       {
          doSmoothing(continueToNextStep);
@@ -1298,6 +1314,51 @@ public class VectorizeBitmapDialog extends JFrame
       }
 
       controlPanel.deselectLineDetection();
+
+      if (!continueToNextStep)
+      {
+         finishedTask();
+         return;
+      }
+
+      if (controlPanel.isMergeNearPathsOn())
+      {
+         doMergeNearPaths(continueToNextStep);
+      }
+      else if (controlPanel.isSmoothingOn())
+      {
+         doSmoothing(continueToNextStep);
+      }
+      else if (controlPanel.isRemoveTinyPathsOn())
+      {
+         doRemoveTinyPaths(continueToNextStep);
+      }
+      else
+      {
+         finishedTask();
+      }
+   }
+
+   public void doMergeNearPaths(boolean continueToNextStep)
+   {
+      startTask(getResources().getString("vectorize.merge_nearpaths"),
+          new MergeNearPaths(this, shapeList, continueToNextStep));
+   }
+
+   public void finishedMergeNearPaths(Vector<ShapeComponentVector> shapes,
+      boolean continueToNextStep)
+   {
+      addUndoableEdit(shapes, 
+         getResources().getString("vectorize.merge_nearpaths"));
+
+      if (shapes == null || shapes.isEmpty())
+      {
+         finishedTask();
+         error(getResources().getString("vectorize.no_shapes"));
+         return;
+      }
+
+      controlPanel.deselectMergeNearPaths();
 
       if (!continueToNextStep)
       {
@@ -1574,9 +1635,9 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getGradientEpsilon();
    }
 
-   public double getMinSubPathGap()
+   public double getMergeNearPathThreshold()
    {
-      return controlPanel.getMinSubPathGap();
+      return controlPanel.getMergeNearPathThreshold();
    }
 
    public boolean isRemoveMinTinySubPathsOn()
@@ -2635,12 +2696,9 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
 
       gradientEpsilonSpinner = controlPanel.createSpinner(
          gradientEpsilonLabel, gradientEpsilonSpinnerModel);
+      gradientEpsilonSpinner.setMaximumSize(
+         gradientEpsilonSpinner.getPreferredSize());
       subPanel.add(gradientEpsilonSpinner);
-
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
-
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -2723,16 +2781,6 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      minSubPathGapLabel = resources.createAppLabel(
-        "vectorize.min_subpath_gap");
-      subPanel.add(minSubPathGapLabel);
-
-      minSubPathGapSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
-
-      minSubPathGapSpinner = controlPanel.createSpinner(
-        minSubPathGapLabel, minSubPathGapSpinnerModel);
-      subPanel.add(minSubPathGapSpinner);
-
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
@@ -2753,6 +2801,8 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
 
       minTinyAreaSpinner = controlPanel.createSpinner(
          minTinyAreaLabel, minTinyAreaSpinnerModel);
+      minTinyAreaSpinner.setMaximumSize(
+         minTinyAreaSpinner.getPreferredSize());
       subPanel.add(minTinyAreaSpinner);
 
       minTinySizeLabel = resources.createAppLabel(
@@ -2763,6 +2813,8 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
 
       minTinySizeSpinner = controlPanel.createSpinner(
          minTinySizeLabel, minTinySizeSpinnerModel);
+      minTinySizeSpinner.setMaximumSize(
+         minTinySizeSpinner.getPreferredSize());
       subPanel.add(minTinySizeSpinner);
 
       splitTypeLabel = resources.createAppLabel("vectorize.split_type");
@@ -2790,9 +2842,6 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
       if (src == doSplitSubPathsCheckBox)
       {
          boolean enable = doSplitSubPathsCheckBox.isSelected();
-
-         minSubPathGapSpinner.setEnabled(enable);
-         minSubPathGapLabel.setEnabled(enable);
 
          splitTypeLabel.setEnabled(enable);
          exteriorSplitOnlyButton.setEnabled(enable);
@@ -2836,9 +2885,6 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
 
       enable = enable && doSplitSubPathsCheckBox.isSelected();
 
-      minSubPathGapSpinner.setEnabled(enable);
-      minSubPathGapLabel.setEnabled(enable);
-
       splitTypeLabel.setEnabled(enable);
       exteriorSplitOnlyButton.setEnabled(enable);
       evenInteriorSplitButton.setEnabled(enable);
@@ -2858,7 +2904,6 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
    {
       if (revertAll)
       {
-         minSubPathGapSpinnerModel.setValue(Double.valueOf(2.0));
          minTinyAreaSpinnerModel.setValue(Double.valueOf(10.0));
          minTinySizeSpinnerModel.setValue(Integer.valueOf(10));
 
@@ -2879,11 +2924,6 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
             evenInteriorSplitButton.setSelected(true);
          }
       }
-   }
-
-   public double getMinSubPathGap()
-   {
-      return minSubPathGapSpinnerModel.getNumber().doubleValue();
    }
 
    public boolean isRemoveMinTinySubPathsOn()
@@ -2922,13 +2962,13 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
       }
    }
 
-   private JLabel minSubPathGapLabel, splitTypeLabel, minTinyAreaLabel,
+   private JLabel splitTypeLabel, minTinyAreaLabel,
      minTinySizeLabel;
 
-   private SpinnerNumberModel minSubPathGapSpinnerModel,  
+   private SpinnerNumberModel   
       minTinyAreaSpinnerModel, minTinySizeSpinnerModel;
 
-   private JSpinner minSubPathGapSpinner, minTinyAreaSpinner, minTinySizeSpinner;
+   private JSpinner minTinyAreaSpinner, minTinySizeSpinner;
 
    private JCheckBox doSplitSubPathsCheckBox, removeTinyPathsCheckBox;
 
@@ -2963,7 +3003,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       deltaThresholdSpinner = controlPanel.createSpinner(
          deltaThresholdLabel, deltaThresholdSpinnerModel);
+      deltaThresholdSpinner.setMaximumSize(
+         deltaThresholdSpinner.getPreferredSize());
       subPanel.add(deltaThresholdSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -2978,6 +3022,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       fixedLineWidthSpinnerModel = new SpinnerNumberModel(1, 1, 50, 1);
       fixedLineWidthSpinner = new JSpinner(fixedLineWidthSpinnerModel);
       fixedLineWidthSpinner.setEnabled(false);
+      fixedLineWidthSpinner.setMaximumSize(
+         fixedLineWidthSpinner.getPreferredSize());
       subPanel.add(fixedLineWidthSpinner);
 
       subPanel.add(Box.createHorizontalGlue());
@@ -3002,7 +3048,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      deltaVarianceThresholdSpinnerModel = new SpinnerNumberModel(16.0, 0.0, 1000.0, 1.0);
+      deltaVarianceThresholdSpinnerModel
+          = new SpinnerNumberModel(16.0, 0.0, 1000.0, 1.0);
 
       deltaVarianceThresholdLabel = resources.createAppLabel(
          "vectorize.variance_threshold");
@@ -3010,7 +3057,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       deltaVarianceThresholdSpinner = controlPanel.createSpinner(
          deltaVarianceThresholdLabel, deltaVarianceThresholdSpinnerModel);
+      deltaVarianceThresholdSpinner.setMaximumSize(
+         deltaVarianceThresholdSpinner.getPreferredSize());
       subPanel.add(deltaVarianceThresholdSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -3024,6 +3075,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       spikeReturnDistanceSpinner = controlPanel.createSpinner(
          spikeReturnDistanceLabel, spikeReturnDistanceSpinnerModel);
+      spikeReturnDistanceSpinner.setMaximumSize(
+         spikeReturnDistanceSpinner.getPreferredSize());
       subPanel.add(spikeReturnDistanceSpinner);
 
       subPanel = Box.createHorizontalBox();
@@ -3038,6 +3091,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       tinyStepThresholdSpinner = controlPanel.createSpinner(
          tinyStepThresholdLabel, tinyStepThresholdSpinnerModel);
+      tinyStepThresholdSpinner.setMaximumSize(
+         tinyStepThresholdSpinner.getPreferredSize());
       subPanel.add(tinyStepThresholdSpinner);
    }
 
@@ -3051,6 +3106,28 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
          deltaThresholdSpinner.setEnabled(enable);
          deltaThresholdLabel.setEnabled(enable);
+
+         fixedLineWidthButton.setEnabled(enable);
+         relativeLineWidthButton.setEnabled(enable);
+
+         if (enable)
+         {
+            if (fixedLineWidthButton.isSelected())
+            {
+               fixedLineWidthSpinner.setEnabled(true);
+               roundRelativeLineWidthCheckBox.setEnabled(false);
+            }
+            else
+            {
+               fixedLineWidthSpinner.setEnabled(false);
+               roundRelativeLineWidthCheckBox.setEnabled(true);
+            }
+         }
+         else
+         {
+            fixedLineWidthSpinner.setEnabled(false);
+            roundRelativeLineWidthCheckBox.setEnabled(false);
+         }
 
          detectIntersections.setEnabled(enable);
 
@@ -3089,10 +3166,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       if (action == null) return;
 
-      if ((action.equals("fixed_line_width") || action.equals("relative_line_width"))
-          && fixedLineWidthButton.isEnabled() && relativeLineWidthButton.isEnabled())
+      if ((action.equals("fixed_line_width") || action.equals("relative_line_width")))
       {
-
          if (fixedLineWidthButton.isSelected())
          {
             fixedLineWidthSpinner.setEnabled(true);
@@ -3261,6 +3336,90 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
    private JRadioButton fixedLineWidthButton, relativeLineWidthButton;
 
    private ControlPanel controlPanel;
+}
+
+class MergeNearPathsPanel extends JPanel implements ChangeListener
+{
+   public MergeNearPathsPanel(ControlPanel controlPanel)
+   {
+      super();
+      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+      setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      this.controlPanel = controlPanel;
+      JDRResources resources = controlPanel.getResources();
+
+      doMergeCheckBox = resources.createAppCheckBox(
+        "vectorize.merge_nearpaths", true, this);
+      add(doMergeCheckBox);
+
+      JComponent subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
+      gapLabel = resources.createAppLabel("vectorize.merge_nearpaths.threshold");
+      subPanel.add(gapLabel);
+
+      gapModel = new SpinnerNumberModel(2.0, 1.0, 20.0, 1.0);
+      gapSpinner = new JSpinner(gapModel);
+      gapSpinner.setMaximumSize(gapSpinner.getPreferredSize());
+      subPanel.add(gapSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
+   }
+
+   public void stateChanged(ChangeEvent evt)
+   {
+      Object src = evt.getSource();
+
+      if (src == doMergeCheckBox)
+      {
+         boolean enable = doMergeCheckBox.isSelected() 
+                           && doMergeCheckBox.isEnabled();
+
+         gapLabel.setEnabled(enable);
+         gapSpinner.setEnabled(enable);
+
+         controlPanel.updateTaskButton();
+      }
+   }
+
+   public boolean isMergeNearPathsOn()
+   {
+      return doMergeCheckBox.isSelected();
+   }
+
+   public double getGapThreshold()
+   {
+      return gapModel.getNumber().doubleValue();
+   }
+
+   public void updateWidgets(boolean taskInProgress, boolean isVectorized)
+   {
+      boolean enable = !taskInProgress;
+
+      doMergeCheckBox.setEnabled(enable);
+   }
+
+   public void reset(boolean revertAll)
+   {
+      if (revertAll)
+      {
+         gapModel.setValue(Double.valueOf(2.0));
+      }
+   }
+
+   public void setSelected(boolean selected)
+   {
+      doMergeCheckBox.setSelected(selected);
+   }
+
+   private JLabel gapLabel;
+   private SpinnerNumberModel gapModel;
+   private JSpinner gapSpinner;
+
+   private ControlPanel controlPanel;
+   private JCheckBox doMergeCheckBox;
 }
 
 class SmoothingPanel extends JPanel implements ChangeListener
@@ -3683,6 +3842,11 @@ class ControlPanel extends JPanel implements ActionListener
       lineDetectionPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(lineDetectionPanel);
 
+      mergeNearPathsPanel = new MergeNearPathsPanel(this);
+      mergeNearPathsPanel.add(Box.createHorizontalGlue());
+      mergeNearPathsPanel.setBorder(BorderFactory.createEtchedBorder());
+      mainPanel.add(mergeNearPathsPanel);
+
       smoothingPanel = new SmoothingPanel(this);
       smoothingPanel.add(Box.createHorizontalGlue());
       smoothingPanel.setBorder(BorderFactory.createEtchedBorder());
@@ -3810,6 +3974,11 @@ class ControlPanel extends JPanel implements ActionListener
       splitSubPathsPanel.setSelected(false);
    }
 
+   public void deselectMergeNearPaths()
+   {
+      mergeNearPathsPanel.setSelected(false);
+   }
+
    public void deselectLineDetection()
    {
       lineDetectionPanel.setSelected(false);
@@ -3836,6 +4005,7 @@ class ControlPanel extends JPanel implements ActionListener
       scanImagePanel.updateWidgets(taskInProgress, isVectorized);
       optimizeLinesPanel.updateWidgets(taskInProgress, isVectorized);
       splitSubPathsPanel.updateWidgets(taskInProgress, isVectorized);
+      mergeNearPathsPanel.updateWidgets(taskInProgress, isVectorized);
       lineDetectionPanel.updateWidgets(taskInProgress, isVectorized);
       smoothingPanel.updateWidgets(taskInProgress, isVectorized);
       removeTinyPathsPanel.updateWidgets(taskInProgress, isVectorized);
@@ -3866,6 +4036,7 @@ class ControlPanel extends JPanel implements ActionListener
       scanImagePanel.reset(revertAll);
       optimizeLinesPanel.reset(revertAll);
       splitSubPathsPanel.reset(revertAll);
+      mergeNearPathsPanel.reset(revertAll);
       lineDetectionPanel.reset(revertAll);
       smoothingPanel.reset(revertAll);
       removeTinyPathsPanel.reset(revertAll);
@@ -3876,7 +4047,8 @@ class ControlPanel extends JPanel implements ActionListener
       if (doTasksButton != null)
       {
          doTasksButton.setEnabled(isScanImageOn() || isOptimizeOn() 
-            || isSplitSubPathsOn() || isSmoothingOn() || isLineDetectionOn()
+            || isSplitSubPathsOn() || isMergeNearPathsOn() 
+            || isSmoothingOn() || isLineDetectionOn()
             || isRemoveTinyPathsOn());
       }
    }
@@ -3925,6 +4097,7 @@ class ControlPanel extends JPanel implements ActionListener
       scanImagePanel.setSelected(selected);
       optimizeLinesPanel.setSelected(selected);
       splitSubPathsPanel.setSelected(selected);
+      mergeNearPathsPanel.setSelected(selected);
       lineDetectionPanel.setSelected(selected);
       smoothingPanel.setSelected(selected);
       removeTinyPathsPanel.setSelected(selected);
@@ -3960,9 +4133,14 @@ class ControlPanel extends JPanel implements ActionListener
       return optimizeLinesPanel.getGradientEpsilon();
    }
 
-   public double getMinSubPathGap()
+   public double getMergeNearPathThreshold()
    {
-      return splitSubPathsPanel.getMinSubPathGap();
+      return mergeNearPathsPanel.getGapThreshold();
+   }
+
+   public boolean isMergeNearPathsOn()
+   {
+      return mergeNearPathsPanel == null ? false : mergeNearPathsPanel.isMergeNearPathsOn();
    }
 
    public boolean isRemoveMinTinySubPathsOn()
@@ -4099,6 +4277,7 @@ class ControlPanel extends JPanel implements ActionListener
    private ScanImagePanel scanImagePanel;
    private OptimizeLinesPanel optimizeLinesPanel;
    private SplitSubPathsPanel splitSubPathsPanel;
+   private MergeNearPathsPanel mergeNearPathsPanel;
    private LineDetectionPanel lineDetectionPanel;
    private SmoothingPanel smoothingPanel;
    private RemoveTinyPathsPanel removeTinyPathsPanel;
@@ -4329,15 +4508,46 @@ class ShapeComponentVector extends Vector<ShapeComponent>
 
    public void appendPath(ShapeComponentVector path)
    {
+      appendPath(path, false);
+   }
+
+   public void appendPath(ShapeComponentVector path, boolean lineConnect)
+   {
       if (path.isEmpty()) return;
 
       if (!isEmpty())
       {
          ShapeComponent firstElement = path.firstElement();
          firstElement.setStart(lastElement().getEnd());
+
+         if (lineConnect && firstElement.getType() == PathIterator.SEG_MOVETO)
+         {
+            firstElement.setType(PathIterator.SEG_LINETO);
+         }
       }
 
       addAll(path);
+   }
+
+   public void prependPath(ShapeComponentVector path, boolean lineConnect)
+   {
+      if (path.isEmpty())
+      {
+         return;
+      }
+
+      if (!isEmpty())
+      {
+         ShapeComponent firstElement = firstElement();
+         firstElement.setStart(path.lastElement().getEnd());
+
+         if (lineConnect && firstElement.getType() == PathIterator.SEG_MOVETO)
+         {
+            firstElement.setType(PathIterator.SEG_LINETO);
+         }
+      }
+
+      addAll(0, path);
    }
 
    public void appendSubPath(SubPath subPath)
@@ -4662,6 +4872,65 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       lineWidth = width;
    }
 
+   public boolean hasSubPaths()
+   {
+      for (int i = size()-2; i > 0; i--)
+      {
+         if (get(i).getType() == PathIterator.SEG_CLOSE)
+         {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   // assumes no subpaths
+   public void computeDirection()
+   {
+      if (size() < 2) return;
+
+      Rectangle2D bounds = getBounds2D();
+
+      double midX = bounds.getX() + 0.5*bounds.getWidth();
+      double midY = bounds.getY() + 0.5*bounds.getHeight();
+
+      ShapeComponent comp1 = get(0);
+      ShapeComponent comp2 = get(1);
+
+      Point2D p1 = comp1.getEnd();
+      Point2D p2 = comp2.getEnd();
+
+      double theta1 = Math.PI + Math.atan2(p1.getY()-midY, p1.getX()-midX);
+      double theta2 = Math.PI + Math.atan2(p2.getY()-midY, p2.getX()-midX);
+      double diff = theta2 - theta1;
+
+      if (diff > Math.PI)
+      {
+         direction = SubPath.DIRECTION_ANTICLOCKWISE;
+      }
+      else
+      {
+         direction = SubPath.DIRECTION_CLOCKWISE;
+      }
+   }
+
+   public int getDirection()
+   {
+      if (direction == SubPath.DIRECTION_UNSET)
+      {
+         computeDirection();
+      }
+
+      return direction;
+   }
+
+   public boolean isOppositeDirection(ShapeComponentVector other)
+   {
+      return getDirection() + other.getDirection() == 0;
+   }
+
+   private int direction = SubPath.DIRECTION_UNSET;
    private int windingRule = Path2D.WIND_NON_ZERO;
    private boolean isFilled = true;
    private double lineWidth=1.0;
@@ -4733,9 +5002,49 @@ class ShapeComponent
       }
    }
 
+   public ShapeComponent reverse()
+   {
+      double[] newCoords = (coords == null ? null : new double[coords.length]);
+
+      Point2D.Double newStart = getEnd();
+      double newEndX = (start == null ? 0 : start.getX());
+      double newEndY = (start == null ? 0 : start.getY());
+
+      switch (type)
+      {
+         case PathIterator.SEG_MOVETO:
+         case PathIterator.SEG_LINETO:
+            newCoords[0] = newEndX;
+            newCoords[1] = newEndY;
+         break;
+         case PathIterator.SEG_QUADTO:
+            newCoords[0] = coords[0];
+            newCoords[1] = coords[1];
+
+            newCoords[2] = newEndX;
+            newCoords[3] = newEndY;
+         break;
+         case PathIterator.SEG_CUBICTO:
+            newCoords[0] = coords[2];
+            newCoords[1] = coords[3];
+            newCoords[2] = coords[0];
+            newCoords[3] = coords[1];
+            newCoords[4] = newEndX;
+            newCoords[5] = newEndY;
+         break;
+      }
+
+      return new ShapeComponent(type, newCoords, newStart);
+   }
+
    public int getType()
    {
       return type;
+   }
+
+   public boolean isCurve()
+   {
+      return type == PathIterator.SEG_QUADTO || type == PathIterator.SEG_CUBICTO;
    }
 
    public double[] getCoords()
@@ -4987,6 +5296,19 @@ class ShapeComponent
       }
 
       return 0.0;
+   }
+
+   public static double getSquareDistance(double p0x, double p0y, double p1x, double p1y)
+   {
+      double dx = p1x-p0x;
+      double dy = p1y-p0y;
+
+      return dx*dx + dy*dy;
+   }
+
+   public static double getSquareDistance(Point2D p0, Point2D p1)
+   {
+      return getSquareDistance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
    }
 
    public void addToPath(Path2D.Double path)
@@ -5875,7 +6197,6 @@ class SplitSubPaths extends SwingWorker<Void,Void>
       this.dialog = dialog;
       this.shapeList = shapeList;
 
-      minGap = dialog.getMinSubPathGap();
       minTinyArea = dialog.getMinTinySubPathArea();
       minTinySize = dialog.getMinTinySubPathSize();
       removeTiny = dialog.isRemoveMinTinySubPathsOn();
@@ -5918,18 +6239,6 @@ class SplitSubPaths extends SwingWorker<Void,Void>
                if (j != n-1)
                {
                   ShapeComponent nextComp = vec.get(j+1);
-
-                  if (nextComp.getType() == PathIterator.SEG_MOVETO)
-                  {
-                     Point2D gapDp = nextComp.getStartGradient();
-                     double gapLength = Math.sqrt(gapDp.getX()*gapDp.getX()
-                                             + gapDp.getY()*gapDp.getY());
-
-                     if (gapLength < minGap)
-                     {
-                        continue;
-                     }
-                  }
                }
 
                SubPath sp = new SubPath(vec, startIdx, j);
@@ -6273,7 +6582,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
    }
 
    private int progress, maxProgress;
-   private double minGap, minTinyArea;
+   private double minTinyArea;
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> shapeList;
    private volatile Vector<ShapeComponentVector> newShapesVec;
@@ -6282,6 +6591,413 @@ class SplitSubPaths extends SwingWorker<Void,Void>
    private Comparator<Integer> comparator;
 
    public static final int SPLIT_ALL=0, EVEN_INTERIOR_SPLIT=1, SPLIT_EXTERIOR_ONLY=2;
+}
+
+class MergeNearPaths extends SwingWorker<Void,Void>
+{
+   public MergeNearPaths(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapeList,
+     boolean continueToNextStep)
+   {
+      this.dialog = dialog;
+      this.shapeList = shapeList;
+      this.continueToNextStep = continueToNextStep;
+
+      deltaThreshold = dialog.getMergeNearPathThreshold();
+   }
+
+   protected Void doInBackground() throws InterruptedException
+   {
+      if (shapeList == null || shapeList.isEmpty())
+      {
+         return null;
+      }
+
+      dialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+      maxProgress = shapeList.size();
+      progress = 0;
+
+      for (int i = 0; i < shapeList.size()-1; i++)
+      {
+         incProgress();
+         sleepAndCheckCancel();
+
+         ShapeComponentVector vec = shapeList.get(i);
+         boolean isOpenPath = false;
+
+         if (vec.lastElement().getType() == PathIterator.SEG_CLOSE)
+         {
+            if (!vec.isFilled())
+            {// don't merge unfilled loops
+               continue;
+            }
+         }
+         else
+         {
+            isOpenPath = true;
+         }
+
+         for (int j = i+1; j < shapeList.size(); j++)
+         {
+            ShapeComponentVector vec2 = shapeList.get(j);
+            boolean isOpenPath2 = false;
+
+            if (vec2.lastElement().getType() == PathIterator.SEG_CLOSE)
+            {
+               if (!vec2.isFilled()) continue;
+            }
+            else
+            {
+               isOpenPath2 = true;
+            }
+
+            boolean isModified = false;
+
+            if (isOpenPath && isOpenPath2)
+            {
+               if (mergeLines(vec, vec2))
+               {
+                  isModified = true;
+               }
+            }
+            else if (!isOpenPath && !isOpenPath2)
+            {
+               if (mergeRegions(vec, vec2))
+               {
+                  isModified = true;
+               }
+            }
+
+            if (isModified)
+            {
+               dialog.addMessageIdLn("vectorize.merged_path", vec.svg());
+               shapeList.remove(j);
+               j--;
+               dialog.repaintImagePanel(vec.getBounds());
+               incProgress();
+               sleepAndCheckCancel();
+            }
+         }
+      }
+
+      return null;
+   }
+
+   private boolean mergeLines(ShapeComponentVector vec1, 
+       ShapeComponentVector vec2)
+   {
+      Point2D startPt1 = vec1.firstElement().getEnd();
+      Point2D startPt2 = vec2.firstElement().getEnd();
+
+      Point2D endPt1 = vec1.lastElement().getEnd();
+      Point2D endPt2 = vec2.lastElement().getEnd();
+
+      double sqThreshold = deltaThreshold*deltaThreshold;
+
+      double dist1 = ShapeComponent.getSquareDistance(endPt1, startPt2);
+      double dist2 = ShapeComponent.getSquareDistance(endPt2, startPt1);
+      double dist3 = ShapeComponent.getSquareDistance(endPt2, endPt1);
+      double dist4 = ShapeComponent.getSquareDistance(startPt1, startPt2);
+
+      if (dist1 <= sqThreshold && dist1 <= dist2
+           && dist1 <= dist3 && dist1 <= dist4)
+      {
+         vec1.appendPath(vec2, true);
+         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist1),
+          vec1.svg(), vec2.svg());
+      }
+      else if (dist2 <= sqThreshold && dist2 <= dist1
+                && dist2 <= dist3 && dist2 <= dist4)
+      {
+         vec1.prependPath(vec2, true);
+         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist2),
+          vec1.svg(), vec2.svg());
+      }
+      else if (dist3 <= sqThreshold && dist3 <= dist1
+                && dist3 <= dist2 && dist3 <= dist4)
+      {
+         vec1.lineTo(endPt1);
+
+         for (int i = vec2.size()-1; i > 0; i--)
+         {
+            vec1.addComponent(vec2.get(i).reverse());
+         }
+
+         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist3),
+          vec1.svg(), vec2.svg());
+      }
+      else if (dist4 <= sqThreshold && dist4 <= dist1
+                && dist4 <= dist2 && dist4 <= dist3)
+      {
+         ShapeComponentVector reverse = new ShapeComponentVector(vec2.size());
+
+         reverse.moveTo(endPt2);
+
+         for (int i = vec2.size()-1; i > 0; i--)
+         {
+            reverse.addComponent(vec2.get(i).reverse());
+         }
+
+         vec1.prependPath(reverse, true);
+
+         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist4),
+          vec1.svg(), vec2.svg());
+      }
+      else
+      {
+         return false;
+      }
+
+      return true;
+   }
+
+   private boolean mergeRegions(ShapeComponentVector vec1, 
+       ShapeComponentVector vec2)
+   {
+      if (vec1.hasSubPaths() || vec2.hasSubPaths()
+       || vec1.isOppositeDirection(vec2))
+      {
+         return false;
+      }
+
+      int n1 = vec1.size();
+      int n2 = vec2.size();
+
+      if (n1 < 3 || n2 < 3)
+      {
+         return false;
+      }
+
+      Point2D startPt1 = vec1.firstElement().getEnd();
+      Point2D startPt2 = vec2.firstElement().getEnd();
+
+      Point2D endPt1 = vec1.get(n1-2).getEnd();
+      Point2D endPt2 = vec2.get(n2-2).getEnd();
+
+      double sqThreshold = deltaThreshold*deltaThreshold;
+      double sum = 0.0;
+
+      int idx1 = -1;
+      int idx2 = -1;
+
+      for (int i = 0; i < n1-1; i++)
+      {
+         ShapeComponent comp1 = vec1.get(i);
+
+         if (comp1.isCurve())
+         {
+            continue;
+         }
+
+         Point2D p1 = (i == 0 ? startPt1 : comp1.getEnd());
+         Point2D prevPt = endPt2;
+
+         for (int j = 0; j < n2; j++)
+         {
+            ShapeComponent comp2 = vec2.get(j);
+
+            Point2D p2 = (j == 0 ? startPt2 : comp2.getEnd());
+
+            if (comp2.isCurve())
+            {
+               prevPt = p2;
+               continue;
+            }
+
+            double dist = ShapeComponent.getSquareDistance(p1, p2);
+
+            if (dist > sqThreshold)
+            {
+               prevPt = p2;
+               continue;
+            }
+
+            sum = Math.sqrt(dist);
+
+            Point2D nextPt = (i == n1-2 ? startPt1 : vec1.get(i+1).getEnd());
+
+            dist = ShapeComponent.getSquareDistance(prevPt, nextPt);
+
+            if (dist <= sqThreshold)
+            {
+               sum += Math.sqrt(dist);
+               idx1 = i;
+               idx2 = j;
+
+               break;
+            }
+
+            prevPt = p2;
+         }
+
+         if (idx1 != -1)
+         {
+            break;
+         }
+      }
+
+      if (idx1 == -1 || idx2 == -1)
+      {
+         return false;
+      }
+
+      int endIdx1 = idx1+1;
+      int endIdx2 = (idx2 == 0 ? n2-2 : idx2-1);
+      int N = 2;
+
+      for (int i = endIdx1+1, j = 1; i < n1-1; i++, j++)
+      {
+         ShapeComponent comp1 = vec1.get(i);
+
+         int k = endIdx2-j;
+
+         if (k < 0)
+         {
+            k = n2-1 + k;
+         }
+
+         ShapeComponent comp2 = vec2.get(k);
+
+         if (comp1.isCurve() || comp2.isCurve())
+         {
+            break;
+         }
+
+         Point2D p1 = comp1.getEnd();
+         Point2D p2 = comp2.getEnd();
+
+         double dist = ShapeComponent.getSquareDistance(p1, p2);
+
+         if (dist > sqThreshold)
+         {
+            break;
+         }
+
+         sum += Math.sqrt(dist);
+         N++;
+         endIdx1 = i;
+         endIdx2 = k;
+      }
+
+      dialog.addMessageIdLn("vectorize.merging_regions", sum/N,
+          vec1.svg(), vec2.svg());
+
+      ShapeComponentVector vec3 = new ShapeComponentVector(N);
+
+      for (int i = idx2; i < n2; i++)
+      {
+         if (i == endIdx2) break;
+
+         ShapeComponent comp = vec2.get(i);
+
+         if (vec3.isEmpty())
+         {
+            if (comp.getType() == PathIterator.SEG_CLOSE)
+            {
+               vec3.moveTo(startPt2);
+            }
+            else
+            {
+               vec3.moveTo(comp.getEnd());
+            }
+         }
+         else if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            vec3.lineTo(startPt2);
+         }
+         else
+         {
+            vec3.addComponent(comp);
+         }
+      }
+
+      if (idx2 > endIdx2)
+      {
+         for (int i = 0; i <= endIdx2; i++)
+         {
+            ShapeComponent comp = vec2.get(i);
+
+            if (vec3.isEmpty())
+            {
+               vec3.moveTo(comp.getEnd());
+            }
+            else if (i == 0)
+            {
+               vec3.lineTo(startPt2);
+            }
+            else
+            {
+               vec3.addComponent(comp);
+            }
+         }
+      }
+
+      for (int i = endIdx1; i < n1; i++)
+      {
+         ShapeComponent comp = vec1.get(i);
+
+         if (vec3.isEmpty())
+         {
+            vec3.moveTo(comp.getEnd());
+         }
+         else if (i == 0)
+         {
+            vec3.lineTo(startPt1);
+         }
+         else
+         {
+            vec3.addComponent(comp);
+         }
+      }
+
+      vec1.setSize(idx1+1);
+
+      vec1.appendPath(vec3, true);
+
+      return true;
+   }
+
+   private void incProgress()
+   {
+      progress++;
+      setProgress((int)Math.min((100.0*progress)/maxProgress, 100));
+   }
+
+   private void sleepAndCheckCancel() throws InterruptedException
+   {
+      dialog.updateTimeElapsed();
+      Thread.sleep(VectorizeBitmapDialog.SLEEP_DURATION);
+
+      // check for cancel
+      if (dialog.isCancelled())
+      {
+         throw new UserCancelledException(dialog.getMessageDictionary());
+      }
+   }
+
+   public void done()
+   {
+      dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+      try
+      {
+         get();
+      }
+      catch (Exception e)
+      {
+         dialog.taskFailed(e);
+         return;
+      }
+
+      dialog.finishedMergeNearPaths(shapeList, continueToNextStep);
+   }
+
+
+   private int progress, maxProgress;
+   private double deltaThreshold;
+   private VectorizeBitmapDialog dialog;
+   private Vector<ShapeComponentVector> shapeList;
+   private boolean continueToNextStep;
 }
 
 class LineDetection extends SwingWorker<Void,ShapeComponentVector>
@@ -8229,30 +8945,27 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       return Math.acos(dotproduct*factor);
    }
 
-   public double getSquareDistance(double p0x, double p0y, double p1x, double p1y)
+   public static double getSquareDistance(double p0x, double p0y, double p1x, double p1y)
    {
-      double dx = p1x-p0x;
-      double dy = p1y-p0y;
-
-      return dx*dx + dy*dy;
+      return ShapeComponent.getSquareDistance(p0x, p0y, p1x, p1y);
    }
 
-   public double getSquareDistance(Point2D p0, Point2D p1)
+   public static double getSquareDistance(Point2D p0, Point2D p1)
    {
       return getSquareDistance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
    }
 
-   public double getDistance(double p0x, double p0y, double p1x, double p1y)
+   public static double getDistance(double p0x, double p0y, double p1x, double p1y)
    {
       return Math.sqrt(getSquareDistance(p0x, p0y, p1x, p1y));
    }
 
-   public double getDistance(Point2D p0, Point2D p1)
+   public static double getDistance(Point2D p0, Point2D p1)
    {
       return getDistance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
    }
 
-   public double getDistance(PathCoord p0, PathCoord p1)
+   public static double getDistance(PathCoord p0, PathCoord p1)
    {
       return getDistance(p0.getPoint(), p1.getPoint());
    }

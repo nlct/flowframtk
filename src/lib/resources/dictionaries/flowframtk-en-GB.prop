@@ -2775,8 +2775,6 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="vectorize.split_subpaths">Split Sub Paths</entry>
 <entry key="vectorize.split_subpaths.mnemonic">S</entry>
-<entry key="vectorize.min_subpath_gap">Min Sub Path Gap:</entry>
-<entry key="vectorize.min_subpath_gap.mnemonic">G</entry>
 <entry key="vectorize.remove_tiny_subpaths">Remove Tiny Sub Paths</entry>
 <entry key="vectorize.tiny_subpath.bounding_area_max">bounding area &lt;</entry>
 <entry key="vectorize.tiny_subpath.size_max">size &lt;</entry>
@@ -2787,6 +2785,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.split.even_interior.mnemonic">E</entry>
 <entry key="vectorize.split.all">Split All</entry>
 <entry key="vectorize.split.all.mnemonic">S</entry>
+
+<entry key="vectorize.merge_nearpaths">Merge Near Paths</entry>
+<entry key="vectorize.merge_nearpaths.threshold">Gap Threshold</entry>
 
 <entry key="vectorize.line_detection">Line Detection</entry>
 <entry key="vectorize.delta_threshold">Delta Threshold:</entry>
@@ -2874,6 +2875,13 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.too_wide">Region too wide.</entry>
 <entry key="vectorize.mid_region">Investigating mid region: {0}</entry>
 <entry key="vectorize.mid_region_collapsed">Mid region collapsed.</entry>
+<entry key="vectorize.merging_paths">Merging paths (distance: {0}): 
+Merge Path: {1}
+Merge Path: {2}</entry>
+<entry key="vectorize.merging_regions">Merging regions (average distance: {0}): 
+Merge Region: {1}
+Merge Region: {2}</entry>
+<entry key="vectorize.merged_path">Merged path: {0}</entry> 
 
 <!--  general purpose text -->
 
