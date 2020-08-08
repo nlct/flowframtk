@@ -2868,6 +2868,11 @@ Merge Path: {2}</entry>
 Merge Region: {1}
 Merge Region: {2}</entry>
 <entry key="vectorize.merged_path">Merged path: {0}</entry> 
+<entry key="vectorize.smoothing_region">Smoothing region starting at ({0},{1}).</entry> 
+<entry key="vectorize.smoothing_loop">Smoothing loop starting at ({0},{1}).</entry> 
+<entry key="vectorize.smoothing_path">Smoothing path starting at ({0},{1}).</entry> 
+<entry key="vectorize.smoothing_tiny_steps_run">Tiny steps from ({0},{1}) to ({2},{3}). Average length: {4}.</entry> 
+<entry key="vectorize.smoothing_bend_found">Possible bend found at ({0},{1}).</entry> 
 
 <!--  general purpose text -->
 

@@ -2996,7 +2996,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      deltaThresholdSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 0.5);
+      deltaThresholdSpinnerModel = new SpinnerNumberModel(1.5, 0.0, 100.0, 0.5);
 
       deltaThresholdLabel = resources.createAppLabel("vectorize.delta_threshold");
       subPanel.add(deltaThresholdLabel);
@@ -3049,7 +3049,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       add(subPanel);
 
       deltaVarianceThresholdSpinnerModel
-          = new SpinnerNumberModel(16.0, 0.0, 1000.0, 1.0);
+          = new SpinnerNumberModel(1.0, 0.0, 100.0, 1.0);
 
       deltaVarianceThresholdLabel = resources.createAppLabel(
          "vectorize.variance_threshold");
@@ -3060,8 +3060,6 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       deltaVarianceThresholdSpinner.setMaximumSize(
          deltaVarianceThresholdSpinner.getPreferredSize());
       subPanel.add(deltaVarianceThresholdSpinner);
-
-      subPanel.add(Box.createHorizontalGlue());
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -3239,7 +3237,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
    {
       if (revertAll)
       {
-         deltaThresholdSpinnerModel.setValue(Double.valueOf(2.0));
+         deltaThresholdSpinnerModel.setValue(Double.valueOf(1.5));
          fixedLineWidthSpinnerModel.setValue(Integer.valueOf(1));
 
          if (fixedLineWidthSpinner.isEnabled())
@@ -3267,7 +3265,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
             detectIntersections.setSelected(true);
          }
 
-         deltaVarianceThresholdSpinnerModel.setValue(Double.valueOf(16.0));
+         deltaVarianceThresholdSpinnerModel.setValue(Double.valueOf(1.0));
          spikeReturnDistanceSpinnerModel.setValue(Double.valueOf(4.0));
          tinyStepThresholdSpinnerModel.setValue(Double.valueOf(3.5));
       }
@@ -4870,6 +4868,15 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    public void setLineWidth(double width)
    {
       lineWidth = width;
+   }
+
+   // Only checks if final element is a closing segment.
+   // Use hasSubPaths to check if there are other closing segments.
+   public boolean isClosed()
+   {
+      if (isEmpty()) return false;
+
+      return lastElement().getType() == PathIterator.SEG_CLOSE;
    }
 
    public boolean hasSubPaths()
@@ -11225,15 +11232,47 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
    {
       ShapeComponentVector path = null;
 
+      Point2D startPt = vec.firstElement().getEnd();
+
+      if (vec.isFilled())
+      {
+         dialog.addMessageIdLn("vectorize.smoothing_region",
+          startPt.getX(), startPt.getY());
+      }
+      else if (vec.isClosed())
+      {
+         dialog.addMessageIdLn("vectorize.smoothing_loop",
+          startPt.getX(), startPt.getY());
+      }
+      else
+      {
+         dialog.addMessageIdLn("vectorize.smoothing_path",
+          startPt.getX(), startPt.getY());
+      }
+
+      double sqTinyStepThreshold = tinyStepThreshold*tinyStepThreshold;
+
       for (int i = 1, n = vec.size(); i < n; i++)
       {
          incProgress();
 
          int j = i;
 
+         Point2D startRunPt = null;
+         Point2D endRunPt = null;
+         double sum = 0.0;
+         int N = 0;
+
+         int changeIdx = -1;
+         Point2D changeMidPt = null;
+
+         int xLastDir = 0;
+         int yLastDir = 0;
+
          for ( ; j < n; j++)
          {
             ShapeComponent comp = vec.get(j);
+
             int type = comp.getType();
 
             if (type != PathIterator.SEG_LINETO)
@@ -11241,21 +11280,84 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
                break;
             }
 
-            Point2D p0 = comp.getStart();
+            Point2D p0 = (endRunPt == null ? comp.getStart() : endRunPt);
             Point2D p1 = comp.getEnd();
 
             double dx = p0.getX()-p1.getX();
             double dy = p0.getY()-p1.getY();
 
-            double length = Math.sqrt(dx*dx+dy*dy);
+            double sqLength = dx*dx+dy*dy;
 
-            if (length > tinyStepThreshold)
+            if (sqLength > sqTinyStepThreshold)
             {
                break;
             }
+
+            int xdir = (p0.getX() < p1.getX() ? -1 : p0.getX() > p1.getX() ? 1 : 0);
+            int ydir = (p0.getY() < p1.getY() ? -1 : p0.getY() > p1.getY() ? 1 : 0);
+
+            if (startRunPt == null)
+            {
+               startRunPt = p0;
+               xLastDir = xdir;
+               yLastDir = ydir;
+            }
+            else
+            {
+               if (xdir != 0)
+               {
+                  if (xdir != xLastDir && xLastDir != 0)
+                  {
+                     if (!tryBezier || changeIdx != -1)
+                     {
+                        break;
+                     }
+
+                     changeIdx = j-1;
+                  }
+
+                  xLastDir = xdir;
+               }
+
+               if (ydir != 0)
+               {
+                  if (ydir != yLastDir && yLastDir != 0)
+                  {
+                     if (!tryBezier || changeIdx != -1)
+                     {
+                        break;
+                     }
+
+                     changeIdx = j-1;
+                  }
+
+                  yLastDir = ydir;
+               }
+            }
+
+            endRunPt = p1;
+
+            sum += Math.sqrt(sqLength);
+            N++;
          }
 
          int endIdx = j-1;
+
+         if (startRunPt != null && endRunPt != null)
+         {
+            dialog.addMessageIdLn("vectorize.smoothing_tiny_steps_run",
+             startRunPt.getX(), startRunPt.getY(), 
+             endRunPt.getX(), endRunPt.getY(),
+             sum/N);
+
+            if (changeIdx != -1)
+            {
+               changeMidPt = vec.get(changeIdx).getMid();
+
+               dialog.addMessageIdLn("vectorize.smoothing_bend_found",
+                  changeMidPt.getX(), changeMidPt.getY());
+            }
+         }
 
          if (endIdx - i > 2)
          {
