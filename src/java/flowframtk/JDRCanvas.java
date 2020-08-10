@@ -580,6 +580,8 @@ public class JDRCanvas extends JPanel
          CONTROL_FLAG_REGULAR
          ));
 
+      editPathPopupMenu.addSeparator();
+
       // Convert to line
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
@@ -633,6 +635,8 @@ public class JDRCanvas extends JPanel
        | SEGMENT_FLAG_PARTIAL_CURVE
        | SEGMENT_FLAG_PARTIAL_LINE
          ));
+
+      editPathPopupMenu.addSeparator();
 
       // Symmetry submenu
 
@@ -831,6 +835,8 @@ public class JDRCanvas extends JPanel
             }
          }));
 
+      editPathPopupMenu.addSeparator();
+
       // Move point
 
       movePtDialog = new MovePointDialog(frame_);
@@ -848,6 +854,19 @@ public class JDRCanvas extends JPanel
          SEGMENT_FLAG_ANY,
          CONTROL_FLAG_ANY & ~CONTROL_FLAG_NONE
          ));
+
+      // Segment info
+
+      editPathPopupMenu.add(EditPathAction.createMenuItem(this,
+         "editpath", "info",
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               segmentInfo();
+            }
+         }
+      ));
 
       // Snap to grid
 
@@ -2421,6 +2440,17 @@ public class JDRCanvas extends JPanel
 
       UndoableEdit edit = new AddPoint(editedPath);
       frame_.postEdit(edit);
+   }
+
+   public void segmentInfo()
+   {
+      if (editedPath == null) return;
+
+      JDRPathSegment segment = editedPath.getSelectedSegment();
+
+      if (segment == null) return;
+
+      frame_.displaySegmentInfoDialog(segment);
    }
 
    public void convertToLine()
@@ -7603,6 +7633,12 @@ public class JDRCanvas extends JPanel
 
       JDRPathSegment editedSegment = editedPath.getSelectedSegment();
 
+      setStoragePoint(editedSegment, selectedPoint, x, y);
+   }
+
+   protected void setStoragePoint(JDRPathSegment editedSegment,
+    JDRPoint selectedPoint, double x, double y)
+   {
       if (selectedPoint != null && editedPath != null)
       {
          double oldx = selectedPoint.x;
@@ -7622,6 +7658,13 @@ public class JDRCanvas extends JPanel
             frame_.postEdit(edit);
          }
       }
+   }
+
+   public void setControlPoint(JDRPathSegment segment, 
+     JDRPoint point, JDRLength x, JDRLength y)
+   {
+      JDRUnit unit = getCanvasGraphics().getStorageUnit();
+      setStoragePoint(segment, point, x.getValue(unit), y.getValue(unit));
    }
 
    public void setSymbolText(String str)

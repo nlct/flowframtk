@@ -27,6 +27,7 @@ package com.dickimawbooks.flowframtk.dialog;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
@@ -74,6 +75,19 @@ public class RectangularCoordPanel extends JPanel implements CoordPanel
    public JDRLength getYCoord()
    {
       return yPanel.getLength();
+   }
+
+   public void addCoordinateChangeListener(ChangeListener listener)
+   {
+      xPanel.addChangeListener(listener);
+      yPanel.addChangeListener(listener);
+   }
+
+   public void setEnabled(boolean enable)
+   {
+      super.setEnabled(enable);
+      xPanel.setEnabled(enable);
+      yPanel.setEnabled(enable);
    }
 
    private LengthPanel xPanel, yPanel;

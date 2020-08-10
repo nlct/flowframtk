@@ -950,6 +950,24 @@ public class JDRSegment extends JDRObject
       return "segment["+start.info()+","+end.info()+"]";
    }
 
+   public String getDetails()
+   {
+      JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
+
+      String type = msg.getString("class."+getClass().getCanonicalName(),
+       getClass().getSimpleName());
+
+      Point2D dp0 = getdP(0.0);
+      Point2D dp1 = getdP(1.0);
+
+      return msg.getMessageWithAlt(
+        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(0) = ({5},{6}); P'(1) = ({7},{8}).",
+        "segmentinfo.details",
+        type, start.x, start.y, end.x, end.y, dp0.getX(), dp0.getY(),
+        dp1.getX(), dp1.getY()
+       );
+   }
+
    public JDRMarker getStartMarker()
    {
       return startMarker;

@@ -27,6 +27,7 @@ package com.dickimawbooks.flowframtk.dialog;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
@@ -97,6 +98,19 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
    public void setUnit(JDRUnit unit)
    {
       radiusPanel.setUnit(unit);
+   }
+
+   public void addCoordinateChangeListener(ChangeListener listener)
+   {
+      radiusPanel.addChangeListener(listener);
+      anglePanel.addChangeListener(listener);
+   }
+
+   public void setEnabled(boolean enable)
+   {
+      super.setEnabled(enable);
+      radiusPanel.setEnabled(enable);
+      anglePanel.setEnabled(enable);
    }
 
    private NonNegativeLengthPanel radiusPanel;

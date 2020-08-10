@@ -3450,6 +3450,7 @@ public class FlowframTk extends JFrame
       exportToSvgSettings = new ExportToSvgSettings(this, appSelector);
       exportToPdfSettings = new ExportToPdfSettings(this, appSelector);
 
+      segmentInfoDialog = new SegmentInfoDialog(this);
 
       invoker.setStartupInfo(resources.getString("message.init_desktop"));
       invoker.setStartupIndeterminate();
@@ -3966,6 +3967,11 @@ public class FlowframTk extends JFrame
       }
 
       return true;
+   }
+
+   public void displaySegmentInfoDialog(JDRFrame frame, JDRPathSegment segment)
+   {
+      segmentInfoDialog.display(frame, segment);
    }
 
    public void displayTextPaintChooser()
@@ -7162,6 +7168,7 @@ public class FlowframTk extends JFrame
    private TeXEditorDialog texEditorDialog;
    private CharacterSelector characterSelector;
    private ExportPngDialog exportPngDialog;
+   private SegmentInfoDialog segmentInfoDialog;
 
    // file choosers
    private JFileChooser savejdrFC, openjdrFC,

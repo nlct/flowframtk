@@ -560,6 +560,8 @@
 <entry key="editpath.symmetry.join_anchor.mnemonic">J</entry>
 <entry key="editpath.symmetry.close_anchor">Anchor Start Control</entry>
 <entry key="editpath.symmetry.close_anchor.mnemonic">S</entry>
+<entry key="editpath.info">Details...</entry>
+<entry key="editpath.info.mnemonic">I</entry>
 
 <!--  Distortion popup menu -->
 <entry key="distort.state">Distort</entry>
@@ -1991,6 +1993,20 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="coordinates.radius.mnemonic">R</entry>
 <entry key="coordinates.angle">Angle</entry>
 <entry key="coordinates.angle.mnemonic">A</entry>
+
+<!--  segment information dialog box -->
+
+<entry key="segmentinfo.title">Segment Details</entry>
+<entry key="segmentinfo.control">Control {0}</entry>
+<entry key="segmentinfo.end_control">End Control</entry>
+<entry key="segmentinfo.control1.rectangular.mnemonic">G</entry>
+<entry key="segmentinfo.control1.radial.mnemonic">L</entry>
+<entry key="segmentinfo.control2.rectangular.mnemonic">E</entry>
+<entry key="segmentinfo.control2.radial.mnemonic">U</entry>
+<entry key="segmentinfo.control3.rectangular.mnemonic">T</entry>
+<entry key="segmentinfo.control3.radial.mnemonic">D</entry>
+<entry key="segmentinfo.details">Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P′(0) = ({5},{6}); P′(1) = ({7},{8}).</entry>
+<entry key="segmentinfo.details.symmetry">Line of symmetry: ({0},{1})--({2},{3}).</entry>
 
 <!--  browse bitmap dialog box -->
 

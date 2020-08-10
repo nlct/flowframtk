@@ -24,6 +24,8 @@
 
 package com.dickimawbooks.flowframtk.dialog;
 
+import javax.swing.event.ChangeListener;
+
 import com.dickimawbooks.jdr.*;
 
 public interface CoordPanel
@@ -37,4 +39,6 @@ public interface CoordPanel
    public JDRLength getXCoord();
 
    public JDRLength getYCoord();
+
+   public void addCoordinateChangeListener(ChangeListener listener);
 }

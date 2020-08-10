@@ -45,19 +45,42 @@ public class LocationPane extends JTabbedPane
 {
    public LocationPane(JDRResources resources)
    {
+      this(resources, true);
+   }
+
+   public LocationPane(JDRResources resources, boolean addMnemonics)
+   {
+      this(resources, "grid", addMnemonics);
+   }
+
+   public LocationPane(JDRResources resources, String baseId)
+   {
+      this(resources, baseId, true);
+   }
+
+   public LocationPane(JDRResources resources, String baseId, boolean addMnemonics)
+   {
       super();
 
       rectCoordPanel = new RectangularCoordPanel(resources);
 
       add(rectCoordPanel, RECTANGULAR);
-      setMnemonicAt(RECTANGULAR,
-         resources.getCodePoint("grid.rectangular.mnemonic"));
+
+      if (addMnemonics)
+      {
+         setMnemonicAt(RECTANGULAR,
+            resources.getCodePoint(baseId+".rectangular.mnemonic"));
+      }
 
       radialCoordPanel = new RadialCoordPanel(resources);
 
       add(radialCoordPanel, RADIAL);
-      setMnemonicAt(RADIAL,
-         resources.getCodePoint("grid.radial.mnemonic"));
+
+      if (addMnemonics)
+      {
+         setMnemonicAt(RADIAL,
+            resources.getCodePoint(baseId+".radial.mnemonic"));
+      }
 
       addChangeListener(this);
    }
@@ -118,6 +141,18 @@ public class LocationPane extends JTabbedPane
    public CoordPanel getCoordPanel()
    {
       return (CoordPanel)getSelectedComponent();
+   }
+
+   public void addCoordinateChangeListener(ChangeListener listener)
+   {
+      rectCoordPanel.addCoordinateChangeListener(listener);
+      radialCoordPanel.addCoordinateChangeListener(listener);
+   }
+
+   public void setPanelsEnabled(boolean enabled)
+   {
+      rectCoordPanel.setEnabled(enabled);
+      radialCoordPanel.setEnabled(enabled);
    }
 
    private RectangularCoordPanel rectCoordPanel;

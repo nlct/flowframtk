@@ -117,8 +117,6 @@ public interface JDRPathSegment extends Cloneable,Serializable
 
    /**
     * Draws this segment in draft mode.
-    * @param g the graphics device on which to draw
-    * @param scale the scaling factor
     * @param drawEnd flag indicating whether to draw the end point
     */
    public void drawDraft(boolean drawEnd);
@@ -187,4 +185,6 @@ public interface JDRPathSegment extends Cloneable,Serializable
    public JDRObjectLoaderListener getListener();
 
    public int getSegmentFlag();
+
+   public String getDetails();
 }
