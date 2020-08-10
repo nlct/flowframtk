@@ -31,6 +31,11 @@ public class MinRangeLongFieldValidator extends LongFieldValidator
       this.minValue = minValue;
    }
 
+   public boolean isValid(Number value)
+   {
+      return super.isValid(value) && isValid(value.longValue());
+   }
+
    public boolean isValid(long value)
    {
       return value >= minValue;

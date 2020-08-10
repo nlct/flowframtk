@@ -30,6 +30,22 @@ public class IntFieldValidator extends NumberFieldValidator
       super();
    }
 
+   public boolean isValid(Number value)
+   {
+      if (value instanceof Integer || value instanceof Byte
+           || value instanceof Short)
+      {
+         return isValid(value.intValue());
+      }
+
+      if (value instanceof Long)
+      {
+         return isValid(value.longValue());
+      }
+
+      return false;
+   }
+
    public boolean isValid(int value)
    {
       return true;
@@ -38,6 +54,17 @@ public class IntFieldValidator extends NumberFieldValidator
    public boolean isValid(byte value)
    {
       return isValid((int)value);
+   }
+
+   public boolean isValid(short value)
+   {
+      return isValid((int)value);
+   }
+
+   public boolean isValid(long value)
+   {
+      return (value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE)
+         && isValid((int)value);
    }
 
    public boolean isValid(float value)

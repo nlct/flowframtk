@@ -30,6 +30,17 @@ public class LongFieldValidator extends NumberFieldValidator
       super();
    }
 
+   public boolean isValid(Number value)
+   {
+      if (value instanceof Integer || value instanceof Byte
+           || value instanceof Short || value instanceof Long)
+      {
+         return isValid(value.longValue());
+      }
+
+      return false;
+   }
+
    public boolean isValid(long value)
    {
       return true;
@@ -41,6 +52,11 @@ public class LongFieldValidator extends NumberFieldValidator
    }
 
    public boolean isValid(byte value)
+   {
+      return isValid((long)value);
+   }
+
+   public boolean isValid(short value)
    {
       return isValid((long)value);
    }

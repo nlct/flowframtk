@@ -24,6 +24,7 @@
 package com.dickimawbooks.jdrresources.numfield;
 
 import java.text.DecimalFormat;
+import java.util.Vector;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -45,17 +46,18 @@ import com.dickimawbooks.jdrresources.*;
 public class LengthPanel extends JPanel
    implements ItemListener
 {
-   public LengthPanel(JDRMessageDictionary msgSys, String label, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, String label,
+      NumberComponent numField)
    {
       super();
       this.messageSystem = msgSys;
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
       sizeLabel = new JLabel(label);
-      text      = numField;
-      text.setColumns(4);
+      numberField = numField;
+      setColumns(4);
 
-      sizeLabel.setLabelFor(text);
+      sizeLabel.setLabelFor(numberField.getComponent());
 
       unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
       unitBox.addItemListener(this);
@@ -63,155 +65,163 @@ public class LengthPanel extends JPanel
       setUnit(JDRUnit.bp);
 
       add(sizeLabel);
-      add(text);
+      add(numberField.getComponent());
       add(unitBox);
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, String label,
+      char mnemonic, NumberComponent numField)
    {
       this(msgSys, label, numField);
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, String label,
+      int mnemonic, NumberComponent numField)
    {
       this(msgSys, label, numField);
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, NumberComponent numField)
    {
       super();
       this.messageSystem = msgSys;
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
       sizeLabel = null;
-      text      = numField;
-      text.setColumns(4);
+      numberField = numField;
+      setColumns(4);
 
       unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS); 
       unitBox.addItemListener(this);
       currentUnit = BP;
       setUnit(JDRUnit.bp);
 
-      add(text);
+      add(numberField.getComponent());
       add(unitBox);
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, SamplePanel panel, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, String label, 
+      SamplePanel panel, NumberComponent numField)
    {
       this(msgSys, label, numField);
 
-      text.getDocument().addDocumentListener(
-          new TextFieldSampleListener(panel));
+      addChangeListener(new TextFieldSampleListener(panel));
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, SamplePanel panel, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, 
+      SamplePanel panel, NumberComponent numField)
    {
       this(msgSys, label, panel, numField);
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic,
+      SamplePanel panel, NumberComponent numField)
    {
       this(msgSys, label, panel, numField);
       sizeLabel.setDisplayedMnemonic(mnemonic);
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, SamplePanel panel, NumberField numField)
+   public LengthPanel(JDRMessageDictionary msgSys, SamplePanel panel, 
+      NumberComponent numField)
    {
       this(msgSys, numField);
 
-      text.getDocument().addDocumentListener(
-          new TextFieldSampleListener(panel));
+      addChangeListener(new TextFieldSampleListener(panel));
    }
 
    public LengthPanel(JDRMessageDictionary msgSys, String label)
    {
-      this(msgSys, label, new DoubleField(0.0));
+      this(msgSys, label, new NumberSpinnerField());
    }
 
    public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic)
    {
-      this(msgSys, label, mnemonic, new DoubleField(0.0));
+      this(msgSys, label, mnemonic, new NumberSpinnerField());
    }
 
    public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic)
    {
-      this(msgSys, label, mnemonic, new DoubleField(0.0));
+      this(msgSys, label, mnemonic, new NumberSpinnerField());
    }
 
    public LengthPanel(JDRMessageDictionary msgSys)
    {
-      this(msgSys, new DoubleField(0.0));
+      this(msgSys, new NumberSpinnerField());
    }
 
    public LengthPanel(JDRMessageDictionary msgSys, String label, SamplePanel panel)
    {
-      this(msgSys, label, panel, new DoubleField(0.0));
+      this(msgSys, label, panel, new NumberSpinnerField());
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, SamplePanel panel)
+   public LengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic,
+     SamplePanel panel)
    {
-      this(msgSys, label, mnemonic, panel, new DoubleField(0.0));
+      this(msgSys, label, mnemonic, panel, new NumberSpinnerField());
    }
 
-   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel)
+   public LengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, 
+      SamplePanel panel)
    {
-      this(msgSys, label, mnemonic, panel, new DoubleField(0.0));
+      this(msgSys, label, mnemonic, panel, new NumberSpinnerField());
    }
 
    public LengthPanel(JDRMessageDictionary msgSys, SamplePanel panel)
    {
-      this(msgSys, panel, new DoubleField(0.0));
+      this(msgSys, panel, new NumberSpinnerField());
    }
 
-   public NumberField getTextField()
+   public NumberComponent getNumberComponent()
    {
-      return text;
+      return numberField;
+   }
+
+   public JTextField getTextField()
+   {
+      return getNumberComponent().getTextField();
    }
 
    public Document getDocument()
    {
-      return text.getDocument();
+      return getTextField().getDocument();
    }
 
    public double getValue(JDRUnit otherUnit)
    {
       JDRUnit unit = getUnit();
 
-      return unit.toUnit(text.getDouble(), otherUnit);
+      return unit.toUnit(getNumberComponent().getDouble(), otherUnit);
    }
 
    public JDRLength getLength()
    {
-      return new JDRLength(messageSystem, text.getDouble(), getUnit());
+      return new JDRLength(messageSystem, getNumberComponent().getDouble(), getUnit());
    }
 
    public void setValue(double value, JDRUnit unit)
    {
-      text.setValue(value);
+      getNumberComponent().setValue(value);
       setUnit(unit);
-      text.setCaretPosition(0);
    }
 
    public void setValue(float value, JDRUnit unit)
    {
-      text.setValue(value);
+      getNumberComponent().setValue(value);
       setUnit(unit);
-      text.setCaretPosition(0);
    }
 
    public void setLength(JDRLength length)
    {
-      text.setValue(length.getValue());
+      getNumberComponent().setValue(length.getValue());
       setUnit(length.getUnit());
-      text.setCaretPosition(0);
    }
 
    public void addKeyListener(KeyListener kl)
    {
-      text.addKeyListener(kl);
+      getTextField().addKeyListener(kl);
       unitBox.addKeyListener(kl);
    }
 
@@ -240,9 +250,9 @@ public class LengthPanel extends JPanel
             currentUnit = unitBox.getSelectedIndex();
             JDRUnit unit = getUnit();
 
-            double val = text.getDouble();
+            double val = getNumberComponent().getDouble();
             double newVal = unit.fromUnit(val, oldUnit);
-            text.setValue(newVal);
+            getNumberComponent().setValue(newVal);
          }
       }
    }
@@ -251,12 +261,12 @@ public class LengthPanel extends JPanel
    {
       if (sizeLabel != null) sizeLabel.setEnabled(flag);
       unitBox.setEnabled(flag);
-      text.setEnabled(flag);
+      numberField.getComponent().setEnabled(flag);
    }
 
    public void setColumns(int cols)
    {
-      text.setColumns(cols);
+      getTextField().setColumns(cols);
    }
 
    public String info()
@@ -269,8 +279,8 @@ public class LengthPanel extends JPanel
       str += "      value: "+unitBox.getSelectedItem()+eol;
       str += "      has focus: "+unitBox.hasFocus()+eol;
       str += "   value box:"+eol;
-      str += "      value: "+text.getDouble()+eol;
-      str += "      has focus: "+text.hasFocus()+eol;
+      str += "      value: "+getNumberComponent().getNumber()+eol;
+      str += "      has focus: "+numberField.getComponent().hasFocus()+eol;
 
       return str;
    }
@@ -280,9 +290,14 @@ public class LengthPanel extends JPanel
       return getMessageSystem();
    }
 
+   public void addChangeListener(ChangeListener listener)
+   {
+      getNumberComponent().addChangeListener(listener);
+   }
+
    private JLabel sizeLabel;
    private JComboBox<String> unitBox;
-   private NumberField text;
+   private NumberComponent numberField;
    public static final int PT=0, IN=1, CM=2, BP=3;
    private int currentUnit=0;
 

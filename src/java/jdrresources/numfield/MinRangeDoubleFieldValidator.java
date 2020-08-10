@@ -31,6 +31,11 @@ public class MinRangeDoubleFieldValidator extends NumberFieldValidator
       this.minValue = minValue;
    }
 
+   public boolean isValid(Number value)
+   {
+      return isValid(value.doubleValue());
+   }
+
    public boolean isValid(double value)
    {
       return value >= minValue;
@@ -47,6 +52,16 @@ public class MinRangeDoubleFieldValidator extends NumberFieldValidator
    }
 
    public boolean isValid(int value)
+   {
+      return isValid((double)value);
+   }
+
+   public boolean isValid(short value)
+   {
+      return isValid((double)value);
+   }
+
+   public boolean isValid(long value)
    {
       return isValid((double)value);
    }

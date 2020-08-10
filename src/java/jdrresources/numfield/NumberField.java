@@ -23,6 +23,7 @@
 */
 package com.dickimawbooks.jdrresources.numfield;
 
+import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -33,7 +34,7 @@ import javax.swing.text.*;
  * Text field that only allows numbers.
  * @author Nicola L C Talbot
  */
-public class NumberField extends JTextField
+public class NumberField extends JTextField implements NumberComponent
 {
    /**
     * Initialise with given value.
@@ -75,6 +76,15 @@ public class NumberField extends JTextField
    protected Document createDefaultModel()
    {
       return new NumberDocument(validator);
+   }
+
+   public void setNumber(Number number)
+   {
+      if (validator.isValid(number))
+      {
+         super.setText(number.toString());
+         setCaretPosition(0);
+      }
    }
 
    public void setValue(double val)
@@ -119,6 +129,19 @@ public class NumberField extends JTextField
       }
    }
 
+   public void setValue(short val)
+   {
+      if (validator.isValid(val))
+      {
+         super.setText(""+val);
+      }
+   }
+
+   public Number getNumber()
+   {
+      return validator.getNumber(getText());
+   }
+
    public double getDouble()
    {
       return validator.getDouble(getText());
@@ -144,6 +167,60 @@ public class NumberField extends JTextField
       return validator.getLong(getText());
    }
 
+   public short getShort()
+   {
+      return validator.getShort(getText());
+   }
+
+   public JTextField getTextField()
+   {
+      return this;
+   }
+
+   public JComponent getComponent()
+   {
+      return this;
+   }
+
+   public void addChangeListener(ChangeListener listener)
+   {
+      if (changeListeners == null)
+      {
+         changeListeners = new Vector<ChangeListener>();
+
+         getDocument().addDocumentListener(new DocumentListener()
+         {
+            public void changedUpdate(DocumentEvent e)
+            {
+               notifyChange(new ChangeEvent(getTextField()));
+            }
+
+            public void insertUpdate(DocumentEvent e)
+            {
+               notifyChange(new ChangeEvent(getTextField()));
+            }
+
+            public void removeUpdate(DocumentEvent e)
+            {
+               notifyChange(new ChangeEvent(getTextField()));
+            }
+         });
+      }
+
+      changeListeners.add(listener);
+   }
+
+   protected void notifyChange(ChangeEvent evt)
+   {
+      if (changeListeners == null) return;
+
+      for (ChangeListener listener : changeListeners)
+      {
+         listener.stateChanged(evt);
+      }
+   }
+
    private NumberFieldValidator validator;
+   private Vector<ChangeListener> changeListeners=null;
 }
 

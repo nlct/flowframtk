@@ -3,7 +3,6 @@
 //                 needs repainting when the contents of the text
 //                 field changes
 // Date          : 6th July 2009
-// Last Modified : 6th July 2009
 // Author        : Nicola L.C. Talbot
 //                 http://www.dickimaw-books.com/
 
@@ -38,7 +37,7 @@ import javax.swing.text.*;
  * field changes
  * @author Nicola L C Talbot
  */
-public class TextFieldSampleListener implements DocumentListener
+public class TextFieldSampleListener implements DocumentListener,ChangeListener
 {
    /**
     * Initialise with the given component.
@@ -67,6 +66,14 @@ public class TextFieldSampleListener implements DocumentListener
    }
 
    public void changedUpdate(DocumentEvent e)
+   {
+      if (component != null)
+      {
+         component.updateSamples();
+      }
+   }
+
+   public void stateChanged(ChangeEvent e)
    {
       if (component != null)
       {

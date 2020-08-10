@@ -29,6 +29,11 @@ public class NumberFieldValidator
    {
    }
 
+   public boolean isValid(Number value)
+   {
+      return true;
+   }
+
    public boolean isValid(int value)
    {
       return true;
@@ -40,6 +45,11 @@ public class NumberFieldValidator
    }
 
    public boolean isValid(byte value)
+   {
+      return true;
+   }
+
+   public boolean isValid(short value)
    {
       return true;
    }
@@ -67,6 +77,11 @@ public class NumberFieldValidator
    public byte getDefaultByte()
    {
       return (byte)0;
+   }
+
+   public short getDefaultShort()
+   {
+      return (short)0;
    }
 
    public float getDefaultFloat()
@@ -199,4 +214,78 @@ public class NumberFieldValidator
       return isValid(value) ? value : getDefaultLong();
    }
 
+   public short getShort(String text)
+   {
+      short value = getDefaultShort();
+
+      try
+      {
+         value = Short.parseShort(text);
+      }
+      catch (NumberFormatException e)
+      {
+      }
+      catch (NullPointerException e)
+      {
+      }
+
+      return isValid(value) ? value : getDefaultShort();
+   }
+
+   public Number getNumber(String text)
+   {
+      try
+      {
+         Number value = Double.valueOf(text);
+
+         if (isValid(value))
+         {
+            return value;
+         }
+
+         value = Float.valueOf(text);
+
+         if (isValid(value))
+         {
+            return value;
+         }
+
+         value = Long.valueOf(text);
+
+         if (isValid(value))
+         {
+            return value;
+         }
+
+         value = Integer.valueOf(text);
+
+         if (isValid(value))
+         {
+            return value;
+         }
+
+         value = Short.valueOf(text);
+
+         if (isValid(value))
+         {
+            return value;
+         }
+
+         value = Byte.valueOf(text);
+
+         if (isValid(value))
+         {
+            return value;
+         }
+
+      }
+      catch (NumberFormatException e)
+      {
+      }
+      catch (NullPointerException e)
+      {
+      }
+
+      return Double.valueOf(getDefaultDouble());
+   }
 }

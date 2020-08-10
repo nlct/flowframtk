@@ -37,9 +37,19 @@ public class RangeIntFieldValidator extends IntFieldValidator
       this.maxValue = max;
    }
 
+   public boolean isValid(Number value)
+   {
+      return super.isValid(value) && isValid(value.intValue());
+   }
+
    public boolean isValid(int value)
    {
       return value >= minValue && value <= maxValue;
+   }
+
+   public boolean isValid(long value)
+   {
+      return super.isValid(value) && isValid((int)value);
    }
 
    public boolean allowsNegative()

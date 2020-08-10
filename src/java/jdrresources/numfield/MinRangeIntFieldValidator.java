@@ -31,9 +31,19 @@ public class MinRangeIntFieldValidator extends IntFieldValidator
       this.minValue = minValue;
    }
 
+   public boolean isValid(Number value)
+   {
+      return super.isValid(value) && isValid(value.intValue());
+   }
+
    public boolean isValid(int value)
    {
       return value >= minValue;
+   }
+
+   public boolean isValid(long value)
+   {
+      return super.isValid(value) && isValid((int)value);
    }
 
    public boolean allowsNegative()

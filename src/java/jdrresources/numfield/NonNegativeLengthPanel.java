@@ -45,41 +45,50 @@ public class NonNegativeLengthPanel extends LengthPanel
 {
    public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label)
    {
-      super(msgSys, label, new NonNegativeDoubleField(0.0));
+      super(msgSys, label, NumberSpinnerField.createNonNegativeDoubleField());
    }
 
-   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic)
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, 
+      String label, char mnemonic)
    {
-      super(msgSys, label, mnemonic, new NonNegativeDoubleField(0.0));
+      super(msgSys, label, mnemonic, 
+         NumberSpinnerField.createNonNegativeDoubleField());
    }
 
-   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic)
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys,
+      String label, int mnemonic)
    {
-      super(msgSys, label, mnemonic, new NonNegativeDoubleField(0.0));
+      super(msgSys, label, mnemonic, 
+         NumberSpinnerField.createNonNegativeDoubleField());
    }
 
    public NonNegativeLengthPanel(JDRMessageDictionary msgSys)
    {
-      super(msgSys, new NonNegativeDoubleField(0.0));
+      super(msgSys, NumberSpinnerField.createNonNegativeDoubleField());
    }
 
-   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, SamplePanel panel)
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label,
+      SamplePanel panel)
    {
-      super(msgSys, label, panel, new NonNegativeDoubleField(0.0));
+      super(msgSys, label, panel, NumberSpinnerField.createNonNegativeDoubleField());
    }
 
-   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, char mnemonic, SamplePanel panel)
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label,
+      char mnemonic, SamplePanel panel)
    {
-      super(msgSys, label, mnemonic, panel, new NonNegativeDoubleField(0.0));
+      super(msgSys, label, mnemonic, panel,
+        NumberSpinnerField.createNonNegativeDoubleField());
    }
 
-   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel)
+   public NonNegativeLengthPanel(JDRMessageDictionary msgSys, String label,
+      int mnemonic, SamplePanel panel)
    {
-      super(msgSys, label, mnemonic, panel, new NonNegativeDoubleField(0.0));
+      super(msgSys, label, mnemonic, panel, 
+        NumberSpinnerField.createNonNegativeDoubleField());
    }
 
    public NonNegativeLengthPanel(JDRMessageDictionary msgSys, SamplePanel panel)
    {
-      super(msgSys, panel, new NonNegativeDoubleField(0.0));
+      super(msgSys, panel, NumberSpinnerField.createNonNegativeDoubleField());
    }
 }
