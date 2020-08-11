@@ -1180,6 +1180,105 @@ public class JDRBezier extends JDRSegment
       +","+control1+","+control2+","+end.info()+"]";
    }
 
+   public String getDetails()
+   {
+      String segmentDetails = super.getDetails();
+
+      String stationaryInfo = "";
+
+      double[] t = getStationaryPositions();
+
+      JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
+
+      if (t == null)
+      {
+         stationaryInfo = msg.getString("No stationary points found",
+           "segmentinfo.details.bezier.stationary_none");
+      }
+      else if (t.length == 1)
+      {
+         Point2D p = getP(t[0]);
+
+         stationaryInfo = msg.getMessageWithAlt(
+           "1 stationary point found: t={0}, P(t)=({1},{2}).",
+           "segmentinfo.details.bezier.stationary_1",
+           t[0], p.getX(), p.getY());
+      }
+      else if (t.length == 2)
+      {
+         Point2D p1 = getP(t[0]);
+         Point2D p2 = getP(t[1]);
+
+         stationaryInfo = msg.getMessageWithAlt(
+           "2 stationary points found: t={0}, P(t)=({1},{2}) and t={3}, P(t)=({4},{5}).",
+           "segmentinfo.details.bezier.stationary_2",
+           t[0], p1.getX(), p1.getY(), t[1], p2.getX(), p2.getY());
+      }
+
+      return String.format("%s %s", segmentDetails, stationaryInfo);
+   }
+
+   /*
+    Returns an array of t values corresponding to stationary points or
+    null if none found. The curve has the parametric equation:
+\[
+P(t) = (1-t^3)p_0 + 3(1-t^2)tp_1 + 3(1-t)t^2p_2 + t^3p_3
+\]
+The derivative is
+\[
+P'(t) = 3(1-t)^2(p_1-p_0) + 6(1-t)t(p_2-p_1)+3t^2(p_3-p_2)
+\]
+Stationary points occur when $\frac{dy}{dx}=0$. In the case of a
+parametric function $\frac{dy}{dx}=\frac{\frac{dy}{dt}}{\frac{dx}{dt}}$
+where $\frac{dx}{dt}=P^x'(t)$ and $\frac{dy}{dt}=P^y'(t)$.
+This means that $P^y'(t) = 0$ and $P^x'(t) \ne 0$.
+\[
+P^y'(t) = t^2[3(p_1^y-p_2^y)+p_3^y-p_0^y] 
++ 2t[p_0^y+p_2^y-2p_1^y]
++ p_1^y - p_0^y 
+\]
+ 
+Note that t may be outside the range [0-1] which means that the 
+stationary point is outside of this segment.
+    */ 
+   public double[] getStationaryPositions()
+   {
+      double a = 3*(control1.y-control2.y) + end.y - start.y;
+      double b = 2*(start.y+control2.y-2*control1.y);
+      double c = control1.y - start.y;
+
+      double sq = b*b - 4*a*c;
+
+      if (sq < 0)
+      {
+         return null;
+      }
+
+      double factor = 1.0/(2*a);
+
+      if (Double.isNaN(factor))
+      {
+         return null;
+      }
+
+      if (sq == 0)
+      {
+         return new double[] { - b * factor};
+      }
+
+      double root = Math.sqrt(sq);
+
+      double t1 = factor*(root - b);
+      double t2 = -factor*(b + root);
+
+      if (t1 < t2)
+      {
+         return new double[] {t1, t2};
+      }
+      
+      return new double[] {t2, t1};
+   }
+
    public int controlCount()
    {
       return 3;
