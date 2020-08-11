@@ -2010,7 +2010,7 @@ public class JDRBasicStroke implements JDRStroke
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      Shape shape = getBpStrokedPath(path);
+      Shape shape = getStorageStrokedPath(path);
 
       JDRUnit unit = cg.getStorageUnit();
 
