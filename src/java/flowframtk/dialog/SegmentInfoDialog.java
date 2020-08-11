@@ -69,7 +69,7 @@ public class SegmentInfoDialog extends JDialog
 
       JSplitPane splitPane = new JSplitPane(
         JSplitPane.VERTICAL_SPLIT, new JScrollPane(samplePanel), detailsComp);
-      splitPane.setResizeWeight(0.5);
+      splitPane.setResizeWeight(1.0);
 
       getContentPane().add(splitPane, "Center");
 
@@ -110,12 +110,17 @@ public class SegmentInfoDialog extends JDialog
          }
       }
 
+      JPanel bottomPanel = new JPanel(new BorderLayout());
+      getContentPane().add(bottomPanel, "South");
+
       JPanel p2 = new JPanel();
+      bottomPanel.add(p2, "Center");
 
       p2.add(resources.createOkayButton(this));
       p2.add(resources.createCancelButton(this));
 
-      getContentPane().add(p2, "South");
+      bottomPanel.add(resources.createDialogButton(
+        "segmentinfo", "default", this, null), "East");
    }
 
    public JDRResources getResources()
@@ -128,17 +133,74 @@ public class SegmentInfoDialog extends JDialog
       return workingSegment;
    }
 
-   public void display(JDRFrame frame, JDRPathSegment segment)
+   public Shape getCompleteShape()
+   {
+      return completeShape;
+   }
+
+   public void detailsUpdated()
+   {
+      completeShape = workingPath.getBpGeneralPath();
+      textComp.setText(workingSegment.getDetails());
+      samplePanel.repaint();
+   }
+
+   public void revert()
+   {
+      CanvasGraphics cg = (CanvasGraphics)workingSegment.getCanvasGraphics();
+
+      JDRUnit unit = cg.getStorageUnit();
+      JDRPaper paper = frame.getPaper();
+      JDRGrid grid = frame.getGrid();
+
+      int n = workingSegment.controlCount();
+
+      for (int i = 0; i < n; i++)
+      {
+         JDRPoint orgPoint = segment.getControl(i);
+
+         JDRPoint point = workingSegment.getControl(i);
+         point.set(orgPoint.getX(), orgPoint.getY());
+         point.setSelected(orgPoint.isSelected());
+
+         infoPanels.get(i).setPoint(point, hoffset, voffset, 
+          unit, paper, grid);
+      }
+
+      if (endControlPanel.isEnabled())
+      {
+         JDRPoint orgPoint = segment.getEnd();
+
+         JDRPoint point = workingSegment.getEnd();
+         point.set(orgPoint.getX(), orgPoint.getY());
+         point.setSelected(orgPoint.isSelected());
+
+         endControlPanel.setPoint(point, hoffset, voffset,
+            unit, paper, grid);
+      }
+
+      detailsUpdated();
+   }
+
+   public void display(JDRFrame frame, JDRShape path, JDRPathSegment segment)
    {
       this.frame = frame;
       this.segment = segment;
-      this.workingSegment = (JDRPathSegment)segment.clone();
+      JDRCanvas canvas = frame.getCanvas();
 
-      CanvasGraphics cg = (CanvasGraphics)segment.getCanvasGraphics().clone();
+      int editedSegmentIndex = path.getSelectedIndex();
+
+      workingPath = (JDRShape)path.clone();
+
+      workingSegment = workingPath.get(editedSegmentIndex);
+
+      CanvasGraphics cg = (CanvasGraphics)workingPath.getCanvasGraphics().clone();
       cg.setComponent(samplePanel);
       cg.setMagnification(1.0);
 
-      textComp.setText(segment.getDetails());
+      completeShape = workingPath.getBpGeneralPath();
+
+      textComp.setText(workingSegment.getDetails());
 
       int n = segment.controlCount();
 
@@ -164,14 +226,10 @@ public class SegmentInfoDialog extends JDialog
          }
       }
 
-      JDRCanvas canvas = frame.getCanvas();
-      JDRPoint point = canvas.getSelectedStoragePoint();
-      JDRShape editedPath = canvas.getEditedPath();
-
       hoffset = 0.0;
       voffset = 0.0;
 
-      FlowFrame flowframe = editedPath.getFlowFrame();
+      FlowFrame flowframe = path.getFlowFrame();
 
       if (flowframe != null && cg.isEvenPage())
       {
@@ -189,19 +247,37 @@ public class SegmentInfoDialog extends JDialog
       JDRUnit unit = cg.getStorageUnit();
       JDRPaper paper = frame.getPaper();
       JDRGrid grid = frame.getGrid();
+      selectedIndex = 0;
 
       for (int i = 0; i < n; i++)
       {
-         infoPanels.get(i).setPoint(workingSegment.getControl(i), hoffset, voffset, 
+         JDRPoint point = workingSegment.getControl(i);
+         infoPanels.get(i).setPoint(point, hoffset, voffset, 
           unit, paper, grid);
+
+         if (point.isSelected())
+         {
+            selectedIndex = i;
+         }
       }
 
-      endControlPanel.setPoint(workingSegment.getEnd(), hoffset, voffset,
+      JDRPoint endPt = workingSegment.getEnd();
+      endControlPanel.setPoint(endPt, hoffset, voffset,
          unit, paper, grid);
 
-      JDRShape path = canvas.getEditedPath();
+      if (workingPath.segmentHasEnd(workingSegment))
+      {
+         endControlPanel.setEnabled(true);
 
-      endControlPanel.setEnabled(path.segmentHasEnd(segment));
+         if (endPt.isSelected())
+         {
+            selectedIndex = n;
+         }
+      }
+      else
+      {
+         endControlPanel.setEnabled(false);
+      }
 
       pack();
       setLocationRelativeTo(frame);
@@ -265,6 +341,10 @@ public class SegmentInfoDialog extends JDialog
       {
          setVisible(false);
       }
+      else if (action.equals("default"))
+      {
+         revert();
+      }
    }
 
    public String info()
@@ -276,11 +356,6 @@ public class SegmentInfoDialog extends JDialog
    public RenderingHints getRenderingHints()
    {
       return frame.getRenderingHints();
-   }
-
-   public void repaintSample()
-   {
-      samplePanel.repaint();
    }
 
    public double getHOffset()
@@ -298,10 +373,13 @@ public class SegmentInfoDialog extends JDialog
       return endControlPanel.isEnabled();
    }
 
+   private JDRShape workingPath;
+   private Shape completeShape;
    private JDRPathSegment segment, workingSegment;
    private JDRFrame frame;
    private FlowframTk application;
    private double hoffset = 0.0, voffset = 0.0;
+   private int selectedIndex;
 
    private Vector<ControlInfoPanel> infoPanels;
 
@@ -353,9 +431,10 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
    {
       super.paintComponent(g);
 
+      Shape shape = dialog.getCompleteShape();
       JDRPathSegment segment = dialog.getSegment();
 
-      if (segment == null)
+      if (shape == null || segment == null)
       {
          return;
       }
@@ -374,6 +453,10 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
          g2.setRenderingHints(hints);
       }
 
+      g2.setPaint(PATH_PAINT);
+      g2.draw(shape);
+
+      g2.setPaint(Color.BLACK);
       segment.draw();
       segment.drawControls(dialog.isEndEnabled());
 
@@ -421,6 +504,8 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
    private double xOffset=0.0, yOffset = 0.0;
    private SegmentInfoDialog dialog;
    private static final Dimension MIN_SIZE = new Dimension(100, 100);
+
+   public static final Color PATH_PAINT = new Color(220, 220, 220);
 }
 
 class ControlInfoPanel extends JPanel implements ChangeListener
@@ -517,7 +602,7 @@ class ControlInfoPanel extends JPanel implements ChangeListener
          point.x = xcoord.getValue(unit);
          point.y = ycoord.getValue(unit);
 
-         dialog.repaintSample();
+         dialog.detailsUpdated();
       }
    }
 

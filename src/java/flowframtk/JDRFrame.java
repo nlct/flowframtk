@@ -1974,9 +1974,9 @@ public class JDRFrame extends JInternalFrame
       return preambleEditor == null ? false : preambleEditor.isEditing();
    }
 
-   public void displaySegmentInfoDialog(JDRPathSegment segment)
+   public void displaySegmentInfoDialog(JDRShape shape, JDRPathSegment segment)
    {
-      application_.displaySegmentInfoDialog(this, segment);
+      application_.displaySegmentInfoDialog(this, shape, segment);
    }
 
    public JDRResources getResources()

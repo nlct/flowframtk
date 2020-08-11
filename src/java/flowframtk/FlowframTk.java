@@ -3969,9 +3969,10 @@ public class FlowframTk extends JFrame
       return true;
    }
 
-   public void displaySegmentInfoDialog(JDRFrame frame, JDRPathSegment segment)
+   public void displaySegmentInfoDialog(JDRFrame frame,
+      JDRShape shape, JDRPathSegment segment)
    {
-      segmentInfoDialog.display(frame, segment);
+      segmentInfoDialog.display(frame, shape, segment);
    }
 
    public void displayTextPaintChooser()

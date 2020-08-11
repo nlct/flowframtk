@@ -1990,6 +1990,9 @@
 <!--  segment information dialog box -->
 
 <entry key="segmentinfo.title">Segment Details</entry>
+<entry key="segmentinfo.default">Revert</entry>
+<entry key="segmentinfo.default.mnemonic">R</entry>
+<entry key="segmentinfo.default.tooltip">Reset coordinates</entry>
 <entry key="segmentinfo.control">Control {0}</entry>
 <entry key="segmentinfo.end_control">End Control</entry>
 <entry key="segmentinfo.control1.rectangular.mnemonic">G</entry>
@@ -2000,6 +2003,10 @@
 <entry key="segmentinfo.control3.radial.mnemonic">D</entry>
 <entry key="segmentinfo.details">Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(0) = ({5},{6}); P'(1) = ({7},{8}).</entry>
 <entry key="segmentinfo.details.symmetry">Line of symmetry: ({0},{1})--({2},{3}).</entry>
+<entry key="segmentinfo.details.bezier.stationary_none">No stationary points found.</entry>
+<entry key="segmentinfo.details.bezier.stationary_1">1 stationary point found: t={0}, P(t)=({1},{2}).</entry>
+<entry key="segmentinfo.details.bezier.stationary_2">2 stationary points found: t={0}, P(t)=({1},{2}) and t={3}, P(t)=({4},{5}).</entry>
+
 
 <!--  browse bitmap dialog box -->
 

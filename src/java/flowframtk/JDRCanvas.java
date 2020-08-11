@@ -2450,7 +2450,7 @@ public class JDRCanvas extends JPanel
 
       if (segment == null) return;
 
-      frame_.displaySegmentInfoDialog(segment);
+      frame_.displaySegmentInfoDialog(editedPath, segment);
    }
 
    public void convertToLine()
