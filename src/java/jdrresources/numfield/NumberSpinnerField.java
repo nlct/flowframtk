@@ -69,7 +69,7 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
 
    public NumberSpinnerField()
    {
-      this(Double.valueOf(0.0), null, null, 0.5);
+      this(Double.valueOf(0.0), null, null, 1.0);
    }
 
    public NumberSpinnerField(int defVal)
@@ -80,7 +80,7 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
    public static NumberSpinnerField createNonNegativeDoubleField()
    {
       return new NumberSpinnerField(
-       Double.valueOf(0.0), Double.valueOf(0.0), null, Double.valueOf(0.5));
+       Double.valueOf(0.0), Double.valueOf(0.0), null, Double.valueOf(1.0));
    }
 
    public static NumberSpinnerField createNonNegativeIntField()
