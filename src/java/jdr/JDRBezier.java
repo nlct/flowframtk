@@ -415,6 +415,14 @@ public class JDRBezier extends JDRSegment
     */
    public Point2D getP(double t)
    {
+      return getP(t, start.x, start.y, control1.x, control1.y,
+       control2.x, control2.y, end.x, end.y);
+   }
+
+   public static Point2D getP(double t,
+     double p0x, double p0y, double p1x, double p1y,
+     double p2x, double p2y, double p3x, double p3y)
+   {
       double one_minus_t = (1-t);
       double one_minus_t_sq = one_minus_t*one_minus_t;
       double t_sq = t*t;
@@ -423,8 +431,8 @@ public class JDRBezier extends JDRSegment
       double J2 = 3*t_sq*one_minus_t;
       double J3 = t_sq*t;
 
-      double x = J0*start.x + J1*control1.x + J2*control2.x + J3*end.x;
-      double y = J0*start.y + J1*control1.y + J2*control2.y + J3*end.y;
+      double x = J0*p0x + J1*p1x + J2*p2x + J3*p3x;
+      double y = J0*p0y + J1*p1y + J2*p2y + J3*p3y;
 
       return new Point2D.Double(x, y);
    }
@@ -435,13 +443,21 @@ public class JDRBezier extends JDRSegment
     */
    public Point2D getdP(double t)
    {
+      return getdP(t, start.x, start.y, control1.x, control1.y,
+       control2.x, control2.y, end.x, end.y);
+   }
+
+   public static Point2D getdP(double t,
+     double p0x, double p0y, double p1x, double p1y,
+     double p2x, double p2y, double p3x, double p3y)
+   {
       double dJ0 = - 3*(1-t)*(1-t);
       double dJ1 = 3*(1-t)*(1-3*t);
       double dJ2 = 3*t*(2-3*t);
       double dJ3 = 3*t*t;
 
-      double x = dJ0*start.x+dJ1*control1.x+dJ2*control2.x+dJ3*end.x;
-      double y = dJ0*start.y+dJ1*control1.y+dJ2*control2.y+dJ3*end.y;
+      double x = dJ0*p0x+dJ1*p1x+dJ2*p2x+dJ3*p3x;
+      double y = dJ0*p0y+dJ1*p1y+dJ2*p2y+dJ3*p3y;
 
       return new Point2D.Double(x,y);
    }
@@ -1182,18 +1198,33 @@ public class JDRBezier extends JDRSegment
 
    public String getDetails()
    {
-      String segmentDetails = super.getDetails();
+      JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
+
+      String type = msg.getString("class."+getClass().getCanonicalName(),
+       getClass().getSimpleName());
+
+      Point2D dp0 = getdP0();
+      Point2D dp1 = getdP1();
+
+      double angle = JDRLine.getVectorAngle(dp0.getX(), dp0.getY(),
+       dp1.getX(), dp1.getY());
+
+      String segmentDetails = msg.getMessageWithAlt(
+        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P''(0) = ({5},{6}); P''(1) = ({7},{8}); angle between P''(0) and P''(1): {9} rad ({10} degrees).",
+        "segmentinfo.details.curve",
+        type, start.x, start.y, end.x, end.y, dp0.getX(), dp0.getY(),
+        dp1.getX(), dp1.getY(), angle, Math.toDegrees(angle)
+       );
 
       String stationaryInfo = "";
 
       double[] t = getStationaryPositions();
 
-      JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
-
       if (t == null)
       {
-         stationaryInfo = msg.getString("No stationary points found",
-           "segmentinfo.details.bezier.stationary_none");
+         stationaryInfo = msg.getString(
+           "segmentinfo.details.bezier.stationary_none", 
+           "No stationary points found");
       }
       else if (t.length == 1)
       {
@@ -1241,11 +1272,13 @@ P^y'(t) = t^2[3(p_1^y-p_2^y)+p_3^y-p_0^y]
 Note that t may be outside the range [0-1] which means that the 
 stationary point is outside of this segment.
     */ 
-   public double[] getStationaryPositions()
+   public static double[] getStationaryPositions(
+     double p0x, double p0y, double p1x, double p1y,
+     double p2x, double p2y, double p3x, double p3y)
    {
-      double a = 3*(control1.y-control2.y) + end.y - start.y;
-      double b = 2*(start.y+control2.y-2*control1.y);
-      double c = control1.y - start.y;
+      double a = 3*(p1y-p2y) + p3y - p0y;
+      double b = 2*(p0y+p2y-2*p1y);
+      double c = p1y - p0y;
 
       double sq = b*b - 4*a*c;
 
@@ -1254,7 +1287,7 @@ stationary point is outside of this segment.
          return null;
       }
 
-      double factor = 1.0/(2*a);
+      double factor = 1.0/(2.0*a);
 
       if (Double.isNaN(factor))
       {
@@ -1263,7 +1296,8 @@ stationary point is outside of this segment.
 
       if (sq == 0)
       {
-         return new double[] { - b * factor};
+         double t = - b * factor;
+         return Double.isNaN(t) ? null : new double[] { t };
       }
 
       double root = Math.sqrt(sq);
@@ -1271,12 +1305,248 @@ stationary point is outside of this segment.
       double t1 = factor*(root - b);
       double t2 = -factor*(b + root);
 
+      if (Double.isNaN(t1) || Double.isInfinite(t1))
+      {
+         if (Double.isNaN(t2) || Double.isInfinite(t2))
+         {
+            return null;
+         }
+
+         return new double[] {t2};
+      }
+      else if (Double.isNaN(t2) || Double.isInfinite(t2))
+      {
+         return new double[] {t1};
+      }
+
       if (t1 < t2)
       {
          return new double[] {t1, t2};
       }
       
       return new double[] {t2, t1};
+   }
+
+   public double[] getStationaryPositions()
+   {
+      return getStationaryPositions(start.x, start.y,
+        control1.x, control1.y, control2.x, control2.y, end.x, end.y);
+   }
+
+   /**
+    *  Gets approximate closest point. The actual solution to this
+    *  requires solving a 5th order polynomial, so this method
+    *  simply iterates over sample points.
+    *  @param q the point near the curve
+    *  @param p0 curve start point P(0)
+    *  @param c1 first control
+    *  @param c2 second control
+    *  @param p1 curve end point P(1)
+    *  @param numDivisions
+    *  @param resultP used to store the corresponding P(t)
+    *  @param result if not null used to store [t, square_distance]
+    *  @return result
+    */ 
+   public static double[] getClosest(Point2D q, 
+     Point2D p0, Point2D c1, Point2D c2, Point2D p1, int numDivisions,
+     Point2D resultP, double[] result)
+   {
+      if (numDivisions < 0)
+      {
+         throw new IllegalArgumentException(
+           "Invalid number of divisions "+numDivisions);
+      }
+
+      int prevBestIdx = 0;
+      double prevBestT = 0.0;
+      Point2D prevBestP = p0;
+      double prevBest = Point2D.distanceSq(p0.getX(), p0.getY(),
+        q.getX(), q.getY());
+
+      int bestIdx = 0;
+      double bestT = 0.0;
+      Point2D bestP = p0; 
+      double best = prevBest;
+
+      double t = 0.0;
+      double inc = 1.0/(numDivisions+1);
+
+      for (int i = 1; i <= numDivisions; i++)
+      {
+         t += inc;
+
+         Point2D pt = getP(t, p0.getX(), p0.getY(), c1.getX(), c1.getY(),
+           c2.getX(), c2.getY(), p1.getX(), p1.getY());
+
+         double d = Point2D.distanceSq(pt.getX(), pt.getY(),
+           q.getX(), q.getY());
+
+         if (d < best)
+         {
+            prevBestIdx = bestIdx;
+            prevBestP = bestP;
+            prevBest = best;
+            prevBestT = bestT;
+
+            bestIdx = i;
+            bestP = pt;
+            best = d;
+            bestT = t;
+         }
+      } 
+
+      t = 1.0;
+
+      double d = Point2D.distanceSq(p1.getX(), p1.getY(),
+        q.getX(), q.getY());
+
+      if (d < best)
+      {
+         prevBestIdx = bestIdx;
+         prevBestP = bestP;
+         prevBest = best;
+         prevBestT = bestT;
+
+         bestIdx = numDivisions+1;
+         bestP = p1;
+         best = d;
+         bestT = t;
+      }
+
+      if (bestIdx - prevBestIdx == 1)
+      {
+         t = prevBestT + 0.5*inc;
+
+         Point2D pt = getP(t, p0.getX(), p0.getY(), c1.getX(), c1.getY(),
+           c2.getX(), c2.getY(), p1.getX(), p1.getY());
+
+         d = Point2D.distanceSq(pt.getX(), pt.getY(),
+           q.getX(), q.getY());
+
+         if (d < best)
+         {
+            bestP = pt;
+            best = d;
+            bestT = t;
+         }
+      }
+
+      resultP.setLocation(bestP);
+
+      if (result == null)
+      {
+         result = new double[2];
+      }
+
+      result[0] = bestT;
+      result[1] = best;
+
+      return result;
+   }
+
+   public static double[] getClosest(Point2D q, 
+     Point2D p0, Point2D c1, Point2D c2, Point2D p1, 
+     double startT, double incT,
+     Point2D resultP, double[] result)
+   {
+      if (startT < 0.0 || startT > 1.0)
+      {
+         throw new IllegalArgumentException(
+           "Invalid start t "+startT);
+      }
+
+      if (incT <= 0.0 || incT > 1.0)
+      {
+         throw new IllegalArgumentException(
+           "Invalid t increment "+incT);
+      }
+
+      int prevBestIdx = 0;
+      double prevBestT = startT;
+      Point2D prevBestP = getP(startT, p0.getX(), p0.getY(), c1.getX(), c1.getY(),
+           c2.getX(), c2.getY(), p1.getX(), p1.getY());
+      double prevBest = Point2D.distanceSq(
+        prevBestP.getX(), prevBestP.getY(),
+        q.getX(), q.getY());
+
+      int bestIdx = prevBestIdx;
+      double bestT = prevBestT;
+      Point2D bestP = prevBestP; 
+      double best = prevBest;
+
+      int i = 0;
+
+      for (double t = startT+incT; t < 1.0; t += incT)
+      {
+         i++;
+
+         Point2D pt = getP(t, p0.getX(), p0.getY(), c1.getX(), c1.getY(),
+           c2.getX(), c2.getY(), p1.getX(), p1.getY());
+
+         double d = Point2D.distanceSq(pt.getX(), pt.getY(),
+           q.getX(), q.getY());
+
+         if (d < best)
+         {
+            prevBestIdx = bestIdx;
+            prevBestP = bestP;
+            prevBest = best;
+            prevBestT = bestT;
+
+            bestIdx = i;
+            bestP = pt;
+            best = d;
+            bestT = t;
+         }
+      } 
+
+      double t = 1.0;
+
+      double d = Point2D.distanceSq(p1.getX(), p1.getY(),
+        q.getX(), q.getY());
+
+      if (d < best)
+      {
+         prevBestIdx = bestIdx;
+         prevBestP = bestP;
+         prevBest = best;
+         prevBestT = bestT;
+
+         bestIdx = i+1;
+         bestP = p1;
+         best = d;
+         bestT = t;
+      }
+
+      if (bestIdx - prevBestIdx == 1)
+      {
+         t = prevBestT + 0.5*incT;
+
+         Point2D pt = getP(t, p0.getX(), p0.getY(), c1.getX(), c1.getY(),
+           c2.getX(), c2.getY(), p1.getX(), p1.getY());
+
+         d = Point2D.distanceSq(pt.getX(), pt.getY(),
+           q.getX(), q.getY());
+
+         if (d < best)
+         {
+            bestP = pt;
+            best = d;
+            bestT = t;
+         }
+      }
+
+      resultP.setLocation(bestP);
+
+      if (result == null)
+      {
+         result = new double[2];
+      }
+
+      result[0] = bestT;
+      result[1] = best;
+
+      return result;
    }
 
    public int controlCount()

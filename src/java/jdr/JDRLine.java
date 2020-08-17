@@ -326,6 +326,76 @@ public class JDRLine extends JDRSegment
       return af;
    }
 
+   public double getAngle(JDRLine line)
+   {
+      return getAngle(start.x, start.y, end.x, end.y,
+        line.start.x, line.start.y, line.end.x, line.end.y);
+   }
+
+   /*
+    * Gets angle between the lines (p0, p1) and (p2, p3).
+    */ 
+   public static double getAngle(
+     double p0x, double p0y, 
+     double p1x, double p1y, 
+     double p2x, double p2y,
+     double p3x, double p3y
+     )
+   {
+      double v1_x = p1x - p0x;
+      double v1_y = p1y - p0y;
+
+      double v2_x = p3x - p2x;
+      double v2_y = p3y - p2y;
+
+      return getVectorAngle(v1_x, v1_y, v2_x, v2_y);
+   }
+
+   public static double getVectorAngle(double v1_x, double v1_y,
+     double v2_x, double v2_y)
+   {
+      double length1 = Math.sqrt(v1_x*v1_x + v1_y * v1_y);
+      double length2 = Math.sqrt(v2_x*v2_x + v2_y * v2_y); 
+
+      double factor = 1.0/(length1 * length2);
+
+      if (Double.isNaN(factor))
+      {
+         return 0.0;
+      }
+
+      double dotproduct = v1_x * v2_x + v1_y * v2_y;
+
+      double angle = Math.acos(dotproduct * factor);
+
+      if (Double.isNaN(angle))
+      {
+         angle = Math.PI;
+      }
+
+      return angle;
+   }
+
+   public static double getLength(Point2D p1, Point2D p2)
+   {
+      return Point2D.distance(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+   }
+
+   public double getLength()
+   {
+      return Point2D.distance(start.x, start.y, end.x, end.y);
+   }
+
+   public static Point2D getGradient(Point2D p0, Point2D p1)
+   {
+      return getGradient(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+   }
+
+   public static Point2D getGradient(double x0, double y0, double x1, double y1)
+   {
+      return new Point2D.Double(x1-x0, y1-y0);
+   }
+
    public JDRObjectLoaderListener getListener()
    {
       return listener;

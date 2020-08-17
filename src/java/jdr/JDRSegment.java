@@ -518,7 +518,7 @@ public class JDRSegment extends JDRObject
     */
    public Point2D getdP()
    {
-      return new Point2D.Double(end.x-start.x, end.y-start.y);
+      return JDRLine.getGradient(start.x, start.y, end.x, end.y);
    }
 
    public void flatten()
@@ -957,14 +957,12 @@ public class JDRSegment extends JDRObject
       String type = msg.getString("class."+getClass().getCanonicalName(),
        getClass().getSimpleName());
 
-      Point2D dp0 = getdP(0.0);
-      Point2D dp1 = getdP(1.0);
+      Point2D dp = getdP();
 
       return msg.getMessageWithAlt(
-        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(0) = ({5},{6}); P'(1) = ({7},{8}).",
-        "segmentinfo.details",
-        type, start.x, start.y, end.x, end.y, dp0.getX(), dp0.getY(),
-        dp1.getX(), dp1.getY()
+        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(t) = ({5},{6}).",
+        "segmentinfo.details.line",
+        type, start.x, start.y, end.x, end.y, dp.getX(), dp.getY()
        );
    }
 

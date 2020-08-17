@@ -52,11 +52,15 @@ public class AnglePanel extends JPanel
       this.messageSystem = msgSys;
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-      sizeLabel = new JLabel(label);
       this.numField = numField;
       setColumns(6);
 
-      sizeLabel.setLabelFor(numField.getComponent());
+      if (label != null)
+      {
+         sizeLabel = new JLabel(label);
+         sizeLabel.setLabelFor(numField.getComponent());
+         add(sizeLabel);
+      }
 
       unitBox = new JComboBox<String>
       (
@@ -68,48 +72,31 @@ public class AnglePanel extends JPanel
       );
       unitBox.addItemListener(this);
       setUnit(JDRAngle.DEGREE);
+      unitBox.setMaximumSize(unitBox.getPreferredSize());
 
-      add(sizeLabel);
       add(numField.getComponent());
       add(unitBox);
    }
 
    public AnglePanel(JDRMessageDictionary msgSys, String label, char mnemonic, NumberComponent numField)
    {
-      this(msgSys, label, numField);
-      sizeLabel.setDisplayedMnemonic(mnemonic);
+      this(msgSys, label, (int)mnemonic, numField);
    }
 
    public AnglePanel(JDRMessageDictionary msgSys, String label, int mnemonic,
       NumberComponent numField)
    {
       this(msgSys, label, numField);
-      sizeLabel.setDisplayedMnemonic(mnemonic);
+
+      if (sizeLabel != null && mnemonic > 0)
+      {
+         sizeLabel.setDisplayedMnemonic(mnemonic);
+      }
    }
 
    public AnglePanel(JDRMessageDictionary msgSys, NumberComponent numField)
    {
-      super();
-      this.messageSystem = msgSys;
-      setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
-      sizeLabel = null;
-      this.numField = numField;
-      setColumns(6);
-
-      unitBox = new JComboBox<String>
-      (
-        new String[]
-         {
-            msgSys.getString("rotate.radians", "rad"),
-            msgSys.getString("rotate.degrees", "deg")
-         }
-      ); 
-      unitBox.addItemListener(this);
-      setUnit(JDRAngle.DEGREE);
-
-      add(numField.getComponent());
-      add(unitBox);
+      this(msgSys, (String)null, numField);
    }
 
    public AnglePanel(JDRMessageDictionary msgSys, String label, SamplePanel panel,
@@ -129,7 +116,11 @@ public class AnglePanel extends JPanel
    public AnglePanel(JDRMessageDictionary msgSys, String label, int mnemonic, SamplePanel panel, NumberComponent numField)
    {
       this(msgSys, label, panel, numField);
-      sizeLabel.setDisplayedMnemonic(mnemonic);
+
+      if (sizeLabel != null && mnemonic > 0)
+      {
+         sizeLabel.setDisplayedMnemonic(mnemonic);
+      }
    }
 
    public AnglePanel(JDRMessageDictionary msgSys, SamplePanel panel, 
@@ -268,18 +259,10 @@ public class AnglePanel extends JPanel
 
    public String info()
    {
-      String eol = System.getProperty("line.separator", "\n");
-
-      String str = "AnglePanel:"+eol;
-
-      str += "   unit box:"+eol;
-      str += "      value: "+unitBox.getSelectedItem()+eol;
-      str += "      has focus: "+unitBox.hasFocus()+eol;
-      str += "   value box:"+eol;
-      str += "      value: "+getNumberComponent().getDouble()+eol;
-      str += "      has focus: "+numField.getComponent().hasFocus()+eol;
-
-      return str;
+      return String.format(
+        "AnglePanel:%n   unit box:%n      value: %s%n      has focus: %s%n   value box:%n      value: %f      has focus: %s%n",
+          unitBox.getSelectedItem(), unitBox.hasFocus(), 
+          getNumberComponent().getDouble(), numField.getComponent().hasFocus());
    }
 
    public void requestValueFocus()

@@ -7546,8 +7546,9 @@ public class JDRCanvas extends JPanel
 
    public Dimension getUnitIncrement()
    {
-      Point2D minor = frame_.getGrid().getMinorTicDistance();
-      Point2D major = frame_.getGrid().getMinorTicDistance();
+      JDRGrid grid = frame_.getGrid();
+      Point2D minor = grid.getMinorTicDistance();
+      Point2D major = grid.getMinorTicDistance();
 
       double incX = (minor.getX() > 0 ? minor.getX() : major.getX());
       double incY = (minor.getY() > 0 ? minor.getY() : major.getY());

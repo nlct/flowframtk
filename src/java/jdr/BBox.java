@@ -576,6 +576,21 @@ public class BBox implements Cloneable,Serializable
                            (int)Math.ceil((getHeight()+2*dy+2)*scale));
    }
 
+   public Rectangle2D getRectangle2D(double scale)
+   {
+      CanvasGraphics cg = getCanvasGraphics();
+
+      Dimension2D ptSize = cg.getComponentPointSize();
+
+      double dx = 0.5*ptSize.getWidth()+1;
+      double dy = 0.5*ptSize.getHeight()+1;
+
+      return new Rectangle2D.Double((getMinX()-dx-1)*scale,
+                           (getMinY()-dy-1)*scale,
+                           (getWidth()+2*dx+2)*scale,
+                           (getHeight()+2*dy+2)*scale);
+   }
+
    public Rectangle getComponentRectangle()
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -592,6 +607,24 @@ public class BBox implements Cloneable,Serializable
                            (int)Math.floor(scaleY*getMinY()-dy),
                            (int)Math.ceil(scaleX*getWidth()+2*dx),
                            (int)Math.ceil(scaleY*getHeight()+2*dy));
+   }
+
+   public Rectangle2D getComponentRectangle2D()
+   {
+      CanvasGraphics cg = getCanvasGraphics();
+
+      Dimension2D ptSize = cg.getComponentPointSize();
+
+      double dx = 0.5*ptSize.getWidth()+1;
+      double dy = 0.5*ptSize.getHeight()+1;
+
+      double scaleX = cg.storageToComponentX(1.0);
+      double scaleY = cg.storageToComponentY(1.0);
+
+      return new Rectangle2D.Double(scaleX*getMinX()-dx,
+                           scaleY*getMinY()-dy,
+                           scaleX*getWidth()+2*dx,
+                           scaleY*getHeight()+2*dy);
    }
 
    public Rectangle getRectangle()
@@ -929,6 +962,16 @@ public class BBox implements Cloneable,Serializable
       minY_ *= factor;
       maxX_ *= factor;
       maxY_ *= factor;
+
+      resetHotspots();
+   }
+
+   public void scale(double scaleX, double scaleY)
+   {
+      minX_ *= scaleX;
+      minY_ *= scaleY;
+      maxX_ *= scaleX;
+      maxY_ *= scaleY;
 
       resetHotspots();
    }

@@ -1735,6 +1735,11 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getCurveGradientThreshold();
    }
 
+   public double getCurveStationaryPtThreshold()
+   {
+      return controlPanel.getCurveStationaryPtThreshold();
+   }
+
    public int getCurveMinPoints()
    {
       return controlPanel.getCurveMinPoints();
@@ -3449,7 +3454,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      tinyStepThresholdSpinnerModel = new SpinnerNumberModel(10.0, 0.0, 100.0, 1.0);
+      tinyStepThresholdSpinnerModel = new SpinnerNumberModel(20.0, 0.0, 100.0, 1.0);
 
       tinyStepThresholdLabel = resources.createAppLabel(
          "vectorize.smooth_shapes.tiny_step");
@@ -3524,16 +3529,32 @@ class SmoothingPanel extends JPanel implements ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      curveGradientThresholdSpinnerModel 
-         = new SpinnerNumberModel(10.0, 0.0, 100.0, 1.0);
-
       curveGradientThresholdLabel = resources.createAppLabel(
         "vectorize.smooth_shapes.curve_gradient_threshold");
       subPanel.add(curveGradientThresholdLabel);
 
-      curveGradientThresholdSpinner = controlPanel.createSpinner(
-         curveGradientThresholdLabel, curveGradientThresholdSpinnerModel);
-      subPanel.add(curveGradientThresholdSpinner);
+      NumberSpinnerField numField = new NumberSpinnerField(2.0, 0.0, 360, 1.0);
+      numField.setMaximumSize(numField.getPreferredSize());
+
+      gradientAngleThresholdPanel = new AnglePanel(
+        resources.getMessageDictionary(), numField);
+      subPanel.add(gradientAngleThresholdPanel);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
+      curveStationaryPtThresholdSpinnerModel
+        = new SpinnerNumberModel(2.0, 0.0, 100.0, 1);
+
+      curveStatPtLabel = resources.createAppLabel(
+         "vectorize.smooth_shapes.stat_pt_threshold");
+      subPanel.add(curveStatPtLabel);
+
+      curveStationaryPtThresholdSpinner = 
+        controlPanel.createSpinner(curveStationaryPtThresholdSpinnerModel);
+      curveStatPtLabel.setLabelFor(curveStationaryPtThresholdSpinner);
+      subPanel.add(curveStationaryPtThresholdSpinner);
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -3548,6 +3569,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       curveMinPointsSpinner = 
         controlPanel.createSpinner(curveMinPointsSpinnerModel);
+      curveMinPointsLabel.setLabelFor(curveMinPointsSpinner);
       subPanel.add(curveMinPointsSpinner);
 
       Dimension prefSize = tinyStepThresholdLabel.getPreferredSize();
@@ -3582,6 +3604,13 @@ class SmoothingPanel extends JPanel implements ChangeListener
       }
 
       prefSize = curveGradientThresholdLabel.getPreferredSize();
+
+      if (prefSize.width > maxPrefSize.width)
+      {
+         maxPrefSize = prefSize;
+      }
+
+      prefSize = curveStatPtLabel.getPreferredSize();
 
       if (prefSize.width > maxPrefSize.width)
       {
@@ -3625,6 +3654,11 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveGradientThresholdLabel.setPreferredSize(prefSize);
       curveGradientThresholdLabel.setMaximumSize(prefSize);
 
+      prefSize = curveStatPtLabel.getPreferredSize();
+      prefSize.width = maxPrefSize.width;
+      curveStatPtLabel.setPreferredSize(prefSize);
+      curveStatPtLabel.setMaximumSize(prefSize);
+
       prefSize = curveMinPointsLabel.getPreferredSize();
       prefSize.width = maxPrefSize.width;
       curveMinPointsLabel.setPreferredSize(prefSize);
@@ -3658,7 +3692,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
          thresholdDiffSpinner.setEnabled(enable);
          maxDeviationSpinner.setEnabled(enable);
          deviationEpsilonSpinner.setEnabled(enable);
-         curveGradientThresholdSpinner.setEnabled(enable);
+         gradientAngleThresholdPanel.setEnabled(enable);
+         curveStationaryPtThresholdSpinner.setEnabled(enable);
          curveMinPointsSpinner.setEnabled(enable);
          tinyStepThresholdLabel.setEnabled(enable);
          lengthThresholdLabel.setEnabled(enable);
@@ -3678,6 +3713,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       curveGradientThresholdLabel.setEnabled(enable);
       curveMinPointsLabel.setEnabled(enable);
+      curveStatPtLabel.setEnabled(enable);
    }
 
    public void setSelected(boolean selected)
@@ -3700,7 +3736,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
       thresholdDiffSpinner.setEnabled(enable);
       maxDeviationSpinner.setEnabled(enable);
       deviationEpsilonSpinner.setEnabled(enable);
-      curveGradientThresholdSpinner.setEnabled(enable);
+      gradientAngleThresholdPanel.setEnabled(enable);
+      curveStationaryPtThresholdSpinner.setEnabled(enable);
       curveMinPointsSpinner.setEnabled(enable);
       tinyStepThresholdLabel.setEnabled(enable);
       lengthThresholdLabel.setEnabled(enable);
@@ -3714,6 +3751,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       curveGradientThresholdLabel.setEnabled(enable);
       curveMinPointsLabel.setEnabled(enable);
+      curveStatPtLabel.setEnabled(enable);
    }
 
    public void reset(boolean revertAll)
@@ -3726,8 +3764,9 @@ class SmoothingPanel extends JPanel implements ChangeListener
          maxDeviationSpinnerModel.setValue(Double.valueOf(2.0));
          deviationEpsilonSpinnerModel.setValue(Double.valueOf(0.01));
 
-         curveGradientThresholdSpinnerModel.setValue(Double.valueOf(10.0));
+         gradientAngleThresholdPanel.setDegrees(2.0);
          curveMinPointsSpinnerModel.setValue(Integer.valueOf(5));
+         curveStationaryPtThresholdSpinnerModel.setValue(Double.valueOf(2.0));
 
          if (!tryBezierCheckBox.isSelected())
          {
@@ -3773,7 +3812,12 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
    public double getCurveGradientThreshold()
    {
-      return curveGradientThresholdSpinnerModel.getNumber().doubleValue();
+      return gradientAngleThresholdPanel.getValue().toRadians();
+   }
+
+   public double getCurveStationaryPtThreshold()
+   {
+      return curveStationaryPtThresholdSpinnerModel.getNumber().doubleValue();
    }
 
    public int getCurveMinPoints()
@@ -3783,17 +3827,20 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
    private JLabel tinyStepThresholdLabel, lengthThresholdLabel, thresholdDiffLabel,
     curveGradientThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
-    deviationEpsilonLabel;
+    deviationEpsilonLabel, curveStatPtLabel;
+
+   private AnglePanel gradientAngleThresholdPanel;
 
    private SpinnerNumberModel  
      tinyStepThresholdSpinnerModel, lengthThresholdSpinnerModel,
      thresholdDiffSpinnerModel, maxDeviationSpinnerModel,
-     deviationEpsilonSpinnerModel,
-     curveMinPointsSpinnerModel, curveGradientThresholdSpinnerModel;
+     deviationEpsilonSpinnerModel, curveStationaryPtThresholdSpinnerModel,
+     curveMinPointsSpinnerModel;
 
-   private JSpinner curveMinPointsSpinner, curveGradientThresholdSpinner,
+   private JSpinner curveMinPointsSpinner,
      thresholdDiffSpinner, lengthThresholdSpinner, tinyStepThresholdSpinner,
-     maxDeviationSpinner, deviationEpsilonSpinner;
+     maxDeviationSpinner, deviationEpsilonSpinner,
+     curveStationaryPtThresholdSpinner;
 
    private JCheckBox doSmoothingCheckBox, tryBezierCheckBox;
 
@@ -4291,6 +4338,11 @@ class ControlPanel extends JPanel implements ActionListener
       return smoothingPanel.getCurveGradientThreshold();
    }
 
+   public double getCurveStationaryPtThreshold()
+   {
+      return smoothingPanel.getCurveStationaryPtThreshold();
+   }
+
    public int getCurveMinPoints()
    {
       return smoothingPanel.getCurveMinPoints();
@@ -4429,18 +4481,25 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
          {
             cancelButton.setEnabled(false);
             cancelled=true;
+
+            if (currentTask != null)
+            {
+               currentTask.cancel(true);
+            }
          }
       }
    }
 
    public void taskFinished()
    {
+      currentTask = null;
       dialog.hideStatusBar();
       taskInProgress = false;
    }
 
    public void startTask(String info, SwingWorker task)
    {
+      currentTask = task;
       taskInProgress = true;
       textField.setText(info);
       progressBar.setValue(0);
@@ -4470,6 +4529,8 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
    private JProgressBar progressBar;
 
    private String confirmAbort;
+
+   private SwingWorker currentTask = null;
 
    private JButton cancelButton;
    private boolean cancelled=false;
@@ -5156,6 +5217,97 @@ class ShapeComponent
       return type == PathIterator.SEG_QUADTO || type == PathIterator.SEG_CUBICTO;
    }
 
+   public double[] getStationaryPositions()
+   {
+      // currently only implemented for cubic Bezier segments
+
+      if (type == PathIterator.SEG_CUBICTO)
+      {
+         return JDRBezier.getStationaryPositions(start.getX(), start.getY(),
+          coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
+      }
+      else
+      {
+         return null;
+      }
+   }
+
+   public double[] getStationaryDeviations(Point2D p1, Point2D p2, 
+      double[] resultT, Point2D[] resultP)
+   {
+      // currently only implemented for cubic Bezier segments
+
+      if (type != PathIterator.SEG_CUBICTO)
+      {
+         return null;
+      }
+
+      double[] t = getStationaryPositions();
+
+      if (t == null)
+      {
+         return null;
+      }
+
+      double t1 = -1;
+      double t2 = -1;
+
+      if (t[0] >= 0.0 && t[0] <= 1.0)
+      {
+         t1 = t[0];
+      }
+
+      if (t.length > 1 && t[1] >= 0.0 && t[1] <= 1.0)
+      {
+         if (t1 < 0.0)
+         {
+            t1 = t[1];
+         }
+         else
+         {
+            t2 = t[1];
+         }
+      }
+
+      if (t1 < 0.0 && t2 < 0.0)
+      {
+         return null;
+      }
+
+      Point2D b1 = JDRBezier.getP(t1, start.getX(), start.getY(),
+       coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
+
+      double d1 = JDRLine.getLength(p1, b1);
+
+      if (resultT != null)
+      {
+         resultT[0] = t1;
+         resultT[1] = t2;
+      }
+
+      if (resultP != null)
+      {
+         resultP[0] = b1;
+      }
+
+      if (t2 < 0.0 || p2 == null)
+      {
+         return new double[] { d1 };
+      }
+
+      Point2D b2 = JDRBezier.getP(t2, start.getX(), start.getY(),
+       coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
+
+      double d2 = JDRLine.getLength(p2, b2);
+
+      if (resultP != null)
+      {
+         resultP[1] = b2;
+      }
+
+      return new double[] { d1, d2 };
+   }
+
    public double[] getCoords()
    {
       return coords;
@@ -5449,7 +5601,7 @@ class ShapeComponent
          case PathIterator.SEG_CLOSE:
             return "Z";
          case PathIterator.SEG_CUBICTO:
-            return String.format("C %f %f %f %f %f", 
+            return String.format("C %f %f %f %f %f %f", 
               coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
          case PathIterator.SEG_LINETO:
             return String.format("L %f %f", coords[0], coords[1]);
@@ -5475,16 +5627,20 @@ class ShapeComponent
          case PathIterator.SEG_CUBICTO:
             return resources.getMessage("path_element_info.cubic",
               x0, y0, coords[0], coords[1], coords[2], coords[3], 
-              coords[4], coords[5]);
+              coords[4], coords[5], 
+              3*(coords[0]-x0), 3*(coords[1]-y0),
+              3*(coords[4]-coords[2]), 3*(coords[5]-coords[3]));
          case PathIterator.SEG_LINETO:
             return resources.getMessage("path_element_info.line",
-              x0, y0, coords[0], coords[1]);
+              x0, y0, coords[0], coords[1], coords[0]-x0, coords[1]-y0);
          case PathIterator.SEG_MOVETO:
             return resources.getMessage("path_element_info.move",
               x0, y0, coords[0], coords[1]);
          case PathIterator.SEG_QUADTO:
             return resources.getMessage("path_element_info.quad",
-              x0, y0, coords[0], coords[1], coords[2], coords[3]);
+              x0, y0, coords[0], coords[1], coords[2], coords[3],
+              2*(coords[0]-x0), 2*(coords[1]-y0),
+              2*(coords[2]-coords[0]), 2*(coords[2]-coords[1]));
       }
 
       return "";
@@ -11283,6 +11439,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
       minBezierSamples = dialog.getCurveMinPoints();
       maxDeviation = dialog.getSmoothingMaxDeviation();
       deviationEpsilon = dialog.getSmoothingDeviationEpsilon();
+      curveStatPtThreshold = dialog.getCurveStationaryPtThreshold();
    }
 
    protected Void doInBackground() throws InterruptedException
@@ -11303,16 +11460,22 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
       for (int i = 0; i < shapes.size(); i++)
       {
-         dialog.updateTimeElapsed();
-         Thread.sleep(VectorizeBitmapDialog.SLEEP_DURATION);
+         updateAndSleep();
 
-         // check for cancel
-         if (dialog.isCancelled())
+         ShapeComponentVector orgShape = shapes.get(i);
+
+         int p = progress;
+         int n = orgShape.size() - 1;
+
+         ShapeComponentVector shape = smoothShape(orgShape);
+
+         if (shape != null)
          {
-            throw new UserCancelledException(dialog.getMessageDictionary());
+            publish(new ShapeComponentVectorListElement(i, shape));
          }
 
-         publish(new ShapeComponentVectorListElement(i, shapes.get(i)));
+         progress = p + n;
+         setProgress((int)Math.min((100.0*progress)/maxProgress, 100));
       }
 
       return null;
@@ -11324,22 +11487,38 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
       while (iter.hasNext())
       {
-         ShapeComponentVectorListElement elem = iter.next();
-         ShapeComponentVector vec = elem.getVector();
+          ShapeComponentVectorListElement elem = iter.next();
 
-         ShapeComponentVector shape = smoothShape(vec);
+          int i = elem.getIndex();
+          ShapeComponentVector shape = elem.getVector();
 
-         if (shape != null)
-         {
-            shapes.set(elem.getIndex(), shape);
-         }
+          shapes.set(i, shape);
+          dialog.repaintImagePanel(shape.getBounds(), false);
       }
    }
 
-   private void incProgress()
+   private void updateAndSleep() throws InterruptedException
    {
-      progress++;
+      dialog.updateTimeElapsed();
+      Thread.sleep(VectorizeBitmapDialog.SLEEP_DURATION);
+
+      // check for cancel
+      if (dialog.isCancelled())
+      {
+         throw new UserCancelledException(dialog.getMessageDictionary());
+      }
+   }
+
+   private void incProgress() throws InterruptedException
+   {
+      incProgress(1);
+   }
+
+   private void incProgress(int inc) throws InterruptedException
+   {
+      progress += inc;
       setProgress((int)Math.min((100.0*progress)/maxProgress, 100));
+      updateAndSleep();
    }
 
    public void done()
@@ -11360,6 +11539,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
    }
 
    private ShapeComponentVector smoothShape(ShapeComponentVector vec)
+     throws InterruptedException
    {
       ShapeComponentVector path = null;
       JDRResources resources = dialog.getResources();
@@ -11384,9 +11564,10 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
       double sqTinyStepThreshold = tinyStepThreshold*tinyStepThreshold;
 
-      for (int i = 1, n = vec.size(); i < n; i++)
+      for (int i = 1, n = vec.size(), prevI = 1; i < n; i++)
       {
-         incProgress();
+         incProgress(i-prevI);
+         prevI = i;
 
          int j = i;
 
@@ -11509,9 +11690,15 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
             DeviationResult line1Result = null;
             DeviationResult line2Result = null;
 
+            Point2D stat1 = null;
+            Point2D stat2 = null;
+            int statIdx1 = changeIdx;
+            int statIdx2 = changeIdx2;
+
             if (changeIdx != -1)
             {
                changePt = vec.get(changeIdx).getMid();
+               stat1 = changePt;
 
                line1Result = DeviationResult.getLineDeviation(
                  startRunPt, changePt, vec, i, changeIdx);
@@ -11519,6 +11706,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
                if (changeIdx2 != -1)
                {
                   changePt2 = vec.get(changeIdx2).getMid();
+                  stat2 = changePt2;
 
                   dialog.addMessageIdLn("vectorize.smoothing_bends_found",
                      changePt.getX(), changePt.getY(),
@@ -11579,7 +11767,8 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
                }
             }
 
-            DeviationResult bestResult = getBestComponent(vec, i, endIdx);
+            DeviationResult bestResult = getBestComponent(vec, i, endIdx,
+             statIdx1, stat1, statIdx2, stat2);
 
             if (bestResult != null
              && (line1Result != null && line1Result.compareTo(bestResult) < 0)
@@ -11671,7 +11860,9 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
    }
 
    private DeviationResult getBestComponent(ShapeComponentVector vec,
-      int startIdx, int endIdx)
+      int startIdx, int endIdx, int statIdx1, Point2D statPt1, 
+      int statIdx2, Point2D statPt2)
+   throws InterruptedException
    {
       ShapeComponent startComp = vec.get(startIdx);
       Point2D.Double p0 = startComp.getStart();
@@ -11679,15 +11870,17 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
       double minDelta = Double.MAX_VALUE;
       double minSubThresholdDelta = Double.MAX_VALUE;
 
+      DeviationResult bestCurveResult = null, firstCurveResult=null;
+      double minCurveDelta = Double.MAX_VALUE;
+
       for (int j = endIdx; j > startIdx+1; j--)
       {
+         updateAndSleep();
          ShapeComponent endComp = vec.get(j);
 
          Point2D.Double p1 = endComp.getEnd();
 
-         DeviationResult result = DeviationResult.create(vec, startIdx, j, p0, p1,
-            tryBezier && minBezierSamples < (j-startIdx),
-            bezierGradientThreshold);
+         DeviationResult result = DeviationResult.createLine(vec, startIdx, j, p0, p1);
 
          double delta = result.getAverageDeviation();
 
@@ -11707,6 +11900,31 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
                bestResult = result;
             }
          }
+
+         if (minBezierSamples < (j-startIdx))
+         {
+            result = DeviationResult.createCurve(vec, startIdx, j, p0, p1, 
+               maxDeviation);
+
+            if (result != null)
+            {
+               if (firstCurveResult==null)
+               {
+                  firstCurveResult = result;
+               }
+
+               if (result.getAngle() > bezierGradientThreshold)
+               {
+                  delta = result.getAverageDeviation();
+
+                  if (delta < minCurveDelta)
+                  {
+                     minCurveDelta = delta;
+                     bestCurveResult = result;
+                  }
+               }
+            }
+         }
       }
 
       JDRResources resources = dialog.getResources();
@@ -11714,6 +11932,95 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
       if (bestResult != null)
       {
          dialog.addMessageLn(bestResult.info(resources));
+      }
+
+      if (bestCurveResult != null)
+      {
+         double[] t = new double[2];
+         Point2D[] Pt = new Point2D.Double[2];
+         double[] d1 = null;
+         double[] d2 = null;
+
+         if (bestCurveResult != firstCurveResult)
+         {
+            dialog.addMessageLn(firstCurveResult.info(resources));
+
+            if (statPt1 != null)
+            {
+               d1 = firstCurveResult.getComponent()
+                   .getStationaryDeviations(statPt1, statPt2, t, Pt);
+
+               if (d1 != null)
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
+                    t[0], Pt[0].getX(), Pt[0].getY(), 
+                    statPt1.getX(), statPt1.getY(), d1[0]);
+
+                  if (statPt2 != null && d1.length > 0)
+                  {
+                     dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
+                       t[1], Pt[1].getX(), Pt[1].getY(), 
+                       statPt2.getX(), statPt2.getY(), d1[1]);
+                  }
+               }
+
+               if (statIdx1 <= bestCurveResult.getEndIndex())
+               {
+                  d2 = bestCurveResult.getComponent()
+                               .getStationaryDeviations(statPt1, statPt2, t, Pt);
+               }
+            }
+         }
+
+         dialog.addMessageLn(bestCurveResult.info(resources));
+
+         if (statPt1 != null)
+         {
+            if (d2 == null)
+            {
+               dialog.addMessageIdLn("vectorize.smoothing_no_stat_pt");
+            }
+            else
+            {
+               dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
+                 t[0], Pt[0].getX(), Pt[0].getY(), 
+                 statPt1.getX(), statPt1.getY(), d2[0]);
+
+               if (statPt2 != null && d2.length > 0)
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
+                    t[1], Pt[1].getX(), Pt[1].getY(), 
+                    statPt2.getX(), statPt2.getY(), d2[1]);
+               }
+            }
+         }
+
+         if (bestCurveResult != firstCurveResult)
+         {
+            if (d1 != null)
+            {
+               if (d1[0] < curveStatPtThreshold &&
+                   (d2 == null || d1[0] < d2[0])
+                   &&
+                    (
+                       statPt2 == null
+                    || (d1.length > 1 && 
+                      d1[1] < curveStatPtThreshold &&
+                       (d2 == null || d2.length < 2 || d1[1] < d2[1]))
+                    )
+                  )
+               {
+                  bestCurveResult = firstCurveResult;
+                  minCurveDelta = firstCurveResult.getAverageDeviation();
+               }
+            }
+         }
+
+// TODO provide separate thresholdDiff for curve vs line
+         if (minCurveDelta < minDelta + thresholdDiff)
+         {
+            return bestCurveResult;
+         }
       }
 
       if (bestSubThresholdResult != null)
@@ -11739,7 +12046,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
     maxDeviation=2.0, deviationEpsilon=0.01;
    private boolean tryBezier=true;
    private int minBezierSamples = 5;
-   private double bezierGradientThreshold=8.0;
+   private double bezierGradientThreshold=0.1, curveStatPtThreshold=2.0;
    private int progress, maxProgress;
    private boolean continueToNextStep;
 }
@@ -11750,18 +12057,17 @@ class DeviationResult implements Comparable<DeviationResult>
    {
    }
 
-   public static DeviationResult create(ShapeComponentVector vec,
+   public static DeviationResult createLine(ShapeComponentVector vec,
       int startIdx, int endIdx,
-      Point2D.Double p1, Point2D.Double p2, boolean tryBezier,
-      double gradientThreshold)
+      Point2D.Double p1, Point2D.Double p2)
    {
       DeviationResult result = new DeviationResult();
-      result.compute(vec, startIdx, endIdx, p1, p2, tryBezier, gradientThreshold);
+      result.computeLine(vec, startIdx, endIdx, p1, p2);
       return result;
    }
 
-   public void compute(ShapeComponentVector vec, int startIdx, int endIdx,
-      Point2D.Double p1, Point2D.Double p2, boolean tryBezier, double gradientThreshold)
+   private void computeLine(ShapeComponentVector vec, int startIdx, int endIdx,
+      Point2D.Double p1, Point2D.Double p2)
    {
       this.startIdx = startIdx;
       this.endIdx = endIdx;
@@ -11842,159 +12148,349 @@ class DeviationResult implements Comparable<DeviationResult>
          {
             minDist = dist;
          }
-
-         if (tryBezier)
-         {
-            t[j] = (x+y-p1.getX()-p1.getY())*t_factor;
-
-            double t_sq = t[j]*t[j];
-            double t_cube = t_sq*t[j];
-            double one_minus_t = 1.0-t[j];
-            double one_minus_t_sq = one_minus_t * one_minus_t;
-            double one_minus_t_sq_x_t = one_minus_t_sq * t[j];
-            double one_minus_t_x_t_sq = one_minus_t * t_sq;
-            double one_minus_t_cube = one_minus_t_sq * one_minus_t;
-
-            double kx = one_minus_t_cube * p1.getX() + t_cube * p2.getX();
-            double ky = one_minus_t_cube * p1.getY() + t_cube * p2.getY();
-
-            a1 += one_minus_t_sq_x_t * one_minus_t_sq_x_t;
-            a2 += one_minus_t_sq_x_t * one_minus_t_x_t_sq;
-            a3 += one_minus_t_x_t_sq * one_minus_t_x_t_sq;
-
-            double k_minus_x = kx - p.getX();
-            double k_minus_y = ky - p.getY();
-
-            b1 += one_minus_t_sq_x_t * k_minus_x;
-            b2 += one_minus_t_sq_x_t * k_minus_y;
-            b3 += one_minus_t_x_t_sq * k_minus_x;
-            b4 += one_minus_t_x_t_sq * k_minus_y;
-         }
       }
-
-      boolean chooseLine = true;
 
       double[] coords = new double[6];
 
-      double lineAverageDeviation = sumDist/numPoints;
+      averageDeviation = sumDist/numPoints;
+      coords[0] = p2.getX();
+      coords[1] = p2.getY();
+      component = new ShapeComponent(PathIterator.SEG_LINETO, coords, p1);
+      length = component.getDiagonalLength();
+   }
 
-      if (tryBezier)
+   public static DeviationResult createCurve(ShapeComponentVector vec,
+      int startIdx, int endIdx,
+      Point2D.Double p1, Point2D.Double p2, double maxDeviation)
+   {
+      DeviationResult result = new DeviationResult();
+      result.computeCurve(vec, startIdx, endIdx, p1, p2, maxDeviation);
+      return result;
+   }
+
+   private void computeCurve(ShapeComponentVector vec, int startIdx, int endIdx,
+      Point2D.Double p1, Point2D.Double p2, double maxDeviation)
+   {
+      this.startIdx = startIdx;
+      this.endIdx = endIdx;
+
+      this.p1 = p1;
+      this.p2 = p2;
+
+      int offset = Math.max(2, (endIdx-startIdx+1)/3);
+
+      Point2D dp1 = JDRLine.getGradient(p1, vec.get(startIdx+offset).getEnd());
+      Point2D dp2 = JDRLine.getGradient(vec.get(endIdx-offset).getEnd(), p2);
+
+      Point2D c1 = new Point2D.Double(dp1.getX()/3 + p1.getX(),
+                      dp1.getY()/3 + p1.getY());
+
+      Point2D c2 = new Point2D.Double(p2.getX() - dp2.getX()/3,
+                      p2.getY() - dp2.getY()/3);
+
+      double[] coords = new double[6];
+
+      coords[0] = c1.getX();
+      coords[1] = c1.getY();
+      coords[2] = c2.getX();
+      coords[3] = c2.getY();
+      coords[4] = p2.getX();
+      coords[5] = p2.getY();
+
+      component = new ShapeComponent(PathIterator.SEG_CUBICTO, coords, p1);
+
+      computeCurveDeviation(c1, c2, vec);
+
+      if (averageDeviation > maxDeviation)
       {
-         a1 *= 3.0;
-         a2 *= 3.0;
-         a3 *= 3.0;
+         tuneGradients(vec);
+      }
 
-         double c_factor = 1.0/(a2 * a2 - a1 * a3);
+      angle = JDRLine.getVectorAngle(dp1.getX(), dp1.getY(), dp2.getX(), dp2.getY());
+   }
 
-         if (!Double.isNaN(c_factor))
+   private void tuneGradients(ShapeComponentVector vec)
+   {
+      int iter = 0;
+
+      iter = tuneGradients(vec, iter, true, true);
+   }
+
+   private int tuneGradients(ShapeComponentVector vec, int iter, 
+     boolean stepC1, boolean stepC2)
+   {
+      if (iter >= MAX_ITER) return iter;
+
+      iter++;
+
+      double prevMaxDist = maxDist;
+      double prevMinDist = minDist;
+      double prevDeviation = averageDeviation;
+      double prevLength = length;
+      double[] coords = component.getCoords();
+
+      double bestMaxDist = maxDist;
+      double bestMinDist = minDist;
+      double bestDeviation = averageDeviation;
+      double bestLength = length;
+      Point2D bestC1 = null;
+      Point2D bestC2 = null;
+
+      Point2D c1 = new Point2D.Double(coords[0], coords[1]);
+      Point2D c2 = new Point2D.Double(coords[2], coords[3]);
+
+      if (stepC1)
+      {
+         c1.setLocation(coords[0]+STEP_SIZE, coords[1]);
+
+         computeCurveDeviation(c1, c2, vec);
+
+         if (averageDeviation < bestDeviation)
          {
-            double c1_x = c_factor * (b1 * a3 - a2 * b3);
-            double c1_y = c_factor * (b2 * a3 - a2 * b4);
-            double c2_x = c_factor * (a1 * b3 - a2 * b1);
-            double c2_y = c_factor * (a1 * b4 - a2 * b2);
+            bestMaxDist = maxDist;
+            bestMinDist = minDist;
+            bestDeviation = averageDeviation;
+            bestLength = length;
+            bestC1 = new Point2D.Double(c1.getX(), c1.getY());
 
-            sumDist = 0.0;
-            double curveLength = 0.0;
-            double prevX = p1.getX();
-            double prevY = p1.getY();
-            double curveMinDist = Double.MAX_VALUE;
-            double curveMaxDist = 0.0;
+            c1.setLocation(c1.getX(), coords[1]+STEP_SIZE);
+         }
+         else
+         {
+            c1.setLocation(coords[0]-STEP_SIZE, coords[1]);
 
-            for (int i = startIdx, j=0; i < endIdx; i++, j++)
+            computeCurveDeviation(c1, c2, vec);
+
+            if (averageDeviation < bestDeviation)
             {
-               ShapeComponent comp = vec.get(i);
-               Point2D p = comp.getEnd();
+               bestMaxDist = maxDist;
+               bestMinDist = minDist;
+               bestDeviation = averageDeviation;
+               bestLength = length;
+               bestC1 = new Point2D.Double(c1.getX(), c1.getY());
 
-               double t_sq = t[j] * t[j];
-               double one_minus_t = 1.0 - t[j];
-               double one_minus_t_sq = one_minus_t * one_minus_t;
-
-               double d1 = one_minus_t * one_minus_t_sq;
-               double d2 = 3 * one_minus_t_sq * t[j];
-               double d3 = 3 * one_minus_t * t_sq;
-               double d4 = t_sq * t[j];
-
-               double bx = d1 * p1.getX() + d2 * c1_x + d3 * c2_x + d4 * p2.getX();
-               double by = d1 * p1.getY() + d2 * c1_y + d3 * c2_y + d4 * p2.getY();
-
-               double dx = bx - p.getX();
-               double dy = by - p.getY();
-
-               double dist = Math.sqrt(dx*dx + dy*dy);
-               sumDist += dist;
-
-               if (dist < curveMinDist)
-               {
-                  curveMinDist = dist;
-               }
-
-               if (dist > curveMaxDist)
-               {
-                  curveMaxDist = dist;
-               }
-
-               dx = prevX - bx;
-               dy = prevY - by;
-
-               curveLength += Math.sqrt(dx*dx + dy*dy);
-
-               prevX = bx;
-               prevY = by;
+               c1.setLocation(c1.getX(), coords[1]+STEP_SIZE);
             }
-
-            double dx = prevX - p2.getX();
-            double dy = prevY - p2.getY();
-
-            curveLength += Math.sqrt(dx*dx + dy*dy);
-
-            double curveAverageDeviation = sumDist / numPoints;
-
-            double lineGradX = p2.getX() - p1.getX();
-            double lineGradY = p2.getY() - p1.getY();
-
-            double dP0x = 3*(c1_x - p1.getX());
-            double dP0y = 3*(c1_y - p1.getY());
-
-            double dP1x = 3*(p2.getX() - c2_x);
-            double dP1y = 3*(p2.getY() - c2_y);
-
-            dx = lineGradX-dP0x;
-            dy = lineGradY-dP0y;
-            double diff0 = Math.sqrt(dx*dx + dy*dy);
-
-            dx = lineGradX-dP1x;
-            dy = lineGradY-dP1y;
-            double diff1 = Math.sqrt(dx*dx + dy*dy);
-
-            if (curveAverageDeviation < lineAverageDeviation
-              && diff0 > gradientThreshold && diff1 > gradientThreshold)
+            else
             {
-               chooseLine = false;
-               coords[0] = c1_x;
-               coords[1] = c1_y;
-               coords[2] = c2_x;
-               coords[3] = c2_y;
-               coords[4] = p2.getX();
-               coords[5] = p2.getY();
+               c1.setLocation(coords[0], coords[1]+STEP_SIZE);
+            }
+         }
 
-               averageDeviation = curveAverageDeviation;
+         computeCurveDeviation(c1, c2, vec);
 
-               component = new ShapeComponent(PathIterator.SEG_CUBICTO, coords, p1);
-               length = curveLength;
-               minDist = curveMinDist;
-               maxDist = curveMaxDist;
+         if (averageDeviation < bestDeviation)
+         {
+            bestMaxDist = maxDist;
+            bestMinDist = minDist;
+            bestDeviation = averageDeviation;
+            bestLength = length;
+
+            if (bestC1 == null)
+            {
+               bestC1 = new Point2D.Double(c1.getX(), c1.getY());
+            }
+            else
+            {
+               bestC1.setLocation(c1.getX(), c1.getY());
+            }
+         }
+         else
+         {
+            c1.setLocation(c1.getX(), coords[1]-STEP_SIZE);
+            
+            computeCurveDeviation(c1, c2, vec);
+
+            if (averageDeviation < bestDeviation)
+            {
+               bestMaxDist = maxDist;
+               bestMinDist = minDist;
+               bestDeviation = averageDeviation;
+               bestLength = length;
+
+               if (bestC1 == null)
+               {
+                  bestC1 = new Point2D.Double(c1.getX(), c1.getY());
+               }
+               else
+               {
+                  bestC1.setLocation(c1.getX(), c1.getY());
+               }
+            }
+            else
+            {
+               c1.setLocation(c1.getX(), coords[1]);
             }
          }
       }
 
-      if (chooseLine)
+      if (stepC2)
       {
-         averageDeviation = lineAverageDeviation;
-         coords[0] = p2.getX();
-         coords[1] = p2.getY();
-         component = new ShapeComponent(PathIterator.SEG_LINETO, coords, p1);
-         length = component.getDiagonalLength();
+         c2.setLocation(coords[2]+STEP_SIZE, coords[3]);
+
+         computeCurveDeviation(c1, c2, vec);
+
+         if (averageDeviation < bestDeviation)
+         {
+            bestMaxDist = maxDist;
+            bestMinDist = minDist;
+            bestDeviation = averageDeviation;
+            bestLength = length;
+            bestC2 = new Point2D.Double(c2.getX(), c2.getY());
+
+            c2.setLocation(c2.getX(), coords[3]+STEP_SIZE);
+         }
+         else
+         {
+            c2.setLocation(coords[2]-STEP_SIZE, coords[3]);
+
+            computeCurveDeviation(c1, c2, vec);
+
+            if (averageDeviation < bestDeviation)
+            {
+               bestMaxDist = maxDist;
+               bestMinDist = minDist;
+               bestDeviation = averageDeviation;
+               bestLength = length;
+               bestC2 = new Point2D.Double(c2.getX(), c2.getY());
+
+               c2.setLocation(c2.getX(), coords[3]+STEP_SIZE);
+            }
+            else
+            {
+               c2.setLocation(coords[2], coords[3]+STEP_SIZE);
+            }
+         }
+
+         computeCurveDeviation(c1, c2, vec);
+
+         if (averageDeviation < bestDeviation)
+         {
+            bestMaxDist = maxDist;
+            bestMinDist = minDist;
+            bestDeviation = averageDeviation;
+            bestLength = length;
+
+            if (bestC2 == null)
+            {
+               bestC2 = new Point2D.Double(c2.getX(), c2.getY());
+            }
+            else
+            {
+               bestC2.setLocation(c2.getX(), c2.getY());
+            }
+         }
+         else
+         {
+            c2.setLocation(c2.getX(), coords[3]-STEP_SIZE);
+
+            computeCurveDeviation(c1, c2, vec);
+
+            if (averageDeviation < bestDeviation)
+            {
+               bestMaxDist = maxDist;
+               bestMinDist = minDist;
+               bestDeviation = averageDeviation;
+               bestLength = length;
+
+               if (bestC2 == null)
+               {
+                  bestC2 = new Point2D.Double(c2.getX(), c2.getY());
+               }
+               else
+               {
+                  bestC2.setLocation(c2.getX(), c2.getY());
+               }
+            }
+            else
+            {
+               c2.setLocation(c2.getX(), coords[3]);
+            }
+         }
       }
+
+      if (bestC1 == null && bestC2 == null)
+      {
+         maxDist = prevMaxDist;
+         minDist = prevMinDist;
+         averageDeviation = prevDeviation;
+         length = prevLength;
+      }
+      else
+      {
+         if (bestC1 != null)
+         {
+            coords[0] = bestC1.getX();
+            coords[1] = bestC1.getY();
+         }
+
+         if (bestC2 != null)
+         {
+            coords[2] = bestC2.getX();
+            coords[3] = bestC2.getY();
+         }
+
+         iter = tuneGradients(vec, iter, bestC1 != null, bestC2 != null);
+      }
+
+      return iter;
+   }
+
+   private void computeCurveDeviation(Point2D c1, Point2D c2,
+     ShapeComponentVector vec)
+   {
+      maxDist = 0.0;
+      minDist = Double.MAX_VALUE;
+
+      averageDeviation = 0.0;
+      length = 0.0;
+      double prevX = p1.getX();
+      double prevY = p1.getY();
+
+      double[] result = new double[2];
+      Point2D.Double resultP = new Point2D.Double();
+
+      int n = endIdx-startIdx;
+
+      double incT = Math.min(0.001, 1.0/(n+1));
+      double startT = incT;
+
+      for (int i = startIdx; i < endIdx; i++)
+      {
+         ShapeComponent comp = vec.get(i);
+         Point2D p = comp.getEnd();
+
+         JDRBezier.getClosest(p, p1, c1, c2, p2, startT, incT, resultP, result);
+
+         startT = Math.min(1.0, result[0]);
+
+         double dist = Math.sqrt(result[1]);
+         averageDeviation += dist;
+
+         if (dist < minDist)
+         {
+            minDist = dist;
+         }
+
+         if (dist > maxDist)
+         {
+            maxDist = dist;
+         }
+
+         length += Point2D.distance(prevX, prevY, resultP.getX(), resultP.getY());
+
+         prevX = resultP.getX();
+         prevY = resultP.getY();
+      }
+
+      length += Point2D.distance(prevX, prevY, p2.getX(), p2.getY());
+
+      averageDeviation /= (n-1);
+   }
+
+   public double getAngle()
+   {
+      return angle;
    }
 
    public double getEstimatedLength()
@@ -12105,14 +12601,23 @@ class DeviationResult implements Comparable<DeviationResult>
 
    public String toString()
    {
-      return String.format("average deviation: %f, dist range: [%f, %f], length: %f, index range: [%d, %d], component: %s", 
-        averageDeviation, minDist, maxDist, length, startIdx, endIdx, component);
+      return String.format("average deviation: %f, dist range: [%f, %f], length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), component: %s, angle: %f radians", 
+        averageDeviation, minDist, maxDist, length, startIdx, endIdx,
+        p1.getX(), p1.getY(), p2.getX(), p2.getY(), component, angle);
    }
 
    public String info(JDRResources resources)
    {
-      return resources.getMessage("vectorize.smoothing_possible_path",
+      String text = resources.getMessage("vectorize.smoothing_possible_path",
        component.info(resources), averageDeviation, minDist, maxDist, length);
+
+      if (component.getType() == PathIterator.SEG_LINETO)
+      {
+         return text;
+      }
+
+      return String.format("%s %s", text, resources.getMessage(
+        "vectorize.smoothing_angle", angle, Math.toDegrees(angle)));
    }
 
    public int compareTo(DeviationResult other)
@@ -12136,8 +12641,10 @@ class DeviationResult implements Comparable<DeviationResult>
    private Point2D.Double p1, p2;
    private double maxDist = 0.0, minDist = Double.MAX_VALUE;
    private ShapeComponent component;
-   private double length=0.0;
+   private double length=0.0, angle=0.0;
    private int startIdx, endIdx;
+
+   public static final int MAX_ITER = 100, STEP_SIZE=5;
 }
 
 class BestFitComponent
