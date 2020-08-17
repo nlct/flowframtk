@@ -28,6 +28,8 @@ import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -44,7 +46,7 @@ import com.dickimawbooks.flowframtk.*;
  * @author Nicola L C Talbot
  */
 public class SegmentInfoDialog extends JDialog
-   implements ActionListener
+   implements ActionListener,JDRApp
 {
    public SegmentInfoDialog(FlowframTk application)
    {
@@ -55,11 +57,18 @@ public class SegmentInfoDialog extends JDialog
       JDRResources resources = application.getResources();
 
       samplePanel = new SegmentSamplePanel(this);
+      samplePanelSp = new JScrollPane(samplePanel);
 
-      JComponent detailsComp = Box.createVerticalBox();
+      zoomComp = new ZoomComponent(this);
+
+      JComponent lowerPane = new JPanel(new BorderLayout());
 
       textComp = resources.createAppInfoArea();
-      detailsComp.add(textComp);
+      textComp.setRows(6);
+      lowerPane.add(new JScrollPane(textComp), "North");
+
+      JComponent detailsComp = Box.createVerticalBox();
+      lowerPane.add(new JScrollPane(detailsComp), "Center");
 
       mainControlComp = Box.createVerticalBox();
       detailsComp.add(mainControlComp);
@@ -67,9 +76,11 @@ public class SegmentInfoDialog extends JDialog
       endControlPanel = new ControlInfoPanel(this, -1);
       detailsComp.add(endControlPanel);
 
+      detailsComp.add(Box.createVerticalGlue());
+
       JSplitPane splitPane = new JSplitPane(
-        JSplitPane.VERTICAL_SPLIT, new JScrollPane(samplePanel), detailsComp);
-      splitPane.setResizeWeight(1.0);
+        JSplitPane.VERTICAL_SPLIT, samplePanelSp, lowerPane);
+      splitPane.setResizeWeight(0.5);
 
       getContentPane().add(splitPane, "Center");
 
@@ -119,8 +130,12 @@ public class SegmentInfoDialog extends JDialog
       p2.add(resources.createOkayButton(this));
       p2.add(resources.createCancelButton(this));
 
-      bottomPanel.add(resources.createDialogButton(
-        "segmentinfo", "default", this, null), "East");
+      revertButton = resources.createDialogButton(
+        "segmentinfo", "default", this, null);
+      revertButton.setEnabled(true);
+      bottomPanel.add(revertButton, "East");
+
+      bottomPanel.add(zoomComp, "West");
    }
 
    public JDRResources getResources()
@@ -128,9 +143,107 @@ public class SegmentInfoDialog extends JDialog
       return application.getResources();
    }
 
+   public double getCurrentMagnification()
+   {
+      CanvasGraphics cg = getCanvasGraphics();
+
+      return cg == null ? 1.0 : cg.getMagnification();
+   }
+
+   public void setCurrentMagnification(double factor)
+   {
+      CanvasGraphics cg = getCanvasGraphics();
+
+      if (cg != null && factor > 0.0)
+      {
+         cg.setMagnification(factor);
+         detailsUpdated();
+      }
+   }
+
+   public double zoomAction(ZoomValue zoomValue)
+   {
+      updateCurrentFactor(zoomValue);
+
+      detailsUpdated();
+
+      return getCurrentMagnification();
+   }
+
+   private void updateCurrentFactor(ZoomValue zoomValue)
+   {
+      String id = zoomValue.getActionCommand();
+      BBox bbox = samplePanel.getBpBounds();
+
+      if (bbox == null) return;
+
+      double factor = getCurrentMagnification();
+
+      if (id.equals(ZoomValue.ZOOM_PAGE_WIDTH_ID))
+      {
+         double width = bbox.getWidth();
+
+         if (width > 0)
+         {
+            Dimension dim = samplePanel.getSize();
+            factor = dim.getWidth()/width;
+         }
+      }
+      else if (id.equals(ZoomValue.ZOOM_PAGE_HEIGHT_ID))
+      {
+         double height = bbox.getHeight();
+
+         if (height > 0)
+         {
+            Dimension dim = samplePanel.getSize();
+            factor = dim.getHeight()/(double)height;
+         }
+      }
+      else if (id.equals(ZoomValue.ZOOM_PAGE_ID))
+      {
+         double width = bbox.getWidth();
+         double height = bbox.getHeight();
+
+         if (height <= 0 || width <= 0)
+         {
+            factor = 1.0;
+         }
+         else
+         {
+            Dimension dim = samplePanel.getSize();
+
+            if (height > width)
+            {
+               factor = dim.getHeight()/height;
+            }
+            else
+            {
+               factor = dim.getWidth()/width;
+            }
+         }
+      }
+      else if (zoomValue instanceof PercentageZoomValue)
+      {
+         factor = ((PercentageZoomValue)zoomValue).getValue();
+      }
+
+      zoomComp.setZoom(zoomValue, factor);
+
+      setCurrentMagnification(factor);
+   }
+
+   public void showZoomChooser()
+   {
+   }
+
    public JDRPathSegment getSegment()
    {
       return workingSegment;
+   }
+
+   public JDRShape getWorkingPath()
+   {
+      return workingPath;
    }
 
    public Shape getCompleteShape()
@@ -138,16 +251,58 @@ public class SegmentInfoDialog extends JDialog
       return completeShape;
    }
 
+   public JDRGrid getGrid()
+   {
+      return frame.getGrid();
+   }
+
+   public void setModified(boolean changed)
+   {
+      if (modified != changed)
+      {
+         modified = changed;
+         revertButton.setEnabled(modified);
+      }
+   }
+
    public void detailsUpdated()
    {
-      completeShape = workingPath.getBpGeneralPath();
+      detailsUpdated(modified);
+   }
+
+   public void detailsUpdated(boolean changed)
+   {
+      completeShape = workingPath.getComponentGeneralPath();
       textComp.setText(workingSegment.getDetails());
+      samplePanel.detailsUpdated();
       samplePanel.repaint();
+      setModified(changed);
+   }
+
+   public void scrollSample(double x, double y)
+   {
+      JScrollBar hBar = samplePanelSp.getHorizontalScrollBar();
+      JScrollBar vBar = samplePanelSp.getVerticalScrollBar();
+
+      int min = hBar.getMinimum();
+      int max = hBar.getMaximum();
+
+      hBar.setValue((int)Math.floor(min+x*(max-min)));
+
+      min = vBar.getMinimum();
+      max = vBar.getMaximum();
+
+      vBar.setValue((int)Math.floor(min+y*(max-min)));
+   }
+
+   public CanvasGraphics getCanvasGraphics()
+   {
+      return workingSegment.getCanvasGraphics();
    }
 
    public void revert()
    {
-      CanvasGraphics cg = (CanvasGraphics)workingSegment.getCanvasGraphics();
+      CanvasGraphics cg = workingSegment.getCanvasGraphics();
 
       JDRUnit unit = cg.getStorageUnit();
       JDRPaper paper = frame.getPaper();
@@ -179,7 +334,7 @@ public class SegmentInfoDialog extends JDialog
             unit, paper, grid);
       }
 
-      detailsUpdated();
+      detailsUpdated(false);
    }
 
    public void display(JDRFrame frame, JDRShape path, JDRPathSegment segment)
@@ -196,7 +351,8 @@ public class SegmentInfoDialog extends JDialog
 
       CanvasGraphics cg = (CanvasGraphics)workingPath.getCanvasGraphics().clone();
       cg.setComponent(samplePanel);
-      cg.setMagnification(1.0);
+      workingPath.setCanvasGraphics(cg);
+      zoomComp.setZoom(cg.getMagnification());
 
       completeShape = workingPath.getBpGeneralPath();
 
@@ -279,6 +435,7 @@ public class SegmentInfoDialog extends JDialog
          endControlPanel.setEnabled(false);
       }
 
+      detailsUpdated(false);
       pack();
       setLocationRelativeTo(frame);
       setVisible(true);
@@ -291,6 +448,12 @@ public class SegmentInfoDialog extends JDialog
 
    public void okay()
    {
+      if (!modified)
+      {
+         setVisible(false);
+         return;
+      }
+
       JDRCanvas canvas = frame.getCanvas();
       JDRUnit unit = getStorageUnit();
 
@@ -339,11 +502,27 @@ public class SegmentInfoDialog extends JDialog
       } 
       else if (action.equals("cancel"))
       {
-         setVisible(false);
+         JDRResources resources = getResources();
+
+         if (!modified || resources.confirm(this, 
+              resources.getString("segmentinfo.confirm_discard"))
+            == JOptionPane.YES_OPTION)
+         {
+            setVisible(false);
+         }
       }
       else if (action.equals("default"))
       {
-         revert();
+         if (!modified) return;// shouldn't happen as revertButton should be disabled
+
+         JDRResources resources = getResources();
+
+         if (resources.confirm(this, 
+              resources.getString("segmentinfo.confirm_discard"))
+            == JOptionPane.YES_OPTION)
+         {
+            revert();
+         }
       }
    }
 
@@ -380,6 +559,7 @@ public class SegmentInfoDialog extends JDialog
    private FlowframTk application;
    private double hoffset = 0.0, voffset = 0.0;
    private int selectedIndex;
+   private boolean modified=false;
 
    private Vector<ControlInfoPanel> infoPanels;
 
@@ -388,9 +568,13 @@ public class SegmentInfoDialog extends JDialog
    private JComponent mainControlComp;
    private JTextArea textComp;
    private SegmentSamplePanel samplePanel;
+   private JScrollPane samplePanelSp;
+   private JButton revertButton;
+   private ZoomComponent zoomComp;
 }
 
-class SegmentSamplePanel extends JPanel implements ComponentListener
+class SegmentSamplePanel extends JPanel 
+   implements ComponentListener,Scrollable
 {
    public SegmentSamplePanel(SegmentInfoDialog dialog)
    {
@@ -398,6 +582,7 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
       this.dialog = dialog;
       setOpaque(true);
       setBackground(Color.WHITE);
+      setPreferredSize(MIN_SIZE);
 
       addComponentListener(this);
    }
@@ -407,24 +592,134 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
       return MIN_SIZE;
    }
 
-   public Dimension getPreferredSize()
+   public Dimension getPreferredScrollableViewportSize()
    {
+      return prefViewportSize;
+   }
+
+   public boolean getScrollableTracksViewportWidth() {return false;}
+   public boolean getScrollableTracksViewportHeight(){return false;}
+
+   public Dimension getUnitIncrement()
+   {
+      JDRGrid grid = dialog.getGrid();
+      Point2D minor = grid.getMinorTicDistance();
+      Point2D major = grid.getMinorTicDistance();
+
+      double incX = (minor.getX() > 0 ? minor.getX() : major.getX());
+      double incY = (minor.getY() > 0 ? minor.getY() : major.getY());
+
+      return new Dimension(
+       (int)Math.ceil(dialog.getCanvasGraphics().bpToComponentX(incX)),
+       (int)Math.ceil(dialog.getCanvasGraphics().bpToComponentY(incY)));
+   }
+
+   public int getScrollableUnitIncrement(Rectangle visibleRect,
+                                         int orientation,
+                                         int direction)
+   {
+      int currentPos = 0;
+
+      Dimension unitIncrement = getUnitIncrement();
+
+      int inc;
+
+      if (orientation == SwingConstants.HORIZONTAL)
+      {
+         currentPos = visibleRect.x;
+         inc = unitIncrement.width;
+      }
+      else
+      {
+         currentPos = visibleRect.y;
+         inc = unitIncrement.height;
+      }
+
+      if (direction < 0)
+      {
+         int newPosition = currentPos - (currentPos/inc) * inc;
+
+         return newPosition==0 ? inc : newPosition;
+      }
+      else
+      {
+         return ((currentPos/inc)+1)*inc - currentPos;
+      }
+   }
+
+   public int getScrollableBlockIncrement(Rectangle visibleRect,
+                                          int orientation,
+                                          int direction)
+   {
+      Dimension unitIncrement = getUnitIncrement();
+
+      if (orientation == SwingConstants.HORIZONTAL)
+         return (unitIncrement.width >= visibleRect.width) ?
+           visibleRect.width :
+           visibleRect.width - unitIncrement.width;
+      else
+         return (unitIncrement.height >= visibleRect.height) ?
+           visibleRect.height :
+           visibleRect.height - unitIncrement.height;
+   }
+
+   public void detailsUpdated()
+   {
+      Shape shape = dialog.getCompleteShape();
+      CanvasGraphics cg = dialog.getCanvasGraphics();
+
+      Rectangle2D newBounds = shape.getBounds2D();
+
       JDRPathSegment segment = dialog.getSegment();
+      segmentBBox = segment.getStorageControlBBox();
+      segmentBBox.scale(cg.storageToComponentX(1.0), 
+                        cg.storageToComponentY(1.0));
 
-      if (segment == null)
+      bounds = new BBox(cg, newBounds);
+
+      bounds.merge(segmentBBox);
+
+      Dimension dim = new Dimension(
+        (int)Math.ceil(bounds.getWidth())+PADDING,
+        (int)Math.ceil(bounds.getHeight())+PADDING);
+
+      if (dim.width < MIN_SIZE.width)
       {
-         return MIN_SIZE;
+         dim.width = MIN_SIZE.width;
       }
 
-      BBox bbox = segment.getBpControlBBox();
-
-      if (bbox == null)
+      if (dim.height < MIN_SIZE.height)
       {
-         return MIN_SIZE;
+         dim.height = MIN_SIZE.height;
       }
 
-      return new Dimension((int)Math.ceil(bbox.getWidth())+20, 
-        (int)Math.ceil(bbox.getHeight())+20);
+      Dimension orgSize = getPreferredSize();
+
+      setPreferredSize(dim);
+
+      prefViewportSize = new Dimension(
+          (int)Math.ceil(segmentBBox.getWidth())+PADDING,
+          (int)Math.ceil(segmentBBox.getHeight())+PADDING);
+
+      if (prefViewportSize.width < MIN_SIZE.width)
+      {
+         prefViewportSize.width = MIN_SIZE.width;
+      }
+
+      if (prefViewportSize.height < MIN_SIZE.height)
+      {
+         prefViewportSize.height = MIN_SIZE.height;
+      }
+
+      int halfPadding = PADDING/2;
+
+      xOffset = halfPadding - bounds.getMinX();
+      yOffset = halfPadding - bounds.getMinY();
+
+      if (dim.width > orgSize.width || dim.height > orgSize.height)
+      {
+         revalidate();
+      }
    }
 
    protected void paintComponent(Graphics g)
@@ -463,24 +758,20 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
       g2.setTransform(oldAf);
    }
 
-   public void updateOffsets()
+   public void scrollToSegment()
    {
-      JDRPathSegment segment = dialog.getSegment();
-
-      if (segment == null)
+      if (bounds == null || segmentBBox == null)
       {
          return;
       }
 
-      Dimension dim = getSize();
+      double totalW = bounds.getWidth();
+      double totalH = bounds.getHeight();
 
-      BBox bbox = segment.getBpControlBBox();
+      double x = (segmentBBox.getMinX() - bounds.getMinX())/totalW;
+      double y = (segmentBBox.getMinY() - bounds.getMinY())/totalH;
 
-      double midX = bbox.getMidX();
-      double midY = bbox.getMidY();
-
-      xOffset = 0.5*dim.getWidth() - midX;
-      yOffset = 0.5*dim.getHeight() - midY;
+      dialog.scrollSample(x, y);
    }
 
    public void componentHidden(ComponentEvent e)
@@ -493,19 +784,27 @@ class SegmentSamplePanel extends JPanel implements ComponentListener
 
    public void componentResized(ComponentEvent e)
    {
-      updateOffsets();
+      scrollToSegment();
    }
 
    public void componentShown(ComponentEvent e)
    {
-      updateOffsets();
+      scrollToSegment();
    }
 
+   public BBox getBpBounds()
+   {
+      return bounds;
+   }
+
+   private BBox bounds=null, segmentBBox=null;
+   private Dimension prefViewportSize = MIN_SIZE;
    private double xOffset=0.0, yOffset = 0.0;
    private SegmentInfoDialog dialog;
    private static final Dimension MIN_SIZE = new Dimension(100, 100);
 
    public static final Color PATH_PAINT = new Color(220, 220, 220);
+   public static final int PADDING=10;
 }
 
 class ControlInfoPanel extends JPanel implements ChangeListener
@@ -515,13 +814,16 @@ class ControlInfoPanel extends JPanel implements ChangeListener
       super(new BorderLayout());
       this.dialog = dialog;
       this.index = idx;
-      idx++;
 
       JDRResources resources = dialog.getResources();
 
       if (index == -1)
       {
          label = new JLabel(resources.getString("segmentinfo.end_control"));
+      }
+      else if (index == 0)
+      {
+         label = new JLabel(resources.getString("segmentinfo.start_control"));
       }
       else
       {
@@ -530,6 +832,7 @@ class ControlInfoPanel extends JPanel implements ChangeListener
 
       add(label, "West");
 
+      idx++;
       locationPane = new LocationPane(resources, 
         "segmentinfo.control"+idx);
       locationPane.addCoordinateChangeListener(this);
@@ -602,7 +905,7 @@ class ControlInfoPanel extends JPanel implements ChangeListener
          point.x = xcoord.getValue(unit);
          point.y = ycoord.getValue(unit);
 
-         dialog.detailsUpdated();
+         dialog.detailsUpdated(true);
       }
    }
 
