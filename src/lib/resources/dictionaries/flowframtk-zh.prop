@@ -2839,6 +2839,8 @@
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold">Gradient Angle Threshold:</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold.mnemonic">G</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold.tooltip">Minimum angle between gradient vectors</entry>
+<entry key="vectorize.smooth_shapes.curve_threshold_diff">Threshold Diff:</entry>
+<entry key="vectorize.smooth_shapes.curve_threshold_diff.tooltip">Choose curve if the difference between best curve and best line is less than this.</entry>
 <entry key="vectorize.smooth_shapes.min_points">Minimum points:</entry>
 <entry key="vectorize.smooth_shapes.min_points.mnemonic">P</entry>
 <entry key="vectorize.smooth_shapes.stat_pt_threshold">Stationary Point Threshold:</entry>
