@@ -852,6 +852,18 @@ public class VectorizeBitmapDialog extends JFrame
       resultPanel.repaint();
    }
 
+   public void repaintImagePanel(Rectangle2D bounds)
+   {
+      repaintImagePanel(bounds, true);
+   }
+
+   public void repaintImagePanel(Rectangle2D bounds, boolean repaintResults)
+   {
+      repaintImagePanel(new Rectangle((int)bounds.getX(),
+        (int)bounds.getY(), (int)Math.ceil(bounds.getWidth()),
+        (int)Math.ceil(bounds.getHeight())), repaintResults);
+   }
+
    public void repaintImagePanel(Rectangle bounds)
    {
       repaintImagePanel(bounds, true);
@@ -860,7 +872,11 @@ public class VectorizeBitmapDialog extends JFrame
    public void repaintImagePanel(Rectangle bounds, boolean repaintResults)
    {
       mainPanel.repaint(bounds);
-      resultPanel.repaint(bounds);
+
+      if (repaintResults)
+      {
+         resultPanel.repaint(bounds);
+      }
    }
 
    public void addMessageId(String id, Object... params)
@@ -1718,6 +1734,11 @@ public class VectorizeBitmapDialog extends JFrame
    public double getThresholdDiff()
    {
       return controlPanel.getThresholdDiff();
+   }
+
+   public double getCurveThresholdDiff()
+   {
+      return controlPanel.getCurveThresholdDiff();
    }
 
    public double getSmoothingMaxDeviation()
@@ -3560,6 +3581,20 @@ class SmoothingPanel extends JPanel implements ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
+      curveThresholdDiffSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
+
+      curveThresholdDiffLabel = resources.createAppLabel(
+         "vectorize.smooth_shapes.curve_threshold_diff");
+      subPanel.add(curveThresholdDiffLabel);
+
+      curveThresholdDiffSpinner = controlPanel.createSpinner(
+         curveThresholdDiffLabel, curveThresholdDiffSpinnerModel);
+      subPanel.add(curveThresholdDiffSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
       curveMinPointsSpinnerModel 
          = new SpinnerNumberModel(5, 3, 100, 1);
 
@@ -3617,6 +3652,13 @@ class SmoothingPanel extends JPanel implements ChangeListener
          maxPrefSize = prefSize;
       }
 
+      prefSize = curveThresholdDiffLabel.getPreferredSize();
+
+      if (prefSize.width > maxPrefSize.width)
+      {
+         maxPrefSize = prefSize;
+      }
+
       prefSize = curveMinPointsLabel.getPreferredSize();
 
       if (prefSize.width > maxPrefSize.width)
@@ -3659,6 +3701,11 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveStatPtLabel.setPreferredSize(prefSize);
       curveStatPtLabel.setMaximumSize(prefSize);
 
+      prefSize = curveThresholdDiffLabel.getPreferredSize();
+      prefSize.width = maxPrefSize.width;
+      curveThresholdDiffLabel.setPreferredSize(prefSize);
+      curveThresholdDiffLabel.setMaximumSize(prefSize);
+
       prefSize = curveMinPointsLabel.getPreferredSize();
       prefSize.width = maxPrefSize.width;
       curveMinPointsLabel.setPreferredSize(prefSize);
@@ -3690,6 +3737,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
          tinyStepThresholdSpinner.setEnabled(enable);
          lengthThresholdSpinner.setEnabled(enable);
          thresholdDiffSpinner.setEnabled(enable);
+         curveThresholdDiffSpinner.setEnabled(enable);
          maxDeviationSpinner.setEnabled(enable);
          deviationEpsilonSpinner.setEnabled(enable);
          gradientAngleThresholdPanel.setEnabled(enable);
@@ -3698,6 +3746,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
          tinyStepThresholdLabel.setEnabled(enable);
          lengthThresholdLabel.setEnabled(enable);
          thresholdDiffLabel.setEnabled(enable);
+         curveThresholdDiffLabel.setEnabled(enable);
          maxDeviationLabel.setEnabled(enable);
          deviationEpsilonLabel.setEnabled(enable);
          tryBezierCheckBox.setEnabled(enable);
@@ -3712,8 +3761,13 @@ class SmoothingPanel extends JPanel implements ChangeListener
         && tryBezierCheckBox.isSelected();
 
       curveGradientThresholdLabel.setEnabled(enable);
+      gradientAngleThresholdPanel.setEnabled(enable);
       curveMinPointsLabel.setEnabled(enable);
+      curveMinPointsSpinner.setEnabled(enable);
       curveStatPtLabel.setEnabled(enable);
+      curveStationaryPtThresholdSpinner.setEnabled(enable);
+      curveThresholdDiffLabel.setEnabled(enable);
+      curveThresholdDiffSpinner.setEnabled(enable);
    }
 
    public void setSelected(boolean selected)
@@ -3734,6 +3788,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       tinyStepThresholdSpinner.setEnabled(enable);
       lengthThresholdSpinner.setEnabled(enable);
       thresholdDiffSpinner.setEnabled(enable);
+      curveThresholdDiffSpinner.setEnabled(enable);
       maxDeviationSpinner.setEnabled(enable);
       deviationEpsilonSpinner.setEnabled(enable);
       gradientAngleThresholdPanel.setEnabled(enable);
@@ -3742,6 +3797,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       tinyStepThresholdLabel.setEnabled(enable);
       lengthThresholdLabel.setEnabled(enable);
       thresholdDiffLabel.setEnabled(enable);
+      curveThresholdDiffLabel.setEnabled(enable);
       maxDeviationLabel.setEnabled(enable);
       deviationEpsilonLabel.setEnabled(enable);
 
@@ -3761,6 +3817,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
          tinyStepThresholdSpinnerModel.setValue(Double.valueOf(10.0));
          lengthThresholdSpinnerModel.setValue(Double.valueOf(20.0));
          thresholdDiffSpinnerModel.setValue(Double.valueOf(2.0));
+         curveThresholdDiffSpinnerModel.setValue(Double.valueOf(2.0));
          maxDeviationSpinnerModel.setValue(Double.valueOf(2.0));
          deviationEpsilonSpinnerModel.setValue(Double.valueOf(0.01));
 
@@ -3800,6 +3857,11 @@ class SmoothingPanel extends JPanel implements ChangeListener
       return thresholdDiffSpinnerModel.getNumber().doubleValue();
    }
 
+   public double getCurveThresholdDiff()
+   {
+      return curveThresholdDiffSpinnerModel.getNumber().doubleValue();
+   }
+
    public double getMaxDeviation()
    {
       return maxDeviationSpinnerModel.getNumber().doubleValue();
@@ -3827,7 +3889,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
    private JLabel tinyStepThresholdLabel, lengthThresholdLabel, thresholdDiffLabel,
     curveGradientThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
-    deviationEpsilonLabel, curveStatPtLabel;
+    deviationEpsilonLabel, curveStatPtLabel, curveThresholdDiffLabel;
 
    private AnglePanel gradientAngleThresholdPanel;
 
@@ -3835,12 +3897,12 @@ class SmoothingPanel extends JPanel implements ChangeListener
      tinyStepThresholdSpinnerModel, lengthThresholdSpinnerModel,
      thresholdDiffSpinnerModel, maxDeviationSpinnerModel,
      deviationEpsilonSpinnerModel, curveStationaryPtThresholdSpinnerModel,
-     curveMinPointsSpinnerModel;
+     curveMinPointsSpinnerModel, curveThresholdDiffSpinnerModel;
 
    private JSpinner curveMinPointsSpinner,
      thresholdDiffSpinner, lengthThresholdSpinner, tinyStepThresholdSpinner,
      maxDeviationSpinner, deviationEpsilonSpinner,
-     curveStationaryPtThresholdSpinner;
+     curveStationaryPtThresholdSpinner, curveThresholdDiffSpinner;
 
    private JCheckBox doSmoothingCheckBox, tryBezierCheckBox;
 
@@ -4326,6 +4388,11 @@ class ControlPanel extends JPanel implements ActionListener
    public double getThresholdDiff()
    {
       return smoothingPanel.getThresholdDiff();
+   }
+
+   public double getCurveThresholdDiff()
+   {
+      return smoothingPanel.getCurveThresholdDiff();
    }
 
    public double getSmoothingMaxDeviation()
@@ -6084,7 +6151,9 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
          maxProgress += shapeList.get(i).size();
       }
 
-      newShapesVec = new Vector<ShapeComponentVector>();
+      Vector<ShapeComponentVector> oldShapeList = new Vector<ShapeComponentVector>();
+      oldShapeList.addAll(shapeList);
+      shapeList.clear();
 
       for (int i = 0; i < numShapes; i++)
       {
@@ -6097,7 +6166,12 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
             throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
-         publish(shapeList.get(i));
+         Vector<ShapeComponentVector> result = processShape(oldShapeList.get(i));
+
+         for (ShapeComponentVector vec : result)
+         {
+            publish(vec);
+         }
       }
 
       return null;
@@ -6111,9 +6185,9 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
       {
          ShapeComponentVector vec = iter.next();
 
-         Vector<ShapeComponentVector> result = processShape(vec);
+         shapeList.add(vec);
 
-         newShapesVec.addAll(result);
+         dialog.repaintImagePanel(vec.getBounds());
       }
    }
 
@@ -6197,14 +6271,13 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
-      dialog.finishedOptimizeLines(newShapesVec, continueToNextStep);
+      dialog.finishedOptimizeLines(shapeList, continueToNextStep);
    }
 
    private int progress, maxProgress;
    private double gradientEpsilon=0.01;
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> shapeList;
-   private volatile Vector<ShapeComponentVector> newShapesVec;
    private boolean continueToNextStep;
 }
 
@@ -7318,16 +7391,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       }
 
       progress = 0;
-      maxProgress = 0;
       int numShapes = shapeList.size();
+      maxProgress = numShapes;
 
-      for (int i = 0; i < numShapes; i++)
-      {
-         maxProgress += shapeList.get(i).size();
-      }
-
-      newShapesVec = new Vector<ShapeComponentVector>();
-      dialog.updateShapes(newShapesVec, false);
+      Vector<ShapeComponentVector> oldShapeList = new Vector<ShapeComponentVector>();
+      oldShapeList.addAll(shapeList);
+      shapeList.clear();
 
       for (int i = 0; i < numShapes; i++)
       {
@@ -7340,7 +7409,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
-         publish(shapeList.get(i));
+         tryLineify(oldShapeList.get(i));
+         incProgress();
       }
 
       return null;
@@ -7373,17 +7443,9 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       while (iter.hasNext())
       {
-         incProgress();
          ShapeComponentVector vec = iter.next();
 
-         try
-         {
-            tryLineify(vec);
-         }
-         catch (InterruptedException e)
-         {
-            return;
-         }
+         dialog.repaintImagePanel(vec.getBounds());
       }
    }
 
@@ -7401,13 +7463,18 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
-      dialog.finishedLineDetection(newShapesVec, continueToNextStep);
+      dialog.finishedLineDetection(shapeList, continueToNextStep);
    }
 
    private void addShape(ShapeComponentVector newShape)
    {
-      newShapesVec.add(newShape);
-      dialog.repaintImagePanel(newShape.getBounds(), false);
+      shapeList.add(newShape);
+      publish(newShape);
+   }
+
+   private int getNumShapes()
+   {
+      return shapeList.size();
    }
 
    private void setLineWidth(ShapeComponentVector shape, double delta)
@@ -7441,7 +7508,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          addShape(vec);
          dialog.addMessageIdLn("vectorize.message.insufficient_to_vectorize",
-          newShapesVec.size(), n);
+          getNumShapes(), n);
          return;
       }
 
@@ -7467,7 +7534,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          addShape(vec);
          dialog.addMessageIdLn("vectorize.message.no_closed_subpaths",
-          newShapesVec.size());
+          getNumShapes());
          return;
       }
 
@@ -7509,7 +7576,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                {
                   addShape(vec);
                   dialog.addMessageIdLn("vectorize.message.inner_contains",
-                     newShapesVec.size(), (i+1));
+                     getNumShapes(), (i+1));
                   return;
                }
 
@@ -7532,7 +7599,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                {
                   addShape(vec);
                   dialog.addMessageIdLn("vectorize.message.inner_contains",
-                     newShapesVec.size(), (j+1));
+                     getNumShapes(), (j+1));
                   return;
                }
 
@@ -7561,7 +7628,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          addShape(vec);
          dialog.addMessageIdLn("vectorize.message.no_outer_inner",
-            newShapesVec.size());
+            getNumShapes());
          return;
       }
 
@@ -7573,7 +7640,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          {
             addShape(vec);
             dialog.addMessageIdLn("vectorize.message.not_inner_outer",
-               newShapesVec.size(), (i+1));
+               getNumShapes(), (i+1));
             return;
          }
       }
@@ -8236,7 +8303,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          setLineWidth(newPath1, averageDelta1);
          addShape(newPath1);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          newShapesVec.size(), averageDelta1);
+          getNumShapes(), averageDelta1);
          return true;
       }
 
@@ -8329,7 +8396,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          setLineWidth(newPath1, averageDelta1);
          addShape(newPath1);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          newShapesVec.size(), averageDelta1);
+          getNumShapes(), averageDelta1);
          success = true;
       }
 
@@ -8344,7 +8411,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          setLineWidth(newPath2, averageDelta2);
          addShape(newPath2);
          dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          newShapesVec.size(), averageDelta2);
+          getNumShapes(), averageDelta2);
          success = true;
       }
 
@@ -8599,14 +8666,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          addShape(vec);
          dialog.addMessageIdLn("vectorize.message.insufficient_to_vectorize",
-          newShapesVec.size(), n);
+          getNumShapes(), n);
          return;
       }
       else if (vec.lastElement().getType() != PathIterator.SEG_CLOSE)
       {
          addShape(vec);
          dialog.addMessageIdLn("vectorize.message.not_closed",
-          newShapesVec.size());
+          getNumShapes());
          return;
       }
 
@@ -8635,7 +8702,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          {
             addShape(results.bestPath);
             dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             newShapesVec.size(), results.minAverageDelta);
+             getNumShapes(), results.minAverageDelta);
             return;
          }
          else
@@ -8644,7 +8711,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                addShape(results.bestPath);
                dialog.addMessageIdLn("vectorize.success_intersect_check",
-                 newShapesVec.size(), results.minAverageDelta, results.variance);
+                 getNumShapes(), results.minAverageDelta, results.variance);
                return;
             }
          }
@@ -8660,7 +8727,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          if (!findBulge(vec))
          {
             addShape(vec);
-            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+            dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
          }
 
          return;
@@ -8679,7 +8746,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       if (remainingN < 4)
       {
          addShape(vec);
-         dialog.addMessageIdLn("vectorize.too_many_spikes", newShapesVec.size());
+         dialog.addMessageIdLn("vectorize.too_many_spikes", getNumShapes());
          return;
       }
 
@@ -8732,7 +8799,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          addShape(reducedPathResults.bestPath);
          dialog.addMessageIdLn("vectorize.reduced_path_success", 
-            newShapesVec.size(), reducedPathResults.minAverageDelta);
+            getNumShapes(), reducedPathResults.minAverageDelta);
       }
       else
       {
@@ -8740,7 +8807,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          {
             addShape(vec);
             dialog.addMessageIdLn("vectorize.reduced_path_failed", 
-               newShapesVec.size(), reducedPathResults.minAverageDelta);
+               getNumShapes(), reducedPathResults.minAverageDelta);
          }
 
          return;
@@ -8818,7 +8885,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             setLineWidth(path, averageDelta);
             addShape(path);
             dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             newShapesVec.size(), averageDelta);
+             getNumShapes(), averageDelta);
             return;
          }
          else
@@ -8830,7 +8897,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                setLineWidth(path, averageDelta);
                addShape(path);
                dialog.addMessageIdLn("vectorize.success_intersect_check",
-                 newShapesVec.size(), averageDelta, variance);
+                 getNumShapes(), averageDelta, variance);
                return;
             }
          }
@@ -8891,13 +8958,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             setLineWidth(path, bestAverageDelta);
             addShape(path);
             dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             newShapesVec.size(), bestAverageDelta);
+             getNumShapes(), bestAverageDelta);
          }
          else
          {
             addShape(sp1.getCompleteVector());
             dialog.addMessageIdLn("vectorize.failed_no_intersect_check",
-             newShapesVec.size(), bestAverageDelta);
+             getNumShapes(), bestAverageDelta);
          }
 
          return;
@@ -8910,7 +8977,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          setLineWidth(path, bestAverageDelta);
          addShape(path);
          dialog.addMessageIdLn("vectorize.success_intersect_check",
-            newShapesVec.size(), bestAverageDelta, variance);
+            getNumShapes(), bestAverageDelta, variance);
          return;
       }
 
@@ -8927,7 +8994,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             if (spikes.isEmpty())
             {
                addShape(sp1.getCompleteVector());
-               dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+               dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
                return;
             }
 
@@ -8939,7 +9006,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          else
          {
             addShape(sp1.getCompleteVector());
-            dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+            dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
             return;
          }
       }
@@ -8997,7 +9064,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             if (spikes.isEmpty())
             {
                addShape(sp1.getCompleteVector());
-               dialog.addMessageIdLn("vectorize.no_spikes", newShapesVec.size());
+               dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
                return;
             }
 
@@ -9048,14 +9115,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             if (remainingN1 < 2 || remainingN2 < 2)
             {
                addShape(sp1.getCompleteVector());
-               dialog.addMessageIdLn("vectorize.too_many_spikes", newShapesVec.size());
+               dialog.addMessageIdLn("vectorize.too_many_spikes", getNumShapes());
                return;
             }
          }
          else
          {
             addShape(sp1.getCompleteVector());
-            dialog.addMessageIdLn("vectorize.too_many_spikes", newShapesVec.size());
+            dialog.addMessageIdLn("vectorize.too_many_spikes", getNumShapes());
             return;
          }
       }
@@ -9101,13 +9168,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          setLineWidth(bestPath, bestAverageDelta);
          addShape(bestPath);
          dialog.addMessageIdLn("vectorize.reduced_path_success", 
-            newShapesVec.size(), bestAverageDelta);
+            getNumShapes(), bestAverageDelta);
       }
       else
       {
          addShape(sp1.getCompleteVector());
          dialog.addMessageIdLn("vectorize.reduced_path_failed", 
-            newShapesVec.size(), bestAverageDelta);
+            getNumShapes(), bestAverageDelta);
          return;
       }
 
@@ -10048,8 +10115,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (lastShape != null)
             {
-               newShapesVec.add(lastShape);
-               dialog.repaintImagePanel(lastShape.getBounds(), false);
+               addShape(lastShape);
             }
 
             lastShape = newVec;
@@ -10073,8 +10139,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (lastShape != null)
       {
-         newShapesVec.add(lastShape);
-         dialog.repaintImagePanel(lastShape.getBounds(), false);
+         addShape(lastShape);
       }
 
       if (remaining < 3 || remaining == allIndexes.length)
@@ -11277,9 +11342,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    private double maxTinyStep; // to assist gradient approximation across small steps
    private double returnPtDist; // spike detection
    private VectorizeBitmapDialog dialog;
-   private Vector<ShapeComponentVector> shapeList;
-   private volatile Vector<ShapeComponentVector> newShapesVec;
    private boolean continueToNextStep, doLineIntersectionCheck;
+   private Vector<ShapeComponentVector> shapeList;
    private static final double HALF_PI = 0.5*Math.PI,
     SPIKE_ANGLE_LOWER1=0.2*Math.PI, SPIKE_ANGLE_UPPER1=0.8*Math.PI,
     SPIKE_ANGLE_LOWER2=1.2*Math.PI, SPIKE_ANGLE_UPPER2=1.8*Math.PI;
@@ -11401,29 +11465,7 @@ class LineifyResults
    protected LineFit[] bestLineFit;
 }
 
-class ShapeComponentVectorListElement
-{
-   public ShapeComponentVectorListElement(int index, ShapeComponentVector vec)
-   {
-      this.index = index;
-      this.vec = vec;
-   }
-
-   public int getIndex()
-   {
-      return index;
-   }
-
-   public ShapeComponentVector getVector()
-   {
-      return vec;
-   }
-
-   private int index;
-   private ShapeComponentVector vec;
-}
-
-class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
+class Smooth extends SwingWorker<Void,Rectangle>
 {
    public Smooth(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapes,
      boolean continueToNextStep)
@@ -11434,6 +11476,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
       tinyStepThreshold = dialog.getSmoothingTinyStepThreshold();
       lengthThreshold = dialog.getLengthThreshold();
       thresholdDiff = dialog.getThresholdDiff();
+      curveThresholdDiff = dialog.getCurveThresholdDiff();
       tryBezier = dialog.isTryBezierOn();
       bezierGradientThreshold = dialog.getCurveGradientThreshold();
       minBezierSamples = dialog.getCurveMinPoints();
@@ -11471,7 +11514,8 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
 
          if (shape != null)
          {
-            publish(new ShapeComponentVectorListElement(i, shape));
+            shapes.set(i, shape);
+            publish(shape.getBounds());
          }
 
          progress = p + n;
@@ -11481,19 +11525,15 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
       return null;
    }
 
-   protected void process(java.util.List<ShapeComponentVectorListElement> shapeVecList)
+   protected void process(java.util.List<Rectangle> list)
    {
-      Iterator<ShapeComponentVectorListElement> iter = shapeVecList.iterator();
+      Iterator<Rectangle> iter = list.iterator();
 
       while (iter.hasNext())
       {
-          ShapeComponentVectorListElement elem = iter.next();
+          Rectangle elem = iter.next();
 
-          int i = elem.getIndex();
-          ShapeComponentVector shape = elem.getVector();
-
-          shapes.set(i, shape);
-          dialog.repaintImagePanel(shape.getBounds(), false);
+          dialog.repaintImagePanel(elem);
       }
    }
 
@@ -12016,8 +12056,7 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
             }
          }
 
-// TODO provide separate thresholdDiff for curve vs line
-         if (minCurveDelta < minDelta + thresholdDiff)
+         if (minCurveDelta < minDelta + curveThresholdDiff)
          {
             return bestCurveResult;
          }
@@ -12046,7 +12085,8 @@ class Smooth extends SwingWorker<Void,ShapeComponentVectorListElement>
     maxDeviation=2.0, deviationEpsilon=0.01;
    private boolean tryBezier=true;
    private int minBezierSamples = 5;
-   private double bezierGradientThreshold=0.1, curveStatPtThreshold=2.0;
+   private double bezierGradientThreshold=0.1, curveStatPtThreshold=2.0,
+     curveThresholdDiff;
    private int progress, maxProgress;
    private boolean continueToNextStep;
 }
@@ -12684,7 +12724,7 @@ class BestFitComponent
    private double delta = Double.MAX_VALUE;
 }
 
-class RemoveTinyPaths extends SwingWorker<Void,ShapeComponentVector>
+class RemoveTinyPaths extends SwingWorker<Void,Rectangle2D>
 {
    public RemoveTinyPaths(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapes)
    {
@@ -12706,9 +12746,7 @@ class RemoveTinyPaths extends SwingWorker<Void,ShapeComponentVector>
       progress = 0;
       maxProgress = numShapes;
 
-      newShapesVec = new Vector<ShapeComponentVector>(numShapes);
-
-      for (int i = 0; i < numShapes; i++)
+      for (int i = numShapes-1; i >= 0; i--)
       {
          dialog.updateTimeElapsed();
          Thread.sleep(VectorizeBitmapDialog.SLEEP_DURATION);
@@ -12719,30 +12757,31 @@ class RemoveTinyPaths extends SwingWorker<Void,ShapeComponentVector>
             throw new UserCancelledException(dialog.getMessageDictionary());
          }
 
-         publish(shapes.get(i));
+         ShapeComponentVector vec = shapes.get(i);
+         Rectangle2D bounds = vec.getBounds2D();
+
+         if (bounds == null 
+          || bounds.getWidth()*bounds.getHeight() < areaThreshold)
+         {
+            shapes.remove(i);
+            publish(bounds);
+         }
+
+         incProgress();
       }
 
       return null;
    }
 
-   protected void process(java.util.List<ShapeComponentVector> shapeVecList)
+   protected void process(java.util.List<Rectangle2D> list)
    {
-      Iterator<ShapeComponentVector> iter = shapeVecList.iterator();
+      Iterator<Rectangle2D> iter = list.iterator();
 
       while (iter.hasNext())
       {
-         incProgress();
+         Rectangle2D bounds = iter.next();
 
-         ShapeComponentVector vec = iter.next();
-
-         Rectangle2D bounds = vec.getBounds2D();
-
-         if (bounds != null 
-          && bounds.getWidth()*bounds.getHeight() >= areaThreshold)
-         {
-            newShapesVec.add(vec);
-         }
-
+         dialog.repaintImagePanel(bounds);
       }
    }
 
@@ -12766,14 +12805,13 @@ class RemoveTinyPaths extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
-      dialog.finishedRemoveTinyPaths(newShapesVec);
+      dialog.finishedRemoveTinyPaths(shapes);
    }
 
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> shapes;
    private double areaThreshold;
    private int progress, maxProgress;
-   private Vector<ShapeComponentVector> newShapesVec;
 }
 
 class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
