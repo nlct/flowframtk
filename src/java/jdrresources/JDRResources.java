@@ -494,7 +494,7 @@ public class JDRResources
             msg2 = getString("process.aborted", "Process Aborted");
          }
 
-         if (msg == null || msg.isEmpty();)
+         if (msg == null || msg.isEmpty())
          {
             msg = msg2;
          }
