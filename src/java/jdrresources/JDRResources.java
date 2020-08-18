@@ -472,13 +472,38 @@ public class JDRResources
     */
    public void error(Component parent, Throwable e)
    {
-      if (e instanceof UserCancelledException)
+      if (e instanceof UserCancelledException
+        || e instanceof java.util.concurrent.CancellationException)
       {
-         JOptionPane.showMessageDialog(parent, e.getMessage());
+         String msg = e.getMessage();
+
+         if (msg == null || msg.isEmpty())
+         {
+            msg = getString("process.aborted", "Process Aborted");
+         }
+
+         JOptionPane.showMessageDialog(parent, msg);
       }
       else if (e.getCause() instanceof UserCancelledException)
       {
-         JOptionPane.showMessageDialog(parent, e.getCause().getMessage());
+         String msg = e.getMessage();
+         String msg2 = e.getCause().getMessage();
+
+         if (msg2 == null || msg2.isEmpty())
+         {
+            msg2 = getString("process.aborted", "Process Aborted");
+         }
+
+         if (msg == null || msg.isEmpty();)
+         {
+            msg = msg2;
+         }
+         else
+         {
+            msg = String.format("%s%n%s", msg, msg2);
+         }
+
+         JOptionPane.showMessageDialog(parent, msg);
       }
       else
       {
