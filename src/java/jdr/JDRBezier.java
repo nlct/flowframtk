@@ -1345,7 +1345,8 @@ stationary point is outside of this segment.
     *  @param numDivisions
     *  @param resultP used to store the corresponding P(t)
     *  @param result if not null used to store [t, square_distance]
-    *  @return result
+    *  @return either result parameter, if not null, or new
+    *  array [t, square_distance]
     */ 
    public static double[] getClosest(Point2D q, 
      Point2D p0, Point2D c1, Point2D c2, Point2D p1, int numDivisions,

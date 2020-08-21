@@ -351,6 +351,14 @@ public class JDRLine extends JDRSegment
       return getVectorAngle(v1_x, v1_y, v2_x, v2_y);
    }
 
+   /*
+    * Gets angle between vectors v1 and v2.
+    */ 
+   public static double getVectorAngle(Point2D v1, Point2D v2)
+   {
+      return getVectorAngle(v1.getX(), v1.getY(), v2.getX(), v2.getY());
+   }
+
    public static double getVectorAngle(double v1_x, double v1_y,
      double v2_x, double v2_y)
    {
@@ -394,6 +402,73 @@ public class JDRLine extends JDRSegment
    public static Point2D getGradient(double x0, double y0, double x1, double y1)
    {
       return new Point2D.Double(x1-x0, y1-y0);
+   }
+
+   public static Point2D getMidPoint(Point2D p0, Point2D p1)
+   {
+      return getMidPoint(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+   }
+
+   public static Point2D getMidPoint(double p0x, double p0y, double p1x, double p1y)
+   {
+      return new Point2D.Double(p0x+0.5*(p1x-p0x), p0y+0.5*(p1y-p0y));
+   }
+
+   /**
+    * Gets point on line closest to given point.
+    * The line is defined by r1 and r2 but the closest point may be
+    * outside those end points. 
+    * @param r1 first point on line
+    * @param r2 second point on line
+    * @param p given point
+    * @return the closest point on the line to p or r1 if the point
+    * can't be computed (most likely because r1 and r2 coincide)
+   */
+   public static Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
+   {
+      // get closest point on r1-r2 to p
+
+      double diff_y = r1.getY() - r2.getY();
+      double diff_x = r1.getX() - r2.getX();
+      double m = diff_y/diff_x;
+
+      double m_sq = 0.0;
+      double orthog_m=0.0;
+      double orthog_m_sq = 0.0;
+      boolean use_orthog = false;
+      double factor, x, y;
+
+      if (Double.isNaN(m) || Double.isInfinite(m))
+      {
+         use_orthog = true;
+         orthog_m = -diff_x/diff_y;
+         orthog_m_sq = orthog_m*orthog_m;
+         factor = 1.0/(1.0 + orthog_m_sq);
+      }
+      else
+      {
+         m_sq = m*m;
+         factor = 1.0/(1.0 + m_sq);
+      }
+
+      if (use_orthog)
+      {
+         x = (r1.getX()+orthog_m*(r1.getY()-p.getY())
+                +orthog_m_sq*p.getX())*factor;
+         y = orthog_m * (x - p.getX()) + p.getY();
+      }
+      else
+      {
+         x = (m_sq*r1.getX()+m*(p.getY()-r1.getY())+p.getX())*factor;
+         y = m * (x - r1.getX()) + r1.getY();
+      }
+
+      if (Double.isNaN(x) || Double.isNaN(y))
+      {// most likely caused by r1 = r2
+         return r1;
+      }
+
+      return new Point2D.Double(x, y);
    }
 
    public JDRObjectLoaderListener getListener()

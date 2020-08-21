@@ -210,11 +210,11 @@ public class JDRResources
 
          if (cause == null)
          {
-            displayStackTrace(parent, frameTitle, ""+e, e);
+            displayStackTrace(parent, frameTitle, e.toString(), e);
          }
          else
          {
-            displayStackTrace(parent, frameTitle, ""+e+"\n"+cause, e);
+            displayStackTrace(parent, frameTitle, String.format("%s%n%s", e, cause), e);
          }
       }
    }
@@ -270,13 +270,19 @@ public class JDRResources
       messageArea.setText(message);
 
       StackTraceElement[] trace = e.getStackTrace();
-      String stackTrace = "";
+      StringBuilder stackTrace = new StringBuilder();
+
       for (int i = 0, n=trace.length; i < n; i++)
       {
-         stackTrace += trace[i]+"\n";
+         stackTrace.append(String.format("%s%n", trace[i]));
       }
 
-      stackTraceDetails.setText(stackTrace);
+      if (e.getCause() != null)
+      {
+         appendStackTrace(e, stackTrace);
+      }
+
+      stackTraceDetails.setText(stackTrace.toString());
 
       int result = JOptionPane.showOptionDialog(parent, stackTracePane,
          frameTitle,
@@ -287,6 +293,26 @@ public class JDRResources
       if (result == JOptionPane.NO_OPTION)
       {
          System.exit(EXIT_INTERNAL_ERROR);
+      }
+   }
+
+   private void appendStackTrace(Throwable e, StringBuilder stackTrace)
+   {
+      if (e != null)
+      {
+         StackTraceElement[] trace = e.getStackTrace();
+
+         stackTrace.append(String.format("%n%s%n", e));
+
+         for (int i = 0, n=trace.length; i < n; i++)
+         {
+            stackTrace.append(String.format("%s%n", trace[i]));
+         }
+
+         if (e.getCause() != null)
+         {
+            appendStackTrace(e.getCause(), stackTrace);
+         }
       }
    }
 

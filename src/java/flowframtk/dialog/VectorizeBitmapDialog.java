@@ -899,6 +899,11 @@ public class VectorizeBitmapDialog extends JFrame
       messagePanel.setText(String.format("%s%s%n", messagePanel.getText(), msg));
    }
 
+   public void addMessageLn()
+   {
+      messagePanel.setText(String.format("%s%n", messagePanel.getText()));
+   }
+
    public void setWorkingShape(Shape shape)
    {
       mainPanel.setWorkingShape(shape);
@@ -1709,6 +1714,11 @@ public class VectorizeBitmapDialog extends JFrame
    public double getSpikeReturnDistance()
    {
       return controlPanel.getSpikeReturnDistance();
+   }
+
+   public double getMinimumStubLength()
+   {
+      return controlPanel.getMinimumStubLength();
    }
 
    public double getLineDetectTinyStepThreshold()
@@ -3117,6 +3127,22 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
+      minStubLengthSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 20.0, 0.5);
+
+      minStubLengthLabel = resources.createAppLabel(
+         "vectorize.min_stub_length");
+      subPanel.add(minStubLengthLabel);
+
+      minStubLengthSpinner = controlPanel.createSpinner(
+         minStubLengthLabel, minStubLengthSpinnerModel);
+      minStubLengthSpinner.setMaximumSize(
+         minStubLengthSpinner.getPreferredSize());
+      subPanel.add(minStubLengthSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(subPanel);
+
       tinyStepThresholdSpinnerModel = new SpinnerNumberModel(3.5, 1.0, 20.0, 0.5);
 
       tinyStepThresholdLabel = resources.createAppLabel(
@@ -3173,6 +3199,9 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          spikeReturnDistanceSpinner.setEnabled(enable);
          spikeReturnDistanceLabel.setEnabled(enable);
 
+         minStubLengthSpinner.setEnabled(enable);
+         minStubLengthLabel.setEnabled(enable);
+
          tinyStepThresholdSpinner.setEnabled(enable);
          tinyStepThresholdLabel.setEnabled(enable);
 
@@ -3188,6 +3217,9 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
          spikeReturnDistanceSpinner.setEnabled(enable);
          spikeReturnDistanceLabel.setEnabled(enable);
+
+         minStubLengthSpinner.setEnabled(enable);
+         minStubLengthLabel.setEnabled(enable);
 
          tinyStepThresholdSpinner.setEnabled(enable);
          tinyStepThresholdLabel.setEnabled(enable);
@@ -3265,6 +3297,9 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       spikeReturnDistanceSpinner.setEnabled(enable);
       spikeReturnDistanceLabel.setEnabled(enable);
 
+      minStubLengthSpinner.setEnabled(enable);
+      minStubLengthLabel.setEnabled(enable);
+
       tinyStepThresholdSpinner.setEnabled(enable);
       tinyStepThresholdLabel.setEnabled(enable);
    }
@@ -3303,6 +3338,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
          deltaVarianceThresholdSpinnerModel.setValue(Double.valueOf(1.0));
          spikeReturnDistanceSpinnerModel.setValue(Double.valueOf(4.0));
+         minStubLengthSpinnerModel.setValue(Double.valueOf(2.0));
          tinyStepThresholdSpinnerModel.setValue(Double.valueOf(3.5));
       }
    }
@@ -3337,6 +3373,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       return spikeReturnDistanceSpinnerModel.getNumber().doubleValue();
    }
 
+   public double getMinimumStubLength()
+   {
+      return minStubLengthSpinnerModel.getNumber().doubleValue();
+   }
+
    public double getTinyStepThreshold()
    {
       return tinyStepThresholdSpinnerModel.getNumber().doubleValue();
@@ -3353,16 +3394,18 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
    }
 
    private JLabel deltaThresholdLabel, deltaVarianceThresholdLabel, 
-    tinyStepThresholdLabel, spikeReturnDistanceLabel;
+    tinyStepThresholdLabel, spikeReturnDistanceLabel,
+    minStubLengthLabel;
 
    private SpinnerNumberModel deltaThresholdSpinnerModel,
       deltaVarianceThresholdSpinnerModel, tinyStepThresholdSpinnerModel,
       spikeReturnDistanceSpinnerModel,
+      minStubLengthSpinnerModel,
       fixedLineWidthSpinnerModel;
 
    private JSpinner deltaThresholdSpinner, deltaVarianceThresholdSpinner,
     tinyStepThresholdSpinner, spikeReturnDistanceSpinner,
-    fixedLineWidthSpinner;
+    fixedLineWidthSpinner, minStubLengthSpinner;
 
    private JCheckBox doLineDetectionCheckBox, detectIntersections,
     roundRelativeLineWidthCheckBox;
@@ -4365,6 +4408,11 @@ class ControlPanel extends JPanel implements ActionListener
       return lineDetectionPanel.getSpikeReturnDistance();
    }
 
+   public double getMinimumStubLength()
+   {
+      return lineDetectionPanel.getMinimumStubLength();
+   }
+
    public double getLineDetectTinyStepThreshold()
    {
       return lineDetectionPanel.getTinyStepThreshold();
@@ -4652,7 +4700,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
 
    public void moveTo(double x, double y)
    {
-      Point2D.Double pt = (isEmpty() ? null : lastElement().getEnd());
+      Point2D pt = (isEmpty() ? null : lastElement().getEnd());
 
       add(new ShapeComponent(PathIterator.SEG_MOVETO,
         new double[]{x, y}, pt));
@@ -4678,7 +4726,8 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    {
       ShapeComponent comp = lastElement();
 
-      if (comp.getType() != PathIterator.SEG_LINETO)
+      if (comp.getType() != PathIterator.SEG_LINETO
+        && comp.getType() != PathIterator.SEG_MOVETO)
       {
          lineTo(x, y);
          return true;
@@ -4691,6 +4740,12 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       if (dx*dx + dy*dy < EPSILON)
       {
          return false;
+      }
+
+      if (comp.getType() == PathIterator.SEG_MOVETO)
+      {
+         lineTo(x, y);
+         return true;
       }
 
       Point2D dp1 = comp.getEndGradient();
@@ -4725,6 +4780,44 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       }
 
       add(comp);
+   }
+
+   public void removeComponent(int index)
+   {
+      int n = size()-1;
+
+      ShapeComponent comp = remove(index);
+
+      if (index == n)
+      {
+         return;
+      }
+
+      comp = get(index);
+
+      if (index == 0)
+      {
+         switch (comp.getType())
+         {
+            case PathIterator.SEG_LINETO:
+              comp.setType(PathIterator.SEG_MOVETO);
+            break;
+            case PathIterator.SEG_MOVETO:
+            break;
+            default:
+               Point2D p1 = comp.getEnd();
+               comp.setType(PathIterator.SEG_MOVETO);
+               comp.setEndPoint(p1);
+         }
+
+         comp.setStart(null);
+
+         return;
+      }
+
+      Point2D p0 = comp.getStart();
+
+      comp.setStart(p0);
    }
 
    public void appendPath(ShapeComponentVector path)
@@ -4780,7 +4873,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    {
       if (subPath.size() == 0) return;
 
-      Point2D.Double pt = null;
+      Point2D pt = null;
       boolean isClosed = false;
 
       if (!isEmpty())
@@ -4799,7 +4892,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
 
                if (comp.getType() == PathIterator.SEG_MOVETO)
                {
-                  Point2D.Double p1 = comp.getEnd();
+                  Point2D p1 = comp.getEnd();
 
                   double[] coords = new double[6];
                   coords[0] = p1.getX();
@@ -4845,7 +4938,83 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       }
    }
 
-   public Path2D.Double getPath()
+   public double getEstimatedLength()
+   {
+      return getEstimatedLength(0, size()-1);
+   }
+
+   public double getEstimatedLength(int startIdx, int endIdx)
+   {
+      double length = 0.0;
+      Point2D p0 = null;
+
+      int n1 = endIdx < startIdx ? size()-1 : endIdx;
+
+      for (int i = startIdx; i <= n1; i++)
+      {
+         ShapeComponent comp = get(i);
+
+         switch (comp.getType())
+         {
+            case PathIterator.SEG_CLOSE:
+               if (p0 == null)
+               {
+                  for (int j = i-1; j >= 0; j--)
+                  {
+                     ShapeComponent comp2 = get(j);
+
+                     if (comp2.getType() == PathIterator.SEG_MOVETO)
+                     {
+                        p0 = comp2.getEnd();
+                     }
+                  }
+               }
+               length += JDRLine.getLength(get(i-1).getEnd(), p0);
+               break;
+            case PathIterator.SEG_MOVETO:
+               p0 = comp.getEnd();
+               break;
+            default:
+               length += comp.getDiagonalLength();
+         }
+      }
+
+      if (endIdx < startIdx)
+      {
+         for (int i = 0; i <= endIdx; i++)
+         {
+            ShapeComponent comp = get(i);
+
+            switch (comp.getType())
+            {
+               case PathIterator.SEG_CLOSE:
+                  if (p0 == null)
+                  {
+                     for (int j = i-1; j >= 0; j--)
+                     {
+                        ShapeComponent comp2 = get(j);
+
+                        if (comp2.getType() == PathIterator.SEG_MOVETO)
+                        {
+                           p0 = comp2.getEnd();
+                        }
+                     }
+                  }
+                  length += JDRLine.getLength(get(i-1).getEnd(), p0);
+                  break;
+               case PathIterator.SEG_MOVETO:
+                  p0 = comp.getEnd();
+                  break;
+               default:
+                  length += comp.getDiagonalLength();
+            }
+         }
+      }
+
+      return length;
+   }
+
+   public Path2D getPath()
    {
       Path2D.Double path = new Path2D.Double(windingRule, size());
 
@@ -4871,7 +5040,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       return subPath;
    }
 
-   public Path2D.Double getSubPath2D(int endIdx)
+   public Path2D getSubPath2D(int endIdx)
    {
       Path2D.Double path = new Path2D.Double(windingRule, size());
 
@@ -4927,7 +5096,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       vec.setRule(pi.getWindingRule());
 
       double[] coords = new double[6];
-      Point2D.Double start = null;
+      Point2D start = null;
 
       while (!pi.isDone())
       {
@@ -5013,7 +5182,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
 
       ShapeComponent comp = firstElement();
 
-      Point2D.Double p = comp.getEnd();
+      Point2D p = comp.getEnd();
 
       // avoid zero areas for horizontal and vertical lines
       double minX = p.getX()-0.25;
@@ -5050,7 +5219,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       {
          if (comp.getType() == PathIterator.SEG_CLOSE) continue;
 
-         Point2D.Double pt = comp.getEnd();
+         Point2D pt = comp.getEnd();
 
          if (pt.getX() > maxX) maxX = pt.getX();
          if (pt.getX() < minX) minX = pt.getX();
@@ -5165,7 +5334,7 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    private boolean isFilled = true;
    private double lineWidth=1.0;
 
-   private static final double EPSILON=1e-6;
+   public static final double EPSILON=1e-6;
 }
 
 class ShapeComponent
@@ -5193,14 +5362,7 @@ class ShapeComponent
          }
       }
 
-      if (start instanceof Point2D.Double || start == null)
-      {
-         this.start = (Point2D.Double)start;
-      }
-      else
-      {
-         this.start = new Point2D.Double(start.getX(), start.getY());
-      }
+      this.start = start;
    }
 
    public ShapeComponent(ShapeComponent otherComp)
@@ -5243,7 +5405,7 @@ class ShapeComponent
    {
       double[] newCoords = (coords == null ? null : new double[coords.length]);
 
-      Point2D.Double newStart = getEnd();
+      Point2D newStart = getEnd();
       double newEndX = (start == null ? 0 : start.getX());
       double newEndY = (start == null ? 0 : start.getY());
 
@@ -5380,12 +5542,12 @@ class ShapeComponent
       return coords;
    }
 
-   public Point2D.Double getStart()
+   public Point2D getStart()
    {
       return start;
    }
 
-   public void setStart(Point2D.Double newStart)
+   public void setStart(Point2D newStart)
    {
       start = newStart;
    }
@@ -5408,7 +5570,7 @@ class ShapeComponent
       }
    }
 
-   public Point2D.Double getP(double t, Point2D startPt)
+   public Point2D getP(double t, Point2D startPt)
    {
       Point2D p = getEnd();
 
@@ -5416,15 +5578,13 @@ class ShapeComponent
                                 (1.0-t)*startPt.getY()+t*p.getY());
    }
 
-   public Point2D.Double getMid(Point2D startPt)
-   {
-      Point2D p = getEnd();
+   public Point2D getMid(Point2D startPt)
+   {// midpoint of diagonal line from start to end
 
-      return new Point2D.Double(startPt.getX()+0.5*(p.getX()-startPt.getX()),
-                                startPt.getY()+0.5*(p.getY()-startPt.getY()));
+      return JDRLine.getMidPoint(startPt, getEnd());
    }
 
-   public Point2D.Double getMid()
+   public Point2D getMid()
    {
       if (start == null)
       {
@@ -5436,7 +5596,7 @@ class ShapeComponent
       return getMid(start);
    }
 
-   public Point2D.Double getEnd()
+   public Point2D getEnd()
    {
       switch (type)
       {
@@ -5475,17 +5635,6 @@ class ShapeComponent
             coords[5] = y;
          return;
       }
-   }
-
-   public static Point2D getLineGradient(Point2D p0, Point2D p1)
-   {
-      return new Point2D.Double(p1.getX()-p0.getX(), p1.getY()-p0.getY());
-   }
-
-   public static Point2D getLineGradient(double p0x, double p0y,
-     double p1x, double p1y)
-   {
-      return new Point2D.Double(p1x-p0x, p1y-p0y);
    }
 
    public Point2D getGradientToEnd(ShapeComponent comp)
@@ -5538,10 +5687,10 @@ class ShapeComponent
          break;
       }
 
-      return getLineGradient(p0x, p0y, p1x, p1y);
+      return JDRLine.getGradient(p0x, p0y, p1x, p1y);
    }
 
-   public Point2D.Double getStartGradient()
+   public Point2D getStartGradient()
    {
       if (start == null) return null;
 
@@ -5639,7 +5788,7 @@ class ShapeComponent
       return getSquareDistance(p0.getX(), p0.getY(), p1.getX(), p1.getY());
    }
 
-   public void addToPath(Path2D.Double path)
+   public void addToPath(Path2D path)
    {
       switch (type)
       {
@@ -5730,7 +5879,7 @@ class ShapeComponent
 
    private int type;
    private double[] coords;
-   private Point2D.Double start=null;
+   private Point2D start=null;
    private double bend = Math.PI;
 }
 
@@ -6293,7 +6442,7 @@ class SubPath
    // approximate - assumes lines not curves
    public Rectangle2D getBounds2D()
    {
-      Point2D.Double p = vec.get(startIdx).getEnd();
+      Point2D p = vec.get(startIdx).getEnd();
 
       // ensure that horizontal/vertical lines don't have zero area.
       double minX = p.getX()-0.5;
@@ -6370,10 +6519,10 @@ class SubPath
 
    public Shape getShape()
    {
-      Path2D.Double shape = new Path2D.Double(vec.getRule(), endIdx-startIdx+1);
+      Path2D shape = new Path2D.Double(vec.getRule(), endIdx-startIdx+1);
 
       ShapeComponent comp = vec.get(startIdx);
-      Point2D.Double pt = comp.getEnd();
+      Point2D pt = comp.getEnd();
       shape.moveTo(pt.getX(), pt.getY());
 
       for (int i = startIdx+1; i <= endIdx; i++)
@@ -6656,7 +6805,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
          for (int i = 0; i < n; i++)
          {
             SubPath sp = subPaths.get(i);
-            Point2D.Double pt = sp.getCompleteVector().get(sp.getStartIndex()).getEnd();
+            Point2D pt = sp.getCompleteVector().get(sp.getStartIndex()).getEnd();
 
             for (int j = 0; j < n; j++)
             {
@@ -6783,7 +6932,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
 
             ShapeComponentVector newVec = new ShapeComponentVector(capacity);
             newVec.setRule(fullVec.getRule());
-            Point2D.Double prevPt = null;
+            Point2D prevPt = null;
 
             for (Integer idx : contentIndexes)
             {
@@ -6862,7 +7011,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
 
                ShapeComponentVector newVec = new ShapeComponentVector(capacity);
                newVec.setRule(fullVec.getRule());
-               Point2D.Double prevPt = null;
+               Point2D prevPt = null;
 
                for (Integer idx : contentIndexes)
                {
@@ -6905,7 +7054,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
       ShapeComponentVector vec = subPath.getCompleteVector();
 
       ShapeComponentVector newVec = new ShapeComponentVector(endIndex-startIndex+1);
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
 
       for (int i = startIndex; i <= endIndex; i++)
       {
@@ -7376,6 +7525,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       deltaThreshold = dialog.getDeltaThreshold();
       varianceThreshold = dialog.getDeltaVarianceThreshold();
       returnPtDist = dialog.getSpikeReturnDistance();
+      minStubLength = dialog.getMinimumStubLength();
       maxTinyStep = dialog.getLineDetectTinyStepThreshold();
       doLineIntersectionCheck = dialog.isIntersectionDetectionOn();
       this.continueToNextStep = continueToNextStep;
@@ -7472,6 +7622,22 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       publish(newShape);
    }
 
+   private void addShape(ShapeComponentVector newShape, String id,
+     Object... params)
+   {
+      shapeList.add(newShape);
+
+      addPathResultMessage(getNumShapes(), id, params);
+
+      publish(newShape);
+   }
+
+   private void addPathResultMessage(int n, String id, Object... params)
+   {
+      dialog.addMessageIdLn("vectorize.path_n_result",
+         n, dialog.getResources().getMessage(id, params));
+   }
+
    private int getNumShapes()
    {
       return shapeList.size();
@@ -7506,9 +7672,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (n < 4)
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.message.insufficient_to_vectorize",
-          getNumShapes(), n);
+         addShape(vec, "vectorize.message.insufficient_to_vectorize", n);
          return;
       }
 
@@ -7532,16 +7696,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (subPaths.isEmpty())
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.message.no_closed_subpaths",
-          getNumShapes());
+         addShape(vec, "vectorize.message.no_closed_subpaths");
          return;
       }
 
       if (subPaths.size() == 1)
       {
          dialog.addMessageIdLn("vectorize.message.single_closed_subpath_found");
-         tryLineifyRegion(subPaths.firstElement());
+         tryLineifyRegion(vec);
          return;
       }
 
@@ -7567,16 +7729,15 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             SubPath sp2 = subPaths.get(j);
             Shape shape2 = shapes[j];
             
-            Point2D.Double pt1 = vec.get(sp1.getStartIndex()).getEnd();
-            Point2D.Double pt2 = vec.get(sp2.getStartIndex()).getEnd();
+            Point2D pt1 = vec.get(sp1.getStartIndex()).getEnd();
+            Point2D pt2 = vec.get(sp2.getStartIndex()).getEnd();
    
             if (shape1.contains(pt2))
             {
                if (inner.contains(sp1))
                {
-                  addShape(vec);
-                  dialog.addMessageIdLn("vectorize.message.inner_contains",
-                     getNumShapes(), (i+1));
+                  addShape(vec, "vectorize.message.inner_contains",
+                     (i+1));
                   return;
                }
 
@@ -7597,9 +7758,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                if (inner.contains(sp2))
                {
-                  addShape(vec);
-                  dialog.addMessageIdLn("vectorize.message.inner_contains",
-                     getNumShapes(), (j+1));
+                  addShape(vec, "vectorize.message.inner_contains",
+                     (j+1));
                   return;
                }
 
@@ -7626,9 +7786,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (outer == null || inner.isEmpty())
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.message.no_outer_inner",
-            getNumShapes());
+         addShape(vec, "vectorize.message.no_outer_inner");
          return;
       }
 
@@ -7638,9 +7796,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (!(outer == sp || inner.contains(sp)))
          {
-            addShape(vec);
-            dialog.addMessageIdLn("vectorize.message.not_inner_outer",
-               getNumShapes(), (i+1));
+            addShape(vec, "vectorize.message.not_inner_outer", (i+1));
             return;
          }
       }
@@ -7663,7 +7819,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          SubPath sp1 = inner.get(i);
          int startIdx1 = sp1.getStartIndex();
          int endIdx1 = sp1.getEndIndex();
-         Point2D.Double startPt1 = vec.get(startIdx1).getEnd();
+         Point2D startPt1 = vec.get(startIdx1).getEnd();
          ShapeComponentVector currentVec = null;
 
          for (int j = i+1; j < inner.size(); j++)
@@ -7672,7 +7828,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             int startIdx2 = sp2.getStartIndex();
             int endIdx2 = sp2.getEndIndex();
-            Point2D.Double startPt2 = vec.get(startIdx2).getEnd();
+            Point2D startPt2 = vec.get(startIdx2).getEnd();
 
             int closestStart1=-1;
             int closestStart2=-1;
@@ -7681,14 +7837,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             for (int k1 = startIdx1; k1 < endIdx1; k1++)
             {
                ShapeComponent comp1 = vec.get(k1);
-               Point2D.Double p1 = comp1.getEnd();
+               Point2D p1 = comp1.getEnd();
 
                if (reverse)
                {
                   for (int k2 = endIdx2; k2 > startIdx2; k2--)
                   {
                      ShapeComponent comp2 = vec.get(k2);
-                     Point2D.Double p2;
+                     Point2D p2;
 
                      if (comp2.getType() == PathIterator.SEG_CLOSE)
                      {
@@ -7714,7 +7870,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                   for (int k2 = startIdx2; k2 < endIdx2; k2++)
                   {
                      ShapeComponent comp2 = vec.get(k2);
-                     Point2D.Double p2 = comp2.getEnd();
+                     Point2D p2 = comp2.getEnd();
 
                      double dist = getDistance(p1, p2);
 
@@ -7741,14 +7897,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                for (int k1 = endIdx1-1; k1 > closestStart1; k1--)
                {
                   ShapeComponent comp1 = vec.get(k1);
-                  Point2D.Double p1 = comp1.getEnd();
+                  Point2D p1 = comp1.getEnd();
 
                   if (reverse)
                   {
                      for (int k2 = startIdx2; k2 < closestStart2; k2++)
                      {
                         ShapeComponent comp2 = vec.get(k2);
-                        Point2D.Double p2 = comp2.getEnd();
+                        Point2D p2 = comp2.getEnd();
 
                         double dist = getDistance(p1, p2);
 
@@ -7765,7 +7921,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                      for (int k2 = endIdx2-1; k2 > closestStart2; k2--)
                      {
                         ShapeComponent comp2 = vec.get(k2);
-                        Point2D.Double p2 = comp2.getEnd();
+                        Point2D p2 = comp2.getEnd();
 
                         double dist = getDistance(p1, p2);
 
@@ -8221,6 +8377,24 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       return tryLineify(pts1, pts2);
    }
 
+   private String listBulgePoints(Vector<Point2D> pts1, Vector<Point2D> pts2)
+   {
+      StringBuilder builder = new StringBuilder();
+      JDRResources resources = dialog.getResources();
+
+      for (int i = 0, n = pts1.size(); i < n; i++)
+      {
+         Point2D p1 = pts1.get(i);
+         Point2D p2 = pts2.get(i);
+
+         builder.append(String.format("%n"));
+         builder.append(resources.getMessage("vectorize.lineify_border_pair",
+           i, p1.getX(), p1.getY(), p2.getX(), p2.getY()));
+      }
+
+      return builder.toString();
+   }
+
    private boolean tryLineify(Vector<Point2D> pts1, Vector<Point2D> pts2)
     throws InterruptedException
    {
@@ -8231,6 +8405,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (n1 != n2)
       {
+         dialog.addMessageIdLn("vectorize.border_unequal_points",
+           n1, n2);
          addBorderPoints(pts1, pts2);
 
          n1 = pts1.size();
@@ -8238,9 +8414,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (n1 != n2)
          {
+            addPathResultMessage(getNumShapes()+1, 
+               "vectorize.cant_balance_border_points", n1, n2);
             return false;
          }
       }
+
+      dialog.addMessageIdLn("vectorize.lineify_between_borders",
+       listBulgePoints(pts1, pts2));
 
       double gradientEpsilon = dialog.getGradientEpsilon();
 
@@ -8249,25 +8430,26 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       Point2D p1 = pts1.get(0);
       Point2D p2 = pts2.get(0);
 
-      double x = p1.getX() + 0.5*(p2.getX() - p1.getX());
-      double y = p1.getY() + 0.5*(p2.getY() - p1.getY());
+      double prevX=-1;
+      double prevY=-1;
 
-      double prevX=x;
-      double prevY=y;
-
-      newPath1.moveTo(x, y);
       double averageDelta1 = 0.0;
       int numPts1 = 0;
 
-      int idx = 0;
+      double newPath1LastX = -1;
+      double newPath1LastY = -1;
 
-      double newPath1LastX = x;
-      double newPath1LastY = y;
+      boolean inc = false;
+      boolean dec = false;
+      double prevDelta = 0.0;
+      double firstDelta = 0.0;
 
-      for (idx = 1; idx < n1; idx++)
+      int startBulge = 0;
+
+      for (int i = 0; i < n1; i++)
       {
-         p1 = pts1.get(idx);
-         p2 = pts2.get(idx);
+         p1 = pts1.get(i);
+         p2 = pts2.get(i);
 
          double dx = 0.5*(p2.getX() - p1.getX());
          double dy = 0.5*(p2.getY() - p1.getY());
@@ -8276,10 +8458,35 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (delta <= deltaThreshold)
          {
-            x = p1.getX() + dx;
-            y = p1.getY() + dy;
+            if (!(i == 0 || (i == 1 && prevDelta < ShapeComponentVector.EPSILON)))
+            {
+               if (firstDelta == 0.0)
+               {
+                  firstDelta = delta;
+               }
 
-            newPath1.lineTo(x, y, gradientEpsilon);
+               if (delta < prevDelta - ShapeComponentVector.EPSILON)
+               {
+                  dec = true;
+               }
+               else if (delta > prevDelta + ShapeComponentVector.EPSILON)
+               {
+                  inc = true;
+               }
+            }
+
+            double x = p1.getX() + dx;
+            double y = p1.getY() + dy;
+
+            if (newPath1.isEmpty())
+            {
+               newPath1.moveTo(x, y);
+            }
+            else
+            {
+               newPath1.lineTo(x, y, gradientEpsilon);
+            }
+
             numPts1++;
             averageDelta1 += delta;
 
@@ -8291,36 +8498,65 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          }
          else
          {
+            startBulge = i;
             break;
          }
+
+         prevDelta = delta;
       }
 
-      if (newPath1.size() == n1 && numPts1 > 0)
+      // No wedge detection if path fits entire region.
+
+      if (startBulge == 0 && numPts1 > 1)
       {
+         // numPts1 may not be the same as newPath1.size() as
+         // lineTo(double,double,double) was used.
+
          averageDelta1 /= numPts1;
 
          newPath1.setFilled(false);
          setLineWidth(newPath1, averageDelta1);
-         addShape(newPath1);
-         dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          getNumShapes(), averageDelta1);
+         addShape(newPath1, "vectorize.success_no_variance",
+          averageDelta1);
          return true;
+      }
+
+      if (!doLineIntersectionCheck)
+      {
+         addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+         return false;
       }
 
       ShapeComponentVector newPath2 = null;
 
-      if (newPath1.size() <= 1)
+      double path1Length = newPath1 == null ? 0.0 : newPath1.getEstimatedLength();
+
+      if (newPath1.size() <= 1 || (inc && !dec))
       {
+         if (inc)
+         {
+            // if the distance kept increasing then may be the start of a wedge
+            dialog.addMessageIdLn("vectorize.increasing_start",
+             firstDelta, prevDelta, newPath1.size(), path1Length,
+               newPath1.svg());
+         }
+
          newPath1 = null;
+         startBulge = 0;
+         path1Length = 0.0;
       }
 
-      int startBulge = idx;
       int endBulge = n1-1;
 
       double averageDelta2 = 0.0;
       int numPts2 = 0;
 
-      for (int i = 1, m = n1-idx; i <= m; i++)
+      inc = false;
+      dec = false;
+      prevDelta = 0;
+      firstDelta = 0.0;
+
+      for (int i = 1, m = n1-startBulge; i <= m; i++)
       {
          p1 = pts1.get(n1-i);
          p2 = pts2.get(n2-i);
@@ -8337,13 +8573,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             prevX = -1;
             prevY = -1;
 
-            for (int j = i+1; j < n1; j++)
+            for (int j = endBulge+1; j < n1; j++)
             {
                p1 = pts1.get(j);
                p2 = pts2.get(j);
 
-               x = p1.getX() + 0.5*(p2.getX() - p1.getX());
-               y = p1.getY() + 0.5*(p2.getY() - p1.getY());
+               double x = p1.getX() + 0.5*(p2.getX() - p1.getX());
+               double y = p1.getY() + 0.5*(p2.getY() - p1.getY());
 
                if (newPath2 == null)
                {
@@ -8351,6 +8587,18 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                       || getDistance(newPath1LastX, newPath1LastY, x, y)
                             > deltaThreshold)
                   {
+                     if (newPath1 != null)
+                     {
+                        if (path1Length < minStubLength)
+                        {
+                           dialog.addMessageIdLn("vectorize.discarding_small_stub",
+                            path1Length, newPath1.svg());
+
+                           newPath1 = null;
+                           startBulge = 0;
+                        }
+                     }
+
                      newPath2 = new ShapeComponentVector();
                      newPath2.moveTo(x, y);
                   }
@@ -8371,11 +8619,28 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             break;
          }
-         else
+
+         if (!(i == 1 || (i == 2 && prevDelta < ShapeComponentVector.EPSILON)))
          {
-            numPts2++;
-            averageDelta2 += delta;
+            if (firstDelta == 0.0)
+            {
+               firstDelta = delta;
+            }
+
+            if (delta < prevDelta - ShapeComponentVector.EPSILON)
+            {
+               dec = true;
+            }
+            else if (delta > prevDelta + ShapeComponentVector.EPSILON)
+            {
+               inc = true;
+            }
          }
+
+         numPts2++;
+         averageDelta2 += delta;
+
+         prevDelta = delta;
       }
 
       if (newPath2 == newPath1)
@@ -8383,6 +8648,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          numPts1 += numPts2;
          averageDelta1 += averageDelta2;
          newPath2 = null;
+         path1Length = newPath1.getEstimatedLength();
       }
 
       if (newPath1 != null && newPath1.size() > 1)
@@ -8394,37 +8660,75 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          newPath1.setFilled(false);
          setLineWidth(newPath1, averageDelta1);
-         addShape(newPath1);
-         dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          getNumShapes(), averageDelta1);
+         addShape(newPath1, "vectorize.success_with_line_length",
+          averageDelta1, path1Length);
          success = true;
       }
 
-      if (newPath2 != null && newPath2.size() > 1)
-      {
-         if (numPts2 > 0)
-         {
-            averageDelta2 /= numPts2;
-         }
+      double path2Length = 0.0;
 
-         newPath2.setFilled(false);
-         setLineWidth(newPath2, averageDelta2);
-         addShape(newPath2);
-         dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-          getNumShapes(), averageDelta2);
-         success = true;
+      if (newPath2 != null)
+      {
+         path2Length = newPath2.getEstimatedLength();
+
+         if (path2Length < minStubLength)
+         {
+            dialog.addMessageIdLn("vectorize.discarding_small_stub",
+             path2Length, newPath2.svg());
+            newPath2 = null;
+            endBulge = n1-1;
+         }
+         else if (inc && !dec)
+         {
+            dialog.addMessageIdLn("vectorize.decreasing_end",
+               prevDelta, firstDelta, newPath2.size(), path2Length,
+               newPath2.svg());
+            newPath2 = null;
+            endBulge = n1-1;
+         }
+         else if (newPath2.size() > 1)
+         {
+            if (numPts2 > 0)
+            {
+               averageDelta2 /= numPts2;
+            }
+
+            newPath2.setFilled(false);
+            setLineWidth(newPath2, averageDelta2);
+            addShape(newPath2, "vectorize.success_with_line_length",
+             averageDelta2, path2Length);
+            success = true;
+         }
+         else
+         {
+            newPath2 = null;
+            endBulge = n1-1;
+         }
       }
 
       if (!success)
       {
-         dialog.addMessageIdLn("vectorize.too_wide");
+         addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
          return false;
       }
 
       ShapeComponentVector newPath = new ShapeComponentVector();
 
-      Point2D p0 = pts1.get(startBulge);
+      Point2D startBulgePt1 = pts1.get(startBulge);
+      Point2D startBulgePt2 = pts2.get(startBulge);
+      Point2D endBulgePt1 = pts1.get(endBulge);
+      Point2D endBulgePt2 = pts2.get(endBulge);
+
+      Point2D p0 = startBulgePt1;
       newPath.moveTo(p0);
+
+      dialog.addMessageIdLn("vectorize.bulge_detected", 
+        startBulge, 
+        startBulgePt1.getX(), startBulgePt1.getY(),
+        startBulgePt2.getX(), startBulgePt2.getY(),
+        endBulge,
+        endBulgePt1.getX(), endBulgePt1.getY(),
+        endBulgePt2.getX(), endBulgePt2.getY());
 
       for (int i = startBulge+1; i <= endBulge; i++)
       {
@@ -8446,7 +8750,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (newPath.size() <= 2)
       {
-         dialog.addMessageIdLn("vectorize.mid_region_collapsed");
+         addPathResultMessage(getNumShapes()+1, "vectorize.mid_region_collapsed");
          return false;
       }
 
@@ -8475,56 +8779,16 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
-      for (int i = 1; i < pts2.size() && i < n1 && pts2.size() < n1; i++)
+      for (int i = 1; i < pts2.size() && i < n1-1 && pts2.size() < n1; i++)
       {
          Point2D p1 = pts1.get(i);
          Point2D p2 = pts2.get(i);
 
-         double dist = getDistance(p1, p2);
-
-         if (dist > deltaThreshold)
-         {
-            Point2D p0 = pts2.get(i-1);
-
-            // get closest point on p0-p2 to p1
-
-            pts2.add(i, getClosestPointAlongLine(p0, p2, p1));
-         }
-
-         if (pts2.size() == n1)
-         {
-            return;
-         }
-
-         int j = pts2.size()-1-i;
-
-         p1 = pts1.get(n1-1-i);
-         p2 = pts2.get(j);
-
-         dist = getDistance(p1, p2);
-
-         if (dist > deltaThreshold)
-         {
-            Point2D p0 = pts2.get(j+1);
-
-            // get closest point on p0-p2 to p1
-
-            pts2.add(j+1, getClosestPointAlongLine(p0, p2, p1));
-         }
-
-         if (pts2.size() == n1)
-         {
-            return;
-         }
-      }
-
-      for (int i = 1; i < pts2.size() && i < n1 && pts2.size() < n1; i++)
-      {
-         Point2D p1 = pts1.get(i);
-         Point2D p2 = pts2.get(i);
          Point2D p0 = pts2.get(i-1);
 
-         pts2.add(i, getClosestPointAlongLine(p0, p2, p1));
+         // get closest point on p0-p2 to p1
+
+         pts2.add(i, JDRLine.getClosestPointAlongLine(p0, p2, p1));
 
          if (pts2.size() == n1)
          {
@@ -8535,9 +8799,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          p1 = pts1.get(n1-1-i);
          p2 = pts2.get(j);
+
          p0 = pts2.get(j+1);
 
-         pts2.add(j+1, getClosestPointAlongLine(p0, p2, p1));
+         // get closest point on p0-p2 to p1
+
+         pts2.add(j+1, JDRLine.getClosestPointAlongLine(p0, p2, p1));
 
          if (pts2.size() == n1)
          {
@@ -8635,28 +8902,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       return tryLineifyBulge(vec, idx1, idx2);
    }
 
-   private void tryLineifyRegion(SubPath subPath)
-    throws InterruptedException
-   {
-      int startIdx = subPath.getStartIndex();
-      int endIdx = subPath.getEndIndex();
-
-      ShapeComponentVector fullVec = subPath.getCompleteVector();
-      ShapeComponentVector vec = new ShapeComponentVector(endIdx-startIdx+1);
-
-      Point2D.Double prevPt = null;
-
-      for (int i = startIdx; i <= endIdx; i++)
-      {
-         ShapeComponent comp = fullVec.get(i);
-         comp.setStart(prevPt);
-         vec.add(comp);
-         prevPt = comp.getEnd();
-      }
-
-      tryLineifyRegion(vec);
-   }
-
    private void tryLineifyRegion(ShapeComponentVector vec)
     throws InterruptedException
    {
@@ -8664,16 +8909,787 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (n < 3)
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.message.insufficient_to_vectorize",
-          getNumShapes(), n);
+         addShape(vec, "vectorize.message.insufficient_to_vectorize", n);
          return;
       }
       else if (vec.lastElement().getType() != PathIterator.SEG_CLOSE)
       {
+         addShape(vec, "vectorize.message.not_closed");
+         return;
+      }
+
+      ShapeComponent comp0 = vec.firstElement();
+      ShapeComponent comp2 = vec.get(n-2);
+
+      Point2D p0 = comp0.getEnd();
+      Point2D p1 = comp2.getEnd();
+
+      if (n == 5)
+      {// quadrilateral
+
+         ShapeComponent c1 = vec.get(1);
+         ShapeComponent c2 = vec.get(2);
+         ShapeComponent c3 = comp2;
+
+         double averageDist1 = 0.25*(c1.getDiagonalLength()
+                           + c3.getDiagonalLength());
+
+         double averageDist2 = 0.25*(c2.getDiagonalLength()
+                           + JDRLine.getLength(p0, p1));
+
+         if ((averageDist1 > deltaThreshold && averageDist2 > deltaThreshold)
+          || averageDist1 == averageDist2)
+         {
+            addShape(vec, "vectorize.failed_no_intersect_check",
+              Math.min(averageDist1, averageDist2));
+            return;
+         }
+
+         ShapeComponentVector newPath = new ShapeComponentVector(2);
+         double delta;
+
+         if (averageDist1 < averageDist2)
+         {
+            newPath.moveTo(c1.getMid());
+            newPath.lineTo(c3.getMid());
+            delta = averageDist1;
+         }
+         else
+         {
+            newPath.moveTo(c2.getMid());
+            newPath.lineTo(JDRLine.getMidPoint(p1, p0));
+            delta = averageDist2;
+         }
+
+         addShape(newPath, "vectorize.success_no_variance", delta);
+         return;
+      }
+
+      double twiceDelta = 2.0*deltaThreshold;
+
+      Path2D path = vec.getPath();
+
+      Vector<Number> indexes = null;
+
+      for (int i = 1; i < n; i++)
+      {
+         ShapeComponent comp = vec.get(i);
+
+         Point2D currentEndPt, currentStartPt, currentMidPt;
+
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            if (JDRLine.getLength(p1, p0) > twiceDelta)
+            {
+               continue;
+            }
+
+            currentStartPt = p1;
+            currentEndPt = p0;
+            currentMidPt = JDRLine.getMidPoint(p0, p1);
+         }
+         else
+         {
+            if (comp.getDiagonalLength() > twiceDelta)
+            {
+               continue;
+            }
+
+            currentStartPt = comp.getStart();
+            currentEndPt = comp.getEnd();
+            currentMidPt = comp.getMid();
+         }
+
+         ShapeComponent prevComp;
+
+         if (i == 1)
+         {
+            prevComp = vec.lastElement();
+         }
+         else
+         {
+            prevComp = vec.get(i-1);
+         }
+
+         Point2D prevDp;
+
+         if (prevComp.getType() == PathIterator.SEG_CLOSE
+             || prevComp.getStart() == null)
+         {
+            prevDp = JDRLine.getGradient(p1, p0);
+         }
+         else
+         {
+            prevDp = prevComp.getEndGradient();
+         }
+
+         ShapeComponent nextComp;
+
+         if (i == n-1)
+         {
+            nextComp = vec.get(1);
+         }
+         else if (i == n-2)
+         {
+            nextComp = vec.lastElement();
+         }
+         else
+         {
+            nextComp = vec.get(i+1);
+         }
+
+         Point2D nextDp;
+
+         if (nextComp.getType() == PathIterator.SEG_CLOSE
+             || nextComp.getStart() == null)
+         {
+            nextDp = JDRLine.getGradient(p1, p0);
+         }
+         else
+         {
+            nextDp = nextComp.getStartGradient();
+         }
+
+         if (Math.abs(JDRLine.getVectorAngle(prevDp, nextDp)-Math.PI)
+             > ShapeComponentVector.EPSILON)
+         {
+            continue;
+         }
+
+         double gradLength = Math.sqrt(nextDp.getX()*nextDp.getX()
+                                 + nextDp.getY()*nextDp.getY());
+
+         double dx = nextDp.getX()/gradLength;
+         double dy = nextDp.getY()/gradLength;
+
+         if (Double.isNaN(dx) || Double.isNaN(dy))
+         {
+            continue;
+         }
+
+         double px = currentMidPt.getX()+dx;
+         double py = currentMidPt.getY()+dy;
+
+         if (!path.contains(px, py))
+         {
+            continue;
+         }
+
+         if (indexes == null)
+         {
+            indexes = new Vector<Number>();
+         }
+
+         indexes.add(Integer.valueOf(i));
+      }
+
+      if (indexes == null)
+      {
+         addShape(vec, "vectorize.no_spikes");
+         return;
+      }
+
+      int numIndexes = indexes.size();
+      Number idxVal1, idxVal2;
+
+      if (numIndexes > 1)
+      {
+         trimSpikeIndexes(vec, indexes, p0, p1);
+      }
+
+      numIndexes = indexes.size();
+
+      dialog.addMessageIdLn("vectorize.spikes_found",
+       dialog.getResources().formatMessageChoice(numIndexes, 
+       "vectorize.n_spikes"));
+
+      for (int i = 0; i < numIndexes; i++)
+      {
+         Number val = indexes.get(i);
+
+         int j = val.intValue();
+
+         dialog.addMessageIdLn("vectorize.spike_details", 
+           val, vec.get(j).info(dialog.getResources()));
+      }
+
+      if (numIndexes == 1)
+      {
+         stickBulge(vec, indexes.get(0), p0, p1, twiceDelta);
+
+         return;
+      }
+      else if (numIndexes == 2)
+      {
+         idxVal1 = indexes.get(0);
+         idxVal2 = indexes.get(1);
+      }
+      else if (numIndexes == 3)
+      {
+         Number[] result = selectTwoOfThreeSpikes(vec, p0, p1,
+          indexes.get(0), indexes.get(1), indexes.get(2));
+
+         if (result == null)
+         {
+            addShape(vec, "vectorize.spikes_too_close");
+            return;
+         }
+
+         idxVal1 = result[0]; 
+         idxVal2 = result[1]; 
+      }
+      else
+      {
+         idxVal1 = indexes.get(0);
+         idxVal2 = indexes.get(numIndexes/2);
+      }
+
+      Vector<Point2D> pts1 = new Vector<Point2D>();
+      Vector<Point2D> pts2 = new Vector<Point2D>();
+
+      int idx1 = idxVal1.intValue();
+      int idx2 = idxVal2.intValue();
+
+      dialog.addMessageIdLn("vectorize.try_between_spikes",
+         idxVal1, vec.get(idx1).info(dialog.getResources()),
+         idxVal2, vec.get(idx2).info(dialog.getResources()));
+
+      for (int i = idx1; i < idx2; i++)
+      {
+         ShapeComponent comp = vec.get(i);
+
+         if (comp.getType() == PathIterator.SEG_CLOSE
+           || comp.getStart() == null)
+         {
+            pts1.add(p0);
+         }
+         else
+         {
+            pts1.add(comp.getEnd());
+         }
+      }
+
+      if (idxVal2 instanceof Double)
+      {
+         ShapeComponent comp = vec.get(idx2);
+
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            pts1.add(p0);
+         }
+         else
+         {
+            pts1.add(comp.getEnd());
+         }
+      }
+
+      if (idxVal1 instanceof Double)
+      {
+         ShapeComponent comp = vec.get(idx1);
+
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            pts2.add(p0);
+         }
+         else
+         {
+            pts2.add(comp.getEnd());
+         }
+      }
+
+      for (int i = idx1; i > 0; i--)
+      {
+         ShapeComponent comp = vec.get(i);
+
+         if (comp.getType() == PathIterator.SEG_CLOSE
+           || comp.getStart() == null)
+         {
+            pts2.add(p1);
+         }
+         else
+         {
+            pts2.add(comp.getStart());
+         }
+      }
+
+      for (int i = n-1; i > idx2; i--)
+      {
+         ShapeComponent comp = vec.get(i);
+
+         if (comp.getType() == PathIterator.SEG_CLOSE
+           || comp.getStart() == null)
+         {
+            pts2.add(p1);
+         }
+         else
+         {
+            pts2.add(comp.getStart());
+         }
+      }
+
+      if (!tryLineify(pts1, pts2))
+      {
          addShape(vec);
-         dialog.addMessageIdLn("vectorize.message.not_closed",
-          getNumShapes());
+      }
+   }
+
+   private void trimSpikeIndexes(ShapeComponentVector vec, 
+     Vector<Number> indexes, Point2D p0, Point2D p1)
+   {
+      int n = vec.size();
+      int numIndexes = indexes.size();
+
+      int i1 = indexes.firstElement().intValue();
+      int i2 = indexes.lastElement().intValue();
+
+      if (i1 == 1 && i2 == n-1)
+      {
+         double l1 = vec.getEstimatedLength(1, 2);
+         double l2 = vec.get(n-2).getDiagonalLength()
+                   + JDRLine.getLength(p1, p0);
+
+         if (l1 < l2)
+         {
+            indexes.remove(0);
+         }
+         else
+         {
+            indexes.remove(numIndexes-1);
+         }
+
+         numIndexes--;
+      }
+
+      for (int i = numIndexes-1; i > 1; i--)
+      {
+         i1 = indexes.get(i-1).intValue();
+         i2 = indexes.get(i).intValue();
+
+         boolean tooclose = false;
+
+         if (i2-i1 < 2)
+         {
+            tooclose = true;
+         }
+         else
+         {
+            int j1 = i1+1;
+            int j2 = i1-1;
+
+            if (j1 == n)
+            {
+               j1 = 1;
+            }
+
+            if (j2 == 0)
+            {
+               j2 = n-1;
+            }
+
+            double l = vec.getEstimatedLength(j1, j2);
+
+            if (l < returnPtDist)
+            {
+               tooclose = true;
+            }
+         }
+
+         if (tooclose)
+         {
+            int j1 = i1-1;
+            int j2 = i2+1;
+
+            if (j1 == 0)
+            {
+               j1 = n-1;
+            }
+
+            if (j2 == n)
+            {
+               j2 = 1;
+            }
+
+            double l1 = vec.getEstimatedLength(j1, i1);
+            double l2 = vec.getEstimatedLength(i2, j2);
+
+            if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON
+                && i2 == i1+1)
+            {
+               indexes.remove(i);
+               indexes.set(i-1, Double.valueOf(i1+0.5));
+            }
+            else if (l2 > l1)
+            {
+               indexes.remove(i-1);
+            }
+            else
+            {
+               indexes.remove(i);
+            }
+         }
+      }
+
+   }
+
+   private Number[] selectTwoOfThreeSpikes(ShapeComponentVector vec,
+    Point2D p0, Point2D p1,
+    Number idxVal1, Number idxVal2, Number idxVal3)
+   {
+      Point2D m1, m2, m3;
+
+      ShapeComponent c1 = vec.get(idxVal1.intValue());
+
+      if (idxVal1 instanceof Integer)
+      {
+         if (c1.getType() == PathIterator.SEG_CLOSE)
+         {
+            m1 = JDRLine.getMidPoint(p1, p0);
+         }
+         else
+         {
+            m1 = c1.getMid();
+         }
+      }
+      else
+      {
+         if (c1.getType() == PathIterator.SEG_CLOSE)
+         {
+            m1 = p0;
+         }
+         else
+         {
+            m1 = c1.getEnd();
+         }
+      }
+
+      ShapeComponent c2 = vec.get(idxVal2.intValue());
+
+      if (idxVal2 instanceof Integer)
+      {
+         if (c2.getType() == PathIterator.SEG_CLOSE)
+         {
+            m2 = JDRLine.getMidPoint(p1, p0);
+         }
+         else
+         {
+            m2 = c2.getMid();
+         }
+      }
+      else
+      {
+         if (c2.getType() == PathIterator.SEG_CLOSE)
+         {
+            m2 = p0;
+         }
+         else
+         {
+            m2 = c2.getEnd();
+         }
+      }
+
+      ShapeComponent c3 = vec.get(idxVal3.intValue());
+
+      if (idxVal3 instanceof Integer)
+      {
+         if (c3.getType() == PathIterator.SEG_CLOSE)
+         {
+            m3 = JDRLine.getMidPoint(p1, p0);
+         }
+         else
+         {
+            m3 = c3.getMid();
+         }
+      }
+      else
+      {
+         if (c3.getType() == PathIterator.SEG_CLOSE)
+         {
+            m3 = p0;
+         }
+         else
+         {
+            m3 = c3.getEnd();
+         }
+      }
+
+      double d12 = Math.min(Math.abs(m2.getX() - m1.getX()), 
+                            Math.abs(m2.getY() - m1.getY()));
+      double d13 = Math.min(Math.abs(m3.getX() - m1.getX()), 
+                            Math.abs(m3.getY() - m1.getY()));
+      double d23 = Math.min(Math.abs(m3.getX() - m2.getX()), 
+                            Math.abs(m3.getY() - m2.getY()));
+
+      double l12 = JDRLine.getLength(m1, m2);
+      double l13 = JDRLine.getLength(m1, m3);
+      double l23 = JDRLine.getLength(m2, m3);
+
+      if (d12 <= d13 && d12 <= d23 && l12 > returnPtDist)
+      {
+         return new Number[] {idxVal1, idxVal2};
+      }
+
+      if (d13 <= d12 && d13 <= d23 && l13 > returnPtDist)
+      {
+         return new Number[] {idxVal1, idxVal3};
+      }
+
+      if (d23 <= d12 && d23 <= d13 && l23 > returnPtDist)
+      {
+         return new Number[] {idxVal2, idxVal3};
+      }
+
+      if (l12 > returnPtDist && l12 >= l13 && l12 >= l23)
+      {
+         return new Number[] {idxVal1, idxVal2};
+      }
+
+      if (l13 > returnPtDist && l13 >= l12 && l13 >= l23)
+      {
+         return new Number[] {idxVal1, idxVal3};
+      }
+
+      if (l23 > returnPtDist)
+      {
+         return new Number[] {idxVal2, idxVal3};
+      }
+
+      return null;
+   }
+
+   private void stickBulge(ShapeComponentVector vec, Number idxNum, 
+     Point2D p0, Point2D p1, double twiceDelta)
+   {
+      int n = vec.size();
+
+      // try to find where path starts to bulge
+
+      ShapeComponentVector newPath = new ShapeComponentVector();
+      newPath.setFilled(false);
+
+      double averageDist = 0.0;
+      int idx1 = idxNum.intValue();
+      int idx2 = idx1;
+
+      ShapeComponent comp = vec.get(idx1);
+
+      if (idxNum instanceof Integer)
+      {
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            newPath.moveTo(JDRLine.getMidPoint(p1, p0));
+         }
+         else
+         {
+            newPath.moveTo(comp.getMid());
+         }
+
+         averageDist = 0.5*comp.getDiagonalLength();
+      }
+      else
+      {
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            newPath.moveTo(p0);
+         }
+         else
+         {
+            newPath.moveTo(comp.getEnd());
+         }
+
+         idx2++;
+      }
+
+      int i1 = idx1+1;
+      int i2 = idx2-1;
+
+      boolean bulgeFound = false;
+
+      for (int i = 1; i < n; i++)
+      {
+         i1 = idx1+i;
+         i2 = idx2-i;
+
+         if (i1 >= n)
+         {
+            i1 = (i1%n)+1;
+         }
+
+         if (i2 <= 0)
+         {
+            i2 = i2 + n - 1;
+         }
+
+         ShapeComponent c1 = vec.get(i1);
+         ShapeComponent c2 = vec.get(i2);
+
+         Point2D r1, r2;
+
+         if (c1.getType() == PathIterator.SEG_CLOSE)
+         {
+            r1 = p0;
+         }
+         else
+         {
+            r1 = c1.getEnd();
+         }
+
+         if (c2.getType() == PathIterator.SEG_CLOSE)
+         {
+            r2 = p1;
+         }
+         else
+         {
+            r2 = c2.getStart();
+         }
+
+         double l = JDRLine.getLength(r1, r2);
+
+         if (l <= twiceDelta)
+         {
+            averageDist += 0.5*l;
+
+            newPath.lineTo(JDRLine.getMidPoint(r1, r2));
+         }
+         else
+         {
+            bulgeFound = true;
+
+            if (doLineIntersectionCheck)
+            {
+               break;
+            }
+         }
+      }
+
+      double length = newPath.getEstimatedLength();
+
+      if (length < minStubLength)
+      {
+         dialog.addMessageIdLn("vectorize.discarding_small_stub",
+          length, newPath.svg());
+         addShape(vec, "vectorize.too_wide");
+         return;
+      }
+
+      if (newPath.size() > 1)
+      {
+         averageDist /= newPath.size();
+
+         setLineWidth(newPath, averageDist);
+
+         if (!doLineIntersectionCheck || !bulgeFound)
+         {
+            if (averageDist < deltaThreshold)
+            {
+               addShape(newPath, "vectorize.success_with_line_length",
+                averageDist, length);
+            }
+            else
+            {
+               addShape(vec, "vectorize.failed_no_intersect_check",
+                 averageDist);
+            }
+
+            return;
+         }
+
+         addShape(newPath, "vectorize.success_with_line_length",
+             averageDist, length);
+
+         Point2D r0;
+
+         newPath = new ShapeComponentVector();
+
+         comp = vec.get(i1);
+
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            r0 = p1;
+         }
+         else
+         {
+            r0 = comp.getStart();
+         }
+
+         newPath.moveTo(r0);
+
+         int m = (i2 < i1 ? n-1 : i2);
+
+         Point2D r1 = r0;
+
+         for (int i = i1; i <= m; i++)
+         {
+            comp = vec.get(i);
+
+            if (comp.getType() == PathIterator.SEG_CLOSE)
+            {
+               r1 = p0;
+            }
+            else
+            {
+               r1 = comp.getEnd();
+            }
+
+            newPath.lineTo(r1);
+         }
+
+         if (i2 < i1)
+         {
+            for (int i = 1; i <= i2; i++)
+            {
+               comp = vec.get(i);
+
+               if (comp.getType() == PathIterator.SEG_CLOSE)
+               {
+                  r1 = p0;
+               }
+               else
+               {
+                  r1 = comp.getEnd();
+               }
+
+               newPath.lineTo(r1);
+            }
+         }
+
+         newPath.closePath();
+
+         m = newPath.size()-2;
+         Point2D dp1 = newPath.firstElement().getStartGradient();
+         Point2D dp2 = newPath.get(m).getStartGradient();
+         Point2D dp3 = JDRLine.getGradient(r1, r0);
+
+         if (JDRLine.getVectorAngle(dp2, dp3) < ShapeComponentVector.EPSILON)
+         {
+            newPath.removeComponent(m);
+         }
+
+         if (JDRLine.getVectorAngle(dp3, dp2) < ShapeComponentVector.EPSILON)
+         {
+            newPath.removeComponent(0);
+         }
+
+         addShape(newPath, "vectorize.too_wide");
+      }
+      else
+      {
+         addShape(vec, "vectorize.too_wide");
+      }
+   }
+
+   private void tryLineifyRegion2(ShapeComponentVector vec)
+    throws InterruptedException
+   {
+      int n = vec.size();
+
+      if (n < 3)
+      {
+         addShape(vec, "vectorize.message.insufficient_to_vectorize", n);
+         return;
+      }
+      else if (vec.lastElement().getType() != PathIterator.SEG_CLOSE)
+      {
+         addShape(vec, "vectorize.message.not_closed");
          return;
       }
 
@@ -8685,8 +9701,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          ShapeComponent comp = vec.get(i);
 
-         Point2D.Double grad1 = new Point2D.Double();
-         Point2D.Double grad2 = new Point2D.Double();
+         Point2D grad1 = new Point2D.Double();
+         Point2D grad2 = new Point2D.Double();
          double bend = getBendAngle(vec, i, grad1, grad2);
          pts[i] = new PathCoord(comp.getType(), comp.getEnd(), bend, grad1, grad2);
       }
@@ -8700,18 +9716,16 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          if (!doLineIntersectionCheck)
          {
-            addShape(results.bestPath);
-            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             getNumShapes(), results.minAverageDelta);
+            addShape(results.bestPath, "vectorize.success_no_variance",
+             results.minAverageDelta);
             return;
          }
          else
          {
             if (results.variance <= varianceThreshold)
             {
-               addShape(results.bestPath);
-               dialog.addMessageIdLn("vectorize.success_intersect_check",
-                 getNumShapes(), results.minAverageDelta, results.variance);
+               addShape(results.bestPath, "vectorize.success_intersect_check",
+                 results.minAverageDelta, results.variance);
                return;
             }
          }
@@ -8726,8 +9740,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          if (!findBulge(vec))
          {
-            addShape(vec);
-            dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
+            addShape(vec, "vectorize.no_spikes");
          }
 
          return;
@@ -8745,20 +9758,19 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (remainingN < 4)
       {
-         addShape(vec);
-         dialog.addMessageIdLn("vectorize.too_many_spikes", getNumShapes());
+         addShape(vec, "vectorize.too_many_spikes");
          return;
       }
 
       ShapeComponentVector reducedShape = new ShapeComponentVector(remainingN);
 
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
 
       for (int i = 0; i < pts.length; i++)
       {
          if (indexes[i] != null)
          {
-            Point2D.Double p = pts[i].getPoint();
+            Point2D p = pts[i].getPoint();
             double[] coords = new double[6];
             coords[0] = p.getX();
             coords[1] = p.getY();
@@ -8784,8 +9796,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          ShapeComponent comp = reducedShape.get(i);
 
-         Point2D.Double grad1 = new Point2D.Double();
-         Point2D.Double grad2 = new Point2D.Double();
+         Point2D grad1 = new Point2D.Double();
+         Point2D grad2 = new Point2D.Double();
          double bend = getBendAngle(vec, i, grad1, grad2);
          q[i] = new PathCoord(comp.getType(), comp.getEnd(), bend, grad1, grad2);
       }
@@ -8797,17 +9809,15 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       if (reducedPathResults.minAverageDelta <= deltaThreshold)
       {
-         addShape(reducedPathResults.bestPath);
-         dialog.addMessageIdLn("vectorize.reduced_path_success", 
-            getNumShapes(), reducedPathResults.minAverageDelta);
+         addShape(reducedPathResults.bestPath, "vectorize.reduced_path_success",
+           reducedPathResults.minAverageDelta);
       }
       else
       {
          if (!findBulge(vec))
          {
-            addShape(vec);
-            dialog.addMessageIdLn("vectorize.reduced_path_failed", 
-               getNumShapes(), reducedPathResults.minAverageDelta);
+            addShape(vec, "vectorize.reduced_path_failed", 
+               reducedPathResults.minAverageDelta);
          }
 
          return;
@@ -8821,7 +9831,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          for (Integer num : spike)
          {
-            Point2D.Double p = pts[num].getPoint();
+            Point2D p = pts[num].getPoint();
             coords = new double[6];
             coords[0] = p.getX();
             coords[1] = p.getY();
@@ -8855,8 +9865,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       int n1 = sp1.size()-1;
       int n2 = sp2.size()-1;
 
-      Point2D.Double[] pts1 = new Point2D.Double[n1];
-      Point2D.Double[] pts2 = new Point2D.Double[n2];
+      Point2D[] pts1 = new Point2D.Double[n1];
+      Point2D[] pts2 = new Point2D.Double[n2];
 
       for (int i = 0; i < n1; i++)
       {
@@ -8883,9 +9893,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          if (!doLineIntersectionCheck)
          {
             setLineWidth(path, averageDelta);
-            addShape(path);
-            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             getNumShapes(), averageDelta);
+            addShape(path, "vectorize.success_no_variance",
+             averageDelta);
             return;
          }
          else
@@ -8895,9 +9904,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             if (variance <= varianceThreshold)
             {
                setLineWidth(path, averageDelta);
-               addShape(path);
-               dialog.addMessageIdLn("vectorize.success_intersect_check",
-                 getNumShapes(), averageDelta, variance);
+               addShape(path, "vectorize.success_intersect_check",
+                 averageDelta, variance);
                return;
             }
          }
@@ -8956,15 +9964,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          if (bestAverageDelta <= deltaThreshold)
          {
             setLineWidth(path, bestAverageDelta);
-            addShape(path);
-            dialog.addMessageIdLn("vectorize.success_no_intersect_check",
-             getNumShapes(), bestAverageDelta);
+            addShape(path, "vectorize.success_no_variance",
+             bestAverageDelta);
          }
          else
          {
-            addShape(sp1.getCompleteVector());
-            dialog.addMessageIdLn("vectorize.failed_no_intersect_check",
-             getNumShapes(), bestAverageDelta);
+            addShape(sp1.getCompleteVector(),
+             "vectorize.failed_no_intersect_check",
+             bestAverageDelta);
          }
 
          return;
@@ -8975,9 +9982,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       if (bestAverageDelta <= deltaThreshold && variance <= varianceThreshold)
       {
          setLineWidth(path, bestAverageDelta);
-         addShape(path);
-         dialog.addMessageIdLn("vectorize.success_intersect_check",
-            getNumShapes(), bestAverageDelta, variance);
+         addShape(path, "vectorize.success_intersect_check",
+            bestAverageDelta, variance);
          return;
       }
 
@@ -8993,8 +9999,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (spikes.isEmpty())
             {
-               addShape(sp1.getCompleteVector());
-               dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
+               addShape(sp1.getCompleteVector(),
+                 "vectorize.no_spikes", getNumShapes());
                return;
             }
 
@@ -9005,8 +10011,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          }
          else
          {
-            addShape(sp1.getCompleteVector());
-            dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
+            addShape(sp1.getCompleteVector(), "vectorize.no_spikes");
             return;
          }
       }
@@ -9063,8 +10068,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (spikes.isEmpty())
             {
-               addShape(sp1.getCompleteVector());
-               dialog.addMessageIdLn("vectorize.no_spikes", getNumShapes());
+               addShape(sp1.getCompleteVector(), "vectorize.no_spikes");
                return;
             }
 
@@ -9114,21 +10118,21 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (remainingN1 < 2 || remainingN2 < 2)
             {
-               addShape(sp1.getCompleteVector());
-               dialog.addMessageIdLn("vectorize.too_many_spikes", getNumShapes());
+               addShape(sp1.getCompleteVector(),
+                 "vectorize.too_many_spikes");
                return;
             }
          }
          else
          {
-            addShape(sp1.getCompleteVector());
-            dialog.addMessageIdLn("vectorize.too_many_spikes", getNumShapes());
+            addShape(sp1.getCompleteVector(),
+               "vectorize.too_many_spikes");
             return;
          }
       }
 
-      Point2D.Double[] q1 = new Point2D.Double[remainingN1];
-      Point2D.Double[] q2 = new Point2D.Double[remainingN2];
+      Point2D[] q1 = new Point2D.Double[remainingN1];
+      Point2D[] q2 = new Point2D.Double[remainingN2];
 
       for (int i = 0, j = 0; i < pts1.length; i++)
       {
@@ -9166,15 +10170,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       if (bestAverageDelta <= deltaThreshold)
       {
          setLineWidth(bestPath, bestAverageDelta);
-         addShape(bestPath);
-         dialog.addMessageIdLn("vectorize.reduced_path_success", 
-            getNumShapes(), bestAverageDelta);
+         addShape(bestPath, "vectorize.reduced_path_success", 
+            bestAverageDelta);
       }
       else
       {
-         addShape(sp1.getCompleteVector());
-         dialog.addMessageIdLn("vectorize.reduced_path_failed", 
-            getNumShapes(), bestAverageDelta);
+         addShape(sp1.getCompleteVector(),
+            "vectorize.reduced_path_failed", 
+            bestAverageDelta);
          return;
       }
 
@@ -9210,13 +10213,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          path = new ShapeComponentVector(m1+m2);
 
-         Point2D.Double prevPt = null;
+         Point2D prevPt = null;
          double[] coords = null;
 
          for (int i = 0; i < m1; i++)
          {
             int j = (sIdx1+i)%pts1.length;
-            Point2D.Double p = pts1[j];
+            Point2D p = pts1[j];
             coords = new double[6];
             coords[0] = p.getX();
             coords[1] = p.getY();
@@ -9233,8 +10236,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             prevPt = p;
          }
 
-         Point2D.Double p1 = pts2[sIdx2];
-         Point2D.Double p2 = pts2[(sIdx2+m2-1)%pts2.length];
+         Point2D p1 = pts2[sIdx2];
+         Point2D p2 = pts2[(sIdx2+m2-1)%pts2.length];
 
          double dx = prevPt.getX()-p1.getX();
          double dy = prevPt.getY()-p1.getY();
@@ -9249,7 +10252,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             for (int i = 0; i < m2; i++)
             {
                int j = (sIdx2+i)%pts2.length;
-               Point2D.Double p = pts2[j];
+               Point2D p = pts2[j];
 
                coords = new double[6];
                coords[0] = p.getX();
@@ -9264,7 +10267,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             for (int i = m2-1; i >= 0; i--)
             {
                int j = (sIdx2+i)%pts2.length;
-               Point2D.Double p = pts2[j];
+               Point2D p = pts2[j];
 
                coords = new double[6];
                coords[0] = p.getX();
@@ -9353,8 +10356,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             continue;
          }
 
-         Point2D.Double grad1 = pts[i].getGradient1();
-         Point2D.Double grad2 = pts[i].getGradient2();
+         Point2D grad1 = pts[i].getGradient1();
+         Point2D grad2 = pts[i].getGradient2();
          double angle = Math.PI-getAngle(grad2, grad1);
 
          if ((angle >= SPIKE_ANGLE_LOWER1 && angle <= SPIKE_ANGLE_UPPER1)
@@ -9364,8 +10367,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (nextDist < maxTinyStep)
             {
-               Point2D.Double nextGrad1 = pts[i+1].getGradient1();
-               Point2D.Double nextGrad2 = pts[i+1].getGradient2();
+               Point2D nextGrad1 = pts[i+1].getGradient1();
+               Point2D nextGrad2 = pts[i+1].getGradient2();
                double nextAngle = Math.PI-getAngle(nextGrad2, nextGrad1);
 
                if ((nextAngle < SPIKE_ANGLE_UPPER1 && nextAngle < angle)
@@ -9376,12 +10379,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                }
             }
 
-            Point2D.Double q1 = new Point2D.Double(
+            Point2D q1 = new Point2D.Double(
               pts[i].getX() + extensionDist * grad2.getX(),
               pts[i].getY() + extensionDist * grad2.getY()
               );
 
-            Point2D.Double q2 = new Point2D.Double(
+            Point2D q2 = new Point2D.Double(
               pts[i].getX() - extensionDist * grad1.getX(),
               pts[i].getY() - extensionDist * grad1.getY()
               );
@@ -9392,20 +10395,20 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             double qAngle = q2Angle-q1Angle;
 
             double theta = q1Angle + 0.1*qAngle;
-            Point2D.Double q3 = new Point2D.Double(
+            Point2D q3 = new Point2D.Double(
                pts[i].getX() + extensionDist*Math.cos(theta),
                pts[i].getY() - extensionDist*Math.sin(theta)
             );
 
             theta = q1Angle + 0.9*qAngle;
-            Point2D.Double q4 = new Point2D.Double(
+            Point2D q4 = new Point2D.Double(
                pts[i].getX() + extensionDist*Math.cos(theta),
                pts[i].getY() - extensionDist*Math.sin(theta)
             );
 
             theta = q1Angle + 0.5*qAngle;
 
-            Point2D.Double q5 = new Point2D.Double(
+            Point2D q5 = new Point2D.Double(
                pts[i].getX() + extensionDist*Math.cos(theta),
                pts[i].getY() - extensionDist*Math.sin(theta)
             );
@@ -9636,7 +10639,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       return sum / n;
    }
 
-   private LineFit[] fitLoop(Point2D.Double[] pts1, Point2D.Double[] pts2,
+   private LineFit[] fitLoop(Point2D[] pts1, Point2D[] pts2,
       int offset, ShapeComponentVector path)
    {
       int n1 = pts1.length;
@@ -9646,7 +10649,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       int maxN = (int)Math.max(n1, n2);
       int minN = (int)Math.min(n1, n2);
 
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
       LineFit[] linefit = new LineFit[maxN];
 
       int div = maxN/minN;
@@ -9675,13 +10678,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                idx2 = (i+offset)%n2;
             }
 
-            Point2D.Double p1 = pts1[idx1];
-            Point2D.Double p2 = pts2[idx2];
+            Point2D p1 = pts1[idx1];
+            Point2D p2 = pts2[idx2];
 
             double dx = 0.5*(p2.getX()-p1.getX());
             double dy = 0.5*(p2.getY()-p1.getY());
 
-            Point2D.Double p = new Point2D.Double(p1.getX()+dx, p1.getY()+dy);
+            Point2D p = new Point2D.Double(p1.getX()+dx, p1.getY()+dy);
 
             coords = new double[6];
             coords[0] = p.getX();
@@ -9717,7 +10720,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       ShapeComponentVector fullVec = subPath.getCompleteVector();
       ShapeComponentVector vec = new ShapeComponentVector(endIdx-startIdx+1);
 
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
 
       for (int i = startIdx; i <= endIdx; i++)
       {
@@ -9755,8 +10758,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          ShapeComponent comp = vec.get(i);
 
-         Point2D.Double grad1 = new Point2D.Double();
-         Point2D.Double grad2 = new Point2D.Double();
+         Point2D grad1 = new Point2D.Double();
+         Point2D grad2 = new Point2D.Double();
          double bend = getBendAngle(vec, i, grad1, grad2);
          pts[i] = new PathCoord(comp.getType(), comp.getEnd(), bend, grad1, grad2);
       }
@@ -9764,55 +10767,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       ShapeComponentVector newVec = getBestPath(pts, indexes);
 
       return newVec == null ? vec : newVec;
-   }
-
-   // Returns r1 if can't compute (most likely because r1 and r2
-   // coincide)
-   public static Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
-   {
-      // get closest point on r1-r2 to p
-
-      double diff_y = r1.getY() - r2.getY();
-      double diff_x = r1.getX() - r2.getX();
-      double m = diff_y/diff_x;
-
-      double m_sq = 0.0;
-      double orthog_m=0.0;
-      double orthog_m_sq = 0.0;
-      boolean use_orthog = false;
-      double factor, x, y;
-
-      if (Double.isNaN(m))
-      {
-         use_orthog = true;
-         orthog_m = -diff_x/diff_y;
-         orthog_m_sq = orthog_m*orthog_m;
-         factor = 1.0/(1.0 + orthog_m_sq);
-      }
-      else
-      {
-         m_sq = m*m;
-         factor = 1.0/(1.0 + m_sq);
-      }
-
-      if (use_orthog)
-      {
-         x = (r1.getX()+orthog_m*(r1.getY()-p.getY())
-                +orthog_m_sq*p.getX())*factor;
-         y = orthog_m * (x - p.getX()) + p.getY();
-      }
-      else
-      {
-         x = (m_sq*r1.getX()+m*(p.getY()-r1.getY())+p.getX())*factor;
-         y = m * (x - r1.getX()) + r1.getY();
-      }
-
-      if (Double.isNaN(x) || Double.isNaN(y))
-      {// most likely caused by r1 = r2
-         return r1;
-      }
-
-      return new Point2D.Double(x, y);
    }
 
    private ShapeComponentVector getBestPath(PathCoord[] pts)
@@ -9922,16 +10876,16 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          int m2 = m1;
          Vector<Integer> indexes2 = null;
 
-         Point2D.Double p1=null, p2=null;
+         Point2D p1=null, p2=null;
 
          if ((pts.length+bestLineFit[startIdx].idx2
                  - bestLineFit[endIdx].idx2)%pts.length
              == 1 && spike.size() > 2)
          {
-            Point2D.Double r1 = pts[bestLineFit[startIdx].idx2].getPoint();
-            Point2D.Double r2 = pts[bestLineFit[endIdx].idx2].getPoint();
+            Point2D r1 = pts[bestLineFit[startIdx].idx2].getPoint();
+            Point2D r2 = pts[bestLineFit[endIdx].idx2].getPoint();
 
-            Point2D.Double p = pts[bestLineFit[startIdx].idx1].getPoint();
+            Point2D p = pts[bestLineFit[startIdx].idx1].getPoint();
 
             // get closest point on r1-r2 to p
 
@@ -10018,7 +10972,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          Integer[] subIndexes = new Integer[m1+m2];
          ShapeComponentVector newShape = new ShapeComponentVector(m1+m2+2);
 
-         Point2D.Double prevPt = null;
+         Point2D prevPt = null;
          double[] coords = null;
          int subIdx = 0;
 
@@ -10027,7 +10981,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             int k = bestLineFit[j].idx1;
 
             subIndexes[subIdx++] = Integer.valueOf(k);
-            Point2D.Double p = pts[k].getPoint();
+            Point2D p = pts[k].getPoint();
             coords = new double[6];
             coords[0] = p.getX();
             coords[1] = p.getY();
@@ -10070,7 +11024,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                Integer num = indexes2.get(i);
                subIndexes[subIdx++] = num;
-               Point2D.Double p = pts[num.intValue()].getPoint();
+               Point2D p = pts[num.intValue()].getPoint();
                coords = new double[6];
                coords[0] = p.getX();
                coords[1] = p.getY();
@@ -10177,12 +11131,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       }
 
       ShapeComponentVector newShape = new ShapeComponentVector(remaining+1);
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
       double[] coords = null;
 
       for (int i = 0; i < remaining; i++)
       {
-         Point2D.Double p = remainingPts[i].getPoint();
+         Point2D p = remainingPts[i].getPoint();
          coords = new double[6];
          coords[0] = p.getX();
          coords[1] = p.getY();
@@ -10433,7 +11387,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    private LineFit[] tryLineify(int maxN, int minN, int div, int r, 
      PathCoord[] pts, int offset, int n1, int n2, ShapeComponentVector path)
    {
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
       LineFit[] linefit = new LineFit[maxN];
 
       int k = 0;
@@ -10465,13 +11419,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             idx1 = (offset+idx1)%pts.length;
             idx2 = (offset+pts.length-idx2-1)%pts.length;
 
-            Point2D.Double p1 = pts[idx1].getPoint();
-            Point2D.Double p2 = pts[idx2].getPoint();
+            Point2D p1 = pts[idx1].getPoint();
+            Point2D p2 = pts[idx2].getPoint();
 
             double dx = 0.5*(p2.getX()-p1.getX());
             double dy = 0.5*(p2.getY()-p1.getY());
 
-            Point2D.Double p = new Point2D.Double(p1.getX()+dx, p1.getY()+dy);
+            Point2D p = new Point2D.Double(p1.getX()+dx, p1.getY()+dy);
 
             double[] coords = new double[6];
             coords[0] = p.getX();
@@ -10513,13 +11467,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          idx1 = (offset+idx1)%pts.length;
          idx2 = (offset+pts.length-idx2-1)%pts.length;
 
-         Point2D.Double p1 = pts[idx1].getPoint();
-         Point2D.Double p2 = pts[idx2].getPoint();
+         Point2D p1 = pts[idx1].getPoint();
+         Point2D p2 = pts[idx2].getPoint();
 
          double dx = 0.5*(p2.getX()-p1.getX());
          double dy = 0.5*(p2.getY()-p1.getY());
 
-         Point2D.Double p = new Point2D.Double(p1.getX()+dx, p1.getY()+dy);
+         Point2D p = new Point2D.Double(p1.getX()+dx, p1.getY()+dy);
 
          double[] coords = new double[6];
          coords[0] = p.getX();
@@ -10573,8 +11527,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (i != n-1)
          {
-            Point2D.Double grad1 = new Point2D.Double();
-            Point2D.Double grad2 = new Point2D.Double();
+            Point2D grad1 = new Point2D.Double();
+            Point2D grad2 = new Point2D.Double();
             double bend = getBendAngle(vec, i, grad1, grad2);
             comp.setBend(bend);
          }
@@ -10599,7 +11553,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          double delta=0.0;
 
          ShapeComponentVector path = new ShapeComponentVector(halfWay);
-         Point2D.Double startPt = null;
+         Point2D startPt = null;
 
          for (int i = 0; i < halfWay; i++)
          {
@@ -10617,7 +11571,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             int type2 = (idx2 == 0 ? PathIterator.SEG_LINETO : comp.getType());
 
-            Point2D.Double p = new Point2D.Double(
+            Point2D p = new Point2D.Double(
               p1.getX()+0.5*(p2.getX()-p1.getX()),
               p1.getY()+0.5*(p2.getY()-p1.getY()));
 
@@ -10739,7 +11693,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       int n2 = n - 1 - n1;
 
       ShapeComponent lastComp = vec.get(n-2); 
-      Point2D.Double lastPoint = lastComp.getEnd();
+      Point2D lastPoint = lastComp.getEnd();
 
       PathCoord[] pts1 = new PathCoord[Math.max(n1, n2)];
       PathCoord[] pts2 = new PathCoord[pts1.length];
@@ -10781,14 +11735,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             if (k >= n-1) k = (k+1)%n;
 
             ShapeComponent comp = vec.get(k);
-            Point2D.Double p0 = comp.getStart();
+            Point2D p0 = comp.getStart();
 
             if (k == 0)
             {
                p0 = lastPoint;
             }
 
-            Point2D.Double p1 = comp.getEnd();
+            Point2D p1 = comp.getEnd();
 
             int type = (k == n-2 ? PathIterator.SEG_LINETO : vec.get(k+1).getType());
 
@@ -10796,7 +11750,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                for (int l = 1; l < d && j < pts1.length-1; l++)
                {
-                  Point2D.Double pt = comp.getP(((double)l)/d, p0);
+                  Point2D pt = comp.getP(((double)l)/d, p0);
                   pts1[j++] = new PathCoord(type, pt);
                   p0 = pt;
                }
@@ -10808,7 +11762,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                for (int l = 1; l <= extra && j < pts1.length-1; l++)
                {
-                  Point2D.Double pt = comp.getP(((double)l)/(extra+1), p0);
+                  Point2D pt = comp.getP(((double)l)/(extra+1), p0);
                   pts1[j++] = new PathCoord(type, pt);
                   p0 = pt;
                }
@@ -10848,14 +11802,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             if (k < 0) k = k + n - 1;
 
             ShapeComponent comp = vec.get(k);
-            Point2D.Double p0 = comp.getStart();
+            Point2D p0 = comp.getStart();
 
             if (k == 0)
             {
                p0 = lastPoint;
             }
 
-            Point2D.Double p1 = comp.getEnd();
+            Point2D p1 = comp.getEnd();
 
             int type = (k == 0 ? PathIterator.SEG_LINETO : comp.getType());
 
@@ -10863,7 +11817,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                for (int l = d-1; l >= 1 && j < pts2.length-1; l--)
                {
-                  Point2D.Double pt = comp.getP(((double)l)/d, p0);
+                  Point2D pt = comp.getP(((double)l)/d, p0);
                   pts2[j++] = new PathCoord(type, pt);
                   p0 = pt;
                }
@@ -10875,7 +11829,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             {
                for (int l = extra; l >= 1 && j < pts2.length-1; l--)
                {
-                  Point2D.Double pt = comp.getP(((double)l)/(extra+1), p0);
+                  Point2D pt = comp.getP(((double)l)/(extra+1), p0);
                   pts2[j++] = new PathCoord(type, pt);
                   p0 = pt;
                }
@@ -10904,7 +11858,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       ShapeComponentVector newPath = new ShapeComponentVector(pts1.length);
       double delta = 0.0;
-      Point2D.Double prevPt = null;
+      Point2D prevPt = null;
 
       for (int i = 0; i < pts1.length; i++)
       {
@@ -11103,7 +12057,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             }
 
             comp = vec.get(j2);
-            Point2D.Double r = comp.getEnd();
+            Point2D r = comp.getEnd();
 
             double x = r.getX() - q0.getX();
             double y = r.getY() - q0.getY();
@@ -11143,7 +12097,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             }
 
             comp = vec.get(k2);
-            Point2D.Double r = comp.getEnd();
+            Point2D r = comp.getEnd();
 
             double x = q0.getX() - r.getX();
             double y = q0.getY() - r.getY();
@@ -11341,6 +12295,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    private double varianceThreshold; // max variance
    private double maxTinyStep; // to assist gradient approximation across small steps
    private double returnPtDist; // spike detection
+   private double minStubLength;
    private VectorizeBitmapDialog dialog;
    private boolean continueToNextStep, doLineIntersectionCheck;
    private Vector<ShapeComponentVector> shapeList;
@@ -11351,8 +12306,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
 class PathCoord
 {
-   public PathCoord(int type, Point2D.Double p, double bend, Point2D.Double grad1,
-     Point2D.Double grad2)
+   public PathCoord(int type, Point2D p, double bend, Point2D grad1,
+     Point2D grad2)
    {
       this.bend = bend;
       this.type = type;
@@ -11361,7 +12316,7 @@ class PathCoord
       this.grad2 = grad2;
    }
 
-   public PathCoord(int type, Point2D.Double p)
+   public PathCoord(int type, Point2D p)
    {
       this.type = type;
       this.p = p;
@@ -11382,7 +12337,7 @@ class PathCoord
       return p.getY();
    }
 
-   public Point2D.Double getPoint()
+   public Point2D getPoint()
    {
       return p;
    }
@@ -11393,12 +12348,12 @@ class PathCoord
       return bend;
    }
 
-   public Point2D.Double getGradient1()
+   public Point2D getGradient1()
    {
       return grad1;
    }
 
-   public Point2D.Double getGradient2()
+   public Point2D getGradient2()
    {
       return grad2;
    }
@@ -11412,12 +12367,12 @@ class PathCoord
 
    private double bend;
    private int type;
-   private Point2D.Double p, grad1, grad2;
+   private Point2D p, grad1, grad2;
 }
 
 class LineFit
 {
-   public LineFit(double delta, int idx1, int idx2, Point2D.Double p1, Point2D.Double p2)
+   public LineFit(double delta, int idx1, int idx2, Point2D p1, Point2D p2)
    {
       this.delta = delta;
       this.idx1 = idx1;
@@ -11434,7 +12389,7 @@ class LineFit
 
    protected int idx1, idx2;
    protected double delta;
-   protected Point2D.Double p1, p2;
+   protected Point2D p1, p2;
 }
 
 class LineifyResults
@@ -11812,7 +12767,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
             if (bestResult != null
              && (line1Result != null && line1Result.compareTo(bestResult) < 0)
-             && (line1Result != null && line2Result.compareTo(bestResult) < 0)
+             && (line2Result != null && line2Result.compareTo(bestResult) < 0)
                )
             {
                bestResult = null;
@@ -11905,7 +12860,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
    throws InterruptedException
    {
       ShapeComponent startComp = vec.get(startIdx);
-      Point2D.Double p0 = startComp.getStart();
+      Point2D p0 = startComp.getStart();
       DeviationResult bestResult = null, bestSubThresholdResult = null;
       double minDelta = Double.MAX_VALUE;
       double minSubThresholdDelta = Double.MAX_VALUE;
@@ -11918,7 +12873,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
          updateAndSleep();
          ShapeComponent endComp = vec.get(j);
 
-         Point2D.Double p1 = endComp.getEnd();
+         Point2D p1 = endComp.getEnd();
 
          DeviationResult result = DeviationResult.createLine(vec, startIdx, j, p0, p1);
 
@@ -11977,7 +12932,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
       if (bestCurveResult != null)
       {
          double[] t = new double[2];
-         Point2D[] Pt = new Point2D.Double[2];
+         Point2D[] Pt = new Point2D[2];
          double[] d1 = null;
          double[] d2 = null;
 
@@ -11996,7 +12951,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                     t[0], Pt[0].getX(), Pt[0].getY(), 
                     statPt1.getX(), statPt1.getY(), d1[0]);
 
-                  if (statPt2 != null && d1.length > 0)
+                  if (statPt2 != null && Pt[1] != null && d1.length > 0)
                   {
                      dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
                        t[1], Pt[1].getX(), Pt[1].getY(), 
@@ -12026,7 +12981,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                  t[0], Pt[0].getX(), Pt[0].getY(), 
                  statPt1.getX(), statPt1.getY(), d2[0]);
 
-               if (statPt2 != null && d2.length > 0)
+               if (statPt2 != null && Pt[1] != null && d2.length > 0)
                {
                   dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
                     t[1], Pt[1].getX(), Pt[1].getY(), 
@@ -12099,7 +13054,7 @@ class DeviationResult implements Comparable<DeviationResult>
 
    public static DeviationResult createLine(ShapeComponentVector vec,
       int startIdx, int endIdx,
-      Point2D.Double p1, Point2D.Double p2)
+      Point2D p1, Point2D p2)
    {
       DeviationResult result = new DeviationResult();
       result.computeLine(vec, startIdx, endIdx, p1, p2);
@@ -12107,7 +13062,7 @@ class DeviationResult implements Comparable<DeviationResult>
    }
 
    private void computeLine(ShapeComponentVector vec, int startIdx, int endIdx,
-      Point2D.Double p1, Point2D.Double p2)
+      Point2D p1, Point2D p2)
    {
       this.startIdx = startIdx;
       this.endIdx = endIdx;
@@ -12201,7 +13156,7 @@ class DeviationResult implements Comparable<DeviationResult>
 
    public static DeviationResult createCurve(ShapeComponentVector vec,
       int startIdx, int endIdx,
-      Point2D.Double p1, Point2D.Double p2, double maxDeviation)
+      Point2D p1, Point2D p2, double maxDeviation)
    {
       DeviationResult result = new DeviationResult();
       result.computeCurve(vec, startIdx, endIdx, p1, p2, maxDeviation);
@@ -12209,7 +13164,7 @@ class DeviationResult implements Comparable<DeviationResult>
    }
 
    private void computeCurve(ShapeComponentVector vec, int startIdx, int endIdx,
-      Point2D.Double p1, Point2D.Double p2, double maxDeviation)
+      Point2D p1, Point2D p2, double maxDeviation)
    {
       this.startIdx = startIdx;
       this.endIdx = endIdx;
@@ -12488,7 +13443,7 @@ class DeviationResult implements Comparable<DeviationResult>
       double prevY = p1.getY();
 
       double[] result = new double[2];
-      Point2D.Double resultP = new Point2D.Double();
+      Point2D resultP = new Point2D.Double();
 
       int n = endIdx-startIdx;
 
@@ -12584,7 +13539,7 @@ class DeviationResult implements Comparable<DeviationResult>
       {
          ShapeComponent comp = vec.get(i);
          Point2D p = comp.getEnd();
-         Point2D q = LineDetection.getClosestPointAlongLine(startPt, endPt, p);
+         Point2D q = JDRLine.getClosestPointAlongLine(startPt, endPt, p);
 
          if (p != q)
          {
@@ -12618,23 +13573,8 @@ class DeviationResult implements Comparable<DeviationResult>
       result.startIdx = startIdx;
       result.endIdx = endIdx;
 
-      if (startPt instanceof Point2D.Double)
-      {
-         result.p1 = (Point2D.Double)startPt;
-      }
-      else
-      {
-         result.p1 = new Point2D.Double(startPt.getX(), startPt.getY());
-      }
-
-      if (endPt instanceof Point2D.Double)
-      {
-         result.p2 = (Point2D.Double)endPt;
-      }
-      else
-      {
-         result.p2 = new Point2D.Double(endPt.getX(), endPt.getY());
-      }
+      result.p1 = startPt;
+      result.p2 = endPt;
 
       return result;
    }
@@ -12678,7 +13618,7 @@ class DeviationResult implements Comparable<DeviationResult>
    }
 
    private double averageDeviation=Double.MAX_VALUE;
-   private Point2D.Double p1, p2;
+   private Point2D p1, p2;
    private double maxDist = 0.0, minDist = Double.MAX_VALUE;
    private ShapeComponent component;
    private double length=0.0, angle=0.0;
@@ -13423,10 +14363,10 @@ class Result
       {
          path.setLinePaint(new JDRColor(cg, foreground));
          path.setFillPaint(null);
-      }
 
-      path.setStroke(new JDRBasicStroke(cg, stroke.getLineWidth(),
-        stroke.getEndCap(), stroke.getLineJoin()));
+         path.setStroke(new JDRBasicStroke(cg, stroke.getLineWidth(),
+           stroke.getEndCap(), stroke.getLineJoin()));
+      }
 
       return path;
    }
@@ -13553,6 +14493,7 @@ class ResultPanel extends JPanel
 
       RenderingHints oldHints = g2.getRenderingHints();
       AffineTransform oldAf = g2.getTransform();
+      Stroke oldStroke = g2.getStroke();
 
       g2.setRenderingHints(RENDER_HINTS);
 
@@ -13590,6 +14531,7 @@ class ResultPanel extends JPanel
 
       g2.setTransform(oldAf);
       g2.setRenderingHints(oldHints);
+      g2.setStroke(oldStroke);
    }
 
    private ImagePanel imagePanel;
