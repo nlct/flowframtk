@@ -2897,10 +2897,12 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.splitting_border">Splitting off shared border region.</entry>
 <entry key="vectorize.too_wide">Region too wide.</entry>
 <entry key="vectorize.spikes_too_close">spikes too close.</entry>
-<entry key="vectorize.spikes_found">{0} found:</entry>
+<entry key="vectorize.selected_n_spikes">Selected {0}:</entry>
+<entry key="vectorize.n_spikes_found">{0} found:</entry>
 <entry key="vectorize.n_spikes">0#0 spikes|1#1 spike|1&lt;{0} spikes</entry>
-<entry key="vectorize.spike_details"> {0} [{1}]</entry>
-<entry key="vectorize.try_between_spikes">Trying from spike {0} [{1}] to spike {2} [{3}]</entry>
+<entry key="vectorize.spike_details">[{0}] ({1},{2}) -- ({3},{4}) -- ({5},{6}). Angle 1: {7} rad ({8} deg). Angle 2: {9} rad ({10} deg). Diagonal length: {11}.</entry>
+<entry key="vectorize.spike_details_no_mid">[{0}] ({1},{2}) -- ({3},{4}). Angle 1: {5} rad ({6} deg). Angle 2: {7} rad ({8} deg). Length: {9}.</entry>
+<entry key="vectorize.best_spike_pair">Best spike pair: [{0}] ({1},{2}) -- [{3}] ({4},{5}); deviation from midway: {6}; inclination deviation: {7}; average length: {8}; average angle deviation: {9}.</entry>
 <entry key="vectorize.mid_region">Investigating mid region: {0}</entry>
 <entry key="vectorize.mid_region_collapsed">Mid region collapsed.</entry>
 <entry key="vectorize.merging_paths">Merging paths (distance: {0}): 

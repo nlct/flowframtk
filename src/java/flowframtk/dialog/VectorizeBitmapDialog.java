@@ -5736,6 +5736,11 @@ class ShapeComponent
 
    public double getDiagonalLength()
    {
+      return Math.sqrt(getSquareDiagonalLength());
+   }
+
+   public double getSquareDiagonalLength()
+   {
       double x0 = 0.0;
       double y0 = 0.0;
 
@@ -5755,21 +5760,21 @@ class ShapeComponent
             dx = coords[0]-x0;
             dy = coords[1]-y0;
 
-            return Math.sqrt(dx*dx + dy*dy);
+            return dx*dx + dy*dy;
 
          case PathIterator.SEG_QUADTO:
 
             dx = coords[2]-x0;
             dy = coords[3]-y0;
 
-            return Math.sqrt(dx*dx + dy*dy);
+            return dx*dx + dy*dy;
 
          case PathIterator.SEG_CUBICTO:
 
             dx = coords[4]-x0;
             dy = coords[5]-y0;
 
-            return Math.sqrt(dx*dx + dy*dy);
+            return dx*dx + dy*dy;
       }
 
       return 0.0;
@@ -8907,8 +8912,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    {
       int n = vec.size();
 
-      if (n < 3)
-      {
+      if (n <= 4)
+      {// triangle (4), line (3 or 2), single point (1) or empty
          addShape(vec, "vectorize.message.insufficient_to_vectorize", n);
          return;
       }
@@ -8969,7 +8974,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       Path2D path = vec.getPath();
 
-      Vector<Number> indexes = null;
+      Vector<Spike> indexes = null;
 
       for (int i = 1; i < n; i++)
       {
@@ -9077,10 +9082,10 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (indexes == null)
          {
-            indexes = new Vector<Number>();
+            indexes = new Vector<Spike>();
          }
 
-         indexes.add(Integer.valueOf(i));
+         indexes.add(new Spike(i, vec, p0, p1, dialog));
       }
 
       if (indexes == null)
@@ -9092,67 +9097,34 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       int numIndexes = indexes.size();
       Number idxVal1, idxVal2;
 
-      if (numIndexes > 1)
-      {
-         trimSpikeIndexes(vec, indexes, p0, p1);
-      }
+      trimSpikeIndexes(vec, indexes, p0, p1);
 
       numIndexes = indexes.size();
 
-      dialog.addMessageIdLn("vectorize.spikes_found",
+      dialog.addMessageIdLn("vectorize.selected_n_spikes",
        dialog.getResources().formatMessageChoice(numIndexes, 
        "vectorize.n_spikes"));
 
-      for (int i = 0; i < numIndexes; i++)
+      for (Spike spike : indexes)
       {
-         Number val = indexes.get(i);
-
-         int j = val.intValue();
-
-         dialog.addMessageIdLn("vectorize.spike_details", 
-           val, vec.get(j).info(dialog.getResources()));
+         dialog.addMessageLn(spike.info(dialog.getResources()));
       }
 
       if (numIndexes == 1)
       {
-         stickBulge(vec, indexes.get(0), p0, p1, twiceDelta);
+         stickBulge(vec, indexes.get(0).getIndex(), p0, p1, twiceDelta);
 
          return;
       }
-      else if (numIndexes == 2)
-      {
-         idxVal1 = indexes.get(0);
-         idxVal2 = indexes.get(1);
-      }
-      else if (numIndexes == 3)
-      {
-         Number[] result = selectTwoOfThreeSpikes(vec, p0, p1,
-          indexes.get(0), indexes.get(1), indexes.get(2));
 
-         if (result == null)
-         {
-            addShape(vec, "vectorize.spikes_too_close");
-            return;
-         }
-
-         idxVal1 = result[0]; 
-         idxVal2 = result[1]; 
-      }
-      else
-      {
-         idxVal1 = indexes.get(0);
-         idxVal2 = indexes.get(numIndexes/2);
-      }
+      idxVal1 = indexes.get(0).getIndex();
+      idxVal2 = indexes.get(1).getIndex();
 
       Vector<Point2D> pts1 = new Vector<Point2D>();
       Vector<Point2D> pts2 = new Vector<Point2D>();
 
       int idx1 = idxVal1.intValue();
       int idx2 = idxVal2.intValue();
-
-      dialog.addMessageIdLn("vectorize.try_between_spikes",
-         idxVal1, vec.get(idx1).info(dialog.getResources()),
-         idxVal2, vec.get(idx2).info(dialog.getResources()));
 
       for (int i = idx1; i < idx2; i++)
       {
@@ -9233,48 +9205,306 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       }
    }
 
-   private void trimSpikeIndexes(ShapeComponentVector vec, 
-     Vector<Number> indexes, Point2D p0, Point2D p1)
+   public Spike chooseNearSpike(Spike spike1, Spike spike2, 
+     ShapeComponentVector vec, Point2D p0, Point2D p1)
    {
       int n = vec.size();
-      int numIndexes = indexes.size();
 
-      int i1 = indexes.firstElement().intValue();
-      int i2 = indexes.lastElement().intValue();
+      int i1 = spike1.intValue();
+      int i2 = spike2.intValue();
 
-      if (i1 == 1 && i2 == n-1)
+      double l1, l2;
+
+      if (Math.abs(i1-i2) == 1 || (i1 == n-1 && i2 == 1))
       {
-         double l1 = vec.getEstimatedLength(1, 2);
-         double l2 = vec.get(n-2).getDiagonalLength()
-                   + JDRLine.getLength(p1, p0);
+         // choose shortest segment
 
-         if (l1 < l2)
+         l1 = spike1.getLength();
+         l2 = spike2.getLength();
+
+         if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
          {
-            indexes.remove(0);
+            // find lengths of neighbouring components
+
+            int before = (i1 < i2 ? i1 : i2) - 1;
+
+            if (before < 1)
+            {
+               before = n - 1 + before;
+            }
+
+            int after = (i1 < i2 ? i2 : i1) + 1;
+
+            if (after >= n)
+            {
+               after = after - n + 1;
+            }
+
+            if (before == n-1)
+            {
+               l1 = JDRLine.getSquareLength(p1, p0);
+            }
+            else
+            {
+               l1 = vec.get(before).getSquareDiagonalLength();
+            }
+
+            if (after == n-1)
+            {
+               l2 = JDRLine.getSquareLength(p1, p0);
+            }
+            else
+            {
+               l2 = vec.get(after).getSquareDiagonalLength();
+            }
+
+            if (l2 > l1 + ShapeComponentVector.EPSILON)
+            {
+               return spike2;
+            }
+            else if (l1 > l2 + ShapeComponentVector.EPSILON)
+            {
+               return spike1;
+            }
+            else
+            {// neighbours approximately the same length
+               spike1.setIndex(i1+0.5, vec, p0, p1, dialog);
+            }
+
+            return spike1;
+         }
+         else if (l1 < l2)
+         {
+            return spike1;
+         }
+         else
+         {// l2 < l1
+            return spike2;
+         }
+      }
+
+      if (i1 < i2)
+      {
+         int before1 = i1-1;
+
+         if (before1 < 1)
+         {
+            before1 = n - 1 + before1;
+         }
+
+         int after2 = i2+1;
+
+         if (after2 >= n)
+         {
+            after2 = after2 - n + 1;
+         }
+
+         if (before1 == n-1)
+         {
+            l1 = JDRLine.getSquareLength(p1, p0);
          }
          else
          {
+            l1 = vec.get(before1).getSquareDiagonalLength();
+         }
+
+         if (after2 == n-1)
+         {
+            l2 = JDRLine.getSquareLength(p1, p0);
+         }
+         else
+         {
+            l2 = vec.get(after2).getSquareDiagonalLength();
+         }
+
+         if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
+         {
+            before1 = i1-2;
+
+            if (before1 < 1)
+            {
+               before1 = n - 1 + before1;
+            }
+
+            after2 = i2+2;
+
+            if (after2 >= n)
+            {
+               after2 = after2 - n + 1;
+            }
+
+            if (before1 == n-1)
+            {
+               l1 += JDRLine.getSquareLength(p1, p0);
+            }
+            else
+            {
+               l1 += vec.get(before1).getSquareDiagonalLength();
+            }
+
+            if (after2 == n-1)
+            {
+               l2 += JDRLine.getSquareLength(p1, p0);
+            }
+            else
+            {
+               l2 += vec.get(after2).getSquareDiagonalLength();
+            }
+
+            return l1 > l2 ? spike1 : spike2;
+         }
+         else if (l1 > l2)
+         {
+            return spike1;
+         }
+         else
+         {// l2 > l1
+            return spike2;
+         }
+      }
+      else
+      {// i2 < i1
+
+         int after1 = i1+1;
+
+         if (after1 >= n)
+         {
+            after1 = after1 - n + 1;
+         }
+
+         int before2 = i2-1;
+
+         if (before2 < 1)
+         {
+            before2 = n - 1 + before2;
+         }
+
+         if (after1 == n-1)
+         {
+            l1 = JDRLine.getSquareLength(p1, p0);
+         }
+         else
+         {
+            l1 = vec.get(after1).getSquareDiagonalLength();
+         }
+
+         if (before2 == n-1)
+         {
+            l2 = JDRLine.getSquareLength(p1, p0);
+         }
+         else
+         {
+            l2 = vec.get(before2).getSquareDiagonalLength();
+         }
+
+         if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
+         {
+            after1 = i1+2;
+
+            if (after1 >= n)
+            {
+               after1 = after1 - n + 1;
+            }
+
+            before2 = i2-2;
+
+            if (before2 < 1)
+            {
+               before2 = n - 1 + before2;
+            }
+
+            if (after1 == n-1)
+            {
+               l1 += JDRLine.getSquareLength(p1, p0);
+            }
+            else
+            {
+               l1 += vec.get(after1).getSquareDiagonalLength();
+            }
+
+            if (before2 == n-1)
+            {
+               l2 += JDRLine.getSquareLength(p1, p0);
+            }
+            else
+            {
+               l2 += vec.get(before2).getSquareDiagonalLength();
+            }
+
+            return l1 > l2 ? spike1 : spike2;
+         }
+         else if (l1 > l2)
+         {
+            return spike1;
+         }
+         else
+         {// l2 > l1
+            return spike2;
+         }
+      }
+   }
+
+   // should be at least 6 segments by the time this method is
+   // called
+   private void trimSpikeIndexes(ShapeComponentVector vec, 
+     Vector<Spike> indexes, Point2D p0, Point2D p1)
+   {
+      int numIndexes = indexes.size();
+
+      dialog.addMessageIdLn("vectorize.n_spikes_found",
+       dialog.getResources().formatMessageChoice(numIndexes, 
+       "vectorize.n_spikes"));
+
+      for (Spike spike : indexes)
+      {
+         dialog.addMessageLn(spike.info(dialog.getResources()));
+      }
+
+      if (numIndexes == 1)
+      {
+         return;
+      }
+
+      int n = vec.size();
+
+      Spike spike1 = indexes.lastElement();
+      Spike spike2 = indexes.firstElement();
+
+      Point2D r1, r2;
+
+      if (spike2.intValue() == 1 && spike1.intValue() == n-1)
+      {
+         Spike keep = chooseNearSpike(spike1, spike2, vec, p0, p1);
+
+         if (keep.intValue() == 1)
+         {
+            indexes.set(0, keep);
             indexes.remove(numIndexes-1);
+         }
+         else
+         {
+            indexes.set(numIndexes-1, keep);
+            indexes.remove(0);
          }
 
          numIndexes--;
       }
 
-      for (int i = numIndexes-1; i > 1; i--)
+      for (int i = numIndexes-1; i > 0; i--)
       {
-         i1 = indexes.get(i-1).intValue();
-         i2 = indexes.get(i).intValue();
+         spike1 = indexes.get(i-1);
+         spike2 = indexes.get(i);
 
          boolean tooclose = false;
 
-         if (i2-i1 < 2)
+         if (spike2.intValue()-spike1.intValue() < 2)
          {
             tooclose = true;
          }
          else
          {
-            int j1 = i1+1;
-            int j2 = i1-1;
+            int j1 = spike1.intValue()+1;
+            int j2 = spike2.intValue()-1;
 
             if (j1 == n)
             {
@@ -9296,39 +9526,79 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (tooclose)
          {
-            int j1 = i1-1;
-            int j2 = i2+1;
+            Spike keep = chooseNearSpike(spike1, spike2, vec, p0, p1);
 
-            if (j1 == 0)
+            indexes.remove(i);
+            indexes.set(i-1, keep);
+
+            numIndexes--;
+         }
+      }
+
+      if (numIndexes < 3)
+      {
+         return;
+      }
+
+      double totalLength = vec.getEstimatedLength(1, n-2)
+                         + JDRLine.getLength(p1, p0);
+
+      Spike2Spike best = null;
+
+      for (int i = 0; i < numIndexes; i++)
+      {
+         spike1 = indexes.get(i);
+         Number num1 = spike1.getIndex();
+         int nextIdx = 
+           (num1 instanceof Integer ? num1.intValue()+1 : num1.intValue()+2);
+
+         if (nextIdx >= n)
+         {
+            nextIdx = nextIdx - n + 1;
+         }
+
+         double halfLength1 = 0.5*spike1.getLength();
+
+         for (int j = i+1; j < numIndexes; j++)
+         {
+            spike2 = indexes.get(j);
+
+            Number num2 = spike2.getIndex();
+            int prevIdx = num2.intValue()-1;
+
+            if (prevIdx < 1)
             {
-               j1 = n-1;
+               prevIdx = n - 1 + prevIdx;
             }
 
-            if (j2 == n)
-            {
-               j2 = 1;
-            }
+            double l = vec.getEstimatedLength(nextIdx, prevIdx)
+                     + halfLength1 + 0.5*spike2.getLength();
 
-            double l1 = vec.getEstimatedLength(j1, i1);
-            double l2 = vec.getEstimatedLength(i2, j2);
+            double dx = Math.abs(spike1.getMid().getX() - spike2.getMid().getX());
+            double dy = Math.abs(spike1.getMid().getY() - spike2.getMid().getY());
 
-            if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON
-                && i2 == i1+1)
+            Spike2Spike s2s = new Spike2Spike(spike1, spike2,
+             Math.abs(0.5-(l/totalLength)), Math.min(dx, dy));
+
+            if (best == null || s2s.compareTo(best) < 0)
             {
-               indexes.remove(i);
-               indexes.set(i-1, Double.valueOf(i1+0.5));
-            }
-            else if (l2 > l1)
-            {
-               indexes.remove(i-1);
-            }
-            else
-            {
-               indexes.remove(i);
+               best = s2s;
             }
          }
       }
 
+      spike1 = best.getSpike1();
+      spike2 = best.getSpike2();
+
+      indexes.clear();
+      indexes.add(spike1);
+      indexes.add(spike2);
+
+      dialog.addMessageIdLn("vectorize.best_spike_pair",
+       spike1.getIndex(), spike1.getMid().getX(), spike1.getMid().getY(),
+       spike2.getIndex(), spike2.getMid().getX(), spike2.getMid().getY(),
+       best.getFromMidway(), best.getInclinationDifference(),
+       best.getAverageLength(), best.getAverageAngleDifference());
    }
 
    private Number[] selectTwoOfThreeSpikes(ShapeComponentVector vec,
@@ -12302,6 +12572,336 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    private static final double HALF_PI = 0.5*Math.PI,
     SPIKE_ANGLE_LOWER1=0.2*Math.PI, SPIKE_ANGLE_UPPER1=0.8*Math.PI,
     SPIKE_ANGLE_LOWER2=1.2*Math.PI, SPIKE_ANGLE_UPPER2=1.8*Math.PI;
+}
+
+class Spike
+{
+   public Spike(Number index)
+   {
+      this.index = index;
+   }
+
+   public Spike(int idx, ShapeComponentVector vec,
+    Point2D pathStart, Point2D pathEnd, VectorizeBitmapDialog dialog)
+   {
+      this.index = Integer.valueOf(idx);
+      update(vec, pathStart, pathEnd, dialog);
+   }
+
+   public Number getIndex()
+   {
+      return index;
+   }
+
+   public int intValue()
+   {
+      return index.intValue();
+   }
+
+   public void setIndex(double idx, ShapeComponentVector vec,
+     Point2D pathStart, Point2D pathEnd, VectorizeBitmapDialog dialog)
+   {
+      this.index = Double.valueOf(idx);
+      update(vec, pathStart, pathEnd, dialog);
+   }
+
+   public double getLength()
+   {
+      return length;
+   }
+
+   public double getDiagonalLength()
+   {
+      return diagonalLength;
+   }
+
+   public Point2D getP1()
+   {
+      return p1;
+   }
+
+   public Point2D getP2()
+   {
+      return p2;
+   }
+
+   public Point2D getMid()
+   {
+      return mid;
+   }
+
+   public double getBeforeAngle()
+   {
+      return beforeAngle;
+   }
+
+   public double getAfterAngle()
+   {
+      return afterAngle;
+   }
+
+   public void update(ShapeComponentVector vec,
+    Point2D pathStart, Point2D pathEnd, VectorizeBitmapDialog dialog)
+   {
+      int n = vec.size();
+      int idx = index.intValue();
+
+      if (idx == n-1)
+      {
+         p1 = pathEnd;
+         p2 = pathStart;
+      }
+      else
+      {
+         ShapeComponent comp = vec.get(idx);
+         p1 = comp.getStart();
+         p2 = comp.getEnd();
+      }
+
+      int prevIdx = idx-1;
+
+      if (prevIdx < 1)
+      {
+         prevIdx = n - 1 + prevIdx;
+      }
+
+      Point2D p3;
+
+      int nextIdx = idx+1;
+
+      if (nextIdx == n)
+      {
+         nextIdx = 1;
+      }
+
+      length = JDRLine.getLength(p1, p2);
+
+      if (!(index instanceof Integer))
+      {
+         if (nextIdx == n-1)
+         {
+            p3 = pathStart;
+         }
+         else
+         {
+            p3 = vec.get(nextIdx).getEnd();
+         }
+
+         length += JDRLine.getLength(p2, p3);
+         diagonalLength = JDRLine.getLength(p1, p3);
+
+         mid = p2;
+         p2 = p3;
+
+         nextIdx++;
+
+         if (nextIdx == n)
+         {
+            nextIdx = 1;
+         }
+      }
+      else
+      {
+         mid = JDRLine.getMidPoint(p1, p2);
+         diagonalLength = length;
+      }
+
+      double sqThreshold = dialog.getLineDetectTinyStepThreshold();
+      sqThreshold *= sqThreshold;
+
+      if (prevIdx == n-1)
+      {
+         p3 = pathEnd;
+      }
+      else if (prevIdx == 1)
+      {
+         p3 = pathStart;
+      }
+      else
+      {
+         p3 = vec.get(prevIdx).getStart();
+      }
+
+      if (JDRLine.getSquareLength(p3, mid) < sqThreshold)
+      {
+         prevIdx--;
+
+         if (prevIdx < 1)
+         {
+            prevIdx = n - 1 + prevIdx;
+         }
+
+         if (prevIdx == n-1)
+         {
+            p3 = pathEnd;
+         }
+         else if (prevIdx == 1)
+         {
+            p3 = pathStart;
+         }
+         else
+         {
+            p3 = vec.get(prevIdx).getStart();
+         }
+      }
+
+      beforeAngle = JDRLine.getAngle(
+        p3.getX(), p3.getY(), p1.getX(), p1.getY(), 
+        p1.getX(), p1.getY(), mid.getX(), mid.getY());
+
+      if (nextIdx >= n)
+      {
+         nextIdx = nextIdx - n + 1;
+      }
+
+      if (nextIdx == n-1)
+      {
+         p3 = pathStart;
+      }
+      else
+      {
+         p3 = vec.get(nextIdx).getEnd();
+      }
+
+      if (JDRLine.getSquareLength(mid, p3) < sqThreshold)
+      {
+         nextIdx++;
+
+         if (nextIdx >= n)
+         {
+            nextIdx = nextIdx - n + 1;
+         }
+
+         if (nextIdx == n-1)
+         {
+            p3 = pathStart;
+         }
+         else
+         {
+            p3 = vec.get(nextIdx).getEnd();
+         }
+      }
+
+      afterAngle = JDRLine.getAngle(
+        mid.getX(), mid.getY(), p2.getX(), p2.getY(), 
+        p2.getX(), p2.getY(), p3.getX(), p3.getY());
+   }
+
+   public String info(JDRResources resources)
+   {
+      if (p1 == null || p2 == null || mid == null)
+      {
+         return String.format("[%s]", index.toString());
+      }
+
+      if (index instanceof Integer)
+      {
+         return resources.getMessage("vectorize.spike_details_no_mid",
+          index, p1.getX(), p1.getY(),
+           p2.getX(), p2.getY(), beforeAngle, Math.toDegrees(beforeAngle),
+           afterAngle, Math.toDegrees(afterAngle), length);
+      }
+
+      return resources.getMessage("vectorize.spike_details",
+       index, p1.getX(), p1.getY(), mid.getX(), mid.getY(),
+        p2.getX(), p2.getY(), beforeAngle, Math.toDegrees(beforeAngle),
+        afterAngle, Math.toDegrees(afterAngle), diagonalLength);
+   }
+
+   public String toString()
+   {
+      if (p1 == null || p2 == null || mid == null)
+      {
+         return String.format("%s[index=%s]",
+           getClass().getSimpleName(), index.toString());
+      }
+
+      return String.format("%s[index=%s; (%f,%f) -- (%f,%f) -- (%f,%f); beforeAngle=%f; afterAngle=%f; length=%f; diagonalLength=%f]",
+       getClass().getSimpleName(), index.toString(), 
+        p1.getX(), p1.getY(), mid.getX(), mid.getY(),
+        p2.getX(), p2.getY(), beforeAngle, afterAngle, length, diagonalLength);
+   }
+
+   private Point2D p1, p2, mid;
+   private double beforeAngle, afterAngle;
+   private double length, diagonalLength;
+   private Number index;
+}
+
+class Spike2Spike implements Comparable<Spike2Spike>
+{
+   public Spike2Spike(Spike spike1, Spike spike2, double midDiff,
+    double inclinationDiff)
+   {
+      this.spike1 = spike1;
+      this.spike2 = spike2;
+      this.midDiff = midDiff;
+      this.inclinationDiff = inclinationDiff;
+
+      averageLength = 0.5*(spike1.getDiagonalLength() + spike2.getDiagonalLength());
+
+      averageAngleDiff = 0.5*(
+         Math.abs(spike1.getBeforeAngle()-spike1.getAfterAngle())
+       + Math.abs(spike2.getBeforeAngle()-spike2.getAfterAngle())
+      );
+
+      sum = midDiff + inclinationDiff + averageLength + averageAngleDiff;
+   }
+
+   public int compareTo(Spike2Spike other)
+   {
+      if (sum < other.sum)
+      {
+         return -1;
+      }
+
+      if (sum > other.sum)
+      {
+         return 1;
+      }
+
+      return 0;
+   }
+
+   public Spike getSpike1()
+   {
+      return spike1;
+   }
+
+   public Spike getSpike2()
+   {
+      return spike2;
+   }
+
+   public double getFromMidway()
+   {
+      return midDiff;
+   }
+
+   public double getInclinationDifference()
+   {
+      return inclinationDiff;
+   }
+
+   public double getAverageLength()
+   {
+      return averageLength;
+   }
+
+   public double getAverageAngleDifference()
+   {
+      return averageAngleDiff;
+   }
+
+   public String toString()
+   {
+      return String.format("%s[spike1=%s,spike2=%s,midDiff=%f,inclinationDiff=%f,averageLength=%f,averageAngleDiff=%f,sum=%f]",
+        getClass().getSimpleName(), spike1.toString(), spike2.toString(),
+        midDiff, inclinationDiff, averageLength, averageAngleDiff, sum);
+   }
+
+   private Spike spike1, spike2;
+   private double midDiff, inclinationDiff, averageLength, averageAngleDiff, sum;
 }
 
 class PathCoord
