@@ -2817,6 +2817,15 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.line_detection">Line Detection</entry>
 <entry key="vectorize.delta_threshold">Delta Threshold:</entry>
 <entry key="vectorize.delta_threshold.mnemonic">D</entry>
+<entry key="vectorize.merge_spikes">Merge Adjacent Spikes</entry>
+<entry key="vectorize.merge_spike_length_threshold">Length Threshold:</entry>
+<entry key="vectorize.merge_spike_neighbour_threshold">Neighbour Threshold:</entry>
+<entry key="vectorize.spike_pair_selection">Spike Pair Selection</entry>
+<entry key="vectorize.spike_pair_mid_diff_weight">Midway Deviation Weight:</entry>
+<entry key="vectorize.spike_pair_inclination_diff_weight">Inclination Deviation Weight:</entry>
+<entry key="vectorize.spike_pair_average_length_weight">Average Spike Length Weight:</entry>
+<entry key="vectorize.spike_pair_angle_diff_weight">Angle Deviation Weight:</entry>
+<entry key="vectorize.spike_pair_inverse_distance_weight">Inverse Distance Weight:</entry>
 <entry key="vectorize.fixed_line_width">Fixed line width:</entry>
 <entry key="vectorize.fixed_line_width.tooltip">Set line width to the given value</entry>
 <entry key="vectorize.relative_line_width">Relative line width</entry>
@@ -2896,7 +2905,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.border_unequal_points">Unequal border points ({0} and {1}) attempting to balance.</entry>
 <entry key="vectorize.lineify_between_borders">Attempting to fit a line between borders: {0}</entry>
 <entry key="vectorize.lineify_border_pair">{0,number,####0} ({1},{2})  ({3},{4})</entry>
-<entry key="vectorize.bulge_detected">Bulge detected from {0} ({1},{2}) and ({3},{4}) to {5} ({6},{7}) and ({8},{9}).</entry>
+<entry key="vectorize.bulge_detected">Bulge detected from {0} ({1},{2}) and ({3},{4}) [delta={5}] to {6} ({7},{8}) and ({9},{10}) [delta={11}].</entry>
 <entry key="vectorize.cant_balance_border_points">can''t balance border points ({0} not equal to {1})</entry>
 <entry key="vectorize.increasing_start">Increasing delta suggests initial wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
 <entry key="vectorize.decreasing_end">Decreasing delta suggests end wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
@@ -2923,7 +2932,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.n_spikes">0#0 spikes|1#1 spike|1&lt;{0} spikes</entry>
 <entry key="vectorize.spike_details">[{0}] ({1},{2}) -- ({3},{4}) -- ({5},{6}). Angle 1: {7} rad ({8} deg). Angle 2: {9} rad ({10} deg). Diagonal length: {11}.</entry>
 <entry key="vectorize.spike_details_no_mid">[{0}] ({1},{2}) -- ({3},{4}). Angle 1: {5} rad ({6} deg). Angle 2: {7} rad ({8} deg). Length: {9}.</entry>
-<entry key="vectorize.best_spike_pair">Best spike pair: [{0}] ({1},{2}) -- [{3}] ({4},{5}); deviation from midway: {6}; inclination deviation: {7}; average length: {8}; average angle deviation: {9}.</entry>
+<entry key="vectorize.best_spike_pair">Best spike pair: [{0}] ({1},{2}) -- [{3}] ({4},{5}); deviation from midway: {6}; inclination deviation: {7}; average length: {8}; average angle deviation: {9}; distance: {10}.</entry>
 <entry key="vectorize.mid_region">Investigating mid region: {0}</entry>
 <entry key="vectorize.mid_region_collapsed">Mid region collapsed.</entry>
 <entry key="vectorize.merging_paths">Merging paths (distance: {0}): 

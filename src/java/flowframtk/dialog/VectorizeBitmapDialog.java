@@ -1686,6 +1686,41 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getDeltaThreshold();
    }
 
+   public double getMergeSpikeLengthThreshold()
+   {
+      return controlPanel.getMergeSpikeLengthThreshold();
+   }
+
+   public double getMergeSpikeNeighbourThreshold()
+   {
+      return controlPanel.getMergeSpikeNeighbourThreshold();
+   }
+
+   public double getMidwayDeviationWeight()
+   {
+      return controlPanel.getMidwayDeviationWeight();
+   }
+
+   public double getInclinationDeviationWeight()
+   {
+      return controlPanel.getInclinationDeviationWeight();
+   }
+
+   public double getAverageLengthWeight()
+   {
+      return controlPanel.getAverageLengthWeight();
+   }
+
+   public double getAngleDeviationWeight()
+   {
+      return controlPanel.getAngleDeviationWeight();
+   }
+
+   public double getInverseDistanceWeight()
+   {
+      return controlPanel.getInverseDistanceWeight();
+   }
+
    public boolean isFixedLineWidth()
    {
       return controlPanel.isFixedLineWidth();
@@ -3055,6 +3090,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       subPanel.add(Box.createHorizontalGlue());
 
+      // Line width options
+
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
@@ -3085,6 +3122,149 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       roundRelativeLineWidthCheckBox = resources.createAppCheckBox(
         "vectorize", "round_relative_line_width", true, null);
       subPanel.add(roundRelativeLineWidthCheckBox);
+
+      // Merge adjacent spike options
+
+      mergeSpikesPanel = Box.createVerticalBox();
+      mergeSpikesPanel.setBorder(BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(), 
+        resources.getString("vectorize.merge_spikes")));
+      add(mergeSpikesPanel);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      mergeSpikesPanel.add(subPanel);
+
+      mergeSpikeLengthThresholdSpinnerModel = 
+        new SpinnerNumberModel(0.5, 0.0, 100.0, 0.0);
+
+      mergeSpikeLengthThresholdLabel = resources.createAppLabel(
+        "vectorize.merge_spike_length_threshold");
+      subPanel.add(mergeSpikeLengthThresholdLabel);
+
+      mergeSpikeLengthThresholdSpinner = controlPanel.createSpinner(
+         mergeSpikeLengthThresholdLabel, mergeSpikeLengthThresholdSpinnerModel);
+      mergeSpikeLengthThresholdSpinner.setMaximumSize(
+         mergeSpikeLengthThresholdSpinner.getPreferredSize());
+      subPanel.add(mergeSpikeLengthThresholdSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      mergeSpikesPanel.add(subPanel);
+
+      mergeSpikeNeighbourThresholdSpinnerModel = 
+        new SpinnerNumberModel(5.0, 0.0, 100.0, 0.0);
+
+      mergeSpikeNeighbourThresholdLabel = resources.createAppLabel(
+        "vectorize.merge_spike_neighbour_threshold");
+      subPanel.add(mergeSpikeNeighbourThresholdLabel);
+
+      mergeSpikeNeighbourThresholdSpinner = controlPanel.createSpinner(
+         mergeSpikeNeighbourThresholdLabel, mergeSpikeNeighbourThresholdSpinnerModel);
+      mergeSpikeNeighbourThresholdSpinner.setMaximumSize(
+         mergeSpikeNeighbourThresholdSpinner.getPreferredSize());
+      subPanel.add(mergeSpikeNeighbourThresholdSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
+
+      // Spike pair selection options
+
+      spikePairSelectionPanel = Box.createVerticalBox();
+      spikePairSelectionPanel.setBorder(BorderFactory.createTitledBorder(
+         BorderFactory.createEtchedBorder(), 
+         resources.getString("vectorize.spike_pair_selection")));
+      add(spikePairSelectionPanel);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      spikePairSelectionPanel.add(subPanel);
+
+      midDiffWeightSpinnerModel
+          = new SpinnerNumberModel(2.0, 0.0, 100.0, 0.5);
+
+      midDiffWeightLabel = resources.createAppLabel(
+         "vectorize.spike_pair_mid_diff_weight");
+      subPanel.add(midDiffWeightLabel);
+
+      midDiffWeightSpinner = controlPanel.createSpinner(
+         midDiffWeightLabel, midDiffWeightSpinnerModel);
+      midDiffWeightSpinner.setMaximumSize(
+         midDiffWeightSpinner.getPreferredSize());
+      subPanel.add(midDiffWeightSpinner);
+
+      subPanel.add(Box.createHorizontalGlue());
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      spikePairSelectionPanel.add(subPanel);
+
+      inclinationDiffWeightSpinnerModel
+          = new SpinnerNumberModel(0.25, 0.0, 100.0, 0.25);
+
+      inclinationDiffWeightLabel = resources.createAppLabel(
+         "vectorize.spike_pair_inclination_diff_weight");
+      subPanel.add(inclinationDiffWeightLabel);
+
+      inclinationDiffWeightSpinner = controlPanel.createSpinner(
+         inclinationDiffWeightLabel, inclinationDiffWeightSpinnerModel);
+      inclinationDiffWeightSpinner.setMaximumSize(
+         inclinationDiffWeightSpinner.getPreferredSize());
+      subPanel.add(inclinationDiffWeightSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      spikePairSelectionPanel.add(subPanel);
+
+      averageLengthWeightSpinnerModel
+          = new SpinnerNumberModel(1.0, 0.0, 100.0, 0.5);
+
+      averageLengthWeightLabel = resources.createAppLabel(
+         "vectorize.spike_pair_average_length_weight");
+      subPanel.add(averageLengthWeightLabel);
+
+      averageLengthWeightSpinner = controlPanel.createSpinner(
+         averageLengthWeightLabel, averageLengthWeightSpinnerModel);
+      averageLengthWeightSpinner.setMaximumSize(
+         averageLengthWeightSpinner.getPreferredSize());
+      subPanel.add(averageLengthWeightSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      spikePairSelectionPanel.add(subPanel);
+
+      angleDiffWeightSpinnerModel
+          = new SpinnerNumberModel(2.0, 0.0, 100.0, 0.5);
+
+      angleDiffWeightLabel = resources.createAppLabel(
+         "vectorize.spike_pair_angle_diff_weight");
+      subPanel.add(angleDiffWeightLabel);
+
+      angleDiffWeightSpinner = controlPanel.createSpinner(
+         angleDiffWeightLabel, angleDiffWeightSpinnerModel);
+      angleDiffWeightSpinner.setMaximumSize(
+         angleDiffWeightSpinner.getPreferredSize());
+      subPanel.add(angleDiffWeightSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      spikePairSelectionPanel.add(subPanel);
+
+      inverseDistanceWeightSpinnerModel
+          = new SpinnerNumberModel(0.5, 0.0, 100.0, 0.5);
+
+      inverseDistanceWeightLabel = resources.createAppLabel(
+         "vectorize.spike_pair_inverse_distance_weight");
+      subPanel.add(inverseDistanceWeightLabel);
+
+      inverseDistanceWeightSpinner = controlPanel.createSpinner(
+         inverseDistanceWeightLabel, inverseDistanceWeightSpinnerModel);
+      inverseDistanceWeightSpinner.setMaximumSize(
+         inverseDistanceWeightSpinner.getPreferredSize());
+      subPanel.add(inverseDistanceWeightSpinner);
+
+      // Intersection options
 
       detectIntersections = resources.createAppCheckBox(
          "vectorize.detect_intersections", true, this);
@@ -3154,6 +3334,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       tinyStepThresholdSpinner.setMaximumSize(
          tinyStepThresholdSpinner.getPreferredSize());
       subPanel.add(tinyStepThresholdSpinner);
+
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -3166,6 +3347,30 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
          deltaThresholdSpinner.setEnabled(enable);
          deltaThresholdLabel.setEnabled(enable);
+
+         mergeSpikesPanel.setEnabled(enable);
+         spikePairSelectionPanel.setEnabled(enable);
+
+         mergeSpikeLengthThresholdSpinner.setEnabled(enable);
+         mergeSpikeLengthThresholdLabel.setEnabled(enable);
+
+         mergeSpikeNeighbourThresholdSpinner.setEnabled(enable);
+         mergeSpikeNeighbourThresholdLabel.setEnabled(enable);
+
+         midDiffWeightSpinner.setEnabled(enable);
+         midDiffWeightLabel.setEnabled(enable);
+
+         inclinationDiffWeightSpinner.setEnabled(enable);
+         inclinationDiffWeightLabel.setEnabled(enable);
+
+         averageLengthWeightSpinner.setEnabled(enable);
+         averageLengthWeightLabel.setEnabled(enable);
+
+         angleDiffWeightSpinner.setEnabled(enable);
+         angleDiffWeightLabel.setEnabled(enable);
+
+         inverseDistanceWeightSpinner.setEnabled(enable);
+         inverseDistanceWeightLabel.setEnabled(enable);
 
          fixedLineWidthButton.setEnabled(enable);
          relativeLineWidthButton.setEnabled(enable);
@@ -3265,6 +3470,30 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       deltaThresholdSpinner.setEnabled(enable);
       deltaThresholdLabel.setEnabled(enable);
 
+      mergeSpikesPanel.setEnabled(enable);
+      spikePairSelectionPanel.setEnabled(enable);
+
+      mergeSpikeLengthThresholdSpinner.setEnabled(enable);
+      mergeSpikeLengthThresholdLabel.setEnabled(enable);
+
+      mergeSpikeNeighbourThresholdSpinner.setEnabled(enable);
+      mergeSpikeNeighbourThresholdLabel.setEnabled(enable);
+
+      midDiffWeightSpinner.setEnabled(enable);
+      midDiffWeightLabel.setEnabled(enable);
+
+      inclinationDiffWeightSpinner.setEnabled(enable);
+      inclinationDiffWeightLabel.setEnabled(enable);
+
+      averageLengthWeightSpinner.setEnabled(enable);
+      averageLengthWeightLabel.setEnabled(enable);
+
+      angleDiffWeightSpinner.setEnabled(enable);
+      angleDiffWeightLabel.setEnabled(enable);
+
+      inverseDistanceWeightSpinner.setEnabled(enable);
+      inverseDistanceWeightLabel.setEnabled(enable);
+
       fixedLineWidthButton.setEnabled(enable);
       relativeLineWidthButton.setEnabled(enable);
 
@@ -3309,6 +3538,16 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       if (revertAll)
       {
          deltaThresholdSpinnerModel.setValue(Double.valueOf(1.5));
+
+         mergeSpikeLengthThresholdSpinnerModel.setValue(Double.valueOf(0.5));
+         mergeSpikeNeighbourThresholdSpinnerModel.setValue(Double.valueOf(5.0));
+
+         midDiffWeightSpinnerModel.setValue(Double.valueOf(2.0));
+         inclinationDiffWeightSpinnerModel.setValue(Double.valueOf(0.25));
+         averageLengthWeightSpinnerModel.setValue(Double.valueOf(1.0));
+         angleDiffWeightSpinnerModel.setValue(Double.valueOf(2.0));
+         inverseDistanceWeightSpinnerModel.setValue(Double.valueOf(0.5));
+
          fixedLineWidthSpinnerModel.setValue(Integer.valueOf(1));
 
          if (fixedLineWidthSpinner.isEnabled())
@@ -3363,6 +3602,41 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       return deltaThresholdSpinnerModel.getNumber().doubleValue();
    }
 
+   public double getMergeSpikeLengthThreshold()
+   {
+      return mergeSpikeLengthThresholdSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getMergeSpikeNeighbourThreshold()
+   {
+      return mergeSpikeNeighbourThresholdSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getMidwayDeviationWeight()
+   {
+      return midDiffWeightSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getInclinationDeviationWeight()
+   {
+      return inclinationDiffWeightSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getAverageLengthWeight()
+   {
+      return averageLengthWeightSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getAngleDeviationWeight()
+   {
+      return angleDiffWeightSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getInverseDistanceWeight()
+   {
+      return inverseDistanceWeightSpinnerModel.getNumber().doubleValue();
+   }
+
    public double getDeltaVarianceThreshold()
    {
       return deltaVarianceThresholdSpinnerModel.getNumber().doubleValue();
@@ -3395,22 +3669,39 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
    private JLabel deltaThresholdLabel, deltaVarianceThresholdLabel, 
     tinyStepThresholdLabel, spikeReturnDistanceLabel,
-    minStubLengthLabel;
+    minStubLengthLabel,
+    mergeSpikeLengthThresholdLabel, mergeSpikeNeighbourThresholdLabel,
+    midDiffWeightLabel, inclinationDiffWeightLabel,
+    averageLengthWeightLabel, angleDiffWeightLabel,
+    inverseDistanceWeightLabel;
 
    private SpinnerNumberModel deltaThresholdSpinnerModel,
       deltaVarianceThresholdSpinnerModel, tinyStepThresholdSpinnerModel,
       spikeReturnDistanceSpinnerModel,
       minStubLengthSpinnerModel,
-      fixedLineWidthSpinnerModel;
+      fixedLineWidthSpinnerModel, 
+      mergeSpikeLengthThresholdSpinnerModel, 
+      mergeSpikeNeighbourThresholdSpinnerModel,
+      midDiffWeightSpinnerModel,
+      inclinationDiffWeightSpinnerModel,
+      averageLengthWeightSpinnerModel,
+      angleDiffWeightSpinnerModel,
+      inverseDistanceWeightSpinnerModel;
 
    private JSpinner deltaThresholdSpinner, deltaVarianceThresholdSpinner,
     tinyStepThresholdSpinner, spikeReturnDistanceSpinner,
-    fixedLineWidthSpinner, minStubLengthSpinner;
+    fixedLineWidthSpinner, minStubLengthSpinner,
+    mergeSpikeLengthThresholdSpinner, mergeSpikeNeighbourThresholdSpinner,
+    midDiffWeightSpinner, inclinationDiffWeightSpinner,
+    averageLengthWeightSpinner, angleDiffWeightSpinner,
+    inverseDistanceWeightSpinner;
 
    private JCheckBox doLineDetectionCheckBox, detectIntersections,
     roundRelativeLineWidthCheckBox;
 
    private JRadioButton fixedLineWidthButton, relativeLineWidthButton;
+
+   private JComponent mergeSpikesPanel, spikePairSelectionPanel;
 
    private ControlPanel controlPanel;
 }
@@ -4398,6 +4689,41 @@ class ControlPanel extends JPanel implements ActionListener
       return lineDetectionPanel.getDeltaThreshold();
    }
 
+   public double getMergeSpikeLengthThreshold()
+   {
+      return lineDetectionPanel.getMergeSpikeLengthThreshold();
+   }
+
+   public double getMergeSpikeNeighbourThreshold()
+   {
+      return lineDetectionPanel.getMergeSpikeNeighbourThreshold();
+   }
+
+   public double getMidwayDeviationWeight()
+   {
+      return lineDetectionPanel.getMidwayDeviationWeight();
+   }
+
+   public double getInclinationDeviationWeight()
+   {
+      return lineDetectionPanel.getInclinationDeviationWeight();
+   }
+
+   public double getAverageLengthWeight()
+   {
+      return lineDetectionPanel.getAverageLengthWeight();
+   }
+
+   public double getAngleDeviationWeight()
+   {
+      return lineDetectionPanel.getAngleDeviationWeight();
+   }
+
+   public double getInverseDistanceWeight()
+   {
+      return lineDetectionPanel.getInverseDistanceWeight();
+   }
+
    public double getDeltaVarianceThreshold()
    {
       return lineDetectionPanel.getDeltaVarianceThreshold();
@@ -4770,6 +5096,57 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    {
       add(new ShapeComponent(PathIterator.SEG_CLOSE,
         null, lastElement().getEnd()));
+   }
+
+   public void closePath(double gradientEpsilon)
+   {
+      if (size() < 3)
+      {
+         closePath();
+         return;
+      }
+
+      ShapeComponent comp1 = get(1);
+      ShapeComponent comp2 = lastElement();
+
+      Point2D p0 = comp1.getStart();
+
+      Point2D p2 = comp2.getEnd();
+
+      if (comp1.getType() == PathIterator.SEG_LINETO)
+      {
+         Point2D dp2 = JDRLine.getGradient(p2, p0);
+         Point2D dp1 = comp1.getStartGradient();
+
+         double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+         double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+         if (Math.abs(theta1-theta2) < gradientEpsilon)
+         {
+            p0 = comp1.getEnd();
+            firstElement().setEndPoint(p0);
+
+            remove(1);
+            comp1 = get(1);
+            comp1.setStart(p0);
+         }
+      }
+      
+      if (comp2.getType() == PathIterator.SEG_LINETO)
+      {
+         Point2D dp1 = comp2.getEndGradient();
+         Point2D dp2 = JDRLine.getGradient(p2, p0);
+
+         double theta1 = Math.atan2(dp1.getY(), dp1.getX());
+         double theta2 = Math.atan2(dp2.getY(), dp2.getX());
+
+         if (Math.abs(theta1-theta2) < gradientEpsilon)
+         {
+            remove(size()-1);
+         }
+      }
+
+      closePath();
    }
 
    public void addComponent(ShapeComponent comp)
@@ -8450,6 +8827,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       double firstDelta = 0.0;
 
       int startBulge = 0;
+      double startBulgeDelta = 0.0;
 
       for (int i = 0; i < n1; i++)
       {
@@ -8504,6 +8882,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          else
          {
             startBulge = i;
+            startBulgeDelta = delta;
             break;
          }
 
@@ -8548,10 +8927,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          newPath1 = null;
          startBulge = 0;
+         startBulgeDelta = firstDelta;
          path1Length = 0.0;
       }
 
       int endBulge = n1-1;
+      double endBulgeDelta = 0.0;
 
       double averageDelta2 = 0.0;
       int numPts2 = 0;
@@ -8574,6 +8955,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          if (delta > deltaThreshold)
          {
             endBulge = n1-i;
+            endBulgeDelta = delta;
 
             prevX = -1;
             prevY = -1;
@@ -8682,6 +9064,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
              path2Length, newPath2.svg());
             newPath2 = null;
             endBulge = n1-1;
+            endBulgeDelta = firstDelta;
          }
          else if (inc && !dec)
          {
@@ -8690,6 +9073,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                newPath2.svg());
             newPath2 = null;
             endBulge = n1-1;
+            endBulgeDelta = firstDelta;
          }
          else if (newPath2.size() > 1)
          {
@@ -8708,6 +9092,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          {
             newPath2 = null;
             endBulge = n1-1;
+            endBulgeDelta = firstDelta;
          }
       }
 
@@ -8724,16 +9109,34 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       Point2D endBulgePt1 = pts1.get(endBulge);
       Point2D endBulgePt2 = pts2.get(endBulge);
 
-      Point2D p0 = startBulgePt1;
-      newPath.moveTo(p0);
-
       dialog.addMessageIdLn("vectorize.bulge_detected", 
         startBulge, 
         startBulgePt1.getX(), startBulgePt1.getY(),
         startBulgePt2.getX(), startBulgePt2.getY(),
+        startBulgeDelta,
         endBulge,
         endBulgePt1.getX(), endBulgePt1.getY(),
-        endBulgePt2.getX(), endBulgePt2.getY());
+        endBulgePt2.getX(), endBulgePt2.getY(),
+        endBulgeDelta);
+
+      if (startBulge > 0)
+      {
+         startBulge--;
+
+         startBulgePt1 = pts1.get(startBulge);
+         startBulgePt2 = pts2.get(startBulge);
+      }
+
+      if (endBulge < n1-1)
+      {
+         endBulge++;
+
+         endBulgePt1 = pts1.get(endBulge);
+         endBulgePt2 = pts2.get(endBulge);
+      }
+
+      Point2D p0 = startBulgePt1;
+      newPath.moveTo(p0);
 
       for (int i = startBulge+1; i <= endBulge; i++)
       {
@@ -8759,7 +9162,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return false;
       }
 
-      newPath.closePath();
+      newPath.closePath(gradientEpsilon);
 
       dialog.addMessageIdLn("vectorize.mid_region", newPath.svg());
 
@@ -9095,19 +9498,22 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       }
 
       int numIndexes = indexes.size();
-      Number idxVal1, idxVal2;
 
       trimSpikeIndexes(vec, indexes, p0, p1);
 
-      numIndexes = indexes.size();
-
-      dialog.addMessageIdLn("vectorize.selected_n_spikes",
-       dialog.getResources().formatMessageChoice(numIndexes, 
-       "vectorize.n_spikes"));
-
-      for (Spike spike : indexes)
+      if (numIndexes > indexes.size())
       {
-         dialog.addMessageLn(spike.info(dialog.getResources()));
+         // after trimSpikeIndexes there will be a maximum of 2 spikes
+         numIndexes = indexes.size();
+
+         dialog.addMessageIdLn("vectorize.selected_n_spikes",
+          dialog.getResources().formatMessageChoice(numIndexes, 
+          "vectorize.n_spikes"));
+
+         for (Spike spike : indexes)
+         {
+            dialog.addMessageLn(spike.info(dialog.getResources()));
+         }
       }
 
       if (numIndexes == 1)
@@ -9117,14 +9523,14 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
-      idxVal1 = indexes.get(0).getIndex();
-      idxVal2 = indexes.get(1).getIndex();
+      Spike spike1 = indexes.get(0);
+      Spike spike2 = indexes.get(1);
 
       Vector<Point2D> pts1 = new Vector<Point2D>();
       Vector<Point2D> pts2 = new Vector<Point2D>();
 
-      int idx1 = idxVal1.intValue();
-      int idx2 = idxVal2.intValue();
+      int idx1 = spike1.intValue();
+      int idx2 = spike2.intValue();
 
       for (int i = idx1; i < idx2; i++)
       {
@@ -9141,7 +9547,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          }
       }
 
-      if (idxVal2 instanceof Double)
+      if (spike2.getIndex() instanceof Double)
       {
          ShapeComponent comp = vec.get(idx2);
 
@@ -9155,7 +9561,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          }
       }
 
-      if (idxVal1 instanceof Double)
+      if (spike1.getIndex() instanceof Double)
       {
          ShapeComponent comp = vec.get(idx1);
 
@@ -9222,8 +9628,10 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          l1 = spike1.getLength();
          l2 = spike2.getLength();
 
-         if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
+         if (Math.abs(l2-l1) < dialog.getMergeSpikeLengthThreshold())
          {
+            // approximately the same length (within threshold)
+
             // find lengths of neighbouring components
 
             int before = (i1 < i2 ? i1 : i2) - 1;
@@ -9258,16 +9666,16 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                l2 = vec.get(after).getSquareDiagonalLength();
             }
 
-            if (l2 > l1 + ShapeComponentVector.EPSILON)
+            if (l2 > l1 + dialog.getMergeSpikeNeighbourThreshold())
             {
                return spike2;
             }
-            else if (l1 > l2 + ShapeComponentVector.EPSILON)
+            else if (l1 > l2 + dialog.getMergeSpikeNeighbourThreshold())
             {
                return spike1;
             }
             else
-            {// neighbours approximately the same length
+            {// neighbours approximately the same length (within threshold)
                spike1.setIndex(i1+0.5, vec, p0, p1, dialog);
             }
 
@@ -9578,7 +9986,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             double dy = Math.abs(spike1.getMid().getY() - spike2.getMid().getY());
 
             Spike2Spike s2s = new Spike2Spike(spike1, spike2,
-             Math.abs(0.5-(l/totalLength)), Math.min(dx, dy));
+             Math.abs(0.5-(l/totalLength)), Math.min(dx, dy), dialog);
 
             if (best == null || s2s.compareTo(best) < 0)
             {
@@ -9598,7 +10006,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
        spike1.getIndex(), spike1.getMid().getX(), spike1.getMid().getY(),
        spike2.getIndex(), spike2.getMid().getX(), spike2.getMid().getY(),
        best.getFromMidway(), best.getInclinationDifference(),
-       best.getAverageLength(), best.getAverageAngleDifference());
+       best.getAverageLength(), best.getAverageAngleDifference(),
+       best.getDistance());
    }
 
    private Number[] selectTwoOfThreeSpikes(ShapeComponentVector vec,
@@ -12831,7 +13240,7 @@ class Spike
 class Spike2Spike implements Comparable<Spike2Spike>
 {
    public Spike2Spike(Spike spike1, Spike spike2, double midDiff,
-    double inclinationDiff)
+    double inclinationDiff, VectorizeBitmapDialog dialog)
    {
       this.spike1 = spike1;
       this.spike2 = spike2;
@@ -12845,17 +13254,31 @@ class Spike2Spike implements Comparable<Spike2Spike>
        + Math.abs(spike2.getBeforeAngle()-spike2.getAfterAngle())
       );
 
-      sum = midDiff + inclinationDiff + averageLength + averageAngleDiff;
+      distance = JDRLine.getLength(spike1.getMid(), spike2.getMid());
+
+      double recip = 1.0 / distance;
+
+      if (Double.isInfinite(recip) || Double.isNaN(recip))
+      {// unlikely to occur as spikes shouldn't overlap
+         recip = Double.MAX_VALUE;
+      }
+
+      // The smaller this value, the better the spike pair.
+      minFunction = dialog.getMidwayDeviationWeight()*midDiff
+                  + dialog.getInclinationDeviationWeight()*inclinationDiff
+                  + dialog.getAverageLengthWeight()*averageLength
+                  + dialog.getAngleDeviationWeight()*averageAngleDiff
+                  + dialog.getInverseDistanceWeight()*recip;
    }
 
    public int compareTo(Spike2Spike other)
    {
-      if (sum < other.sum)
+      if (minFunction < other.minFunction)
       {
          return -1;
       }
 
-      if (sum > other.sum)
+      if (minFunction > other.minFunction)
       {
          return 1;
       }
@@ -12893,15 +13316,22 @@ class Spike2Spike implements Comparable<Spike2Spike>
       return averageAngleDiff;
    }
 
+   public double getDistance()
+   {
+      return distance;
+   }
+
    public String toString()
    {
-      return String.format("%s[spike1=%s,spike2=%s,midDiff=%f,inclinationDiff=%f,averageLength=%f,averageAngleDiff=%f,sum=%f]",
+      return String.format("%s[spike1=%s,spike2=%s,midDiff=%f,inclinationDiff=%f,averageLength=%f,averageAngleDiff=%f,distance=%f,minFunction=%f]",
         getClass().getSimpleName(), spike1.toString(), spike2.toString(),
-        midDiff, inclinationDiff, averageLength, averageAngleDiff, sum);
+        midDiff, inclinationDiff, averageLength, averageAngleDiff,
+        distance, minFunction);
    }
 
    private Spike spike1, spike2;
-   private double midDiff, inclinationDiff, averageLength, averageAngleDiff, sum;
+   private double midDiff, inclinationDiff, averageLength, averageAngleDiff,
+     distance, minFunction;
 }
 
 class PathCoord
