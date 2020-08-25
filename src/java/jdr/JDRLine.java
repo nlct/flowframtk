@@ -384,6 +384,11 @@ public class JDRLine extends JDRSegment
       return angle;
    }
 
+   public static double getSquareLength(Point2D p1, Point2D p2)
+   {
+      return Point2D.distanceSq(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+   }
+
    public static double getLength(Point2D p1, Point2D p2)
    {
       return Point2D.distance(p1.getX(), p1.getY(), p2.getX(), p2.getY());
