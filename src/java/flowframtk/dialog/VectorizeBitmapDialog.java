@@ -4996,14 +4996,17 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    public Object clone()
    {
       ShapeComponentVector shape = new ShapeComponentVector(size());
-      shape.isFilled = isFilled;
+
+      shape.direction = direction;
       shape.windingRule = windingRule;
+      shape.isFilled = isFilled;
+      shape.lineWidth = lineWidth;
 
       for (ShapeComponent comp : this)
       {
          ShapeComponent newComp = new ShapeComponent();
          newComp.set(comp);
-         shape.addComponent(comp);
+         shape.addComponent(newComp);
       }
 
       return shape;
@@ -5751,7 +5754,8 @@ class ShapeComponent
    public void set(ShapeComponent otherComp)
    {
       this.type = otherComp.type;
-      this.start = otherComp.start;
+      this.start = (otherComp.start == null ? null : 
+        new Point2D.Double(otherComp.start.getX(), otherComp.start.getY()));
 
       if (coords == null)
       {
@@ -9473,6 +9477,9 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             newPath.lineTo(JDRLine.getMidPoint(p1, p0));
             delta = averageDist2;
          }
+
+         newPath.setFilled(false);
+         setLineWidth(newPath, delta);
 
          addShape(newPath, "vectorize.success_no_variance", delta);
          return;
@@ -15590,12 +15597,14 @@ class Result
       if (isFilled)
       {
          path.setFillPaint(new JDRColor(cg, foreground));
-         path.setLinePaint(null);
+         path.setLinePaint(new JDRTransparent(cg));
+         path.setStroke(new JDRBasicStroke(cg, 1.0,
+          stroke.getEndCap(), stroke.getLineJoin()));
       }
       else
       {
          path.setLinePaint(new JDRColor(cg, foreground));
-         path.setFillPaint(null);
+         path.setFillPaint(new JDRTransparent(cg));
 
          path.setStroke(new JDRBasicStroke(cg, stroke.getLineWidth(),
            stroke.getEndCap(), stroke.getLineJoin()));
