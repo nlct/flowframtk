@@ -426,10 +426,11 @@ public class JDRLine extends JDRSegment
     * @param r1 first point on line
     * @param r2 second point on line
     * @param p given point
+    * @param limit if true limit to the end points
     * @return the closest point on the line to p or r1 if the point
     * can't be computed (most likely because r1 and r2 coincide)
    */
-   public static Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
+   public static Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p, boolean limit)
    {
       // get closest point on r1-r2 to p
 
@@ -473,7 +474,28 @@ public class JDRLine extends JDRSegment
          return r1;
       }
 
+      if (limit)
+      {
+         double t = (x + y - r1.getX() - r1.getY())
+                  / (r2.getX() - r1.getX() + r2.getY() - r1.getY());
+
+         if (t <= 0.0)
+         {
+            return r1;
+         }
+
+         if (t >= 1.0)
+         {
+            return r2;
+         }
+      }
+
       return new Point2D.Double(x, y);
+   }
+
+   public static Point2D getClosestPointAlongLine(Point2D r1, Point2D r2, Point2D p)
+   {
+      return getClosestPointAlongLine(r1, r2, p, false);
    }
 
    public JDRObjectLoaderListener getListener()
