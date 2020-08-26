@@ -9030,7 +9030,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          prevDelta = delta;
       }
 
-      if (newPath2 == newPath1)
+      if (newPath2 == newPath1 && newPath1 != null)
       {
          numPts1 += numPts2;
          averageDelta1 += averageDelta2;
@@ -9187,6 +9187,105 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
+      int remaining = n1 - n2;
+
+      Vector<PointPair> pairs = new Vector<PointPair>(n1);
+
+      Point2D prevP = pts2.firstElement();
+
+      for (int i = 1; i < n2; i++)
+      {
+         Point2D p = pts2.get(i);
+
+         pairs.add(new PointPair(prevP, p, i-1));
+         prevP = p;
+      }
+
+      pairs.sort(new PointPairLengthComparator());
+
+      Vector<PointPair> extra = new Vector<PointPair>(remaining);
+
+      for (int i = 0; i < pairs.size() && remaining > 0; i++)
+      {
+         PointPair pp = pairs.get(i);
+
+         Point2D p1 = pp.getP1();
+         Point2D p2 = pp.getP2();
+
+         // find closest pts1 
+
+         int j1 = 0;
+         int j2 = n1-1;
+
+         Point2D q1 = pts1.firstElement();
+         Point2D q2 = pts1.get(j2);
+
+         double minDist1 = JDRLine.getSquareLength(q1, p1);
+         double minDist2 = JDRLine.getSquareLength(q2, p2);
+
+         for (int j = 1; j < n1-1; j++)
+         {
+            Point2D q = pts1.get(j);
+            double d = JDRLine.getSquareLength(q, p1);
+
+            if (d <= minDist1 && j < j2)
+            {
+               j1 = j;
+               q1 = q;
+            }
+
+            d = JDRLine.getSquareLength(q, p2);
+
+            if (d <= minDist2 && j > j1)
+            {
+               j2 = j;
+               q2 = q;
+            }
+         }
+
+         int m = j2 - j1 - 1;
+
+         if (m > 0)
+         {
+            PointPair prevPP = pp;
+
+            for (int j = 1; j <= m && remaining > 0; j++)
+            {
+               Point2D p = pts1.get(j1+j);
+
+               Point2D q = 
+                  JDRLine.getClosestPointAlongLine(p1, p2, p, true);
+
+               PointPair pp2 = new PointPair(q, p2, 
+                 pp.getIndex().doubleValue()+(((double)j)/(m+1.0)));
+
+               extra.add(pp2);
+
+               prevPP.setP2(q);
+
+               prevPP = pp2;
+
+               remaining--;
+            }
+         }
+      }
+
+      pairs.addAll(extra);
+
+      pairs.sort(new PointPairIndexComparator());
+
+      pts2.setSize(1);
+
+      for (PointPair pp : pairs)
+      {
+         pts2.add(pp.getP2());
+      }
+
+      if (pts2.size() == pts1.size())
+      {
+         return;
+      }
+
       for (int i = 1; i < pts2.size() && i < n1-1 && pts2.size() < n1; i++)
       {
          Point2D p1 = pts1.get(i);
@@ -9194,9 +9293,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          Point2D p0 = pts2.get(i-1);
 
-         // get closest point on p0-p2 to p1
+         // get closest point on p0 -- p2 to p1
 
-         pts2.add(i, JDRLine.getClosestPointAlongLine(p0, p2, p1));
+         Point2D q = JDRLine.getClosestPointAlongLine(p0, p2, p1, true);
+         double d1 = JDRLine.getSquareLength(p1, q);
+
+         pts2.add(i, q);
 
          if (pts2.size() == n1)
          {
@@ -9210,9 +9312,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          p0 = pts2.get(j+1);
 
-         // get closest point on p0-p2 to p1
+         // get closest point on p0 -- p2 to p1
 
-         pts2.add(j+1, JDRLine.getClosestPointAlongLine(p0, p2, p1));
+         q = JDRLine.getClosestPointAlongLine(p0, p2, p1, true);
+         d1 = JDRLine.getSquareLength(p1, q);
+
+         pts2.add(j+1, q);
 
          if (pts2.size() == n1)
          {
@@ -12981,6 +13086,104 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    private static final double HALF_PI = 0.5*Math.PI,
     SPIKE_ANGLE_LOWER1=0.2*Math.PI, SPIKE_ANGLE_UPPER1=0.8*Math.PI,
     SPIKE_ANGLE_LOWER2=1.2*Math.PI, SPIKE_ANGLE_UPPER2=1.8*Math.PI;
+}
+
+class PointPair
+{
+   public PointPair(Point2D p1, Point2D p2, Number index)
+   {
+      this.p1 = p1;
+      this.p2 = p2;
+      this.index = index;
+      update();
+   }
+
+   public PointPair(Point2D p1, Point2D p2, int index)
+   {
+      this(p1, p2, Integer.valueOf(index));
+   }
+
+   public PointPair(Point2D p1, Point2D p2, double index)
+   {
+      this(p1, p2, Double.valueOf(index));
+   }
+
+   public Point2D getP1()
+   {
+      return p1;
+   }
+
+   public Point2D getP2()
+   {
+      return p2;
+   }
+
+   public Number getIndex()
+   {
+      return index;
+   }
+
+   public double getLength()
+   {
+      return length;
+   }
+
+   public void setP2(Point2D p2)
+   {
+      this.p2 = p2;
+      update();
+   }
+
+   private void update()
+   {
+      length = Math.abs(p1.getX() - p2.getX())
+             + Math.abs(p1.getY() - p2.getY());
+   }
+
+   public String toString()
+   {
+      return String.format("%s[p1=%s,p2=%s,index=%s,length=%f]",
+        getClass().getSimpleName(), p1, p2, index, length);
+   }
+
+   private Point2D p1, p2;
+   private Number index;
+   private double length;
+}
+
+class PointPairLengthComparator implements Comparator<PointPair>
+{
+   public int compare(PointPair pp1, PointPair pp2)
+   {
+      if (pp1.getLength() < pp2.getLength())
+      {
+         return 1;
+      }
+      else if (pp1.getLength() > pp2.getLength())
+      {
+         return -1;
+      }
+      else
+      {
+         return 0;
+      }
+   }
+}
+
+class PointPairIndexComparator implements Comparator<PointPair>
+{
+   public int compare(PointPair pp1, PointPair pp2)
+   {
+      Number num1 = pp1.getIndex();
+      Number num2 = pp2.getIndex();
+
+      if (num1 instanceof Integer && num2 instanceof Integer)
+      {
+         return ((Integer)num1).compareTo((Integer)num2);
+      }
+
+      return Double.compare(num1.doubleValue(), num2.doubleValue());
+   }
 }
 
 class Spike
