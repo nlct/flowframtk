@@ -2905,8 +2905,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.border_unequal_points">Unequal border points ({0} and {1}) attempting to balance.</entry>
 <entry key="vectorize.lineify_between_borders">Attempting to fit a line between borders: {0}</entry>
 <entry key="vectorize.lineify_border_pair">{0,number,####0} ({1},{2})  ({3},{4})</entry>
-<entry key="vectorize.bulge_detected">Bulge detected from {0} ({1},{2}) and ({3},{4}) [delta={5}] to {6} ({7},{8}) and ({9},{10}) [delta={11}].</entry>
-<entry key="vectorize.cant_balance_border_points">can''t balance border points ({0} not equal to {1})</entry>
+<entry key="vectorize.bulge_detected">Bulge detected from {0} ({1},{2}) and ({3},{4}) [delta={5}] to end-{6} ({7},{8}) and ({9},{10}) [delta={11}].</entry>
 <entry key="vectorize.increasing_start">Increasing delta suggests initial wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
 <entry key="vectorize.decreasing_end">Decreasing delta suggests end wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
 <entry key="vectorize.message.insufficient_to_vectorize">not enough path components ({0}).</entry>
@@ -2927,7 +2926,6 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.splitting_border">Splitting off shared border region.</entry>
 <entry key="vectorize.too_wide">Region too wide.</entry>
 <entry key="vectorize.spikes_too_close">spikes too close.</entry>
-<entry key="vectorize.selected_n_spikes">Selected {0}:</entry>
 <entry key="vectorize.n_spikes_found">{0} found:</entry>
 <entry key="vectorize.n_spikes">0#0 spikes|1#1 spike|1&lt;{0} spikes</entry>
 <entry key="vectorize.spike_details">[{0}] ({1},{2}) -- ({3},{4}) -- ({5},{6}). Angle 1: {7} rad ({8} deg). Angle 2: {9} rad ({10} deg). Diagonal length: {11}.</entry>

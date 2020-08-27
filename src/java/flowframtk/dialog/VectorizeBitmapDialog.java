@@ -3136,7 +3136,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       mergeSpikesPanel.add(subPanel);
 
       mergeSpikeLengthThresholdSpinnerModel = 
-        new SpinnerNumberModel(0.5, 0.0, 100.0, 0.0);
+        new SpinnerNumberModel(0.5, 0.0, 100.0, 0.5);
 
       mergeSpikeLengthThresholdLabel = resources.createAppLabel(
         "vectorize.merge_spike_length_threshold");
@@ -3155,7 +3155,7 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
       mergeSpikesPanel.add(subPanel);
 
       mergeSpikeNeighbourThresholdSpinnerModel = 
-        new SpinnerNumberModel(5.0, 0.0, 100.0, 0.0);
+        new SpinnerNumberModel(5.0, 0.0, 100.0, 0.5);
 
       mergeSpikeNeighbourThresholdLabel = resources.createAppLabel(
         "vectorize.merge_spike_neighbour_threshold");
@@ -8763,19 +8763,35 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       return tryLineify(pts1, pts2);
    }
 
-   private String listBulgePoints(Vector<Point2D> pts1, Vector<Point2D> pts2)
+   private String listBulgePoints(Vector<Point2D> pts1, Vector<Point2D> pts2,
+     int n)
    {
       StringBuilder builder = new StringBuilder();
       JDRResources resources = dialog.getResources();
 
-      for (int i = 0, n = pts1.size(); i < n; i++)
+      if (n > 0)
       {
-         Point2D p1 = pts1.get(i);
-         Point2D p2 = pts2.get(i);
+         for (int i = 0; i <= n; i++)
+         {
+            Point2D p1 = pts1.get(i);
+            Point2D p2 = pts2.get(i);
 
-         builder.append(String.format("%n"));
-         builder.append(resources.getMessage("vectorize.lineify_border_pair",
-           i, p1.getX(), p1.getY(), p2.getX(), p2.getY()));
+            builder.append(String.format("%n"));
+            builder.append(resources.getMessage("vectorize.lineify_border_pair",
+              i, p1.getX(), p1.getY(), p2.getX(), p2.getY()));
+         }
+      }
+      else
+      {
+         for (int i = 1-n, n1 = pts1.size(), n2=pts2.size(); i > 0; i--)
+         {
+            Point2D p1 = pts1.get(n1-i);
+            Point2D p2 = pts2.get(n2-i);
+
+            builder.append(String.format("%n"));
+            builder.append(resources.getMessage("vectorize.lineify_border_pair",
+              i, p1.getX(), p1.getY(), p2.getX(), p2.getY()));
+         }
       }
 
       return builder.toString();
@@ -8798,16 +8814,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          n1 = pts1.size();
          n2 = pts2.size();
 
-         if (n1 != n2)
-         {
-            addPathResultMessage(getNumShapes()+1, 
-               "vectorize.cant_balance_border_points", n1, n2);
-            return false;
-         }
       }
-
-      dialog.addMessageIdLn("vectorize.lineify_between_borders",
-       listBulgePoints(pts1, pts2));
 
       double gradientEpsilon = dialog.getGradientEpsilon();
 
@@ -8833,7 +8840,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       int startBulge = 0;
       double startBulgeDelta = 0.0;
 
-      for (int i = 0; i < n1; i++)
+      for (int i = 0; i < n1 && i < n2; i++)
       {
          p1 = pts1.get(i);
          p2 = pts2.get(i);
@@ -8885,7 +8892,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          }
          else
          {
-            startBulge = i;
+            startBulge = i-1;
             startBulgeDelta = delta;
             break;
          }
@@ -8893,9 +8900,15 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          prevDelta = delta;
       }
 
+      if (startBulge > 0)
+      {
+         dialog.addMessageIdLn("vectorize.lineify_between_borders",
+          listBulgePoints(pts1, pts2, startBulge));
+      }
+
       // No wedge detection if path fits entire region.
 
-      if (startBulge == 0 && numPts1 > 1)
+      if (startBulge == 0 && numPts1 > 1 && n1 == n2)
       {
          // numPts1 may not be the same as newPath1.size() as
          // lineTo(double,double,double) was used.
@@ -8935,7 +8948,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          path1Length = 0.0;
       }
 
-      int endBulge = n1-1;
+      int endBulge = 0;
       double endBulgeDelta = 0.0;
 
       double averageDelta2 = 0.0;
@@ -8946,7 +8959,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       prevDelta = 0;
       firstDelta = 0.0;
 
-      for (int i = 1, m = n1-startBulge; i <= m; i++)
+      for (int i = 1, m = Math.min(n1,n2)-startBulge; i <= m; i++)
       {
          p1 = pts1.get(n1-i);
          p2 = pts2.get(n2-i);
@@ -8958,16 +8971,16 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (delta > deltaThreshold)
          {
-            endBulge = n1-i;
+            endBulge = i-2;
             endBulgeDelta = delta;
 
             prevX = -1;
             prevY = -1;
 
-            for (int j = endBulge+1; j < n1; j++)
+            for (int j = endBulge+1; j > 0; j--)
             {
-               p1 = pts1.get(j);
-               p2 = pts2.get(j);
+               p1 = pts1.get(n1-j);
+               p2 = pts2.get(n2-j);
 
                double x = p1.getX() + 0.5*(p2.getX() - p1.getX());
                double y = p1.getY() + 0.5*(p2.getY() - p1.getY());
@@ -9034,6 +9047,12 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          prevDelta = delta;
       }
 
+      if (endBulge > 0)
+      {
+         dialog.addMessageIdLn("vectorize.lineify_between_borders",
+          listBulgePoints(pts1, pts2, -endBulge));
+      }
+
       if (newPath2 == newPath1 && newPath1 != null)
       {
          numPts1 += numPts2;
@@ -9067,7 +9086,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             dialog.addMessageIdLn("vectorize.discarding_small_stub",
              path2Length, newPath2.svg());
             newPath2 = null;
-            endBulge = n1-1;
+            endBulge = 0;
             endBulgeDelta = firstDelta;
          }
          else if (inc && !dec)
@@ -9076,7 +9095,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                prevDelta, firstDelta, newPath2.size(), path2Length,
                newPath2.svg());
             newPath2 = null;
-            endBulge = n1-1;
+            endBulge = 0;
             endBulgeDelta = firstDelta;
          }
          else if (newPath2.size() > 1)
@@ -9095,7 +9114,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          else
          {
             newPath2 = null;
-            endBulge = n1-1;
+            endBulge = 0;
             endBulgeDelta = firstDelta;
          }
       }
@@ -9110,8 +9129,8 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       Point2D startBulgePt1 = pts1.get(startBulge);
       Point2D startBulgePt2 = pts2.get(startBulge);
-      Point2D endBulgePt1 = pts1.get(endBulge);
-      Point2D endBulgePt2 = pts2.get(endBulge);
+      Point2D endBulgePt1 = pts1.get(n1-1-endBulge);
+      Point2D endBulgePt2 = pts2.get(n2-1-endBulge);
 
       dialog.addMessageIdLn("vectorize.bulge_detected", 
         startBulge, 
@@ -9123,26 +9142,10 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
         endBulgePt2.getX(), endBulgePt2.getY(),
         endBulgeDelta);
 
-      if (startBulge > 0)
-      {
-         startBulge--;
-
-         startBulgePt1 = pts1.get(startBulge);
-         startBulgePt2 = pts2.get(startBulge);
-      }
-
-      if (endBulge < n1-1)
-      {
-         endBulge++;
-
-         endBulgePt1 = pts1.get(endBulge);
-         endBulgePt2 = pts2.get(endBulge);
-      }
-
       Point2D p0 = startBulgePt1;
       newPath.moveTo(p0);
 
-      for (int i = startBulge+1; i <= endBulge; i++)
+      for (int i = startBulge+1; i < n1-endBulge; i++)
       {
          p1 = pts1.get(i);
 
@@ -9151,7 +9154,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          p0 = p1;
       }
 
-      for (int i = endBulge; i >= startBulge; i--)
+      for (int i = n2-1-endBulge; i >= startBulge; i--)
       {
          p1 = pts2.get(i);
 
@@ -9191,13 +9194,36 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
+      double sqThreshold = 4.0 * deltaThreshold*deltaThreshold;
+
       int remaining = n1 - n2;
 
       Vector<PointPair> pairs = new Vector<PointPair>(n1);
 
+      Vector<PointPair> extra = new Vector<PointPair>(remaining);
+
       Point2D prevP = pts2.firstElement();
 
-      for (int i = 1; i < n2; i++)
+      int startOffset = 0;
+      int endOffset = 0;
+
+      if (JDRLine.getManhattanDistance(pts1.get(0), prevP) 
+          < ShapeComponentVector.EPSILON)
+      {
+         startOffset = 1;
+         Point2D p = pts2.get(1);
+         extra.add(new PointPair(prevP, p, 0));
+         prevP = p;
+      }
+
+      if (JDRLine.getManhattanDistance(pts1.lastElement(), pts2.lastElement()) 
+          < ShapeComponentVector.EPSILON)
+      {
+         endOffset = 1;
+         extra.add(new PointPair(pts2.get(n2-2), pts2.lastElement(), n2-2));
+      }
+
+      for (int i = 1+startOffset; i < n2-endOffset; i++)
       {
          Point2D p = pts2.get(i);
 
@@ -9206,8 +9232,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       }
 
       pairs.sort(new PointPairLengthComparator());
-
-      Vector<PointPair> extra = new Vector<PointPair>(remaining);
 
       for (int i = 0; i < pairs.size() && remaining > 0; i++)
       {
@@ -9260,16 +9284,19 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                Point2D q = 
                   JDRLine.getClosestPointAlongLine(p1, p2, p, true);
 
-               PointPair pp2 = new PointPair(q, p2, 
-                 pp.getIndex().doubleValue()+(((double)j)/(m+1.0)));
+               if (JDRLine.getSquareLength(p, q) <= sqThreshold)
+               {
+                  PointPair pp2 = new PointPair(q, p2, 
+                    pp.getIndex().doubleValue()+(((double)j)/(m+1.0)));
 
-               extra.add(pp2);
+                  extra.add(pp2);
 
-               prevPP.setP2(q);
+                  prevPP.setP2(q);
 
-               prevPP = pp2;
+                  prevPP = pp2;
 
-               remaining--;
+                  remaining--;
+               }
             }
          }
       }
@@ -9285,6 +9312,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          pts2.add(pp.getP2());
       }
 
+/*
       if (pts2.size() == pts1.size())
       {
          return;
@@ -9328,6 +9356,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             return;
          }
       }
+*/
    }
 
    private boolean tryLineifyBulge(ShapeComponentVector vec, int idx1, int idx2)
@@ -9617,15 +9646,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       {
          // after trimSpikeIndexes there will be a maximum of 2 spikes
          numIndexes = indexes.size();
-
-         dialog.addMessageIdLn("vectorize.selected_n_spikes",
-          dialog.getResources().formatMessageChoice(numIndexes, 
-          "vectorize.n_spikes"));
-
-         for (Spike spike : indexes)
-         {
-            dialog.addMessageLn(spike.info(dialog.getResources()));
-         }
       }
 
       if (numIndexes == 1)
