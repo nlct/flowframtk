@@ -2906,6 +2906,10 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.lineify_between_borders">Attempting to fit a line between borders: {0}</entry>
 <entry key="vectorize.lineify_border_pair">{0,number,####0} ({1},{2})  ({3},{4})</entry>
 <entry key="vectorize.bulge_detected">Bulge detected from {0} ({1},{2}) and ({3},{4}) [delta={5}] to end-{6} ({7},{8}) and ({9},{10}) [delta={11}].</entry>
+<entry key="vectorize.between_bulges">Investigating region between two bulges.
+First bulge: {0}
+Second bulge: {1}
+Middle region: {2}</entry>
 <entry key="vectorize.increasing_start">Increasing delta suggests initial wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
 <entry key="vectorize.decreasing_end">Decreasing delta suggests end wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
 <entry key="vectorize.message.insufficient_to_vectorize">not enough path components ({0}).</entry>
