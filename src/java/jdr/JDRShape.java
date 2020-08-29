@@ -1431,6 +1431,47 @@ public abstract class JDRShape extends JDRCompleteObject
       System.out.println("Winding rule: "+(rule==PathIterator.WIND_EVEN_ODD? "Even-Odd" : "Non-Zero"));
    }
 
+   public static double computeArea(Shape shape, double flatness)
+   {// assume closed shape
+      PathIterator pi = shape.getPathIterator(null, flatness);
+
+      double area = 0.0;
+      double sum = 0.0;
+      double prevX = 0.0;
+      double prevY = 0.0;
+      double startX = 0.0;
+      double startY = 0.0;
+
+      double[] coords = new double[6];
+
+      for (; pi.isDone(); pi.next())
+      {
+         int type = pi.currentSegment(coords);
+
+         switch (type)
+         {
+            case PathIterator.SEG_CLOSE:
+               sum += prevX * startY - prevY * startX;
+               area += sum/2.0;
+               sum = 0.0;
+            break;
+            case PathIterator.SEG_LINETO:
+               sum += prevX * coords[1] - prevY * coords[0];
+               prevX = coords[0];
+               prevY = coords[1];
+            break;
+            case PathIterator.SEG_MOVETO:
+               prevX = coords[0];
+               prevY = coords[1];
+               startX = prevX;
+               startY = prevY;
+            break;
+         }
+      }
+
+      return area;
+   }
+
    public Object[] getDescriptionInfo()
    {
       return new Object[] {size()};
