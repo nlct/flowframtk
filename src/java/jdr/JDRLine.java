@@ -386,7 +386,13 @@ public class JDRLine extends JDRSegment
 
    public static double getManhattanDistance(Point2D p1, Point2D p2)
    {
-      return Math.abs(p1.getX()-p2.getX()) + Math.abs(p1.getY()-p2.getY());
+      return getManhattanDistance(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+   }
+
+   public static double getManhattanDistance(double p1x, double p1y,
+      double p2x, double p2y)
+   {
+      return Math.abs(p1x-p2x) + Math.abs(p1y-p2y);
    }
 
    public static double getSquareLength(Point2D p1, Point2D p2)
