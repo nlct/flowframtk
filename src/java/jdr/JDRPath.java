@@ -368,7 +368,11 @@ public class JDRPath extends JDRShape
    public void setStroke(JDRStroke s)
    {
       stroke = s;
-      stroke.setCanvasGraphics(getCanvasGraphics());
+
+      if (stroke != null)
+      {
+         stroke.setCanvasGraphics(getCanvasGraphics());
+      }
    }
 
    /**
@@ -466,11 +470,11 @@ public class JDRPath extends JDRShape
                JDRLine line = new JDRLine(cg, oldX, oldY, coords[0],coords[1]);
                oldX = coords[0];
                oldY = coords[1];
-               path.add(line);
                if (path == null)
                {
                   throw new MissingMoveException(cg);
                }
+               path.add(line);
             break;
             case PathIterator.SEG_QUADTO :
                JDRBezier curve = JDRBezier.quadToCubic(cg, oldX, oldY, 
@@ -478,11 +482,11 @@ public class JDRPath extends JDRShape
                                          coords[2],coords[3]);
                oldX = coords[2];
                oldY = coords[3];
-               path.add(curve);
                if (path == null)
                {
                   throw new MissingMoveException(cg);
                }
+               path.add(curve);
             break;
             case PathIterator.SEG_CUBICTO :
                JDRBezier cubic = new JDRBezier(cg, oldX, oldY, 
@@ -491,23 +495,30 @@ public class JDRPath extends JDRShape
                                          coords[4],coords[5]);
                oldX = coords[4];
                oldY = coords[5];
-               path.add(cubic);
                if (path == null)
                {
                   throw new MissingMoveException(cg);
                }
+               path.add(cubic);
             break;
             case PathIterator.SEG_CLOSE :
                isClosed = true;
-               JDRLine lineseg = new JDRLine(cg, coords[0],coords[1],
-                  startX, startY);
-               oldX = coords[0];
-               oldY = coords[1];
-               path.add(lineseg);
+
                if (path == null)
                {
                   throw new MissingMoveException(cg);
                }
+
+               if (JDRLine.getManhattanDistance(oldX, oldY,
+                    startX, startY) > 0.0)
+               {
+                  JDRLine lineseg = new JDRLine(cg, coords[0],coords[1],
+                     startX, startY);
+                  path.add(lineseg);
+               }
+
+               oldX = startX;
+               oldY = startY;
          }
 
          pi.next();
@@ -813,8 +824,11 @@ public class JDRPath extends JDRShape
    {
       int n = size_;
 
-      JDRPath path = new JDRPath(n, getLinePaint(),
-         getFillPaint(), getStroke());
+      JDRPath path = new JDRPath(getCanvasGraphics(), n);
+
+      path.setLinePaint(getLinePaint());
+      path.setFillPaint(getFillPaint());
+      path.setStroke(getStroke());
 
       path.flowframe = (flowframe==null?null : new FlowFrame(flowframe));
       path.description = description;
