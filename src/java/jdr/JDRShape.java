@@ -1369,6 +1369,17 @@ public abstract class JDRShape extends JDRCompleteObject
    public abstract void setStroke(JDRStroke stroke);
    public abstract JDRStroke getStroke();
 
+   // Make this shape have the same line, fill and stroke as other
+   public void setAttributes(JDRShape other)
+   {
+      JDRPaint paint = other.getLinePaint();
+      setLinePaint(paint == null ? null : (JDRPaint)paint.clone());
+      paint = other.getFillPaint();
+      setFillPaint(paint == null ? null : (JDRPaint)paint.clone());
+      JDRStroke stroke = other.getStroke();
+      setStroke(stroke == null ? null : (JDRStroke)stroke.clone());
+   }
+
    /**
     * Gets the path style listener for this shape.
     */
