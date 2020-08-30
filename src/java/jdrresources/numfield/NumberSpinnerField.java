@@ -83,6 +83,12 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
        Double.valueOf(0.0), Double.valueOf(0.0), null, Double.valueOf(1.0));
    }
 
+   public static NumberSpinnerField createNonNegativeDoubleField(double defVal)
+   {
+      return new NumberSpinnerField(
+       Double.valueOf(defVal), Double.valueOf(0.0), null, Double.valueOf(1.0));
+   }
+
    public static NumberSpinnerField createNonNegativeIntField()
    {
       return new NumberSpinnerField(
