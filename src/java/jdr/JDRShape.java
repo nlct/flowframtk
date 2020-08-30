@@ -1431,8 +1431,66 @@ public abstract class JDRShape extends JDRCompleteObject
       System.out.println("Winding rule: "+(rule==PathIterator.WIND_EVEN_ODD? "Even-Odd" : "Non-Zero"));
    }
 
+   public static int svg(StringBuilder builder, Shape shape)
+   {
+      return svg(builder, shape.getPathIterator(null), String.format("%n"));
+   }
+
+   public static int svg(StringBuilder builder, Shape shape, String sep)
+   {
+      return svg(builder, shape.getPathIterator(null), sep);
+   }
+
+   public static int svg(StringBuilder builder, PathIterator pi, String sep)
+   {
+      int n = 0;
+
+      double[] coords = new double[6];
+
+      while (!pi.isDone())
+      {
+         n++;
+         int type = pi.currentSegment(coords);
+
+         if (builder.length() > 0)
+         {
+            builder.append(sep);
+         }
+
+         switch (type)
+         {
+            case PathIterator.SEG_MOVETO:
+              builder.append(String.format("M %f %f", coords[0], coords[1]));
+            break;
+            case PathIterator.SEG_LINETO:
+              builder.append(String.format("L %f %f", coords[0], coords[1]));
+            break;
+            case PathIterator.SEG_QUADTO:
+              builder.append(String.format("Q %f %f %f %f",
+                coords[0], coords[1], coords[2], coords[3]));
+            break;
+            case PathIterator.SEG_CUBICTO:
+              builder.append(String.format("C %f %f %f %f %f %f",
+                 coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]));
+            break;
+            case PathIterator.SEG_CLOSE:
+              builder.append("Z");
+            break;
+         }
+
+         pi.next();
+      }
+
+      return n;
+   }
+
+   public static double computeArea(Shape shape)
+   {
+      return computeArea(shape, 0.0);
+   }
+
    public static double computeArea(Shape shape, double flatness)
-   {// assume closed shape
+   {
       PathIterator pi = shape.getPathIterator(null, flatness);
 
       double area = 0.0;
@@ -1441,35 +1499,106 @@ public abstract class JDRShape extends JDRCompleteObject
       double prevY = 0.0;
       double startX = 0.0;
       double startY = 0.0;
+      double minX = Double.MAX_VALUE;
+      double maxX = -Double.MAX_VALUE;
+      double minY = Double.MAX_VALUE;
+      double maxY = -Double.MAX_VALUE;
 
       double[] coords = new double[6];
 
-      for (; pi.isDone(); pi.next())
+      boolean closed = false;
+      Point2D midPt = new Point2D.Double();
+
+      for (; !pi.isDone(); pi.next())
       {
          int type = pi.currentSegment(coords);
+
+         closed = false;
 
          switch (type)
          {
             case PathIterator.SEG_CLOSE:
                sum += prevX * startY - prevY * startX;
-               area += sum/2.0;
+
+               midPt.setLocation(minX+0.5*(maxX-minX), minY+0.5*(maxY-minY));
+
+               if (shape.contains(midPt))
+               {
+                  area += Math.abs(sum/2.0);
+               }
+               else
+               {
+                  area -= Math.abs(sum/2.0);
+               }
+
                sum = 0.0;
+               closed = true;
+               minX = Double.MAX_VALUE;
+               maxX = -Double.MAX_VALUE;
+               minY = Double.MAX_VALUE;
+               maxY = -Double.MAX_VALUE;
             break;
             case PathIterator.SEG_LINETO:
                sum += prevX * coords[1] - prevY * coords[0];
                prevX = coords[0];
                prevY = coords[1];
+
+               minX = Math.min(minX, prevX);
+               minY = Math.min(minY, prevY);
+               maxX = Math.max(maxX, prevX);
+               maxY = Math.max(maxY, prevY);
+            break;
+            case PathIterator.SEG_QUADTO:
+               sum += prevX * coords[3] - prevY * coords[2];
+               prevX = coords[2];
+               prevY = coords[3];
+
+               minX = Math.min(minX, prevX);
+               minY = Math.min(minY, prevY);
+               maxX = Math.max(maxX, prevX);
+               maxY = Math.max(maxY, prevY);
+            break;
+            case PathIterator.SEG_CUBICTO:
+               sum += prevX * coords[5] - prevY * coords[4];
+               prevX = coords[4];
+               prevY = coords[5];
+
+               minX = Math.min(minX, prevX);
+               minY = Math.min(minY, prevY);
+               maxX = Math.max(maxX, prevX);
+               maxY = Math.max(maxY, prevY);
             break;
             case PathIterator.SEG_MOVETO:
                prevX = coords[0];
                prevY = coords[1];
                startX = prevX;
                startY = prevY;
+
+               minX = Math.min(minX, prevX);
+               minY = Math.min(minY, prevY);
+               maxX = Math.max(maxX, prevX);
+               maxY = Math.max(maxY, prevY);
             break;
          }
       }
 
-      return area;
+      if (!closed)
+      {
+         sum += prevX * startY - prevY * startX;
+
+         midPt.setLocation(minX+0.5*(maxX-minX), minY+0.5*(maxY-minY));
+
+         if (shape.contains(midPt))
+         {
+            area += Math.abs(sum/2.0);
+         }
+         else
+         {
+            area -= Math.abs(sum/2.0);
+         }
+      }
+
+      return Math.abs(area);
    }
 
    public Object[] getDescriptionInfo()
