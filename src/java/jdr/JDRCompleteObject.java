@@ -651,17 +651,9 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public String info()
    {
-      String eol = System.getProperty("line.separator", "\n");
-
-      String str = "";
-
-      str += "description: "+description+eol;
-      str += "flowframe: "+flowframe+eol;
-      str += "is selected: "+isSelected()+eol;
-      str += "bounding box: "+getStorageBBox().info()+eol;
-      str += "hash code: "+hashCode()+eol;
-
-      return str;
+      return String.format("description: %s%nflowframe: %s%nis selected: %s%nbounding box:%s%nhash code: %s%n",
+        description, flowframe, isSelected(), getStorageBBox().info(), 
+        hashCode());
    }
 
    /**
