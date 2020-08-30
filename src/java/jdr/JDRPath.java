@@ -3020,28 +3020,24 @@ public class JDRPath extends JDRShape
 
    public String info()
    {
-      String eol = System.getProperty("line.separator", "\n");
-
-      String str = "Path:"+eol;
-      str += "size: "+size_+eol;
+      StringBuilder builder = new StringBuilder(
+       String.format("Path:%nsize: %d%n", size_));
 
       for (int i = 0; i < size_; i++)
       {
-         str += "Segment "+i+":"+eol;
-         str += segmentList_[i].info()+eol;
+         builder.append(String.format("Segment %d:%n%s%n",
+           i, segmentList_[i].info()));
       }
 
-      str += "closed: "+isClosed()+eol;
-      str += "line paint: "+getLinePaint()+eol;
-      str += "fill paint: "+getFillPaint()+eol;
-      str += "capacity: "+capacity_+eol;
-      str += "edited segment: "+selectedSegment+eol;
-      str += "edited control: "+selectedControl+eol;
-      str += "edited index: "+selectedControlIndex+eol;
+      builder.append(String.format("closed: %s%nline paint: %s%nfill paint: %s%ncapacity: %d%nedited segment: %s%nedited control: %s%nedited index: %s%nstroke: %s%narea: %f%n",
+        isClosed(), getLinePaint(), getFillPaint(), capacity_, selectedSegment,
+        selectedControl, selectedControlIndex, 
+        stroke == null ? "null" : stroke.info(),
+        computeArea(getGeneralPath())));
 
-      str += "stroke: "+getStroke().info()+eol;
+      builder.append(super.info());
 
-      return str+super.info();
+      return builder.toString();
    }
 
    protected void setSegmentList(JDRSegment[] list, int size)
