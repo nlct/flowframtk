@@ -7021,6 +7021,20 @@ public class JDRCanvas extends JPanel
       if (edit != null) frame_.postEdit(ce);
    }
 
+   public void convertToPolygon(JDRShape shape, Shape polygon)
+   {
+      try
+      {
+         UndoableEdit edit = new ConvertToPolygon(shape, polygon);
+
+         frame_.postEdit(edit);
+      }
+      catch (Exception e)
+      {
+         getResources().internalError(this, e);
+      }
+   }
+
    public boolean updateLaTeXFontSize(JDRGroup group, 
       LaTeXFontBase latexFonts, JDRCanvasCompoundEdit ce)
    {
@@ -15937,6 +15951,65 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return getResources().getString("undo.rotate");
+      }
+   }
+
+   class ConvertToPolygon extends CanvasUndoableEdit
+   {
+      private JDRShape object_, oldobject_;
+      private int index_;
+
+      public ConvertToPolygon(JDRShape object, Shape polygon)
+         throws InvalidPathException
+      {
+         super(getFrame());
+
+         oldobject_ = object;
+         index_ = ((JDRCompleteObject)object).getIndex();
+
+         JDRPath newPath = JDRPath.getPath(object.getCanvasGraphics(), 
+           polygon.getPathIterator(null));
+
+         newPath.setAttributes(object);
+
+         if (object instanceof JDRCompoundShape)
+         {
+            object_ = (JDRShape)object.clone();
+            ((JDRCompoundShape)object_).setUnderlyingShape(newPath);
+         }
+         else
+         {
+            object_ = newPath;
+         }
+
+         paths.set(index_, object_);
+
+         // Bounds may be different if the shape has markers.
+         setRefreshBounds(oldobject_, object_);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+         paths.set(index_, object_);
+
+         repaintRegion();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+         paths.set(index_, oldobject_);
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getString("undo.convert_to_polygon");
       }
    }
 

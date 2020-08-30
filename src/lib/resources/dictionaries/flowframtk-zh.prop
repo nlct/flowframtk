@@ -224,6 +224,8 @@
 <entry key="transform.convert_to_full.mnemonic">F</entry>
 <entry key="transform.merge">ºϲ¢·¾¶(M)</entry>
 <entry key="transform.merge.mnemonic">M</entry>
+<entry key="transform.convert_to_polygon">Convert To Polygon...</entry>
+<entry key="transform.convert_to_polygon.mnemonic">Y</entry>
 <entry key="transform.textpath">Convert To Text Path</entry>
 <entry key="transform.textpath.mnemonic">N</entry>
 <entry key="label.textpath">To Text Path</entry>
@@ -566,7 +568,7 @@
 <entry key="editpath.symmetry.join_anchor.mnemonic">J</entry>
 <entry key="editpath.symmetry.close_anchor">Anchor Start Control</entry>
 <entry key="editpath.symmetry.close_anchor.mnemonic">S</entry>
-<entry key="editpath.info">Details...</entry>
+<entry key="editpath.info">Segment Details...</entry>
 <entry key="editpath.info.mnemonic">I</entry>
 
 <!--  Distortion popup menu -->
@@ -882,6 +884,7 @@
 <entry key="undo.convert_to_path">ת»»Ϊ·¾¶</entry>
 <entry key="undo.convert_to_textpath">Convert to Text Path</entry>
 <entry key="undo.convert_to_pattern">Convert to Pattern</entry>
+<entry key="undo.convert_to_polygon">Convert to Polygon</entry>
 <entry key="undo.distort">Start Distortion</entry>
 <entry key="undo.distort_end">Distortion</entry>
 <entry key="undo.deiconify_child_window">¹رÕ×Ӵ°¿Ú</entry>
@@ -1399,6 +1402,16 @@
 <entry key="shear.x.mnemonic">X</entry>
 <entry key="shear.y">´¹ֱ·½ÏòÇãб(Y)</entry>
 <entry key="shear.y.mnemonic">Y</entry>
+
+<!-- convert to polygon dialog -->
+
+<entry key="polygon.title">Convert to Polygon</entry>
+<entry key="polygon.flatness">Flatness:</entry>
+<entry key="polygon.flatness.mnemonic">F</entry>
+<entry key="polygon.dotask">Create Polygon</entry>
+<entry key="polygon.dotask.mnemonic">P</entry>
+<entry key="polygon.size">Size: {0}</entry>
+<entry key="polygon.area_diff">Difference: {0}</entry>
 
 <!--  symbol selector -->
 <entry key="symbol.title">²åÈë·ûºÅ</entry>
@@ -2919,6 +2932,7 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_region">Smoothing region starting at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_loop">Smoothing loop starting at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_path">Smoothing path starting at ({0},{1}).</entry> 
+<entry key="vectorize.smoothing_subpath">Smoothing sub-path from ({0},{1}) to ({2},{3}).</entry> 
 <entry key="vectorize.smoothing_tiny_steps_run">Tiny steps from ({0},{1}) to ({2},{3}). Average length: {4}.</entry> 
 <entry key="vectorize.smoothing_bend_found">Possible bend found at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_bends_found">Possible bends found at ({0},{1}) and ({2}, {3}).</entry> 

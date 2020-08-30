@@ -228,7 +228,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getString("message.init_menus"));
 
-      invoker.setStartupDeterminate(184);
+      invoker.setStartupDeterminate(185);
 
       // create menu bar, menu and menu item
 
@@ -1867,6 +1867,25 @@ public class FlowframTk extends JFrame
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
                action.getFrame().subtractPaths();
+            }
+         });
+
+      incStartupProgress(transformM, subtractPathsItem);
+
+      // Convert to polygon
+
+      convertToPolygonDialog = new ConvertToPolygonDialog(this);
+
+      convertToPolygonItem = FlowframTkAction.createMenuItem(this,
+         "transform", "convert_to_polygon", transformM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_SHAPE,
+         FlowframTkAction.SELECTION_SINGLE_OBJECT_NO_GROUP, true, false, true,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               convertToPolygonDialog.display(action.getFrame());
             }
          });
 
@@ -7165,6 +7184,7 @@ public class FlowframTk extends JFrame
    private SetTransformDialogBox textMatrixDialog;
    private PatternDialogBox patternBox;
    private VectorizeBitmapDialog vectorizeBitmapDialog;
+   private ConvertToPolygonDialog convertToPolygonDialog;
    private FadeDialogBox fadeDialog;
    private TeXEditorDialog texEditorDialog;
    private CharacterSelector characterSelector;
@@ -7239,6 +7259,7 @@ public class FlowframTk extends JFrame
                      reverseItem,
                      convertToPathItem, mergePathsItem,
                      convertToFullPathItem,
+                     convertToPolygonItem,
                      removePatternItem,
                      editPatternItem,
                      separateItem,
