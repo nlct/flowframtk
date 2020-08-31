@@ -826,13 +826,7 @@ public class JDRPath extends JDRShape
 
       JDRPath path = new JDRPath(getCanvasGraphics(), n);
 
-      path.setLinePaint(getLinePaint());
-      path.setFillPaint(getFillPaint());
-      path.setStroke(getStroke());
-
-      path.flowframe = (flowframe==null?null : new FlowFrame(flowframe));
-      path.description = description;
-      path.setSelected(isSelected());
+      path.setAttributes(this);
 
       for (int i = n-1; i >= 0; i--)
       {
@@ -876,14 +870,7 @@ public class JDRPath extends JDRShape
       JDRPath newpath = getPath(getCanvasGraphics(),
        area1.getPathIterator(null));
 
-      newpath.setLinePaint((JDRPaint)getLinePaint().clone());
-      newpath.setFillPaint((JDRPaint)getFillPaint().clone());
-      newpath.setStroke((JDRStroke)getStroke().clone());
-      newpath.setSelected(isSelected());
-
-      newpath.flowframe = (flowframe==null?null
-         : new FlowFrame(flowframe));
-      newpath.description = description;
+      newpath.setAttributes(this);
 
       return newpath;
    }
@@ -906,14 +893,7 @@ public class JDRPath extends JDRShape
       JDRPath newpath = getPath(getCanvasGraphics(),
          area1.getPathIterator(null));
 
-      newpath.setLinePaint((JDRPaint)getLinePaint().clone());
-      newpath.setFillPaint((JDRPaint)getFillPaint().clone());
-      newpath.setStroke((JDRStroke)getStroke().clone());
-      newpath.setSelected(isSelected());
-
-      newpath.flowframe = (flowframe==null?null
-         : new FlowFrame(flowframe));
-      newpath.description = description;
+      newpath.setAttributes(this);
 
       return newpath;
    }
@@ -937,14 +917,7 @@ public class JDRPath extends JDRShape
       JDRPath newpath = getPath(getCanvasGraphics(),
          area1.getPathIterator(null));
 
-      newpath.setLinePaint((JDRPaint)getLinePaint().clone());
-      newpath.setFillPaint((JDRPaint)getFillPaint().clone());
-      newpath.setStroke((JDRStroke)getStroke().clone());
-      newpath.setSelected(isSelected());
-
-      newpath.flowframe = (flowframe==null?null
-         : new FlowFrame(flowframe));
-      newpath.description = description;
+      newpath.setAttributes(this);
 
       return newpath;
    }
@@ -955,7 +928,7 @@ public class JDRPath extends JDRShape
     * @return a new path that is this path less another path
     */
    public JDRShape subtract(JDRShape path)
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       Area area1 = new Area(getGeneralPath());
       Area area2 = new Area(path.getGeneralPath());
@@ -965,14 +938,7 @@ public class JDRPath extends JDRShape
       JDRPath newpath = getPath(getCanvasGraphics(),
           area1.getPathIterator(null));
 
-      newpath.setLinePaint((JDRPaint)getLinePaint().clone());
-      newpath.setFillPaint((JDRPaint)getFillPaint().clone());
-      newpath.setStroke((JDRStroke)getStroke().clone());
-      newpath.setSelected(isSelected());
-
-      newpath.flowframe = (flowframe==null?null
-         : new FlowFrame(flowframe));
-      newpath.description = description;
+      newpath.setAttributes(this);
 
       return newpath;
    }
@@ -1547,7 +1513,7 @@ public class JDRPath extends JDRShape
     * segment can't be found
     */
    public JDRShape breakPath()
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       if (selectedSegment == null)
       {
@@ -1796,6 +1762,24 @@ public class JDRPath extends JDRShape
    }
 
    /**
+    * Returns true if this path is a polygon. That is, it only
+    * consists of lines.
+    * @return true if this path is a polygon
+    */
+   public boolean isPolygon()
+   {
+      for (int i = 0, n = size(); i < n; i++)
+      {
+         if (get(i).isCurve())
+         {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   /**
     * Gets this path as a Path2D.
     * @return this path as a Path2D
     */
@@ -1830,6 +1814,22 @@ public class JDRPath extends JDRShape
       if (closed) path.closePath();
 
       return path;
+   }
+
+   public JDRShape toPolygon(double flatness)
+    throws InvalidShapeException
+   {
+      Shape path = getGeneralPath();
+
+      PathIterator pi = path.getPathIterator(null, flatness);
+
+      Path2D polygon = new Path2D.Double(pi.getWindingRule());
+      polygon.append(pi, false);
+
+      JDRPath newPath = getPath(getCanvasGraphics(), polygon.getPathIterator(null));
+      newPath.setAttributes(this);
+
+      return newPath;
    }
 
    /**
