@@ -178,6 +178,8 @@ public interface JDRPathSegment extends Cloneable,Serializable
     */
    public boolean isGap();
 
+   public boolean isCurve();
+
    public void setCanvasGraphics(CanvasGraphics cg);
 
    public CanvasGraphics getCanvasGraphics();

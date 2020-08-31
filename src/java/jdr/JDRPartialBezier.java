@@ -521,6 +521,8 @@ public class JDRPartialBezier extends JDRPartialSegment
 
    public boolean isGap() {return false;}
 
+   public boolean isCurve() {return true;}
+
    public String info()
    {
       return "partial Bezier: start="+start.info()

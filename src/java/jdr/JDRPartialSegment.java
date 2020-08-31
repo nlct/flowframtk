@@ -651,6 +651,8 @@ public class JDRPartialSegment extends JDRObject
 
    public boolean isGap() {return true;}
 
+   public boolean isCurve() {return false;}
+
    public String toString()
    {
       return "JDRPartialSegment[start="+start+",symmetry="+line_+"]";

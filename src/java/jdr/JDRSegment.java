@@ -1057,6 +1057,8 @@ public class JDRSegment extends JDRObject
 
    public boolean isGap() {return true;}
 
+   public boolean isCurve() {return false;}
+
    public int getSegmentFlag()
    {
       return SEGMENT_FLAG_MOVE;

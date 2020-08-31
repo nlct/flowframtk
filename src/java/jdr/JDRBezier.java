@@ -1581,6 +1581,8 @@ stationary point is outside of this segment.
 
    public boolean isGap() {return false;}
 
+   public boolean isCurve() {return true;}
+
    public int getSegmentFlag()
    {
       return SEGMENT_FLAG_CURVE;
