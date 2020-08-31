@@ -199,27 +199,27 @@ public abstract class JDRPattern extends JDRCompoundShape
    }
 
    public JDRShape intersect(JDRShape shape)
-       throws InvalidPathException
+       throws InvalidShapeException
    {
-      return path_.intersect(shape);
+      return getFullPath().intersect(shape);
    }
 
    public JDRShape pathUnion(JDRShape shape)
-      throws InvalidPathException
+      throws InvalidShapeException
    {
-      return path_.pathUnion(shape);
+      return getFullPath().pathUnion(shape);
    }
 
    public JDRShape exclusiveOr(JDRShape shape)
-      throws InvalidPathException
+      throws InvalidShapeException
    {
-      return path_.exclusiveOr(shape);
+      return getFullPath().exclusiveOr(shape);
    }
 
    public JDRShape subtract(JDRShape shape)
-      throws InvalidPathException
+      throws InvalidShapeException
    {
-      return path_.subtract(shape);
+      return getFullPath().subtract(shape);
    }
 
    public BBox getStorageControlBBox()
@@ -957,9 +957,27 @@ public abstract class JDRPattern extends JDRCompoundShape
    public abstract void makeParametersEqual(JDRPattern pattern);
 
    public JDRShape reverse()
-       throws InvalidPathException
+       throws InvalidShapeException
    {
       JDRShape shape = path_.reverse();
+
+      JDRPattern pattern = createTemplate();
+
+      pattern.path_  = shape;
+      pattern.point_ = (JDRPatternAnchorPoint)point_.clone();
+
+      if (adjust_ != null)
+      {
+         pattern.adjust_ = (JDRPatternAdjustPoint)adjust_.clone();
+      }
+
+      return pattern;
+   }
+
+   public JDRShape toPolygon(double flatness)
+     throws InvalidShapeException
+   {
+      JDRShape shape = path_.toPolygon(flatness);
 
       JDRPattern pattern = createTemplate();
 
@@ -1659,7 +1677,7 @@ public abstract class JDRPattern extends JDRCompoundShape
    }
 
    public JDRShape breakPath()
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       // break this path
 
@@ -1966,7 +1984,7 @@ public abstract class JDRPattern extends JDRCompoundShape
       super.applyCanvasGraphics(cg);
    }
 
-   public JDRShape outlineToPath() throws InvalidPathException
+   public JDRShape outlineToPath() throws InvalidShapeException
    {
       JDRPattern p = createTemplate();
 
