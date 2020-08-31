@@ -407,7 +407,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    public JDRShape breakPath()
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       return new JDRTextPath(path_.breakPath(), 
         (JDRTextPathStroke)getStroke());
@@ -642,7 +642,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    public JDRShape outlineToPath()
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       JDRShape shape = super.outlineToPath();
 
@@ -685,8 +685,17 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       ((JDRTextPathStroke)getStroke()).setTransformation(mtx);
    }
 
+   public JDRShape toPolygon(double flatness)
+      throws InvalidShapeException
+   {
+      JDRTextPath path = new JDRTextPath(path_.toPolygon(flatness),
+         (JDRTextPathStroke)getStroke().clone());
+
+      return path;
+   }
+
    public JDRShape reverse()
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       JDRTextPath path = new JDRTextPath(path_.reverse(),
          (JDRTextPathStroke)getStroke().clone());
@@ -695,28 +704,28 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    public JDRShape exclusiveOr(JDRShape path)
-   throws InvalidPathException
+   throws InvalidShapeException
    {
       return new JDRTextPath(path_.exclusiveOr(path),
          (JDRTextPathStroke)getStroke().clone());
    }
 
    public JDRShape pathUnion(JDRShape path)
-   throws InvalidPathException
+   throws InvalidShapeException
    {
       return new JDRTextPath(path_.pathUnion(path),
          (JDRTextPathStroke)getStroke().clone());
    }
 
    public JDRShape intersect(JDRShape path)
-   throws InvalidPathException
+   throws InvalidShapeException
    {
       return new JDRTextPath(path_.intersect(path),
          (JDRTextPathStroke)getStroke().clone());
    }
 
    public JDRShape subtract(JDRShape path)
-   throws InvalidPathException
+   throws InvalidShapeException
    {
       return new JDRTextPath(path_.subtract(path),
          (JDRTextPathStroke)getStroke().clone());
