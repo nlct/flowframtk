@@ -1476,7 +1476,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
     }
 
     public JDRShape breakPath()
-       throws InvalidPathException
+       throws InvalidShapeException
     {
        // Make new path have the same join as this path had before
        // it gets broken
@@ -1602,7 +1602,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
     * @return a group containing between 3 and 5 objects
     */
    public JDRGroup separate()
-      throws InvalidPathException
+      throws InvalidShapeException
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -1762,90 +1762,85 @@ public class JDRSymmetricPath extends JDRCompoundShape
       return path;
    }
 
-
-    public JDRShape reverse()
-       throws InvalidPathException
-    {
+   public JDRShape toPolygon(double flatness)
+       throws InvalidShapeException
+   {
       CanvasGraphics cg = getCanvasGraphics();
 
-       int n = path_.size();
+      JDRShape polygon = path_.toPolygon(flatness);
 
-       if (n == 0)
-       {
-          throw new EmptyPathException(cg);
-       }
+      JDRLine newSymLine = new JDRLine(line_);
 
-       JDRSymmetricPath path = new JDRSymmetricPath(line_,
-         n, (JDRPaint)getLinePaint().clone(), 
-            (JDRPaint)getFillPaint().clone(),
-            (JDRStroke)getStroke().clone());
+      JDRPartialSegment newJoin = null;
+      JDRPartialSegment newClosing = null;
 
-       path.flowframe = (flowframe==null?null
-          : (FlowFrame)flowframe.clone());
+      if (join != null && join.isCurve())
+      {
+         newJoin = new JDRPartialLine(cg);
+      }
 
-       path.description = description;
-       path.setSelected(isSelected());
+      if (closingSegment != null && closingSegment.isCurve())
+      {
+         newClosing = new JDRPartialLine(cg);
+      }
 
-       JDRPathSegment segment = null;
+      return new JDRSymmetricPath(polygon, newJoin, newSymLine, newClosing,
+        closed, markerSymmetry);
+   }
 
-       for (int i = 0; i < n; i++)
-       {
-          segment = getReflected(i);
+   public JDRShape reverse() throws InvalidShapeException
+   {
+      CanvasGraphics cg = getCanvasGraphics();
 
-          path.add((JDRSegment)segment);
-       }
+      JDRShape newShape = path_.reverse();
 
-       if (join != null)
-       {
-          if (isJoinLine())
-          {
-             path.setJoin(new JDRPartialLine(segment.getEnd(),
-               path.getSymmetry()));
-          }
-          else if (isJoinBezier())
-          {
-             path.setJoin(new JDRPartialBezier(segment.getEnd(),
-               new JDRPoint(cg, ((JDRPartialBezier)join).getControl2()),
-               path.getSymmetry()));
-          }
-          else
-          {
-             path.setJoin(new JDRPartialSegment(segment.getEnd(),
-               path.getSymmetry()));
-          }
-       }
+      JDRLine newSymLine = line_.reverse();
 
-       return path;
-    }
+      JDRPartialSegment newJoin = null;
+      JDRPartialSegment newClosing = null;
 
-    public JDRShape intersect(JDRShape shape)
-       throws InvalidPathException
-    {
-       return path_.intersect(shape);
-    }
+      if (join != null)
+      {
+         newClosing = (JDRPartialSegment)join.reverse();
+      }
 
-    public JDRShape pathUnion(JDRShape shape)
-       throws InvalidPathException
-    {
-       return path_.pathUnion(shape);
-    }
+      if (closingSegment != null)
+      {
+         newJoin = (JDRPartialSegment)closingSegment.reverse();
+      }
 
-    public JDRShape exclusiveOr(JDRShape shape)
-       throws InvalidPathException
-    {
-       return path_.exclusiveOr(shape);
-    }
+      return new JDRSymmetricPath(newShape, newJoin, newSymLine, newClosing,
+        closed, markerSymmetry);
+   }
 
-    public JDRShape subtract(JDRShape shape)
-       throws InvalidPathException
-    {
-       return path_.subtract(shape);
-    }
+   public JDRShape intersect(JDRShape shape)
+      throws InvalidShapeException
+   {
+      return getFullPath().intersect(shape);
+   }
 
-    public JDRObjectLoaderListener getListener()
-    {
-       return symmetricPathListener;
-    }
+   public JDRShape pathUnion(JDRShape shape)
+      throws InvalidShapeException
+   {
+      return getFullPath().pathUnion(shape);
+   }
+
+   public JDRShape exclusiveOr(JDRShape shape)
+      throws InvalidShapeException
+   {
+      return getFullPath().exclusiveOr(shape);
+   }
+
+   public JDRShape subtract(JDRShape shape)
+      throws InvalidShapeException
+   {
+      return getFullPath().subtract(shape);
+   }
+
+   public JDRObjectLoaderListener getListener()
+   {
+      return symmetricPathListener;
+   }
 
    /**
     * Gets string representation of this symmetric path.
@@ -1922,6 +1917,17 @@ public class JDRSymmetricPath extends JDRCompoundShape
     {
        return closingSegment;
     }
+
+   public boolean isPolygon()
+   {
+      if ((join != null && join.isCurve())
+       || (closingSegment != null && closingSegment.isCurve()))
+      {
+         return false;
+      }
+
+      return getUnderlyingShape().isPolygon();
+   }
 
     /**
      *  Checks if join is an instance of JDRPartialLine and is
@@ -2444,7 +2450,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
       super.applyCanvasGraphics(cg);
    }
 
-   public JDRShape outlineToPath() throws InvalidPathException
+   public JDRShape outlineToPath() throws InvalidShapeException
    {
        return new JDRSymmetricPath(
             path_.outlineToPath(),  
