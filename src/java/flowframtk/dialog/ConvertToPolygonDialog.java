@@ -45,7 +45,7 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
 {
    public ConvertToPolygonDialog(FlowframTk application)
    {
-      super(application, application.getResources().getString("polygon.title"));
+      super(application, application.getResources().getString("polygon.title"), true);
       this.application = application;
 
       init();
@@ -109,21 +109,21 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
    {
       canvas = frame.getCanvas();
       shape = canvas.getSelectedShape();
+      polygon = null;
+
+      if (shape.isPolygon())
+      {
+         JOptionPane.showMessageDialog(this, 
+           getResources().getString("polygon.no_curves"));
+
+         return;
+      }
+
       okayButton.setEnabled(false);
       doTaskButton.setEnabled(true);
       infoArea.setText("");
 
-      if (shape instanceof JDRCompoundShape)
-      {
-         shapeArea = new Area(
-           ((JDRCompoundShape)shape).getUnderlyingShape().getGeneralPath());
-      }
-      else
-      {
-         shapeArea = new Area(shape.getGeneralPath());
-      }
-
-      samplePanel.updateShape(shapeArea);
+      samplePanel.updateBounds(shape);
 
       setVisible(true);
    }
@@ -148,12 +148,14 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
          task = null;
       }
 
+      shape.getCanvasGraphics().setComponent(canvas);
       setVisible(false);
    }
 
    public void okay()
    {
-      canvas.convertToPolygon(shape, samplePanel.getPolygon());
+      shape.getCanvasGraphics().setComponent(canvas);
+      canvas.convertToPolygon(shape, polygon);
       setVisible(false);
    }
 
@@ -192,8 +194,10 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       getResources().error(this, e);
    }
 
-   private void finishedTask(Shape polygon)
+   private void finishedTask(JDRShape polygon)
    {
+      this.polygon = polygon;
+
       if (polygon == null)
       {
          infoArea.setText("");
@@ -211,7 +215,7 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       task = null;
    }
 
-   public void finishedTask(Shape polygon, String infoText, int numComponents,
+   public void finishedTask(JDRShape polygon, String infoText, int numComponents,
     double areaDiff)
    {
       finishedTask(polygon);
@@ -223,9 +227,14 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       return flatnessField.getDouble();
    }
 
-   public Area getShapeArea()
+   public JDRShape getOriginalShape()
    {
-      return shapeArea;
+      return shape;
+   }
+
+   public JDRShape getPolygon()
+   {
+      return polygon;
    }
 
    public void updateInfoArea(String infoText, int numComponents, double areaDiff)
@@ -238,15 +247,18 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       {
          infoArea.setText(String.format("%s%n%s%n%s",
           getResources().getMessage("polygon.size", numComponents),
-          getResources().getMessage("polygon.area_diff", areaDiff),
+          getResources().getMessage("polygon.area_diff", areaDiff, 
+          polygon.getCanvasGraphics().getStorageUnit().getLabel()),
           infoText));
       }
+
+      infoArea.setCaretPosition(0);
    }
 
    private FlowframTk application;
    private JDRCanvas canvas;
-   private JDRShape shape;
-   private Area shapeArea;
+
+   private JDRShape shape, polygon;
 
    private PolygonSamplePanel samplePanel;
    private NumberSpinnerField flatnessField;
@@ -275,34 +287,49 @@ class PolygonSamplePanel extends JPanel
       setBackground(Color.WHITE);
    }
 
-   public void updateShape(Shape shape)
+   public void updateBounds(JDRShape shape)
    {
-      this.shape = shape;
-
-      bounds = shape.getBounds2D();
-
-      setSize(new Dimension(
-         (int)Math.ceil(bounds.getWidth()), 
-         (int)Math.ceil(bounds.getHeight())));
-
-      polygon = null;
+      updateBounds(shape, null);
    }
 
-   public void setPolygon(Shape polygon)
+   public void updateBounds(JDRShape shape, JDRShape polygonShape)
    {
-      this.polygon = polygon;
+      CanvasGraphics cg = shape.getCanvasGraphics();
+      cg.setComponent(this);
+
+      bounds = shape.getComponentBBox();
+
+      setSize(new Dimension(
+        (int)Math.ceil(bounds.getWidth()), (int)Math.ceil(bounds.getHeight())));
+
+      originalShape = shape.getComponentGeneralPath();
+      setPolygon(polygonShape);
 
       repaint();
    }
 
-   public Shape getPolygon()
+   public void setPolygon(JDRShape polygonShape)
    {
-      return polygon;
+      if (polygonShape == null)
+      {
+         polygon = null;
+      }
+      else
+      {
+         polygon = polygonShape.getComponentGeneralPath();
+      }
+
+      repaint();
    }
 
    protected void paintComponent(Graphics g)
    {
       super.paintComponent(g);
+
+      if (originalShape == null)
+      {
+         return;
+      }
 
       Graphics2D g2 = (Graphics2D)g;
 
@@ -319,16 +346,13 @@ class PolygonSamplePanel extends JPanel
 
       Dimension dim = getSize();
 
-      double offsetX = bounds.getX()+0.5*(bounds.getWidth()-dim.getWidth());
-      double offsetY = bounds.getY()+0.5*(bounds.getHeight()-dim.getHeight());
+      double offsetX = bounds.getMinX()+0.5*(bounds.getWidth()-dim.getWidth());
+      double offsetY = bounds.getMinY()+0.5*(bounds.getHeight()-dim.getHeight());
 
       g2.translate(-offsetX, -offsetY);
 
-      if (shape != null)
-      {
-         g2.setPaint(Color.ORANGE);
-         g2.draw(shape);
-      }
+      g2.setPaint(JDRObject.draftColor);
+      g2.draw(originalShape);
 
       if (polygon != null)
       {
@@ -342,13 +366,11 @@ class PolygonSamplePanel extends JPanel
    }
 
    private ConvertToPolygonDialog dialog;
-
-   private Shape polygon;
-   private Shape shape;
-   private Rectangle2D bounds;
+   private Shape originalShape, polygon;
+   private BBox bounds;
 }
 
-class PolygonTask extends SwingWorker<Path2D,Void>
+class PolygonTask extends SwingWorker<JDRShape,Void>
 {
    public PolygonTask(ConvertToPolygonDialog dialog)
    {
@@ -356,26 +378,24 @@ class PolygonTask extends SwingWorker<Path2D,Void>
       this.dialog = dialog;
    }
 
-   protected Path2D doInBackground() throws InterruptedException
+   protected JDRShape doInBackground() 
+      throws InterruptedException,InvalidShapeException
    {
       dialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
       double flatness = dialog.getFlatness();
-      Area shapeArea = dialog.getShapeArea();
 
-      PathIterator pi = shapeArea.getPathIterator(null, flatness);
+      JDRShape shape = dialog.getOriginalShape();
 
-      Path2D polygon = new Path2D.Double(pi.getWindingRule());
-      polygon.append(pi, false);
+      JDRShape polygon = shape.toPolygon(flatness);
 
       polygonPathInfo = new StringBuilder();
 
-      numComponents = JDRShape.svg(polygonPathInfo, polygon);
+      numComponents = polygon.svg(polygonPathInfo);
 
-      Area area = new Area(polygon);
-      area.exclusiveOr(shapeArea);
+      JDRShape area = shape.exclusiveOr(polygon);
 
-      areaDiff = JDRShape.computeArea(area);
+      areaDiff = area.computeArea();// storage units
 
       return polygon;
    }

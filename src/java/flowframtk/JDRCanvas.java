@@ -7021,7 +7021,7 @@ public class JDRCanvas extends JPanel
       if (edit != null) frame_.postEdit(ce);
    }
 
-   public void convertToPolygon(JDRShape shape, Shape polygon)
+   public void convertToPolygon(JDRShape shape, JDRShape polygon)
    {
       try
       {
@@ -11720,7 +11720,7 @@ public class JDRCanvas extends JPanel
       private JDRShape oldObject_, object_;
 
       public ConvertOutlineToPath(JDRShape path)
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 
@@ -12235,7 +12235,7 @@ public class JDRCanvas extends JPanel
       private JDRCompoundShape original;
 
       public Separate(JDRCompoundShape shape)
-        throws InvalidPathException
+        throws InvalidShapeException
       {
          super(getFrame());
 
@@ -12380,7 +12380,7 @@ public class JDRCanvas extends JPanel
       private int n;
 
       public XORPaths(Vector<JDRShape> list) 
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 
@@ -12478,7 +12478,7 @@ public class JDRCanvas extends JPanel
       private int n;
 
       public PathIntersect(Vector<JDRShape> list) 
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 
@@ -12576,7 +12576,7 @@ public class JDRCanvas extends JPanel
       private int n;
 
       public SubtractPaths(Vector<JDRShape> list) 
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 
@@ -12674,7 +12674,7 @@ public class JDRCanvas extends JPanel
       private int n;
 
       public PathUnion(Vector<JDRShape> list) 
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 
@@ -13875,7 +13875,7 @@ public class JDRCanvas extends JPanel
       private int controlIndex;
 
       public BreakPath(JDRShape path)
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 
@@ -15959,28 +15959,15 @@ public class JDRCanvas extends JPanel
       private JDRShape object_, oldobject_;
       private int index_;
 
-      public ConvertToPolygon(JDRShape object, Shape polygon)
-         throws InvalidPathException
+      public ConvertToPolygon(JDRShape oldShape, JDRShape polygon)
+         throws InvalidShapeException
       {
          super(getFrame());
 
-         oldobject_ = object;
-         index_ = ((JDRCompleteObject)object).getIndex();
+         oldobject_ = oldShape;
+         index_ = ((JDRCompleteObject)oldShape).getIndex();
 
-         JDRPath newPath = JDRPath.getPath(object.getCanvasGraphics(), 
-           polygon.getPathIterator(null));
-
-         newPath.setAttributes(object);
-
-         if (object instanceof JDRCompoundShape)
-         {
-            object_ = (JDRShape)object.clone();
-            ((JDRCompoundShape)object_).setUnderlyingShape(newPath);
-         }
-         else
-         {
-            object_ = newPath;
-         }
+         object_ = polygon;
 
          paths.set(index_, object_);
 
@@ -16019,7 +16006,7 @@ public class JDRCanvas extends JPanel
       private int index_;
 
       public ReversePath(JDRShape object, int index)
-         throws InvalidPathException
+         throws InvalidShapeException
       {
          super(getFrame());
 

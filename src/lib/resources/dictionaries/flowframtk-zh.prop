@@ -1411,7 +1411,8 @@
 <entry key="polygon.dotask">Create Polygon</entry>
 <entry key="polygon.dotask.mnemonic">P</entry>
 <entry key="polygon.size">Size: {0}</entry>
-<entry key="polygon.area_diff">Difference: {0}</entry>
+<entry key="polygon.area_diff">Difference in area: {0} {1}&#x00B2;</entry>
+<entry key="polygon.no_curves">Shape is already a polygon.</entry>
 
 <!--  symbol selector -->
 <entry key="symbol.title">²åÈë·ûºÅ</entry>

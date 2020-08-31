@@ -1407,7 +1407,8 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="polygon.dotask">Create Polygon</entry>
 <entry key="polygon.dotask.mnemonic">P</entry>
 <entry key="polygon.size">Size: {0}</entry>
-<entry key="polygon.area_diff">Difference: {0}</entry>
+<entry key="polygon.area_diff">Difference in area: {0} {1}²</entry>
+<entry key="polygon.no_curves">Shape is already a polygon.</entry>
 
 <!--  symbol selector -->
 <entry key="symbol.title">Insert Symbol</entry>
