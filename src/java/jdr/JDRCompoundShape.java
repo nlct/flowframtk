@@ -54,6 +54,11 @@ public abstract class JDRCompoundShape extends JDRShape
       return getUnderlyingShape().isDistortable();
    }
 
+   public boolean isPolygon()
+   {
+      return getUnderlyingShape().isPolygon();
+   }
+
    public BBox getStorageDistortionBounds()
    {
       return getUnderlyingShape().getStorageDistortionBounds();
@@ -137,7 +142,7 @@ public abstract class JDRCompoundShape extends JDRShape
     * @return the group containing the components of this object
     */
    public abstract JDRGroup separate()
-     throws InvalidPathException;
+     throws InvalidShapeException;
 
    /**
     * Gets the total number of segments defining this shape.
