@@ -65,14 +65,14 @@ public abstract class JDRShape extends JDRCompleteObject
     * @return the reverse of this shape
     * @throws InvalidPathException if this shape can't be reversed
     */
-   public abstract JDRShape reverse() throws InvalidPathException;
+   public abstract JDRShape reverse() throws InvalidShapeException;
 
    /**
     * Creates a new shape that is a reflection of this shape.
     * @return the reflection of this shape
     */
    public JDRShape reflection(JDRLine symmetryLine)
-     throws InvalidPathException
+     throws InvalidShapeException
    {
       JDRShape reflection = (JDRShape)clone();
 
@@ -94,7 +94,7 @@ public abstract class JDRShape extends JDRCompleteObject
     * @return new shape that is this shape XOR the other shape
     */
    public abstract JDRShape exclusiveOr(JDRShape shape)
-      throws InvalidPathException;
+      throws InvalidShapeException;
 
    /**
     * Returns a shape created from applying union of
@@ -103,7 +103,7 @@ public abstract class JDRShape extends JDRCompleteObject
     * @return new shape that is this shape AND the shaper path
     */
    public abstract JDRShape pathUnion(JDRShape shape)
-      throws InvalidPathException;
+      throws InvalidShapeException;
    
    /**
     * Returns a new shape that is the intersection of this shape
@@ -113,7 +113,7 @@ public abstract class JDRShape extends JDRCompleteObject
     * and another shape
     */
    public abstract JDRShape intersect(JDRShape shape)
-      throws InvalidPathException;
+      throws InvalidShapeException;
 
    /**
     * Returns a new shape that is this shape less another shape.
@@ -121,15 +121,15 @@ public abstract class JDRShape extends JDRCompleteObject
     * @return a new shape that is this shape less another shape
     */
    public abstract JDRShape subtract(JDRShape shape)
-      throws InvalidPathException;
+      throws InvalidShapeException;
 
    /**
     * Creates a new shape from the stroked outline of this shape.
     * @return the shape following this shape's stroked outline
-    * @throws InvalidPathException if something is wrong with 
+    * @throws InvalidShapeException if something is wrong with 
     * the shape outline
     */
-   public JDRShape outlineToPath() throws InvalidPathException
+   public JDRShape outlineToPath() throws InvalidShapeException
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -210,9 +210,9 @@ public abstract class JDRShape extends JDRCompleteObject
     * Breaks shape at the currently selected segment and returns the
     * left over part as a new shape.
     * @return left over shape
-    * @throws InvalidPathException if the path can't be broken
+    * @throws InvalidShapeException if the path can't be broken
     */
-   public abstract JDRShape breakPath() throws InvalidPathException;
+   public abstract JDRShape breakPath() throws InvalidShapeException;
 
    /**
     * Returns the size of this shape. Typically the number of
@@ -1369,7 +1369,12 @@ public abstract class JDRShape extends JDRCompleteObject
    public abstract void setStroke(JDRStroke stroke);
    public abstract JDRStroke getStroke();
 
-   // Make this shape have the same line, fill and stroke as other
+   /** Makes this shape have the same attributes as other.
+    * Sets the line and fill paint, the stroke and common attributes
+    * such as description, flowframe data and edit mode. This checks
+    * for null in the event that it's used while a shape is under
+    * construction and the attributes haven't yet been set.
+    */
    public void setAttributes(JDRShape other)
    {
       JDRPaint paint = other.getLinePaint();
@@ -1378,6 +1383,8 @@ public abstract class JDRShape extends JDRCompleteObject
       setFillPaint(paint == null ? null : (JDRPaint)paint.clone());
       JDRStroke stroke = other.getStroke();
       setStroke(stroke == null ? null : (JDRStroke)stroke.clone());
+
+      super.makeEqual(other);
    }
 
    /**
@@ -1442,6 +1449,11 @@ public abstract class JDRShape extends JDRCompleteObject
       System.out.println("Winding rule: "+(rule==PathIterator.WIND_EVEN_ODD? "Even-Odd" : "Non-Zero"));
    }
 
+   public int svg(StringBuilder builder)
+   {
+      return svg(builder, getGeneralPath());
+   }
+
    public static int svg(StringBuilder builder, Shape shape)
    {
       return svg(builder, shape.getPathIterator(null), String.format("%n"));
@@ -1493,6 +1505,16 @@ public abstract class JDRShape extends JDRCompleteObject
       }
 
       return n;
+   }
+
+   public double computeArea()
+   {
+      return computeArea(getGeneralPath());
+   }
+
+   public double computeArea(double flatness)
+   {
+      return computeArea(getGeneralPath(), flatness);
    }
 
    public static double computeArea(Shape shape)
@@ -1626,6 +1648,16 @@ public abstract class JDRShape extends JDRCompleteObject
    {
       return true;
    }
+
+   /**
+    * Returns true if this path is a polygon. That is, it only
+    * consists of lines.
+    * @return true if this path is a polygon
+    */
+   public abstract boolean isPolygon();
+
+   public abstract JDRShape toPolygon(double flatness)
+    throws InvalidShapeException;
 
    public abstract BBox getStorageDistortionBounds();
 
