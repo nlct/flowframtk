@@ -53,7 +53,7 @@ public class JDRSymmetricPathListener extends JDRPathListener
          {
             return path.separate();
          }
-         catch (InvalidPathException e)
+         catch (InvalidShapeException e)
          {
             return new JDRGroup(jdr.getCanvasGraphics());
          }
