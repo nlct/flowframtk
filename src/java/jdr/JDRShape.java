@@ -1522,6 +1522,7 @@ public abstract class JDRShape extends JDRCompleteObject
       return computeArea(shape, 0.0);
    }
 
+   // estimated - only for simple paths
    public static double computeArea(Shape shape, double flatness)
    {
       PathIterator pi = shape.getPathIterator(null, flatness);
@@ -1582,6 +1583,7 @@ public abstract class JDRShape extends JDRCompleteObject
                maxY = Math.max(maxY, prevY);
             break;
             case PathIterator.SEG_QUADTO:
+               // estimate
                sum += prevX * coords[3] - prevY * coords[2];
                prevX = coords[2];
                prevY = coords[3];
@@ -1592,6 +1594,7 @@ public abstract class JDRShape extends JDRCompleteObject
                maxY = Math.max(maxY, prevY);
             break;
             case PathIterator.SEG_CUBICTO:
+               // estimate
                sum += prevX * coords[5] - prevY * coords[4];
                prevX = coords[4];
                prevY = coords[5];
@@ -1632,6 +1635,88 @@ public abstract class JDRShape extends JDRCompleteObject
       }
 
       return Math.abs(area);
+   }
+
+   public static double computeArea(Point2D[] pts)
+   {
+      double sum = 0.0;
+      Point2D prev = pts[0];
+
+      for (int i = 1; i < pts.length; i++)
+      {
+         sum += prev.getX() * pts[i].getY() - prev.getY() * pts[i].getX();
+
+         prev = pts[i];
+      }
+
+      sum += prev.getX() * pts[0].getY() - prev.getY() * pts[0].getX();
+
+      return Math.abs(sum)/2;
+   }
+
+   public double computePerimeter()
+   {
+      return computePerimeter(getGeneralPath());
+   }
+
+   public static double computePerimeter(Shape shape)
+   {
+      return computePerimeter(shape, 0.0);
+   }
+
+   public static double computePerimeter(Shape shape, double flatness)
+   {
+      return computePerimeter(shape.getPathIterator(null, flatness));
+   }
+
+   public static double computePerimeter(PathIterator pi)
+   {
+      double length = 0.0;
+      double prevX = 0.0;
+      double prevY = 0.0;
+      double startX = 0.0;
+      double startY = 0.0;
+
+      double[] coords = new double[6];
+
+      for (; !pi.isDone(); pi.next())
+      {
+         int type = pi.currentSegment(coords);
+
+         switch (type)
+         {
+            case PathIterator.SEG_CLOSE:
+               length += Point2D.distance(prevX, prevY, startX, startY);
+            break;
+            case PathIterator.SEG_MOVETO:
+               startX = coords[0];
+               startY = coords[1];
+               prevX = startX;
+               prevY = startY;
+            break;
+            case PathIterator.SEG_LINETO:
+               length += Point2D.distance(prevX, prevY, coords[0], coords[1]);
+               prevX = coords[0];
+               prevY = coords[1];
+            break;
+            case PathIterator.SEG_QUADTO:
+               length += JDRBezier.getEstimatedLength(prevX, prevY,
+                 (2*coords[0]+prevX)/3, (2*coords[1]+prevY)/3, 
+                 (coords[2]+2*coords[0])/3, (coords[3]+2*coords[1])/3, 
+                 coords[2], coords[3]);
+               prevX = coords[2];
+               prevY = coords[3];
+            break;
+            case PathIterator.SEG_CUBICTO:
+               length += JDRBezier.getEstimatedLength(prevX, prevY,
+                 coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
+               prevX = coords[4];
+               prevY = coords[5];
+            break;
+         }
+      }
+
+      return length;
    }
 
    public Object[] getDescriptionInfo()
