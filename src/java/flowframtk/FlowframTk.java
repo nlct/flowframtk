@@ -228,7 +228,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getString("message.init_menus"));
 
-      invoker.setStartupDeterminate(185);
+      invoker.setStartupDeterminate(186);
 
       // create menu bar, menu and menu item
 
@@ -2346,6 +2346,27 @@ public class FlowframTk extends JFrame
          });
 
       incStartupProgress(toolsM, finishButtonItem);
+
+      toolsM.addSeparator();
+
+      // Create path from SVG
+
+      createPathFromSvgDialog = new CreatePathFromSvgDialog(this);
+
+      createPathFromSvgItem = FlowframTkAction.createMenuItem(this,
+         "tools", "create_path_from_svg", toolsM,
+         TOOL_FLAG_SELECT | TOOL_FLAG_ANY_PATHS, EDIT_FLAG_NONE,
+         SELECT_FLAG_NONE,
+         FlowframTkAction.SELECTION_NONE, true, false, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               createPathFromSvgDialog.display(action.getFrame());
+            }
+         });
+
+      incStartupProgress(toolsM, createPathFromSvgItem);
 
       Dimension prefSize = sidePanel.getPreferredSize();
       prefSize.width += 4;
@@ -7185,6 +7206,7 @@ public class FlowframTk extends JFrame
    private PatternDialogBox patternBox;
    private VectorizeBitmapDialog vectorizeBitmapDialog;
    private ConvertToPolygonDialog convertToPolygonDialog;
+   private CreatePathFromSvgDialog createPathFromSvgDialog;
    private FadeDialogBox fadeDialog;
    private TeXEditorDialog texEditorDialog;
    private CharacterSelector characterSelector;
@@ -7283,7 +7305,7 @@ public class FlowframTk extends JFrame
                      zoomWidthItem, zoomHeightItem, zoomPageItem,
                      reduceToGreyItem, removeAlphaItem, convertToCMYKItem,
                      convertToRGBItem, convertToHSBItem, vectorizeItem, fadeItem,
-                     moveUpItem, moveDownItem;
+                     moveUpItem, moveDownItem, createPathFromSvgItem;
 
    private JRadioButtonMenuItem 
       zoomSettingsItem, zoom25Item,

@@ -299,6 +299,8 @@
 <entry key="tools.abandon.mnemonic">A</entry>
 <entry key="tools.finish">Finish</entry>
 <entry key="tools.finish.mnemonic">F</entry>
+<entry key="tools.create_path_from_svg">Create Path from SVG...</entry>
+<entry key="tools.create_path_from_svg.mnemonic">V</entry>
 
 <!--  navigation menu -->
 
@@ -1296,6 +1298,10 @@ File doesn''t exist</entry>
 <entry key="error.possible_malformed_1_7">Possible malformed 1.7 file. Attempting to read again.</entry>
 <entry key="error.no_current_point">No current point</entry>
 <entry key="error.vectorize_in_progress">Unfinished vectorize bitmap task must be completed or cancelled.</entry>
+<entry key="error.string_parse.invalid_number">Number expected while parsing ''{0}''. Found ''{1}''.</entry>
+<entry key="error.string_parse.invalid_command">Command expected while parsing ''{0}''. Found ''{1}''.</entry>
+<entry key="error.string_parse.invalid_flag">Flag (0 or 1) expected while parsing ''{0}''. Found ''{1}''.</entry>
+<entry key="error.no_path_data">No path data!</entry>
 
 <!--  internal error messages -->
 <entry key="internal_error.title">Internal Error</entry>
@@ -1417,7 +1423,12 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 
 <entry key="svg_path.title">Create Path from SVG</entry>
 <entry key="svg_path.dotask">Create Path</entry>
-<entry key="svg_path.info">Enter the path data (as per the SVG path "d" property). For example: M 100 100 L 300 400 Z</entry>
+<entry key="svg_path.unit">Unit:</entry>
+<entry key="svg_path.unit.mnemonic">Unit:</entry>
+<entry key="svg_path.info">Enter the path data (as per the SVG path "d" property) in the box below. For example: M 100 100 L 300 400 Z. Select the unit of measurement and click on the {0} button to create a draft path. (The current styles will be added to the path when it''s added to the canvas.)</entry>
+<entry key="svg_path.default_unit_info">The unit should correspond to the SVG data. The co-ordinates will be converted to the current storage unit while the SVG data is parsed.</entry>
+<entry key="svg_path.update_unit_info">You will need to reparse the SVG data to make the change in unit take effect.</entry>
+<entry key="svg_path.confirm.abandon">Are you sure you want to abandon the changes you have made to the SVG data?</entry>
 
 <!--  symbol selector -->
 <entry key="symbol.title">Insert Symbol</entry>
