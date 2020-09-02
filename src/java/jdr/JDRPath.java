@@ -1823,10 +1823,7 @@ public class JDRPath extends JDRShape
 
       PathIterator pi = path.getPathIterator(null, flatness);
 
-      Path2D polygon = new Path2D.Double(pi.getWindingRule());
-      polygon.append(pi, false);
-
-      JDRPath newPath = getPath(getCanvasGraphics(), polygon.getPathIterator(null));
+      JDRPath newPath = getPath(getCanvasGraphics(), pi);
       newPath.setAttributes(this);
 
       return newPath;
