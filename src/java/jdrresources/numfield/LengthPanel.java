@@ -44,7 +44,7 @@ import com.dickimawbooks.jdrresources.*;
  */
 
 public class LengthPanel extends JPanel
-   implements ItemListener
+   implements UnitChangeListener
 {
    public LengthPanel(JDRMessageDictionary msgSys, String label,
       NumberComponent numField)
@@ -59,10 +59,8 @@ public class LengthPanel extends JPanel
 
       sizeLabel.setLabelFor(numberField.getComponent());
 
-      unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
-      unitBox.addItemListener(this);
-      currentUnit = BP;
-      setUnit(JDRUnit.bp);
+      unitBox = new UnitField();
+      unitBox.addUnitChangeListener(this);
 
       add(sizeLabel);
       add(numberField.getComponent());
@@ -93,10 +91,8 @@ public class LengthPanel extends JPanel
       numberField = numField;
       setColumns(4);
 
-      unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS); 
-      unitBox.addItemListener(this);
-      currentUnit = BP;
-      setUnit(JDRUnit.bp);
+      unitBox = new UnitField(); 
+      unitBox.addUnitChangeListener(this);
 
       add(numberField.getComponent());
       add(unitBox);
@@ -227,33 +223,26 @@ public class LengthPanel extends JPanel
 
    public void setUnit(JDRUnit unit)
    {
-      currentUnit = unit.getID();
-
-      unitBox.setSelectedIndex(currentUnit);
+      unitBox.setUnit(unit);
    }
 
    private JDRUnit getUnit()
    {
-      return JDRUnit.getUnit(unitBox.getSelectedIndex());
+      return unitBox.getUnit();
    }
 
-   public void itemStateChanged(ItemEvent evt)
+   public void unitChanged(UnitChangeEvent evt)
    {
       Object source = evt.getSource();
 
-      if (evt.getStateChange() == ItemEvent.SELECTED)
+      if (source == unitBox)
       {
-         if (source == unitBox)
-         {
-            JDRUnit oldUnit = JDRUnit.getUnit(currentUnit);
+         JDRUnit oldUnit = evt.getOldUnit();
+         JDRUnit unit = evt.getNewUnit();
 
-            currentUnit = unitBox.getSelectedIndex();
-            JDRUnit unit = getUnit();
-
-            double val = getNumberComponent().getDouble();
-            double newVal = unit.fromUnit(val, oldUnit);
-            getNumberComponent().setValue(newVal);
-         }
+         double val = getNumberComponent().getDouble();
+         double newVal = unit.fromUnit(val, oldUnit);
+         getNumberComponent().setValue(newVal);
       }
    }
 
@@ -296,10 +285,8 @@ public class LengthPanel extends JPanel
    }
 
    private JLabel sizeLabel;
-   private JComboBox<String> unitBox;
+   private UnitField unitBox;
    private NumberComponent numberField;
-   public static final int PT=0, IN=1, CM=2, BP=3;
-   private int currentUnit=0;
 
    private JDRMessageDictionary messageSystem;
 }
