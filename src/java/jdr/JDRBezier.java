@@ -1550,6 +1550,22 @@ stationary point is outside of this segment.
       return result;
    }
 
+   public static double getEstimatedLength(double p0x, double p0y,
+     double p1x, double p1y, double p2x, double p2y, double p3x, double p3y)
+   {
+      return 0.5*(
+          Point2D.distance(p0x, p0y, p1x, p1y)
+        + Point2D.distance(p2x, p2y, p1x, p1y)
+        + Point2D.distance(p3x, p3y, p2x, p2y)
+        + Point2D.distance(p0x, p0y, p3x, p3y));
+   }
+
+   public double getEstimatedLength()
+   {
+      return getEstimatedLength(start.x, start.y, 
+        control1.x, control1.y, control2.x, control2.y, end.x, end.y);
+   }
+
    public int controlCount()
    {
       return 3;
