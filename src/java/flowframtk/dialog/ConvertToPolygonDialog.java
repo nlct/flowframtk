@@ -216,10 +216,10 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
    }
 
    public void finishedTask(JDRShape polygon, String infoText, int numComponents,
-    double areaDiff)
+    double xorArea, double perimeterLength, double polyArea)
    {
       finishedTask(polygon);
-      updateInfoArea(infoText, numComponents, areaDiff);
+      updateInfoArea(infoText, numComponents, xorArea, perimeterLength, polyArea);
    }
 
    public double getFlatness()
@@ -237,7 +237,8 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       return polygon;
    }
 
-   public void updateInfoArea(String infoText, int numComponents, double areaDiff)
+   public void updateInfoArea(String infoText, int numComponents, 
+     double xorArea, double perimeterLength, double polyArea)
    {
       if (infoText == null)
       {
@@ -245,10 +246,14 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       }
       else
       {
-         infoArea.setText(String.format("%s%n%s%n%s",
-          getResources().getMessage("polygon.size", numComponents),
-          getResources().getMessage("polygon.area_diff", areaDiff, 
-          polygon.getCanvasGraphics().getStorageUnit().getLabel()),
+         JDRResources resources = getResources();
+         String unit = polygon.getCanvasGraphics().getStorageUnit().getLabel();
+
+         infoArea.setText(String.format("%s%n%s%n%s%n%s%n%s",
+          resources.getMessage("polygon.size", numComponents),
+          resources.getMessage("polygon.length", perimeterLength, unit),
+          resources.getMessage("polygon.area", polyArea, unit),
+          resources.getMessage("polygon.xor_area", xorArea, unit),
           infoText));
       }
 
@@ -393,9 +398,18 @@ class PolygonTask extends SwingWorker<JDRShape,Void>
 
       numComponents = polygon.svg(polygonPathInfo);
 
-      JDRShape area = shape.exclusiveOr(polygon);
+      try
+      {
+         JDRShape area = shape.exclusiveOr(polygon);
+         xorArea = area.computeArea();// storage units
+      }
+      catch (EmptyPathException e)
+      {
+         xorArea = 0.0;
+      }
 
-      areaDiff = area.computeArea();// storage units
+      perimeterLength = polygon.computePerimeter();
+      polyArea = polygon.computeArea();
 
       return polygon;
    }
@@ -408,7 +422,7 @@ class PolygonTask extends SwingWorker<JDRShape,Void>
       {
          dialog.finishedTask(get(), 
            polygonPathInfo == null ? null : polygonPathInfo.toString(),
-           numComponents, areaDiff);
+           numComponents, xorArea, perimeterLength, polyArea);
       }
       catch (Exception e)
       {
@@ -418,6 +432,6 @@ class PolygonTask extends SwingWorker<JDRShape,Void>
 
    private ConvertToPolygonDialog dialog;
    private StringBuilder polygonPathInfo;
-   private double areaDiff = 0.0;
+   private double xorArea = 0.0, perimeterLength=0.0, polyArea=0.0;
    private int numComponents = 0;
 }

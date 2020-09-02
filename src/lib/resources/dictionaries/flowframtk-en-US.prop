@@ -963,6 +963,7 @@
 <entry key="undo.vectorize">Vectorize bitmap</entry>
 <entry key="undo.set_storage_unit">Set Storage Unit</entry>
 <entry key="undo.drag_and_drop">Drag and Drop</entry>
+<entry key="undo.new_path">New Path</entry>
 <entry key="undo.undo">Undo {0}</entry>
 <entry key="undo.redo">Redo {0}</entry>
 
@@ -1407,8 +1408,16 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="polygon.dotask">Create Polygon</entry>
 <entry key="polygon.dotask.mnemonic">P</entry>
 <entry key="polygon.size">Size: {0}</entry>
-<entry key="polygon.area_diff">Difference in area: {0} {1}²</entry>
+<entry key="polygon.xor_area">XOR area: {0} {1}²</entry>
+<entry key="polygon.length">Perimeter length: {0} {1}</entry>
+<entry key="polygon.area">Polygon area: {0} {1}²</entry>
 <entry key="polygon.no_curves">Shape is already a polygon.</entry>
+
+<!-- create path from SVG specs dialog -->
+
+<entry key="svg_path.title">Create Path from SVG</entry>
+<entry key="svg_path.dotask">Create Path</entry>
+<entry key="svg_path.info">Enter the path data (as per the SVG path "d" property). For example: M 100 100 L 300 400 Z</entry>
 
 <!--  symbol selector -->
 <entry key="symbol.title">Insert Symbol</entry>
@@ -2933,13 +2942,21 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_tiny_steps_run">Tiny steps from ({0},{1}) to ({2},{3}). Average length: {4}.</entry> 
 <entry key="vectorize.smoothing_bend_found">Possible bend found at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_bends_found">Possible bends found at ({0},{1}) and ({2}, {3}).</entry> 
-<entry key="vectorize.smoothing_possible_path">Possible path {0}. Average deviation: {1}. Deviation range: [{2}, {3}]. Length: {4}.</entry> 
+<entry key="vectorize.smoothing_choice_n">({0}): {1}</entry>
+<entry key="vectorize.smoothing_choosing_n_not_m">Choosing ({0}) over ({1}): {2}</entry>
+<entry key="vectorize.smoothing_discounting_n">Discounting ({0}): {1}</entry>
+<entry key="vectorize.smoothing_leq">{0} ≤ {1}</entry>
+<entry key="vectorize.smoothing_leq_offset">{0} ≤ {1} + {2}</entry>
+<entry key="vectorize.smoothing_reason_and">{0} and {1}</entry>
+<entry key="vectorize.smoothing_possible_path">Possible path {0}. Length: {1}. Delta: {2}.</entry> 
 <entry key="vectorize.smoothing_stat_pt">Deviation from stationary point: P({0})=({1},{2}) to ({3},{4}) = {5}.</entry>
 <entry key="vectorize.smoothing_no_stat_pt">No stationary points in range.</entry>
 <entry key="vectorize.smoothing_angle">Angle between gradient vectors: {0} rad ({1} degrees).</entry> 
+<entry key="vectorize.smoothing_replacing_path">Replacing path with {0}.</entry> 
 <entry key="vectorize.smoothing_replacing">Replacing sub-path from {0} to {1} with {2}.</entry> 
 <entry key="vectorize.smoothing_replacing2">Replacing sub-path from {0} to {1} with {2}.</entry> 
 <entry key="vectorize.smoothing_replacing3">Replacing sub-path from {0} to {1} with {2} {3}.</entry> 
+<entry key="vectorize.smoothing_curve_fit_iter">Curve fitting stopped at iteration {0}.</entry>
 
 <entry key="path_element_info.line">L ({0},{1}) – ({2},{3}) gradient: ({4},{5})</entry>
 <entry key="path_element_info.move">M ({0},{1}) ({2},{3})</entry>
