@@ -304,5 +304,5 @@ public interface JDRConstants
 
    public static final double ONE_OVER_ROOT_3 = 1.0/ROOT_3;
 
-
+   public static final double EPSILON = 1e-6;
 }
