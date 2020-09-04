@@ -1522,10 +1522,24 @@ public abstract class JDRShape extends JDRCompleteObject
       return computeArea(shape, 0.0);
    }
 
-   // estimated - only for simple paths
+   // estimated - only for simple paths (won't work for shapes with
+   // holes)
    public static double computeArea(Shape shape, double flatness)
    {
-      PathIterator pi = shape.getPathIterator(null, flatness);
+      Area polyArea;
+
+      if (shape instanceof Area && ((Area)shape).isPolygonal())
+      {
+         polyArea = (Area)shape;
+      }
+      else
+      {
+         Path2D polygon = new Path2D.Double();
+         polygon.append(shape.getPathIterator(null, flatness), false);
+         polyArea = new Area(polygon);
+      }
+
+      PathIterator pi = polyArea.getPathIterator(null);
 
       double area = 0.0;
       double sum = 0.0;
@@ -1533,104 +1547,43 @@ public abstract class JDRShape extends JDRCompleteObject
       double prevY = 0.0;
       double startX = 0.0;
       double startY = 0.0;
-      double minX = Double.MAX_VALUE;
-      double maxX = -Double.MAX_VALUE;
-      double minY = Double.MAX_VALUE;
-      double maxY = -Double.MAX_VALUE;
 
       double[] coords = new double[6];
-
-      boolean closed = false;
-      Point2D midPt = new Point2D.Double();
 
       for (; !pi.isDone(); pi.next())
       {
          int type = pi.currentSegment(coords);
 
-         closed = false;
-
          switch (type)
          {
             case PathIterator.SEG_CLOSE:
                sum += prevX * startY - prevY * startX;
-
-               midPt.setLocation(minX+0.5*(maxX-minX), minY+0.5*(maxY-minY));
-
-               if (shape.contains(midPt))
-               {
-                  area += Math.abs(sum/2.0);
-               }
-               else
-               {
-                  area -= Math.abs(sum/2.0);
-               }
-
+               area += Math.abs(sum/2.0);
                sum = 0.0;
-               closed = true;
-               minX = Double.MAX_VALUE;
-               maxX = -Double.MAX_VALUE;
-               minY = Double.MAX_VALUE;
-               maxY = -Double.MAX_VALUE;
             break;
             case PathIterator.SEG_LINETO:
                sum += prevX * coords[1] - prevY * coords[0];
                prevX = coords[0];
                prevY = coords[1];
-
-               minX = Math.min(minX, prevX);
-               minY = Math.min(minY, prevY);
-               maxX = Math.max(maxX, prevX);
-               maxY = Math.max(maxY, prevY);
             break;
             case PathIterator.SEG_QUADTO:
-               // estimate
+               // estimate (shouldn't happen)
                sum += prevX * coords[3] - prevY * coords[2];
                prevX = coords[2];
                prevY = coords[3];
-
-               minX = Math.min(minX, prevX);
-               minY = Math.min(minY, prevY);
-               maxX = Math.max(maxX, prevX);
-               maxY = Math.max(maxY, prevY);
             break;
             case PathIterator.SEG_CUBICTO:
-               // estimate
+               // estimate (shouldn't happen)
                sum += prevX * coords[5] - prevY * coords[4];
                prevX = coords[4];
                prevY = coords[5];
-
-               minX = Math.min(minX, prevX);
-               minY = Math.min(minY, prevY);
-               maxX = Math.max(maxX, prevX);
-               maxY = Math.max(maxY, prevY);
             break;
             case PathIterator.SEG_MOVETO:
                prevX = coords[0];
                prevY = coords[1];
                startX = prevX;
                startY = prevY;
-
-               minX = Math.min(minX, prevX);
-               minY = Math.min(minY, prevY);
-               maxX = Math.max(maxX, prevX);
-               maxY = Math.max(maxY, prevY);
             break;
-         }
-      }
-
-      if (!closed)
-      {
-         sum += prevX * startY - prevY * startX;
-
-         midPt.setLocation(minX+0.5*(maxX-minX), minY+0.5*(maxY-minY));
-
-         if (shape.contains(midPt))
-         {
-            area += Math.abs(sum/2.0);
-         }
-         else
-         {
-            area -= Math.abs(sum/2.0);
          }
       }
 
