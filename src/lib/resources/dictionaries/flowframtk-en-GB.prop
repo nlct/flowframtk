@@ -2895,6 +2895,18 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.smooth_shapes.min_points">Minimum points:</entry>
 <entry key="vectorize.smooth_shapes.min_points.mnemonic">P</entry>
 <entry key="vectorize.smooth_shapes.stat_pt_threshold">Stationary Point Threshold:</entry>
+<entry key="vectorize.smooth.nelder_mead">Nelder-Mead Simplex Parameters</entry>
+<entry key="vectorize.smooth.alpha">Alpha:</entry>
+<entry key="vectorize.smooth.alpha.tooltip">Reflection co-efficient</entry>
+<entry key="vectorize.smooth.gamma">Gamma:</entry>
+<entry key="vectorize.smooth.gamma.tooltip">Expansion co-efficient</entry>
+<entry key="vectorize.smooth.rho">Rho:</entry>
+<entry key="vectorize.smooth.rho.tooltip">Contraction co-efficient</entry>
+<entry key="vectorize.smooth.sigma">Sigma:</entry>
+<entry key="vectorize.smooth.sigma.tooltip">Shrink co-efficient</entry>
+<entry key="vectorize.smooth.epsilon">Epsilon:</entry>
+<entry key="vectorize.smooth.epsilon.tooltip">Termination threshold</entry>
+<entry key="vectorize.smooth.max_iter">Maximum iterations:</entry>
 
 <entry key="vectorize.remove_tiny_paths">Remove Tiny Paths</entry>
 <entry key="vectorize.remove_tiny_paths.min_area">Min Area:</entry>

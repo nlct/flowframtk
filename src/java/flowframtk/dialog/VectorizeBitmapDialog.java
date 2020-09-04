@@ -58,10 +58,10 @@ public class VectorizeBitmapDialog extends JFrame
       super(application.getResources().getString("vectorize.title"));
       this.application = application;
 
-      createAndShowGUI();
+      init();
    }
 
-   private void createAndShowGUI()
+   private void init()
    {
       JDRResources resources = getResources();
 
@@ -206,10 +206,19 @@ public class VectorizeBitmapDialog extends JFrame
       resources.addTab(resultTabbedPane, "vectorize.summary",
          new JScrollPane(summaryPanel));
 
-      messagePanel = resources.createAppInfoArea();
-      messagePanel.setOpaque(true);
+      JComponent messageComp = new JPanel(new BorderLayout());
+
+      messageArea = resources.createAppInfoArea();
+      messageArea.setOpaque(true);
+      messageComp.add(new JScrollPane(messageArea), "Center");
+
+      subTaskStatusBar = new SubTaskStatus(resources);
+      messageComp.add(subTaskStatusBar, "South");
+
+      hideSubTaskStatus();
+
       resources.addTab(resultTabbedPane, "vectorize.messages",
-         new JScrollPane(messagePanel));
+         messageComp);
 
       JSplitPane imagePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
          imageScrollPane, resultTabbedPane);
@@ -550,7 +559,7 @@ public class VectorizeBitmapDialog extends JFrame
       editComp.setSelected(true);
       historyGroup.add(editComp);
       historyPanel.add(editComp);
-      messagePanel.setText("");
+      messageArea.setText("");
 
       controlPanel.reset(false);
       controlPanel.updateWidgets(false, shapeList != null);
@@ -641,6 +650,12 @@ public class VectorizeBitmapDialog extends JFrame
    public JDRBitmap getBitmap()
    {
       return bitmap;
+   }
+
+   public CanvasGraphics getCanvasGraphics()
+   {
+      return bitmap == null ? application.getDefaultCanvasGraphics() 
+        : bitmap.getCanvasGraphics();
    }
 
    public JDRFrame getBitmapFrame()
@@ -894,17 +909,17 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void addMessage(String msg)
    {
-      messagePanel.setText(messagePanel.getText()+msg);
+      messageArea.setText(messageArea.getText()+msg);
    }
 
    public void addMessageLn(String msg)
    {
-      messagePanel.setText(String.format("%s%s%n", messagePanel.getText(), msg));
+      messageArea.setText(String.format("%s%s%n", messageArea.getText(), msg));
    }
 
    public void addMessageLn()
    {
-      messagePanel.setText(String.format("%s%n", messagePanel.getText()));
+      messageArea.setText(String.format("%s%n", messageArea.getText()));
    }
 
    public void setWorkingShape(Shape shape)
@@ -988,6 +1003,34 @@ public class VectorizeBitmapDialog extends JFrame
         scanStatusBar.isTaskInProgress(), shapeList != null && !shapeList.isEmpty());
    }
 
+   public void resetCurveFitProgress(int max, CubicCurve2D curve)
+   {
+      setWorkingShape(curve);
+      subTaskStatusBar.resetProgress();
+      subTaskStatusBar.setMaximum(max);
+   }
+
+   public void setCurveFitProgress(int progress, CurveFitSample sample)
+   {
+      mainPanel.updateWorkingCurve(sample);
+      subTaskStatusBar.updateProgress(progress, 
+         String.format("%f", sample.getDelta()));
+   }
+
+   public void showSubTaskStatus()
+   {
+      subTaskStatusBar.resetProgress();
+      subTaskStatusBar.setVisible(true);
+   }
+
+   public void hideSubTaskStatus()
+   {
+      if (subTaskStatusBar.isVisible())
+      {
+         subTaskStatusBar.setVisible(false);
+      }
+   }
+
    public void showStatusBar()
    {
       cardLayout.show(cardComp, "status");
@@ -1030,6 +1073,7 @@ public class VectorizeBitmapDialog extends JFrame
    public void finishedTask()
    {
       setWorkingShape(null);
+      hideSubTaskStatus();
       scanStatusBar.taskFinished();
       controlPanel.taskFinished(shapeList != null);
       updateTimeElapsed();
@@ -1814,6 +1858,36 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getCurveMinPoints();
    }
 
+   public double getCurveFitAlpha()
+   {
+      return controlPanel.getCurveFitAlpha();
+   }
+
+   public double getCurveFitGamma()
+   {
+      return controlPanel.getCurveFitGamma();
+   }
+
+   public double getCurveFitRho()
+   {
+      return controlPanel.getCurveFitRho();
+   }
+
+   public double getCurveFitSigma()
+   {
+      return controlPanel.getCurveFitSigma();
+   }
+
+   public double getCurveFitEpsilon()
+   {
+      return controlPanel.getCurveFitEpsilon();
+   }
+
+   public int getCurveFitMaximumIterations()
+   {
+      return controlPanel.getCurveFitMaximumIterations();
+   }
+
    public boolean isTryBezierOn()
    {
       return controlPanel.isTryBezierOn();
@@ -1823,7 +1897,7 @@ public class VectorizeBitmapDialog extends JFrame
    private JScrollPane imageScrollPane, resultScrollPane;
    private ResultPanel resultPanel;
    private SummaryPanel summaryPanel;
-   private JTextArea messagePanel;
+   private JTextArea messageArea;
 
    private Area scanRegion;
 
@@ -1835,6 +1909,7 @@ public class VectorizeBitmapDialog extends JFrame
    private JMenuItem undoItem, redoItem;
 
    private ScanStatusBar scanStatusBar;
+   private SubTaskStatus subTaskStatusBar;
    private ControlPanel controlPanel;
    private ZoomWidget mainZoomWidget, resultZoomWidget;
    private JCheckBox zoomLinkCheckBox;
@@ -3944,109 +4019,167 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveMinPointsLabel.setLabelFor(curveMinPointsSpinner);
       subPanel.add(curveMinPointsSpinner);
 
-      Dimension prefSize = tinyStepThresholdLabel.getPreferredSize();
-      Dimension maxPrefSize = prefSize;
+      JComponent nelderMead = Box.createVerticalBox();
+      nelderMead.setBorder(BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(), 
+        resources.getString("vectorize.smooth.nelder_mead")
+      ));
+      add(nelderMead);
 
-      prefSize = lengthThresholdLabel.getPreferredSize();
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      nelderMead.add(subPanel);
+
+      alphaSpinnerModel // >0
+         = new SpinnerNumberModel(Double.valueOf(1.0), 
+                 Double.valueOf(0.0), null, Double.valueOf(0.5));
+
+      alphaLabel = resources.createAppLabel("vectorize.smooth.alpha");
+      subPanel.add(alphaLabel);
+
+      alphaSpinner = 
+        controlPanel.createSpinner(alphaSpinnerModel);
+      alphaLabel.setLabelFor(alphaSpinner);
+      subPanel.add(alphaSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      nelderMead.add(subPanel);
+
+      gammaSpinnerModel // >1
+         = new SpinnerNumberModel(Double.valueOf(2.0), 
+                  Double.valueOf(1.0), null, Double.valueOf(0.5));
+
+      gammaLabel = resources.createAppLabel("vectorize.smooth.gamma");
+      subPanel.add(gammaLabel);
+
+      gammaSpinner = 
+        controlPanel.createSpinner(gammaSpinnerModel);
+      gammaLabel.setLabelFor(gammaSpinner);
+      subPanel.add(gammaSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      nelderMead.add(subPanel);
+
+      rhoSpinnerModel // 0 < rho <= 0.5
+         = new SpinnerNumberModel(0.5, 0.0, 0.5, 0.05);
+
+      rhoLabel = resources.createAppLabel("vectorize.smooth.rho");
+      subPanel.add(rhoLabel);
+
+      rhoSpinner = 
+        controlPanel.createSpinner(rhoSpinnerModel);
+      rhoLabel.setLabelFor(rhoSpinner);
+      subPanel.add(rhoSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      nelderMead.add(subPanel);
+
+      sigmaSpinnerModel // 0 < sigma < 1
+         = new SpinnerNumberModel(0.5, 0.0, 1.0, 0.1);
+
+      sigmaLabel = resources.createAppLabel("vectorize.smooth.sigma");
+      subPanel.add(sigmaLabel);
+
+      sigmaSpinner = 
+        controlPanel.createSpinner(sigmaSpinnerModel);
+      sigmaLabel.setLabelFor(sigmaSpinner);
+      subPanel.add(sigmaSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      nelderMead.add(subPanel);
+
+      epsilonSpinnerModel // epsilon > 0
+         = new SpinnerNumberModel(Double.valueOf(0.001), 
+                  Double.valueOf(0.0), null, Double.valueOf(0.25));
+
+      epsilonLabel = resources.createAppLabel("vectorize.smooth.epsilon");
+      subPanel.add(epsilonLabel);
+
+      epsilonSpinner = 
+        controlPanel.createSpinner(epsilonSpinnerModel);
+      epsilonLabel.setLabelFor(epsilonSpinner);
+      subPanel.add(epsilonSpinner);
+
+      subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      nelderMead.add(subPanel);
+
+      maxIterSpinnerModel // maxIter > 0
+         = new SpinnerNumberModel(Integer.valueOf(100), 
+                 Integer.valueOf(1), null, Integer.valueOf(100));
+
+      maxIterLabel = resources.createAppLabel("vectorize.smooth.max_iter");
+      subPanel.add(maxIterLabel);
+
+      maxIterSpinner = 
+        controlPanel.createSpinner(maxIterSpinnerModel);
+      maxIterLabel.setLabelFor(maxIterSpinner);
+      subPanel.add(maxIterSpinner);
+
+      // Adjust label sizes
+
+      Dimension maxPrefSize = updateMaxPreferredSize(tinyStepThresholdLabel, null);
+      updateMaxPreferredSize(lengthThresholdLabel, maxPrefSize);
+      updateMaxPreferredSize(thresholdDiffLabel, maxPrefSize);
+      updateMaxPreferredSize(maxDeviationLabel, maxPrefSize);
+      updateMaxPreferredSize(deviationEpsilonLabel, maxPrefSize);
+      updateMaxPreferredSize(curveGradientThresholdLabel, maxPrefSize);
+      updateMaxPreferredSize(curveStatPtLabel, maxPrefSize);
+      updateMaxPreferredSize(curveThresholdDiffLabel, maxPrefSize);
+      updateMaxPreferredSize(curveMinPointsLabel, maxPrefSize);
+
+      updateMaxPreferredSize(alphaLabel, maxPrefSize);
+      updateMaxPreferredSize(gammaLabel, maxPrefSize);
+      updateMaxPreferredSize(rhoLabel, maxPrefSize);
+      updateMaxPreferredSize(sigmaLabel, maxPrefSize);
+      updateMaxPreferredSize(epsilonLabel, maxPrefSize);
+      updateMaxPreferredSize(maxIterLabel, maxPrefSize);
+
+      updateLabelPreferredSize(tinyStepThresholdLabel, maxPrefSize);
+      updateLabelPreferredSize(lengthThresholdLabel, maxPrefSize);
+      updateLabelPreferredSize(thresholdDiffLabel, maxPrefSize);
+      updateLabelPreferredSize(maxDeviationLabel, maxPrefSize);
+      updateLabelPreferredSize(deviationEpsilonLabel, maxPrefSize);
+      updateLabelPreferredSize(curveGradientThresholdLabel, maxPrefSize);
+      updateLabelPreferredSize(curveStatPtLabel, maxPrefSize);
+      updateLabelPreferredSize(curveThresholdDiffLabel, maxPrefSize);
+      updateLabelPreferredSize(curveMinPointsLabel, maxPrefSize);
+
+      updateLabelPreferredSize(alphaLabel, maxPrefSize);
+      updateLabelPreferredSize(gammaLabel, maxPrefSize);
+      updateLabelPreferredSize(rhoLabel, maxPrefSize);
+      updateLabelPreferredSize(sigmaLabel, maxPrefSize);
+      updateLabelPreferredSize(epsilonLabel, maxPrefSize);
+      updateLabelPreferredSize(maxIterLabel, maxPrefSize);
+   }
+
+   private Dimension updateMaxPreferredSize(JComponent label, Dimension maxPrefSize)
+   {
+      Dimension prefSize = label.getPreferredSize();
+
+      if (maxPrefSize == null)
+      {
+         return new Dimension(prefSize.width, prefSize.height);
+      }
 
       if (prefSize.width > maxPrefSize.width)
       {
-         maxPrefSize = prefSize;
+         maxPrefSize.width = prefSize.width;
       }
 
-      prefSize = thresholdDiffLabel.getPreferredSize();
+      return maxPrefSize;
+   }
 
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = maxDeviationLabel.getPreferredSize();
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = deviationEpsilonLabel.getPreferredSize();
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = curveGradientThresholdLabel.getPreferredSize();
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = curveStatPtLabel.getPreferredSize();
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = curveThresholdDiffLabel.getPreferredSize();
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = curveMinPointsLabel.getPreferredSize();
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize = prefSize;
-      }
-
-      prefSize = tinyStepThresholdLabel.getPreferredSize();
+   private void updateLabelPreferredSize(JComponent label, Dimension maxPrefSize)
+   {
+      Dimension prefSize = label.getPreferredSize();
       prefSize.width = maxPrefSize.width;
-      tinyStepThresholdLabel.setPreferredSize(prefSize);
-      tinyStepThresholdLabel.setMaximumSize(prefSize);
-
-      prefSize = lengthThresholdLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      lengthThresholdLabel.setPreferredSize(prefSize);
-      lengthThresholdLabel.setMaximumSize(prefSize);
-
-      prefSize = thresholdDiffLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      thresholdDiffLabel.setPreferredSize(prefSize);
-      thresholdDiffLabel.setMaximumSize(prefSize);
-
-      prefSize = maxDeviationLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      maxDeviationLabel.setPreferredSize(prefSize);
-      maxDeviationLabel.setMaximumSize(prefSize);
-
-      prefSize = deviationEpsilonLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      deviationEpsilonLabel.setPreferredSize(prefSize);
-      deviationEpsilonLabel.setMaximumSize(prefSize);
-
-      prefSize = curveGradientThresholdLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      curveGradientThresholdLabel.setPreferredSize(prefSize);
-      curveGradientThresholdLabel.setMaximumSize(prefSize);
-
-      prefSize = curveStatPtLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      curveStatPtLabel.setPreferredSize(prefSize);
-      curveStatPtLabel.setMaximumSize(prefSize);
-
-      prefSize = curveThresholdDiffLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      curveThresholdDiffLabel.setPreferredSize(prefSize);
-      curveThresholdDiffLabel.setMaximumSize(prefSize);
-
-      prefSize = curveMinPointsLabel.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      curveMinPointsLabel.setPreferredSize(prefSize);
-      curveMinPointsLabel.setMaximumSize(prefSize);
+      label.setPreferredSize(prefSize);
+      label.setMaximumSize(prefSize);
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -4086,6 +4219,20 @@ class SmoothingPanel extends JPanel implements ChangeListener
          curveThresholdDiffLabel.setEnabled(enable);
          maxDeviationLabel.setEnabled(enable);
          deviationEpsilonLabel.setEnabled(enable);
+
+         alphaLabel.setEnabled(enable);
+         alphaSpinner.setEnabled(enable);
+         gammaLabel.setEnabled(enable);
+         gammaSpinner.setEnabled(enable);
+         rhoLabel.setEnabled(enable);
+         rhoSpinner.setEnabled(enable);
+         sigmaLabel.setEnabled(enable);
+         sigmaSpinner.setEnabled(enable);
+         epsilonLabel.setEnabled(enable);
+         epsilonSpinner.setEnabled(enable);
+         maxIterLabel.setEnabled(enable);
+         maxIterSpinner.setEnabled(enable);
+
          tryBezierCheckBox.setEnabled(enable);
 
          updateBezierWidgets();
@@ -4105,6 +4252,19 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveStationaryPtThresholdSpinner.setEnabled(enable);
       curveThresholdDiffLabel.setEnabled(enable);
       curveThresholdDiffSpinner.setEnabled(enable);
+
+      alphaLabel.setEnabled(enable);
+      alphaSpinner.setEnabled(enable);
+      gammaLabel.setEnabled(enable);
+      gammaSpinner.setEnabled(enable);
+      rhoLabel.setEnabled(enable);
+      rhoSpinner.setEnabled(enable);
+      sigmaLabel.setEnabled(enable);
+      sigmaSpinner.setEnabled(enable);
+      epsilonLabel.setEnabled(enable);
+      epsilonSpinner.setEnabled(enable);
+      maxIterLabel.setEnabled(enable);
+      maxIterSpinner.setEnabled(enable);
    }
 
    public void setSelected(boolean selected)
@@ -4125,16 +4285,12 @@ class SmoothingPanel extends JPanel implements ChangeListener
       tinyStepThresholdSpinner.setEnabled(enable);
       lengthThresholdSpinner.setEnabled(enable);
       thresholdDiffSpinner.setEnabled(enable);
-      curveThresholdDiffSpinner.setEnabled(enable);
       maxDeviationSpinner.setEnabled(enable);
       deviationEpsilonSpinner.setEnabled(enable);
       gradientAngleThresholdPanel.setEnabled(enable);
-      curveStationaryPtThresholdSpinner.setEnabled(enable);
-      curveMinPointsSpinner.setEnabled(enable);
       tinyStepThresholdLabel.setEnabled(enable);
       lengthThresholdLabel.setEnabled(enable);
       thresholdDiffLabel.setEnabled(enable);
-      curveThresholdDiffLabel.setEnabled(enable);
       maxDeviationLabel.setEnabled(enable);
       deviationEpsilonLabel.setEnabled(enable);
 
@@ -4143,8 +4299,25 @@ class SmoothingPanel extends JPanel implements ChangeListener
       enable = enable && tryBezierCheckBox.isSelected();
 
       curveGradientThresholdLabel.setEnabled(enable);
+      curveThresholdDiffSpinner.setEnabled(enable);
+      curveThresholdDiffLabel.setEnabled(enable);
       curveMinPointsLabel.setEnabled(enable);
+      curveMinPointsSpinner.setEnabled(enable);
       curveStatPtLabel.setEnabled(enable);
+      curveStationaryPtThresholdSpinner.setEnabled(enable);
+
+      alphaLabel.setEnabled(enable);
+      alphaSpinner.setEnabled(enable);
+      gammaLabel.setEnabled(enable);
+      gammaSpinner.setEnabled(enable);
+      rhoLabel.setEnabled(enable);
+      rhoSpinner.setEnabled(enable);
+      sigmaLabel.setEnabled(enable);
+      sigmaSpinner.setEnabled(enable);
+      epsilonLabel.setEnabled(enable);
+      epsilonSpinner.setEnabled(enable);
+      maxIterLabel.setEnabled(enable);
+      maxIterSpinner.setEnabled(enable);
    }
 
    public void reset(boolean revertAll)
@@ -4161,6 +4334,13 @@ class SmoothingPanel extends JPanel implements ChangeListener
          gradientAngleThresholdPanel.setDegrees(2.0);
          curveMinPointsSpinnerModel.setValue(Integer.valueOf(5));
          curveStationaryPtThresholdSpinnerModel.setValue(Double.valueOf(2.0));
+
+         alphaSpinnerModel.setValue(Double.valueOf(1.0));
+         gammaSpinnerModel.setValue(Double.valueOf(2.0));
+         rhoSpinnerModel.setValue(Double.valueOf(0.5));
+         sigmaSpinnerModel.setValue(Double.valueOf(0.5));
+         epsilonSpinnerModel.setValue(Double.valueOf(0.001));
+         maxIterSpinnerModel.setValue(Double.valueOf(100));
 
          if (!tryBezierCheckBox.isSelected())
          {
@@ -4224,9 +4404,40 @@ class SmoothingPanel extends JPanel implements ChangeListener
       return curveMinPointsSpinnerModel.getNumber().intValue();
    }
 
+   public double getCurveFitAlpha()
+   {
+      return alphaSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getCurveFitGamma()
+   {
+      return gammaSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getCurveFitRho()
+   {
+      return rhoSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getCurveFitSigma()
+   {
+      return sigmaSpinnerModel.getNumber().doubleValue();
+   }
+
+   public double getCurveFitEpsilon()
+   {
+      return epsilonSpinnerModel.getNumber().doubleValue();
+   }
+
+   public int getCurveFitMaximumIterations()
+   {
+      return maxIterSpinnerModel.getNumber().intValue();
+   }
+
    private JLabel tinyStepThresholdLabel, lengthThresholdLabel, thresholdDiffLabel,
     curveGradientThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
-    deviationEpsilonLabel, curveStatPtLabel, curveThresholdDiffLabel;
+    deviationEpsilonLabel, curveStatPtLabel, curveThresholdDiffLabel,
+    alphaLabel, gammaLabel, rhoLabel, sigmaLabel, epsilonLabel, maxIterLabel;
 
    private AnglePanel gradientAngleThresholdPanel;
 
@@ -4234,12 +4445,21 @@ class SmoothingPanel extends JPanel implements ChangeListener
      tinyStepThresholdSpinnerModel, lengthThresholdSpinnerModel,
      thresholdDiffSpinnerModel, maxDeviationSpinnerModel,
      deviationEpsilonSpinnerModel, curveStationaryPtThresholdSpinnerModel,
-     curveMinPointsSpinnerModel, curveThresholdDiffSpinnerModel;
+     curveMinPointsSpinnerModel, curveThresholdDiffSpinnerModel,
+// Nelder-Mead Simplex
+     alphaSpinnerModel, // reflection
+     gammaSpinnerModel, // expansion
+     rhoSpinnerModel,// contraction
+     sigmaSpinnerModel, // shrink
+     epsilonSpinnerModel, maxIterSpinnerModel // stopping criteria
+     ;
 
    private JSpinner curveMinPointsSpinner,
      thresholdDiffSpinner, lengthThresholdSpinner, tinyStepThresholdSpinner,
      maxDeviationSpinner, deviationEpsilonSpinner,
-     curveStationaryPtThresholdSpinner, curveThresholdDiffSpinner;
+     curveStationaryPtThresholdSpinner, curveThresholdDiffSpinner,
+     alphaSpinner, gammaSpinner, rhoSpinner, sigmaSpinner, epsilonSpinner,
+     maxIterSpinner;
 
    private JCheckBox doSmoothingCheckBox, tryBezierCheckBox;
 
@@ -4792,6 +5012,36 @@ class ControlPanel extends JPanel implements ActionListener
       return smoothingPanel.getCurveMinPoints();
    }
 
+   public double getCurveFitAlpha()
+   {
+      return smoothingPanel.getCurveFitAlpha();
+   }
+
+   public double getCurveFitGamma()
+   {
+      return smoothingPanel.getCurveFitGamma();
+   }
+
+   public double getCurveFitRho()
+   {
+      return smoothingPanel.getCurveFitRho();
+   }
+
+   public double getCurveFitSigma()
+   {
+      return smoothingPanel.getCurveFitSigma();
+   }
+
+   public double getCurveFitEpsilon()
+   {
+      return smoothingPanel.getCurveFitEpsilon();
+   }
+
+   public int getCurveFitMaximumIterations()
+   {
+      return smoothingPanel.getCurveFitMaximumIterations();
+   }
+
    public double getMaxTinyPaths()
    {
       return removeTinyPathsPanel.getMaxTinyPaths();
@@ -4984,6 +5234,41 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
    private VectorizeBitmapDialog dialog;
 }
 
+class SubTaskStatus extends JPanel
+{
+   public SubTaskStatus(JDRResources resources)
+   {
+      super(new BorderLayout());
+
+      progressBar = new JProgressBar(0, 100);
+      progressBar.setStringPainted(true);
+      add(progressBar, "Center");
+
+      textField = resources.createAppInfoField(14);
+      add(textField, "East");
+   }
+
+   public void resetProgress()
+   {
+      progressBar.setValue(0);
+      textField.setText("");
+   }
+
+   public void setMaximum(int max)
+   {
+      progressBar.setMaximum(max);
+   }
+
+   public void updateProgress(int progress, String info)
+   {
+      progressBar.setValue(progress);
+      textField.setText(info);
+   }
+
+   private JProgressBar progressBar;
+   private JTextField textField;
+}
+
 class ShapeComponentVector extends Vector<ShapeComponent>
 {
    public ShapeComponentVector()
@@ -5058,11 +5343,9 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    {
       ShapeComponent comp = lastElement();
 
-      if (comp.getType() != PathIterator.SEG_LINETO
-        && comp.getType() != PathIterator.SEG_MOVETO)
+      if (comp == null)
       {
-         lineTo(x, y);
-         return true;
+         throw new IllegalPathStateException("Missing moveto");
       }
 
       Point2D p = comp.getEnd();
@@ -5072,6 +5355,13 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       if (dx*dx + dy*dy < EPSILON)
       {
          return false;
+      }
+
+      if (comp.getType() != PathIterator.SEG_LINETO
+        && comp.getType() != PathIterator.SEG_MOVETO)
+      {
+         lineTo(x, y);
+         return true;
       }
 
       if (comp.getType() == PathIterator.SEG_MOVETO)
@@ -5113,6 +5403,19 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       }
 
       ShapeComponent comp1 = get(1);
+
+      for (int i = size()-2; i > 0; i--)
+      {
+         ShapeComponent comp = get(i);
+
+         if (comp.getType() == PathIterator.SEG_MOVETO)
+         {
+            comp1 = get(i+1);
+
+            break;
+         }
+      }
+
       ShapeComponent comp2 = lastElement();
 
       Point2D p0 = comp1.getStart();
@@ -5153,6 +5456,49 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       }
 
       closePath();
+   }
+
+   public void addShape(Shape shape)
+   {
+      Point2D startPt = null;
+
+      if (!isEmpty())
+      {
+         ShapeComponent comp = lastElement();
+
+         if (comp.getType() != PathIterator.SEG_CLOSE)
+         {
+            startPt = comp.getEnd();
+         }
+      }
+
+      PathIterator pi = shape.getPathIterator(null);
+      double[] coords = new double[6];
+
+      // first will always be moveto
+      int type = pi.currentSegment(coords);
+
+      if (startPt == null)
+      {
+         ShapeComponent comp = new ShapeComponent(type, coords, startPt);
+
+         addComponent(comp);
+
+         startPt = comp.getEnd();
+      }
+
+      pi.next();
+
+      for (; !pi.isDone(); pi.next())
+      {
+         type = pi.currentSegment(coords);
+
+         ShapeComponent comp = new ShapeComponent(type, coords, startPt);
+
+         addComponent(comp);
+
+         startPt = comp.getEnd();
+      }
    }
 
    public void addComponent(ShapeComponent comp)
@@ -5409,6 +5755,29 @@ class ShapeComponentVector extends Vector<ShapeComponent>
       return path;
    }
 
+   // Starts at end point of get(startIdx). Includes get(endIdx).
+   public Path2D getPath(int startIdx, int endIdx)
+   {
+      Path2D.Double path = new Path2D.Double(windingRule, endIdx-startIdx+1);
+
+      ShapeComponent comp = get(startIdx);
+      Point2D pt = comp.getEnd();
+
+      path.moveTo(pt.getX(), pt.getY());
+
+      for (int i = startIdx+1; i <= endIdx; i++)
+      {
+         get(i).addToPath(path);
+      }
+
+      return path;
+   }
+
+   public double computeArea()
+   {
+      return JDRShape.computeArea(getPath());
+   }
+
    public ShapeComponentVector getSubPath(int endIdx)
    {
       ShapeComponentVector subPath = new ShapeComponentVector(size()-endIdx);
@@ -5521,6 +5890,14 @@ class ShapeComponentVector extends Vector<ShapeComponent>
          ShapeComponent comp = get(i);
          builder.append(comp);
       }
+
+      return builder.toString();
+   }
+
+   public static String svg(Shape shape)
+   {
+      StringBuilder builder = new StringBuilder();
+      int n = JDRShape.svg(builder, shape, " ");
 
       return builder.toString();
    }
@@ -5710,6 +6087,68 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    public boolean isOppositeDirection(ShapeComponentVector other)
    {
       return getDirection() + other.getDirection() == 0;
+   }
+
+   public static String info(Shape shape, JDRResources resources)
+   {
+      StringBuilder builder = new StringBuilder();
+
+      PathIterator pi = shape.getPathIterator(null);
+      double[] coords = new double[6];
+
+      double x0 = 0.0;
+      double y0 = 0.0;
+
+      for (; !pi.isDone(); pi.next())
+      {
+         if (builder.length() > 0)
+         {
+            builder.append(String.format("%n"));
+         }
+
+         int type = pi.currentSegment(coords);
+
+         switch (type)
+         {
+            case PathIterator.SEG_CLOSE:
+               builder.append(resources.getString("path_element_info.close"));
+            break;
+            case PathIterator.SEG_CUBICTO:
+               builder.append(resources.getMessage("path_element_info.cubic",
+                 x0, y0, coords[0], coords[1], coords[2], coords[3], 
+                 coords[4], coords[5], 
+                 3*(coords[0]-x0), 3*(coords[1]-y0),
+                 3*(coords[4]-coords[2]), 3*(coords[5]-coords[3])));
+               x0 = coords[4];
+               y0 = coords[5];
+            break;
+            case PathIterator.SEG_LINETO:
+               builder.append(resources.getMessage("path_element_info.line",
+                 x0, y0, coords[0], coords[1], coords[0]-x0, coords[1]-y0));
+               x0 = coords[0];
+               y0 = coords[1];
+            break;
+            case PathIterator.SEG_MOVETO:
+               if (builder.length() > 0)
+               {
+                  builder.append(resources.getMessage("path_element_info.move",
+                    x0, y0, coords[0], coords[1]));
+               }
+               x0 = coords[0];
+               y0 = coords[1];
+            break;
+            case PathIterator.SEG_QUADTO:
+               builder.append(resources.getMessage("path_element_info.quad",
+                 x0, y0, coords[0], coords[1], coords[2], coords[3],
+                 2*(coords[0]-x0), 2*(coords[1]-y0),
+                 2*(coords[2]-coords[0]), 2*(coords[2]-coords[1])));
+               x0 = coords[2];
+               y0 = coords[3];
+            break;
+         }
+      }
+
+      return builder.toString();
    }
 
    private int direction = SubPath.DIRECTION_UNSET;
@@ -7496,7 +7935,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
    public static final int SPLIT_ALL=0, EVEN_INTERIOR_SPLIT=1, SPLIT_EXTERIOR_ONLY=2;
 }
 
-class MergeNearPaths extends SwingWorker<Void,Void>
+class MergeNearPaths extends SwingWorker<Void,Rectangle>
 {
    public MergeNearPaths(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapeList,
      boolean continueToNextStep)
@@ -7576,7 +8015,7 @@ class MergeNearPaths extends SwingWorker<Void,Void>
                dialog.addMessageIdLn("vectorize.merged_path", vec.svg());
                shapeList.remove(j);
                j--;
-               dialog.repaintImagePanel(vec.getBounds());
+               publish(vec.getBounds());
                incProgress();
                sleepAndCheckCancel();
             }
@@ -7584,6 +8023,16 @@ class MergeNearPaths extends SwingWorker<Void,Void>
       }
 
       return null;
+   }
+
+   protected void process(java.util.List<Rectangle> list)
+   {
+      Iterator<Rectangle> iter = list.iterator();
+
+      while (iter.hasNext())
+      {
+         dialog.repaintImagePanel(iter.next());
+      }
    }
 
    private boolean mergeLines(ShapeComponentVector vec1, 
@@ -7595,28 +8044,26 @@ class MergeNearPaths extends SwingWorker<Void,Void>
       Point2D endPt1 = vec1.lastElement().getEnd();
       Point2D endPt2 = vec2.lastElement().getEnd();
 
-      double sqThreshold = deltaThreshold*deltaThreshold;
+      double dist1 = JDRLine.getLength(endPt1, startPt2);
+      double dist2 = JDRLine.getLength(endPt2, startPt1);
+      double dist3 = JDRLine.getLength(endPt2, endPt1);
+      double dist4 = JDRLine.getLength(startPt1, startPt2);
 
-      double dist1 = ShapeComponent.getSquareDistance(endPt1, startPt2);
-      double dist2 = ShapeComponent.getSquareDistance(endPt2, startPt1);
-      double dist3 = ShapeComponent.getSquareDistance(endPt2, endPt1);
-      double dist4 = ShapeComponent.getSquareDistance(startPt1, startPt2);
-
-      if (dist1 <= sqThreshold && dist1 <= dist2
+      if (dist1 <= deltaThreshold && dist1 <= dist2
            && dist1 <= dist3 && dist1 <= dist4)
       {
          vec1.appendPath(vec2, true);
-         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist1),
+         dialog.addMessageIdLn("vectorize.merging_paths", dist1,
           vec1.svg(), vec2.svg());
       }
-      else if (dist2 <= sqThreshold && dist2 <= dist1
+      else if (dist2 <= deltaThreshold && dist2 <= dist1
                 && dist2 <= dist3 && dist2 <= dist4)
       {
          vec1.prependPath(vec2, true);
-         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist2),
+         dialog.addMessageIdLn("vectorize.merging_paths", dist2,
           vec1.svg(), vec2.svg());
       }
-      else if (dist3 <= sqThreshold && dist3 <= dist1
+      else if (dist3 <= deltaThreshold && dist3 <= dist1
                 && dist3 <= dist2 && dist3 <= dist4)
       {
          vec1.lineTo(endPt1);
@@ -7626,10 +8073,10 @@ class MergeNearPaths extends SwingWorker<Void,Void>
             vec1.addComponent(vec2.get(i).reverse());
          }
 
-         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist3),
+         dialog.addMessageIdLn("vectorize.merging_paths", dist3,
           vec1.svg(), vec2.svg());
       }
-      else if (dist4 <= sqThreshold && dist4 <= dist1
+      else if (dist4 <= deltaThreshold && dist4 <= dist1
                 && dist4 <= dist2 && dist4 <= dist3)
       {
          ShapeComponentVector reverse = new ShapeComponentVector(vec2.size());
@@ -7643,7 +8090,7 @@ class MergeNearPaths extends SwingWorker<Void,Void>
 
          vec1.prependPath(reverse, true);
 
-         dialog.addMessageIdLn("vectorize.merging_paths", Math.sqrt(dist4),
+         dialog.addMessageIdLn("vectorize.merging_paths", dist4,
           vec1.svg(), vec2.svg());
       }
       else
@@ -7677,7 +8124,6 @@ class MergeNearPaths extends SwingWorker<Void,Void>
       Point2D endPt1 = vec1.get(n1-2).getEnd();
       Point2D endPt2 = vec2.get(n2-2).getEnd();
 
-      double sqThreshold = deltaThreshold*deltaThreshold;
       double sum = 0.0;
 
       int idx1 = -1;
@@ -7707,23 +8153,23 @@ class MergeNearPaths extends SwingWorker<Void,Void>
                continue;
             }
 
-            double dist = ShapeComponent.getSquareDistance(p1, p2);
+            double dist = JDRLine.getLength(p1, p2);
 
-            if (dist > sqThreshold)
+            if (dist > deltaThreshold)
             {
                prevPt = p2;
                continue;
             }
 
-            sum = Math.sqrt(dist);
+            sum = dist;
 
             Point2D nextPt = (i == n1-2 ? startPt1 : vec1.get(i+1).getEnd());
 
-            dist = ShapeComponent.getSquareDistance(prevPt, nextPt);
+            dist = JDRLine.getLength(prevPt, nextPt);
 
-            if (dist <= sqThreshold)
+            if (dist <= deltaThreshold)
             {
-               sum += Math.sqrt(dist);
+               sum += dist;
                idx1 = i;
                idx2 = j;
 
@@ -7769,14 +8215,14 @@ class MergeNearPaths extends SwingWorker<Void,Void>
          Point2D p1 = comp1.getEnd();
          Point2D p2 = comp2.getEnd();
 
-         double dist = ShapeComponent.getSquareDistance(p1, p2);
+         double dist = JDRLine.getLength(p1, p2);
 
-         if (dist > sqThreshold)
+         if (dist > deltaThreshold)
          {
             break;
          }
 
-         sum += Math.sqrt(dist);
+         sum += dist;
          N++;
          endIdx1 = i;
          endIdx2 = k;
@@ -7903,7 +8349,7 @@ class MergeNearPaths extends SwingWorker<Void,Void>
    private boolean continueToNextStep;
 }
 
-class LineDetection extends SwingWorker<Void,ShapeComponentVector>
+class LineDetection extends SwingWorker<Void,Rectangle>
 {
    public LineDetection(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapeList,
      boolean continueToNextStep)
@@ -7976,15 +8422,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
       }
    }
 
-   protected void process(java.util.List<ShapeComponentVector> shapeVecList)
+   protected void process(java.util.List<Rectangle> list)
    {
-      Iterator<ShapeComponentVector> iter = shapeVecList.iterator();
+      Iterator<Rectangle> iter = list.iterator();
 
       while (iter.hasNext())
       {
-         ShapeComponentVector vec = iter.next();
-
-         dialog.repaintImagePanel(vec.getBounds());
+         dialog.repaintImagePanel(iter.next());
       }
    }
 
@@ -8008,7 +8452,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
    private void addShape(ShapeComponentVector newShape)
    {
       shapeList.add(newShape);
-      publish(newShape);
+      publish(newShape.getBounds());
    }
 
    private void addShape(ShapeComponentVector newShape, String id,
@@ -8018,7 +8462,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
       addPathResultMessage(getNumShapes(), id, params);
 
-      publish(newShape);
+      publish(newShape.getBounds());
    }
 
    private void addPathResultMessage(int n, String id, Object... params)
@@ -9213,7 +9657,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return;
       }
 
-      double sqThreshold = 4.0 * deltaThreshold*deltaThreshold;
+      double threshold = 2.0 * deltaThreshold;
 
       int remaining = n1 - n2;
 
@@ -9267,13 +9711,13 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          Point2D q1 = pts1.firstElement();
          Point2D q2 = pts1.get(j2);
 
-         double minDist1 = JDRLine.getSquareLength(q1, p1);
-         double minDist2 = JDRLine.getSquareLength(q2, p2);
+         double minDist1 = JDRLine.getLength(q1, p1);
+         double minDist2 = JDRLine.getLength(q2, p2);
 
          for (int j = 1; j < n1-1; j++)
          {
             Point2D q = pts1.get(j);
-            double d = JDRLine.getSquareLength(q, p1);
+            double d = JDRLine.getLength(q, p1);
 
             if (d <= minDist1 && j < j2)
             {
@@ -9281,7 +9725,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                q1 = q;
             }
 
-            d = JDRLine.getSquareLength(q, p2);
+            d = JDRLine.getLength(q, p2);
 
             if (d <= minDist2 && j > j1)
             {
@@ -9303,7 +9747,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
                Point2D q = 
                   JDRLine.getClosestPointAlongLine(p1, p2, p, true);
 
-               if (JDRLine.getSquareLength(p, q) <= sqThreshold)
+               if (JDRLine.getLength(p, q) <= threshold)
                {
                   PointPair pp2 = new PointPair(q, p2, 
                     pp.getIndex().doubleValue()+(((double)j)/(m+1.0)));
@@ -9331,51 +9775,6 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          pts2.add(pp.getP2());
       }
 
-/*
-      if (pts2.size() == pts1.size())
-      {
-         return;
-      }
-
-      for (int i = 1; i < pts2.size() && i < n1-1 && pts2.size() < n1; i++)
-      {
-         Point2D p1 = pts1.get(i);
-         Point2D p2 = pts2.get(i);
-
-         Point2D p0 = pts2.get(i-1);
-
-         // get closest point on p0 -- p2 to p1
-
-         Point2D q = JDRLine.getClosestPointAlongLine(p0, p2, p1, true);
-         double d1 = JDRLine.getSquareLength(p1, q);
-
-         pts2.add(i, q);
-
-         if (pts2.size() == n1)
-         {
-            return;
-         }
-
-         int j = pts2.size()-1-i;
-
-         p1 = pts1.get(n1-1-i);
-         p2 = pts2.get(j);
-
-         p0 = pts2.get(j+1);
-
-         // get closest point on p0 -- p2 to p1
-
-         q = JDRLine.getClosestPointAlongLine(p0, p2, p1, true);
-         d1 = JDRLine.getSquareLength(p1, q);
-
-         pts2.add(j+1, q);
-
-         if (pts2.size() == n1)
-         {
-            return;
-         }
-      }
-*/
    }
 
    private boolean tryLineifyBulge(ShapeComponentVector vec, int idx1, int idx2)
@@ -9803,20 +10202,20 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (before == n-1)
             {
-               l1 = JDRLine.getSquareLength(p1, p0);
+               l1 = JDRLine.getLength(p1, p0);
             }
             else
             {
-               l1 = vec.get(before).getSquareDiagonalLength();
+               l1 = vec.get(before).getDiagonalLength();
             }
 
             if (after == n-1)
             {
-               l2 = JDRLine.getSquareLength(p1, p0);
+               l2 = JDRLine.getLength(p1, p0);
             }
             else
             {
-               l2 = vec.get(after).getSquareDiagonalLength();
+               l2 = vec.get(after).getDiagonalLength();
             }
 
             if (l2 > l1 + dialog.getMergeSpikeNeighbourThreshold())
@@ -9862,20 +10261,20 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (before1 == n-1)
          {
-            l1 = JDRLine.getSquareLength(p1, p0);
+            l1 = JDRLine.getLength(p1, p0);
          }
          else
          {
-            l1 = vec.get(before1).getSquareDiagonalLength();
+            l1 = vec.get(before1).getDiagonalLength();
          }
 
          if (after2 == n-1)
          {
-            l2 = JDRLine.getSquareLength(p1, p0);
+            l2 = JDRLine.getLength(p1, p0);
          }
          else
          {
-            l2 = vec.get(after2).getSquareDiagonalLength();
+            l2 = vec.get(after2).getDiagonalLength();
          }
 
          if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
@@ -9896,20 +10295,20 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (before1 == n-1)
             {
-               l1 += JDRLine.getSquareLength(p1, p0);
+               l1 += JDRLine.getLength(p1, p0);
             }
             else
             {
-               l1 += vec.get(before1).getSquareDiagonalLength();
+               l1 += vec.get(before1).getDiagonalLength();
             }
 
             if (after2 == n-1)
             {
-               l2 += JDRLine.getSquareLength(p1, p0);
+               l2 += JDRLine.getLength(p1, p0);
             }
             else
             {
-               l2 += vec.get(after2).getSquareDiagonalLength();
+               l2 += vec.get(after2).getDiagonalLength();
             }
 
             return l1 > l2 ? spike1 : spike2;
@@ -9942,20 +10341,20 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
          if (after1 == n-1)
          {
-            l1 = JDRLine.getSquareLength(p1, p0);
+            l1 = JDRLine.getLength(p1, p0);
          }
          else
          {
-            l1 = vec.get(after1).getSquareDiagonalLength();
+            l1 = vec.get(after1).getDiagonalLength();
          }
 
          if (before2 == n-1)
          {
-            l2 = JDRLine.getSquareLength(p1, p0);
+            l2 = JDRLine.getLength(p1, p0);
          }
          else
          {
-            l2 = vec.get(before2).getSquareDiagonalLength();
+            l2 = vec.get(before2).getDiagonalLength();
          }
 
          if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
@@ -9976,20 +10375,20 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
 
             if (after1 == n-1)
             {
-               l1 += JDRLine.getSquareLength(p1, p0);
+               l1 += JDRLine.getLength(p1, p0);
             }
             else
             {
-               l1 += vec.get(after1).getSquareDiagonalLength();
+               l1 += vec.get(after1).getDiagonalLength();
             }
 
             if (before2 == n-1)
             {
-               l2 += JDRLine.getSquareLength(p1, p0);
+               l2 += JDRLine.getLength(p1, p0);
             }
             else
             {
-               l2 += vec.get(before2).getSquareDiagonalLength();
+               l2 += vec.get(before2).getDiagonalLength();
             }
 
             return l1 > l2 ? spike1 : spike2;
@@ -10173,7 +10572,7 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
          return false;
       }
 
-      double sqThreshold = 4.0*deltaThreshold*deltaThreshold;
+      double threshold = 2.0*deltaThreshold;
 
       Point2D p1 = vec.get(1).getStart();
       Point2D p2 = vec.get(n-2).getEnd();
@@ -10194,9 +10593,9 @@ class LineDetection extends SwingWorker<Void,ShapeComponentVector>
             ShapeComponent comp2 = vec.get(j);
             Point2D q2 = (j == n-1 ? p1 : comp2.getEnd());
 
-            double dist = JDRLine.getSquareLength(q1, q2);
+            double dist = JDRLine.getLength(q1, q2);
 
-            if (dist < sqThreshold)
+            if (dist < threshold)
             {
                int diff = j - i;
 
@@ -13456,8 +13855,7 @@ class Spike
          diagonalLength = length;
       }
 
-      double sqThreshold = dialog.getLineDetectTinyStepThreshold();
-      sqThreshold *= sqThreshold;
+      double threshold = dialog.getLineDetectTinyStepThreshold();
 
       if (prevIdx == n-1)
       {
@@ -13472,7 +13870,7 @@ class Spike
          p3 = vec.get(prevIdx).getStart();
       }
 
-      if (JDRLine.getSquareLength(p3, mid) < sqThreshold)
+      if (JDRLine.getLength(p3, mid) < threshold)
       {
          prevIdx--;
 
@@ -13513,7 +13911,7 @@ class Spike
          p3 = vec.get(nextIdx).getEnd();
       }
 
-      if (JDRLine.getSquareLength(mid, p3) < sqThreshold)
+      if (JDRLine.getLength(mid, p3) <= threshold)
       {
          nextIdx++;
 
@@ -13827,6 +14225,11 @@ class Smooth extends SwingWorker<Void,Rectangle>
          return null;
       }
 
+      if (tryBezier)
+      {
+         dialog.showSubTaskStatus();
+      }
+
       for (int i = 0; i < shapes.size(); i++)
       {
          updateAndSleep();
@@ -13907,9 +14310,6 @@ class Smooth extends SwingWorker<Void,Rectangle>
    private ShapeComponentVector smoothShape(ShapeComponentVector vec)
      throws InterruptedException
    {
-      ShapeComponentVector path = null;
-      JDRResources resources = dialog.getResources();
-
       Point2D startPt = vec.firstElement().getEnd();
 
       if (vec.isFilled())
@@ -13926,9 +14326,87 @@ class Smooth extends SwingWorker<Void,Rectangle>
       {
          dialog.addMessageIdLn("vectorize.smoothing_path",
           startPt.getX(), startPt.getY());
+
+         return smoothOpenPath(vec);
       }
 
-      double sqTinyStepThreshold = tinyStepThreshold*tinyStepThreshold;
+      int n = vec.size();
+
+      ShapeComponentVector fullPath = new ShapeComponentVector(n);
+      fullPath.setFilled(vec.isFilled());
+      fullPath.setLineWidth(vec.getLineWidth());
+      fullPath.setRule(vec.getRule());
+
+      ShapeComponentVector subPath = null;
+
+      double gradientEpsilon = dialog.getGradientEpsilon();
+      int numSubPaths = 1;
+
+      for (int i = 0; i < n; i++)
+      {
+         ShapeComponent comp = vec.get(i);
+
+         if (comp.getType() == PathIterator.SEG_MOVETO)
+         {
+            subPath = new ShapeComponentVector(n);
+
+            startPt = comp.getEnd();
+            subPath.moveTo(startPt);
+         }
+         else if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            if (subPath == null)
+            {
+               throw new IllegalPathStateException("Missing moveto");
+            }
+
+            subPath.lineTo(startPt, gradientEpsilon);
+
+            if (i < n-1 || numSubPaths > 1)
+            {
+               Point2D p = comp.getStart();
+               dialog.addMessageIdLn("vectorize.smoothing_subpath",
+                startPt.getX(), startPt.getY(), p.getX(), p.getY());
+            }
+
+            DeviationResult fullTry = DeviationResult.createFull(subPath, dialog);
+
+            ShapeComponentVector newSubPath = smoothOpenPath(subPath, fullTry);
+
+            fullPath.appendPath(newSubPath);
+            fullPath.closePath(gradientEpsilon);
+
+            subPath = null;
+            numSubPaths++;
+         }
+         else
+         {
+            if (subPath == null)
+            {
+               throw new IllegalPathStateException("Missing moveto");
+            }
+
+            subPath.addComponent(new ShapeComponent(comp));
+         }
+      }
+
+      return fullPath;
+   }
+
+   private ShapeComponentVector smoothOpenPath(ShapeComponentVector vec)
+     throws InterruptedException
+   {
+      return smoothOpenPath(vec, null);
+   }
+
+   private ShapeComponentVector smoothOpenPath(ShapeComponentVector vec,
+     DeviationResult firstTry)
+     throws InterruptedException
+   {
+      ShapeComponentVector path = null;
+      JDRResources resources = dialog.getResources();
+
+      Point2D startPt = vec.firstElement().getEnd();
 
       for (int i = 1, n = vec.size(), prevI = 1; i < n; i++)
       {
@@ -13967,9 +14445,9 @@ class Smooth extends SwingWorker<Void,Rectangle>
             double dx = p0.getX()-p1.getX();
             double dy = p0.getY()-p1.getY();
 
-            double sqLength = dx*dx+dy*dy;
+            double length = Math.sqrt(dx*dx+dy*dy);
 
-            if (sqLength > sqTinyStepThreshold)
+            if (length > tinyStepThreshold)
             {
                break;
             }
@@ -14040,7 +14518,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
             endRunPt = p1;
 
-            sum += Math.sqrt(sqLength);
+            sum += length;
             N++;
          }
 
@@ -14066,8 +14544,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
                changePt = vec.get(changeIdx).getMid();
                stat1 = changePt;
 
-               line1Result = DeviationResult.getLineDeviation(
-                 startRunPt, changePt, vec, i, changeIdx);
+               line1Result = DeviationResult.createLine(dialog,
+                 vec, i, changeIdx, startRunPt, changePt);
 
                if (changeIdx2 != -1)
                {
@@ -14078,133 +14556,198 @@ class Smooth extends SwingWorker<Void,Rectangle>
                      changePt.getX(), changePt.getY(),
                      changePt2.getX(), changePt2.getY());
 
-                  line2Result = DeviationResult.getLineDeviation(
-                    changePt, changePt2, vec, changeIdx, changeIdx2);
+                  line2Result = DeviationResult.createLine(dialog,
+                    vec, changeIdx, changeIdx2, changePt, changePt2);
                }
                else
                {
                   dialog.addMessageIdLn("vectorize.smoothing_bend_found",
                      changePt.getX(), changePt.getY());
 
-                  line2Result = DeviationResult.getLineDeviation(
-                    changePt, endRunPt, vec, changeIdx, endIdx);
+                  line2Result = DeviationResult.createLine(dialog,
+                    vec, changeIdx, endIdx, changePt, endRunPt);
 
                   changeIdx2 = endIdx;
                   changePt2 = endRunPt;
                }
-
-               dialog.addMessageLn(line1Result.info(resources));
-
-               if (line2Result != null)
-               {
-                  dialog.addMessageLn(line2Result.info(resources));
-
-                  if (line2Result.getMaxDistance() > maxDeviation)
-                  {
-                     line2Result = null;
-
-                     if (line1Result.getMaxDistance() > maxDeviation)
-                     {
-                        line1Result = null;
-                     }
-                  }
-                  else if (line1Result.getMaxDistance() > maxDeviation)
-                  {
-                     line1Result = null;
-                     line2Result = null;
-                  }
-               }
-               else if (line1Result.getMaxDistance() > maxDeviation)
-               {
-                  line1Result = null;
-               }
             }
             else
             {
-               line1Result = DeviationResult.getLineDeviation(
-                 startRunPt, endRunPt, vec, i, endIdx);
+               line1Result = DeviationResult.createLine(dialog,
+                 vec, i, endIdx, startRunPt, endRunPt);
                changeIdx = endIdx;
-
-               dialog.addMessageLn(line1Result.info(resources));
-
-               if (line1Result.getMaxDistance() > maxDeviation)
-               {
-                  line1Result = null;
-               }
             }
+
+            int bestChoiceIdx = 1;
+            int firstTryChoiceIdx = 2;
+            int line1ChoiceIdx = 3;
+            int line2ChoiceIdx = 4;
 
             DeviationResult bestResult = getBestComponent(vec, i, endIdx,
              statIdx1, stat1, statIdx2, stat2);
 
+            if (bestResult == null)
+            {
+               firstTryChoiceIdx = 1;
+               line1ChoiceIdx = 2;
+               line2ChoiceIdx = 3;
+            }
+            else
+            {
+               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+                 bestChoiceIdx, bestResult.info());
+            }
+
+            if (firstTry != null)
+            {
+               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+                 firstTryChoiceIdx, firstTry.info());
+
+               if (bestResult == null)
+               {
+                  bestResult = firstTry;
+                  bestChoiceIdx = firstTryChoiceIdx;
+               }
+               else if (firstTry.compareTo(bestResult) <= 0)
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
+                    firstTryChoiceIdx, bestChoiceIdx, 
+                    firstTry.comparisonInfo(bestResult));
+
+                  bestResult = firstTry;
+                  bestChoiceIdx = firstTryChoiceIdx;
+               }
+               else if (bestResult.getEstimatedLength() <= lengthThreshold
+                      && firstTry.getDelta()
+                        <= bestResult.getDelta()
+                            + thresholdDiff)
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
+                    firstTryChoiceIdx, bestChoiceIdx, 
+                    resources.getMessage("vectorize.smoothing_reason_and",
+                      resources.getMessage("vectorize.smoothing_leq",
+                          bestResult.getEstimatedLength(), lengthThreshold),
+                      firstTry.comparisonInfo(bestResult, thresholdDiff)));
+
+                  bestResult = firstTry;
+                  bestChoiceIdx = firstTryChoiceIdx;
+               }
+            }
+            else
+            {
+               line1ChoiceIdx--;
+               line2ChoiceIdx--;
+            }
+
+            if (line1Result == null)
+            {
+               line2ChoiceIdx--;
+            }
+            else
+            {
+               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+                 line1ChoiceIdx, line1Result.info());
+            }
+
+            if (line2Result != null)
+            {
+               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+                 line2ChoiceIdx, line2Result.info());
+            }
+
             if (bestResult != null
-             && (line1Result != null && line1Result.compareTo(bestResult) < 0)
-             && (line2Result != null && line2Result.compareTo(bestResult) < 0)
+             && (line1Result != null && line1Result.compareTo(bestResult) <= 0)
+             && (line2Result != null && line2Result.compareTo(bestResult) <= 0)
                )
             {
+               dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
+                 bestChoiceIdx,
+                 resources.getMessage("vectorize.smoothing_reason_and",
+                   line1Result.comparisonInfo(bestResult),
+                   line2Result.comparisonInfo(bestResult)
+                 ));
+
                bestResult = null;
             }
 
             if (bestResult != null && line1Result != null
                 && bestResult.isLine())
             {
-               double delta = line1Result.getAverageDeviation();
+               double delta = line1Result.getDelta();
 
                if (line2Result != null)
                {
-                  delta = 0.5*(delta + line2Result.getAverageDeviation());
+                  delta = 0.5*(delta + line2Result.getDelta());
                }
 
-               if (delta <= bestResult.getAverageDeviation()+deviationEpsilon)
+               if (delta <= bestResult.getDelta()+deviationEpsilon)
                {
+                  dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
+                    bestChoiceIdx,
+                    resources.getMessage("vectorize.smoothing_leq_offset", 
+                    delta, bestResult.getDelta(), deviationEpsilon));
+
                   bestResult = null;
                }
             }
 
-            if (bestResult != null)
+            if (bestResult != null && bestResult.getDelta() <= maxDeviation)
             {
-               if (path == null)
+               Shape replacement = bestResult.getShape();
+
+               if (bestResult == firstTry)
                {
-                  path = vec.getSubPath(i-1);
+                  dialog.addMessageIdLn("vectorize.smoothing_replacing_path",
+                     ShapeComponentVector.svg(replacement));
+
+                  return ShapeComponentVector.create(replacement);
                }
+               else
+               {
+                  if (path == null)
+                  {
+                     path = vec.getSubPath(i-1);
+                  }
 
-               ShapeComponent comp = bestResult.getComponent();
-               path.addComponent(comp);
+                  dialog.addMessageIdLn("vectorize.smoothing_replacing",
+                     vec.get(i).info(resources), 
+                     vec.get(bestResult.getEndIndex()).info(resources),
+                     ShapeComponentVector.info(replacement, resources));
 
-               dialog.addMessageIdLn("vectorize.smoothing_replacing",
-                  vec.get(i).info(resources), 
-                  vec.get(bestResult.getEndIndex()).info(resources),
-                  comp.info(resources));
+                  path.addShape(replacement);
 
-               i = bestResult.getEndIndex();
+                  i = bestResult.getEndIndex();
+               }
             }
-            else if (line1Result != null)
+            else if (line1Result != null && line1Result.getDelta() <= maxDeviation)
             {
                if (path == null)
                {
                   path = vec.getSubPath(i-1);
                }
 
-               ShapeComponent comp = line1Result.getComponent();
-               path.addComponent(comp);
+               Shape replacement = line1Result.getShape();
+               path.addShape(replacement);
 
-               if (line2Result == null)
+               if (line2Result == null || line1Result.getDelta() > maxDeviation)
                {
                   dialog.addMessageIdLn("vectorize.smoothing_replacing2",
                      vec.get(i).info(resources), 
                      vec.get(changeIdx).info(resources), 
-                     comp);
+                     ShapeComponentVector.info(replacement, resources));
 
                   i = changeIdx;
                }
                else
                {
-                  ShapeComponent comp2 = line2Result.getComponent();
-                  path.addComponent(comp2);
+                  Shape replacement2 = line2Result.getShape();
+                  path.addShape(replacement2);
 
                   dialog.addMessageIdLn("vectorize.smoothing_replacing3",
                      vec.get(i).info(resources), 
                      vec.get(changeIdx2).info(resources), 
-                     comp, comp2);
+                     ShapeComponentVector.info(replacement, resources), 
+                     ShapeComponentVector.info(replacement2, resources));
 
                   i = changeIdx2;
                }
@@ -14220,6 +14763,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
             ShapeComponent comp = vec.get(i);
             path.addComponent(comp);
          }
+
+         firstTry = null;
       }
 
       return path;
@@ -14246,11 +14791,12 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          Point2D p1 = endComp.getEnd();
 
-         DeviationResult result = DeviationResult.createLine(vec, startIdx, j, p0, p1);
+         DeviationResult result = DeviationResult.createLine(dialog,
+           vec, startIdx, j, p0, p1);
 
-         double delta = result.getAverageDeviation();
+         double delta = result.getDelta();
 
-         if (delta < minDelta && result.getMaxDistance() <= maxDeviation)
+         if (delta < minDelta)
          {
             if (result.getEstimatedLength() < lengthThreshold)
             {
@@ -14269,7 +14815,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          if (minBezierSamples < (j-startIdx))
          {
-            result = DeviationResult.createCurve(vec, startIdx, j, p0, p1, 
+            result = DeviationResult.createCurve(dialog, vec, startIdx, j, p0, p1, 
                maxDeviation);
 
             if (result != null)
@@ -14281,7 +14827,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
                if (result.getAngle() > bezierGradientThreshold)
                {
-                  delta = result.getAverageDeviation();
+                  delta = result.getDelta();
 
                   if (delta < minCurveDelta)
                   {
@@ -14295,11 +14841,6 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
       JDRResources resources = dialog.getResources();
 
-      if (bestResult != null)
-      {
-         dialog.addMessageLn(bestResult.info(resources));
-      }
-
       if (bestCurveResult != null)
       {
          double[] t = new double[2];
@@ -14309,7 +14850,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          if (bestCurveResult != firstCurveResult)
          {
-            dialog.addMessageLn(firstCurveResult.info(resources));
+            dialog.addMessageLn(firstCurveResult.info());
 
             if (statPt1 != null)
             {
@@ -14338,7 +14879,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
             }
          }
 
-         dialog.addMessageLn(bestCurveResult.info(resources));
+         dialog.addMessageLn(bestCurveResult.info());
 
          if (statPt1 != null)
          {
@@ -14352,7 +14893,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                  t[0], Pt[0].getX(), Pt[0].getY(), 
                  statPt1.getX(), statPt1.getY(), d2[0]);
 
-               if (statPt2 != null && Pt[1] != null && d2.length > 0)
+               if (statPt2 != null && Pt[1] != null && d2.length > 1)
                {
                   dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
                     t[1], Pt[1].getX(), Pt[1].getY(), 
@@ -14377,7 +14918,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   )
                {
                   bestCurveResult = firstCurveResult;
-                  minCurveDelta = firstCurveResult.getAverageDeviation();
+                  minCurveDelta = firstCurveResult.getDelta();
                }
             }
          }
@@ -14390,7 +14931,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
       if (bestSubThresholdResult != null)
       {
-         dialog.addMessageLn(bestSubThresholdResult.info(resources));
+         dialog.addMessageLn(bestSubThresholdResult.info());
 
          if (minDelta < minSubThresholdDelta+thresholdDiff)
          {
@@ -14419,117 +14960,466 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
 class DeviationResult implements Comparable<DeviationResult>
 {
-   private DeviationResult()
+   private DeviationResult(VectorizeBitmapDialog dialog)
    {
+      this.dialog = dialog;
    }
 
-   public static DeviationResult createLine(ShapeComponentVector vec,
-      int startIdx, int endIdx,
-      Point2D p1, Point2D p2)
+   public static DeviationResult createFull(ShapeComponentVector vec, 
+    VectorizeBitmapDialog dialog)
    {
-      DeviationResult result = new DeviationResult();
-      result.computeLine(vec, startIdx, endIdx, p1, p2);
-      return result;
+       DeviationResult result = new DeviationResult(dialog);
+       result.computeFull(vec);
+       return result.shape == null ? null : result;
    }
 
-   private void computeLine(ShapeComponentVector vec, int startIdx, int endIdx,
-      Point2D p1, Point2D p2)
+   private void computeFull(ShapeComponentVector vec)
    {
-      this.startIdx = startIdx;
-      this.endIdx = endIdx;
-      int numPoints = endIdx-startIdx;
-      double[] t = new double[numPoints];
+      int n = vec.size();
 
-      this.p1 = p1;
-      this.p2 = p2;
-
-      double sumDist = 0.0;
-      maxDist = 0.0;
-      minDist = Double.MAX_VALUE;
-
-      double sumSignumX = 0.0;
-      double sumSignumY = 0.0;
-
-      double diff_y = p1.getY()-p2.getY();
-      double diff_x = p1.getX()-p2.getX();
-
-      double m = diff_y/diff_x;
-
-      double m_sq = 0.0;
-      double orthog_m=0.0;
-      double orthog_m_sq = 0.0;
-      boolean use_orthog = false;
-      double factor;
-
-      if (Double.isNaN(m))
+      if (n < 20)
       {
-         use_orthog = true;
-         orthog_m = -diff_x/diff_y;
-         orthog_m_sq = orthog_m*orthog_m;
-         factor = 1.0/(1.0 + orthog_m_sq);
+         return;
+      }
+
+      startIdx = 0;
+      endIdx = n-1;
+
+      numPoints = endIdx;
+
+      originalArea = new Area(vec.getPath());
+
+      double tinyStepThreshold = dialog.getSmoothingTinyStepThreshold();
+
+      Point2D northMin = null;
+      Point2D northMax = null;
+      Point2D eastMin = null;
+      Point2D eastMax = null;
+      Point2D southMin = null;
+      Point2D southMax = null;
+      Point2D westMin = null;
+      Point2D westMax = null;
+
+      int northMinIdx = -1;
+      int northMaxIdx = -1;
+      int southMinIdx = -1;
+      int southMaxIdx = -1;
+      int eastMinIdx = -1;
+      int eastMaxIdx = -1;
+      int westMinIdx = -1;
+      int westMaxIdx = -1;
+
+      double minX = Double.MAX_VALUE;
+      double maxX = -Double.MAX_VALUE;
+      double minY = Double.MAX_VALUE;
+      double maxY = -Double.MAX_VALUE;
+
+      originalLength = 0.0;
+
+      for (int i = 1; i < n; i++)
+      {
+         ShapeComponent comp = vec.get(i);
+
+         if (comp.getType() != PathIterator.SEG_LINETO)
+         {
+            return;
+         }
+
+         double l = comp.getDiagonalLength();
+
+         if (l > tinyStepThreshold)
+         {
+            return;
+         }
+
+         originalLength += l;
+
+         Point2D r1 = comp.getStart();
+         Point2D r2 = comp.getEnd();
+
+         if (Math.abs(r1.getY()-r2.getY()) < ShapeComponentVector.EPSILON)
+         {
+            if (northMin == null || northMax == null)
+            {
+               if (r1.getX() < r2.getX())
+               {
+                  northMin = r1;
+                  northMax = r2;
+               }
+               else
+               {
+                  northMin = r2;
+                  northMax = r1;
+               }
+
+               northMinIdx = i;
+               northMaxIdx = i;
+            }
+            else if (Math.max(r1.getY(),r2.getY()) <= minY)
+            {
+               if (r1.getX() <= r2.getX())
+               {
+                  if (r1.getY() < northMin.getY() || r1.getX() < northMin.getX())
+                  {
+                     northMin = r1;
+                     northMinIdx = i;
+                  }
+
+                  if (r2.getY() < northMax.getY() || r2.getX() > northMax.getX())
+                  {
+                     northMax = r2;
+                     northMaxIdx = i;
+                  }
+               }
+               else
+               {
+                  if (r2.getY() < northMin.getY() || r2.getX() < northMin.getX())
+                  {
+                     northMin = r2;
+                     northMinIdx = i;
+                  }
+
+                  if (r1.getY() < northMax.getY() || r1.getX() > northMax.getX())
+                  {
+                     northMax = r1;
+                     northMaxIdx = i;
+                  }
+               }
+            }
+
+            if (southMin == null || southMax == null)
+            {
+               if (r1.getX() < r2.getX())
+               {
+                  southMin = r1;
+                  southMax = r2;
+               }
+               else
+               {
+                  southMin = r2;
+                  southMax = r1;
+               }
+
+               southMinIdx = i;
+               southMaxIdx = i;
+            }
+            else if (Math.min(r1.getY(),r2.getY()) >= maxY)
+            {
+               if (r1.getX() <= r2.getX())
+               {
+                  if (r1.getY() > southMin.getY() || r1.getX() < southMin.getX())
+                  {
+                     southMin = r1;
+                     southMinIdx = i;
+                  }
+
+                  if (r2.getY() > southMax.getY() || r2.getX() > southMax.getX())
+                  {
+                     southMax = r2;
+                     southMaxIdx = i;
+                  }
+               }
+               else
+               {
+                  if (r2.getY() > southMin.getY() || r2.getX() < southMin.getX())
+                  {
+                     southMin = r2;
+                     southMinIdx = i;
+                  }
+
+                  if (r1.getY() > southMax.getY() || r1.getX() > southMax.getX())
+                  {
+                     southMax = r1;
+                     southMaxIdx = i;
+                  }
+               }
+            }
+         }
+         else if (Math.abs(r1.getX()-r2.getX()) < ShapeComponentVector.EPSILON)
+         {
+            if (westMin == null || westMax == null)
+            {
+               if (r1.getX() < r2.getX())
+               {
+                  westMin = r1;
+                  westMax = r2;
+               }
+               else
+               {
+                  westMin = r2;
+                  westMax = r1;
+               }
+
+               westMinIdx = i;
+               westMaxIdx = i;
+            }
+            else if (Math.max(r1.getX(),r2.getX()) <= minX)
+            {
+               if (r1.getY() <= r2.getY())
+               {
+                  if (r1.getX() < westMin.getX() || r1.getY() < westMin.getY())
+                  {
+                     westMin = r1;
+                     westMinIdx = i;
+                  }
+
+                  if (r2.getX() < westMax.getX() || r2.getY() > westMax.getY())
+                  {
+                     westMax = r2;
+                     westMaxIdx = i;
+                  }
+               }
+               else
+               {
+                  if (r2.getX() < westMin.getX() || r2.getY() < westMin.getY())
+                  {
+                     westMin = r2;
+                     westMinIdx = i;
+                  }
+
+                  if (r1.getX() < westMax.getX() || r1.getY() > westMax.getY())
+                  {
+                     westMax = r1;
+                     westMaxIdx = i;
+                  }
+               }
+            }
+
+            if (eastMin == null || eastMax == null)
+            {
+               if (r1.getY() < r2.getY())
+               {
+                  eastMin = r1;
+                  eastMax = r2;
+               }
+               else
+               {
+                  eastMin = r2;
+                  eastMax = r1;
+               }
+
+               eastMinIdx = i;
+               eastMaxIdx = i;
+            }
+            else if (Math.min(r1.getX(),r2.getX()) >= maxX)
+            {
+               if (r1.getY() <= r2.getY())
+               {
+                  if (r1.getX() > eastMin.getX() || r1.getY() <= eastMin.getY())
+                  {
+                     eastMin = r1;
+                     eastMinIdx = i;
+                  }
+
+                  if (r2.getX() > eastMax.getX() || r2.getY() >= eastMax.getY())
+                  {
+                     eastMax = r2;
+                     eastMaxIdx = i;
+                  }
+               }
+               else
+               {
+                  if (r2.getX() > eastMin.getX() || r2.getY() <= eastMin.getY())
+                  {
+                     eastMin = r2;
+                     eastMinIdx = i;
+                  }
+
+                  if (r1.getX() > eastMax.getX() || r1.getY() >= eastMax.getY())
+                  {
+                     eastMax = r1;
+                     eastMaxIdx = i;
+                  }
+               }
+            }
+         }
+
+         minX = Math.min(minX, Math.min(r1.getX(), r2.getX()));
+         maxX = Math.max(maxX, Math.max(r1.getX(), r2.getX()));
+         minY = Math.min(minY, Math.min(r1.getY(), r2.getY()));
+         maxY = Math.max(maxY, Math.max(r1.getY(), r2.getY()));
+      }
+
+      if (northMinIdx != northMaxIdx
+       || southMinIdx != southMaxIdx
+       || eastMinIdx != eastMaxIdx
+       || westMinIdx != westMaxIdx)
+      {
+         return;
+      }
+
+      boolean clockwise;
+
+      if (northMinIdx == n-1)
+      {
+         clockwise = southMinIdx < westMinIdx;
       }
       else
       {
-         m_sq = m*m;
-         factor = 1.0/(1.0 + m_sq);
+         clockwise = northMinIdx > westMinIdx;
       }
 
-      double t_factor = -1.0/(diff_x+diff_y);
+      Point2D[] pts = new Point2D[4];
+      int[] indexes = new int[4];
 
-      double a1 = 0.0, a2 = 0.0, a3 = 0.0;
-      double b1 = 0.0, b2 = 0.0, b3 = 0.0, b4 = 0.0;
+      indexes[0] = Math.min(Math.min(northMinIdx, eastMinIdx), 
+                             Math.min(southMinIdx, westMinIdx));
 
-      for (int i = startIdx+1, j=0; i < endIdx; i++, j++)
+      if (clockwise)
       {
-         ShapeComponent comp = vec.get(i);
-         Point2D p = comp.getEnd();
-
-         // closest point on the line
-         double x, y;
-
-         if (use_orthog)
+         if (northMinIdx == indexes[0])
          {
-            x = (p1.getX()+orthog_m*(p1.getY()-p.getY())+orthog_m_sq*p.getX())*factor;
-            y = orthog_m * (x - p.getX()) + p.getY();
+            indexes[1] = eastMinIdx;
+            indexes[2] = southMinIdx;
+            indexes[3] = westMinIdx;
+         }
+         else if (eastMinIdx == indexes[0])
+         {
+            indexes[1] = southMinIdx;
+            indexes[2] = westMinIdx;
+            indexes[3] = northMinIdx;
+         }
+         else if (southMinIdx == indexes[0])
+         {
+            indexes[1] = westMinIdx;
+            indexes[2] = northMinIdx;
+            indexes[3] = eastMinIdx;
          }
          else
          {
-            x = (m_sq*p1.getX()+m*(p.getY()-p1.getY())+p.getX())*factor;
-            y = m * (x - p1.getX()) + p1.getY();
+            indexes[1] = northMinIdx;
+            indexes[2] = eastMinIdx;
+            indexes[3] = southMinIdx;
          }
-         
-         double dx = p.getX() - x;
-         double dy = p.getY() - y;
-
-         double dist = Math.sqrt(dx*dx + dy*dy);
-
-         sumDist += dist;
-
-         if (dist > maxDist)
+      }
+      else
+      {
+         if (northMinIdx == indexes[0])
          {
-            maxDist = dist;
+            indexes[1] = westMinIdx;
+            indexes[2] = southMinIdx;
+            indexes[3] = eastMinIdx;
          }
-
-         if (dist < minDist)
+         else if (westMinIdx == indexes[0])
          {
-            minDist = dist;
+            indexes[1] = southMinIdx;
+            indexes[2] = eastMinIdx;
+            indexes[3] = northMinIdx;
+         }
+         else if (southMinIdx == indexes[0])
+         {
+            indexes[1] = eastMinIdx;
+            indexes[2] = northMinIdx;
+            indexes[3] = westMinIdx;
+         }
+         else
+         {
+            indexes[1] = northMinIdx;
+            indexes[2] = westMinIdx;
+            indexes[3] = southMinIdx;
          }
       }
 
-      double[] coords = new double[6];
+      for (int i = 0; i < indexes.length; i++)
+      {
+         pts[i] = vec.get(indexes[i]).getMid();
+      }
 
-      averageDeviation = sumDist/numPoints;
-      coords[0] = p2.getX();
-      coords[1] = p2.getY();
-      component = new ShapeComponent(PathIterator.SEG_LINETO, coords, p1);
-      length = component.getDiagonalLength();
+      double quadLength = 0.0;
+
+      Path2D.Double quadPath = new Path2D.Double();
+      quadPath.moveTo(pts[0].getX(), pts[0].getY());
+
+      for (int i = 1; i < pts.length; i++)
+      {
+         quadPath.lineTo(pts[i].getX(), pts[i].getY());
+
+         length += JDRLine.getLength(pts[i-1], pts[i]);
+      }
+
+      quadPath.closePath();
+      quadLength += JDRLine.getLength(pts[pts.length-1], pts[0]);
+
+      double quadDelta = computeDelta(quadPath);
+
+      p1 = pts[0];
+      p2 = pts[3];
+
+      boolean useLine = true;
+
+      if (dialog.isTryBezierOn() && n >= dialog.getCurveMinPoints())
+      {
+         Ellipse2D ellipse = new Ellipse2D.Double(0, 0, maxX-minX, maxY-minY);
+
+         if (clockwise)
+         {
+            shape = ellipse;
+         }
+         else
+         {
+            try
+            {
+               JDRPath jdrpath = JDRPath.getPath(dialog.getCanvasGraphics(), 
+                ellipse.getPathIterator(null));
+               JDRShape reversePath = jdrpath.reverse();
+               shape = reversePath.getGeneralPath();
+            }
+            catch (InvalidShapeException e)
+            {// shouldn't happen
+            }
+         }
+
+         double delta2 = computeDelta(shape);
+
+         if (delta2 < quadDelta)
+         {
+            delta = delta2;
+            length = JDRShape.computePerimeter(shape);
+            useLine = false;
+         }
+      }
+
+      if (useLine)
+      {
+         length = quadLength;
+         shape = quadPath;
+         delta = quadDelta;
+      }
    }
 
-   public static DeviationResult createCurve(ShapeComponentVector vec,
-      int startIdx, int endIdx,
+   public static DeviationResult createLine(VectorizeBitmapDialog dialog,
+       ShapeComponentVector vec,
+       int startIdx, int endIdx, Point2D startPt, Point2D endPt)
+   {
+      DeviationResult result = new DeviationResult(dialog);
+
+      result.startIdx = startIdx;
+      result.endIdx = endIdx;
+      result.numPoints = endIdx-startIdx+1;
+
+      result.p1 = startPt;
+      result.p2 = endPt;
+
+      result.originalLength = vec.getEstimatedLength(startIdx, endIdx);
+
+      result.originalArea = new Area(vec.getPath(startIdx-1, endIdx));
+
+      result.shape = new Line2D.Double(startPt.getX(), startPt.getY(),
+         endPt.getX(), endPt.getY());
+
+      result.length = Point2D.distance(startPt.getX(), startPt.getY(),
+         endPt.getX(), endPt.getY());
+
+      result.delta = result.computeDelta(result.shape);
+
+      return result;
+   }
+
+   public static DeviationResult createCurve(VectorizeBitmapDialog dialog,
+      ShapeComponentVector vec, int startIdx, int endIdx,
       Point2D p1, Point2D p2, double maxDeviation)
    {
-      DeviationResult result = new DeviationResult();
+      DeviationResult result = new DeviationResult(dialog);
       result.computeCurve(vec, startIdx, endIdx, p1, p2, maxDeviation);
       return result;
    }
@@ -14539,11 +15429,14 @@ class DeviationResult implements Comparable<DeviationResult>
    {
       this.startIdx = startIdx;
       this.endIdx = endIdx;
+      numPoints = endIdx-startIdx+1;
 
       this.p1 = p1;
       this.p2 = p2;
 
       int offset = Math.max(2, (endIdx-startIdx+1)/3);
+
+      originalLength = vec.getEstimatedLength(startIdx, endIdx);
 
       Point2D dp1 = JDRLine.getGradient(p1, vec.get(startIdx+offset).getEnd());
       Point2D dp2 = JDRLine.getGradient(vec.get(endIdx-offset).getEnd(), p2);
@@ -14554,304 +15447,172 @@ class DeviationResult implements Comparable<DeviationResult>
       Point2D c2 = new Point2D.Double(p2.getX() - dp2.getX()/3,
                       p2.getY() - dp2.getY()/3);
 
-      double[] coords = new double[6];
+      originalArea = new Area(vec.getPath(startIdx-1, endIdx));
 
-      coords[0] = c1.getX();
-      coords[1] = c1.getY();
-      coords[2] = c2.getX();
-      coords[3] = c2.getY();
-      coords[4] = p2.getX();
-      coords[5] = p2.getY();
+      CubicCurve2D curve = new CubicCurve2D.Double(p1.getX(), p1.getY(),
+       c1.getX(), c1.getY(), c2.getX(), c2.getY(), 
+       p2.getX(), p2.getY());
 
-      component = new ShapeComponent(PathIterator.SEG_CUBICTO, coords, p1);
+      shape = curve;
 
-      computeCurveDeviation(c1, c2, vec);
+      tuneGradients(dp1, dp2);
 
-      if (averageDeviation > maxDeviation)
-      {
-         tuneGradients(vec);
-      }
+      dp1.setLocation(
+          3*(curve.getCtrlX1() - p1.getX()),
+          3*(curve.getCtrlY1() - p1.getY())
+        );
+
+      dp2.setLocation(
+         3*(p2.getX() - curve.getCtrlX2()),
+         3*(p2.getY() - curve.getCtrlY2())
+      );
 
       angle = JDRLine.getVectorAngle(dp1.getX(), dp1.getY(), dp2.getX(), dp2.getY());
+
+      length = JDRShape.computePerimeter(shape);
    }
 
-   private void tuneGradients(ShapeComponentVector vec)
+   private void tuneGradients(Point2D dp0, Point2D dp1)
    {
-      int iter = 0;
+      CubicCurve2D curve = (CubicCurve2D)shape;
 
-      iter = tuneGradients(vec, iter, true, true);
+      double alpha = dialog.getCurveFitAlpha();// reflection
+      double gamma = dialog.getCurveFitGamma();// expansion
+      double rho = dialog.getCurveFitRho();// contraction
+      double sigma = dialog.getCurveFitSigma();// shrink
+
+      // stopping criteria
+      double epsilon = dialog.getCurveFitEpsilon();
+      int maxIter = dialog.getCurveFitMaximumIterations();
+
+      dialog.resetCurveFitProgress(maxIter, curve);
+
+      Point2D c1 = curve.getCtrlP1();
+      Point2D c2 = curve.getCtrlP2();
+      Point2D p1 = curve.getP1();
+      Point2D p2 = curve.getP2();
+
+      Point2D prevC1 = new Point2D.Double(c1.getX(), c1.getY());
+      Point2D prevC2 = new Point2D.Double(c2.getX(), c2.getY());
+
+      CubicCurve2D trialCurve = new CubicCurve2D.Double(
+         p1.getX(), p1.getY(), p1.getX(), p1.getY(),
+         p2.getX(), p2.getY(), p2.getX(), p2.getY());
+
+      CurveFitSample[] samples = new CurveFitSample[5];
+
+      samples[0] = new CurveFitSample(c1, c2, this, trialCurve);
+
+      Point2D midPt = JDRLine.getMidPoint(p1, p2);
+
+      samples[1] = new CurveFitSample(midPt, midPt, this, trialCurve);
+
+      Point2D intersect = JDRLine.getClosestPointAlongLine(p1, c1, c2);
+
+      samples[2] = new CurveFitSample(intersect, intersect, this, trialCurve);
+
+      samples[3] = new CurveFitSample(c1.getX()+dp0.getX(), c1.getY()+dp0.getY(),
+                              c2.getX()+dp1.getX(), c2.getY()+dp1.getY(),
+                              this, trialCurve);
+
+      samples[4] = new CurveFitSample(p1, p2, this, trialCurve);
+
+      double prevAverageDelta = Double.MAX_VALUE;
+      double[] x0 = new double[4];
+
+      for (int i = 1; i <= maxIter; i++)
+      {
+         double value = 0.0;
+
+         dialog.setCurveFitProgress(100*i/maxIter, samples[0]);
+
+         Arrays.parallelSort(samples);
+
+         double averageDelta = CurveFitSample.computeAverageDelta(samples);
+
+         if (Math.abs(prevAverageDelta - averageDelta) < epsilon)
+         {
+            break;
+         }
+
+         prevAverageDelta = averageDelta;
+
+         // calculate centroid of all points except last one
+
+         int k = samples.length-1;
+
+         samples[0].getControls(x0); // initialise
+
+         for (int j = 1; j < k; j++)
+         {
+            samples[j].addControlsToArray(x0);
+         }
+
+         for (int j = 0; j < x0.length; j++)
+         {
+            x0[j] /= k;
+         }
+
+         CurveFitSample reflected = samples[k].computeReflected(x0, alpha);
+
+         // Is reflected better than second worse but not better than
+         // the best?
+
+         boolean betterThanBest = (reflected.compareTo(samples[0]) < 0);
+
+         if (!betterThanBest
+          && reflected.compareTo(samples[3]) < 0)// better than second worse
+         {
+            samples[4] = reflected;
+         }
+         else if (betterThanBest)
+         {
+            CurveFitSample expanded = samples[k].computeExpanded(x0, gamma);
+
+            if (expanded.compareTo(reflected) < 0)
+            {
+               samples[4] = expanded;
+            }
+            else
+            {
+               samples[4] = reflected;
+            }
+         }
+         else
+         {
+            CurveFitSample contraction = samples[4].computeContraction(x0, rho);
+
+            if (contraction.compareTo(samples[4]) < 0)
+            {
+               samples[4] = contraction;
+            }
+            else
+            {
+               for (int j = 1; j < samples.length; j++)
+               {
+                  samples[j] = samples[j].computeOffset(samples[0], sigma);
+               }
+            }
+         }
+
+      }
+
+      dialog.setCurveFitProgress(maxIter, samples[0]);
+
+      delta = samples[0].getDelta()/(endIdx-startIdx+1);
    }
 
-   private int tuneGradients(ShapeComponentVector vec, int iter, 
-     boolean stepC1, boolean stepC2)
+   public double computeDelta(Shape trialShape)
    {
-      if (iter >= MAX_ITER) return iter;
+      Area area = new Area(trialShape);
+      area.exclusiveOr(originalArea);
 
-      iter++;
+      return JDRShape.computeArea(area)/(endIdx-startIdx+1);
+   }
 
-      double prevMaxDist = maxDist;
-      double prevMinDist = minDist;
-      double prevDeviation = averageDeviation;
-      double prevLength = length;
-      double[] coords = component.getCoords();
-
-      double bestMaxDist = maxDist;
-      double bestMinDist = minDist;
-      double bestDeviation = averageDeviation;
-      double bestLength = length;
-      Point2D bestC1 = null;
-      Point2D bestC2 = null;
-
-      Point2D c1 = new Point2D.Double(coords[0], coords[1]);
-      Point2D c2 = new Point2D.Double(coords[2], coords[3]);
-
-      if (stepC1)
-      {
-         c1.setLocation(coords[0]+STEP_SIZE, coords[1]);
-
-         computeCurveDeviation(c1, c2, vec);
-
-         if (averageDeviation < bestDeviation)
-         {
-            bestMaxDist = maxDist;
-            bestMinDist = minDist;
-            bestDeviation = averageDeviation;
-            bestLength = length;
-            bestC1 = new Point2D.Double(c1.getX(), c1.getY());
-
-            c1.setLocation(c1.getX(), coords[1]+STEP_SIZE);
-         }
-         else
-         {
-            c1.setLocation(coords[0]-STEP_SIZE, coords[1]);
-
-            computeCurveDeviation(c1, c2, vec);
-
-            if (averageDeviation < bestDeviation)
-            {
-               bestMaxDist = maxDist;
-               bestMinDist = minDist;
-               bestDeviation = averageDeviation;
-               bestLength = length;
-               bestC1 = new Point2D.Double(c1.getX(), c1.getY());
-
-               c1.setLocation(c1.getX(), coords[1]+STEP_SIZE);
-            }
-            else
-            {
-               c1.setLocation(coords[0], coords[1]+STEP_SIZE);
-            }
-         }
-
-         computeCurveDeviation(c1, c2, vec);
-
-         if (averageDeviation < bestDeviation)
-         {
-            bestMaxDist = maxDist;
-            bestMinDist = minDist;
-            bestDeviation = averageDeviation;
-            bestLength = length;
-
-            if (bestC1 == null)
-            {
-               bestC1 = new Point2D.Double(c1.getX(), c1.getY());
-            }
-            else
-            {
-               bestC1.setLocation(c1.getX(), c1.getY());
-            }
-         }
-         else
-         {
-            c1.setLocation(c1.getX(), coords[1]-STEP_SIZE);
-            
-            computeCurveDeviation(c1, c2, vec);
-
-            if (averageDeviation < bestDeviation)
-            {
-               bestMaxDist = maxDist;
-               bestMinDist = minDist;
-               bestDeviation = averageDeviation;
-               bestLength = length;
-
-               if (bestC1 == null)
-               {
-                  bestC1 = new Point2D.Double(c1.getX(), c1.getY());
-               }
-               else
-               {
-                  bestC1.setLocation(c1.getX(), c1.getY());
-               }
-            }
-            else
-            {
-               c1.setLocation(c1.getX(), coords[1]);
-            }
-         }
-      }
-
-      if (stepC2)
-      {
-         c2.setLocation(coords[2]+STEP_SIZE, coords[3]);
-
-         computeCurveDeviation(c1, c2, vec);
-
-         if (averageDeviation < bestDeviation)
-         {
-            bestMaxDist = maxDist;
-            bestMinDist = minDist;
-            bestDeviation = averageDeviation;
-            bestLength = length;
-            bestC2 = new Point2D.Double(c2.getX(), c2.getY());
-
-            c2.setLocation(c2.getX(), coords[3]+STEP_SIZE);
-         }
-         else
-         {
-            c2.setLocation(coords[2]-STEP_SIZE, coords[3]);
-
-            computeCurveDeviation(c1, c2, vec);
-
-            if (averageDeviation < bestDeviation)
-            {
-               bestMaxDist = maxDist;
-               bestMinDist = minDist;
-               bestDeviation = averageDeviation;
-               bestLength = length;
-               bestC2 = new Point2D.Double(c2.getX(), c2.getY());
-
-               c2.setLocation(c2.getX(), coords[3]+STEP_SIZE);
-            }
-            else
-            {
-               c2.setLocation(coords[2], coords[3]+STEP_SIZE);
-            }
-         }
-
-         computeCurveDeviation(c1, c2, vec);
-
-         if (averageDeviation < bestDeviation)
-         {
-            bestMaxDist = maxDist;
-            bestMinDist = minDist;
-            bestDeviation = averageDeviation;
-            bestLength = length;
-
-            if (bestC2 == null)
-            {
-               bestC2 = new Point2D.Double(c2.getX(), c2.getY());
-            }
-            else
-            {
-               bestC2.setLocation(c2.getX(), c2.getY());
-            }
-         }
-         else
-         {
-            c2.setLocation(c2.getX(), coords[3]-STEP_SIZE);
-
-            computeCurveDeviation(c1, c2, vec);
-
-            if (averageDeviation < bestDeviation)
-            {
-               bestMaxDist = maxDist;
-               bestMinDist = minDist;
-               bestDeviation = averageDeviation;
-               bestLength = length;
-
-               if (bestC2 == null)
-               {
-                  bestC2 = new Point2D.Double(c2.getX(), c2.getY());
-               }
-               else
-               {
-                  bestC2.setLocation(c2.getX(), c2.getY());
-               }
-            }
-            else
-            {
-               c2.setLocation(c2.getX(), coords[3]);
-            }
-         }
-      }
-
-      if (bestC1 == null && bestC2 == null)
-      {
-         maxDist = prevMaxDist;
-         minDist = prevMinDist;
-         averageDeviation = prevDeviation;
-         length = prevLength;
-      }
-      else
-      {
-         if (bestC1 != null)
-         {
-            coords[0] = bestC1.getX();
-            coords[1] = bestC1.getY();
-         }
-
-         if (bestC2 != null)
-         {
-            coords[2] = bestC2.getX();
-            coords[3] = bestC2.getY();
-         }
-
-         iter = tuneGradients(vec, iter, bestC1 != null, bestC2 != null);
-      }
-
+   public int getIteration()
+   {
       return iter;
-   }
-
-   private void computeCurveDeviation(Point2D c1, Point2D c2,
-     ShapeComponentVector vec)
-   {
-      maxDist = 0.0;
-      minDist = Double.MAX_VALUE;
-
-      averageDeviation = 0.0;
-      length = 0.0;
-      double prevX = p1.getX();
-      double prevY = p1.getY();
-
-      double[] result = new double[2];
-      Point2D resultP = new Point2D.Double();
-
-      int n = endIdx-startIdx;
-
-      double incT = Math.min(0.001, 1.0/(n+1));
-      double startT = incT;
-
-      for (int i = startIdx; i < endIdx; i++)
-      {
-         ShapeComponent comp = vec.get(i);
-         Point2D p = comp.getEnd();
-
-         JDRBezier.getClosest(p, p1, c1, c2, p2, startT, incT, resultP, result);
-
-         startT = Math.min(1.0, result[0]);
-
-         double dist = Math.sqrt(result[1]);
-         averageDeviation += dist;
-
-         if (dist < minDist)
-         {
-            minDist = dist;
-         }
-
-         if (dist > maxDist)
-         {
-            maxDist = dist;
-         }
-
-         length += Point2D.distance(prevX, prevY, resultP.getX(), resultP.getY());
-
-         prevX = resultP.getX();
-         prevY = resultP.getY();
-      }
-
-      length += Point2D.distance(prevX, prevY, p2.getX(), p2.getY());
-
-      averageDeviation /= (n-1);
    }
 
    public double getAngle()
@@ -14864,29 +15625,49 @@ class DeviationResult implements Comparable<DeviationResult>
       return length;
    }
 
-   public double getMaxDistance()
+   public double getDelta()
    {
-      return maxDist;
+      return delta;
    }
 
-   public double getMinDistance()
+   public Point2D getP1()
    {
-      return minDist;
+      return p1;
    }
 
-   public double getAverageDeviation()
+   public Point2D getP2()
    {
-      return averageDeviation;
-   }
-
-   public ShapeComponent getComponent()
-   {
-      return component;
+      return p2;
    }
 
    public boolean isLine()
    {
-      return component != null && component.getType() == PathIterator.SEG_LINETO;
+      return shape == null ? false : (shape instanceof Line2D);
+   }
+
+   public Shape getShape()
+   {
+      return shape;
+   }
+
+   public ShapeComponent getComponent()
+   {
+      if (shape == null)
+      {
+         return null;
+      }
+
+      PathIterator pi = shape.getPathIterator(null);
+
+      double[] coords = new double[6];
+
+      int type = pi.currentSegment(coords);
+
+      Point2D startPt = new Point2D.Double(coords[0], coords[1]);
+      pi.next();
+
+      type = pi.currentSegment(coords);
+      return new ShapeComponent(type, coords, startPt);
    }
 
    public int getStartIndex()
@@ -14899,88 +15680,73 @@ class DeviationResult implements Comparable<DeviationResult>
       return endIdx;
    }
 
-   public static DeviationResult getLineDeviation(Point2D startPt, Point2D endPt,
-     ShapeComponentVector vec, int startIdx, int endIdx)
-   {
-      DeviationResult result = new DeviationResult();
-
-      double sum = 0.0;
-
-      for (int i = startIdx; i <= endIdx; i++)
-      {
-         ShapeComponent comp = vec.get(i);
-         Point2D p = comp.getEnd();
-         Point2D q = JDRLine.getClosestPointAlongLine(startPt, endPt, p);
-
-         if (p != q)
-         {
-            double dist = Math.sqrt(ShapeComponent.getSquareDistance(p, q));
-            sum += dist;
-
-            if (dist < result.minDist)
-            {
-               result.minDist = dist;
-            }
-
-            if (dist > result.maxDist)
-            {
-               result.maxDist = dist;
-            }
-         }
-         else
-         {
-            result.minDist = 0.0;
-         }
-      }
-
-      int n = endIdx-startIdx+1;
-
-      result.averageDeviation = sum/n;
-
-      result.component = new ShapeComponent(PathIterator.SEG_LINETO, 
-        new double[] { endPt.getX(), endPt.getY() }, startPt);
-      result.length = result.component.getDiagonalLength();
-
-      result.startIdx = startIdx;
-      result.endIdx = endIdx;
-
-      result.p1 = startPt;
-      result.p2 = endPt;
-
-      return result;
-   }
-
    public String toString()
    {
-      return String.format("average deviation: %f, dist range: [%f, %f], length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), component: %s, angle: %f radians", 
-        averageDeviation, minDist, maxDist, length, startIdx, endIdx,
-        p1.getX(), p1.getY(), p2.getX(), p2.getY(), component, angle);
+      String shapeInfo = "(empty)";
+
+      if (shape != null)
+      {
+         shapeInfo = String.format("shape: %s", ShapeComponentVector.svg(shape));
+      }
+
+      return String.format("approximate length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), %s, angle: %f radians, delta: %f", 
+        length, startIdx, endIdx,
+        p1.getX(), p1.getY(), p2.getX(), p2.getY(), shapeInfo, angle, delta);
    }
 
-   public String info(JDRResources resources)
+   public String info()
    {
-      String text = resources.getMessage("vectorize.smoothing_possible_path",
-       component.info(resources), averageDeviation, minDist, maxDist, length);
+      JDRResources resources = dialog.getResources();
 
-      if (component.getType() == PathIterator.SEG_LINETO)
+      String shapeInfo = "(empty)";
+
+      if (shape != null)
+      {
+         shapeInfo = ShapeComponentVector.svg(shape);
+      }
+
+      String text = resources.getMessage("vectorize.smoothing_possible_path",
+       shapeInfo, length, delta);
+
+      if (!(shape instanceof CubicCurve2D))
       {
          return text;
       }
 
+      if (iter > -1)
+      {
+         text = String.format("%s %s", text, 
+           resources.getMessage("vectorize.smoothing_curve_fit_iter", iter));
+      }
+
       return String.format("%s %s", text, resources.getMessage(
-        "vectorize.smoothing_angle", angle, Math.toDegrees(angle)));
+           "vectorize.smoothing_angle", angle, Math.toDegrees(angle)));
+   }
+
+   public String comparisonInfo(DeviationResult other)
+   {
+      JDRResources resources = dialog.getResources();
+
+      return resources.getMessage("vectorize.smoothing_leq", 
+        delta, other.delta);
+   }
+
+   public String comparisonInfo(DeviationResult other, double offset)
+   {
+      JDRResources resources = dialog.getResources();
+
+      return resources.getMessage("vectorize.smoothing_leq_offset", 
+        delta, other.delta, offset);
    }
 
    public int compareTo(DeviationResult other)
    {
-      if (averageDeviation < other.averageDeviation
-            && maxDist < other.maxDist)
+      if (delta < other.delta)
       {
          return -1;
       }
 
-      if (averageDeviation > other.averageDeviation
-            && maxDist > other.maxDist)
+      if (delta > other.delta)
       {
          return 1;
       }
@@ -14988,14 +15754,189 @@ class DeviationResult implements Comparable<DeviationResult>
       return 0;
    }
 
-   private double averageDeviation=Double.MAX_VALUE;
+   private double delta=Double.MAX_VALUE;
    private Point2D p1, p2;
-   private double maxDist = 0.0, minDist = Double.MAX_VALUE;
-   private ShapeComponent component;
-   private double length=0.0, angle=0.0;
-   private int startIdx, endIdx;
+   private double length=0.0, angle=0.0, originalLength;
+   private int startIdx, endIdx, iter=-1, numPoints;
+   private Shape shape;
+   private Area originalArea;
 
-   public static final int MAX_ITER = 100, STEP_SIZE=5;
+   private VectorizeBitmapDialog dialog;
+}
+
+class CurveFitSample implements Comparable<CurveFitSample>
+{
+   public CurveFitSample(Point2D c1, Point2D c2, 
+      DeviationResult deviationResult, CubicCurve2D trialCurve)
+   {
+      this(c1.getX(), c1.getY(), c2.getX(), c2.getY(), deviationResult, trialCurve);
+   }
+
+   public CurveFitSample(double c1x, double c1y, double c2x, double c2y,
+      DeviationResult deviationResult,
+      CubicCurve2D trialCurve)
+   {
+      this(new double[]{c1x, c1y, c2x, c2y}, deviationResult, trialCurve);
+   }
+
+   public CurveFitSample(double[] array, DeviationResult deviationResult,
+      CubicCurve2D trialCurve)
+   {
+      controls = array;
+
+      this.deviationResult = deviationResult;
+
+      if (trialCurve == null)
+      {
+         Point2D p1 = deviationResult.getP1();
+         Point2D p2 = deviationResult.getP2();
+
+         this.trialCurve = new CubicCurve2D.Double(p1.getX(), p1.getY(),
+           p1.getX(), p1.getY(), p2.getX(), p2.getY(), p2.getX(), p2.getY());
+      }
+      else
+      {
+         this.trialCurve = trialCurve;
+      }
+
+      computeDelta();
+   }
+
+   public int compareTo(CurveFitSample other)
+   {
+      return (delta < other.delta ? -1 : (delta > other.delta ? 1 : 0));
+   }
+
+   public double getDelta()
+   {
+      return delta;
+   }
+
+   public double getC1X()
+   {
+      return controls[0];
+   }
+
+   public double getC1Y()
+   {
+      return controls[1];
+   }
+
+   public double getC2X()
+   {
+      return controls[2];
+   }
+
+   public double getC2Y()
+   {
+      return controls[3];
+   }
+
+   public double getX1()
+   {
+      return trialCurve.getX1();
+   }
+
+   public double getY1()
+   {
+      return trialCurve.getY1();
+   }
+
+   public double getX2()
+   {
+      return trialCurve.getX2();
+   }
+
+   public double getY2()
+   {
+      return trialCurve.getY2();
+   }
+
+   public double[] getControls(double[] result)
+   {
+      if (result == null)
+      {
+         result = new double[controls.length];
+      }
+
+      for (int i = 0; i < controls.length; i++)
+      {
+         result[i] = controls[i];
+      }
+
+      return result;
+   }
+
+   public void addControlsToArray(double[] array)
+   {
+      for (int i = 0; i < controls.length; i++)
+      {
+         array[i] += controls[i];
+      }
+   }
+
+   public void getCurve(CubicCurve2D curve)
+   {
+      curve.setCurve(getX1(), getY1(), 
+        getC1X(), getC1Y(), getC2X(), getC2Y(), getX2(), getY2());
+   }
+
+   public CurveFitSample computeOffset(double[] x0, double alpha)
+   {
+      double[] result = new double[controls.length];
+
+      for (int i = 0; i < controls.length; i++)
+      {
+         result[i] = x0[i] + alpha*(x0[i] - controls[i]);
+      }
+
+      return new CurveFitSample(result, deviationResult, trialCurve);
+   }
+
+   public CurveFitSample computeOffset(CurveFitSample other, double sigma)
+   {
+      return computeOffset(other.controls, sigma);
+   }
+
+   public CurveFitSample computeReflected(double[] x0, double alpha)
+   {
+      return computeOffset(x0, alpha);
+   }
+
+   public CurveFitSample computeExpanded(double[] x0, double gamma)
+   {
+      return computeOffset(x0, -gamma);
+   }
+
+   public CurveFitSample computeContraction(double[] x0, double rho)
+   {
+      return computeOffset(x0, -rho);
+   }
+
+   private void computeDelta()
+   {
+      trialCurve.setCurve(getX1(), getY1(), controls[0], controls[1],
+        controls[2], controls[3], getX2(), getY2());
+
+      delta = deviationResult.computeDelta(trialCurve);
+   }
+
+   public static double computeAverageDelta(CurveFitSample[] samples)
+   {
+      double sum = 0.0;
+
+      for (CurveFitSample sample : samples)
+      {
+         sum += sample.getDelta();
+      }
+
+      return sum/samples.length;
+   }
+
+   private double delta;
+   private double[] controls;
+   private CubicCurve2D trialCurve;
+   private DeviationResult deviationResult;
 }
 
 class BestFitComponent
@@ -15367,7 +16308,59 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
 
       if (workingShape != null)
       {
+         Rectangle2D bounds = workingShape.getBounds2D();
+
+         if (shape instanceof CubicCurve2D)
+         {
+            CubicCurve2D curve = (CubicCurve2D)workingShape;
+            bounds.add(curve.getCtrlP1());
+            bounds.add(curve.getCtrlP2());
+         }
+
+         double factor = getMagnification();
+
+         Rectangle rect = new Rectangle(
+          (int)Math.ceil(factor*bounds.getX()),
+          (int)Math.ceil(factor*bounds.getY()),
+          (int)Math.ceil(factor*bounds.getWidth()),
+          (int)Math.ceil(factor*bounds.getHeight())
+         );
+
+         int size = dialog.getControlSize()+2;
+         rect.grow(size, size);
+
          repaint(workingShape.getBounds());
+      }
+   }
+
+   public void updateWorkingCurve(CurveFitSample sample)
+   {
+      if (workingShape != null && (workingShape instanceof CubicCurve2D))
+      {
+         CubicCurve2D curve = (CubicCurve2D)workingShape;
+         Rectangle2D bounds = workingShape.getBounds2D();
+         bounds.add(curve.getCtrlP1());
+         bounds.add(curve.getCtrlP2());
+
+         sample.getCurve(curve);
+         bounds.add(curve.getBounds2D());
+         bounds.add(curve.getCtrlP1());
+         bounds.add(curve.getCtrlP2());
+
+         double factor = getMagnification();
+
+         Rectangle rect = new Rectangle(
+          (int)Math.ceil(factor*bounds.getX()),
+          (int)Math.ceil(factor*bounds.getY()),
+          (int)Math.ceil(factor*bounds.getWidth()),
+          (int)Math.ceil(factor*bounds.getHeight())
+         );
+
+         int size = dialog.getControlSize();
+
+         rect.grow(size, size);
+
+         repaint(rect);
       }
    }
 
