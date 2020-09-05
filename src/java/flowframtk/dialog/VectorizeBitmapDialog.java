@@ -4019,16 +4019,16 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveMinPointsLabel.setLabelFor(curveMinPointsSpinner);
       subPanel.add(curveMinPointsSpinner);
 
-      JComponent nelderMead = Box.createVerticalBox();
-      nelderMead.setBorder(BorderFactory.createTitledBorder(
+      nelderMeadComp = Box.createVerticalBox();
+      nelderMeadComp.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), 
         resources.getString("vectorize.smooth.nelder_mead")
       ));
-      add(nelderMead);
+      add(nelderMeadComp);
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMead.add(subPanel);
+      nelderMeadComp.add(subPanel);
 
       alphaSpinnerModel // >0
          = new SpinnerNumberModel(Double.valueOf(1.0), 
@@ -4044,7 +4044,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMead.add(subPanel);
+      nelderMeadComp.add(subPanel);
 
       gammaSpinnerModel // >1
          = new SpinnerNumberModel(Double.valueOf(2.0), 
@@ -4060,7 +4060,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMead.add(subPanel);
+      nelderMeadComp.add(subPanel);
 
       rhoSpinnerModel // 0 < rho <= 0.5
          = new SpinnerNumberModel(0.5, 0.0, 0.5, 0.05);
@@ -4075,7 +4075,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMead.add(subPanel);
+      nelderMeadComp.add(subPanel);
 
       sigmaSpinnerModel // 0 < sigma < 1
          = new SpinnerNumberModel(0.5, 0.0, 1.0, 0.1);
@@ -4090,7 +4090,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMead.add(subPanel);
+      nelderMeadComp.add(subPanel);
 
       epsilonSpinnerModel // epsilon > 0
          = new SpinnerNumberModel(Double.valueOf(0.001), 
@@ -4106,7 +4106,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMead.add(subPanel);
+      nelderMeadComp.add(subPanel);
 
       maxIterSpinnerModel // maxIter > 0
          = new SpinnerNumberModel(Integer.valueOf(100), 
@@ -4233,6 +4233,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
          maxIterLabel.setEnabled(enable);
          maxIterSpinner.setEnabled(enable);
 
+         nelderMeadComp.setEnabled(enable);
+
          tryBezierCheckBox.setEnabled(enable);
 
          updateBezierWidgets();
@@ -4265,6 +4267,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       epsilonSpinner.setEnabled(enable);
       maxIterLabel.setEnabled(enable);
       maxIterSpinner.setEnabled(enable);
+      nelderMeadComp.setEnabled(enable);
    }
 
    public void setSelected(boolean selected)
@@ -4318,6 +4321,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       epsilonSpinner.setEnabled(enable);
       maxIterLabel.setEnabled(enable);
       maxIterSpinner.setEnabled(enable);
+      nelderMeadComp.setEnabled(enable);
    }
 
    public void reset(boolean revertAll)
@@ -4462,6 +4466,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
      maxIterSpinner;
 
    private JCheckBox doSmoothingCheckBox, tryBezierCheckBox;
+
+   private JComponent nelderMeadComp;
 
    private ControlPanel controlPanel;
 }
@@ -4661,7 +4667,7 @@ class ControlPanel extends JPanel implements ActionListener
       }
 
       Dimension dim = spinner.getPreferredSize();
-      dim.width += 10;
+      dim.width += 20;
       dim.height += 2;
       spinner.setMaximumSize(dim);
 
@@ -14632,6 +14638,46 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   bestResult = firstTry;
                   bestChoiceIdx = firstTryChoiceIdx;
                }
+               else if (bestResult.getEndIndex() < firstTry.getEndIndex())
+               {
+                  int startRemainingIdx = bestResult.getEndIndex()+1;
+
+                  double remainingLength = vec.getEstimatedLength(
+                           startRemainingIdx, firstTry.getEndIndex());
+
+                  if (remainingLength <= lengthThreshold
+                       && firstTry.getDelta() <= bestResult.getDelta()+thresholdDiff)
+                  {
+                     ShapeComponent comp1 = vec.get(startRemainingIdx);
+                     ShapeComponent comp2; 
+
+                     if (startRemainingIdx == firstTry.getEndIndex())
+                     {
+                        comp2 = comp1;
+                     }
+                     else
+                     {
+                        comp2 = vec.get(firstTry.getEndIndex());
+                     }
+
+                     Point2D pt1 = comp1.getStart();
+                     Point2D pt2 = comp2.getEnd();
+
+                     dialog.addMessageIdLn("vectorize.smoothing_remaining_length",
+                       pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY(),
+                       remainingLength);
+
+                     dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
+                       firstTryChoiceIdx, bestChoiceIdx, 
+                       resources.getMessage("vectorize.smoothing_reason_and",
+                         resources.getMessage("vectorize.smoothing_leq",
+                             remainingLength, lengthThreshold),
+                         firstTry.comparisonInfo(bestResult, thresholdDiff)));
+
+                     bestResult = firstTry;
+                     bestChoiceIdx = firstTryChoiceIdx;
+                  }
+               }
             }
             else
             {
@@ -14920,6 +14966,44 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   bestCurveResult = firstCurveResult;
                   minCurveDelta = firstCurveResult.getDelta();
                }
+            }
+         }
+
+         if (bestCurveResult != firstCurveResult)
+         {
+            int startRemainingIdx = bestCurveResult.getEndIndex()+1;
+
+            double remainingLength = vec.getEstimatedLength(
+                     startRemainingIdx, endIdx);
+
+            if (remainingLength <= lengthThreshold
+              && firstCurveResult.getDelta()
+                    <= bestCurveResult.getDelta()+thresholdDiff)
+            {
+               ShapeComponent comp1 = vec.get(startRemainingIdx);
+               ShapeComponent comp2; 
+
+               if (startRemainingIdx == endIdx)
+               {
+                  comp2 = comp1;
+               }
+               else
+               {
+                  comp2 = vec.get(endIdx);
+               }
+
+               Point2D pt1 = comp1.getStart();
+               Point2D pt2 = comp2.getEnd();
+
+               dialog.addMessageIdLn("vectorize.smoothing_remaining_length",
+                 pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY(),
+                 remainingLength);
+
+               dialog.addMessageLn(firstCurveResult.comparisonInfo(
+                  bestCurveResult, thresholdDiff));
+
+               bestCurveResult = firstCurveResult;
+               minCurveDelta = firstCurveResult.getDelta();
             }
          }
 
