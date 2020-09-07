@@ -419,6 +419,14 @@ public class JDRBezier extends JDRSegment
        control2.x, control2.y, end.x, end.y);
    }
 
+   public static Point2D getP(double t, CubicCurve2D curve)
+   {
+      return getP(t, curve.getX1(), curve.getY1(),
+       curve.getCtrlX1(), curve.getCtrlY1(),
+       curve.getCtrlX2(), curve.getCtrlY2(),
+       curve.getX2(), curve.getY2());
+   }
+
    public static Point2D getP(double t,
      double p0x, double p0y, double p1x, double p1y,
      double p2x, double p2y, double p3x, double p3y)
@@ -1270,11 +1278,20 @@ P^y'(t) = t^2[3(p_1^y-p_2^y)+p_3^y-p_0^y]
 \]
  
 Note that t may be outside the range [0-1] which means that the 
-stationary point is outside of this segment.
+stationary point is outside of this segment. Use limit=true to only return possible values of t within that range
     */ 
    public static double[] getStationaryPositions(
      double p0x, double p0y, double p1x, double p1y,
      double p2x, double p2y, double p3x, double p3y)
+   {
+      return getStationaryPositions(p0x, p0y, p1x, p1y,
+       p2x, p2y, p3x, p3y, false);
+   }
+
+   public static double[] getStationaryPositions(
+     double p0x, double p0y, double p1x, double p1y,
+     double p2x, double p2y, double p3x, double p3y,
+     boolean limit)
    {
       double a = 3*(p1y-p2y) + p3y - p0y;
       double b = 2*(p0y+p2y-2*p1y);
@@ -1297,7 +1314,13 @@ stationary point is outside of this segment.
       if (sq == 0)
       {
          double t = - b * factor;
-         return Double.isNaN(t) ? null : new double[] { t };
+
+         if (Double.isNaN(t) || limit && (t < 0.0 || t > 1.0))
+         {
+            return null;
+         }
+
+         return new double[] { t };
       }
 
       double root = Math.sqrt(sq);
@@ -1305,16 +1328,19 @@ stationary point is outside of this segment.
       double t1 = factor*(root - b);
       double t2 = -factor*(b + root);
 
-      if (Double.isNaN(t1) || Double.isInfinite(t1))
+      if (Double.isNaN(t1) || Double.isInfinite(t1)
+             || (limit && (t1 < 0.0 || t1 > 1.0)))
       {
-         if (Double.isNaN(t2) || Double.isInfinite(t2))
+         if (Double.isNaN(t2) || Double.isInfinite(t2)
+             || (limit && (t2 < 0.0 || t2 > 1.0)))
          {
             return null;
          }
 
          return new double[] {t2};
       }
-      else if (Double.isNaN(t2) || Double.isInfinite(t2))
+      else if (Double.isNaN(t2) || Double.isInfinite(t2)
+             || (limit && (t2 < 0.0 || t2 > 1.0)))
       {
          return new double[] {t1};
       }
@@ -1327,10 +1353,33 @@ stationary point is outside of this segment.
       return new double[] {t2, t1};
    }
 
+   public static double[] getStationaryPositions(CubicCurve2D curve)
+   {
+      return getStationaryPositions(curve.getX1(), curve.getY1(),
+        curve.getCtrlX1(), curve.getCtrlY1(), 
+        curve.getCtrlX2(), curve.getCtrlY2(), 
+        curve.getX2(), curve.getY2());
+   }
+
+   public static double[] getStationaryPositions(CubicCurve2D curve,
+     boolean limit)
+   {
+      return getStationaryPositions(curve.getX1(), curve.getY1(),
+        curve.getCtrlX1(), curve.getCtrlY1(), 
+        curve.getCtrlX2(), curve.getCtrlY2(), 
+        curve.getX2(), curve.getY2(), limit);
+   }
+
    public double[] getStationaryPositions()
    {
       return getStationaryPositions(start.x, start.y,
         control1.x, control1.y, control2.x, control2.y, end.x, end.y);
+   }
+
+   public double[] getStationaryPositions(boolean limit)
+   {
+      return getStationaryPositions(start.x, start.y,
+        control1.x, control1.y, control2.x, control2.y, end.x, end.y, limit);
    }
 
    /**
