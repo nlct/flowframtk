@@ -2587,6 +2587,7 @@
 <entry key="process.confirm">Confirm</entry>
 <entry key="process.running">Running {0}</entry>
 <entry key="process.aborted">Task aborted.</entry>
+<entry key="process.cancelling">Canceling task.</entry>
 
 <!--  Parshape/Shapepar dialog box -->
 
@@ -2783,6 +2784,12 @@
 <entry key="vectorize.messages">ÏûϢ</entry>
 <entry key="vectorize.controls">Controls</entry>
 <entry key="vectorize.history">History</entry>
+<entry key="vectorize.verbose">Verbose</entry>
+<entry key="vectorize.verbose.tooltip">Change verbose mode for future messages.</entry>
+<entry key="vectorize.copy_messages">Copy Messages</entry>
+<entry key="vectorize.copy_messages.tooltip">Copy selected text or all text, if none selected.</entry>
+<entry key="vectorize.cut_messages">Cut Messages</entry>
+<entry key="vectorize.cut_messages.tooltip">Cut selected text or all text, if none selected.</entry>
 <entry key="vectorize.confirm_pin_current">Pin current results?</entry>
 <entry key="vectorize.confirm_clear_all">Clear all results (including pinned)? This action can't be undone. Any paths already applied to the canvas won't be affected.</entry>
 <entry key="vectorize.confirm_include_current">Include current results?</entry>
@@ -2866,14 +2873,21 @@
 <entry key="vectorize.smooth_shapes">Smooth Shapes</entry>
 <entry key="vectorize.smooth_shapes.tiny_step">Tiny Step Threshold:</entry>
 <entry key="vectorize.smooth_shapes.tiny_step.mnemonic">T</entry>
+<entry key="vectorize.smooth_shapes.tiny_step.tooltip">Fit sequence of segments that are all less than this length.</entry>
 <entry key="vectorize.smooth_shapes.length_threshold">Length Threshold:</entry>
 <entry key="vectorize.smooth_shapes.length_threshold.mnemonic">L</entry>
+<entry key="vectorize.smooth_shapes.length_threshold.tooltip">If the best line is shorter than this value, use Threshold Diff.</entry>
 <entry key="vectorize.smooth_shapes.threshold_diff">Threshold Diff:</entry>
 <entry key="vectorize.smooth_shapes.threshold_diff.mnemonic">D</entry>
+<entry key="vectorize.smooth_shapes.threshold_diff.tooltip">Choose longer path if delta is less than best shorter path delta + threshold</entry>
 <entry key="vectorize.smooth_shapes.max_deviation">Max Deviation:</entry>
 <entry key="vectorize.smooth_shapes.max_deviation.mnemonic">X</entry>
+<entry key="vectorize.smooth_shapes.max_deviation.tooltip">Don't replace if delta is larger than this value.</entry>
 <entry key="vectorize.smooth_shapes.deviation_epsilon">Deviation Diff:</entry>
+<entry key="vectorize.smooth_shapes.deviation_epsilon.tooltip">If the average deviation for line fits using bends as end points is &lt;= best delta + this value, choose the lines.</entry>
 <entry key="vectorize.smooth_shapes.try_bezier">Try Bézier curves</entry>
+<entry key="vectorize.smooth_shapes.sampling">Curve Sampling</entry>
+<entry key="vectorize.smooth_shapes.sampling.tooltip">If set, curve fitting will be faster but less likely to find the best match</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold">Gradient Angle Threshold:</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold.mnemonic">G</entry>
 <entry key="vectorize.smooth_shapes.curve_gradient_threshold.tooltip">Minimum angle between gradient vectors</entry>
@@ -2882,6 +2896,7 @@
 <entry key="vectorize.smooth_shapes.min_points">Minimum points:</entry>
 <entry key="vectorize.smooth_shapes.min_points.mnemonic">P</entry>
 <entry key="vectorize.smooth_shapes.stat_pt_threshold">Stationary Point Threshold:</entry>
+<entry key="vectorize.smooth_shapes.stat_pt_threshold.tooltip">If best curve doesn't fit detected bends choose a curve where the bend deviation is less than this value.</entry>
 <entry key="vectorize.smooth.nelder_mead">Nelder-Mead Simplex Parameters</entry>
 <entry key="vectorize.smooth.alpha">Alpha (&#x1D6FC; &gt; 0):</entry>
 <entry key="vectorize.smooth.alpha.tooltip">Reflection co-efficient</entry>
@@ -2894,7 +2909,7 @@
 <entry key="vectorize.smooth.epsilon">Epsilon (&#x1D700; &gt; 0):</entry>
 <entry key="vectorize.smooth.epsilon.tooltip">Termination threshold</entry>
 <entry key="vectorize.smooth.max_iter">Maximum iterations (&gt; 0):</entry>
-
+<entry key="vectorize.smooth.max_iter.tooltip">Stopping criteria to prevent process running on for too long.</entry>
 
 <entry key="vectorize.remove_tiny_paths">Remove Tiny Paths</entry>
 <entry key="vectorize.remove_tiny_paths.min_area">Min Area:</entry>
@@ -2967,26 +2982,41 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_loop">Smoothing loop starting at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_path">Smoothing path starting at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_subpath">Smoothing sub-path from ({0},{1}) to ({2},{3}).</entry> 
+<entry key="vectorize.smoothing_no_tiny_steps_run">No tiny step run for ({0},{1}) to ({2},{3}). Adding component {4}.</entry> 
+<entry key="vectorize.smoothing_no_tiny_steps_run_indexes">No tiny step run from path index {0} to {1}. Adding component {2}.</entry> 
+<entry key="vectorize.smoothing_no_replacement">No replacement; best delta > {0}. Adding component {1}.</entry> 
 <entry key="vectorize.smoothing_tiny_steps_run">Tiny steps from ({0},{1}) to ({2},{3}). Average length: {4}.</entry> 
 <entry key="vectorize.smoothing_bend_found">Possible bend found at ({0},{1}).</entry> 
 <entry key="vectorize.smoothing_bends_found">Possible bends found at ({0},{1}) and ({2}, {3}).</entry> 
 <entry key="vectorize.smoothing_choice_n">({0}): {1}</entry>
 <entry key="vectorize.smoothing_choosing_n_not_m">Choosing ({0}) over ({1}): {2}</entry>
 <entry key="vectorize.smoothing_discounting_n">Discounting ({0}): {1}</entry>
+<entry key="vectorize.smoothing_le">{0} &lt; {1}</entry>
 <entry key="vectorize.smoothing_leq">{0} &#x2264; {1}</entry>
 <entry key="vectorize.smoothing_leq_offset">{0} &#x2264; {1} + {2}</entry>
 <entry key="vectorize.smoothing_reason_and">{0} and {1}</entry>
 <entry key="vectorize.smoothing_remaining_length">Estimated length from ({0},{1}) -- ({2},{3}): {4}</entry>
-<entry key="vectorize.smoothing_possible_path">Possible path {0}. Length: {1}. Delta: {2}</entry> 
+<entry key="vectorize.smoothing_curve_sampling_start">Curve sampling on: finding best starting point.</entry>
+<entry key="vectorize.smoothing_too_flat">Too flat ({0}).</entry>
+<entry key="vectorize.smoothing_curve_best_stat_pt">Best path with stationary points: {0}</entry>
+<entry key="vectorize.smoothing_curve_biggest">Biggest path: {0}</entry>
+<entry key="vectorize.smoothing_curve_sample_path">Sample path {0,number}: {1}</entry>
+<entry key="vectorize.smoothing_curve_better_sample_path">Sample path {0,number} better than {1}.</entry>
+<entry key="vectorize.smoothing_choosing_sample_path">Choosing sample path {0,number} as initial path.</entry>
+<entry key="vectorize.smoothing_choosing_initial_sample_path">Choosing initial sample path.</entry>
+<entry key="vectorize.smoothing_possible_path">Possible path {0}</entry> 
+<entry key="vectorize.smoothing_result_info">{0}. Length: {1}. Delta: {2}.</entry> 
 <entry key="vectorize.smoothing_stat_pt">Deviation from stationary point: P({0})=({1},{2}) to ({3},{4}) = {5}.</entry>
 <entry key="vectorize.smoothing_no_stat_pt">No stationary points in range.</entry>
 <entry key="vectorize.smoothing_angle">Angle between gradient vectors: {0} rad ({1} degrees).</entry> 
+<entry key="vectorize.smoothing_flatness">Flatness: {0}.</entry>
 <entry key="vectorize.smoothing_replacing_path">Replacing path with {0}.</entry> 
 <entry key="vectorize.smoothing_replacing">Replacing sub-path from {0} to {1} with {2}.</entry> 
 <entry key="vectorize.smoothing_replacing2">Replacing sub-path from {0} to {1} with {2}.</entry> 
 <entry key="vectorize.smoothing_replacing3">Replacing sub-path from {0} to {1} with {2} {3}.</entry> 
 <entry key="vectorize.smoothing_curve_fit_iter">Curve fitting stopped at iteration {0}.</entry>
 
+<entry key="path_element_info.empty">(empty)</entry>
 <entry key="path_element_info.line">L ({0},{1}) -- ({2},{3}) gradient: ({4},{5})</entry>
 <entry key="path_element_info.move">M ({0},{1}) ({2},{3})</entry>
 <entry key="path_element_info.quad">Q ({0},{1}) .. ({2},{3}) .. ({4},{5}) start gradient: ({6},{7}); end gradient: ({8},{9})</entry>

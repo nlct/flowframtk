@@ -208,6 +208,22 @@ public class VectorizeBitmapDialog extends JFrame
 
       JComponent messageComp = new JPanel(new BorderLayout());
 
+      JComponent messageButtonPanel = new JPanel(
+        new FlowLayout(FlowLayout.LEADING, 10, 5));
+      messageComp.add(messageButtonPanel, "North");
+
+      verboseCheckBox = resources.createAppCheckBox("vectorize", 
+         "verbose", true, null);
+      messageButtonPanel.add(verboseCheckBox);
+
+      copyMessagesButton = resources.createDialogButton("vectorize.copy_messages",
+         "copyText", this, null);
+      messageButtonPanel.add(copyMessagesButton);
+
+      deleteMessagesButton = resources.createDialogButton("vectorize.cut_messages",
+         "cutText", this, null);
+      messageButtonPanel.add(deleteMessagesButton);
+
       messageArea = resources.createAppInfoArea();
       messageArea.setOpaque(true);
       messageComp.add(new JScrollPane(messageArea), "Center");
@@ -378,6 +394,45 @@ public class VectorizeBitmapDialog extends JFrame
             resultZoomWidget.setEnabled(true);
          }
       }
+      else if (command.equals("copyText"))
+      {
+         if (messageArea == null || messageArea.getText().isEmpty())
+         {
+            return;
+         }
+
+         if (messageArea.getSelectedText() == null)
+         {
+            int pos = messageArea.getCaretPosition();
+            messageArea.selectAll();
+            messageArea.copy();
+            messageArea.setCaretPosition(pos);
+         }
+         else
+         {
+            messageArea.copy();
+         }
+      }
+      else if (command.equals("cutText"))
+      {
+         if (messageArea == null || messageArea.getText().isEmpty())
+         {
+            return;
+         }
+
+         if (messageArea.getSelectedText() == null)
+         {
+            messageArea.selectAll();
+            messageArea.copy();
+            messageArea.setText("");
+         }
+         else
+         {// temporarily switch on edit mode to allow this
+            messageArea.setEditable(true);
+            messageArea.cut();
+            messageArea.setEditable(false);
+         }
+      }
    }
 
    private void updateUndoRedo()
@@ -385,7 +440,7 @@ public class VectorizeBitmapDialog extends JFrame
       updateUndoRedo(undoManager.getUndoPresentationName(),
         undoManager.getRedoPresentationName());
 
-      controlPanel.updateWidgets(false, shapeList != null);
+      updateWidgets();
    }
 
    private void updateUndoRedo(String undoName, String redoName)
@@ -523,17 +578,34 @@ public class VectorizeBitmapDialog extends JFrame
       coordField.setText(String.format("%d, %d", x, y));
    }
 
-   public void updateTimeElapsed()
-   {
-      setTimeElapsed((new Date()).getTime()-startTime);
-   }
-
    public void setTimeElapsed(long time)
    {
       int hours = (int)time/3600000;
       int minutes = (int)(time%3600000)/60000;
       int seconds = (int)(time%60000)/1000;
       timeElapsedField.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+   }
+
+   public void updateTimeElapsed()
+   {
+      setTimeElapsed((new Date()).getTime()-startTime);
+   }
+
+   public void updateTimeElapsedAndCheckCancel(boolean sleep)
+      throws InterruptedException
+   {
+      updateTimeElapsed();
+
+      if (sleep)
+      {
+         Thread.sleep(SLEEP_DURATION);
+      }
+
+      // check for cancel
+      if (isCancelled())
+      {
+         throw new UserCancelledException(getMessageDictionary());
+      }
    }
 
    public JDRMessageDictionary getMessageDictionary()
@@ -562,7 +634,7 @@ public class VectorizeBitmapDialog extends JFrame
       messageArea.setText("");
 
       controlPanel.reset(false);
-      controlPanel.updateWidgets(false, shapeList != null);
+      updateWidgets();
    }
 
    public boolean clearImage()
@@ -897,6 +969,43 @@ public class VectorizeBitmapDialog extends JFrame
       }
    }
 
+   public boolean isVerbose()
+   {
+      return verboseCheckBox.isSelected();
+   }
+
+   public void addVerboseMessageId(String id, Object... params)
+   {
+      if (isVerbose())
+      {
+         addMessageId(id, params);
+      }
+   }
+
+   public void addVerboseMessageIdLn(String id, Object... params)
+   {
+      if (isVerbose())
+      {
+         addMessageIdLn(id, params);
+      }
+   }
+
+   public void addVerboseMessage(String text)
+   {
+      if (isVerbose())
+      {
+         addMessage(text);
+      }
+   }
+
+   public void addVerboseMessageLn(String text)
+   {
+      if (isVerbose())
+      {
+         addMessageLn(text);
+      }
+   }
+
    public void addMessageId(String id, Object... params)
    {
       addMessage(getResources().getMessage(id, params));
@@ -1097,7 +1206,7 @@ public class VectorizeBitmapDialog extends JFrame
    public void doSelectedTasks()
    {
       startTime = (new Date()).getTime();
-      controlPanel.updateWidgets(true, shapeList != null);
+      controlPanel.updateWidgets(true, shapeList != null && !shapeList.isEmpty());
 
       boolean continueToNextStep = true;
 
@@ -1888,6 +1997,11 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getCurveFitMaximumIterations();
    }
 
+   public boolean isCurveSamplingOn()
+   {
+      return controlPanel.isCurveSamplingOn();
+   }
+
    public boolean isTryBezierOn()
    {
       return controlPanel.isTryBezierOn();
@@ -1917,7 +2031,10 @@ public class VectorizeBitmapDialog extends JFrame
    private CardLayout cardLayout;
    private JComponent cardComp;
 
-   private JDRButton applyButton, okayButton, cancelButton;
+   private JDRButton applyButton, okayButton, cancelButton,
+    copyMessagesButton, deleteMessagesButton;
+
+   private JCheckBox verboseCheckBox;
 
    private Cursor colourPickerCursor;
 
@@ -1925,7 +2042,7 @@ public class VectorizeBitmapDialog extends JFrame
    private UndoManager undoManager;
    private long startTime;
 
-   public static final long SLEEP_DURATION=10;
+   public static final long SLEEP_DURATION=2;
 
    private FlowframTk application;
    private JDRFrame currentFrame;
@@ -4019,6 +4136,10 @@ class SmoothingPanel extends JPanel implements ChangeListener
       curveMinPointsLabel.setLabelFor(curveMinPointsSpinner);
       subPanel.add(curveMinPointsSpinner);
 
+      curveSampleCheckBox = resources.createAppCheckBox(
+         "vectorize.smooth_shapes.sampling", true, this);
+      add(curveSampleCheckBox);
+
       nelderMeadComp = Box.createVerticalBox();
       nelderMeadComp.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), 
@@ -4109,7 +4230,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       nelderMeadComp.add(subPanel);
 
       maxIterSpinnerModel // maxIter > 0
-         = new SpinnerNumberModel(Integer.valueOf(100), 
+         = new SpinnerNumberModel(Integer.valueOf(500), 
                  Integer.valueOf(1), null, Integer.valueOf(100));
 
       maxIterLabel = resources.createAppLabel("vectorize.smooth.max_iter");
@@ -4233,6 +4354,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
          maxIterLabel.setEnabled(enable);
          maxIterSpinner.setEnabled(enable);
 
+         curveSampleCheckBox.setEnabled(enable);
+
          nelderMeadComp.setEnabled(enable);
 
          tryBezierCheckBox.setEnabled(enable);
@@ -4267,6 +4390,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       epsilonSpinner.setEnabled(enable);
       maxIterLabel.setEnabled(enable);
       maxIterSpinner.setEnabled(enable);
+      curveSampleCheckBox.setEnabled(enable);
       nelderMeadComp.setEnabled(enable);
    }
 
@@ -4321,6 +4445,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       epsilonSpinner.setEnabled(enable);
       maxIterLabel.setEnabled(enable);
       maxIterSpinner.setEnabled(enable);
+      curveSampleCheckBox.setEnabled(enable);
       nelderMeadComp.setEnabled(enable);
    }
 
@@ -4344,7 +4469,9 @@ class SmoothingPanel extends JPanel implements ChangeListener
          rhoSpinnerModel.setValue(Double.valueOf(0.5));
          sigmaSpinnerModel.setValue(Double.valueOf(0.5));
          epsilonSpinnerModel.setValue(Double.valueOf(0.001));
-         maxIterSpinnerModel.setValue(Double.valueOf(100));
+         maxIterSpinnerModel.setValue(Double.valueOf(500));
+
+         curveSampleCheckBox.setSelected(true);
 
          if (!tryBezierCheckBox.isSelected())
          {
@@ -4438,6 +4565,11 @@ class SmoothingPanel extends JPanel implements ChangeListener
       return maxIterSpinnerModel.getNumber().intValue();
    }
 
+   public boolean isCurveSamplingOn()
+   {
+      return curveSampleCheckBox.isSelected();
+   }
+
    private JLabel tinyStepThresholdLabel, lengthThresholdLabel, thresholdDiffLabel,
     curveGradientThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
     deviationEpsilonLabel, curveStatPtLabel, curveThresholdDiffLabel,
@@ -4465,7 +4597,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
      alphaSpinner, gammaSpinner, rhoSpinner, sigmaSpinner, epsilonSpinner,
      maxIterSpinner;
 
-   private JCheckBox doSmoothingCheckBox, tryBezierCheckBox;
+   private JCheckBox doSmoothingCheckBox, tryBezierCheckBox,
+     curveSampleCheckBox;
 
    private JComponent nelderMeadComp;
 
@@ -5048,6 +5181,11 @@ class ControlPanel extends JPanel implements ActionListener
       return smoothingPanel.getCurveFitMaximumIterations();
    }
 
+   public boolean isCurveSamplingOn()
+   {
+      return smoothingPanel.isCurveSamplingOn();
+   }
+
    public double getMaxTinyPaths()
    {
       return removeTinyPathsPanel.getMaxTinyPaths();
@@ -5185,6 +5323,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
             if (currentTask != null)
             {
                currentTask.cancel(true);
+               dialog.addMessageIdLn("process.cancelling");
             }
          }
       }
@@ -14203,22 +14342,52 @@ class Smooth extends SwingWorker<Void,Rectangle>
       this.dialog = dialog;
       this.shapes = shapes;
       this.continueToNextStep = continueToNextStep;
+
+      // Try replacing sequence of short segments each with length
+      // less than this value:
       tinyStepThreshold = dialog.getSmoothingTinyStepThreshold();
+
+      // The best fits are likely to be too short. If the best fit
+      // has length below this threshold, choose the best path
+      // that's longer than this value if 
+      // delta of longer path + thresholdDiff < delta of short path
       lengthThreshold = dialog.getLengthThreshold();
       thresholdDiff = dialog.getThresholdDiff();
-      curveThresholdDiff = dialog.getCurveThresholdDiff();
-      tryBezier = dialog.isTryBezierOn();
-      bezierGradientThreshold = dialog.getCurveGradientThreshold();
-      minBezierSamples = dialog.getCurveMinPoints();
+
+      // Don't use a path with delta > maxDeviation
       maxDeviation = dialog.getSmoothingMaxDeviation();
+
+      // Try curve fitting
+      tryBezier = dialog.isTryBezierOn();
+
+      // If the best curve has delta < line delta + curveThresholdDiff
+      // select the curve instead of the line.
+      curveThresholdDiff = dialog.getCurveThresholdDiff();
+
+      // Don't choose curves where the angle between start and end gradient
+      // vectors is less than this value.
+      bezierGradientThreshold = dialog.getCurveGradientThreshold();
+
+      // Don't try fitting curves if the number of points is less
+      // than this value.
+      minBezierSamples = dialog.getCurveMinPoints();
+
+      // If bends are detected and the average delta for the line
+      // fits between the mid points of the bends is < the best
+      // delta + this value, choose the lines.
       deviationEpsilon = dialog.getSmoothingDeviationEpsilon();
+
+      // If the best curve doesn't fit at least one stationary point
+      // choose a curve where the deviation(s) from the stationary
+      // point(s) is less than this value.
       curveStatPtThreshold = dialog.getCurveStationaryPtThreshold();
    }
 
    protected Void doInBackground() throws InterruptedException
    {
       dialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-      progress = 0;
+      setProgress(1);
+      progress = 1;
       maxProgress = 0;
 
       for (int i = 0; i < shapes.size(); i++)
@@ -14274,14 +14443,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
    private void updateAndSleep() throws InterruptedException
    {
-      dialog.updateTimeElapsed();
-      Thread.sleep(VectorizeBitmapDialog.SLEEP_DURATION);
-
-      // check for cancel
-      if (dialog.isCancelled())
-      {
-         throw new UserCancelledException(dialog.getMessageDictionary());
-      }
+      dialog.updateTimeElapsedAndCheckCancel(true);
    }
 
    private void incProgress() throws InterruptedException
@@ -14292,7 +14454,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
    private void incProgress(int inc) throws InterruptedException
    {
       progress += inc;
-      setProgress((int)Math.min((100.0*progress)/maxProgress, 100));
+      setProgress((int)Math.min(
+        Math.max((100.0*progress)/maxProgress, 1), 100));
       updateAndSleep();
    }
 
@@ -14375,9 +14538,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
                 startPt.getX(), startPt.getY(), p.getX(), p.getY());
             }
 
-            DeviationResult fullTry = DeviationResult.createFull(subPath, dialog);
-
-            ShapeComponentVector newSubPath = smoothOpenPath(subPath, fullTry);
+            ShapeComponentVector newSubPath = smoothOpenPath(subPath,
+               DeviationResult.createFull(subPath, dialog));
 
             fullPath.appendPath(newSubPath);
             fullPath.closePath(gradientEpsilon);
@@ -14409,6 +14571,18 @@ class Smooth extends SwingWorker<Void,Rectangle>
      DeviationResult firstTry)
      throws InterruptedException
    {
+      if (tryBezier)
+      {
+         if (curveDeviations == null)
+         {
+            curveDeviations = new HashMap<String,DeviationResult>();
+         }
+         else
+         {
+            curveDeviations.clear();
+         }
+      }
+
       ShapeComponentVector path = null;
       JDRResources resources = dialog.getResources();
 
@@ -14532,7 +14706,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          if (startRunPt != null && endRunPt != null && endIdx - i > 2)
          {
-            dialog.addMessageIdLn("vectorize.smoothing_tiny_steps_run",
+            dialog.addVerboseMessageIdLn("vectorize.smoothing_tiny_steps_run",
              startRunPt.getX(), startRunPt.getY(), 
              endRunPt.getX(), endRunPt.getY(),
              sum/N);
@@ -14558,7 +14732,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   changePt2 = vec.get(changeIdx2).getMid();
                   stat2 = changePt2;
 
-                  dialog.addMessageIdLn("vectorize.smoothing_bends_found",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_bends_found",
                      changePt.getX(), changePt.getY(),
                      changePt2.getX(), changePt2.getY());
 
@@ -14567,7 +14741,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                }
                else
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_bend_found",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_bend_found",
                      changePt.getX(), changePt.getY());
 
                   line2Result = DeviationResult.createLine(dialog,
@@ -14600,13 +14774,13 @@ class Smooth extends SwingWorker<Void,Rectangle>
             }
             else
             {
-               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+               dialog.addVerboseMessageIdLn("vectorize.smoothing_choice_n",
                  bestChoiceIdx, bestResult.info());
             }
 
             if (firstTry != null)
             {
-               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+               dialog.addVerboseMessageIdLn("vectorize.smoothing_choice_n",
                  firstTryChoiceIdx, firstTry.info());
 
                if (bestResult == null)
@@ -14616,7 +14790,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                }
                else if (firstTry.compareTo(bestResult) <= 0)
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_choosing_n_not_m",
                     firstTryChoiceIdx, bestChoiceIdx, 
                     firstTry.comparisonInfo(bestResult));
 
@@ -14628,12 +14802,15 @@ class Smooth extends SwingWorker<Void,Rectangle>
                         <= bestResult.getDelta()
                             + thresholdDiff)
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
-                    firstTryChoiceIdx, bestChoiceIdx, 
-                    resources.getMessage("vectorize.smoothing_reason_and",
-                      resources.getMessage("vectorize.smoothing_leq",
-                          bestResult.getEstimatedLength(), lengthThreshold),
-                      firstTry.comparisonInfo(bestResult, thresholdDiff)));
+                  if (dialog.isVerbose())
+                  {
+                     dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
+                       firstTryChoiceIdx, bestChoiceIdx, 
+                       resources.getMessage("vectorize.smoothing_reason_and",
+                         resources.getMessage("vectorize.smoothing_leq",
+                             bestResult.getEstimatedLength(), lengthThreshold),
+                         firstTry.comparisonInfo(bestResult, thresholdDiff)));
+                  }
 
                   bestResult = firstTry;
                   bestChoiceIdx = firstTryChoiceIdx;
@@ -14663,16 +14840,19 @@ class Smooth extends SwingWorker<Void,Rectangle>
                      Point2D pt1 = comp1.getStart();
                      Point2D pt2 = comp2.getEnd();
 
-                     dialog.addMessageIdLn("vectorize.smoothing_remaining_length",
-                       pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY(),
-                       remainingLength);
+                     if (dialog.isVerbose())
+                     {
+                        dialog.addMessageIdLn("vectorize.smoothing_remaining_length",
+                          pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY(),
+                          remainingLength);
 
-                     dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
-                       firstTryChoiceIdx, bestChoiceIdx, 
-                       resources.getMessage("vectorize.smoothing_reason_and",
-                         resources.getMessage("vectorize.smoothing_leq",
-                             remainingLength, lengthThreshold),
-                         firstTry.comparisonInfo(bestResult, thresholdDiff)));
+                        dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
+                          firstTryChoiceIdx, bestChoiceIdx, 
+                          resources.getMessage("vectorize.smoothing_reason_and",
+                            resources.getMessage("vectorize.smoothing_leq",
+                                remainingLength, lengthThreshold),
+                            firstTry.comparisonInfo(bestResult, thresholdDiff)));
+                     }
 
                      bestResult = firstTry;
                      bestChoiceIdx = firstTryChoiceIdx;
@@ -14691,13 +14871,13 @@ class Smooth extends SwingWorker<Void,Rectangle>
             }
             else
             {
-               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+               dialog.addVerboseMessageIdLn("vectorize.smoothing_choice_n",
                  line1ChoiceIdx, line1Result.info());
             }
 
             if (line2Result != null)
             {
-               dialog.addMessageIdLn("vectorize.smoothing_choice_n",
+               dialog.addVerboseMessageIdLn("vectorize.smoothing_choice_n",
                  line2ChoiceIdx, line2Result.info());
             }
 
@@ -14706,12 +14886,15 @@ class Smooth extends SwingWorker<Void,Rectangle>
              && (line2Result != null && line2Result.compareTo(bestResult) <= 0)
                )
             {
-               dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
-                 bestChoiceIdx,
-                 resources.getMessage("vectorize.smoothing_reason_and",
-                   line1Result.comparisonInfo(bestResult),
-                   line2Result.comparisonInfo(bestResult)
-                 ));
+               if (dialog.isVerbose())
+               {
+                  dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
+                    bestChoiceIdx,
+                    resources.getMessage("vectorize.smoothing_reason_and",
+                      line1Result.comparisonInfo(bestResult),
+                      line2Result.comparisonInfo(bestResult)
+                  ));
+               }
 
                bestResult = null;
             }
@@ -14728,10 +14911,13 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
                if (delta <= bestResult.getDelta()+deviationEpsilon)
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
-                    bestChoiceIdx,
-                    resources.getMessage("vectorize.smoothing_leq_offset", 
-                    delta, bestResult.getDelta(), deviationEpsilon));
+                  if (dialog.isVerbose())
+                  {
+                     dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
+                       bestChoiceIdx,
+                       resources.getMessage("vectorize.smoothing_leq_offset", 
+                       delta, bestResult.getDelta(), deviationEpsilon));
+                  }
 
                   bestResult = null;
                }
@@ -14743,7 +14929,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
                if (bestResult == firstTry)
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_replacing_path",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_replacing_path",
                      ShapeComponentVector.svg(replacement));
 
                   return ShapeComponentVector.create(replacement);
@@ -14755,7 +14941,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                      path = vec.getSubPath(i-1);
                   }
 
-                  dialog.addMessageIdLn("vectorize.smoothing_replacing",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_replacing",
                      vec.get(i).info(resources), 
                      vec.get(bestResult.getEndIndex()).info(resources),
                      ShapeComponentVector.info(replacement, resources));
@@ -14775,9 +14961,9 @@ class Smooth extends SwingWorker<Void,Rectangle>
                Shape replacement = line1Result.getShape();
                path.addShape(replacement);
 
-               if (line2Result == null || line1Result.getDelta() > maxDeviation)
+               if (line2Result == null || line2Result.getDelta() > maxDeviation)
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_replacing2",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_replacing2",
                      vec.get(i).info(resources), 
                      vec.get(changeIdx).info(resources), 
                      ShapeComponentVector.info(replacement, resources));
@@ -14789,7 +14975,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   Shape replacement2 = line2Result.getShape();
                   path.addShape(replacement2);
 
-                  dialog.addMessageIdLn("vectorize.smoothing_replacing3",
+                  dialog.addVerboseMessageIdLn("vectorize.smoothing_replacing3",
                      vec.get(i).info(resources), 
                      vec.get(changeIdx2).info(resources), 
                      ShapeComponentVector.info(replacement, resources), 
@@ -14802,12 +14988,29 @@ class Smooth extends SwingWorker<Void,Rectangle>
             {
                ShapeComponent comp = vec.get(i);
                path.addComponent(comp);
+
+               dialog.addVerboseMessageIdLn("vectorize.smoothing_no_replacement",
+                maxDeviation, comp.info(resources));
             }
          }
          else if (path != null)
          {
             ShapeComponent comp = vec.get(i);
             path.addComponent(comp);
+
+            if (startRunPt != null && endRunPt != null)
+            {
+               dialog.addVerboseMessageIdLn("vectorize.smoothing_no_tiny_steps_run",
+                  startRunPt.getX(), startRunPt.getY(), 
+                  endRunPt.getX(), endRunPt.getY(),
+                  comp.info(resources));
+            }
+            else
+            {
+               dialog.addVerboseMessageIdLn(
+                "vectorize.smoothing_no_tiny_steps_run_indexes",
+                i, endIdx, comp.info(resources));
+            }
          }
 
          firstTry = null;
@@ -14827,8 +15030,9 @@ class Smooth extends SwingWorker<Void,Rectangle>
       double minDelta = Double.MAX_VALUE;
       double minSubThresholdDelta = Double.MAX_VALUE;
 
-      DeviationResult bestCurveResult = null, firstCurveResult=null;
-      double minCurveDelta = Double.MAX_VALUE;
+      JDRResources resources = dialog.getResources();
+
+      // Line fitting is quite quick. Curve fitting is slower.
 
       for (int j = endIdx; j > startIdx+1; j--)
       {
@@ -14858,158 +15062,190 @@ class Smooth extends SwingWorker<Void,Rectangle>
                bestResult = result;
             }
          }
-
-         if (minBezierSamples < (j-startIdx))
-         {
-            result = DeviationResult.createCurve(dialog, vec, startIdx, j, p0, p1, 
-               maxDeviation);
-
-            if (result != null)
-            {
-               if (firstCurveResult==null)
-               {
-                  firstCurveResult = result;
-               }
-
-               if (result.getAngle() > bezierGradientThreshold)
-               {
-                  delta = result.getDelta();
-
-                  if (delta < minCurveDelta)
-                  {
-                     minCurveDelta = delta;
-                     bestCurveResult = result;
-                  }
-               }
-            }
-         }
       }
 
-      JDRResources resources = dialog.getResources();
+      int diff = endIdx-startIdx;
 
-      if (bestCurveResult != null)
+      if (tryBezier && minBezierSamples < diff)
       {
-         double[] t = new double[2];
-         Point2D[] Pt = new Point2D[2];
-         double[] d1 = null;
-         double[] d2 = null;
+         DeviationResult firstCurveResult = getCurveDeviation(vec, startIdx, endIdx,
+            statIdx1, statPt1, statIdx2, statPt2);
 
-         if (bestCurveResult != firstCurveResult)
+         DeviationResult bestCurveResult = firstCurveResult;
+
+         DeviationResult bestStatPtCurveResult = null;
+
+         if (statPt1 != null && firstCurveResult.hasStationaryPointDeviations())
          {
-            dialog.addMessageLn(firstCurveResult.info());
-
-            if (statPt1 != null)
-            {
-               d1 = firstCurveResult.getComponent()
-                   .getStationaryDeviations(statPt1, statPt2, t, Pt);
-
-               if (d1 != null)
-               {
-                  dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
-                    t[0], Pt[0].getX(), Pt[0].getY(), 
-                    statPt1.getX(), statPt1.getY(), d1[0]);
-
-                  if (statPt2 != null && Pt[1] != null && d1.length > 0)
-                  {
-                     dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
-                       t[1], Pt[1].getX(), Pt[1].getY(), 
-                       statPt2.getX(), statPt2.getY(), d1[1]);
-                  }
-               }
-
-               if (statIdx1 <= bestCurveResult.getEndIndex())
-               {
-                  d2 = bestCurveResult.getComponent()
-                               .getStationaryDeviations(statPt1, statPt2, t, Pt);
-               }
-            }
+            bestStatPtCurveResult = firstCurveResult;
          }
 
-         dialog.addMessageLn(bestCurveResult.info());
+         int loopEndIdx = endIdx-1;
+         int loopStartIdx = startIdx+minBezierSamples;
 
-         if (statPt1 != null)
+         DeviationResult[] bestInitialCurves = null;
+
+         if (dialog.isCurveSamplingOn())
          {
-            if (d2 == null)
+            diff /= 3;
+
+            dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sampling_start");
+
+            bestInitialCurves = 
+             getBestInitialCurves(vec, startIdx, endIdx, startIdx+diff, endIdx-diff,
+             firstCurveResult, statIdx1, statPt1, statIdx2, statPt2);
+
+            if (bestInitialCurves[1] != null && bestInitialCurves[1].success())
             {
-               dialog.addMessageIdLn("vectorize.smoothing_no_stat_pt");
+               bestCurveResult = bestInitialCurves[1];
+
+               loopEndIdx = bestInitialCurves[0].getEndIndex()-1;
             }
             else
             {
-               dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
-                 t[0], Pt[0].getX(), Pt[0].getY(), 
-                 statPt1.getX(), statPt1.getY(), d2[0]);
+               loopEndIdx = startIdx;// skip loop
+            }
 
-               if (statPt2 != null && Pt[1] != null && d2.length > 1)
+            if (bestInitialCurves[2] != null)
+            {
+               bestStatPtCurveResult = bestInitialCurves[2];
+            }
+         }
+
+         for (int j = loopEndIdx; j > loopStartIdx; j--)
+         {
+            DeviationResult r = getCurveDeviation(vec, startIdx, j,
+               statIdx1, statPt1, statIdx2, statPt2);
+
+            if (!r.success() || r.getAngle() < bezierGradientThreshold)
+            {
+               // If a larger curve is too flat, there's unlikely to be a
+               // shorter curve that isn't too flat.
+
+               break;
+            }
+
+            int compare = r.compareTo(bestCurveResult);
+
+            if (statPt1 != null)
+            {
+               if (compare == 0)
                {
-                  dialog.addMessageIdLn("vectorize.smoothing_stat_pt", 
-                    t[1], Pt[1].getX(), Pt[1].getY(), 
-                    statPt2.getX(), statPt2.getY(), d2[1]);
+                  compare = r.compareStatPtDeviation(bestCurveResult);
+               }
+
+               if (r.hasStationaryPointDeviations() 
+              && (bestStatPtCurveResult == null
+                  || ((bestStatPtCurveResult == bestCurveResult && compare < 0)
+                       || r.compareStatPtDeviation(bestStatPtCurveResult) < 0)))
+               {
+                  bestStatPtCurveResult = r;
+               }
+            }
+
+            if (compare < 0)
+            {
+               bestCurveResult = r;
+            }
+            else if (compare >= 0)
+            {
+               if (curveSampling && compare > 0
+               && bestCurveResult != null
+               && bestCurveResult.getDelta() < maxDeviation 
+               && bestInitialCurves != null
+               && (bestInitialCurves.length < 2 
+               || bestInitialCurves[1].getEndIndex() >= j)
+               )
+               {// with sampling on, assume not stuck in a local minimum
+                // (but keep going if we know from sampling that
+                // there's a better result later in the loop)
+                  break;
                }
             }
          }
 
-         if (bestCurveResult != firstCurveResult)
+         if (bestCurveResult != null)
          {
-            if (d1 != null)
+            dialog.addVerboseMessageLn(bestCurveResult.info());
+
+            if (bestStatPtCurveResult != null && bestStatPtCurveResult != bestCurveResult
+                 && bestStatPtCurveResult.success())
             {
-               if (d1[0] < curveStatPtThreshold &&
-                   (d2 == null || d1[0] < d2[0])
-                   &&
-                    (
-                       statPt2 == null
-                    || (d1.length > 1 && 
-                      d1[1] < curveStatPtThreshold &&
-                       (d2 == null || d2.length < 2 || d1[1] < d2[1]))
-                    )
-                  )
+               dialog.addVerboseMessageLn(bestStatPtCurveResult.info(
+                 "vectorize.smoothing_curve_best_stat_pt"));
+
+               if (bestStatPtCurveResult.getDelta() <= maxDeviation
+                   && bestStatPtCurveResult.getEndIndex() > bestCurveResult.getEndIndex()
+                   && bestStatPtCurveResult.statPtDeviationWithinThreshold(
+                       curveStatPtThreshold))
+               {
+                  if (dialog.isVerbose())
+                  {
+                     dialog.addMessageLn(
+                       bestStatPtCurveResult.statPtThresholdInfo(curveStatPtThreshold));
+                  }
+
+                  bestCurveResult = bestStatPtCurveResult;
+               }
+            }
+
+            if (bestCurveResult != firstCurveResult)
+            {
+               dialog.addVerboseMessageLn(firstCurveResult.info(
+                  "vectorize.smoothing_curve_biggest"));
+
+               if (firstCurveResult.getDelta() < maxDeviation
+                && firstCurveResult.hasStationaryPointDeviations() 
+                && firstCurveResult.compareStatPtDeviation(bestCurveResult) < 0)
                {
                   bestCurveResult = firstCurveResult;
-                  minCurveDelta = firstCurveResult.getDelta();
                }
             }
-         }
 
-         if (bestCurveResult != firstCurveResult)
-         {
-            int startRemainingIdx = bestCurveResult.getEndIndex()+1;
-
-            double remainingLength = vec.getEstimatedLength(
-                     startRemainingIdx, endIdx);
-
-            if (remainingLength <= lengthThreshold
-              && firstCurveResult.getDelta()
-                    <= bestCurveResult.getDelta()+thresholdDiff)
+            if (bestCurveResult != firstCurveResult)
             {
-               ShapeComponent comp1 = vec.get(startRemainingIdx);
-               ShapeComponent comp2; 
+               int startRemainingIdx = bestCurveResult.getEndIndex()+1;
 
-               if (startRemainingIdx == endIdx)
+               double remainingLength = vec.getEstimatedLength(
+                        startRemainingIdx, endIdx);
+
+               if (remainingLength <= lengthThreshold
+                 && firstCurveResult.getDelta()
+                       <= bestCurveResult.getDelta()+thresholdDiff)
                {
-                  comp2 = comp1;
+                  ShapeComponent comp1 = vec.get(startRemainingIdx);
+                  ShapeComponent comp2; 
+
+                  if (startRemainingIdx == endIdx)
+                  {
+                     comp2 = comp1;
+                  }
+                  else
+                  {
+                     comp2 = vec.get(endIdx);
+                  }
+
+                  Point2D pt1 = comp1.getStart();
+                  Point2D pt2 = comp2.getEnd();
+
+                  if (dialog.isVerbose())
+                  {
+                     dialog.addMessageIdLn("vectorize.smoothing_remaining_length",
+                       pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY(),
+                       remainingLength);
+
+                     dialog.addMessageLn(firstCurveResult.comparisonInfo(
+                        bestCurveResult, thresholdDiff));
+                  }
+
+                  bestCurveResult = firstCurveResult;
                }
-               else
-               {
-                  comp2 = vec.get(endIdx);
-               }
-
-               Point2D pt1 = comp1.getStart();
-               Point2D pt2 = comp2.getEnd();
-
-               dialog.addMessageIdLn("vectorize.smoothing_remaining_length",
-                 pt1.getX(), pt1.getY(), pt2.getX(), pt2.getY(),
-                 remainingLength);
-
-               dialog.addMessageLn(firstCurveResult.comparisonInfo(
-                  bestCurveResult, thresholdDiff));
-
-               bestCurveResult = firstCurveResult;
-               minCurveDelta = firstCurveResult.getDelta();
             }
-         }
 
-         if (minCurveDelta < minDelta + curveThresholdDiff)
-         {
-            return bestCurveResult;
+            if (bestCurveResult.getDelta() < minDelta + curveThresholdDiff)
+            {
+               return bestCurveResult;
+            }
          }
       }
 
@@ -15030,14 +15266,329 @@ class Smooth extends SwingWorker<Void,Rectangle>
       return bestResult;
    }
 
+   private DeviationResult[] getBestInitialCurves(ShapeComponentVector vec,
+      int startIdx, int endIdx, int midIdx1, int midIdx2,
+      DeviationResult result0,
+      int statIdx1, Point2D statPt1, int statIdx2, Point2D statPt2)
+    throws InterruptedException
+   {
+      if (midIdx1 > midIdx2)
+      {
+         int tmp = midIdx2;
+         midIdx2 = midIdx1;
+         midIdx1 = tmp;
+      }
+
+      DeviationResult[] bestResult = new DeviationResult[3];
+
+      bestResult[0] = result0;// starting point
+      bestResult[1] = null;// best
+      bestResult[2] = null;// best with stationary point deviations
+
+      if (minBezierSamples >= (endIdx-startIdx) || midIdx2 >= endIdx
+          || midIdx1 <= startIdx || !result0.success())
+      {
+         return bestResult;
+      }
+
+      dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sample_path",
+        0, result0.info(null));
+
+      JDRResources resources = dialog.getResources();
+
+      if (result0.getAngle() < bezierGradientThreshold)
+      {
+         // If a larger curve is too flat, there's unlikely to be a
+         // shorter curve that isn't too flat.
+
+         if (dialog.isVerbose())
+         {
+            dialog.addMessageIdLn("vectorize.smoothing_too_flat",
+             resources.getMessage("vectorize.smoothing_le", 
+               result0.getAngle(), bezierGradientThreshold));
+         }
+
+         return bestResult;
+      }
+
+      DeviationResult result1 = getCurveDeviation(
+        vec, startIdx, midIdx1,
+        statIdx1, statPt1, statIdx2, statPt2);
+
+      if (!result1.success())
+      {
+         int diff = midIdx2-midIdx1;
+
+         if (diff <= 1)
+         {
+            return bestResult;
+         }
+
+         midIdx1 = midIdx1 + diff/2;
+
+         result1 = getCurveDeviation(
+           vec, startIdx, midIdx1,
+            statIdx1, statPt1, statIdx2, statPt2);
+
+         if (!result1.success())
+         {
+            return bestResult;
+         }
+      }
+
+      dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sample_path",
+        1, result1.info(null));
+
+      DeviationResult result2 = getCurveDeviation(
+        vec, startIdx, midIdx2,
+        statIdx1, statPt1, statIdx2, statPt2);
+
+      if (!result2.success())
+      {
+         int diff = endIdx-midIdx2;
+
+         if (diff <= 1)
+         {
+            return bestResult;
+         }
+
+         midIdx2 = endIdx-diff/2;
+
+         result2 = getCurveDeviation(
+           vec, startIdx, midIdx2,
+           statIdx1, statPt1, statIdx2, statPt2);
+
+         if (!result2.success())
+         {
+            return bestResult;
+         }
+      }
+
+      dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sample_path",
+        2, result2.info(null));
+
+      int compare01 = result0.compareTo(result1);
+      int compare02 = result0.compareTo(result2);
+      int compare12 = result1.compareTo(result2);
+
+      if (compare01 >= 0 && compare12 <= 0)
+      {
+         bestResult[1] = result1;
+      }
+      else if (compare02 >= 0 && compare12 >= 0)
+      {
+         bestResult[1] = result2;
+      }
+
+      if (statPt1 != null)
+      {
+         int statCompare01 = result0.compareStatPtDeviation(result1);
+         int statCompare02 = result0.compareStatPtDeviation(result2);
+         int statCompare12 = result1.compareStatPtDeviation(result2);
+
+         if (statCompare01 <= 0 && statCompare02 <= 0)
+         {
+            if (result0.hasStationaryPointDeviations()
+                  && result0.getDelta() <= maxDeviation)
+            {
+               bestResult[2] = result0;
+            }
+            else if (result2.hasStationaryPointDeviations()
+                       && result2.getDelta() <= maxDeviation && statCompare12 > 0)
+            {
+               bestResult[2] = result2;
+            }
+            else if (result1.hasStationaryPointDeviations()
+                       && result1.getDelta() <= maxDeviation)
+            {
+               bestResult[2] = result1;
+            }
+         }
+         else if (statCompare01 >= 0 && statCompare12 <= 0)
+         {
+            if (result1.hasStationaryPointDeviations()
+             && result1.getDelta() <= maxDeviation)
+            {
+               bestResult[2] = result1;
+            }
+            else if (result2.hasStationaryPointDeviations()
+                       && result2.getDelta() <= maxDeviation)
+            {
+               bestResult[2] = result2;
+            }
+         }
+         else if (statCompare02 >= 0 && statCompare12 >= 0)
+         {
+            if (result2.hasStationaryPointDeviations()
+             && result2.getDelta() <= maxDeviation)
+            {
+               bestResult[2] = result2;
+            }
+         }
+      }
+
+      if (result1.success() && compare12 <= 0 && compare01 >= 0)
+      {// result1 better than result2 and result0 but there may be a better result 
+       // between result1 and result2
+
+         bestResult[0] = result1;
+
+         if (dialog.isVerbose())
+         {
+            dialog.addVerboseMessageIdLn(
+              "vectorize.smoothing_curve_better_sample_path",
+              1, resources.getMessage("vectorize.smoothing_reason_and", 2, 0));
+         }
+
+         int diff = midIdx2-midIdx1;
+
+         if (diff <= 1)
+         {
+            return bestResult;
+         }
+
+         int mid = midIdx1+diff/2;
+
+         DeviationResult r = getCurveDeviation(vec, startIdx, mid,
+           statIdx1, statPt1, statIdx2, statPt2);
+
+         dialog.addVerboseMessageIdLn(
+           "vectorize.smoothing_curve_sample_path",
+           3, r.info(null));
+
+         if (statPt1 != null && r.hasStationaryPointDeviations()
+          && r.getDelta() <= maxDeviation
+          && (bestResult[2] == null || r.compareStatPtDeviation(bestResult[2]) < 0)
+            )
+         {
+            bestResult[2] = r;
+         }
+
+         if (result1.compareTo(r) <= 0)
+         {
+            dialog.addVerboseMessageIdLn(
+               "vectorize.smoothing_choosing_sample_path", 3);
+            bestResult[0] = r;
+         }
+         else
+         {
+            dialog.addVerboseMessageIdLn(
+               "vectorize.smoothing_choosing_sample_path", 2);
+            bestResult[0] = result2;
+         }
+
+         return bestResult;
+      }
+
+      if (result2.success() && compare02 >= 0)
+      {// result2 better than result0
+         bestResult[0] = result2;
+
+         dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_better_sample_path",
+           2, 0);
+
+         int diff = endIdx - midIdx2;
+
+         if (diff <= 1)
+         {
+            dialog.addVerboseMessageIdLn(
+               "vectorize.smoothing_choosing_sample_path", 2);
+
+            return bestResult;
+         }
+
+         int mid = midIdx2+diff/2;
+
+         DeviationResult r = getCurveDeviation(vec, startIdx, mid,
+           statIdx1, statPt1, statIdx2, statPt2);
+
+         if (statPt1 != null && r.hasStationaryPointDeviations()
+          && r.getDelta() <= maxDeviation
+          && (bestResult[2] == null || r.compareStatPtDeviation(bestResult[2]) < 0)
+            )
+         {
+            bestResult[2] = r;
+         }
+
+         int rIdx = 3;
+         dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sample_path",
+           rIdx, r.info(null));
+
+         int mid2 = endIdx-minBezierSamples-1;
+
+         if (mid < mid2)
+         {
+            DeviationResult r2 = getCurveDeviation(vec, startIdx, 
+              mid2, statIdx1, statPt1, statIdx2, statPt2);
+
+            dialog.addVerboseMessageIdLn(
+              "vectorize.smoothing_curve_sample_path",
+              rIdx+1, r2.info(null));
+
+            if (statPt1 != null && r2.hasStationaryPointDeviations()
+             && r2.getDelta() <= maxDeviation
+             && (bestResult[2] == null || r2.compareStatPtDeviation(bestResult[2]) < 0)
+               )
+            {
+               bestResult[2] = r2;
+            }
+
+            if (r2.compareTo(r) <= 0)
+            {
+               r = r2;
+               rIdx++;
+            }
+         }
+
+         if (result2.compareTo(r) <= 0)
+         {
+            dialog.addVerboseMessageIdLn(
+              "vectorize.smoothing_choosing_sample_path", rIdx);
+
+            bestResult[0] = r;
+            return bestResult;
+         }
+      }
+
+      dialog.addVerboseMessageIdLn("vectorize.smoothing_choosing_initial_sample_path");
+
+      bestResult[0] = result0;
+
+      return bestResult;
+   }
+
+   private DeviationResult getCurveDeviation(ShapeComponentVector vec,
+      int startIdx, int endIdx,
+      int statIdx1, Point2D statPt1, int statIdx2, Point2D statPt2)
+    throws InterruptedException
+   {
+      String key = new String(""+startIdx+"-"+endIdx);
+      DeviationResult result = curveDeviations.get(key);
+
+      if (result == null)
+      {
+         Point2D p0 = vec.get(startIdx).getStart();
+         Point2D p1 = vec.get(endIdx).getEnd();
+
+         result = DeviationResult.createCurve(dialog, vec, startIdx, endIdx, 
+           p0, p1, statIdx1, statPt1, statIdx2, statPt2);
+
+         curveDeviations.put(key, result);
+      }
+
+      return result;
+   }
+
    private VectorizeBitmapDialog dialog;
    private Vector<ShapeComponentVector> shapes;
    private double tinyStepThreshold=2.0, lengthThreshold=10.0, thresholdDiff=0.01,
     maxDeviation=2.0, deviationEpsilon=0.01;
-   private boolean tryBezier=true;
+   private boolean tryBezier=true, curveSampling=true;
    private int minBezierSamples = 5;
    private double bezierGradientThreshold=0.1, curveStatPtThreshold=2.0,
      curveThresholdDiff;
+
+   private HashMap<String,DeviationResult> curveDeviations = null;
    private int progress, maxProgress;
    private boolean continueToNextStep;
 }
@@ -15501,15 +16052,31 @@ class DeviationResult implements Comparable<DeviationResult>
 
    public static DeviationResult createCurve(VectorizeBitmapDialog dialog,
       ShapeComponentVector vec, int startIdx, int endIdx,
-      Point2D p1, Point2D p2, double maxDeviation)
+      Point2D p1, Point2D p2, int statIdx1, Point2D statPt1, 
+      int statIdx2, Point2D statPt2)
+    throws InterruptedException
    {
       DeviationResult result = new DeviationResult(dialog);
-      result.computeCurve(vec, startIdx, endIdx, p1, p2, maxDeviation);
+
+      if (dialog.getCurveMinPoints() >= (endIdx-startIdx))
+      {
+         return result;
+      }
+
+      result.statPt1 = statPt1;
+      result.statPt2 = statPt2;
+
+      result.statIdx1 = statIdx1;
+      result.statIdx2 = statIdx2;
+
+      result.computeCurve(vec, startIdx, endIdx, p1, p2);
+
       return result;
    }
 
    private void computeCurve(ShapeComponentVector vec, int startIdx, int endIdx,
-      Point2D p1, Point2D p2, double maxDeviation)
+      Point2D p1, Point2D p2)
+    throws InterruptedException
    {
       this.startIdx = startIdx;
       this.endIdx = endIdx;
@@ -15553,10 +16120,51 @@ class DeviationResult implements Comparable<DeviationResult>
 
       angle = JDRLine.getVectorAngle(dp1.getX(), dp1.getY(), dp2.getX(), dp2.getY());
 
+      flatness = curve.getFlatness();
+
       length = JDRShape.computePerimeter(shape);
+
+      if (statPt1 != null)
+      {
+         if (statPt2 != null && (statIdx2 < startIdx || statIdx1 > endIdx))
+         {
+            statPt2 = null;
+         }
+
+         if (statIdx1 < startIdx || statIdx1 > endIdx)
+         {
+            statPt1 = statPt2;
+            statIdx1 = statIdx2;
+            statPt2 = null;
+         }
+      }
+
+      if (statPt1 == null) return;
+
+      statPtDeviationT = JDRBezier.getStationaryPositions(curve, true);
+
+      if (statPtDeviationT == null) return;
+
+      statPtDeviation = new double[statPtDeviationT.length];
+
+      curveStatPt1 = JDRBezier.getP(statPtDeviationT[0], curve);
+
+      statPtDeviation[0] = JDRLine.getLength(statPt1, curveStatPt1);
+      averageStatPtDeviation = statPtDeviation[0];
+
+      if (statPt2 != null && statPtDeviationT.length > 1)
+      {
+         curveStatPt2 = JDRBezier.getP(statPtDeviationT[1], curve);
+
+         statPtDeviation[1] = JDRLine.getLength(statPt2, curveStatPt2);
+
+         averageStatPtDeviation = 
+            (averageStatPtDeviation + statPtDeviation[1])/2;
+      }
    }
 
    private void tuneGradients(Point2D dp0, Point2D dp1)
+      throws InterruptedException
    {
       CubicCurve2D curve = (CubicCurve2D)shape;
 
@@ -15606,6 +16214,9 @@ class DeviationResult implements Comparable<DeviationResult>
 
       for (int i = 1; i <= maxIter; i++)
       {
+         // check for cancel
+         dialog.updateTimeElapsedAndCheckCancel(true);
+
          double value = 0.0;
 
          dialog.setCurveFitProgress(100*i/maxIter, samples[0]);
@@ -15691,7 +16302,7 @@ class DeviationResult implements Comparable<DeviationResult>
       Area area = new Area(trialShape);
       area.exclusiveOr(originalArea);
 
-      return JDRShape.computeArea(area)/(endIdx-startIdx+1);
+      return JDRShape.computeArea(area);
    }
 
    public int getIteration()
@@ -15702,6 +16313,11 @@ class DeviationResult implements Comparable<DeviationResult>
    public double getAngle()
    {
       return angle;
+   }
+
+   public double getFlatness()
+   {
+      return flatness;
    }
 
    public double getEstimatedLength()
@@ -15773,40 +16389,94 @@ class DeviationResult implements Comparable<DeviationResult>
          shapeInfo = String.format("shape: %s", ShapeComponentVector.svg(shape));
       }
 
-      return String.format("approximate length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), %s, angle: %f radians, delta: %f", 
+      return String.format("approximate length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), %s, angle: %f radians, flatness: %f, delta: %f", 
         length, startIdx, endIdx,
-        p1.getX(), p1.getY(), p2.getX(), p2.getY(), shapeInfo, angle, delta);
+        p1.getX(), p1.getY(), p2.getX(), p2.getY(), shapeInfo, angle, flatness, delta);
+   }
+
+   public String pathInfo()
+   {
+      JDRResources resources = dialog.getResources();
+
+      if (shape == null)
+      {
+         return resources.getString("path_element_info.empty");
+      }
+      else
+      {
+         return ShapeComponentVector.svg(shape);
+      }
    }
 
    public String info()
    {
+      return info("vectorize.smoothing_possible_path");
+   }
+
+   public String info(String tag)
+   {
       JDRResources resources = dialog.getResources();
 
-      String shapeInfo = "(empty)";
+      String text = resources.getMessage("vectorize.smoothing_result_info",
+       pathInfo(), length, delta);
 
-      if (shape != null)
+      if (tag != null)
       {
-         shapeInfo = ShapeComponentVector.svg(shape);
+         text = resources.getMessage(tag, text);
       }
-
-      String text = resources.getMessage("vectorize.smoothing_possible_path",
-       shapeInfo, length, delta);
 
       if (!(shape instanceof CubicCurve2D))
       {
          return text;
       }
 
+      StringBuilder builder = new StringBuilder(text);
+
       if (iter > -1)
       {
-         text = String.format("%s %s", text, 
+         builder.append(' ');
+         builder.append(
            resources.getMessage("vectorize.smoothing_curve_fit_iter", iter));
       }
 
-      return String.format("%s %s", text, resources.getMessage(
+      builder.append(' ');
+      builder.append(resources.getMessage(
            "vectorize.smoothing_angle", angle, Math.toDegrees(angle)));
+
+      builder.append(' ');
+      builder.append(resources.getMessage(
+           "vectorize.smoothing_flatness", flatness));
+
+      if (statPtDeviation == null)
+      {
+         builder.append(String.format("%n"));
+         builder.append(
+            resources.getMessage("vectorize.smoothing_no_stat_pt"));
+      }
+      else
+      {
+         builder.append(String.format("%n"));
+
+         builder.append(
+            resources.getMessage("vectorize.smoothing_stat_pt", 
+              statPtDeviationT[0], curveStatPt1.getX(), curveStatPt1.getY(), 
+              statPt1.getX(), statPt1.getY(), statPtDeviation[0]));
+
+         if (statPt2 != null && curveStatPt2 != null && statPtDeviation.length > 1)
+         {
+            builder.append(String.format("%n"));
+
+            builder.append( 
+              resources.getMessage("vectorize.smoothing_stat_pt", 
+              statPtDeviationT[1], curveStatPt2.getX(), curveStatPt2.getY(), 
+              statPt2.getX(), statPt2.getY(), statPtDeviation[1]));
+         }
+      }
+
+      return builder.toString();
    }
 
+   // test should already have been performed
    public String comparisonInfo(DeviationResult other)
    {
       JDRResources resources = dialog.getResources();
@@ -15815,6 +16485,7 @@ class DeviationResult implements Comparable<DeviationResult>
         delta, other.delta);
    }
 
+   // test should already have been performed
    public String comparisonInfo(DeviationResult other, double offset)
    {
       JDRResources resources = dialog.getResources();
@@ -15823,8 +16494,53 @@ class DeviationResult implements Comparable<DeviationResult>
         delta, other.delta, offset);
    }
 
+   // test should already have been performed
+   public String statPtThresholdInfo(double threshold)
+   {
+      if (statPtDeviation == null) return "";
+
+      JDRResources resources = dialog.getResources();
+
+      String text = resources.getMessage("vectorize.smoothing_leq",
+           statPtDeviation[0], threshold);
+
+      if (statPtDeviation.length == 1)
+      {
+         return text;
+      }
+
+      return resources.getMessage("vectorize.smoothing_reason_and", text,
+        resources.getMessage("vectorize.smoothing_leq",
+           statPtDeviation[1], threshold));
+   }
+
    public int compareTo(DeviationResult other)
    {
+      if (other == null) return -1;
+
+      if (!other.success())
+      {
+         return success() ? -1 : 0;
+      }
+
+      if (!success()) return 1;
+
+      if (shape instanceof CubicCurve2D)
+      {
+         double bezierGradientThreshold = dialog.getCurveGradientThreshold();
+
+         if (getAngle() < bezierGradientThreshold
+          && other.getAngle() >= bezierGradientThreshold)
+         {
+            return 1;
+         }
+         else if (other.getAngle() < bezierGradientThreshold
+          && getAngle() >= bezierGradientThreshold)
+         {
+            return -1;
+         }
+      }
+
       if (delta < other.delta)
       {
          return -1;
@@ -15838,12 +16554,128 @@ class DeviationResult implements Comparable<DeviationResult>
       return 0;
    }
 
+   public boolean hasStationaryPointDeviations()
+   {
+      return statPtDeviation != null;
+   }
+
+   public boolean statPtDeviationWithinThreshold(double threshold)
+   {
+      if (statPtDeviation == null || averageStatPtDeviation > threshold)
+      {
+         return false;
+      }
+
+      for (double d : statPtDeviation)
+      {
+         if (d > threshold) return false;
+      }
+
+      return true;
+   }
+
+   public int compareStatPtDeviation(DeviationResult other)
+   {
+      double curveStatPtThreshold = dialog.getCurveStationaryPtThreshold();
+
+      boolean withinThreshold1 = true;
+      boolean withinThreshold2 = true;
+      int len1=0, len2=0;
+
+      if (statPtDeviation == null)
+      {
+         withinThreshold1 = false;
+      }
+      else
+      {
+         len1 = statPtDeviation.length;
+      }
+
+      if (other.statPtDeviation == null)
+      {
+         withinThreshold2 = false;
+      }
+      else
+      {
+         len2 = other.statPtDeviation.length;
+      }
+
+      if (len1 == len2)
+      {
+         for (int i = 0; i < len1; i++)
+         {
+            if (statPtDeviation[i] > curveStatPtThreshold)
+            {
+               withinThreshold1 = false;
+            }
+
+            if (other.statPtDeviation[i] > curveStatPtThreshold)
+            {
+               withinThreshold1 = false;
+            }
+         }
+      }
+
+      if (!withinThreshold1 && !withinThreshold2)
+      {
+         return 0;
+      }
+
+      if (withinThreshold1 && !withinThreshold2)
+      {
+         return -1;
+      }
+
+      if (!withinThreshold1 && withinThreshold2)
+      {
+         return 1;
+      }
+
+      if (averageStatPtDeviation < other.averageStatPtDeviation)
+      {
+         return -1;
+      }
+
+      if (averageStatPtDeviation > other.averageStatPtDeviation)
+      {
+         return 1;
+      }
+
+      if (len1 > len2)
+      {
+         if (statPtDeviation[0] < other.statPtDeviation[0])
+         {
+            return -1;
+         }
+      }
+      else if (len1 < len2)
+      {
+         if (other.statPtDeviation[0] < statPtDeviation[0])
+         {
+            return 1;
+         }
+      }
+
+      return 0;
+   }
+
+   public boolean success()
+   {
+      return shape != null;
+   }
+
    private double delta=Double.MAX_VALUE;
    private Point2D p1, p2;
-   private double length=0.0, angle=0.0, originalLength;
+   private double length=0.0, angle=0.0, originalLength, flatness=0.0;
    private int startIdx, endIdx, iter=-1, numPoints;
    private Shape shape;
    private Area originalArea;
+
+   private double[] statPtDeviation, statPtDeviationT;
+   private Point2D statPt1, statPt2, curveStatPt1, curveStatPt2;
+   private int statIdx1=-1, statIdx2=-1;
+
+   private double averageStatPtDeviation = Double.MAX_VALUE;
 
    private VectorizeBitmapDialog dialog;
 }
@@ -16388,32 +17220,51 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
 
    public void setWorkingShape(Shape shape)
    {
-      this.workingShape = shape;
+      workingShape = shape;
 
-      if (workingShape != null)
+      if (workingShapeBounds != null)
       {
-         Rectangle2D bounds = workingShape.getBounds2D();
-
-         if (shape instanceof CubicCurve2D)
-         {
-            CubicCurve2D curve = (CubicCurve2D)workingShape;
-            bounds.add(curve.getCtrlP1());
-            bounds.add(curve.getCtrlP2());
-         }
-
          double factor = getMagnification();
 
          Rectangle rect = new Rectangle(
-          (int)Math.ceil(factor*bounds.getX()),
-          (int)Math.ceil(factor*bounds.getY()),
-          (int)Math.ceil(factor*bounds.getWidth()),
-          (int)Math.ceil(factor*bounds.getHeight())
+          (int)Math.ceil(factor*workingShapeBounds.getX()),
+          (int)Math.ceil(factor*workingShapeBounds.getY()),
+          (int)Math.ceil(factor*workingShapeBounds.getWidth()),
+          (int)Math.ceil(factor*workingShapeBounds.getHeight())
          );
 
          int size = dialog.getControlSize()+2;
          rect.grow(size, size);
 
-         repaint(workingShape.getBounds());
+         repaint(rect);
+
+         workingShapeBounds = null;
+      }
+
+      if (workingShape != null)
+      {
+         workingShapeBounds = workingShape.getBounds2D();
+
+         if (shape instanceof CubicCurve2D)
+         {
+            CubicCurve2D curve = (CubicCurve2D)workingShape;
+            workingShapeBounds.add(curve.getCtrlP1());
+            workingShapeBounds.add(curve.getCtrlP2());
+         }
+
+         double factor = getMagnification();
+
+         Rectangle rect = new Rectangle(
+          (int)Math.ceil(factor*workingShapeBounds.getX()),
+          (int)Math.ceil(factor*workingShapeBounds.getY()),
+          (int)Math.ceil(factor*workingShapeBounds.getWidth()),
+          (int)Math.ceil(factor*workingShapeBounds.getHeight())
+         );
+
+         int size = dialog.getControlSize()+2;
+         rect.grow(size, size);
+
+         repaint(rect);
       }
    }
 
@@ -16422,25 +17273,27 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
       if (workingShape != null && (workingShape instanceof CubicCurve2D))
       {
          CubicCurve2D curve = (CubicCurve2D)workingShape;
-         Rectangle2D bounds = workingShape.getBounds2D();
-         bounds.add(curve.getCtrlP1());
-         bounds.add(curve.getCtrlP2());
+
+         if (workingShapeBounds != null)
+         {
+            workingShapeBounds = workingShape.getBounds2D();
+         }
 
          sample.getCurve(curve);
-         bounds.add(curve.getBounds2D());
-         bounds.add(curve.getCtrlP1());
-         bounds.add(curve.getCtrlP2());
+         workingShapeBounds.add(curve.getBounds2D());
+         workingShapeBounds.add(curve.getCtrlP1());
+         workingShapeBounds.add(curve.getCtrlP2());
 
          double factor = getMagnification();
 
          Rectangle rect = new Rectangle(
-          (int)Math.ceil(factor*bounds.getX()),
-          (int)Math.ceil(factor*bounds.getY()),
-          (int)Math.ceil(factor*bounds.getWidth()),
-          (int)Math.ceil(factor*bounds.getHeight())
+          (int)Math.ceil(factor*workingShapeBounds.getX()),
+          (int)Math.ceil(factor*workingShapeBounds.getY()),
+          (int)Math.ceil(factor*workingShapeBounds.getWidth()),
+          (int)Math.ceil(factor*workingShapeBounds.getHeight())
          );
 
-         int size = dialog.getControlSize();
+         int size = dialog.getControlSize()+2;
 
          rect.grow(size, size);
 
@@ -16756,7 +17609,7 @@ class ImagePanel extends JPanel implements MouseListener,MouseMotionListener
    private Point dragStart = null;
    private Rectangle draggingRegion = null;
    private Area notRegion=null, oldNotRegion;
-   private Rectangle2D regionBounds, oldRegionBounds;
+   private Rectangle2D regionBounds, oldRegionBounds, workingShapeBounds;
 
    private static Stroke CONNECT_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
      BasicStroke.JOIN_BEVEL, 10.0f, new float[] {4.0f, 2.0f}, 0.0f);
@@ -16840,7 +17693,7 @@ class ResultPanel extends JPanel
 
    public void updatePanel()
    {
-      if (imagePanel == null || resultList.isEmpty())
+      if (imagePanel == null)
       {
          setPreferredSize(ImagePanel.DEFAULT_PREFERRED_SIZE);
       }

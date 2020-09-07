@@ -37,6 +37,8 @@ import com.dickimawbooks.jdrresources.numfield.*;
 
 import com.dickimawbooks.flowframtk.*;
 
+// TODO add right-handed/left-handed coordinate system options
+
 /**
  * Dialog box for converting a shape to a polygon.
  * @author Nicola L C Talbot
