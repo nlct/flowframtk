@@ -3316,7 +3316,9 @@ public class FlowframTkInvoker
          logFile = new File(usersettings, "flowframtk.log");
       }
       
-      gui = new FlowframTk(this, showWelcome);
+      gui = new FlowframTk(this);
+
+      gui.initialiseGuiAndShow(showWelcome);
    }
 
    public void showWelcome()

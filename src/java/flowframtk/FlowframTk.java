@@ -70,14 +70,17 @@ public class FlowframTk extends JFrame
               DropTargetListener,
               JDRApp,JDRConstants
 {
-   // set up GUI
-   public FlowframTk(FlowframTkInvoker invoker, boolean showWelcome)
+   public FlowframTk(FlowframTkInvoker invoker)
 
    {
       super(invoker.getName());
 
       this.invoker = invoker;
+   }
 
+   // create GUI elements (menus, dialogs etc)
+   public void initialiseGuiAndShow(boolean showWelcome)
+   {
       try
       {
          init();
