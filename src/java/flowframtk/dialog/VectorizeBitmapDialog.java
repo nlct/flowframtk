@@ -159,6 +159,18 @@ public class VectorizeBitmapDialog extends JFrame
 
       cardComp.add(topInfo, "region_info");
 
+      topInfo = resources.createAppInfoArea(
+        "vectorize.message.colour_picker");
+      topInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+      cardComp.add(topInfo, "colour_info");
+
+      topInfo = resources.createAppInfoArea(
+        "vectorize.message.task_info");
+      topInfo.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+      cardComp.add(topInfo, "task_info");
+
       scanStatusBar = new ScanStatusBar(this);
       cardComp.add(scanStatusBar, "status");
       cardLayout.first(cardComp);
@@ -1154,12 +1166,24 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void showDefaultInfo()
    {
-      cardLayout.show(cardComp, "default_info");
+      if (getImageForeground() == null)
+      {
+         cardLayout.show(cardComp, "default_info");
+      }
+      else
+      {
+         cardLayout.show(cardComp, "task_info");
+      }
    }
 
    public void showRegionInfo()
    {
       cardLayout.show(cardComp, "region_info");
+   }
+
+   public void showColourPickerInfo()
+   {
+      cardLayout.show(cardComp, "colour_info");
    }
 
    public void startTask(String info, SwingWorker task)
@@ -1646,6 +1670,7 @@ public class VectorizeBitmapDialog extends JFrame
    public void colourPickerChoice(Color colour)
    {
       controlPanel.colourPickerChoice(colour);
+      setColourPickerCursor(isColourPickerOn());
    }
 
    public void setColourPickerCursor(boolean on)
@@ -1655,10 +1680,29 @@ public class VectorizeBitmapDialog extends JFrame
          if (on)
          {
             mainPanel.setCursor(colourPickerCursor);
+            showColourPickerInfo();
          }
          else
          {
             mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            showDefaultInfo();
+         }
+      }
+   }
+
+   public void setRegionPickerCursor(boolean on)
+   {
+      if (mainPanel != null)
+      {
+         if (on)
+         {
+            mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            showRegionInfo();
+         }
+         else
+         {
+            mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            showDefaultInfo();
          }
       }
    }
@@ -1734,23 +1778,6 @@ public class VectorizeBitmapDialog extends JFrame
    public Rectangle2D getRegionBounds()
    {
       return mainPanel.getRegionBounds();
-   }
-
-   public void setRegionPickerCursor(boolean on)
-   {
-      if (mainPanel != null)
-      {
-         if (on)
-         {
-            mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            showRegionInfo();
-         }
-         else
-         {
-            mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            showDefaultInfo();
-         }
-      }
    }
 
    public double getMainMagnification()
@@ -2712,8 +2739,7 @@ class ScanImagePanel extends ControlSubPanel implements ActionListener,ChangeLis
       foregroundChooser = new JColorChooser(Color.BLACK);
 
       colourPicker = resources.createToggleButton("vectorize", 
-         "pipet_selector", null);
-      colourPicker.addChangeListener(this);
+         "pipet_selector", this);
       subPanel.add(colourPicker);
 
       fuzzSpinnerModel = new SpinnerNumberModel(0.2, 0.0, 1.0, 0.1);
@@ -2840,6 +2866,7 @@ class ScanImagePanel extends ControlSubPanel implements ActionListener,ChangeLis
          if (col != null)
          {
             setImageForeground(col);
+            controlPanel.getDialog().showDefaultInfo();
          }
       }
       else if (command.equals("subtract_last_scan"))
@@ -2854,10 +2881,20 @@ class ScanImagePanel extends ControlSubPanel implements ActionListener,ChangeLis
       }
       else if (src == colourPicker)
       {
+         if (colourPicker.isSelected() && regionPicker.isSelected())
+         {
+            regionPicker.setSelected(false);
+         }
+
          controlPanel.colourPickerChange(colourPicker.isSelected());
       }
       else if (src == regionPicker)
       {
+         if (regionPicker.isSelected() && colourPicker.isSelected())
+         {
+            colourPicker.setSelected(false);
+         }
+
          controlPanel.regionPickerChange(regionPicker.isSelected());
       }
       else if ((src == scanAllButton || src == scanRegionButton)

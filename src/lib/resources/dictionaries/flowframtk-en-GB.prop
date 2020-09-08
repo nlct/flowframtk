@@ -2959,7 +2959,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.pin">Pin</entry>
 
 <entry key="vectorize.message.default_info">Select foreground colour before scanning. Any transformations will be applied when the paths are added to the image.</entry>
+<entry key="vectorize.message.task_info">Select the required tasks (scanning must always be done initially) and click on the "Do Selected Task" button (green circle).</entry>
 <entry key="vectorize.message.region_picker">Click and drag mouse over bitmap to select area. Use SHIFT to add to current scan region and CTRL to exclude area.</entry>
+<entry key="vectorize.message.colour_picker">Click on the required area of the image to set the foreground colour to that of the target pixel.</entry>
 <entry key="vectorize.message.sample_intersects_region">Sample x={0}, y={1}, width={2}, height={3} intersects scan region. Dividing sample area.</entry>
 <entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
 <entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
