@@ -2499,6 +2499,44 @@ abstract class ControlSubPanel extends JPanel
       comp.add(mainSubPanel, "Center");
    }
 
+   protected void addInfoWidget(JComponent parent, String id)
+   {
+      parent.add(Box.createHorizontalStrut(10));
+      parent.add(createInfoWidget(id));
+   }
+
+   protected JButton createInfoWidget(final String id)
+   {
+      JDRResources resources = getResources();
+
+      JButton button = resources.createSmallHelpButton(true);
+      button.setBorder(BorderFactory.createEmptyBorder());
+      button.setToolTipText(resources.getString("label.info"));
+      button.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            String title = getResources().getString(id+".info_title", null);
+
+            if (title == null)
+            {
+               title = getResources().getString(id, null);
+
+               if (title == null)
+               {
+                  title = getResources().getString("label.info");
+               }
+            }
+
+            getResources().message(controlPanel, 
+              getResources().getString(id+".info"),
+              title, JOptionPane.INFORMATION_MESSAGE);
+         }
+      });
+
+      return button;
+   }
+
    protected void addMainCheckBox(JCheckBox checkBox)
    {
       topPanel.add(checkBox);
@@ -4083,6 +4121,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
          tinyStepThresholdLabel, tinyStepThresholdSpinnerModel);
       subPanel.add(tinyStepThresholdSpinner);
 
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.tiny_step");
+
       subPanel = newRow();
 
       lengthThresholdSpinnerModel 
@@ -4095,6 +4135,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
          lengthThresholdLabel, lengthThresholdSpinnerModel);
       subPanel.add(lengthThresholdSpinner);
 
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.length_threshold");
+
       subPanel = newRow();
 
       thresholdDiffSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
@@ -4105,6 +4147,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
       thresholdDiffSpinner = createSpinner(
          thresholdDiffLabel, thresholdDiffSpinnerModel);
       subPanel.add(thresholdDiffSpinner);
+
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.length_threshold");
 
       subPanel = newRow();
 
@@ -4117,6 +4161,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
          maxDeviationLabel, maxDeviationSpinnerModel);
       subPanel.add(maxDeviationSpinner);
 
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.max_deviation");
+
       subPanel = newRow();
 
       deviationEpsilonSpinnerModel = new SpinnerNumberModel(0.01, 0.0, 100.0, 0.01);
@@ -4128,9 +4174,23 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
          deviationEpsilonLabel, deviationEpsilonSpinnerModel);
       subPanel.add(deviationEpsilonSpinner);
 
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.deviation_epsilon");
+
+      subPanel = newRow();
+
       tryBezierCheckBox = resources.createAppCheckBox(
          "vectorize.smooth_shapes.try_bezier", true, this);
-      addWidget(tryBezierCheckBox);
+      subPanel.add(tryBezierCheckBox);
+
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.try_bezier");
+
+      subPanel = newRow();
+      curveSampleCheckBox = resources.createAppCheckBox(
+         "vectorize.smooth_shapes.sampling", true, this);
+
+      subPanel.add(curveSampleCheckBox);
+
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.sampling");
 
       subPanel = newRow();
 
@@ -4145,6 +4205,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
         createSpinner(flatnessThresholdLabel, flatnessThresholdSpinnerModel);
       subPanel.add(flatnessThresholdSpinner);
 
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.flatness_threshold");
+
       subPanel = newRow();
 
       curveStationaryPtThresholdSpinnerModel
@@ -4157,6 +4219,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
         createSpinner(curveStatPtLabel, curveStationaryPtThresholdSpinnerModel);
       subPanel.add(curveStationaryPtThresholdSpinner);
 
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.stat_pt_threshold");
+
       subPanel = newRow();
 
       curveThresholdDiffSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
@@ -4167,6 +4231,8 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
       curveThresholdDiffSpinner = createSpinner(
          curveThresholdDiffLabel, curveThresholdDiffSpinnerModel);
       subPanel.add(curveThresholdDiffSpinner);
+
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.curve_threshold");
 
       subPanel = newRow();
 
@@ -4180,9 +4246,7 @@ class SmoothingPanel extends ControlSubPanel implements ChangeListener
         createSpinner(curveMinPointsLabel, curveMinPointsSpinnerModel);
       subPanel.add(curveMinPointsSpinner);
 
-      curveSampleCheckBox = resources.createAppCheckBox(
-         "vectorize.smooth_shapes.sampling", true, this);
-      addWidget(curveSampleCheckBox);
+      addInfoWidget(subPanel, "vectorize.smooth_shapes.min_points");
 
       nelderMeadComp = addTitledArea("vectorize.smooth.nelder_mead");
 
