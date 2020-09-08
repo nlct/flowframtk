@@ -1542,6 +1542,29 @@ public class JDRResources
       return helpButton;
    }
 
+   public JButton createSmallHelpButton()
+   {
+      return createSmallHelpButton(false);
+   }
+
+   public JButton createSmallHelpButton(boolean setMax)
+   {
+      Icon ic = appIcon("statushelp.png");
+
+      JButton button = new JButton(ic);
+      button.setMargin(new Insets(0,0,0,0));
+      button.setContentAreaFilled(false);
+
+      if (setMax)
+      {
+         Dimension dim = new Dimension(ic.getIconWidth(), ic.getIconHeight());
+         button.setPreferredSize(dim);
+         button.setMaximumSize(dim);
+      }
+
+      return button;
+   }
+
    public JDRButton createDialogButton(String tag,
      ActionListener listener, KeyStroke keyStroke)
    {

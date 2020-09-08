@@ -284,12 +284,8 @@ public class StatusBar extends JPanel
          }
       });
 
-      helpButton = new JButton(
-        getResources().appIcon("statushelp.png"));
+      helpButton = getResources().createSmallHelpButton();
       helpButton.setActionCommand("statushelp");
-      helpButton.setMargin(new Insets(0,0,0,0));
-      helpButton.setContentAreaFilled(false);
-//      helpButton.setBorderPainted(false);
       helpButton.setToolTipText(
         getResources().getString("info.help.tooltip", null));
 
