@@ -690,6 +690,30 @@ public class JDRResources
         options, type);
    }
 
+   public void message(Component parent, String message, String title)
+   {
+      message(parent, message, title, JOptionPane.PLAIN_MESSAGE);
+   }
+
+   public void message(Component parent, String message, String title, int type)
+   {
+      if (message == null)
+      {
+         try
+         {
+            throw new NullPointerException();
+         }
+         catch (NullPointerException npe)
+         {
+            System.err.println(npe);
+         }
+      }
+
+      messageArea.setText(message);
+
+      JOptionPane.showMessageDialog(parent, messageSP, title, type);
+   }
+
    /**
     * Gets an integer associated with the given key in the
     * resources dictionary.
