@@ -2449,24 +2449,172 @@ class ZoomWidget extends JPanel implements JDRApp
    private double factor=1.0;
 }
 
-class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
+abstract class ControlSubPanel extends JPanel
+{
+   protected ControlSubPanel(ControlPanel controlPanel)
+   {
+      super(new BorderLayout());
+      setAlignmentX(Component.LEFT_ALIGNMENT);
+      this.controlPanel = controlPanel;
+
+      mainSubPanel = Box.createVerticalBox();
+      mainSubPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      add(mainSubPanel, "Center");
+      add(Box.createHorizontalGlue(), "South");
+      setBorder(BorderFactory.createEtchedBorder());
+   }
+
+   protected void addMainCheckBox(JCheckBox checkBox)
+   {
+      add(checkBox, "North");
+      checkBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+   }
+
+   protected void addWidget(JComponent widget)
+   {
+      mainSubPanel.add(widget);
+      widget.setAlignmentX(Component.LEFT_ALIGNMENT);
+   }
+
+   protected JComponent newRow()
+   {
+      return newRow(mainSubPanel);
+   }
+
+   protected JComponent newRow(JComponent parent)
+   {
+      JComponent subPanel = Box.createHorizontalBox();
+      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      parent.add(subPanel);
+
+      return subPanel;
+   }
+
+   protected JComponent addTitledArea(String id)
+   {
+      JComponent comp = Box.createVerticalBox();
+      comp.setBorder(BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(), 
+        getResources().getString(id)));
+
+      comp.add(Box.createHorizontalGlue());
+      mainSubPanel.add(comp);
+
+      return comp;
+   }
+
+   public JSpinner createSpinner(SpinnerModel model)
+   {
+      return createSpinner(null, model);
+   }
+
+   public JSpinner createSpinner(JLabel label, SpinnerModel model)
+   {
+      JSpinner spinner = new JSpinner(model);
+      spinner.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      if (label != null)
+      {
+         label.setLabelFor(spinner);
+      }
+
+      Dimension dim = spinner.getPreferredSize();
+      dim.width += 20;
+      dim.height += 2;
+      spinner.setMaximumSize(dim);
+
+      return spinner;
+   }
+
+   protected JLabel createAlignedLabel(String id, JComponent parent)
+   {
+      JLabel label = getResources().createAppLabel(id);
+      parent.add(label);
+
+      if (alignedComps == null)
+      {
+         alignedComps = new Vector<JComponent>();
+      }
+
+      alignedComps.add(label);
+
+      return label;
+   }
+
+   protected void updateAlignedSizes()
+   {
+      if (alignedComps == null) return;
+
+      Dimension maxPrefSize = null;
+
+      for (JComponent comp : alignedComps)
+      {
+         maxPrefSize = updateMaxPreferredSize(comp, maxPrefSize);
+      }
+
+      for (JComponent comp : alignedComps)
+      {
+         updateCompPreferredSize(comp, maxPrefSize);
+      }
+   }
+
+   private Dimension updateMaxPreferredSize(JComponent comp, Dimension maxPrefSize)
+   {
+      Dimension prefSize = comp.getPreferredSize();
+
+      if (maxPrefSize == null)
+      {
+         return new Dimension(prefSize.width, prefSize.height);
+      }
+
+      if (prefSize.width > maxPrefSize.width)
+      {
+         maxPrefSize.width = prefSize.width;
+      }
+
+      return maxPrefSize;
+   }
+
+   private void updateCompPreferredSize(JComponent comp, Dimension maxPrefSize)
+   {
+      Dimension prefSize = comp.getPreferredSize();
+      prefSize.width = maxPrefSize.width;
+      comp.setPreferredSize(prefSize);
+      comp.setMaximumSize(prefSize);
+   }
+
+   public JDRResources getResources()
+   {
+      return controlPanel.getResources();
+   }
+
+   public abstract void setSelected(boolean selected);
+
+   public abstract void updateWidgets(boolean taskInProgress, boolean isVectorized);
+
+   public abstract void reset(boolean revertAll);
+
+   private Vector<JComponent> alignedComps;
+
+   private JComponent mainSubPanel;
+
+   protected ControlPanel controlPanel;
+}
+
+class ScanImagePanel extends ControlSubPanel implements ActionListener,ChangeListener
 {
    public ScanImagePanel(ControlPanel controlPanel)
    {
-      super();
-      this.controlPanel = controlPanel;
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
+      super(controlPanel);
       JDRResources resources = controlPanel.getResources();
 
       doScanImageCheckBox = resources.createAppCheckBox(
          "vectorize.scan_image", true, this);
       doScanImageCheckBox.setEnabled(false);
-      add(doScanImageCheckBox);
+      addMainCheckBox(doScanImageCheckBox);
 
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       foregroundLabel = resources.createAppLabel("vectorize.foreground");
       subPanel.add(foregroundLabel);
@@ -2493,19 +2641,17 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       fuzzLabel = resources.createAppLabel("vectorize.fuzz");
       subPanel.add(fuzzLabel);
 
-      fuzzSpinner = controlPanel.createSpinner(fuzzLabel, fuzzSpinnerModel);
+      fuzzSpinner = createSpinner(fuzzLabel, fuzzSpinnerModel);
       subPanel.add(fuzzSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       sampleWidthLabel = resources.createAppLabel("vectorize.sample_width");
       subPanel.add(sampleWidthLabel);
 
       sampleWidthSpinnerModel = new SpinnerNumberModel(10, 2, 50, 1);
 
-      sampleWidthSpinner = controlPanel.createSpinner(
+      sampleWidthSpinner = createSpinner(
         sampleWidthLabel, sampleWidthSpinnerModel);
       subPanel.add(sampleWidthSpinner);
 
@@ -2516,13 +2662,11 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
 
       sampleHeightSpinnerModel = new SpinnerNumberModel(10, 2, 50, 1);
 
-      sampleHeightSpinner = controlPanel.createSpinner(
+      sampleHeightSpinner = createSpinner(
         sampleHeightLabel, sampleHeightSpinnerModel);
       subPanel.add(sampleHeightSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       ButtonGroup bg = new ButtonGroup();
 
@@ -2537,9 +2681,7 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
       regionPicker = resources.createToggleButton("vectorize", "select_region", this);
       subPanel.add(regionPicker);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       subtractLastScanButton = resources.createAppJButton(
         "vectorize", "subtract_last_scan", this);
@@ -2938,30 +3080,23 @@ class ScanImagePanel extends JPanel implements ActionListener,ChangeListener
 
    private SpinnerNumberModel subtractLastScanBorderModel;
 
-   private ControlPanel controlPanel;
-
    public static final int REGION_PICKER_SET=0, REGION_PICKER_ADD=1,
     REGION_PICKER_SUBTRACT=2;
 }
 
-class OptimizeLinesPanel extends JPanel implements ChangeListener
+class OptimizeLinesPanel extends ControlSubPanel implements ChangeListener
 {
    public OptimizeLinesPanel(ControlPanel controlPanel)
    {
-      super();
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
+      super(controlPanel);
 
-      this.controlPanel = controlPanel;
       JDRResources resources = controlPanel.getResources();
 
       doOptimizeCheckBox = resources.createAppCheckBox(
         "vectorize.optimize_lines", true, this);
-      add(doOptimizeCheckBox);
+      addMainCheckBox(doOptimizeCheckBox);
 
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       gradientEpsilonSpinnerModel = new SpinnerNumberModel(0.01, 0.0, 100.0,
          0.1);
@@ -2970,7 +3105,7 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
         "vectorize.gradient_threshold");
       subPanel.add(gradientEpsilonLabel);
 
-      gradientEpsilonSpinner = controlPanel.createSpinner(
+      gradientEpsilonSpinner = createSpinner(
          gradientEpsilonLabel, gradientEpsilonSpinnerModel);
       gradientEpsilonSpinner.setMaximumSize(
          gradientEpsilonSpinner.getPreferredSize());
@@ -3034,40 +3169,25 @@ class OptimizeLinesPanel extends JPanel implements ChangeListener
    private JSpinner gradientEpsilonSpinner;
 
    private JCheckBox doOptimizeCheckBox;
-
-   private ControlPanel controlPanel;
 }
 
-class SplitSubPathsPanel extends JPanel implements ChangeListener
+class SplitSubPathsPanel extends ControlSubPanel implements ChangeListener
 {
    public SplitSubPathsPanel(ControlPanel controlPanel)
    {
-      super();
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
+      super(controlPanel);
 
-      this.controlPanel = controlPanel;
       JDRResources resources = controlPanel.getResources();
 
       doSplitSubPathsCheckBox = resources.createAppCheckBox(
        "vectorize.split_subpaths", true, this);
-      add(doSplitSubPathsCheckBox);
-
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
-
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      addMainCheckBox(doSplitSubPathsCheckBox);
 
       removeTinyPathsCheckBox = resources.createAppCheckBox(
         "vectorize.remove_tiny_subpaths", true, this);
-      subPanel.add(removeTinyPathsCheckBox);
+      addWidget(removeTinyPathsCheckBox);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       minTinyAreaLabel = resources.createAppLabel(
         "vectorize.tiny_subpath.bounding_area_max");
@@ -3075,7 +3195,7 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
 
       minTinyAreaSpinnerModel = new SpinnerNumberModel(10.0, 0.0, 100.0, 1.0);
 
-      minTinyAreaSpinner = controlPanel.createSpinner(
+      minTinyAreaSpinner = createSpinner(
          minTinyAreaLabel, minTinyAreaSpinnerModel);
       minTinyAreaSpinner.setMaximumSize(
          minTinyAreaSpinner.getPreferredSize());
@@ -3087,28 +3207,26 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
 
       minTinySizeSpinnerModel = new SpinnerNumberModel(10, 0, 100, 1);
 
-      minTinySizeSpinner = controlPanel.createSpinner(
+      minTinySizeSpinner = createSpinner(
          minTinySizeLabel, minTinySizeSpinnerModel);
-      minTinySizeSpinner.setMaximumSize(
-         minTinySizeSpinner.getPreferredSize());
       subPanel.add(minTinySizeSpinner);
 
       splitTypeLabel = resources.createAppLabel("vectorize.split_type");
-      add(splitTypeLabel);
+      addWidget(splitTypeLabel);
 
       ButtonGroup bg = new ButtonGroup();
 
       exteriorSplitOnlyButton = resources.createAppRadioButton(
        "vectorize.split.exterior", bg, false, null);
-      add(exteriorSplitOnlyButton);
+      addWidget(exteriorSplitOnlyButton);
 
       evenInteriorSplitButton = resources.createAppRadioButton(
          "vectorize.split.even_interior", bg, true, null);
-      add(evenInteriorSplitButton);
+      addWidget(evenInteriorSplitButton);
 
       splitAllButton = resources.createAppRadioButton(
          "vectorize.split.all", bg, false, null);
-      add(splitAllButton);
+      addWidget(splitAllButton);
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -3249,47 +3367,37 @@ class SplitSubPathsPanel extends JPanel implements ChangeListener
    private JCheckBox doSplitSubPathsCheckBox, removeTinyPathsCheckBox;
 
    private JRadioButton exteriorSplitOnlyButton, evenInteriorSplitButton, splitAllButton;
-
-   private ControlPanel controlPanel;
 }
 
-class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
+class LineDetectionPanel extends ControlSubPanel
+   implements ChangeListener,ActionListener
 {
    public LineDetectionPanel(ControlPanel controlPanel)
    {
-      super();
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
+      super(controlPanel);
 
-      this.controlPanel = controlPanel;
       JDRResources resources = controlPanel.getResources();
 
       doLineDetectionCheckBox = resources.createAppCheckBox(
          "vectorize.line_detection", true, this);
-      add(doLineDetectionCheckBox);
+      addMainCheckBox(doLineDetectionCheckBox);
 
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       deltaThresholdSpinnerModel = new SpinnerNumberModel(1.5, 0.0, 100.0, 0.5);
 
       deltaThresholdLabel = resources.createAppLabel("vectorize.delta_threshold");
       subPanel.add(deltaThresholdLabel);
 
-      deltaThresholdSpinner = controlPanel.createSpinner(
+      deltaThresholdSpinner = createSpinner(
          deltaThresholdLabel, deltaThresholdSpinnerModel);
       deltaThresholdSpinner.setMaximumSize(
          deltaThresholdSpinner.getPreferredSize());
       subPanel.add(deltaThresholdSpinner);
 
-      subPanel.add(Box.createHorizontalGlue());
-
       // Line width options
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       ButtonGroup bg = new ButtonGroup();
 
@@ -3297,18 +3405,13 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
         "vectorize", "fixed_line_width", bg, false, this);
       subPanel.add(fixedLineWidthButton);
 
-      fixedLineWidthSpinnerModel = new SpinnerNumberModel(1, 1, 50, 1);
-      fixedLineWidthSpinner = new JSpinner(fixedLineWidthSpinnerModel);
+      fixedLineWidthSpinnerModel = new SpinnerNumberModel(
+         Double.valueOf(1.0), Double.valueOf(0.5), null, Double.valueOf(1.0));
+      fixedLineWidthSpinner = createSpinner(fixedLineWidthSpinnerModel);
       fixedLineWidthSpinner.setEnabled(false);
-      fixedLineWidthSpinner.setMaximumSize(
-         fixedLineWidthSpinner.getPreferredSize());
       subPanel.add(fixedLineWidthSpinner);
 
-      subPanel.add(Box.createHorizontalGlue());
-
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       relativeLineWidthButton = resources.createAppRadioButton(
         "vectorize", "relative_line_width", bg, true, this);
@@ -3320,15 +3423,9 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
 
       // Merge adjacent spike options
 
-      mergeSpikesPanel = Box.createVerticalBox();
-      mergeSpikesPanel.setBorder(BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(), 
-        resources.getString("vectorize.merge_spikes")));
-      add(mergeSpikesPanel);
+      mergeSpikesPanel = addTitledArea("vectorize.merge_spikes");
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      mergeSpikesPanel.add(subPanel);
+      subPanel = newRow(mergeSpikesPanel);
 
       mergeSpikeLengthThresholdSpinnerModel = 
         new SpinnerNumberModel(0.5, 0.0, 100.0, 0.5);
@@ -3337,17 +3434,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
         "vectorize.merge_spike_length_threshold");
       subPanel.add(mergeSpikeLengthThresholdLabel);
 
-      mergeSpikeLengthThresholdSpinner = controlPanel.createSpinner(
+      mergeSpikeLengthThresholdSpinner = createSpinner(
          mergeSpikeLengthThresholdLabel, mergeSpikeLengthThresholdSpinnerModel);
-      mergeSpikeLengthThresholdSpinner.setMaximumSize(
-         mergeSpikeLengthThresholdSpinner.getPreferredSize());
       subPanel.add(mergeSpikeLengthThresholdSpinner);
 
-      subPanel.add(Box.createHorizontalGlue());
-
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      mergeSpikesPanel.add(subPanel);
+      subPanel = newRow(mergeSpikesPanel);
 
       mergeSpikeNeighbourThresholdSpinnerModel = 
         new SpinnerNumberModel(5.0, 0.0, 100.0, 0.5);
@@ -3356,25 +3447,15 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
         "vectorize.merge_spike_neighbour_threshold");
       subPanel.add(mergeSpikeNeighbourThresholdLabel);
 
-      mergeSpikeNeighbourThresholdSpinner = controlPanel.createSpinner(
+      mergeSpikeNeighbourThresholdSpinner = createSpinner(
          mergeSpikeNeighbourThresholdLabel, mergeSpikeNeighbourThresholdSpinnerModel);
-      mergeSpikeNeighbourThresholdSpinner.setMaximumSize(
-         mergeSpikeNeighbourThresholdSpinner.getPreferredSize());
       subPanel.add(mergeSpikeNeighbourThresholdSpinner);
-
-      subPanel.add(Box.createHorizontalGlue());
 
       // Spike pair selection options
 
-      spikePairSelectionPanel = Box.createVerticalBox();
-      spikePairSelectionPanel.setBorder(BorderFactory.createTitledBorder(
-         BorderFactory.createEtchedBorder(), 
-         resources.getString("vectorize.spike_pair_selection")));
-      add(spikePairSelectionPanel);
+      spikePairSelectionPanel = addTitledArea("vectorize.spike_pair_selection");
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      spikePairSelectionPanel.add(subPanel);
+      subPanel = newRow(spikePairSelectionPanel);
 
       midDiffWeightSpinnerModel
           = new SpinnerNumberModel(2.0, 0.0, 100.0, 0.5);
@@ -3383,17 +3464,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.spike_pair_mid_diff_weight");
       subPanel.add(midDiffWeightLabel);
 
-      midDiffWeightSpinner = controlPanel.createSpinner(
+      midDiffWeightSpinner = createSpinner(
          midDiffWeightLabel, midDiffWeightSpinnerModel);
-      midDiffWeightSpinner.setMaximumSize(
-         midDiffWeightSpinner.getPreferredSize());
       subPanel.add(midDiffWeightSpinner);
 
-      subPanel.add(Box.createHorizontalGlue());
-
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      spikePairSelectionPanel.add(subPanel);
+      subPanel = newRow(spikePairSelectionPanel);
 
       inclinationDiffWeightSpinnerModel
           = new SpinnerNumberModel(0.25, 0.0, 100.0, 0.25);
@@ -3402,15 +3477,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.spike_pair_inclination_diff_weight");
       subPanel.add(inclinationDiffWeightLabel);
 
-      inclinationDiffWeightSpinner = controlPanel.createSpinner(
+      inclinationDiffWeightSpinner = createSpinner(
          inclinationDiffWeightLabel, inclinationDiffWeightSpinnerModel);
-      inclinationDiffWeightSpinner.setMaximumSize(
-         inclinationDiffWeightSpinner.getPreferredSize());
       subPanel.add(inclinationDiffWeightSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      spikePairSelectionPanel.add(subPanel);
+      subPanel = newRow(spikePairSelectionPanel);
 
       averageLengthWeightSpinnerModel
           = new SpinnerNumberModel(1.0, 0.0, 100.0, 0.5);
@@ -3419,15 +3490,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.spike_pair_average_length_weight");
       subPanel.add(averageLengthWeightLabel);
 
-      averageLengthWeightSpinner = controlPanel.createSpinner(
+      averageLengthWeightSpinner = createSpinner(
          averageLengthWeightLabel, averageLengthWeightSpinnerModel);
-      averageLengthWeightSpinner.setMaximumSize(
-         averageLengthWeightSpinner.getPreferredSize());
       subPanel.add(averageLengthWeightSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      spikePairSelectionPanel.add(subPanel);
+      subPanel = newRow(spikePairSelectionPanel);
 
       angleDiffWeightSpinnerModel
           = new SpinnerNumberModel(2.0, 0.0, 100.0, 0.5);
@@ -3436,15 +3503,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.spike_pair_angle_diff_weight");
       subPanel.add(angleDiffWeightLabel);
 
-      angleDiffWeightSpinner = controlPanel.createSpinner(
+      angleDiffWeightSpinner = createSpinner(
          angleDiffWeightLabel, angleDiffWeightSpinnerModel);
-      angleDiffWeightSpinner.setMaximumSize(
-         angleDiffWeightSpinner.getPreferredSize());
       subPanel.add(angleDiffWeightSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      spikePairSelectionPanel.add(subPanel);
+      subPanel = newRow(spikePairSelectionPanel);
 
       inverseDistanceWeightSpinnerModel
           = new SpinnerNumberModel(0.5, 0.0, 100.0, 0.5);
@@ -3453,21 +3516,17 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.spike_pair_inverse_distance_weight");
       subPanel.add(inverseDistanceWeightLabel);
 
-      inverseDistanceWeightSpinner = controlPanel.createSpinner(
+      inverseDistanceWeightSpinner = createSpinner(
          inverseDistanceWeightLabel, inverseDistanceWeightSpinnerModel);
-      inverseDistanceWeightSpinner.setMaximumSize(
-         inverseDistanceWeightSpinner.getPreferredSize());
       subPanel.add(inverseDistanceWeightSpinner);
 
       // Intersection options
 
       detectIntersections = resources.createAppCheckBox(
          "vectorize.detect_intersections", true, this);
-      add(detectIntersections);
+      addWidget(detectIntersections);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       deltaVarianceThresholdSpinnerModel
           = new SpinnerNumberModel(1.0, 0.0, 100.0, 1.0);
@@ -3476,15 +3535,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.variance_threshold");
       subPanel.add(deltaVarianceThresholdLabel);
 
-      deltaVarianceThresholdSpinner = controlPanel.createSpinner(
+      deltaVarianceThresholdSpinner = createSpinner(
          deltaVarianceThresholdLabel, deltaVarianceThresholdSpinnerModel);
-      deltaVarianceThresholdSpinner.setMaximumSize(
-         deltaVarianceThresholdSpinner.getPreferredSize());
       subPanel.add(deltaVarianceThresholdSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       spikeReturnDistanceSpinnerModel = new SpinnerNumberModel(4.0, 1.0, 20.0, 0.5);
 
@@ -3492,15 +3547,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.spike_return_distance");
       subPanel.add(spikeReturnDistanceLabel);
 
-      spikeReturnDistanceSpinner = controlPanel.createSpinner(
+      spikeReturnDistanceSpinner = createSpinner(
          spikeReturnDistanceLabel, spikeReturnDistanceSpinnerModel);
-      spikeReturnDistanceSpinner.setMaximumSize(
-         spikeReturnDistanceSpinner.getPreferredSize());
       subPanel.add(spikeReturnDistanceSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       minStubLengthSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 20.0, 0.5);
 
@@ -3508,15 +3559,11 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.min_stub_length");
       subPanel.add(minStubLengthLabel);
 
-      minStubLengthSpinner = controlPanel.createSpinner(
+      minStubLengthSpinner = createSpinner(
          minStubLengthLabel, minStubLengthSpinnerModel);
-      minStubLengthSpinner.setMaximumSize(
-         minStubLengthSpinner.getPreferredSize());
       subPanel.add(minStubLengthSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       tinyStepThresholdSpinnerModel = new SpinnerNumberModel(3.5, 1.0, 20.0, 0.5);
 
@@ -3524,10 +3571,8 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
          "vectorize.line_detect.tiny_step");
       subPanel.add(tinyStepThresholdLabel);
 
-      tinyStepThresholdSpinner = controlPanel.createSpinner(
+      tinyStepThresholdSpinner = createSpinner(
          tinyStepThresholdLabel, tinyStepThresholdSpinnerModel);
-      tinyStepThresholdSpinner.setMaximumSize(
-         tinyStepThresholdSpinner.getPreferredSize());
       subPanel.add(tinyStepThresholdSpinner);
 
    }
@@ -3897,38 +3942,28 @@ class LineDetectionPanel extends JPanel implements ChangeListener,ActionListener
    private JRadioButton fixedLineWidthButton, relativeLineWidthButton;
 
    private JComponent mergeSpikesPanel, spikePairSelectionPanel;
-
-   private ControlPanel controlPanel;
 }
 
-class MergeNearPathsPanel extends JPanel implements ChangeListener
+class MergeNearPathsPanel extends ControlSubPanel implements ChangeListener
 {
    public MergeNearPathsPanel(ControlPanel controlPanel)
    {
-      super();
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
-
-      this.controlPanel = controlPanel;
+      super(controlPanel);
       JDRResources resources = controlPanel.getResources();
 
       doMergeCheckBox = resources.createAppCheckBox(
         "vectorize.merge_nearpaths", true, this);
-      add(doMergeCheckBox);
+      addMainCheckBox(doMergeCheckBox);
 
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       gapLabel = resources.createAppLabel("vectorize.merge_nearpaths.threshold");
       subPanel.add(gapLabel);
 
-      gapModel = new SpinnerNumberModel(2.0, 1.0, 20.0, 1.0);
-      gapSpinner = new JSpinner(gapModel);
-      gapSpinner.setMaximumSize(gapSpinner.getPreferredSize());
+      gapModel = new SpinnerNumberModel(
+        Double.valueOf(2.0), Double.valueOf(1.0), null, Double.valueOf(1.0));
+      gapSpinner = createSpinner(gapLabel, gapModel);
       subPanel.add(gapSpinner);
-
-      subPanel.add(Box.createHorizontalGlue());
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -3981,328 +4016,199 @@ class MergeNearPathsPanel extends JPanel implements ChangeListener
    private SpinnerNumberModel gapModel;
    private JSpinner gapSpinner;
 
-   private ControlPanel controlPanel;
    private JCheckBox doMergeCheckBox;
 }
 
-class SmoothingPanel extends JPanel implements ChangeListener
+class SmoothingPanel extends ControlSubPanel implements ChangeListener
 {
    public SmoothingPanel(ControlPanel controlPanel)
    {
-      super();
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
-
-      this.controlPanel = controlPanel;
+      super(controlPanel);
       JDRResources resources = controlPanel.getResources();
 
       doSmoothingCheckBox = resources.createAppCheckBox(
         "vectorize.smooth_shapes", true, this);
-      add(doSmoothingCheckBox);
+      addMainCheckBox(doSmoothingCheckBox);
 
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       tinyStepThresholdSpinnerModel = new SpinnerNumberModel(20.0, 0.0, 100.0, 1.0);
 
-      tinyStepThresholdLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.tiny_step");
-      subPanel.add(tinyStepThresholdLabel);
+      tinyStepThresholdLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.tiny_step", subPanel);
 
-      tinyStepThresholdSpinner = controlPanel.createSpinner(
+      tinyStepThresholdSpinner = createSpinner(
          tinyStepThresholdLabel, tinyStepThresholdSpinnerModel);
       subPanel.add(tinyStepThresholdSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       lengthThresholdSpinnerModel 
          = new SpinnerNumberModel(20.0, 0.0, 100.0, 1.0);
 
-      lengthThresholdLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.length_threshold");
-      subPanel.add(lengthThresholdLabel);
+      lengthThresholdLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.length_threshold", subPanel);
 
-      lengthThresholdSpinner = controlPanel.createSpinner(
+      lengthThresholdSpinner = createSpinner(
          lengthThresholdLabel, lengthThresholdSpinnerModel);
       subPanel.add(lengthThresholdSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       thresholdDiffSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
 
-      thresholdDiffLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.threshold_diff");
-      subPanel.add(thresholdDiffLabel);
+      thresholdDiffLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.threshold_diff", subPanel);
 
-      thresholdDiffSpinner = controlPanel.createSpinner(
+      thresholdDiffSpinner = createSpinner(
          thresholdDiffLabel, thresholdDiffSpinnerModel);
       subPanel.add(thresholdDiffSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       maxDeviationSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
 
-      maxDeviationLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.max_deviation");
-      subPanel.add(maxDeviationLabel);
+      maxDeviationLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.max_deviation", subPanel);
 
-      maxDeviationSpinner = controlPanel.createSpinner(
+      maxDeviationSpinner = createSpinner(
          maxDeviationLabel, maxDeviationSpinnerModel);
       subPanel.add(maxDeviationSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       deviationEpsilonSpinnerModel = new SpinnerNumberModel(0.01, 0.0, 100.0, 0.01);
 
-      deviationEpsilonLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.deviation_epsilon");
-      subPanel.add(deviationEpsilonLabel);
+      deviationEpsilonLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.deviation_epsilon", subPanel);
 
-      deviationEpsilonSpinner = controlPanel.createSpinner(
+      deviationEpsilonSpinner = createSpinner(
          deviationEpsilonLabel, deviationEpsilonSpinnerModel);
       subPanel.add(deviationEpsilonSpinner);
 
       tryBezierCheckBox = resources.createAppCheckBox(
          "vectorize.smooth_shapes.try_bezier", true, this);
-      add(tryBezierCheckBox);
+      addWidget(tryBezierCheckBox);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       flatnessThresholdSpinnerModel 
          = new SpinnerNumberModel(Double.valueOf(5.0), Double.valueOf(0.0), null, 
             Double.valueOf(1.0));
 
-      flatnessThresholdLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.flatness_threshold");
-      subPanel.add(flatnessThresholdLabel);
+      flatnessThresholdLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.flatness_threshold", subPanel);
 
       flatnessThresholdSpinner = 
-        controlPanel.createSpinner(flatnessThresholdSpinnerModel);
-      flatnessThresholdLabel.setLabelFor(flatnessThresholdSpinner);
+        createSpinner(flatnessThresholdLabel, flatnessThresholdSpinnerModel);
       subPanel.add(flatnessThresholdSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       curveStationaryPtThresholdSpinnerModel
         = new SpinnerNumberModel(2.0, 0.0, 100.0, 1);
 
-      curveStatPtLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.stat_pt_threshold");
-      subPanel.add(curveStatPtLabel);
+      curveStatPtLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.stat_pt_threshold", subPanel);
 
       curveStationaryPtThresholdSpinner = 
-        controlPanel.createSpinner(curveStationaryPtThresholdSpinnerModel);
-      curveStatPtLabel.setLabelFor(curveStationaryPtThresholdSpinner);
+        createSpinner(curveStatPtLabel, curveStationaryPtThresholdSpinnerModel);
       subPanel.add(curveStationaryPtThresholdSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       curveThresholdDiffSpinnerModel = new SpinnerNumberModel(2.0, 0.0, 100.0, 1.0);
 
-      curveThresholdDiffLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.curve_threshold_diff");
-      subPanel.add(curveThresholdDiffLabel);
+      curveThresholdDiffLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.curve_threshold_diff", subPanel);
 
-      curveThresholdDiffSpinner = controlPanel.createSpinner(
+      curveThresholdDiffSpinner = createSpinner(
          curveThresholdDiffLabel, curveThresholdDiffSpinnerModel);
       subPanel.add(curveThresholdDiffSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      subPanel = newRow();
 
       curveMinPointsSpinnerModel 
          = new SpinnerNumberModel(5, 3, 100, 1);
 
-      curveMinPointsLabel = resources.createAppLabel(
-         "vectorize.smooth_shapes.min_points");
-      subPanel.add(curveMinPointsLabel);
+      curveMinPointsLabel = createAlignedLabel(
+         "vectorize.smooth_shapes.min_points", subPanel);
 
       curveMinPointsSpinner = 
-        controlPanel.createSpinner(curveMinPointsSpinnerModel);
-      curveMinPointsLabel.setLabelFor(curveMinPointsSpinner);
+        createSpinner(curveMinPointsLabel, curveMinPointsSpinnerModel);
       subPanel.add(curveMinPointsSpinner);
 
       curveSampleCheckBox = resources.createAppCheckBox(
          "vectorize.smooth_shapes.sampling", true, this);
-      add(curveSampleCheckBox);
+      addWidget(curveSampleCheckBox);
 
-      nelderMeadComp = Box.createVerticalBox();
-      nelderMeadComp.setBorder(BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(), 
-        resources.getString("vectorize.smooth.nelder_mead")
-      ));
-      add(nelderMeadComp);
+      nelderMeadComp = addTitledArea("vectorize.smooth.nelder_mead");
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMeadComp.add(subPanel);
+      subPanel = newRow(nelderMeadComp);
 
       alphaSpinnerModel // >0
          = new SpinnerNumberModel(Double.valueOf(1.0), 
                  Double.valueOf(0.0), null, Double.valueOf(0.5));
 
-      alphaLabel = resources.createAppLabel("vectorize.smooth.alpha");
-      subPanel.add(alphaLabel);
+      alphaLabel = createAlignedLabel("vectorize.smooth.alpha", subPanel);
 
-      alphaSpinner = 
-        controlPanel.createSpinner(alphaSpinnerModel);
-      alphaLabel.setLabelFor(alphaSpinner);
+      alphaSpinner = createSpinner(alphaLabel, alphaSpinnerModel);
       subPanel.add(alphaSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMeadComp.add(subPanel);
+      subPanel = newRow(nelderMeadComp);
 
       gammaSpinnerModel // >1
          = new SpinnerNumberModel(Double.valueOf(2.0), 
                   Double.valueOf(1.0), null, Double.valueOf(0.5));
 
-      gammaLabel = resources.createAppLabel("vectorize.smooth.gamma");
-      subPanel.add(gammaLabel);
+      gammaLabel = createAlignedLabel("vectorize.smooth.gamma", subPanel);
 
-      gammaSpinner = 
-        controlPanel.createSpinner(gammaSpinnerModel);
-      gammaLabel.setLabelFor(gammaSpinner);
+      gammaSpinner = createSpinner(gammaLabel, gammaSpinnerModel);
       subPanel.add(gammaSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMeadComp.add(subPanel);
+      subPanel = newRow(nelderMeadComp);
 
       rhoSpinnerModel // 0 < rho <= 0.5
          = new SpinnerNumberModel(0.5, 0.0, 0.5, 0.05);
 
-      rhoLabel = resources.createAppLabel("vectorize.smooth.rho");
-      subPanel.add(rhoLabel);
+      rhoLabel = createAlignedLabel("vectorize.smooth.rho", subPanel);
 
-      rhoSpinner = 
-        controlPanel.createSpinner(rhoSpinnerModel);
-      rhoLabel.setLabelFor(rhoSpinner);
+      rhoSpinner = createSpinner(rhoLabel, rhoSpinnerModel);
       subPanel.add(rhoSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMeadComp.add(subPanel);
+      subPanel = newRow(nelderMeadComp);
 
       sigmaSpinnerModel // 0 < sigma < 1
          = new SpinnerNumberModel(0.5, 0.0, 1.0, 0.1);
 
-      sigmaLabel = resources.createAppLabel("vectorize.smooth.sigma");
-      subPanel.add(sigmaLabel);
+      sigmaLabel = createAlignedLabel("vectorize.smooth.sigma", subPanel);
 
-      sigmaSpinner = 
-        controlPanel.createSpinner(sigmaSpinnerModel);
-      sigmaLabel.setLabelFor(sigmaSpinner);
+      sigmaSpinner = createSpinner(sigmaLabel, sigmaSpinnerModel);
       subPanel.add(sigmaSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMeadComp.add(subPanel);
+      subPanel = newRow(nelderMeadComp);
 
       epsilonSpinnerModel // epsilon > 0
          = new SpinnerNumberModel(Double.valueOf(0.001), 
                   Double.valueOf(0.0), null, Double.valueOf(0.25));
 
-      epsilonLabel = resources.createAppLabel("vectorize.smooth.epsilon");
-      subPanel.add(epsilonLabel);
+      epsilonLabel = createAlignedLabel("vectorize.smooth.epsilon", subPanel);
 
-      epsilonSpinner = 
-        controlPanel.createSpinner(epsilonSpinnerModel);
-      epsilonLabel.setLabelFor(epsilonSpinner);
+      epsilonSpinner = createSpinner(epsilonLabel, epsilonSpinnerModel);
       subPanel.add(epsilonSpinner);
 
-      subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      nelderMeadComp.add(subPanel);
+      subPanel = newRow(nelderMeadComp);
 
       maxIterSpinnerModel // maxIter > 0
          = new SpinnerNumberModel(Integer.valueOf(500), 
                  Integer.valueOf(1), null, Integer.valueOf(100));
 
-      maxIterLabel = resources.createAppLabel("vectorize.smooth.max_iter");
-      subPanel.add(maxIterLabel);
+      maxIterLabel = createAlignedLabel("vectorize.smooth.max_iter", subPanel);
 
-      maxIterSpinner = 
-        controlPanel.createSpinner(maxIterSpinnerModel);
-      maxIterLabel.setLabelFor(maxIterSpinner);
+      maxIterSpinner = createSpinner(maxIterLabel, maxIterSpinnerModel);
       subPanel.add(maxIterSpinner);
 
-      // Adjust label sizes
-
-      Dimension maxPrefSize = updateMaxPreferredSize(tinyStepThresholdLabel, null);
-      updateMaxPreferredSize(lengthThresholdLabel, maxPrefSize);
-      updateMaxPreferredSize(thresholdDiffLabel, maxPrefSize);
-      updateMaxPreferredSize(maxDeviationLabel, maxPrefSize);
-      updateMaxPreferredSize(deviationEpsilonLabel, maxPrefSize);
-      updateMaxPreferredSize(flatnessThresholdLabel, maxPrefSize);
-      updateMaxPreferredSize(curveStatPtLabel, maxPrefSize);
-      updateMaxPreferredSize(curveThresholdDiffLabel, maxPrefSize);
-      updateMaxPreferredSize(curveMinPointsLabel, maxPrefSize);
-
-      updateMaxPreferredSize(alphaLabel, maxPrefSize);
-      updateMaxPreferredSize(gammaLabel, maxPrefSize);
-      updateMaxPreferredSize(rhoLabel, maxPrefSize);
-      updateMaxPreferredSize(sigmaLabel, maxPrefSize);
-      updateMaxPreferredSize(epsilonLabel, maxPrefSize);
-      updateMaxPreferredSize(maxIterLabel, maxPrefSize);
-
-      updateLabelPreferredSize(tinyStepThresholdLabel, maxPrefSize);
-      updateLabelPreferredSize(lengthThresholdLabel, maxPrefSize);
-      updateLabelPreferredSize(thresholdDiffLabel, maxPrefSize);
-      updateLabelPreferredSize(maxDeviationLabel, maxPrefSize);
-      updateLabelPreferredSize(deviationEpsilonLabel, maxPrefSize);
-      updateLabelPreferredSize(flatnessThresholdLabel, maxPrefSize);
-      updateLabelPreferredSize(curveStatPtLabel, maxPrefSize);
-      updateLabelPreferredSize(curveThresholdDiffLabel, maxPrefSize);
-      updateLabelPreferredSize(curveMinPointsLabel, maxPrefSize);
-
-      updateLabelPreferredSize(alphaLabel, maxPrefSize);
-      updateLabelPreferredSize(gammaLabel, maxPrefSize);
-      updateLabelPreferredSize(rhoLabel, maxPrefSize);
-      updateLabelPreferredSize(sigmaLabel, maxPrefSize);
-      updateLabelPreferredSize(epsilonLabel, maxPrefSize);
-      updateLabelPreferredSize(maxIterLabel, maxPrefSize);
-   }
-
-   private Dimension updateMaxPreferredSize(JComponent label, Dimension maxPrefSize)
-   {
-      Dimension prefSize = label.getPreferredSize();
-
-      if (maxPrefSize == null)
-      {
-         return new Dimension(prefSize.width, prefSize.height);
-      }
-
-      if (prefSize.width > maxPrefSize.width)
-      {
-         maxPrefSize.width = prefSize.width;
-      }
-
-      return maxPrefSize;
-   }
-
-   private void updateLabelPreferredSize(JComponent label, Dimension maxPrefSize)
-   {
-      Dimension prefSize = label.getPreferredSize();
-      prefSize.width = maxPrefSize.width;
-      label.setPreferredSize(prefSize);
-      label.setMaximumSize(prefSize);
+      updateAlignedSizes();
    }
 
    public void stateChanged(ChangeEvent evt)
@@ -4606,28 +4512,20 @@ class SmoothingPanel extends JPanel implements ChangeListener
      curveSampleCheckBox;
 
    private JComponent nelderMeadComp;
-
-   private ControlPanel controlPanel;
 }
 
-class RemoveTinyPathsPanel extends JPanel implements ChangeListener
+class RemoveTinyPathsPanel extends ControlSubPanel implements ChangeListener
 {
    public RemoveTinyPathsPanel(ControlPanel controlPanel)
    {
-      super();
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-      setAlignmentX(Component.LEFT_ALIGNMENT);
-
-      this.controlPanel = controlPanel;
+      super(controlPanel);
       JDRResources resources = controlPanel.getResources();
 
       doRemoveTinyPathsCheckBox = resources.createAppCheckBox(
         "vectorize.remove_tiny_paths", true, this);
-      add(doRemoveTinyPathsCheckBox);
+      addMainCheckBox(doRemoveTinyPathsCheckBox);
 
-      JComponent subPanel = Box.createHorizontalBox();
-      subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(subPanel);
+      JComponent subPanel = newRow();
 
       maxTinyPathsSpinnerModel = new SpinnerNumberModel(4.0, 0.0, 100.0, 1.0);
 
@@ -4635,7 +4533,7 @@ class RemoveTinyPathsPanel extends JPanel implements ChangeListener
          "vectorize.remove_tiny_paths.min_area");
       subPanel.add(maxTinyPathsLabel);
 
-      maxTinyPathsSpinner = controlPanel.createSpinner(
+      maxTinyPathsSpinner = createSpinner(
          maxTinyPathsLabel, maxTinyPathsSpinnerModel);
       subPanel.add(maxTinyPathsSpinner);
    }
@@ -4697,8 +4595,6 @@ class RemoveTinyPathsPanel extends JPanel implements ChangeListener
    private JSpinner maxTinyPathsSpinner;
 
    private JCheckBox doRemoveTinyPathsCheckBox;
-
-   private ControlPanel controlPanel;
 }
 
 class ControlPanel extends JPanel implements ActionListener
@@ -4710,44 +4606,30 @@ class ControlPanel extends JPanel implements ActionListener
 
       JDRResources resources = dialog.getResources();
 
-      Box mainPanel = Box.createVerticalBox();
+      mainPanel = Box.createVerticalBox();
       add(new JScrollPane(mainPanel), "Center");
 
       mainPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       scanImagePanel = new ScanImagePanel(this);
-      scanImagePanel.add(Box.createHorizontalGlue());
-      scanImagePanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(scanImagePanel);
 
       optimizeLinesPanel = new OptimizeLinesPanel(this);
-      optimizeLinesPanel.add(Box.createHorizontalGlue());
-      optimizeLinesPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(optimizeLinesPanel);
 
       splitSubPathsPanel = new SplitSubPathsPanel(this);
-      splitSubPathsPanel.add(Box.createHorizontalGlue());
-      splitSubPathsPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(splitSubPathsPanel);
 
       lineDetectionPanel = new LineDetectionPanel(this);
-      lineDetectionPanel.add(Box.createHorizontalGlue());
-      lineDetectionPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(lineDetectionPanel);
 
       mergeNearPathsPanel = new MergeNearPathsPanel(this);
-      mergeNearPathsPanel.add(Box.createHorizontalGlue());
-      mergeNearPathsPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(mergeNearPathsPanel);
 
       smoothingPanel = new SmoothingPanel(this);
-      smoothingPanel.add(Box.createHorizontalGlue());
-      smoothingPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(smoothingPanel);
 
       removeTinyPathsPanel = new RemoveTinyPathsPanel(this);
-      removeTinyPathsPanel.add(Box.createHorizontalGlue());
-      removeTinyPathsPanel.setBorder(BorderFactory.createEtchedBorder());
       mainPanel.add(removeTinyPathsPanel);
 
       JComponent buttonPanel = Box.createVerticalBox();
@@ -4787,29 +4669,6 @@ class ControlPanel extends JPanel implements ActionListener
    public JDRResources getResources()
    {
       return dialog.getResources();
-   }
-
-   public JSpinner createSpinner(SpinnerModel model)
-   {
-      return createSpinner(null, model);
-   }
-
-   public JSpinner createSpinner(JLabel label, SpinnerModel model)
-   {
-      JSpinner spinner = new JSpinner(model);
-      spinner.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-      if (label != null)
-      {
-         label.setLabelFor(spinner);
-      }
-
-      Dimension dim = spinner.getPreferredSize();
-      dim.width += 20;
-      dim.height += 2;
-      spinner.setMaximumSize(dim);
-
-      return spinner;
    }
 
    public void colourPickerChange(boolean on)
@@ -4895,13 +4754,18 @@ class ControlPanel extends JPanel implements ActionListener
    public void updateWidgets(boolean taskInProgress, 
       boolean isVectorized)
    {
-      scanImagePanel.updateWidgets(taskInProgress, isVectorized);
-      optimizeLinesPanel.updateWidgets(taskInProgress, isVectorized);
-      splitSubPathsPanel.updateWidgets(taskInProgress, isVectorized);
-      mergeNearPathsPanel.updateWidgets(taskInProgress, isVectorized);
-      lineDetectionPanel.updateWidgets(taskInProgress, isVectorized);
-      smoothingPanel.updateWidgets(taskInProgress, isVectorized);
-      removeTinyPathsPanel.updateWidgets(taskInProgress, isVectorized);
+      if (mainPanel != null)
+      {
+         for (int i = 0, n = mainPanel.getComponentCount(); i < n; i++)
+         {
+            Component comp = mainPanel.getComponent(i);
+
+            if (comp instanceof ControlSubPanel)
+            {
+               ((ControlSubPanel)comp).updateWidgets(taskInProgress, isVectorized);
+            }
+         }
+      }
 
       dialog.setCancelEnabled(!taskInProgress);
       dialog.setOkayEnabled(!taskInProgress && (isVectorized || dialog.hasResults()));
@@ -4926,13 +4790,17 @@ class ControlPanel extends JPanel implements ActionListener
 
    public void reset(boolean revertAll)
    {
-      scanImagePanel.reset(revertAll);
-      optimizeLinesPanel.reset(revertAll);
-      splitSubPathsPanel.reset(revertAll);
-      mergeNearPathsPanel.reset(revertAll);
-      lineDetectionPanel.reset(revertAll);
-      smoothingPanel.reset(revertAll);
-      removeTinyPathsPanel.reset(revertAll);
+      if (mainPanel == null) return;
+
+      for (int i = 0, n = mainPanel.getComponentCount(); i < n; i++)
+      {
+         Component comp = mainPanel.getComponent(i);
+
+         if (comp instanceof ControlSubPanel)
+         {
+            ((ControlSubPanel)comp).reset(revertAll);
+         }
+      }
    }
 
    public void updateTaskButton()
@@ -4987,13 +4855,17 @@ class ControlPanel extends JPanel implements ActionListener
 
    public void setAll(boolean selected)
    {
-      scanImagePanel.setSelected(selected);
-      optimizeLinesPanel.setSelected(selected);
-      splitSubPathsPanel.setSelected(selected);
-      mergeNearPathsPanel.setSelected(selected);
-      lineDetectionPanel.setSelected(selected);
-      smoothingPanel.setSelected(selected);
-      removeTinyPathsPanel.setSelected(selected);
+      if (mainPanel == null) return;
+
+      for (int i = 0, n = mainPanel.getComponentCount(); i < n; i++)
+      {
+         Component comp = mainPanel.getComponent(i);
+
+         if (comp instanceof ControlSubPanel)
+         {
+            ((ControlSubPanel)comp).setSelected(selected);
+         }
+      }
    }
 
    public Color getImageForeground()
@@ -5269,6 +5141,8 @@ class ControlPanel extends JPanel implements ActionListener
    private LineDetectionPanel lineDetectionPanel;
    private SmoothingPanel smoothingPanel;
    private RemoveTinyPathsPanel removeTinyPathsPanel;
+
+   private JComponent mainPanel;
 }
 
 class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListener
