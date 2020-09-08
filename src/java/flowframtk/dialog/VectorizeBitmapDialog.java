@@ -236,6 +236,8 @@ public class VectorizeBitmapDialog extends JFrame
       resources.addTab(resultTabbedPane, "vectorize.messages",
          messageComp);
 
+      resultTabbedPane.setSelectedComponent(messageComp);
+
       JSplitPane imagePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
          imageScrollPane, resultTabbedPane);
 
@@ -2453,21 +2455,53 @@ abstract class ControlSubPanel extends JPanel
 {
    protected ControlSubPanel(ControlPanel controlPanel)
    {
-      super(new BorderLayout());
+      super(null);
+      setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
       setAlignmentX(Component.LEFT_ALIGNMENT);
+      setAlignmentY(Component.TOP_ALIGNMENT);
+      setBorder(BorderFactory.createEtchedBorder());
       this.controlPanel = controlPanel;
+
+      JDRResources resources = controlPanel.getResources();
+
+      Icon triangleRightIcon = resources.appIcon("triangle_right.png");
+      Icon triangleDownIcon = resources.appIcon("triangle_down.png");
+
+      expandCheckBox = new JCheckBox(triangleRightIcon, true);
+      expandCheckBox.setSelectedIcon(triangleDownIcon);
+      expandCheckBox.setToolTipText(resources.getString("vectorize.expand_controls"));
+      expandCheckBox.setMaximumSize(expandCheckBox.getPreferredSize());
+      expandCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      expandCheckBox.setAlignmentY(Component.TOP_ALIGNMENT);
+
+      expandCheckBox.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            mainSubPanel.setVisible(expandCheckBox.isSelected());
+         }
+      });
+
+      add(expandCheckBox);
+
+      JComponent comp = new JPanel(new BorderLayout());
+      comp.setAlignmentY(Component.TOP_ALIGNMENT);
+      add(comp);
+
+      topPanel = Box.createHorizontalBox();
+      topPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+      comp.add(topPanel, "North");
 
       mainSubPanel = Box.createVerticalBox();
       mainSubPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      mainSubPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 
-      add(mainSubPanel, "Center");
-      add(Box.createHorizontalGlue(), "South");
-      setBorder(BorderFactory.createEtchedBorder());
+      comp.add(mainSubPanel, "Center");
    }
 
    protected void addMainCheckBox(JCheckBox checkBox)
    {
-      add(checkBox, "North");
+      topPanel.add(checkBox);
       checkBox.setAlignmentX(Component.LEFT_ALIGNMENT);
    }
 
@@ -2589,6 +2623,12 @@ abstract class ControlSubPanel extends JPanel
       return controlPanel.getResources();
    }
 
+   public void setControlVisibility(boolean selected)
+   {
+      expandCheckBox.setSelected(selected);
+      mainSubPanel.setVisible(selected);
+   }
+
    public abstract void setSelected(boolean selected);
 
    public abstract void updateWidgets(boolean taskInProgress, boolean isVectorized);
@@ -2597,7 +2637,9 @@ abstract class ControlSubPanel extends JPanel
 
    private Vector<JComponent> alignedComps;
 
-   private JComponent mainSubPanel;
+   private JCheckBox expandCheckBox;
+
+   private JComponent mainSubPanel, topPanel;
 
    protected ControlPanel controlPanel;
 }
@@ -4632,11 +4674,11 @@ class ControlPanel extends JPanel implements ActionListener
       removeTinyPathsPanel = new RemoveTinyPathsPanel(this);
       mainPanel.add(removeTinyPathsPanel);
 
-      JComponent buttonPanel = Box.createVerticalBox();
-      add(buttonPanel, "South");
+      mainPanel.add(new Box.Filler(new Dimension(0,0),
+          new Dimension(0, 0), new Dimension(0, Integer.MAX_VALUE)));
 
       JComponent taskButtonPanel = new JPanel();
-      buttonPanel.add(taskButtonPanel);
+      add(taskButtonPanel, "South");
 
       doTasksButton = resources.createDialogButton(
          "vectorize.dotasks", "dotask", this, null);
@@ -4649,6 +4691,12 @@ class ControlPanel extends JPanel implements ActionListener
       deselectAllButton = resources.createDialogButton("vectorize",
         "deselectallitems", this, null);
       taskButtonPanel.add(deselectAllButton);
+
+      taskButtonPanel.add(resources.createDialogButton("vectorize", 
+       "expandall", this, null));
+
+      taskButtonPanel.add(resources.createDialogButton("vectorize", 
+       "collapseall", this, null));
 
       storeResultsButton = resources.createDialogButton("vectorize",
          "pinshapes", this, null);
@@ -4850,6 +4898,29 @@ class ControlPanel extends JPanel implements ActionListener
       else if (command.equals("discard_all"))
       {
          dialog.clearAllResults();
+      }
+      else if (command.equals("expandall"))
+      {
+         setControlVisibility(true);
+      }
+      else if (command.equals("collapseall"))
+      {
+         setControlVisibility(false);
+      }
+   }
+
+   public void setControlVisibility(boolean visible)
+   {
+      if (mainPanel == null) return;
+
+      for (int i = 0, n = mainPanel.getComponentCount(); i < n; i++)
+      {
+         Component comp = mainPanel.getComponent(i);
+
+         if (comp instanceof ControlSubPanel)
+         {
+            ((ControlSubPanel)comp).setControlVisibility(visible);
+         }
       }
    }
 
@@ -14419,7 +14490,15 @@ class Smooth extends SwingWorker<Void,Rectangle>
             ShapeComponentVector newSubPath = smoothOpenPath(subPath,
                DeviationResult.createFull(subPath, dialog));
 
-            fullPath.appendPath(newSubPath);
+            if (newSubPath == null)
+            {
+               fullPath.appendPath(subPath);
+            }
+            else
+            {
+               fullPath.appendPath(newSubPath);
+            }
+
             fullPath.closePath(gradientEpsilon);
 
             subPath = null;

@@ -2787,6 +2787,7 @@
 <entry key="vectorize.messages.mnemonic">M</entry>
 <entry key="vectorize.controls">Controls</entry>
 <entry key="vectorize.controls.mnemonic">T</entry>
+<entry key="vectorize.expand_controls">Show/hide settings.</entry>
 <entry key="vectorize.history">History</entry>
 <entry key="vectorize.history.mnemonic">Y</entry>
 <entry key="vectorize.verbose">Verbose</entry>
@@ -2923,6 +2924,8 @@
 <entry key="vectorize.dotasks">Do Selected Tasks</entry>
 <entry key="vectorize.selectallitems">Select All Tasks</entry>
 <entry key="vectorize.deselectallitems">Deselect All Tasks</entry>
+<entry key="vectorize.expandall">Expand All</entry>
+<entry key="vectorize.collapseall">Collapse All</entry>
 <entry key="vectorize.pinresults">Pin Current Results</entry>
 <entry key="vectorize.discard_all">Clear All</entry>
 <entry key="vectorize.apply_pinned">Apply Pinned</entry>
