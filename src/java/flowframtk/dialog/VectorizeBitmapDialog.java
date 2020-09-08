@@ -1952,9 +1952,9 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getMaxTinyPaths();
    }
 
-   public double getCurveGradientThreshold()
+   public double getFlatnessThreshold()
    {
-      return controlPanel.getCurveGradientThreshold();
+      return controlPanel.getFlatnessThreshold();
    }
 
    public double getCurveStationaryPtThreshold()
@@ -4079,16 +4079,18 @@ class SmoothingPanel extends JPanel implements ChangeListener
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(subPanel);
 
-      curveGradientThresholdLabel = resources.createAppLabel(
-        "vectorize.smooth_shapes.curve_gradient_threshold");
-      subPanel.add(curveGradientThresholdLabel);
+      flatnessThresholdSpinnerModel 
+         = new SpinnerNumberModel(Double.valueOf(5.0), Double.valueOf(0.0), null, 
+            Double.valueOf(1.0));
 
-      NumberSpinnerField numField = new NumberSpinnerField(2.0, 0.0, 360, 1.0);
-      numField.setMaximumSize(numField.getPreferredSize());
+      flatnessThresholdLabel = resources.createAppLabel(
+         "vectorize.smooth_shapes.flatness_threshold");
+      subPanel.add(flatnessThresholdLabel);
 
-      gradientAngleThresholdPanel = new AnglePanel(
-        resources.getMessageDictionary(), numField);
-      subPanel.add(gradientAngleThresholdPanel);
+      flatnessThresholdSpinner = 
+        controlPanel.createSpinner(flatnessThresholdSpinnerModel);
+      flatnessThresholdLabel.setLabelFor(flatnessThresholdSpinner);
+      subPanel.add(flatnessThresholdSpinner);
 
       subPanel = Box.createHorizontalBox();
       subPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -4248,7 +4250,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       updateMaxPreferredSize(thresholdDiffLabel, maxPrefSize);
       updateMaxPreferredSize(maxDeviationLabel, maxPrefSize);
       updateMaxPreferredSize(deviationEpsilonLabel, maxPrefSize);
-      updateMaxPreferredSize(curveGradientThresholdLabel, maxPrefSize);
+      updateMaxPreferredSize(flatnessThresholdLabel, maxPrefSize);
       updateMaxPreferredSize(curveStatPtLabel, maxPrefSize);
       updateMaxPreferredSize(curveThresholdDiffLabel, maxPrefSize);
       updateMaxPreferredSize(curveMinPointsLabel, maxPrefSize);
@@ -4265,7 +4267,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
       updateLabelPreferredSize(thresholdDiffLabel, maxPrefSize);
       updateLabelPreferredSize(maxDeviationLabel, maxPrefSize);
       updateLabelPreferredSize(deviationEpsilonLabel, maxPrefSize);
-      updateLabelPreferredSize(curveGradientThresholdLabel, maxPrefSize);
+      updateLabelPreferredSize(flatnessThresholdLabel, maxPrefSize);
       updateLabelPreferredSize(curveStatPtLabel, maxPrefSize);
       updateLabelPreferredSize(curveThresholdDiffLabel, maxPrefSize);
       updateLabelPreferredSize(curveMinPointsLabel, maxPrefSize);
@@ -4331,7 +4333,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
          curveThresholdDiffSpinner.setEnabled(enable);
          maxDeviationSpinner.setEnabled(enable);
          deviationEpsilonSpinner.setEnabled(enable);
-         gradientAngleThresholdPanel.setEnabled(enable);
+         flatnessThresholdLabel.setEnabled(enable);
+         flatnessThresholdSpinner.setEnabled(enable);
          curveStationaryPtThresholdSpinner.setEnabled(enable);
          curveMinPointsSpinner.setEnabled(enable);
          tinyStepThresholdLabel.setEnabled(enable);
@@ -4369,8 +4372,9 @@ class SmoothingPanel extends JPanel implements ChangeListener
       boolean enable = doSmoothingCheckBox.isSelected() 
         && tryBezierCheckBox.isSelected();
 
-      curveGradientThresholdLabel.setEnabled(enable);
-      gradientAngleThresholdPanel.setEnabled(enable);
+      flatnessThresholdLabel.setEnabled(enable);
+      flatnessThresholdLabel.setEnabled(enable);
+      flatnessThresholdSpinner.setEnabled(enable);
       curveMinPointsLabel.setEnabled(enable);
       curveMinPointsSpinner.setEnabled(enable);
       curveStatPtLabel.setEnabled(enable);
@@ -4414,7 +4418,8 @@ class SmoothingPanel extends JPanel implements ChangeListener
       thresholdDiffSpinner.setEnabled(enable);
       maxDeviationSpinner.setEnabled(enable);
       deviationEpsilonSpinner.setEnabled(enable);
-      gradientAngleThresholdPanel.setEnabled(enable);
+      flatnessThresholdLabel.setEnabled(enable);
+      flatnessThresholdSpinner.setEnabled(enable);
       tinyStepThresholdLabel.setEnabled(enable);
       lengthThresholdLabel.setEnabled(enable);
       thresholdDiffLabel.setEnabled(enable);
@@ -4425,7 +4430,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
 
       enable = enable && tryBezierCheckBox.isSelected();
 
-      curveGradientThresholdLabel.setEnabled(enable);
+      flatnessThresholdLabel.setEnabled(enable);
       curveThresholdDiffSpinner.setEnabled(enable);
       curveThresholdDiffLabel.setEnabled(enable);
       curveMinPointsLabel.setEnabled(enable);
@@ -4460,7 +4465,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
          maxDeviationSpinnerModel.setValue(Double.valueOf(2.0));
          deviationEpsilonSpinnerModel.setValue(Double.valueOf(0.01));
 
-         gradientAngleThresholdPanel.setDegrees(2.0);
+         flatnessThresholdSpinnerModel.setValue(Double.valueOf(5.0));
          curveMinPointsSpinnerModel.setValue(Integer.valueOf(5));
          curveStationaryPtThresholdSpinnerModel.setValue(Double.valueOf(2.0));
 
@@ -4520,9 +4525,9 @@ class SmoothingPanel extends JPanel implements ChangeListener
       return deviationEpsilonSpinnerModel.getNumber().doubleValue();
    }
 
-   public double getCurveGradientThreshold()
+   public double getFlatnessThreshold()
    {
-      return gradientAngleThresholdPanel.getValue().toRadians();
+      return flatnessThresholdSpinnerModel.getNumber().doubleValue();
    }
 
    public double getCurveStationaryPtThreshold()
@@ -4571,17 +4576,16 @@ class SmoothingPanel extends JPanel implements ChangeListener
    }
 
    private JLabel tinyStepThresholdLabel, lengthThresholdLabel, thresholdDiffLabel,
-    curveGradientThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
+    flatnessThresholdLabel, curveMinPointsLabel, maxDeviationLabel,
     deviationEpsilonLabel, curveStatPtLabel, curveThresholdDiffLabel,
     alphaLabel, gammaLabel, rhoLabel, sigmaLabel, epsilonLabel, maxIterLabel;
-
-   private AnglePanel gradientAngleThresholdPanel;
 
    private SpinnerNumberModel  
      tinyStepThresholdSpinnerModel, lengthThresholdSpinnerModel,
      thresholdDiffSpinnerModel, maxDeviationSpinnerModel,
      deviationEpsilonSpinnerModel, curveStationaryPtThresholdSpinnerModel,
      curveMinPointsSpinnerModel, curveThresholdDiffSpinnerModel,
+     flatnessThresholdSpinnerModel,
 // Nelder-Mead Simplex
      alphaSpinnerModel, // reflection
      gammaSpinnerModel, // expansion
@@ -4594,6 +4598,7 @@ class SmoothingPanel extends JPanel implements ChangeListener
      thresholdDiffSpinner, lengthThresholdSpinner, tinyStepThresholdSpinner,
      maxDeviationSpinner, deviationEpsilonSpinner,
      curveStationaryPtThresholdSpinner, curveThresholdDiffSpinner,
+     flatnessThresholdSpinner,
      alphaSpinner, gammaSpinner, rhoSpinner, sigmaSpinner, epsilonSpinner,
      maxIterSpinner;
 
@@ -5136,9 +5141,9 @@ class ControlPanel extends JPanel implements ActionListener
       return smoothingPanel.getMaxDeviation();
    }
 
-   public double getCurveGradientThreshold()
+   public double getFlatnessThreshold()
    {
-      return smoothingPanel.getCurveGradientThreshold();
+      return smoothingPanel.getFlatnessThreshold();
    }
 
    public double getCurveStationaryPtThreshold()
@@ -14364,9 +14369,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
       // select the curve instead of the line.
       curveThresholdDiff = dialog.getCurveThresholdDiff();
 
-      // Don't choose curves where the angle between start and end gradient
-      // vectors is less than this value.
-      bezierGradientThreshold = dialog.getCurveGradientThreshold();
+      // Don't choose curves where the flatness is less than this value.
+      flatnessThreshold = dialog.getFlatnessThreshold();
 
       // Don't try fitting curves if the number of points is less
       // than this value.
@@ -15095,7 +15099,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
              getBestInitialCurves(vec, startIdx, endIdx, startIdx+diff, endIdx-diff,
              firstCurveResult, statIdx1, statPt1, statIdx2, statPt2);
 
-            if (bestInitialCurves[1] != null && bestInitialCurves[1].success())
+            if (bestInitialCurves[1] != null && bestInitialCurves[1].success()
+                && bestInitialCurves[1].getFlatness() > flatnessThreshold)
             {
                bestCurveResult = bestInitialCurves[1];
 
@@ -15117,7 +15122,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
             DeviationResult r = getCurveDeviation(vec, startIdx, j,
                statIdx1, statPt1, statIdx2, statPt2);
 
-            if (!r.success() || r.getAngle() < bezierGradientThreshold)
+            if (!r.success() || r.getFlatness() < flatnessThreshold)
             {
                // If a larger curve is too flat, there's unlikely to be a
                // shorter curve that isn't too flat.
@@ -15164,12 +15169,28 @@ class Smooth extends SwingWorker<Void,Rectangle>
             }
          }
 
+         if (bestCurveResult != null 
+             && bestCurveResult.getFlatness() <= flatnessThreshold)
+         {
+            if (bestCurveResult == firstCurveResult
+                 || firstCurveResult.getFlatness() <= flatnessThreshold)
+            {
+               bestCurveResult = null;
+            }
+            else
+            {
+               bestCurveResult = firstCurveResult;
+            }
+         }
+
          if (bestCurveResult != null)
          {
             dialog.addVerboseMessageLn(bestCurveResult.info());
 
-            if (bestStatPtCurveResult != null && bestStatPtCurveResult != bestCurveResult
-                 && bestStatPtCurveResult.success())
+            if (bestStatPtCurveResult != null
+                 && bestStatPtCurveResult != bestCurveResult
+                 && bestStatPtCurveResult.success()
+                 && bestStatPtCurveResult.getFlatness() > flatnessThreshold)
             {
                dialog.addVerboseMessageLn(bestStatPtCurveResult.info(
                  "vectorize.smoothing_curve_best_stat_pt"));
@@ -15244,6 +15265,14 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
             if (bestCurveResult.getDelta() < minDelta + curveThresholdDiff)
             {
+               if (dialog.isVerbose())
+               {
+                  dialog.addMessageLn(bestResult.info());
+                  dialog.addMessageLn(resources.getMessage(
+                   "vectorize.smoothing_le_offset", bestCurveResult.getDelta(),
+                     minDelta, curveThresholdDiff));
+               }
+               
                return bestCurveResult;
             }
          }
@@ -15255,6 +15284,19 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          if (minDelta < minSubThresholdDelta+thresholdDiff)
          {
+            if (dialog.isVerbose())
+            {
+               dialog.addMessageLn(bestResult.info());
+
+               dialog.addMessageIdLn("vectorize.smoothing_reason_and",
+                  resources.getMessage("vectorize.smoothing_le",
+                    bestSubThresholdResult.getEstimatedLength(),
+                     lengthThreshold),
+                  resources.getMessage("vectorize.smoothing_le_offset",
+                  minDelta, minSubThresholdDelta, thresholdDiff)
+               );
+            }
+
             return bestResult;
          }
          else
@@ -15296,7 +15338,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
       JDRResources resources = dialog.getResources();
 
-      if (result0.getAngle() < bezierGradientThreshold)
+      if (result0.getFlatness() <= flatnessThreshold)
       {
          // If a larger curve is too flat, there's unlikely to be a
          // shorter curve that isn't too flat.
@@ -15304,8 +15346,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
          if (dialog.isVerbose())
          {
             dialog.addMessageIdLn("vectorize.smoothing_too_flat",
-             resources.getMessage("vectorize.smoothing_le", 
-               result0.getAngle(), bezierGradientThreshold));
+             resources.getMessage("vectorize.smoothing_leq", 
+               result0.getFlatness(), flatnessThreshold));
          }
 
          return bestResult;
@@ -15315,7 +15357,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
         vec, startIdx, midIdx1,
         statIdx1, statPt1, statIdx2, statPt2);
 
-      if (!result1.success())
+      if (!result1.success() || result1.getFlatness() <= flatnessThreshold)
       {
          int diff = midIdx2-midIdx1;
 
@@ -15339,11 +15381,20 @@ class Smooth extends SwingWorker<Void,Rectangle>
       dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sample_path",
         1, result1.info(null));
 
+      if (result1.getFlatness() <= flatnessThreshold)
+      {
+         dialog.addMessageIdLn("vectorize.smoothing_too_flat",
+          resources.getMessage("vectorize.smoothing_leq", 
+            result1.getFlatness(), flatnessThreshold));
+
+         return bestResult;
+      }
+
       DeviationResult result2 = getCurveDeviation(
         vec, startIdx, midIdx2,
         statIdx1, statPt1, statIdx2, statPt2);
 
-      if (!result2.success())
+      if (!result2.success() || result2.getFlatness() <= flatnessThreshold)
       {
          int diff = endIdx-midIdx2;
 
@@ -15366,6 +15417,15 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
       dialog.addVerboseMessageIdLn("vectorize.smoothing_curve_sample_path",
         2, result2.info(null));
+
+      if (result2.getFlatness() <= flatnessThreshold)
+      {
+         dialog.addMessageIdLn("vectorize.smoothing_too_flat",
+          resources.getMessage("vectorize.smoothing_leq", 
+            result2.getFlatness(), flatnessThreshold));
+
+         return bestResult;
+      }
 
       int compare01 = result0.compareTo(result1);
       int compare02 = result0.compareTo(result2);
@@ -15427,7 +15487,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
          }
       }
 
-      if (result1.success() && compare12 <= 0 && compare01 >= 0)
+      if (compare12 <= 0 && compare01 >= 0)
       {// result1 better than result2 and result0 but there may be a better result 
        // between result1 and result2
 
@@ -15451,6 +15511,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          DeviationResult r = getCurveDeviation(vec, startIdx, mid,
            statIdx1, statPt1, statIdx2, statPt2);
+
+         // if result1 isn't too flat, r also shouldn't be too flat
 
          dialog.addVerboseMessageIdLn(
            "vectorize.smoothing_curve_sample_path",
@@ -15480,7 +15542,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
          return bestResult;
       }
 
-      if (result2.success() && compare02 >= 0)
+      if (compare02 >= 0)
       {// result2 better than result0
          bestResult[0] = result2;
 
@@ -15501,6 +15563,9 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
          DeviationResult r = getCurveDeviation(vec, startIdx, mid,
            statIdx1, statPt1, statIdx2, statPt2);
+
+         // if result2 isn't too flat then r also shouldn't be too
+         // flat
 
          if (statPt1 != null && r.hasStationaryPointDeviations()
           && r.getDelta() <= maxDeviation
@@ -15585,8 +15650,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
     maxDeviation=2.0, deviationEpsilon=0.01;
    private boolean tryBezier=true, curveSampling=true;
    private int minBezierSamples = 5;
-   private double bezierGradientThreshold=0.1, curveStatPtThreshold=2.0,
-     curveThresholdDiff;
+   private double curveStatPtThreshold=2.0,
+     curveThresholdDiff, flatnessThreshold;
 
    private HashMap<String,DeviationResult> curveDeviations = null;
    private int progress, maxProgress;
@@ -15975,7 +16040,7 @@ class DeviationResult implements Comparable<DeviationResult>
       quadPath.closePath();
       quadLength += JDRLine.getLength(pts[pts.length-1], pts[0]);
 
-      double quadDelta = computeDelta(quadPath);
+      double quadDelta = computeWeightedDelta(quadPath);
 
       p1 = pts[0];
       p2 = pts[3];
@@ -16004,7 +16069,7 @@ class DeviationResult implements Comparable<DeviationResult>
             }
          }
 
-         double delta2 = computeDelta(shape);
+         double delta2 = computeWeightedDelta(shape);
 
          if (delta2 < quadDelta)
          {
@@ -16045,7 +16110,7 @@ class DeviationResult implements Comparable<DeviationResult>
       result.length = Point2D.distance(startPt.getX(), startPt.getY(),
          endPt.getX(), endPt.getY());
 
-      result.delta = result.computeDelta(result.shape);
+      result.delta = result.computeWeightedDelta(result.shape);
 
       return result;
    }
@@ -16117,8 +16182,6 @@ class DeviationResult implements Comparable<DeviationResult>
          3*(p2.getX() - curve.getCtrlX2()),
          3*(p2.getY() - curve.getCtrlY2())
       );
-
-      angle = JDRLine.getVectorAngle(dp1.getX(), dp1.getY(), dp2.getX(), dp2.getY());
 
       flatness = curve.getFlatness();
 
@@ -16294,7 +16357,17 @@ class DeviationResult implements Comparable<DeviationResult>
 
       dialog.setCurveFitProgress(maxIter, samples[0]);
 
-      delta = samples[0].getDelta()/(endIdx-startIdx+1);
+      delta = computeWeightedDelta(samples[0].getDelta());
+   }
+
+   private double computeWeightedDelta(double d)
+   {
+      return d/(endIdx-startIdx+1);
+   }
+
+   public double computeWeightedDelta(Shape trialShape)
+   {
+      return computeWeightedDelta(computeDelta(trialShape));
    }
 
    public double computeDelta(Shape trialShape)
@@ -16308,11 +16381,6 @@ class DeviationResult implements Comparable<DeviationResult>
    public int getIteration()
    {
       return iter;
-   }
-
-   public double getAngle()
-   {
-      return angle;
    }
 
    public double getFlatness()
@@ -16389,9 +16457,9 @@ class DeviationResult implements Comparable<DeviationResult>
          shapeInfo = String.format("shape: %s", ShapeComponentVector.svg(shape));
       }
 
-      return String.format("approximate length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), %s, angle: %f radians, flatness: %f, delta: %f", 
+      return String.format("approximate length: %f, index range: [%d, %d], p1: (%f,%f), p2: (%f,%f), %s, flatness: %f, delta: %f", 
         length, startIdx, endIdx,
-        p1.getX(), p1.getY(), p2.getX(), p2.getY(), shapeInfo, angle, flatness, delta);
+        p1.getX(), p1.getY(), p2.getX(), p2.getY(), shapeInfo, flatness, delta);
    }
 
    public String pathInfo()
@@ -16438,10 +16506,6 @@ class DeviationResult implements Comparable<DeviationResult>
          builder.append(
            resources.getMessage("vectorize.smoothing_curve_fit_iter", iter));
       }
-
-      builder.append(' ');
-      builder.append(resources.getMessage(
-           "vectorize.smoothing_angle", angle, Math.toDegrees(angle)));
 
       builder.append(' ');
       builder.append(resources.getMessage(
@@ -16527,15 +16591,15 @@ class DeviationResult implements Comparable<DeviationResult>
 
       if (shape instanceof CubicCurve2D)
       {
-         double bezierGradientThreshold = dialog.getCurveGradientThreshold();
+         double flatnessThreshold = dialog.getFlatnessThreshold();
 
-         if (getAngle() < bezierGradientThreshold
-          && other.getAngle() >= bezierGradientThreshold)
+         if (getFlatness() < flatnessThreshold
+          && other.getFlatness() >= flatnessThreshold)
          {
             return 1;
          }
-         else if (other.getAngle() < bezierGradientThreshold
-          && getAngle() >= bezierGradientThreshold)
+         else if (other.getFlatness() < flatnessThreshold
+          && getFlatness() >= flatnessThreshold)
          {
             return -1;
          }
@@ -16666,7 +16730,7 @@ class DeviationResult implements Comparable<DeviationResult>
 
    private double delta=Double.MAX_VALUE;
    private Point2D p1, p2;
-   private double length=0.0, angle=0.0, originalLength, flatness=0.0;
+   private double length=0.0, originalLength, flatness=0.0;
    private int startIdx, endIdx, iter=-1, numPoints;
    private Shape shape;
    private Area originalArea;

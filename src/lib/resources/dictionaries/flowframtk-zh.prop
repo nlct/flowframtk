@@ -2778,13 +2778,19 @@
 <!--  vectorizing bitmap -->
 <entry key="vectorize.title">Vectorize bitmap</entry>
 <entry key="vectorize.results">Results</entry>
+<entry key="vectorize.results.mnemonic">R</entry>
 <entry key="vectorize.results.info">Pin desired paths to retain them if you need to scan a new area or color.</entry>
 <entry key="vectorize.results.link">Link zoom</entry>
 <entry key="vectorize.summary">Summary</entry>
+<entry key="vectorize.summary.mnemonic">S</entry>
 <entry key="vectorize.messages">ÏûϢ</entry>
+<entry key="vectorize.messages.mnemonic">M</entry>
 <entry key="vectorize.controls">Controls</entry>
+<entry key="vectorize.controls.mnemonic">T</entry>
 <entry key="vectorize.history">History</entry>
+<entry key="vectorize.history.mnemonic">Y</entry>
 <entry key="vectorize.verbose">Verbose</entry>
+<entry key="vectorize.verbose.mnemonic">V</entry>
 <entry key="vectorize.verbose.tooltip">Change verbose mode for future messages.</entry>
 <entry key="vectorize.copy_messages">Copy Messages</entry>
 <entry key="vectorize.copy_messages.tooltip">Copy selected text or all text, if none selected.</entry>
@@ -2888,9 +2894,8 @@
 <entry key="vectorize.smooth_shapes.try_bezier">Try Bézier curves</entry>
 <entry key="vectorize.smooth_shapes.sampling">Curve Sampling</entry>
 <entry key="vectorize.smooth_shapes.sampling.tooltip">If set, curve fitting will be faster but less likely to find the best match</entry>
-<entry key="vectorize.smooth_shapes.curve_gradient_threshold">Gradient Angle Threshold:</entry>
-<entry key="vectorize.smooth_shapes.curve_gradient_threshold.mnemonic">G</entry>
-<entry key="vectorize.smooth_shapes.curve_gradient_threshold.tooltip">Minimum angle between gradient vectors</entry>
+<entry key="vectorize.smooth_shapes.flatness_threshold">Flatness Threshold:</entry>
+<entry key="vectorize.smooth_shapes.flatness_threshold.tooltip">Don't choose curves that are too flat.</entry>
 <entry key="vectorize.smooth_shapes.curve_threshold_diff">Threshold Diff:</entry>
 <entry key="vectorize.smooth_shapes.curve_threshold_diff.tooltip">Choose curve if the difference between best curve and best line is less than this.</entry>
 <entry key="vectorize.smooth_shapes.min_points">Minimum points:</entry>
@@ -2994,6 +2999,7 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_le">{0} &lt; {1}</entry>
 <entry key="vectorize.smoothing_leq">{0} &#x2264; {1}</entry>
 <entry key="vectorize.smoothing_leq_offset">{0} &#x2264; {1} + {2}</entry>
+<entry key="vectorize.smoothing_le_offset">{0} &lt; {1} + {2}</entry>
 <entry key="vectorize.smoothing_reason_and">{0} and {1}</entry>
 <entry key="vectorize.smoothing_remaining_length">Estimated length from ({0},{1}) -- ({2},{3}): {4}</entry>
 <entry key="vectorize.smoothing_curve_sampling_start">Curve sampling on: finding best starting point.</entry>
@@ -3008,7 +3014,6 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_result_info">{0}. Length: {1}. Delta: {2}.</entry> 
 <entry key="vectorize.smoothing_stat_pt">Deviation from stationary point: P({0})=({1},{2}) to ({3},{4}) = {5}.</entry>
 <entry key="vectorize.smoothing_no_stat_pt">No stationary points in range.</entry>
-<entry key="vectorize.smoothing_angle">Angle between gradient vectors: {0} rad ({1} degrees).</entry> 
 <entry key="vectorize.smoothing_flatness">Flatness: {0}.</entry>
 <entry key="vectorize.smoothing_replacing_path">Replacing path with {0}.</entry> 
 <entry key="vectorize.smoothing_replacing">Replacing sub-path from {0} to {1} with {2}.</entry> 
