@@ -1240,10 +1240,6 @@ public class VectorizeBitmapDialog extends JFrame
       {
          scanImage(continueToNextStep);
       }
-      else if (controlPanel.isOptimizeOn())
-      {
-         doOptimize(continueToNextStep);
-      }
       else if (controlPanel.isSplitSubPathsOn())
       {
          doSplitSubPaths(continueToNextStep);
@@ -1255,6 +1251,10 @@ public class VectorizeBitmapDialog extends JFrame
       else if (controlPanel.isMergeNearPathsOn())
       {
          doMergeNearPaths(continueToNextStep);
+      }
+      else if (controlPanel.isOptimizeOn())
+      {
+         doOptimize(continueToNextStep);
       }
       else if (controlPanel.isSmoothingOn())
       {
@@ -1365,63 +1365,6 @@ public class VectorizeBitmapDialog extends JFrame
          return;
       }
 
-      if (controlPanel.isOptimizeOn())
-      {
-         doOptimize(continueToNextStep);
-      }
-      else if (controlPanel.isSplitSubPathsOn())
-      {
-         doSplitSubPaths(continueToNextStep);
-      }
-      else if (controlPanel.isLineDetectionOn())
-      {
-         doLineDetection(continueToNextStep);
-      }
-      else if (controlPanel.isMergeNearPathsOn())
-      {
-         doMergeNearPaths(continueToNextStep);
-      }
-      else if (controlPanel.isSmoothingOn())
-      {
-         doSmoothing(continueToNextStep);
-      }
-      else if (controlPanel.isRemoveTinyPathsOn())
-      {
-         doRemoveTinyPaths(continueToNextStep);
-      }
-      else
-      {
-         finishedTask();
-      }
-   }
-
-   public void doOptimize(boolean continueToNextStep)
-   {
-      startTask(getResources().getString("vectorize.optimizing_lines"), 
-        new OptimizeLines(this, shapeList, continueToNextStep)); 
-   }
-
-   public void finishedOptimizeLines(Vector<ShapeComponentVector> shapes,
-      boolean continueToNextStep)
-   {
-      addUndoableEdit(shapes, 
-         getResources().getString("vectorize.optimize_lines"));
-
-      if (shapes == null || shapes.isEmpty())
-      {
-         finishedTask();
-         error(getResources().getString("vectorize.no_shapes"));
-         return;
-      }
-
-      controlPanel.deselectOptimizeLines();
-
-      if (!continueToNextStep)
-      {
-         finishedTask();
-         return;
-      }
-
       if (controlPanel.isSplitSubPathsOn())
       {
          doSplitSubPaths(continueToNextStep);
@@ -1433,6 +1376,10 @@ public class VectorizeBitmapDialog extends JFrame
       else if (controlPanel.isMergeNearPathsOn())
       {
          doMergeNearPaths(continueToNextStep);
+      }
+      else if (controlPanel.isOptimizeOn())
+      {
+         doOptimize(continueToNextStep);
       }
       else if (controlPanel.isSmoothingOn())
       {
@@ -1483,6 +1430,10 @@ public class VectorizeBitmapDialog extends JFrame
       {
          doMergeNearPaths(continueToNextStep);
       }
+      else if (controlPanel.isOptimizeOn())
+      {
+         doOptimize(continueToNextStep);
+      }
       else if (controlPanel.isSmoothingOn())
       {
          doSmoothing(continueToNextStep);
@@ -1528,6 +1479,10 @@ public class VectorizeBitmapDialog extends JFrame
       {
          doMergeNearPaths(continueToNextStep);
       }
+      else if (controlPanel.isOptimizeOn())
+      {
+         doOptimize(continueToNextStep);
+      }
       else if (controlPanel.isSmoothingOn())
       {
          doSmoothing(continueToNextStep);
@@ -1562,6 +1517,51 @@ public class VectorizeBitmapDialog extends JFrame
       }
 
       controlPanel.deselectMergeNearPaths();
+
+      if (!continueToNextStep)
+      {
+         finishedTask();
+         return;
+      }
+
+      if (controlPanel.isOptimizeOn())
+      {
+         doOptimize(continueToNextStep);
+      }
+      else if (controlPanel.isSmoothingOn())
+      {
+         doSmoothing(continueToNextStep);
+      }
+      else if (controlPanel.isRemoveTinyPathsOn())
+      {
+         doRemoveTinyPaths(continueToNextStep);
+      }
+      else
+      {
+         finishedTask();
+      }
+   }
+
+   public void doOptimize(boolean continueToNextStep)
+   {
+      startTask(getResources().getString("vectorize.optimizing_lines"), 
+        new OptimizeLines(this, shapeList, continueToNextStep)); 
+   }
+
+   public void finishedOptimizeLines(Vector<ShapeComponentVector> shapes,
+      boolean continueToNextStep)
+   {
+      addUndoableEdit(shapes, 
+         getResources().getString("vectorize.optimize_lines"));
+
+      if (shapes == null || shapes.isEmpty())
+      {
+         finishedTask();
+         error(getResources().getString("vectorize.no_shapes"));
+         return;
+      }
+
+      controlPanel.deselectOptimizeLines();
 
       if (!continueToNextStep)
       {
@@ -1934,6 +1934,11 @@ public class VectorizeBitmapDialog extends JFrame
    public double getSpikeReturnDistance()
    {
       return controlPanel.getSpikeReturnDistance();
+   }
+
+   public double getWedgeThreshold()
+   {
+      return controlPanel.getWedgeThreshold();
    }
 
    public double getMinimumStubLength()
@@ -3658,6 +3663,20 @@ class LineDetectionPanel extends ControlSubPanel
 
       subPanel = newRow();
 
+      wedgeThresholdSpinnerModel
+          = new SpinnerNumberModel(Double.valueOf(1.0), Double.valueOf(0.0), null, 
+              Double.valueOf(1.0));
+
+      wedgeThresholdLabel = resources.createAppLabel(
+         "vectorize.wedge_threshold");
+      subPanel.add(wedgeThresholdLabel);
+
+      wedgeThresholdSpinner = createSpinner(
+         wedgeThresholdLabel, wedgeThresholdSpinnerModel);
+      subPanel.add(wedgeThresholdSpinner);
+
+      subPanel = newRow();
+
       spikeReturnDistanceSpinnerModel = new SpinnerNumberModel(4.0, 1.0, 20.0, 0.5);
 
       spikeReturnDistanceLabel = resources.createAppLabel(
@@ -3758,6 +3777,9 @@ class LineDetectionPanel extends ControlSubPanel
          deltaVarianceThresholdSpinner.setEnabled(enable);
          deltaVarianceThresholdLabel.setEnabled(enable);
 
+         wedgeThresholdSpinner.setEnabled(enable);
+         wedgeThresholdLabel.setEnabled(enable);
+
          spikeReturnDistanceSpinner.setEnabled(enable);
          spikeReturnDistanceLabel.setEnabled(enable);
 
@@ -3776,6 +3798,9 @@ class LineDetectionPanel extends ControlSubPanel
 
          deltaVarianceThresholdSpinner.setEnabled(enable);
          deltaVarianceThresholdLabel.setEnabled(enable);
+
+         wedgeThresholdSpinner.setEnabled(enable);
+         wedgeThresholdLabel.setEnabled(enable);
 
          spikeReturnDistanceSpinner.setEnabled(enable);
          spikeReturnDistanceLabel.setEnabled(enable);
@@ -3880,6 +3905,9 @@ class LineDetectionPanel extends ControlSubPanel
       deltaVarianceThresholdSpinner.setEnabled(enable);
       deltaVarianceThresholdLabel.setEnabled(enable);
 
+      wedgeThresholdSpinner.setEnabled(enable);
+      wedgeThresholdLabel.setEnabled(enable);
+
       spikeReturnDistanceSpinner.setEnabled(enable);
       spikeReturnDistanceLabel.setEnabled(enable);
 
@@ -3933,6 +3961,7 @@ class LineDetectionPanel extends ControlSubPanel
          }
 
          deltaVarianceThresholdSpinnerModel.setValue(Double.valueOf(1.0));
+         wedgeThresholdSpinnerModel.setValue(Double.valueOf(1.0));
          spikeReturnDistanceSpinnerModel.setValue(Double.valueOf(4.0));
          minStubLengthSpinnerModel.setValue(Double.valueOf(2.0));
          tinyStepThresholdSpinnerModel.setValue(Double.valueOf(3.5));
@@ -4004,6 +4033,11 @@ class LineDetectionPanel extends ControlSubPanel
       return spikeReturnDistanceSpinnerModel.getNumber().doubleValue();
    }
 
+   public double getWedgeThreshold()
+   {
+      return wedgeThresholdSpinnerModel.getNumber().doubleValue();
+   }
+
    public double getMinimumStubLength()
    {
       return minStubLengthSpinnerModel.getNumber().doubleValue();
@@ -4030,11 +4064,12 @@ class LineDetectionPanel extends ControlSubPanel
     mergeSpikeLengthThresholdLabel, mergeSpikeNeighbourThresholdLabel,
     midDiffWeightLabel, inclinationDiffWeightLabel,
     averageLengthWeightLabel, angleDiffWeightLabel,
-    inverseDistanceWeightLabel;
+    inverseDistanceWeightLabel,
+    wedgeThresholdLabel;
 
    private SpinnerNumberModel deltaThresholdSpinnerModel,
       deltaVarianceThresholdSpinnerModel, tinyStepThresholdSpinnerModel,
-      spikeReturnDistanceSpinnerModel,
+      spikeReturnDistanceSpinnerModel, wedgeThresholdSpinnerModel,
       minStubLengthSpinnerModel,
       fixedLineWidthSpinnerModel, 
       mergeSpikeLengthThresholdSpinnerModel, 
@@ -4051,7 +4086,8 @@ class LineDetectionPanel extends ControlSubPanel
     mergeSpikeLengthThresholdSpinner, mergeSpikeNeighbourThresholdSpinner,
     midDiffWeightSpinner, inclinationDiffWeightSpinner,
     averageLengthWeightSpinner, angleDiffWeightSpinner,
-    inverseDistanceWeightSpinner;
+    inverseDistanceWeightSpinner, 
+    wedgeThresholdSpinner;
 
    private JCheckBox doLineDetectionCheckBox, detectIntersections,
     roundRelativeLineWidthCheckBox;
@@ -4757,9 +4793,6 @@ class ControlPanel extends JPanel implements ActionListener
       scanImagePanel = new ScanImagePanel(this);
       mainPanel.add(scanImagePanel);
 
-      optimizeLinesPanel = new OptimizeLinesPanel(this);
-      mainPanel.add(optimizeLinesPanel);
-
       splitSubPathsPanel = new SplitSubPathsPanel(this);
       mainPanel.add(splitSubPathsPanel);
 
@@ -4768,6 +4801,9 @@ class ControlPanel extends JPanel implements ActionListener
 
       mergeNearPathsPanel = new MergeNearPathsPanel(this);
       mainPanel.add(mergeNearPathsPanel);
+
+      optimizeLinesPanel = new OptimizeLinesPanel(this);
+      mainPanel.add(optimizeLinesPanel);
 
       smoothingPanel = new SmoothingPanel(this);
       mainPanel.add(smoothingPanel);
@@ -5145,6 +5181,11 @@ class ControlPanel extends JPanel implements ActionListener
       return lineDetectionPanel.getSpikeReturnDistance();
    }
 
+   public double getWedgeThreshold()
+   {
+      return lineDetectionPanel.getWedgeThreshold();
+   }
+
    public double getMinimumStubLength()
    {
       return lineDetectionPanel.getMinimumStubLength();
@@ -5465,7 +5506,7 @@ class SubTaskStatus extends JPanel
    private JTextField textField;
 }
 
-class ShapeComponentVector extends Vector<ShapeComponent>
+class ShapeComponentVector extends Vector<ShapeComponent> implements JDRConstants
 {
    public ShapeComponentVector()
    {
@@ -6351,8 +6392,6 @@ class ShapeComponentVector extends Vector<ShapeComponent>
    private int windingRule = Path2D.WIND_NON_ZERO;
    private boolean isFilled = true;
    private double lineWidth=1.0;
-
-   public static final double EPSILON=1e-6;
 }
 
 class ShapeComponent
@@ -6642,14 +6681,26 @@ class ShapeComponent
       {
          case PathIterator.SEG_MOVETO:
          case PathIterator.SEG_LINETO:
+            if (coords == null || coords.length < 2)
+            {
+               coords = new double[2];
+            }
             coords[0] = x;
             coords[1] = y;
          return;
          case PathIterator.SEG_QUADTO:
+            if (coords == null || coords.length < 4)
+            {
+               coords = new double[4];
+            }
             coords[2] = x;
             coords[3] = y;
          return;
          case PathIterator.SEG_CUBICTO:
+            if (coords == null || coords.length < 6)
+            {
+               coords = new double[6];
+            }
             coords[4] = x;
             coords[5] = y;
          return;
@@ -7114,8 +7165,8 @@ class ScanImage extends SwingWorker<Void,Raster>
          return;
       }
 
-      dialog.addMessageIdLn(
-        "vectorize.message.sample_intersects_region",
+      dialog.addVerboseMessageIdLn(
+        "vectorize.message.scan_image.sample_intersects_region",
         x, y, rectWidth, rectHeight);
 
       int x1 = x+halfRectWidth;
@@ -7256,11 +7307,11 @@ class ScanImage extends SwingWorker<Void,Raster>
       else
       {
          Rectangle2D bounds = area.getBounds2D();
-         dialog.addMessageIdLn("vectorize.message.scan_image_results",
+         dialog.addMessageIdLn("vectorize.message.scan_image.results",
           bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 
          dialog.addMessageLn(dialog.getResources().applyMessagePattern(
-          "vectorize.message.contains_subpaths",
+          "vectorize.message.scan_image.contains_subpaths",
           area.isSingular() ? 1 : 0));
 
          Vector<ShapeComponentVector> shapeList
@@ -8545,7 +8596,7 @@ class MergeNearPaths extends SwingWorker<Void,Rectangle>
    private boolean continueToNextStep;
 }
 
-class LineDetection extends SwingWorker<Void,Rectangle>
+class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
 {
    public LineDetection(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapeList,
      boolean continueToNextStep)
@@ -8696,14 +8747,15 @@ class LineDetection extends SwingWorker<Void,Rectangle>
    private void tryLineify(ShapeComponentVector vec)
      throws InterruptedException
    {
-      int startIdx = 0;
       int n = vec.size();
 
       if (n < 4)
       {
-         addShape(vec, "vectorize.message.insufficient_to_vectorize", n);
+         addShape(vec, "vectorize.message.line_detection.insufficient_n", n);
          return;
       }
+
+      int startIdx = 0;
 
       Vector<SubPath> subPaths = new Vector<SubPath>();
 
@@ -8711,10 +8763,16 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       {
          ShapeComponent comp = vec.get(j);
 
-         if (comp.getType() == PathIterator.SEG_CLOSE)
+         switch (comp.getType())
          {
-            subPaths.add(new SubPath(vec, startIdx, j));
-            startIdx = j+1;
+            case PathIterator.SEG_CLOSE :
+               subPaths.add(new SubPath(vec, startIdx, j));
+               startIdx = j+1;
+            break;
+            case PathIterator.SEG_CUBICTO :
+            case PathIterator.SEG_QUADTO :
+               addShape(vec, "vectorize.message.line_detection.curves_found");
+               return;
          }
       }
 
@@ -8753,7 +8811,8 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          SubPath sp1 = subPaths.get(i);
          Shape shape1 = sp1.getShape();
          shapes[i] = shape1;
-         dialog.addMessageIdLn("vectorize.message.sub_path", (i+1), sp1.getSpecs());
+         dialog.addVerboseMessageIdLn("vectorize.message.line_detection.sub_path",
+            (i+1), sp1.getSpecs());
 
          for (int j = 0; j < i; j++)
          {
@@ -8770,7 +8829,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             {
                if (inner.contains(sp1))
                {
-                  addShape(vec, "vectorize.message.inner_contains",
+                  addShape(vec, "vectorize.message.line_detection.inner_contains",
                      (i+1));
                   return;
                }
@@ -8779,20 +8838,22 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                {
                   outer = sp1;
                   outerIdx = i;
-                  dialog.addMessageIdLn("vectorize.message.outer_sub_path", (i+1));
+                  dialog.addVerboseMessageIdLn(
+                   "vectorize.message.line_detection.outer_sub_path", (i+1));
                }
 
                if (outer == sp1)
                {
                   inner.add(sp2);
-                  dialog.addMessageIdLn("vectorize.message.inner_sub_path", (j+1));
+                  dialog.addVerboseMessageIdLn(
+                   "vectorize.message.line_detection.inner_sub_path", (j+1));
                }
             }
             else if (shape2.contains(pt1))
             {
                if (inner.contains(sp2))
                {
-                  addShape(vec, "vectorize.message.inner_contains",
+                  addShape(vec, "vectorize.message.line_detection.inner_contains",
                      (j+1));
                   return;
                }
@@ -8801,18 +8862,21 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                {
                   outer = sp2;
                   outerIdx = j;
-                  dialog.addMessageIdLn("vectorize.message.outer_sub_path", (j+1));
+                  dialog.addVerboseMessageIdLn(
+                     "vectorize.message.line_detection.outer_sub_path", (j+1));
                }
 
                if (outer == sp2)
                {
                   inner.add(sp1);
-                  dialog.addMessageIdLn("vectorize.message.inner_sub_path", (i+1));
+                  dialog.addVerboseMessageIdLn(
+                    "vectorize.message.line_detection.inner_sub_path", (i+1));
                }
             }
             else
             {
-               dialog.addMessageIdLn("vectorize.message.sub_paths_dont_contain",
+               dialog.addVerboseMessageIdLn(
+                 "vectorize.message.line_detection.sub_paths_dont_contain",
                  (i+1), pt2.getX(), pt2.getY(), (j+1), pt1.getX(), pt1.getY());
             }
          }
@@ -8820,7 +8884,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
       if (outer == null || inner.isEmpty())
       {
-         addShape(vec, "vectorize.message.no_outer_inner");
+         addShape(vec, "vectorize.message.line_detection.no_outer_inner");
          return;
       }
 
@@ -8830,14 +8894,15 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
          if (!(outer == sp || inner.contains(sp)))
          {
-            addShape(vec, "vectorize.message.not_inner_outer", (i+1));
+            addShape(vec, "vectorize.message.line_detection.not_inner_outer", (i+1));
             return;
          }
       }
 
       if (inner.size() == 1)
       {
-         dialog.addMessageIdLn("vectorize.message.possible_loop");
+         dialog.addVerboseMessageIdLn(
+           "vectorize.message.line_detection.possible_loop");
 
          if (!tryLineifyLoop(outer, inner.firstElement()))
          {
@@ -8847,11 +8912,10 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          return;
       }
 
-      dialog.addMessageIdLn("vectorize.message.multi_inner");
+      dialog.addVerboseMessageIdLn("vectorize.message.line_detection.multi_inner");
 
       Vector<ShapeComponentVector> shapeVecs = new Vector<ShapeComponentVector>(n);
       boolean modified = false;
-      double gradientEpsilon = dialog.getGradientEpsilon();
 
       for (int i = 0; i < inner.size(); i++)
       {
@@ -9066,7 +9130,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                         double theta1 = Math.atan2(dp1.getY(), dp1.getX());
                         double theta2 = Math.atan2(dp2.getY(), dp2.getX());
 
-                        if (Math.abs(theta1-theta2) < gradientEpsilon)
+                        if (Math.abs(theta1-theta2) < EPSILON)
                         {
                            prevComp.setEndPoint(endPt);
                         }
@@ -9097,7 +9161,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                               double theta1 = Math.atan2(dp1.getY(), dp1.getX());
                               double theta2 = Math.atan2(dp2.getY(), dp2.getX());
 
-                              if (Math.abs(theta1-theta2) < gradientEpsilon)
+                              if (Math.abs(theta1-theta2) < EPSILON)
                               {
                                  prevComp.setEndPoint(endPt);
                               }
@@ -9158,7 +9222,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                         double theta1 = Math.atan2(dp1.getY(), dp1.getX());
                         double theta2 = Math.atan2(dp2.getY(), dp2.getX());
 
-                        if (Math.abs(theta1-theta2) < gradientEpsilon)
+                        if (Math.abs(theta1-theta2) < EPSILON)
                         {
                            prevComp.setEndPoint(endPt);
                         }
@@ -9187,7 +9251,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                            double theta1 = Math.atan2(dp1.getY(), dp1.getX());
                            double theta2 = Math.atan2(dp2.getY(), dp2.getX());
 
-                           if (Math.abs(theta1-theta2) < gradientEpsilon)
+                           if (Math.abs(theta1-theta2) < EPSILON)
                            {
                               prevComp.setEndPoint(endPt);
                            }
@@ -9249,6 +9313,48 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       else
       {
          addShape(vec);
+      }
+   }
+
+   // Redundant segments as they can interfere with
+   // finding spikes and can also interfere with line fitting
+   // if they aren't evenly spaced. Removal should
+   // obviously be done before inserting a new set of points to
+   // (more evenly) break up long segments.
+   private void reduceSegments(ShapeComponentVector vec)
+   {
+      Point2D p0 = vec.firstElement().getEnd();
+
+      for (int i = vec.size()-1; i > 1; i--)
+      {
+         ShapeComponent comp = vec.get(i);
+         ShapeComponent comp2 = vec.get(i-1);
+         Point2D dp = null;
+
+         if (comp.getType() == PathIterator.SEG_CLOSE)
+         {
+            Point2D p = comp2.getEnd();
+            dp = JDRLine.getGradient(p, p0);
+         }
+         else if (comp.getType() == PathIterator.SEG_LINETO)
+         {
+            dp = comp.getStartGradient();
+         }
+         else
+         {
+            continue;
+         }
+
+         Point2D dp2 = comp2.getStartGradient();
+
+         if (Math.abs(JDRLine.getVectorAngle(dp, dp2)) > EPSILON)
+         {
+            continue;
+         }
+
+         comp.setStart(comp2.getStart());
+         vec.remove(i-1);
+         i++;
       }
    }
 
@@ -9450,6 +9556,46 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       return builder.toString();
    }
 
+   private Vector<Integer> findCornerIndexes(Vector<Point2D> pts)
+   {
+      double bendLengthThreshold = 2.0*deltaThreshold;
+
+      Vector<Integer> cornerIdx = null;
+
+      for (int i = 0, n = pts.size()-2; i < n; i++)
+      {
+         Point2D p1 = pts.get(i);
+         Point2D p2 = pts.get(i+1);
+         Point2D p3 = pts.get(i+2);
+
+         double len1 = JDRLine.getLength(p1, p2);
+
+         if (len1 < bendLengthThreshold) continue;
+
+         double len2 = JDRLine.getLength(p2, p3);
+
+         if (len2 < bendLengthThreshold) continue;
+
+         Point2D dp1 = JDRLine.getGradient(p1, p2);
+         Point2D dp2 = JDRLine.getGradient(p2, p3);
+         double angle = JDRLine.getVectorAngle(dp1, dp2);
+
+         if (Math.abs(angle-HALF_PI) > EPSILON)
+         {
+            continue;
+         }
+
+         if (cornerIdx == null)
+         {
+            cornerIdx = new Vector<Integer>();
+         }
+
+         cornerIdx.add(Integer.valueOf(i+1));
+      }
+
+      return cornerIdx;
+   }
+
    private boolean tryLineify(Vector<Point2D> pts1, Vector<Point2D> pts2)
     throws InterruptedException
    {
@@ -9458,18 +9604,94 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       int n1 = pts1.size();
       int n2 = pts2.size();
 
-      if (n1 != n2)
+      Vector<Integer> cornerIdx1 = findCornerIndexes(pts1);
+      Vector<Integer> cornerIdx2 = findCornerIndexes(pts2);
+
+      if (cornerIdx1 != null && cornerIdx2 != null)
       {
-         dialog.addMessageIdLn("vectorize.border_unequal_points",
-           n1, n2);
-         addBorderPoints(pts1, pts2);
+         double sqThreshold = 8.0*deltaThreshold*deltaThreshold;
+
+         for (int i = cornerIdx1.size()-1, k = cornerIdx2.size(); i >= 0; i--)
+         {
+            int idx1 = cornerIdx1.get(i);
+
+            Point2D p1 = pts1.get(idx1);
+            double minDist = Double.MAX_VALUE;
+            Point2D p2 = null;
+
+            for (int j = k-1; j >= 0; j--)
+            {
+               Point2D p = pts2.get(cornerIdx2.get(j));
+
+               double len = JDRLine.getSquareLength(p1, p);
+
+               if (len < minDist && len <= sqThreshold)
+               {
+                  k = j;
+                  minDist = len;
+                  p2 = p;
+               }
+            }
+
+            if (p2 != null)
+            {
+               int idx2 = cornerIdx2.get(k);
+
+               Point2D nextP1 = pts1.get(idx1+1);
+               Point2D prevP1 = pts1.get(idx1-1);
+               Point2D nextP2 = pts2.get(idx2+1);
+               Point2D prevP2 = pts2.get(idx2-1);
+
+               double prevAngle = JDRLine.getAngle(
+                  prevP1.getX(), prevP1.getY(), p1.getX(), p1.getY(), 
+                  prevP2.getX(), prevP2.getY(), p2.getX(), p2.getY());
+
+               double nextAngle = JDRLine.getAngle(
+                  p1.getX(), p1.getY(), nextP1.getX(), nextP1.getY(), 
+                  p2.getX(), p2.getY(), nextP2.getX(), nextP2.getY());
+
+               if (Math.abs(prevAngle) < EPSILON && Math.abs(nextAngle) < EPSILON)
+               {
+                  Point2D r1 = JDRLine.getClosestPointAlongLine(
+                    p1, nextP1, p2, true);
+
+                  Point2D r2 = JDRLine.getClosestPointAlongLine(
+                    prevP1, p1, p2, true);
+
+                  pts1.add(idx1+1, r1); 
+                  pts1.add(idx1, r2); 
+
+                  r1 = JDRLine.getClosestPointAlongLine(
+                    p2, nextP2, p1, true);
+
+                  r2 = JDRLine.getClosestPointAlongLine(
+                    prevP2, p2, p1, true);
+
+                  pts2.add(idx2+1, r1); 
+                  pts2.add(idx2, r2); 
+
+               }
+            }
+         }
 
          n1 = pts1.size();
          n2 = pts2.size();
-
       }
 
-      double gradientEpsilon = dialog.getGradientEpsilon();
+      insertSubDivisions(pts1);
+      insertSubDivisions(pts2);
+      n1 = pts1.size();
+      n2 = pts2.size();
+
+      // deltaThreshold is essentially half the line width. Need to
+      // take into account the distance between points on the
+      // outside and inside of corners. With the initial horizontal
+      // and vertical only segments from scanning, this is a right
+      // angle triangle with base and height both of length 
+      // 2 * delta so the diagonal has length = delta * 2 \surd 2
+      // Therefore make the actual threshold value half this.
+
+      double threshold = ROOT_2 * deltaThreshold;
 
       ShapeComponentVector newPath1 = new ShapeComponentVector();
 
@@ -9484,41 +9706,42 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
       double newPath1LastX = -1;
       double newPath1LastY = -1;
+      double prevLastX = -1;
+      double prevLastY = -1;
 
-      boolean inc = false;
-      boolean dec = false;
       double prevDelta = 0.0;
+      double prevDelta2 = 0.0;
       double firstDelta = 0.0;
 
-      int startBulge = 0;
+      int startBulge = -1;
       double startBulgeDelta = 0.0;
 
-      for (int i = 0; i < n1 && i < n2; i++)
+      int minN = (int)Math.min(n1, n2);
+
+      for (int i = 0; i < n1 || i < n2; i++)
       {
-         p1 = pts1.get(i);
-         p2 = pts2.get(i);
+         if (i < n1)
+         {
+            p1 = pts1.get(i);
+         }
+
+         if (i < n2)
+         {
+            p2 = pts2.get(i);
+         }
 
          double dx = 0.5*(p2.getX() - p1.getX());
          double dy = 0.5*(p2.getY() - p1.getY());
 
          double delta = Math.sqrt(dx*dx + dy*dy);
 
-         if (delta <= deltaThreshold)
+         if (delta <= threshold)
          {
-            if (!(i == 0 || (i == 1 && prevDelta < ShapeComponentVector.EPSILON)))
+            if (!(i == 0 || (i == 1 && prevDelta < EPSILON)))
             {
                if (firstDelta == 0.0)
                {
                   firstDelta = delta;
-               }
-
-               if (delta < prevDelta - ShapeComponentVector.EPSILON)
-               {
-                  dec = true;
-               }
-               else if (delta > prevDelta + ShapeComponentVector.EPSILON)
-               {
-                  inc = true;
                }
             }
 
@@ -9531,11 +9754,14 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             }
             else
             {
-               newPath1.lineTo(x, y, gradientEpsilon);
+               newPath1.lineTo(x, y, EPSILON);
             }
 
             numPts1++;
             averageDelta1 += delta;
+
+            prevLastX = newPath1LastX;
+            prevLastY = newPath1LastY;
 
             newPath1LastX = x;
             newPath1LastY = y;
@@ -9550,23 +9776,32 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             break;
          }
 
+         prevDelta2 = prevDelta;
          prevDelta = delta;
       }
 
-      if (startBulge > 0)
+      double path1Length = newPath1 == null ? 0.0 : newPath1.getEstimatedLength();
+
+      if (numPts1 > 0)
       {
-         dialog.addMessageIdLn("vectorize.lineify_between_borders",
-          listBulgePoints(pts1, pts2, startBulge));
+         averageDelta1 /= numPts1;
       }
 
       // No wedge detection if path fits entire region.
 
-      if (startBulge == 0 && numPts1 > 1 && n1 == n2)
+      if (startBulge == -1 && numPts1 > 1)
       {
          // numPts1 may not be the same as newPath1.size() as
          // lineTo(double,double,double) was used.
 
-         averageDelta1 /= numPts1;
+         if (path1Length < minStubLength)
+         {
+            addPathResultMessage(getNumShapes()+1, 
+               "vectorize.line_detection.too_short", 
+                 dialog.getResources().getMessage("vectorize.message.le",
+                  path1Length, minStubLength));
+            return false;
+         }
 
          newPath1.setFilled(false);
          setLineWidth(newPath1, averageDelta1);
@@ -9577,29 +9812,86 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
       if (!doLineIntersectionCheck)
       {
-         addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+         addPathResultMessage(getNumShapes()+1, 
+           "vectorize.line_detection.too_wide.with_delta", startBulgeDelta);
          return false;
       }
 
-      ShapeComponentVector newPath2 = null;
+      if (startBulge == -1 || startBulge >= minN)
+      {// at this point, it's most likely because n1 != n2 and the above loop 
+       // stopped at or above the smaller value.
 
-      double path1Length = newPath1 == null ? 0.0 : newPath1.getEstimatedLength();
+         dialog.addVerboseMessageIdLn("vectorize.line_detection.excess_points",
+           n1, n2, prevDelta, numPts1);
 
-      if (newPath1.size() <= 1 || (inc && !dec))
+         newPath1 = null;
+         startBulge = 0;
+      }
+
+      // If either end of last pair before bulge lies on the line
+      // formed by the previous pair, then it's likely a right
+      // angled corner was encountered so move back to the previous
+      // pair.
+
+      if (startBulge > 2)
       {
-         if (inc)
+         p1 = pts1.get(startBulge);
+         p2 = pts2.get(startBulge);
+         Point2D prevP1 = pts1.get(startBulge-1);
+         Point2D prevP2 = pts2.get(startBulge-1);
+
+         if (JDRLine.getSquareLength(p1, 
+               JDRLine.getClosestPointAlongLine(prevP1, prevP2, p1)) < EPSILON
+          || JDRLine.getSquareLength(p2,
+               JDRLine.getClosestPointAlongLine(prevP1, prevP2, p2)) < EPSILON)
+         {
+            newPath1.lastElement().setEndPoint(prevLastX, prevLastY);
+            startBulge--;
+            numPts1--;
+            startBulgeDelta = prevDelta;
+            prevDelta = prevDelta2;
+         }
+      }
+
+      double wedgeThreshold = dialog.getWedgeThreshold();
+      double wedgeDeviation1 = 0.0;
+
+      if (startBulge > 0)
+      {
+         wedgeDeviation1 = prevDelta-firstDelta;
+      }
+
+      if (newPath1 == null || newPath1.size() <= 1 
+           || wedgeDeviation1 >= wedgeThreshold)
+      {
+         if (wedgeDeviation1 > 0 && dialog.isVerbose())
          {
             // if the distance kept increasing then may be the start of a wedge
-            dialog.addMessageIdLn("vectorize.increasing_start",
+            dialog.addMessageIdLn("vectorize.line_detection.increasing_start",
              firstDelta, prevDelta, newPath1.size(), path1Length,
-               newPath1.svg());
+               wedgeDeviation1, newPath1.svg());
          }
 
          newPath1 = null;
          startBulge = 0;
          startBulgeDelta = firstDelta;
          path1Length = 0.0;
+         numPts1 = 0;
       }
+      else if (wedgeDeviation1 > 0)
+      {
+         dialog.addVerboseMessageIdLn(
+           "vectorize.line_detection.start_wedge_below_threshold",
+           firstDelta, prevDelta, wedgeThreshold);
+      }
+
+      if (startBulge > 0 && dialog.isVerbose())
+      {
+         dialog.addMessageIdLn("vectorize.lineify_between_borders",
+          listBulgePoints(pts1, pts2, startBulge));
+      }
+
+      ShapeComponentVector newPath2 = null;
 
       int endBulge = 0;
       double endBulgeDelta = 0.0;
@@ -9607,10 +9899,11 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       double averageDelta2 = 0.0;
       int numPts2 = 0;
 
-      inc = false;
-      dec = false;
       prevDelta = 0;
       firstDelta = 0.0;
+      prevDelta2 = 0.0;
+
+      double wedgeDeviation2 = 0.0;
 
       for (int i = 1, m = Math.min(n1,n2)-startBulge; i <= m; i++)
       {
@@ -9622,13 +9915,37 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
          double delta = Math.sqrt(dx*dx + dy*dy);
 
-         if (delta > deltaThreshold)
+         if (delta > threshold)
          {
             endBulge = i-2;
             endBulgeDelta = delta;
 
             prevX = -1;
             prevY = -1;
+
+            if (endBulge > 2)
+            {
+               p1 = pts1.get(n1-endBulge-1);
+               p2 = pts2.get(n2-endBulge-1);
+               Point2D nextP1 = pts1.get(n1-endBulge);
+               Point2D nextP2 = pts2.get(n2-endBulge);
+
+               if (JDRLine.getSquareLength(p1, 
+                     JDRLine.getClosestPointAlongLine(nextP1, nextP2, p1)) < EPSILON
+                || JDRLine.getSquareLength(p2,
+                     JDRLine.getClosestPointAlongLine(nextP1, nextP2, p2)) < EPSILON)
+               {
+                  endBulge--;
+                  numPts2--;
+                  endBulgeDelta = prevDelta;
+                  prevDelta = prevDelta2;
+               }
+            }
+
+            if (endBulge > 0)
+            {
+               wedgeDeviation2 = prevDelta-firstDelta;
+            }
 
             for (int j = endBulge+1; j > 0; j--)
             {
@@ -9642,7 +9959,8 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                {
                   if (newPath1 == null 
                       || getDistance(newPath1LastX, newPath1LastY, x, y)
-                            > deltaThreshold)
+                            > threshold
+                      || wedgeDeviation2 > wedgeThreshold)
                   {
                      if (newPath1 != null)
                      {
@@ -9661,13 +9979,14 @@ class LineDetection extends SwingWorker<Void,Rectangle>
                   }
                   else
                   {
+                     // merge paths (later check if newPath1 == newPath2)
                      newPath2 = newPath1;
-                     newPath2.lineTo(x, y, gradientEpsilon);
+                     newPath2.lineTo(x, y, EPSILON);
                   }
                }
                else
                {
-                  newPath2.lineTo(x, y, gradientEpsilon);
+                  newPath2.lineTo(x, y, EPSILON);
                }
 
                prevX = x;
@@ -9677,55 +9996,64 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             break;
          }
 
-         if (!(i == 1 || (i == 2 && prevDelta < ShapeComponentVector.EPSILON)))
+         if (!(i == 1 || (i == 2 && prevDelta < EPSILON)))
          {
             if (firstDelta == 0.0)
             {
                firstDelta = delta;
-            }
-
-            if (delta < prevDelta - ShapeComponentVector.EPSILON)
-            {
-               dec = true;
-            }
-            else if (delta > prevDelta + ShapeComponentVector.EPSILON)
-            {
-               inc = true;
             }
          }
 
          numPts2++;
          averageDelta2 += delta;
 
+         prevDelta2 = prevDelta;
          prevDelta = delta;
       }
 
-      if (endBulge > 0)
+      if (startBulge == 0 && endBulge == 0)
       {
-         dialog.addMessageIdLn("vectorize.lineify_between_borders",
-          listBulgePoints(pts1, pts2, -endBulge));
+         if (dialog.isVerbose())
+         {
+            if (wedgeDeviation1 > 0 || wedgeDeviation2 > 0)
+            {
+               addPathResultMessage(getNumShapes()+1, 
+                 "vectorize.line_detection.too_wide.with_deltas_and_diff",
+                   startBulgeDelta, wedgeDeviation1, endBulgeDelta, wedgeDeviation2);
+            }
+            else
+            {
+               addPathResultMessage(getNumShapes()+1, 
+                 "vectorize.line_detection.too_wide.with_deltas",
+                   startBulgeDelta, endBulgeDelta);
+            }
+         }
+
+         return false;
+      }
+
+      if (numPts2 > 0)
+      {
+         averageDelta2 /= numPts2;
       }
 
       if (newPath2 == newPath1 && newPath1 != null)
       {
          numPts1 += numPts2;
-         averageDelta1 += averageDelta2;
+         averageDelta1 = 0.5*(averageDelta1 + averageDelta2);
          newPath2 = null;
          path1Length = newPath1.getEstimatedLength();
       }
 
       if (newPath1 != null && newPath1.size() > 1)
       {
-         if (numPts1 > 0)
-         {
-            averageDelta1 /= numPts1;
-         }
-
          newPath1.setFilled(false);
          setLineWidth(newPath1, averageDelta1);
-         addShape(newPath1, "vectorize.success_with_line_length",
-          averageDelta1, path1Length);
          success = true;
+      }
+      else
+      {
+         newPath1 = null;
       }
 
       double path2Length = 0.0;
@@ -9736,32 +10064,40 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
          if (path2Length < minStubLength)
          {
-            dialog.addMessageIdLn("vectorize.discarding_small_stub",
-             path2Length, newPath2.svg());
+            if (dialog.isVerbose())
+            {
+               dialog.addMessageIdLn("vectorize.discarding_small_stub",
+                path2Length, newPath2.svg());
+            }
+
             newPath2 = null;
             endBulge = 0;
             endBulgeDelta = firstDelta;
          }
-         else if (inc && !dec)
+         else if (wedgeDeviation2 > wedgeThreshold)
          {
-            dialog.addMessageIdLn("vectorize.decreasing_end",
-               prevDelta, firstDelta, newPath2.size(), path2Length,
-               newPath2.svg());
+            if (dialog.isVerbose())
+            {
+               dialog.addMessageIdLn("vectorize.line_detection.decreasing_end",
+                  prevDelta, firstDelta, newPath2.size(), path2Length,
+                  wedgeDeviation2, newPath2.svg());
+            }
+
             newPath2 = null;
             endBulge = 0;
             endBulgeDelta = firstDelta;
          }
          else if (newPath2.size() > 1)
          {
-            if (numPts2 > 0)
+            if (wedgeDeviation2 > 0 && wedgeDeviation2 < wedgeThreshold)
             {
-               averageDelta2 /= numPts2;
+               dialog.addVerboseMessageIdLn(
+                 "vectorize.line_detection.end_wedge_below_threshold",
+                 firstDelta, prevDelta, wedgeDeviation2);
             }
 
             newPath2.setFilled(false);
             setLineWidth(newPath2, averageDelta2);
-            addShape(newPath2, "vectorize.success_with_line_length",
-             averageDelta2, path2Length);
             success = true;
          }
          else
@@ -9771,10 +10107,9 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             endBulgeDelta = firstDelta;
          }
       }
-
       if (!success)
       {
-         addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+         addPathResultMessage(getNumShapes()+1, "vectorize.line_detection.too_wide");
          return false;
       }
 
@@ -9795,6 +10130,12 @@ class LineDetection extends SwingWorker<Void,Rectangle>
         endBulgePt2.getX(), endBulgePt2.getY(),
         endBulgeDelta);
 
+      if (endBulge > 0)
+      {
+         dialog.addMessageIdLn("vectorize.lineify_between_borders",
+          listBulgePoints(pts1, pts2, -endBulge));
+      }
+
       Point2D p0 = startBulgePt1;
       newPath.moveTo(p0);
 
@@ -9802,7 +10143,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       {
          p1 = pts1.get(i);
 
-         newPath.lineTo(p1, gradientEpsilon);
+         newPath.lineTo(p1, EPSILON);
 
          p0 = p1;
       }
@@ -9811,7 +10152,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       {
          p1 = pts2.get(i);
 
-         newPath.lineTo(p1, gradientEpsilon);
+         newPath.lineTo(p1, EPSILON);
 
          p0 = p1;
       }
@@ -9822,155 +10163,73 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          return false;
       }
 
-      newPath.closePath(gradientEpsilon);
+      newPath.closePath(EPSILON);
+
+      if (newPath1 != null)
+      {
+         addShape(newPath1, "vectorize.success_with_line_length",
+             averageDelta1, path1Length);
+      }
+
+      if (newPath2 != null)
+      {
+         addShape(newPath2, "vectorize.success_with_line_length",
+             averageDelta2, path2Length);
+      }
 
       dialog.addMessageIdLn("vectorize.mid_region", newPath.svg());
 
       if (!tryLineifyRegion(newPath))
       {
-         if (success)
+         if (newPath1 == null && newPath2 == null)
          {
-            addShape(newPath);
+            return false;
          }
+
+         addShape(newPath);
       }
 
-      return success;
+      // At least one new path has been found
+      return true;
    }
 
-   private void addBorderPoints(Vector<Point2D> pts1, Vector<Point2D> pts2)
+   private void insertSubDivisions(Vector<Point2D> pts)
    {
-      int n1 = pts1.size();
-      int n2 = pts2.size();
+      double threshold = 2.5*deltaThreshold;
+      double maxLength = 1;
 
-      if (n1 < n2)
+      for (int i = 0; i < pts.size()-1; i++)
       {
-         addBorderPoints(pts2, pts1);
-         return;
-      }
+         Point2D p0 = pts.get(i);
+         Point2D p1 = pts.get(i+1);
 
-      if (n1 == n2)
-      {
-         return;
-      }
+         double length = JDRLine.getLength(p0, p1);
 
-      double threshold = 2.0 * deltaThreshold;
-
-      int remaining = n1 - n2;
-
-      Vector<PointPair> pairs = new Vector<PointPair>(n1);
-
-      Vector<PointPair> extra = new Vector<PointPair>(remaining);
-
-      Point2D prevP = pts2.firstElement();
-
-      int startOffset = 0;
-      int endOffset = 0;
-
-      if (JDRLine.getManhattanDistance(pts1.get(0), prevP) 
-          < ShapeComponentVector.EPSILON)
-      {
-         startOffset = 1;
-         Point2D p = pts2.get(1);
-         extra.add(new PointPair(prevP, p, 0));
-         prevP = p;
-      }
-
-      if (JDRLine.getManhattanDistance(pts1.lastElement(), pts2.lastElement()) 
-          < ShapeComponentVector.EPSILON)
-      {
-         endOffset = 1;
-         extra.add(new PointPair(pts2.get(n2-2), pts2.lastElement(), n2-2));
-      }
-
-      for (int i = 1+startOffset; i < n2-endOffset; i++)
-      {
-         Point2D p = pts2.get(i);
-
-         pairs.add(new PointPair(prevP, p, i-1));
-         prevP = p;
-      }
-
-      pairs.sort(new PointPairLengthComparator());
-
-      for (int i = 0; i < pairs.size() && remaining > 0; i++)
-      {
-         PointPair pp = pairs.get(i);
-
-         Point2D p1 = pp.getP1();
-         Point2D p2 = pp.getP2();
-
-         // find closest pts1 
-
-         int j1 = 0;
-         int j2 = n1-1;
-
-         Point2D q1 = pts1.firstElement();
-         Point2D q2 = pts1.get(j2);
-
-         double minDist1 = JDRLine.getLength(q1, p1);
-         double minDist2 = JDRLine.getLength(q2, p2);
-
-         for (int j = 1; j < n1-1; j++)
+         if (length <= threshold)
          {
-            Point2D q = pts1.get(j);
-            double d = JDRLine.getLength(q, p1);
+            continue;
+         }
 
-            if (d <= minDist1 && j < j2)
+         int subN = (int)Math.ceil(length/maxLength);
+
+         if (subN > 1)
+         {
+            int numDivisions = subN-1;
+            double t_factor = 1.0 / subN;
+
+            for (int j = 1; j <= numDivisions; j++)
             {
-               j1 = j;
-               q1 = q;
-            }
+               double t = j * t_factor;
 
-            d = JDRLine.getLength(q, p2);
+               Point2D p = new Point2D.Double(
+                  p0.getX() + (p1.getX() - p0.getX()) * t,
+                  p0.getY() + (p1.getY() - p0.getY()) * t);
 
-            if (d <= minDist2 && j > j1)
-            {
-               j2 = j;
-               q2 = q;
+               pts.add(++i, p);
             }
          }
 
-         int m = j2 - j1 - 1;
-
-         if (m > 0)
-         {
-            PointPair prevPP = pp;
-
-            for (int j = 1; j <= m && remaining > 0; j++)
-            {
-               Point2D p = pts1.get(j1+j);
-
-               Point2D q = 
-                  JDRLine.getClosestPointAlongLine(p1, p2, p, true);
-
-               if (JDRLine.getLength(p, q) <= threshold)
-               {
-                  PointPair pp2 = new PointPair(q, p2, 
-                    pp.getIndex().doubleValue()+(((double)j)/(m+1.0)));
-
-                  extra.add(pp2);
-
-                  prevPP.setP2(q);
-
-                  prevPP = pp2;
-
-                  remaining--;
-               }
-            }
-         }
       }
-
-      pairs.addAll(extra);
-
-      pairs.sort(new PointPairIndexComparator());
-
-      pts2.setSize(1);
-
-      for (PointPair pp : pairs)
-      {
-         pts2.add(pp.getP2());
-      }
-
    }
 
    private boolean tryLineifyBulge(ShapeComponentVector vec, int idx1, int idx2)
@@ -10079,6 +10338,11 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          return false;
       }
 
+      double twiceDelta = 2.0*deltaThreshold;
+
+      reduceSegments(vec);
+      n = vec.size();
+
       ShapeComponent comp0 = vec.firstElement();
       ShapeComponent comp2 = vec.get(n-2);
 
@@ -10130,11 +10394,11 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          return true;
       }
 
-      double twiceDelta = 2.0*deltaThreshold;
-
       Path2D path = vec.getPath();
 
       Vector<Spike> indexes = null;
+
+      // Find potential spikes
 
       for (int i = 1; i < n; i++)
       {
@@ -10142,9 +10406,15 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
          Point2D currentEndPt, currentStartPt, currentMidPt;
 
+         double currentLength;
+
+         Point2D dp;
+
          if (comp.getType() == PathIterator.SEG_CLOSE)
          {
-            if (JDRLine.getLength(p1, p0) > twiceDelta)
+            currentLength = JDRLine.getLength(p1, p0);
+
+            if (currentLength > twiceDelta)
             {
                continue;
             }
@@ -10152,10 +10422,13 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             currentStartPt = p1;
             currentEndPt = p0;
             currentMidPt = JDRLine.getMidPoint(p0, p1);
+            dp = JDRLine.getGradient(p0, p1);
          }
          else
          {
-            if (comp.getDiagonalLength() > twiceDelta)
+            currentLength = comp.getDiagonalLength();
+
+            if (currentLength > twiceDelta)
             {
                continue;
             }
@@ -10163,6 +10436,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             currentStartPt = comp.getStart();
             currentEndPt = comp.getEnd();
             currentMidPt = comp.getMid();
+            dp = comp.getEndGradient();
          }
 
          ShapeComponent prevComp;
@@ -10189,14 +10463,11 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          }
 
          ShapeComponent nextComp;
+         double nextLength;
 
          if (i == n-1)
          {
             nextComp = vec.get(1);
-         }
-         else if (i == n-2)
-         {
-            nextComp = vec.lastElement();
          }
          else
          {
@@ -10209,14 +10480,16 @@ class LineDetection extends SwingWorker<Void,Rectangle>
              || nextComp.getStart() == null)
          {
             nextDp = JDRLine.getGradient(p1, p0);
+            nextLength = JDRLine.getLength(p1, p0);
          }
          else
          {
             nextDp = nextComp.getStartGradient();
+            nextLength = nextComp.getDiagonalLength();
          }
 
          if (Math.abs(JDRLine.getVectorAngle(prevDp, nextDp)-Math.PI)
-             > ShapeComponentVector.EPSILON)
+             > EPSILON)
          {
             continue;
          }
@@ -10269,12 +10542,13 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          numIndexes = indexes.size();
       }
 
+      Spike spike1 = indexes.get(0);
+
       if (numIndexes == 1)
       {
-         return stickBulge(vec, indexes.get(0).getIndex(), p0, p1, twiceDelta);
+         return stickBulge(vec, spike1.getIndex(), p0, p1, twiceDelta);
       }
 
-      Spike spike1 = indexes.get(0);
       Spike spike2 = indexes.get(1);
 
       Vector<Point2D> pts1 = new Vector<Point2D>();
@@ -10473,7 +10747,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             l2 = vec.get(after2).getDiagonalLength();
          }
 
-         if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
+         if (Math.abs(l2-l1) < EPSILON)
          {
             before1 = i1-2;
 
@@ -10553,7 +10827,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             l2 = vec.get(before2).getDiagonalLength();
          }
 
-         if (Math.abs(l2-l1) < ShapeComponentVector.EPSILON)
+         if (Math.abs(l2-l1) < EPSILON)
          {
             after1 = i1+2;
 
@@ -10606,14 +10880,18 @@ class LineDetection extends SwingWorker<Void,Rectangle>
      Vector<Spike> indexes, Point2D p0, Point2D p1)
    {
       int numIndexes = indexes.size();
+      int originalNumIndexes = numIndexes;
 
-      dialog.addMessageIdLn("vectorize.n_spikes_found",
-       dialog.getResources().formatMessageChoice(numIndexes, 
-       "vectorize.n_spikes"));
-
-      for (Spike spike : indexes)
+      if (dialog.isVerbose())
       {
-         dialog.addMessageLn(spike.info(dialog.getResources()));
+         dialog.addMessageIdLn("vectorize.n_spikes_found",
+          dialog.getResources().formatMessageChoice(numIndexes, 
+          "vectorize.n_spikes"));
+
+         for (Spike spike : indexes)
+         {
+            dialog.addMessageLn(spike.info(dialog.getResources()));
+         }
       }
 
       if (numIndexes == 1)
@@ -10648,8 +10926,11 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
       for (int i = numIndexes-1; i > 0; i--)
       {
-         spike1 = indexes.get(i-1);
          spike2 = indexes.get(i);
+
+         if (!spike2.hasIntegerIndex()) continue;
+
+         spike1 = indexes.get(i-1);
 
          boolean tooclose = false;
 
@@ -10688,6 +10969,18 @@ class LineDetection extends SwingWorker<Void,Rectangle>
             indexes.set(i-1, keep);
 
             numIndexes--;
+         }
+      }
+
+      if (dialog.isVerbose() && numIndexes < originalNumIndexes)
+      {
+         dialog.addMessageIdLn("vectorize.line_detection.reduced_spike_set",
+           dialog.getResources().formatMessageChoice(numIndexes, 
+             "vectorize.n_spikes"));
+
+         for (Spike spike : indexes)
+         {
+            dialog.addMessageLn(spike.info(dialog.getResources()));
          }
       }
 
@@ -10839,8 +11132,6 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          }
       }
 
-      double gradientEpsilon = dialog.getGradientEpsilon();
-
       ShapeComponentVector bulge1, bulge2, middle;
 
       if (firstPair[1] < secondPair[0])
@@ -10851,7 +11142,8 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
          if (midN < 5)
          {
-            addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+            addPathResultMessage(getNumShapes()+1, 
+              "vectorize.line_detection.too_wide");
             return false;
          }
 
@@ -10862,10 +11154,10 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          for (int i = firstPair[0]+1; i <= firstPair[1]; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            bulge1.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            bulge1.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
-         bulge1.closePath(gradientEpsilon);
+         bulge1.closePath(EPSILON);
 
          middle = new ShapeComponentVector(midN);
 
@@ -10874,22 +11166,22 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          for (int i = firstPair[1]+1; i <= secondPair[0]; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            middle.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            middle.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
          for (int i = secondPair[1]; i < n; i++)
          {
             Point2D p = (i == n-1 ? p1 : vec.get(i).getEnd());
-            middle.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            middle.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
          for (int i = 0; i < firstPair[0]; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            middle.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            middle.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
-         middle.closePath(gradientEpsilon);
+         middle.closePath(EPSILON);
       }
       else
       {
@@ -10898,7 +11190,8 @@ class LineDetection extends SwingWorker<Void,Rectangle>
 
          if (midN < 5)
          {
-            addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+            addPathResultMessage(getNumShapes()+1, 
+               "vectorize.line_detection.too_wide");
             return false;
          }
 
@@ -10909,17 +11202,17 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          for (int i = 1; i <= firstPair[0]; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            bulge1.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            bulge1.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
          for (int i = firstPair[1]; i < n-1; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            bulge1.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            bulge1.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
-         bulge1.lineTo(p2.getX(), p2.getY(), gradientEpsilon);
-         bulge1.closePath(gradientEpsilon);
+         bulge1.lineTo(p2.getX(), p2.getY(), EPSILON);
+         bulge1.closePath(EPSILON);
 
          middle = new ShapeComponentVector(midN);
 
@@ -10928,16 +11221,16 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          for (int i = firstPair[0]+1; i <= secondPair[0]; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            middle.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            middle.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
          for (int i = secondPair[1]; i <= firstPair[1]; i++)
          {
             Point2D p = vec.get(i).getEnd();
-            middle.lineTo(p.getX(), p.getY(), gradientEpsilon);
+            middle.lineTo(p.getX(), p.getY(), EPSILON);
          }
 
-         middle.closePath(gradientEpsilon);
+         middle.closePath(EPSILON);
       }
 
       bulge2 = new ShapeComponentVector(secondPair[1]-secondPair[0]+2);
@@ -10947,10 +11240,10 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       for (int i = secondPair[0]+1; i < secondPair[1]; i++)
       {
          Point2D p = vec.get(i).getEnd();
-         bulge2.lineTo(p.getX(), p.getY(), gradientEpsilon);
+         bulge2.lineTo(p.getX(), p.getY(), EPSILON);
       }
 
-      bulge2.closePath(gradientEpsilon);
+      bulge2.closePath(EPSILON);
 
       dialog.addMessageIdLn("vectorize.between_bulges",
          bulge1.svg(), bulge2.svg(), middle.svg());
@@ -11058,7 +11351,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          {
             averageDist += 0.5*l;
 
-            newPath.lineTo(JDRLine.getMidPoint(r1, r2));
+            newPath.lineTo(JDRLine.getMidPoint(r1, r2), EPSILON);
          }
          else
          {
@@ -11077,7 +11370,8 @@ class LineDetection extends SwingWorker<Void,Rectangle>
       {
          dialog.addMessageIdLn("vectorize.discarding_small_stub",
           length, newPath.svg());
-         addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+         addPathResultMessage(getNumShapes()+1, 
+           "vectorize.line_detection.too_wide");
          return false;
       }
 
@@ -11169,21 +11463,21 @@ class LineDetection extends SwingWorker<Void,Rectangle>
          Point2D dp2 = newPath.get(m).getStartGradient();
          Point2D dp3 = JDRLine.getGradient(r1, r0);
 
-         if (JDRLine.getVectorAngle(dp2, dp3) < ShapeComponentVector.EPSILON)
+         if (JDRLine.getVectorAngle(dp2, dp3) < EPSILON)
          {
             newPath.removeComponent(m);
          }
 
-         if (JDRLine.getVectorAngle(dp3, dp2) < ShapeComponentVector.EPSILON)
+         if (JDRLine.getVectorAngle(dp3, dp2) < EPSILON)
          {
             newPath.removeComponent(0);
          }
 
-         addShape(newPath, "vectorize.too_wide");
+         addShape(newPath, "vectorize.line_detection.too_wide");
          return true;
       }
 
-      addPathResultMessage(getNumShapes()+1, "vectorize.too_wide");
+      addPathResultMessage(getNumShapes()+1, "vectorize.line_detection.too_wide");
 
       return false;
    }
@@ -13816,7 +14110,7 @@ class LineDetection extends SwingWorker<Void,Rectangle>
    private VectorizeBitmapDialog dialog;
    private boolean continueToNextStep, doLineIntersectionCheck;
    private Vector<ShapeComponentVector> shapeList;
-   private static final double HALF_PI = 0.5*Math.PI,
+   private static final double ROOT_2 = Math.sqrt(2.0),
     SPIKE_ANGLE_LOWER1=0.2*Math.PI, SPIKE_ANGLE_UPPER1=0.8*Math.PI,
     SPIKE_ANGLE_LOWER2=1.2*Math.PI, SPIKE_ANGLE_UPPER2=1.8*Math.PI;
 }
@@ -13926,11 +14220,22 @@ class Spike
       this.index = index;
    }
 
+   public Spike(Number idx, ShapeComponentVector vec,
+    Point2D pathStart, Point2D pathEnd, VectorizeBitmapDialog dialog)
+   {
+      this.index = idx;
+      update(vec, pathStart, pathEnd, dialog);
+   }
+
    public Spike(int idx, ShapeComponentVector vec,
     Point2D pathStart, Point2D pathEnd, VectorizeBitmapDialog dialog)
    {
-      this.index = Integer.valueOf(idx);
-      update(vec, pathStart, pathEnd, dialog);
+      this(Integer.valueOf(idx), vec, pathStart, pathEnd, dialog);
+   }
+
+   public boolean hasIntegerIndex()
+   {
+      return index instanceof Integer;
    }
 
    public Number getIndex()
@@ -14385,7 +14690,7 @@ class LineifyResults
    protected LineFit[] bestLineFit;
 }
 
-class Smooth extends SwingWorker<Void,Rectangle>
+class Smooth extends SwingWorker<Void,Rectangle> implements JDRConstants
 {
    public Smooth(VectorizeBitmapDialog dialog, Vector<ShapeComponentVector> shapes,
      boolean continueToNextStep)
@@ -14558,7 +14863,6 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
       ShapeComponentVector subPath = null;
 
-      double gradientEpsilon = dialog.getGradientEpsilon();
       int numSubPaths = 1;
 
       for (int i = 0; i < n; i++)
@@ -14579,7 +14883,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                throw new IllegalPathStateException("Missing moveto");
             }
 
-            subPath.lineTo(startPt, gradientEpsilon);
+            subPath.lineTo(startPt, EPSILON);
 
             if (i < n-1 || numSubPaths > 1)
             {
@@ -14600,7 +14904,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                fullPath.appendPath(newSubPath);
             }
 
-            fullPath.closePath(gradientEpsilon);
+            fullPath.closePath(EPSILON);
 
             subPath = null;
             numSubPaths++;
@@ -14864,8 +15168,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   {
                      dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
                        firstTryChoiceIdx, bestChoiceIdx, 
-                       resources.getMessage("vectorize.smoothing_reason_and",
-                         resources.getMessage("vectorize.smoothing_leq",
+                       resources.getMessage("vectorize.message.reason_and",
+                         resources.getMessage("vectorize.message.leq",
                              bestResult.getEstimatedLength(), lengthThreshold),
                          firstTry.comparisonInfo(bestResult, thresholdDiff)));
                   }
@@ -14906,8 +15210,8 @@ class Smooth extends SwingWorker<Void,Rectangle>
 
                         dialog.addMessageIdLn("vectorize.smoothing_choosing_n_not_m",
                           firstTryChoiceIdx, bestChoiceIdx, 
-                          resources.getMessage("vectorize.smoothing_reason_and",
-                            resources.getMessage("vectorize.smoothing_leq",
+                          resources.getMessage("vectorize.message.reason_and",
+                            resources.getMessage("vectorize.message.leq",
                                 remainingLength, lengthThreshold),
                             firstTry.comparisonInfo(bestResult, thresholdDiff)));
                      }
@@ -14948,7 +15252,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                {
                   dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
                     bestChoiceIdx,
-                    resources.getMessage("vectorize.smoothing_reason_and",
+                    resources.getMessage("vectorize.message.reason_and",
                       line1Result.comparisonInfo(bestResult),
                       line2Result.comparisonInfo(bestResult)
                   ));
@@ -14973,7 +15277,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                   {
                      dialog.addMessageIdLn("vectorize.smoothing_discounting_n",
                        bestChoiceIdx,
-                       resources.getMessage("vectorize.smoothing_leq_offset", 
+                       resources.getMessage("vectorize.message.leq_offset", 
                        delta, bestResult.getDelta(), deviationEpsilon));
                   }
 
@@ -15323,7 +15627,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
                {
                   dialog.addMessageLn(bestResult.info());
                   dialog.addMessageLn(resources.getMessage(
-                   "vectorize.smoothing_le_offset", bestCurveResult.getDelta(),
+                   "vectorize.message.le_offset", bestCurveResult.getDelta(),
                      minDelta, curveThresholdDiff));
                }
                
@@ -15342,11 +15646,11 @@ class Smooth extends SwingWorker<Void,Rectangle>
             {
                dialog.addMessageLn(bestResult.info());
 
-               dialog.addMessageIdLn("vectorize.smoothing_reason_and",
+               dialog.addMessageIdLn("vectorize.message.reason_and",
                   resources.getMessage("vectorize.smoothing_le",
                     bestSubThresholdResult.getEstimatedLength(),
                      lengthThreshold),
-                  resources.getMessage("vectorize.smoothing_le_offset",
+                  resources.getMessage("vectorize.message.le_offset",
                   minDelta, minSubThresholdDelta, thresholdDiff)
                );
             }
@@ -15400,7 +15704,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
          if (dialog.isVerbose())
          {
             dialog.addMessageIdLn("vectorize.smoothing_too_flat",
-             resources.getMessage("vectorize.smoothing_leq", 
+             resources.getMessage("vectorize.message.leq", 
                result0.getFlatness(), flatnessThreshold));
          }
 
@@ -15438,7 +15742,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
       if (result1.getFlatness() <= flatnessThreshold)
       {
          dialog.addMessageIdLn("vectorize.smoothing_too_flat",
-          resources.getMessage("vectorize.smoothing_leq", 
+          resources.getMessage("vectorize.message.leq", 
             result1.getFlatness(), flatnessThreshold));
 
          return bestResult;
@@ -15475,7 +15779,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
       if (result2.getFlatness() <= flatnessThreshold)
       {
          dialog.addMessageIdLn("vectorize.smoothing_too_flat",
-          resources.getMessage("vectorize.smoothing_leq", 
+          resources.getMessage("vectorize.message.leq", 
             result2.getFlatness(), flatnessThreshold));
 
          return bestResult;
@@ -15551,7 +15855,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
          {
             dialog.addVerboseMessageIdLn(
               "vectorize.smoothing_curve_better_sample_path",
-              1, resources.getMessage("vectorize.smoothing_reason_and", 2, 0));
+              1, resources.getMessage("vectorize.message.reason_and", 2, 0));
          }
 
          int diff = midIdx2-midIdx1;
@@ -15712,7 +16016,7 @@ class Smooth extends SwingWorker<Void,Rectangle>
    private boolean continueToNextStep;
 }
 
-class DeviationResult implements Comparable<DeviationResult>
+class DeviationResult implements Comparable<DeviationResult>, JDRConstants
 {
    private DeviationResult(VectorizeBitmapDialog dialog)
    {
@@ -15791,7 +16095,7 @@ class DeviationResult implements Comparable<DeviationResult>
          Point2D r1 = comp.getStart();
          Point2D r2 = comp.getEnd();
 
-         if (Math.abs(r1.getY()-r2.getY()) < ShapeComponentVector.EPSILON)
+         if (Math.abs(r1.getY()-r2.getY()) < EPSILON)
          {
             if (northMin == null || northMax == null)
             {
@@ -15889,7 +16193,7 @@ class DeviationResult implements Comparable<DeviationResult>
                }
             }
          }
-         else if (Math.abs(r1.getX()-r2.getX()) < ShapeComponentVector.EPSILON)
+         else if (Math.abs(r1.getX()-r2.getX()) < EPSILON)
          {
             if (westMin == null || westMax == null)
             {
@@ -16599,7 +16903,7 @@ class DeviationResult implements Comparable<DeviationResult>
    {
       JDRResources resources = dialog.getResources();
 
-      return resources.getMessage("vectorize.smoothing_leq", 
+      return resources.getMessage("vectorize.message.leq", 
         delta, other.delta);
    }
 
@@ -16608,7 +16912,7 @@ class DeviationResult implements Comparable<DeviationResult>
    {
       JDRResources resources = dialog.getResources();
 
-      return resources.getMessage("vectorize.smoothing_leq_offset", 
+      return resources.getMessage("vectorize.message.leq_offset", 
         delta, other.delta, offset);
    }
 
@@ -16619,7 +16923,7 @@ class DeviationResult implements Comparable<DeviationResult>
 
       JDRResources resources = dialog.getResources();
 
-      String text = resources.getMessage("vectorize.smoothing_leq",
+      String text = resources.getMessage("vectorize.message.leq",
            statPtDeviation[0], threshold);
 
       if (statPtDeviation.length == 1)
@@ -16627,8 +16931,8 @@ class DeviationResult implements Comparable<DeviationResult>
          return text;
       }
 
-      return resources.getMessage("vectorize.smoothing_reason_and", text,
-        resources.getMessage("vectorize.smoothing_leq",
+      return resources.getMessage("vectorize.message.reason_and", text,
+        resources.getMessage("vectorize.message.leq",
            statPtDeviation[1], threshold));
    }
 

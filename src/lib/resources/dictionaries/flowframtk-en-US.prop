@@ -2866,6 +2866,8 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.detect_intersections">Detect intersections</entry>
 <entry key="vectorize.variance_threshold">Variance Threshold:</entry>
 <entry key="vectorize.variance_threshold.mnemonic">V</entry>
+<entry key="vectorize.wedge_threshold">Wedge Threshold:</entry>
+<entry key="vectorize.wedge_threshold.mnemonic">W</entry>
 <entry key="vectorize.spike_return_distance">Spike Return Distance:</entry>
 <entry key="vectorize.spike_return_distance.mnemonic">K</entry>
 <entry key="vectorize.min_stub_length">Minimum stub length:</entry>
@@ -2930,9 +2932,6 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.apply_pinned">Apply Pinned</entry>
 <entry key="vectorize.apply_pinned.tooltip">Add pinned shapes to the image.</entry>
 
-<entry key="vectorize.unsupported_colour_type">Unsupported color type: {0}</entry>
-<entry key="vectorize.unsupported_colour_type_name">Unsupported color type: {0} ({1})</entry>
-
 <entry key="vectorize.summary.paths">0#No paths.|1#1 path.|1&lt;{0} paths.</entry>
 <entry key="vectorize.summary.path_n">Path {0}: {1} {2}</entry>
 <entry key="vectorize.summary.empty">Empty!</entry>
@@ -2942,21 +2941,57 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.summary.discard">Delete</entry>
 <entry key="vectorize.summary.pin">Pin</entry>
 
+<!-- Info Messages for Top Panel -->
+
 <entry key="vectorize.message.default_info">Select foreground color before scanning. Any transformations will be applied when the paths are added to the image.</entry>
 <entry key="vectorize.message.task_info">Select the required tasks (scanning must always be done initially) and click on the "Do Selected Task" button (green circle).</entry>
 <entry key="vectorize.message.region_picker">Click and drag mouse over bitmap to select area. Use SHIFT to add to current scan region and CTRL to exclude area.</entry>
 <entry key="vectorize.message.colour_picker">Click on the required area of the image to set the foreground color to that of the target pixel.</entry>
-<entry key="vectorize.message.sample_intersects_region">Sample x={0}, y={1}, width={2}, height={3} intersects scan region. Dividing sample area.</entry>
-<entry key="vectorize.message.scan_image_results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
-<entry key="vectorize.message.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
-<entry key="vectorize.message.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>
-<entry key="vectorize.message.inner_contains">Path {0}: inner contains sub-path.</entry>
-<entry key="vectorize.message.possible_loop">Possible loop detected.</entry>
-<entry key="vectorize.message.multi_inner">Multiple inner sub-paths detected.</entry>
+
+<!-- General Task Messages -->
+
+<entry key="vectorize.message.le">{0} &lt; {1}</entry>
+<entry key="vectorize.message.leq">{0} ≤ {1}</entry>
+<entry key="vectorize.message.leq_offset">{0} ≤ {1} + {2}</entry>
+<entry key="vectorize.message.le_offset">{0} &lt; {1} + {2}</entry>
+<entry key="vectorize.message.reason_and">{0} and {1}</entry>
+
+<!-- Messages from scan image task -->
+
+<entry key="vectorize.unsupported_colour_type">Unsupported color type: {0}</entry>
+<entry key="vectorize.unsupported_colour_type_name">Unsupported color type: {0} ({1})</entry>
+
+<entry key="vectorize.message.scan_image.sample_intersects_region">Sample x={0}, y={1}, width={2}, height={3} intersects scan region. Dividing sample area.</entry>
+<entry key="vectorize.message.scan_image.results">Area detected: x={0}, y={1}, width={2}, height={3}.</entry>
+<entry key="vectorize.message.scan_image.contains_subpaths">0#Does not contain single closed sub-path.|1#Contains single closed sub-path.</entry>
+
+<!-- Line detection messages -->
+
+<entry key="vectorize.message.line_detection.no_outer_inner">Path {0}: no outer or inner sub-paths found.</entry>
+<entry key="vectorize.message.line_detection.inner_contains">Path {0}: inner contains sub-path.</entry>
+<entry key="vectorize.message.line_detection.sub_path">Sub-path {0}: {1}</entry>
+<entry key="vectorize.message.line_detection.outer_sub_path">Sub-path {0} identified as outer sub-path.</entry>
+<entry key="vectorize.message.line_detection.inner_sub_path">Sub-path {0} identified as inner sub-path.</entry>
+<entry key="vectorize.message.line_detection.not_inner_outer">Path {0}: sub-path {1} not identified as either outer or inner sub-path.</entry>
+<entry key="vectorize.message.line_detection.sub_paths_dont_contain">Sub-path {0} does not contain ({1},{2}) and sub-path {3} does not contain ({4},{5}).</entry>
+<entry key="vectorize.message.line_detection.possible_loop">Possible loop detected.</entry>
+<entry key="vectorize.message.line_detection.multi_inner">Multiple inner sub-paths detected.</entry>
+
 <entry key="vectorize.path_n_result">Path {0}: {1}</entry>
-<entry key="vectorize.increasing_start">Increasing delta suggests initial wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
-<entry key="vectorize.decreasing_end">Decreasing delta suggests end wedge (delta range: [{0}, {1}], size: {2}, length: {3}). {4}</entry>
-<entry key="vectorize.message.insufficient_to_vectorize">not enough path components ({0}).</entry>
+<entry key="vectorize.border_unequal_points">Unequal border points ({0} and {1}) attempting to balance.</entry>
+<entry key="vectorize.lineify_between_borders">Attempting to fit a line between borders: {0}</entry>
+<entry key="vectorize.lineify_border_pair">{0,number,####0} ({1},{2})  ({3},{4})</entry>
+<entry key="vectorize.bulge_detected">Bulge detected from {0} ({1},{2}) and ({3},{4}) [delta={5}] to end-{6} ({7},{8}) and ({9},{10}) [delta={11}].</entry>
+<entry key="vectorize.between_bulges">Investigating region between two bulges.
+First bulge: {0}
+Second bulge: {1}
+Middle region: {2}</entry>
+<entry key="vectorize.line_detection.start_wedge_below_threshold">Possible initial wedge. Delta range: [{0}, {1}]. Deviation {2} below wedge threshold. Attempting to fit path.</entry>
+<entry key="vectorize.line_detection.end_wedge_below_threshold">Possible end wedge. Delta range: [{0}, {1}]. Deviation {2} below wedge threshold. Attempting to fit path.</entry>
+<entry key="vectorize.line_detection.increasing_start">Increasing delta suggests initial wedge (delta range: [{0}, {1}], size: {2}, length: {3}, deviation: {4}). {5}</entry>
+<entry key="vectorize.line_detection.decreasing_end">Decreasing delta suggests end wedge (delta range: [{0}, {1}], size: {2}, length: {3}, deviation: {4}). {5}</entry>
+<entry key="vectorize.line_detection.excess_points">Can''t detect initial bulge (unbalanced points): n1={0}, n2={1}, final deviation: {2} at index {3}.</entry>
+<entry key="vectorize.message.line_detection.curves_found">curves found.</entry>
 <entry key="vectorize.message.no_closed_subpaths">no closed sub-paths detected.</entry>
 <entry key="vectorize.message.single_closed_subpath_found">Single closed sub-path found.</entry>
 <entry key="vectorize.success_no_variance">converted to line (average delta: {0}).</entry>
@@ -2971,13 +3006,19 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.trying_spike">Trying spike {0}.</entry>
 <entry key="vectorize.possible_border">Possible line along sub-path borders: sub-path {0}: ({1},{2}) – ({3},{4}) and sub-path {5}: ({6},{7}) – ({8},{9}).</entry>
 <entry key="vectorize.splitting_border">Splitting off shared border region.</entry>
-<entry key="vectorize.too_wide">Region too wide.</entry>
+<entry key="vectorize.line_detection.too_wide">Region too wide.</entry>
+<entry key="vectorize.line_detection.too_wide.with_delta">Region too wide. Delta: {0}.</entry>
+<entry key="vectorize.line_detection.too_wide.with_deltas">Region too wide. Deltas: {0} and {1}.</entry>
+<entry key="vectorize.line_detection.too_wide.with_deltas_and_diff">Region too wide. Deltas: {0} (wedge deviation {1}) and {2} (wedge deviation {3}).</entry>
+<entry key="vectorize.line_detection.too_short">Path too short: {0}.</entry>
+<entry key="vectorize.line_detection.no_small_segments">No segments with length less than {0}.</entry>
 <entry key="vectorize.spikes_too_close">spikes too close.</entry>
 <entry key="vectorize.n_spikes_found">{0} found:</entry>
 <entry key="vectorize.n_spikes">0#0 spikes|1#1 spike|1&lt;{0} spikes</entry>
 <entry key="vectorize.spike_details">[{0}] ({1},{2}) -- ({3},{4}) -- ({5},{6}). Angle 1: {7} rad ({8} deg). Angle 2: {9} rad ({10} deg). Diagonal length: {11}.</entry>
 <entry key="vectorize.spike_details_no_mid">[{0}] ({1},{2}) -- ({3},{4}). Angle 1: {5} rad ({6} deg). Angle 2: {7} rad ({8} deg). Length: {9}.</entry>
 <entry key="vectorize.best_spike_pair">Best spike pair: [{0}] ({1},{2}) -- [{3}] ({4},{5}); deviation from midway: {6}; inclination deviation: {7}; average length: {8}; average angle deviation: {9}; distance: {10}.</entry>
+<entry key="vectorize.line_detection.reduced_spike_set">Spike set reduced to {0}.</entry>
 <entry key="vectorize.mid_region">Investigating mid region: {0}</entry>
 <entry key="vectorize.mid_region_collapsed">Mid region collapsed.</entry>
 <entry key="vectorize.merging_paths">Merging paths (distance: {0}): 
@@ -3000,11 +3041,6 @@ Merge Region: {2}</entry>
 <entry key="vectorize.smoothing_choice_n">({0}): {1}</entry>
 <entry key="vectorize.smoothing_choosing_n_not_m">Choosing ({0}) over ({1}): {2}</entry>
 <entry key="vectorize.smoothing_discounting_n">Discounting ({0}): {1}</entry>
-<entry key="vectorize.smoothing_le">{0} &lt; {1}</entry>
-<entry key="vectorize.smoothing_leq">{0} ≤ {1}</entry>
-<entry key="vectorize.smoothing_leq_offset">{0} ≤ {1} + {2}</entry>
-<entry key="vectorize.smoothing_le_offset">{0} &lt; {1} + {2}</entry>
-<entry key="vectorize.smoothing_reason_and">{0} and {1}</entry>
 <entry key="vectorize.smoothing_remaining_length">Estimated length from ({0},{1}) -- ({2},{3}): {4}</entry>
 <entry key="vectorize.smoothing_curve_sampling_start">Curve sampling on: finding best starting point.</entry>
 <entry key="vectorize.smoothing_too_flat">Too flat ({0}).</entry>
