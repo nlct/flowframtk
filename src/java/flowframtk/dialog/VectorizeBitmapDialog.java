@@ -1941,6 +1941,11 @@ public class VectorizeBitmapDialog extends JFrame
       return controlPanel.getWedgeThreshold();
    }
 
+   public double getWedgeLengthThreshold()
+   {
+      return controlPanel.getWedgeLengthThreshold();
+   }
+
    public double getMinimumStubLength()
    {
       return controlPanel.getMinimumStubLength();
@@ -3664,8 +3669,8 @@ class LineDetectionPanel extends ControlSubPanel
       subPanel = newRow();
 
       wedgeThresholdSpinnerModel
-          = new SpinnerNumberModel(Double.valueOf(1.0), Double.valueOf(0.0), null, 
-              Double.valueOf(1.0));
+          = new SpinnerNumberModel(Double.valueOf(1.2), Double.valueOf(0.0), null, 
+              Double.valueOf(0.1));
 
       wedgeThresholdLabel = resources.createAppLabel(
          "vectorize.wedge_threshold");
@@ -3674,6 +3679,20 @@ class LineDetectionPanel extends ControlSubPanel
       wedgeThresholdSpinner = createSpinner(
          wedgeThresholdLabel, wedgeThresholdSpinnerModel);
       subPanel.add(wedgeThresholdSpinner);
+
+      subPanel = newRow();
+
+      wedgeLengthThresholdSpinnerModel
+          = new SpinnerNumberModel(Double.valueOf(3.0), Double.valueOf(0.0), null, 
+              Double.valueOf(0.5));
+
+      wedgeLengthThresholdLabel = resources.createAppLabel(
+         "vectorize.wedge_length_threshold");
+      subPanel.add(wedgeLengthThresholdLabel);
+
+      wedgeLengthThresholdSpinner = createSpinner(
+         wedgeLengthThresholdLabel, wedgeLengthThresholdSpinnerModel);
+      subPanel.add(wedgeLengthThresholdSpinner);
 
       subPanel = newRow();
 
@@ -3780,6 +3799,9 @@ class LineDetectionPanel extends ControlSubPanel
          wedgeThresholdSpinner.setEnabled(enable);
          wedgeThresholdLabel.setEnabled(enable);
 
+         wedgeLengthThresholdSpinner.setEnabled(enable);
+         wedgeLengthThresholdLabel.setEnabled(enable);
+
          spikeReturnDistanceSpinner.setEnabled(enable);
          spikeReturnDistanceLabel.setEnabled(enable);
 
@@ -3801,6 +3823,9 @@ class LineDetectionPanel extends ControlSubPanel
 
          wedgeThresholdSpinner.setEnabled(enable);
          wedgeThresholdLabel.setEnabled(enable);
+
+         wedgeLengthThresholdSpinner.setEnabled(enable);
+         wedgeLengthThresholdLabel.setEnabled(enable);
 
          spikeReturnDistanceSpinner.setEnabled(enable);
          spikeReturnDistanceLabel.setEnabled(enable);
@@ -3908,6 +3933,9 @@ class LineDetectionPanel extends ControlSubPanel
       wedgeThresholdSpinner.setEnabled(enable);
       wedgeThresholdLabel.setEnabled(enable);
 
+      wedgeLengthThresholdSpinner.setEnabled(enable);
+      wedgeLengthThresholdLabel.setEnabled(enable);
+
       spikeReturnDistanceSpinner.setEnabled(enable);
       spikeReturnDistanceLabel.setEnabled(enable);
 
@@ -3961,7 +3989,8 @@ class LineDetectionPanel extends ControlSubPanel
          }
 
          deltaVarianceThresholdSpinnerModel.setValue(Double.valueOf(1.0));
-         wedgeThresholdSpinnerModel.setValue(Double.valueOf(1.0));
+         wedgeThresholdSpinnerModel.setValue(Double.valueOf(1.2));
+         wedgeLengthThresholdSpinnerModel.setValue(Double.valueOf(3.0));
          spikeReturnDistanceSpinnerModel.setValue(Double.valueOf(4.0));
          minStubLengthSpinnerModel.setValue(Double.valueOf(2.0));
          tinyStepThresholdSpinnerModel.setValue(Double.valueOf(3.5));
@@ -4038,6 +4067,11 @@ class LineDetectionPanel extends ControlSubPanel
       return wedgeThresholdSpinnerModel.getNumber().doubleValue();
    }
 
+   public double getWedgeLengthThreshold()
+   {
+      return wedgeLengthThresholdSpinnerModel.getNumber().doubleValue();
+   }
+
    public double getMinimumStubLength()
    {
       return minStubLengthSpinnerModel.getNumber().doubleValue();
@@ -4065,11 +4099,12 @@ class LineDetectionPanel extends ControlSubPanel
     midDiffWeightLabel, inclinationDiffWeightLabel,
     averageLengthWeightLabel, angleDiffWeightLabel,
     inverseDistanceWeightLabel,
-    wedgeThresholdLabel;
+    wedgeThresholdLabel, wedgeLengthThresholdLabel;
 
    private SpinnerNumberModel deltaThresholdSpinnerModel,
       deltaVarianceThresholdSpinnerModel, tinyStepThresholdSpinnerModel,
-      spikeReturnDistanceSpinnerModel, wedgeThresholdSpinnerModel,
+      spikeReturnDistanceSpinnerModel,
+      wedgeThresholdSpinnerModel, wedgeLengthThresholdSpinnerModel,
       minStubLengthSpinnerModel,
       fixedLineWidthSpinnerModel, 
       mergeSpikeLengthThresholdSpinnerModel, 
@@ -4087,7 +4122,7 @@ class LineDetectionPanel extends ControlSubPanel
     midDiffWeightSpinner, inclinationDiffWeightSpinner,
     averageLengthWeightSpinner, angleDiffWeightSpinner,
     inverseDistanceWeightSpinner, 
-    wedgeThresholdSpinner;
+    wedgeThresholdSpinner, wedgeLengthThresholdSpinner;
 
    private JCheckBox doLineDetectionCheckBox, detectIntersections,
     roundRelativeLineWidthCheckBox;
@@ -5184,6 +5219,11 @@ class ControlPanel extends JPanel implements ActionListener
    public double getWedgeThreshold()
    {
       return lineDetectionPanel.getWedgeThreshold();
+   }
+
+   public double getWedgeLengthThreshold()
+   {
+      return lineDetectionPanel.getWedgeLengthThreshold();
    }
 
    public double getMinimumStubLength()
@@ -9854,6 +9894,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       }
 
       double wedgeThreshold = dialog.getWedgeThreshold();
+      double wedgeLengthThreshold = dialog.getWedgeLengthThreshold();
       double wedgeDeviation1 = 0.0;
 
       if (startBulge > 0)
@@ -9862,7 +9903,8 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       }
 
       if (newPath1 == null || newPath1.size() <= 1 
-           || wedgeDeviation1 >= wedgeThreshold)
+           || wedgeDeviation1 >= wedgeThreshold
+           || (wedgeDeviation1 > 0 && path1Length < wedgeLengthThreshold))
       {
          if (wedgeDeviation1 > 0 && dialog.isVerbose())
          {
@@ -9882,7 +9924,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       {
          dialog.addVerboseMessageIdLn(
            "vectorize.line_detection.start_wedge_below_threshold",
-           firstDelta, prevDelta, wedgeThreshold);
+           firstDelta, prevDelta, wedgeDeviation1, path1Length);
       }
 
       if (startBulge > 0 && dialog.isVerbose())
@@ -9960,7 +10002,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
                   if (newPath1 == null 
                       || getDistance(newPath1LastX, newPath1LastY, x, y)
                             > threshold
-                      || wedgeDeviation2 > wedgeThreshold)
+                      || wedgeDeviation2 > 0)
                   {
                      if (newPath1 != null)
                      {
@@ -10074,7 +10116,8 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
             endBulge = 0;
             endBulgeDelta = firstDelta;
          }
-         else if (wedgeDeviation2 > wedgeThreshold)
+         else if (wedgeDeviation2 >= wedgeThreshold
+               || (wedgeDeviation2 > 0 && path2Length < wedgeLengthThreshold))
          {
             if (dialog.isVerbose())
             {
@@ -10089,11 +10132,11 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          }
          else if (newPath2.size() > 1)
          {
-            if (wedgeDeviation2 > 0 && wedgeDeviation2 < wedgeThreshold)
+            if (wedgeDeviation2 > 0)
             {
                dialog.addVerboseMessageIdLn(
                  "vectorize.line_detection.end_wedge_below_threshold",
-                 firstDelta, prevDelta, wedgeDeviation2);
+                 firstDelta, prevDelta, wedgeDeviation2, path2Length);
             }
 
             newPath2.setFilled(false);
@@ -10107,9 +10150,12 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
             endBulgeDelta = firstDelta;
          }
       }
+
       if (!success)
       {
-         addPathResultMessage(getNumShapes()+1, "vectorize.line_detection.too_wide");
+         addPathResultMessage(getNumShapes()+1, 
+           "vectorize.line_detection.too_wide.with_deltas", 
+              startBulgeDelta, endBulgeDelta);
          return false;
       }
 
@@ -11143,7 +11189,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          if (midN < 5)
          {
             addPathResultMessage(getNumShapes()+1, 
-              "vectorize.line_detection.too_wide");
+              "vectorize.line_detection.mid_region_too_small");
             return false;
          }
 
@@ -11191,7 +11237,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          if (midN < 5)
          {
             addPathResultMessage(getNumShapes()+1, 
-               "vectorize.line_detection.too_wide");
+               "vectorize.line_detection.mid_region_too_small");
             return false;
          }
 
@@ -11366,19 +11412,22 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
 
       double length = newPath.getEstimatedLength();
 
+      if (newPath.size() > 1)
+      {
+         averageDist /= newPath.size();
+      }
+
       if (length < minStubLength)
       {
-         dialog.addMessageIdLn("vectorize.discarding_small_stub",
+         dialog.addVerboseMessageIdLn("vectorize.discarding_small_stub",
           length, newPath.svg());
          addPathResultMessage(getNumShapes()+1, 
-           "vectorize.line_detection.too_wide");
+           "vectorize.line_detection.too_wide.with_delta", averageDist);
          return false;
       }
 
       if (newPath.size() > 1)
       {
-         averageDist /= newPath.size();
-
          setLineWidth(newPath, averageDist);
 
          if (!doLineIntersectionCheck || !bulgeFound)
@@ -11477,7 +11526,9 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          return true;
       }
 
-      addPathResultMessage(getNumShapes()+1, "vectorize.line_detection.too_wide");
+      addPathResultMessage(getNumShapes()+1,
+         "vectorize.line_detection.too_wide.with_delta",
+         averageDist);
 
       return false;
    }

@@ -2868,6 +2868,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.variance_threshold.mnemonic">V</entry>
 <entry key="vectorize.wedge_threshold">Wedge Threshold:</entry>
 <entry key="vectorize.wedge_threshold.mnemonic">W</entry>
+<entry key="vectorize.wedge_length_threshold">Wedge Length Threshold:</entry>
 <entry key="vectorize.spike_return_distance">Spike Return Distance:</entry>
 <entry key="vectorize.spike_return_distance.mnemonic">K</entry>
 <entry key="vectorize.min_stub_length">Minimum stub length:</entry>
@@ -2986,8 +2987,8 @@ Are you sure you want to ungroup it?</entry>
 First bulge: {0}
 Second bulge: {1}
 Middle region: {2}</entry>
-<entry key="vectorize.line_detection.start_wedge_below_threshold">Possible initial wedge. Delta range: [{0}, {1}]. Deviation {2} below wedge threshold. Attempting to fit path.</entry>
-<entry key="vectorize.line_detection.end_wedge_below_threshold">Possible end wedge. Delta range: [{0}, {1}]. Deviation {2} below wedge threshold. Attempting to fit path.</entry>
+<entry key="vectorize.line_detection.start_wedge_below_threshold">Possible initial wedge. Delta range: [{0}, {1}]. Deviation {2} below wedge threshold. Length {3} above wedge length threshold. Attempting to fit path.</entry>
+<entry key="vectorize.line_detection.end_wedge_below_threshold">Possible end wedge. Delta range: [{0}, {1}]. Deviation {2} below wedge threshold. Length {3} above wedge length threshold. Attempting to fit path.</entry>
 <entry key="vectorize.line_detection.increasing_start">Increasing delta suggests initial wedge (delta range: [{0}, {1}], size: {2}, length: {3}, deviation: {4}). {5}</entry>
 <entry key="vectorize.line_detection.decreasing_end">Decreasing delta suggests end wedge (delta range: [{0}, {1}], size: {2}, length: {3}, deviation: {4}). {5}</entry>
 <entry key="vectorize.line_detection.excess_points">Can''t detect initial bulge (unbalanced points): n1={0}, n2={1}, final deviation: {2} at index {3}.</entry>
@@ -3006,6 +3007,7 @@ Middle region: {2}</entry>
 <entry key="vectorize.trying_spike">Trying spike {0}.</entry>
 <entry key="vectorize.possible_border">Possible line along sub-path borders: sub-path {0}: ({1},{2}) – ({3},{4}) and sub-path {5}: ({6},{7}) – ({8},{9}).</entry>
 <entry key="vectorize.splitting_border">Splitting off shared border region.</entry>
+<entry key="vectorize.line_detection.mid_region_too_small">Mid-region too small.</entry>
 <entry key="vectorize.line_detection.too_wide">Region too wide.</entry>
 <entry key="vectorize.line_detection.too_wide.with_delta">Region too wide. Delta: {0}.</entry>
 <entry key="vectorize.line_detection.too_wide.with_deltas">Region too wide. Deltas: {0} and {1}.</entry>
