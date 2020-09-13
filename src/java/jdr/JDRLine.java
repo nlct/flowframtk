@@ -509,6 +509,79 @@ public class JDRLine extends JDRSegment
       return getClosestPointAlongLine(r1, r2, p, false);
    }
 
+   public static Point2D getIntersection(Point2D r1, Point2D r2,
+     Point2D q1, Point2D q2)
+   {
+      double rxdiff = r2.getX() - r1.getX();
+      double rydiff = r2.getY() - r1.getY();
+
+      double qxdiff = q2.getX() - q1.getX();
+      double qydiff = q2.getY() - q1.getY();
+
+      double one_over_rxdiff = 1.0/rxdiff;
+      double one_over_rydiff = 1.0/rydiff;
+
+      double one_over_qxdiff = 1.0/qxdiff;
+      double one_over_qydiff = 1.0/qydiff;
+
+      if ((Double.isInfinite(one_over_rxdiff) 
+       && Double.isInfinite(one_over_qxdiff))
+       ||(Double.isInfinite(one_over_rydiff) 
+       && Double.isInfinite(one_over_qydiff)))
+      {
+         // both vertical or both horizontal.
+         return null;
+      }
+
+      if (Double.isInfinite(one_over_rxdiff))
+      {// r1 -- r2 is vertical
+       // intersection must occur when x = r2.getX() = r1.getX()
+         double t = (r1.getX() - q1.getX()) * one_over_qxdiff;
+         double y = q1.getY() + t * qydiff;
+
+         return new Point2D.Double(r1.getX(), y);
+      }
+
+      if (Double.isInfinite(one_over_qxdiff))
+      {// q1 -- q2 is vertical
+       // intersection must occur when x = q2.getX() = q1.getX()
+         double t = (q1.getX() - r1.getX()) * one_over_rxdiff;
+         double y = r1.getY() + t * rydiff;
+
+         return new Point2D.Double(q1.getX(), y);
+      }
+
+      if (Double.isInfinite(one_over_rydiff))
+      {// r1 -- r2 is horizontal
+       // intersection must occur when y = r2.getY() = r1.getY()
+         double t = (r1.getY() - q1.getY()) * one_over_qydiff;
+         double x = q1.getX() + t * qxdiff;
+
+         return new Point2D.Double(x, r1.getY());
+      }
+
+      if (Double.isInfinite(one_over_qydiff))
+      {// q1 -- q2 is horizontal
+       // intersection must occur when y = q2.getY() = q1.getY()
+         double t = (q1.getY() - r1.getY()) * one_over_rydiff;
+         double x = r1.getX() + t * rxdiff;
+
+         return new Point2D.Double(x, q1.getY());
+      }
+
+      double factor = 1.0/(rydiff * qxdiff - qydiff * rxdiff);
+
+      if (Double.isInfinite(factor))
+      {
+         return null;
+      }
+
+      double t = factor * 
+        ((q1.getY() - r1.getY())*rxdiff - rydiff * (q1.getX() - r1.getX()));
+
+      return new Point2D.Double(q1.getX() + t * qxdiff, q1.getY() + t * qydiff);
+   }
+
    public JDRObjectLoaderListener getListener()
    {
       return listener;
