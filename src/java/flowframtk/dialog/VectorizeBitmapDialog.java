@@ -10592,7 +10592,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
 
       if (numIndexes == 1)
       {
-         return stickBulge(vec, spike1.getIndex(), p0, p1, twiceDelta);
+         return stickBulge(vec, spike1, p0, p1, twiceDelta);
       }
 
       Spike spike2 = indexes.get(1);
@@ -10687,9 +10687,16 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       int i1 = spike1.intValue();
       int i2 = spike2.intValue();
 
+      int idxDiff = Math.abs(i2-i1);
+
+      if (i1 == n-1)
+      {
+         idxDiff = i2;
+      }
+
       double l1, l2;
 
-      if (Math.abs(i1-i2) == 1 || (i1 == n-1 && i2 == 1))
+      if (idxDiff == 1)
       {
          // choose shortest segment
 
@@ -10775,25 +10782,83 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
             after2 = after2 - n + 1;
          }
 
+         Point2D beforePt, afterPt;
+
          if (before1 == n-1)
          {
             l1 = JDRLine.getLength(p1, p0);
+            beforePt = p1;
          }
          else
          {
-            l1 = vec.get(before1).getDiagonalLength();
+            ShapeComponent comp = vec.get(before1);
+            l1 = comp.getDiagonalLength();
+            beforePt = comp.getStart();
          }
 
          if (after2 == n-1)
          {
             l2 = JDRLine.getLength(p1, p0);
+            afterPt = p0;
          }
          else
          {
-            l2 = vec.get(after2).getDiagonalLength();
+            ShapeComponent comp = vec.get(after2);
+            l2 = comp.getDiagonalLength();
+            afterPt = comp.getEnd();
          }
 
-         if (Math.abs(l2-l1) < EPSILON)
+         double lenDiff = Math.abs(l2-l1);
+
+         if (lenDiff <= dialog.getMergeSpikeNeighbourThreshold() && idxDiff == 3)
+         {
+            double dist1 = JDRLine.getLength(beforePt, afterPt);
+            double dist2 = JDRLine.getLength(spike1.getP2(), spike2.getP1());
+
+            if (Math.abs(dist1-dist2) <= dialog.getMergeSpikeNeighbourThreshold())
+            {
+               spike1.setIndex(i1 == n-1? 1.5 : i1+1.5, vec, p0, p1, dialog);
+
+               // set mid point to intersection of neighbouring
+               // segments
+               Point2D r1, r2, q1, q2;
+
+               if (i1 == n-1)
+               {
+                  r1 = p1;
+                  r2 = p0;
+               }
+               else
+               {
+                  ShapeComponent comp = vec.get(i1);
+                  r1 = comp.getStart();
+                  r2 = comp.getEnd();
+               }
+
+               if (i2 == n-1)
+               {
+                  q1 = p1;
+                  q2 = p0;
+               }
+               else
+               {
+                  ShapeComponent comp = vec.get(i2);
+                  q1 = comp.getStart();
+                  q2 = comp.getEnd();
+               }
+
+               Point2D intersect = JDRLine.getIntersection(r1, r2, q1, q2);
+
+               if (intersect != null)
+               {
+                  spike1.setMid(intersect);
+               }
+
+               return spike1;
+            }
+         }
+
+         if (lenDiff < EPSILON)
          {
             before1 = i1-2;
 
@@ -10855,25 +10920,83 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
             before2 = n - 1 + before2;
          }
 
+         Point2D beforePt, afterPt;
+
          if (after1 == n-1)
          {
             l1 = JDRLine.getLength(p1, p0);
+            afterPt = p0;
          }
          else
          {
-            l1 = vec.get(after1).getDiagonalLength();
+            ShapeComponent comp = vec.get(after1);
+            l1 = comp.getDiagonalLength();
+            afterPt = comp.getEnd();
          }
 
          if (before2 == n-1)
          {
             l2 = JDRLine.getLength(p1, p0);
+            beforePt = p1;
          }
          else
          {
-            l2 = vec.get(before2).getDiagonalLength();
+            ShapeComponent comp = vec.get(before2);
+            l2 = comp.getDiagonalLength();
+            beforePt = comp.getStart();
          }
 
-         if (Math.abs(l2-l1) < EPSILON)
+         double lenDiff = Math.abs(l2-l1);
+
+         if (lenDiff <= dialog.getMergeSpikeNeighbourThreshold() && idxDiff == 3)
+         {
+            double dist1 = JDRLine.getLength(beforePt, afterPt);
+            double dist2 = JDRLine.getLength(spike1.getP2(), spike2.getP1());
+
+            if (Math.abs(dist1-dist2) <= dialog.getMergeSpikeNeighbourThreshold())
+            {
+               spike1.setIndex(i1 == n-1? 1.5 : i1+1.5, vec, p0, p1, dialog);
+
+               // set mid point to intersection of neighbouring
+               // segments
+               Point2D r1, r2, q1, q2;
+
+               if (i1 == n-1)
+               {
+                  r1 = p1;
+                  r2 = p0;
+               }
+               else
+               {
+                  ShapeComponent comp = vec.get(i1);
+                  r1 = comp.getStart();
+                  r2 = comp.getEnd();
+               }
+
+               if (i2 == n-1)
+               {
+                  q1 = p1;
+                  q2 = p0;
+               }
+               else
+               {
+                  ShapeComponent comp = vec.get(i2);
+                  q1 = comp.getStart();
+                  q2 = comp.getEnd();
+               }
+
+               Point2D intersect = JDRLine.getIntersection(r1, r2, q1, q2);
+
+               if (intersect != null)
+               {
+                  spike1.setMid(intersect);
+               }
+
+               return spike1;
+            }
+         }
+
+         if (lenDiff < EPSILON)
          {
             after1 = i1+2;
 
@@ -11305,7 +11428,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       return true;
    }
 
-   private boolean stickBulge(ShapeComponentVector vec, Number idxNum, 
+   private boolean stickBulge(ShapeComponentVector vec, Spike spike, 
      Point2D p0, Point2D p1, double twiceDelta)
    {
       int n = vec.size();
@@ -11316,38 +11439,215 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       newPath.setFilled(false);
 
       double averageDist = 0.0;
-      int idx1 = idxNum.intValue();
-      int idx2 = idx1;
+      int idx = spike.intValue();
 
-      ShapeComponent comp = vec.get(idx1);
+      Vector<Point2D> pts = new Vector<Point2D>(n);
 
-      if (idxNum instanceof Integer)
+      for (int i = idx; i < n; i++)
       {
+         ShapeComponent comp = vec.get(i);
+         Point2D p;
+
          if (comp.getType() == PathIterator.SEG_CLOSE)
          {
-            newPath.moveTo(JDRLine.getMidPoint(p1, p0));
+            p = p0;
          }
          else
          {
-            newPath.moveTo(comp.getMid());
+            p = comp.getEnd();
          }
 
-         averageDist = 0.5*comp.getDiagonalLength();
+         pts.add(p);
       }
-      else
+
+      for (int i = 1; i <= idx; i++)
       {
+         ShapeComponent comp = vec.get(i);
+         Point2D p;
+
          if (comp.getType() == PathIterator.SEG_CLOSE)
          {
-            newPath.moveTo(p0);
+            p = p0;
          }
          else
          {
-            newPath.moveTo(comp.getEnd());
+            p = comp.getEnd();
          }
 
-         idx2++;
+         pts.add(p);
       }
 
+      insertSubDivisions(pts);
+      pts.remove(pts.size()-1);
+
+      idx=0;
+
+      if (!spike.hasIntegerIndex())
+      {
+         newPath.moveTo(spike.getMid());
+         idx=1;
+      }
+
+      n = pts.size();
+
+      double firstDelta = 0, prevDelta = 0, prevDelta2 = 0;
+      double bulgeDelta = -1.0;
+
+      double averageDelta = 0.0;
+      int numPts = 0;
+
+      double prevX=-1;
+      double prevY=-1;
+      double newPathLastX = -1;
+      double newPathLastY = -1;
+      double prevLastX = -1;
+      double prevLastY = -1;
+
+      int startBulge=-1, endBulge=-1;
+
+      double threshold = ROOT_2 * deltaThreshold;
+
+// TODO add check for wedge
+      for (int i = idx, j = n-1; i <= j; i++, j--)
+      {
+         Point2D r1 = pts.get(i);
+         Point2D r2 = pts.get(j);
+
+         double dx = 0.5*(r2.getX() - r1.getX());
+         double dy = 0.5*(r2.getY() - r1.getY());
+
+         double x = r1.getX() + dx;
+         double y = r1.getY() + dy;
+
+         double delta = Math.sqrt(dx*dx + dy*dy);
+
+         if (i == idx)
+         {
+            firstDelta = delta;
+         }
+
+         if (delta <= threshold)
+         {
+            if (newPath.isEmpty())
+            {
+               newPath.moveTo(x, y);
+            }
+            else
+            {
+               newPath.lineTo(x, y, EPSILON);
+            }
+
+            numPts++;
+            averageDelta += delta;
+
+            prevLastX = newPathLastX;
+            prevLastY = newPathLastY;
+
+            newPathLastX = x;
+            newPathLastY = y;
+
+            startBulge = i;
+            endBulge = j;
+         }
+         else
+         {
+            bulgeDelta = delta;
+            break;
+         }
+
+         prevX = x;
+         prevY = y;
+
+         prevDelta2 = prevDelta;
+         prevDelta = delta;
+      }
+
+      if (endBulge == -1 || startBulge == -1 || endBulge == n-1 || numPts <= 1+idx)
+      {
+         addPathResultMessage(getNumShapes()+1, 
+           "vectorize.line_detection.too_wide.with_delta", bulgeDelta);
+         return false;
+      }
+
+      double pathLength = newPath.getEstimatedLength();
+
+      if (endBulge <= n-2 && (endBulge-startBulge > 3))
+      {
+         Point2D r1 = pts.get(startBulge);      
+         Point2D r2 = pts.get(endBulge);      
+
+         Point2D prev1 = pts.get(startBulge-1);
+         Point2D prev2 = pts.get(endBulge+1);
+
+         Point2D adjustPt = null;
+
+         if (JDRLine.getSquareLength(r1, 
+               JDRLine.getClosestPointAlongLine(prev1, prev2, r1)) < EPSILON
+          || JDRLine.getSquareLength(r2,
+               JDRLine.getClosestPointAlongLine(prev1, prev2, r2)) < EPSILON)
+         {
+            adjustPt = new Point2D.Double(prevLastX, prevLastY);
+            startBulge--;
+            endBulge++;
+         }
+         else
+         {
+            Point2D q1 = JDRLine.getClosestPointAlongLine(r1, r2, prev1);
+            Point2D q2 = JDRLine.getClosestPointAlongLine(r1, r2, prev2);
+
+            if (JDRLine.getSquareLength(prev1, q1) < EPSILON)
+            {
+               adjustPt = JDRLine.getMidPoint(q1, q2);
+               startBulge--;
+            }
+            else if (JDRLine.getSquareLength(prev2, q2) < EPSILON)
+            {
+               adjustPt = JDRLine.getMidPoint(q1, q2);
+               endBulge++;
+            }
+         }
+
+         if (adjustPt != null)
+         {
+            newPath.remove(newPath.size()-1);
+            newPath.lineTo(adjustPt, EPSILON);
+            numPts--;
+            averageDelta -= bulgeDelta;
+            bulgeDelta = prevDelta;
+            prevDelta = prevDelta2;
+         }
+      }
+
+      if (numPts > 0)
+      {
+         averageDelta /= numPts;
+      }
+
+      if (endBulge-startBulge < 2)
+      {
+         addPathResultMessage(getNumShapes()+1, 
+           "vectorize.line_detection.end_bulge_too_small",
+           pts.get(startBulge), pts.get(endBulge), bulgeDelta);
+         return false;
+      }
+
+      addShape(newPath, "vectorize.success_no_variance", averageDelta);
+
+      ShapeComponentVector bulge = new ShapeComponentVector();
+
+      bulge.moveTo(pts.get(startBulge));
+
+      for (int i = startBulge+1; i <= endBulge; i++)
+      {
+         bulge.lineTo(pts.get(i), EPSILON);
+      }
+
+      bulge.closePath(EPSILON);
+
+      addShape(bulge);
+      return true;
+
+/*
       int i1 = idx1+1;
       int i2 = idx2-1;
 
@@ -11531,190 +11831,8 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          averageDist);
 
       return false;
-   }
-
-/*
-   private void tryLineifyRegion2(ShapeComponentVector vec)
-    throws InterruptedException
-   {
-      int n = vec.size();
-
-      if (n < 3)
-      {
-         addShape(vec, "vectorize.message.insufficient_to_vectorize", n);
-         return;
-      }
-      else if (vec.lastElement().getType() != PathIterator.SEG_CLOSE)
-      {
-         addShape(vec, "vectorize.message.not_closed");
-         return;
-      }
-
-      n--;
-
-      PathCoord[] pts = new PathCoord[n];
-
-      for (int i = 0; i < n; i++)
-      {
-         ShapeComponent comp = vec.get(i);
-
-         Point2D grad1 = new Point2D.Double();
-         Point2D grad2 = new Point2D.Double();
-         double bend = getBendAngle(vec, i, grad1, grad2);
-         pts[i] = new PathCoord(comp.getType(), comp.getEnd(), bend, grad1, grad2);
-      }
-
-      int n2 = n/2;
-      int n1 = n-n2;
-
-      LineifyResults results = lineifyBestFit(pts, n1, n2);
-
-      if (results.minAverageDelta <= deltaThreshold)
-      {
-         if (!doLineIntersectionCheck)
-         {
-            addShape(results.bestPath, "vectorize.success_no_variance",
-             results.minAverageDelta);
-            return;
-         }
-         else
-         {
-            if (results.variance <= varianceThreshold)
-            {
-               addShape(results.bestPath, "vectorize.success_intersect_check",
-                 results.minAverageDelta, results.variance);
-               return;
-            }
-         }
-      }
-
-      // Find spikes
-      Integer[] indexes = new Integer[pts.length];
-      Vector<Vector<Integer>> spikes = getRegionSpikes(pts, vec.getPath(),
-        indexes);
-
-      if (spikes.isEmpty())
-      {
-         if (!findBulge(vec))
-         {
-            addShape(vec, "vectorize.no_spikes");
-         }
-
-         return;
-      }
-
-      int remainingN = 0;
-
-      for (int i = 0; i < indexes.length; i++)
-      {
-         if (indexes[i] != null)
-         {
-            remainingN++;
-         }
-      }
-
-      if (remainingN < 4)
-      {
-         addShape(vec, "vectorize.too_many_spikes");
-         return;
-      }
-
-      ShapeComponentVector reducedShape = new ShapeComponentVector(remainingN);
-
-      Point2D prevPt = null;
-
-      for (int i = 0; i < pts.length; i++)
-      {
-         if (indexes[i] != null)
-         {
-            Point2D p = pts[i].getPoint();
-            double[] coords = new double[6];
-            coords[0] = p.getX();
-            coords[1] = p.getY();
-
-            if (prevPt == null)
-            {
-               reducedShape.add(new ShapeComponent(PathIterator.SEG_MOVETO, 
-                 coords, prevPt));
-            }
-            else
-            {
-               reducedShape.add(new ShapeComponent(PathIterator.SEG_LINETO,
-                 coords, prevPt));
-            }
-
-            prevPt = p;
-         }
-      }
-
-      PathCoord[] q = new PathCoord[remainingN];
-
-      for (int i = 0; i < remainingN; i++)
-      {
-         ShapeComponent comp = reducedShape.get(i);
-
-         Point2D grad1 = new Point2D.Double();
-         Point2D grad2 = new Point2D.Double();
-         double bend = getBendAngle(vec, i, grad1, grad2);
-         q[i] = new PathCoord(comp.getType(), comp.getEnd(), bend, grad1, grad2);
-      }
-
-      int m2 = q.length/2;
-      int m1 = q.length-m2;
-
-      LineifyResults reducedPathResults = lineifyBestFit(q, m1, m2);
-
-      if (reducedPathResults.minAverageDelta <= deltaThreshold)
-      {
-         addShape(reducedPathResults.bestPath, "vectorize.reduced_path_success",
-           reducedPathResults.minAverageDelta);
-      }
-      else
-      {
-         if (!findBulge(vec))
-         {
-            addShape(vec, "vectorize.reduced_path_failed", 
-               reducedPathResults.minAverageDelta);
-         }
-
-         return;
-      }
-
-      for (Vector<Integer> spike : spikes)
-      {
-         ShapeComponentVector newShape = new ShapeComponentVector(spike.size()+1);
-         prevPt = null;
-         double[] coords = null;
-
-         for (Integer num : spike)
-         {
-            Point2D p = pts[num].getPoint();
-            coords = new double[6];
-            coords[0] = p.getX();
-            coords[1] = p.getY();
-
-            if (prevPt == null)
-            {
-               newShape.add(new ShapeComponent(PathIterator.SEG_MOVETO,
-                coords, prevPt));
-            }
-            else
-            {
-               newShape.add(new ShapeComponent(PathIterator.SEG_LINETO,
-                coords, prevPt));
-            }
-
-            prevPt = p;
-         }
-
-         newShape.add(new ShapeComponent(PathIterator.SEG_CLOSE, coords, prevPt));
-
-         dialog.addMessageIdLn("vectorize.trying_spike", spike);
-         tryLineifyRegion(newShape);
-      }
-
-   }
 */
+   }
 
    private boolean tryLineifyLoop(SubPath sp1, SubPath sp2)
     throws InterruptedException
@@ -14329,6 +14447,11 @@ class Spike
    public Point2D getMid()
    {
       return mid;
+   }
+
+   public void setMid(Point2D newMid)
+   {
+      mid = newMid;
    }
 
    public double getBeforeAngle()
