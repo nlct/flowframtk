@@ -1592,17 +1592,92 @@ public abstract class JDRShape extends JDRCompleteObject
 
    public static double computeArea(Point2D[] pts)
    {
+      return computeArea(pts, 0, pts.length-1);
+   }
+
+   public static double computeArea(Point2D[] pts, int startOffset, int endOffset)
+   {
       double sum = 0.0;
-      Point2D prev = pts[0];
+      Point2D prev = pts[startOffset];
 
-      for (int i = 1; i < pts.length; i++)
+      if (startOffset > endOffset)
       {
-         sum += prev.getX() * pts[i].getY() - prev.getY() * pts[i].getX();
+         for (int i = startOffset; i < pts.length; i++)
+         {
+            sum += prev.getX() * pts[i].getY() - prev.getY() * pts[i].getX();
 
-         prev = pts[i];
+            prev = pts[i];
+         }
+
+         for (int i = 0; i <= endOffset; i++)
+         {
+            sum += prev.getX() * pts[i].getY() - prev.getY() * pts[i].getX();
+
+            prev = pts[i];
+         }
+      }
+      else
+      {
+         for (int i = startOffset; i <= endOffset; i++)
+         {
+            sum += prev.getX() * pts[i].getY() - prev.getY() * pts[i].getX();
+
+            prev = pts[i];
+         }
       }
 
-      sum += prev.getX() * pts[0].getY() - prev.getY() * pts[0].getX();
+      sum += prev.getX() * pts[startOffset].getY()
+           - prev.getY() * pts[startOffset].getX();
+
+      return Math.abs(sum)/2;
+   }
+
+   public static double computeArea(Vector<Point2D> pts)
+   {
+      return computeArea(pts, 0, pts.size()-1);
+   }
+
+   public static double computeArea(Vector<Point2D> pts, int startOffset, int endOffset)
+   {
+      double sum = 0.0;
+      Point2D p0 = pts.get(startOffset);
+      Point2D prev = p0;
+
+      if (startOffset > endOffset)
+      {
+         int n = pts.size();
+
+         for (int i = startOffset; i < n; i++)
+         {
+            Point2D p = pts.get(i);
+
+            sum += prev.getX() * p.getY() - prev.getY() * p.getX();
+
+            prev = p;
+         }
+
+         for (int i = 0; i <= endOffset; i++)
+         {
+            Point2D p = pts.get(i);
+
+            sum += prev.getX() * p.getY() - prev.getY() * p.getX();
+
+            prev = p;
+         }
+      }
+      else
+      {
+         for (int i = startOffset; i <= endOffset; i++)
+         {
+            Point2D p = pts.get(i);
+
+            sum += prev.getX() * p.getY() - prev.getY() * p.getX();
+
+            prev = p;
+         }
+      }
+
+      sum += prev.getX() * p0.getY() - prev.getY() * p0.getX();
 
       return Math.abs(sum)/2;
    }
