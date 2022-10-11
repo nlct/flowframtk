@@ -3011,6 +3011,7 @@ Middle region: {2}</entry>
 <entry key="vectorize.trying_spike">Trying spike {0}.</entry>
 <entry key="vectorize.possible_border">Possible line along sub-path borders: sub-path {0}: ({1},{2}) -- ({3},{4}) and sub-path {5}: ({6},{7}) -- ({8},{9}).</entry>
 <entry key="vectorize.splitting_border">Splitting off shared border region.</entry>
+<entry key="vectorize.line_detection.adjusting_bulge_cutoff">({0},{1}) or ({2},{3}) lies on the line ({4},{5}) -- ({6},{7}). Adjusting final end point to ({8},{9}).</entry>
 <entry key="vectorize.line_detection.mid_region_too_small">Mid-region too small.</entry>
 <entry key="vectorize.line_detection.end_bulge_too_small">End bulge too small from ({0},{1}) to ({2},{3}). End delta: {4}.</entry>
 <entry key="vectorize.line_detection.too_wide">Region too wide.</entry>

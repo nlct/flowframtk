@@ -9741,7 +9741,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       double prevX=-1;
       double prevY=-1;
 
-      double averageDelta1 = 0.0;
+      double sumDelta = 0.0;
       int numPts1 = 0;
 
       double newPath1LastX = -1;
@@ -9798,7 +9798,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
             }
 
             numPts1++;
-            averageDelta1 += delta;
+            sumDelta += delta;
 
             prevLastX = newPath1LastX;
             prevLastY = newPath1LastY;
@@ -9821,10 +9821,11 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       }
 
       double path1Length = newPath1 == null ? 0.0 : newPath1.getEstimatedLength();
+      double averageDelta1 = 0.0;
 
       if (numPts1 > 0)
       {
-         averageDelta1 /= numPts1;
+         averageDelta1 = sumDelta / numPts1;
       }
 
       // No wedge detection if path fits entire region.
@@ -9885,9 +9886,19 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
           || JDRLine.getSquareLength(p2,
                JDRLine.getClosestPointAlongLine(prevP1, prevP2, p2)) < EPSILON)
          {
-            newPath1.lastElement().setEndPoint(prevLastX, prevLastY);
+            dialog.addVerboseMessageIdLn(
+              "vectorize.line_detection.adjusting_bulge_cutoff",
+              p1.getX(), p1.getY(), p2.getX(), p2.getY(),
+              prevP1.getX(), prevP1.getY(), prevP2.getX(), prevP2.getY(),
+              prevLastX, prevLastY
+            );
+
+            newPath1.remove(newPath1.size()-1);
+            newPath1.lineTo(prevLastX, prevLastY, EPSILON);
             startBulge--;
+            sumDelta -= prevDelta;
             numPts1--;
+            averageDelta1 = sumDelta/numPts1;
             startBulgeDelta = prevDelta;
             prevDelta = prevDelta2;
          }
@@ -11507,11 +11518,11 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
 
       double threshold = ROOT_2 * deltaThreshold;
 
-// TODO add check for wedge
       for (int i = idx, j = n-1; i <= j; i++, j--)
       {
          Point2D r1 = pts.get(i);
          Point2D r2 = pts.get(j);
+System.out.println("r1="+r1+" r2="+r2);
 
          double dx = 0.5*(r2.getX() - r1.getX());
          double dy = 0.5*(r2.getY() - r1.getY());
@@ -11519,7 +11530,10 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          double x = r1.getX() + dx;
          double y = r1.getY() + dy;
 
+System.out.println("mid=("+x+","+y+")");
+
          double delta = Math.sqrt(dx*dx + dy*dy);
+System.out.println("delta="+delta);
 
          if (i == idx)
          {
@@ -11569,8 +11583,6 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          return false;
       }
 
-      double pathLength = newPath.getEstimatedLength();
-
       if (endBulge <= n-2 && (endBulge-startBulge > 3))
       {
          Point2D r1 = pts.get(startBulge);      
@@ -11589,6 +11601,13 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
             adjustPt = new Point2D.Double(prevLastX, prevLastY);
             startBulge--;
             endBulge++;
+
+            dialog.addVerboseMessageIdLn(
+              "vectorize.line_detection.adjusting_bulge_cutoff",
+              r1.getX(), r1.getY(), r2.getX(), r2.getY(),
+              prev1.getX(), prev1.getY(), prev2.getX(), prev2.getY(),
+              adjustPt.getX(), adjustPt.getY()
+            );
          }
          else
          {
@@ -11605,6 +11624,16 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
                adjustPt = JDRLine.getMidPoint(q1, q2);
                endBulge++;
             }
+
+            if (adjustPt != null)
+            {
+               dialog.addVerboseMessageIdLn(
+                 "vectorize.line_detection.adjusting_bulge_cutoff",
+                 prev1.getX(), prev1.getY(), prev2.getX(), prev2.getY(),
+                 r1.getX(), r1.getY(), r2.getX(), r2.getY(),
+                 adjustPt.getX(), adjustPt.getY()
+               );
+            }
          }
 
          if (adjustPt != null)
@@ -11618,9 +11647,17 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          }
       }
 
+      double pathLength = newPath.getEstimatedLength();
+
       if (numPts > 0)
       {
          averageDelta /= numPts;
+      }
+
+      if (pathLength < minStubLength)
+      {
+         dialog.addMessageIdLn("vectorize.discarding_small_stub",
+          pathLength, newPath.svg());
       }
 
       if (endBulge-startBulge < 2)
@@ -11629,6 +11666,47 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
            "vectorize.line_detection.end_bulge_too_small",
            pts.get(startBulge), pts.get(endBulge), bulgeDelta);
          return false;
+      }
+
+      double wedgeThreshold = dialog.getWedgeThreshold();
+      double wedgeLengthThreshold = dialog.getWedgeLengthThreshold();
+      double wedgeDeviation = prevDelta-firstDelta;
+
+      if (wedgeDeviation >= wedgeThreshold
+           || (wedgeDeviation > 0 && pathLength < wedgeLengthThreshold))
+      {
+         if (wedgeDeviation > 0 && dialog.isVerbose())
+         {
+            // if the distance kept increasing then may be the start of a wedge
+            dialog.addMessageIdLn("vectorize.line_detection.increasing_start",
+             firstDelta, prevDelta, newPath.size(), pathLength,
+               wedgeDeviation, newPath.svg());
+         }
+
+         return false;
+      }
+      else if (wedgeDeviation > 0)
+      {
+         dialog.addVerboseMessageIdLn(
+           "vectorize.line_detection.start_wedge_below_threshold",
+           firstDelta, prevDelta, wedgeDeviation, pathLength);
+
+         double totalArea = JDRShape.computeArea(pts);
+
+         double frac;
+
+         if (endBulge-startBulge < n/2)
+         {
+            double bulgeArea = JDRShape.computeArea(pts, startBulge, endBulge);
+            frac = 1.0 - bulgeArea/totalArea;
+         }
+         else 
+         {
+            double stickArea = JDRShape.computeArea(pts, endBulge, startBulge);
+            frac = stickArea/totalArea;
+         }
+// TODO add percentage of total area threshold widget
+System.out.println("frac: "+frac);
       }
 
       addShape(newPath, "vectorize.success_no_variance", averageDelta);

@@ -36,7 +36,9 @@ classes/com/dickimawbooks/jdr/JDRObject.class	: classes \
 	java/jdr/io/eps/operators/*.java  \
 	java/jdr/io/svg/*.java
 	cd java/jdr ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:unchecked -Xlint:deprecation \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:unchecked -Xlint:deprecation \
 	*.java */*.java */*/*.java */*/*/*.java
 
 lib/jdrresources.jar      : lib/jdr.jar \
@@ -59,7 +61,9 @@ classes/com/dickimawbooks/jdrresources/JDRResources.class : classes \
 	java/jdrresources/*.java \
 	java/jdrresources/*/*.java
 	cd java/jdrresources ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	  -bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	  -d ../../classes -Xlint:deprecation -Xlint:unchecked \
           -cp ../../lib/jdr.jar:../../lib/javahelp2.jar \
           *.java */*.java
 
@@ -83,7 +87,9 @@ classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class : \
 	java/flowframtk/*.java \
 	java/flowframtk/*/*.java
 	cd java/flowframtk ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:unchecked -Xlint:deprecation \
+	javac -target 1.7 -source 1.7 \
+	  -bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	  -d ../../classes -Xlint:unchecked -Xlint:deprecation \
           -cp ../../lib/javahelp2.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
           *.java */*.java
 
@@ -114,7 +120,9 @@ classes/com/dickimawbooks/jdrview/JDRView.class : classes \
 	lib/jdr.jar lib/jdrresources.jar \
 	java/jdrview/*.java
 	cd java/jdrview ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:unchecked  -Xlint:deprecation \
+	javac -target 1.7 -source 1.7 \
+	  -bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	  -d ../../classes -Xlint:unchecked  -Xlint:deprecation \
 	  -cp ../../lib/javahelp2.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
 	  *.java
 
@@ -127,7 +135,9 @@ lib/jdrinfo.jar   : classes/com/dickimawbooks/jdrinfo/JdrInfo.class \
 
 classes/com/dickimawbooks/jdrinfo/JdrInfo.class : lib/jdr.jar java/jdrinfo/*.java
 	cd java/jdrinfo ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -140,7 +150,9 @@ lib/ajr2ajr.jar   : classes/com/dickimawbooks/ajr2ajr/Ajr2Ajr.class \
 
 classes/com/dickimawbooks/ajr2ajr/Ajr2Ajr.class : lib/jdr.jar java/ajr2ajr/*.java
 	cd java/ajr2ajr ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -153,7 +165,9 @@ lib/ajr2jdr.jar   : classes/com/dickimawbooks/ajr2jdr/Ajr2Jdr.class \
 
 classes/com/dickimawbooks/ajr2jdr/Ajr2Jdr.class : lib/jdr.jar java/ajr2jdr/*.java
 	cd java/ajr2jdr ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -166,7 +180,9 @@ lib/ajr2tex.jar   : classes/com/dickimawbooks/ajr2tex/Ajr2Tex.class \
 
 classes/com/dickimawbooks/ajr2tex/Ajr2Tex.class : lib/jdr.jar java/ajr2tex/*.java
 	cd java/ajr2tex ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -179,7 +195,9 @@ lib/eps2jdr.jar   : classes/com/dickimawbooks/eps2jdr/Eps2Jdr.class \
 
 classes/com/dickimawbooks/eps2jdr/Eps2Jdr.class : lib/jdr.jar lib/jdrresources.jar java/eps2jdr/*.java
 	cd java/eps2jdr ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar:../../lib/jdrresources.jar \
 	*.java
 
@@ -192,7 +210,9 @@ lib/jdr2ajr.jar   : classes/com/dickimawbooks/jdr2ajr/Jdr2Ajr.class \
 
 classes/com/dickimawbooks/jdr2ajr/Jdr2Ajr.class : lib/jdr.jar java/jdr2ajr/*.java
 	cd java/jdr2ajr ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -205,7 +225,9 @@ lib/jdr2eps.jar   : classes/com/dickimawbooks/jdr2eps/Jdr2Eps.class \
 
 classes/com/dickimawbooks/jdr2eps/Jdr2Eps.class : lib/jdr.jar java/jdr2eps/*.java
 	cd java/jdr2eps ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -218,7 +240,9 @@ lib/jdr2png.jar   : classes/com/dickimawbooks/jdr2png/Jdr2Png.class \
 
 classes/com/dickimawbooks/jdr2png/Jdr2Png.class : lib/jdr.jar java/jdr2png/*.java
 	cd java/jdr2png ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -231,7 +255,9 @@ lib/jdr2svg.jar   : classes/com/dickimawbooks/jdr2svg/Jdr2Svg.class \
 
 classes/com/dickimawbooks/jdr2svg/Jdr2Svg.class : lib/jdr.jar java/jdr2svg/*.java
 	cd java/jdr2svg ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -244,7 +270,9 @@ lib/jdr2tex.jar   : classes/com/dickimawbooks/jdr2tex/Jdr2Tex.class \
 
 classes/com/dickimawbooks/jdr2tex/Jdr2Tex.class : lib/jdr.jar java/jdr2tex/*.java
 	cd java/jdr2tex ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
@@ -257,7 +285,9 @@ lib/svg2jdr.jar   : classes/com/dickimawbooks/svg2jdr/Svg2Jdr.class \
 
 classes/com/dickimawbooks/svg2jdr/Svg2Jdr.class : lib/jdr.jar java/svg2jdr/*.java
 	cd java/svg2jdr ; \
-	javac -target 1.7 -source 1.7 -d ../../classes -Xlint:deprecation -Xlint:unchecked \
+	javac -target 1.7 -source 1.7 \
+	-bootclasspath $(JAVA7BOOTCLASSLIB)/rt.jar \
+	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp ../../lib/jdr.jar \
 	*.java
 
