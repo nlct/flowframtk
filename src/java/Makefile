@@ -1,6 +1,9 @@
 LIBDIR=$(JDRSRC)/lib
 CLASSTREE=com/dickimawbooks
 
+# Java 8 extended support until December 2030
+target_version := --release 8 -Xlint:-options
+
 all	: $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar \
 	  $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrview.jar \
 	  $(LIBDIR)/ajr2ajr.jar $(LIBDIR)/jdrinfo.jar \
@@ -181,7 +184,7 @@ classes/$(CLASSTREE)/jdr/JDRObject.class : \
 	jdr/io/eps/operators/*.java  \
 	jdr/io/svg/*.java  
 	cd jdr ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:unchecked -Xlint:deprecation \
+	javac $(target_version) -d ../classes -Xlint:unchecked -Xlint:deprecation \
 	  *.java */*.java */*/*.java */*/*/*.java
 
 
@@ -190,7 +193,7 @@ classes/$(CLASSTREE)/jdrresources/JDRResources.class : \
 	jdrresources/*.java \
 	jdrresources/*/*.java 
 	cd jdrresources ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	  -cp $(LIBDIR)/jdr.jar:$(LIBDIR)/javahelp2.jar \
 	  *.java */*.java
 
@@ -199,7 +202,7 @@ classes/$(CLASSTREE)/flowframtk/FlowframTk.class : \
 	flowframtk/*.java \
 	flowframtk/*/*.java
 	cd flowframtk ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:unchecked -Xlint:deprecation \
+	javac $(target_version) -d ../classes -Xlint:unchecked -Xlint:deprecation \
 	  -cp $(LIBDIR)/javahelp2.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java */*.java
 
@@ -208,7 +211,7 @@ classes/$(CLASSTREE)/jdrview/JDRView.class : \
 	jdr jdrresources classes \
 	jdrview/*.java
 	cd jdrview ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:unchecked  -Xlint:deprecation \
+	javac $(target_version) -d ../classes -Xlint:unchecked  -Xlint:deprecation \
 	  -cp $(LIBDIR)/javahelp2.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java
 
@@ -216,7 +219,7 @@ classes/$(CLASSTREE)/ajr2ajr/Ajr2Ajr.class : \
 	classes \
 	ajr2ajr/*.java
 	cd ajr2ajr ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -224,7 +227,7 @@ classes/$(CLASSTREE)/jdrinfo/JdrInfo.class : \
 	classes \
 	jdrinfo/*.java
 	cd jdrinfo ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -232,7 +235,7 @@ classes/$(CLASSTREE)/ajr2jdr/Ajr2Jdr.class : \
 	classes \
 	ajr2jdr/*.java
 	cd ajr2jdr ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -240,7 +243,7 @@ classes/$(CLASSTREE)/ajr2tex/Ajr2Tex.class : \
 	classes \
 	ajr2tex/*.java
 	cd ajr2tex ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -248,7 +251,7 @@ classes/$(CLASSTREE)/eps2jdr/Eps2Jdr.class : \
 	classes \
 	eps2jdr/*.java
 	cd eps2jdr ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	*.java
 
@@ -256,7 +259,7 @@ classes/$(CLASSTREE)/jdr2ajr/Jdr2Ajr.class : \
 	classes \
 	jdr2ajr/*.java
 	cd jdr2ajr ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -264,7 +267,7 @@ classes/$(CLASSTREE)/jdr2eps/Jdr2Eps.class : \
 	classes \
 	jdr2eps/*.java
 	cd jdr2eps ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -272,7 +275,7 @@ classes/$(CLASSTREE)/jdr2png/Jdr2Png.class : \
 	classes \
 	jdr2png/*.java
 	cd jdr2png ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -280,7 +283,7 @@ classes/$(CLASSTREE)/jdr2svg/Jdr2Svg.class : \
 	classes \
 	jdr2svg/*.java
 	cd jdr2svg ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -288,7 +291,7 @@ classes/$(CLASSTREE)/jdr2tex/Jdr2Tex.class : \
 	classes \
 	jdr2tex/*.java
 	cd jdr2tex ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
@@ -296,7 +299,7 @@ classes/$(CLASSTREE)/svg2jdr/Svg2Jdr.class : \
 	classes \
 	svg2jdr/*.java
 	cd svg2jdr ; \
-	javac -target 1.7 -source 1.7 -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
