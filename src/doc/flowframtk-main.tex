@@ -34,7 +34,7 @@
 \tableofcontents
 \listoffigures
 
-\chapter{Notes}
+\chapter*{Notes}
 
 \appname is licensed under the terms of the GNU General Public License
 (\url{http://gnu.org/licenses/gpl.html"}).
@@ -81,10 +81,10 @@ redraw, use \accelerator{redraw}.
    used to generate \gls{parshape} and (\sty{shapepar} package) \gls{shapepar} or 
    \gls{Shapepar} specifications. In order to run the application you 
    must have the \gls{jre} installed.
-   
-   
+
+
    In \appname, you can:
-   
+
    \begin{itemize}
     \item construct shapes using line, move and cubic Bézier segments
 (\sectionref{sec:newobjects});
@@ -109,12 +109,12 @@ redraw, use \accelerator{redraw}.
     \item construct frames for use with the \sty{flowfram} package
     (\sectionref{sec:flowframe}).
    \end{itemize}
-   
+
    Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
    (\sectionref{sec:loadimage}) from \appname's native \gls{jdr}
    (binary) or \gls{ajr} (ASCII) file formats. Additionally, images can be
    exported (\sectionref{sec:exportimage}) as:
-   
+
    \begin{itemize}
     \item a \LaTeX\ file containing a \env{pgfpicture} environment
     for inclusion in a \LaTeX\ document;
@@ -135,7 +135,7 @@ redraw, use \accelerator{redraw}.
    Note that the export to PS/PDF/SVG functions use external
    processes, such as \app{latex} and \app{dvips}.
    \strong{You can't import back from the files you can export to.}
-   
+
    The low-level \sty{pgf} basic layer commands are used during
    exports to \LaTeX\ files. These commands aren't particularly easy to
    read but are faster to compile than the higher-level commands that
@@ -150,8 +150,8 @@ redraw, use \accelerator{redraw}.
    may not work with earlier versions of those packages. Note that some
    DVI viewers may not understand PGF specials. I strongly recommend
    that you read the user manuals for those packages.
-   
-   
+
+
    Notation: a \gls{primaryclick} is a single click with the primary
    mouse button. This is typically the left button for a right-handed
    mouse, but may be the right button for a left-handed mouse. A
@@ -160,7 +160,7 @@ redraw, use \accelerator{redraw}.
    button for a right-handed two-button mouse. If the button isn't
    mentioned, a~\gls{click} can be assumed to mean 
    a~\gls{primaryclick}.
-   
+
 
 \chapter{Installation}
 \label{install}
@@ -169,19 +169,19 @@ redraw, use \accelerator{redraw}.
    This can be downloaded from \url{http://java.sun.com/j2se/}.
    You must ensure that you use at least Java~8, as \appname\
    does not work with earlier versions.
-   
+
    To install, download the installer
    \metafilefmt{flowframtk-}{appversion}{-installer.jar}
    (where \meta{appversion} is the application version) and run it. 
    This can be done from a terminal or command prompt using:
-   
+
 \begin{terminal}
 java -jar flowframtk-\meta{appversion}-installer.jar
 \end{terminal}
-   
+
    Depending on the setup of your operating system, you may also be
    able to \gls{doubleclick} on the \ext{jar} file to run it.
-   
+
 
 \chapter{Accessibility}
 \label{access}
@@ -680,6 +680,750 @@ Radial gradient paint start location selectors &
 \end{longtable}
 
 
+TODO
+
+
+\chapter{Settings}\label{sec:settings}
+
+TODO
+
+\section{Command Line Arguments}\label{sec:cmdargs}
+
+TODO
+
+\section{The Settings Menu}\label{sec:settingsmenu}
+
+TODO
+
+\subsection{Styles}\label{sec:setcurrentstyles}
+
+TODO
+
+\subsection{Show Rulers}\label{sec:showrulers}
+
+TODO
+
+\subsection{Grid}\label{sec:gridmenu}
+
+TODO
+
+\subsection{Zoom}\label{sec:zoommenu}
+
+TODO
+
+
+\subsection{Paper}\label{sec:papermenu}
+
+TODO
+
+
+\subsection{Configure Image Settings}\label{sec:configuredialog}
+
+TODO
+
+
+\subsubsection{Control Points}\label{sec:controlsettings}
+
+TODO
+
+
+\subsubsection{Startup Directory}\label{sec:startdir}
+
+TODO
+
+
+\subsubsection{JDR/AJR Settings}\label{sec:jdrsettings}
+
+TODO
+
+
+\subsubsection{Startup Settings}\label{sec:initsettings}
+
+TODO
+
+
+\subsubsection{Bitmaps}\label{sec:bitmapconfig}
+
+TODO
+
+
+\subsubsection{Application Paths}\label{sec:processes}
+
+TODO
+
+
+\subsection{\TeX\ Settings Dialog}\label{sec:texconfig}
+
+TODO
+
+
+\subsubsection{Setting the Document Class and Normal Font Size}
+\label{sec:normalsize}
+
+TODO
+
+
+\subsubsection{Flowframe Settings}\label{sec:texconfigflf}
+
+TODO
+
+
+\subsubsection{Text Settings}\label{sec:texconfigtext}
+
+TODO
+
+
+\subsubsection{Default Preamble}\label{sec:texconfigpreamble}
+
+TODO
+
+
+\subsection{Configure User Interface}\label{sec:configureuidialog}
+
+TODO
+
+
+\subsubsection{Graphics Settings}\label{sec:graphics}
+
+TODO
+
+
+\subsubsection{Annotations Settings}\label{sec:annotations}
+
+TODO
+
+
+\subsubsection{Language Settings}\label{sec:languages}
+
+TODO
+
+
+\subsubsection{Accelerator Settings}\label{sec:accelerators}
+
+TODO
+
+
+\subsubsection{Toolbar, Ruler and Status Bar Settings}\label{sec:rulers}
+
+TODO
+
+
+\subsubsection{Normalization}\label{sec:normalize}
+
+TODO
+
+
+\subsubsection{TeX Editor Settings}\label{sec:texeditorui}
+
+TODO
+
+
+\subsubsection{Look and Feel Settings}\label{sec:lookandfeel}
+
+TODO
+
+
+\section{Configuration Directory}\label{sec:configdir}
+
+\gls[format=primary]{config_dir}
+TODO
+
+\chapter{The Basics}\label{sec:thebasics}
+
+TODO
+
+
+\section{The Canvas}\label{sec:thecanvas}
+
+TODO
+
+
+\section{The Toolbars}\label{sec:thetoolbars}
+
+TODO
+
+
+\section{The Rulers}\label{sec:therulers}
+
+TODO
+
+
+\section{The Status Bar}\label{sec:thestatusbar}
+
+TODO
+
+
+\chapter{The File Menu}\label{sec:filemenu}
+
+TODO
+
+
+\section{New}\label{sec:newimage}
+
+TODO
+
+
+\section{Open}\label{sec:loadimage}
+
+TODO
+
+\section{Recent Files}\label{sec:recentfiles}
+
+TODO
+
+
+\section{Image Description}\label{sec:imagedescription}
+
+TODO
+
+
+\section{Save and Save As}\label{sec:saveimage}
+
+TODO
+
+\section{Export}\label{sec:exportimage}
+
+TODO
+
+
+\subsection{Export to PNG}\label{sec:exportpng}
+
+TODO
+
+
+\subsection{Export to a Class or Package}\label{sec:exportsty}
+
+TODO
+
+
+\subsection{Export to PGF}\label{sec:exportpgf}
+
+TODO
+
+
+\subsection{Export to Single-Paged Document}\label{sec:exportdoc}
+
+TODO
+
+
+\section{Print}\label{sec:print}
+
+TODO
+
+
+\section{Message Window}\label{sec:messages}
+
+TODO
+
+
+\section{Close}\label{sec:closeimage}
+
+TODO
+
+
+\section{Quit}\label{sec:quit}
+
+TODO
+
+
+\chapter{Creating New Objects}\label{sec:newobjects}
+
+TODO
+
+\section{Line Paths}\label{sec:newlinepath}
+
+TODO
+
+\section{Curve Paths}\label{sec:newcurvepath}
+
+TODO
+
+
+\section{Rectangles}\label{sec:rectangles}
+
+TODO
+
+
+\section{Ellipses}\label{sec:ellipses}
+
+TODO
+
+
+\section{Text}\label{sec:newtext}
+
+TODO
+
+
+\chapter{Bitmaps}\label{sec:insertbitmap}
+
+TODO
+
+
+\section{Properties}\label{sec:bitmapprops}
+
+TODO
+
+
+\section{Vectorizing}\label{sec:vectorize}
+
+TODO
+
+
+\chapter{Selecting and Editing Objects}\label{sec:selectobjects}
+
+TODO
+
+
+\section{Moving an Object}\label{sec:moveobjects}
+
+TODO
+
+
+\section{Cut}\label{sec:cutobjects}
+
+TODO
+
+
+\section{Copy}\label{sec:copyobjects}
+
+TODO
+
+
+\section{Paste}\label{sec:pasteobjects}
+
+TODO
+
+
+\section{Object Description}\label{sec:objectdescription}
+
+TODO
+
+
+\section{Editing Control Points}\label{sec:editpath}
+
+TODO
+
+
+\section{Symmetric Shapes}\label{sec:symmetric}
+
+TODO
+
+
+\section{Editing Text Areas}\label{sec:edittext}
+
+TODO
+
+
+\section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}
+
+TODO
+
+
+\section{Text Outlines}\label{sec:textoutline}
+
+TODO
+
+
+\section{Reducing to Gray Scale}\label{sec:reduce}
+
+TODO
+
+
+\section{Color Space Conversions}\label{sec:convertcolspace}
+
+TODO
+
+
+\section{Fade}\label{sec:fade}
+
+TODO
+
+
+\section{Removing Translucency}\label{sec:removetrans}
+
+TODO
+
+
+\section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
+
+TODO
+
+
+\section{Rotating Objects}\label{sec:rotateobjects}
+
+TODO
+
+
+\section{Scaling Objects}\label{sec:scaleobjects}
+
+TODO
+
+
+\section{Shearing Objects}\label{sec:shearobjects}
+
+TODO
+
+
+\section{Distorting Shapes}\label{sec:distort}
+
+TODO
+
+
+\section{Grouping and Ungrouping Objects}\label{sec:grouping}
+
+TODO
+
+
+\section{Aligning Objects}\label{sec:alignobjects}
+
+TODO
+
+
+\section{Reversing a Path's Direction}\label{sec:reversing}
+
+TODO
+
+
+\section{Merging Paths}\label{sec:mergepaths}
+
+TODO
+
+
+\section{Path Union}\label{sec:pathunion}
+
+TODO
+
+
+\section{Exclusive Or Function}\label{sec:xorpath}
+
+TODO
+
+
+\section{Path Intersection}\label{sec:pathintersect}
+
+TODO
+
+
+\section{Path Subtraction}\label{sec:pathsubtract}
+
+TODO
+
+
+\section{Separating a Text-Path into a Text Area and Path}\label{sec:separate}
+
+TODO
+
+
+\section{Converting a Path or Text-Path into a Pattern}\label{sec:patterns}
+
+TODO
+
+
+\section{Converting to a Path}\label{sec:converttopath}
+
+TODO
+
+
+\section{Converting a Text Area, Text-Path or Pattern to a Path}\label{sec:texttopath}
+
+TODO
+
+
+\section{Converting an Outline to a Path}\label{sec:outlinetopath}
+
+TODO
+
+
+\section{Splitting Text Areas}\label{sec:splittext}
+
+TODO
+
+
+\chapter{Path and Text Styles}\label{sec:styles}
+
+TODO
+
+
+\section{Line Color}\label{sec:linepaint}
+
+TODO
+
+
+\section{Fill Color}\label{sec:fillpaint}
+
+TODO
+
+
+\section{Line Style}\label{sec:pathstyle}
+
+TODO
+
+
+\subsection{Line Thickness (or Pen Width)}\label{sec:penwidth}
+
+TODO
+
+
+\subsection{Dash Pattern}\label{sec:dashpattern}
+
+TODO
+
+
+\subsection{Cap Style}\label{sec:capstyle}
+
+TODO
+
+
+\subsection{Join Style}\label{sec:joinstyle}
+
+TODO
+
+
+\subsection{Markers}\label{sec:markers}
+
+TODO
+
+
+\subsubsection{Enabling or Disabling a Marker}\label{sec:enablingmarkers}
+
+TODO
+
+
+\subsubsection{Marker Types}\label{sec:markertypes}
+
+TODO
+
+
+\subsubsection{Marker Size}\label{sec:markersize}
+
+TODO
+
+
+\subsubsection{Repeating Markers}\label{sec:repeatingmarkers}
+
+TODO
+
+
+\subsubsection{Reversing Markers}\label{sec:reversingmarkers}
+
+TODO
+
+
+\subsubsection{Composite Markers}\label{sec:compositemarkers}
+
+TODO
+
+
+\subsubsection{Marker Orientation}\label{sec:markerorientation}
+
+TODO
+
+
+\subsubsection{Marker Offset}\label{sec:markeroffset}
+
+TODO
+
+
+\subsubsection{Repeat Gap}\label{sec:repeatgap}
+
+TODO
+
+
+\subsubsection{Marker Color}\label{sec:markerpaint}
+
+TODO
+
+
+\subsection{Winding Rule}\label{sec:winding}
+
+TODO
+
+
+\section{Text Color}\label{sec:textpaint}
+
+TODO
+
+
+\section{Text Style}\label{sec:textstyle}
+
+TODO
+
+
+\subsection{Font Family}\label{sec:fontfamily}
+
+TODO
+
+
+\subsection{Font Size}\label{sec:fontsize}
+
+TODO
+
+
+\subsection{Font Series}\label{sec:fontseries}
+
+TODO
+
+
+\subsection{Font Shape}\label{sec:fontshape}
+
+TODO
+
+
+\subsection{Text Transformation Matrix}\label{sec:textmatrix}
+
+TODO
+
+
+\subsection{Anchor}\label{sec:fontanchor}
+
+TODO
+
+
+\chapter{\TeX/\LaTeX}\label{sec:tex}
+
+TODO
+
+
+\section{Adding Commands to the Preamble}\label{sec:setpreamble}
+
+TODO
+
+
+\section{Computing the Parameters for \glsfmttext{parshape}}\label{sec:parshape}
+
+TODO
+
+
+\section{Computing the Parameters for \glsfmttext{shapepar} or
+\glsfmttext{Shapepar}}
+\label{sec:shapepar}
+
+TODO
+
+
+\section{Creating Frames for Use with the \stytext{flowfram} Package}
+\label{sec:flowframe}
+
+TODO
+
+
+\subsection{The \stytext{flowfram} Package: A Brief Summary}
+\label{sec:flowframesummary}
+
+TODO
+
+
+\subsection{Defining the Typeblock}\label{sec:typeblock}
+
+TODO
+
+
+\subsection{Defining a Frame}\label{sec:framedef}
+
+TODO
+
+
+\subsection{The Frame Shape}\label{sec:frameshape}
+
+TODO
+
+
+\subsection{Scale Object to Fit Typeblock}\label{sec:scaletotypeblock}
+
+TODO
+
+
+\subsection{Only Displaying Objects Defined on a Given Page}\label{sec:displaypage}
+
+TODO
+
+
+\chapter{Step-by-Step Examples}\label{sec:tutorials}
+
+TODO
+
+
+\section{A House}\label{sec:houseexample}
+
+TODO
+
+
+\section{Lettuce on Toast}\label{sec:toastexample}
+
+TODO
+
+
+\section{Cheese and Lettuce on Toast}\label{sec:cheeseexample}
+
+TODO
+
+
+\section{An Artificial Neuron}\label{sec:neuronexample}
+
+TODO
+
+
+\section{Bus}\label{sec:busexample}
+
+TODO
+
+
+\section{A Poster}\label{sec:postertutorial}
+
+TODO
+
+
+\section{A Newspaper}\label{sec:newstutorial}
+
+TODO
+
+
+\section{A Brochure}\label{sec:brochure}
+
+TODO
+
+
+\section{A House With No Mouse}\label{sec:accesstutorial}
+
+TODO
+
+
+\section{A Lute Rose}\label{sec:rosetutorial}
+
+TODO
+
+
+\chapter{JDR/AJR File Formats}\label{sec:jdrajrformat}
+
+TODO
+
+
+\chapter{Multilingual Support}\label{sec:multilingualsupport}
+
+TODO
+
+
+\chapter{Source Code}\label{sec:sourcecode}
+
+TODO
+
+
+\section{Java Source}\label{sec:javasource}
+
+TODO
+
+
+\section{Document Source}\label{sec:docsource}
+
+TODO
+
+
+\chapter{Troubleshooting}\label{sec:troubleshooting}
+
+TODO
+
+
+\section{Known Bugs}\label{sec:knownbugs}
 
 TODO
 

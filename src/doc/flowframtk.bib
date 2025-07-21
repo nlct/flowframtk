@@ -41,26 +41,11 @@
 
 % FILE EXTENSIONS/FORMATS
 
-@fileext{ext.tex}
-@fileext{ext.pdf}
-@fileext{ext.svg}
-@fileext{ext.xml}
-@fileext{ext.eps}
-
-% SWITCHES
-
-@switch{switch.help,
-  parent={app.flowframtk},
-  shortswitch={h},
-  description={Prints help and exits}
-}
-
-@switch{switch.version,
-  parent={app.flowframtk},
-  shortswitch={v},
-  description={Prints version information and exits}
-}
-  
+@fileext{ext.tex, parent={fileextension}}
+@fileext{ext.pdf, parent={fileextension}}
+@fileext{ext.svg, parent={fileextension}}
+@fileext{ext.xml, parent={fileextension}}
+@fileext{ext.eps, parent={fileextension}}
 
 
 % PACKAGES
@@ -95,34 +80,111 @@
  name={\envfmt{pgf\-picture}}
 }
 
+% ENVIRONMENT VARIABLES
+
+@variable{PATH}
+
+@variable{JDR_JVMOPTS,
+ name={\varfmt{JDR\_JVM\-OPTS}}
+}
+
+@variable{FLOWFRAMTK_OPTS,
+ name={\varfmt{FLOW\-FRAM\-TK\_OPTS}}
+}
+
+@variable{JPGFDRAW_OPTS,
+ name={\varfmt{JPGF\-DRAW\_OPTS}}
+}
+
 % APPLICATIONS
 
 @application{latex}
 @application{dvips}
 
+% SWITCHES
+
+@switch{switch.help,
+  parent={app.flowframtk},
+  shortswitch={h},
+  description={Prints help and exits}
+}
+
+@switch{switch.version,
+  parent={app.flowframtk},
+  shortswitch={v},
+  description={Prints version information and exits}
+}
+  
+@switch{switch.show_grid,
+  parent={app.flowframtk},
+  name={\longargfmt{show\_grid}},
+  description={Show the grid}
+}
+
+@switch{switch.noshow_grid,
+  parent={app.flowframtk},
+  name={\longargfmt{noshow\_grid}},
+  description={Don't show the \gls{grid}}
+}
+
+@switch{switch.toolbar,
+  parent={app.flowframtk},
+  description={Show the \glspl{toolbar}}
+}
+
+@switch{switch.notoolbar,
+  parent={app.flowframtk},
+  description={Don't show the \glspl{toolbar}}
+}
+
+@switch{switch.statusbar,
+  parent={app.flowframtk},
+  description={Show the \glspl{statusbar}}
+}
+
+@switch{switch.nostatusbar,
+  parent={app.flowframtk},
+  description={Don't show the \glspl{statusbar}}
+}
+
+@switch{switch.ruler,
+  parent={app.flowframtk},
+  description={Show the \glspl{ruler}}
+}
+
+@switch{switch.noruler,
+  parent={app.flowframtk},
+  description={Don't show the \glspl{ruler}}
+}
+
+@switch{switch.experimental,
+  parent={app.flowframtk},
+  description={Enable experimental functions}
+}
+
+@switch{switch.noexperimental,
+  parent={app.flowframtk},
+  description={Don't enable experimental functions}
+}
+
+@switch{switch.debug,
+  parent={app.flowframtk},
+  description={Enable debugging mode}
+}
+
+@switch{switch.nodebug,
+  parent={app.flowframtk},
+  description={Don't enable debugging mode}
+}
+
+
 % GENERAL
 
-@entry{ajr,
-  name="AJR",
-  description = {\appname's native ASCII format. Files in this format 
-      should have the extension \ext{ajr}. This format is 
-      primarily provided to assist conversion to and from \gls{jdr} files 
-      or for version control.}
-}
-
-@entry{jdr,
-   name="JDR",
-   description = {\appname's native binary format. Files in this format 
-      should have the extension \ext{jdr}.}
-}
-
-@entry{Java,
-  name="Java",
+@index{Java,
   description = {A platform-independent object-orientated language.}
 }
 
 @index{grid,
-  name="grid",
   description = {Tick marks located at regular intervals on the canvas. The grid can be locked so
      that new points will be placed at the tick nearest the specified
      position.}
@@ -284,14 +346,14 @@ single entity.}
 @index{stack,
   description = {List of \glspl{object} that make up the image, 
     in the order in which they should be painted on the canvas.
-    A \gls{group"} is essentially a sub-stack.}
+    A \gls{group} is essentially a sub-stack.}
 }
 
 @index{stackingorder,
   name="stacking order",
   description={The order in which \glspl{object} are painted on the canvas.
     To determine the reverse stacking order, deselect all objects, then
-    use <kbd key="F6"/> to cycle through the stack starting from the
+    use \accelerator{navigate.skip} to cycle through the stack starting from the
     frontmost object. Reverse this list to obtain the stacking order.
     Note that the frontmost object is the last object in the \gls{stack}, not
     the first.}
@@ -317,13 +379,13 @@ single entity.}
 points, lines and curves.}
 }
 
-@index{raster,
+@index{rastergraphics,
   name="raster graphics",
   description = {Representing images as a collection of pixels. Also
 called a bitmap.}
 }
 
-@index{bitmap, alias="raster"}
+@index{bitmap, alias="rastergraphics"}
 
 @index{construction,
   name="construction mode",
@@ -364,7 +426,7 @@ called a bitmap.}
   description = {A menu whose items vary depending on the context. These
     menus are usually invoked with the menu or secondary mouse button. In
     \appname\ it is also possible to invoke popup menus using
-    <kbd key="F3"/> or your keyboard may have a context-menu key.}
+    \accelerator{contextmenu} or your keyboard may have a context-menu key.}
 }
 
 @index{recto,

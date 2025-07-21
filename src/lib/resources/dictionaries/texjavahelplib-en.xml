@@ -15,10 +15,11 @@ Nicola Talbot
 <entry key="menu.help.manual">Manual</entry>
 <entry key="menu.help.manual.mnemonic">M</entry>
 <entry key="menu.help.manual.keystroke">F1</entry>
+<entry key="menu.help.manual.tooltip">Open manual</entry>
 
 <entry key="action.help">Help</entry>
 <entry key="action.help.mnemonic">H</entry>
-<entry key="action.help.description">Open manual</entry>
+<entry key="action.help.tooltip">Open relevant section of the manual</entry>
 <entry key="action.help.keystroke">shift F1</entry>
 <entry key="action.help.defaultkeys">format=glsignore</entry>
 

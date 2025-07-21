@@ -1242,6 +1242,7 @@ Nicola Talbot
 <entry key="symbol.textcontent">Text</entry>
 <entry key="symbol.textcontent.mnemonic">T</entry>
 
+<entry key="symbol.select.description">Insert the symbol corresponding to the supplied Unicode code point</entry>
 <entry key="symbol.select.tooltip">Insert symbol with given Unicode value into text</entry>
 <entry key="symbol.unicode.tooltip">Enter hexadecimal Unicode value</entry>
 
