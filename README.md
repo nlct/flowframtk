@@ -35,36 +35,52 @@ FlowframTk is a vector graphics application written in Java. You can use Flowfra
 
 ## Source Code
 
-To build from the source code you will need to add `javahelp2.jar`
-to the `lib` directory. For example:
+The source code depends on the [TeX Java Help library](https://github.com/nlct/texjavahelp).
+The `texjavahelplib.jar` library needs to be added to the `lib`
+directory.
 
+The documentation has LaTeX source code but depends on the
+applicable language XML files in the `lib/resources/dictionaries`
+directory. The TeX Java Help Library comes with some command line
+tools that are used to build the documentation:
+
+ - `xml2bib` converts the XML language files to Bib2Gls bib files
+   (this allows the documentation to pick up the widget text and
+   menu hierarchy);
+ - `texjavahelpmk` needs to be run after the PDF is created (so that
+   it can pick up the table of contents, cross-references etc)
+   and creates the HTML and XML files used for the in-application
+   help.
+
+The `version.tex` file just contains `\date` and is automatically
+created to pick up the current version and date information from the
+Java source:
 ```bash
-cd src/lib
-ln -s /usr/share/java/javahelp2.jar
+echo "\\date{Version " > version.tex
+grep 'String APP_VERSION = ' $baseclass | sed "s/public\sstatic\sfinal\sString\sAPP_VERSION\s=//" | tr -d "\"\; " >> version.tex
+grep 'String APP_DATE = ' $baseclass | sed "s/public\sstatic\sfinal\sString\sAPP_DATE\s=//" | tr -d "\"\; " >> version.tex
+echo "}" >> version.tex
+```
+where `$baseclass` is the path to `JDRResources.java`.
+
+For example, to create flowframtk-en.pdf:
+
+Create `flowframtk-props-en.bib` from the XML dictionaries
+    (where `$dictdir` is the path to `lib/resources/dictionaries`):
+```bash
+xml2bib --copy-overwrite $dictdir/texjavahelplib-en.xml $dictdir/flowframtk-en.xml $dictdir/jdrcommon-en.xml -o flowframtk-props-en.bib
 ```
 
-The JavaHelp files are created from the XML file in the
-`src/doc/manual` directory by the `createflowframtkdocs` Perl
-script. This also creates the LaTeX source for the PDF manual
-(with `arara` directives at the start). Locale-specific text is
-obtained from the corresponding property file
-`src/lib/resources/dictionaries`. For example:
+Build the document. This can be done with Arara:
 ```bash
-createflowframtkdocs FlowframTk en GB
+arara flowframtk-en
 ```
-This fetches the application version details from 
-`FlowframTkInvoker.java`, the locale text from 
-`flowframtk-en-GB.prop`, and the locale-sensitive images from
-`images-en-GB`. (Non-locale images are in `shared-images`.) 
-The helpset files are written to
-`src/lib/resources/helpsets/flowframtk/en-GB` and the LaTeX
-file `flowframtk-en-GB.tex` is written in the `src/doc/manual`
-directory. The PDF can be then be created with:
+
+If successful, the HTML and XML files can now be created (where
+`$targetdir` is the path to `lib/resources/helpsets`):
 ```bash
-arara flowframtk-en-GB
+texjavahelpmk flowframtk-en.tex $targetdir/flowframtk/en
 ```
-The `createflowframtkdocs` Perl script was developed on Linux.
-There's no guarantee that it will work with other platforms.
 
 ## Licence
 
