@@ -1,0 +1,101 @@
+
+\usepackage{fontspec}
+\setmainfont{Linux Libertine O}
+\usepackage{verbatim}
+\usepackage
+ [
+    novref,
+%   debug=showwrgloss
+ ]{texjavahelp}
+
+\hypersetup{colorlinks,linkcolor=blue}
+\DeclareGraphicsExtensions{.png,.pdf,.tex}
+
+\newcommand{\appname}{JDRView}
+
+\title{User Manual for \appname}
+\author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
+
+\InputIfFileExists{version}{}{}
+
+\GlsXtrLoadResources[src={jdrview,shared,\langbibsrcs},
+ \TeXJavaHelpSymbolResourceOptions
+]
+
+\GlsXtrLoadResources[src={jdrview,shared,\langbibsrcs},
+ \TeXJavaHelpGlsResourceOptions
+]
+
+\begin{document}
+\maketitle
+\frontmatter
+\tableofcontents
+\listoffigures
+
+\chapter{Introduction}
+\label{sec:intro}
+
+TODO
+
+\chapter{Settings}
+\label{sec:settings}
+
+\subsection{The \glsfmttext{menu.settings.zoom} Sub-Menu}
+\label{sec:zoommenu}
+
+\menudef{menu.settings.zoom}
+
+The \menu{settings.zoom} sub-menu allows the magnification to
+be changed.
+
+\menudef{menu.settings.zoom.user}
+
+The \menu{settings.zoom.user} menu item opens the
+\InlineMsgDef{zoom.title} dialog where you can specify a custom
+magnification.
+
+\chapter{Help Windows}
+\label{sec:helpwindows}
+
+\menudef{menu.help.about}
+
+The \menu{help.about} menu item shows the
+\InlineMsgDef
+ [\appname]
+ {about.title}
+dialog with version details.
+
+\menudef{menu.help.license}
+
+The \menu{help.license} menu item shows the
+\InlineMsgDef
+ {license.title}
+dialog (see \sectionref{sec:licence}).
+
+\input{helpinterface}
+
+
+\chapter{\MFUsentencecase{\glsentrytext{index.licence}}}
+\label{sec:licence}
+
+\glsadd{index.licence}%
+\appname\ is licensed under the terms of the 
+\href{https://www.gnu.org/licenses/gpl-3.0.html}{GNU General
+Public License version 3 (GPLv3)}.
+\app{jdrview} depends on the following third party library whose jar
+file is in the \filefmt{lib} directory:
+\begin{itemize}
+   \item TeX Java Help \filefmt{texjavahelplib.jar}
+   (GPLv3, \url{https://github.com/nlct/texjavahelp}).
+\end{itemize}
+
+
+%\listentrydescendents
+% [title={Summary of \apptext{jdrview} Switches}]
+% {app.jdrview}
+
+\printmain
+\printindex 
+
+\end{document} 
+

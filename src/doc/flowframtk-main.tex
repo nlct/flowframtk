@@ -1,0 +1,711 @@
+
+\usepackage{fontspec}
+\setmainfont{Linux Libertine O}
+\usepackage{verbatim}
+\usepackage{longtable}
+\usepackage{booktabs}
+\PassOptionsToPackage{prefix}{glossaries-extra}
+\usepackage
+ [
+    novref,
+%   debug=showwrgloss
+ ]{texjavahelp}
+
+\hypersetup{colorlinks,linkcolor=blue}
+
+\newcommand{\appname}{FlowframTk}
+
+\title{User Manual for \appname}
+\author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
+
+\InputIfFileExists{version}{}{}
+
+\GlsXtrLoadResources[src={flowframtk,\langbibsrcs},
+ \TeXJavaHelpSymbolResourceOptions
+]
+
+\GlsXtrLoadResources[src={flowframtk,\langbibsrcs},
+ \TeXJavaHelpGlsResourceOptions
+]
+
+\begin{document}
+\maketitle
+\frontmatter
+\tableofcontents
+\listoffigures
+
+\chapter{Notes}
+
+\appname is licensed under the terms of the GNU General Public License
+(\url{http://gnu.org/licenses/gpl.html"}).
+See \sectionref{sec:licence}.
+
+DOCUMENTATION IS PROVIDED \qt{AS IS} AND ALL EXPRESS OR IMPLIED
+CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY
+IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT
+SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.
+
+This document is a user manual for \appname. For information about
+JDRView or jdrutils, see \filefmt{jdrview.pdf} or
+\filefmt{jdrutils.pdf}, respectively.
+
+\IfTeXParserLib
+  {%
+    This manual is also available as a PDF document, \filefmt{flowframtk.pdf}. 
+  }
+  {}
+
+The latest version of \appname\ can be downloaded from
+\url{https://ctan.org/pkg/flowframtk}.
+Older versions can be downloaded from
+\url{http://www.dickimaw-books.com/software/flowframtk/}.
+The source code is in the GitHub repository
+\url{https://github.com/nlct/flowframtk}.
+
+Occasionally the canvas doesn't get redrawn correctly. To force a
+redraw, use \accelerator{redraw}.
+
+
+\mainmatter
+\chapter{Introduction}
+\label{sec:introduction}
+
+\appname\footnote{This application is a replacement for the now-obsolete
+   JpgfDraw (\strong{J}ava \strong{pgf}-code generating \strong{draw}ing application).
+   In fact, it's actually just been renamed and the code refactored.}
+   is a \gls{vectorgraphics} application written in \gls{Java}, with a 
+   \gls{gui}.  The main purpose of \appname is to generate \LaTeX\ packages or 
+   classes that use the \sty{flowfram} package, and to generate
+   \sty{pgf} picture drawing code. As a side-effect, it can also be
+   used to generate \gls{parshape} and (\sty{shapepar} package) \gls{shapepar} or 
+   \gls{Shapepar} specifications. In order to run the application you 
+   must have the \gls{jre} installed.
+   
+   
+   In \appname, you can:
+   
+   \begin{itemize}
+    \item construct shapes using line, move and cubic Bézier segments
+(\sectionref{sec:newobjects});
+
+    \item edit paths by modifying the defining \glspl{controlpt}
+    (\sectionref{sec:editpath});
+
+    \item incorporate text (\sectionref{sec:newtext}) and 
+    bitmap images (\sectionref{sec:insertbitmap})
+    for annotating and background effects;
+
+    \item combine text and a path to form a text-along-path
+    effect (\sectionref{sec:textpath});
+
+    \item apply replicas to a shape to form patterns
+    (\sectionref{sec:patterns});
+
+    \item extract the parameter's for \TeX's \gls{parshape} command and for 
+    the \gls{shapepar} (or \gls{Shapepar}) command defined in the
+    \sty{shapepar} package;
+
+    \item construct frames for use with the \sty{flowfram} package
+    (\sectionref{sec:flowframe}).
+   \end{itemize}
+   
+   Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
+   (\sectionref{sec:loadimage}) from \appname's native \gls{jdr}
+   (binary) or \gls{ajr} (ASCII) file formats. Additionally, images can be
+   exported (\sectionref{sec:exportimage}) as:
+   
+   \begin{itemize}
+    \item a \LaTeX\ file containing a \env{pgfpicture} environment
+    for inclusion in a \LaTeX\ document;
+
+    \item a single-paged complete \LaTeX\ document containing the image
+    (either just encapsulating the image or with the page set to the
+    same size as the \gls{canvas});
+
+    \item a \LaTeX\ package or class that loads the \sty{flowfram} package;
+
+    \item a PNG file;
+
+    \item a PostScript file;
+
+    \item \pgls{svg} file.
+   \end{itemize}
+
+   Note that the export to PS/PDF/SVG functions use external
+   processes, such as \app{latex} and \app{dvips}.
+   \strong{You can't import back from the files you can export to.}
+   
+   The low-level \sty{pgf} basic layer commands are used during
+   exports to \LaTeX\ files. These commands aren't particularly easy to
+   read but are faster to compile than the higher-level commands that
+   require extra processing to parse the syntax and perform additional
+   calculations. The primary purpose of \appname\ is to provide a
+   graphical interface that can generate complicated code that's hard
+   to write manually.
+
+   \appname\ was tested with version 3.0.0 of the \sty{pgf}
+   package, version 1.16 of the \sty{flowfram} package and version
+   2.2 of the \sty{shapepar} package. Files created by \appname\
+   may not work with earlier versions of those packages. Note that some
+   DVI viewers may not understand PGF specials. I strongly recommend
+   that you read the user manuals for those packages.
+   
+   
+   Notation: a \gls{primaryclick} is a single click with the primary
+   mouse button. This is typically the left button for a right-handed
+   mouse, but may be the right button for a left-handed mouse. A
+   \gls{menuclick} is a click with the context-menu mouse button. This
+   button depends on your configuration, but is typically the right
+   button for a right-handed two-button mouse. If the button isn't
+   mentioned, a~\gls{click} can be assumed to mean 
+   a~\gls{primaryclick}.
+   
+
+\chapter{Installation}
+\label{install}
+
+   Ensure that you have the \gls{jre} installed.
+   This can be downloaded from \url{http://java.sun.com/j2se/}.
+   You must ensure that you use at least Java~8, as \appname\
+   does not work with earlier versions.
+   
+   To install, download the installer
+   \metafilefmt{flowframtk-}{appversion}{-installer.jar}
+   (where \meta{appversion} is the application version) and run it. 
+   This can be done from a terminal or command prompt using:
+   
+\begin{terminal}
+java -jar flowframtk-\meta{appversion}-installer.jar
+\end{terminal}
+   
+   Depending on the setup of your operating system, you may also be
+   able to \gls{doubleclick} on the \ext{jar} file to run it.
+   
+
+\chapter{Accessibility}
+\label{access}
+
+Most of \appname's mouse functions can be emulated using the
+keyboard, however note that some systems do not allow
+applications to move the pointer, so keyboard functions that move
+the pointer are not guaranteed to work on every system. Keyboard
+accelerators and their menu mnemonic equivalents are listed in
+\tableref{tab:access}. These accelerators may be changed using the
+\widget{accelerators} tab in the \dialog{configui} window
+(see \sectionref{sec:configureuidialog}).
+\accelerator{menubarfocus} switches the
+focus to the menu bar. The \accelerator{okay} key will usually be equivalent to
+the \widget{okay} button except when the focus is with a component that
+interprets \keys{\keyref{return}} for some other purpose (such as
+a~\gls{dropdown}), in which case you need to use 
+\keys{\keyref{shift}+\keyref{return}}.
+
+Within editable text fields, you can use \keys{\keyref{ctrl}+A} to select all the
+text, or \keys{\keyref{shift}} followed by the left
+\keys{\keyref{left}} or right \keys{\keyref{right}}
+arrow key to select a portion of the text. If some of the 
+text has been selected, you can use \keys{\keyref{ctrl}+C} or 
+\keys{\keyref{ctrl}+X} to copy or cut the text onto the clipboard,
+and you can use \keys{\keyref{ctrl}+V} to paste text from the clipboard into the
+text field.
+
+\begin{warning}
+Note that a few of the accelerators previously used by JpgfDraw have
+been changed in \appname, as they caused a conflict. For example,
+\keys{\keyref{escape}} cancels a displayed menu, so if you use it to
+dismiss a menu while you had a \gls{path} under construction, the
+entire path could be discarded, which is undesirable. Therefore the
+abandon path accelerator is now \accelerator{abandon}. The
+\accelerator{help.manual} key is now only for the main manual help
+button. The help buttons in dialog windows and the preamble editor
+are activated with \accelerator{help} and the help button in the
+status bar is activated with \accelerator{contexthelp} (otherwise
+the main help button, preamble editor help button and status bar
+help button would conflict).
+\end{warning}
+
+\seealsorefs{sec:configureuidialog,sec:selectobjects,sec:newobjects,sec:accesstutorial}
+
+\begin{longtable}{lp{0.5\textwidth}p{0.2\textwidth}}
+\caption{Keyboard Accelerators and Menu Mnemonics\label{tab:access}}\\
+\bfseries Accelerator & \bfseries Function & \bfseries Mnemonic \\
+\endfirsthead
+\caption*{Keyboard Accelerators and Menu Mnemonics}\\
+\bfseries Accelerator & \bfseries Function & \bfseries Mnemonic \\
+\endhead
+\multicolumn{3}{l}{\fnsymtext{2}{Functions that move the pointer.}}\\\endfoot
+\keys{\keyref{return}} &
+Finish current \gls{path}/\gls{textarea} & 
+\mnemonictrail{tools.finish}\tabularnewline
+& 
+\emph{or} select \widget{okay} button in dialog boxes &
+\mnemonic{okay}\tabularnewline
+%
+& 
+\emph{or} select \widget{close} button in dialog boxes &
+\mnemonic{close}\tabularnewline
+%
+\keys{\keyref{shift}+\keyref{return}} &
+Select \widget{okay} button in dialog boxes &
+\mnemonic{okay}\tabularnewline
+%
+\accelerator{tools.abandon} &
+Abandon current \gls{path} &
+\mnemonictrail{tools.abandon}\tabularnewline
+%
+\keys{\keyref{escape}} &
+Select \widget{cancel} button in dialog boxes &
+\mnemonic{cancel}\tabularnewline
+%
+ & 
+\emph{or} close displayed menu &
+\tabularnewline
+%
+\accelerator{editpath.delete_control} & 
+Delete selected \gls{controlpt} &
+\accelerator{contextmenu} \mnemonic{editpath.delete_control}
+\tabularnewline
+%
+\accelerator{delete_last} &
+Delete last segment (path construction mode) &
+\tabularnewline
+%
+\keys{\keyref{insert}} &
+Add \gls{controlpt} &
+\accelerator{contextmenu} \mnemonic{editpath.add_control}
+\tabularnewline
+&
+\emph{or} display symbol dialog box &
+\accelerator{contextmenu} \mnemonic{text.insert_symbol}
+\tabularnewline
+%
+\accelerator{focusnext} &
+Move focus to next focusable component &
+\tabularnewline
+%
+\accelerator{focusselect} &
+Select component with current focus &
+\tabularnewline
+\midrule
+%
+\keys{\keyref{pageup}} &
+Scroll up by one screen full &
+\tabularnewline
+%
+\keys{\keyref{pagedown}} &
+Scroll down by one screen full &
+\tabularnewline
+%
+\keys{\keyref{ctrl}+\keyref{pagedown}} &
+If in a tabbed pane: &
+\tabularnewline
+&
+\quad Move to the next tab &
+\tabularnewline
+&
+Otherwise: &
+\tabularnewline
+&
+\quad Scroll right by one screen full &
+\tabularnewline
+%
+\keys{\keyref{ctrl}+\keyref{pageup}} &
+If in a tabbed pane: &
+\tabularnewline
+&
+\quad Move to the previous tab &
+\tabularnewline
+ &
+ Otherwise: &
+\tabularnewline
+&
+\quad Scroll left by one screen full &
+\tabularnewline
+%
+Arrow Keys &
+If left mouse button pressed: &
+\tabularnewline
+ &
+ \quad \fnsym{2}move mouse by one pixel in given direction &
+\tabularnewline
+ &
+Otherwise: &
+\tabularnewline
+ &
+\quad scroll by one tick mark in given direction &
+\tabularnewline
+%
+\keys{\keyref{home}} &
+Scroll to the top of the \gls{canvas} &
+\tabularnewline
+%
+\keys{\keyref{end}} &
+Scroll to the bottom of the \gls{canvas} &
+\tabularnewline
+%
+\keys{\keyref{ctrl}+\keyref{home}} &
+Scroll leftmost &
+\tabularnewline
+%
+\keys{\keyref{ctrl}+\keyref{end}} &
+Scroll rightmost &
+\tabularnewline
+\midrule
+%
+\accelerator{help.manual} &
+Display Handbook &
+\mnemonictrail{help.manual}
+\tabularnewline
+\accelerator{settings.grid.show} &
+Show/hide \gls{grid} &
+\mnemonictrail{settings.grid.show}
+\tabularnewline
+\accelerator{contextmenu} &
+Show \gls{canvas} popup menu (if available for current mode) &
+\tabularnewline
+%
+\accelerator{constructclick} &
+Emulate \gls{primaryclick} in \gls{construction} &
+\tabularnewline
+%
+\accelerator{navigate.goto} &
+ \fnsym{2}Go to coordinate &
+\mnemonictrail{navigate.goto}
+\tabularnewline
+%
+\keys{\actualkey{F6}} &
+Select mode: &
+\tabularnewline
+ &
+ \quad deselect the \glsdisp{backobject}{backmost} selected 
+      \gls{object}, and select next object in the \gls{stack} &
+\mnemonictrail{navigate.skip}
+\tabularnewline
+&
+Edit mode: &
+\tabularnewline
+\quad select next \gls{controlpt} &
+\accelerator{contextmenu} \mnemonic{editpath.next_control}
+\tabularnewline
+%
+\keys{\actualkey{F7}} &
+Select mode: &
+\tabularnewline
+ &
+\quad Move selected \gls{object} &
+\mnemonictrail{edit.moveby}
+\tabularnewline
+ &
+ Edit mode: &
+\tabularnewline
+ &
+\quad Move selected \gls{controlpt} &
+\accelerator{contextmenu} \mnemonic{editpath.coordinates}
+\tabularnewline
+%
+\accelerator{edit.undo} &
+Undo &
+\mnemonictrail{edit.undo} \tabularnewline
+%
+\accelerator{edit.redo} &
+Redo &
+\mnemonictrail{edit.redo}
+\tabularnewline
+%
+\accelerator{menubarfocus} &
+Switch focus to menu bar &
+\tabularnewline
+%
+\accelerator{redraw} &
+Repaint canvas &
+\tabularnewline
+%
+\accelerator{contexthelp} &
+Display current tool help (status bar help button) &
+\tabularnewline
+%
+\accelerator{save_all} &
+Saves all images to the \gls{config_dir} &
+\tabularnewline
+%
+\accelerator{help} &
+Display subject help (help buttons in dialog windows or preamble
+editor) &
+\tabularnewline
+\accelerator{settings.grid.lock} &
+Lock/unlock grid &
+\mnemonictrail{settings.grid.lock}
+\tabularnewline
+%
+\accelerator{navigate.select} &
+Select next \gls{object} in the \gls{stack} (from the
+\gls{front}), and deselect all others &
+\mnemonictrail{navigate.select} \tabularnewline
+%
+\keys{\keyref{F6}} &
+Select mode: &
+\tabularnewline
+&
+\quad Add next \gls{object} in the \gls{stack}
+     (from the \gls{front}) to selection &
+\mnemonictrail{navigate.add_next}
+\tabularnewline
+ &
+Edit mode: &
+\tabularnewline
+%
+ &
+\quad select previous \gls{controlpt} &
+\accelerator{contextmenu} \mnemonic{editpath.prev_control}
+\tabularnewline
+%
+\accelerator{navigate.find} &
+\fnsym{2}Find selected \gls{object} &
+\mnemonictrail{navigate.find}
+\tabularnewline
+%
+\accelerator{debug_show} &
+Displays debugging information &
+\tabularnewline
+%
+\accelerator{debug_log} &
+Writes log file in the \gls{config_dir} &
+\tabularnewline
+\accelerator{close_window} &
+Quit &
+\mnemonictrail{file.quit}
+\tabularnewline
+\midrule
+%
+\accelerator{edit.select_all} &
+Select all \gls{object} &
+\mnemonictrail{edit.select_all}
+\tabularnewline
+%
+\accelerator{edit.back} &
+Move selected \gls{object} to the \gls{back} &
+\mnemonictrail{edit.back}
+\tabularnewline
+%
+\accelerator{edit.copy} &
+Copy selected \gls{object} to clipboard &
+\mnemonictrail{edit.copy}
+\tabularnewline
+%
+\accelerator{transform.convert} &
+Convert outline to a \gls{path} &
+\mnemonictrail{transform.convert}
+\tabularnewline
+%
+\accelerator{tools.ellipse} &
+Switch to ellipse tool &
+\mnemonictrail{tools.ellipse}
+\tabularnewline
+%
+\keys{\keyref{ctrl}+\actualkey{F}} &
+Select mode: &
+\tabularnewline
+ &
+\quad Move selected \gls{object} to the \gls{front} &
+\mnemonictrail{edit.front}
+\tabularnewline
+ & \TeX\ editor: &
+\tabularnewline
+ &
+\quad Find text &
+\mnemonictrail{texeditor.search.find}
+\tabularnewline
+\keys{\keyref{ctrl}+\actualkey{G}} &
+Select mode: &
+\tabularnewline
+ &
+\quad Group selected \gls{object} &
+\mnemonictrail{transform.group}
+\tabularnewline
+ &
+\TeX\ editor: &
+\tabularnewline
+ &
+\quad Find again &
+\mnemonictrail{texeditor.search.find_again}
+\tabularnewline
+\keys{\keyref{ctrl}+\actualkey{H}} &
+Select mode: &
+\tabularnewline
+ &
+\quad Shear selected \gls{object} &
+\mnemonictrail{transform.shear}
+\tabularnewline
+ &
+\TeX\ editor: &
+\tabularnewline
+ &
+\quad Find and Replace text &
+\mnemonictrail{texeditor.search.replace}
+\tabularnewline
+%
+\accelerator{edit.path.edit} &
+Edit selected \gls{path} &
+\mnemonictrail{edit.path.edit}
+\tabularnewline
+%
+\accelerator{transform.merge} &
+Merge selected \gls{path} &
+\mnemonictrail{transform.merge}
+\tabularnewline
+%
+\accelerator{tools.open_curve} &
+Switch to open curve tool &
+\mnemonictrail{tools.open_curve}
+\tabularnewline
+%
+\accelerator{tools.open_line} &
+Switch to open line tool &
+\mnemonictrail{tools.open_line}
+\tabularnewline
+%
+\accelerator{tools.gap} &
+Gap function &
+\mnemonictrail{tools.gap}
+\tabularnewline
+%
+\accelerator{file.new} &
+New canvas &
+\mnemonictrail{file.new}
+\tabularnewline
+%
+\accelerator{file.open} &
+Open \gls{jdr} or \gls{jdr} file &
+\mnemonictrail{file.open}
+\tabularnewline
+%
+\accelerator{tools.select} &
+Switch to select tool &
+\mnemonictrail{tools.select}
+\tabularnewline
+%
+\accelerator{file.quit} &
+Quit &
+\mnemonictrail{file.quit}
+\tabularnewline
+%
+\accelerator{tools.rectangle} &
+Switch to rectangle tool &
+\mnemonictrail{tools.rectangle}
+\tabularnewline
+%
+\accelerator{file.save} &
+Save current image &
+\mnemonictrail{file.save}
+\tabularnewline
+%
+\accelerator{tools.text} &
+Switch to text tool &
+\mnemonictrail{tools.text}
+\tabularnewline
+%
+\accelerator{transform.ungroup} &
+Ungroup selected \gls{group} &
+\mnemonictrail{transform.ungroup}
+\tabularnewline
+%
+\accelerator{edit.paste} &
+Paste \gls{object} from clipboard &
+\mnemonictrail{edit.paste}
+\tabularnewline
+%
+\accelerator{transform.rotate} &
+Rotate selected \gls{object} &
+\mnemonictrail{transform.rotate}
+\tabularnewline
+%
+\accelerator{edit.cut} &
+Cut selected \gls{object} &
+\mnemonictrail{edit.cut}
+\tabularnewline
+%
+\accelerator{edit.path.style.all} &
+Edit the selected paths' line styles &
+\mnemonictrail{edit.path.style.all}
+\tabularnewline
+%
+\accelerator{transform.scale} &
+Scale selected \gls{object} &
+\mnemonictrail{transform.scale}
+\tabularnewline
+%
+\accelerator{edit.deselect_all} &
+Deselect all &
+\mnemonictrail{edit.deselect_all}
+\tabularnewline
+%
+\accelerator{edit.movedown} &
+Move selected \gls{object} down the \gls{stack} &
+\mnemonictrail{edit.movedown}
+\tabularnewline
+%
+\accelerator{edit.moveup} &
+Move selected \gls{object} up the \gls{stack} &
+\mnemonictrail{edit.moveup}
+\tabularnewline
+%
+\accelerator{edit.text.edit} &
+Edit selected text &
+\mnemonictrail{edit.text.edit}
+\tabularnewline
+%
+\accelerator{tools.closed_curve} &
+Switch to closed curve tool &
+\mnemonictrail{tools.closed_curve}
+\tabularnewline
+%
+\accelerator{tools.closed_line} &
+Switch to closed line tool &
+\mnemonictrail{tools.closed_line}
+\tabularnewline
+%
+\accelerator{tools.math} &
+Switch to \manualtext{maths} mode tool &
+\mnemonictrail{tools.math}
+\tabularnewline
+\midrule
+%
+\keys{\actualkey{1}}\ldots\keys{\actualkey{8}} &
+Linear gradient paint direction selectors &
+\tabularnewline
+%
+\keys{\actualkey{1}}\ldots\keys{\actualkey{9}} &
+Radial gradient paint start location selectors &
+\end{longtable}
+
+
+
+TODO
+
+\chapter{\MFUsentencecase{\glsentrytext{index.licence}}}
+\label{sec:licence}
+
+\glsadd{index.licence}%
+\appname\ is licensed under the terms of the 
+\href{https://www.gnu.org/licenses/gpl-3.0.html}{GNU General
+Public License version 3 (GPLv3)}.
+\app{flowframtk} depends on the following third party libraries whose jar files are
+in the \filefmt{lib} directory:
+\begin{itemize}
+   \item \TeX\ Parser Library \filefmt{texparserlib.jar}
+   (GPL, \url{https://github.com/nlct/texparser});
+   \item TeX Java Help \filefmt{texjavahelplib.jar}
+   (GPL, \url{https://github.com/nlct/texjavahelp}).
+\end{itemize}
+
+
+\listentrydescendents
+ [title={Summary of \apptext{flowframtk} Switches}]
+ {app.flowframtk}
+
+\printmain
+\printindex 
+
+\end{document} 
+

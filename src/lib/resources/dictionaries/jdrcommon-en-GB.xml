@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English language en-GB file for common JDR messages.
+https://github.com/nlct/flowframtk
+GPL-3.0
+Nicola Talbot
+</comment>
+
+<!-- 
+     Messages relating to TeXJavaHelpLib are
+     in texjavahelplib-en.xml
+     Regionless messages are in jdrcommon-en.xml
+ -->
+
+<entry key="xml.lang">en_GB</entry>
+
+<!-- Help Menu -->
+
+<entry key="menu.help.license">Licence...</entry>
+
+<!-- License Dialogue -->
+
+<entry key="license.title">Licence</entry>
+
+<!-- Messages -->
+
+<entry key="process.cancelling">Cancelling task.</entry>
+
+<!-- Warning Messages -->
+
+<!-- Error Messages -->
+
+<entry key="error.title">Error</entry>
+
+<!-- Manual -->
+
+<entry key="manual.grey">grey</entry>
+<entry key="manual.colour">colour</entry>
+<entry key="manual.maths">maths</entry>
+<entry key="manual.through">through</entry>
+
+</properties>

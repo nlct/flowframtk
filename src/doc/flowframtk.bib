@@ -1,0 +1,370 @@
+@abbreviation{gui,
+  short="GUI",
+  long="graphical user interface",
+  description = {An application with windows and buttons in which the user
+      can point and click with the mouse.}
+}
+
+@abbreviation{jdk,
+  short="JDK",
+  long="Java Standard Edition SDK",
+  description = {A development environment for building
+       applications, applets and components using the Java
+       programming language.}
+}
+
+@abbreviation{jre,
+  short="JRE",
+  long="Java Runtime Environment",
+  description = {Allows end-users to run Java applications.}
+}
+
+@abbreviation{jvm,
+  short="JVM",
+  long="Java Virtual Machine"
+  description = {Also known as the Java Runtime Environment.}
+}
+
+@abbreviation{mdi,
+  short="MDI",
+  long="multiple-Document interface",
+  description = {A main (parent) window containing child
+       windows allowing you to process several documents in
+       parallel.}
+}
+
+@abbreviation{svg,
+  prefix="an\space ",
+  prefixfirst="a~",
+  short="SVG",
+  long="scalable vector graphics",
+  description = {A Modularized language for describing
+      two-dimensional vector and mixed vector/raster graphics in XML.}
+}
+
+@commonabbreviation{pdf,
+  short = {PDF},
+  long = {portable document format}
+}
+
+% FILE EXTENSIONS/FORMATS
+
+@fileext{ext.jdr}
+@fileext{ext.ajr}
+@fileext{ext.tex}
+@fileext{ext.pdf}
+@fileext{ext.svg}
+@fileext{ext.tex}
+@fileext{ext.xml}
+@fileext{ext.eps}
+
+@entry{ajr,
+  name="AJR",
+  description = {\AppName's native ASCII format. Files in this format 
+      should have the extension \ext{ajr}. This format is 
+      primarily provided to assist conversion to and from \gls{jdr} files 
+      or for version control.}
+}
+
+@entry{jdr,
+   name="JDR",
+   description = {\AppName's native binary format. Files in this format 
+      should have the extension \ext{jdr}.}
+}
+
+@entry{Java,
+  name="Java",
+  description = {A platform-independent object-orientated language.}
+}
+
+@index{grid,
+  name="grid",
+  description = {Tick marks located at regular intervals on the canvas. The grid can be locked so
+     that new points will be placed at the tick nearest the specified
+     position.}
+}
+
+@indexplural{toolbar,
+  description = {The two panels containing buttons, the horizontal toolbar is positioned at
+    the top of \AppName's main window, the vertical toolbar is
+    positioned along the left edge of the main window.}
+}
+
+@index{statusbar,
+  name="status bar",
+  description = {The status bar is the horizontal panel positioned along the bottom of
+    \AppName's main window.}
+}
+
+@indexplural{ruler,
+ description = {The two panels containing the horizontal and
+vertical rulers.}
+}
+
+@index{canvas,
+  plural="canvases",
+  description = {The white area on which you construct your picture.}
+}
+
+@index{shape,
+  description = {Either a path, text-path or a composite shape.}
+}
+
+@index{path,
+  description = {A shape made up of line segments, moves and cubic
+Bézier segments.}
+}
+
+@index{textarea,
+  name="text area",
+  description = {An object consisting of a single line of text. The text may be moved,
+    scaled, rotated, sheared or converted to a path.}
+}
+
+@index{textpath,
+  name="text-path",
+  description = {A composite object formed by combining a path and a text area
+    to create a text along a path effect. The underlying path is
+    only visible when editing the text-path object using the edit path
+    function. Transformations (rotating, scaling and shearing) are
+    applied to the path not to the text.}
+}
+
+@index{compositeshape,
+  name="composite shape",
+  description = {A shape that is described by an underlying shape
+    and a means of transforming it, such as apply symmetry or
+replicas.}
+}
+
+@index{symmetricshape,
+  name="symmetric shape",
+  description = {A composite shape that is formed by the underlying shape
+    added to its reflection in a line a symmetry. Depending on how it's
+    created, the symmetric shape may be drawn as a single shape, or the
+    underlying shape and its reflection may be drawn independently of
+    each other. The line of symmetry has two control points that can be
+    adjusted to change the overall shape.}
+}
+
+@index{pattern,
+ description = {A composite shape formed by repeatedly applying a given
+    transformation on a shape. Each pattern has a specified number of
+    replicas. The underlying shape may or may not be visible. The
+    pattern mode determines whether the underlying path and replicas are
+    drawn in one go (single mode) or whether they are drawn
+    independently of each other (multi-mode). Transformations (rotating,
+    scaling and shearing) are applied to the path not to the text.}
+}
+
+@index{rotationalpattern,
+  name="rotational pattern",
+  description = {A pattern where the replicas are created
+    by rotating the underlying path. In addition to the control points
+    defining the underlying shape, rotational patterns also have a control
+    point that governs the point of rotation.}
+}
+
+@index{scaledpattern,
+  name="scaled pattern",
+  description = {A pattern where the replicas are created
+    by scaling the underlying path. In addition to the control points
+    defining the underlying shape, scaled patterns also have two control
+    points governing the scale anchor and the scale direction.}
+}
+
+@index{spiralpattern,
+  name="spiral pattern",
+  description = {A pattern where the replicas are created
+    by rotating and translating the underlying path so that the replicas
+    are aligned along a spiral. In addition to the control points
+    defining the underlying shape, spiral patterns also have two control points
+    that govern the anchor and offset.}
+}
+
+@index{pathattributes,
+  name="path attributes",
+  description = {The line \manualtext{colour}, fill \manualtext{colour} and line styles for the path.}
+}
+
+@index{textattributes,
+  name="text attributes",
+  description = {The text \manualtext{colour} and font.}
+}
+
+@index{storageunit,
+  name="storage unit",
+  description = {The length unit used when storing co-ordinates. The default unit
+    is bp (PostScript point) but may be changed in the configuration
+    dialog.}
+}
+
+@index{controlpt,
+  name="control point",
+  description = {The points that define a path. Line segments and gaps have two control
+    points, at the start and end, cubic Bézier segments have four
+    control points: one at the start of the segment, one at the end of
+    the segment, and two others that define the curvature of the segment.
+    Adjacent segments share a common control point. When a path is under
+    construction, or is being edited, the control points are shown as
+    orange or red squares. Composite paths also have control points that
+    govern how the full path is created from the underlying shape. The
+    composite control points are \manualtext{coloured} differently to the standard
+    path controls.}
+}
+
+@index{ptindex,
+  name="control point index",
+  plural="control point indexes",
+  description = {Each control point defining a given path or composite
+    shape has an index relative to the initial control point (at the
+    start of the path). Use <kbd key="F6"/> (in edit path mode) to cycle
+    through the points in increasing order of index.}
+}
+
+@index{object,
+ description =  {A path, text area, text-path, bitmap or group.}
+}
+
+@index{group,
+  description = {A collection of \glspl{object} treated as a
+single entity.}
+}
+
+@index{bbox,
+  name="bounding box",
+  plural="bounding boxes",
+  description = {The smallest rectangle that encompasses the \gls{object}.}
+}
+
+@index{stack,
+  description = {List of \glspl{object} that make up the image, 
+    in the order in which they should be painted on the canvas.
+    A \gls{group"} is essentially a sub-stack.}
+}
+
+@index{stackingorder,
+  name="stacking order",
+  description={The order in which \glspl{object} are painted on the canvas.
+    To determine the reverse stacking order, deselect all objects, then
+    use <kbd key="F6"/> to cycle through the stack starting from the
+    frontmost object. Reverse this list to obtain the stacking order.
+    Note that the frontmost object is the last object in the \gls{stack}, not
+    the first.}
+}
+
+@index{frontobject,
+  name="frontmost object",
+  description = {The last object to be painted on the canvas.}
+}
+
+@index{front, alias="frontobject"}
+
+@index{backobject,
+  name="backmost object",
+  description = {The first object to be painted on the canvas.}
+}
+
+@index{back, alias="backobject"}
+
+@index{vectorgraphics,
+  name="vector graphics",
+  description = {A means of describing images through the use of
+points, lines and curves.}
+}
+
+@index{raster,
+  name="raster graphics",
+  description = {Representing images as a collection of pixels. Also
+called a bitmap.}
+}
+
+@index{bitmap, alias="raster"}
+
+@index{construction,
+  name="construction mode",
+  description = {Any of the tools except the select tool.}
+}
+
+@index{pt,
+  description = {\TeX's point. Not to be confused with bp (a PostScript point).
+    72.27pt=1in.}
+}
+
+@index{bp,
+  description = {\TeX's \qt{big point}. This is the same as a PostScript point.
+    72bp=1in.}
+}
+
+@index{dropdown,
+  name="drop-down list",
+  description = {A \gls{gui} element that allows a user to choose one value from a list.
+    When inactive, it only displays the selected value. When activated
+    (usually by pressing an arrow button to on one side) it displays
+    a list of all available values from which the user can select
+    the required value.}
+}
+
+@index{combobox,
+  name="combo box",
+  description = {A \gls{gui} element similar to a drop-down list, but can be edited if the
+    required value is not in the list.}
+}
+
+@index{checkbox,
+  description = {A \gls{gui} element with two states: on (true) and off (false).}
+}
+
+@index{popupmenu,
+  name="popup menu",
+  description = {A menu whose items vary depending on the context. These
+    menus are usually invoked with the menu or secondary mouse button. In
+    \AppName\ it is also possible to invoke popup menus using
+    <kbd key="F3"/> or your keyboard may have a context-menu key.}
+}
+
+@index{recto,
+  description = {The \qt{front} side of a leaf of paper (the right or
+odd-numbered page).}
+}
+
+@index{verso,
+  description = {The \qt{back} side of a leaf of paper (the left
+or even-numbered page).}
+}
+
+@index{menuclick,
+  name="menu-click",
+  description = {Click the mouse button that activates context-menus. This depends
+    on your mouse configuration. For example, this is typically the right
+    button on a two-button right-handed
+    mouse, but may be the left button on a left-handed mouse or
+    the middle button on three button mouse.}
+}
+
+@index{primaryclick,
+  name="primary-click",
+  description = {Click the primary mouse button. This depends on your
+    mouse configuration. For example, this is typically the left button
+    on a two-button right-handed mouse, but may be the right button on a
+    left-handed mouse.}
+}
+
+@index{doubleclick,
+  name="double-click",
+  description = {Press and release the mouse button twice in rapid succession.
+    If no button is specified, assume the primary button.}
+}
+
+@index{click,
+  description = {Press and release a mouse button. If the button isn't
+    specified, assume the primary button.}
+}
+
+@index{config_dir,
+  name="configuration directory",
+  description = {This directory contains application settings, the list of recent files and 
+    mapping files. It's also the location used for log files and the
+dump all function.}
+}
+

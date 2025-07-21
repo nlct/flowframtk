@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English language file for common JDR messages.
+https://github.com/nlct/flowframtk
+GPL-3.0
+Nicola Talbot
+</comment>
+
+<!-- 
+     Messages relating to TeXJavaHelpLib are
+     in texjavahelplib-en.xml
+ -->
+
+<entry key="xml.lang">en</entry>
+
+<!-- File Menu -->
+
+<entry key="menu.file">File</entry>
+<entry key="menu.file.mnemonic">F</entry>
+
+<entry key="menu.file.open">Open...</entry>
+<entry key="menu.file.open.mnemonic">O</entry>
+<entry key="menu.file.open.keystroke">control O</entry>
+
+<entry key="menu.file.print">Print...</entry>
+<entry key="menu.file.print.mnemonic">P</entry>
+<entry key="menu.file.print.tooltip">Print current image</entry>
+
+<entry key="menu.file.quit">Quit</entry>
+<entry key="menu.file.quit.mnemonic">Q</entry>
+<entry key="menu.file.quit.keystroke">control Q</entry>
+
+<entry key="action.close_window">Close Window</entry>
+<entry key="action.close_window.keystroke">alt F4</entry>
+
+<!-- Settings Menu -->
+
+<entry key="menu.settings">Settings</entry>
+<entry key="menu.settings.mnemonic">S</entry>
+
+<!-- Settings -> Zoom Sub-Menu -->
+
+<entry key="menu.settings.zoom">Zoom</entry>
+<entry key="menu.settings.zoom.mnemonic">Z</entry>
+
+<entry key="menu.settings.zoom.width">Fit Width</entry>
+<entry key="menu.settings.zoom.width.mnemonic">W</entry>
+<entry key="menu.settings.zoom.width.tooltip">Zoom to fit page width</entry>
+
+<entry key="menu.settings.zoom.height">Fit Height</entry>
+<entry key="menu.settings.zoom.height.mnemonic">H</entry>
+<entry key="menu.settings.zoom.height.tooltip">Zoom to fit page height</entry>
+
+<entry key="menu.settings.zoom.page">Fit Page</entry>
+<entry key="menu.settings.zoom.page.mnemonic">P</entry>
+<entry key="menu.settings.zoom.page.tooltip">Zoom to fit page</entry>
+
+<entry key="menu.settings.zoom.user">User Defined...</entry>
+<entry key="menu.settings.zoom.user.mnemonic">U</entry>
+<entry key="menu.settings.zoom.user.tooltip">Apply custom magnification</entry>
+
+<entry key="menu.settings.zoom.25">25%</entry>
+<entry key="menu.settings.zoom.25.mnemonic">2</entry>
+
+<entry key="menu.settings.zoom.50">50%</entry>
+<entry key="menu.settings.zoom.50.mnemonic">5</entry>
+
+<entry key="menu.settings.zoom.75">75%</entry>
+<entry key="menu.settings.zoom.75.mnemonic">7</entry>
+
+<entry key="menu.settings.zoom.100">100%</entry>
+<entry key="menu.settings.zoom.100.mnemonic">1</entry>
+
+<entry key="menu.settings.zoom.200">200%</entry>
+<entry key="menu.settings.zoom.200.mnemonic">0</entry>
+
+<entry key="menu.settings.zoom.400">400%</entry>
+<entry key="menu.settings.zoom.400.mnemonic">4</entry>
+
+<entry key="menu.settings.zoom.800">800%</entry>
+<entry key="menu.settings.zoom.800.mnemonic">8</entry>
+
+<!-- Help Menu -->
+
+<entry key="menu.help.license">License...</entry>
+<entry key="menu.help.license.mnemonic">L</entry>
+
+<entry key="menu.help.about">About...</entry>
+<entry key="menu.help.about.mnemonic">A</entry>
+
+
+
+<!-- Open Dialog -->
+
+<entry key="filter.jdrajr">flowframtk image file (*.jdr, *.ajr)</entry>
+<entry key="filter.bitmap">Image Files ({0})</entry>
+
+<!-- Zoom Dialogue -->
+
+<entry key="zoom.title">Set Magnification</entry>
+<entry key="zoom.magnification">Magnification</entry>
+<entry key="zoom.magnification.mnemonic">M</entry>
+<entry key="zoom.invalid">Invalid value ''{0}''</entry>
+<entry key="zoom.width">Fit Width</entry>
+<entry key="zoom.height">Fit Height</entry>
+<entry key="zoom.page">Fit Page</entry>
+<entry key="zoom.user">User Defined</entry>
+<entry key="zoom.invalid">Invalid</entry>
+
+<!-- License Dialogue -->
+
+<entry key="license.title">License</entry>
+
+<!-- About Dialogue -->
+
+<entry key="about.title">About</entry>
+
+<!-- Buttons -->
+
+<entry key="action.abort">Abort</entry>
+<entry key="action.abort.mnemonic">A</entry>
+<entry key="action.abort.tooltip">Abort current process</entry>
+
+<!-- Actions Without a Corresponding Widget -->
+
+<entry key="action.menubarfocus">Menu Bar Focus</entry>
+<entry key="action.menubarfocus.keystroke">F10</entry>
+<entry key="action.menubarfocus.description">Switch focus to menu bar</entry>
+
+<entry key="action.focusnext">Focus next</entry>
+<entry key="action.focusnext.keystroke">TAB</entry>
+<entry key="action.focusnext.description">Move focus to next focusable component</entry>
+
+<entry key="action.focusselect">Focus select</entry>
+<entry key="action.focusselect.keystroke">SPACE</entry>
+<entry key="action.focusselect.description">Select component with current focus</entry>
+
+
+<!--  font used for annotations, such as flowframe labels -->
+<entry key="font.annote.family">SansSerif</entry>
+<entry key="font.annote.size">10</entry>
+
+<!--  File Chooser -->
+<entry key="fc.append_ext">Append extension</entry>
+
+<!--  Browse bitmap dialog box -->
+
+<entry key="browsebitmap.title">Bitmap not found</entry>
+<entry key="browsebitmap.browse">Browse...</entry>
+<entry key="browsebitmap.browse.mnemonic">B</entry>
+<entry key="browsebitmap.not_found">Bitmap not found. Select new file?</entry>
+<entry key="browsebitmap.cant_refresh">Can't refresh bitmap</entry>
+<entry key="browsebitmap.invalid_format">Invalid or unrecognised image format</entry>
+<entry key="browsebitmap.invalid_title">Bitmap Invalid</entry>
+<entry key="browsebitmap.discard">Discard</entry>
+
+
+
+<!-- Messages -->
+
+<entry key="process.confirm.abort">Are you sure you want to abort this operation?</entry>
+<entry key="process.confirm">Confirm</entry>
+<entry key="process.running">Running {0}</entry>
+<entry key="process.aborted">Task aborted.</entry>
+<entry key="process.cancelling">Canceling task.</entry>
+
+
+<!-- Warning Messages -->
+
+<entry key="warning.title">Warning</entry>
+
+<entry key="warning.tag">Warning: {0}</entry>
+<entry key="warning.draft_bitmap">Insufficient memory to load bitmap.
+Reverting to draft mode.</entry>
+<entry key="warning.draft_bitmaps">Insufficient memory to load one or more bitmaps.
+Reverting to draft mode.</entry>
+
+
+<!-- Error Messages -->
+
+<entry key="error.title">Error</entry>
+
+<entry key="error.throwable.FileNotFoundException">File not found</entry>
+<entry key="error.throwable.IOException">I/O error has occurred</entry>
+
+<!-- Manual -->
+
+
+<entry key="index.licence">license</entry>
+
+</properties>

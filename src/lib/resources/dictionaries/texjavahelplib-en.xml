@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English language file for texjavahelplib
+https://github.com/nlct/texjavahelp
+GPL-3.0
+Nicola Talbot
+</comment>
+
+<!-- Help Menu (for the main application) -->
+
+<entry key="menu.help">Help</entry>
+<entry key="menu.help.mnemonic">H</entry>
+
+<entry key="menu.help.manual">Manual</entry>
+<entry key="menu.help.manual.mnemonic">M</entry>
+<entry key="menu.help.manual.keystroke">F1</entry>
+
+<entry key="action.help">Help</entry>
+<entry key="action.help.mnemonic">H</entry>
+<entry key="action.help.description">Open manual</entry>
+<entry key="action.help.keystroke">shift F1</entry>
+<entry key="action.help.defaultkeys">format=glsignore</entry>
+
+<!-- Common Actions -->
+
+<entry key="action.okay">Okay</entry>
+<entry key="action.okay.mnemonic">O</entry>
+<entry key="action.okay.keystroke">shift ENTER</entry>
+<entry key="action.okay.defaultkeys">format=glsignore</entry>
+
+<entry key="action.cancel">Cancel</entry>
+<entry key="action.cancel.mnemonic">C</entry>
+<entry key="action.cancel.keystroke">ESCAPE</entry>
+<entry key="action.cancel.defaultkeys">format=glsignore</entry>
+
+<entry key="action.apply">Apply</entry>
+<entry key="action.apply.mnemonic">A</entry>
+<entry key="action.apply.defaultkeys">format=glsignore</entry>
+
+<entry key="action.close">Close</entry>
+<entry key="action.close.mnemonic">C</entry>
+<entry key="action.close.keystroke">alt F4</entry>
+<entry key="action.close.defaultkeys">format=glsignore</entry>
+
+<entry key="action.copy">Copy</entry>
+<entry key="action.copy.mnemonic">C</entry>
+<entry key="action.copy.keystroke">control C</entry>
+<entry key="action.copy.defaultkeys">format=glsignore</entry>
+
+<!-- Menus and Buttons for the Help System -->
+
+<!-- Main Help Frame -->
+
+<entry key="index.menu.helpframe">Help Frame Menus</entry>
+
+<!-- Navigation -->
+
+<entry key="menu.helpframe.navigation">Navigation</entry>
+<entry key="menu.helpframe.navigation.mnemonic">N</entry>
+<entry key="menu.helpframe.navigation.tooltip">Navigate around the document</entry>
+<entry key="menu.helpframe.navigation.description">Actions to switch the view to another page</entry>
+
+<entry key="menu.helpframe.navigation.home">Home</entry>
+<entry key="menu.helpframe.navigation.home.tooltip">Home Page</entry>
+<entry key="menu.helpframe.navigation.home.description">Go to the first page</entry>
+<entry key="menu.helpframe.navigation.home.mnemonic">H</entry>
+<entry key="menu.helpframe.navigation.home.keystroke">alt HOME</entry>
+
+<entry key="menu.helpframe.navigation.up">Up</entry>
+<entry key="menu.helpframe.navigation.up.mnemonic">U</entry>
+<entry key="menu.helpframe.navigation.up.tooltip">Up</entry>
+<entry key="menu.helpframe.navigation.up.description">Go up a section</entry>
+<entry key="menu.helpframe.navigation.up.keystroke">alt UP</entry>
+
+<entry key="menu.helpframe.navigation.previous">Previous</entry>
+<entry key="menu.helpframe.navigation.previous.mnemonic">P</entry>
+<entry key="menu.helpframe.navigation.previous.tooltip">Previous Page</entry>
+<entry key="menu.helpframe.navigation.previous.description">Go to the previous page</entry>
+<entry key="menu.helpframe.navigation.previous.keystroke">alt LEFT</entry>
+
+<entry key="menu.helpframe.navigation.next">Next</entry>
+<entry key="menu.helpframe.navigation.next.mnemonic">N</entry>
+<entry key="menu.helpframe.navigation.next.tooltip">Next Page</entry>
+<entry key="menu.helpframe.navigation.next.description">Go to the next page</entry>
+<entry key="menu.helpframe.navigation.next.keystroke">alt RIGHT</entry>
+
+<entry key="menu.helpframe.navigation.search">Search...</entry>
+<entry key="menu.helpframe.navigation.search.mnemonic">S</entry>
+<entry key="menu.helpframe.navigation.search.tooltip">Search document</entry>
+<entry key="menu.helpframe.navigation.search.description">Open search dialogue</entry>
+
+<entry key="menu.helpframe.navigation.index">Index...</entry>
+<entry key="menu.helpframe.navigation.index.mnemonic">I</entry>
+<entry key="menu.helpframe.navigation.index.tooltip">Open index page</entry>
+<entry key="menu.helpframe.navigation.index.description">Open index page in separate window</entry>
+
+<entry key="menu.helpframe.navigation.history">History...</entry>
+<entry key="menu.helpframe.navigation.history.mnemonic">H</entry>
+<entry key="menu.helpframe.navigation.history.keystroke">ctrl shift H</entry>
+<entry key="menu.helpframe.navigation.history.tooltip">View History</entry>
+<entry key="menu.helpframe.navigation.history.description">View recent page list</entry>
+
+<entry key="menu.helpframe.navigation.historyback">Back</entry>
+<entry key="menu.helpframe.navigation.historyback.mnemonic">B</entry>
+<entry key="menu.helpframe.navigation.historyback.keystroke">alt shift LEFT</entry>
+<entry key="menu.helpframe.navigation.historyback.tooltip">History Back</entry>
+<entry key="menu.helpframe.navigation.historyback.description">Go back</entry>
+
+<entry key="menu.helpframe.navigation.historyforward">Forward</entry>
+<entry key="menu.helpframe.navigation.historyforward.mnemonic">F</entry>
+<entry key="menu.helpframe.navigation.historyforward.keystroke">alt shift RIGHT</entry>
+<entry key="menu.helpframe.navigation.historyforward.tooltip">History Forward</entry>
+<entry key="menu.helpframe.navigation.historyforward.description">Go forward</entry>
+
+<!-- Navigation -->
+
+<entry key="menu.helpframe.settings">Settings</entry>
+<entry key="menu.helpframe.settings.mnemonic">S</entry>
+<entry key="menu.helpframe.settings.description">Change the graphical interface</entry>
+
+<entry key="menu.helpframe.settings.decrease">Font Decrease</entry>
+<entry key="menu.helpframe.settings.decrease.tooltip">Decrease Font Size</entry>
+<entry key="menu.helpframe.settings.decrease.description">Decrease the font size for the help pages</entry>
+<entry key="menu.helpframe.settings.decrease.mnemonic">D</entry>
+<entry key="menu.helpframe.settings.decrease.keystroke">SUBTRACT</entry>
+
+<entry key="menu.helpframe.settings.increase">Font Increase</entry>
+<entry key="menu.helpframe.settings.increase.tooltip">Increase Font Size</entry>
+<entry key="menu.helpframe.settings.increase.description">Increase the font size for the help pages</entry>
+<entry key="menu.helpframe.settings.increase.mnemonic">I</entry>
+<entry key="menu.helpframe.settings.increase.keystroke">ADD</entry>
+
+<entry key="menu.helpframe.settings.font">Font...</entry>
+<entry key="menu.helpframe.settings.font.tooltip">Select Font</entry>
+<entry key="menu.helpframe.settings.font.description">Change the font used by the help pages</entry>
+<entry key="menu.helpframe.settings.font.mnemonic">F</entry>
+<entry key="menu.helpframe.settings.font.keystroke">ctrl F</entry>
+
+<entry key="menu.helpframe.settings.nav">Lower Navigation...</entry>
+<entry key="menu.helpframe.settings.nav.mnemonic">L</entry>
+<entry key="menu.helpframe.settings.nav.description">Adjust the bottom navigation panel</entry>
+
+<!-- Help Popup Menu  -->
+
+<entry key="index.menu.helppage">Help Popup Menu</entry>
+
+<entry key="menu.helppage.view_image">View Image</entry>
+<entry key="menu.helppage.view_image.mnemonic">I</entry>
+<entry key="menu.helppage.view_image.tooltip">Open image in viewer</entry>
+
+<entry key="menu.helppage.home">Home</entry>
+<entry key="menu.helppage.home.tooltip">Home Page</entry>
+<entry key="menu.helppage.home.description">Go to the first page</entry>
+<entry key="menu.helppage.home.mnemonic">H</entry>
+<entry key="menu.helppage.home.keystroke">alt HOME</entry>
+
+<entry key="menu.helppage.reset">Reset</entry>
+<entry key="menu.helppage.reset.mnemonic">R</entry>
+<entry key="menu.helppage.reset.keystroke">alt HOME</entry>
+<entry key="menu.helppage.reset.tooltip">Back to page {0}</entry>
+<entry key="menu.helppage.reset.description">Go back to the topic''s page</entry>
+
+<entry key="menu.helppage.up">Up</entry>
+<entry key="menu.helppage.up.mnemonic">U</entry>
+<entry key="menu.helppage.up.tooltip">Up</entry>
+<entry key="menu.helppage.up.description">Go up a section</entry>
+<entry key="menu.helppage.up.keystroke">alt UP</entry>
+
+<entry key="menu.helppage.previous">Previous</entry>
+<entry key="menu.helppage.previous.mnemonic">P</entry>
+<entry key="menu.helppage.previous.tooltip">Previous Page</entry>
+<entry key="menu.helppage.previous.description">Go to the previous page</entry>
+<entry key="menu.helppage.previous.keystroke">alt LEFT</entry>
+
+<entry key="menu.helppage.next">Next</entry>
+<entry key="menu.helppage.next.mnemonic">N</entry>
+<entry key="menu.helppage.next.tooltip">Next Page</entry>
+<entry key="menu.helppage.next.description">Go to the next page</entry>
+<entry key="menu.helppage.next.keystroke">alt RIGHT</entry>
+
+<entry key="menu.helppage.historyback">Back</entry>
+<entry key="menu.helppage.historyback.mnemonic">B</entry>
+<entry key="menu.helppage.historyback.keystroke">alt shift LEFT</entry>
+<entry key="menu.helppage.historyback.tooltip">History Back</entry>
+<entry key="menu.helppage.historyback.description">Go back</entry>
+
+<entry key="menu.helppage.historyforward">Forward</entry>
+<entry key="menu.helppage.historyforward.mnemonic">F</entry>
+<entry key="menu.helppage.historyforward.keystroke">alt shift RIGHT</entry>
+<entry key="menu.helppage.historyforward.tooltip">History Forward</entry>
+<entry key="menu.helppage.historyforward.description">Go forward</entry>
+
+<!-- Secondary Help Dialogs  -->
+
+<entry key="index.menu.helpdialog">Help Dialog Menu</entry>
+
+<!-- Navigation -->
+
+<entry key="menu.helpdialog.navigation">Navigation</entry>
+<entry key="menu.helpdialog.navigation.mnemonic">N</entry>
+<entry key="menu.helpdialog.navigation.tooltip">Navigate the document topic</entry>
+<entry key="menu.helpdialog.navigation.description">Actions to switch the viewed page</entry>
+
+<entry key="menu.helpdialog.navigation.reset">Reset</entry>
+<entry key="menu.helpdialog.navigation.reset.mnemonic">R</entry>
+<entry key="menu.helpdialog.navigation.reset.keystroke">alt HOME</entry>
+<entry key="menu.helpdialog.navigation.reset.tooltip">Back to page {0}</entry>
+<entry key="menu.helpdialog.navigation.reset.description">Go back to the topic''s page</entry>
+
+<entry key="menu.helpdialog.navigation.historyback">Back</entry>
+<entry key="menu.helpdialog.navigation.historyback.mnemonic">B</entry>
+<entry key="menu.helpdialog.navigation.historyback.keystroke">alt shift LEFT</entry>
+<entry key="menu.helpdialog.navigation.historyback.tooltip">History Back</entry>
+<entry key="menu.helpdialog.navigation.historyback.description">Go back</entry>
+
+<entry key="menu.helpdialog.navigation.historyforward">Forward</entry>
+<entry key="menu.helpdialog.navigation.historyforward.mnemonic">F</entry>
+<entry key="menu.helpdialog.navigation.historyforward.keystroke">alt shift RIGHT</entry>
+<entry key="menu.helpdialog.navigation.historyforward.tooltip">History Forward</entry>
+<entry key="menu.helpdialog.navigation.historyforward.description">Go forward</entry>
+
+<entry key="menu.helpdialog.navigation.previous">Previous</entry>
+<entry key="menu.helpdialog.navigation.previous.mnemonic">P</entry>
+<entry key="menu.helpdialog.navigation.previous.tooltip">Previous Page</entry>
+<entry key="menu.helpdialog.navigation.previous.description">Go to the previous page</entry>
+<entry key="menu.helpdialog.navigation.previous.keystroke">alt LEFT</entry>
+
+<entry key="menu.helpdialog.navigation.next">Next</entry>
+<entry key="menu.helpdialog.navigation.next.mnemonic">N</entry>
+<entry key="menu.helpdialog.navigation.next.tooltip">Next Page</entry>
+<entry key="menu.helpdialog.navigation.next.description">Go to the next page</entry>
+<entry key="menu.helpdialog.navigation.next.keystroke">alt RIGHT</entry>
+
+<entry key="menu.helpdialog.navigation.up">Up</entry>
+<entry key="menu.helpdialog.navigation.up.mnemonic">U</entry>
+<entry key="menu.helpdialog.navigation.up.tooltip">Up</entry>
+<entry key="menu.helpdialog.navigation.up.description">Go up a section</entry>
+<entry key="menu.helpdialog.navigation.up.keystroke">alt UP</entry>
+
+<!-- Index Frame -->
+
+<entry key="help.navigation.index.title">Index</entry>
+
+<!-- History Frame -->
+
+<entry key="help.navigation.history.title">Page History</entry>
+
+<entry key="symbol.help.navigation.history.pointer">&#x261E;</entry>
+<entry key="symbol.help.navigation.history.pointer.description">current page</entry>
+
+<entry key="help.navigation.history.header">Recent List</entry>
+<entry key="help.navigation.history.go">Go</entry>
+<entry key="help.navigation.history.go.mnemonic">G</entry>
+<entry key="help.navigation.history.go.tooltip">Go to selected page</entry>
+
+<!-- Search Frame -->
+
+<entry key="help_page_search.title">Search</entry>
+
+<entry key="help_page_search.keywords">Keywords:</entry>
+<entry key="help_page_search.keywords.mnemonic">K</entry>
+<entry key="help_page_search.keywords.description">Search terms</entry>
+<entry key="help_page_search.keywords.tooltip">Enter search keywords</entry>
+
+<entry key="help_page_search.case">Case-sensitive</entry>
+<entry key="help_page_search.case.mnemonic">V</entry>
+<entry key="help_page_search.exact">Match whole word</entry>
+<entry key="help_page_search.exact.mnemonic">W</entry>
+
+<entry key="message.help_page_search.searching">Searching...</entry>
+<entry key="message.help_page_search.found">Found {0} {0,choice,1#match|1&lt;matches}</entry>
+<entry key="message.help_page_search.not_found">Not found</entry>
+<entry key="message.help_page_search_link_title">Go to start of section</entry>
+<entry key="message.help_page_search_link_para">Go to paragraph</entry>
+
+<!-- Search Frame Menu -->
+
+<entry key="index.menu.help_page_search">Documentation Search</entry>
+
+<entry key="menu.help_page_search.search_menu">Search</entry>
+<entry key="menu.help_page_search.search_menu.mnemonic">S</entry>
+
+<entry key="menu.help_page_search.search_menu.search">Find</entry>
+<entry key="menu.help_page_search.search_menu.search.mnemonic">F</entry>
+<entry key="menu.help_page_search.search_menu.search.tooltip">Find keywords in document</entry>
+
+<entry key="menu.help_page_search.search_menu.previous">Previous Result</entry>
+<entry key="menu.help_page_search.search_menu.previous.mnemonic">P</entry>
+<entry key="menu.help_page_search.search_menu.previous.keystroke">control shift F</entry>
+<entry key="menu.help_page_search.search_menu.previous.tooltip">Scroll to previous result</entry>
+
+<entry key="menu.help_page_search.search_menu.next">Next Result</entry>
+<entry key="menu.help_page_search.search_menu.next.mnemonic">N</entry>
+<entry key="menu.help_page_search.search_menu.next.keystroke">control F</entry>
+<entry key="menu.help_page_search.search_menu.next.tooltip">Scroll to next result</entry>
+
+<entry key="menu.help_page_search.search_menu.reset">Clear</entry>
+<entry key="menu.help_page_search.search_menu.reset.mnemonic">C</entry>
+<entry key="menu.help_page_search.search_menu.reset.keystroke">shift ESCAPE</entry>
+<entry key="menu.help_page_search.search_menu.reset.tooltip">Clear results and keywords</entry>
+
+<entry key="menu.help_page_search.search_menu.stop">Stop</entry>
+<entry key="menu.help_page_search.search_menu.stop.mnemonic">T</entry>
+<entry key="menu.help_page_search.search_menu.stop.keystroke">ESCAPE</entry>
+
+<!-- Font Settings Frame -->
+
+<entry key="text.help_font_settings_sample">“Waltz, bad nymph! For quick jigs vex sylph’s fiddle. D’ye ken?”&lt;br&gt;(+/-)1234567890 &lt;a href="#sample"&gt;sample link&lt;/a&gt;&lt;br&gt;&lt;a name="sample"&gt;Link target&lt;/a&gt;</entry>
+
+<entry key="help_font_settings.title">Help Page Font</entry>
+<entry key="help_font_settings.family">Default Font Family:</entry>
+<entry key="help_font_settings.family.mnemonic">F</entry>
+<entry key="help_font_settings.size">Font Size:</entry>
+<entry key="help_font_settings.size.mnemonic">Z</entry>
+
+<entry key="help_font_settings.icon_font_family">Icon Font:</entry>
+<entry key="help_font_settings.icon_font_family.mnemonic">I</entry>
+
+<entry key="help_font_settings.keystroke_font_family">Keystroke Font:</entry>
+<entry key="help_font_settings.keystroke_font_family.mnemonic">K</entry>
+
+<entry key="help_font_settings.mono_font_family">Mono Font:</entry>
+<entry key="help_font_settings.mono_font_family.mnemonic">M</entry>
+
+<entry key="help_font_settings.hyperlinks">Hyperlinks:</entry>
+
+<entry key="help_font_settings.choose_colour">Choose...</entry>
+<entry key="help_font_settings.choose_colour.mnemonic">S</entry>
+
+<entry key="help_font_settings.colour_chooser.title">Choose</entry>
+
+<entry key="help_font_settings.underline">Underline</entry>
+<entry key="help_font_settings.underline.mnemonic">U</entry>
+
+<!-- Lower Navigation Window -->
+
+<entry key="help_settings_nav.title">Lower Navigation Settings</entry>
+<entry key="help_settings_nav.label_limit">Maximum number of characters:</entry>
+<entry key="help_settings_nav.label_limit.mnemonic">M</entry>
+<entry key="help_settings_nav.show_label">Include text</entry>
+<entry key="help_settings_nav.show_label.mnemonic">T</entry>
+
+<!-- Image Viewer  -->
+
+<entry key="imageviewer.title">Image Viewer</entry>
+<entry key="imageviewer.magnify">Magnify (%):</entry>
+<entry key="imageviewer.magnify.mnemonic">M</entry>
+
+<entry key="index.menu.imageviewer">Image Viewer Menu</entry>
+
+<entry key="menu.imageviewer.fit_to_width">Fit to Width</entry>
+<entry key="menu.imageviewer.fit_to_width.mnemonic">W</entry>
+
+<entry key="menu.imageviewer.fit_to_height">Fit to Height</entry>
+<entry key="menu.imageviewer.fit_to_height.mnemonic">H</entry>
+
+<entry key="menu.imageviewer.fit_to_page">Fit to Page</entry>
+<entry key="menu.imageviewer.fit_to_page.mnemonic">P</entry>
+
+<entry key="menu.imageviewer.increase">Increase</entry>
+<entry key="menu.imageviewer.increase.mnemonic">I</entry>
+<entry key="menu.imageviewer.increase.keystroke">alt UP</entry>
+
+<entry key="menu.imageviewer.decrease">Decrease</entry>
+<entry key="menu.imageviewer.decrease.mnemonic">D</entry>
+<entry key="menu.imageviewer.decrease.keystroke">alt DOWN</entry>
+
+<entry key="menu.imageviewer.zoom_1">100%</entry>
+<entry key="menu.imageviewer.zoom_1.mnemonic">1</entry>
+
+<entry key="menu.imageviewer.zoom_2">200%</entry>
+<entry key="menu.imageviewer.zoom_2.mnemonic">2</entry>
+
+<entry key="menu.imageviewer.zoom_5">500%</entry>
+<entry key="menu.imageviewer.zoom_5.mnemonic">5</entry>
+
+<!-- Version information -->
+
+<entry key="about.version">{0} ({1})</entry>
+<entry key="about.library.version">Bundled with {0} version {1} ({2})</entry>
+
+<!-- Index Map -->
+
+<entry key="indexmap.name_description">{0}: {1}</entry>
+<entry key="indexmap.short_description">{0}: {1}</entry>
+<entry key="indexmap.long_short_description">{0} ({1}): {2}</entry>
+
+<!--
+  Language sensitive common text for the manual. These should be prefixed with
+  "manual." (for non-indexed text) or "index." (for indexed text).
+  For keystrokes, the entry key need to be in the form
+    manual.keystroke.label
+  where label is obtained from the KeyStroke identifier that has been converted
+  to lowercase and had any underscores stripped. 
+ -->
+
+<entry key="index.help-page">help page</entry>
+
+<entry key="manual.keystroke.shift">\shiftsym</entry>
+<entry key="manual.keystroke.shift.description">Shift</entry>
+
+<entry key="manual.keystroke.space">\spacekeysym</entry>
+<entry key="manual.keystroke.space.description">Space</entry>
+
+<entry key="manual.keystroke.contextmenu">\contextmenusym</entry>
+<entry key="manual.keystroke.contextmenu.description">Context Menu</entry>
+
+<entry key="manual.keystroke.control">Control</entry>
+<entry key="manual.keystroke.ctrl">Ctrl</entry>
+<entry key="manual.keystroke.meta">Meta</entry>
+<entry key="manual.keystroke.alt">Alt</entry>
+<entry key="manual.keystroke.altgraph">Alt Gr</entry>
+<entry key="manual.keystroke.altgraph.description">Alt Graph</entry>
+
+<entry key="manual.keystroke.home">Home</entry>
+<entry key="manual.keystroke.end">End</entry>
+
+<entry key="manual.keystroke.up">\upkeysym</entry>
+<entry key="manual.keystroke.up.description">Up</entry>
+<entry key="manual.keystroke.down">\downkeysym</entry>
+<entry key="manual.keystroke.down.description">Down</entry>
+<entry key="manual.keystroke.left">\leftkeysym</entry>
+<entry key="manual.keystroke.left.description">Left</entry>
+<entry key="manual.keystroke.right">\rightkeysym</entry>
+<entry key="manual.keystroke.right.description">Right</entry>
+
+<entry key="manual.keystroke.pageup">Page Up</entry>
+<entry key="manual.keystroke.pagedown">Page Down</entry>
+
+<entry key="manual.keystroke.tab">\tabsym</entry>
+<entry key="manual.keystroke.tab.description">Tab</entry>
+
+<entry key="manual.keystroke.return">\returnsym</entry>
+<entry key="manual.keystroke.return.description">Return</entry>
+
+<entry key="manual.keystroke.clear">Clear</entry>
+<entry key="manual.keystroke.add">NumPad +</entry>
+<entry key="manual.keystroke.subtract">NumPad -</entry>
+<entry key="manual.keystroke.divide">NumPad /</entry>
+<entry key="manual.keystroke.multiple">NumPad *</entry>
+<entry key="manual.keystroke.enter">Enter</entry>
+
+<entry key="manual.keystroke.escape">Esc</entry>
+<entry key="manual.keystroke.escape.description">Escape</entry>
+
+<entry key="manual.keystroke.menu">Menu</entry>
+<entry key="manual.keystroke.insert">Insert</entry>
+<entry key="manual.keystroke.delete">Delete</entry>
+<entry key="manual.keystroke.backspace">Backspace</entry>
+<entry key="manual.keystroke.capslock">Caps Lock</entry>
+<entry key="manual.keystroke.printscreen">PrtScn</entry>
+<entry key="manual.keystroke.printscreen.description">Print Screen</entry>
+
+<entry key="symbol.location_prefix">&#x261B;</entry>
+<entry key="symbol.location_prefix.description">location prefix</entry>
+
+<entry key="manual.menu_separator_title">menu separator</entry>
+<entry key="manual.space_key_title">space key</entry>
+
+<entry key="manual.warning">Warning</entry>
+<entry key="manual.warning.description">a warning</entry>
+
+<entry key="manual.important">Important</entry>
+<entry key="manual.important.description">an important message</entry>
+
+<entry key="manual.information">Information</entry>
+<entry key="manual.information.description">prominent information</entry>
+
+<entry key="manual.definition">Definition</entry>
+<entry key="manual.definition.description">the syntax and usage of a command,
+environment or option etc</entry>
+
+<entry key="manual.valuesetting">Setting</entry>
+<entry key="manual.valuesetting.description">an option 
+that takes a value</entry>
+
+<entry key="manual.novaluesetting">Valueless Setting</entry>
+<entry key="manual.novaluesetting.description">an 
+option that doesn't take a value</entry>
+
+<entry key="manual.toggleonsetting">Toggle (On)</entry>
+<entry key="manual.toggleonsetting.description">a 
+boolean option that is initially true</entry>
+
+<entry key="manual.toggleoffsetting">Toggle (Off)</entry>
+<entry key="manual.toggleoffsetting.description">a 
+boolean option that is initially false</entry>
+
+<entry key="manual.optionvaluedef">Option Value Definition</entry>
+<entry key="manual.optionvaluedef.description">the definition of an option value</entry>
+
+<entry key="manual.counterdef">Counter</entry>
+<entry key="manual.counterdef.description">a counter is
+being described</entry>
+
+<entry key="manual.deprecated">Deprecated</entry>
+<entry key="manual.deprecated.description">a command, environment or option that
+is now deprecated</entry>
+
+<entry key="manual.banned">Don't use</entry>
+<entry key="manual.banned.description"></entry>
+
+<entry key="manual.terminal">Terminal</entry>
+<entry key="manual.terminal.description">a command-line application invocation
+that needs to be entered into a \href'{'https://www.dickimaw-books.com/latex/novices/html/terminal.html'}''{'terminal or command prompt'}'</entry>
+
+<entry key="manual.codeinput">Input</entry>
+<entry key="manual.codeinput.description">\LaTeX\ code to
+insert into your document</entry>
+
+<entry key="manual.badcode">Problematic Input</entry>
+<entry key="manual.badcode.description">problematic code which should be avoided</entry>
+
+<entry key="manual.unicodeinput">Unicode Input</entry>
+<entry key="manual.unicodeinput.description">code that requires a native Unicode
+engine (\XeLaTeX\ or \LuaLaTeX)</entry>
+
+<entry key="manual.coderesult">Result</entry>
+<entry key="manual.coderesult.description">how the example 
+code should appear in the PDF</entry>
+
+<entry key="manual.transcript">Transcript</entry>
+<entry key="manual.transcript.description">text in a transcript or log file or written to STDOUT or STDERR</entry>
+
+<entry key="manual.figure">figure</entry>
+<entry key="manual.figure.plural">figures</entry>
+<entry key="manual.table">table</entry>
+<entry key="manual.table.plural">tables</entry>
+<entry key="manual.example">example</entry>
+<entry key="manual.example.plural">examples</entry>
+<entry key="manual.section">section</entry>
+<entry key="manual.section.plural">sections</entry>
+<entry key="manual.seealso">see also</entry>
+
+<entry key="manual.contents">Contents</entry>
+<entry key="manual.listofexamples">Examples</entry>
+<entry key="manual.index">Index</entry>
+<entry key="manual.glossary">Glossary</entry>
+<entry key="manual.abbreviations">Abbreviations</entry>
+<entry key="manual.glssymbolsgroup">Symbols</entry>
+
+<entry key="manual.cont_explanation">(The symbol \continuesymbol\ above indicates a~line wrap. Don't insert a~line break at that point.)</entry>
+
+<entry key="manual.idxenv">environment</entry>
+<entry key="manual.idxpackage">package</entry>
+<entry key="manual.idxclass">class</entry>
+<entry key="manual.idxcounter">counter</entry>
+<entry key="manual.idxcounter">variable</entry>
+<entry key="manual.idxmenu">menu</entry>
+
+<!--  Errors -->
+<entry key="error.xml.more_than_one_tag">More than 1 &lt;{0}&gt; found</entry>
+<entry key="error.xml.missing_attr_in_tag">Missing ''{0}'' attribute in &lt;{1}&gt;</entry>
+<entry key="error.xml.int_attr_required_in_tag">Integer ''{0}'' attribute required in &lt;{1}&gt; (found ''{2}'')</entry>
+<entry key="error.xml.tag_found_outside">&lt;{0}&gt; found outside &lt;{1}&gt;</entry>
+<entry key="error.xml.tag_found_inside">&lt;{0}&gt; found inside &lt;{1}&gt;</entry>
+<entry key="error.xml.unknown_tag">Unknown tag &lt;{0}&gt;</entry>
+<entry key="error.xml.missing_tag">Missing tag &lt;{0}&gt;</entry>
+<entry key="error.xml.missing_tag_for_node">Missing &lt;{0}&gt; for node ''{1}''</entry>
+<entry key="error.xml.unknown_end_tag">Unknown end tag &lt;/{0}&gt; found</entry>
+<entry key="error.xml.unexpected_chars">Unexpected content ''{0}'' found</entry>
+<entry key="error.xml.unknown_context">No context found for ID {0} referenced by entry ''{1}''</entry>
+
+<entry key="error.resource_not_found">Resource file ''{0}'' not found</entry>
+<entry key="error.resource_not_found_for_node">Resource file ''{0}'' not found for node ''{1}''</entry>
+<entry key="error.no_helpset">Helpset has not been initialised</entry>
+<entry key="error.node_id_not_found">Node with ID ''{0}'' not found</entry>
+<entry key="error.no_desktop">Desktop not supported on the current platform.
+Unable to open URL {0}</entry>
+<entry key="error.browse_failed">Unable to open browser to view {0}</entry>
+<entry key="error.missing_search_term">Missing search term</entry>
+<entry key="error.image_load_failed">Failed to load image ''{0}''</entry>
+
+</properties>

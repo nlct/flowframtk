@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English language file for JDRView.
+https://github.com/nlct/flowframtk
+GPL-3.0
+Nicola Talbot
+</comment>
+
+<!-- Shared messages are in jdrcommon-en.xml
+     Messages relating to TeXJavaHelpLib are
+     in texjavahelplib-en.xml
+ -->
+
+<!-- File Menu -->
+
+<entry key="menu.file.reload">Reload</entry>
+<entry key="menu.file.reload.mnemonic">R</entry>
+<entry key="menu.file.reload.keystroke">control R</entry>
+<entry key="menu.file.reload.tooltip">Reload current image</entry>
+
+<entry key="menu.file.properties">Properties...</entry>
+<entry key="menu.file.properties.mnemonic">T</entry>
+<entry key="menu.file.properties.tooltip">View image properties</entry>
+
+<!-- Settings Menu -->
+
+<entry key="menu.settings.antialias">Anti-Alias</entry>
+<entry key="menu.settings.antialias.mnemonic">A</entry>
+<entry key="menu.settings.antialias.tooltip">Enable/disable anti-aliasing</entry>
+
+
+<!-- Properties Dialogue -->
+<entry key="fileproperties.title">Properties</entry>
+<entry key="fileproperties.filename">File name:</entry>
+<entry key="fileproperties.filesize">File size:</entry>
+<entry key="fileproperties.fileformat">Format:</entry>
+<entry key="fileproperties.bounds">Image Bounding Box:</entry>
+<entry key="fileproperties.paper">Paper:</entry>
+<entry key="fileproperties.description">Description:</entry>
+<entry key="fileproperties.modified">Last Modified:</entry> 
+<entry key="fileproperties.empty">Empty</entry>
+<entry key="fileproperties.bytes">{0}B</entry>
+<entry key="fileproperties.kbytes">{0}Kb</entry> 
+<entry key="fileproperties.mbytes">{0}Mb</entry>
+<entry key="fileproperties.nonesupplied">None Supplied</entry>
+
+</properties>
