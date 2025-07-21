@@ -6,6 +6,10 @@ endif
 # Java 8 extended support until December 2030
 target_version := --release 8 -Xlint:-options
 
+# Java 8 extended support until December 2030
+target_version := --release 8 -Xlint:-options
+
+
 all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar \
 	lib/ajr2ajr.jar \
 	lib/ajr2jdr.jar \
