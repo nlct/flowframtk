@@ -98,8 +98,8 @@
 
 % APPLICATIONS
 
-@application{latex}
-@application{dvips}
+@application{app.latex}
+@application{app.dvips}
 
 % SWITCHES
 
@@ -450,10 +450,16 @@ or even-numbered page).}
 
 @index{primaryclick,
   name="primary-click",
-  description = {Click the primary mouse button. This depends on your
-    mouse configuration. For example, this is typically the left button
+  description = {Click the \gls{primary-mouse-button}.}
+}
+
+@index{primary-mouse-button,
+  name="primary mouse button",
+  description = {This depends on your
+    mouse configuration. For example, the primary button is typically the left button
     on a two-button right-handed mouse, but may be the right button on a
-    left-handed mouse.}
+    left-handed mouse. For devices with a trackpad, this should be
+interpreted as tapping the appropriate side of the pad.}
 }
 
 @index{doubleclick,
@@ -474,3 +480,9 @@ or even-numbered page).}
 dump all function.}
 }
 
+@index{JpgfDraw,
+ description={The precursor to \appname\ (\strong{J}ava
+\strong{pgf}-code generating \strong{draw}ing application).
+The original JpgfDraw code was refactored and renamed FlowframTk.). 
+}
+}

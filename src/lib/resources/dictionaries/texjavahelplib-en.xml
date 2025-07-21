@@ -41,7 +41,7 @@ Nicola Talbot
 
 <entry key="action.close">Close</entry>
 <entry key="action.close.mnemonic">C</entry>
-<entry key="action.close.keystroke">alt F4</entry>
+<entry key="action.close.keystroke">ENTER</entry>
 <entry key="action.close.defaultkeys">format=glsignore</entry>
 
 <entry key="action.copy">Copy</entry>
@@ -442,8 +442,10 @@ Nicola Talbot
 <entry key="manual.keystroke.right">\rightkeysym</entry>
 <entry key="manual.keystroke.right.description">Right</entry>
 
-<entry key="manual.keystroke.pageup">Page Up</entry>
-<entry key="manual.keystroke.pagedown">Page Down</entry>
+<entry key="manual.keystroke.pageup">PgUp</entry>
+<entry key="manual.keystroke.pageup.description">Page Up</entry>
+<entry key="manual.keystroke.pagedown">PgDn</entry>
+<entry key="manual.keystroke.pagedown.description">Page Down</entry>
 
 <entry key="manual.keystroke.tab">\tabsym</entry>
 <entry key="manual.keystroke.tab.description">Tab</entry>

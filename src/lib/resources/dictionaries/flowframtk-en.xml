@@ -767,7 +767,7 @@ Nicola Talbot
 
 <entry key="menu.editpath.delete_control">Delete Point</entry>
 <entry key="menu.editpath.delete_control.mnemonic">D</entry>
-<entry key="menu.editpath.delete_control.mnemonic">DELETE</entry>
+<entry key="menu.editpath.delete_control.keystroke">DELETE</entry>
 
 <entry key="menu.editpath.convert_to_line">Convert To Line</entry>
 <entry key="menu.editpath.convert_to_line.mnemonic">L</entry>
@@ -2481,28 +2481,31 @@ Are you sure you want to ungroup it?</entry>
 <entry key="texeditor.preamble.mid">Mid</entry>
 <entry key="texeditor.preamble.late">Late</entry>
 <entry key="texeditor.frame_contents">Frame Contents</entry>
-<entry key="texeditor.search">Search</entry>
-<entry key="texeditor.search.mnemonic">S</entry>
-<entry key="texeditor.search.find">Find...</entry>
-<entry key="texeditor.search.find.mnemonic">F</entry>
-<entry key="texeditor.search.find_again">Find Again</entry>
-<entry key="texeditor.search.find_again.mnemonic">A</entry>
-<entry key="texeditor.search.replace">Replace...</entry>
-<entry key="texeditor.search.replace.mnemonic">R</entry>
+
+<entry key="menu.texeditor.search">Search</entry>
+<entry key="menu.texeditor.search.mnemonic">S</entry>
+<entry key="menu.texeditor.search.find">Find...</entry>
+<entry key="menu.texeditor.search.find.mnemonic">F</entry>
+<entry key="menu.texeditor.search.find_again">Find Again</entry>
+<entry key="menu.texeditor.search.find_again.mnemonic">A</entry>
+<entry key="menu.texeditor.search.replace">Replace...</entry>
+<entry key="menu.texeditor.search.replace.mnemonic">R</entry>
+
 <entry key="texeditor.discard_edit_query">Discard the edits you have just made?</entry>
 <entry key="texeditor.confirm_discard">Confirm Discard</entry>
-<entry key="texeditor.cutText">Cut</entry>
-<entry key="texeditor.cutText.mnemonic">T</entry>
-<entry key="texeditor.cutText.keystroke">control X</entry>
-<entry key="texeditor.copyText">Copy</entry>
-<entry key="texeditor.copyText.mnemonic">C</entry>
-<entry key="texeditor.copyText.keystroke">control C</entry>
-<entry key="texeditor.pasteText">Paste</entry>
-<entry key="texeditor.pasteText.mnemonic">P</entry>
-<entry key="texeditor.pasteText.keystroke">V</entry>
-<entry key="texeditor.selectText">Select All</entry>
-<entry key="texeditor.selectText.mnemonic">A</entry>
-<entry key="texeditor.selectText.keystroke">control A</entry>
+
+<entry key="menu.texeditor.cutText">Cut</entry>
+<entry key="menu.texeditor.cutText.mnemonic">T</entry>
+<entry key="menu.texeditor.cutText.keystroke">control X</entry>
+<entry key="menu.texeditor.copyText">Copy</entry>
+<entry key="menu.texeditor.copyText.mnemonic">C</entry>
+<entry key="menu.texeditor.copyText.keystroke">control C</entry>
+<entry key="menu.texeditor.pasteText">Paste</entry>
+<entry key="menu.texeditor.pasteText.mnemonic">P</entry>
+<entry key="menu.texeditor.pasteText.keystroke">V</entry>
+<entry key="menu.texeditor.selectText">Select All</entry>
+<entry key="menu.texeditor.selectText.mnemonic">A</entry>
+<entry key="menu.texeditor.selectText.keystroke">control A</entry>
 
 <!--  Preamble Find/Replace Dialog -->
 
@@ -3418,6 +3421,8 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="warning.unknown_drop">Don''t know what to do with dropped file ''{0}''</entry>
 
 <!-- Manual -->
+
+<entry key="index.maths-mode">math mode</entry>
 
 <entry key="manual.grey">gray</entry>
 <entry key="manual.colour">color</entry>

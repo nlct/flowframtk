@@ -53,13 +53,13 @@ version.tex	: $(baseclass)
 	@grep 'String APP_DATE = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_DATE\s=//" | tr -d "\"\; " >> version.tex
 	@echo "}" >> version.tex
 
-flowframtk-en-GB.pdf	: flowframtk.bib flowframtk-props-en-GB.bib \
+flowframtk-en-GB.pdf	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
 			sharedimages/*.png sharedimages/*.tex
 	$(arara) flowframtk-en-GB
 
-flowframtk-en.pdf	: flowframtk.bib flowframtk-props-en.bib \
+flowframtk-en.pdf	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			  flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
 			sharedimages/*.png sharedimages/*.tex

@@ -8,6 +8,7 @@
 \usepackage
  [
     novref,
+    fnsymleft,
 %   debug=showwrgloss
  ]{texjavahelp}
 
@@ -20,11 +21,11 @@
 
 \InputIfFileExists{version}{}{}
 
-\GlsXtrLoadResources[src={flowframtk,\langbibsrcs},
+\GlsXtrLoadResources[src={flowframtk,shared,\langbibsrcs},
  \TeXJavaHelpSymbolResourceOptions
 ]
 
-\GlsXtrLoadResources[src={flowframtk,\langbibsrcs},
+\GlsXtrLoadResources[src={flowframtk,shared,\langbibsrcs},
  \TeXJavaHelpGlsResourceOptions
 ]
 
@@ -36,7 +37,7 @@
 
 \chapter*{Notes}
 
-\appname is licensed under the terms of the GNU General Public License
+\appname\ is licensed under the terms of the GNU General Public License
 (\url{http://gnu.org/licenses/gpl.html"}).
 See \sectionref{sec:licence}.
 
@@ -71,51 +72,48 @@ redraw, use \accelerator{redraw}.
 \chapter{Introduction}
 \label{sec:introduction}
 
-\appname\footnote{This application is a replacement for the now-obsolete
-   JpgfDraw (\strong{J}ava \strong{pgf}-code generating \strong{draw}ing application).
-   In fact, it's actually just been renamed and the code refactored.}
-   is a \gls{vectorgraphics} application written in \gls{Java}, with a 
-   \gls{gui}.  The main purpose of \appname is to generate \LaTeX\ packages or 
-   classes that use the \sty{flowfram} package, and to generate
-   \sty{pgf} picture drawing code. As a side-effect, it can also be
-   used to generate \gls{parshape} and (\sty{shapepar} package) \gls{shapepar} or 
-   \gls{Shapepar} specifications. In order to run the application you 
-   must have the \gls{jre} installed.
+\appname\ (formerly \gls{JpgfDraw})
+is a \gls{vectorgraphics} application written in \gls{Java}, with a 
+\gls{gui}.  The main purpose of \appname\ is to generate \LaTeX\ packages or 
+classes that use the \sty{flowfram} package, and to generate
+\sty{pgf} picture drawing code. As a side-effect, it can also be
+used to generate \gls{parshape} and (\sty{shapepar} package) \gls{shapepar} or 
+\gls{Shapepar} specifications. In order to run the application you 
+must have the \gls{jre} installed.
 
+In \appname, you can:
 
-   In \appname, you can:
-
-   \begin{itemize}
-    \item construct shapes using line, move and cubic Bézier segments
+\begin{itemize}
+  \item construct shapes using line, move and cubic Bézier segments
 (\sectionref{sec:newobjects});
 
-    \item edit paths by modifying the defining \glspl{controlpt}
-    (\sectionref{sec:editpath});
+  \item edit paths by modifying the defining \glspl{controlpt}
+  (\sectionref{sec:editpath});
 
-    \item incorporate text (\sectionref{sec:newtext}) and 
-    bitmap images (\sectionref{sec:insertbitmap})
-    for annotating and background effects;
+  \item incorporate text (\sectionref{sec:newtext}) and 
+  bitmap images (\sectionref{sec:insertbitmap})
+  for annotating and background effects;
 
-    \item combine text and a path to form a text-along-path
-    effect (\sectionref{sec:textpath});
+  \item combine text and a path to form a text-along-path
+  effect (\sectionref{sec:textpath});
 
-    \item apply replicas to a shape to form patterns
-    (\sectionref{sec:patterns});
+  \item apply replicas to a shape to form patterns
+  (\sectionref{sec:patterns});
 
-    \item extract the parameter's for \TeX's \gls{parshape} command and for 
-    the \gls{shapepar} (or \gls{Shapepar}) command defined in the
-    \sty{shapepar} package;
+  \item extract the parameter's for \TeX's \gls{parshape} command and for 
+  the \gls{shapepar} (or \gls{Shapepar}) command defined in the
+  \sty{shapepar} package;
 
-    \item construct frames for use with the \sty{flowfram} package
-    (\sectionref{sec:flowframe}).
-   \end{itemize}
+  \item construct frames for use with the \sty{flowfram} package
+  (\sectionref{sec:flowframe}).
+\end{itemize}
 
-   Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
-   (\sectionref{sec:loadimage}) from \appname's native \gls{jdr}
-   (binary) or \gls{ajr} (ASCII) file formats. Additionally, images can be
-   exported (\sectionref{sec:exportimage}) as:
+Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
+(\sectionref{sec:loadimage}) from \appname's native \gls{jdr}
+(binary) or \gls{ajr} (ASCII) file formats. Additionally, images can be
+exported (\sectionref{sec:exportimage}) as:
 
-   \begin{itemize}
+\begin{itemize}
     \item a \LaTeX\ file containing a \env{pgfpicture} environment
     for inclusion in a \LaTeX\ document;
 
@@ -130,93 +128,92 @@ redraw, use \accelerator{redraw}.
     \item a PostScript file;
 
     \item \pgls{svg} file.
-   \end{itemize}
+\end{itemize}
 
-   Note that the export to PS/PDF/SVG functions use external
-   processes, such as \app{latex} and \app{dvips}.
-   \strong{You can't import back from the files you can export to.}
+Note that the export to PS/PDF/SVG functions use external
+processes, such as \app{latex} and \app{dvips}.
+\strong{You can't import back from the files you can export to.}
 
-   The low-level \sty{pgf} basic layer commands are used during
-   exports to \LaTeX\ files. These commands aren't particularly easy to
-   read but are faster to compile than the higher-level commands that
-   require extra processing to parse the syntax and perform additional
-   calculations. The primary purpose of \appname\ is to provide a
-   graphical interface that can generate complicated code that's hard
-   to write manually.
+The low-level \sty{pgf} basic layer commands are used during
+exports to \LaTeX\ files. These commands aren't particularly easy to
+read but are faster to compile than the higher-level commands that
+require extra processing to parse the syntax and perform additional
+calculations. The primary purpose of \appname\ is to provide a
+graphical interface that can generate complicated code that's hard
+to write manually.
 
-   \appname\ was tested with version 3.0.0 of the \sty{pgf}
-   package, version 1.16 of the \sty{flowfram} package and version
-   2.2 of the \sty{shapepar} package. Files created by \appname\
-   may not work with earlier versions of those packages. Note that some
-   DVI viewers may not understand PGF specials. I strongly recommend
-   that you read the user manuals for those packages.
+\appname\ was tested with version 3.0.0 of the \sty{pgf}
+package, version 1.16 of the \sty{flowfram} package and version
+2.2 of the \sty{shapepar} package. Files created by \appname\
+may not work with earlier versions of those packages. Note that some
+DVI viewers may not understand PGF specials. I strongly recommend
+that you read the user manuals for those packages.
 
 
-   Notation: a \gls{primaryclick} is a single click with the primary
-   mouse button. This is typically the left button for a right-handed
-   mouse, but may be the right button for a left-handed mouse. A
-   \gls{menuclick} is a click with the context-menu mouse button. This
-   button depends on your configuration, but is typically the right
-   button for a right-handed two-button mouse. If the button isn't
-   mentioned, a~\gls{click} can be assumed to mean 
-   a~\gls{primaryclick}.
-
+Notation: a \gls{primaryclick} is a single click with the
+\gls{primary-mouse-button}. This is typically the left button for a
+right-handed mouse (or left side of a trackpad), but may be the
+right button for a left-handed mouse. A \gls{menuclick} is a click
+with the context-menu mouse button. This button depends on your
+configuration, but is typically the right button for a right-handed
+two-button mouse (and vice-versa for a left-handed two-button mouse). 
+If the button isn't mentioned, a~\gls{click} can
+be assumed to mean a~\gls{primaryclick}.
 
 \chapter{Installation}
 \label{install}
 
-   Ensure that you have the \gls{jre} installed.
-   This can be downloaded from \url{http://java.sun.com/j2se/}.
-   You must ensure that you use at least Java~8, as \appname\
-   does not work with earlier versions.
+Ensure that you have the \gls{jre} installed.
+This can be downloaded from \url{http://java.sun.com/j2se/}.
+You must ensure that you use at least Java~8, as \appname\
+does not work with earlier versions.
 
-   To install, download the installer
-   \metafilefmt{flowframtk-}{appversion}{-installer.jar}
-   (where \meta{appversion} is the application version) and run it. 
-   This can be done from a terminal or command prompt using:
+To install, download the installer
+\metafilefmt{flowframtk-}{appversion}{-installer.jar}
+(where \meta{appversion} is the application version) and run it. 
+This can be done from a terminal or command prompt using:
 
 \begin{terminal}
 java -jar flowframtk-\meta{appversion}-installer.jar
 \end{terminal}
 
-   Depending on the setup of your operating system, you may also be
-   able to \gls{doubleclick} on the \ext{jar} file to run it.
+Depending on the setup of your operating system, you may also be
+able to \gls{doubleclick} on the \ext{jar} file to run it.
 
 
 \chapter{Accessibility}
 \label{access}
 
 Most of \appname's mouse functions can be emulated using the
-keyboard, however note that some systems do not allow
-applications to move the pointer, so keyboard functions that move
-the pointer are not guaranteed to work on every system. Keyboard
-accelerators and their menu mnemonic equivalents are listed in
-\tableref{tab:access}. These accelerators may be changed using the
-\widget{accelerators} tab in the \dialog{configui} window
-(see \sectionref{sec:configureuidialog}).
-\accelerator{menubarfocus} switches the
-focus to the menu bar. The \accelerator{okay} key will usually be equivalent to
-the \widget{okay} button except when the focus is with a component that
-interprets \keys{\keyref{return}} for some other purpose (such as
-a~\gls{dropdown}), in which case you need to use 
-\keys{\keyref{shift}+\keyref{return}}.
+keyboard, however note that some systems do not allow applications
+to move the pointer, so keyboard functions that move the pointer are
+not guaranteed to work on every system. Keyboard accelerators and
+their menu mnemonic equivalents are listed in \tableref{tab:access}.
+These accelerators may be changed using the \dialog{accelerators}
+tab in the \dialog{configui} window (see
+\sectionref{sec:configureuidialog}).  \accelerator{menubarfocus}
+switches the focus to the menu bar. The return \keys{\keyref{return}}
+key will usually be equivalent to the \widget{okay} button
+except when the focus is with a component that interprets
+\keys{\keyref{return}} for some other purpose (such as
+a~\gls{dropdown}), in which case you need to use \accelerator{okay}.
 
-Within editable text fields, you can use \keys{\keyref{ctrl}+A} to select all the
-text, or \keys{\keyref{shift}} followed by the left
-\keys{\keyref{left}} or right \keys{\keyref{right}}
-arrow key to select a portion of the text. If some of the 
-text has been selected, you can use \keys{\keyref{ctrl}+C} or 
+Within editable text fields, you can use \keys{\keyref{ctrl}+A} to
+select all the text, or shift \keys{\keyref{shift}} followed by
+the left \keys{\keyref{left}} or right \keys{\keyref{right}} arrow
+key to select a portion of the text. If some of the text has been
+selected, you can use \keys{\keyref{ctrl}+C} or
 \keys{\keyref{ctrl}+X} to copy or cut the text onto the clipboard,
-and you can use \keys{\keyref{ctrl}+V} to paste text from the clipboard into the
-text field.
+and you can use \keys{\keyref{ctrl}+V} to paste text from the
+clipboard into the text field.
 
 \begin{warning}
-Note that a few of the accelerators previously used by JpgfDraw have
+Note that a few of the accelerators previously used by \gls{JpgfDraw} have
 been changed in \appname, as they caused a conflict. For example,
 \keys{\keyref{escape}} cancels a displayed menu, so if you use it to
 dismiss a menu while you had a \gls{path} under construction, the
 entire path could be discarded, which is undesirable. Therefore the
-abandon path accelerator is now \accelerator{abandon}. The
+abandon path accelerator is now \accelerator{tools.abandon}. The
 \accelerator{help.manual} key is now only for the main manual help
 button. The help buttons in dialog windows and the preamble editor
 are activated with \accelerator{help} and the help button in the
@@ -246,7 +243,7 @@ Finish current \gls{path}/\gls{textarea} &
 \emph{or} select \widget{close} button in dialog boxes &
 \mnemonic{close}\tabularnewline
 %
-\keys{\keyref{shift}+\keyref{return}} &
+\accelerator{okay} &
 Select \widget{okay} button in dialog boxes &
 \mnemonic{okay}\tabularnewline
 %
@@ -277,7 +274,7 @@ Add \gls{controlpt} &
 \tabularnewline
 &
 \emph{or} display symbol dialog box &
-\accelerator{contextmenu} \mnemonic{text.insert_symbol}
+\accelerator{contextmenu} \mnemonic{textarea.insert_symbol}
 \tabularnewline
 %
 \accelerator{focusnext} &
@@ -301,39 +298,39 @@ Scroll down by one screen full &
 If in a tabbed pane: &
 \tabularnewline
 &
-\quad Move to the next tab &
+\leftquadpar{Move to the next tab} &
 \tabularnewline
 &
 Otherwise: &
 \tabularnewline
 &
-\quad Scroll right by one screen full &
+\leftquadpar{Scroll right by one screen full} &
 \tabularnewline
 %
 \keys{\keyref{ctrl}+\keyref{pageup}} &
 If in a tabbed pane: &
 \tabularnewline
 &
-\quad Move to the previous tab &
+\leftquadpar{Move to the previous tab} &
 \tabularnewline
  &
  Otherwise: &
 \tabularnewline
 &
-\quad Scroll left by one screen full &
+\leftquadpar{Scroll left by one screen full} &
 \tabularnewline
 %
 Arrow Keys &
-If left mouse button pressed: &
+If \gls{primary-mouse-button} is pressed: &
 \tabularnewline
  &
- \quad \fnsym{2}move mouse by one pixel in given direction &
+ \leftquadpar{\fnsym{2}Move mouse by one pixel in given direction} &
 \tabularnewline
  &
 Otherwise: &
 \tabularnewline
  &
-\quad scroll by one tick mark in given direction &
+\leftquadpar{Scroll by one tick mark in given direction} &
 \tabularnewline
 %
 \keys{\keyref{home}} &
@@ -362,7 +359,7 @@ Show/hide \gls{grid} &
 \mnemonictrail{settings.grid.show}
 \tabularnewline
 \accelerator{contextmenu} &
-Show \gls{canvas} popup menu (if available for current mode) &
+Show popup context menu (if available) &
 \tabularnewline
 %
 \accelerator{constructclick} &
@@ -378,14 +375,15 @@ Emulate \gls{primaryclick} in \gls{construction} &
 Select mode: &
 \tabularnewline
  &
- \quad deselect the \glsdisp{backobject}{backmost} selected 
-      \gls{object}, and select next object in the \gls{stack} &
+ \leftquadpar{Deselect the \glsdisp{backobject}{backmost} selected 
+  \gls{object}, and select next object in the \gls{stack}} &
 \mnemonictrail{navigate.skip}
 \tabularnewline
 &
 Edit mode: &
 \tabularnewline
-\quad select next \gls{controlpt} &
+&
+\leftquadpar{Select next \gls{controlpt}} &
 \accelerator{contextmenu} \mnemonic{editpath.next_control}
 \tabularnewline
 %
@@ -393,14 +391,14 @@ Edit mode: &
 Select mode: &
 \tabularnewline
  &
-\quad Move selected \gls{object} &
+\leftquadpar{Move selected \gls{object}} &
 \mnemonictrail{edit.moveby}
 \tabularnewline
  &
  Edit mode: &
 \tabularnewline
  &
-\quad Move selected \gls{controlpt} &
+\leftquadpar{Move selected \gls{controlpt}} &
 \accelerator{contextmenu} \mnemonic{editpath.coordinates}
 \tabularnewline
 %
@@ -443,12 +441,12 @@ Select next \gls{object} in the \gls{stack} (from the
 \gls{front}), and deselect all others &
 \mnemonictrail{navigate.select} \tabularnewline
 %
-\keys{\keyref{F6}} &
+\keys{\actualkey{F6}} &
 Select mode: &
 \tabularnewline
 &
-\quad Add next \gls{object} in the \gls{stack}
-     (from the \gls{front}) to selection &
+\leftquadpar{Add next \gls{object} in the \gls{stack}
+     (from the \gls{front}) to selection} &
 \mnemonictrail{navigate.add_next}
 \tabularnewline
  &
@@ -456,7 +454,7 @@ Edit mode: &
 \tabularnewline
 %
  &
-\quad select previous \gls{controlpt} &
+\leftquadpar{Select previous \gls{controlpt}} &
 \accelerator{contextmenu} \mnemonic{editpath.prev_control}
 \tabularnewline
 %
@@ -507,41 +505,41 @@ Switch to ellipse tool &
 Select mode: &
 \tabularnewline
  &
-\quad Move selected \gls{object} to the \gls{front} &
+\leftquadpar{Move selected \gls{object} to the \gls{front}} &
 \mnemonictrail{edit.front}
 \tabularnewline
  & \TeX\ editor: &
 \tabularnewline
  &
-\quad Find text &
-\mnemonictrail{texeditor.search.find}
+\leftquadpar{Find text} &
+\mnemonic{texeditor.search.find}
 \tabularnewline
 \keys{\keyref{ctrl}+\actualkey{G}} &
 Select mode: &
 \tabularnewline
  &
-\quad Group selected \gls{object} &
+\leftquadpar{Group selected \gls{object}} &
 \mnemonictrail{transform.group}
 \tabularnewline
  &
 \TeX\ editor: &
 \tabularnewline
  &
-\quad Find again &
-\mnemonictrail{texeditor.search.find_again}
+\leftquadpar{Find again} &
+\mnemonic{texeditor.search.find_again}
 \tabularnewline
 \keys{\keyref{ctrl}+\actualkey{H}} &
 Select mode: &
 \tabularnewline
  &
-\quad Shear selected \gls{object} &
+\leftquadpar{Shear selected \gls{object}} &
 \mnemonictrail{transform.shear}
 \tabularnewline
  &
 \TeX\ editor: &
 \tabularnewline
  &
-\quad Find and Replace text &
+\leftquadpar{Find and Replace text} &
 \mnemonictrail{texeditor.search.replace}
 \tabularnewline
 %
@@ -600,9 +598,9 @@ Save current image &
 \mnemonictrail{file.save}
 \tabularnewline
 %
-\accelerator{tools.text} &
+\accelerator{tools.textarea} &
 Switch to text tool &
-\mnemonictrail{tools.text}
+\mnemonictrail{tools.textarea}
 \tabularnewline
 %
 \accelerator{transform.ungroup} &
@@ -650,9 +648,9 @@ Move selected \gls{object} up the \gls{stack} &
 \mnemonictrail{edit.moveup}
 \tabularnewline
 %
-\accelerator{edit.text.edit} &
+\accelerator{edit.textarea.edit} &
 Edit selected text &
-\mnemonictrail{edit.text.edit}
+\mnemonictrail{edit.textarea.edit}
 \tabularnewline
 %
 \accelerator{tools.closed_curve} &
@@ -666,7 +664,7 @@ Switch to closed line tool &
 \tabularnewline
 %
 \accelerator{tools.math} &
-Switch to \manualtext{maths} mode tool &
+Switch to \dgls{maths-mode} tool &
 \mnemonictrail{tools.math}
 \tabularnewline
 \midrule
