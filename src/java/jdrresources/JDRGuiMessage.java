@@ -112,7 +112,7 @@ public class JDRGuiMessage extends JFrame
       JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
       buttonPanel.add(lowerPanel, "South");
 
-      abortButton = helpLib.createJButton("action", "abort", this);
+      abortButton = helpLib.createJButton("button", "abort", this);
       abortButton.setActionCommand("confirmabort");
       buttonPanel.add(abortButton, "East");
 

@@ -18,10 +18,10 @@ Nicola Talbot
 <entry key="menu.file.new.mnemonic">N</entry>
 <entry key="menu.file.new.keystroke">control N</entry>
 
-<entry key="action.new">New</entry>
-<entry key="action.new.keystroke">control N</entry>
-<entry key="action.new.tooltip">New image</entry>
-<entry key="action.new.description">Create a new image</entry>
+<entry key="button.new">New</entry>
+<entry key="button.new.keystroke">control N</entry>
+<entry key="button.new.tooltip">New image</entry>
+<entry key="button.new.description">Create a new image</entry>
 
 <entry key="menu.file.recent">Recent Files</entry>
 <entry key="menu.file.recent.mnemonic">R</entry>
@@ -34,10 +34,10 @@ Nicola Talbot
 <entry key="menu.file.save.mnemonic">S</entry>
 <entry key="menu.file.save.keystroke">control S</entry>
 
-<entry key="action.save">Save</entry>
-<entry key="action.save.keystroke">control S</entry>
-<entry key="action.save.tooltip">Save image</entry>
-<entry key="action.save.description">Save the current image</entry>
+<entry key="button.save">Save</entry>
+<entry key="button.save.keystroke">control S</entry>
+<entry key="button.save.tooltip">Save image</entry>
+<entry key="button.save.description">Save the current image</entry>
 
 <entry key="menu.file.save_as">Save As...</entry>
 <entry key="menu.file.save_as.mnemonic">A</entry>
@@ -72,25 +72,25 @@ Nicola Talbot
 <entry key="menu.edit.undo.tooltip">Undo last action</entry>
 <entry key="menu.edit.undo.keystroke">F8</entry>
 
-<entry key="action.undo">Undo</entry>
-<entry key="action.undo.keystroke">F8</entry>
-<entry key="action.undo.description">Undo last action</entry>
+<entry key="button.undo">Undo</entry>
+<entry key="button.undo.keystroke">F8</entry>
+<entry key="button.undo.description">Undo last action</entry>
 
 <entry key="menu.edit.redo">Redo</entry>
 <entry key="menu.edit.redo.mnemonic">R</entry>
 <entry key="menu.edit.redo.tooltip">Redo last action</entry>
 <entry key="menu.edit.redo.keystroke">F9</entry>
 
-<entry key="action.redo">Redo</entry>
-<entry key="action.redo.keystroke">F9</entry>
-<entry key="action.redo.description">Redo last action</entry>
+<entry key="button.redo">Redo</entry>
+<entry key="button.redo.keystroke">F9</entry>
+<entry key="button.redo.description">Redo last action</entry>
 
 <entry key="menu.edit.select_all">Select All</entry>
 <entry key="menu.edit.select_all.mnemonic">A</entry>
 <entry key="menu.edit.select_all.keystroke">control A</entry>
 
-<entry key="action.select_all">Select All</entry>
-<entry key="action.select_all.keystroke">control A</entry>
+<entry key="button.select_all">Select All</entry>
+<entry key="button.select_all.keystroke">control A</entry>
 
 <entry key="menu.edit.deselect_all">Deselect All</entry>
 <entry key="menu.edit.deselect_all.mnemonic">D</entry>
@@ -105,22 +105,22 @@ Nicola Talbot
 <entry key="menu.edit.cut.mnemonic">T</entry>
 <entry key="menu.edit.cut.keystroke">control X</entry>
 
-<entry key="action.cut">Cut</entry>
-<entry key="action.cut.keystroke">control X</entry>
+<entry key="button.cut">Cut</entry>
+<entry key="button.cut.keystroke">control X</entry>
 
 <entry key="menu.edit.copy">Copy</entry>
 <entry key="menu.edit.copy.mnemonic">C</entry>
 <entry key="menu.edit.copy.keystroke">control C</entry>
 
-<entry key="action.copy">Copy</entry>
-<entry key="action.copy.keystroke">control C</entry>
+<entry key="button.copy">Copy</entry>
+<entry key="button.copy.keystroke">control C</entry>
 
 <entry key="menu.edit.paste">Paste</entry>
 <entry key="menu.edit.paste.mnemonic">P</entry>
 <entry key="menu.edit.paste.keystroke">control V</entry>
 
-<entry key="action.paste">Paste</entry>
-<entry key="action.paste.keystroke">control V</entry>
+<entry key="button.paste">Paste</entry>
+<entry key="button.paste.keystroke">control V</entry>
 
 <entry key="menu.edit.description">Object Description...</entry>
 <entry key="menu.edit.description.mnemonic">O</entry>
@@ -134,8 +134,8 @@ Nicola Talbot
 <entry key="menu.edit.path.edit.mnemonic">E</entry>
 <entry key="menu.edit.path.edit.keystroke">control I</entry>
 
-<entry key="action.edit_path">Edit</entry>
-<entry key="action.edit_path.keystroke">control I</entry>
+<entry key="button.edit_path">Edit</entry>
+<entry key="button.edit_path.keystroke">control I</entry>
 
 <entry key="menu.edit.path.line_colour">Line Color...</entry>
 <entry key="menu.edit.path.line_colour.mnemonic">L</entry>
@@ -295,15 +295,15 @@ Nicola Talbot
 <entry key="menu.edit.front.mnemonic">F</entry>
 <entry key="menu.edit.front.keystroke">control F</entry>
 
-<entry key="action.front">To Front</entry>
-<entry key="action.front.keystroke">control F</entry>
+<entry key="button.front">To Front</entry>
+<entry key="button.front.keystroke">control F</entry>
 
 <entry key="menu.edit.back">Move to Back</entry>
 <entry key="menu.edit.back.mnemonic">B</entry>
 <entry key="menu.edit.back.keystroke">control B</entry>
 
-<entry key="action.back">To Back</entry>
-<entry key="action.back.keystroke">control B</entry>
+<entry key="button.back">To Back</entry>
+<entry key="button.back.keystroke">control B</entry>
 
 <entry key="menu.edit.moveup">Move Up</entry>
 <entry key="menu.edit.moveup.mnemonic">V</entry>
@@ -322,22 +322,22 @@ Nicola Talbot
 <entry key="menu.transform.rotate.mnemonic">R</entry>
 <entry key="menu.transform.rotate.keystroke">control W</entry>
 
-<entry key="action.rotate">Rotate</entry>
-<entry key="action.rotate.keystroke">control W</entry>
+<entry key="button.rotate">Rotate</entry>
+<entry key="button.rotate.keystroke">control W</entry>
 
 <entry key="menu.transform.scale">Scale...</entry>
 <entry key="menu.transform.scale.mnemonic">S</entry>
 <entry key="menu.transform.scale.keystroke">control Z</entry>
 
-<entry key="action.scale">Scale</entry>
-<entry key="action.scale.keystroke">control Z</entry>
+<entry key="button.scale">Scale</entry>
+<entry key="button.scale.keystroke">control Z</entry>
 
 <entry key="menu.transform.shear">Shear...</entry>
 <entry key="menu.transform.shear.mnemonic">H</entry>
 <entry key="menu.transform.shear.keystroke">control H</entry>
 
-<entry key="action.shear">Shear</entry>
-<entry key="action.shear.keystroke">control H</entry>
+<entry key="button.shear">Shear</entry>
+<entry key="button.shear.keystroke">control H</entry>
 
 <entry key="menu.transform.reset">Reset Matrix</entry>
 <entry key="menu.transform.reset.mnemonic">A</entry>
@@ -345,7 +345,7 @@ Nicola Talbot
 <entry key="menu.transform.distort">Distort</entry>
 <entry key="menu.transform.distort.mnemonic">D</entry>
 
-<entry key="action.distort">Distort</entry>
+<entry key="button.distort">Distort</entry>
 
 <entry key="menu.transform.reverse">Reverse Path</entry>
 <entry key="menu.transform.reverse.mnemonic">V</entry>
@@ -367,7 +367,7 @@ Nicola Talbot
 <entry key="menu.transform.textpath">Convert To Text Path</entry>
 <entry key="menu.transform.textpath.mnemonic">N</entry>
 
-<entry key="action.textpath">To Text Path</entry>
+<entry key="button.textpath">To Text Path</entry>
 
 <entry key="menu.transform.separate">Separate</entry>
 <entry key="menu.transform.separate.mnemonic">E</entry>
@@ -391,15 +391,15 @@ Nicola Talbot
 <entry key="menu.transform.group.mnemonic">G</entry>
 <entry key="menu.transform.group.keystroke">control G</entry>
 
-<entry key="action.group">Group</entry>
-<entry key="action.group.keystroke">control G</entry>
+<entry key="button.group">Group</entry>
+<entry key="button.group.keystroke">control G</entry>
 
 <entry key="menu.transform.ungroup">Ungroup</entry>
 <entry key="menu.transform.ungroup.mnemonic">U</entry>
 <entry key="menu.transform.ungroup.keystroke">control U</entry>
 
-<entry key="action.ungroup">Ungroup</entry>
-<entry key="action.ungroup.keystroke">control U</entry>
+<entry key="button.ungroup">Ungroup</entry>
+<entry key="button.ungroup.keystroke">control U</entry>
 
 <entry key="menu.transform.pattern">Pattern</entry>
 <entry key="menu.transform.pattern.mnemonic">A</entry>
@@ -440,7 +440,7 @@ Nicola Talbot
 
 <!--  tools menu -->
 
-<entry key="menu.tools.label">Tools</entry>
+<entry key="menu.tools">Tools</entry>
 <entry key="menu.tools.mnemonic">O</entry>
 
 <entry key="menu.tools.select">Select</entry>
@@ -497,7 +497,7 @@ Nicola Talbot
 
 <!--  navigation menu -->
 
-<entry key="menu.navigate.label">Navigate</entry>
+<entry key="menu.navigate">Navigate</entry>
 <entry key="menu.navigate.mnemonic">N</entry>
 
 <entry key="menu.navigate.goto">Go To...</entry>
@@ -529,7 +529,7 @@ Nicola Talbot
 
 <!--  Bitmap Menu -->
 
-<entry key="menu.bitmap.label">Bitmap</entry>
+<entry key="menu.bitmap">Bitmap</entry>
 <entry key="menu.bitmap.mnemonic">B</entry>
 
 <entry key="menu.bitmap.insert">Insert Bitmap...</entry>
@@ -546,7 +546,7 @@ Nicola Talbot
 
 <!--  TeX/LaTeX menu -->
 
-<entry key="menu.tex.label">TeX/LaTeX</entry>
+<entry key="menu.tex">TeX/LaTeX</entry>
 <entry key="menu.tex.mnemonic">L</entry>
 
 <entry key="menu.tex.set_preamble">Preamble Editor</entry>
@@ -699,7 +699,7 @@ Nicola Talbot
 
 <!--  Text Popup Menu -->
 
-<entry key="menu.textarea">Text Popup Menu</entry>
+<entry key="index.menu.textarea">Text Popup Menu</entry>
 
 <entry key="menu.textarea.cut">Cut</entry>
 <entry key="menu.textarea.cut.mnemonic">T</entry>
@@ -724,7 +724,7 @@ Nicola Talbot
 
 <!--  Edit Path Popup Menu -->
 
-<entry key="menu.editpath">Edit Path Popup Menu</entry>
+<entry key="index.menu.editpath">Edit Path Popup Menu</entry>
 
 <entry key="menu.editpath.add_control">Add Point</entry>
 <entry key="menu.editpath.add_control.mnemonic">A</entry>
@@ -813,6 +813,8 @@ Nicola Talbot
 
 <!--  Distortion Popup Menu -->
 
+<entry key="index.menu.distort">Distortion Popup Menu</entry>
+
 <entry key="menu.distort.state">Distort</entry>
 <entry key="menu.distort.state.mnemonic">D</entry>
 
@@ -821,10 +823,14 @@ Nicola Talbot
 
 <!--  Selected Text Along Path Popup Menu -->
 
+<entry key="index.menu.selectedtextpath">Text Along Path Popup Menu</entry>
+
 <entry key="menu.selectedtextpath.textpath_description">Text Along Path Description...</entry>
 <entry key="menu.selectedtextpath.textpath_description.mnemonic">I</entry>
 
 <!--  Selected Text Popup Menu -->
+
+<entry key="index.menu.selectedtext">Text Popup Menu</entry>
 
 <entry key="menu.selectedtext.textarea_description">Text Area Description...</entry>
 <entry key="menu.selectedtext.textarea_description.mnemonic">I</entry>
@@ -864,6 +870,8 @@ Nicola Talbot
 <entry key="menu.selectedtext.anchor.mnemonic">H</entry>
 
 <!--  Selected Paths Popup Menu -->
+
+<entry key="index.menu.selectedpath">Path Popup Menu</entry>
 
 <entry key="menu.selectedpath.path_description">Path Description...</entry>
 <entry key="menu.selectedpath.path_description.mnemonic">I</entry>
@@ -917,6 +925,8 @@ Nicola Talbot
 
 <!--  Selected Bitmaps Popup Menu -->
 
+<entry key="index.menu.selectedbitmap">Bitmap Popup Menu</entry>
+
 <entry key="menu.selectedbitmap.bitmap_description">Bitmap Description...</entry>
 <entry key="menu.selectedbitmap.bitmap_description.mnemonic">I</entry>
 
@@ -934,8 +944,12 @@ Nicola Talbot
 
 <!--  Selected Objects Popup Menu -->
 
-<entry key="menu.selected.group_description">Group Description...</entry>
-<entry key="menu.selected.group_description.mnemonic">I</entry>
+<entry key="index.menu.selectedgroup">Group Popup Menu</entry>
+
+<entry key="menu.selectedgroup_description">Group Description...</entry>
+<entry key="menu.selectedgroup_description.mnemonic">I</entry>
+
+<entry key="index.menu.selected">Common Popup Menu Items</entry>
 
 <entry key="menu.selected.cut">Cut</entry>
 <entry key="menu.selected.cut.mnemonic">T</entry>
@@ -980,14 +994,16 @@ Nicola Talbot
 
 <!--  None Selected Popup Menu -->
 
-<entry key="none.image_description">Image Description</entry>
-<entry key="none.image_description.mnemonic">D</entry>
+<entry key="index.none">Image Popup Menu</entry>
 
-<entry key="none.find_by_description">Find By Description</entry>
-<entry key="none.find_by_description.mnemonic">F</entry>
+<entry key="menu.none.image_description">Image Description</entry>
+<entry key="menu.none.image_description.mnemonic">D</entry>
 
-<entry key="none.insert_bitmap">Insert Bitmap...</entry>
-<entry key="none.insert_bitmap.mnemonic">B</entry>
+<entry key="menu.none.find_by_description">Find By Description</entry>
+<entry key="menu.none.find_by_description.mnemonic">F</entry>
+
+<entry key="menu.none.insert_bitmap">Insert Bitmap...</entry>
+<entry key="menu.none.insert_bitmap.mnemonic">B</entry>
 
 <!--  undo/redo information -->
 
@@ -1485,10 +1501,10 @@ Nicola Talbot
 <!--  Dash Patterns Panel -->
 
 <entry key="dashpattern.title">Dash Pattern</entry>
-<entry key="dash.label">Dash</entry>
-<entry key="dash.gap">Gap</entry>
-<entry key="dash.offset">Offset</entry>
-<entry key="dash.secondary">Secondary</entry>
+<entry key="dashpattern.dash">Dash</entry>
+<entry key="dashpattern.dash.gap">Gap</entry>
+<entry key="dashpattern.dash.offset">Offset</entry>
+<entry key="dashpattern.dash.secondary">Secondary</entry>
 
 <!--  Size Panel -->
 
@@ -2876,24 +2892,30 @@ Merge Region: {2}</entry>
 
 <!-- Buttons -->
 
-<entry key="action.contexthelp">Context Help</entry>
-<entry key="action.contexthelp.mnemonic">H</entry>
-<entry key="action.contexthelp.keystroke">control F1</entry>
-<entry key="action.contexthelp.tooltip">View manual</entry>
+<entry key="button.contexthelp">Context Help</entry>
+<entry key="button.contexthelp.mnemonic">H</entry>
+<entry key="button.contexthelp.keystroke">control F1</entry>
+<entry key="button.contexthelp.tooltip">View manual</entry>
 
-<entry key="action.default">Default</entry>
-<entry key="action.default.mnemonic">D</entry>
-<entry key="action.default.tooltip">Restore defaults</entry>
-<entry key="action.filename">Filename</entry>
-<entry key="action.filename.mnemonic">F</entry>
-<entry key="action.info">Information</entry>
-<entry key="action.hidden_object">{0} hidden object</entry>
-<entry key="action.hidden_objects">{0} hidden objects</entry>
-<entry key="action.untitled">Untitled</entry>
-<entry key="action.choose">Select...</entry>
-<entry key="action.choose.tooltip">Choose a new setting</entry>
-<entry key="action.quit_without_saving">Quit Without Saving</entry>
-<entry key="action.duplicate">(Copy)</entry>
+<entry key="button.default">Default</entry>
+<entry key="button.default.mnemonic">D</entry>
+<entry key="button.default.tooltip">Restore defaults</entry>
+
+<entry key="label.filename">Filename</entry>
+<entry key="label.filename.mnemonic">F</entry>
+
+<entry key="label.info">Information</entry>
+<entry key="label.hidden_object">{0} hidden object</entry>
+<entry key="label.hidden_objects">{0} hidden objects</entry>
+
+<entry key="label.untitled">Untitled</entry>
+
+<entry key="button.choose">Select...</entry>
+<entry key="button.choose.tooltip">Choose a new setting</entry>
+
+<entry key="button.quit_without_saving">Quit Without Saving</entry>
+
+<entry key="label.duplicate">(Copy)</entry>
 
 <!-- Actions Without a Corresponding Widget -->
 
@@ -3429,6 +3451,12 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="manual.maths">math</entry>
 <entry key="manual.through">thru</entry>
 
+<entry key="term.popupmenu">popup menu</entry>
+<entry key="term.popupmenu.description">A menu whose items vary depending on the context. These
+    menus are usually invoked with the menu or secondary mouse button. In
+    \appname\ it is also possible to invoke popup menus using
+    \accelerator{contextmenu} or your keyboard may have a context-menu key.</entry>
+<entry key="term.popupmenu.see">index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.none</entry>
 
 </properties>
 

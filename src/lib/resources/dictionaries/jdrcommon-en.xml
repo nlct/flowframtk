@@ -118,9 +118,9 @@ Nicola Talbot
 
 <!-- Buttons -->
 
-<entry key="action.abort">Abort</entry>
-<entry key="action.abort.mnemonic">A</entry>
-<entry key="action.abort.tooltip">Abort current process</entry>
+<entry key="button.abort">Abort</entry>
+<entry key="button.abort.mnemonic">A</entry>
+<entry key="button.abort.tooltip">Abort current process</entry>
 
 <!-- Actions Without a Corresponding Widget -->
 

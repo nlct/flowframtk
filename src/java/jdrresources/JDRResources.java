@@ -728,7 +728,12 @@ public class JDRResources
 
       if (str == null)
       {
-         str = getMessageIfExists("action."+propName+".keystroke");
+         str = getMessageIfExists("button."+propName+".keystroke");
+
+         if (str == null)
+         {
+            str = getMessageIfExists("action."+propName+".keystroke");
+         }
       }
 
       return str;
