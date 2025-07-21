@@ -39,10 +39,8 @@ import com.dickimawbooks.jdrresources.*;
 public class JDRViewInvoker
 {
    public JDRViewInvoker(String[] args) 
-     throws IOException,URISyntaxException
    {
       this.args = args;
-      this.resources = new JDRResources();
    }
 
    public JDRResources getResources()
@@ -62,7 +60,7 @@ public class JDRViewInvoker
 
    public String getVersion()
    {
-      return APP_VERSION;
+      return JDRResources.APP_VERSION;
    }
 
    /**
@@ -70,11 +68,14 @@ public class JDRViewInvoker
     */
    public void appVersion()
    {
+      System.out.println(resources.getAppInfo(false));
+/*
       System.err.println(APP_NAME.toLowerCase()+" "+APP_VERSION);
       System.err.println(String.format("Copyright (C) 2007-%s Nicola L C Talbot",
        APP_DATE.substring(0,4)));
       System.err.println("This is free software distributed under the GNU General Public License.");
       System.err.println("There is NO WARRANTY. See accompanying licence file for details.");
+*/
    }
 
    /**
@@ -98,11 +99,12 @@ public class JDRViewInvoker
    {
       try
       {
-         resources.initialiseDictionary();
+         resources = new JDRResources(APP_NAME);
       }
-      catch (IOException ioe)
+      catch (Throwable e)
       {
-         resources.internalError(null, ioe);
+         e.printStackTrace();
+         System.exit(JDRResources.EXIT_FATAL_ERROR);
       }
 
       messageSystem = new JDRGuiMessage(resources);
@@ -138,7 +140,7 @@ public class JDRViewInvoker
          {
             if (args.length == i+1)
             {
-               resources.error(resources.getString(
+               resources.error(resources.getMessage(
                   "error.missing_cwd"));
             }
             else
@@ -159,7 +161,7 @@ public class JDRViewInvoker
          else
          {
             resources.error(
-               resources.getString("error.one_filename"));
+               resources.getMessage("error.one_filename"));
             syntax();
          }
       }
@@ -213,7 +215,5 @@ public class JDRViewInvoker
    private JDRResources resources;
    private JDRGuiMessage messageSystem;
 
-   private static final String APP_VERSION = "1.7.20200111";
    private static final String APP_NAME = "JDRView";
-   private static final String APP_DATE = "2020-01-11";
 }

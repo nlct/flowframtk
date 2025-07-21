@@ -1208,7 +1208,7 @@ public class JDRBezier extends JDRSegment
    {
       JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
 
-      String type = msg.getString("class."+getClass().getCanonicalName(),
+      String type = msg.getMessageWithFallback("class."+getClass().getCanonicalName(),
        getClass().getSimpleName());
 
       Point2D dp0 = getdP0();
@@ -1217,9 +1217,9 @@ public class JDRBezier extends JDRSegment
       double angle = JDRLine.getVectorAngle(dp0.getX(), dp0.getY(),
        dp1.getX(), dp1.getY());
 
-      String segmentDetails = msg.getMessageWithAlt(
-        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P''(0) = ({5},{6}); P''(1) = ({7},{8}); angle between P''(0) and P''(1): {9} rad ({10} degrees).",
+      String segmentDetails = msg.getMessageWithFallback(
         "segmentinfo.details.curve",
+        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P''(0) = ({5},{6}); P''(1) = ({7},{8}); angle between P''(0) and P''(1): {9} rad ({10} degrees).",
         type, start.x, start.y, end.x, end.y, dp0.getX(), dp0.getY(),
         dp1.getX(), dp1.getY(), angle, Math.toDegrees(angle)
        );
@@ -1230,7 +1230,7 @@ public class JDRBezier extends JDRSegment
 
       if (t == null)
       {
-         stationaryInfo = msg.getString(
+         stationaryInfo = msg.getMessageWithFallback(
            "segmentinfo.details.bezier.stationary_none", 
            "No stationary points found");
       }
@@ -1238,9 +1238,9 @@ public class JDRBezier extends JDRSegment
       {
          Point2D p = getP(t[0]);
 
-         stationaryInfo = msg.getMessageWithAlt(
-           "1 stationary point found: t={0}, P(t)=({1},{2}).",
+         stationaryInfo = msg.getMessageWithFallback(
            "segmentinfo.details.bezier.stationary_1",
+           "1 stationary point found: t={0}, P(t)=({1},{2}).",
            t[0], p.getX(), p.getY());
       }
       else if (t.length == 2)
@@ -1248,9 +1248,9 @@ public class JDRBezier extends JDRSegment
          Point2D p1 = getP(t[0]);
          Point2D p2 = getP(t[1]);
 
-         stationaryInfo = msg.getMessageWithAlt(
-           "2 stationary points found: t={0}, P(t)=({1},{2}) and t={3}, P(t)=({4},{5}).",
+         stationaryInfo = msg.getMessageWithFallback(
            "segmentinfo.details.bezier.stationary_2",
+           "2 stationary points found: t={0}, P(t)=({1},{2}) and t={3}, P(t)=({4},{5}).",
            t[0], p1.getX(), p1.getY(), t[1], p2.getX(), p2.getY());
       }
 

@@ -29,7 +29,19 @@ import com.dickimawbooks.jdr.*;
 
 public interface JDRMessageDictionary
 {
-   public String getString(String tag, String defValue);
-   public String getMessageWithAlt(String altFormat, String tag,
-     Object... values);
+   @Deprecated
+   public default String getString(String tag, String defValue)
+   {
+      return getMessageWithFallback(tag, defValue);
+   }
+
+   @Deprecated
+   public default String getMessageWithAlt(String altFormat, String tag,
+     Object... values)
+   {
+      return getMessageWithFallback(tag, altFormat, values);
+   }
+
+   public String getMessageWithFallback(String label,
+       String fallbackFormat, Object... params);
 }

@@ -36,13 +36,15 @@ public class NoCurrentPointException extends InvalidFormatException
 {
    public NoCurrentPointException(EPS eps)
    {
-      this(eps.getCanvasGraphics().getString("error.no_current_point",
-           "No current point"), eps.getLineNum());
+      this(eps.getCanvasGraphics().getMessageWithFallback(
+           "error.no_current_point",
+           "No current point"
+           ), eps.getLineNum());
    }
 
    public NoCurrentPointException(CanvasGraphics cg)
    {
-      super(cg.getString("error.no_current_point",
+      super(cg.getMessageWithFallback("error.no_current_point",
            "No current point"));
    }
 
@@ -53,7 +55,7 @@ public class NoCurrentPointException extends InvalidFormatException
     */
    public NoCurrentPointException(int line, CanvasGraphics cg)
    {
-      super(cg.getString("error.no_current_point", "No current point"), line);
+      super(cg.getMessageWithFallback("error.no_current_point", "No current point"), line);
    }
 
    /**

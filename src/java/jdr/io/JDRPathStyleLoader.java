@@ -80,8 +80,9 @@ public class JDRPathStyleLoader
       {
          String name = theShape.getName();
 
-         jdr.warningMessage("Path style ''{0}'' not supported in version {1}",
+         jdr.warningWithFallback(
             "warning.save_unsupported_path_style",
+            "Path style ''{0}'' not supported in version {1}",
              name, version);
 
          save(jdr, shape);

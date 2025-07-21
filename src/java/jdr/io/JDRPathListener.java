@@ -255,7 +255,7 @@ public class JDRPathListener implements JDRObjectLoaderListener
                   // failing to save the indexes due to an earlier bug
                   // in the initial release of flowframtk.
 
-                  jdr.warning("error.possible_malformed_1_7",
+                  jdr.warningWithFallback("error.possible_malformed_1_7",
                    "Possible malformed v1.7 file. Attempting to read again.");
 
                   try
@@ -282,7 +282,7 @@ public class JDRPathListener implements JDRObjectLoaderListener
             {
                if (version == 1.7f)
                {
-                  jdr.warning("error.possible_malformed_1_7",
+                  jdr.warningWithFallback("error.possible_malformed_1_7",
                    "Possible malformed v1.7 file. Attempting to read again.");
 
                   try

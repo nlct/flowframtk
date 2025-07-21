@@ -31,6 +31,8 @@ import java.io.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
 
@@ -50,7 +52,7 @@ public class JDRGuiMessage extends JFrame
 
    public JDRGuiMessage(JDRResources resources)
    {
-      super(resources.getString("message.title", "Messages"));
+      super(resources.getMessageWithFallback("message.title", "Messages"));
 
       init(resources);
    }
@@ -60,6 +62,7 @@ public class JDRGuiMessage extends JFrame
       this.resources = resources;
       resources.setMessageSystem(this);
       publisher = this;
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
 
       setIconImage(resources.getSmallAppIcon().getImage());
 
@@ -106,17 +109,16 @@ public class JDRGuiMessage extends JFrame
       processInfo = new JLabel();
       buttonPanel.add(processInfo, "Center");
 
-      abortButton = resources.createAppButton("label", "abort", this);
+      JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+      buttonPanel.add(lowerPanel, "South");
+
+      abortButton = helpLib.createJButton("action", "abort", this);
       abortButton.setActionCommand("confirmabort");
       buttonPanel.add(abortButton, "East");
 
       enableAbort(false);
 
-      buttonPanel.add(resources.createCloseButton(this), "South");
-
-      messageArea.getInputMap(JComponent.WHEN_FOCUSED)
-         .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-              "close");
+      lowerPanel.add(helpLib.createCloseButton((JFrame)this), "South");
 
       int width = 400;
       int height = 200;
@@ -180,7 +182,7 @@ public class JDRGuiMessage extends JFrame
       else if (action.equals("confirmabort"))
       {
          if (getResources().confirm(this,
-             resources.getString("process.confirm.abort"))
+             resources.getMessage("process.confirm.abort"))
          == JOptionPane.YES_OPTION)
          {
             abortButton.setActionCommand("abort");
@@ -342,7 +344,21 @@ public class JDRGuiMessage extends JFrame
 
    public void warning(Throwable excp)
    {
-      warning(excp.getMessage());
+      String msg = excp.getMessage();
+      String classname = excp.getClass().getSimpleName();
+      String text = resources.getMessageIfExists("error.throwable."+classname);
+
+      if (text == null)
+      {
+         text = classname;
+      }
+
+      if (msg != null)
+      {
+         text += ": " + msg;
+      }
+
+      warning(text);
    }
 
    public void error(String messageText)
@@ -414,15 +430,23 @@ public class JDRGuiMessage extends JFrame
       resources.fatalError(excp.getMessage(), excp);
    }
 
+   @Deprecated
    public String getString(String tag, String alt)
    {
       return resources.getString(tag, alt);
    }
 
+   @Deprecated
    public String getMessageWithAlt(String altFormat, String tag,
      Object... values)
    {
       return resources.getMessageWithAlt(altFormat, tag, values);
+   }
+
+   public String getMessageWithFallback(String tag, String altFormat, 
+     Object... values)
+   {
+      return resources.getMessageWithFallback(tag, altFormat, values);
    }
 
    public boolean warningFlagged()

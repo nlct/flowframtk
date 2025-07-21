@@ -32,6 +32,9 @@ import java.text.*;
 import java.util.*;
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 
@@ -49,223 +52,126 @@ public class JDRPropertiesDialog extends JDialog
    public JDRPropertiesDialog(JDRView application)
    {
       super(application,
-         application.getResources().getString("fileproperties.title"));
+         application.getResources().getMessage("fileproperties.title"));
 
       setLayout(new BorderLayout());
 
       app = application;
+      TeXJavaHelpLib helpLib = app.getResources().getHelpLib();
 
       addKeyListener(this);
 
-      Box box = Box.createVerticalBox();
+      JComponent mainComp = Box.createVerticalBox();
+      JLabelGroup labelGrp = new JLabelGroup();
 
-      Dimension dim;
+      // File name
 
-      // file name
-      JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      nameLabel = new JLabel(
-         getResources().getString("fileproperties.filename"),
-         SwingConstants.RIGHT);
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      dim = nameLabel.getPreferredSize();
+      nameField = createField();
 
-      int width = dim.width;
-      int height = dim.height;
+      nameLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.filename", nameField);
+      row.add(nameLabel);
+      row.add(nameField);
 
-      panel.add(nameLabel);
+      // File size
 
-      nameField = new JLabel();
-      panel.add(nameField);
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      box.add(panel);
+      sizeField = createField();
 
-      // file size
-      panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      sizeLabel = new JLabel(
-         getResources().getString("fileproperties.filesize"),
-         SwingConstants.RIGHT);
+      sizeLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.filesize", sizeField);
+      row.add(sizeLabel);
+      row.add(sizeField);
 
-      dim = sizeLabel.getPreferredSize();
+      // File format
 
-      if (dim.width > width)
-      {
-         width = dim.width;
-      }
-      
-      if (dim.height > height)
-      {
-         height = dim.height;
-      }
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      panel.add(sizeLabel);
+      formatField = createField();
 
-      sizeField = new JLabel();
-      panel.add(sizeField);
+      formatLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.fileformat", formatField);
+      row.add(formatLabel);
+      row.add(formatField);
 
-      box.add(panel);
+      // Image bounds
 
-      // file format
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      formatLabel = new JLabel(getResources().getString(
-         "fileproperties.fileformat"),
-         SwingConstants.RIGHT);
+      boundsField = createField();
 
-      dim = formatLabel.getPreferredSize();
+      boundsLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.bounds", boundsField);
+      row.add(boundsLabel);
+      row.add(boundsField);
 
-      if (dim.width > width)
-      {
-         width = dim.width;
-      }
-      
-      if (dim.height > height)
-      {
-         height = dim.height;
-      }
+      // Paper size
 
-      panel.add(formatLabel);
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      formatField = new JLabel();
-      panel.add(formatField);
+      paperField = createField();
 
-      box.add(panel);
+      paperLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.paper", paperField);
+      row.add(paperLabel);
+      row.add(paperField);
 
-      // image bounds
+      // Image description
 
-      panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      boundsLabel = new JLabel(
-         getResources().getString("fileproperties.bounds"),
-         SwingConstants.RIGHT);
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      dim = boundsLabel.getPreferredSize();
+      descriptionField = createField();
 
-      if (dim.width > width)
-      {
-         width = dim.width;
-      }
-      
-      if (dim.height > height)
-      {
-         height = dim.height;
-      }
+      descriptionLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.description", descriptionField);
+      row.add(descriptionLabel);
+      row.add(descriptionField);
 
-      panel.add(boundsLabel);
+      // Last modified date
 
-      boundsField = new JLabel();
-      panel.add(boundsField);
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(0);
+      mainComp.add(row);
 
-      box.add(panel);
+      modifiedField = createField();
 
-      // paper
-      panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      paperLabel = new JLabel(
-         getResources().getString("fileproperties.paper"),
-         SwingConstants.RIGHT);
+      modifiedLabel = helpLib.createJLabel(labelGrp,
+          "fileproperties.modified", modifiedField);
+      row.add(modifiedLabel);
+      row.add(modifiedField);
 
-      dim = paperLabel.getPreferredSize();
+      getContentPane().add(mainComp, "Center");
 
-      if (dim.width > width)
-      {
-         width = dim.width;
-      }
-      
-      if (dim.height > height)
-      {
-         height = dim.height;
-      }
-
-      panel.add(paperLabel);
-
-      paperField = new JLabel();
-      panel.add(paperField);
-
-      box.add(panel);
-
-      // image description
-
-      panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      descriptionLabel = new JLabel(
-         getResources().getString("fileproperties.description"),
-         SwingConstants.RIGHT);
-
-      dim = descriptionLabel.getPreferredSize();
-
-      if (dim.width > width)
-      {
-         width = dim.width;
-      }
-      
-      if (dim.height > height)
-      {
-         height = dim.height;
-      }
-
-      panel.add(descriptionLabel);
-
-      descriptionField = new JLabel();
-      panel.add(descriptionField);
-
-      box.add(panel);
-
-      // last modified
-
-      panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      modifiedLabel = new JLabel(
-         getResources().getString("fileproperties.modified"),
-         SwingConstants.RIGHT);
-
-      dim = modifiedLabel.getPreferredSize();
-
-      if (dim.width > width)
-      {
-         width = dim.width;
-      }
-      
-      if (dim.height > height)
-      {
-         height = dim.height;
-      }
-
-      panel.add(modifiedLabel);
-
-      modifiedField = new JLabel();
-      panel.add(modifiedField);
-
-      box.add(panel);
-
-      dim = new Dimension(width, height);
-
-      nameLabel.setPreferredSize(dim);
-      sizeLabel.setPreferredSize(dim);
-      formatLabel.setPreferredSize(dim);
-      boundsLabel.setPreferredSize(dim);
-      paperLabel.setPreferredSize(dim);
-      descriptionLabel.setPreferredSize(dim);
-      modifiedLabel.setPreferredSize(dim);
-
-      getContentPane().add(box, "Center");
-
-      okayButton = new JButton(getResources().getString("label.okay"));
-      okayButton.setMnemonic(
-         getResources().getCodePoint("label.okay.mnemonic"));
-      okayButton.addKeyListener(this);
-
-      okayButton.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent evt)
-            {
-               setVisible(false);
-            }
-         });
-
-      panel = new JPanel();
-      panel.add(okayButton);
+      JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+      panel.add(getResources().getHelpLib().createCloseButton((JDialog)this));
 
       getContentPane().add(panel, "South");
 
       pack();
 
       setLocationRelativeTo(application);
+   }
+
+   protected JTextField createField()
+   {
+      JTextField field = new JTextField(32);
+      field.setEditable(false);
+      return field;
    }
 
    public void keyPressed(KeyEvent e)
@@ -329,7 +235,7 @@ public class JDRPropertiesDialog extends JDialog
       if (image == null)
       {
          boundsField.setText(
-            getResources().getString("fileproperties.empty"));
+            getResources().getMessage("fileproperties.empty"));
       }
       else
       {
@@ -338,7 +244,7 @@ public class JDRPropertiesDialog extends JDialog
          if (box == null)
          {
             boundsField.setText(
-               getResources().getString("fileproperties.empty"));
+               getResources().getMessage("fileproperties.empty"));
          }
          else
          {
@@ -353,7 +259,7 @@ public class JDRPropertiesDialog extends JDialog
       if (paper == null)
       {
          paperField.setText(
-            getResources().getString("fileproperties.nonesupplied"));
+            getResources().getMessage("fileproperties.nonesupplied"));
       }
       else
       {
@@ -372,12 +278,10 @@ public class JDRPropertiesDialog extends JDialog
 
    private JDRView app;
 
-   private JButton okayButton;
-
    private JLabel nameLabel, sizeLabel, formatLabel, boundsLabel,
       descriptionLabel, modifiedLabel, paperLabel;
 
-   private JLabel nameField, sizeField, formatField, boundsField,
+   private JTextField nameField, sizeField, formatField, boundsField,
       descriptionField, modifiedField, paperField;
 
    private static DecimalFormat df = new DecimalFormat("0.##");

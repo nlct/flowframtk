@@ -29,7 +29,6 @@ import java.io.*;
 import java.net.*;  
 import java.beans.*;
 import java.util.*;
-import java.text.MessageFormat;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -38,7 +37,10 @@ import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.plaf.basic.*;
 import javax.swing.event.ChangeListener;
-import javax.help.*;
+
+import org.xml.sax.SAXException;
+
+import com.dickimawbooks.texjavahelplib.*;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.JDRMessageDictionary;
@@ -51,12 +53,97 @@ import com.dickimawbooks.jdrresources.numfield.*;
  * Resources required by FlowframTk and JDRView.
  */
 public class JDRResources
+ extends TeXJavaHelpLibAppAdapter
+ implements JDRMessageDictionary
 {
-   public JDRResources() throws IOException,URISyntaxException
+   public JDRResources(String appname)
+   throws IOException,URISyntaxException,InvalidFormatException
    {
-      initStackTracePane();
+      this(appname,
+           "jdrcommon", appname.toLowerCase().replaceAll(" ", ""));
+   }
+
+   public JDRResources(String appname, String... dictPrefixes)
+   throws IOException,URISyntaxException,InvalidFormatException
+   {
+      this.appname = appname;
+      this.fatalErrorExitCode = EXIT_INTERNAL_ERROR;
       initUserConfigDir();
+      initLocalisation(dictPrefixes);
+      initStackTracePane();
       createIconNameMap();
+   }
+
+   protected void initLocalisation(String... dictPrefixes)
+     throws IOException, InvalidFormatException
+   {
+      loadLanguageSettings();
+
+      if (dictLocale == null)
+      {
+         dictLocale = new HelpSetLocale(Locale.getDefault());
+      }
+
+      if (helpSetLocale == null)
+      {
+         helpSetLocale = new HelpSetLocale(Locale.getDefault());
+      }
+
+      helpLib = new TeXJavaHelpLib(this,
+       appname, "/resources", "/resources/dictionaries",
+       dictLocale, helpSetLocale, dictPrefixes);
+   }
+
+   public String getDictionaryTag()
+   {
+      return dictLocale.getTag();
+   }
+
+   public HelpSetLocale getDictionaryLocale()
+   {
+      return dictLocale;
+   }
+
+   public void setDictionary(HelpSetLocale hsLocale)
+   {
+      dictLocale = hsLocale;
+   }
+
+   public void setDictionary(String tag)
+   {
+      setDictionary(new HelpSetLocale(tag));
+   }
+
+   public String getHelpSetTag()
+   {
+      return helpSetLocale.getTag();
+   }
+
+   public HelpSetLocale getHelpSetLocale()
+   {
+      return helpSetLocale;
+   }
+
+   public void setHelpSet(HelpSetLocale hsLocale)
+   {
+      helpSetLocale = hsLocale;
+   }
+
+   public void setHelpSet(String tag)
+   {
+      setHelpSet(new HelpSetLocale(tag));
+   }
+
+   @Override
+   public String getApplicationName()
+   {
+      return appname;
+   }
+
+   @Override
+   public boolean isGUI()
+   {
+      return true;
    }
 
    public static String getIconDir()
@@ -219,102 +306,6 @@ public class JDRResources
       }
    }
 
-   private void initStackTracePane()
-   {
-      stackTracePane = new JTabbedPane();
-      String title = getString("stacktrace.message","Error Message");
-
-      messageArea = new JTextArea(20,50);
-      messageArea.setEditable(false);
-      messageArea.setLineWrap(true);
-      messageArea.setWrapStyleWord(true);
-
-      messageSP = new JScrollPane(messageArea);
-
-      stackTracePane.addTab(title, null, messageSP, title);
-
-      JPanel p2 = new JPanel();
-
-      stackTraceDetails = new JTextArea(20,50);
-      stackTraceDetails.setEditable(false);
-
-      JScrollPane scrollPane = new JScrollPane(stackTraceDetails);
-      p2.add(scrollPane, "Center");
-
-      JButton copyButton =
-         new JButton(getString("stacktrace.copy","Copy"));
-      copyButton.setMnemonic(getCodePoint("stacktrace.copy.mnemonic",'C'));
-      copyButton.addActionListener(new CopyAction(stackTraceDetails));
-
-      p2.add(copyButton,"South");
-
-      title = getString("stacktrace.details","Details");
-      stackTracePane.addTab(title, null, p2, title);
-
-      okayOption = getString("label.okay", "Okay");
-      exitOption = getString("label.quit_without_saving",
-         "Quit Without Saving");
-
-   }
-
-   /**
-    * Displays stack trace in a dialog box with the option for the
-    * user to continue or quit the application.
-    * @param parent the parent for the dialog box
-    * @param frameTitle the title for the dialog box
-    * @param e the exception with the required stack trace
-    */
-   public void displayStackTrace(Component parent,
-       String frameTitle, String message, Throwable e)
-   {
-      messageArea.setText(message);
-
-      StackTraceElement[] trace = e.getStackTrace();
-      StringBuilder stackTrace = new StringBuilder();
-
-      for (int i = 0, n=trace.length; i < n; i++)
-      {
-         stackTrace.append(String.format("%s%n", trace[i]));
-      }
-
-      if (e.getCause() != null)
-      {
-         appendStackTrace(e, stackTrace);
-      }
-
-      stackTraceDetails.setText(stackTrace.toString());
-
-      int result = JOptionPane.showOptionDialog(parent, stackTracePane,
-         frameTitle,
-         JOptionPane.YES_NO_OPTION,
-         JOptionPane.ERROR_MESSAGE, null,
-         new String[] {okayOption, exitOption}, okayOption);
-
-      if (result == JOptionPane.NO_OPTION)
-      {
-         System.exit(EXIT_INTERNAL_ERROR);
-      }
-   }
-
-   private void appendStackTrace(Throwable e, StringBuilder stackTrace)
-   {
-      if (e != null)
-      {
-         StackTraceElement[] trace = e.getStackTrace();
-
-         stackTrace.append(String.format("%n%s%n", e));
-
-         for (int i = 0, n=trace.length; i < n; i++)
-         {
-            stackTrace.append(String.format("%s%n", trace[i]));
-         }
-
-         if (e.getCause() != null)
-         {
-            appendStackTrace(e.getCause(), stackTrace);
-         }
-      }
-   }
 
    /**
     * Displays stack trace in a dialog box with the option for the
@@ -324,31 +315,7 @@ public class JDRResources
     */
    public void internalError(Component parent, Throwable e)
    {
-      if (debugMode)
-      {
-         e.printStackTrace();
-         System.exit(1);
-      }
-      else
-      {
-         displayStackTrace(parent,
-            getString("internal_error.title", "Internal Error"),
-           e);
-      }
-   }
-
-   /**
-    * Displays stack trace in a dialog box.
-    * @param parent the parent for the dialog box
-    * @param message the error message
-    * @param e the exception with the required stack trace
-    */
-   public void internalError(Component parent,
-      String message, Throwable e)
-   {
-      displayStackTrace(parent,
-         getString("internal_error.title", "Internal Error"),
-         message, e);
+      internalError(parent, null, e);
    }
 
    /**
@@ -359,20 +326,7 @@ public class JDRResources
     */
    public void internalError(Component parent, String message)
    {
-      String okayOption = getString("label.okay", "Okay");
-      String exitOption = getString("label.quit_without_saving",
-         "Quit Without Saving");
-
-      int result = JOptionPane.showOptionDialog(parent, message,
-         getString("internal_error.title","Internal Error"),
-         JOptionPane.YES_NO_OPTION,
-         JOptionPane.ERROR_MESSAGE, null,
-         new String[] {okayOption, exitOption}, okayOption);
-
-      if (result == JOptionPane.NO_OPTION)
-      {
-         System.exit(EXIT_INTERNAL_ERROR);
-      }
+      internalError(parent, message, null);
    }
 
    /**
@@ -383,20 +337,7 @@ public class JDRResources
     */
    public void internalError(Component parent, String[] message)
    {
-      String okayOption = getString("label.okay", "Okay");
-      String exitOption = getString("label.quit_without_saving",
-         "Quit Without Saving");
-
-      int result = JOptionPane.showOptionDialog(parent, message,
-         getString("internal_error.title","Internal Error"),
-         JOptionPane.YES_NO_OPTION,
-         JOptionPane.ERROR_MESSAGE, null,
-         new String[] {okayOption, exitOption}, okayOption);
-
-      if (result == JOptionPane.NO_OPTION)
-      {
-         System.exit(EXIT_INTERNAL_ERROR);
-      }
+      internalError(parent, String.join(String.format("%n"), message), null);
    }
 
    /**
@@ -411,32 +352,6 @@ public class JDRResources
       internalError(null, message);
    }
 
-   /**
-    * Displays an error message in a dialog box.
-    * @param parent the dialog box's parent
-    * @param message the error message
-    */
-   public void error(Component parent, String message)
-   {
-      if (message == null)
-      {
-         try
-         {
-            throw new NullPointerException();
-         }
-         catch (NullPointerException npe)
-         {
-            System.err.println(npe);
-         }
-      }
-
-      messageArea.setText(message);
-
-      JOptionPane.showMessageDialog(parent,
-      messageSP,
-      getString("error.title", "Error"),
-      JOptionPane.ERROR_MESSAGE);
-   }
 
    /**
     * Displays an error message in a dialog box.
@@ -445,39 +360,7 @@ public class JDRResources
     */
    public void error(Component parent, String[] message)
    {
-      if (message == null)
-      {
-         try
-         {
-            throw new NullPointerException();
-         }
-         catch (NullPointerException npe)
-         {
-            System.err.println(npe);
-         }
-      }
-
-      messageArea.setText(String.join("\n", message));
-
-      JOptionPane.showMessageDialog(parent,
-      messageSP,
-      getString("error.title", "Error"),
-      JOptionPane.ERROR_MESSAGE);
-   }
-
-   /**
-    * Displays an error message in a dialog box. The parent component
-    * is set to null.
-    * @param message the error message
-    */
-   public void error(String message)
-   {
-      error(null, message);
-   }
-
-   public void error(Exception e)
-   {
-      error(null, e);
+      error(parent, String.join(String.format("%n"), message));
    }
 
    /**
@@ -496,6 +379,7 @@ public class JDRResources
     * @param parent the parent component
     * @param e the exception
     */
+   @Override
    public void error(Component parent, Throwable e)
    {
       if (e instanceof UserCancelledException
@@ -508,7 +392,7 @@ public class JDRResources
             msg = getString("process.aborted", "Process Aborted");
          }
 
-         JOptionPane.showMessageDialog(parent, msg);
+         error(parent, msg, null);
       }
       else if (e.getCause() instanceof UserCancelledException)
       {
@@ -529,39 +413,12 @@ public class JDRResources
             msg = String.format("%s%n%s", msg, msg2);
          }
 
-         JOptionPane.showMessageDialog(parent, msg);
+         error(parent, msg, null);
       }
       else
       {
-         displayStackTrace(parent,
-                           getString("error.title", "Error"),e);
+         error(parent, null, e);
       }
-   }
-
-   /**
-    * Displays the stack trace in a dialog box where the user
-    * has the option to continue or quit the application.
-    * @param parent the parent component
-    * @param e the exception
-    */
-   public void error(Component parent, String message,
-      Throwable e)
-   {
-      if (message == null)
-      {
-         try
-         {
-            throw new NullPointerException();
-         }
-         catch (NullPointerException npe)
-         {
-            System.err.println(npe);
-         }
-      }
-
-      displayStackTrace(parent,
-                        getString("error.title", "Error"),
-                        message, e);
    }
 
    /**
@@ -572,35 +429,7 @@ public class JDRResources
     */
    public void fatalError(String message, Throwable e)
    {
-      if (message == null)
-      {
-         try
-         {
-            throw new NullPointerException();
-         }
-         catch (NullPointerException npe)
-         {
-            System.err.println(npe);
-         }
-      }
-
-      messageArea.setText(message);
-
-      StackTraceElement[] trace = e.getStackTrace();
-      String stackTrace = "";
-      for (int i = 0, n=trace.length; i < n; i++)
-      {
-         stackTrace += trace[i]+"\n";
-      }
-
-      stackTraceDetails.setText(stackTrace);
-
-      JOptionPane.showMessageDialog(null,
-      stackTracePane,
-      getString("error.fatal", "Fatal Error"),
-      JOptionPane.ERROR_MESSAGE);
-
-      System.exit(EXIT_FATAL_ERROR);
+      fatalError(message, e, EXIT_FATAL_ERROR);
    }
 
    /**
@@ -610,34 +439,7 @@ public class JDRResources
     */
    public void warning(Component parent, String[] message)
    {
-      messageArea.setText(String.join("\n", message));
-
-      JOptionPane.showMessageDialog(parent,
-      messageSP,
-      getString("warning.title"),
-      JOptionPane.WARNING_MESSAGE);
-   }
-
-   /**
-    * Displays a warning message in a dialog box.
-    * @param parent the dialog's parent
-    * @param message the warning message
-    */
-   public void warning(Component parent, String message)
-   {
-      JOptionPane.showMessageDialog(parent,
-      message,
-      getString("warning.title"),
-      JOptionPane.WARNING_MESSAGE);
-   }
-
-   /**
-    * Displays a warning message in a dialog box.
-    * @param message the warning message
-    */
-   public void warning(String message)
-   {
-      warning(null, message);
+      warning(parent, String.join(String.format("%n"), message));
    }
 
    public int confirm(Component parent, String message)
@@ -672,21 +474,7 @@ public class JDRResources
 
    public int confirm(Component parent, String message, String title, int options, int type)
    {
-      if (message == null)
-      {
-         try
-         {
-            throw new NullPointerException();
-         }
-         catch (NullPointerException npe)
-         {
-            System.err.println(npe);
-         }
-      }
-
-      messageArea.setText(message);
-
-      return JOptionPane.showConfirmDialog(parent, messageSP, title,
+      return showConfirmDialog(parent, message, title,
         options, type);
    }
 
@@ -697,21 +485,7 @@ public class JDRResources
 
    public void message(Component parent, String message, String title, int type)
    {
-      if (message == null)
-      {
-         try
-         {
-            throw new NullPointerException();
-         }
-         catch (NullPointerException npe)
-         {
-            System.err.println(npe);
-         }
-      }
-
-      messageArea.setText(message);
-
-      JOptionPane.showMessageDialog(parent, messageSP, title, type);
+      showMessageDialog(parent, message, title, type);
    }
 
    /**
@@ -721,86 +495,75 @@ public class JDRResources
    public int getInt(String key)
       throws NumberFormatException
    {
-      if (dictionary == null)
+      String msg = getMessageIfExists(key);
+
+      if (msg == null || msg.isEmpty())
       {
          return -1;
       }
 
-      return Integer.parseInt(dictionary.getString(key));
+      return Integer.parseInt(msg);
    }
 
+   @Deprecated
    public String applyMessagePattern(String key, Number value)
    {
-      if (dictionary == null)
-      {
-         return key;
-      }
-
-      return dictionary.applyMessagePattern(key, value);
+      return key;
    }
 
+   @Deprecated
    public String formatMessageChoice(Number value, String key)
    {
-      if (dictionary == null)
-      {
-         return key;
-      }
-
-      return MessageFormat.format(dictionary.applyMessagePattern(key, value), value);
+      return key;
    }
 
+   @Deprecated
    public String formatMessageChoice(Number value, String key, Object... params)
    {
-      if (dictionary == null)
-      {
-         return key;
-      }
-
-      return MessageFormat.format(dictionary.applyMessagePattern(key, value), params);
+      return key;
    }
 
    public String getMessage(String key, Object... values)
    {
-      if (dictionary == null)
-      {
-         return key;
-      }
-
-      return dictionary.getMessage(key, values);
+      return helpLib.getMessage(key, values);
    }
 
+   public String getMessageIfExists(String key, Object... values)
+   {
+      return helpLib.getMessageIfExists(key, values);
+   }
+
+   @Override
+   public String getMessageWithFallback(String key, String altFormat, Object... values)
+   {
+      return helpLib.getMessageWithFallback(key, altFormat, values);
+   }
+
+   @Deprecated
    public String getMessageWithAlt(String altFormat, String key, Object... values)
    {
-      if (dictionary == null)
-      {
-         return MessageFormat.format(altFormat, values);
-      }
-
-      return dictionary.getMessageWithAlt(altFormat, key, values);
+      return getMessageWithFallback(key, altFormat, values);
    }
 
    public String getMessage(int lineNum, String key, Object... values)
    {
-      if (dictionary == null)
-      {
-         return String.format("%d: %s", lineNum, key);
-      }
-
-      return getMessageWithAlt("Line {0}: {1}", "error.with_line",
+      return getMessageWithFallback("error.with_line", "Line {0}: {1}", 
         lineNum, getMessage(key, values));
    }
 
+   @Deprecated
    public String getMessageWithAlt(int lineNum, String altFormat, 
      String key, Object... values)
    {
-      if (dictionary == null)
-      {
-         return String.format("%d: %s", lineNum, 
-            MessageFormat.format(altFormat, values));
-      }
-
       return getMessageWithAlt("%d: %s", "error.with_line", lineNum,
-       dictionary.getMessageWithAlt(altFormat, key, values));
+       getMessageWithAlt(altFormat, key, values));
+   }
+
+   public String getMessageWithFallback(int lineNum, 
+     String key, String fallbackFormat, Object... values)
+   {
+      return getMessageWithFallback("error.with_line", "{0}: {1}", lineNum,
+       getMessageWithFallback(key, fallbackFormat, values));
    }
 
    /**
@@ -812,14 +575,10 @@ public class JDRResources
     * if the dictionary has not been initialised using
     * {@link #initialiseDictionary()}
     */
+   @Deprecated
    public String getString(String key, String defVal)
    {
-      if (dictionary == null)
-      {
-         return defVal;
-      }
-
-      return dictionary.getString(key, defVal);
+      return getMessageWithFallback(key, defVal);
    }
 
    /**
@@ -831,11 +590,10 @@ public class JDRResources
     * @param key the key identifying the required string
     * @return the required string or the key if not found
     */
+   @Deprecated
    public String getString(String key)
    {
-      if (dictionary == null) return key;
-
-      return dictionary.getString(key);
+      return getMessage(key);
    }
 
    /**
@@ -853,12 +611,11 @@ public class JDRResources
    @Deprecated
    public char getChar(String key, char defVal)
    {
-      if (dictionary == null)
-      {
-         return defVal;
-      }
-
-      return dictionary.getChar(key, defVal);
+      String text = getMessageIfExists(key);
+   
+      if (text == null || text.isEmpty()) return defVal;
+   
+      return text.charAt(0);
    }
 
 
@@ -882,9 +639,7 @@ public class JDRResources
    /**
     * Gets the code point of the first character of the string associated with the 
     * given key in the resource dictionary, or the default value 
-    * if not found or 
-    * if the dictionary has not been initialised using
-    * {@link #initialiseDictionary()}.
+    * if not found.
     * @param key the key identifying the required string
     * @param defVal the default value
     * @return the first character of the required string 
@@ -892,19 +647,16 @@ public class JDRResources
     */
    public int getCodePoint(String key, int defVal)
    {
-      if (dictionary == null)
-      {
-         return defVal;
-      }
-
-      return dictionary.getCodePoint(key, defVal);
+      String text = getMessageIfExists(key);
+   
+      if (text == null || text.isEmpty()) return defVal;
+   
+      return text.codePointAt(0);
    }
 
    /**
     * Gets the code point of the first character of the string associated with the 
-    * given key in the resource dictionary. If not found or 
-    * if the dictionary has not been initialised using
-    * {@link #initialiseDictionary()}, the
+    * given key in the resource dictionary. If not found the 
     * first character of the key is used instead.
     * @param key the key identifying the required string
     * @return the first character of the required string 
@@ -915,9 +667,14 @@ public class JDRResources
       return getCodePoint(key, key.codePointAt(0));
    }
 
+   public int getMnemonic(String label)
+   {
+      return helpLib.getMnemonic(label);
+   }
+
    public String getToolTipText(String id)
    {
-      return getString(id+".tooltip", getString("tooltip."+id, null));
+      return getMessageWithFallback(id+".tooltip", getString("tooltip."+id, null));
    }
 
    public String getDefaultDescription(JDRCompleteObject object)
@@ -962,9 +719,19 @@ public class JDRResources
 
    public String getAcceleratorString(String propName)
    {
-      if (accelerators == null) return null;
+      String str = null;
 
-      return accelerators.getProperty(propName);
+      if (accelerators != null)
+      {
+         str = accelerators.getProperty(propName);
+      }
+
+      if (str == null)
+      {
+         str = getMessageIfExists("action."+propName+".keystroke");
+      }
+
+      return str;
    }
 
    public KeyStroke getAccelerator(String propName)
@@ -1023,32 +790,34 @@ public class JDRResources
       }
    }
 
+   @Deprecated
    public boolean isDictInitialised()
    {
-      return dictionary != null;
+      return helpLib.getMessageSystem() != null;
    }
 
    /**
     * Initialises dictionary using the language resources.
+    * No op now that TeXJavaHelpLib is used.
     */
+   @Deprecated
    public void initialiseDictionary()
    throws IOException
    {
-      dictionary = new JDRDictionary(this);
    }
 
    /**
     * Initialises dictionary.
     * @param dictionaryInputStream the dictionary input stream
-    * @param licenceInputStream the licence input stream
+    * @param licenseInputStream the license input stream
+    * No op now that TeXJavaHelpLib is used.
     */
+   @Deprecated
    public void initialiseDictionary(
       InputStream dictionaryInputStream,
-      InputStream licenceInputStream)
+      InputStream licenseInputStream)
    throws IOException
    {
-      dictionary = new JDRDictionary(this, dictionaryInputStream,
-         licenceInputStream);
    }
 
    /**
@@ -1195,16 +964,9 @@ public class JDRResources
          }
          else if (file.exists())
          {
-            if (dictionary == null)
-            {
-               throw new IOException(
-                 String.format("'%s' is not a directory", file.toString()));
-            }
-            else
-            {
-               throw new IOException(
-                 getMessage("error.not_a_directory", file.toString()));
-            }
+            throw new IOException(
+              getMessageWithFallback("error.not_a_directory",
+               "''{0}'' is not a directory", file));
          }
       }
       else
@@ -1227,21 +989,155 @@ public class JDRResources
             }
             else
             {
-               if (dictionary == null)
-               {
-                  throw new IOException(
-                    String.format("Can't create config directory '%s'",
-                     file.toString()));
-               }
-               else
-               {
-                  throw new IOException(
-                        getMessage("error.config_cant_create",
-                           file.getCanonicalPath()));
-               }
+               throw new IOException(
+                  getMessageWithFallback("error.config_cant_create",
+                    "Can''t create config directory ''{0}''",
+                    file));
             }
          }
       }
+   }
+
+   public void saveLanguageSettings() throws IOException
+   {
+      File file = new File(usersettings, "languages.conf");
+
+      PrintWriter out = null;
+
+      try
+      {
+          out = new PrintWriter(new FileWriter(file));
+          debugMessage("writing: "+file);
+
+          if (dictLocale != null)
+          {
+             out.println("dict_lang="+dictLocale.getTag());
+          }
+
+          if (helpSetLocale != null)
+          {
+             out.println("help_lang="+helpSetLocale.getTag());
+          }
+      }
+      finally
+      {
+         if (out != null)
+         {
+            out.close();
+         }
+      }
+   }
+
+   protected void loadLanguageSettings()
+      throws IOException,InvalidFormatException
+   {
+      String helpsetTag = null;
+      String dictTag = null;
+
+      File file = new File(usersettings, "languages.conf");
+
+      if (file.exists())
+      {
+         debugMessage("reading: "+file);
+
+         BufferedReader in = null;
+         int lineNum = 0;
+
+         try
+         {
+             in = new BufferedReader(new FileReader(file));
+
+             String line;
+
+             while ((line = in.readLine()) != null)
+             {
+                lineNum++;
+
+                line = line.trim();
+
+                if (line.isEmpty() || line.startsWith("#"))
+                {
+                   continue;
+                }
+
+                String[] split = line.split(" *= *", 2);
+
+                if (split == null || split.length < 2)
+                {
+                    throw new InvalidFormatException(
+                      String.format("%s:%d: key=value pair expected, '%s' found ",
+                        file.toString(), lineNum, line));
+                }
+
+                String key = split[0];
+                String value = split[1];
+
+                if (key.equals("dict_lang"))
+                {
+                   dictTag = value.trim();
+                }
+                else if (key.equals("help_lang"))
+                {
+                   helpsetTag = value.trim();
+                }
+             }
+         }
+         finally
+         {
+            if (in != null)
+            {
+               in.close();
+            }
+         }
+      }
+
+      if (dictTag != null && !dictTag.isEmpty())
+      {
+         dictLocale = new HelpSetLocale(dictTag);
+      }
+
+      if (helpsetTag != null && !helpsetTag.isEmpty())
+      {
+         helpSetLocale = new HelpSetLocale(helpsetTag);
+      }
+   }
+
+   @Override
+   public void debug(String message)
+   {
+      debugMessage(message);
+   }
+
+   @Override
+   public void debug(Component owner, String message)
+   {
+      debugMessage(message);
+   }
+
+   @Override
+   public void debug(Throwable e)
+   {
+      debugMessage(e);
+   }
+
+   @Override
+   public void debug(Component owner, Throwable e)
+   {
+      debugMessage(e);
+   }
+
+   @Override
+   public void debug(Component owner, String message, Throwable e)
+   {
+      debugMessage(message);
+      debugMessage(e);
+   }
+
+   @Override
+   public void debug(String message, Throwable e)
+   {
+      debugMessage(message);
+      debugMessage(e);
    }
 
    public void debugMessage(String message)
@@ -1268,84 +1164,10 @@ public class JDRResources
       }
    }
 
-   private URL getHelpSetLocation(String appName)
-     throws IOException
+   @Override
+   public boolean isDebuggingOn()
    {
-      String helpsetLocation = "/resources/helpsets/";
-
-      String hsLocation;
-
-      URL hsURL;
-
-      if (helpLocaleId != null)
-      {
-         hsLocation = String.format("%s%s/%s/%s.hs",
-           helpsetLocation, appName, helpLocaleId,
-              appName, helpLocaleId);
-
-         hsURL = getClass().getResource(hsLocation);
-
-         if (hsURL == null)
-         {
-            warning("Can't find helpset for language '"+helpLocaleId+"'");
-            helpLocaleId = null;
-         }
-
-         return hsURL;
-      }
-
-      Locale locale = Locale.getDefault();
-
-      String localeId = locale.getLanguage()+"-"+locale.getCountry();
-
-      helpLocaleId = localeId;
-
-      hsLocation = String.format("%s%s/%s/%s.hs",
-        helpsetLocation, appName, localeId,
-           appName, localeId);
-
-      hsURL = getClass().getResource(hsLocation);
-
-      if (hsURL == null)
-      {
-         String tried = hsLocation;
-
-         helpLocaleId = locale.getLanguage();
-
-         hsLocation = String.format("%s%s/%s/%s.hs",
-           helpsetLocation, appName, helpLocaleId,
-              appName, helpLocaleId);
-
-         hsURL = getClass().getResource(hsLocation);
-
-         if (hsURL == null)
-         {
-            tried += "\n"+hsLocation;
-
-            if (!localeId.equals("en-GB"))
-            {
-               helpLocaleId = "en-GB";
-
-               hsLocation = String.format("%s%s/%s/%s.hs",
-                 helpsetLocation, appName, helpLocaleId,
-                    appName, helpLocaleId);
-
-               hsURL = getClass().getResource(hsLocation);
-
-               if (hsURL == null)
-               {
-                  tried += "\n"+hsLocation;
-               }
-            }
-
-            if (hsURL == null)
-            {
-               throw new IOException("Can't find helpset. Tried:\n"+tried);
-            }
-         }
-      }
-
-      return hsURL;
+      return debugMode;
    }
 
    public String[] getAvailableDictLanguages()
@@ -1363,7 +1185,7 @@ public class JDRResources
          // this shouldn't happen!
 
          e.printStackTrace();
-         return new String[] {"en-GB"};
+         return new String[] {"en"};
       }
 
       File[] files = parent.listFiles(dictionaryFilter);
@@ -1371,7 +1193,7 @@ public class JDRResources
       if (files == null)
       {
          debugMessage("no dictionaries found");
-         return new String[] {"en-GB"};
+         return new String[] {"en"};
       }
 
       String[] lang = new String[files.length];
@@ -1386,9 +1208,9 @@ public class JDRResources
       return lang;
    }
 
-   public String[] getAvailableHelpLanguages(String appName)
+   public String[] getAvailableHelpLanguages()
    {
-      URL url = getClass().getResource("/resources/helpsets/"+appName);
+      URL url = getClass().getResource(helpLib.getHelpSetResourcePath());
 
       File parent;
 
@@ -1401,7 +1223,7 @@ public class JDRResources
          // this shouldn't happen!
 
          e.printStackTrace();
-         return new String[] {"en-GB"};
+         return new String[] {"en"};
       }
 
       File[] files = parent.listFiles(directoryFilter);
@@ -1409,7 +1231,7 @@ public class JDRResources
       if (files == null)
       {
          debugMessage("no dictionaries found");
-         return new String[] {"en-GB"};
+         return new String[] {"en"};
       }
 
       String[] lang = new String[files.length];
@@ -1422,116 +1244,379 @@ public class JDRResources
       return lang;
    }
 
-   public void initialiseHelp(JFrame parent, String appName)
+   @Deprecated
+   public String[] getAvailableHelpLanguages(String dirBase)
    {
-      if (mainHelpBroker == null)
-      {
-         HelpSet mainHelpSet = null;
+      URL url = getClass().getResource("/resources/helpsets/"+dirBase);
 
+      File parent;
+
+      try
+      {
+         parent = new File(url.toURI());
+      }
+      catch (URISyntaxException e)
+      {
+         // this shouldn't happen!
+
+         e.printStackTrace();
+         return new String[] {"en"};
+      }
+
+      File[] files = parent.listFiles(directoryFilter);
+
+      if (files == null)
+      {
+         debugMessage("no dictionaries found");
+         return new String[] {"en"};
+      }
+
+      String[] lang = new String[files.length];
+
+      for (int i = 0; i < files.length; i++)
+      {
+         lang[i] = files[i].getName();
+      }
+
+      return lang;
+   }
+
+   /**
+    * Initialises the GUI help components.
+    */
+   public void initialiseHelp(JFrame parent) throws IOException,SAXException
+   {
+      initialiseHelp(parent,
+        "helpsets/"+appname.toLowerCase().replaceAll(" ", ""));
+   }
+
+   public void initialiseHelp(JFrame parent, String helpSetBase)
+     throws IOException,SAXException
+   {
+      helpLib.initHelpSet(helpSetBase, "navigation");
+      HelpFrame helpFrame = helpLib.getHelpFrame();
+
+      Image img = parent.getIconImage();
+
+      if (img != null)
+      {
+         helpFrame.setIconImage(img);
+      }
+
+      helpFrame.setLocationRelativeTo(parent);
+   }
+
+   /**
+    * Creates a menu item and tool bar button to open manual.
+    * @param helpM may be null if menu item not required
+    * @param toolBar may be null if button not required
+    */
+   public TJHAbstractAction createHelpAction(JMenu helpM, JComponent toolBar)
+   {
+      TJHAbstractAction helpAction = helpLib.createHelpAction();
+
+      if (helpM != null)
+      {
+         helpM.add(new JMenuItem(helpAction));
+      }
+
+      if (toolBar != null)
+      {
+         toolBar.add(new JButton(helpAction));
+      }
+
+      return helpAction;
+   }
+
+   /**
+    * Creates a menu item to open manual.
+    * @param helpM menu to add the new menu item to
+    * @return the new menu item
+    */
+   public JMenuItem addHelpItem(JMenu helpM)
+   {
+      JMenuItem helpItem = new JMenuItem(helpLib.createHelpAction());
+      helpM.add(helpItem);
+
+      return helpItem;
+   }
+
+   /**
+    * Creates an action to open a secondary help window at the
+    * identified identified node.
+    * @param id node identified (corresponds to \label argument)
+    */
+   public TJHAbstractAction createHelpAction(String id, JComponent comp)
+   {
+      return helpLib.createHelpAction(id, comp);
+   }
+
+   public JButton createHelpButton(String id, JComponent comp)
+   {
+      return new JButton(helpLib.createHelpAction(id, comp));
+   }
+
+   /**
+    * Creates an action to open a secondary help window at the
+    * identified identified node for a modal dialog.
+    * @param dialog the dialog window
+    * @param id node identified (corresponds to \label argument)
+    */
+   public JButton createHelpDialogButton(JDialog dialog, String id)
+   {
+      return helpLib.createHelpDialogButton(dialog, id);
+   }
+
+   /**
+    * Creates the license dialog (if not already created) 
+    * and a menu item that may be used to open it.
+    * @param parent parent frame
+    * @param menu the menu to which the item should be added (may be
+    * null if not required)
+    */ 
+   public JMenuItem createLicenceItem(JFrame parent, JMenu menu)
+   {
+      if (licenseDialog == null)
+      {
          try
          {
-            URL hsURL = getHelpSetLocation(appName);
+            URL url = getClass().getResource(LICENSE_PATH);
 
-            mainHelpSet = new HelpSet(null, hsURL);
+            if (url == null)
+            {
+               throw new FileNotFoundException(helpLib.getMessage(
+                 "error.resource_not_found", LICENSE_PATH));
+            }
+
+            licenseDialog = new MessageDialog(parent,
+              helpLib.getMessage("license.title"), true,
+              helpLib, url);
+
+            if (parent != null)
+            {
+               licenseDialog.setSize(parent.getSize());
+            }
          }
-         catch (Exception e)
+         catch (IOException e)
          {
-            error(parent, e);
+            debug(e);
+         }
+      }
+
+      JMenuItem item = helpLib.createJMenuItem("menu.help", "license", 
+       new ActionListener()
+        {
+           @Override
+           public void actionPerformed(ActionEvent evt)
+           {
+              if (licenseDialog == null)
+              {
+                 error("Failed to open resource " + LICENSE_PATH);
+              }
+              else
+              {
+                 licenseDialog.setVisible(true);
+              }
+           }
+        });
+
+
+      if (menu != null)
+      {
+         menu.add(item);
+      }
+
+      return item;
+   }
+
+   /**
+    * Creates the about dialog (if not already created) 
+    * and a menu item that may be used to open it.
+    * @param parent the parent frame
+    * @param menu the menu to which the item should be added (may be
+    * null if not required)
+    */ 
+   public JMenuItem createAboutItem(JFrame parent, JMenu menu)
+   {
+      if (aboutDialog == null)
+      {
+         aboutDialog = new MessageDialog(parent,
+          helpLib.getMessage("about.title", getApplicationName()),
+          true, helpLib, getAppInfo(true));
+      }
+
+      JMenuItem item = helpLib.createJMenuItem("menu.help", "about", 
+       new ActionListener()
+        {
+           @Override
+           public void actionPerformed(ActionEvent evt)
+           {
+              aboutDialog.setVisible(true);
+           }
+        });
+
+
+      if (menu != null)
+      {
+         menu.add(item);
+      }
+
+      return item;
+   }
+
+   /**
+    * Gets formatted information about the application for the about
+    * dialog or to print to STDOUT.
+    * @param html true if HTML output required otherwise returns
+    * plain text
+    */
+   public String getAppInfo(boolean html)
+   {
+      String par = html ? "<p>" : String.format("%n%n");
+      String nl = html ? "<br>" : String.format("%n");
+
+      StringBuilder builder = new StringBuilder();
+
+      builder.append(
+        helpLib.getMessage("about.version", getApplicationName(), 
+         APP_VERSION, APP_DATE)
+      );
+
+      builder.append(nl);
+
+      builder.append(String.format(
+        "Copyright (C) %s Nicola L. C. Talbot (%s)",
+        COPYRIGHT_YEAR, getInfoUrl(html, "www.dickimaw-books.com")));
+
+      builder.append(nl);
+
+      String legalText = getMessageIfExists("about.legal");
+
+      if (legalText != null)
+      {
+         if (html)
+         {
+            legalText = TeXJavaHelpLib.encodeHTML(legalText, false).replaceAll("\n", nl);
          }
 
-         if (mainHelpSet != null)
+         builder.append(legalText);
+      }
+
+      String translator = helpLib.getMessageIfExists("about.translator_info");
+
+      if (translator != null && !translator.isEmpty())
+      {
+         builder.append(par);
+
+         if (html)
          {
-            mainHelpBroker = mainHelpSet.createHelpBroker();
+            translator = TeXJavaHelpLib.encodeHTML(translator, false);
          }
 
-         if (mainHelpBroker != null)
+         builder.append(translator);
+      }
+
+      String ack = helpLib.getMessageIfExists("about.acknowledgements");
+
+
+      if (ack != null && !ack.isEmpty())
+      {
+         builder.append(par);
+
+         if (html)
          {
-            csh = new CSH.DisplayHelpFromSource(mainHelpBroker);
+            ack = TeXJavaHelpLib.encodeHTML(ack, false);
          }
+
+         builder.append(ack);
+      }
+
+      builder.append(par);
+      builder.append(getMessageWithFallback("about.library.version",
+        "Bundled with {0} version {1} ({2})",
+        "texjavahelplib.jar", TeXJavaHelpLib.VERSION, TeXJavaHelpLib.VERSION_DATE));
+      builder.append(nl);
+
+      builder.append(getInfoUrl(html, "https://github.com/nlct/texjavahelp"));
+
+/*
+      builder.append(par);
+      builder.append(getMessageWithFallback("about.library.version",
+        "Bundled with {0} version {1} ({2})",
+        "texparserlib.jar", TeXParser.VERSION, TeXParser.VERSION_DATE));
+      builder.append(nl);
+      builder.append(getInfoUrl(html, "https://github.com/nlct/texparser"));
+*/
+
+      return builder.toString();
+   }
+
+   /**
+    * Formats URL for about information.
+    * @param html true if HTML output required otherwise returns
+    * plain text
+    * @param url the URL (leading https:// may be omitted)
+    */
+   public String getInfoUrl(boolean html, String url)
+   {
+      if (html)
+      {
+         String href = url;
+
+         if (!url.startsWith("http"))
+         {
+            href = "https://"+url;
+         }
+
+         return String.format("<a href=\"%s\">%s</a>",
+           TeXJavaHelpLib.encodeAttributeValue(href, true),
+           TeXJavaHelpLib.encodeHTML(url, false));
+      }
+      else
+      {
+         return url;
       }
    }
 
+
+   @Deprecated
    public void enableHelpOnButton(AbstractButton button, String id)
    {
       enableHelpOnButton(button, id, getAccelerator("label.contexthelp"));
    }
 
+   @Deprecated
    public void enableHelpOnButton(AbstractButton button, String id,
      KeyStroke keyStroke)
    {
-      if (mainHelpBroker != null)
-      {
-         try
-         {
-            mainHelpBroker.enableHelpOnButton(button, id,
-               mainHelpBroker.getHelpSet());
-
-            csh = new CSH.DisplayHelpFromSource(mainHelpBroker);
-
-            button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
-             put(keyStroke, button.getActionCommand());
-
-            button.getActionMap().put(button.getActionCommand(), 
-             new AbstractAction(button.getActionCommand())
-             {
-                public void actionPerformed(ActionEvent evt)
-                {
-                   csh.actionPerformed(evt);
-                }
-             }
-             );
-         }
-         catch (BadIDException e)
-         {
-            internalError(null, e);
-         }
-      }
-      else
-      {
-         internalError(getString("internal_error.no_helpset"));
-      }
+      System.err.println("JavaHelp no longer supported");
    }
 
+   @Deprecated
    public JMenuItem addHelpItem(JMenu helpM, String appName)
    {
-      JMenuItem helpItem = new JMenuItem(
-         getMessage("help.handbook", appName));
-
-      helpM.add(helpItem);
-      helpItem.setAccelerator(getAccelerator("label.help"));
-
-      helpItem.setMnemonic(getCodePoint("help.handbook.mnemonic"));
-
-      if (csh != null)
-      {
-         helpItem.addActionListener(csh);
-      }
-      else
-      {
-         internalError(getString("internal_error.no_helpset"));
-      }
-
-      return helpItem;
+      return addHelpItem(helpM);
    }
 
+   @Deprecated
    public JDRButton createMainHelpButton()
    {
       return createMainHelpButton(getString("help.label"));
    }
 
+   @Deprecated
    public JDRButton createMainHelpButton(String tooltipText)
    {
-      JDRButton helpButton = createAppButton("help", csh, null, 
-         tooltipText);
-
-      return helpButton;
+      return new JDRButton(helpLib.createHelpAction());
    }
 
+   @Deprecated
    public JDRButton createHelpButton(String id)
    {
       return createHelpButton(id, getString("help.label"));
    }
 
+   @Deprecated
    public JDRButton createHelpButton(String id, String tooltipText)
    {
       JDRButton helpButton = createDialogButton("label.help",
@@ -1611,8 +1696,6 @@ public class JDRResources
 
       if (buttonText == null)
       {
-         buttonText = getString(tag, null);
-
          if (buttonText == null)
          {
             buttonText = getString(tag+"."+actionName, null);
@@ -1935,7 +2018,7 @@ public class JDRResources
 
    public JDRButton createCloseButton(ActionListener listener)
    {
-      return createCloseButton(listener, getString("label.close"));
+      return createCloseButton(listener, getMessage("label.close"));
    }
 
    public JDRButton createCloseButton(ActionListener listener, 
@@ -2643,37 +2726,41 @@ public class JDRResources
 
    public JDRMessageDictionary getMessageDictionary()
    {
-      return dictionary;
+      return this;
    }
 
    public JDRMessage getMessageSystem()
    {
-      return messageSystem;
+      return jdrMessageSystem;
    }
 
-   public void setMessageSystem(JDRMessage msgSys)
+   public void setMessageSystem(JDRGuiMessage msgSys)
    {
-      this.messageSystem = msgSys;
+      jdrMessageSystem = msgSys;
    }
 
+   @Deprecated
    public String getDictLocaleId()
    {
-      return dictLocaleId;
+      return getDictionaryTag();
    }
 
+   @Deprecated
    public String getHelpLocaleId()
    {
-      return helpLocaleId;
+      return getHelpSetTag();
    }
 
+   @Deprecated
    public void setDictLocaleId(String id)
    {
-      dictLocaleId = id;
+      setDictionary(id);
    }
 
+   @Deprecated
    public void setHelpLocaleId(String id)
    {
-      helpLocaleId = id;
+      setHelpSet(id);
    }
 
    public Font getStartUpInfoFont()
@@ -2706,14 +2793,34 @@ public class JDRResources
       startupVersionFont = font;
    }
 
-   private JDRMessage messageSystem;
+   @Override
+   public void message(String message)
+   {
+      if (jdrMessageSystem == null)
+      {
+         if (debugMode)
+         {
+            System.out.println(message);
+         }
+      }
+      else
+      {
+         jdrMessageSystem.message(message);
+      }
+   }
 
-   private JDRDictionary dictionary;
+   @Override
+   public void dictionaryLoaded(URL url)
+   {
+   }
 
-   private static HelpBroker mainHelpBroker = null;
-   private static CSH.DisplayHelpFromSource csh = null;
+   public static final String LICENSE_PATH = "/gpl-3.0-standalone.html";
 
-   private String dictLocaleId, helpLocaleId;
+   private String appname="jdrresources";
+   private HelpSetLocale dictLocale, helpSetLocale;
+   private MessageDialog licenseDialog, aboutDialog;
+
+   private JDRGuiMessage jdrMessageSystem;
 
    public Accelerators accelerators = null;
 
@@ -2729,11 +2836,14 @@ public class JDRResources
    private static DirectoryFilter directoryFilter = new DirectoryFilter();
    private static DictionaryFilter dictionaryFilter = new DictionaryFilter();
 
-   private JTabbedPane stackTracePane;
-   private JTextArea messageArea, stackTraceDetails;
-   private JScrollPane messageSP;
 
-   private String okayOption, exitOption;
+   public static final String APP_VERSION = "0.8.6.20250718";
+   public static final String APP_DATE = "2025-07-18";
+   public static final String START_COPYRIGHT_YEAR = "2006";
+   public static final String COPYRIGHT_YEAR
+    = APP_DATE.startsWith(START_COPYRIGHT_YEAR) ?
+      APP_DATE.substring(0,4) :
+      START_COPYRIGHT_YEAR+"-"+APP_DATE.substring(0,4);
 
    public static final int EXIT_SYNTAX = 1;
 
@@ -2887,6 +2997,6 @@ class DictionaryFilter implements java.io.FilenameFilter
 {
    public boolean accept(File dir, String name)
    {
-      return name.contains("-") && name.endsWith(".prop");
+      return name.contains("-") && name.endsWith(".xml");
    }
 }

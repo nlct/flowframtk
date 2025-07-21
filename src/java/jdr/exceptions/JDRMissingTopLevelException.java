@@ -34,7 +34,7 @@ public class JDRMissingTopLevelException extends InvalidFormatException
 {
    public JDRMissingTopLevelException(CanvasGraphics cg)
    {
-      super(cg.getString("error.top_level_missing",
+      super(cg.getMessageWithFallback("error.top_level_missing",
         "Top level group identifier missing"));
    }
 }

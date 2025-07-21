@@ -38,8 +38,9 @@ import javax.swing.undo.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
+import com.dickimawbooks.texjavahelplib.MessageSystem;
+
 import com.dickimawbooks.jdr.*;
-import com.dickimawbooks.jdr.io.JDRMessageDictionary;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -55,7 +56,7 @@ public class VectorizeBitmapDialog extends JFrame
 {
    public VectorizeBitmapDialog(FlowframTk application)
    {
-      super(application.getResources().getString("vectorize.title"));
+      super(application.getResources().getMessage("vectorize.title"));
       this.application = application;
 
       init();
@@ -360,7 +361,7 @@ public class VectorizeBitmapDialog extends JFrame
          {
             error(e);
             undoItem.setEnabled(false);
-            undoItem.setText(getResources().getString("label.undo"));
+            undoItem.setText(getResources().getMessage("label.undo"));
          }
       }
       else if (command.equals("redo"))
@@ -378,7 +379,7 @@ public class VectorizeBitmapDialog extends JFrame
          {
             error(e);
             redoItem.setEnabled(false);
-            redoItem.setText(getResources().getString("label.redo"));
+            redoItem.setText(getResources().getMessage("label.redo"));
          }
       }
       else if (command.equals("apply_pinned"))
@@ -468,7 +469,7 @@ public class VectorizeBitmapDialog extends JFrame
       }
       else
       {
-         undoItem.setText(getResources().getString("label.undo"));
+         undoItem.setText(getResources().getMessage("label.undo"));
       }
 
       boolean canRedo = undoManager.canRedo();
@@ -480,7 +481,7 @@ public class VectorizeBitmapDialog extends JFrame
       }
       else
       {
-         redoItem.setText(getResources().getString("label.redo"));
+         redoItem.setText(getResources().getMessage("label.redo"));
       }
    }
 
@@ -618,13 +619,13 @@ public class VectorizeBitmapDialog extends JFrame
       // check for cancel
       if (isCancelled())
       {
-         throw new UserCancelledException(getMessageDictionary());
+         throw new UserCancelledException(getMessageSystem());
       }
    }
 
-   public JDRMessageDictionary getMessageDictionary()
+   public MessageSystem getMessageSystem()
    {
-      return getResources().getMessageDictionary();
+      return getResources().getHelpLib.getMessageSystem();
    }
 
    public boolean hasResults()
@@ -656,7 +657,7 @@ public class VectorizeBitmapDialog extends JFrame
       if (hasCurrentResults())
       {
          int result = getResources().confirm(this, 
-           getResources().getString("vectorize.confirm_pin_current"), 
+           getResources().getMessage("vectorize.confirm_pin_current"), 
             JOptionPane.YES_NO_CANCEL_OPTION);
 
          if (result == JOptionPane.YES_OPTION)
@@ -692,7 +693,7 @@ public class VectorizeBitmapDialog extends JFrame
    public void clearAllResults()
    {
       int result = getResources().confirm(this, 
-        getResources().getString("vectorize.confirm_clear_all"));
+        getResources().getMessage("vectorize.confirm_clear_all"));
 
       if (result == JOptionPane.YES_OPTION)
       {
@@ -716,7 +717,7 @@ public class VectorizeBitmapDialog extends JFrame
 
       shapeList = null;
 
-      addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
+      addUndoableEdit(shapeList, getResources().getMessage("vectorize.pin_shape"), 
          resultList);
 
       resultPanel.updateCurrentShapeList(shapeList);
@@ -771,7 +772,7 @@ public class VectorizeBitmapDialog extends JFrame
 
          if (bitmap != currentFrame.getSelectedBitmap())
          {
-            error(getResources().getString("error.vectorize_in_progress"));
+            error(getResources().getMessage("error.vectorize_in_progress"));
          }
 
          return;
@@ -814,7 +815,7 @@ public class VectorizeBitmapDialog extends JFrame
       if (hasCurrentResults())
       {
          int result = getResources().confirm(this, 
-           getResources().getString("vectorize.confirm_include_current"), 
+           getResources().getMessage("vectorize.confirm_include_current"), 
             JOptionPane.YES_NO_CANCEL_OPTION);
 
          if (result == JOptionPane.YES_OPTION)
@@ -881,12 +882,12 @@ public class VectorizeBitmapDialog extends JFrame
       }
 
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(canvas,
-        getResources().getString("undo.vectorize"));
+        getResources().getMessage("undo.vectorize"));
 
       canvas.selectObject(ce, bitmap, false);
 
       canvas.addObject(ce, obj, 
-         getResources().getString("undo.vectorize"));
+         getResources().getMessage("undo.vectorize"));
 
       canvas.selectObject(ce, obj, true);
 
@@ -905,7 +906,7 @@ public class VectorizeBitmapDialog extends JFrame
       if (confirm && (!resultPanel.getResults().isEmpty() || hasCurrentResults()))
       {
          if (getResources().confirm(this, 
-               getResources().getString("vectorize.confirm_discard_all"))
+               getResources().getMessage("vectorize.confirm_discard_all"))
              != JOptionPane.YES_OPTION)
          {
             return;
@@ -1095,7 +1096,7 @@ public class VectorizeBitmapDialog extends JFrame
    {
       storeOldShapes();
       shapeList.remove(i);
-      addUndoableEdit(shapeList, getResources().getString("vectorize.delete_shape"));
+      addUndoableEdit(shapeList, getResources().getMessage("vectorize.delete_shape"));
       resultPanel.updateCurrentShapeList(shapeList);
       updateWidgets();
    }
@@ -1104,7 +1105,7 @@ public class VectorizeBitmapDialog extends JFrame
    {
       storeOldShapes();
       ShapeComponentVector shape = shapeList.remove(i);
-      addUndoableEdit(shapeList, getResources().getString("vectorize.pin_shape"), 
+      addUndoableEdit(shapeList, getResources().getMessage("vectorize.pin_shape"), 
          resultPanel.storeShape(shape));
       resultPanel.updateCurrentShapeList(shapeList);
       updateWidgets();
@@ -1266,7 +1267,7 @@ public class VectorizeBitmapDialog extends JFrame
       }
       else
       {
-         error(getResources().getString("vectorize.no_tasks_selected"));
+         error(getResources().getMessage("vectorize.no_tasks_selected"));
       }
    }
 
@@ -1276,14 +1277,14 @@ public class VectorizeBitmapDialog extends JFrame
 
       if (image == null)
       {
-         error(getResources().getString("vectorize.no_image"));
+         error(getResources().getMessage("vectorize.no_image"));
          finishedTask();
          return;
       }
 
       if (getImageForeground() == null)
       {
-         error(getResources().getString("vectorize.foreground_not_set"));
+         error(getResources().getMessage("vectorize.foreground_not_set"));
          finishedTask();
          return;
       }
@@ -1291,7 +1292,7 @@ public class VectorizeBitmapDialog extends JFrame
       if (hasCurrentResults())
       {
          int result = getResources().confirm(this, 
-            getResources().getString("vectorize.confirm_pin_current"),
+            getResources().getMessage("vectorize.confirm_pin_current"),
             JOptionPane.YES_NO_CANCEL_OPTION);
 
          if (result == JOptionPane.YES_OPTION)
@@ -1312,7 +1313,7 @@ public class VectorizeBitmapDialog extends JFrame
 
       try
       {
-         startTask(getResources().getString("vectorize.scanning"), 
+         startTask(getResources().getMessage("vectorize.scanning"), 
             new ScanImage(this, image, continueToNextStep));
       }
       catch (UnsupportedColourType e)
@@ -1346,12 +1347,12 @@ public class VectorizeBitmapDialog extends JFrame
      boolean continueToNextStep)
    {
       addUndoableEdit(shapeList, 
-         getResources().getString("vectorize.scan_image"));
+         getResources().getMessage("vectorize.scan_image"));
 
       if (shapeList == null)
       {
          finishedTask();
-         error(getResources().getString("vectorize.scan_no_areas_detected"));
+         error(getResources().getMessage("vectorize.scan_no_areas_detected"));
          return;
       }
 
@@ -1397,7 +1398,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void doSplitSubPaths(boolean continueToNextStep)
    {
-      startTask(getResources().getString("vectorize.splitting_subpaths"),
+      startTask(getResources().getMessage("vectorize.splitting_subpaths"),
           new SplitSubPaths(this, shapeList, continueToNextStep));
    }
 
@@ -1405,12 +1406,12 @@ public class VectorizeBitmapDialog extends JFrame
       boolean continueToNextStep)
    {
       addUndoableEdit(shapes, 
-         getResources().getString("vectorize.split_subpaths"));
+         getResources().getMessage("vectorize.split_subpaths"));
 
       if (shapes == null || shapes.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.no_shapes"));
+         error(getResources().getMessage("vectorize.no_shapes"));
          return;
       }
 
@@ -1450,7 +1451,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void doLineDetection(boolean continueToNextStep)
    {
-      startTask(getResources().getString("vectorize.detecting_lines"),
+      startTask(getResources().getMessage("vectorize.detecting_lines"),
           new LineDetection(this, shapeList, continueToNextStep));
    }
 
@@ -1458,12 +1459,12 @@ public class VectorizeBitmapDialog extends JFrame
       boolean continueToNextStep)
    {
       addUndoableEdit(shapes, 
-         getResources().getString("vectorize.line_detection"));
+         getResources().getMessage("vectorize.line_detection"));
 
       if (shapes == null || shapes.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.no_shapes"));
+         error(getResources().getMessage("vectorize.no_shapes"));
          return;
       }
 
@@ -1499,7 +1500,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void doMergeNearPaths(boolean continueToNextStep)
    {
-      startTask(getResources().getString("vectorize.merge_nearpaths"),
+      startTask(getResources().getMessage("vectorize.merge_nearpaths"),
           new MergeNearPaths(this, shapeList, continueToNextStep));
    }
 
@@ -1507,12 +1508,12 @@ public class VectorizeBitmapDialog extends JFrame
       boolean continueToNextStep)
    {
       addUndoableEdit(shapes, 
-         getResources().getString("vectorize.merge_nearpaths"));
+         getResources().getMessage("vectorize.merge_nearpaths"));
 
       if (shapes == null || shapes.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.no_shapes"));
+         error(getResources().getMessage("vectorize.no_shapes"));
          return;
       }
 
@@ -1544,7 +1545,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    public void doOptimize(boolean continueToNextStep)
    {
-      startTask(getResources().getString("vectorize.optimizing_lines"), 
+      startTask(getResources().getMessage("vectorize.optimizing_lines"), 
         new OptimizeLines(this, shapeList, continueToNextStep)); 
    }
 
@@ -1552,12 +1553,12 @@ public class VectorizeBitmapDialog extends JFrame
       boolean continueToNextStep)
    {
       addUndoableEdit(shapes, 
-         getResources().getString("vectorize.optimize_lines"));
+         getResources().getMessage("vectorize.optimize_lines"));
 
       if (shapes == null || shapes.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.no_shapes"));
+         error(getResources().getMessage("vectorize.no_shapes"));
          return;
       }
 
@@ -1588,11 +1589,11 @@ public class VectorizeBitmapDialog extends JFrame
       if (shapeList == null || shapeList.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.shapes_lost"));
+         error(getResources().getMessage("vectorize.shapes_lost"));
          return;
       }
 
-      startTask(getResources().getString("vectorize.smoothing_shapes"),
+      startTask(getResources().getMessage("vectorize.smoothing_shapes"),
           new Smooth(this, shapeList, continueToNextStep)); 
    }
 
@@ -1600,12 +1601,12 @@ public class VectorizeBitmapDialog extends JFrame
      boolean continueToNextStep)
    {
       addUndoableEdit(shapeList, 
-         getResources().getString("vectorize.smooth_shapes"));
+         getResources().getMessage("vectorize.smooth_shapes"));
 
       if (shapeList == null || shapeList.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.shapes_lost"));
+         error(getResources().getMessage("vectorize.shapes_lost"));
          return;
       }
 
@@ -1632,23 +1633,23 @@ public class VectorizeBitmapDialog extends JFrame
       if (shapeList == null || shapeList.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.shapes_lost"));
+         error(getResources().getMessage("vectorize.shapes_lost"));
          return;
       }
 
-      startTask(getResources().getString("vectorize.removing_tiny_paths"),
+      startTask(getResources().getMessage("vectorize.removing_tiny_paths"),
           new RemoveTinyPaths(this, shapeList));
    }
 
    public void finishedRemoveTinyPaths(Vector<ShapeComponentVector> shapeList)
    {
       addUndoableEdit(shapeList, 
-         getResources().getString("vectorize.remove_tiny_paths"));
+         getResources().getMessage("vectorize.remove_tiny_paths"));
 
       if (shapeList == null || shapeList.isEmpty())
       {
          finishedTask();
-         error(getResources().getString("vectorize.shapes_lost"));
+         error(getResources().getMessage("vectorize.shapes_lost"));
          return;
       }
 
@@ -2092,7 +2093,7 @@ class UndoableEditComp extends JRadioButton implements ActionListener
 {
    public UndoableEditComp(VectorizeBitmapDialog dialog)
    {
-      super(dialog.getResources().getString("vectorize.history_base"));
+      super(dialog.getResources().getMessage("vectorize.history_base"));
       this.dialog = dialog;
       index = 0;
       addActionListener(this);
@@ -2506,7 +2507,7 @@ abstract class ControlSubPanel extends JPanel
 
       expandCheckBox = new JCheckBox(triangleRightIcon, true);
       expandCheckBox.setSelectedIcon(triangleDownIcon);
-      expandCheckBox.setToolTipText(resources.getString("vectorize.expand_controls"));
+      expandCheckBox.setToolTipText(resources.getMessage("vectorize.expand_controls"));
       expandCheckBox.setMaximumSize(expandCheckBox.getPreferredSize());
       expandCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       expandCheckBox.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -2548,25 +2549,25 @@ abstract class ControlSubPanel extends JPanel
 
       JButton button = resources.createSmallHelpButton(true);
       button.setBorder(BorderFactory.createEmptyBorder());
-      button.setToolTipText(resources.getString("label.info"));
+      button.setToolTipText(resources.getMessage("label.info"));
       button.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            String title = getResources().getString(id+".info_title", null);
+            String title = getResources().getMessage(id+".info_title", null);
 
             if (title == null)
             {
-               title = getResources().getString(id, null);
+               title = getResources().getMessage(id, null);
 
                if (title == null)
                {
-                  title = getResources().getString("label.info");
+                  title = getResources().getMessage("label.info");
                }
             }
 
             getResources().message(controlPanel, 
-              getResources().getString(id+".info"),
+              getResources().getMessage(id+".info"),
               title, JOptionPane.INFORMATION_MESSAGE);
          }
       });
@@ -2605,7 +2606,7 @@ abstract class ControlSubPanel extends JPanel
       JComponent comp = Box.createVerticalBox();
       comp.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), 
-        getResources().getString(id)));
+        getResources().getMessage(id)));
 
       comp.add(Box.createHorizontalGlue());
       mainSubPanel.add(comp);
@@ -2870,7 +2871,7 @@ class ScanImagePanel extends ControlSubPanel implements ActionListener,ChangeLis
       if (command.equals("choose_colour"))
       {
          Color col = foregroundChooser.showDialog(this, 
-            controlPanel.getResources().getString("vectorize.select_foreground"), 
+            controlPanel.getResources().getMessage("vectorize.select_foreground"), 
             getImageForeground());
 
          if (col != null)
@@ -5423,7 +5424,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       cancelButton.setAlignmentY(Component.CENTER_ALIGNMENT);
       add(cancelButton);
 
-      confirmAbort = resources.getString("process.confirm.abort");
+      confirmAbort = resources.getMessage("process.confirm.abort");
    }
 
    public void propertyChange(PropertyChangeEvent evt)
@@ -6388,7 +6389,7 @@ class ShapeComponentVector extends Vector<ShapeComponent> implements JDRConstant
          switch (type)
          {
             case PathIterator.SEG_CLOSE:
-               builder.append(resources.getString("path_element_info.close"));
+               builder.append(resources.getMessage("path_element_info.close"));
             break;
             case PathIterator.SEG_CUBICTO:
                builder.append(resources.getMessage("path_element_info.cubic",
@@ -6954,7 +6955,7 @@ class ShapeComponent
       switch (type)
       {
          case PathIterator.SEG_CLOSE:
-            return resources.getString("path_element_info.close");
+            return resources.getMessage("path_element_info.close");
          case PathIterator.SEG_CUBICTO:
             return resources.getMessage("path_element_info.cubic",
               x0, y0, coords[0], coords[1], coords[2], coords[3], 
@@ -7134,7 +7135,7 @@ class ScanImage extends SwingWorker<Void,Raster>
             if (dialog.isCancelled())
             {
                dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-               throw new UserCancelledException(dialog.getMessageDictionary());
+               throw new UserCancelledException(dialog.getMessageSystem());
             }
 
             int rectWidth = dx;
@@ -7188,7 +7189,7 @@ class ScanImage extends SwingWorker<Void,Raster>
       if (dialog.isCancelled())
       {
          dialog.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-         throw new UserCancelledException(dialog.getMessageDictionary());
+         throw new UserCancelledException(dialog.getMessageSystem());
       }
 
       processSample(ar, rect.x, rect.y, rect.width, rect.height);
@@ -7350,7 +7351,7 @@ class ScanImage extends SwingWorker<Void,Raster>
          dialog.addMessageIdLn("vectorize.message.scan_image.results",
           bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 
-         dialog.addMessageLn(dialog.getResources().applyMessagePattern(
+         dialog.addMessageLn(dialog.getResources().getMessage(
           "vectorize.message.scan_image.contains_subpaths",
           area.isSingular() ? 1 : 0));
 
@@ -7427,7 +7428,7 @@ class OptimizeLines extends SwingWorker<Void,ShapeComponentVector>
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException(dialog.getMessageDictionary());
+            throw new UserCancelledException(dialog.getMessageSystem());
          }
 
          Vector<ShapeComponentVector> result = processShape(oldShapeList.get(i));
@@ -7987,7 +7988,7 @@ class SplitSubPaths extends SwingWorker<Void,Void>
       // check for cancel
       if (dialog.isCancelled())
       {
-         throw new UserCancelledException(dialog.getMessageDictionary());
+         throw new UserCancelledException(dialog.getMessageSystem());
       }
    }
 
@@ -8607,7 +8608,7 @@ class MergeNearPaths extends SwingWorker<Void,Rectangle>
       // check for cancel
       if (dialog.isCancelled())
       {
-         throw new UserCancelledException(dialog.getMessageDictionary());
+         throw new UserCancelledException(dialog.getMessageSystem());
       }
    }
 
@@ -8678,7 +8679,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException(dialog.getMessageDictionary());
+            throw new UserCancelledException(dialog.getMessageSystem());
          }
 
          tryLineify(oldShapeList.get(i));
@@ -8705,7 +8706,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       // check for cancel
       if (dialog.isCancelled())
       {
-         throw new UserCancelledException(dialog.getMessageDictionary());
+         throw new UserCancelledException(dialog.getMessageSystem());
       }
    }
 
@@ -11064,9 +11065,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
 
       if (dialog.isVerbose())
       {
-         dialog.addMessageIdLn("vectorize.n_spikes_found",
-          dialog.getResources().formatMessageChoice(numIndexes, 
-          "vectorize.n_spikes"));
+         dialog.addMessageIdLn("vectorize.n_spikes_found", numIndexes);
 
          for (Spike spike : indexes)
          {
@@ -11155,8 +11154,7 @@ class LineDetection extends SwingWorker<Void,Rectangle> implements JDRConstants
       if (dialog.isVerbose() && numIndexes < originalNumIndexes)
       {
          dialog.addMessageIdLn("vectorize.line_detection.reduced_spike_set",
-           dialog.getResources().formatMessageChoice(numIndexes, 
-             "vectorize.n_spikes"));
+             numIndexes);
 
          for (Spike spike : indexes)
          {
@@ -17078,7 +17076,7 @@ class DeviationResult implements Comparable<DeviationResult>, JDRConstants
 
       if (shape == null)
       {
-         return resources.getString("path_element_info.empty");
+         return resources.getMessage("path_element_info.empty");
       }
       else
       {
@@ -17596,7 +17594,7 @@ class RemoveTinyPaths extends SwingWorker<Void,Rectangle2D>
          // check for cancel
          if (dialog.isCancelled())
          {
-            throw new UserCancelledException(dialog.getMessageDictionary());
+            throw new UserCancelledException(dialog.getMessageSystem());
          }
 
          ShapeComponentVector vec = shapes.get(i);
@@ -18559,8 +18557,8 @@ class SummaryPanel extends JPanel
 
          JDRResources resources = dialog.getResources();
 
-         topField.setText(resources.formatMessageChoice(shapes.size(),
-           "vectorize.summary.paths"));
+         topField.setText(resources.getMessage(
+           "vectorize.summary.paths", shapes.size()));
       }
 
       mainPanel.revalidate();
@@ -18589,14 +18587,14 @@ class SummaryPathPanel extends JPanel implements ActionListener
 
       if (shape.isEmpty())
       {
-         extraText = resources.getString("vectorize.summary.empty");
+         extraText = resources.getMessage("vectorize.summary.empty");
       }
       else if (shape.lastElement().getType() == PathIterator.SEG_CLOSE)
       {
          extraText = resources.getMessage("vectorize.summary.closed",
           shape.getRule() == PathIterator.WIND_EVEN_ODD ? 
-            resources.getString("linestyle.winding_rule.eo") : 
-            resources.getString("linestyle.winding_rule.nz"));
+            resources.getMessage("linestyle.winding_rule.eo") : 
+            resources.getMessage("linestyle.winding_rule.nz"));
 
          int numSubPaths = 0;
 

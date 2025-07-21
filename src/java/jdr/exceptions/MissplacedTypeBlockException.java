@@ -35,7 +35,7 @@ public class MissplacedTypeBlockException extends InvalidFormatException
 {
    public MissplacedTypeBlockException(CanvasGraphics cg)
    {
-      super(cg.getString("error.misplaced_typeblock",
+      super(cg.getMessageWithFallback("error.misplaced_typeblock",
             "Missplaced typeblock"));
    }
 

@@ -127,8 +127,10 @@ public class InvalidFormatException extends Exception
          return String.format("%s (%s)", msg, identifier);
       }
 
-      return msgSys.getMessageWithAlt("{0} ({1})",
-        "error.with_id", msg, identifier);
+      return msgSys.getMessageWithFallback(
+        "error.with_id",
+        "{0} ({1})",
+         msg, identifier);
    }
 
    public String getMessageWithIndex(JDRMessageDictionary msgSys)
@@ -142,9 +144,9 @@ public class InvalidFormatException extends Exception
             return String.format("Line %d, Column %d: %s", lineNum, colIdx, msg);
          }
 
-         return msgSys.getMessageWithAlt(
-           "Line {0}, Column {1}: {2}",
+         return msgSys.getMessageWithFallback(
            "error.with_line_and_col",
+           "Line {0}, Column {1}: {2}",
            lineNum, colIdx, msg);
       }
 
@@ -155,8 +157,10 @@ public class InvalidFormatException extends Exception
             return String.format("Line %d: %s", lineNum, msg);
          }
 
-         return msgSys.getMessageWithAlt(
-           "Line {0}: {1}", "error.with_line", lineNum, msg);
+         return msgSys.getMessageWithFallback(
+           "error.with_line",
+           "Line {0}: {1}",
+            lineNum, msg);
       }
 
       return msg;

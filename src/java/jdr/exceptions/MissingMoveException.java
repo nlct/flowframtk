@@ -38,7 +38,7 @@ public class MissingMoveException extends InvalidPathException
 {
    public MissingMoveException(CanvasGraphics cg)
    {
-      super(cg.getString("internal_error.missing_move", "Missing move"));
+      super(cg.getMessageWithFallback("internal_error.missing_move", "Missing move"));
    }
 }
 

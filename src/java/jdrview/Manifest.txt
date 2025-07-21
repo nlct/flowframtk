@@ -1,2 +1,2 @@
 Main-Class: com/dickimawbooks/jdrview/JDRViewInvoker
-Class-Path: jdr.jar jdrresources.jar javahelp2.jar .
+Class-Path: jdr.jar jdrresources.jar texjavahelplib.jar .

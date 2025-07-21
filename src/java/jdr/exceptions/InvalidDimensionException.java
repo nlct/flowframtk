@@ -37,8 +37,10 @@ public class InvalidDimensionException extends InvalidFormatException
     */
    public InvalidDimensionException(String dimension, CanvasGraphics cg)
    {
-      super(cg.getMessageWithAlt("Invalid dimension {0}",
-            "error.id.unit", dimension));
+      super(cg.getMessageWithFallback(
+            "error.id.unit",
+            "Invalid dimension {0}",
+             dimension));
       invalidDimension = dimension;
    }
 
@@ -49,8 +51,10 @@ public class InvalidDimensionException extends InvalidFormatException
     */
    public InvalidDimensionException(String dimension, int line, CanvasGraphics cg)
    {
-      super(cg.getMessageWithAlt(line, "Invalid dimension {0}", 
-            "error.id.unit", dimension), line);
+      super(cg.getMessageWithFallback(line,
+            "error.id.unit",
+            "Invalid dimension {0}", 
+            dimension), line);
       invalidDimension = dimension;
    }
 

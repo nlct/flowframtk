@@ -71,7 +71,7 @@ classes/com/dickimawbooks/jdrresources/JDRResources.class : classes \
 	cd java/jdrresources ; \
 	javac $(target_version) \
 	  -d ../../classes -Xlint:deprecation -Xlint:unchecked \
-          -cp ../../lib/jdr.jar:../../lib/javahelp2.jar \
+          -cp ../../lib/jdr.jar:../../lib/texjavahelplib.jar \
           *.java */*.java
 
 classes	:
@@ -96,7 +96,7 @@ classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class : \
 	cd java/flowframtk ; \
 	javac $(target_version) \
 	  -d ../../classes -Xlint:unchecked -Xlint:deprecation \
-          -cp ../../lib/javahelp2.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
+          -cp ../../lib/texjavahelplib.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
           *.java */*.java
 
 classes/splashimage.png	: classes images/splashimage.png
@@ -128,7 +128,7 @@ classes/com/dickimawbooks/jdrview/JDRView.class : classes \
 	cd java/jdrview ; \
 	javac $(target_version) \
 	  -d ../../classes -Xlint:unchecked  -Xlint:deprecation \
-	  -cp ../../lib/javahelp2.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
+	  -cp ../../lib/texjavahelplib.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
 	  *.java
 
 lib/jdrinfo.jar   : classes/com/dickimawbooks/jdrinfo/JdrInfo.class \

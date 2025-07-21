@@ -66,7 +66,7 @@ public class FlowframTkInvoker
    {
       System.out.println(
          resources.getMessageWithAlt("{0} version {1}", "about.version",
-         APP_NAME, APP_VERSION));
+         APP_NAME, JDRResources.APP_VERSION));
       System.exit(0);
    }
 
@@ -74,7 +74,7 @@ public class FlowframTkInvoker
    {
       System.out.println(
          resources.getMessageWithAlt("{0} version {1}", "about.version",
-         APP_NAME, APP_VERSION));
+         APP_NAME, JDRResources.APP_VERSION));
 
       System.out.println();
       System.out.println("Syntax: flowframtk [options] [filename] ... [filename]");
@@ -669,7 +669,7 @@ public class FlowframTkInvoker
                }
                else if (key.equals("version"))
                {
-                  diffVersion = !value.equals(APP_VERSION);
+                  diffVersion = !value.equals(JDRResources.APP_VERSION);
       
                   if (value.compareTo("0.5.6b") < 0)
                   {
@@ -687,22 +687,14 @@ public class FlowframTkInvoker
                else if (key.equals("dict_lang"))
                {
                   // dict_lang and help_lang now in languages.conf
-                  // but just in case the user has just upgraded
+                  // Too late to do anything about it now but save
+                  // for restart
    
-                  settings.setDictId(value);
-      
-                  try
-                  {
-                     resources.initialiseDictionary();
-                  }
-                  catch (IOException ioe)
-                  {
-                     resources.internalError(null, ioe);
-                  }
+                  resources.setDictionary(value);
                }
                else if (key.equals("help_lang"))
                {
-                  settings.setHelpId(value);
+                  settings.setHelpSet(value);
                }
                else if (key.equals("preview_bitmaps"))
                {
@@ -1797,7 +1789,7 @@ public class FlowframTkInvoker
    private void writeRememberedSettings(PrintWriter out)
       throws IOException
    {
-      out.println("version="+APP_VERSION);
+      out.println("version="+JDRResources.APP_VERSION);
       out.println("robot="+(settings.robot==null?0:1));
 
       saveIfNotNullOrEmpty(out, "latex_app", settings.getLaTeXApp());
@@ -1916,36 +1908,7 @@ public class FlowframTkInvoker
    public void saveDictionaryConfig()
       throws IOException
    {
-      File file = new File(resources.getUserConfigDirName(), "languages.conf");
-
-      PrintWriter out = null;
-
-      try
-      {
-          out = new PrintWriter(new FileWriter(file));
-          debugMessage("writing: "+file);
-
-          String dictID = resources.getDictLocaleId();
-
-          if (dictID != null)
-          {
-             out.println("dict_lang="+dictID);
-          }
-
-          String helpID = resources.getHelpLocaleId();
-
-          if (helpID != null)
-          {
-             out.println("help_lang="+helpID);
-          }
-      }
-      finally
-      {
-         if (out != null)
-         {
-            out.close();
-         }
-      }
+      resources.saveLanguageSettings();
    }
 
    public void saveConfig(File file)
@@ -2603,87 +2566,6 @@ public class FlowframTkInvoker
       return new File(getConfigDirName(), "recentfiles");
    }
 
-   private void loadDictionaries()
-      throws IOException,URISyntaxException,InvalidFormatException
-   {
-      if (resources.isDictInitialised())
-      {
-         return;
-      }
-
-      String usersettings = getConfigDirName();
-
-      if (usersettings == null)
-      {
-         resources.initialiseDictionary();
-         return;
-      }
-
-      File file = new File(usersettings, "languages.conf");
-
-      if (!file.exists())
-      {
-         // Maybe old version with locale settings in flowfram.conf
-         // so defer loading.
-
-         return;
-      }
-
-      setStartupInfo(file.toString());
-
-      BufferedReader in = null;
-      int lineNum = 0;
-         
-      try
-      {
-          in = new BufferedReader(new FileReader(file));
-
-          String line;
-
-          while ((line = in.readLine()) != null)
-          {
-             lineNum++;
-
-             line = line.trim();
-
-             if (line.isEmpty() || line.startsWith("#"))
-             {
-                continue;
-             }
-
-             String[] split = line.split(" *= *", 2);
-
-             if (split == null || split.length < 2)
-             {
-                 throw new InvalidFormatException(
-                   String.format("%s:%d: key=value pair expected, '%s' found ",
-                     file.toString(), lineNum, line));
-             }
-
-             String key = split[0];
-             String value = split[1];
-
-             if (key.equals("dict_lang"))
-             {
-                resources.setDictLocaleId(value);
-             }
-             else if (key.equals("help_lang"))
-             {
-                resources.setHelpLocaleId(value);
-             }
-          }
-      }
-      finally
-      {
-         if (in != null)
-         {
-            in.close();
-         }
-
-         resources.initialiseDictionary();
-      }
-   }
-
    private boolean loadResources()
       throws IOException,URISyntaxException
    {
@@ -2778,8 +2660,8 @@ public class FlowframTkInvoker
          startup.setVersion(resources.getMessage(
            "about.version", getName(), getVersion()),
            resources.getString("about.copyright")
-              +String.format(" 2006-%s Nicola L.C. Talbot",
-               APP_DATE.substring(0, 4)),
+              +String.format(" %s-%s Nicola L.C. Talbot",
+               JDRResources.START_COPYRIGHT_YEAR, JDRResources.COPYRIGHT_YEAR),
            resources.getMessage("about.disclaimer", getName())
          );
       }
@@ -3335,7 +3217,7 @@ public class FlowframTkInvoker
 
    public String getVersion()
    {
-      return APP_VERSION;
+      return JDRResources.APP_VERSION;
    }
 
    public Vector<String> getFilenames()
@@ -3392,9 +3274,7 @@ public class FlowframTkInvoker
       });
    }
 
-   public static final String APP_VERSION = "0.8.6.20200908";
    public static final String APP_NAME = "FlowframTk";
-   public static final String APP_DATE = "2020-09-08";
 
    private FlowframTkSettings settings;
 

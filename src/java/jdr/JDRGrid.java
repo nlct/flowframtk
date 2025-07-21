@@ -347,7 +347,7 @@ public abstract class JDRGrid implements Cloneable
          return name;
       }
 
-      return canvasGraphics.getString("class."+name, name);
+      return canvasGraphics.getMessageWithFallback("class."+name, name);
    }
 
    public abstract JDRRectangularGrid getRectangularGrid();

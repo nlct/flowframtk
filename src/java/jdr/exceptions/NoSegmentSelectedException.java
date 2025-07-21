@@ -34,7 +34,7 @@ public class NoSegmentSelectedException extends InvalidPathException
 {
    public NoSegmentSelectedException(CanvasGraphics cg)
    {
-      super(cg.getString("internal_error.no_segment_selected",
+      super(cg.getMessageWithFallback("internal_error.no_segment_selected",
             "No segment selected"));
    }
 }

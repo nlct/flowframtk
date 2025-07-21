@@ -211,7 +211,7 @@ public class JDRButtonStyle
    public JDRButton createButton(JDRResources resources, String base,
       ActionListener listener, String tooltipText)
    {
-      return createButton(resources, resources.getString("label."+base), base,
+      return createButton(resources, resources.getMessage("label."+base), base,
          listener, tooltipText);
    }
 

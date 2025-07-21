@@ -62,7 +62,7 @@ public class AboutDialog extends JDialog implements ActionListener
             doc.getStyle("bold"));
 
          addInfo(String.format("%n%s %s", 
-                   resources.getString("about.copyright"),
+                   resources.getMessage("about.copyright"),
                    "2006 Nicola L.C. Talbot"));
 
          addInfo(String.format("%n%s", 
@@ -70,9 +70,9 @@ public class AboutDialog extends JDialog implements ActionListener
 
          addInfo("\nhttps://www.dickimaw-books.com/\n");
 
-         addInfo(resources.getString("about.see_licence"));
+         addInfo(resources.getMessage("about.see_licence"));
 
-         String translator=resources.getString("about.translator");
+         String translator=resources.getMessage("about.translator");
 
          if (translator.length() > 0 && !translator.equals("?unknown?"))
          {
@@ -80,7 +80,7 @@ public class AboutDialog extends JDialog implements ActionListener
                resources.getMessage("about.translated_by", translator)));
             addInfo(translator);
 
-            String url = resources.getString("about.translator_url");
+            String url = resources.getMessage("about.translator_url");
 
             if (url.length() > 0 && !url.equals("?unknown?"))
             {
@@ -88,7 +88,7 @@ public class AboutDialog extends JDialog implements ActionListener
             }
 
             String transInfo
-               = resources.getString("about.translator_info");
+               = resources.getMessage("about.translator_info");
 
             if (transInfo.length() > 0 && !transInfo.equals("?unknown?"))
             {

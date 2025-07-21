@@ -140,7 +140,7 @@ public class JdrIllegalArgumentException extends IllegalArgumentException
       int line, int columnIdx, JDRMessageDictionary msgSys)
    {
       super(msgSys == null ? String.format("Invalid %s", type) :
-            msgSys.getString("error.invalid_"+type, 
+            msgSys.getMessageWithFallback("error.invalid_"+type, 
             String.format("Invalid %s", type)));
 
       lineNum = line;
@@ -153,7 +153,7 @@ public class JdrIllegalArgumentException extends IllegalArgumentException
       int line, int columnIdx, JDRMessageDictionary msgSys, Throwable cause)
    {
       super(msgSys == null ? String.format("Invalid %s", type) :
-            msgSys.getString("error.invalid_"+type, 
+            msgSys.getMessageWithFallback("error.invalid_"+type, 
             String.format("Invalid %s", type)), cause);
 
       lineNum = line;
@@ -220,23 +220,27 @@ public class JdrIllegalArgumentException extends IllegalArgumentException
 
       if (found != null)
       {
-         msg = msgSys.getMessageWithAlt("{0} (found ''{1}'')",
-          "error.with_found", msg, found);
+         msg = msgSys.getMessageWithFallback(
+          "error.with_found",
+          "{0} (found ''{1}'')",
+           msg, found);
       }
 
       if (lineNum > -1)
       {
          if (colIdx > -1)
          {
-            msg = msgSys.getMessageWithAlt(
-                  "Line {0}, Column {1}: {2}",
+            msg = msgSys.getMessageWithFallback(
                   "error.with_line_and_col",
+                  "Line {0}, Column {1}: {2}",
                   lineNum, colIdx, msg);
          }
          else
          {
-            msg = msgSys.getMessageWithAlt("Line {0}: {1}",
-                  "error.with_line", lineNum, msg);
+            msg = msgSys.getMessageWithFallback(
+                  "error.with_line",
+                  "Line {0}: {1}",
+                  lineNum, msg);
          }
       }
 

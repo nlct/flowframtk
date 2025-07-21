@@ -6,7 +6,7 @@ public class UserCancelledException extends InterruptedException
 {
    public UserCancelledException(JDRMessageDictionary msgSys)
    {
-      super(msgSys.getString("process.aborted", "Process Aborted"));
+      super(msgSys.getMessageWithFallback("process.aborted", "Process Aborted"));
    }
 
    public UserCancelledException(String msg)

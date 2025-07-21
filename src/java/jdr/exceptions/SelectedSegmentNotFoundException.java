@@ -34,7 +34,7 @@ public class SelectedSegmentNotFoundException extends InvalidPathException
 {
    public SelectedSegmentNotFoundException(CanvasGraphics cg)
    {
-      super(cg.getString("internal_error.cant_find_selected_segment",
+      super(cg.getMessageWithFallback("internal_error.cant_find_selected_segment",
          "Can't find selected segment"));
    }
 }

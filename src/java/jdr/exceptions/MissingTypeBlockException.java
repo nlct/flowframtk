@@ -38,6 +38,6 @@ public class MissingTypeBlockException extends InvalidFormatException
     */
    public MissingTypeBlockException(CanvasGraphics cg)
    {
-      super(cg.getString("error.no_typeblock", "Typeblock not set"));
+      super(cg.getMessageWithFallback("error.no_typeblock", "Typeblock not set"));
    }
 }

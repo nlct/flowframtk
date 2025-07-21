@@ -33,6 +33,6 @@ public class ShapeHasNoHeightException extends InvalidShapeException
 {
    public ShapeHasNoHeightException(CanvasGraphics cg)
    {
-      super(cg.getString("error.shape.noheight", "Shape has no height"));
+      super(cg.getMessageWithFallback("error.shape.noheight", "Shape has no height"));
    }
 }

@@ -303,7 +303,7 @@ public abstract class JDRPaint implements Serializable
          return name;
       }
 
-      return canvasGraphics.getString("class."+name, name);
+      return canvasGraphics.getMessageWithFallback("class."+name, name);
    }
 
    public abstract String getPdfStrokeSpecs();

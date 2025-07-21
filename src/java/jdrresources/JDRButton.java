@@ -188,4 +188,8 @@ public class JDRButton extends JButton
       }
    }
 
+   public JDRButton(Action action)
+   {
+      super(action);
+   }
 }

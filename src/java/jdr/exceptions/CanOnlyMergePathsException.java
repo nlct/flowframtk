@@ -35,7 +35,7 @@ public class CanOnlyMergePathsException extends InvalidPathException
 {
    public CanOnlyMergePathsException(CanvasGraphics cg)
    {
-      super(cg.getString("internal_error.can_only_merge_paths",
+      super(cg.getMessageWithFallback("internal_error.can_only_merge_paths",
           "can only merge paths"));
    }
 }

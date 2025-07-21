@@ -48,6 +48,22 @@ Nicola Talbot
 <entry key="action.copy.keystroke">control C</entry>
 <entry key="action.copy.defaultkeys">format=glsignore</entry>
 
+<!-- TeXJavaHelpLibAppAdapter error reporting -->
+
+<entry key="action.quit_without_saving">Quit Without Saving</entry>
+<entry key="action.quit_without_saving.mnemonic">Q</entry>
+
+<entry key="stacktrace.message">Error Message</entry>
+<entry key="stacktrace.message.mnemonic">E</entry>
+
+<entry key="stacktrace.details">Details</entry>
+<entry key="stacktrace.details.mnemonic">D</entry>
+
+<entry key="stacktrace.copy">Copy</entry>
+<entry key="stacktrace.copy.mnemonic">C</entry>
+<entry key="stacktrace.copy.keystroke">control C</entry>
+
+
 <!-- Menus and Buttons for the Help System -->
 
 <!-- Main Help Frame -->

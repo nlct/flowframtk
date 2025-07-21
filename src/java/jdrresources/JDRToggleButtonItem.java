@@ -41,7 +41,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
       ActionListener listener, boolean selected,
       JComponent buttonParent, JMenu menu)
    {
-      super(resources.getString(
+      super(resources.getMessage(
              parentID == null ? action : parentID+"."+action),
             selected);
 
@@ -49,7 +49,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
 
       KeyStroke keyStroke = resources.getAccelerator(menuID);
 
-      String tooltipText = resources.getString("tooltip."+action, null);
+      String tooltipText = resources.getMessageIfExists("tooltip."+action);
 
       setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setToolTipText(tooltipText);
@@ -58,7 +58,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
       setActionCommand(action);
 
       button = resources.createToggleButton(
-         resources.getString("label."+action, getText()),
+         resources.getMessage("label."+action, getText()),
          action, this, keyStroke, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -79,7 +79,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
       String tooltipText, boolean selected,
       JComponent buttonParent, JMenu menu)
    {
-      super(resources.getString(menuID), selected);
+      super(resources.getMessage(menuID), selected);
 
       setMnemonic(resources.getCodePoint(menuID+".mnemonic"));
       setToolTipText(tooltipText);
@@ -88,7 +88,7 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
       setActionCommand(name);
 
       button = resources.createToggleButton(
-         resources.getString("label."+name, getText()),
+         resources.getMessage("label."+name, getText()),
          name, this, keyStroke, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);

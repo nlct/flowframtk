@@ -484,18 +484,18 @@ class SlidingToolControlButton extends JButton
       hScrollUnitRightPressed = resources.appIcon(
         "hScrollUnitRightPressed.png");
 
-      vScrollBlockDownTT = resources.getString("tooltip.vScrollBlockDown");
-      vScrollBlockUpTT = resources.getString("tooltip.vScrollBlockUp");
-      vScrollEndDownTT = resources.getString("tooltip.vScrollEndDown");
-      vScrollEndUpTT = resources.getString("tooltip.vScrollEndUp");
-      vScrollUnitDownTT = resources.getString("tooltip.vScrollUnitDown");
-      vScrollUnitUpTT = resources.getString("tooltip.vScrollUnitUp");
-      hScrollBlockLeftTT = resources.getString("tooltip.hScrollBlockLeft");
-      hScrollBlockRightTT = resources.getString("tooltip.hScrollBlockRight");
-      hScrollEndLeftTT = resources.getString("tooltip.hScrollEndLeft");
-      hScrollEndRightTT = resources.getString("tooltip.hScrollEndRight");
-      hScrollUnitLeftTT = resources.getString("tooltip.hScrollUnitLeft");
-      hScrollUnitRightTT = resources.getString("tooltip.hScrollUnitRight");
+      vScrollBlockDownTT = resources.getMessage("tooltip.vScrollBlockDown");
+      vScrollBlockUpTT = resources.getMessage("tooltip.vScrollBlockUp");
+      vScrollEndDownTT = resources.getMessage("tooltip.vScrollEndDown");
+      vScrollEndUpTT = resources.getMessage("tooltip.vScrollEndUp");
+      vScrollUnitDownTT = resources.getMessage("tooltip.vScrollUnitDown");
+      vScrollUnitUpTT = resources.getMessage("tooltip.vScrollUnitUp");
+      hScrollBlockLeftTT = resources.getMessage("tooltip.hScrollBlockLeft");
+      hScrollBlockRightTT = resources.getMessage("tooltip.hScrollBlockRight");
+      hScrollEndLeftTT = resources.getMessage("tooltip.hScrollEndLeft");
+      hScrollEndRightTT = resources.getMessage("tooltip.hScrollEndRight");
+      hScrollUnitLeftTT = resources.getMessage("tooltip.hScrollUnitLeft");
+      hScrollUnitRightTT = resources.getMessage("tooltip.hScrollUnitRight");
 
       imagesLoaded = true;
    }

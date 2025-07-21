@@ -46,12 +46,12 @@ public class LicenceDialog extends JDialog implements ActionListener
     */
    public LicenceDialog(JDRResources resources, JFrame parent)
    {
-      super(parent, resources.getString("licence.title"));
+      super(parent, resources.getMessage("licence.title"));
 
       JTextArea textarea = new JTextArea(10, 40);
       JScrollPane scrollPane = new JScrollPane(textarea);
 
-      textarea.setText(resources.getString("licence"));
+      textarea.setText(resources.getMessage("licence"));
       textarea.setEditable(false);
 
       getContentPane().add(scrollPane, "Center");

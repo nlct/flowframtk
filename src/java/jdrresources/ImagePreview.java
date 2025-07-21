@@ -87,7 +87,7 @@ public class ImagePreview extends JComponent
       add(imagePanel, "Center");
 
       previewBox = new JCheckBox(
-         resources.getString("image.preview"));
+         resources.getMessage("image.preview"));
       previewBox.setMnemonic(
          resources.getCodePoint("image.preview.mnemonic"));
       previewBox.addActionListener(this);

@@ -164,7 +164,7 @@ public class FlowframTk extends JFrame
       try
       {
          JDRCompleteObject.annoteFont = new Font(
-            resources.getString("font.annote.name"), 0,
+            resources.getString("font.annote.family"), 0,
             resources.getInt("font.annote.size"));
       }
       catch (NumberFormatException e)
@@ -3322,44 +3322,15 @@ public class FlowframTk extends JFrame
 
       // manual
 
-      JMenuItem item = addHelpItem(helpM);
-
-      toolBar.add(resources.createMainHelpButton());
-
-      incStartupProgress(helpM, item);
+      incStartupProgress(helpM, resources.createHelpAction(helpM, toolBar));
 
       // Licence dialog
 
-      licenceDialog = new LicenceDialog(resources, this);
-
-      licenceItem = FlowframTkAction.createMenuItem(this,
-        "help", "licence", helpM,
-         new FlowframTkActionListener()
-         {
-            public void doAction(FlowframTkAction action, ActionEvent evt)
-            {
-               licenceDialog.setVisible(true);
-            }
-         });
-
-      incStartupProgress(helpM, licenceItem);
+      incStartupProgress(helpM, resources.createLicenceItem(helpM));
 
       // About dialog
 
-      aboutDialog = new AboutDialog(resources, this, invoker.getName(),
-         invoker.getVersion());
-
-      aboutItem = FlowframTkAction.createMenuItem(this,
-         "help", "about", helpM,
-         new FlowframTkActionListener()
-         {
-            public void doAction(FlowframTkAction action, ActionEvent evt)
-            {
-               aboutDialog.setVisible(true);
-            }
-         });
-
-      incStartupProgress(helpM, aboutItem);
+      incStartupProgress(helpM, resources.createAboutItem(helpM));
 
       FlowframTkAction objectInfo = new FlowframTkAction(this,
         "objectinfo", 
@@ -3534,6 +3505,11 @@ public class FlowframTk extends JFrame
    private void incStartupProgress(AbstractButton item1, AbstractButton item2)
    {
       invoker.incStartupProgress(item1.getText()+"->"+item2.getText());
+   }
+
+   private void incStartupProgress(AbstractButton item1, TJHAbstractAction item2)
+   {
+      invoker.incStartupProgress(item1.getText()+"->"+item2.getDisplayName());
    }
 
    private void incStartupProgress(AbstractButton item1,
@@ -7163,8 +7139,6 @@ public class FlowframTk extends JFrame
 
    // dialog boxes
 
-   private AboutDialog aboutDialog;
-   private LicenceDialog licenceDialog;
    private LinePaintSelector linePaintChooserBox;
    private FillPaintSelector fillPaintChooserBox;
    private LineStyleSelector lineStyleChooserBox;

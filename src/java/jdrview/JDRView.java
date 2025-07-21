@@ -34,10 +34,13 @@ import java.net.*;
 import java.awt.print.*;
 
 import javax.swing.*;
-import javax.help.*;  
 import javax.print.*;
 import javax.print.attribute.*;
 import javax.print.attribute.standard.*;
+
+import org.xml.sax.SAXException;
+
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
@@ -108,12 +111,29 @@ public class JDRView extends JFrame
 
       setIconImage(getResources().getSmallAppIcon().getImage());
 
+      JDRResources resources = getResources();
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
+
+      // helpset needs to be initialised before any help buttons are
+      // created.
+
+      try
+      {
+         initializeHelp(this);
+
+      }
+      catch (Exception e)
+      {
+         getResources().error(this,
+          resources.getMessage("error.no_helpset"), e);
+      }
+
       // set up annotation font
 
       try
       {
          JDRCompleteObject.annoteFont = new Font(
-            getResources().getString("font.annote.name"), 0,
+            getResources().getMessage("font.annote.family"), 0,
             getResources().getInt("font.annote.size"));
       }
       catch (NumberFormatException e)
@@ -124,33 +144,26 @@ public class JDRView extends JFrame
                "font.annote.size"));
       }
 
-      initializeHelp(this);
-
       // create menu bar, menu and menu item
       JMenuBar mbar = new JMenuBar();
       setJMenuBar(mbar);
 
       // File Menu
 
-      fileM = new JMenu(getResources().getString("file.label"));
-      fileM.setMnemonic(getResources().getCodePoint("file.mnemonic"));
+      fileM = helpLib.createJMenu("menu.file");
       mbar.add(fileM);
 
       // Open
 
-      openItem =
-         new JMenuItem(getResources().getString("file.open"),
-                       getResources().getCodePoint("file.open.mnemonic"));
-      openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-         InputEvent.CTRL_MASK));
-      openItem.addActionListener(this);
+      openItem = helpLib.createJMenuItem("menu.file", "open", this);
+
       fileM.add(openItem);
 
       // open dialog box
       openjdrFC = new JDRFileChooser(getResources());
 
       fileFilter = new JdrAjrFileFilter(
-         getResources().getString("filter.jdrajr"));
+         getResources().getMessage("filter.jdrajr"));
 
       openjdrFC.addChoosableFileFilter(fileFilter);
 
@@ -163,199 +176,133 @@ public class JDRView extends JFrame
 
       // reload item
 
-      reloadItem =
-         new JMenuItem(getResources().getString("file.reload"),
-                       getResources().getCodePoint("file.reload.mnemonic"));
-      reloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
-         InputEvent.CTRL_MASK));
-      reloadItem.addActionListener(this);
+      reloadItem = helpLib.createJMenuItem("menu.file", "reload", this);
       fileM.add(reloadItem);
 
       // properties item
 
-      propertiesItem =
-         new JMenuItem(getResources().getString("file.properties"),
-                       getResources().getCodePoint("file.properties.mnemonic"));
-      propertiesItem.addActionListener(this);
+      propertiesItem = helpLib.createJMenuItem("menu.file", "properties", this);
       fileM.add(propertiesItem);
 
       propertiesDialog = new JDRPropertiesDialog(this);
 
       // print item
 
-      printItem =
-         new JMenuItem(getResources().getString("file.print"),
-            getResources().getCodePoint("file.print.mnemonic"));
-      printItem.addActionListener(this);
+      printItem = helpLib.createJMenuItem("menu.file", "print", this);
       fileM.add(printItem);
 
       // quit item
 
-      quitItem =
-         new JMenuItem(getResources().getString("file.quit"),
-                       getResources().getCodePoint("file.quit.mnemonic"));
-      quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-         InputEvent.CTRL_MASK));
-      quitItem.addActionListener(this);
+      quitItem = helpLib.createJMenuItem("menu.file", "quit", this);
       fileM.add(quitItem);
 
       // settings menu
 
-      settingsM = new JMenu(getResources().getString("settings.label"));
-      settingsM.setMnemonic(getResources().getCodePoint("settings.mnemonic"));
+      settingsM = helpLib.createJMenu("menu.settings");
       mbar.add(settingsM);
 
       // anti-aliasing
 
-      antiAliasItem = new JCheckBoxMenuItem(
-         getResources().getString("settings.antialias"), antiAlias);
-      antiAliasItem.setMnemonic(
-         getResources().getCodePoint("settings.antialias.mnemonic"));
-      antiAliasItem.addActionListener(this);
+      antiAliasItem = helpLib.createJCheckBoxMenuItem("menu.settings", "antialias",
+       antiAlias, this);
       settingsM.add(antiAliasItem);
 
       setAntiAlias(antiAlias);
 
       // Zoom sub menu
 
-      zoomM = new JMenu(getResources().getString("settings.zoom"));
-      zoomM.setMnemonic(getResources().getCodePoint("settings.zoom.mnemonic"));
+      zoomM = helpLib.createJMenu("menu.settings.zoom");
       settingsM.add(zoomM);
 
       ButtonGroup zoomGroup = new ButtonGroup();
       
       // Fit Width
 
-      zoomWidthItem = new JMenuItem(
-         getResources().getString("settings.zoom.width"),
-         getResources().getCodePoint("settings.zoom.width.mnemonic"));
-      zoomWidthItem.addActionListener(this);
+      zoomWidthItem = helpLib.createJRadioButtonMenuItem(
+       "menu.settings.zoom", "width", this, zoomGroup);
       zoomM.add(zoomWidthItem);
 
       // Fit Height
 
-      zoomHeightItem = new JMenuItem(
-         getResources().getString("settings.zoom.height"),
-         getResources().getCodePoint("settings.zoom.height.mnemonic"));
-      zoomHeightItem.addActionListener(this);
+      zoomHeightItem = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "height", this, zoomGroup);
       zoomM.add(zoomHeightItem);
 
       // Fit Page
 
-      zoomPageItem = new JMenuItem(
-         getResources().getString("settings.zoom.page"),
-         getResources().getCodePoint("settings.zoom.page.mnemonic"));
-      zoomPageItem.addActionListener(this);
+      zoomPageItem = helpLib.createJRadioButtonMenuItem(
+       "menu.settings.zoom", "page", this, zoomGroup);
       zoomM.add(zoomPageItem);
 
       zoomM.addSeparator();
 
       // User defined zoom
 
-      zoomSettingsItem = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.user"), false);
-      zoomSettingsItem.setMnemonic(
-         getResources().getCodePoint("settings.zoom.user.mnemonic"));
+      zoomSettingsItem = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "user", this, zoomGroup);
 
       zoomSettingsChooserBox = new ZoomSettings(this, this);
-      zoomSettingsItem.addActionListener(this);
       zoomM.add(zoomSettingsItem);
-      zoomGroup.add(zoomSettingsItem);
 
 
       // 25% Magnification
 
-      zoom25Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.25"), false);
-      zoom25Item.setMnemonic(getResources().getCodePoint("settings.zoom.25.mnemonic"));
-      zoom25Item.addActionListener(this);
+      zoom25Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "25", this, zoomGroup);
       zoomM.add(zoom25Item);
-      zoomGroup.add(zoom25Item);
 
       // 50% Magnification
 
-      zoom50Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.50"), false);
-      zoom50Item.setMnemonic(getResources().getCodePoint("settings.zoom.50.mnemonic"));
-      zoom50Item.addActionListener(this);
+      zoom50Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "50", this, zoomGroup);
       zoomM.add(zoom50Item);
-      zoomGroup.add(zoom50Item);
 
       // 75% Magnification
 
-      zoom75Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.75"), false);
-      zoom75Item.setMnemonic(getResources().getCodePoint("settings.zoom.75.mnemonic"));
-      zoom75Item.addActionListener(this);
+      zoom75Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "75", this, zoomGroup);
       zoomM.add(zoom75Item);
-      zoomGroup.add(zoom75Item);
 
       // 100% Magnification
 
-      zoom100Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.100"), true);
-      zoom100Item.setMnemonic(getResources().getCodePoint("settings.zoom.100.mnemonic"));
-      zoom100Item.addActionListener(this);
+      zoom100Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "100", true, this, zoomGroup);
       zoomM.add(zoom100Item);
-      zoomGroup.add(zoom100Item);
 
       // 200% Magnification
 
-      zoom200Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.200"), false);
-      zoom200Item.setMnemonic(getResources().getCodePoint("settings.zoom.200.mnemonic"));
-      zoom200Item.addActionListener(this);
+      zoom200Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "200", this, zoomGroup);
       zoomM.add(zoom200Item);
-      zoomGroup.add(zoom200Item);
 
       // 400% Magnification
 
-      zoom400Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.400"), false);
-      zoom400Item.setMnemonic(getResources().getCodePoint("settings.zoom.400.mnemonic"));
-      zoom400Item.addActionListener(this);
+      zoom400Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "400", this, zoomGroup);
       zoomM.add(zoom400Item);
-      zoomGroup.add(zoom400Item);
 
       // 800% Magnification
 
-      zoom800Item = new JRadioButtonMenuItem(
-         getResources().getString("settings.zoom.800"), false);
-      zoom800Item.setMnemonic(getResources().getCodePoint("settings.zoom.800.mnemonic"));
-      zoom800Item.addActionListener(this);
+      zoom800Item = helpLib.createJRadioButtonMenuItem(
+        "menu.settings.zoom", "800", this, zoomGroup);
       zoomM.add(zoom800Item);
-      zoomGroup.add(zoom800Item);
-
 
       // help menu
 
-      JMenu helpM = new JMenu(getResources().getString("help.label"));
-      helpM.setMnemonic(getResources().getCodePoint("help.mnemonic"));
+      JMenu helpM = helpLib.createJMenu("menu.help");
       mbar.add(helpM);
 
       // manual
-
       addHelpItem(helpM);
 
       // Licence dialog
 
-      licenceDialog = new LicenceDialog(getResources(), this);
-      licenceItem = new JMenuItem(
-         getResources().getString("help.licence"),
-         getResources().getCodePoint("help.licence.mnemonic"));
-      licenceItem.addActionListener(this);
-      helpM.add(licenceItem);
+      getResources().createLicenceItem(this, helpM);
 
 
       // About dialog
 
-      aboutDialog = new AboutDialog(getResources(), this, invoker.getName(),
-         invoker.getVersion());
-      aboutItem = new JMenuItem(
-         getResources().getString("help.about"),
-         getResources().getCodePoint("help.about.mnemonic"));
-      aboutItem.addActionListener(this);
-      helpM.add(aboutItem);
+      getResources().createAboutItem(this, helpM);
 
       // set up print request attribute set
       printRequestAttributeSet = new HashPrintRequestAttributeSet();
@@ -404,13 +351,14 @@ public class JDRView extends JFrame
       // set the browse utility for bitmaps
 
       canvasGraphics.setBrowseUtil(
-         new BrowseUtil(getResources().getString("browse.label"),
-                        getResources().getString("browse.not_found"),
-                        getResources().getString("browse.invalid_format"),
-                        getResources().getString("browse.cant_refresh"),
-                        getResources().getString("browse.title"),
-                        getResources().getString("browse.invalid_title"),
-                        getResources().getString("browse.discard")));
+         new BrowseUtil(getResources().getMessage("browsebitmap.browse"),
+                        getResources().getMessage("browsebitmap.not_found"),
+                        getResources().getMessage("browsebitmap.invalid_format"),
+                        getResources().getMessage("browsebitmap.cant_refresh"),
+                        getResources().getMessage("browsebitmap.title"),
+                        getResources().getMessage("browsebitmap.invalid_title"),
+                        getResources().getMessage("browsebitmap.discard")));
+
       if (filename != null)
       {
          loadImage(new File(filename));
@@ -640,14 +588,6 @@ public class JDRView extends JFrame
       {
          setCurrentMagnification(8);
       }
-      else if (source == licenceItem)
-      {
-         licenceDialog.setVisible(true);
-      }
-      else if (source == aboutItem)
-      {
-         aboutDialog.setVisible(true);
-      }
    }
 
    public PrintService getPrintService()
@@ -707,7 +647,7 @@ public class JDRView extends JFrame
          catch (PrinterException pe)
          {
             getResources().error(this, new String[]
-               {getResources().getString("error.printing"),
+               {getResources().getMessage("error.printing"),
                pe.getMessage()});
          }
          catch (Exception e)
@@ -718,7 +658,7 @@ public class JDRView extends JFrame
       else
       {
          getResources().error(this,
-            getResources().getString("error.printing.no_service"));
+            getResources().getMessage("error.printing.no_service"));
       }
    }
 
@@ -1068,15 +1008,16 @@ public class JDRView extends JFrame
     */
    public JMenuItem addHelpItem(JMenu helpM)
    {
-      return getResources().addHelpItem(helpM, invoker.getName());
+      return getResources().addHelpItem(helpM);
    }
 
    /**
     * Initializes the helpset.
     */
    public void initializeHelp(JFrame parent)
+    throws IOException, SAXException
    {
-      getResources().initialiseHelp(parent, invoker.getName().toLowerCase());
+      getResources().initialiseHelp(parent);
    }
 
    /**
@@ -1230,6 +1171,7 @@ public class JDRView extends JFrame
       setCurrentMagnification(magnification);
    }
 
+   @Deprecated
    public void enableHelpOnButton(AbstractButton comp, String id)
    {
       getResources().enableHelpOnButton(comp, id);
@@ -1262,7 +1204,7 @@ public class JDRView extends JFrame
 
    private JMenuItem openItem, reloadItem, quitItem, 
       zoomWidthItem, zoomHeightItem, zoomPageItem,
-      aboutItem, licenceItem, propertiesItem, printItem;
+      propertiesItem, printItem;
 
    private JCheckBoxMenuItem antiAliasItem;
 
@@ -1274,9 +1216,6 @@ public class JDRView extends JFrame
 
    private ZoomSettings zoomSettingsChooserBox;
 
-   private AboutDialog aboutDialog;
-
-   private LicenceDialog licenceDialog;
 
    private RenderingHints renderHints=null;
 

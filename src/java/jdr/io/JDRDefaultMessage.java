@@ -336,12 +336,8 @@ public class JDRDefaultMessage
       }
    }
 
-   public String getString(String tag, String alt)
-   {
-      return alt;
-   }
-
-   public String getMessageWithAlt(String altFormat, String tag,
+   @Override
+   public String getMessageWithFallback(String tag, String altFormat, 
      Object... values)
    {
       return MessageFormat.format(altFormat, values);

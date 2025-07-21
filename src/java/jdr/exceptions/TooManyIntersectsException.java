@@ -41,8 +41,10 @@ public class TooManyIntersectsException extends InvalidShapeException
     */
    public TooManyIntersectsException(CanvasGraphics cg, double x, double y)
    {
-      super(cg.getMessageWithAlt("Shape has too many intersects: x={0} y={1}",
-            "error.shape.too_many_intersects", x, y));
+      super(cg.getMessageWithFallback(
+            "error.shape.too_many_intersects",
+            "Shape has too many intersects: x={0} y={1}",
+            x, y));
 
       x_ = x;
       y_ = y;

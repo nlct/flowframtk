@@ -330,7 +330,7 @@ public class FlowFrame implements Cloneable,Serializable
       throws IOException,InvalidShapeException
    {
       tex(pgf, object, typeblock, 
-           getCanvasGraphics().getString
+           getCanvasGraphics().getMessageWithFallback
             ("tex.comment.border_command", "Border command for frame"),
           baselineskip, useHPaddingShapepar);
    }
@@ -632,9 +632,10 @@ public class FlowFrame implements Cloneable,Serializable
 
       if (omitted)
       {
-         jdr.warningMessage(
+         jdr.warningWithFallback(
+           "warning.save_unsupported_flow_frame",
            "Flow frame data not supported by JDR/AJR version {0} has been omitted",
-           "warning.save_unsupported_flow_frame", version);
+            version);
       }
    }
 

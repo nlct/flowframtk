@@ -75,8 +75,9 @@ public class JDRSegmentLoader
       {
          String name = theSegment.getName();
 
-         jdr.warningMessage("Segment type ''{0}'' not supported in version {1}",
+         jdr.warningWithFallback(
             "warning.save_unsupported_segment",
+            "Segment type ''{0}'' not supported in version {1}",
              name, version);
 
          save(jdr, segment);

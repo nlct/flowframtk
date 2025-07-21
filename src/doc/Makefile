@@ -1,77 +1,121 @@
-all	: flowframtk-en-GB.pdf flowframtk-en-US.pdf
+targetdir=../lib/resources/helpsets
+dictdir=../lib/resources/dictionaries
+baseclass=../java/jdrresources/JDRResources.java
+arara=arara --verbose
+#texjavahelpmk=texjavahelpmk --debug-mode all --log texjavahelpmk.log
+texjavahelpmk=texjavahelpmk
+xml2bib=xml2bib --copy-overwrite-xml
 
-../lib/resources/helpsets	:
-				 mkdir -p ../lib/resources/helpsets
+all	: en-GB en flowframtk.1
 
-../lib/resources/helpsets/sharedimages	: ../lib/resources/helpsets
-				 cp -r sharedimages ../lib/resources/helpsets
+flowframtk.1	: flowframtk.pod
+		pod2man -c flowframtk flowframtk.pod flowframtk.1
 
-../lib/resources/helpsets/flowframtk/en-GB	:
-				 mkdir -p ../lib/resources/helpsets/flowframtk/en-GB
+flowframtk-props-en.bib	: $(dictdir)/flowframtk-en.xml \
+			$(dictdir)/jdrcommon-en.xml \
+			$(dictdir)/texjavahelplib-en.xml
+	$(xml2bib)  $(dictdir)/texjavahelplib-en.xml \
+	$(dictdir)/flowframtk-en.xml \
+	$(dictdir)/jdrcommon-en.xml \
+	-o flowframtk-props-en.bib
 
-../lib/resources/helpsets/flowframtk/en-GB/images-en-GB	: ../lib/resources/helpsets/flowframtk/en-GB
-				 cp -r images-en-GB ../lib/resources/helpsets/flowframtk/en-GB/
+flowframtk-props-en-GB.bib	: $(dictdir)/flowframtk-en.xml \
+				$(dictdir)/flowframtk-en-GB.xml  \
+				$(dictdir)/jdrcommon-en.xml \
+				$(dictdir)/jdrcommon-en-GB.xml \
+				$(dictdir)/texjavahelplib-en.xml
+	$(xml2bib)  $(dictdir)/texjavahelplib-en.xml \
+	$(dictdir)/flowframtk-en.xml \
+	$(dictdir)/flowframtk-en-GB.xml \
+	$(dictdir)/jdrcommon-en.xml \
+	$(dictdir)/jdrcommon-en-GB.xml \
+	-o flowframtk-props-en-GB.bib
 
-flowframtk-en-GB.pdf	: flowframtk-en-GB.tex flowframtk.cls
-			arara flowframtk-en-GB
+jdrview-props-en.bib	: $(dictdir)/jdrview-en.xml $(dictdir)/jdrcommon-en.xml \
+			$(dictdir)/texjavahelplib-en.xml
+	$(xml2bib) $(dictdir)/texjavahelplib-en.xml \
+	$(dictdir)/jdrcommon-en.xml \
+	$(dictdir)/jdrview-en.xml \
+	-o jdrview-props-en.bib
 
-flowframtk-en-GB.tex	: createflowframtkdocs flowframtk-en.xml \
-			../lib/resources/helpsets/sharedimages \
-			../lib/resources/helpsets/flowframtk/en-GB/images-en-GB \
-			../lib/resources/dictionaries/flowframtk-en-GB.prop \
-			../java/flowframtk/FlowframTkInvoker.java
-			createflowframtkdocs FlowframTk en GB
-			rm -r -f ../lib/resources/helpsets/flowframtk/en-GB/JavaHelpSearch 
-			cd ../lib/resources/helpsets/flowframtk/en-GB; \
-			jh2indexer -locale en_GB .
+jdrview-props-en-GB.bib	: $(dictdir)/jdrview-en.xml $(dictdir)/jdrcommon-en.xml \
+			$(dictdir)/jdrcommon-en-GB.xml $(dictdir)/texjavahelplib-en.xml
+	$(xml2bib) $(dictdir)/texjavahelplib-en.xml \
+	$(dictdir)/jdrcommon-en.xml \
+	$(dictdir)/jdrcommon-en-GB.xml \
+	$(dictdir)/jdrview-en.xml \
+	-o jdrview-props-en-GB.bib
 
-../lib/resources/helpsets/flowframtk/en-US	:
-				 mkdir -p ../lib/resources/helpsets/flowframtk/en-US
 
-../lib/resources/helpsets/flowframtk/en-US/images-en-US	: ../lib/resources/helpsets/flowframtk/en-US
-				 cp -r images-en-US ../lib/resources/helpsets/flowframtk/en-US/
+version.tex	: $(baseclass)
+	@echo "\\date{Version " > version.tex
+	@grep 'String APP_VERSION = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_VERSION\s=//" | tr -d "\"\; " >> version.tex
+	@grep 'String APP_DATE = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_DATE\s=//" | tr -d "\"\; " >> version.tex
+	@echo "}" >> version.tex
 
-flowframtk-en-US.pdf	: flowframtk-en-US.tex flowframtk.cls
-			arara flowframtk-en-US
+flowframtk-en-GB.pdf	: flowframtk.bib flowframtk-props-en-GB.bib \
+			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
+			 helpinterface.tex images-en-GB/*.png \
+			sharedimages/*.png sharedimages/*.tex
+	$(arara) flowframtk-en-GB
 
-flowframtk-en-US.tex	: createflowframtkdocs flowframtk-en.xml \
-			../lib/resources/helpsets/sharedimages \
-			../lib/resources/helpsets/flowframtk/en-US/images-en-US \
-			../lib/resources/dictionaries/flowframtk-en-US.prop \
-			../java/flowframtk/FlowframTkInvoker.java
-			createflowframtkdocs FlowframTk en US
-			rm -r -f ../lib/resources/helpsets/flowframtk/en-US/JavaHelpSearch 
-			cd ../lib/resources/helpsets/flowframtk/en-US; \
-			jh2indexer -locale en_US .
+flowframtk-en.pdf	: flowframtk.bib flowframtk-props-en.bib \
+			  flowframtk-en.tex flowframtk-main.tex version.tex \
+			 helpinterface.tex images-en/*.png \
+			sharedimages/*.png sharedimages/*.tex
+	$(arara) flowframtk-en
+
+jdrview-en.pdf	: jdrview.bib jdrview-props-en.bib \
+		jdrview-en.tex jdrview-main.tex version.tex \
+		helpinterface.tex \
+		sharedimages/*.png sharedimages/*.tex
+	$(arara) jdrview-en
+
+jdrview-en-GB.pdf	: jdrview.bib jdrview-props-en-GB.bib \
+			jdrview-en-GB.tex jdrview-main.tex version.tex \
+			helpinterface.tex \
+			sharedimages/*.png sharedimages/*.tex
+	$(arara) jdrview-en-GB
+
+en-GB	: $(targetdir)/flowframtk/en-GB/index.xml \
+	$(targetdir)/jdrview/en-GB/index.xml
+
+en	: $(targetdir)/flowframtk/en/index.xml \
+	$(targetdir)/jdrview/en/index.xml
+
+$(targetdir)/flowframtk/en-GB/index.xml	: $(targetdir)/flowframtk/en-GB \
+	  flowframtk-en-GB.pdf  
+	$(texjavahelpmk) flowframtk-en-GB.tex $(targetdir)/flowframtk/en-GB
+
+$(targetdir)/flowframtk/en/index.xml	: $(targetdir)/flowframtk/en \
+	  flowframtk-en.pdf  
+	$(texjavahelpmk) flowframtk-en.tex $(targetdir)/flowframtk/en
+
+$(targetdir)/jdrview/en/index.xml	: $(targetdir)/jdrview/en \
+	  jdrview-en.pdf  
+	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en
+
+$(targetdir)/jdrview/en-GB/index.xml	: $(targetdir)/jdrview/en-GB \
+	  jdrview-en-GB.pdf  
+	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en-GB
+
+
+$(targetdir)/flowframtk/en	:
+	mkdir -p $(targetdir)/flowframtk/en
+
+$(targetdir)/flowframtk/en-GB	:
+	mkdir -p $(targetdir)/flowframtk/en-GB
+
+$(targetdir)/jdrview/en	:
+	mkdir -p $(targetdir)/jdrview/en
+
+$(targetdir)/jdrview/en-GB	:
+	mkdir -p $(targetdir)/jdrview/en-GB
 
 clean	:
-	rm -f flowframtk-en-GB.aux
-	rm -f flowframtk-en-GB.glg
-	rm -f flowframtk-en-GB.glstex
-	rm -f flowframtk-en-GB.log
-	rm -f flowframtk-en-GB.out
-	rm -f flowframtk-en-GB.toc
-	rm -f flowframtk-en-GB.lof
-	rm -f flowframtk-en-GB.lot
-	rm -f flowframtk-en-GB.ldf
-	rm -f flowframtk-en-GB-boilerplate.tex
-	rm -f flowframtk-en-US.aux
-	rm -f flowframtk-en-US.glg
-	rm -f flowframtk-en-US.glstex
-	rm -f flowframtk-en-US.log
-	rm -f flowframtk-en-US.out
-	rm -f flowframtk-en-US.toc
-	rm -f flowframtk-en-US.lof
-	rm -f flowframtk-en-US.lot
-	rm -f flowframtk-en-US.ldf
-	rm -f flowframtk-en-US-boilerplate.tex
-
-squeaky	:
-	rm -f flowframtk-en-GB.tex
-	rm -f flowframtk-en-GB.bib
-	rm -f flowframtk-en-GB.pdf
-	rm -f flowframtk-en-US.tex
-	rm -f flowframtk-en-US.bib
-	rm -f flowframtk-en-US.pdf
-	rm -f -r ../lib/resources/helpsets
-
+	\rm -f flowframtk-en*.{aux,log,pdf,glg,glstex,out,toc,lof}
+	\rm -f jdrview-en*.{aux,log,pdf,glg,glstex,out,toc,lof}
+	\rm -rf $(targetdir)/flowframtk
+	\rm -rf $(targetdir)/jdrview
+	\rm -rf flowframtk-props-en*.bib
+	\rm -rf jdrview-props-en*.bib

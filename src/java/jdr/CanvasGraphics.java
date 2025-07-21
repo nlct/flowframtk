@@ -994,7 +994,7 @@ public class CanvasGraphics
          return alt;
       }
 
-      String message = messageSystem.getString(tag, alt);
+      String message = messageSystem.getMessageWithFallback(tag, alt);
 
       messageSystem.getPublisher().publishMessages(
          MessageInfo.createWarning(message));
@@ -1011,7 +1011,7 @@ public class CanvasGraphics
          return message;
       }
 
-      String message = messageSystem.getMessageWithAlt(altFormat, tag, params);
+      String message = messageSystem.getMessageWithFallback(tag, altFormat, params);
 
       messageSystem.getPublisher().publishMessages(
         MessageInfo.createWarning(message));
@@ -1019,50 +1019,47 @@ public class CanvasGraphics
       return message;
    }
 
+   @Deprecated
    public String getString(String tag, String alt)
    {
-      if (messageSystem == null)
-      {
-         return alt;
-      }
-
-      return messageSystem.getString(tag, alt);
+      return getMessageWithFallback(tag, alt);
    }
 
+   @Deprecated
    public String getString(int lineNum, String tag, String alt)
    {
-      if (lineNum < 0)
-      {
-         return getString(tag, alt);
-      }
-
-      if (messageSystem == null)
-      {
-         return String.format("Line %d: %s", lineNum, alt);
-      }
-
-      String msg = messageSystem.getString(tag, alt);
-
-      return messageSystem.getMessageWithAlt("Line {0}: {1}",
-        "error.with_line", lineNum, msg);
+      return getMessageWithFallback(lineNum, tag, alt);
    }
 
+   @Deprecated
    public String getMessageWithAlt(String altFormat, String tag, Object... params)
+   {
+      return getMessageWithFallback(tag, altFormat, params);
+   }
+
+   public String getMessageWithFallback(String tag, String altFormat, Object... params)
    {
       if (messageSystem == null)
       {
          return MessageFormat.format(altFormat, params);
       }
 
-      return messageSystem.getMessageWithAlt(altFormat, tag, params);
+      return messageSystem.getMessageWithFallback(tag, altFormat, params);
    }
 
+   @Deprecated
    public String getMessageWithAlt(int lineNum, String altFormat, 
        String tag, Object... params)
    {
+      return getMessageWithFallback(lineNum, tag, altFormat, params);
+   }
+
+   public String getMessageWithFallback(int lineNum,
+     String tag, String altFormat, Object... params)
+   {
       if (lineNum < 0)
       {
-         return getMessageWithAlt(altFormat, tag, params);
+         return getMessageWithFallback(tag, altFormat);
       }
 
       if (messageSystem == null)
@@ -1071,10 +1068,10 @@ public class CanvasGraphics
             MessageFormat.format(altFormat, params));
       }
 
-      String msg = messageSystem.getMessageWithAlt(altFormat, tag, params);
+      String msg = messageSystem.getMessageWithFallback(tag, altFormat, params);
 
-      return messageSystem.getMessageWithAlt(
-        "Line {0}: {1}", "error.with_line", lineNum, msg);
+      return messageSystem.getMessageWithFallback(
+        "error.with_line", "Line {0}: {1}", lineNum, msg);
    }
 
    public synchronized void setPreamble(String preambleText)

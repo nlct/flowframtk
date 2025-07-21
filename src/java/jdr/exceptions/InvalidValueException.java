@@ -90,7 +90,7 @@ public class InvalidValueException extends InvalidFormatException
 
    public InvalidValueException(String tag, Object value, JDRMessageDictionary msgSys)
    {
-      super(msgSys.getString("error.invalid_"+tag,
+      super(msgSys.getMessageWithFallback("error.invalid_"+tag,
             String.format("Invalid %s", tag)));
       setTag(tag);
       setInvalidValue(value);
@@ -99,7 +99,7 @@ public class InvalidValueException extends InvalidFormatException
 
    public InvalidValueException(String tag, Object value, JDRAJR jdr)
    {
-      super(jdr.getMessageSystem().getString(
+      super(jdr.getMessageSystem().getMessageWithFallback(
             "error.invalid_"+tag,
             String.format("Invalid %s", tag)), jdr);
       setTag(tag);
@@ -116,7 +116,7 @@ public class InvalidValueException extends InvalidFormatException
    public InvalidValueException(String tag, Object value, JDRMessageDictionary msgSys, 
      Throwable cause)
    {
-      super(msgSys.getString("error.invalid_"+tag,
+      super(msgSys.getMessageWithFallback("error.invalid_"+tag,
             String.format("Invalid %s", tag)), cause);
       setTag(tag);
       setInvalidValue(value);
@@ -126,7 +126,7 @@ public class InvalidValueException extends InvalidFormatException
    public InvalidValueException(String tag, Object value, 
      JDRAJR jdr, Throwable cause)
    {
-      super(jdr.getMessageSystem().getString(
+      super(jdr.getMessageSystem().getMessageWithFallback(
             "error.invalid_"+tag,
             String.format("Invalid %s", tag)), jdr, cause);
       setTag(tag);
@@ -136,7 +136,7 @@ public class InvalidValueException extends InvalidFormatException
 
    public InvalidValueException(String tag, JDRAJR jdr, Throwable cause)
    {
-      super(jdr.getMessageSystem().getString(
+      super(jdr.getMessageSystem().getMessageWithFallback(
             "error.invalid_"+tag,
             String.format("Invalid %s", tag)), jdr, cause);
       setTag(tag);
@@ -207,8 +207,10 @@ public class InvalidValueException extends InvalidFormatException
          return String.format("%s found '%s'", msg, val);
       }
 
-      return msgSys.getMessageWithAlt("{0} found ''{1}''", 
-        "error.with_found", msg, val);
+      return msgSys.getMessageWithFallback(
+        "error.with_found",
+        "{0} found ''{1}''", 
+         msg, val);
    }
 
    private Object invalidValue;

@@ -309,8 +309,10 @@ public class EPS
       if (!line.matches("%!PS-Adobe-\\d\\.\\d EPSF-\\d\\.\\d"))
       {
          throw new InvalidFormatException(
-            cg.getMessageWithAlt("Can''t parse file type from ''{0}''",
-             "error.cant_parse_file_type", line));
+            cg.getMessageWithFallback(
+             "error.cant_parse_file_type",
+             "Can''t parse file type from ''{0}''",
+              line));
       }
 
       eps.currentfile.mark(256);
@@ -498,13 +500,16 @@ public class EPS
 
       if (file.getType() == EPSFile.CURRENTFILE)
       {
-         msg = getMessageSystem().getMessageWithAlt(
-             "{0}: {1}", "error.with_line", file.getLineNum(), message);
+         msg = getMessageSystem().getMessageWithFallback(
+             "error.with_line",
+             "{0}: {1}",
+             file.getLineNum(), message);
       }
       else
       {
-         msg = getMessageSystem().getMessageWithAlt(
-          "{0}:{1}: {2}", "error.with_file_and_line",
+         msg = getMessageSystem().getMessageWithFallback(
+          "error.with_file_and_line",
+          "{0}:{1}: {2}",
             file.getName(), String.format("%d", file.getLineNum()), message);
       }
 
@@ -513,8 +518,10 @@ public class EPS
 
       warningString.append(
         String.format("%s%n", 
-          getMessageSystem().getMessageWithAlt("Warning: {0}", 
-            "warning.tag", msg))
+          getMessageSystem().getMessageWithFallback(
+            "warning.tag",
+            "Warning: {0}", 
+            msg))
       );
    }
 

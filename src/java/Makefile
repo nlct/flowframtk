@@ -1,3 +1,6 @@
+ifndef JDRSRC
+JDRSRC:=$(shell dirname `pwd`)
+endif
 LIBDIR=$(JDRSRC)/lib
 CLASSTREE=com/dickimawbooks
 
@@ -194,7 +197,7 @@ classes/$(CLASSTREE)/jdrresources/JDRResources.class : \
 	jdrresources/*/*.java 
 	cd jdrresources ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	  -cp $(LIBDIR)/jdr.jar:$(LIBDIR)/javahelp2.jar \
+	  -cp $(LIBDIR)/jdr.jar:$(LIBDIR)/texjavahelplib.jar \
 	  *.java */*.java
 
 classes/$(CLASSTREE)/flowframtk/FlowframTk.class : \
@@ -203,7 +206,7 @@ classes/$(CLASSTREE)/flowframtk/FlowframTk.class : \
 	flowframtk/*/*.java
 	cd flowframtk ; \
 	javac $(target_version) -d ../classes -Xlint:unchecked -Xlint:deprecation \
-	  -cp $(LIBDIR)/javahelp2.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
+	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java */*.java
 
 
@@ -212,7 +215,7 @@ classes/$(CLASSTREE)/jdrview/JDRView.class : \
 	jdrview/*.java
 	cd jdrview ; \
 	javac $(target_version) -d ../classes -Xlint:unchecked  -Xlint:deprecation \
-	  -cp $(LIBDIR)/javahelp2.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
+	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java
 
 classes/$(CLASSTREE)/ajr2ajr/Ajr2Ajr.class : \
@@ -308,7 +311,7 @@ classes	:
 
 classes/$(CLASSTREE)/jdrresources/icons	:
 	mkdir -p classes/$(CLASSTREE)/jdrresources
-	cd classes/$(CLASSTREE)/jdrresources; ln -f -s $(JDRSRC)/src/jdrresources/icons
+	cd classes/$(CLASSTREE)/jdrresources; ln -f -s $(JDRSRC)/java/jdrresources/icons
 
 
 classes/$(CLASSTREE)/jdrview	:

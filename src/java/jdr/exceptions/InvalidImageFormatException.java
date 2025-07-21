@@ -38,7 +38,7 @@ public class InvalidImageFormatException extends InvalidFormatException
     */
    public InvalidImageFormatException(String filename, CanvasGraphics cg)
    {
-      super(cg.getString("error.invalid_imageformat",
+      super(cg.getMessageWithFallback("error.invalid_imageformat",
               "Invalid image format"), (JDRAJR)null);
       setIdentifier(filename);
       invalidFilename = filename;
@@ -47,7 +47,7 @@ public class InvalidImageFormatException extends InvalidFormatException
    public InvalidImageFormatException(String filename, 
       CanvasGraphics cg, Throwable cause)
    {
-      super(cg.getString("error.invalid_imageformat",
+      super(cg.getMessageWithFallback("error.invalid_imageformat",
               "Invalid image format"), null, cause);
       setIdentifier(filename);
       invalidFilename = filename;
@@ -60,7 +60,7 @@ public class InvalidImageFormatException extends InvalidFormatException
     */
    public InvalidImageFormatException(String filename, JDRAJR jdr)
    {
-      super(jdr.getMessageSystem().getString("error.invalid_imageformat",
+      super(jdr.getMessageSystem().getMessageWithFallback("error.invalid_imageformat",
               "Invalid image format"), jdr);
       setIdentifier(filename);
       invalidFilename = filename;
@@ -69,7 +69,7 @@ public class InvalidImageFormatException extends InvalidFormatException
    public InvalidImageFormatException(String filename, JDRAJR jdr,
       Throwable cause)
    {
-      super(jdr.getMessageSystem().getString("error.invalid_imageformat",
+      super(jdr.getMessageSystem().getMessageWithFallback("error.invalid_imageformat",
               "Invalid image format"), jdr, cause);
       setIdentifier(filename);
       invalidFilename = filename;

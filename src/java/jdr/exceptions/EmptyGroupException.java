@@ -39,7 +39,7 @@ public class EmptyGroupException extends InvalidFormatException
 
    public EmptyGroupException(JDRMessageDictionary msgSys)
    {
-      super(msgSys.getString("internal_error.empty_group", "Empty group"));
+      super(msgSys.getMessageWithFallback("internal_error.empty_group", "Empty group"));
    }
 }
 

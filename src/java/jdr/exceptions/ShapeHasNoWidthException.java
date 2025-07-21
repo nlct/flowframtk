@@ -33,6 +33,6 @@ public class ShapeHasNoWidthException extends InvalidShapeException
 {
    public ShapeHasNoWidthException(CanvasGraphics cg)
    {
-      super(cg.getString("error.shape.nowidth", "Shape has no width"));
+      super(cg.getMessageWithFallback("error.shape.nowidth", "Shape has no width"));
    }
 }

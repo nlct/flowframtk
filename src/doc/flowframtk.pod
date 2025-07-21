@@ -2,10 +2,6 @@
 
 B<flowframtk> [I<option>]+
 
-or
-
-B<flowframtk-gui> [I<option>]+
-
 =head1 DESCRIPTION
 
 TODO

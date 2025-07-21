@@ -74,8 +74,10 @@ public class JDRGridLoader
       {
          String name = theGrid.getName();
 
-         jdr.warningMessage("Grid type ''{0}'' not supported in version {1}",
-            "warning.save_unsupported_grid", name, version);
+         jdr.warningWithFallback(
+            "warning.save_unsupported_grid",
+            "Grid type ''{0}'' not supported in version {1}",
+             name, version);
 
          save(jdr, grid);
 

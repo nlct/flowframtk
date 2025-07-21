@@ -66,8 +66,8 @@ public class AnglePanel extends JPanel
       (
         new String[]
          {
-            msgSys.getString("rotate.radians", "rad"),
-            msgSys.getString("rotate.degrees", "deg")
+            msgSys.getMessageWithFallback("rotate.radians", "rad"),
+            msgSys.getMessageWithFallback("rotate.degrees", "deg")
          }
       );
       unitBox.addItemListener(this);

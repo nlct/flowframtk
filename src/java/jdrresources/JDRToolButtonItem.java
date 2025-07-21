@@ -50,12 +50,12 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
       boolean selected, ToolButtonGroup group, 
       JComponent buttonParent, JMenu menu)
    {
-      super(resources.getString(
+      super(resources.getMessage(
             parentID==null?action : parentID+"."+action),
             selected);
 
       String menuID = (parentID==null?action : parentID+"."+action);
-      String tooltipText = resources.getString("tooltip."+action, null);
+      String tooltipText = resources.getMessageIfExists("tooltip."+action);
 
       KeyStroke keyStroke = resources.getAccelerator(menuID);
 
@@ -66,7 +66,7 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
       setActionCommand(action);
 
       button = resources.createToolButton(
-         resources.getString("label."+action, getText()),
+         resources.getMessage("label."+action, getText()),
          action, this, keyStroke,
          null, selected, tooltipText);
 
@@ -87,10 +87,10 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
       String tooltipText, boolean selected, ToolButtonGroup group,
       JComponent buttonParent, JMenu menu)
    {
-      super(resources.getString(menuID), selected);
+      super(resources.getMessage(menuID), selected);
 
       button = resources.createToolButton(
-         resources.getString("label."+name, getText()), name, this, keyStroke,
+         resources.getMessage("label."+name, getText()), name, this, keyStroke,
          null, selected, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);

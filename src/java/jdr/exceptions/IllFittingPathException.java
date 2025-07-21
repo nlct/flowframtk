@@ -34,12 +34,12 @@ public class IllFittingPathException extends InvalidPathException
 {
    public IllFittingPathException(CanvasGraphics cg)
    {
-      super(cg.getString("internal_error.ill_fitting", "Ill fitting path"));
+      super(cg.getMessageWithFallback("internal_error.ill_fitting", "Ill fitting path"));
    }
 
    public IllFittingPathException(CanvasGraphics cg, Throwable cause)
    {
-      super(cg.getString("internal_error.ill_fitting", "Ill fitting path"),
+      super(cg.getMessageWithFallback("internal_error.ill_fitting", "Ill fitting path"),
             cause);
    }
 

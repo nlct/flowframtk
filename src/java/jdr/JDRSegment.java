@@ -954,14 +954,14 @@ public class JDRSegment extends JDRObject
    {
       JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
 
-      String type = msg.getString("class."+getClass().getCanonicalName(),
+      String type = msg.getMessageWithFallback("class."+getClass().getCanonicalName(),
        getClass().getSimpleName());
 
       Point2D dp = getdP();
 
-      return msg.getMessageWithAlt(
-        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(t) = ({5},{6}).",
+      return msg.getMessageWithFallback(
         "segmentinfo.details.line",
+        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(t) = ({5},{6}).",
         type, start.x, start.y, end.x, end.y, dp.getX(), dp.getY()
        );
    }

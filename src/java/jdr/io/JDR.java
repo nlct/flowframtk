@@ -136,7 +136,7 @@ public class JDR extends JDRAJR
       if (!(formatId).equals("JDR"))
       {
          throw new InvalidFormatException(
-           getMessageSystem().getString(
+           getMessageSystem().getMessageWithFallback(
              "invalid_"+InvalidFormatException.INVALID_JDR_FORMAT,
              "Invalid JDR file format"), this);
       }

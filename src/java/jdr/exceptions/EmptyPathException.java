@@ -38,6 +38,6 @@ public class EmptyPathException extends InvalidPathException
 
    public EmptyPathException(JDRMessageDictionary msgSys)
    {
-      super(msgSys.getString("internal_error.empty_path", "Empty Path"));
+      super(msgSys.getMessageWithFallback("internal_error.empty_path", "Empty Path"));
    }
 }

@@ -562,7 +562,7 @@ public class JDRPartialSegment extends JDRObject
    {
       JDRMessageDictionary msg = getCanvasGraphics().getMessageDictionary();
 
-      String type = msg.getString("class."+getClass().getCanonicalName(),
+      String type = msg.getMessageWithFallback("class."+getClass().getCanonicalName(),
        getClass().getSimpleName());
        
       Point2D dp = getdP();
@@ -570,13 +570,13 @@ public class JDRPartialSegment extends JDRObject
       Point2D endPt = getEnd2D();
       
       return String.format("%s %s",
-         msg.getMessageWithAlt(
-        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(t) = ({5},{6}).",
+         msg.getMessageWithFallback(
         "segmentinfo.details.line",
+        "Segment type: {0}; P(0)=({1},{2}), P(1)=({3},{4}); P'(t) = ({5},{6}).",
         type, start.x, start.y, endPt.getX(), endPt.getY(), dp.getX(), dp.getY()),
-        msg.getMessageWithAlt(
-        "Line of symmetry: ({0},{1})--({2},{3})",
+        msg.getMessageWithFallback(
         "segmentinfo.details.symmetry",
+        "Line of symmetry: ({0},{1})--({2},{3})",
         line_.start.x, line_.start.y, line_.end.x, line_.end.y)
        );
    }

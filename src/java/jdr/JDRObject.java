@@ -893,7 +893,7 @@ public abstract class JDRObject implements Serializable,JDRGraphicObject
          return name;
       }
 
-      return canvasGraphics.getString("class."+name, name);
+      return canvasGraphics.getMessageWithFallback("class."+name, name);
    }
 
    public abstract void applyCanvasGraphics(CanvasGraphics cg);

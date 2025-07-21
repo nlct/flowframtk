@@ -81,8 +81,10 @@ public class JDRObjectLoader
       {
          String name = theObject.getName();
 
-         jdr.warningMessage("Object type ''{0}'' not supported in version {1}",
-            "warning.save_unsupported_object", name, version);
+         jdr.warningWithFallback(
+            "warning.save_unsupported_object",
+            "Object type ''{0}'' not supported in version {1}",
+             name, version);
 
          save(jdr, object);
 

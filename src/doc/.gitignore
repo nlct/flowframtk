@@ -1,6 +1,3 @@
-flowframtk-*.bib
-jdrview-*.bib
-*.tex
 *.aux
 *.log
 *.out
@@ -12,3 +9,5 @@ jdrview-*.bib
 *.lof
 *.lot
 *.ldf
+version.tex
+*-props-*.bib

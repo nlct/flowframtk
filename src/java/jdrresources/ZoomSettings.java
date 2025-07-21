@@ -32,6 +32,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+import com.dickimawbooks.texjavahelplib.OkayAction;
+
 import com.dickimawbooks.jdrresources.numfield.*;
 
 /**
@@ -40,21 +43,15 @@ import com.dickimawbooks.jdrresources.numfield.*;
  */
 
 public class ZoomSettings extends JDialog
-   implements ActionListener
+   implements OkayAction
 {
    public ZoomSettings(JDRApp application, Frame parent)
    {
-      super(parent, application.getResources().getString("zoom.title"),true);
+      super(parent, application.getResources().getMessage("zoom.title"),true);
       this.application = application;
+      TeXJavaHelpLib helpLib = application.getResources().getHelpLib();
 
       JPanel p1 = new JPanel();
-
-      JLabel label = new JLabel(
-         application.getResources().getString("zoom.magnification"));
-      label.setDisplayedMnemonic(
-         application.getResources().getCodePoint("zoom.magnification.mnemonic"));
-
-      p1.add(label);
 
       values = createZoomArray();
 
@@ -89,17 +86,16 @@ public class ZoomSettings extends JDialog
 
       setMag(1.0);
 
-      label.setLabelFor(magBox);
-
+      p1.add(helpLib.createJLabel("zoom.magnification", magBox));
       p1.add(magBox);
 
       getContentPane().add(p1, "Center");
 
       JPanel p2 = new JPanel();
 
-      p2.add(application.getResources().createOkayButton(this));
-      p2.add(application.getResources().createCancelButton(this));
-      p2.add(application.getResources().createHelpButton("zoommenu"));
+      p2.add(helpLib.createOkayButton((OkayAction)this, getRootPane()));
+      p2.add(helpLib.createCancelButton((JDialog)this));
+      p2.add(application.getResources().createHelpDialogButton(this, "sec:zoommenu"));
 
       getContentPane().add(p2, "South");
 
@@ -128,7 +124,7 @@ public class ZoomSettings extends JDialog
       for (int i = 0; i < RELATIVE_ZOOM_CHOICE.length; i++)
       {
          array[i] = new RelativeZoomValue(RELATIVE_ZOOM_CHOICE[i],
-          resources.getString("settings."+RELATIVE_ZOOM_CHOICE[i]));
+          resources.getMessage(RELATIVE_ZOOM_CHOICE[i]));
       }
 
       for (int i = 0; i < ZOOM_CHOICE.length; i++)
@@ -145,6 +141,7 @@ public class ZoomSettings extends JDialog
       setVisible(true);
    }
 
+   @Override
    public void okay()
    {
       ZoomValue obj = (ZoomValue)magBox.getSelectedItem();
@@ -219,22 +216,6 @@ public class ZoomSettings extends JDialog
    public double getMag()
    {
       return currentMagnification;
-   }
-
-   public void actionPerformed(ActionEvent e)
-   {
-      String action = e.getActionCommand();
-
-      if (action == null) return;
-
-      if (action.equals("okay"))
-      {
-         okay();
-      } 
-      else if (action.equals("cancel"))
-      {
-         setVisible(false);
-      }
    }
 
    public JDRResources getResources()

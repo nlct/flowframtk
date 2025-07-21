@@ -1,9 +1,6 @@
-@abbreviation{gui,
-  short="GUI",
-  long="graphical user interface",
-  description = {An application with windows and buttons in which the user
-      can point and click with the mouse.}
-}
+% Encoding: UTF-8
+
+% ABBREVIATIONS
 
 @abbreviation{jdk,
   short="JDK",
@@ -21,7 +18,7 @@
 
 @abbreviation{jvm,
   short="JVM",
-  long="Java Virtual Machine"
+  long="Java Virtual Machine",
   description = {Also known as the Java Runtime Environment.}
 }
 
@@ -42,25 +39,72 @@
       two-dimensional vector and mixed vector/raster graphics in XML.}
 }
 
-@commonabbreviation{pdf,
-  short = {PDF},
-  long = {portable document format}
-}
-
 % FILE EXTENSIONS/FORMATS
 
-@fileext{ext.jdr}
-@fileext{ext.ajr}
 @fileext{ext.tex}
 @fileext{ext.pdf}
 @fileext{ext.svg}
-@fileext{ext.tex}
 @fileext{ext.xml}
 @fileext{ext.eps}
 
+% SWITCHES
+
+@switch{switch.help,
+  parent={app.flowframtk},
+  shortswitch={h},
+  description={Prints help and exits}
+}
+
+@switch{switch.version,
+  parent={app.flowframtk},
+  shortswitch={v},
+  description={Prints version information and exits}
+}
+  
+
+
+% PACKAGES
+
+@package{pkg.flowfram,
+ name={\styfmt{flow\-fram}}
+}
+
+@package{pkg.shapepar,
+ name={\styfmt{shape\-par}}
+}
+
+@package{pkg.pgf}
+
+% COMMANDS
+
+@command{shapepar,
+ name={\csfmt{shape\-par}}
+}
+
+@command{Shapepar,
+ name={\csfmt{Shape\-par}}
+}
+
+@command{parshape,
+ name={\csfmt{par\-shape}}
+}
+
+% ENVIRONMENTS
+
+@environment{env.pgfpicture,
+ name={\envfmt{pgf\-picture}}
+}
+
+% APPLICATIONS
+
+@application{latex}
+@application{dvips}
+
+% GENERAL
+
 @entry{ajr,
   name="AJR",
-  description = {\AppName's native ASCII format. Files in this format 
+  description = {\appname's native ASCII format. Files in this format 
       should have the extension \ext{ajr}. This format is 
       primarily provided to assist conversion to and from \gls{jdr} files 
       or for version control.}
@@ -68,7 +112,7 @@
 
 @entry{jdr,
    name="JDR",
-   description = {\AppName's native binary format. Files in this format 
+   description = {\appname's native binary format. Files in this format 
       should have the extension \ext{jdr}.}
 }
 
@@ -86,14 +130,14 @@
 
 @indexplural{toolbar,
   description = {The two panels containing buttons, the horizontal toolbar is positioned at
-    the top of \AppName's main window, the vertical toolbar is
+    the top of \appname's main window, the vertical toolbar is
     positioned along the left edge of the main window.}
 }
 
 @index{statusbar,
   name="status bar",
   description = {The status bar is the horizontal panel positioned along the bottom of
-    \AppName's main window.}
+    \appname's main window.}
 }
 
 @indexplural{ruler,
@@ -319,7 +363,7 @@ called a bitmap.}
   name="popup menu",
   description = {A menu whose items vary depending on the context. These
     menus are usually invoked with the menu or secondary mouse button. In
-    \AppName\ it is also possible to invoke popup menus using
+    \appname\ it is also possible to invoke popup menus using
     <kbd key="F3"/> or your keyboard may have a context-menu key.}
 }
 

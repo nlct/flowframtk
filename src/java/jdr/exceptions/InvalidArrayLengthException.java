@@ -34,8 +34,10 @@ public class InvalidArrayLengthException extends InvalidFormatException
 {
    public InvalidArrayLengthException(int length, CanvasGraphics cg)
    {
-      super(cg.getMessageWithAlt("Invalid array length {0}",
-        "error.io.invalid_array_length", length), (JDRAJR)null);
+      super(cg.getMessageWithFallback(
+        "error.io.invalid_array_length",
+        "Invalid array length {0}",
+        length), (JDRAJR)null);
       invalidArrayLength = length;
       setIdentifier(null);
    }
@@ -47,8 +49,10 @@ public class InvalidArrayLengthException extends InvalidFormatException
 
    public InvalidArrayLengthException(String name, int length, CanvasGraphics cg)
    {
-      super(cg.getMessageWithAlt("Invalid array length {0}",
-        "error.io.invalid_array_length", length), (JDRAJR)null);
+      super(cg.getMessageWithFallback(
+        "error.io.invalid_array_length",
+        "Invalid array length {0}",
+        length), (JDRAJR)null);
       invalidArrayLength = length;
       setIdentifier(name);
    }
@@ -56,9 +60,10 @@ public class InvalidArrayLengthException extends InvalidFormatException
    public InvalidArrayLengthException(String name, int length, 
       JDRAJR jdr)
    {
-      super(jdr.getCanvasGraphics().getMessageWithAlt(
+      super(jdr.getCanvasGraphics().getMessageWithFallback(
+        "error.io.invalid_array_length",
         "Invalid array length {0}",
-        "error.io.invalid_array_length", length), jdr);
+         length), jdr);
       invalidArrayLength = length;
       setIdentifier(name);
    }
@@ -66,9 +71,10 @@ public class InvalidArrayLengthException extends InvalidFormatException
    public InvalidArrayLengthException(String name, int length, 
      JDRAJR jdr, Throwable cause)
    {
-      super(jdr.getCanvasGraphics().getMessageWithAlt(
+      super(jdr.getCanvasGraphics().getMessageWithFallback(
+        "error.io.invalid_array_length",
         "Invalid array length {0}",
-        "error.io.invalid_array_length", length), jdr, cause);
+        length), jdr, cause);
       invalidArrayLength = length;
       setIdentifier(name);
    }

@@ -1091,22 +1091,19 @@ public abstract class JDRAJR
       return getCanvasGraphics().getMessageDictionary();
    }
 
+   @Deprecated
    public void warning(String tag, String alt)
    {
-      JDRMessage msg = getMessageSystem();
-
-      if (msg == null)
-      {
-         System.out.println(alt);
-      }
-      else
-      {
-         msg.getPublisher().publishMessages(
-            MessageInfo.createWarning(msg.getString(tag, alt)));
-      }
+      warningWithFallback(tag, alt);
    }
 
+   @Deprecated
    public void warningMessage(String altFormat, String tag, Object... values)
+   {
+      warningWithFallback(tag, altFormat, values);
+   }
+
+   public void warningWithFallback(String tag, String altFormat, Object... values)
    {
       JDRMessage msg = getMessageSystem();
 
@@ -1117,7 +1114,7 @@ public abstract class JDRAJR
       else
       {
          msg.getPublisher().publishMessages(
-          MessageInfo.createWarning(msg.getMessageWithAlt(altFormat, tag, values)));
+          MessageInfo.createWarning(msg.getMessageWithFallback(tag, altFormat, values)));
       }
    }
 

@@ -38,16 +38,16 @@ public class JDRButtonItem extends JMenuItem
    public JDRButtonItem(JDRResources resources, String parentId, String action, 
       ActionListener listener, JComponent buttonParent, JComponent menu)
    {
-      super(resources.getString(parentId == null ? action : parentId+"."+action));
+      super(resources.getMessage(parentId == null ? action : parentId+"."+action));
 
       String menuID = (parentId == null ? action : parentId+"."+action);
 
       KeyStroke keyStroke = resources.getAccelerator(menuID);
 
-      String tooltipText = resources.getString("tooltip."+action, null);
+      String tooltipText = resources.getMessageIfExists("tooltip."+action);
 
       button = resources.createAppButton(
-         resources.getString("label."+menuID, getText()), 
+         resources.getMessageWithFallback("label."+menuID, getText()), 
          menuID, listener, keyStroke, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -68,9 +68,10 @@ public class JDRButtonItem extends JMenuItem
       KeyStroke keyStroke, ActionListener listener,
       String tooltipText, JComponent buttonParent, JComponent menu)
    {
-      super(resources.getString(menuID));
+      super(resources.getMessage(menuID));
       button = resources.createAppButton(
-         resources.getString("label."+name, getText()), name, listener, keyStroke,
+         resources.getMessageWithFallback("label."+name, getText()),
+         name, listener, keyStroke,
          tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -33,6 +33,6 @@ public class NoPathException extends InvalidPathException
 {
    public NoPathException(CanvasGraphics cg)
    {
-      super(cg.getString("internal_error.no_path", "No path"));
+      super(cg.getMessageWithFallback("internal_error.no_path", "No path"));
    }
 }
