@@ -3471,7 +3471,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="term.popupmenu.description">A menu whose items vary depending on the context. These
     menus are usually invoked with the menu or secondary mouse button. In
     \appname\ it is also possible to invoke popup menus using
-    \accelerator{contextmenu} or your keyboard may have a context-menu key.</entry>
+    \accelerator'{'contextmenu'}' or your keyboard may have a context-menu key.</entry>
 <entry key="term.popupmenu.see">index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.none</entry>
 
 </properties>
