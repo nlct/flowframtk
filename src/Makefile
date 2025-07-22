@@ -112,7 +112,7 @@ lib/resources/helpsets/flowframtk/en-GB/index.xml	: doc/flowframtk-en-GB.tex \
 lib/resources/helpsets/flowframtk/en/index.xml	: doc/flowframtk-en.tex \
 			doc/flowframtk-main.tex \
 			doc/flowframtk.bib \
-			doc/images-en-US/*.png \
+			doc/images-en/*.png \
 			doc/sharedimages/*.png 
 			make -C doc
 
@@ -301,4 +301,4 @@ clean	:
 	\rm -f lib/jdr2svg.jar
 	\rm -f lib/jdr2tex.jar
 	\rm -f lib/svg2jdr.jar
-	make -C doc squeaky clean
+	make -C doc clean
