@@ -34,6 +34,8 @@ import java.awt.geom.*;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -64,32 +66,68 @@ public class FlowframTkInvoker
 
    public void version()
    {
-      System.out.println(
-         resources.getMessageWithAlt("{0} version {1}", "about.version",
-         APP_NAME, JDRResources.APP_VERSION));
+      System.out.println(resources.getAppInfo(false));
+
       System.exit(0);
    }
 
    public void syntax()
    {
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
+
       System.out.println(
-         resources.getMessageWithAlt("{0} version {1}", "about.version",
+         helpLib.getMessageWithFallback(
+        "about.version",
+        "{0} version {1}",
          APP_NAME, JDRResources.APP_VERSION));
 
       System.out.println();
-      System.out.println("Syntax: flowframtk [options] [filename] ... [filename]");
+
+      System.out.println(helpLib.getMessage("clisyntax.usage",
+         "flowframtk [options] [filename] ... [filename]"));
       System.out.println();
-      System.out.println("Options:");
+
+      System.out.println(helpLib.getMessage("syntax.options"));
+
       System.out.println();
-      System.out.println("-(no)show_grid");
-      System.out.println("-(no)grid_lock");
-      System.out.println("-(no)toolbar");
-      System.out.println("-(no)statusbar");
-      System.out.println("-(no)rulers");
-      System.out.println("-paper <type>");
-      System.out.println("-(no)debug");
-      System.out.println("-(no)experimental");
-      System.out.println("-version");
+
+      helpLib.printSyntaxItem(helpLib.getMessage("syntax.settings_info"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.show_grid", "--[no]show_grid"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.grid_lock", "--[no]grid_lock"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.toolbar", "--[no]toolbar"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.statusbar", "--[no]statusbar"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.rulers", "--[no]rulers"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.paper", "--paper"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(helpLib.getMessage("syntax.other_options"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.help", "--help", "-h"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.version", "--version", "-v"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.debug", "--[no]debug"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.experimental", "--[no]experimental"));
 
       System.exit(0);
    }

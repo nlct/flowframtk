@@ -31,6 +31,8 @@ import java.net.URISyntaxException;
 import java.awt.Component;
 import javax.swing.SwingUtilities;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -69,13 +71,6 @@ public class JDRViewInvoker
    public void appVersion()
    {
       System.out.println(resources.getAppInfo(false));
-/*
-      System.err.println(APP_NAME.toLowerCase()+" "+APP_VERSION);
-      System.err.println(String.format("Copyright (C) 2007-%s Nicola L C Talbot",
-       APP_DATE.substring(0,4)));
-      System.err.println("This is free software distributed under the GNU General Public License.");
-      System.err.println("There is NO WARRANTY. See accompanying licence file for details.");
-*/
    }
 
    /**
@@ -83,15 +78,37 @@ public class JDRViewInvoker
     */
    public void syntax()
    {
-      System.err.println("Syntax: jdrview [options] [<jdr/ajr file>]");
-      System.err.println();   
-      System.err.println("Options:");   
-      System.err.println();
-      System.err.println("-antialias\t: Switch on anti-aliasing (default)");
-      System.err.println("-noantialias\t: Switch off anti-aliasing");
-      System.err.println("-cwd <path>\t: Set the current working directory to <path>");
-      System.err.println("-version\t: Print version number and exit");
-      System.err.println("-help\t: Print this help message");
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
+
+      System.out.println(
+         helpLib.getMessageWithFallback(
+        "about.version",
+        "{0} version {1}",
+         APP_NAME, JDRResources.APP_VERSION));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(helpLib.getMessage("syntax.title"));
+
+      System.out.println("jdrview [options] [jdr/ajr file]");
+      System.out.println();
+
+      helpLib.printSyntaxItem(helpLib.getMessage("syntax.options"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.antialias", "--[no]antialias"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.cwd", "--cwd"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.help", "--help", "-h"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.version", "--version", "-v"));
+
       System.exit(0);
    }
 

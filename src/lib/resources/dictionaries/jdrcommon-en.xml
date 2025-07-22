@@ -14,6 +14,15 @@ Nicola Talbot
 
 <entry key="xml.lang">en</entry>
 
+<!-- Command line invocation syntax messages -->
+
+<entry key="syntax.options">Options:</entry>
+<entry key="syntax.other_options">Other options:</entry>
+
+<entry key="syntax.help">{0} (or {1})   Display this help message and exit.</entry>
+<entry key="syntax.version">{0} (or {1})        Display version and exit.</entry>
+
+
 <!-- File Menu -->
 
 <entry key="menu.file">File</entry>

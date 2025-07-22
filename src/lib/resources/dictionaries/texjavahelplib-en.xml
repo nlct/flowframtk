@@ -49,6 +49,10 @@ Nicola Talbot
 <entry key="button.copy.keystroke">control C</entry>
 <entry key="button.copy.defaultkeys">format=glsignore</entry>
 
+<entry key="button.copy_all">Copy All</entry>
+<entry key="button.copy_all.mnemonic">A</entry>
+<entry key="button.copy_all.keystroke">control shift C</entry>
+
 <!-- TeXJavaHelpLibAppAdapter error reporting -->
 
 <entry key="button.quit_without_saving">Quit Without Saving</entry>
@@ -397,6 +401,11 @@ Nicola Talbot
 <entry key="about.version">{0} ({1})</entry>
 <entry key="about.library.version">Bundled with {0} version {1} ({2})</entry>
 
+<entry key="about.translator_info"></entry>
+<entry key="about.acknowledgements"></entry>
+
+<entry key="about.version_date">{0} {1} ({2})</entry>
+
 <!-- Index Map -->
 
 <entry key="indexmap.name_description">{0}: {1}</entry>
@@ -591,5 +600,23 @@ Unable to open URL {0}</entry>
 <entry key="error.browse_failed">Unable to open browser to view {0}</entry>
 <entry key="error.missing_search_term">Missing search term</entry>
 <entry key="error.image_load_failed">Failed to load image ''{0}''</entry>
+
+<!-- CLI syntax parsing -->
+
+<entry key="clisyntax.usage">Usage: {0}</entry>
+<entry key="clisyntax.help">{0}	Display help and exit.</entry>
+<entry key="clisyntax.help2">{0} (or {1})	Display help and exit.</entry>
+<entry key="clisyntax.version">{0}	Display version information and exit.</entry>
+<entry key="clisyntax.version2">{0} (or {1})	Display version information and exit.</entry>
+
+
+
+<entry key="error.clisyntax.missing.value">Missing value for: {0}</entry>
+<entry key="error.clisyntax.invalid.int_value">Invalid ''{0}'' value: {1} (number required)</entry>
+<entry key="error.clisyntax.unknown.arg">Unknown option: {0}
+Use {1} for help.</entry>
+<entry key="error.clisyntax.toomany.arg">Too many arguments.
+Use {0} for help.</entry>
+
 
 </properties>
