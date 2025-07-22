@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,9 @@ import java.awt.Component;
 import javax.swing.SwingUtilities;
 
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+import com.dickimawbooks.texjavahelplib.InvalidSyntaxException;
+import com.dickimawbooks.texjavahelplib.CLISyntaxParser;
+import com.dickimawbooks.texjavahelplib.CLIArgValue;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
@@ -82,18 +85,14 @@ public class JDRViewInvoker
 
       System.out.println(
          helpLib.getMessageWithFallback(
-        "about.version",
-        "{0} version {1}",
-         APP_NAME, JDRResources.APP_VERSION));
+        "about.version_date",
+        "{0} version {1} ({2})",
+         APP_NAME, JDRResources.APP_VERSION, JDRResources.APP_DATE));
 
       System.out.println();
 
-      helpLib.printSyntaxItem(helpLib.getMessage("syntax.title"));
-
-      System.out.println("jdrview [options] [jdr/ajr file]");
-      System.out.println();
-
-      helpLib.printSyntaxItem(helpLib.getMessage("syntax.options"));
+      System.out.println(helpLib.getMessage("clisyntax.usage",
+        helpLib.getMessage("syntax.options", APP_NAME)));
 
       System.out.println();
 
@@ -104,84 +103,144 @@ public class JDRViewInvoker
          helpLib.getMessage("syntax.cwd", "--cwd"));
 
       helpLib.printSyntaxItem(
-         helpLib.getMessage("syntax.help", "--help", "-h"));
+         helpLib.getMessage("syntax.in", "--in", "-i"));
 
       helpLib.printSyntaxItem(
-         helpLib.getMessage("syntax.version", "--version", "-v"));
+         helpLib.getMessage("clisyntax.help2", "--help", "-h"));
+
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("clisyntax.version2", "--version", "-v"));
+
+      System.out.println();
+      System.out.println(helpLib.getMessage("clisyntax.bugreport",
+        "https://github.com/nlct/flowframtk"));
 
       System.exit(0);
    }
 
    private void createAndShowGui()
+   throws IOException,URISyntaxException,InvalidFormatException,
+          InvalidSyntaxException
    {
-      try
-      {
-         resources = new JDRResources(APP_NAME);
-      }
-      catch (Throwable e)
-      {
-         e.printStackTrace();
-         System.exit(JDRResources.EXIT_FATAL_ERROR);
-      }
+      resources = new JDRResources(APP_NAME);
 
       messageSystem = new JDRGuiMessage(resources);
 
-      String filename = null;
-      boolean antiAlias = true;
-      String cwd = ".";
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
 
-      for (int i = 0; i < args.length; i++)
-      {
-         if (args[i].equals("-version")
-          || args[i].equals("--version"))
+      CLISyntaxParser cliParser = new CLISyntaxParser(helpLib, args, "-h", "-v")
+      {             
+         @Override
+         protected int argCount(String arg)
+         {
+            if (arg.equals("--cwd") || arg.equals("-cwd")
+             || arg.equals("--in") || arg.equals("-i")
+               )
+            {
+               return 1;
+            }
+
+            return 0;
+
+         }
+
+         @Override
+         protected void help()
+         {
+            syntax();
+            System.exit(0);
+         }
+
+         @Override
+         protected void version()
          {
             appVersion();
             System.exit(0);
          }
-         else if (args[i].equals("-help")
-          || args[i].equals("--help")
-          || args[i].equals("-h"))
+
+         @Override
+         protected void parseArg(String arg)
+         throws InvalidSyntaxException
          {
-            appVersion();
-            syntax();
-         }
-         else if (args[i].equals("-antialias"))
-         {
-            antiAlias = true;
-         }
-         else if (args[i].equals("-noantialias"))
-         {
-            antiAlias = false;
-         }
-         else if (args[i].equals("-cwd"))
-         {
-            if (args.length == i+1)
+            // support single hyphen for backward-compatibility
+
+            if (arg.equals("-version"))
             {
-               resources.error(resources.getMessage(
-                  "error.missing_cwd"));
+               version();
+            }
+            else if (arg.equals("-help"))
+            {
+               help();
+            }
+            else if ( arg.equals("--antialias")
+                   || arg.equals("-antialias")
+                    )
+            {
+               antiAlias = true;
+            }
+            else if ( arg.equals("--noantialias")
+                   || arg.equals("-noantialias")
+                    )
+            {
+               antiAlias = false;
+            }
+            else if (arg.startsWith("-"))
+            {
+               throw new InvalidSyntaxException(
+                helpLib.getMessage("error.syntax.unknown_option", arg));
+            } 
+            else if (filename == null)
+            {
+               filename = arg;
             }
             else
             {
-               cwd = args[++i];
+               throw new InvalidSyntaxException(
+                  helpLib.getMessage("error.one_filename"));
             }
          }
-         else if (args[i].startsWith("-"))
+
+         @Override
+         protected boolean parseArg(String arg, CLIArgValue[] returnVals)
+         throws InvalidSyntaxException
          {
-            resources.error(
-               resources.getMessage("error.unknown_option", args[i]));
-            syntax();
-         }
-         else if (filename == null)
-         {
-            filename = args[i];
-         }
-         else
-         {
-            resources.error(
-               resources.getMessage("error.one_filename"));
-            syntax();
-         }
-      }
+            if (isArg(arg, "--cwd", "-cwd", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     helpLib.getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               cwd = returnVals[0].toString();
+            }
+            else if (isArg(arg, "--in", "-i", returnVals))
+            {
+               if (filename != null)
+               {
+                  throw new InvalidSyntaxException(
+                     resources.getMessage("error.one_filename"));
+               }
+
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     helpLib.getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               filename = returnVals[0].toString();
+            }
+            else
+            {
+               return false;
+            }
+
+            return true;
+
+        }
+      };
+
+      cliParser.process();
 
       File cwdFile = new File(cwd);
 
@@ -198,14 +257,7 @@ public class JDRViewInvoker
          cwdFile = null;
       }
 
-      try
-      {
-         JDRView app = new JDRView(this, filename, antiAlias, cwdFile);
-      }
-      catch (Exception e)
-      {
-         resources.internalError((Component)null, e);
-      }
+      new JDRView(this, filename, antiAlias, cwdFile);
    }
 
    public static void main(String[] args)
@@ -218,7 +270,38 @@ public class JDRViewInvoker
          {
             public void run()
             {
-               invoker.createAndShowGui();
+               JDRResources resources = invoker.getResources();
+
+               try
+               {
+                  invoker.createAndShowGui();
+               }
+               catch (InvalidSyntaxException e)
+               {
+                  System.err.println(e.getMessage());
+                  System.exit(JDRResources.EXIT_FATAL_ERROR);
+               }
+               catch (Throwable e)
+               {
+                  String msg = e.getMessage();
+
+                  if (msg == null)
+                  {
+                     msg = e.getClass().getSimpleName();
+                  }
+
+                  System.err.println(msg);
+
+                  if (resources == null)
+                  {
+                     e.printStackTrace();
+                     System.exit(JDRResources.EXIT_FATAL_ERROR);
+                  }
+                  else
+                  {
+                     resources.internalError(null, msg, e);
+                  }
+               }
             }
          });
       }
@@ -231,6 +314,10 @@ public class JDRViewInvoker
    private String[] args;
    private JDRResources resources;
    private JDRGuiMessage messageSystem;
+
+   private String filename = null;
+   private boolean antiAlias = true;
+   private String cwd = ".";
 
    private static final String APP_NAME = "JDRView";
 }

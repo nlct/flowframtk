@@ -12,8 +12,11 @@ Nicola Talbot
      in texjavahelplib-en.xml
  -->
 
-<entry key="syntax.antialias">{0}   Enable anti-aliasing.</entry>
-<entry key="syntax.cwd">{0} &lt;path&gt;   Set the current working directory to &lt;path&gt;.</entry>
+<entry key="syntax.options">{0} [&lt;options&gt;] [&lt;JDR/AJR file&gt;]</entry>
+
+<entry key="syntax.antialias">{0}	Enable anti-aliasing.</entry>
+<entry key="syntax.cwd">{0} &lt;path&gt;	Set the current working directory to &lt;path&gt;.</entry>
+<entry key="syntax.in">{0} (or {1}) &lt;file&gt;	Load JDR/AJR &lt;file&gt;.</entry>
 
 <!-- File Menu -->
 

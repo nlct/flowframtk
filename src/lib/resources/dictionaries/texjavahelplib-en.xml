@@ -399,12 +399,12 @@ Nicola Talbot
 <!-- Version information -->
 
 <entry key="about.version">{0} ({1})</entry>
+<entry key="about.version_date">{0} {1} ({2})</entry>
+
 <entry key="about.library.version">Bundled with {0} version {1} ({2})</entry>
 
 <entry key="about.translator_info"></entry>
 <entry key="about.acknowledgements"></entry>
-
-<entry key="about.version_date">{0} {1} ({2})</entry>
 
 <!-- Index Map -->
 
@@ -609,6 +609,8 @@ Unable to open URL {0}</entry>
 <entry key="clisyntax.version">{0}	Display version information and exit.</entry>
 <entry key="clisyntax.version2">{0} (or {1})	Display version information and exit.</entry>
 
+<entry key="clisyntax.bugreport">Report bugs to: {0}</entry>
+<entry key="clisyntax.homepage">{0} home page: {1}</entry>
 
 
 <entry key="error.clisyntax.missing.value">Missing value for: {0}</entry>
