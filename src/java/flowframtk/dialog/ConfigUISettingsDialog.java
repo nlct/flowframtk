@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ public class ConfigUISettingsDialog extends JDialog
    public ConfigUISettingsDialog(FlowframTk application)
    {
       super(application,
-         application.getResources().getString("configui.title"), true);
+         application.getResources().getMessage("configui.title"), true);
       application_ = application;
 
       JTabbedPane tabbedPane = new JTabbedPane();
@@ -105,9 +105,9 @@ public class ConfigUISettingsDialog extends JDialog
       gbc.gridy++;
       graphicsPanel.add(controlPointsPanel, gbc);
 
-      tabbedPane.addTab(getResources().getString("graphics.title"),
+      tabbedPane.addTab(getResources().getMessage("graphics.title"),
          null, new JScrollPane(graphicsPanel),
-         getResources().getString("tooltip.graphics"));
+         getResources().getMessage("tooltip.graphics"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("graphics.mnemonic"));
 
@@ -130,66 +130,66 @@ public class ConfigUISettingsDialog extends JDialog
 
       annotationsPanel.add(splashScreenSettingsPanel, gbc);
 
-      tabbedPane.addTab(getResources().getString("annotations.title"),
+      tabbedPane.addTab(getResources().getMessage("annotations.title"),
          null, new JScrollPane(annotationsPanel),
-         getResources().getString("annotations.tooltip"));
+         getResources().getMessage("annotations.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("annotations.mnemonic"));
 
       langPanel = new LanguagePanel(application);
 
-      tabbedPane.addTab(getResources().getString("lang.title"),
+      tabbedPane.addTab(getResources().getMessage("lang.title"),
          null, new JScrollPane(langPanel),
-         getResources().getString("lang.tooltip"));
+         getResources().getMessage("lang.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("lang.mnemonic"));
 
       acceleratorPanel = new AcceleratorPanel(this);
 
-      tabbedPane.addTab(getResources().getString("accelerators.title"),
+      tabbedPane.addTab(getResources().getMessage("accelerators.title"),
          null, acceleratorPanel,
-         getResources().getString("accelerators.tooltip"));
+         getResources().getMessage("accelerators.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("accelerators.mnemonic"));
 
       rulerFormatPanel = new RulerFormatPanel(application);
       rulerFormatPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
-      tabbedPane.addTab(getResources().getString("borders.title"),
+      tabbedPane.addTab(getResources().getMessage("borders.title"),
          null, new JScrollPane(rulerFormatPanel),
-         getResources().getString("borders.tooltip"));
+         getResources().getMessage("borders.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("ruler.mnemonic"));
 
       normalizePanel = new NormalizePanel(getResources()); 
 
-      tabbedPane.addTab(getResources().getString("normalize.title"),
+      tabbedPane.addTab(getResources().getMessage("normalize.title"),
          null, new JScrollPane(normalizePanel),
-         getResources().getString("tooltip.normalize"));
+         getResources().getMessage("tooltip.normalize"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("normalize.mnemonic"));
 
       texEditorUIPanel = new TeXEditorUIPanel(application_);
 
-      tabbedPane.addTab(getResources().getString("texeditorui.title"),
+      tabbedPane.addTab(getResources().getMessage("texeditorui.title"),
          null, new JScrollPane(texEditorUIPanel),
-         getResources().getString("texeditorui.tooltip"));
+         getResources().getMessage("texeditorui.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("texeditorui.mnemonic"));
 
       lookAndFeelPanel = new LookAndFeelPanel(application_);
 
-      tabbedPane.addTab(getResources().getString("lookandfeel.title"),
+      tabbedPane.addTab(getResources().getMessage("lookandfeel.title"),
          null, new JScrollPane(lookAndFeelPanel),
-         getResources().getString("lookandfeel.tooltip"));
+         getResources().getMessage("lookandfeel.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("lookandfeel.mnemonic"));
 
       vectorizeBitmapUIPanel = new VectorizeBitmapUIPanel(application_);
 
-      tabbedPane.addTab(getResources().getString("vectorizeui.title"),
+      tabbedPane.addTab(getResources().getMessage("vectorizeui.title"),
          null, new JScrollPane(vectorizeBitmapUIPanel),
-         getResources().getString("vectorizeui.tooltip"));
+         getResources().getMessage("vectorizeui.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("vectorizeui.mnemonic"));
 
@@ -199,7 +199,7 @@ public class ConfigUISettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("configureuidialog"));
+      p.add(getResources().createHelpDialogButton(this, "sec:configureuidialog"));
 
       pack();
       setLocationRelativeTo(application_);
@@ -317,7 +317,7 @@ class EditPathPanel extends JPanel
    {
       super(null);
       this.application = application;
-      setName(getResources().getString("editpathui.title"));
+      setName(getResources().getMessage("editpathui.title"));
       setAlignmentX(0f);
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -367,7 +367,7 @@ class SplashScreenSettingsPanel extends JPanel
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
       setBorder(BorderFactory.createTitledBorder(
-         resources.getString("splash.title")));
+         resources.getMessage("splash.title")));
 
       infoFontSelector = new JavaFontSelector(gui, 
         "splash.infofont.name",
@@ -534,13 +534,13 @@ class ControlPointsPanel extends JPanel
 
       box.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(),
-        resources.getString("render.control."+tag)));
+        resources.getMessage("render.control."+tag)));
 
       controlPaintPanels[index] = new ControlPaintPanel(resources,
          point,
          resources.getMessage("render.control.choosertitle",
-           resources.getString("render.control."+tag),
-           resources.getString("render.control.unselected")));
+           resources.getMessage("render.control."+tag),
+           resources.getMessage("render.control.unselected")));
 
       box.add(controlPaintPanels[index]);
 
@@ -550,8 +550,8 @@ class ControlPointsPanel extends JPanel
       controlPaintPanels[index+1] = new ControlPaintPanel(resources,
          selectedPoint,
          resources.getMessage("render.control.choosertitle",
-           resources.getString("render.control."+tag),
-           resources.getString("render.control.selected")));
+           resources.getMessage("render.control."+tag),
+           resources.getMessage("render.control.selected")));
 
       box.add(controlPaintPanels[index+1]);
 
@@ -599,8 +599,8 @@ class ControlPaintPanel extends JPanel implements ActionListener
       point.y = ptSizeY*0.5+1;
 
       label = new JLabel(point.isSelected() ?
-                     resources.getString("render.control.selected") :
-                     resources.getString("render.control.unselected"));
+                     resources.getMessage("render.control.selected") :
+                     resources.getMessage("render.control.unselected"));
 
       paint = point.isSelected() ? point.getSelectedPaint()
                                  : point.getUnselectedPaint();
@@ -745,8 +745,8 @@ class DragScalePanel extends JPanel
    {
       super();
 
-      add(new JLabel(resources.getString("hotspots.title")));
-      setToolTipText(resources.getString("tooltip.hotspots"));
+      add(new JLabel(resources.getMessage("hotspots.title")));
+      setToolTipText(resources.getMessage("tooltip.hotspots"));
 
       ButtonGroup group = new ButtonGroup();
 
@@ -820,7 +820,7 @@ class LanguagePanel extends JPanel
       gbc.gridx++;
       add(dictLangBox, gbc);
 
-      String id = getResources().getDictLocaleId();
+      String id = getResources().getDictionaryTag();
 
       if (id != null)
       {
@@ -844,7 +844,7 @@ class LanguagePanel extends JPanel
       gbc.gridx++;
       add(helpLangBox, gbc);
 
-      id = getResources().getHelpLocaleId();
+      id = getResources().getHelpSetTag();
 
       if (id != null)
       {
@@ -873,8 +873,8 @@ class LanguagePanel extends JPanel
       }
 
       Object[] columnNames = new Object[2];
-      columnNames[0] = getResources().getString("lang.unicode.start");
-      columnNames[1] = getResources().getString("lang.unicode.end");
+      columnNames[0] = getResources().getMessage("lang.unicode.start");
+      columnNames[1] = getResources().getMessage("lang.unicode.end");
 
       unicodeTable = new JTable(new DefaultTableModel(data, columnNames))
       {
@@ -901,12 +901,12 @@ class LanguagePanel extends JPanel
 
       JButton addButton =  getResources().createDialogButton(
         "lang.unicode.add_block", "add.unicode_block", this, null,
-        getResources().getString("lang.unicode.add_block.tooltip"));
+        getResources().getMessage("lang.unicode.add_block.tooltip"));
       box.add(addButton);
 
       removeButton =  getResources().createDialogButton(
         "lang.unicode.remove_block", "remove.unicode_block", this, null,
-        getResources().getString("lang.unicode.remove_block.tooltip"));
+        getResources().getMessage("lang.unicode.remove_block.tooltip"));
       box.add(removeButton);
 
       add(panel, gbc);
@@ -932,8 +932,8 @@ class LanguagePanel extends JPanel
          }
 
          Object[] columnNames = new Object[2];
-         columnNames[0] = getResources().getString("lang.unicode.start");
-         columnNames[1] = getResources().getString("lang.unicode.end");
+         columnNames[0] = getResources().getMessage("lang.unicode.start");
+         columnNames[1] = getResources().getMessage("lang.unicode.end");
 
          ((DefaultTableModel)unicodeTable.getModel())
             .setDataVector(data, columnNames);
@@ -1050,7 +1050,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
 
       JComponent toolBarComp = createToolBarArea();
       toolBarComp.setBorder(BorderFactory.createTitledBorder(
-         resources.getString("borders.toolbars.title")));
+         resources.getMessage("borders.toolbars.title")));
       toolBarComp.setAlignmentX(0f);
 
       add(toolBarComp);
@@ -1059,7 +1059,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
 
       JComponent rulerComp = createRulerArea(application);
       rulerComp.setBorder(BorderFactory.createTitledBorder(
-         resources.getString("borders.rulers.title")));
+         resources.getMessage("borders.rulers.title")));
       rulerComp.setAlignmentX(0f);
 
       add(rulerComp);
@@ -1069,7 +1069,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
       JComponent statusBarComp = createStatusArea(application);
       statusBarComp.setAlignmentX(0f);
       statusBarComp.setBorder(BorderFactory.createTitledBorder(
-        resources.getString("borders.status.title")));
+        resources.getMessage("borders.status.title")));
 
       add(statusBarComp);
 
@@ -1122,7 +1122,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
       gbc.gridx++;
       gbc.weightx=0.25;
       toolBarLocationComp.add(
-        new JLabel(resources.getString("borders.vtoolbar.info")));
+        new JLabel(resources.getMessage("borders.vtoolbar.info")));
 
       return comp;
    }
@@ -1271,8 +1271,8 @@ class RulerFormatPanel extends JPanel implements ActionListener
       gbc.fill=GridBagConstraints.BOTH;
 
       rulerComp.add(resources.createAppInfoArea("borders.showruler.info",
-           resources.getString("settings.label"),
-           resources.getString("settings.rulers")),
+           resources.getMessage("settings.label"),
+           resources.getMessage("settings.rulers")),
         gbc);
 
       return rulerComp;
@@ -1543,7 +1543,7 @@ class AcceleratorPanel extends JPanel
       this.resources = owner.getResources();
 
       JTextArea info = new JTextArea(
-         resources.getString("accelerators.info"));
+         resources.getMessage("accelerators.info"));
       info.setEditable(false);
       info.setOpaque(false);
       info.setLineWrap(true);
@@ -1592,9 +1592,9 @@ class AcceleratorPanel extends JPanel
 
       Vector<String> columnNames = new Vector<String>(3);
 
-      columnNames.add(resources.getString("accelerators.column.propname"));
-      columnNames.add(resources.getString("accelerators.column.function"));
-      columnNames.add(resources.getString("accelerators.column.keystroke"));
+      columnNames.add(resources.getMessage("accelerators.column.propname"));
+      columnNames.add(resources.getMessage("accelerators.column.function"));
+      columnNames.add(resources.getMessage("accelerators.column.keystroke"));
 
       table = new JTable(data, columnNames)
       {
@@ -1655,7 +1655,7 @@ class AcceleratorRow extends Vector<String>
       super(2);
 
       add(propertyName);
-      add(resources.getString(propertyName));
+      add(resources.getMessage(propertyName));
       add(resources.getAcceleratorString(propertyName));
    }
 
@@ -1690,7 +1690,7 @@ class AcceleratorDialog extends JDialog
 {
    public AcceleratorDialog(JDialog owner, AcceleratorPanel accPanel)
    {
-      super(owner, accPanel.getResources().getString("accelerator.set"), true);
+      super(owner, accPanel.getResources().getMessage("accelerator.set"), true);
 
       acceleratorPanel = accPanel;
 
@@ -2650,7 +2650,7 @@ class TeXEditorUIPanel extends JPanel
       add(prefSizeComp, gbc);
 
       prefSizeComp.setBorder(BorderFactory.createTitledBorder(
-         resources.getString("texeditorui.dim")));
+         resources.getMessage("texeditorui.dim")));
 
       JLabel widthLabel = resources.createAppLabel("texeditorui.width");
 
@@ -2665,7 +2665,7 @@ class TeXEditorUIPanel extends JPanel
       widthModel = new SpinnerNumberModel(10, 1, 100, 1);
       JSpinner widthField = new JSpinner(widthModel);
       widthField.setToolTipText(
-         resources.getString("texeditorui.width.tooltip"));
+         resources.getMessage("texeditorui.width.tooltip"));
       widthLabel.setLabelFor(widthField);
       widthLabel.setToolTipText(widthField.getToolTipText());
 
@@ -2682,7 +2682,7 @@ class TeXEditorUIPanel extends JPanel
       heightModel = new SpinnerNumberModel(10, 1, 100, 1);
       JSpinner heightField = new JSpinner(heightModel);
       heightField.setToolTipText(
-         resources.getString("texeditorui.height.tooltip"));
+         resources.getMessage("texeditorui.height.tooltip"));
       heightLabel.setLabelFor(heightField);
       heightLabel.setToolTipText(heightField.getToolTipText());
 
@@ -2705,7 +2705,7 @@ class TeXEditorUIPanel extends JPanel
       splitGbc.gridy=0;
 
       splitComp.setBorder(BorderFactory.createTitledBorder(
-        resources.getString("texeditorui.split")));
+        resources.getMessage("texeditorui.split")));
 
       ButtonGroup bg = new ButtonGroup();
 
@@ -2743,7 +2743,7 @@ class TeXEditorUIPanel extends JPanel
       if (action.equals("commentselect"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("texeditorui.comment"),
+            resources.getMessage("texeditorui.comment"),
             commentColorPanel.getBackground());
 
          if (color != null)
@@ -2754,7 +2754,7 @@ class TeXEditorUIPanel extends JPanel
       else if (action.equals("csselect"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("texeditorui.cs"),
+            resources.getMessage("texeditorui.cs"),
             csColorPanel.getBackground());
 
          if (color != null)
@@ -2934,7 +2934,7 @@ class LookAndFeelPanel extends JPanel
 
       JPanel dbPanel = new JPanel(new BorderLayout());
       dbPanel.setBorder(BorderFactory.createTitledBorder(
-          getResources().getString("lookandfeel.dialog_button_styles")));
+          getResources().getMessage("lookandfeel.dialog_button_styles")));
 
       add(dbPanel);
 
@@ -3051,7 +3051,7 @@ class LookAndFeelPanel extends JPanel
       gbc.anchor=GridBagConstraints.LINE_START;
 
       stylesPanel.setBorder(BorderFactory.createTitledBorder(
-         getResources().getString("lookandfeel.button_styles")));
+         getResources().getMessage("lookandfeel.button_styles")));
 
       stylesPanel.add(
          getResources().createAppLabel("lookandfeel.button.style"), gbc);
@@ -3096,7 +3096,7 @@ class LookAndFeelPanel extends JPanel
          gbc.gridx++;
 
          button = style.createButton(getResources(),
-             getResources().getString("label.okay"), "okay", null, null);
+             getResources().getMessage("label.okay"), "okay", null, null);
          button.setMnemonic('\0');
 
          stylesPanel.add(button, gbc);
@@ -3104,7 +3104,7 @@ class LookAndFeelPanel extends JPanel
          gbc.gridx++;
 
          button = style.createToggle(getResources(),
-             getResources().getString("label.edit_path"), "editPath", null, null);
+             getResources().getMessage("label.edit_path"), "editPath", null, null);
          button.setMnemonic('\0');
 
          stylesPanel.add(button, gbc);
@@ -3113,14 +3113,14 @@ class LookAndFeelPanel extends JPanel
          JComponent radioComp = Box.createVerticalBox();
 
          button = style.createTool(getResources(),
-               getResources().getString("tools.select"), "select", null, 
+               getResources().getMessage("tools.select"), "select", null, 
                grp, true, null);
          button.setMnemonic('\0');
 
          radioComp.add(button);
 
          button = style.createTool(getResources(),
-               getResources().getString("tools.text"), "text", null,
+               getResources().getMessage("tools.text"), "text", null,
                grp, false, null);
          button.setMnemonic('\0');
 
@@ -3519,7 +3519,7 @@ class VectorizeBitmapUIPanel extends JPanel
       if (action.equals("notregion"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("vectorizeui.notregion"),
+            resources.getMessage("vectorizeui.notregion"),
             notRegionColorPanel.getBackground());
 
          if (color != null)
@@ -3531,7 +3531,7 @@ class VectorizeBitmapUIPanel extends JPanel
       else if (action.equals("path"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("vectorizeui.current_path"),
+            resources.getMessage("vectorizeui.current_path"),
             pathColorPanel.getBackground());
 
          if (color != null)
@@ -3543,7 +3543,7 @@ class VectorizeBitmapUIPanel extends JPanel
       else if (action.equals("connector"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("vectorizeui.connector"),
+            resources.getMessage("vectorizeui.connector"),
             connectorColorPanel.getBackground());
 
          if (color != null)
@@ -3555,7 +3555,7 @@ class VectorizeBitmapUIPanel extends JPanel
       else if (action.equals("drag"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("vectorizeui.drag"),
+            resources.getMessage("vectorizeui.drag"),
             dragColorPanel.getBackground());
 
          if (color != null)
@@ -3567,7 +3567,7 @@ class VectorizeBitmapUIPanel extends JPanel
       else if (action.equals("control"))
       {
          Color color = colorChooser.showDialog(this, 
-            resources.getString("vectorizeui.control"),
+            resources.getMessage("vectorizeui.control"),
             controlPointPanel.getForeground());
 
          if (color != null)

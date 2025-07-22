@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2012-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class FadeDialogBox extends JDialog
 {
    public FadeDialogBox(FlowframTk application)
    {
-      super(application, application.getResources().getString("fade.title"),
+      super(application, application.getResources().getMessage("fade.title"),
             true);
       setSize(300,110);
       application_ = application;
@@ -85,7 +85,7 @@ public class FadeDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("fade"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:fade"));
 
       getContentPane().add(p2, "South");
 

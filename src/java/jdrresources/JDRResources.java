@@ -127,6 +127,7 @@ public class JDRResources
    public void setHelpSet(HelpSetLocale hsLocale)
    {
       helpSetLocale = hsLocale;
+      helpLib.setHelpSetLocale(hsLocale);
    }
 
    public void setHelpSet(String tag)
@@ -526,6 +527,11 @@ public class JDRResources
    public String getMessage(String key, Object... values)
    {
       return helpLib.getMessage(key, values);
+   }
+
+   public String getMessage(String key, int value)
+   {
+      return helpLib.getMessage(key, ""+value);
    }
 
    public String getMessageIfExists(String key, Object... values)
@@ -1363,11 +1369,23 @@ public class JDRResources
 
    /**
     * Creates an action to open a secondary help window at the
-    * identified identified node for a modal dialog.
+    * identified node for a modal dialog.
     * @param dialog the dialog window
     * @param id node identified (corresponds to \label argument)
     */
    public JButton createHelpDialogButton(JDialog dialog, String id)
+   {
+      return helpLib.createHelpDialogButton(dialog, id);
+   }
+
+   /**
+    * Creates an action to open a secondary help window at the
+    * identified node for a frame that behaves like a modeless
+    * dialog.
+    * @param dialog the dialog window
+    * @param id node identified (corresponds to \label argument)
+    */
+   public JButton createHelpDialogButton(JFrame dialog, String id)
    {
       return helpLib.createHelpDialogButton(dialog, id);
    }

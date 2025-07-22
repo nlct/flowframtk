@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class TextSelector extends JDialog
 {
    public TextSelector(FlowframTk application)
    {
-      super(application, application.getResources().getString("edittext.title"),
+      super(application, application.getResources().getMessage("edittext.title"),
          true);
       application_ = application;
 
@@ -86,7 +86,7 @@ public class TextSelector extends JDialog
       textpopupMenu = new JPopupMenu();
 
       copyText = new JMenuItem(
-          getResources().getString("edit.copy"),
+          getResources().getMessage("edit.copy"),
           getResources().getCodePoint("edit.copy.mnemonic"));
       textpopupMenu.add(copyText);
       copyText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
@@ -100,7 +100,7 @@ public class TextSelector extends JDialog
          });
 
       cutText = new JMenuItem(
-          getResources().getString("edit.cut"),
+          getResources().getMessage("edit.cut"),
           getResources().getCodePoint("edit.cut.mnemonic"));
       textpopupMenu.add(cutText);
       cutText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
@@ -114,7 +114,7 @@ public class TextSelector extends JDialog
          });
 
       JMenuItem pasteText = new JMenuItem(
-          getResources().getString("edit.paste"),
+          getResources().getMessage("edit.paste"),
           getResources().getCodePoint("edit.paste.mnemonic"));
       textpopupMenu.add(pasteText);
       pasteText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
@@ -128,7 +128,7 @@ public class TextSelector extends JDialog
          });
 
       JMenuItem select_allText = new JMenuItem(
-          getResources().getString("edit.select_all"),
+          getResources().getMessage("edit.select_all"),
           getResources().getCodePoint("edit.select_all.mnemonic"));
       textpopupMenu.add(select_allText);
       select_allText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
@@ -145,7 +145,7 @@ public class TextSelector extends JDialog
          "text.insert_symbol");
 
       JMenuItem insertSymbol = new JMenuItem(
-         getResources().getString("text.insert_symbol"),
+         getResources().getMessage("text.insert_symbol"),
          getResources().getCodePoint("text.insert_symbol.mnemonic"));
       textpopupMenu.add(insertSymbol);
       insertSymbol.setAccelerator(insertKeyStroke);
@@ -196,7 +196,7 @@ public class TextSelector extends JDialog
       JPanel p3 = new JPanel();
 
       p3.add(new JLabel(
-         getResources().getString("edittext.latexlabel")));
+         getResources().getMessage("edittext.latexlabel")));
 
       ButtonGroup group = new ButtonGroup();
 
@@ -234,7 +234,7 @@ public class TextSelector extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("edittext"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:edittext"));
 
       getContentPane().add(p2, "South");
 
@@ -253,7 +253,7 @@ public class TextSelector extends JDialog
       if (text == null)
       {
          getResources().internalError(
-            getResources().getString("internal_error.cant_find_selected_text"));
+            getResources().getMessage("internal_error.cant_find_selected_text"));
          return;
       }
 
@@ -491,7 +491,7 @@ class TextPathPanel extends JPanel
 
       setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(),
-        resources.getString("edittext.textpath")));
+        resources.getMessage("edittext.textpath")));
 
       Box box = Box.createHorizontalBox();
       box.setAlignmentX(0.0f);
@@ -500,7 +500,7 @@ class TextPathPanel extends JPanel
       box.add(Box.createHorizontalGlue());
 
       JLabel leftDelimLabel = new JLabel(
-         resources.getString("edittext.textpath.left_delim"));
+         resources.getMessage("edittext.textpath.left_delim"));
       leftDelimLabel.setDisplayedMnemonic(
          resources.getCodePoint("edittext.textpath.left_delim.mnemonic"));
       leftDelimLabel.setAlignmentX(0.0f);
@@ -515,7 +515,7 @@ class TextPathPanel extends JPanel
       box.add(Box.createHorizontalStrut(20));
 
       JLabel rightDelimLabel = new JLabel(
-         resources.getString("edittext.textpath.right_delim"));
+         resources.getMessage("edittext.textpath.right_delim"));
       rightDelimLabel.setDisplayedMnemonic(
          resources.getCodePoint("edittext.textpath.right_delim.mnemonic"));
       rightDelimLabel.setAlignmentX(0.0f);
@@ -532,7 +532,7 @@ class TextPathPanel extends JPanel
       add(Box.createVerticalStrut(10));
 
       textArea = new JTextArea(
-         resources.getString("edittext.textpath.info"));
+         resources.getMessage("edittext.textpath.info"));
       textArea.setEditable(false);
       textArea.setOpaque(false);
       textArea.setLineWrap(true);

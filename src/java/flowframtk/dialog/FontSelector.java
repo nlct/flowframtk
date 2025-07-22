@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,10 +45,8 @@ public class FontSelector extends JDRSelector
 {
    public FontSelector(FlowframTk application)
    {
-      super(application, application.getResources().getString("font.title"),
-         false, true, true);
-
-      application.enableHelpOnButton(help, "textstyle");
+      super(application, application.getResources().getMessage("font.title"),
+         false, true, true, "sec:textstyle");
 
       // font panel
 

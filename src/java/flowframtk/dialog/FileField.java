@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Nicola L.C. Talbot
+    Copyright (C) 2013-2025 Nicola L.C. Talbot
     www.dickimaw-books.com
 
     This program is free software; you can redistribute it and/or modify
@@ -71,7 +71,7 @@ public class FileField extends Box
       box.add(textField);
 
       button = getResources().createDialogButton("label.choose", "open",
-         this, null, getResources().getString("tooltip.choose_file"));
+         this, null, getResources().getMessage("tooltip.choose_file"));
 
       box.add(button);
 
@@ -118,7 +118,7 @@ public class FileField extends Box
             getResources().getCodePoint("file.select.mnemonic"));
 
          if (fileChooser.showDialog(parent,
-            getResources().getString("file.select"))
+            getResources().getMessage("file.select"))
             == JFileChooser.APPROVE_OPTION)
          {
             textField.setText(fileChooser.getSelectedFile().getAbsolutePath());

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2008-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
          if (image.anyDraftBitmaps())
          {
             publish(MessageInfo.createWarning(
-               getResources().getString("warning.draft_bitmaps")));
+               getResources().getMessage("warning.draft_bitmaps")));
          }
       }
       finally
@@ -110,7 +110,7 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
          catch (IOException e)
          {
             publish(
-            MessageInfo.createError(getResources().getString("error.io.close")),
+            MessageInfo.createError(getResources().getMessage("error.io.close")),
             MessageInfo.createError(e));
          }
 

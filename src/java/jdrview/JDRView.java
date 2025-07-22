@@ -119,8 +119,7 @@ public class JDRView extends JFrame
 
       try
       {
-         initializeHelp(this);
-
+         getResources().initialiseHelp(this);
       }
       catch (Exception e)
       {
@@ -1009,15 +1008,6 @@ public class JDRView extends JFrame
    public JMenuItem addHelpItem(JMenu helpM)
    {
       return getResources().addHelpItem(helpM);
-   }
-
-   /**
-    * Initializes the helpset.
-    */
-   public void initializeHelp(JFrame parent)
-    throws IOException, SAXException
-   {
-      getResources().initialiseHelp(parent);
    }
 
    /**

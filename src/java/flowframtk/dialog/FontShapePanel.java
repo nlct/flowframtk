@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ public class FontShapePanel extends JPanel implements ItemListener
       add(fontShapeLabel);
 
       fontShape = new JComboBox<String>(
-         new String[] {getResources().getString("font.shape.upright"),
-                       getResources().getString("font.shape.italic")});
+         new String[] {getResources().getMessage("font.shape.upright"),
+                       getResources().getMessage("font.shape.italic")});
       fontShapeLabel.setLabelFor(fontShape);
       add(fontShape);
 

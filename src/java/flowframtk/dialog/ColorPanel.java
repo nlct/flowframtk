@@ -100,29 +100,29 @@ public class ColorPanel extends JPanel
 
       // RGB selector panel
 
-      tabbedPane.addTab(getResources().getString("colour.rgb"),
+      tabbedPane.addTab(getResources().getMessage("colour.rgb"),
                         null, rgbPanel,
-                        getResources().getString("tooltip.rgb"));
+                        getResources().getMessage("tooltip.rgb"));
       tabbedPane.addChangeListener(this);
       currentPanel = rgbPanel;
 
       // CMYK selector panel
 
-      tabbedPane.addTab(getResources().getString("colour.cmyk"),
+      tabbedPane.addTab(getResources().getMessage("colour.cmyk"),
                         null, cmykPanel,
-                        getResources().getString("tooltip.cmyk"));
+                        getResources().getMessage("tooltip.cmyk"));
 
       // HSB selector panel
 
-      tabbedPane.addTab(getResources().getString("colour.hsb"),
+      tabbedPane.addTab(getResources().getMessage("colour.hsb"),
                         null, hsbPanel,
-                        getResources().getString("tooltip.hsb"));
+                        getResources().getMessage("tooltip.hsb"));
 
       // Grey selector panel
 
-      tabbedPane.addTab(getResources().getString("colour.grey"),
+      tabbedPane.addTab(getResources().getMessage("colour.grey"),
                         null, greyPanel,
-                        getResources().getString("tooltip.grey"));
+                        getResources().getMessage("tooltip.grey"));
 
       // predefined colour panel
       constraints.gridx = 2;
@@ -139,48 +139,48 @@ public class ColorPanel extends JPanel
       predefined_n = 0;
 
       addPredefinedColor(Color.black,
-         getResources().getString("tooltip.swatch.black"));
+         getResources().getMessage("tooltip.swatch.black"));
       addPredefinedColor(Color.darkGray,
-         getResources().getString("tooltip.swatch.darkgrey"));
+         getResources().getMessage("tooltip.swatch.darkgrey"));
       addPredefinedColor(Color.gray,
-         getResources().getString("tooltip.swatch.grey"));
+         getResources().getMessage("tooltip.swatch.grey"));
       addPredefinedColor(Color.lightGray,
-         getResources().getString("tooltip.swatch.lightgrey"));
+         getResources().getMessage("tooltip.swatch.lightgrey"));
       addPredefinedColor(Color.white,
-         getResources().getString("tooltip.swatch.white"));
+         getResources().getMessage("tooltip.swatch.white"));
 
       addPredefinedColor(new Color(0,0,128),
-         getResources().getString("tooltip.swatch.darkblue"));
+         getResources().getMessage("tooltip.swatch.darkblue"));
       addPredefinedColor(Color.blue,
-         getResources().getString("tooltip.swatch.blue"));
+         getResources().getMessage("tooltip.swatch.blue"));
       addPredefinedColor(Color.cyan,
-         getResources().getString("tooltip.swatch.cyan"));
+         getResources().getMessage("tooltip.swatch.cyan"));
       addPredefinedColor(Color.green,
-         getResources().getString("tooltip.swatch.green"));
+         getResources().getMessage("tooltip.swatch.green"));
       addPredefinedColor(new Color(0,128,0),
-         getResources().getString("tooltip.swatch.darkgreen"));
+         getResources().getMessage("tooltip.swatch.darkgreen"));
 
       addPredefinedColor(Color.yellow,
-         getResources().getString("tooltip.swatch.yellow"));
+         getResources().getMessage("tooltip.swatch.yellow"));
       addPredefinedColor(cmyk(0.0,0.1,0.84,0),
-         getResources().getString("tooltip.swatch.goldenrod"));
+         getResources().getMessage("tooltip.swatch.goldenrod"));
       addPredefinedColor(Color.orange,
-         getResources().getString("tooltip.swatch.orange"));
+         getResources().getMessage("tooltip.swatch.orange"));
       addPredefinedColor(cmyk(0.14,0.42,0.56,0.0),
-         getResources().getString("tooltip.swatch.tan"));
+         getResources().getMessage("tooltip.swatch.tan"));
       addPredefinedColor(cmyk(0.0,0.72,1.0,0.45),
-         getResources().getString("tooltip.swatch.rawsienna"));
+         getResources().getMessage("tooltip.swatch.rawsienna"));
 
       addPredefinedColor(Color.red,
-         getResources().getString("tooltip.swatch.red"));
+         getResources().getMessage("tooltip.swatch.red"));
       addPredefinedColor(new Color(128,0,0),
-         getResources().getString("tooltip.swatch.darkred"));
+         getResources().getMessage("tooltip.swatch.darkred"));
       addPredefinedColor(cmyk(0.32,0.64,0.0,0.0),
-         getResources().getString("tooltip.swatch.orchid"));
+         getResources().getMessage("tooltip.swatch.orchid"));
       addPredefinedColor(Color.magenta,
-         getResources().getString("tooltip.swatch.magenta"));
+         getResources().getMessage("tooltip.swatch.magenta"));
       addPredefinedColor(Color.pink,
-         getResources().getString("tooltip.swatch.pink"));
+         getResources().getMessage("tooltip.swatch.pink"));
    }
 
    private Color cmyk(double cyan, double magenta, double yellow,

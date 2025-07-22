@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class FLFSetTypeblock extends JDialog
    public FLFSetTypeblock(FlowframTk application)
    {
       super(application,
-        application.getResources().getString("typeblock.title"),true);
+        application.getResources().getMessage("typeblock.title"),true);
       application_ = application;
 
       JComponent mainPanel = Box.createVerticalBox();
@@ -133,7 +133,7 @@ public class FLFSetTypeblock extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("typeblock"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:typeblock"));
 
       getContentPane().add(p2, "South");
 

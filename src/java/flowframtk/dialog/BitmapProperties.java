@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ public class BitmapProperties extends JDialog
    public BitmapProperties(FlowframTk application, JFileChooser fc)
    {
       super(application,
-            application.getResources().getString("bitmap.properties.label"),
+            application.getResources().getMessage("bitmap.properties.label"),
             true);
       application_ = application;
       fc_ = fc;
@@ -69,12 +69,12 @@ public class BitmapProperties extends JDialog
       JLabel filenameLabel = getResources().createAppLabel("label.filename");
       rowBox.add(filenameLabel);
 
-      filename = new JTextField(getResources().getString("error.no_filename"));
+      filename = new JTextField(getResources().getMessage("error.no_filename"));
       filenameLabel.setLabelFor(filename);
       rowBox.add(filename);
 
       browse = getResources().createDialogButton("browse.label", "open",
-         this, null, getResources().getString("tooltip.choose_file"));
+         this, null, getResources().getMessage("tooltip.choose_file"));
 
       rowBox.add(browse);
 
@@ -98,10 +98,10 @@ public class BitmapProperties extends JDialog
 
       mainPanel.add(Box.createVerticalStrut(10));
 
-      JTextArea infoArea = new JTextArea(getResources().getString(
+      JTextArea infoArea = new JTextArea(getResources().getMessage(
          "bitmap.properties.path_note") + " "
         + (application.useRelativeBitmaps() ?
-           getResources().getString("bitmap.properties.path.relative") :
+           getResources().getMessage("bitmap.properties.path.relative") :
            getResources().getMessage("bitmap.properties.path.absolute",
               filenameLabel.getText())));
       infoArea.setEditable(false);
@@ -189,7 +189,7 @@ public class BitmapProperties extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("bitmapprops"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:bitmapprops"));
 
       getContentPane().add(p2, "South");
 
@@ -243,7 +243,7 @@ public class BitmapProperties extends JDialog
       if (db == null)
       {
          getResources().internalError(this,
-            getResources().getString("internal_error.no_bitmap"));
+            getResources().getMessage("internal_error.no_bitmap"));
          return;
       }
 
@@ -284,7 +284,7 @@ public class BitmapProperties extends JDialog
          getResources().error(this, 
                        new String[]
                        {"'"+newfilename+"'",
-                       getResources().getString("error.not_found")});
+                       getResources().getMessage("error.not_found")});
       }
       else
       {

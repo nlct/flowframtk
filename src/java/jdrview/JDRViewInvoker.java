@@ -162,6 +162,21 @@ public class JDRViewInvoker
          protected void parseArg(String arg)
          throws InvalidSyntaxException
          {
+            if (filename == null)
+            {
+               filename = arg;
+            }
+            else
+            {
+               throw new InvalidSyntaxException(
+                  helpLib.getMessage("error.one_filename"));
+            }
+         }
+
+         @Override
+         protected boolean parseArg(String arg, CLIArgValue[] returnVals)
+         throws InvalidSyntaxException
+         {
             // support single hyphen for backward-compatibility
 
             if (arg.equals("-version"))
@@ -184,27 +199,7 @@ public class JDRViewInvoker
             {
                antiAlias = false;
             }
-            else if (arg.startsWith("-"))
-            {
-               throw new InvalidSyntaxException(
-                helpLib.getMessage("error.syntax.unknown_option", arg));
-            } 
-            else if (filename == null)
-            {
-               filename = arg;
-            }
-            else
-            {
-               throw new InvalidSyntaxException(
-                  helpLib.getMessage("error.one_filename"));
-            }
-         }
-
-         @Override
-         protected boolean parseArg(String arg, CLIArgValue[] returnVals)
-         throws InvalidSyntaxException
-         {
-            if (isArg(arg, "--cwd", "-cwd", returnVals))
+            else if (isArg(arg, "--cwd", "-cwd", returnVals))
             {
                if (returnVals[0] == null)
                {

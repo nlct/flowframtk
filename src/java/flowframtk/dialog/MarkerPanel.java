@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ public class MarkerPanel extends JPanel
       markerTabPane.addChangeListener(this);
 
       markerTabPane.setToolTipText(
-         getResources().getString("tooltip.arrow.type"));
+         getResources().getMessage("tooltip.arrow.type"));
 
       // arrow style markers
 
@@ -101,7 +101,7 @@ public class MarkerPanel extends JPanel
       JScrollPane arrowSp = new JScrollPane(arrowStyleBox);
 
       markerTabPane.addTab(
-         getResources().getString("arrow.tab.arrows")+" ", null, arrowSp,
+         getResources().getMessage("arrow.tab.arrows")+" ", null, arrowSp,
          getResources().getToolTipText("arrow.type.arrows"));
 
       // partial arrows
@@ -115,7 +115,7 @@ public class MarkerPanel extends JPanel
       JScrollPane partialSp = new JScrollPane(partialStyleBox);
 
       markerTabPane.addTab(
-         getResources().getString("arrow.tab.partial")+" ", null, partialSp,
+         getResources().getMessage("arrow.tab.partial")+" ", null, partialSp,
          getResources().getToolTipText("arrow.type.partial"));
 
       // data point styles
@@ -129,7 +129,7 @@ public class MarkerPanel extends JPanel
       JScrollPane dataSp = new JScrollPane(dataStyleBox);
 
       markerTabPane.addTab(
-         getResources().getString("arrow.tab.data")+" ", null, dataSp,
+         getResources().getMessage("arrow.tab.data")+" ", null, dataSp,
          getResources().getToolTipText("arrow.type.data"));
 
       // bracket style markers
@@ -143,7 +143,7 @@ public class MarkerPanel extends JPanel
       JScrollPane bracketSp = new JScrollPane(bracketStyleBox);
 
       markerTabPane.addTab(
-         getResources().getString("arrow.tab.bracket")+" ", null, bracketSp,
+         getResources().getMessage("arrow.tab.bracket")+" ", null, bracketSp,
          getResources().getToolTipText("arrow.type.bracket"));
 
       // circle/diamond style markers
@@ -157,7 +157,7 @@ public class MarkerPanel extends JPanel
       JScrollPane shapesSp = new JScrollPane(shapesStyleBox);
 
       markerTabPane.addTab(
-         getResources().getString("arrow.tab.decorative")+" ", null, shapesSp,
+         getResources().getMessage("arrow.tab.decorative")+" ", null, shapesSp,
          getResources().getToolTipText("arrow.type.decorative"));
 
       // cap style markers
@@ -171,7 +171,7 @@ public class MarkerPanel extends JPanel
       JScrollPane capSp = new JScrollPane(capStyleBox);
 
       markerTabPane.addTab(
-         getResources().getString("arrow.tab.caps")+" ", null, capSp,
+         getResources().getMessage("arrow.tab.caps")+" ", null, capSp,
          getResources().getToolTipText("arrow.type.caps"));
 
       markerPanel.add(markerTabPane);
@@ -880,17 +880,17 @@ public class MarkerPanel extends JPanel
 
       if (getArrowRepeated()==2)
       {
-         str += " "+getResources().getString("arrow.double");
+         str += " "+getResources().getMessage("arrow.double");
       }
       else if (getArrowRepeated()==3)
       {
-         str += " "+getResources().getString("arrow.triple");
+         str += " "+getResources().getMessage("arrow.triple");
       }
 
 
       if (getArrowReverse())
       {
-         str += " "+getResources().getString("arrow.reversed");
+         str += " "+getResources().getMessage("arrow.reversed");
       }
 
       return str;
@@ -906,210 +906,210 @@ public class MarkerPanel extends JPanel
       if (noMarkerItem != null) return;
 
       noMarkerItem = new MarkerItem(getResources(), JDRMarker.ARROW_NONE,
-         getResources().getString("arrow.none"));
+         getResources().getMessage("arrow.none"));
 
       arrowStyles = new MarkerItem[]
       {
          new MarkerItem(getResources(), JDRMarker.ARROW_POINTED,
-            getResources().getString("arrow.pointed")),
+            getResources().getMessage("arrow.pointed")),
          new MarkerItem(getResources(), JDRMarker.ARROW_POINTED60,
-            getResources().getString("arrow.pointed60")),
+            getResources().getMessage("arrow.pointed60")),
          new MarkerItem(getResources(), JDRMarker.ARROW_POINTED45,
-            getResources().getString("arrow.pointed45")),
+            getResources().getMessage("arrow.pointed45")),
          new MarkerItem(getResources(), JDRMarker.ARROW_CUSP,
-            getResources().getString("arrow.cusp")),
+            getResources().getMessage("arrow.cusp")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SINGLE,
-            getResources().getString("arrow.latex")),
+            getResources().getMessage("arrow.latex")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ALT_SINGLE,
-            getResources().getString("arrow.altlatex")),
+            getResources().getMessage("arrow.altlatex")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ALT_SINGLE_OPEN,
-            getResources().getString("arrow.altlatex.open")),
+            getResources().getMessage("arrow.altlatex.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE,
-            getResources().getString("arrow.triangle")),
+            getResources().getMessage("arrow.triangle")),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE_OPEN,
-            getResources().getString("arrow.triangle.open")),
+            getResources().getMessage("arrow.triangle.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_EQUILATERAL_FILLED,
-            getResources().getString("arrow.equilateral.filled")),
+            getResources().getMessage("arrow.equilateral.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_EQUILATERAL_OPEN,
-            getResources().getString("arrow.equilateral.open")),
+            getResources().getMessage("arrow.equilateral.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HOOKS,
-            getResources().getString("arrow.hooks"))
+            getResources().getMessage("arrow.hooks"))
       };
 
       partialStyles = new MarkerItem[]
       {
          new MarkerItem(getResources(), JDRMarker.ARROW_HOOK_UP,
-            getResources().getString("arrow.hook.up")),
+            getResources().getMessage("arrow.hook.up")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HOOK_DOWN,
-            getResources().getString("arrow.hook.down")),
+            getResources().getMessage("arrow.hook.down")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_POINTED_UP,
-            getResources().getString("arrow.halfpointed.up")),
+            getResources().getMessage("arrow.halfpointed.up")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_POINTED_DOWN,
-            getResources().getString("arrow.halfpointed.down")),
+            getResources().getMessage("arrow.halfpointed.down")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_POINTED60_UP,
-            getResources().getString("arrow.halfpointed60.up")),
+            getResources().getMessage("arrow.halfpointed60.up")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_POINTED60_DOWN,
-            getResources().getString("arrow.halfpointed60.down")),
+            getResources().getMessage("arrow.halfpointed60.down")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_POINTED45_UP,
-            getResources().getString("arrow.halfpointed45.up")),
+            getResources().getMessage("arrow.halfpointed45.up")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_POINTED45_DOWN,
-            getResources().getString("arrow.halfpointed45.down")),
+            getResources().getMessage("arrow.halfpointed45.down")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_CUSP_UP,
-            getResources().getString("arrow.halfcusp.up")),
+            getResources().getMessage("arrow.halfcusp.up")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HALF_CUSP_DOWN,
-            getResources().getString("arrow.halfcusp.down"))
+            getResources().getMessage("arrow.halfcusp.down"))
       };
 
       bracketStyles = new MarkerItem[]
       {
          new MarkerItem(getResources(), JDRMarker.ARROW_SQUARE,
-            getResources().getString("arrow.square")),
+            getResources().getMessage("arrow.square")),
          new MarkerItem(getResources(), JDRMarker.ARROW_BAR,
-            getResources().getString("arrow.bar")),
+            getResources().getMessage("arrow.bar")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ROUND,
-            getResources().getString("arrow.round")),
+            getResources().getMessage("arrow.round")),
          new MarkerItem(getResources(), JDRMarker.ARROW_BRACE,
-            getResources().getString("arrow.brace")),
+            getResources().getMessage("arrow.brace")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ALT_SQUARE,
-            getResources().getString("arrow.altsquare")),
+            getResources().getMessage("arrow.altsquare")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ALT_BAR,
-            getResources().getString("arrow.altbar")),
+            getResources().getMessage("arrow.altbar")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ALT_ROUND,
-            getResources().getString("arrow.altround")),
+            getResources().getMessage("arrow.altround")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ALT_BRACE,
-            getResources().getString("arrow.altbrace"))
+            getResources().getMessage("arrow.altbrace"))
       };
 
       shapesStyles = new MarkerItem[]
       {
          new MarkerItem(getResources(), JDRMarker.ARROW_CIRCLE,
-            getResources().getString("arrow.circle")),
+            getResources().getMessage("arrow.circle")),
          new MarkerItem(getResources(), JDRMarker.ARROW_DIAMOND,
-            getResources().getString("arrow.diamond")),
+            getResources().getMessage("arrow.diamond")),
          new MarkerItem(getResources(), JDRMarker.ARROW_CIRCLE_OPEN,
-            getResources().getString("arrow.circle.open")),
+            getResources().getMessage("arrow.circle.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_DIAMOND_OPEN,
-            getResources().getString("arrow.diamond.open")),
+            getResources().getMessage("arrow.diamond.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SCISSORS_UP_FILLED,
-            getResources().getString("arrow.scissors.up.filled")),
+            getResources().getMessage("arrow.scissors.up.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SCISSORS_DOWN_FILLED,
-            getResources().getString("arrow.scissors.down.filled")),
+            getResources().getMessage("arrow.scissors.down.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SCISSORS_UP_OPEN,
-            getResources().getString("arrow.scissors.up.open")),
+            getResources().getMessage("arrow.scissors.up.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SCISSORS_DOWN_OPEN,
-            getResources().getString("arrow.scissors.down.open")),
+            getResources().getMessage("arrow.scissors.down.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HEART_RIGHT_FILLED,
-            getResources().getString("arrow.heart.right.filled")),
+            getResources().getMessage("arrow.heart.right.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HEART_RIGHT_OPEN,
-            getResources().getString("arrow.heart.right.open")),
+            getResources().getMessage("arrow.heart.right.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HEART_FILLED,
-            getResources().getString("arrow.heart.filled")),
+            getResources().getMessage("arrow.heart.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HEART_OPEN,
-            getResources().getString("arrow.heart.open")),
+            getResources().getMessage("arrow.heart.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SNOWFLAKE,
-            getResources().getString("arrow.snowflake")),
+            getResources().getMessage("arrow.snowflake")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR_CHEVRON_OPEN,
-            getResources().getString("arrow.starchevron.open")),
+            getResources().getMessage("arrow.starchevron.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR_CHEVRON_FILLED,
-            getResources().getString("arrow.starchevron.filled"))
+            getResources().getMessage("arrow.starchevron.filled"))
       };
 
       dataStyles = new MarkerItem[]
       {
          new MarkerItem(getResources(), JDRMarker.ARROW_DOTFILLED,
-            getResources().getString("arrow.dotfilled")),
+            getResources().getMessage("arrow.dotfilled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_DOTOPEN,
-            getResources().getString("arrow.dotopen")),
+            getResources().getMessage("arrow.dotopen")),
          new MarkerItem(getResources(), JDRMarker.ARROW_BOXFILLED,
-            getResources().getString("arrow.boxfilled")),
+            getResources().getMessage("arrow.boxfilled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_BOXOPEN,
-            getResources().getString("arrow.boxopen")),
+            getResources().getMessage("arrow.boxopen")),
          new MarkerItem(getResources(), JDRMarker.ARROW_CROSS,
-            getResources().getString("arrow.cross")),
+            getResources().getMessage("arrow.cross")),
          new MarkerItem(getResources(), JDRMarker.ARROW_PLUS,
-            getResources().getString("arrow.plus")),
+            getResources().getMessage("arrow.plus")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR,
-            getResources().getString("arrow.star")),
+            getResources().getMessage("arrow.star")),
          new MarkerItem(getResources(), JDRMarker.ARROW_ASTERISK,
-            getResources().getString("arrow.asterisk")),
+            getResources().getMessage("arrow.asterisk")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR5_FILLED,
-            getResources().getString("arrow.star5.filled")),
+            getResources().getMessage("arrow.star5.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR5_OPEN,
-            getResources().getString("arrow.star5.open")),
+            getResources().getMessage("arrow.star5.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR6_FILLED,
-            getResources().getString("arrow.star6.filled")),
+            getResources().getMessage("arrow.star6.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_STAR6_OPEN,
-            getResources().getString("arrow.star6.open")),
+            getResources().getMessage("arrow.star6.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE_UP_FILLED,
-            getResources().getString("arrow.triangle.up.filled")),
+            getResources().getMessage("arrow.triangle.up.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE_UP_OPEN,
-            getResources().getString("arrow.triangle.up.open")),
+            getResources().getMessage("arrow.triangle.up.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE_DOWN_FILLED,
-            getResources().getString("arrow.triangle.down.filled")),
+            getResources().getMessage("arrow.triangle.down.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE_DOWN_OPEN,
-            getResources().getString("arrow.triangle.down.open")),
+            getResources().getMessage("arrow.triangle.down.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_RHOMBUS_FILLED,
-            getResources().getString("arrow.rhombus.filled")),
+            getResources().getMessage("arrow.rhombus.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_RHOMBUS_OPEN,
-            getResources().getString("arrow.rhombus.open")),
+            getResources().getMessage("arrow.rhombus.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_PENTAGON_FILLED,
-            getResources().getString("arrow.pentagon.filled")),
+            getResources().getMessage("arrow.pentagon.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_PENTAGON_OPEN,
-            getResources().getString("arrow.pentagon.open")),
+            getResources().getMessage("arrow.pentagon.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HEXAGON_FILLED,
-            getResources().getString("arrow.hexagon.filled")),
+            getResources().getMessage("arrow.hexagon.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HEXAGON_OPEN,
-            getResources().getString("arrow.hexagon.open")),
+            getResources().getMessage("arrow.hexagon.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_OCTAGON_FILLED,
-            getResources().getString("arrow.octagon.filled")),
+            getResources().getMessage("arrow.octagon.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_OCTAGON_OPEN,
-            getResources().getString("arrow.octagon.open")),
+            getResources().getMessage("arrow.octagon.open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SEMICIRCLE_FILLED,
-            getResources().getString("arrow.semicircle.filled")),
+            getResources().getMessage("arrow.semicircle.filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SEMICIRCLE_OPEN,
-            getResources().getString("arrow.semicircle.open"))
+            getResources().getMessage("arrow.semicircle.open"))
       };
 
       capStyles = new MarkerItem[]
       {
          new MarkerItem(getResources(), JDRMarker.ARROW_RECTANGLE_CAP,
-            getResources().getString("arrow.rectanglecap"), 10, 50),
+            getResources().getMessage("arrow.rectanglecap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_ROUND_CAP,
-            getResources().getString("arrow.roundcap"), 10, 50),
+            getResources().getMessage("arrow.roundcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE_CAP,
-            getResources().getString("arrow.trianglecap"), 10, 50),
+            getResources().getMessage("arrow.trianglecap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_INVERT_TRIANGLE_CAP,
-            getResources().getString("arrow.inverttrianglecap"), 10, 50),
+            getResources().getMessage("arrow.inverttrianglecap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_CHEVRON_CAP,
-            getResources().getString("arrow.chevroncap"), 10, 50),
+            getResources().getMessage("arrow.chevroncap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_INVERT_CHEVRON_CAP,
-            getResources().getString("arrow.invertchevroncap"), 10, 50),
+            getResources().getMessage("arrow.invertchevroncap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_FAST_CAP,
-            getResources().getString("arrow.fastcap"), 10, 50),
+            getResources().getMessage("arrow.fastcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_INVERT_FAST_CAP,
-            getResources().getString("arrow.invertfastcap"), 10, 50),
+            getResources().getMessage("arrow.invertfastcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_BALL_CAP,
-            getResources().getString("arrow.ballcap"), 10, 50),
+            getResources().getMessage("arrow.ballcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF_CAP,
-            getResources().getString("arrow.leafcap"), 10, 50),
+            getResources().getMessage("arrow.leafcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF2_CAP,
-            getResources().getString("arrow.doubleleafcap"), 10, 50),
+            getResources().getMessage("arrow.doubleleafcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF3_CAP,
-            getResources().getString("arrow.tripleleafcap"), 10, 50),
+            getResources().getMessage("arrow.tripleleafcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_CLUB_CAP,
-            getResources().getString("arrow.clubcap"), 10, 50),
+            getResources().getMessage("arrow.clubcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF3FOR_CAP,
-            getResources().getString("arrow.tripleleafforwardcap"), 10, 50),
+            getResources().getMessage("arrow.tripleleafforwardcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF3BACK_CAP,
-            getResources().getString("arrow.tripleleafbackcap"), 10, 50),
+            getResources().getMessage("arrow.tripleleafbackcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF2FOR_CAP,
-            getResources().getString("arrow.doubleleafforwardcap"), 10, 50),
+            getResources().getMessage("arrow.doubleleafforwardcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_LEAF2BACK_CAP,
-            getResources().getString("arrow.doubleleafbackcap"), 10, 50),
+            getResources().getMessage("arrow.doubleleafbackcap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_BULGE_CAP,
-            getResources().getString("arrow.bulgecap"), 10, 50),
+            getResources().getMessage("arrow.bulgecap"), 10, 50),
          new MarkerItem(getResources(), JDRMarker.ARROW_CUTOUTBULGE_CAP,
-            getResources().getString("arrow.cutoutbulgecap"), 10, 50),
+            getResources().getMessage("arrow.cutoutbulgecap"), 10, 50),
       };
    }
 

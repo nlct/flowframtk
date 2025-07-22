@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -3249,12 +3249,12 @@ public class JDRCanvas extends JPanel
       if (selected)
       {
          ce.addEdit(new SelectObject(obj, true,
-             getResources().getString("undo.select")));
+             getResources().getMessage("undo.select")));
       }
       else
       {
          ce.addEdit(new SelectObject(obj, false,
-             getResources().getString("undo.deselect")));
+             getResources().getMessage("undo.deselect")));
       }
    }
 
@@ -3282,7 +3282,7 @@ public class JDRCanvas extends JPanel
              if (object == null) object = prevobject;
 
              UndoableEdit edit = new SelectObject(thisobject,false,
-                 getResources().getString("undo.deselect"));
+                 getResources().getMessage("undo.deselect"));
              ce.addEdit(edit);
              done = true;
          }
@@ -3298,7 +3298,7 @@ public class JDRCanvas extends JPanel
       if (object != null)
       {
          UndoableEdit edit = new SelectObject(object,true,
-            getResources().getString("undo.select"));
+            getResources().getMessage("undo.select"));
 
          ce.addEdit(edit);
          done = true;
@@ -3343,7 +3343,7 @@ public class JDRCanvas extends JPanel
       if (object != null)
       {
          UndoableEdit edit = new SelectObject(object,true,
-            getResources().getString("undo.select"));
+            getResources().getMessage("undo.select"));
 
          frame_.postEdit(edit);
       }
@@ -3389,7 +3389,7 @@ public class JDRCanvas extends JPanel
       if (oldObject != null)
       {
          UndoableEdit edit = new SelectObject(oldObject,false,
-            getResources().getString("undo.deselect"));
+            getResources().getMessage("undo.deselect"));
 
          ce.addEdit(edit);
          done = true;
@@ -3398,7 +3398,7 @@ public class JDRCanvas extends JPanel
       if (object != null)
       {
          UndoableEdit edit = new SelectObject(object,true,
-            getResources().getString("undo.select"));
+            getResources().getMessage("undo.select"));
 
          ce.addEdit(edit);
          done = true;
@@ -3535,7 +3535,7 @@ public class JDRCanvas extends JPanel
       int n = 0;
       boolean done=false;
 
-      String undoName = getResources().getString("undo.drag_and_drop");
+      String undoName = getResources().getMessage("undo.drag_and_drop");
 
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this, undoName);
 
@@ -3664,7 +3664,7 @@ public class JDRCanvas extends JPanel
       }
 
       getApplication().setStatusInfo(
-        getResources().getString("info.select"), "selectobjects");
+        getResources().getMessage("info.select"), "selectobjects");
    }
 
    public void insertBitmap(File imageFile)
@@ -3677,7 +3677,7 @@ public class JDRCanvas extends JPanel
       try
       {
          JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this,
-            getResources().getString("undo.new_bitmap"));
+            getResources().getMessage("undo.new_bitmap"));
 
          insertBitmap(ce, imagefilename);
 
@@ -3687,7 +3687,7 @@ public class JDRCanvas extends JPanel
       catch (InvalidImageFormatException e)
       {
          getResources().error(frame_,
-            getResources().getString("error.invalid_imageformat"));
+            getResources().getMessage("error.invalid_imageformat"));
       }
       catch (InvalidFormatException e)
       {
@@ -3715,7 +3715,7 @@ public class JDRCanvas extends JPanel
       {
          getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
             MessageInfo.createWarning(
-               getResources().getString("warning.draft_bitmap")));
+               getResources().getMessage("warning.draft_bitmap")));
       }
 
       UndoableEdit edit;
@@ -3724,16 +3724,16 @@ public class JDRCanvas extends JPanel
       {
          edit = new SelectObject(
             paths.get(i), false,
-            getResources().getString("undo.deselect_all"));
+            getResources().getMessage("undo.deselect_all"));
          ce.addEdit(edit);
       }
 
       edit = new AddObject(bitmap,
-         getResources().getString("undo.new_bitmap"));
+         getResources().getMessage("undo.new_bitmap"));
       ce.addEdit(edit);
 
       edit = new SelectObject(
-         bitmap, true, getResources().getString("undo.new_bitmap"));
+         bitmap, true, getResources().getMessage("undo.new_bitmap"));
       ce.addEdit(edit);
 
       return bitmap;
@@ -3765,9 +3765,9 @@ public class JDRCanvas extends JPanel
             {
                JOptionPane.showMessageDialog(frame_,
                new String[]
-               {getResources().getString("error.parshape.convert"),
+               {getResources().getMessage("error.parshape.convert"),
                 e.getMessage()},
-               getResources().getString("error.shape.incompatible"),
+               getResources().getMessage("error.shape.incompatible"),
                JOptionPane.ERROR_MESSAGE);
             }
             finally
@@ -3810,9 +3810,9 @@ public class JDRCanvas extends JPanel
             {
                JOptionPane.showMessageDialog(frame_,
                new String[]
-               {getResources().getString("error.shapepar.convert"),
+               {getResources().getMessage("error.shapepar.convert"),
                 e.getMessage()},
-               getResources().getString("error.shape.incompatible"),
+               getResources().getMessage("error.shape.incompatible"),
                JOptionPane.ERROR_MESSAGE);
             }
             finally
@@ -4794,7 +4794,7 @@ public class JDRCanvas extends JPanel
       }
 
       UndoableEdit edit = new SetFlowFrame(object, f,
-         getResources().getString("undo.clear_flowframes"));
+         getResources().getMessage("undo.clear_flowframes"));
 
       ce.addEdit(edit);
    }
@@ -4890,8 +4890,8 @@ public class JDRCanvas extends JPanel
          if (f != null && group.containsFlowFrameData())
          {
             int response = getResources().confirm(frame_,
-               getResources().getString("flowframe.confirm.group"),
-               getResources().getString("flowframe.confirm.group.title"));
+               getResources().getMessage("flowframe.confirm.group"),
+               getResources().getMessage("flowframe.confirm.group.title"));
 
             if (response == JOptionPane.YES_OPTION)
             {
@@ -5221,7 +5221,7 @@ public class JDRCanvas extends JPanel
       if (bitmap.isDraft())
       {
          getResources().warning(frame_,
-                          getResources().getString("warning.draft_bitmap"));
+                          getResources().getMessage("warning.draft_bitmap"));
       }
    }
 
@@ -6648,7 +6648,7 @@ public class JDRCanvas extends JPanel
          if (text.isEmpty())
          {
              getResources().error(frame_,
-                 getResources().getString("error.empty_string"));
+                 getResources().getMessage("error.empty_string"));
          }
          else
          {
@@ -7080,7 +7080,7 @@ public class JDRCanvas extends JPanel
    public void selectObjectAndScroll(JDRCompleteObject object)
    {
       UndoableEdit edit = new SelectObject(
-         object, true, getResources().getString("undo.select"));
+         object, true, getResources().getMessage("undo.select"));
       frame_.postEdit(edit);
       BBox box = object.getStorageBBox();
 
@@ -7100,7 +7100,7 @@ public class JDRCanvas extends JPanel
       {
          edit = new SelectObject(
             (visible == null ? paths.get(i) : visible.get(i)),true,
-            getResources().getString("undo.select_all"));
+            getResources().getMessage("undo.select_all"));
          ce.addEdit(edit);
       }
 
@@ -7185,7 +7185,7 @@ public class JDRCanvas extends JPanel
 
       if (grp.getDescription().equals(getFrame().getFilename()))
       {
-         dupTag = " "+getResources().getString("label.duplicate");
+         dupTag = " "+getResources().getMessage("label.duplicate");
       }
 
       JDRGrid grid = frame_.getGrid();
@@ -7245,7 +7245,7 @@ public class JDRCanvas extends JPanel
          }
 
          UndoableEdit edit = new AddObject(object, 
-            getResources().getString("undo.paste"));
+            getResources().getMessage("undo.paste"));
          ce.addEdit(edit);
       }
    }
@@ -7850,7 +7850,7 @@ public class JDRCanvas extends JPanel
       try
       {
          UndoableEdit edit = new AddObject(currentText, 
-            getResources().getString("undo.new_text"));
+            getResources().getMessage("undo.new_text"));
          ce.addEdit(edit);
 
          addPackagesToPreamble(styNames);
@@ -7971,14 +7971,14 @@ public class JDRCanvas extends JPanel
                currentPath.close(JDRShape.CLOSE_LINE);
             case ACTION_OPEN_LINE :
                UndoableEdit edit = new AddObject(currentPath,
-                  getResources().getString("undo.new_line"));
+                  getResources().getMessage("undo.new_line"));
                frame_.postEdit(edit);
                break;
             case ACTION_CLOSED_CURVE :
                currentPath.close(JDRShape.CLOSE_CONT);
             case ACTION_OPEN_CURVE :
                edit = new AddObject(currentPath, 
-                  getResources().getString("undo.new_curve"));
+                  getResources().getMessage("undo.new_curve"));
                frame_.postEdit(edit);
                break;
             case ACTION_RECTANGLE :
@@ -7996,7 +7996,7 @@ public class JDRCanvas extends JPanel
                                     currentFillPaint,
                                     currentStroke);
                edit = new AddObject(currentPath, 
-                  getResources().getString("undo.new_rectangle"));
+                  getResources().getMessage("undo.new_rectangle"));
                frame_.postEdit(edit);
                break;
             case ACTION_ELLIPSE :
@@ -8015,7 +8015,7 @@ public class JDRCanvas extends JPanel
                                     currentFillPaint,
                                     currentStroke);
                edit = new AddObject(currentPath,
-                  getResources().getString("undo.new_ellipse"));
+                  getResources().getMessage("undo.new_ellipse"));
                frame_.postEdit(edit);
                break;
          }
@@ -8118,7 +8118,7 @@ public class JDRCanvas extends JPanel
          catch (PrinterException pe)
          {
             getResources().error(frame_, new String[]
-               {getResources().getString("error.printing"),
+               {getResources().getMessage("error.printing"),
                pe.getMessage()});
          }
          catch (Exception e)
@@ -8129,7 +8129,7 @@ public class JDRCanvas extends JPanel
       else
       {
          getResources().error(frame_,
-            getResources().getString("error.printing.no_service"));
+            getResources().getMessage("error.printing.no_service"));
       }
    }
 
@@ -8244,7 +8244,7 @@ public class JDRCanvas extends JPanel
          {
             UndoableEdit edit = new SelectObject(
                object,false,
-               getResources().getString("undo.deselect"));
+               getResources().getMessage("undo.deselect"));
             ce.addEdit(edit);
          }
       }
@@ -8287,9 +8287,9 @@ public class JDRCanvas extends JPanel
          int midY = dim.height/2;
 
          g2.setFont(getFont().deriveFont(Font.BOLD, 72f));
-         g2.drawString(getResources().getString("message.io_in_progress"), 
+         g2.drawString(getResources().getMessage("message.io_in_progress"), 
             0, dim.height/2-2);
-         g2.drawString(getResources().getString("message.please_wait"), 
+         g2.drawString(getResources().getMessage("message.please_wait"), 
             0, dim.height/2+74);
 
          return;
@@ -8537,7 +8537,7 @@ public class JDRCanvas extends JPanel
       {
          UndoableEdit edit = new SelectObject(
             paths.get(i), false,
-            getResources().getString("undo.deselect_all"));
+            getResources().getMessage("undo.deselect_all"));
          ce.addEdit(edit);
          done=true;
       }
@@ -8554,7 +8554,7 @@ public class JDRCanvas extends JPanel
       {
          UndoableEdit edit = new SelectObject(
             paths.get(i), false,
-            getResources().getString("undo.deselect_all"));
+            getResources().getMessage("undo.deselect_all"));
          ce.addEdit(edit);
          done=true;
       }
@@ -8972,7 +8972,7 @@ public class JDRCanvas extends JPanel
                {
                   UndoableEdit edit = new SelectObject(
                      object, false,
-                     getResources().getString("undo.deselect"));
+                     getResources().getMessage("undo.deselect"));
                   frame_.postEdit(edit);
                   break;
                }
@@ -9036,7 +9036,7 @@ public class JDRCanvas extends JPanel
                   {
                      UndoableEdit edit = new SelectObject(
                         thisPath, true,
-                        getResources().getString("undo.select"));
+                        getResources().getMessage("undo.select"));
                      ce.addEdit(edit);
                      done = true;
                   }
@@ -9536,7 +9536,7 @@ public class JDRCanvas extends JPanel
       catch (Exception e)
       {
          getResources().internalError(frame_,
-         getResources().getString("internal_error.finish_edit_path_failed"),
+         getResources().getMessage("internal_error.finish_edit_path_failed"),
          e);
       }
    }
@@ -9549,7 +9549,7 @@ public class JDRCanvas extends JPanel
       if (!(object instanceof JDRShape) || object == null)
       {
          getResources().internalError(frame_,
-            getResources().getString("internal_error.no_path"));
+            getResources().getMessage("internal_error.no_path"));
       }
       else
       {
@@ -9625,12 +9625,12 @@ public class JDRCanvas extends JPanel
       if (flag)
       {
          getApplication().setStatusInfo(
-           getResources().getString("info.distort"), "distort");
+           getResources().getMessage("info.distort"), "distort");
       }
       else
       {
          getApplication().setStatusInfo(
-           getResources().getString("info.select"), "selectobjects");
+           getResources().getMessage("info.select"), "selectobjects");
       }
 
       enableTools();
@@ -9823,7 +9823,7 @@ public class JDRCanvas extends JPanel
 
       if (typeblock == null)
       {
-         getResources().error(this, getResources().getString("error.no_typeblock"));
+         getResources().error(this, getResources().getMessage("error.no_typeblock"));
          return;
       }
 
@@ -10117,12 +10117,12 @@ public class JDRCanvas extends JPanel
             catch (EmptyGroupException e)
             {
                getResources().error(frame_,
-                  getResources().getString("error.convert_to_path_failed"), e);
+                  getResources().getMessage("error.convert_to_path_failed"), e);
             }
             catch (Exception e)
             {
                getResources().internalError(frame_,
-                getResources().getString("internal_error.convert_to_path")
+                getResources().getMessage("internal_error.convert_to_path")
                 +"\n"+e.getMessage(),
                  e);
             }
@@ -10196,7 +10196,7 @@ public class JDRCanvas extends JPanel
       if (text == null || path == null)
       {
          getResources().internalError(frame_,
-          getResources().getString(
+          getResources().getMessage(
             "internal_error.convert_to_textpath"));
       }
       else
@@ -10499,8 +10499,8 @@ public class JDRCanvas extends JPanel
             if (object.getFlowFrame() != null && response==JOptionPane.NO_OPTION)
             {
                response = getResources().confirm(frame_,
-                  getResources().getString("flowframe.confirm.ungroup"),
-                  getResources().getString("flowframe.confirm.ungroup.title"));
+                  getResources().getMessage("flowframe.confirm.ungroup"),
+                  getResources().getMessage("flowframe.confirm.ungroup.title"));
 
                if (response != JOptionPane.YES_OPTION) return;
             }
@@ -10686,7 +10686,7 @@ public class JDRCanvas extends JPanel
                backgroundImage = null;
                getResources().getMessageSystem().getPublisher().publishMessages(
                  MessageInfo.createWarning(
-                   getResources().getString("warning.no_background_image")));
+                   getResources().getMessage("warning.no_background_image")));
                getCanvasGraphics().setOptimize(CanvasGraphics.OPTIMIZE_NONE);
                return;
             }
@@ -10907,7 +10907,7 @@ public class JDRCanvas extends JPanel
          if (getResources().confirm(frame_,
                 getResources().getMessage("warning.save.jdr",
                    jdrversion),
-                getResources().getString("warning.title"))
+                getResources().getMessage("warning.title"))
              != JOptionPane.YES_OPTION)
          {
             return;
@@ -10931,7 +10931,7 @@ public class JDRCanvas extends JPanel
          if (getResources().confirm(frame_,
              getResources().getMessage("warning.save.ajr",
                 ajrversion),
-             getResources().getString("warning.title"))
+             getResources().getMessage("warning.title"))
              != JOptionPane.YES_OPTION)
          {
             return;
@@ -11075,7 +11075,7 @@ public class JDRCanvas extends JPanel
       if (currentPath != null)
       {
          getResources().error(frame_,
-            getResources().getString("error.finish_or_discard"));
+            getResources().getMessage("error.finish_or_discard"));
          return false;
       }
 
@@ -11094,7 +11094,7 @@ public class JDRCanvas extends JPanel
    public void discard()
    {
       paths = new JDRGroup(getCanvasGraphics());
-      String filename = getResources().getString("label.untitled");
+      String filename = getResources().getMessage("label.untitled");
       count++;
       if (count > 1) filename += count;
       frame_.setDefaultName(filename);
@@ -11131,7 +11131,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_doc_cls");
+         return getResources().getMessage("undo.set_doc_cls");
       }
    }
 
@@ -11165,7 +11165,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_normalsize");
+         return getResources().getMessage("undo.set_normalsize");
       }
    }
 
@@ -11261,14 +11261,14 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_tool");
+         return getResources().getMessage("undo.set_tool");
       }
    }
 
    class SetTypeblock extends AbstractUndoableEdit
    {
       private FlowFrame oldTypeblock, newTypeblock;
-      private String string=getResources().getString("undo.set_typeblock");
+      private String string=getResources().getMessage("undo.set_typeblock");
 
       public SetTypeblock(double left, double right,
                           double top, double bottom,
@@ -11324,7 +11324,7 @@ public class JDRCanvas extends JPanel
    {
       private FlowFrame oldFrame, newFrame;
       private JDRCompleteObject object_;
-      private String string=getResources().getString("undo.set_frame");
+      private String string=getResources().getMessage("undo.set_frame");
 
       public SetFlowFrame(JDRCompleteObject object, FlowFrame f,
                           String presentation)
@@ -11344,7 +11344,7 @@ public class JDRCanvas extends JPanel
 
       public SetFlowFrame(JDRCompleteObject object, FlowFrame f)
       {
-         this(object, f, getResources().getString("undo.set_frame"));
+         this(object, f, getResources().getMessage("undo.set_frame"));
       }
 
       public void undo() throws CannotUndoException
@@ -11411,7 +11411,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_description");
+         return getResources().getMessage("undo.set_description");
       }
    }
 
@@ -11454,7 +11454,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_absolute_pages");
+         return getResources().getMessage("undo.set_absolute_pages");
       }
    }
 
@@ -11462,7 +11462,7 @@ public class JDRCanvas extends JPanel
    {
       private int index_;
       private JDRCompleteObject object_;
-      private String string=getResources().getString("undo.new_object");
+      private String string=getResources().getMessage("undo.new_object");
 
       public AddObject(JDRCompleteObject newObject)
       {
@@ -11552,7 +11552,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.delete");
+         return getResources().getMessage("undo.delete");
       }
    }
 
@@ -11640,7 +11640,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.splittext");
+         return getResources().getMessage("undo.splittext");
       }
    }
 
@@ -11710,7 +11710,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_path");
+         return getResources().getMessage("undo.convert_to_path");
       }
    }
 
@@ -11760,7 +11760,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_path");
+         return getResources().getMessage("undo.convert_to_path");
       }
    }
 
@@ -11810,7 +11810,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_path");
+         return getResources().getMessage("undo.convert_to_path");
       }
    }
 
@@ -11890,7 +11890,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_path");
+         return getResources().getMessage("undo.convert_to_path");
       }
    }
 
@@ -11945,7 +11945,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.pattern.remove");
+         return getResources().getMessage("undo.pattern.remove");
       }
    }
 
@@ -12014,7 +12014,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_pattern");
+         return getResources().getMessage("undo.convert_to_pattern");
       }
    }
 
@@ -12127,7 +12127,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.edit_pattern");
+         return getResources().getMessage("undo.edit_pattern");
       }
    }
 
@@ -12224,7 +12224,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_textpath");
+         return getResources().getMessage("undo.convert_to_textpath");
       }
    }
 
@@ -12292,7 +12292,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.separate");
+         return getResources().getMessage("undo.separate");
       }
    }
 
@@ -12367,7 +12367,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.merge_paths");
+         return getResources().getMessage("undo.merge_paths");
       }
    }
 
@@ -12465,7 +12465,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.xor_paths");
+         return getResources().getMessage("undo.xor_paths");
       }
    }
 
@@ -12563,7 +12563,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.path_intersect");
+         return getResources().getMessage("undo.path_intersect");
       }
    }
 
@@ -12661,7 +12661,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.subtract_paths");
+         return getResources().getMessage("undo.subtract_paths");
       }
    }
 
@@ -12748,7 +12748,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.path_union");
+         return getResources().getMessage("undo.path_union");
       }
    }
 
@@ -12851,7 +12851,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.group");
+         return getResources().getMessage("undo.group");
       }
    }
 
@@ -12937,7 +12937,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.ungroup");
+         return getResources().getMessage("undo.ungroup");
       }
    }
 
@@ -12981,7 +12981,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.move_to_front");
+         return getResources().getMessage("undo.move_to_front");
       }
    }
 
@@ -13025,7 +13025,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.move_to_back");
+         return getResources().getMessage("undo.move_to_back");
       }
    }
 
@@ -13119,7 +13119,7 @@ public class JDRCanvas extends JPanel
    {
       private Point2D oldPt, newPt;
       private String presentation_
-         = getResources().getString("undo.select_point");
+         = getResources().getMessage("undo.select_point");
 
       public SelectDistortionControl(Point2D currentPos)
          throws NullPointerException
@@ -13167,7 +13167,7 @@ public class JDRCanvas extends JPanel
    {
       private Point2D oldPt;
       private String presentation_
-         = getResources().getString("undo.deselect");
+         = getResources().getMessage("undo.deselect");
 
       public DeselectDistortionControl()
       {
@@ -13300,7 +13300,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.move_point");
+         return getResources().getMessage("undo.move_point");
       }
    }
 
@@ -13355,7 +13355,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.reset.distort");
+         return getResources().getMessage("undo.reset.distort");
       }
    }
 
@@ -13414,7 +13414,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.distort");
+         return getResources().getMessage("undo.distort");
       }
    }
 
@@ -13472,7 +13472,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.distort_end");
+         return getResources().getMessage("undo.distort_end");
       }
    }
 
@@ -13555,7 +13555,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_line");
+         return getResources().getMessage("undo.convert_to_line");
       }
    }
 
@@ -13638,7 +13638,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_move");
+         return getResources().getMessage("undo.convert_to_move");
       }
    }
 
@@ -13697,7 +13697,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_curve");
+         return getResources().getMessage("undo.convert_to_curve");
       }
    }
 
@@ -13759,7 +13759,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.add_point");
+         return getResources().getMessage("undo.add_point");
       }
    }
 
@@ -13864,7 +13864,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.delete_point");
+         return getResources().getMessage("undo.delete_point");
       }
    }
 
@@ -13940,7 +13940,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.break");
+         return getResources().getMessage("undo.break");
       }
    }
 
@@ -14009,7 +14009,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.open");
+         return getResources().getMessage("undo.open");
       }
    }
 
@@ -14069,7 +14069,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.close");
+         return getResources().getMessage("undo.close");
       }
    }
 
@@ -14277,7 +14277,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.move_point");
+         return getResources().getMessage("undo.move_point");
       }
    }
 
@@ -14348,7 +14348,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.symmetry.join_anchor");
+         return getResources().getMessage("undo.symmetry.join_anchor");
       }
    }
 
@@ -14423,7 +14423,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.symmetry.close_anchor");
+         return getResources().getMessage("undo.symmetry.close_anchor");
       }
    }
 
@@ -14478,7 +14478,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_move");
+         return getResources().getMessage("undo.convert_to_move");
       }
    }
 
@@ -14546,7 +14546,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_move");
+         return getResources().getMessage("undo.convert_to_move");
       }
    }
 
@@ -14600,7 +14600,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_line");
+         return getResources().getMessage("undo.convert_to_line");
       }
    }
 
@@ -14668,7 +14668,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_line");
+         return getResources().getMessage("undo.convert_to_line");
       }
    }
 
@@ -14725,7 +14725,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_curve");
+         return getResources().getMessage("undo.convert_to_curve");
       }
    }
 
@@ -14797,7 +14797,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_curve");
+         return getResources().getMessage("undo.convert_to_curve");
       }
    }
 
@@ -14835,7 +14835,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.anchor_control");
+         return getResources().getMessage("undo.anchor_control");
       }
    }
 
@@ -14961,7 +14961,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.continuous");
+         return getResources().getMessage("undo.continuous");
       }
    }
 
@@ -14969,7 +14969,7 @@ public class JDRCanvas extends JPanel
    {
       private int oldIndex_, newIndex_;
       private String presentation_
-         = getResources().getString("undo.select_point");
+         = getResources().getMessage("undo.select_point");
 
       public SelectControl(Point2D currentPos)
          throws NullPointerException
@@ -15071,7 +15071,7 @@ public class JDRCanvas extends JPanel
    {
       private int oldIndex, newIndex;
       private String presentation_
-         = getResources().getString("undo.select_point");
+         = getResources().getMessage("undo.select_point");
 
       public SelectNextControl()
          throws NullPointerException
@@ -15160,7 +15160,7 @@ public class JDRCanvas extends JPanel
    {
       private int oldIndex, newIndex;
       private String presentation_
-         = getResources().getString("undo.select_point");
+         = getResources().getMessage("undo.select_point");
 
       public SelectPrevControl()
          throws NullPointerException
@@ -15250,7 +15250,7 @@ public class JDRCanvas extends JPanel
    {
       private JDRCompleteObject object_;
       private boolean oldselected_, selected_;
-      private String string_=getResources().getString("undo.select");
+      private String string_=getResources().getMessage("undo.select");
 
       public SelectObject(JDRCompleteObject object, boolean selected)
       {
@@ -15354,7 +15354,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.move");
+         return getResources().getMessage("undo.move");
       }
    }
 
@@ -15451,7 +15451,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.symmetry");
+         return getResources().getMessage("undo.symmetry");
       }
    }
 
@@ -15520,7 +15520,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.bitmap_properties");
+         return getResources().getMessage("undo.bitmap_properties");
       }
    }
 
@@ -15572,7 +15572,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.reset.bitmap");
+         return getResources().getMessage("undo.reset.bitmap");
       }
    }
 
@@ -15624,7 +15624,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.reset.text");
+         return getResources().getMessage("undo.reset.text");
       }
    }
 
@@ -15702,7 +15702,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.scale");
+         return getResources().getMessage("undo.scale");
       }
    }
 
@@ -15763,7 +15763,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.scale_x");
+         return getResources().getMessage("undo.scale_x");
       }
    }
 
@@ -15825,7 +15825,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.scale_y");
+         return getResources().getMessage("undo.scale_y");
       }
    }
 
@@ -15889,7 +15889,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.shear");
+         return getResources().getMessage("undo.shear");
       }
    }
 
@@ -15950,7 +15950,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.rotate");
+         return getResources().getMessage("undo.rotate");
       }
    }
 
@@ -15996,7 +15996,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.convert_to_polygon");
+         return getResources().getMessage("undo.convert_to_polygon");
       }
    }
 
@@ -16041,7 +16041,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.reverse");
+         return getResources().getMessage("undo.reverse");
       }
    }
 
@@ -16049,7 +16049,7 @@ public class JDRCanvas extends JPanel
    {
       private JDRGroup object_, oldobject_;
       private int index_, align_;
-      private String string_=getResources().getString("undo.justify");
+      private String string_=getResources().getMessage("undo.justify");
 
       public static final int LEFT=0, CENTRE=1, RIGHT=2,
                               TOP=3, MIDDLE=4, BOTTOM=5;
@@ -16067,7 +16067,7 @@ public class JDRCanvas extends JPanel
          {
             case LEFT :
                object_.leftAlign();
-               string_ = getResources().getString("undo.justify.left");
+               string_ = getResources().getMessage("undo.justify.left");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -16086,7 +16086,7 @@ public class JDRCanvas extends JPanel
             break;
             case CENTRE :
                object_.centreAlign();
-               string_ = getResources().getString("undo.justify.centre");
+               string_ = getResources().getMessage("undo.justify.centre");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -16105,7 +16105,7 @@ public class JDRCanvas extends JPanel
             break;
             case RIGHT :
                object_.rightAlign();
-               string_ = getResources().getString("undo.justify.right");
+               string_ = getResources().getMessage("undo.justify.right");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -16124,7 +16124,7 @@ public class JDRCanvas extends JPanel
             break;
             case TOP :
                object_.topAlign();
-               string_ = getResources().getString("undo.justify.top");
+               string_ = getResources().getMessage("undo.justify.top");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -16143,7 +16143,7 @@ public class JDRCanvas extends JPanel
             break;
             case MIDDLE :
                object_.middleAlign();
-               string_ = getResources().getString("undo.justify.middle");
+               string_ = getResources().getMessage("undo.justify.middle");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -16162,7 +16162,7 @@ public class JDRCanvas extends JPanel
             break;
             case BOTTOM :
                object_.bottomAlign();
-               string_ = getResources().getString("undo.justify.bottom");
+               string_ = getResources().getMessage("undo.justify.bottom");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -16366,7 +16366,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.edit_text");
+         return getResources().getMessage("undo.edit_text");
       }
    }
 
@@ -16410,7 +16410,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.colour");
+         return getResources().getMessage("undo.colour");
       }
    }
 
@@ -16453,7 +16453,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_colour");
+         return getResources().getMessage("undo.line_colour");
       }
    }
 
@@ -16496,7 +16496,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.colour");
+         return getResources().getMessage("undo.colour");
       }
    }
 
@@ -16560,7 +16560,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.fill_colour");
+         return getResources().getMessage("undo.fill_colour");
       }
    }
 
@@ -16609,7 +16609,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16658,7 +16658,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16707,7 +16707,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16756,7 +16756,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16806,7 +16806,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16854,7 +16854,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16904,7 +16904,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -16955,7 +16955,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -17006,7 +17006,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -17069,7 +17069,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -17118,7 +17118,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.line_style");
+         return getResources().getMessage("undo.line_style");
       }
    }
 
@@ -17167,7 +17167,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.halign");
+         return getResources().getMessage("undo.halign");
       }
    }
 
@@ -17216,7 +17216,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.halign");
+         return getResources().getMessage("undo.halign");
       }
    }
 
@@ -17271,7 +17271,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.anchor");
+         return getResources().getMessage("undo.anchor");
       }
    }
 
@@ -17342,7 +17342,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.text.outline");
+         return getResources().getMessage("undo.text.outline");
       }
    }
 
@@ -17392,7 +17392,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_transform");
+         return getResources().getMessage("undo.set_transform");
       }
    }
 
@@ -17550,7 +17550,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -17656,7 +17656,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -17762,7 +17762,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -17868,7 +17868,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -17973,7 +17973,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -18019,7 +18019,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.latexsize");
+         return getResources().getMessage("undo.latexsize");
       }
    }
 
@@ -18064,7 +18064,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -18109,7 +18109,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.font");
+         return getResources().getMessage("undo.font");
       }
    }
 
@@ -18157,12 +18157,12 @@ public class JDRCanvas extends JPanel
          if (state)
          {
             getApplication().setStatusInfo(
-               getResources().getString("info.edit_path"), "editpath");
+               getResources().getMessage("info.edit_path"), "editpath");
          }
          else
          {
             getApplication().setStatusInfo(
-               getResources().getString("info.select"), "selectobjects");
+               getResources().getMessage("info.select"), "selectobjects");
          }
       }
 
@@ -18222,8 +18222,8 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return edited_ ? 
-                getResources().getString("undo.edit.start") :
-                getResources().getString("undo.edit.finish");
+                getResources().getMessage("undo.edit.start") :
+                getResources().getMessage("undo.edit.finish");
       }
    }
 
@@ -18231,7 +18231,7 @@ public class JDRCanvas extends JPanel
    {
       private int _oldPage, _newPage;
       private String string_
-         = getResources().getString("undo.displaypage");
+         = getResources().getMessage("undo.displaypage");
 
       public DisplayPageEdit(int page)
       {
@@ -18286,7 +18286,7 @@ public class JDRCanvas extends JPanel
    class ShowTextField extends AbstractUndoableEdit
    {
       private String string_
-         = getResources().getString("undo.start_new_text");
+         = getResources().getMessage("undo.start_new_text");
       private JDRText textarea_;
       private Point2D location_;
       private String text_ = "";
@@ -18348,7 +18348,7 @@ public class JDRCanvas extends JPanel
    class HideTextField extends AbstractUndoableEdit
    {
       private String string_
-         = getResources().getString("undo.finish_new_text");
+         = getResources().getMessage("undo.finish_new_text");
       private Point location_;
       private JDRText textarea_ = null;
       private JDRFont font_, oldFont_;
@@ -18460,7 +18460,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getString("undo.set_storage_unit");
+         return getResources().getMessage("undo.set_storage_unit");
       }
    }
 

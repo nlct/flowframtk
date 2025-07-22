@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2020 Nicola L.C. Talbot
+    Copyright (C) 2020-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
 {
    public ConvertToPolygonDialog(FlowframTk application)
    {
-      super(application, application.getResources().getString("polygon.title"), true);
+      super(application, application.getResources().getMessage("polygon.title"), true);
       this.application = application;
 
       init();
@@ -114,7 +114,7 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       if (shape.isPolygon())
       {
          JOptionPane.showMessageDialog(this, 
-           getResources().getString("polygon.no_curves"));
+           getResources().getMessage("polygon.no_curves"));
 
          return;
       }
@@ -134,7 +134,7 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       {
          JDRResources resources = getResources();
 
-         if (resources.confirm(this, resources.getString("process.confirm.abort"))
+         if (resources.confirm(this, resources.getMessage("process.confirm.abort"))
              != JOptionPane.YES_OPTION)
          {
             return;

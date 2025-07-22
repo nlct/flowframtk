@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -150,7 +150,7 @@ public class PathGridPanel extends GridPanel
       row.add(descriptionBox);
 
       // add a temporary element to help pack the container
-      descriptionModel.addElement(resources.getString("label.choose"));
+      descriptionModel.addElement(resources.getMessage("label.choose"));
 
       dim = descriptionBox.getPreferredSize();
       dim.width = Integer.MAX_VALUE;

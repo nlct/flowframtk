@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,13 +58,13 @@ public class TeXAction extends FlowframTkAction
       switch (actionId)
       {
          case PARSHAPE :
-            putValue(Action.NAME, getResources().getString("tex.parshape"));
-            frameTitle = getResources().getString("parshape.title");
+            putValue(Action.NAME, getResources().getMessage("tex.parshape"));
+            frameTitle = getResources().getMessage("parshape.title");
             helpID = "parshape";
          break;
          case SHAPEPAR :
-            putValue(Action.NAME, getResources().getString("tex.shapepar"));
-            frameTitle = getResources().getString("shapepar.title");
+            putValue(Action.NAME, getResources().getMessage("tex.shapepar"));
+            frameTitle = getResources().getMessage("shapepar.title");
             helpID = "shapepar";
          break;
       }
@@ -93,7 +93,7 @@ public class TeXAction extends FlowframTkAction
 
       panel.add(getResources().createOkayButton(buttonAction));
       panel.add(getResources().createCancelButton(buttonAction));
-      panel.add(getResources().createHelpButton(helpID));
+      panel.add(getResources().createHelpDialogButton(application, helpID));
 
       dbox.getContentPane().add(panel, "South");
    }

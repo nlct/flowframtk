@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class PaperDialogBox extends JDialog
 {
    public PaperDialogBox(FlowframTk application, JDRPaper paper)
    {
-      super(application, application.getResources().getString("paper.title"),
+      super(application, application.getResources().getMessage("paper.title"),
             true);
       application_ = application;
 
@@ -65,33 +65,33 @@ public class PaperDialogBox extends JDialog
 
       predefinedBox = new JComboBox<String>(new String[]
       {
-         getResources().getString("paper.a6"),
-         getResources().getString("paper.a7"),
-         getResources().getString("paper.a8"),
-         getResources().getString("paper.a9"),
-         getResources().getString("paper.a10"),
-         getResources().getString("paper.b0"),
-         getResources().getString("paper.b1"),
-         getResources().getString("paper.b2"),
-         getResources().getString("paper.b3"),
-         getResources().getString("paper.b4"),
-         getResources().getString("paper.b5"),
-         getResources().getString("paper.b6"),
-         getResources().getString("paper.b7"),
-         getResources().getString("paper.b8"),
-         getResources().getString("paper.b9"),
-         getResources().getString("paper.b10"),
-         getResources().getString("paper.c0"),
-         getResources().getString("paper.c1"),
-         getResources().getString("paper.c2"),
-         getResources().getString("paper.c3"),
-         getResources().getString("paper.c4"),
-         getResources().getString("paper.c5"),
-         getResources().getString("paper.c6"),
-         getResources().getString("paper.c7"),
-         getResources().getString("paper.c8"),
-         getResources().getString("paper.c9"),
-         getResources().getString("paper.c10")
+         getResources().getMessage("paper.a6"),
+         getResources().getMessage("paper.a7"),
+         getResources().getMessage("paper.a8"),
+         getResources().getMessage("paper.a9"),
+         getResources().getMessage("paper.a10"),
+         getResources().getMessage("paper.b0"),
+         getResources().getMessage("paper.b1"),
+         getResources().getMessage("paper.b2"),
+         getResources().getMessage("paper.b3"),
+         getResources().getMessage("paper.b4"),
+         getResources().getMessage("paper.b5"),
+         getResources().getMessage("paper.b6"),
+         getResources().getMessage("paper.b7"),
+         getResources().getMessage("paper.b8"),
+         getResources().getMessage("paper.b9"),
+         getResources().getMessage("paper.b10"),
+         getResources().getMessage("paper.c0"),
+         getResources().getMessage("paper.c1"),
+         getResources().getMessage("paper.c2"),
+         getResources().getMessage("paper.c3"),
+         getResources().getMessage("paper.c4"),
+         getResources().getMessage("paper.c5"),
+         getResources().getMessage("paper.c6"),
+         getResources().getMessage("paper.c7"),
+         getResources().getMessage("paper.c8"),
+         getResources().getMessage("paper.c9"),
+         getResources().getMessage("paper.c10")
       });
       predefinedPanel.add(predefinedBox);
 
@@ -116,7 +116,7 @@ public class PaperDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("papermenu"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:papermenu"));
 
       getContentPane().add(p2, "South");
       pack();

@@ -6,7 +6,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class PatternDialogBox extends JDialog
    public PatternDialogBox(FlowframTk application)
    {
       super(application,
-         application.getResources().getString("pattern.title"), true);
+         application.getResources().getMessage("pattern.title"), true);
       application_ = application;
 
       Box box = Box.createVerticalBox();
@@ -97,7 +97,7 @@ public class PatternDialogBox extends JDialog
 
       rotPanel.add(rotAnglePanel);
 
-      tabbedPane.addTab(getResources().getString("pattern.rotational"),
+      tabbedPane.addTab(getResources().getMessage("pattern.rotational"),
          null, rotPanel);
 
       tabbedPane.setMnemonicAt(0,
@@ -121,7 +121,7 @@ public class PatternDialogBox extends JDialog
       label.setLabelFor(scaleYField);
       scaledPanel.add(scaleYField);
 
-      tabbedPane.addTab(getResources().getString("pattern.scaled"),
+      tabbedPane.addTab(getResources().getMessage("pattern.scaled"),
          null, scaledPanel);
 
       tabbedPane.setMnemonicAt(1,
@@ -142,7 +142,7 @@ public class PatternDialogBox extends JDialog
 
       spiralPanel.add(spiralDistancePanel);
 
-      tabbedPane.addTab(getResources().getString("pattern.spiral"),
+      tabbedPane.addTab(getResources().getMessage("pattern.spiral"),
          null, spiralPanel);
 
       tabbedPane.setMnemonicAt(2,
@@ -156,7 +156,7 @@ public class PatternDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("patterns"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:patterns"));
 
       getContentPane().add(p2, "South");
 

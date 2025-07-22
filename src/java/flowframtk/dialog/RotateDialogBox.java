@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class RotateDialogBox extends JDialog
    public RotateDialogBox(FlowframTk application)
    {
       super(application,
-         application.getResources().getString("rotate.title"), true);
+         application.getResources().getMessage("rotate.title"), true);
       application_ = application;
 
       JDRResources resources = application.getResources();
@@ -61,7 +61,7 @@ public class RotateDialogBox extends JDialog
 
       p2.add(resources.createOkayButton(this));
       p2.add(resources.createCancelButton(this));
-      p2.add(resources.createHelpButton("rotateobjects"));
+      p2.add(resources.createHelpDialogButton(this, "sec:rotateobjects"));
 
       getContentPane().add(p2, "South");
 

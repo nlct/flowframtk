@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2008-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -60,9 +60,9 @@ public class FontAnchorPanel extends JPanel
       p1.add(pgfTextLabel);
 
       pgfHalign = new JComboBox<String>(
-         new String[] {getResources().getString("font.anchor.left"),
-                       getResources().getString("font.anchor.hcentre"),
-                       getResources().getString("font.anchor.right")});
+         new String[] {getResources().getMessage("font.anchor.left"),
+                       getResources().getMessage("font.anchor.hcentre"),
+                       getResources().getMessage("font.anchor.right")});
 
       pgfTextLabel.setLabelFor(pgfHalign);
       pgfHalign.addItemListener(this);
@@ -70,10 +70,10 @@ public class FontAnchorPanel extends JPanel
       p1.add(pgfHalign);
 
       pgfValign = new JComboBox<String>(
-         new String[] {getResources().getString("font.anchor.top"),
-                       getResources().getString("font.anchor.vcentre"),
-                       getResources().getString("font.anchor.base"),
-                       getResources().getString("font.anchor.bottom")});
+         new String[] {getResources().getMessage("font.anchor.top"),
+                       getResources().getMessage("font.anchor.vcentre"),
+                       getResources().getMessage("font.anchor.base"),
+                       getResources().getMessage("font.anchor.bottom")});
       pgfValign.addItemListener(this);
 
       p1.add(pgfValign);

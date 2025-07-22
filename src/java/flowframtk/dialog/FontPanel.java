@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -143,8 +143,8 @@ public class FontPanel extends JScrollPane
       p.add(fontSeriesLabel, constraints);
 
       fontSeries = new JComboBox<String>(
-         new String[] {getResources().getString("font.series.medium"),
-                       getResources().getString("font.series.bold")});
+         new String[] {getResources().getMessage("font.series.medium"),
+                       getResources().getMessage("font.series.bold")});
       fontSeriesLabel.setLabelFor(fontSeries);
       constraints.gridx = 1;
       p.add(fontSeries, constraints);
@@ -172,8 +172,8 @@ public class FontPanel extends JScrollPane
       p.add(fontShapeLabel, constraints);
 
       fontShape = new JComboBox<String>(
-         new String[] {getResources().getString("font.shape.upright"),
-                       getResources().getString("font.shape.italic")});
+         new String[] {getResources().getMessage("font.shape.upright"),
+                       getResources().getMessage("font.shape.italic")});
       fontShapeLabel.setLabelFor(fontShape);
       constraints.gridx = 1;
       p.add(fontShape, constraints);
@@ -400,7 +400,7 @@ public class FontPanel extends JScrollPane
 
    public void setDefaults()
    {
-      setFontName(getResources().getString("font.default"));
+      setFontName(getResources().getMessage("font.default"));
       setNormalSize(
           (int)latexFonts_.getFontSize(LaTeXFontBase.NORMALSIZE));
       setFontSeries(JDRFont.SERIES_MEDIUM);

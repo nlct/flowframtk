@@ -81,8 +81,8 @@ lib/flowframtk.jar	: java/flowframtk/Manifest.txt \
 			lib/jdr.jar lib/jdrresources.jar \
 			classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class \
 			classes/splashimage.png \
-			lib/resources/helpsets/flowframtk/en-GB/flowframtk.hs \
-			lib/resources/helpsets/flowframtk/en-US/flowframtk.hs
+			lib/resources/helpsets/flowframtk/en-GB/index.xml \
+			lib/resources/helpsets/flowframtk/en/index.xml
 	cd classes; \
 	jar cmf ../java/flowframtk/Manifest.txt ../lib/flowframtk.jar \
 	splashimage.png \
@@ -102,14 +102,16 @@ classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class : \
 classes/splashimage.png	: classes images/splashimage.png
 	cp -u images/splashimage.png classes/
 
-lib/resources/helpsets/flowframtk/en-GB/flowframtk.hs	: doc/flowframtk-en.xml \
-			doc/createflowframtkdocs \
+lib/resources/helpsets/flowframtk/en-GB/index.xml	: doc/flowframtk-en-GB.tex \
+			doc/flowframtk-main.tex \
+			doc/flowframtk.bib \
 			doc/images-en-GB/*.png \
 			doc/sharedimages/*.png 
 			make -C doc
 
-lib/resources/helpsets/flowframtk/en-US/flowframtk.hs	: doc/flowframtk-en.xml \
-			doc/createflowframtkdocs \
+lib/resources/helpsets/flowframtk/en/index.xml	: doc/flowframtk-en.tex \
+			doc/flowframtk-main.tex \
+			doc/flowframtk.bib \
 			doc/images-en-US/*.png \
 			doc/sharedimages/*.png 
 			make -C doc

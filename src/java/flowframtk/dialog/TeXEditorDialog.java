@@ -26,7 +26,7 @@ public class TeXEditorDialog extends JDialog
    public TeXEditorDialog(FlowframTk application)
    {
       super(application,
-        application.getResources().getString("texeditor.frame_contents"),
+        application.getResources().getMessage("texeditor.frame_contents"),
         true);
 
       this.application = application;
@@ -102,8 +102,8 @@ public class TeXEditorDialog extends JDialog
       if (texEditorPanel.isModified())
       {
          if (getResources().confirm(this, 
-            getResources().getString("texeditor.discard_edit_query"),
-            getResources().getString("texeditor.confirm_discard"))
+            getResources().getMessage("texeditor.discard_edit_query"),
+            getResources().getMessage("texeditor.confirm_discard"))
             != JOptionPane.YES_OPTION)
          {
             return;

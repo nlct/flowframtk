@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Nicola L.C. Talbot
+    Copyright (C) 2013-2025 Nicola L.C. Talbot
     www.dickimaw-books.com
 
     This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ public class JDRAppSelector extends JDialog
    public JDRAppSelector(FlowframTk application)
    {
       super(application, 
-         application.getResources().getString("appselect.title"), true);
+         application.getResources().getMessage("appselect.title"), true);
 
       resources = application.getResources();
 
@@ -153,7 +153,7 @@ public class JDRAppSelector extends JDialog
          if (selectedFile == null || selectedFile.equals(""))
          {
             getResources().error(this,
-               getResources().getString("error.no_filename"));
+               getResources().getMessage("error.no_filename"));
          }
          else
          {

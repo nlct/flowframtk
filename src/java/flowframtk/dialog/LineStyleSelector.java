@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,10 +46,8 @@ public class LineStyleSelector extends JDRSelector
 {
    public LineStyleSelector(FlowframTk application)
    {
-      super(application,application.getResources().getString("linestyle.title"),
-            true,false);
-
-      application.enableHelpOnButton(help, "pathstyle");
+      super(application,application.getResources().getMessage("linestyle.title"),
+            true,false, "sec:pathstyle");
 
       // line style selection panel
 
@@ -78,7 +76,7 @@ public class LineStyleSelector extends JDRSelector
         && linestylePanel.getEnteredMitreLimit() < 1.0)
       {
          getResources().error(this,
-            getResources().getString("error.invalid_mitre_limit"));
+            getResources().getMessage("error.invalid_mitre_limit"));
          return;
       }
 

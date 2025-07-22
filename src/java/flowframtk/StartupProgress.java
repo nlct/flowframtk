@@ -3,7 +3,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -139,18 +139,18 @@ public class StartupProgress
 
       y += dy + maxChar.getHeight();
 
-      g.drawString(getResources().getString("about.see_licence"), x, y);
+      g.drawString(getResources().getMessage("about.see_licence"), x, y);
 
-      String translator = getResources().getString("about.translator", null);
+      String translator = getResources().getMessageIfExists("about.translator");
 
       if (translator != null && !translator.isEmpty())
       {
-         String translatedBy = getResources().getMessage(
+         String translatedBy = getResources().getMessageIfExists(
             "about.translated_by", translator);
-         String translatorUrl = getResources().getString(
-            "about.translator_url", null);
-         String translatorInfo = getResources().getString(
-            "about.translator_info", null);
+         String translatorUrl = getResources().getMessageIfExists(
+            "about.translator_url");
+         String translatorInfo = getResources().getMessageIfExists(
+            "about.translator_info");
 
          y = ICON_HEIGHT+margin;
          x = margin;

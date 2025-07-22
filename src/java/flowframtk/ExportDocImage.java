@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2015-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ public abstract class ExportDocImage extends ExportImage
             throw new IOException(String.format("%s%n%s",
                 getResources().getMessage("error.exec_failed_withcode_and_dir",
               buff.toString(), dir.toString(), exitCode),
-              getResources().getString("error.try_latex_export")));
+              getResources().getMessage("error.try_latex_export")));
          }
       }
       finally

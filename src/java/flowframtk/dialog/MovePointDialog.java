@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class MovePointDialog extends JDialog
    public MovePointDialog(JDRFrame frame)
    {
       super(frame.getApplication(),
-         frame.getResources().getString("coordinates.title"), true);
+         frame.getResources().getMessage("coordinates.title"), true);
       frame_ = frame;
 
       locationPane = new LocationPane(frame.getResources());

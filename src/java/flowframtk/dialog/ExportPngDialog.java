@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2015-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public class ExportPngDialog extends JDialog
    public ExportPngDialog(FlowframTk application)
    {
       super(application, 
-            application.getResources().getString("exportpng.title"),
+            application.getResources().getMessage("exportpng.title"),
             true);
       this.application = application;
 
@@ -61,7 +61,7 @@ public class ExportPngDialog extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("exportpng"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:exportpng"));
 
       getContentPane().add(p2, "South");
 

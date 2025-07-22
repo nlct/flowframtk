@@ -4,7 +4,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,9 +48,10 @@ import javax.print.*;
 import javax.print.attribute.*;
 import javax.print.attribute.standard.*;
 import javax.imageio.*;
-import javax.help.*;  
 
 import java.beans.*;
+
+import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -164,7 +165,7 @@ public class FlowframTk extends JFrame
       try
       {
          JDRCompleteObject.annoteFont = new Font(
-            resources.getString("font.annote.family"), 0,
+            resources.getMessage("font.annote.family"), 0,
             resources.getInt("font.annote.size"));
       }
       catch (NumberFormatException e)
@@ -188,7 +189,16 @@ public class FlowframTk extends JFrame
 
       // initialise help set
 
-      initializeHelp(this);
+      try 
+      {
+         getResources().initialiseHelp(this);
+      }
+      catch (Exception e)
+      {
+         getResources().error(this,
+          resources.getMessage("error.no_helpset"), e);
+      }
+
 
       // load list of recent files
 
@@ -229,7 +239,7 @@ public class FlowframTk extends JFrame
 
       contentPane.add(vSlidingBar, appSettings.getVerticalToolBarLocation());
 
-      invoker.setStartupInfo(resources.getString("message.init_menus"));
+      invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
       invoker.setStartupDeterminate(186);
 
@@ -284,7 +294,7 @@ public class FlowframTk extends JFrame
       openjdrFC.setCurrentDirectory(new File(appSettings.startDir));
 
       jdrAjrFileFilter = new JdrAjrFileFilter(
-         resources.getString("filter.jdrajr"));
+         resources.getMessage("filter.jdrajr"));
 
       openjdrFC.addChoosableFileFilter(jdrAjrFileFilter);
       openjdrFC.setFileFilter(jdrAjrFileFilter);
@@ -297,11 +307,11 @@ public class FlowframTk extends JFrame
       savejdrFC.setAcceptAllFileFilterUsed(false);
 
       jdrFileFilter = new JdrFileFilter(
-         resources.getString("filter.jdr"));
+         resources.getMessage("filter.jdr"));
       savejdrFC.addChoosableFileFilter(jdrFileFilter);
 
       ajrFileFilter = new AjrFileFilter(
-         resources.getString("filter.ajr"));
+         resources.getMessage("filter.ajr"));
       savejdrFC.addChoosableFileFilter(ajrFileFilter);
 
       int version = (int)Math.round(10.0*(JDRAJR.CURRENT_VERSION-0.1f))-10;
@@ -431,45 +441,45 @@ public class FlowframTk extends JFrame
       exportFC = new JDRFileChooser(resources);
 
       exportFC.setDialogTitle(
-         resources.getString("export.title"));
+         resources.getMessage("export.title"));
 
       exportFC.setCurrentDirectory(new File(appSettings.startDir));
       exportFC.setAcceptAllFileFilterUsed(false);
 
       pgfFileFilter = new TeXFileFilter(
-         resources.getString("filter.pgf"));
+         resources.getMessage("filter.pgf"));
       exportFC.addChoosableFileFilter(pgfFileFilter);
 
       clsFileFilter = new ClsFileFilter(
-         resources.getString("filter.cls"));
+         resources.getMessage("filter.cls"));
       exportFC.addChoosableFileFilter(clsFileFilter);
 
       styFileFilter = new StyFileFilter(
-         resources.getString("filter.sty"));
+         resources.getMessage("filter.sty"));
       exportFC.addChoosableFileFilter(styFileFilter);
 
       pgfDocFileFilter = new TeXFileFilter(
-         resources.getString("filter.pgfdoc"));
+         resources.getMessage("filter.pgfdoc"));
       exportFC.addChoosableFileFilter(pgfDocFileFilter);
 
       pgfEncapDocFileFilter = new TeXFileFilter(
-         resources.getString("filter.pgfencapdoc"));
+         resources.getMessage("filter.pgfencapdoc"));
       exportFC.addChoosableFileFilter(pgfEncapDocFileFilter);
 
       pngFileFilter = new PngFileFilter(
-         resources.getString("filter.png"));
+         resources.getMessage("filter.png"));
       exportFC.addChoosableFileFilter(pngFileFilter);
 
       epsFileFilter = new EpsFileFilter(
-         resources.getString("filter.eps"));
+         resources.getMessage("filter.eps"));
       exportFC.addChoosableFileFilter(epsFileFilter);
 
       pdfFileFilter = new PdfFileFilter(
-         resources.getString("filter.pdf"));
+         resources.getMessage("filter.pdf"));
       exportFC.addChoosableFileFilter(pdfFileFilter);
 
       svgFileFilter = new SvgFileFilter(
-         resources.getString("filter.svg"));
+         resources.getMessage("filter.svg"));
       exportFC.addChoosableFileFilter(svgFileFilter);
 
       exportFC.setFileFilter(pgfFileFilter);
@@ -479,7 +489,7 @@ public class FlowframTk extends JFrame
       texFC.setCurrentDirectory(new File(appSettings.startDir));
       texFC.setAcceptAllFileFilterUsed(false);
       texFileFilter = new TeXFileFilter(
-         resources.getString("filter.tex"));
+         resources.getMessage("filter.tex"));
       texFC.addChoosableFileFilter(texFileFilter);
 
       // Import
@@ -502,7 +512,7 @@ public class FlowframTk extends JFrame
 
          importFC = new JDRFileChooser(resources, false);
          importFC.setDialogTitle(
-            resources.getString("import.title"));
+            resources.getMessage("import.title"));
 
          importFC.setCurrentDirectory(
             new File(appSettings.startDir));
@@ -2736,7 +2746,7 @@ public class FlowframTk extends JFrame
                if (typeblock == null)
                {
                   invoker.getResources().error(frame, 
-                    invoker.getResources().getString("error.no_typeblock"));
+                    invoker.getResources().getMessage("error.no_typeblock"));
                   return;
                }
 
@@ -3326,11 +3336,11 @@ public class FlowframTk extends JFrame
 
       // Licence dialog
 
-      incStartupProgress(helpM, resources.createLicenceItem(helpM));
+      incStartupProgress(helpM, resources.createLicenceItem(this, helpM));
 
       // About dialog
 
-      incStartupProgress(helpM, resources.createAboutItem(helpM));
+      incStartupProgress(helpM, resources.createAboutItem(this, helpM));
 
       FlowframTkAction objectInfo = new FlowframTkAction(this,
         "objectinfo", 
@@ -3354,7 +3364,7 @@ public class FlowframTk extends JFrame
            public void doAction(FlowframTkAction action, ActionEvent evt)
            {
               getMessageSystem().messageln(
-                  invoker.getResources().getString("debug.writelog"));
+                  invoker.getResources().getMessage("debug.writelog"));
               debugMessage("writing log");
               writeLog();
            }
@@ -3370,7 +3380,7 @@ public class FlowframTk extends JFrame
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
                getMessageSystem().messageln(
-                  invoker.getResources().getString("debug.dumpall"));
+                  invoker.getResources().getMessage("debug.dumpall"));
                debugMessage("Dumping all");
                dumpAll();
             }
@@ -3451,13 +3461,13 @@ public class FlowframTk extends JFrame
       // set the browse utility for bitmaps
 
       appSettings.setBrowseUtil(new BrowseUtil(
-         resources.getString("browse.label"),
-         resources.getString("browse.not_found"),
-         resources.getString("browse.invalid_format"),
-         resources.getString("browse.cant_refresh"),
-         resources.getString("browse.title"),
-         resources.getString("browse.invalid_title"),
-         resources.getString("browse.discard")));
+         resources.getMessage("browse.label"),
+         resources.getMessage("browse.not_found"),
+         resources.getMessage("browse.invalid_format"),
+         resources.getMessage("browse.cant_refresh"),
+         resources.getMessage("browse.title"),
+         resources.getMessage("browse.invalid_title"),
+         resources.getMessage("browse.discard")));
       appSettings.setBitmapChooser(bitmapFC);
 
       exportToEpsSettings = new ExportToEpsSettings(this, appSelector);
@@ -3466,7 +3476,7 @@ public class FlowframTk extends JFrame
 
       segmentInfoDialog = new SegmentInfoDialog(this);
 
-      invoker.setStartupInfo(resources.getString("message.init_desktop"));
+      invoker.setStartupInfo(resources.getMessage("message.init_desktop"));
       invoker.setStartupIndeterminate();
 
       Vector<String> filenames = invoker.getFilenames();
@@ -3810,7 +3820,7 @@ public class FlowframTk extends JFrame
       if (invoker.isPrintDisabled())
       {
          getResources().error(this,
-            getResources().getString("error.printing.no_service"));
+            getResources().getMessage("error.printing.no_service"));
 
          return;
       }
@@ -3839,7 +3849,7 @@ public class FlowframTk extends JFrame
       else
       {
           getResources().error(this,
-             getResources().getString("error.printing.no_service"));
+             getResources().getMessage("error.printing.no_service"));
       }
    }
 
@@ -3883,7 +3893,7 @@ public class FlowframTk extends JFrame
       if (invoker.isPrintDisabled())
       {
           getResources().error(this,
-             getResources().getString("error.printing.no_service"));
+             getResources().getMessage("error.printing.no_service"));
 
           return;
       }
@@ -4197,8 +4207,8 @@ public class FlowframTk extends JFrame
       public String getPresentationName()
       {
          return activate_ 
-                ? getResources().getString("undo.select_child_window")
-                : getResources().getString("undo.deselect_child_window");
+                ? getResources().getMessage("undo.select_child_window")
+                : getResources().getMessage("undo.deselect_child_window");
       }
    }
 
@@ -4251,8 +4261,8 @@ public class FlowframTk extends JFrame
       public String getPresentationName()
       {
          return iconify_ 
-                ? getResources().getString("undo.iconify_child_window")
-                : getResources().getString("undo.deiconify_child_window");
+                ? getResources().getMessage("undo.iconify_child_window")
+                : getResources().getMessage("undo.deiconify_child_window");
       }
    }
 
@@ -5421,7 +5431,7 @@ public class FlowframTk extends JFrame
 
    class SetCurrentSettings extends AbstractUndoableEdit
    {
-      private String string_=getResources().getString("undo.set_current_settings");
+      private String string_=getResources().getMessage("undo.set_current_settings");
       private JDRPaint oldLinePaint_, linePaint_, oldFillPaint_,
          fillPaint_, oldTextPaint_, textPaint_;
       private JDRBasicStroke oldStroke_, stroke_;
@@ -5646,11 +5656,11 @@ public class FlowframTk extends JFrame
 
       JOptionPane.showMessageDialog(this,
          new Object[]{
-            getResources().getString("error.unknown_font")+": "
+            getResources().getMessage("error.unknown_font")+": "
                +getCurrentFontFamily(),
-            getResources().getString("error.unknown_font_select"),
+            getResources().getMessage("error.unknown_font_select"),
             box},
-            getResources().getString("error.unknown_font"),
+            getResources().getMessage("error.unknown_font"),
             JOptionPane.ERROR_MESSAGE
          );
 
@@ -5726,8 +5736,8 @@ public class FlowframTk extends JFrame
          {
             int selection = getResources().confirm(this,
                new String[] {filename,
-               getResources().getString("warning.file_exists")},
-               getResources().getString("warning.title"),
+               getResources().getMessage("warning.file_exists")},
+               getResources().getMessage("warning.title"),
                JOptionPane.YES_NO_OPTION,
                JOptionPane.WARNING_MESSAGE);
 
@@ -6551,8 +6561,8 @@ public class FlowframTk extends JFrame
          int selection = getResources().confirm(frame,
             new String[]
             {file.toString(),
-            getResources().getString("warning.file_exists")},
-            getResources().getString("warning.title"),
+            getResources().getMessage("warning.file_exists")},
+            getResources().getMessage("warning.title"),
             JOptionPane.YES_NO_OPTION,
             JOptionPane.WARNING_MESSAGE);
 
@@ -6652,8 +6662,8 @@ public class FlowframTk extends JFrame
             int selection = getResources().confirm(frame,
                new String[]
                {filename,
-               getResources().getString("warning.file_exists")},
-               getResources().getString("warning.title"),
+               getResources().getMessage("warning.file_exists")},
+               getResources().getMessage("warning.title"),
                JOptionPane.YES_NO_OPTION,
                JOptionPane.WARNING_MESSAGE);
 
@@ -6905,7 +6915,7 @@ public class FlowframTk extends JFrame
       }
       catch (Exception e)
       {
-         getResources().error(null,e);
+         getResources().error((Component)null, e);
       }
    }
 
@@ -6914,11 +6924,12 @@ public class FlowframTk extends JFrame
       return getResources().addHelpItem(helpM, invoker.getName());
    }
 
+   @Deprecated
    public void initializeHelp(JFrame parent)
    {
-      getResources().initialiseHelp(parent, invoker.getName().toLowerCase());
    }
 
+   @Deprecated
    public void enableHelpOnButton(AbstractButton comp, String id)
    {
       getResources().enableHelpOnButton(comp, id);

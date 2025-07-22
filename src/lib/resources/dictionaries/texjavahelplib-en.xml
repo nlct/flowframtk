@@ -614,6 +614,7 @@ Unable to open URL {0}</entry>
 
 
 <entry key="error.clisyntax.missing.value">Missing value for: {0}</entry>
+<entry key="error.clisyntax.invalid.syntax">Invalid syntax for: {0}</entry>
 <entry key="error.clisyntax.invalid.int_value">Invalid ''{0}'' value: {1} (number required)</entry>
 <entry key="error.clisyntax.unknown.arg">Unknown option: {0}
 Use {1} for help.</entry>

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -121,7 +121,7 @@ public class FontFamilyPanel extends JPanel implements ItemListener
 
    public void setDefaults()
    {
-      setFontName(getResources().getString("font.default"));
+      setFontName(getResources().getMessage("font.default"));
    }
 
    public JDRResources getResources()

@@ -96,7 +96,7 @@ public class JDRFrame extends JInternalFrame
       {
          String label="";
          count++;
-         label=getResources().getString("label.untitled");
+         label=getResources().getMessage("label.untitled");
 
          if (count > 1) label += count;
 
@@ -277,17 +277,17 @@ public class JDRFrame extends JInternalFrame
          case JDRCanvas.PAGES_NONE:
             prefix = getResources().getMessage(
                "flowframe.pages.label",
-               getResources().getString("flowframe.pages_none"));
+               getResources().getMessage("flowframe.pages_none"));
             break;
          case JDRCanvas.PAGES_ODD:
             prefix = getResources().getMessage(
                "flowframe.pages.label",
-               getResources().getString("flowframe.pages_odd"));
+               getResources().getMessage("flowframe.pages_odd"));
             break;
          case JDRCanvas.PAGES_EVEN:
             prefix = getResources().getMessage(
                "flowframe.pages.label",
-               getResources().getString("flowframe.pages_even"));
+               getResources().getMessage("flowframe.pages_even"));
             break;
          case JDRCanvas.PAGES_ALL:
             break;
@@ -302,7 +302,7 @@ public class JDRFrame extends JInternalFrame
       }
 
       String suffix = isModified() ? 
-      " ["+getResources().getString("info.modified")+"]" : "";
+      " ["+getResources().getMessage("info.modified")+"]" : "";
 
       String name = defaultName;
 
@@ -1534,7 +1534,7 @@ public class JDRFrame extends JInternalFrame
       if (isIoInProgress())
       {
          getResources().error(this,
-            getResources().getString("error.io.in_progress"));
+            getResources().getMessage("error.io.in_progress"));
 
          return false;
       }

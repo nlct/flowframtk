@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,7 +49,8 @@ public class JDRSelector extends JDialog
    public JDRSelector(FlowframTk application,
                       String title, 
                       boolean showPaths, boolean showText,
-                      boolean showAnchor)
+                      boolean showAnchor,
+                      String helpId)
    {
       super(application, true);
       application_ = application;
@@ -135,8 +136,10 @@ public class JDRSelector extends JDialog
       panel.add(getResources().createOkayButton(this));
       panel.add(getResources().createCancelButton(this));
 
-      help = getResources().createDialogButton("label.help", "help", null, null);
-      panel.add(help);
+      if (helpId != null)
+      {
+         panel.add(getResources().createHelpDialogButton(this, helpId));
+      }
 
       defaults = getResources().createDefaultButton(this);
       JPanel p2 = new JPanel();
@@ -151,22 +154,25 @@ public class JDRSelector extends JDialog
 
    public JDRSelector(FlowframTk application,
                       String title, 
-                      boolean showPaths)
+                      boolean showPaths,
+                      String helpId)
    {
-      this(application, title, showPaths, false, false);
+      this(application, title, showPaths, false, false, helpId);
    }
 
    public JDRSelector(FlowframTk application,
                       String title, 
-                      boolean showPaths, boolean showText)
+                      boolean showPaths, boolean showText,
+                      String helpId)
    {
-      this(application, title, showPaths, showText, false);
+      this(application, title, showPaths, showText, false, helpId);
    }
 
    public JDRSelector(FlowframTk application,
-                      String title)
+                      String title,
+                      String helpId)
    {
-      this(application, title, true, true, true);
+      this(application, title, true, true, true, helpId);
    }
 
    public void addToMain(JComponent comp)
@@ -406,7 +412,7 @@ public class JDRSelector extends JDialog
 
    public String getSampleText()
    {
-      return getResources().getString("font.sample");
+      return getResources().getMessage("font.sample");
    }
 
    public RenderingHints getRenderingHints()
@@ -428,7 +434,6 @@ public class JDRSelector extends JDialog
       str += "is visible: "+isVisible()+eol;
       str += "has focus: "+hasFocus()+eol;
       str += "defaults has focus: "+defaults.hasFocus()+eol;
-      str += "help has focus: "+help.hasFocus()+eol;
 
       ActionMap actionMap = getRootPane().getActionMap();
       str += "action map: "+eol;
@@ -479,7 +484,7 @@ public class JDRSelector extends JDialog
 
    public FlowframTk application_;
    private SamplePanel samplePathPanel, sampleTextPanel;
-   public JButton defaults, help;
+   public JButton defaults;
    protected JPanel actionPanel;
 
    protected JComponent mainPanel;

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2020 Nicola L.C. Talbot
+    Copyright (C) 2020-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -188,7 +188,7 @@ public class VectorizeBitmapDialog extends JFrame
       cancelButton = resources.createCancelButton(this);
       bottomPanel.add(cancelButton);
 
-      bottomPanel.add(resources.createHelpButton("vectorize"));
+      bottomPanel.add(resources.createHelpDialogButton(this, "sec:vectorize"));
 
       getContentPane().add(bottomPanel, "South");
 
@@ -625,7 +625,7 @@ public class VectorizeBitmapDialog extends JFrame
 
    public MessageSystem getMessageSystem()
    {
-      return getResources().getHelpLib.getMessageSystem();
+      return getResources().getHelpLib().getMessageSystem();
    }
 
    public boolean hasResults()
@@ -2554,11 +2554,11 @@ abstract class ControlSubPanel extends JPanel
       {
          public void actionPerformed(ActionEvent evt)
          {
-            String title = getResources().getMessage(id+".info_title", null);
+            String title = getResources().getMessageIfExists(id+".info_title");
 
             if (title == null)
             {
-               title = getResources().getMessage(id, null);
+               title = getResources().getMessageIfExists(id);
 
                if (title == null)
                {

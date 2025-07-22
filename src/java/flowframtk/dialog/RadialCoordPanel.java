@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
 
       add(anglePanel);
 
-      setName(resources.getString("grid.radial"));
+      setName(resources.getMessage("grid.radial"));
    }
 
    public void requestCoordFocus()

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ public class FontSeriesPanel extends JPanel implements ItemListener
       add(fontSeriesLabel);
 
       fontSeries = new JComboBox<String>(
-         new String[] {getResources().getString("font.series.medium"),
-                       getResources().getString("font.series.bold")});
+         new String[] {getResources().getMessage("font.series.medium"),
+                       getResources().getMessage("font.series.bold")});
       fontSeriesLabel.setLabelFor(fontSeries);
       add(fontSeries);
 

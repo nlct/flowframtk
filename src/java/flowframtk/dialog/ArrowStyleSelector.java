@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,11 +48,10 @@ public class ArrowStyleSelector extends JDRSelector
    public ArrowStyleSelector(FlowframTk application, int type)
    {
       super(application, 
-            ArrowStylePanel.getTitle(application.getResources(), type), true);
+            ArrowStylePanel.getTitle(application.getResources(), type), true,
+            "sec:markers");
 
       type_ = type;
-
-      application.enableHelpOnButton(help, "markers");
 
       // arrow selection panel
 

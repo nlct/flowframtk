@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2014-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class ExportToSvgSettings extends JDialog
    public ExportToSvgSettings(FlowframTk application, JDRAppSelector appSelector)
    {
       super(application, 
-         application.getResources().getString("appselect.setup"),true);
+         application.getResources().getMessage("appselect.setup"),true);
       this.application = application;
 
       Box mainPanel = Box.createVerticalBox();

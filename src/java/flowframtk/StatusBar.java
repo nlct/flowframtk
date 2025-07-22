@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ public class StatusBar extends JPanel
 
       if (modWidth <= 0)
       {
-         tmp = new JLabel(getResources().getString("info.modified")
+         tmp = new JLabel(getResources().getMessage("info.modified")
            +CanvasTextField.widestChar);
          tmp.setFont(statusFont);
          modDim = tmp.getPreferredSize();
@@ -179,7 +179,7 @@ public class StatusBar extends JPanel
       };
 
       storageUnitLabel.setToolTipText(
-         getResources().getString("info.storage_unit"));
+         getResources().getMessage("info.storage_unit"));
 
       storageUnitLabel.addMouseListener(new MouseAdapter()
       {
@@ -217,7 +217,7 @@ public class StatusBar extends JPanel
 
       modifiedLabel.setText(" ");
       modifiedLabel.setToolTipText(
-         getResources().getString("info.unmodified.tooltip"));
+         getResources().getMessage("info.unmodified.tooltip"));
 
       lockIcon = getResources().appIcon("key.png");
       unlockIcon = getResources().appIcon("keycross.png");
@@ -253,7 +253,7 @@ public class StatusBar extends JPanel
          }
       });
 
-      lockLabel.setToolTipText(getResources().getString("info.grid.lock_off"));
+      lockLabel.setToolTipText(getResources().getMessage("info.grid.lock_off"));
 
       zoomComp = new ZoomComponent(application, statusFont, height);
       Dimension zoomFieldDim = zoomComp.getZoomFieldSize();
@@ -271,7 +271,7 @@ public class StatusBar extends JPanel
       infoField.setDragEnabled(false);
       infoField.setHighlighter(null);
       infoField.setToolTipText(
-        getResources().getString("info.tooltip", null));
+        getResources().getMessageIfExists("info.tooltip"));
 
       infoField.addMouseListener(new MouseAdapter()
       {
@@ -287,7 +287,7 @@ public class StatusBar extends JPanel
       helpButton = getResources().createSmallHelpButton();
       helpButton.setActionCommand("statushelp");
       helpButton.setToolTipText(
-        getResources().getString("info.help.tooltip", null));
+        getResources().getMessageIfExists("info.help.tooltip"));
 
       int maxH = height;
       if (posDim.height > maxH) maxH = posDim.height;
@@ -367,7 +367,7 @@ public class StatusBar extends JPanel
       application.setStatusPositionWidth(posWidth);
       height = posDim.height;
 
-      tmp = new JLabel(getResources().getString("info.modified")
+      tmp = new JLabel(getResources().getMessage("info.modified")
            +CanvasTextField.widestChar);
       tmp.setFont(statusFont);
       dim = tmp.getPreferredSize();
@@ -430,12 +430,12 @@ public class StatusBar extends JPanel
       if (lock)
       {
          lockLabel.setIcon(lockIcon);
-         lockLabel.setToolTipText(getResources().getString("info.grid.lock_on"));
+         lockLabel.setToolTipText(getResources().getMessage("info.grid.lock_on"));
       }
       else
       {
          lockLabel.setIcon(unlockIcon);
-         lockLabel.setToolTipText(getResources().getString("info.grid.lock_off"));
+         lockLabel.setToolTipText(getResources().getMessage("info.grid.lock_off"));
       }
    }
 
@@ -447,11 +447,11 @@ public class StatusBar extends JPanel
    public void setModified(boolean modified)
    {
       modifiedLabel.setText(modified ?
-         getResources().getString("info.modified") : " ");
+         getResources().getMessage("info.modified") : " ");
 
       modifiedLabel.setToolTipText(modified ?
-         getResources().getString("info.modified.tooltip") :
-         getResources().getString("info.unmodified.tooltip"));
+         getResources().getMessage("info.modified.tooltip") :
+         getResources().getMessage("info.unmodified.tooltip"));
    }
 
    public void setStorageUnit(byte id)
@@ -484,11 +484,11 @@ public class StatusBar extends JPanel
    {
       if (numFrames == 0)
       {
-         setInfo(getResources().getString("info.no_frames"));
+         setInfo(getResources().getMessage("info.no_frames"));
       }
       else
       {
-         setInfo(getResources().getString("info.no_frames_selected"));
+         setInfo(getResources().getMessage("info.no_frames_selected"));
       }
       pos.setEnabled(false);
       modifiedLabel.setEnabled(false);

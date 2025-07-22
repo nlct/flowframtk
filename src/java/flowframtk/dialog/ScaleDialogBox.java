@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class ScaleDialogBox extends JDialog
    public ScaleDialogBox(FlowframTk application)
    {
       super(application, 
-         application.getResources().getString("scale.title"), true);
+         application.getResources().getMessage("scale.title"), true);
       application_ = application;
 
       int width  = 300;
@@ -94,7 +94,7 @@ public class ScaleDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("scaleobjects"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:scaleobjects"));
 
       getContentPane().add(p2, "South");
    }

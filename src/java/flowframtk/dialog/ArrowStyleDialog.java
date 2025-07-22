@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ public class ArrowStyleDialog extends JDialog
 
       p1.add(getResources().createOkayButton(this));
       p1.add(getResources().createCancelButton(this));
-      p1.add(getResources().createHelpButton("markers"));
+      p1.add(getResources().createHelpDialogButton(this, "sec:markers"));
 
       defaultButton = getResources().createDefaultButton(this);
       JPanel p2 = new JPanel();

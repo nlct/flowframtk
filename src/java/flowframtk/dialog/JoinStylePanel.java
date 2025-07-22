@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,9 +50,9 @@ public class JoinStylePanel extends JPanel implements ItemListener
       add(joinStylesLabel);
 
       String[] joinStyles = {
-         getResources().getString("linestyle.join.mitre"),
-         getResources().getString("linestyle.join.round"),
-         getResources().getString("linestyle.join.bevel")};
+         getResources().getMessage("linestyle.join.mitre"),
+         getResources().getMessage("linestyle.join.round"),
+         getResources().getMessage("linestyle.join.bevel")};
       joinStyleBox = new JComboBox<String>(joinStyles);
       add(joinStyleBox);
 

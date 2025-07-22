@@ -23,7 +23,7 @@ public class WelcomeDialog extends JDialog
    public WelcomeDialog(FlowframTkInvoker invoker)
    {
       super(invoker.getGUI(), 
-        invoker.getResources().getString("welcome.title"), true);
+        invoker.getResources().getMessage("welcome.title"), true);
 
       JDRResources resources = invoker.getResources();
 
@@ -32,12 +32,12 @@ public class WelcomeDialog extends JDialog
       JEditorPane editorPane = new JEditorPane("text/html",
         resources.getMessage("welcome.text",
          invoker.getName(), invoker.getVersion(),
-         resources.getString("config.title"),
-         resources.getString("settings.label"),
-         resources.getString("settings.config"),
-         resources.getString("configui.title"),
-         resources.getString("settings.label"),
-         resources.getString("settings.configui")));
+         resources.getMessage("config.title"),
+         resources.getMessage("settings.label"),
+         resources.getMessage("settings.config"),
+         resources.getMessage("configui.title"),
+         resources.getMessage("settings.label"),
+         resources.getMessage("settings.configui")));
 
       Font font = editorPane.getFont();
       FontMetrics fm = getFontMetrics(font);

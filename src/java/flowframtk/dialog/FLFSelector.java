@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public class FLFSelector extends JDialog
    public FLFSelector(FlowframTk application)
    {
       super(application,
-         application.getResources().getString("flowframe.title"),true);
+         application.getResources().getMessage("flowframe.title"),true);
       application_ = application;
 
 
@@ -77,10 +77,10 @@ public class FLFSelector extends JDialog
       type = new JComboBox<String>(
          new String[]
          {
-            getResources().getString("flowframe.static"),
-            getResources().getString("flowframe.flow"),
-            getResources().getString("flowframe.dynamic"),
-            getResources().getString("flowframe.none")
+            getResources().getMessage("flowframe.static"),
+            getResources().getMessage("flowframe.flow"),
+            getResources().getMessage("flowframe.dynamic"),
+            getResources().getMessage("flowframe.none")
          }
       );
       type.addItemListener(this);
@@ -105,12 +105,12 @@ public class FLFSelector extends JDialog
       border = new JComboBox<String>(
          new String[]
          {
-             getResources().getString("flowframe.border_none"),
-             getResources().getString("flowframe.border_as_shown")
+             getResources().getMessage("flowframe.border_none"),
+             getResources().getMessage("flowframe.border_as_shown")
          }
       );
       border.setSelectedItem(
-         getResources().getString("flowframe.border_as_shown"));
+         getResources().getMessage("flowframe.border_as_shown"));
       borderLabel.setLabelFor(border);
       p1.add(border, gbc);
 
@@ -122,10 +122,10 @@ public class FLFSelector extends JDialog
       pageList = new JComboBox<String>(
          new String[]
          {
-            getResources().getString("flowframe.pages_all"),
-            getResources().getString("flowframe.pages_none"),
-            getResources().getString("flowframe.pages_odd"),
-            getResources().getString("flowframe.pages_even")
+            getResources().getMessage("flowframe.pages_all"),
+            getResources().getMessage("flowframe.pages_none"),
+            getResources().getMessage("flowframe.pages_odd"),
+            getResources().getMessage("flowframe.pages_even")
          }
       );
       pageList.setEditable(true);
@@ -145,9 +145,9 @@ public class FLFSelector extends JDialog
       shapeBox = new JComboBox<String>(
          new String[]
          {
-            getResources().getString("flowframe.shape_standard"),
-            getResources().getString("flowframe.shape_parshape"),
-            getResources().getString("flowframe.shape_shapepar")
+            getResources().getMessage("flowframe.shape_standard"),
+            getResources().getMessage("flowframe.shape_parshape"),
+            getResources().getMessage("flowframe.shape_shapepar")
           }
       );
       shapeBox.addItemListener(this);
@@ -164,9 +164,9 @@ public class FLFSelector extends JDialog
       alignBox = new JComboBox<String>(
          new String[]
          {
-            getResources().getString("flowframe.align_top"),
-            getResources().getString("flowframe.align_middle"),
-            getResources().getString("flowframe.align_bottom")
+            getResources().getMessage("flowframe.align_top"),
+            getResources().getMessage("flowframe.align_middle"),
+            getResources().getMessage("flowframe.align_bottom")
           }
       );
       alignLabel.setLabelFor(alignBox);
@@ -251,7 +251,7 @@ public class FLFSelector extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("framedef"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:framedef"));
 
       getContentPane().add(p2, "South");
 
@@ -294,7 +294,7 @@ public class FLFSelector extends JDialog
          if (labelText.getText().equals(""))
          {
             getResources().error(this,
-               getResources().getString("error.no_idl"));
+               getResources().getMessage("error.no_idl"));
             return;
          }
 
@@ -302,29 +302,29 @@ public class FLFSelector extends JDialog
          if (!mainPanel.isUniqueLabel(idx,object,labelText.getText()))
          {
             getResources().error(this,
-               getResources().getString("error.idl_exists"));
+               getResources().getMessage("error.idl_exists"));
             return;
          }
 
          String pages = (String)pageList.getSelectedItem();
 
          if (pages.equals(
-              getResources().getString("flowframe.pages_all")))
+              getResources().getMessage("flowframe.pages_all")))
          {
             pages = "all";
          }
          else if (pages.equals(
-            getResources().getString("flowframe.pages_odd")))
+            getResources().getMessage("flowframe.pages_odd")))
          {
             pages = "odd";
          }
          else if (pages.equals(
-            getResources().getString("flowframe.pages_even")))
+            getResources().getMessage("flowframe.pages_even")))
          {
             pages = "even";
          }
          else if (pages.equals(
-            getResources().getString("flowframe.pages_none")))
+            getResources().getMessage("flowframe.pages_none")))
          {
             pages = "none";
          }
@@ -333,7 +333,7 @@ public class FLFSelector extends JDialog
          if (!FlowFrame.isValidPageList(pages))
          {
             getResources().error(this,
-               getResources().getString("error.invalid_frame-page-list"));
+               getResources().getMessage("error.invalid_frame-page-list"));
             return;
          }
          
@@ -525,22 +525,22 @@ public class FLFSelector extends JDialog
          if (pages.equals("all"))
          {
             pageList.setSelectedItem(
-               getResources().getString("flowframe.pages_all"));
+               getResources().getMessage("flowframe.pages_all"));
          }
          else if (pages.equals("odd"))
          {
             pageList.setSelectedItem(
-               getResources().getString("flowframe.pages_odd"));
+               getResources().getMessage("flowframe.pages_odd"));
          }
          else if (pages.equals("even"))
          {
             pageList.setSelectedItem(
-               getResources().getString("flowframe.pages_even"));
+               getResources().getMessage("flowframe.pages_even"));
          }
          else if (pages.equals("none"))
          {
             pageList.setSelectedItem(
-               getResources().getString("flowframe.pages_none"));
+               getResources().getMessage("flowframe.pages_none"));
          }
          else
          {

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ public class ConfigTeXSettingsDialog extends JDialog
    public ConfigTeXSettingsDialog(FlowframTk application)
    {
       super(application,
-         application.getResources().getString("texconfig.title"), true);
+         application.getResources().getMessage("texconfig.title"), true);
       application_ = application;
       setIconImage(getResources().getSmallAppIcon().getImage());
 
@@ -77,33 +77,33 @@ public class ConfigTeXSettingsDialog extends JDialog
 
       texSettings = new TeXSettingsPanel(application);
 
-      tabbedPane.addTab(getResources().getString("clssettings.title"),
+      tabbedPane.addTab(getResources().getMessage("clssettings.title"),
          null, new JScrollPane(texSettings),
-         getResources().getString("clssettings.tooltip"));
+         getResources().getMessage("clssettings.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("clssettings.mnemonic"));
 
       flfConfigPanel = new FlfConfigPanel(getResources());
 
-      tabbedPane.addTab(getResources().getString("flfsettings.title"),
+      tabbedPane.addTab(getResources().getMessage("flfsettings.title"),
          null, new JScrollPane(flfConfigPanel),
-         getResources().getString("flfsettings.tooltip"));
+         getResources().getMessage("flfsettings.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("flfsettings.mnemonic"));
 
       textConfigPanel = new TextConfigPanel(this, application);
 
-      tabbedPane.addTab(getResources().getString("textconfig.title"),
+      tabbedPane.addTab(getResources().getMessage("textconfig.title"),
          null, new JScrollPane(textConfigPanel),
-         getResources().getString("textconfig.tooltip"));
+         getResources().getMessage("textconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("textconfig.mnemonic"));
 
       preambleConfigPanel = new PreambleConfigPanel(this, application);
 
-      tabbedPane.addTab(getResources().getString("preambleconfig.title"),
+      tabbedPane.addTab(getResources().getMessage("preambleconfig.title"),
          null, new JScrollPane(preambleConfigPanel),
-         getResources().getString("preambleconfig.tooltip"));
+         getResources().getMessage("preambleconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("preambleconfig.mnemonic"));
 
@@ -115,7 +115,7 @@ public class ConfigTeXSettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("texconfig"));
+      p.add(getResources().createHelpDialogButton(this, "sec:texconfig"));
 
       pack();
       Dimension dim = getSize();
@@ -477,7 +477,7 @@ class FlfConfigPanel extends Box
       add(shapeparBox);
 
       JLabel shapeparLabel = new JLabel(
-         resources.getString("flfsettings.shapeparcs"));
+         resources.getMessage("flfsettings.shapeparcs"));
       shapeparLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
       shapeparBox.add(shapeparLabel);
 
@@ -498,7 +498,7 @@ class FlfConfigPanel extends Box
       add(pagesBox);
 
       JLabel pagesLabel = new JLabel(
-          resources.getString("flfsettings.pages_opt"));
+          resources.getMessage("flfsettings.pages_opt"));
       pagesLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
       pagesBox.add(pagesLabel);
 
@@ -571,7 +571,7 @@ class TextConfigPanel extends JPanel
       tabbedPane.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(tabbedPane, "Center");
 
-      tabbedPane.addTab(resources.getString("textconfig.textmode"),
+      tabbedPane.addTab(resources.getMessage("textconfig.textmode"),
         resources.appButtonIcon("textup.png"),
         createTextMappingsComponent(),
         resources.getToolTipText("textconfig.textmode"));
@@ -579,7 +579,7 @@ class TextConfigPanel extends JPanel
         resources.getCodePoint("textconfig.textmode.mnemonic"));
 
       tabbedPane.addTab(
-        resources.getString("textconfig.mathmode"),
+        resources.getMessage("textconfig.mathmode"),
         resources.appButtonIcon("mathup.png"),
         createMathsMappingsComponent(),
         resources.getToolTipText("textconfig.mathmode"));
@@ -615,10 +615,10 @@ class TextConfigPanel extends JPanel
 
       textualShading = new JComboBox<String>(new String[]
       {
-          resources.getString("textconfig.textualshading.average"),
-          resources.getString("textconfig.textualshading.start"),
-          resources.getString("textconfig.textualshading.end"),
-          resources.getString("textconfig.textualshading.path")
+          resources.getMessage("textconfig.textualshading.average"),
+          resources.getMessage("textconfig.textualshading.start"),
+          resources.getMessage("textconfig.textualshading.end"),
+          resources.getMessage("textconfig.textualshading.path")
       });
 
       textualShadingLabel.setLabelFor(textualShading);
@@ -638,8 +638,8 @@ class TextConfigPanel extends JPanel
 
       textPathOutline = new JComboBox<String>(new String[]
       {
-          resources.getString("textconfig.textpathoutline.path"),
-          resources.getString("textconfig.textpathoutline.ignore")
+          resources.getMessage("textconfig.textpathoutline.path"),
+          resources.getMessage("textconfig.textpathoutline.ignore")
       });
 
       textPathOutlineLabel.setLabelFor(textPathOutline);
@@ -665,12 +665,12 @@ class TextConfigPanel extends JPanel
 
       addTextMapButton = resources.createDialogButton(
         "textconfig.add.textmap", "add.textmap", this, null, 
-        resources.getString("textconfig.add.textmap.tooltip"));
+        resources.getMessage("textconfig.add.textmap.tooltip"));
       box.add(addTextMapButton);
 
       removeTextMapButton = resources.createDialogButton(
         "textconfig.remove.textmap", "remove.textmap", this, null, 
-        resources.getString("textconfig.remove.textmap.tooltip"));
+        resources.getMessage("textconfig.remove.textmap.tooltip"));
       box.add(removeTextMapButton);
 
       box.add(resources.createDialogButton("textconfig.textmappings.import",
@@ -681,10 +681,10 @@ class TextConfigPanel extends JPanel
       textModeMappings = application.getTextModeMappings();
 
       columnNames = new Vector<String>(2);
-      columnNames.add(resources.getString("textconfig.codepoint"));
-      columnNames.add(resources.getString("textconfig.symbol"));
-      columnNames.add(resources.getString("textconfig.command"));
-      columnNames.add(resources.getString("textconfig.package"));
+      columnNames.add(resources.getMessage("textconfig.codepoint"));
+      columnNames.add(resources.getMessage("textconfig.symbol"));
+      columnNames.add(resources.getMessage("textconfig.command"));
+      columnNames.add(resources.getMessage("textconfig.package"));
 
       textMapTable = new JTable()
       {
@@ -732,12 +732,12 @@ class TextConfigPanel extends JPanel
 
       addMathMapButton = resources.createDialogButton(
         "textconfig.add.mathmap", "add.mathmap", this, null, 
-        resources.getString("textconfig.add.mathmap.tooltip"));
+        resources.getMessage("textconfig.add.mathmap.tooltip"));
       box.add(addMathMapButton);
 
       removeMathMapButton = resources.createDialogButton(
         "textconfig.remove.mathmap", "remove.mathmap", this, null, 
-        resources.getString("textconfig.remove.mathmap.tooltip"));
+        resources.getMessage("textconfig.remove.mathmap.tooltip"));
       box.add(removeMathMapButton);
 
       box.add(resources.createDialogButton("textconfig.mathmappings.import",
@@ -912,7 +912,7 @@ class TextConfigPanel extends JPanel
       }
       else if (action.equals("add.textmap"))
       {
-         texMapDialog.setTitle(resources.getString("textconfig.add.textmap"));
+         texMapDialog.setTitle(resources.getMessage("textconfig.add.textmap"));
 
          TeXMapRow map = texMapDialog.requestMapping();
 
@@ -923,7 +923,7 @@ class TextConfigPanel extends JPanel
       }
       else if (action.equals("add.mathmap"))
       {
-         texMapDialog.setTitle(resources.getString("textconfig.add.mathmap"));
+         texMapDialog.setTitle(resources.getMessage("textconfig.add.mathmap"));
 
          TeXMapRow map = texMapDialog.requestMapping();
 
@@ -1260,7 +1260,7 @@ class TeXMapDialog extends JDialog
 
       buttonPanel.add(resources.createOkayButton(this));
       buttonPanel.add(resources.createCancelButton(this));
-      buttonPanel.add(resources.createHelpButton("mi:newtexmappings"));
+      buttonPanel.add(resources.createHelpDialogButton(this, "mi:newtexmappings"));
 
       pack();
       setLocationRelativeTo(parent);

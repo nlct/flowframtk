@@ -6,7 +6,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2015-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ public abstract class AddJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
          if (jdr.hasDraftBitmap())
          {
             publish(MessageInfo.createWarning(
-               getResources().getString("warning.draft_bitmaps")));
+               getResources().getMessage("warning.draft_bitmaps")));
          }
 
       }
@@ -120,7 +120,7 @@ public abstract class AddJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
          catch (IOException e)
          {
             publish(
-              MessageInfo.createError(getResources().getString("error.io.close")), 
+              MessageInfo.createError(getResources().getMessage("error.io.close")), 
               MessageInfo.createError(e));
          }
 
@@ -173,7 +173,7 @@ public abstract class AddJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
 
       getMessageSystem().finished(jdrFrame);
       jdrFrame.getApplication().setStatusInfo(
-        getResources().getString("info.select"), "selectobjects");
+        getResources().getMessage("info.select"), "selectobjects");
    }
 
    public JDRResources getResources()

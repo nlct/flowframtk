@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ public class CharacterSelector extends JDialog
 {
    public CharacterSelector(FlowframTk gui, int[][] ranges)
    {
-      super(gui, gui.getResources().getString("symbol.title"), true);
+      super(gui, gui.getResources().getMessage("symbol.title"), true);
 
       this.resources = gui.getResources();
 
@@ -64,7 +64,7 @@ public class CharacterSelector extends JDialog
    public CharacterSelector(JDRResources resources, Dialog parent,
      SymbolSelectorListener symbolListener, int[][] ranges)
    {
-      super(parent, resources.getString("symbol.title"), true);
+      super(parent, resources.getMessage("symbol.title"), true);
 
       this.resources = resources;
       this.symbolListener_ = symbolListener;
@@ -76,7 +76,7 @@ public class CharacterSelector extends JDialog
    {
       Box topPanel = Box.createHorizontalBox();
 
-      JLabel label = new JLabel(resources.getString("symbol.text"));
+      JLabel label = new JLabel(resources.getMessage("symbol.text"));
       label.setDisplayedMnemonic(resources.getCodePoint("symbol.text.mnemonic"));
 
       topPanel.add(label);
@@ -109,7 +109,7 @@ public class CharacterSelector extends JDialog
 
       cardIndexTable = new JTable(
        new DefaultTableModel(
-         new Object[] {resources.getString("unicode.blocks.title")},
+         new Object[] {resources.getMessage("unicode.blocks.title")},
          0)
       )
       {
@@ -153,7 +153,7 @@ public class CharacterSelector extends JDialog
 
       p2.add(resources.createOkayButton(this));
       p2.add(resources.createCancelButton(this));
-      p2.add(resources.createHelpButton("mi:insertsymbol"));
+      p2.add(resources.createHelpDialogButton(this, "mi:insertsymbol"));
 
       modeLabel = new JLabel();
       bottomPanel.add(modeLabel, "East");
@@ -199,7 +199,7 @@ public class CharacterSelector extends JDialog
    {
       BlockPanel panel = new BlockPanel(block, symbolListener_, this);
 
-      String name = resources.getString("unicode."+block.toString());
+      String name = resources.getMessage("unicode."+block.toString());
 
       JScrollPane scrollPane = new JScrollPane(panel);
       scrollPane.setName(name);

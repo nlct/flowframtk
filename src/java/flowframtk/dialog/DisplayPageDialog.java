@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public class DisplayPageDialog extends JDialog
    public DisplayPageDialog(FlowframTk application)
    {
       super(application,
-            application.getResources().getString("displaypage.title"),true);
+            application.getResources().getMessage("displaypage.title"),true);
       application_ = application;
 
       JPanel p1 = new JPanel();
@@ -103,7 +103,7 @@ public class DisplayPageDialog extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("displaypage"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:displaypage"));
 
       getContentPane().add(p2, "South");
 

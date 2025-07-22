@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class FindByDescriptionDialogBox extends JDialog
    public FindByDescriptionDialogBox(FlowframTk application)
    {
       super(application,
-            application.getResources().getString("findbydescription.title"),
+            application.getResources().getMessage("findbydescription.title"),
             true);
       application_ = application;
 

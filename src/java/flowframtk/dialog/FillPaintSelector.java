@@ -46,10 +46,8 @@ public class FillPaintSelector extends JDRSelector
    public FillPaintSelector(FlowframTk application)
    {
       super(application, 
-         application.getResources().getString("fillcolour.title"),
-      true, false);
-
-      application.enableHelpOnButton(help, "fillpaint");
+         application.getResources().getMessage("fillcolour.title"),
+      true, false, "sec:fillpaint");
 
       paintPanel = new PaintPanel(this);
       paintPanel.setBorder(BorderFactory.createLoweredBevelBorder());

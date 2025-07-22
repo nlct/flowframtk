@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ public class GreyPanel extends JPanel
       gbc.gridy = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      greyLabel = new JLabel(getResources().getString("colour.grey"),
+      greyLabel = new JLabel(getResources().getMessage("colour.grey"),
                             SwingConstants.RIGHT);
       sliders.add(greyLabel, gbc);
 
@@ -111,7 +111,7 @@ public class GreyPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      alphaLabel = new JLabel(getResources().getString("colour.alpha"),
+      alphaLabel = new JLabel(getResources().getMessage("colour.alpha"),
                               SwingConstants.RIGHT);
       sliders.add(alphaLabel, gbc);
       gbc.gridx = 1;

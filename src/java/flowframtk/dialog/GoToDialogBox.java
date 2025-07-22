@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class GoToDialogBox extends JDialog
 {
    public GoToDialogBox(FlowframTk application)
    {
-      super(application, application.getResources().getString("goto.title"),
+      super(application, application.getResources().getMessage("goto.title"),
             true);
       application_ = application;
       setLocationRelativeTo(application_);
@@ -58,7 +58,7 @@ public class GoToDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("goto"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:goto"));
 
       getContentPane().add(p2, "South");
 

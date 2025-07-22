@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public class StorageUnitDialog extends JDialog
    public StorageUnitDialog(FlowframTk application)
    {
       super(application,
-            application.getResources().getString("graphics.storage_unit.title"),
+            application.getResources().getMessage("graphics.storage_unit.title"),
             true);
       application_ = application;
 
@@ -53,7 +53,7 @@ public class StorageUnitDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("controlsettings"));
+      p.add(getResources().createHelpDialogButton(this, "sec:controlsettings"));
 
       pack();
       setLocationRelativeTo(application_);

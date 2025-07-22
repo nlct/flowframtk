@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,10 +46,8 @@ public class TextPaintSelector extends JDRSelector
    public TextPaintSelector(FlowframTk application)
    {
       super(application, 
-            application.getResources().getString("textcolour.title"),
-            false, true);
-
-      application.enableHelpOnButton(help, "textpaint");
+            application.getResources().getMessage("textcolour.title"),
+            false, true, "sec:textpaint");
 
       paintPanel = new PaintPanel(this);
       paintPanel.setBorder(BorderFactory.createLoweredBevelBorder());

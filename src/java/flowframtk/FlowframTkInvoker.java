@@ -6,7 +6,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006-2020 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,6 +35,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+import com.dickimawbooks.texjavahelplib.InvalidSyntaxException;
+import com.dickimawbooks.texjavahelplib.CLISyntaxParser;
+import com.dickimawbooks.texjavahelplib.CLIArgValue;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
@@ -47,10 +50,10 @@ import com.dickimawbooks.flowframtk.dialog.WelcomeDialog;
 public class FlowframTkInvoker
 {
    public FlowframTkInvoker(String[] args)
-     throws IOException,URISyntaxException
+     throws IOException,URISyntaxException,InvalidFormatException
    {
       this.args = args;
-      this.resources = new JDRResources();
+      this.resources = new JDRResources(APP_NAME);
       this.filenames = new Vector<String>();
    }
 
@@ -64,27 +67,34 @@ public class FlowframTkInvoker
       resources.debugMessage(e);
    }
 
-   public void version()
+   /**
+    * Prints the version information to STDERR.
+    */
+   public void versionInfo()
    {
       System.out.println(resources.getAppInfo(false));
 
       System.exit(0);
    }
 
+   /**
+    * Prints the command line syntax to STDERR and quits application.
+    */
    public void syntax()
    {
       TeXJavaHelpLib helpLib = resources.getHelpLib();
 
       System.out.println(
          helpLib.getMessageWithFallback(
-        "about.version",
-        "{0} version {1}",
-         APP_NAME, JDRResources.APP_VERSION));
+        "about.version_date",
+        "{0} version {1} ({2})",
+         APP_NAME, JDRResources.APP_VERSION, JDRResources.APP_DATE));
 
       System.out.println();
 
       System.out.println(helpLib.getMessage("clisyntax.usage",
-         "flowframtk [options] [filename] ... [filename]"));
+        helpLib.getMessage("syntax.options", APP_NAME)));
+
       System.out.println();
 
       System.out.println(helpLib.getMessage("syntax.options"));
@@ -118,16 +128,20 @@ public class FlowframTkInvoker
       System.out.println();
 
       helpLib.printSyntaxItem(
-         helpLib.getMessage("syntax.help", "--help", "-h"));
+         helpLib.getMessage("clisyntax.help2", "--help", "-h"));
 
       helpLib.printSyntaxItem(
-         helpLib.getMessage("syntax.version", "--version", "-v"));
+         helpLib.getMessage("clisyntax.version2", "--version", "-v"));
 
       helpLib.printSyntaxItem(
          helpLib.getMessage("syntax.debug", "--[no]debug"));
 
       helpLib.printSyntaxItem(
          helpLib.getMessage("syntax.experimental", "--[no]experimental"));
+
+      System.out.println();
+      System.out.println(helpLib.getMessage("clisyntax.bugreport",
+        "https://github.com/nlct/flowframtk"));
 
       System.exit(0);
    }
@@ -708,19 +722,6 @@ public class FlowframTkInvoker
                else if (key.equals("version"))
                {
                   diffVersion = !value.equals(JDRResources.APP_VERSION);
-      
-                  if (value.compareTo("0.5.6b") < 0)
-                  {
-                     try
-                     {
-                        resources.initialiseDictionary();
-                     }
-                     catch (IOException ioe)
-                     {
-                        resources.internalError(null, ioe);
-                     }
-                  }
-      
                }
                else if (key.equals("dict_lang"))
                {
@@ -732,7 +733,7 @@ public class FlowframTkInvoker
                }
                else if (key.equals("help_lang"))
                {
-                  settings.setHelpSet(value);
+                  resources.setHelpSet(value);
                }
                else if (key.equals("preview_bitmaps"))
                {
@@ -1429,14 +1430,14 @@ public class FlowframTkInvoker
                      catch (AWTException awte)
                      {
                         resources.warning(null, new String[] {
-                           resources.getString("warning.no_robot"),
+                           resources.getMessage("warning.no_robot"),
                            awte.getMessage()});
                         settings.robot = null;
                      }
                      catch (SecurityException sexc)
                      {
                         resources.warning(null, new String[] {
-                           resources.getString("warning.no_robot"),
+                           resources.getMessage("warning.no_robot"),
                            sexc.getMessage()});
                         settings.robot = null;
                      }
@@ -1760,14 +1761,14 @@ public class FlowframTkInvoker
          catch (AWTException awte)
          {
             resources.warning(null, new String[] {
-               resources.getString("warning.no_robot"),
+               resources.getMessage("warning.no_robot"),
                awte.getMessage()});
             settings.robot = null;
          }
          catch (SecurityException sexc)
          {
             resources.warning(null, new String[] {
-               resources.getString("warning.no_robot"),
+               resources.getMessage("warning.no_robot"),
                sexc.getMessage()});
             settings.robot = null;
          }
@@ -2633,11 +2634,6 @@ public class FlowframTkInvoker
             {
                resources.error(e);
             }
-
-            if (!resources.isDictInitialised())
-            {
-               resources.initialiseDictionary();
-            }
          }
          else
          {
@@ -2653,21 +2649,11 @@ public class FlowframTkInvoker
                {
                   resources.error(e);
                }
-
-               if (!resources.isDictInitialised())
-               {
-                  resources.initialiseDictionary();
-               }
             }
             else
             {
                debugMessage("No config file found, usersettings: "
                 + usersettings);
-
-               if (!resources.isDictInitialised())
-               {
-                  resources.initialiseDictionary();
-               }
 
                // no setting found, try initialising robot
 
@@ -2678,14 +2664,14 @@ public class FlowframTkInvoker
                catch (AWTException awte)
                {
                   resources.warning(null, new String[] {
-                     resources.getString("warning.no_robot"),
+                     resources.getMessage("warning.no_robot"),
                      awte.getMessage()});
                   settings.setRobot(null);
                }
                catch (SecurityException se)
                {
                   resources.warning(null, new String[] {
-                     resources.getString("warning.no_robot"),
+                     resources.getMessage("warning.no_robot"),
                      se.getMessage()});
                   settings.setRobot(null);
                }
@@ -2697,7 +2683,7 @@ public class FlowframTkInvoker
       {
          startup.setVersion(resources.getMessage(
            "about.version", getName(), getVersion()),
-           resources.getString("about.copyright")
+           resources.getMessage("about.copyright")
               +String.format(" %s-%s Nicola L.C. Talbot",
                JDRResources.START_COPYRIGHT_YEAR, JDRResources.COPYRIGHT_YEAR),
            resources.getMessage("about.disclaimer", getName())
@@ -2957,30 +2943,406 @@ public class FlowframTkInvoker
       return startup.getProgress();
    }
 
-   private void createAndShowGUI()
+   private CLISyntaxParser createCLISyntaxParser()
    {
-      try
-      {
-         loadDictionaries();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-
-      if (args.length == 1)
-      {
-         if (args[0].equals("-version") || args[0].equals("--version")
-           || args[0].equals("-v"))
+      return new CLISyntaxParser(resources.getHelpLib(), args, "-h", "-v")
+      {             
+         @Override  
+         protected int argCount(String arg)
          {
-            version();
+            if (arg.equals("--paper") || arg.equals("-paper"))
+            {
+               return 3;
+            }
+            else if (arg.equals("--in") || arg.equals("-i")
+             || arg.equals("--verbosity") || arg.equals("-verbosity")
+               )
+            {
+               return 1;
+            }
+
+            return 0;
          }
-         else if (args[0].equals("-help") || args[0].equals("-h")
-         || args[0].equals("--help"))
+
+         @Override
+         public boolean setDebugOption(String option, Integer value)
+         throws InvalidSyntaxException
+         {
+            resources.debugMode = true;
+            resources.getMessageSystem().setVerbosity(2);
+
+            return true;
+         }
+
+         @Override
+         protected boolean preparseCheckArg()
+         throws InvalidSyntaxException
+         {
+            if (super.preparseCheckArg())
+            {
+               return true;
+            }
+
+            if (originalArgList[preparseIndex].equals("--paper")
+             || originalArgList[preparseIndex].equals("-paper")
+              )
+            {
+               // make sure the queue has three arguments
+
+               String option = originalArgList[preparseIndex];
+
+               if (preparseIndex < originalArgList.length - 1)
+               {
+                  preparseIndex++;
+                  deque.add(option);
+
+                  String paperId = originalArgList[preparseIndex];
+                  deque.add(paperId);
+
+                  preparseIndex++;
+
+                  if (paperId.equals("user"))
+                  {
+                     if (preparseIndex < originalArgList.length - 1)
+                     {
+                        deque.add(originalArgList[preparseIndex]);
+                        preparseIndex++;
+                     }
+                     else
+                     {
+                        throw new InvalidSyntaxException(
+                          resources.getMessage( "error.missing_paper_width"));
+                     }
+
+                     if (preparseIndex < originalArgList.length - 1)
+                     {
+                        deque.add(originalArgList[preparseIndex]);
+                        preparseIndex++;
+                     }
+                     else
+                     {
+                        throw new InvalidSyntaxException(
+                          resources.getMessage( "error.missing_paper_height"));
+                     }
+                  }
+                  else
+                  {
+                     deque.add("");
+                     deque.add("");
+                  }
+               }
+               else
+               {
+                  throw new InvalidSyntaxException(getHelpLib().getMessage(
+                    "error.clisyntax.missing.value", option));
+               }
+            }
+            else if (originalArgList[preparseIndex].equals("-version"))
+            {
+               versionInfo();
+            }
+            else if (originalArgList[preparseIndex].equals("-help"))
+            {
+               syntax();
+            }
+            else if (originalArgList[preparseIndex].equals("-debug"))
+            {
+               return setDebugModeOption(originalArgList[preparseIndex], null);
+            }
+            else if (originalArgList[preparseIndex].equals("-nodebug")
+                  || originalArgList[preparseIndex].equals("--nodebug")
+                    )
+            {
+               resources.debugMode = false;
+            }
+            else if (originalArgList[preparseIndex].equals("--verbosity")
+             || originalArgList[preparseIndex].equals("-verbosity")
+               )
+            {
+               String option = originalArgList[preparseIndex];
+
+               if (preparseIndex < originalArgList.length - 1)
+               {
+                  preparseIndex++;
+
+                  try
+                  {
+                     resources.getMessageSystem().setVerbosity(
+                       Integer.parseInt(originalArgList[preparseIndex]));
+                  }
+                  catch (NumberFormatException e)
+                  {
+                     throw new InvalidSyntaxException(
+                        resources.getMessage("error.with_found",
+                          resources.getMessage("error.invalid_verbosity"),
+                          originalArgList[preparseIndex]), e);
+                  }
+               }
+               else
+               {
+                  throw new InvalidSyntaxException(getHelpLib().getMessage(
+                    "error.clisyntax.missing.value", option));
+               }
+            }
+            else if (originalArgList[preparseIndex].startsWith("--verbosity="))
+            {
+               String[] split = originalArgList[preparseIndex].split("=", 2);
+               String option = split[0];
+
+               try
+               {
+                  resources.getMessageSystem().setVerbosity(
+                    Integer.parseInt(split[1]));
+               }
+               catch (NumberFormatException e)
+               {
+                  throw new InvalidSyntaxException(
+                     resources.getMessage("error.with_found",
+                       resources.getMessage("error.invalid_verbosity"),
+                       split[1]), e);
+               }
+            }
+            else
+            {
+               return false;
+            }
+
+            return true;
+         }
+
+         @Override
+         protected void help()
          {
             syntax();
          }
-      }
+
+         @Override
+         protected void version()
+         {
+            versionInfo();
+         }
+
+         @Override
+         protected void parseArg(String arg)
+         throws InvalidSyntaxException
+         {
+            // if no option specified, assume input file
+
+            try
+            {
+               // Discard any problem file but continue to open
+               // GUI if possible
+
+               filenames.add((new File(arg)).getCanonicalPath());
+            }
+            catch (IOException e)
+            {
+               resources.error(e.getMessage());
+            }
+            catch (Exception e)
+            {
+               resources.error(e);
+            }
+         }
+
+         @Override
+         protected boolean parseArg(String arg, CLIArgValue[] returnVals)
+         throws InvalidSyntaxException
+         {
+            if (arg.equals("--disable_print")
+             || arg.equals("-disable_print")
+             )
+            {
+               disablePrint = true;
+            }
+            else if (arg.equals("--nodisable_print")
+                  || arg.equals("-nodisable_print")
+             )
+            {
+               disablePrint = false;
+            }
+            else if (arg.equals("--show_grid")
+                  || arg.equals("-show_grid")
+             )
+            {
+               settings.setDisplayGrid(true);
+            }
+            else if (arg.equals("--noshow_grid")
+                  || arg.equals("-noshow_grid")
+             )
+            {
+               settings.setDisplayGrid(false);
+            }
+            else if (arg.equals("--grid_lock")
+                  || arg.equals("-grid_lock")
+             )
+            {
+               settings.setGridLock(true);
+            }
+            else if (arg.equals("--nogrid_lock")
+                  || arg.equals("-nogrid_lock")
+             )
+            {
+               settings.setGridLock(false);
+            }
+            else if (arg.equals("--toolbar")
+                  || arg.equals("-toolbar")
+             )
+            {
+               settings.showToolBar = true;
+            }
+            else if (arg.equals("--notoolbar")
+                  || arg.equals("-notoolbar")
+             )
+            {
+               settings.showToolBar = false;
+            }
+            else if (arg.equals("--statusbar")
+                  || arg.equals("-statusbar")
+             )
+            {
+               settings.setShowStatus(true);
+            }
+            else if (arg.equals("--nostatusbar")
+                  || arg.equals("-nostatusbar")
+             )
+            {
+               settings.setShowStatus(false);
+            }
+            else if (arg.equals("--rulers")
+                  || arg.equals("-rulers")
+             )
+            {
+               settings.setShowRulers(true);
+            }
+            else if (arg.equals("--norulers")
+                  || arg.equals("-norulers")
+             )
+            {
+               settings.setShowRulers(false);
+            }
+            else if (arg.equals("--experimental")
+                  || arg.equals("-experimental")
+             )
+            {
+               experimentalMode = true;
+            }
+            else if (arg.equals("--noexperimental")
+                  || arg.equals("-noexperimental")
+             )
+            {
+               experimentalMode = true;
+            }
+            else if (arg.startsWith("-"))
+            {
+               throw new InvalidSyntaxException(
+                getHelpLib().getMessage("error.syntax.unknown_option", arg));
+            }
+            else if (isArg(arg, "--paper", "-paper", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getHelpLib().getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               String paperId = returnVals[0].toString();
+
+               if (paperId.equals("user"))
+               {
+                  try
+                  {
+                     if (returnVals[1] == null)
+                     {
+                        throw new InvalidSyntaxException(
+                           resources.getMessage(
+                              "error.missing_paper_width"));
+                     }
+
+                     JDRLength paperWidth = JDRLength.parse(
+                        resources.getMessageDictionary(),
+                        returnVals[1].toString());
+
+                     if (returnVals[2] == null)
+                     {
+                        throw new InvalidSyntaxException(
+                           resources.getMessage(
+                              "error.missing_paper_height"));
+                     }
+
+                     JDRLength paperHeight = JDRLength.parse(
+                        resources.getMessageDictionary(),
+                        returnVals[2].toString());
+
+                     if (paperHeight.getValue() <= 0)
+                     {
+                        throw new InvalidValueException(
+                          InvalidFormatException.LENGTH, returnVals[2].toString(), 
+                          resources.getMessageDictionary());
+                     }
+
+                     settings.setPaper(new JDRPaper(paperWidth, paperHeight));
+                  }
+                  catch (InvalidValueException e)
+                  {
+                     throw new InvalidSyntaxException(
+                      getHelpLib().getMessage("error.clisyntax.invalid.syntax", arg), e);
+                  }
+                  catch (JdrIllegalArgumentException e)
+                  {
+                     throw new InvalidSyntaxException(
+                        resources.getMessage("error.paper_dimension"));
+                  }
+               }
+               else
+               {
+                  JDRPaper paper = JDRPaper.getPredefinedPaper(paperId);
+
+                  if (paper == null)
+                  {
+                     throw new InvalidSyntaxException(
+                       resources.getMessage(
+                          "error.unknown_papersize", paperId));
+                  }
+                  else
+                  {
+                     settings.setPaper(paper);
+                  }
+               }
+            }
+            else if (isArg(arg, "--in", "-i", returnVals))
+            {
+               try
+               {
+                  // Discard any problem file but continue to open
+                  // GUI if possible
+
+                  filenames.add((new File(arg)).getCanonicalPath());
+               }
+               catch (IOException e)
+               {
+                  resources.error(e.getMessage());
+               }
+               catch (Exception e)
+               {
+                  resources.error(e);
+               }
+            }
+            else
+            {
+               return false;
+            }
+
+            return true;
+         }
+      };
+   }
+
+   private void createAndShowGUI()
+   throws InvalidSyntaxException
+   {
+      CLISyntaxParser cliParser = createCLISyntaxParser();
+      cliParser.preparse();
 
       try
       {
@@ -3003,12 +3365,12 @@ public class FlowframTkInvoker
       }
       catch (IOException e)
       {
-         resources.error(null, e);
+         resources.error((Component)null, e);
          e.printStackTrace();
       }
       catch (URISyntaxException e)
       {
-         resources.error(null, e);
+         resources.error((Component)null, e);
          e.printStackTrace();
       }
       catch (Throwable e)
@@ -3018,216 +3380,7 @@ public class FlowframTkInvoker
 
       // process command line arguments
 
-      for (int i = 0; i < args.length; i++)
-      {
-         if (args[i].equals("-version") || args[i].equals("--version")
-           || args[i].equals("-v"))
-         {
-            version();
-         }
-         else if (args[i].equals("-help") || args[i].equals("-h")
-         || args[i].equals("--help"))
-         {
-            syntax();
-         }
-         else if (args[i].equals("-disable_print"))
-         {
-            disablePrint = true;
-         }
-         else if (args[i].equals("-nodisable_print"))
-         {
-            disablePrint = false;
-         }
-         else if (args[i].equals("-show_grid"))
-         {
-            settings.setDisplayGrid(true);
-         }
-         else if (args[i].equals("-noshow_grid"))
-         {
-            settings.setDisplayGrid(false);
-         }
-         else if (args[i].equals("-grid_lock"))
-         {
-            settings.setGridLock(true);
-         }
-         else if (args[i].equals("-nogrid_lock"))
-         {
-            settings.setGridLock(false);
-         }
-         else if (args[i].equals("-toolbar"))
-         {
-            settings.showToolBar = true;
-         }
-         else if (args[i].equals("-notoolbar"))
-         {
-            settings.setShowToolBar(false);
-         }
-         else if (args[i].equals("-statusbar"))
-         {
-            settings.setShowStatus(true);
-         }
-         else if (args[i].equals("-nostatusbar"))
-         {
-            settings.setShowStatus(false);
-         }
-         else if (args[i].equals("-rulers"))
-         {
-            settings.setShowRulers(true);
-         }
-         else if (args[i].equals("-norulers"))
-         {
-            settings.setShowRulers(false);
-         }
-         else if (args[i].equals("-paper"))
-         {
-            if (args.length == i+1)
-            {
-               resources.error(
-                  resources.getString("error.missing_papersize"));
-               System.exit(resources.EXIT_SYNTAX);
-            }
-            i++;
-
-            if (args[i].equals("user"))
-            {
-               if (args.length == i+1)
-               {
-                  resources.error(resources.getString(
-                     "error.missing_paper_width"));
-                  System.exit(resources.EXIT_SYNTAX);
-               }
-
-               i++;
-
-               try
-               {
-                  JDRLength paperWidth = JDRLength.parse(
-                     resources.getMessageDictionary(), args[i]);
-
-                  if (args.length == i+1)
-                  {
-                     resources.error(
-                        resources.getString(
-                           "error.missing_paper_height"));
-                     System.exit(resources.EXIT_SYNTAX);
-                  }
-
-                  if (paperWidth.getValue() <= 0)
-                  {
-                     throw new InvalidValueException(
-                       InvalidFormatException.LENGTH, args[i], 
-                       resources.getMessageDictionary());
-                  }
-
-                  i++;
-
-                  JDRLength paperHeight = JDRLength.parse(
-                     resources.getMessageDictionary(), args[i]);
-
-                  if (paperHeight.getValue() <= 0)
-                  {
-                     throw new InvalidValueException(
-                       InvalidFormatException.LENGTH, args[i], 
-                       resources.getMessageDictionary());
-                  }
-
-                  settings.setPaper(new JDRPaper(paperWidth, paperHeight));
-               }
-               catch (InvalidValueException e)
-               {
-                  resources.error(e);
-                  System.exit(resources.EXIT_SYNTAX);
-               }
-               catch (JdrIllegalArgumentException e)
-               {
-                  resources.error(
-                     resources.getString("error.paper_dimension"));
-                  System.exit(resources.EXIT_SYNTAX);
-               }
-            }
-            else
-            {
-               JDRPaper paper = JDRPaper.getPredefinedPaper(args[i]);
-
-               if (paper == null)
-               {
-                  resources.error(
-                    resources.getMessage(
-                       "error.unknown_papersize", args[i]));
-                  System.exit(resources.EXIT_SYNTAX);
-               }
-               else
-               {
-                  settings.setPaper(paper);
-               }
-            }
-         }
-         else if (args[i].equals("-verbosity"))
-         {
-            if (args.length == i+1)
-            {
-               resources.error(
-                  resources.getString("error.missing_verbosity"));
-               System.exit(resources.EXIT_SYNTAX);
-            }
-
-            i++;
-
-            try
-            {
-               resources.getMessageSystem().setVerbosity(Integer.parseInt(args[i]));
-            }
-            catch (NumberFormatException e)
-            {
-               resources.error(
-                 resources.getMessage("error.with_found",
-                  resources.getString("error.invalid_verbosity"), args[i]));
-            }
-         }
-         else if (args[i].equals("-debug"))
-         {
-            resources.debugMode = true;
-            resources.getMessageSystem().setVerbosity(2);
-         }
-         else if (args[i].equals("-nodebug"))
-         {
-            resources.debugMode = false;
-         }
-         else if (args[i].equals("-experimental"))
-         {
-            experimentalMode = true;
-         }
-         else if (args[i].equals("-noexperimental"))
-         {
-            experimentalMode = false;
-         }
-         else if (args[i].equals("-help") || args[i].equals("-h")
-               || args[i].equals("--help"))
-         {
-            syntax();
-         }
-         else if (args[i].substring(0,1).equals("-"))
-         {
-            resources.error(resources.getMessage(
-               "error.unknown_option", args[i]));
-            System.exit(resources.EXIT_SYNTAX);
-         }
-         else
-         {
-            try
-            {
-               filenames.add((new File(args[i])).getCanonicalPath());
-            }
-            catch (IOException e)
-            {
-               resources.error(e.getMessage());
-            }
-            catch (Exception e)
-            {
-               resources.error(e);
-            }
-         }
-      }
+      cliParser.parseArgs();
 
       String usersettings = getConfigDirName();
 
@@ -3296,17 +3449,52 @@ public class FlowframTkInvoker
       {
          public void run()
          {
+            FlowframTkInvoker invoker = null;
+
             try
             {
-               FlowframTkInvoker invoker = new FlowframTkInvoker(invokerArgs);
-
-               invoker.createAndShowGUI();
+               invoker = new FlowframTkInvoker(invokerArgs);
             }
             catch (Exception e)
             {
                e.printStackTrace();
                JOptionPane.showMessageDialog(null, e.toString(),
                  "Error", JOptionPane.ERROR_MESSAGE);
+               System.exit(JDRResources.EXIT_FATAL_ERROR);
+            }
+
+            JDRResources resources = invoker.getResources();
+
+            try
+            {
+               invoker.createAndShowGUI();
+            }
+            catch (InvalidSyntaxException e)
+            {
+               System.err.println(e.getMessage());
+               resources.error(e);
+               System.exit(JDRResources.EXIT_FATAL_ERROR);
+            }
+            catch (Throwable e)
+            {
+               String msg = e.getMessage();
+
+               if (msg == null)
+               {
+                  msg = e.getClass().getSimpleName();
+               }
+
+               System.err.println(msg);
+
+               if (resources == null)
+               {
+                  e.printStackTrace();
+                  System.exit(JDRResources.EXIT_FATAL_ERROR);
+               }
+               else
+               {
+                  resources.internalError(null, msg, e);
+               }
             }
          }
       });

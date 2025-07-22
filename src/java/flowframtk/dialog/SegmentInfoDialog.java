@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2020 Nicola L.C. Talbot
+    Copyright (C) 2020-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ public class SegmentInfoDialog extends JDialog
    public SegmentInfoDialog(FlowframTk application)
    {
       super(application,
-         application.getResources().getString("segmentinfo.title"), true);
+         application.getResources().getMessage("segmentinfo.title"), true);
       this.application = application;
 
       JDRResources resources = application.getResources();
@@ -505,7 +505,7 @@ public class SegmentInfoDialog extends JDialog
          JDRResources resources = getResources();
 
          if (!modified || resources.confirm(this, 
-              resources.getString("segmentinfo.confirm_discard"))
+              resources.getMessage("segmentinfo.confirm_discard"))
             == JOptionPane.YES_OPTION)
          {
             setVisible(false);
@@ -518,7 +518,7 @@ public class SegmentInfoDialog extends JDialog
          JDRResources resources = getResources();
 
          if (resources.confirm(this, 
-              resources.getString("segmentinfo.confirm_discard"))
+              resources.getMessage("segmentinfo.confirm_discard"))
             == JOptionPane.YES_OPTION)
          {
             revert();
@@ -819,11 +819,11 @@ class ControlInfoPanel extends JPanel implements ChangeListener
 
       if (index == -1)
       {
-         label = new JLabel(resources.getString("segmentinfo.end_control"));
+         label = new JLabel(resources.getMessage("segmentinfo.end_control"));
       }
       else if (index == 0)
       {
-         label = new JLabel(resources.getString("segmentinfo.start_control"));
+         label = new JLabel(resources.getMessage("segmentinfo.start_control"));
       }
       else
       {

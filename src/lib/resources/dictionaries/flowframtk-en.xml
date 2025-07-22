@@ -14,6 +14,8 @@ Nicola Talbot
 
 <!-- Command line invocation syntax messages -->
 
+<entry key="syntax.options">{0} [&lt;options&gt;] [&lt;file&gt;] ... </entry>
+
 <entry key="syntax.debug">{0}   Enable debugging.</entry>
 <entry key="syntax.experimental">{0}   Enable experimental features.</entry>
 

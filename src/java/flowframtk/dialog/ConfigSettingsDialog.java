@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ public class ConfigSettingsDialog extends JDialog
       JDRAppSelector appSelector)
    {
       super(application,
-         application.getResources().getString("config.title"), true);
+         application.getResources().getMessage("config.title"), true);
       application_ = application;
 
       JTabbedPane tabbedPane = new JTabbedPane();
@@ -83,45 +83,45 @@ public class ConfigSettingsDialog extends JDialog
 
       panel.add(storageUnitPanel);
 
-      tabbedPane.addTab(getResources().getString("controls.title"),
+      tabbedPane.addTab(getResources().getMessage("controls.title"),
          null, panel,
-         getResources().getString("tooltip.controls"));
+         getResources().getMessage("tooltip.controls"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("controls.mnemonic"));
 
       dirPanel = new DirPanel(getResources());
 
-      tabbedPane.addTab(getResources().getString("startdir.title"),
-         null, dirPanel, getResources().getString("tooltip.startdir"));
+      tabbedPane.addTab(getResources().getMessage("startdir.title"),
+         null, dirPanel, getResources().getMessage("tooltip.startdir"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("startdir.mnemonic"));
 
       jdrPanel = new JDRSettingsPanel(getResources());
 
-      tabbedPane.addTab(getResources().getString("jdr.title"), null,
-        jdrPanel, getResources().getString("tooltip.jdr"));
+      tabbedPane.addTab(getResources().getMessage("jdr.title"), null,
+        jdrPanel, getResources().getMessage("tooltip.jdr"));
       tabbedPane.setMnemonicAt(idx++,
         getResources().getCodePoint("jdr.mnemonic"));
 
       initAppSettingsPanel = new InitAppSettingsPanel(getResources());
 
-      tabbedPane.addTab(getResources().getString("initsettings.title"),
+      tabbedPane.addTab(getResources().getMessage("initsettings.title"),
          null, initAppSettingsPanel,
-         getResources().getString("tooltip.initsettings"));
+         getResources().getMessage("tooltip.initsettings"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("initsettings.mnemonic"));
 
       bitmapPanel = new BitmapPanel(getResources());
 
-      tabbedPane.addTab(getResources().getString("bitmapconfig.title"), null,
-        bitmapPanel, getResources().getString("bitmapconfig.tooltip"));
+      tabbedPane.addTab(getResources().getMessage("bitmapconfig.title"), null,
+        bitmapPanel, getResources().getMessage("bitmapconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
         getResources().getCodePoint("bitmapconfig.mnemonic"));
 
       processesPanel = new ProcessesPanel(application, appSelector);
 
-      tabbedPane.addTab(getResources().getString("processes.title"), null,
-        processesPanel, getResources().getString("processes.tooltip"));
+      tabbedPane.addTab(getResources().getMessage("processes.title"), null,
+        processesPanel, getResources().getMessage("processes.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
         getResources().getCodePoint("processes.mnemonic"));
 
@@ -132,7 +132,7 @@ public class ConfigSettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpButton("configuredialog"));
+      p.add(getResources().createHelpDialogButton(this, "sec:configuredialog"));
 
       pack();
       Dimension dim = getSize();
@@ -245,13 +245,13 @@ class JDRSettingsPanel extends JPanel
       String[] saveStrings = new String[3];
 
       saveStrings[JDRAJR.ALL_SETTINGS] 
-         = resources.getString("jdr.on_save.all");
+         = resources.getMessage("jdr.on_save.all");
 
       saveStrings[JDRAJR.NO_SETTINGS]
-         = resources.getString("jdr.on_save.none");
+         = resources.getMessage("jdr.on_save.none");
 
       saveStrings[JDRAJR.PAPER_ONLY]
-         = resources.getString("jdr.on_save.paper");
+         = resources.getMessage("jdr.on_save.paper");
 
       saveBox = new JComboBox<String>(saveStrings);
       saveLabel.setLabelFor(saveBox);
@@ -285,13 +285,13 @@ class JDRSettingsPanel extends JPanel
       String[] loadStrings = new String[3];
 
       loadStrings[JDRAJR.ALL_SETTINGS]
-          = resources.getString("jdr.on_load.all");
+          = resources.getMessage("jdr.on_load.all");
 
       loadStrings[JDRAJR.NO_SETTINGS]
-          = resources.getString("jdr.on_load.none");
+          = resources.getMessage("jdr.on_load.none");
 
       loadStrings[JDRAJR.PAPER_ONLY]
-          = resources.getString("jdr.on_load.paper");
+          = resources.getMessage("jdr.on_load.paper");
 
       loadBox = new JComboBox<String>(loadStrings);
       loadLabel.setLabelFor(loadBox);
@@ -495,7 +495,7 @@ class DirPanel extends JPanel
       fc = new JFileChooser();
       fc.setCurrentDirectory(new File("."));
       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-      fc.setApproveButtonText(resources.getString("label.okay"));
+      fc.setApproveButtonText(resources.getMessage("label.okay"));
       fc.setApproveButtonMnemonic(resources.getCodePoint("label.okay.mnemonic"));
    }
 
@@ -548,7 +548,7 @@ class DirPanel extends JPanel
          break;
          default :
             application.getResources().internalError(this,
-               application.getResources().getString(
+               application.getResources().getMessage(
                  "internal_error.invalid_startdir")+ ": " +type);
       }
    }
@@ -790,7 +790,7 @@ class ProcessesPanel extends JPanel
 
       Box box = Box.createHorizontalBox();
       box.add(timeoutField);
-      box.add(new JLabel(resources.getString("processes.millisecs")));
+      box.add(new JLabel(resources.getMessage("processes.millisecs")));
 
       add(box, gbc);
    }

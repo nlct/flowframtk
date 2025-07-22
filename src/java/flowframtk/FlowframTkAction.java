@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2014-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -127,12 +127,12 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
    public JMenuItem createMenuItem(String menuId, String tooltipId)
    {
       JMenuItem item = new JMenuItem(
-         getResources().getString(menuId),
+         getResources().getMessage(menuId),
          getResources().getCodePoint(menuId+".mnemonic"));
 
       if (tooltipId != null)
       {
-         item.setToolTipText(getResources().getString(tooltipId, null));
+         item.setToolTipText(getResources().getMessageIfExists(tooltipId));
       }
 
       KeyStroke keyStroke = getAccelerator();
@@ -162,7 +162,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
       if (tooltipId != null)
       {
-         menu.setToolTipText(getResources().getString(tooltipId, null));
+         menu.setToolTipText(getResources().getMessageIfExists(tooltipId));
       }
 
       KeyStroke keyStroke = getAccelerator();
@@ -190,13 +190,13 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       boolean selected, String tooltipId)
    {
       JCheckBoxMenuItem item = new JCheckBoxMenuItem(
-         getResources().getString(menuId), selected);
+         getResources().getMessage(menuId), selected);
 
       item.setMnemonic(getResources().getCodePoint(menuId+".mnemonic"));
 
       if (tooltipId != null)
       {
-         item.setToolTipText(getResources().getString(tooltipId, null));
+         item.setToolTipText(getResources().getMessageIfExists(tooltipId));
       }
 
       KeyStroke keyStroke = getAccelerator();
@@ -224,14 +224,14 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       ButtonGroup bg, boolean selected, String tooltipId)
    {
       JRadioButtonMenuItem item = new JRadioButtonMenuItem(
-         getResources().getString(menuId), selected);
+         getResources().getMessage(menuId), selected);
 
       item.setMnemonic(getResources().getCodePoint(menuId+".mnemonic"));
       bg.add(item);
 
       if (tooltipId != null)
       {
-         item.setToolTipText(getResources().getString(tooltipId, null));
+         item.setToolTipText(getResources().getMessageIfExists(tooltipId));
       }
 
       KeyStroke keyStroke = getAccelerator();
@@ -269,7 +269,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
       JDRButtonItem button = new JDRButtonItem(getResources(), name, action,
          keyStroke, this, 
-         tooltipId == null ? null : getResources().getString(tooltipId, null),
+         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId),
          comp, menu);
 
       setActionButton(button);
@@ -291,7 +291,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
       JDRButton button = getResources().createAppButton(
          name, this, keyStroke,
-         tooltipId == null ? null : getResources().getString(tooltipId, null));
+         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());
@@ -311,8 +311,8 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       }
 
       JDRToggleButton button = getResources().createToggleButton(
-         getResources().getString("label."+name), name, this, keyStroke,
-         tooltipId == null ? null : getResources().getString(tooltipId, null));
+         getResources().getMessage("label."+name), name, this, keyStroke,
+         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());
@@ -335,7 +335,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
       JDRToggleButtonItem button = new JDRToggleButtonItem(getResources(),
           menuId, name, keyStroke, this,
-          getResources().getString(tooltipId, null),
+          getResources().getMessageIfExists(tooltipId),
           selected, buttonParent, menu);
 
       setActionButton(button);
@@ -355,9 +355,9 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       }
 
       JDRToolButton button = getResources().createToolButton(
-         getResources().getString("tools."+name), name,
+         getResources().getMessage("tools."+name), name,
          this, keyStroke, bg, selected,
-         tooltipId == null ? null : getResources().getString(tooltipId, null));
+         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());

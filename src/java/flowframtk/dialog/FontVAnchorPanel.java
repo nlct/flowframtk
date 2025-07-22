@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -60,10 +60,10 @@ public class FontVAnchorPanel extends JPanel
       p1.add(pgfTextLabel);
 
       pgfValign = new JComboBox<String>(
-         new String[] {getResources().getString("font.anchor.top"),
-                       getResources().getString("font.anchor.vcentre"),
-                       getResources().getString("font.anchor.base"),
-                       getResources().getString("font.anchor.bottom")});
+         new String[] {getResources().getMessage("font.anchor.top"),
+                       getResources().getMessage("font.anchor.vcentre"),
+                       getResources().getMessage("font.anchor.base"),
+                       getResources().getMessage("font.anchor.bottom")});
 
       pgfTextLabel.setLabelFor(pgfValign);
       pgfValign.addItemListener(this);
@@ -72,7 +72,7 @@ public class FontVAnchorPanel extends JPanel
       add(p1);
 
       JTextField message = new JTextField(
-         getResources().getString("font.anchor_message"));
+         getResources().getMessage("font.anchor_message"));
 
       message.setEditable(false);
       message.setFocusable(false);

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2020 Nicola L.C. Talbot
+    Copyright (C) 2020-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public class CreatePathFromSvgDialog extends JDialog
 {
    public CreatePathFromSvgDialog(FlowframTk application)
    {
-      super(application, application.getResources().getString("svg_path.title"), true);
+      super(application, application.getResources().getMessage("svg_path.title"), true);
       this.application = application;
 
       init();
@@ -63,7 +63,7 @@ public class CreatePathFromSvgDialog extends JDialog
       JComponent detailsComp = new JPanel(new BorderLayout());
 
       detailsComp.add(resources.createAppInfoArea("svg_path.info",
-        resources.getString("svg_path.dotask")), "North");
+        resources.getMessage("svg_path.dotask")), "North");
 
       svgField = new JTextArea(10, 24);
       svgField.getDocument().addDocumentListener(this);
@@ -87,8 +87,8 @@ public class CreatePathFromSvgDialog extends JDialog
         "svg_path", "dotask", this, null);
       actionPanel.add(doTaskButton);
 
-      defaultUnitInfo = resources.getString("svg_path.default_unit_info");
-      updateUnitInfo = resources.getString("svg_path.update_unit_info");
+      defaultUnitInfo = resources.getMessage("svg_path.default_unit_info");
+      updateUnitInfo = resources.getMessage("svg_path.update_unit_info");
 
       unitInfoField = resources.createAppInfoArea(15);
       unitInfoField.setText(defaultUnitInfo);
@@ -159,7 +159,7 @@ public class CreatePathFromSvgDialog extends JDialog
    {
       if (!confirmClose()) return;
 
-      frame.getCanvas().addObject(shape, getResources().getString("undo.new_path"));
+      frame.getCanvas().addObject(shape, getResources().getMessage("undo.new_path"));
       setVisible(false);
    }
 
@@ -169,7 +169,7 @@ public class CreatePathFromSvgDialog extends JDialog
 
       if (task != null)
       {
-         if (resources.confirm(this, resources.getString("process.confirm.abort"))
+         if (resources.confirm(this, resources.getMessage("process.confirm.abort"))
              != JOptionPane.YES_OPTION)
          {
             return false;
@@ -183,7 +183,7 @@ public class CreatePathFromSvgDialog extends JDialog
          task = null;
       }
       else if (modified
-         && resources.confirm(this, resources.getString("svg_path.confirm.abandon"))
+         && resources.confirm(this, resources.getMessage("svg_path.confirm.abandon"))
              != JOptionPane.YES_OPTION)
       {
          return false;
@@ -218,7 +218,7 @@ public class CreatePathFromSvgDialog extends JDialog
 
       if (svgSpecs.isEmpty())
       {
-         getResources().error(this, getResources().getString("error.no_path_data"));
+         getResources().error(this, getResources().getMessage("error.no_path_data"));
          return;
       }
 

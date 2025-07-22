@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class GridSettings extends JDialog
 {
    public GridSettings(FlowframTk application)
    {
-      super(application, application.getResources().getString("grid.title"),
+      super(application, application.getResources().getMessage("grid.title"),
             true);
       application_ = application;
 
@@ -63,45 +63,45 @@ public class GridSettings extends JDialog
 
       int idx = 0;
 
-      tabbedPane.addTab(getResources().getString("grid.rectangular"),
+      tabbedPane.addTab(getResources().getMessage("grid.rectangular"),
          null, rectangularGridPanel,
-        getResources().getString("tooltip.grid.rectangular"));
+        getResources().getMessage("tooltip.grid.rectangular"));
 
       tabbedPane.setMnemonicAt(idx,
          getResources().getCodePoint("grid.rectangular.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getString("grid.radial"),
+      tabbedPane.addTab(getResources().getMessage("grid.radial"),
          null, radialGridPanel,
-         getResources().getString("tooltip.grid.radial"));
+         getResources().getMessage("tooltip.grid.radial"));
 
       tabbedPane.setMnemonicAt(idx,
          getResources().getCodePoint("grid.radial.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getString("grid.iso"),
+      tabbedPane.addTab(getResources().getMessage("grid.iso"),
          null, isoGridPanel,
-         getResources().getString("tooltip.grid.iso"));
+         getResources().getMessage("tooltip.grid.iso"));
 
       tabbedPane.setMnemonicAt(idx,
          getResources().getCodePoint("grid.iso.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getString("grid.tschichold"),
+      tabbedPane.addTab(getResources().getMessage("grid.tschichold"),
          null, tschicholdGridPanel,
-         getResources().getString("tooltip.grid.tschichold"));
+         getResources().getMessage("tooltip.grid.tschichold"));
 
       tabbedPane.setMnemonicAt(idx,
          getResources().getCodePoint("grid.tschichold.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getString("grid.path"),
+      tabbedPane.addTab(getResources().getMessage("grid.path"),
          null, pathGridPanel,
-         getResources().getString("tooltip.grid.path"));
+         getResources().getMessage("tooltip.grid.path"));
 
       tabbedPane.setMnemonicAt(idx,
          getResources().getCodePoint("grid.path.mnemonic"));
@@ -119,7 +119,7 @@ public class GridSettings extends JDialog
 
       p2.add(getResources().createOkayButton(this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpButton("gridmenu"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:gridmenu"));
 
       getContentPane().add(p2, "South");
 

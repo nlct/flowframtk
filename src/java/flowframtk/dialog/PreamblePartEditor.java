@@ -35,7 +35,7 @@ public class PreamblePartEditor extends JPanel
       SlidingToolBar sToolBar =
          new SlidingToolBar(getResources(), toolBar, SwingConstants.HORIZONTAL);
 
-      setName(getResources().getString("texeditor.preamble"));
+      setName(getResources().getMessage("texeditor.preamble"));
 
       add(sToolBar, BorderLayout.NORTH);
 
@@ -76,7 +76,7 @@ public class PreamblePartEditor extends JPanel
       replaceItem = createButtonItem("texeditor.search", "replace",
         toolBar, popupM);
 
-      toolBar.add(getResources().createHelpButton("setpreamble"));
+      toolBar.add(getResources().createHelpDialogButton(application, "sec:setpreamble"));
 
       Font font = application.getTeXEditorFont();
 

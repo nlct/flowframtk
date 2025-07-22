@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,16 +45,14 @@ public class DashPatternSelector extends JDRSelector
 {
    public DashPatternSelector(FlowframTk application)
    {
-      super(application,application.getResources().getString("dashpattern.title"),
-            true);
+      super(application,application.getResources().getMessage("dashpattern.title"),
+            true, "sec:dashpattern");
 
 /*
       Dimension dim = getSize();
       dim.height=220;
       setSize(dim);
 */
-
-      application.enableHelpOnButton(help, "dashpattern");
 
       // dash pattern selection panel
 

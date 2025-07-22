@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2014-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ public class MathModeMappings extends TeXMappings
 {
    public MathModeMappings(JDRResources resources)
    {
-      super(resources, resources.getString("symbol.mode.maths"));
+      super(resources, resources.getMessage("symbol.mode.maths"));
    }
 
    public static MathModeMappings createDefaultMappings(JDRResources resources)

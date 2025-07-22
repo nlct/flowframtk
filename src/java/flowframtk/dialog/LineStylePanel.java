@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -85,9 +85,9 @@ public class LineStylePanel extends JScrollPane
       capAndJoinPanel.add(capStyleLabel);
 
       String[] capStyles = {
-         getResources().getString("linestyle.cap.butt"),
-         getResources().getString("linestyle.cap.round"),
-         getResources().getString("linestyle.cap.square")};
+         getResources().getMessage("linestyle.cap.butt"),
+         getResources().getMessage("linestyle.cap.round"),
+         getResources().getMessage("linestyle.cap.square")};
       capStyleBox = new JComboBox<String>(capStyles);
       capStyleLabel.setLabelFor(capStyleBox);
       capAndJoinPanel.add(capStyleBox);
@@ -202,8 +202,8 @@ public class LineStylePanel extends JScrollPane
       windingRulePanel.add(windingRuleLabel);
 
       String[] windingRules = new String[]
-         {getResources().getString("linestyle.winding_rule.eo"),
-         getResources().getString("linestyle.winding_rule.nz")};
+         {getResources().getMessage("linestyle.winding_rule.eo"),
+         getResources().getMessage("linestyle.winding_rule.nz")};
       windingRuleBox = new JComboBox<String>(windingRules);
       windingRuleLabel.setLabelFor(windingRuleBox);
 

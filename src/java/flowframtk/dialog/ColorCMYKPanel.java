@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridy = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      cyanLabel = new JLabel(getResources().getString("colour.cyan"),
+      cyanLabel = new JLabel(getResources().getMessage("colour.cyan"),
                              SwingConstants.RIGHT);
       sliders.add(cyanLabel, gbc);
 
@@ -113,7 +113,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      magentaLabel = new JLabel(getResources().getString("colour.magenta"),
+      magentaLabel = new JLabel(getResources().getMessage("colour.magenta"),
                                 SwingConstants.RIGHT);
       sliders.add(magentaLabel,gbc);
       gbc.gridx = 1;
@@ -134,7 +134,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.fill = GridBagConstraints.BOTH;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      yellowLabel = new JLabel(getResources().getString("colour.yellow"),
+      yellowLabel = new JLabel(getResources().getMessage("colour.yellow"),
                                SwingConstants.RIGHT);
       sliders.add(yellowLabel, gbc);
       gbc.gridx = 1;
@@ -155,7 +155,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      blackLabel = new JLabel(getResources().getString("colour.black"),
+      blackLabel = new JLabel(getResources().getMessage("colour.black"),
                               SwingConstants.RIGHT);
       sliders.add(blackLabel, gbc);
       gbc.gridx = 1;
@@ -176,7 +176,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      alphaLabel = new JLabel(getResources().getString("colour.alpha"),
+      alphaLabel = new JLabel(getResources().getMessage("colour.alpha"),
                               SwingConstants.RIGHT);
       sliders.add(alphaLabel, gbc);
       gbc.gridx = 1;

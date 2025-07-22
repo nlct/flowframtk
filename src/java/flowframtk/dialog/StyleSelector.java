@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,10 +45,8 @@ public class StyleSelector extends JDRSelector
 {
    public StyleSelector(FlowframTk application)
    {
-      super(application, application.getResources().getString("styles.title"),
-            true, true, true);
-
-      application.enableHelpOnButton(help, "styles");
+      super(application, application.getResources().getMessage("styles.title"),
+            true, true, true, "sec:styles");
 
       tabbedPane = new JTabbedPane();
 
@@ -59,8 +57,8 @@ public class StyleSelector extends JDRSelector
       linePanel = new PaintPanel(this);
 
       tabbedPane.addTab(
-         getResources().getString("linecolour.label"), null, linePanel,
-         getResources().getString("tooltip.line_colour"));
+         getResources().getMessage("linecolour.label"), null, linePanel,
+         getResources().getMessage("tooltip.line_colour"));
 
       linePanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(0,
@@ -70,9 +68,9 @@ public class StyleSelector extends JDRSelector
 
       fillPanel = new PaintPanel(this);
 
-      tabbedPane.addTab(getResources().getString("fillcolour.label"),
+      tabbedPane.addTab(getResources().getMessage("fillcolour.label"),
          null, fillPanel,
-         getResources().getString("tooltip.fill_colour"));
+         getResources().getMessage("tooltip.fill_colour"));
 
       fillPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(1,
@@ -81,9 +79,9 @@ public class StyleSelector extends JDRSelector
       // line style panel
       linestylePanel = new LineStylePanel(this);
 
-      tabbedPane.addTab(getResources().getString("linestyle.label"),
+      tabbedPane.addTab(getResources().getMessage("linestyle.label"),
          null, linestylePanel,
-         getResources().getString("tooltip.line_style"));
+         getResources().getMessage("tooltip.line_style"));
 
       linestylePanel.setBorder(
          BorderFactory.createLoweredBevelBorder());
@@ -93,9 +91,9 @@ public class StyleSelector extends JDRSelector
       // JDRText colour selection panel
       textPanel = new PaintPanel(this);
 
-      tabbedPane.addTab(getResources().getString("textcolour.label"),
+      tabbedPane.addTab(getResources().getMessage("textcolour.label"),
          null, textPanel,
-         getResources().getString("tooltip.text.colour"));
+         getResources().getMessage("tooltip.text.colour"));
 
       textPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(3,
@@ -105,8 +103,8 @@ public class StyleSelector extends JDRSelector
 
       JDRFrame mainPanel = application_.getCurrentFrame();
       fontPanel = new FontPanel(this, application_.getFontFamilies());
-      tabbedPane.addTab(getResources().getString("font.label"), null,
-         fontPanel, getResources().getString("tooltip.font"));
+      tabbedPane.addTab(getResources().getMessage("font.label"), null,
+         fontPanel, getResources().getMessage("tooltip.font"));
 
       fontPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -155,7 +153,7 @@ public class StyleSelector extends JDRSelector
         && linestylePanel.getEnteredMitreLimit() < 1.0)
       {
          getResources().error(this,
-            getResources().getString("error.invalid_mitre_limit"));
+            getResources().getMessage("error.invalid_mitre_limit"));
          return;
       }
 

@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,16 +45,14 @@ public class JoinStyleSelector extends JDRSelector
 {
    public JoinStyleSelector(FlowframTk application)
    {
-      super(application,application.getResources().getString("linestyle.join"),
-            true);
+      super(application,application.getResources().getMessage("linestyle.join"),
+            true, "sec:joinstyle");
 
 /*
       Dimension dim = getSize();
       dim.height=220;
       setSize(dim);
 */
-
-      application.enableHelpOnButton(help, "joinstyle");
 
       // line width selection panel
 

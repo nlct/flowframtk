@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class DiscardDialogBox extends JDialog
    public DiscardDialogBox(FlowframTk application)
    {
       super(application, 
-         application.getResources().getString("discard.title"),true);
+         application.getResources().getMessage("discard.title"),true);
 
       application_ = application;
 
@@ -65,12 +65,12 @@ public class DiscardDialogBox extends JDialog
 
       saveButton = getResources().createDialogButton(
         "discard.save_all", "save_all", this,
-         null, getResources().getString("discard.save_all"));
+         null, getResources().getMessage("discard.save_all"));
 
       p2.add(saveButton);
 
       discardButton = getResources().createDialogButton("discard.discard_all", "discard_all", this,
-         null, getResources().getString("discard.discard_all"));
+         null, getResources().getMessage("discard.discard_all"));
 
       p2.add(discardButton);
 
@@ -106,7 +106,7 @@ public class DiscardDialogBox extends JDialog
 
       infoLabel.setText(
         frames.size() == 1 ?
-         getResources().getString("discard.image_not_saved") :
+         getResources().getMessage("discard.image_not_saved") :
          getResources().getMessage("discard.images_not_saved", frames.size()));
 
       revalidate();
@@ -126,7 +126,7 @@ public class DiscardDialogBox extends JDialog
 
       frameListComponent.add(new DiscardFrameItem(this, frame));
 
-      infoLabel.setText(getResources().getString("discard.image_not_saved"));
+      infoLabel.setText(getResources().getMessage("discard.image_not_saved"));
 
       discardButton.setVisible(false);
       saveButton.setVisible(false);
@@ -251,9 +251,9 @@ class DiscardFrameItem extends JPanel implements ActionListener
       JDRResources resources = frame.getResources();
 
       add(resources.createDialogButton("discard.save", "save", this,
-         null, resources.getString("discard.save")));
+         null, resources.getMessage("discard.save")));
       add(resources.createDialogButton("discard.discard", "discard", this,
-         null, resources.getString("discard.discard")));
+         null, resources.getMessage("discard.discard")));
 
       JTextField textField = new JTextField(frame.getFilename());
       textField.setEditable(false);

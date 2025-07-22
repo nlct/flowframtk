@@ -26,21 +26,21 @@ public class PreambleEditor extends JPanel
    {
       super(new BorderLayout());
       setBorder(BorderFactory.createTitledBorder(
-        frame.getResources().getString("texeditor.preamble")));
+        frame.getResources().getMessage("texeditor.preamble")));
 
       tabbedPane = new JTabbedPane();
       add(tabbedPane, BorderLayout.CENTER);
 
       earlyPreamble = new PreamblePartEditor(frame);
-      tabbedPane.add(frame.getResources().getString("texeditor.preamble.early"),
+      tabbedPane.add(frame.getResources().getMessage("texeditor.preamble.early"),
          earlyPreamble);
 
       midPreamble = new PreamblePartEditor(frame);
-      tabbedPane.add(frame.getResources().getString("texeditor.preamble.mid"),
+      tabbedPane.add(frame.getResources().getMessage("texeditor.preamble.mid"),
          midPreamble);
 
       latePreamble = new PreamblePartEditor(frame);
-      tabbedPane.add(frame.getResources().getString("texeditor.preamble.late"),
+      tabbedPane.add(frame.getResources().getMessage("texeditor.preamble.late"),
          latePreamble);
 
    }

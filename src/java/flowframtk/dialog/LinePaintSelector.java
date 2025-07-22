@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,10 +47,8 @@ public class LinePaintSelector extends JDRSelector
    public LinePaintSelector(FlowframTk application)
    {
       super(application, 
-            application.getResources().getString("linecolour.title"),
-            true, false);
-
-      application.enableHelpOnButton(help, "linepaint");
+            application.getResources().getMessage("linecolour.title"),
+            true, false, "sec:linepaint");
 
       // JDRLine colour selection panel
 

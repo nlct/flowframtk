@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2008-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ public class SavePgf extends ExportImage
          pgf.writeCreationDate();
 
          pgf.println("\\iffalse");
-         pgf.comment(getResources().getString("tex.comment.preamble"));
+         pgf.comment(getResources().getMessage("tex.comment.preamble"));
 
          pgf.println("\\usepackage{ifpdf}");
          pgf.println("\\makeatletter");
@@ -74,7 +74,7 @@ public class SavePgf extends ExportImage
             "tex.comment.fontsize", 
             ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
 
-         pgf.comment(getResources().getString("tex.comment.endpreamble"));
+         pgf.comment(getResources().getMessage("tex.comment.endpreamble"));
          pgf.println("\\fi");
 
          pgf.save(image, app.getSettings().useTypeblockAsBoundingBox);

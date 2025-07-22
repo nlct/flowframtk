@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2015-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ public class JavaFontSelector extends JPanel
 
       attrComp.add(sizeField);
 
-      sampleLabel = new JLabel(resources.getString("font.sample"));
+      sampleLabel = new JLabel(resources.getMessage("font.sample"));
       attrComp.add(sampleLabel);
    }
 

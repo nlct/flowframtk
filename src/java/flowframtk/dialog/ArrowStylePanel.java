@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -82,11 +82,11 @@ public class ArrowStylePanel extends JPanel
 
       tabbedPane = new JTabbedPane();
 
-      tabbedPane.add(getResources().getString("arrow.primary")+" ",
+      tabbedPane.add(getResources().getMessage("arrow.primary")+" ",
                      new JScrollPane(markerPanel1));
       tabbedPane.setMnemonicAt(0,
          getResources().getCodePoint("arrow.primary.mnemonic"));
-      tabbedPane.add(getResources().getString("arrow.secondary")+" ",
+      tabbedPane.add(getResources().getMessage("arrow.secondary")+" ",
                      new JScrollPane(markerPanel2));
       tabbedPane.setMnemonicAt(1,
          getResources().getCodePoint("arrow.secondary.mnemonic"));
@@ -101,16 +101,16 @@ public class ArrowStylePanel extends JPanel
       switch (type)
       {
          case ArrowStylePanel.START :
-            str = resources.getString("linestyle.arrow.start");
+            str = resources.getMessage("linestyle.arrow.start");
          break;
          case ArrowStylePanel.MID :
-            str = resources.getString("linestyle.arrow.mid");
+            str = resources.getMessage("linestyle.arrow.mid");
          break;
          case ArrowStylePanel.END :
-            str = resources.getString("linestyle.arrow.end");
+            str = resources.getMessage("linestyle.arrow.end");
          break;
          case ArrowStylePanel.ALL :
-            str = resources.getString("linestyle.arrow.all");
+            str = resources.getMessage("linestyle.arrow.all");
       }
 
       return str;

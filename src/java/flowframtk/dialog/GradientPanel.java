@@ -1,11 +1,11 @@
-// File          : GradientDialog.java
+// File          : GradientPanel.java
 // Description   : Panel for selecting gradient paint
 // Creation Date : 13th August 2008
 // Author        : Nicola L.C. Talbot
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

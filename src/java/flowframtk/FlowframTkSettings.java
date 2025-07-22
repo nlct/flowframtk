@@ -6,7 +6,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1188,22 +1188,22 @@ public class FlowframTkSettings
 
    public String getDictId()
    {
-      return resources.getDictLocaleId();
+      return resources.getDictionaryTag();
    }
 
    public void setDictId(String id)
    {
-      resources.setDictLocaleId(id);
+      resources.setDictionary(id);
    }
 
    public String getHelpId()
    {
-      return resources.getHelpLocaleId();
+      return resources.getHelpSetTag();
    }
 
    public void setHelpId(String id)
    {
-      resources.setHelpLocaleId(id);
+      resources.setHelpSet(id);
    }
 
    public int getCanvasSplit()

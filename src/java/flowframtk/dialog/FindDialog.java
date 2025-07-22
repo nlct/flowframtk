@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Nicola L.C. Talbot
+    Copyright (C) 2013-2025 Nicola L.C. Talbot
     www.dickimaw-books.com
 
     This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ public class FindDialog extends JDialog
    public FindDialog(JDRResources resources, JDialog parent, 
       JTextComponent textComp)
    {
-      super(parent, resources.getString("find.title"), true);
+      super(parent, resources.getMessage("find.title"), true);
       this.resources = resources;
 
       init(parent, textComp);
@@ -45,7 +45,7 @@ public class FindDialog extends JDialog
 
    public FindDialog(FlowframTk gui, JTextComponent textComp)
    {
-      super(gui, gui.getResources().getString("find.title"), true);
+      super(gui, gui.getResources().getMessage("find.title"), true);
       this.resources = gui.getResources();
 
       init(gui, textComp);
@@ -220,8 +220,8 @@ public class FindDialog extends JDialog
       replaceButton.setVisible(isReplaceAllowed);
       replaceAllButton.setVisible(isReplaceAllowed);
 
-      setTitle(isReplaceAllowed ? getResources().getString("replace.title") :
-        getResources().getString("find.title"));
+      setTitle(isReplaceAllowed ? getResources().getMessage("replace.title") :
+        getResources().getMessage("find.title"));
 
       found = false;
 
@@ -358,7 +358,7 @@ public class FindDialog extends JDialog
 
       JOptionPane.showMessageDialog(this, 
         count == 1 ?
-        getResources().getString("replace.one_replaced") :
+        getResources().getMessage("replace.one_replaced") :
         getResources().getMessage("replace.num_replaced", count));
    }
 
@@ -402,7 +402,7 @@ public class FindDialog extends JDialog
          if (index == -1)
          {
             JOptionPane.showMessageDialog(this,
-               getResources().getString("find.not_found"));
+               getResources().getMessage("find.not_found"));
             return false;
          }
       }
@@ -458,7 +458,7 @@ public class FindDialog extends JDialog
          if (index == -1)
          {
             JOptionPane.showMessageDialog(this,
-               getResources().getString("find.not_found"));
+               getResources().getMessage("find.not_found"));
             return false;
          }
       }
