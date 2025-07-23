@@ -16,17 +16,17 @@ Nicola Talbot
 
 <entry key="syntax.options">{0} [&lt;options&gt;] [&lt;file&gt;] ... </entry>
 
-<entry key="syntax.debug">{0}   Enable debugging.</entry>
-<entry key="syntax.experimental">{0}   Enable experimental features.</entry>
+<entry key="syntax.debug">{0}	Enable debugging.</entry>
+<entry key="syntax.experimental">{0}	Enable experimental features.</entry>
 
 <entry key="syntax.settings_info">Settings may be overridden by any JDR/AJR files that are loaded.</entry>
 
-<entry key="syntax.show_grid">{0}   Show the grid.</entry>
-<entry key="syntax.grid_lock">{0}   Enable grid lock.</entry>
-<entry key="syntax.toolbar">{0}   Show the toolbars.</entry>
-<entry key="syntax.statusbar">{0}   Show the status bar.</entry>
-<entry key="syntax.rulers">{0}   Show the rulers.</entry>
-<entry key="syntax.paper">{0} &lt;type&gt;   Set the paper size to &lt;type&gt;.</entry>
+<entry key="syntax.show_grid">{0}	Show the grid.</entry>
+<entry key="syntax.grid_lock">{0}	Enable grid lock.</entry>
+<entry key="syntax.toolbar">{0}	Show the toolbars.</entry>
+<entry key="syntax.statusbar">{0}	Show the status bar.</entry>
+<entry key="syntax.rulers">{0}	Show the rulers.</entry>
+<entry key="syntax.paper">{0} &lt;type&gt;	Set the paper size to &lt;type&gt;.</entry>
 
 <!-- File Menu -->
 

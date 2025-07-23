@@ -93,15 +93,13 @@ public class FlowframTkInvoker
       System.out.println();
 
       System.out.println(helpLib.getMessage("clisyntax.usage",
-        helpLib.getMessage("syntax.options", APP_NAME)));
-
-      System.out.println();
-
-      System.out.println(helpLib.getMessage("syntax.options"));
+         helpLib.getMessage("syntax.options", APP_NAME.toLowerCase())));
 
       System.out.println();
 
       helpLib.printSyntaxItem(helpLib.getMessage("syntax.settings_info"));
+
+      System.out.println();
 
       helpLib.printSyntaxItem(
          helpLib.getMessage("syntax.show_grid", "--[no]show_grid"));
