@@ -43,9 +43,9 @@ public class TeXEditorPanel extends JPanel
 
       undoManager = new UndoManager();
 
-      undoItem = createButtonItem("edit", "undo", toolBar, editM);
+      undoItem = createButtonItem("menu.edit", "undo", toolBar, editM);
 
-      redoItem = createButtonItem("edit", "redo", toolBar, editM);
+      redoItem = createButtonItem("menu.edit", "redo", toolBar, editM);
 
       if (editM instanceof JMenu)
       {
@@ -56,13 +56,13 @@ public class TeXEditorPanel extends JPanel
          ((JPopupMenu)editM).addSeparator();
       }
 
-      editM.add(getResources().createAppMenuItem("texeditor", "selectText", this));
+      editM.add(getResources().createAppMenuItem("menu.texeditor", "selectText", this));
 
-      cutItem = createButtonItem("texeditor", "cutText", toolBar, editM);
+      cutItem = createButtonItem("menu.texeditor", "cutText", toolBar, editM);
 
-      copyItem = createButtonItem("texeditor", "copyText", toolBar, editM);
+      copyItem = createButtonItem("menu.texeditor", "copyText", toolBar, editM);
 
-      createButtonItem("texeditor", "pasteText", toolBar, editM);
+      createButtonItem("menu.texeditor", "pasteText", toolBar, editM);
 
       if (searchM == editM)
       {
@@ -76,11 +76,11 @@ public class TeXEditorPanel extends JPanel
          }
       }
 
-      findItem = createButtonItem("texeditor.search", "find", toolBar, searchM);
-      findAgainItem = createButtonItem("texeditor.search", "find_again",
+      findItem = createButtonItem("menu.texeditor.search", "find", toolBar, searchM);
+      findAgainItem = createButtonItem("menu.texeditor.search", "find_again",
         toolBar, searchM);
 
-      replaceItem = createButtonItem("texeditor.search", "replace",
+      replaceItem = createButtonItem("menu.texeditor.search", "replace",
         toolBar, searchM);
 
       document = new TeXEditorDocument(this,

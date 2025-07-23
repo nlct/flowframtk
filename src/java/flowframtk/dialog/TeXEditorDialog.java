@@ -44,10 +44,10 @@ public class TeXEditorDialog extends JDialog
       JMenuBar mbar = new JMenuBar();
       setJMenuBar(mbar);
 
-      JMenu editM = getResources().createAppMenu("edit");
+      JMenu editM = getResources().createAppMenu("menu.edit");
       mbar.add(editM);
 
-      JMenu searchM = getResources().createAppMenu("texeditor.search");
+      JMenu searchM = getResources().createAppMenu("menu.texeditor.search");
       mbar.add(searchM);
 
       texEditorPanel = new TeXEditorPanel(application, this,

@@ -33,11 +33,11 @@ public class WelcomeDialog extends JDialog
         resources.getMessage("welcome.text",
          invoker.getName(), invoker.getVersion(),
          resources.getMessage("config.title"),
-         resources.getMessage("settings.label"),
-         resources.getMessage("settings.config"),
+         resources.getMessage("menu.settings"),
+         resources.getMessage("menu.settings.config"),
          resources.getMessage("configui.title"),
-         resources.getMessage("settings.label"),
-         resources.getMessage("settings.configui")));
+         resources.getMessage("menu.settings"),
+         resources.getMessage("menu.settings.configui")));
 
       Font font = editorPane.getFont();
       FontMetrics fm = getFontMetrics(font);

@@ -105,14 +105,14 @@ public class VectorizeBitmapDialog extends JFrame
       JMenuBar mBar = new JMenuBar();
       setJMenuBar(mBar);
 
-      JMenu editM = resources.createAppMenu("edit");
+      JMenu editM = resources.createAppMenu("menu.edit");
       mBar.add(editM);
 
-      undoItem = resources.createAppMenuItem("edit", "undo", this);
+      undoItem = resources.createAppMenuItem("menu.edit", "undo", this);
       undoItem.setEnabled(false);
       editM.add(undoItem);
 
-      redoItem = resources.createAppMenuItem("edit", "redo", this);
+      redoItem = resources.createAppMenuItem("menu.edit", "redo", this);
       redoItem.setEnabled(false);
       editM.add(redoItem);
 
@@ -361,7 +361,7 @@ public class VectorizeBitmapDialog extends JFrame
          {
             error(e);
             undoItem.setEnabled(false);
-            undoItem.setText(getResources().getMessage("label.undo"));
+            undoItem.setText(getResources().getMessage("button.undo"));
          }
       }
       else if (command.equals("redo"))
@@ -379,7 +379,7 @@ public class VectorizeBitmapDialog extends JFrame
          {
             error(e);
             redoItem.setEnabled(false);
-            redoItem.setText(getResources().getMessage("label.redo"));
+            redoItem.setText(getResources().getMessage("button.redo"));
          }
       }
       else if (command.equals("apply_pinned"))
@@ -469,7 +469,7 @@ public class VectorizeBitmapDialog extends JFrame
       }
       else
       {
-         undoItem.setText(getResources().getMessage("label.undo"));
+         undoItem.setText(getResources().getMessage("button.undo"));
       }
 
       boolean canRedo = undoManager.canRedo();
@@ -481,7 +481,7 @@ public class VectorizeBitmapDialog extends JFrame
       }
       else
       {
-         redoItem.setText(getResources().getMessage("label.redo"));
+         redoItem.setText(getResources().getMessage("button.redo"));
       }
    }
 
@@ -5420,7 +5420,7 @@ class ScanStatusBar extends JPanel implements PropertyChangeListener,ActionListe
       progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
       add(progressBar);
 
-      cancelButton = resources.createAppButton("label", "abort", this);
+      cancelButton = resources.createAppButton("button", "abort", this);
       cancelButton.setAlignmentY(Component.CENTER_ALIGNMENT);
       add(cancelButton);
 

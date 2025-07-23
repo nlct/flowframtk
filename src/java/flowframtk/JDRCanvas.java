@@ -132,7 +132,7 @@ public class JDRCanvas extends JPanel
 
       // Keystroke actions without items in the canvas popup menus
 
-      addCanvasAction(new CanvasAction(this, "construct_click",
+      addCanvasAction(new CanvasAction(this, "action.construct_click",
          getResources().getAccelerator("accelerator.construct_click"),
          new FlowframTkActionListener()
          {
@@ -429,7 +429,7 @@ public class JDRCanvas extends JPanel
 
       texteditPathPopupMenu = new JPopupMenu();
 
-      copyText = getResources().createAppMenuItem(null, "text.copy",
+      copyText = getResources().createAppMenuItem("menu", "textarea.copy",
       new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -440,7 +440,7 @@ public class JDRCanvas extends JPanel
 
       texteditPathPopupMenu.add(copyText);
 
-      cutText = getResources().createAppMenuItem(null, "text.cut",
+      cutText = getResources().createAppMenuItem("menu", "textarea.cut",
       new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -452,7 +452,7 @@ public class JDRCanvas extends JPanel
       texteditPathPopupMenu.add(cutText);
 
       texteditPathPopupMenu.add(
-         getResources().createAppMenuItem(null, "text.paste",
+         getResources().createAppMenuItem("menu", "textarea.paste",
       new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -462,7 +462,7 @@ public class JDRCanvas extends JPanel
          }));
 
       texteditPathPopupMenu.add(
-      getResources().createAppMenuItem(null, "text.select_all",
+      getResources().createAppMenuItem("menu", "textarea.select_all",
       new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -472,7 +472,7 @@ public class JDRCanvas extends JPanel
          }));
 
       texteditPathPopupMenu.add(CanvasAction.createMenuItem(this,
-        "text", "insert_symbol",
+        "menu.textarea", "insert_symbol",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -509,7 +509,7 @@ public class JDRCanvas extends JPanel
       // Next control
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "next_control",
+         "menu.editpath", "next_control",
          new FlowframTkActionListener ()
          {
              public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -522,7 +522,7 @@ public class JDRCanvas extends JPanel
       // Previous Control
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "prev_control",
+         "menu.editpath", "prev_control",
          new FlowframTkActionListener ()
          {
              public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -535,7 +535,7 @@ public class JDRCanvas extends JPanel
       // Delete control
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "delete_control",
+         "menu.editpath", "delete_control",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -567,7 +567,7 @@ public class JDRCanvas extends JPanel
       // Insert Control
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "add_control",
+         "menu.editpath", "add_control",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -585,7 +585,7 @@ public class JDRCanvas extends JPanel
       // Convert to line
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "convert_to_line",
+         "menu.editpath", "convert_to_line",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -603,7 +603,7 @@ public class JDRCanvas extends JPanel
       // Convert to curve
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "convert_to_curve",
+         "menu.editpath", "convert_to_curve",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -621,7 +621,7 @@ public class JDRCanvas extends JPanel
       // Convert to move
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "convert_to_move",
+         "menu.editpath", "convert_to_move",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -640,13 +640,13 @@ public class JDRCanvas extends JPanel
 
       // Symmetry submenu
 
-      JMenu symmetryMenu = getResources().createAppMenu("editpath.symmetry");
+      JMenu symmetryMenu = getResources().createAppMenu("menu.editpath.symmetry");
       editPathPopupMenu.add(symmetryMenu);
 
       // Toggle symmetry
 
       symmetryMenu.add(EditPathAction.createCheckBoxMenuItem(this,
-          "editpath.symmetry", "has_symmetry", false,
+          "menu.editpath.symmetry", "has_symmetry", false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -661,7 +661,7 @@ public class JDRCanvas extends JPanel
       // Toggle join anchor
 
       symmetryMenu.add(EditPathAction.createCheckBoxMenuItem(this,
-          "editpath.symmetry", "join_anchor", false,
+          "menu.editpath.symmetry", "join_anchor", false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -676,7 +676,7 @@ public class JDRCanvas extends JPanel
       // Toggle close anchor 
 
       symmetryMenu.add(EditPathAction.createCheckBoxMenuItem(this,
-          "editpath.symmetry", "close_anchor", false,
+          "menu.editpath.symmetry", "close_anchor", false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -692,14 +692,14 @@ public class JDRCanvas extends JPanel
       // Continuous 
 
       JMenu continuityMenu = EditPathAction.createMenu(this,
-         "editpath", "continuity",
+         "menu.editpath", "continuity",
          SELECT_FLAG_SHAPE,
          SEGMENT_FLAG_CURVE | SEGMENT_FLAG_PARTIAL_CURVE,
          CONTROL_FLAG_CAN_MAKE_JOIN_CONTINUOUS | CONTROL_FLAG_CAN_ANCHOR);
       editPathPopupMenu.add(continuityMenu);
 
       continuityMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "continuity.equi",
+         "menu.editpath", "continuity.equi",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -712,7 +712,7 @@ public class JDRCanvas extends JPanel
          CONTROL_FLAG_CAN_MAKE_JOIN_CONTINUOUS));
 
       continuityMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "continuity.relative",
+         "menu.editpath", "continuity.relative",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -725,7 +725,7 @@ public class JDRCanvas extends JPanel
          CONTROL_FLAG_CAN_MAKE_JOIN_CONTINUOUS));
 
       continuityMenu.add(EditPathAction.createCheckBoxMenuItem(this,
-         "editpath", "continuity.anchor", false,
+         "menu.editpath", "continuity.anchor", false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -741,7 +741,7 @@ public class JDRCanvas extends JPanel
       // Open path submenu
 
       JMenu openPathMenu = EditPathAction.createMenu(this,
-        "editpath", "open_path",
+        "menu.editpath", "open_path",
         SELECT_FLAG_CLOSED,
         SEGMENT_FLAG_ANY);
       editPathPopupMenu.add(openPathMenu);
@@ -749,7 +749,7 @@ public class JDRCanvas extends JPanel
       // Open (remove last segment)
 
       openPathMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "open_path.remove_last",
+         "menu.editpath", "open_path.remove_last",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -764,7 +764,7 @@ public class JDRCanvas extends JPanel
       // Open (remove keep segment)
 
       openPathMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "open_path.keep_last",
+         "menu.editpath", "open_path.keep_last",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -780,7 +780,7 @@ public class JDRCanvas extends JPanel
       // Close path submenu
 
       JMenu closePathMenu = EditPathAction.createMenu(this,
-         "editpath", "close_path",
+         "menu.editpath", "close_path",
          SELECT_FLAG_OPEN,
          SEGMENT_FLAG_ANY);
       editPathPopupMenu.add(closePathMenu);
@@ -788,7 +788,7 @@ public class JDRCanvas extends JPanel
       // Close with line
 
       closePathMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "close_path.line",
+         "menu.editpath", "close_path.line",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -802,7 +802,7 @@ public class JDRCanvas extends JPanel
       // Close path with continuous curve
 
       closePathMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "close_path.cont",
+         "menu.editpath", "close_path.cont",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -816,7 +816,7 @@ public class JDRCanvas extends JPanel
       // Close path, merging end points
 
       closePathMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "close_path.merge",
+         "menu.editpath", "close_path.merge",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -842,7 +842,7 @@ public class JDRCanvas extends JPanel
       movePtDialog = new MovePointDialog(frame_);
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "coordinates",
+         "menu.editpath", "coordinates",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -858,7 +858,7 @@ public class JDRCanvas extends JPanel
       // Segment info
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "info",
+         "menu.editpath", "info",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -871,7 +871,7 @@ public class JDRCanvas extends JPanel
       // Snap to grid
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "snap",
+         "menu.editpath", "snap",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -884,7 +884,7 @@ public class JDRCanvas extends JPanel
       // Break path
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
-         "editpath", "break_path",
+         "menu.editpath", "break_path",
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -933,11 +933,11 @@ public class JDRCanvas extends JPanel
       // Text
 
       CanvasSelectAction editTextAction
-         = addCanvasSelectAction("text.edit");
+         = addCanvasSelectAction("textarea.edit");
       CanvasSelectAction textPaintAction
-         = addCanvasSelectAction("text.colour");
+         = addCanvasSelectAction("textarea.colour");
       CanvasSelectAction textOutlineAction
-         = addCanvasSelectAction("text.outline");
+         = addCanvasSelectAction("textarea.outline");
       CanvasSelectAction allFontStylesAction
          = addCanvasSelectAction("font.all_styles");
       CanvasSelectAction fontFamilyAction
@@ -1017,112 +1017,112 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectTextPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "selectedtext.description", "tooltip.description"));
+         "menu.selectedtext.description", "tooltip.description"));
 
       // Edit text
 
       selectTextPopupMenu.add(editTextAction.createMenuItem(
-         "selectedtext.edit", "tooltip.text.edit"));
+         "menu.selectedtext.edit", "tooltip.textarea.edit"));
 
       selectTextPopupMenu.add(new JPopupMenu.Separator());
 
       // Cut
 
       selectTextPopupMenu.add(cutAction.createMenuItem(
-         "selected.cut", "tooltip.cut"));
+         "menu.selected.cut", "tooltip.cut"));
 
       // Copy
 
       selectTextPopupMenu.add(copyAction.createMenuItem(
-         "selected.copy", "tooltip.copy"));
+         "menu.selected.copy", "tooltip.copy"));
 
       // Paste
 
       selectTextPopupMenu.add(pasteAction.createMenuItem(
-         "selected.paste", "tooltip.paste"));
+         "menu.selected.paste", "tooltip.paste"));
 
       selectTextPopupMenu.add(new JPopupMenu.Separator());
 
       // Select all
 
       selectTextPopupMenu.add(selectAllAction.createMenuItem(
-         "selected.select_all", "tooltip.select_all"));
+         "menu.selected.select_all", "tooltip.select_all"));
 
       // Deselect all
 
       selectTextPopupMenu.add(deselectAllAction.createMenuItem(
-         "selected.deselect_all", "tooltip.deselect_all"));
+         "menu.selected.deselect_all", "tooltip.deselect_all"));
 
       // Group
 
       selectTextPopupMenu.add(groupAction.createMenuItem(
-         "selected.group", "tooltip.group"));
+         "menu.selected.group", "tooltip.group"));
 
       selectTextPopupMenu.add(new JPopupMenu.Separator());
 
       // Text paint
 
       selectTextPopupMenu.add(textPaintAction.createMenuItem(
-         "selectedtext.colour", "tooltip.text.colour"));
+         "menu.selectedtext.colour", "tooltip.textarea.colour"));
 
       selectTextPopupMenu.add(textOutlineAction.createCheckBoxMenuItem(
-         "selectedtext.outline", false, "tooltip.text.outline"));
+         "menu.selectedtext.outline", false, "tooltip.textarea.outline"));
 
       selectTextPopupMenu.add(fillPaintAction.createMenuItem(
-         "selectedtext.fill_colour", "tooltip.fill_colour"));
+         "menu.selectedtext.fill_colour", "tooltip.fill_colour"));
 
       selectTextPopupMenu.add(new JPopupMenu.Separator());
 
       // All font styles
 
       selectTextPopupMenu.add(allFontStylesAction.createMenuItem(
-         "selectedtext.all_styles", "tooltip.font.all_styles"));
+         "menu.selectedtext.all_styles", "tooltip.font.all_styles"));
 
       // Family
 
       selectTextPopupMenu.add(fontFamilyAction.createMenuItem(
-         "selectedtext.family", "tooltip.font.family"));
+         "menu.selectedtext.family", "tooltip.font.family"));
 
       // Size
 
       selectTextPopupMenu.add(fontSizeAction.createMenuItem(
-         "selectedtext.size", "tooltip.font.size"));
+         "menu.selectedtext.size", "tooltip.font.size"));
 
       // Shape
 
       selectTextPopupMenu.add(fontShapeAction.createMenuItem(
-         "selectedtext.shape", "tooltip.font.shape"));
+         "menu.selectedtext.shape", "tooltip.font.shape"));
 
       // Series
 
       selectTextPopupMenu.add(fontSeriesAction.createMenuItem(
-         "selectedtext.series", "tooltip.font.series"));
+         "menu.selectedtext.series", "tooltip.font.series"));
 
       // anchor
 
       JMenu sTextAnchorM = getResources().createAppMenu(
-         "selectedtext.anchor");
+         "menu.selectedtext.anchor");
       selectTextPopupMenu.add(sTextAnchorM);
 
       // both
 
       sTextAnchorM.add(fontAnchorBothAction.createMenuItem(
-         "edit.text.font.anchor.both", "tooltip.font.anchor.both"));
+         "menu.edit.textarea.font.anchor.both", "tooltip.font.anchor.both"));
 
       // horizontal
 
       sTextAnchorM.add(fontAnchorHorizontalAction.createMenuItem(
-         "edit.text.font.anchor.horizontal", "tooltip.font.anchor.horizontal"));
+         "menu.edit.textarea.font.anchor.horizontal", "tooltip.font.anchor.horizontal"));
 
       // vertical
 
       sTextAnchorM.add(fontAnchorVerticalAction.createMenuItem(
-         "edit.text.font.anchor.vertical", "tooltip.font.anchor.vertical"));
+         "menu.edit.textarea.font.anchor.vertical", "tooltip.font.anchor.vertical"));
 
       // Reset Matrix
 
       selectTextPopupMenu.add(resetAction.createMenuItem(
-         "selectedtext.reset", "tooltip.reset"));
+         "menu.selectedtext.reset", "tooltip.reset"));
 
       // Only path selected popup menu
 
@@ -1131,86 +1131,86 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectPathPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "selectedpath.description", "tooltip.description"));
+         "menu.selectedpath.description", "tooltip.description"));
 
       // Edit path
 
       selectPathPopupMenu.add(editPathAction.createCheckBoxMenuItem(
-         "selectedpath.edit", false, "tooltip.path.edit"));
+         "menu.selectedpath.edit", false, "tooltip.path.edit"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Cut
 
       selectPathPopupMenu.add(cutAction.createMenuItem(
-         "selected.cut", "tooltip.cut"));
+         "menu.selected.cut", "tooltip.cut"));
 
       // Copy
 
       selectPathPopupMenu.add(copyAction.createMenuItem(
-         "selected.copy", "tooltip.copy"));
+         "menu.selected.copy", "tooltip.copy"));
 
       // Paste
 
       selectPathPopupMenu.add(pasteAction.createMenuItem(
-         "selected.paste", "tooltip.paste"));
+         "menu.selected.paste", "tooltip.paste"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Select all
 
       selectPathPopupMenu.add(selectAllAction.createMenuItem(
-         "selected.select_all", "tooltip.select_all"));
+         "menu.selected.select_all", "tooltip.select_all"));
 
       // Deselect all
 
       selectPathPopupMenu.add(deselectAllAction.createMenuItem(
-         "selected.deselect_all", "tooltip.deselect_all"));
+         "menu.selected.deselect_all", "tooltip.deselect_all"));
 
       // Group
 
       selectPathPopupMenu.add(groupAction.createMenuItem(
-         "selected.group", "tooltip.group"));
+         "menu.selected.group", "tooltip.group"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Distort
 
       selectPathPopupMenu.add(distortAction.createCheckBoxMenuItem(
-         "selectedpath.distort", false, "tooltip.distort"));
+         "menu.selectedpath.distort", false, "tooltip.distort"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Line paint
 
       selectPathPopupMenu.add(linePaintAction.createMenuItem(
-         "selectedpath.line_colour", "tooltip.line_colour"));
+         "menu.selectedpath.line_colour", "tooltip.line_colour"));
 
       // Fill paint
 
       selectPathPopupMenu.add(fillPaintAction.createMenuItem(
-         "selectedpath.fill_colour", "tooltip.fill_colour"));
+         "menu.selectedpath.fill_colour", "tooltip.fill_colour"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
       // All styles
 
       selectPathPopupMenu.add(pathStyleAction.createMenuItem(
-         "selectedpath.style.all", "tooltip.path.style.all"));
+         "menu.selectedpath.style.all", "tooltip.path.style.all"));
 
       // Pen width
 
       selectPathPopupMenu.add(lineWidthAction.createMenuItem(
-         "selectedpath.linewidth", "tooltip.linewidth"));
+         "menu.selectedpath.linewidth", "tooltip.linewidth"));
 
       // Dash pattern
 
       selectPathPopupMenu.add(dashPatternAction.createMenuItem(
-         "selectedpath.dashpattern", "tooltip.dashpattern"));
+         "menu.selectedpath.dashpattern", "tooltip.dashpattern"));
 
       // Cap submenu
 
-      JMenu capMenu = getResources().createAppMenu("selectedpath.capstyle");
+      JMenu capMenu = getResources().createAppMenu("menu.selectedpath.capstyle");
       selectPathPopupMenu.add(capMenu);
 
       ButtonGroup capGroup = new ButtonGroup();
@@ -1218,57 +1218,57 @@ public class JDRCanvas extends JPanel
       // Butt cap
 
       capMenu.add(capStyleButtAction.createRadioButtonMenuItem(
-         "edit.path.style.capstyle.butt", capGroup, false, 
+         "menu.edit.path.style.capstyle.butt", capGroup, false, 
          "tooltip.capstyle.butt"));
 
       // Round cap
 
       capMenu.add(capStyleRoundAction.createRadioButtonMenuItem(
-         "edit.path.style.capstyle.round", capGroup, false, 
+         "menu.edit.path.style.capstyle.round", capGroup, false, 
          "tooltip.capstyle.round"));
 
       // Square cap
 
       capMenu.add(capStyleSquareAction.createRadioButtonMenuItem(
-         "edit.path.style.capstyle.square", capGroup, false, 
+         "menu.edit.path.style.capstyle.square", capGroup, false, 
          "tooltip.capstyle.square"));
 
       // Join
 
       selectPathPopupMenu.add(joinStyleAction.createMenuItem(
-         "selectedpath.joinstyle", "tooltip.joinstyle"));
+         "menu.selectedpath.joinstyle", "tooltip.joinstyle"));
 
       // Markers
 
-      JMenu markerMenu = getResources().createAppMenu("selectedpath.marker");
+      JMenu markerMenu = getResources().createAppMenu("menu.selectedpath.marker");
       selectPathPopupMenu.add(markerMenu);
 
       // All markers
 
       markerMenu.add(allMarkersAction.createMenuItem(
-         "edit.path.style.all_markers", "tooltip.all_markers"));
+         "menu.edit.path.style.all_markers", "tooltip.all_markers"));
 
       markerMenu.addSeparator();
 
       // Start Marker
 
       markerMenu.add(startMarkerAction.createMenuItem(
-         "edit.path.style.startarrow", "tooltip.startarrow"));
+         "menu.edit.path.style.startarrow", "tooltip.startarrow"));
 
       // Mid Marker
 
       markerMenu.add(midMarkerAction.createMenuItem(
-         "edit.path.style.midarrow", "tooltip.midarrow"));
+         "menu.edit.path.style.midarrow", "tooltip.midarrow"));
 
       // End Marker
 
       markerMenu.add(endMarkerAction.createMenuItem(
-         "edit.path.style.endarrow", "tooltip.endarrow"));
+         "menu.edit.path.style.endarrow", "tooltip.endarrow"));
 
       // Winding rule sub menu
 
       JMenu windingMenu = getResources().createAppMenu(
-         "selectedpath.windingrule");
+         "menu.selectedpath.windingrule");
       selectPathPopupMenu.add(windingMenu);
 
       ButtonGroup windingGroup = new ButtonGroup();
@@ -1276,13 +1276,13 @@ public class JDRCanvas extends JPanel
       // Even odd
 
       windingMenu.add(evenOddAction.createRadioButtonMenuItem(
-         "edit.path.style.windingrule.evenodd", windingGroup, false,
+         "menu.edit.path.style.windingrule.evenodd", windingGroup, false,
          "tooltip.windingrule.evenodd"));
 
       // Non zero
 
       windingMenu.add(nonZeroAction.createRadioButtonMenuItem(
-         "edit.path.style.windingrule.nonzero", windingGroup, false,
+         "menu.edit.path.style.windingrule.nonzero", windingGroup, false,
          "tooltip.windingrule.nonzero"));
 
       // only textpaths selected popup menu
@@ -1292,117 +1292,117 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectTextPathPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "selectedtextpath.description", "tooltip.description"));
+         "menu.selectedtextpath.description", "tooltip.description"));
 
       // Edit text
 
       selectTextPathPopupMenu.add(editTextAction.createMenuItem(
-         "selectedtext.edit", "tooltip.text.edit"));
+         "menu.selectedtext.edit", "tooltip.textarea.edit"));
 
       // Edit Path
 
       selectTextPathPopupMenu.add(editPathAction.createCheckBoxMenuItem(
-         "selectedpath.edit", false, "tooltip.path.edit"));
+         "menu.selectedpath.edit", false, "tooltip.path.edit"));
 
       selectTextPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Cut
 
       selectTextPathPopupMenu.add(cutAction.createMenuItem(
-         "selected.cut", "tooltip.cut"));
+         "menu.selected.cut", "tooltip.cut"));
 
       // Copy
 
       selectTextPathPopupMenu.add(copyAction.createMenuItem(
-         "selected.copy", "tooltip.copy"));
+         "menu.selected.copy", "tooltip.copy"));
 
       // Paste
 
       selectTextPathPopupMenu.add(pasteAction.createMenuItem(
-         "selected.paste", "tooltip.paste"));
+         "menu.selected.paste", "tooltip.paste"));
 
       selectTextPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Select all
 
       selectTextPathPopupMenu.add(selectAllAction.createMenuItem(
-         "selected.select_all", "tooltip.select_all"));
+         "menu.selected.select_all", "tooltip.select_all"));
 
       // Deselect all
 
       selectTextPathPopupMenu.add(deselectAllAction.createMenuItem(
-         "selected.deselect_all", "tooltip.deselect_all"));
+         "menu.selected.deselect_all", "tooltip.deselect_all"));
 
       // Group
 
       selectTextPathPopupMenu.add(groupAction.createMenuItem(
-         "selected.group", "tooltip.group"));
+         "menu.selected.group", "tooltip.group"));
 
       selectTextPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Text paint
 
       selectTextPathPopupMenu.add(textPaintAction.createMenuItem(
-         "selectedtext.colour", "tooltip.text.colour"));
+         "menu.selectedtext.colour", "tooltip.textarea.colour"));
 
       selectTextPathPopupMenu.add(textOutlineAction.createCheckBoxMenuItem(
-         "selectedtext.outline", false, "tooltip.text.outline"));
+         "menu.selectedtext.outline", false, "tooltip.textarea.outline"));
 
       selectTextPathPopupMenu.add(fillPaintAction.createMenuItem(
-         "selectedtext.fill_colour", "tooltip.fill_colour"));
+         "menu.selectedtext.fill_colour", "tooltip.fill_colour"));
 
       selectTextPathPopupMenu.add(new JPopupMenu.Separator());
 
       // All font styles
 
       selectTextPathPopupMenu.add(allFontStylesAction.createMenuItem(
-         "selectedtext.all_styles", "tooltip.font.all_styles"));
+         "menu.selectedtext.all_styles", "tooltip.font.all_styles"));
 
       // Family
 
       selectTextPathPopupMenu.add(fontFamilyAction.createMenuItem(
-         "selectedtext.family", "tooltip.font.family"));
+         "menu.selectedtext.family", "tooltip.font.family"));
 
       // Size
 
       selectTextPathPopupMenu.add(fontSizeAction.createMenuItem(
-         "selectedtext.size", "tooltip.font.size"));
+         "menu.selectedtext.size", "tooltip.font.size"));
 
       // Shape
 
       selectTextPathPopupMenu.add(fontShapeAction.createMenuItem(
-         "selectedtext.shape", "tooltip.font.shape"));
+         "menu.selectedtext.shape", "tooltip.font.shape"));
 
       // Series
 
       selectTextPathPopupMenu.add(fontSeriesAction.createMenuItem(
-         "selectedtext.series", "tooltip.font.series"));
+         "menu.selectedtext.series", "tooltip.font.series"));
 
       // anchor
 
       sTextAnchorM = getResources().createAppMenu(
-         "selectedtext.anchor");
+         "menu.selectedtext.anchor");
       selectTextPathPopupMenu.add(sTextAnchorM);
 
       // both
 
       sTextAnchorM.add(fontAnchorBothAction.createMenuItem(
-         "edit.text.font.anchor.both", "tooltip.font.anchor.both"));
+         "menu.edit.textarea.font.anchor.both", "tooltip.font.anchor.both"));
 
       // horizontal
 
       sTextAnchorM.add(fontAnchorHorizontalAction.createMenuItem(
-         "edit.text.font.anchor.horizontal", "tooltip.font.anchor.horizontal"));
+         "menu.edit.textarea.font.anchor.horizontal", "tooltip.font.anchor.horizontal"));
 
       // vertical
 
       sTextAnchorM.add(fontAnchorVerticalAction.createMenuItem(
-         "edit.text.font.anchor.vertical", "tooltip.font.anchor.vertical"));
+         "menu.edit.textarea.font.anchor.vertical", "tooltip.font.anchor.vertical"));
 
       // Reset Matrix
 
       selectTextPathPopupMenu.add(resetAction.createMenuItem(
-         "selectedtext.reset", "tooltip.reset"));
+         "menu.selectedtext.reset", "tooltip.reset"));
 
       // only bitmaps selected popup menu
 
@@ -1411,56 +1411,56 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectBitmapPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "selectedbitmap.description", "tooltip.description"));
+         "menu.selectedbitmap.description", "tooltip.description"));
 
       // Properties
 
       selectBitmapPopupMenu.add(bitmapPropsAction.createMenuItem(
-         "selectedbitmap.properties", "tooltip.bitmap.properties"));
+         "menu.selectedbitmap.properties", "tooltip.bitmap.properties"));
 
       // Reset
 
       selectBitmapPopupMenu.add(resetAction.createMenuItem(
-         "selectedbitmap.reset", "tooltip.reset"));
+         "menu.selectedbitmap.reset", "tooltip.reset"));
 
       // Insert
 
       selectBitmapPopupMenu.add(bitmapInsertAction.createMenuItem(
-         "selectedbitmap.insert", "tooltip.bitmap.insert"));
+         "menu.selectedbitmap.insert", "tooltip.bitmap.insert"));
 
       selectBitmapPopupMenu.add(new JPopupMenu.Separator());
 
       // Cut
 
       selectBitmapPopupMenu.add(cutAction.createMenuItem(
-         "selected.cut", "tooltip.cut"));
+         "menu.selected.cut", "tooltip.cut"));
 
       // Copy
 
       selectBitmapPopupMenu.add(copyAction.createMenuItem(
-         "selected.copy", "tooltip.copy"));
+         "menu.selected.copy", "tooltip.copy"));
 
       // Paste
 
       selectBitmapPopupMenu.add(pasteAction.createMenuItem(
-         "selected.paste", "tooltip.paste"));
+         "menu.selected.paste", "tooltip.paste"));
 
       selectBitmapPopupMenu.add(new JPopupMenu.Separator());
 
       // Select all
 
       selectBitmapPopupMenu.add(selectAllAction.createMenuItem(
-         "selected.select_all", "tooltip.select_all"));
+         "menu.selected.select_all", "tooltip.select_all"));
 
       // Deselect all
 
       selectBitmapPopupMenu.add(deselectAllAction.createMenuItem(
-         "selected.deselect_all", "tooltip.deselect_all"));
+         "menu.selected.deselect_all", "tooltip.deselect_all"));
 
       // Group
 
       selectBitmapPopupMenu.add(groupAction.createMenuItem(
-         "selected.group", "tooltip.group"));
+         "menu.selected.group", "tooltip.group"));
 
       if (vectorizeAction != null)
       {
@@ -1469,7 +1469,7 @@ public class JDRCanvas extends JPanel
          // Vectorize
 
          selectBitmapPopupMenu.add(vectorizeAction.createMenuItem(
-            "selectedbitmap.vectorize", "tooltip.bitmap.vectorize"));
+            "menu.selectedbitmap.vectorize", "tooltip.bitmap.vectorize"));
       }
 
       // selected objects popup menu
@@ -1479,81 +1479,81 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "selected.description", "tooltip.description"));
+         "menu.selected.description", "tooltip.description"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
       // Cut
 
       selectPopupMenu.add(cutAction.createMenuItem(
-         "selected.cut", "tooltip.cut"));
+         "menu.selected.cut", "tooltip.cut"));
 
       // Copy
 
       selectPopupMenu.add(copyAction.createMenuItem(
-         "selected.copy", "tooltip.copy"));
+         "menu.selected.copy", "tooltip.copy"));
 
       // Paste
 
       selectPopupMenu.add(pasteAction.createMenuItem(
-         "selected.paste", "tooltip.paste"));
+         "menu.selected.paste", "tooltip.paste"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
       // Select all
 
       selectPopupMenu.add(selectAllAction.createMenuItem(
-         "selected.select_all", "tooltip.select_all"));
+         "menu.selected.select_all", "tooltip.select_all"));
 
       // Deselect all
 
       selectPopupMenu.add(deselectAllAction.createMenuItem(
-         "selected.deselect_all", "tooltip.deselect_all"));
+         "menu.selected.deselect_all", "tooltip.deselect_all"));
 
       // Group
 
       selectPopupMenu.add(groupAction.createMenuItem(
-         "selected.group", "tooltip.group"));
+         "menu.selected.group", "tooltip.group"));
 
       // Ungroup
 
       selectPopupMenu.add(addCanvasSelectAction("ungroup").createMenuItem(
-         "selected.ungroup", "tooltip.ungroup"));
+         "menu.selected.ungroup", "tooltip.ungroup"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
       // Paths sub menu
 
       JMenu pathMenu = addCanvasSelectAction("edit.path").createMenu(
-         "selected.path", "tooltip.edit.path");
+         "menu.selected.path", "tooltip.edit.path");
 
       selectPopupMenu.add(pathMenu);
 
       // Line paint
 
       pathMenu.add(linePaintAction.createMenuItem(
-         "selectedpath.line_colour", "tooltip.line_colour"));
+         "menu.selectedpath.line_colour", "tooltip.line_colour"));
 
       selectPopupMenu.add(pathMenu);
 
       // All styles
 
       pathMenu.add(pathStyleAction.createMenuItem(
-         "selectedpath.style.all", "tooltip.path.style.all"));
+         "menu.selectedpath.style.all", "tooltip.path.style.all"));
 
       // Pen width
 
       pathMenu.add(lineWidthAction.createMenuItem(
-         "selectedpath.linewidth", "tooltip.linewidth"));
+         "menu.selectedpath.linewidth", "tooltip.linewidth"));
 
       // Dash pattern
 
       pathMenu.add(dashPatternAction.createMenuItem(
-         "selectedpath.dashpattern", "tooltip.dashpattern"));
+         "menu.selectedpath.dashpattern", "tooltip.dashpattern"));
 
       // Cap submenu
 
-      capMenu = getResources().createAppMenu("selectedpath.capstyle");
+      capMenu = getResources().createAppMenu("menu.selectedpath.capstyle");
       pathMenu.add(capMenu);
 
       capGroup = new ButtonGroup();
@@ -1561,57 +1561,57 @@ public class JDRCanvas extends JPanel
       // Butt cap
 
       capMenu.add(capStyleButtAction.createRadioButtonMenuItem(
-         "edit.path.style.capstyle.butt", capGroup, false, 
+         "menu.edit.path.style.capstyle.butt", capGroup, false, 
          "tooltip.capstyle.butt"));
 
       // Round cap
 
       capMenu.add(capStyleRoundAction.createRadioButtonMenuItem(
-         "edit.path.style.capstyle.round", capGroup, false, 
+         "menu.edit.path.style.capstyle.round", capGroup, false, 
          "tooltip.capstyle.round"));
 
       // Square cap
 
       capMenu.add(capStyleSquareAction.createRadioButtonMenuItem(
-         "edit.path.style.capstyle.square", capGroup, false, 
+         "menu.edit.path.style.capstyle.square", capGroup, false, 
          "tooltip.capstyle.square"));
 
       // Join
 
       pathMenu.add(joinStyleAction.createMenuItem(
-         "selectedpath.joinstyle", "tooltip.joinstyle"));
+         "menu.selectedpath.joinstyle", "tooltip.joinstyle"));
 
       // Markers
 
-      markerMenu = getResources().createAppMenu("selectedpath.marker");
+      markerMenu = getResources().createAppMenu("menu.selectedpath.marker");
       pathMenu.add(markerMenu);
 
       // All markers
 
       markerMenu.add(allMarkersAction.createMenuItem(
-         "edit.path.style.all_markers", "tooltip.all_markers"));
+         "menu.edit.path.style.all_markers", "tooltip.all_markers"));
 
       markerMenu.addSeparator();
 
       // Start Marker
 
       markerMenu.add(startMarkerAction.createMenuItem(
-         "edit.path.style.startarrow", "tooltip.startarrow"));
+         "menu.edit.path.style.startarrow", "tooltip.startarrow"));
 
       // Mid Marker
 
       markerMenu.add(midMarkerAction.createMenuItem(
-         "edit.path.style.midarrow", "tooltip.midarrow"));
+         "menu.edit.path.style.midarrow", "tooltip.midarrow"));
 
       // End Marker
 
       markerMenu.add(endMarkerAction.createMenuItem(
-         "edit.path.style.endarrow", "tooltip.endarrow"));
+         "menu.edit.path.style.endarrow", "tooltip.endarrow"));
 
       // Winding rule sub menu
 
       windingMenu = getResources().createAppMenu(
-         "selectedpath.windingrule");
+         "menu.selectedpath.windingrule");
       pathMenu.add(windingMenu);
 
       windingGroup = new ButtonGroup();
@@ -1619,145 +1619,145 @@ public class JDRCanvas extends JPanel
       // Even odd
 
       windingMenu.add(evenOddAction.createRadioButtonMenuItem(
-         "edit.path.style.windingrule.evenodd", windingGroup, false,
+         "menu.edit.path.style.windingrule.evenodd", windingGroup, false,
          "tooltip.windingrule.evenodd"));
 
       // Non zero
 
       windingMenu.add(nonZeroAction.createRadioButtonMenuItem(
-         "edit.path.style.windingrule.nonzero", windingGroup, false,
+         "menu.edit.path.style.windingrule.nonzero", windingGroup, false,
          "tooltip.windingrule.nonzero"));
 
       // Text sub menu
 
-      JMenu textMenu = addCanvasSelectAction("edit.text").createMenu(
-         "selected.text", "tooltip.edit.text");
+      JMenu textMenu = addCanvasSelectAction("edit.textarea").createMenu(
+         "menu.selected.textarea", "tooltip.edit.textarea");
       selectPopupMenu.add(textMenu);
 
       // Text paint
 
       textMenu.add(textPaintAction.createMenuItem(
-         "selectedtext.colour", "tooltip.text.colour"));
+         "menu.selectedtext.colour", "tooltip.textarea.colour"));
 
       textMenu.add(textOutlineAction.createCheckBoxMenuItem(
-         "selectedtext.outline", false, "tooltip.text.outline"));
+         "menu.selectedtext.outline", false, "tooltip.textarea.outline"));
 
       textMenu.add(new JPopupMenu.Separator());
 
       // All font styles
 
       textMenu.add(allFontStylesAction.createMenuItem(
-         "selectedtext.all_styles", "tooltip.font.all_styles"));
+         "menu.selectedtext.all_styles", "tooltip.font.all_styles"));
 
       // Family
 
       textMenu.add(fontFamilyAction.createMenuItem(
-         "selectedtext.family", "tooltip.font.family"));
+         "menu.selectedtext.family", "tooltip.font.family"));
 
       // Size
 
       textMenu.add(fontSizeAction.createMenuItem(
-         "selectedtext.size", "tooltip.font.size"));
+         "menu.selectedtext.size", "tooltip.font.size"));
 
       // Shape
 
       textMenu.add(fontShapeAction.createMenuItem(
-         "selectedtext.shape", "tooltip.font.shape"));
+         "menu.selectedtext.shape", "tooltip.font.shape"));
 
       // Series
 
       textMenu.add(fontSeriesAction.createMenuItem(
-         "selectedtext.series", "tooltip.font.series"));
+         "menu.selectedtext.series", "tooltip.font.series"));
 
       // anchor
 
       sTextAnchorM = getResources().createAppMenu(
-         "selectedtext.anchor");
+         "menu.selectedtext.anchor");
       textMenu.add(sTextAnchorM);
 
       // both
 
       sTextAnchorM.add(fontAnchorBothAction.createMenuItem(
-         "edit.text.font.anchor.both", "tooltip.font.anchor.both"));
+         "menu.edit.textarea.font.anchor.both", "tooltip.font.anchor.both"));
 
       // horizontal
 
       sTextAnchorM.add(fontAnchorHorizontalAction.createMenuItem(
-         "edit.text.font.anchor.horizontal", "tooltip.font.anchor.horizontal"));
+         "menu.edit.textarea.font.anchor.horizontal", "tooltip.font.anchor.horizontal"));
 
       // vertical
 
       sTextAnchorM.add(fontAnchorVerticalAction.createMenuItem(
-         "edit.text.font.anchor.vertical", "tooltip.font.anchor.vertical"));
+         "menu.edit.textarea.font.anchor.vertical", "tooltip.font.anchor.vertical"));
 
       // Reset
 
       textMenu.add(resetAction.createMenuItem(
-         "selectedtext.reset", "tooltip.reset"));
+         "menu.selectedtext.reset", "tooltip.reset"));
 
       // Fill paint
 
       selectPopupMenu.add(fillPaintAction.createMenuItem(
-         "selected.fill_colour", "tooltip.fill_colour"));
+         "menu.selected.fill_colour", "tooltip.fill_colour"));
 
       // bitmap sub menu
 
       JMenu bitmapMenu = addCanvasSelectAction("bitmap").createMenu(
-         "selected.bitmap", "tooltip.bitmap");
+         "menu.selected.bitmap", "tooltip.bitmap");
       selectPopupMenu.add(bitmapMenu);
 
       // Insert Bitmap 
 
       bitmapMenu.add(bitmapInsertAction.createMenuItem(
-         "selectedbitmap.insert", "tooltip.bitmap.insert"));
+         "menu.selectedbitmap.insert", "tooltip.bitmap.insert"));
 
       // Bitmap Properties
 
       bitmapMenu.add(bitmapPropsAction.createMenuItem(
-         "selectedbitmap.properties", "tooltip.bitmap.properties"));
+         "menu.selectedbitmap.properties", "tooltip.bitmap.properties"));
 
       bitmapMenu.add(resetAction.createMenuItem(
-         "selectedbitmap.reset", "tooltip.reset"));
+         "menu.selectedbitmap.reset", "tooltip.reset"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
       // Justify sub menu
 
       JMenu justifyMenu = addCanvasSelectAction("justify").createMenu(
-         "selected.justify", "tooltip.justify");
+         "menu.selected.justify", "tooltip.justify");
       selectPopupMenu.add(justifyMenu);
 
       // Left align
 
       justifyMenu.add(addCanvasSelectAction("justify.left").createMenuItem(
-         "transform.justify.left", "tooltip.justify.left"));
+         "menu.transform.justify.left", "tooltip.justify.left"));
 
       // Centre align
 
       justifyMenu.add(addCanvasSelectAction("justify.centre").createMenuItem(
-         "transform.justify.centre", "tooltip.justify.centre"));
+         "menu.transform.justify.centre", "tooltip.justify.centre"));
 
       // Right align
 
       justifyMenu.add(addCanvasSelectAction("justify.right").createMenuItem(
-         "transform.justify.right", "tooltip.justify.right"));
+         "menu.transform.justify.right", "tooltip.justify.right"));
 
       justifyMenu.add(new JPopupMenu.Separator());
 
       // Top align
 
       justifyMenu.add(addCanvasSelectAction("justify.top").createMenuItem(
-         "transform.justify.top", "tooltip.justify.top"));
+         "menu.transform.justify.top", "tooltip.justify.top"));
 
       // middle align
 
       justifyMenu.add(addCanvasSelectAction("justify.middle").createMenuItem(
-         "transform.justify.middle", "tooltip.justify.middle"));
+         "menu.transform.justify.middle", "tooltip.justify.middle"));
 
       // bottom align
 
       justifyMenu.add(addCanvasSelectAction("justify.bottom").createMenuItem(
-         "transform.justify.bottom", "tooltip.justify.bottom"));
+         "menu.transform.justify.bottom", "tooltip.justify.bottom"));
 
       // none selected popup menu
 
@@ -1767,38 +1767,38 @@ public class JDRCanvas extends JPanel
 
       noneSelectedPopupMenu.add(
          addCanvasSelectAction("image_description").createMenuItem(
-         "none.description", "tooltip.description"));
+         "menu.none.description", "tooltip.description"));
 
       // Select all
 
       noneSelectedPopupMenu.add(selectAllAction.createMenuItem(
-         "selected.select_all", "tooltip.select_all"));
+         "menu.selected.select_all", "tooltip.select_all"));
 
       // Find by description
 
       noneSelectedPopupMenu.add(
          addCanvasSelectAction("navigate.description").createMenuItem(
-         "none.find_by_description", "tooltip.navigate.description"));
+         "menu.none.find_by_description", "tooltip.navigate.description"));
 
       // Paste
 
       noneSelectedPopupMenu.add(pasteAction.createMenuItem(
-         "selected.paste", "tooltip.paste"));
+         "menu.selected.paste", "tooltip.paste"));
 
       // Insert bitmap
 
       noneSelectedPopupMenu.add(bitmapInsertAction.createMenuItem(
-         "none.insert_bitmap", "tooltip.bitmap.insert"));
+         "menu.none.insert_bitmap", "tooltip.bitmap.insert"));
 
       // Distortion Popup Menu
 
       distortPopupMenu = new JPopupMenu();
 
       distortPopupMenu.add(distortAction.createCheckBoxMenuItem(
-         "distort.state", false, "tooltip.distort"));
+         "menu.distort.state", false, "tooltip.distort"));
 
       distortPopupMenu.add(resetAction.createMenuItem(
-         "distort.reset", "tooltip.reset"));
+         "menu.distort.reset", "tooltip.reset"));
    }
 
    protected void addAppAction(String name)

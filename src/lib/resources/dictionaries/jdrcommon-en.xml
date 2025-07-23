@@ -122,6 +122,11 @@ Nicola Talbot
 
 <entry key="about.title">About</entry>
 
+
+<entry key="about.copyright">Copyright (C)</entry>
+<entry key="about.disclaimer">{0} comes with ABSOLUTELY NO WARRANTY</entry>
+<entry key="about.see_licence">See LICENSE for details</entry>
+
 <!-- Buttons -->
 
 <entry key="button.abort">Abort</entry>

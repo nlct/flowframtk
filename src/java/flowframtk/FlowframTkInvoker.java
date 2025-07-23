@@ -2780,7 +2780,7 @@ public class FlowframTkInvoker
 
       // Need to load dictionary before creating message system.
 
-      settings.setMessageSystem(new JDRGuiMessage(resources));
+      settings.setMessageSystem((JDRGuiMessage)resources.getMessageSystem());
 
       // load Java to LaTeX font family mappings
 
@@ -3465,6 +3465,7 @@ public class FlowframTkInvoker
 
             try
             {
+               resources.setMessageSystem(new JDRGuiMessage(resources));
                invoker.createAndShowGUI();
             }
             catch (InvalidSyntaxException e)

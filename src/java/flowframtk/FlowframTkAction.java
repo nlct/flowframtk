@@ -311,7 +311,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       }
 
       JDRToggleButton button = getResources().createToggleButton(
-         getResources().getMessage("label."+name), name, this, keyStroke,
+         getResources().getMessage("button."+name), name, this, keyStroke,
          tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
 
       setActionButton(button);

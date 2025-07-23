@@ -70,7 +70,7 @@ public class FileField extends Box
 
       box.add(textField);
 
-      button = getResources().createDialogButton("label.choose", "open",
+      button = getResources().createDialogButton("button.choose", "open",
          this, null, getResources().getMessage("tooltip.choose_file"));
 
       box.add(button);

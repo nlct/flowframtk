@@ -49,37 +49,37 @@ class DashPatternBox extends JPanel implements ActionListener
 
       setLayout(new GridLayout(2, 3));
 
-      offsetPanel = resources.createNonNegativeLengthPanel("dash.offset");
+      offsetPanel = resources.createNonNegativeLengthPanel("dashpattern.dash.offset");
       offsetPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       offsetPanel.getTextField().setColumns(2);
       add(offsetPanel);
 
-      dashPanel = resources.createNonNegativeLengthPanel("dash.label");
+      dashPanel = resources.createNonNegativeLengthPanel("dashpattern.title");
       dashPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       dashPanel.getTextField().setColumns(2);
       dashPanel.setValue(10.0, JDRUnit.bp);
       add(dashPanel);
 
-      gapPanel = resources.createNonNegativeLengthPanel("dash.gap");
+      gapPanel = resources.createNonNegativeLengthPanel("dashpattern.dash.gap");
       gapPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       gapPanel.getTextField().setColumns(2);
       gapPanel.setValue(5.0, JDRUnit.bp);
       add(gapPanel);
 
-      secondary = resources.createAppCheckBox("dash", "secondary", false, this);
+      secondary = resources.createAppCheckBox("dashpattern.dash", "secondary", false, this);
       add(secondary);
 
-      dash2Panel = resources.createNonNegativeLengthPanel("dash.label");
+      dash2Panel = resources.createNonNegativeLengthPanel("dashpattern.title");
       dash2Panel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       dash2Panel.getTextField().setColumns(2);
       dash2Panel.setValue(1.0, JDRUnit.bp);
       add(dash2Panel);
 
-      gap2Panel = resources.createNonNegativeLengthPanel("dash.gap");
+      gap2Panel = resources.createNonNegativeLengthPanel("dashpattern.dash.gap");
       gap2Panel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       gap2Panel.getTextField().setColumns(2);

@@ -111,10 +111,10 @@ public class ToolAction extends FlowframTkAction
 
    private static final String[] ACTIONS =
     {"select", "open_line", "closed_line", "open_curve",
-     "closed_curve", "rectangle", "ellipse", "text", "math"};
+     "closed_curve", "rectangle", "ellipse", "textarea", "math"};
 
    private static final String[] HELP_ID =
-    {"selectobjects", "newlinepath", "newlinepath", "newcurvepath",
-     "newcurvepath", "rectangles", "ellipses", "newtext", "newtext"};
+    {"sec:selectobjects", "sec:newlinepath", "sec:newlinepath", "sec:newcurvepath",
+     "sec:newcurvepath", "sec:rectangles", "sec:ellipses", "sec:newtext", "sec:newtext"};
 }
 

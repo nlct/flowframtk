@@ -65,8 +65,15 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
       setToolTipText(tooltipText);
       setActionCommand(action);
 
+      String buttonText = resources.getMessageIfExists("button."+action);
+
+      if (buttonText == null)
+      {
+         buttonText = getText();
+      }
+
       button = resources.createToolButton(
-         resources.getMessage("label."+action, getText()),
+         buttonText,
          action, this, keyStroke,
          null, selected, tooltipText);
 

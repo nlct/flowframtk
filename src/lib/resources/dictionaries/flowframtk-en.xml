@@ -247,34 +247,34 @@ Nicola Talbot
 
 <!--  Edit -> Text -> Font Style Sub Menu -->
 
-<entry key="menu.edit.text.font.all_styles">All Styles...</entry>
-<entry key="menu.edit.text.font.all_styles.mnemonic">L</entry>
+<entry key="menu.edit.textarea.font.all_styles">All Styles...</entry>
+<entry key="menu.edit.textarea.font.all_styles.mnemonic">L</entry>
 
-<entry key="menu.edit.text.font.family">Family...</entry>
-<entry key="menu.edit.text.font.family.mnemonic">Y</entry>
+<entry key="menu.edit.textarea.font.family">Family...</entry>
+<entry key="menu.edit.textarea.font.family.mnemonic">Y</entry>
 
-<entry key="menu.edit.text.font.size">Size...</entry>
-<entry key="menu.edit.text.font.size.mnemonic">Z</entry>
+<entry key="menu.edit.textarea.font.size">Size...</entry>
+<entry key="menu.edit.textarea.font.size.mnemonic">Z</entry>
 
-<entry key="menu.edit.text.font.shape">Shape...</entry>
-<entry key="menu.edit.text.font.shape.mnemonic">H</entry>
+<entry key="menu.edit.textarea.font.shape">Shape...</entry>
+<entry key="menu.edit.textarea.font.shape.mnemonic">H</entry>
 
-<entry key="menu.edit.text.font.series">Series...</entry>
-<entry key="menu.edit.text.font.series.mnemonic">R</entry>
+<entry key="menu.edit.textarea.font.series">Series...</entry>
+<entry key="menu.edit.textarea.font.series.mnemonic">R</entry>
 
-<entry key="menu.edit.text.font.anchor">Anchor</entry>
-<entry key="menu.edit.text.font.anchor.mnemonic">A</entry>
+<entry key="menu.edit.textarea.font.anchor">Anchor</entry>
+<entry key="menu.edit.textarea.font.anchor.mnemonic">A</entry>
 
 <!--  Edit -> Text -> Font Style -> Anchor Sub Menu -->
 
-<entry key="menu.edit.text.font.anchor.both">Both...</entry>
-<entry key="menu.edit.text.font.anchor.both.mnemonic">B</entry>
+<entry key="menu.edit.textarea.font.anchor.both">Both...</entry>
+<entry key="menu.edit.textarea.font.anchor.both.mnemonic">B</entry>
 
-<entry key="menu.edit.text.font.anchor.horizontal">Horizontal...</entry>
-<entry key="menu.edit.text.font.anchor.horizontal.mnemonic">H</entry>
+<entry key="menu.edit.textarea.font.anchor.horizontal">Horizontal...</entry>
+<entry key="menu.edit.textarea.font.anchor.horizontal.mnemonic">H</entry>
 
-<entry key="menu.edit.text.font.anchor.vertical">Vertical...</entry>
-<entry key="menu.edit.text.font.anchor.vertical.mnemonic">V</entry>
+<entry key="menu.edit.textarea.font.anchor.vertical">Vertical...</entry>
+<entry key="menu.edit.textarea.font.anchor.vertical.mnemonic">V</entry>
 
 <!--  Edit Menu Cont -->
 
@@ -1020,6 +1020,183 @@ Nicola Talbot
 
 <entry key="menu.none.insert_bitmap">Insert Bitmap...</entry>
 <entry key="menu.none.insert_bitmap.mnemonic">B</entry>
+
+<!-- Tooltips -->
+
+<entry key="tooltip.abandon">Cancel current path</entry>
+<entry key="tooltip.add_control">Add a new point in the middle of current segment</entry>
+<entry key="tooltip.all_markers">Set the same start, mid and end markers</entry>
+<entry key="tooltip.autoanchor">Automatically update anchors when aligning text areas</entry>
+<entry key="tooltip.arrow.angle">Marker angle</entry>
+<entry key="tooltip.arrow.autogap">Select to compute gap between repeat markers according to the line width</entry>
+<entry key="tooltip.arrow.autooffset">Select to automatically compute marker offset</entry>
+<entry key="tooltip.arrow.autoorient">Select to orient marker to follow path's gradient</entry>
+<entry key="tooltip.arrow.colour.dependent">Make the marker color depend on the line color</entry>
+<entry key="tooltip.arrow.colour.independent">Make the marker color independent of the line color</entry>
+<entry key="tooltip.arrow.composite">Enable secondary marker</entry>
+<entry key="tooltip.arrow.gap">Distance between repeated markers</entry>
+<entry key="tooltip.arrow.offset">Distance from vertex</entry>
+<entry key="tooltip.arrow.overlay">Overlap primary and secondary markers</entry>
+<entry key="tooltip.arrow.type">Set marker type</entry>
+<entry key="tooltip.arrow.type.arrows">Arrow style markers</entry>
+<entry key="tooltip.arrow.type.bracket">Bracket style markers</entry>
+<entry key="tooltip.arrow.type.caps">Cap style markers</entry>
+<entry key="tooltip.arrow.type.data">Data point style markers</entry>
+<entry key="tooltip.arrow.type.decorative">Decorative markers</entry>
+<entry key="tooltip.arrow.type.partial">Partial arrow markers</entry>
+<entry key="tooltip.back">Move selected object(s) to the back</entry>
+<entry key="tooltip.bitmap.insert">Insert an external bitmap file</entry>
+<entry key="tooltip.bitmap.properties">Change the bitmap source file, the LaTeX path to the source file or the bitmap's transformation matrix</entry>
+<entry key="tooltip.break_path">Break path at the end of current segment</entry>
+<entry key="tooltip.close_path">Close path</entry>
+<entry key="tooltip.close_path.line">Close path with a line</entry>
+<entry key="tooltip.close_path.cont">Close path with a continuous curve</entry>
+<entry key="tooltip.close_path.merge">Close path by merging end point with start point</entry>
+<entry key="tooltip.closed_curve">Closed cubic Bézier spline</entry>
+<entry key="tooltip.closed_line">Closed line tool</entry>
+<entry key="tooltip.continuity.relative">Make segment continuous at join (relative shift)</entry>
+<entry key="tooltip.continuity.equi">Make segment continuous at join (equidistant controls)</entry>
+<entry key="tooltip.continuity.anchor">Toggle continuity anchor</entry>
+<entry key="tooltip.convert_to_curve">Convert current segment to a curve</entry>
+<entry key="tooltip.convert_to_line">Convert current segment to a line</entry>
+<entry key="tooltip.convert_to_move">Convert current segment to a gap</entry>
+<entry key="tooltip.coordinates">Set the co-ordinates using a dialogue box</entry>
+<entry key="tooltip.cmyk">CMYK (Cyan Magenta Yellow Key) color selector </entry>
+<entry key="tooltip.copy">Copy selected object(s) to clipboard</entry>
+<entry key="tooltip.cut">Cut selected object(s)</entry>
+<entry key="tooltip.delete_control">Delete current point</entry>
+<entry key="tooltip.direction.linear.north">Northward</entry>
+<entry key="tooltip.direction.linear.northwest">North-Westward</entry>
+<entry key="tooltip.direction.linear.west">Westward</entry>
+<entry key="tooltip.direction.linear.southwest">South-Westward</entry>
+<entry key="tooltip.direction.linear.south">Southward</entry>
+<entry key="tooltip.direction.linear.southeast">South-Eastward</entry>
+<entry key="tooltip.direction.linear.east">Eastward</entry>
+<entry key="tooltip.direction.linear.northeast">North-Eastward</entry>
+<entry key="tooltip.direction.radial.north">North starting location</entry>
+<entry key="tooltip.direction.radial.northwest">North-West starting location</entry>
+<entry key="tooltip.direction.radial.west">West starting location</entry>
+<entry key="tooltip.direction.radial.southwest">South-West starting location</entry>
+<entry key="tooltip.direction.radial.south">South starting location</entry>
+<entry key="tooltip.direction.radial.southeast">South-East starting location</entry>
+<entry key="tooltip.direction.radial.east">East starting location</entry>
+<entry key="tooltip.direction.radial.northeast">North-East starting location</entry>
+<entry key="tooltip.direction.radial.centre">Central starting location</entry>
+<entry key="tooltip.distort">Distort selected path</entry>
+<entry key="tooltip.hotspots">Enable/Disable drag scale</entry>
+<entry key="tooltip.controls">Control point settings</entry>
+<entry key="tooltip.initsettings">Specify settings at start up</entry>
+<entry key="tooltip.ellipse">Ellipse tool</entry>
+<entry key="tooltip.fill_colour">Set fill color</entry>
+<entry key="tooltip.finish">Finish current path</entry>
+<entry key="tooltip.font">Set font attributes</entry>
+<entry key="tooltip.font_family">Select font family name</entry>
+<entry key="tooltip.font.all_styles">Change font attributes</entry>
+<entry key="tooltip.font.family">Change font family</entry>
+<entry key="tooltip.font.size">Change font size</entry>
+<entry key="tooltip.font.shape">Change font shape (upright/italic)</entry>
+<entry key="tooltip.font.series">Change font series (medium/bold)</entry>
+<entry key="tooltip.font.anchor.both">Change the horizontal and vertical LaTeX font anchors</entry>
+<entry key="tooltip.font.anchor.horizontal">Change the horizontal LaTeX font anchor</entry>
+<entry key="tooltip.font.anchor.vertical">Change the vertical LaTeX font anchor</entry>
+<entry key="tooltip.front">Move selected object(s) to the front</entry>
+<entry key="tooltip.gap">Make a gap in the currect path</entry>
+<entry key="tooltip.grey">Gray selector </entry>
+<entry key="tooltip.grid.rectangular">Rectangular grid (origin at top left)</entry>
+<entry key="tooltip.grid.radial">Radial grid (origin at center of canvas)</entry>
+<entry key="tooltip.grid.iso">Isometric grid (origin at top left)</entry>
+<entry key="tooltip.grid.tschichold">Tschichold grid (origin at top left)</entry>
+<entry key="tooltip.grid.path">Path-based grid (origin at top left)</entry>
+<entry key="tooltip.grid.show">Show/hide grid</entry>
+<entry key="tooltip.group">Group selected object(s)</entry>
+<entry key="tooltip.hsb">HSB (Hue Saturation Brightness) color selector </entry>
+<entry key="tooltip.jdr">Save/use canvas settings stored in jdr files</entry>
+<entry key="tooltip.joinstyle">Set the join style between segments</entry>
+<entry key="tooltip.latex_font">LaTeX font family equivalent</entry>
+<entry key="tooltip.latex_font_series">LaTeX font series equivalent</entry>
+<entry key="tooltip.latex_font_shape">LaTeX font shape equivalent</entry>
+<entry key="tooltip.latex_font_size">LaTeX font size equivalent</entry>
+<entry key="tooltip.line_colour">Set line color</entry>
+<entry key="tooltip.line_style">Set the line style</entry>
+<entry key="tooltip.linewidth">Set the pen width</entry>
+<entry key="tooltip.lock_grid">Lock grid</entry>
+<entry key="tooltip.math">Create a text area that will automatically insert math shift characters at the start and end of the LaTeX alternative text</entry>
+<entry key="tooltip.navigate.goto">Move mouse to specified co-ordinates</entry>
+<entry key="tooltip.navigate.select">Select the next object in the stack</entry>
+<entry key="tooltip.navigate.add_next">Add the next object in the stack to the current selection</entry>
+<entry key="tooltip.navigate.skip">Deselect the lowest selected object in the stack and add next object to selection</entry>
+<entry key="tooltip.navigate.find">Scroll to selected object(s)</entry>
+<entry key="tooltip.navigate.description">Select and scroll to an object from its description</entry>
+<entry key="tooltip.navigate.add_description">Scroll to an object from its description and add to current selection</entry>
+<entry key="tooltip.new">New image</entry>
+<entry key="tooltip.next_control">Select the next control point</entry>
+<entry key="tooltip.normalize">Set normalization factors</entry>
+<entry key="tooltip.open">Load image</entry>
+<entry key="tooltip.open_curve">Open cubic Bézier spline</entry>
+<entry key="tooltip.open_line">Open line tool</entry>
+<entry key="tooltip.open_path">Open path</entry>
+<entry key="tooltip.open_path.remove_last">Open path removing last segment</entry>
+<entry key="tooltip.open_path.keep_last">Open path keeping last segment</entry>
+<entry key="tooltip.path.edit">Edit selected path</entry>
+<entry key="tooltip.paste">Paste selected object(s) from clipboard</entry>
+<entry key="tooltip.prev_control">Select the previous control point</entry>
+<entry key="tooltip.rectangle">Rectangle tool</entry>
+<entry key="tooltip.graphics">Change graphics settings</entry>
+<entry key="tooltip.reset">Reset the underlying transformation matrix</entry>
+<entry key="tooltip.rgb">RGB (Red Green Blue) color selector </entry>
+<entry key="tooltip.rotate">Rotate selected object(s)</entry>
+<entry key="tooltip.save">Save image</entry>
+<entry key="tooltip.scale">Scale selected object(s)</entry>
+<entry key="tooltip.shear">Shear selected object(s)</entry>
+<entry key="tooltip.select">Select tool</entry>
+<entry key="tooltip.select_all">Select all objects</entry>
+<entry key="tooltip.snap">Move the control to the nearest grid point</entry>
+<entry key="tooltip.startdir">Set start up directory</entry>
+<entry key="tooltip.swatch.black">Black</entry>
+<entry key="tooltip.swatch.darkgrey">Dark Gray</entry>
+<entry key="tooltip.swatch.grey">Gray</entry>
+<entry key="tooltip.swatch.lightgrey">Light Gray</entry>
+<entry key="tooltip.swatch.white">White</entry>
+<entry key="tooltip.swatch.darkblue">Dark Blue</entry>
+<entry key="tooltip.swatch.blue">Blue</entry>
+<entry key="tooltip.swatch.cyan">Cyan</entry>
+<entry key="tooltip.swatch.green">Green</entry>
+<entry key="tooltip.swatch.darkgreen">Dark Green</entry>
+<entry key="tooltip.swatch.yellow">Yellow</entry>
+<entry key="tooltip.swatch.goldenrod">Goldenrod</entry>
+<entry key="tooltip.swatch.orange">Orange</entry>
+<entry key="tooltip.swatch.tan">Tan</entry>
+<entry key="tooltip.swatch.rawsienna">RawSienna</entry>
+<entry key="tooltip.swatch.red">Red</entry>
+<entry key="tooltip.swatch.darkred">Dark Red</entry>
+<entry key="tooltip.swatch.orchid">Orchid</entry>
+<entry key="tooltip.swatch.magenta">Magenta</entry>
+<entry key="tooltip.swatch.pink">Pink</entry>
+<entry key="tooltip.close_anchor">Toggle whether the start point of the underlying path should be anchored</entry>
+<entry key="tooltip.has_symmetry">Add or remove symmetry from the path</entry>
+<entry key="tooltip.join_anchor">Toggle whether the last point of the underlying path should be anchored</entry>
+<entry key="tooltip.textarea">Text tool</entry>
+<entry key="tooltip.textarea.edit">Edit selected text</entry>
+<entry key="tooltip.textarea.colour">Set text color</entry>
+<entry key="tooltip.textarea.outline">Display text as an outline</entry>
+<entry key="tooltip.ungroup">Ungroup selected object(s)</entry>
+<entry key="tooltip.vScrollBlockDown">Block scroll down</entry>
+<entry key="tooltip.vScrollBlockUp">Block scroll up</entry>
+<entry key="tooltip.vScrollEndDown">Scroll down to end</entry>
+<entry key="tooltip.vScrollEndUp">Scroll up to start</entry>
+<entry key="tooltip.vScrollUnitDown">Scroll down</entry>
+<entry key="tooltip.vScrollUnitUp">Scroll up</entry>
+<entry key="tooltip.hScrollBlockLeft">Block scroll left</entry>
+<entry key="tooltip.hScrollBlockRight">Block scroll right</entry>
+<entry key="tooltip.hScrollEndLeft">Scroll left to start</entry>
+<entry key="tooltip.hScrollEndRight">Scroll right to end</entry>
+<entry key="tooltip.hScrollUnitLeft">Scroll left</entry>
+<entry key="tooltip.hScrollUnitRight">Scroll right</entry>
+<entry key="tooltip.pattern.set">Apply a pattern to selected shape</entry>
+<entry key="tooltip.textpath">Convert to text-path</entry>
+<entry key="tooltip.up">Move selected object(s) up the stack (z axis)</entry>
+<entry key="tooltip.down">Move selected object(s) down the stack (z axis)</entry>
+<entry key="tooltip.choose_file">Open file selector to choose a file</entry>
 
 <!--  undo/redo information -->
 
@@ -2684,6 +2861,15 @@ Are you sure you want to ungroup it?</entry>
 <entry key="vectorize.merge_nearpaths">Merge Near Paths</entry>
 <entry key="vectorize.merge_nearpaths.threshold">Gap Threshold</entry>
 
+<entry key="vectorize.merge_spikes">Merge Spikes</entry>
+<entry key="vectorize.spike_pair_selection">Spike pair selection</entry>
+<entry key="vectorize.spike_pair_mid_diff_weight">??Spike pair mid diff weight</entry>
+<entry key="vectorize.spike_pair_inclination_diff_weight">??Spike pair inclination diff weight</entry>
+<entry key="vectorize.spike_pair_average_length_weight">??Spike pair average length weight</entry>
+<entry key="vectorize.spike_pair_angle_diff_weight">??Spike pair angle diff weight</entry>
+<entry key="vectorize.spike_pair_inverse_distance_weight">??Spike pair inverse distance weight</entry>
+
+
 <entry key="vectorize.line_detection">Line Detection</entry>
 <entry key="vectorize.delta_threshold">Delta Threshold:</entry>
 <entry key="vectorize.delta_threshold.mnemonic">D</entry>
@@ -3123,6 +3309,7 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.eof">File ended prematurely</entry>
 <entry key="error.fatal">Fatal error</entry>
 <entry key="error.file_not_found">File not found</entry>
+<entry key="error.file_not_found_with_name">File not found: {0}</entry>
 <entry key="error.finish_or_discard">You must finish or discard the current path before closing the image</entry>
 <entry key="error.invalid_paint-id">Invalid color identifier</entry>
 <entry key="error.id.endcolour">Invalid end color identifier</entry>

@@ -495,8 +495,8 @@ class DirPanel extends JPanel
       fc = new JFileChooser();
       fc.setCurrentDirectory(new File("."));
       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-      fc.setApproveButtonText(resources.getMessage("label.okay"));
-      fc.setApproveButtonMnemonic(resources.getCodePoint("label.okay.mnemonic"));
+      fc.setApproveButtonText(resources.getMessage("button.okay"));
+      fc.setApproveButtonMnemonic(resources.getCodePoint("button.okay.mnemonic"));
    }
 
    public void actionPerformed(ActionEvent evt)

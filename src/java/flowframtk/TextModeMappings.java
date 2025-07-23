@@ -34,7 +34,7 @@ public class TextModeMappings extends TeXMappings
 {
    public TextModeMappings(JDRResources resources)
    {
-      super(resources, resources.getMessage("symbol.mode.text"));
+      super(resources, resources.getMessage("symbol.mode_text"));
    }
 
    public static TextModeMappings createDefaultMappings(JDRResources resources)

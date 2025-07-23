@@ -34,7 +34,7 @@ public class MathModeMappings extends TeXMappings
 {
    public MathModeMappings(JDRResources resources)
    {
-      super(resources, resources.getMessage("symbol.mode.maths"));
+      super(resources, resources.getMessage("symbol.mode_maths"));
    }
 
    public static MathModeMappings createDefaultMappings(JDRResources resources)

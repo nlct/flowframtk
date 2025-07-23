@@ -636,7 +636,7 @@ class ControlPaintPanel extends JPanel implements ActionListener
 
       add(label);
 
-      selectButton = resources.createDialogButton("label.choose",
+      selectButton = resources.createDialogButton("button.choose",
         "choose", this, null);
 
       add(selectButton);
@@ -1271,8 +1271,8 @@ class RulerFormatPanel extends JPanel implements ActionListener
       gbc.fill=GridBagConstraints.BOTH;
 
       rulerComp.add(resources.createAppInfoArea("borders.showruler.info",
-           resources.getMessage("settings.label"),
-           resources.getMessage("settings.rulers")),
+           resources.getMessage("menu.settings"),
+           resources.getMessage("menu.settings.rulers")),
         gbc);
 
       return rulerComp;
@@ -2600,7 +2600,7 @@ class TeXEditorUIPanel extends JPanel
       panel.add(Box.createHorizontalStrut(10));
 
       commentSelectButton = resources.createDialogButton(
-         "label.choose", "choose", this, null);
+         "button.choose", "choose", this, null);
       commentSelectButton.setActionCommand("commentselect");
       commentColorLabel.setLabelFor(commentSelectButton);
 
@@ -2626,7 +2626,7 @@ class TeXEditorUIPanel extends JPanel
       panel.add(Box.createHorizontalStrut(10));
 
       csSelectButton = resources.createDialogButton(
-         "label.choose", "choose", this, null);
+         "button.choose", "choose", this, null);
       csSelectButton.setActionCommand("csselect");
       csColorLabel.setLabelFor(csSelectButton);
 
@@ -3001,7 +3001,7 @@ class LookAndFeelPanel extends JPanel
          gbc.gridx++;
 
          button = getResources().createDialogButton(i,
-           "label.close", "close", null, null, null);
+           "button.close", "close", null, null, null);
          button.setMnemonic('\0');
 
          dialogButtonPanel.add(button, gbc);
@@ -3096,7 +3096,7 @@ class LookAndFeelPanel extends JPanel
          gbc.gridx++;
 
          button = style.createButton(getResources(),
-             getResources().getMessage("label.okay"), "okay", null, null);
+             getResources().getMessage("button.okay"), "okay", null, null);
          button.setMnemonic('\0');
 
          stylesPanel.add(button, gbc);
@@ -3104,7 +3104,7 @@ class LookAndFeelPanel extends JPanel
          gbc.gridx++;
 
          button = style.createToggle(getResources(),
-             getResources().getMessage("label.edit_path"), "editPath", null, null);
+             getResources().getMessage("button.edit_path"), "editPath", null, null);
          button.setMnemonic('\0');
 
          stylesPanel.add(button, gbc);
@@ -3284,7 +3284,7 @@ class VectorizeBitmapUIPanel extends JPanel
       notRegionColorPanel = createSwatch();
       comp.add(notRegionColorPanel);
 
-      selectNotRegionButton = resources.createDialogButton("label.choose",
+      selectNotRegionButton = resources.createDialogButton("button.choose",
         "choose", this, null);
       selectNotRegionButton.setActionCommand("notregion");
       notRegionLabel.setLabelFor(selectNotRegionButton);
@@ -3312,7 +3312,7 @@ class VectorizeBitmapUIPanel extends JPanel
       pathColorPanel = createSwatch();
       comp.add(pathColorPanel);
 
-      selectPathButton = resources.createDialogButton("label.choose",
+      selectPathButton = resources.createDialogButton("button.choose",
         "choose", this, null);
       selectPathButton.setActionCommand("path");
       pathLabel.setLabelFor(selectPathButton);
@@ -3340,7 +3340,7 @@ class VectorizeBitmapUIPanel extends JPanel
       connectorColorPanel = createSwatch();
       comp.add(connectorColorPanel);
 
-      selectConnectorButton = resources.createDialogButton("label.choose",
+      selectConnectorButton = resources.createDialogButton("button.choose",
         "choose", this, null);
       selectConnectorButton.setActionCommand("connector");
       connectorLabel.setLabelFor(selectConnectorButton);
@@ -3368,7 +3368,7 @@ class VectorizeBitmapUIPanel extends JPanel
       dragColorPanel = createSwatch();
       comp.add(dragColorPanel);
 
-      selectDragButton = resources.createDialogButton("label.choose",
+      selectDragButton = resources.createDialogButton("button.choose",
         "choose", this, null);
       selectDragButton.setActionCommand("drag");
       dragLabel.setLabelFor(selectDragButton);
@@ -3419,7 +3419,7 @@ class VectorizeBitmapUIPanel extends JPanel
 
       comp.add(controlPointPanel);
 
-      controlButton = resources.createDialogButton("label.choose",
+      controlButton = resources.createDialogButton("button.choose",
         "choose", this, null);
       controlButton.setActionCommand("control");
       controlLabel.setLabelFor(controlButton);

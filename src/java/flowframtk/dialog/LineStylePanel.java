@@ -127,7 +127,7 @@ public class LineStylePanel extends JScrollPane
       startArrowDialog = new ArrowStyleDialog(selector_,
          ArrowStylePanel.START);
 
-      startArrowButton = getResources().createDialogButton("label.choose",
+      startArrowButton = getResources().createDialogButton("button.choose",
          "choose", this, null);
       startArrowLabel.setLabelFor(startArrowButton);
 
@@ -155,7 +155,7 @@ public class LineStylePanel extends JScrollPane
       midArrowDialog = new ArrowStyleDialog(selector_,
          ArrowStylePanel.MID);
 
-      midArrowButton = getResources().createDialogButton("label.choose",
+      midArrowButton = getResources().createDialogButton("button.choose",
         "choose", this, null);
       midArrowLabel.setLabelFor(midArrowButton);
 
@@ -186,7 +186,7 @@ public class LineStylePanel extends JScrollPane
       endArrowDialog = new ArrowStyleDialog(selector_,
          ArrowStylePanel.END);
 
-      endArrowButton = getResources().createDialogButton("label.choose",
+      endArrowButton = getResources().createDialogButton("button.choose",
          "choose", this, null);
       endArrowLabel.setLabelFor(endArrowButton);
 

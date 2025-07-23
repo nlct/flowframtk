@@ -87,8 +87,14 @@ public class JDRToggleButtonItem extends JCheckBoxMenuItem
       addActionListener(this);
       setActionCommand(name);
 
-      button = resources.createToggleButton(
-         resources.getMessage("label."+name, getText()),
+      String buttonText = resources.getMessageIfExists("button."+name);
+
+      if (buttonText == null)
+      {
+         buttonText = getText();
+      }
+
+      button = resources.createToggleButton(buttonText,
          name, this, keyStroke, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);

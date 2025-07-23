@@ -57,7 +57,7 @@ public class StyleSelector extends JDRSelector
       linePanel = new PaintPanel(this);
 
       tabbedPane.addTab(
-         getResources().getMessage("linecolour.label"), null, linePanel,
+         getResources().getMessage("linecolour.title"), null, linePanel,
          getResources().getMessage("tooltip.line_colour"));
 
       linePanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -68,7 +68,7 @@ public class StyleSelector extends JDRSelector
 
       fillPanel = new PaintPanel(this);
 
-      tabbedPane.addTab(getResources().getMessage("fillcolour.label"),
+      tabbedPane.addTab(getResources().getMessage("fillcolour.title"),
          null, fillPanel,
          getResources().getMessage("tooltip.fill_colour"));
 
@@ -79,7 +79,7 @@ public class StyleSelector extends JDRSelector
       // line style panel
       linestylePanel = new LineStylePanel(this);
 
-      tabbedPane.addTab(getResources().getMessage("linestyle.label"),
+      tabbedPane.addTab(getResources().getMessage("linestyle.title"),
          null, linestylePanel,
          getResources().getMessage("tooltip.line_style"));
 
@@ -91,9 +91,9 @@ public class StyleSelector extends JDRSelector
       // JDRText colour selection panel
       textPanel = new PaintPanel(this);
 
-      tabbedPane.addTab(getResources().getMessage("textcolour.label"),
+      tabbedPane.addTab(getResources().getMessage("textcolour.title"),
          null, textPanel,
-         getResources().getMessage("tooltip.text.colour"));
+         getResources().getMessage("tooltip.textarea.colour"));
 
       textPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(3,
@@ -103,7 +103,7 @@ public class StyleSelector extends JDRSelector
 
       JDRFrame mainPanel = application_.getCurrentFrame();
       fontPanel = new FontPanel(this, application_.getFontFamilies());
-      tabbedPane.addTab(getResources().getMessage("font.label"), null,
+      tabbedPane.addTab(getResources().getMessage("font.title"), null,
          fontPanel, getResources().getMessage("tooltip.font"));
 
       fontPanel.setBorder(BorderFactory.createLoweredBevelBorder());

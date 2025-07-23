@@ -163,7 +163,7 @@ public class JDRResources
          return new ImageIcon(imgURL);
       }
 
-      warning(getString("error.file_not_found")+": "+filename);
+      warning(getMessage("error.file_not_found_with_name", filename));
       return null;
    }
 
@@ -178,7 +178,7 @@ public class JDRResources
          return new ImageIcon(imgURL);
       }
 
-      warning(getString("error.file_not_found")+": "+filename);
+      warning(getMessage("error.file_not_found_with_name", filename));
       return null;
    }
 
@@ -254,7 +254,7 @@ public class JDRResources
          return new ImageIcon(imgURL);
       }
 
-      warning(getString("error.file_not_found")+": "+filename);
+      warning(getMessage("error.file_not_found_with_name", filename));
       return null;
    } 
 
@@ -390,7 +390,7 @@ public class JDRResources
 
          if (msg == null || msg.isEmpty())
          {
-            msg = getString("process.aborted", "Process Aborted");
+            msg = getMessageWithFallback("process.aborted", "Process Aborted");
          }
 
          error(parent, msg, null);
@@ -402,7 +402,7 @@ public class JDRResources
 
          if (msg2 == null || msg2.isEmpty())
          {
-            msg2 = getString("process.aborted", "Process Aborted");
+            msg2 = getMessageWithFallback("process.aborted", "Process Aborted");
          }
 
          if (msg == null || msg.isEmpty())
@@ -445,7 +445,7 @@ public class JDRResources
 
    public int confirm(Component parent, String message)
    {
-      return confirm(parent, message, getString("process.confirm"), JOptionPane.YES_NO_OPTION);
+      return confirm(parent, message, getMessage("process.confirm"), JOptionPane.YES_NO_OPTION);
    }
 
    public int confirm(Component parent, String message, String title)
@@ -455,12 +455,12 @@ public class JDRResources
 
    public int confirm(Component parent, String message, int options)
    {
-      return confirm(parent, message, getString("process.confirm"), options);
+      return confirm(parent, message, getMessage("process.confirm"), options);
    }
 
    public int confirm(Component parent, String message, int options, int type)
    {
-      return confirm(parent, message, getString("process.confirm"), options);
+      return confirm(parent, message, getMessage("process.confirm"), options);
    }
 
    public int confirm(Component parent, String message, String title, int options)
@@ -680,7 +680,14 @@ public class JDRResources
 
    public String getToolTipText(String id)
    {
-      return getMessageWithFallback(id+".tooltip", getString("tooltip."+id, null));
+      String tooltip = getMessageIfExists(id+".tooltip");
+
+      if (tooltip == null)
+      {
+         tooltip = getMessageIfExists("tooltip."+id);
+      }
+
+      return tooltip;
    }
 
    public String getDefaultDescription(JDRCompleteObject object)
@@ -702,13 +709,13 @@ public class JDRResources
          switch (flowframe.getType())
          {
             case FlowFrame.STATIC:
-               description = getString("flowframe.static");
+               description = getMessage("flowframe.static");
             break;
             case FlowFrame.FLOW:
-               description = getString("flowframe.flow");
+               description = getMessage("flowframe.flow");
             break;
             case FlowFrame.DYNAMIC:
-               description = getString("flowframe.dynamic");
+               description = getMessage("flowframe.dynamic");
             break;
          }
 
@@ -1495,83 +1502,13 @@ public class JDRResources
     */
    public String getAppInfo(boolean html)
    {
-      String par = html ? "<p>" : String.format("%n%n");
-      String nl = html ? "<br>" : String.format("%n");
-
-      StringBuilder builder = new StringBuilder();
-
-      builder.append(
-        helpLib.getMessage("about.version", getApplicationName(), 
-         APP_VERSION, APP_DATE)
-      );
-
-      builder.append(nl);
-
-      builder.append(String.format(
+      return helpLib.getAboutInfo(html, APP_VERSION, APP_DATE,
+       String.format(
         "Copyright (C) %s Nicola L. C. Talbot (%s)",
-        COPYRIGHT_YEAR, getInfoUrl(html, "www.dickimaw-books.com")));
-
-      builder.append(nl);
-
-      String legalText = getMessageIfExists("about.legal");
-
-      if (legalText != null)
-      {
-         if (html)
-         {
-            legalText = TeXJavaHelpLib.encodeHTML(legalText, false).replaceAll("\n", nl);
-         }
-
-         builder.append(legalText);
-      }
-
-      String translator = helpLib.getMessageIfExists("about.translator_info");
-
-      if (translator != null && !translator.isEmpty())
-      {
-         builder.append(par);
-
-         if (html)
-         {
-            translator = TeXJavaHelpLib.encodeHTML(translator, false);
-         }
-
-         builder.append(translator);
-      }
-
-      String ack = helpLib.getMessageIfExists("about.acknowledgements");
-
-
-      if (ack != null && !ack.isEmpty())
-      {
-         builder.append(par);
-
-         if (html)
-         {
-            ack = TeXJavaHelpLib.encodeHTML(ack, false);
-         }
-
-         builder.append(ack);
-      }
-
-      builder.append(par);
-      builder.append(getMessageWithFallback("about.library.version",
-        "Bundled with {0} version {1} ({2})",
-        "texjavahelplib.jar", TeXJavaHelpLib.VERSION, TeXJavaHelpLib.VERSION_DATE));
-      builder.append(nl);
-
-      builder.append(getInfoUrl(html, "https://github.com/nlct/texjavahelp"));
-
-/*
-      builder.append(par);
-      builder.append(getMessageWithFallback("about.library.version",
-        "Bundled with {0} version {1} ({2})",
-        "texparserlib.jar", TeXParser.VERSION, TeXParser.VERSION_DATE));
-      builder.append(nl);
-      builder.append(getInfoUrl(html, "https://github.com/nlct/texparser"));
-*/
-
-      return builder.toString();
+        COPYRIGHT_YEAR, helpLib.getInfoUrl(html, "www.dickimaw-books.com")),
+        TeXJavaHelpLib.LICENSE_GPL3,
+        true, null
+      );
    }
 
    /**
@@ -1582,23 +1519,7 @@ public class JDRResources
     */
    public String getInfoUrl(boolean html, String url)
    {
-      if (html)
-      {
-         String href = url;
-
-         if (!url.startsWith("http"))
-         {
-            href = "https://"+url;
-         }
-
-         return String.format("<a href=\"%s\">%s</a>",
-           TeXJavaHelpLib.encodeAttributeValue(href, true),
-           TeXJavaHelpLib.encodeHTML(url, false));
-      }
-      else
-      {
-         return url;
-      }
+      return helpLib.getInfoUrl(html, url);
    }
 
 
@@ -1642,7 +1563,7 @@ public class JDRResources
    @Deprecated
    public JDRButton createHelpButton(String id, String tooltipText)
    {
-      JDRButton helpButton = createDialogButton("label.help",
+      JDRButton helpButton = createDialogButton("button.help",
       "help", null, null, tooltipText);
 
       enableHelpOnButton(helpButton, id);
@@ -1677,7 +1598,7 @@ public class JDRResources
      ActionListener listener, KeyStroke keyStroke)
    {
       return createDialogButton(tag, tag, listener,
-       keyStroke, getString(tag+".tooltip", null));
+       keyStroke, getToolTipText(tag));
    }
 
    public JDRButton createDialogButton(String tag,
@@ -1715,13 +1636,18 @@ public class JDRResources
      String tag, String actionName, ActionListener listener,
      KeyStroke keyStroke, String tooltipText)
    {
-      String buttonText = getString("label."+actionName, null);
+      String buttonText = getMessageIfExists("label."+actionName);
+
+      if (buttonText == null)
+      {
+         buttonText = getMessageIfExists("button."+actionName);
+      }
 
       if (buttonText == null)
       {
          if (buttonText == null)
          {
-            buttonText = getString(tag+"."+actionName, null);
+            buttonText = getMessageIfExists(tag+"."+actionName);
 
             if (buttonText != null)
             {
@@ -1770,7 +1696,7 @@ public class JDRResources
    {
       return createDialogToggle(getDialogButtonStyle(), 
        tag, actionName, listener,
-       null, getString(tag+".tooltip", null));
+       null, getToolTipText(tag));
    }
 
    public JDRToggleButton createDialogToggle(String tag,
@@ -1778,7 +1704,7 @@ public class JDRResources
    {
       return createDialogToggle(getDialogButtonStyle(), 
        tag, actionName, listener,
-       null, getString(tag+".tooltip", null), selected);
+       null, getToolTipText(tag), selected);
    }
 
    public JDRToggleButton createDialogToggle(String tag,
@@ -1787,7 +1713,7 @@ public class JDRResources
    {
       return createDialogToggle(getDialogButtonStyle(), 
        tag, actionName, listener,
-       keyStroke, getString(tag+".tooltip", null));
+       keyStroke, getToolTipText(tag));
    }
 
    public JDRToggleButton createDialogToggle(int style,
@@ -1802,11 +1728,16 @@ public class JDRResources
      String tag, String actionName, ActionListener listener,
      KeyStroke keyStroke, String tooltipText, boolean selected)
    {
-      String buttonText = getString("label."+actionName, null);
+      String buttonText = getMessageIfExists("label."+actionName);
 
       if (buttonText == null)
       {
-         buttonText = getString(tag, null);
+         buttonText = getMessageIfExists("button."+actionName);
+      }
+
+      if (buttonText == null)
+      {
+         buttonText = getMessageIfExists(tag);
       }
 
       int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
@@ -1850,7 +1781,7 @@ public class JDRResources
    {
       return createDialogRadio(getDialogButtonStyle(), 
        tag, actionName, listener, bg, selected,
-       null, getString(tag+".tooltip", null));
+       null, getToolTipText(tag));
    }
 
    public JDRToolButton createDialogRadio(String tag,
@@ -1859,7 +1790,7 @@ public class JDRResources
    {
       return createDialogRadio(getDialogButtonStyle(), 
        tag, actionName, listener, bg, selected,
-       keyStroke, getString(tag+".tooltip", null));
+       keyStroke, getToolTipText(tag));
    }
 
    public JDRToolButton createDialogRadio(int style,
@@ -1867,11 +1798,16 @@ public class JDRResources
      ActionListener listener, ButtonGroup bg, boolean selected,
      KeyStroke keyStroke, String tooltipText)
    {
-      String buttonText = getString("label."+actionName, null);
+      String buttonText = getMessageIfExists("label."+actionName);
 
       if (buttonText == null)
       {
-         buttonText = getString(tag, null);
+         buttonText = getMessageIfExists("button."+actionName);
+      }
+
+      if (buttonText == null)
+      {
+         buttonText = getMessageIfExists(tag);
       }
 
       int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
@@ -1938,16 +1874,23 @@ public class JDRResources
       String name, ActionListener listener)
    {
       String id = parentId+"."+name;
-      String text = getString(id);
+      String text = getMessage(id);
 
       return createAppButton(text, name, listener,
-         getAccelerator(id), getString(id+".tooltip", text));
+         getAccelerator(id), getMessageWithFallback(id+".tooltip", text));
    }
 
    public JDRButton createAppButton(String name, 
       ActionListener listener, KeyStroke keyStroke, String tooltipText)
    {
-      return createAppButton(getString("label."+name), name, listener,
+      String text = getMessageIfExists("label."+name);
+
+      if (text == null)
+      {
+         text = getMessage("button."+name);
+      }
+
+      return createAppButton(text, name, listener,
          keyStroke, tooltipText);
    }
 
@@ -1955,10 +1898,10 @@ public class JDRResources
       String name, ActionListener listener)
    {
       String id = parentId+"."+name;
-      String text = getString(id);
+      String text = getMessage(id);
 
       return createToggleButton(text, name, listener,
-         getAccelerator(id), getString(id+".tooltip", text));
+         getAccelerator(id), getMessageWithFallback(id+".tooltip", text));
    }
 
    public JDRToggleButton createToggleButton(String buttonText, String name, 
@@ -2012,13 +1955,13 @@ public class JDRResources
 
    public JDRButton createOkayButton(ActionListener listener)
    {
-      return createOkayButton(listener, getString("label.okay"));
+      return createOkayButton(listener, getMessage("button.okay"));
    }
 
    public JDRButton createOkayButton(ActionListener listener, 
      String tooltipText)
    {
-      JDRButton button = createDialogButton("label.okay", "okay", 
+      JDRButton button = createDialogButton("button.okay", "okay", 
        listener, getAccelerator("label.okay"), tooltipText);
 
       button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
@@ -2029,38 +1972,38 @@ public class JDRResources
 
    public JDRButton createCancelButton(ActionListener listener)
    {
-      return createCancelButton(listener, getString("label.cancel"));
+      return createCancelButton(listener, getMessage("button.cancel"));
    }
 
    public JDRButton createCancelButton(ActionListener listener,
       String tooltipText)
    {
-      return createDialogButton("label.cancel", "cancel", 
-       listener, getAccelerator("label.cancel"), tooltipText);
+      return createDialogButton("button.cancel", "cancel", 
+       listener, getAccelerator("button.cancel"), tooltipText);
    }
 
    public JDRButton createCloseButton(ActionListener listener)
    {
-      return createCloseButton(listener, getMessage("label.close"));
+      return createCloseButton(listener, getMessage("button.close"));
    }
 
    public JDRButton createCloseButton(ActionListener listener, 
       String tooltipText)
    {
-      return createDialogButton("label.close", "close", 
-       listener, getAccelerator("label.close"), tooltipText);
+      return createDialogButton("button.close", "close", 
+       listener, getAccelerator("button.close"), tooltipText);
    }
 
    public JDRButton createDefaultButton(ActionListener listener)
    {
-      return createDefaultButton(listener, getString("label.default.tooltip"));
+      return createDefaultButton(listener, getToolTipText("button.default"));
    }
 
    public JDRButton createDefaultButton(ActionListener listener,
       String tooltipText)
    {
-      return createDialogButton("label.default", "default", 
-       listener, getAccelerator("label.default"), tooltipText);
+      return createDialogButton("button.default", "default", 
+       listener, getAccelerator("button.default"), tooltipText);
    }
 
    public JDRButtonItem createButtonItem(String parentId, String action,
@@ -2070,10 +2013,15 @@ public class JDRResources
 
       KeyStroke keyStroke = getAccelerator(menuId);
 
+      String tooltip = getMessageIfExists(menuId+".tooltip");
+
+      if (tooltip == null)
+      {
+         tooltip = getMessageIfExists(parentId+".tooltip");
+      }
+
       JDRButtonItem button = new JDRButtonItem(this, menuId, action,
-        keyStroke, listener, 
-        getString(menuId+".tooltip", getString(parentId+".tooltip", null)),
-        comp, menu);
+        keyStroke, listener, tooltip, comp, menu);
 
       return button;
    }
@@ -2085,7 +2033,7 @@ public class JDRResources
    {
       String label = (parentId == null ? action : parentId+"."+action);
 
-      JRadioButton button = new JRadioButton(getString(label), selected);
+      JRadioButton button = new JRadioButton(getMessage(label), selected);
 
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
@@ -2109,7 +2057,7 @@ public class JDRResources
    public JRadioButton createAppRadioButton(
       String label, ButtonGroup bg, boolean selected, ChangeListener listener)
    {
-      JRadioButton button = new JRadioButton(getString(label), selected);
+      JRadioButton button = new JRadioButton(getMessage(label), selected);
 
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
@@ -2134,7 +2082,7 @@ public class JDRResources
    {
       String label = (parentId == null ? action : parentId+"."+action);
 
-      JCheckBox button = new JCheckBox(getString(label), selected);
+      JCheckBox button = new JCheckBox(getMessage(label), selected);
 
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
@@ -2158,7 +2106,7 @@ public class JDRResources
    public JCheckBox createAppCheckBox(String label,
       boolean selected, ChangeListener listener)
    {
-      JCheckBox button = new JCheckBox(getString(label), selected);
+      JCheckBox button = new JCheckBox(getMessage(label), selected);
 
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
@@ -2182,7 +2130,7 @@ public class JDRResources
    {
       String label = (parentId == null ? action : parentId+"."+action);
 
-      JButton button = new JButton(getString(label));
+      JButton button = new JButton(getMessage(label));
 
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
@@ -2203,7 +2151,7 @@ public class JDRResources
 
    public JLabel createAppLabel(String id)
    {
-      JLabel label = new JLabel(getString(id));
+      JLabel label = new JLabel(getMessage(id));
 
       int c = getCodePoint(id+".mnemonic", 0);
 
@@ -2212,7 +2160,7 @@ public class JDRResources
          label.setDisplayedMnemonic(c);
       }
 
-      String tooltip = getString(id+".tooltip", null);
+      String tooltip = getMessageIfExists(id+".tooltip");
 
       if (tooltip != null)
       {
@@ -2235,7 +2183,7 @@ public class JDRResources
 
    public JTextField createAppInfoField(String id)
    {
-      JTextField field = new JTextField(getString(id));
+      JTextField field = new JTextField(getMessage(id));
 
       field.setEditable(false);
       field.setBorder(null);
@@ -2278,7 +2226,7 @@ public class JDRResources
 
    public JTextArea createAppInfoArea(int cols, String id)
    {
-      JTextArea textArea = new JTextArea(getString(id));
+      JTextArea textArea = new JTextArea(getMessage(id));
 
       textArea.setColumns(cols);
       textArea.setEditable(false);
@@ -2291,7 +2239,7 @@ public class JDRResources
 
    public JTextArea createAppInfoArea(String id)
    {
-      JTextArea textArea = new JTextArea(getString(id));
+      JTextArea textArea = new JTextArea(getMessage(id));
 
       textArea.setEditable(false);
       textArea.setOpaque(false);
@@ -2315,7 +2263,7 @@ public class JDRResources
 
    public void addTab(JTabbedPane tabbedPane, String id, Component comp)
    {
-      tabbedPane.addTab(getString(id), comp);
+      tabbedPane.addTab(getMessage(id), comp);
 
       int index = tabbedPane.getTabCount()-1;
 
@@ -2326,7 +2274,7 @@ public class JDRResources
          tabbedPane.setMnemonicAt(index, mnemonic);
       }
 
-      String tooltipText = getString(id+".tooltip", null);
+      String tooltipText = getToolTipText(id);
 
       if (tooltipText != null)
       {
@@ -2336,14 +2284,7 @@ public class JDRResources
 
    public JMenu createAppMenu(String menuId)
    {
-      String text = getString(menuId, null);
-
-      if (text == null)
-      {
-         text = getString(menuId+".label");
-      }
-
-      JMenu menu = new JMenu(text);
+      JMenu menu = new JMenu(getMessage(menuId));
 
       menu.setMnemonic(getCodePoint(menuId+".mnemonic"));
 
@@ -2358,14 +2299,14 @@ public class JDRResources
 
       return createAppMenuItem(id, actionName,
          getAccelerator(id), listener, 
-         getString("tooltip."+actionName, null));
+         getToolTipText(actionName));
    }
 
    public JMenuItem createAppMenuItem(String id, 
       String actionName, KeyStroke keyStroke, ActionListener listener,
       String tooltipText)
    {
-      JMenuItem item = new JMenuItem(getString(id),
+      JMenuItem item = new JMenuItem(getMessage(id),
          getCodePoint(id+".mnemonic"));
 
       if (keyStroke != null)
@@ -2403,7 +2344,7 @@ public class JDRResources
       String actionName, boolean selected, KeyStroke keyStroke, 
       ActionListener listener, String tooltipText)
    {
-      JCheckBoxMenuItem item = new JCheckBoxMenuItem(getString(id), selected);
+      JCheckBoxMenuItem item = new JCheckBoxMenuItem(getMessage(id), selected);
 
       item.setMnemonic(getCodePoint(id+".mnemonic"));
 
@@ -2434,7 +2375,7 @@ public class JDRResources
       String actionName, KeyStroke keyStroke, ButtonGroup group,
       boolean selected, ActionListener listener, String tooltipText)
    {
-      JRadioButtonMenuItem item = new JRadioButtonMenuItem(getString(id),
+      JRadioButtonMenuItem item = new JRadioButtonMenuItem(getMessage(id),
          selected);
 
       group.add(item);
@@ -2472,11 +2413,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         panel = new LengthPanel(getMessageSystem(), getString(tag));
+         panel = new LengthPanel(getMessageSystem(), getMessage(tag));
       }
       else
       {
-         panel = new LengthPanel(getMessageSystem(), getString(tag), mnemonic);
+         panel = new LengthPanel(getMessageSystem(), getMessage(tag), mnemonic);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2497,11 +2438,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         panel = new LengthPanel(getMessageSystem(), getString(tag), numField);
+         panel = new LengthPanel(getMessageSystem(), getMessage(tag), numField);
       }
       else
       {
-         panel = new LengthPanel(getMessageSystem(), getString(tag), mnemonic, numField);
+         panel = new LengthPanel(getMessageSystem(), getMessage(tag), mnemonic, numField);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2523,11 +2464,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         lengthPanel = new LengthPanel(getMessageSystem(), getString(tag), samplePanel, numField);
+         lengthPanel = new LengthPanel(getMessageSystem(), getMessage(tag), samplePanel, numField);
       }
       else
       {
-         lengthPanel = new LengthPanel(getMessageSystem(), getString(tag), mnemonic, samplePanel, numField);
+         lengthPanel = new LengthPanel(getMessageSystem(), getMessage(tag), mnemonic, samplePanel, numField);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2549,11 +2490,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         lengthPanel = new LengthPanel(getMessageSystem(), getString(tag), samplePanel);
+         lengthPanel = new LengthPanel(getMessageSystem(), getMessage(tag), samplePanel);
       }
       else
       {
-         lengthPanel = new LengthPanel(getMessageSystem(), getString(tag), mnemonic, samplePanel);
+         lengthPanel = new LengthPanel(getMessageSystem(), getMessage(tag), mnemonic, samplePanel);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2594,11 +2535,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         panel = new NonNegativeLengthPanel(getMessageSystem(), getString(tag));
+         panel = new NonNegativeLengthPanel(getMessageSystem(), getMessage(tag));
       }
       else
       {
-         panel = new NonNegativeLengthPanel(getMessageSystem(), getString(tag), mnemonic);
+         panel = new NonNegativeLengthPanel(getMessageSystem(), getMessage(tag), mnemonic);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2619,11 +2560,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         lengthPanel = new NonNegativeLengthPanel(getMessageSystem(), getString(tag), samplePanel);
+         lengthPanel = new NonNegativeLengthPanel(getMessageSystem(), getMessage(tag), samplePanel);
       }
       else
       {
-         lengthPanel = new NonNegativeLengthPanel(getMessageSystem(), getString(tag), mnemonic, samplePanel);
+         lengthPanel = new NonNegativeLengthPanel(getMessageSystem(), getMessage(tag), mnemonic, samplePanel);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2664,11 +2605,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         anglePanel = new AnglePanel(getMessageSystem(), getString(tag), numField);
+         anglePanel = new AnglePanel(getMessageSystem(), getMessage(tag), numField);
       }
       else
       {
-         anglePanel = new AnglePanel(getMessageSystem(), getString(tag), mnemonic, numField);
+         anglePanel = new AnglePanel(getMessageSystem(), getMessage(tag), mnemonic, numField);
       }
 
       String tooltip = getToolTipText(tag);
@@ -2689,11 +2630,11 @@ public class JDRResources
 
       if (mnemonic == 0)
       {
-         anglePanel = new AnglePanel(getMessageSystem(), getString(tag));
+         anglePanel = new AnglePanel(getMessageSystem(), getMessage(tag));
       }
       else
       {
-         anglePanel = new AnglePanel(getMessageSystem(), getString(tag), mnemonic);
+         anglePanel = new AnglePanel(getMessageSystem(), getMessage(tag), mnemonic);
       }
 
       String tooltip = getToolTipText(tag);

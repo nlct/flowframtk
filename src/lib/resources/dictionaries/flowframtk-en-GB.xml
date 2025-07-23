@@ -18,7 +18,7 @@
 <!--  Menus -->
 
 <entry key="menu.edit.path.line_colour">Line Colour...</entry>
-<entry key="menu.edit.text.colour">Text Colour...</entry>
+<entry key="menu.edit.textarea.colour">Text Colour...</entry>
 <entry key="menu.edit.fill_colour">Fill Colour...</entry>
 <entry key="menu.edit.adjustcol">Adjust Colour</entry>
 <entry key="menu.edit.adjustcol.togrey">Reduce to Grey Scale</entry>
@@ -41,7 +41,7 @@
 <entry key="tooltip.swatch.darkgrey">Dark Grey</entry>
 <entry key="tooltip.swatch.grey">Grey</entry>
 <entry key="tooltip.swatch.lightgrey">Light Grey</entry>
-<entry key="tooltip.text.colour">Set text colour</entry>
+<entry key="tooltip.textarea.colour">Set text colour</entry>
 
 <entry key="undo.colour">Change colour</entry>
 <entry key="undo.fill_colour">Change fill colour</entry>
@@ -57,6 +57,8 @@
 <entry key="error.invalid_mitre-limit">Invalid mitre limit (mitre limit can't be less than 1)</entry>
 <entry key="error.invalid_gradient-start">Invalid gradient start colour type</entry>
 <entry key="error.invalid_radial-gradient-start">Invalid radial start colour type</entry>
+
+<entry key="symbol.mode_maths">Maths</entry>
 
 <entry key="fade.title">Fade Colours</entry>
 

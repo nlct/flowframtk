@@ -86,8 +86,8 @@ public class TextSelector extends JDialog
       textpopupMenu = new JPopupMenu();
 
       copyText = new JMenuItem(
-          getResources().getMessage("edit.copy"),
-          getResources().getCodePoint("edit.copy.mnemonic"));
+          getResources().getMessage("menu.edit.copy"),
+          getResources().getCodePoint("menu.edit.copy.mnemonic"));
       textpopupMenu.add(copyText);
       copyText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
          InputEvent.CTRL_MASK));
@@ -100,8 +100,8 @@ public class TextSelector extends JDialog
          });
 
       cutText = new JMenuItem(
-          getResources().getMessage("edit.cut"),
-          getResources().getCodePoint("edit.cut.mnemonic"));
+          getResources().getMessage("menu.edit.cut"),
+          getResources().getCodePoint("menu.edit.cut.mnemonic"));
       textpopupMenu.add(cutText);
       cutText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
          InputEvent.CTRL_MASK));
@@ -114,8 +114,8 @@ public class TextSelector extends JDialog
          });
 
       JMenuItem pasteText = new JMenuItem(
-          getResources().getMessage("edit.paste"),
-          getResources().getCodePoint("edit.paste.mnemonic"));
+          getResources().getMessage("menu.edit.paste"),
+          getResources().getCodePoint("menu.edit.paste.mnemonic"));
       textpopupMenu.add(pasteText);
       pasteText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
          InputEvent.CTRL_MASK));
@@ -128,8 +128,8 @@ public class TextSelector extends JDialog
          });
 
       JMenuItem select_allText = new JMenuItem(
-          getResources().getMessage("edit.select_all"),
-          getResources().getCodePoint("edit.select_all.mnemonic"));
+          getResources().getMessage("menu.edit.select_all"),
+          getResources().getCodePoint("menu.edit.select_all.mnemonic"));
       textpopupMenu.add(select_allText);
       select_allText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
          InputEvent.CTRL_MASK));
@@ -145,8 +145,8 @@ public class TextSelector extends JDialog
          "text.insert_symbol");
 
       JMenuItem insertSymbol = new JMenuItem(
-         getResources().getMessage("text.insert_symbol"),
-         getResources().getCodePoint("text.insert_symbol.mnemonic"));
+         getResources().getMessage("menu.textarea.insert_symbol"),
+         getResources().getCodePoint("menu.textarea.insert_symbol.mnemonic"));
       textpopupMenu.add(insertSymbol);
       insertSymbol.setAccelerator(insertKeyStroke);
 

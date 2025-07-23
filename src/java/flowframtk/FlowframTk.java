@@ -250,7 +250,7 @@ public class FlowframTk extends JFrame
 
       // File Menu
 
-      fileM = resources.createAppMenu("file");
+      fileM = resources.createAppMenu("menu.file");
       mbar.add(fileM);
 
       incStartupProgress(fileM);
@@ -258,7 +258,7 @@ public class FlowframTk extends JFrame
       // New
 
       newButtonItem = FlowframTkAction.createButtonItem(this,
-         "file", "new", toolBar, fileM,
+         "menu.file", "new", toolBar, fileM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -275,7 +275,7 @@ public class FlowframTk extends JFrame
       // Open
 
       openButtonItem = FlowframTkAction.createButtonItem(this,
-         "file", "open", toolBar, fileM,
+         "menu.file", "open", toolBar, fileM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -340,7 +340,7 @@ public class FlowframTk extends JFrame
 
       // Recent Files
 
-      recentM = resources.createAppMenu("file.recent");
+      recentM = resources.createAppMenu("menu.file.recent");
       fileM.add(recentM);
 
       recentM.addMenuListener(new MenuListener()
@@ -362,7 +362,7 @@ public class FlowframTk extends JFrame
       // Image Description
 
       imageDescriptionItem = FlowframTkAction.createMenuItem(this,
-         "file", "image_description", fileM, true, false,
+         "menu.file", "image_description", fileM, true, false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -374,7 +374,7 @@ public class FlowframTk extends JFrame
       );
 
       imageDescriptionDialog
-         = new DescriptionDialogBox(this, "imagedescription");
+         = new DescriptionDialogBox(this, "sec:imagedescription");
 
 
       incStartupProgress(fileM, imageDescriptionItem);
@@ -382,7 +382,7 @@ public class FlowframTk extends JFrame
       // Save
 
       saveButtonItem = FlowframTkAction.createButtonItem(this,
-         "file", "save", toolBar, fileM,
+         "menu.file", "save", toolBar, fileM,
          TOOL_FLAG_ANY, EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_NONE_OR_TEXT,
          SELECT_FLAG_ANY,
@@ -401,7 +401,7 @@ public class FlowframTk extends JFrame
       // Save As
 
       saveAsItem = FlowframTkAction.createMenuItem(this,
-         "file", "save_as", fileM,
+         "menu.file", "save_as", fileM,
          TOOL_FLAG_ANY, EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_NONE_OR_TEXT,
          SELECT_FLAG_ANY,
@@ -420,7 +420,7 @@ public class FlowframTk extends JFrame
       // Export
 
       exportItem = FlowframTkAction.createMenuItem(this,
-         "file", "export", fileM, 
+         "menu.file", "export", fileM, 
          TOOL_FLAG_ANY, EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_NONE_OR_TEXT,
          SELECT_FLAG_ANY,
@@ -499,7 +499,7 @@ public class FlowframTk extends JFrame
       if (invoker.isExperimentalMode() || resources.debugMode)
       {
          importItem = FlowframTkAction.createMenuItem(this,
-           "file", "import", fileM,
+           "menu.file", "import", fileM,
             new FlowframTkActionListener()
             {
                public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -525,7 +525,7 @@ public class FlowframTk extends JFrame
       // Printer Page Setup dialog
 
       pageDialogItem = FlowframTkAction.createMenuItem(this,
-         "file", "page", fileM, true, true,
+         "menu.file", "page", fileM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -539,7 +539,7 @@ public class FlowframTk extends JFrame
       // Print
 
       printItem = FlowframTkAction.createMenuItem(this,
-        "file", "print", fileM, true, true,
+        "menu.file", "print", fileM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -559,7 +559,7 @@ public class FlowframTk extends JFrame
       fileM.addSeparator();
 
       JMenuItem showMessagesItem = FlowframTkAction.createMenuItem(this,
-         "file", "messages", fileM,
+         "menu.file", "messages", fileM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -575,7 +575,7 @@ public class FlowframTk extends JFrame
       // Close
 
       closeItem = FlowframTkAction.createMenuItem(this,
-        "file", "close", fileM, true, false,
+        "menu.file", "close", fileM, true, false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -592,7 +592,7 @@ public class FlowframTk extends JFrame
       // Quit ^Q
 
       quitItem = FlowframTkAction.createMenuItem(this,
-        "file", "quit", fileM, false, false,
+        "menu.file", "quit", fileM, false, false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -605,7 +605,7 @@ public class FlowframTk extends JFrame
 
       // Edit Menu
 
-      editM = FlowframTkAction.createMenu(this, "edit",
+      editM = FlowframTkAction.createMenu(this, "menu", "edit",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -622,7 +622,7 @@ public class FlowframTk extends JFrame
       // Undo
 
       undoItem = FlowframTkAction.createMenuItem(this,
-         "edit", "undo", editM,
+         "menu.edit", "undo", editM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -644,7 +644,7 @@ public class FlowframTk extends JFrame
       // Redo
 
       redoItem = FlowframTkAction.createMenuItem(this,
-        "edit", "redo", editM,
+        "menu.edit", "redo", editM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -670,7 +670,7 @@ public class FlowframTk extends JFrame
       // Select All
 
       selectAllButtonItem = FlowframTkAction.createButtonItem(this,
-        "edit", "select_all",
+        "menu.edit", "select_all",
         toolBar, editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, 
          FlowframTkAction.CONSTRUCTION_FLAG_NONE,
@@ -689,7 +689,7 @@ public class FlowframTk extends JFrame
       // Deselect All
 
       deselectAllItem = FlowframTkAction.createMenuItem(this,
-         "edit", "deselect_all", editM,
+         "menu.edit", "deselect_all", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT,
           true, true,
@@ -706,7 +706,7 @@ public class FlowframTk extends JFrame
       // Move By
 
       moveByItem = FlowframTkAction.createMenuItem(this,
-         "edit", "moveby", editM,
+         "menu.edit", "moveby", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT,
           true, false,
@@ -726,7 +726,7 @@ public class FlowframTk extends JFrame
       // Cut
 
       cutButtonItem = FlowframTkAction.createButtonItem(this,
-         "edit", "cut", toolBar, editM,
+         "menu.edit", "cut", toolBar, editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT,
          true, false,
@@ -744,7 +744,7 @@ public class FlowframTk extends JFrame
       // Copy
 
       copyButtonItem = FlowframTkAction.createButtonItem(this,
-         "edit", "copy", toolBar, editM,
+         "menu.edit", "copy", toolBar, editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT,
          true, false,
@@ -761,7 +761,7 @@ public class FlowframTk extends JFrame
       // Paste
 
       pasteButtonItem = FlowframTkAction.createButtonItem(this,
-         "edit", "paste", toolBar, editM,
+         "menu.edit", "paste", toolBar, editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT,
          true, false,
@@ -778,7 +778,7 @@ public class FlowframTk extends JFrame
       // Object Description
 
       objectDescriptionItem = FlowframTkAction.createMenuItem(this, 
-        "edit", "description", editM,
+        "menu.edit", "description", editM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, 
         SELECT_FLAG_OBJECT,
         FlowframTkAction.SELECTION_SINGLE_OBJECT,
@@ -794,7 +794,7 @@ public class FlowframTk extends JFrame
         );
 
       objectDescriptionDialog
-         = new DescriptionDialogBox(this, "objectdescription");
+         = new DescriptionDialogBox(this, "sec:objectdescription");
 
 
       editM.addSeparator();
@@ -804,7 +804,7 @@ public class FlowframTk extends JFrame
       // JDRPath submenu
 
       pathM = FlowframTkAction.createMenu(this, 
-         null, "edit.path", editM,
+         "menu", "edit.path", editM,
          TOOL_FLAG_SELECT, 
          EDIT_FLAG_NONE_OR_PATH,
          SELECT_FLAG_SHAPE | SELECT_FLAG_NON_TEXTUAL_SHAPE, 
@@ -815,7 +815,7 @@ public class FlowframTk extends JFrame
       // Edit JDRPath
 
       editPathButtonItem = FlowframTkAction.createToggleButtonItem(this,
-         "edit", "path.edit", false, "tooltip.edit_path", toolBar, pathM,
+         "menu.edit", "path.edit", false, "tooltip.edit_path", toolBar, pathM,
          "edit.path.edit",
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE_OR_PATH,
          SELECT_FLAG_SHAPE, 
@@ -843,7 +843,7 @@ public class FlowframTk extends JFrame
       // JDRLine colour
 
       linePaintItem = FlowframTkAction.createMenuItem(this,
-         "edit.path", "line_colour", pathM,
+         "menu.edit.path", "line_colour", pathM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -862,7 +862,7 @@ public class FlowframTk extends JFrame
       // Edit Line Style sub menu
 
       lineStyleM = FlowframTkAction.createMenu(this, 
-         "edit", "path.style", pathM,
+         "menu.edit", "path.style", pathM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -872,7 +872,7 @@ public class FlowframTk extends JFrame
       // all styles
 
       lineStyleItem = FlowframTkAction.createMenuItem(this,
-         "edit", "path.style.all", lineStyleM,
+         "menu.edit", "path.style.all", lineStyleM,
           TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
           SELECT_FLAG_NON_TEXTUAL_SHAPE,
           FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -891,7 +891,7 @@ public class FlowframTk extends JFrame
       // all markers
 
       allMarkersItem = FlowframTkAction.createMenuItem(this,
-         "edit.path.style", "all_markers", lineStyleM,
+         "menu.edit.path.style", "all_markers", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -913,7 +913,7 @@ public class FlowframTk extends JFrame
       // line width
 
       lineWidthItem = FlowframTkAction.createMenuItem(this,
-         "edit.path.style", "linewidth", lineStyleM,
+         "menu.edit.path.style", "linewidth", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -932,7 +932,7 @@ public class FlowframTk extends JFrame
       // dash pattern
 
       dashItem = FlowframTkAction.createMenuItem(this,
-         "edit.path.style", "dashpattern", lineStyleM,
+         "menu.edit.path.style", "dashpattern", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -951,7 +951,7 @@ public class FlowframTk extends JFrame
       // Cap style sub menu
 
       JMenu capM = FlowframTkAction.createMenu(this,
-         "edit.path.style", "capstyle", lineStyleM,
+         "menu.edit.path.style", "capstyle", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -996,7 +996,7 @@ public class FlowframTk extends JFrame
       // butt cap
 
       capButtItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "edit.path.style", "capstyle.butt", capM, capGroup,
+         "menu.edit.path.style", "capstyle.butt", capM, capGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1013,7 +1013,7 @@ public class FlowframTk extends JFrame
       // round cap
 
       capRoundItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "edit.path.style", "capstyle.round", capM, capGroup,
+         "menu.edit.path.style", "capstyle.round", capM, capGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1030,7 +1030,7 @@ public class FlowframTk extends JFrame
       // square cap
 
       capSquareItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "edit.path.style", "capstyle.square", capM, capGroup,
+         "menu.edit.path.style", "capstyle.square", capM, capGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1047,7 +1047,7 @@ public class FlowframTk extends JFrame
       // Join Style
 
       joinItem = FlowframTkAction.createMenuItem(this,
-         "edit.path.style", "joinstyle", lineStyleM,
+         "menu.edit.path.style", "joinstyle", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1067,7 +1067,7 @@ public class FlowframTk extends JFrame
       // start arrow style
 
       startArrowItem = FlowframTkAction.createMenuItem(this,
-        "edit", "path.style.startarrow", lineStyleM,
+        "menu.edit", "path.style.startarrow", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1088,7 +1088,7 @@ public class FlowframTk extends JFrame
       // mid arrow style
 
       midArrowItem = FlowframTkAction.createMenuItem(this,
-        "edit", "path.style.midarrow", lineStyleM,
+        "menu.edit", "path.style.midarrow", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1109,7 +1109,7 @@ public class FlowframTk extends JFrame
       // end arrow style
 
       endArrowItem = FlowframTkAction.createMenuItem(this,
-        "edit", "path.style.endarrow", lineStyleM,
+        "menu.edit", "path.style.endarrow", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1130,7 +1130,7 @@ public class FlowframTk extends JFrame
       // winding rule sub menu
 
       JMenu windingM = FlowframTkAction.createMenu(this, 
-        "edit.path.style", "windingrule", lineStyleM,
+        "menu.edit.path.style", "windingrule", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -1172,7 +1172,7 @@ public class FlowframTk extends JFrame
       // even-odd
 
       windingEvenOddItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "edit.path.style", "windingrule.evenodd", windingM,
+         "menu.edit.path.style", "windingrule.evenodd", windingM,
          windingGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
@@ -1192,7 +1192,7 @@ public class FlowframTk extends JFrame
       // non zero
 
       windingNonZeroItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "edit.path.style", "windingrule.nonzero", windingM,
+         "menu.edit.path.style", "windingrule.nonzero", windingM,
          windingGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE,
@@ -1212,7 +1212,7 @@ public class FlowframTk extends JFrame
       // JDRText submenu
 
       textM = FlowframTkAction.createMenu(this,
-         null, "edit.text", editM,
+         "menu", "edit.textarea", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -1222,7 +1222,7 @@ public class FlowframTk extends JFrame
       // Edit JDRText
 
       editTextItem = FlowframTkAction.createMenuItem(this,
-         "edit", "text.edit", textM,
+         "menu.edit", "textarea.edit", textM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_SINGLE_TEXTUAL, true, false,
@@ -1250,7 +1250,7 @@ public class FlowframTk extends JFrame
       // JDRText colour
 
       textPaintItem = FlowframTkAction.createMenuItem(this,
-         "edit", "text.colour", textM,
+         "menu.edit", "textarea.colour", textM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1268,7 +1268,7 @@ public class FlowframTk extends JFrame
 
       JCheckBoxMenuItem textOutlineItem = 
          FlowframTkAction.createToggleMenuItem(this,
-         "edit", "text.outline", textM, false,
+         "menu.edit", "textarea.outline", textM, false,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_NONE,
          SELECT_FLAG_TEXTUAL, FlowframTkAction.SELECTION_IGNORE_COUNT, 
@@ -1293,7 +1293,7 @@ public class FlowframTk extends JFrame
       // JDRText transformation matrix
 
       textMatrixItem = FlowframTkAction.createMenuItem(this,
-         "edit", "text.matrix", textM,
+         "menu.edit", "textarea.matrix", textM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1312,7 +1312,7 @@ public class FlowframTk extends JFrame
       // Change Font
 
       fontStyleM = FlowframTkAction.createMenu(this,
-         "edit.text", "font", textM,
+         "menu.edit.textarea", "font", textM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -1322,7 +1322,7 @@ public class FlowframTk extends JFrame
       // All font styles
 
       textStyleItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.all_styles", fontStyleM,
+         "menu.edit.textarea", "font.all_styles", fontStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1343,7 +1343,7 @@ public class FlowframTk extends JFrame
       // font family
 
       fontFamilyItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.family", fontStyleM,
+         "menu.edit.textarea", "font.family", fontStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1362,7 +1362,7 @@ public class FlowframTk extends JFrame
       // font size
 
       fontSizeItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.size", fontStyleM,
+         "menu.edit.textarea", "font.size", fontStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1381,7 +1381,7 @@ public class FlowframTk extends JFrame
       // font shape
 
       fontShapeItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.shape", fontStyleM,
+         "menu.edit.textarea", "font.shape", fontStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1400,7 +1400,7 @@ public class FlowframTk extends JFrame
       // font series
 
       fontSeriesItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.series", fontStyleM,
+         "menu.edit.textarea", "font.series", fontStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1419,7 +1419,7 @@ public class FlowframTk extends JFrame
       // text anchor
 
       JMenu fontAnchorM = FlowframTkAction.createMenu(this,
-         "edit.text", "font.anchor", fontStyleM,
+         "menu.edit.textarea", "font.anchor", fontStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -1429,7 +1429,7 @@ public class FlowframTk extends JFrame
       // both
 
       fontAnchorItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.anchor.both", fontAnchorM,
+         "menu.edit.textarea", "font.anchor.both", fontAnchorM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1448,7 +1448,7 @@ public class FlowframTk extends JFrame
       // horizontal anchor setting
 
       fontHAnchorItem = FlowframTkAction.createMenuItem(this, 
-         "edit.text", "font.anchor.horizontal", fontAnchorM,
+         "menu.edit.textarea", "font.anchor.horizontal", fontAnchorM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1468,7 +1468,7 @@ public class FlowframTk extends JFrame
       // vertical anchor setting
 
       fontVAnchorItem = FlowframTkAction.createMenuItem(this,
-         "edit.text", "font.anchor.vertical", fontAnchorM,
+         "menu.edit.textarea", "font.anchor.vertical", fontAnchorM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1488,7 +1488,7 @@ public class FlowframTk extends JFrame
       // Fill colour
 
       fillPaintItem = FlowframTkAction.createMenuItem(this,
-         "edit", "fill_colour", editM,
+         "menu.edit", "fill_colour", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NON_TEXTUAL_SHAPE | SELECT_FLAG_OUTLINE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1509,7 +1509,7 @@ public class FlowframTk extends JFrame
       // Adjust colour sub menu
 
       adjustColM = FlowframTkAction.createMenu(this,
-         "edit", "adjustcol", editM,
+         "menu.edit", "adjustcol", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -1517,7 +1517,7 @@ public class FlowframTk extends JFrame
       // Reduce to grey scale
 
       reduceToGreyItem = FlowframTkAction.createMenuItem(this,
-         "edit", "adjustcol.togrey", adjustColM,
+         "menu.edit", "adjustcol.togrey", adjustColM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1534,7 +1534,7 @@ public class FlowframTk extends JFrame
       // Convert to CMYK
 
       convertToCMYKItem = FlowframTkAction.createMenuItem(this,
-         "edit", "adjustcol.cmyk", adjustColM,
+         "menu.edit", "adjustcol.cmyk", adjustColM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1551,7 +1551,7 @@ public class FlowframTk extends JFrame
       // Convert to RGB
 
       convertToRGBItem = FlowframTkAction.createMenuItem(this,
-         "edit", "adjustcol.rgb", adjustColM,
+         "menu.edit", "adjustcol.rgb", adjustColM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1568,7 +1568,7 @@ public class FlowframTk extends JFrame
       // Convert to HSB
 
       convertToHSBItem = FlowframTkAction.createMenuItem(this,
-         "edit", "adjustcol.hsb", adjustColM,
+         "menu.edit", "adjustcol.hsb", adjustColM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1585,7 +1585,7 @@ public class FlowframTk extends JFrame
       // Fade
 
       fadeItem = FlowframTkAction.createMenuItem(this,
-         "edit", "adjustcol.fade", adjustColM,
+         "menu.edit", "adjustcol.fade", adjustColM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1604,7 +1604,7 @@ public class FlowframTk extends JFrame
       // Remove alpha
 
       removeAlphaItem = FlowframTkAction.createMenuItem(this,
-         "edit", "adjustcol.removetrans", adjustColM,
+         "menu.edit", "adjustcol.removetrans", adjustColM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -1623,7 +1623,7 @@ public class FlowframTk extends JFrame
       // Move To Front
 
       moveToFrontButtonItem = FlowframTkAction.createButtonItem(this,
-         "edit", "front", toolBar, editM,
+         "menu.edit", "front", toolBar, editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1639,7 +1639,7 @@ public class FlowframTk extends JFrame
       // Move To Back
 
       moveToBackButtonItem = FlowframTkAction.createButtonItem(this,
-        "edit", "back", toolBar, editM,
+        "menu.edit", "back", toolBar, editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1655,7 +1655,7 @@ public class FlowframTk extends JFrame
       // Move Up
 
       moveUpItem = FlowframTkAction.createMenuItem(this,
-         "edit", "moveup", editM,
+         "menu.edit", "moveup", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1671,7 +1671,7 @@ public class FlowframTk extends JFrame
       // Move Down
 
       moveDownItem = FlowframTkAction.createMenuItem(this,
-         "edit", "movedown", editM,
+         "menu.edit", "movedown", editM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1686,7 +1686,7 @@ public class FlowframTk extends JFrame
 
       // Transform Menu
 
-      transformM = resources.createAppMenu("transform");
+      transformM = resources.createAppMenu("menu.transform");
       mbar.add(transformM);
 
       incStartupProgress(transformM);
@@ -1694,7 +1694,7 @@ public class FlowframTk extends JFrame
       // Rotate
 
       rotateButtonItem = FlowframTkAction.createButtonItem(this,
-         "transform", "rotate", toolBar, transformM,
+         "menu.transform", "rotate", toolBar, transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1712,7 +1712,7 @@ public class FlowframTk extends JFrame
       // Scale
 
       scaleButtonItem = FlowframTkAction.createButtonItem(this,
-         "transform", "scale", toolBar, transformM,
+         "menu.transform", "scale", toolBar, transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1730,7 +1730,7 @@ public class FlowframTk extends JFrame
       // Shear
 
       shearButtonItem = FlowframTkAction.createButtonItem(this,
-         "transform", "shear", toolBar, transformM,
+         "menu.transform", "shear", toolBar, transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -1748,7 +1748,7 @@ public class FlowframTk extends JFrame
       // Reset transformation matrix
 
       JMenuItem resetItem = FlowframTkAction.createMenuItem(this,
-         "transform", "reset", transformM,
+         "menu.transform", "reset", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE_OR_DISTORT,
          SELECT_FLAG_BITMAP | SELECT_FLAG_TEXTUAL | SELECT_FLAG_DISTORTED,
          FlowframTkAction.SELECTION_SINGLE_OBJECT_NO_GROUP, 
@@ -1765,7 +1765,7 @@ public class FlowframTk extends JFrame
       // Toggle Distortion
 
       distortButtonItem = FlowframTkAction.createToggleButtonItem(this,
-         "transform", "distort", false, toolBar, transformM,
+         "menu.transform", "distort", false, toolBar, transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE_OR_DISTORT,
          SELECT_FLAG_PATH | SELECT_FLAG_DISTORTED,
          FlowframTkAction.SELECTION_SINGLE_OBJECT_NO_GROUP, 
@@ -1786,7 +1786,7 @@ public class FlowframTk extends JFrame
       // Reverse path
 
       reverseItem = FlowframTkAction.createMenuItem(this,
-         "transform", "reverse", transformM,
+         "menu.transform", "reverse", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
@@ -1803,7 +1803,7 @@ public class FlowframTk extends JFrame
       // Merge Paths
 
       mergePathsItem = FlowframTkAction.createMenuItem(this,
-         "transform", "merge", transformM,
+         "menu.transform", "merge", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_AT_LEAST_TWO_SHAPES_NO_OTHER, true, false,
@@ -1820,7 +1820,7 @@ public class FlowframTk extends JFrame
       // Path Union
 
       pathUnionItem = FlowframTkAction.createMenuItem(this,
-         "transform", "union", transformM,
+         "menu.transform", "union", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_AT_LEAST_TWO_SHAPES_NO_OTHER, true, false,
@@ -1837,7 +1837,7 @@ public class FlowframTk extends JFrame
       // XOR Paths
 
       xorPathsItem = FlowframTkAction.createMenuItem(this,
-         "transform", "xor", transformM,
+         "menu.transform", "xor", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_AT_LEAST_TWO_SHAPES_NO_OTHER, true, false,
@@ -1854,7 +1854,7 @@ public class FlowframTk extends JFrame
       // Path Intersection
 
       intersectPathsItem = FlowframTkAction.createMenuItem(this,
-         "transform", "intersect", transformM,
+         "menu.transform", "intersect", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_AT_LEAST_TWO_SHAPES_NO_OTHER, true, false,
@@ -1871,7 +1871,7 @@ public class FlowframTk extends JFrame
       // Subtract Paths
 
       subtractPathsItem = FlowframTkAction.createMenuItem(this,
-         "transform", "subtract", transformM,
+         "menu.transform", "subtract", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_AT_LEAST_TWO_SHAPES_NO_OTHER, true, false,
@@ -1890,7 +1890,7 @@ public class FlowframTk extends JFrame
       convertToPolygonDialog = new ConvertToPolygonDialog(this);
 
       convertToPolygonItem = FlowframTkAction.createMenuItem(this,
-         "transform", "convert_to_polygon", transformM,
+         "menu.transform", "convert_to_polygon", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_SINGLE_OBJECT_NO_GROUP, true, false, true,
@@ -1907,7 +1907,7 @@ public class FlowframTk extends JFrame
       transformM.addSeparator();
 
       patternM = FlowframTkAction.createMenu(this,
-         "transform", "pattern", transformM,
+         "menu.transform", "pattern", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_SINGLE_SHAPE_NO_GROUP, true, false);
@@ -1919,7 +1919,7 @@ public class FlowframTk extends JFrame
       // Set Pattern
 
       setPatternButtonItem = FlowframTkAction.createButtonItem(this,
-         "transform", "pattern.set", toolBar, patternM,
+         "menu.transform", "pattern.set", toolBar, patternM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_SINGLE_NON_PATTERN_SHAPE_NO_GROUP, true, false,
@@ -1938,7 +1938,7 @@ public class FlowframTk extends JFrame
       // Edit Pattern
 
       editPatternItem = FlowframTkAction.createMenuItem(this,
-         "transform", "pattern.edit", patternM,
+         "menu.transform", "pattern.edit", patternM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_PATTERN,
          FlowframTkAction.SELECTION_SINGLE_PATTERN_NO_GROUP, true, false,
@@ -1955,7 +1955,7 @@ public class FlowframTk extends JFrame
       // Remove Pattern
 
       removePatternItem = FlowframTkAction.createMenuItem(this,
-         "transform", "pattern.remove", patternM,
+         "menu.transform", "pattern.remove", patternM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_PATTERN,
          FlowframTkAction.SELECTION_SINGLE_PATTERN_NO_GROUP, true, false,
@@ -1972,7 +1972,7 @@ public class FlowframTk extends JFrame
       // Convert to JDRPath
 
       convertToPathItem = FlowframTkAction.createMenuItem(this,
-         "transform", "convert", transformM,
+         "menu.transform", "convert", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_SHAPE | SELECT_FLAG_TEXT,
          FlowframTkAction.SELECTION_ONLY_SHAPES_OR_TEXT, true, false,
@@ -1989,7 +1989,7 @@ public class FlowframTk extends JFrame
       // Convert pattern or symmetric path to full path
 
       convertToFullPathItem = FlowframTkAction.createMenuItem(this,
-         "transform", "convert_to_full", transformM,
+         "menu.transform", "convert_to_full", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_COMPOUND,
          FlowframTkAction.SELECTION_ONLY_COMPOUND_SHAPES, true, false,
@@ -2006,7 +2006,7 @@ public class FlowframTk extends JFrame
       // split text
 
       splitTextItem = FlowframTkAction.createMenuItem(this,
-         "transform", "split", transformM,
+         "menu.transform", "split", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXTUAL,
          FlowframTkAction.SELECTION_ONLY_TEXTUAL, true, false,
@@ -2023,7 +2023,7 @@ public class FlowframTk extends JFrame
       // Convert to JDRTextPath
 
       convertToTextPathButtonItem = FlowframTkAction.createButtonItem(this,
-         "transform", "textpath", toolBar, transformM,
+         "menu.transform", "textpath", toolBar, transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_TEXT | SELECT_FLAG_NON_TEXTUAL_SHAPE,
          FlowframTkAction.SELECTION_ONE_NON_TEXTUAL_SHAPE_AND_ONE_TEXT_ONLY,
@@ -2041,7 +2041,7 @@ public class FlowframTk extends JFrame
       // Separate compound shape
 
       separateItem = FlowframTkAction.createMenuItem(this,
-         "transform", "separate", transformM,
+         "menu.transform", "separate", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_COMPOUND,
          FlowframTkAction.SELECTION_ONLY_COMPOUND_SHAPES, true, false,
@@ -2060,7 +2060,7 @@ public class FlowframTk extends JFrame
       // Group
 
       groupButtonItem = FlowframTkAction.createButtonItem(this,
-         "transform", "group", toolBar, transformM,
+         "menu.transform", "group", toolBar, transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_AT_LEAST_TWO_OBJECTS, true, false,
@@ -2077,7 +2077,7 @@ public class FlowframTk extends JFrame
       // Ungroup
 
       ungroupButtonItem = FlowframTkAction.createButtonItem(this,
-        "transform", "ungroup", toolBar, transformM,
+        "menu.transform", "ungroup", toolBar, transformM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
         SELECT_FLAG_GROUP,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2094,7 +2094,7 @@ public class FlowframTk extends JFrame
       // Justify Sub Menu
 
       justifyM = FlowframTkAction.createMenu(this,
-         "transform", "justify", transformM,
+         "menu.transform", "justify", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
@@ -2104,7 +2104,7 @@ public class FlowframTk extends JFrame
       // Left Align
 
       leftAlignItem = FlowframTkAction.createMenuItem(this,
-         "transform", "justify.left", justifyM,
+         "menu.transform", "justify.left", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2121,7 +2121,7 @@ public class FlowframTk extends JFrame
       // Centre Align
 
       centreAlignItem = FlowframTkAction.createMenuItem(this,
-         "transform", "justify.centre", justifyM,
+         "menu.transform", "justify.centre", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2138,7 +2138,7 @@ public class FlowframTk extends JFrame
       // Right Align
 
       rightAlignItem = FlowframTkAction.createMenuItem(this,
-         "transform", "justify.right", justifyM,
+         "menu.transform", "justify.right", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2157,7 +2157,7 @@ public class FlowframTk extends JFrame
       // Top Align
 
       topAlignItem = FlowframTkAction.createMenuItem(this,
-         "transform", "justify.top", justifyM,
+         "menu.transform", "justify.top", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2174,7 +2174,7 @@ public class FlowframTk extends JFrame
       // Middle Align
 
       middleAlignItem = FlowframTkAction.createMenuItem(this,
-         "transform", "justify.middle", justifyM,
+         "menu.transform", "justify.middle", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2191,7 +2191,7 @@ public class FlowframTk extends JFrame
       // Bottom Align
 
       bottomAlignItem = FlowframTkAction.createMenuItem(this,
-         "transform", "justify.bottom", justifyM,
+         "menu.transform", "justify.bottom", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2207,7 +2207,7 @@ public class FlowframTk extends JFrame
 
       // Tools menu
 
-      toolsM = FlowframTkAction.createMenu(this, "tools",
+      toolsM = FlowframTkAction.createMenu(this, "menu.tools",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2222,7 +2222,7 @@ public class FlowframTk extends JFrame
       // Select
 
       selectButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_SELECT, sidePanel, toolsM, 
+         "menu.tools", currentTool==ACTION_SELECT, sidePanel, toolsM, 
          toolButtonGroup, ACTION_SELECT);
 
       incStartupProgress(toolsM, selectButtonItem);
@@ -2233,7 +2233,7 @@ public class FlowframTk extends JFrame
       // Open line
 
       openLineButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_OPEN_LINE, sidePanel, toolsM, 
+         "menu.tools", currentTool==ACTION_OPEN_LINE, sidePanel, toolsM, 
          toolButtonGroup, ACTION_OPEN_LINE);
 
       incStartupProgress(toolsM, openLineButtonItem);
@@ -2241,7 +2241,7 @@ public class FlowframTk extends JFrame
       // Closed Line
 
       closedLineButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_CLOSED_LINE, 
+         "menu.tools", currentTool==ACTION_CLOSED_LINE, 
           sidePanel, toolsM, toolButtonGroup,
          ACTION_CLOSED_LINE);
 
@@ -2250,7 +2250,7 @@ public class FlowframTk extends JFrame
       // Open curve
 
       openCurveButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_OPEN_CURVE, 
+         "menu.tools", currentTool==ACTION_OPEN_CURVE, 
          sidePanel, toolsM, toolButtonGroup,
          ACTION_OPEN_CURVE);
 
@@ -2259,7 +2259,7 @@ public class FlowframTk extends JFrame
       // Closed curve
 
       closedCurveButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_CLOSED_CURVE, 
+         "menu.tools", currentTool==ACTION_CLOSED_CURVE, 
          sidePanel, toolsM, toolButtonGroup,
          ACTION_CLOSED_CURVE);
 
@@ -2268,7 +2268,7 @@ public class FlowframTk extends JFrame
       // Rectangle
 
       rectangleButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_RECTANGLE, 
+         "menu.tools", currentTool==ACTION_RECTANGLE, 
          sidePanel, toolsM, toolButtonGroup,
          ACTION_RECTANGLE);
 
@@ -2277,7 +2277,7 @@ public class FlowframTk extends JFrame
       // Ellipse
 
       ellipseButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_ELLIPSE,
+         "menu.tools", currentTool==ACTION_ELLIPSE,
          sidePanel, toolsM, toolButtonGroup,
          ACTION_ELLIPSE);
 
@@ -2286,7 +2286,7 @@ public class FlowframTk extends JFrame
       // Text
 
       textButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_TEXT, 
+         "menu.tools", currentTool==ACTION_TEXT, 
          sidePanel, toolsM, toolButtonGroup,
          ACTION_TEXT);
 
@@ -2295,7 +2295,7 @@ public class FlowframTk extends JFrame
       // Maths
 
       JDRToolButtonItem mathButtonItem = ToolAction.createToolButtonItem(this,
-         "tools", currentTool==ACTION_MATH, 
+         "menu.tools", currentTool==ACTION_MATH, 
          sidePanel, toolsM, toolButtonGroup,
          ACTION_MATH);
 
@@ -2306,7 +2306,7 @@ public class FlowframTk extends JFrame
       // Gap
 
       gapButtonItem = FlowframTkAction.createButtonItem(this,
-         "tools", "gap", sidePanel, toolsM,
+         "menu.tools", "gap", sidePanel, toolsM,
          TOOL_FLAG_ANY_PATHS,
          EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_NON_GEOMETRIC,
@@ -2325,7 +2325,7 @@ public class FlowframTk extends JFrame
       // Abandon
 
       abandonButtonItem = FlowframTkAction.createButtonItem(this,
-         "tools", "abandon", sidePanel, toolsM,
+         "menu.tools", "abandon", sidePanel, toolsM,
          TOOL_FLAG_ANY_PATHS,
          EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_PATH,
@@ -2344,7 +2344,7 @@ public class FlowframTk extends JFrame
       // Finish
 
       finishButtonItem = FlowframTkAction.createButtonItem(this,
-         "tools", "finish", sidePanel, toolsM,
+         "menu.tools", "finish", sidePanel, toolsM,
          TOOL_FLAG_ANY_PATHS | TOOL_FLAG_ANY_TEXT,
          EDIT_FLAG_NONE,
          FlowframTkAction.CONSTRUCTION_FLAG_PATH_OR_TEXT,
@@ -2367,7 +2367,7 @@ public class FlowframTk extends JFrame
       createPathFromSvgDialog = new CreatePathFromSvgDialog(this);
 
       createPathFromSvgItem = FlowframTkAction.createMenuItem(this,
-         "tools", "create_path_from_svg", toolsM,
+         "menu.tools", "create_path_from_svg", toolsM,
          TOOL_FLAG_SELECT | TOOL_FLAG_ANY_PATHS, EDIT_FLAG_NONE,
          SELECT_FLAG_NONE,
          FlowframTkAction.SELECTION_NONE, true, false, false,
@@ -2387,7 +2387,7 @@ public class FlowframTk extends JFrame
 
       // navigate menu
 
-      navigateM = FlowframTkAction.createMenu(this, "navigate",
+      navigateM = FlowframTkAction.createMenu(this, "menu.navigate",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2398,7 +2398,7 @@ public class FlowframTk extends JFrame
       // go to co-ordinate
 
       gotoItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.goto", navigateM, true, true,
+         "menu", "navigate.goto", navigateM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2414,7 +2414,7 @@ public class FlowframTk extends JFrame
       // select next object
 
       nextItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.select", navigateM,
+         "menu", "navigate.select", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
@@ -2430,7 +2430,7 @@ public class FlowframTk extends JFrame
       // add next object to selection
 
       addNextItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.add_next", navigateM,
+         "menu", "navigate.add_next", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
@@ -2446,7 +2446,7 @@ public class FlowframTk extends JFrame
       // deselect lowest object and add next object to selection
 
       skipItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.skip", navigateM,
+         "menu", "navigate.skip", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
@@ -2462,7 +2462,7 @@ public class FlowframTk extends JFrame
       // scroll to selected objects.
 
       findSelectedItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.find", navigateM,
+         "menu", "navigate.find", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2478,7 +2478,7 @@ public class FlowframTk extends JFrame
       // find object with given description
 
       findByDescriptionItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.description", navigateM,
+         "menu", "navigate.description", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
@@ -2497,7 +2497,7 @@ public class FlowframTk extends JFrame
       // selection
 
       addByDescriptionItem = FlowframTkAction.createMenuItem(this,
-         null, "navigate.add_description", navigateM,
+         "menu", "navigate.add_description", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
@@ -2514,7 +2514,7 @@ public class FlowframTk extends JFrame
 
       // Bitmap menu
 
-      bitmapM = FlowframTkAction.createMenu(this, "bitmap",
+      bitmapM = FlowframTkAction.createMenu(this, "menu.bitmap",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2525,7 +2525,7 @@ public class FlowframTk extends JFrame
       // Insert Bitmap
 
       insertBitmapItem = FlowframTkAction.createMenuItem(this,
-         null, "bitmap.insert", bitmapM,
+         "menu", "bitmap.insert", bitmapM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2582,7 +2582,7 @@ public class FlowframTk extends JFrame
       // Refresh
 
       refreshItem = FlowframTkAction.createMenuItem(this,
-        null, "bitmap.refresh", bitmapM, true, false,
+        "menu", "bitmap.refresh", bitmapM, true, false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2596,7 +2596,7 @@ public class FlowframTk extends JFrame
       // Properties
 
       bitmapPropItem = FlowframTkAction.createMenuItem(this,
-         null, "bitmap.properties", bitmapM,
+         "menu", "bitmap.properties", bitmapM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_BITMAP,
          FlowframTkAction.SELECTION_SINGLE_OBJECT, true, false,
          new FlowframTkActionListener()
@@ -2614,7 +2614,7 @@ public class FlowframTk extends JFrame
       // Vectorize
 
       vectorizeItem = FlowframTkAction.createMenuItem(this,
-         "bitmap", "vectorize", bitmapM,
+         "menu.bitmap", "vectorize", bitmapM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_BITMAP,
          FlowframTkAction.SELECTION_SINGLE_BITMAP, true, false,
       new FlowframTkActionListener()
@@ -2631,7 +2631,7 @@ public class FlowframTk extends JFrame
 
       // TeX/LaTeX
 
-      texM = FlowframTkAction.createMenu(this, "tex",
+      texM = FlowframTkAction.createMenu(this, "menu.tex",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2642,7 +2642,7 @@ public class FlowframTk extends JFrame
       // Set preamble
 
       JMenuItem preambleItem = FlowframTkAction.createMenuItem(this,
-         "tex", "set_preamble", texM,
+         "menu.tex", "set_preamble", texM,
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2667,7 +2667,7 @@ public class FlowframTk extends JFrame
       TeXAction parshapeAction = 
          new TeXAction(this, TeXAction.PARSHAPE);
 
-      parshapeItem = parshapeAction.createMenuItem("tex.parshape", null);
+      parshapeItem = parshapeAction.createMenuItem("menu.tex.parshape", null);
 
       texM.add(parshapeItem);
 
@@ -2678,7 +2678,7 @@ public class FlowframTk extends JFrame
       TeXAction shapeparAction = 
          new TeXAction(this, TeXAction.SHAPEPAR);
 
-      shapeparItem = shapeparAction.createMenuItem("tex.shapepar", null);
+      shapeparItem = shapeparAction.createMenuItem("menu.tex.shapepar", null);
 
       texM.add(shapeparItem);
 
@@ -2686,7 +2686,7 @@ public class FlowframTk extends JFrame
 
       // Flow Frame Menu
 
-      JMenu flowframeM = resources.createAppMenu("tex.flowframe");
+      JMenu flowframeM = resources.createAppMenu("menu.tex.flowframe");
       texM.add(flowframeM);
 
       incStartupProgress(texM, flowframeM);
@@ -2694,7 +2694,7 @@ public class FlowframTk extends JFrame
       // Clear All
 
       clearAllItem = FlowframTkAction.createMenuItem(this, 
-         "tex", "flowframe.clear", flowframeM,
+         "menu.tex", "flowframe.clear", flowframeM,
          true, false,
          new FlowframTkActionListener()
          {
@@ -2709,7 +2709,7 @@ public class FlowframTk extends JFrame
       // Set Typeblock
 
       setTypeblockItem = FlowframTkAction.createMenuItem(this,
-        "tex", "flowframe.set_typeblock", flowframeM,
+        "menu.tex", "flowframe.set_typeblock", flowframeM,
         TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2732,7 +2732,7 @@ public class FlowframTk extends JFrame
       // Set Frame
 
       setFrameItem = FlowframTkAction.createMenuItem(this,
-        "tex", "flowframe.set_frame", flowframeM,
+        "menu.tex", "flowframe.set_frame", flowframeM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
         FlowframTkAction.SELECTION_SINGLE_OBJECT, true, false,
          new FlowframTkActionListener()
@@ -2761,7 +2761,7 @@ public class FlowframTk extends JFrame
       // Scale to fit typeblock
 
       JMenuItem setTypeblockItem = FlowframTkAction.createMenuItem(this,
-        "tex", "flowframe.scale_to_typeblock", flowframeM,
+        "menu.tex", "flowframe.scale_to_typeblock", flowframeM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY_OBJECT,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2779,7 +2779,7 @@ public class FlowframTk extends JFrame
       displayPageDialog = new DisplayPageDialog(this);
 
       displayPageItem = FlowframTkAction.createMenuItem(this,
-        "tex", "flowframe.display_page", flowframeM,
+        "menu.tex", "flowframe.display_page", flowframeM,
         TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2794,7 +2794,7 @@ public class FlowframTk extends JFrame
 
       // Settings
 
-      settingsM = resources.createAppMenu("settings");
+      settingsM = resources.createAppMenu("menu.settings");
       mbar.add(settingsM);
 
       incStartupProgress(settingsM);
@@ -2802,7 +2802,7 @@ public class FlowframTk extends JFrame
       // Styles
 
       stylesItem = FlowframTkAction.createMenuItem(this,
-         "settings", "styles", settingsM,
+         "menu.settings", "styles", settingsM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2825,7 +2825,7 @@ public class FlowframTk extends JFrame
       // Show both rulers
 
       showRulersItem = FlowframTkAction.createToggleMenuItem(this,
-         null, "settings.rulers", settingsM, true,
+         "menu", "settings.rulers", settingsM, true,
          true, false,
          new FlowframTkActionListener()
          {
@@ -2841,7 +2841,7 @@ public class FlowframTk extends JFrame
       // Grid Sub Menu
 
       gridM = FlowframTkAction.createMenu(this,
-         "settings", "grid", settingsM,
+         "menu.settings", "grid", settingsM,
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2850,7 +2850,7 @@ public class FlowframTk extends JFrame
       // Show Grid
 
       showGridButtonItem = FlowframTkAction.createToggleButtonItem(this,
-        "settings", "grid.show", true, toolBar, gridM,
+        "menu.settings", "grid.show", true, toolBar, gridM,
         TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2866,7 +2866,7 @@ public class FlowframTk extends JFrame
       // Lock
 
       lockGridButtonItem = FlowframTkAction.createToggleButtonItem(this,
-         "settings", "grid.lock", false, toolBar, gridM,
+         "menu.settings", "grid.lock", false, toolBar, gridM,
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -2882,7 +2882,7 @@ public class FlowframTk extends JFrame
       // Grid Settings
 
       gridSettingsItem = FlowframTkAction.createMenuItem(this,
-         "settings", "grid.settings", gridM, true, false,
+         "menu.settings", "grid.settings", gridM, true, false,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2898,7 +2898,7 @@ public class FlowframTk extends JFrame
       // Zoom sub menu
 
       zoomM = FlowframTkAction.createMenu(this, 
-        "settings", "zoom", settingsM,
+        "menu.settings", "zoom", settingsM,
         TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, true);
 
@@ -2909,7 +2909,7 @@ public class FlowframTk extends JFrame
       // Fit Width
 
       zoomWidthItem = FlowframTkAction.createMenuItem(this,
-        "settings", "zoom.width", zoomM, true, true,
+        "menu.settings", "zoom.width", zoomM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2928,7 +2928,7 @@ public class FlowframTk extends JFrame
       // Fit Height
 
       zoomHeightItem = FlowframTkAction.createMenuItem(this,
-         "settings", "zoom.height", zoomM, true, true,
+         "menu.settings", "zoom.height", zoomM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2947,7 +2947,7 @@ public class FlowframTk extends JFrame
       // Fit Page
 
       zoomPageItem = FlowframTkAction.createMenuItem(this,
-         "settings", "zoom.page", zoomM, true, true,
+         "menu.settings", "zoom.page", zoomM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2968,7 +2968,7 @@ public class FlowframTk extends JFrame
       // User defined zoom
 
       zoomSettingsItem = FlowframTkAction.createRadioButtonMenuItem(this,
-        "settings", "zoom.user", zoomM, zoomGroup,
+        "menu.settings", "zoom.user", zoomM, zoomGroup,
         TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, true,
          new FlowframTkActionListener()
@@ -2986,56 +2986,56 @@ public class FlowframTk extends JFrame
       // 25% Magnification
 
       zoom25Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.25", zoomM, zoomGroup, 0.25);
+         "menu.settings", "zoom.25", zoomM, zoomGroup, 0.25);
 
       incStartupProgress(settingsM, zoomM, zoom25Item);
 
       // 50% Magnification
 
       zoom50Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.50", zoomM, zoomGroup, 0.5);
+         "menu.settings", "zoom.50", zoomM, zoomGroup, 0.5);
 
       incStartupProgress(settingsM, zoomM, zoom50Item);
 
       // 75% Magnification
 
       zoom75Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.75", zoomM, zoomGroup, 0.75);
+         "menu.settings", "zoom.75", zoomM, zoomGroup, 0.75);
 
       incStartupProgress(settingsM, zoomM, zoom75Item);
 
       // 100% Magnification
 
       zoom100Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.100", zoomM, zoomGroup, 1.0);
+         "menu.settings", "zoom.100", zoomM, zoomGroup, 1.0);
 
       incStartupProgress(settingsM, zoomM, zoom100Item);
 
       // 200% Magnification
 
       zoom200Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.200", zoomM, zoomGroup, 2.0);
+         "menu.settings", "zoom.200", zoomM, zoomGroup, 2.0);
 
       incStartupProgress(settingsM, zoomM, zoom200Item);
 
       // 400% Magnification
 
       zoom400Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.400", zoomM, zoomGroup, 4.0);
+         "menu.settings", "zoom.400", zoomM, zoomGroup, 4.0);
 
       incStartupProgress(settingsM, zoomM, zoom400Item);
 
       // 800% Magnification
 
       zoom800Item = ZoomAction.createRadioMenuItem(this, 
-         "settings", "zoom.800", zoomM, zoomGroup, 8.0);
+         "menu.settings", "zoom.800", zoomM, zoomGroup, 8.0);
 
       incStartupProgress(settingsM, zoomM, zoom800Item);
 
       // Paper size menu
 
       paperM = FlowframTkAction.createMenu(this,
-        "settings", "paper", settingsM,
+        "menu.settings", "paper", settingsM,
         TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -3044,7 +3044,7 @@ public class FlowframTk extends JFrame
       // Show printer margins
 
       showPrinterMarginsItem = FlowframTkAction.createToggleMenuItem(
-         this, "settings", "paper.margins", null,
+         this, "menu.settings", "paper.margins", null,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3069,7 +3069,7 @@ public class FlowframTk extends JFrame
       // Portrait
 
       portraitItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "settings", "paper.portrait", paperM, orientationGroup,
+         "menu.settings", "paper.portrait", paperM, orientationGroup,
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -3085,7 +3085,7 @@ public class FlowframTk extends JFrame
       // Landscape
 
       landscapeItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "settings", "paper.landscape", paperM, orientationGroup,
+         "menu.settings", "paper.landscape", paperM, orientationGroup,
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -3105,7 +3105,7 @@ public class FlowframTk extends JFrame
       // A5 paper
 
       paperA5Item = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.A5", paperM, paperGroup,
+        "menu.settings", "paper.A5", paperM, paperGroup,
         JDRPaper.A5, JDRPaper.A5R);
 
       incStartupProgress(settingsM, paperM, paperA5Item);
@@ -3113,7 +3113,7 @@ public class FlowframTk extends JFrame
       // A4 paper
 
       paperA4Item = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.A4", paperM, paperGroup,
+        "menu.settings", "paper.A4", paperM, paperGroup,
         JDRPaper.A4, JDRPaper.A4R);
 
       incStartupProgress(settingsM, paperM, paperA4Item);
@@ -3121,7 +3121,7 @@ public class FlowframTk extends JFrame
       // A3 paper
 
       paperA3Item = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.A3", paperM, paperGroup,
+        "menu.settings", "paper.A3", paperM, paperGroup,
         JDRPaper.A3, JDRPaper.A3R);
 
       incStartupProgress(settingsM, paperM, paperA3Item);
@@ -3129,7 +3129,7 @@ public class FlowframTk extends JFrame
       // A2 paper
 
       paperA2Item = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.A2", paperM, paperGroup,
+        "menu.settings", "paper.A2", paperM, paperGroup,
         JDRPaper.A2, JDRPaper.A2R);
 
       incStartupProgress(settingsM, paperM, paperA2Item);
@@ -3137,7 +3137,7 @@ public class FlowframTk extends JFrame
       // A1 paper
 
       paperA1Item = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.A1", paperM, paperGroup,
+        "menu.settings", "paper.A1", paperM, paperGroup,
         JDRPaper.A1, JDRPaper.A1R);
 
       incStartupProgress(settingsM, paperM, paperA1Item);
@@ -3145,7 +3145,7 @@ public class FlowframTk extends JFrame
       // A0 paper
 
       paperA0Item = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.A0", paperM, paperGroup,
+        "menu.settings", "paper.A0", paperM, paperGroup,
         JDRPaper.A0, JDRPaper.A0R);
 
       incStartupProgress(settingsM, paperM, paperA0Item);
@@ -3153,7 +3153,7 @@ public class FlowframTk extends JFrame
       // Letter paper
 
       paperLetterItem = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.letter", paperM, paperGroup,
+        "menu.settings", "paper.letter", paperM, paperGroup,
         JDRPaper.LETTER, JDRPaper.LETTERR);
 
       incStartupProgress(settingsM, paperM, paperLetterItem);
@@ -3161,7 +3161,7 @@ public class FlowframTk extends JFrame
       // Legal paper
 
       paperLegalItem = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.legal", paperM, paperGroup,
+        "menu.settings", "paper.legal", paperM, paperGroup,
         JDRPaper.LEGAL, JDRPaper.LEGALR);
 
       incStartupProgress(settingsM, paperM, paperLegalItem);
@@ -3169,7 +3169,7 @@ public class FlowframTk extends JFrame
       // Executive paper
 
       paperExecutiveItem = PaperAction.createRadioMenuItem(this,
-        "settings", "paper.executive", paperM, paperGroup,
+        "menu.settings", "paper.executive", paperM, paperGroup,
         JDRPaper.EXECUTIVE, JDRPaper.EXECUTIVER);
 
       incStartupProgress(settingsM, paperM, paperExecutiveItem);
@@ -3177,7 +3177,7 @@ public class FlowframTk extends JFrame
       // other paper
 
       paperOtherItem = FlowframTkAction.createRadioButtonMenuItem(this,
-         "settings", "paper.other", paperM, paperGroup,
+         "menu.settings", "paper.other", paperM, paperGroup,
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
@@ -3195,7 +3195,7 @@ public class FlowframTk extends JFrame
       // configure settings
 
       configSettingsItem = FlowframTkAction.createMenuItem(this,
-         null, "settings.config", settingsM,
+         "menu", "settings.config", settingsM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3211,7 +3211,7 @@ public class FlowframTk extends JFrame
       // configure TeX/LaTeX settings
 
       JMenuItem configTeXSettingsItem = FlowframTkAction.createMenuItem(this,
-         "settings", "configtex", settingsM,
+         "menu.settings", "configtex", settingsM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3227,7 +3227,7 @@ public class FlowframTk extends JFrame
       // configure UI
 
       JMenuItem configUISettingsItem = FlowframTkAction.createMenuItem(this,
-         null, "settings.configui", settingsM,
+         "menu", "settings.configui", settingsM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3243,7 +3243,7 @@ public class FlowframTk extends JFrame
       // Window menu
 
       windowM = FlowframTkAction.createMenu(this,
-        "window", TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
+        "menu.window", TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, false, true);
       mbar.add(windowM);
 
@@ -3254,7 +3254,7 @@ public class FlowframTk extends JFrame
 
       // Tile frames
 
-      tileItem = FlowframTkAction.createMenuItem(this, "window", "tile",
+      tileItem = FlowframTkAction.createMenuItem(this, "menu.window", "tile",
          windowM, true, true,
          new FlowframTkActionListener()
          {
@@ -3269,7 +3269,7 @@ public class FlowframTk extends JFrame
       // Arrange frames vertically
 
       verticallyItem = FlowframTkAction.createMenuItem(this, 
-        "window", "vertically", windowM, true, true,
+        "menu.window", "vertically", windowM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3283,7 +3283,7 @@ public class FlowframTk extends JFrame
       // Arrange frames horizontally
 
       horizontallyItem = FlowframTkAction.createMenuItem(this,
-         "window", "horizontally", windowM, true, true,
+         "menu.window", "horizontally", windowM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3297,7 +3297,7 @@ public class FlowframTk extends JFrame
       // minimize all frames
 
       minimizeItem = FlowframTkAction.createMenuItem(this,
-        "window", "minimize", windowM, true, true,
+        "menu.window", "minimize", windowM, true, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3311,7 +3311,7 @@ public class FlowframTk extends JFrame
       // maximize all frames
 
       maximizeItem = FlowframTkAction.createMenuItem(this,
-         "window", "maximize", windowM, false, true,
+         "menu.window", "maximize", windowM, false, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -3324,7 +3324,7 @@ public class FlowframTk extends JFrame
 
       // Help menu
 
-      JMenu helpM = resources.createAppMenu("help");
+      JMenu helpM = resources.createAppMenu("menu.help");
 
       mbar.add(helpM);
 
@@ -3352,7 +3352,7 @@ public class FlowframTk extends JFrame
               objectInfo();
            }
         },
-         "debug.objectinfo"
+         "menu.debug.objectinfo"
         );
 
       addAppAction(objectInfo);
@@ -3364,12 +3364,12 @@ public class FlowframTk extends JFrame
            public void doAction(FlowframTkAction action, ActionEvent evt)
            {
               getMessageSystem().messageln(
-                  invoker.getResources().getMessage("debug.writelog"));
+                  invoker.getResources().getMessage("menu.debug.writelog"));
               debugMessage("writing log");
               writeLog();
            }
         },
-         "debug.writelog");
+         "menu.debug.writelog");
 
       addAppAction(writeLog);
 
@@ -3380,12 +3380,12 @@ public class FlowframTk extends JFrame
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
                getMessageSystem().messageln(
-                  invoker.getResources().getMessage("debug.dumpall"));
+                  invoker.getResources().getMessage("menu.debug.dumpall"));
                debugMessage("Dumping all");
                dumpAll();
             }
          },
-         "debug.dumpall");
+         "menu.debug.dumpall");
  
       addAppAction(dumpAll);
 
@@ -3408,7 +3408,7 @@ public class FlowframTk extends JFrame
                }
             }
          },
-         "debug.revalidate");
+         "menu.debug.revalidate");
  
       addAppAction(revalidate);
 
@@ -3416,32 +3416,32 @@ public class FlowframTk extends JFrame
 
       if (resources.debugMode)
       {
-         JMenu debugM = resources.createAppMenu("debug");
+         JMenu debugM = resources.createAppMenu("menu.debug");
 
          mbar.add(debugM);
 
          incStartupProgress(debugM);
 
-         JMenuItem infoItem = objectInfo.createMenuItem("debug.objectinfo",
+         JMenuItem infoItem = objectInfo.createMenuItem("menu.debug.objectinfo",
             null);
          debugM.add(infoItem);
 
          incStartupProgress(debugM, infoItem);
 
-         JMenuItem writeLogItem = writeLog.createMenuItem("debug.writelog",
+         JMenuItem writeLogItem = writeLog.createMenuItem("menu.debug.writelog",
             null);
          debugM.add(writeLogItem);
 
          incStartupProgress(debugM, writeLogItem);
 
-         JMenuItem dumpAllItem = dumpAll.createMenuItem("debug.dumpall",
+         JMenuItem dumpAllItem = dumpAll.createMenuItem("menu.debug.dumpall",
             null);
          debugM.add(dumpAllItem);
 
          incStartupProgress(debugM, dumpAllItem);
 
          JMenuItem revalidateItem = revalidate.createMenuItem(
-            "debug.revalidate", null);
+            "menu.debug.revalidate", null);
          debugM.add(revalidateItem);
 
          incStartupProgress(debugM, revalidateItem);

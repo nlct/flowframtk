@@ -155,7 +155,7 @@ public class FindDialog extends JDialog
       pack();
       setLocationRelativeTo(parent);
 
-      KeyStroke keyStroke = getResources().getAccelerator("label.okay");
+      KeyStroke keyStroke = getResources().getAccelerator("button.okay");
 
       if (keyStroke != null)
       {

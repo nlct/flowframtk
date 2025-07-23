@@ -33,7 +33,7 @@
 \maketitle
 \frontmatter
 \tableofcontents
-\listoffigures
+%\listoffigures
 
 \chapter*{Notes}
 
@@ -688,8 +688,16 @@ using the settings menu (\sectionref{sec:settingsmenu}).
 
 \appdef{flowframtk}
 
+Older versions of \appname\ had switches prefixed with a single
+hyphen (such as \shortargfmt{help}). These are still supported for
+backward-compatibility but double-hyphen versions are now provided
+(such as \longargfmt{help}).
+
 \switchdef{help}
 Display help message and exit.
+
+\switchdef{version}
+Display version details and exit.
 
 TODO
 
@@ -706,6 +714,32 @@ TODO
 TODO
 
 \subsection{Grid}\label{sec:gridmenu}
+
+\menudef{menu.settings.grid}
+
+The \menu{menu.settings.grid} submenu allows you to change
+the \gls{grid} settings:
+
+\menudef{menu.settings.grid.show}
+
+Toggles between displaying the \gls{grid} on the \gls{canvas} and  
+hiding it. If there is enough memory available, the grid will be
+stored as a bitmap in order to improve redraw speed.
+
+\plabel[Locking the Grid]{mi:gridlock}
+\menudef{menu.settings.grid.lock}
+
+Toggles between locking and unlocking the grid. If the grid is
+locked, mouse \glspl{click} will be translated to the nearest tick mark.
+This means that if you use a mouse \gls{click} to set the location of
+a \gls{controlpt} when constructing a \gls{path}, the
+point will be placed at the nearest tick mark. This also means that
+when you move a point while in 
+edit mode (\sectionref{sec:editpath}), the point will be moved
+in intervals of the gap between tick marks. Note that locking the
+grid does not affect the keyboard or menu driven functions, such as
+\menutrail{navigate.goto} or emulate a \gls{primaryclick}.
+
 
 TODO
 
@@ -756,6 +790,22 @@ TODO
 
 \subsection{\TeX\ Settings Dialog}\label{sec:texconfig}
 
+%The \dialog{textconfig} tab
+%(\figureref{fig:configdialog-texsettings})
+%allows you to adjust the text-related settings. 
+
+TODO
+
+\plabel[\TeX\ Mappings]{mi:texmappings}%
+\appname\ has two tools for creating \glspl{textarea}: the
+
+TODO
+
+\plabel[New \TeX\ Mappings]{mi:newtexmappings}%
+To add a new mapping, \gls{click} on the green plus button to
+the side of the relevant table.
+
+
 TODO
 
 
@@ -786,6 +836,13 @@ TODO
 
 
 \subsubsection{Graphics Settings}\label{sec:graphics}
+
+TODO
+
+
+\plabel[Hotspots]{mi:hotspots}%
+You can also use this tab to choose between enabling (left icon) and
+disabling (right icon) hotspots along the \glspl{bbox}. 
 
 TODO
 
@@ -858,6 +915,12 @@ TODO
 
 The \inlineglsdef{statusbar}
 TODO
+
+
+\FloatFig
+  {fig:information}
+  {\includeimg[width=0.5\linewidth]{informationDialog}}
+  {The Information Dialog}
 
 
 \chapter{The File Menu}\label{sec:filemenu}
@@ -937,6 +1000,10 @@ TODO
 
 TODO
 
+\plabel[Go To Dialog Box]{sec:goto}% 
+
+TODO
+
 \section{Line Paths}\label{sec:newlinepath}
 
 TODO
@@ -1010,6 +1077,9 @@ TODO
 
 TODO
 
+\plabel[Breaking a Path]{mi:breakpath}
+
+TODO
 
 \section{Symmetric Shapes}\label{sec:symmetric}
 
@@ -1017,6 +1087,11 @@ TODO
 
 
 \section{Editing Text Areas}\label{sec:edittext}
+
+TODO
+
+\plabel[Insert Symbol Dialog Box]{mi:insertsymbol}%
+
 
 TODO
 
@@ -1404,6 +1479,26 @@ TODO
 
 TODO
 
+
+\chapter{Help Windows}
+\label{sec:helpwindows}
+
+\menudef{menu.help.about}
+
+The \menu{help.about} menu item shows the
+\InlineMsgDef
+ [\appname]
+ {about.title}
+dialog with version details.
+
+\menudef{menu.help.license}
+
+The \menu{help.license} menu item shows the
+\InlineMsgDef
+ {license.title}
+dialog (see \sectionref{sec:licence}).
+
+\input{helpinterface}
 
 \chapter{Multilingual Support}\label{sec:multilingualsupport}
 

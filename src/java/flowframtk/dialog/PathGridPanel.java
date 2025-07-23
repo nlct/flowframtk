@@ -150,7 +150,7 @@ public class PathGridPanel extends GridPanel
       row.add(descriptionBox);
 
       // add a temporary element to help pack the container
-      descriptionModel.addElement(resources.getMessage("label.choose"));
+      descriptionModel.addElement(resources.getMessage("button.choose"));
 
       dim = descriptionBox.getPreferredSize();
       dim.width = Integer.MAX_VALUE;

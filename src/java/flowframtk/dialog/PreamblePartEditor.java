@@ -47,33 +47,33 @@ public class PreamblePartEditor extends JPanel
 
       popupM = new JPopupMenu(getName());
 
-      undoItem = createButtonItem("edit", "undo", toolBar, popupM);
+      undoItem = createButtonItem("menu.edit", "undo", toolBar, popupM);
       undoItem.setEnabled(false);
 
-      redoItem = createButtonItem("edit", "redo", toolBar, popupM);
+      redoItem = createButtonItem("menu.edit", "redo", toolBar, popupM);
       redoItem.setEnabled(false);
 
       popupM.addSeparator();
 
       popupM.add(getResources().createAppMenuItem(
-        "texeditor.selectText", "selectText",
+        "menu.texeditor.selectText", "selectText",
         null, this, getResources().getToolTipText("selectText")));
 
-      cutItem = createButtonItem("texeditor", "cutText", toolBar, popupM);
+      cutItem = createButtonItem("menu.texeditor", "cutText", toolBar, popupM);
 
-      copyItem = createButtonItem("texeditor", "copyText", toolBar, popupM);
+      copyItem = createButtonItem("menu.texeditor", "copyText", toolBar, popupM);
 
-      createButtonItem("texeditor", "pasteText", toolBar, popupM);
+      createButtonItem("menu.texeditor", "pasteText", toolBar, popupM);
 
       popupM.addSeparator();
 
-      findItem = createButtonItem("texeditor.search", "find", toolBar, popupM);
-      findAgainItem = createButtonItem("texeditor.search", "find_again", 
+      findItem = createButtonItem("menu.texeditor.search", "find", toolBar, popupM);
+      findAgainItem = createButtonItem("menu.texeditor.search", "find_again", 
         toolBar, popupM);
 
       findAgainItem.setEnabled(false);
 
-      replaceItem = createButtonItem("texeditor.search", "replace",
+      replaceItem = createButtonItem("menu.texeditor.search", "replace",
         toolBar, popupM);
 
       toolBar.add(getResources().createHelpDialogButton(application, "sec:setpreamble"));

@@ -76,8 +76,8 @@ public class CharacterSelector extends JDialog
    {
       Box topPanel = Box.createHorizontalBox();
 
-      JLabel label = new JLabel(resources.getMessage("symbol.text"));
-      label.setDisplayedMnemonic(resources.getCodePoint("symbol.text.mnemonic"));
+      JLabel label = new JLabel(resources.getMessage("symbol.textcontent"));
+      label.setDisplayedMnemonic(resources.getCodePoint("symbol.textcontent.mnemonic"));
 
       topPanel.add(label);
 

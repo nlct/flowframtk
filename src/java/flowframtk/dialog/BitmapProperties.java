@@ -52,7 +52,7 @@ public class BitmapProperties extends JDialog
    public BitmapProperties(FlowframTk application, JFileChooser fc)
    {
       super(application,
-            application.getResources().getMessage("bitmap.properties.label"),
+            application.getResources().getMessage("bitmap_properties.title"),
             true);
       application_ = application;
       fc_ = fc;
@@ -73,7 +73,7 @@ public class BitmapProperties extends JDialog
       filenameLabel.setLabelFor(filename);
       rowBox.add(filename);
 
-      browse = getResources().createDialogButton("browse.label", "open",
+      browse = getResources().createDialogButton("browsebitmap.browse", "open",
          this, null, getResources().getMessage("tooltip.choose_file"));
 
       rowBox.add(browse);
@@ -84,11 +84,11 @@ public class BitmapProperties extends JDialog
       mainPanel.add(rowBox);
 
       JLabel latexlinkLabel = 
-         getResources().createAppLabel("bitmap.properties.latexfilename");
+         getResources().createAppLabel("bitmap_properties.latexfilename");
       rowBox.add(latexlinkLabel);
 
       autoBox = getResources().createAppCheckBox(
-        "bitmap.properties", "auto_latexfilename", true, this);
+        "bitmap_properties", "auto_latexfilename", true, this);
       rowBox.add(autoBox);
 
       latexlinkText = new JTextField("");
@@ -99,10 +99,10 @@ public class BitmapProperties extends JDialog
       mainPanel.add(Box.createVerticalStrut(10));
 
       JTextArea infoArea = new JTextArea(getResources().getMessage(
-         "bitmap.properties.path_note") + " "
+         "bitmap_properties.path_note") + " "
         + (application.useRelativeBitmaps() ?
-           getResources().getMessage("bitmap.properties.path.relative") :
-           getResources().getMessage("bitmap.properties.path.absolute",
+           getResources().getMessage("bitmap_properties.path.relative") :
+           getResources().getMessage("bitmap_properties.path.absolute",
               filenameLabel.getText())));
       infoArea.setEditable(false);
       infoArea.setLineWrap(true);
@@ -117,7 +117,7 @@ public class BitmapProperties extends JDialog
       mainPanel.add(rowBox);
 
       JLabel commandLabel =
-         getResources().createAppLabel("bitmap.properties.command");
+         getResources().createAppLabel("bitmap_properties.command");
       rowBox.add(commandLabel);
 
       latexCommand = new JTextField("\\pgfimage");
@@ -131,7 +131,7 @@ public class BitmapProperties extends JDialog
       mainPanel.add(rowBox);
 
       JLabel matrixLabel = 
-         getResources().createAppLabel("bitmap.properties.matrix");
+         getResources().createAppLabel("bitmap_properties.matrix");
       rowBox.add(matrixLabel);
 
       JPanel matrixPanel = new JPanel();
