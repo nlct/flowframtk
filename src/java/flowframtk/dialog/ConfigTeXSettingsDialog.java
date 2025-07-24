@@ -572,7 +572,7 @@ class TextConfigPanel extends JPanel
       add(tabbedPane, "Center");
 
       tabbedPane.addTab(resources.getMessage("textconfig.textmode"),
-        resources.appButtonIcon("textup.png"),
+        resources.appButtonIcon("textareaup.png"),
         createTextMappingsComponent(),
         resources.getToolTipText("textconfig.textmode"));
       tabbedPane.setMnemonicAt(0, 

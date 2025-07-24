@@ -2710,11 +2710,6 @@ public class FlowframTkInvoker
          catch (IOException e)
          {
             resources.error(e);
-
-            if (!resources.areAcceleratorsInitialised())
-            {
-               resources.initialiseAccelerators();
-            }
          }
          finally
          {
@@ -2723,11 +2718,6 @@ public class FlowframTkInvoker
                reader.close();
             }
          }
-      }
-      else
-      {
-         debugMessage("no accelerator file "+file);
-         resources.initialiseAccelerators();
       }
 
       // Load text mappings if they exist

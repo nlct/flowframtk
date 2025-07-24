@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.io.*;
 
 import java.awt.*;
@@ -1553,40 +1554,43 @@ class AcceleratorPanel extends JPanel
 
       data = new Vector<AcceleratorRow>();
 
-      for (Enumeration<Object> propertyNames
-         = resources.getAcceleratorPropertyNames();
-         propertyNames.hasMoreElements(); )
+      Iterator<String> it = resources.getKeyStrokeIterator();
+
+      if (it != null)
       {
-         String propName = propertyNames.nextElement().toString();
-
-         AcceleratorRow row = new AcceleratorRow(propName, resources);
-
-         int n = data.size();
-
-         if (n == 0)
+         while (it.hasNext())
          {
-            data.add(row);
-            continue;
-         }
+            String propName = it.next();
 
-         String thisLabel = row.firstElement();
-         boolean done = false;
+            AcceleratorRow row = new AcceleratorRow(propName, resources);
 
-         for (int i = 0; i < n; i++)
-         {
-            String label = data.get(i).getPropertyName();
+            int n = data.size();
 
-            if (thisLabel.compareTo(label) < 0)
+            if (n == 0)
             {
-               data.add(i, row);
-               done = true;
-               break;
+               data.add(row);
+               continue;
             }
-         }
 
-         if (!done)
-         {
-            data.add(row);
+            String thisLabel = row.firstElement();
+            boolean done = false;
+
+            for (int i = 0; i < n; i++)
+            {
+               String label = data.get(i).getPropertyName();
+
+               if (thisLabel.compareTo(label) < 0)
+               {
+                  data.add(i, row);
+                  done = true;
+                  break;
+               }
+            }
+
+            if (!done)
+            {
+               data.add(row);
+            }
          }
       }
 
@@ -3113,14 +3117,14 @@ class LookAndFeelPanel extends JPanel
          JComponent radioComp = Box.createVerticalBox();
 
          button = style.createTool(getResources(),
-               getResources().getMessage("tools.select"), "select", null, 
+               getResources().getMessage("menu.tools.select"), "select", null, 
                grp, true, null);
          button.setMnemonic('\0');
 
          radioComp.add(button);
 
          button = style.createTool(getResources(),
-               getResources().getMessage("tools.text"), "text", null,
+               getResources().getMessage("menu.tools.textarea"), "textarea", null,
                grp, false, null);
          button.setMnemonic('\0');
 

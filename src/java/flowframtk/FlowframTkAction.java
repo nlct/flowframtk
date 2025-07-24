@@ -124,6 +124,11 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       }
    }
 
+   public JMenuItem createMenuItem(String menuId)
+   {
+      return createMenuItem(menuId, menuId+".tooltipId");
+   }
+
    public JMenuItem createMenuItem(String menuId, String tooltipId)
    {
       JMenuItem item = new JMenuItem(
@@ -154,6 +159,11 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       setActionButton(item);
 
       return item;
+   }
+
+   public JMenu createMenu(String menuId)
+   {
+      return createMenu(menuId, menuId+".tooltip");
    }
 
    public JMenu createMenu(String menuId, String tooltipId)

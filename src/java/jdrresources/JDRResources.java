@@ -163,7 +163,16 @@ public class JDRResources
          return new ImageIcon(imgURL);
       }
 
-      warning(getMessage("error.file_not_found_with_name", filename));
+      try
+      {
+         throw new FileNotFoundException(
+           getMessage("error.file_not_found_with_name", filename));
+      }
+      catch (FileNotFoundException e)
+      {
+         warning(e.getMessage(), e);
+      }
+
       return null;
    }
 
@@ -178,7 +187,16 @@ public class JDRResources
          return new ImageIcon(imgURL);
       }
 
-      warning(getMessage("error.file_not_found_with_name", filename));
+      try
+      {
+         throw new FileNotFoundException(
+           getMessage("error.file_not_found_with_name", filename));
+      }
+      catch (FileNotFoundException e)
+      {
+         warning(e.getMessage(), e);
+      }
+
       return null;
    }
 
@@ -254,7 +272,16 @@ public class JDRResources
          return new ImageIcon(imgURL);
       }
 
-      warning(getMessage("error.file_not_found_with_name", filename));
+      try
+      {
+         throw new FileNotFoundException(
+           getMessage("error.file_not_found_with_name", filename));
+      }
+      catch (FileNotFoundException e)
+      {
+         warning(e.getMessage(), e);
+      }
+
       return null;
    } 
 
@@ -725,87 +752,179 @@ public class JDRResources
       return description;
    }
 
+   @Deprecated
    public Enumeration<Object> getAcceleratorPropertyNames()
    {
-      return accelerators.keys();
+      return null;
    }
 
    public String getAcceleratorString(String propName)
    {
-      String str = null;
+      KeyStroke k = getAccelerator(propName);
 
-      if (accelerators != null)
-      {
-         str = accelerators.getProperty(propName);
-      }
-
-      if (str == null)
-      {
-         str = getMessageIfExists("button."+propName+".keystroke");
-
-         if (str == null)
-         {
-            str = getMessageIfExists("action."+propName+".keystroke");
-         }
-      }
-
-      return str;
+      return k == null ? null : k.toString();
    }
 
    public KeyStroke getAccelerator(String propName)
    {
-      if (accelerators == null) return null;
-
-      return accelerators.getAccelerator(propName);
+      return getAccelerator(propName, null);
    }
 
    public KeyStroke getAccelerator(String propName, String defValue)
    {
-      if (accelerators == null) return null;
+      KeyStroke keyStroke = null;
 
-      return accelerators.getAccelerator(propName, defValue);
-   }
-
-   public void setAccelerator(String propName, String keystroke)
-   {
-      accelerators.setProperty(propName, keystroke);
-   }
-
-   public boolean areAcceleratorsInitialised()
-   {
-      return accelerators != null;
-   }
-
-   public void initialiseAccelerators()
-   {
-      accelerators = Accelerators.createDefaultAccelerators();
-   }
-
-   public void initialiseAccelerators(boolean upgrade,
-      Reader reader)
-      throws IOException
-   {
-      if (upgrade)
+      if (keyStrokes == null)
       {
-         // Create the defaults first in case new accelerators
-         // have been added to the application.
-         accelerators = Accelerators.createDefaultAccelerators();
+         keyStrokes = new HashMap<String,KeyStroke>();
+      }
+
+      keyStroke = keyStrokes.get(propName);
+
+      if (keyStroke == null)
+      {
+         keyStroke = helpLib.getKeyStroke(propName);
+
+         if (keyStroke == null && defValue != null)
+         {
+            keyStroke = KeyStroke.getKeyStroke(defValue);
+         }
+
+         if (keyStroke != null)
+         {
+            keyStrokes.put(propName, keyStroke);
+         }
+      }
+
+      return keyStroke;
+   }
+
+   public void setAccelerator(String propName, String keystrokeName)
+   {
+      KeyStroke k = null;
+
+      if (keystrokeName != null)
+      {
+         k = KeyStroke.getKeyStroke(keystrokeName);
+      }
+
+      setAccelerator(propName, k);
+   }
+
+   public void setAccelerator(String propName, KeyStroke k)
+   {
+      if (keyStrokes == null)
+      {
+         keyStrokes = new HashMap<String,KeyStroke>();
+      }
+
+      if (k == null)
+      {
+         keyStrokes.remove(propName);
       }
       else
       {
-         accelerators = new Accelerators();
+         keyStrokes.put(propName, k);
       }
 
-      accelerators.load(reader);
+      helpLib.setKeyStrokeProperty(propName, k);
    }
 
-   public void saveAccelerators(Writer writer)
+   @Deprecated
+   public boolean areAcceleratorsInitialised()
+   {
+      return false;
+   }
+
+   @Deprecated
+   public void initialiseAccelerators()
+   {
+   }
+
+   public void initialiseAccelerators(boolean upgrade,
+      BufferedReader reader)
       throws IOException
    {
-      if (accelerators != null)
+      String line;
+
+      while ((line = reader.readLine()) != null)
       {
-         accelerators.store(writer, "Accelerators");
+         if (line.startsWith("#") || line.isEmpty())
+         {
+            continue;
+         }
+
+         String[] split = line.split("=", 1);
+
+         if (split.length == 2)
+         {
+            String propName = split[0];
+            KeyStroke keyStroke = KeyStroke.getKeyStroke(split[1]);
+
+            if (upgrade)
+            {
+               // take renaming into account
+
+               if (propName.startsWith("text."))
+               {
+                  propName = "menu.textarea." + propName.substring(5);
+               }
+               else if (propName.startsWith("label."))
+               {
+                  propName = "button." + propName.substring(7);
+               }
+               else if (propName.startsWith("tools.")
+                 || propName.startsWith("file.")
+                 || propName.startsWith("edit.")
+                 || propName.startsWith("editpath.")
+                 || propName.startsWith("transform.")
+                 || propName.startsWith("navigate.")
+                 || propName.startsWith("settings.")
+                 || propName.startsWith("texeditor.")
+                 || propName.startsWith("debug.")
+                 )
+               {
+                  propName = "menu." + propName;
+               }
+            }
+
+            setAccelerator(propName, keyStroke);
+         }
       }
+   }
+
+   public void saveAccelerators(PrintWriter writer)
+      throws IOException
+   {
+      writer.println("#Accelerators");
+      writer.print("#");
+      writer.println(new Date());
+
+      if (keyStrokes != null)
+      {
+         for (Iterator<String> it = keyStrokes.keySet().iterator(); it.hasNext(); )
+         {
+            String propName = it.next();
+            KeyStroke k = keyStrokes.get(propName);
+
+            if (k != null)
+            {
+               writer.print(propName);
+               writer.print("=");
+               writer.println(k);
+            }
+         }
+      }
+   }
+
+   public Iterator<String> getKeyStrokeIterator()
+   {
+      if (keyStrokes != null)
+      {
+         return keyStrokes.keySet().iterator();
+      }
+
+      return null;
    }
 
    @Deprecated
@@ -1214,55 +1333,23 @@ public class JDRResources
          return new String[] {"en"};
       }
 
-      String[] lang = new String[files.length];
+      Vector<String> lang = new Vector<String>(files.length);
 
       for (int i = 0; i < files.length; i++)
       {
          String name = files[i].getName();
 
-         lang[i] = name.substring(name.indexOf("-")+1, name.lastIndexOf("."));
+         String l = name.substring(name.indexOf("-")+1, name.lastIndexOf("."));
+
+         if (!lang.contains(l))
+         {
+            lang.add(l);
+         }
       }
 
-      return lang;
+      return lang.toArray(new String[lang.size()]);
    }
 
-   public String[] getAvailableHelpLanguages()
-   {
-      URL url = getClass().getResource(helpLib.getHelpSetResourcePath());
-
-      File parent;
-
-      try
-      {
-         parent = new File(url.toURI());
-      }
-      catch (URISyntaxException e)
-      {
-         // this shouldn't happen!
-
-         e.printStackTrace();
-         return new String[] {"en"};
-      }
-
-      File[] files = parent.listFiles(directoryFilter);
-
-      if (files == null)
-      {
-         debugMessage("no dictionaries found");
-         return new String[] {"en"};
-      }
-
-      String[] lang = new String[files.length];
-
-      for (int i = 0; i < files.length; i++)
-      {
-         lang[i] = files[i].getName();
-      }
-
-      return lang;
-   }
-
-   @Deprecated
    public String[] getAvailableHelpLanguages(String dirBase)
    {
       URL url = getClass().getResource("/resources/helpsets/"+dirBase);
@@ -1285,7 +1372,7 @@ public class JDRResources
 
       if (files == null)
       {
-         debugMessage("no dictionaries found");
+         debugMessage("no helpsets found");
          return new String[] {"en"};
       }
 
@@ -1504,8 +1591,9 @@ public class JDRResources
    {
       return helpLib.getAboutInfo(html, APP_VERSION, APP_DATE,
        String.format(
-        "Copyright (C) %s Nicola L. C. Talbot (%s)",
-        COPYRIGHT_YEAR, helpLib.getInfoUrl(html, "www.dickimaw-books.com")),
+        "Copyright (C) %s-%s Nicola L. C. Talbot (%s)",
+        START_COPYRIGHT_YEAR, COPYRIGHT_YEAR,
+        helpLib.getInfoUrl(html, "www.dickimaw-books.com")),
         TeXJavaHelpLib.LICENSE_GPL3,
         true, null
       );
@@ -2786,7 +2874,7 @@ public class JDRResources
 
    private JDRGuiMessage jdrMessageSystem;
 
-   public Accelerators accelerators = null;
+   public HashMap<String,KeyStroke> keyStrokes = null;
 
    public Properties iconnamemap;
 
@@ -2805,9 +2893,7 @@ public class JDRResources
    public static final String APP_DATE = "2025-07-18";
    public static final String START_COPYRIGHT_YEAR = "2006";
    public static final String COPYRIGHT_YEAR
-    = APP_DATE.startsWith(START_COPYRIGHT_YEAR) ?
-      APP_DATE.substring(0,4) :
-      START_COPYRIGHT_YEAR+"-"+APP_DATE.substring(0,4);
+    = APP_DATE.substring(0,4);
 
    public static final int EXIT_SYNTAX = 1;
 

@@ -374,7 +374,7 @@ public class JDRCanvas extends JPanel
       addAppAction("save_as");
       addAppAction("export");
       addAppSelectAction("moveby");
-      addAppSelectAction("text.matrix");
+      addAppSelectAction("textarea.matrix");
       addAppSelectAction("path.style");
       addAppSelectAction("adjustcol");
       addAppSelectAction("adjustcol.togrey");
@@ -409,7 +409,7 @@ public class JDRCanvas extends JPanel
       addAppAction("navigate.add_next");
       addAppAction("navigate.skip");
       addAppAction("navigate.find");
-      addAppAction("navigate.description");
+      addAppAction("navigate.by_description");
       addAppAction("navigate.add_description");
       addAppSelectAction("parshape");
       addAppSelectAction("shapepar");
@@ -1017,7 +1017,7 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectTextPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "menu.selectedtext.description", "tooltip.description"));
+         "menu.selectedtext.textarea_description"));
 
       // Edit text
 
@@ -1131,7 +1131,7 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectPathPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "menu.selectedpath.description", "tooltip.description"));
+         "menu.selectedpath.path_description"));
 
       // Edit path
 
@@ -1292,7 +1292,7 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectTextPathPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "menu.selectedtextpath.description", "tooltip.description"));
+         "menu.selectedtextpath.textpath_description"));
 
       // Edit text
 
@@ -1411,7 +1411,7 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectBitmapPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "menu.selectedbitmap.description", "tooltip.description"));
+         "menu.selectedbitmap.bitmap_description"));
 
       // Properties
 
@@ -1479,7 +1479,7 @@ public class JDRCanvas extends JPanel
       // Description
 
       selectPopupMenu.add(objectDescriptionAction.createMenuItem(
-         "menu.selected.description", "tooltip.description"));
+         "menu.selected.object_description"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1767,7 +1767,7 @@ public class JDRCanvas extends JPanel
 
       noneSelectedPopupMenu.add(
          addCanvasSelectAction("image_description").createMenuItem(
-         "menu.none.description", "tooltip.description"));
+         "menu.none.image_description"));
 
       // Select all
 
@@ -1777,8 +1777,8 @@ public class JDRCanvas extends JPanel
       // Find by description
 
       noneSelectedPopupMenu.add(
-         addCanvasSelectAction("navigate.description").createMenuItem(
-         "menu.none.find_by_description", "tooltip.navigate.description"));
+         addCanvasSelectAction("navigate.by_description").createMenuItem(
+         "menu.none.find_by_description", "tooltip.navigate.by_description"));
 
       // Paste
 

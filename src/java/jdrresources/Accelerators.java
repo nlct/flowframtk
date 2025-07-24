@@ -64,22 +64,22 @@ public class Accelerators extends Properties
    {
       Accelerators acc = new Accelerators();
 
-      acc.putAccelerator("label.okay",
+      acc.putAccelerator("button.okay",
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
 
-      acc.putAccelerator("label.alt_okay",
+      acc.putAccelerator("button.alt_okay",
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("label.cancel",
+      acc.putAccelerator("button.cancel",
         KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 
-      acc.putAccelerator("label.close",
+      acc.putAccelerator("button.close",
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
 
-      acc.putAccelerator("label.help",
+      acc.putAccelerator("button.help",
         KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 
-      acc.putAccelerator("label.contexthelp",
+      acc.putAccelerator("button.contexthelp",
         KeyStroke.getKeyStroke(KeyEvent.VK_F1, InputEvent.SHIFT_MASK));
 
       acc.putAccelerator("info.help",
@@ -142,216 +142,216 @@ public class Accelerators extends Properties
       acc.putAccelerator("accelerator.delete_last",
          KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0));
 
-      acc.putAccelerator("text.copy",
+      acc.putAccelerator("menu.textarea.copy",
          KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("text.cut",
+      acc.putAccelerator("menu.textarea.cut",
          KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("text.paste",
+      acc.putAccelerator("menu.textarea.paste",
          KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("text.select_all",
+      acc.putAccelerator("menu.textarea.select_all",
          KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("text.insert_symbol",
+      acc.putAccelerator("menu.textarea.insert_symbol",
          KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
 
-      acc.putAccelerator("editpath.next_control",
+      acc.putAccelerator("menu.editpath.next_control",
          KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
 
-      acc.putAccelerator("editpath.prev_control",
+      acc.putAccelerator("menu.editpath.prev_control",
          KeyStroke.getKeyStroke(KeyEvent.VK_F6,
          InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("editpath.delete_control",
+      acc.putAccelerator("menu.editpath.delete_control",
          KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-      acc.putAccelerator("editpath.add_control",
+      acc.putAccelerator("menu.editpath.add_control",
          KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
 
-      acc.putAccelerator("editpath.coordinates",
+      acc.putAccelerator("menu.editpath.coordinates",
          KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
 
-      acc.putAccelerator("editpath.snap",
+      acc.putAccelerator("menu.editpath.snap",
          KeyStroke.getKeyStroke(KeyEvent.VK_S,
          InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("file.new", 
+      acc.putAccelerator("menu.file.new", 
         KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("file.open",
+      acc.putAccelerator("menu.file.open",
         KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("file.save",
+      acc.putAccelerator("menu.file.save",
         KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("file.quit",
+      acc.putAccelerator("menu.file.quit",
         KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.undo",
+      acc.putAccelerator("menu.edit.undo",
         KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0));
 
-      acc.putAccelerator("edit.redo",
+      acc.putAccelerator("menu.edit.redo",
         KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
 
-      acc.putAccelerator("edit.select_all",
+      acc.putAccelerator("menu.edit.select_all",
         KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.deselect_all",
+      acc.putAccelerator("menu.edit.deselect_all",
         KeyStroke.getKeyStroke(KeyEvent.VK_A,
          InputEvent.CTRL_MASK+InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("edit.cut",
+      acc.putAccelerator("menu.edit.cut",
         KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.copy",
+      acc.putAccelerator("menu.edit.copy",
         KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.paste",
+      acc.putAccelerator("menu.edit.paste",
         KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.moveby",
+      acc.putAccelerator("menu.edit.moveby",
         KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0));
 
-      acc.putAccelerator("edit.path.edit",
+      acc.putAccelerator("menu.edit.path.edit",
         KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.path.style.all",
+      acc.putAccelerator("menu.edit.path.style.all",
         KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.text.edit",
+      acc.putAccelerator("menu.edit.text.edit",
         KeyStroke.getKeyStroke(KeyEvent.VK_I,
          InputEvent.CTRL_MASK+InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("edit.front",
+      acc.putAccelerator("menu.edit.front",
         KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.back",
+      acc.putAccelerator("menu.edit.back",
         KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("edit.moveup",
+      acc.putAccelerator("menu.edit.moveup",
         KeyStroke.getKeyStroke(KeyEvent.VK_F,
          InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("edit.movedown",
+      acc.putAccelerator("menu.edit.movedown",
         KeyStroke.getKeyStroke(KeyEvent.VK_B,
          InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("transform.rotate",
+      acc.putAccelerator("menu.transform.rotate",
         KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("transform.scale",
+      acc.putAccelerator("menu.transform.scale",
         KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("transform.shear",
+      acc.putAccelerator("menu.transform.shear",
         KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("transform.merge",
+      acc.putAccelerator("menu.transform.merge",
         KeyStroke.getKeyStroke(KeyEvent.VK_J, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("transform.convert",
+      acc.putAccelerator("menu.transform.convert",
         KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("transform.group",
+      acc.putAccelerator("menu.transform.group",
         KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("transform.ungroup",
+      acc.putAccelerator("menu.transform.ungroup",
          KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.select",
+      acc.putAccelerator("menu.tools.select",
          KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.open_line",
+      acc.putAccelerator("menu.tools.open_line",
          KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.closed_line",
+      acc.putAccelerator("menu.tools.closed_line",
          KeyStroke.getKeyStroke(KeyEvent.VK_L,
             InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("tools.open_curve",
+      acc.putAccelerator("menu.tools.open_curve",
         KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.closed_curve",
+      acc.putAccelerator("menu.tools.closed_curve",
         KeyStroke.getKeyStroke(KeyEvent.VK_K,
             InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("tools.rectangle",
+      acc.putAccelerator("menu.tools.rectangle",
         KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.ellipse",
+      acc.putAccelerator("menu.tools.ellipse",
         KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.text",
+      acc.putAccelerator("menu.tools.textarea",
         KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.math",
+      acc.putAccelerator("menu.tools.math",
         KeyStroke.getKeyStroke(KeyEvent.VK_T, 
          InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("tools.gap",
+      acc.putAccelerator("menu.tools.gap",
         KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("tools.abandon",
+      acc.putAccelerator("menu.tools.abandon",
         KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("tools.finish",
+      acc.putAccelerator("menu.tools.finish",
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
 
-      acc.putAccelerator("navigate.goto",
+      acc.putAccelerator("menu.navigate.goto",
         KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 
-      acc.putAccelerator("navigate.select",
+      acc.putAccelerator("menu.navigate.select",
         KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.SHIFT_MASK));
 
-      acc.putAccelerator("navigate.add_next",
+      acc.putAccelerator("menu.navigate.add_next",
         KeyStroke.getKeyStroke(KeyEvent.VK_F6, KeyEvent.SHIFT_MASK));
 
-      acc.putAccelerator("navigate.skip",
+      acc.putAccelerator("menu.navigate.skip",
         KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
 
-      acc.putAccelerator("navigate.find",
+      acc.putAccelerator("menu.navigate.find",
         KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.SHIFT_MASK));
 
-      acc.putAccelerator("texeditor.selectText",
+      acc.putAccelerator("menu.texeditor.selectText",
         KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("texeditor.cutText",
+      acc.putAccelerator("menu.texeditor.cutText",
         KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("texeditor.copyText",
+      acc.putAccelerator("menu.texeditor.copyText",
         KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("texeditor.pasteText",
+      acc.putAccelerator("menu.texeditor.pasteText",
         KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("texeditor.search.find",
+      acc.putAccelerator("menu.texeditor.search.find",
         KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_MASK));
 
-      acc.putAccelerator("texeditor.search.find_again",
+      acc.putAccelerator("menu.texeditor.search.find_again",
         KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK));
 
-      acc.putAccelerator("texeditor.search.replace",
+      acc.putAccelerator("menu.texeditor.search.replace",
         KeyStroke.getKeyStroke(KeyEvent.VK_H, KeyEvent.CTRL_MASK));
 
-      acc.putAccelerator("settings.grid.show",
+      acc.putAccelerator("menu.settings.grid.show",
         KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
-      acc.putAccelerator("settings.grid.lock",
+      acc.putAccelerator("menu.settings.grid.lock",
         KeyStroke.getKeyStroke(KeyEvent.VK_F2, InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("debug.objectinfo",
+      acc.putAccelerator("menu.debug.objectinfo",
         KeyStroke.getKeyStroke(KeyEvent.VK_F11, 
           InputEvent.SHIFT_MASK));
 
-      acc.putAccelerator("debug.writelog",
+      acc.putAccelerator("menu.debug.writelog",
         KeyStroke.getKeyStroke(KeyEvent.VK_F11, 
           InputEvent.SHIFT_MASK+InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("debug.dumpall",
+      acc.putAccelerator("menu.debug.dumpall",
         KeyStroke.getKeyStroke(KeyEvent.VK_F11, InputEvent.CTRL_MASK));
 
-      acc.putAccelerator("debug.revalidate",
+      acc.putAccelerator("menu.debug.revalidate",
         KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
 
       return acc;

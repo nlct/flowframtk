@@ -2207,7 +2207,7 @@ public class FlowframTk extends JFrame
 
       // Tools menu
 
-      toolsM = FlowframTkAction.createMenu(this, "menu.tools",
+      toolsM = FlowframTkAction.createMenu(this, "menu", "tools",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2387,7 +2387,7 @@ public class FlowframTk extends JFrame
 
       // navigate menu
 
-      navigateM = FlowframTkAction.createMenu(this, "menu.navigate",
+      navigateM = FlowframTkAction.createMenu(this, "menu", "navigate",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2478,7 +2478,7 @@ public class FlowframTk extends JFrame
       // find object with given description
 
       findByDescriptionItem = FlowframTkAction.createMenuItem(this,
-         "menu", "navigate.description", navigateM,
+         "menu", "navigate.by_description", navigateM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
@@ -2514,7 +2514,7 @@ public class FlowframTk extends JFrame
 
       // Bitmap menu
 
-      bitmapM = FlowframTkAction.createMenu(this, "menu.bitmap",
+      bitmapM = FlowframTkAction.createMenu(this, "menu", "bitmap",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -2631,7 +2631,7 @@ public class FlowframTk extends JFrame
 
       // TeX/LaTeX
 
-      texM = FlowframTkAction.createMenu(this, "menu.tex",
+      texM = FlowframTkAction.createMenu(this, "menu", "tex",
          TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
@@ -3243,7 +3243,7 @@ public class FlowframTk extends JFrame
       // Window menu
 
       windowM = FlowframTkAction.createMenu(this,
-        "menu.window", TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
+        "menu", "window", TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, false, true);
       mbar.add(windowM);
 
@@ -3461,13 +3461,13 @@ public class FlowframTk extends JFrame
       // set the browse utility for bitmaps
 
       appSettings.setBrowseUtil(new BrowseUtil(
-         resources.getMessage("browse.label"),
-         resources.getMessage("browse.not_found"),
-         resources.getMessage("browse.invalid_format"),
-         resources.getMessage("browse.cant_refresh"),
-         resources.getMessage("browse.title"),
-         resources.getMessage("browse.invalid_title"),
-         resources.getMessage("browse.discard")));
+         resources.getMessage("browsebitmap.title"),
+         resources.getMessage("browsebitmap.not_found"),
+         resources.getMessage("browsebitmap.invalid_format"),
+         resources.getMessage("browsebitmap.cant_refresh"),
+         resources.getMessage("browsebitmap.title"),
+         resources.getMessage("browsebitmap.invalid_title"),
+         resources.getMessage("browsebitmap.discard")));
       appSettings.setBitmapChooser(bitmapFC);
 
       exportToEpsSettings = new ExportToEpsSettings(this, appSelector);
@@ -3548,7 +3548,6 @@ public class FlowframTk extends JFrame
 
    public void addAppAction(FlowframTkAction action)
    {
-
       int validToolFlag = action.getValidToolFlag();
 
       if (validToolFlag == TOOL_FLAG_ANY)

@@ -536,8 +536,8 @@ Nicola Talbot
 <entry key="menu.navigate.find.mnemonic">F</entry>
 <entry key="menu.navigate.find.keystroke">shift F7</entry>
 
-<entry key="menu.navigate.description">Find By Description...</entry>
-<entry key="menu.navigate.description.mnemonic">D</entry>
+<entry key="menu.navigate.by_description">Find By Description...</entry>
+<entry key="menu.navigate.by_description.mnemonic">D</entry>
 
 <entry key="menu.navigate.add_description">Add By Description...</entry>
 <entry key="menu.navigate.add_description.mnemonic">B</entry>
@@ -843,6 +843,7 @@ Nicola Talbot
 
 <entry key="menu.selectedtextpath.textpath_description">Text Along Path Description...</entry>
 <entry key="menu.selectedtextpath.textpath_description.mnemonic">I</entry>
+<entry key="menu.selectedtextpath.textpath_description.tooltip">Set or edit the description for the selected text-path</entry>
 
 <!--  Selected Text Popup Menu -->
 
@@ -850,6 +851,7 @@ Nicola Talbot
 
 <entry key="menu.selectedtext.textarea_description">Text Area Description...</entry>
 <entry key="menu.selectedtext.textarea_description.mnemonic">I</entry>
+<entry key="menu.selectedtext.textarea_description.tooltip">Set or edit the description of the selected text</entry>
 
 <entry key="menu.selectedtext.edit">Edit Text...</entry>
 <entry key="menu.selectedtext.edit.mnemonic">X</entry>
@@ -891,6 +893,7 @@ Nicola Talbot
 
 <entry key="menu.selectedpath.path_description">Path Description...</entry>
 <entry key="menu.selectedpath.path_description.mnemonic">I</entry>
+<entry key="menu.selectedpath.path_description.tooltip">Set or edit the description of the selected path</entry>
 
 <entry key="menu.selectedpath.edit">Edit Path</entry>
 <entry key="menu.selectedpath.edit.mnemonic">E</entry>
@@ -945,6 +948,7 @@ Nicola Talbot
 
 <entry key="menu.selectedbitmap.bitmap_description">Bitmap Description...</entry>
 <entry key="menu.selectedbitmap.bitmap_description.mnemonic">I</entry>
+<entry key="menu.selectedbitmap.bitmap_description.tooltip">Set or edit the description of the selected bitmap</entry>
 
 <entry key="menu.selectedbitmap.properties">Bitmap Properties...</entry>
 <entry key="menu.selectedbitmap.properties.mnemonic">R</entry>
@@ -962,10 +966,15 @@ Nicola Talbot
 
 <entry key="index.menu.selectedgroup">Group Popup Menu</entry>
 
-<entry key="menu.selectedgroup_description">Group Description...</entry>
-<entry key="menu.selectedgroup_description.mnemonic">I</entry>
+<entry key="menu.selectedgroup.group_description">Group Description...</entry>
+<entry key="menu.selectedgroup.group_description.mnemonic">I</entry>
+<entry key="menu.selectedgroup.group_description.tooltip">Set or edit the description of the selected group</entry>
 
 <entry key="index.menu.selected">Common Popup Menu Items</entry>
+
+<entry key="menu.selected.object_description">Description...</entry>
+<entry key="menu.selected.object_description.mnemonic">I</entry>
+<entry key="menu.selected.object_description.tooltip">Set or edit the description of the selected object</entry>
 
 <entry key="menu.selected.cut">Cut</entry>
 <entry key="menu.selected.cut.mnemonic">T</entry>
@@ -1014,6 +1023,7 @@ Nicola Talbot
 
 <entry key="menu.none.image_description">Image Description</entry>
 <entry key="menu.none.image_description.mnemonic">D</entry>
+<entry key="menu.none.image_description.tooltip">Set or edit the description of the image</entry>
 
 <entry key="menu.none.find_by_description">Find By Description</entry>
 <entry key="menu.none.find_by_description.mnemonic">F</entry>
@@ -1126,7 +1136,7 @@ Nicola Talbot
 <entry key="tooltip.navigate.add_next">Add the next object in the stack to the current selection</entry>
 <entry key="tooltip.navigate.skip">Deselect the lowest selected object in the stack and add next object to selection</entry>
 <entry key="tooltip.navigate.find">Scroll to selected object(s)</entry>
-<entry key="tooltip.navigate.description">Select and scroll to an object from its description</entry>
+<entry key="tooltip.navigate.by_description">Select and scroll to an object from its description</entry>
 <entry key="tooltip.navigate.add_description">Scroll to an object from its description and add to current selection</entry>
 <entry key="tooltip.new">New image</entry>
 <entry key="tooltip.next_control">Select the next control point</entry>
@@ -1306,9 +1316,12 @@ Nicola Talbot
 
 
 <entry key="info.title">Information</entry>
-<entry key="info.help">Help</entry>
-<entry key="info.help.tooltip">View the relevant page of the manual</entry>
 <entry key="info.tooltip">Double-click to view full message</entry>
+
+<entry key="info.help">Help</entry>
+<entry key="info.help.keystroke">control F1</entry>
+<entry key="info.help.tooltip">View the relevant page of the manual</entry>
+
 <entry key="info.closed_path">Click at each vertex. Double-click on final vertex to close path.</entry>
 <entry key="info.distort">Drag corner points to distort object.</entry>
 <entry key="info.edit_path">Click on control point to select a segment.</entry>
@@ -3093,6 +3106,8 @@ Merge Region: {2}</entry>
 
 
 <!-- Buttons -->
+
+<entry key="button.alt_okay">shift ENTER</entry>
 
 <entry key="button.contexthelp">Context Help</entry>
 <entry key="button.contexthelp.mnemonic">H</entry>
