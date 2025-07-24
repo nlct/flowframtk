@@ -29,6 +29,9 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.IconSet;
+import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+
 /**
  * Application button.
  * @author Nicola L C Talbot
@@ -188,8 +191,15 @@ public class JDRButton extends JButton
       }
    }
 
-   public JDRButton(Action action)
+   public JDRButton(TJHAbstractAction action)
    {
       super(action);
+
+      IconSet icSet = action.getIconSet();
+
+      if (icSet != null)
+      {
+         icSet.setButtonIcons(this);
+      }
    }
 }

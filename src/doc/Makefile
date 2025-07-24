@@ -113,8 +113,8 @@ $(targetdir)/jdrview/en-GB	:
 	mkdir -p $(targetdir)/jdrview/en-GB
 
 clean	:
-	\rm -f flowframtk-en*.{aux,log,pdf,glg,glstex,out,toc,lof}
-	\rm -f jdrview-en*.{aux,log,pdf,glg,glstex,out,toc,lof}
+	\rm -f flowframtk-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
+	\rm -f jdrview-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
 	\rm -rf $(targetdir)/flowframtk
 	\rm -rf $(targetdir)/jdrview
 	\rm -rf flowframtk-props-en*.bib

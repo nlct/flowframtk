@@ -3332,7 +3332,8 @@ public class FlowframTk extends JFrame
 
       // manual
 
-      incStartupProgress(helpM, resources.createHelpAction(helpM, toolBar));
+      JDRButtonItem helpItem = resources.createHelpButtonItem(helpM, toolBar);
+      incStartupProgress(helpM, helpItem);
 
       // Licence dialog
 

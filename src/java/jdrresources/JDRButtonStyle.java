@@ -30,6 +30,8 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+
 public class JDRButtonStyle
 {
    public JDRButtonStyle(String name, String location, boolean isCompact)
@@ -132,6 +134,11 @@ public class JDRButtonStyle
       }
 
       this.display = display;
+   }
+
+   public boolean isIconOnly()
+   {
+      return display == ICON_ONLY;
    }
 
    public boolean isCompact()
@@ -276,6 +283,48 @@ public class JDRButtonStyle
       else
       {
          button = new JDRButton(text, listener, tooltipText);
+      }
+
+      button.setBorderPainted(paintBorder);
+      button.setContentAreaFilled(fillArea);
+
+      if (paintBorder)
+      {
+         button.setMargin(new Insets(0, 0, 0, 0));
+      }
+      else
+      {
+         button.setMargin(new Insets(1, 1, 1, 1));
+      }
+
+      return button;
+   }
+
+   public JDRButton createButton(TJHAbstractAction action)
+   {
+      JDRButton button = new JDRButton(action);
+
+      if (display == ICON_ONLY)
+      {
+         if (!paintBorder)
+         {
+            button.setBorder(BorderFactory.createEmptyBorder());
+         }
+      }
+      else if (display == ICON_TEXT)
+      {
+          button.setHorizontalTextPosition(horizontalPosition);
+          button.setVerticalTextPosition(verticalPosition);
+      }
+
+      if (presslocation == null)
+      {
+         button.setPressedIcon(null);
+      }
+      else
+      {
+         button.setRolloverIcon(null);
+         button.setDisabledIcon(null);
       }
 
       button.setBorderPainted(paintBorder);

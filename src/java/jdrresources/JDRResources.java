@@ -92,6 +92,8 @@ public class JDRResources
       helpLib = new TeXJavaHelpLib(this,
        appname, "/resources", "/resources/dictionaries",
        dictLocale, helpSetLocale, dictPrefixes);
+
+      helpLib.setDefaultButtonOmitTextIfIcon(true);
    }
 
    public String getDictionaryTag()
@@ -223,7 +225,7 @@ public class JDRResources
       return BUTTON_STYLES[0];
    }
 
-   public static void setButtonStyle(String name)
+   public void setButtonStyle(String name)
     throws IllegalArgumentException
    {
       for (int i = 0; i < BUTTON_STYLES.length; i++)
@@ -231,6 +233,7 @@ public class JDRResources
          if (BUTTON_STYLES[i].getName().equals(name))
          {
             buttonStyle = i;
+            helpLib.setDefaultButtonOmitTextIfIcon(BUTTON_STYLES[i].isIconOnly());
             return;
          }
       }
@@ -1413,24 +1416,14 @@ public class JDRResources
 
    /**
     * Creates a menu item and tool bar button to open manual.
-    * @param helpM may be null if menu item not required
-    * @param toolBar may be null if button not required
+    * @param helpM the menu to add the item to
+    * @param toolBar the component to add the button to
     */
-   public TJHAbstractAction createHelpAction(JMenu helpM, JComponent toolBar)
+   public JDRButtonItem createHelpButtonItem(JMenu helpM, JComponent toolBar)
    {
       TJHAbstractAction helpAction = helpLib.createHelpAction();
 
-      if (helpM != null)
-      {
-         helpM.add(new JMenuItem(helpAction));
-      }
-
-      if (toolBar != null)
-      {
-         toolBar.add(new JButton(helpAction));
-      }
-
-      return helpAction;
+      return new JDRButtonItem(this, helpAction, toolBar, helpM);
    }
 
    /**
@@ -1935,6 +1928,11 @@ public class JDRResources
    public DirectionButton createDirectionButton(String tag, int direction)
    {
       return getButtonStyle().createDirectionButton(this, tag, direction);
+   }
+
+   public JDRButton createAppButton(TJHAbstractAction action)
+   {
+      return getButtonStyle().createButton(action);
    }
 
    public JDRButton createAppButton(String buttonText, String name, 

@@ -29,6 +29,8 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+
 /**
  * Application button and menu item.
  * @author Nicola L C Talbot
@@ -87,9 +89,28 @@ public class JDRButtonItem extends JMenuItem
       menu.add(this);
    }
 
+   public JDRButtonItem(JDRResources resources, TJHAbstractAction action,
+      JComponent buttonParent, JComponent menu)
+   {
+      super(action);
+
+      button = resources.createAppButton(action);
+
+      button.setAlignmentX(Component.CENTER_ALIGNMENT);
+      button.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+      buttonParent.add(button);
+
+      menu.add(this);
+   }
+
    public void setEnabled(boolean flag)
    {
-      button.setEnabled(flag);
+      if (button != null)
+      {
+         button.setEnabled(flag);
+      }
+
       super.setEnabled(flag);
    }
 
