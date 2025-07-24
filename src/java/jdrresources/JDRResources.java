@@ -259,6 +259,61 @@ public class JDRResources
       return dialogButtonStyle;
    }
 
+   @Override
+   public ImageIcon getSmallIcon(String base, String... extensions)
+   {
+      for (String ext : extensions)
+      {
+         String filename = getIconDir() + "/" + base
+          + helpLib.getSmallIconSuffix() + "." + ext;
+
+         java.net.URL imgURL = getClass().getResource(filename);
+
+         if (imgURL == null)
+         {
+            filename = getIconDir() + "/" + base
+             + "." + ext;
+
+            imgURL = getClass().getResource(filename);
+         }
+
+         if (imgURL != null)
+         {
+            return new ImageIcon(imgURL);
+         }
+      }
+
+      return null;
+   }
+  
+   @Override
+   public ImageIcon getLargeIcon(String base, String... extensions)
+   {
+      for (String ext : extensions)
+      {
+         String filename = getIconDir() + "/" + base
+           + helpLib.getLargeIconSuffix() + "." + ext;
+
+         java.net.URL imgURL = getClass().getResource(filename);
+
+         if (imgURL == null)
+         {
+            filename = getIconDir() + "/" + base
+             + "." + ext;
+
+            imgURL = getClass().getResource(filename);
+         }
+
+         if (imgURL != null)
+         {
+            return new ImageIcon(imgURL);
+         }
+      }
+
+      return null;
+   }
+  
+
    /**
     * Gets an application icon from the resource icon directory.
     * @param name the name of the icon
@@ -2914,43 +2969,43 @@ public class JDRResources
       new JDRButtonStyle("smallbordered", "smallbuttons", "smallplain",
           true, true, true, true, true),
       new JDRButtonStyle("textsmallplain", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT),
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT),
       new JDRButtonStyle("textsmallhighlights", "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT),
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT),
       new JDRButtonStyle("textsmallbordered", "smallbuttons", "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT),
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT),
       new JDRButtonStyle("textsmallplainleading", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.LEADING, SwingConstants.CENTER),
       new JDRButtonStyle("textsmallhighlightsleading", "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT,
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.LEADING, SwingConstants.CENTER),
       new JDRButtonStyle("textsmallborderedleading", "smallbuttons",
           "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT,
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.LEADING, SwingConstants.CENTER),
       new JDRButtonStyle("textsmallplaintop", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.TOP),
       new JDRButtonStyle("textsmallhighlightstop", "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT,
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.TOP),
       new JDRButtonStyle("textsmallborderedtop", "smallbuttons",
           "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT,
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.TOP),
       new JDRButtonStyle("textsmallplainbottom", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.BOTTOM),
       new JDRButtonStyle("textsmallhighlightsbottom", "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT,
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.BOTTOM),
       new JDRButtonStyle("textsmallborderedbottom", "smallbuttons",
           "smallplain",
-          false, true, true, true, true, JDRButtonStyle.ICON_TEXT,
+          false, true, true, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.BOTTOM),
       new JDRButtonStyle("text", "smallplain",
-          false, false, false, false, false, JDRButtonStyle.TEXT_ONLY),
+          false, false, false, false, false, JDRButtonStyleDisplayType.TEXT_ONLY),
    };
 
    private static int buttonStyle = 0;
@@ -2995,39 +3050,39 @@ public class JDRResources
    {
       new JDRButtonStyle("default", "buttons"),
       new JDRButtonStyle("text", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.TEXT_ONLY),
+          false, true, true, false, false, JDRButtonStyleDisplayType.TEXT_ONLY),
       new JDRButtonStyle("textplaintrailing", "plain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT),
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT),
       new JDRButtonStyle("textsmallplaintrailing", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT),
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT),
       new JDRButtonStyle("textsmallborderedtrailing", "smallbuttons",
-          false, false, false, true, true, JDRButtonStyle.ICON_TEXT),
+          false, false, false, true, true, JDRButtonStyleDisplayType.ICON_TEXT),
       new JDRButtonStyle("textplainleading", "plain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.LEADING, SwingConstants.CENTER),
       new JDRButtonStyle("textsmallplainleading", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.LEADING, SwingConstants.CENTER),
       new JDRButtonStyle("textsmallborderedleading", "smallbuttons",
-          false, false, false, true, true, JDRButtonStyle.ICON_TEXT,
+          false, false, false, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.LEADING, SwingConstants.CENTER),
       new JDRButtonStyle("textplaintop", "plain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.TOP),
       new JDRButtonStyle("textsmallplaintop", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.TOP),
       new JDRButtonStyle("textsmallborderedtop", "smallbuttons",
-          false, false, false, true, true, JDRButtonStyle.ICON_TEXT,
+          false, false, false, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.TOP),
       new JDRButtonStyle("textplainbottom", "plain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.BOTTOM),
       new JDRButtonStyle("textsmallplainbottom", "smallplain",
-          false, true, true, false, false, JDRButtonStyle.ICON_TEXT,
+          false, true, true, false, false, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.BOTTOM),
       new JDRButtonStyle("textsmallborderedbottom", "smallbuttons",
-          false, false, false, true, true, JDRButtonStyle.ICON_TEXT,
+          false, false, false, true, true, JDRButtonStyleDisplayType.ICON_TEXT,
           SwingConstants.CENTER, SwingConstants.BOTTOM),
    };
 
