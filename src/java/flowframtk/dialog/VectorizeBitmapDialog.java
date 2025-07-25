@@ -2547,13 +2547,13 @@ abstract class ControlSubPanel extends JPanel
    {
       JDRResources resources = getResources();
 
-      JButton button = resources.createSmallHelpButton(true);
-      button.setBorder(BorderFactory.createEmptyBorder());
-      button.setToolTipText(resources.getMessage("label.info"));
-      button.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
+      JButton button = getResources().createSmallHelpButton(
+       true,
+       getRootPane(),
+       new AbstractAction()
+       {
+          public void actionPerformed(ActionEvent evt)
+          {
             String title = getResources().getMessageIfExists(id+".info_title");
 
             if (title == null)
@@ -2569,8 +2569,11 @@ abstract class ControlSubPanel extends JPanel
             getResources().message(controlPanel, 
               getResources().getMessage(id+".info"),
               title, JOptionPane.INFORMATION_MESSAGE);
-         }
-      });
+          }
+       });
+
+      button.setBorder(BorderFactory.createEmptyBorder());
+      button.setToolTipText(resources.getMessage("label.info"));
 
       return button;
    }

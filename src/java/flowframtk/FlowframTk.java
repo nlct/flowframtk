@@ -6921,7 +6921,7 @@ public class FlowframTk extends JFrame
 
    public JMenuItem addHelpItem(JMenu helpM)
    {
-      return getResources().addHelpItem(helpM, invoker.getName());
+      return getResources().addHelpItem(helpM);
    }
 
    @Deprecated

@@ -31,8 +31,7 @@ import java.text.MessageFormat;
  * @author Nicola L C Talbot
  */
 
-public class JDRDefaultMessage 
-  implements JDRMessage,MessageInfoPublisher
+public class JDRDefaultMessage extends JDRMessagePublisher
 {
    public JDRDefaultMessage()
    {

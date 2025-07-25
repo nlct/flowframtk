@@ -200,7 +200,7 @@ classes/com/dickimawbooks/eps2jdr/Eps2Jdr.class : lib/jdr.jar lib/jdrresources.j
 	cd java/eps2jdr ; \
 	javac $(target_version) \
 	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar:../../lib/jdrresources.jar \
+	-cp ../../lib/jdr.jar:../../lib/jdrresources.jar:../../lib/texjavahelplib.jar \
 	*.java
 
 lib/jdr2ajr.jar   : classes/com/dickimawbooks/jdr2ajr/Jdr2Ajr.class \

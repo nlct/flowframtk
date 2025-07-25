@@ -21,4 +21,5 @@ package com.dickimawbooks.jdr.io;
 
 public abstract class JDRMessagePublisher implements JDRMessage,MessageInfoPublisher
 {
+   public abstract void message(String messageText);
 }

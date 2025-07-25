@@ -48,7 +48,7 @@ public class StatusBar extends JPanel
       this.application = a;
 
       storageUnitDialog = new StorageUnitDialog(application);
-      infoDialog = new InfoDialog(application);
+      infoDialog = new InfoDialog(application, "sec:selectobjects");
 
       Font statusFont = application.getStatusFont();
 
@@ -284,10 +284,33 @@ public class StatusBar extends JPanel
          }
       });
 
-      helpButton = getResources().createSmallHelpButton();
-      helpButton.setActionCommand("statushelp");
+      helpButton = getResources().createSmallHelpButton(
+       application.getRootPane(),
+       new AbstractAction()
+       {
+          public void actionPerformed(ActionEvent evt)
+          {
+             if (helpId == null)
+             {
+                getResources().getHelpLib().openHelp();
+             }
+             else
+             {
+                try
+                {
+                   getResources().getHelpLib().openHelpForId(helpId);
+                }
+                catch (Exception e)
+                {
+                   getResources().error(application, e);
+                }
+             }
+          }
+       });
+
       helpButton.setToolTipText(
         getResources().getMessageIfExists("info.help.tooltip"));
+
 
       int maxH = height;
       if (posDim.height > maxH) maxH = posDim.height;
@@ -415,8 +438,6 @@ public class StatusBar extends JPanel
       {
          helpButton.setVisible(true);
          helpButton.setEnabled(true);
-         getResources().enableHelpOnButton(helpButton, helpId,
-           getResources().getAccelerator("info.help"));
       }
    }
 

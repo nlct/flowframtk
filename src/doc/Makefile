@@ -59,7 +59,19 @@ flowframtk-en-GB.pdf	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			sharedimages/*.png sharedimages/*.tex
 	$(arara) flowframtk-en-GB
 
+flowframtk-en-GB.aux	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
+			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
+			 helpinterface.tex images-en-GB/*.png \
+			sharedimages/*.png sharedimages/*.tex
+	$(arara) flowframtk-en-GB
+
 flowframtk-en.pdf	: flowframtk.bib shared.bib flowframtk-props-en.bib \
+			  flowframtk-en.tex flowframtk-main.tex version.tex \
+			 helpinterface.tex images-en/*.png \
+			sharedimages/*.png sharedimages/*.tex
+	$(arara) flowframtk-en
+
+flowframtk-en.aux	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			  flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
 			sharedimages/*.png sharedimages/*.tex
@@ -71,7 +83,19 @@ jdrview-en.pdf	: jdrview.bib jdrview-props-en.bib \
 		sharedimages/*.png sharedimages/*.tex
 	$(arara) jdrview-en
 
+jdrview-en.aux	: jdrview.bib jdrview-props-en.bib \
+		jdrview-en.tex jdrview-main.tex version.tex \
+		helpinterface.tex \
+		sharedimages/*.png sharedimages/*.tex
+	$(arara) jdrview-en
+
 jdrview-en-GB.pdf	: jdrview.bib jdrview-props-en-GB.bib \
+			jdrview-en-GB.tex jdrview-main.tex version.tex \
+			helpinterface.tex \
+			sharedimages/*.png sharedimages/*.tex
+	$(arara) jdrview-en-GB
+
+jdrview-en-GB.aux	: jdrview.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
 			sharedimages/*.png sharedimages/*.tex
@@ -84,19 +108,19 @@ en	: $(targetdir)/flowframtk/en/index.xml \
 	$(targetdir)/jdrview/en/index.xml
 
 $(targetdir)/flowframtk/en-GB/index.xml	: $(targetdir)/flowframtk/en-GB \
-	  flowframtk-en-GB.pdf  
+	  flowframtk-en-GB.aux  
 	$(texjavahelpmk) flowframtk-en-GB.tex $(targetdir)/flowframtk/en-GB
 
 $(targetdir)/flowframtk/en/index.xml	: $(targetdir)/flowframtk/en \
-	  flowframtk-en.pdf  
+	  flowframtk-en.aux  
 	$(texjavahelpmk) flowframtk-en.tex $(targetdir)/flowframtk/en
 
 $(targetdir)/jdrview/en/index.xml	: $(targetdir)/jdrview/en \
-	  jdrview-en.pdf  
+	  jdrview-en.aux  
 	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en
 
 $(targetdir)/jdrview/en-GB/index.xml	: $(targetdir)/jdrview/en-GB \
-	  jdrview-en-GB.pdf  
+	  jdrview-en-GB.aux  
 	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en-GB
 
 

@@ -22,10 +22,14 @@
 */
 package com.dickimawbooks.flowframtk.dialog;
 
+import java.io.IOException;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.*;
+
+import com.dickimawbooks.texjavahelplib.*;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
@@ -34,7 +38,7 @@ import com.dickimawbooks.flowframtk.*;
 public class InfoDialog extends JDialog
    implements ActionListener
 {
-   public InfoDialog(FlowframTk application)
+   public InfoDialog(FlowframTk application, String helpSectionId)
    {
       super(application,
          application.getResources().getMessage("info.title"), true);
@@ -52,11 +56,15 @@ public class InfoDialog extends JDialog
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
-      p.add(getResources().createOkayButton(this));
-      p.add(getResources().createCancelButton(this));
+      JDRResources resources = getResources();
 
-      helpButton = getResources().createDialogButton("button.help",
-      "help", null, null, null);
+      p.add(resources.createOkayButton(this));
+      p.add(resources.createCancelButton(this));
+
+      helpAction = resources.getHelpLib().createHelpDialogAction(this,
+        helpSectionId);
+
+      helpButton = resources.getButtonStyle().createButton(resources, helpAction);
 
       p.add(helpButton);
 
@@ -78,6 +86,24 @@ public class InfoDialog extends JDialog
       {
          setVisible(false);
       }
+      else if (action.equals("help"))
+      {
+         helpAction.doAction();
+
+         if (helpId != null)
+         {
+            HelpDialog helpDialog = helpAction.getHelpDialog();
+
+            try
+            {
+               helpDialog.setPage(helpId);
+            }
+            catch (IOException e)
+            {
+               getResources().error(this, e);
+            }
+         }
+      }
    }
 
    public void display(String text)
@@ -87,6 +113,7 @@ public class InfoDialog extends JDialog
 
    public void display(String text, String helpId)
    {
+      this.helpId = helpId;
       textArea.setText(text);
 
       if (helpId == null)
@@ -98,7 +125,6 @@ public class InfoDialog extends JDialog
       {
          helpButton.setEnabled(true);
          helpButton.setVisible(true);
-         getResources().enableHelpOnButton(helpButton, helpId);
       }
 
       setVisible(true);
@@ -119,4 +145,6 @@ public class InfoDialog extends JDialog
    private JTextArea textArea;
 
    private AbstractButton helpButton;
+   private String helpId;
+   private HelpDialogAction helpAction;
 }

@@ -45,6 +45,7 @@ import com.dickimawbooks.texjavahelplib.*;
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.JDRMessageDictionary;
 import com.dickimawbooks.jdr.io.JDRMessage;
+import com.dickimawbooks.jdr.io.JDRMessagePublisher;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.filter.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -1718,16 +1719,18 @@ public class JDRResources
       return helpButton;
    }
 
-   public JButton createSmallHelpButton()
+   public JButton createSmallHelpButton(JRootPane rootPane, Action action)
    {
-      return createSmallHelpButton(false);
+      return createSmallHelpButton(false, rootPane, action);
    }
 
-   public JButton createSmallHelpButton(boolean setMax)
+   public JButton createSmallHelpButton(boolean setMax, JRootPane rootPane, Action action)
    {
       Icon ic = appIcon("statushelp.png");
 
-      JButton button = new JButton(ic);
+      JButton button = new JButton(action);
+
+      button.setIcon(ic);
       button.setMargin(new Insets(0,0,0,0));
       button.setContentAreaFilled(false);
 
@@ -1736,6 +1739,19 @@ public class JDRResources
          Dimension dim = new Dimension(ic.getIconWidth(), ic.getIconHeight());
          button.setPreferredSize(dim);
          button.setMaximumSize(dim);
+      }
+
+      if (rootPane != null)
+      {
+         String actionName = "contexthelp";
+         KeyStroke keyStroke = getAccelerator("info.help");
+
+         if (keyStroke != null)
+         {
+            rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                   .put(keyStroke, actionName);
+            rootPane.getActionMap().put(actionName, action);
+         }
       }
 
       return button;
@@ -2850,7 +2866,7 @@ public class JDRResources
       return jdrMessageSystem;
    }
 
-   public void setMessageSystem(JDRGuiMessage msgSys)
+   public void setMessageSystem(JDRMessagePublisher msgSys)
    {
       jdrMessageSystem = msgSys;
    }
@@ -2936,7 +2952,7 @@ public class JDRResources
    private HelpSetLocale dictLocale, helpSetLocale;
    private MessageDialog licenseDialog, aboutDialog;
 
-   private JDRGuiMessage jdrMessageSystem;
+   private JDRMessagePublisher jdrMessageSystem;
 
    public HashMap<String,KeyStroke> keyStrokes = null;
 

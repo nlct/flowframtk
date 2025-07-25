@@ -255,7 +255,7 @@ classes/$(CLASSTREE)/eps2jdr/Eps2Jdr.class : \
 	eps2jdr/*.java
 	cd eps2jdr ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
+	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
 	*.java
 
 classes/$(CLASSTREE)/jdr2ajr/Jdr2Ajr.class : \

@@ -110,7 +110,7 @@ public class Eps2Jdr
       float version = JDRAJR.CURRENT_VERSION;
       int normalsize=10;
 
-      JDRResources resources = new JDRResources();
+      JDRResources resources = new JDRResources("eps2jdr");
 
       JDRDefaultMessage messageSystem = new JDRDefaultMessage();
       resources.setMessageSystem(messageSystem);

@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,16 +41,214 @@ import com.dickimawbooks.jdr.exceptions.*;
  * @author Nicola L C Talbot
  */
 
-public class JDRGuiMessage extends JFrame
+public class JDRGuiMessage extends JDRMessagePublisher
+{
+   public JDRGuiMessage(JDRResources resources)
+   {
+      resources.setMessageSystem(this);
+      frame = new JDRGuiMessageFrame(resources);
+   }
+
+   @Override
+   public void postMessage(MessageInfo info)
+   {
+      frame.postMessage(info);
+   }
+
+   @Override
+   public void setVerbosity(int verbosity)
+   {
+      frame.setVerbosity(verbosity);
+   }
+
+   @Override
+   public int getVerbosity()
+   {
+      return frame.getVerbosity();
+   }
+
+   @Override
+   public int getProgress()
+   {
+      return frame.getProgress();
+   }
+
+   @Override
+   public int getMaxProgress()
+   {
+      return frame.getMaxProgress();
+   }
+
+   @Override
+   public boolean isIndeterminate()
+   {
+      return frame.isIndeterminate();
+   }
+
+   @Override
+   public MessageInfoPublisher getPublisher()
+   {
+      return frame.getPublisher();
+   }
+
+   @Override
+   public void setPublisher(MessageInfoPublisher publisher)
+   {
+      frame.setPublisher(publisher);
+   }
+
+   @Override
+   public void publishMessages(MessageInfo... chunks)
+   {
+      frame.publishMessages(chunks);
+   }
+
+   @Override
+   public String getMessageWithFallback(String label,
+       String fallbackFormat, Object... params)
+   {
+      return frame.getMessageWithFallback(label, fallbackFormat, params);
+   }
+
+   @Override
+   public void message(String messageText)
+   {
+      frame.message(messageText);
+   }
+
+   public void finished(JComponent comp)
+   {
+      frame.finished(comp);
+   }
+
+   public void hideMessages()
+   {
+      frame.hideMessages();
+   }
+
+   public void displayMessages()
+   {
+      frame.displayMessages();
+   }
+
+   public void suspend()
+   {
+      frame.suspend();
+   }
+
+   public void resume()
+   {
+      frame.resume();
+   }
+
+   public void message(Exception excp)
+   {
+      frame.message(excp);
+   }
+
+   public void messageln(String messageText)
+   {
+      frame.messageln(messageText);
+   }
+
+   public void messageln(Exception excp)
+   {
+      frame.messageln(excp);
+   }
+
+   public void warning(String messageText)
+   {
+      frame.warning(messageText);
+   }
+
+   public void error(String messageText)
+   {
+      frame.error(messageText);
+   }
+
+   public void error(Throwable excp)
+   {
+      frame.error(excp);
+   }
+
+   public void internalerror(String messageText)
+   {
+      frame.internalerror(messageText);
+   }
+
+   public void internalerror(Throwable excp)
+   {
+      frame.internalerror(excp);
+   }
+
+   public void fatalerror(Throwable excp)
+   {
+      frame.fatalerror(excp);
+   }
+
+   public boolean warningFlagged()
+   {
+      return frame.warningFlagged();
+   }
+
+   public void enableAbort(boolean enabled)
+   {
+      frame.enableAbort(enabled);
+   }
+
+   public void checkForInterrupt() throws UserCancelledException
+   {
+      frame.checkForInterrupt();
+   }
+
+   public void setProcessInfo(String text)
+   {
+      frame.setProcessInfo(text);
+   }
+
+   public void debug(Exception e)
+   {
+      frame.debug(e);
+   }
+
+   public void debug(String msg)
+   {
+      frame.debug(msg);
+   }
+
+   public void registerProcess(Process process)
+   {
+      frame.registerProcess(process);
+   }
+
+   public void processDone()
+   {
+      frame.processDone();
+   }
+
+   public JDRResources getResources()
+   {
+      return frame.getResources();
+   }
+
+   public JFrame getFrame()
+   {
+      return frame;
+   }
+
+   JDRGuiMessageFrame frame;
+}
+
+class JDRGuiMessageFrame extends JFrame
   implements JDRMessage,MessageInfoPublisher,ActionListener,Serializable
 {
-   protected JDRGuiMessage()
+   protected JDRGuiMessageFrame()
    {
       super("Messages");
       isSuspended = true;
    }
 
-   public JDRGuiMessage(JDRResources resources)
+   public JDRGuiMessageFrame(JDRResources resources)
    {
       super(resources.getMessageWithFallback("message.title", "Messages"));
 
@@ -60,7 +258,6 @@ public class JDRGuiMessage extends JFrame
    private void init(JDRResources resources)
    {
       this.resources = resources;
-      resources.setMessageSystem(this);
       publisher = this;
       TeXJavaHelpLib helpLib = resources.getHelpLib();
 
@@ -169,6 +366,7 @@ public class JDRGuiMessage extends JFrame
       });
    }
 
+   @Override
    public void actionPerformed(ActionEvent evt)
    {
       String action = evt.getActionCommand();
