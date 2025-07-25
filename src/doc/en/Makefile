@@ -1,10 +1,10 @@
-targetdir=../lib/resources/helpsets
-dictdir=../lib/resources/dictionaries
-baseclass=../java/jdrresources/JDRResources.java
+targetdir=../../lib/resources/helpsets
+dictdir=../../lib/resources/dictionaries
+baseclass=../../java/jdrresources/JDRResources.java
 arara=arara --verbose
 #texjavahelpmk=texjavahelpmk --debug-mode all --log texjavahelpmk.log
 texjavahelpmk=texjavahelpmk
-xml2bib=xml2bib --copy-overwrite-xml
+tjhxml2bib=tjhxml2bib --copy-overwrite-xml
 
 all	: en-GB en flowframtk.1
 
@@ -14,7 +14,7 @@ flowframtk.1	: flowframtk.pod
 flowframtk-props-en.bib	: $(dictdir)/flowframtk-en.xml \
 			$(dictdir)/jdrcommon-en.xml \
 			$(dictdir)/texjavahelplib-en.xml
-	$(xml2bib)  $(dictdir)/texjavahelplib-en.xml \
+	$(tjhxml2bib)  $(dictdir)/texjavahelplib-en.xml \
 	$(dictdir)/flowframtk-en.xml \
 	$(dictdir)/jdrcommon-en.xml \
 	-o flowframtk-props-en.bib
@@ -24,7 +24,7 @@ flowframtk-props-en-GB.bib	: $(dictdir)/flowframtk-en.xml \
 				$(dictdir)/jdrcommon-en.xml \
 				$(dictdir)/jdrcommon-en-GB.xml \
 				$(dictdir)/texjavahelplib-en.xml
-	$(xml2bib)  $(dictdir)/texjavahelplib-en.xml \
+	$(tjhxml2bib)  $(dictdir)/texjavahelplib-en.xml \
 	$(dictdir)/flowframtk-en.xml \
 	$(dictdir)/flowframtk-en-GB.xml \
 	$(dictdir)/jdrcommon-en.xml \
@@ -33,14 +33,14 @@ flowframtk-props-en-GB.bib	: $(dictdir)/flowframtk-en.xml \
 
 jdrview-props-en.bib	: $(dictdir)/jdrview-en.xml $(dictdir)/jdrcommon-en.xml \
 			$(dictdir)/texjavahelplib-en.xml
-	$(xml2bib) $(dictdir)/texjavahelplib-en.xml \
+	$(tjhxml2bib) $(dictdir)/texjavahelplib-en.xml \
 	$(dictdir)/jdrcommon-en.xml \
 	$(dictdir)/jdrview-en.xml \
 	-o jdrview-props-en.bib
 
 jdrview-props-en-GB.bib	: $(dictdir)/jdrview-en.xml $(dictdir)/jdrcommon-en.xml \
 			$(dictdir)/jdrcommon-en-GB.xml $(dictdir)/texjavahelplib-en.xml
-	$(xml2bib) $(dictdir)/texjavahelplib-en.xml \
+	$(tjhxml2bib) $(dictdir)/texjavahelplib-en.xml \
 	$(dictdir)/jdrcommon-en.xml \
 	$(dictdir)/jdrcommon-en-GB.xml \
 	$(dictdir)/jdrview-en.xml \
@@ -56,49 +56,49 @@ version.tex	: $(baseclass)
 flowframtk-en-GB.pdf	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
-			sharedimages/*.png sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) flowframtk-en-GB
 
 flowframtk-en-GB.aux	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
-			sharedimages/*.png sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) flowframtk-en-GB
 
 flowframtk-en.pdf	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			  flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
-			sharedimages/*.png sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) flowframtk-en
 
 flowframtk-en.aux	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			  flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
-			sharedimages/*.png sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) flowframtk-en
 
 jdrview-en.pdf	: jdrview.bib jdrview-props-en.bib \
 		jdrview-en.tex jdrview-main.tex version.tex \
 		helpinterface.tex \
-		sharedimages/*.png sharedimages/*.tex
+		../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) jdrview-en
 
 jdrview-en.aux	: jdrview.bib jdrview-props-en.bib \
 		jdrview-en.tex jdrview-main.tex version.tex \
 		helpinterface.tex \
-		sharedimages/*.png sharedimages/*.tex
+		../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) jdrview-en
 
 jdrview-en-GB.pdf	: jdrview.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
-			sharedimages/*.png sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) jdrview-en-GB
 
 jdrview-en-GB.aux	: jdrview.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
-			sharedimages/*.png sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex
 	$(arara) jdrview-en-GB
 
 en-GB	: $(targetdir)/flowframtk/en-GB/index.xml \

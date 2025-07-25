@@ -102,19 +102,19 @@ classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class : \
 classes/splashimage.png	: classes images/splashimage.png
 	cp -u images/splashimage.png classes/
 
-lib/resources/helpsets/flowframtk/en-GB/index.xml	: doc/flowframtk-en-GB.tex \
-			doc/flowframtk-main.tex \
-			doc/flowframtk.bib \
-			doc/images-en-GB/*.png \
-			doc/sharedimages/*.png 
-			make -C doc
+lib/resources/helpsets/flowframtk/en-GB/index.xml	: doc/en/flowframtk-en-GB.tex \
+			doc/en/flowframtk-main.tex \
+			doc/en/flowframtk.bib \
+			doc/en/images-en-GB/*.png \
+			doc/en/sharedimages/*.png 
+			make -C doc/en
 
-lib/resources/helpsets/flowframtk/en/index.xml	: doc/flowframtk-en.tex \
-			doc/flowframtk-main.tex \
-			doc/flowframtk.bib \
-			doc/images-en/*.png \
-			doc/sharedimages/*.png 
-			make -C doc
+lib/resources/helpsets/flowframtk/en/index.xml	: doc/en/flowframtk-en.tex \
+			doc/en/flowframtk-main.tex \
+			doc/en/flowframtk.bib \
+			doc/en/images-en/*.png \
+			doc/en/sharedimages/*.png 
+			make -C doc/en
 
 lib/jdrview.jar   : lib/jdr.jar lib/jdrresources.jar \
 	classes/com/dickimawbooks/jdrview/JDRView.class \
@@ -301,4 +301,4 @@ clean	:
 	\rm -f lib/jdr2svg.jar
 	\rm -f lib/jdr2tex.jar
 	\rm -f lib/svg2jdr.jar
-	make -C doc clean
+	make -C doc/en clean
