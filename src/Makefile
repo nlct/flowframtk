@@ -106,14 +106,14 @@ lib/resources/helpsets/flowframtk/en-GB/index.xml	: doc/en/flowframtk-en-GB.tex 
 			doc/en/flowframtk-main.tex \
 			doc/en/flowframtk.bib \
 			doc/en/images-en-GB/*.png \
-			doc/en/sharedimages/*.png 
+			doc/sharedimages/*.png 
 			make -C doc/en
 
 lib/resources/helpsets/flowframtk/en/index.xml	: doc/en/flowframtk-en.tex \
 			doc/en/flowframtk-main.tex \
 			doc/en/flowframtk.bib \
 			doc/en/images-en/*.png \
-			doc/en/sharedimages/*.png 
+			doc/sharedimages/*.png 
 			make -C doc/en
 
 lib/jdrview.jar   : lib/jdr.jar lib/jdrresources.jar \

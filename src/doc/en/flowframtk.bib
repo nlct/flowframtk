@@ -50,6 +50,7 @@
 % FILES
 
 @file{file.flowframtk.jar}
+@file{file.libgs}
 
 % PACKAGES
 
@@ -63,7 +64,28 @@
 
 @package{pkg.pgf}
 
+@package{pkg.extsizes}
+
+% CLASSES
+
+@class{cls.article}
+@class{cls.extarticle}
+@class{cls.a0poster}
+
+% COUNTERS
+
+@counter{ctr.page}
+
 % COMMANDS
+
+@command{large}
+@command{Large}
+@command{huge}
+@command{pdfinfo}
+
+@command{setfontsize,
+ name={\csfmt{set\-font\-size}}
+}
 
 @command{shapepar,
  name={\csfmt{shape\-par}}
@@ -75,6 +97,22 @@
 
 @command{parshape,
  name={\csfmt{par\-shape}}
+}
+
+@command{pgfimage,
+ name={\csfmt{pgf\-image}}
+}
+
+@command{includegraphics,
+ name={\csfmt{in\-clude\-graphics}}
+}
+
+@command{normalsize,
+ name={\csfmt{normal\-size}}
+}
+
+@command{baselineskip,
+ name={\csfmt{base\-line\-skip}}
 }
 
 % ENVIRONMENTS
@@ -102,7 +140,9 @@
 % APPLICATIONS
 
 @application{app.latex}
+@application{app.pdflatex}
 @application{app.dvips}
+@application{app.dvisvgm}
 
 % SWITCHES
 
@@ -508,9 +548,6 @@ interpreted as tapping the appropriate side of the pad.}
 dump all function.}
 }
 
-@index{JpgfDraw,
- description={The precursor to \appname\ (\strong{J}ava
-\strong{pgf}-code generating \strong{draw}ing application).
-The original JpgfDraw code was refactored and renamed FlowframTk.). 
-}
+@index{normal-font-size,
+ name={normal font size}
 }

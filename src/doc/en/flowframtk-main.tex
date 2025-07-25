@@ -968,54 +968,394 @@ or \menutrail{menu.editpath.prev_control} functions.
 
 \subsection{Zoom}\label{sec:zoommenu}
 
-TODO
+\menudef{menu.settings.zoom}
+
+The \menu{settings.zoom} sub-menu allows you to change
+the magnification. You can choose one of the predefined
+settings or you can specify an arbitrary setting.
+
+\menudef{menu.settings.zoom.user}
+
+The \menu{settings.zoom.user} menu item will open a dialog box in
+which to specify an arbitrary magnification.  The magnification
+value may be entered as either a percentage or a decimal value. For
+example, either 150\% or 1.5 to zoom by a factor of 1.5.  You can
+also change the magnification using the zoom function in the status
+bar. \Gls{click} on the decrease button \includeimg{zoomdown} to
+reduce the magnification or on the increase button
+\includeimg{zoomup} to increase the magnification, according to the
+list of preset values.  Alternatively, you can \gls{doubleclick} to
+open the zoom dialog box or \gls{menuclick} on the percentage value
+to open a~popup menu.
 
 
 \subsection{Paper}\label{sec:papermenu}
 
-TODO
+\menudef{menu.settings.paper}
+
+The \menu{settings.paper} sub-menu allows you to change
+the paper size and orientation.
+
+\menudef{menu.settings.paper.margins}
+
+The \menu{settings.paper.margins} item toggles between showing
+and hiding the printer margins, but note that this facility is not
+available if you use the \switch{disable_print} command line
+argument.
+
+The predefined paper sizes A0 to A5, letter, legal and executive
+can be selected from the \menu{settings.paper} menu.
+
+\menudef{menu.settings.paper.other}
+
+The \menu{settings.paper.other} item allows a custom paper size to
+be specified.  Select the  \widget{paper.predefined} radio button to
+enable a list of additional known paper sizes or select the
+\widget{paper.user} radio button to enter a custom size.
 
 
 \subsection{Configure Image Settings}\label{sec:configuredialog}
 
-TODO
+\menudef{menu.settings.config}
+
+The \menu{settings.config} menu item opens the \dialog{config}
+dialog box, which can be used to change image settings.
+(\sectionref{sec:texconfig} covers \TeX/\LaTeX\ related settings and
+\sectionref{sec:configureuidialog} covers settings related to the user
+interface.)
 
 
 \subsubsection{Control Points}\label{sec:controlsettings}
 
-TODO
+\FloatFig
+  {fig:configdialog-controlsettings}
+  {\includeimg[height=0.4\textheight]{configureDialog-controls}}
+  {Configuration Dialog Box (Control Point Settings)}
+
+The \widget{controls.title} tab
+(\figureref{fig:configdialog-controlsettings})
+allows you to:
+\begin{itemize}
+ \item set the size of the \glspl{controlpt};
+ \item specify whether the \gls{controlpt} size should be affected by
+the zoom setting;
+ \item set the \gls{storageunit}.
+\end{itemize}
+It's best to set the \gls{storageunit} before you start creating an
+image. If the selected \gls{canvas} isn't empty, all \glspl{object} will
+have their co-ordinates recomputed in terms of the new unit, which
+may take a while if there are many \glspl{object} or \glspl{path}
+with many segments.  You can also open a dialog window with just the
+storage unit panel in it by \glslink{doubleclick}{double-clicking}
+the mouse on the storage unit area of the \gls{statusbar}.
 
 
 \subsubsection{Startup Directory}\label{sec:startdir}
 
-TODO
+\FloatFig
+  {fig:configdialog-startdir}
+  {\includeimg[height=0.4\textheight]{configureDialog-startdir}}
+  {Configuration Dialog Box (Startup Directory Settings)}
+
+The \widget{startdir.title} tab
+(\figureref{fig:configdialog-startdir})
+allows you to choose which directory \appname\ should use as the
+current working directory when it starts up. You have a choice of:
+\begin{itemize}
+\item the current working directory that you were in when you started
+up \appname;
+\item the directory you were using when you last used \appname;
+\item a specific directory. In this case, type in the path in the
+\widget{startdir.named} box or use the
+\widget{startdir.browse} button to select the required
+directory.
+\end{itemize}
 
 
 \subsubsection{JDR/AJR Settings}\label{sec:jdrsettings}
 
-TODO
+\FloatFig
+  {fig:configdialog-jdrsettings}
+  {\includeimg[height=0.4\textheight]{configureDialog-jdrsettings}}
+  {Configuration Dialog Box (JDR/AJR Settings)}
+
+You can use the \widget{jdr.title} tab
+(\figureref{fig:configdialog-jdrsettings})
+to specify whether or not you want the current
+\gls{canvas} settings stored in the \gls{jdr} or \gls{ajr} file when
+you save your image. You can also choose whether or not you want to
+apply any canvas settings information stored in any \gls{jdr} or
+\gls{ajr} file that you load. The canvas settings consist of:
+grid show/hide, grid locked/not locked, rulers displayed/not
+displayed, the tool in use, the LaTeX normal size, the paper size,
+the grid style, the size of the \glspl{controlpt} and whether they
+should be affected by the magnification setting.
 
 
 \subsubsection{Startup Settings}\label{sec:initsettings}
 
-TODO
+\FloatFig
+  {fig:configdialog-initsettings}
+  {\includeimg[height=0.4\textheight]{configureDialog-initsettings}}
+  {Configuration Dialog Box (Startup Settings)}
+
+You can use the \widget{initsettings.title} tab
+(\figureref{fig:configdialog-initsettings})
+to choose whether you want \appname\ to start with its
+default settings, or whether to restore the settings from the last
+time you used \appname, or whether to use the settings that are
+currently in use.
+
+If you choose the default settings option, the \emph{\gls{canvas}}
+settings will be set to the default on startup.  Some (but not all)
+of the user interface settings may still be remembered from the
+previous session, including the language used by the user interface
+and the manual, the paths to the required applications used by the
+export functions (\sectionref{sec:exportimage}) and the button styles.
+
+Most of the settings are saved in the file \file{flowframtk.conf} in the
+configuration directory (\sectionref{sec:configdir}).  Mappings,
+accelerators, language settings and the recent file list aren't
+governed by the startup setting and are stored in separate files in
+the configuration directory. When you upgrade to a new version of
+\appname, the accelerators are reset to the default and then the
+existing accelerators file is loaded to ensure any new accelerators
+are added. Don't modify these files whilst \appname\ is running.
+You may modify them after you have quit \appname\ using a text
+editor, but make sure you save your changes before restarting
+\appname.
 
 
 \subsubsection{Bitmaps}\label{sec:bitmapconfig}
 
-TODO
+\FloatFig
+  {fig:configdialog-bitmap}
+  {\includeimg[height=0.4\textheight]{configureDialog-bitmap}}
+  {Configuration Dialog Box (Bitmap Settings)}
+
+You can use the \widget{bitmapconfig.title} tab
+(\figureref{fig:configdialog-bitmap})
+to choose whether included \glspl{bitmap} should be
+saved using their full path name or a path name relative to the
+file being saved. Relative names allow for greater portability, but
+if you move the saved file to a different location, you will need to
+remember to move the bitmap files relative to the new location or
+they won't be found.
+
+You can also use this tab to specify
+your preferred default image command, which may be either
+\gls{pgfimage} or \gls{includegraphics}.
 
 
 \subsubsection{Application Paths}\label{sec:processes}
 
-TODO
+\FloatFig
+  {fig:configdialog-apppaths}
+  {\includeimg[height=0.4\textheight]{configureDialog-apppaths}}
+  {Configuration Dialog Box (Application Paths)}
+
+If you export your image to PDF, EPS or SVG (see \sectionref{sec:exportdoc})
+\appname\ will first save the image as an encapsulated \LaTeX\
+document and will then run external applications to create the
+desired file format. In order to do this, \appname\ needs to know
+the correct paths to these applications. It will try to find them
+from your system's \gls{PATH} environment variable, but if it
+can't find them you can use the \widget{processes.title} tab
+(\figureref{fig:configdialog-apppaths}) to set their locations.  The
+\file{libgs} library is needed by \app{dvisvgm}, so you only
+need it if you intend to export to \gls{svg}.
+
+To reduce the chance of zombie processes, each process is run with a
+timer that will kill the process if it exceeds the value specified
+in the \widget{processes.timeout} box.
 
 
 \subsection{\TeX\ Settings Dialog}\label{sec:texconfig}
 
-%The \dialog{textconfig} tab
-%(\figureref{fig:configdialog-texsettings})
-%allows you to adjust the text-related settings. 
+\menudef{menu.settings.configtex}
+
+The \menu{settings.configtex} menu item will open up a dialog box
+in which you can adjust the \TeX/\LaTeX\ settings.
+(\sectionref{sec:configure} covers image settings
+and \sectionref{sec:configureui} covers user interface settings.)
+
+
+\subsubsection{Setting the Document Class and Normal Font Size}
+\label{sec:normalsize}
+
+Most of \appname's \TeX/\LaTeX\ related functions (including the
+\hyperref[sec:exportimage]{export function}) require a value
+corresponding to \gls{normalsize} (the \LaTeX\ command that sets the
+\gls{normal-font-size}). A \gls{textarea} needs to know the normal
+font size to determine the appropriate font size declaration (see
+\sectionref{sec:fontsize}). In addition, both the
+\gls{menu.tex.parshape} and \gls{menu.tex.shapepar} functions use
+the value of \gls{baselineskip} for the normal font size in order to
+determine the location of the scan lines used to compute the
+required parameters. This also means that any static or dynamic
+frames (\section{sec:flowframe}) that use a non-standard paragraph
+shape also require this information.
+
+\FloatFig
+ {fig:normalsize}
+ {\includeimg[width=0.9\linewidth]{normalsizeandclass}}
+ {Setting the Normal Font Size and (optionally) the Class}
+
+The \gls{normal-font-size} can be set using the
+\widget{clssettings.title} tab (\figureref{fig:normalsize}).  Select the
+required value from the \gls{dropdown} and select
+\dgls{okay} to set it. Note that you must remember
+to use this value in your document. For example, if you set the
+normal size as 20, your document will need to use one of the
+\sty{extsizes} class files, e.g.\ \cls{extarticle}, and specify
+20\gls{pt} as one of the optional arguments:
+\begin{codebox}
+\cmd{documentclass}[20pt]\marg{extarticle}
+\end{codebox}
+
+Note that the largest normal size listed
+(25pt\dash this value is actually 24.88pt, but
+\appname\ lists it as 25pt) is for use
+with the \cls{a0poster} class file. Remember that for very large
+or very small fonts, you will need to use scalable fonts in your
+document to prevent font size substitutions.
+Available values, along with the corresponding value of
+\gls{baselineskip} and the file in which they are defined,
+are listed in \tableref{tab:normalsize}.
+
+\FloatTable
+{tab:normalsize}
+{%
+\begin{tabular}{@{}ccl@{}}
+\bfseries Normal size value & \bfseries \gls{baselineskip}
+value & \bfseries Relevant File\\
+8 & 9.5 & tex/latex/extsizes/size8.clo\\
+9 & 11 & tex/latex/extsizes/size9.clo\\
+10 & 12 & tex/latex/base/size10.clo\\
+11 & 13.6 & tex/latex/base/size11.clo\\
+12 & 14.5 & tex/latex/base/size12.clo\\
+14 & 17 & tex/latex/extsizes/size14.clo\\
+17 & 22 & tex/latex/extsizes/size17.clo\\
+20 & 25 & tex/latex/extsizes/size20.clo\\
+25 & 30 & tex/latex/a0poster/a0poster.sty
+\end{tabular}
+}
+[Available Values for the Normal Font Size]
+{Available values for the normal font size, the corresponding value
+and the file in which they are defined (relative to the TEXMF
+tree).}
+
+If the \widget{clssettings.update} \gls*{checkbox} is selected,
+changing the normal size setting in this dialog will update the
+\LaTeX\ font size settings for all the \glspl{textarea} in the
+current image.
+
+If you want to export your image to a complete \LaTeX\ document (see
+\sectionref{sec:exportdoc}) the document class will default to:
+\begin{itemize}
+\item \cls{article}, if the normal size is
+set to 10, 11 or 12;
+\item \cls{a0poster}, if the normal size is set to
+25;
+\item \cls{extarticle}, otherwise.
+\end{itemize}
+If you want to use a different document class, select the
+\widget{clssettings.custom_cls} radio button, which will enable the
+field where you can type the require class name (without the
+\filefmt{.cls} extension). You need to ensure the class supports your
+specified normal font size (as a standard option, not a key=value
+option).
+
+The document class is also used as the base class with the export to
+document class function (see \sectionref{sec:exportsty}) and is used
+for all export functions that use the export to encapsulated \LaTeX\
+document function as an intermediate step (\sectionref{sec:exportdoc}).
+
+The \widget{clssettings.relative_fontsize} \gls*{checkbox} governs
+the suggested \LaTeX\ font size command when you change the
+\hyperref[sec:fontsize]{font size setting} for \glspl{textarea}. If
+this \gls*{checkbox} is selected, \appname\ will attempt to select a
+font size declaration, such as \gls{large}, according to the current
+normalsize setting. Otherwise, \gls{setfontsize} will be used. If
+the font size is significantly larger than the largest available
+declaration, \gls{setfontsize} will be used regardless of this
+setting.
+
+The \widget{clssettings.pdfinfo} \gls*{checkbox} governs whether or
+not to add \gls{pdfinfo} to exported \LaTeX\ documents. If the image
+has a description (\sectionref{sec:imagedescription}), this will be
+added to the \texttt{/Title} attribute. The only other attribute
+that is set is the \texttt{/CreationDate} attribute. This setting is
+not used for the export to PostScript or \gls{svg} functions as they
+use \app{latex} rather than \app{pdflatex}.
+
+When an image is exported to an encapsulated \LaTeX\ document
+or complete \LaTeX\ document, by default the image bounding box
+is calculated as the minimal sized rectangle that encompasses all
+\glspl{object} on the \gls{canvas}. If the image contains an
+\glspl*{textarea}, this may result in text being clipped to the left
+or right of the image due to the font differences. In this case, or
+if you require a different bounding box for some other reason, then
+switch on the \widget{clssettings.use_typeblock_as_bbox}
+\gls*{checkbox} and if the image has a typeblock set
+(see \sectionref{sec:typeblock}) the typeblock will be used as the image
+bounding box. If the image doesn't have a typeblock set, then the
+default bounding box will be used. See also \figureref{fig:equation}
+in \sectionref{sec:exportdoc}.
+
+
+\subsubsection{Flowframe Settings}\label{sec:texconfigflf}
+
+The \widget{flfsettings.title} tab
+(\figureref{fig:flfsettings}) allows you to adjust the
+\sty{flowfram} related settings.
+
+\FloatFig
+ {fig:flfsettings}
+ {\includeimg[width=0.9\linewidth]{flfsettings}}
+ {Flowframe Settings Tab}
+
+The \sty{flowfram} package now allows you to use absolute pages
+numbers in the page list rather than using the value of the
+\ctr{page} counter. For example, if your document pages are numbered
+a, b, i, ii, iii, 1, 2, 3, then with the absolute setting page
+number 3 refers to the page \manmsg{labelled} i whereas with the
+relative setting page number 3 refers to both the page
+\manmsg{labelled} iii and the page \manmsg{labelled} 3. (See the
+\sty{flowfram} documentation for further details.) If you want to
+use the absolute setting, select the
+\widget{flfsettings.pages_opt.absolute} button otherwise select the
+\widget{flfsettings.pages_opt.relative} button.
+
+The \sty{shapepar} package now has a command called
+\gls{Shapepar} that behaves slightly differently to
+\gls{shapepar}. Since \gls{Shapepar} works better than
+\gls{shapepar} when used with the \sty{flowfram} package,
+\appname\ defaults to using \gls{Shapepar} for the
+\gls{menu.tex.shapepar} function or when a
+\hyperref[sec:flowframe]{static or dynamic frame} has the
+shape set to \widget{flowframe.shape_shapepar}. However, if
+you prefer the original \gls{shapepar} command, selected the
+appropriate \widget{flfsettings.shapeparcs} radio button.
+If you want to use \gls{Shapepar}, you need to ensure you have
+up-to-date versions of the \sty{flowfram} and \sty{shapepar}
+packages. This setting applies both to frames with the
+\widget{flowframe.shape_shapepar} shape setting and to the
+\gls{menu.tex.shapepar} function.
+
+\subsubsection{Text Settings}\label{sec:texconfigtext}
+
+The \widget{textconfig.title} tab
+(\figureref{fig:configdialog-texsettings})
+allows you to adjust the text-related settings.
+
+\FloatFig
+  {fig:configdialog-texsettings}
+  {\includeimg[width=0.9\linewidth]{configureDialog-texsettings}}
+  {LaTeX-Related Text Settings}
+
+
+
 
 TODO
 
@@ -1027,24 +1367,6 @@ TODO
 \plabel[New \TeX\ Mappings]{mi:newtexmappings}%
 To add a new mapping, \gls{click} on the green plus button to
 the side of the relevant table.
-
-
-TODO
-
-
-\subsubsection{Setting the Document Class and Normal Font Size}
-\label{sec:normalsize}
-
-TODO
-
-
-\subsubsection{Flowframe Settings}\label{sec:texconfigflf}
-
-TODO
-
-
-\subsubsection{Text Settings}\label{sec:texconfigtext}
-
 TODO
 
 
@@ -1197,6 +1519,7 @@ TODO
 \subsection{Export to Single-Paged Document}\label{sec:exportdoc}
 
 TODO
+
 
 
 \section{Print}\label{sec:print}
