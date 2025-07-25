@@ -119,6 +119,9 @@ public class FlowframTkInvoker
       helpLib.printSyntaxItem(
          helpLib.getMessage("syntax.paper", "--paper"));
 
+      helpLib.printSyntaxItem(
+         helpLib.getMessage("syntax.disable_print", "--[no]disable_print"));
+
       System.out.println();
 
       helpLib.printSyntaxItem(helpLib.getMessage("syntax.other_options"));

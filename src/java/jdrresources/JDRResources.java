@@ -1483,7 +1483,8 @@ public class JDRResources
     */
    public JDRButtonItem createHelpButtonItem(JMenu helpM, JComponent toolBar)
    {
-      IconSet icSet = getButtonStyle().getIconSet(this, "help");
+      IconSet icSet = getButtonStyle().getIconSet(this, 
+        helpLib.getIconPrefix("menu.help.manual", "help"));
 
       TJHAbstractAction helpAction = helpLib.createHelpManualAction(icSet, null);
 
@@ -1799,11 +1800,11 @@ public class JDRResources
      String tag, String actionName, ActionListener listener,
      KeyStroke keyStroke, String tooltipText)
    {
-      String buttonText = getMessageIfExists("label."+actionName);
+      String buttonText = getMessageIfExists("button."+actionName);
 
       if (buttonText == null)
       {
-         buttonText = getMessageIfExists("button."+actionName);
+         buttonText = getMessageIfExists("label."+actionName);
       }
 
       if (buttonText == null)
@@ -1820,7 +1821,12 @@ public class JDRResources
       }
 
       int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
-      String base = mapIconBaseName(actionName);
+      String base = helpLib.getIconPrefix(tag, null);
+
+      if (base == null)
+      {
+         base = mapIconBaseName(actionName);
+      }
 
       JDRButtonStyle buttonStyle;
 
@@ -1904,7 +1910,12 @@ public class JDRResources
       }
 
       int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
-      String base = mapIconBaseName(actionName);
+      String base = helpLib.getIconPrefix(tag, null);
+
+      if (base == null)
+      {
+         base = mapIconBaseName(actionName);
+      }
 
       JDRToggleButton button = null;
 
@@ -1974,7 +1985,12 @@ public class JDRResources
       }
 
       int buttonMnemonic = getCodePoint(tag+".mnemonic", 0);
-      String base = mapIconBaseName(actionName);
+      String base = helpLib.getIconPrefix(tag, null);
+
+      if (base == null)
+      {
+         base = mapIconBaseName(actionName);
+      }
 
       JDRToolButton button = null;
 
@@ -2020,7 +2036,17 @@ public class JDRResources
    public JDRButton createAppButton(String buttonText, String name, 
       ActionListener listener, KeyStroke keyStroke, String tooltipText)
    {
-      String base = mapIconBaseName(name);
+      return createAppButton(buttonText, name, 
+      listener, null, keyStroke, tooltipText);
+   }
+
+   public JDRButton createAppButton(String buttonText, String name, 
+      ActionListener listener, String base, KeyStroke keyStroke, String tooltipText)
+   {
+      if (base == null)
+      {
+         base = mapIconBaseName(name);
+      }
 
       JDRButton button = getButtonStyle().createButton(this,
          buttonText, base, listener, tooltipText);
@@ -2045,17 +2071,18 @@ public class JDRResources
       String text = getMessage(id);
 
       return createAppButton(text, name, listener,
+         helpLib.getIconPrefix(id, null),
          getAccelerator(id), getMessageWithFallback(id+".tooltip", text));
    }
 
    public JDRButton createAppButton(String name, 
       ActionListener listener, KeyStroke keyStroke, String tooltipText)
    {
-      String text = getMessageIfExists("label."+name);
+      String text = getMessageIfExists("button."+name);
 
       if (text == null)
       {
-         text = getMessage("button."+name);
+         text = getMessage("label."+name);
       }
 
       return createAppButton(text, name, listener,
@@ -2068,14 +2095,25 @@ public class JDRResources
       String id = parentId+"."+name;
       String text = getMessage(id);
 
-      return createToggleButton(text, name, listener,
+      return createToggleButton(text, name, listener, 
+         helpLib.getIconPrefix(id, null),
          getAccelerator(id), getMessageWithFallback(id+".tooltip", text));
    }
 
    public JDRToggleButton createToggleButton(String buttonText, String name, 
       ActionListener listener, KeyStroke keyStroke, String tooltipText)
    {
-      String base = mapIconBaseName(name);
+      return createToggleButton(buttonText, name, 
+      listener, null, keyStroke, tooltipText);
+   }
+
+   public JDRToggleButton createToggleButton(String buttonText, String name, 
+      ActionListener listener, String base, KeyStroke keyStroke, String tooltipText)
+   {
+      if (base == null)
+      {
+         base = mapIconBaseName(name);
+      }
 
       JDRToggleButton button = getButtonStyle().createToggle(this,
         buttonText, base, listener, tooltipText);
@@ -2098,7 +2136,20 @@ public class JDRResources
       ActionListener listener, KeyStroke keyStroke,
       ButtonGroup g, boolean selected, String tooltipText)
    {
-      String base = mapIconBaseName(name);
+      return createToolButton(buttonText, name, 
+      listener, null, keyStroke,
+      g, selected, tooltipText);
+   }
+
+   public JDRToolButton createToolButton(
+      String buttonText, String name, 
+      ActionListener listener, String base, KeyStroke keyStroke,
+      ButtonGroup g, boolean selected, String tooltipText)
+   {
+      if (base == null)
+      {
+         base = mapIconBaseName(name);
+      }
 
       JDRToolButton button = getButtonStyle().createTool(this,
          buttonText, base, listener, g, selected, tooltipText);
@@ -2824,29 +2875,29 @@ public class JDRResources
    {
       iconnamemap = new Properties();
 
-      iconnamemap.setProperty("grid.show", "showgrid");
-      iconnamemap.setProperty("grid.lock", "lockgrid");
-      iconnamemap.setProperty("path.edit", "editPath");
-      iconnamemap.setProperty("select_all", "selectAll");
-      iconnamemap.setProperty("front", "movetofront");
-      iconnamemap.setProperty("back", "movetoback");
-      iconnamemap.setProperty("pattern.set", "pattern");
-      iconnamemap.setProperty("open_line", "openline");
-      iconnamemap.setProperty("closed_line", "closedline");
-      iconnamemap.setProperty("open_curve", "opencurve");
-      iconnamemap.setProperty("closed_curve", "closedcurve");
-      iconnamemap.setProperty("manual", "help");
-      iconnamemap.setProperty("remove.textmap", "remove");
-      iconnamemap.setProperty("add.textmap", "add");
-      iconnamemap.setProperty("remove.mathmap", "remove");
-      iconnamemap.setProperty("add.mathmap", "add");
+      //iconnamemap.setProperty("grid.show", "showgrid");
+      //iconnamemap.setProperty("grid.lock", "lockgrid");
+      //iconnamemap.setProperty("path.edit", "editPath");
+      //iconnamemap.setProperty("select_all", "selectAll");
+      //iconnamemap.setProperty("front", "movetofront");
+      //iconnamemap.setProperty("back", "movetoback");
+      //iconnamemap.setProperty("pattern.set", "pattern");
+      //iconnamemap.setProperty("open_line", "openline");
+      //iconnamemap.setProperty("closed_line", "closedline");
+      //iconnamemap.setProperty("open_curve", "opencurve");
+      //iconnamemap.setProperty("closed_curve", "closedcurve");
+      //iconnamemap.setProperty("manual", "help");
+      //iconnamemap.setProperty("remove.textmap", "remove");
+      //iconnamemap.setProperty("add.textmap", "add");
+      //iconnamemap.setProperty("remove.mathmap", "remove");
+      //iconnamemap.setProperty("add.mathmap", "add");
       iconnamemap.setProperty("remove.unicode_block", "remove");
       iconnamemap.setProperty("add.unicode_block", "add");
-      iconnamemap.setProperty("find_again", "findAgain");
-      iconnamemap.setProperty("replace_all", "replaceAll");
+      //iconnamemap.setProperty("find_again", "findAgain");
+      //iconnamemap.setProperty("replace_all", "replaceAll");
       iconnamemap.setProperty("close", "cancel");
-      iconnamemap.setProperty("textmappings.import", "import");
-      iconnamemap.setProperty("mathmappings.import", "import");
+      //iconnamemap.setProperty("textmappings.import", "import");
+      //iconnamemap.setProperty("mathmappings.import", "import");
    }
 
    public String mapIconBaseName(String propName)

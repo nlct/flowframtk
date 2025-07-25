@@ -89,6 +89,8 @@ Nicola Talbot
 
 <!-- Help Menu -->
 
+<entry key="menu.help.manual.iconimage">help</entry>
+
 <entry key="menu.help.license">License...</entry>
 <entry key="menu.help.license.mnemonic">L</entry>
 

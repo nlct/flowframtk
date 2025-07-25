@@ -686,12 +686,187 @@ using the settings menu (\sectionref{sec:settingsmenu}).
 
 \section{Command Line Arguments}\label{sec:cmdargs}
 
+\appname\ can be invoked from a command prompt. 
+
 \appdef{flowframtk}
 
+Depending on your installation, this command may run a bash script
+(which will run the application \ext{jar} file) or this command may
+be an executable form of the application \ext{jar} file.
+The application \ext{jar} file is called \file{flowframtk.jar}
+and may also be invoked from the command line explicitly:
+\begin{terminal}
+java -jar path/to/\file{flowframtk.jar}
+\end{terminal}
+where \filefmt{path/to/} is the path to the \file{flowframtk.jar}
+file.
+
+Note that the options and the filenames may be omitted.
+Each filename must be either a \gls{jdr} or an \gls{ajr} file.
+The \app{flowframtk} bash script uses the environment variable 
+\inlineglsdef{JDR_JVMOPTS} to pass
+options to the \gls{jvm}.  For example, if you want to run \appname\ with
+a maximum size of 128Mb for the memory allocation pool, you can set
+\gls{JDR_JVMOPTS} to \verb|-Xmx128m|:
+\begin{terminal}
+setenv \gls{JDR_JVMOPTS} -Xmx128m
+\end{terminal}
+The \app{flowframtk} script also uses the environment variable
+\inlineglsdef{FLOWFRAMTK_OPTS} to pass options to \appname.
+
+\begin{information}
+If you have previously used \gls{JpgfDraw}, the \inlineglsdef{JPGFDRAW_OPTS} 
+environment variable will also be recognised, but any settings in 
+\gls{FLOWFRAMTK_OPTS} will override those in \gls{JPGFDRAW_OPTS}.
+\end{information}
+
+For example, if you always want \appname\ to start up with the grid showing,
+ you can set \gls{FLOWFRAMTK_OPTS} to \switch{show_grid}:
+\begin{terminal}
+setenv \gls{FLOWFRAMTK_OPTS} \switch{show_grid}
+\end{terminal}
+(Bear in mind that \gls{jdr} and \gls{ajr} files can have certain
+settings saved, which may override the startup settings.)
+
+\begin{important}
+Note that these environment variables only have an effect if you
+use the \app{flowframtk} script to run the \gls{jre}.
+\end{important}
+
+Available command line options are listed below.
 Older versions of \appname\ had switches prefixed with a single
 hyphen (such as \shortargfmt{help}). These are still supported for
 backward-compatibility but double-hyphen versions are now provided
 (such as \longargfmt{help}).
+
+\switchdef{show_grid}
+Show the \gls{grid}.
+
+\switchdef{noshow_grid}
+Don't show the \gls{grid}.
+
+\switchdef{lock_grid}
+Lock the \gls{grid}.
+
+\switchdef{nolock_grid}
+Don't lock the \gls{grid}.
+
+\switchdef{toolbar}
+Show the \glspl{toolbar}.
+
+\switchdef{notoolbar}
+Don't show the \glspl{toolbar}.
+
+\switchdef{statusbar}
+Show the \gls{statusbar}.
+
+\switchdef{nostatusbar}
+Don't show the \gls{statusbar}.
+
+\switchdef{ruler}
+Show the \glspl{ruler}.
+
+\switchdef{noruler}
+Don't show the \glspl{ruler}.
+
+\switchdef{paper}
+Set the paper size. The argument may be a single keyword that
+identifies a recognised paper size or, for a custom size, the
+argument may be the keyword \optfmt{user} followed by the width and
+height. For example:
+\begin{terminal}
+\app{flowframtk} \switch{paper} user 100mm 200mm
+\end{terminal}
+The custom size must have positive dimensions.
+Recognised units: \code{\gls{pt}}, \code{\gls{bp}},
+\code{in}, \code{mm}, \code{cm}, \code{pc},
+\code{dd} and \code{cc}. If the unit is omitted,
+\code{\gls{bp}} is assumed. Examples:
+\begin{itemize}
+\item \code{\switch{paper} a4r}
+\item \code{\switch{paper} user 8.5in 12in}
+\item \code{\switch{paper} user 600 1000}
+\end{itemize}
+
+\FloatTable
+{tab:papersizes}
+{%
+\begin{tabular}{llll}    
+\toprule
+\multicolumn{1}{c}{\bfseries Identifier} &
+\multicolumn{1}{c}{\bfseries Description} &
+\multicolumn{1}{c}{\bfseries Identifier} &
+\multicolumn{1}{c}{\bfseries Description}
+\tabularnewline 
+\midrule
+\optfmt{a10}&A10 portrait &    \optfmt{a10r}&A10 landscape\tabularnewline 
+\optfmt{a9}&A9 portrait &    \optfmt{a9r}&A9 landscape\tabularnewline
+\optfmt{a8}&A8 portrait &    \optfmt{a8r}&A8 landscape\tabularnewline
+\optfmt{a7}&A7 portrait &    \optfmt{a7r}&A7 landscape\tabularnewline
+\optfmt{a6}&A6 portrait &    \optfmt{a6r}&A6 landscape\tabularnewline
+\optfmt{a5}&A5 portrait &    \optfmt{a5r}&A5 landscape\tabularnewline
+\optfmt{a4}&A4 portrait &    \optfmt{a4r}&A4 landscape\tabularnewline
+\optfmt{a3}&A3 portrait &    \optfmt{a3r}&A3 landscape\tabularnewline
+\optfmt{a2}&A2 portrait &    \optfmt{a2r}&A2 landscape\tabularnewline
+\optfmt{a1}&A1 portrait &    \optfmt{a1r}&A1 landscape\tabularnewline
+\optfmt{a0}&A0 portrait &    \optfmt{a0r}&A0 landscape\tabularnewline
+\optfmt{b10}&B10 portrait &    \optfmt{b10r}&B10 landscape\tabularnewline
+\optfmt{b9}&B9 portrait &    \optfmt{b9r}&B9 landscape\tabularnewline
+\optfmt{b8}&B8 portrait &    \optfmt{b8r}&B8 landscape\tabularnewline
+\optfmt{b7}&B7 portrait &    \optfmt{b7r}&B7 landscape\tabularnewline
+\optfmt{b6}&B6 portrait &    \optfmt{b6r}&B6 landscape\tabularnewline
+\optfmt{b5}&B5 portrait &    \optfmt{b5r}&B5 landscape\tabularnewline
+\optfmt{b4}&B4 portrait &    \optfmt{b4r}&B4 landscape\tabularnewline
+\optfmt{b3}&B3 portrait &    \optfmt{b3r}&B3 landscape\tabularnewline
+\optfmt{b2}&B2 portrait &    \optfmt{b2r}&B2 landscape\tabularnewline
+\optfmt{b1}&B1 portrait &    \optfmt{b1r}&B1 landscape\tabularnewline
+\optfmt{b0}&B0 portrait &    \optfmt{b0r}&B0 landscape\tabularnewline
+\optfmt{c10}&C10 portrait &    \optfmt{c10r}&C10 landscape\tabularnewline
+\optfmt{c9}&C9 portrait &    \optfmt{c9r}&C9 landscape\tabularnewline
+\optfmt{c8}&C8 portrait &    \optfmt{c8r}&C8 landscape\tabularnewline
+\optfmt{c7}&C7 portrait &    \optfmt{c7r}&C7 landscape\tabularnewline
+\optfmt{c6}&C6 portrait &    \optfmt{c6r}&C6 landscape\tabularnewline
+\optfmt{c5}&C5 portrait &    \optfmt{c5r}&C5 landscape\tabularnewline
+\optfmt{c4}&C4 portrait &    \optfmt{c4r}&C4 landscape\tabularnewline
+\optfmt{c3}&C3 portrait &    \optfmt{c3r}&C3 landscape\tabularnewline
+\optfmt{c2}&C2 portrait &    \optfmt{c2r}&C2 landscape\tabularnewline
+\optfmt{c1}&C1 portrait &    \optfmt{c1r}&C1 landscape\tabularnewline
+\optfmt{c0}&C0 portrait &    \optfmt{c0r}&C0 landscape\tabularnewline
+\optfmt{letter}&Letter portrait &    \optfmt{letterr}&Letter landscape\tabularnewline
+\optfmt{legal}&Legal portrait &    \optfmt{legalr}&Legal landscape\tabularnewline
+\optfmt{executive}&Executive portrait &    \optfmt{executiver}&Executive landscape\tabularnewline
+\bottomrule 
+\end{tabular}
+}%
+[Paper Size Identifiers]
+{Paper size identifiers for use with \switch{paper} command line switch.}
+
+
+\switchdef{disable_print}
+Disable the request for printer attributes on startup.
+
+\switchdef{nodisable_print}
+Don't disable the request for printer attributes on startup (default).
+
+\switchdef{debug}
+Enable debugging mode. This will add the \inlineglsdef{menu.debug}
+menu to the main menu bar which provides the following functions:
+\menu{debug.objectinfo} (displays diagnostic information about the
+currently selected objects); \menu{debug.writelog} (writes
+diagnostic information for all currently open images to a log file
+in the \gls{config_dir}) \menu{debug.revalidate} (revalidates the
+image) and \menu{debug.dumpall} (saves all current images to a
+subdirectory of the \gls{config_dir}).
+
+\switchdef{nodebug}
+Don't enable debugging mode (default).
+
+\switchdef{experimental}
+Enable experimental functions for testing purposes. These functions don't
+work properly and are not documented.
+
+\switchdef{noexperimental}
+Don't enable experimental functions (default).
 
 \switchdef{help}
 Display help message and exit.
@@ -699,49 +874,97 @@ Display help message and exit.
 \switchdef{version}
 Display version details and exit.
 
-TODO
-
 \section{The Settings Menu}\label{sec:settingsmenu}
 
-TODO
+\menudef{menu.settings}
+
+While \appname\ is running, you can change the current settings
+using the \menu{settings} menu. Most of the settings will be
+remembered next time you use \appname, but may be overridden
+either by \hyperref[sec:cmdargs]{command line arguments} or by
+settings specified in any \gls{jdr} or \gls{ajr} file that you load.
+
+If you have selected \widget{initsettings.default} in the
+\widget{initsettings.title} tab of the \dialog{config} dialog,
+then the \emph{\gls{canvas}} settings will be set to the default
+values on startup (unless overridden, as above). Some (but not all)
+of the user interface settings may still be remembered from the
+previous session.
 
 \subsection{Styles}\label{sec:setcurrentstyles}
 
-TODO
+\menudef{menu.settings.styles}
+
+The \menu{settings.styles} menu item will open a dialog window
+which can be used to set the current \gls{path} and
+\gls{textarea} attributes. New paths and text areas will use these
+attributes when they are created. The attributes for existing paths
+and text areas are changed using the \menu{edit} menu.  These
+settings are discussed in more detail in \sectionref{sec:styles}.
 
 \subsection{Show Rulers}\label{sec:showrulers}
 
-TODO
+\menudef{menu.settings.rulers}
+
+The \menu{settings.rulers} menu item can be used to toggle between showing
+and hiding the \glspl{ruler} for the current \gls{canvas}. This
+setting will be applied to new \glspl{canvas} that are subsequently
+opened, but the setting may be overridden when a new image is
+loaded.
+
+\seealsorefs{sec:rulers}
 
 \subsection{Grid}\label{sec:gridmenu}
 
 \menudef{menu.settings.grid}
 
-The \menu{menu.settings.grid} submenu allows you to change
+The \menu{settings.grid} submenu allows you to change
 the \gls{grid} settings:
 
 \menudef{menu.settings.grid.show}
 
-Toggles between displaying the \gls{grid} on the \gls{canvas} and  
-hiding it. If there is enough memory available, the grid will be
-stored as a bitmap in order to improve redraw speed.
+The \menu{settings.grid.show} menu item toggles between displaying
+the \gls{grid} on the \gls{canvas} and hiding it. If there is
+enough memory available, the grid will be stored as a bitmap in
+order to improve redraw speed.
 
 \plabel[Locking the Grid]{mi:gridlock}
 \menudef{menu.settings.grid.lock}
 
-Toggles between locking and unlocking the grid. If the grid is
-locked, mouse \glspl{click} will be translated to the nearest tick mark.
-This means that if you use a mouse \gls{click} to set the location of
-a \gls{controlpt} when constructing a \gls{path}, the
-point will be placed at the nearest tick mark. This also means that
-when you move a point while in 
-edit mode (\sectionref{sec:editpath}), the point will be moved
-in intervals of the gap between tick marks. Note that locking the
-grid does not affect the keyboard or menu driven functions, such as
-\menutrail{navigate.goto} or emulate a \gls{primaryclick}.
+The \menu{settings.grid.lock} menu item toggles between locking and
+unlocking the grid. If the grid is locked, mouse \glspl{click} will
+be translated to the nearest tick mark.  This means that if you use
+a mouse \gls{click} to set the location of a \gls{controlpt} when
+constructing a \gls{path}, the point will be placed at the nearest
+tick mark. This also means that when you move a point while in edit
+mode (\sectionref{sec:editpath}), the point will be moved in
+intervals of the gap between tick marks. Note that locking the grid
+does not affect the keyboard or menu driven functions, such as
+\menutrail{menu.navigate.goto} \accelerator{menu.navigate.goto}
+or emulate a \gls{primaryclick}
+\accelerator{action.constructclick}.
 
 
-TODO
+When the grid is locked, the \gls{statusbar} will show the image
+\includeimg[alt={Grid lock on}]{key} otherwise it will show
+the image \includeimg[alt={Grid lock off}]{keycross}.
+You can \gls{doubleclick} on this image to toggle the state.
+
+\begin{warning}
+If you lock the grid, you will be unable to use the
+mouse to select narrow \glspl{path} that lie between tick marks as
+mouse \glspl{click} will be translated to the nearest tick mark, unless you
+use the drag rectangle (which may select other objects as well).
+\end{warning}
+
+Similarly, if the \widget{editpathui.ignorelock}
+option is off, you won't be able to select \glspl{controlpt} in
+\hyperref[sec:editpath]{edit mode} with the mouse unless a
+tick mark lies inside the \gls{controlpt}['s] bounding box.
+You will however be able to select them using the
+\menutrail{menu.editpath.next_control} 
+or \menutrail{menu.editpath.prev_control} functions.
+
 
 \subsection{Zoom}\label{sec:zoommenu}
 

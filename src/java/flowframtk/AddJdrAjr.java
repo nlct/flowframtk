@@ -173,7 +173,7 @@ public abstract class AddJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
 
       getMessageSystem().finished(jdrFrame);
       jdrFrame.getApplication().setStatusInfo(
-        getResources().getMessage("info.select"), "selectobjects");
+        getResources().getMessage("info.select"), "sec:selectobjects");
    }
 
    public JDRResources getResources()

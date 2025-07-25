@@ -29,6 +29,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import com.dickimawbooks.texjavahelplib.*;
+
 import com.dickimawbooks.jdr.JDRUnit;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.ZoomValue;
@@ -298,7 +300,18 @@ public class StatusBar extends JPanel
              {
                 try
                 {
-                   getResources().getHelpLib().openHelpForId(helpId);
+                   if (targetRef != null)
+                   {
+                      getResources().getHelpLib().openHelp(targetRef);
+                   }
+                   else if (navNode != null)
+                   {
+                      getResources().getHelpLib().openHelp(navNode);
+                   }
+                   else
+                   {
+                      getResources().getHelpLib().openHelpForId(helpId);
+                   }
                 }
                 catch (Exception e)
                 {
@@ -433,11 +446,40 @@ public class StatusBar extends JPanel
       {
          helpButton.setVisible(false);
          helpButton.setEnabled(false);
+         navNode = null;
+         targetRef = null;
       }
       else
       {
          helpButton.setVisible(true);
          helpButton.setEnabled(true);
+         try
+         {
+            refreshHelpReference();
+         }
+         catch (Exception e)
+         {
+            getResources().error(application, e);
+         }
+      }
+   }
+
+   protected void refreshHelpReference() throws UnknownNodeException
+   {
+      TeXJavaHelpLib helpLib = getResources().getHelpLib();
+
+      targetRef = null;
+      navNode = helpLib.getNavigationNodeById(helpId);
+
+      if (navNode == null)
+      {
+         targetRef = helpLib.getTargetRef(helpId);
+
+         if (targetRef == null)
+         {
+            throw new UnknownNodeException(helpLib.getMessage(
+              "error.node_id_not_found", helpId));
+         }
       }
    }
 
@@ -615,4 +657,6 @@ public class StatusBar extends JPanel
    private InfoDialog infoDialog;
 
    private String helpId = null;
+   private NavigationNode navNode = null;
+   private TargetRef targetRef = null;
 }

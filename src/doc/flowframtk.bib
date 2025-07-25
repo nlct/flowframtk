@@ -47,6 +47,9 @@
 @fileext{ext.xml, parent={fileextension}}
 @fileext{ext.eps, parent={fileextension}}
 
+% FILES
+
+@file{file.flowframtk.jar}
 
 % PACKAGES
 
@@ -127,6 +130,18 @@
   description={Don't show the \gls{grid}}
 }
 
+@switch{switch.lock_grid,
+  parent={app.flowframtk},
+  name={\longargfmt{lock\_grid}},
+  description={Lock the grid}
+}
+
+@switch{switch.nolock_grid,
+  parent={app.flowframtk},
+  name={\longargfmt{nolock\_grid}},
+  description={Don't lock the \gls{grid}}
+}
+
 @switch{switch.toolbar,
   parent={app.flowframtk},
   description={Show the \glspl{toolbar}}
@@ -155,6 +170,26 @@
 @switch{switch.noruler,
   parent={app.flowframtk},
   description={Don't show the \glspl{ruler}}
+}
+
+@switch{switch.paper,
+  parent={app.flowframtk},
+  syntax={\meta{specifier}},
+  description={Set the paper size where \meta{specifier}
+is either a known paper identifier (see \tableref{tab:papersizes})
+or is the keyword \optfmt{user} followed by the width and height.}
+}
+
+@switch{switch.disable_print,
+  parent={app.flowframtk},
+  name={\longargfmt{disable\_print}},
+  description={Disable the request for printer attributes on startup.}
+}
+
+@switch{switch.nodisable_print,
+  parent={app.flowframtk},
+  name={\longargfmt{no\-disable\_print}},
+  description={Don't disable the request for printer attributes on startup.}
 }
 
 @switch{switch.experimental,

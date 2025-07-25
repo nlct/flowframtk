@@ -49,7 +49,7 @@ public class JDRButtonItem extends JMenuItem
       String tooltipText = resources.getMessageIfExists("tooltip."+action);
 
       button = resources.createAppButton(
-         resources.getMessageWithFallback("label."+menuID, getText()), 
+         resources.getMessageWithFallback("button."+menuID, getText()), 
          menuID, listener, keyStroke, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -71,9 +71,12 @@ public class JDRButtonItem extends JMenuItem
       String tooltipText, JComponent buttonParent, JComponent menu)
    {
       super(resources.getMessage(menuID));
+
       button = resources.createAppButton(
-         resources.getMessageWithFallback("label."+name, getText()),
-         name, listener, keyStroke,
+         resources.getMessageWithFallback("button."+name, getText()),
+         name, listener,
+         resources.getHelpLib().getIconPrefix(menuID, null),
+         keyStroke,
          tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);

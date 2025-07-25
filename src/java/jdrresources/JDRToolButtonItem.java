@@ -74,7 +74,9 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
 
       button = resources.createToolButton(
          buttonText,
-         action, this, keyStroke,
+         action, this,
+         resources.getHelpLib().getIconPrefix(menuID, null),
+         keyStroke,
          null, selected, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -97,7 +99,9 @@ public class JDRToolButtonItem extends JRadioButtonMenuItem
       super(resources.getMessage(menuID), selected);
 
       button = resources.createToolButton(
-         resources.getMessage("label."+name, getText()), name, this, keyStroke,
+         resources.getMessage("button."+name, getText()), name, this,
+         resources.getHelpLib().getIconPrefix(menuID, null),
+         keyStroke,
          null, selected, tooltipText);
 
       button.setAlignmentX(Component.CENTER_ALIGNMENT);

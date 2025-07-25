@@ -26,7 +26,8 @@ Nicola Talbot
 <entry key="syntax.toolbar">{0}	Show the toolbars.</entry>
 <entry key="syntax.statusbar">{0}	Show the status bar.</entry>
 <entry key="syntax.rulers">{0}	Show the rulers.</entry>
-<entry key="syntax.paper">{0} &lt;type&gt;	Set the paper size to &lt;type&gt;.</entry>
+<entry key="syntax.paper">{0} &lt;type&gt;	Set the paper size to &lt;type&gt; where &lt;type&gt; may be a keyword, such as a0, or in the form: user &lt;width&gt; &lt;height&gt;.</entry>
+<entry key="syntax.disable_print">{0}	Disable the request for printer attributes on startup.</entry>
 
 <!-- File Menu -->
 
@@ -104,9 +105,11 @@ Nicola Talbot
 <entry key="menu.edit.select_all">Select All</entry>
 <entry key="menu.edit.select_all.mnemonic">A</entry>
 <entry key="menu.edit.select_all.keystroke">control A</entry>
+<entry key="menu.edit.select_all.iconimage">selectAll</entry>
 
 <entry key="button.select_all">Select All</entry>
 <entry key="button.select_all.keystroke">control A</entry>
+<entry key="button.select_all.iconimage">selectAll</entry>
 
 <entry key="menu.edit.deselect_all">Deselect All</entry>
 <entry key="menu.edit.deselect_all.mnemonic">D</entry>
@@ -149,6 +152,7 @@ Nicola Talbot
 <entry key="menu.edit.path.edit">Edit Path</entry>
 <entry key="menu.edit.path.edit.mnemonic">E</entry>
 <entry key="menu.edit.path.edit.keystroke">control I</entry>
+<entry key="menu.edit.path.edit.iconimage">editPath</entry>
 
 <entry key="button.edit_path">Edit</entry>
 <entry key="button.edit_path.keystroke">control I</entry>
@@ -310,16 +314,20 @@ Nicola Talbot
 <entry key="menu.edit.front">Move to Front</entry>
 <entry key="menu.edit.front.mnemonic">F</entry>
 <entry key="menu.edit.front.keystroke">control F</entry>
+<entry key="menu.edit.front.iconimage">movetofront</entry>
 
 <entry key="button.front">To Front</entry>
 <entry key="button.front.keystroke">control F</entry>
+<entry key="button.front.iconimage">movetofront</entry>
 
 <entry key="menu.edit.back">Move to Back</entry>
 <entry key="menu.edit.back.mnemonic">B</entry>
 <entry key="menu.edit.back.keystroke">control B</entry>
+<entry key="menu.edit.back.iconimage">movetoback</entry>
 
 <entry key="button.back">To Back</entry>
 <entry key="button.back.keystroke">control B</entry>
+<entry key="button.back.iconimage">movetoback</entry>
 
 <entry key="menu.edit.moveup">Move Up</entry>
 <entry key="menu.edit.moveup.mnemonic">V</entry>
@@ -424,6 +432,7 @@ Nicola Talbot
 
 <entry key="menu.transform.pattern.set">Set Pattern...</entry>
 <entry key="menu.transform.pattern.set.mnemonic">S</entry>
+<entry key="menu.transform.pattern.set.iconimage">pattern</entry>
 
 <entry key="menu.transform.pattern.edit">Edit Pattern...</entry>
 <entry key="menu.transform.pattern.edit.mnemonic">E</entry>
@@ -462,51 +471,63 @@ Nicola Talbot
 <entry key="menu.tools.select">Select</entry>
 <entry key="menu.tools.select.mnemonic">S</entry>
 <entry key="menu.tools.select.keystroke">control P</entry>
+<entry key="menu.tools.select.iconimage">select</entry>
 
 <entry key="menu.tools.open_line">Open Line</entry>
 <entry key="menu.tools.open_line.mnemonic">L</entry>
 <entry key="menu.tools.open_line.keystroke">control L</entry>
+<entry key="menu.tools.open_line.iconimage">openline</entry>
 
 <entry key="menu.tools.closed_line">Closed Line</entry>
 <entry key="menu.tools.closed_line.mnemonic">I</entry>
 <entry key="menu.tools.closed_line.keystroke">control shift L</entry>
+<entry key="menu.tools.closed_line.iconimage">closedline</entry>
 
 <entry key="menu.tools.open_curve">Open Curve</entry>
 <entry key="menu.tools.open_curve.mnemonic">C</entry>
 <entry key="menu.tools.open_curve.keystroke">control K</entry>
+<entry key="menu.tools.open_curve.iconimage">opencurve</entry>
 
 <entry key="menu.tools.closed_curve">Closed Curve</entry>
 <entry key="menu.tools.closed_curve.mnemonic">U</entry>
 <entry key="menu.tools.closed_curve.keystroke">control shift K</entry>
+<entry key="menu.tools.closed_curve.iconimage">closedcurve</entry>
 
 <entry key="menu.tools.rectangle">Rectangle</entry>
 <entry key="menu.tools.rectangle.mnemonic">R</entry>
 <entry key="menu.tools.rectangle.keystroke">control R</entry>
+<entry key="menu.tools.rectangle.iconimage">rectangle</entry>
 
 <entry key="menu.tools.ellipse">Ellipse</entry>
 <entry key="menu.tools.ellipse.mnemonic">E</entry>
 <entry key="menu.tools.ellipse.keystroke">control E</entry>
+<entry key="menu.tools.ellipse.iconimage">ellipse</entry>
 
 <entry key="menu.tools.textarea">Text</entry>
 <entry key="menu.tools.textarea.mnemonic">T</entry>
 <entry key="menu.tools.textarea.keystroke">control T</entry>
+<entry key="menu.tools.textarea.iconimage">textarea</entry>
 
 <entry key="menu.tools.math">Math</entry>
 <entry key="menu.tools.math.mnemonic">M</entry>
 <entry key="menu.tools.math.keystroke">control shift T</entry>
+<entry key="menu.tools.math.iconimage">math</entry>
 
 <entry key="menu.tools.gap">Gap</entry>
 <entry key="menu.tools.gap.mnemonic">G</entry>
 <entry key="menu.tools.gap.keystroke">control M</entry>
+<entry key="menu.tools.gap.iconimage">gap</entry>
 
 <entry key="menu.tools.abandon">Abandon</entry>
 <entry key="menu.tools.abandon.mnemonic">A</entry>
 <entry key="menu.tools.abandon.keystroke">shift ESCAPE</entry>
 <entry key="menu.tools.abandon.tooltip">Cancel current path</entry>
+<entry key="menu.tools.abandon.iconimage">abandon</entry>
 
 <entry key="menu.tools.finish">Finish</entry>
 <entry key="menu.tools.finish.mnemonic">F</entry>
 <entry key="menu.tools.finish.keystroke">ENTER</entry>
+<entry key="menu.tools.finish.iconimage">finish</entry>
 
 <entry key="menu.tools.create_path_from_svg">Create Path from SVG...</entry>
 <entry key="menu.tools.create_path_from_svg.mnemonic">V</entry>
@@ -610,10 +631,12 @@ Nicola Talbot
 <entry key="menu.settings.grid.show">Show Grid</entry>
 <entry key="menu.settings.grid.show.mnemonic">S</entry>
 <entry key="menu.settings.grid.show.keystroke">F2</entry>
+<entry key="menu.settings.grid.show.iconimage">showgrid</entry>
 
 <entry key="menu.settings.grid.lock">Lock Grid</entry>
 <entry key="menu.settings.grid.lock.mnemonic">L</entry>
 <entry key="menu.settings.grid.lock.keystroke">shift F2</entry>
+<entry key="menu.settings.grid.lock.iconimage">lockgrid</entry>
 
 <entry key="menu.settings.grid.settings">Grid Settings...</entry>
 <entry key="menu.settings.grid.settings.mnemonic">G</entry>
@@ -991,6 +1014,7 @@ Nicola Talbot
 <entry key="menu.selected.select_all">Select All</entry>
 <entry key="menu.selected.select_all.mnemonic">A</entry>
 <entry key="menu.selected.select_all.keystroke">control A</entry>
+<entry key="menu.selected.select_all.iconimage">selectAll</entry>
 
 <entry key="menu.selected.deselect_all">Deselect All</entry>
 <entry key="menu.selected.deselect_all.mnemonic">D</entry>
@@ -2349,12 +2373,17 @@ Nicola Talbot
 <entry key="textconfig.mathmode">Math Mode Mappings</entry>
 <entry key="textconfig.textmode.mnemonic">T</entry>
 <entry key="textconfig.mathmode.mnemonic">M</entry>
+
 <entry key="textconfig.textmappings.import">Import</entry>
 <entry key="textconfig.textmappings.import.mnemonic">I</entry>
 <entry key="textconfig.textmappings.import.tooltip">Import Text Mappings</entry>
+<entry key="textconfig.textmappings.import.iconimage">import</entry>
+
 <entry key="textconfig.mathmappings.import">Import</entry>
 <entry key="textconfig.mathmappings.import.mnemonic">I</entry>
 <entry key="textconfig.mathmappings.import.tooltip">Import Math Mappings</entry>
+<entry key="textconfig.mathmappings.import.iconimage">import</entry>
+
 <entry key="textconfig.codepoint">Code Point</entry>
 <entry key="textconfig.codepoint.mnemonic">D</entry>
 <entry key="textconfig.symbol">Symbol</entry>
@@ -2363,18 +2392,26 @@ Nicola Talbot
 <entry key="textconfig.command.mnemonic">C</entry>
 <entry key="textconfig.package">Package</entry>
 <entry key="textconfig.package.mnemonic">P</entry>
+
 <entry key="textconfig.remove.textmap">Remove</entry>
 <entry key="textconfig.remove.textmap.mnemonic">R</entry>
 <entry key="textconfig.remove.textmap.tooltip">Remove text mapping</entry>
+<entry key="textconfig.remove.textmap.iconimage">remove</entry>
+
 <entry key="textconfig.add.textmap">Add</entry>
 <entry key="textconfig.add.textmap.mnemonic">D</entry>
 <entry key="textconfig.add.textmap.tooltip">Add new text mapping</entry>
+<entry key="textconfig.add.textmap.iconimage">add</entry>
+
 <entry key="textconfig.remove.mathmap">Remove</entry>
 <entry key="textconfig.remove.mathmap.mnemonic">R</entry>
 <entry key="textconfig.remove.mathmap.tooltip">Remove math mapping</entry>
+<entry key="textconfig.remove.mathmap.iconimage">remove</entry>
+
 <entry key="textconfig.add.mathmap">Add</entry>
 <entry key="textconfig.add.mathmap.mnemonic">D</entry>
 <entry key="textconfig.add.mathmap.tooltip">Add new math mapping</entry>
+<entry key="textconfig.add.mathmap.iconimage">add</entry>
 
 <!--  Modify contents of preamble.tex -->
 
@@ -2460,12 +2497,17 @@ Nicola Talbot
 <entry key="lang.unicode.info">(The more Unicode blocks that are added to the character selector, the longer it will take this application to start up. Changes will not take effect until you have quit and restarted.)</entry>
 <entry key="lang.unicode.start">Start</entry>
 <entry key="lang.unicode.end">End</entry>
+
 <entry key="lang.unicode.remove_block">Remove</entry>
 <entry key="lang.unicode.remove_block.mnemonic">V</entry>
 <entry key="lang.unicode.remove_block.tooltip">Remove row</entry>
+<entry key="lang.unicode.remove_block.iconimage">remove</entry>
+
 <entry key="lang.unicode.add_block">Add</entry>
 <entry key="lang.unicode.add_block.mnemonic">D</entry>
 <entry key="lang.unicode.add_block.tooltip">Add row</entry>
+<entry key="lang.unicode.add_block.iconimage">add</entry>
+
 <entry key="lang.unicode.invalid_hex">Invalid hexadecimal number ''{0}'' (row ''{1}'', column ''{2}'')</entry>
 
 <!--  Normalization Panel -->
@@ -2708,8 +2750,11 @@ Are you sure you want to ungroup it?</entry>
 <entry key="menu.texeditor.search.mnemonic">S</entry>
 <entry key="menu.texeditor.search.find">Find...</entry>
 <entry key="menu.texeditor.search.find.mnemonic">F</entry>
+
 <entry key="menu.texeditor.search.find_again">Find Again</entry>
 <entry key="menu.texeditor.search.find_again.mnemonic">A</entry>
+<entry key="menu.texeditor.search.find_again.iconimage">findAgain</entry>
+
 <entry key="menu.texeditor.search.replace">Replace...</entry>
 <entry key="menu.texeditor.search.replace.mnemonic">R</entry>
 
@@ -2753,9 +2798,11 @@ Are you sure you want to ungroup it?</entry>
 <entry key="replace.replace">Replace</entry>
 <entry key="replace.replace.tooltip">Replace text</entry>
 <entry key="replace.replace.mnemonic">R</entry>
+
 <entry key="replace.replace_all">Replace All</entry>
 <entry key="replace.replace_all.mnemonic">A</entry>
 <entry key="replace.replace_all.tooltip">Replace all occurrences</entry>
+<entry key="replace.replace_all.iconimage">replaceAll</entry>
 
 <!--  Description Dialog Box -->
 
