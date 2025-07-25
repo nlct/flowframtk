@@ -93,6 +93,7 @@ public class JDRButtonItem extends JMenuItem
       JComponent buttonParent, JComponent menu)
    {
       super(action);
+      setText(action.getDefaultName());
 
       button = resources.createAppButton(action);
 

@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,22 +38,22 @@ import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
  */
 public class JDRButton extends JButton
 {
-   public JDRButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener)
    {
       this(icon_up, icon_down, icon_rollover, icon_disabled, listener, null);
    }
 
-   public JDRButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover,
+   public JDRButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover,
                      ActionListener listener)
    {
       this(icon_up, icon_down, icon_rollover, null, listener, null);
    }
 
-   public JDRButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener, String info)
    {
       super();
@@ -90,8 +90,8 @@ public class JDRButton extends JButton
       }
    }
 
-   public JDRButton(String text, ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRButton(String text, Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener, String info)
    {
       super(text);
@@ -128,8 +128,8 @@ public class JDRButton extends JButton
       }
    }
 
-   public JDRButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover,
+   public JDRButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover,
                      ActionListener listener, String info)
    {
       this(icon_up, icon_down, icon_rollover, null, listener, info);
@@ -150,7 +150,7 @@ public class JDRButton extends JButton
       }
    }
 
-   public JDRButton(String text, ImageIcon icon,
+   public JDRButton(String text, Icon icon,
                     ActionListener listener, String info)
    {
       super(text);
@@ -171,7 +171,7 @@ public class JDRButton extends JButton
       }
    }
 
-   public JDRButton(ImageIcon icon, ActionListener listener, String info)
+   public JDRButton(Icon icon, ActionListener listener, String info)
    {
       super();
 

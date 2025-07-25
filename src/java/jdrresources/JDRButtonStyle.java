@@ -24,6 +24,7 @@
 package com.dickimawbooks.jdrresources;
 
 import java.net.URL;
+import java.io.FileNotFoundException;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -31,6 +32,7 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+import com.dickimawbooks.texjavahelplib.IconSet;
 
 public class JDRButtonStyle
 {
@@ -41,10 +43,28 @@ public class JDRButtonStyle
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
 
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+            String location, boolean isCompact)
+   {
+      this(name, useSmallIcons, location, isCompact, false, false, true, true, 
+           JDRButtonStyleDisplayType.ICON_ONLY,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
    public JDRButtonStyle(String name, String location, String presslocation,
        boolean isCompact)
    {
-      this(name, location, presslocation, isCompact, false, false, true, true, ICON_ONLY,
+      this(name, location, presslocation, isCompact, false, false, true, true,
+           JDRButtonStyleDisplayType.ICON_ONLY,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+       String location, String presslocation, boolean isCompact)
+   {
+      this(name, useSmallIcons, location, presslocation,
+           isCompact, false, false, true, true,
+           JDRButtonStyleDisplayType.ICON_ONLY,
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
 
@@ -55,10 +75,25 @@ public class JDRButtonStyle
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
 
+   public JDRButtonStyle(String name, boolean useSmallIcons, String location)
+   {
+      this(name, useSmallIcons, location, false, false, false, true, true,  
+           JDRButtonStyleDisplayType.ICON_ONLY,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
    public JDRButtonStyle(String name, String location, String presslocation)
    {
       this(name, location, presslocation,
-           false, false, false, true, true, ICON_ONLY,
+           false, false, false, true, true, JDRButtonStyleDisplayType.ICON_ONLY,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+            String location, String presslocation)
+   {
+      this(name, useSmallIcons, location, presslocation,
+           false, false, false, true, true, JDRButtonStyleDisplayType.ICON_ONLY,
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
 
@@ -68,6 +103,17 @@ public class JDRButtonStyle
    {
       this(name, location, isCompact, paintBorder, fillArea, hasDownIcon,
            hasRolloverIcon, 
+           JDRButtonStyleDisplayType.ICON_ONLY,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+     String location, boolean isCompact,
+     boolean paintBorder, boolean fillArea, boolean hasDownIcon,
+     boolean hasRolloverIcon)
+   {
+      this(name, useSmallIcons, location, isCompact, paintBorder,
+           fillArea, hasDownIcon, hasRolloverIcon, 
            JDRButtonStyleDisplayType.ICON_ONLY,
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
@@ -83,11 +129,33 @@ public class JDRButtonStyle
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
 
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+     String location, String presslocation,
+     boolean isCompact, boolean paintBorder, boolean fillArea,
+     boolean hasDownIcon, boolean hasRolloverIcon)
+   {
+      this(name, useSmallIcons, location, presslocation, isCompact,
+           paintBorder, fillArea, hasDownIcon,
+           hasRolloverIcon,  
+           JDRButtonStyleDisplayType.ICON_ONLY,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
    public JDRButtonStyle(String name, String location, boolean isCompact,
      boolean paintBorder, boolean fillArea, boolean hasDownIcon,
      boolean hasRolloverIcon, JDRButtonStyleDisplayType display)
    {
       this(name, location, isCompact, paintBorder, fillArea, hasDownIcon,
+           hasRolloverIcon, display,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+     String location, boolean isCompact,
+     boolean paintBorder, boolean fillArea, boolean hasDownIcon,
+     boolean hasRolloverIcon, JDRButtonStyleDisplayType display)
+   {
+      this(name, useSmallIcons, location, isCompact, paintBorder, fillArea, hasDownIcon,
            hasRolloverIcon, display,
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
@@ -102,6 +170,17 @@ public class JDRButtonStyle
            SwingConstants.TRAILING, SwingConstants.CENTER);
    }
 
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+     String location, String presslocation,
+     boolean isCompact, boolean paintBorder,
+     boolean fillArea, boolean hasDownIcon,
+     boolean hasRolloverIcon, JDRButtonStyleDisplayType display)
+   {
+      this(name, useSmallIcons, location, presslocation, isCompact, paintBorder,
+           fillArea, hasDownIcon, hasRolloverIcon, display,
+           SwingConstants.TRAILING, SwingConstants.CENTER);
+   }
+
    public JDRButtonStyle(String name, String location, boolean isCompact,
      boolean paintBorder, boolean fillArea, boolean hasDownIcon,
      boolean hasRolloverIcon, JDRButtonStyleDisplayType display, int hPos, int vPos)
@@ -111,12 +190,32 @@ public class JDRButtonStyle
            hasRolloverIcon, display, hPos, vPos);
    }
 
+   public JDRButtonStyle(String name, boolean useSmallIcons,
+     String location, boolean isCompact,
+     boolean paintBorder, boolean fillArea, boolean hasDownIcon,
+     boolean hasRolloverIcon, JDRButtonStyleDisplayType display, int hPos, int vPos)
+   {
+      this(name, useSmallIcons, location, null, isCompact,
+           paintBorder, fillArea, hasDownIcon,
+           hasRolloverIcon, display, hPos, vPos);
+   }
+
    public JDRButtonStyle(String name, String location,
      String presslocation, boolean isCompact,
      boolean paintBorder, boolean fillArea, boolean hasDownIcon,
      boolean hasRolloverIcon, JDRButtonStyleDisplayType display, int hPos, int vPos)
    {
+      this(name, false, location, presslocation, isCompact, paintBorder,
+       fillArea, hasDownIcon, hasRolloverIcon, display, hPos, vPos);
+   }
+
+   public JDRButtonStyle(String name, boolean useSmallIcons, String location,
+     String presslocation, boolean isCompact,
+     boolean paintBorder, boolean fillArea, boolean hasDownIcon,
+     boolean hasRolloverIcon, JDRButtonStyleDisplayType display, int hPos, int vPos)
+   {
       this.name = name;
+      this.useSmallIcons = useSmallIcons;
       this.location = location;
       this.presslocation = presslocation;
       this.isCompact = isCompact;
@@ -177,27 +276,32 @@ public class JDRButtonStyle
 
    public IconSet getIconSet(JDRResources resources, String base)
    {
-      IconSet icSet = resources.getHelpSet().getHelpIconSet(location+"/"+base, isSmall);
+      IconSet icSet = resources.getHelpLib().getHelpIconSet(location+"/"+base,
+         useSmallIcons);
 
-      if (pressLocation != null)
+      if (icSet == null)
+      {
+         icSet = resources.getHelpLib().getHelpIconSet(base,
+            useSmallIcons);
+      }
+
+      if (presslocation != null)
       {
          Icon ic = null;
 
-         if (isSmall)
+         if (useSmallIcons)
          {
-            ic = resources.getHelpSet().getSmallIcon(pressLocation+"/"+base);
+            ic = resources.getHelpLib().getSmallIcon(presslocation+"/"+base);
          }
          else
          {
-            ic = resources.getHelpSet().getLargeIcon(pressLocation+"/"+base);
+            ic = resources.getHelpLib().getLargeIcon(presslocation+"/"+base);
          }
 
          if (ic != null)
          {
-            icSet.setDefaultIcon(ic);
-            icSet.setPressedIcon(null);
-            icSet.setRolloverIcon(null);
-            icSet.setDisabledIcon(null);
+            icSet.setPressedIcon(ic);
+            icSet.setSelectedIcon(ic);
          }
       }
 
@@ -206,12 +310,12 @@ public class JDRButtonStyle
 
    public ImageIcon getPressIcon(JDRResources resources, String base)
    {
-      return resources.appIcon(presslocation+"/"+base+"up.png");
+      return resources.appIcon(presslocation+"/"+base+"_pressed.png");
    }
 
    public ImageIcon getUpIcon(JDRResources resources, String base)
    {
-      return resources.appIcon(location+"/"+base+"up.png");
+      return resources.appIcon(location+"/"+base+".png");
    }
 
    public ImageIcon getDownIcon(JDRResources resources, String base)
@@ -219,7 +323,7 @@ public class JDRButtonStyle
       if (hasDownIcon)
       {
          URL imgURL = getClass().getResource(
-            resources.getIconDir()+"/"+location+"/"+base+".png");
+            resources.getIconDir()+"/"+location+"/"+base+"_selected.png");
 
          return imgURL == null ? null : new ImageIcon(imgURL);
       }
@@ -232,7 +336,7 @@ public class JDRButtonStyle
       if (hasRolloverIcon)
       {
          URL imgURL = getClass().getResource(
-            resources.getIconDir()+"/"+location+"/"+base+"r.png");
+            resources.getIconDir()+"/"+location+"/"+base+"_rollover.png");
 
          return imgURL == null ? null : new ImageIcon(imgURL);
       }
@@ -240,6 +344,7 @@ public class JDRButtonStyle
       return null;
    }
 
+   @Deprecated
    public ImageIcon getDisabledIcon(JDRResources resources, String base)
    {
       URL imgURL = getClass().getResource(
@@ -251,7 +356,7 @@ public class JDRButtonStyle
    public JDRButton createButton(JDRResources resources, String base,
       ActionListener listener, String tooltipText)
    {
-      return createButton(resources, resources.getMessage("label."+base), base,
+      return createButton(resources, resources.getMessage("button."+base), base,
          listener, tooltipText);
    }
 
@@ -259,42 +364,61 @@ public class JDRButtonStyle
       String base, ActionListener listener, String tooltipText)
    {
       JDRButton button;
-      IconSet icSet = getIconSet(resources, base);
 
-      if (display == ICON_ONLY)
+      if (display == JDRButtonStyleDisplayType.TEXT_ONLY)
       {
-         button = new JDRButton(
-            icSet.getDefaultIcon(),
-            listener,
-            tooltipText);
-
-         icSet.setButtonIcons(button);
-
-         if (!paintBorder)
-         {
-            button.setBorder(BorderFactory.createEmptyBorder());
-         }
-
-         if (tooltipText == null)
-         {
-            button.setToolTipText(text);
-         }
-      }
-      else if (display == ICON_TEXT)
-      {
-         button = new JDRButton(text,
-            icSet.getDefaultIcon(),
-            listener,
-            tooltipText);
-
-         icSet.setButtonIcons(button);
-
-         button.setHorizontalTextPosition(horizontalPosition);
-         button.setVerticalTextPosition(verticalPosition);
+         button = new JDRButton(text, listener, tooltipText);
       }
       else
       {
-         button = new JDRButton(text, listener, tooltipText);
+         IconSet icSet = getIconSet(resources, base);
+
+         if (icSet == null)
+         {
+            try
+            {
+               throw new FileNotFoundException(resources.getMessage(
+                "error.iconset_not_found", base));
+            }
+            catch (FileNotFoundException e)
+            {
+               resources.warning(e.getMessage(), e);
+            }
+
+            button = new JDRButton(text, listener, tooltipText);
+         }
+         else
+         {
+            if (display == JDRButtonStyleDisplayType.ICON_ONLY)
+            {
+               button = new JDRButton(
+                  icSet.getDefaultIcon(),
+                  listener,
+                  tooltipText);
+
+               if (!paintBorder)
+               {
+                  button.setBorder(BorderFactory.createEmptyBorder());
+               }
+
+               if (tooltipText == null)
+               {
+                  button.setToolTipText(text);
+               }
+            }
+            else //if (display == ICON_TEXT)
+            {
+               button = new JDRButton(text,
+                  icSet.getDefaultIcon(),
+                  listener,
+                  tooltipText);
+
+               button.setHorizontalTextPosition(horizontalPosition);
+               button.setVerticalTextPosition(verticalPosition);
+            }
+
+            icSet.setButtonIcons(button);
+         }
       }
 
       button.setBorderPainted(paintBorder);
@@ -312,29 +436,64 @@ public class JDRButtonStyle
       return button;
    }
 
-   public JDRButton createButton(TJHAbstractAction action)
+   public JDRButton createButton(JDRResources resources, TJHAbstractAction action)
    {
       JDRButton button = new JDRButton(action);
-      IconSet icSet = action.getIconSet();
 
-      if (pressLocation != null)
+      if (display == JDRButtonStyleDisplayType.TEXT_ONLY)
       {
-         icSet.setPressedIcon(null);
-         icSet.setRolloverIcon(null);
-         icSet.setDisabledIcon(null);
+         button.setIcon(null);
+         button.setPressedIcon(null);
+         button.setDisabledIcon(null);
+         button.setRolloverIcon(null);
+         button.setSelectedIcon(null);
       }
-
-      if (display == ICON_ONLY)
+      else
       {
-         if (!paintBorder)
+         if (presslocation != null)
          {
-            button.setBorder(BorderFactory.createEmptyBorder());
+            IconSet icSet = action.getIconSet();
+            String base = icSet.getBase();
+
+            int idx = base.lastIndexOf("/");
+
+            if (idx > -1)
+            {
+               base = base.substring(idx+1);
+            }
+
+            Icon ic = null;
+
+            if (useSmallIcons)
+            {
+               ic = resources.getHelpLib().getSmallIcon(
+                     presslocation+"/"+base);
+            }
+            else
+            {
+               ic = resources.getHelpLib().getLargeIcon(
+                     presslocation+"/"+base);
+            }
+
+            if (ic != null)
+            {
+               button.setPressedIcon(ic);
+               button.setSelectedIcon(ic);
+            }
          }
-      }
-      else if (display == ICON_TEXT)
-      {
-          button.setHorizontalTextPosition(horizontalPosition);
-          button.setVerticalTextPosition(verticalPosition);
+
+         if (display == JDRButtonStyleDisplayType.ICON_ONLY)
+         {
+            if (!paintBorder)
+            {
+               button.setBorder(BorderFactory.createEmptyBorder());
+            }
+         }
+         else //if (display == ICON_TEXT)
+         {
+             button.setHorizontalTextPosition(horizontalPosition);
+             button.setVerticalTextPosition(verticalPosition);
+         }
       }
 
       button.setBorderPainted(paintBorder);
@@ -357,42 +516,119 @@ public class JDRButtonStyle
    {
       JDRToggleButton button;
 
-      if (display == ICON_ONLY)
+      if (display == JDRButtonStyleDisplayType.TEXT_ONLY)
       {
-         button = new JDRToggleButton(
-            getUpIcon(resources, base),
-            getDownIcon(resources, base),
-            getRolloverIcon(resources, base),
-            getDisabledIcon(resources, base),
-            listener,
-            tooltipText);
-
-         if (!paintBorder)
-         {
-            button.setBorder(BorderFactory.createEmptyBorder());
-         }
-
-         if (tooltipText == null)
-         {
-            button.setToolTipText(text);
-         }
-      }
-      else if (display == ICON_TEXT)
-      {
-         button = new JDRToggleButton(text,
-            getUpIcon(resources, base),
-            getDownIcon(resources, base),
-            getRolloverIcon(resources, base),
-            getDisabledIcon(resources, base),
-            listener,
-            tooltipText);
-
-          button.setHorizontalTextPosition(horizontalPosition);
-          button.setVerticalTextPosition(verticalPosition);
+         button = new JDRToggleButton(text, listener, tooltipText);
       }
       else
       {
-         button = new JDRToggleButton(text, listener, tooltipText);
+         IconSet icSet = getIconSet(resources, base);
+
+         if (display == JDRButtonStyleDisplayType.ICON_ONLY)
+         {
+            button = new JDRToggleButton(
+               icSet.getDefaultIcon(),
+               listener,
+               tooltipText);
+
+            if (!paintBorder)
+            {
+               button.setBorder(BorderFactory.createEmptyBorder());
+            }
+
+            if (tooltipText == null)
+            {
+               button.setToolTipText(text);
+            }
+         }
+         else //if (display == ICON_TEXT)
+         {
+            button = new JDRToggleButton(text,
+               icSet.getDefaultIcon(),
+               listener,
+               tooltipText);
+
+             button.setHorizontalTextPosition(horizontalPosition);
+             button.setVerticalTextPosition(verticalPosition);
+         }
+
+         icSet.setButtonIcons(button);
+      }
+
+      button.setBorderPainted(paintBorder);
+      button.setContentAreaFilled(fillArea);
+
+      if (paintBorder)
+      {
+         button.setMargin(new Insets(0, 0, 0, 0));
+      }
+      else
+      {
+         button.setMargin(new Insets(1, 1, 1, 1));
+      }
+
+      return button;
+   }
+
+   public JDRToggleButton createToggle(JDRResources resources,
+      TJHAbstractAction action)
+   {
+      JDRToggleButton button = new JDRToggleButton(action);
+
+      if (display == JDRButtonStyleDisplayType.TEXT_ONLY)
+      {
+         button.setIcon(null);
+         button.setPressedIcon(null);
+         button.setDisabledIcon(null);
+         button.setRolloverIcon(null);
+         button.setSelectedIcon(null);
+      }
+      else
+      {
+         if (presslocation != null)
+         {
+            IconSet icSet = action.getIconSet();
+            String base = icSet.getBase();
+
+            int idx = base.lastIndexOf("/");
+
+            if (idx > -1)
+            {
+               base = base.substring(idx+1);
+            }
+
+            Icon ic = null;
+
+            if (useSmallIcons)
+            {
+               ic = resources.getHelpLib().getSmallIcon(
+                     presslocation+"/"+base);
+            }
+            else
+            {
+               ic = resources.getHelpLib().getLargeIcon(
+                     presslocation+"/"+base);
+            }
+
+            if (ic != null)
+            {
+               button.setPressedIcon(ic);
+               button.setSelectedIcon(ic);
+            }
+         }
+
+         if (display == JDRButtonStyleDisplayType.ICON_ONLY)
+         {
+            if (!paintBorder)
+            {
+               button.setBorder(BorderFactory.createEmptyBorder());
+            }
+         }
+         else //if (display == JDRButtonStyleDisplayType.ICON_TEXT)
+         {
+             button.setHorizontalTextPosition(horizontalPosition);
+             button.setVerticalTextPosition(verticalPosition);
+         }
       }
 
       button.setBorderPainted(paintBorder);
@@ -417,44 +653,122 @@ public class JDRButtonStyle
    {
       JDRToolButton button;
 
-      if (display == ICON_ONLY)
-      {
-         button = new JDRToolButton(
-            getUpIcon(resources, base),
-            getDownIcon(resources, base),
-            getRolloverIcon(resources, base),
-            getDisabledIcon(resources, base),
-            listener, group, selected,
-            tooltipText);
-
-         if (!paintBorder)
-         {
-            button.setBorder(BorderFactory.createEmptyBorder());
-         }
-
-         if (tooltipText == null)
-         {
-            button.setToolTipText(buttonText);
-         }
-      }
-      else if (display == ICON_TEXT)
-      {
-         button = new JDRToolButton(
-            buttonText,
-            getUpIcon(resources, base),
-            getDownIcon(resources, base),
-            getRolloverIcon(resources, base),
-            getDisabledIcon(resources, base),
-            listener, group, selected,
-            tooltipText);
-
-          button.setHorizontalTextPosition(horizontalPosition);
-          button.setVerticalTextPosition(verticalPosition);
-      }
-      else
+      if (display == JDRButtonStyleDisplayType.TEXT_ONLY)
       {
          button = new JDRToolButton(
             buttonText, listener, group, selected, tooltipText);
+      }
+      else
+      {
+         IconSet icSet = getIconSet(resources, base);
+
+         if (display == JDRButtonStyleDisplayType.ICON_ONLY)
+         {
+            button = new JDRToolButton(
+               icSet.getDefaultIcon(),
+               listener, group, selected,
+               tooltipText);
+
+            if (!paintBorder)
+            {
+               button.setBorder(BorderFactory.createEmptyBorder());
+            }
+
+            if (tooltipText == null)
+            {
+               button.setToolTipText(buttonText);
+            }
+         }
+         else //if (display == ICON_TEXT)
+         {
+            button = new JDRToolButton(
+               buttonText,
+               icSet.getDefaultIcon(),
+               listener, group, selected,
+               tooltipText);
+
+             button.setHorizontalTextPosition(horizontalPosition);
+             button.setVerticalTextPosition(verticalPosition);
+         }
+
+         icSet.setButtonIcons(button);
+      }
+
+      button.setBorderPainted(paintBorder);
+      button.setContentAreaFilled(fillArea);
+
+      if (paintBorder)
+      {
+         button.setMargin(new Insets(0, 0, 0, 0));
+      }
+      else
+      {
+         button.setMargin(new Insets(1, 1, 1, 1));
+      }
+
+      return button;
+   }
+
+   public JDRToolButton createTool(JDRResources resources,
+      TJHAbstractAction action, 
+      ButtonGroup group, boolean selected)
+   {
+      JDRToolButton button = new JDRToolButton(action, group, selected);
+
+      if (display == JDRButtonStyleDisplayType.TEXT_ONLY)
+      {
+         button.setIcon(null);
+         button.setPressedIcon(null);
+         button.setDisabledIcon(null);
+         button.setRolloverIcon(null);
+         button.setSelectedIcon(null);
+      }
+      else
+      {
+         if (presslocation != null)
+         {
+            IconSet icSet = action.getIconSet();
+            String base = icSet.getBase();
+
+            int idx = base.lastIndexOf("/");
+
+            if (idx > -1)
+            {
+               base = base.substring(idx+1);
+            }
+
+            Icon ic = null;
+
+            if (useSmallIcons)
+            {
+               ic = resources.getHelpLib().getSmallIcon(
+                     presslocation+"/"+base);
+            }
+            else
+            {
+               ic = resources.getHelpLib().getLargeIcon(
+                     presslocation+"/"+base);
+            }
+
+            if (ic != null)
+            {
+               button.setPressedIcon(ic);
+               button.setSelectedIcon(ic);
+            }
+         }
+
+         if (display == JDRButtonStyleDisplayType.ICON_ONLY)
+         {
+            if (!paintBorder)
+            {
+               button.setBorder(BorderFactory.createEmptyBorder());
+            }
+         }
+         else //if (display == ICON_TEXT)
+         {
+             button.setHorizontalTextPosition(horizontalPosition);
+             button.setVerticalTextPosition(verticalPosition);
+         }
       }
 
       button.setBorderPainted(paintBorder);
@@ -499,9 +813,9 @@ public class JDRButtonStyle
 
    private boolean hasDownIcon, hasRolloverIcon;
 
-   private boolean isCompact;
+   private boolean isCompact, useSmallIcons;
 
-   private JDRButtonStyleDisplayType display = ICON_ONLY;
+   private JDRButtonStyleDisplayType display = JDRButtonStyleDisplayType.ICON_ONLY;
 
    private int horizontalPosition = SwingConstants.TRAILING;
    private int verticalPosition = SwingConstants.CENTER;

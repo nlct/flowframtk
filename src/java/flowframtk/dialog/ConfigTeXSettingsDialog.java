@@ -572,7 +572,7 @@ class TextConfigPanel extends JPanel
       add(tabbedPane, "Center");
 
       tabbedPane.addTab(resources.getMessage("textconfig.textmode"),
-        resources.appButtonIcon("textareaup.png"),
+        resources.getButtonIcon("textarea"),
         createTextMappingsComponent(),
         resources.getToolTipText("textconfig.textmode"));
       tabbedPane.setMnemonicAt(0, 
@@ -580,7 +580,7 @@ class TextConfigPanel extends JPanel
 
       tabbedPane.addTab(
         resources.getMessage("textconfig.mathmode"),
-        resources.appButtonIcon("mathup.png"),
+        resources.getButtonIcon("math"),
         createMathsMappingsComponent(),
         resources.getToolTipText("textconfig.mathmode"));
       tabbedPane.setMnemonicAt(1, 

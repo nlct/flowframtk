@@ -3325,6 +3325,7 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.fatal">Fatal error</entry>
 <entry key="error.file_not_found">File not found</entry>
 <entry key="error.file_not_found_with_name">File not found: {0}</entry>
+<entry key="error.iconset_not_found">Icon set not found for base: {0}</entry>
 <entry key="error.finish_or_discard">You must finish or discard the current path before closing the image</entry>
 <entry key="error.invalid_paint-id">Invalid color identifier</entry>
 <entry key="error.id.endcolour">Invalid end color identifier</entry>

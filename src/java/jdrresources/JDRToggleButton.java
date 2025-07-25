@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,28 +29,42 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+
 /**
  * Toggle button.
  * @author Nicola L C Talbot
  */
 public class JDRToggleButton extends JCheckBox
 {
-   public JDRToggleButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRToggleButton(Icon icon_up, 
+                     ActionListener listener)
+   {
+      this(icon_up, listener, null);
+   }
+
+   public JDRToggleButton(Icon icon_up, 
+                     ActionListener listener, String info)
+   {
+      this(icon_up, null, null, null, listener, info);
+   }
+
+   public JDRToggleButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener)
    {
       this(icon_up, icon_down, icon_rollover, icon_disabled, listener, null);
    }
 
-   public JDRToggleButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover,
+   public JDRToggleButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover,
                      ActionListener listener)
    {
       this(icon_up, icon_down, icon_rollover, null, listener, null);
    }
 
-   public JDRToggleButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRToggleButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener, String info)
    {
       super();
@@ -77,15 +91,21 @@ public class JDRToggleButton extends JCheckBox
       }
    }
 
-   public JDRToggleButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover,
+   public JDRToggleButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover,
                      ActionListener listener, String info)
    {
       this(icon_up, icon_down, icon_rollover, null, listener, info);
    }
 
-   public JDRToggleButton(String text, ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRToggleButton(String text, Icon icon_up, 
+                     ActionListener listener, String info)
+   {
+      this(text, icon_up, null, null, null, listener, info);
+   }
+
+   public JDRToggleButton(String text, Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener, String info)
    {
       super(text);
@@ -125,6 +145,11 @@ public class JDRToggleButton extends JCheckBox
       {
          setToolTipText(info);
       }
+   }
+
+   public JDRToggleButton(TJHAbstractAction action)
+   {
+      super(action);
    }
 
 }

@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,29 +29,36 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+
 /**
  * Tool radio style button.
  * @author Nicola L C Talbot
  */
 public class JDRToolButton extends JRadioButton
 {
-   public JDRToolButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, 
+   public JDRToolButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, 
                      ActionListener listener, ButtonGroup g)
    {
       this(icon_up, icon_down, icon_rollover, listener, g, false, null);
    }
 
-   public JDRToolButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, 
+   public JDRToolButton(Icon icon_up, ActionListener listener, ButtonGroup g)
+   {
+      this(icon_up, null, null, listener, g, false, null);
+   }
+
+   public JDRToolButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, 
                      ActionListener listener, ButtonGroup g,
                      boolean selected)
    {
       this(icon_up, icon_down, icon_rollover, listener, g, selected, null);
    }
 
-   public JDRToolButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, 
+   public JDRToolButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, 
                      ActionListener listener, ButtonGroup g, 
                      boolean selected, String info)
    {
@@ -59,8 +66,16 @@ public class JDRToolButton extends JRadioButton
            g, selected, info);
    }
 
-   public JDRToolButton(ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, ImageIcon icon_disabled,
+   public JDRToolButton(Icon icon_up,  
+                     ActionListener listener, ButtonGroup g, 
+                     boolean selected, String info)
+   {
+      this(icon_up, null, null, null, listener,
+           g, selected, info);
+   }
+
+   public JDRToolButton(Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, Icon icon_disabled,
                      ActionListener listener, ButtonGroup g, 
                      boolean selected, String info)
    {
@@ -92,9 +107,28 @@ public class JDRToolButton extends JRadioButton
       }
    }
 
-   public JDRToolButton(String text, ImageIcon icon_up, ImageIcon icon_down, 
-                     ImageIcon icon_rollover, 
-                     ImageIcon icon_disabled, 
+   public JDRToolButton(TJHAbstractAction action, ButtonGroup g, 
+                     boolean selected)
+   {
+      super(action);
+      setSelected(selected);
+
+      if (g != null)
+      {
+         g.add(this);
+      }
+   }
+
+   public JDRToolButton(String text, Icon icon_up,
+                     ActionListener listener, ButtonGroup g,
+                     boolean selected, String info)
+   {
+      this(text, icon_up, null, null, null, listener, g, selected, info);
+   }
+
+   public JDRToolButton(String text, Icon icon_up, Icon icon_down, 
+                     Icon icon_rollover, 
+                     Icon icon_disabled, 
                      ActionListener listener, ButtonGroup g,
                      boolean selected, String info)
    {
@@ -145,6 +179,20 @@ public class JDRToolButton extends JRadioButton
       if (info != null)
       {
          setToolTipText(info);
+      }
+   }
+
+   public JDRToolButton(String text,
+                     TJHAbstractAction action, ButtonGroup g,
+                     boolean selected, String info)
+   {
+      super(action);
+      setSelected(selected);
+      setText(text);
+
+      if (g != null)
+      {
+         g.add(this);
       }
    }
 
