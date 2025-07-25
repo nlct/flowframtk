@@ -141,5 +141,6 @@ clean	:
 	\rm -f jdrview-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
 	\rm -rf $(targetdir)/flowframtk
 	\rm -rf $(targetdir)/jdrview
-	\rm -rf flowframtk-props-en*.bib
-	\rm -rf jdrview-props-en*.bib
+	\rm -f flowframtk-props-en*.bib
+	\rm -f jdrview-props-en*.bib
+	\rm -f *.1
