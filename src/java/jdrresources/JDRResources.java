@@ -1496,7 +1496,10 @@ public class JDRResources
     */
    public JMenuItem addHelpItem(JMenu helpM)
    {
-      JMenuItem helpItem = new JMenuItem(helpLib.createHelpManualAction("help"));
+      TJHAbstractAction helpAction = helpLib.createHelpManualAction("help");
+
+      JMenuItem helpItem = new JMenuItem(helpAction);
+      helpItem.setText(helpAction.getDefaultName());
       helpM.add(helpItem);
 
       return helpItem;
