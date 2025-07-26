@@ -1687,15 +1687,85 @@ settings.)
 
 \subsubsection{Graphics Settings}\label{sec:graphics}
 
-TODO
+\FloatFig
+  {fig:graphics}
+  {\includeimg[width=\linewidth]{configureUI-graphics}}
+  {Configuration UI Dialog Box (Graphics Settings)}
+
+The \widget{graphics.title} tab (\figureref{fig:graphics})
+allows you to:
+\begin{itemize}
+\item choose between using or not using \gls{anti-aliasing}
+to display the graphics;
+
+\item choose between speed or quality in the \gls{rendering};
+
+\item set the \manmsg{colour} for the different types of
+\glspl*{controlpt};
+
+\item choose whether a mouse \gls{click} on the \gls{canvas} (outside of
+any of the \glspl{controlpt}) exits
+\hyperref[sec:editpath]{edit path mode}.
+
+\item choose whether or not to ignore the
+\hyperref[mi:gridlock]{grid lock} when using the
+mouse to select a \gls{controlpt} in edit path mode.
+\end{itemize}
 
 
+\iconstartpar{hotspots.png,nohotspots.png}%
 \plabel[Hotspots]{mi:hotspots}%
-You can also use this tab to choose between enabling (left icon) and
-disabling (right icon) hotspots along the \glspl{bbox}. 
+You can also use the \widget{graphics.title} tab to choose between
+enabling (left icon) and disabling (right icon) hotspots along the
+\glspl{bbox}. If hotspots are enabled, you can scale, rotate or
+shear \glspl{object} by dragging the appropriate hotspot. (Note that
+transforming \glspl{compositeshape} applies the transformation to
+the \emph{underlying} shape not to the shape as a whole.)
 
-TODO
+You may want to disable this option when you want to move small
+objects, or you may end up transforming them instead of moving them.
+When this option is enabled, the cursor will change
+shape when you move it over the edge of the \gls{bbox}.
+(The actual cursor appearance depends on the look and
+feel of the platform you are using. On some systems the South and
+North arrows may look the same, and similarly for the East and West
+arrows.)
+\figureref{fig:hotspotsa} shows how the \gls{bbox} is displayed
+when hotspots are enabled and \figureref{fig:hotspotsb} shows
+how the \gls{bbox} is displayed when the hotspots have been
+disabled. Each hotspot is represented by a small square. Available
+functions are listed in \tableref{tab:hotspotfunctions}.
 
+\FloatTable
+{tab:hotspotfunctions}
+{%
+\begin{tabular}{lll}
+\bfseries Hotspot & \bfseries Function &
+\bfseries Cursor Appearance\\
+Bottom left & rotate & hand\\
+Bottom \manmsg{centre} & scale vertically & South arrow\\
+Bottom right & scale both directions & South-East arrow\\
+Middle right & scale horizontally & East arrow\\
+Top right & shear vertically & North arrow\\
+Top left & shear horizontally & West arrow
+\end{tabular}
+}
+{Hotspot Functions}
+ 
+Note that even if you have more than one \gls{object} selected, only the
+object whose hotspot you are dragging will be transformed.
+As may be predicted, using hotspots is not as precise as using the
+transformation dialog boxes described in
+\sectionref{sec:selectobjects}.
+
+\FloatSubFigs{fig:hotspots}
+{
+ {fig:hotspotsa}{\includeimg[width=0.4\textwidth]{exhotspots}}{Enabled},
+ {fig:hotspotsb}{\includeimg[width=0.4\textwidth]{exnohotspots}}{Disabled}
+}
+{Hotspots}
+
+\seealsorefs{sec:rotateobjects,sec:scaleobjects,sec:shearobjects}
 
 \subsubsection{Annotations Settings}\label{sec:annotations}
 

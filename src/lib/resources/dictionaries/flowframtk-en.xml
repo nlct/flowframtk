@@ -27,6 +27,7 @@ Nicola Talbot
 <entry key="syntax.statusbar">{0}	Show the status bar.</entry>
 <entry key="syntax.rulers">{0}	Show the rulers.</entry>
 <entry key="syntax.paper">{0} &lt;type&gt;	Set the paper size to &lt;type&gt; where &lt;type&gt; may be a keyword, such as a0, or in the form: user &lt;width&gt; &lt;height&gt;.</entry>
+<entry key="syntax.paper.syntax">\meta'{'type'}'</entry>
 <entry key="syntax.disable_print">{0}	Disable the request for printer attributes on startup.</entry>
 
 <!-- File Menu -->
@@ -153,6 +154,7 @@ Nicola Talbot
 <entry key="menu.edit.path.edit.mnemonic">E</entry>
 <entry key="menu.edit.path.edit.keystroke">control I</entry>
 <entry key="menu.edit.path.edit.iconimage">editPath</entry>
+<entry key="menu.edit.path.edit.initvalue">false</entry>
 
 <entry key="button.edit_path">Edit</entry>
 <entry key="button.edit_path.keystroke">control I</entry>
@@ -368,6 +370,7 @@ Nicola Talbot
 
 <entry key="menu.transform.distort">Distort</entry>
 <entry key="menu.transform.distort.mnemonic">D</entry>
+<entry key="menu.transform.distort.initvalue">false</entry>
 
 <entry key="button.distort">Distort</entry>
 
@@ -622,6 +625,7 @@ Nicola Talbot
 
 <entry key="menu.settings.rulers">Show Rulers</entry>
 <entry key="menu.settings.rulers.mnemonic">R</entry>
+<entry key="menu.settings.rulers.initvalue">true</entry>
 
 <!--  settings->grid sub menu -->
 
@@ -632,11 +636,13 @@ Nicola Talbot
 <entry key="menu.settings.grid.show.mnemonic">S</entry>
 <entry key="menu.settings.grid.show.keystroke">F2</entry>
 <entry key="menu.settings.grid.show.iconimage">showgrid</entry>
+<entry key="menu.settings.grid.show.initvalue">true</entry>
 
 <entry key="menu.settings.grid.lock">Lock Grid</entry>
 <entry key="menu.settings.grid.lock.mnemonic">L</entry>
 <entry key="menu.settings.grid.lock.keystroke">shift F2</entry>
 <entry key="menu.settings.grid.lock.iconimage">lockgrid</entry>
+<entry key="menu.settings.grid.lock.initvalue">false</entry>
 
 <entry key="menu.settings.grid.settings">Grid Settings...</entry>
 <entry key="menu.settings.grid.settings.mnemonic">G</entry>
@@ -921,6 +927,7 @@ Nicola Talbot
 <entry key="menu.selectedpath.edit">Edit Path</entry>
 <entry key="menu.selectedpath.edit.mnemonic">E</entry>
 <entry key="menu.selectedpath.edit.keystroke">control I</entry>
+<entry key="menu.selectedpath.edit.initvalue">false</entry>
 
 <entry key="menu.selectedpath.distort">Distort</entry>
 <entry key="menu.selectedpath.distort.mnemonic">R</entry>
@@ -3718,6 +3725,8 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="manual.through">thru</entry>
 <entry key="manual.labelled">labeled</entry>
 <entry key="manual.favourite">favorite</entry>
+<entry key="manual.centre">center</entry>
+<entry key="manual.centred">centered</entry>
 
 <entry key="term.popupmenu">popup menu</entry>
 <entry key="term.popupmenu.description">A menu whose items vary depending on the context. These
