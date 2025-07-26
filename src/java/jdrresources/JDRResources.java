@@ -318,7 +318,14 @@ public class JDRResources
    {
       String location = getButtonStyle().getLocation();
 
-      return getLargeIcon(location+"/"+base);
+      return helpLib.getLargeIcon(location+"/"+base);
+   }
+
+   public ImageIcon getSmallButtonIcon(String base)
+   {
+      String location = getButtonStyle().getLocation();
+
+      return helpLib.getSmallIcon(location+"/"+base);
    }
 
    /**

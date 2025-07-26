@@ -228,7 +228,7 @@ help button would conflict).
 \caption{Keyboard Accelerators and Menu Mnemonics\label{tab:access}}\\
 \bfseries Accelerator & \bfseries Function & \bfseries Mnemonic \\
 \endfirsthead
-\caption*{Keyboard Accelerators and Menu Mnemonics}\\
+\caption*{Keyboard Accelerators and Menu Mnemonics (Continued)}\\
 \bfseries Accelerator & \bfseries Function & \bfseries Mnemonic \\
 \endhead
 \multicolumn{3}{l}{\fnsymtext{2}{Functions that move the pointer.}}\\\endfoot
@@ -777,6 +777,7 @@ height. For example:
 \begin{terminal}
 \app{flowframtk} \switch{paper} user 100mm 200mm
 \end{terminal}
+
 The custom size must have positive dimensions.
 Recognised units: \code{\gls{pt}}, \code{\gls{bp}},
 \code{in}, \code{mm}, \code{cm}, \code{pc},
@@ -1029,7 +1030,7 @@ interface.)
 
 \FloatFig
   {fig:configdialog-controlsettings}
-  {\includeimg[height=0.4\textheight]{configureDialog-controls}}
+  {\includeimg{configureDialog-controls}}
   {Configuration Dialog Box (Control Point Settings)}
 
 The \widget{controls.title} tab
@@ -1041,6 +1042,7 @@ allows you to:
 the zoom setting;
  \item set the \gls{storageunit}.
 \end{itemize}
+
 It's best to set the \gls{storageunit} before you start creating an
 image. If the selected \gls{canvas} isn't empty, all \glspl{object} will
 have their co-ordinates recomputed in terms of the new unit, which
@@ -1054,7 +1056,7 @@ the mouse on the storage unit area of the \gls{statusbar}.
 
 \FloatFig
   {fig:configdialog-startdir}
-  {\includeimg[height=0.4\textheight]{configureDialog-startdir}}
+  {\includeimg{configureDialog-startdir}}
   {Configuration Dialog Box (Startup Directory Settings)}
 
 The \widget{startdir.title} tab
@@ -1076,7 +1078,7 @@ directory.
 
 \FloatFig
   {fig:configdialog-jdrsettings}
-  {\includeimg[height=0.4\textheight]{configureDialog-jdrsettings}}
+  {\includeimg{configureDialog-jdrsettings}}
   {Configuration Dialog Box (JDR/AJR Settings)}
 
 You can use the \widget{jdr.title} tab
@@ -1096,7 +1098,7 @@ should be affected by the magnification setting.
 
 \FloatFig
   {fig:configdialog-initsettings}
-  {\includeimg[height=0.4\textheight]{configureDialog-initsettings}}
+  {\includeimg{configureDialog-initsettings}}
   {Configuration Dialog Box (Startup Settings)}
 
 You can use the \widget{initsettings.title} tab
@@ -1130,7 +1132,7 @@ editor, but make sure you save your changes before restarting
 
 \FloatFig
   {fig:configdialog-bitmap}
-  {\includeimg[height=0.4\textheight]{configureDialog-bitmap}}
+  {\includeimg{configureDialog-bitmap}}
   {Configuration Dialog Box (Bitmap Settings)}
 
 You can use the \widget{bitmapconfig.title} tab
@@ -1151,7 +1153,7 @@ your preferred default image command, which may be either
 
 \FloatFig
   {fig:configdialog-apppaths}
-  {\includeimg[height=0.4\textheight]{configureDialog-apppaths}}
+  {\includeimg{configureDialog-apppaths}}
   {Configuration Dialog Box (Application Paths)}
 
 If you export your image to PDF, EPS or SVG (see \sectionref{sec:exportdoc})
@@ -1198,7 +1200,7 @@ shape also require this information.
 
 \FloatFig
  {fig:normalsize}
- {\includeimg[width=0.9\linewidth]{normalsizeandclass}}
+ {\includeimg{normalsizeandclass}}
  {Setting the Normal Font Size and (optionally) the Class}
 
 The \gls{normal-font-size} can be set using the
@@ -1310,7 +1312,7 @@ The \widget{flfsettings.title} tab
 
 \FloatFig
  {fig:flfsettings}
- {\includeimg[width=0.9\linewidth]{flfsettings}}
+ {\includeimg{flfsettings}}
  {Flowframe Settings Tab}
 
 The \sty{flowfram} package now allows you to use absolute pages
@@ -1349,7 +1351,7 @@ allows you to adjust the text-related settings.
 
 \FloatFig
   {fig:configdialog-texsettings}
-  {\includeimg[width=0.9\linewidth]{configureDialog-texsettings}}
+  {\includeimg{configureDialog-texsettings}}
   {LaTeX-Related Text Settings}
 
 \widgetdef{textconfig.anchor}
@@ -1477,7 +1479,7 @@ characters and these are listed in the table shown in the
 
 \FloatFig
   {fig:configdialog-mathsettings}
-  {\includeimg[width=0.9\linewidth]{configureDialog-mathsettings}}
+  {\includeimg{configureDialog-mathsettings}}
   {LaTeX-Related Text Settings\dash \Manmsg{maths}-Mode Mappings}
 
 The mapping tables can be sorted by \glslink{click}{clicking} on
@@ -1528,7 +1530,7 @@ available in the \LaTeX\ kernel, you can leave this box blank.
 mapping is applied.)
 
 The package name may be preceded by optional arguments in square
-brackets such as \texttt{[weather]ifsym} (note that the package name
+brackets, for example \code{[weather]ifsym} (note that the package name
 isn't enclosed in braces). Set the package name to \qt{none} or
 leave it empty if you don't want it automatically added to the early-preamble
 code when the mappings are applied.
@@ -1546,7 +1548,7 @@ be overwritten.
 
 \FloatFig
   {fig:addTeXMapping}
-  {\includeimg[width=0.9\textwidth]{addTeXMapping}}
+  {\includeimg{addTeXMapping}}
   {Adding a New Text Mapping} 
 
 \widgetdef{textconfig.textmappings.import}
@@ -1662,7 +1664,7 @@ class (\ext{cls}) or package (\ext{sty}) functions.
 
 \FloatFig
   {fig:texconfig-preamble}
-  {\includeimg[width=0.9\linewidth]{texconfig-preamble}}
+  {\includeimg{texconfig-preamble}}
   {Default Preamble Code}
 
 The default preamble code is stored in a file called
@@ -1689,7 +1691,7 @@ settings.)
 
 \FloatFig
   {fig:graphics}
-  {\includeimg[width=\linewidth]{configureUI-graphics}}
+  {\includeimg{configureUI-graphics}}
   {Configuration UI Dialog Box (Graphics Settings)}
 
 The \widget{graphics.title} tab (\figureref{fig:graphics})
