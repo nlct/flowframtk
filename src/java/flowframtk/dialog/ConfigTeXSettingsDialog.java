@@ -80,6 +80,7 @@ public class ConfigTeXSettingsDialog extends JDialog
       tabbedPane.addTab(getResources().getMessage("clssettings.title"),
          null, new JScrollPane(texSettings),
          getResources().getMessage("clssettings.tooltip"));
+
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("clssettings.mnemonic"));
 
@@ -88,6 +89,7 @@ public class ConfigTeXSettingsDialog extends JDialog
       tabbedPane.addTab(getResources().getMessage("flfsettings.title"),
          null, new JScrollPane(flfConfigPanel),
          getResources().getMessage("flfsettings.tooltip"));
+
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("flfsettings.mnemonic"));
 
@@ -96,6 +98,7 @@ public class ConfigTeXSettingsDialog extends JDialog
       tabbedPane.addTab(getResources().getMessage("textconfig.title"),
          null, new JScrollPane(textConfigPanel),
          getResources().getMessage("textconfig.tooltip"));
+
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("textconfig.mnemonic"));
 
@@ -104,6 +107,7 @@ public class ConfigTeXSettingsDialog extends JDialog
       tabbedPane.addTab(getResources().getMessage("preambleconfig.title"),
          null, new JScrollPane(preambleConfigPanel),
          getResources().getMessage("preambleconfig.tooltip"));
+
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("preambleconfig.mnemonic"));
 
@@ -572,7 +576,7 @@ class TextConfigPanel extends JPanel
       add(tabbedPane, "Center");
 
       tabbedPane.addTab(resources.getMessage("textconfig.textmode"),
-        resources.getButtonIcon("textarea"),
+        resources.getSmallButtonIcon("textarea"),
         createTextMappingsComponent(),
         resources.getToolTipText("textconfig.textmode"));
       tabbedPane.setMnemonicAt(0, 
@@ -580,7 +584,7 @@ class TextConfigPanel extends JPanel
 
       tabbedPane.addTab(
         resources.getMessage("textconfig.mathmode"),
-        resources.getButtonIcon("math"),
+        resources.getSmallButtonIcon("math"),
         createMathsMappingsComponent(),
         resources.getToolTipText("textconfig.mathmode"));
       tabbedPane.setMnemonicAt(1, 
