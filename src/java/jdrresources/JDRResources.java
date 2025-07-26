@@ -1530,7 +1530,29 @@ public class JDRResources
     */
    public JButton createHelpDialogButton(JDialog dialog, String id)
    {
-      return helpLib.createHelpDialogButton(dialog, id);
+      return createHelpDialogButton(dialogButtonStyle, dialog, id);
+   }
+
+   public JButton createHelpDialogButton(int style, JDialog dialog, String id)
+   {
+      JDRButtonStyle buttonStyle;
+
+      if (style == DIALOG_BUTTON_AS_GENERAL)
+      {
+         buttonStyle = getButtonStyle();
+      }
+      else
+      {
+         buttonStyle = DIALOG_BUTTON_STYLES[style];
+      }
+
+      IconSet icSet = buttonStyle.getIconSet(this, 
+        helpLib.getIconPrefix("button.help", "help"));
+
+      TJHAbstractAction helpAction = helpLib.createHelpDialogAction(
+        dialog, id, icSet, null);
+
+      return buttonStyle.createButton(this, helpAction);
    }
 
    /**
@@ -1542,7 +1564,29 @@ public class JDRResources
     */
    public JButton createHelpDialogButton(JFrame dialog, String id)
    {
-      return helpLib.createHelpDialogButton(dialog, id);
+      return createHelpDialogButton(dialogButtonStyle, dialog, id);
+   }
+
+   public JButton createHelpDialogButton(int style, JFrame dialog, String id)
+   {
+      JDRButtonStyle buttonStyle;
+
+      if (style == DIALOG_BUTTON_AS_GENERAL)
+      {
+         buttonStyle = getButtonStyle();
+      }
+      else
+      {
+         buttonStyle = DIALOG_BUTTON_STYLES[style];
+      }
+
+      IconSet icSet = buttonStyle.getIconSet(this, 
+        helpLib.getIconPrefix("button.help", "help"));
+
+      TJHAbstractAction helpAction = helpLib.createHelpDialogAction(
+        dialog, id, icSet, null);
+
+      return buttonStyle.createButton(this, helpAction);
    }
 
    /**
