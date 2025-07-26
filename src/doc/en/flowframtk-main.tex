@@ -1762,8 +1762,8 @@ transformation dialog boxes described in
 
 \FloatSubFigs{fig:hotspots}
 {
- {fig:hotspotsa}{\includeimg[width=0.4\textwidth]{exhotspots}}{Enabled},
- {fig:hotspotsb}{\includeimg[width=0.4\textwidth]{exnohotspots}}{Disabled}
+ {fig:hotspotsa}{\includeimg{exhotspots}}{Enabled},
+ {fig:hotspotsb}{\includeimg{exnohotspots}}{Disabled}
 }
 {Hotspots}
 
@@ -1771,18 +1771,81 @@ transformation dialog boxes described in
 
 \subsubsection{Annotations Settings}\label{sec:annotations}
 
-TODO
+\FloatFig
+  {fig:annotations}
+  {\includeimg{configureUI-annotations}}
+  {Configuration UI Dialog Box (Annotations Settings)}
+
+The \widget{annotations.title} tab (\figureref{fig:annotations})
+allows you to set the font used for annotating frames or draft
+\glspl{bitmap} and set the font used on the splash screen during startup.
 
 
 \subsubsection{Language Settings}\label{sec:languages}
 
-TODO
+\FloatFig
+  {fig:languages}
+  {\includeimg{configureUI-languages}}
+  {Configuration UI Dialog Box (Language Settings)}
 
+You can use the \widget{lang.title} tab
+(\figureref{fig:graphics})
+to set which language to use for the application
+resources (menus, messages etc) and which language to use for
+the manual. These settings will not be applied until you quit and
+restart \appname.
+
+You can also use the \widget{lang.title} tab to specify the
+Unicode blocks to display in the
+\hyperref[mi:insertsymbol]{symbol selector}. By default, only
+a limited subsection of Unicode characters are available because it
+would significantly slow \appname's startup process to provide
+all possible characters. To add a new block, \gls{click} on the
+green plus button next to the table. To remove an unwanted block,
+select the appropriate row in the table and \gls{click} on the red minus
+button. The start and end values don't need to match a complete
+Unicode block and may span multiple blocks. For example, suppose you
+regularly want to enter musical symbols into your image, then you
+can add a block starting from 1D100 and ending at 1D1DD. You need to
+quit and restart \appname\ for the changes to take effect. If you
+want to restore the defaults, quit \appname, open the file
+\file{flowframtk.conf} in the \gls{config_dir} and remove
+the line starting with \qt{unicode=}.
+
+\seealsorefs{sec:multilingualsupport}
 
 \subsubsection{Accelerator Settings}\label{sec:accelerators}
 
-TODO
+\FloatFig
+  {fig:accelerators}
+  {\includeimg{configureUI-accelerators}}
+  {Configuration UI Dialog Box (Accelerators)}
 
+You can use the \widget{accelerators.title} tab
+(\figureref{fig:accelerators}) to change the default accelerators
+(keyboard shortcuts). It's possible to use the same keystroke for
+different actions provided the actions are never both enabled at the
+same time. (For example, \accelerator{menu.editpath.next_control}
+selects the next control in path edit mode or adjust the selection
+in select mode.)
+
+\textbf{Note: } Java's accessibility API uses \keys{\actualkey{10}} to switch
+the focus to the menu bar, so avoid using this key for an
+accelerator.
+
+Suppose you want to change the accelerator for the \menu{edit.undo}
+function from the default \accelerator{menu.edit.undo} to, say,
+\keys{\keyref{ctrl}+\keyref{shift}+U}. Find the appropriate row in
+the accelerator table and \gls{doubleclick} on it to open the
+\widget{accelerator.set} dialog box
+(\figureref{fig:setaccelerator}).
+
+\FloatFig
+  {fig:setaccelerator}
+  {\includeimg[width=\linewidth]{setaccelerator}}
+  {Changing a keyboard shortcut.}
+
+TODO
 
 \subsubsection{Toolbar, Ruler and Status Bar Settings}\label{sec:rulers}
 

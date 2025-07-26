@@ -56,25 +56,29 @@ version.tex	: $(baseclass)
 flowframtk-en-GB.pdf	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex \
+			../en-sharedimages/*.png
 	$(arara) flowframtk-en-GB
 
 flowframtk-en-GB.aux	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex \
+			../en-sharedimages/*.png
 	$(arara) flowframtk-en-GB
 
 flowframtk-en.pdf	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			  flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex \
+			../en-sharedimages/*.png
 	$(arara) flowframtk-en
 
 flowframtk-en.aux	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			  flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex
+			../sharedimages/*.png ../sharedimages/*.tex \
+			../en-sharedimages/*.png
 	$(arara) flowframtk-en
 
 jdrview-en.pdf	: jdrview.bib jdrview-props-en.bib \
