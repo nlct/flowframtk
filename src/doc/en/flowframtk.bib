@@ -46,11 +46,17 @@
 @fileext{ext.svg, parent={fileextension}}
 @fileext{ext.xml, parent={fileextension}}
 @fileext{ext.eps, parent={fileextension}}
+@fileext{ext.sty, parent={fileextension}}
+@fileext{ext.cls, parent={fileextension}}
+@fileext{ext.tsv, parent={fileextension}}
 
 % FILES
 
 @file{file.flowframtk.jar}
 @file{file.libgs}
+@file{file.textmappings.prop}
+@file{file.mathmappings.prop}
+@file{file.preamble.tex}
 
 % PACKAGES
 
@@ -65,6 +71,12 @@
 @package{pkg.pgf}
 
 @package{pkg.extsizes}
+
+@package{pkg.fontenc}
+
+@package{pkg.mathdesign,
+ name={\styfmt{math\-design}}
+}
 
 % CLASSES
 
@@ -551,3 +563,31 @@ dump all function.}
 @index{normal-font-size,
  name={normal font size}
 }
+
+% PUNCTUATION
+
+@punctuation{mshift,
+ symbol={\code{\$}},
+ description={\manmsg{maths}-shift}
+}
+
+@punctuation{bksl,
+  symbol={\code{\char`\\ }},
+  description={backslash}
+}
+
+@cspunctuation{dbbksl,
+  symbol={\cspuncfmt{\char`\\ }},
+  description={new row}
+}
+
+@punctuation{percent,
+  symbol={\code{\char`\% }},
+  description={percent}
+}
+
+@punctuation{hash,
+  symbol={\code{\char`\# }},
+  description={hash}
+}
+

@@ -3717,6 +3717,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="manual.maths">math</entry>
 <entry key="manual.through">thru</entry>
 <entry key="manual.labelled">labeled</entry>
+<entry key="manual.favourite">favorite</entry>
 
 <entry key="term.popupmenu">popup menu</entry>
 <entry key="term.popupmenu.description">A menu whose items vary depending on the context. These

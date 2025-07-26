@@ -1114,7 +1114,7 @@ and the manual, the paths to the required applications used by the
 export functions (\sectionref{sec:exportimage}) and the button styles.
 
 Most of the settings are saved in the file \file{flowframtk.conf} in the
-configuration directory (\sectionref{sec:configdir}).  Mappings,
+\gls{config_dir}.  Mappings,
 accelerators, language settings and the recent file list aren't
 governed by the startup setting and are stored in separate files in
 the configuration directory. When you upgrade to a new version of
@@ -1176,8 +1176,8 @@ in the \widget{processes.timeout} box.
 
 The \menu{settings.configtex} menu item will open up a dialog box
 in which you can adjust the \TeX/\LaTeX\ settings.
-(\sectionref{sec:configure} covers image settings
-and \sectionref{sec:configureui} covers user interface settings.)
+(\sectionref{sec:configuredialog} covers image settings
+and \sectionref{sec:configureuidialog} covers user interface settings.)
 
 
 \subsubsection{Setting the Document Class and Normal Font Size}
@@ -1193,7 +1193,7 @@ font size to determine the appropriate font size declaration (see
 the value of \gls{baselineskip} for the normal font size in order to
 determine the location of the scan lines used to compute the
 required parameters. This also means that any static or dynamic
-frames (\section{sec:flowframe}) that use a non-standard paragraph
+frames (\sectionref{sec:flowframe}) that use a non-standard paragraph
 shape also require this information.
 
 \FloatFig
@@ -1213,15 +1213,13 @@ normal size as 20, your document will need to use one of the
 \cmd{documentclass}[20pt]\marg{extarticle}
 \end{codebox}
 
-Note that the largest normal size listed
-(25pt\dash this value is actually 24.88pt, but
-\appname\ lists it as 25pt) is for use
-with the \cls{a0poster} class file. Remember that for very large
-or very small fonts, you will need to use scalable fonts in your
-document to prevent font size substitutions.
-Available values, along with the corresponding value of
-\gls{baselineskip} and the file in which they are defined,
-are listed in \tableref{tab:normalsize}.
+The largest normal size listed is 25pt (the value is actually
+24.88pt, but \appname\ lists it as 25pt) which is for use with the
+\cls{a0poster} class file. Remember that for very large or very
+small fonts, you will need to use scalable fonts in your document to
+prevent font size substitutions.  Available values, along with the
+corresponding value of \gls{baselineskip} and the file in which they
+are defined, are listed in \tableref{tab:normalsize}.
 
 \FloatTable
 {tab:normalsize}
@@ -1229,15 +1227,15 @@ are listed in \tableref{tab:normalsize}.
 \begin{tabular}{@{}ccl@{}}
 \bfseries Normal size value & \bfseries \gls{baselineskip}
 value & \bfseries Relevant File\\
-8 & 9.5 & tex/latex/extsizes/size8.clo\\
-9 & 11 & tex/latex/extsizes/size9.clo\\
-10 & 12 & tex/latex/base/size10.clo\\
-11 & 13.6 & tex/latex/base/size11.clo\\
-12 & 14.5 & tex/latex/base/size12.clo\\
-14 & 17 & tex/latex/extsizes/size14.clo\\
-17 & 22 & tex/latex/extsizes/size17.clo\\
-20 & 25 & tex/latex/extsizes/size20.clo\\
-25 & 30 & tex/latex/a0poster/a0poster.sty
+8 & 9.5 & \filefmt{tex/latex/extsizes/size8.clo}\\
+9 & 11 & \filefmt{tex/latex/extsizes/size9.clo}\\
+10 & 12 & \filefmt{tex/latex/base/size10.clo}\\
+11 & 13.6 & \filefmt{tex/latex/base/size11.clo}\\
+12 & 14.5 & \filefmt{tex/latex/base/size12.clo}\\
+14 & 17 & \filefmt{tex/latex/extsizes/size14.clo}\\
+17 & 22 & \filefmt{tex/latex/extsizes/size17.clo}\\
+20 & 25 & \filefmt{tex/latex/extsizes/size20.clo}\\
+25 & 30 & \filefmt{tex/latex/a0poster/a0poster.sty}
 \end{tabular}
 }
 [Available Values for the Normal Font Size]
@@ -1354,30 +1352,337 @@ allows you to adjust the text-related settings.
   {\includeimg[width=0.9\linewidth]{configureDialog-texsettings}}
   {LaTeX-Related Text Settings}
 
+\widgetdef{textconfig.anchor}
 
+If the \widget{textconfig.anchor} \gls{checkbox} is selected,
+whenever you \hyperref[sec:alignobjects]{justify} a \gls{group}, any
+\glspl{textarea} in that group will have their anchors automatically
+adjusted.
 
+\widgetdef{textconfig.textualshading}
 
-TODO
+\appname\ can't implement paint shadings for text when
+\hyperref[sec:exportpgf]{exporting} to \sty{pgf}. (This includes the
+export functions that use \app{latex} or \app{pdflatex}, such as
+the export to PDF function.) You can choose how \appname\ should export
+shaded text using the \widget{textconfig.textualshading} dropdown
+box. Available options:
 
-\plabel[\TeX\ Mappings]{mi:texmappings}%
+\begin{deflist}
+\itemtitle
+ {\inlineglsdef{textconfig.textualshading.average}}
+
+\begin{itemdesc}
+The text will be given the \manmsg{colour} obtained by averaging the
+shading's start and end \manmsg{colour}.
+\end{itemdesc}
+
+\itemtitle
+ {\inlineglsdef{textconfig.textualshading.start}}
+
+\begin{itemdesc}
+Just the shading's start \manmsg{colour} will be used.
+\end{itemdesc}
+
+\itemtitle
+ {\inlineglsdef{textconfig.textualshading.end}}
+
+\begin{itemdesc}
+Just the shading's end \manmsg{colour} will be used.
+\end{itemdesc}
+
+\itemtitle
+ {\inlineglsdef{textconfig.textualshading.path}}
+
+\begin{itemdesc}
+The text will be exported as a path rather than text. This means
+that the \LaTeX\ alternative text attribute will be ignored. This is
+equivalent to applying the 
+\hyperref[sec:converttopath]{convert to path}, 
+\hyperref[sec:grouping]{ungroup} and 
+\hyperref[sec:mergepaths]{merge path}
+functions (without actually changing your image).
+\end{itemdesc}
+
+\end{deflist}
+
+\widgetdef{textconfig.textpathoutline}
+
+\appname\ can't implement the text
+\hyperref[sec:textoutline]{outline} option for
+\glspl{textpath} when exporting to \sty{pgf}. (Again, this
+includes the export functions that use \app{latex} or \app{pdflatex}.)
+You can choose how \appname\ should export \gls{textpath}
+outlines using the \widget{textconfig.textpathoutline}
+dropdown box. Available options:
+
+\begin{deflist}
+\itemtitle
+ {\inlineglsdef{textconfig.textpathoutline.path}}
+
+\begin{itemdesc}
+The \gls{textpath} will be exported as a path rather than a
+\gls{textpath}. This means that the \LaTeX\
+alternative text attribute will be ignored. This is equivalent to
+applying the
+\hyperref[sec:converttopath]{convert to path}, 
+\hyperref[sec:grouping]{ungroup} and 
+\hyperref[sec:mergepaths]{merge path}
+functions, without actually changing your image.
+(This option will always override the shading options described
+above, if the \gls{textpath} has a shading.)
+\end{itemdesc}
+
+\itemtitle
+ {\inlineglsdef{textconfig.textpathoutline.ignore}}
+
+\begin{itemdesc}
+The outline attribute will be ignored.
+\end{itemdesc}
+
+\end{deflist}
+
+\iconstartpar{textarea,math}%
+\plabel[TeX Mappings]{mi:texmappings}%
 \appname\ has two tools for creating \glspl{textarea}: the
+regular text-mode tool (\menu{tools.textarea}) and the
+\manmsg{maths}-mode tool (\menu{tools.math}). Each \gls{textarea} has an
+associated \LaTeX\ alternative text which, if set, is used
+during the \sty{pgf} export operations in place of the
+text displayed on the \gls{canvas}. (This includes the export
+functions that use \app{latex} or \app{pdflatex}, such as
+the export to PDF function.) The \manmsg{maths}-mode tool automatically
+inserts \glsname{mshift} at the start and end of the
+alternative text. In addition, Unicode symbols present in
+the text when a new \gls*{textarea} is constructed can be mapped to
+a \LaTeX\ command.
 
-TODO
+The mappings applied depend on which tool has been selected. With
+the regular text-mode tool, all the ten \TeX\ special characters are
+mapped to commands. In addition, there are some other characters
+that are also mapped by default. These are listed in the table shown
+in the \widget{textconfig.textmode} tab (see
+\figureref{fig:configdialog-texsettings}). If you don't want any
+text mappings applied, deselect the
+\widget{textconfig.escape} \gls{checkbox}.
 
+With the \manmsg{maths}-mode tool, the \gls{hash} and \gls{percent} characters are the
+only two of the ten \TeX\ special characters that are mapped by
+default. However there are other mappings of \manmsg{maths}-related Unicode
+characters and these are listed in the table shown in the
+\widget{textconfig.mathmode} tab (see
+\figureref{fig:configdialog-mathsettings}). If you don't want
+\manmsg{maths} mappings applied, deselect the
+\widget{textconfig.escape.mathchar} \gls*{checkbox}.
+
+\FloatFig
+  {fig:configdialog-mathsettings}
+  {\includeimg[width=0.9\linewidth]{configureDialog-mathsettings}}
+  {LaTeX-Related Text Settings\dash \Manmsg{maths}-Mode Mappings}
+
+The mapping tables can be sorted by \glslink{click}{clicking} on
+their column headers. You can add, delete or modify any of these
+text- or \manmsg{maths}-mode mappings. Any mapping that ends with a control
+word (a backslash followed by one or more letters) should
+usually be followed by a space or \verb|{}| to prevent it from
+running into any subsequent letter when the mapping is applied. For
+text-mode mappings, \verb|{}| is better in case the command is
+followed by an intended space, although this may depend on the
+command definition. For \manmsg{maths}-mode mappings it's better
+to follow the control word with a space.
+
+One or more rows in a mapping table can be selected with the mouse.
+You can use \keys{\keyref{shift}}+\gls{click} or 
+\keys{\keyref{ctrl}}+\gls{click} to add to the
+current selection.
+
+\widgetdef{textconfig.remove.textmap}
+
+To delete a mapping or mappings, select the appropriate row or rows of the
+mapping table and click on the \widget{textconfig.remove.textmap} button
+to the side of the table.  To restore all the original mappings,
+quit \appname\ and delete or rename the files
+\file{mathmappings.prop} and \file{textmappings.prop} in the
+\gls{config_dir}.
+
+To edit an existing mapping, \gls{doubleclick} on the second and
+third columns of the mapping table. The first two columns can't be
+edited.
+
+\widgetdef{textconfig.add.textmap}
 \plabel[New \TeX\ Mappings]{mi:newtexmappings}%
-To add a new mapping, \gls{click} on the green plus button to
-the side of the relevant table.
-TODO
+To add a new mapping, \gls{click} on the green plus button to the
+side of the relevant table.  This will open the add new mapping
+dialog. Enter the character you want mapped in the
+\widget{textconfig.symbol} box or type the hexadecimal value in the
+\widget{textconfig.codepoint} box and then enter the replacement
+command in the \widget{textconfig.command} box.  If the command is
+defined in a package, enter the package name (without the \ext{sty}
+extension) in the \widget{textconfig.package} box. If the mapping
+requires multiple commands from different packages, you can specify
+a comma-separated list of packages in the
+\widget{textconfig.package} box. If the replacement command is
+available in the \LaTeX\ kernel, you can leave this box blank.
+(These packages will be automatically added to the
+\hyperref[sec:setpreamble]{image's early-preamble} code, whenever the
+mapping is applied.)
 
+The package name may be preceded by optional arguments in square
+brackets such as \texttt{[weather]ifsym} (note that the package name
+isn't enclosed in braces). Set the package name to \qt{none} or
+leave it empty if you don't want it automatically added to the early-preamble
+code when the mappings are applied.
+
+For example, in \figureref{fig:addTeXMapping} the new mapping dialog
+is being used to define a new text mapping from the Unicode dagger
+\textdagger\ symbol (U+2020) to the \csfmt{textdagger} command.
+Since this command is defined in the \LaTeX\ kernel, the package
+field can be left empty. The Unicode symbol can be specified either
+by typing the hexadecimal code into the
+\widget{textconfig.codepoint} field or by typing the actual
+symbol into the \widget{textconfig.symbol} field. If there
+is already a mapping for this Unicode symbol, the old mapping will
+be overwritten.
+
+\FloatFig
+  {fig:addTeXMapping}
+  {\includeimg[width=0.9\textwidth]{addTeXMapping}}
+  {Adding a New Text Mapping} 
+
+\widgetdef{textconfig.textmappings.import}
+You can also import mappings from a tab-separated file (\ext{tsv})
+where the first column is the hexadecimal code, the second column is
+the command (or commands) and the third column is the package name
+or comma-separated list of packages. Any additional columns are
+ignored, as are blank lines or lines starting with \gls{hash}. The file
+shouldn't contain any delimiters nor may any of
+the cells contain a newline or tab character. For example,
+the file may look like:
+\begin{verbatim}
+00260E  \Telephone      [misc]ifsym
+0026A1  \Lightning      [weather]ifsym
+\end{verbatim}
+
+You can find extra mappings using the Symbol Lookup page at
+\url{http://www.dickimaw-books.com/latex/symbol-lookup.php} which
+has a web form you can use to look up mappings in the database.  If
+the mapping ends with a control word the import function will
+automatically append a space for \manmsg{maths}-mode or
+\verb|{}| for text-mode, unless the Unicode character type is one
+of: combining spacing mark, connector punctuation, modifier symbol
+or modifier letter, in which case just a space is appended.
+(This adjustment isn't done for the edit mapping or
+add a single-mapping functions described above. You need to do this
+yourself, as I did in \figureref{fig:addTeXMapping}.) If this
+adjustment isn't appropriate, you can edit the mapping to remove it.
+
+For example, in \figureref{fig:symbolLookup}, I've selected the
+\qt{Latin-1 Supplement} block with the mode set to \qt{text}. If I
+then click on the \qt{Search} button at the bottom of the form, this
+will list all the mappings listed in the database that match. To
+import these values into \appname, you first need to download
+them in the correct format. Set the \qt{Results Format}
+\gls{dropdown} to TSV (\emph{not CSV}) and click on the
+\qt{Search} button. Depending on your browser, this may
+automatically save the file \filefmt{symbol-lookup.tsv} in your
+downloads directory\slash folder or it may try to open the file.
+Be careful if it tries to open the file in a spreadsheet application
+as this may change the format to one that's not compatible with
+\appname.
+
+\FloatFig
+  {fig:symbolLookup}
+  {\includeimg[width=0.9\textwidth]{symbol-lookup}}
+  {Symbol Lookup Script}
+
+If you try this search on the Symbol Lookup page and open the file in your
+\manmsg{favourite} text editor, you may notice that some codepoints are listed
+multiple times. For example:
+\begin{verbatim}
+0000A3  \textsterling   none    text    0
+0000A3  \pounds         none    both    0
+\end{verbatim}
+If you simply import the file into \appname, new mappings will
+override the earlier mappings, so in this case the mapping for
+U+A3 will be set to \csfmt{pounds} rather than
+\csfmt{textsterling} so delete any of the mappings you don't want
+before you import the file.
+
+This example also produces mappings that require the \sty{fontenc}
+package. For example:
+\begin{verbatim}
+0000AB  \guillemotleft  fontenc text    0
+\end{verbatim}
+This indicates commands that are part of the \LaTeX\ kernel but don't
+work with the default OT1 font encoding. In my case, I've set my
+\hyperref[sec:texconfigpreamble]{default preamble} to include
+\sty{fontenc} with the T1 encoding, so I don't want that package
+automatically added to my early-preamble code. To fix this, I just need to
+use my text-editor's search-and-replace function to replace all instances of
+\qt{fontenc} with \qt{none} before I import this file. If you don't
+have this package in the default preamble, you'll need to add the appropriate
+option.  For example, change the line to:
+\begin{verbatim}
+0000AB  \guillemotleft  [T1]fontenc     text    0
+\end{verbatim}
+(Again, you can use your text-editor's search-and-replace function.)
+Similarly, if you want to import any of the symbol maps that include
+commands from the \sty{mathdesign} package, you'll need to add
+the option to set the required font. For example
+\begin{verbatim}
+002231  \intclockwise   [utopia]mathdesign      math    1
+\end{verbatim}
+
+Once all these modifications have been made, the file can then be
+imported by clicking on the import button in the appropriate mapping
+pane. In this case, I have fetched mappings that are valid in
+text-mode, so I need to select the \widget{textconfig.textmode} tab
+and then click on the import button to the right of the mapping
+table. This will open a file chooser which I can use to select the
+TSV file.
+
+\begin{warning}
+Note that mappings take up resources and the more mappings you have,
+the longer it will take to startup \appname, so it's best to only
+add the mappings that you're likely to need. The symbol lookup form
+on the Dickimaw Books website has a maximum limit of 500 for the search
+results. (A smaller limit can be set if required. The default value
+is 200.)
+\end{warning}
 
 \subsubsection{Default Preamble}\label{sec:texconfigpreamble}
 
-TODO
+The \widget{preambleconfig.title} tab
+(\figureref{fig:texconfig-preamble}) allows you to specify code that
+should always be added to the preamble when exporting images to
+complete \LaTeX\ documents or formats that use the encapsulated
+\LaTeX\ document function as an intermediate step (see
+\sectionref{sec:exportdoc}). This code isn't used for the export to
+class (\ext{cls}) or package (\ext{sty}) functions.
+
+\FloatFig
+  {fig:texconfig-preamble}
+  {\includeimg[width=0.9\linewidth]{texconfig-preamble}}
+  {Default Preamble Code}
+
+The default preamble code is stored in a file called
+\file{preamble.tex} in \appname's \gls{config_dir}. If you edit this
+file outside of \appname, you'll need to use the reload button to
+refresh this panel. The other buttons are the same as for the \TeX\
+editor described in \sectionref{sec:texeditorui}.  You can also
+access these button actions through the context menu, which can be
+opened using a~\gls{menuclick} on the editor pane.
 
 
 \subsection{Configure User Interface}\label{sec:configureuidialog}
 
-TODO
+\menudef{menu.settings.configui}
+
+The menu item \menu{settings.configui} will open up a dialog box
+in which you can adjust the user interface settings.
+(\sectionref{sec:configuredialog} covers image settings
+and \sectionref{sec:texconfig} covers \TeX/\LaTeX\ related
+settings.)
 
 
 \subsubsection{Graphics Settings}\label{sec:graphics}
