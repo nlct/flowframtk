@@ -45,6 +45,8 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
 import com.dickimawbooks.jdr.io.*;
@@ -67,44 +69,14 @@ public class ConfigUISettingsDialog extends JDialog
    {
       super(application,
          application.getResources().getMessage("configui.title"), true);
-      application_ = application;
+      this.application = application;
 
       JTabbedPane tabbedPane = new JTabbedPane();
       getContentPane().add(tabbedPane, "Center");
 
       int idx=0;
 
-      JComponent graphicsPanel = new JPanel(new GridBagLayout());
-
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.fill = GridBagConstraints.HORIZONTAL;
-      gbc.anchor=GridBagConstraints.NORTH;
-      gbc.gridx=0;
-      gbc.gridy=0;
-      gbc.weightx=0;
-      gbc.weighty=0.5;
-
-      renderPanel = new RenderPanel(getResources());
-
-      graphicsPanel.add(renderPanel, gbc);
-
-      dragScale = new DragScalePanel(getResources());
-
-      gbc.gridy++;
-      graphicsPanel.add(dragScale, gbc);
-
-      editPathPanel = new EditPathPanel(application_);
-      editPathPanel.setBorder(BorderFactory.createTitledBorder(
-        editPathPanel.getName()));
-
-      gbc.gridy++;
-      graphicsPanel.add(editPathPanel, gbc);
-
-      controlPointsPanel = new ControlPointsPanel(
-         application.getDefaultCanvasGraphics(), getResources());
-
-      gbc.gridy++;
-      graphicsPanel.add(controlPointsPanel, gbc);
+      JComponent graphicsPanel = createGraphicsPanel();
 
       tabbedPane.addTab(getResources().getMessage("graphics.title"),
          null, new JScrollPane(graphicsPanel),
@@ -112,25 +84,7 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("graphics.mnemonic"));
 
-      JComponent annotationsPanel = new JPanel(new GridBagLayout());
-
-      gbc = new GridBagConstraints();
-      gbc.fill = GridBagConstraints.BOTH;
-      gbc.anchor=GridBagConstraints.NORTH;
-      gbc.gridx=0;
-      gbc.gridy=0;
-      gbc.weightx=0;
-      gbc.weighty=1;
-
-      annoteFontPanel = new AnnoteFontPanel(application_);
-
-      annotationsPanel.add(annoteFontPanel, gbc);
-
-      gbc.gridy++;
-      splashScreenSettingsPanel = new SplashScreenSettingsPanel(application_);
-
-      annotationsPanel.add(splashScreenSettingsPanel, gbc);
-
+      JComponent annotationsPanel = createAnnotationsPanel();
       tabbedPane.addTab(getResources().getMessage("annotations.title"),
          null, new JScrollPane(annotationsPanel),
          getResources().getMessage("annotations.tooltip"));
@@ -170,7 +124,7 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("normalize.mnemonic"));
 
-      texEditorUIPanel = new TeXEditorUIPanel(application_);
+      texEditorUIPanel = new TeXEditorUIPanel(application);
 
       tabbedPane.addTab(getResources().getMessage("texeditorui.title"),
          null, new JScrollPane(texEditorUIPanel),
@@ -178,7 +132,7 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("texeditorui.mnemonic"));
 
-      lookAndFeelPanel = new LookAndFeelPanel(application_);
+      lookAndFeelPanel = new LookAndFeelPanel(application);
 
       tabbedPane.addTab(getResources().getMessage("lookandfeel.title"),
          null, new JScrollPane(lookAndFeelPanel),
@@ -186,7 +140,7 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("lookandfeel.mnemonic"));
 
-      vectorizeBitmapUIPanel = new VectorizeBitmapUIPanel(application_);
+      vectorizeBitmapUIPanel = new VectorizeBitmapUIPanel(application);
 
       tabbedPane.addTab(getResources().getMessage("vectorizeui.title"),
          null, new JScrollPane(vectorizeBitmapUIPanel),
@@ -203,7 +157,64 @@ public class ConfigUISettingsDialog extends JDialog
       p.add(getResources().createHelpDialogButton(this, "sec:configureuidialog"));
 
       pack();
-      setLocationRelativeTo(application_);
+      setLocationRelativeTo(application);
+   }
+
+   private JComponent createGraphicsPanel()
+   {
+      JComponent graphicsPanel = new JPanel(new GridBagLayout());
+
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      gbc.anchor=GridBagConstraints.NORTH;
+      gbc.gridx=0;
+      gbc.gridy=0;
+      gbc.weightx=0;
+      gbc.weighty=0.5;
+
+      renderPanel = new RenderPanel(getResources());
+
+      graphicsPanel.add(renderPanel, gbc);
+
+      dragScale = new DragScalePanel(getResources());
+
+      gbc.gridy++;
+      graphicsPanel.add(dragScale, gbc);
+
+      editPathPanel = new EditPathPanel(application);
+      editPathPanel.setBorder(BorderFactory.createTitledBorder(
+        editPathPanel.getName()));
+
+      gbc.gridy++;
+      graphicsPanel.add(editPathPanel, gbc);
+
+      controlPointsPanel = new ControlPointsPanel(
+         application.getDefaultCanvasGraphics(), getResources());
+
+      gbc.gridy++;
+      graphicsPanel.add(controlPointsPanel, gbc);
+
+      return graphicsPanel;
+   }
+
+   private JComponent createAnnotationsPanel()
+   {
+      JComponent annotationsPanel = Box.createVerticalBox();
+
+      JLabelGroup labelGrp = new JLabelGroup();
+
+      annoteFontPanel = new AnnoteFontPanel(application, labelGrp);
+
+      annotationsPanel.add(annoteFontPanel);
+
+      annotationsPanel.add(Box.createVerticalStrut(10));
+
+      splashScreenSettingsPanel
+        = new SplashScreenSettingsPanel(application, labelGrp);
+
+      annotationsPanel.add(splashScreenSettingsPanel);
+
+      return annotationsPanel;
    }
 
    public void actionPerformed(ActionEvent evt)
@@ -224,14 +235,14 @@ public class ConfigUISettingsDialog extends JDialog
 
    public void display()
    {
-      dragScale.initialise(application_);
-      renderPanel.initialise(application_);
+      dragScale.initialise(application);
+      renderPanel.initialise(application);
       controlPointsPanel.initialise();
-      rulerFormatPanel.initialise(application_);
-      normalizePanel.initialise(application_);
+      rulerFormatPanel.initialise(application);
+      normalizePanel.initialise(application);
       langPanel.initialise();
-      texEditorUIPanel.initialise(application_);
-      annoteFontPanel.initialise(application_.getSettings());
+      texEditorUIPanel.initialise(application);
+      annoteFontPanel.initialise(application.getSettings());
       lookAndFeelPanel.initialise();
       vectorizeBitmapUIPanel.initialise();
       splashScreenSettingsPanel.initialise();
@@ -244,8 +255,8 @@ public class ConfigUISettingsDialog extends JDialog
    {
       try
       {
-         rulerFormatPanel.okay(application_);
-         normalizePanel.okay(application_);
+         rulerFormatPanel.okay(application);
+         normalizePanel.okay(application);
       }
       catch (InvalidFormatException e)
       {
@@ -263,17 +274,17 @@ public class ConfigUISettingsDialog extends JDialog
          return;
       }
 
-      dragScale.okay(application_);
-      controlPointsPanel.okay(application_);
-      renderPanel.okay(application_);
-      texEditorUIPanel.okay(application_);
-      annoteFontPanel.okay(application_.getSettings());
+      dragScale.okay(application);
+      controlPointsPanel.okay(application);
+      renderPanel.okay(application);
+      texEditorUIPanel.okay(application);
+      annoteFontPanel.okay(application.getSettings());
       lookAndFeelPanel.okay();
       vectorizeBitmapUIPanel.okay();
       splashScreenSettingsPanel.okay();
       editPathPanel.okay();
 
-      application_.updateAllFrames();
+      application.updateAllFrames();
 
       setVisible(false);
    }
@@ -292,7 +303,7 @@ public class ConfigUISettingsDialog extends JDialog
 
    public JDRResources getResources()
    {
-      return application_.getResources();
+      return application.getResources();
    }
 
    private DragScalePanel dragScale;
@@ -309,7 +320,7 @@ public class ConfigUISettingsDialog extends JDialog
    private SplashScreenSettingsPanel splashScreenSettingsPanel;
    private EditPathPanel editPathPanel;
 
-   private FlowframTk application_;
+   private FlowframTk application;
 }
 
 class EditPathPanel extends JPanel
@@ -360,7 +371,7 @@ class EditPathPanel extends JPanel
 
 class SplashScreenSettingsPanel extends JPanel
 {
-   public SplashScreenSettingsPanel(FlowframTk gui)
+   public SplashScreenSettingsPanel(FlowframTk gui, JLabelGroup labelGrp)
    {
       super(null);
       this.resources = gui.getResources();
@@ -370,7 +381,7 @@ class SplashScreenSettingsPanel extends JPanel
       setBorder(BorderFactory.createTitledBorder(
          resources.getMessage("splash.title")));
 
-      infoFontSelector = new JavaFontSelector(gui, 
+      infoFontSelector = new JavaFontSelector(gui,  labelGrp,
         "splash.infofont.name",
         "splash.infofont.bold",
         "splash.infofont.italic",
@@ -378,7 +389,9 @@ class SplashScreenSettingsPanel extends JPanel
 
       add(infoFontSelector);
 
-      versionFontSelector = new JavaFontSelector(gui, 
+      add(Box.createVerticalStrut(10));
+
+      versionFontSelector = new JavaFontSelector(gui, labelGrp,
         "splash.versionfont.name",
         "splash.versionfont.bold",
         "splash.versionfont.italic",
@@ -2882,9 +2895,9 @@ class TeXEditorUIPanel extends JPanel
 
 class AnnoteFontPanel extends JavaFontSelector
 {
-   public AnnoteFontPanel(FlowframTk application)
+   public AnnoteFontPanel(FlowframTk application, JLabelGroup labelGrp)
    {
-      super(application, "annote.font", 
+      super(application, labelGrp, "annote.font", 
        "annote.font.bold", "annote.font.italic", "annote.fontsize");
    }
 
