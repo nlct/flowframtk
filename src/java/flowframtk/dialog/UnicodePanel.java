@@ -63,7 +63,7 @@ public class UnicodePanel extends JPanel
 
       JPanel topPanel = new JPanel();
 
-      JLabel unicodeLabel = getResources().createAppLabel("symbol.unicode");
+      JLabel unicodeLabel = getResources().createAppLabel("symbolselector.unicode");
 
       topPanel.add(unicodeLabel);
 
@@ -78,7 +78,7 @@ public class UnicodePanel extends JPanel
 
       topPanel.add(unicodeField);
 
-      selectButton = getResources().createDialogButton("symbol", "insertAtCaret", this, null);
+      selectButton = getResources().createDialogButton("symbolselector", "insertAtCaret", this, null);
 
       topPanel.add(selectButton);
 

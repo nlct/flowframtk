@@ -52,7 +52,7 @@ public class CharacterSelector extends JDialog
 {
    public CharacterSelector(FlowframTk gui, int[][] ranges)
    {
-      super(gui, gui.getResources().getMessage("symbol.title"), true);
+      super(gui, gui.getResources().getMessage("symbolselector.title"), true);
 
       this.resources = gui.getResources();
 
@@ -64,7 +64,7 @@ public class CharacterSelector extends JDialog
    public CharacterSelector(JDRResources resources, Dialog parent,
      SymbolSelectorListener symbolListener, int[][] ranges)
    {
-      super(parent, resources.getMessage("symbol.title"), true);
+      super(parent, resources.getMessage("symbolselector.title"), true);
 
       this.resources = resources;
       this.symbolListener_ = symbolListener;
@@ -76,8 +76,8 @@ public class CharacterSelector extends JDialog
    {
       Box topPanel = Box.createHorizontalBox();
 
-      JLabel label = new JLabel(resources.getMessage("symbol.textcontent"));
-      label.setDisplayedMnemonic(resources.getCodePoint("symbol.textcontent.mnemonic"));
+      JLabel label = new JLabel(resources.getMessage("symbolselector.textcontent"));
+      label.setDisplayedMnemonic(resources.getCodePoint("symbolselector.textcontent.mnemonic"));
 
       topPanel.add(label);
 
@@ -258,7 +258,7 @@ public class CharacterSelector extends JDialog
       Dimension dim = textfield.getSize();
 
       modeLabel.setText(resources.getMessage(
-        "symbol.mapping_mode", mapping.getModeName()));
+        "symbolselector.mapping_mode", mapping.getModeName()));
 
       setVisible(true);
    }

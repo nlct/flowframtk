@@ -58,7 +58,7 @@
 <entry key="error.invalid_gradient-start">Invalid gradient start colour type</entry>
 <entry key="error.invalid_radial-gradient-start">Invalid radial start colour type</entry>
 
-<entry key="symbol.mode_maths">Maths</entry>
+<entry key="symbolselector.mode_maths">Maths</entry>
 
 <entry key="fade.title">Fade Colours</entry>
 

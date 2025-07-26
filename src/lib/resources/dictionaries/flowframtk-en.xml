@@ -1476,26 +1476,26 @@ Nicola Talbot
 
 <!--  Symbol Selector -->
 
-<entry key="symbol.title">Insert Symbol</entry>
+<entry key="symbolselector.title">Insert Symbol</entry>
 
-<entry key="symbol.unicode">Unicode</entry>
-<entry key="symbol.unicode.mnemonic">U</entry>
+<entry key="symbolselector.unicode">Unicode</entry>
+<entry key="symbolselector.unicode.mnemonic">U</entry>
 
-<entry key="symbol.insertAtCaret">Select</entry>
-<entry key="symbol.insertAtCaret.mnemonic">S</entry>
-<entry key="symbol.insertAtCaret.tooltip">Insert symbol at the caret in the text field</entry>
+<entry key="symbolselector.insertAtCaret">Select</entry>
+<entry key="symbolselector.insertAtCaret.mnemonic">S</entry>
+<entry key="symbolselector.insertAtCaret.tooltip">Insert symbol at the caret in the text field</entry>
 
-<entry key="symbol.textcontent">Text</entry>
-<entry key="symbol.textcontent.mnemonic">T</entry>
+<entry key="symbolselector.textcontent">Text</entry>
+<entry key="symbolselector.textcontent.mnemonic">T</entry>
 
-<entry key="symbol.select.description">Insert the symbol corresponding to the supplied Unicode code point</entry>
-<entry key="symbol.select.tooltip">Insert symbol with given Unicode value into text</entry>
-<entry key="symbol.unicode.tooltip">Enter hexadecimal Unicode value</entry>
+<entry key="symbolselector.select.description">Insert the symbol corresponding to the supplied Unicode code point</entry>
+<entry key="symbolselector.select.tooltip">Insert symbol with given Unicode value into text</entry>
+<entry key="symbolselector.unicode.tooltip">Enter hexadecimal Unicode value</entry>
 
-<entry key="symbol.mode_text">Text</entry>
-<entry key="symbol.mode_maths">Math</entry>
+<entry key="symbolselector.mode_text">Text</entry>
+<entry key="symbolselector.mode_maths">Math</entry>
 
-<entry key="symbol.mapping_mode">Mapping Mode: {0}</entry>
+<entry key="symbolselector.mapping_mode">Mapping Mode: {0}</entry>
 
 <!--  Unicode blocks -->
 
