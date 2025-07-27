@@ -395,7 +395,7 @@ class SplashScreenSettingsPanel extends JPanel
          resources.getMessage("splash.title")));
 
       infoFontSelector = new JavaFontSelector(gui,  labelGrp,
-        "splash.infofont.name",
+        "splash.infofont.family",
         "splash.infofont.bold",
         "splash.infofont.italic",
         "splash.infofont.size");
@@ -405,7 +405,7 @@ class SplashScreenSettingsPanel extends JPanel
       add(Box.createVerticalStrut(10));
 
       versionFontSelector = new JavaFontSelector(gui, labelGrp,
-        "splash.versionfont.name",
+        "splash.versionfont.family",
         "splash.versionfont.bold",
         "splash.versionfont.italic",
         "splash.versionfont.size");
@@ -1237,7 +1237,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
       gbc.gridwidth=1;
 
       JLabel rulerFontNameLabel = 
-         resources.createAppLabel("borders.rulerfont.name");
+         resources.createAppLabel("borders.rulerfont.family");
       rulerComp.add(rulerFontNameLabel, gbc);
 
       gbc.gridx++;
@@ -1318,7 +1318,7 @@ class RulerFormatPanel extends JPanel implements ActionListener
       gbc.weighty=0.25;
 
       JLabel statusFontNameLabel = 
-         resources.createAppLabel("borders.statusfont.name");
+         resources.createAppLabel("borders.statusfont.family");
       statusComp.add(statusFontNameLabel, gbc);
 
       gbc.gridx++;
@@ -2943,7 +2943,7 @@ class LookAndFeelPanel extends JPanel
       JComponent lfPanel = new JPanel();
       add(lfPanel);
 
-      JLabel nameLabel = getResources().createAppLabel("lookandfeel.name");
+      JLabel nameLabel = getResources().createAppLabel("lookandfeel.lfname");
       lfPanel.add(nameLabel);
 
       info = UIManager.getInstalledLookAndFeels();

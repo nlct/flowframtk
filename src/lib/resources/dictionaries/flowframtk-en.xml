@@ -2242,13 +2242,13 @@ Nicola Talbot
 <!--  Splash Screen Settings -->
 
 <entry key="splash.title">Splash Screen Settings</entry>
-<entry key="splash.infofont.name">Information Font:</entry>
-<entry key="splash.infofont.name.mnemonic">N</entry>
+<entry key="splash.infofont.family">Information Font:</entry>
+<entry key="splash.infofont.family.mnemonic">N</entry>
 <entry key="splash.infofont.bold">Bold</entry>
 <entry key="splash.infofont.italic">Italic</entry>
 <entry key="splash.infofont.size">Size</entry>
-<entry key="splash.versionfont.name">Title Font:</entry>
-<entry key="splash.versionfont.name.mnemonic">E</entry>
+<entry key="splash.versionfont.family">Title Font:</entry>
+<entry key="splash.versionfont.family.mnemonic">E</entry>
 <entry key="splash.versionfont.bold">Bold</entry>
 <entry key="splash.versionfont.italic">Italic</entry>
 <entry key="splash.versionfont.size">Size</entry>
@@ -2452,8 +2452,8 @@ Nicola Talbot
 <entry key="borders.rulerpattern.mnemonic">N </entry>
 <entry key="borders.rulerlocale">Locale: </entry>
 <entry key="borders.rulerlocale.mnemonic">L</entry>
-<entry key="borders.rulerfont.name">Font:</entry>
-<entry key="borders.rulerfont.name.mnemonic">M</entry>
+<entry key="borders.rulerfont.family">Font:</entry>
+<entry key="borders.rulerfont.family.mnemonic">M</entry>
 <entry key="borders.rulerfont.size">Size:</entry>
 <entry key="borders.rulerfont.size.mnemonic">Z</entry>
 <entry key="borders.rulerfont.bold">Bold</entry>
@@ -2465,7 +2465,7 @@ Nicola Talbot
 <entry key="borders.showtools.mnemonic">S</entry>
 <entry key="borders.showstatus">Show Status Bar</entry>
 <entry key="borders.showstatus.mnemonic">B</entry>
-<entry key="borders.statusfont.name">Status Bar Font:</entry>
+<entry key="borders.statusfont.family">Status Bar Font:</entry>
 <entry key="borders.statusfont.size">Size</entry>
 <entry key="borders.statusfont.bold">Bold</entry>
 <entry key="borders.statusfont.italic">Italic</entry>
@@ -2576,8 +2576,8 @@ Nicola Talbot
 <entry key="lookandfeel.mnemonic">K</entry>
 <entry key="lookandfeel.tooltip">Change the look and feel of the widgets</entry>
 <entry key="lookandfeel.info">A restart is required for these settings to take effect. Sample buttons don't perform any actions when you click on them. They just demonstrate their appearance. The "Plain" icon styles aren't suitable for L&amp;F styles that don't place a border around toggle and radio buttons.</entry>
-<entry key="lookandfeel.name">Look &amp; Feel Name:</entry>
-<entry key="lookandfeel.name.mnemonic">N</entry>
+<entry key="lookandfeel.lfname">Look &amp; Feel Name:</entry>
+<entry key="lookandfeel.lfname.mnemonic">N</entry>
 <entry key="lookandfeel.button_styles">General Button Styles</entry>
 <entry key="lookandfeel.dialog_button_styles">Dialog Button Styles</entry>
 <entry key="lookandfeel.button.style">Style</entry>
