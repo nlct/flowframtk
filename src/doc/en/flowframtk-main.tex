@@ -1920,8 +1920,51 @@ isn't running).
 
 \subsubsection{Toolbar, Ruler and Status Bar Settings}\label{sec:rulers}
 
-TODO
+\widgetdef{borders.title}
 
+\FloatFig
+  {fig:rulers}
+  {\includeimg{configureUI-rulers}}
+  {Configuration UI Dialog Box (Toolbar, Ruler and Status Bar Settings)}
+
+You can use the \widget{borders.title} tab (\figureref{fig:rulers})
+to customise the \glspl{ruler}, \glspl{toolbar} and \gls{statusbar}.
+You can show or hide the \glspl{toolbar} using the
+\widget{borders.showtools} checkbox. If this check box is selected,
+you can also specify the location of the vertical toolbar.
+
+\iconstartpar{toolbarleft,toolbarright}%
+The vertical toolbar is located on the left of \appname's main
+window by default, but can be switched to the right by selecting the
+\widget{borders.vtoolbar} \widget{borders.vtoolbar.right} radio
+button. You will need to quit and restart for the change to take
+effect.
+
+The width (in pixels) of the vertical ruler can be specified in the
+\widget{borders.rulerwidth} field, and the height (in pixels) of
+the horizontal ruler can be specified in the
+\widget{borders.rulerheight} field. For example, if you find that
+the $y$ co-ordinates don't fit on the vertical ruler, you can make the
+ruler wider, say, to 30 pixels. There's a sample panel on the right
+that shows the dimensions (but doesn't show the ruler annotations).
+
+The way the co-ordinates appear on the rulers is governed by the
+\widget{borders.rulerpattern} field.  The pattern syntax is as for
+\href{https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html}{\filefmt{java.text.DecimalFormat}},
+described in the Java API.  You can also set the locale governing
+the pattern, but this pattern is only applied to the \glspl{ruler},
+not to the co-ordinate dialog boxes or \gls{statusbar}. The font
+used by the rulers can also be changed.  This panel doesn't provide
+a setting to show or hide the rulers as this is done for the
+currently selected \gls{canvas} using the main menu item
+\menu{settings.rulers}.
+
+You can show or hide the \gls{statusbar} using the
+\widget{borders.showstatus} check box. If this box is
+selected, you can additionally choose to show or hide the
+individual \gls{statusbar} elements.
+
+\seealsorefs{sec:thetoolbars,sec:therulers,sec:thestatusbar}
 
 \subsubsection{Normalization}\label{sec:normalize}
 
