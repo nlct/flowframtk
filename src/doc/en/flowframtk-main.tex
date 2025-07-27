@@ -2304,6 +2304,14 @@ some of them completely hide the preamble pane (such as the GTK+
 Look and Feel).  You can also use the \menu{tex.set_preamble} menu
 item to show the preamble pane.
 
+In \hyperref[sec:edit]{select mode} (but not when you're editing or
+distorting a shape) you can \gls{drag-and-drop} image files or
+text onto the canvas to add to the current image. In
+\hyperref[sec:text]{text or \manmsg{maths} mode} you can only drag
+and drop text onto the canvas. If you attempt to drop a file
+instead, you will get a new \gls{textarea} containing the file's
+path (or URI). 
+
 \section{The Preamble Pane}\label{sec:thepreamblepane}
 
 The preamble pane by default is on the right of the \gls{canvas},
@@ -2318,30 +2326,96 @@ code is added during the export process, and
 see \sectionref{sec:configureuidialog} to set a default preamble
 for all images and to reposition the preamble pane.
 
-
-
 \section{The Toolbars}\label{sec:thetoolbars}
 
-The \inlineglspluraldef{toolbar}
-TODO
+There are two \inlineglspluraldef{toolbar}.  The horizontal toolbar positioned at
+the top of the main window, which allows you to manipulate
+\glspl{object} on the \gls{canvas} (as well as the save, load and
+new buttons) and the vertical toolbar positioned to the left of the
+main window, which you can use to create new \glspl{path} and
+\glspl{textarea}. If a toolbar is too wide\slash tall, scroll buttons will
+appear.
+
+You can show or hide the \gls{toolbar} or change the location of
+the vertical toolbar so that it appears on the right of \appname's
+main window using the \widget{borders.title} tab in the
+\widget{configui.title} dialog.
+
+The \hyperref[sec:thepreamblepane]{preamble pane} has its own
+toolbar with buttons to edit the preamble text.
 
 
 \section{The Rulers}\label{sec:therulers}
 
-The \inlineglspluraldef{ruler}
-TODO
+There are two \inlineglspluraldef{ruler}.The horizontal ruler
+positioned above the \gls{canvas} which marks out the $x$-ticks, and
+the vertical ruler positioned to the left of the \gls*{canvas} which
+marks out the $y$-ticks. The gap between tick marks can be changed
+using the \menu{settings.grid.settings} menu item.
 
+You can show or hide the \glspl*{ruler} using the menu item
+\menu{settings.rulers}.  You can adjust their size and number format
+using the \widget{borders.title} tab in the \widget{configui.title}
+dialog box. When the rulers are visible, the grid unit is displayed
+in the corner between the rulers. You can \gls{doubleclick} on this
+corner to open the grid settings dialog.
 
 \section{The Status Bar}\label{sec:thestatusbar}
 
-The \inlineglsdef{statusbar}
-TODO
+\FloatFig
+  {fig:statusbar}
+  {\includeimg[width=\linewidth]{annoteStatusBar}}
+  {The Status Bar}
 
+The \inlineglsdef{statusbar} (\figureref{fig:statusbar}) is positioned along
+the bottom of the main window. This has the following elements:
+
+\begin{itemize}
+
+\item The current position of the pointer (or the pointer's last
+position before it was moved away from the \gls{canvas}). You can
+\gls{doubleclick} on this area to open the
+\widget{goto.title} dialog.
+
+\item The \hyperref[sec:controlsettings]{storage unit}. You
+can \gls{doubleclick} on this to open the storage unit selector.
+
+\item The file status area.  If the current picture has been modified, it
+will display the word \qt{\gls{info.modified}}, otherwise it
+will be blank.
+
+\item The grid lock indicator. This shows if the grid lock is on
+\includeimg{key} or off \includeimg{keycross}. You can
+\gls{doubleclick} on this area to toggle the grid lock setting.
+
+\item The current magnification. You can adjust this value by
+\glslink{click}{clicking} on the plus or minus icons to move up or
+down the pre-defined list of zoom settings. Alternatively, in the area
+between them where the magnification value is displayed, you can
+\gls{menuclick} to popup a~menu or \gls{doubleclick} to open the
+magnification settings dialog.
+
+\item A help button \includeimg{statushelp} that you can \gls{click} on
+to open the manual at the section related to the current operation.
+This button is only present when the current operation has a section
+in the manual.
+
+\item A brief message about the currently selected tool or
+operation. If the message is too long to fit in the provided area,
+you can \gls{doubleclick} on it to open a dialog window with the
+full message (\figureref{fig:information}).
+
+\end{itemize}
 
 \FloatFig
   {fig:information}
   {\includeimg[width=0.5\linewidth]{informationDialog}}
   {The Information Dialog}
+
+You can show or hide the \gls*{statusbar}, or elements within the
+bar, using the \widget{configui.title} dialog. You can also use this
+dialog to change the font used in the \gls*{statusbar}.
+
 
 \chapter{The File Menu}\label{sec:filemenu}
 
