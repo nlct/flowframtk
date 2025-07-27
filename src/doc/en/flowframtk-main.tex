@@ -1968,8 +1968,42 @@ individual \gls{statusbar} elements.
 
 \subsubsection{Normalization}\label{sec:normalize}
 
-TODO
+\widgetdef{normalize.title}
 
+\FloatFig
+  {fig:normalize}
+  {\includeimg{configureUI-normalize}}
+  {Configuration UI Dialog Box (Normalization)}
+
+When an image is drawn on the \gls{canvas} via Java's painting
+methods, the co-ordinates of all the objects are converted into
+PostScript points (including any scaling applied by the zoom
+settings). However, it is rare for any display device, such as a
+standard monitor, to have pixels that are exactly one PostScript point square
+in size. This means that a 1in (or 72\gls{bp}) line drawn on the
+screen at 100\% magnification may not actually measure 1in if you
+hold a ruler up against the screen. This is fairly typical for
+most graphical applications but, if it bothers you, you can
+adjust the horizontal and vertical normalization factors used by
+\appname\ in the \widget{normalize.title} tab
+(\figureref{fig:normalize}).
+
+If you happen to already know the normalization factors
+for your device, you can enter them in the
+\widget{normalize.norm.x} and
+\widget{normalize.norm.y} fields. If you don't know them,
+\appname\ can compute them for you. To do this, you need to hold
+a ruler against the \widget{normalize.nonorm_horizontal}
+line, enter the measurement in the length field below the line and
+\gls{click} on the \widget{normalize.x_compute_norm} button. This
+will insert the normalization factor into the
+\widget{normalize.norm.x} field. Next, hold the ruler
+against the \widget{normalize.nonorm_vertical} line, enter
+the measurement in the length field below that line and \gls{click} on the
+\widget{normalize.y_compute_norm} button. This will insert
+the normalization factor into the \widget{normalize.norm.y}
+field. You then need to \gls{click} on the okay button to set these
+normalization factors.
 
 \subsubsection{TeX Editor Settings}\label{sec:texeditorui}
 
