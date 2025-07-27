@@ -76,7 +76,7 @@ public class PreamblePartEditor extends JPanel
       replaceItem = createButtonItem("menu.texeditor.search", "replace",
         toolBar, popupM);
 
-      toolBar.add(getResources().createHelpDialogButton(application, "sec:setpreamble"));
+      toolBar.add(getResources().createHelpDialogButton(application, "sec:preamble"));
 
       Font font = application.getTeXEditorFont();
 

@@ -1544,7 +1544,7 @@ a comma-separated list of packages in the
 \widget{textconfig.package} box. If the replacement command is
 available in the \LaTeX\ kernel, you can leave this box blank.
 (These packages will be automatically added to the
-\hyperref[sec:setpreamble]{image's early-preamble} code, whenever the
+\hyperref[sec:preamble]{image's early-preamble} code, whenever the
 mapping is applied.)
 
 The package name may be preceded by optional arguments in square
@@ -2040,7 +2040,7 @@ divider. By default, the preamble pane is to the right of the
 \gls{canvas}, but you can change this using the radio buttons in the
 \widget{texeditorui.split} area.
 
-\seealsorefs{sec:preamblearea,sec:flowframe}
+\seealsorefs{sec:thepreamblepane,sec:flowframe}
 
 \subsubsection{Look and Feel Settings}\label{sec:lookandfeel}
 
@@ -2273,13 +2273,51 @@ with filenames of the form \file{imagen.jdr}.
 
 \chapter{The Basics}\label{sec:thebasics}
 
-TODO
+The main \appname\ window is shown in \figureref{fig:mainwindow}.
+
+\FloatFig
+  {fig:mainwindow}
+  {\includeimg[width=\linewidth]{jpdwindow}}
+  {The Main Window}
+
+\appname\ uses a \gls{mdi}. This means that you can have multiple
+images loaded in separate child windows, without having to start up
+new instances of \appname. Most of the buttons and menu items
+will only be applied to the child window that currently has the
+focus. If there are no child windows, or if they have all been
+minimized, then the relevant buttons and menu items will be disabled.
+The only exceptions are the non-\gls{canvas} specific items.
 
 
 \section{The Canvas}\label{sec:thecanvas}
 
-The \inlineglsdef{canvas}
-TODO
+The \inlineglsdef{canvas} is the white area (that may optionally
+have a~grid) in each of \appname's child windows on which you create
+your picture. It shares a~child window with the
+\hyperref[sec:thepreamblepane]{preamble editor pane}. The canvas and
+preamble areas are separated by a divider that can be adjusted to
+allow one side to take up more room in the window. This can be done
+by dragging the divider.  With some \glspl{look-and-feel}, the
+divider has small triangular buttons which you can click on to
+collapse or expand one side, but not all have this function nor can
+some of them completely hide the preamble pane (such as the GTK+
+Look and Feel).  You can also use the \menu{tex.set_preamble} menu
+item to show the preamble pane.
+
+\section{The Preamble Pane}\label{sec:thepreamblepane}
+
+The preamble pane by default is on the right of the \gls{canvas},
+which may be used to specify code that should go in the document
+preamble of exported files. (This includes exports that use \LaTeX\
+as an intermediate step.)
+
+This area is split into three tabs for the early preamble code,
+the mid-preamble code, and the late preamble code.
+See \sectionref{sec:preamble} for further details on how this
+code is added during the export process, and
+see \sectionref{sec:configureuidialog} to set a default preamble
+for all images and to reposition the preamble pane.
+
 
 
 \section{The Toolbars}\label{sec:thetoolbars}
@@ -2304,9 +2342,6 @@ TODO
   {fig:information}
   {\includeimg[width=0.5\linewidth]{informationDialog}}
   {The Information Dialog}
-
-\section{The Preamble Area}\label{sec:preamblearea}
-
 
 \chapter{The File Menu}\label{sec:filemenu}
 
@@ -2752,7 +2787,7 @@ TODO
 TODO
 
 
-\section{Adding Commands to the Preamble}\label{sec:setpreamble}
+\section{Adding Commands to the Preamble}\label{sec:preamble}
 
 TODO
 
