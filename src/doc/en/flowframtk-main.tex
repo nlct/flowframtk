@@ -2005,10 +2005,42 @@ the normalization factor into the \widget{normalize.norm.y}
 field. You then need to \gls{click} on the okay button to set these
 normalization factors.
 
-\subsubsection{TeX Editor Settings}\label{sec:texeditorui}
+\subsubsection{\TeX\ Editor Settings}\label{sec:texeditorui}
 
-TODO
+\widgetdef{texeditorui.title}
 
+\FloatFig
+  {fig:texeditorui}
+  {\includeimg{configureUI-texeditorui}}
+  {Configuration UI Dialog Box (TeX Editor Settings)}
+
+\appname\ has small text editor that's opened when you want to
+edit the contents of a static or dynamic frame.
+The font used by this editor can be changed in the
+\widget{texeditorui.title} tab (\figureref{fig:texeditorui}).
+You can also set the default width (in terms of approximate number
+of characters per line) and the default height (in terms of lines)
+for the editor when it's first created at startup. You can also
+enable or disable syntax highlighting by selecting or deselecting
+the button marked \widget{texeditorui.highlight}. If
+selected, you can also set the \manmsg{colour} used for comments
+(indicated by \TeX's \glssymbol{percent} comment character) or for commands. The
+editor currently doesn't have any spell-checking support.
+The \hyperref[sec:texconfigpreamble]{default preamble} panel
+of the \widget{texconfig.title} dialog also
+uses these settings.
+
+In \appname\ version 0.7, this editor window was also used for changing the
+preamble text, but as from version~0.8, the preamble editor has been
+switched to a pane attached to the \gls{canvas} that can remain open
+while you're editing the image. This pane uses these settings,
+except for the default width and height, which is now governed
+by the size of the \gls{canvas} window and the location of the
+divider. By default, the preamble pane is to the right of the
+\gls{canvas}, but you can change this using the radio buttons in the
+\widget{texeditorui.split} area.
+
+\seealsorefs{sec:preamblearea,sec:flowframe}
 
 \subsubsection{Look and Feel Settings}\label{sec:lookandfeel}
 
@@ -2054,6 +2086,8 @@ TODO
   {fig:information}
   {\includeimg[width=0.5\linewidth]{informationDialog}}
   {The Information Dialog}
+
+\section{The Preamble Area}\label{sec:preamblearea}
 
 
 \chapter{The File Menu}\label{sec:filemenu}
