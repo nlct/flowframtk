@@ -730,15 +730,24 @@ Nicola Talbot
 
 <entry key="menu.debug.writelog">Write Log</entry>
 <entry key="menu.debug.writelog.mnemonic">W</entry>
+<entry key="menu.debug.writelog.keystroke">control shift F11</entry>
+<entry key="menu.debug.writelog.description">Writes debugging information to a log file in the configuration directory</entry>
+
 
 <entry key="menu.debug.dumpall">Dump All</entry>
 <entry key="menu.debug.dumpall.mnemonic">A</entry>
+<entry key="menu.debug.dumpall.keystroke">control F11</entry>
+<entry key="menu.debug.dumpall.descriptions">Saves all open images to the configuration directory</entry>
 
 <entry key="menu.debug.objectinfo">Object Info...</entry>
 <entry key="menu.debug.objectinfo.mnemonic">O</entry>
+<entry key="menu.debug.objectinfo.keystroke">shift F11</entry>
+<entry key="menu.debug.objectinfo.description">Display debugging information</entry>
 
 <entry key="menu.debug.revalidate">Revalidate Image</entry>
 <entry key="menu.debug.revalidate.mnemonic">R</entry>
+<entry key="menu.debug.revalidate.keystroke">F11</entry>
+<entry key="menu.debug.revalidate.description">Updates all components and redraws the current image</entry>
 
 <!--  Popup Menus -->
 
@@ -3189,22 +3198,6 @@ Merge Region: {2}</entry>
 <entry key="label.duplicate">(Copy)</entry>
 
 <!-- Actions Without a Corresponding Widget -->
-
-<entry key="action.redraw">Redraw</entry>
-<entry key="action.redraw.keystroke">F11</entry>
-<entry key="action.redraw.description">Redraw the current image</entry>
-
-<entry key="action.save_all">Save all</entry>
-<entry key="action.save_all.keystroke">control F11</entry>
-<entry key="action.save_all.description">Save all images to configuration directory</entry>
-
-<entry key="action.debug_show">Debug Show</entry>
-<entry key="action.debug_show.keystroke">shift F11</entry>
-<entry key="action.debug_show.description">Display debugging information</entry>
-
-<entry key="action.debug_log">Debug Log</entry>
-<entry key="action.debug_log.keystroke">control shift F11</entry>
-<entry key="action.debug_log.description">Writes debugging information to a log file in the configuration directory</entry>
 
 <entry key="action.contextmenu">Context Menu</entry>
 <entry key="action.contextmenu.keystroke">F3</entry>

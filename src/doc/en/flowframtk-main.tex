@@ -65,7 +65,7 @@ The source code is in the GitHub repository
 \url{https://github.com/nlct/flowframtk}.
 
 Occasionally the canvas doesn't get redrawn correctly. To force a
-redraw, use \accelerator{redraw}.
+redraw, use \accelerator{menu.debug.revalidate}.
 
 
 \mainmatter
@@ -415,7 +415,7 @@ Redo &
 Switch focus to menu bar &
 \tabularnewline
 %
-\accelerator{redraw} &
+\accelerator{menu.debug.revalidate} &
 Repaint canvas &
 \tabularnewline
 %
@@ -423,7 +423,7 @@ Repaint canvas &
 Display current tool help (status bar help button) &
 \tabularnewline
 %
-\accelerator{save_all} &
+\accelerator{menu.debug.dumpall} &
 Saves all images to the \gls{config_dir} &
 \tabularnewline
 %
@@ -463,11 +463,11 @@ Edit mode: &
 \mnemonictrail{navigate.find}
 \tabularnewline
 %
-\accelerator{debug_show} &
+\accelerator{menu.debug.objectinfo} &
 Displays debugging information &
 \tabularnewline
 %
-\accelerator{debug_log} &
+\accelerator{menu.debug.writelog} &
 Writes log file in the \gls{config_dir} &
 \tabularnewline
 \accelerator{close_window} &
@@ -2173,15 +2173,103 @@ before the changes can be implemented.
 
 \FloatFig
   {fig:icontext}
-  {\includeimg[width=\linewidth]{configureUI-graphics-icontext}}
+  {\includeimg{configureUI-graphics-icontext}}
   {Dialog Buttons with Small Icons and Trailing Text}
 
 
 \section{Configuration Directory}\label{sec:configdir}
 
-\inlineglsdef{config_dir}
 
-TODO
+When you quit \appname, the settings will be saved in
+\appname's \inlineglsdef{config_dir}.  This directory is
+determined (and created if necessary) as follows:
+
+\begin{itemize}
+  \item If the environment variable \gls{JDRSETTINGS} exists
+        and is a directory, that directory is used.
+
+  \item If \appname\ detects the existence of \gls{JpgfDraw}['s]
+        configuration directory, that will be used. If the file
+        \file{jpgfdraw.conf} exists in that directory but the file
+        \file{flowframtk.conf} doesn't exist, \appname\ will load the
+        settings from \file{jpgfdraw.conf} and then save the new settings to
+        \file{flowframtk.conf}. If you like, after you have quit
+        \appname, you can remove the now unneeded file
+        \file{jpgfdraw.conf} and rename the directory \file{.flowframtk} or
+        \file{flowframtk-settings}, as appropriate.
+
+  \item If the directory \file{home/.flowframtk} exists
+        and is a directory, that directory is used (where
+        \meta{home} indicates the user's home directory as given
+        by the Java \code{user.home} property).
+
+  \item If the directory \file{home/flowframtk-settings} exists
+        and is a directory, that directory is used.
+
+  \item If the operating system (as identified by the Java \code{os.name}
+        property) is a version of Windows and the
+        directory \file{home/flowframtk-settings} can
+        be created, that directory is used.
+
+  \item For other operating systems, if the directory
+        \file{home/.flowframtk} can be created, that
+        directory is used.
+
+  \item If the directory \file{settings/user} or
+        \file{settings} can be created in \appname's
+        installation directory, that directory will be used
+        (where \meta{user} is the current user's user name). This is
+        sub-optimal and not recommended as it may be removed when
+        upgrading to a new version.
+
+  \item If none of the above, an error will occur and you will need
+        to set the environment variable \gls{JDRSETTINGS} to
+        a sensible location with read and write permissions.
+
+\end{itemize}
+
+The configuration directory may also contain:
+\begin{itemize}
+\item the list of \hyperref[sec:recent]{recent files}
+(written by \appname\ when it quits normally);
+
+\item the \hyperref[sec:accelerators]{accelerator settings}
+file \file{accelerators.prop}
+(written by \appname\ when it quits normally);
+
+\item the \manmsg{maths}-mode and text-mode
+\hyperref[sec:texconfigtext]{character mapping} files,
+\file{mathmappings.prop} and \file{textmappings.prop}
+(written by \appname\ when it quits normally);
+
+\item the \hyperref[sec:preamble]{preamble} file \file{preamble.tex}
+(created by you, if you want it, in any text editor) used by some of
+the \hyperref[sec:export]{export} functions
+(see \sectionref{sec:texconfigpreamble});
+
+\item the \file{languages.conf} file that stores the
+\hyperref[sec:languages]{language settings} used for the resources and manual;
+
+\item the \file{startup.conf} file that stores the names of the
+fonts used by the \hyperref[sec:graphics]{startup splash screen};
+
+\item the \file{latexfontmap.prop} file (created by you, if you want
+it, in any text editor) that contains any \gls{font-mappings} (see
+\sectionref{sec:fontfamily}).  For compatibility with
+\gls{JpgfDraw}, the file may simply be \filefmt{latexfontmap}
+without an extension.
+
+\end{itemize}
+
+In addition, the configuration directory is used to save the log
+file, \file{flowframtk.log}, in the event that
+\accelerator{menu.debug.writelog} is used (or \menu{debug.writelog}
+if the command line option \switch{debug} is used). The emergency
+save all function \accelerator{menu.debug.dumpall} (or
+\menu{debug.dumpall} if the command line option \switch{debug} is
+used) will create a subdirectory (using the current date and time to
+construct the name) and will save all open images to that directory
+with filenames of the form \file{imagen.jdr}.
 
 \chapter{The Basics}\label{sec:thebasics}
 
