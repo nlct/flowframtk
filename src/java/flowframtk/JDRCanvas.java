@@ -1001,13 +1001,9 @@ public class JDRCanvas extends JPanel
 
       CanvasSelectAction vectorizeAction = null;
 
-      try
+      if (getApplication().isVectorizeSupported())
       {
          vectorizeAction = addCanvasSelectAction("vectorize");
-      }
-      catch (IllegalArgumentException e)
-      {
-         // Not in debug or experimental mode
       }
 
       // only text selected popup menu

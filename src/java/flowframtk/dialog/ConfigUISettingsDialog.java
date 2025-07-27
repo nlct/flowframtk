@@ -140,13 +140,16 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("lookandfeel.mnemonic"));
 
-      vectorizeBitmapUIPanel = new VectorizeBitmapUIPanel(application);
+      if (application.isVectorizeSupported())
+      {
+         vectorizeBitmapUIPanel = new VectorizeBitmapUIPanel(application);
 
-      tabbedPane.addTab(getResources().getMessage("vectorizeui.title"),
-         null, new JScrollPane(vectorizeBitmapUIPanel),
-         getResources().getMessage("vectorizeui.tooltip"));
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("vectorizeui.mnemonic"));
+         tabbedPane.addTab(getResources().getMessage("vectorizeui.title"),
+            null, new JScrollPane(vectorizeBitmapUIPanel),
+            getResources().getMessage("vectorizeui.tooltip"));
+         tabbedPane.setMnemonicAt(idx++,
+            getResources().getCodePoint("vectorizeui.mnemonic"));
+      }
 
       // OK/Cancel Button panel
       JPanel p = new JPanel();
@@ -244,7 +247,12 @@ public class ConfigUISettingsDialog extends JDialog
       texEditorUIPanel.initialise(application);
       annoteFontPanel.initialise(application.getSettings());
       lookAndFeelPanel.initialise();
-      vectorizeBitmapUIPanel.initialise();
+
+      if (vectorizeBitmapUIPanel != null)
+      {
+         vectorizeBitmapUIPanel.initialise();
+      }
+
       splashScreenSettingsPanel.initialise();
       editPathPanel.initialise();
 
@@ -280,7 +288,12 @@ public class ConfigUISettingsDialog extends JDialog
       texEditorUIPanel.okay(application);
       annoteFontPanel.okay(application.getSettings());
       lookAndFeelPanel.okay();
-      vectorizeBitmapUIPanel.okay();
+
+      if (vectorizeBitmapUIPanel != null)
+      {
+         vectorizeBitmapUIPanel.okay();
+      }
+
       splashScreenSettingsPanel.okay();
       editPathPanel.okay();
 

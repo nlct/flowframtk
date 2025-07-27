@@ -496,7 +496,7 @@ public class FlowframTk extends JFrame
 
       // not fully implemented
 
-      if (invoker.isExperimentalMode() || resources.debugMode)
+      if (invoker.isExperimentalMode() || resources.isDebuggingOn())
       {
          importItem = FlowframTkAction.createMenuItem(this,
            "menu.file", "import", fileM,
@@ -2613,21 +2613,24 @@ public class FlowframTk extends JFrame
 
       // Vectorize
 
-      vectorizeItem = FlowframTkAction.createMenuItem(this,
-         "menu.bitmap", "vectorize", bitmapM,
-         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_BITMAP,
-         FlowframTkAction.SELECTION_SINGLE_BITMAP, true, false,
-      new FlowframTkActionListener()
+      if (invoker.isExperimentalMode() || resources.isDebuggingOn())
       {
-         public void doAction(FlowframTkAction action, ActionEvent evt)
+         vectorizeItem = FlowframTkAction.createMenuItem(this,
+            "menu.bitmap", "vectorize", bitmapM,
+            TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_BITMAP,
+            FlowframTkAction.SELECTION_SINGLE_BITMAP, true, false,
+         new FlowframTkActionListener()
          {
-            displayVectorizeBitmapDialog();
-         }
-      });
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               displayVectorizeBitmapDialog();
+            }
+         });
 
-      incStartupProgress(bitmapM, vectorizeItem);
+         incStartupProgress(bitmapM, vectorizeItem);
 
-      vectorizeBitmapDialog = new VectorizeBitmapDialog(this);
+         vectorizeBitmapDialog = new VectorizeBitmapDialog(this);
+      }
 
       // TeX/LaTeX
 
@@ -3947,9 +3950,17 @@ public class FlowframTk extends JFrame
       bitmapPropChooserBox.initialise();
    }
 
+   public boolean isVectorizeSupported()
+   {
+      return vectorizeBitmapDialog != null;
+   }
+
    public void displayVectorizeBitmapDialog()
    {
-      vectorizeBitmapDialog.display();
+      if (vectorizeBitmapDialog != null)
+      {
+         vectorizeBitmapDialog.display();
+      }
    }
 
    public void repaintVectorizeBitmapDialog()
@@ -3973,6 +3984,11 @@ public class FlowframTk extends JFrame
 
    public boolean closeVectorizeBitmap(JDRFrame frame)
    {
+      if (vectorizeBitmapDialog == null)
+      {
+         return true;
+      }
+
       if (frame == null)
       {
          frame = vectorizeBitmapDialog.getBitmapFrame();
