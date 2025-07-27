@@ -53,57 +53,51 @@ version.tex	: $(baseclass)
 	@grep 'String APP_DATE = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_DATE\s=//" | tr -d "\"\; " >> version.tex
 	@echo "}" >> version.tex
 
-flowframtk-en-GB.pdf	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
+flowframtk-en-GB.pdf	: flowframtk-en-GB.glstex 
+	lualatex flowframtk-en-GB
+	lualatex flowframtk-en-GB
+
+flowframtk-en-GB.glstex	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
 			../sharedimages/*.png ../sharedimages/*.tex \
 			../en-sharedimages/*.png
-	$(arara) flowframtk-en-GB
+	lualatex flowframtk-en-GB
+	bib2gls -g --no-warn-unknown-entry-types flowframtk-en-GB
 
-flowframtk-en-GB.aux	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
-			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
-			 helpinterface.tex images-en-GB/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex \
-			../en-sharedimages/*.png
-	$(arara) flowframtk-en-GB
+flowframtk-en.pdf	: flowframtk-en.glstex 
+	lualatex flowframtk-en
+	lualatex flowframtk-en
 
-flowframtk-en.pdf	: flowframtk.bib shared.bib flowframtk-props-en.bib \
-			  flowframtk-en.tex flowframtk-main.tex version.tex \
+flowframtk-en.glstex	: flowframtk.bib shared.bib flowframtk-props-en.bib \
+			 flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
 			../sharedimages/*.png ../sharedimages/*.tex \
 			../en-sharedimages/*.png
-	$(arara) flowframtk-en
+	lualatex flowframtk-en
+	bib2gls -g --no-warn-unknown-entry-types flowframtk-en
 
-flowframtk-en.aux	: flowframtk.bib shared.bib flowframtk-props-en.bib \
-			  flowframtk-en.tex flowframtk-main.tex version.tex \
-			 helpinterface.tex images-en/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex \
-			../en-sharedimages/*.png
-	$(arara) flowframtk-en
 
-jdrview-en.pdf	: jdrview.bib jdrview-props-en.bib \
+jdrview-en.pdf	: jdrview-en.glstex
+	lualatex jdrview-en
+	lualatex jdrview-en
+
+jdrview-en.glstex	: jdrview.bib jdrview-props-en.bib \
 		jdrview-en.tex jdrview-main.tex version.tex \
 		helpinterface.tex \
 		../sharedimages/*.png ../sharedimages/*.tex
-	$(arara) jdrview-en
+	lualatex jdrview-en
+	bib2gls -g --no-warn-unknown-entry-types jdrview-en
 
-jdrview-en.aux	: jdrview.bib jdrview-props-en.bib \
-		jdrview-en.tex jdrview-main.tex version.tex \
-		helpinterface.tex \
-		../sharedimages/*.png ../sharedimages/*.tex
-	$(arara) jdrview-en
+jdrview-en-GB.pdf	: jdrview-en-GB.glstex
+	lualatex jdrview-en-GB
 
-jdrview-en-GB.pdf	: jdrview.bib jdrview-props-en-GB.bib \
+jdrview-en-GB.glstex	: jdrview.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
 			../sharedimages/*.png ../sharedimages/*.tex
-	$(arara) jdrview-en-GB
-
-jdrview-en-GB.aux	: jdrview.bib jdrview-props-en-GB.bib \
-			jdrview-en-GB.tex jdrview-main.tex version.tex \
-			helpinterface.tex \
-			../sharedimages/*.png ../sharedimages/*.tex
-	$(arara) jdrview-en-GB
+	lualatex jdrview-en-GB
+	bib2gls -g --no-warn-unknown-entry-types jdrview-en-GB
 
 en-GB	: $(targetdir)/flowframtk/en-GB/index.xml \
 	$(targetdir)/jdrview/en-GB/index.xml
@@ -112,19 +106,19 @@ en	: $(targetdir)/flowframtk/en/index.xml \
 	$(targetdir)/jdrview/en/index.xml
 
 $(targetdir)/flowframtk/en-GB/index.xml	: $(targetdir)/flowframtk/en-GB \
-	  flowframtk-en-GB.aux  
+	  flowframtk-en-GB.pdf  
 	$(texjavahelpmk) flowframtk-en-GB.tex $(targetdir)/flowframtk/en-GB
 
 $(targetdir)/flowframtk/en/index.xml	: $(targetdir)/flowframtk/en \
-	  flowframtk-en.aux  
+	  flowframtk-en.pdf  
 	$(texjavahelpmk) flowframtk-en.tex $(targetdir)/flowframtk/en
 
 $(targetdir)/jdrview/en/index.xml	: $(targetdir)/jdrview/en \
-	  jdrview-en.aux  
+	  jdrview-en.pdf  
 	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en
 
 $(targetdir)/jdrview/en-GB/index.xml	: $(targetdir)/jdrview/en-GB \
-	  jdrview-en-GB.aux  
+	  jdrview-en-GB.pdf  
 	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en-GB
 
 
