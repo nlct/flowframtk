@@ -1028,6 +1028,8 @@ interface.)
 
 \subsubsection{Control Points}\label{sec:controlsettings}
 
+\widgetdef{controls.title}
+
 \FloatFig
   {fig:configdialog-controlsettings}
   {\includeimg{configureDialog-controls}}
@@ -1054,6 +1056,8 @@ the mouse on the storage unit area of the \gls{statusbar}.
 
 \subsubsection{Startup Directory}\label{sec:startdir}
 
+\widgetdef{startdir.title}
+
 \FloatFig
   {fig:configdialog-startdir}
   {\includeimg{configureDialog-startdir}}
@@ -1076,6 +1080,8 @@ directory.
 
 \subsubsection{JDR/AJR Settings}\label{sec:jdrsettings}
 
+\widgetdef{jdr.title}
+
 \FloatFig
   {fig:configdialog-jdrsettings}
   {\includeimg{configureDialog-jdrsettings}}
@@ -1095,6 +1101,8 @@ should be affected by the magnification setting.
 
 
 \subsubsection{Startup Settings}\label{sec:initsettings}
+
+\widgetdef{initsettings.title}
 
 \FloatFig
   {fig:configdialog-initsettings}
@@ -1130,6 +1138,8 @@ editor, but make sure you save your changes before restarting
 
 \subsubsection{Bitmaps}\label{sec:bitmapconfig}
 
+\widgetdef{bitmapconfig.title}
+
 \FloatFig
   {fig:configdialog-bitmap}
   {\includeimg{configureDialog-bitmap}}
@@ -1150,6 +1160,8 @@ your preferred default image command, which may be either
 
 
 \subsubsection{Application Paths}\label{sec:processes}
+
+\widgetdef{processes.title}
 
 \FloatFig
   {fig:configdialog-apppaths}
@@ -1184,6 +1196,8 @@ and \sectionref{sec:configureuidialog} covers user interface settings.)
 
 \subsubsection{Setting the Document Class and Normal Font Size}
 \label{sec:normalsize}
+
+\widgetdef{clssettings.title}
 
 Most of \appname's \TeX/\LaTeX\ related functions (including the
 \hyperref[sec:exportimage]{export function}) require a value
@@ -1284,8 +1298,8 @@ setting.
 The \widget{clssettings.pdfinfo} \gls*{checkbox} governs whether or
 not to add \gls{pdfinfo} to exported \LaTeX\ documents. If the image
 has a description (\sectionref{sec:imagedescription}), this will be
-added to the \texttt{/Title} attribute. The only other attribute
-that is set is the \texttt{/CreationDate} attribute. This setting is
+added to the \code{/Title} attribute. The only other attribute
+that is set is the \code{/CreationDate} attribute. This setting is
 not used for the export to PostScript or \gls{svg} functions as they
 use \app{latex} rather than \app{pdflatex}.
 
@@ -1306,14 +1320,16 @@ in \sectionref{sec:exportdoc}.
 
 \subsubsection{Flowframe Settings}\label{sec:texconfigflf}
 
-The \widget{flfsettings.title} tab
-(\figureref{fig:flfsettings}) allows you to adjust the
-\sty{flowfram} related settings.
+\widgetdef{flfsettings.title}
 
 \FloatFig
  {fig:flfsettings}
  {\includeimg{flfsettings}}
  {Flowframe Settings Tab}
+
+The \widget{flfsettings.title} tab
+(\figureref{fig:flfsettings}) allows you to adjust the
+\sty{flowfram} related settings.
 
 The \sty{flowfram} package now allows you to use absolute pages
 numbers in the page list rather than using the value of the
@@ -1345,14 +1361,16 @@ packages. This setting applies both to frames with the
 
 \subsubsection{Text Settings}\label{sec:texconfigtext}
 
-The \widget{textconfig.title} tab
-(\figureref{fig:configdialog-texsettings})
-allows you to adjust the text-related settings.
+\widgetdef{textconfig.title}
 
 \FloatFig
   {fig:configdialog-texsettings}
   {\includeimg{configureDialog-texsettings}}
   {LaTeX-Related Text Settings}
+
+The \widget{textconfig.title} tab
+(\figureref{fig:configdialog-texsettings})
+allows you to adjust the text-related settings.
 
 \widgetdef{textconfig.anchor}
 
@@ -1654,6 +1672,8 @@ is 200.)
 
 \subsubsection{Default Preamble}\label{sec:texconfigpreamble}
 
+\widgetdef{preambleconfig.title}
+
 The \widget{preambleconfig.title} tab
 (\figureref{fig:texconfig-preamble}) allows you to specify code that
 should always be added to the preamble when exporting images to
@@ -1688,6 +1708,8 @@ settings.)
 
 
 \subsubsection{Graphics Settings}\label{sec:graphics}
+
+\widgetdef{graphics.title}
 
 \FloatFig
   {fig:graphics}
@@ -1771,6 +1793,8 @@ transformation dialog boxes described in
 
 \subsubsection{Annotations Settings}\label{sec:annotations}
 
+\widgetdef{annotations.title}
+
 \FloatFig
   {fig:annotations}
   {\includeimg{configureUI-annotations}}
@@ -1782,6 +1806,8 @@ allows you to set the font used for annotating frames or draft
 
 
 \subsubsection{Language Settings}\label{sec:languages}
+
+\widgetdef{lang.title}
 
 \FloatFig
   {fig:languages}
@@ -1816,6 +1842,8 @@ the line starting with \qt{unicode=}.
 
 \subsubsection{Accelerator Settings}\label{sec:accelerators}
 
+\widgetdef{accelerators.title}
+
 \FloatFig
   {fig:accelerators}
   {\includeimg{configureUI-accelerators}}
@@ -1829,9 +1857,11 @@ same time. (For example, \accelerator{menu.editpath.next_control}
 selects the next control in path edit mode or adjust the selection
 in select mode.)
 
-\textbf{Note: } Java's accessibility API uses \keys{\actualkey{10}} to switch
+\begin{information}
+Java's accessibility API uses \accelerator{action.menubarfocus} to switch
 the focus to the menu bar, so avoid using this key for an
 accelerator.
+\end{information}
 
 Suppose you want to change the accelerator for the \menu{edit.undo}
 function from the default \accelerator{menu.edit.undo} to, say,
@@ -1845,7 +1875,48 @@ the accelerator table and \gls{doubleclick} on it to open the
   {\includeimg{setaccelerator}}
   {Changing a keyboard shortcut.}
 
-TODO
+There are two ways to change the
+keystroke. If the \widget{accelerator.set.useselector}
+button is selected, you can select or deselect the required
+modifiers (such as \widget{accelerator.set.shift}) and
+use the drop-down box to select the keystroke. So to change the
+keystroke to \keys{\keyref{ctrl}+\keyref{shift}+\actualkey{U}}, select the
+\widget{accelerator.set.shift} and
+\widget{accelerator.set.ctrl} \glspl{checkbox} and set the drop-down
+box to \widgetfmt{pressed U}.
+
+Alternatively, if the \widget{accelerator.set.usekeystroke} button
+is selected you can type the required keystroke in the
+\widget{accelerator.set.usekeystroke.label} field. Care must be
+taken with this option. You need to make sure you release the main
+key before releasing the modifiers. For example, press down the
+\desckeyref{ctrl}, \desckeyref{shift} and \keys{\actualkey{U}} keys
+but release the \keys{\actualkey{U}} key before releasing the
+\keys{\keyref{ctrl}} and \keys{\keyref{shift}} keys. 
+
+Note that the \desckeyref{tab} key retains its usual
+function of moving the focus to the next component in the window,
+and so can't be typed in the
+\widget{accelerator.set.usekeystroke.label} field. (Neither
+can certain other keys that are always intercepted by the operating
+system.) The \desckeyref{return} key, on the other hand, will be picked up
+by the \widget{accelerator.set.usekeystroke.label} field
+if it has the focus, so you need to ensure you move the focus to a
+different component if you want to use \keys{\keyref{return}} to activate the
+\btn{okay} button.
+
+The accelerator settings are written to a file called
+\inlineglsdef{file.accelerators.prop} in the \gls{config_dir} when
+\appname\ quits normally. You may edit this file using your
+preferred text editor to change the settings as long as \appname\
+isn't currently running. For example, if you want to change all the
+keystrokes that require the control key to be pressed to requiring
+the meta key pressed instead, you may find it easier to do a global
+search and replace in \file{accelerators.prop} of \code{ctrl}
+with \code{meta}. If you do edit this file, make sure you only
+edit the values to the right of the \code{=} sign. To restore the
+default accelerators, delete or rename this file (when \appname\
+isn't running).
 
 \subsubsection{Toolbar, Ruler and Status Bar Settings}\label{sec:rulers}
 
