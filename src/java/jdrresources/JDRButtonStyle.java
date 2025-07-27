@@ -305,6 +305,17 @@ public class JDRButtonStyle
          }
       }
 
+      if (!hasDownIcon)
+      {
+         icSet.setPressedIcon(null);
+         icSet.setSelectedIcon(null);
+      }
+
+      if (!hasRolloverIcon)
+      {
+         icSet.setRolloverIcon(null);
+      }
+
       return icSet;
    }
 

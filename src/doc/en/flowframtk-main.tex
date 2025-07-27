@@ -2044,7 +2044,137 @@ divider. By default, the preamble pane is to the right of the
 
 \subsubsection{Look and Feel Settings}\label{sec:lookandfeel}
 
-TODO
+\widgetdef{lookandfeel.title}
+
+\FloatFig
+  {fig:lookandfeel}
+  {\includeimg{configureUI-lookandfeel}}
+  {Configuration UI Dialog Box (Look and Feel Settings)}
+
+Java displays \gls{gui} elements, such as buttons and menus,
+according to the selected \qt{\gls{look-and-feel}}. There are a number of
+different \glspl{look-and-feel} that may, or may not, be available on your
+platform. Some of the \glspl{look-and-feel} don't support certain features
+such as the click-to-collapse setting on the divider bar in split
+panes, including the divider between the \gls{canvas} and the preamble
+pane. The \widget{lookandfeel.title} tab has a
+\gls{dropdown} with the list of available \gls{look-and-feel}. For
+example, \figureref{fig:lookandfeel} has the \qt{Metal} look and
+feel selected. You can change this to a different \gls{look-and-feel}, but
+you must restart \appname\ for the change to be implemented.
+
+Some example \glspl{look-and-feel} are shown in \figureref{fig:lookandfeelex}.
+Note that the main window's title bar and outer border isn't
+governed by Java's \gls{look-and-feel}, but by the operating
+system's window manager. For example, I've used different window
+themes whilst taking snapshots of \appname\ for this manual,
+which is why the \manmsg{colour} and format of the title bar for the main
+window and for the dialog boxes vary.
+
+\FloatSubFigs{fig:lookandfeelex}
+{
+  {fig:lookandfeelex-metal}
+    {\includeimg[width=0.45\linewidth]{lookandfeel-metal}}{Metal},
+  {fig:lookandfeelex-nimbus}
+    {\includeimg[width=0.45\linewidth]{lookandfeel-nimbus}}{Nimbus},
+  {fig:lookandfeelex-cdemotif}
+    {\includeimg[width=0.45\linewidth]{lookandfeel-cdemotif}}{CDE\slash Motif},
+  {fig:lookandfeelex-gtk}
+    {\includeimg[width=0.45\linewidth]{lookandfeel-gtk}}{GTK+}
+}
+{Look and Feel Examples}
+
+In addition to changing the look and feel, you can also change how
+the buttons that have icons are displayed. By default, the buttons
+with icons have a bevel bordered style, with a different icon image for
+the up, down, rollover and disabled states, but if you don't like
+them, you can select a different type from the
+\widget{lookandfeel.button.style} area. Each type has some sample
+buttons displayed on the right. They don't perform any actions, but
+you can press them to try them out. The button types come in the
+following \manmsgpl{flavour}:
+
+\begin{deflist}
+\itemtitle{Bordered}
+
+\begin{itemdesc}
+This is the default button type described above.
+These buttons have distinctive up and down states regardless of the
+\gls{look-and-feel}.
+\end{itemdesc}
+
+\itemtitle{Small Bordered}
+
+\begin{itemdesc}
+Similar to bordered but a smaller version.
+\end{itemdesc}
+
+\itemtitle{Plain}
+
+\begin{itemdesc}
+This has a single icon image for the button. The up and
+down look is dealt with by the \gls{look-and-feel}. This means that if the
+selected look and feel doesn't draw an up or down effect, you won't
+be able to see the button state.
+\end{itemdesc}
+
+\itemtitle{Small Plain}
+
+\begin{itemdesc}
+Similar to plain but a smaller version.
+\end{itemdesc}
+
+\itemtitle{Highlights}
+
+\begin{itemdesc}
+This is like plain but there is a
+second icon for the down state of radio and check buttons that is
+like the up state but has a highlighted background. This means that
+you can now see a difference between the up and down states for the
+radio and check buttons when used with a \gls{look-and-feel} style that
+doesn't draw an up or down effect.
+\end{itemdesc}
+
+\itemtitle{Small Highlights}
+
+\begin{itemdesc}
+Similar to highlights but a smaller version.
+\end{itemdesc}
+
+\itemtitle{Bordered Switches}
+
+\begin{itemdesc}
+Uses the plain type for press buttons and
+the bordered type icons for radio and check buttons. Unlike the
+default bordered style, in this case the bordered icons also include
+the \gls{look-and-feel}['s] up and down effect (where supported).
+\end{itemdesc}
+
+\itemtitle{Small Bordered Switches}
+
+\begin{itemdesc}
+Like bordered switches but a smaller version.
+\end{itemdesc}
+
+\end{deflist}
+
+Some of these styles also display a textual label, which may be
+above, below, to the left or to the right of the icon.
+Alternatively, you can just select the text only option. If you
+prefer to have a different style for the dialog windows, you can
+uncheck the \widget{lookandfeel.dialog.as_general} button,
+which will display a set of button styles that you can apply to the
+dialog windows. For example, \figureref{fig:icontext} shows the
+dialog window from \figureref{fig:graphics} with the
+small icons and trailing text dialog button option.
+
+As with the look and feel setting, you must restart \appname\
+before the changes can be implemented.
+
+\FloatFig
+  {fig:icontext}
+  {\includeimg[width=\linewidth]{configureUI-graphics-icontext}}
+  {Dialog Buttons with Small Icons and Trailing Text}
 
 
 \section{Configuration Directory}\label{sec:configdir}
