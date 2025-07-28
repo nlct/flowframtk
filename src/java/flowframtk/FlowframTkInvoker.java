@@ -1676,7 +1676,7 @@ public class FlowframTkInvoker
             }
             catch (InvalidFormatException e)
             {
-               if (resources.debugMode)
+               if (resources.isDebuggingOn())
                {
                   e.printStackTrace();
                }
@@ -1692,7 +1692,7 @@ public class FlowframTkInvoker
             }
          }
 
-         if (messages != null)
+         if (messages != null && resources.isDebuggingOn())
          {
             resources.error(messages.toString());
          }
