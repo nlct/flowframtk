@@ -2934,30 +2934,93 @@ the quit operation.
 New \glspl{path} and \glspl{textarea} can be created using
 \FlowframTk's \gls{construction}, which can be obtained using any tool
 except the select tool. The tools can be selected using either the
-vertical \gls{toolbar} or the \menu{tools} menu. Once \glspl*{path}
-and \glspl*{textarea} have been created they can then be edited or
+vertical \gls{toolbar} or the \menu{tools} menu. Once \glspl{path}
+and \glspl{textarea} have been created they can then be edited or
 transformed or combined to form a \gls{textpath} object. You can
-also apply patterns to \glspl*{path} or \glspl*{textpath}.
+also apply patterns to \glspl{path} or \glspl{textpath}.
 
-Whilst constructing a \hyperref[sec:lines]{line path}
-or \hyperref[sec:curves]{curve path}, you can:
+\menudef{menu.tools.finish}
 
-\iconstartpar{finish.png}%
-Finish the \gls*{path} by pressing the \keys{\keyref{return}} key or by
-\glslink{doubleclick}{double-clicking} (instead of
-single-clicking) on the final vertex or by selecting
-\inlineglsdef{menu.tools.finish} or by clicking on the finish button.
-Note that transferring the focus to another \FlowframTk\ child
-window or selecting a new tool whilst you are constructing a
-\gls{path}, will complete the current path.
+Finish the \gls{path} or \gls{textarea} by pressing
+\accelerator{menu.tools.finish} or by selecting \menu{tools.finish}
+or by clicking on the finish button or (\gls{path}) by
+\glslink{doubleclick}{double-clicking} (instead of single-clicking)
+on the final vertex or (\gls{textarea}) clicking on the \gls{canvas}
+where you want the next \gls{textarea} to start.  
 
+Note that transferring the focus to
+another \FlowframTk\ child window or selecting a new tool whilst you
+are constructing a \gls{path}, will complete the current path.
 
+\menudef{menu.tools.abandon}
 
-TODO
+Cancel the current \gls{path} by pressing the
+\accelerator{menu.tools.abandon} key or by selecting
+\menu{tools.abandon} or by clicking on the abandon path button.
+(Not applicable for \glspl{textarea}.)
+
+\menudef{menu.tools.gap}
+
+The \inlineglsdef{gap} or \qt{\gls{move-to}} function is only
+available when constructing an open or closed
+\hyperref[sec:lines]{line path} or \hyperref[sec:curves]{curve
+path}.  Once you have clicked on the vertex where you want the
+\gls{gap} to start, select \menu{menu.tools.gap} or click on the
+\gls{gap} button or press \accelerator{menu.tools.gap}, then click
+on the \gls{canvas} where you want the \gls{gap} to end. The next
+segment will resume according to the tool (line or curve).
+
+\begin{warning}
+The undo/redo mechanism is disabled while you are constructing a
+path, however while you are creating a line path or a curve path,
+you can delete the previous segment using the \accelerator{action.delete_last} key.
+\end{warning}
+
+Note that \FlowframTk\ won't allow you to create a \gls{path} whose
+total width and height are both less than 1.002\gls{bp}. This is to
+prevent accidentally creating a tiny path that can't be seen but
+contributes to the total image dimensions. This restriction only
+applies when creating \glspl*{path} and does not apply to editing
+paths.
+
+The \gls{pathattributes} will only be set
+once the \gls{path} has been completed. Whilst the
+\gls{path} is under construction you will
+only see a draft version (see \figureref{fig:draftfinal}).
+If you want a \gls{path} with a mixture of line and curve
+segments, first construct a \gls{path} with only one
+type of segment (e.g.\ lines), and then use the
+\hyperref[sec:editpath]{edit path function} to convert
+the required segments.
+
+\FloatSubFigs{fig:draftfinal}
+{
+ {fig:draftfinala}{\includeimg{underconstruction}}{},
+ {fig:draftfinalb}{\includeimg{curvecompleted}}{}
+}
+[Path Attributes Are Only Set Once the Path is Completed]
+{Path attributes are only set once the path is completed:
+\subfigref{fig:draftfinala} path under construction;
+\subfigref{fig:draftfinalb} path completed.}
 
 \plabel[Go To Dialog Box]{sec:goto}% 
+If you are unable to use the mouse, you can move the pointer using
+\menu{navigate.goto} which will display the dialog box shown in
+\figureref{fig:goto}. Enter the $x$ and $y$ co-ordinates in the
+\widget{coordinates.x} and \widget{coordinates.y} fields if you are
+using a rectangular grid, or enter the angle and radius in the
+\widget{coordinates.angle} and \widget{coordinates.radius} fields,
+if you are using a radial grid. The keystroke
+\accelerator{action.constructclick} will emulate a single mouse
+click in \gls{construction}.
 
-TODO
+\FloatFig
+  {fig:goto}
+  {\includeimg{goto}}
+  {Go To Co-ordinate Dialog Box}
+
+
+\seealsorefs{sec:editpath,sec:symmetric,sec:patterns}
 
 \section{Line Paths}\label{sec:newlinepath}
 
