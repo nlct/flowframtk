@@ -49,6 +49,7 @@
 @fileext{ext.sty, parent={fileextension}}
 @fileext{ext.cls, parent={fileextension}}
 @fileext{ext.tsv, parent={fileextension}}
+@fileext{ext.png, parent={fileextension}}
 
 % FILES
 
@@ -104,7 +105,11 @@
 
 @package{pkg.extsizes}
 
+@package{pkg.inputenc}
 @package{pkg.fontenc}
+@package{pkg.fontspec}
+@package{pkg.geometry}
+@package{pkg.ifpdf}
 
 @package{pkg.mathdesign,
  name={\styfmt{math\-design}}
@@ -125,7 +130,18 @@
 @command{large}
 @command{Large}
 @command{huge}
+@command{input}
 @command{pdfinfo}
+
+@index{pdfinfo/Title,
+ name={\code{/Title}},
+ parent={pdfinfo}
+}
+
+@index{pdfinfo/CreationDate,
+ name={\code{/CreationDate}},
+ parent={pdfinfo}
+}
 
 @command{setfontsize,
  name={\csfmt{set\-font\-size}}
@@ -159,6 +175,18 @@
  name={\csfmt{base\-line\-skip}}
 }
 
+@command{usepackage,
+ name={\csfmt{use\-package}}
+}
+
+@command{RequirePackage,
+ name={\csfmt{Require\-Package}}
+}
+
+@command{LoadClass,
+ name={\csfmt{Load\-Class}}
+}
+
 % ENVIRONMENTS
 
 @environment{env.pgfpicture,
@@ -189,6 +217,7 @@
 
 @application{app.latex}
 @application{app.pdflatex}
+@application{app.lualatex}
 @application{app.dvips}
 @application{app.dvisvgm}
 
@@ -504,11 +533,12 @@ points, lines and curves.}
 
 @index{rastergraphics,
   name="raster graphics",
-  description = {Representing images as a collection of pixels. Also
-called a bitmap.}
+  alias={bitmap}
 }
 
-@index{bitmap, alias="rastergraphics"}
+@index{bitmap,
+  description={Representing images as a collection of pixels.}
+}
 
 @index{construction,
   name="construction mode",

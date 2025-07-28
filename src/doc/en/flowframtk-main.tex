@@ -109,8 +109,8 @@ In \appname, you can:
 \end{itemize}
 
 Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
-(\sectionref{sec:loadimage}) from \appname's native \gls{jdr}
-(binary) or \gls{ajr} (ASCII) file formats. Additionally, images can be
+(\sectionref{sec:loadimage}) from \appname's native \gls{JDR}
+(binary) or \gls{AJR} (ASCII) file formats. Additionally, images can be
 exported (\sectionref{sec:exportimage}) as:
 
 \begin{itemize}
@@ -574,7 +574,7 @@ New canvas &
 \tabularnewline
 %
 \accelerator{file.open} &
-Open \gls{jdr} or \gls{jdr} file &
+Open \gls{JDR} or \gls{JDR} file &
 \mnemonictrail{file.open}
 \tabularnewline
 %
@@ -702,7 +702,7 @@ where \filefmt{path/to/} is the path to the \file{flowframtk.jar}
 file.
 
 Note that the options and the filenames may be omitted.
-Each filename must be either a \gls{jdr} or an \gls{ajr} file.
+Each filename must be either a \gls{JDR} or an \gls{AJR} file.
 The \app{flowframtk} bash script uses the environment variable 
 \inlineglsdef{JDR_JVMOPTS} to pass
 options to the \gls{jvm}.  For example, if you want to run \appname\ with
@@ -725,7 +725,7 @@ For example, if you always want \appname\ to start up with the grid showing,
 \begin{terminal}
 setenv \gls{FLOWFRAMTK_OPTS} \switch{show_grid}
 \end{terminal}
-(Bear in mind that \gls{jdr} and \gls{ajr} files can have certain
+(Bear in mind that \gls{JDR} and \gls{AJR} files can have certain
 settings saved, which may override the startup settings.)
 
 \begin{important}
@@ -883,7 +883,7 @@ While \appname\ is running, you can change the current settings
 using the \menu{settings} menu. Most of the settings will be
 remembered next time you use \appname, but may be overridden
 either by \hyperref[sec:cmdargs]{command line arguments} or by
-settings specified in any \gls{jdr} or \gls{ajr} file that you load.
+settings specified in any \gls{JDR} or \gls{AJR} file that you load.
 
 If you have selected \widget{initsettings.default} in the
 \widget{initsettings.title} tab of the \dialog{config} dialog,
@@ -1022,7 +1022,7 @@ enable a list of additional known paper sizes or select the
 
 The \menu{settings.config} menu item opens the \dialog{config}
 dialog box, which can be used to change image settings.
-(\sectionref{sec:texconfig} covers \TeX/\LaTeX\ related settings and
+(\sectionref{sec:texconfig} covers \TeX\slash\LaTeX\ related settings and
 \sectionref{sec:configureuidialog} covers settings related to the user
 interface.)
 
@@ -1091,14 +1091,15 @@ directory.
 You can use the \widget{jdr.title} tab
 (\figureref{fig:configdialog-jdrsettings})
 to specify whether or not you want the current
-\gls{canvas} settings stored in the \gls{jdr} or \gls{ajr} file when
+\gls{canvas} settings stored in the \gls{JDR} or \gls{AJR} file when
 you save your image. You can also choose whether or not you want to
-apply any canvas settings information stored in any \gls{jdr} or
-\gls{ajr} file that you load. The canvas settings consist of:
-grid show/hide, grid locked/not locked, rulers displayed/not
-displayed, the tool in use, the LaTeX normal size, the paper size,
-the grid style, the size of the \glspl{controlpt} and whether they
-should be affected by the magnification setting.
+apply any canvas settings information stored in any \gls{JDR} or
+\gls{AJR} file that you load. The canvas settings consist of:
+grid show\slash hide, grid locked\slash not locked, rulers
+displayed\slash not displayed, the tool in use, the LaTeX normal
+size, the paper size, the grid style, the size of the
+\glspl{controlpt} and whether they should be affected by the
+magnification setting.
 
 
 \subsubsection{Startup Settings}\label{sec:initsettings}
@@ -1189,8 +1190,9 @@ in the \widget{processes.timeout} box.
 
 \menudef{menu.settings.configtex}
 
-The \menu{settings.configtex} menu item will open up a dialog box
-in which you can adjust the \TeX/\LaTeX\ settings.
+The \menu{settings.configtex} menu item will open up 
+the \inlineglsdef{texconfig.title} dialog box
+in which you can adjust the \TeX\slash\LaTeX\ settings.
 (\sectionref{sec:configuredialog} covers image settings
 and \sectionref{sec:configureuidialog} covers user interface settings.)
 
@@ -1200,7 +1202,7 @@ and \sectionref{sec:configureuidialog} covers user interface settings.)
 
 \widgetdef{clssettings.title}
 
-Most of \appname's \TeX/\LaTeX\ related functions (including the
+Most of \appname's \TeX\slash\LaTeX\ related functions (including the
 \hyperref[sec:exportimage]{export function}) require a value
 corresponding to \gls{normalsize} (the \LaTeX\ command that sets the
 \gls{normal-font-size}). A \gls{textarea} needs to know the normal
@@ -1299,8 +1301,8 @@ setting.
 The \widget{clssettings.pdfinfo} \gls*{checkbox} governs whether or
 not to add \gls{pdfinfo} to exported \LaTeX\ documents. If the image
 has a description (\sectionref{sec:imagedescription}), this will be
-added to the \code{/Title} attribute. The only other attribute
-that is set is the \code{/CreationDate} attribute. This setting is
+added to the \gls{pdfinfo/Title} attribute. The only other attribute
+that is set is the \gls{pdfinfo/CreationDate} attribute. This setting is
 not used for the export to PostScript or \gls{svg} functions as they
 use \app{latex} rather than \app{pdflatex}.
 
@@ -1704,7 +1706,7 @@ opened using a~\gls{menuclick} on the editor pane.
 The menu item \menu{settings.configui} will open up a dialog box
 in which you can adjust the user interface settings.
 (\sectionref{sec:configuredialog} covers image settings
-and \sectionref{sec:texconfig} covers \TeX/\LaTeX\ related
+and \sectionref{sec:texconfig} covers \TeX\slash\LaTeX\ related
 settings.)
 
 
@@ -2231,7 +2233,7 @@ determined (and created if necessary) as follows:
 
 The configuration directory may also contain:
 \begin{itemize}
-\item the list of \hyperref[sec:recent]{recent files}
+\item the list of \hyperref[sec:recentfiles]{recent files}
 (written by \appname\ when it quits normally);
 
 \item the \hyperref[sec:accelerators]{accelerator settings}
@@ -2245,7 +2247,7 @@ file \file{accelerators.prop}
 
 \item the \hyperref[sec:preamble]{preamble} file \file{preamble.tex}
 (created by you, if you want it, in any text editor) used by some of
-the \hyperref[sec:export]{export} functions
+the \hyperref[sec:exportimage]{export} functions
 (see \sectionref{sec:texconfigpreamble});
 
 \item the \file{languages.conf} file that stores the
@@ -2304,10 +2306,10 @@ some of them completely hide the preamble pane (such as the GTK+
 Look and Feel).  You can also use the \menu{tex.set_preamble} menu
 item to show the preamble pane.
 
-In \hyperref[sec:edit]{select mode} (but not when you're editing or
+In \hyperref[sec:selectobjects]{select mode} (but not when you're editing or
 distorting a shape) you can \gls{drag-and-drop} image files or
 text onto the canvas to add to the current image. In
-\hyperref[sec:text]{text or \manmsg{maths} mode} you can only drag
+\hyperref[sec:newtext]{text or \manmsg{maths} mode} you can only drag
 and drop text onto the canvas. If you attempt to drop a file
 instead, you will get a new \gls{textarea} containing the file's
 path (or URI). 
@@ -2425,8 +2427,8 @@ dialog to change the font used in the \gls*{statusbar}.
 You can use the \menu{file} menu to create a
 \hyperref[sec:newimage]{new} picture,
 \hyperref[sec:loadimage]{load} a picture from a
-\gls{jdr} or \gls{ajr} file,
-\hyperref[sec:save]{save} the current picture,
+\gls{JDR} or \gls{AJR} file,
+\hyperref[sec:saveimage]{save} the current picture,
 \hyperref[sec:exportimage]{export} the current
 picture to a supported format (such as a \LaTeX\ file),
 \hyperref[sec:imagedescription]{assign a description} to the
@@ -2445,11 +2447,11 @@ a new child window. You can switch between child windows using the
 
 \menudef{menu.file.open}
 
-To load a \gls{jdr} or \gls{ajr} file, select \menu{file.open}.
+To load a \gls{JDR} or \gls{AJR} file, select \menu{file.open}.
 If there is already a picture in the current child window, a new
 child window will open to display the file. Note that although
 \appname\ can export to other formats, it can only load
-\gls{jdr} and \gls{ajr} files. (Although there is an import option
+\gls{JDR} and \gls{AJR} files. (Although there is an import option
 available in the experimental mode.)
 
 If you load an image that contains a link to a \gls{bitmap} and
@@ -2459,14 +2461,14 @@ select a new link, the \LaTeX\ link will also be updated.
 If there is insufficient memory in the \gls{jre} to load a bitmap,
 \appname\ will revert to draft mode for that bitmap.
 
-On some systems you may be able to \gls{drag-and-drop} \gls{jdr} or
-\gls{ajr} files from a filer window onto \appname's internal desktop
+On some systems you may be able to \gls{drag-and-drop} \gls{JDR} or
+\gls{AJR} files from a filer window onto \appname's internal desktop
 (the \manmsg{grey} background of \appname's main window) and this
 will load each file into \appname. If you drag and drop a
-\gls{bitmap} it will be equivalent to \hyperref[sec:new]{creating a
-new image} and then \hyperref[sec:bitmaps]{inserting the bitmap}.
+\gls{bitmap} it will be equivalent to \hyperref[sec:newimage]{creating a
+new image} and then \hyperref[sec:insertbitmap]{inserting the bitmap}.
 
-For example, in \figureref{fig:dnda} three \gls{jdr} files and
+For example, in \figureref{fig:dnda} three \gls{JDR} files and
 a PNG file have been selected and then dragged onto \appname's
 desktop, \figureref{fig:dndb}. This results in four child
 windows, \figureref{fig:dndc}, where one of them is a new
@@ -2485,8 +2487,8 @@ make sure you drop onto \appname's desktop. If you drop a file onto a
 text area, such as the preamble pane or the text field used to
 create a new \gls{textarea} then the filename (or URI) will be
 inserted instead. If you drop onto a \gls{canvas}, the file contents
-will be added to the current image (in the case of a \gls{jdr} or
-\gls{ajr} file) or a link will inserted into the current image (in the
+will be added to the current image (in the case of a \gls{JDR} or
+\gls{AJR} file) or a link will inserted into the current image (in the
 case of a \gls{bitmap} file). You can only drop a file onto the
 \gls{canvas} in select mode (and no objects are being distorted or
 edited).
@@ -2495,61 +2497,435 @@ edited).
 
 \menudef{menu.file.recent}
 
+To load a recently used \gls{JDR} or \gls{AJR} file, use the sub
+menu \menu{file.recent}. A maximum of ten files, starting with the
+most recently used are listed. Note that loading a file from this
+list will change the open file chooser directory to that file's
+directory.
 
 \section{Image Description}\label{sec:imagedescription}
 
-TODO
+\menudef{menu.file.image_description}
 
+You can use the \menu{file.image_description} dialog box to give the
+image a description. The description is not visible in the image,
+but is saved as a comment when you export the image to a \LaTeX\
+document (see \sectionref{sec:exportdoc}). If you have the
+\widget{clssettings.pdfinfo} option selected in the
+\widget{clssettings.title} tab of the \dialog{texconfig} dialog box,
+the image description will be added to an exported \LaTeX\ document
+in the \gls{pdfinfo/Title} attribute of the \gls{pdfinfo} argument.
 
 \section{Save and Save As}\label{sec:saveimage}
 
-TODO
+\menudef{menu.file.save}
+\menudef{menu.file.save_as}
+
+You can save the current picture in \appname's native
+\gls{JDR} (binary) or \gls{AJR} (ASCII) format using either
+\menu{file.save} (if it already has a name)
+or \menu{file.save_as} (if you want to specify the
+filename).  I strongly recommend that you save your work frequently.
+There is no auto-save function. The \gls{JDR} format can store
+higher precision values than the \gls{AJR} format.
 
 \section{Export}\label{sec:exportimage}
 
-TODO
+\menudef{menu.file.export}
 
+\begin{warning}
+Note that \appname\ can't load the files that it can export, so I
+strongly recommend that you first save the picture as a
+\gls{JDR} or \gls{AJR} file before exporting it, in case you
+wish to edit it later.
+\end{warning}
+
+The \menu{file.export} menu allows you to export your image. The
+\inlineglsdef{export.title} dialog box provides a way to specify the name
+and location of the file.  The file format for the exported file
+depends on the selected file filter.  A default filename will be
+provided with the same basename as the image (if it has one).
 
 \subsection{Export to PNG}\label{sec:exportpng}
 
-TODO
+Select the \inlineglsdef{filter.png} file filter in the
+\dialog{export} dialog box to export to a PNG file. This export type
+ignores all \LaTeX\ settings. Once you have selected the destination
+\inlineglsdef{ext.png} file, the \inlineglsdef{exportpng.title}
+dialog box will open (see \figureref{fig:exportpngdialog}).
 
+\FloatFig
+  {fig:exportpngdialog}
+  {\includeimg{exportpngdialog}}
+  {Export to PNG Settings}
 
-\subsection{Export to a Class or Package}\label{sec:exportsty}
+Select the \widget{exportpng.usealpha} box if you want a transparent
+background. If the box isn't checked, the background will be white.
 
-TODO
+Select the \widget{exportpng.crop} box if you want the image cropped
+to the image's bounding box. If the box isn't checked, the image
+will be the same size as the paper size. 
 
+Note that all \manmsgpl{colour} will be converted to RGB.
+The resulting PNG image won't include the grid or any annotations
+but will otherwise render as the image shown on the \gls{canvas}.
+
+\subsection{Export to a \LaTeX\ Class or Package}\label{sec:exportsty}
+
+Select the \widget{filter.cls} file filter in the
+\dialog{export} dialog box to export to a \LaTeX\ class
+(\inlineglsdef{ext.cls}) or selected the \widget{filter.sty}
+file filter to export to a \LaTeX\ package (\inlineglsdef{ext.sty}).
+
+The class or package will require the \sty{flowfram} package to
+create the page layout defined by the image through the functions in
+the \menu{tex.flowframe} menu.  The \sty{pgf} package will also be
+required to create borders and backgrounds, where applicable.
+
+Only \glspl{object} that have been identified as static, flow or
+dynamic frames will be exported (see \sectionref{sec:flowframe}).
+This means that you can create additional \glspl{object} for use as
+guidelines and they won't be included in the class or package.
+
+The settings provided in the \dialog{textconfig} configuration
+will be used. If exporting to a class, the provided class will be
+used as a basis (using \gls{LoadClass}). The class setting is
+ignored when exporting to a package.
+
+The early-\hyperref[sec:preamble]{preamble text} is added before the
+start of the package option declarations, which provides a means to
+add extra package options, if required.  The mid-preamble text will
+be placed after the class or packages are loaded and the
+end-preamble text is placed at the end of the class or package.
+
+\begin{important}
+The \hyperref[sec:texconfigpreamble]{default preamble} is not used
+when exporting to a class or package.
+\end{important}
+
+Any occurrences of \gls{usepackage} in the image
+preamble will be converted to \gls{RequirePackage} on export.
+
+\seealsorefs{sec:texconfig,
+sec:preamble,
+sec:flowframe,
+sec:houseexample,
+sec:neuronexample,
+sec:postertutorial,
+sec:newstutorial}
 
 \subsection{Export to PGF}\label{sec:exportpgf}
 
-TODO
+Select the \widget{filter.pgf} file filter in the \dialog{export}
+dialog box to export to a \LaTeX\ file that contains a
+\env{pgfpicture} environment, which can then be included into a
+\LaTeX\ document using \gls{input}.
 
+The start of the file will include comments with
+code between an \csfmt{iffalse} \ldots\ \csfmt{fi} block
+that may be required in your preamble. If necessary, copy that block
+into your document's preamble.
+
+If you want to create a standalone file, complete with a document
+class and document environment, you will need the
+\nameref{sec:exportdoc} function instead.
+
+\seealsorefs{sec:texconfig,
+sec:preamble,
+sec:houseexample,
+sec:neuronexample}
 
 \subsection{Export to Single-Paged Document}\label{sec:exportdoc}
 
-TODO
+To create a standalone \LaTeX\ document (\inlineglsdef{ext.tex}), select
+the \widget{filter.pgfdoc} file filter, which will use the image's
+paper size, or select the \widget{filter.pgfencapdoc} file filter to
+set the page geometry to the image's bounding box.
 
+\begin{information}
+For the encapsulated export function,
+if the bounding box is smaller than the baselineskip, the page
+height is set to the baselineskip, according to the given
+\hyperref[sec:normalsize]{normal size} for the image.
+\end{information}
 
+Alternatively, select the \widget{filter.pdf} file filter to create
+a \inlineglsdef{ext.pdf} file.  This function works by first creating a
+standalone encapsulated \LaTeX\ document in a temporary file and
+then compiling it with \app{pdflatex}. The temporary file (and any
+associated files created in the process) will then be deleted.
+
+If a default preamble has been set (see
+\sectionref{sec:texconfigpreamble}) the code will be included in the
+\ext{tex} file's preamble.  This is in
+addition to the contents of the image's early-, mid- and
+late-\hyperref[sec:preamble]{preamble}. For example, I have set the
+default preamble to:
+\begin{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\end{verbatim}
+If you prefer to use \sty{fontspec}, change the application path for
+\app{pdflatex} to \app{lualatex}.
+
+If your image includes \LaTeX\ commands that require a particular
+package, you will need to add these packages to the
+\hyperref[sec:preamble]{image preamble}. This is done automatically
+by the mapping function, if it has been
+\hyperref[mi:texmappings]{enabled}.  See
+\sectionsref{sec:texconfigtext,sec:preamble} for further details.
+
+\appname\ will automatically add
+\verb|\usepackage{pgf}| to the preamble and other packages such as
+\sty{geometry} and \sty{ifpdf}. It will also add
+\begin{verbatim}
+\usepgflibrary{decorations.text}
+\end{verbatim}
+in case the image contains any \glspl{textpath}.
+
+\begin{warning}
+Changes caused by differences in the way that \appname\ renders
+\glspl{textarea} with the way that \LaTeX\ typesets them
+can cause the image to be clipped if the bounding box
+has been underestimated. If this is a problem, you can switch on
+the \widget{clssettings.use_typeblock_as_bbox}
+option and use the typeblock function to mark your
+preferred bounding box.
+\end{warning}
+
+For example, in \figureref{fig:equation} I have a \gls{textarea} with the
+alternative \LaTeX\ text set to:
+\begin{verbatim}
+$\displaystyle f(\boldsymbol{\Upupsilon}; \eta ) = 
+\frac{1}{2}\eta \sum_k\boldsymbol{\upupsilon}_k\cdot 
+\boldsymbol{\upupsilon}_k$
+\end{verbatim}
+Below this is a \gls{path} for illustrative purposes. When viewed in
+\appname, as shown in \figureref{fig:equationa}, the
+\gls*{textarea} and \gls*{path} are the same widths, but when the
+image is exported to PDF, shown in \figureref{fig:equationb}, the
+equation generated by the alternative text is wider that its
+representation on the \gls{canvas} and has consequently been clipped
+(both the top of the fraction and the right end of the equation)
+because it exceeds the image bounding box that was computed by
+\appname.
+
+In \figureref{fig:equationc}, a rectangle has been
+added to the image. This now extends the image bounding box, so when
+the image is now exported to PDF, as shown in
+\figureref{fig:equationd}, the equation is no longer clipped,
+but the new rectangle is now visible, which may not be desirable.
+
+There are two ways to deal with this. The first is to give the
+rectangle a transparent line \manmsg{colour} (in addition to the
+transparent fill \manmsg{colour}) but now it can only been detected on the
+\gls{canvas} when it's selected. The second method is to set the
+typeblock to the area of that rectangle (see \sectionref{sec:typeblock}).
+The easiest way to do this is to select the rectangle, use the
+\menu{tex.flowframe.set_typeblock} menu item to open the
+\dialog{typeblock} dialog box, and click on the
+\widget{typeblock.compute_from_path} button. Then delete the
+rectangle. The typeblock is now shown as a grey rectangle in
+\figureref{fig:equatione}. Now make sure that the
+\widget{clssettings.use_typeblock_as_bbox}
+setting is on. Redoing the export to PDF now
+produces the image shown in \figureref{fig:equationf}.
+
+\FloatSubFigs{fig:equation}
+{
+ {fig:equationa}{\includeimg[scale=0.7]{equationa}}{},
+ {fig:equationb}{\includeimg[scale=0.7]{equationb}}{},
+ {fig:equationc}{\includeimg[scale=0.7]{equationc}}{},
+ {fig:equationd}{\includeimg[scale=0.7]{equationd}}{},
+ {fig:equatione}{\includeimg[scale=0.7]{equatione}}{},
+ {fig:equationf}{\includeimg[scale=0.7]{equationf}}{}
+}
+[Exported Text Areas Can Overflow Bounding Box]
+{Exported Text Areas Can Overflow Bounding Box:
+\subfigref{fig:equationa} image as shown on canvas;
+\subfigref{fig:equationb} image exported to PDF (equation has been clipped);
+\subfigref{fig:equationc} rectangle added to image;
+\subfigref{fig:equationd} image from \subfigref{fig:equationc} exported to PDF;
+\subfigref{fig:equatione} typeblock added and rectangle removed;
+\subfigref{fig:equationf} image from \subfigref{fig:equatione} exported to PDF.}
+
+If the exported PDF file has unexpected results or fails to be
+created, try exporting to an encapsulated \LaTeX\ document and then
+manually building the document, as the issue may be due to the
+conversion process or it may be due to an unrecognised command or
+syntax error in a \gls{textarea} or \gls{textpath}.
+
+\seealsorefs{sec:texconfig,sec:preamble,sec:fontanchor}
+
+\subsection{Export to SVG or EPS}\label{sec:exportsvgeps}
+
+The export to SVG or EPS functions both work in the same way
+as \hyperref[sec:exportdoc]{exporting to an encapsulating PDF}
+in that a temporary encapsulated \LaTeX\ file is first created.
+
+If the \widget{filter.svg} file filter is chosen, then the temporary
+file will be compiled with \app{latex} followed by
+\app{dvisvgm} to created an  \inlineglsdef{ext.svg} file.
+
+If the \widget{filter.eps} file filter is chosen, then the temporary
+file will be compiled with \app{latex} followed by
+\app{dvips} to created an \inlineglsdef{ext.eps} file.
+
+In either case, if the image contains any
+\glspl{bitmap}, \appname\ will attempt to convert
+them to EPS, where necessary.
+
+\begin{important}
+Note that PostScript does not support transparency.
+\end{important}
+
+As with the export to encapsulated PDF, if the resulting SVG or EPS
+file has unexpected results or fails to be created, try exporting to
+an encapsulated \LaTeX\ document and then manually building the
+document.
+
+\section{Page Setup}\label{sec:pagesetup}
+
+\menudef{menu.file.page}
+
+The \menu{file.page} menu item will open the printer's page
+setup dialog box. This will require a print service to be available.
+The page margins will be shown on the \gls{canvas} if the
+\menu{settings.paper.margins} menu item is selected.
 
 \section{Print}\label{sec:print}
 
-TODO
+\menudef{menu.file.print}
 
+You can print the current image using the \menu{file.print} menu
+item which will open the printer dialog box. If no printer is found,
+the error message \qt{\errmsg{printing.no_service}} will
+be displayed. If this happens, check that the printer is switched
+on and connected to the computer. The print function uses the
+\gls{canvas}['s] \gls{rendering} and \gls{anti-aliasing} settings
+(provided in the \dialog{graphics} configuration) and draws
+the image as it's displayed on the \gls{canvas} (at 100\%
+magnification and without the grid or annotations).
 
 \section{Message Window}\label{sec:messages}
 
-TODO
+\menudef{menu.file.messages}
 
+You can display the \inlineglsdef{message.title} window using the
+\menu{file.messages} item. This usually just lists the
+files that have been opened, saved or exported, but warnings are
+sometimes written there as well. This window is opened during a read
+or write operation. When an external application is spawned, the
+abort button becomes enabled, which you can use to kill the spawned
+process if required.
 
 \section{Close}\label{sec:closeimage}
 
-TODO
+\menudef{menu.file.close}
 
+You can close the current child window, either by clicking on the
+child window's close icon or by selecting \menu{file.close}.
+If there is any unsaved data, \appname\ will ask for confirmation
+before discarding the window (see \figureref{fig:confirmclose1}).
+In this dialog box you can:
+
+\begin{deflist}
+\itemtitle{\includeimg{discard}}
+
+\begin{itemdesc}
+click on the discard button next to the image name to discard the
+image;
+\end{itemdesc}
+
+\itemtitle{\includeimg{save}}
+
+\begin{itemdesc}
+click on the save button next to the image name to save the image;
+\end{itemdesc}
+
+\itemtitle{\includeimg{cancel}}
+
+\begin{itemdesc}
+click on the cancel button at the bottom of the dialog box to cancel
+the close operation.
+\end{itemdesc}
+
+\end{deflist}
+
+\FloatFig
+  {fig:confirmclose1}
+  {\includeimg{confirmclose1}}
+  {Confirm Discard Dialog (1 Modified Image).}
+
+An image will only be marked as unmodified if it has been saved as a
+\gls{JDR} or \gls{AJR} file.  If you have
+\hyperref[sec:exportimage]{exported} your image to another file
+type, I recommend that you also \hyperref[sec:saveimage]{save} it as
+a \gls{JDR} file as well, in case you want to edit it later.
+
+Note that you must finish or discard any \gls{path} that is under
+\hyperref[sec:newobjects]{construction} before you can close
+an image.
 
 \section{Quit}\label{sec:quit}
 
-TODO
+\menudef{menu.file.quit}
 
+To quit \appname\ either use the menu item
+\menu{file.quit} or click on the close icon on the
+main window. All child frames will be closed. If any child frame
+contains unsaved data, you will be asked for confirmation before
+the window is discard. If there is only one modified image, the
+dialog box is as for the \hyperref[sec:closeimage]{close operation} shown in
+\figureref{fig:confirmclose1}, otherwise it's as shown in
+\figureref{fig:confirmclose2}, where each modified file is listed.
+
+\FloatFig
+  {fig:confirmclose2}
+  {\includeimg{confirmclose2}}
+  {Confirm Discard Dialog (2 Modified Images).}
+
+As with the close operation, for each listed file, you can:
+\begin{deflist}
+\itemtitle{\includeimg{save}}
+
+\begin{itemdesc}
+click on the save button next to the image name to save the image;
+\end{itemdesc}
+
+\itemtitle{\includeimg{discard}}
+
+\begin{itemdesc}
+click on the discard button next to the image name to discard the
+image.
+\end{itemdesc}
+
+\end{deflist}
+
+Alternatively you can:
+\begin{deflist}
+\itemtitle{\includeimg{save_all}}
+
+\begin{itemdesc}
+click on the save all button to save all the listed files;
+\end{itemdesc}
+
+\itemtitle{\includeimg{discard_all}}
+
+\begin{itemdesc}
+click on the discard all button to discard all the listed files and
+quit;
+\end{itemdesc}
+
+\itemtitle{\includeimg{cancel}}
+
+\begin{itemdesc}
+click on the cancel button at the bottom of the dialog box to cancel
+the quit operation.
+\end{itemdesc}
+
+\end{deflist}
 
 \chapter{Creating New Objects}\label{sec:newobjects}
 
@@ -2584,6 +2960,8 @@ TODO
 
 
 \chapter{Bitmaps}\label{sec:insertbitmap}
+
+\inlineglsdef{bitmap}
 
 TODO
 
