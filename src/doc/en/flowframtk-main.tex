@@ -14,9 +14,9 @@
 
 \hypersetup{colorlinks,linkcolor=blue}
 
-\newcommand{\appname}{FlowframTk}
+\newcommand{\FlowframTk}{FlowframTk}
 
-\title{User Manual for \appname}
+\title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
 
 \InputIfFileExists{version}{}{}
@@ -37,7 +37,7 @@
 
 \chapter*{Notes}
 
-\appname\ is licensed under the terms of the GNU General Public License
+\FlowframTk\ is licensed under the terms of the GNU General Public License
 (\url{http://gnu.org/licenses/gpl.html"}).
 See \sectionref{sec:licence}.
 
@@ -47,7 +47,7 @@ IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
 PURPOSE OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT
 SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.
 
-This document is a user manual for \appname. For information about
+This document is a user manual for \FlowframTk. For information about
 JDRView or jdrutils, see \filefmt{jdrview.pdf} or
 \filefmt{jdrutils.pdf}, respectively.
 
@@ -57,7 +57,7 @@ JDRView or jdrutils, see \filefmt{jdrview.pdf} or
   }
   {}
 
-The latest version of \appname\ can be downloaded from
+The latest version of \FlowframTk\ can be downloaded from
 \url{https://ctan.org/pkg/flowframtk}.
 Older versions can be downloaded from
 \url{http://www.dickimaw-books.com/software/flowframtk/}.
@@ -72,16 +72,16 @@ redraw, use \accelerator{menu.debug.revalidate}.
 \chapter{Introduction}
 \label{sec:introduction}
 
-\appname\ (formerly \gls{JpgfDraw})
+\FlowframTk\ (formerly \gls{JpgfDraw})
 is a \gls{vectorgraphics} application written in \gls{Java}, with a 
-\gls{gui}.  The main purpose of \appname\ is to generate \LaTeX\ packages or 
+\gls{gui}.  The main purpose of \FlowframTk\ is to generate \LaTeX\ packages or 
 classes that use the \sty{flowfram} package, and to generate
 \sty{pgf} picture drawing code. As a side-effect, it can also be
 used to generate \gls{parshape} and (\sty{shapepar} package) \gls{shapepar} or 
 \gls{Shapepar} specifications. In order to run the application you 
 must have the \gls{jre} installed.
 
-In \appname, you can:
+In \FlowframTk, you can:
 
 \begin{itemize}
   \item construct shapes using line, move and cubic Bézier segments
@@ -109,7 +109,7 @@ In \appname, you can:
 \end{itemize}
 
 Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
-(\sectionref{sec:loadimage}) from \appname's native \gls{JDR}
+(\sectionref{sec:loadimage}) from \FlowframTk's native \gls{JDR}
 (binary) or \gls{AJR} (ASCII) file formats. Additionally, images can be
 exported (\sectionref{sec:exportimage}) as:
 
@@ -138,13 +138,13 @@ The low-level \sty{pgf} basic layer commands are used during
 exports to \LaTeX\ files. These commands aren't particularly easy to
 read but are faster to compile than the higher-level commands that
 require extra processing to parse the syntax and perform additional
-calculations. The primary purpose of \appname\ is to provide a
+calculations. The primary purpose of \FlowframTk\ is to provide a
 graphical interface that can generate complicated code that's hard
 to write manually.
 
-\appname\ was tested with version 3.0.0 of the \sty{pgf}
+\FlowframTk\ was tested with version 3.0.0 of the \sty{pgf}
 package, version 1.16 of the \sty{flowfram} package and version
-2.2 of the \sty{shapepar} package. Files created by \appname\
+2.2 of the \sty{shapepar} package. Files created by \FlowframTk\
 may not work with earlier versions of those packages. Note that some
 DVI viewers may not understand PGF specials. I strongly recommend
 that you read the user manuals for those packages.
@@ -165,7 +165,7 @@ be assumed to mean a~\gls{primaryclick}.
 
 Ensure that you have the \gls{jre} installed.
 This can be downloaded from \url{http://java.sun.com/j2se/}.
-You must ensure that you use at least Java~8, as \appname\
+You must ensure that you use at least Java~8, as \FlowframTk\
 does not work with earlier versions.
 
 To install, download the installer
@@ -184,7 +184,7 @@ able to \gls{doubleclick} on the \ext{jar} file to run it.
 \chapter{Accessibility}
 \label{access}
 
-Most of \appname's mouse functions can be emulated using the
+Most of \FlowframTk's mouse functions can be emulated using the
 keyboard, however note that some systems do not allow applications
 to move the pointer, so keyboard functions that move the pointer are
 not guaranteed to work on every system. Keyboard accelerators and
@@ -209,7 +209,7 @@ clipboard into the text field.
 
 \begin{warning}
 Note that a few of the accelerators previously used by \gls{JpgfDraw} have
-been changed in \appname, as they caused a conflict. For example,
+been changed in \FlowframTk, as they caused a conflict. For example,
 \keys{\keyref{escape}} cancels a displayed menu, so if you use it to
 dismiss a menu while you had a \gls{path} under construction, the
 entire path could be discarded, which is undesirable. Therefore the
@@ -680,13 +680,13 @@ Radial gradient paint start location selectors &
 
 \chapter{Settings}\label{sec:settings}
 
-You can customise the appearance of \appname's main window either
+You can customise the appearance of \FlowframTk's main window either
 using the command line arguments (\sectionref{sec:cmdargs}) or
 using the settings menu (\sectionref{sec:settingsmenu}).
 
 \section{Command Line Arguments}\label{sec:cmdargs}
 
-\appname\ can be invoked from a command prompt. 
+\FlowframTk\ can be invoked from a command prompt. 
 
 \appdef{flowframtk}
 
@@ -705,14 +705,14 @@ Note that the options and the filenames may be omitted.
 Each filename must be either a \gls{JDR} or an \gls{AJR} file.
 The \app{flowframtk} bash script uses the environment variable 
 \inlineglsdef{JDR_JVMOPTS} to pass
-options to the \gls{jvm}.  For example, if you want to run \appname\ with
+options to the \gls{jvm}.  For example, if you want to run \FlowframTk\ with
 a maximum size of 128Mb for the memory allocation pool, you can set
 \gls{JDR_JVMOPTS} to \verb|-Xmx128m|:
 \begin{terminal}
 setenv \gls{JDR_JVMOPTS} -Xmx128m
 \end{terminal}
 The \app{flowframtk} script also uses the environment variable
-\inlineglsdef{FLOWFRAMTK_OPTS} to pass options to \appname.
+\inlineglsdef{FLOWFRAMTK_OPTS} to pass options to \FlowframTk.
 
 \begin{information}
 If you have previously used \gls{JpgfDraw}, the \inlineglsdef{JPGFDRAW_OPTS} 
@@ -720,7 +720,7 @@ environment variable will also be recognised, but any settings in
 \gls{FLOWFRAMTK_OPTS} will override those in \gls{JPGFDRAW_OPTS}.
 \end{information}
 
-For example, if you always want \appname\ to start up with the grid showing,
+For example, if you always want \FlowframTk\ to start up with the grid showing,
  you can set \gls{FLOWFRAMTK_OPTS} to \switch{show_grid}:
 \begin{terminal}
 setenv \gls{FLOWFRAMTK_OPTS} \switch{show_grid}
@@ -734,7 +734,7 @@ use the \app{flowframtk} script to run the \gls{jre}.
 \end{important}
 
 Available command line options are listed below.
-Older versions of \appname\ had switches prefixed with a single
+Older versions of \FlowframTk\ had switches prefixed with a single
 hyphen (such as \shortargfmt{help}). These are still supported for
 backward-compatibility but double-hyphen versions are now provided
 (such as \longargfmt{help}).
@@ -879,9 +879,9 @@ Display version details and exit.
 
 \menudef{menu.settings}
 
-While \appname\ is running, you can change the current settings
+While \FlowframTk\ is running, you can change the current settings
 using the \menu{settings} menu. Most of the settings will be
-remembered next time you use \appname, but may be overridden
+remembered next time you use \FlowframTk, but may be overridden
 either by \hyperref[sec:cmdargs]{command line arguments} or by
 settings specified in any \gls{JDR} or \gls{AJR} file that you load.
 
@@ -1066,12 +1066,12 @@ the mouse on the storage unit area of the \gls{statusbar}.
 
 The \widget{startdir.title} tab
 (\figureref{fig:configdialog-startdir})
-allows you to choose which directory \appname\ should use as the
+allows you to choose which directory \FlowframTk\ should use as the
 current working directory when it starts up. You have a choice of:
 \begin{itemize}
 \item the current working directory that you were in when you started
-up \appname;
-\item the directory you were using when you last used \appname;
+up \FlowframTk;
+\item the directory you were using when you last used \FlowframTk;
 \item a specific directory. In this case, type in the path in the
 \widget{startdir.named} box or use the
 \widget{startdir.browse} button to select the required
@@ -1113,9 +1113,9 @@ magnification setting.
 
 You can use the \widget{initsettings.title} tab
 (\figureref{fig:configdialog-initsettings})
-to choose whether you want \appname\ to start with its
+to choose whether you want \FlowframTk\ to start with its
 default settings, or whether to restore the settings from the last
-time you used \appname, or whether to use the settings that are
+time you used \FlowframTk, or whether to use the settings that are
 currently in use.
 
 If you choose the default settings option, the \emph{\gls{canvas}}
@@ -1130,12 +1130,12 @@ Most of the settings are saved in the file \file{flowframtk.conf} in the
 accelerators, language settings and the recent file list aren't
 governed by the startup setting and are stored in separate files in
 the configuration directory. When you upgrade to a new version of
-\appname, the accelerators are reset to the default and then the
+\FlowframTk, the accelerators are reset to the default and then the
 existing accelerators file is loaded to ensure any new accelerators
-are added. Don't modify these files whilst \appname\ is running.
-You may modify them after you have quit \appname\ using a text
+are added. Don't modify these files whilst \FlowframTk\ is running.
+You may modify them after you have quit \FlowframTk\ using a text
 editor, but make sure you save your changes before restarting
-\appname.
+\FlowframTk.
 
 
 \subsubsection{Bitmaps}\label{sec:bitmapconfig}
@@ -1171,9 +1171,9 @@ your preferred default image command, which may be either
   {Configuration Dialog Box (Application Paths)}
 
 If you export your image to PDF, EPS or SVG (see \sectionref{sec:exportdoc})
-\appname\ will first save the image as an encapsulated \LaTeX\
+\FlowframTk\ will first save the image as an encapsulated \LaTeX\
 document and will then run external applications to create the
-desired file format. In order to do this, \appname\ needs to know
+desired file format. In order to do this, \FlowframTk\ needs to know
 the correct paths to these applications. It will try to find them
 from your system's \gls{PATH} environment variable, but if it
 can't find them you can use the \widget{processes.title} tab
@@ -1202,7 +1202,7 @@ and \sectionref{sec:configureuidialog} covers user interface settings.)
 
 \widgetdef{clssettings.title}
 
-Most of \appname's \TeX\slash\LaTeX\ related functions (including the
+Most of \FlowframTk's \TeX\slash\LaTeX\ related functions (including the
 \hyperref[sec:exportimage]{export function}) require a value
 corresponding to \gls{normalsize} (the \LaTeX\ command that sets the
 \gls{normal-font-size}). A \gls{textarea} needs to know the normal
@@ -1233,7 +1233,7 @@ normal size as 20, your document will need to use one of the
 \end{codebox}
 
 The largest normal size listed is 25pt (the value is actually
-24.88pt, but \appname\ lists it as 25pt) which is for use with the
+24.88pt, but \FlowframTk\ lists it as 25pt) which is for use with the
 \cls{a0poster} class file. Remember that for very large or very
 small fonts, you will need to use scalable fonts in your document to
 prevent font size substitutions.  Available values, along with the
@@ -1291,7 +1291,7 @@ document function as an intermediate step (\sectionref{sec:exportdoc}).
 The \widget{clssettings.relative_fontsize} \gls*{checkbox} governs
 the suggested \LaTeX\ font size command when you change the
 \hyperref[sec:fontsize]{font size setting} for \glspl{textarea}. If
-this \gls*{checkbox} is selected, \appname\ will attempt to select a
+this \gls*{checkbox} is selected, \FlowframTk\ will attempt to select a
 font size declaration, such as \gls{large}, according to the current
 normalsize setting. Otherwise, \gls{setfontsize} will be used. If
 the font size is significantly larger than the largest available
@@ -1350,7 +1350,7 @@ The \sty{shapepar} package now has a command called
 \gls{Shapepar} that behaves slightly differently to
 \gls{shapepar}. Since \gls{Shapepar} works better than
 \gls{shapepar} when used with the \sty{flowfram} package,
-\appname\ defaults to using \gls{Shapepar} for the
+\FlowframTk\ defaults to using \gls{Shapepar} for the
 \gls{menu.tex.shapepar} function or when a
 \hyperref[sec:flowframe]{static or dynamic frame} has the
 shape set to \widget{flowframe.shape_shapepar}. However, if
@@ -1384,10 +1384,10 @@ adjusted.
 
 \widgetdef{textconfig.textualshading}
 
-\appname\ can't implement paint shadings for text when
+\FlowframTk\ can't implement paint shadings for text when
 \hyperref[sec:exportpgf]{exporting} to \sty{pgf}. (This includes the
 export functions that use \app{latex} or \app{pdflatex}, such as
-the export to PDF function.) You can choose how \appname\ should export
+the export to PDF function.) You can choose how \FlowframTk\ should export
 shaded text using the \widget{textconfig.textualshading} dropdown
 box. Available options:
 
@@ -1431,11 +1431,11 @@ functions (without actually changing your image).
 
 \widgetdef{textconfig.textpathoutline}
 
-\appname\ can't implement the text
+\FlowframTk\ can't implement the text
 \hyperref[sec:textoutline]{outline} option for
 \glspl{textpath} when exporting to \sty{pgf}. (Again, this
 includes the export functions that use \app{latex} or \app{pdflatex}.)
-You can choose how \appname\ should export \gls{textpath}
+You can choose how \FlowframTk\ should export \gls{textpath}
 outlines using the \widget{textconfig.textpathoutline}
 dropdown box. Available options:
 
@@ -1467,7 +1467,7 @@ The outline attribute will be ignored.
 
 \iconstartpar{textarea,math}%
 \plabel[TeX Mappings]{mi:texmappings}%
-\appname\ has two tools for creating \glspl{textarea}: the
+\FlowframTk\ has two tools for creating \glspl{textarea}: the
 regular text-mode tool (\menu{tools.textarea}) and the
 \manmsg{maths}-mode tool (\menu{tools.math}). Each \gls{textarea} has an
 associated \LaTeX\ alternative text which, if set, is used
@@ -1524,7 +1524,7 @@ current selection.
 To delete a mapping or mappings, select the appropriate row or rows of the
 mapping table and click on the \widget{textconfig.remove.textmap} button
 to the side of the table.  To restore all the original mappings,
-quit \appname\ and delete or rename the files
+quit \FlowframTk\ and delete or rename the files
 \file{mathmappings.prop} and \file{textmappings.prop} in the
 \gls{config_dir}.
 
@@ -1603,7 +1603,7 @@ For example, in \figureref{fig:symbolLookup}, I've selected the
 \qt{Latin-1 Supplement} block with the mode set to \qt{text}. If I
 then click on the \qt{Search} button at the bottom of the form, this
 will list all the mappings listed in the database that match. To
-import these values into \appname, you first need to download
+import these values into \FlowframTk, you first need to download
 them in the correct format. Set the \qt{Results Format}
 \gls{dropdown} to TSV (\emph{not CSV}) and click on the
 \qt{Search} button. Depending on your browser, this may
@@ -1611,7 +1611,7 @@ automatically save the file \filefmt{symbol-lookup.tsv} in your
 downloads directory\slash folder or it may try to open the file.
 Be careful if it tries to open the file in a spreadsheet application
 as this may change the format to one that's not compatible with
-\appname.
+\FlowframTk.
 
 \FloatFig
   {fig:symbolLookup}
@@ -1625,7 +1625,7 @@ multiple times. For example:
 0000A3  \textsterling   none    text    0
 0000A3  \pounds         none    both    0
 \end{verbatim}
-If you simply import the file into \appname, new mappings will
+If you simply import the file into \FlowframTk, new mappings will
 override the earlier mappings, so in this case the mapping for
 U+A3 will be set to \csfmt{pounds} rather than
 \csfmt{textsterling} so delete any of the mappings you don't want
@@ -1666,7 +1666,7 @@ TSV file.
 
 \begin{warning}
 Note that mappings take up resources and the more mappings you have,
-the longer it will take to startup \appname, so it's best to only
+the longer it will take to startup \FlowframTk, so it's best to only
 add the mappings that you're likely to need. The symbol lookup form
 on the Dickimaw Books website has a maximum limit of 500 for the search
 results. (A smaller limit can be set if required. The default value
@@ -1691,8 +1691,8 @@ class (\ext{cls}) or package (\ext{sty}) functions.
   {Default Preamble Code}
 
 The default preamble code is stored in a file called
-\file{preamble.tex} in \appname's \gls{config_dir}. If you edit this
-file outside of \appname, you'll need to use the reload button to
+\file{preamble.tex} in \FlowframTk's \gls{config_dir}. If you edit this
+file outside of \FlowframTk, you'll need to use the reload button to
 refresh this panel. The other buttons are the same as for the \TeX\
 editor described in \sectionref{sec:texeditorui}.  You can also
 access these button actions through the context menu, which can be
@@ -1822,13 +1822,13 @@ You can use the \widget{lang.title} tab
 to set which language to use for the application
 resources (menus, messages etc) and which language to use for
 the manual. These settings will not be applied until you quit and
-restart \appname.
+restart \FlowframTk.
 
 You can also use the \widget{lang.title} tab to specify the
 Unicode blocks to display in the
 \hyperref[mi:insertsymbol]{symbol selector}. By default, only
 a limited subsection of Unicode characters are available because it
-would significantly slow \appname's startup process to provide
+would significantly slow \FlowframTk's startup process to provide
 all possible characters. To add a new block, \gls{click} on the
 green plus button next to the table. To remove an unwanted block,
 select the appropriate row in the table and \gls{click} on the red minus
@@ -1836,8 +1836,8 @@ button. The start and end values don't need to match a complete
 Unicode block and may span multiple blocks. For example, suppose you
 regularly want to enter musical symbols into your image, then you
 can add a block starting from 1D100 and ending at 1D1DD. You need to
-quit and restart \appname\ for the changes to take effect. If you
-want to restore the defaults, quit \appname, open the file
+quit and restart \FlowframTk\ for the changes to take effect. If you
+want to restore the defaults, quit \FlowframTk, open the file
 \file{flowframtk.conf} in the \gls{config_dir} and remove
 the line starting with \qt{unicode=}.
 
@@ -1910,15 +1910,15 @@ different component if you want to use \keys{\keyref{return}} to activate the
 
 The accelerator settings are written to a file called
 \inlineglsdef{file.accelerators.prop} in the \gls{config_dir} when
-\appname\ quits normally. You may edit this file using your
-preferred text editor to change the settings as long as \appname\
+\FlowframTk\ quits normally. You may edit this file using your
+preferred text editor to change the settings as long as \FlowframTk\
 isn't currently running. For example, if you want to change all the
 keystrokes that require the control key to be pressed to requiring
 the meta key pressed instead, you may find it easier to do a global
 search and replace in \file{accelerators.prop} of \code{ctrl}
 with \code{meta}. If you do edit this file, make sure you only
 edit the values to the right of the \code{=} sign. To restore the
-default accelerators, delete or rename this file (when \appname\
+default accelerators, delete or rename this file (when \FlowframTk\
 isn't running).
 
 \subsubsection{Toolbar, Ruler and Status Bar Settings}\label{sec:rulers}
@@ -1937,7 +1937,7 @@ You can show or hide the \glspl{toolbar} using the
 you can also specify the location of the vertical toolbar.
 
 \iconstartpar{toolbarleft,toolbarright}%
-The vertical toolbar is located on the left of \appname's main
+The vertical toolbar is located on the left of \FlowframTk's main
 window by default, but can be switched to the right by selecting the
 \widget{borders.vtoolbar} \widget{borders.vtoolbar.right} radio
 button. You will need to quit and restart for the change to take
@@ -1988,14 +1988,14 @@ screen at 100\% magnification may not actually measure 1in if you
 hold a ruler up against the screen. This is fairly typical for
 most graphical applications but, if it bothers you, you can
 adjust the horizontal and vertical normalization factors used by
-\appname\ in the \widget{normalize.title} tab
+\FlowframTk\ in the \widget{normalize.title} tab
 (\figureref{fig:normalize}).
 
 If you happen to already know the normalization factors
 for your device, you can enter them in the
 \widget{normalize.norm.x} and
 \widget{normalize.norm.y} fields. If you don't know them,
-\appname\ can compute them for you. To do this, you need to hold
+\FlowframTk\ can compute them for you. To do this, you need to hold
 a ruler against the \widget{normalize.nonorm_horizontal}
 line, enter the measurement in the length field below the line and
 \gls{click} on the \widget{normalize.x_compute_norm} button. This
@@ -2017,7 +2017,7 @@ normalization factors.
   {\includeimg{configureUI-texeditorui}}
   {Configuration UI Dialog Box (TeX Editor Settings)}
 
-\appname\ has small text editor that's opened when you want to
+\FlowframTk\ has small text editor that's opened when you want to
 edit the contents of a static or dynamic frame.
 The font used by this editor can be changed in the
 \widget{texeditorui.title} tab (\figureref{fig:texeditorui}).
@@ -2033,7 +2033,7 @@ The \hyperref[sec:texconfigpreamble]{default preamble} panel
 of the \dialog{texconfig} dialog also
 uses these settings.
 
-In \appname\ version 0.7, this editor window was also used for changing the
+In \FlowframTk\ version 0.7, this editor window was also used for changing the
 preamble text, but as from version~0.8, the preamble editor has been
 switched to a pane attached to the \gls{canvas} that can remain open
 while you're editing the image. This pane uses these settings,
@@ -2064,13 +2064,13 @@ pane. The \widget{lookandfeel.title} tab has a
 \gls{dropdown} with the list of available \gls{look-and-feel}. For
 example, \figureref{fig:lookandfeel} has the \qt{Metal} look and
 feel selected. You can change this to a different \gls{look-and-feel}, but
-you must restart \appname\ for the change to be implemented.
+you must restart \FlowframTk\ for the change to be implemented.
 
 Some example \glspl{look-and-feel} are shown in \figureref{fig:lookandfeelex}.
 Note that the main window's title bar and outer border isn't
 governed by Java's \gls{look-and-feel}, but by the operating
 system's window manager. For example, I've used different window
-themes whilst taking snapshots of \appname\ for this manual,
+themes whilst taking snapshots of \FlowframTk\ for this manual,
 which is why the \manmsg{colour} and format of the title bar for the main
 window and for the dialog boxes vary.
 
@@ -2171,7 +2171,7 @@ dialog windows. For example, \figureref{fig:icontext} shows the
 dialog window from \figureref{fig:graphics} with the
 small icons and trailing text dialog button option.
 
-As with the look and feel setting, you must restart \appname\
+As with the look and feel setting, you must restart \FlowframTk\
 before the changes can be implemented.
 
 \FloatFig
@@ -2183,21 +2183,21 @@ before the changes can be implemented.
 \section{Configuration Directory}\label{sec:configdir}
 
 
-When you quit \appname, the settings will be saved in
-\appname's \inlineglsdef{config_dir}.  This directory is
+When you quit \FlowframTk, the settings will be saved in
+\FlowframTk's \inlineglsdef{config_dir}.  This directory is
 determined (and created if necessary) as follows:
 
 \begin{itemize}
   \item If the environment variable \gls{JDRSETTINGS} exists
         and is a directory, that directory is used.
 
-  \item If \appname\ detects the existence of \gls{JpgfDraw}['s]
+  \item If \FlowframTk\ detects the existence of \gls{JpgfDraw}['s]
         configuration directory, that will be used. If the file
         \file{jpgfdraw.conf} exists in that directory but the file
-        \file{flowframtk.conf} doesn't exist, \appname\ will load the
+        \file{flowframtk.conf} doesn't exist, \FlowframTk\ will load the
         settings from \file{jpgfdraw.conf} and then save the new settings to
         \file{flowframtk.conf}. If you like, after you have quit
-        \appname, you can remove the now unneeded file
+        \FlowframTk, you can remove the now unneeded file
         \file{jpgfdraw.conf} and rename the directory \file{.flowframtk} or
         \file{flowframtk-settings}, as appropriate.
 
@@ -2219,7 +2219,7 @@ determined (and created if necessary) as follows:
         directory is used.
 
   \item If the directory \file{settings/user} or
-        \file{settings} can be created in \appname's
+        \file{settings} can be created in \FlowframTk's
         installation directory, that directory will be used
         (where \meta{user} is the current user's user name). This is
         sub-optimal and not recommended as it may be removed when
@@ -2234,16 +2234,16 @@ determined (and created if necessary) as follows:
 The configuration directory may also contain:
 \begin{itemize}
 \item the list of \hyperref[sec:recentfiles]{recent files}
-(written by \appname\ when it quits normally);
+(written by \FlowframTk\ when it quits normally);
 
 \item the \hyperref[sec:accelerators]{accelerator settings}
 file \file{accelerators.prop}
-(written by \appname\ when it quits normally);
+(written by \FlowframTk\ when it quits normally);
 
 \item the \manmsg{maths}-mode and text-mode
 \hyperref[sec:texconfigtext]{character mapping} files,
 \file{mathmappings.prop} and \file{textmappings.prop}
-(written by \appname\ when it quits normally);
+(written by \FlowframTk\ when it quits normally);
 
 \item the \hyperref[sec:preamble]{preamble} file \file{preamble.tex}
 (created by you, if you want it, in any text editor) used by some of
@@ -2281,20 +2281,20 @@ with filenames of the form \file{imagen.jdr}.
   {\includeimg[width=\linewidth]{jpdwindow}}
   {The Main Window}
 
-\appname\ uses a \gls{mdi}. This means that you can have multiple
+\FlowframTk\ uses a \gls{mdi}. This means that you can have multiple
 images loaded in separate child windows, without having to start up
-new instances of \appname. Most of the buttons and menu items
+new instances of \FlowframTk. Most of the buttons and menu items
 will only be applied to the child window that currently has the
 focus. If there are no child windows, or if they have all been
 minimized, then the relevant buttons and menu items will be disabled.
 The only exceptions are the non-\gls{canvas} specific items.
-The main \appname\ window is shown in \figureref{fig:mainwindow}.
+The main \FlowframTk\ window is shown in \figureref{fig:mainwindow}.
 
 
 \section{The Canvas}\label{sec:thecanvas}
 
 The \inlineglsdef{canvas} is the white area (that may optionally
-have a~grid) in each of \appname's child windows on which you create
+have a~grid) in each of \FlowframTk's child windows on which you create
 your picture. It shares a~child window with the
 \hyperref[sec:thepreamblepane]{preamble editor pane}. The canvas and
 preamble areas are separated by a divider that can be adjusted to
@@ -2339,7 +2339,7 @@ main window, which you can use to create new \glspl{path} and
 appear.
 
 You can show or hide the \gls{toolbar} or change the location of
-the vertical toolbar so that it appears on the right of \appname's
+the vertical toolbar so that it appears on the right of \FlowframTk's
 main window using the \widget{borders.title} tab in the
 \dialog{configui} dialog.
 
@@ -2433,7 +2433,7 @@ You can use the \menu{file} menu to create a
 picture to a supported format (such as a \LaTeX\ file),
 \hyperref[sec:imagedescription]{assign a description} to the
 current picture, \hyperref[sec:print]{print} the
-current picture or \hyperref[sec:quit]{quit} \appname.
+current picture or \hyperref[sec:quit]{quit} \FlowframTk.
 
 \section{New}\label{sec:newimage}
 
@@ -2450,7 +2450,7 @@ a new child window. You can switch between child windows using the
 To load a \gls{JDR} or \gls{AJR} file, select \menu{file.open}.
 If there is already a picture in the current child window, a new
 child window will open to display the file. Note that although
-\appname\ can export to other formats, it can only load
+\FlowframTk\ can export to other formats, it can only load
 \gls{JDR} and \gls{AJR} files. (Although there is an import option
 available in the experimental mode.)
 
@@ -2459,17 +2459,17 @@ the bitmap is no longer in the same location, you will be prompted
 for a new link or you can discard the link. Note that if you
 select a new link, the \LaTeX\ link will also be updated.
 If there is insufficient memory in the \gls{jre} to load a bitmap,
-\appname\ will revert to draft mode for that bitmap.
+\FlowframTk\ will revert to draft mode for that bitmap.
 
 On some systems you may be able to \gls{drag-and-drop} \gls{JDR} or
-\gls{AJR} files from a filer window onto \appname's internal desktop
-(the \manmsg{grey} background of \appname's main window) and this
-will load each file into \appname. If you drag and drop a
+\gls{AJR} files from a filer window onto \FlowframTk's internal desktop
+(the \manmsg{grey} background of \FlowframTk's main window) and this
+will load each file into \FlowframTk. If you drag and drop a
 \gls{bitmap} it will be equivalent to \hyperref[sec:newimage]{creating a
 new image} and then \hyperref[sec:insertbitmap]{inserting the bitmap}.
 
 For example, in \figureref{fig:dnda} three \gls{JDR} files and
-a PNG file have been selected and then dragged onto \appname's
+a PNG file have been selected and then dragged onto \FlowframTk's
 desktop, \figureref{fig:dndb}. This results in four child
 windows, \figureref{fig:dndc}, where one of them is a new
 untitled image with the link to the \gls{bitmap} inserted.
@@ -2480,10 +2480,10 @@ untitled image with the link to the \gls{bitmap} inserted.
   {fig:dndb}{\includeimg{dnd2}}{},
   {fig:dndc}{\includeimg{dnd3}}{}
 }
-{Drag and Drop onto \appname's Internal Desktop}
+{Drag and Drop onto \FlowframTk's Internal Desktop}
 
 If you want to open an image in a new child window using drag and drop,
-make sure you drop onto \appname's desktop. If you drop a file onto a
+make sure you drop onto \FlowframTk's desktop. If you drop a file onto a
 text area, such as the preamble pane or the text field used to
 create a new \gls{textarea} then the filename (or URI) will be
 inserted instead. If you drop onto a \gls{canvas}, the file contents
@@ -2521,7 +2521,7 @@ in the \gls{pdfinfo/Title} attribute of the \gls{pdfinfo} argument.
 \menudef{menu.file.save}
 \menudef{menu.file.save_as}
 
-You can save the current picture in \appname's native
+You can save the current picture in \FlowframTk's native
 \gls{JDR} (binary) or \gls{AJR} (ASCII) format using either
 \menu{file.save} (if it already has a name)
 or \menu{file.save_as} (if you want to specify the
@@ -2534,7 +2534,7 @@ higher precision values than the \gls{AJR} format.
 \menudef{menu.file.export}
 
 \begin{warning}
-Note that \appname\ can't load the files that it can export, so I
+Note that \FlowframTk\ can't load the files that it can export, so I
 strongly recommend that you first save the picture as a
 \gls{JDR} or \gls{AJR} file before exporting it, in case you
 wish to edit it later.
@@ -2676,7 +2676,7 @@ by the mapping function, if it has been
 \hyperref[mi:texmappings]{enabled}.  See
 \sectionsref{sec:texconfigtext,sec:preamble} for further details.
 
-\appname\ will automatically add
+\FlowframTk\ will automatically add
 \verb|\usepackage{pgf}| to the preamble and other packages such as
 \sty{geometry} and \sty{ifpdf}. It will also add
 \begin{verbatim}
@@ -2685,7 +2685,7 @@ by the mapping function, if it has been
 in case the image contains any \glspl{textpath}.
 
 \begin{warning}
-Changes caused by differences in the way that \appname\ renders
+Changes caused by differences in the way that \FlowframTk\ renders
 \glspl{textarea} with the way that \LaTeX\ typesets them
 can cause the image to be clipped if the bounding box
 has been underestimated. If this is a problem, you can switch on
@@ -2702,14 +2702,14 @@ $\displaystyle f(\boldsymbol{\Upupsilon}; \eta ) =
 \boldsymbol{\upupsilon}_k$
 \end{verbatim}
 Below this is a \gls{path} for illustrative purposes. When viewed in
-\appname, as shown in \figureref{fig:equationa}, the
+\FlowframTk, as shown in \figureref{fig:equationa}, the
 \gls*{textarea} and \gls*{path} are the same widths, but when the
 image is exported to PDF, shown in \figureref{fig:equationb}, the
 equation generated by the alternative text is wider that its
 representation on the \gls{canvas} and has consequently been clipped
 (both the top of the fraction and the right end of the equation)
 because it exceeds the image bounding box that was computed by
-\appname.
+\FlowframTk.
 
 In \figureref{fig:equationc}, a rectangle has been
 added to the image. This now extends the image bounding box, so when
@@ -2773,7 +2773,7 @@ file will be compiled with \app{latex} followed by
 \app{dvips} to created an \inlineglsdef{ext.eps} file.
 
 In either case, if the image contains any
-\glspl{bitmap}, \appname\ will attempt to convert
+\glspl{bitmap}, \FlowframTk\ will attempt to convert
 them to EPS, where necessary.
 
 \begin{important}
@@ -2826,7 +2826,7 @@ process if required.
 
 You can close the current child window, either by clicking on the
 child window's close icon or by selecting \menu{file.close}.
-If there is any unsaved data, \appname\ will ask for confirmation
+If there is any unsaved data, \FlowframTk\ will ask for confirmation
 before discarding the window (see \figureref{fig:confirmclose1}).
 In this dialog box you can:
 
@@ -2872,7 +2872,7 @@ an image.
 
 \menudef{menu.file.quit}
 
-To quit \appname\ either use the menu item
+To quit \FlowframTk\ either use the menu item
 \menu{file.quit} or click on the close icon on the
 main window. All child frames will be closed. If any child frame
 contains unsaved data, you will be asked for confirmation before
@@ -2928,6 +2928,30 @@ the quit operation.
 \end{deflist}
 
 \chapter{Creating New Objects}\label{sec:newobjects}
+
+\menudef{menu.tools}
+
+New \glspl{path} and \glspl{textarea} can be created using
+\FlowframTk's \gls{construction}, which can be obtained using any tool
+except the select tool. The tools can be selected using either the
+vertical \gls{toolbar} or the \menu{tools} menu. Once \glspl*{path}
+and \glspl*{textarea} have been created they can then be edited or
+transformed or combined to form a \gls{textpath} object. You can
+also apply patterns to \glspl*{path} or \glspl*{textpath}.
+
+Whilst constructing a \hyperref[sec:lines]{line path}
+or \hyperref[sec:curves]{curve path}, you can:
+
+\iconstartpar{finish.png}%
+Finish the \gls*{path} by pressing the \keys{\keyref{return}} key or by
+\glslink{doubleclick}{double-clicking} (instead of
+single-clicking) on the final vertex or by selecting
+\inlineglsdef{menu.tools.finish} or by clicking on the finish button.
+Note that transferring the focus to another \FlowframTk\ child
+window or selecting a new tool whilst you are constructing a
+\gls{path}, will complete the current path.
+
+
 
 TODO
 
@@ -3461,10 +3485,10 @@ TODO
 \label{sec:licence}
 
 \glsadd{index.licence}%
-\appname\ is licensed under the terms of the 
+\FlowframTk\ is licensed under the terms of the 
 \href{https://www.gnu.org/licenses/gpl-3.0.html}{GNU General
 Public License version 3 (GPLv3)}.
-\appname\ depends on the following third party library whose
+\FlowframTk\ depends on the following third party library whose
 jar file is in the \filefmt{lib} directory:
 \begin{itemize}
    \item TeX Java Help \filefmt{texjavahelplib.jar}
