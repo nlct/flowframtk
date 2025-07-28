@@ -82,9 +82,9 @@ $(LIBDIR)/jdrresources.jar	: jdr classes/$(CLASSTREE)/jdrresources/JDRResources.
 
 $(LIBDIR)/flowframtk.jar	: jdr jdrresources classes/$(CLASSTREE)/flowframtk/FlowframTk.class \
 		  flowframtk/Manifest.txt \
-		  images/splashimage.png \
+		  ../images/splashimage.png \
 		../lib/resources
-		cp -u images/splashimage.png classes/
+		cp -u ../images/splashimage.png classes/
 		cd classes ; \
 		jar cmf ../flowframtk/Manifest.txt \
 	          $(LIBDIR)/flowframtk.jar \
