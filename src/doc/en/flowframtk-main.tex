@@ -2965,7 +2965,7 @@ The \inlineglsdef{gap} or \qt{\gls{move-to}} function is only
 available when constructing an open or closed
 \hyperref[sec:lines]{line path} or \hyperref[sec:curves]{curve
 path}.  Once you have clicked on the vertex where you want the
-\gls{gap} to start, select \menu{menu.tools.gap} or click on the
+\gls{gap} to start, select \menu{tools.gap} or click on the
 \gls{gap} button or press \accelerator{menu.tools.gap}, then click
 on the \gls{canvas} where you want the \gls{gap} to end. The next
 segment will resume according to the tool (line or curve).
@@ -3024,27 +3024,299 @@ click in \gls{construction}.
 
 \section{Line Paths}\label{sec:newlinepath}
 
-TODO
+\menudef{menu.tools.open_line}
+
+To construct an open line \gls{path}, select the open line tool,
+either by clicking on the open line button or by selecting
+\menu{tools.open_line}. You can later close the \gls{path}
+with the \hyperref[sec:editpath]{edit path function}.
+
+\menudef{menu.tools.closed_line}
+
+To construct a closed line \gls{path}, select the closed line tool,
+either by clicking on the closed line button or by selecting
+\menu{tools.closed_line}. You can later open the \gls{path}
+with the \hyperref[sec:editpath]{edit path function}.
+
+Use the \glslink{primaryclick}{primary mouse button} to click on each vertex
+defining the path. To complete the \gls{path}, do one of the following:
+\begin{itemize}
+\item \glslink{doubleclick}{Double-click} instead of single-clicking
+on the final vertex: this performs the combined function of defining
+the vertex and finishing the path. If you use this method, be
+careful not to accidentally create two coincident vertices at the
+end point, or it will cause a problem for any mid or end
+\hyperref[sec:markers]{marker} that you apply.
+
+\item Single-\gls{click} on the final vertex and then
+complete the path by pressing \accelerator{tools.finish} or by
+clicking on the finish button or by selecting
+\menu{tools.finish}.
+\end{itemize}
+If you have used the closed line tool, the path will automatically
+be closed by inserting a line between the end vertex
+and the initial vertex.
+
+\seealsorefs{
+ sec:rectangles,
+ sec:linecolour,
+ sec:fillcolour,
+ sec:linestyle,
+ sec:editpath,
+ sec:houseexample,
+ sec:accesstutorial
+}
 
 \section{Curve Paths}\label{sec:newcurvepath}
 
-TODO
+\menudef{menu.tools.open_curve}
 
+To construct an open curve \gls{path}, select the open curve tool,
+either by clicking on the open curve button or by selecting
+\menu{tools.open_curve}. You can later close the \gls{path}
+with the \hyperref[sec:editpath]{edit path function}.
+
+\menudef{menu.tools.closed_curve}
+
+To construct a closed curve \gls{path}, select the closed curve tool,
+either by clicking on the closed curve button or by selecting
+\menu{tools.closed_curve}. You can later open the \gls{path}
+with the \hyperref[sec:editpath]{edit path function}.
+
+Use the \glslink{primaryclick}{primary mouse button} to click on each vertex in
+the \gls*{path}.  There is no way to specify the location of the
+\glspl{controlpt} defining the curvature of the \gls*{path} whilst the
+\gls*{path} is under construction, however, once the
+\gls*{path} has been completed, it is possible to move these
+\glspl*{controlpt} using the
+\hyperref[sec:editpath]{edit path function}.
+
+To complete the \gls*{path}, do one of the following:
+\begin{itemize}
+\item \glslink{doubleclick}{Double-click} instead of single-clicking
+on the final vertex: this performs the combined function of defining
+the vertex and finishing the path. If you use this method, be
+careful not to accidentally create two coincident vertices at the
+end point, or it will cause a problem for any mid or end
+\hyperref[sec:markers]{marker} that you apply.
+
+\item Single-\gls{click} on the final vertex and then
+complete the path by pressing \accelerator{tools.finish} or by
+clicking on the finish button or by selecting
+\menu{tools.finish}.
+\end{itemize}
+If you have used the closed curve tool, the path will automatically
+be closed by inserting a curve between the end vertex
+and the initial vertex.
+
+\seealsorefs{
+ sec:ellipses,
+ sec:linecolour,
+ sec:fillcolour,
+ sec:linestyle,
+ sec:editpath,
+ sec:neuronexample
+}
 
 \section{Rectangles}\label{sec:rectangles}
 
-TODO
+\menudef{menu.tools.rectangle}
+
+To construct a rectangle, select the rectangle tool either by
+clicking on the rectangle tool button or by selecting
+\menu{tools.rectangle}.
+
+Use the \glslink{primaryclick}{primary mouse button} to click where
+you want the first corner to go, then move (not drag) the mouse to
+the opposite corner, and \gls{click} or press
+\accelerator{menu.tools.finish} to complete the \gls{path}.
+
+Note that this function is just a shortcut to using the
+\gls{menu.tools.closed_line} function. Once the rectangle is
+created, it is simply another closed \gls{path}, and can be edited in
+exactly the same way.
+
+\seealsorefs{
+ sec:lines,
+ sec:linecolour,
+ sec:fillcolour,
+ sec:linestyle,
+ sec:editpath,
+ sec:houseexample,
+ sec:neuronexample
+}
 
 
 \section{Ellipses}\label{sec:ellipses}
 
-TODO
+\menudef{menu.tools.ellipse}
 
+To construct an ellipse, select the ellipse tool either by clicking
+on the ellipse tool button or by selecting
+\menu{tools.ellipse}.
+
+Use the \glslink{primaryclick}{primary mouse button} to click on the
+\manmsg{centre} point of the ellipse, and then move (not drag) the mouse
+until the ellipse has reached the desired dimension, and \gls{click}
+or press \accelerator{menu.tools.finish} to complete the \gls{path}. If you want
+to create a circle, I recommend that you first
+\hyperref[mi:gridlock]{lock} the grid or use the
+\menu{navigate.goto} menu item.
+
+Note that this function is just a shortcut to using the
+\gls{menu.tools.closed_curve} function. Once the ellipse is
+created, it is simply another closed \gls{path}, and can be edited in
+exactly the same way.
+
+\seealsorefs{
+ sec:curves,
+ sec:linecolour,
+ sec:fillcolour,
+ sec:linestyle,
+ sec:editpath,
+ sec:cheeseexample
+}
 
 \section{Text}\label{sec:newtext}
 
-TODO
+\Glspl{textarea} can be created to annotate images. Each
+\gls*{textarea} has text that's displayed on the \gls{canvas} but
+may have alternative text to use when
+\hyperref[sec:exportimage]{exporting} to a \LaTeX\ file. (This includes
+the export functions that create a temporary \LaTeX\ file, such as
+the export to PDF function.) There are two tools to create a
+\gls*{textarea}: the text tool and the \manmsg{maths} tool. These
+affect the default alternative text for the new \gls*{textarea} in
+different ways. You can later \hyperref[sec:edittext]{edit the
+alternative text}, if the default isn't suitable.
 
+Line breaks are not supported in \gls{textarea}. If you are using
+the \hyperref[sec:flowframe]{flowframe} functions, you can create a
+static frame and provide multi-lined text for the frame content.
+
+\menudef{menu.tools.textarea}
+
+The text tool can be selected either by clicking on the
+\gls{menu.tools.textarea} tool button or by selecting \menu{tools.textarea}.
+
+If \widget{textconfig.escape} is enabled, the alternative text will be set
+to the original supplied text with any identified characters
+substituted according to the \widget{textconfig.textmode} settings.
+
+\menudef{menu.tools.math}
+
+The \manmsg{maths} tool can be selected either by clicking on the
+\gls{menu.tools.math} tool button or by selecting \menu{tools.math}.
+
+If \widget{textconfig.escape.mathchar} is enabled, the alternative text will be set
+to the original supplied text with any identified characters
+substituted according to the \widget{textconfig.textmode} settings.
+
+After any substitutions on the alternative have been performed, 
+the \gls{mshift} character will be added to the start and end
+of the alternative text.
+
+
+With either the text or \manmsg{maths} tool,
+once you have selected the required tool, click with the
+\glslink{primaryclick}{primary mouse button} at the position where
+you want the text to start. This will produce a shaded area with a
+cursor in which you can type no more than a single line of text
+(\figureref{fig:textareafield}).
+Clicking inside this shaded area will move the cursor around the
+text area under construction.
+
+\FloatFig
+  {fig:textareafield}
+  {\includeimg{textareafield}}
+  {Text Area Construction Field}
+
+When you want to complete a \gls{textarea}, press
+\accelerator{menu.tools.finish} (which will start a new
+\gls{textarea} on the line below) or click anywhere on the canvas
+outside of the current text area (which will start a new
+\gls{textarea} at the new location) or use the
+\gls{menu.tools.finish} button or \menu{tools.finish}.  Selecting
+another tool whilst a \gls{textarea} is under construction will
+finish the current \gls{textarea}, unless you're switching between
+the text and \manmsg{maths} tools.  (If you do switch between the
+text and \manmsg{maths} tools, the alternative \LaTeX\ text is only
+created when you finish the \gls*{textarea}, so the mappings applied
+will be governed by the tool currently selected when you completed
+the \gls*{textarea}.) An empty \gls{textarea} will be discarded.
+
+If a mapping is performed that has an associated package, then the
+package will be automatically add to the image's
+\hyperref[sec:preamble]{early-preamble}. The mapping function will
+first search the early-preamble code to check if the package is
+already present, but it doesn't check the mid- or late-preamble code
+or the code in the \hyperref[sec:texconfigpreamble]{default
+preamble}.
+
+Once a \gls{textarea} has been completed, the only way to edit it is via the
+\hyperref[sec:edittext]{edit text function}. If you click the
+mouse on the location of a completed text area (while the
+text\slash\manmsg{maths} tool is selected) you will simply create a new
+overlapping \gls*{textarea}.
+
+If your operating system supports \gls{drag-and-drop}, you can
+also \gls{drag-and-drop} text onto the \gls{canvas}. If the drop point is
+inside the \gls{textarea} construction field, the dropped text will be
+inserted into the field (newline characters will be converted to
+spaces). If the drop point is outside the \gls{textarea} construction
+field, a new text area will be created for each line of dropped
+text. The mapping applied to the dropped text will be according to
+the currently selected text tool.  If text is dropped onto the
+\gls{canvas} in select mode, the text mappings (not \manmsg{maths}
+mappings) will be applied. If a file is
+dropped onto the \gls{canvas} in text- or \manmsg{maths}-mode, the file
+path (or URI) will be added as a new \gls{textarea}.
+
+\figureref{fig:dndtext} illustrates \gls{drag-and-drop} to create new
+\glspl{textarea}.
+In \figureref{fig:dndtexta} I have four lines of
+text selected in a text editor. The second line simply contains two
+space characters (which aren't visible). These four lines of text
+are then dragged onto the \gls{canvas},
+\figureref{fig:dndtextb}, and dropped. The drop location (the
+location of the pointer when the mouse button was released) is
+directly on the canvas, not on the \gls{textarea} construction field (which
+currently isn't visible). This creates three new \glspl*{textarea},
+\figureref{fig:dndtextc}.
+The line solely consisting of white space hasn't created a 
+\gls{textarea} but has contributed to the vertical offset of the following
+\gls{textarea}. In \figureref{fig:dndtextd}, the same three lines of
+text are dragged onto the \gls{textarea} construction field and dropped
+at the cursor, \figureref{fig:dndtexte}. This has inserted the
+dropped text into the \gls{textarea} construction field. The new line
+characters have been converted to spaces and the \gls{textarea}
+construction field is awaiting further input.
+
+\FloatSubFigs{fig:dndtext}
+{
+ {fig:dndtexta}{\includeimg[height=0.2\textheight]{dndtext1}}{},
+ {fig:dndtextb}{\includeimg[height=0.2\textheight]{dndtext2}}{},
+ {fig:dndtextc}{\includeimg[height=0.2\textheight]{dndtext3}}{},
+ {fig:dndtextd}{\includeimg[height=0.2\textheight]{dndtext4}}{},
+ {fig:dndtexte}{\includeimg[height=0.2\textheight]{dndtext5}}{}
+}
+[Drag and Drop Text]
+{Drag and Drop Text: \subfigref{a} drag initiated on some
+selected text in another application; \subfigref{b} selected text
+dragged onto canvas; \subfigref{c} the text that was dropped onto
+the canvas in \subfigref{b} has been converted into two text areas;
+\subfigref{d}
+the selected text from \subfigref{a} is now dragged onto the text
+area construction field; \subfigref{e} the dropped text has been
+inserted into the construction field.}
+
+Whilst a text area is under construction, you can activate the
+\menu{selectedtext} \dgls{popupmenu}, illustrated in \figureref{fig:textpopup},
+with a \gls{menuclick} (or use the context-menu key).
+
+
+
+TODO
 
 \chapter{Bitmaps}\label{sec:insertbitmap}
 
