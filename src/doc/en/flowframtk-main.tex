@@ -977,16 +977,17 @@ settings or you can specify an arbitrary setting.
 
 \menudef{menu.settings.zoom.user}
 
-The \menu{settings.zoom.user} menu item will open a dialog box in
+The \menu{settings.zoom.user} menu item will open 
+the \inlineglsdef{zoom.title} dialog box in
 which to specify an arbitrary magnification.  The magnification
 value may be entered as either a percentage or a decimal value. For
 example, either 150\% or 1.5 to zoom by a factor of 1.5.  You can
-also change the magnification using the zoom function in the status
-bar. \Gls{click} on the decrease button \includeimg{zoomdown} to
+also change the magnification using the zoom function in the 
+\gls{statusbar}. \Gls{click} on the decrease button \includeimg{zoomdown} to
 reduce the magnification or on the increase button
 \includeimg{zoomup} to increase the magnification, according to the
 list of preset values.  Alternatively, you can \gls{doubleclick} to
-open the zoom dialog box or \gls{menuclick} on the percentage value
+open the \dialog{zoom} dialog box or \gls{menuclick} on the percentage value
 to open a~popup menu.
 
 
@@ -2027,7 +2028,7 @@ selected, you can also set the \manmsg{colour} used for comments
 (indicated by \TeX's \glssymbol{percent} comment character) or for commands. The
 editor currently doesn't have any spell-checking support.
 The \hyperref[sec:texconfigpreamble]{default preamble} panel
-of the \widget{texconfig.title} dialog also
+of the \dialog{texconfig} dialog also
 uses these settings.
 
 In \appname\ version 0.7, this editor window was also used for changing the
@@ -2273,8 +2274,6 @@ with filenames of the form \file{imagen.jdr}.
 
 \chapter{The Basics}\label{sec:thebasics}
 
-The main \appname\ window is shown in \figureref{fig:mainwindow}.
-
 \FloatFig
   {fig:mainwindow}
   {\includeimg[width=\linewidth]{jpdwindow}}
@@ -2287,6 +2286,7 @@ will only be applied to the child window that currently has the
 focus. If there are no child windows, or if they have all been
 minimized, then the relevant buttons and menu items will be disabled.
 The only exceptions are the non-\gls{canvas} specific items.
+The main \appname\ window is shown in \figureref{fig:mainwindow}.
 
 
 \section{The Canvas}\label{sec:thecanvas}
@@ -2339,7 +2339,7 @@ appear.
 You can show or hide the \gls{toolbar} or change the location of
 the vertical toolbar so that it appears on the right of \appname's
 main window using the \widget{borders.title} tab in the
-\widget{configui.title} dialog.
+\dialog{configui} dialog.
 
 The \hyperref[sec:thepreamblepane]{preamble pane} has its own
 toolbar with buttons to edit the preamble text.
@@ -2355,7 +2355,7 @@ using the \menu{settings.grid.settings} menu item.
 
 You can show or hide the \glspl*{ruler} using the menu item
 \menu{settings.rulers}.  You can adjust their size and number format
-using the \widget{borders.title} tab in the \widget{configui.title}
+using the \widget{borders.title} tab in the \dialog{configui}
 dialog box. When the rulers are visible, the grid unit is displayed
 in the corner between the rulers. You can \gls{doubleclick} on this
 corner to open the grid settings dialog.
@@ -2374,8 +2374,7 @@ the bottom of the main window. This has the following elements:
 
 \item The current position of the pointer (or the pointer's last
 position before it was moved away from the \gls{canvas}). You can
-\gls{doubleclick} on this area to open the
-\widget{goto.title} dialog.
+\gls{doubleclick} on this area to open the \dialog{goto} dialog.
 
 \item The \hyperref[sec:controlsettings]{storage unit}. You
 can \gls{doubleclick} on this to open the storage unit selector.
@@ -2386,14 +2385,16 @@ will be blank.
 
 \item The grid lock indicator. This shows if the grid lock is on
 \includeimg{key} or off \includeimg{keycross}. You can
-\gls{doubleclick} on this area to toggle the grid lock setting.
+\gls{doubleclick} on this area to toggle the grid lock setting as an
+alternative to using the \menu{settings.grid.lock} menu item or
+button.
 
 \item The current magnification. You can adjust this value by
 \glslink{click}{clicking} on the plus or minus icons to move up or
 down the pre-defined list of zoom settings. Alternatively, in the area
 between them where the magnification value is displayed, you can
 \gls{menuclick} to popup a~menu or \gls{doubleclick} to open the
-magnification settings dialog.
+\dialog{zoom} dialog.
 
 \item A help button \includeimg{statushelp} that you can \gls{click} on
 to open the manual at the section related to the current operation.
@@ -2409,31 +2410,90 @@ full message (\figureref{fig:information}).
 
 \FloatFig
   {fig:information}
-  {\includeimg[width=0.5\linewidth]{informationDialog}}
+  {\includeimg{informationDialog}}
   {The Information Dialog}
 
 You can show or hide the \gls*{statusbar}, or elements within the
-bar, using the \widget{configui.title} dialog. You can also use this
+bar, using the \dialog{configui} dialog. You can also use this
 dialog to change the font used in the \gls*{statusbar}.
 
 
 \chapter{The File Menu}\label{sec:filemenu}
 
-TODO
+\menudef{menu.file}
 
+You can use the \menu{file} menu to create a
+\hyperref[sec:newimage]{new} picture,
+\hyperref[sec:loadimage]{load} a picture from a
+\gls{jdr} or \gls{ajr} file,
+\hyperref[sec:save]{save} the current picture,
+\hyperref[sec:exportimage]{export} the current
+picture to a supported format (such as a \LaTeX\ file),
+\hyperref[sec:imagedescription]{assign a description} to the
+current picture, \hyperref[sec:print]{print} the
+current picture or \hyperref[sec:quit]{quit} \appname.
 
 \section{New}\label{sec:newimage}
 
-TODO
+\menudef{menu.file.new}
 
+To start a new picture, select \menu{file.new}. This will open
+a new child window. You can switch between child windows using the
+\menu{window} menu.
 
 \section{Open}\label{sec:loadimage}
 
-TODO
+\menudef{menu.file.open}
+
+To load a \gls{jdr} or \gls{ajr} file, select \menu{file.open}.
+If there is already a picture in the current child window, a new
+child window will open to display the file. Note that although
+\appname\ can export to other formats, it can only load
+\gls{jdr} and \gls{ajr} files. (Although there is an import option
+available in the experimental mode.)
+
+If you load an image that contains a link to a \gls{bitmap} and
+the bitmap is no longer in the same location, you will be prompted
+for a new link or you can discard the link. Note that if you
+select a new link, the \LaTeX\ link will also be updated.
+If there is insufficient memory in the \gls{jre} to load a bitmap,
+\appname\ will revert to draft mode for that bitmap.
+
+On some systems you may be able to \gls{drag-and-drop} \gls{jdr} or
+\gls{ajr} files from a filer window onto \appname's internal desktop
+(the \manmsg{grey} background of \appname's main window) and this
+will load each file into \appname. If you drag and drop a
+\gls{bitmap} it will be equivalent to \hyperref[sec:new]{creating a
+new image} and then \hyperref[sec:bitmaps]{inserting the bitmap}.
+
+For example, in \figureref{fig:dnda} three \gls{jdr} files and
+a PNG file have been selected and then dragged onto \appname's
+desktop, \figureref{fig:dndb}. This results in four child
+windows, \figureref{fig:dndc}, where one of them is a new
+untitled image with the link to the \gls{bitmap} inserted.
+
+\FloatSubFigs{fig:dnd}
+{
+  {fig:dnda}{\includeimg{dnd1}}{},
+  {fig:dndb}{\includeimg{dnd2}}{},
+  {fig:dndc}{\includeimg{dnd3}}{}
+}
+{Drag and Drop onto \appname's Internal Desktop}
+
+If you want to open an image in a new child window using drag and drop,
+make sure you drop onto \appname's desktop. If you drop a file onto a
+text area, such as the preamble pane or the text field used to
+create a new \gls{textarea} then the filename (or URI) will be
+inserted instead. If you drop onto a \gls{canvas}, the file contents
+will be added to the current image (in the case of a \gls{jdr} or
+\gls{ajr} file) or a link will inserted into the current image (in the
+case of a \gls{bitmap} file). You can only drop a file onto the
+\gls{canvas} in select mode (and no objects are being distorted or
+edited).
 
 \section{Recent Files}\label{sec:recentfiles}
 
-TODO
+\menudef{menu.file.recent}
 
 
 \section{Image Description}\label{sec:imagedescription}
@@ -2980,17 +3040,12 @@ TODO
 
 \menudef{menu.help.about}
 
-The \menu{help.about} menu item shows the
-\InlineMsgDef
- [\appname]
- {about.title}
+The \menu{help.about} menu item shows the \inlineglsdef{about.title}
 dialog with version details.
 
 \menudef{menu.help.license}
 
-The \menu{help.license} menu item shows the
-\InlineMsgDef
- {license.title}
+The \menu{help.license} menu item shows the \inlineglsdef{license.title}
 dialog (see \sectionref{sec:licence}).
 
 \input{helpinterface}
