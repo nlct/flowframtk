@@ -17,6 +17,8 @@
 \newcommand{\FlowframTk}{FlowframTk}
 \newcommand{\texttool}{\gls{menu.tools.textarea} tool}
 \newcommand{\mathstool}{\gls{menu.tools.math} tool}
+\newcommand{\textmode}{\glslink{menu.tools.textarea}{text-mode}}
+\newcommand{\mathsmode}{\glslink{menu.tools.math}{\manmsg{maths}-mode}}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -1497,7 +1499,7 @@ default. However there are other mappings of \manmsg{maths}-related Unicode
 characters and these are listed in the table shown in the
 \widget{textconfig.mathmode} tab (see
 \figureref{fig:configdialog-mathsettings}). If you don't want
-\manmsg{maths} mappings applied, deselect the
+\mathsmode\ mappings applied, deselect the
 \widget{textconfig.escape.mathchar} \gls*{checkbox}.
 
 \FloatFig
@@ -1507,13 +1509,13 @@ characters and these are listed in the table shown in the
 
 The mapping tables can be sorted by \glslink{click}{clicking} on
 their column headers. You can add, delete or modify any of these
-text-mode or \manmsg{maths}-mode mappings. Any mapping that ends with a control
+\textmode\ or \mathsmode\ mappings. Any mapping that ends with a control
 word (a backslash followed by one or more letters) should
 usually be followed by a space or \verb|{}| to prevent it from
 running into any subsequent letter when the mapping is applied. For
-text-mode mappings, \verb|{}| is better in case the command is
+\textmode\ mappings, \verb|{}| is better in case the command is
 followed by an intended space, although this may depend on the
-command definition. For \manmsg{maths}-mode mappings it's better
+command definition. For \mathsmode\ mappings it's better
 to follow the control word with a space.
 
 One or more rows in a mapping table can be selected with the mouse.
@@ -1592,8 +1594,8 @@ You can find extra mappings using the Symbol Lookup page at
 \url{http://www.dickimaw-books.com/latex/symbol-lookup.php} which
 has a web form you can use to look up mappings in the database.  If
 the mapping ends with a control word the import function will
-automatically append a space for \manmsg{maths}-mode or
-\verb|{}| for text-mode, unless the Unicode character type is one
+automatically append a space for \mathsmode\ or
+\verb|{}| for \textmode, unless the Unicode character type is one
 of: combining spacing mark, connector punctuation, modifier symbol
 or modifier letter, in which case just a space is appended.
 (This adjustment isn't done for the edit mapping or
@@ -1661,7 +1663,7 @@ the option to set the required font. For example
 Once all these modifications have been made, the file can then be
 imported by clicking on the import button in the appropriate mapping
 pane. In this case, I have fetched mappings that are valid in
-text-mode, so I need to select the \widget{textconfig.textmode} tab
+\textmode, so I need to select the \widget{textconfig.textmode} tab
 and then click on the import button to the right of the mapping
 table. This will open a file chooser which I can use to select the
 TSV file.
@@ -2242,7 +2244,7 @@ The configuration directory may also contain:
 file \file{accelerators.prop}
 (written by \FlowframTk\ when it quits normally);
 
-\item the \manmsg{maths}-mode and text-mode
+\item the \mathsmode\ and \textmode\
 \hyperref[sec:texconfigtext]{character mapping} files,
 \file{mathmappings.prop} and \file{textmappings.prop}
 (written by \FlowframTk\ when it quits normally);
@@ -3219,7 +3221,7 @@ the \gls{mshift} character will be added to the start and end
 of the alternative text.
 
 
-With either the text or \manmsg{maths} tool,
+With either the \texttool\ or the \mathstool,
 once you have selected the required tool, click with the
 \glslink{primaryclick}{primary mouse button} at the position where
 you want the text to start. This will produce a shaded area with a
@@ -3241,7 +3243,7 @@ outside of the current text area (which will start a new
 \gls{menu.tools.finish} button or \menu{tools.finish}.  Selecting
 another tool whilst a \gls{textarea} is under construction will
 finish the current \gls{textarea}, unless you're switching between
-the text and \manmsg{maths} tools.  (If you do switch between the
+the \texttool\ and \mathstool.  (If you do switch between the
 text and \manmsg{maths} tools, the alternative \LaTeX\ text is only
 created when you finish the \gls*{textarea}, so the mappings applied
 will be governed by the tool currently selected when you completed
@@ -3549,8 +3551,141 @@ Currently undocumented.
 
 \chapter{Selecting and Editing Objects}\label{sec:selectobjects}
 
-TODO
+\menudef{menu.tools.select}
 
+In order to edit an \gls{object}, you must be in select mode. To do
+this either click on the \gls{menu.tools.select} button or use the 
+\menu{tools.select} menu item. An \gls*{object} can
+be selected using any of the following methods:
+\begin{itemize}
+\item Click on it with the \glslink{primaryclick}{primary mouse button}.
+
+\item \Gls{doubleclick} the primary mouse button to
+select the \gls*{object} behind the current \gls*{object}.
+
+\item Use Control-click (i.e.\ \gls{click} whilst holding down the control
+\keys{\keyref{ctrl}} key) if you want to add an \gls*{object} to the current
+selection.
+
+\item \Gls{click} on an empty part of the \gls{canvas} and
+drag. A dashed rectangle will appear. When you release the mouse
+button, any \glspl*{object} within that
+region will be selected. (If you have the shift \keys{\keyref{shift}} key depressed,
+only those objects which are completely inside the dashed
+rectangle will be selected, but make sure you release the mouse
+button before releasing the shift key.)
+
+\item Use the \menu{navigate} menu (see \sectionref{sec:navigate}).
+
+\item Use \menu{edit.select_all} to select all
+\glspl{object}.
+\end{itemize}
+
+When an \gls{object} is selected, a dashed red\slash\manmsg{grey} rectangle will
+be displayed around it. (This rectangle may optionally have
+\hyperref[mi:hotspots]{hotspot} regions.) Note that
+individual elements of a \gls{group} can not be selected
+independently of the group.  When you select a group, you will only
+see a dashed red\slash\manmsg{grey} rectangle around the \gls{bbox} of the group,
+not around the individual elements of the group.
+
+To deselect an individual \gls*{object}, click on that object whilst
+depressing the shift key. To deselect all \glspl*{object}, click on
+an empty part of the \gls{canvas}, or use \menu{edit.deselect_all}.
+Selecting another tool will also deselect all \glspl*{object}.
+
+In select mode, you can also \gls{menuclick} to activate the
+selection \gls{popup}. The contents of this menu vary according to
+what types of \glspl*{object} have been selected, if any (see
+\figureref{fig:selectpopups}).
+
+\FloatSubFigs{fig:selectpopups}
+{%
+  {fig:selectpopups.none}{\includeimg{selectPopupNone}}{no objects},
+  {fig:selectpopups.textpath}{\includeimg{selectPopupTextPath}}
+    {only text-paths},
+  {fig:selectpopups.path}{\includeimg{selectPopupPath}}{only paths},
+  {fig:selectpopups.text}{\includeimg{selectPopupText}}{only \glspl{textarea}},
+  {fig:selectpopups.bitmap}{\includeimg{selectPopupBitmap}}{only \glspl{bitmap}},
+  {fig:selectpopups.other}{\includeimg{selectPopupOther}}{groups or mixture}
+}
+{Popup Menus in Select Mode Depend on What Objects Have Been Selected}
+
+In select mode you can \gls{drag-and-drop} \gls{JDR} or \gls{AJR}
+files onto the \gls{canvas} (provided your operating system supports
+drag and drop) which will add all the objects from those files to
+the current image. The new objects will be added to the current
+selection. You can't drag and drop if a shape is being edited or
+distorted.
+
+If text is dropped onto the \gls{canvas} in select mode, the text
+mappings (not \manmsg{maths} mappings) will be applied. If a file is
+dropped onto the \gls{canvas} in \textmode\ or \mathsmode, instead of
+in select mode, the file path (or URI) will be added as a new \gls{textarea}.
+
+
+\section{Navigation Menu}\label{sec:navigate}
+
+\menudef{menu.navigate}
+
+The \menu{navigate} menu provides a way to navigate around the
+\gls{canvas} and can help to select \glspl{object}
+in a cluttered image.
+
+\menudef{menu.navigate.goto}
+
+The \menu{navigate.goto} menu item opens the
+\inlineglsdef{goto.title} dialog in
+which you can enter $x$ and $y$ coordinates. If your system allows
+applications to move the cursor, the cursor will be moved to the
+entered co-ordinates (scrolling the \gls{canvas} if necessary).
+
+\menudef{menu.navigate.select}
+
+The \menu{navigate.select} menu item 
+selects the next object in the \gls{stack}. (Starting from the
+\gls{front} and heading towards the \gls{back}.) This will cycle back to
+the start when it reaches the end of the \gls{stack}.
+
+\menudef{menu.navigate.skip}
+
+The \menu{navigate.skip} menu item will deselect the
+selected object closest to the \gls{back}, and select
+the next object in the \gls{stack} (heading towards the \gls{back}). This
+will cycle back to the start when it reaches the end of the stack.
+If you have more than one \gls{object} selected, the remaining
+\glspl*{object} will stay selected.
+
+\menudef{menu.navigate.add_next}
+
+The \menu{navigate.add_next} menu item will add
+the next object in the \gls{stack} to the selection (starting from
+the \gls{front} and heading towards the \gls{back}). This will cycle back to
+the start when it reaches the end of the stack.
+
+\menudef{menu.navigate.find}
+
+If an \gls{object} is already selected, the \menu{navigate.find}
+menu item will scroll the \gls{canvas} to ensure the \gls{object} is
+in the viewport. If your system allows applications to move the
+cursor, the cursor will be moved to the top left corner of the
+\gls{object}['s] bounding box.
+
+\menudef{menu.navigate.by_description}
+
+The \menu{navigate.by_description} menu item will open the
+\dialog{description} dialog box. This has all the \glspl{object}
+listed by their description.  If a description hasn't been set, a
+generic description is used.  Select the required description and
+click \btn{okay} to select the corresponding \gls{object} (and
+deselect any currently selected \gls{object}).
+
+\menudef{menu.navigate.add_description}
+
+The \menu{navigate.add_description} menu item is similar to 
+\menu{navigate.by_description} but will select the \gls{object}
+without deselecting any other \glspl{object} that are already
+selected.
 
 \section{Moving an Object}\label{sec:moveobjects}
 
