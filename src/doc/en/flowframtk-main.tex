@@ -2964,7 +2964,7 @@ Cancel the current \gls{path} by pressing the
 
 The \inlineglsdef{gap} or \qt{\gls{move-to}} function is only
 available when constructing an open or closed
-\hyperref[sec:lines]{line path} or \hyperref[sec:curves]{curve
+\hyperref[sec:newlinepath]{line path} or \hyperref[sec:newcurvepath]{curve
 path}.  Once you have clicked on the vertex where you want the
 \gls{gap} to start, select \menu{tools.gap} or click on the
 \gls{gap} button or press \accelerator{menu.tools.gap}, then click
@@ -3326,9 +3326,99 @@ system, the \accelerator{context_menu} \gls{context-menu} key.
   {\includeimg{textpopup}}
   {Text Area Popup Menu}
 
+\menudef{menu.textarea.copy}
 
+The \menu{textarea.copy} menu item copies to the clipboard any text within 
+the text construction field that has been selected.
 
-TODO
+\menudef{menu.textarea.cut}
+
+The \menu{textarea.cut} menu item cuts to the clipboard any text within 
+the text construction field that has been selected.
+
+\menudef{menu.textarea.paste}
+
+The \menu{textarea.paste} menu item pastes text from the
+clipboard to the cursor position in the text construction field.
+
+\menudef{menu.textarea.select_all}
+
+The \menu{textarea.select_all} menu item selects all text in 
+the text construction field.
+
+\menudef{menu.textarea.insert_symbol}
+
+The \menu{textarea.insert_symbol} menu item 
+opens the \dialog{symbolselector} dialog  if you want to
+enter a symbol that doesn't appear on your keyboard. 
+
+\plabel[Insert Symbol Dialog Box]{mi:insertsymbol}%
+\widgetdef{symbolselector.title}
+
+\FloatFig
+  {fig:insertsymbol}
+  {\includeimg[width=\linewidth]{annoteInsertSymbol}}
+  {Insert Symbol Dialog Box}
+
+The \dialog{symbolselector} dialog box (see \figureref{fig:insertsymbol})
+has a field at the top which contains the text currently in the text
+area. If you know the hexadecimal Unicode value for the character
+you want to insert, you can type the number into the
+\widget{symbolselector.unicode} box and press the
+\includeimg{insertAtCaret} \widget{symbolselector.insertAtCaret} button to
+insert it into the text field at the caret. 
+
+On the right hand panel below the \widget{symbolselector.unicode} field
+there is an enlarged image of the selected character. If there's an
+associated mapping it will be displayed below the image
+(see \figureref{fig:insertsymbol}), but remember that this mapping
+may change if you switch between the \texttool\ and \mathstool\ before
+completing the \gls{textarea}.
+
+Alternatively, you can use the button panels on the left to
+select the character you want to insert into the text field. Use the
+left hand list to display the require Unicode block and either click
+on the button with the required character on it to insert and
+display the symbol or hold the shift key down while you click to
+just display the symbol in the right hand panel without inserting it
+into the text field. The available Unicode blocks and symbols are govern by the
+\widget{lang.title} tab in the \dialog{configui} dialog.
+
+Once the \gls{textarea} has been finished (by clicking on the
+\gls{menu.tools.finish} button or by pressing
+\accelerator{menu.tools.finish} or by switching to a non-text
+tool) any packages that are required by the mappings will be added
+to the \hyperref[sec:preamble]{early-preamble pane}, as shown in
+\figureref{fig:addpackage}.  Note that the \gls{canvas} and the
+preamble panes have separate undo\slash redo managers so if you undo
+a new text area it will remove the new text area but won't remove
+the modification to the preamble. You will need to switch to the
+early-preamble panel and use its undo button or \gls{popupmenu} item.
+
+\FloatFig
+  {fig:addpackage}
+  {\includeimg{addpackage}}
+  {Package Required by Mapping Added to the Early Preamble}
+
+\begin{important}
+The text in your \env{pgfpicture} environment may not
+look exactly the same as in \FlowframTk\ due to font differences as
+well as the translation of \LaTeX\ commands.
+\end{important}
+
+\seealsorefs{%
+sec:edittext,
+sec:fontanchor,
+sec:texconfig,
+sec:preamble,
+sec:textpaint,
+sec:textstyle,
+sec:texttopath,
+sec:splittext,
+sec:exportdoc,
+sec:neuronexample,
+sec:accesstutorial
+}
 
 \chapter{Bitmaps}\label{sec:insertbitmap}
 
@@ -3394,10 +3484,6 @@ TODO
 
 TODO
 
-\plabel[Insert Symbol Dialog Box]{mi:insertsymbol}%
-
-
-TODO
 
 
 \section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}

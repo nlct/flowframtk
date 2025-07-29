@@ -27,6 +27,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.flowframtk.*;
@@ -53,7 +55,15 @@ public class StorageUnitDialog extends JDialog
 
       p.add(getResources().createOkayButton(this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpDialogButton(this, "sec:controlsettings"));
+
+      try
+      {
+         p.add(getResources().createHelpDialogButton(this, "sec:controlsettings"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().debug(e);
+      }
 
       pack();
       setLocationRelativeTo(application_);
