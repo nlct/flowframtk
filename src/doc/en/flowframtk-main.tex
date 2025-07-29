@@ -3422,19 +3422,129 @@ sec:accesstutorial
 
 \chapter{Bitmaps}\label{sec:insertbitmap}
 
-\inlineglsdef{bitmap}
+\menudef{menu.bitmap}
 
-TODO
+\FlowframTk\ is primarily a \gls{vectorgraphics} application,
+however it is possible to insert a \inlineglsdef{bitmap}
+(\gls{rastergraphics}) into your picture for background effects or
+if you want to annotate a \gls{bitmap} (as was done in
+\figureref{fig:insertsymbol} in the previous section).  Note that
+\FlowframTk\ does not save the actual \glslink{rastergraphics}{raster} data in either
+the \gls{JDR} or the \gls{AJR} file, but instead it creates a reference
+to the original file. You can't edit the actual bitmap data in
+\FlowframTk. However you can scale, rotate or shear the link.  If
+you change the location of the file containing the bitmap, when
+\FlowframTk\ reloads the \gls*{JDR} or \gls*{AJR} file it will
+prompt you to either provide the new location or discard the reference.
 
+\menudef{menu.bitmap.insert}
+
+To insert a \gls{bitmap} into your picture, first make sure you are using
+the \gls{menu.tools.select} tool (and no shapes are
+being edited or distorted), and then select the menu item
+\menu{bitmap.insert} and a file selector dialog box will appear in which
+you can choose the required \gls{bitmap}. The \gls{bitmap} will initially appear
+in the top left hand corner of the \gls{canvas} but can be
+\hyperref[sec:move]{moved} to a new location.  If your
+operating system supports \gls{drag-and-drop}, you can also drag a
+\gls{bitmap} file onto the \gls{canvas} (in \gls{menu.tools.select} mode) and it will
+be inserted at the drop location.
+
+If there is insufficient memory in the \gls{jre} to load a bitmap,
+\FlowframTk\ will revert to draft mode to display that bitmap.  For
+example, in \figureref{fig:draftbitmap} several photos have been
+inserted into an image. Since photos tend to be quite large, there
+is insufficient memory to load the final photo, so it is displayed
+in draft mode instead. Note that draft mode will also be used when
+printing or when \hyperref[sec:exportpng]{exporting to PNG}. Since \LaTeX\ files
+only contain a link to the bitmap, draft mode should not affect
+exporting to \LaTeX\ files or to formats that use \app{latex} or
+\app{pdflatex} as an intermediate step.
+
+Note that the amount of memory available to any Java application is
+set at startup. The default maximum value can be changed via the
+\gls{jre} command line options.  If you run \FlowframTk\ from the
+shell script \app{flowframtk}, then you can set the environment
+variable \gls{JDR_JVMOPTS} to change the default configuration. See
+\sectionref{sec:cmdargs} for further details. If you are running
+\FlowframTk\ from Windows, you will need to check the \gls*{jre}
+documentation.
+
+\FloatFig
+  {fig:draftbitmap}
+  {\includeimg{draftBitmap}}
+  [Bitmaps Are Displayed in Draft Mode When There is Insufficient Memory in the JRE]
+  {Bitmaps are displayed in draft mode
+when there is insufficient memory in the \gls{jre}. The area taken up by
+the image is displayed as a semi-transparent light \manmsg{grey} rectangle
+with the bitmap's file name in square brackets.}
+
+\menudef{menu.bitmap.refresh}
+
+If you use another application to edit the bitmap whilst
+you have a picture with a link to it displayed in \FlowframTk, you will
+need to select \menu{bitmap.refresh} to update the image.
+
+\menudef{menu.bitmap.properties}
+
+The \menu{bitmap.properties} menu item will open the 
+\dialog{bitmap_properties} dialog (see \sectionref{sec:bitmapprops}).
+
+\menudef{menu.bitmap.vectorize}
+
+The \menu{bitmap.vectorize} function is an experimental
+feature. It's only available if \app{flowframtk} is invoked with
+the \switch{experimental} switch.
+
+Currently undocumented.
 
 \section{Properties}\label{sec:bitmapprops}
 
-TODO
+\widgetdef{bitmap_properties.title}
 
+To change a \gls{bitmap}['s] properties (file reference, alternative
+\LaTeX\ path, or transformation matrix), \hyperref[sec:edit]{select}
+the required \gls{bitmap} and select the \menu{bitmap.properties}
+menu item. This will open up the \dialog{bitmap_properties} dialog box shown in
+\figureref{fig:bitmapprops}. If you want to change the path name to
+the bitmap, you can either type it directly into the
+\widget{label.filename} field or click on the
+\widget{browsebitmap.browse} button. You can also change the
+transformation matrix applied to the bitmap link.
+
+\FloatFig
+ {fig:bitmapprops}
+ {\includeimg{bitmapprops}}
+ {Bitmap Properties Dialog}
+
+If you want to \hyperref[sec:exportimage]{export} your picture to a \LaTeX\ file or
+to a format that uses \app{latex} or \app{pdflatex} as an intermediate
+step, the \LaTeX\ command can either be \gls{pgfimage} or
+\gls{includegraphics} and is specified in the
+\widget{bitmap_properties.command} field. The command argument in
+either case must use a \gls{forwardslash} as the directory divider. If
+the \widget{bitmap_properties.auto_latexfilename} \gls*{checkbox}
+is selected, this substitution will be performed automatically by
+the export function. Alternatively, you can unselect
+the \widget{bitmap_properties.auto_latexfilename} \gls*{checkbox}
+which will enable the
+\widget{bitmap_properties.latexfilename} field in which you
+can enter the argument to be used by the image command. If you use the
+export to PostScript or \gls{svg} function, \FlowframTk\ will
+attempt to create an EPS version of the bitmap (if it doesn't
+already exist) since \app{latex} (as opposed to
+\app{pdflatex}) can't include bitmap formats, such as PNG and
+JPEG.
+
+\seealsorefs{sec:bitmapconfig}
 
 \section{Vectorizing}\label{sec:vectorize}
 
-TODO
+The \menu{bitmap.vectorize} function is an experimental
+feature. It's only available if \FlowframTk\ is invoked with
+the \switch{experimental} switch.
+
+Currently undocumented.
 
 
 \chapter{Selecting and Editing Objects}\label{sec:selectobjects}
