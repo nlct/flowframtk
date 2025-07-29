@@ -3199,14 +3199,59 @@ Merge Region: {2}</entry>
 
 <!-- Actions Without a Corresponding Widget -->
 
-<entry key="action.contextmenu">Context Menu</entry>
-<entry key="action.contextmenu.keystroke">F3</entry>
+<entry key="action.popup">Context Menu</entry>
+<entry key="action.popup.keystroke">F3</entry>
+
+<entry key="action.context_menu">Context Menu</entry>
+<entry key="action.context_menu.keystroke">CONTEXT_MENU</entry>
 
 <entry key="action.delete_last">Delete Last</entry>
 <entry key="action.delete_last.keystroke">BACKSPACE</entry>
 
-<entry key="action.constructclick">Construction Click</entry>
-<entry key="action.constructclick.keystroke">F4</entry>
+<entry key="action.construct_click">Construction Click</entry>
+<entry key="action.construct_click.keystroke">F4</entry>
+
+<entry key="action.scroll_block_left">Scroll Block Left</entry>
+<entry key="action.scroll_block_left.keystroke">ctrl PAGE_UP</entry>
+
+<entry key="action.scroll_block_right">Scroll Block Right</entry>
+<entry key="action.scroll_block_right.keystroke">ctrl PAGE_DOWN</entry>
+
+<entry key="action.scroll_block_up">Scroll Block Up</entry>
+<entry key="action.scroll_block_up.keystroke">PAGE_UP</entry>
+
+<entry key="action.scroll_block_down">Scroll Block Down</entry>
+<entry key="action.scroll_block_down.keystroke">PAGE_DOWN</entry>
+
+<entry key="action.scroll_home_up">Scroll Home Up</entry>
+<entry key="action.scroll_home_up.keystroke">HOME</entry>
+
+<entry key="action.scroll_end_down">Scroll End Down</entry>
+<entry key="action.scroll_end_down.keystroke">END</entry>
+
+<entry key="action.scroll_home_left">Scroll Home Left</entry>
+<entry key="action.scroll_home_left.keystroke">ctrl HOME</entry>
+
+<entry key="action.scroll_end_right">Scroll End Right</entry>
+<entry key="action.scroll_end_right.keystroke">ctrl END</entry>
+
+<entry key="action.cursor_up">Cursor Up</entry>
+<entry key="action.cursor_up.keystroke">UP</entry>
+
+<entry key="action.cursor_down">Cursor Down</entry>
+<entry key="action.cursor_down.keystroke">DOWN</entry>
+
+<entry key="action.cursor_left">Cursor Left</entry>
+<entry key="action.cursor_left.keystroke">LEFT</entry>
+
+<entry key="action.cursor_right">Cursor Right</entry>
+<entry key="action.cursor_right.keystroke">RIGHT</entry>
+
+<entry key="action.cursor_word_left">Cursor Word Left</entry>
+<entry key="action.cursor_word_left.keystroke">shift LEFT</entry>
+
+<entry key="action.cursor_word_right">Cursor Word Right</entry>
+<entry key="action.cursor_word_right.keystroke">shift RIGHT</entry>
 
 <!--  Comments in TeX/LaTeX Files -->
 
@@ -3722,11 +3767,12 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="manual.centred">centered</entry>
 <entry key="manual.flavour">flavor</entry>
 
-<entry key="term.popupmenu">popup menu</entry>
+<entry key="term.popupmenu">popup (or context) menu</entry>
+<entry key="term.popupmenu.text">popup menu</entry>
 <entry key="term.popupmenu.description">A menu whose items vary depending on the context. These
     menus are usually invoked with the menu or secondary mouse button. In
     \FlowframTk\ it is also possible to invoke popup menus using
-    \accelerator'{'contextmenu'}' or your keyboard may have a context-menu key.</entry>
+    \accelerator'{'popup'}' or your keyboard may have a context-menu \accelerator'{'contextmenu'}' key.</entry>
 <entry key="term.popupmenu.see">index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.none</entry>
 
 </properties>

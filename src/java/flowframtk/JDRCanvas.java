@@ -133,7 +133,7 @@ public class JDRCanvas extends JPanel
       // Keystroke actions without items in the canvas popup menus
 
       addCanvasAction(new CanvasAction(this, "action.construct_click",
-         getResources().getAccelerator("accelerator.construct_click"),
+         getResources().getAccelerator("action.construct_click"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -149,7 +149,7 @@ public class JDRCanvas extends JPanel
       ));
 
       addCanvasAction(new CanvasAction(this, "cursor_left",
-         getResources().getAccelerator("accelerator.cursor_left"),
+         getResources().getAccelerator("action.cursor_left"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -164,7 +164,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "cursor_right",
-         getResources().getAccelerator("accelerator.cursor_right"),
+         getResources().getAccelerator("action.cursor_right"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -179,7 +179,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "cursor_up",
-         getResources().getAccelerator("accelerator.cursor_up"),
+         getResources().getAccelerator("action.cursor_up"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -194,7 +194,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "cursor_down",
-         getResources().getAccelerator("accelerator.cursor_down"),
+         getResources().getAccelerator("action.cursor_down"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -209,7 +209,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_home_up",
-         getResources().getAccelerator("accelerator.scroll_home_up"),
+         getResources().getAccelerator("action.scroll_home_up"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -224,7 +224,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_home_left",
-         getResources().getAccelerator("accelerator.scroll_home_left"),
+         getResources().getAccelerator("action.scroll_home_left"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -239,7 +239,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_end_down",
-         getResources().getAccelerator("accelerator.scroll_end_down"),
+         getResources().getAccelerator("action.scroll_end_down"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -254,7 +254,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_end_right",
-         getResources().getAccelerator("accelerator.scroll_end_right"),
+         getResources().getAccelerator("action.scroll_end_right"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -269,7 +269,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_block_down",
-         getResources().getAccelerator("accelerator.scroll_block_down"),
+         getResources().getAccelerator("action.scroll_block_down"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -284,7 +284,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_block_right",
-         getResources().getAccelerator("accelerator.scroll_block_right"),
+         getResources().getAccelerator("action.scroll_block_right"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -299,7 +299,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_block_up",
-         getResources().getAccelerator("accelerator.scroll_block_up"),
+         getResources().getAccelerator("action.scroll_block_up"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -314,7 +314,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "scroll_block_left",
-         getResources().getAccelerator("accelerator.scroll_block_left"),
+         getResources().getAccelerator("action.scroll_block_left"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -329,7 +329,7 @@ public class JDRCanvas extends JPanel
          FlowframTkAction.SELECTION_IGNORE_COUNT));
 
       addCanvasAction(new CanvasAction(this, "delete_last",
-         getResources().getAccelerator("accelerator.delete_last"),
+         getResources().getAccelerator("action.delete_last"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -345,7 +345,7 @@ public class JDRCanvas extends JPanel
 
        CanvasAction popupAction = new CanvasAction(this,
          "show-popup",
-         getResources().getAccelerator("accelerator.popup"),
+         getResources().getAccelerator("action.popup"),
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -361,7 +361,7 @@ public class JDRCanvas extends JPanel
       addCanvasAction(popupAction);
 
       popupAction.setAccelerator(
-         getResources().getAccelerator("accelerator.alt_popup"));
+         getResources().getAccelerator("action.context_menu"));
 
    }
 
@@ -18705,7 +18705,7 @@ class CanvasTextField extends JTextField
       };
 
       getInputMap(JComponent.WHEN_FOCUSED).put(
-         getResources().getAccelerator("accelerator.cursor_left"),
+         getResources().getAccelerator("action.cursor_left"),
          "moveLeft"
          );
 
@@ -18720,7 +18720,7 @@ class CanvasTextField extends JTextField
       };
 
       getInputMap(JComponent.WHEN_FOCUSED).put(
-         getResources().getAccelerator("accelerator.cursor_right"),
+         getResources().getAccelerator("action.cursor_right"),
          "moveRight"
          );
 
@@ -18735,7 +18735,7 @@ class CanvasTextField extends JTextField
       };
 
       getInputMap(JComponent.WHEN_FOCUSED).put(
-         getResources().getAccelerator("accelerator.cursor_word_left"),
+         getResources().getAccelerator("action.cursor_word_left"),
          "shiftLeft"
          );
 
@@ -18750,14 +18750,14 @@ class CanvasTextField extends JTextField
       };
 
       getInputMap(JComponent.WHEN_FOCUSED).put(
-         getResources().getAccelerator("accelerator.cursor_word_right"),
+         getResources().getAccelerator("action.cursor_word_right"),
          "shiftRight"
          );
 
       getActionMap().put("shiftRight", action);
 
       getInputMap(JComponent.WHEN_FOCUSED).put(
-         getResources().getAccelerator("text.insert_symbol"),
+         getResources().getAccelerator("menu.textarea.insert_symbol"),
          "insert_symbol"
          );
 

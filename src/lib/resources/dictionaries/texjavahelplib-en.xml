@@ -429,8 +429,8 @@ Nicola Talbot
 <entry key="manual.keystroke.space">\spacekeysym</entry>
 <entry key="manual.keystroke.space.description">Space</entry>
 
-<entry key="manual.keystroke.contextmenu">\contextmenusym</entry>
-<entry key="manual.keystroke.contextmenu.description">Context Menu</entry>
+<entry key="manual.keystroke.context_menu">\contextmenusym</entry>
+<entry key="manual.keystroke.context_menu.description">Context Menu</entry>
 
 <entry key="manual.keystroke.control">Control</entry>
 <entry key="manual.keystroke.ctrl">Ctrl</entry>

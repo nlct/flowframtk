@@ -945,6 +945,14 @@ public class JDRResources
                {
                   propName = "button." + propName.substring(7);
                }
+               else if (propName.equals("accelerator.alt_popup"))
+               {
+                  propName = "action.context_menu";
+               }
+               else if (propName.startsWith("accelerator."))
+               {
+                  propName = "action." + propName.substring(7);
+               }
                else if (propName.startsWith("tools.")
                  || propName.startsWith("file.")
                  || propName.startsWith("edit.")

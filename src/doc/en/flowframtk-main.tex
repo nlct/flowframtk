@@ -15,6 +15,8 @@
 \hypersetup{colorlinks,linkcolor=blue}
 
 \newcommand{\FlowframTk}{FlowframTk}
+\newcommand{\texttool}{\gls{menu.tools.textarea} tool}
+\newcommand{\mathstool}{\gls{menu.tools.math} tool}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -154,7 +156,7 @@ Notation: a \gls{primaryclick} is a single click with the
 \gls{primary-mouse-button}. This is typically the left button for a
 right-handed mouse (or left side of a trackpad), but may be the
 right button for a left-handed mouse. A \gls{menuclick} is a click
-with the context-menu mouse button. This button depends on your
+with the \gls{context-menu} mouse button. This button depends on your
 configuration, but is typically the right button for a right-handed
 two-button mouse (and vice-versa for a left-handed two-button mouse). 
 If the button isn't mentioned, a~\gls{click} can
@@ -232,7 +234,7 @@ help button would conflict).
 \bfseries Accelerator & \bfseries Function & \bfseries Mnemonic \\
 \endhead
 \multicolumn{3}{l}{\fnsymtext{2}{Functions that move the pointer.}}\\\endfoot
-\keys{\keyref{return}} &
+\keys{\keyref{return}} (return) &
 Finish current \gls{path}/\gls{textarea} & 
 \mnemonictrail{tools.finish}\tabularnewline
 & 
@@ -261,27 +263,27 @@ Select \widget{cancel} button in dialog boxes &
 %
 \accelerator{editpath.delete_control} & 
 Delete selected \gls{controlpt} &
-\accelerator{contextmenu} \mnemonic{editpath.delete_control}
+\accelerator{popup} \mnemonic{editpath.delete_control}
 \tabularnewline
 %
-\accelerator{delete_last} &
+\accelerator{delete_last} (backspace) &
 Delete last segment (path construction mode) &
 \tabularnewline
 %
 \keys{\keyref{insert}} &
 Add \gls{controlpt} &
-\accelerator{contextmenu} \mnemonic{editpath.add_control}
+\accelerator{popup} \mnemonic{editpath.add_control}
 \tabularnewline
 &
 \emph{or} display symbol dialog box &
-\accelerator{contextmenu} \mnemonic{textarea.insert_symbol}
+\accelerator{popup} \mnemonic{textarea.insert_symbol}
 \tabularnewline
 %
 \accelerator{focusnext} &
 Move focus to next focusable component &
 \tabularnewline
 %
-\accelerator{focusselect} &
+\accelerator{focusselect} (space) &
 Select component with current focus &
 \tabularnewline
 \midrule
@@ -358,11 +360,11 @@ Display Handbook &
 Show/hide \gls{grid} &
 \mnemonictrail{settings.grid.show}
 \tabularnewline
-\accelerator{contextmenu} &
-Show context \gls{popupmenu} (if available) &
+\accelerator{popup} &
+Show \gls{context-menu} (if available) &
 \tabularnewline
 %
-\accelerator{constructclick} &
+\accelerator{construct_click} &
 Emulate \gls{primaryclick} in \gls{construction} &
 \tabularnewline
 %
@@ -384,7 +386,7 @@ Edit mode: &
 \tabularnewline
 &
 \leftquadpar{Select next \gls{controlpt}} &
-\accelerator{contextmenu} \mnemonic{editpath.next_control}
+\accelerator{popup} \mnemonic{editpath.next_control}
 \tabularnewline
 %
 \keys{\actualkey{F7}} &
@@ -399,7 +401,7 @@ Select mode: &
 \tabularnewline
  &
 \leftquadpar{Move selected \gls{controlpt}} &
-\accelerator{contextmenu} \mnemonic{editpath.coordinates}
+\accelerator{popup} \mnemonic{editpath.coordinates}
 \tabularnewline
 %
 \accelerator{edit.undo} &
@@ -455,7 +457,7 @@ Edit mode: &
 %
  &
 \leftquadpar{Select previous \gls{controlpt}} &
-\accelerator{contextmenu} \mnemonic{editpath.prev_control}
+\accelerator{popup} \mnemonic{editpath.prev_control}
 \tabularnewline
 %
 \accelerator{navigate.find} &
@@ -664,7 +666,7 @@ Switch to closed line tool &
 \tabularnewline
 %
 \accelerator{tools.math} &
-Switch to \dgls{maths-mode} tool &
+Switch to \mathstool &
 \mnemonictrail{tools.math}
 \tabularnewline
 \midrule
@@ -943,7 +945,7 @@ intervals of the gap between tick marks. Note that locking the grid
 does not affect the keyboard or menu driven functions, such as
 \menutrail{menu.navigate.goto} \accelerator{menu.navigate.goto}
 or emulate a \gls{primaryclick}
-\accelerator{action.constructclick}.
+\accelerator{action.construct_click}.
 
 
 When the grid is locked, the \gls{statusbar} will show the image
@@ -1474,14 +1476,14 @@ associated \LaTeX\ alternative text which, if set, is used
 during the \sty{pgf} export operations in place of the
 text displayed on the \gls{canvas}. (This includes the export
 functions that use \app{latex} or \app{pdflatex}, such as
-the export to PDF function.) The \manmsg{maths}-mode tool automatically
+the export to PDF function.) The \mathstool\ automatically
 inserts \glsname{mshift} at the start and end of the
 alternative text. In addition, Unicode symbols present in
 the text when a new \gls*{textarea} is constructed can be mapped to
 a \LaTeX\ command.
 
 The mappings applied depend on which tool has been selected. With
-the regular text-mode tool, all the ten \TeX\ special characters are
+the regular \texttool, all the ten \TeX\ special characters are
 mapped to commands. In addition, there are some other characters
 that are also mapped by default. These are listed in the table shown
 in the \widget{textconfig.textmode} tab (see
@@ -1489,7 +1491,7 @@ in the \widget{textconfig.textmode} tab (see
 text mappings applied, deselect the
 \widget{textconfig.escape} \gls{checkbox}.
 
-With the \manmsg{maths}-mode tool, the \gls{hash} and \gls{percent} characters are the
+With the \mathstool, the \gls{hash} and \gls{percent} characters are the
 only two of the ten \TeX\ special characters that are mapped by
 default. However there are other mappings of \manmsg{maths}-related Unicode
 characters and these are listed in the table shown in the
@@ -1505,7 +1507,7 @@ characters and these are listed in the table shown in the
 
 The mapping tables can be sorted by \glslink{click}{clicking} on
 their column headers. You can add, delete or modify any of these
-text- or \manmsg{maths}-mode mappings. Any mapping that ends with a control
+text-mode or \manmsg{maths}-mode mappings. Any mapping that ends with a control
 word (a backslash followed by one or more letters) should
 usually be followed by a space or \verb|{}| to prevent it from
 running into any subsequent letter when the mapping is applied. For
@@ -2308,11 +2310,10 @@ item to show the preamble pane.
 
 In \hyperref[sec:selectobjects]{select mode} (but not when you're editing or
 distorting a shape) you can \gls{drag-and-drop} image files or
-text onto the canvas to add to the current image. In
-\hyperref[sec:newtext]{text or \manmsg{maths} mode} you can only drag
-and drop text onto the canvas. If you attempt to drop a file
-instead, you will get a new \gls{textarea} containing the file's
-path (or URI). 
+text onto the canvas to add to the current image. With the
+\texttool\ or \mathstool\ you can only \gls{drag-and-drop} text onto
+the canvas. If you attempt to drop a file instead, you will get a
+new \gls{textarea} containing the file's path (or URI). 
 
 \section{The Preamble Pane}\label{sec:thepreamblepane}
 
@@ -2973,7 +2974,8 @@ segment will resume according to the tool (line or curve).
 \begin{warning}
 The undo/redo mechanism is disabled while you are constructing a
 path, however while you are creating a line path or a curve path,
-you can delete the previous segment using the \accelerator{action.delete_last} key.
+you can delete the previous segment using the
+backspace \accelerator{action.delete_last} key.
 \end{warning}
 
 Note that \FlowframTk\ won't allow you to create a \gls{path} whose
@@ -3011,7 +3013,7 @@ If you are unable to use the mouse, you can move the pointer using
 using a rectangular grid, or enter the angle and radius in the
 \widget{coordinates.angle} and \widget{coordinates.radius} fields,
 if you are using a radial grid. The keystroke
-\accelerator{action.constructclick} will emulate a single mouse
+\accelerator{action.construct_click} will emulate a single mouse
 click in \gls{construction}.
 
 \FloatFig
@@ -3059,9 +3061,9 @@ and the initial vertex.
 
 \seealsorefs{
  sec:rectangles,
- sec:linecolour,
- sec:fillcolour,
- sec:linestyle,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:pathstyle,
  sec:editpath,
  sec:houseexample,
  sec:accesstutorial
@@ -3111,9 +3113,9 @@ and the initial vertex.
 
 \seealsorefs{
  sec:ellipses,
- sec:linecolour,
- sec:fillcolour,
- sec:linestyle,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:pathstyle,
  sec:editpath,
  sec:neuronexample
 }
@@ -3137,10 +3139,10 @@ created, it is simply another closed \gls{path}, and can be edited in
 exactly the same way.
 
 \seealsorefs{
- sec:lines,
- sec:linecolour,
- sec:fillcolour,
- sec:linestyle,
+ sec:newlinepath,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:pathstyle,
  sec:editpath,
  sec:houseexample,
  sec:neuronexample
@@ -3169,10 +3171,10 @@ created, it is simply another closed \gls{path}, and can be edited in
 exactly the same way.
 
 \seealsorefs{
- sec:curves,
- sec:linecolour,
- sec:fillcolour,
- sec:linestyle,
+ sec:newcurvepath,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:pathstyle,
  sec:editpath,
  sec:cheeseexample
 }
@@ -3185,7 +3187,7 @@ may have alternative text to use when
 \hyperref[sec:exportimage]{exporting} to a \LaTeX\ file. (This includes
 the export functions that create a temporary \LaTeX\ file, such as
 the export to PDF function.) There are two tools to create a
-\gls*{textarea}: the text tool and the \manmsg{maths} tool. These
+\gls*{textarea}: the \texttool\ and the \mathstool. These
 affect the default alternative text for the new \gls*{textarea} in
 different ways. You can later \hyperref[sec:edittext]{edit the
 alternative text}, if the default isn't suitable.
@@ -3256,21 +3258,22 @@ preamble}.
 Once a \gls{textarea} has been completed, the only way to edit it is via the
 \hyperref[sec:edittext]{edit text function}. If you click the
 mouse on the location of a completed text area (while the
-text\slash\manmsg{maths} tool is selected) you will simply create a new
+\texttool\ or \mathstool\ is selected) you will simply create a new
 overlapping \gls*{textarea}.
 
-If your operating system supports \gls{drag-and-drop}, you can
-also \gls{drag-and-drop} text onto the \gls{canvas}. If the drop point is
-inside the \gls{textarea} construction field, the dropped text will be
-inserted into the field (newline characters will be converted to
-spaces). If the drop point is outside the \gls{textarea} construction
-field, a new text area will be created for each line of dropped
-text. The mapping applied to the dropped text will be according to
-the currently selected text tool.  If text is dropped onto the
-\gls{canvas} in select mode, the text mappings (not \manmsg{maths}
-mappings) will be applied. If a file is
-dropped onto the \gls{canvas} in text- or \manmsg{maths}-mode, the file
-path (or URI) will be added as a new \gls{textarea}.
+If your operating system supports \gls{drag-and-drop}, you can also
+\gls{drag-and-drop} text onto the \gls{canvas}. If the drop point is
+inside the \gls{textarea} construction field, the dropped text will
+be inserted into the field (newline characters will be converted to
+spaces). If the drop point is outside the \gls{textarea}
+construction field, a new text area will be created for each line of
+dropped text. The mapping applied to the dropped text will be
+according to the currently selected text tool.  If text is dropped
+onto the \gls{canvas} in select mode, the text mappings (not
+\manmsg{maths} mappings) will be applied. If a file is dropped onto
+the \gls{canvas} when either the \texttool\ or \mathstool\ is
+active, the file path (or URI) will be added as a new
+\gls{textarea}.
 
 \figureref{fig:dndtext} illustrates \gls{drag-and-drop} to create new
 \glspl{textarea}.
@@ -3294,25 +3297,34 @@ construction field is awaiting further input.
 
 \FloatSubFigs{fig:dndtext}
 {
- {fig:dndtexta}{\includeimg[height=0.2\textheight]{dndtext1}}{},
- {fig:dndtextb}{\includeimg[height=0.2\textheight]{dndtext2}}{},
- {fig:dndtextc}{\includeimg[height=0.2\textheight]{dndtext3}}{},
- {fig:dndtextd}{\includeimg[height=0.2\textheight]{dndtext4}}{},
- {fig:dndtexte}{\includeimg[height=0.2\textheight]{dndtext5}}{}
+ {fig:dndtexta}{\includeimg{dndtext1}}{},
+ {fig:dndtextb}{\includeimg{dndtext2}}{},
+ {fig:dndtextc}{\includeimg{dndtext3}}{},
+ {fig:dndtextd}{\includeimg{dndtext4}}{},
+ {fig:dndtexte}{\includeimg{dndtext5}}{}
 }
 [Drag and Drop Text]
-{Drag and Drop Text: \subfigref{a} drag initiated on some
-selected text in another application; \subfigref{b} selected text
-dragged onto canvas; \subfigref{c} the text that was dropped onto
-the canvas in \subfigref{b} has been converted into two text areas;
-\subfigref{d}
-the selected text from \subfigref{a} is now dragged onto the text
-area construction field; \subfigref{e} the dropped text has been
-inserted into the construction field.}
+{Drag and Drop Text: \subfigref{fig:dndtexta} drag initiated on some
+selected text in another application; \subfigref{fig:dndtextb}
+selected text dragged onto canvas; \subfigref{fig:dndtextc} the text
+that was dropped onto the canvas in \subfigref{fig:dndtextb} has
+been converted into three \glspl{textarea}; \subfigref{fig:dndtextd}
+the selected text from \subfigref{fig:dndtexta} is now dragged onto
+the \gls{textarea} construction field; \subfigref{fig:dndtexte} the
+dropped text has been inserted into the construction field.}
 
-Whilst a text area is under construction, you can activate the
-\menu{selectedtext} \dgls{popupmenu}, illustrated in \figureref{fig:textpopup},
-with a \gls{menuclick} (or use the context-menu key).
+\menudef{index.menu.selectedtext}
+
+Whilst a \gls{textarea} is under construction, you can activate the
+\gls{index.menu.selectedtext}, illustrated in
+\figureref{fig:textpopup}, with a \gls{menuclick}. Alternatively,
+you can use the \accelerator{popup} key or, if supported by your
+system, the \accelerator{context_menu} \gls{context-menu} key.
+
+\FloatFig
+  {fig:textpopup}
+  {\includeimg{textpopup}}
+  {Text Area Popup Menu}
 
 
 
@@ -3403,7 +3415,7 @@ TODO
 TODO
 
 
-\section{Color Space Conversions}\label{sec:convertcolspace}
+\section{\Glsfmttext{manual.colour} Space Conversions}\label{sec:convertcolspace}
 
 TODO
 
@@ -3518,12 +3530,12 @@ TODO
 TODO
 
 
-\section{Line Color}\label{sec:linepaint}
+\section{Line \Glsfmttext{manual.colour}}\label{sec:linepaint}
 
 TODO
 
 
-\section{Fill Color}\label{sec:fillpaint}
+\section{Fill \Glsfmttext{manual.colour}}\label{sec:fillpaint}
 
 TODO
 
@@ -3603,7 +3615,7 @@ TODO
 TODO
 
 
-\subsubsection{Marker Color}\label{sec:markerpaint}
+\subsubsection{Marker \Glsfmttext{manual.colour}}\label{sec:markerpaint}
 
 TODO
 
@@ -3613,7 +3625,7 @@ TODO
 TODO
 
 
-\section{Text Color}\label{sec:textpaint}
+\section{Text \Glsfmttext{manual.colour}}\label{sec:textpaint}
 
 TODO
 

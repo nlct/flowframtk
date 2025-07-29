@@ -142,7 +142,7 @@ public class TextSelector extends JDialog
          });
 
       KeyStroke insertKeyStroke = getResources().getAccelerator(
-         "text.insert_symbol");
+         "menu.textarea.insert_symbol");
 
       JMenuItem insertSymbol = new JMenuItem(
          getResources().getMessage("menu.textarea.insert_symbol"),
@@ -184,11 +184,11 @@ public class TextSelector extends JDialog
          JComponent.WHEN_FOCUSED);
 
       textbox.registerKeyboardAction(this, "popup",
-         getResources().getAccelerator("accelerator.popup"),
+         getResources().getAccelerator("action.popup"),
          JComponent.WHEN_FOCUSED);
 
       textbox.registerKeyboardAction(this, "popup",
-         getResources().getAccelerator("accelerator.alt_popup"),
+         getResources().getAccelerator("action.context_menu"),
          JComponent.WHEN_FOCUSED);
 
       p1.add(textbox);
