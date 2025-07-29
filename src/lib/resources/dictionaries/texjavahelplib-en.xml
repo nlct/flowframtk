@@ -475,7 +475,8 @@ Nicola Talbot
 <entry key="manual.keystroke.menu">Menu</entry>
 <entry key="manual.keystroke.insert">Insert</entry>
 <entry key="manual.keystroke.delete">Delete</entry>
-<entry key="manual.keystroke.backspace">Backspace</entry>
+<entry key="manual.keystroke.backspace">\backspacekeysym</entry>
+<entry key="manual.keystroke.backspace.description">Backspace</entry>
 <entry key="manual.keystroke.capslock">Caps Lock</entry>
 <entry key="manual.keystroke.printscreen">PrtScn</entry>
 <entry key="manual.keystroke.printscreen.description">Print Screen</entry>
