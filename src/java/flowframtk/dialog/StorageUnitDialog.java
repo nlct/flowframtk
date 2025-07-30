@@ -62,7 +62,7 @@ public class StorageUnitDialog extends JDialog
       }
       catch (HelpSetNotInitialisedException e)
       {
-         getResources().debug(e);
+         getResources().debugMessage(e);
       }
 
       pack();

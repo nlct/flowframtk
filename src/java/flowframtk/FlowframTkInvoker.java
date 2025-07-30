@@ -54,6 +54,7 @@ public class FlowframTkInvoker
    {
       this.args = args;
       this.resources = new JDRResources(APP_NAME);
+      this.resources.initialise();
       this.filenames = new Vector<String>();
    }
 

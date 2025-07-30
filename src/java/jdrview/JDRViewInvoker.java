@@ -123,6 +123,7 @@ public class JDRViewInvoker
           InvalidSyntaxException
    {
       resources = new JDRResources(APP_NAME);
+      resources.initialise();
 
       messageSystem = new JDRGuiMessage(resources);
 

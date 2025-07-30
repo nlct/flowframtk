@@ -57,22 +57,45 @@ public class JDRResources
  extends TeXJavaHelpLibAppAdapter
  implements JDRMessageDictionary,Serializable
 {
-   public JDRResources(String appname)
-   throws IOException,URISyntaxException,InvalidFormatException
+   public JDRResources()
    {
-      this(appname,
-           "jdrcommon", appname.toLowerCase().replaceAll(" ", ""));
+      this("jdrresources");
    }
 
-   public JDRResources(String appname, String... dictPrefixes)
-   throws IOException,URISyntaxException,InvalidFormatException
+   public JDRResources(String appname)
    {
       this.appname = appname;
+   }
+
+   public void initialise()
+   throws IOException,URISyntaxException,InvalidFormatException
+   {
+      initialise("jdrcommon", appname.toLowerCase().replaceAll(" ", ""));
+   }
+
+   public void initialise(String... dictPrefixes)
+   throws IOException,URISyntaxException,InvalidFormatException
+   {
       this.fatalErrorExitCode = EXIT_INTERNAL_ERROR;
       initUserConfigDir();
       initLocalisation(dictPrefixes);
       initStackTracePane();
       createIconNameMap();
+   }
+
+   private void writeObject(java.io.ObjectOutputStream stream)
+     throws IOException
+   {
+   }
+
+   private void readObject(java.io.ObjectInputStream stream)
+     throws IOException, ClassNotFoundException
+   {
+   }
+
+   private void readObjectNoData()
+     throws ObjectStreamException
+   {
    }
 
    protected void initLocalisation(String... dictPrefixes)
