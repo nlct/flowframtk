@@ -162,8 +162,25 @@ public class ZoomSettings extends JDialog
 
       if (obj instanceof InvalidZoomValue)
       {
-         application.getResources().error(this, ((InvalidZoomValue)obj).getMessage());
-         return;
+         String strVal = obj.toString();
+
+         try
+         {
+            if (strVal.endsWith("%"))
+            {
+               obj = new PercentageZoomValue(
+                0.01*Double.parseDouble(strVal.substring(0, strVal.length()-1)));
+            }
+            else
+            {
+               obj = new PercentageZoomValue(Double.parseDouble(strVal));
+            }
+         }
+         catch (NumberFormatException e)
+         {
+            application.getResources().error(this, ((InvalidZoomValue)obj).getMessage(), e);
+            return;
+         }
       }
 
       try
