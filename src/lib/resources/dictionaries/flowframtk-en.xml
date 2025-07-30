@@ -424,7 +424,7 @@ Nicola Talbot
 
 <entry key="menu.transform.reset">Reset Matrix</entry>
 <entry key="menu.transform.reset.mnemonic">A</entry>
-<entry key="menu.transform.reset.tooltip">Reset the scale and shear factors in the underlying transformation matrix</entry>
+<entry key="menu.transform.reset.tooltip">Reset the underlying transformation matrix</entry>
 
 <entry key="menu.transform.distort">Distort</entry>
 <entry key="menu.transform.distort.mnemonic">D</entry>
@@ -1097,7 +1097,7 @@ Nicola Talbot
 
 <!--  Selected Objects Popup Menu -->
 
-<entry key="index.menu.selectedgroup">Group Popup Menu</entry>
+<entry key="index.menu.selectedgroup">General Selection Popup Menu</entry>
 
 <entry key="menu.selectedgroup.group_description">Group Description...</entry>
 <entry key="menu.selectedgroup.group_description.mnemonic">I</entry>
@@ -1153,7 +1153,7 @@ Nicola Talbot
 
 <!--  None Selected Popup Menu -->
 
-<entry key="index.none">Image Popup Menu</entry>
+<entry key="index.menu.none">Image Popup Menu</entry>
 
 <entry key="menu.none.image_description">Image Description...</entry>
 <entry key="menu.none.image_description.mnemonic">D</entry>

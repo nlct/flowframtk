@@ -24,7 +24,7 @@
 <entry key="menu.edit.textarea.colour.tooltip">Set the pen colour for selected text areas</entry>
 
 <entry key="menu.edit.fill_colour">Fill Colour...</entry>
-<entry key="menu.edit.tooltip">Set fill colour for the selected shapes or outlined text areas</entry>
+<entry key="menu.edit.fill_colour.tooltip">Set fill colour for the selected shapes or outlined text areas</entry>
 
 <entry key="menu.edit.adjustcol">Adjust Colour</entry>
 <entry key="menu.edit.adjustcol.tooltip">Adjust the colour space for the selected shapes or text areas</entry>

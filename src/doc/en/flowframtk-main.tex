@@ -627,9 +627,9 @@ Cut selected \gls{object} &
 \mnemonictrail{edit.cut}
 \tabularnewline
 %
-\accelerator{edit.path.style.all} &
+\accelerator{edit.path.style.all_styles} &
 Edit the selected paths' line styles &
-\mnemonictrail{edit.path.style.all}
+\mnemonictrail{edit.path.style.all_styles}
 \tabularnewline
 %
 \accelerator{transform.scale} &
@@ -3621,14 +3621,66 @@ In select mode, you can also \gls{menuclick} to activate the
 selection \gls{popupmenu}. The contents of this menu vary according to
 what types of \glspl*{object} have been selected, if any.
 
+% COMMON POPUP MENU ITEMS
+
+\menudef{index.menu.selected}
+
+Common popup menu items are listed below.
+
+\menudef{menu.selected.object_description}
+
+To assign a description to the selected \gls{object}, use
+\menu{selected.object_description}. This is the same as using the
+\menu{edit.object_description} menu item from the main menu bar.
+This option will only be available if there is exactly one
+\gls{object} selected.
+
+\menudef{menu.selected.cut}
+
+Cut the selected \gls{object} (or \glspl{object}) to the clipboard.
+This is the same as using the \menu{edit.cut} menu item from the
+main menu bar. At least one \gls{object} needs to be selected.
+
+\menudef{menu.selected.copy}
+
+Copy the selected \gls{object} (or \glspl{object}) to the clipboard.
+This is the same as using the \menu{edit.copy} menu item from the
+main menu bar. At least one \gls{object} needs to be selected.
+
+\menudef{menu.selected.paste}
+
+Paste any \gls{object} or \glspl{object} from the clipboard onto the
+\gls{canvas}.
+This is the same as using the \menu{edit.paste} menu item from the
+main menu bar.
+
+\menudef{menu.selected.select_all}
+
+Select all \glspl{object}.
+This is the same as using the \menu{edit.select_all} menu item from the
+main menu bar.
+
+\menudef{menu.selected.deselect_all}
+
+Deselect all \glspl{object}.
+This is the same as using the \menu{edit.deselect_all} menu item from the
+main menu bar. There must be at least one \gls{object} selected.
+
+\menudef{menu.selected.group}
+
+Group all selected \glspl{object}. There must be more than one
+object selected.
+This is the same as using the \menu{transform.group} menu item from the
+main menu bar.
+
 % NONE SELECTED POPUP
 
-\menudef{index.none}
+\menudef{index.menu.none}
 
 \FloatFig
   {fig:selectpopups.none}
   {\includeimg{selectPopupNone}}
-  {Popup Menu when no Objects are Selected},
+  {Popup Menu When No Objects are Selected}
 
 If nothing is selected, there will only be a few options available
 (\figureref{fig:selectpopups.none}).
@@ -3648,7 +3700,10 @@ To select an \gls{object} by its description, use
 \menudef{menu.none.insert_bitmap}
 
 To insert a \gls{bitmap}, use \menu{none.insert_bitmap}. This
-is the same as using the \menu{bitmap.insert} menu item.
+is the same as using the \menu{bitmap.insert} menu item from the main menu bar.
+
+The \menu{selected.select_all} and \menu{selected.paste} common menu
+items are also available.
 
 % PATH POPUP
 
@@ -3657,23 +3712,16 @@ is the same as using the \menu{bitmap.insert} menu item.
 \FloatFig
   {fig:selectpopups.path}
   {\includeimg{selectPopupPath}}
-  {Popup Menu when only Paths are Selected},
+  {Popup Menu when only Paths are Selected}
 
-If a path is selected, the following options will be available
+In addition to the \gls{index.menu.selected},
+if a path is selected then the following options will be available
 (\figureref{fig:selectpopups.path}).
-
-\menudef{menu.selectedpath.path_description}
-
-To assign a description to the path, use
-\menu{selectedpath.path_description}. This is the same as using the
-\menu{edit.object_description} menu item from the main menu bar.
-This option won't be available if there is more than one
-path selected.
 
 \menudef{menu.selectedpath.edit}
 
 To edit the path, use \menu{selectedpath.edit}. This is the same as using
-the \menu{edit.edit.path.edit} menu item from the main menu bar.
+the \menu{edit.path.edit} menu item from the main menu bar.
 This option won't be available if there is more than one
 path selected.
 
@@ -3688,7 +3736,7 @@ path selected.
 
 To change the path's line \manmsg{colour}, use
 \menu{selectedpath.line_colour}. This is the same as using the
-\menu{edit.line_colour} menu item from the main menu bar.
+\menu{edit.path.line_colour} menu item from the main menu bar.
 
 \menudef{menu.selectedpath.fill_colour}
 
@@ -3708,11 +3756,11 @@ To change the line width for the selected paths,
 use \menu{selectedpath.linewidth}. This is the same as using the
 \menu{edit.path.style.linewidth} menu item from the main menu bar.
 
-\menudef{menu.selectedpath.pattern}
+\menudef{menu.selectedpath.dashpattern}
 
 To change the line pattern (dash or solid) for the selected paths,
-use \menu{selectedpath.pattern}. This is the same as using the
-\menu{edit.path.style.pattern} menu item from the main menu bar.
+use \menu{selectedpath.dashpattern}. This is the same as using the
+\menu{edit.path.style.dashpattern} menu item from the main menu bar.
 
 \menudef{menu.selectedpath.capstyle}
 
@@ -3766,18 +3814,11 @@ use \menu{selectedpath.marker.end}. This is the same as using the
 \FloatFig
   {fig:selectpopups.text}
   {\includeimg{selectPopupText}}
-  {Popup Menu when only Text-Areas are Selected},
+  {Popup Menu when only Text-Areas are Selected}
 
-If a \gls{textarea} is selected, the following options will be available
+In addition to the \gls{index.menu.selected},
+if a \gls{textarea} is selected then the following options will be available
 (\figureref{fig:selectpopups.text}).
-
-\menudef{menu.selectedtext.textarea_description}
-
-To assign a description to the \gls{textarea}, use
-\menu{selectedtext.textarea_description}. This is the same as using the
-\menu{edit.object_description} menu item from the main menu bar.
-This option won't be available if there is more than one
-\gls{textarea} selected.
 
 \menudef{menu.selectedtext.edit}
 
@@ -3849,6 +3890,8 @@ bar.
 To reset the \gls{textarea}['s] transformation matrix, use 
 \menu{selectedtext.reset}. This is the same as using the 
 \menu{transform.reset} menu item from the main menu bar.
+This option won't be available if there is more than one
+\gls{textarea} selected.
 
 % TEXT-PATH POPUP
 
@@ -3857,16 +3900,14 @@ To reset the \gls{textarea}['s] transformation matrix, use
 \FloatFig
   {fig:selectpopups.textpath}
   {\includeimg{selectPopupTextPath}}
-  {Popup Menu when only a Text-Path is Selected},
+  {Popup Menu when a Text-Path is Selected}
 
-If a text-path is selected, the following option will be available
-(\figureref{fig:selectpopups.textpath}).
 
-\menudef{menu.selectedtextpath.textpath_description}
-
-To assign a description to the text-path, use
-\menu{selectedtextpath.textpath_description}. This is the same as using the
-\menu{edit.object_description} menu item from the main menu bar.
+If a text-path has been selected then the
+\gls{index.menu.selectedtextpath} is very similar to the
+\gls{index.menu.selectedtext} but additionally has the
+\menu{selectedpath.edit} menu item to switch on edit mode for the
+underlying path.
 
 % BITMAP POPUP
 
@@ -3875,20 +3916,13 @@ To assign a description to the text-path, use
 \FloatFig
   {fig:selectpopups.bitmap}
   {\includeimg{selectPopupBitmap}}
-  {Popup Menu when only Bitmaps are Selected},
+  {Popup Menu when only Bitmaps are Selected}
 
-If a \gls{bitmap} is selected, the following options will be available
+In addition to the \gls{index.menu.selected},
+if a \gls{bitmap} is selected then the following options will be available
 (\figureref{fig:selectpopups.bitmap}).
 
-\menudef{menu.selectedbitmap.bitmap_description}
-
-To assign a description to the \gls{bitmap}, use
-\menu{selectedbitmap.bitmap_description}. This is the same as using the
-\menu{edit.object_description} menu item from the main menu bar.
-This option won't be available if there is more than one
-\gls{bitmap} selected.
-
-\menudef{menu.selectedtext.properties}
+\menudef{menu.selectedbitmap.properties}
 
 To edit the \gls{bitmap}['s] properties, use
 \menu{selectedbitmap.properties}. This is the same as using
@@ -3896,13 +3930,74 @@ the \menu{bitmap.properties} menu item from the main menu bar.
 This option won't be available if there is more than one
 \gls{bitmap} selected.
 
+\menudef{menu.selectedbitmap.reset}
 
-\FloatSubFigs{fig:selectpopups}
-{%
-  {fig:selectpopups.bitmap}{\includeimg{selectPopupBitmap}}{only \glspl{bitmap}},
-  {fig:selectpopups.other}{\includeimg{selectPopupOther}}{groups or mixture}
-}
-{Popup Menus in Select Mode Depend on What Objects Have Been Selected}
+To reset the \gls{bitmap}['s]
+transformation matrix, use \menu{selectedbitmap.reset}. This is the
+same as using the \menu{transform.reset} menu item from the main menu
+bar.
+
+\menudef{menu.selectedbitmap.insert}
+
+To insert another \gls{bitmap}, use \menu{selectedbitmap.insert}. This is the
+same as using the \menu{bitmap.insert} menu item from the main menu
+bar.
+
+% GROUPS OR MIXTURE
+
+\menudef{index.menu.selectedgroup}
+
+\FloatFig
+  {fig:selectpopups.other}
+  {\includeimg{selectPopupOther}}
+  {Popup Menu when Groups or Mixture are Selected}
+
+In addition to the \gls{index.menu.selected},
+if any \glspl{group} or mixture of \glspl{object} are selected 
+then following option will be available
+(\figureref{fig:selectpopups.other}).
+
+\menudef{menu.selected.ungroup}
+
+To ungroup any selected \glspl{group}, use
+\menu{selected.ungroup}. This is the same as using the
+\menu{transform.ungroup} menu item from the main menu bar.
+This option won't be available if there are no
+\glspl{group} selected.
+
+\menudef{menu.selected.path}
+
+If any \glspl{path} have been selected or if any selected
+\glspl{group} contain any \glspl{path}, then the
+\menu{selected.path} sub menu will be available. This has the same
+menu items as \gls{index.menu.selectedpath}.
+
+\menudef{menu.selected.textarea}
+
+If any \glspl{textarea} have been selected or if any selected
+\glspl{group} contain any \glspl{textarea}, then the
+\menu{selected.textarea} sub menu will be available. This has the same
+menu items as \gls{index.menu.selectedtext}.
+
+\menudef{menu.selected.fill_colour}
+
+If any \glspl{path} have been selected or if any outlined \glspl{textarea}
+have been selected, then the \menu{selected.fill_colour} menu item
+will be available. This is the same as using the
+\menu{edit.fill_colour} menu item from the main menu bar.
+
+\menudef{menu.selected.bitmap}
+
+The \menu{selected.bitmap} sub menu has the same
+menu items as \gls{index.menu.selectedbitmap}.
+
+\menudef{menu.selected.justify}
+
+To justify the contents of any selected \glspl{group}, use the
+\menu{selected.justify} sub menu. This is the same as using the
+\menu{transform.justify} sub menu from the main menu bar.
+This option won't be available if there are no
+\glspl{group} selected.
 
 
 \section{Navigation Menu}\label{sec:navigate}
