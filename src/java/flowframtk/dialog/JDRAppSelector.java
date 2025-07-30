@@ -50,7 +50,7 @@ public class JDRAppSelector extends JDialog
       JPanel buttonPanel = new JPanel();
       add(buttonPanel, "South");
 
-      buttonPanel.add(getResources().createOkayButton(this));
+      buttonPanel.add(getResources().createOkayButton(getRootPane(), this));
       buttonPanel.add(getResources().createCancelButton(this));
 
       String os = System.getProperty("os.name").toLowerCase();

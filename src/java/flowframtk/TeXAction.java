@@ -91,7 +91,7 @@ public class TeXAction extends FlowframTkAction
 
       ActionListener buttonAction = new TeXActionButtonListener(this);
 
-      panel.add(getResources().createOkayButton(buttonAction));
+      panel.add(getResources().createOkayButton(dbox.getRootPane(), buttonAction));
       panel.add(getResources().createCancelButton(buttonAction));
       panel.add(getResources().createHelpDialogButton(application, helpID));
 

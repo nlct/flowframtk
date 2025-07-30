@@ -53,7 +53,7 @@ public class StorageUnitDialog extends JDialog
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
-      p.add(getResources().createOkayButton(this));
+      p.add(getResources().createOkayButton(getRootPane(), this));
       p.add(getResources().createCancelButton(this));
 
       try

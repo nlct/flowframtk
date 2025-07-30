@@ -58,7 +58,7 @@ public class InfoDialog extends JDialog
 
       JDRResources resources = getResources();
 
-      p.add(resources.createOkayButton(this));
+      p.add(resources.createOkayButton(getRootPane(), this));
       p.add(resources.createCancelButton(this));
 
       helpAction = resources.getHelpLib().createHelpDialogAction(this,

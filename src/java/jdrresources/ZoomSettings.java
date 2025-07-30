@@ -43,7 +43,7 @@ import com.dickimawbooks.jdrresources.numfield.*;
  */
 
 public class ZoomSettings extends JDialog
-   implements OkayAction
+   implements ActionListener
 {
    public ZoomSettings(JDRApp application, Frame parent)
    {
@@ -93,8 +93,8 @@ public class ZoomSettings extends JDialog
 
       JPanel p2 = new JPanel();
 
-      p2.add(helpLib.createOkayButton((OkayAction)this, getRootPane()));
-      p2.add(helpLib.createCancelButton((JDialog)this));
+      p2.add(getResources().createOkayButton(getRootPane(), this));
+      p2.add(getResources().createCancelButton(this));
       p2.add(application.getResources().createHelpDialogButton(this, "sec:zoommenu"));
 
       getContentPane().add(p2, "South");
@@ -142,6 +142,20 @@ public class ZoomSettings extends JDialog
    }
 
    @Override
+   public void actionPerformed(ActionEvent evt)
+   {
+      String action = evt.getActionCommand();
+
+      if ("okay".equals(action))
+      {
+         okay();
+      }
+      else if ("cancel".equals(action))
+      {
+         setVisible(false);
+      }
+   }
+
    public void okay()
    {
       ZoomValue obj = (ZoomValue)magBox.getSelectedItem();

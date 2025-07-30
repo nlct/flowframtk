@@ -104,7 +104,7 @@ public class CreatePathFromSvgDialog extends JDialog
       JComponent buttonPanel = new JPanel();
       getContentPane().add(buttonPanel, "South");
 
-      okayButton = resources.createOkayButton(this);
+      okayButton = resources.createOkayButton(getRootPane(), this);
 
       buttonPanel.add(okayButton); 
       buttonPanel.add(resources.createCancelButton(this));

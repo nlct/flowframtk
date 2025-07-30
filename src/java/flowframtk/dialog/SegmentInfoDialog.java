@@ -127,7 +127,7 @@ public class SegmentInfoDialog extends JDialog
       JPanel p2 = new JPanel();
       bottomPanel.add(p2, "Center");
 
-      p2.add(resources.createOkayButton(this));
+      p2.add(resources.createOkayButton(getRootPane(), this));
       p2.add(resources.createCancelButton(this));
 
       revertButton = resources.createDialogButton(

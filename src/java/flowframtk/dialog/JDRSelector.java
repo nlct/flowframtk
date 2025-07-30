@@ -133,7 +133,7 @@ public class JDRSelector extends JDialog
       JPanel panel = new JPanel();
       actionPanel.add(panel, "Center");
 
-      panel.add(getResources().createOkayButton(this));
+      panel.add(getResources().createOkayButton(getRootPane(), this));
       panel.add(getResources().createCancelButton(this));
 
       if (helpId != null)

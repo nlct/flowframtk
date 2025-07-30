@@ -98,7 +98,7 @@ public class ExportToEpsSettings extends JDialog
       getContentPane().add(mainPanel, "Center");
 
       JPanel buttonPanel = new JPanel();
-      buttonPanel.add(getResources().createOkayButton(this));
+      buttonPanel.add(getResources().createOkayButton(getRootPane(), this));
       buttonPanel.add(getResources().createCancelButton(this));
 
       getContentPane().add(buttonPanel, "South");

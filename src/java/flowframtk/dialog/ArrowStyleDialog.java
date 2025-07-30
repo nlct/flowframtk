@@ -69,7 +69,7 @@ public class ArrowStyleDialog extends JDialog
       JPanel p1 = new JPanel();
       buttonPanel.add(p1, BorderLayout.CENTER);
 
-      p1.add(getResources().createOkayButton(this));
+      p1.add(getResources().createOkayButton(getRootPane(), this));
       p1.add(getResources().createCancelButton(this));
       p1.add(getResources().createHelpDialogButton(this, "sec:markers"));
 

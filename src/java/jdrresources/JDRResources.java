@@ -917,6 +917,12 @@ public class JDRResources
       BufferedReader reader)
       throws IOException
    {
+      if (upgrade)
+      {
+         setAccelerator("menu.help.manual", getAccelerator("menu.help.manual"));
+         setAccelerator("button.help", getAccelerator("button.help"));
+      }
+
       String line;
 
       while ((line = reader.readLine()) != null)
@@ -1565,9 +1571,25 @@ public class JDRResources
         helpLib.getIconPrefix("button.help", "help"));
 
       TJHAbstractAction helpAction = helpLib.createHelpDialogAction(
-        dialog, id, icSet, null);
+        dialog, id, icSet, (IconSet)null);
 
-      return buttonStyle.createButton(this, helpAction);
+      JButton button = buttonStyle.createButton(this, helpAction);
+
+      KeyStroke ks = (KeyStroke)helpAction.getValue(Action.ACCELERATOR_KEY);
+      String actionName = (String)helpAction.getValue(Action.ACTION_COMMAND_KEY);
+
+      if (ks != null && actionName != null)
+      {
+         // TJHAbstractAction already sets up the mappings on the
+         // dialog's root pane but the accelerator doesn't seem to show 
+         // up in the tooltip unless the keystroke is also added
+         // to the button's input map.
+
+         button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+          .put(ks, actionName);
+      }
+
+      return button;
    }
 
    /**
@@ -1601,7 +1623,18 @@ public class JDRResources
       TJHAbstractAction helpAction = helpLib.createHelpDialogAction(
         dialog, id, icSet, null);
 
-      return buttonStyle.createButton(this, helpAction);
+      JButton button = buttonStyle.createButton(this, helpAction);
+
+      KeyStroke ks = (KeyStroke)helpAction.getValue(Action.ACCELERATOR_KEY);
+      String actionName = (String)helpAction.getValue(Action.ACTION_COMMAND_KEY);
+
+      if (ks != null && actionName != null)
+      {
+         button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+          .put(ks, actionName);
+      }
+
+      return button;
    }
 
    /**
@@ -2240,10 +2273,29 @@ public class JDRResources
      String tooltipText)
    {
       JDRButton button = createDialogButton("button.okay", "okay", 
-       listener, getAccelerator("okay"), tooltipText);
+       listener, getAccelerator("button.okay"), tooltipText);
 
       button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
-        put(getAccelerator("alt_okay"), "okay");
+        put(getAccelerator("button.alt_okay"), "okay");
+
+      return button;
+   }
+
+   public JDRButton createOkayButton(JRootPane rootPane, ActionListener listener)
+   {
+      return createOkayButton(rootPane, listener, getMessage("button.okay"));
+   }
+
+   public JDRButton createOkayButton(JRootPane rootPane, ActionListener listener, 
+     String tooltipText)
+   {
+      JDRButton button = createDialogButton("button.okay", "okay", 
+       listener, getAccelerator("button.okay"), tooltipText);
+
+      rootPane.setDefaultButton(button);
+
+      button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
+        put(getAccelerator("button.alt_okay"), "okay");
 
       return button;
    }

@@ -55,7 +55,7 @@ public class MovePointDialog extends JDialog
 
       JPanel p2 = new JPanel();
 
-      p2.add(frame.getResources().createOkayButton(this));
+      p2.add(frame.getResources().createOkayButton(getRootPane(), this));
       p2.add(frame.getResources().createCancelButton(this));
 
       getContentPane().add(p2, "South");

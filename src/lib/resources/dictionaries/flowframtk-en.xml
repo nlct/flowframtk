@@ -1061,11 +1061,11 @@ Nicola Talbot
 
 <entry key="index.none">Image Popup Menu</entry>
 
-<entry key="menu.none.image_description">Image Description</entry>
+<entry key="menu.none.image_description">Image Description...</entry>
 <entry key="menu.none.image_description.mnemonic">D</entry>
 <entry key="menu.none.image_description.tooltip">Set or edit the description of the image</entry>
 
-<entry key="menu.none.find_by_description">Find By Description</entry>
+<entry key="menu.none.find_by_description">Find By Description...</entry>
 <entry key="menu.none.find_by_description.mnemonic">F</entry>
 
 <entry key="menu.none.insert_bitmap">Insert Bitmap...</entry>
@@ -2070,9 +2070,9 @@ Nicola Talbot
 
 <entry key="coordinates.title">Co-ordinates</entry>
 <entry key="coordinates.x">x</entry>
-<entry key="coordinates.x.mnemonic">x</entry>
+<entry key="coordinates.x.mnemonic">X</entry>
 <entry key="coordinates.y">y</entry>
-<entry key="coordinates.y.mnemonic">y</entry>
+<entry key="coordinates.y.mnemonic">Y</entry>
 <entry key="coordinates.radius">Radius</entry>
 <entry key="coordinates.radius.mnemonic">R</entry>
 <entry key="coordinates.angle">Angle</entry>

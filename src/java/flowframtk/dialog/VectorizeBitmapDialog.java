@@ -182,7 +182,7 @@ public class VectorizeBitmapDialog extends JFrame
        "apply_pinned", this, null);
       bottomPanel.add(applyButton);
 
-      okayButton = resources.createOkayButton(this);
+      okayButton = resources.createOkayButton(getRootPane(), this);
       bottomPanel.add(okayButton);
 
       cancelButton = resources.createCancelButton(this);

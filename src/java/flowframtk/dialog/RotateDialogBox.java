@@ -59,7 +59,7 @@ public class RotateDialogBox extends JDialog
 
       JPanel p2 = new JPanel();
 
-      p2.add(resources.createOkayButton(this));
+      p2.add(resources.createOkayButton(getRootPane(), this));
       p2.add(resources.createCancelButton(this));
       p2.add(resources.createHelpDialogButton(this, "sec:rotateobjects"));
 

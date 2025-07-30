@@ -155,7 +155,7 @@ public class ConfigUISettingsDialog extends JDialog
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
-      p.add(getResources().createOkayButton(this));
+      p.add(getResources().createOkayButton(getRootPane(), this));
       p.add(getResources().createCancelButton(this));
       p.add(getResources().createHelpDialogButton(this, "sec:configureuidialog"));
 

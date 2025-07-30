@@ -56,7 +56,7 @@ public class MoveByDialogBox extends JDialog
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(this));
+      p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
       p2.add(getResources().createHelpDialogButton(this, "sec:moveobjects"));
 
