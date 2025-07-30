@@ -23,6 +23,8 @@
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
 
+\subtitle{\bigskip\includeimg{title}\bigskip}
+
 \InputIfFileExists{version}{}{}
 
 \GlsXtrLoadResources[src={flowframtk,shared,\langbibsrcs},
@@ -3453,7 +3455,7 @@ being edited or distorted), and then select the menu item
 \menu{bitmap.insert} and a file selector dialog box will appear in which
 you can choose the required \gls{bitmap}. The \gls{bitmap} will initially appear
 in the top left hand corner of the \gls{canvas} but can be
-\hyperref[sec:move]{moved} to a new location.  If your
+\hyperref[sec:moveobjects]{moved} to a new location.  If your
 operating system supports \gls{drag-and-drop}, you can also drag a
 \gls{bitmap} file onto the \gls{canvas} (in \gls{menu.tools.select} mode) and it will
 be inserted at the drop location.
@@ -3511,7 +3513,7 @@ Currently undocumented.
 \widgetdef{bitmap_properties.title}
 
 To change a \gls{bitmap}['s] properties (file reference, alternative
-\LaTeX\ path, or transformation matrix), \hyperref[sec:edit]{select}
+\LaTeX\ path, or transformation matrix), \hyperref[sec:selectobjects]{select}
 the required \gls{bitmap} and select the \menu{bitmap.properties}
 menu item. This will open up the \dialog{bitmap_properties} dialog box shown in
 \figureref{fig:bitmapprops}. If you want to change the path name to
@@ -3600,23 +3602,6 @@ depressing the shift key. To deselect all \glspl*{object}, click on
 an empty part of the \gls{canvas}, or use \menu{edit.deselect_all}.
 Selecting another tool will also deselect all \glspl*{object}.
 
-In select mode, you can also \gls{menuclick} to activate the
-selection \gls{popup}. The contents of this menu vary according to
-what types of \glspl*{object} have been selected, if any (see
-\figureref{fig:selectpopups}).
-
-\FloatSubFigs{fig:selectpopups}
-{%
-  {fig:selectpopups.none}{\includeimg{selectPopupNone}}{no objects},
-  {fig:selectpopups.textpath}{\includeimg{selectPopupTextPath}}
-    {only text-paths},
-  {fig:selectpopups.path}{\includeimg{selectPopupPath}}{only paths},
-  {fig:selectpopups.text}{\includeimg{selectPopupText}}{only \glspl{textarea}},
-  {fig:selectpopups.bitmap}{\includeimg{selectPopupBitmap}}{only \glspl{bitmap}},
-  {fig:selectpopups.other}{\includeimg{selectPopupOther}}{groups or mixture}
-}
-{Popup Menus in Select Mode Depend on What Objects Have Been Selected}
-
 In select mode you can \gls{drag-and-drop} \gls{JDR} or \gls{AJR}
 files onto the \gls{canvas} (provided your operating system supports
 drag and drop) which will add all the objects from those files to
@@ -3628,6 +3613,296 @@ If text is dropped onto the \gls{canvas} in select mode, the text
 mappings (not \manmsg{maths} mappings) will be applied. If a file is
 dropped onto the \gls{canvas} in \textmode\ or \mathsmode, instead of
 in select mode, the file path (or URI) will be added as a new \gls{textarea}.
+
+\section{Selection Popup Menus}
+\label{sec:selectpopups}
+
+In select mode, you can also \gls{menuclick} to activate the
+selection \gls{popupmenu}. The contents of this menu vary according to
+what types of \glspl*{object} have been selected, if any.
+
+% NONE SELECTED POPUP
+
+\menudef{index.none}
+
+\FloatFig
+  {fig:selectpopups.none}
+  {\includeimg{selectPopupNone}}
+  {Popup Menu when no Objects are Selected},
+
+If nothing is selected, there will only be a few options available
+(\figureref{fig:selectpopups.none}).
+
+\menudef{menu.none.image_description}
+
+To assign a description to the whole image, use
+\menu{none.image_description}. This is the same as using the
+\menu{file.image_description} menu item from the main menu bar.
+
+\menudef{menu.none.find_by_description}
+
+To select an \gls{object} by its description, use
+\menu{none.find_by_description}. This is the same as using the
+\menu{navigate.by_description} menu item.
+
+\menudef{menu.none.insert_bitmap}
+
+To insert a \gls{bitmap}, use \menu{none.insert_bitmap}. This
+is the same as using the \menu{bitmap.insert} menu item.
+
+% PATH POPUP
+
+\menudef{index.menu.selectedpath}
+
+\FloatFig
+  {fig:selectpopups.path}
+  {\includeimg{selectPopupPath}}
+  {Popup Menu when only Paths are Selected},
+
+If a path is selected, the following options will be available
+(\figureref{fig:selectpopups.path}).
+
+\menudef{menu.selectedpath.path_description}
+
+To assign a description to the path, use
+\menu{selectedpath.path_description}. This is the same as using the
+\menu{edit.object_description} menu item from the main menu bar.
+This option won't be available if there is more than one
+path selected.
+
+\menudef{menu.selectedpath.edit}
+
+To edit the path, use \menu{selectedpath.edit}. This is the same as using
+the \menu{edit.edit.path.edit} menu item from the main menu bar.
+This option won't be available if there is more than one
+path selected.
+
+\menudef{menu.selectedpath.distort}
+
+To distort the path, use \menu{selectedpath.distort}. This is the same as using
+the \menu{transform.distort} menu item from the main menu bar.
+This option won't be available if there is more than one
+path selected.
+
+\menudef{menu.selectedpath.line_colour}
+
+To change the path's line \manmsg{colour}, use
+\menu{selectedpath.line_colour}. This is the same as using the
+\menu{edit.line_colour} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.fill_colour}
+
+To change the path's fill \manmsg{colour}, use
+\menu{selectedpath.fill_colour}. This is the same as using the
+\menu{edit.fill_colour} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.all_styles}
+
+To change all the path styles for the selected paths,
+use \menu{selectedpath.all_styles}. This is the same as using the
+\menu{edit.path.style.all_styles} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.linewidth}
+
+To change the line width for the selected paths,
+use \menu{selectedpath.linewidth}. This is the same as using the
+\menu{edit.path.style.linewidth} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.pattern}
+
+To change the line pattern (dash or solid) for the selected paths,
+use \menu{selectedpath.pattern}. This is the same as using the
+\menu{edit.path.style.pattern} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.capstyle}
+
+To change the cap style for the selected paths,
+use the \menu{selectedpath.capstyle} sub menu. This is the same as using the
+\menu{edit.path.style.capstyle} sub menu from the main menu bar.
+
+\menudef{menu.selectedpath.joinstyle}
+
+To change the join style for the selected paths,
+use \menu{selectedpath.joinstyle}. This is the same as using the
+\menu{edit.path.style.joinstyle} menu item from the main menu bar.
+
+To change the winding rule for the selected paths,
+use the \menu{selectedpath.windingrule} sub menu. This is the same as using the
+\menu{edit.path.style.windingrule} sub menu from the main menu bar.
+
+\menudef{menu.selectedpath.marker}
+
+The \menu{selectedpath.marker} sub menu has the following options:
+
+\menudef{menu.selectedpath.marker.all}
+
+To change all the path markers to the same type for the selected paths,
+use \menu{selectedpath.marker.all}. This is the same as using the
+\menu{edit.path.style.all_markers} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.marker.start}
+
+To change the start marker for the selected paths,
+use \menu{selectedpath.marker.start}. This is the same as using the
+\menu{edit.path.style.startarrow} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.marker.mid}
+
+To change the mid marker for the selected paths,
+use \menu{selectedpath.marker.mid}. This is the same as using the
+\menu{edit.path.style.midarrow} menu item from the main menu bar.
+
+\menudef{menu.selectedpath.marker.end}
+
+To change the end marker for the selected paths,
+use \menu{selectedpath.marker.end}. This is the same as using the
+\menu{edit.path.style.endarrow} menu item from the main menu bar.
+
+
+% TEXT POPUP
+
+\menudef{index.menu.selectedtext}
+
+\FloatFig
+  {fig:selectpopups.text}
+  {\includeimg{selectPopupText}}
+  {Popup Menu when only Text-Areas are Selected},
+
+If a \gls{textarea} is selected, the following options will be available
+(\figureref{fig:selectpopups.text}).
+
+\menudef{menu.selectedtext.textarea_description}
+
+To assign a description to the \gls{textarea}, use
+\menu{selectedtext.textarea_description}. This is the same as using the
+\menu{edit.object_description} menu item from the main menu bar.
+This option won't be available if there is more than one
+\gls{textarea} selected.
+
+\menudef{menu.selectedtext.edit}
+
+To edit the \gls{textarea}['s] displayed text or \LaTeX\
+alternative, use \menu{selectedtext.edit}. This is the same as using
+the \menu{edit.textarea.edit} menu item from the main menu bar.
+This option won't be available if there is more than one
+\gls{textarea} selected.
+
+\menudef{menu.selectedtext.colour}
+
+To change the \gls{textarea}['s] pen \manmsg{colour}, use
+\menu{selectedtext.colour}. This is the same as using the
+\menu{edit.textarea.colour} menu item from the main menu bar.
+
+\menudef{menu.selectedtext.outline}
+
+To outline the \gls{textarea}, use \menu{selectedtext.outline}.
+This is the same as using the \menu{edit.textarea.outline} menu item
+from the main menu bar.
+
+\menudef{menu.selectedtext.fill_colour}
+
+To change the \gls{textarea}['s] fill \manmsg{colour}, use
+\menu{selectedtext.fill_colour}. This is the same as using the
+\menu{edit.fill_colour} menu item from the main menu bar.
+This action is only available if the outline setting is on.
+
+\menudef{menu.selectedtext.all_styles}
+
+To change all the text styles for the selected \glspl{textarea},
+use \menu{selectedtext.all_styles}. This is the same as using the
+\menu{edit.textarea.font.all_styles} menu item from the main menu bar.
+
+\menudef{menu.selectedtext.family}
+
+To change just the font family for the selected \glspl{textarea},
+use \menu{selectedtext.family}. This is the same as using the
+\menu{edit.textarea.font.family} menu item from the main menu bar.
+
+\menudef{menu.selectedtext.size}
+
+To change just the font size for the selected \glspl{textarea},
+use \menu{selectedtext.size}. This is the same as using the
+\menu{edit.textarea.font.size} menu item from the main menu bar.
+
+\menudef{menu.selectedtext.shape}
+
+To change just the font shape for the selected \glspl{textarea},
+use \menu{selectedtext.shape}. This is the same as using the
+\menu{edit.textarea.font.shape} menu item from the main menu bar.
+
+\menudef{menu.selectedtext.series}
+
+To change just the font series (weight) for the selected \glspl{textarea},
+use \menu{selectedtext.series}. This is the same as using the
+\menu{edit.textarea.font.series} menu item from the main menu bar.
+
+\menudef{menu.selectedtext.anchor}
+
+To change just the anchor (horizontal, vertical or both) for the
+selected \glspl{textarea}, use the \menu{selectedtext.anchor}
+sub-menu. This is the same as using the
+\menu{edit.textarea.font.anchor.both} sub-menu from the main menu
+bar.
+
+\menudef{menu.selectedtext.reset}
+
+To reset the \gls{textarea}['s] transformation matrix, use 
+\menu{selectedtext.reset}. This is the same as using the 
+\menu{transform.reset} menu item from the main menu bar.
+
+% TEXT-PATH POPUP
+
+\menudef{index.menu.selectedtextpath}
+
+\FloatFig
+  {fig:selectpopups.textpath}
+  {\includeimg{selectPopupTextPath}}
+  {Popup Menu when only a Text-Path is Selected},
+
+If a text-path is selected, the following option will be available
+(\figureref{fig:selectpopups.textpath}).
+
+\menudef{menu.selectedtextpath.textpath_description}
+
+To assign a description to the text-path, use
+\menu{selectedtextpath.textpath_description}. This is the same as using the
+\menu{edit.object_description} menu item from the main menu bar.
+
+% BITMAP POPUP
+
+\menudef{index.menu.selectedbitmap}
+
+\FloatFig
+  {fig:selectpopups.bitmap}
+  {\includeimg{selectPopupBitmap}}
+  {Popup Menu when only Bitmaps are Selected},
+
+If a \gls{bitmap} is selected, the following options will be available
+(\figureref{fig:selectpopups.bitmap}).
+
+\menudef{menu.selectedbitmap.bitmap_description}
+
+To assign a description to the \gls{bitmap}, use
+\menu{selectedbitmap.bitmap_description}. This is the same as using the
+\menu{edit.object_description} menu item from the main menu bar.
+This option won't be available if there is more than one
+\gls{bitmap} selected.
+
+\menudef{menu.selectedtext.properties}
+
+To edit the \gls{bitmap}['s] properties, use
+\menu{selectedbitmap.properties}. This is the same as using
+the \menu{bitmap.properties} menu item from the main menu bar.
+This option won't be available if there is more than one
+\gls{bitmap} selected.
+
+
+\FloatSubFigs{fig:selectpopups}
+{%
+  {fig:selectpopups.bitmap}{\includeimg{selectPopupBitmap}}{only \glspl{bitmap}},
+  {fig:selectpopups.other}{\includeimg{selectPopupOther}}{groups or mixture}
+}
+{Popup Menus in Select Mode Depend on What Objects Have Been Selected}
 
 
 \section{Navigation Menu}\label{sec:navigate}
