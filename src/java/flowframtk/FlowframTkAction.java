@@ -126,7 +126,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
    public JMenuItem createMenuItem(String menuId)
    {
-      return createMenuItem(menuId, menuId+".tooltipId");
+      return createMenuItem(menuId, null);
    }
 
    public JMenuItem createMenuItem(String menuId, String tooltipId)
@@ -135,10 +135,19 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          getResources().getMessage(menuId),
          getResources().getCodePoint(menuId+".mnemonic"));
 
+      String tooltipText = null;
+
       if (tooltipId != null)
       {
-         item.setToolTipText(getResources().getMessageIfExists(tooltipId));
+         tooltipText = getResources().getToolTipText(tooltipId);
       }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText(menuId);
+      }
+
+      item.setToolTipText(tooltipText);
 
       KeyStroke keyStroke = getAccelerator();
 
@@ -163,17 +172,26 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
    public JMenu createMenu(String menuId)
    {
-      return createMenu(menuId, menuId+".tooltip");
+      return createMenu(menuId, null);
    }
 
    public JMenu createMenu(String menuId, String tooltipId)
    {
       JMenu menu = getResources().createAppMenu(menuId);
 
+      String tooltipText = null;
+
       if (tooltipId != null)
       {
-         menu.setToolTipText(getResources().getMessageIfExists(tooltipId));
+         tooltipText = getResources().getToolTipText(tooltipId);
       }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText(menuId);
+      }
+
+      menu.setToolTipText(tooltipText);
 
       KeyStroke keyStroke = getAccelerator();
 
@@ -204,10 +222,19 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
       item.setMnemonic(getResources().getCodePoint(menuId+".mnemonic"));
 
+      String tooltipText = null;
+
       if (tooltipId != null)
       {
-         item.setToolTipText(getResources().getMessageIfExists(tooltipId));
+         tooltipText = getResources().getToolTipText(tooltipId);
       }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText(menuId);
+      }
+
+      item.setToolTipText(tooltipText);
 
       KeyStroke keyStroke = getAccelerator();
 
@@ -239,10 +266,19 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       item.setMnemonic(getResources().getCodePoint(menuId+".mnemonic"));
       bg.add(item);
 
+      String tooltipText = null;
+
       if (tooltipId != null)
       {
-         item.setToolTipText(getResources().getMessageIfExists(tooltipId));
+         tooltipText = getResources().getToolTipText(tooltipId);
       }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText(menuId);
+      }
+
+      item.setToolTipText(tooltipText);
 
       KeyStroke keyStroke = getAccelerator();
 
@@ -277,10 +313,25 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          setAccelerator(keyStroke);
       }
 
+      String tooltipText = null;
+
+      if (tooltipId != null)
+      {
+         tooltipText = getResources().getToolTipText(tooltipId);
+      }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText(name);
+
+         if (tooltipText == null && keystrokeId != null)
+         {
+            tooltipText = getResources().getToolTipText(keystrokeId);
+         }
+      }
+
       JDRButtonItem button = new JDRButtonItem(getResources(), name, action,
-         keyStroke, this, 
-         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId),
-         comp, menu);
+         keyStroke, this, tooltipText, comp, menu);
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());
@@ -299,9 +350,20 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          setAccelerator(keyStroke);
       }
 
+      String tooltipText = null;
+
+      if (tooltipId != null)
+      {
+         tooltipText = getResources().getToolTipText(tooltipId);
+      }
+
+      if (tooltipText == null && keystrokeId != null)
+      {
+         tooltipText = getResources().getToolTipText(keystrokeId);
+      }
+
       JDRButton button = getResources().createAppButton(
-         name, this, keyStroke,
-         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
+         name, this, keyStroke, tooltipText);
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());
@@ -320,9 +382,26 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          setAccelerator(keyStroke);
       }
 
+      String tooltipText = null;
+
+      if (tooltipId != null)
+      {
+         tooltipText = getResources().getToolTipText(tooltipId);
+      }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText("button."+name);
+
+         if (tooltipText == null && keystrokeId != null)
+         {
+            tooltipText = getResources().getToolTipText(keystrokeId);
+         }
+      }
+
       JDRToggleButton button = getResources().createToggleButton(
          getResources().getMessage("button."+name), name, this, keyStroke,
-         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
+         tooltipText);
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());
@@ -343,9 +422,25 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          setAccelerator(keyStroke);
       }
 
+      String tooltipText = null;
+
+      if (tooltipId != null)
+      {
+         tooltipText = getResources().getToolTipText(tooltipId);
+      }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText(menuId);
+
+         if (tooltipText == null && keystrokeId != null)
+         {
+            tooltipText = getResources().getToolTipText(keystrokeId);
+         }
+      }
+
       JDRToggleButtonItem button = new JDRToggleButtonItem(getResources(),
-          menuId, name, keyStroke, this,
-          getResources().getMessageIfExists(tooltipId),
+          menuId, name, keyStroke, this, tooltipText,
           selected, buttonParent, menu);
 
       setActionButton(button);
@@ -364,10 +459,21 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          setAccelerator(keyStroke);
       }
 
+      String tooltipText = null;
+
+      if (tooltipId != null)
+      {
+         tooltipText = getResources().getToolTipText(tooltipId);
+      }
+
+      if (tooltipText == null)
+      {
+         tooltipText = getResources().getToolTipText("menu.tools."+name);
+      }
+
       JDRToolButton button = getResources().createToolButton(
          getResources().getMessage("tools."+name), name,
-         this, keyStroke, bg, selected,
-         tooltipId == null ? null : getResources().getMessageIfExists(tooltipId));
+         this, keyStroke, bg, selected, tooltipText);
 
       setActionButton(button);
       button.setActionCommand(getActionCommand());

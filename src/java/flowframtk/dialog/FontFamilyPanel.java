@@ -54,7 +54,8 @@ public class FontFamilyPanel extends JPanel implements ItemListener
       fontNamesBox.addItemListener(this);
       fontNamesBox.requestFocusInWindow();
 
-      fontNamesBox.setToolTipText(getResources().getToolTipText("font_family"));
+      fontNamesBox.setToolTipText(
+       getResources().getToolTipText("font.family"));
       add(fontNamesBox);
 
       latexFontFamily = new JComboBox<String>(

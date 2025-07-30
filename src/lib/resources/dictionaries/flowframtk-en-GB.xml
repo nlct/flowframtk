@@ -18,11 +18,32 @@
 <!--  Menus -->
 
 <entry key="menu.edit.path.line_colour">Line Colour...</entry>
+<entry key="menu.edit.path.line_colour.tooltip">Set line colour for selected paths</entry>
+
 <entry key="menu.edit.textarea.colour">Text Colour...</entry>
+<entry key="menu.edit.textarea.colour.tooltip">Set the pen colour for selected text areas</entry>
+
 <entry key="menu.edit.fill_colour">Fill Colour...</entry>
+<entry key="menu.edit.tooltip">Set fill colour for the selected shapes or outlined text areas</entry>
+
 <entry key="menu.edit.adjustcol">Adjust Colour</entry>
+<entry key="menu.edit.adjustcol.tooltip">Adjust the colour space for the selected shapes or text areas</entry>
+
 <entry key="menu.edit.adjustcol.togrey">Reduce to Grey Scale</entry>
+<entry key="menu.edit.adjustcol.togrey.tooltip">Convert colours to greyscale for selected shapes or text areas</entry>
+
+<entry key="menu.edit.adjustcol.cmyk.tooltip">Convert colours to CMYK for selected shapes or text areas</entry>
+
+<entry key="menu.edit.adjustcol.rbg.tooltip">Convert colours to RGB for selected shapes or text areas</entry>
+
+<entry key="menu.edit.adjustcol.hsb.tooltip">Convert colours to HSB for selected shapes or text areas</entry>
+
+
 <entry key="menu.transform.justify.centre">Centre</entry>
+<entry key="menu.transform.justify.centre.tooltip">Horizontally centre the objects inside the group</entry>
+
+<entry key="menu.transform.justify.middle.tooltip">Vertically centre the objects inside the group</entry>
+
 <entry key="menu.tools.math">Maths</entry>
 <entry key="menu.selectedtext.colour">Text Colour...</entry>
 <entry key="menu.selectedtext.fill_colour">Fill Colour...</entry>
@@ -34,14 +55,11 @@
 <entry key="tooltip.arrow.colour.dependent">Make the marker colour depend on the line colour</entry>
 <entry key="tooltip.arrow.colour.independent">Make the marker colour independent of the line colour</entry>
 <entry key="tooltip.cmyk">CMYK (Cyan Magenta Yellow Key) colour selector </entry>
-<entry key="tooltip.fill_colour">Set fill colour</entry>
 <entry key="tooltip.hsb">HSB (Hue Saturation Brightness) colour selector </entry>
-<entry key="tooltip.line_colour">Set line colour</entry>
 <entry key="tooltip.rgb">RGB (Red Green Blue) colour selector </entry>
 <entry key="tooltip.swatch.darkgrey">Dark Grey</entry>
 <entry key="tooltip.swatch.grey">Grey</entry>
 <entry key="tooltip.swatch.lightgrey">Light Grey</entry>
-<entry key="tooltip.textarea.colour">Set text colour</entry>
 
 <entry key="undo.colour">Change colour</entry>
 <entry key="undo.fill_colour">Change fill colour</entry>

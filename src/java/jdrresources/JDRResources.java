@@ -55,7 +55,7 @@ import com.dickimawbooks.jdrresources.numfield.*;
  */
 public class JDRResources
  extends TeXJavaHelpLibAppAdapter
- implements JDRMessageDictionary
+ implements JDRMessageDictionary,Serializable
 {
    public JDRResources(String appname)
    throws IOException,URISyntaxException,InvalidFormatException
@@ -779,6 +779,11 @@ public class JDRResources
 
    public String getToolTipText(String id)
    {
+      if (id.startsWith("tooltip.") || id.endsWith(".tooltip"))
+      {
+         return getMessageIfExists(id);
+      }
+
       String tooltip = getMessageIfExists(id+".tooltip");
 
       if (tooltip == null)

@@ -58,7 +58,7 @@ public class StyleSelector extends JDRSelector
 
       tabbedPane.addTab(
          getResources().getMessage("linecolour.title"), null, linePanel,
-         getResources().getMessage("tooltip.line_colour"));
+         getResources().getMessage("menu.edit.path.line_colour.tooltip"));
 
       linePanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(0,
@@ -70,7 +70,7 @@ public class StyleSelector extends JDRSelector
 
       tabbedPane.addTab(getResources().getMessage("fillcolour.title"),
          null, fillPanel,
-         getResources().getMessage("tooltip.fill_colour"));
+         getResources().getMessage("menu.edit.fill_colour.tooltip"));
 
       fillPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(1,
@@ -93,7 +93,7 @@ public class StyleSelector extends JDRSelector
 
       tabbedPane.addTab(getResources().getMessage("textcolour.title"),
          null, textPanel,
-         getResources().getMessage("tooltip.textarea.colour"));
+         getResources().getMessage("menu.edit.textarea.colour.tooltip"));
 
       textPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(3,
@@ -104,7 +104,7 @@ public class StyleSelector extends JDRSelector
       JDRFrame mainPanel = application_.getCurrentFrame();
       fontPanel = new FontPanel(this, application_.getFontFamilies());
       tabbedPane.addTab(getResources().getMessage("font.title"), null,
-         fontPanel, getResources().getMessage("tooltip.font"));
+         fontPanel, getResources().getMessage("menu.edit.textarea.font.tooltip"));
 
       fontPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 

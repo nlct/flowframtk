@@ -778,7 +778,7 @@ public class FlowframTk extends JFrame
       // Object Description
 
       objectDescriptionItem = FlowframTkAction.createMenuItem(this, 
-        "menu.edit", "description", editM,
+        "menu.edit", "object_description", editM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, 
         SELECT_FLAG_OBJECT,
         FlowframTkAction.SELECTION_SINGLE_OBJECT,
@@ -815,7 +815,8 @@ public class FlowframTk extends JFrame
       // Edit JDRPath
 
       editPathButtonItem = FlowframTkAction.createToggleButtonItem(this,
-         "menu.edit", "path.edit", false, "tooltip.edit_path", toolBar, pathM,
+         "menu.edit", "path.edit", false, "menu.edit.path.edit.tooltip",
+          toolBar, pathM,
          "edit.path.edit",
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE_OR_PATH,
          SELECT_FLAG_SHAPE, 
@@ -872,7 +873,7 @@ public class FlowframTk extends JFrame
       // all styles
 
       lineStyleItem = FlowframTkAction.createMenuItem(this,
-         "menu.edit", "path.style.all", lineStyleM,
+         "menu.edit", "path.style.all_styles", lineStyleM,
           TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
           SELECT_FLAG_NON_TEXTUAL_SHAPE,
           FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,

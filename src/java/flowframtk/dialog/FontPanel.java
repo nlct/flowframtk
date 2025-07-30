@@ -74,7 +74,8 @@ public class FontPanel extends JScrollPane
       fontNamesBox.addItemListener(this);
       fontNamesBox.requestFocusInWindow();
 
-      fontNamesBox.setToolTipText(getResources().getToolTipText("font_family"));
+      fontNamesBox.setToolTipText(
+        getResources().getToolTipText("font.family"));
       constraints.gridx++;
       p.add(fontNamesBox, constraints);
 

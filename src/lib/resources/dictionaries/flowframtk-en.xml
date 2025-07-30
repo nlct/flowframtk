@@ -46,39 +46,45 @@ Nicola Talbot
 
 <entry key="menu.file.image_description">Image Description...</entry>
 <entry key="menu.file.image_description.mnemonic">D</entry>
+<entry key="menu.file.image_description.tooltip">Set or edit the image''s description</entry>
 <entry key="menu.file.image_description.description">Provide a short textual description of the image</entry>
 
 <entry key="menu.file.save">Save</entry>
 <entry key="menu.file.save.mnemonic">S</entry>
 <entry key="menu.file.save.keystroke">control S</entry>
+<entry key="menu.file.save.tooltip">Save image</entry>
 
 <entry key="button.save">Save</entry>
 <entry key="button.save.keystroke">control S</entry>
-<entry key="button.save.tooltip">Save image</entry>
 <entry key="button.save.description">Save the current image</entry>
 
 <entry key="menu.file.save_as">Save As...</entry>
 <entry key="menu.file.save_as.mnemonic">A</entry>
+<entry key="menu.file.save_as.tooltip">Save image with file selector</entry>
 <entry key="menu.file.save_as.description">Save the current image to a named file</entry>
 
 <entry key="menu.file.export">Export...</entry>
 <entry key="menu.file.export.mnemonic">E</entry>
+<entry key="menu.file.export.tooltip">Export image to another format</entry>
 <entry key="menu.file.export.description">Export the current image to a different format</entry>
 
 <entry key="menu.file.import">Import...</entry>
 <entry key="menu.file.import.mnemonic">I</entry>
+<entry key="menu.file.import.tooltip">Import from another format</entry>
 
 <entry key="menu.file.page">Page Setup...</entry>
 <entry key="menu.file.page.mnemonic">G</entry>
-<entry key="menu.file.page.description">Setup the printer margins</entry>
+<entry key="menu.file.page.tooltip">Setup the printer margins</entry>
 
 <entry key="menu.file.messages">Show Messages...</entry>
 <entry key="menu.file.messages.mnemonic">M</entry>
-<entry key="menu.file.messages.description">Open the message viewer</entry>
+<entry key="menu.file.messages.tooltip">Open the message viewer</entry>
 
 <entry key="menu.file.close">Close</entry>
 <entry key="menu.file.close.mnemonic">C</entry>
-<entry key="menu.file.close.description">Close the current image</entry>
+<entry key="menu.file.close.tooltip">Close the current image</entry>
+
+<entry key="menu.file.quit.tooltip">Quit application</entry>
 
 <!--  Edit Menu -->
 
@@ -107,6 +113,7 @@ Nicola Talbot
 <entry key="menu.edit.select_all.mnemonic">A</entry>
 <entry key="menu.edit.select_all.keystroke">control A</entry>
 <entry key="menu.edit.select_all.iconimage">selectAll</entry>
+<entry key="menu.edit.select_all.tooltip">Select all objects</entry>
 
 <entry key="button.select_all">Select All</entry>
 <entry key="button.select_all.keystroke">control A</entry>
@@ -115,15 +122,17 @@ Nicola Talbot
 <entry key="menu.edit.deselect_all">Deselect All</entry>
 <entry key="menu.edit.deselect_all.mnemonic">D</entry>
 <entry key="menu.edit.deselect_all.keystroke">control shift A</entry>
+<entry key="menu.edit.deselect_all.tooltip">Deselect all objects</entry>
 
 <entry key="menu.edit.moveby">Move By...</entry>
 <entry key="menu.edit.moveby.mnemonic">M</entry>
 <entry key="menu.edit.moveby.keystroke">F7</entry>
-<entry key="menu.edit.moveby.description">Move selected objects by specified offset</entry>
+<entry key="menu.edit.moveby.tooltip">Move selected objects by specified offset</entry>
 
 <entry key="menu.edit.cut">Cut</entry>
 <entry key="menu.edit.cut.mnemonic">T</entry>
 <entry key="menu.edit.cut.keystroke">control X</entry>
+<entry key="menu.edit.cut.tooltip">Cut selected objects to the clipboard</entry>
 
 <entry key="button.cut">Cut</entry>
 <entry key="button.cut.keystroke">control X</entry>
@@ -131,6 +140,7 @@ Nicola Talbot
 <entry key="menu.edit.copy">Copy</entry>
 <entry key="menu.edit.copy.mnemonic">C</entry>
 <entry key="menu.edit.copy.keystroke">control C</entry>
+<entry key="menu.edit.copy.tooltip">Copy selected objects to the clipboard</entry>
 
 <entry key="button.copy">Copy</entry>
 <entry key="button.copy.keystroke">control C</entry>
@@ -138,99 +148,118 @@ Nicola Talbot
 <entry key="menu.edit.paste">Paste</entry>
 <entry key="menu.edit.paste.mnemonic">P</entry>
 <entry key="menu.edit.paste.keystroke">control V</entry>
+<entry key="menu.edit.paste.keystroke">Paste objects from the clipboard</entry>
 
 <entry key="button.paste">Paste</entry>
 <entry key="button.paste.keystroke">control V</entry>
 
-<entry key="menu.edit.description">Object Description...</entry>
-<entry key="menu.edit.description.mnemonic">O</entry>
+<entry key="menu.edit.object_description">Object Description...</entry>
+<entry key="menu.edit.object_description.mnemonic">O</entry>
+<entry key="menu.edit.object_description.tooltip">Set or edit the selected object''s description</entry>
 
 <!--  Edit -> Path Sub Menu -->
 
 <entry key="menu.edit.path">Path</entry>
 <entry key="menu.edit.path.mnemonic">H</entry>
+<entry key="menu.edit.path.tooltip">Change attributes for selected paths</entry>
 
 <entry key="menu.edit.path.edit">Edit Path</entry>
 <entry key="menu.edit.path.edit.mnemonic">E</entry>
 <entry key="menu.edit.path.edit.keystroke">control I</entry>
 <entry key="menu.edit.path.edit.iconimage">editPath</entry>
 <entry key="menu.edit.path.edit.initvalue">false</entry>
+<entry key="menu.edit.path.edit.tooltip">Toggle edit mode for selected path</entry>
 
 <entry key="button.edit_path">Edit</entry>
 <entry key="button.edit_path.keystroke">control I</entry>
 
 <entry key="menu.edit.path.line_colour">Line Color...</entry>
 <entry key="menu.edit.path.line_colour.mnemonic">L</entry>
+<entry key="menu.edit.path.line_colour.tooltip">Set line color for selected paths</entry>
 
 <entry key="menu.edit.path.style">Line Styles</entry>
 <entry key="menu.edit.path.style.mnemonic">S</entry>
+<entry key="menu.edit.path.style.tooltip">Set styles for selected paths</entry>
 
 <!--  Edit -> Path -> Line Styles Sub Menu -->
 
-<entry key="menu.edit.path.style.all">All Styles...</entry>
-<entry key="menu.edit.path.style.all.mnemonic">A</entry>
-<entry key="menu.edit.path.style.all.keystroke">control Y</entry>
+<entry key="menu.edit.path.style.all_styles">All Styles...</entry>
+<entry key="menu.edit.path.style.all_styles.mnemonic">A</entry>
+<entry key="menu.edit.path.style.all_styles.keystroke">control Y</entry>
+<entry key="menu.edit.path.style.all_styles.tooltip">Change all style attributes for selected paths</entry>
 
 <entry key="menu.edit.path.style.all_markers">All Markers...</entry>
 <entry key="menu.edit.path.style.all_markers.mnemonic">K</entry>
-<entry key="menu.edit.path.style.all_markers.tooltip">Set the same start, mid and end markers</entry>
+<entry key="menu.edit.path.style.all_markers.tooltip">Set the same start, mid and end markers for selected paths</entry>
 
 <entry key="menu.edit.path.style.linewidth">Line Width...</entry>
 <entry key="menu.edit.path.style.linewidth.mnemonic">W</entry>
+<entry key="menu.edit.path.style.linewidth.tooltip">Set the pen width for selected paths</entry>
 
 <entry key="menu.edit.path.style.dashpattern">Dash Pattern...</entry>
 <entry key="menu.edit.path.style.dashpattern.mnemonic">D</entry>
+<entry key="menu.edit.path.style.dashpattern.tooltip">Set the line to solid or dash for selected paths</entry>
 
 <entry key="menu.edit.path.style.capstyle">Cap Style</entry>
 <entry key="menu.edit.path.style.capstyle.mnemonic">C</entry>
+<entry key="menu.edit.path.style.capstyle.tooltip">Set the line cap style for selected paths</entry>
 
 <!--  Edit -> Path -> Line Styles -> Cap Style Sub Menu -->
 
 <entry key="menu.edit.path.style.capstyle.butt">Butt</entry>
 <entry key="menu.edit.path.style.capstyle.butt.mnemonic">B</entry>
+<entry key="menu.edit.path.style.capstyle.butt.tooltip">Set the cap style to butt (flush) for selected paths</entry>
 
 <entry key="menu.edit.path.style.capstyle.round">Round</entry>
 <entry key="menu.edit.path.style.capstyle.round.mnemonic">R</entry>
+<entry key="menu.edit.path.style.capstyle.round.tooltip">Set the cap style to round for selected paths</entry>
 
 <entry key="menu.edit.path.style.capstyle.square">Square</entry>
 <entry key="menu.edit.path.style.capstyle.square.mnemonic">S</entry>
+<entry key="menu.edit.path.style.capstyle.square.tooltip">Set the cap style to square (protrude) for selected paths</entry>
 
 
 <!--  Edit -> Path -> Line Styles Sub Menu Cont -->
 
 <entry key="menu.edit.path.style.joinstyle">Join Style...</entry>
 <entry key="menu.edit.path.style.joinstyle.mnemonic">J</entry>
-
-<!--  Edit -> Path -> Line Styles -> Join Style Sub Menu -->
+<entry key="menu.edit.path.style.joinstyle.tooltip">Set the join style between segments for selected paths</entry>
 
 <entry key="menu.edit.path.style.startarrow">Start Marker...</entry>
 <entry key="menu.edit.path.style.startarrow.mnemonic">S</entry>
+<entry key="menu.edit.path.style.startarrow.tooltip">Set the marker at the start of the path for selected paths</entry>
 
 <entry key="menu.edit.path.style.midarrow">Mid Marker...</entry>
 <entry key="menu.edit.path.style.midarrow.mnemonic">M</entry>
+<entry key="menu.edit.path.style.midarrow.tooltip">Set the marker at each interior vertex for selected paths</entry>
 
 <entry key="menu.edit.path.style.endarrow">End Marker...</entry>
 <entry key="menu.edit.path.style.endarrow.mnemonic">E</entry>
+<entry key="menu.edit.path.style.endarrow.tooltip">Set the marker at the end of the path for selected paths</entry>
 
 
 <!--  Edit -> Path -> Line Styles Sub Menu Cont -->
 
 <entry key="menu.edit.path.style.windingrule">Winding Rule</entry>
 <entry key="menu.edit.path.style.windingrule.mnemonic">W</entry>
+<entry key="menu.edit.path.style.windingrule.tooltip">Set the winding rule for the selected paths</entry>
 
 <!--  Edit -> Path -> Line Styles -> Winding Rule Sub Menu -->
 
 <entry key="menu.edit.path.style.windingrule.evenodd">Even-Odd</entry>
 <entry key="menu.edit.path.style.windingrule.evenodd.mnemonic">E</entry>
+<entry key="menu.edit.path.style.windingrule.evenodd.tooltip">Set the winding rule to even-odd for selected paths</entry>
 
 <entry key="menu.edit.path.style.windingrule.nonzero">Non Zero</entry>
 <entry key="menu.edit.path.style.windingrule.nonzero.mnemonic">N</entry>
+<entry key="menu.edit.path.style.windingrule.nonzero.tooltip">Set the winding rule to non-zero for selected paths</entry>
 
 
 <!--  Edit Menu Cont -->
 
 <entry key="menu.edit.textarea">Text</entry>
 <entry key="menu.edit.textarea.mnemonic">X</entry>
+<entry key="menu.edit.textarea.tooltip">Change attributes for selected text areas</entry>
 
 <!--  Edit -> Text Sub Menu -->
 
@@ -241,75 +270,96 @@ Nicola Talbot
 
 <entry key="menu.edit.textarea.colour">Text Color...</entry>
 <entry key="menu.edit.textarea.colour.mnemonic">C</entry>
+<entry key="menu.edit.textarea.colour.tooltip">Set the pen color for selected text areas</entry>
 
 <entry key="menu.edit.textarea.outline">Outline</entry>
 <entry key="menu.edit.textarea.outline.mnemonic">O</entry>
+<entry key="menu.edit.textarea.outline.initvalue">false</entry>
+<entry key="menu.edit.textarea.outline.tooltip">Display text as an outline for selected text areas</entry>
 
 <entry key="menu.edit.textarea.matrix">Transformation Matrix...</entry>
 <entry key="menu.edit.textarea.matrix.mnemonic">M</entry>
+<entry key="menu.edit.textarea.matrix.tooltip">Change the transformation matrix for the selected text area</entry>
 
 <entry key="menu.edit.textarea.font">Font Style</entry>
 <entry key="menu.edit.textarea.font.mnemonic">F</entry>
+<entry key="menu.edit.textarea.font.tooltip">Set font attributes for the selected text areas</entry>
 
 <!--  Edit -> Text -> Font Style Sub Menu -->
 
 <entry key="menu.edit.textarea.font.all_styles">All Styles...</entry>
 <entry key="menu.edit.textarea.font.all_styles.mnemonic">L</entry>
+<entry key="menu.edit.textarea.font.all_styles.tooltip">Change font attributes for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.family">Family...</entry>
 <entry key="menu.edit.textarea.font.family.mnemonic">Y</entry>
+<entry key="menu.edit.textarea.font.family.tooltip">Change font family for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.size">Size...</entry>
 <entry key="menu.edit.textarea.font.size.mnemonic">Z</entry>
+<entry key="menu.edit.textarea.font.size.tooltip">Change font size for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.shape">Shape...</entry>
 <entry key="menu.edit.textarea.font.shape.mnemonic">H</entry>
+<entry key="menu.edit.textarea.font.shape.tooltip">Change font shape (upright/italic) for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.series">Series...</entry>
 <entry key="menu.edit.textarea.font.series.mnemonic">R</entry>
+<entry key="menu.edit.textarea.font.series.tooltip">Change font series (medium/bold) for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.anchor">Anchor</entry>
 <entry key="menu.edit.textarea.font.anchor.mnemonic">A</entry>
+<entry key="menu.edit.textarea.font.anchor.tooltip">Change the horizontal or vertical anchors for the selected text areas</entry>
 
 <!--  Edit -> Text -> Font Style -> Anchor Sub Menu -->
 
 <entry key="menu.edit.textarea.font.anchor.both">Both...</entry>
 <entry key="menu.edit.textarea.font.anchor.both.mnemonic">B</entry>
+<entry key="menu.edit.textarea.font.anchor.both.tooltip">Change the horizontal and vertical LaTeX font anchors for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.anchor.horizontal">Horizontal...</entry>
 <entry key="menu.edit.textarea.font.anchor.horizontal.mnemonic">H</entry>
+<entry key="menu.edit.textarea.font.anchor.horizontal.tooltip">Change the horizontal LaTeX font anchor for the selected text areas</entry>
 
 <entry key="menu.edit.textarea.font.anchor.vertical">Vertical...</entry>
 <entry key="menu.edit.textarea.font.anchor.vertical.mnemonic">V</entry>
+<entry key="menu.edit.textarea.font.anchor.vertical.tooltip">Change the vertical LaTeX font anchor for the selected text areas</entry>
 
 <!--  Edit Menu Cont -->
 
 <entry key="menu.edit.fill_colour">Fill Color...</entry>
 <entry key="menu.edit.fill_colour.mnemonic">L</entry>
+<entry key="menu.edit.fill_colour.tooltip">Set fill color for the selected shapes or outlined text areas</entry>
 
 <entry key="menu.edit.adjustcol">Adjust Color</entry>
 <entry key="menu.edit.adjustcol.mnemonic">J</entry>
+<entry key="menu.edit.adjustcol.tooltip">Adjust the color space for the selected shapes or text areas</entry>
 
 <!--  Edit -> Adjust Color Sub Menu -->
 
 <entry key="menu.edit.adjustcol.togrey">Reduce to Gray Scale</entry>
 <entry key="menu.edit.adjustcol.togrey.mnemonic">G</entry>
+<entry key="menu.edit.adjustcol.togrey.tooltip">Convert colors to grayscale for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.cmyk">Convert to CMYK</entry>
 <entry key="menu.edit.adjustcol.cmyk.mnemonic">C</entry>
+<entry key="menu.edit.adjustcol.cmyk.tooltip">Convert colors to CMYK for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.rgb">Convert to RGB</entry>
 <entry key="menu.edit.adjustcol.rgb.mnemonic">R</entry>
+<entry key="menu.edit.adjustcol.rbg.tooltip">Convert colors to RGB for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.hsb">Convert to HSB</entry>
 <entry key="menu.edit.adjustcol.hsb.mnemonic">H</entry>
+<entry key="menu.edit.adjustcol.hsb.tooltip">Convert colors to HSB for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.fade">Fade Alpha</entry>
 <entry key="menu.edit.adjustcol.fade.mnemonic">F</entry>
+<entry key="menu.edit.adjustcol.fade.tooltip">Adjust the transparency for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.removetrans">Remove Translucency</entry>
 <entry key="menu.edit.adjustcol.removetrans.mnemonic">L</entry>
-
+<entry key="menu.edit.adjustcol.removetrans.tooltip">Remove translucency for selected shapes or text areas</entry>
 
 <!--  Edit Menu Cont -->
 
@@ -317,6 +367,7 @@ Nicola Talbot
 <entry key="menu.edit.front.mnemonic">F</entry>
 <entry key="menu.edit.front.keystroke">control F</entry>
 <entry key="menu.edit.front.iconimage">movetofront</entry>
+<entry key="menu.edit.front.tooltip">Move selected object(s) to the front</entry>
 
 <entry key="button.front">To Front</entry>
 <entry key="button.front.keystroke">control F</entry>
@@ -326,6 +377,7 @@ Nicola Talbot
 <entry key="menu.edit.back.mnemonic">B</entry>
 <entry key="menu.edit.back.keystroke">control B</entry>
 <entry key="menu.edit.back.iconimage">movetoback</entry>
+<entry key="menu.edit.back.tooltip">Move selected object(s) to the back</entry>
 
 <entry key="button.back">To Back</entry>
 <entry key="button.back.keystroke">control B</entry>
@@ -334,10 +386,12 @@ Nicola Talbot
 <entry key="menu.edit.moveup">Move Up</entry>
 <entry key="menu.edit.moveup.mnemonic">V</entry>
 <entry key="menu.edit.moveup.keystroke">control shift F</entry>
+<entry key="menu.edit.moveup.tooltip">Move selected object(s) up the stack (z axis)</entry>
 
 <entry key="menu.edit.movedown">Move Down</entry>
 <entry key="menu.edit.movedown.mnemonic">W</entry>
 <entry key="menu.edit.movedown.keystroke">control shift B</entry>
+<entry key="menu.edit.movedown.tooltip">Move selected object(s) down the stack (z axis)</entry>
 
 <!--  Transform Menu -->
 
@@ -347,6 +401,7 @@ Nicola Talbot
 <entry key="menu.transform.rotate">Rotate...</entry>
 <entry key="menu.transform.rotate.mnemonic">R</entry>
 <entry key="menu.transform.rotate.keystroke">control W</entry>
+<entry key="menu.transform.rotate.tooltip">Rotate selected object(s)</entry>
 
 <entry key="button.rotate">Rotate</entry>
 <entry key="button.rotate.keystroke">control W</entry>
@@ -354,6 +409,7 @@ Nicola Talbot
 <entry key="menu.transform.scale">Scale...</entry>
 <entry key="menu.transform.scale.mnemonic">S</entry>
 <entry key="menu.transform.scale.keystroke">control Z</entry>
+<entry key="menu.transform.scale.tooltip">Scale selected object(s)</entry>
 
 <entry key="button.scale">Scale</entry>
 <entry key="button.scale.keystroke">control Z</entry>
@@ -361,43 +417,53 @@ Nicola Talbot
 <entry key="menu.transform.shear">Shear...</entry>
 <entry key="menu.transform.shear.mnemonic">H</entry>
 <entry key="menu.transform.shear.keystroke">control H</entry>
+<entry key="menu.transform.shear.tooltip">Shear selected object(s)</entry>
 
 <entry key="button.shear">Shear</entry>
 <entry key="button.shear.keystroke">control H</entry>
 
 <entry key="menu.transform.reset">Reset Matrix</entry>
 <entry key="menu.transform.reset.mnemonic">A</entry>
+<entry key="menu.transform.reset.tooltip">Reset the scale and shear factors in the underlying transformation matrix</entry>
 
 <entry key="menu.transform.distort">Distort</entry>
 <entry key="menu.transform.distort.mnemonic">D</entry>
 <entry key="menu.transform.distort.initvalue">false</entry>
+<entry key="menu.transform.distort.tooltip">Toggle distortion mode for selected path</entry>
 
 <entry key="button.distort">Distort</entry>
 
 <entry key="menu.transform.reverse">Reverse Path</entry>
 <entry key="menu.transform.reverse.mnemonic">V</entry>
+<entry key="menu.transform.reverse.tooltip">Reverse the direction of the selected paths</entry>
 
 <entry key="menu.transform.convert">Convert Outline To Path</entry>
 <entry key="menu.transform.convert.mnemonic">C</entry>
 <entry key="menu.transform.convert.keystroke">control D</entry>
+<entry key="menu.transform.convert.tooltip">Replace the selected object with a path that traces its outline</entry>
 
 <entry key="menu.transform.convert_to_full">Convert To Full Path</entry>
 <entry key="menu.transform.convert_to_full.mnemonic">F</entry>
+<entry key="menu.transform.convert_to_full.tooltip">Replace a composite shape with a normal path</entry>
 
 <entry key="menu.transform.merge">Merge Paths</entry>
 <entry key="menu.transform.merge.mnemonic">M</entry>
 <entry key="menu.transform.merge.keystroke">control J</entry>
+<entry key="menu.transform.merge.tooltip">Merge selected paths into a single path</entry>
 
 <entry key="menu.transform.convert_to_polygon">Convert To Polygon...</entry>
 <entry key="menu.transform.convert_to_polygon.mnemonic">Y</entry>
+<entry key="menu.transform.convert_to_polygon.tooltip">Convert curves in selected shape into a series of straight lines</entry>
 
 <entry key="menu.transform.textpath">Convert To Text Path</entry>
 <entry key="menu.transform.textpath.mnemonic">N</entry>
+<entry key="menu.transform.textpath.tooltip">Replace the selected text area and path with a text-path</entry>
 
 <entry key="button.textpath">To Text Path</entry>
 
 <entry key="menu.transform.separate">Separate</entry>
 <entry key="menu.transform.separate.mnemonic">E</entry>
+<entry key="menu.transform.separate.tooltip">Separate each selected compound shape into a group of regular paths</entry>
 
 <entry key="menu.transform.union">Path Union</entry>
 <entry key="menu.transform.union.mnemonic">P</entry>
@@ -413,10 +479,13 @@ Nicola Talbot
 
 <entry key="menu.transform.split">Split Text</entry>
 <entry key="menu.transform.split.mnemonic">X</entry>
+<entry key="menu.transform.split.tooltip">Split each selected text area into a group of text areas</entry>
+<entry key="menu.transform.split.description">Split each selected text area into a group of text areas consisting of the individual characters of the original.</entry>
 
 <entry key="menu.transform.group">Group</entry>
 <entry key="menu.transform.group.mnemonic">G</entry>
 <entry key="menu.transform.group.keystroke">control G</entry>
+<entry key="menu.transform.group.tooltip">Group selected object(s)</entry>
 
 <entry key="button.group">Group</entry>
 <entry key="button.group.keystroke">control G</entry>
@@ -424,6 +493,7 @@ Nicola Talbot
 <entry key="menu.transform.ungroup">Ungroup</entry>
 <entry key="menu.transform.ungroup.mnemonic">U</entry>
 <entry key="menu.transform.ungroup.keystroke">control U</entry>
+<entry key="menu.transform.ungroup.tooltip">Ungroup selected object(s)</entry>
 
 <entry key="button.ungroup">Ungroup</entry>
 <entry key="button.ungroup.keystroke">control U</entry>
@@ -436,35 +506,45 @@ Nicola Talbot
 <entry key="menu.transform.pattern.set">Set Pattern...</entry>
 <entry key="menu.transform.pattern.set.mnemonic">S</entry>
 <entry key="menu.transform.pattern.set.iconimage">pattern</entry>
+<entry key="menu.transform.pattern.set.tooltip">Apply a pattern to selected shape</entry>
 
 <entry key="menu.transform.pattern.edit">Edit Pattern...</entry>
 <entry key="menu.transform.pattern.edit.mnemonic">E</entry>
+<entry key="menu.transform.pattern.edit.tooltip">Edit the selected pattern's variables</entry>
 
 <entry key="menu.transform.pattern.remove">Remove Pattern</entry>
 <entry key="menu.transform.pattern.remove.mnemonic">R</entry>
+<entry key="menu.transform.pattern.remove.tooltip">Remove pattern attributes from selected shapes</entry>
 
 <!--  Transform -> Justify Sub Menu -->
 
 <entry key="menu.transform.justify">Justify</entry>
 <entry key="menu.transform.justify.mnemonic">J</entry>
+<entry key="menu.transform.justify.tooltip">Justify the objects inside the group</entry>
 
 <entry key="menu.transform.justify.left">Left</entry>
 <entry key="menu.transform.justify.left.mnemonic">L</entry>
+<entry key="menu.transform.justify.left.tooltip">Left justify the objects inside the group</entry>
 
 <entry key="menu.transform.justify.centre">Center</entry>
 <entry key="menu.transform.justify.centre.mnemonic">C</entry>
+<entry key="menu.transform.justify.centre.tooltip">Horizontally center the objects inside the group</entry>
 
 <entry key="menu.transform.justify.right">Right</entry>
 <entry key="menu.transform.justify.right.mnemonic">R</entry>
+<entry key="menu.transform.justify.right.tooltip">Right justify the objects inside the group</entry>
 
 <entry key="menu.transform.justify.top">Top</entry>
 <entry key="menu.transform.justify.top.mnemonic">T</entry>
+<entry key="menu.transform.justify.top.tooltip">Top-align the objects inside the group</entry>
 
 <entry key="menu.transform.justify.middle">Middle</entry>
 <entry key="menu.transform.justify.middle.mnemonic">M</entry>
+<entry key="menu.transform.justify.middle.tooltip">Vertically center the objects inside the group</entry>
 
 <entry key="menu.transform.justify.bottom">Bottom</entry>
 <entry key="menu.transform.justify.bottom.mnemonic">B</entry>
+<entry key="menu.transform.justify.bottom.tooltip">Bottom-align the objects inside the group</entry>
 
 <!--  tools menu -->
 
@@ -543,28 +623,35 @@ Nicola Talbot
 <entry key="menu.navigate.goto">Go To...</entry>
 <entry key="menu.navigate.goto.mnemonic">G</entry>
 <entry key="menu.navigate.goto.keystroke">F5</entry>
+<entry key="menu.navigate.goto.tooltip">Move mouse to specified co-ordinates</entry>
 
 <entry key="menu.navigate.select">Select</entry>
 <entry key="menu.navigate.select.mnemonic">S</entry>
 <entry key="menu.navigate.select.keystroke">shift F5</entry>
+<entry key="menu.navigate.select.tooltip">Select the next object in the stack</entry>
 
 <entry key="menu.navigate.add_next">Add Next</entry>
 <entry key="menu.navigate.add_next.mnemonic">A</entry>
 <entry key="menu.navigate.add_next.keystroke">shift F6</entry>
+<entry key="menu.navigate.add_next.tooltip">Add the next object in the stack to the current selection</entry>
 
 <entry key="menu.navigate.skip">Skip</entry>
 <entry key="menu.navigate.skip.mnemonic">K</entry>
 <entry key="menu.navigate.skip.keystroke">F6</entry>
+<entry key="menu.navigate.skip.tooltip">Deselect the lowest selected object in the stack and add next object to selection</entry>
 
 <entry key="menu.navigate.find">Find Selected Objects</entry>
 <entry key="menu.navigate.find.mnemonic">F</entry>
 <entry key="menu.navigate.find.keystroke">shift F7</entry>
+<entry key="menu.navigate.find.tooltip">Scroll to selected object(s)</entry>
 
 <entry key="menu.navigate.by_description">Find By Description...</entry>
 <entry key="menu.navigate.by_description.mnemonic">D</entry>
+<entry key="menu.navigate.by_description.tooltip">Select and scroll to an object from its description</entry>
 
 <entry key="menu.navigate.add_description">Add By Description...</entry>
 <entry key="menu.navigate.add_description.mnemonic">B</entry>
+<entry key="menu.navigate.add_description.tooltip">Scroll to an object from its description and add to current selection</entry>
 
 
 <!--  Bitmap Menu -->
@@ -574,15 +661,19 @@ Nicola Talbot
 
 <entry key="menu.bitmap.insert">Insert Bitmap...</entry>
 <entry key="menu.bitmap.insert.mnemonic">I</entry>
+<entry key="menu.bitmap.insert.tooltip">Insert a reference to an external bitmap file</entry>
 
 <entry key="menu.bitmap.refresh">Refresh</entry>
 <entry key="menu.bitmap.refresh.mnemonic">R</entry>
+<entry key="menu.bitmap.refresh.tooltip">Reload the bitmap from its referenced file</entry>
 
 <entry key="menu.bitmap.properties">Properties...</entry>
 <entry key="menu.bitmap.properties.mnemonic">P</entry>
+<entry key="menu.bitmap.properties.tooltip">Change the bitmap source file, the LaTeX path to the source file or the bitmap's transformation matrix</entry>
 
 <entry key="menu.bitmap.vectorize">Vectorize...</entry>
 <entry key="menu.bitmap.vectorize.mnemonic">V</entry>
+<entry key="menu.bitmap.vectorize.tooltip">Trace paths in the bitmap</entry>
 
 <!--  TeX/LaTeX menu -->
 
@@ -871,9 +962,11 @@ Nicola Talbot
 
 <entry key="menu.distort.state">Distort</entry>
 <entry key="menu.distort.state.mnemonic">D</entry>
+<entry key="menu.distort.state.initvalue">false</entry>
 
 <entry key="menu.distort.reset">Reset Transform</entry>
 <entry key="menu.distort.reset.mnemonic">R</entry>
+<entry key="menu.distort.reset.tooltip">Reset distorted object''s transformation</entry>
 
 <!--  Selected Text Along Path Popup Menu -->
 
@@ -903,6 +996,7 @@ Nicola Talbot
 
 <entry key="menu.selectedtext.outline">Outline</entry>
 <entry key="menu.selectedtext.outline.mnemonic">O</entry>
+<entry key="menu.selectedtext.outline.initvalue">false</entry>
 
 <entry key="menu.selectedtext.fill_colour">Fill Color...</entry>
 <entry key="menu.selectedtext.fill_colour.mnemonic">F</entry>
@@ -947,9 +1041,9 @@ Nicola Talbot
 <entry key="menu.selectedpath.fill_colour">Fill Color...</entry>
 <entry key="menu.selectedpath.fill_colour.mnemonic">F</entry>
 
-<entry key="menu.selectedpath.style.all">All Styles...</entry>
-<entry key="menu.selectedpath.style.all.mnemonic">S</entry>
-<entry key="menu.selectedpath.style.all.keystroke">control Y</entry>
+<entry key="menu.selectedpath.all_styles">All Styles...</entry>
+<entry key="menu.selectedpath.all_styles.mnemonic">S</entry>
+<entry key="menu.selectedpath.all_styles.keystroke">control Y</entry>
 
 <entry key="menu.selectedpath.linewidth">Line Width...</entry>
 <entry key="menu.selectedpath.linewidth.mnemonic">H</entry>
@@ -1094,9 +1188,6 @@ Nicola Talbot
 <entry key="tooltip.arrow.type.data">Data point style markers</entry>
 <entry key="tooltip.arrow.type.decorative">Decorative markers</entry>
 <entry key="tooltip.arrow.type.partial">Partial arrow markers</entry>
-<entry key="tooltip.back">Move selected object(s) to the back</entry>
-<entry key="tooltip.bitmap.insert">Insert an external bitmap file</entry>
-<entry key="tooltip.bitmap.properties">Change the bitmap source file, the LaTeX path to the source file or the bitmap's transformation matrix</entry>
 <entry key="tooltip.break_path">Break path at the end of current segment</entry>
 <entry key="tooltip.close_path">Close path</entry>
 <entry key="tooltip.close_path.line">Close path with a line</entry>
@@ -1112,8 +1203,6 @@ Nicola Talbot
 <entry key="tooltip.convert_to_move">Convert current segment to a gap</entry>
 <entry key="tooltip.coordinates">Set the co-ordinates using a dialogue box</entry>
 <entry key="tooltip.cmyk">CMYK (Cyan Magenta Yellow Key) color selector </entry>
-<entry key="tooltip.copy">Copy selected object(s) to clipboard</entry>
-<entry key="tooltip.cut">Cut selected object(s)</entry>
 <entry key="tooltip.delete_control">Delete current point</entry>
 <entry key="tooltip.direction.linear.north">Northward</entry>
 <entry key="tooltip.direction.linear.northwest">North-Westward</entry>
@@ -1132,24 +1221,11 @@ Nicola Talbot
 <entry key="tooltip.direction.radial.east">East starting location</entry>
 <entry key="tooltip.direction.radial.northeast">North-East starting location</entry>
 <entry key="tooltip.direction.radial.centre">Central starting location</entry>
-<entry key="tooltip.distort">Distort selected path</entry>
 <entry key="tooltip.hotspots">Enable/Disable drag scale</entry>
 <entry key="tooltip.controls">Control point settings</entry>
 <entry key="tooltip.initsettings">Specify settings at start up</entry>
 <entry key="tooltip.ellipse">Ellipse tool</entry>
-<entry key="tooltip.fill_colour">Set fill color</entry>
 <entry key="tooltip.finish">Finish current path</entry>
-<entry key="tooltip.font">Set font attributes</entry>
-<entry key="tooltip.font_family">Select font family name</entry>
-<entry key="tooltip.font.all_styles">Change font attributes</entry>
-<entry key="tooltip.font.family">Change font family</entry>
-<entry key="tooltip.font.size">Change font size</entry>
-<entry key="tooltip.font.shape">Change font shape (upright/italic)</entry>
-<entry key="tooltip.font.series">Change font series (medium/bold)</entry>
-<entry key="tooltip.font.anchor.both">Change the horizontal and vertical LaTeX font anchors</entry>
-<entry key="tooltip.font.anchor.horizontal">Change the horizontal LaTeX font anchor</entry>
-<entry key="tooltip.font.anchor.vertical">Change the vertical LaTeX font anchor</entry>
-<entry key="tooltip.front">Move selected object(s) to the front</entry>
 <entry key="tooltip.gap">Make a gap in the currect path</entry>
 <entry key="tooltip.grey">Gray selector </entry>
 <entry key="tooltip.grid.rectangular">Rectangular grid (origin at top left)</entry>
@@ -1158,26 +1234,15 @@ Nicola Talbot
 <entry key="tooltip.grid.tschichold">Tschichold grid (origin at top left)</entry>
 <entry key="tooltip.grid.path">Path-based grid (origin at top left)</entry>
 <entry key="tooltip.grid.show">Show/hide grid</entry>
-<entry key="tooltip.group">Group selected object(s)</entry>
 <entry key="tooltip.hsb">HSB (Hue Saturation Brightness) color selector </entry>
 <entry key="tooltip.jdr">Save/use canvas settings stored in jdr files</entry>
-<entry key="tooltip.joinstyle">Set the join style between segments</entry>
 <entry key="tooltip.latex_font">LaTeX font family equivalent</entry>
 <entry key="tooltip.latex_font_series">LaTeX font series equivalent</entry>
 <entry key="tooltip.latex_font_shape">LaTeX font shape equivalent</entry>
 <entry key="tooltip.latex_font_size">LaTeX font size equivalent</entry>
-<entry key="tooltip.line_colour">Set line color</entry>
 <entry key="tooltip.line_style">Set the line style</entry>
-<entry key="tooltip.linewidth">Set the pen width</entry>
 <entry key="tooltip.lock_grid">Lock grid</entry>
 <entry key="tooltip.math">Create a text area that will automatically insert math shift characters at the start and end of the LaTeX alternative text</entry>
-<entry key="tooltip.navigate.goto">Move mouse to specified co-ordinates</entry>
-<entry key="tooltip.navigate.select">Select the next object in the stack</entry>
-<entry key="tooltip.navigate.add_next">Add the next object in the stack to the current selection</entry>
-<entry key="tooltip.navigate.skip">Deselect the lowest selected object in the stack and add next object to selection</entry>
-<entry key="tooltip.navigate.find">Scroll to selected object(s)</entry>
-<entry key="tooltip.navigate.by_description">Select and scroll to an object from its description</entry>
-<entry key="tooltip.navigate.add_description">Scroll to an object from its description and add to current selection</entry>
 <entry key="tooltip.new">New image</entry>
 <entry key="tooltip.next_control">Select the next control point</entry>
 <entry key="tooltip.normalize">Set normalization factors</entry>
@@ -1187,17 +1252,10 @@ Nicola Talbot
 <entry key="tooltip.open_path">Open path</entry>
 <entry key="tooltip.open_path.remove_last">Open path removing last segment</entry>
 <entry key="tooltip.open_path.keep_last">Open path keeping last segment</entry>
-<entry key="tooltip.path.edit">Edit selected path</entry>
-<entry key="tooltip.paste">Paste selected object(s) from clipboard</entry>
 <entry key="tooltip.prev_control">Select the previous control point</entry>
 <entry key="tooltip.rectangle">Rectangle tool</entry>
 <entry key="tooltip.graphics">Change graphics settings</entry>
-<entry key="tooltip.reset">Reset the underlying transformation matrix</entry>
 <entry key="tooltip.rgb">RGB (Red Green Blue) color selector </entry>
-<entry key="tooltip.rotate">Rotate selected object(s)</entry>
-<entry key="tooltip.save">Save image</entry>
-<entry key="tooltip.scale">Scale selected object(s)</entry>
-<entry key="tooltip.shear">Shear selected object(s)</entry>
 <entry key="tooltip.select">Select tool</entry>
 <entry key="tooltip.select_all">Select all objects</entry>
 <entry key="tooltip.snap">Move the control to the nearest grid point</entry>
@@ -1226,10 +1284,6 @@ Nicola Talbot
 <entry key="tooltip.has_symmetry">Add or remove symmetry from the path</entry>
 <entry key="tooltip.join_anchor">Toggle whether the last point of the underlying path should be anchored</entry>
 <entry key="tooltip.textarea">Text tool</entry>
-<entry key="tooltip.textarea.edit">Edit selected text</entry>
-<entry key="tooltip.textarea.colour">Set text color</entry>
-<entry key="tooltip.textarea.outline">Display text as an outline</entry>
-<entry key="tooltip.ungroup">Ungroup selected object(s)</entry>
 <entry key="tooltip.vScrollBlockDown">Block scroll down</entry>
 <entry key="tooltip.vScrollBlockUp">Block scroll up</entry>
 <entry key="tooltip.vScrollEndDown">Scroll down to end</entry>
@@ -1242,10 +1296,6 @@ Nicola Talbot
 <entry key="tooltip.hScrollEndRight">Scroll right to end</entry>
 <entry key="tooltip.hScrollUnitLeft">Scroll left</entry>
 <entry key="tooltip.hScrollUnitRight">Scroll right</entry>
-<entry key="tooltip.pattern.set">Apply a pattern to selected shape</entry>
-<entry key="tooltip.textpath">Convert to text-path</entry>
-<entry key="tooltip.up">Move selected object(s) up the stack (z axis)</entry>
-<entry key="tooltip.down">Move selected object(s) down the stack (z axis)</entry>
 <entry key="tooltip.choose_file">Open file selector to choose a file</entry>
 
 <!--  undo/redo information -->
@@ -1919,8 +1969,11 @@ Nicola Talbot
 <entry key="font.tab.mnemonic">N</entry>
 <entry key="font.sample">Sample</entry>
 <entry key="font.samples">Samples</entry>
+
 <entry key="font.family">Font Family</entry>
 <entry key="font.family.mnemonic">Y</entry>
+<entry key="font.family.tooltip">Set the font family</entry>
+
 <entry key="font.series">Font Series</entry>
 <entry key="font.series.mnemonic">R</entry>
 <entry key="font.series.bold">Bold</entry>
@@ -3739,7 +3792,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="warning.pgf-no-textpath-outline">text-path outline can't be exported to pgf</entry>
 <entry key="warning.pgf-no-stroke-shading">stroke shading paint can't be exported to pgf</entry>
 <entry key="warning.pgf-shading-mixed-opacity">pgf shading mixed opacity has been averaged</entry>
-<entry key="warning.pgf-no-marker-shading">marker shading paint can't be exported to pgf</entry>
+<entry key="warning.pgf-no-marker-shading">marker shading paint can''t be exported to pgf</entry>
 <entry key="warning.no_background_image">Not enough memory to create a background image. Switching to optimize memory setting.</entry>
 <entry key="warning.save_unsupported_object">Object type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_paint">Paint type ''{0}'' not supported in JDR/AJR version {1}</entry>
