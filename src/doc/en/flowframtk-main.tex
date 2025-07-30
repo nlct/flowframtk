@@ -35,11 +35,6 @@
 
 \begin{document}
 \maketitle
-\frontmatter
-\tableofcontents
-%\listoffigures
-
-\chapter*{Notes}
 
 \FlowframTk\ is licensed under the terms of the GNU General Public License
 (\url{http://gnu.org/licenses/gpl.html"}).
@@ -71,6 +66,9 @@ The source code is in the GitHub repository
 Occasionally the canvas doesn't get redrawn correctly. To force a
 redraw, use \accelerator{menu.debug.revalidate}.
 
+\frontmatter
+\tableofcontents
+%\listoffigures
 
 \mainmatter
 \chapter{Introduction}
@@ -165,7 +163,7 @@ If the button isn't mentioned, a~\gls{click} can
 be assumed to mean a~\gls{primaryclick}.
 
 \chapter{Installation}
-\label{install}
+\label{sec:install}
 
 Ensure that you have the \gls{jre} installed.
 This can be downloaded from \url{http://java.sun.com/j2se/}.
@@ -186,7 +184,7 @@ able to \gls{doubleclick} on the \ext{jar} file to run it.
 
 
 \chapter{Accessibility}
-\label{access}
+\label{sec:access}
 
 Most of \FlowframTk's mouse functions can be emulated using the
 keyboard, however note that some systems do not allow applications
