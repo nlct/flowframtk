@@ -95,6 +95,7 @@ Nicola Talbot
 <entry key="menu.edit.undo.mnemonic">U</entry>
 <entry key="menu.edit.undo.tooltip">Undo last action</entry>
 <entry key="menu.edit.undo.keystroke">F8</entry>
+<entry key="menu.edit.undo.iconimage">undo</entry>
 
 <entry key="button.undo">Undo</entry>
 <entry key="button.undo.keystroke">F8</entry>
@@ -104,6 +105,7 @@ Nicola Talbot
 <entry key="menu.edit.redo.mnemonic">R</entry>
 <entry key="menu.edit.redo.tooltip">Redo last action</entry>
 <entry key="menu.edit.redo.keystroke">F9</entry>
+<entry key="menu.edit.redo.iconimage">redo</entry>
 
 <entry key="button.redo">Redo</entry>
 <entry key="button.redo.keystroke">F9</entry>
@@ -133,6 +135,7 @@ Nicola Talbot
 <entry key="menu.edit.cut.mnemonic">T</entry>
 <entry key="menu.edit.cut.keystroke">control X</entry>
 <entry key="menu.edit.cut.tooltip">Cut selected objects to the clipboard</entry>
+<entry key="menu.edit.cut.iconimage">cut</entry>
 
 <entry key="button.cut">Cut</entry>
 <entry key="button.cut.keystroke">control X</entry>
@@ -141,6 +144,7 @@ Nicola Talbot
 <entry key="menu.edit.copy.mnemonic">C</entry>
 <entry key="menu.edit.copy.keystroke">control C</entry>
 <entry key="menu.edit.copy.tooltip">Copy selected objects to the clipboard</entry>
+<entry key="menu.edit.copy.iconimage">copy</entry>
 
 <entry key="button.copy">Copy</entry>
 <entry key="button.copy.keystroke">control C</entry>
@@ -148,7 +152,8 @@ Nicola Talbot
 <entry key="menu.edit.paste">Paste</entry>
 <entry key="menu.edit.paste.mnemonic">P</entry>
 <entry key="menu.edit.paste.keystroke">control V</entry>
-<entry key="menu.edit.paste.keystroke">Paste objects from the clipboard</entry>
+<entry key="menu.edit.paste.tooltip">Paste objects from the clipboard</entry>
+<entry key="menu.edit.paste.iconimage">paste</entry>
 
 <entry key="button.paste">Paste</entry>
 <entry key="button.paste.keystroke">control V</entry>
@@ -430,6 +435,7 @@ Nicola Talbot
 <entry key="menu.transform.distort.mnemonic">D</entry>
 <entry key="menu.transform.distort.initvalue">false</entry>
 <entry key="menu.transform.distort.tooltip">Toggle distortion mode for selected path</entry>
+<entry key="menu.transform.distort.iconimage">distort</entry>
 
 <entry key="button.distort">Distort</entry>
 
@@ -486,6 +492,7 @@ Nicola Talbot
 <entry key="menu.transform.group.mnemonic">G</entry>
 <entry key="menu.transform.group.keystroke">control G</entry>
 <entry key="menu.transform.group.tooltip">Group selected object(s)</entry>
+<entry key="menu.transform.group.iconimage">group</entry>
 
 <entry key="button.group">Group</entry>
 <entry key="button.group.keystroke">control G</entry>
@@ -494,6 +501,7 @@ Nicola Talbot
 <entry key="menu.transform.ungroup.mnemonic">U</entry>
 <entry key="menu.transform.ungroup.keystroke">control U</entry>
 <entry key="menu.transform.ungroup.tooltip">Ungroup selected object(s)</entry>
+<entry key="menu.transform.ungroup.iconimage">ungroup</entry>
 
 <entry key="button.ungroup">Ungroup</entry>
 <entry key="button.ungroup.keystroke">control U</entry>
@@ -1034,6 +1042,8 @@ Nicola Talbot
 
 <entry key="menu.selectedpath.distort">Distort</entry>
 <entry key="menu.selectedpath.distort.mnemonic">R</entry>
+<entry key="menu.selectedpath.distort.initvalue">false</entry>
+<entry key="menu.selectedpath.distort.iconimage">distort</entry>
 
 <entry key="menu.selectedpath.line_colour">Line Color...</entry>
 <entry key="menu.selectedpath.line_colour.mnemonic">L</entry>
@@ -1103,7 +1113,7 @@ Nicola Talbot
 <entry key="menu.selectedgroup.group_description.mnemonic">I</entry>
 <entry key="menu.selectedgroup.group_description.tooltip">Set or edit the description of the selected group</entry>
 
-<entry key="index.menu.selected">Common Popup Menu Items</entry>
+<entry key="index.menu.selected">Selection Popup Menu</entry>
 
 <entry key="menu.selected.object_description">Description...</entry>
 <entry key="menu.selected.object_description.mnemonic">I</entry>
@@ -1112,14 +1122,17 @@ Nicola Talbot
 <entry key="menu.selected.cut">Cut</entry>
 <entry key="menu.selected.cut.mnemonic">T</entry>
 <entry key="menu.selected.cut.keystroke">control X</entry>
+<entry key="menu.selected.cut.iconimage">cut</entry>
 
 <entry key="menu.selected.copy">Copy</entry>
 <entry key="menu.selected.copy.mnemonic">C</entry>
 <entry key="menu.selected.copy.keystroke">control C</entry>
+<entry key="menu.selected.copy.iconimage">copy</entry>
 
 <entry key="menu.selected.paste">Paste</entry>
 <entry key="menu.selected.paste.mnemonic">P</entry>
 <entry key="menu.selected.paste.keystroke">control V</entry>
+<entry key="menu.selected.paste.iconimage">paste</entry>
 
 <entry key="menu.selected.select_all">Select All</entry>
 <entry key="menu.selected.select_all.mnemonic">A</entry>
@@ -1132,9 +1145,11 @@ Nicola Talbot
 
 <entry key="menu.selected.group">Group</entry>
 <entry key="menu.selected.group.mnemonic">G</entry>
+<entry key="menu.selected.group.iconimage">group</entry>
 
 <entry key="menu.selected.ungroup">Ungroup</entry>
 <entry key="menu.selected.ungroup.mnemonic">U</entry>
+<entry key="menu.selected.ungroup.iconimage">ungroup</entry>
 
 <entry key="menu.selected.path">Path</entry>
 <entry key="menu.selected.path.mnemonic">H</entry>

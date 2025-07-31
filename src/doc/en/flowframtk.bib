@@ -593,12 +593,22 @@ or even-numbered page).}
     \FlowframTk\ it is also possible to invoke popup menus using
     \accelerator{popup} or your keyboard may have a context-menu
     \accelerator{context_menu} key.},
-  see={index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.none}
+  see={index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.menu.none}
 }
 
 @index{context-menu,
  name={context menu},
  alias={popupmenu}
+}
+
+@term{robot,
+ description={a system for mimicking input events, such as mouse
+movements. This is used to allow fine movements of the pointer with
+the cursor keys or for moving the pointer to a specific location on
+the canvas (such as with the \gls{menu.navigate.goto} and
+\gls{menu.navigate.find} functions). Some platforms or environments
+may prohibit some or all robot functions. If this occurs, you may
+receive the warning \warnmsg{no_robot}}
 }
 
 @index{menuclick,
@@ -668,6 +678,14 @@ dump all function.}
 @index{move-to,
   name={move to},
   see={gap}
+}
+
+@indexplural{hotspot}
+
+@index{selection-bbox,
+ name={selection bounding box},
+ plural={selection bounding boxes},
+ seealso={bbox}
 }
 
 % PUNCTUATION

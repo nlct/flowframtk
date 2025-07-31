@@ -15,10 +15,15 @@
 \hypersetup{colorlinks,linkcolor=blue}
 
 \newcommand{\FlowframTk}{FlowframTk}
-\newcommand{\texttool}{\gls{menu.tools.textarea} tool}
-\newcommand{\mathstool}{\gls{menu.tools.math} tool}
-\newcommand{\textmode}{\glslink{menu.tools.textarea}{text-mode}}
-\newcommand{\mathsmode}{\glslink{menu.tools.math}{\manmsg{maths}-mode}}
+\newcommand{\tool}[1]{\gls{menu.tools.#1} tool}
+\newcommand{\texttool}{\tool{textarea}}
+\newcommand{\mathstool}{\tool{math}}
+\newcommand{\textmode}{\glslink{menu.tools.textarea}{text mode}}
+\newcommand{\mathsmode}{\glslink{menu.tools.math}{\manmsg{maths} mode}}
+\newcommand{\selectmode}{\glslink{menu.tools.select}{select mode}}
+\newcommand{\select}{\hyperref[sec:selectobjects]{select}}
+\newcommand{\selects}{\hyperref[sec:selectobjects]{selects}}
+\newcommand{\selected}{\hyperref[sec:selectobjects]{selected}}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -189,11 +194,18 @@ able to \gls{doubleclick} on the \ext{jar} file to run it.
 \label{sec:access}
 
 Most of \FlowframTk's mouse functions can be emulated using the
-keyboard, however note that some systems do not allow applications
-to move the pointer, so keyboard functions that move the pointer are
-not guaranteed to work on every system. Keyboard accelerators and
+keyboard. Keyboard accelerators and
 their menu mnemonic equivalents are listed in \tableref{tab:access}.
-These accelerators may be changed using the \dialog{accelerators}
+
+\begin{information}
+Some functions will also try to move the pointer (such as
+\menu{navigate.find}). This is done via the \emph{\gls{robot}}.
+However note that some platforms or environments do not allow applications
+to move the pointer, so keyboard functions that move the pointer are
+not guaranteed to work on every system
+\end{information}
+
+Many of the accelerators may be changed using the \dialog{accelerators}
 tab in the \dialog{configui} window (see
 \sectionref{sec:configureuidialog}).  \accelerator{menubarfocus}
 switches the focus to the menu bar. The return \keys{\keyref{return}}
@@ -857,7 +869,7 @@ Don't disable the request for printer attributes on startup (default).
 Enable debugging mode. This will add the \inlineglsdef{menu.debug}
 menu to the main menu bar which provides the following functions:
 \menu{debug.objectinfo} (displays diagnostic information about the
-currently selected objects); \menu{debug.writelog} (writes
+currently \selected\ objects); \menu{debug.writelog} (writes
 diagnostic information for all currently open images to a log file
 in the \gls{config_dir}) \menu{debug.revalidate} (revalidates the
 image) and \menu{debug.dumpall} (saves all current images to a
@@ -957,9 +969,9 @@ You can \gls{doubleclick} on this image to toggle the state.
 
 \begin{warning}
 If you lock the grid, you will be unable to use the
-mouse to select narrow \glspl{path} that lie between tick marks as
+mouse to \select\ narrow \glspl{path} that lie between tick marks as
 mouse \glspl{click} will be translated to the nearest tick mark, unless you
-use the drag rectangle (which may select other objects as well).
+use the drag rectangle (which may \select\ other \glspl{object} as well).
 \end{warning}
 
 Similarly, if the \widget{editpathui.ignorelock}
@@ -1545,7 +1557,7 @@ third columns of the mapping table. The first two columns can't be
 edited.
 
 \widgetdef{textconfig.add.textmap}
-\plabel[New \TeX\ Mappings]{mi:newtexmappings}%
+\plabel[New \TeX\ Mappings]{mi:newtexmappings}% HelpSet id
 To add a new mapping, \gls{click} on the green plus button to the
 side of the relevant table.  This will open the add new mapping
 dialog. Enter the character you want mapped in the
@@ -1754,25 +1766,28 @@ mouse to select a \gls{controlpt} in edit path mode.
 
 \iconstartpar{hotspots.png,nohotspots.png}%
 \plabel[Hotspots]{mi:hotspots}%
-You can also use the \widget{graphics.title} tab to choose between
-enabling (left icon) and disabling (right icon) hotspots along the
-\glspl{bbox}. If hotspots are enabled, you can scale, rotate or
-shear \glspl{object} by dragging the appropriate hotspot. (Note that
+\Inlineglspluraldef{hotspot} are regions around an \gls*{object}['s] 
+\gls{selection-bbox} that can be used to perform freehand
+transformations.
+You can use the \widget{graphics.title} tab to choose between
+enabling (left icon) and disabling (right icon) \glspl{hotspot} along the
+\glspl{selection-bbox}. If \glspl{hotspot} are enabled, you can scale, rotate or
+shear \glspl{object} by dragging the appropriate \gls{hotspot}. (Note that
 transforming \glspl{compositeshape} applies the transformation to
 the \emph{underlying} shape not to the shape as a whole.)
 
 You may want to disable this option when you want to move small
 objects, or you may end up transforming them instead of moving them.
 When this option is enabled, the cursor will change
-shape when you move it over the edge of the \gls{bbox}.
+shape when you move it over the edge of the \gls{selection-bbox}.
 (The actual cursor appearance depends on the look and
 feel of the platform you are using. On some systems the South and
 North arrows may look the same, and similarly for the East and West
 arrows.)
 \figureref{fig:hotspotsa} shows how the \gls{bbox} is displayed
-when hotspots are enabled and \figureref{fig:hotspotsb} shows
-how the \gls{bbox} is displayed when the hotspots have been
-disabled. Each hotspot is represented by a small square. Available
+when \glspl{hotspot} are enabled and \figureref{fig:hotspotsb} shows
+how the \gls{selection-bbox} is displayed when the \glspl{hotspot} have been
+disabled. Each \gls{hotspot} is represented by a small square. Available
 functions are listed in \tableref{tab:hotspotfunctions}.
 
 \FloatTable
@@ -1791,9 +1806,9 @@ Top left & shear horizontally & West arrow
 }
 {Hotspot Functions}
  
-Note that even if you have more than one \gls{object} selected, only the
-object whose hotspot you are dragging will be transformed.
-As may be predicted, using hotspots is not as precise as using the
+Note that even if you have more than one \gls{object} \selected, only the
+object whose \gls{hotspot} you are dragging will be transformed.
+As may be predicted, using \glspl{hotspot} is not as precise as using the
 transformation dialog boxes described in
 \sectionref{sec:selectobjects}.
 
@@ -1870,7 +1885,7 @@ You can use the \widget{accelerators.title} tab
 different actions provided the actions are never both enabled at the
 same time. (For example, \accelerator{menu.editpath.next_control}
 selects the next control in path edit mode or adjust the selection
-in select mode.)
+in \selectmode.)
 
 \begin{information}
 Java's accessibility API uses \accelerator{action.menubarfocus} to switch
@@ -2318,7 +2333,7 @@ some of them completely hide the preamble pane (such as the GTK+
 Look and Feel).  You can also use the \menu{tex.set_preamble} menu
 item to show the preamble pane.
 
-In \hyperref[sec:selectobjects]{select mode} (but not when you're editing or
+In \selectmode\ (but not when you're editing or
 distorting a shape) you can \gls{drag-and-drop} image files or
 text onto the canvas to add to the current image. With the
 \texttool\ or \mathstool\ you can only \gls{drag-and-drop} text onto
@@ -2501,7 +2516,7 @@ inserted instead. If you drop onto a \gls{canvas}, the file contents
 will be added to the current image (in the case of a \gls{JDR} or
 \gls{AJR} file) or a link will inserted into the current image (in the
 case of a \gls{bitmap} file). You can only drop a file onto the
-\gls{canvas} in select mode (and no objects are being distorted or
+\gls{canvas} in \selectmode\ (and no objects are being distorted or
 edited).
 
 \section{Recent Files}\label{sec:recentfiles}
@@ -2733,7 +2748,7 @@ rectangle a transparent line \manmsg{colour} (in addition to the
 transparent fill \manmsg{colour}) but now it can only been detected on the
 \gls{canvas} when it's selected. The second method is to set the
 typeblock to the area of that rectangle (see \sectionref{sec:typeblock}).
-The easiest way to do this is to select the rectangle, use the
+The easiest way to do this is to \select\ the rectangle, use the
 \menu{tex.flowframe.set_typeblock} menu item to open the
 \dialog{typeblock} dialog box, and click on the
 \widget{typeblock.compute_from_path} button. Then delete the
@@ -2944,7 +2959,7 @@ the quit operation.
 
 New \glspl{path} and \glspl{textarea} can be created using
 \FlowframTk's \gls{construction}, which can be obtained using any tool
-except the select tool. The tools can be selected using either the
+except the \tool{select}. The tools can be selected using either the
 vertical \gls{toolbar} or the \menu{tools} menu. Once \glspl{path}
 and \glspl{textarea} have been created they can then be edited or
 transformed or combined to form a \gls{textpath} object. You can
@@ -3015,7 +3030,7 @@ the required segments.
 \subfigref{fig:draftfinala} path under construction;
 \subfigref{fig:draftfinalb} path completed.}
 
-\plabel[Go To Dialog Box]{sec:goto}% 
+\plabel[Go To Dialog Box]{sec:goto}%
 If you are unable to use the mouse, you can move the pointer using
 \menu{navigate.goto} which will display the dialog box shown in
 \figureref{fig:goto}. Enter the $x$ and $y$ co-ordinates in the
@@ -3279,7 +3294,7 @@ spaces). If the drop point is outside the \gls{textarea}
 construction field, a new text area will be created for each line of
 dropped text. The mapping applied to the dropped text will be
 according to the currently selected text tool.  If text is dropped
-onto the \gls{canvas} in select mode, the text mappings (not
+onto the \gls{canvas} in \selectmode, the text mappings (not
 \manmsg{maths} mappings) will be applied. If a file is dropped onto
 the \gls{canvas} when either the \texttool\ or \mathstool\ is
 active, the file path (or URI) will be added as a new
@@ -3362,7 +3377,7 @@ The \menu{textarea.insert_symbol} menu item
 opens the \dialog{symbolselector} dialog  if you want to
 enter a symbol that doesn't appear on your keyboard. 
 
-\plabel[Insert Symbol Dialog Box]{mi:insertsymbol}%
+\plabel[Insert Symbol Dialog Box]{mi:insertsymbol}% HelpSet id
 \widgetdef{symbolselector.title}
 
 \FloatFig
@@ -3450,14 +3465,14 @@ prompt you to either provide the new location or discard the reference.
 \menudef{menu.bitmap.insert}
 
 To insert a \gls{bitmap} into your picture, first make sure you are using
-the \gls{menu.tools.select} tool (and no shapes are
+the \tool{select} (and no shapes are
 being edited or distorted), and then select the menu item
 \menu{bitmap.insert} and a file selector dialog box will appear in which
 you can choose the required \gls{bitmap}. The \gls{bitmap} will initially appear
 in the top left hand corner of the \gls{canvas} but can be
 \hyperref[sec:moveobjects]{moved} to a new location.  If your
 operating system supports \gls{drag-and-drop}, you can also drag a
-\gls{bitmap} file onto the \gls{canvas} (in \gls{menu.tools.select} mode) and it will
+\gls{bitmap} file onto the \gls{canvas} (in \selectmode) and it will
 be inserted at the drop location.
 
 If there is insufficient memory in the \gls{jre} to load a bitmap,
@@ -3513,7 +3528,7 @@ Currently undocumented.
 \widgetdef{bitmap_properties.title}
 
 To change a \gls{bitmap}['s] properties (file reference, alternative
-\LaTeX\ path, or transformation matrix), \hyperref[sec:selectobjects]{select}
+\LaTeX\ path, or transformation matrix), \select\
 the required \gls{bitmap} and select the \menu{bitmap.properties}
 menu item. This will open up the \dialog{bitmap_properties} dialog box shown in
 \figureref{fig:bitmapprops}. If you want to change the path name to
@@ -3561,7 +3576,7 @@ Currently undocumented.
 
 \menudef{menu.tools.select}
 
-In order to edit an \gls{object}, you must be in select mode. To do
+In order to edit an \gls{object}, you must be in \selectmode. To do
 this either click on the \gls{menu.tools.select} button or use the 
 \menu{tools.select} menu item. An \gls*{object} can
 be selected using any of the following methods:
@@ -3571,7 +3586,7 @@ be selected using any of the following methods:
 \item \Gls{doubleclick} the primary mouse button to
 select the \gls*{object} behind the current \gls*{object}.
 
-\item Use Control-click (i.e.\ \gls{click} whilst holding down the control
+\item Use \keyref{ctrl}-click (that is, \gls{click} whilst holding down the control
 \keys{\keyref{ctrl}} key) if you want to add an \gls*{object} to the current
 selection.
 
@@ -3585,41 +3600,52 @@ button before releasing the shift key.)
 
 \item Use the \menu{navigate} menu (see \sectionref{sec:navigate}).
 
-\item Use \menu{edit.select_all} to select all
-\glspl{object}.
 \end{itemize}
 
-When an \gls{object} is selected, a dashed red\slash\manmsg{grey} rectangle will
-be displayed around it. (This rectangle may optionally have
-\hyperref[mi:hotspots]{hotspot} regions.) Note that
-individual elements of a \gls{group} can not be selected
-independently of the group.  When you select a group, you will only
-see a dashed red\slash\manmsg{grey} rectangle around the \gls{bbox} of the group,
-not around the individual elements of the group.
+\menudef{menu.edit.select_all}
 
-To deselect an individual \gls*{object}, click on that object whilst
-depressing the shift key. To deselect all \glspl*{object}, click on
-an empty part of the \gls{canvas}, or use \menu{edit.deselect_all}.
+The \menu{edit.select_all} menu item will select all
+\glspl{object}.
+
+\menudef{menu.edit.deselect_all}
+
+The \menu{edit.deselect_all} menu item will deselect all
+\glspl{object}. You can also click on
+an empty part of the \gls{canvas} to deselect all \glspl{object}.
 Selecting another tool will also deselect all \glspl*{object}.
 
-In select mode you can \gls{drag-and-drop} \gls{JDR} or \gls{AJR}
+\begin{information}
+To deselect an individual \gls*{object}, click on that object whilst
+depressing the shift \keys{\keyref{shift}} key.
+\end{information}
+
+When an \gls{object} is selected, a dashed red\slash\manmsg{grey}
+rectangle will be displayed around it. This rectangle is the 
+\emph{\inlineglsdef{selection-bbox}} and may optionally have
+\gls{hotspot} regions. Note that individual elements of a
+\gls{group} can not be selected independently of the group.  When
+you select a group, you will only see a dashed
+red\slash\manmsg{grey} rectangle around the \gls{bbox} of the group,
+not around the individual elements of the group.
+
+In \selectmode\ you can \gls{drag-and-drop} \gls{JDR} or \gls{AJR}
 files onto the \gls{canvas} (provided your operating system supports
 drag and drop) which will add all the objects from those files to
 the current image. The new objects will be added to the current
 selection. You can't drag and drop if a shape is being edited or
 distorted.
 
-If text is dropped onto the \gls{canvas} in select mode, the text
+If text is dropped onto the \gls{canvas} in \selectmode, the text
 mappings (not \manmsg{maths} mappings) will be applied. If a file is
 dropped onto the \gls{canvas} in \textmode\ or \mathsmode, instead of
-in select mode, the file path (or URI) will be added as a new \gls{textarea}.
+in \selectmode, the file path (or URI) will be added as a new \gls{textarea}.
 
 \section{Selection Popup Menus}
 \label{sec:selectpopups}
 
-In select mode, you can also \gls{menuclick} to activate the
+In \selectmode, you can also \gls{menuclick} to activate the
 selection \gls{popupmenu}. The contents of this menu vary according to
-what types of \glspl*{object} have been selected, if any.
+what types of \glspl*{object} have been \selected, if any.
 
 % COMMON POPUP MENU ITEMS
 
@@ -4005,29 +4031,29 @@ This option won't be available if there are no
 \menudef{menu.navigate}
 
 The \menu{navigate} menu provides a way to navigate around the
-\gls{canvas} and can help to select \glspl{object}
+\gls{canvas} and can help to \select\ \glspl{object}
 in a cluttered image.
 
 \menudef{menu.navigate.goto}
 
 The \menu{navigate.goto} menu item opens the
-\inlineglsdef{goto.title} dialog in
-which you can enter $x$ and $y$ coordinates. If your system allows
-applications to move the cursor, the cursor will be moved to the
-entered co-ordinates (scrolling the \gls{canvas} if necessary).
+\inlineglsdef{goto.title} dialog in which you can enter $x$ and $y$
+coordinates. If your system allows applications to move the cursor
+(via the \gls{robot}), the cursor will be moved to the entered
+co-ordinates (scrolling the \gls{canvas} if necessary).
 
 \menudef{menu.navigate.select}
 
 The \menu{navigate.select} menu item 
-selects the next object in the \gls{stack}. (Starting from the
+\selects\ the next \gls{object} in the \gls{stack}. (Starting from the
 \gls{front} and heading towards the \gls{back}.) This will cycle back to
 the start when it reaches the end of the \gls{stack}.
 
 \menudef{menu.navigate.skip}
 
 The \menu{navigate.skip} menu item will deselect the
-selected object closest to the \gls{back}, and select
-the next object in the \gls{stack} (heading towards the \gls{back}). This
+selected \gls{object} closest to the \gls{back}, and \select\
+the next \gls{object} in the \gls{stack} (heading towards the \gls{back}). This
 will cycle back to the start when it reaches the end of the stack.
 If you have more than one \gls{object} selected, the remaining
 \glspl*{object} will stay selected.
@@ -4035,16 +4061,16 @@ If you have more than one \gls{object} selected, the remaining
 \menudef{menu.navigate.add_next}
 
 The \menu{navigate.add_next} menu item will add
-the next object in the \gls{stack} to the selection (starting from
+the next \gls{object} in the \gls{stack} to the selection (starting from
 the \gls{front} and heading towards the \gls{back}). This will cycle back to
 the start when it reaches the end of the stack.
 
 \menudef{menu.navigate.find}
 
-If an \gls{object} is already selected, the \menu{navigate.find}
+If an \gls{object} is already \selected, the \menu{navigate.find}
 menu item will scroll the \gls{canvas} to ensure the \gls{object} is
 in the viewport. If your system allows applications to move the
-cursor, the cursor will be moved to the top left corner of the
+cursor (via the \gls{robot}), the cursor will be moved to the top left corner of the
 \gls{object}['s] bounding box.
 
 \menudef{menu.navigate.by_description}
@@ -4065,7 +4091,45 @@ selected.
 
 \section{Moving an Object}\label{sec:moveobjects}
 
-TODO
+To move an \gls{object} or \glspl*{object}, first \select\ the
+\glspl*{object} you want to move and then depress the
+\glslink{primaryclick}{primary mouse button} somewhere inside the
+selection, and drag the mouse.  Release the mouse button when the
+\glspl*{object} have reached their required location.
+
+\begin{important}
+If the \hyperref[mi:gridlock]{grid lock} is on, the \selected\
+\gls{object} (or \glspl{object}) will jump
+in increments of the minor tick distance.
+\end{important}
+
+If you only want to move the object by a very small amount, and your
+mouse is very sensitive or you have difficulties with fine motor
+co-ordination, depress the mouse button and instead of dragging use
+the arrow keys to move the pointer. (This will require the
+\gls{robot} to be available.)
+
+\menudef{menu.edit.moveby}
+
+An alternative if you need to move a small amount or if you need to
+move by an exact amount is to use the \menu{edit.moveby} menu item.
+This will open the \dialog{moveby} dialog box (\figureref{fig:moveby}).
+In the field marked \widget{coordinates.x} enter the horizontal
+displacement, and in the field marked \widget{coordinates.y}
+enter the vertical displacement. For example, to move the
+selected \glspl*{object} 10 units to the right and 20 units down,
+type 10 in the \widget{coordinates.x} field and 20 in the
+\widget{coordinates.y} field. To move left or up, use a negative
+value.
+
+\begin{information}
+The \menu{edit.moveby} function is unaffected by the grid lock.
+\end{information}
+
+\FloatFig
+  {fig:moveby}
+  {\includeimg{moveby}}
+  {Move Selected Objects Dialog Box}
 
 
 \section{Cut}\label{sec:cutobjects}
