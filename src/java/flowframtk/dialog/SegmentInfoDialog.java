@@ -129,6 +129,7 @@ public class SegmentInfoDialog extends JDialog
 
       p2.add(resources.createOkayButton(getRootPane(), this));
       p2.add(resources.createCancelButton(this));
+      p2.add(resources.createHelpDialogButton(this, "mi:segmentinfo"));
 
       revertButton = resources.createDialogButton(
         "segmentinfo", "default", this, null);

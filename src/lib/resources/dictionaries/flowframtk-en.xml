@@ -886,6 +886,7 @@ Nicola Talbot
 
 <entry key="menu.editpath.break_path">Break path</entry>
 <entry key="menu.editpath.break_path.mnemonic">B</entry>
+<entry key="menu.editpath.break_path.tooltip">Split the path in two at the current segment</entry>
 
 <entry key="menu.editpath.close_path">Close Path</entry>
 <entry key="menu.editpath.close_path.mnemonic">P</entry>
@@ -901,36 +902,47 @@ Nicola Talbot
 
 <entry key="menu.editpath.continuity">Continuity</entry>
 <entry key="menu.editpath.continuity.mnemonic">U</entry>
+<entry key="menu.editpath.continuity.tooltip">Adjust the curvature controls to ensure a continuous gradient between segments</entry>
 
 <entry key="menu.editpath.continuity.equi">Equidistant</entry>
 <entry key="menu.editpath.continuity.equi.mnemonic">E</entry>
+<entry key="menu.editpath.continuity.equi.tooltip">Move control so the gradient vector has same direction and magnitude as adjoining segment</entry>
 
 <entry key="menu.editpath.continuity.relative">Relative</entry>
 <entry key="menu.editpath.continuity.relative.mnemonic">R</entry>
+<entry key="menu.editpath.continuity.relative.tooltip">Move control so the gradient vector has same direction as adjoining segment</entry>
 
 <entry key="menu.editpath.continuity.anchor">Anchor</entry>
 <entry key="menu.editpath.continuity.anchor.mnemonic">A</entry>
+<entry key="menu.editpath.continuity.anchor.initvalue">false</entry>
+<entry key="menu.editpath.continuity.anchor.tooltip">Enable the gradient continuity anchor</entry>
 
 <entry key="menu.editpath.coordinates">Co-ordinates...</entry>
 <entry key="menu.editpath.coordinates.mnemonic">R</entry>
 <entry key="menu.editpath.coordinates.keystroke">F7</entry>
+<entry key="menu.editpath.coordinates.tooltip">Specify new co-ordinates for selected control point</entry>
 
 <entry key="menu.editpath.convert_to_curve">Convert To Curve</entry>
 <entry key="menu.editpath.convert_to_curve.mnemonic">C</entry>
+<entry key="menu.editpath.convert_to_curve.tooltip">Replace the current segment with a cubic Bézier curve</entry>
 
 <entry key="menu.editpath.delete_control">Delete Point</entry>
 <entry key="menu.editpath.delete_control.mnemonic">D</entry>
 <entry key="menu.editpath.delete_control.keystroke">DELETE</entry>
+<entry key="menu.editpath.delete_control.tooltip">Delete the current control pint and its segment</entry>
 
 <entry key="menu.editpath.convert_to_line">Convert To Line</entry>
 <entry key="menu.editpath.convert_to_line.mnemonic">L</entry>
+<entry key="menu.editpath.convert_to_line.tooltip">Replace the current segment with a line</entry>
 
 <entry key="menu.editpath.convert_to_move">Convert To Move</entry>
 <entry key="menu.editpath.convert_to_move.mnemonic">M</entry>
+<entry key="menu.editpath.convert_to_move.tool">Replace the current segment with a gap</entry>
 
 <entry key="menu.editpath.next_control">Next Control</entry>
 <entry key="menu.editpath.next_control.mnemonic">N</entry>
 <entry key="menu.editpath.next_control.keystroke">F6</entry>
+<entry key="menu.editpath.next_control.tooltip">Select the next control point</entry>
 
 <entry key="menu.editpath.open_path">Open Path</entry>
 <entry key="menu.editpath.open_path.mnemonic">O</entry>
@@ -944,22 +956,30 @@ Nicola Talbot
 <entry key="menu.editpath.prev_control">Previous Control</entry>
 <entry key="menu.editpath.prev_control.mnemonic">V</entry>
 <entry key="menu.editpath.prev_control.keystroke">shift F6</entry>
+<entry key="menu.editpath.prev_control.tooltip">Select the previous control point</entry>
 
 <entry key="menu.editpath.snap">Snap To Grid</entry>
 <entry key="menu.editpath.snap.mnemonic">S</entry>
 <entry key="menu.editpath.snap.keystroke">control shift S</entry>
+<entry key="menu.editpath.snap.tooltip">Move the selected control point to the closest tick mark</entry>
 
 <entry key="menu.editpath.symmetry">Path Symmetry</entry>
 <entry key="menu.editpath.symmetry.mnemonic">Y</entry>
 
 <entry key="menu.editpath.symmetry.has_symmetry">Has Symmetry</entry>
 <entry key="menu.editpath.symmetry.has_symmetry.mnemonic">H</entry>
+<entry key="menu.editpath.symmetry.has_symmetry.initvalue">false</entry>
+<entry key="menu.editpath.symmetry.has_symmetry.tooltip">Add or remove symmetry to the path</entry>
 
 <entry key="menu.editpath.symmetry.join_anchor">Anchor Join</entry>
 <entry key="menu.editpath.symmetry.join_anchor.mnemonic">J</entry>
+<entry key="menu.editpath.symmetry.join_anchor.initvalue">false</entry>
+<entry key="menu.editpath.symmetry.join_anchor.tooltip">Constrain the end point to the line of symmetry</entry>
 
 <entry key="menu.editpath.symmetry.close_anchor">Anchor Start Control</entry>
 <entry key="menu.editpath.symmetry.close_anchor.mnemonic">S</entry>
+<entry key="menu.editpath.symmetry.close_anchor.tooltip">Constrain the start point to the line of symmetry</entry>
+<entry key="menu.editpath.symmetry.close_anchor.initvalue">false</entry>
 
 <entry key="menu.editpath.info">Segment Details...</entry>
 <entry key="menu.editpath.info.mnemonic">I</entry>

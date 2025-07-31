@@ -24,6 +24,9 @@
 \newcommand{\select}{\hyperref[sec:selectobjects]{select}}
 \newcommand{\selects}{\hyperref[sec:selectobjects]{selects}}
 \newcommand{\selected}{\hyperref[sec:selectobjects]{selected}}
+\newcommand{\selection}{\hyperref[sec:selectobjects]{selection}}
+\newcommand{\gridlock}{\hyperref[mi:gridlock]{grid lock}}
+\newcommand{\editpathmode}{\hyperref[sec:editpath]{edit path mode}}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -953,8 +956,8 @@ unlocking the grid. If the grid is locked, mouse \glspl{click} will
 be translated to the nearest tick mark.  This means that if you use
 a mouse \gls{click} to set the location of a \gls{controlpt} when
 constructing a \gls{path}, the point will be placed at the nearest
-tick mark. This also means that when you move a point while in edit
-mode (\sectionref{sec:editpath}), the point will be moved in
+tick mark. This also means that when you move a point while in 
+\editpathmode, the point will be moved in
 intervals of the gap between tick marks. Note that locking the grid
 does not affect the keyboard or menu driven functions, such as
 \menutrail{menu.navigate.goto} \accelerator{menu.navigate.goto}
@@ -976,7 +979,7 @@ use the drag rectangle (which may \select\ other \glspl{object} as well).
 
 Similarly, if the \widget{editpathui.ignorelock}
 option is off, you won't be able to select \glspl{controlpt} in
-\hyperref[sec:editpath]{edit mode} with the mouse unless a
+\editpathmode\ with the mouse unless a
 tick mark lies inside the \gls{controlpt}['s] bounding box.
 You will however be able to select them using the
 \menutrail{menu.editpath.next_control} 
@@ -1044,7 +1047,7 @@ enable a list of additional known paper sizes or select the
 
 \menudef{menu.settings.config}
 
-The \menu{settings.config} menu item opens the \dialog{config}
+The \menu{settings.config} menu item opens the \inlineglsdef{config.title}
 dialog box, which can be used to change image settings.
 (\sectionref{sec:texconfig} covers \TeX\slash\LaTeX\ related settings and
 \sectionref{sec:configureuidialog} covers settings related to the user
@@ -1727,7 +1730,8 @@ opened using a~\gls{menuclick} on the editor pane.
 
 \menudef{menu.settings.configui}
 
-The menu item \menu{settings.configui} will open up a dialog box
+The menu item \menu{settings.configui} will open up 
+the \inlineglsdef{configui.title} dialog box
 in which you can adjust the user interface settings.
 (\sectionref{sec:configuredialog} covers image settings
 and \sectionref{sec:texconfig} covers \TeX\slash\LaTeX\ related
@@ -1744,28 +1748,61 @@ settings.)
   {Configuration UI Dialog Box (Graphics Settings)}
 
 The \widget{graphics.title} tab (\figureref{fig:graphics})
-allows you to:
-\begin{itemize}
-\item choose between using or not using \gls{anti-aliasing}
-to display the graphics;
+allows you to make adjustments to the way the image is rendered on
+the \gls{canvas}.
 
-\item choose between speed or quality in the \gls{rendering};
+\widgetdef{render.anti_alias}
 
-\item set the \manmsg{colour} for the different types of
-\glspl*{controlpt};
+If enabled, use \gls{anti-aliasing} to draw the image.
 
-\item choose whether a mouse \gls{click} on the \gls{canvas} (outside of
-any of the \glspl{controlpt}) exits
-\hyperref[sec:editpath]{edit path mode}.
+\widgetdef{render.rendering}
 
-\item choose whether or not to ignore the
-\hyperref[mi:gridlock]{grid lock} when using the
-mouse to select a \gls{controlpt} in edit path mode.
-\end{itemize}
+Choose between speed or quality in the \gls{rendering}.
 
+\widgetdef{editpathui.title}
+
+The \widget{editpathui.title} area has the following settings that
+relate to the \editpathmode.
+
+\widgetdef{editpathui.canvasclick}
+
+If enabled, this setting will cause a mouse \gls{click} on the
+\gls{canvas} outside of any of the \glspl{controlpt} to exit
+\editpathmode.
+
+\widgetdef{editpathui.ignorelock}
+
+If enabled, the \gridlock\ will be ignored when using the
+mouse to select a \gls{controlpt} in \editpathmode.
+
+\widgetdef{render.control.standard}
+
+Set the \manmsg{colour} for the regular
+\glspl*{controlpt} according to whether they are selected or
+unselected.
+
+\widgetdef{render.control.symmetry}
+
+Set the \manmsg{colour} for the line of symmetry
+\glspl*{controlpt} according to whether they are selected or
+unselected.
+
+\widgetdef{render.control.patternanchor}
+
+Set the \manmsg{colour} for the pattern anchor
+\glspl*{controlpt} according to whether they are selected or
+unselected.
+
+\widgetdef{render.control.patternadjust}
+
+Set the \manmsg{colour} for the pattern adjustment
+\glspl*{controlpt} according to whether they are selected or
+unselected.
+
+\plabel[Hotspots]{mi:hotspots}%
+\widgetdef{hotspots.title}
 
 \iconstartpar{hotspots.png,nohotspots.png}%
-\plabel[Hotspots]{mi:hotspots}%
 \Inlineglspluraldef{hotspot} are regions around an \gls*{object}['s] 
 \gls{selection-bbox} that can be used to perform freehand
 transformations.
@@ -2411,9 +2448,9 @@ can \gls{doubleclick} on this to open the storage unit selector.
 will display the word \qt{\gls{info.modified}}, otherwise it
 will be blank.
 
-\item The grid lock indicator. This shows if the grid lock is on
+\item The \gridlock\ indicator. This shows if the \gridlock\ is on
 \includeimg{key} or off \includeimg{keycross}. You can
-\gls{doubleclick} on this area to toggle the grid lock setting as an
+\gls{doubleclick} on this area to toggle the \gridlock\ setting as an
 alternative to using the \menu{settings.grid.lock} menu item or
 button.
 
@@ -3017,7 +3054,7 @@ only see a draft version (see \figureref{fig:draftfinal}).
 If you want a \gls{path} with a mixture of line and curve
 segments, first construct a \gls{path} with only one
 type of segment (e.g.\ lines), and then use the
-\hyperref[sec:editpath]{edit path function} to convert
+\gls{menu.edit.path.edit} function to convert
 the required segments.
 
 \FloatSubFigs{fig:draftfinal}
@@ -3056,14 +3093,14 @@ click in \gls{construction}.
 To construct an open line \gls{path}, select the open line tool,
 either by clicking on the open line button or by selecting
 \menu{tools.open_line}. You can later close the \gls{path}
-with the \hyperref[sec:editpath]{edit path function}.
+with the \gls{menu.edit.path.edit} function.
 
 \menudef{menu.tools.closed_line}
 
 To construct a closed line \gls{path}, select the closed line tool,
 either by clicking on the closed line button or by selecting
 \menu{tools.closed_line}. You can later open the \gls{path}
-with the \hyperref[sec:editpath]{edit path function}.
+with the \gls{menu.edit.path.edit} function.
 
 Use the \glslink{primaryclick}{primary mouse button} to click on each vertex
 defining the path. To complete the \gls{path}, do one of the following:
@@ -3101,22 +3138,21 @@ and the initial vertex.
 To construct an open curve \gls{path}, select the open curve tool,
 either by clicking on the open curve button or by selecting
 \menu{tools.open_curve}. You can later close the \gls{path}
-with the \hyperref[sec:editpath]{edit path function}.
+with the \gls{menu.edit.path.edit} function.
 
 \menudef{menu.tools.closed_curve}
 
 To construct a closed curve \gls{path}, select the closed curve tool,
 either by clicking on the closed curve button or by selecting
 \menu{tools.closed_curve}. You can later open the \gls{path}
-with the \hyperref[sec:editpath]{edit path function}.
+with the \gls{menu.edit.path.edit} function.
 
 Use the \glslink{primaryclick}{primary mouse button} to click on each vertex in
 the \gls*{path}.  There is no way to specify the location of the
 \glspl{controlpt} defining the curvature of the \gls*{path} whilst the
 \gls*{path} is under construction, however, once the
 \gls*{path} has been completed, it is possible to move these
-\glspl*{controlpt} using the
-\hyperref[sec:editpath]{edit path function}.
+\glspl*{controlpt} in \editpathmode.
 
 To complete the \gls*{path}, do one of the following:
 \begin{itemize}
@@ -3186,8 +3222,7 @@ Use the \glslink{primaryclick}{primary mouse button} to click on the
 \manmsg{centre} point of the ellipse, and then move (not drag) the mouse
 until the ellipse has reached the desired dimension, and \gls{click}
 or press \accelerator{menu.tools.finish} to complete the \gls{path}. If you want
-to create a circle, I recommend that you first
-\hyperref[mi:gridlock]{lock} the grid or use the
+to create a circle, I recommend that you first enable the \gridlock\ or use the
 \menu{navigate.goto} menu item.
 
 Note that this function is just a shortcut to using the
@@ -4098,8 +4133,8 @@ selection, and drag the mouse.  Release the mouse button when the
 \glspl*{object} have reached their required location.
 
 \begin{important}
-If the \hyperref[mi:gridlock]{grid lock} is on, the \selected\
-\gls{object} (or \glspl{object}) will jump
+If the \gridlock\ is on, the \selected\
+\gls{object} (or \glspl{object}) will move
 in increments of the minor tick distance.
 \end{important}
 
@@ -4123,7 +4158,7 @@ type 10 in the \widget{coordinates.x} field and 20 in the
 value.
 
 \begin{information}
-The \menu{edit.moveby} function is unaffected by the grid lock.
+The \menu{edit.moveby} function is unaffected by the \gridlock.
 \end{information}
 
 \FloatFig
@@ -4131,39 +4166,586 @@ The \menu{edit.moveby} function is unaffected by the grid lock.
   {\includeimg{moveby}}
   {Move Selected Objects Dialog Box}
 
-
 \section{Cut}\label{sec:cutobjects}
 
-TODO
+\menudef{menu.edit.cut}
 
+To cut a \selection\ of \glspl{object} to the
+clipboard, use \menu{edit.cut} menu item. Note that it will be stored
+on the clipboard as a \code{JDRGroup} Java object, not as text or
+\gls{rastergraphics}, so you won't be able to paste it into a different
+application.  If you want to cut a piece of text
+from a \gls{textarea}, you will need to use the
+\hyperref[sec:edittext]{edit text area} function.
+Note that the \hyperref[sec:preamble]{preamble panes} have
+their own cut button.
 
 \section{Copy}\label{sec:copyobjects}
 
-TODO
+\menudef{menu.edit.copy}
 
+To copy a \selection\ of \glspl{object} to the
+clipboard, use \menu{edit.copy}. Note that it will be stored
+on the clipboard as a \code{JDRGroup} Java object, not as text or
+\gls{rastergraphics}, so you won't be able to paste it into a different
+application.  If you want to copy a piece of text from a
+\gls{textarea}, you will need to use the
+\hyperref[sec:edittext]{edit text area} function.
+Note that the \hyperref[sec:preamble]{preamble panes} have
+their own copy button.
 
 \section{Paste}\label{sec:pasteobjects}
 
-TODO
+\menudef{menu.edit.paste}
 
+To paste a \selection\ of \glspl{object} from the clipboard, use
+\menu{edit.paste}. If you want to copy text from another
+application, and paste it into a \gls{textarea} in \FlowframTk, you
+will have to \hyperref[sec:newtext]{create a new text area}, and
+use the \gls{index.menu.textarea} to paste the text into the
+\gls*{textarea}.  If you want to paste plain text into an existing
+\gls*{textarea}, you will need to use the
+\hyperref[sec:edittext]{edit text area} function.  Note that the
+\hyperref[sec:preamble]{preamble panes} have their own paste button.
 
 \section{Object Description}\label{sec:objectdescription}
 
-TODO
+\menudef{menu.edit.object_description}
+
+You can assign a description to a \selected\ \gls*{object} using the
+\menu{edit.object_description} menu item. This will display the
+dialog box shown in \figureref{fig:objectDescription}. Type the
+description into the text field, and click on \btn{okay} or press
+\keys{\keyref{return}}.  Note that the \gls{menu.edit.object_description}
+menu item is only available if exactly one object is \selected.
+
+\FloatFig
+  {fig:objectDescription}
+  {\includeimg{objectDescription}}
+  {Setting an Object's Description}
+
+The description will not appear in the image, but it can be used to
+locate and select \glspl*{object} on the canvas using the
+\menu{navigate.by_description} or
+\menu{navigate.add_description} menu items. The description
+may also be used as a comment when
+\hyperref[sec:exportimage]{exporting images}, depending on the
+file type.
+
+\begin{important}
+If you assign a description to a \gls{group},
+you will lose the description if you later ungroup it.
+\end{important}
 
 
 \section{Editing Control Points}\label{sec:editpath}
 
-TODO
+\menudef{menu.edit.path.edit}
+
+To move, delete or add \glspl{controlpt}, open or close
+\glspl{path}, or to convert segments from one form (line, gap, cubic
+\gls{Bezier-curve}) to another, first \select\ the \gls*{path}, and
+then either click on the \gls{menu.edit.path.edit} icon or select
+\menu{edit.path.edit}.  Note that the \gls{menu.edit.path.edit} menu item
+is only available if exactly one \gls{path} and no other
+\gls{object} is \selected.
+
+The \gls*{path} will then be displayed in draft format.  The
+currently selected \gls*{controlpt} and the currently selected
+segment will appear in red. The other \glspl*{controlpt} will be
+orange.
+
+\begin{information}
+The \manmsgpl{colour} can be changed via the \widget{graphics.title}
+tab in the \dialog{configui} dialog. The size of the
+\glspl{controlpt} can be changed in the \widget{controls.title} tab
+of the \dialog{config} dialog. You may also want to adjust the
+\widget{editpathui.title} in the \widget{graphics.title} tab of the
+\dialog{configui} dialog.
+\end{information}
+
+\Glspl{compositeshape} may also be edited with 
+the \gls{menu.edit.path.edit} function. The
+\glspl{controlpt} will only be those on the underlying path and 
+the special controls that define the \gls{compositeshape}.
+
+A \gls{textpath} object can have its underlying path edited in the
+same way as a normal \gls{path}, but in edit mode you will also see
+the text (without \gls{anti-aliasing}).  Note that you can not edit
+a \gls{path} if it belongs to a \gls{group}; you must first
+\hyperref[sec:grouping]{ungroup it}.
+
+\begin{information}
+\Glspl{controlpt} rather than segments are selectable. The segment
+that the selected \gls{controlpt} belongs to will then be
+highlighted. You can either select a \gls{controlpt} with the mouse
+or use the \gls{menu.editpath.next_control} or \gls{menu.editpath.prev_control}
+items in the \gls{index.menu.editpath}.
+\end{information}
+
+A selected \gls{controlpt} can be moved by dragging with the mouse.
+In a cluttered image with overlapping \glspl{controlpt} it can be
+difficult to select and move the desired \gls{controlpt}.
+If two or more points coincide
+with the location of the mouse, the point with the lowest
+\glslink{ptindex}{index} will be selected.
+You may find it easier to use the \gls{index.menu.editpath}.
+
+Dragging doesn't automatically select a \gls{controlpt} otherwise it
+would be easy to accidentally select a coincident \gls{controlpt}
+when trying to move a currently selected \gls{controlpt}.
+This means that you can initiate dragging outside of the selected
+\gls*{controlpt}, but make sure that you
+first click to change the selection before initiating a drag or you
+may move the wrong control.
+
+\begin{important}
+With the \widget{editpathui.canvasclick} option on, if you
+click outside of any \gls{controlpt} the path edit mode will be
+switched off. Otherwise you will need to toggle the
+\menu{edit.path.edit} menu item to switch off path edit mode.
+\end{important}
+
+If the \gridlock\ is on, mouse clicks will be translated to the
+nearest tick mark, so even if the pointer is positioned over a
+control point, the nearest tick mark may be outside the control
+point bounds. Enabling the \widget{editpathui.ignorelock} option in 
+\widget{graphics.title} panel will ignore the \gridlock\ for the
+purposes of selecting \glspl{controlpt}.
+
+\menudef{index.menu.editpath}
+
+In path edit mode, the \gls{popupmenu} will change from the usual
+\selectmode\ menus to provide functions to edit the \gls{path}.
+
+\FloatFig{fig:editPathPopup}
+ {\includeimg{editPathPopup}}
+ {Edit Path Popup Menu}
+
+\menudef{menu.editpath.next_control}
+
+The \menu{editpath.next_control} menu item will select the next \gls{controlpt}
+(wrapping round to the start from the final \gls{controlpt}).
+This is an alternative to using the mouse to select a point.
+
+\menudef{menu.editpath.prev_control}
+
+The \menu{editpath.prev_control} menu item will select the previous \gls{controlpt}
+(wrapping round to the end from the first \gls{controlpt}).
+This is an alternative to using the mouse to select a point.
+
+\menudef{menu.editpath.delete_control}
+
+The \menu{editpath.delete_control} menu item will delete the current
+\gls{controlpt}. 
+Note that certain \glspl{controlpt}, such as curvature controls or points
+the define a \gls{compositeshape}, can't be deleted.
+
+If the \gls{controlpt} is the first or last point in an open path
+this function will delete the corresponding segment, otherwise it
+will replace two adjacent segments with a single segment.  If the
+path is open and only has one segment, or if the path is closed and
+has two segments, deleting a control point will delete the
+\gls{shape} or the \gls{textpath} object. (The text will also be lost when
+the \gls{textpath} is deleted.)
+
+\menudef{menu.editpath.add_control}
+
+The \menu{editpath.add_control} menu item will add a new
+\gls{controlpt} in the middle of the currently selected segment.
+This actually replaces the selected segment with two new segments of 
+half the length of the original that maintain the same shape.
+This function is only available for normal path segments and not for
+segments used to alter \glspl{compositeshape}.
+
+\menudef{menu.editpath.convert_to_line}
+
+The \menu{editpath.convert_to_line} menu item will convert the
+current segment to a line. This function will be unavailable if the
+current segment is already a line or if it isn't a normal path segment.
+
+\menudef{menu.editpath.convert_to_curve}
+
+The \menu{editpath.convert_to_curve} menu item will convert the
+current segment to a \gls{Bezier-curve}. The new curvature 
+\glspl{controlpt} can then be moved as required.
+This function will be unavailable if the
+current segment is already a \gls{Bezier-curve} or if it isn't a normal path segment.
+
+\menudef{menu.editpath.convert_to_move}
+
+The \menu{editpath.convert_to_move} menu item will convert the
+current segment to a \gls{gap} (\qt{move to}). This function will be
+unavailable if the current segment is already a \gls{gap} or if it
+isn't a normal path segment.
+
+\menudef{menu.editpath.symmetry}
+
+The \menu{editpath.symmetry} sub menu can be used to add or remove
+\glslink{symmetricshape}{symmetry}.
+See \sectionref{sec:symmetric} for further details.
+
+\menudef{menu.editpath.continuity}
+
+If the selected segment is a \gls{Bezier-curve}, the
+\menu{editpath.continuity} sub menu provides functions that adjust
+the curvature \gls*{controlpt} to ensure that the gradient at the
+nearest join is continuous. This sub menu isn't available if it's not
+possible to do this (for example, if the nearest join is an end
+point). See \sectionref{sec:continous} for further details.
+
+\menudef{menu.editpath.open_path}
+
+The \menu{editpath.close_path} sub menu provides functions to open a
+closed path.
+
+\menudef{menu.editpath.open_path.remove_last}
+
+The \menu{editpath.open_path.remove_last} menu item
+opens the path, removing the last segment (\figureref{fig:openpathb}).
+
+\menudef{menu.editpath.open_path.keep_last}
+
+The \menu{editpath.open_path.keep_last} menu item
+opens the path, but keeps the last segment (\figureref{fig:openpathb}).
+
+\FloatSubFigs{fig:openpath}
+{
+ {fig:openpatha}{\includeimg{open-patha}}{},
+ {fig:openpathb}{\includeimg{open-pathb}}{},
+ {fig:openpathc}{\includeimg{open-pathc}}{}
+}
+  [Opening a Path]
+  {Opening a path: \subfigref{fig:openpatha} the original closed path;
+   \subfigref{fig:openpathb} the path in \subfigref{fig:openpatha} was opened,
+   removing the final segment; \subfigref{fig:openpathc} the path in 
+   \subfigref{fig:openpatha} was opened, keeping the last segment.}
+
+\menudef{menu.editpath.close_path}
+
+The \menu{editpath.close_path} sub menu provides functions to join
+the end of the \gls{shape} to its start to close an open path.
+
+\menudef{menu.editpath.close_path.line}
+
+The \menu{editpath.close_path.line} menu item will
+close the path with a line between the last and first
+\glspl*{controlpt} of the original path (\figureref{fig:closepatha}).
+
+\menudef{menu.editpath.close_path.cont}
+
+The \menu{editpath.close_path.cont} menu item will
+close the path with a \gls{Bezier-curve} between the last and first
+\glspl*{controlpt} such that the curve is continuous at the join
+between the first and last segments of the original path
+(\figureref{fig:closepathb}).
+
+\menudef{menu.editpath.close_path.merge}
+
+The \menu{editpath.close_path.merge} menu item will
+close the path, merging the last \gls*{controlpt} of the original
+path with the first \gls*{controlpt} (\figureref{fig:closepathc}).
+
+\FloatSubFigs {fig:closepath}
+{%
+  {fig:closepatha}{\includeimg{close-patha}}{},
+  {fig:closepathb}{\includeimg{close-pathb}}{},
+  {fig:closepathc}{\includeimg{close-pathc}}{},
+  {fig:closepathd}{\includeimg{close-pathd}}{}
+}
+[Closing a Path]
+{Closing a path: \subfigref{fig:closepatha} the original path;
+\subfigref{fig:closepathb}
+the path in \subfigref{fig:closepatha} was closed with a line;
+\subfigref{fig:closepathc} the path in \subfigref{fig:closepatha} was closed with a
+curve continuous at the join between adjacent segments;
+\subfigref{fig:closepathd} the path in \subfigref{fig:closepatha} was closed, merging
+the end points}
+
+\menudef{menu.editpath.coordinates}
+
+The \menu{editpath.coordinates} menu item will display the
+\inlineglsdef{coordinates.title} dialog box in which you can set the
+\gls{controlpt}['s] $x$ and $y$ values (instead of dragging the
+point to the required location).  Note that rounding errors may
+occur if the unit used in this dialog doesn't have a convenient
+conversion factor with the \gls{storageunit}.
+
+\plabel[Segment Details]{mi:segmentinfo}% HelpSet id
+\menudef{menu.editpath.info}
+
+The \menu{editpath.info} menu item will option the 
+\inlineglsdef{segmentinfo.title} dialog box shown in
+\figureref{fig:segmentinfo}, which describes the segment type and
+provides numeric fields in which to adjust the co-ordinates of the
+segment. Note that the end \gls{controlpt} won't be enabled unless 
+it's the end point of an open path.
+
+Any changes made in this dialog won't take effect until you click on
+the \btn{okay} button. The \btn{cancel} button will discard all the
+changes (after prompting for confirmation). Use the 
+\widget{segmentinfo.default} button to revert the working segment
+back to its current state in the actual path.
+
+\FloatFig{fig:segmentinfo}
+{\includeimg{segmentinfo}}
+{Segment Details Dialog}
+
+\menudef{menu.editpath.snap}
+
+The \menu{editpath.snap} menu item will
+move the currently selected \gls*{controlpt} to the nearest
+tick mark.
 
 \plabel[Breaking a Path]{mi:breakpath}
+\menudef{menu.editpath.break_path}
 
-TODO
+The \menu{editpath.break_path} menu item will split the current path
+into two distinct \glspl{path} at the \emph{end} of the currently
+selected segment (not at the currently selected \gls*{controlpt}).
+One path will remain in \editpathmode. 
+If the object is a \gls*{textpath}, the new \glspl*{textpath} will
+both have the same text (that is, the text is not broken between
+them).
+
+\seealsorefs{
+ sec:reversing,
+ sec:mergepaths,
+ sec:pathunion,
+ sec:xorpath,
+ sec:pathintersect,
+ sec:pathsubtract,
+ sec:converttopath,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:styles,
+ sec:toastexample,
+ sec:busexample,
+ sec:accesstutorial
+}
+
+\section{Gradient Continuity}\label{sec:continous}
+
+Joins between \gls{path} segments, where one of both segments is a
+\gls{Bezier-curve}, can be made continuous (a smooth join)
+in \editpathmode\ with the \menu{editpath.continuity} sub menu.
+
+\menudef{menu.editpath.continuity.equi}
+
+The \menu{editpath.continuity.equi} menu item will move the selected
+curvature \gls*{controlpt} so that it has the same gradient
+direction and magnitude as the gradient vector on the other side of
+the join.
+This function is only available if the selected \gls{controlpt} is
+a curvature control.
+
+\menudef{menu.editpath.continuity.relative}
+
+The \menu{editpath.continuity.relative} menu item will move the
+selected curvature control so that it has the same direction as the
+gradient on the other side of the join, but its magnitude will
+remain unchanged. (See \figureref{fig:continuous}.)
+This function is only available if the selected \gls{controlpt} is
+a curvature control.
+
+\menudef{menu.editpath.continuity.anchor}
+
+The \menu{editpath.continuity.anchor} menu item is only available
+when a \gls*{controlpt} on the join between two \glspl{Bezier-curve}
+has been selected. If this item is selected, when you adjust one of
+the adjacent curvature control points, the corresponding curvature
+control on the other segment will be adjusted to maintain
+continuity. An anchor image will appear in the control joining the
+two segments when this setting is on (as shown in
+\figureref{fig:continuityanchor}).
+
+For example, in \figureref{fig:continuous} the path was originally
+an open line \gls{path} with three line segments.  The middle segment was
+selected and converted to a \gls{Bezier-curve} using the
+\menu{editpath.convert_to_curve} function
+(\figureref{fig:continuousa}). The
+\menu{editpath.continuity.relative} function was then
+used to change the starting gradient of the \gls{Bezier-curve} to make
+a smooth join between the first two segments
+(\figureref{fig:continuousb}).  The \gls{Bezier-curve}['s] third
+\gls*{controlpt}, which governs the end curvature, was selected, and
+the \menu{editpath.continuity.relative} function was
+again used to change the end gradient of the \gls{Bezier-curve} to
+make a smooth join between the last two segments
+(\figureref{fig:continuousc}).
+
+\FloatSubFigs{fig:continuous}
+{
+ {fig:continuousa}{\includeimg{continuous1a}}{},
+ {fig:continuousb}{\includeimg{continuous1b}}{},
+ {fig:continuousc}{\includeimg{continuous1c}}{}
+}
+[Making the Join Between Segments Continuous]
+{Making the join between segments continuous: 
+\subfigref{fig:continuousa} the middle segment of
+an open line path has been converted into a \gls{Bezier-curve};
+\subfigref{fig:continuousb} the gradient at the start of the curve is now the same as
+the gradient at the end of the previous segment; 
+\subfigref{fig:continuousc} the
+gradient at the end of the curve is now the same as the gradient at
+the start of the next segment.}
+
+\FloatFig
+  {fig:continuityanchor}
+   {\includeimg{continuityanchor}}
+   {Continuity Anchor}
+
+\seealsorefs{{sec:editpath}}
 
 \section{Symmetric Shapes}\label{sec:symmetric}
 
-TODO
+Symmetry can be applied to an existing \gls{shape} in 
+\editpathmode\ via the \menu{editpath.symmetry} sub menu.
 
+\FloatSubFigs{fig:symmetric}
+{
+  {fig:symmetrica}{\includeimg{symmetrica}}{},
+  {fig:symmetricb}{\includeimg{symmetricb}}{},
+  {fig:symmetricc}{\includeimg{symmetricc}}{},
+  {fig:symmetricd}{\includeimg{symmetricd}}{},
+  {fig:symmetrice}{\includeimg{symmetrice}}{}
+}
+[Adding Symmetry to a Path]
+{Adding Symmetry to a Path: \subfigref{fig:symmetrica} original path;
+\subfigref{fig:symmetricb} symmetry added to path in \subfigref{fig:symmetrica} the
+two blue controls govern the line of symmetry;
+\subfigref{fig:symmetricc} the line of symmetry has been moved, altering the
+overall appearance of the shape; \subfigref{fig:symmetricd} the end anchor
+constraint has been removed and the end control has been moved
+away from the line of symmetry; \subfigref{fig:symmetrice} the joining segment
+has been converted to a curve with only one curvature control.}
+
+\menudef{menu.editpath.symmetry.has_symmetry}
+
+The \menu{editpath.symmetry.has_symmetry} menu item can be toggled
+to add or remove symmetry. Adding symmetry will replace the existing
+\gls{shape} with a \gls{symmetricshape}. This has extra
+\glspl{controlpt} that govern the line of symmetry.
+Removing symmetry will replace the existing \gls{symmetricshape}
+with its underlying \gls{shape}.
+
+For example, \figureref{fig:symmetrica} shows a \gls*{path}
+in \editpathmode, and \figureref{fig:symmetricb} shows the
+path with symmetry applied to it. There are now two extra
+\glspl{controlpt} (\manmsg{coloured} blue). These points govern the line
+of symmetry. In \figureref{fig:symmetricc}, these two controls
+have been moved.
+
+\begin{information}
+The line of symmetry extends infinitely though the two controls,
+but only the part of the line between the two points is actually
+displayed in edit mode.
+\end{information}
+
+If you later decide to remove the symmetry, deselect
+\menu{editpath.symmetry.has_symmetry}.
+
+\begin{warning}
+Adding symmetry to a closed shape may cause unexpected
+results as the shape will be first opened (without removing the
+last segment), the symmetry will be added, and then the symmetric
+shape will be closed, merging the end points.
+\end{warning}
+
+\menudef{menu.editpath.symmetry.join_anchor}
+
+The \menu{editpath.symmetry.join_anchor} menu item can be toggled to
+determine whether or not the reflection is joined to the underlying
+path at its end point. If this option is on, the end \gls{controlpt}
+will be constrained to the line of symmetry.  That is, the end
+\gls{controlpt} can only move along the line defined by the two blue
+\glspl*{controlpt}.  In \figureref{fig:symmetricd}, the
+\menu{editpath.symmetry.join_anchor} item was deselected, and the
+end control was then moved away from the line of symmetry.
+
+Note that this function places a \gls{gap} (move) segment between the
+end control and its symmetric counterpart, which will produce an
+unsymmetric effect if the path is then closed. This gap can be changed to
+a line or curve, using \menu{editpath.convert_to_line} or
+\menu{editpath.convert_to_curve}, as described in
+\sectionref{sec:editpath}. In \figureref{fig:symmetrice},
+the join has been changed to a curve. Unlike the
+\glspl{Bezier-curves}
+in the non-symmetric paths, this curve only has one curvature
+control.
+
+The \gls{menu.editpath.symmetry.join_anchor} function is only available
+if \gls{menu.editpath.symmetry.has_symmetry} is on.
+
+\menudef{menu.editpath.symmetry.close_anchor}
+
+The \menu{editpath.symmetry.close_anchor} menu item can be toggled
+to determine whether or not the reflection is joined to the
+underlying path at is start point.  If this option is on, the start
+\gls{controlpt} will be constrained to the line of symmetry.  This
+function is only available if
+\gls{menu.editpath.symmetry.has_symmetry} is on and the
+underlying \gls{path} is closed.
+
+For example, \figureref{fig:closedsymmetrica}
+shows a closed symmetric path (a closed version of
+\figureref{fig:symmetrice}). The anchor constraint on the first control
+was then removed and the control was moved to the left
+(\figureref{fig:closedsymmetricb}). As with the join segment
+(above) the closing segment between the start control and its
+reflection can be changed to a curve with
+one curvature control (\figureref{fig:closedsymmetricc}).
+
+\FloatSubFigs{fig:closedsymmetric}
+{
+ {fig:closedsymmetrica}{\includeimg{closedsymmetrica}}{},
+ {fig:closedsymmetricb}{\includeimg{closedsymmetricb}}{},
+ {fig:closedsymmetricc}{\includeimg{closedsymmetricc}}{}
+}
+[Closed Symmetric Path]
+{Closed symmetric path: \subfigref{fig:closedsymmetrica} the symmetric path in
+\figureref{fig:symmetrice} has been closed\dash the
+first control is now anchored to the line of symmetry;
+\subfigref{fig:closedsymmetricb} deselecting the close anchor constraint allows
+the start control to be moved away from the line of symmetry;
+\subfigref{fig:closedsymmetricc} the segment closing the symmetric path has been
+changed to a curve.}
+
+\begin{warning}
+Take care with closed symmetric paths. Unexpected results
+may occur, particularly if the path contains any gaps. This may
+cause the stroked or filled shape to appear unsymmetric.
+For example, \figureref{fig:symgapa} shows the original
+(non-symmetric path). This was then given a line of symmetry and
+the path appears symmetric, as shown in \figureref{fig:symgapb}. In
+\figureref{fig:symgapc}, two of the line segments have been
+converted to gaps. The shape still appears symmetric although the
+filled area has changed, but in \figureref{fig:symgapd} the path
+has been closed with a line so although the control points that
+make up right side of the complete path are a reflection of the
+original points on the left side, the shape no longer appears
+symmetric.
+\end{warning}
+
+\FloatSubFigs{fig:symgap}
+{
+  {fig:symgapa}{\includeimg{symgapa}}{},
+  {fig:symgapb}{\includeimg{symgapb}}{},
+  {fig:symgapc}{\includeimg{symgapc}}{},
+  {fig:symgapd}{\includeimg{symgapd}}{}
+}
+[Symmetric Path with Gaps]
+{Symmetric Path with Gaps:
+\subfigref{fig:symgapa} the original path;
+\subfigref{fig:symgapb} symmetry has been added;
+\subfigref{fig:symgapc} two line segments have been replaced with gaps;
+\subfigref{fig:symgapd} the path has been closed.}
+
+\seealsorefs{
+ sec:editpath,
+ sec:pattern,
+ sec:rose
+}
 
 \section{Editing Text Areas}\label{sec:edittext}
 
