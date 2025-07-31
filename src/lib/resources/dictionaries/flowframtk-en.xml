@@ -3847,6 +3847,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 
 <entry key="manual.grey">gray</entry>
 <entry key="manual.colour">color</entry>
+<entry key="manual.coloured">colored</entry>
 <entry key="manual.maths">math</entry>
 <entry key="manual.through">thru</entry>
 <entry key="manual.labelled">labeled</entry>

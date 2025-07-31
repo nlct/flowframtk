@@ -4151,7 +4151,7 @@ move by an exact amount is to use the \menu{edit.moveby} menu item.
 This will open the \dialog{moveby} dialog box (\figureref{fig:moveby}).
 In the field marked \widget{coordinates.x} enter the horizontal
 displacement, and in the field marked \widget{coordinates.y}
-enter the vertical displacement. For example, to move the
+enter the vertical (\strong{downward}) displacement. For example, to move the
 selected \glspl*{object} 10 units to the right and 20 units down,
 type 10 in the \widget{coordinates.x} field and 20 in the
 \widget{coordinates.y} field. To move left or up, use a negative
@@ -4240,14 +4240,20 @@ you will lose the description if you later ungroup it.
 
 \section{Editing Control Points}\label{sec:editpath}
 
+The \glspl{controlpt} that define a \gls{shape} only become visible
+and interactive when the shape is in edit path mode.
+Edit mode can't be enabled for a \gls{shape} that is part of a \gls{group}.
+If the selected shape is a \gls{compositeshape}, edit mode will allow the
+underlying path to be edited.
+
 \menudef{menu.edit.path.edit}
 
 To move, delete or add \glspl{controlpt}, open or close
 \glspl{path}, or to convert segments from one form (line, gap, cubic
-\gls{Bezier-curve}) to another, first \select\ the \gls*{path}, and
+\gls{Bezier-curve}) to another, first \select\ the \gls*{shape}, and
 then either click on the \gls{menu.edit.path.edit} icon or select
 \menu{edit.path.edit}.  Note that the \gls{menu.edit.path.edit} menu item
-is only available if exactly one \gls{path} and no other
+is only available if exactly one \gls{shape} and no other
 \gls{object} is \selected.
 
 The \gls*{path} will then be displayed in draft format.  The
@@ -4310,7 +4316,7 @@ If the \gridlock\ is on, mouse clicks will be translated to the
 nearest tick mark, so even if the pointer is positioned over a
 control point, the nearest tick mark may be outside the control
 point bounds. Enabling the \widget{editpathui.ignorelock} option in 
-\widget{graphics.title} panel will ignore the \gridlock\ for the
+the \widget{graphics.title} panel will ignore the \gridlock\ for the
 purposes of selecting \glspl{controlpt}.
 
 \menudef{index.menu.editpath}
@@ -4595,7 +4601,7 @@ the start of the next segment.}
    {\includeimg{continuityanchor}}
    {Continuity Anchor}
 
-\seealsorefs{{sec:editpath}}
+\seealsorefs{sec:editpath}
 
 \section{Symmetric Shapes}\label{sec:symmetric}
 
@@ -4669,8 +4675,7 @@ unsymmetric effect if the path is then closed. This gap can be changed to
 a line or curve, using \menu{editpath.convert_to_line} or
 \menu{editpath.convert_to_curve}, as described in
 \sectionref{sec:editpath}. In \figureref{fig:symmetrice},
-the join has been changed to a curve. Unlike the
-\glspl{Bezier-curves}
+the join has been changed to a curve. Unlike the \glspl{Bezier-curve}
 in the non-symmetric paths, this curve only has one curvature
 control.
 
@@ -4743,11 +4748,32 @@ symmetric.
 
 \seealsorefs{
  sec:editpath,
- sec:pattern,
- sec:rose
+ sec:patterns,
+ sec:rosetutorial
 }
 
 \section{Editing Text Areas}\label{sec:edittext}
+
+\menudef{menu.edit.textarea.edit}
+
+To insert or delete characters from a \gls{textarea} or \gls{textpath} first
+\select\ the \gls*{textarea} or \gls*{textpath}, and then
+select the \menu{edit.textarea.edit} menu item.  (Note
+that you should not have any other \glspl{object} selected.) This
+will display the \inlineglsdef{edittext.title} dialog box
+(\figureref{fig:edittexta}) in which you can modify the text as
+appropriate. If you are editing the text of a \gls{textpath}, there
+will be an extra panel visible, shown in
+\figureref{fig:edittextb}.
+
+\begin{information}
+You can not edit a \gls*{textarea} or \gls*{textpath} if
+it belongs to a \gls{group}. Deleting all the characters within a
+\gls*{textarea} or \gls*{textpath} isn't permitted and will result
+in the error message \dq{\errmsg{empty_string}}.
+\end{information}
+
+
 
 TODO
 
