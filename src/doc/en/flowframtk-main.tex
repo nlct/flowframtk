@@ -2872,7 +2872,7 @@ document.
 
 The \menu{file.page} menu item will open the printer's page
 setup dialog box. This will require a print service to be available.
-The \glspl{printer.margin} will be shown on the \gls{canvas} if the
+The \glspl{printer-margin} will be shown on the \gls{canvas} if the
 \menu{settings.paper.margins} menu item is selected.
 
 \section{Print}\label{sec:print}
@@ -4828,6 +4828,32 @@ may occupy a larger or smaller area in the \LaTeX\ document than it
 does in \FlowframTk, so you may also need to change the
 \gls{text-attribute.anchor} or set the image \glspl{image.typeblock}
 (see \sectionref{sec:exportdoc}).
+
+You can use the \widget{edittext.remap} button to generate
+the alternative text in the bottom field by applying
+\hyperref[mi:texmappings]{mappings} to the text in the top field. If
+the original alternative text starts and ends with a \gls{mshift}
+symbol, the \mathsmode\ mappings will be used, otherwise the
+\textmode\ mappings will be used. If the original alternative text is
+empty, you can just type a \glssymbol{mshift} symbol in it and click on the
+\widget{edittext.remap} button to generate a \mathsmode\
+mapping. The original alternative text will be completely replaced by the text
+from the top field with the appropriate mappings applied. You can
+then edit this if necessary.
+
+\widgetdef{edittext.textpath}
+
+The \LaTeX\ export functions (see \sectionref{sec:exportpgf}) use the \sty{pgf} text
+decoration to implement \glspl*{textpath}. This allows you to insert
+declarations, such as \csfmt{large}, part way through the text by
+placing them between \glspl{pgf.delimiter}. By default these delimiters are the
+vertical bar (pipe) character \glssymbol{pipe} but this can be changed in
+the \widget{edittext.textpath.left_delim} and
+\widget{edittext.textpath.right_delim} fields (see
+\figureref{fig:edittextb}). Note that the vertical \gls{text-attribute.anchor}
+setting is ignored by the \LaTeX\ export functions. It's best to avoid
+\manmsg{maths} in \glspl{textpath}. See the \sty{pgf} manual for
+further details about text decorations.
 
 
 TODO
