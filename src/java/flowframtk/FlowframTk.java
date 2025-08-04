@@ -3466,7 +3466,7 @@ public class FlowframTk extends JFrame
       // set the browse utility for bitmaps
 
       appSettings.setBrowseUtil(new BrowseUtil(
-         resources.getMessage("browsebitmap.title"),
+         resources.getMessage("browsebitmap.browse"),
          resources.getMessage("browsebitmap.not_found"),
          resources.getMessage("browsebitmap.invalid_format"),
          resources.getMessage("browsebitmap.cant_refresh"),
