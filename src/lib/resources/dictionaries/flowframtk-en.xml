@@ -3874,6 +3874,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="manual.centre">center</entry>
 <entry key="manual.centred">centered</entry>
 <entry key="manual.flavour">flavor</entry>
+<entry key="manual.behaviour">behavior</entry>
 
 </properties>
 

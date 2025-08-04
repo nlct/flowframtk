@@ -4067,7 +4067,8 @@ menu items as \gls{index.menu.selectedtext}.
 
 \menudef{menu.selected.fill_colour}
 
-If any \glspl{path} have been selected or if any outlined \glspl{textarea}
+If any \glspl{path} have been selected or if any
+\glslink{text-attribute.outline}{outlined} \glspl{textarea}
 have been selected, then the \menu{selected.fill_colour} menu item
 will be available. This is the same as using the
 \menu{edit.fill_colour} menu item from the main menu bar.
@@ -4855,12 +4856,48 @@ setting is ignored by the \LaTeX\ export functions. It's best to avoid
 \manmsg{maths} in \glspl{textpath}. See the \sty{pgf} manual for
 further details about text decorations.
 
+\begin{important}
+The alternative text may not be used by
+\hyperref[sec:exportimage]{export} functions if
+the \gls*{textpath} has been made an
+\gls{text-attribute.outline} or if the
+\gls*{textarea}\slash\gls*{textpath} has a gradient paint.
+The export \manmsg{behaviour} under those circumstances is dependent on
+the \hyperref[sec:texconfigtext]{\LaTeX\ text settings}.
+The alternative text is not used when exporting to PNG or when
+\gls{printing}.
+\end{important}
 
-TODO
-
-
+\seealsorefs{
+ sec:texconfig,
+ sec:newtext,
+ sec:textpath,
+ sec:textoutline,
+ sec:textpaint,
+ sec:textstyle,
+ sec:splittext,
+ sec:texttopath,
+ sec:neuronexample
+}
 
 \section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}
+
+\menudef{menu.transform.textpath}
+
+A \gls{textarea} and a \gls{path} can be combined to form a
+\gls{textpath}. Ensure that only a single \gls{textarea} and a
+single \gls{path} are selected and use the \menu{transform.textpath}
+function. The text from the original \gls{textarea} will then follow
+the shape of the original path (which will now be the underlying
+path).
+
+The underlying path will not be visible (except in \editpathmode).
+If the original \gls*{textarea} was in \gls{text-attribute.outline} mode, the new
+\gls*{textpath} will also be in \gls{text-attribute.outline} mode, possibly with a fill
+paint, depending on the original \gls*{textarea} and \gls*{path}
+fill paint. (If the original \gls*{textarea} didn't have a fill
+paint, the \gls*{path} fill paint will be applied.)
+
 
 TODO
 
