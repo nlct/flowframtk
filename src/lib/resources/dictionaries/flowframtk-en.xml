@@ -2425,18 +2425,27 @@ Nicola Talbot
 <entry key="clssettings.normalsize.mnemonic">N</entry>
 <entry key="clssettings.normalsize.tooltip">Set LaTeX normal font size settings</entry>
 <entry key="clssettings.note">Remember to set this as the default font size in your document, e.g:</entry>
+
 <entry key="clssettings.update">Update all LaTeX font size declarations in current image</entry>
 <entry key="clssettings.update.mnemonic">U</entry>
+<entry key="clssettings.update.initvalue">true</entry>
+
 <entry key="clssettings.default_cls">Use default class</entry>
 <entry key="clssettings.default_cls.mnemonic">D</entry>
 <entry key="clssettings.custom_cls">Use class: </entry>
 <entry key="clssettings.custom_cls.mnemonic">S </entry>
+
 <entry key="clssettings.relative_fontsize">Use relative font size declarations</entry>
 <entry key="clssettings.relative_fontsize.mnemonic">R</entry>
+<entry key="clssettings.relative_fontsize.initvalue">true</entry>
+
 <entry key="clssettings.pdfinfo">Add \pdfinfo to exported LaTeX documents</entry>
 <entry key="clssettings.pdfinfo.mnemonic">I</entry>
+<entry key="clssettings.pdfinfo.initvalue">false</entry>
+
 <entry key="clssettings.use_typeblock_as_bbox">Use typeblock as bounding box for pgfpicture</entry>
 <entry key="clssettings.use_typeblock_as_bbox.mnemonic">T</entry>
+<entry key="clssettings.use_typeblock_as_bbox.initvalue">false</entry>
 
 <!--  Flowframe Settings -->
 
@@ -2455,8 +2464,11 @@ Nicola Talbot
 <entry key="textconfig.title">LaTeX Text Settings</entry>
 <entry key="textconfig.mnemonic">L</entry>
 <entry key="textconfig.tooltip">Settings related to alternative LaTeX text for text-areas and text-paths</entry>
+
 <entry key="textconfig.anchor">Auto Adjust Anchor</entry>
 <entry key="textconfig.anchor.mnemonic">A</entry>
+<entry key="textconfig.anchor.initvalue">true</entry>
+
 <entry key="textconfig.textualshading">When exporting text with shadings:</entry>
 <entry key="textconfig.textualshading.mnemonic">D</entry>
 <entry key="textconfig.textualshading.average">Average Colors</entry>
@@ -2868,15 +2880,22 @@ Are you sure you want to ungroup it?</entry>
 <entry key="menu.texeditor.cutText">Cut</entry>
 <entry key="menu.texeditor.cutText.mnemonic">T</entry>
 <entry key="menu.texeditor.cutText.keystroke">control X</entry>
+<entry key="menu.texeditor.cutText.tooltip">Cut selected text to clipboard</entry>
+
 <entry key="menu.texeditor.copyText">Copy</entry>
 <entry key="menu.texeditor.copyText.mnemonic">C</entry>
 <entry key="menu.texeditor.copyText.keystroke">control C</entry>
+<entry key="menu.texeditor.copyText.tooltip">Copy selected text to clipboard</entry>
+
 <entry key="menu.texeditor.pasteText">Paste</entry>
 <entry key="menu.texeditor.pasteText.mnemonic">P</entry>
 <entry key="menu.texeditor.pasteText.keystroke">V</entry>
-<entry key="menu.texeditor.selectText">Select All</entry>
-<entry key="menu.texeditor.selectText.mnemonic">A</entry>
-<entry key="menu.texeditor.selectText.keystroke">control A</entry>
+<entry key="menu.texeditor.pasteText.tooltip">Paste text from clipboard</entry>
+
+<entry key="menu.texeditor.selectAllText">Select All</entry>
+<entry key="menu.texeditor.selectAllText.mnemonic">A</entry>
+<entry key="menu.texeditor.selectAllText.keystroke">control A</entry>
+<entry key="menu.texeditor.selectAllText.tooltip">Select all text</entry>
 
 <!--  Preamble Find/Replace Dialog -->
 

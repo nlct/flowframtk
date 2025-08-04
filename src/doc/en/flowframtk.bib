@@ -293,8 +293,8 @@
 @switch{switch.paper,
   parent={app.flowframtk},
   syntax={\meta{specifier}},
-  description={Set the paper size where \meta{specifier}
-is either a known paper identifier (see \tableref{tab:papersizes})
+  description={Set the \gls{paper} size where \meta{specifier}
+is either a known \gls{paper} identifier (see \tableref{tab:papersizes})
 or is the keyword \optfmt{user} followed by the width and height.}
 }
 
@@ -398,11 +398,12 @@ replicas.}
 
 @index{symmetricshape,
   name="symmetric shape",
-  description = {A composite shape that is formed by the underlying shape
-    added to its reflection in a line a symmetry. Depending on how it's
+  description = {A \gls{compositeshape} with \gls{symmetry} formed by the underlying shape
+    being combined with its reflection in a \gls{line-a-symmetry}. Depending on how it's
     created, the symmetric shape may be drawn as a single shape, or the
     underlying shape and its reflection may be drawn independently of
-    each other. The line of symmetry has two control points that can be
+    each other. The \gls{line-of-symmetry} has two
+    \glspl{line-of-symmetry.controlpt} that can be
     adjusted to change the overall shape.}
 }
 
@@ -577,12 +578,12 @@ points, lines and curves.}
 }
 
 @index{recto,
-  description = {The \qt{front} side of a leaf of paper (the right or
+  description = {The \qt{front} side of a leaf of \gls{paper} (the right or
 odd-numbered page).}
 }
 
 @index{verso,
-  description = {The \qt{back} side of a leaf of paper (the left
+  description = {The \qt{back} side of a leaf of \gls{paper} (the left
 or even-numbered page).}
 }
 
@@ -695,6 +696,147 @@ dump all function.}
 
 @indexplural{curve,
  see={Bezier-curve}
+}
+
+@indexplural{text-attribute,
+ text={text attribute}
+}
+
+@index{text-attribute.family,
+ parent={text-attribute},
+ name={family}
+}
+
+@index{text-attribute.shape,
+ parent={text-attribute},
+ name={shape}
+}
+
+@index{text-attribute.series,
+ parent={text-attribute},
+ name={series}
+}
+
+@index{text-attribute.size,
+ parent={text-attribute},
+ name={size}
+}
+
+@index{text-attribute.anchor,
+ parent={text-attribute},
+ name={anchor}
+}
+
+@index{text-attribute.transformation-matrix,
+ parent={text-attribute},
+ name={transformation matrix}
+}
+
+@index{pattern.anchor,
+ parent={pattern},
+ name={anchor}
+}
+
+@index{pattern.adjustment-controlpt,
+ parent={pattern},
+ name={adjustment control point}
+}
+
+@index{continuity}
+
+@index{continuity.anchor,
+ parent={continuity},
+ name={anchor}
+}
+
+@indexplural{curvature-controlpt,
+ text = {curvature control point}
+}
+
+@index{curvature-controlpt.continuity,
+ parent={curvature-controlpt},
+ name={continuity},
+ alias={continuity}
+}
+
+@index{gradient,seealso={curvature-controlpt,continuity}}
+
+@index{symmetry,
+ seealso={symmetricshape}
+}
+
+@index{symmetry.line,
+ parent={symmetry},
+ name={line},
+ alias={line-of-symmetry}
+}
+
+@index{line-of-symmetry,
+ name={line of symmetry},
+ seealso={symmetricshape}
+}
+
+@index{line-of-symmetry.anchor,
+ parent={line-of-symmetry},
+ name={anchor}
+}
+
+@indexplural{line-of-symmetry.controlpt,
+ parent={line-of-symmetry},
+ text={control point}
+}
+
+@index{anchor,
+ see={continuity.anchor,line-of-symmetry.anchor,pattern.anchor,text-attribute.anchor}
+}
+
+@index{image}
+
+@index{image.description,
+ parent={image},
+ name={description}
+}
+@indexplural{image.typeblock,
+ parent={image},
+ name={typeblock}
+}
+
+@indexplural{image.bbox,
+ parent={image},
+ name={bounding box}
+}
+
+@indexplural{margin,
+ see={image.typeblock,paper.margin}
+}
+
+@index{paper}
+
+@indexplural{paper.margin,
+  parent={paper},
+  text={margin}
+}
+
+@index{printing}
+
+@indexplural{printer-margin,
+ text={printer margin},
+ alias={paper.margin}
+}
+
+@index{paper.size,
+  parent={paper},
+  name={size}
+}
+
+@index{paper.orientation,
+  parent={paper},
+  name={orientation}
+}
+
+@index{page-layout,
+ name={page layout},
+ see={image.typeblock,paper}
 }
 
 % PUNCTUATION

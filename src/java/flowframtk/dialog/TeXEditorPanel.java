@@ -56,7 +56,7 @@ public class TeXEditorPanel extends JPanel
          ((JPopupMenu)editM).addSeparator();
       }
 
-      editM.add(getResources().createAppMenuItem("menu.texeditor", "selectText", this));
+      editM.add(getResources().createAppMenuItem("menu.texeditor", "selectAllText", this));
 
       cutItem = createButtonItem("menu.texeditor", "cutText", toolBar, editM);
 
@@ -197,7 +197,7 @@ public class TeXEditorPanel extends JPanel
          undoItem.setEnabled(undoManager.canUndo());
          redoItem.setEnabled(undoManager.canRedo());
       }
-      else if (action.equals("selectText"))
+      else if (action.equals("selectAllText"))
       {
          textPane.requestFocusInWindow();
          textPane.selectAll();

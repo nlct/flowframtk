@@ -56,8 +56,8 @@ public class PreamblePartEditor extends JPanel
       popupM.addSeparator();
 
       popupM.add(getResources().createAppMenuItem(
-        "menu.texeditor.selectText", "selectText",
-        null, this, getResources().getToolTipText("selectText")));
+        "menu.texeditor.selectAllText", "selectAllText",
+        null, this, getResources().getToolTipText("selectAllText")));
 
       cutItem = createButtonItem("menu.texeditor", "cutText", toolBar, popupM);
 
@@ -310,7 +310,7 @@ public class PreamblePartEditor extends JPanel
          undoItem.setEnabled(undoManager.canUndo());
          revalidate();
       }
-      else if (action.equals("selectText"))
+      else if (action.equals("selectAllText"))
       {
          selectAllText();
       }

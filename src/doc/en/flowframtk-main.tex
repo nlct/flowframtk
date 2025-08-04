@@ -789,8 +789,8 @@ Show the \glspl{ruler}.
 Don't show the \glspl{ruler}.
 
 \switchdef{paper}
-Set the paper size. The argument may be a single keyword that
-identifies a recognised paper size or, for a custom size, the
+Set the paper \gls{paper.size}. The argument may be a single keyword that
+identifies a recognised paper \gls{paper.size} or, for a custom size, the
 argument may be the keyword \optfmt{user} followed by the width and
 height. For example:
 \begin{terminal}
@@ -859,7 +859,7 @@ Recognised units: \code{\gls{pt}}, \code{\gls{bp}},
 \end{tabular}
 }%
 [Paper Size Identifiers]
-{Paper size identifiers for use with \switch{paper} command line switch.}
+{Paper \gls{paper.size} identifiers for use with \switch{paper} command line switch.}
 
 
 \switchdef{disable_print}
@@ -1023,21 +1023,21 @@ a~popup menu.
 \menudef{menu.settings.paper}
 
 The \menu{settings.paper} sub-menu allows you to change
-the paper size and orientation.
+the \gls{paper} attributes.
 
 \menudef{menu.settings.paper.margins}
 
 The \menu{settings.paper.margins} item toggles between showing
-and hiding the printer margins, but note that this facility is not
+and hiding the \glspl{printer-margin}, but note that this facility is not
 available if you use the \switch{disable_print} command line
 argument.
 
-The predefined paper sizes A0 to A5, letter, legal and executive
+The predefined paper \glspl{paper.size} A0 to A5, letter, legal and executive
 can be selected from the \menu{settings.paper} menu.
 
 \menudef{menu.settings.paper.other}
 
-The \menu{settings.paper.other} item allows a custom paper size to
+The \menu{settings.paper.other} item allows a custom paper \gls{paper.size} to
 be specified.  Select the  \widget{paper.predefined} radio button to
 enable a list of additional known paper sizes or select the
 \widget{paper.user} radio button to enter a custom size.
@@ -1124,7 +1124,7 @@ apply any canvas settings information stored in any \gls{JDR} or
 \gls{AJR} file that you load. The canvas settings consist of:
 grid show\slash hide, grid locked\slash not locked, rulers
 displayed\slash not displayed, the tool in use, the LaTeX normal
-size, the paper size, the grid style, the size of the
+size, the \gls{paper} attributes, the grid style, the size of the
 \glspl{controlpt} and whether they should be affected by the
 magnification setting.
 
@@ -1247,9 +1247,11 @@ shape also require this information.
  {\includeimg{normalsizeandclass}}
  {Setting the Normal Font Size and (optionally) the Class}
 
+\widgetdef{clssettings.normalsize}
+
 The \gls{normal-font-size} can be set using the
 \widget{clssettings.title} tab (\figureref{fig:normalsize}).  Select the
-required value from the \gls{dropdown} and select
+required value from the \widget{clssettings.normalsize} \gls{dropdown} and select
 \dgls{okay} to set it. Note that you must remember
 to use this value in your document. For example, if you set the
 normal size as 20, your document will need to use one of the
@@ -1289,13 +1291,17 @@ value & \bfseries Relevant File\\
 and the file in which they are defined (relative to the TEXMF
 tree).}
 
+\widgetdef{clssettings.update}
+
 If the \widget{clssettings.update} \gls*{checkbox} is selected,
 changing the normal size setting in this dialog will update the
 \LaTeX\ font size settings for all the \glspl{textarea} in the
 current image.
 
+\widgetdef{clssettings.default_cls}
+
 If you want to export your image to a complete \LaTeX\ document (see
-\sectionref{sec:exportdoc}) the document class will default to:
+\sectionref{sec:exportdoc}) the \inlineglsdef{document-class} will default to:
 \begin{itemize}
 \item \cls{article}, if the normal size is
 set to 10, 11 or 12;
@@ -1303,17 +1309,22 @@ set to 10, 11 or 12;
 25;
 \item \cls{extarticle}, otherwise.
 \end{itemize}
-If you want to use a different document class, select the
+
+\widgetdef{clssettings.custom_cls}
+
+If you want to use a different \gls{document-class}, select the
 \widget{clssettings.custom_cls} radio button, which will enable the
 field where you can type the require class name (without the
 \filefmt{.cls} extension). You need to ensure the class supports your
 specified normal font size (as a standard option, not a key=value
 option).
 
-The document class is also used as the base class with the export to
+The \gls{document-class} is also used as the base class with the export to
 document class function (see \sectionref{sec:exportsty}) and is used
 for all export functions that use the export to encapsulated \LaTeX\
 document function as an intermediate step (\sectionref{sec:exportdoc}).
+
+\widgetdef{clssettings.relative_fontsize}
 
 The \widget{clssettings.relative_fontsize} \gls*{checkbox} governs
 the suggested \LaTeX\ font size command when you change the
@@ -1325,6 +1336,8 @@ the font size is significantly larger than the largest available
 declaration, \gls{setfontsize} will be used regardless of this
 setting.
 
+\widgetdef{clssettings.pdfinfo}
+
 The \widget{clssettings.pdfinfo} \gls*{checkbox} governs whether or
 not to add \gls{pdfinfo} to exported \LaTeX\ documents. If the image
 has a description (\sectionref{sec:imagedescription}), this will be
@@ -1333,17 +1346,19 @@ that is set is the \gls{pdfinfo/CreationDate} attribute. This setting is
 not used for the export to PostScript or \gls{svg} functions as they
 use \app{latex} rather than \app{pdflatex}.
 
+\widgetdef{clssettings.use_typeblock_as_bbox}
+
 When an image is exported to an encapsulated \LaTeX\ document
-or complete \LaTeX\ document, by default the image bounding box
+or complete \LaTeX\ document, by default the image \gls{image.bbox}
 is calculated as the minimal sized rectangle that encompasses all
 \glspl{object} on the \gls{canvas}. If the image contains an
 \glspl*{textarea}, this may result in text being clipped to the left
 or right of the image due to the font differences. In this case, or
 if you require a different bounding box for some other reason, then
 switch on the \widget{clssettings.use_typeblock_as_bbox}
-\gls*{checkbox} and if the image has a typeblock set
-(see \sectionref{sec:typeblock}) the typeblock will be used as the image
-bounding box. If the image doesn't have a typeblock set, then the
+\gls*{checkbox} and if the image has a \gls{image.typeblock} set
+(see \sectionref{sec:typeblock}) the \gls{image.typeblock} will be used as the image
+\gls{image.bbox}. If the image doesn't have a \gls{image.typeblock} set, then the
 default bounding box will be used. See also \figureref{fig:equation}
 in \sectionref{sec:exportdoc}.
 
@@ -1406,7 +1421,8 @@ allows you to adjust the text-related settings.
 
 If the \widget{textconfig.anchor} \gls{checkbox} is selected,
 whenever you \hyperref[sec:alignobjects]{justify} a \gls{group}, any
-\glspl{textarea} in that group will have their anchors automatically
+\glspl{textarea} in that group will have their
+\glspl{text-attribute.anchor} automatically
 adjusted.
 
 \widgetdef{textconfig.textualshading}
@@ -1783,20 +1799,20 @@ unselected.
 
 \widgetdef{render.control.symmetry}
 
-Set the \manmsg{colour} for the line of symmetry
+Set the \manmsg{colour} for the \gls{line-of-symmetry}
 \glspl*{controlpt} according to whether they are selected or
 unselected.
 
 \widgetdef{render.control.patternanchor}
 
-Set the \manmsg{colour} for the pattern anchor
+Set the \manmsg{colour} for the pattern \gls{pattern.anchor}
 \glspl*{controlpt} according to whether they are selected or
 unselected.
 
 \widgetdef{render.control.patternadjust}
 
-Set the \manmsg{colour} for the pattern adjustment
-\glspl*{controlpt} according to whether they are selected or
+Set the \manmsg{colour} for the pattern 
+\glspl*{pattern.adjustment-controlpt} according to whether they are selected or
 unselected.
 
 \plabel[Hotspots]{mi:hotspots}%
@@ -2625,9 +2641,9 @@ dialog box will open (see \figureref{fig:exportpngdialog}).
 Select the \widget{exportpng.usealpha} box if you want a transparent
 background. If the box isn't checked, the background will be white.
 
-Select the \widget{exportpng.crop} box if you want the image cropped
-to the image's bounding box. If the box isn't checked, the image
-will be the same size as the paper size. 
+Select the \widget{exportpng.crop} checkbox if you want the image cropped
+to the image's \gls{image.bbox}. If the checkbox isn't checked, the image
+will be the same size as the paper \gls{paper.size}. 
 
 Note that all \manmsgpl{colour} will be converted to RGB.
 The resulting PNG image won't include the grid or any annotations
@@ -2702,8 +2718,10 @@ sec:neuronexample}
 
 To create a standalone \LaTeX\ document (\inlineglsdef{ext.tex}), select
 the \widget{filter.pgfdoc} file filter, which will use the image's
-paper size, or select the \widget{filter.pgfencapdoc} file filter to
-set the page geometry to the image's bounding box.
+paper \gls{paper.size}, or select the \widget{filter.pgfencapdoc} file filter to
+set the page geometry to the image's \gls{image.bbox} (or \gls{image.typeblock}
+if \widget{clssettings.use_typeblock_as_bbox} is set, see
+\sectionref{sec:normalsize}).
 
 \begin{information}
 For the encapsulated export function,
@@ -2753,7 +2771,7 @@ Changes caused by differences in the way that \FlowframTk\ renders
 can cause the image to be clipped if the bounding box
 has been underestimated. If this is a problem, you can switch on
 the \widget{clssettings.use_typeblock_as_bbox}
-option and use the typeblock function to mark your
+option and use the \gls{image.typeblock} function to mark your
 preferred bounding box.
 \end{warning}
 
@@ -2784,12 +2802,12 @@ There are two ways to deal with this. The first is to give the
 rectangle a transparent line \manmsg{colour} (in addition to the
 transparent fill \manmsg{colour}) but now it can only been detected on the
 \gls{canvas} when it's selected. The second method is to set the
-typeblock to the area of that rectangle (see \sectionref{sec:typeblock}).
+\gls{image.typeblock} to the area of that rectangle (see \sectionref{sec:typeblock}).
 The easiest way to do this is to \select\ the rectangle, use the
 \menu{tex.flowframe.set_typeblock} menu item to open the
 \dialog{typeblock} dialog box, and click on the
 \widget{typeblock.compute_from_path} button. Then delete the
-rectangle. The typeblock is now shown as a grey rectangle in
+rectangle. The \gls{image.typeblock} is now shown as a \manmsg{grey} rectangle in
 \figureref{fig:equatione}. Now make sure that the
 \widget{clssettings.use_typeblock_as_bbox}
 setting is on. Redoing the export to PDF now
@@ -2854,14 +2872,14 @@ document.
 
 The \menu{file.page} menu item will open the printer's page
 setup dialog box. This will require a print service to be available.
-The page margins will be shown on the \gls{canvas} if the
+The \glspl{printer.margin} will be shown on the \gls{canvas} if the
 \menu{settings.paper.margins} menu item is selected.
 
 \section{Print}\label{sec:print}
 
 \menudef{menu.file.print}
 
-You can print the current image using the \menu{file.print} menu
+You can \glslink{printing}{print} the current image using the \menu{file.print} menu
 item which will open the printer dialog box. If no printer is found,
 the error message \qt{\errmsg{printing.no_service}} will
 be displayed. If this happens, check that the printer is switched
@@ -2870,6 +2888,13 @@ on and connected to the computer. The print function uses the
 (provided in the \dialog{graphics} configuration) and draws
 the image as it's displayed on the \gls{canvas} (at 100\%
 magnification and without the grid or annotations).
+
+\begin{information}
+If you use the printer's \qt{Print to PDF} function (where
+supported), the resulting PDF may be different from that created
+with the export to PDF function (see \sectionref{sec:exportdoc})
+as the \LaTeX-related settings won't be used by the printer.
+\end{information}
 
 \section{Message Window}\label{sec:messages}
 
@@ -3940,7 +3965,7 @@ use \menu{selectedtext.series}. This is the same as using the
 
 \menudef{menu.selectedtext.anchor}
 
-To change just the anchor (horizontal, vertical or both) for the
+To change just the \gls{text-attribute.anchor} (horizontal, vertical or both) for the
 selected \glspl{textarea}, use the \menu{selectedtext.anchor}
 sub-menu. This is the same as using the
 \menu{edit.textarea.font.anchor.both} sub-menu from the main menu
@@ -4388,7 +4413,7 @@ isn't a normal path segment.
 \menudef{menu.editpath.symmetry}
 
 The \menu{editpath.symmetry} sub menu can be used to add or remove
-\glslink{symmetricshape}{symmetry}.
+\gls{symmetry}.
 See \sectionref{sec:symmetric} for further details.
 
 \menudef{menu.editpath.continuity}
@@ -4552,16 +4577,16 @@ selected curvature control so that it has the same direction as the
 gradient on the other side of the join, but its magnitude will
 remain unchanged. (See \figureref{fig:continuous}.)
 This function is only available if the selected \gls{controlpt} is
-a curvature control.
+a \gls{curvature-controlpt}.
 
 \menudef{menu.editpath.continuity.anchor}
 
 The \menu{editpath.continuity.anchor} menu item is only available
 when a \gls*{controlpt} on the join between two \glspl{Bezier-curve}
 has been selected. If this item is selected, when you adjust one of
-the adjacent curvature control points, the corresponding curvature
+the adjacent \glspl{curvature-controlpt}, the corresponding curvature
 control on the other segment will be adjusted to maintain
-continuity. An anchor image will appear in the control joining the
+\gls{continuity}. An \gls{continuity.anchor} image will appear in the control joining the
 two segments when this setting is on (as shown in
 \figureref{fig:continuityanchor}).
 
@@ -4571,12 +4596,12 @@ selected and converted to a \gls{Bezier-curve} using the
 \menu{editpath.convert_to_curve} function
 (\figureref{fig:continuousa}). The
 \menu{editpath.continuity.relative} function was then
-used to change the starting gradient of the \gls{Bezier-curve} to make
+used to change the starting \gls{gradient} of the \gls{Bezier-curve} to make
 a smooth join between the first two segments
 (\figureref{fig:continuousb}).  The \gls{Bezier-curve}['s] third
 \gls*{controlpt}, which governs the end curvature, was selected, and
 the \menu{editpath.continuity.relative} function was
-again used to change the end gradient of the \gls{Bezier-curve} to
+again used to change the end \gls{gradient} of the \gls{Bezier-curve} to
 make a smooth join between the last two segments
 (\figureref{fig:continuousc}).
 
@@ -4605,7 +4630,8 @@ the start of the next segment.}
 
 \section{Symmetric Shapes}\label{sec:symmetric}
 
-Symmetry can be applied to an existing \gls{shape} in 
+\Glspl{symmetricshape} are created by applying
+\inlineglsdef{symmetry} to an existing \gls{shape} in 
 \editpathmode\ via the \menu{editpath.symmetry} sub menu.
 
 \FloatSubFigs{fig:symmetric}
@@ -4629,21 +4655,21 @@ has been converted to a curve with only one curvature control.}
 \menudef{menu.editpath.symmetry.has_symmetry}
 
 The \menu{editpath.symmetry.has_symmetry} menu item can be toggled
-to add or remove symmetry. Adding symmetry will replace the existing
+to add or remove \gls{symmetry}. Adding symmetry will replace the existing
 \gls{shape} with a \gls{symmetricshape}. This has extra
-\glspl{controlpt} that govern the line of symmetry.
-Removing symmetry will replace the existing \gls{symmetricshape}
+\glspl{controlpt} that govern the \inlineglsdef{line-of-symmetry}.
+Removing \gls{symmetry} will replace the existing \gls{symmetricshape}
 with its underlying \gls{shape}.
 
 For example, \figureref{fig:symmetrica} shows a \gls*{path}
 in \editpathmode, and \figureref{fig:symmetricb} shows the
-path with symmetry applied to it. There are now two extra
-\glspl{controlpt} (\manmsg{coloured} blue). These points govern the line
-of symmetry. In \figureref{fig:symmetricc}, these two controls
+path with \gls{symmetry} applied to it. There are now two extra
+\glspl{controlpt} (\manmsg{coloured} blue). These points govern the 
+\gls{line-of-symmetry}. In \figureref{fig:symmetricc}, these two controls
 have been moved.
 
 \begin{information}
-The line of symmetry extends infinitely though the two controls,
+The \gls{line-of-symmetry} extends infinitely though the two controls,
 but only the part of the line between the two points is actually
 displayed in edit mode.
 \end{information}
@@ -4652,22 +4678,23 @@ If you later decide to remove the symmetry, deselect
 \menu{editpath.symmetry.has_symmetry}.
 
 \begin{warning}
-Adding symmetry to a closed shape may cause unexpected
+Adding \gls{symmetry} to a closed shape may cause unexpected
 results as the shape will be first opened (without removing the
-last segment), the symmetry will be added, and then the symmetric
+last segment), the \gls{symmetry} will be added, and then the symmetric
 shape will be closed, merging the end points.
 \end{warning}
 
 \menudef{menu.editpath.symmetry.join_anchor}
 
 The \menu{editpath.symmetry.join_anchor} menu item can be toggled to
-determine whether or not the reflection is joined to the underlying
+determine whether or not the reflection is
+\glslink{line-of-symmetry.anchor}{anchored} to the underlying
 path at its end point. If this option is on, the end \gls{controlpt}
-will be constrained to the line of symmetry.  That is, the end
+will be constrained to the \gls{line-of-symmetry}.  That is, the end
 \gls{controlpt} can only move along the line defined by the two blue
 \glspl*{controlpt}.  In \figureref{fig:symmetricd}, the
 \menu{editpath.symmetry.join_anchor} item was deselected, and the
-end control was then moved away from the line of symmetry.
+end control was then moved away from the \gls{line-of-symmetry}.
 
 Note that this function places a \gls{gap} (move) segment between the
 end control and its symmetric counterpart, which will produce an
@@ -4676,8 +4703,8 @@ a line or curve, using \menu{editpath.convert_to_line} or
 \menu{editpath.convert_to_curve}, as described in
 \sectionref{sec:editpath}. In \figureref{fig:symmetrice},
 the join has been changed to a curve. Unlike the \glspl{Bezier-curve}
-in the non-symmetric paths, this curve only has one curvature
-control.
+in the non-symmetric paths, this curve only has one 
+\gls{curvature-controlpt}.
 
 The \gls{menu.editpath.symmetry.join_anchor} function is only available
 if \gls{menu.editpath.symmetry.has_symmetry} is on.
@@ -4685,21 +4712,22 @@ if \gls{menu.editpath.symmetry.has_symmetry} is on.
 \menudef{menu.editpath.symmetry.close_anchor}
 
 The \menu{editpath.symmetry.close_anchor} menu item can be toggled
-to determine whether or not the reflection is joined to the
+to determine whether or not the reflection is
+\glslink{line-of-symmetry.anchor}{anchored} to the
 underlying path at is start point.  If this option is on, the start
-\gls{controlpt} will be constrained to the line of symmetry.  This
+\gls{controlpt} will be constrained to the \gls{line-of-symmetry}.  This
 function is only available if
 \gls{menu.editpath.symmetry.has_symmetry} is on and the
 underlying \gls{path} is closed.
 
-For example, \figureref{fig:closedsymmetrica}
-shows a closed symmetric path (a closed version of
-\figureref{fig:symmetrice}). The anchor constraint on the first control
-was then removed and the control was moved to the left
-(\figureref{fig:closedsymmetricb}). As with the join segment
-(above) the closing segment between the start control and its
-reflection can be changed to a curve with
-one curvature control (\figureref{fig:closedsymmetricc}).
+For example, \figureref{fig:closedsymmetrica} shows a closed
+symmetric path (a closed version of \figureref{fig:symmetrice}). The
+\gls{line-of-symmetry.anchor} constraint on the first control was
+then removed and the control was moved to the left
+(\figureref{fig:closedsymmetricb}). As with the join segment (above)
+the closing segment between the start control and its reflection can
+be changed to a curve with one \gls{curvature-controlpt}
+(\figureref{fig:closedsymmetricc}).
 
 \FloatSubFigs{fig:closedsymmetric}
 {
@@ -4783,8 +4811,23 @@ in the error message \qt{\errmsg{empty_string}}.
 \subfigref{fig:edittextb} text-path}
 
 The \gls{index.menu.textarea} is available in the top text field.
-It has the same items as for the field used when a \gls{textarea}
+It has the same items as for the text input field used when a \gls{textarea}
 is under construction.
+
+If you want to specify alternative text to appear in a \LaTeX\
+document, click on the button marked \widget{edittext.different},
+and enter the alternative in the bottom field (see
+\figureref{fig:edittextb}). The \gls{index.menu.textarea} is not
+available in this field, but you can still use
+\accelerator{menu.textarea.select_all},
+\accelerator{menu.textarea.copy}, \accelerator{menu.textarea.cut}
+and \accelerator{menu.textarea.paste} to select all the text, copy
+to the clipboard, cut to the clipboard or paste from the clipboard,
+respectively. Note that the \hyperref[sec:exportpgf]{exported} text
+may occupy a larger or smaller area in the \LaTeX\ document than it
+does in \FlowframTk, so you may also need to change the
+\gls{text-attribute.anchor} or set the image \glspl{image.typeblock}
+(see \sectionref{sec:exportdoc}).
 
 
 TODO
@@ -4801,7 +4844,7 @@ TODO
 TODO
 
 
-\section{Reducing to Gray Scale}\label{sec:reduce}
+\section{Reducing to \Glsfmttext{manual.grey} Scale}\label{sec:reduce}
 
 TODO
 
@@ -5028,30 +5071,42 @@ TODO
 
 \subsection{Font Family}\label{sec:fontfamily}
 
+\inlineglsdef{text-attribute.family}
+
 TODO
 
 
 \subsection{Font Size}\label{sec:fontsize}
+
+\inlineglsdef{text-attribute.size}
 
 TODO
 
 
 \subsection{Font Series}\label{sec:fontseries}
 
+\inlineglsdef{text-attribute.series}
+
 TODO
 
 
 \subsection{Font Shape}\label{sec:fontshape}
+
+\inlineglsdef{text-attribute.shape}
 
 TODO
 
 
 \subsection{Text Transformation Matrix}\label{sec:textmatrix}
 
+\inlineglsdef{text-attribute.transformation-matrix}
+
 TODO
 
 
 \subsection{Anchor}\label{sec:fontanchor}
+
+\inlineglsdef{text-attribute.anchor}
 
 TODO
 
