@@ -663,6 +663,18 @@ dump all function.}
 @index{anti-aliasing}
 @index{rendering}
 
+@index{drawing-on-canvas,
+ name={drawing (painting on canvas)},
+ text={drawing},
+ alias={painting}
+}
+
+@index{painting,
+ name={painting (on canvas)},
+ text={painting},
+ see={anti-aliasing,rendering}
+}
+
 @index{look-and-feel,
  name={look and feel}
 }
@@ -698,45 +710,6 @@ dump all function.}
  see={Bezier-curve}
 }
 
-@indexplural{text-attribute,
- text={text attribute}
-}
-
-@index{text-attribute.family,
- parent={text-attribute},
- name={family}
-}
-
-@index{text-attribute.shape,
- parent={text-attribute},
- name={shape}
-}
-
-@index{text-attribute.series,
- parent={text-attribute},
- name={series}
-}
-
-@index{text-attribute.size,
- parent={text-attribute},
- name={size}
-}
-
-@index{text-attribute.anchor,
- parent={text-attribute},
- name={anchor}
-}
-
-@index{text-attribute.transformation-matrix,
- parent={text-attribute},
- name={transformation matrix}
-}
-
-@index{text-attribute.outline,
- parent={text-attribute},
- name={outline}
-}
-
 @index{pattern.anchor,
  parent={pattern},
  name={anchor}
@@ -764,7 +737,23 @@ dump all function.}
  alias={continuity}
 }
 
-@index{gradient,seealso={curvature-controlpt,continuity}}
+@index{gradient,
+ name={gradient (slope)},
+ text={gradient},
+ seealso={curvature-controlpt,continuity}
+}
+
+@index{translucency,
+ see={index.colour.transparency}
+}
+
+@index{opacity,
+ see={index.colour.transparency}
+}
+
+@index{shading,
+ alias={index.paint.shading}
+}
 
 @index{symmetry,
  seealso={symmetricshape}
@@ -792,7 +781,31 @@ dump all function.}
 }
 
 @index{anchor,
- see={continuity.anchor,line-of-symmetry.anchor,pattern.anchor,text-attribute.anchor}
+ see={continuity.anchor,line-of-symmetry.anchor,pattern.anchor,index.text-attribute.anchor}
+}
+
+@index{linear-gradient-paint,
+ name={linear gradient paint},
+ text={linear},
+ alias={index.gradient-paint.linear}
+}
+
+@index{linear-gradient-direction,
+ name={linear gradient direction},
+ text={direction},
+ alias={index.gradient-paint.direction}
+}
+
+@index{radial-gradient-paint,
+ name={radial gradient paint},
+ text={radial},
+ alias={index.gradient-paint.radial}
+}
+
+@index{radial-gradient-start-location,
+ name={radial gradient start location},
+ text={start location},
+ alias={index.gradient-paint.centre}
 }
 
 @index{image}

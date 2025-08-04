@@ -102,6 +102,7 @@
 <entry key="font.anchor.vcentre">Centre</entry>
 
 <entry key="colour.single">Colour</entry>
+<entry key="colour.grey">Grey</entry>
 <entry key="colour.start">Start Colour</entry>
 <entry key="colour.end">End Colour</entry>
 
@@ -148,6 +149,24 @@
 <!--  Context labels in manual -->
 
 <entry key="index.maths-mode">maths mode</entry>
+
+<entry key="index.line-colour">line colour</entry>
+<entry key="index.fill-colour">fill colour</entry>
+<entry key="index.text-colour">text colour</entry>
+<entry key="index.pen-colour">pen colour</entry>
+
+<entry key="index.marker.colour">colour</entry>
+
+<entry key="index.colour">colour</entry>
+<entry key="index.colour.greyscale">greyscale</entry>
+
+<entry key="index.gradient-paint.start-colour">start colour</entry>
+<entry key="index.gradient-paint.end-colour">end colour</entry>
+<entry key="index.gradient-paint.centre">centre</entry>
+
+<entry key="index.paint.solid-colour">solid colour</entry>
+
+<!-- Not in the index -->
 
 <entry key="manual.labelled">labelled</entry>
 <entry key="manual.grey">grey</entry>

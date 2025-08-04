@@ -2231,6 +2231,7 @@ Nicola Talbot
 
 <!--  colour selector -->
 
+<entry key="colour.title">Paint Selector</entry>
 <entry key="colour.red">Red</entry>
 <entry key="colour.green">Green</entry>
 <entry key="colour.blue">Blue</entry>
@@ -3863,6 +3864,94 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <!-- Manual -->
 
 <entry key="index.maths-mode">math mode</entry>
+
+<entry key="index.text-attribute">text attributes</entry>
+<entry key="index.text-attribute.text">text attribute</entry>
+
+<entry key="index.text-attribute.paint">paint</entry>
+<entry key="index.text-attribute.fill-paint">fill paint (outlined interior)</entry>
+<entry key="index.text-attribute.fill-paint.text">fill paint</entry>
+
+<entry key="index.text-attribute.font-family">font family</entry>
+<entry key="index.text-attribute.font-series">font series</entry>
+<entry key="index.text-attribute.font-size">font size</entry>
+<entry key="index.text-attribute.font-shape">font shape</entry>
+<entry key="index.text-attribute.anchor">anchor</entry>
+<entry key="index.text-attribute.transformation-matrix">transformation matrix</entry>
+<entry key="index.text-attribute.outline">outline</entry>
+
+<entry key="index.path-attribute">path attributes</entry>
+<entry key="index.path-attribute.text">path attribute</entry>
+
+<entry key="index.path-attribute.line-paint">line paint</entry>
+<entry key="index.path-attribute.fill-paint">fill paint</entry>
+<entry key="index.path-attribute.line-width">line width</entry>
+<entry key="index.path-attribute.dash-pattern">dash pattern</entry>
+<entry key="index.path-attribute.cap-style">cap style</entry>
+<entry key="index.path-attribute.join-style">join style</entry>
+<entry key="index.path-attribute.winding-rule">winding rule</entry>
+
+<entry key="index.marker">markers</entry>
+<entry key="index.marker.text">marker</entry>
+
+<entry key="index.marker.colour">color</entry>
+<entry key="index.marker.size">size</entry>
+<entry key="index.marker.type">type</entry>
+<entry key="index.marker.repeating">repeating</entry>
+<entry key="index.marker.reversing">reversing</entry>
+<entry key="index.marker.composite">composite</entry>
+<entry key="index.marker.offset">offset</entry>
+<entry key="index.marker.repeat-gap">repeat gap</entry>
+<entry key="index.marker.orientation">orientation</entry>
+
+<entry key="index.path-attribute.marker">markers</entry>
+<entry key="index.path-attribute.marker.text">marker</entry>
+<entry key="index.path-attribute.marker.alias">index.marker</entry>
+
+<entry key="index.line-colour">line color</entry>
+<entry key="index.line-colour.alias">index.path-attribute.line-paint</entry>
+<entry key="index.fill-colour">fill color</entry>
+<entry key="index.fill-colour.alias">index.path-attribute.fill-paint</entry>
+
+<entry key="index.text-colour">text color</entry>
+<entry key="index.text-colour.alias">index.text-attribute.paint</entry>
+
+<entry key="index.pen-colour">pen color</entry>
+<entry key="index.pen-colour.see">index.text-attribute.paint,index.path-attribute.line-paint</entry>
+
+<entry key="index.pen-width">pen width</entry>
+<entry key="index.pen-width.alias">index.path-attribute.line-width</entry>
+
+<entry key="index.colour">color</entry>
+<entry key="index.colour.see">index.text-attribute.paint,index.text-attribute.fill-paint,index.path-attribute.line-paint,index.path-attribute.fill-paint,index.marker.colour</entry>
+
+<entry key="index.colour.rgb">RGB</entry>
+<entry key="index.colour.cmyk">CMYK</entry>
+<entry key="index.colour.hsb">HSB</entry>
+<entry key="index.colour.greyscale">grayscale</entry>
+<entry key="index.colour.transparency">transparency</entry>
+<entry key="index.colour.gradient">gradient</entry>
+<entry key="index.colour.solid">solid</entry>
+
+<entry key="index.gradient-paint">gradient paint</entry>
+<entry key="index.gradient-paint.seealso">index.text-attribute.paint,index.text-attribute.fill-paint,index.path-attribute.line-paint,index.path-attribute.fill-paint</entry>
+
+<entry key="index.gradient-paint.linear">linear</entry>
+<entry key="index.gradient-paint.radial">radial</entry>
+<entry key="index.gradient-paint.start-colour">start color</entry>
+<entry key="index.gradient-paint.end-colour">end color</entry>
+<entry key="index.gradient-paint.direction">direction</entry>
+<entry key="index.gradient-paint.centre">center</entry>
+
+<entry key="index.paint">paint</entry>
+<entry key="index.paint.shading">shading</entry>
+<entry key="index.paint.alias">index.gradient-paint</entry>
+<entry key="index.paint.solid-colour">solid color</entry>
+<entry key="index.paint.solid-colour.alias">index.colour.solid</entry>
+<entry key="index.paint.opacity">opacity</entry>
+<entry key="index.paint.opacity.alias">index.colour.transparency</entry>
+
+<!-- Not in the index -->
 
 <entry key="manual.grey">gray</entry>
 <entry key="manual.colour">color</entry>

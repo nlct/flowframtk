@@ -19,7 +19,10 @@
 \newcommand{\texttool}{\tool{textarea}}
 \newcommand{\mathstool}{\tool{math}}
 \newcommand{\textmode}{\glslink{menu.tools.textarea}{text mode}}
-\newcommand{\mathsmode}{\glslink{menu.tools.math}{\manmsg{maths} mode}}
+\newcommand{\mathsmode}{%
+ \glslink{menu.tools.math}{\manmsg{maths} mode}%
+ \glsadd{index.maths-mode}%
+}
 \newcommand{\selectmode}{\glslink{menu.tools.select}{select mode}}
 \newcommand{\select}{\hyperref[sec:selectobjects]{select}}
 \newcommand{\selects}{\hyperref[sec:selectobjects]{selects}}
@@ -27,6 +30,10 @@
 \newcommand{\selection}{\hyperref[sec:selectobjects]{selection}}
 \newcommand{\gridlock}{\hyperref[mi:gridlock]{grid lock}}
 \newcommand{\editpathmode}{\hyperref[sec:editpath]{edit path mode}}
+\newcommand{\textattr}[1]{\gls{index.text-attribute.#1}}
+\newcommand{\textattrpl}[1]{\glspl{index.text-attribute.#1}}
+\newcommand{\pathattr}[1]{\gls{index.path-attribute.#1}}
+\newcommand{\pathattrpl}[1]{\glspl{index.path-attribute.#1}}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -688,12 +695,12 @@ Switch to \mathstool &
 \tabularnewline
 \midrule
 %
-\keys{\actualkey{1}}\ldots\keys{\actualkey{8}} &
-Linear gradient paint direction selectors &
+\keys{\keyref{alt}+\actualkey{1}}\ldots\keys{\keyref{alt}+\actualkey{8}} &
+\Glsname{linear-gradient-direction} selectors &
 \tabularnewline
 %
-\keys{\actualkey{1}}\ldots\keys{\actualkey{9}} &
-Radial gradient paint start location selectors &
+\keys{\keyref{alt}+\actualkey{1}}\ldots\keys{\keyref{alt}+\actualkey{9}} &
+\Glsname{radial-gradient-start-location} selectors &
 \end{longtable}
 
 
@@ -1422,12 +1429,11 @@ allows you to adjust the text-related settings.
 If the \widget{textconfig.anchor} \gls{checkbox} is selected,
 whenever you \hyperref[sec:alignobjects]{justify} a \gls{group}, any
 \glspl{textarea} in that group will have their
-\glspl{text-attribute.anchor} automatically
-adjusted.
+\textattrpl{anchor} automatically adjusted.
 
 \widgetdef{textconfig.textualshading}
 
-\FlowframTk\ can't implement paint shadings for text when
+\FlowframTk\ can't implement \dgls{gradient-paint} for text when
 \hyperref[sec:exportpgf]{exporting} to \sty{pgf}. (This includes the
 export functions that use \app{latex} or \app{pdflatex}, such as
 the export to PDF function.) You can choose how \FlowframTk\ should export
@@ -2058,7 +2064,7 @@ individual \gls{statusbar} elements.
   {\includeimg{configureUI-normalize}}
   {Configuration UI Dialog Box (Normalization)}
 
-When an image is drawn on the \gls{canvas} via Java's painting
+When an image is \glslink{painting}{drawn} on the \gls{canvas} via Java's painting
 methods, the co-ordinates of all the objects are converted into
 PostScript points (including any scaling applied by the zoom
 settings). However, it is rare for any display device, such as a
@@ -2799,8 +2805,8 @@ the image is now exported to PDF, as shown in
 but the new rectangle is now visible, which may not be desirable.
 
 There are two ways to deal with this. The first is to give the
-rectangle a transparent line \manmsg{colour} (in addition to the
-transparent fill \manmsg{colour}) but now it can only been detected on the
+rectangle a transparent \pathattr{line-paint} (in addition to the
+default transparent \pathattr{fill-paint}) but now it can only been detected on the
 \gls{canvas} when it's selected. The second method is to set the
 \gls{image.typeblock} to the area of that rectangle (see \sectionref{sec:typeblock}).
 The easiest way to do this is to \select\ the rectangle, use the
@@ -3820,13 +3826,13 @@ path selected.
 
 \menudef{menu.selectedpath.line_colour}
 
-To change the path's line \manmsg{colour}, use
+To change the path's \pathattr{line-paint}, use
 \menu{selectedpath.line_colour}. This is the same as using the
 \menu{edit.path.line_colour} menu item from the main menu bar.
 
 \menudef{menu.selectedpath.fill_colour}
 
-To change the path's fill \manmsg{colour}, use
+To change the path's \pathattr{fill-paint}, use
 \menu{selectedpath.fill_colour}. This is the same as using the
 \menu{edit.fill_colour} menu item from the main menu bar.
 
@@ -3916,22 +3922,22 @@ This option won't be available if there is more than one
 
 \menudef{menu.selectedtext.colour}
 
-To change the \gls{textarea}['s] pen \manmsg{colour}, use
+To change the \gls{textarea}['s] pen (or \textattr{outline}) \textattr{paint}, use
 \menu{selectedtext.colour}. This is the same as using the
 \menu{edit.textarea.colour} menu item from the main menu bar.
 
 \menudef{menu.selectedtext.outline}
 
-To outline the \gls{textarea}, use \menu{selectedtext.outline}.
+To toggle \textattr{outline} mode for the \gls{textarea}, use \menu{selectedtext.outline}.
 This is the same as using the \menu{edit.textarea.outline} menu item
 from the main menu bar.
 
 \menudef{menu.selectedtext.fill_colour}
 
-To change the \gls{textarea}['s] fill \manmsg{colour}, use
+To change the \gls{textarea}['s] \textattr{fill-paint}, use
 \menu{selectedtext.fill_colour}. This is the same as using the
 \menu{edit.fill_colour} menu item from the main menu bar.
-This action is only available if the outline setting is on.
+This action is only available if the \textattr{outline} setting is on.
 
 \menudef{menu.selectedtext.all_styles}
 
@@ -3965,7 +3971,7 @@ use \menu{selectedtext.series}. This is the same as using the
 
 \menudef{menu.selectedtext.anchor}
 
-To change just the \gls{text-attribute.anchor} (horizontal, vertical or both) for the
+To change just the \textattr{anchor} (horizontal, vertical or both) for the
 selected \glspl{textarea}, use the \menu{selectedtext.anchor}
 sub-menu. This is the same as using the
 \menu{edit.textarea.font.anchor.both} sub-menu from the main menu
@@ -4067,11 +4073,11 @@ menu items as \gls{index.menu.selectedtext}.
 
 \menudef{menu.selected.fill_colour}
 
-If any \glspl{path} have been selected or if any
-\glslink{text-attribute.outline}{outlined} \glspl{textarea}
-have been selected, then the \menu{selected.fill_colour} menu item
-will be available. This is the same as using the
-\menu{edit.fill_colour} menu item from the main menu bar.
+If any \glspl{path} have been selected or if any \glspl*{textarea}
+have been selected with \textattr{outline} mode on, then the
+\menu{selected.fill_colour} menu item will be available. This is the
+same as using the \menu{edit.fill_colour} menu item from the main
+menu bar.
 
 \menudef{menu.selected.bitmap}
 
@@ -4263,6 +4269,110 @@ If you assign a description to a \gls{group},
 you will lose the description if you later ungroup it.
 \end{important}
 
+\section{Paint (\Manmsg{colour}) Selector}\label{sec:paint}
+
+\widgetdef{colour.title}
+
+\Inlineglsdef{index.paint} is the \gls{index.colour} or \gls{shading} used for
+\dglspl{text-colour}, \dglspl{line-colour} and \dglspl{fill-colour}. When selecting a
+\dgls{paint} for a particular attribute, you may have a choice of:
+transparent, a \dgls{paint.solid-colour} or a \dgls{gradient-paint}.
+(Some attributes, such as marker \gls{index.marker.colour},
+only support a \gls{index.paint.solid-colour}.)
+
+\widgetdef{colour.transparent}
+
+Selecting the \widget{colour.transparent} radio button indicates no
+\dgls{colour}. For example, if a \gls{index.path-attribute.line-paint} is set to
+\widget{colour.transparent} then this indicates that the \gls{shape}
+outline should not be \glslink{drawing-on-canvas}{drawn} or if a
+\gls{index.path-attribute.fill-paint} is set to \widget{colour.transparent} then
+this indicates that the \gls{shape} should not be filled.
+
+\widgetdef{colour.single}
+
+\FloatFig{fig:paint-solid}
+{\includeimg{paint-solid}}
+{Solid \Manmsg{colour} Selector}
+
+Selecting the \widget{colour.single} radio button indicates a
+\inlineglsdef{index.colour.solid} \dgls{colour} and enables the
+\widget{colour.single} panel (see \figureref{fig:paint-solid}).  A
+\dgls{paint.solid-colour} may be expressed as
+\inlineglsdef{index.colour.rgb} (red, green, blue),
+\inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black),
+\inlineglsdef{index.colour.hsb} (hue, saturation, brightness) or
+\inlineglsdef{index.colour.greyscale}. In each case,
+\inlineglsdef{index.colour.transparency} may be added by adjusting
+the alpha channel.  If the alpha value is 100\% then the
+\dgls{colour} is opaque.  Smaller values increase
+\gls{translucency}, allowing \glspl{object} behind to show
+\manmsg{through}.
+
+\widgetdef{colour.gradient}
+
+\FloatFig{fig:paint-linear-gradient}
+{\includeimg{paint-linear-gradient}}
+{Gradient Paint Selector (Linear Selected)}
+
+Selecting the \widget{colour.gradient} radio button indicates a 
+\inlineglsdef{index.gradient-paint} and enables the
+\widget{colour.gradient} panel (see
+\figureref{fig:paint-linear-gradient}). 
+
+A \gls{index.gradient-paint} is a shading that smoothly transitions
+from a \inlineglsdef{index.gradient-paint.start-colour} to an
+\inlineglsdef{index.gradient-paint.end-colour}.  There is a choice
+of \gls{index.gradient-paint.linear} or
+\gls{index.gradient-paint.radial}. Both are a shading that
+transitions from one \dgls{colour} (the
+\inlineglsdef{index.gradient-paint.start-colour}) to another (the
+\inlineglsdef{index.gradient-paint.end-colour}).  The
+\inlineglsdef{colour.start} and \inlineglsdef{colour.end} selectors
+each have the same interface as the \widget{colour.single} panel.
+
+\FloatSubFigs{fig:shadingex}
+{
+ {fig:linearshading}{\includeimg{linear-shading}}{Linear},
+ {fig:radialshading}{\includeimg{radial-shading}}{Radial}
+}
+{Gradient Shading}
+
+\widgetdef{colour.linear}
+
+A \inlineglsdef{index.gradient-paint.linear} shading transitions in
+a band from the \gls{index.gradient-paint.start-colour} to the
+\gls{index.gradient-paint.end-colour} in the given direction. There
+are eight directions which are enabled when the
+\widget{colour.linear} radio button is selected: North, North-East,
+East, South-East, South, South-West, West, and North-West.  The
+direction buttons can either be clicked on or selected with the
+keystrokes \keys{\keyref{alt}+\actualkey{1}} \ldots\
+\keys{\keyref{alt}+\actualkey{8}}.
+
+For example, \figureref{fig:linearshading} has a solid black
+\pathattr{line-paint} but the \pathattr{fill-paint} is a linear
+gradient paint from yellow to magenta. The direction is set to North
+so the bottom of the shape is yellow and the shading transitions to
+magenta at the top of the shape.
+
+\widgetdef{colour.radial}
+
+A \inlineglsdef{index.gradient-paint.radial} shading radiates
+outwards from a starting location. There are nine locations which
+become enabled with the \widget{colour.radial} radio button is
+selected. These are arranged in a three by three grid referencing
+regions of a \gls*{shape}['s] \gls{bbox}.
+The location buttons can either be clicked on or
+selected with the keystrokes \keys{\keyref{alt}+\actualkey{1}} \ldots\
+\keys{\keyref{alt}+\actualkey{9}} (starting from the bottom left).
+
+For example, \figureref{fig:radialshading} has a solid black
+\pathattr{line-paint} but the \pathattr{fill-paint} is a radial
+gradient paint from yellow to magenta. The location is set to the
+middle bottom location. So the middle bottom area of the \gls{shape}
+is yellow but the transition to magenta radiates outwards from there
+in all directions (clipped by the shape).
 
 \section{Editing Control Points}\label{sec:editpath}
 
@@ -4827,7 +4937,7 @@ to the clipboard, cut to the clipboard or paste from the clipboard,
 respectively. Note that the \hyperref[sec:exportpgf]{exported} text
 may occupy a larger or smaller area in the \LaTeX\ document than it
 does in \FlowframTk, so you may also need to change the
-\gls{text-attribute.anchor} or set the image \glspl{image.typeblock}
+\textattr{anchor} or set the image \glspl{image.typeblock}
 (see \sectionref{sec:exportdoc}).
 
 You can use the \widget{edittext.remap} button to generate
@@ -4851,7 +4961,7 @@ placing them between \glspl{pgf.delimiter}. By default these delimiters are the
 vertical bar (pipe) character \glssymbol{pipe} but this can be changed in
 the \widget{edittext.textpath.left_delim} and
 \widget{edittext.textpath.right_delim} fields (see
-\figureref{fig:edittextb}). Note that the vertical \gls{text-attribute.anchor}
+\figureref{fig:edittextb}). Note that the vertical \textattr{anchor}
 setting is ignored by the \LaTeX\ export functions. It's best to avoid
 \manmsg{maths} in \glspl{textpath}. See the \sty{pgf} manual for
 further details about text decorations.
@@ -4860,7 +4970,7 @@ further details about text decorations.
 The alternative text may not be used by
 \hyperref[sec:exportimage]{export} functions if
 the \gls*{textpath} has been made an
-\gls{text-attribute.outline} or if the
+\textattr{outline} or if the
 \gls*{textarea}\slash\gls*{textpath} has a gradient paint.
 The export \manmsg{behaviour} under those circumstances is dependent on
 the \hyperref[sec:texconfigtext]{\LaTeX\ text settings}.
@@ -4892,11 +5002,11 @@ the shape of the original path (which will now be the underlying
 path).
 
 The underlying path will not be visible (except in \editpathmode).
-If the original \gls*{textarea} was in \gls{text-attribute.outline} mode, the new
-\gls*{textpath} will also be in \gls{text-attribute.outline} mode, possibly with a fill
-paint, depending on the original \gls*{textarea} and \gls*{path}
-fill paint. (If the original \gls*{textarea} didn't have a fill
-paint, the \gls*{path} fill paint will be applied.)
+If the original \gls*{textarea} was in \textattr{outline} mode, the new
+\gls*{textpath} will also be in \textattr{outline} mode, possibly with a 
+\textattr{fill-paint}, depending on the original \gls*{textarea} and \gls*{path}
+fill paint. (If the original \gls*{textarea} didn't have a
+\textattr{fill-paint}, the \gls*{path} \pathattr{fill-paint} will be applied.)
 
 
 TODO
@@ -4904,15 +5014,23 @@ TODO
 
 \section{Text Outlines}\label{sec:textoutline}
 
+\menudef{menu.edit.textarea.outline}
+
 TODO
 
 
-\section{Reducing to \Glsfmttext{manual.grey} Scale}\label{sec:reduce}
+\section{Reducing to \Glsfmttext{index.colour.greyscale}}\label{sec:reduce}
+
+\inlineglsdef{index.colour.greyscale}
 
 TODO
 
 
 \section{\Glsfmttext{manual.colour} Space Conversions}\label{sec:convertcolspace}
+
+\inlineglsdef{index.colour.rgb}
+\inlineglsdef{index.colour.cmyk}
+\inlineglsdef{index.colour.hsb}
 
 TODO
 
@@ -5027,12 +5145,16 @@ TODO
 TODO
 
 
-\section{Line \Glsfmttext{manual.colour}}\label{sec:linepaint}
+\section{Line Paint}\label{sec:linepaint}
+
+\inlineglsdef{index.path-attribute.line-paint}
 
 TODO
 
 
-\section{Fill \Glsfmttext{manual.colour}}\label{sec:fillpaint}
+\section{Fill Paint}\label{sec:fillpaint}
+
+\inlineglsdef{index.path-attribute.fill-paint}
 
 TODO
 
@@ -5044,26 +5166,35 @@ TODO
 
 \subsection{Line Thickness (or Pen Width)}\label{sec:penwidth}
 
+\inlineglsdef{index.path-attribute.line-width}
+
 TODO
 
 
 \subsection{Dash Pattern}\label{sec:dashpattern}
+
+\inlineglsdef{index.path-attribute.dash-pattern}
 
 TODO
 
 
 \subsection{Cap Style}\label{sec:capstyle}
 
+\inlineglsdef{index.path-attribute.cap-style}
+
 TODO
 
 
 \subsection{Join Style}\label{sec:joinstyle}
+
+\inlineglsdef{index.path-attribute.join-style}
 
 TODO
 
 
 \subsection{Markers}\label{sec:markers}
 
+\inlineglsdef{index.marker}
 TODO
 
 
@@ -5074,55 +5205,77 @@ TODO
 
 \subsubsection{Marker Types}\label{sec:markertypes}
 
+\inlineglsdef{index.marker.type}
+
 TODO
 
 
 \subsubsection{Marker Size}\label{sec:markersize}
+
+\inlineglsdef{index.marker.size}
 
 TODO
 
 
 \subsubsection{Repeating Markers}\label{sec:repeatingmarkers}
 
+\inlineglsdef{index.marker.repeating}
+
 TODO
 
 
 \subsubsection{Reversing Markers}\label{sec:reversingmarkers}
+
+\inlineglsdef{index.marker.reversing}
 
 TODO
 
 
 \subsubsection{Composite Markers}\label{sec:compositemarkers}
 
+\inlineglsdef{index.marker.composite}
+
 TODO
 
 
 \subsubsection{Marker Orientation}\label{sec:markerorientation}
+
+\inlineglsdef{index.marker.orientation}
 
 TODO
 
 
 \subsubsection{Marker Offset}\label{sec:markeroffset}
 
+\inlineglsdef{index.marker.offset}
+
 TODO
 
 
 \subsubsection{Repeat Gap}\label{sec:repeatgap}
+
+\inlineglsdef{index.marker.repeat-gap}
 
 TODO
 
 
 \subsubsection{Marker \Glsfmttext{manual.colour}}\label{sec:markerpaint}
 
+\inlineglsdef{index.marker.colour}
+
 TODO
 
 
 \subsection{Winding Rule}\label{sec:winding}
 
+\inlineglsdef{index.path-attribute.winding-rule}
+
 TODO
 
 
-\section{Text \Glsfmttext{manual.colour}}\label{sec:textpaint}
+\section{Text Paint}\label{sec:textpaint}
+
+\inlineglsdef{index.text-attribute.paint}
 
 TODO
 
@@ -5134,42 +5287,42 @@ TODO
 
 \subsection{Font Family}\label{sec:fontfamily}
 
-\inlineglsdef{text-attribute.family}
+\inlineglsdef{index.text-attribute.font-family}
 
 TODO
 
 
 \subsection{Font Size}\label{sec:fontsize}
 
-\inlineglsdef{text-attribute.size}
+\inlineglsdef{index.text-attribute.font-size}
 
 TODO
 
 
 \subsection{Font Series}\label{sec:fontseries}
 
-\inlineglsdef{text-attribute.series}
+\inlineglsdef{index.text-attribute.font-series}
 
 TODO
 
 
 \subsection{Font Shape}\label{sec:fontshape}
 
-\inlineglsdef{text-attribute.shape}
+\inlineglsdef{index.text-attribute.font-shape}
 
 TODO
 
 
 \subsection{Text Transformation Matrix}\label{sec:textmatrix}
 
-\inlineglsdef{text-attribute.transformation-matrix}
+\inlineglsdef{index.text-attribute.transformation-matrix}
 
 TODO
 
 
 \subsection{Anchor}\label{sec:fontanchor}
 
-\inlineglsdef{text-attribute.anchor}
+\inlineglsdef{index.text-attribute.anchor}
 
 TODO
 
