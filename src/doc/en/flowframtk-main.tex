@@ -4173,15 +4173,53 @@ selected.
 
 \section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
 
+\Glspl{object} are \glslink{drawing-on-canvas}{painted} on the page according to the
+\gls{stackingorder}. This means that objects can
+partially or wholly obscure other objects in the same location.
+For example, in \figureref{fig:stackingordera} the green rectangle is
+at the bottom (\gls{back}) of the stack ($z=0$), the blue circle is in
+the middle of the stack ($z=1$) and the yellow triangle is at the
+top (\gls{front}) of the stack ($z=2$). The stacking order has
+been reversed in \figureref{fig:stackingorderb}, with the green
+rectangle now at the top (front) of the stack ($z=2$) and
+the yellow triangle now at the bottom (back) of the stack
+($z=0$).
+
+\FloatSubFigs{fig:stackingorder}
+{
+  {fig:stackingordera}{\includeimg{stackingordera}}{},
+  {fig:stackingorderb}{\includeimg{stackingorderb}}{}
+}
+{Stacking Order}
+
+If \glspl{object} don't overlap or if they don't have a
+\gls{index.fill-colour}, the \gls{stackingorder} may not be
+immediately apparent, but the order is important when you're
+defining frames for the \sty{flowfram} package. You can cycle the
+selection in reverse order from front to back of the stack using the
+\menu{navigate.select} menu item.
+
 \menudef{menu.edit.front}
+
+Each new \gls{object} is automatically added to the \gls{front} when it is
+created, but \glspl{object} can also be moved to the \gls{front} 
+with the \menu{edit.front} menu item.
 
 \menudef{menu.edit.back}
 
+A selected \gls{object} can be moved to the
+\gls{back} of the \gls{stack} (so that other \glspl{object} in the
+same location obscure it) with the \menu{edit.back} menu item.
+
 \menudef{menu.edit.moveup}
+
+An object can be moved up the \gls{stackingorder} using
+the \menu{edit.moveup} menu item.
 
 \menudef{menu.edit.movedown}
 
-TODO
+An object can be moved down the \gls{stackingorder} using
+the \menu{edit.movedown} menu item.
 
 
 \section{Grouping and Ungrouping Objects}\label{sec:grouping}
