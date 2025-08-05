@@ -407,6 +407,7 @@ Nicola Talbot
 <entry key="menu.transform.rotate.mnemonic">R</entry>
 <entry key="menu.transform.rotate.keystroke">control W</entry>
 <entry key="menu.transform.rotate.tooltip">Rotate selected object(s)</entry>
+<entry key="menu.transform.rotate.iconimage">rotate</entry>
 
 <entry key="button.rotate">Rotate</entry>
 <entry key="button.rotate.keystroke">control W</entry>
@@ -415,6 +416,7 @@ Nicola Talbot
 <entry key="menu.transform.scale.mnemonic">S</entry>
 <entry key="menu.transform.scale.keystroke">control Z</entry>
 <entry key="menu.transform.scale.tooltip">Scale selected object(s)</entry>
+<entry key="menu.transform.scale.iconimage">scale</entry>
 
 <entry key="button.scale">Scale</entry>
 <entry key="button.scale.keystroke">control Z</entry>
@@ -423,6 +425,7 @@ Nicola Talbot
 <entry key="menu.transform.shear.mnemonic">H</entry>
 <entry key="menu.transform.shear.keystroke">control H</entry>
 <entry key="menu.transform.shear.tooltip">Shear selected object(s)</entry>
+<entry key="menu.transform.shear.iconimage">shear</entry>
 
 <entry key="button.shear">Shear</entry>
 <entry key="button.shear.keystroke">control H</entry>

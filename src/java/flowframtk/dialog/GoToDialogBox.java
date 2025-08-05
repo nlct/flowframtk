@@ -58,7 +58,7 @@ public class GoToDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpDialogButton(this, "sec:goto"));
+      p2.add(getResources().createHelpDialogButton(this, "sec:navigate"));
 
       getContentPane().add(p2, "South");
 

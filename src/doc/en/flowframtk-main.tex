@@ -3116,22 +3116,10 @@ the required segments.
 \subfigref{fig:draftfinala} path under construction;
 \subfigref{fig:draftfinalb} path completed.}
 
-\plabel[Go To Dialog Box]{sec:goto}%
 If you are unable to use the mouse, you can move the pointer using
-\menu{navigate.goto} which will display the dialog box shown in
-\figureref{fig:goto}. Enter the $x$ and $y$ co-ordinates in the
-\widget{coordinates.x} and \widget{coordinates.y} fields if you are
-using a rectangular grid, or enter the angle and radius in the
-\widget{coordinates.angle} and \widget{coordinates.radius} fields,
-if you are using a radial grid. The keystroke
+\menu{navigate.goto}. The keystroke
 \accelerator{action.construct_click} will emulate a single mouse
 click in \gls{construction}.
-
-\FloatFig
-  {fig:goto}
-  {\includeimg{goto}}
-  {Go To Co-ordinate Dialog Box}
-
 
 \seealsorefs{sec:editpath,sec:symmetric,sec:patterns}
 
@@ -4122,8 +4110,18 @@ in a cluttered image.
 \menudef{menu.navigate.goto}
 
 The \menu{navigate.goto} menu item opens the
-\inlineglsdef{goto.title} dialog in which you can enter $x$ and $y$
-coordinates. If your system allows applications to move the cursor
+\inlineglsdef{goto.title} dialog (\figureref{fig:goto}).  Enter the
+$x$ and $y$ co-ordinates in the \widget{coordinates.x} and
+\widget{coordinates.y} fields if you are using a rectangular grid,
+or enter the angle and radius in the \widget{coordinates.angle} and
+\widget{coordinates.radius} fields, if you are using a radial grid.
+
+\FloatFig
+  {fig:goto}
+  {\includeimg{goto}}
+  {Go To Co-ordinate Dialog Box}
+
+If your system allows applications to move the cursor
 (via the \gls{robot}), the cursor will be moved to the entered
 co-ordinates (scrolling the \gls{canvas} if necessary).
 
@@ -4317,7 +4315,8 @@ If you assign a description to a \gls{group},
 you will lose the description if you later ungroup it.
 \end{important}
 
-\chapter{Paint (\Glsfmttext{index.colour} and Shading)}
+\chapter{Paint (\Glsentrytext{manual.colour} and Shading)}
+\label{sec:paintcolourandshading}
 
 \Inlineglsdef{index.paint} is the \gls{index.colour} or \gls{shading} used for
 \dglspl{text-colour}, \dglspl{line-colour} and \dglspl{fill-colour}. When selecting a
@@ -4443,7 +4442,7 @@ in all directions (clipped by the shape).
  sec:removetrans
 }
 
-\section{\Glsfmttext{manual.colour} Space Conversions}\label{sec:convertcolspace}
+\section{\Glsentrytext{manual.colour} Space Conversions}\label{sec:convertcolspace}
 
 \menudef{menu.edit.adjustcol}
 
@@ -5457,10 +5456,29 @@ To illustrate this, in \figureref{fig:rotateex1a} there are three
 \glspl*{object} selected.  The selection is then rotated
 \degrees{90}.  The result is shown in \figureref{fig:rotateex1b}.
 
+\FloatSubFigs{fig:rotateex1}
+{
+ {fig:rotateex1a}{\includeimg{rotateex1a}}{},
+ {fig:rotateex1b}{\includeimg{rotateex1b}}{}
+}
+[Three Selected Objects Rotated by 90 Degrees]
+{Three selected objects rotated by 90 degrees: 
+\subfigref{fig:rotateex1a} before;
+\subfigref{fig:rotateex1b} after.}
+
 In \figureref{fig:rotateex2}, the three objects in
 \figureref{fig:rotateex1} were first \hyperref[sec:grouping]{grouped}
 (\figureref{fig:rotateex2a}) and then rotated \degrees{90}
 (\figureref{fig:rotateex2b}).
+
+\FloatSubFigs{fig:rotateex2}
+{
+ {fig:rotateex2a}{\includeimg{rotateex2a}}{},
+ {fig:rotateex2b}{\includeimg{rotateex2b}}{}
+}
+[A Group Consisting of Three Objects Rotated by 90 Degrees]
+{A group consisting of three objects rotated by 90 degrees:
+\subfigref{fig:rotateex2a} before; \subfigref{fig:rotateex2b} after.}
 
 In \figureref{fig:rotatetextpath}, the \gls*{path} and
 \gls*{textarea} in \figureref{fig:rotatetextpatha} are
@@ -5472,25 +5490,6 @@ from first rotating the original \gls*{path} and \gls*{textarea},
 shown in \figureref{fig:rotatetextpathd}, and then combining
 them to form a \gls*{textpath}, shown in
 \figureref{fig:rotatetextpathe}.
-
-\FloatSubFigs{fig:rotateex1}
-{
- {fig:rotateex1a}{\includeimg{rotateex1a}}{},
- {fig:rotateex1b}{\includeimg{rotateex1b}}{}
-}
-[Three Selected Objects Rotated by 90 Degrees]
-{Three selected objects rotated by 90 degrees: 
-\subfigref{fig:rotateex1a} before,
-\subfigref{fig:rotateex1b} after.}
-
-\FloatSubFigs{fig:rotateex2}
-{
- {fig:rotateex2a}{\includeimg{rotateex2a}}{},
- {fig:rotateex2b}{\includeimg{rotateex2b}}{}
-}
-[A Group Consisting of Three Objects Rotated by 90 Degrees]
-{A group consisting of three objects rotated by 90 degrees:
-\subfigref{fig:rotateex2a} before, \subfigref{fig:rotateex2b} after.}
 
 \FloatSubFigs*{fig:rotatetextpath}
 {
@@ -5520,6 +5519,7 @@ are dragging will be transformed.
 
 \seealsorefs{
  sec:grouping,
+ sec:moveobjects,
  sec:scaleobjects,
  sec:shearobjects,
  sec:textpath
@@ -5530,15 +5530,286 @@ are dragging will be transformed.
 
 \menudef{menu.transform.scale}
 
-TODO
+Selected \glspl{object} can be scaled with the
+\menu{transform.scale} menu item. This will open up a dialog box
+in which you can specify the scale factor. There is a choice of
+scaling just the $x$ dimension, just the $y$ dimension
+or both dimensions.
+
+Notes:
+\begin{itemize}
+\item \Inlineglsdef{affine-transformation.reflection} can be
+achieved with a negative scale factor.
+
+\item Individual \glspl*{object} will be
+scaled relative to the top left corner of the
+object's \gls{bbox}.
+
+\item \Glspl*{object} within a
+\gls{group} will be scaled relative to the top left corner
+of the group's \gls*{bbox}.
+
+\item Scaling a \gls{textpath} will scale the path and the text
+will adjust to follow the transformed path. Note that the text
+itself will not be scaled.
+
+\item Scaling a \gls*{textarea} and \gls*{path} and then combining
+them to form a \gls*{textpath} is not the same as first combining
+and then scaling.
+\end{itemize}
+
+To illustrate this, in \figureref{fig:scaleex1a} there are three
+\glspl*{object} selected.
+The selection is then scaled by a factor of 2.
+The result is shown in \figureref{fig:scaleex1b}.
+
+\FloatSubFigs{fig:scaleex1}
+{
+ {fig:scaleex1a}{\includeimg{scaleex1a}}{},
+ {fig:scaleex1b}{\includeimg{scaleex1b}}{},
+}
+[Three Selected Objects Scaled by a Factor of 2]
+{Three selected objects scaled by a factor of 2:
+\subfigref{fig:scaleex1a} before;
+\subfigref{fig:scaleex1b} after.}
+
+In \figureref{fig:scaleex2}, the three objects in
+\figureref{fig:scaleex1} were first
+\hyperref[sec:grouping]{grouped} (\figureref{fig:scaleex2a})
+and then scaled by a factor of 2 (\figureref{fig:scaleex2b}).
+
+\FloatSubFigs{fig:scaleex2}
+{
+ {fig:scaleex2a}{\includeimg{scaleex2a}}{},
+ {fig:scaleex2b}{\includeimg{scaleex2b}}{}
+}
+[A Group Consisting of Three Objects Scaled by a Factor of 2]
+{A group consisting of three objects scaled by a factor of 2:
+\subfigref{fig:scaleex2a} before;
+\subfigref{fig:scaleex2b} after.}
+
+In \figureref{fig:scaletextpath}, the \gls*{path} and
+\gls*{textarea} in \figureref{fig:scaletextpatha} are combined
+into a \gls*{textpath}, shown in
+\figureref{fig:scaletextpathb}. This \gls*{textpath} is then
+scaled by a factor of 2 resulting in
+\figureref{fig:scaletextpathc}. Note that this is different
+from first scaling the original \gls*{path} and \gls*{textarea},
+shown in \figureref{fig:scaletextpathd}, and then combining
+them to form a \gls*{textpath}, shown in
+\figureref{fig:scaletextpathe}.
+
+\FloatSubFigs*{fig:scaletextpath}
+{
+ {fig:scaletextpatha}{\includeimg{scaletextpatha}}{},
+ {fig:scaletextpathb}{\includeimg{scaletextpathb}}{},
+ {fig:scaletextpathc}{\includeimg{scaletextpathc}}{},
+ {fig:scaletextpathd}{\includeimg{scaletextpathd}}{},
+ {fig:scaletextpathe}{\includeimg{scaletextpathe}}{}
+}
+[Scaling a Text-Path]
+{Scaling a text-path:
+\subfigref{fig:scaletextpatha} original text area and path;
+\subfigref{fig:scaletextpathb} text area and path in
+\subfigref{fig:scaletextpatha} combined to form a text-path;
+\subfigref{fig:scaletextpathc} text-path 
+in \subfigref{fig:scaletextpathb} scaled by a factor of 2;
+\subfigref{fig:scaletextpathd} text area and path 
+in \subfigref{fig:scaletextpatha} scaled by a factor of 2;
+\subfigref{fig:scaletextpathe} scaled text area and path 
+in \subfigref{fig:scaletextpathd} combined to form a text-path.}
+
+If you prefer to scale an \gls{object} using the mouse (which is
+less precise), you first need to \hyperref[mi:hotspots]{enable the
+hotspots}. Then drag the bottom \manmsg{centre} hotspot to scale
+vertically, the bottom right hotspot to scale in both directions or
+the middle right hotspot to scale horizontally. Note that even if
+you have more than one object selected, only the object whose
+hotspot you are dragging will be transformed.
+
+
+\seealsorefs{
+ sec:grouping,
+ sec:moveobjects,
+ sec:rotateobjects,
+ sec:shearobjects,
+ sec:textpath
+}
 
 
 \subsection{Shearing Objects}\label{sec:shearobjects}
 
 \menudef{menu.transform.shear}
 
-TODO
+Selected \glspl{object} can be sheared with
+the \menu{transform.shear} menu item. This will open up a dialog box
+in which you can specify the shear factors. The shearing
+transformation is given by:
+\TeXParserLibToImage
+[div=displaymath,alt={
+ (
+   [ 1 , sX ]
+   [ sY , 1 ]
+ )
+ (
+   [ x ]
+   [ y ]
+ )
+=
+ (
+   [ x + sX \texttimes\ y ]
+   [ y + sY \texttimes\ x ]
+ )
+}]
+{
+\[
+  \left(
+  \begin{array}{cc}
+  1 & s_x\\
+  s_y & 1
+  \end{array}
+  \right)
+  \left(
+  \begin{array}{c}
+  x\\
+  y
+  \end{array}
+  \right)
+  =
+  \left(
+  \begin{array}{l}
+  x + s_x y\\
+  y + s_y x
+  \end{array}
+  \right)
+  \]
+}
 
+Notes:
+\begin{itemize}
+\item Individual \glspl*{object}
+will be sheared relative to the bottom left corner of the
+object's \gls{bbox}.
+
+\item \Glspl*{object} within a 
+\gls{group} will be sheared relative to the bottom
+left corner of the group's \gls*{bbox}.
+
+\item Shearing a \gls{textpath} will shear the path and the text
+will adjust to follow the transformed path. Note that the text
+itself will not be sheared.
+
+\item Shearing a \gls*{textarea} and \gls*{path} and then combining
+them to form a \gls*{textpath} is not the same as first combining
+and then shearing. 
+
+\item Shearing a \gls{pattern} will shear the underlying path not
+the complete shape.
+\end{itemize}
+
+To illustrate this, in \figureref{fig:shearex1a} there are three
+\glspl*{object} selected.  The selection is then sheared with shear
+factors $s_x=1$ and $s_y=0$.  The result is shown in
+\figureref{fig:shearex1b}.
+
+\FloatSubFigs{fig:shearex1}
+{
+ {fig:shearex1a}{\includeimg{shearex1a}}{},
+ {fig:shearex1b}{\includeimg{shearex1b}}{}
+}
+[Two Selected Objects Sheared Horizontally]
+{Two selected objects sheared horizontally:
+\subfigref{fig:shearex1a} before;
+\subfigref{fig:shearex1b} after.}
+
+In \figureref{fig:shearex2}, the three objects in
+\figureref{fig:shearex1} were first \hyperref[sec:grouping]{grouped}
+(\figureref{fig:shearex2a}) and then sheared with shear factors
+$s_x=1$ and $s_y=0$ (\figureref{fig:shearex2}).
+
+\FloatSubFigs{fig:shearex2}
+{
+ {fig:shearex2a}{\includeimg{shearex2a}}{},
+ {fig:shearex2b}{\includeimg{shearex2b}}{}
+}
+[A Group Consisting of Two Objects Sheared Horizontally]
+{A group consisting of two objects sheared horizontally:
+\subfigref{fig:shearex2a} before;
+\subfigref{fig:shearex2b} after.}
+
+In \figureref{fig:sheartextpath}, the \gls*{path} and
+\gls*{textarea} in \figureref{fig:sheartextpatha} are combined into
+a \gls*{textpath}, shown in \figureref{fig:sheartextpathb}. This
+\gls*{textpath} is then sheared with shear factors $s_x=1$ and
+$s_y=0$ (\figureref{fig:sheartextpathc}). Note that this is
+different from first shearing the original \gls*{path} and
+\gls*{textarea}, shown in \figureref{fig:sheartextpathd}, and then
+combining them to form a \gls*{textpath}, shown in
+\figureref{fig:sheartextpathe}.
+
+\FloatSubFigs*{fig:sheartextpath}
+{
+ {fig:sheartextpatha}{\includeimg{sheartextpatha}}{},
+ {fig:sheartextpathb}{\includeimg{sheartextpathb}}{},
+ {fig:sheartextpathc}{\includeimg{sheartextpathc}}{},
+ {fig:sheartextpathd}{\includeimg{sheartextpathd}}{},
+ {fig:sheartextpathe}{\includeimg{sheartextpathe}}{}
+}
+[Shearing a Text-Path]
+{Shearing a text-path:
+\subfigref{fig:sheartextpatha} original text area and path; 
+\subfigref{fig:sheartextpathb} text area and path 
+in \subfigref{fig:sheartextpatha} combined to form a text-path; 
+\subfigref{fig:sheartextpathc} text-path 
+in \subfigref{fig:sheartextpathb} sheared horizontally; 
+\subfigref{fig:sheartextpathd} text area and path 
+in \subfigref{fig:sheartextpatha} sheared horizontally; 
+\subfigref{fig:sheartextpathe} sheared text area and path 
+in \subfigref{fig:sheartextpathd} combined to form a text-path.}
+
+In \figureref{fig:shearpatterna}, a \gls*{path} created using the
+ellipse tool has been converted into a rotational pattern with two
+replicas. This pattern is then sheared with shear factors $s_x=1$
+and $s_y=0$, shown in \figureref{fig:shearpatternb}. This is
+different from the effect obtained by applying the same shear
+factors to a complete path rather than a pattern.
+\figureref{fig:shearpatternc} is a full path version of
+\figureref{fig:shearpatternd}. This path is then sheared using the
+same factors and the result is shown in
+\figureref{fig:shearpatternd}.
+
+\FloatSubFigs{fig:shearpattern}
+{
+ {fig:shearpatterna}{\includeimg{shearpatternexa}}{},
+ {fig:shearpatternb}{\includeimg{shearpatternexb}}{},
+ {fig:shearpatternc}{\includeimg{shearpatternexa}}{},
+ {fig:shearpatternd}{\includeimg{shearpatternexd}}{}
+}
+[Shearing a Pattern]
+{Shearing a pattern: 
+\subfigref{fig:shearpatterna} a pattern consisting of an
+ellipse that has 2 rotational replicas; 
+\subfigref{fig:shearpatternb} the pattern 
+in \subfigref{fig:shearpatterna} has been sheared horizontally;
+\subfigref{fig:shearpatternc} the pattern 
+in \subfigref{fig:shearpatterna} has been converted to a full path; 
+\subfigref{fig:shearpatternd} the path 
+in \subfigref{fig:shearpatternc} has been sheared horizontally.}
+
+If you prefer to shear an \gls{object} using the mouse,
+you first need to \hyperref[mi:hotspots]{enable the hotspots}.
+Then drag the top right hotspot to shear vertically
+or the top left hotspot to shear horizontally. Note that even if you
+have more than one object selected, only the object whose hotspot you
+are dragging will be transformed.
+
+\seealsorefs{
+ sec:grouping,
+ sec:moveobjects,
+ sec:rotateobjects,
+ sec:scaleobjects,
+ sec:textpath
+}
 
 \section{Constructive Area Geometry (CAG)}\label{sec:cag}
 
@@ -5763,7 +6034,7 @@ TODO
 TODO
 
 
-\subsubsection{Marker \Glsfmttext{manual.colour}}\label{sec:markerpaint}
+\subsubsection{Marker \Glsentrytext{manual.colour}}\label{sec:markerpaint}
 
 \inlineglsdef{index.marker.colour}
 
