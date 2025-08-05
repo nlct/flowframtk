@@ -4,11 +4,15 @@
 \usepackage{verbatim}
 \usepackage{longtable}
 \usepackage{booktabs}
+\usepackage{pgf}
+\usepgflibrary{decorations.text}
+
 \PassOptionsToPackage{prefix}{glossaries-extra}
 \usepackage
  [
     novref,
     fnsymleft,
+    jdroutline,
 %   debug=showwrgloss
  ]{texjavahelp}
 
@@ -5130,8 +5134,34 @@ the \manmsg{behaviour} on export via the \dialog{texconfig} dialog.
 
 \menudef{menu.edit.textarea.outline}
 
-TODO
+A \gls{textarea} or \gls{textpath} can be rendered as an
+\inlineglsdef{index.text-attribute.outline} by
+selecting it and then using the \menu{edit.textarea.outline}
+menu item. For example, \figureref{fig:textoutlinea} shows a
+standard \gls*{textarea} and \figureref{fig:textoutlineb} shows
+that \gls*{textarea} rendered as an outline. If the outline mode is
+set, you can apply a \gls{index.fill-colour} using
+\menu{edit.fill_colour}.
 
+\begin{warning}
+Note that although \glspl*{textpath} can be rendered with an outline in \FlowframTk,
+the \LaTeX\ \filefn{export} functions can't emulate
+this and will either export the \gls*{textpath} without the outline
+setting or will export it as a path (in which case the alternative
+text will be ignored) depending on your
+\hyperref[sec:texconfig]{\TeX\ Configuration Setting}.
+\end{warning}
+
+\FloatSubFigs{fig:textoutline}
+{
+ {fig:textoutlinea}{\includeimg{outlinea}}{},
+ {fig:textoutlineb}{\includeimg{outlineb}}{},
+}
+[Text Outline]
+{Text Outline: \subfigref{fig:textoutlinea} original text area;
+  \subfigref{fig:textoutlineb} outline.}
+
+% TODO document \jdroutline
 
 \section{Reducing to \Glsfmttext{index.colour.greyscale}}\label{sec:reduce}
 
