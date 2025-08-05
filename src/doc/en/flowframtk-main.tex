@@ -44,6 +44,9 @@
 \newcommand{\editfn}[1]{\menuitem{edit.#1}}
 \newcommand{\transformfn}[1]{\menuitem{transform.#1}}
 
+% Needs to be fairly simple for the HelpSet HTML files:
+\newcommand{\degrees}[1]{#1\textdegree}
+
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
 
@@ -4553,29 +4556,309 @@ alpha channel will be ignored if you \filefn{export} to PostScript.
  sec:textpaint
 }
 
-\chapter{Editing Paths}\label{sec:editpath}
+\chapter{Text}\label{sec:text}
 
-\Glspl{path} consist of a sequence of segments that are defined by
-\glspl{controlpt}. These \glspl{controlpt} may be adjusted in
-\editpathmode.
+\Glspl{textarea} consist of a single line of text. Alternative
+\LaTeX\ code may be provided to use instead when the image
+is \hyperref[sec:exportimage]{exported} to a \TeX-related format.
+New \glspl{textarea} can be created with the
+\texttool\ or \mathstool, as described in \sectionref{sec:newtext}.
+An existing \gls{textarea} can be edited (\sectionref{sec:edittext}),
+converted to a \gls{textpath} (\sectionref{sec:textpath}), or
+converted to an \textattr{outline} (\sectionref{sec:textoutline}).
+
+To change text style attributes (font and \textattr{anchor}) see
+\sectionref{sec:textstyle}.
+
+\section{Editing Text Areas}\label{sec:edittext}
+
+\menudef{menu.edit.textarea.edit}
+
+To insert or delete characters from a \gls{textarea} or \gls{textpath} first
+\select\ the \gls*{textarea} or \gls*{textpath}, and then
+select the \menu{edit.textarea.edit} menu item.  (Note
+that you should not have any other \glspl{object} selected.) This
+will display the \inlineglsdef{edittext.title} dialog box
+(\figureref{fig:edittexta}) in which you can modify the text as
+appropriate. If you are editing the text of a \gls{textpath}, there
+will be an extra panel visible, shown in
+\figureref{fig:edittextb}.
+
+\begin{information}
+You can not edit a \gls*{textarea} or \gls*{textpath} if
+it belongs to a \gls{group}. Deleting all the characters within a
+\gls*{textarea} or \gls*{textpath} isn't permitted and will result
+in the error message \qt{\errmsg{empty_string}}.
+\end{information}
+
+\FloatSubFigs{fig:edittext}
+{
+  {fig:edittexta}{\includeimg{editText}}{},
+  {fig:edittextb}{\includeimg{editTextPath}}{}
+}
+[Edit Text Dialog Box]
+{Edit Text Dialog Box: \subfigref{fig:edittexta} regular text area;
+\subfigref{fig:edittextb} text-path}
+
+The \gls{index.menu.textarea} is available in the top text field.
+It has the same items as for the text input field used when a \gls{textarea}
+is under construction.
+
+If you want to specify alternative text to appear in a \LaTeX\
+document, click on the button marked \widget{edittext.different},
+and enter the alternative in the bottom field (see
+\figureref{fig:edittextb}). The \gls{index.menu.textarea} is not
+available in this field, but you can still use
+\accelerator{menu.textarea.select_all},
+\accelerator{menu.textarea.copy}, \accelerator{menu.textarea.cut}
+and \accelerator{menu.textarea.paste} to select all the text, copy
+to the clipboard, cut to the clipboard or paste from the clipboard,
+respectively. Note that the \hyperref[sec:exportpgf]{exported} text
+may occupy a larger or smaller area in the \LaTeX\ document than it
+does in \FlowframTk, so you may also need to change the
+\textattr{anchor} or set the image \glspl{image.typeblock}
+(see \sectionref{sec:exportdoc}).
+
+You can use the \widget{edittext.remap} button to generate
+the alternative text in the bottom field by applying
+\hyperref[mi:texmappings]{mappings} to the text in the top field. If
+the original alternative text starts and ends with a \gls{mshift}
+symbol, the \mathsmode\ mappings will be used, otherwise the
+\textmode\ mappings will be used. If the original alternative text is
+empty, you can just type a \glssymbol{mshift} symbol in it and click on the
+\widget{edittext.remap} button to generate a \mathsmode\
+mapping. The original alternative text will be completely replaced by the text
+from the top field with the appropriate mappings applied. You can
+then edit this if necessary.
+
+\widgetdef{edittext.textpath}
+
+The \LaTeX-related \filefn{export} functions use the \sty{pgf} text
+decoration to implement \glspl*{textpath}. This allows you to insert
+declarations, such as \csfmt{large}, part way through the text by
+placing them between \glspl{pgf.delimiter}. By default these delimiters are the
+vertical bar (pipe) character \glssymbol{pipe} but this can be changed in
+the \widget{edittext.textpath.left_delim} and
+\widget{edittext.textpath.right_delim} fields (see
+\figureref{fig:edittextb}). Note that the vertical \textattr{anchor}
+setting is ignored by the \LaTeX\ export functions. It's best to avoid
+\manmsg{maths} in \glspl{textpath}. See the \sty{pgf} manual for
+further details about text decorations.
+
+\begin{important}
+The alternative text may not be used by \filefn{export} functions if
+the \gls*{textpath} has been made an \textattr{outline} or if the
+\gls*{textarea}\slash\gls*{textpath} has a gradient paint.
+The export \manmsg{behaviour} under those circumstances is dependent on
+the \hyperref[sec:texconfigtext]{\LaTeX\ text settings}.
+The alternative text is not used when exporting to PNG or when
+\gls{printing}.
+\end{important}
+
+\seealsorefs{
+ sec:texconfig,
+ sec:newtext,
+ sec:textpath,
+ sec:textoutline,
+ sec:textpaint,
+ sec:textstyle,
+ sec:splittext,
+ sec:texttopath,
+ sec:neuronexample
+}
+
+\section{Text Transformation Matrix}\label{sec:textmatrix}
+
+\inlineglsdef{index.text-attribute.transformation-matrix}
+
+TODO
+
+
+\section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}
+
+\menudef{menu.transform.textpath}
+
+A \gls{textarea} and a \gls{path} can be combined to form a
+\gls{textpath}. Ensure that only a single \gls{textarea} and a
+single \gls{path} are selected and use the \menu{transform.textpath}
+menu item. The text from the original \gls{textarea} will then follow
+the shape of the original path (which will now be the underlying
+path).
+
+The underlying path will not be visible (except in \editpathmode).
+If the original \gls*{textarea} was in \textattr{outline} mode, the new
+\gls*{textpath} will also be in \textattr{outline} mode, possibly with a 
+\textattr{fill-paint}, depending on the original \gls*{textarea} and \gls*{path}
+fill paint. (If the original \gls*{textarea} didn't have a
+\textattr{fill-paint}, the \gls*{path} \pathattr{fill-paint} will be applied.)
+
+The horizontal \textattr{anchor} determines
+whether the text should start at the first \gls{controlpt} of the
+underlying path or if it should be \manmsg{centred} along the path or if
+it should be right aligned at the end \gls*{controlpt}. The vertical
+\textattr{anchor} determines whether the base, bottom, top or middle of the
+text should be aligned on the path. 
+
+\begin{important}
+The vertical \textattr{anchor} isn't implemented by the
+\filefn{export} \TeX-related filters. Note that if the text is
+longer than the path, the text will be truncated.
+\end{important}
+
+For example, the \gls{textarea} and \gls{path} in
+\figureref{fig:textpatha} are combined to form a \gls*{textpath}.
+The original \gls*{textarea}['s] horizontal \textattr{anchor} was
+set to left, so the text along the path starts at the first
+\gls{controlpt} in \figureref{fig:textpathb}. In
+\figureref{fig:textpathc} the horizontal \textattr{anchor} has been
+changed to \manmsg{centre}, and in \figureref{fig:textpathc} the
+horizontal \textattr{anchor} has been changed to right.
+
+\FloatSubFigs{fig:textpath}
+{
+ {fig:textpatha}{\includeimg{textpath}}{},
+ {fig:textpathb}{\includeimg{textpathleft}}{},
+ {fig:textpathc}{\includeimg{textpathcentre}}{},
+ {fig:textpathd}{\includeimg{textpathright}}{}
+}
+[Combining a Text Area and Path to Form a Text-Path]
+{Combining a \gls{textarea} and \gls{path} to form a \gls{textpath}:
+\subfigref{fig:textpatha} the original \gls{textarea} and \gls{path};
+\subfigref{fig:textpathb} the resulting \gls{textpath} with left horizontal 
+\textattr{anchor}; 
+\subfigref{fig:textpathc} \manmsg{centred} \textattr{anchor}; 
+\subfigref{fig:textpathd} right \textattr{anchor}. 
+(The \glspl{textpath} are in edit mode to show the underlying path.)}
+
+Once a \gls{path} has been combined with a \gls{textarea}, the line
+style \glspl{index.path-attribute} are lost as the path is only used
+as a guide to position the text. The \gls{cag} functions, such as
+\transformfn{union}, are applied to the underlying path and the text
+is adjusted to follow the new path.  Transformations using the
+\transformfn{rotate}, \transformfn{scale} and \transformfn{shear}
+functions are applied to the underlying path not the text. You can
+either transform the text using the transformation functions before
+combining it with a path or transform it after combining by changing
+the text \textattr{transformation-matrix}.
+
+Note there is a difference between applying \gls{symmetry} to a
+\gls{textpath} and converting a \gls*{textarea} and
+\gls{symmetricshape} to a \gls*{textpath}. For example, consider the
+\gls{textarea} and \gls{path} in \figureref{fig:textpathsyma}. If
+you first combine them to form a \gls*{textpath}
+(\figureref{fig:textpathsymb}) and then add symmetry
+(\figureref{fig:textpathsymc}), the result is a \gls*{textpath}
+where the text is reflected across the \gls{line-of-symmetry}.
+Conversely, applying \gls{symmetry} to the path first
+(\figureref{fig:textpathsymd}) and then combining with the
+\gls*{textarea} yields a \gls*{textarea} where only the underlying
+path has \gls{symmetry} (\figureref{fig:textpathsyme}).
+
+A similar effect applies with other types of \glspl{compositeshape}.
+
+\FloatSubFigs*{fig:textpathsym}
+{%
+ {fig:textpathsyma}{\includeimg{textpath-syma}}{},
+ {fig:textpathsymb}{\includeimg{textpath-symb}}{},
+ {fig:textpathsymc}{\includeimg{textpath-symc}}{},
+ {fig:textpathsymd}{\includeimg{textpath-symd}}{},
+ {fig:textpathsyme}{\includeimg{textpath-syme}}{}
+}
+[Symmetric Text-Paths]
+{Symmetric \glspl{textpath}:
+\subfigref{fig:textpathsyma} original \gls{textarea} and \gls{path};
+\subfigref{fig:textpathsymb} \gls{textarea} and \gls{path} in 
+\subfigref{fig:textpathsyma} have been combined to
+form a \gls{textpath};
+\subfigref{fig:textpathsymc} the \gls{textpath} in \subfigref{fig:textpathsymb} 
+has had \gls{symmetry} applied to it in \editpathmode; 
+\subfigref{fig:textpathsymd} the \gls{path} in
+\subfigref{fig:textpathsyma} has had \gls{symmetry} applied to it;
+\subfigref{fig:textpathsyme} the \gls{textarea} and symmetric path in 
+\subfigref{fig:textpathsymd} have been combined to form a
+\gls{textpath}.}
+
+\begin{warning}
+Restrictions apply to \glspl*{textpath} with the
+\filefn{export} \TeX-related filters as some \gls*{textpath}
+effects aren't emulated in \LaTeX, such as the vertical \textattr{anchor},
+\gls{index.gradient-paint} and \textattrpl{outline}. You can determine 
+the \manmsg{behaviour} on export via the \dialog{texconfig} dialog.
+\end{warning}
+
+\seealsorefs{
+ sec:edittext,
+ sec:separate,
+ sec:patterns
+}
+
+\section{Text Outlines}\label{sec:textoutline}
+
+\menudef{menu.edit.textarea.outline}
+
+A \gls{textarea} or \gls{textpath} can be rendered as an
+\inlineglsdef{index.text-attribute.outline} by
+selecting it and then using the \menu{edit.textarea.outline}
+menu item. For example, \figureref{fig:textoutlinea} shows a
+standard \gls*{textarea} and \figureref{fig:textoutlineb} shows
+that \gls*{textarea} rendered as an outline. If the outline mode is
+set, you can apply a \gls{index.fill-colour} using
+\menu{edit.fill_colour}.
+
+\begin{warning}
+Note that although \glspl*{textpath} can be rendered with an outline in \FlowframTk,
+the \LaTeX\ \filefn{export} functions can't emulate
+this and will either export the \gls*{textpath} without the outline
+setting or will export it as a path (in which case the alternative
+text will be ignored) depending on your
+\hyperref[sec:texconfig]{\TeX\ Configuration Setting}.
+\end{warning}
+
+\FloatSubFigs{fig:textoutline}
+{
+ {fig:textoutlinea}{\includeimg{outlinea}}{},
+ {fig:textoutlineb}{\includeimg{outlineb}}{},
+}
+[Text Outline]
+{Text Outline: \subfigref{fig:textoutlinea} original text area;
+  \subfigref{fig:textoutlineb} outline.}
+
+% TODO document \jdroutline
+
+\section{Splitting Text Areas}\label{sec:splittext}
+
+\menudef{menu.transform.split}
+
+TODO
+
+\chapter{Edit Path Mode}\label{sec:editpath}
+
+\menudef{menu.edit.path.edit}
+
+\Glspl{path} consist of a sequence of lines, curves and \glspl{gap} 
+that are defined by \glspl{controlpt}. These \glspl{controlpt} may be adjusted in
+\emph{\inlineglsdef{edit-path-mode}} which can be switched on and off
+with the \menu{edit.path.edit} toggle menu item.
+
+\begin{information}
+Edit mode can't be enabled for a \gls{shape} that is part of a \gls{group}.
+If the selected shape is a \gls{compositeshape}, edit mode will allow the
+underlying path to be edited.
+\end{information}
+
+The \gls{menu.edit.path.edit} menu item
+is only available if exactly one \gls{shape} and no other
+\gls{object} is \selected.
 
 \section{Control Points}\label{sec:editcontrolpt}
 
 The \glspl{controlpt} that define a \gls{shape} only become visible
-and interactive when the shape is in edit path mode.
-Edit mode can't be enabled for a \gls{shape} that is part of a \gls{group}.
-If the selected shape is a \gls{compositeshape}, edit mode will allow the
-underlying path to be edited.
-
-\menudef{menu.edit.path.edit}
-
+and interactive when the shape is in \editpathmode.
 To move, delete or add \glspl{controlpt}, open or close
-\glspl{path}, or to convert segments from one form (line, gap, cubic
+\glspl{path}, or to convert segments from one form (line, \gls{gap}, cubic
 \gls{Bezier-curve}) to another, first \select\ the \gls*{shape}, and
 then either click on the \gls{menu.edit.path.edit} icon or select
-\menu{edit.path.edit}.  Note that the \gls{menu.edit.path.edit} menu item
-is only available if exactly one \gls{shape} and no other
-\gls{object} is \selected.
+\menu{edit.path.edit}.
 
 The \gls*{path} will then be displayed in draft format.  The
 currently selected \gls*{controlpt} and the currently selected
@@ -5076,281 +5359,6 @@ symmetric.
  sec:rosetutorial
 }
 
-\chapter{Text}\label{sec:text}
-
-\Glspl{textarea} consist of a single line of text. Alternative
-\LaTeX\ code may be provided to use instead when the image
-is \hyperref[sec:exportimage]{exported} to a \TeX-related format.
-New \glspl{textarea} can be created with the
-\texttool\ or \mathstool, as described in \sectionref{sec:newtext}.
-An existing \gls{textarea} can be edited (\sectionref{sec:edittext}),
-converted to a \gls{textpath} (\sectionref{sec:textpath}), or
-converted to an \textattr{outline} (\sectionref{sec:textoutline}).
-
-To change text style attributes (font and \textattr{anchor}) see
-\sectionref{sec:textstyle}.
-
-\section{Editing Text Areas}\label{sec:edittext}
-
-\menudef{menu.edit.textarea.edit}
-
-To insert or delete characters from a \gls{textarea} or \gls{textpath} first
-\select\ the \gls*{textarea} or \gls*{textpath}, and then
-select the \menu{edit.textarea.edit} menu item.  (Note
-that you should not have any other \glspl{object} selected.) This
-will display the \inlineglsdef{edittext.title} dialog box
-(\figureref{fig:edittexta}) in which you can modify the text as
-appropriate. If you are editing the text of a \gls{textpath}, there
-will be an extra panel visible, shown in
-\figureref{fig:edittextb}.
-
-\begin{information}
-You can not edit a \gls*{textarea} or \gls*{textpath} if
-it belongs to a \gls{group}. Deleting all the characters within a
-\gls*{textarea} or \gls*{textpath} isn't permitted and will result
-in the error message \qt{\errmsg{empty_string}}.
-\end{information}
-
-\FloatSubFigs{fig:edittext}
-{
-  {fig:edittexta}{\includeimg{editText}}{},
-  {fig:edittextb}{\includeimg{editTextPath}}{}
-}
-[Edit Text Dialog Box]
-{Edit Text Dialog Box: \subfigref{fig:edittexta} regular text area;
-\subfigref{fig:edittextb} text-path}
-
-The \gls{index.menu.textarea} is available in the top text field.
-It has the same items as for the text input field used when a \gls{textarea}
-is under construction.
-
-If you want to specify alternative text to appear in a \LaTeX\
-document, click on the button marked \widget{edittext.different},
-and enter the alternative in the bottom field (see
-\figureref{fig:edittextb}). The \gls{index.menu.textarea} is not
-available in this field, but you can still use
-\accelerator{menu.textarea.select_all},
-\accelerator{menu.textarea.copy}, \accelerator{menu.textarea.cut}
-and \accelerator{menu.textarea.paste} to select all the text, copy
-to the clipboard, cut to the clipboard or paste from the clipboard,
-respectively. Note that the \hyperref[sec:exportpgf]{exported} text
-may occupy a larger or smaller area in the \LaTeX\ document than it
-does in \FlowframTk, so you may also need to change the
-\textattr{anchor} or set the image \glspl{image.typeblock}
-(see \sectionref{sec:exportdoc}).
-
-You can use the \widget{edittext.remap} button to generate
-the alternative text in the bottom field by applying
-\hyperref[mi:texmappings]{mappings} to the text in the top field. If
-the original alternative text starts and ends with a \gls{mshift}
-symbol, the \mathsmode\ mappings will be used, otherwise the
-\textmode\ mappings will be used. If the original alternative text is
-empty, you can just type a \glssymbol{mshift} symbol in it and click on the
-\widget{edittext.remap} button to generate a \mathsmode\
-mapping. The original alternative text will be completely replaced by the text
-from the top field with the appropriate mappings applied. You can
-then edit this if necessary.
-
-\widgetdef{edittext.textpath}
-
-The \LaTeX-related \filefn{export} functions use the \sty{pgf} text
-decoration to implement \glspl*{textpath}. This allows you to insert
-declarations, such as \csfmt{large}, part way through the text by
-placing them between \glspl{pgf.delimiter}. By default these delimiters are the
-vertical bar (pipe) character \glssymbol{pipe} but this can be changed in
-the \widget{edittext.textpath.left_delim} and
-\widget{edittext.textpath.right_delim} fields (see
-\figureref{fig:edittextb}). Note that the vertical \textattr{anchor}
-setting is ignored by the \LaTeX\ export functions. It's best to avoid
-\manmsg{maths} in \glspl{textpath}. See the \sty{pgf} manual for
-further details about text decorations.
-
-\begin{important}
-The alternative text may not be used by \filefn{export} functions if
-the \gls*{textpath} has been made an \textattr{outline} or if the
-\gls*{textarea}\slash\gls*{textpath} has a gradient paint.
-The export \manmsg{behaviour} under those circumstances is dependent on
-the \hyperref[sec:texconfigtext]{\LaTeX\ text settings}.
-The alternative text is not used when exporting to PNG or when
-\gls{printing}.
-\end{important}
-
-\seealsorefs{
- sec:texconfig,
- sec:newtext,
- sec:textpath,
- sec:textoutline,
- sec:textpaint,
- sec:textstyle,
- sec:splittext,
- sec:texttopath,
- sec:neuronexample
-}
-
-\subsection{Text Transformation Matrix}\label{sec:textmatrix}
-
-\inlineglsdef{index.text-attribute.transformation-matrix}
-
-TODO
-
-
-\section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}
-
-\menudef{menu.transform.textpath}
-
-A \gls{textarea} and a \gls{path} can be combined to form a
-\gls{textpath}. Ensure that only a single \gls{textarea} and a
-single \gls{path} are selected and use the \menu{transform.textpath}
-menu item. The text from the original \gls{textarea} will then follow
-the shape of the original path (which will now be the underlying
-path).
-
-The underlying path will not be visible (except in \editpathmode).
-If the original \gls*{textarea} was in \textattr{outline} mode, the new
-\gls*{textpath} will also be in \textattr{outline} mode, possibly with a 
-\textattr{fill-paint}, depending on the original \gls*{textarea} and \gls*{path}
-fill paint. (If the original \gls*{textarea} didn't have a
-\textattr{fill-paint}, the \gls*{path} \pathattr{fill-paint} will be applied.)
-
-The horizontal \textattr{anchor} determines
-whether the text should start at the first \gls{controlpt} of the
-underlying path or if it should be \manmsg{centred} along the path or if
-it should be right aligned at the end \gls*{controlpt}. The vertical
-\textattr{anchor} determines whether the base, bottom, top or middle of the
-text should be aligned on the path. 
-
-\begin{important}
-The vertical \textattr{anchor} isn't implemented by the
-\filefn{export} \TeX-related filters. Note that if the text is
-longer than the path, the text will be truncated.
-\end{important}
-
-For example, the \gls{textarea} and \gls{path} in
-\figureref{fig:textpatha} are combined to form a \gls*{textpath}.
-The original \gls*{textarea}['s] horizontal \textattr{anchor} was
-set to left, so the text along the path starts at the first
-\gls{controlpt} in \figureref{fig:textpathb}. In
-\figureref{fig:textpathc} the horizontal \textattr{anchor} has been
-changed to \manmsg{centre}, and in \figureref{fig:textpathc} the
-horizontal \textattr{anchor} has been changed to right.
-
-\FloatSubFigs{fig:textpath}
-{
- {fig:textpatha}{\includeimg{textpath}}{},
- {fig:textpathb}{\includeimg{textpathleft}}{},
- {fig:textpathc}{\includeimg{textpathcentre}}{},
- {fig:textpathd}{\includeimg{textpathright}}{}
-}
-[Combining a Text Area and Path to Form a Text-Path]
-{Combining a \gls{textarea} and \gls{path} to form a \gls{textpath}:
-\subfigref{fig:textpatha} the original \gls{textarea} and \gls{path};
-\subfigref{fig:textpathb} the resulting \gls{textpath} with left horizontal 
-\textattr{anchor}; 
-\subfigref{fig:textpathc} \manmsg{centred} \textattr{anchor}; 
-\subfigref{fig:textpathd} right \textattr{anchor}. 
-(The \glspl{textpath} are in edit mode to show the underlying path.)}
-
-Once a \gls{path} has been combined with a \gls{textarea}, the line
-style \glspl{index.path-attribute} are lost as the path is only used
-as a guide to position the text. The \gls{cag} functions, such as
-\transformfn{union}, are applied to the underlying path and the text
-is adjusted to follow the new path.  Transformations using the
-\transformfn{rotate}, \transformfn{scale} and \transformfn{shear}
-functions are applied to the underlying path not the text. You can
-either transform the text using the transformation functions before
-combining it with a path or transform it after combining by changing
-the text \textattr{transformation-matrix}.
-
-Note there is a difference between applying \gls{symmetry} to a
-\gls{textpath} and converting a \gls*{textarea} and
-\gls{symmetricshape} to a \gls*{textpath}. For example, consider the
-\gls{textarea} and \gls{path} in \figureref{fig:textpathsyma}. If
-you first combine them to form a \gls*{textpath}
-(\figureref{fig:textpathsymb}) and then add symmetry
-(\figureref{fig:textpathsymc}), the result is a \gls*{textpath}
-where the text is reflected across the \gls{line-of-symmetry}.
-Conversely, applying \gls{symmetry} to the path first
-(\figureref{fig:textpathsymd}) and then combining with the
-\gls*{textarea} yields a \gls*{textarea} where only the underlying
-path has \gls{symmetry} (\figureref{fig:textpathsyme}).
-
-A similar effect applies with other types of \glspl{compositeshape}.
-
-\FloatSubFigs*{fig:textpathsym}
-{%
- {fig:textpathsyma}{\includeimg{textpath-syma}}{},
- {fig:textpathsymb}{\includeimg{textpath-symb}}{},
- {fig:textpathsymc}{\includeimg{textpath-symc}}{},
- {fig:textpathsymd}{\includeimg{textpath-symd}}{},
- {fig:textpathsyme}{\includeimg{textpath-syme}}{}
-}
-[Symmetric Text-Paths]
-{Symmetric \glspl{textpath}:
-\subfigref{fig:textpathsyma} original \gls{textarea} and \gls{path};
-\subfigref{fig:textpathsymb} \gls{textarea} and \gls{path} in 
-\subfigref{fig:textpathsyma} have been combined to
-form a \gls{textpath};
-\subfigref{fig:textpathsymc} the \gls{textpath} in \subfigref{fig:textpathsymb} 
-has had \gls{symmetry} applied to it in \editpathmode; 
-\subfigref{fig:textpathsymd} the \gls{path} in
-\subfigref{fig:textpathsyma} has had \gls{symmetry} applied to it;
-\subfigref{fig:textpathsyme} the \gls{textarea} and symmetric path in 
-\subfigref{fig:textpathsymd} have been combined to form a
-\gls{textpath}.}
-
-\begin{warning}
-Restrictions apply to \glspl*{textpath} with the
-\filefn{export} \TeX-related filters as some \gls*{textpath}
-effects aren't emulated in \LaTeX, such as the vertical \textattr{anchor},
-\gls{index.gradient-paint} and \textattrpl{outline}. You can determine 
-the \manmsg{behaviour} on export via the \dialog{texconfig} dialog.
-\end{warning}
-
-\seealsorefs{
- sec:edittext,
- sec:separate,
- sec:patterns
-}
-
-\section{Text Outlines}\label{sec:textoutline}
-
-\menudef{menu.edit.textarea.outline}
-
-A \gls{textarea} or \gls{textpath} can be rendered as an
-\inlineglsdef{index.text-attribute.outline} by
-selecting it and then using the \menu{edit.textarea.outline}
-menu item. For example, \figureref{fig:textoutlinea} shows a
-standard \gls*{textarea} and \figureref{fig:textoutlineb} shows
-that \gls*{textarea} rendered as an outline. If the outline mode is
-set, you can apply a \gls{index.fill-colour} using
-\menu{edit.fill_colour}.
-
-\begin{warning}
-Note that although \glspl*{textpath} can be rendered with an outline in \FlowframTk,
-the \LaTeX\ \filefn{export} functions can't emulate
-this and will either export the \gls*{textpath} without the outline
-setting or will export it as a path (in which case the alternative
-text will be ignored) depending on your
-\hyperref[sec:texconfig]{\TeX\ Configuration Setting}.
-\end{warning}
-
-\FloatSubFigs{fig:textoutline}
-{
- {fig:textoutlinea}{\includeimg{outlinea}}{},
- {fig:textoutlineb}{\includeimg{outlineb}}{},
-}
-[Text Outline]
-{Text Outline: \subfigref{fig:textoutlinea} original text area;
-  \subfigref{fig:textoutlineb} outline.}
-
-% TODO document \jdroutline
-
-\section{Splitting Text Areas}\label{sec:splittext}
-
-\menudef{menu.transform.split}
-
-TODO
-
 \chapter{Modifying Shapes}\label{sec:modshape}
 
 In addition to editing the segments and \glspl{controlpt}
@@ -5423,7 +5431,99 @@ The \menu{edit.moveby} function is unaffected by the \gridlock.
 
 \menudef{menu.transform.rotate}
 
-TODO
+Selected \glspl{object} can be rotated with the
+\menu{transform.rotate} menu item. This will display a dialog box in
+which you can specify the angle of rotation.
+
+Notes:
+\begin{itemize}
+\item Individual \glspl{object}
+will be rotated relative to the \manmsg{centre} of the \gls{object}.
+
+\item \Glspl*{object} within a
+\gls{group} will be rotated relative to the \manmsg{centre} of the
+group.
+
+\item Rotating a \gls{textpath} will rotate the path and the text
+will adjust to follow the transformed path.
+
+\item Rotating a \gls*{textarea} and \gls*{path} and then combining
+them to form a \gls*{textpath} is not the same as first combining
+and then rotating.
+
+\end{itemize}
+
+To illustrate this, in \figureref{fig:rotateex1a} there are three
+\glspl*{object} selected.  The selection is then rotated
+\degrees{90}.  The result is shown in \figureref{fig:rotateex1b}.
+
+In \figureref{fig:rotateex2}, the three objects in
+\figureref{fig:rotateex1} were first \hyperref[sec:grouping]{grouped}
+(\figureref{fig:rotateex2a}) and then rotated \degrees{90}
+(\figureref{fig:rotateex2b}).
+
+In \figureref{fig:rotatetextpath}, the \gls*{path} and
+\gls*{textarea} in \figureref{fig:rotatetextpatha} are
+combined into a \gls*{textpath}, shown in
+\figureref{fig:rotatetextpathb}. This \gls*{textpath} is then
+rotated by \degrees{90} resulting in
+\figureref{fig:rotatetextpathc}. Note that this is different
+from first rotating the original \gls*{path} and \gls*{textarea},
+shown in \figureref{fig:rotatetextpathd}, and then combining
+them to form a \gls*{textpath}, shown in
+\figureref{fig:rotatetextpathe}.
+
+\FloatSubFigs{fig:rotateex1}
+{
+ {fig:rotateex1a}{\includeimg{rotateex1a}}{},
+ {fig:rotateex1b}{\includeimg{rotateex1b}}{}
+}
+[Three Selected Objects Rotated by 90 Degrees]
+{Three selected objects rotated by 90 degrees: 
+\subfigref{fig:rotateex1a} before,
+\subfigref{fig:rotateex1b} after.}
+
+\FloatSubFigs{fig:rotateex2}
+{
+ {fig:rotateex2a}{\includeimg{rotateex2a}}{},
+ {fig:rotateex2b}{\includeimg{rotateex2b}}{}
+}
+[A Group Consisting of Three Objects Rotated by 90 Degrees]
+{A group consisting of three objects rotated by 90 degrees:
+\subfigref{fig:rotateex2a} before, \subfigref{fig:rotateex2b} after.}
+
+\FloatSubFigs*{fig:rotatetextpath}
+{
+ {fig:rotatetextpatha}{\includeimg{rotatetextpatha}}{},
+ {fig:rotatetextpathb}{\includeimg{rotatetextpathb}}{},
+ {fig:rotatetextpathc}{\includeimg{rotatetextpathc}}{},
+ {fig:rotatetextpathd}{\includeimg{rotatetextpathd}}{},
+ {fig:rotatetextpathe}{\includeimg{rotatetextpathe}}{}
+}
+[Rotating a Text-Path]
+{Rotating a text-path: 
+\subfigref{fig:rotatetextpatha} original text area and path; 
+\subfigref{fig:rotatetextpathb} text area and path in
+\subfigref{fig:rotatetextpatha} combined to form a text-path;
+\subfigref{fig:rotatetextpathc} text-path in
+\subfigref{fig:rotatetextpathb} rotated by 45 degrees;
+\subfigref{fig:rotatetextpathd} text area and path in
+\subfigref{fig:rotatetextpatha} rotated by 45 degrees;
+\subfigref{fig:rotatetextpathe} rotated text area and
+path in \subfigref{fig:rotatetextpathd} combined to form a text-path.}
+
+If you prefer to rotate an \gls{object} using the mouse (which is
+less precise), you first need to \hyperref[mi:hotspots]{enable the hotspots}.
+Then drag the bottom left hotspot to rotate. Note that even if you
+have more than one object selected, only the object whose hotspot you
+are dragging will be transformed.
+
+\seealsorefs{
+ sec:grouping,
+ sec:scaleobjects,
+ sec:shearobjects,
+ sec:textpath
+}
 
 
 \subsection{Scaling Objects}\label{sec:scaleobjects}
