@@ -38,6 +38,7 @@
 \newcommand{\textattrpl}[1]{\glspl{index.text-attribute.#1}}
 \newcommand{\pathattr}[1]{\gls{index.path-attribute.#1}}
 \newcommand{\pathattrpl}[1]{\glspl{index.path-attribute.#1}}
+\newcommand{\affinetrans}[1]{\gls{affine-transformation.#1}}
 
 \newcommand{\filefn}[1]{\menuitem{file.#1}}
 \newcommand{\editfn}[1]{\menuitem{edit.#1}}
@@ -3652,7 +3653,7 @@ the \switch{experimental} switch.
 Currently undocumented.
 
 
-\chapter{Selecting and Editing Objects}\label{sec:selectobjects}
+\chapter{Selecting, Navigation and Basic Editing}\label{sec:selectobjects}
 
 \menudef{menu.tools.select}
 
@@ -3664,7 +3665,7 @@ be selected using any of the following methods:
 \item Click on it with the \glslink{primaryclick}{primary mouse button}.
 
 \item \Gls{doubleclick} the primary mouse button to
-select the \gls*{object} behind the current \gls*{object}.
+select the \gls*{object} \glslink{backobject}{behind} the current \gls*{object}.
 
 \item Use \keyref{ctrl}-click (that is, \gls{click} whilst holding down the control
 \keys{\keyref{ctrl}} key) if you want to add an \gls*{object} to the current
@@ -4170,47 +4171,39 @@ The \menu{navigate.add_description} menu item is similar to
 without deselecting any other \glspl{object} that are already
 selected.
 
-\section{Moving an Object}\label{sec:moveobjects}
+\section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
 
-To move an \gls{object} or \glspl*{object}, first \select\ the
-\glspl*{object} you want to move and then depress the
-\glslink{primaryclick}{primary mouse button} somewhere inside the
-selection, and drag the mouse.  Release the mouse button when the
-\glspl*{object} have reached their required location.
+\menudef{menu.edit.front}
 
-\begin{important}
-If the \gridlock\ is on, the \selected\
-\gls{object} (or \glspl{object}) will move
-in increments of the minor tick distance.
-\end{important}
+\menudef{menu.edit.back}
 
-If you only want to move the object by a very small amount, and your
-mouse is very sensitive or you have difficulties with fine motor
-co-ordination, depress the mouse button and instead of dragging use
-the arrow keys to move the pointer. (This will require the
-\gls{robot} to be available.)
+\menudef{menu.edit.moveup}
 
-\menudef{menu.edit.moveby}
+\menudef{menu.edit.movedown}
 
-An alternative if you need to move a small amount or if you need to
-move by an exact amount is to use the \menu{edit.moveby} menu item.
-This will open the \dialog{moveby} dialog box (\figureref{fig:moveby}).
-In the field marked \widget{coordinates.x} enter the horizontal
-displacement, and in the field marked \widget{coordinates.y}
-enter the vertical (\strong{downward}) displacement. For example, to move the
-selected \glspl*{object} 10 units to the right and 20 units down,
-type 10 in the \widget{coordinates.x} field and 20 in the
-\widget{coordinates.y} field. To move left or up, use a negative
-value.
+TODO
 
-\begin{information}
-The \menu{edit.moveby} function is unaffected by the \gridlock.
-\end{information}
 
-\FloatFig
-  {fig:moveby}
-  {\includeimg{moveby}}
-  {Move Selected Objects Dialog Box}
+\section{Grouping and Ungrouping Objects}\label{sec:grouping}
+
+\menudef{menu.transform.group}
+
+\menudef{menu.transform.ungroup}
+
+TODO
+
+\section{Aligning Objects}\label{sec:alignobjects}
+
+\menudef{menu.transform.justify}
+
+\menudef{menu.transform.justify.left}
+
+\menudef{menu.transform.justify.centre}
+
+\menudef{menu.transform.justify.right}
+
+TODO
+
 
 \section{Cut}\label{sec:cutobjects}
 
@@ -4283,16 +4276,23 @@ If you assign a description to a \gls{group},
 you will lose the description if you later ungroup it.
 \end{important}
 
-\section{Paint (\Glsfmttext{index.colour}) Selector}\label{sec:paint}
-
-\widgetdef{colour.title}
+\chapter{Paint (\Glsfmttext{index.colour} and Shading)}
 
 \Inlineglsdef{index.paint} is the \gls{index.colour} or \gls{shading} used for
 \dglspl{text-colour}, \dglspl{line-colour} and \dglspl{fill-colour}. When selecting a
 \dgls{paint} for a particular attribute, you may have a choice of:
-transparent, a \dgls{paint.solid-colour} or a \dgls{gradient-paint}.
+transparent (no paint), a \dgls{paint.solid-colour} or a \dgls{gradient-paint}.
 (Some attributes, such as marker \gls{index.marker.colour},
 only support a \gls{index.paint.solid-colour}.)
+
+\section{Paint Selector}\label{sec:paint}
+
+\widgetdef{colour.title}
+
+The \widget{colour.title} panel is used in various \gls{index.paint}
+selection dialog boxes. Where only a \gls{index.paint.solid-colour} 
+is supported, the radio buttons will be omitted and only the 
+\widget{colour.single} panel will be available.
 
 \widgetdef{colour.transparent}
 
@@ -4322,6 +4322,11 @@ the alpha channel.  If the alpha value is 100\% then the
 \dgls{colour} is opaque.  Smaller values increase
 \gls{translucency}, allowing \glspl{object} behind to show
 \manmsg{through}.
+
+There are swatches to the right of the \widget{colour.single} panel 
+which can be used to quickly set a \manmsg{colour}. Click on the 
+appropriate swatch and the \manmsg{colour} specification will be
+filled in.
 
 \widgetdef{colour.gradient}
 
@@ -4392,13 +4397,131 @@ in all directions (clipped by the shape).
  sec:linepaint,
  sec:fillpaint,
  sec:textpaint,
- sec:reduce,
  sec:convertcolspace,
  sec:fade,
  sec:removetrans
 }
 
-\section{Editing Control Points}\label{sec:editpath}
+\section{\Glsfmttext{manual.colour} Space Conversions}\label{sec:convertcolspace}
+
+\menudef{menu.edit.adjustcol}
+
+\FlowframTk\ supports the
+\inlineglsdef{index.colour.rgb} (red, green, blue),
+\inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black),
+\inlineglsdef{index.colour.hsb} (hue, saturation, brightness) and
+\gls{index.colour.greyscale} \manmsg{colour} spaces.
+
+\Glspl{index.line-colour}, \glspl{index.fill-colour} and
+\glspl{index.text-colour} can be converted to a different
+\manmsg{colour} space.
+
+\menudef{menu.edit.adjustcol.togrey}
+
+\Glspl{index.line-colour}, \glspl{index.fill-colour} and
+\glspl{index.text-colour} can be reduced to
+\inlineglsdef{index.colour.greyscale} using
+\menu{edit.adjustcol.togrey}.  Only selected \glspl{path} and
+\glspl{textarea} will be affected. If you want to reduce a
+\gls{bitmap} to \gls{index.colour.greyscale} you will need to use a
+bitmap editor.
+
+\menudef{menu.edit.adjustcol.rgb}
+
+The \menu{edit.adjustcol.rgb} menu item will convert to
+\gls{index.colour.rgb}.
+
+\menudef{menu.edit.adjustcol.cmyk}
+
+The \menu{edit.adjustcol.cmyk} menu item will convert to
+\gls{index.colour.cmyk}.
+
+\menudef{menu.edit.adjustcol.hsb}
+
+The \menu{edit.adjustcol.hsb} menu item will convert to
+\gls{index.colour.hsb}.
+
+\begin{warning}
+Note that \manmsg{colour} space conversions are not exact. You may
+not end up with the desired effect. Some \filefn{export} functions
+may not support the chosen \manmsg{colour} space and may convert
+during the export process.
+\end{warning}
+
+\seealsorefs{
+ sec:fade,
+ sec:removetrans,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:textpaint
+}
+
+\section{Fade}\label{sec:fade}
+
+\menudef{menu.edit.adjustcol.fade}
+
+\Glspl{index.line-colour}, \glspl{index.fill-colour} and
+\glspl{index.text-colour} can be faded (transparency increased)
+using the \menu{edit.adjustcol.fade} menu item. Only selected
+\glspl{path} and \glspl{textarea} will be affected. If you want to
+fade a \gls{bitmap} you will need to use a bitmap editor that
+provides that function.
+
+\seealsorefs{
+ sec:convertcolspace,
+ sec:removetrans,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:textpaint
+}
+
+\section{Removing Translucency}\label{sec:removetrans}
+
+\menudef{menu.edit.adjustcol.removetrans}
+
+\Glspl{index.line-colour}, \glspl{index.fill-colour} and
+\glspl{index.text-colour} can have the translucency removed using
+the \menu{edit.adjustcol.removetrans} menu item. Only selected
+\glspl{shape} and \glspl{textarea} will be affected. This function
+sets the paint to none (completely transparent) if the alpha value
+is less than 0.5 otherwise it sets the alpha value to 1 (opaque).
+For example, \figureref{fig:removetransa} shows three shapes: a
+filled rectangle with alpha set to 100\%, a blue filled circle with
+alpha set to 60\% and a yellow filled circle with alpha set to 40\%.
+In \figureref{fig:removetransb}, the circles have had their
+translucency removed. The blue filled circle now has the alpha set
+to 100\% but the other circle, which formerly had a yellow interior,
+has had its \gls{index.fill-colour} removed.
+
+\FloatSubFigs{fig:removetrans}
+{
+ {fig:removetransa}{\includeimg{removetransa}}{},
+ {fig:removetransb}{\includeimg{removetransb}}{},
+}
+[Removing Translucency]
+{Removing Translucency: \subfigref{fig:removetransa} original shapes;
+  \subfigref{fig:removetransb} translucency removed.}
+
+\begin{warning}
+Note that PostScript doesn't support transparency so the
+alpha channel will be ignored if you \filefn{export} to PostScript.
+\end{warning}
+
+\seealsorefs{
+ sec:convertcolspace,
+ sec:fade,
+ sec:linepaint,
+ sec:fillpaint,
+ sec:textpaint
+}
+
+\chapter{Editing Paths}\label{sec:editpath}
+
+\Glspl{path} consist of a sequence of segments that are defined by
+\glspl{controlpt}. These \glspl{controlpt} may be adjusted in
+\editpathmode.
+
+\section{Control Points}\label{sec:editcontrolpt}
 
 The \glspl{controlpt} that define a \gls{shape} only become visible
 and interactive when the shape is in edit path mode.
@@ -4915,6 +5038,20 @@ symmetric.
  sec:rosetutorial
 }
 
+\chapter{Text}\label{sec:text}
+
+\Glspl{textarea} consist of a single line of text. Alternative
+\LaTeX\ code may be provided to use instead when the image
+is \hyperref[sec:exportimage]{exported} to a \TeX-related format.
+New \glspl{textarea} can be created with the
+\texttool\ or \mathstool, as described in \sectionref{sec:newtext}.
+An existing \gls{textarea} can be edited (\sectionref{sec:edittext}),
+converted to a \gls{textpath} (\sectionref{sec:textpath}), or
+converted to an \textattr{outline} (\sectionref{sec:textoutline}).
+
+To change text style attributes (font and \textattr{anchor}) see
+\sectionref{sec:textstyle}.
+
 \section{Editing Text Areas}\label{sec:edittext}
 
 \menudef{menu.edit.textarea.edit}
@@ -5011,6 +5148,13 @@ The alternative text is not used when exporting to PNG or when
  sec:texttopath,
  sec:neuronexample
 }
+
+\subsection{Text Transformation Matrix}\label{sec:textmatrix}
+
+\inlineglsdef{index.text-attribute.transformation-matrix}
+
+TODO
+
 
 \section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}
 
@@ -5163,109 +5307,97 @@ text will be ignored) depending on your
 
 % TODO document \jdroutline
 
-\section{Reducing to \Glsfmttext{index.colour.greyscale}}\label{sec:reduce}
+\section{Splitting Text Areas}\label{sec:splittext}
 
-\inlineglsdef{index.colour.greyscale}
-
-TODO
-
-
-\section{\Glsfmttext{manual.colour} Space Conversions}\label{sec:convertcolspace}
-
-\inlineglsdef{index.colour.rgb}
-\inlineglsdef{index.colour.cmyk}
-\inlineglsdef{index.colour.hsb}
+\menudef{menu.transform.split}
 
 TODO
 
+\chapter{Modifying Shapes}\label{sec:modshape}
 
-\section{Fade}\label{sec:fade}
+In addition to editing the segments and \glspl{controlpt}
+that define a \gls{path}, it's also possible to modify \glspl{shape}
+using \glspl{affine-transformation} (see
+\sectionref{sec:affinetrans}), \gls{cag} (see \sectionref{sec:cag}),
+distortion (see \sectionref{sec:distort}),
+reversing the direction (see \sectionref{sec:reversing}),
+merging paths (see \sectionref{sec:mergepaths}),
+or converting into one or more other \glspl{shape}
+(see \sectionref{sec:converttopolygon},
+\sectionref{sec:separate}, \sectionref{sec:patterns},
+\sectionref{sec:converttopath}, \sectionref{sec:texttopath},
+\sectionref{sec:outlinetopath}). 
 
-\menudef{menu.edit.adjustcol.fade}
+\section{Affine Transformations}\label{sec:affinetrans}
 
-TODO
-
-
-\section{Removing Translucency}\label{sec:removetrans}
-
-\menudef{menu.edit.adjustcol.removetrans}
-
-TODO
-
-
-\section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
-
-\menudef{menu.edit.front}
-
-\menudef{menu.edit.back}
-
-\menudef{menu.edit.moveup}
-
-\menudef{menu.edit.movedown}
-
-TODO
+\FlowframTk\ provides functions to perform 
+\inlineglsdef{affine-transformation} on \glspl{object}:
+\affinetrans{translation} (\sectionref{sec:moveobjects}), 
+\affinetrans{rotation} (\sectionref{sec:rotateobjects}), 
+\affinetrans{scaling} (\sectionref{sec:scaleobjects}) and 
+\affinetrans{shearing} (\sectionref{sec:shearobjects}).
 
 
-\section{Rotating Objects}\label{sec:rotateobjects}
+\subsection{Moving an Object}\label{sec:moveobjects}
+
+To move an \gls{object} or \glspl*{object}, first \select\ the
+\glspl*{object} you want to move and then depress the
+\glslink{primaryclick}{primary mouse button} somewhere inside the
+selection, and drag the mouse.  Release the mouse button when the
+\glspl*{object} have reached their required location.
+
+\begin{important}
+If the \gridlock\ is on, the \selected\
+\gls{object} (or \glspl{object}) will move
+in increments of the minor tick distance.
+\end{important}
+
+If you only want to move the object by a very small amount, and your
+mouse is very sensitive or you have difficulties with fine motor
+co-ordination, depress the mouse button and instead of dragging use
+the arrow keys to move the pointer. (This will require the
+\gls{robot} to be available.)
+
+\menudef{menu.edit.moveby}
+
+An alternative if you need to move a small amount or if you need to
+move by an exact amount is to use the \menu{edit.moveby} menu item.
+This will open the \dialog{moveby} dialog box (\figureref{fig:moveby}).
+In the field marked \widget{coordinates.x} enter the horizontal
+displacement, and in the field marked \widget{coordinates.y}
+enter the vertical (\strong{downward}) displacement. For example, to move the
+selected \glspl*{object} 10 units to the right and 20 units down,
+type 10 in the \widget{coordinates.x} field and 20 in the
+\widget{coordinates.y} field. To move left or up, use a negative
+value.
+
+\begin{information}
+The \menu{edit.moveby} function is unaffected by the \gridlock.
+\end{information}
+
+\FloatFig
+  {fig:moveby}
+  {\includeimg{moveby}}
+  {Move Selected Objects Dialog Box}
+
+
+\subsection{Rotating Objects}\label{sec:rotateobjects}
 
 \menudef{menu.transform.rotate}
 
 TODO
 
 
-\section{Scaling Objects}\label{sec:scaleobjects}
+\subsection{Scaling Objects}\label{sec:scaleobjects}
 
 \menudef{menu.transform.scale}
 
 TODO
 
 
-\section{Shearing Objects}\label{sec:shearobjects}
+\subsection{Shearing Objects}\label{sec:shearobjects}
 
 \menudef{menu.transform.shear}
-
-TODO
-
-
-\section{Distorting Shapes}\label{sec:distort}
-
-\menudef{menu.transform.distort}
-
-TODO
-
-
-\section{Grouping and Ungrouping Objects}\label{sec:grouping}
-
-\menudef{menu.transform.group}
-
-\menudef{menu.transform.ungroup}
-
-TODO
-
-
-\section{Aligning Objects}\label{sec:alignobjects}
-
-\menudef{menu.transform.justify}
-
-\menudef{menu.transform.justify.left}
-
-\menudef{menu.transform.justify.centre}
-
-\menudef{menu.transform.justify.right}
-
-TODO
-
-
-\section{Reversing a Path's Direction}\label{sec:reversing}
-
-\menudef{menu.transform.reverse}
-
-TODO
-
-
-\section{Merging Paths}\label{sec:mergepaths}
-
-\menudef{menu.transform.merge}
 
 TODO
 
@@ -5308,6 +5440,28 @@ TODO
 
 TODO
 
+
+\section{Distorting Shapes}\label{sec:distort}
+
+\menudef{menu.transform.distort}
+
+TODO
+
+
+\section{Reversing a Path's Direction}\label{sec:reversing}
+
+\menudef{menu.transform.reverse}
+
+TODO
+
+
+\section{Merging Paths}\label{sec:mergepaths}
+
+\menudef{menu.transform.merge}
+
+TODO
+
+
 \section{Convert to Polygon}\label{sec:converttopolygon}
 
 \menudef{menu.transform.convert_to_polygon}
@@ -5348,13 +5502,6 @@ TODO
 
 
 \subsection{Converting an Outline to a Path}\label{sec:outlinetopath}
-
-TODO
-
-
-\section{Splitting Text Areas}\label{sec:splittext}
-
-\menudef{menu.transform.split}
 
 TODO
 
@@ -5528,13 +5675,6 @@ TODO
 \subsection{Font Shape}\label{sec:fontshape}
 
 \inlineglsdef{index.text-attribute.font-shape}
-
-TODO
-
-
-\subsection{Text Transformation Matrix}\label{sec:textmatrix}
-
-\inlineglsdef{index.text-attribute.transformation-matrix}
 
 TODO
 
