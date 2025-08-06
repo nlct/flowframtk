@@ -4274,14 +4274,139 @@ removed.
 
 \menudef{menu.transform.justify}
 
+It is only possible to align \glspl{object} that form part of a
+\gls{group}. Objects within a group can be aligned vertically or
+horizontally using the \menu{transform.justify} sub menu.
+
+Note that alignment is not recursive: if a group contains another
+group, the contents of the sub group will not be aligned, each
+element in the sub group will be moved by the same amount.
+
 \menudef{menu.transform.justify.left}
+
+The \menu{transform.justify.left} menu item will move all objects
+within the \gls{group} so that the left edge of each object's \gls{bbox}
+lies along the left edge of the group's \gls*{bbox}.  (See
+\figureref{fig:alignex1b}.)
 
 \menudef{menu.transform.justify.centre}
 
+The \menu{transform.justify.centre} menu item will move all objects
+within the \gls{group} so that they are \manmsg{centred} horizontally
+within the group's \gls*{bbox}.  (See \figureref{fig:alignex1c}.)
+
 \menudef{menu.transform.justify.right}
 
-TODO
+The \menu{transform.justify.right} menu item will move all objects
+within the \gls{group} so that the right edge of each object's \gls*{bbox}
+lies along the right edge of the group's \gls*{bbox}.  (See
+\figureref{fig:alignex1d}.)
 
+\menudef{menu.transform.justify.top}
+
+The \menu{transform.justify.top} menu item will move all objects
+within the \gls{group} so that the top of each object's \gls*{bbox} lies along the
+top of the group's \gls*{bbox}.
+
+\menudef{menu.transform.justify.middle}
+
+The \menu{transform.justify.middle} menu item will move all objects
+within the \gls{group} so that they are \manmsg{centred} vertically
+within the group's \gls{bbox}.
+
+\menudef{menu.transform.justify.bottom}
+
+The \menu{transform.justify.bottom} menu item will move all objects
+within the \gls{group} so that the bottom of each object's \gls*{bbox} lies
+along the bottom of the group's \gls*{bbox}.
+
+\FloatSubFigs{fig:alignex1}
+{
+  {fig:alignex1a}{\includeimg{alignex1a}}{},
+  {fig:alignex1b}{\includeimg{alignex1b}}{},
+  {fig:alignex1c}{\includeimg{alignex1c}}{},
+  {fig:alignex1d}{\includeimg{alignex1d}}{}
+}
+[Aligning a Group Consisting of Three Objects]
+{Aligning a group consisting of three objects: 
+\subfigref{fig:alignex1a} original; 
+\subfigref{fig:alignex1b} left justified; 
+\subfigref{fig:alignex1c} \manmsg{centre} justified; 
+\subfigref{fig:alignex1d} right justified.}
+
+If the \widget{textconfig.anchor} \gls{checkbox} in the
+\hyperref[sec:texconfig]{TeX Configuration Settings Dialog} is
+selected, any \glspl{textarea} that are contained in a group that is
+justified will automatically have their \textattrpl{anchor} changed.
+For example, in \figureref{fig:alignex1} one of the objects is a
+\gls*{textarea}.  If the auto anchor update facility is enabled, the
+\gls*{textarea} in \figureref{fig:alignex1b} will have its
+horizontal \textattr{anchor} changed to \widget{font.anchor.left},
+in \figureref{fig:alignex1c} it will have its horizontal
+\textattr{anchor} changed to \widget{font.anchor.hcentre} and in
+\figureref{fig:alignex1d} it will have its horizontal
+\textattr{anchor} changed to \widget{font.anchor.right}. Similarly,
+applying a vertical alignment will change the vertical
+\textattr{anchor} to one of: \widget{font.anchor.top},
+\widget{font.anchor.vcentre} or \widget{font.anchor.bottom}.
+
+\begin{information}
+Note that there is no way of aligning \glspl{textarea} along their
+baseline. (However it is possible that the baseline may coincide
+with the bottom of the \gls*{textarea} if the \gls*{textarea} doesn't contain
+any characters with descenders.)
+\end{information}
+
+\strong{Tip:} Sometimes you might want to \manmsg{centre} an
+\gls{object} relative to another thinner object. In this case it's
+better to create a \hyperref[sec:rectangles]{rectangle}
+\manmsg{centred} on the thin object that encompasses all the objects
+you want to justify.  Include this rectangle in the \gls{group},
+justify, ungroup and then delete the rectangle. For example, the
+image shown in \figureref{fig:alignex2a} has a \gls{textarea} below
+the middle line. It would look better if the text was
+\manmsg{centred} below the line, so I grouped the middle line and
+\gls{textarea} and justified them using
+\menu{transform.justify.centre}. The result is shown in
+\figureref{fig:alignex2b}. Although the \gls{textarea} and line are
+now \manmsg{centred} relative to each other, the line was moved to
+the \manmsg{centre} of the \gls{textarea}, not the other way round.
+This was not what was intended. Instead, in
+\figureref{fig:alignex2c}, I created a new rectangle that is
+\manmsg{centred} on the line. Since the line is on a tick mark and
+the grid lock is on, it is relatively easy to create this rectangle
+(much easier than trying to move the \gls{textarea} to manually
+align it). I then grouped the rectangle, the middle line and the
+text area and justified them using \menu{transform.justify.centre}.
+The result is shown in \figureref{fig:alignex2d}. The justified
+objects were then ungrouped and the rectangle was deleted to
+produced \figureref{fig:alignex2e}.
+
+\FloatSubFigs{fig:alignex2}
+{
+  {fig:alignex2a}{\includeimg{alignex2a}}{},
+  {fig:alignex2b}{\includeimg{alignex2b}}{},
+  {fig:alignex2c}{\includeimg{alignex2c}}{},
+  {fig:alignex2d}{\includeimg{alignex2d}}{},
+  {fig:alignex2e}{\includeimg{alignex2e}}{}
+}
+[Aligning a Wider Object Relative to a Thinner Object]
+{Aligning a wider object relative to a thinner object:
+\subfigref{fig:alignex2a} original image;
+\subfigref{fig:alignex2b} middle line and text area have
+been grouped and justified;
+\subfigref{fig:alignex2c} rectangle added to original
+image \manmsg{centred} on the middle line;
+\subfigref{fig:alignex2d} rectangle, middle line
+and text area have been grouped and justified;
+\subfigref{fig:alignex2e} justified
+objects have been ungrouped and the rectangle has been deleted.}
+
+\seealsorefs{
+  sec:grouping,
+  sec:texconfig,
+  sec:neuronexample
+}
 
 \section{Cut}\label{sec:cutobjects}
 
