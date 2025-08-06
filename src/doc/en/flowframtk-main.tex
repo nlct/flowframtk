@@ -5854,8 +5854,56 @@ TODO
 
 \menudef{menu.transform.distort}
 
-TODO
+A selected \gls{path} (not a \gls{compositeshape}) can be distorted using the
+\menu{transform.distort} menu item. While this toggle
+button\slash item is on, the \gls{path} is in distortion mode.
+This has four round controls that are initially located at each
+corner of the path's \gls{bbox}. These controls can be moved to
+distort the path.  Note that this modifies the location of the
+path's \glspl{controlpt}. The stroke attributes, such as the line
+width, aren't modified. Once you have finished distorting the shape,
+uncheck the \menu{transform.distort} menu item (or the
+button on the horizontal \gls{toolbar}) or click
+anywhere outside the (original) bounding box.
 
+For example, \figureref{fig:distortpatha} shows a circle in 
+\editpathmode. In \figureref{fig:distortpathb}, the \editpathmode\ is now off and
+the circle is selected. In \figureref{fig:distortpathc}, the
+distortion mode has now been switched on. The round distortion
+controls are initialised to each corner of the \gls{bbox}. The
+controls that define the path aren't visible. (Note that the
+\hyperref[sec:graphics]{rendering hints} have been set to speed
+and no anti-aliasing while in distortion mode.)
+
+In \figureref{fig:distortpathd}, three of the round distortion
+controls have been moved. The original bounding box is still
+visible, even though it no longer encompasses the distorted shape.
+In \figureref{fig:distortpathe}, the distortion mode has been
+switched off and normal select mode has resumed. The modified path
+is now showing with its new \gls{bbox}. The distortion moved the
+path's \glspl{controlpt}, as can be seen when the path is put back into
+\editpathmode\ in \figureref{fig:distortpathf}. If this path is
+returned to distortion mode, the distortion controls will be reinitialised to
+the corners of the new bounding box. You can't invert the distortion
+to restore the path to its original shape.
+
+\FloatSubFigs{fig:distortpath}
+{
+  {fig:distortpatha}{\includeimg{distortpatha}}{},
+  {fig:distortpathb}{\includeimg{distortpathb}}{},
+  {fig:distortpathc}{\includeimg{distortpathc}}{},
+  {fig:distortpathd}{\includeimg{distortpathd}}{},
+  {fig:distortpathe}{\includeimg{distortpathe}}{},
+  {fig:distortpathf}{\includeimg{distortpathf}}{}
+}
+[Distorting a Path]
+{Distorting a Path: 
+\subfigref{fig:distortpatha} original path in edit mode;
+\subfigref{fig:distortpathb} original path selected;
+\subfigref{fig:distortpathc} distortion mode on;
+\subfigref{fig:distortpathd} distortion in progress;
+\subfigref{fig:distortpathe} distorted shape (distortion mode off);
+\subfigref{fig:distortpathf} distorted shape in edit mode.}
 
 \section{Reversing a Path's Direction}\label{sec:reversing}
 
