@@ -4225,11 +4225,50 @@ the \menu{edit.movedown} menu item.
 
 \section{Grouping and Ungrouping Objects}\label{sec:grouping}
 
+A \gls{group} is a collection of \glspl{object} that are treated as
+though they are a single entity. When you select a \gls{group}, you
+will only see the \gls{bbox} of the entire group, not the
+\glspl*{bbox} of each individual object within the group. If a
+\gls{group} is \hyperref[sec:rotateobjects]{rotated},
+\hyperref[sec:scaleobjects]{scaled} or \hyperref[sec:shearobjects]{sheared}, each
+\gls*{object} within the group will maintain its relative position.
+Objects within a \gls{group} may also be
+\hyperref[sec:alignobjects]{aligned}.  Note that a \gls{group} can
+not be edited. Grouping and ungrouping \glspl*{object} may change
+the \gls{stackingorder}.
+
 \menudef{menu.transform.group}
+
+To group \glspl*{object}, first \hyperref[sec:selectobjects]{select}
+all the objects you want in the \gls{group}, and then select the
+\menu{transform.group} menu item.
 
 \menudef{menu.transform.ungroup}
 
-TODO
+To \inlineglsdef{ungroup} a group, first \hyperref[sec:selectobjects]{select} the
+group, and then select the \menu{transform.ungroup} menu item. Note
+that this function is not recursive: if a group contains other
+groups when you ungroup the outer group, the inner groups will
+remain.  Any description assigned to a group will be lost when it's
+ungrouped.
+
+\begin{warning}
+Note that if you ungroup an \gls*{object} containing
+\hyperref[sec:flowframe]{flowframe} related
+data, the \gls{flowframe} information will be lost. If you group objects
+containing flowframe data, and then assign that group flowframe data,
+any flowframe data assigned to the contents of that group will be
+removed.
+\end{warning}
+
+\seealsorefs{
+ sec:rotateobjects,
+ sec:scaleobjects,
+ sec:shearobjects,
+ sec:moveupordown,
+ sec:alignobjects
+}
+
 
 \section{Aligning Objects}\label{sec:alignobjects}
 
