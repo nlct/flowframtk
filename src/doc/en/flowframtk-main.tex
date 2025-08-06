@@ -6073,8 +6073,45 @@ to restore the path to its original shape.
 
 \menudef{menu.transform.reverse}
 
-TODO
+The direction of a \gls{path} or \gls{textpath} can be reversed
+using the \menu{transform.reverse} menu item. For example, the path
+in \figureref{fig:reverse} has a bar start marker, pointed arrow
+mid-markers and a \LaTeX\ style arrow end marker.
+\figureref{fig:reversea} shows the original path, and
+\figureref{fig:reverseb} shows the reversed path. Note that all the
+\glspl{controlpt} are in the same place, but their ordering has
+changed, so that what was originally the first \gls{controlpt} is
+now the last \gls{controlpt}.
 
+\FloatSubFigs{fig:reverse}
+{
+  {fig:reversea}{\includeimg{reverse1a}}{},
+  {fig:reverseb}{\includeimg{reverse1b}}{}
+}
+[Reversing the Direction of a Path]
+{Reversing the direction of a path:
+\subfigref{fig:reversea} original path;
+\subfigref{fig:reverseb} reversed path\dash
+the vertices are in the same location, but the order has been
+reversed.}
+
+In \figureref{fig:reversetextpath}, the \gls*{textpath} in
+\figureref{fig:reversetextpatha} is reversed to form 
+\figureref{fig:reversetextpathb}. Note that the text now starts
+from the right instead of the left, since the first \gls*{controlpt}
+is now on the right, and it is upside-down.
+
+\FloatSubFigs{fig:reversetextpath}
+{
+  {fig:reversetextpatha}{\includeimg{reversetextpatha}}{},
+  {fig:reversetextpathb}{\includeimg{reversetextpathb}}{}
+}
+[Reversing the Direction of a Text-Path]
+{Reversing the direction of a text-path:
+\subfigref{fig:reversetextpatha} original text-path;
+\subfigref{fig:reversetextpathb} reversed text-path\dash 
+the vertices are in the same location, but the order has been
+reversed so the text starts from the other end.}
 
 \section{Merging Paths}\label{sec:mergepaths}
 
