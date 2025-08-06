@@ -6117,8 +6117,109 @@ reversed so the text starts from the other end.}
 
 \menudef{menu.transform.merge}
 
-TODO
+Multiple \glspl{shape} can be merged into a single \gls*{shape}
+using the \menu{transform.merge} menu item. Note that this is not
+the same as \hyperref[sec:grouping]{grouping}.  A \gls{gap} (move
+to) will be placed between the last \gls{controlpt} of one path and
+the first \gls*{controlpt} of the next path. Any \gls{pattern} in
+the selection will be first \hyperref[sec:converttopath]{converted
+to a full path} before merging.
 
+\begin{information}
+To split an existing \gls{path} into two separate \glspl{path}, use the
+\menu{editpath.break_path} popup menu item in \editpathmode.
+\end{information}
+
+Once the shape has been merged, it can then be edited as usual in
+\editpathmode.  If the original shapes had different styles, the new
+shape will retain the style of the first shape (the lowest one in
+the \gls{stack}). For example, in \figureref{fig:mergea} there are
+two \glspl{path} with different styles. \figureref{fig:mergeb} shows
+the single \gls{path} created from merging the two original paths.
+Since the first path used the even-odd winding rule, the new shape
+has a hole in it.
+
+\FloatSubFigs{fig:merge}
+{
+  {fig:mergea}{\includeimg{mergepatha}}{},
+  {fig:mergeb}{\includeimg{mergepathb}}{}
+}
+[Merging Two Paths]
+{Merging two paths:
+\subfigref{fig:mergea} the first path has a solid line pattern, a
+green fill \manmsg{colour} and even-odd winding rule, and the second
+path has a dashed line pattern and a yellow fill \manmsg{colour};
+\subfigref{fig:mergeb} resulting merged path has a solid line
+pattern, green fill \manmsg{colour} and even-odd winding rule.}
+
+The same applies if one or more of the selected \glspl*{object} is a
+\gls{textpath}. For example, in \figureref{fig:mergetextpathsa}
+there are two \glspl*{textpath}.  These are merged to form a single
+\gls*{textpath} shown in \figureref{fig:mergetextpathsb}. Note that
+the text from the second \gls{textpath} is lost. The resulting path
+is shown in \editpathmode\ in \figureref{fig:mergetextpathsc} to
+illustrate the underlying path. A mixture of \glspl*{path} and
+\glspl*{textpath} can be merged. The resulting \gls*{object} will be
+a \gls*{textpath} if the first object to be merged is a
+\gls*{textpath}, otherwise it will be a \gls*{path}.
+
+\FloatSubFigs{fig:mergetextpaths}
+{
+  {fig:mergetextpathsa}{\includeimg{mergetextpathsa}}{},
+  {fig:mergetextpathsb}{\includeimg{mergetextpathsb}}{},
+  {fig:mergetextpathsc}{\includeimg{mergetextpathsc}}{}
+}
+[Merging Two Text-Paths]
+{Merging two text-paths:
+\subfigref{fig:mergetextpathsa} the first path is on the left and
+the second path is on the right;
+\subfigref{fig:mergetextpathsb} resulting merged path;
+\subfigref{fig:mergetextpathsc} resulting merged path in
+edit mode to illustrate the underlying path}
+
+\Glspl{path} are merged according to their \gls{stackingorder}. For
+example, in \figureref{fig:merge2a} there are two \glspl{path}, both
+with a bar start marker, and an arrow end marker. The path on the
+right is further back in terms of the \gls{stackingorder}. (That is,
+it gets \glslink{painting}{painted} on the \gls{canvas} before the
+other path.) \figureref{fig:merge2b} shows the result of merging the
+two paths\dash the left hand path has been appended to the right
+hand path. \figureref{fig:merge2c} shows the same two paths as in
+\figureref{fig:merge2a} except that now the left path is the
+\gls{back}. There is no visible difference between
+\figureref{fig:merge2a} and \figureref{fig:merge2c}, but the result
+of merging the paths in \figureref{fig:merge2c} (see
+\figureref{fig:merge2d}) is different to
+\figureref{fig:merge2b}\dash the right hand path has been appended
+to the left hand path.
+
+\FloatSubFigs{fig:merge2}
+{
+  {fig:merge2a}{\includeimg{mergepath2a}}{},
+  {fig:merge2b}{\includeimg{mergepath2b}}{},
+  {fig:merge2c}{\includeimg{mergepath2a}}{},
+  {fig:merge2d}{\includeimg{mergepath2d}}{}
+}
+[Paths Are Merged According to the Stacking Order]
+{Paths are merged according to the stacking order:
+\subfigref{fig:merge2a} two straight line paths where the path 
+on the right is at the back of the stack;
+\subfigref{fig:merge2b} new single path resulting from merging 
+the two paths in \subfigref{fig:merge2a};
+\subfigref{fig:merge2c} same as \subfigref{fig:merge2a} but the path on the left
+is at the back of the stack;
+\subfigref{fig:merge2d} new single path resulting from merging 
+the two paths in \subfigref{fig:merge2c}.}
+
+\seealsorefs{
+ sec:pathunion,
+ sec:xorpath,
+ sec:pathintersect,
+ sec:pathsubtract,
+ sec:reversing,
+ sec:moveupordown,
+ sec:cheeseexample
+}
 
 \section{Convert to Polygon}\label{sec:converttopolygon}
 
