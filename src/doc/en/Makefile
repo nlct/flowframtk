@@ -82,7 +82,7 @@ jdrview-en.pdf	: jdrview-en.glstex
 	lualatex jdrview-en
 	lualatex jdrview-en
 
-jdrview-en.glstex	: jdrview.bib jdrview-props-en.bib \
+jdrview-en.glstex	: jdrview.bib shared.bib jdrview-props-en.bib \
 		jdrview-en.tex jdrview-main.tex version.tex \
 		helpinterface.tex \
 		../sharedimages/*.png ../sharedimages/*.tex
@@ -91,8 +91,9 @@ jdrview-en.glstex	: jdrview.bib jdrview-props-en.bib \
 
 jdrview-en-GB.pdf	: jdrview-en-GB.glstex
 	lualatex jdrview-en-GB
+	lualatex jdrview-en-GB
 
-jdrview-en-GB.glstex	: jdrview.bib jdrview-props-en-GB.bib \
+jdrview-en-GB.glstex	: jdrview.bib shared.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
 			../sharedimages/*.png ../sharedimages/*.tex
