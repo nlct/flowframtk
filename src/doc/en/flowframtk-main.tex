@@ -4239,13 +4239,13 @@ the \gls{stackingorder}.
 
 \menudef{menu.transform.group}
 
-To group \glspl*{object}, first \hyperref[sec:selectobjects]{select}
+To group \glspl*{object}, first \select\
 all the objects you want in the \gls{group}, and then select the
 \menu{transform.group} menu item.
 
 \menudef{menu.transform.ungroup}
 
-To \inlineglsdef{ungroup} a group, first \hyperref[sec:selectobjects]{select} the
+To \inlineglsdef{ungroup} a group, first \select\ the
 group, and then select the \menu{transform.ungroup} menu item. Note
 that this function is not recursive: if a group contains other
 groups when you ungroup the outer group, the inner groups will
@@ -6223,7 +6223,107 @@ the two paths in \subfigref{fig:merge2c}.}
 
 \section{Convert to Polygon}\label{sec:converttopolygon}
 
+If you want to convert a single \gls{curve} segment to a single
+line segment, you can simply enable \editpathmode, and use the 
+\menu{editpath.convert_to_line} item from the popup menu.
+However, if you want to replace all curves with one or more straight
+lines then you may prefer to use the \transformfn{convert_to_polygon}
+function.
+
 \menudef{menu.transform.convert_to_polygon}
+
+The \gls{curve} segments of a \gls{path} (or underlying path)
+can be converted into a series of straight line segments with the
+\menu{transform.convert_to_polygon} menu item, which will result in
+a polygonal shape. The number of lines used to replace an individual
+curve segment is determined by the \emph{flatness} parameter.
+
+\begin{information}
+There is a maximum limit of 1024 replacement line segments per
+\gls{curve}.
+\end{information}
+
+First \select\ the \gls{shape} with \glspl{curve} that need to be transformed.
+For example, in \figureref{fig:selectedcircle} a circle created with
+the \tool{ellipse} has been selected.
+
+\FloatFig{fig:selectedcircle}
+{\includeimg{selectedcircle}}
+{A Selected Circle}
+
+\widgetdef{polygon.title}
+
+The \menu{transform.convert_to_polygon} menu item will open the
+\dialog{polygon} dialog, shown in \figureref{fig:polygondialog}.
+This will show a draft outline of the selected shape (in this case,
+the circle from \figureref{fig:selectedcircle}).
+
+\FloatFig{fig:polygondialog}
+{\includeimg{polygondialog}}
+{Convert to Polygon Dialog}
+
+\widgetdef{polygon.flatness}
+
+The \widget{polygon.flatness} numeric field should be set to the
+flatness parameter. This is the maximum allowable distance
+between the \glspl{controlpt} and the flattened \gls{curve}. A small
+value will create a series of line segments that are as close to the
+original curve as possible. This may result in many short line
+segments depending on the curvature of the original \gls{curve}.
+
+\widgetdef{polygon.dotask}
+
+Once you have set the desired flatness parameter, click on the
+\widget{polygon.dotask} button. This will draw the calculated
+polygon over the original shape for comparison. For example, 
+\figureref{fig:polygondialog1} shows the calculated polygon with
+the flatness parameter set to 1.
+
+\FloatFig{fig:polygondialog1}
+{\includeimg{polygondialog1}}
+{Convert to Polygon Dialog: Result with 1.0 Flatness}
+
+On the right-hand side of the \dialog{polygon} dialog is an
+information panel that details the number of lines used, the length
+of the polygon's perimeter, the polygon's area and the \gls{xor} area.
+It also lists the path's definition where \qt{M} indicates a move to
+(followed by the co-ordinate pair to move to), \qt{L} indicates a line to
+(followed by the co-ordinate pair to draw a line to), and \qt{Z}
+indicates close path.
+
+If the result isn't quite satisfactory, you can adjust the flatness
+parameter and click on the \widget{polygon.dotask} button again.
+For example, I changed the flatness to 4 and recalculated. This
+produced the polygon shown in \figureref{fig:polygondialog2} which
+has fewer line segments with a greater deviation from the original
+circle.
+
+\FloatFig{fig:polygondialog2}
+{\includeimg{polygondialog2}}
+{Convert to Polygon Dialog: Result with 4.0 Flatness}
+
+\widgetdef{polygon.reload}
+
+You can clear the dialog and reset it back to just the original
+selected shape with the \widget{polygon.reload} button.
+There is also a zoom widget on the bottom left which can be used to
+adjust the magnification.
+
+
+\begin{information}
+The \widget{okay} button is only enabled once a polygon has been
+calculated.
+\end{information}
+
+If you want to replace the selected path with the
+calculated polygon, click on the \widget{okay} button.  For example,
+\figureref{fig:selectedpolygon} is the result with the flatness set
+to 4. If you change you mind you can click on the \widget{cancel}
+button to discard the draft. You will be prompted for confirmation.
+
+\FloatFig{fig:selectedpolygon}
+{\includeimg{selectedpolygon}}
+{Resulting Polygon}
 
 
 \section{Separating Compound Shapes}\label{sec:separate}

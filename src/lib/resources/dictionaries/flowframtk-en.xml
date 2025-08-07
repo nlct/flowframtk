@@ -1557,12 +1557,19 @@ Nicola Talbot
 
 <entry key="polygon.dotask">Create Polygon</entry>
 <entry key="polygon.dotask.mnemonic">P</entry>
+<entry key="polygon.dotask.iconimage">dotask</entry>
 
+<entry key="polygon.reload">Reset</entry>
+<entry key="polygon.reload.mnemonic">R</entry>
+<entry key="polygon.reload.iconimage">reload</entry>
+
+<entry key="polygon.flatness_info">Flatness: {0}</entry>
 <entry key="polygon.size">Size: {0}</entry>
 <entry key="polygon.xor_area">XOR area: {0} {1}²</entry>
 <entry key="polygon.length">Perimeter length: {0} {1}</entry>
 <entry key="polygon.area">Polygon area: {0} {1}²</entry>
 <entry key="polygon.no_curves">Shape is already a polygon.</entry>
+<entry key="polygon.confirm_discard">Are you sure you want to discard the polygon?</entry>
 
 <!-- Create Path from SVG Specs Dialog -->
 
