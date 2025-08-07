@@ -54,6 +54,21 @@ public class SegmentInfoDialog extends JDialog
          application.getResources().getMessage("segmentinfo.title"), true);
       this.application = application;
 
+      init();
+   }
+
+   private void init()
+   {
+      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+      addWindowListener(new WindowAdapter()
+       {
+          public void windowClosing(WindowEvent evt)
+          {
+             cancel();
+          }
+       });
+
       JDRResources resources = application.getResources();
 
       samplePanel = new SegmentSamplePanel(this);
@@ -139,11 +154,13 @@ public class SegmentInfoDialog extends JDialog
       bottomPanel.add(zoomComp, "West");
    }
 
+   @Override
    public JDRResources getResources()
    {
       return application.getResources();
    }
 
+   @Override
    public double getCurrentMagnification()
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -151,6 +168,7 @@ public class SegmentInfoDialog extends JDialog
       return cg == null ? 1.0 : cg.getMagnification();
    }
 
+   @Override
    public void setCurrentMagnification(double factor)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -162,6 +180,7 @@ public class SegmentInfoDialog extends JDialog
       }
    }
 
+   @Override
    public double zoomAction(ZoomValue zoomValue)
    {
       updateCurrentFactor(zoomValue);
@@ -233,6 +252,7 @@ public class SegmentInfoDialog extends JDialog
       setCurrentMagnification(factor);
    }
 
+   @Override
    public void showZoomChooser()
    {
    }
@@ -491,6 +511,18 @@ public class SegmentInfoDialog extends JDialog
       setVisible(false);
    }
 
+   public void cancel()
+   {
+      JDRResources resources = getResources();
+
+      if (!modified || resources.confirm(this, 
+           resources.getMessage("segmentinfo.confirm_discard"))
+         == JOptionPane.YES_OPTION)
+      {
+         setVisible(false);
+      }
+   }
+
    public void actionPerformed(ActionEvent e)
    {
       String action = e.getActionCommand();
@@ -503,14 +535,7 @@ public class SegmentInfoDialog extends JDialog
       } 
       else if (action.equals("cancel"))
       {
-         JDRResources resources = getResources();
-
-         if (!modified || resources.confirm(this, 
-              resources.getMessage("segmentinfo.confirm_discard"))
-            == JOptionPane.YES_OPTION)
-         {
-            setVisible(false);
-         }
+         cancel();
       }
       else if (action.equals("default"))
       {
