@@ -41,7 +41,8 @@ import com.dickimawbooks.flowframtk.*;
  * Dialog box for converting a shape to a polygon.
  * @author Nicola L C Talbot
  */
-public class ConvertToPolygonDialog extends JDialog implements ActionListener
+public class ConvertToPolygonDialog extends JDialog
+ implements ActionListener, JDRApp
 {
    public ConvertToPolygonDialog(FlowframTk application)
    {
@@ -53,6 +54,16 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
 
    private void init()
    {
+      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+      addWindowListener(new WindowAdapter()
+       {
+          public void windowClosing(WindowEvent evt)
+          {
+             cancel();
+          }
+       });
+
       JDRResources resources = application.getResources();
 
       JComponent mainComp = new JPanel(new BorderLayout()); 
@@ -82,27 +93,141 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       infoArea = resources.createAppInfoArea(24);
       rightComp.add(new JScrollPane(infoArea));
 
+      JComponent bottomPanel = new JPanel(new BorderLayout());
+      getContentPane().add(bottomPanel, "South");
+
       JComponent buttonPanel = new JPanel();
-      getContentPane().add(buttonPanel, "South");
+      bottomPanel.add(buttonPanel, "Center");
 
       okayButton = resources.createOkayButton(getRootPane(), this);
 
       buttonPanel.add(okayButton); 
       buttonPanel.add(resources.createCancelButton(this));
+      buttonPanel.add(resources.createHelpDialogButton(this, "sec:converttopolygon"));
+
+      zoomComp = new ZoomComponent(this);
+      bottomPanel.add(zoomComp, "West");
+
+      resetButton = resources.createDialogButton(
+        "polygon", "reload", this, null);
+      bottomPanel.add(resetButton, "East");
 
       pack();
       setLocationRelativeTo(application);
    }
 
+   @Override
    public JDRResources getResources()
    {
       return application.getResources();
+   }
+
+   @Override
+   public double getCurrentMagnification()
+   {
+      CanvasGraphics cg = getCanvasGraphics();
+   
+      return cg == null ? 1.0 : cg.getMagnification();
+   }
+
+   @Override
+   public void setCurrentMagnification(double factor)
+   {
+      CanvasGraphics cg = getCanvasGraphics();
+
+      if (cg != null && factor > 0.0)
+      {
+         cg.setMagnification(factor);
+         samplePanel.updateBounds(getOriginalShape(), getPolygon());
+      }
+   }
+
+   @Override
+   public double zoomAction(ZoomValue zoomValue)
+   {
+      updateCurrentFactor(zoomValue);
+
+      samplePanel.updateBounds(getOriginalShape(), getPolygon());
+
+      return getCurrentMagnification();
+   }
+
+   private void updateCurrentFactor(ZoomValue zoomValue)
+   {
+      String id = zoomValue.getActionCommand();
+      BBox bbox = samplePanel.getBpBounds();
+
+      if (bbox == null) return;
+
+      double factor = getCurrentMagnification();
+
+      if (id.equals(ZoomValue.ZOOM_PAGE_WIDTH_ID))
+      {
+         double width = bbox.getWidth();
+
+         if (width > 0)
+         {
+            Dimension dim = samplePanel.getSize();
+            factor = dim.getWidth()/width;
+         }
+      }
+      else if (id.equals(ZoomValue.ZOOM_PAGE_HEIGHT_ID))
+      {
+         double height = bbox.getHeight();
+
+         if (height > 0)
+         {
+            Dimension dim = samplePanel.getSize();
+            factor = dim.getHeight()/(double)height;
+         }
+      }
+      else if (id.equals(ZoomValue.ZOOM_PAGE_ID))
+      {
+         double width = bbox.getWidth();
+         double height = bbox.getHeight();
+
+         if (height <= 0 || width <= 0)
+         {
+            factor = 1.0;
+         }
+         else
+         {
+            Dimension dim = samplePanel.getSize();
+
+            if (height > width)
+            {
+               factor = dim.getHeight()/height;
+            }
+            else
+            {
+               factor = dim.getWidth()/width;
+            }
+         }
+      }
+      else if (zoomValue instanceof PercentageZoomValue)
+      {
+         factor = ((PercentageZoomValue)zoomValue).getValue();
+      }
+
+      zoomComp.setZoom(zoomValue, factor);
+
+      setCurrentMagnification(factor);
+   }
+
+   @Override
+   public void showZoomChooser()
+   {
    }
 
    public RenderingHints getRenderingHints()
    {
       return canvas == null ? application.getRenderingHints() 
         : canvas.getRenderingHints();
+   }
+
+   public CanvasGraphics getCanvasGraphics()
+   {
+      return shape.getCanvasGraphics();
    }
 
    public void display(JDRFrame frame)
@@ -119,6 +244,8 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
          return;
       }
 
+      zoomComp.setZoom(application.getMagnification());
+      setCurrentMagnification(application.getMagnification());
       okayButton.setEnabled(false);
       doTaskButton.setEnabled(true);
       infoArea.setText("");
@@ -128,12 +255,19 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       setVisible(true);
    }
 
+   protected void reset()
+   {
+      polygon = null;
+      infoArea.setText("");
+      samplePanel.updateBounds(shape);
+   }
+
    public void cancel()
    {
+      JDRResources resources = getResources();
+
       if (task != null)
       {
-         JDRResources resources = getResources();
-
          if (resources.confirm(this, resources.getMessage("process.confirm.abort"))
              != JOptionPane.YES_OPTION)
          {
@@ -148,12 +282,22 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
          task = null;
       }
 
+      if (polygon != null &&
+           resources.confirm(this, 
+            resources.getMessage("polygon.confirm_discard"))
+             != JOptionPane.YES_OPTION)
+      {
+         return;
+      }
+
+      setCurrentMagnification(application.getMagnification());
       shape.getCanvasGraphics().setComponent(canvas);
       setVisible(false);
    }
 
    public void okay()
    {
+      setCurrentMagnification(application.getMagnification());
       shape.getCanvasGraphics().setComponent(canvas);
       canvas.convertToPolygon(shape, polygon);
       setVisible(false);
@@ -177,12 +321,17 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
       {
          doTask();
       }
+      else if (action.equals("reload"))
+      {
+         reset();
+      }
    }
 
    private void doTask()
    {
       flatnessField.setEnabled(false);
       okayButton.setEnabled(false);
+      resetButton.setEnabled(false);
       doTaskButton.setEnabled(false);
       task = new PolygonTask(this);
       task.execute();
@@ -208,6 +357,7 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
          okayButton.setEnabled(true);
       }
 
+      resetButton.setEnabled(true);
       doTaskButton.setEnabled(true);
 
       samplePanel.setPolygon(polygon);
@@ -216,10 +366,11 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
    }
 
    public void finishedTask(JDRShape polygon, String infoText, int numComponents,
-    double xorArea, double perimeterLength, double polyArea)
+    double xorArea, double perimeterLength, double polyArea, double flatness)
    {
       finishedTask(polygon);
-      updateInfoArea(infoText, numComponents, xorArea, perimeterLength, polyArea);
+      updateInfoArea(infoText, numComponents, xorArea, perimeterLength, polyArea,
+        flatness);
    }
 
    public double getFlatness()
@@ -238,7 +389,8 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
    }
 
    public void updateInfoArea(String infoText, int numComponents, 
-     double xorArea, double perimeterLength, double polyArea)
+     double xorArea, double perimeterLength, double polyArea,
+     double flatness)
    {
       if (infoText == null)
       {
@@ -249,7 +401,8 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
          JDRResources resources = getResources();
          String unit = polygon.getCanvasGraphics().getStorageUnit().getLabel();
 
-         infoArea.setText(String.format("%s%n%s%n%s%n%s%n%s",
+         infoArea.setText(String.format("%s%n%s%n%s%n%s%n%s%n%s",
+          resources.getMessage("polygon.flatness_info", flatness),
           resources.getMessage("polygon.size", numComponents),
           resources.getMessage("polygon.length", perimeterLength, unit),
           resources.getMessage("polygon.area", polyArea, unit),
@@ -267,8 +420,9 @@ public class ConvertToPolygonDialog extends JDialog implements ActionListener
 
    private PolygonSamplePanel samplePanel;
    private NumberSpinnerField flatnessField;
-   private JButton doTaskButton, okayButton;
+   private JButton doTaskButton, okayButton, resetButton;
    private JTextArea infoArea;
+   private ZoomComponent zoomComp;
 
    private PolygonTask task=null;
 }
@@ -311,6 +465,11 @@ class PolygonSamplePanel extends JPanel
       setPolygon(polygonShape);
 
       repaint();
+   }
+
+   public BBox getBpBounds()
+   {
+      return bounds;
    }
 
    public void setPolygon(JDRShape polygonShape)
@@ -388,7 +547,7 @@ class PolygonTask extends SwingWorker<JDRShape,Void>
    {
       dialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-      double flatness = dialog.getFlatness();
+      flatness = dialog.getFlatness();
 
       JDRShape shape = dialog.getOriginalShape();
 
@@ -422,7 +581,7 @@ class PolygonTask extends SwingWorker<JDRShape,Void>
       {
          dialog.finishedTask(get(), 
            polygonPathInfo == null ? null : polygonPathInfo.toString(),
-           numComponents, xorArea, perimeterLength, polyArea);
+           numComponents, xorArea, perimeterLength, polyArea, flatness);
       }
       catch (Exception e)
       {
@@ -434,4 +593,5 @@ class PolygonTask extends SwingWorker<JDRShape,Void>
    private StringBuilder polygonPathInfo;
    private double xorArea = 0.0, perimeterLength=0.0, polyArea=0.0;
    private int numComponents = 0;
+   private double flatness=1.0;
 }
