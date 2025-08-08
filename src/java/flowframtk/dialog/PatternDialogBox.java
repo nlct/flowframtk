@@ -31,6 +31,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.dickimawbooks.jdr.*;
+import com.dickimawbooks.jdr.exceptions.InvalidValueException;
 
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -57,7 +58,7 @@ public class PatternDialogBox extends JDialog
       JLabel label = getResources().createAppLabel("pattern.replicas");
       panel.add(label);
 
-      replicaField = new NonNegativeIntField(1);
+      replicaField = NumberSpinnerField.createPositiveIntField(1);
       label.setLabelFor(replicaField);
       panel.add(replicaField);
 
@@ -108,7 +109,7 @@ public class PatternDialogBox extends JDialog
       label = getResources().createAppLabel("pattern.scale.x");
       scaledPanel.add(label);
 
-      scaleXField = new DoubleField(2.0);
+      scaleXField = new NumberSpinnerField(2.0);
 
       label.setLabelFor(scaleXField);
       scaledPanel.add(scaleXField);
@@ -116,7 +117,7 @@ public class PatternDialogBox extends JDialog
       label = getResources().createAppLabel("scale.y");
       scaledPanel.add(label);
 
-      scaleYField = new DoubleField(2.0);
+      scaleYField = new NumberSpinnerField(2.0);
 
       label.setLabelFor(scaleYField);
       scaledPanel.add(scaleYField);
@@ -161,6 +162,7 @@ public class PatternDialogBox extends JDialog
       getContentPane().add(p2, "South");
 
       pack();
+
       setLocationRelativeTo(application);
    }
 
@@ -254,6 +256,7 @@ public class PatternDialogBox extends JDialog
    }
 
    public JDRPattern getPattern(CanvasGraphics cg)
+   throws NullPointerException,InvalidValueException
    {
       Component comp = tabbedPane.getSelectedComponent();
 
@@ -274,8 +277,15 @@ public class PatternDialogBox extends JDialog
          double scaleX = scaleXField.getDouble();
          double scaleY = scaleYField.getDouble();
 
-         if (scaleX == 0.0) scaleX = 1.0;
-         if (scaleY == 0.0) scaleY = 1.0;
+         if (scaleX == 0.0)
+         {
+            throw new InvalidValueException("scaled-factor-x", "0", cg);
+         }
+
+         if (scaleY == 0.0)
+         {
+            throw new InvalidValueException("scaled-factor-y", "0", cg);
+         }
 
          return new JDRScaledPattern
             (cg, null, null, scaleX, scaleY, replicas,
@@ -300,18 +310,29 @@ public class PatternDialogBox extends JDialog
    {
       JDRFrame frame = application_.getCurrentFrame();
 
-      JDRPattern pattern = getPattern(frame.getCanvasGraphics());
-
-      setVisible(false);
-
-      if (index == -1)
+      try
       {
+         JDRPattern pattern = getPattern(frame.getCanvasGraphics());
+
+         setVisible(false);
+
+         if (index == -1)
+         {
          
-         frame.convertSelectedToPattern(pattern);
+            frame.convertSelectedToPattern(pattern);
+         }
+         else
+         {
+            frame.updatePattern(index, pattern);
+         }
       }
-      else
+      catch (InvalidValueException e)
       {
-         frame.updatePattern(index, pattern);
+         getResources().error(this, e.getMessage());
+      }
+      catch (Throwable e)
+      {
+         getResources().internalError(this, e);
       }
    }
 
@@ -345,10 +366,10 @@ public class PatternDialogBox extends JDialog
 
    private AnglePanel rotAnglePanel, spiralAnglePanel;
 
-   private DoubleField scaleXField, scaleYField;
+   private NumberSpinnerField scaleXField, scaleYField;
    private NonNegativeLengthPanel spiralDistancePanel;
 
-   private NonNegativeIntField replicaField;
+   private NumberSpinnerField replicaField;
    private FlowframTk application_;
 
    private JRadioButton singlePath, multiPath;
