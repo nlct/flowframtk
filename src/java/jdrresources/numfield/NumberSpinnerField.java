@@ -65,6 +65,15 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
       Number step)
    {
       super(new SpinnerNumberModel(defVal, min, max, step));
+
+      JSpinner.NumberEditor editor = (JSpinner.NumberEditor)getEditor();
+      JFormattedTextField field = editor.getTextField();
+      int cols = field.getColumns();
+
+      if (cols < 3)
+      {
+         field.setColumns(3);
+      }
    }
 
    public NumberSpinnerField()
@@ -75,6 +84,11 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
    public NumberSpinnerField(int defVal)
    {
       this(Integer.valueOf(defVal), null, null, 1);
+   }
+
+   public NumberSpinnerField(double defVal)
+   {
+      this(Double.valueOf(defVal), null, null, 1.0);
    }
 
    public static NumberSpinnerField createNonNegativeDoubleField()
@@ -93,6 +107,24 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
    {
       return new NumberSpinnerField(
        Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1));
+   }
+
+   public static NumberSpinnerField createPositiveIntField()
+   {
+      return createPositiveIntField(1);
+   }
+
+   public static NumberSpinnerField createPositiveIntField(int defValue)
+   {
+      return new NumberSpinnerField(
+       Integer.valueOf(defValue), Integer.valueOf(1), null, Integer.valueOf(1));
+   }
+
+   public void setColumns(int columns)
+   {
+      JSpinner.DefaultEditor editor = (JSpinner.NumberEditor)getEditor();
+      JFormattedTextField field = editor.getTextField();
+      field.setColumns(columns);
    }
 
    public void setNumber(Number number)
