@@ -6548,8 +6548,91 @@ to restore the path to its original shape.
 
 \menudef{menu.transform.separate}
 
-TODO
+\Glspl{compoundshape} can be separated into its constituent parts
+according to their type using the \menu{transform.separate} menu
+item.  For example, in \figureref{fig:separatepatterna} a
+\gls{rotationalpattern} with four replicas has been selected. In
+\figureref{fig:separatepatternb} the pattern is shown in
+\editpathmode\ for illustration. This mode needs to be switched off
+to separate the component parts. The \transformfn{separate} function
+was then used to replace the original selected \gls{pattern} with a
+group containing the original path and each of the four replicas as
+separate \glspl{path}. The group was then ungrouped
+(\figureref{fig:separatepatternc}).
 
+\FloatSubFigs{fig:separatepattern}
+{
+  {fig:separatepatterna}{\includeimg{separatepatterna}}{},
+  {fig:separatepatternb}{\includeimg{separatepatternb}}{},
+  {fig:separatepatternc}{\includeimg{separatepatternc}}{}
+}
+[Separating a Pattern]
+{Separating a pattern:
+\subfigref{fig:separatepatterna} selected pattern with four
+replicas;
+\subfigref{fig:separatepatternb} the pattern in \subfigref{fig:separatepatterna}
+is shown in edit path mode to show the underlying path;
+\subfigref{fig:separatepatternc} the pattern in \subfigref{fig:separatepatterna}
+was separated into a group of paths and then ungrouped.}
+
+A \gls{textpath} can similarly be separated into a group containing the
+\gls{textarea} and \gls{path} that made up the \gls*{textpath}.
+Note that any line styles that were applied to the path before
+combining it with the text area will be lost, and the resulting
+path will use the default styles with the \pathattr{line-colour} the same
+as the \textattr{text-colour} from the \gls*{textpath}.
+
+For example, in \figureref{fig:separate} the \gls*{textarea} and
+\gls*{path} in \figureref{fig:separatea} are combined to
+form the \gls*{textpath} in \figureref{fig:separateb}. The
+\gls*{textpath} is the separated into a group containing a
+\gls*{textarea} and a \gls*{path}. Note that the new path has
+lost the line style shown in \figureref{fig:separatea}
+and is now the same \manmsg{colour} as the text.
+
+\FloatSubFigs*{fig:separate}
+{
+  {fig:separatea}{\includeimg{separatea}}{},
+  {fig:separateb}{\includeimg{separateb}}{},
+  {fig:separatec}{\includeimg{separatec}}{}
+}
+[Separating the Text and Path from a Text-Path]
+{Separating the text and path from a text-path: 
+\subfigref{fig:separatea} original path and text area;
+\subfigref{fig:separateb} path and text area 
+in \subfigref{fig:separatea} combined to form a text-path;
+\subfigref{fig:separatec} text-path 
+in \subfigref{fig:separateb} separated into
+a group containing a text area and a path.}
+
+You may have noticed from \figureref{fig:separate} that the 
+\pathattr{fill-colour} has been retained. This is because it may be needed if the
+\textattr{outline} mode is on.  If a non-outline \gls{textpath} is switched to
+\textattr{outline} mode with a filled interior, that \manmsg{colour} will be applied
+to the new \gls{path}, as illustrated in \figureref{fig:separateoutline}.
+
+\FloatSubFigs*{fig:separateoutline}
+{
+  {fig:separateoutlinea}{\includeimg{separateoutlinea}}{},
+  {fig:separateoutlineb}{\includeimg{separateoutlineb}}{},
+  {fig:separateoutlinec}{\includeimg{separateoutlinec}}{},
+}
+[Separating the Text and Path from an Outline Text-Path]
+{Separating the text and path from an outline text-path: 
+\subfigref{fig:separateoutlinea} original path and
+outline text area;
+\subfigref{fig:separateoutlineb} path and outline text area 
+in \subfigref{fig:separateoutlinea} combined to
+form an outline text-path;
+\subfigref{fig:separateoutlinec} outline text-path in 
+\subfigref{fig:separateoutlineb} separated into
+a group containing an outline text area and a path.}
+
+\seealsorefs{
+ sec:textpath,
+ sec:splittext,
+ sec:texttopath
+}
 
 \section{Converting a Path or Text-Path into a Pattern}\label{sec:patterns}
 
