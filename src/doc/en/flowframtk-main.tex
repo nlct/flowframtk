@@ -1484,7 +1484,7 @@ Just the shading's end \manmsg{colour} will be used.
 The text will be exported as a path rather than text. This means
 that the \LaTeX\ alternative text attribute will be ignored. This is
 equivalent to applying the 
-\hyperref[sec:converttopath]{convert to path}, 
+\hyperref[sec:outlinetopath]{convert outline to path}, 
 \hyperref[sec:grouping]{ungroup} and 
 \hyperref[sec:mergepaths]{merge path}
 functions (without actually changing your image).
@@ -1511,7 +1511,7 @@ The \gls{textpath} will be exported as a path rather than a
 \gls{textpath}. This means that the \LaTeX\
 alternative text attribute will be ignored. This is equivalent to
 applying the
-\hyperref[sec:converttopath]{convert to path}, 
+\hyperref[sec:outlinetopath]{convert outline to path}, 
 \hyperref[sec:grouping]{ungroup} and 
 \hyperref[sec:mergepaths]{merge path}
 functions, without actually changing your image.
@@ -3510,7 +3510,7 @@ sec:texconfig,
 sec:preamble,
 sec:textpaint,
 sec:textstyle,
-sec:texttopath,
+sec:outlinetopath,
 sec:splittext,
 sec:exportdoc,
 sec:neuronexample,
@@ -4832,7 +4832,7 @@ The alternative text is not used when exporting to PNG or when
  sec:textpaint,
  sec:textstyle,
  sec:splittext,
- sec:texttopath,
+ sec:outlinetopath,
  sec:neuronexample
 }
 
@@ -4997,6 +4997,8 @@ text will be ignored) depending on your
 
 % TODO document \jdroutline
 
+\seealsorefs{sec:outlinetopath}
+
 \section{Splitting Text Areas}\label{sec:splittext}
 
 \menudef{menu.transform.split}
@@ -5015,7 +5017,7 @@ the \glspl{controlpt} and segments (see \sectionref{sec:reversing}), merging pat
 \sectionref{sec:mergepaths}), or converting into one or more other
 \glspl{shape} (see \sectionref{sec:converttopolygon},
 \sectionref{sec:separate}, \sectionref{sec:patterns},
-\sectionref{sec:converttopath}, \sectionref{sec:texttopath},
+\sectionref{sec:converttofullpath} and
 \sectionref{sec:outlinetopath}). 
 
 \section{Edit Path Mode}\label{sec:editpath}
@@ -5312,7 +5314,7 @@ them).
  sec:xorpath,
  sec:pathintersect,
  sec:pathsubtract,
- sec:converttopath,
+ sec:outlinetopath,
  sec:linepaint,
  sec:fillpaint,
  sec:styles,
@@ -5555,7 +5557,7 @@ using the \menu{transform.merge} menu item. Note that this is not
 the same as \hyperref[sec:grouping]{grouping}.  A \gls{gap} (move
 to) will be placed between the last \gls{controlpt} of one path and
 the first \gls*{controlpt} of the next path. Any \gls{pattern} in
-the selection will be first \hyperref[sec:converttopath]{converted
+the selection will be first \hyperref[sec:converttofullpath]{converted
 to a full path} before merging.
 
 \begin{information}
@@ -6721,15 +6723,15 @@ also has the \inlineglsdef{pattern.spiral.distance} field.
 
 All patterns have two modes:
 \begin{deflist}
-\itemtitle{Single}
+\itemtitle{\inlineglsdef{pattern.mode.single}}
 \begin{itemdesc}
 The pattern is drawn as a single path (see \figureref{fig:patternmodeb}).
 Select \widget{pattern.mode.single} for single mode.
 \end{itemdesc}
 
-\itemtitle{Multi}
+\itemtitle{\inlineglsdef{pattern.mode.multi}}
 \begin{itemdesc}
-The original and each replicate are drawn as separate
+The original (if shown) and each replicate are drawn as 
 independent shapes (see \figureref{fig:patternmodec}).
 Select \widget{pattern.mode.multi} for multi mode.
 \end{itemdesc}
@@ -6872,26 +6874,170 @@ a group containing an outline text area and a path.}
 \seealsorefs{
  sec:textpath,
  sec:splittext,
- sec:texttopath
+ sec:converttofullpath,
+ sec:outlinetopath
 }
 
-\section{Converting to a Path}\label{sec:converttopath}
-
-\menudef{menu.transform.convert}
+\section{Converting a Composite Shape to a Full Path}\label{sec:converttofullpath}
 
 \menudef{menu.transform.convert_to_full}
 
-TODO
+A \gls{compositeshape} may be converted into a normal path with the
+\menu{transform.convert_to_full} menu item.  For example,
+\figureref{fig:convertpatterntofullpatha} shows a
+\gls{rotationalpattern} with 6\gls{bp} \pathattr{line-width}, black
+\pathattr{line-paint} and orchid \pathattr{fill-paint}.  This
+pattern is shown in \editpathmode\ in
+\figureref{fig:convertpatterntofullpathb}. Note that only the
+underlying path's \glspl{controlpt} and the pattern
+\gls{pattern.anchor} are visible. (The \editpathmode\ will then need
+to be switched off.) The \transformfn{convert_to_full} function was
+then used convert the \gls{pattern} info a complete \gls{path}
+(\figureref{fig:convertpatterntofullpathc}).  Note that's no
+noticeable difference to the way the \gls{shape} is drawn on the
+\gls{canvas}. However, if \editpathmode\ is switched on again
+(\figureref{fig:convertpatterntofullpathd}) it now becomes clear
+that the shape is no longer a \gls{pattern}. All \glspl{controlpt}
+are now showing and there's no \gls{pattern.anchor} control.
 
+\FloatSubFigs{fig:convertpatterntofullpath}
+{
+  {fig:convertpatterntofullpatha}{\includeimg{convertpatterntofullpatha}}{},
+  {fig:convertpatterntofullpathb}{\includeimg{convertpatterntofullpathb}}{},
+  {fig:convertpatterntofullpathc}{\includeimg{convertpatterntofullpathc}}{},
+  {fig:convertpatterntofullpathd}{\includeimg{convertpatterntofullpathd}}{}
+}
+[Converting a Pattern to a Full Path]
+{Converting a pattern to a full path:
+\subfigref{fig:convertpatterntofullpatha} a rotational pattern;
+\subfigref{fig:convertpatterntofullpathb} the rotational pattern in
+path edit mode; 
+\subfigref{fig:convertpatterntofullpathc} the rotational pattern
+in \subfigref{fig:convertpatterntofullpatha} has been converted to a
+full path;
+\subfigref{fig:convertpatterntofullpathd} the path
+in \subfigref{fig:convertpatterntofullpathc} showing in edit 
+path mode.}
 
-\subsection{Converting a Text Area, Text-Path or Pattern to a Path}\label{sec:texttopath}
+\section{Converting an Outline to a Path}\label{sec:outlinetopath}
 
-TODO
+\menudef{menu.transform.convert}
 
+The stroked outline of a \gls{shape}, \gls{textarea} or
+\gls{textpath} may be converted to a filled path
+with the \menu{transform.convert} menu item.
+First \select\ the required \glspl{shape}, \glspl{textarea} or
+\glspl{textpath}. The selection should not include any \glspl{group}
+or \glspl{bitmap}. Then use the \menu{transform.convert} menu item.
 
-\subsection{Converting an Outline to a Path}\label{sec:outlinetopath}
+Any \gls{shape} will be converted into a \gls{path} with 1\gls{bp}
+line width that traces around the original stroked path. The new
+path will be filled with the original \gls{index.line-colour} and
+will have no \gls{index.line-paint}. The original \gls{index.fill-colour}
+will be discarded.
 
-TODO
+For example, consider the path in \figureref{fig:outlinetopatha}.
+This has a line width of 10\gls{bp}, a circle start marker,
+a triangle end arrow, a gradient \pathattr{line-paint} and a yellow
+\pathattr{fill-paint}. \figureref{fig:outlinetopathb} shows this
+path in \editpathmode\ to show the path's defining \glspl{controlpt}. In
+\figureref{fig:outlinetopathc}, the path's outline
+has been converted to a path. This new path now has
+a gradient \pathattr{fill-paint} with a line width of 1\gls{bp} and
+no start or end arrows. The new path's defining
+control points are shown in \figureref{fig:outlinetopathd}.
+
+\FloatSubFigs{fig:outlinetopath}
+{
+  {fig:outlinetopatha}{\includeimg{outline2patha}}{},
+  {fig:outlinetopathb}{\includeimg{outline2pathb}}{},
+  {fig:outlinetopathc}{\includeimg{outline2pathc}}{},
+  {fig:outlinetopathd}{\includeimg{outline2pathd}}{}
+}
+[Converting an Outline to a Path]
+{Converting an outline to a path:
+\subfigref{fig:outlinetopatha} the original path;
+\subfigref{fig:outlinetopathb} the original path's defining control points;
+\subfigref{fig:outlinetopathc} the new path;
+\subfigref{fig:outlinetopathd} the new path's defining control points.}
+
+Any selected \gls{pattern} will have its underlying path
+converted to an outline. For example, the \gls{pattern}
+from \figureref{fig:convertpatterntofullpatha} (reshown in
+\figureref{fig:convertpatterntooutlinea}) has instead been
+converted into an outline with the \transformfn{convert} function
+(\figureref{fig:convertpatterntooutlineb}). The original orchid
+\pathattr{fill-paint} has been discarded. The new
+\pathattr{fill-paint} is now the original \pathattr{line-paint}
+(black). The new \pathattr{line-paint} is now set to transparent
+(that is the outline isn't drawn). Switching to \editpathmode\
+(\figureref{fig:convertpatterntooutlinec}) shows the new underlying
+path that draws around the original stroked path. Note that the
+\gls{shape} is still a \gls{pattern} and still has the pattern
+\gls{pattern.anchor} in the same place (see \figureref{fig:convertpatterntofullpathb}).
+
+\FloatSubFigs*{fig:convertpatterntooutline}
+{
+  {fig:convertpatterntooutlinea}{\includeimg{convertpatterntofullpatha}}{},
+  {fig:convertpatterntooutlineb}{\includeimg{convertpatterntooutlineb}}{},
+  {fig:convertpatterntooutlinec}{\includeimg{convertpatterntooutlinec}}{}
+}
+[Converting a Pattern Outline to a Path]
+{Converting a pattern outline to a path:
+\subfigref{fig:convertpatterntooutlinea} the original pattern (as
+\figureref{fig:convertpatterntofullpatha});
+\subfigref{fig:convertpatterntooutlineb} the pattern
+in \subfigref{fig:convertpatterntooutlinea} has been converted to an
+outline;
+\subfigref{fig:convertpatterntooutlinec} the pattern
+in \subfigref{fig:convertpatterntooutlineb} showing in edit path
+mode.} 
+
+Any selected \gls{textarea} or \gls{textpath} will be replaced with
+a \gls{group} of \glspl{path} with 1\gls{bp} line width that trace
+around the approximate shape of the original characters. These new
+\glspl{path} will be filled with the original
+\gls{index.text-colour} and will have no \gls{index.line-colour}.
+Converting a \gls*{textarea} or \gls*{textpath} to a path allows you to:
+\begin{itemize}
+\item include the image in \LaTeX\ document when you don't have the
+equivalent \LaTeX\ font;
+
+\item make a \gls{parshape} or \gls{shapepar}
+from the text's outline.
+\end{itemize}
+
+\begin{information}
+Unlike the text \textattr{outline} mode, it's no longer possible to
+edit the text once its outline has been converted to a path.
+\end{information}
+
+You will have to \hyperref[sec:grouping]{ungroup} the
+\glspl*{path} before you can apply any functions that require
+individual \glspl{shape} and not \glspl{group} to be selected.  If you
+had a gradient paint \gls{index.text-colour} the gradient will be
+applied to each \gls*{path}. You can however,
+\hyperref[sec:mergepaths]{merge} the \glspl*{path}, which will apply
+a single gradient resembling the original \gls*{textarea} (see
+\figureref{fig:converttopath}).
+
+\FloatSubFigs{fig:converttopath}
+{
+  {fig:converttopatha}{\includeimg{text2patha}}{},
+  {fig:converttopathb}{\includeimg{text2pathb}}{},
+  {fig:converttopathc}{\includeimg{text2pathc}}{}
+}
+[Converting a Text Area to a Path]
+{Converting a text area to a path:
+\subfigref{fig:converttopatha} original text area;
+\subfigref{fig:converttopathb} converted to a path;
+\subfigref{fig:converttopathc} ungroup and merge paths.}
+
+\seealsorefs{
+ sec:patterns,
+ sec:separate,
+ sec:textoutline
+}
 
 
 \chapter{Path and Text Styles}\label{sec:styles}
