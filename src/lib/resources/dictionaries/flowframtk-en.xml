@@ -467,6 +467,7 @@ Nicola Talbot
 <entry key="menu.transform.textpath">Convert To Text Path</entry>
 <entry key="menu.transform.textpath.mnemonic">N</entry>
 <entry key="menu.transform.textpath.tooltip">Replace the selected text area and path with a text-path</entry>
+<entry key="menu.transform.textpath.iconimage">textpath</entry>
 
 <entry key="button.textpath">To Text Path</entry>
 

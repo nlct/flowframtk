@@ -5,6 +5,8 @@
 *.pdf
 *.glstex
 *.glg
+*.bbl
+*.blg
 *.swp
 *.lof
 *.lot

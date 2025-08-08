@@ -1007,6 +1007,169 @@ You will however be able to select them using the
 \menutrail{menu.editpath.next_control} 
 or \menutrail{menu.editpath.prev_control} functions.
 
+\menudef{menu.settings.grid.settings}
+
+The \menu{settings.grid.settings} menu item will open the
+\dialog{grid} dialog box in which you can specify the position of the tick marks
+and the units used. You can also open this dialog box by
+\glslink{doubleclick}{double-clicking} on the top left corner
+between the \glspl{ruler}, where the current grid unit is displayed.
+
+\begin{important}
+The grid unit is independent of the 
+\hyperref[sec:controlsettings]{storage unit}.  However, it's a good idea to choose a
+grid unit and storage unit that have a convenient conversion factor
+between them. For example, \code{mm} storage unit and \code{cm}
+grid unit. Regardless of the grid used, co-ordinates are always
+stored as left-handed rectangular co-ordinates where the origin is
+at the top left. This may cause slight rounding errors in the
+conversion between rectangular and radial co-ordinates. If you are
+using a radial grid and you change the paper size or orientation,
+the grid origin will shift but the \glspl{object} will maintain
+their original positions relative to the top left corner of the
+\gls{canvas}.
+\end{important}
+
+\FloatSubFigs*{fig:grid}
+{
+  {fig:grida}{\includeimg{grid-rect}}{},
+  {fig:gridb}{\includeimg{grid-radial}}{},
+  {fig:gridc}{\includeimg{grid-iso}}{}
+}
+[Available Regular Grids]
+{Available regular grids:
+\subfigref{fig:grida} rectangular grid;
+\subfigref{fig:gridb} radial grid;
+\subfigref{fig:gridc} isomorphic grid.}
+
+\FloatSubFigs{fig:tschichold}
+{
+  {fig:tschicholda}{\includeimg{tschichold-verso}}{},
+  {fig:tschicholdb}{\includeimg{tschichold-recto}}{}
+}
+[Tschichold Grid]
+{Tschichold grid:
+\subfigref{fig:tschicholda} verso (even pages);
+\subfigref{fig:tschicholdb} recto (odd pages)}
+
+\FloatSubFigs*{fig:pathgrid}
+{
+  {fig:pathgrida}{\includeimg{pathgrid1}}{},
+  {fig:pathgridb}{\includeimg{pathgrid2}}{},
+  {fig:pathgridc}{\includeimg{pathgrid3}}{}
+}
+ [Path-Based Grid]
+ {Path-based grid:
+\subfigref{fig:pathgrida} path used to form new grid
+(current grid is rectangular);
+\subfigref{fig:pathgridb} grid panel;
+\subfigref{fig:pathgridc} path in
+\subfigref{fig:pathgrida} has been deleted by the user and the new grid is now
+visible.}
+
+\widgetdef{grid.title}
+
+The default grid type is a left-handed rectangular grid. You can
+switch to a different grid by selecting a different tab.
+
+\widgetdef{grid.rectangular}
+
+The rectangular has the origin at the top left hand corner of the \gls{canvas}
+(\figureref{fig:grida}). This has two parameters: \widget{grid.major}
+(which identifies the grid unit) and \widget{grid.sub_divisions}
+which indicates the number of minor tick marks between each major
+tick.
+
+\widgetdef{grid.radial}
+
+The radial grid has the origin at the \manmsg{centre} of the
+\gls{canvas} (\figureref{fig:gridb}). Bear in mind that any
+radial co-ordinates will be converted to rectangular co-ordinates.
+So the radial co-ordinate (0:0) will be converted to the rectangular
+co-ordinate of the current paper \manmsg{centre}.
+In addition to the \widget{grid.major} and
+\widget{grid.sub_divisions} parameters, the radial grid also has 
+the \widget{grid.spokes} parameter.
+
+\widgetdef{grid.iso}
+
+The isometric grid has the origin at the top left hand corner of the
+\gls{canvas} where the major divisions indicate the length of each
+side of the equilateral triangles forming the grid
+(\figureref{fig:gridc}).
+
+\widgetdef{grid.tschichold}
+
+The \widget{grid.tschichold} is a typesetting grid after Tschichold
+(see~\cite[p.~40]{Hoschuli}). This is the only grid that checks the
+\hyperref[sec:displaypage]{display page setting}. If an even
+numbered page is displayed, the \gls{verso} grid is shown
+(\figureref{fig:tschicholda}), otherwise the \gls{recto} grid is
+shown (see \figureref{fig:tschicholdb}). The \gls*{recto} grid is
+used for the default \widget{displaypage.all} setting.
+
+Note that you are limited to only fourteen locations with the
+\widget{grid.tschichold} grid if you have the
+\gridlock\ on. The settings for this grid style are the same as for
+the rectangular grid and are only applied to the rulers. The origin
+is the top left corner of the \gls{canvas} for both the \gls{recto}
+and \gls{verso} displays. The grid settings (major and subdivisions)
+are only applied to the rulers.
+
+\widgetdef{grid.path}
+
+The \widget{grid.path} grid follows a specified path. This places major tick
+marks at the path's control points. (The major distance setting is
+only applied to the rulers.) The subdivision setting will place
+minor tick marks along the path segments.
+
+For example, in \figureref{fig:pathgrida} a circle has been
+constructed on a rectangular grid. This circle will be used as the
+guide for the path-based grid. Note that this will make a
+\emph{copy} of the shape. If the original shape (the circle in this
+case) is edited or deleted, the grid won't change.
+In \figureref{fig:pathgridb}, the path-based grid panel has
+been selected. This provides three options:
+
+\widgetdef{grid.path.keep}
+
+If a path-base grid has already been used, then the
+\widget{grid.path.keep} option will be available and should be
+selected if you want to keep that path.  This option will be
+disabled if you haven't yet used a path-based grid.
+
+\widgetdef{grid.path.usepage}
+
+The \widget{grid.path.usepage} option will create a grid that
+follows the page boundary. (That is, the path is the rectangle that
+fits the \gls{canvas} border.)
+
+\widgetdef{grid.path.select}
+
+The \widget{grid.path.select} option allows you to select an
+\gls{object} from the \gls{canvas} to use as the path.  If this
+option is selected, the drop-down menu next to it will be enabled.
+This lists all the objects in your image (as per the
+\dialog{description} dialog box described in
+\sectionref{sec:navigate}).
+
+If the object is a \gls{shape}, that shape
+will be converted to a complete \gls{path} (if not already a
+\gls{path}), otherwise the grid will be based on the
+\gls{object}['s] \gls{bbox}. In \figureref{fig:pathgridb},
+the circle (Path:~4) has been selected.
+(\hyperref[sec:objectdescription]{Assigning descriptions} to
+\glspl{object} makes this task easier, but the drop-down menu will
+default to the first selected \gls{object}, if applicable, to
+assist selection.)
+
+In \figureref{fig:pathgridc}, the new grid has been applied.  The
+original circle has been manually deleted (using \menu{edit.cut}) to
+allow the grid to be shown for illustrative purposes. Note that the
+major division setting of 100\gls{pt} only applies to the rulers, as
+the major tick marks are located at the shape's \glspl{controlpt}.
+
+
 
 \subsection{Zoom}\label{sec:zoommenu}
 
@@ -4166,7 +4329,7 @@ cursor (via the \gls{robot}), the cursor will be moved to the top left corner of
 \menudef{menu.navigate.by_description}
 
 The \menu{navigate.by_description} menu item will open the
-\dialog{description} dialog box. This has all the \glspl{object}
+\inlineglsdef{description.title} dialog box. This has all the \glspl{object}
 listed by their description.  If a description hasn't been set, a
 generic description is used.  Select the required description and
 click \btn{okay} to select the corresponding \gls{object} (and
@@ -7446,6 +7609,8 @@ jar file is in the \filefmt{lib} directory:
    (GPL, \url{https://github.com/nlct/texjavahelp}).
 \end{itemize}
 
+\bibliographystyle{plain}
+\bibliography{flowframtkrefs}
 
 \listentrydescendents
  [title={Summary of \apptext{flowframtk} Switches}]

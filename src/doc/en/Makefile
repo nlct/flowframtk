@@ -63,6 +63,7 @@ flowframtk-en-GB.glstex	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			../sharedimages/*.png ../sharedimages/*.tex \
 			../en-sharedimages/*.png
 	lualatex flowframtk-en-GB
+	bibtex flowframtk-en-GB
 	bib2gls -g --no-warn-unknown-entry-types flowframtk-en-GB
 
 flowframtk-en.pdf	: flowframtk-en.glstex 
@@ -75,6 +76,7 @@ flowframtk-en.glstex	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			../sharedimages/*.png ../sharedimages/*.tex \
 			../en-sharedimages/*.png
 	lualatex flowframtk-en
+	bibtex flowframtk-en
 	bib2gls -g --no-warn-unknown-entry-types flowframtk-en
 
 
