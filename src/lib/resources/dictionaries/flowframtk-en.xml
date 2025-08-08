@@ -2156,6 +2156,7 @@ Nicola Talbot
 <entry key="pattern.mode.multi">Multi</entry>
 <entry key="pattern.show_original">Show Original Path</entry>
 <entry key="pattern.show_original.mnemonic">H</entry>
+<entry key="pattern.show_original.initvalue">true</entry>
 <entry key="pattern.rotate">Rotate by</entry>
 <entry key="pattern.rotate.mnemonic">R</entry>
 <entry key="pattern.scale.x">Scale X</entry>

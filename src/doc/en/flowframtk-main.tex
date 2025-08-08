@@ -6544,11 +6544,252 @@ to restore the path to its original shape.
 \subfigref{fig:distortpathe} distorted shape (distortion mode off);
 \subfigref{fig:distortpathf} distorted shape in edit mode.}
 
+\section{Converting a Path or Text-Path into a Pattern}\label{sec:patterns}
+
+\menudef{menu.transform.pattern}
+Patterns can be created, modified or removed with the
+\menu{transform.pattern} sub menu. The following pattern types
+are available:
+\begin{deflist}
+\itemtitle{\glslink{rotationalpattern}{Rotational}}
+
+\begin{itemdesc}
+The replicates will be rotated around the original
+shape. For example, if you specify an angle of \degrees{90} and 4
+replicas, the first replicate with be created by rotating a copy of
+the original by \degrees{90}, the second replicate by \degrees{180},
+the third by \degrees{270} and the fourth replicate by
+\degrees{360}, which will superimpose it over the original.
+In this case, the fourth replicate is redundant if the original path
+is shown, so it would be better to set the number of replicas to 3.
+
+The point of rotation is initially set to the \manmsg{centre} of the original
+shape, but can be moved to a different location when the shape is in
+\editpathmode. (See \figureref{fig:patternrot}.)
+
+\end{itemdesc}
+
+\itemtitle{\glslink{scaledpattern}{Scaled}}
+
+\begin{itemdesc}
+The replicates will be scaled versions of the original
+shape. There are two \glspl{controlpt} that govern the pattern: the
+anchor, which can be freely moved, and the offset, which is
+constrained to lie along the scaling axis. (See
+\figureref{fig:patternscale}.)
+\end{itemdesc}
+
+\itemtitle{\glslink{spiralpattern}{Spiral}}
+
+\begin{itemdesc}
+The replicates will be placed in a spiral around the
+original with the given incremental angle. There are again two
+\glspl{controlpt} that govern the pattern: the anchor and offset,
+which can both be moved freely. (See \figureref{fig:patternspiral}.)
+\end{itemdesc}
+
+\end{deflist}
+
+\FloatSubFigs{fig:patternrot}
+{
+  {fig:patternrota}{\includeimg{patternrota}}{},
+  {fig:patternrotb}{\includeimg{patternrotb}}{},
+  {fig:patternrotc}{\includeimg{patternrotc}}{},
+  {fig:patternrotd}{\includeimg{patternrotd}}{}
+}
+[A Rotational Pattern]
+{A rotational pattern: 
+\subfigref{fig:patternrota} original path; 
+\subfigref{fig:patternrotb} the path 
+in \subfigref{fig:patternrota} has a rotational pattern applied with 3~replicas, 
+\degrees{90} angle of rotation, with the original path visible; 
+\subfigref{fig:patternrotc} the pattern 
+in \subfigref{fig:patternrotb} in edit path mode:
+the green control indicates the point of rotation;
+\subfigref{fig:patternrotd} the
+point of rotation has been move to the right, changing the shape of
+the pattern.}
+
+\FloatSubFigs*{fig:patternscale}
+{
+  {fig:patternscalea}{\includeimg{patternscalea}}{},
+  {fig:patternscaleb}{\includeimg{patternscaleb}}{},
+  {fig:patternscalec}{\includeimg{patternscalec}}{}
+}
+[A Scaled Pattern]
+{A scaled pattern. The original path is the same as in
+\figureref{fig:patternrota}:
+\subfigref{fig:patternscalea} the path has a scaled pattern applied with two replicas, 
+the horizontal scale factor set to 2 and the vertical scale factor 
+set to 1.5;
+\subfigref{fig:patternscaleb} the pattern 
+in \subfigref{fig:patternscalea} in edit path mode: the green control is
+the anchor and the cyan control is the offset;
+\subfigref{fig:patternscalec} the anchor has been moved to the left.}
+
+\FloatSubFigs*{fig:patternspiral}
+{
+  {fig:patternspirala}{\includeimg{patternspirala}}{},
+  {fig:patternspiralb}{\includeimg{patternspiralb}}{},
+  {fig:patternspiralc}{\includeimg{patternspiralc}}{}
+}
+[A Spiral Pattern]
+{A spiral pattern. The original path is the same as in
+\figureref{fig:patternrota}:
+\subfigref{fig:patternspirala} the path has a
+spiral pattern applied with ten replicas, the increment angle set
+to \degrees{60} and a gap of 50bp; 
+\subfigref{fig:patternspiralb} the pattern 
+in \subfigref{fig:patternspirala} in edit path mode: the green control is
+the anchor and the cyan control is the offset;
+\subfigref{fig:patternspiralc} the anchor has been moved down.}
+
+\menudef{menu.transform.pattern.set}
+
+A \gls{path} or \gls{textpath} can be converted into a pattern using
+the \menu{transform.pattern.set} menu item. First \select\ the
+required \gls{path} or \gls{textpath} (ensure that nothing else is
+selected) and use the \menu{transform.pattern.set} menu item to open
+the \dialog{pattern} dialog.
+
+\menudef{menu.transform.pattern.edit}
+
+An existing \gls{pattern} can be edited with the \menu{transform.pattern.edit}
+menu item. First \select\ the required pattern (ensure that nothing else is
+selected) and use the \menu{transform.pattern.edit} menu item to open
+the \dialog{pattern} dialog where you can adjust the pattern
+parameters.
+
+\menudef{menu.transform.pattern.remove}
+
+If you want to remove the pattern specifications, \select\ the
+required pattern (ensure that nothing else is selected) and use the
+\menu{transform.pattern.remove} menu item.  This will replace the
+selected \gls{pattern} with its underlying path.
+
+\widgetdef{pattern.title}
+
+The \dialog{pattern} dialog allows you to set up (or edit) the pattern
+specifications (see \figureref{fig:patterndialog}).
+
+\FloatSubFigs{fig:patterndialog}
+{
+  {fig:patterndialog-rotational}{\includeimg{patterndialog-rotational}}{},
+  {fig:patterndialog-scaled}{\includeimg{patterndialog-scaled}}{},
+  {fig:patterndialog-spiral}{\includeimg{patterndialog-spiral}}{}
+}
+[Pattern Dialog]
+{Pattern dialog:
+\subfigref{fig:patterndialog-rotational} rotational tab;
+\subfigref{fig:patterndialog-scaled} scaled tab;
+\subfigref{fig:patterndialog-spiral} spiral tab.}
+
+\widgetdef{pattern.replicas}
+
+Specify the number of replicates in the \widget{pattern.replicas} field.
+
+\widgetdef{pattern.show_original}
+
+Toggle the  \widget{pattern.show_original} checkbox to set whether
+or not the original \gls*{path} or \gls*{textpath} should be
+displayed. For example, if you specify 4 replicates and show the
+original, there will be 5 versions of the shape: the original and
+the 4 replicas.
+
+\widgetdef{pattern.rotational}
+
+For a \gls{rotationalpattern}, select the
+\widget{pattern.rotational} tab in which you can specify the degrees
+of rotation in the \inlineglsdef{pattern.rotate} field.
+
+\widgetdef{pattern.scaled}
+
+For a \gls{scaledpattern}, select the \widget{pattern.scaled} tab
+in which you can enter the horizontal scaling in the
+\inlineglsdef{pattern.scale.x} field and the vertical scaling in 
+the \inlineglsdef{pattern.scale.y} field.
+Either scale factor may be negative but neither may be zero.
+
+\widgetdef{pattern.spiral}
+
+For a \gls{spiralpattern}, select the \widget{pattern.spiral} tab.
+This also has a \widget{pattern.rotate} field, as for the
+\widget{pattern.rotational} tab, but the \widget{pattern.spiral} tab
+also has the \inlineglsdef{pattern.spiral.distance} field.
+
+\widgetdef{pattern.mode}
+
+All patterns have two modes:
+\begin{deflist}
+\itemtitle{Single}
+\begin{itemdesc}
+The pattern is drawn as a single path (see \figureref{fig:patternmodeb}).
+Select \widget{pattern.mode.single} for single mode.
+\end{itemdesc}
+
+\itemtitle{Multi}
+\begin{itemdesc}
+The original and each replicate are drawn as separate
+independent shapes (see \figureref{fig:patternmodec}).
+Select \widget{pattern.mode.multi} for multi mode.
+\end{itemdesc}
+
+\end{deflist}
+
+\FloatSubFigs*{fig:patternmode}
+{
+  {fig:patternmodea}{\includeimg{patternmodea}}{},
+  {fig:patternmodeb}{\includeimg{patternmodeb}}{},
+  {fig:patternmodec}{\includeimg{patternmodec}}{}
+}
+[Single vs Multi-Mode Patterns]
+{Single vs multi-mode patterns:
+\subfigref{fig:patternmodea} original path
+has a bar start marker, a triangle end-marker and a gradient fill paint;
+\subfigref{fig:patternmodeb} the path in \subfigref{fig:patternmodea} has
+a rotational pattern applied with single mode set;
+\subfigref{fig:patternmodec} the same pattern 
+as \subfigref{fig:patternmodeb} but with multi-mode.}
+
+Note that a \gls{textpath} created by applying text to a multi-mode
+pattern produces a different result to applying the same multi-mode
+pattern to a \gls{textpath}. (See \figureref{fig:patterntextpath}.)
+
+\FloatSubFigs{fig:patterntextpath}
+{
+  {fig:patterntextpatha}{\includeimg{patterntextpatha}}{},
+  {fig:patterntextpathb}{\includeimg{patterntextpathb}}{},
+  {fig:patterntextpathc}{\includeimg{patterntextpathc}}{},
+  {fig:patterntextpathd}{\includeimg{patterntextpathd}}{},
+  {fig:patterntextpathe}{\includeimg{patterntextpathe}}{},
+  {fig:patterntextpathf}{\includeimg{patterntextpathf}}{}
+}
+[Text-Path Patterns]
+{Text-path multi-mode patterns:
+\subfigref{fig:patterntextpatha} original text area and path;
+\subfigref{fig:patterntextpathb} text area and path in
+\subfigref{fig:patterntextpatha} combined to form a text-path;
+\subfigref{fig:patterntextpathc} a scaled
+multi-mode pattern is applied to the text-path with 2 replicas and scale
+factors 2.0 and 1.5;
+\subfigref{fig:patterntextpathd} the path in \subfigref{fig:patterntextpatha} has
+the same scaled multi-mode pattern applied;
+\subfigref{fig:patterntextpathe} the text area and
+pattern in \subfigref{fig:patterntextpathd} have been combined to form a
+text-path;
+\subfigref{fig:patterntextpathf} the pattern in \subfigref{fig:patterntextpathb} has
+been changed from multi-mode to single-mode.}
+
+\seealsorefs{
+  sec:textpath,
+  sec:rosetutorial
+}
+
 \section{Separating Compound Shapes}\label{sec:separate}
 
 \menudef{menu.transform.separate}
 
-\Glspl{compoundshape} can be separated into its constituent parts
+\Glspl{compositeshape} can be separated into its constituent parts
 according to their type using the \menu{transform.separate} menu
 item.  For example, in \figureref{fig:separatepatterna} a
 \gls{rotationalpattern} with four replicas has been selected. In
@@ -6579,8 +6820,8 @@ A \gls{textpath} can similarly be separated into a group containing the
 \gls{textarea} and \gls{path} that made up the \gls*{textpath}.
 Note that any line styles that were applied to the path before
 combining it with the text area will be lost, and the resulting
-path will use the default styles with the \pathattr{line-colour} the same
-as the \textattr{text-colour} from the \gls*{textpath}.
+path will use the default styles with the \gls{index.line-colour} the same
+as the \gls{index.text-colour} from the \gls*{textpath}.
 
 For example, in \figureref{fig:separate} the \gls*{textarea} and
 \gls*{path} in \figureref{fig:separatea} are combined to
@@ -6606,7 +6847,7 @@ in \subfigref{fig:separateb} separated into
 a group containing a text area and a path.}
 
 You may have noticed from \figureref{fig:separate} that the 
-\pathattr{fill-colour} has been retained. This is because it may be needed if the
+\pathattr{fill-paint} has been retained. This is because it may be needed if the
 \textattr{outline} mode is on.  If a non-outline \gls{textpath} is switched to
 \textattr{outline} mode with a filled interior, that \manmsg{colour} will be applied
 to the new \gls{path}, as illustrated in \figureref{fig:separateoutline}.
@@ -6633,19 +6874,6 @@ a group containing an outline text area and a path.}
  sec:splittext,
  sec:texttopath
 }
-
-\section{Converting a Path or Text-Path into a Pattern}\label{sec:patterns}
-
-\menudef{menu.transform.pattern}
-
-\menudef{menu.transform.pattern.set}
-
-\menudef{menu.transform.pattern.edit}
-
-\menudef{menu.transform.pattern.remove}
-
-TODO
-
 
 \section{Converting to a Path}\label{sec:converttopath}
 
