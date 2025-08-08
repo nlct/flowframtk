@@ -1030,6 +1030,11 @@ their original positions relative to the top left corner of the
 \gls{canvas}.
 \end{important}
 
+\widgetdef{grid.title}
+
+The default grid type is a left-handed rectangular grid. You can
+switch to a different grid by selecting a different tab.
+
 \FloatSubFigs*{fig:grid}
 {
   {fig:grida}{\includeimg{grid-rect}}{},
@@ -1041,36 +1046,6 @@ their original positions relative to the top left corner of the
 \subfigref{fig:grida} rectangular grid;
 \subfigref{fig:gridb} radial grid;
 \subfigref{fig:gridc} isomorphic grid.}
-
-\FloatSubFigs{fig:tschichold}
-{
-  {fig:tschicholda}{\includeimg{tschichold-verso}}{},
-  {fig:tschicholdb}{\includeimg{tschichold-recto}}{}
-}
-[Tschichold Grid]
-{Tschichold grid:
-\subfigref{fig:tschicholda} verso (even pages);
-\subfigref{fig:tschicholdb} recto (odd pages)}
-
-\FloatSubFigs*{fig:pathgrid}
-{
-  {fig:pathgrida}{\includeimg{pathgrid1}}{},
-  {fig:pathgridb}{\includeimg{pathgrid2}}{},
-  {fig:pathgridc}{\includeimg{pathgrid3}}{}
-}
- [Path-Based Grid]
- {Path-based grid:
-\subfigref{fig:pathgrida} path used to form new grid
-(current grid is rectangular);
-\subfigref{fig:pathgridb} grid panel;
-\subfigref{fig:pathgridc} path in
-\subfigref{fig:pathgrida} has been deleted by the user and the new grid is now
-visible.}
-
-\widgetdef{grid.title}
-
-The default grid type is a left-handed rectangular grid. You can
-switch to a different grid by selecting a different tab.
 
 \widgetdef{grid.rectangular}
 
@@ -1108,6 +1083,16 @@ numbered page is displayed, the \gls{verso} grid is shown
 shown (see \figureref{fig:tschicholdb}). The \gls*{recto} grid is
 used for the default \widget{displaypage.all} setting.
 
+\FloatSubFigs{fig:tschichold}
+{
+  {fig:tschicholda}{\includeimg{tschichold-verso}}{},
+  {fig:tschicholdb}{\includeimg{tschichold-recto}}{}
+}
+[Tschichold Grid]
+{Tschichold grid:
+\subfigref{fig:tschicholda} verso (even pages);
+\subfigref{fig:tschicholdb} recto (odd pages).}
+
 Note that you are limited to only fourteen locations with the
 \widget{grid.tschichold} grid if you have the
 \gridlock\ on. The settings for this grid style are the same as for
@@ -1122,6 +1107,21 @@ The \widget{grid.path} grid follows a specified path. This places major tick
 marks at the path's control points. (The major distance setting is
 only applied to the rulers.) The subdivision setting will place
 minor tick marks along the path segments.
+
+\FloatSubFigs*{fig:pathgrid}
+{
+  {fig:pathgrida}{\includeimg{pathgrid1}}{},
+  {fig:pathgridb}{\includeimg{pathgrid2}}{},
+  {fig:pathgridc}{\includeimg{pathgrid3}}{}
+}
+ [Path-Based Grid]
+ {Path-based grid:
+\subfigref{fig:pathgrida} path used to form new grid
+(current grid is rectangular);
+\subfigref{fig:pathgridb} grid panel;
+\subfigref{fig:pathgridc} path in
+\subfigref{fig:pathgrida} has been deleted by the user and the new grid is now
+visible.}
 
 For example, in \figureref{fig:pathgrida} a circle has been
 constructed on a rectangular grid. This circle will be used as the
