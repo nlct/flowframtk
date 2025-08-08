@@ -7254,6 +7254,21 @@ a single gradient resembling the original \gls*{textarea} (see
 
 \chapter{Path and Text Styles}\label{sec:styles}
 
+The way a \gls{shape} is displayed is governed by the 
+\pathattr{line-paint}, the \pathattr{fill-paint}, the 
+\inlineglsdef{line-style} and the \pathattr{winding-rule}. 
+
+The way a \gls{textarea} is displayed is
+governed by the \gls{index.text-colour}, \gls{font},
+\textattr{transformation-matrix} and (if \hyperref[sec:exportimage]{exporting} to a
+\LaTeX\ file) the \textattr{anchor}. The way a \gls{textpath} is displayed is
+governed by the \gls{index.text-colour}, \gls{font},
+\textattr{anchor}, \textattr{transformation-matrix}
+and the underlying path. (A \gls*{textarea} or \gls*{textpath} may
+also be rendered as an \textattr{outline} optionally with a 
+\textattr{fill-paint}, see \sectionref{sec:textoutline}.)
+
+
 TODO
 
 
