@@ -5703,7 +5703,7 @@ reversed so the text starts from the other end.}
 If you want to convert a single \gls{curve} segment to a single
 line segment, you can simply enable \editpathmode, and use the 
 \menu{editpath.convert_to_line} item from the popup menu.
-However, if you want to replace all curves with one or more straight
+However, if you want to replace every curve with one or more straight
 lines then you may prefer to use the \transformfn{convert_to_polygon}
 function.
 
@@ -5721,15 +5721,20 @@ There is a maximum limit of 1024 replacement line segments per
 \end{information}
 
 First \select\ the \gls{shape} with \glspl{curve} that need to be transformed.
-For example, in \figureref{fig:selectedcircle} a circle created with
-the \tool{ellipse} has been selected.
+For example, in \figureref{fig:converttopolygona} a closed \gls{path}
+with four \gls{curve} segments has been selected.
 
 \FloatSubFigs{fig:converttopolygon}
 {
-  {fig:selectedcircle}{\includeimg{selectedcircle}}{Before},
-  {fig:selectedpolygon}{\includeimg{selectedpolygon}}{After}
+  {fig:converttopolygona}{\includeimg{converttopolygona}}{},
+  {fig:converttopolygonb}{\includeimg{converttopolygonb}}{}
 }
-{Converting a Shape With Curves to a Polygon}
+[Converting a Shape With Curves to a Polygon]
+{Converting a shape with curves to a polygon:
+\subfigref{fig:converttopolygona} original shape with four
+curve segments;
+\subfigref{fig:converttopolygonb} converted shape (flatness 4.0) 
+with fourteen line segments.}
 
 
 \widgetdef{polygon.title}
@@ -5737,7 +5742,7 @@ the \tool{ellipse} has been selected.
 The \menu{transform.convert_to_polygon} menu item will open the
 \dialog{polygon} dialog, shown in \figureref{fig:polygondialog}.
 This will show a draft outline of the selected shape (in this case,
-the circle from \figureref{fig:selectedcircle}).
+the shape from \figureref{fig:converttopolygona}).
 
 \FloatFig{fig:polygondialog}
 {\includeimg{polygondialog}}
@@ -5746,7 +5751,7 @@ the circle from \figureref{fig:selectedcircle}).
 \widgetdef{polygon.flatness}
 
 The \widget{polygon.flatness} numeric field should be set to the
-flatness parameter. This is the maximum allowable distance
+flatness parameter. This is the maximum allowable distance (in \gls{bp})
 between the \glspl{controlpt} and the flattened \gls{curve}. A small
 value will create a series of line segments that are as close to the
 original curve as possible. This may result in many short line
@@ -5777,7 +5782,7 @@ parameter and click on the \widget{polygon.dotask} button again.
 For example, I changed the flatness to 4 and recalculated. This
 produced the polygon shown in \figureref{fig:polygondialog2} which
 has fewer line segments with a greater deviation from the original
-circle.
+shape.
 
 \FloatFig{fig:polygondialog2}
 {\includeimg{polygondialog2}}
@@ -5790,17 +5795,17 @@ selected shape with the \widget{polygon.reload} button.
 There is also a zoom widget on the bottom left which can be used to
 adjust the magnification.
 
+If you want to replace the selected path with the
+calculated polygon, click on the \widget{okay} button.  For example,
+\figureref{fig:converttopolygonb} is the result with the flatness set
+to 4. Note that this new polygonal shape has more segments that the 
+original curving shape.
 
 \begin{information}
 The \widget{okay} button is only enabled once a polygon has been
-calculated.
-\end{information}
-
-If you want to replace the selected path with the
-calculated polygon, click on the \widget{okay} button.  For example,
-\figureref{fig:selectedpolygon} is the result with the flatness set
-to 4. If you change you mind you can click on the \widget{cancel}
+calculated. If you change you mind you can click on the \widget{cancel}
 button to discard the draft. You will be prompted for confirmation.
+\end{information}
 
 
 \section{Affine Transformations}\label{sec:affinetrans}
@@ -6333,9 +6338,52 @@ path; \subfigref{fig:patternunionc} result shown in edit mode.}
 
 \menudef{menu.transform.xor}
 
-\inlineglsdef{cag.xor}
+Area \inlineglsdef{cag.xor} can be performed on \glspl{shape} with
+the \menu{transform.xor} menu item. That is, multiple \glspl{shape}
+can be combined into a single \gls*{shape} by performing an
+\gls{cag.xor} operation on all the selected \glspl*{shape}.  At
+least two \glspl*{shape} must be selected to perform this function.
+As with the \hyperref[sec:merging]{merge path function}, the new
+\gls*{shape} has the same styles as the \glslink{back}{backmost}
+path in the selection and \glspl{pattern} will be converted to full
+\glspl{path}.
 
-TODO
+For example, in \figureref{fig:xorpatha}, there are three
+overlapping paths.  The rear path has a non-zero winding rule. In
+\figureref{fig:xorpathb} the paths have been replaced by a
+single path created using the \transformfn{xor} function. For comparison,
+the same three paths in \figureref{fig:xorpatha} were replaced
+using the \hyperref[sec:merging]{merge function}. The result is
+shown in \figureref{fig:xorpathc}. Both paths in
+\figureref{fig:xorpathb} and \figureref{fig:xorpathc} use
+a non-zero winding rule, since that was used by the rear path in
+\figureref{fig:xorpatha}.
+
+\FloatSubFigs*{fig:xorpath}
+{
+ {fig:xorpatha}{\includeimg{geom}}{},
+ {fig:xorpathb}{\includeimg{xorpaths}}{},
+ {fig:xorpathc}{\includeimg{geommerge}}{}
+}
+[Exclusive OR Function]
+{Exclusive OR function: 
+\subfigref{fig:xorpatha} original paths (the rear path has 
+a non-zero winding rule, orchid
+fill \manmsg{colour} and round join style);
+\subfigref{fig:xorpathb} the three paths in
+\subfigref{fig:xorpatha} have been replaced by 
+a single path using the exclusive OR function; 
+\subfigref{fig:xorpathc} for comparison, the three paths in
+\subfigref{fig:xorpatha} have been replaced by 
+a single path using the merge paths function.}
+
+\seealsorefs{
+ sec:mergepaths,
+ sec:pathunion,
+ sec:pathintersect,
+ sec:pathsubtract,
+ sec:reversing
+}
 
 
 \subsection{Path Intersection}\label{sec:pathintersect}
