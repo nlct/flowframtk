@@ -1386,6 +1386,7 @@ Nicola Talbot
 <entry key="undo.justify.right">Right Justify</entry>
 <entry key="undo.latexsize">Set LaTeX font size</entry>
 <entry key="undo.line_colour">Change line color</entry>
+<entry key="undo.line_style">Change line style</entry>
 <entry key="undo.merge_paths">Merge Paths</entry>
 <entry key="undo.move">Move</entry>
 <entry key="undo.move_point">Move Point</entry>
