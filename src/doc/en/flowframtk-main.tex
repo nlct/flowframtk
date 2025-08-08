@@ -5724,9 +5724,13 @@ First \select\ the \gls{shape} with \glspl{curve} that need to be transformed.
 For example, in \figureref{fig:selectedcircle} a circle created with
 the \tool{ellipse} has been selected.
 
-\FloatFig{fig:selectedcircle}
-{\includeimg{selectedcircle}}
-{A Selected Circle}
+\FloatSubFigs{fig:converttopolygon}
+{
+  {fig:selectedcircle}{\includeimg{selectedcircle}}{Before},
+  {fig:selectedpolygon}{\includeimg{selectedpolygon}}{After}
+}
+{Converting a Shape With Curves to a Polygon}
+
 
 \widgetdef{polygon.title}
 
@@ -5797,10 +5801,6 @@ calculated polygon, click on the \widget{okay} button.  For example,
 \figureref{fig:selectedpolygon} is the result with the flatness set
 to 4. If you change you mind you can click on the \widget{cancel}
 button to discard the draft. You will be prompted for confirmation.
-
-\FloatFig{fig:selectedpolygon}
-{\includeimg{selectedpolygon}}
-{Resulting Polygon}
 
 
 \section{Affine Transformations}\label{sec:affinetrans}
