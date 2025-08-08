@@ -5804,7 +5804,8 @@ original curving shape.
 \begin{information}
 The \widget{okay} button is only enabled once a polygon has been
 calculated. If you change you mind you can click on the \widget{cancel}
-button to discard the draft. You will be prompted for confirmation.
+button to discard the draft. You will be prompted for confirmation
+if a polygon has been calculated.
 \end{information}
 
 
@@ -6343,7 +6344,7 @@ the \menu{transform.xor} menu item. That is, multiple \glspl{shape}
 can be combined into a single \gls*{shape} by performing an
 \gls{cag.xor} operation on all the selected \glspl*{shape}.  At
 least two \glspl*{shape} must be selected to perform this function.
-As with the \hyperref[sec:merging]{merge path function}, the new
+As with the \hyperref[sec:mergepaths]{merge path function}, the new
 \gls*{shape} has the same styles as the \glslink{back}{backmost}
 path in the selection and \glspl{pattern} will be converted to full
 \glspl{path}.
@@ -6353,7 +6354,7 @@ overlapping paths.  The rear path has a non-zero winding rule. In
 \figureref{fig:xorpathb} the paths have been replaced by a
 single path created using the \transformfn{xor} function. For comparison,
 the same three paths in \figureref{fig:xorpatha} were replaced
-using the \hyperref[sec:merging]{merge function}. The result is
+using the \hyperref[sec:mergepaths]{merge function}. The result is
 shown in \figureref{fig:xorpathc}. Both paths in
 \figureref{fig:xorpathb} and \figureref{fig:xorpathc} use
 a non-zero winding rule, since that was used by the rear path in
@@ -6385,24 +6386,110 @@ a single path using the merge paths function.}
  sec:reversing
 }
 
-
 \subsection{Path Intersection}\label{sec:pathintersect}
 
 \menudef{menu.transform.intersect}
 
 \inlineglsdef{cag.intersection}
 
-TODO
+Area \inlineglsdef{cag.intersection} can be performed on \glspl{shape} with
+the \menu{transform.intersect} menu item. That is, multiple \glspl{shape}
+can be combined into a single \gls*{shape} by performing an
+\gls{cag.intersection} operation on all the selected \glspl*{shape}.  At
+least two \glspl*{shape} must be selected to perform this function, 
+and at least two of the shapes (or underlying path
+in the case of a \gls{textpath}) must overlap.
+As with the \hyperref[sec:mergepaths]{merge path function}, the new
+\gls*{shape} has the same styles as the \glslink{back}{backmost}
+path in the selection and \glspl{pattern} will be converted to full
+\glspl{path}.
 
+For example, in \figureref{fig:pathintersecta},
+there are three overlapping paths.  In
+\figureref{fig:pathintersectb} the paths have been replaced by
+a single path created using the path intersect function.
+
+\FloatSubFigs{fig:pathintersect}
+{
+  {fig:pathintersecta}{\includeimg{geom}}{},
+  {fig:pathintersectb}{\includeimg{intersectpaths}}{}
+}
+[Path Intersection Function]
+{Path intersection function: 
+\subfigref{fig:pathintersecta} original paths (the rear path has 
+an orchid fill \manmsg{colour} and round join style); 
+\subfigref{fig:pathintersectb} the three paths 
+in \subfigref{fig:pathintersecta} have been
+replaced by a single path using the path intersect function.}
+
+\seealsorefs{
+ sec:mergepaths,
+ sec:pathunion,
+ sec:xorpath,
+ sec:pathsubtract,
+ sec:reversing
+}
 
 \subsection{Path Subtraction}\label{sec:pathsubtract}
 
 \menudef{menu.transform.subtract}
 
-\inlineglsdef{cag.subtraction}
+Area \inlineglsdef{cag.subtraction} can be performed on \glspl{shape} with
+the \menu{transform.subtract} menu item. That is, multiple \glspl{shape}
+can be combined into a single \gls*{shape} by performing an
+\gls{cag.subtraction} operation on all the selected \glspl*{shape}.  At
+least two \glspl*{shape} must be selected to perform this function.
+The new shape is the \glslink{back}{backmost} selected shape with
+the other selected shapes subtracted from it. Any \glspl{pattern} in
+the selection will be converted to full paths.
 
-TODO
+For example, in
+\figureref{fig:pathsubtracta}, there are three overlapping
+paths.  In \figureref{fig:pathsubtractb} the paths have been
+replaced by a single path created using the path subtraction
+function.
 
+The new path will be a \gls*{textpath} if the backmost selected
+object was a \gls*{textpath} and the text will adjust to fit the
+new underlying path. For example, in
+\figureref{fig:textpathsubtracta}, there is a \gls*{textpath}
+and a \gls*{path}. The \gls*{textpath} is the backmost path.
+In \figureref{fig:textpathsubtractb}, the two objects have
+been replaced by a single \gls*{textpath} using the path subtraction
+function.
+
+\FloatSubFigs{fig:pathsubtract}
+{
+  {fig:pathsubtracta}{\includeimg{geom}}{},
+  {fig:pathsubtractb}{\includeimg{subtractpaths}}{}
+}
+[Path Subtraction Function]
+{Path subtraction function:
+\subfigref{fig:pathsubtracta} original paths (the rear path 
+has an orchid fill \manmsg{colour} and round join style);
+\subfigref{fig:pathsubtractb} the three paths 
+in \subfigref{fig:pathsubtracta} have
+been replaced by a single path using the path subtraction function.}
+
+\FloatSubFigs{fig:textpathsubtract}
+{
+  {fig:textpathsubtracta}{\includeimg{subtracttextpatha}}{},
+  {fig:textpathsubtractb}{\includeimg{subtracttextpathb}}{}
+}
+[Subtracting From a Text-Path]
+{Subtracting from a text-path: 
+\subfigref{fig:textpathsubtracta} original text-path and path; 
+\subfigref{fig:textpathsubtractb} the path has been 
+subtracted from the underlying path of the text-path.}
+
+\seealsorefs{
+ sec:mergepaths,
+ sec:pathunion,
+ sec:xorpath,
+ sec:pathintersect,
+ sec:reversing,
+ sec:busexample
+}
 
 \section{Distorting Shapes}\label{sec:distort}
 
