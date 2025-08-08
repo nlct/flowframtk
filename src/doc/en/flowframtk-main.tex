@@ -3529,10 +3529,16 @@ if you want to annotate a \gls{bitmap} (as was done in
 \FlowframTk\ does not save the actual \glslink{rastergraphics}{raster} data in either
 the \gls{JDR} or the \gls{AJR} file, but instead it creates a reference
 to the original file. You can't edit the actual bitmap data in
-\FlowframTk. However you can scale, rotate or shear the link.  If
-you change the location of the file containing the bitmap, when
+\FlowframTk. However you can scale, rotate or shear the link
+using the \gls{affine-transformation} functions described in 
+\sectionref{sec:affinetrans} or by directly editing the
+bitmap's \gls{bitmap.transformation-matrix}. 
+
+\begin{important}
+If you change the location of the file containing the bitmap, when
 \FlowframTk\ reloads the \gls*{JDR} or \gls*{AJR} file it will
 prompt you to either provide the new location or discard the reference.
+\end{important}
 
 \menudef{menu.bitmap.insert}
 
@@ -3600,7 +3606,7 @@ Currently undocumented.
 \widgetdef{bitmap_properties.title}
 
 To change a \gls{bitmap}['s] properties (file reference, alternative
-\LaTeX\ path, or transformation matrix), \select\
+\LaTeX\ path, or \gls{bitmap.transformation-matrix}), \select\
 the required \gls{bitmap} and select the \menu{bitmap.properties}
 menu item. This will open up the \dialog{bitmap_properties} dialog box shown in
 \figureref{fig:bitmapprops}. If you want to change the path name to
@@ -4832,7 +4838,10 @@ The alternative text is not used when exporting to PNG or when
 
 \section{Text Transformation Matrix}\label{sec:textmatrix}
 
-\inlineglsdef{index.text-attribute.transformation-matrix}
+You can scale, rotate or shear text
+using the \gls{affine-transformation} functions described in 
+\sectionref{sec:affinetrans} or by directly editing the
+\inlineglsdef{index.text-attribute.transformation-matrix}.
 
 TODO
 
@@ -4994,7 +5003,22 @@ text will be ignored) depending on your
 
 TODO
 
-\chapter{Edit Path Mode}\label{sec:editpath}
+\chapter{Modifying Shapes}\label{sec:modshape}
+
+\Glspl{shape} are defined by their segment types (line, \gls{curve}
+or \glspl{gap}) and \glspl{controlpt}, which may be adjusted in edit
+path mode (see \sectionref{sec:editpath}). It's also possible to
+modify \glspl{shape} using \glspl{affine-transformation} (see
+\sectionref{sec:affinetrans}), \gls{cag} (see \sectionref{sec:cag}),
+distortion (see \sectionref{sec:distort}), reversing the order of
+the \glspl{controlpt} and segments (see \sectionref{sec:reversing}), merging paths (see
+\sectionref{sec:mergepaths}), or converting into one or more other
+\glspl{shape} (see \sectionref{sec:converttopolygon},
+\sectionref{sec:separate}, \sectionref{sec:patterns},
+\sectionref{sec:converttopath}, \sectionref{sec:texttopath},
+\sectionref{sec:outlinetopath}). 
+
+\section{Edit Path Mode}\label{sec:editpath}
 
 \menudef{menu.edit.path.edit}
 
@@ -5013,7 +5037,7 @@ The \gls{menu.edit.path.edit} menu item
 is only available if exactly one \gls{shape} and no other
 \gls{object} is \selected.
 
-\section{Control Points}\label{sec:editcontrolpt}
+\subsection{Control Points}\label{sec:editcontrolpt}
 
 The \glspl{controlpt} that define a \gls{shape} only become visible
 and interactive when the shape is in \editpathmode.
@@ -5297,7 +5321,7 @@ them).
  sec:accesstutorial
 }
 
-\section{Gradient Continuity}\label{sec:continous}
+\subsection{Gradient Continuity}\label{sec:continous}
 
 Joins between \gls{path} segments, where one of both segments is a
 \gls{Bezier-curve}, can be made continuous (a smooth join)
@@ -5370,7 +5394,7 @@ the start of the next segment.}
 
 \seealsorefs{sec:editpath}
 
-\section{Symmetric Shapes}\label{sec:symmetric}
+\subsection{Symmetric Shapes}\label{sec:symmetric}
 
 \Glspl{symmetricshape} are created by applying
 \inlineglsdef{symmetry} to an existing \gls{shape} in 
@@ -5522,20 +5546,262 @@ symmetric.
  sec:rosetutorial
 }
 
-\chapter{Modifying Shapes}\label{sec:modshape}
+\section{Merging Paths}\label{sec:mergepaths}
 
-In addition to editing the segments and \glspl{controlpt}
-that define a \gls{path}, it's also possible to modify \glspl{shape}
-using \glspl{affine-transformation} (see
-\sectionref{sec:affinetrans}), \gls{cag} (see \sectionref{sec:cag}),
-distortion (see \sectionref{sec:distort}),
-reversing the direction (see \sectionref{sec:reversing}),
-merging paths (see \sectionref{sec:mergepaths}),
-or converting into one or more other \glspl{shape}
-(see \sectionref{sec:converttopolygon},
-\sectionref{sec:separate}, \sectionref{sec:patterns},
-\sectionref{sec:converttopath}, \sectionref{sec:texttopath},
-\sectionref{sec:outlinetopath}). 
+\menudef{menu.transform.merge}
+
+Multiple \glspl{shape} can be merged into a single \gls*{shape}
+using the \menu{transform.merge} menu item. Note that this is not
+the same as \hyperref[sec:grouping]{grouping}.  A \gls{gap} (move
+to) will be placed between the last \gls{controlpt} of one path and
+the first \gls*{controlpt} of the next path. Any \gls{pattern} in
+the selection will be first \hyperref[sec:converttopath]{converted
+to a full path} before merging.
+
+\begin{information}
+To split an existing \gls{path} into two separate \glspl{path}, use the
+\menu{editpath.break_path} popup menu item in \editpathmode.
+\end{information}
+
+Once the shape has been merged, it can then be edited as usual in
+\editpathmode.  If the original shapes had different styles, the new
+shape will retain the style of the first shape (the lowest one in
+the \gls{stack}). For example, in \figureref{fig:mergea} there are
+two \glspl{path} with different styles. \figureref{fig:mergeb} shows
+the single \gls{path} created from merging the two original paths.
+Since the first path used the even-odd winding rule, the new shape
+has a hole in it.
+
+\FloatSubFigs{fig:merge}
+{
+  {fig:mergea}{\includeimg{mergepatha}}{},
+  {fig:mergeb}{\includeimg{mergepathb}}{}
+}
+[Merging Two Paths]
+{Merging two paths:
+\subfigref{fig:mergea} the first path has a solid line pattern, a
+green fill \manmsg{colour} and even-odd winding rule, and the second
+path has a dashed line pattern and a yellow fill \manmsg{colour};
+\subfigref{fig:mergeb} resulting merged path has a solid line
+pattern, green fill \manmsg{colour} and even-odd winding rule.}
+
+The same applies if one or more of the selected \glspl*{object} is a
+\gls{textpath}. For example, in \figureref{fig:mergetextpathsa}
+there are two \glspl*{textpath}.  These are merged to form a single
+\gls*{textpath} shown in \figureref{fig:mergetextpathsb}. Note that
+the text from the second \gls{textpath} is lost. The resulting path
+is shown in \editpathmode\ in \figureref{fig:mergetextpathsc} to
+illustrate the underlying path. A mixture of \glspl*{path} and
+\glspl*{textpath} can be merged. The resulting \gls*{object} will be
+a \gls*{textpath} if the first object to be merged is a
+\gls*{textpath}, otherwise it will be a \gls*{path}.
+
+\FloatSubFigs{fig:mergetextpaths}
+{
+  {fig:mergetextpathsa}{\includeimg{mergetextpathsa}}{},
+  {fig:mergetextpathsb}{\includeimg{mergetextpathsb}}{},
+  {fig:mergetextpathsc}{\includeimg{mergetextpathsc}}{}
+}
+[Merging Two Text-Paths]
+{Merging two text-paths:
+\subfigref{fig:mergetextpathsa} the first path is on the left and
+the second path is on the right;
+\subfigref{fig:mergetextpathsb} resulting merged path;
+\subfigref{fig:mergetextpathsc} resulting merged path in
+edit mode to illustrate the underlying path}
+
+\Glspl{path} are merged according to their \gls{stackingorder}. For
+example, in \figureref{fig:merge2a} there are two \glspl{path}, both
+with a bar start marker, and an arrow end marker. The path on the
+right is further back in terms of the \gls{stackingorder}. (That is,
+it gets \glslink{painting}{painted} on the \gls{canvas} before the
+other path.) \figureref{fig:merge2b} shows the result of merging the
+two paths\dash the left hand path has been appended to the right
+hand path. \figureref{fig:merge2c} shows the same two paths as in
+\figureref{fig:merge2a} except that now the left path is the
+\gls{back}. There is no visible difference between
+\figureref{fig:merge2a} and \figureref{fig:merge2c}, but the result
+of merging the paths in \figureref{fig:merge2c} (see
+\figureref{fig:merge2d}) is different to
+\figureref{fig:merge2b}\dash the right hand path has been appended
+to the left hand path.
+
+\FloatSubFigs{fig:merge2}
+{
+  {fig:merge2a}{\includeimg{mergepath2a}}{},
+  {fig:merge2b}{\includeimg{mergepath2b}}{},
+  {fig:merge2c}{\includeimg{mergepath2a}}{},
+  {fig:merge2d}{\includeimg{mergepath2d}}{}
+}
+[Paths Are Merged According to the Stacking Order]
+{Paths are merged according to the stacking order:
+\subfigref{fig:merge2a} two straight line paths where the path 
+on the right is at the back of the stack;
+\subfigref{fig:merge2b} new single path resulting from merging 
+the two paths in \subfigref{fig:merge2a};
+\subfigref{fig:merge2c} same as \subfigref{fig:merge2a} but the path on the left
+is at the back of the stack;
+\subfigref{fig:merge2d} new single path resulting from merging 
+the two paths in \subfigref{fig:merge2c}.}
+
+\seealsorefs{
+ sec:pathunion,
+ sec:xorpath,
+ sec:pathintersect,
+ sec:pathsubtract,
+ sec:reversing,
+ sec:moveupordown,
+ sec:cheeseexample
+}
+
+\section{Reversing a Path's Direction}\label{sec:reversing}
+
+\menudef{menu.transform.reverse}
+
+The direction of a \gls{path} or \gls{textpath} can be reversed
+using the \menu{transform.reverse} menu item. For example, the path
+in \figureref{fig:reverse} has a bar start marker, pointed arrow
+mid-markers and a \LaTeX\ style arrow end marker.
+\figureref{fig:reversea} shows the original path, and
+\figureref{fig:reverseb} shows the reversed path. Note that all the
+\glspl{controlpt} are in the same place, but their ordering has
+changed, so that what was originally the first \gls{controlpt} is
+now the last \gls{controlpt}.
+
+\FloatSubFigs{fig:reverse}
+{
+  {fig:reversea}{\includeimg{reverse1a}}{},
+  {fig:reverseb}{\includeimg{reverse1b}}{}
+}
+[Reversing the Direction of a Path]
+{Reversing the direction of a path:
+\subfigref{fig:reversea} original path;
+\subfigref{fig:reverseb} reversed path\dash
+the vertices are in the same location, but the order has been
+reversed.}
+
+In \figureref{fig:reversetextpath}, the \gls*{textpath} in
+\figureref{fig:reversetextpatha} is reversed to form 
+\figureref{fig:reversetextpathb}. Note that the text now starts
+from the right instead of the left, since the first \gls*{controlpt}
+is now on the right, and it is upside-down.
+
+\FloatSubFigs{fig:reversetextpath}
+{
+  {fig:reversetextpatha}{\includeimg{reversetextpatha}}{},
+  {fig:reversetextpathb}{\includeimg{reversetextpathb}}{}
+}
+[Reversing the Direction of a Text-Path]
+{Reversing the direction of a text-path:
+\subfigref{fig:reversetextpatha} original text-path;
+\subfigref{fig:reversetextpathb} reversed text-path\dash 
+the vertices are in the same location, but the order has been
+reversed so the text starts from the other end.}
+
+\section{Convert to Polygon}\label{sec:converttopolygon}
+
+If you want to convert a single \gls{curve} segment to a single
+line segment, you can simply enable \editpathmode, and use the 
+\menu{editpath.convert_to_line} item from the popup menu.
+However, if you want to replace all curves with one or more straight
+lines then you may prefer to use the \transformfn{convert_to_polygon}
+function.
+
+\menudef{menu.transform.convert_to_polygon}
+
+The \gls{curve} segments of a \gls{path} (or underlying path)
+can be converted into a series of straight line segments with the
+\menu{transform.convert_to_polygon} menu item, which will result in
+a polygonal shape. The number of lines used to replace an individual
+curve segment is determined by the \emph{flatness} parameter.
+
+\begin{information}
+There is a maximum limit of 1024 replacement line segments per
+\gls{curve}.
+\end{information}
+
+First \select\ the \gls{shape} with \glspl{curve} that need to be transformed.
+For example, in \figureref{fig:selectedcircle} a circle created with
+the \tool{ellipse} has been selected.
+
+\FloatFig{fig:selectedcircle}
+{\includeimg{selectedcircle}}
+{A Selected Circle}
+
+\widgetdef{polygon.title}
+
+The \menu{transform.convert_to_polygon} menu item will open the
+\dialog{polygon} dialog, shown in \figureref{fig:polygondialog}.
+This will show a draft outline of the selected shape (in this case,
+the circle from \figureref{fig:selectedcircle}).
+
+\FloatFig{fig:polygondialog}
+{\includeimg{polygondialog}}
+{Convert to Polygon Dialog}
+
+\widgetdef{polygon.flatness}
+
+The \widget{polygon.flatness} numeric field should be set to the
+flatness parameter. This is the maximum allowable distance
+between the \glspl{controlpt} and the flattened \gls{curve}. A small
+value will create a series of line segments that are as close to the
+original curve as possible. This may result in many short line
+segments depending on the curvature of the original \gls{curve}.
+
+\widgetdef{polygon.dotask}
+
+Once you have set the desired flatness parameter, click on the
+\widget{polygon.dotask} button. This will draw the calculated
+polygon over the original shape for comparison. For example, 
+\figureref{fig:polygondialog1} shows the calculated polygon with
+the flatness parameter set to 1.
+
+\FloatFig{fig:polygondialog1}
+{\includeimg{polygondialog1}}
+{Convert to Polygon Dialog: Result with 1.0 Flatness}
+
+On the right-hand side of the \dialog{polygon} dialog is an
+information panel that details the number of lines used, the length
+of the polygon's perimeter, the polygon's area and the \gls{xor} area.
+It also lists the path's definition where \qt{M} indicates a move to
+(followed by the co-ordinate pair to move to), \qt{L} indicates a line to
+(followed by the co-ordinate pair to draw a line to), and \qt{Z}
+indicates close path.
+
+If the result isn't quite satisfactory, you can adjust the flatness
+parameter and click on the \widget{polygon.dotask} button again.
+For example, I changed the flatness to 4 and recalculated. This
+produced the polygon shown in \figureref{fig:polygondialog2} which
+has fewer line segments with a greater deviation from the original
+circle.
+
+\FloatFig{fig:polygondialog2}
+{\includeimg{polygondialog2}}
+{Convert to Polygon Dialog: Result with 4.0 Flatness}
+
+\widgetdef{polygon.reload}
+
+You can clear the dialog and reset it back to just the original
+selected shape with the \widget{polygon.reload} button.
+There is also a zoom widget on the bottom left which can be used to
+adjust the magnification.
+
+
+\begin{information}
+The \widget{okay} button is only enabled once a polygon has been
+calculated.
+\end{information}
+
+If you want to replace the selected path with the
+calculated polygon, click on the \widget{okay} button.  For example,
+\figureref{fig:selectedpolygon} is the result with the flatness set
+to 4. If you change you mind you can click on the \widget{cancel}
+button to discard the draft. You will be prompted for confirmation.
+
+\FloatFig{fig:selectedpolygon}
+{\includeimg{selectedpolygon}}
+{Resulting Polygon}
+
 
 \section{Affine Transformations}\label{sec:affinetrans}
 
@@ -5981,11 +6247,87 @@ are dragging will be transformed.
 
 \menudef{menu.transform.union}
 
-\inlineglsdef{cag.addition}
+Area \inlineglsdef{cag.addition} can be performed on
+\glspl{shape} with the \menu{transform.union} menu item. That is,
+multiple \glspl{shape} can be combined into a single \gls*{shape} by
+performing a union on all the selected \glspl*{shape}.
 
+At least two \glspl*{shape} must be selected to perform this
+function. As with the \hyperref[sec:mergepaths]{merge path function}, the
+new shape has the same styles as the \glslink{back}{backmost} path
+in the selection.
 
-TODO
+For example, in \figureref{fig:pathuniona}, there are three
+overlapping paths.  In \figureref{fig:pathunionb} the paths have
+been replaced by a single path created using the path union
+function. For comparison, the same three paths in
+\figureref{fig:pathuniona} were replaced using the
+\hyperref[sec:mergepaths]{merge function}. The result is shown in
+\figureref{fig:pathunionc}.
 
+\FloatSubFigs*{fig:pathunion}
+{
+  {fig:pathuniona}{\includeimg{geom}}{},
+  {fig:pathunionb}{\includeimg{pathunion}}{},
+  {fig:pathunionc}{\includeimg{geommerge}}{}
+}
+[Path Union]
+{Path union:
+\subfigref{fig:pathuniona} original paths (the rear path has an
+orchid fill \manmsg{colour} 2bp line width and round join style);
+\subfigref{fig:pathunionb} the three paths in
+\subfigref{fig:pathuniona} have been replaced by a single path using
+the path union function;
+\subfigref{fig:pathunionc} for comparison, the three paths in
+\subfigref{fig:pathuniona} have been replaced by a single path using
+the merge paths function.}
+
+In \figureref{fig:textpathunion}, a \gls*{textpath} and a
+\gls*{path} are combined: \figureref{fig:textpathuniona} shows
+the original objects and \figureref{fig:textpathunionb} shows
+the resulting object. In this case, the resulting object is a
+\gls*{textpath} since the \glslink{back}{backmost} path in
+\figureref{fig:textpathuniona} was the \gls*{textpath} object.
+
+\FloatSubFigs{fig:textpathunion}
+{
+  {fig:textpathuniona}{\includeimg{textpathuniona}}{},
+  {fig:textpathunionb}{\includeimg{textpathunionb}}{}
+}
+[Text-Path Union]
+{Text-path union: \subfigref{fig:textpathuniona} original text-path
+and path; \subfigref{fig:textpathunionb} objects in
+\subfigref{fig:textpathuniona} have been replaced with text-path.}
+
+Any \gls{pattern} in the selection will first be converted to a full
+\gls{path} before the union is applied. For example, in
+\figureref{fig:patternunion}, two patterns are combined:
+\figureref{fig:patternuniona} shows the original patterns (both have
+a rotational pattern with 2 replicas) and
+\figureref{fig:patternunionb} shows the resulting path. This path is
+illustrated in edit mode in \figureref{fig:patternunionc} to show
+that it is now a full path.
+
+\FloatSubFigs*{fig:patternunion}
+{
+  {fig:patternuniona}{\includeimg{patternunionexa}}{},
+  {fig:patternunionb}{\includeimg{patternunionexb}}{},
+  {fig:patternunionc}{\includeimg{patternunionexc}}{}
+}
+[Pattern Union]
+{Pattern union: \subfigref{fig:patternuniona} original patterns;
+\subfigref{fig:patternunionb} patterns in
+\subfigref{fig:patternuniona} have been combined to form a full
+path; \subfigref{fig:patternunionc} result shown in edit mode.}
+
+\seealsorefs{
+ sec:mergepaths,
+ sec:xorpath,
+ sec:pathintersect,
+ sec:pathsubtract,
+ sec:reversing,
+ sec:busexample
+}
 
 \subsection{Exclusive Or Function}\label{sec:xorpath}
 
@@ -6068,263 +6410,6 @@ to restore the path to its original shape.
 \subfigref{fig:distortpathd} distortion in progress;
 \subfigref{fig:distortpathe} distorted shape (distortion mode off);
 \subfigref{fig:distortpathf} distorted shape in edit mode.}
-
-\section{Reversing a Path's Direction}\label{sec:reversing}
-
-\menudef{menu.transform.reverse}
-
-The direction of a \gls{path} or \gls{textpath} can be reversed
-using the \menu{transform.reverse} menu item. For example, the path
-in \figureref{fig:reverse} has a bar start marker, pointed arrow
-mid-markers and a \LaTeX\ style arrow end marker.
-\figureref{fig:reversea} shows the original path, and
-\figureref{fig:reverseb} shows the reversed path. Note that all the
-\glspl{controlpt} are in the same place, but their ordering has
-changed, so that what was originally the first \gls{controlpt} is
-now the last \gls{controlpt}.
-
-\FloatSubFigs{fig:reverse}
-{
-  {fig:reversea}{\includeimg{reverse1a}}{},
-  {fig:reverseb}{\includeimg{reverse1b}}{}
-}
-[Reversing the Direction of a Path]
-{Reversing the direction of a path:
-\subfigref{fig:reversea} original path;
-\subfigref{fig:reverseb} reversed path\dash
-the vertices are in the same location, but the order has been
-reversed.}
-
-In \figureref{fig:reversetextpath}, the \gls*{textpath} in
-\figureref{fig:reversetextpatha} is reversed to form 
-\figureref{fig:reversetextpathb}. Note that the text now starts
-from the right instead of the left, since the first \gls*{controlpt}
-is now on the right, and it is upside-down.
-
-\FloatSubFigs{fig:reversetextpath}
-{
-  {fig:reversetextpatha}{\includeimg{reversetextpatha}}{},
-  {fig:reversetextpathb}{\includeimg{reversetextpathb}}{}
-}
-[Reversing the Direction of a Text-Path]
-{Reversing the direction of a text-path:
-\subfigref{fig:reversetextpatha} original text-path;
-\subfigref{fig:reversetextpathb} reversed text-path\dash 
-the vertices are in the same location, but the order has been
-reversed so the text starts from the other end.}
-
-\section{Merging Paths}\label{sec:mergepaths}
-
-\menudef{menu.transform.merge}
-
-Multiple \glspl{shape} can be merged into a single \gls*{shape}
-using the \menu{transform.merge} menu item. Note that this is not
-the same as \hyperref[sec:grouping]{grouping}.  A \gls{gap} (move
-to) will be placed between the last \gls{controlpt} of one path and
-the first \gls*{controlpt} of the next path. Any \gls{pattern} in
-the selection will be first \hyperref[sec:converttopath]{converted
-to a full path} before merging.
-
-\begin{information}
-To split an existing \gls{path} into two separate \glspl{path}, use the
-\menu{editpath.break_path} popup menu item in \editpathmode.
-\end{information}
-
-Once the shape has been merged, it can then be edited as usual in
-\editpathmode.  If the original shapes had different styles, the new
-shape will retain the style of the first shape (the lowest one in
-the \gls{stack}). For example, in \figureref{fig:mergea} there are
-two \glspl{path} with different styles. \figureref{fig:mergeb} shows
-the single \gls{path} created from merging the two original paths.
-Since the first path used the even-odd winding rule, the new shape
-has a hole in it.
-
-\FloatSubFigs{fig:merge}
-{
-  {fig:mergea}{\includeimg{mergepatha}}{},
-  {fig:mergeb}{\includeimg{mergepathb}}{}
-}
-[Merging Two Paths]
-{Merging two paths:
-\subfigref{fig:mergea} the first path has a solid line pattern, a
-green fill \manmsg{colour} and even-odd winding rule, and the second
-path has a dashed line pattern and a yellow fill \manmsg{colour};
-\subfigref{fig:mergeb} resulting merged path has a solid line
-pattern, green fill \manmsg{colour} and even-odd winding rule.}
-
-The same applies if one or more of the selected \glspl*{object} is a
-\gls{textpath}. For example, in \figureref{fig:mergetextpathsa}
-there are two \glspl*{textpath}.  These are merged to form a single
-\gls*{textpath} shown in \figureref{fig:mergetextpathsb}. Note that
-the text from the second \gls{textpath} is lost. The resulting path
-is shown in \editpathmode\ in \figureref{fig:mergetextpathsc} to
-illustrate the underlying path. A mixture of \glspl*{path} and
-\glspl*{textpath} can be merged. The resulting \gls*{object} will be
-a \gls*{textpath} if the first object to be merged is a
-\gls*{textpath}, otherwise it will be a \gls*{path}.
-
-\FloatSubFigs{fig:mergetextpaths}
-{
-  {fig:mergetextpathsa}{\includeimg{mergetextpathsa}}{},
-  {fig:mergetextpathsb}{\includeimg{mergetextpathsb}}{},
-  {fig:mergetextpathsc}{\includeimg{mergetextpathsc}}{}
-}
-[Merging Two Text-Paths]
-{Merging two text-paths:
-\subfigref{fig:mergetextpathsa} the first path is on the left and
-the second path is on the right;
-\subfigref{fig:mergetextpathsb} resulting merged path;
-\subfigref{fig:mergetextpathsc} resulting merged path in
-edit mode to illustrate the underlying path}
-
-\Glspl{path} are merged according to their \gls{stackingorder}. For
-example, in \figureref{fig:merge2a} there are two \glspl{path}, both
-with a bar start marker, and an arrow end marker. The path on the
-right is further back in terms of the \gls{stackingorder}. (That is,
-it gets \glslink{painting}{painted} on the \gls{canvas} before the
-other path.) \figureref{fig:merge2b} shows the result of merging the
-two paths\dash the left hand path has been appended to the right
-hand path. \figureref{fig:merge2c} shows the same two paths as in
-\figureref{fig:merge2a} except that now the left path is the
-\gls{back}. There is no visible difference between
-\figureref{fig:merge2a} and \figureref{fig:merge2c}, but the result
-of merging the paths in \figureref{fig:merge2c} (see
-\figureref{fig:merge2d}) is different to
-\figureref{fig:merge2b}\dash the right hand path has been appended
-to the left hand path.
-
-\FloatSubFigs{fig:merge2}
-{
-  {fig:merge2a}{\includeimg{mergepath2a}}{},
-  {fig:merge2b}{\includeimg{mergepath2b}}{},
-  {fig:merge2c}{\includeimg{mergepath2a}}{},
-  {fig:merge2d}{\includeimg{mergepath2d}}{}
-}
-[Paths Are Merged According to the Stacking Order]
-{Paths are merged according to the stacking order:
-\subfigref{fig:merge2a} two straight line paths where the path 
-on the right is at the back of the stack;
-\subfigref{fig:merge2b} new single path resulting from merging 
-the two paths in \subfigref{fig:merge2a};
-\subfigref{fig:merge2c} same as \subfigref{fig:merge2a} but the path on the left
-is at the back of the stack;
-\subfigref{fig:merge2d} new single path resulting from merging 
-the two paths in \subfigref{fig:merge2c}.}
-
-\seealsorefs{
- sec:pathunion,
- sec:xorpath,
- sec:pathintersect,
- sec:pathsubtract,
- sec:reversing,
- sec:moveupordown,
- sec:cheeseexample
-}
-
-\section{Convert to Polygon}\label{sec:converttopolygon}
-
-If you want to convert a single \gls{curve} segment to a single
-line segment, you can simply enable \editpathmode, and use the 
-\menu{editpath.convert_to_line} item from the popup menu.
-However, if you want to replace all curves with one or more straight
-lines then you may prefer to use the \transformfn{convert_to_polygon}
-function.
-
-\menudef{menu.transform.convert_to_polygon}
-
-The \gls{curve} segments of a \gls{path} (or underlying path)
-can be converted into a series of straight line segments with the
-\menu{transform.convert_to_polygon} menu item, which will result in
-a polygonal shape. The number of lines used to replace an individual
-curve segment is determined by the \emph{flatness} parameter.
-
-\begin{information}
-There is a maximum limit of 1024 replacement line segments per
-\gls{curve}.
-\end{information}
-
-First \select\ the \gls{shape} with \glspl{curve} that need to be transformed.
-For example, in \figureref{fig:selectedcircle} a circle created with
-the \tool{ellipse} has been selected.
-
-\FloatFig{fig:selectedcircle}
-{\includeimg{selectedcircle}}
-{A Selected Circle}
-
-\widgetdef{polygon.title}
-
-The \menu{transform.convert_to_polygon} menu item will open the
-\dialog{polygon} dialog, shown in \figureref{fig:polygondialog}.
-This will show a draft outline of the selected shape (in this case,
-the circle from \figureref{fig:selectedcircle}).
-
-\FloatFig{fig:polygondialog}
-{\includeimg{polygondialog}}
-{Convert to Polygon Dialog}
-
-\widgetdef{polygon.flatness}
-
-The \widget{polygon.flatness} numeric field should be set to the
-flatness parameter. This is the maximum allowable distance
-between the \glspl{controlpt} and the flattened \gls{curve}. A small
-value will create a series of line segments that are as close to the
-original curve as possible. This may result in many short line
-segments depending on the curvature of the original \gls{curve}.
-
-\widgetdef{polygon.dotask}
-
-Once you have set the desired flatness parameter, click on the
-\widget{polygon.dotask} button. This will draw the calculated
-polygon over the original shape for comparison. For example, 
-\figureref{fig:polygondialog1} shows the calculated polygon with
-the flatness parameter set to 1.
-
-\FloatFig{fig:polygondialog1}
-{\includeimg{polygondialog1}}
-{Convert to Polygon Dialog: Result with 1.0 Flatness}
-
-On the right-hand side of the \dialog{polygon} dialog is an
-information panel that details the number of lines used, the length
-of the polygon's perimeter, the polygon's area and the \gls{xor} area.
-It also lists the path's definition where \qt{M} indicates a move to
-(followed by the co-ordinate pair to move to), \qt{L} indicates a line to
-(followed by the co-ordinate pair to draw a line to), and \qt{Z}
-indicates close path.
-
-If the result isn't quite satisfactory, you can adjust the flatness
-parameter and click on the \widget{polygon.dotask} button again.
-For example, I changed the flatness to 4 and recalculated. This
-produced the polygon shown in \figureref{fig:polygondialog2} which
-has fewer line segments with a greater deviation from the original
-circle.
-
-\FloatFig{fig:polygondialog2}
-{\includeimg{polygondialog2}}
-{Convert to Polygon Dialog: Result with 4.0 Flatness}
-
-\widgetdef{polygon.reload}
-
-You can clear the dialog and reset it back to just the original
-selected shape with the \widget{polygon.reload} button.
-There is also a zoom widget on the bottom left which can be used to
-adjust the magnification.
-
-
-\begin{information}
-The \widget{okay} button is only enabled once a polygon has been
-calculated.
-\end{information}
-
-If you want to replace the selected path with the
-calculated polygon, click on the \widget{okay} button.  For example,
-\figureref{fig:selectedpolygon} is the result with the flatness set
-to 4. If you change you mind you can click on the \widget{cancel}
-button to discard the draft. You will be prompted for confirmation.
-
-\FloatFig{fig:selectedpolygon}
-{\includeimg{selectedpolygon}}
-{Resulting Polygon}
-
 
 \section{Separating Compound Shapes}\label{sec:separate}
 
