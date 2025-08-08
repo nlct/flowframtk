@@ -4,6 +4,7 @@
 \usepackage{verbatim}
 \usepackage{longtable}
 \usepackage{booktabs}
+\usepackage[section]{placeins}
 \usepackage{pgf}
 \usepgflibrary{decorations.text}
 
@@ -4888,7 +4889,7 @@ horizontal \textattr{anchor} has been changed to right.
 
 \FloatSubFigs{fig:textpath}
 {
- {fig:textpatha}{\includeimg{textpath}}{},
+ {fig:textpatha}{\includeimg{textandpath}}{},
  {fig:textpathb}{\includeimg{textpathleft}}{},
  {fig:textpathc}{\includeimg{textpathcentre}}{},
  {fig:textpathd}{\includeimg{textpathright}}{}
@@ -5003,7 +5004,55 @@ text will be ignored) depending on your
 
 \menudef{menu.transform.split}
 
-TODO
+A \gls{textarea} or \gls{textpath} can be split into a \gls{group}
+containing \glspl{textarea} each consisting of a single character.
+The original alternative \LaTeX\ text will be lost. (No mappings
+will be used.) First \select\ the required \glspl{textarea} or
+\glspl{textpath} (no other type of \gls{object} should be selected)
+and then use the \menu{transform.split} menu item.
+
+For example, in \figureref{fig:splitex1a} there is a single 
+\gls{textarea} containing the seven characters that make up the word
+\qt{Rainbow}.  This text area was then converted into a group of
+seven \glspl*{textarea} using \menu{transform.split}. The group was
+then \hyperref[sec:grouping]{ungrouped} (see \figureref{fig:splitex1b}) 
+and each \gls{textarea} was then given a different
+\gls{index.text-colour} resulting in the image
+shown in \figureref{fig:splitex1c}.
+
+\FloatSubFigs*{fig:splitex1}
+{
+  {fig:splitex1a}{\includeimg{splitex1a}}{},
+  {fig:splitex1b}{\includeimg{splitex1b}}{},
+  {fig:splitex1c}{\includeimg{splitex1c}}{}
+} 
+[Splitting a Text Area]
+{Splitting a text area:
+\subfigref{fig:splitex1a} original text area;
+\subfigref{fig:splitex1b} split and ungroup;
+\subfigref{fig:splitex1c} apply separate \textattr{paint} 
+to each of the new text areas.}
+
+Note that if you split a \gls*{textpath}, you will lose the
+underlying path as the result will be a group of \glspl{textarea}.
+For example, the \gls*{textpath} shown in
+\figureref{fig:splittextpatha} was split to create a group
+containing seven \glspl*{textarea}.
+
+\FloatSubFigs*{fig:splittextpath}
+{
+  {fig:splittextpatha}{\includeimg{splittextpatha}}{},
+  {fig:splittextpathb}{\includeimg{splittextpathb}}{},
+  {fig:splittextpathc}{\includeimg{splittextpathc}}{}
+}
+[Splitting a Text Path]
+{Splitting a text path:
+\subfigref{fig:splittextpatha} original text path;
+\subfigref{fig:splittextpathb} split and ungroup;
+\subfigref{fig:splittextpathc} apply
+separate \textattr{paint} to each of the new text areas.}
+
+\seealsorefs{sec:outlinetopath}
 
 \chapter{Modifying Shapes}\label{sec:modshape}
 
@@ -6932,9 +6981,9 @@ or \glspl{bitmap}. Then use the \menu{transform.convert} menu item.
 
 Any \gls{shape} will be converted into a \gls{path} with 1\gls{bp}
 line width that traces around the original stroked path. The new
-path will be filled with the original \gls{index.line-colour} and
-will have no \gls{index.line-paint}. The original \gls{index.fill-colour}
-will be discarded.
+path will be filled with the original \pathattr{line-paint} and
+will have no \pathattr{line-paint}. The original
+\pathattr{fill-paint} will be discarded.
 
 For example, consider the path in \figureref{fig:outlinetopatha}.
 This has a line width of 10\gls{bp}, a circle start marker,
