@@ -55,7 +55,7 @@ class DashPatternBox extends JPanel implements ActionListener
       offsetPanel.getTextField().setColumns(2);
       add(offsetPanel);
 
-      dashPanel = resources.createNonNegativeLengthPanel("dashpattern.title");
+      dashPanel = resources.createNonNegativeLengthPanel("dashpattern.dash.length");
       dashPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       dashPanel.getTextField().setColumns(2);
@@ -72,7 +72,7 @@ class DashPatternBox extends JPanel implements ActionListener
       secondary = resources.createAppCheckBox("dashpattern.dash", "secondary", false, this);
       add(secondary);
 
-      dash2Panel = resources.createNonNegativeLengthPanel("dashpattern.title");
+      dash2Panel = resources.createNonNegativeLengthPanel("dashpattern.dash.length");
       dash2Panel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       dash2Panel.getTextField().setColumns(2);

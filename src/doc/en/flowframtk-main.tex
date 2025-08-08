@@ -7258,72 +7258,398 @@ The way a \gls{shape} is displayed is governed by the
 \pathattr{line-paint}, the \pathattr{fill-paint}, the 
 \inlineglsdef{line-style} and the \pathattr{winding-rule}. 
 
-The way a \gls{textarea} is displayed is
-governed by the \gls{index.text-colour}, \gls{font},
-\textattr{transformation-matrix} and (if \hyperref[sec:exportimage]{exporting} to a
-\LaTeX\ file) the \textattr{anchor}. The way a \gls{textpath} is displayed is
-governed by the \gls{index.text-colour}, \gls{font},
-\textattr{anchor}, \textattr{transformation-matrix}
-and the underlying path. (A \gls*{textarea} or \gls*{textpath} may
-also be rendered as an \textattr{outline} optionally with a 
-\textattr{fill-paint}, see \sectionref{sec:textoutline}.)
+The way a \gls{textarea} is displayed is governed by the
+\gls{index.text-colour}, \gls{font}, \textattr{transformation-matrix} 
+and (if \hyperref[sec:exportimage]{exporting} to a \LaTeX\ file) the
+\textattr{anchor}. The way a \gls{textpath} is displayed is governed
+by the \gls{index.text-colour}, \gls{font}, \textattr{anchor},
+\textattr{transformation-matrix} and the underlying path. (A
+\gls*{textarea} or \gls*{textpath} may also be rendered as an
+\textattr{outline} optionally with a \textattr{fill-paint}, see
+\sectionref{sec:textoutline}.)
 
+\menudef{menu.settings.styles}
 
-TODO
+The current path and text styles can be set using the
+\menu{settings.styles} menu item which opens the \dialog{styles}
+dialog. These styles will be used for any new \glspl{object} that
+are subsequently created. Existing \glspl{object} can have their
+styles altered via the \menu{edit.path} and \menu{edit.textarea}
+sub-menus. 
 
+\widgetdef{styles.title}
+
+The \dialog{styles} dialog box has a tabbed pane with five tabs,
+which may be used to change the current path and text styles.
+Note that changing the current path or text styles won't affect
+existing \glspl{object}. 
+
+There is a sample panel on the right hand side illustrating the
+effects of the \gls{path} settings you choose, and a sample panel along
+the top illustrating the effects of the \gls*{textarea} attributes
+you choose.
+
+The current styles are saved when you exit \FlowframTk, and will be in
+effect next time you use \FlowframTk, unless you change the 
+\widget{initsettings.title} settings in the \dialog{config} dialog
+(see \sectionref{sec:initsettings}).
+
+The \dialog{styles} dialog has the following tabs:
+\begin{deflist}
+\itemtitle{\widget{linecolour.title}}
+\begin{itemdesc}
+Specifies the current \pathattr{line-paint} (see
+\sectionref{sec:linepaint}).
+\end{itemdesc}
+
+\itemtitle{\widget{fillcolour.title}}
+\begin{itemdesc}
+Specifies the current \pathattr{fill-paint} (see
+\sectionref{sec:fillpaint}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.title}}
+\begin{itemdesc}
+Specifies the current \gls{line-style} (see
+\sectionref{sec:pathstyle}).
+\end{itemdesc}
+
+\itemtitle{\widget{textcolour.title}}
+\begin{itemdesc}
+Specifies the current \gls{index.text-colour} (see
+\sectionref{sec:textpaint}).
+\end{itemdesc}
+
+\itemtitle{\widget{font.title}}
+\begin{itemdesc}
+Specifies the current \gls{font} and \textattrpl{anchor} (see
+\sectionref{sec:textstyle}).
+\end{itemdesc}
+
+\end{deflist}
+
+The \gls{button.default} button located at the bottom right corner
+of the dialog box may be used to restore the default settings.
 
 \section{Line Paint}\label{sec:linepaint}
 
-\inlineglsdef{index.path-attribute.line-paint}
+\menudef{menu.edit.path.line_colour}
 
-TODO
+The \menu{edit.path.line_colour} menu item opens a dialog
+with a \widget{linecolour.title} panel in which
+you can change the \inlineglsdef{index.path-attribute.line-paint} 
+of all \selected\ \glspl{shape}.
 
+\widgetdef{linecolour.title}
+
+The \widget{linecolour.title} panel has a paint selector panel
+(see \sectionref{sec:paint}) that may be used to set the 
+\pathattr{line-paint}. This panel is also a tab
+in the \dialog{styles} dialog to set the current
+\pathattr{line-paint}.
+
+Selecting the \widget{colour.transparent} radio button indicates
+that \gls{shape} outlines should not be drawn.  (The \pathattr{fill-paint}
+will need to be set to something other than
+\widget{colour.transparent} in order for the \glspl{shape} to be
+visible.)
+
+There is a sample panel along the top (\menu{edit.path.line_colour})
+or the side (\menu{settings.styles}) illustrating the
+effects of the \pathattr{line-paint} setting that you choose
 
 \section{Fill Paint}\label{sec:fillpaint}
 
-\inlineglsdef{index.path-attribute.fill-paint}
+\menudef{menu.edit.fill_colour}
 
-TODO
+The \menu{edit.fill_colour} menu item opens a dialog with a
+\widget{fillcolour.title} panel in which you can change the
+\inlineglsdef{index.path-attribute.fill-paint} of all \selected\
+\glspl{shape}. The \pathattr{fill-paint} is also used to fill
+\glspl{textarea} or \glspl{textpath} in \textattr{outline} mode. 
 
+\widgetdef{fillcolour.title}
+
+The \widget{fillcolour.title} panel has a paint selector panel (see
+\sectionref{sec:paint}) that may be used to set the
+\pathattr{fill-paint}. This panel is also a tab in the
+\dialog{styles} dialog to set the current \pathattr{fill-paint}.
+
+Selecting the \widget{colour.transparent} radio button indicates
+that \glspl{shape} should not be filled.  (The \pathattr{line-paint}
+will need to be set to something other than
+\widget{colour.transparent} in order for the \glspl{shape} to be
+visible.)
+
+There is a sample panel along the top (\menu{edit.fill_colour})
+or the side (\menu{settings.styles}) illustrating the
+effects of the \pathattr{fill-paint} setting that you choose
+
+\seealsorefs{sec:houseexample}
 
 \section{Line Style}\label{sec:pathstyle}
 
-TODO
+\menudef{menu.edit.path.style.all_styles}
 
+The \menu{edit.path.style.all_styles} menu item opens a dialog
+with a \widget{linestyle.title} panel in which
+you can change the \inlineglsdef{line-style} 
+of all \selected\ \glspl{shape}.
+
+\widgetdef{linestyle.title}
+
+The \widget{linestyle.title} panel is also a tab
+in the \dialog{styles} dialog to set the current
+\gls{line-style}. The panel has the following areas:
+\begin{deflist}
+\itemtitle{\widget{linestyle.thickness}}
+\begin{itemdesc}
+Specifies the \pathattr{line-width} (\sectionref{sec:penwidth}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.solid}\slash\widget{linestyle.dashed}}
+\begin{itemdesc}
+Specifies whether the line is \gls{solid-line} or a \pathattr{dash-pattern}
+(\sectionref{sec:dashpattern}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.cap}}
+\begin{itemdesc}
+Specifies the \pathattr{cap-style} (see \sectionref{sec:capstyle}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.join}}
+\begin{itemdesc}
+Specifies the \pathattr{join-style} (\sectionref{sec:joinstyle}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.arrow.start}}
+\begin{itemdesc}
+Specifies the start \pathattr{marker} (\sectionref{sec:markers}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.arrow.mid}}
+\begin{itemdesc}
+Specifies the mid \pathattr{marker} (\sectionref{sec:markers}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.arrow.end}}
+\begin{itemdesc}
+Specifies the end \pathattr{marker} (\sectionref{sec:markers}).
+\end{itemdesc}
+
+\itemtitle{\widget{linestyle.winding_rule}}
+\begin{itemdesc}
+Specifies the \pathattr{winding-rule} (\sectionref{sec:winding}).
+\end{itemdesc}
+
+\end{deflist}
+
+There is a sample panel along the top (\menu{edit.path.style.all_styles})
+or the side (\menu{settings.styles}) illustrating the
+effects of the \gls{path} settings you choose
+
+\begin{information}
+The line styles are only applicable when the \gls{shape}
+outline is \glslink{drawing-on-canvas}{drawn}. (That is, when 
+the \pathattr{line-paint} is not set to transparent.)
+\end{information}
 
 \subsection{Line Thickness (or Pen Width)}\label{sec:penwidth}
 
-\inlineglsdef{index.path-attribute.line-width}
+\menudef{menu.edit.path.style.linewidth}
 
-TODO
+The \menu{edit.path.style.linewidth} menu item opens a dialog
+with a \widget{linestyle.thickness} panel in which
+you can change the \inlineglsdef{index.path-attribute.line-width} 
+of all \selected\ \glspl{shape}.
 
+\widgetdef{linestyle.thickness}
+
+The \widget{linestyle.thickness} panel is also in the 
+\widget{linestyle.title} panel. The value is a length so it needs
+both a positive decimal number and a unit. The default is 1\gls{bp}.
+
+\begin{information}
+The \pathattr{line-width} is only applicable when the \gls{shape}
+outline is \glslink{drawing-on-canvas}{drawn}. (That is, when 
+the \pathattr{line-paint} is not set to transparent.)
+\end{information}
 
 \subsection{Dash Pattern}\label{sec:dashpattern}
 
-\inlineglsdef{index.path-attribute.dash-pattern}
+\menudef{menu.edit.path.style.dashpattern}
 
-TODO
+The \menu{edit.path.style.dashpattern} menu item opens a dialog
+with a \widget{dashpattern.title} panel in which
+you can change the \inlineglsdef{index.path-attribute.dash-pattern} 
+of all \selected\ \glspl{shape}.
+
+\widgetdef{dashpattern.title}
+
+The \widget{dashpattern.title} panel is also in the 
+\widget{linestyle.title} panel. There are two radio buttons.
+
+\widgetdef{linestyle.solid}
+
+Select the \widget{linestyle.solid} radio button for a 
+\inlineglsdef{solid-line} line.
+
+\widgetdef{linestyle.dashed}
+
+Select the \widget{linestyle.dashed} radio button for a
+\pathattr{dash-pattern}. This will enable the \pathattr{dash-pattern}
+parameters.
+
+\widgetdef{dashpattern.dash.offset}
+
+The \widget{dashpattern.dash.offset} is the length along the outline from the
+\gls{path}['s] starting point at which the dash pattern should begin.
+
+\widgetdef{dashpattern.dash.length}
+
+The \widget{dashpattern.dash.length} is the length of each dash.
+
+\widgetdef{dashpattern.dash.gap}
+
+The \widget{dashpattern.dash.gap} is the length of the gap between
+each pair of dashes.
+
+\widgetdef{dashpattern.dash.secondary}
+
+If the \widget{dashpattern.dash.secondary} checkbox is selected, 
+a secondary dash can be specified. The dash pattern will alternate
+between the primary and secondary dashes. This can be used to obtain
+a dash-dot pattern.
+
+For example, in \figureref{fig:dash} path \subfigurefmt{a} has a
+solid line; path \subfigurefmt{b} has a \pathattr{dash-pattern} with
+an offset of 0\gls{bp}, dash length of 10\gls{bp} and gap length of
+5\gls{bp}; path \subfigurefmt{c} is the same as path
+\subfigurefmt{b} except that the \pathattr{dash-pattern} has an
+offset of 10\gls{bp}; path \subfigurefmt{d} has no offset, a primary
+pair of dash length 10\gls{bp} and gap length 5\gls{bp}, and a
+secondary pair of dash length 1\gls{bp} and gap length 5\gls{bp}
+which gives a dash-dot pattern.
+
+\FloatFig{fig:dash}
+{\includeimg{dashpatterns}}
+[Example Dash Patterns]
+{Example dash patterns: \subfigurefmt{a}
+solid line; \subfigurefmt{b} dash length 10bp and gap length 5bp;
+\subfigurefmt{c} dash length 10bp, gap length 5bp and 10bp offset;
+\subfigurefmt{d} primary dash length 10bp with gap length 5bp and
+secondary dash length 1bp with gap length 5bp.}
+
+\begin{information}
+If you have a thick \pathattr{line-width} with a non-butt cap, the
+gaps between the dashes may be obscured as the cap will be applied
+to each dash. If you need a cap on either end but not on the dashes,
+use a cap style start and end \pathattr{marker} instead.
+\end{information}
 
 
 \subsection{Cap Style}\label{sec:capstyle}
 
-\inlineglsdef{index.path-attribute.cap-style}
+\menudef{menu.edit.path.style.capstyle}
 
-TODO
+The \inlineglsdef{index.path-attribute.cap-style} for a \selected\
+path can either be set in the \menu{edit.path.style.capstyle} sub
+menu or in the \inlineglsdef{linestyle.cap} dropdown box in the
+\widget{linestyle.title} panel. The cap styles are more noticeable
+with thick lines.
 
+\menudef{menu.edit.path.style.capstyle.butt}
+
+A butt cap is flush with the start and end of the \gls{path}.
+
+\menudef{menu.edit.path.style.capstyle.round}
+
+A round cap protrudes from the start and end of the \gls{path}.
+
+\menudef{menu.edit.path.style.capstyle.square}
+
+A square cap protrudes from the start and end of the \gls{path}.
+
+\FloatFig{fig:capstyles}
+{\includeimg{capstyle}}
+[Cap Styles]
+{Cap styles: \subfigurefmt{a} butt, \subfigurefmt{b} round,
+\subfigurefmt{c} square.  Note that the round and square caps protrude from
+the start and end vertices.}
+
+\begin{information}
+The cap is affected by whether the \gls{path} is open or closed. In
+\figureref{fig:capopena} the path is an open path where the end
+points happen to coincide; in \figureref{fig:capopenb} the path is a
+closed path.
+\end{information}
+
+\FloatSubFigs{fig:capopen}
+{
+ {fig:capopena}{\includeimg{capopen}}{},
+ {fig:capopenb}{\includeimg{capclosed}}{}
+}
+[The Cap Style Is Affected by Whether the Path Is Open or Closed]
+{The cap style is affected by whether the path is open or
+closed:
+\subfigref{fig:capopena} butt cap applied to an open path;
+\subfigref{fig:capopenb} butt cap applied to a closed path.}
+
+\seealsorefs{sec:markers}
 
 \subsection{Join Style}\label{sec:joinstyle}
 
-\inlineglsdef{index.path-attribute.join-style}
+\menudef{menu.edit.path.style.joinstyle}
 
-TODO
+The \menu{edit.path.style.joinstyle} menu item opens a dialog
+with a \widget{linestyle.join} panel in which
+you can change the \inlineglsdef{index.path-attribute.join-style} 
+of all \selected\ \glspl{shape}.
 
+\widgetdef{linestyle.join}
+
+The \widget{linestyle.join} panel is also in the 
+\widget{linestyle.title} panel. Use the dropdown box to select the
+\pathattr{join-style}, which may be one of:
+\inlineglsdef{linestyle.join.mitre}
+(for a \inlineglsdef{index.path-attribute.join-style.mitre} join, see
+\figureref{fig:joinstyles-mitre}),
+\inlineglsdef{linestyle.join.round}
+(for a \inlineglsdef{index.path-attribute.join-style.round} join, see
+\figureref{fig:joinstyles-round}), or
+\inlineglsdef{linestyle.join.bevel}
+(for a \inlineglsdef{index.path-attribute.join-style.bevel} join, see
+\figureref{fig:joinstyles-bevel}).
+
+\widgetdef{linestyle.mitre_limit}
+
+If \widget{linestyle.join.mitre} is selected, the \widget{linestyle.mitre_limit}
+field will be enabled. The value must be greater than or equal to
+1.0.
+
+\FloatSubFigs{fig:joinstyles}
+{
+   {fig:joinstyles-mitre}{\includeimg{joinMitre}}{},
+   {fig:joinstyles-round}{\includeimg{joinRound}}{},
+   {fig:joinstyles-bevel}{\includeimg{joinBevel}}{}
+}
+[Join Styles]
+{Join styles:
+\subfigref{fig:joinstyles-mitre} \pathattr{join-style.mitre};
+\subfigref{fig:joinstyles-round} \pathattr{join-style.round};
+\subfigref{fig:joinstyles-bevel} \pathattr{join-style.bevel}.}
 
 \subsection{Markers}\label{sec:markers}
+
+\menudef{menu.edit.path.style.all_markers}
 
 \inlineglsdef{index.marker}
 TODO
 
+\menudef{menu.edit.path.style.startarrow}
+\menudef{menu.edit.path.style.midarrow}
+\menudef{menu.edit.path.style.endarrow}
 
 \subsubsection{Enabling or Disabling a Marker}\label{sec:enablingmarkers}
 
@@ -7395,19 +7721,76 @@ TODO
 
 \subsection{Winding Rule}\label{sec:winding}
 
+\menudef{menu.edit.path.style.windingrule}
+
 \inlineglsdef{index.path-attribute.winding-rule}
+
+\widgetdef{linestyle.winding_rule}
 
 TODO
 
 
 \section{Text Paint}\label{sec:textpaint}
 
-\inlineglsdef{index.text-attribute.paint}
+\menudef{menu.edit.textarea.colour}
 
-TODO
+The \menu{edit.textarea.colour} menu item opens a dialog
+with a \widget{textcolour.title} panel in which
+you can change the \inlineglsdef{index.text-attribute.paint} 
+of all \selected\ \glspl{textarea} and \glspl{textpath}.
 
+\widgetdef{textcolour.title}
+
+The \widget{textcolour.title} panel has a paint selector panel
+(see \sectionref{sec:paint}) that may be used to set the 
+text \textattr{paint}. This panel is also a tab
+in the \dialog{styles} dialog to set the current
+text \textattr{paint}.
+
+There is a sample panel along the top illustrating the effects of
+the \textattr{paint} you choose.
 
 \section{Text Style}\label{sec:textstyle}
+
+\menudef{menu.edit.textarea.font.all_styles}
+
+The \menu{edit.textarea.font.all_styles} menu item opens a dialog
+with a \widget{font.title} panel in which
+you can change the \inlineglsdef{font} 
+of all \selected\ \glspl{textarea} and \glspl{textpath}.
+
+\widgetdef{font.title}
+
+The \widget{font.title} panel is also a tab
+in the \dialog{styles} dialog to set the current
+\gls{font}. The panel has the following areas:
+\begin{deflist}
+\itemtitle{\widget{font.family}}
+\begin{itemdesc}
+Specifies the \textattr{font-family} (\sectionref{sec:fontfamily}).
+\end{itemdesc}
+
+\itemtitle{\widget{font.size}}
+\begin{itemdesc}
+Specifies the \textattr{font-size} (\sectionref{sec:fontsize}).
+\end{itemdesc}
+
+\itemtitle{\widget{font.series}}
+\begin{itemdesc}
+Specifies the \textattr{font-series} (\sectionref{sec:fontseries}).
+\end{itemdesc}
+
+\itemtitle{\widget{font.shape}}
+\begin{itemdesc}
+Specifies the \textattr{font-shape} (\sectionref{sec:fontshape}).
+\end{itemdesc}
+
+\itemtitle{\widget{font.anchor}}
+\begin{itemdesc}
+Specifies the \textattr{anchor} (\sectionref{sec:fontanchor}).
+\end{itemdesc}
+
+\end{deflist}
 
 TODO
 

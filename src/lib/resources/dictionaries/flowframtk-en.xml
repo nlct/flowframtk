@@ -1846,8 +1846,10 @@ Nicola Talbot
 <entry key="dashpattern.title">Dash Pattern</entry>
 <entry key="dashpattern.dash">Dash</entry>
 <entry key="dashpattern.dash.gap">Gap</entry>
+<entry key="dashpattern.dash.length">Dash Length</entry>
 <entry key="dashpattern.dash.offset">Offset</entry>
 <entry key="dashpattern.dash.secondary">Secondary</entry>
+<entry key="dashpattern.dash.secondary.initvalue">false</entry>
 
 <!--  Size Panel -->
 
@@ -3902,6 +3904,9 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="index.path-attribute.dash-pattern">dash pattern</entry>
 <entry key="index.path-attribute.cap-style">cap style</entry>
 <entry key="index.path-attribute.join-style">join style</entry>
+<entry key="index.path-attribute.join-style.bevel">bevel</entry>
+<entry key="index.path-attribute.join-style.round">round</entry>
+<entry key="index.path-attribute.join-style.mitre">miter</entry>
 <entry key="index.path-attribute.winding-rule">winding rule</entry>
 
 <entry key="index.marker">markers</entry>

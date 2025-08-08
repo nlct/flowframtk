@@ -155,6 +155,8 @@
 <entry key="index.text-colour">text colour</entry>
 <entry key="index.pen-colour">pen colour</entry>
 
+<entry key="index.path-attribute.join-style.mitre">mitre</entry>
+
 <entry key="index.marker.colour">colour</entry>
 
 <entry key="index.colour">colour</entry>
