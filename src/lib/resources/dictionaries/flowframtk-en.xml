@@ -1895,12 +1895,19 @@ Nicola Talbot
 <entry key="arrow.altlatex">Alt LaTeX</entry>
 <entry key="arrow.altlatex.open">Alt LaTeX Open</entry>
 <entry key="arrow.asterisk">Asterisk</entry>
+
 <entry key="arrow.autogap">Auto Repeat Gap</entry>
 <entry key="arrow.autogap.mnemonic">G</entry>
+<entry key="arrow.autogap.initvalue">true</entry>
+
 <entry key="arrow.autooffset">Auto Offset</entry>
 <entry key="arrow.autooffset.mnemonic">F</entry>
+<entry key="arrow.autooffset.initvalue">true</entry>
+
 <entry key="arrow.autoorient">Auto Orientation</entry>
 <entry key="arrow.autoorient.mnemonic">I</entry>
+<entry key="arrow.autoorient.initvalue">true</entry>
+
 <entry key="arrow.ballcap">Ball Cap</entry>
 <entry key="arrow.bar">Bar</entry>
 <entry key="arrow.boxfilled">Box Filled</entry>
@@ -1911,8 +1918,11 @@ Nicola Talbot
 <entry key="arrow.circle">Circle</entry>
 <entry key="arrow.circle.open">Circle Open</entry>
 <entry key="arrow.clubcap">Club Cap</entry>
+
 <entry key="arrow.composite">Composite</entry>
 <entry key="arrow.composite.mnemonic">M</entry>
+<entry key="arrow.composite.initvalue">false</entry>
+
 <entry key="arrow.cross">Cross</entry>
 <entry key="arrow.cusp">Cusp</entry>
 <entry key="arrow.cutoutbulgecap">Cutout Bulge Cap</entry>
@@ -1920,8 +1930,11 @@ Nicola Talbot
 <entry key="arrow.diamond.open">Diamond Open</entry>
 <entry key="arrow.dotfilled">Dot Filled</entry>
 <entry key="arrow.dotopen">Dot Open</entry>
+
 <entry key="arrow.double">Double</entry>
 <entry key="arrow.double.mnemonic">B</entry>
+<entry key="arrow.double.initvalue">off</entry>
+
 <entry key="arrow.doubleleafcap">Double Leaf Cap</entry>
 <entry key="arrow.doubleleafbackcap">Backwards Double Leaf Cap</entry>
 <entry key="arrow.doubleleafforwardcap">Forward Double Leaf Cap</entry>
@@ -1950,8 +1963,11 @@ Nicola Talbot
 <entry key="arrow.inverttrianglecap">Inverted Triangle Cap</entry>
 <entry key="arrow.latex">LaTeX</entry>
 <entry key="arrow.leafcap">Leaf Cap</entry>
+
 <entry key="arrow.nomarker">No Marker</entry>
 <entry key="arrow.nomarker.mnemonic">N</entry>
+<entry key="arrow.nomarker.initvalue">on</entry>
+
 <entry key="arrow.none">None</entry>
 <entry key="arrow.octagon.filled">Octagon Filled</entry>
 <entry key="arrow.octagon.open">Octagon Open</entry>
@@ -1967,8 +1983,11 @@ Nicola Talbot
 <entry key="arrow.primary.mnemonic">P</entry>
 <entry key="arrow.rectanglecap">Rectangle Cap</entry>
 <entry key="arrow.roundcap">Round Cap</entry>
+
 <entry key="arrow.reversed">Reversed</entry>
 <entry key="arrow.reversed.mnemonic">V</entry>
+<entry key="arrow.reversed.initvalue">false</entry>
+
 <entry key="arrow.rhombus.filled">Rhombus Filled</entry>
 <entry key="arrow.rhombus.open">Rhombus Open</entry>
 <entry key="arrow.round">Round Bracket</entry>
@@ -1980,8 +1999,11 @@ Nicola Talbot
 <entry key="arrow.secondary.mnemonic">E</entry>
 <entry key="arrow.semicircle.filled">Filled Semicircle</entry>
 <entry key="arrow.semicircle.open">Open Semicircle</entry>
+
 <entry key="arrow.single">Single</entry>
 <entry key="arrow.single.mnemonic">S</entry>
+<entry key="arrow.single.initvalue">on</entry>
+
 <entry key="arrow.snowflake">Snowflake</entry>
 <entry key="arrow.square">Square Bracket</entry>
 <entry key="arrow.star">Star</entry>
@@ -2004,13 +2026,18 @@ Nicola Talbot
 <entry key="arrow.triangle.up.filled">Triangle Up Filled</entry>
 <entry key="arrow.triangle.up.open">Triangle Up Open</entry>
 <entry key="arrow.trianglecap">Triangle Cap</entry>
+
 <entry key="arrow.triple">Triple</entry>
 <entry key="arrow.triple.mnemonic">T</entry>
+<entry key="arrow.triple.initvalue">off</entry>
+
 <entry key="arrow.tripleleafcap">Triple Leaf Cap</entry>
 <entry key="arrow.tripleleafbackcap">Backwards Triple Leaf Cap</entry>
 <entry key="arrow.tripleleafforwardcap">Forward Triple Leaf Cap</entry>
+
 <entry key="arrow.usemarker">Use Marker</entry>
 <entry key="arrow.usemarker.mnemonic">U</entry>
+<entry key="arrow.usemarker.initvalue">off</entry>
 
 <!--  Arrow Colour -->
 
@@ -3368,6 +3395,7 @@ Merge Region: {2}</entry>
 
 <entry key="button.choose">Select...</entry>
 <entry key="button.choose.tooltip">Choose a new setting</entry>
+<entry key="button.choose.iconimage">choose</entry>
 
 <entry key="button.quit_without_saving">Quit Without Saving</entry>
 

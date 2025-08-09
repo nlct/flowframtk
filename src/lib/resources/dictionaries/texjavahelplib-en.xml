@@ -571,6 +571,9 @@ code should appear in the PDF</entry>
 
 <entry key="manual.cont_explanation">(The symbol \continuesymbol\ above indicates a~line wrap. Don't insert a~line break at that point.)</entry>
 
+<entry key="manual.longtable_continued">Continued</entry>
+<entry key="manual.longtable_continued_next_page">Continued on next page</entry>
+
 <entry key="manual.idxenv">environment</entry>
 <entry key="manual.idxpackage">package</entry>
 <entry key="manual.idxclass">class</entry>

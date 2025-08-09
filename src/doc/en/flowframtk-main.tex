@@ -2682,6 +2682,30 @@ You can show or hide the \gls*{statusbar}, or elements within the
 bar, using the \dialog{configui} dialog. You can also use this
 dialog to change the font used in the \gls*{statusbar}.
 
+\section{Common Dialog Buttons}\label{sec:commonwidgets}
+
+Some menu items open dialog boxes. Many of them share some common
+buttons.
+
+\widgetdef{button.okay}
+
+The \widget{okay} button applies the settings in the dialog and
+closes the dialog window.
+
+\widgetdef{button.cancel}
+
+The \widget{cancel} button discards any changes that have been made
+and closes the dialog window.
+
+\widgetdef{button.default}
+
+The \widget{button.default} button may be used to restore default
+settings.
+
+\widgetdef{button.choose}
+
+The \widget{button.choose} button opens a new dialog in which you
+can choose a sub-setting from the main dialog window.
 
 \chapter{The File Menu}\label{sec:filemenu}
 
@@ -7337,8 +7361,6 @@ Specifies the current \gls{font} and \textattrpl{anchor} (see
 
 \end{deflist}
 
-\widgetdef{button.default}
-
 The \gls{button.default} button located at the bottom right corner
 of the dialog box may be used to restore the default settings.
 
@@ -7654,30 +7676,452 @@ field will be enabled. The value must be greater than or equal to
 
 \subsection{Markers}\label{sec:markers}
 
+The start, mid and end \inlineglspluraldef{index.marker} are placed on
+the start, intermediate points (mid-points) and end vertices, respectively. Some of the
+markers require a size, some of them are dependent on the line width
+and some of them require a size as well as being dependent on the
+line width.
+
+Markers can be specified by clicking on the \widget{button.choose}
+button alongside the applicable \widget{linestyle.arrow.start},
+\widget{linestyle.arrow.mid} or \widget{linestyle.arrow.end}
+row in the \dialog{linestyle} panel (accessed with \menu{edit.path.style.all_styles}
+to change the currently \selected\ shapes or with
+\menu{settings.styles} to change the current marker styles to apply
+to new \glspl{path}).
+
 \menudef{menu.edit.path.style.all_markers}
 
-\inlineglsdef{index.marker}
-TODO
+If you want to set the start, mid and end \glspl{index.marker} to
+the same type for currently \selected\ shapes, you can use
+\menu{edit.path.style.all_markers} which will open a marker dialog.
+When you click on the \widget{button.okay} button, the marker type
+will be applied to all the markers on the \selected\ shapes.
+
+Alternatively, you can set the start, mid and end
+\glspl{index.marker} for \selected\ shapes separately.
 
 \menudef{menu.edit.path.style.startarrow}
+
+The \menu{edit.path.style.startarrow} will open a dialog with the
+marker panel in which you can set the start \dgls{marker} for
+all \selected\ shapes. Start markers are automatically reversed as
+they are designed to point towards the start.
+
 \menudef{menu.edit.path.style.midarrow}
+
+The \menu{edit.path.style.midarrow} will open a dialog with the
+marker panel in which you can set the mid \dgls{marker} for
+all \selected\ shapes.
+
 \menudef{menu.edit.path.style.endarrow}
+
+The \menu{edit.path.style.endarrow} will open a dialog with the
+marker panel in which you can set the end \dgls{marker} for
+all \selected\ shapes.
+
+The marker panel used in each case has a sample panel along the top
+illustrating the selected settings. Below the panel are two
+checkboxes:
+
+\widgetdef{arrow.composite}
+
+The \widget{arrow.composite} is only available if secondary marker
+is enabled. See \sectionref{sec:compositemarkers}.
+
+\widgetdef{arrow.overlay}
+
+The \widget{arrow.overlay} is only available if secondary marker
+is enabled. See \sectionref{sec:compositemarkers}.
+
+Below these checkboxes are the two main tabs:
+
+\widgetdef{arrow.primary}
+
+The \widget{arrow.primary} tab specifies the settings for the
+primary marker.
+
+\widgetdef{arrow.secondary}
+
+The \widget{arrow.secondary} tab specifies the settings for the
+primary marker. This tab is only available if the primary marker is
+set and the \widget{arrow.composite} checkbox is selected.
+
+The \widget{arrow.primary} and \widget{arrow.secondary} panels have
+the same layout:
+\begin{itemize}
+\item Radio buttons to enable or disable the marker.
+See \sectionref{sec:enablingmarkers}.
+
+\item The marker \gls{index.marker.type} tabs (only available if the marker is
+enabled). See \sectionref{sec:markertypes}.
+
+\item The marker \gls{index.marker.size} (only available if
+supported by the selected marker \gls{index.marker.type}).
+See \sectionref{sec:markersize}.
+
+\item The \gls{index.marker.repeating} radio buttons.
+See \sectionref{sec:repeatingmarkers}.
+
+\item The \widget{arrow.reversed} checkbox.
+See \sectionref{sec:reversingmarkers}. 
+
+\item The \widget{arrow.autoorient} checkbox.
+See \sectionref{sec:markerorientation}.
+
+\item The \widget{arrow.autooffset} checkbox.
+See \sectionref{sec:markeroffset}.
+
+\item The \widget{arrow.autogap} checkbox.
+See \sectionref{sec:repeatgap}.
+
+\item The \gls{index.marker.colour} setting.
+See \sectionref{sec:markerpaint}.
+
+\end{itemize}
 
 \subsubsection{Enabling or Disabling a Marker}\label{sec:enablingmarkers}
 
-TODO
+\widgetdef{arrow.usemarker}
 
+To enable a marker, select the \widget{arrow.usemarker}
+radio button. This will enable the applicable widgets for the
+selected marker (see \sectionref{sec:markertypes}).
+
+\widgetdef{arrow.nomarker}
+
+To disable a marker, select the \widget{arrow.nomarker} radio
+button. This will disable all the marker settings.
 
 \subsubsection{Marker Types}\label{sec:markertypes}
 
-\inlineglsdef{index.marker.type}
+Marker \inlineglspluraldef{index.marker.type}
+are divided into six categories:
 
-TODO
+\widgetdef{arrow.tab.arrows}
+
+An arrow marker looks like an arrow head or triangle or hook.
+The tips may protrude forward beyond the vertex but mostly they protrude
+back from the vertex.
+
+\widgetdef{arrow.tab.partial}
+
+A partial marker looks like one half of an arrow marker.
+
+\widgetdef{arrow.tab.data}
+
+Data point style markers are \manmsg{centred} on the applicable
+vertex (but can be shifted with an offset).
+
+\widgetdef{arrow.tab.bracket}
+
+Bracket style markers which protrude back from the vertex.
+
+\widgetdef{arrow.tab.decorative}
+
+Decorative markers are dingbat style shapes but also include circles
+and diamonds.
+
+\widgetdef{arrow.tab.caps}
+Cap style markers protrude forward beyond the vertex.
+
+\begin{important}
+The cap style markers do not replace the line \pathattr{cap-style},
+but are in addition to the line \pathattr{cap-style}. However the cap style
+markers generally look best in combination with the
+\editfn{path.style.capstyle.butt} cap line style.
+\end{important}
+
+Available markers are listed in \tableref{tab:arrowmarkers} (arrow
+style markers), \tableref{tab:partialmarkers} (partial arrow markers),
+\tableref{tab:datapointmarkers} (data point style markers),
+\tableref{tab:bracketmarkers} (bracket style markers),
+\tableref{tab:capmarkers} (cap style markers) and
+\tableref{tab:decorativemarkers} (decorative markers).
+
+\FloatTable[htbp]{tab:arrowmarkers}
+{%
+\begin{tabular}{@{}lcccc@{}}
+\bfseries Marker & \bfseries Size? &
+\bfseries \tablecellstack{Line Width\\Dependent?} &
+\bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
+\bfseries Sample\\
+\widget{arrow.pointed} & Required & Dependent & No &
+\includeimg{markerpointed}\\
+\widget{arrow.pointed60} & Required & Dependent & No &
+\includeimg{markerpointed60}\\
+\widget{arrow.pointed45} & Required & Dependent & No &
+\includeimg{markerpointed45}\\
+\widget{arrow.cusp} & Required & Dependent & No &
+\includeimg{markercusp}\\
+\widget{arrow.latex} & N/A & Dependent & No &
+\includeimg{markerlatex}\\
+\widget{arrow.altlatex} & N/A & Dependent & No &
+\includeimg{markeraltlatex}\\
+\widget{arrow.altlatex.open} & N/A & Dependent & No &
+\includeimg{markeraltlatexopen}\\
+\widget{arrow.triangle} & Required & Dependent & No &
+\includeimg{markertriangle}\\
+\widget{arrow.triangle.open} & Required & Dependent & No &
+\includeimg{markertriangleopen}\\
+\widget{arrow.equilateral.filled} & Required & Independent
+& No & \includeimg{markerequilateralfilled}\\
+\widget{arrow.equilateral.open} & Required & Independent
+& No & \includeimg{markerequilateralopen}\\
+\widget{arrow.hooks} & Required & Dependent & No &
+\includeimg{markerhooks}
+\end{tabular}
+}
+[Available Marker Styles and Dependencies for Arrow Style Markers]
+{Available marker styles and dependencies for arrow
+style markers. (Line width=2bp, marker size=8bp, butt cap style.)
+Markers are shown in red to distinguish them from the line.}
+
+\FloatTable[htbp]{tab:partialmarkers}
+{%
+\begin{tabular}{@{}lcccc@{}}
+\bfseries Marker & \bfseries Size? &
+\bfseries \tablecellstack{Line Width\\Dependent?} &
+\bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
+\bfseries Sample\\
+\widget{arrow.hook.up} & Required & Dependent & No &
+\includeimg{markerhookup}\\
+\widget{arrow.hook.down} & Required & Dependent & No &
+\includeimg{markerhookdown}\\
+\widget{arrow.halfpointed.up} & Required & Dependent & No &
+\includeimg{markerhalfpointedup}\\
+\widget{arrow.halfpointed.down} & Required & Dependent & No &
+\includeimg{markerhalfpointeddown}\\
+\widget{arrow.halfpointed60.up} & Required & Dependent & No &
+\includeimg{markerhalfpointed60up}\\
+\widget{arrow.halfpointed60.down} & Required & Dependent & No &
+\includeimg{markerhalfpointed60down}\\
+\widget{arrow.halfpointed45.up} & Required & Dependent & No &
+\includeimg{markerhalfpointed45up}\\
+\widget{arrow.halfpointed45.down} & Required & Dependent & No &
+\includeimg{markerhalfpointed45down}\\
+\widget{arrow.halfcusp.up} & Required & Dependent & No &
+\includeimg{markerhalfcuspup}\\
+\widget{arrow.halfcusp.down} & Required & Dependent & No &
+\includeimg{markerhalfcuspdown}
+\end{tabular}
+}
+[Available Marker Styles and Dependencies for Partial Arrow
+Style Markers]
+{Available marker styles and dependencies for partial
+arrow style markers. (Line width=2bp, marker size=8bp, butt cap
+style.) Markers are shown in red to distinguish them from the line.}
+
+\NoFloatLongTable{tab:datapointmarkers}
+[\renewcommand*{\arraystretch}{1.5}]
+{@{}lcccc@{}}
+{%
+\bfseries Marker & \bfseries Size? &
+\bfseries \tablecellstack{Line Width\\Dependent?} &
+\bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
+\bfseries Sample
+}
+{%
+\widget{arrow.dotfilled} & Required & Independent & Yes &
+\includeimg{markerdotfilled}\\
+\widget{arrow.dotopen} & Required & Independent & Yes &
+\includeimg{markerdotopen}\\
+\widget{arrow.boxfilled} & Required & Independent & Yes &
+\includeimg{markerboxfilled}\\
+\widget{arrow.boxopen} & Required & Independent & Yes &
+\includeimg{markerboxopen}\\
+\widget{arrow.cross} & Required & Independent & Yes &
+\includeimg{markercross}\\
+\widget{arrow.plus} & Required & Independent & Yes &
+\includeimg{markerplus}\\
+\widget{arrow.star} & Required & Independent & Yes &
+\includeimg{markerstar}\\
+\widget{arrow.asterisk} & Required & Independent & Yes &
+\includeimg{markerasterisk}\\
+\widget{arrow.star5.open} & Required & Independent & Yes &
+\includeimg{markerstar5open}\\
+\widget{arrow.star5.filled} & Required & Independent & Yes &
+\includeimg{markerstar5filled}\\
+\widget{arrow.star6.open} & Required & Independent & Yes &
+\includeimg{markerstar6open}\\
+\widget{arrow.star6.filled} & Required & Independent & Yes &
+\includeimg{markerstar6filled}\\
+\widget{arrow.triangle.up.filled} & Required & Independent & Yes &
+\includeimg{markertriangleupfilled}\\
+\widget{arrow.triangle.up.open} & Required & Independent & Yes &
+\includeimg{markertriangleupopen}\\
+\widget{arrow.triangle.down.filled} & Required & Independent & Yes &
+\includeimg{markertriangledownfilled}\\
+\widget{arrow.triangle.down.open} & Required & Independent & Yes &
+\includeimg{markertriangledownopen}\\
+\widget{arrow.rhombus.filled} & Required & Independent & Yes &
+\includeimg{markerrhombusfilled}\\
+\widget{arrow.rhombus.open} & Required & Independent & Yes &
+\includeimg{markerrhombusopen}\\
+\widget{arrow.pentagon.filled} & Required & Independent & Yes &
+\includeimg{markerpentagonfilled}\\
+\widget{arrow.pentagon.open} & Required & Independent & Yes &
+\includeimg{markerpentagonopen}\\
+\widget{arrow.hexagon.filled} & Required & Independent & Yes &
+\includeimg{markerhexagonfilled}\\
+\widget{arrow.hexagon.open} & Required & Independent & Yes &
+\includeimg{markerhexagonopen}\\
+\widget{arrow.octagon.filled} & Required & Independent & Yes &
+\includeimg{markeroctagonfilled}\\
+\widget{arrow.octagon.open} & Required & Independent & Yes &
+\includeimg{markeroctagonopen}\\
+\widget{arrow.semicircle.filled} & Required & Independent & No &
+\includeimg{markersemicirclefilled}\\
+\widget{arrow.semicircle.open} & Required & Independent & No &
+\includeimg{markersemicircleopen}
+}
+[Available Marker Styles and Dependencies for Data Point Style Markers]
+{Available marker styles and dependencies for data
+point style markers. (Line width=2bp, marker size=8bp, butt cap
+style.) Markers are shown in red to distinguish them from the line.}
+
+\FloatTable[htbp]{tab:bracketmarkers}
+[\renewcommand*{\arraystretch}{1.75}]
+{%
+\begin{tabular}{@{}lcccc@{}}
+\bfseries Marker & \bfseries Size? &
+\bfseries \tablecellstack{Line Width\\Dependent?} &
+\bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
+\bfseries Sample\\
+\widget{arrow.square} & N/A & Dependent & No&
+\includeimg{markersquare}\\
+\widget{arrow.bar} & N/A & Dependent & Yes &
+\includeimg{markerbar}\\
+\widget{arrow.round} & N/A & Dependent & No &
+\includeimg{markerround}\\
+\widget{arrow.brace} & N/A & Dependent & No &
+\includeimg{markerbrace}\\
+\widget{arrow.altsquare} & Required & Dependent & No&
+\includeimg{markeraltsquare}\\
+\widget{arrow.altbar} & Required & Dependent & Yes &
+\includeimg{markeraltbar}\\
+\widget{arrow.altround} & Required & Dependent & No &
+\includeimg{markeraltround}\\
+\widget{arrow.altbrace} & Required & Dependent & No &
+\includeimg{markeraltbrace}
+\end{tabular}
+}
+[Available Marker Styles and Dependencies for Bracket Style Markers]
+{Available marker styles and dependencies for bracket
+style markers. (Line width=2bp, marker size=8bp, butt cap style.)
+Markers are shown in red to distinguish them from the line.}
+
+\clearpage
+
+\NoFloatLongTable{tab:capmarkers}
+[\renewcommand*{\arraystretch}{1.75}]
+{@{}lcccc@{}}
+{%
+\bfseries Marker & \bfseries Size? & 
+\bfseries \tablecellstack{Line Width\\Dependent?} &
+\bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
+\bfseries Sample
+}
+{%
+\widget{arrow.rectanglecap} & Required & Dependent & No &
+\includeimg{markerrectanglecap}\\
+\widget{arrow.roundcap} & Required & Dependent & No &
+\includeimg{markerroundcap}\\
+\widget{arrow.trianglecap} & Required & Dependent & No &
+\includeimg{markertrianglecap}\\
+\widget{arrow.inverttrianglecap} & Required & Dependent & No &
+\includeimg{markerinverttrianglecap}\\
+\widget{arrow.chevroncap} & Required & Dependent & No &
+\includeimg{markerchevroncap}\\
+\widget{arrow.invertchevroncap} & Required & Dependent & No &
+\includeimg{markerinvertchevroncap}\\
+\widget{arrow.fastcap} & Required & Dependent & No &
+\includeimg{markerfastcap}\\
+\widget{arrow.invertfastcap} & Required & Dependent & No &
+\includeimg{markerinvertfastcap}\\
+\widget{arrow.ballcap} & Required & Dependent & No &
+\includeimg{markerballcap}\\
+\widget{arrow.leafcap} & Required & Dependent & No &
+\includeimg{markerleafcap}\\
+\widget{arrow.doubleleafcap} & Required & Dependent & No &
+\includeimg{markerleaf2cap}\\
+\widget{arrow.tripleleafcap} & Required & Dependent & No &
+\includeimg{markerleaf3cap}\\
+\widget{arrow.clubcap} & Required & Dependent & No &
+\includeimg{markerclubcap}\\
+\widget{arrow.tripleleafforwardcap} & Required & Dependent & No &
+\includeimg{markerleaf3forcap}\\
+\widget{arrow.tripleleafbackcap} & Required & Dependent & No &
+\includeimg{markerleaf3backcap}\\
+\widget{arrow.doubleleafforwardcap} & Required & Dependent & No &
+\includeimg{markerleaf2forcap}\\
+\widget{arrow.doubleleafbackcap} & Required & Dependent & No &
+\includeimg{markerleaf2backcap}\\
+\widget{arrow.bulgecap} & Required & Dependent & No &
+\includeimg{markerbulgecap}\\
+\widget{arrow.cutoutbulgecap} & Required & Dependent & No &
+\includeimg{markercutoutbulgecap}
+}
+[Available Marker Styles and Dependencies for Cap Style Markers]
+{Available marker styles and dependencies for cap style
+markers. (Line width=10bp, marker size=5bp, butt cap style.)
+The cap style markers are designed to be flush against the line,
+so they are only clearly visible for thick lines.
+Markers are shown in red to distinguish them from the line.}
+
+\FloatTable[htbp]{tab:decorativemarkers}
+[\renewcommand*{\arraystretch}{1.75}]
+{%
+\begin{tabular}{@{}lcccc@{}}
+\bfseries Marker & \bfseries Size? &
+\bfseries \tablecellstack{Line Width\\Dependent?} &
+\bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
+\bfseries Sample\\
+\widget{arrow.circle} & Required & Dependent & No &
+\includeimg{markercircle}\\
+\widget{arrow.diamond} & N/A & Dependent & No &
+\includeimg{markerdiamond}\\
+\widget{arrow.circle.open} & Required & Dependent & No &
+\includeimg{markercircleopen}\\
+\widget{arrow.diamond.open} & N/A & Dependent & No &
+\includeimg{markerdiamondopen}\\
+\widget{arrow.scissors.up.filled} & Required & Dependent & No &
+\includeimg{markerscissorsupfilled}\\
+\widget{arrow.scissors.down.filled} & Required & Dependent & No &
+\includeimg{markerscissorsdownfilled}\\
+\widget{arrow.scissors.up.open} & Required & Dependent & No &
+\includeimg{markerscissorsupopen}\\
+\widget{arrow.scissors.down.open} & Required & Dependent & No &
+\includeimg{markerscissorsdownopen}\\
+\widget{arrow.heart.right.filled} & Required & Independent & No &
+\includeimg{markerheartrightfilled}\\
+\widget{arrow.heart.right.open} & Required & Independent & No &
+\includeimg{markerheartrightopen}\\
+\widget{arrow.heart.filled} & Required & Independent & No &
+\includeimg{markerheartfilled}\\
+\widget{arrow.heart.open} & Required & Independent & No &
+\includeimg{markerheartopen}\\
+\widget{arrow.snowflake} & Required & Independent & Yes &
+\includeimg{markersnowflake}\\
+\widget{arrow.starchevron.open} & Required & Independent & Yes &
+\includeimg{markerstarchevronopen}\\
+\widget{arrow.starchevron.filled} & Required & Independent & Yes &
+\includeimg{markerstarchevronfilled}
+\end{tabular}
+}
+[Available Marker Styles and Dependencies for Decorative Markers]
+{Available marker styles and dependencies for
+decorative markers. (Line width=2bp, marker size=8bp,
+butt cap style.)
+Markers are shown in red to distinguish them from the line.}
+
 
 
 \subsubsection{Marker Size}\label{sec:markersize}
 
 \inlineglsdef{index.marker.size}
+
+\widgetdef{arrow.size}
 
 TODO
 
@@ -7686,12 +8130,18 @@ TODO
 
 \inlineglsdef{index.marker.repeating}
 
+\widgetdef{arrow.single}
+\widgetdef{arrow.double}
+\widgetdef{arrow.triple}
+
 TODO
 
 
 \subsubsection{Reversing Markers}\label{sec:reversingmarkers}
 
 \inlineglsdef{index.marker.reversing}
+
+\widgetdef{arrow.reversed}
 
 TODO
 
@@ -7700,12 +8150,16 @@ TODO
 
 \inlineglsdef{index.marker.composite}
 
+\widgetdef{arrow.composite}
+
 TODO
 
 
 \subsubsection{Marker Orientation}\label{sec:markerorientation}
 
 \inlineglsdef{index.marker.orientation}
+
+\widgetdef{arrow.autoorient}
 
 TODO
 
@@ -7714,6 +8168,8 @@ TODO
 
 \inlineglsdef{index.marker.offset}
 
+\widgetdef{arrow.autooffset}
+
 TODO
 
 
@@ -7721,12 +8177,18 @@ TODO
 
 \inlineglsdef{index.marker.repeat-gap}
 
+\widgetdef{arrow.autogap}
+
 TODO
 
 
 \subsubsection{Marker \Glsentrytext{manual.colour}}\label{sec:markerpaint}
 
 \inlineglsdef{index.marker.colour}
+
+\widgetdef{arrow.colour.dependent}
+
+\widgetdef{arrow.colour.independent}
 
 TODO
 
