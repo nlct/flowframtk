@@ -2521,7 +2521,7 @@ the \filefn{export} functions
 fonts used by the \hyperref[sec:graphics]{startup splash screen};
 
 \item the \file{latexfontmap.prop} file (created by you, if you want
-it, in any text editor) that contains any \gls{font-mappings} (see
+it, in any text editor) that contains any \glspl{font-mapping} (see
 \sectionref{sec:fontfamily}).  For compatibility with
 \gls{JpgfDraw}, the file may simply be \filefmt{latexfontmap}
 without an extension.
@@ -8523,22 +8523,136 @@ Specifies the \textattr{anchor} (\sectionref{sec:fontanchor}).
 
 \end{deflist}
 
-TODO
-
-
 \subsection{Font Family}\label{sec:fontfamily}
 
+\menudef{menu.edit.textarea.font.family}
+
+The \menu{edit.textarea.font.family} menu item opens a dialog with a 
+\widget{font.family} panel in which you can change the
 \inlineglsdef{index.text-attribute.font-family}
+of all \selected\ \glspl{textarea} and \glspl{textpath}.
 
-TODO
+\widgetdef{font.family}
 
+The \widget{font.family} panel is also in the \widget{font.title}
+panel. Use the dropdown box (\figureref{fig:setfontfamily}) to
+select the font family used to \glslink{drawing-on-canvas}{draw} the
+text on the \gls{canvas}.  This dropdown box provides a list of
+locally available fonts found by the \gls{jre}.
+
+\FloatFig{fig:setfontfamily}
+{\includeimg{annoteFontFamily}}
+{Setting the Font Family}
+
+When you select a font family, \FlowframTk\ uses its
+\inlineglsdef{font-mapping} to determine
+an appropriate \LaTeX\ font family declaration.  This is used if you
+\filefn{export} your image as a \LaTeX\ file (or use one of the
+export functions that have \LaTeX\ as an intermediate step). If
+\FlowframTk\ has guessed incorrectly, you can select a different
+command from the \gls{combobox} on the right, or you can edit it if
+you require a font family declaration that is not listed.
+Alternatively you can clear the value (by deleting the family
+declaration) to use the current document font family.
+
+If no \gls{font-mapping} has been set, then \FlowframTk\ will guess
+at the most appropriate declaration based on the font name.
+If there is a particular mapping that you always
+want, you can set up a \gls{font-mapping}.
+
+The \glspl{font-mapping} are defined in a file called
+\inlineglsdef{file.latexfontmap.prop} (which may need to be created, if it
+doesn't exist) in \FlowframTk's \gls{config_dir}.
+Each line in this file should be in the form:
+\begin{compactcodebox}
+\meta{font-name}=\meta{LaTeX declaration}
+\end{compactcodebox}%
+where \meta{font name} is the name of the font family (for example,
+URW Chancery L) and \meta{LaTeX declaration} is the
+code used to set the font in a \LaTeX\ document.
+
+\begin{information}
+The mapped \LaTeX\ code should be in the form of a declaration (sets
+the font \qt{from this point onwards}) such as \gls{rmfamily} not a 
+text block command (a command that sets its argument in the given font)
+such as \gls{textrm}.
+\end{information}
+
+Blank lines or lines starting with a \gls{hash} are ignored. For
+example, on my computer I have the font \qt{URW Chancery L}. If I
+select this font, the \LaTeX\ equivalent will default to
+\gls{rmfamily}. However, it would be more appropriate for the
+\LaTeX\ declaration to select the PSNFSS chancery font. Therefore, I
+can use my favourite text editor to create a file called
+\file{latexfontmap.prop} with the line
+\begin{compactcodebox*}
+URW Chancery L=\gls{fontfamily}\marg{pzc}\gls{selectfont}
+\end{compactcodebox*}%
+and save it in \FlowframTk's \gls{config_dir}. Next time I
+start \FlowframTk, it will load this mapping and use it whenever
+I select \qt{URW Chancery L} from the font name selector.
+Alternatively, you can use a regular expression. For example:
+\begin{compactcodebox*}
+.*[Cc]hancery.*=\gls{fontfamily}\marg{pzc}\gls{selectfont}
+\end{compactcodebox*}%
+This will select \code{\gls{fontfamily}\marg{pzc}\gls{selectfont}} for any font
+that contains either \qt{Chancery} or \qt{chancery} in its name.
+It is however faster to use the exact name.
+
+\seealsorefs{sec:fontanchor}
 
 \subsection{Font Size}\label{sec:fontsize}
 
+\menudef{menu.edit.textarea.font.size}
+
+The \menu{edit.textarea.font.size} menu item opens a dialog with a 
+\widget{font.size} panel in which you can change the
 \inlineglsdef{index.text-attribute.font-size}
+of all \selected\ \glspl{textarea} and \glspl{textpath}.
 
-TODO
+\widgetdef{font.size}
 
+The \widget{font.size} panel is also in the \widget{font.title}
+panel. Enter the desired \textattr{font-size} in the input field
+(see \figureref{fig:setfontsize}).
+
+\FloatFig{fig:setfontsize}
+{\includeimg{annoteFontSize}}
+{Setting the Font Size}
+
+When you specify a font size, \FlowframTk\ guesses at the
+appropriate \LaTeX\ font size declaration. The
+\gls{normal-font-size} is taken from the value given in the
+\widget{clssettings.title} tab (see \sectionref{sec:normalsize}) of
+the \dialog{texconfig} dialog box (unless you have unchecked the
+\widget{clssettings.relative_fontsize} setting). This is used if you
+\filefn{export} your image as a \LaTeX\ file (or use one of the
+export functions that have \LaTeX\ as an intermediate step).
+
+If \FlowframTk\ has guessed incorrectly, you can select a different
+command from the \gls{combobox} on the right, or you can edit it if
+you require a font size declaration that is not listed.
+Alternatively you can clear the value (by deleting the size
+declaration) to use the current document font size.  Note that
+\gls{veryHuge}, \gls{VeryHuge} and \gls{VERYHuge} are
+not standard commands, but are defined in the \cls{a0poster}
+class file.  \FlowframTk\ will only select these commands if the
+normal font size is 25\gls{pt}. Remember that if you want to use
+very large sizes in your \LaTeX\ document, you will need to use
+scalable fonts rather than the default Computer Modern.
+
+Note that if you change the \gls{normalsize} value (typically
+through a document class option), you will
+need to reselect the \textattr{font-size} for each of the \gls{textarea}['s]
+that have already been defined unless the \gls*{checkbox} marked
+\widget{clssettings.update} is selected in the
+\widget{clssettings.title} tab of the \dialog{texconfig} dialog box.
+
+\seealsorefs{
+ sec:fontanchor,
+ sec:normalsize,
+ sec:texconfig
+}
 
 \subsection{Font Series}\label{sec:fontseries}
 

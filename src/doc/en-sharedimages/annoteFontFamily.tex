@@ -1,6 +1,6 @@
-% /home/nlct/programming/java/jpgfdraw/trunk/doc/image-src/annoteFontFamily.jdr
-% Created by FlowframTk version 0.6
-% 08-Jun-2014 20:40:01
+% /home/nlct/programming/java/flowframtk/src/doc/image-src/annoteFontFamily.jdr
+% Created by FlowframTk version 0.8.7
+% 9 Aug 2025, 17:10:18
 \iffalse
 % This image may require the following commands in the preamble:
 \usepackage{ifpdf}
@@ -9,13 +9,17 @@
   \GenericWarning{}{text outline can't be implemented}#3%
 }%
 \ifpdf
+ \let\jdrorgmod\mod
  \InputIfFileExists{pdf-trans}%
  {%
    \renewcommand*{\jdroutline}[3]{%
+     {\def\mod{\expandtwonumexprafter \modulo}%
      \setbox\@tempboxa\hbox{##3}%
      \boxgs{##1}{}\copy\@tempboxa
+     }%
    }%
  }{}
+ \let\mod\jdrorgmod
 \else
  \IfFileExists{pst-char.sty}%
  {%
@@ -30,14 +34,17 @@
 \makeatother
 \usepackage{pgf}
 \usepgflibrary{decorations.text}
-% The normal size font is assumed to be 10pt
+% The normal size font is assumed to be 11pt
 % End of preamble information
 \fi
-\begin{pgfpicture}{115.367864bp}{616.469242bp}{454.867864bp}{736.553889bp}
+\begin{pgfpicture}
+\pgfpathmoveto{\pgfpoint{115.367864bp}{615.875492bp}}
+\pgfpathlineto{\pgfpoint{454.867864bp}{736.553889bp}}
+\pgfusepath{use as bounding box}
 \begin{pgfscope}
 \pgftransformcm{0.7}{-0.0}{0.0}{0.7}{\pgfpoint{115.367864bp}{736.553889bp}}
 \pgflowlevelsynccm
-\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\includegraphics[width=485.0bp,height=35.0bp]{/home/nlct/programming/java/jpgfdraw/trunk/doc/sharedimages/fontfamily}}}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\includegraphics[width=485.0bp,height=35.0bp]{/home/nlct/programming/java/flowframtk/src/doc/en-sharedimages/fontfamily}}}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
@@ -60,12 +67,12 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{202.440089bp}{661.907234bp}}
-\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Select the font family}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{206.908839bp}{662.282234bp}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\small\color[rgb]{0.0,0.0,0.0}Select the font family}
 \end{pgfscope}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{202.440089bp}{651.875246bp}}
-\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}to use in \FlowframTk}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{204.791651bp}{652.250246bp}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\small\color[rgb]{0.0,0.0,0.0}to use in \FlowframTk}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
@@ -88,19 +95,19 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{381.617845bp}{656.843627bp}}
-\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}The \LaTeX\ command to set the}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{369.891283bp}{656.171752bp}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\small\color[rgb]{0.0,0.0,0.0}The \LaTeX\ command to set the}
 \end{pgfscope}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{381.36319bp}{646.562992bp}}
-\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}required font family is selected}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{370.933502bp}{645.937992bp}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\small\color[rgb]{0.0,0.0,0.0}required font family is selected}
 \end{pgfscope}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{380.769103bp}{636.547367bp}}
-\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}automatically, but can be edited}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{372.089415bp}{635.875492bp}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\small\color[rgb]{0.0,0.0,0.0}automatically, but can be edited}
 \end{pgfscope}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{380.831029bp}{626.547367bp}}
-\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}as required}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{366.651341bp}{625.875492bp}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\small\color[rgb]{0.0,0.0,0.0}as required}
 \end{pgfscope}
 \end{pgfpicture}
