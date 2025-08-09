@@ -3800,8 +3800,12 @@ menu item. This will open up the \dialog{bitmap_properties} dialog box shown in
 \figureref{fig:bitmapprops}. If you want to change the path name to
 the bitmap, you can either type it directly into the
 \widget{label.filename} field or click on the
-\widget{browsebitmap.browse} button. You can also change the
-transformation matrix applied to the bitmap link.
+\widget{browsebitmap.browse} button.
+
+You can also use the \dialog{bitmap_properties} dialog to change the
+\gls{bitmap.transformation-matrix} applied to the bitmap link.
+If you want to reset the \gls{bitmap.transformation-matrix}, it's
+quicker to use the \menu{transform.reset} menu item.
 
 \FloatFig
  {fig:bitmapprops}
@@ -5051,8 +5055,68 @@ using the \gls{affine-transformation} functions described in
 \sectionref{sec:affinetrans} or by directly editing the
 \inlineglsdef{index.text-attribute.transformation-matrix}.
 
-TODO
+\menudef{menu.edit.textarea.matrix}
 
+The \menu{edit.textarea.matrix} menu item will open the \dialog{settransform}
+dialog.
+Note that if you want to reset a \textattr{transformation-matrix}, 
+it's quicker to use \menu{transform.reset}.
+
+\widgetdef{settransform.title}
+
+The \dialog{settransform} dialog has six editable fields in which
+you can edit the scaling, shearing and translation elements of the
+\textattr{transformation-matrix}.
+
+The \textattr{transformation-matrix} for a \gls*{textarea} is
+applied relative to the top left corner of the \gls{canvas}. The
+transformation matrix for a \gls{textpath} is applied relative to
+the point along the underlying path where each character should be
+positioned.
+
+Once a \gls*{textarea} has been combined with a \gls{path} to form a
+\gls{textpath}, the text can only be transformed by editing the
+transformation matrix.  For example, \figureref{fig:textmatrix}
+shows a \gls*{textpath} in edit mode (so that you can see the
+underlying path) with different values of the transformation matrix.
+In \figureref{fig:textmatrixa}, the transformation matrix is
+set to the identity matrix, shown in
+\figureref{fig:textmatrixb}.  In
+\figureref{fig:textmatrixc}, the transformation matrix is set
+as shown in \figureref{fig:textmatrixd}, (the vertical
+translation has been set to 10, which is in terms of the
+\gls{storageunit}). The text is no longer flush against
+the path. In \figureref{fig:textmatrixe}, the transformation
+matrix has been set as shown in \figureref{fig:textmatrixf},
+(the horizontal shear element has been set to $-1$).
+
+\FloatSubFigs{fig:textmatrix}
+{
+  {fig:textmatrixa}{\includeimg{textmatrixa}}{},
+  {fig:textmatrixb}{\includeimg{textmatrixb}}{},
+  {fig:textmatrixc}{\includeimg{textmatrixc}}{},
+  {fig:textmatrixd}{\includeimg{textmatrixd}}{},
+  {fig:textmatrixe}{\includeimg{textmatrixe}}{},
+  {fig:textmatrixf}{\includeimg{textmatrixf}}{}
+}
+[Text-Path Transformation Matrix]
+{Text-path transformation matrix:
+\subfigref{fig:textmatrixa} the text-path with transformation matrix shown in
+\subfigref{fig:textmatrixb};
+\subfigref{fig:textmatrixc} the text-path with transformation matrix shown
+in \subfigref{fig:textmatrixd};
+\subfigref{fig:textmatrixe} the text-path with transformation matrix
+shown in \subfigref{fig:textmatrixf}.}
+
+\section{Resetting a Transformation Matrix}\label{sec:resetmatrix}
+
+\menudef{menu.transform.reset}
+
+The \gls{transformation-matrix} for \glspl{textarea}, \glspl{textpath}
+and \glspl{bitmap} can be reset via the
+\menu{transform.reset} menu item. This will reset the scale
+and shear factors (but not the translation) for \glspl{textarea},
+and will reset all elements for \glspl{textpath} and \glspl{bitmap}.
 
 \section{Combining a Text Area and Path to Form a Text-Path}\label{sec:textpath}
 
@@ -8690,7 +8754,6 @@ you can select another command from the \gls{combobox} on the right
 or you can edit it if you require a font series declaration that is
 not listed.  Alternatively you can clear the value (by deleting the
 series declaration) to use the current document font series.
-
 
 \subsection{Font Shape}\label{sec:fontshape}
 
