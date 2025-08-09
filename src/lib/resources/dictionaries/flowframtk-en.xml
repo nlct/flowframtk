@@ -213,14 +213,17 @@ Nicola Talbot
 
 <entry key="menu.edit.path.style.capstyle.butt">Butt</entry>
 <entry key="menu.edit.path.style.capstyle.butt.mnemonic">B</entry>
+<entry key="menu.edit.path.style.capstyle.butt.initvalue">off</entry>
 <entry key="menu.edit.path.style.capstyle.butt.tooltip">Set the cap style to butt (flush) for selected paths</entry>
 
 <entry key="menu.edit.path.style.capstyle.round">Round</entry>
 <entry key="menu.edit.path.style.capstyle.round.mnemonic">R</entry>
+<entry key="menu.edit.path.style.capstyle.round.initvalue">off</entry>
 <entry key="menu.edit.path.style.capstyle.round.tooltip">Set the cap style to round for selected paths</entry>
 
 <entry key="menu.edit.path.style.capstyle.square">Square</entry>
 <entry key="menu.edit.path.style.capstyle.square.mnemonic">S</entry>
+<entry key="menu.edit.path.style.capstyle.square.initvalue">on</entry>
 <entry key="menu.edit.path.style.capstyle.square.tooltip">Set the cap style to square (protrude) for selected paths</entry>
 
 
@@ -253,10 +256,12 @@ Nicola Talbot
 
 <entry key="menu.edit.path.style.windingrule.evenodd">Even-Odd</entry>
 <entry key="menu.edit.path.style.windingrule.evenodd.mnemonic">E</entry>
+<entry key="menu.edit.path.style.windingrule.evenodd.initvalue">on</entry>
 <entry key="menu.edit.path.style.windingrule.evenodd.tooltip">Set the winding rule to even-odd for selected paths</entry>
 
 <entry key="menu.edit.path.style.windingrule.nonzero">Non Zero</entry>
 <entry key="menu.edit.path.style.windingrule.nonzero.mnemonic">N</entry>
+<entry key="menu.edit.path.style.windingrule.nonzero.initvalue">off</entry>
 <entry key="menu.edit.path.style.windingrule.nonzero.tooltip">Set the winding rule to non-zero for selected paths</entry>
 
 
@@ -567,46 +572,55 @@ Nicola Talbot
 <entry key="menu.tools.select.mnemonic">S</entry>
 <entry key="menu.tools.select.keystroke">control P</entry>
 <entry key="menu.tools.select.iconimage">select</entry>
+<entry key="menu.tools.select.initvalue">on</entry>
 
 <entry key="menu.tools.open_line">Open Line</entry>
 <entry key="menu.tools.open_line.mnemonic">L</entry>
 <entry key="menu.tools.open_line.keystroke">control L</entry>
 <entry key="menu.tools.open_line.iconimage">openline</entry>
+<entry key="menu.tools.open_line.initvalue">off</entry>
 
 <entry key="menu.tools.closed_line">Closed Line</entry>
 <entry key="menu.tools.closed_line.mnemonic">I</entry>
 <entry key="menu.tools.closed_line.keystroke">control shift L</entry>
 <entry key="menu.tools.closed_line.iconimage">closedline</entry>
+<entry key="menu.tools.closed_line.initvalue">off</entry>
 
 <entry key="menu.tools.open_curve">Open Curve</entry>
 <entry key="menu.tools.open_curve.mnemonic">C</entry>
 <entry key="menu.tools.open_curve.keystroke">control K</entry>
 <entry key="menu.tools.open_curve.iconimage">opencurve</entry>
+<entry key="menu.tools.open_curve.initvalue">off</entry>
 
 <entry key="menu.tools.closed_curve">Closed Curve</entry>
 <entry key="menu.tools.closed_curve.mnemonic">U</entry>
 <entry key="menu.tools.closed_curve.keystroke">control shift K</entry>
 <entry key="menu.tools.closed_curve.iconimage">closedcurve</entry>
+<entry key="menu.tools.closed_curve.initvalue">off</entry>
 
 <entry key="menu.tools.rectangle">Rectangle</entry>
 <entry key="menu.tools.rectangle.mnemonic">R</entry>
 <entry key="menu.tools.rectangle.keystroke">control R</entry>
 <entry key="menu.tools.rectangle.iconimage">rectangle</entry>
+<entry key="menu.tools.rectangle.initvalue">off</entry>
 
 <entry key="menu.tools.ellipse">Ellipse</entry>
 <entry key="menu.tools.ellipse.mnemonic">E</entry>
 <entry key="menu.tools.ellipse.keystroke">control E</entry>
 <entry key="menu.tools.ellipse.iconimage">ellipse</entry>
+<entry key="menu.tools.ellipse.initvalue">off</entry>
 
 <entry key="menu.tools.textarea">Text</entry>
 <entry key="menu.tools.textarea.mnemonic">T</entry>
 <entry key="menu.tools.textarea.keystroke">control T</entry>
 <entry key="menu.tools.textarea.iconimage">textarea</entry>
+<entry key="menu.tools.textarea.initvalue">off</entry>
 
 <entry key="menu.tools.math">Math</entry>
 <entry key="menu.tools.math.mnemonic">M</entry>
 <entry key="menu.tools.math.keystroke">control shift T</entry>
 <entry key="menu.tools.math.iconimage">math</entry>
+<entry key="menu.tools.math.initvalue">off</entry>
 
 <entry key="menu.tools.gap">Gap</entry>
 <entry key="menu.tools.gap.mnemonic">G</entry>
@@ -1804,22 +1818,35 @@ Nicola Talbot
 
 <entry key="linestyle.solid">Solid Line</entry>
 <entry key="linestyle.solid.mnemonic">L</entry>
+<entry key="linestyle.solid.initvalue">on</entry>
 
 <entry key="linestyle.dashed">Dashed Line</entry>
 <entry key="linestyle.dashed.mnemonic">A</entry>
+<entry key="linestyle.dashed.initvalue">off</entry>
 
 <entry key="linestyle.cap">Cap Style</entry>
 <entry key="linestyle.cap.mnemonic">Y</entry>
 
 <entry key="linestyle.cap.butt">Butt</entry>
+<entry key="linestyle.cap.butt.initvalue">off</entry>
+
 <entry key="linestyle.cap.round">Round</entry>
+<entry key="linestyle.cap.round.initvalue">off</entry>
+
 <entry key="linestyle.cap.square">Square</entry>
+<entry key="linestyle.cap.square.initvalue">on</entry>
 
 <entry key="linestyle.join">Join Style</entry>
 <entry key="linestyle.join.mnemonic">J</entry>
+
 <entry key="linestyle.join.bevel">Bevel</entry>
+<entry key="linestyle.join.bevel.initivalue">off</entry>
+
 <entry key="linestyle.join.mitre">Miter</entry>
+<entry key="linestyle.join.mitre.initvalue">on</entry>
+
 <entry key="linestyle.join.round">Round</entry>
+<entry key="linestyle.join.round.initvalue">off</entry>
 
 <entry key="linestyle.mitre_limit">Miter Limit</entry>
 <entry key="linestyle.mitre_limit.mnemonic">R</entry>
@@ -1839,7 +1866,10 @@ Nicola Talbot
 <entry key="linestyle.winding_rule.mnemonic">W</entry>
 
 <entry key="linestyle.winding_rule.eo">Even-Odd</entry>
+<entry key="linestyle.winding_rule.eo.initvalue">on</entry>
+
 <entry key="linestyle.winding_rule.nz">Non-Zero</entry>
+<entry key="linestyle.winding_rule.nz.initvalue">off</entry>
 
 <!--  Dash Patterns Panel -->
 
@@ -2013,7 +2043,7 @@ Nicola Talbot
 <entry key="textcolour.tab.mnemonic">T</entry>
 
 <!--  font selector -->
-<entry key="font.title">Change Font</entry>
+<entry key="font.title">Set Font</entry>
 <entry key="font.tab">Font</entry>
 <entry key="font.tab.mnemonic">N</entry>
 <entry key="font.sample">Sample</entry>
@@ -2247,37 +2277,59 @@ Nicola Talbot
 <!--  colour selector -->
 
 <entry key="colour.title">Paint Selector</entry>
+
+<entry key="colour.alpha">Alpha</entry>
 <entry key="colour.red">Red</entry>
 <entry key="colour.green">Green</entry>
 <entry key="colour.blue">Blue</entry>
+
 <entry key="colour.rgb">RGB</entry>
 <entry key="colour.rgb.mnemonic">R</entry>
 <entry key="colour.rgb2.mnemonic">B</entry>
+<entry key="colour.rgb.initvalue">on</entry>
+`
 <entry key="colour.cyan">Cyan</entry>
 <entry key="colour.magenta">Magenta</entry>
 <entry key="colour.yellow">Yellow</entry>
 <entry key="colour.black">Black</entry>
+
 <entry key="colour.cmyk">CMYK</entry>
 <entry key="colour.cmyk.mnemonic">K</entry>
 <entry key="colour.cmyk2.mnemonic">M</entry>
-<entry key="colour.alpha">Alpha</entry>
+<entry key="colour.cmyk.initvalue">off</entry>
+
 <entry key="colour.hue">Hue</entry>
 <entry key="colour.saturation">Saturation</entry>
 <entry key="colour.brightness">Brightness</entry>
+
 <entry key="colour.hsb">HSB</entry>
+<entry key="colour.hsb.initvalue">off</entry>
+
 <entry key="colour.grey">Gray</entry>
+<entry key="colour.grey.initvalue">off</entry>
+
 <entry key="colour.transparent">Transparent</entry>
 <entry key="colour.transparent.mnemonic">P</entry>
+<entry key="colour.transparent.initvalue">off</entry>
+
 <entry key="colour.single">Color</entry>
 <entry key="colour.single.mnemonic">L</entry>
+<entry key="colour.single.initvalue">on</entry>
+
 <entry key="colour.gradient">Gradient</entry>
 <entry key="colour.gradient.mnemonic">G</entry>
+<entry key="colour.gradient.initvalue">off</entry>
+
 <entry key="colour.start">Start Color</entry>
 <entry key="colour.end">End Color</entry>
+
 <entry key="colour.linear">Linear</entry>
 <entry key="colour.linear.mnemonic">E</entry>
+<entry key="colour.linear.initvalue">on</entry>
+
 <entry key="colour.radial">Radial</entry>
 <entry key="colour.radial.mnemonic">A</entry>
+<entry key="colour.radial.initvalue">off</entry>
 
 <!--  Configuration Settings Dialog Box -->
 
@@ -3303,6 +3355,7 @@ Merge Region: {2}</entry>
 <entry key="button.default">Default</entry>
 <entry key="button.default.mnemonic">D</entry>
 <entry key="button.default.tooltip">Restore defaults</entry>
+<entry key="button.default.iconimage">default</entry>
 
 <entry key="label.filename">Filename</entry>
 <entry key="label.filename.mnemonic">F</entry>
@@ -3963,7 +4016,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 
 <entry key="index.paint">paint</entry>
 <entry key="index.paint.shading">shading</entry>
-<entry key="index.paint.alias">index.gradient-paint</entry>
+<entry key="index.paint.shading.alias">index.gradient-paint</entry>
 <entry key="index.paint.solid-colour">solid color</entry>
 <entry key="index.paint.solid-colour.alias">index.colour.solid</entry>
 <entry key="index.paint.opacity">opacity</entry>
