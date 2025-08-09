@@ -3969,6 +3969,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 
 <entry key="index.text-attribute">text attributes</entry>
 <entry key="index.text-attribute.text">text attribute</entry>
+<entry key="index.text-attribute.description">The text paint, font and anchors.</entry>
 
 <entry key="index.text-attribute.paint">paint</entry>
 <entry key="index.text-attribute.fill-paint">fill paint (outlined interior)</entry>
@@ -3984,6 +3985,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 
 <entry key="index.path-attribute">path attributes</entry>
 <entry key="index.path-attribute.text">path attribute</entry>
+<entry key="index.path-attribute.description">The line paint, fill paint and line styles for the path.</entry>
 
 <entry key="index.path-attribute.line-paint">line paint</entry>
 <entry key="index.path-attribute.fill-paint">fill paint</entry>

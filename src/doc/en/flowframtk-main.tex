@@ -19,6 +19,13 @@
 
 \hypersetup{colorlinks,linkcolor=blue}
 
+\renewcommand\TeXJavaHelpExtraAssignFields{
+  description =[o] \TITLE { long } + ". " + description 
+   [ entrytype->original = "abbreviation" ],
+  category = "term"
+   [ entrytype->original = "index" & description <> \NULL ],
+}
+
 \newcommand{\FlowframTk}{FlowframTk}
 \newcommand{\tool}[1]{\gls{menu.tools.#1} tool}
 \newcommand{\texttool}{\tool{textarea}}
@@ -3289,7 +3296,7 @@ contributes to the total image dimensions. This restriction only
 applies when creating \glspl*{path} and does not apply to editing
 paths.
 
-The \gls{pathattributes} will only be set
+The \dglspl{path-attribute} will only be set
 once the \gls{path} has been completed. Whilst the
 \gls{path} is under construction you will
 only see a draft version (see \figureref{fig:draftfinal}).
@@ -3715,7 +3722,7 @@ sec:accesstutorial
 \menudef{menu.bitmap}
 
 \FlowframTk\ is primarily a \gls{vectorgraphics} application,
-however it is possible to insert a \inlineglsdef{bitmap}
+however it is possible to insert a \maingls{bitmap}
 (\gls{rastergraphics}) into your picture for background effects or
 if you want to annotate a \gls{bitmap} (as was done in
 \figureref{fig:insertsymbol} in the previous section).  Note that
@@ -4377,9 +4384,15 @@ selected.
 
 \section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
 
-\Glspl{object} are \glslink{drawing-on-canvas}{painted} on the page according to the
-\gls{stackingorder}. This means that objects can
+\Glspl{object} are \glslink{drawing-on-canvas}{painted} on the
+\gls{canvas} according to the
+\maingls{stackingorder}. This means that objects can
 partially or wholly obscure other objects in the same location.
+The first object to be \glslink{drawing-on-canvas}{painted}
+is the \maingls{backobject} (behind any other object in the same
+location) and the last object to be \glslink{drawing-on-canvas}{painted}
+is the \maingls{frontobject}.
+
 For example, in \figureref{fig:stackingordera} the green rectangle is
 at the bottom (\gls{back}) of the stack ($z=0$), the blue circle is in
 the middle of the stack ($z=1$) and the yellow triangle is at the
@@ -6578,6 +6591,11 @@ if a polygon has been calculated.
 
 
 \section{Constructive Area Geometry (CAG)}\label{sec:cag}
+
+\Glsxtrfull{cag} is the process of creating new geometric objects by
+performing logical operations on existing objects. These functions
+replace two or more \selected\ \glspl*{shape} with a new single
+\gls{shape}.
 
 \subsection{Path Union}\label{sec:pathunion}
 

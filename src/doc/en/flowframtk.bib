@@ -19,7 +19,7 @@
 @abbreviation{jvm,
   short="JVM",
   long="Java Virtual Machine",
-  description = {Also known as the Java Runtime Environment.}
+  description = {Also known as the \glsxtrfull{jre}.}
 }
 
 @abbreviation{mdi,
@@ -380,38 +380,38 @@ or is the keyword \optfmt{user} followed by the width and height.}
     positioned along the left edge of the main window.}
 }
 
-@index{statusbar,
+@term{statusbar,
   name="status bar",
   description = {The status bar is the horizontal panel positioned along the bottom of
     \FlowframTk's main window.}
 }
 
-@indexplural{ruler,
+@termplural{ruler,
  description = {The two panels containing the horizontal and
 vertical rulers.}
 }
 
-@index{canvas,
+@term{canvas,
   plural="canvases",
   description = {The white area on which you construct your picture.}
 }
 
-@index{shape,
+@term{shape,
   description = {Either a path, text-path or a composite shape.}
 }
 
-@index{path,
+@term{path,
   description = {A shape made up of line segments, moves and cubic
 Bézier segments.}
 }
 
-@index{textarea,
+@term{textarea,
   name="text area",
   description = {An object consisting of a single line of text. The text may be moved,
     scaled, rotated, sheared or converted to a path.}
 }
 
-@index{textpath,
+@term{textpath,
   name="text-path",
   description = {A composite object formed by combining a path and a text area
     to create a text along a path effect. The underlying path is
@@ -420,14 +420,14 @@ Bézier segments.}
     applied to the path not to the text.}
 }
 
-@index{compositeshape,
+@term{compositeshape,
   name="composite shape",
   description = {A shape that is described by an underlying shape
     and a means of transforming it, such as the application of symmetry or
 replicas.}
 }
 
-@index{symmetricshape,
+@term{symmetricshape,
   name="symmetric shape",
   description = {A \gls{compositeshape} with \gls{symmetry} formed by the underlying shape
     being combined with its reflection in a \gls{line-of-symmetry}. Depending on how it's
@@ -438,7 +438,7 @@ replicas.}
     adjusted to change the overall shape.}
 }
 
-@index{pattern,
+@term{pattern,
  description = {A composite shape formed by repeatedly applying a given
     transformation on a shape. Each pattern has a specified number of
     replicas. The underlying shape may or may not be visible. The
@@ -448,7 +448,7 @@ replicas.}
     scaling and shearing) are applied to the path not to the text.}
 }
 
-@index{rotationalpattern,
+@term{rotationalpattern,
   name="rotational pattern",
   description = {A pattern where the replicas are created
     by rotating the underlying path. In addition to the control points
@@ -456,7 +456,7 @@ replicas.}
     point that governs the point of rotation.}
 }
 
-@index{scaledpattern,
+@term{scaledpattern,
   name="scaled pattern",
   description = {A pattern where the replicas are created
     by scaling the underlying path. In addition to the control points
@@ -464,7 +464,7 @@ replicas.}
     points governing the scale anchor and the scale direction.}
 }
 
-@index{spiralpattern,
+@term{spiralpattern,
   name="spiral pattern",
   description = {A pattern where the replicas are created
     by rotating and translating the underlying path so that the replicas
@@ -473,24 +473,14 @@ replicas.}
     that govern the anchor and offset.}
 }
 
-@index{pathattributes,
-  name="path attributes",
-  description = {The line \manualtext{colour}, fill \manualtext{colour} and line styles for the path.}
-}
-
-@index{textattributes,
-  name="text attributes",
-  description = {The text \manualtext{colour} and font.}
-}
-
-@index{storageunit,
+@term{storageunit,
   name="storage unit",
   description = {The length unit used when storing co-ordinates. The default unit
     is bp (PostScript point) but may be changed in the configuration
     dialog.}
 }
 
-@index{controlpt,
+@term{controlpt,
   name="control point",
   description = {The points that define a path. Line segments and gaps have two control
     points, at the start and end, cubic Bézier segments have four
@@ -504,7 +494,7 @@ replicas.}
     path controls.}
 }
 
-@index{ptindex,
+@term{ptindex,
   name="control point index",
   plural="control point indexes",
   description = {Each control point defining a given path or composite
@@ -514,28 +504,28 @@ replicas.}
     through the points in increasing order of index.}
 }
 
-@index{object,
+@term{object,
  description =  {A path, text area, text-path, bitmap or group.}
 }
 
-@index{group,
+@term{group,
   description = {A collection of \glspl{object} treated as a
 single entity.}
 }
 
-@index{bbox,
+@term{bbox,
   name="bounding box",
   plural="bounding boxes",
   description = {The smallest rectangle that encompasses the \gls{object}.}
 }
 
-@index{stack,
+@term{stack,
   description = {List of \glspl{object} that make up the image, 
     in the order in which they should be painted on the canvas.
     A \gls{group} is essentially a sub-stack.}
 }
 
-@index{stackingorder,
+@term{stackingorder,
   name="stacking order",
   description={The order in which \glspl{object} are painted on the canvas.
     To determine the reverse stacking order, deselect all objects, then
@@ -545,51 +535,51 @@ single entity.}
     the first.}
 }
 
-@index{frontobject,
+@term{frontobject,
   name="frontmost object",
   description = {The last object to be painted on the canvas.}
 }
 
 @index{front, alias="frontobject"}
 
-@index{backobject,
+@term{backobject,
   name="backmost object",
   description = {The first object to be painted on the canvas.}
 }
 
 @index{back, alias="backobject"}
 
-@index{vectorgraphics,
+@term{vectorgraphics,
   name="vector graphics",
   description = {A means of describing images through the use of
 points, lines and curves.}
 }
 
-@index{rastergraphics,
+@term{rastergraphics,
   name="raster graphics",
   alias={bitmap}
 }
 
-@index{bitmap,
+@term{bitmap,
   description={Representing images as a collection of pixels.}
 }
 
-@index{construction,
+@term{construction,
   name="construction mode",
   description = {Any of the tools except the select tool.}
 }
 
-@index{pt,
+@term{pt,
   description = {\TeX's point. Not to be confused with bp (a PostScript point).
     72.27pt=1in.}
 }
 
-@index{bp,
+@term{bp,
   description = {\TeX's \qt{big point}. This is the same as a PostScript point.
     72bp=1in.}
 }
 
-@index{dropdown,
+@term{dropdown,
   name="drop-down list",
   description = {A \gls{gui} element that allows a user to choose one value from a list.
     When inactive, it only displays the selected value. When activated
@@ -598,27 +588,27 @@ points, lines and curves.}
     the required value.}
 }
 
-@index{combobox,
+@term{combobox,
   name="combo box",
   description = {A \gls{gui} element similar to a drop-down list, but can be edited if the
     required value is not in the list.}
 }
 
-@index{checkbox,
+@term{checkbox,
   description = {A \gls{gui} element with two states: on (true) and off (false).}
 }
 
-@index{recto,
+@term{recto,
   description = {The \qt{front} side of a leaf of \gls{paper} (the right or
 odd-numbered page).}
 }
 
-@index{verso,
+@term{verso,
   description = {The \qt{back} side of a leaf of \gls{paper} (the left
 or even-numbered page).}
 }
 
-@index{popupmenu,
+@term{popupmenu,
   name={popup (or context) menu},
   text={popup menu},
   description={A menu whose items vary depending on the context. These
@@ -644,7 +634,7 @@ may prohibit some or all robot functions. If this occurs, you may
 receive the warning \warnmsg{no_robot}}
 }
 
-@index{menuclick,
+@term{menuclick,
   name="menu-click",
   description = {Click the mouse button that activates
     \glspl{context-menu}. This depends
@@ -654,7 +644,7 @@ receive the warning \warnmsg{no_robot}}
     the middle button on three button mouse.}
 }
 
-@index{primaryclick,
+@term{primaryclick,
   name="primary-click",
   description = {\Gls{click} the \gls{primary-mouse-button}.}
 }
@@ -668,7 +658,7 @@ receive the warning \warnmsg{no_robot}}
 interpreted as tapping the appropriate side of the pad.}
 }
 
-@index{doubleclick,
+@term{doubleclick,
   name="double-click",
   description = {Press and release the mouse button twice in rapid succession.
     If no button is specified, assume the primary button.}
@@ -680,14 +670,14 @@ interpreted as tapping the appropriate side of the pad.}
     assume the \gls{primary-mouse-button}.}
 }
 
-@index{config_dir,
+@term{config_dir,
   name="configuration directory",
   description = {This directory contains application settings, the list of recent files and 
     mapping files. It's also the location used for log files and the
 dump all function.}
 }
 
-@index{flowframe,
+@term{flowframe,
  description={Any information relating to the \sty{flowfram} package.
 The omission of the final \qt{e} in the \sty{flowfram} package name
 is for historical reasons as the first version of \sty{flowfram} was
