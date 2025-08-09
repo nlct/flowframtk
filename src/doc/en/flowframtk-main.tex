@@ -4697,6 +4697,12 @@ Where only a \gls{index.paint.solid-colour} is supported, the radio
 buttons will be omitted and only the \widget{colour.single} panel
 will be available.
 
+\begin{warning}
+The \dglspl{colour} you see on the screen may not exactly match
+\dglspl{colour} produced by your printer due to the non-invertible
+mapping between \dgls{colour} spaces.
+\end{warning}
+
 \widgetdef{colour.transparent}
 
 Selecting the \widget{colour.transparent} radio button indicates
@@ -4731,8 +4737,12 @@ the alpha channel.  If the alpha value is 100\% then the
 \gls{translucency}, allowing \glspl{object} behind to show
 \manmsg{through}.
 
-There are swatches to the right of the \widget{colour.single} panel 
-which can be used to quickly set a \manmsg{colour}. Click on the 
+The parameters are specified as integer values between 0 and 100,
+or between 0 and 359 in the case of hue.
+You can type in the number in the appropriate box, or use
+the slider bars. Alternatively, you can click on one of the predefined swatches
+which are to the right of the \widget{colour.single} panel 
+and can be used to quickly set a \manmsg{colour}. Click on the 
 appropriate swatch and the \manmsg{colour} specification will be
 filled in.
 
@@ -8453,9 +8463,23 @@ The \widget{textcolour.title} panel has a \dialog{colour} panel
 text \textattr{paint}. This panel is also a tab
 in the \dialog{styles} dialog to set the current
 text \textattr{paint}.
-
 There is a sample panel along the top illustrating the effects of
 the \textattr{paint} you choose.
+
+\begin{information}
+If the text \textattr{paint} is set to \widget{colour.transparent}
+then the \gls{textarea} is not painted on the canvas, but it does
+have a \gls{bbox}. When \hyperref[sec:exportimage]{exporting} to a
+\LaTeX\ document, \gls{transparent} \glspl*{textarea} have their
+text set in the argument of \gls{phantom}.
+\end{information}
+
+\FlowframTk\ can't implement \dgls{gradient-paint} for text when
+using one of the \LaTeX-related export functions. You can choose
+how \FlowframTk\ should treat text with \dgls{gradient-paint} via the
+\dialog{texconfig} dialog's \dialog{textconfig} panel 
+(see \sectionref{sec:texconfigtext}).
+
 
 \section{Text Style}\label{sec:textstyle}
 
