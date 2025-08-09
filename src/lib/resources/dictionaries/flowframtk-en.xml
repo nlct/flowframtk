@@ -1971,8 +1971,11 @@ Nicola Talbot
 <entry key="arrow.none">None</entry>
 <entry key="arrow.octagon.filled">Octagon Filled</entry>
 <entry key="arrow.octagon.open">Octagon Open</entry>
+
 <entry key="arrow.overlay">Overlay</entry>
 <entry key="arrow.overlay.mnemonic">Y</entry>
+<entry key="arrow.overlay.initvalue">false</entry>
+
 <entry key="arrow.pentagon.filled">Pentagon Filled</entry>
 <entry key="arrow.pentagon.open">Pentagon Open</entry>
 <entry key="arrow.plus">Plus</entry>

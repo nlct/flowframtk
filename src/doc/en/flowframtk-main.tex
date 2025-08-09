@@ -8253,32 +8253,145 @@ Remember that start markers point in the opposite direction.
 
 \subsubsection{Marker Offset}\label{sec:markeroffset}
 
-\inlineglsdef{index.marker.offset}
+The primary marker will be placed on its origin coinciding with the
+vertex. (The origin may not be on the edge of the marker's bounding
+box. For example, the origin may be in the \manmsg{centre} of the
+marker for most of the data point markers.)
+The marker can be \inlineglsdef{index.marker.offset}
+so that its origin is no longer coinciding with the vertex.
+
+The secondary marker will be offset from the primary marker
+according to whether any duplicate markers have been specified and
+according to the line width.
 
 \widgetdef{arrow.autooffset}
 
-TODO
+If the \widget{arrow.autooffset} box is selected, the marker's
+\gls{index.marker.offset} from the vertex will be computed automatically. 
+If this box is deselected, the marker will be offset according to
+the length specified in the adjoining box, which will become
+enabled.
 
+For example, in \figureref{fig:markeroffseta} both the start and end
+markers have been set to the \LaTeX\ style marker with an offset of
+$-10$\gls{bp}, and in \figureref{fig:markeroffsetb} both the start
+and end markers are \gls{index.marker.composite} markers formed from
+a bar primary marker and a pointed secondary marker, where the
+secondary marker's \gls{index.marker.offset} has been set to
+2\gls{bp}.  Note that setting the secondary marker's \gls{index.marker.offset}
+to 0 is equivalent to using the overlay function.
+
+\begin{information}
+Markers are placed along the \gls{path}['s] gradient
+vector, so the marker may not necessarily lie on the \gls*{path}. For
+example, in \figureref{fig:bezieroffset}, a marker with offset 10\gls{bp}
+has been placed at the end of a \gls{Bezier-curve}. The marker's offset
+has moved it along the gradient vector, away from the curve.
+\end{information}
+
+\FloatSubFigs{fig:markeroffset}
+{
+  {fig:markeroffseta}{\includeimg{markeroffset1}}{},
+  {fig:markeroffsetb}{\includeimg{markeroffset2}}{}
+}
+[Disabling the Marker Auto Offset]
+{Disabling the marker auto offset:
+\subfigref{fig:markeroffseta} a negative offset makes the marker protrude off
+the end of the line;
+\subfigref{fig:markeroffsetb} the secondary marker has an offset
+of 2bp so that it is only slightly behind the primary marker.}
+
+\FloatFig{fig:bezieroffset}
+{\includeimg{bezieroffset}}
+[Changing a Marker's Offset Moves It Along the Gradient Vector]
+{Changing a marker's offset moves it along the gradient vector.}
 
 \subsubsection{Repeat Gap}\label{sec:repeatgap}
 
-\inlineglsdef{index.marker.repeat-gap}
+The \inlineglsdef{index.marker.repeat-gap} is the gap between
+repeated markers.
 
 \widgetdef{arrow.autogap}
 
-TODO
+If the \widget{arrow.autogap} box is selected, the gap
+between repeat markers is given by 7 times the line width. If the
+\widget{arrow.autogap} box is not selected, the gap will be given by the length specified
+in the adjoining box. For example, in \figureref{fig:repeatgapa}
+a line has an end marker with a triple arrow with
+the auto repeat function selected. Since the line width is 1\gls{bp}, the
+gap between the markers is 7\gls{bp}. In \figureref{fig:repeatgapb}
+the line width is 2\gls{bp}, so the gap between the markers is 14\gls{bp}. In
+\figureref{fig:repeatgapc}, the line width is 1\gls{bp} and the repeat
+gap has been set to 10\gls{bp} and in \figureref{fig:repeatgapd}
+the line width is 2\gls{bp} again with a repeat gap of 10\gls{bp}.
+
+\FloatSubFigs{fig:repeatgap}
+{
+  {fig:repeatgapa}{\includeimg{repeatgap1}}{},
+  {fig:repeatgapb}{\includeimg{repeatgap2}}{},
+  {fig:repeatgapc}{\includeimg{repeatgap3}}{},
+  {fig:repeatgapd}{\includeimg{repeatgap4}}{}
+}
+[Repeat Gap]
+{Repeat gap:
+\subfigref{fig:repeatgapa} line width of 1\gls{bp} and auto repeat gap;
+\subfigref{fig:repeatgapb} line width of 2\gls{bp} and auto repeat gap;
+\subfigref{fig:repeatgapc} line width of 1\gls{bp} and repeat gap set to 10\gls{bp};
+\subfigref{fig:repeatgapd} line width of 2\gls{bp} and repeat gap set to
+10\gls{bp}.}
 
 
 \subsubsection{Marker \Glsentrytext{manual.colour}}\label{sec:markerpaint}
 
-\inlineglsdef{index.marker.colour}
+The marker \inlineglsdef{index.marker.colour} may be the same as the
+path or may have its own \inlineglsdef{index.marker.colour}
+independent of the path's \pathattr{line-paint}.
+
+\begin{information}
+If the marker has been assigned a specific \gls{index.marker.colour}, it
+will remain unchanged if you change the \pathattr{line-paint} of the
+\gls*{path}, otherwise it will change with the \gls*{path}['s]
+\pathattr{line-paint}.
+\end{information}
 
 \widgetdef{arrow.colour.dependent}
 
+If the \widget{arrow.colour.dependent} box is selected, the marker will
+have the same \gls{index.marker.colour} as the \gls*{path}['s]
+\pathattr{line-paint}.
+
 \widgetdef{arrow.colour.independent}
 
-TODO
+If the \widget{arrow.colour.independent} box is selected, the marker
+\gls{index.marker.colour} will be independent of the \gls*{path}['s]
+\pathattr{line-paint}. Selecting the \widget{arrow.colour.independent} box 
+will enable the \widget{colour.single} panel where you can choose
+the marker's \gls{index.marker.colour}.
+For example, \figureref{fig:sampleplot} shows a \gls*{path} with
+a \gls{transparent} \pathattr{line-paint} and blue start, mid and end
+markers.
 
+\FloatFig{fig:sampleplot}
+{\includeimg{sampleplot}}
+[Marker \Manmsg{colour} May Be Independent of the Line \Manmsg{colour}]
+{Marker \manmsg{colour} may be independent of the line
+\manmsg{colour}:
+this path has a transparent line paint and blue
+start, mid and end markers.}
+
+Primary and secondary marker \gls{index.marker.colour} settings are
+independent of each other.  For example, in
+\figureref{fig:markercolour} the start and end markers are
+\gls{index.marker.composite} markers formed from a filled yellow
+pentagon primary marker and an open pentagon secondary marker. The
+secondary marker \gls{index.marker.colour} is set to the
+\pathattr{line-paint}, so if the \pathattr{line-paint} is changed
+the pentagon outline will change accordingly, but the filled
+pentagon will remain yellow.
+
+\FloatFig{fig:markercolour}
+{\includeimg{markercolour}}
+{Primary and Secondary Markers are Independent}
 
 \subsection{Winding Rule}\label{sec:winding}
 
