@@ -7803,27 +7803,33 @@ are divided into six categories:
 An arrow marker looks like an arrow head or triangle or hook.
 The tips may protrude forward beyond the vertex but mostly they protrude
 back from the vertex.
+Available arrow markers are listed in \tableref{tab:arrowmarkers}.
 
 \widgetdef{arrow.tab.partial}
 
 A partial marker looks like one half of an arrow marker.
+Available partial markers are listed in \tableref{tab:partialmarkers}.
 
 \widgetdef{arrow.tab.data}
 
-Data point style markers are \manmsg{centred} on the applicable
+Data point style markers are mostly \manmsg{centred} on the applicable
 vertex (but can be shifted with an offset).
+Available data point markers are listed in \tableref{tab:datapointmarkers}.
 
 \widgetdef{arrow.tab.bracket}
 
 Bracket style markers which protrude back from the vertex.
+Available bracket markers are listed in \tableref{tab:bracketmarkers}.
 
 \widgetdef{arrow.tab.decorative}
 
 Decorative markers are dingbat style shapes but also include circles
 and diamonds.
+Available decorative markers are listed in \tableref{tab:decorativemarkers}.
 
 \widgetdef{arrow.tab.caps}
 Cap style markers protrude forward beyond the vertex.
+Available cap markers are listed in \tableref{tab:capmarkers}.
 
 \begin{important}
 The cap style markers do not replace the line \pathattr{cap-style},
@@ -7831,13 +7837,6 @@ but are in addition to the line \pathattr{cap-style}. However the cap style
 markers generally look best in combination with the
 \editfn{path.style.capstyle.butt} cap line style.
 \end{important}
-
-Available markers are listed in \tableref{tab:arrowmarkers} (arrow
-style markers), \tableref{tab:partialmarkers} (partial arrow markers),
-\tableref{tab:datapointmarkers} (data point style markers),
-\tableref{tab:bracketmarkers} (bracket style markers),
-\tableref{tab:capmarkers} (cap style markers) and
-\tableref{tab:decorativemarkers} (decorative markers).
 
 \FloatTable[htbp]{tab:arrowmarkers}
 {%
@@ -8116,53 +8115,141 @@ butt cap style.)
 Markers are shown in red to distinguish them from the line.}
 
 
-
 \subsubsection{Marker Size}\label{sec:markersize}
 
-\inlineglsdef{index.marker.size}
 
 \widgetdef{arrow.size}
 
-TODO
-
+The \widget{arrow.size} box will be enabled for only the
+resizeable markers. This box can be used to vary the 
+\inlineglsdef{index.marker.size},
+but some markers also depend on the line width, so the size box is
+only meant as a general guide.
 
 \subsubsection{Repeating Markers}\label{sec:repeatingmarkers}
 
-\inlineglsdef{index.marker.repeating}
+\Inlineglsdef{index.marker.repeating} markers are supported (up to
+three markers, including the original). This is where the marker is
+duplicated or triplicated, each copy slightly offset from the original marker.
+
+\figureref{fig:repeatmarkers} illustrates single, double and triple
+repeat markers for a path with a \LaTeX\ style end arrow. Note that
+the markers are placed along the gradient vector which means that
+they may not lie on the actual path. (See
+\figureref{fig:bezierrepeat}.)
 
 \widgetdef{arrow.single}
+
+Select the \widget{arrow.single} radio button for a single marker.
+
 \widgetdef{arrow.double}
+
+Select the \widget{arrow.double} radio button for two markers.
+
 \widgetdef{arrow.triple}
 
-TODO
+Select the \widget{arrow.triple} radio button for three markers.
+
+\FloatSubFigs{fig:repeatmarkers}
+{
+  {fig:repeatmarkersa}{\includeimg{repeatMarker1}}{},
+  {fig:repeatmarkersb}{\includeimg{repeatMarker2}}{},
+  {fig:repeatmarkersc}{\includeimg{repeatMarker3}}{}
+}
+[Repeat Markers]
+{Repeat markers:
+\subfigref{fig:repeatmarkersa} single;
+\subfigref{fig:repeatmarkersb} double;
+\subfigref{fig:repeatmarkersc} triple.}
+
+\FloatFig{fig:bezierrepeat}
+{\includeimg{bezierrepeat}}
+[Repeat Markers Are Placed Along the Gradient Vector]
+{Repeat markers are placed along the gradient vector.}
 
 
 \subsubsection{Reversing Markers}\label{sec:reversingmarkers}
 
-\inlineglsdef{index.marker.reversing}
+A marker may be \inlineglsdef{index.marker.reversed} so that it
+points in the opposite direction. Note that start markers are always 
+automatically reversed, so reversing a start marker would make it
+point in the same direction as the mid and end marker of the same
+type.
 
 \widgetdef{arrow.reversed}
 
-TODO
+Select the \widget{arrow.reversed} check box to reverse the marker
+(see \figureref{fig:reversedmarkers}).
 
+\FloatSubFigs{fig:reversedmarkers}
+{
+  {fig:reversedmarkersa}{\includeimg{reversedMarker1}}{},
+  {fig:reversedmarkersb}{\includeimg{reversedMarker2}}{},
+  {fig:reversedmarkersc}{\includeimg{reversedMarker3}}{}
+}
+[Reversed Markers]
+{Reversed markers:
+\subfigref{fig:reversedmarkersa} single reversed;
+\subfigref{fig:reversedmarkersb} double reversed;
+\subfigref{fig:reversedmarkersc} triple reversed.}
 
 \subsubsection{Composite Markers}\label{sec:compositemarkers}
 
-\inlineglsdef{index.marker.composite}
+A \inlineglsdef{index.marker.composite} marker is formed by
+combining two markers: the primary marker and a secondary marker.
 
 \widgetdef{arrow.composite}
 
-TODO
+To combine the primary marker with another marker, select the
+\widget{arrow.composite} \gls{checkbox} which will enable the
+\widget{arrow.secondary} tab and the \widget{arrow.overlay} checkbox.
+
+\widgetdef{arrow.overlay}
+
+If the \widget{arrow.overlay} \gls*{checkbox}
+is selected, the primary and secondary markers will be positioned so
+that their origins coincide, otherwise the secondary marker will be
+offset from the primary marker (see also the marker
+\gls{index.marker.offset} in \sectionref{sec:markeroffset}). 
+
+\figureref{fig:composite} shows two examples of composite markers:
+in \figureref{fig:compositea} the start and end markers are formed
+from a pointed arrow primary marker of size 5\gls{bp} and a
+composite bar secondary marker, while in \figureref{fig:compositeb}
+the start and end markers are formed from an open semicircle primary
+marker of size 5bp with an overlaid reversed filled semicircle
+secondary marker of size 5bp.
+
+\FloatSubFigs{fig:composite}
+{
+ {fig:compositea}{\includeimg{composite1}}{},
+ {fig:compositeb}{\includeimg{composite2}}{}
+}
+[Examples of Composite Markers]
+{Examples of composite markers:
+\subfigref{fig:compositea} a bar primary marker with a pointed secondary
+marker of size 5bp;
+\subfigref{fig:compositeb} an open semicircle primary marker of
+size 5bp overlaid with a reversed filled semicircle secondary marker
+of size 5bp.}
 
 
 \subsubsection{Marker Orientation}\label{sec:markerorientation}
 
-\inlineglsdef{index.marker.orientation}
-
 \widgetdef{arrow.autoorient}
 
-TODO
+If the \widget{arrow.autoorient} checkbox is selected,
+the marker's \inlineglsdef{index.marker.orientation} will be
+calculated to align the marker so that its $x$-axis lies along the
+gradient vector at the vertex. 
 
+If the \widget{arrow.autoorient} is not selected, the angle input
+field next to it will be enabled in which you can specify the
+desired angle of rotation.
+
+\begin{important}
+Remember that start markers point in the opposite direction.
+\end{important}
 
 \subsubsection{Marker Offset}\label{sec:markeroffset}
 

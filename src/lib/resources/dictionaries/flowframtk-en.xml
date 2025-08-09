@@ -2043,8 +2043,11 @@ Nicola Talbot
 
 <entry key="arrow.colour.dependent">Color As Path</entry>
 <entry key="arrow.colour.dependent.mnemonic">A</entry>
+<entry key="arrow.colour.dependent.initvalue">on</entry>
+
 <entry key="arrow.colour.independent">Specific Color</entry>
 <entry key="arrow.colour.independent.mnemonic">F</entry>
+<entry key="arrow.colour.independent.initvalue">off</entry>
 
 <!--  Edit Text Dialog Box -->
 
@@ -3997,7 +4000,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="index.marker.size">size</entry>
 <entry key="index.marker.type">type</entry>
 <entry key="index.marker.repeating">repeating</entry>
-<entry key="index.marker.reversing">reversing</entry>
+<entry key="index.marker.reversed">reversed</entry>
 <entry key="index.marker.composite">composite</entry>
 <entry key="index.marker.offset">offset</entry>
 <entry key="index.marker.repeat-gap">repeat gap</entry>
