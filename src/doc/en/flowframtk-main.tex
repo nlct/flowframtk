@@ -8656,17 +8656,78 @@ that have already been defined unless the \gls*{checkbox} marked
 
 \subsection{Font Series}\label{sec:fontseries}
 
-\inlineglsdef{index.text-attribute.font-series}
+\menudef{menu.edit.textarea.font.series}
 
-TODO
+The \menu{edit.textarea.font.series} menu item opens a dialog with a 
+\widget{font.series} panel in which you can change the
+\inlineglsdef{index.text-attribute.font-series}
+of all \selected\ \glspl{textarea} and \glspl{textpath}.
+
+\widgetdef{font.series}
+
+The \widget{font.series} panel is also in the \widget{font.title}
+panel. Use the dropdown box (\figureref{fig:setfontseries}) to
+select the font series used to \glslink{drawing-on-canvas}{draw} the
+text on the \gls{canvas}.
+The available choices are:
+
+\widgetdef{font.series.medium}
+
+The \widget{font.series.medium} item indicates medium weight and
+will automatically set the \LaTeX\ alternative to \gls{mdseries}.
+
+\widgetdef{font.series.bold}
+
+The \widget{font.series.bold} item indicates bold weight and
+will automatically set the \LaTeX\ alternative to \gls{bfseries}.
+
+\FloatFig{fig:setfontseries}
+{\includeimg{annoteFontSeries}}
+{Setting the Font Series}
+
+If you prefer a different \LaTeX\ declaration to the one selected,
+you can select another command from the \gls{combobox} on the right
+or you can edit it if you require a font series declaration that is
+not listed.  Alternatively you can clear the value (by deleting the
+series declaration) to use the current document font series.
 
 
 \subsection{Font Shape}\label{sec:fontshape}
 
+\menudef{menu.edit.textarea.font.shape}
+
+The \menu{edit.textarea.font.shape} menu item opens a dialog with a 
+\widget{font.shape} panel in which you can change the
 \inlineglsdef{index.text-attribute.font-shape}
+of all \selected\ \glspl{textarea} and \glspl{textpath}.
 
-TODO
+\widgetdef{font.shape}
 
+The \widget{font.shape} panel is also in the \widget{font.title}
+panel. Use the dropdown box (\figureref{fig:setfontshape}) to
+select the font shape used to \glslink{drawing-on-canvas}{draw} the
+text on the \gls{canvas}.
+The available choices are:
+
+\widgetdef{font.shape.upright}
+
+The \widget{font.shape.upright} item indicates upright and
+will automatically set the \LaTeX\ alternative to \gls{upshape}.
+
+\widgetdef{font.shape.italic}
+
+The \widget{font.shape.italic} item indicates italic and
+will automatically set the \LaTeX\ alternative to \gls{em}.
+
+\FloatFig{fig:setfontshape}
+{\includeimg{annoteFontShape}}
+{Setting the Font Shape}
+
+If you prefer a different \LaTeX\ declaration to the one selected,
+you can select another command from the \gls{combobox} on the right
+or you can edit it if you require a font shape declaration that is
+not listed.  Alternatively you can clear the value (by deleting the
+shape declaration) to use the current document font shape.
 
 \subsection{Anchor}\label{sec:fontanchor}
 
