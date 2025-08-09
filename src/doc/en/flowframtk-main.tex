@@ -8794,10 +8794,278 @@ shape declaration) to use the current document font shape.
 
 \subsection{Anchor}\label{sec:fontanchor}
 
-\inlineglsdef{index.text-attribute.anchor}
+There are two \inlineglspluraldef{index.text-attribute.anchor}
+that relate to \glspl{textarea} and \glspl{textpath}: the horizontal
+\textattr{anchor} and the vertical \textattr{anchor}.
 
-TODO
+The default is \gls{font.anchor.left} for the horizontal anchor and
+\gls{font.anchor.base} for the vertical anchor. These can be changed
+using the \menu{edit.textarea.font.anchor} menu. The sample panel will
+display a small red dot to indicate the position of the anchor. If
+you enable the \widget{textconfig.anchor} setting
+(\sectionref{sec:texconfigtext}), the anchor will be changed when
+you \hyperref[sec:alignobjects]{align} groups containing \glspl{textarea}.
 
+\menudef{menu.edit.textarea.font.anchor}
+
+The \menu{edit.textarea.font.anchor} sub menu may be used to set the
+\textattrpl{anchor}.
+
+\menudef{menu.edit.textarea.font.anchor.both}
+
+The \menu{edit.textarea.font.anchor.both} menu item opens a dialog
+with the \widget{font.anchor} panel to change both the horizontal
+and vertical anchors for all \selected\ \glspl{textarea} and
+\glspl{textpath}.
+
+\menudef{menu.edit.textarea.font.anchor.horizontal}
+
+The \menu{edit.textarea.font.anchor.horizontal} menu opens a dialog
+with the \widget{font.hanchor} component which may be used to set the
+horizontal \textattr{anchor}.
+
+\menudef{menu.edit.textarea.font.anchor.vertical}
+
+The \menu{edit.textarea.font.anchor.vertical} menu opens a dialog
+with the \widget{font.vanchor} component which may be used to set the
+vertical \textattr{anchor}.
+
+\widgetdef{font.anchor}
+
+The \widget{font.anchor} panel is also in the \widget{font.title}
+panel and provides a way to set both the horizontal and vertical
+anchor at the same time. 
+
+\widgetdef{font.hanchor}
+
+The horizontal anchor options are:
+
+\begin{deflist}
+\itemtitle{\inlineglsdef{font.anchor.left}}
+\begin{itemdesc}
+Left horizontal anchor (corresponds to PGF node \code{west} anchor).
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{font.anchor.hcentre}}
+\begin{itemdesc}
+\Manmsg{centre} horizontal anchor.
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{font.anchor.right}}
+\begin{itemdesc}
+Right horizontal anchor (corresponds to PGF node \code{east} anchor).
+\end{itemdesc}
+
+\end{deflist}
+
+\widgetdef{font.vanchor}
+
+The vertical anchor options are:
+
+\begin{deflist}
+\itemtitle{\inlineglsdef{font.anchor.base}}
+\begin{itemdesc}
+Base vertical anchor (align on the baseline).
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{font.anchor.vcentre}}
+\begin{itemdesc}
+\Manmsg{centre} vertical anchor.
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{font.anchor.top}}
+\begin{itemdesc}
+Top horizontal anchor (corresponds to PGF node \code{north} anchor).
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{font.anchor.bottom}}
+\begin{itemdesc}
+Bottom horizontal anchor (corresponds to PGF node \code{south} anchor).
+\end{itemdesc}
+
+\end{deflist}
+
+When exporting to PGF (see \sectionref{sec:exportpgf}), each
+\gls{textarea} is placed inside a node. In this case, the
+\textattrpl{anchor} are used to identify the PGF node anchors.
+The \gls{textarea} anchors are not used when \gls{drawing-on-canvas}
+the text on the \gls{canvas}.
+
+For a \gls{textpath}, the anchor is used to determine where the text
+should be positioned along the underlying path. Changing the anchor
+for a \gls*{textpath} will change the way it is displayed in
+\FlowframTk\ (as illustrated in \figureref{fig:textpath}).  The
+vertical anchor for \glspl*{textpath} is not supported when
+exporting to a \LaTeX\ file.
+
+If you export your image to a \LaTeX\ file, the font used in the
+document is unlikely to completely match the font used in \FlowframTk.
+As a result, text may appear wider or narrower in the resulting
+\LaTeX\ document than in the image displayed in \FlowframTk.  This may
+result in the text appearing as though it has shifted position.
+(Particularly when the \gls{textarea} contains \LaTeX\ commands.) To
+reduce this effect, you can specify what part of the text should be
+considered as the \textattr{anchor}. To illustrate
+this, consider the image shown in \figureref{fig:anchor}.  An image
+was created in \FlowframTk\ containing some text bordered by a
+rectangle with an additional line along the \gls*{textarea}['s]
+baseline: \figureref{fig:anchora} shows how the image appears
+in \FlowframTk. The font used is the generic serif font and the
+text takes up the entire box. The image was then exported to a
+\LaTeX\ file with various anchor settings. The \LaTeX\ document set
+the Roman font via:
+\begin{compactcodebox}
+\csfmt{usepackage}\marg{mathptmx}
+\end{compactcodebox}
+
+This is a slightly narrower font than the font used in \FlowframTk,
+so the text no longer fills the box. In \figureref{fig:anchorb}, the
+anchor was set to (\gls{font.anchor.left}, \gls{font.anchor.base});
+in \figureref{fig:anchorc}, the anchor was set to
+(\gls{font.anchor.hcentre}, \gls{font.anchor.base}); in
+\figureref{fig:anchord}, the anchor was set to
+(\gls{font.anchor.right}, \gls{font.anchor.base}).  Notice that the
+baseline for the text remains as it was in \FlowframTk, but the
+horizontal placement of the text varies.
+
+In this example, the height of the text in the \LaTeX\ document is
+only slightly smaller than that of the font used by \FlowframTk, so
+the vertical anchor setting does not make that much difference, but
+there is still a slight shift: in \figureref{fig:anchore}, the
+anchor was set to (\gls{font.anchor.left},
+\gls{font.anchor.bottom}); in \figureref{fig:anchorf}, the anchor
+was set to (\gls{font.anchor.left}, \gls{font.anchor.vcentre}); in
+\figureref{fig:anchorg}, the anchor was set to
+(\gls{font.anchor.left}, \gls{font.anchor.top}).
+
+\FloatSubFigs*{fig:anchor}
+{
+  {fig:anchora}{\includeimg{anchor}}{},
+  {fig:anchorb}{\includeimg{anchorleftbase}}{},
+  {fig:anchorc}{\includeimg{anchorcentrebase}}{},
+  {fig:anchord}{\includeimg{anchorrightbase}}{},
+  {fig:anchore}{\includeimg{anchorleftbottom}}{},
+  {fig:anchorf}{\includeimg{anchorleftcentre}}{},
+  {fig:anchorg}{\includeimg{anchorlefttop}}{}
+}
+[The Effect of Converting from Java Fonts to \TeX\ Fonts]
+{The effect of converting from system fonts to \TeX\ fonts:
+\subfigref{fig:anchora} image in \FlowframTk\ using the generic serif font. The
+image was then exported to a \LaTeX\ document with the anchor
+set to:
+\subfigref{fig:anchorb} \gls{font.anchor.left}, \gls{font.anchor.base};
+\subfigref{fig:anchorc} \gls{font.anchor.hcentre}, \gls{font.anchor.base};
+\subfigref{fig:anchord} \gls{font.anchor.right}, \gls{font.anchor.base};
+\subfigref{fig:anchore} \gls{font.anchor.left}, \gls{font.anchor.bottom};
+\subfigref{fig:anchorf} \gls{font.anchor.left}, \gls{font.anchor.vcentre};
+\subfigref{fig:anchorg} \gls{font.anchor.left}, \gls{font.anchor.top}.}
+
+Note that in the above example, the \LaTeX\ document used a
+scalable font (via the \sty{mathptmx} package). The default
+Computer Modern font is not scalable. It is therefore possible that
+the required size is not available, in which case \TeX\ will
+substitute the closest available font size. For example, in
+\figureref{fig:fontdiff}, the image created in the previous
+example is again illustrated with anchor at (left, base).
+\figureref{fig:fontdiffa} shows the original image in
+\FlowframTk\ using the generic serif font;
+\figureref{fig:fontdiffb} shows the image exported to a \LaTeX\
+document that uses the \sty{mathptmx} package;
+\figureref{fig:fontdiffc} shows the image exported to a
+\LaTeX\ document that uses the default Computer Modern font. The
+large font size (40) is not available in the Computer Modern
+font, so the closest available font size is used instead, which in
+this example has resulted in a significant change in size.
+
+\FloatSubFigs{fig:fontdiff}
+{
+  {fig:fontdiffa}{\includeimg{anchor}}{},
+  {fig:fontdiffb}{\includeimg{anchorleftbase}}{},
+  {fig:fontdiffc}{\includeimg{anchorcmr}}{}
+}
+[The Font Used by the \LaTeX\ Document may Result in
+Considerable Differences from the Original Image]
+{The font used by the \LaTeX\ document may result in considerable differences from the
+original image:
+\subfigref{fig:fontdiffa} image in \FlowframTk;
+\subfigref{fig:fontdiffb} image in \LaTeX\ document using \sty{mathptmx} package;
+\subfigref{fig:fontdiffc} image
+in \LaTeX\ document using non-scalable Computer Modern font.}
+
+As mentioned earlier, if a \gls{textarea} contains \LaTeX\ commands,
+this may also result in a horizontal or vertical shift. Consider an
+image that contains some maths. \figureref{fig:anchorfracexa}
+shows the image as it appears in \FlowframTk. The red line path is
+aligned along the left edge and along the baseline of the text.  The
+\gls*{textarea} has been assigned the following alternative text to be
+used when exporting to a \LaTeX\ file:
+\begin{verbatim}
+$f(x) = \frac{(x-a_1)^2}{a_2}$
+\end{verbatim}
+\figureref{fig:anchorfracexb} shows how the image appears
+in a \LaTeX\ document when the anchor is set to
+(\gls{font.anchor.left}, \gls{font.anchor.base}),
+and \figureref{fig:anchorfracexc} shows how the image appears
+in a \LaTeX\ document when the anchor is set to 
+(\gls{font.anchor.left}, \gls{font.anchor.bottom}).
+
+\FloatSubFigs{fig:anchorfracex}
+{
+  {fig:anchorfracexa}{\includeimg{anchorfracexa}}{},
+  {fig:anchorfracexb}{\includeimg{anchorfracexb}}{},
+  {fig:anchorfracexc}{\includeimg{anchorfracexc}}{},
+  {fig:anchorfracexd}{\includeimg{anchorfracexd}}{}
+}
+[Text Area Containing Maths]
+{Text area containing maths:
+\subfigref{fig:anchorfracexa} image in \FlowframTk;
+\subfigref{fig:anchorfracexb} image as it appears in a
+\LaTeX\ document with anchor set to 
+(\gls{font.anchor.left}, \gls{font.anchor.base});
+\subfigref{fig:anchorfracexc} image
+as it appears in a \LaTeX\ document with the anchor set to
+(\gls{font.anchor.left}, \gls{font.anchor.bottom});
+\subfigref{fig:anchorfracexd} text area contents.}
+
+\begin{warning}
+Note that this difference in font size between the image
+viewed in \FlowframTk\ and the \LaTeX\ alternative means that
+exporting to an encapsulated \LaTeX\ document can cause the text to
+be clipped. (This also applies to the \filefn{export} functions that use the
+export to encapsulated \LaTeX\ document function as an intermediate
+step, such as the export to PDF function.)
+\end{warning}
+
+If the \gls*{textarea} is transformed then the anchor will
+have the same transformation. See, for example,
+\figureref{fig:anchortrans}.
+
+\FloatSubFigs{fig:anchortrans}
+{
+  {fig:anchortransa}{\includeimg[scale=0.8]{anchortransformed}}{},
+  {fig:anchortransb}{\includeimg[scale=0.8]{anchortransformedleft}}{},
+  {fig:anchortransc}{\includeimg[scale=0.8]{anchortransformedcentre}}{},
+  {fig:anchortransd}{\includeimg[scale=0.8]{anchortransformedright}}{}
+}
+[The Text Area's Transformation Matrix Will Also Be Applied to the Anchor]
+{The text area's transformation matrix will
+also be applied to the anchor:
+\subfigref{fig:anchortransa} original image in
+\FlowframTk.  The image was then exported to a \LaTeX\ file with
+anchor:
+\subfigref{fig:anchortransb} \gls{font.anchor.left},
+\gls{font.anchor.base};
+\subfigref{fig:anchortransc} \gls{font.anchor.hcentre},
+\gls{font.anchor.base};
+\subfigref{fig:anchortransd}
+\gls{font.anchor.right}, \gls{font.anchor.base}.}
+
+\seealsorefs{
+ sec:texconfigtext,
+ sec:exportimage,
+ sec:neuronexample,
+ sec:accesstutorial
+}
 
 \chapter{\TeX/\LaTeX}\label{sec:tex}
 
