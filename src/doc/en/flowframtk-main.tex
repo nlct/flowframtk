@@ -7674,6 +7674,50 @@ field will be enabled. The value must be greater than or equal to
 \subfigref{fig:joinstyles-round} \pathattr{join-style.round};
 \subfigref{fig:joinstyles-bevel} \pathattr{join-style.bevel}.}
 
+\subsection{Winding Rule}\label{sec:winding}
+
+The \inlineglsdef{index.path-attribute.winding-rule} describes how a \gls{path} is
+filled (if it has a \pathattr{fill-paint}). The
+\pathattr{winding-rule} can be either
+even-odd or non-zero. \figureref{fig:windingrule} illustrates the
+difference between the two winding rules. A \gls*{path} was constructed
+with a \gls{gap} between the outer and inner rectangles.
+\figureref{fig:windingrulea} shows the effect using the even-odd
+winding rule and \figureref{fig:windingruleb} shows the effect
+using the non-zero winding rule. The winding rule is also used when
+extracting the parameters for
+\gls{parshape} (see \sectionref{sec:parshape}) and
+\gls{shapepar} (see \sectionref{sec:shapepar}).
+
+\FloatSubFigs{fig:windingrule}
+{
+ {fig:windingrulea}{\includeimg{evenodd}}{},
+ {fig:windingruleb}{\includeimg{nonzero}}{}
+}
+[Winding Rules]
+{Winding rules (arrows indicate direction of path):
+\subfigref{fig:windingrulea} even-odd;
+\subfigref{fig:windingruleb} non-zero.}
+
+\menudef{menu.edit.path.style.windingrule}
+
+The \pathattr{winding-rule} for a \selected\ path can either be set
+in the \menu{edit.path.style.windingrule} sub menu or in the
+\inlineglsdef{linestyle.winding_rule} dropdown box in the
+\widget{linestyle.title} panel.
+
+\menudef{menu.edit.path.style.windingrule.evenodd}
+
+Select \editfn{path.style.windingrule.evenodd} for the even-odd 
+\pathattr{winding-rule}.
+
+\menudef{menu.edit.path.style.windingrule.nonzero}
+
+Select \editfn{path.style.windingrule.nonzero} for the non-zero 
+\pathattr{winding-rule}.
+
+\seealsorefs{sec:cheeseexample}
+
 \subsection{Markers}\label{sec:markers}
 
 The start, mid and end \inlineglspluraldef{index.marker} are placed on
@@ -8392,17 +8436,6 @@ pentagon will remain yellow.
 \FloatFig{fig:markercolour}
 {\includeimg{markercolour}}
 {Primary and Secondary Markers are Independent}
-
-\subsection{Winding Rule}\label{sec:winding}
-
-\menudef{menu.edit.path.style.windingrule}
-
-\inlineglsdef{index.path-attribute.winding-rule}
-
-\widgetdef{linestyle.winding_rule}
-
-TODO
-
 
 \section{Text Paint}\label{sec:textpaint}
 
