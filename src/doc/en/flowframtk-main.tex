@@ -2826,7 +2826,7 @@ dialog box will open (see \figureref{fig:exportpngdialog}).
   {\includeimg{exportpngdialog}}
   {Export to PNG Settings}
 
-Select the \widget{exportpng.usealpha} box if you want a transparent
+Select the \widget{exportpng.usealpha} box if you want a \gls{transparent}
 background. If the box isn't checked, the background will be white.
 
 Select the \widget{exportpng.crop} checkbox if you want the image cropped
@@ -2987,8 +2987,8 @@ the image is now exported to PDF, as shown in
 but the new rectangle is now visible, which may not be desirable.
 
 There are two ways to deal with this. The first is to give the
-rectangle a transparent \pathattr{line-paint} (in addition to the
-default transparent \pathattr{fill-paint}) but now it can only been detected on the
+rectangle a \gls{transparent} \pathattr{line-paint} (in addition to the
+default \gls{transparent} \pathattr{fill-paint}) but now it can only been detected on the
 \gls{canvas} when it's selected. The second method is to set the
 \gls{image.typeblock} to the area of that rectangle (see \sectionref{sec:typeblock}).
 The easiest way to do this is to \select\ the rectangle, use the
@@ -3763,7 +3763,7 @@ The \menu{bitmap.vectorize} function is an experimental
 feature. It's only available if \app{flowframtk} is invoked with
 the \switch{experimental} switch.
 
-Currently undocumented.
+Currently undocumented and may be removed.
 
 \section{Properties}\label{sec:bitmapprops}
 
@@ -3811,7 +3811,7 @@ The \menu{bitmap.vectorize} function is an experimental
 feature. It's only available if \FlowframTk\ is invoked with
 the \switch{experimental} switch.
 
-Currently undocumented.
+Currently undocumented and may be removed.
 
 
 \chapter{Selecting, Navigation and Basic Editing}\label{sec:selectobjects}
@@ -4652,10 +4652,11 @@ you will lose the description if you later ungroup it.
 \chapter{Paint (\Glsentrytext{manual.colour} and Shading)}
 \label{sec:paintcolourandshading}
 
-\Inlineglsdef{index.paint} is the \gls{index.colour} or \gls{shading} used for
+\Inlineglsdef{index.paint} is the \inlineglsdef{index.colour} or
+\inlineglsdef{index.gradient-paint} (shading) used for
 \dglspl{text-colour}, \dglspl{line-colour} and \dglspl{fill-colour}. When selecting a
 \dgls{paint} for a particular attribute, you may have a choice of:
-transparent (no paint), a \dgls{paint.solid-colour} or a \dgls{gradient-paint}.
+\glsname{transparent}, a \dgls{paint.solid-colour} or a \dgls{gradient-paint}.
 (Some attributes, such as marker \gls{index.marker.colour},
 only support a \gls{index.paint.solid-colour}.)
 
@@ -4664,18 +4665,26 @@ only support a \gls{index.paint.solid-colour}.)
 \widgetdef{colour.title}
 
 The \widget{colour.title} panel is used in various \gls{index.paint}
-selection dialog boxes. Where only a \gls{index.paint.solid-colour} 
-is supported, the radio buttons will be omitted and only the 
-\widget{colour.single} panel will be available.
+selection dialog boxes.
+In most cases, the \widget{colour.single} option is the default
+(such as the \pathattr{line-paint}).  However, the
+\pathattr{fill-paint} defaults to \widget{colour.transparent}.
+Where only a \gls{index.paint.solid-colour} is supported, the radio
+buttons will be omitted and only the \widget{colour.single} panel
+will be available.
 
 \widgetdef{colour.transparent}
 
-Selecting the \widget{colour.transparent} radio button indicates no
-\dgls{colour}. For example, if a \gls{index.path-attribute.line-paint} is set to
+Selecting the \widget{colour.transparent} radio button indicates
+\inlineglsdef{transparent}. For example, if a \pathattr{line-paint} is set to
 \widget{colour.transparent} then this indicates that the \gls{shape}
 outline should not be \glslink{drawing-on-canvas}{drawn} or if a
-\gls{index.path-attribute.fill-paint} is set to \widget{colour.transparent} then
+\pathattr{fill-paint} is set to \widget{colour.transparent} then
 this indicates that the \gls{shape} should not be filled.
+
+If you require \gls{translucency} (where there is some \dgls{paint}
+but \glspl{object} behind show \manmsg{through}) then select one of
+the other \dgls{paint} options and adjust the alpha channel.
 
 \widgetdef{colour.single}
 
@@ -4685,8 +4694,9 @@ this indicates that the \gls{shape} should not be filled.
 
 Selecting the \widget{colour.single} radio button indicates a
 \inlineglsdef{index.colour.solid} \dgls{colour} and enables the
-\widget{colour.single} panel (see \figureref{fig:paint-solid}).  A
-\dgls{paint.solid-colour} may be expressed as
+\widget{colour.single} panel (see \figureref{fig:paint-solid}). 
+
+A \dgls{paint.solid-colour} may be expressed as
 \inlineglsdef{index.colour.rgb} (red, green, blue),
 \inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black),
 \inlineglsdef{index.colour.hsb} (hue, saturation, brightness) or
@@ -4835,7 +4845,7 @@ during the export process.
 \menudef{menu.edit.adjustcol.fade}
 
 \Glspl{index.line-colour}, \glspl{index.fill-colour} and
-\glspl{index.text-colour} can be faded (transparency increased)
+\glspl{index.text-colour} can be faded (\gls{translucency} increased)
 using the \menu{edit.adjustcol.fade} menu item. Only selected
 \glspl{path} and \glspl{textarea} will be affected. If you want to
 fade a \gls{bitmap} you will need to use a bitmap editor that
@@ -4854,10 +4864,10 @@ provides that function.
 \menudef{menu.edit.adjustcol.removetrans}
 
 \Glspl{index.line-colour}, \glspl{index.fill-colour} and
-\glspl{index.text-colour} can have the translucency removed using
+\glspl{index.text-colour} can have the \gls{translucency} removed using
 the \menu{edit.adjustcol.removetrans} menu item. Only selected
 \glspl{shape} and \glspl{textarea} will be affected. This function
-sets the paint to none (completely transparent) if the alpha value
+sets the paint to none (completely \gls{transparent}) if the alpha value
 is less than 0.5 otherwise it sets the alpha value to 1 (opaque).
 For example, \figureref{fig:removetransa} shows three shapes: a
 filled rectangle with alpha set to 100\%, a blue filled circle with
@@ -7181,7 +7191,7 @@ converted into an outline with the \transformfn{convert} function
 (\figureref{fig:convertpatterntooutlineb}). The original orchid
 \pathattr{fill-paint} has been discarded. The new
 \pathattr{fill-paint} is now the original \pathattr{line-paint}
-(black). The new \pathattr{line-paint} is now set to transparent
+(black). The new \pathattr{line-paint} is now set to \gls{transparent}
 (that is the outline isn't drawn). Switching to \editpathmode\
 (\figureref{fig:convertpatterntooutlinec}) shows the new underlying
 path that draws around the original stroked path. Note that the
@@ -7256,8 +7266,7 @@ a single gradient resembling the original \gls*{textarea} (see
 
 The way a \gls{shape} is displayed is governed by the 
 \pathattr{line-paint}, the \pathattr{fill-paint}, the 
-\inlineglsdef{line-style} and the \pathattr{winding-rule}. 
-
+\gls{line-style} and the \pathattr{winding-rule}. 
 The way a \gls{textarea} is displayed is governed by the
 \gls{index.text-colour}, \gls{font}, \textattr{transformation-matrix} 
 and (if \hyperref[sec:exportimage]{exporting} to a \LaTeX\ file) the
@@ -7328,6 +7337,8 @@ Specifies the current \gls{font} and \textattrpl{anchor} (see
 
 \end{deflist}
 
+\widgetdef{button.default}
+
 The \gls{button.default} button located at the bottom right corner
 of the dialog box may be used to restore the default settings.
 
@@ -7342,11 +7353,12 @@ of all \selected\ \glspl{shape}.
 
 \widgetdef{linecolour.title}
 
-The \widget{linecolour.title} panel has a paint selector panel
+The \widget{linecolour.title} panel has a \dialog{colour} panel
 (see \sectionref{sec:paint}) that may be used to set the 
 \pathattr{line-paint}. This panel is also a tab
 in the \dialog{styles} dialog to set the current
 \pathattr{line-paint}.
+The default \pathattr{line-paint} is black.
 
 Selecting the \widget{colour.transparent} radio button indicates
 that \gls{shape} outlines should not be drawn.  (The \pathattr{fill-paint}
@@ -7370,12 +7382,12 @@ The \menu{edit.fill_colour} menu item opens a dialog with a
 
 \widgetdef{fillcolour.title}
 
-The \widget{fillcolour.title} panel has a paint selector panel (see
+The \widget{fillcolour.title} panel has a \dialog{colour} panel (see
 \sectionref{sec:paint}) that may be used to set the
 \pathattr{fill-paint}. This panel is also a tab in the
 \dialog{styles} dialog to set the current \pathattr{fill-paint}.
 
-Selecting the \widget{colour.transparent} radio button indicates
+The default \pathattr{fill-paint} is \gls{transparent} which indicates
 that \glspl{shape} should not be filled.  (The \pathattr{line-paint}
 will need to be set to something other than
 \widget{colour.transparent} in order for the \glspl{shape} to be
@@ -7452,7 +7464,7 @@ effects of the \gls{path} settings you choose
 \begin{information}
 The line styles are only applicable when the \gls{shape}
 outline is \glslink{drawing-on-canvas}{drawn}. (That is, when 
-the \pathattr{line-paint} is not set to transparent.)
+the \pathattr{line-paint} is not set to \gls{transparent}.)
 \end{information}
 
 \subsection{Line Thickness (or Pen Width)}\label{sec:penwidth}
@@ -7473,7 +7485,7 @@ both a positive decimal number and a unit. The default is 1\gls{bp}.
 \begin{information}
 The \pathattr{line-width} is only applicable when the \gls{shape}
 outline is \glslink{drawing-on-canvas}{drawn}. (That is, when 
-the \pathattr{line-paint} is not set to transparent.)
+the \pathattr{line-paint} is not set to \gls{transparent}.)
 \end{information}
 
 \subsection{Dash Pattern}\label{sec:dashpattern}
@@ -7741,7 +7753,7 @@ of all \selected\ \glspl{textarea} and \glspl{textpath}.
 
 \widgetdef{textcolour.title}
 
-The \widget{textcolour.title} panel has a paint selector panel
+The \widget{textcolour.title} panel has a \dialog{colour} panel
 (see \sectionref{sec:paint}) that may be used to set the 
 text \textattr{paint}. This panel is also a tab
 in the \dialog{styles} dialog to set the current
