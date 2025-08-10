@@ -43,9 +43,9 @@ public class TeXEditorPanel extends JPanel
 
       undoManager = new UndoManager();
 
-      undoItem = createButtonItem("menu.edit", "undo", toolBar, editM);
+      undoItem = createButtonItem("menu.texeditor", "undo", toolBar, editM);
 
-      redoItem = createButtonItem("menu.edit", "redo", toolBar, editM);
+      redoItem = createButtonItem("menu.texeditor", "redo", toolBar, editM);
 
       if (editM instanceof JMenu)
       {
@@ -76,11 +76,11 @@ public class TeXEditorPanel extends JPanel
          }
       }
 
-      findItem = createButtonItem("menu.texeditor.search", "find", toolBar, searchM);
-      findAgainItem = createButtonItem("menu.texeditor.search", "find_again",
+      findItem = createButtonItem("menu.texeditor", "find", toolBar, searchM);
+      findAgainItem = createButtonItem("menu.texeditor", "find_again",
         toolBar, searchM);
 
-      replaceItem = createButtonItem("menu.texeditor.search", "replace",
+      replaceItem = createButtonItem("menu.texeditor", "replace",
         toolBar, searchM);
 
       document = new TeXEditorDocument(this,

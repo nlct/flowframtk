@@ -49,10 +49,10 @@ public class PreamblePartEditor extends JPanel
 
       popupM = new JPopupMenu(getName());
 
-      undoItem = createButtonItem("menu.edit", "undo", toolBar, popupM);
+      undoItem = createButtonItem("menu.texeditor", "undo", toolBar, popupM);
       undoItem.setEnabled(false);
 
-      redoItem = createButtonItem("menu.edit", "redo", toolBar, popupM);
+      redoItem = createButtonItem("menu.texeditor", "redo", toolBar, popupM);
       redoItem.setEnabled(false);
 
       popupM.addSeparator();
@@ -69,13 +69,13 @@ public class PreamblePartEditor extends JPanel
 
       popupM.addSeparator();
 
-      findItem = createButtonItem("menu.texeditor.search", "find", toolBar, popupM);
-      findAgainItem = createButtonItem("menu.texeditor.search", "find_again", 
+      findItem = createButtonItem("menu.texeditor", "find", toolBar, popupM);
+      findAgainItem = createButtonItem("menu.texeditor", "find_again", 
         toolBar, popupM);
 
       findAgainItem.setEnabled(false);
 
-      replaceItem = createButtonItem("menu.texeditor.search", "replace",
+      replaceItem = createButtonItem("menu.texeditor", "replace",
         toolBar, popupM);
 
       try

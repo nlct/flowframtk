@@ -47,7 +47,7 @@ public class TeXEditorDialog extends JDialog
       JMenu editM = getResources().createAppMenu("menu.edit");
       mbar.add(editM);
 
-      JMenu searchM = getResources().createAppMenu("menu.texeditor.search");
+      JMenu searchM = getResources().createAppMenu("menu.texeditor_search");
       mbar.add(searchM);
 
       texEditorPanel = new TeXEditorPanel(application, this,

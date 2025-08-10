@@ -103,13 +103,13 @@ Nicola Talbot
 
 <entry key="menu.edit.redo">Redo</entry>
 <entry key="menu.edit.redo.mnemonic">R</entry>
-<entry key="menu.edit.redo.tooltip">Redo last action</entry>
+<entry key="menu.edit.redo.tooltip">Redo last undone action</entry>
 <entry key="menu.edit.redo.keystroke">F9</entry>
 <entry key="menu.edit.redo.iconimage">redo</entry>
 
 <entry key="button.redo">Redo</entry>
 <entry key="button.redo.keystroke">F9</entry>
-<entry key="button.redo.description">Redo last action</entry>
+<entry key="button.redo.description">Redo last undone action</entry>
 
 <entry key="menu.edit.select_all">Select All</entry>
 <entry key="menu.edit.select_all.mnemonic">A</entry>
@@ -2963,34 +2963,54 @@ Are you sure you want to ungroup it?</entry>
 <entry key="texeditor.preamble.late">Late</entry>
 <entry key="texeditor.frame_contents">Frame Contents</entry>
 
-<entry key="menu.texeditor.search">Search</entry>
-<entry key="menu.texeditor.search.mnemonic">S</entry>
-<entry key="menu.texeditor.search.find">Find...</entry>
-<entry key="menu.texeditor.search.find.mnemonic">F</entry>
+<entry key="index.menu.texeditor">TeX Editor Popup Menu</entry>
 
-<entry key="menu.texeditor.search.find_again">Find Again</entry>
-<entry key="menu.texeditor.search.find_again.mnemonic">A</entry>
-<entry key="menu.texeditor.search.find_again.iconimage">findAgain</entry>
+<entry key="menu.texeditor_search">Search</entry>
+<entry key="menu.texeditor_search.mnemonic">S</entry>
 
-<entry key="menu.texeditor.search.replace">Replace...</entry>
-<entry key="menu.texeditor.search.replace.mnemonic">R</entry>
+<entry key="menu.texeditor.find">Find...</entry>
+<entry key="menu.texeditor.find.iconimage">find</entry>
+<entry key="menu.texeditor.find.mnemonic">F</entry>
+
+<entry key="menu.texeditor.find_again">Find Again</entry>
+<entry key="menu.texeditor.find_again.mnemonic">A</entry>
+<entry key="menu.texeditor.find_again.iconimage">findAgain</entry>
+
+<entry key="menu.texeditor.replace">Replace...</entry>
+<entry key="menu.texeditor.replace.mnemonic">R</entry>
+<entry key="menu.texeditor.replace.iconimage">replace</entry>
 
 <entry key="texeditor.discard_edit_query">Discard the edits you have just made?</entry>
 <entry key="texeditor.confirm_discard">Confirm Discard</entry>
 
+<entry key="menu.texeditor.undo">Undo</entry>
+<entry key="menu.texeditor.undo.mnemonic">U</entry>
+<entry key="menu.texeditor.undo.keystroke">F8</entry>
+<entry key="menu.texeditor.undo.tooltip">Undo last edit</entry>
+<entry key="menu.texeditor.undo.iconimage">undo</entry>
+
+<entry key="menu.texeditor.redo">Redo</entry>
+<entry key="menu.texeditor.redo.mnemonic">R</entry>
+<entry key="menu.texeditor.redo.keystroke">F9</entry>
+<entry key="menu.texeditor.redo.tooltip">Redo last undone edit</entry>
+<entry key="menu.texeditor.redo.iconimage">undo</entry>
+
 <entry key="menu.texeditor.cutText">Cut</entry>
 <entry key="menu.texeditor.cutText.mnemonic">T</entry>
 <entry key="menu.texeditor.cutText.keystroke">control X</entry>
+<entry key="menu.texeditor.cutText.iconimage">cutText</entry>
 <entry key="menu.texeditor.cutText.tooltip">Cut selected text to clipboard</entry>
 
 <entry key="menu.texeditor.copyText">Copy</entry>
 <entry key="menu.texeditor.copyText.mnemonic">C</entry>
 <entry key="menu.texeditor.copyText.keystroke">control C</entry>
+<entry key="menu.texeditor.copyText.iconimage">copyText</entry>
 <entry key="menu.texeditor.copyText.tooltip">Copy selected text to clipboard</entry>
 
 <entry key="menu.texeditor.pasteText">Paste</entry>
 <entry key="menu.texeditor.pasteText.mnemonic">P</entry>
 <entry key="menu.texeditor.pasteText.keystroke">V</entry>
+<entry key="menu.texeditor.pasteText.iconimage">pasteText</entry>
 <entry key="menu.texeditor.pasteText.tooltip">Paste text from clipboard</entry>
 
 <entry key="menu.texeditor.selectAllText">Select All</entry>
@@ -3001,16 +3021,25 @@ Are you sure you want to ungroup it?</entry>
 <!--  Preamble Find/Replace Dialog -->
 
 <entry key="find.title">Find</entry>
+
 <entry key="find.search_for">Search For: </entry>
 <entry key="find.search_for.mnemonic">S </entry>
+
 <entry key="find.replace_text">Replacement: </entry>
 <entry key="find.replace_text.mnemonic">T </entry>
+
 <entry key="find.case">Case Sensitive</entry>
 <entry key="find.case.mnemonic">A</entry>
+<entry key="find.case.initvalue">false</entry>
+
 <entry key="find.regex">Regular Expression</entry>
 <entry key="find.regex.mnemonic">X</entry>
+<entry key="find.regex.initvalue">false</entry>
+
 <entry key="find.wrap">Wrap round</entry>
 <entry key="find.wrap.mnemonic">W</entry>
+<entry key="find.wrap.initvalue">true</entry>
+
 <entry key="find.find">Find</entry>
 <entry key="find.find.mnemonic">F</entry>
 <entry key="find.find.tooltip">Find text</entry>
