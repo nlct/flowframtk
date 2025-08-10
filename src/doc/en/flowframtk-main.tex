@@ -1710,10 +1710,11 @@ text displayed on the \gls{canvas}. (This includes the export
 functions that use \app{latex} or \app{pdflatex}, such as
 the export to PDF function.) The \mathstool\ automatically
 inserts \glsname{mshift} at the start and end of the
-alternative text. In addition, Unicode symbols present in
+alternative text. 
+
+If the \inlineglsdef{textarea-mapping} are enabled, Unicode symbols present in
 the text when a new \gls*{textarea} is constructed can be mapped to
 a \LaTeX\ command.
-
 The mappings applied depend on which tool has been selected. With
 the regular \texttool, all the ten \TeX\ special characters are
 mapped to commands. In addition, there are some other characters
@@ -1912,7 +1913,8 @@ is 200.)
 \widgetdef{preambleconfig.title}
 
 The \widget{preambleconfig.title} tab
-(\figureref{fig:texconfig-preamble}) allows you to specify code that
+(\figureref{fig:texconfig-preamble}) allows you to set the
+\inlineglsdef{preamble.default} code that
 should always be added to the preamble when exporting images to
 complete \LaTeX\ documents or formats that use the encapsulated
 \LaTeX\ document function as an intermediate step (see
@@ -1924,7 +1926,7 @@ class (\ext{cls}) or package (\ext{sty}) functions.
   {\includeimg{texconfig-preamble}}
   {Default Preamble Code}
 
-The default preamble code is stored in a file called
+The \gls{preamble.default} code is stored in a file called
 \file{preamble.tex} in \FlowframTk's \gls{config_dir}. If you edit this
 file outside of \FlowframTk, you'll need to use the reload button to
 refresh this panel. The other buttons are the same as for the \TeX\
@@ -2578,7 +2580,7 @@ allow one side to take up more room in the window. This can be done
 by dragging the divider.  With some \glspl{look-and-feel}, the
 divider has small triangular buttons which you can click on to
 collapse or expand one side, but not all have this function nor can
-some of them completely hide the preamble pane (such as the GTK+
+some of them completely hide the \gls{preamble} pane (such as the GTK+
 Look and Feel).  You can also use the \menu{tex.set_preamble} menu
 item to show the preamble pane.
 
@@ -2977,7 +2979,7 @@ If you prefer to use \sty{fontspec}, change the application path for
 If your image includes \LaTeX\ commands that require a particular
 package, you will need to add these packages to the
 \hyperref[sec:preamble]{image preamble}. This is done automatically
-by the mapping function, if it has been
+by the \gls{textarea-mapping} function, if it has been
 \hyperref[mi:texmappings]{enabled}.  See
 \sectionsref{sec:texconfigtext,sec:preamble} for further details.
 
@@ -5025,7 +5027,8 @@ does in \FlowframTk, so you may also need to change the
 
 You can use the \widget{edittext.remap} button to generate
 the alternative text in the bottom field by applying
-\hyperref[mi:texmappings]{mappings} to the text in the top field. If
+\glspl{textarea-mapping} to the text in the top field (see
+\sectionref{sec:texconfigtext}). If
 the original alternative text starts and ends with a \gls{mshift}
 symbol, the \mathsmode\ mappings will be used, otherwise the
 \textmode\ mappings will be used. If the original alternative text is
@@ -5280,7 +5283,12 @@ text will be ignored) depending on your
 {Text Outline: \subfigref{fig:textoutlinea} original text area;
   \subfigref{fig:textoutlineb} outline.}
 
-% TODO document \jdroutline
+When exporting to a document class, package or a complete document,
+the custom command \gls{jdroutline} will automatically be defined.
+This is used to create the outlined effect. If you 
+\hyperref[sec:exportpgf]{export} to a file containing \sty{pgf}
+code to be input by another document, you will need to inspect the 
+created \ext{tex} file for further information.
 
 \seealsorefs{sec:outlinetopath}
 
@@ -9100,10 +9108,138 @@ anchor:
 
 \chapter{\TeX/\LaTeX}\label{sec:tex}
 
-TODO
+\menudef{menu.tex}
 
+This chapter covers functions that are specific to \TeX\ or \LaTeX\
+users.  These functions can be obtained via the
+\menu{tex} menu. The only functions that are relevant to
+Plain \TeX\ users are those relating to \gls{parshape}
+and \gls{shapepar}\slash\gls{Shapepar}. The \sty{flowfram} package is a \LaTeX\
+package. Although the \sty{pgf} package is available for
+\TeX\ formats other than \LaTeX, \FlowframTk\ currently only exports
+images using \LaTeX\ syntax.
 
 \section{Adding Commands to the Preamble}\label{sec:preamble}
+
+The \hyperref[sec:exportdoc]{export to single-paged document}
+functions create a complete \LaTeX\ document, including the document
+class and preamble.  The generated \ext{tex} file has the form:
+\begin{compactcodebox}
+\cmd{documentclass}\oargm{cls size opt}\margm{class-name}
+\strut
+\cmd{usepackage}\marg{ifpdf}
+
+\meta{Default Preamble}
+
+\cmd{usepackage}\marg{pgf}
+\cmd{usepgflibrary}\marg{decorations.text}
+
+\meta{Early-Preamble}
+
+\meta{Definition of \gls+{jdroutline}}
+
+\cmd{usepackage}\oargm{options}\marg{geometry}
+
+\meta{Mid-Preamble}
+
+\cmd{pagestyle}\marg{empty}
+
+\meta{Definition of \gls+{jdrimagebox}}
+
+\meta{Late-Preamble}
+
+\cmd{begin}\marg{document}\cmd{noindent}
+\cmd{jdrimagebox}\margm{image code}
+\cmd{end}\marg{document}
+\end{compactcodebox}
+
+The document class \meta{class-name} and base font size
+\meta{cls size opt} are obtained from the
+\widget{clssettings.title} tab of the
+\dialog{texconfig} dialog (see \sectionref{sec:normalsize}).
+
+As shown above, the \sty{pgf}, \sty{geometry} and
+\sty{ifpdf} packages are automatically added to the \gls{preamble},
+and the \sty*{pgf} \sty{decorations.text} library is also
+loaded, in case the image contains any \glspl{textpath}.
+\FlowframTk\ also defines the command:
+\cmddef{jdroutline}
+This is used for any outline \glspl{textarea} (but not
+\glspl{textpath}, as outline \glspl*{textpath} are not supported by
+the \LaTeX-related export functions.)
+
+The other command that's automatically defined in the \gls{preamble} is:
+\cmddef{jdrimagebox}
+This is used in case the image turns out to be slightly larger than
+calculated. (This could be caused by rounding errors, or the
+difference in fonts, as discussed in \sectionref{sec:fontanchor}.)
+The \env{pgfpicture} environment is placed inside the argument of
+\gls{jdrimagebox} to prevent spurious blank pages occurring.
+
+\begin{information}
+If you \hyperref[sec:exportpgf]{export} to a file containing \sty{pgf}
+code to be input by another document, you will need to inspect the 
+created \ext{tex} file for information regarding required files and
+command definitions.
+\end{information}
+
+In addition \gls{pdfinfo} is added with the creation date and
+optionally a title if the \widget{clssettings.pdfinfo} option
+is selected in the \dialog{texconfig.title} dialog.
+(The title is obtained from the image description, see
+\sectionref{sec:imagedescription}.) The relevant code is placed
+after the early-preamble code and before the definition of
+\gls{jdroutline}. The conditional \gls{ifpdf} is used so
+that \gls{pdfinfo} is only used with \pdfLaTeX.
+
+The \gls{preamble.default} code (\meta{Default Preamble}) is set using the
+\widget{preambleconfig.title} tab of the \dialog{texconfig} dialog
+box (see \sectionref{sec:texconfigpreamble}). This is general code
+that applies to all images that are exported to a LaTeX document.
+
+The \gls{preamble.early} (\meta{Early-Preamble}), 
+\gls{preamble.mid} (\meta{Mid-Preamble}) and \gls{preamble.late}
+(\meta{Late-Preamble}) code is assigned to a specific image, and can
+be used to add any additional \gls{preamble} code required for that image.
+For example, if any of the \glspl{textarea} have alternative text
+that contains a command that isn't part of the \LaTeX\ kernel, the
+early-preamble can include the code to load the package that defines
+the command or the mid- or late-preamble can include the command
+definition.  If the \glspl{textarea-mapping} are enabled (see
+\sectionref{sec:texconfigtext}), any
+required packages for mapped symbols will automatically be
+added to the early \gls{preamble}.
+
+\menudef{menu.tex.set_preamble}
+
+The early-, mid- and late-\gls{preamble} code can be edited in the
+\inlineglsdef{preamble} panel attached to the side of the
+\gls{canvas} (see \figureref{fig:preambleeditor}). There is a
+divider between these two areas that can be moved to adjust the
+visible size of each area, allowing one area to take up more or less
+room than the other. You can also use the \menu{tex.set_preamble}
+menu item to open the preamble panel to its preferred width.
+
+\FloatFig{fig:preambleeditor}
+{\includeimg{annotePreamble}}
+{The Preamble Panel}
+
+For some \hyperref[sec:lookandfeel]{look and feels}, the
+divider has small icons that you can click on to move the divider
+part way across the child window or click again to move it all the
+way across so that one of the panels is no longer visible. However,
+for some look and feels, it's not possible to completely hide the
+preamble panel.
+
+The \gls{preamble} panel has three tabbed panes, for the
+early-, mid- and late-\gls{preamble} code. Each pane has the same layout
+with a horizontal toolbar and an editor area below it in which you
+can type the code. The buttons on the toolbar have the following functions:
+
+
+
+
+
 
 TODO
 

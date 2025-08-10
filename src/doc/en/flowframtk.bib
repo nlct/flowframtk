@@ -120,6 +120,7 @@ objects.}
 @package{pkg.mathptmx}
 @package{pkg.geometry}
 @package{pkg.ifpdf}
+@package{pkg.decorations.text}
 
 @package{pkg.mathdesign,
  name={\styfmt{math\-design}}
@@ -136,6 +137,14 @@ objects.}
 @counter{ctr.page}
 
 % COMMANDS
+
+@command{jdroutline
+ syntax={\margm{pdf specs}\margm{ps specs}\margm{text}}
+}
+
+@command{jdrimagebox,
+ syntax={\margm{image code}}
+}
 
 @command{large}
 @command{Large}
@@ -161,6 +170,7 @@ objects.}
 @command{em}
 
 @command{input}
+@command{ifpdf}
 @command{pdfinfo}
 
 @index{pdfinfo/Title,
@@ -716,6 +726,15 @@ limitation. The \app{flowframtk} application matches the omission.}
   text={font mapping}
 }
 
+@indexplural{textarea-mapping,
+ text={text area mapping},
+ seealso={file.textmappings.prop,file.mathmappings.prop}
+}
+
+@indexplural{mapping,
+  see={font-mapping,textarea-mapping}
+}
+
 @index{gap}
 
 @index{move-to,
@@ -1036,6 +1055,32 @@ limitation. The \app{flowframtk} application matches the omission.}
   parent={font},
   name={shape},
   alias={index.text-attribute.font-shape}
+}
+
+@index{preamble}
+
+@index{preamble.default,
+ parent={preamble}
+ name={default},
+ text={default preamble}
+}
+
+@index{preamble.early,
+ parent={preamble}
+ name={early},
+ text={early preamble}
+}
+
+@index{preamble.mid,
+ parent={preamble}
+ name={mid},
+ text={mid preamble}
+}
+
+@index{preamble.late,
+ parent={preamble}
+ name={late},
+ text={late preamble}
 }
 
 % PUNCTUATION
