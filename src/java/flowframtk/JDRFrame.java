@@ -2000,8 +2000,7 @@ public class JDRFrame extends JInternalFrame
 
    private FlowframTk application_;
 
-   private volatile File currentFile;
-   private File currentExportFile;
+   private volatile File currentFile, currentExportFile;
 
    private String defaultName = "untitled";
 
