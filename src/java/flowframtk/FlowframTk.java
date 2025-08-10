@@ -6642,7 +6642,7 @@ public class FlowframTk extends JFrame
          frame.selectThisFrame();
       }
 
-      File file = exportFC.getSelectedFile();
+      File file = frame.getCurrentExportFile();
 
       if (file == null && !frame.getFilename().isEmpty())
       {
@@ -6661,7 +6661,12 @@ public class FlowframTk extends JFrame
 
          File currentDir = exportFC.getCurrentDirectory();
 
-         exportFC.setSelectedFile(new File(currentDir, name));
+         file = new File(currentDir, name);
+      }
+
+      if (file != null)
+      {
+         exportFC.setSelectedFile(file);
       }
 
       int result = exportFC.showSaveDialog(frame);
@@ -6686,6 +6691,8 @@ public class FlowframTk extends JFrame
 
                if (selection != JOptionPane.YES_OPTION) return;
          }
+
+         frame.setCurrentExportFile(file);
 
          if (filter == pgfFileFilter)
          {         

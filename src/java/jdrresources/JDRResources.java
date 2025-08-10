@@ -3160,7 +3160,7 @@ public class JDRResources
 
 
    public static final String APP_VERSION = "0.8.7";
-   public static final String APP_DATE = "2025-07-28";
+   public static final String APP_DATE = "2025-08-10";
    public static final String START_COPYRIGHT_YEAR = "2006";
    public static final String COPYRIGHT_YEAR
     = APP_DATE.substring(0,4);

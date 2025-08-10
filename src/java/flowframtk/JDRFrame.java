@@ -264,6 +264,16 @@ public class JDRFrame extends JInternalFrame
       application_.updateWindowMenu();
    }
 
+   public void setCurrentExportFile(File file)
+   {
+      currentExportFile = file;
+   }
+
+   public File getCurrentExportFile()
+   {
+      return currentExportFile;
+   }
+
    public void updateTitle()
    {
       int numHidden = canvas.getNumberOfHiddenObjects();
@@ -1991,6 +2001,7 @@ public class JDRFrame extends JInternalFrame
    private FlowframTk application_;
 
    private volatile File currentFile;
+   private File currentExportFile;
 
    private String defaultName = "untitled";
 
