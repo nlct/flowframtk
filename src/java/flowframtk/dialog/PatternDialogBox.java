@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.InvalidValueException;
 
@@ -157,7 +159,15 @@ public class PatternDialogBox extends JDialog
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpDialogButton(this, "sec:patterns"));
+
+      try
+      {
+         p2.add(getResources().createHelpDialogButton(this, "sec:patterns"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       getContentPane().add(p2, "South");
 

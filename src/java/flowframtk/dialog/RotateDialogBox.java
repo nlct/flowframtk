@@ -29,6 +29,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
@@ -61,7 +63,15 @@ public class RotateDialogBox extends JDialog
 
       p2.add(resources.createOkayButton(getRootPane(), this));
       p2.add(resources.createCancelButton(this));
-      p2.add(resources.createHelpDialogButton(this, "sec:rotateobjects"));
+
+      try
+      {
+         p2.add(resources.createHelpDialogButton(this, "sec:rotateobjects"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         resources.internalError(null, e);
+      }
 
       getContentPane().add(p2, "South");
 

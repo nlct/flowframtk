@@ -29,6 +29,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 
@@ -93,7 +95,15 @@ public class TeXAction extends FlowframTkAction
 
       panel.add(getResources().createOkayButton(dbox.getRootPane(), buttonAction));
       panel.add(getResources().createCancelButton(buttonAction));
-      panel.add(getResources().createHelpDialogButton(application, helpID));
+
+      try
+      {
+         panel.add(getResources().createHelpDialogButton(application, helpID));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       dbox.getContentPane().add(panel, "South");
    }

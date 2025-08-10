@@ -35,6 +35,8 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.table.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
@@ -153,7 +155,15 @@ public class CharacterSelector extends JDialog
 
       p2.add(resources.createOkayButton(getRootPane(), this));
       p2.add(resources.createCancelButton(this));
-      p2.add(resources.createHelpDialogButton(this, "mi:insertsymbol"));
+
+      try
+      {
+         p2.add(resources.createHelpDialogButton(this, "mi:insertsymbol"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       modeLabel = new JLabel();
       bottomPanel.add(modeLabel, "East");

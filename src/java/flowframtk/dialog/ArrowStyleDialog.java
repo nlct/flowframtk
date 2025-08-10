@@ -30,6 +30,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
 
@@ -71,7 +73,15 @@ public class ArrowStyleDialog extends JDialog
 
       p1.add(getResources().createOkayButton(getRootPane(), this));
       p1.add(getResources().createCancelButton(this));
-      p1.add(getResources().createHelpDialogButton(this, "sec:markers"));
+
+      try
+      {
+         p1.add(getResources().createHelpDialogButton(this, "sec:markers"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       defaultButton = getResources().createDefaultButton(this);
       JPanel p2 = new JPanel();

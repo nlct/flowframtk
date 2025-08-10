@@ -14,6 +14,8 @@ import javax.swing.event.*;
 import javax.swing.undo.*;
 import javax.swing.text.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.flowframtk.*;
 
@@ -76,7 +78,14 @@ public class PreamblePartEditor extends JPanel
       replaceItem = createButtonItem("menu.texeditor.search", "replace",
         toolBar, popupM);
 
-      toolBar.add(getResources().createHelpDialogButton(application, "sec:preamble"));
+      try
+      {
+         toolBar.add(getResources().createHelpDialogButton(application, "sec:preamble"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       Font font = application.getTeXEditorFont();
 

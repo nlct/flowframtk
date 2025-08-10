@@ -43,6 +43,8 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
 import com.dickimawbooks.jdr.io.*;
@@ -119,7 +121,15 @@ public class ConfigTeXSettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(getRootPane(), this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpDialogButton(this, "sec:texconfig"));
+
+      try
+      {
+         p.add(getResources().createHelpDialogButton(this, "sec:texconfig"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       pack();
       Dimension dim = getSize();
@@ -1264,7 +1274,15 @@ class TeXMapDialog extends JDialog
 
       buttonPanel.add(resources.createOkayButton(this));
       buttonPanel.add(resources.createCancelButton(this));
-      buttonPanel.add(resources.createHelpDialogButton(this, "mi:newtexmappings"));
+
+      try
+      {
+         buttonPanel.add(resources.createHelpDialogButton(this, "mi:newtexmappings"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         resources.internalError(null, e);
+      }
 
       pack();
       setLocationRelativeTo(parent);

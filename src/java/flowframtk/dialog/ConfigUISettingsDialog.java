@@ -46,6 +46,7 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 import com.dickimawbooks.texjavahelplib.JLabelGroup;
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -157,7 +158,15 @@ public class ConfigUISettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(getRootPane(), this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpDialogButton(this, "sec:configureuidialog"));
+
+      try
+      {
+         p.add(getResources().createHelpDialogButton(this, "sec:configureuidialog"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       pack();
       setLocationRelativeTo(application);
@@ -860,10 +869,10 @@ class LanguagePanel extends JPanel
       gbc.gridy++;
       add(helpLabel, gbc);
 
-      helpLangBox = new JComboBox<String>(
-         getResources().getAvailableHelpLanguages(
-           application.getInvoker().getName().toLowerCase()
-         ));
+      String[] helpLangs = getResources().getAvailableHelpLanguages(
+           application.getInvoker().getName().toLowerCase());
+
+      helpLangBox = new JComboBox<String>(helpLangs);
       helpLabel.setLabelFor(helpLangBox);
 
       helpLangBox.setToolTipText(helpLabel.getToolTipText());

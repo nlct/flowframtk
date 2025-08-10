@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
@@ -103,7 +105,15 @@ public class ConvertToPolygonDialog extends JDialog
 
       buttonPanel.add(okayButton); 
       buttonPanel.add(resources.createCancelButton(this));
-      buttonPanel.add(resources.createHelpDialogButton(this, "sec:converttopolygon"));
+
+      try
+      {
+         buttonPanel.add(resources.createHelpDialogButton(this, "sec:converttopolygon"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       zoomComp = new ZoomComponent(this);
       bottomPanel.add(zoomComp, "West");

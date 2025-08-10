@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -119,7 +121,15 @@ public class GridSettings extends JDialog
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpDialogButton(this, "sec:gridmenu"));
+
+      try
+      {
+         p2.add(getResources().createHelpDialogButton(this, "sec:gridmenu"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       getContentPane().add(p2, "South");
 

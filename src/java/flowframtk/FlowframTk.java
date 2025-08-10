@@ -6896,6 +6896,7 @@ public class FlowframTk extends JFrame
       }
       else
       {
+         getResources().closeLogWriter();
          System.exit(0);
       }
    }

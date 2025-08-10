@@ -26,6 +26,7 @@
 package com.dickimawbooks.jdrresources;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.net.*;  
 import java.beans.*;
 import java.util.*;
@@ -1095,6 +1096,31 @@ public class JDRResources
       return usersettings;
    }
 
+   protected void setUserSettings(File dir)
+   {
+      try
+      {
+         usersettings = dir.getCanonicalPath().toString();
+      }
+      catch (IOException e)
+      {
+         usersettings = dir.getAbsolutePath().toString();
+      }
+
+      setLogFile(new File(dir, "errors.log"));
+   }
+
+   protected void setUserSettings(Path path)
+   {
+      usersettings = path.toString();
+      setLogFile(new File(path.toFile(), "errors.log"));
+   }
+
+   protected void setUserSettings(String path)
+   {
+      setUserSettings(new File(path));
+   }
+
    private void initUserConfigDir()
     throws IOException,URISyntaxException
    {
@@ -1110,7 +1136,7 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            usersettings = file.getCanonicalPath();
+            setUserSettings(file);
             return;
          }
       }
@@ -1136,7 +1162,7 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            usersettings = file.getCanonicalPath();
+            setUserSettings(file);
             return;
          }
 
@@ -1144,7 +1170,7 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            usersettings = file.getCanonicalPath();
+            setUserSettings(file);
             return;
          }
 
@@ -1161,13 +1187,13 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            usersettings = file.getCanonicalPath();
+            setUserSettings(file);
             return;
          }
 
          if (file.mkdir())
          {
-            usersettings = file.getCanonicalPath();
+            setUserSettings(file);
             return;
          }
 
@@ -1177,13 +1203,13 @@ public class JDRResources
 
             if (file.exists() && file.isDirectory())
             {
-               usersettings = file.getCanonicalPath();
+               setUserSettings(file);
                return;
             }
 
             if (file.mkdir())
             {
-               usersettings = file.getCanonicalPath();
+               setUserSettings(file);
                return;
             }
          }
@@ -1211,7 +1237,7 @@ public class JDRResources
 
          if (file.isDirectory())
          {
-            usersettings = path;
+            setUserSettings(file);
          }
          else if (file.exists())
          {
@@ -1235,7 +1261,7 @@ public class JDRResources
 
                if (url != null)
                {
-                  usersettings = url.toURI().getPath();
+                  setUserSettings(url.toURI().getPath());
                }
             }
             else
@@ -1467,6 +1493,12 @@ public class JDRResources
    public String[] getAvailableHelpLanguages(String dirBase)
    {
       URL url = getClass().getResource("/resources/helpsets/"+dirBase);
+
+      if (url == null)
+      {
+         debugMessage("no helpsets found");
+         return new String[] { "en" };
+      }
 
       File parent;
 

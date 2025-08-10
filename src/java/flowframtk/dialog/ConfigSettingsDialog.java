@@ -41,6 +41,8 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
 import com.dickimawbooks.jdr.io.*;
@@ -132,7 +134,15 @@ public class ConfigSettingsDialog extends JDialog
 
       p.add(getResources().createOkayButton(getRootPane(), this));
       p.add(getResources().createCancelButton(this));
-      p.add(getResources().createHelpDialogButton(this, "sec:configuredialog"));
+
+      try
+      {
+         p.add(getResources().createHelpDialogButton(this, "sec:configuredialog"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       pack();
       Dimension dim = getSize();

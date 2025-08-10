@@ -61,12 +61,19 @@ public class InfoDialog extends JDialog
       p.add(resources.createOkayButton(getRootPane(), this));
       p.add(resources.createCancelButton(this));
 
-      helpAction = resources.getHelpLib().createHelpDialogAction(this,
-        helpSectionId);
+      try
+      {
+         helpAction = resources.getHelpLib().createHelpDialogAction(this,
+           helpSectionId);
 
-      helpButton = resources.getButtonStyle().createButton(resources, helpAction);
+         helpButton = resources.getButtonStyle().createButton(resources, helpAction);
 
-      p.add(helpButton);
+         p.add(helpButton);
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         resources.internalError(null, e);
+      }
 
       pack();
       setLocationRelativeTo(application_);
@@ -116,15 +123,18 @@ public class InfoDialog extends JDialog
       this.helpId = helpId;
       textArea.setText(text);
 
-      if (helpId == null)
+      if (helpButton != null)
       {
-         helpButton.setEnabled(false);
-         helpButton.setVisible(false);
-      }
-      else
-      {
-         helpButton.setEnabled(true);
-         helpButton.setVisible(true);
+         if (helpId == null)
+         {
+            helpButton.setEnabled(false);
+            helpButton.setVisible(false);
+         }
+         else
+         {
+            helpButton.setEnabled(true);
+            helpButton.setVisible(true);
+         }
       }
 
       setVisible(true);

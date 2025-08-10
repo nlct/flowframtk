@@ -33,6 +33,8 @@ import javax.swing.event.*;
 import javax.swing.border.*;
 import javax.swing.text.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
@@ -234,7 +236,15 @@ public class TextSelector extends JDialog
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpDialogButton(this, "sec:edittext"));
+
+      try
+      {
+         p2.add(getResources().createHelpDialogButton(this, "sec:edittext"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       getContentPane().add(p2, "South");
 

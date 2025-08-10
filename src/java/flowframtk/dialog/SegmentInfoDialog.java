@@ -35,6 +35,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -144,7 +146,15 @@ public class SegmentInfoDialog extends JDialog
 
       p2.add(resources.createOkayButton(getRootPane(), this));
       p2.add(resources.createCancelButton(this));
-      p2.add(resources.createHelpDialogButton(this, "mi:segmentinfo"));
+
+      try
+      {
+         p2.add(resources.createHelpDialogButton(this, "mi:segmentinfo"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       revertButton = resources.createDialogButton(
         "segmentinfo", "default", this, null);

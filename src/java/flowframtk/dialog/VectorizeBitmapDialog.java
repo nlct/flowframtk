@@ -39,6 +39,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
 import com.dickimawbooks.texjavahelplib.MessageSystem;
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -188,7 +189,14 @@ public class VectorizeBitmapDialog extends JFrame
       cancelButton = resources.createCancelButton(this);
       bottomPanel.add(cancelButton);
 
-      bottomPanel.add(resources.createHelpDialogButton(this, "sec:vectorize"));
+      try
+      {
+         bottomPanel.add(resources.createHelpDialogButton(this, "sec:vectorize"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       getContentPane().add(bottomPanel, "South");
 

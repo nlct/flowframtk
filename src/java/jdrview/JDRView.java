@@ -532,6 +532,7 @@ public class JDRView extends JFrame
       }
       else if (source == quitItem)
       {
+         getResources().closeLogWriter();
          System.exit(0);
       }
       else if (source == antiAliasItem)

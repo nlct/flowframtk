@@ -30,6 +30,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 
@@ -61,7 +63,15 @@ public class ExportPngDialog extends JDialog
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(getResources().createHelpDialogButton(this, "sec:exportpng"));
+
+      try
+      {
+         p2.add(getResources().createHelpDialogButton(this, "sec:exportpng"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       getContentPane().add(p2, "South");
 

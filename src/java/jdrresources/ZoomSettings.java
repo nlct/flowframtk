@@ -32,6 +32,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 import com.dickimawbooks.texjavahelplib.OkayAction;
 
@@ -95,7 +97,15 @@ public class ZoomSettings extends JDialog
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
       p2.add(getResources().createCancelButton(this));
-      p2.add(application.getResources().createHelpDialogButton(this, "sec:zoommenu"));
+
+      try
+      {
+         p2.add(application.getResources().createHelpDialogButton(this, "sec:zoommenu"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
 
       getContentPane().add(p2, "South");
 

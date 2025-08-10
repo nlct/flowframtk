@@ -30,6 +30,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
@@ -138,7 +140,14 @@ public class JDRSelector extends JDialog
 
       if (helpId != null)
       {
-         panel.add(getResources().createHelpDialogButton(this, helpId));
+         try
+         {
+            panel.add(getResources().createHelpDialogButton(this, helpId));
+         }
+         catch (HelpSetNotInitialisedException e)
+         {
+            getResources().internalError(null, e);
+         }
       }
 
       defaults = getResources().createDefaultButton(this);
