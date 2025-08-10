@@ -560,7 +560,7 @@ Select mode: &
 \tabularnewline
  &
 \leftquadpar{Find text} &
-\mnemonic{texeditor.search.find}
+\mnemonic{texeditor.find}
 \tabularnewline
 \keys{\keyref{ctrl}+\actualkey{G}} &
 Select mode: &
@@ -574,7 +574,7 @@ Select mode: &
 \tabularnewline
  &
 \leftquadpar{Find again} &
-\mnemonic{texeditor.search.find_again}
+\mnemonic{texeditor.find_again}
 \tabularnewline
 \keys{\keyref{ctrl}+\actualkey{H}} &
 Select mode: &
@@ -588,7 +588,7 @@ Select mode: &
 \tabularnewline
  &
 \leftquadpar{Find and Replace text} &
-\mnemonictrail{texeditor.search.replace}
+\mnemonictrail{texeditor.replace}
 \tabularnewline
 %
 \accelerator{edit.path.edit} &
@@ -1873,7 +1873,7 @@ package. For example:
 \end{verbatim}
 This indicates commands that are part of the \LaTeX\ kernel but don't
 work with the default OT1 font encoding. In my case, I've set my
-\hyperref[sec:texconfigpreamble]{default preamble} to include
+\gls{preamble.default} to include
 \sty{fontenc} with the T1 encoding, so I don't want that package
 automatically added to my early-preamble code. To fix this, I just need to
 use my text-editor's search-and-replace function to replace all instances of
@@ -1927,12 +1927,13 @@ class (\ext{cls}) or package (\ext{sty}) functions.
   {Default Preamble Code}
 
 The \gls{preamble.default} code is stored in a file called
-\file{preamble.tex} in \FlowframTk's \gls{config_dir}. If you edit this
-file outside of \FlowframTk, you'll need to use the reload button to
-refresh this panel. The other buttons are the same as for the \TeX\
-editor described in \sectionref{sec:texeditorui}.  You can also
-access these button actions through the context menu, which can be
-opened using a~\gls{menuclick} on the editor pane.
+\file{preamble.tex} in \FlowframTk's \gls{config_dir}. If you edit
+this file outside of \FlowframTk, you'll need to use the reload
+button to refresh this panel. The other buttons are the same as for
+the \TeX\ editor described in \sectionref{sec:texeditor}.  You can
+also access these button actions through the
+\gls{index.menu.texeditor} context menu, which can be opened using
+a~\gls{menuclick} on the editor pane.
 
 
 \subsection{Configure User Interface}\label{sec:configureuidialog}
@@ -2316,7 +2317,7 @@ divider. By default, the preamble pane is to the right of the
 \gls{canvas}, but you can change this using the radio buttons in the
 \widget{texeditorui.split} area.
 
-\seealsorefs{sec:thepreamblepane,sec:flowframe}
+\seealsorefs{sec:thepreamblepane,sec:flowframe,sec:texeditor}
 
 \subsubsection{Look and Feel Settings}\label{sec:lookandfeel}
 
@@ -9197,22 +9198,25 @@ The \gls{preamble.default} code (\meta{Default Preamble}) is set using the
 box (see \sectionref{sec:texconfigpreamble}). This is general code
 that applies to all images that are exported to a LaTeX document.
 
+\begin{information}
+Note that the \gls{preamble.default} isn't used by the export to package
+or class functions.
+\end{information}
+
 The \gls{preamble.early} (\meta{Early-Preamble}), 
 \gls{preamble.mid} (\meta{Mid-Preamble}) and \gls{preamble.late}
 (\meta{Late-Preamble}) code is assigned to a specific image, and can
 be used to add any additional \gls{preamble} code required for that image.
 For example, if any of the \glspl{textarea} have alternative text
 that contains a command that isn't part of the \LaTeX\ kernel, the
-early-preamble can include the code to load the package that defines
-the command or the mid- or late-preamble can include the command
-definition.  If the \glspl{textarea-mapping} are enabled (see
-\sectionref{sec:texconfigtext}), any
-required packages for mapped symbols will automatically be
-added to the early \gls{preamble}.
+\gls{preamble.early} can include the code to load the package that defines
+the command or the \glsname{preamble.mid} or \gls{preamble.latex} can include the command
+definition.
 
 \menudef{menu.tex.set_preamble}
 
-The early-, mid- and late-\gls{preamble} code can be edited in the
+The \glsname{preamble.early}, \glsname{preamble.mid} and
+\gls{preamble.latex} code can be edited in the
 \inlineglsdef{preamble} panel attached to the side of the
 \gls{canvas} (see \figureref{fig:preambleeditor}). There is a
 divider between these two areas that can be moved to adjust the
@@ -9231,18 +9235,182 @@ way across so that one of the panels is no longer visible. However,
 for some look and feels, it's not possible to completely hide the
 preamble panel.
 
-The \gls{preamble} panel has three tabbed panes, for the
-early-, mid- and late-\gls{preamble} code. Each pane has the same layout
-with a horizontal toolbar and an editor area below it in which you
-can type the code. The buttons on the toolbar have the following functions:
+\widgetdef{texeditor.preamble}
 
+The \widget{texeditor.preamble} panel has three tabbed panels.
+Each panel has the same layout with a horizontal toolbar and an
+editor area below it in which you can type the code. 
 
+The editor area has syntax highlighting. You can change the
+\manmsgpl{colour} used or switch off the highlighting using the
+\dialog{texeditorui} dialog (\sectionref{sec:texeditorui}).
 
+\widgetdef{texeditor.preamble.early}
 
+The \widget{texeditor.preamble.early} panel is for the 
+\inlineglstextdef{preamble.early}, which is typically for package
+loading. If the \glspl{textarea-mapping} are enabled (see
+\sectionref{sec:texconfigtext}), any
+required packages for mapped symbols will automatically be
+added to the \gls{preamble.early}.
 
+If you use the \hyperref[sec:exportsty]{export to package or document
+class} functions, the \gls{preamble.early} code will be
+inserted before the option declarations, which allows you to add
+extra options, if required.
 
-TODO
+\widgetdef{texeditor.preamble.mid}
 
+The \widget{texeditor.preamble.mid} panel is for the
+\inlineglstextdef{preamble.mid}, which may be used to define
+commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
+
+If you use the \hyperref[sec:exportsty]{export to package or document
+class} functions, the \gls{preamble.mid} code will be inserted after
+the underlying class or package has been loaded.
+
+\widgetdef{texeditor.preamble.late}
+
+The \widget{texeditor.preamble.late} panel is for the
+\inlineglstextdef{preamble.mid}, which may also be used to define
+commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
+
+If you use the \hyperref[sec:exportsty]{export to package or document
+class} functions, the \gls{preamble.late} code will be inserted 
+at the end of the file, just before
+\gls{endinput}. Any instances of \gls{usepackage} found in
+the preamble code will be replaced by \gls{RequirePackage}
+during the export.
+
+The \widget{texeditor.preamble.late} panel is shown in \figureref{fig:preambleeditor2},
+where a command has been defined:
+\begin{verbatim}
+\newcommand*{\bvec}[1]{\boldsymbol{#1}}
+\end{verbatim}
+This command has been used in the alternative text for one of the
+\glspl{textarea} on the \gls{canvas}. The dialog box showing this
+alternative text is also visible.
+
+\FloatFig
+  {fig:preambleeditor2}
+  {\includeimg{preambleeditor2}}
+  {The Late-Preamble Tab}
+
+The image's \glsname{preamble.early}, \glsname{preamble.mid} and
+\gls{preamble.late} code is stored in \gls{JDR}\slash \gls{AJR}
+files, but not for versions less than 1.9, so make sure you use the
+latest file version when you save your image. (This is done
+automatically if you use \menu{file.save}.) \gls{JDR}\slash\gls{AJR}
+version 1.8, introduced in \FlowframTk\ version 0.7, only stores the
+\gls{preamble.early} code.  \FlowframTk\ version 0.8
+(\gls{JDR}\slash\gls{AJR} v1.9) introduced \gls{preamble.mid} and
+late-preamble panels. The original preamble panel (which was
+previously just in a dialog window) is now referred to as the
+\gls{preamble.early}.
+
+\section{\TeX\ Editor}\label{sec:texeditor}
+
+The \TeX\ editor is used for the \widget{texeditor.preamble} panels,
+the \dialog{preambleconfig} dialog (\sectionref{sec:texconfigpreamble}),
+and for the static and dynamic frame contents dialog.
+
+\menudef{index.menu.texeditor}
+
+The \gls{index.menu.texeditor} \gls*{popupmenu} can be activated with a \gls{menuclick}.
+Alternatively, you can use the \accelerator{popup} key or, if supported by your
+system, the \accelerator{context_menu} \gls{context-menu} key.
+The buttons on the toolbar may be used instead of the popup menu.
+
+\menudef{menu.texeditor.undo}
+
+The \menu{texeditor.undo} function undoes the last edit. Note that
+this is separate to the \menu{edit.undo} menu item for edits to the
+image on the \gls{canvas}. Each panel has its own independent
+undo\slash redo manager.
+
+\menudef{menu.texeditor.redo}
+
+The \menu{texeditor.redo} function redoes the last undone edit. Note that
+this is separate to the \menu{edit.redo} menu item for edits to the
+image on the \gls{canvas}.
+
+\menudef{menu.texeditor.selectAll}
+
+The \menu{texeditor.selectAll} function selects all the text in
+preamble panel that has the focus.
+
+\menudef{menu.texeditor.cutText}
+
+The \menu{texeditor.cutText} function cuts the selected text in the
+preamble panel that has the focus to the clipboard.
+
+\menudef{menu.texeditor.copyText}
+
+The \menu{texeditor.copyText} function copies the selected text in the
+preamble panel that has the focus to the clipboard.
+
+\menudef{menu.texeditor.pasteText}
+
+The \menu{texeditor.pasteText} function pastes text from the
+clipboard into the preamble panel that has the focus.
+
+\menudef{menu.texeditor.find}
+
+The \menu{texeditor.find} function opens the \dialog{find}
+dialog.
+
+\widgetdef{find.title}
+
+The \dialog{find} dialog has a text field where you can enter you
+search term. 
+
+\widgetdef{find.case}
+
+Select the \widget{find.case} checkbox for a case-sensitive search.
+
+\widgetdef{find.regex}
+
+Select the \widget{find.regex} checkbox if the search term is a
+regular expression.
+
+\widgetdef{find.wrap}
+
+Select the \widget{find.wrap} checkbox to wrap round to the start.
+
+\widget{find.find}
+
+The \widget{find.find} button will find the next occurrence of the
+search term.
+
+\menudef{menu.texeditor.find_again}
+
+The \menu{texeditor.find_again} function finds the previous
+search term.
+
+\menudef{menu.texeditor.replace}
+
+The \menu{texeditor.replace} function opens the
+\widget{replace} dialog.
+
+\widgetdef{replace.title}
+
+The \dialog{replace} dialog has the same buttons as the
+\dialog{find} dialog but also has a text field where you can enter
+the replacement text.
+
+\widget{replace.replace}
+
+The \widget{replace.replace} button will replace the found text.
+
+\widget{replace.replace_all}
+
+The \widget{replace.replace_all} button will replace all occurrences.
+
+\seealsorefs{
+ sec:texconfig,
+ sec:texeditorui,
+ sec:exportimage
+}
 
 \section{Computing the Parameters for \glsfmttext{parshape}}\label{sec:parshape}
 
