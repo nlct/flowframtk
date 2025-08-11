@@ -103,7 +103,12 @@ objects.}
 % PACKAGES
 
 @package{pkg.flowfram,
- name={\styfmt{flow\-fram}}
+ name={\styfmt{flow\-fram}},
+ syntax={\meta{options}}
+}
+
+@option{opt.pages,
+  parent={pkg.flowfram}
 }
 
 @package{pkg.shapepar,
@@ -137,6 +142,8 @@ objects.}
 @counter{ctr.page}
 
 % COMMANDS
+
+@command{thepage}
 
 @command{jdroutline,
  syntax={\margm{pdf specs}\margm{ps specs}\margm{text}}
@@ -572,7 +579,7 @@ single entity.}
 points, lines and curves.}
 }
 
-@term{rastergraphics,
+@index{rastergraphics,
   name="raster graphics",
   alias={bitmap}
 }

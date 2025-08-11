@@ -9461,7 +9461,7 @@ These parameters can be saved to a file, and used in a \TeX\ or
 \LaTeX\ document to create a shaped paragraph
 (\figureref{fig:parshapeex1c}).
 
-\FloatSubFigs{fig:parshapeex1}
+\FloatSubFigs{fig:parshapeex1}[\small]
 {
   {fig:parshapeex1a}{\includeimg{parshapeex1a}}{},
   {fig:parshapeex1b}{\includeimg{parshapeex1b}}{},
@@ -9489,7 +9489,7 @@ create an annulus defined by the \gls*{path}['s] border, which can't be
 done by \gls{parshape} (but can be done by \gls{shapepar},
 although it is not recommended for such a narrow line width).
 
-\FloatSubFigs{fig:parshapeex2}
+\FloatSubFigs{fig:parshapeex2}[\small]
 {
  {fig:parshapeex2a}{\includeimg{parshapeex2a}}{},
  {fig:parshapeex2b}{\includeimg{parshapeex2b}}{}
@@ -9580,7 +9580,7 @@ For example, \figureref{fig:shapeparexa} shows a \gls*{path} with a
 first from the \gls*{path} (\figureref{fig:shapeparexb}) and then from
 the outline (\figureref{fig:shapeparexc}).
 
-\FloatSubFigs*{fig:shapeparex}
+\FloatSubFigs*{fig:shapeparex}[\small]
 {
   {fig:shapeparexa}{\includeimg{shapeparexa}}{},
   {fig:shapeparexb}{\includeimg{shapeparexb}}{},
@@ -9629,14 +9629,103 @@ Remember to include the \sty{shapepar} package:
 \section{Creating Frames for Use with the \stytext{flowfram} Package}
 \label{sec:flowframe}
 
-TODO
+\pkgdef{flowfram}
 
+\FlowframTk\ can be used to help construct frames for use with the
+\sty{flowfram} package. If you are unfamiliar with this
+package, please ensure that you read the user manual.
+\texdocref{flowfram}
 
 \subsection{The \stytext{flowfram} Package: A Brief Summary}
 \label{sec:flowframesummary}
 
-TODO
+The \sty{flowfram} package is a \LaTeX\ package that allows
+the user to construct frames in a document, such that the document
+text flows from one frame to the next in the order that the
+frames were defined. The mechanism is much the same as that used
+to create the columns when using the standard two column mode, but
+the columns are of arbitrary width, height and position.
 
+Imagine that you have a number of rectangular sheets of transparent
+paper. You start writing on the first sheet until it's filled, then
+you put it aside and start writing on the next until that one's
+filled as well, and so on. When you've filled all the sheets, pick
+up the first one and glue it onto your page in your desired
+location, then pick up the next one and glue that onto the page, and
+so on. If you've glued one sheet down so that it overlaps another,
+the text on the top sheet will obscure the text on the lower sheet.
+
+There are three types of frame defined by the \sty{flowfram}
+package: \qt{flow} frames
+which are the main type of frame. These are the frames in which the
+document text is placed and they are analogous to the transparent
+sheets of paper example described above. The other two types of frame are
+called \qt{static} and \qt{dynamic}.  The contents of these frames has
+to be set explicitly using one of the commands or environments
+provided by the \sty{flowfram} package.
+
+The contents of the static frames are typeset once (when the
+contents are set) and it remains unchanged until the user explicitly
+resets the contents. (Static frames have an associated box defined
+via \csfmt{newbox} in which the contents are stored.) The contents
+of the dynamic frames are re-typeset on each page for which the
+frame is defined. (The contents are stored in a macro rather than in
+a box.)
+
+So, for example, if on page~1 of your document, you set the contents
+of a static frame to contain the command \gls{thepage}, the
+contents of that frame will always display a~1 (no matter what page
+it appears on), since that was the value of \gls{thepage} when
+the contents were set. If, on the other hand, you use a dynamic
+frame, the contents will be re-typeset on every page, so it will
+display the relevant page number.
+
+Each frame has an associated label which uniquely identifies it for
+a given frame type, and the frame can optionally have a border. Frames also
+have an associated page list indicating on which pages the frame
+should appear.  The page list can be one of the keywords
+\optfmt{all}, \optfmt{odd}, \optfmt{even} or \optfmt{none}, or it
+can be a comma separated list of pages or page ranges (e.g.\
+\verb|<4,7,9,10-14,>20|). By default, the \sty{flowfram} package
+assumes these numbers refer to the decimal value of the
+\ctr{page} counter (so 9 means the frame is visible on page 9, on
+page ix, on page IX, or even on page nine, if you've redefined
+\gls{thepage} to use a number string). The \sty{flowfram}
+package provides the option \optval{pages}{absolute}, which indicates
+that the page lists refer to the absolute page number rather than
+the value of the \ctr{page} counter. So if your document pages
+are numbered, say, 1, i, ii, iii, 1, 2, 3, then the absolute page 3
+is the page numbered ii, since it's the third page of the document.
+
+The \sty{flowfram} package stacks the frames on the page in
+the following order: static, flow and dynamic, each in the order
+in which they were defined. For example, if you define a flow frame
+called \optfmt{left}, then define a static frame called
+\optfmt{title}, then a dynamic frame called \optfmt{header}
+and lastly a flow frame defined \optfmt{right}, then the
+\sty{flowfram} package will stack the frames in the following
+order: \optfmt{title}, \optfmt{left}, \optfmt{right} and
+\optfmt{header}. This means that the static frames can be used for
+background effects.
+
+When exporting to a package or class file (\sectionref{sec:exportsty}),
+\FlowframTk\ will define the frames according to its own
+\gls{stackingorder}. However, it will allow you to position, say, a
+static frame above a flow frame when displayed on the \gls{canvas}.
+The object with the static frame data may obscure the other object
+when viewed in \FlowframTk, but it will appear in the background
+when displayed in the document.
+
+\menudef{menu.tex.flowframe.clear}
+
+To clear all data relating to the \sty{flowfram} package,
+select the menu item \menu{tex.flowframe.clear}.
+
+\seealsorefs{
+  sec:postertutorial,
+  sec:newstutorial,
+  sec:brochure
+}
 
 \subsection{Defining the Typeblock}\label{sec:typeblock}
 
