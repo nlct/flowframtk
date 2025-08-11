@@ -9729,8 +9729,144 @@ select the menu item \menu{tex.flowframe.clear}.
 
 \subsection{Defining the Typeblock}\label{sec:typeblock}
 
-TODO
+The \inlineglsdef{typeblock} is the main area of the page where the text goes.
+The dimensions of the \gls{typeblock} are given by the \LaTeX\ lengths
+\gls{textwidth} and \gls{textheight}. It's possible to
+define frames that are positioned outside of the \gls{typeblock}, but the
+\gls{typeblock} provides a frame of reference and, unless otherwise
+instructed, the page header and footer will be placed above and
+below the \gls{typeblock} according to \LaTeX's standard page layout
+design.
 
+Note that the \opt{twoside} class option will typically
+shift the typeblock on the even (\gls{verso}) pages (via the
+\gls{evensidemargin} length) whereas the
+\opt{oneside} class option won't. Different classes have
+different default settings. For example, the \cls{article} and
+\cls{report} classes default to \opt{oneside} but the
+\cls{book} class defaults to \opt{twoside}. This setting also
+affects the running headers and footers.
+
+\menudef{menu.tex.flowframe.set_typeblock}
+
+In \FlowframTk, you specify the \gls{typeblock} using the
+\menu{tex.flowframe.set_typeblock} menu item.  This
+opens up the \dialog{typeblock} dialog box.
+
+\widgetdef{typeblock.title}
+
+In the \dialog{typeblock} dialog you can enter the margins
+between the paper edge and the \gls{typeblock}. You can either type the
+lengths into the supplied fields or, if you have a \gls{path}
+selected, you can get \FlowframTk\ to calculate the margins for a
+\gls{typeblock} that fits the \gls{path}['s] bounding rectangle by
+clicking on the \widget{typeblock.compute_from_path} button.
+(This button is disabled if no \gls*{path} is selected.)
+
+For example, \figureref{fig:typeblocka} shows a \gls*{path} that
+has been created using the \tool{rectangle} on the
+\widget{grid.tschichold} grid (\sectionref{sec:gridmenu}). This was then selected and the
+\dialog{typeblock} dialog was opened. The
+\widget{typeblock.compute_from_path} button was clicked
+which then filled in the values for the margins.
+
+\FloatSubFigs*{fig:typeblock}
+{
+  {fig:typeblocka}{\includeimg{typeblocka}}{},
+  {fig:typeblockb}{\includeimg{typeblockb}}{},
+  {fig:typeblockc}{\includeimg{typeblockc}}{},
+  {fig:typeblockd}{\includeimg{typeblockd}}{},
+  {fig:typeblocke}{\includeimg{typeblocke}}{}
+}
+[Setting the Typeblock]
+{Setting the typeblock:
+\subfigref{fig:typeblocka} a rectangle has been drawn on
+a Tschichold grid;
+\subfigref{fig:typeblockb} the margins computed from the
+selected rectangle;
+\subfigref{fig:typeblockc} the top and left margins were
+manually rounded to the nearest point by the user and then the
+adjust width function was used which changed the right margin;
+\subfigref{fig:typeblockd} the adjust height function was used to change the
+bottom margin;
+\subfigref{fig:typeblocke} the compute function was used to
+change the even page shift}
+
+It's possible you might want to round the left and top margins to
+the nearest unit. In which case you can do so by editing the
+\widget{flowframe.margin.left} and
+\widget{flowframe.margin.top} fields. Additionally, you
+might want to adjust the right margin so that the
+\gls{typeblock} width is rounded to, say, the nearest whole mm or whole or half
+pc. To do this, type in the required value in the
+\widget{typeblock.adjust_width_label} field (for example
+1pc) and click on the \widget{typeblock.adjust_width}
+button. For example, I changed the left margin to 66\gls{pt} and the
+top margin to 94\gls{pt}. The
+\widget{typeblock.adjust_width_label} was already set to
+1pc, so I left it at that and clicked on the
+\widget{typeblock.adjust_width} button. This filled in the
+right and bottom margins as shown in \figureref{fig:typeblockc}.
+
+You can also adjust the bottom margin so that the \gls{typeblock} height
+is rounded to the nearest baselineskip or another value such as 1in.
+To round to the nearest baselineskip, make sure the
+\widget{typeblock.use_baseline} button is selected otherwise
+make sure the \widget{typeblock.use_other} button is
+selected and enter the required amount in the field. Then click on
+the \widget{typeblock.adjust_height} button. For example, in
+\figureref{fig:typeblockd} the bottom margin has been adjusted to
+ensure the \gls{typeblock} height is rounded to the nearest baselineskip.
+
+\begin{warning}
+Rounding errors may occur that caused by the conversion between
+units. If you later change the \gls{normal-font-size}
+(\sectionref{sec:normalsize}),
+you may need to readjust the \gls{typeblock} height.
+\end{warning}
+
+Finally, if you use the \opt{twoside} class option, you can get
+\FlowframTk\ to adjust the value of \gls{evensidemargin}.
+\widget{typeblock.hshift} is the difference between
+\gls{evensidemargin} and \gls{oddsidemargin}. If the value
+in the \widget{typeblock.hshift} field is non-zero, when you
+export (\sectionref{sec:exportsty}) to a class or package, 
+\FlowframTk\ will add the commands:
+\begin{compactcodebox}
+\cmd{setlength}\gls{evensidemargin}\{\gls{oddsidemargin}\}
+\cmd{addtolength}\gls{evensidemargin}\{\meta{h-shift}\}
+\end{compactcodebox}%
+where \meta{h-shift} is the length specified in the
+\widget{typeblock.hshift} field. If you specify a zero
+length, \gls{evensidemargin} won't be adjusted, but the
+typeblock may not be displayed correctly when you display even
+pages in \FlowframTk. Remember that \gls{evensidemargin} is
+ignored if you use the \opt{oneside} class option.
+
+
+If you find it a bit complicated to work out the appropriate shift,
+you can use the \widget{typeblock.compute_sym_shift} button,
+which will work out the shift assuming a symmetric page layout. For
+example, in \figureref{fig:typeblocke} I clicked on
+\widget{typeblock.compute_sym_shift} and it altered the
+value in the \widget{typeblock.hshift} field.
+
+Once you have set the \gls{typeblock}, it will appear on the screen as
+a light \manmsg{grey} rectangle, \manmsg{labelled} \qt{typeblock}. In
+\figureref{fig:typeblockshown} I removed the \gls{path} (using
+\menu{edit.cut}) that I had used to calculate the \gls{typeblock}. The
+\gls{typeblock} is slightly smaller than the \gls*{path} as a result of
+the adjustments made.
+
+\FloatSubFigs{fig:typeblockshown}
+{
+ {fig:typeblockshown-verso}{\includeimg{typeblockshown-verso}}{},
+ {fig:typeblockshown-recto}{\includeimg{typeblockshown-recto}}{}
+}
+[The typeblock is shown as a light \manmsg{grey} rectangle]
+{The typeblock is shown as a light \manmsg{grey} rectangle:
+\subfigref{fig:typeblockshown-verso} verso;
+\subfigref{fig:typeblockshown-recto} recto}
 
 \subsection{Defining a Frame}\label{sec:framedef}
 

@@ -134,8 +134,16 @@ objects.}
 % CLASSES
 
 @class{cls.article}
+@class{cls.report}
+@class{cls.book}
+
 @class{cls.extarticle}
 @class{cls.a0poster}
+
+% COMMON OPTIONS
+
+@option{opt.twoside}
+@option{opt.oneside}
 
 % COUNTERS
 
@@ -152,6 +160,11 @@ objects.}
 @command{jdrimagebox,
  syntax={\margm{image code}}
 }
+
+@command{textheight}
+@command{textwidth}
+@command{evensidemargin}
+@command{oddsidemargin}
 
 @command{large}
 @command{Large}
@@ -885,6 +898,10 @@ limitation. The \app{flowframtk} application matches the omission.}
 @indexplural{image.typeblock,
  parent={image},
  name={typeblock}
+}
+
+@index{typeblock,
+ alias={image.typeblock}
 }
 
 @indexplural{image.bbox,
