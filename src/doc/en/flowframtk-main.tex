@@ -251,7 +251,7 @@ switches the focus to the menu bar. The return \keys{\keyref{return}}
 key will usually be equivalent to the \widget{okay} button
 except when the focus is with a component that interprets
 \keys{\keyref{return}} for some other purpose (such as
-a~\gls{dropdown}), in which case you need to use \accelerator{okay}.
+a~\gls+{dropdown}), in which case you need to use \accelerator{okay}.
 
 Within editable text fields, you can use \keys{\keyref{ctrl}+A} to
 select all the text, or shift \keys{\keyref{shift}} followed by
@@ -1450,7 +1450,7 @@ shape also require this information.
 
 The \gls{normal-font-size} can be set using the
 \widget{clssettings.title} tab (\figureref{fig:normalsize}).  Select the
-required value from the \widget{clssettings.normalsize} \gls{dropdown} and select
+required value from the \widget{clssettings.normalsize} \gls*{dropdown} and select
 \dgls{okay} to set it. Note that you must remember
 to use this value in your document. For example, if you set the
 normal size as 20, your document will need to use one of the
@@ -1631,8 +1631,8 @@ whenever you \hyperref[sec:alignobjects]{justify} a \gls{group}, any
 \hyperref[sec:exportpgf]{exporting} to \sty{pgf}. (This includes the
 \filefn{export} functions that use \app{latex} or \app{pdflatex}, such as
 the export to PDF function.) You can choose how \FlowframTk\ should export
-shaded text using the \widget{textconfig.textualshading} dropdown
-box. Available options:
+shaded text using the \widget{textconfig.textualshading}
+\gls*{dropdown}. Available options:
 
 \begin{deflist}
 \itemtitle
@@ -1680,7 +1680,7 @@ functions (without actually changing your image).
 includes the export functions that use \app{latex} or \app{pdflatex}.)
 You can choose how \FlowframTk\ should export \gls{textpath}
 outlines using the \widget{textconfig.textpathoutline}
-dropdown box. Available options:
+\gls*{dropdown}. Available options:
 
 \begin{deflist}
 \itemtitle
@@ -7712,7 +7712,7 @@ use a cap style start and end \pathattr{marker} instead.
 
 The \inlineglsdef{index.path-attribute.cap-style} for a \selected\
 path can either be set in the \menu{edit.path.style.capstyle} sub
-menu or in the \inlineglsdef{linestyle.cap} dropdown box in the
+menu or in the \inlineglsdef{linestyle.cap} \gls{dropdown} in the
 \widget{linestyle.title} panel. The cap styles are more noticeable
 with thick lines.
 
@@ -7767,7 +7767,7 @@ of all \selected\ \glspl{shape}.
 \widgetdef{linestyle.join}
 
 The \widget{linestyle.join} panel is also in the 
-\widget{linestyle.title} panel. Use the dropdown box to select the
+\widget{linestyle.title} panel. Use the \gls{dropdown} to select the
 \pathattr{join-style}, which may be one of:
 \inlineglsdef{linestyle.join.mitre}
 (for a \inlineglsdef{index.path-attribute.join-style.mitre} join, see
@@ -7826,7 +7826,7 @@ extracting the parameters for
 
 The \pathattr{winding-rule} for a \selected\ path can either be set
 in the \menu{edit.path.style.windingrule} sub menu or in the
-\inlineglsdef{linestyle.winding_rule} dropdown box in the
+\inlineglsdef{linestyle.winding_rule} \gls{dropdown} in the
 \widget{linestyle.title} panel.
 
 \menudef{menu.edit.path.style.windingrule.evenodd}
@@ -8648,9 +8648,9 @@ of all \selected\ \glspl{textarea} and \glspl{textpath}.
 \widgetdef{font.family}
 
 The \widget{font.family} panel is also in the \widget{font.title}
-panel. Use the dropdown box (\figureref{fig:setfontfamily}) to
+panel. Use the \gls{dropdown} (\figureref{fig:setfontfamily}) to
 select the font family used to \glslink{drawing-on-canvas}{draw} the
-text on the \gls{canvas}.  This dropdown box provides a list of
+text on the \gls{canvas}.  This \gls{dropdown} provides a list of
 locally available fonts found by the \gls{jre}.
 
 \FloatFig{fig:setfontfamily}
@@ -8779,7 +8779,7 @@ of all \selected\ \glspl{textarea} and \glspl{textpath}.
 \widgetdef{font.series}
 
 The \widget{font.series} panel is also in the \widget{font.title}
-panel. Use the dropdown box (\figureref{fig:setfontseries}) to
+panel. Use the \gls{dropdown} (\figureref{fig:setfontseries}) to
 select the font series used to \glslink{drawing-on-canvas}{draw} the
 text on the \gls{canvas}.
 The available choices are:
@@ -8816,7 +8816,7 @@ of all \selected\ \glspl{textarea} and \glspl{textpath}.
 \widgetdef{font.shape}
 
 The \widget{font.shape} panel is also in the \widget{font.title}
-panel. Use the dropdown box (\figureref{fig:setfontshape}) to
+panel. Use the \gls{dropdown} (\figureref{fig:setfontshape}) to
 select the font shape used to \glslink{drawing-on-canvas}{draw} the
 text on the \gls{canvas}.
 The available choices are:
@@ -9918,7 +9918,7 @@ information.
 \widgetdef{flowframe.type} 
 
 The frame's type is specified using the 
-\widget{flowframe.type} dropdown box. There is a choice of:
+\widget{flowframe.type} \gls*{dropdown}. There is a choice of:
 \widget{flowframe.flow}, \widget{flowframe.static},
 \widget{flowframe.dynamic} or \widget{flowframe.none}.
 \widget{flowframe.none} indicates that the \gls{object} has
@@ -10364,7 +10364,7 @@ To include the image in a \LaTeX\ document, select the
 \menu{file.export} menu item, and save it as a
 \LaTeX\ file: click on the \qt{File of Type} \gls{dropdown} and
 select \widget{filter.pgf}, and name the file
-(for example, \file{house.tex})
+(for example, \filefmt{house.tex})
 \figureref{fig:housesavetex}. Remember to use the \sty{pgf} package:
 \begin{verbatim}
 \usepackage{pgf}
@@ -10511,7 +10511,7 @@ and include the image use \gls{input}. For example:
 \section{Cheese and Lettuce on Toast}\label{sec:cheeseexample}
 
 This example illustrates how to merge paths. It extends the
-previous \nameref{sec:lettuce} example.
+previous \nameref{sec:toastexample} example.
 The aim is to create the image shown in \figureref{fig:cheesefinal}.
 
 \begin{enumerate}
@@ -10522,7 +10522,7 @@ button.
 
 \item To create the slice of cheese, select the
 \tool{rectangle} (\sectionref{sec:rectangles}), and set the
-\pathattr{fill-paint} (\sectionref{sec:fillcolour}) to yellow.
+\pathattr{fill-paint} (\sectionref{sec:fillpaint}) to yellow.
 Make a rectangle, as illustrated in \figureref{fig:cheese1}.
 
 \FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
@@ -10555,6 +10555,7 @@ menu item, in which case you don't need to worry about the winding
 rule.)
 
 \FloatSubFigs{fig:cheese3}
+[\setkeys{Gin}{width=0.4\linewidth}]
 {
   {fig:cheese3a}{\includeimg{cheese3a}}{},
   {fig:cheese3b}{\includeimg{cheese3b}}{}
@@ -10574,8 +10575,204 @@ path.}
 
 \section{An Artificial Neuron}\label{sec:neuronexample}
 
-TODO
+This example illustrates setting line styles and adding text.
+The final image looks best as a \sty{pgf} picture included
+in a \LaTeX\ document, as then you can use maths fonts.
 
+\begin{enumerate}
+\item The \gls{normal-font-size} for my \LaTeX\ document will be
+10\gls{pt}, so I first need to make sure this is set using the
+\menu{settings.configtex} menu item to open the
+\dialog{texconfig} dialog window. Make sure the
+\widget{clssettings.normalsize} value is set to 10 in the
+\dialog{clssettings} tab (\sectionref{sec:normalsize}).
+
+\item Select the \tool{rectangle} (\sectionref{sec:rectangles}),
+and create a rectangle, as shown in \figureref{fig:neuron1}.
+
+\FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
+{fig:neuron1}
+{\includeimg{neuron1}}
+{Artificial Neuron Example\dash Adding a Rectangle}
+[
+  \item Select the \tool{ellipse} (\sectionref{sec:ellipses}),
+  and create a circle, as shown in \figureref{fig:neuron2}.
+]
+{fig:neuron2}
+{\includeimg{neuron2}}
+{Artificial Neuron Example\dash Adding a Circle}
+
+\item To make the logistic function symbol, select the
+\tool{open_curve} (\sectionref{sec:newcurvepath}), and do a single
+segment (\figureref{fig:neuron3a}).  Then use switch to
+\editpathmode\ to adjust the curvature, as shown in
+\figureref{fig:neuron3b}.  (If you have enabled the \gridlock, you
+may find it easier to disable it while you are editing the curvature
+control points.)
+
+\FloatSubFigs{fig:neuron3}
+{
+  {fig:neuron3a}{\includeimg{neuron3a}}{},
+  {fig:neuron3b}{\includeimg{neuron3b}}{}
+}
+[Artificial Neuron Example\dash Creating a Sigmoidal Curve]
+{Artificial Neuron Example\dash creating a sigmoidal
+curve:
+\subfigref{fig:neuron3a} adding an open curve segment;
+\subfigref{fig:neuron3b} edit segment to adjust curvature.}
+
+\item Next set the current line style to have an end
+arrow. Note that lines with end markers look best with a butt cap
+style, so this should also be set. This can be done as follows:
+
+Use the \menu{settings.styles} menu item to display the
+\dialog{styles} dialog box. Select the \widget{linestyle.title} tab
+to display the line style panel.  Select \widget{linestyle.cap.butt}
+from the \widget{linestyle.cap} \gls*{dropdown} (see
+\figureref{fig:neuronlinestyle}).  Next click on the \dgls{choose}
+button located on the same row as \widget{linestyle.arrow.end} to
+open the end marker dialog box (illustrated in
+\figureref{fig:neuronendmarker}). Select the
+\widget{arrow.usemarker} radio button. This will enable the marker
+chooser panel. Select the \widget{arrow.tab.arrows} tab and select
+\widget{arrow.pointed60}. Select \dgls{okay} to close the end marker
+dialog box and select \dgls{okay} to close the \dialog{styles}
+dialog box.
+
+\FloatFig{fig:neuronlinestyle}
+[\setkeys{Gin}{width=0.7\linewidth}]
+{\includeimg{neuronlinestyle}}
+{Artificial Neuron Example\dash Setting the Current Line Style}
+
+\FloatFig{fig:neuronendmarker}
+[\setkeys{Gin}{width=0.7\linewidth}]
+{\includeimg{neuronendmarker}}
+{Artificial Neuron Example\dash End Marker Dialog Box}
+
+\item Select the \tool{open_line} (\sectionref{sec:newlinepath}), and
+add in the arrows as illustrated in \figureref{fig:neuron4}.
+
+\FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
+{fig:neuron4}
+{\includeimg{neuron4}}
+{Artificial Neuron Example\dash Adding Arrows}
+[
+    \item Use \menu{settings.styles} to open the \dialog{styles}
+    selector, and set the font family to \qt{Serif} and the font
+    size to 10pt, and then press \dgls{okay}. Select the
+    \mathstool\ (\sectionref{sec:text}), and add
+    in the text, as illustrated in \figureref{fig:neuron5}.
+    (I've used the
+    \widget{unicode.SUPERSCRIPTS_AND_SUBSCRIPTS} block in the
+    \dialog{symbolselector} to insert the subscripts.)
+]
+{fig:neuron5}
+{\includeimg{neuron5}}
+{Artificial Neuron Example\dash Adding Text}
+
+Since I have the \mathstool\ with the \mathsmode\
+\glslink{textarea-mapping}{mappings} on
+(\sectionref{sec:texconfigtext}), the \LaTeX\ alternative text
+automatically has the \glsdesc{mshift} characters inserted and the
+Unicode subscripts have been converted to \glssymbol{underscore}\code{1} etc. You can
+see the \LaTeX\ alternative text if you select the \gls{textarea}
+and use \menu{edit.textarea.edit}. This will open up the
+\dialog{edittext} dialog box shown in \figureref{fig:neuron6}.
+
+\FloatFig{fig:neuron6}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{\includeimg{neuron6}}
+{Artificial Neuron Example\dash Editing Text}
+
+Now select all of the text on the left (\qt{x\textsubscript{1}},
+\qt{x\textsubscript{2}} and \qt{x\textsubscript{n}}) and use the
+\menu{edit.textarea.font.all_styles} dialog box to change the horizontal
+\textattr{anchor} parameter to \widget{font.anchor.right}. (Note
+that you will not see any difference to the image in \FlowframTk.)
+
+\item Select the \mathstool\ (\sectionref{sec:text}) and start a
+\gls{textarea} in the rectangle.  I want to use a capital sigma to
+indicate a summation, and as I don't know the magic combination of
+characters to access that symbol, I used the
+\dialog{symbolselector} dialog box. To do this, either use the
+\gls{index.menu.textarea} and select \menu{textarea.insert_symbol},
+or press the \accelerator{menu.textarea.insert_symbol} key. The required symbol can now be
+selected from the \dialog{symbolselector} dialog box (illustrated in
+\figureref{fig:neuron7}). This is the summation symbol (U+2211) from
+the \widget{unicode.MATHEMATICAL_OPERATORS} block, not the
+Greek capital sigma from the
+\widget{unicode.MATHEMATICAL_ALPHANUMERIC_SYMBOLS} block.
+
+\FloatFig{fig:neuron7}
+[\setkeys{Gin}{width=0.8\linewidth}]
+{\includeimg{neuron7}}
+{Artificial Neuron Example\dash Insert Symbol Dialog Box}
+
+\item Use the \menu{edit.textarea.font.all_styles} to change the
+font size to 25 and change both the \textattr{anchor} settings to
+\widget{font.anchor.hcentre}, see \figureref{fig:neuron8}.
+(You don't need to change the anchor settings if you have the
+\widget{textconfig.anchor} setting enabled
+(\sectionref{sec:texconfig}), as it will change when you justify the \gls{textarea}
+in step~\ref{itm:neuronalign}.)
+
+\FloatFig{fig:neuron8}
+[\setkeys{Gin}{width=0.7\linewidth}]
+{\includeimg{neuron8}}
+{Artificial Neuron Example\dash Setting the Font Style}
+
+As before, if you used the \mathstool\ with the \mathsmode\
+mappings enabled, the \LaTeX\ alternative text should already be
+correctly set, but you can check by selecting the \gls{textarea} and using the
+\menu{edit.textarea.edit} menu item to open the
+\dialog{edittext} dialog box (\figureref{fig:neuron9b}).
+
+\FloatSubFigs{fig:neuron9}
+{
+ {fig:neuron9a}{\includeimg{neuron9a}}{},
+ {fig:neuron9b}{\includeimg{neuron9b}}{}
+}
+[Artificial Neuron Example\dash Setting the Equivalent \LaTeX\ Symbol]
+{Artificial Neuron Example\dash setting the
+equivalent \LaTeX\ symbol:
+\subfigref{fig:neuron9a} selected text;
+\subfigref{fig:neuron9b} setting \LaTeX\ equivalent.}
+
+\item\label{itm:neuronalign} The $\Sigma$ would look much better if
+it was \manmsg{centred} inside the rectangle. To do this \select\
+the $\Sigma$ and the rectangle, then \gls{group}
+(\sectionref{sec:grouping}) them either by clicking on the
+\dgls{transform.group} button or by using the \menu{transform.group}
+menu item. Then select the \menu{transform.justify.centre} menu
+item, and then the \menu{transform.justify.middle} menu item. The
+\gls{textarea} should now be \manmsg{centred} inside the rectangle
+(\figureref{fig:neuron10}).
+
+\FloatFig{fig:neuron10}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{\includeimg{neuron10}}
+{Artificial Neuron Example\dash Justifying Objects}
+
+To include the image inside a \LaTeX\ document, save the image
+to a \LaTeX\ file using the \menu{file.export} menu item,
+and then include it in your document (assuming the file was called
+\filefmt{neuron.tex}):
+\begin{verbatim}
+\begin{figure}
+\centering
+\input{neuron}
+\caption{An Artificial Neuron}
+\end{figure}
+\end{verbatim}
+(Remember to use the \sty{pgf} package.) The image will appear in
+the \LaTeX\ document as illustrated in \figureref{fig:neurontex}.
+
+\FloatFig{fig:neurontex}
+{\includeimg{neuron}}
+{Artificial Neuron Example\dash Image as it Appears in a
+\LaTeX{} Document}
+
+\end{enumerate}
 
 \section{Bus}\label{sec:busexample}
 
