@@ -57,6 +57,11 @@
 % Needs to be fairly simple for the HelpSet HTML files:
 \newcommand{\degrees}[1]{#1\textdegree}
 
+\newcommand{\pagestyleref}[1]{\opt{page-style.#1}}
+\newcommand{\framelabelref}[1]{\opt{frame-label.#1}}
+\newcommand{\setframeopt}[1]{\opt{settypeframe.#1}}
+\newcommand{\setframeoptval}[2]{\optval{settypeframe.#1}{#2}}
+
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
 
@@ -9870,8 +9875,202 @@ the adjustments made.
 
 \subsection{Defining a Frame}\label{sec:framedef}
 
-TODO
+\menudef{menu.tex.flowframe.set_frame}
 
+An \gls{object} can be identified as a flow, static or
+dynamic frame as follows: select the \gls{object} (it should
+be the only \gls*{object} selected) then select the
+\menu{tex.flowframe.set_frame} menu item.
+This will open up the \dialog{flowframe} dialog box in which you can specify the frame's
+attributes. 
+
+\widgetdef{flowframe.title}
+
+Initially only the \widget{flowframe.type} field
+is enabled (as shown in \figureref{fig:setframe}) since all the other
+fields aren't valid for type \widget{flowframe.none}.
+
+\begin{warning}
+Make sure you set the typeblock before you set any frames.
+If you later adjust the typeblock, you may need to readjust the even
+shifts for all frames that may be displayed on \gls{verso} pages.
+\end{warning}
+
+\FloatFig{fig:setframe}
+{\includeimg{setframe}}
+{Frame Attributes Dialog Box}
+
+Once an \gls*{object} has been identified as a frame, a
+\manmsg{grey} rectangle will appear on the screen indicating the area in
+which the contents of the frame will be typeset, along with the
+frame's type, identification label and page list.
+
+\begin{information}
+Note that if the \gls*{object} is a \gls{group}, the frame
+information will be applied to the whole group. This means you can
+construct a frame border by grouping several objects, however, if
+you later ungroup this \gls*{object}, you will lose the frame
+information.
+\end{information}
+
+\widgetdef{flowframe.type} 
+
+The frame's type is specified using the 
+\widget{flowframe.type} dropdown box. There is a choice of:
+\widget{flowframe.flow}, \widget{flowframe.static},
+\widget{flowframe.dynamic} or \widget{flowframe.none}.
+\widget{flowframe.none} indicates that the \gls{object} has
+no associated flowframe data, which means that the object will not
+be saved if the image is exported to a \LaTeX\ package or
+class (\sectionref{sec:exportsty}).
+
+\widgetdef{flowframe.label}
+
+Each frame is assigned a \inlineglstextdef{frame-label} so that it can be referenced in the
+document. Each label must be unique for its given frame type.  To
+assign a label to the selected frame, enter it in the box
+marked \widget{flowframe.label}.
+
+There are four dynamic frame labels that have a special meaning for
+\FlowframTk: \inlineglsdef{opt.frame-label.header},
+\inlineglsdef{opt.frame-label.footer},
+\inlineglsdef{opt.frame-label.evenheader} and
+\inlineglsdef{opt.frame-label.evenfooter}. These indicate that the frame should be converted
+into the page header or footer frame (analogous to the
+\sty{flowfram} package's \gls{makedfheaderfooter} command).
+If you use any of these special labels, when you export to a package or
+class file, \FlowframTk\ will modify \LaTeX's standard page style
+mechanism to hide the header and footer frames when you use the
+\pagestyleref{empty} page style, hide just the header when you use the
+\pagestyleref{plain} page style and hide just the footer when you use the
+\pagestyleref{headings} page style. If you only define a header frame but
+no footer frame, \FlowframTk\ will switch on the \pagestyleref{headings}
+page style. If you only define a footer frame but no header frame,
+\FlowframTk\ will switch on the \pagestyleref{plain} page style. If you
+define both a header and a footer frame, \FlowframTk\ will switch to
+its own custom page style called \pagestyleref{flowframtk} that puts
+\gls{leftmark} or \gls{rightmark} in the header and
+\gls{thepage} in the footer. This custom page style is
+only defined if you have a header or footer frame.
+
+\begin{important}
+The \framelabelref{header}, \framelabelref{footer},
+\framelabelref{evenheader} and \framelabelref{oddheader} 
+\glspl{frame-label} only have a special significance for dynamic frames.
+\end{important}
+
+The \framelabelref{evenheader} and \framelabelref{evenfooter} labels are provided
+in case you want to have a different frame for even pages. This will
+typically only be necessary if you want a different border or frame
+dimensions for the header or footer on even pages, as the
+even page horizontal shift is usually sufficient.
+
+\widgetdef{flowframe.border}
+
+The \widget{flowframe.border} \gls*{dropdown} allows you
+to specify whether the frame has a border. If the option
+\widget{flowframe.border_as_shown} is set, then the
+\gls{object} will be drawn as the frame's border. If the option
+\widget{flowframe.border_none} is set, then the frame will
+not be given a border, and the object will be used only as an
+indication of the frame's width, height and location (and
+possibly shape, see \sectionref{sec:frameshape}).
+
+Note that all \glspl{textarea} are considered to be a part of the
+frame's background, not the frame's contents, and will only appear if
+the border \widget{flowframe.border_as_shown} setting is
+applied. Likewise for \glspl{bitmap}. The border is not available
+for non-standard paragraph shapes (\sectionref{sec:frameshape}).
+
+\widgetdef{flowframe.pages}
+
+You can specify the page list on which the frame is defined, using the
+\widget{flowframe.pages} \gls*{combobox}. Either select one of:
+\widget{flowframe.pages_all},
+\widget{flowframe.pages_none},
+\widget{flowframe.pages_odd} or
+\widget{flowframe.pages_even}, or you can type in a comma
+separated list of pages or page ranges (e.g. \verb|1-10,12,14,>20|).
+The page references are as described in
+\sectionref{sec:flowframesummary}. Use the
+\widget{flfsettings.pages_opt} section of the
+\dialog{texconfig} dialog (\sectionref{sec:texconfig}) to
+specify whether the page list uses absolute or relative numbers.
+
+\widgetdef{flowframe.border_as_shown}
+
+The frame may have margins between the border and the area in which
+the contents are typeset. The margins are usually only relevant
+if you have specified the \widget{flowframe.border_as_shown}
+border option. The margins are not available for non-standard
+paragraph shapes (\sectionref{sec:frameshape}).
+
+\widgetdef{flowframe.align}
+
+You can change the vertical alignment of the contents of a static or
+dynamic frame using the \widget{flowframe.align} \gls{dropdown}.
+This can be one of: \widget{flowframe.align_top},
+\widget{flowframe.align_middle} or \widget{flowframe.align_bottom},
+which correspond to the settings \setframeoptval{valign}{t},
+\setframeoptval{valign}{c} and \setframeoptval{valign}{b},
+respectively, provided by \gls{setdynamicframe} and
+\gls{setstaticframe}. This facility is not available for flow
+frames.
+
+\widgetdef{flowframe.compute_sym_x_shift}
+
+By default, the frame location on even pages is the same
+\strong{relative to the \gls{typeblock}} as on odd pages. You can override this by
+specifying a shift to apply to the location when the frame is
+displayed on an even page. \emph{However, this setting only has an effect
+if you use the \opt{twoside} class option.} This is usually
+the default for classes such as \cls{book}, but not for classes
+such as \cls{article} or \cls{report}. Typically, only the
+horizontal shift may be needed for two-sided documents, but if for some
+reason you require a vertical shift that option is provided. In most
+cases, the horizontal shift is used to create a symmetric page
+layout (by which I mean the frame locations are symmetric not the
+frame borders). For convenience, the
+\widget{flowframe.compute_sym_x_shift} button will work out
+the appropriate horizontal shift to create a symmetric layout, given
+the current frame position and \gls{typeblock} margins. If you later move
+the \gls{object} or modify the margins you will need to update the
+horizontal shift.
+
+\begin{warning}
+If the \gls{typeblock} has an even page shift, remember to take this into
+account when setting the even shift for the frames. You can check
+the frame's position on even pages using the \dialog{displaypage}
+dialog (\sectionref{sec:displaypage}).
+\end{warning}
+
+\widgetdef{flowframe.contents}
+
+As described in \sectionref{sec:flowframesummary}, the contents of
+static and dynamic frames need to be explicitly set using commands
+or environments provided by the \sty{flowfram} package. For your
+convenience, \FlowframTk\ provides a way for you to specify the
+contents and will use the appropriate commands when you export to a
+package or class file.
+To add or edit the contents, click on the
+\widget{flowframe.edit} button, which will open
+\FlowframTk's little \TeX\ editor.
+
+\begin{important}
+You can't use verbatim text in the contents.
+\end{important}
+
+If your frame has been assigned the
+\widget{flowframe.dynamic} type and has been given one of
+the special dynamic labels \framelabelref{header}, \framelabelref{footer},
+\framelabelref{evenheader} or \framelabelref{evenfooter}, as described above,
+setting the contents has a different effect. The code you provide in
+the contents is inserted into the header or footer to enable you to
+modify the formatting. Note that you shouldn't use commands like
+\gls{thepage}, as that will be done automatically. It's best to
+stick to declarations, such as \gls{bfseries}, although the
+final command may be a text-block command, such as \gls{textbf},
+as it is typically followed by \gls{thepage} or the header mark.
 
 \subsection{The Frame Shape}\label{sec:frameshape}
 

@@ -166,6 +166,21 @@ objects.}
 @command{evensidemargin}
 @command{oddsidemargin}
 
+@command{leftmark}
+@command{rightmark}
+
+@command{makedfheaderfooter,
+  name={\csfmt{make\-df\-head\-er\-foot\-er}}
+}
+
+@command{setdynamicframe,
+ name={\csfmt{set\-dynamic\-frame}}
+}
+
+@command{setstaticframe,
+ name={\csfmt{set\-static\-frame}}
+}
+
 @command{large}
 @command{Large}
 @command{huge}
@@ -183,6 +198,7 @@ objects.}
 
 @command{mdseries}
 @command{bfseries}
+@command{textbf}
 
 @command{upshape}
 @command{itshape}
@@ -1112,6 +1128,67 @@ limitation. The \app{flowframtk} application matches the omission.}
  parent={preamble},
  name={late},
  text={late preamble}
+}
+
+@index{frame-label,
+ name={frame label},
+ text={label}
+}
+
+@option{opt.frame-label.header,
+ parent={frame-label},
+ name={\optfmt{header}}
+}
+
+@option{opt.header,alias={opt.frame-label.header}}
+
+@option{opt.frame-label.evenheader,
+ parent={frame-label},
+ name={\optfmt{even\-header}}
+}
+
+@option{opt.evenheader,alias={opt.frame-label.evenheader}}
+
+@option{opt.frame-label.footer,
+ parent={frame-label},
+ name={\optfmt{footer}}
+}
+
+@option{opt.footer,alias={opt.frame-label.footer}}
+
+@option{opt.frame-label.evenfooter,
+ parent={frame-label},
+ name={\optfmt{even\-footer}}
+}
+
+@option{opt.evenfooter,alias={opt.frame-label.evenfooter}}
+
+@indexplural{page-style,
+  text={page style}
+}
+
+@option{opt.page-style.empty,
+ name={\optfmt{empty}}
+}
+
+@option{opt.page-style.plain,
+ name={\optfmt{plain}}
+}
+
+@option{opt.page-style.headings,
+ name={\optfmt{headings}}
+}
+
+@option{opt.page-style.flowframtk,
+ name={\optfmt{flowframtk}}
+}
+
+@index{settypeframe-options,
+ name={\csmetafmt{set}{type}{frame} options}
+}
+
+@option{opt.settypeframe.valign,
+ name={\optfmt{valign}}
 }
 
 % PUNCTUATION
