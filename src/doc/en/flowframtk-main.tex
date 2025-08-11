@@ -10209,12 +10209,180 @@ shift to the \gls{typeblock}).
 
 \chapter{Step-by-Step Examples}\label{sec:tutorials}
 
-TODO
+The examples in this section illustrate various aspects of
+\FlowframTk.
+
+\begin{deflist}
+\itemtitle{\sectionref{sec:houseexample}}
+\begin{itemdesc}
+\nameref{sec:houseexample} illustrates the basics:
+how to create filled rectangles and a closed line \gls{path}.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:toastexample}}
+\begin{itemdesc}
+\nameref{sec:toastexample} illustrates editing paths.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:cheeseexample}}
+\begin{itemdesc}
+\nameref{sec:cheeseexample} illustrates merging paths.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:neuronexample}}
+\begin{itemdesc}
+\nameref{sec:neuronexample} illustrates
+line styles, text areas and justifying. Also illustrates
+how to specify different text to use when exporting to a
+\LaTeX\ file.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:busexample}}
+\begin{itemdesc}
+\nameref{sec:busexample} illustrates
+path functions, and using the shapepar function.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:postertutorial}}
+\begin{itemdesc}
+\nameref{sec:postertutorial} illustrates how to
+use \FlowframTk\ to create frames for use with the \sty{flowfram}
+package.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:newstutorial}}
+\begin{itemdesc}
+\nameref{sec:newstutorial} illustrates how to
+use \FlowframTk\ to create non-standard shaped frames for use with the
+\sty{flowfram} package.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:brochure}}
+\begin{itemdesc}
+\nameref{sec:brochure} illustrates how to use \FlowframTk\
+to create \gls{recto}\slash\gls{verso} header and footer frames for
+use with the \sty{flowfram} package.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:accesstutorial}}
+\begin{itemdesc}
+\nameref{sec:accesstutorial} illustrates how to create and 
+edit pictures without using the mouse.
+\end{itemdesc}
+
+\itemtitle{\sectionref{sec:rosetutorial}}
+\begin{itemdesc}
+\nameref{sec:rosetutorial} illustrates how to design a lute rose
+using a \gls{symmetricshape} and \glspl{rotationalpattern}.
+\end{itemdesc}
+
+\end{deflist}
 
 
 \section{A House}\label{sec:houseexample}
 
-TODO
+This example illustrates the basics. The aim is to create a simple
+image of a house (shown in \figureref{fig:housefinal}).
+
+\begin{enumerate}
+
+\item The main part of the house will be constructed from a
+rectangle, so select the \tool{rectangle} (\sectionref{sec:rectangles}).
+
+\item Let's make it a
+yellow brick house, so use \menu{settings.styles} to select
+a yellow \pathattr{fill-paint} (\sectionref{sec:fillpaint}).
+
+\item Click where you want the bottom left hand corner to go, and
+move (not drag) the mouse to the opposite corner
+(\figureref{fig:house1a}).  Click to complete the rectangle. You
+will only see the \pathattr{fill-paint} once the rectangle has been
+completed (\figureref{fig:house1b}).
+
+\FloatSubFigs{fig:house1}
+[\setkeys{Gin}{width=0.45\linewidth}]
+{
+ {fig:house1a}{\includeimg{house1a}}{},
+ {fig:house1b}{\includeimg{house1b}}{}
+}
+[House Example\dash Creating a Rectangle]
+{House Example\dash creating a rectangle:
+\subfigref{fig:house1a} rectangle under construction,
+\subfigref{fig:house1b} completed rectangle.}
+
+\item Next do the roof. Let's make the roof using a triangle.
+For this you will need to use the
+\tool{closed_line} (\sectionref{sec:newlinepath}). Select this
+tool using either the \dgls{tools.closed_line} button or
+the \menu{tools.closed_line} menu item.
+
+\item Let's make it a red roof, so use
+\menu{settings.styles} to select a red
+\pathattr{fill-paint} (\sectionref{sec:fillpaint}).
+
+\item Click on each of the three vertices that form the triangle
+(\figureref{fig:house2a}). To complete the \gls{path}, double click
+when you click on the third vertex, or click on the third vertex and
+then press \accelerator{menu.tools.finish}, or use the
+\dgls{tools.finish} button.  You will only see the
+\pathattr{fill-paint} once the path has been completed
+(\figureref{fig:house2b}).
+
+\FloatSubFigs{fig:house2}
+[\setkeys{Gin}{width=0.45\linewidth}]
+{
+ {fig:house2a}{\includeimg{house2a}}{},
+ {fig:house2b}{\includeimg{house2b}}{}
+}
+[House Example\dash Creating a Triangle]
+{House Example\dash creating a triangle:
+\subfigref{fig:house2a} triangle under construction,
+\subfigref{fig:house2b} completed triangle.}
+
+\item Lastly comes the door and windows. These are all
+rectangles, so follow the same procedure as above.
+Let's make the door black and the windows white.
+Remember to set the \pathattr{fill-paint} before creating the rectangles
+(\figureref{fig:housefinal}).
+
+\item To save the picture, select the \menu{file.save_as}
+menu item (\figureref{fig:housesave}).
+
+\end{enumerate}
+
+\FloatSideBySideFigs
+[][\setkeys{Gin}{width=\linewidth}]
+{fig:housefinal}
+{\includeimg{housefinal}}
+{House Example\dash Completed Image}
+{fig:housesave}
+{\includeimg{housesave}}
+{House Example\dash Saving the Image}
+
+To include the image in a \LaTeX\ document, select the
+\menu{file.export} menu item, and save it as a
+\LaTeX\ file: click on the \qt{File of Type} \gls{dropdown} and
+select \widget{filter.pgf}, and name the file
+(for example, \file{house.tex})
+\figureref{fig:housesavetex}. Remember to use the \sty{pgf} package:
+\begin{verbatim}
+\usepackage{pgf}
+\end{verbatim}
+and to include the image later in the document use \gls{input}, e.g.:
+\begin{verbatim}
+\begin{figure}
+\centering
+\input{house}
+\caption{A House}
+\end{figure}
+\end{verbatim}
+
+\FloatFig
+{fig:housesavetex}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{\includeimg{housesavetex}}
+[House Example\dash Exporting the Image to a \LaTeX\ File]
+{House Example\dash exporting the image to a \LaTeX\ file.}
 
 
 \section{Lettuce on Toast}\label{sec:toastexample}
