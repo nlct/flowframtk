@@ -1587,6 +1587,8 @@ use the absolute setting, select the
 \widget{flfsettings.pages_opt.absolute} button otherwise select the
 \widget{flfsettings.pages_opt.relative} button.
 
+\widgetdef{flfsettings.shapeparcs}
+
 The \sty{shapepar} package now has a command called
 \gls{Shapepar} that behaves slightly differently to
 \gls{shapepar}. Since \gls{Shapepar} works better than
@@ -9955,7 +9957,7 @@ only defined if you have a header or footer frame.
 
 \begin{important}
 The \framelabelref{header}, \framelabelref{footer},
-\framelabelref{evenheader} and \framelabelref{oddheader} 
+\framelabelref{evenheader} and \framelabelref{evenfooter} 
 \glspl{frame-label} only have a special significance for dynamic frames.
 \end{important}
 
@@ -10074,18 +10076,136 @@ as it is typically followed by \gls{thepage} or the header mark.
 
 \subsection{The Frame Shape}\label{sec:frameshape}
 
-TODO
+The text in flow frames is typeset using the standard rectangular
+format, but the contents of static or dynamic frames can be shaped. If you
+have selected a \gls{path}, you can enable
+this by selecting either \widget{flowframe.shape_parshape}
+or \widget{flowframe.shape_shapepar} from the
+\widget{flowframe.shape} \gls*{dropdown}. Note that the
+shape option is not available for any other type of \gls{object}.
+  
+If you use the \widget{flowframe.shape_parshape}
+or \widget{flowframe.shape_shapepar} options, it will only
+check if a set of valid parameters can be extracted from the
+\gls*{path} when you export (\sectionref{sec:exportsty}) the image as a \LaTeX\
+class or package. (Otherwise it would have to re-evaluate the
+parameters every time you edit the path.) Note, however, that the
+paragraph shape in your document may not exactly match the shape you
+created in \FlowframTk.
 
+\widgetdef{flowframe.shape_parshape}
+
+If you select \widget{flowframe.shape_parshape}, the frame contents
+will be shaped using \gls{parshape}.
+
+\begin{itemize}
+\item If there are not enough words in the paragraph to fill the
+shape, the shape will be truncated.
+\item If there are too many words in the paragraph, the dimensions
+of the final line of the shape will be repeated for each
+subsequent line.
+\end{itemize}
+
+\widgetdef{flowframe.shape_shapepar}
+
+If you select \widget{flowframe.shape_shapepar}, the frame contents
+will be shaped using either \gls{shapepar} or \gls{Shapepar},
+according to the \widget{flfsettings.shapeparcs} setting
+(\sectionref{sec:texconfigflf}).
+
+\begin{itemize}
+\item If there are not enough words in the paragraph to fill the 
+shape, the shape will shrink.
+\item If there are too many words in the paragraph, the shape
+will expand.
+\end{itemize}
+
+To illustrate this, consider the layout shown in 
+\figureref{fig:parshape-poster1}. There are six identical circles
+arranged in two rows. Each circle has been identified as a static
+frame. Their bounding boxes can be seen as light \manmsg{grey} rectangles.
+The top three circles have all been assigned a shape given by
+\gls{parshape}, while the bottom three circles have been
+assigned a shape given by \gls{shapepar}.
+
+\FloatFig{fig:parshape-poster1}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{parshape-poster1}}
+[Layout Containing Six Circles]
+{Layout containing six circles. All circles have been
+identified as static frames. The top three circles have been
+assigned a shape given by \gls{parshape}. The bottom
+three circles have been assigned a shape given by
+\gls{shapepar}.}
+
+This layout was exported (\sectionref{sec:exportsty}) as a \LaTeX\
+package based on the \sty{flowfram} package, and was included
+into a document. Each of the static frames were filled with a
+varying amount of text.  The leftmost circles do not have enough
+text to fill the designated area, while the rightmost circles have
+too much text.  (See \figureref{fig:parshape-poster2}.)
+
+\FloatFig{fig:parshape-poster2}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{parshape-poster2}}
+[The Effects of Too Much and Too Little Text]
+{The effects of too much and too little text. The top row uses
+\gls{parshape}: (\emph{top left}) too little text truncates
+the shape; (\emph{top right}) too much text replicates the dimension
+of the last line of the shape. The bottom row uses
+\gls{shapepar}: (\emph{bottom left}) too little text shrinks
+the shape; (\emph{bottom right}) too much text expands the shape.
+(The contents of the static frames were all set to a central
+vertical alignment.)}
+
+Note that when you use a non-standard paragraph shape, you can
+no longer specify the margins. Since the paragraph shape is defined
+by the \gls{path}, the margins don't have any meaning. If you want
+a border effect, you can make a slightly larger object behind, and
+set the border of the larger object to
+\widget{flowframe.border_as_shown} and the border of the
+smaller object to \widget{flowframe.border_none}, but
+remember that the overall effect will depend on the amount of text
+contained in the frame.
 
 \subsection{Scale Object to Fit Typeblock}\label{sec:scaletotypeblock}
 
-TODO
+\menudef{menu.tex.flowframe.scale_to_typeblock}
 
+In addition to the \affinetrans{scaling} function described in
+\sectionref{sec:scaleobjects}, if you have set the \gls{typeblock}, you can scale
+selected \glspl{object} so that they fit the \gls{typeblock} area using the
+\menu{tex.flowframe.scale_to_typeblock} menu item.
+Note that this may change the aspect ratio of the scaled
+\glspl*{object}.
 
 \subsection{Only Displaying Objects Defined on a Given Page}\label{sec:displaypage}
 
-TODO
+\menudef{menu.tex.flowframe.display_page}
 
+It is possible to display only those frames that are defined on a
+given page. The \menu{tex.flowframe.display_page} menu item will
+open the \dialog{displaypage} dialog box.
+
+\widgetdef{displaypage.title}
+
+You can select to display those frames that are defined
+on all pages or just those that are defined on odd or even pages or
+you can specify a particular page number by selecting the
+\widget{displaypage.user} radio button and entering the
+relevant page number in the text field. If you specify \qt{0}, only
+those frames that have the \widget{flowframe.none} page
+setting will be displayed.  Note that \glspl{object} that have not
+been assigned \gls{flowframe} data will always be displayed.  The title
+bar will indicate how many objects have been hidden.
+
+It's generally best to apply transformations or edits with the
+\widget{displaypage.all} setting on. If you move an \gls{object}
+when the \gls{verso} (even) page is displayed, the \gls*{object}['s]
+\gls{recto} position will be moved by the same amount. The only way
+to have a different \gls*{verso} position is to apply an even page
+shift in the \dialog{flowframe} dialog (or to apply an even page
+shift to the \gls{typeblock}).
 
 \chapter{Step-by-Step Examples}\label{sec:tutorials}
 
