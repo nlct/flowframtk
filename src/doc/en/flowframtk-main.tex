@@ -10384,11 +10384,124 @@ and to include the image later in the document use \gls{input}, e.g.:
 [House Example\dash Exporting the Image to a \LaTeX\ File]
 {House Example\dash exporting the image to a \LaTeX\ file.}
 
-
 \section{Lettuce on Toast}\label{sec:toastexample}
 
-TODO
+This example illustrates how to edit paths. The aim is to create
+the picture illustrated in \figureref{fig:lettucefinal}.
 
+\begin{enumerate}
+\item Let's start with the toast first. To begin with create
+a rectangle (\sectionref{sec:rectangles}) with a brown
+\pathattr{fill-paint} (\sectionref{sec:fillcolour}). If you are using
+the CMYK model, you can get brown from 0\% Cyan, 81\% Magenta,
+100\% Yellow and 60\% Black. If you are using the RGB model,
+you can get brown from 40\% Red, 8\% Green and 0\% Blue. Create the
+rectangle shown in \figureref{fig:lettuce1}.
+
+\FloatFig
+{fig:lettuce1}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{\includeimg{lettuce1}}
+{Lettuce on Toast Example\dash Brown Rectangle}
+
+\item Bread quite often has a curved top, so let's
+edit (\sectionref{sec:editpath}) the rectangle
+so that the top is slightly curved. To do this,
+\select\ the rectangle, and
+then either click on the \dgls{edit.path.edit} button or select the
+\menu{edit.path.edit} menu item. This will display
+the \gls{path} in edit mode (\figureref{fig:lettuce2a}.)
+Select the top segment, this will then be highlighted in red
+(\figureref{fig:lettuce2b}).
+
+\FloatSubFigs{fig:lettuce2}
+{
+ {fig:lettuce2a}{\includeimg{lettuce2a}}{},
+ {fig:lettuce2b}{\includeimg{lettuce2b}}{}
+}
+[Lettuce on Toast Example\dash Editing the Rectangle]
+{Lettuce on Toast Example\dash editing the rectangle:
+\subfigref{fig:lettuce2a} edit mode;
+\subfigref{fig:lettuce2b} select top segment.}
+
+\item Use the \gls{index.menu.editpath} popup menu to convert the line segment to a
+curve (\figureref{fig:lettuce3}).
+
+\FloatSubFigs{fig:lettuce3}
+{
+  {fig:lettuce3a}{\includeimg{lettuce3a}}{},
+  {fig:lettuce3b}{\includeimg{lettuce3b}}{}
+}
+[Lettuce on Toast Example\dash Converting the Top Segment to a Curve]
+{Lettuce on Toast Example\dash converting the top segment to
+a curve:
+\subfigref{fig:lettuce3a} edit path popup menu;
+\subfigref{fig:lettuce3b} segment converted to a curve.}
+
+\item The segment now has two extra
+\glspl{controlpt}, these need to be moved
+to change the curvature (\figureref{fig:lettuce4a}). Deselect
+the edit path tool (\menu{edit.path.edit} or
+\accelerator{menu.edit.path.edit}) to exit
+the \editpathmode\ (\figureref{fig:lettuce4b}). Note that if
+you have the \gridlock\ enabled, you may find it easier to
+temporarily disable it while you are editing the curvature control
+points.
+
+\FloatSubFigs{fig:lettuce4}
+{
+ {fig:lettuce4a}{\includeimg{lettuce4a}}{},
+ {fig:lettuce4b}{\includeimg{lettuce4b}}{}
+}
+[Lettuce on Toast Example\dash Finish Editing the Curve]
+{Lettuce on Toast Example\dash finish editing the curve:
+\subfigref{fig:lettuce4a} changing the curvature by moving the control points;
+\subfigref{fig:lettuce4b} exit edit path mode.}
+
+\item To make the lettuce, select the \tool{closed_curve}
+(\sectionref{sec:newcurvepath}), and set the \pathattr{fill-paint}
+(\sectionref{sec:fillpaint}) to green.  Make a rough outline of the
+lettuce leaf, clicking on each vertex, and double-click to close the
+path. Then, if necessary, edit the path to modify the
+\glspl{controlpt} (\figureref{fig:lettuce5}).
+
+\item Set the \pathattr{fill-paint} (\sectionref{sec:fillpaint}) to
+\gls{transparent}, and using the \tool{open_curve}
+(\sectionref{sec:newcurvepath}), add in some \glspl{path} to give
+the lettuce leaf some creases and edit as appropriate
+(\figureref{fig:lettucefinal}).
+
+\FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
+{fig:lettuce5}
+{\includeimg{lettuce5}}
+{Lettuce on Toast Example\dash Adding a Closed Curve Path}
+{fig:lettucefinal}
+{\includeimg{lettucefinal}}
+{Lettuce on Toast Example\dash Completed Image}
+
+\end{enumerate}
+
+To save the picture, select the \menu{file.save_as}
+menu item, and enter the filename.
+
+To include the image in a \LaTeX\ document, select the
+\menu{file.export} menu item, and save it as a
+\LaTeX\ file (click on the \qt{File of Type} \gls{dropdown} and
+select \widget{filter.pgf}, and name the file
+(for example, \filefmt{lettuce.tex}).
+To include it in your \LaTeX\ document, remember to use the
+\sty{pgf} package:
+\begin{verbatim}
+\usepackage{pgf}
+\end{verbatim}
+and include the image use \gls{input}. For example:
+\begin{verbatim}
+\begin{figure}
+\centering
+\input{lettuce}
+\caption{Lettuce on Toast}
+\end{figure}
+\end{verbatim}
 
 \section{Cheese and Lettuce on Toast}\label{sec:cheeseexample}
 
