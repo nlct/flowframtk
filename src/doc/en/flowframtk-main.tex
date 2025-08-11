@@ -10345,19 +10345,20 @@ Let's make the door black and the windows white.
 Remember to set the \pathattr{fill-paint} before creating the rectangles
 (\figureref{fig:housefinal}).
 
-\item To save the picture, select the \menu{file.save_as}
-menu item (\figureref{fig:housesave}).
-
-\end{enumerate}
-
 \FloatSideBySideFigs
 [][\setkeys{Gin}{width=\linewidth}]
 {fig:housefinal}
 {\includeimg{housefinal}}
 {House Example\dash Completed Image}
+[
+\item To save the picture, select the \menu{file.save_as}
+menu item (\figureref{fig:housesave}).
+]
 {fig:housesave}
 {\includeimg{housesave}}
 {House Example\dash Saving the Image}
+
+\end{enumerate}
 
 To include the image in a \LaTeX\ document, select the
 \menu{file.export} menu item, and save it as a
@@ -10392,7 +10393,7 @@ the picture illustrated in \figureref{fig:lettucefinal}.
 \begin{enumerate}
 \item Let's start with the toast first. To begin with create
 a rectangle (\sectionref{sec:rectangles}) with a brown
-\pathattr{fill-paint} (\sectionref{sec:fillcolour}). If you are using
+\pathattr{fill-paint} (\sectionref{sec:fillpaint}). If you are using
 the CMYK model, you can get brown from 0\% Cyan, 81\% Magenta,
 100\% Yellow and 60\% Black. If you are using the RGB model,
 you can get brown from 40\% Red, 8\% Green and 0\% Blue. Create the
@@ -10415,6 +10416,7 @@ Select the top segment, this will then be highlighted in red
 (\figureref{fig:lettuce2b}).
 
 \FloatSubFigs{fig:lettuce2}
+[\setkeys{Gin}{width=0.4\linewidth}]
 {
  {fig:lettuce2a}{\includeimg{lettuce2a}}{},
  {fig:lettuce2b}{\includeimg{lettuce2b}}{}
@@ -10428,6 +10430,7 @@ Select the top segment, this will then be highlighted in red
 curve (\figureref{fig:lettuce3}).
 
 \FloatSubFigs{fig:lettuce3}
+[\setkeys{Gin}{width=0.4\linewidth}]
 {
   {fig:lettuce3a}{\includeimg{lettuce3a}}{},
   {fig:lettuce3b}{\includeimg{lettuce3b}}{}
@@ -10449,6 +10452,7 @@ temporarily disable it while you are editing the curvature control
 points.
 
 \FloatSubFigs{fig:lettuce4}
+[\setkeys{Gin}{width=0.4\linewidth}]
 {
  {fig:lettuce4a}{\includeimg{lettuce4a}}{},
  {fig:lettuce4b}{\includeimg{lettuce4b}}{}
@@ -10465,30 +10469,31 @@ lettuce leaf, clicking on each vertex, and double-click to close the
 path. Then, if necessary, edit the path to modify the
 \glspl{controlpt} (\figureref{fig:lettuce5}).
 
-\item Set the \pathattr{fill-paint} (\sectionref{sec:fillpaint}) to
-\gls{transparent}, and using the \tool{open_curve}
-(\sectionref{sec:newcurvepath}), add in some \glspl{path} to give
-the lettuce leaf some creases and edit as appropriate
-(\figureref{fig:lettucefinal}).
-
 \FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
 {fig:lettuce5}
 {\includeimg{lettuce5}}
 {Lettuce on Toast Example\dash Adding a Closed Curve Path}
+[
+  \item Set the \pathattr{fill-paint} (\sectionref{sec:fillpaint}) to
+  \gls{transparent}, and using the \tool{open_curve}
+  (\sectionref{sec:newcurvepath}), add in some \glspl{path} to give
+  the lettuce leaf some creases and edit as appropriate
+  (\figureref{fig:lettucefinal}).
+]
 {fig:lettucefinal}
 {\includeimg{lettucefinal}}
 {Lettuce on Toast Example\dash Completed Image}
 
-\end{enumerate}
-
-To save the picture, select the \menu{file.save_as}
+\item To save the picture, select the \menu{file.save_as}
 menu item, and enter the filename.
+
+\end{enumerate}
 
 To include the image in a \LaTeX\ document, select the
 \menu{file.export} menu item, and save it as a
 \LaTeX\ file (click on the \qt{File of Type} \gls{dropdown} and
-select \widget{filter.pgf}, and name the file
-(for example, \filefmt{lettuce.tex}).
+select \widget{filter.pgf}, and name the file,
+for example, \filefmt{lettuce.tex}).
 To include it in your \LaTeX\ document, remember to use the
 \sty{pgf} package:
 \begin{verbatim}
@@ -10505,8 +10510,67 @@ and include the image use \gls{input}. For example:
 
 \section{Cheese and Lettuce on Toast}\label{sec:cheeseexample}
 
-TODO
+This example illustrates how to merge paths. It extends the
+previous \nameref{sec:lettuce} example.
+The aim is to create the image shown in \figureref{fig:cheesefinal}.
 
+\begin{enumerate}
+\item Load the image you created in the
+\nameref{sec:lettuce} example, using the
+\menu{file.open} menu item, or clicking on the \dgls{file.open}
+button.
+
+\item To create the slice of cheese, select the
+\tool{rectangle} (\sectionref{sec:rectangles}), and set the
+\pathattr{fill-paint} (\sectionref{sec:fillcolour}) to yellow.
+Make a rectangle, as illustrated in \figureref{fig:cheese1}.
+
+\FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
+{fig:cheese1}
+{\includeimg{cheese1}}
+{Cheese and Lettuce on Toast Example\dash A Filled Rectangle}
+[
+  \item This slice of cheese is going to have holes in it, and we need
+  to be able to see the lettuce and toast \manmsg{through} the holes. Since
+  this is not a uniform \manmsg{colour}, we can't just, say, put green ellipses
+  on top of the cheese as this won't look right. Instead, we are going
+  to create some ellipses, and then merge them into the yellow rectangle.
+  To do this, first select the
+  \tool{ellipse} (\sectionref{sec:ellipses}), and create some
+  ellipses on top of the yellow rectangle (\figureref{fig:cheese2}).
+]
+{fig:cheese2}
+{\includeimg{cheese2}}
+{Cheese and Lettuce on Toast Example\dash Adding Ellipses}
+
+\item Now \select\ all the ellipses
+you created in the previous step and the yellow rectangle
+(\figureref{fig:cheese3a}) and 
+merge them (\sectionref{sec:mergepaths}) using the
+\menu{transform.merge} menu item (\figureref{fig:cheese3b}).
+If the ellipses remain filled, check to make sure you have the
+\pathattr{winding-rule} (\sectionref{sec:winding}) set to even-odd.
+(Alternatively, you can use the \menu{transform.subtract}
+menu item, in which case you don't need to worry about the winding
+rule.)
+
+\FloatSubFigs{fig:cheese3}
+{
+  {fig:cheese3a}{\includeimg{cheese3a}}{},
+  {fig:cheese3b}{\includeimg{cheese3b}}{}
+}
+[Cheese and Lettuce on Toast Example\dash Merging Paths]
+{Cheese and Lettuce on Toast Example\dash merging paths:
+\subfigref{fig:cheese3a} paths selected;
+\subfigref{fig:cheese3b} paths merged into a single
+path.}
+
+\end{enumerate}
+
+\FloatFig{fig:cheesefinal}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{\includeimg{cheesefinal}}
+{Cheese and Lettuce on Toast Example\dash Completed Image}
 
 \section{An Artificial Neuron}\label{sec:neuronexample}
 
