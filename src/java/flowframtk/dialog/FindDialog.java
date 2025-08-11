@@ -214,7 +214,7 @@ public class FindDialog extends JDialog
    public void display(boolean isReplaceAllowed)
    {
       updating = false;
-      searchField.requestFocusInWindow();
+      textComp.requestFocusInWindow();
 
       replacePanel.setVisible(isReplaceAllowed);
       replaceButton.setVisible(isReplaceAllowed);
@@ -228,6 +228,8 @@ public class FindDialog extends JDialog
       updateButtons();
 
       setVisible(true);
+
+      searchField.requestFocusInWindow();
    }
 
    public void replace()
