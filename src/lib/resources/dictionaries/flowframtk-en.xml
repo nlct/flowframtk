@@ -2856,8 +2856,12 @@ Nicola Talbot
 
 <entry key="parshape.title">Parshape</entry>
 <entry key="shapepar.title">Shapepar</entry>
+
 <entry key="parshape.use_path">Use Path</entry>
+<entry key="parshape.use_path.initvalue">on</entry>
+
 <entry key="parshape.use_outline">Use Outline</entry>
+<entry key="parshape.use_outline.initvalue">off</entry>
 
 <!--  Flow frame dialog box -->
 
@@ -2993,7 +2997,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="menu.texeditor.redo.mnemonic">R</entry>
 <entry key="menu.texeditor.redo.keystroke">F9</entry>
 <entry key="menu.texeditor.redo.tooltip">Redo last undone edit</entry>
-<entry key="menu.texeditor.redo.iconimage">undo</entry>
+<entry key="menu.texeditor.redo.iconimage">redo</entry>
 
 <entry key="menu.texeditor.cutText">Cut</entry>
 <entry key="menu.texeditor.cutText.mnemonic">T</entry>
@@ -3042,6 +3046,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="find.find">Find</entry>
 <entry key="find.find.mnemonic">F</entry>
+<entry key="find.find.iconimage">find</entry>
 <entry key="find.find.tooltip">Find text</entry>
 <entry key="find.one_replaced">1 occurrence replaced.</entry>
 <entry key="find.num_replaced">{0} occurrences replaced.</entry>
@@ -3050,6 +3055,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="replace.title">Replace</entry>
 <entry key="replace.replace">Replace</entry>
 <entry key="replace.replace.tooltip">Replace text</entry>
+<entry key="replace.replace.iconimage">replace</entry>
 <entry key="replace.replace.mnemonic">R</entry>
 
 <entry key="replace.replace_all">Replace All</entry>

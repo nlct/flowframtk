@@ -5,6 +5,7 @@
 \usepackage{longtable}
 \usepackage{booktabs}
 \usepackage[section]{placeins}
+\usepackage{shapepar}
 \usepackage{pgf}
 \usepgflibrary{decorations.text}
 
@@ -26,6 +27,7 @@
    [ entrytype->original = "index" & description <> \NULL ],
 }
 
+\newcommand{\sharedimagesdir}{../sharedimages}
 \newcommand{\FlowframTk}{FlowframTk}
 \newcommand{\tool}[1]{\gls{menu.tools.#1} tool}
 \newcommand{\texttool}{\tool{textarea}}
@@ -9124,7 +9126,7 @@ images using \LaTeX\ syntax.
 
 The \hyperref[sec:exportdoc]{export to single-paged document}
 functions create a complete \LaTeX\ document, including the document
-class and preamble.  The generated \ext{tex} file has the form:
+class and \inlineglsdef{preamble}.  The generated \ext{tex} file has the form:
 \begin{compactcodebox}
 \cmd{documentclass}\oargm{cls size opt}\margm{class-name}
 \strut
@@ -9186,7 +9188,7 @@ command definitions.
 
 In addition \gls{pdfinfo} is added with the creation date and
 optionally a title if the \widget{clssettings.pdfinfo} option
-is selected in the \dialog{texconfig.title} dialog.
+is selected in the \dialog{texconfig} dialog.
 (The title is obtained from the image description, see
 \sectionref{sec:imagedescription}.) The relevant code is placed
 after the early-preamble code and before the definition of
@@ -9210,14 +9212,14 @@ be used to add any additional \gls{preamble} code required for that image.
 For example, if any of the \glspl{textarea} have alternative text
 that contains a command that isn't part of the \LaTeX\ kernel, the
 \gls{preamble.early} can include the code to load the package that defines
-the command or the \glsname{preamble.mid} or \gls{preamble.latex} can include the command
+the command or the \glsname{preamble.mid} or \gls{preamble.late} can include the command
 definition.
 
 \menudef{menu.tex.set_preamble}
 
 The \glsname{preamble.early}, \glsname{preamble.mid} and
-\gls{preamble.latex} code can be edited in the
-\inlineglsdef{preamble} panel attached to the side of the
+\gls{preamble.late} code can be edited in the
+\gls{preamble} panel attached to the side of the
 \gls{canvas} (see \figureref{fig:preambleeditor}). There is a
 divider between these two areas that can be moved to adjust the
 visible size of each area, allowing one area to take up more or less
@@ -9272,7 +9274,7 @@ the underlying class or package has been loaded.
 \widgetdef{texeditor.preamble.late}
 
 The \widget{texeditor.preamble.late} panel is for the
-\inlineglstextdef{preamble.mid}, which may also be used to define
+\inlineglstextdef{preamble.late}, which may also be used to define
 commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
 
 If you use the \hyperref[sec:exportsty]{export to package or document
@@ -9321,89 +9323,72 @@ Alternatively, you can use the \accelerator{popup} key or, if supported by your
 system, the \accelerator{context_menu} \gls{context-menu} key.
 The buttons on the toolbar may be used instead of the popup menu.
 
-\menudef{menu.texeditor.undo}
-
+\menudef{menu.texeditor.undo}%
 The \menu{texeditor.undo} function undoes the last edit. Note that
 this is separate to the \menu{edit.undo} menu item for edits to the
 image on the \gls{canvas}. Each panel has its own independent
 undo\slash redo manager.
 
-\menudef{menu.texeditor.redo}
-
+\menudef{menu.texeditor.redo}%
 The \menu{texeditor.redo} function redoes the last undone edit. Note that
 this is separate to the \menu{edit.redo} menu item for edits to the
 image on the \gls{canvas}.
 
-\menudef{menu.texeditor.selectAll}
-
-The \menu{texeditor.selectAll} function selects all the text in
+\menudef{menu.texeditor.selectAllText}%
+The \menu{texeditor.selectAllText} function selects all the text in
 preamble panel that has the focus.
 
-\menudef{menu.texeditor.cutText}
-
+\menudef{menu.texeditor.cutText}%
 The \menu{texeditor.cutText} function cuts the selected text in the
 preamble panel that has the focus to the clipboard.
 
-\menudef{menu.texeditor.copyText}
-
+\menudef{menu.texeditor.copyText}%
 The \menu{texeditor.copyText} function copies the selected text in the
 preamble panel that has the focus to the clipboard.
 
-\menudef{menu.texeditor.pasteText}
-
+\menudef{menu.texeditor.pasteText}%
 The \menu{texeditor.pasteText} function pastes text from the
 clipboard into the preamble panel that has the focus.
 
-\menudef{menu.texeditor.find}
-
+\menudef{menu.texeditor.find}%
 The \menu{texeditor.find} function opens the \dialog{find}
 dialog.
 
-\widgetdef{find.title}
-
-The \dialog{find} dialog has a text field where you can enter you
+\widgetdef{find.title}%
+The \dialog{find} dialog has a text field where you can enter your
 search term. 
 
-\widgetdef{find.case}
-
+\widgetdef{find.case}%
 Select the \widget{find.case} checkbox for a case-sensitive search.
 
-\widgetdef{find.regex}
-
+\widgetdef{find.regex}%
 Select the \widget{find.regex} checkbox if the search term is a
 regular expression.
 
-\widgetdef{find.wrap}
-
+\widgetdef{find.wrap}%
 Select the \widget{find.wrap} checkbox to wrap round to the start.
 
-\widget{find.find}
+\widgetdef{find.find}%
+The \widget{find.find} button will find the first occurrence of the
+search term from the position of the cursor.
 
-The \widget{find.find} button will find the next occurrence of the
-search term.
-
-\menudef{menu.texeditor.find_again}
-
+\menudef{menu.texeditor.find_again}%
 The \menu{texeditor.find_again} function finds the previous
 search term.
 
-\menudef{menu.texeditor.replace}
-
+\menudef{menu.texeditor.replace}%
 The \menu{texeditor.replace} function opens the
-\widget{replace} dialog.
+\dialog{replace} dialog.
 
-\widgetdef{replace.title}
-
+\widgetdef{replace.title}%
 The \dialog{replace} dialog has the same buttons as the
 \dialog{find} dialog but also has a text field where you can enter
 the replacement text.
 
-\widget{replace.replace}
-
+\widgetdef{replace.replace}%
 The \widget{replace.replace} button will replace the found text.
 
-\widget{replace.replace_all}
-
+\widgetdef{replace.replace_all}%
 The \widget{replace.replace_all} button will replace all occurrences.
 
 \seealsorefs{
@@ -9414,15 +9399,232 @@ The \widget{replace.replace_all} button will replace all occurrences.
 
 \section{Computing the Parameters for \glsfmttext{parshape}}\label{sec:parshape}
 
-TODO
+\menudef{menu.tex.parshape}
 
+\TeX's \gls{parshape} command can be used to change a
+standard rectangular shaped paragraph into a non-rectangular
+shape. The syntax is:
+\cmddef{parshape}
+where \meta{i\textsubscript{1}} is the indent for
+the first line and \meta{l\textsubscript{1}} is
+the length of the first line, etc.  This command should be placed at
+the start of the paragraph, and is only applied to that paragraph.
+If there are more than \meta{n} lines in the
+paragraph, the specification for the \meta{n}th
+line will be used until the end of the paragraph. If there are less
+than \meta{n} lines in the paragraph, the shape
+will be truncated. See \emph{The \TeX{}book}~\cite{Knuth} for further
+details.
+
+Since each line in the paragraph is constructed from only indent and
+line width information, only certain types of shapes can be
+specified by a \gls{parshape}. If you imagine horizontal
+scan lines passing \manmsg{through} the shape, each scan line should not
+be able to intersect the boundary of the shape more than twice.
+
+Before you use \FlowframTk\ to determine the parameters for
+\gls{parshape}, you must first ensure that you have set the
+\gls{normal-font-size} (\sectionref{sec:normalsize}) to the value
+used in your document. See, for example, \figureref{fig:news26} (in
+\sectionref{sec:newstutorial}) which illustrates what happens when
+you fail to do this.
+
+\widgetdef{parshape.title}
+
+To determine the parameters for a \gls{parshape}, create your shape
+as a single \gls{path}. Select this \gls*{path}, and use the menu
+item \menu{tex.parshape}.  This will open up the \dialog{parshape} dialog box.
+
+\widgetdef{parshape.use_path}
+
+Select the \widget{parshape.use_path} radio button if you want to
+use the outline defined by the action \gls{path}.
+
+\widgetdef{parshape.use_outline}
+
+Select the \widget{parshape.use_outline} radio button if you want to
+use the outline defined by the line style (stroked path).
+
+For example, \figureref{fig:parshapeex1a} shows a \gls*{path}
+which consists of a single line segment (shown in
+\figureref{fig:parshapeex1b}), but with a
+\pathattr{line-width} of 52\gls{bp}, butt
+\pathattr{cap-style} and an equilateral triangle
+start \pathattr{marker} of size 80bp.  If you
+select the \widget{parshape.use_path} option, \FlowframTk\
+will attempt to construct the parameters from the actual \gls*{path}
+(ignoring the line style) which it will not be able to do, as the
+\gls*{path} has no area. If you select the
+\widget{parshape.use_outline} option, \FlowframTk\ will
+construct the parameters from the outline as seen on the screen.
+These parameters can be saved to a file, and used in a \TeX\ or
+\LaTeX\ document to create a shaped paragraph
+(\figureref{fig:parshapeex1c}).
+
+\FloatSubFigs{fig:parshapeex1}
+{
+  {fig:parshapeex1a}{\includeimg{parshapeex1a}}{},
+  {fig:parshapeex1b}{\includeimg{parshapeex1b}}{},
+  {fig:parshapeex1c}{\includeimg{parshapeex1c}}{}
+}
+[Parshape (Using Outline)]
+{Parshape \widget{parshape.use_outline}:
+\subfigref{fig:parshapeex1a} path consisting of
+single line segment with 52bp line width, butt cap and 80bp filled
+equilateral triangle start marker;
+\subfigref{fig:parshapeex1b} the actual path
+defined in \subfigref{fig:parshapeex1a} without the line style applied;
+\subfigref{fig:parshapeex1c}
+\gls{parshape} parameters constructed from the outline
+\subfigref{fig:parshapeex1a} used to create an arrow shaped paragraph in a \LaTeX\
+document.}
+
+Another example is shown in \figureref{fig:parshapeex2}. In this
+example, the \gls*{path} was constructed using the ellipse tool. If you
+select the \widget{parshape.use_path} option, \FlowframTk\ will compute the
+parameters used to create the paragraph shown in
+\figureref{fig:parshapeex2b}. In this example, you will not be
+able to use the \widget{parshape.use_outline} option as this will attempt to
+create an annulus defined by the \gls*{path}['s] border, which can't be
+done by \gls{parshape} (but can be done by \gls{shapepar},
+although it is not recommended for such a narrow line width).
+
+\FloatSubFigs{fig:parshapeex2}
+{
+ {fig:parshapeex2a}{\includeimg{parshapeex2a}}{},
+ {fig:parshapeex2b}{\includeimg{parshapeex2b}}{}
+}
+[Parshape (Using Path)]
+{Parshape \widget{parshape.use_path}:
+\subfigref{fig:parshapeex2a} the path;
+\subfigref{fig:parshapeex2b} \gls{parshape} parameters constructed from the 
+path \subfigref{fig:parshapeex2a}
+used to create an elliptical shaped paragraph in a \LaTeX\ document.}
+
+Whilst the parameters are being computed, the horizontal
+scan lines used by \FlowframTk\ will appear on screen, and if
+successful, a dialog box will appear for you to save the
+\gls{parshape} command to a file. You can then input this
+file at the start of the appropriate paragraph in your \TeX\ or
+\LaTeX\ document. For example, if you save the \gls{parshape}
+command to a file called, say, \filefmt{myparshape.tex}, then if
+you are using plain \TeX\ you would need to do:
+\begin{verbatim}
+\input myparshape
+This is the start of the paragraph...
+\end{verbatim}
+or if you are using \LaTeX\ you would need to do:
+\begin{verbatim}
+\input{myparshape}%
+This is the start of the paragraph...
+\end{verbatim}
+You may want to suppress the paragraph indentation using
+\gls{noindent}:
+\begin{verbatim}
+\input{myparshape}%
+\noindent This is the start of the paragraph...
+\end{verbatim}
+
+The distance between the scanlines is given by the
+value of \gls{baselineskip} for the \gls{normal-font-size}.
+For example, if the normal font size is 10\gls{pt}, \gls{baselineskip}
+will be 12pt, and this will be the distance used between
+the scanlines. It is therefore important that you set the value
+for the \gls{normal-font-size} before using this function.
+
+\seealsorefs{
+  sec:normalsize,
+  sec:framedef
+}
 
 \section{Computing the Parameters for \glsfmttext{shapepar} or
 \glsfmttext{Shapepar}}
 \label{sec:shapepar}
 
-TODO
+\menudef{menu.tex.shapepar}
 
+The \gls{parshape} command is fairly limited. You need the right
+amount of text in the paragraph to get the shape right, and you
+can't have cut out sections. These two things can be overcome using
+the \inlineglsdef{shapepar} or \inlineglsdef{Shapepar} commands
+defined in the \sty{shapepar} package. The syntax for these commands
+is complex and those interested should read the \sty{shapepar}
+documentation. As with \gls{parshape}, the shape is constructed
+using horizontal scan lines. If you want gaps to appear in your
+shape, make sure to set the \pathattr{winding-rule}
+(\sectionref{sec:winding}) to even-odd.  If in doubt, give the
+\gls{path} a \pathattr{fill-paint}; the area that is filled will
+contain the text of the paragraph, and the area that isn't filled
+won't.
+
+\begin{information}
+\FlowframTk\ defaults to using \gls{Shapepar} rather than
+\gls{shapepar}, but you can change this in the
+\dialog{texconfig} dialog (\sectionref{sec:texconfig}).
+\end{information}
+
+To determine the parameters for \gls{Shapepar}\slash\gls{shapepar}, create
+your shape as a single \gls*{path}. Select this \gls*{path}, and use
+the \menu{tex.shapepar} menu item, which will open the
+\dialog{shapepar} dialog.
+
+\widgetdef{shapepar.title}
+
+The \dialog{shapepar} dialog has the same \widget{parshape.use_path}
+and \widget{parshape.use_outline} radio buttons as the
+\dialog{parshape} dialog, which allow you to select
+whether you want to use the \gls*{path} itself to define the shape
+or whether you want to use the \gls*{path}['s] outline to define the shape.
+For example, \figureref{fig:shapeparexa} shows a \gls*{path} with a
+40bp line width. The \gls{shapepar} parameters were constructed
+first from the \gls*{path} (\figureref{fig:shapeparexb}) and then from
+the outline (\figureref{fig:shapeparexc}).
+
+\FloatSubFigs*{fig:shapeparex}
+{
+  {fig:shapeparexa}{\includeimg{shapeparexa}}{},
+  {fig:shapeparexb}{\includeimg{shapeparexb}}{},
+  {fig:shapeparexc}{\includeimg{shapeparexc}}{}
+}
+[Shapepar Example]
+{Shapepar example:
+\subfigref{fig:shapeparexa} the path;
+\subfigref{fig:shapeparexb} parameters constructed from the path and included in a
+\LaTeX\ document to produce a shaped paragraph;
+\subfigref{fig:shapeparexc}
+parameters constructed from the path's outline and included in a
+\LaTeX\ document to produce a shaped paragraph.}
+
+As with the parshape function, the horizontal
+scan lines used by \FlowframTk\ will appear on screen, and if
+successful, a dialog box will appear for you to save the
+\gls{Shapepar}\slash\gls{shapepar} command to a file. You can then input this
+file at the start of the appropriate paragraph in your \TeX\ or
+\LaTeX\ document. For example, if you save the
+command to a file called, say, \filefmt{myshapepar.tex}, then if
+you are using plain \TeX\ you would need to do:
+\begin{verbatim}
+\input myshapepar
+This is the start of the paragraph...
+\end{verbatim}
+or if you are using \LaTeX\ you would need to do:
+\begin{verbatim}
+\input{myshapepar}%
+This is the start of the paragraph...
+\end{verbatim}
+Remember to include the \sty{shapepar} package:
+\begin{itemize}
+\item \verb|\input shapepar.sty| (plain \TeX)
+\item \verb|\usepackage{shapepar}| (\LaTeX)
+\end{itemize}
+
+
+\seealsorefs{
+  sec:normalsize,
+  sec:texconfig,
+  sec:busexample,
+  sec:framedef
+}
 
 \section{Creating Frames for Use with the \stytext{flowfram} Package}
 \label{sec:flowframe}
