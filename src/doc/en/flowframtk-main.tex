@@ -10778,8 +10778,162 @@ the \LaTeX\ document as illustrated in \figureref{fig:neurontex}.
 
 \section{Bus}\label{sec:busexample}
 
-TODO
+This example illustrates how to:
+\begin{itemize}
+\item \hyperref[mi:breakpath]{break a path};
+\item \hyperref[sec:pathunion]{create a path union};
+\item \hyperref[sec:pathsubtract]{subtract paths};
+\item Use the \gls{shapepar} function (\sectionref{sec:shapepar}) to
+create a shaped paragraph in a \TeX\ or \LaTeX\ document.
+\end{itemize}
 
+\begin{enumerate}
+\item If you have not already done so, enable the \gridlock\ either
+with the \dgls{settings.grid.lock} button or the
+\menu{settings.grid.lock} menu item.
+
+\item Use \menu{settings.configtex} to display the
+\dialog{texconfig} dialog box and set the
+\gls{normal-font-size} to the value that you will be using in your
+document (see \figureref{fig:busnormalsize}). In my document, I have
+used 10pt.
+
+\FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
+{fig:busnormalsize}
+{\includeimg{busnormalsize}}
+{Bus Example\dash Setting the Normal Font Size}
+[
+  \item To create the bus outline, start with the
+  \tool{ellipse} (\sectionref{sec:ellipses}), and create a circle
+  (\figureref{fig:bus1}).
+]
+{fig:bus1}
+{\includeimg{bus1}}
+{Bus Example\dash Create a Circle}
+
+\item Select the circle, and switch on \editpathmode\
+(\sectionref{sec:editpath}).  The \gls{controlpt} at the start of
+the \gls{path} is always the first selected \gls{controlpt} when you
+select the edit tool (\figureref{fig:bus2a}). Select the second
+segment in the path (\figureref{fig:bus2b}).
+
+\FloatSubFigs{fig:bus2}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{
+ {fig:bus2a}{\includeimg{bus2a}}{},
+ {fig:bus2b}{\includeimg{bus2b}}{}
+}
+{Bus Example\dash Editing the Path}
+
+\item \hyperref[mi:breakpath]{Break the path} using the
+\gls{index.menu.editpath} and selecting 
+\menu{editpath.break_path} (\figureref{fig:bus3a}).  You should now have two
+separate semi-circles (\figureref{fig:bus3b}).  If you find
+that the circle has been split unevenly (i.e.\ you have a quadrant
+and a three-quarters of a circle) then you selected the wrong
+segment. Don't panic, just select \menu{edit.undo} and try
+again.
+
+\FloatSubFigs{fig:bus3}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{
+ {fig:bus3a}{\includeimg{bus3a}}{},
+ {fig:bus3b}{\includeimg{bus3b}}{}
+}
+{Bus Example\dash Break the Path}
+
+\item Exit edit path mode. Move and rotate the top semi-circle
+so that it looks like \figureref{fig:bus4}.
+
+\FloatSideBySideFigs
+[][\setkeys{Gin}{width=\linewidth}]
+{fig:bus4}
+{\includeimg{bus4}}
+{Bus Example\dash Move and Rotate Top Semi-Circle}
+[
+  \item Select the \tool{open_line} (\sectionref{sec:newlinepath}) and
+  add in the two lines as shown in \figureref{fig:bus5}.
+]
+{fig:bus5}
+{\includeimg{bus5}}
+{Bus Example\dash Adding Lines}
+
+\item Select all paths and use \menu{transform.union}.
+You should now have just a single \gls{path}.
+
+\item Select this new \gls{path}, and use the
+\editpathmode\ (\sectionref{sec:editpath}) to give the
+front end of the bus a slightly curved outline, as
+shown in \figureref{fig:bus6}. (You may find it easier to temporarily
+disable the \gridlock\ while you edit the path.)
+
+\FloatSideBySideFigs
+ [][\setkeys{Gin}{width=\linewidth}]
+{fig:bus6}
+{\includeimg{bus6}}
+{Bus Example\dash Convert Line Segment to a Curve}
+[
+   \item Add the windows, as shown in \figureref{fig:bus7}.
+]
+{fig:bus7}
+{\includeimg{bus7}}
+{Bus Example\dash Add Windows}
+
+\item This next operation assumes that you haven't changed the
+\gls{stackingorder}. The main outline of the bus must be at the
+rear. To ensure this, select the bus outline and use the
+\editfn{back} function (\sectionref{sec:moveupordown}).
+
+\item Select all paths, and apply \menu{transform.subtract}.  Set
+the \pathattr{fill-paint} to red using the \menu{edit.fill_paint}
+menu item to open the \dialog{fillcolour} dialog box.  The windows
+should appear as holes. See \figureref{fig:bus8}.
+
+\FloatFig{fig:bus8}
+[\setkeys{Gin}{width=0.45\linewidth}]
+{\includeimg{bus8}}
+{Bus Example\dash Subtract Windows from Bus Outline and Set
+Fill Paint}
+
+\item Make sure that the bus is selected. Select the
+\menu{tex.shapepar} menu item to open the \dialog{shapepar}
+dialog. Select the \widget{parshape.use_path} option and click
+\dgls{okay}. Scan lines will appear as \FlowframTk\
+works out the parameters. Once completed a file dialog box will
+appear. Give the file a name (for example \filefmt{busshape.tex}).
+
+\item If you are using \LaTeX, create a document that looks something
+like:
+\begin{verbatim}
+\documentclass{article}
+\usepackage{shapepar}
+\begin{document}
+\input{busshape}\frenchspacing
+The wheels on the bus go round and round...
+
+\end{document}
+\end{verbatim}
+
+\item If you are using plain \TeX, create a document that looks
+something like:
+\begin{verbatim}
+\input shapepar.sty
+
+\input busshape.tex
+\frenchspacing
+The wheels on the bus go round and round...
+
+\bye
+\end{verbatim}
+
+\item The resulting shaped paragraph is shown in \figureref{fig:bus9}.
+
+\FloatFig
+  {fig:bus9}
+  {\includeimg{bus9}}
+  {Bus Example\dash Resulting Shaped Paragraph}
+
+\end{enumerate}
 
 \section{A Poster}\label{sec:postertutorial}
 
