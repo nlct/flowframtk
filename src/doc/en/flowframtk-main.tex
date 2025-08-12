@@ -11760,6 +11760,7 @@ doesn't match the image's normal size setting (see
 \figureref{fig:news26}).
 
 \FloatSubFigs{fig:news26}
+[\setkeys{Gin}{width=0.4\linewidth}]
 {
   {fig:news26a}{\includeimg{news26a}}{},
   {fig:news26b}{\includeimg{news26b}}{}
@@ -11778,8 +11779,377 @@ the bottom of the frame.}
 
 \section{A Brochure}\label{sec:brochure}
 
-TODO
+This example illustrates how to use \FlowframTk\ to create a
+class that loads the \sty{flowfram} package. The aim is to
+produce a two-sided document with different \gls{recto} and
+\gls{verso} headers and footers.
 
+\begin{enumerate}
+\item For this example I'm going to start with the
+\gls{grid.tschichold} grid.  Use \menu{settings.grid.settings} to
+open the \gls{grid} dialog box. Select the \widget{grid.tschichold}
+tab and set the \widget{grid.major} to 100\gls{pt}, as shown in
+\figureref{fig:brochure1}. Make sure that the \gridlock\ is on
+(\menu{settings.grid.lock}).
+
+\FloatSideBySideFigs[][\setkeys{Gin}{width=\linewidth}]
+{fig:brochure1}
+{\includeimg{brochure1}}
+{Brochure Example\dash Setting the Grid}
+[
+    \item Use \menu{settings.configtex} to open the
+\dialog{texconfig} dialog and select the
+\widget{clssettings.title} tab. Set the
+\widget{clssettings.normalsize} to 10\gls{pt}, as shown in
+\figureref{fig:brochure2}, and make sure the
+\widget{clssettings.default_cls} radio button is selected.
+]
+{fig:brochure2}
+{\includeimg{brochure2}}
+{Brochure Example\dash Setting the Normal Font Size}
+
+\item Set the image \gls{storageunit} to \gls{pt} using
+\menu{settings.config} dialog box, as shown in
+\figureref{fig:brochure3}
+
+\FloatFig{fig:brochure3}
+{\includeimg{brochure3}}
+{Brochure Example\dash Setting the Storage Unit}
+
+\item Select the \tool{rectangle} and draw the rectangle
+with three of its vertices on the diagonals, as shown in
+\figureref{fig:brochure4}. With the \gridlock\ on, you are limited to
+only fourteen tick marks.
+
+\FloatFig{fig:brochure4}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure4}}
+{Brochure Example\dash Draw a Rectangle}
+
+\item Switch to the \tool{select} and \select\ the rectangle. Then
+use \menu{tex.flowframe.set_typeblock} to open the
+\dialog{typeblock} dialog. Click on the
+\widget{typeblock.compute_from_path} button. (If this button
+is disabled, close the dialog and check that the rectangle has been
+selected.) This will fill the margins, but it looks a bit untidy
+with all those decimal places and since a \gls{pt} is so small such
+precision seems unnecessary so round the
+\widget{flowframe.margin.left} and
+\widget{flowframe.margin.top} margins to the nearest
+\gls{pt} (66\gls*{pt} and 94\gls*{pt}, respectively). Make sure
+the \widget{typeblock.adjust_width_label} field is set to
+1pc and click on the \widget{typeblock.adjust_width} button.
+This should alter the \widget{flowframe.margin.right} field.
+Make sure the \widget{typeblock.use_baseline} radio button
+is selected and click on the
+\widget{typeblock.adjust_height} button. Finally, click on
+the \widget{typeblock.compute_sym_shift} button to calculate
+the even page shift. The settings should now be as shown in
+\figureref{fig:brochure5}. Click on the \dgls{okay} button to apply these
+settings and close the dialog.
+
+\FloatFig{fig:brochure5}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure5}}
+{Brochure Example\dash Setting the Typeblock}
+
+\item The \gls{typeblock} is slightly smaller than the rectangle so,
+making sure the rectangle is still selected, use the menu item
+\menu{tex.flowframe.scale_to_typeblock} to scale the rectangle so
+that it's the same size as the \gls{typeblock}.  Then use the
+\menu{tex.flowframe.set_frame} menu item to open the
+\dialog{flowframe} dialog. Set the \widget{flowframe.type} to
+\widget{flowframe.flow}, set the \widget{flowframe.label} to
+\qt{main} and set the \widget{flowframe.border} to
+\widget{flowframe.border_none}, as shown in
+\figureref{fig:brochure6}. The margins and shifts should all be zero
+and the page list \widget{flowframe.pages_all}.
+
+\FloatFig{fig:brochure6}
+{\includeimg{brochure6}}
+{Brochure Example\dash Setting the Main Flow Frame}
+
+\item Now use \menu{settings.grid.settings} to switch the grid to a
+rectangular grid with 100\gls{pt} major divisions and use the
+\tool{ellipse} to create a circle with a 100\gls*{pt} radius
+\manmsg{centred} on (400,700), as shown in
+\figureref{fig:brochure7}.
+
+\FloatFig{fig:brochure7}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure7}}
+{Brochure Example\dash Draw a Circle}
+
+\item Switch to the \tool{select}, \select\ the circle and enable
+\editpathmode. Use the \gls{index.menu.editpath} to remove the
+segment from (500,700) to (400,800), convert the curve segments from
+(400,800) to (300,700) and from (400,600) to (400,800) into line
+segments, and move the control at (400,800) to (400,700). The
+\gls{path} should now appear as shown in \figureref{fig:brochure8}.
+
+\FloatFig{fig:brochure8}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure8}}
+{Brochure Example\dash Change the Circle into an Arc}
+
+\item Exit the \editpathmode\ and move the \gls*{path} to the bottom
+right edge of the \gls{canvas}, as shown in
+\figureref{fig:brochure9}.
+
+\FloatFig{fig:brochure9}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure9}}
+{Brochure Example\dash Move the Arc to the Bottom Right Corner}
+
+\item Use \menu{edit.fill_colour} to change the 
+\pathattr{fill-paint} to orchid (68\% red, 36\% green, 100\% blue) and use
+\menu{edit.path.line_colour} to change the \pathattr{line-paint}
+to \gls{transparent}. The arc should now appear as shown in
+\figureref{fig:brochure10}.
+
+\FloatFig{fig:brochure10}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure10}}
+{Brochure Example\dash Apply a Fill Paint to the Arc}
+
+\item Make sure the arc is still selected and
+use \menu{tex.flowframe.set_frame} to open the
+\dialog{flowframe} dialog. Set the
+\widget{flowframe.type} to
+\widget{flowframe.dynamic}, set the
+\widget{flowframe.label} to \framelabelref{footer}, set the
+\widget{flowframe.border} to
+\widget{flowframe.border_as_shown},
+set the \widget{flowframe.pages} to
+\widget{flowframe.pages_odd} and set the
+\widget{flowframe.align} to
+\widget{flowframe.align_middle}.  Set the
+\widget{flowframe.margin.left} and
+\widget{flowframe.margin.top} margins to 40\gls{pt} and the
+\widget{flowframe.margin.right} and
+\widget{flowframe.margin.bottom} margins to 10\gls{pt}.
+Next, click on the \widget{flowframe.edit} button to open
+the mini \TeX\ editor and enter:
+\begin{verbatim}
+\bfseries\color{white}\Huge
+\end{verbatim}
+as shown in \figureref{fig:brochure11a}. Click on the
+\dgls{okay} button to close the editor and return to the
+\dialog{flowframe} dialog, which should now look like
+\figureref{fig:brochure11b}.
+
+\FloatSubFigs{fig:brochure11}
+{
+  {fig:brochure11a}{\includeimg{brochure11a}}{},
+  {fig:brochure11b}{\includeimg{brochure11b}}{}
+}
+[Brochure Example\dash Setting The Odd Footer]
+{Brochure Example\dash Setting the odd footer:
+\subfigref{fig:brochure11a} entering the frame contents;
+\subfigref{fig:brochure11b} the frame settings.}
+
+\item Click \dgls{okay} to apply the new settings and close the dialog. The
+image should now appear as shown in \figureref{fig:brochure12}.
+
+\FloatFig{fig:brochure12}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure12}}
+{Brochure Example\dash Arc is Now an Odd Footer}
+
+\item Copy (\menu{edit.copy}) and paste
+(\menu{edit.paste}) the arc to create a
+duplicate. The duplicate should now be the only \gls{object}
+selected. Use \menu{transform.scale} to open the
+\dialog{scale} dialog and set the
+\widget{scale.x} field to $-1$, as shown in
+\figureref{fig:brochure13}. Click on the \dgls{okay} button and this should
+flip the duplicate arc.
+
+\FloatFig{fig:brochure13}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{brochure13}}
+{Brochure Example\dash Flipping the Duplicate Arc}
+
+\item With the duplicate arc still selected, use
+\menu{tex.flowframe.set_frame} to open the
+\dialog{flowframe} dialog box again. Set the
+\widget{flowframe.label} to \framelabelref{evenfooter}, set the
+\widget{flowframe.pages} to
+\widget{flowframe.pages_even}, set the
+\widget{flowframe.margin.left} margin to 10\gls{pt} and the
+\widget{flowframe.margin.right} margin to 40\gls*{pt}.
+The dialog should now appear as shown in \figureref{fig:brochure14}.
+
+\FloatFig{fig:brochure14}
+{\includeimg{brochure14}}
+{Brochure Example\dash Setting the Even Footer}
+
+\item Use \menu{tex.flowframe.display_page} to open the
+\dialog{displaypage} dialog and select the
+\widget{displaypage.even} radio button, as shown in
+\figureref{fig:brochure15}.
+
+\FloatFig{fig:brochure15}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{brochure15}}
+{Brochure Example\dash Changing the Display Page}
+
+The \gls{canvas} should now look as shown in
+\figureref{fig:brochure16}. The \framelabelref{footer} frame is no longer
+displayed as it's only defined on odd pages.
+
+\FloatFig{fig:brochure16}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure16}}
+{Brochure Example\dash Even Pages Display}
+
+\item Move the \framelabelref{evenfooter} frame to the bottom left corner, so
+that it now appears as shown in \figureref{fig:brochure17}.
+
+\FloatFig{fig:brochure17}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure17}}
+{Brochure Example\dash Moving the Even Footer}
+
+\item Use \menu{tex.flowframe.display_page} to open the
+\dialog{displaypage} dialog again and select the
+\widget{displaypage.all} radio button and click on the okay
+button. The \gls{canvas} should now look like
+\figureref{fig:brochure18}. The \framelabelref{evenfooter} frame now appears in
+a different location, but that's just its odd page position. Since
+the page list is set to even pages only, it won't actually be
+displayed in that location in the document.
+
+\FloatFig{fig:brochure18}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure18}}
+{Brochure Example\dash \widget{displaypage.all} display mode shows all objects in
+their odd-page location.}
+
+\item Use the \tool{closed_line}
+to create the \gls{path} shown in \figureref{fig:brochure19}. The
+co-ordinates are: (310,0), (360,50),
+(600,50) and (600,0).
+
+\FloatFig{fig:brochure19}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure19}}
+{Brochure Example\dash Adding a Closed Polygon}
+
+\item Switch to the \tool{select} and \select\ this new polygon. Set
+the \pathattr{fill-paint} to orchid and \pathattr{line-paint} to
+\gls{transparent}, as done earlier for the arc. Then use
+\menu{tex.flowframe.set_frame} to open the \dialog{flowframe} dialog
+again. Set the \widget{flowframe.type} to
+\widget{flowframe.dynamic}, set the \widget{flowframe.label} to
+\framelabelref{header}, set the \widget{flowframe.pages} to
+\widget{flowframe.pages_odd}, set the \widget{flowframe.border} to
+\widget{flowframe.border_as_shown}, set the \widget{flowframe.align}
+to \widget{flowframe.align_middle}, set the
+\widget{flowframe.margin.left} to 50\gls{pt} and set the remaining
+margins to 10\gls{pt}. Then click on the \widget{flowframe.edit}
+button to open the editor, and set the contents to:
+\begin{verbatim}
+\bfseries\Large
+\end{verbatim}
+as shown in \figureref{fig:brochure20a}. Click on the \dgls{okay} button
+to go close the editor and go back to the
+\dialog{flowframe} dialog, which should now look like
+\figureref{fig:brochure20b}.
+
+\FloatSubFigs{fig:brochure20}
+{
+ {fig:brochure20a}{\includeimg{brochure20a}}{},
+ {fig:brochure20b}{\includeimg{brochure20b}}{}
+}
+[Brochure Example\dash Setting The Odd Header]
+{Brochure Example\dash Setting the odd header:
+\subfigref{fig:brochure20a} entering the frame contents;
+\subfigref{fig:brochure20b} the frame settings.}
+
+\item Click on the \dgls{okay} button to apply these settings and close the
+dialog. Keep the polygon selected and copy and paste it to create a
+duplicate, as shown in \figureref{fig:brochure21}.
+
+\FloatFig{fig:brochure21}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure21}}
+{Brochure Example\dash Create a Duplicate Polygon}
+
+\item Flip the duplicate using the same method as earlier
+(\menu{transform.scale}) and, keeping the duplicate
+selected, use \menu{tex.flowframe.set_frame} to open the
+\dialog{flowframe} dialog again. Set the
+\widget{flowframe.label} to \framelabelref{evenheader} and change the
+left margin to 10\gls{pt} and the right margin to 50\gls*{pt}, as
+shown in \figureref{fig:brochure22}.
+
+\FloatFig{fig:brochure22}
+{\includeimg{brochure22}}
+{Brochure Example\dash Setting the Even Header}
+
+\item Use \menu{tex.flowframe.display_page} to open the
+\dialog{displaypage} dialog again and select the
+\widget{displaypage.even} radio button to switch to the even
+page view, as shown in \figureref{fig:brochure23}.
+
+\FloatFig{fig:brochure23}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure23}}
+{Brochure Example\dash Even Pages Display (Two Objects Hidden)}
+
+\item Move the \framelabelref{evenheader} frame to the top left corner of the
+\gls{canvas}, as shown in \figureref{fig:brochure24}.
+
+\FloatFig{fig:brochure24}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure24}}
+{Brochure Example\dash Move Even Header}
+
+As with the \framelabelref{evenfooter} frame, when you switch back to the
+\widget{displaypage.all} view, the frame will be displayed in its odd page
+position, but since the page list is set to even pages only, it
+won't be displayed in the document at that location.
+
+\FloatFig{fig:brochure25}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure25}}
+{Brochure Example\dash All Pages View Again (All Frames Shown in their
+Odd Page Position)}
+
+\item Save the image as \filefmt{brochure.jdr} or
+\filefmt{brochure.ajr} using the \menu{file.save_as} menu
+item. Then use \menu{file.export} to open the
+\dialog{export} dialog. Select the
+\widget{filter.cls} filter and export the image as
+\filefmt{brochure.cls}.
+
+\item Create a document that uses this new class. I've used the
+\sty{blindtext} package to generate pages of dummy text for
+illustrative purposes:
+\begin{verbatim}
+\documentclass[twoside]{brochure}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{blindtext}
+
+\begin{document}
+\Blinddocument
+\end{document}
+\end{verbatim}
+
+A double-page spread view of the resulting document (pages~2 and 3)
+is shown in \figureref{fig:brochure-final}.
+
+\FloatFig{fig:brochure-final}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{brochure-final}}
+{Brochure Example\dash Double-Page Spread View of Brochure}
+
+\end{enumerate}
 
 \section{A House With No Mouse}\label{sec:accesstutorial}
 
