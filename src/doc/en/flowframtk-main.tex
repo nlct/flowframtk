@@ -11176,8 +11176,605 @@ The final document is illustrated in \figureref{fig:posterfinal}.
 
 \section{A Newspaper}\label{sec:newstutorial}
 
-TODO
+This example illustrates how to use \FlowframTk\ to create a
+class or package based on the \sty{flowfram} package, using non-standard
+shaped frames. The aim is to produce the document shown in
+\figureref{fig:news25}.
 
+\begin{enumerate}
+\item In this example, my newspaper is going to be on A4 portrait
+paper, with a \gls{normal-font-size} of 12\gls{pt}, so the first
+thing to do is to select the paper size and orientation using
+\menu{settings.paper.A4} and
+\menu{settings.paper.portrait}, and set the value of the
+\LaTeX\ \gls{normal-font-size} (\sectionref{sec:normalsize}), using
+\menu{settings.configtex} to open the \dialog{texconfig} dialog box
+(see~\figureref{fig:news1}). Select \widgetfmt{12} from the
+\gls{dropdown}.
+
+\FloatFig{fig:news1}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news1}}
+{Newspaper Example\dash Setting the \LaTeX{} Normal Font Size}
+
+\item The 12pt font size has a corresponding \gls{baselineskip}
+of 14.5pt. For this example, it is more practical to have a grid
+that has intervals of this size, as it gives a guide as to how many
+lines there will be in each frame.
+
+\begin{information}
+This is only an approximate guide, as larger or smaller font sizes may be
+used in a frame, which will affect the total number of lines in the
+frame. 
+\end{information}
+
+Therefore I set the grid to have 145\gls{pt} major divisions with
+10 subdivisions. This means that each minor tick mark is at a distance
+of 14.5pt (one \gls{baselineskip}) from its neighbour. To do this
+use \menu{settings.grid.settings} to open the \dialog{grid} dialog, and enter the
+values as shown in \figureref{fig:news2}.
+
+\FloatFig{fig:news2}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news2}}
+{Newspaper Example\dash Setting the Grid}
+
+\item To help reduce rounding errors, I'm also going to set the
+\gls{storageunit} to 1pt. To do this use \menu{settings.config} to
+open the \dialog{config} dialog box and change the storage unit in
+the \widget{controls.title} tab, as shown in
+\figureref{fig:newsunit}.
+
+\FloatFig{fig:newsunit}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{newsunit}}
+{Newspaper Example\dash Setting the Storage Unit}
+
+\item Next set the \gls{typeblock}. This nominally defines the paper
+margins, although it is possible to define frames outside this
+area. I used 58pt margins on all sides. To do this, use the
+\menu{tex.flowframe.set_typeblock} menu item to display
+the \dialog{typeblock} dialog box shown in \figureref{fig:news3}. Enter the values
+shown and click on \dgls{okay} or press \accelerator{button.okay}
+to continue. You should now see a pale \manmsg{grey} rectangle displayed
+on the \gls{canvas} denoting the \gls{typeblock}.
+
+\FloatFig{fig:news3}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news3}}
+{Newspaper Example\dash Setting the Typeblock}
+
+\item The newspaper is going to have a static frame along the
+top of the \gls{typeblock} that will contain the title of the paper. This
+isn't going to have a border, but we will need to draw a rectangle
+to define the frame's bounding box. So select the
+\tool{rectangle} (\sectionref{sec:rectangles}) and draw a
+rectangle with opposing corners at (58pt,58pt) and
+(536.5pt,145pt). You should now see something like
+\figureref{fig:news4}.
+
+\FloatFig{fig:news4}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news4}}
+{Newspaper Example\dash Title Frame}
+
+\item Switch to the \tool{select}, and
+\select\ this rectangle. Use the \menu{tex.flowframe.set_frame} menu item
+to open the \dialog{flowframe} dialog and enter the values
+shown in \figureref{fig:news5a}. Note that the
+\widget{flowframe.border} field has been set to
+\widget{flowframe.border_none}.
+The frame contents should be the title.
+This can be set by clicking on the \widget{flowframe.edit}
+button, which will open the mini \TeX\ editor, shown in
+\figureref{fig:news5b}.
+I typed in the following:
+\begin{verbatim}
+\begin{center}
+\bfseries\Huge
+Fairy Tale Times
+\end{center}
+\hfill Issue 2. 7 December 2005.
+\end{verbatim}
+
+\FloatSubFigs{fig:news5}
+[\setkeys{Gin}{width=0.45\textwidth}]
+{
+ {fig:news5a}{\includeimg{news5}}{},
+ {fig:news5b}{\includeimg{news5b}}{}
+}
+[Newspaper Example\dash Assigning Flowframe Data to Title Frame]
+{Newspaper Example\dash Assigning Flowframe Data to Title
+Frame:
+\subfigref{fig:news5a} frame setup;
+\subfigref{fig:news5b} setting the frame contents}
+
+\item Below the title, there will be two columns each with its
+own heading. I am going to make separate frames for the headings,
+and since the headings will be in a larger font, I shall give their
+frames a height of twice the \gls{baselineskip}. Select the
+\tool{rectangle} (\sectionref{sec:rectangles}), and make two
+rectangles with opposing corners at:
+\begin{itemize}
+\item (58pt, 159.5pt) and (290pt, 188.5pt)
+\item (304.5pt, 159.5pt) and (536.5pt, 188.5pt)
+\end{itemize}
+You should now see something like \figureref{fig:news6}.
+
+\FloatFig{fig:news6}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news6}}
+{Newspaper Example\dash Left and Right Heading Frames Added}
+
+\item Switch to the \tool{select}, and
+\select\ the left hand frame, and assign the \gls{flowframe} data shown in
+\figureref{fig:news7}. The frame contents contains the section
+command:
+\begin{verbatim}
+\section{Killer Wolf on the Loose}
+\end{verbatim}
+This is again set using the \widget{flowframe.edit} button
+to open the \TeX\ editor.
+
+\FloatFig{fig:news7}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news7}}
+{Newspaper Example\dash Assigning Flowframe Data to Left
+Heading Frame}
+
+\item Do the same for the right hand rectangle, but
+call it \qt{rightheading}. The frame contents contains the
+section command:
+\begin{verbatim}
+\section{Tragic Wall Accident}
+\end{verbatim}
+
+\item The left hand column is going to angle around underneath the
+right hand column, as it will have more text in it. Select the
+\tool{closed_line} (\sectionref{sec:newlinepath}) and make a
+polygon with vertices at (58pt, 203pt), (58pt, 507.5pt), (536.5pt,
+507.5pt), (536.5pt, 420.5pt), (290pt, 420.5pt) and (290pt, 203pt) as
+shown in \figureref{fig:news8}.
+
+\FloatFig{fig:news8}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news8}}
+{Newspaper Example\dash Added L Shaped Frame}
+
+\item Switch to the \tool{select}, and
+\select\ this L shaped polygon, and assigned the \gls{flowframe} data
+shown in \figureref{fig:news9}. Note that the
+\widget{flowframe.align} field has been set to
+\widget{flowframe.align_top} to ensure that if there is
+insufficient text to fill the frame, all blank space will go at the
+bottom of the frame, and thus help to keep the frame's shape. I
+used \widget{flowframe.shape_parshape} rather than
+\widget{flowframe.shape_shapepar} to define the frame's shape
+as I don't want it to shrink and grow to fit the text.
+
+The frame contents are quite long. You can either set the text in
+\FlowframTk\ or use one of \sty{flowfram}'s commands in the
+document. Here's the full text:
+\begin{verbatim}
+The authorities are warning of a killer wolf on the
+loose. He has so far devoured an old grandmother and
+two pig brothers. He is described as being furry with
+big eyes and big teeth.
+
+On Monday this week he broke into a house, and devoured
+an old lady. He then disguised himself as the old lady
+in order to deceive her granddaughter. Luckily for the little
+girl a woodsman arrived in time to rescue her. Parents are
+being cautioned not to let their children wander about on
+their own, and to remind them not to talk to strangers.
+
+The next day the wolf struck again, this time targeting two
+pig brothers who had most incautiously made their dwellings
+on the cheap using inadequate materials. The wolf also made
+an attempt on the third pig brother, but was unable to break
+into his house.
+
+Police are appealing to the public for witnesses, and remind
+people to keep their doors securely fastened at all times.
+
+``Always ask to see identification,'' said one police advisor,
+``and invest in improving the general security of your property.''
+\end{verbatim}
+
+\FloatFig{fig:news9}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news9}}
+{Newspaper Example\dash Assigning Flowframe Data to L Shaped
+Frame}
+
+\item I'm going to illustrate the story in the right hand column.
+The \gls{bitmap} image \filefmt{egg.png} is supplied with the \sty{flowfram}
+package but is also available in the examples subdirectory of
+\FlowframTk's installation directory. Use \menu{bitmap.insert}
+to insert the \gls{bitmap} on the \gls{canvas}. This will initially
+appear in the top left hand corner of the \gls{canvas}. Move it
+over to the location shown in \figureref{fig:news10}, either by
+dragging it or by using \menu{edit.moveby} and specifying
+a horizontal (\widget{coordinates.x}) displacement of 472.8pt
+and a vertical (\widget{coordinates.y}) displacement of 206pt.
+
+\FloatFig{fig:news10}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news10}}
+{Newspaper Example\dash Added Image}
+
+\item Set the \gls{flowframe} data shown in \figureref{fig:news11} to
+this \gls{bitmap}. Note that you must set the
+\widget{flowframe.border} setting to
+\widget{flowframe.border_as_shown}, otherwise the \gls{bitmap}
+will not appear in the document.
+
+\FloatFig{fig:news11}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news11}}
+{Newspaper Example\dash Assigning Flowframe Data to Bitmap}
+
+\item Next comes the right hand frame. This is a polygon with a
+stepped area that goes around the bitmap. Select the
+\tool{closed_line} (\sectionref{sec:newlinepath}), and construct a
+polygon with vertices at:
+(304.5pt, 203pt), (304.5pt, 406pt), (536.5pt, 406pt),
+(536.5pt, 290pt), (478.5pt, 290pt), (478.5pt, 261pt),
+(464pt, 261pt), (464pt, 232pt), (478.5pt, 232pt)
+(478.5pt, 217.5pt), (493pt, 217.5pt) and (493pt, 203pt) as shown in
+\figureref{fig:news12}.
+
+\FloatFig{fig:news12}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news12}}
+{Newspaper Example\dash Added Right Hand Polygon}
+
+\item Switch to the \tool{select}, select
+this polygon and assign the \gls{flowframe} data shown in
+\figureref{fig:news13}. Note that the
+\widget{flowframe.shape} field has been set to
+\widget{flowframe.shape_parshape} and the
+\widget{flowframe.align} field has been set to
+\widget{flowframe.align_top}. Again, the contents of the
+frame are quite long and can either be set using \FlowframTk\ or
+using on of \sty{flowfram}'s commands in the document. I'm going to set
+the contents using \FlowframTk, as above. The text is as follows:
+\begin{verbatim}
+An egg person tragically fell from a six foot wall 
+yesterday afternoon and was smashed to pieces. The 
+king's cavalry rushed to the scene, but regretted 
+that they were unable to help him.
+
+Humpty Dumpty was believed to be sitting on the wall 
+when he fell.  Police have ruled out foul play, but
+are advising people not to play on high walls, 
+particularly those vulnerable members of the population 
+suffering from eggshell syndrome.
+
+\small\em
+Exclusive interview with one of the King's men on page 6.
+\end{verbatim}
+
+\FloatFig{fig:news13}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news13}}
+{Newspaper Example\dash Assigning Flowframe Data to Right
+Hand Polygon}
+
+\item I'm going to add an L-shaped segment between the left and right
+blocks to clearly delineate them. Switch to the
+\tool{open_line} (\sectionref{sec:newlinepath}), and construct a
+\gls{path} with vertices at: (297.25pt, 159.5pt), (297.25pt,
+413.25pt) and (536.5pt, 413.25pt) as shown in \figureref{fig:news14}.
+(You'll need to switch off the \gridlock.)
+
+\FloatFig{fig:news14}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news14}}
+{Newspaper Example\dash Added L Shaped Divider}
+
+\item Switch to the \tool{select}, \select\
+this new path and assign the \gls{flowframe} data shown in
+\figureref{fig:news15}.  Make sure that you have set the
+\widget{flowframe.border} field to
+\widget{flowframe.border_as_shown}.
+
+\FloatFig{fig:news15}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news15}}
+{Newspaper Example\dash Assigning Flowframe Data to L Shaped
+Divider}
+
+\item Next comes a horizontal divider to separate the top two
+columns from the bottom columns (which will be created
+later). Select the \tool{open_line}, and construct a line
+with end points at: (58pt, 514.75pt) and (536.5pt, 514.75pt) as shown
+in \figureref{fig:news16}.
+
+\FloatFig{fig:news16}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news16}}
+{Newspaper Example\dash Added Horizontal Divider}
+
+\item Switch to the \tool{select}, \select\
+this line and assign the \gls{flowframe} data shown in
+\figureref{fig:news17}.
+
+\FloatFig{fig:news17}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news17}}
+{Newspaper Example\dash Assigning Flowframe Data to
+Horizontal Divider}
+
+\item Next comes another header frame. Select the
+\tool{rectangle} (\sectionref{sec:rectangles}),
+and construct a rectangle with opposing corners at:
+(58pt, 522pt) and (536.5pt, 551pt) as shown in \figureref{fig:news18}.
+
+\FloatFig{fig:news18}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news18}}
+{Newspaper Example\dash Added Lower Header}
+
+\item Switch to the \tool{select}, \select\
+this rectangle, and assign the \gls{flowframe} data as shown in
+\figureref{fig:news19}. The frame contents is another sectioning
+command:
+\begin{verbatim}
+\section{Relief as Missing Sheep Finally Return Home}
+\end{verbatim}
+
+\FloatFig{fig:news19}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news19}}
+{Newspaper Example\dash Assigning Flowframe Data to Lower
+Header}
+
+\item At the bottom of the page, I want to have two columns,
+with the text flowing from the left hand column into the right
+hand column. This means that these frames need to be flow frames.
+Select the \tool{rectangle}, and
+construct two rectangles with opposing corners at:
+\begin{itemize}
+\item (58pt, 565.5pt) and (290pt, 783pt)
+\item (304.5pt, 565.5pt) and (536.5pt, 783pt)
+\end{itemize}
+as shown in \figureref{fig:news20}.
+
+\FloatFig{fig:news20}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news20}}
+{Newspaper Example\dash Added Lower Left and Right
+Rectangles}
+
+\item Switch to the \tool{select}, select
+the left lower rectangle and assign the \gls{flowframe} data shown in
+\figureref{fig:news21}. Similarly for the right hand lower rectangle.
+
+\FloatFig{fig:news21}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news21}}
+{Newspaper Example\dash Assigning Flowframe Data to Lower
+Left Rectangle}
+
+\item I also want to have a \gls{bitmap} image in the lower left hand frame.
+This is going to be slightly more complicated as flow frames
+can not be assigned a shape like the static and dynamic frames.
+The image I'm going to use is called \filefmt{sheep.png} and is
+provided with the \sty{flowfram} package, but it is also
+available in the \filefmt{examples} subdirectory of \FlowframTk's
+installation directory. Use \menu{bitmap.insert}
+to insert this image, and then either drag it with the mouse or use
+the \menu{edit.moveby} dialog box to move it by (50pt, 556pt)
+to the location shown in \figureref{fig:news22}.
+
+\FloatFig{fig:news22}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news22}}
+{Newspaper Example\dash Added Sheep Bitmap}
+
+\item Assign this \gls{bitmap} the \gls{flowframe} data shown in
+\figureref{fig:news23}.
+
+\FloatFig{fig:news23}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news23}}
+{Newspaper Example\dash Assigning Flowframe Data to Sheep
+Bitmap}
+
+\item As it stands, any text in the left flow frame will overlap
+the sheep image, so I'm going to construct a new polygon to go
+around the sheep image. This polygon will not form a frame, but
+will be used to construct the parameters of the \gls{parshape}
+command, which can then be input at the start of the flow frame.
+To do this, select the \tool{closed_line}{sec:lines},
+and construct a polygon
+with vertices at: (116pt, 565.5pt), (116pt, 580pt), (101.5pt, 580pt),
+(101.5pt, 609pt), (58pt, 609pt), (58pt, 783pt), (290pt, 783pt)
+and (290pt, 565.5pt) as shown in \figureref{fig:news24}.
+
+\FloatFig{fig:news24}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news24}}
+{Newspaper Example\dash Added Polygon Defining Text Region}
+
+\item Select this polygon, and select the \menu{tex.parshape} menu
+item. This will open the \dialog{parshape} dialog box shown in
+\figureref{fig:newsparshapea}.  Select the
+\widget{parshape.use_path} option and click \dgls{okay}.  Save to a
+file named \filefmt{sheepcutout.tex}
+(\figureref{fig:newsparshapeb}).
+
+\FloatSubFigs{fig:newsparshape}
+[\setkeys{Gin}{width=0.45\textwidth}]
+{
+ {fig:newsparshapea}{\includeimg{newsparshapea}}{},
+ {fig:newsparshapeb}{\includeimg{newsparshapeb}}{}
+}
+[Newspaper Example\dash Computing Parshape Parameters]
+{Newspaper Example\dash computing \gls{parshape}
+parameters:
+\subfigref{fig:newsparshapea} select \widget{parshape.use_path} option;
+\subfigref{fig:newsparshapeb} export dialog.}
+
+\item Open the preamble pane either using 
+\menu{tex.set_preamble} or just move the divider across and set the
+\gls{preamble.early} code as follows:
+\begin{verbatim}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\end{verbatim}
+(see \figureref{fig:newspreamble}) and the late preamble to
+\begin{verbatim}
+% suppress section numbering
+\setcounter{secnumdepth}{0}
+% set the paragraph indentation for static
+% and dynamic frames
+\setlength{\sdfparindent}{\parindent}
+\end{verbatim}
+(See \figureref{fig:newspreamble2}.)
+
+\FloatFig{fig:newspreamble}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{newspreamble}}
+{Newspaper Example\dash Setting the Early Preamble Code}
+
+\FloatFig{fig:newspreamble2}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{newspreamble2}}
+{Newspaper Example\dash Setting the Late Preamble Code}
+
+\item Construct a rectangle with opposing corners at: (551.0, 797.5)
+and (580.0, 826.5) as shown in \figureref{fig:news27}.
+
+\FloatFig{fig:news27}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{news27}}
+{Newspaper Example\dash Constructing the Footer Frame}
+
+\item Following the same procedure as before, \select\ this new
+rectangle and make it a dynamic frame with the label
+\framelabelref{footer} and middle alignment. Then click on the
+\widget{flowframe.compute_sym_x_shift} button to calculate the
+horizontal shift for even pages. Set the contents to just
+\gls{itshape} (see \figureref{fig:news28}).
+
+\FloatFig{fig:news28}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news28}}
+{Newspaper Example\dash Assigning the Footer Frame Data}
+
+\item Save the image as \filefmt{newspaper.jdr} and then select the
+\menu{file.export} menu item. Select the
+\widget{filter.cls} filter, and save as
+\filefmt{newspaper.cls}.
+
+\item Use your favourite text editor to create a file called
+\filefmt{news.tex} that looks like:
+\begin{verbatim}
+\documentclass{newspaper}
+
+\begin{document}
+% set the paragraph shape
+\input{sheepcutout}
+% suppress paragraph indentation
+\noindent
+There was much celebration yesterday morning when Little Bo
+Peep's sheep finally returned home. They had been missing
+for more than a week.
+
+``I just didn't know where to find them,'' the shepherdess
+stated, ``but I was told to leave them alone and they'd come
+home.''
+
+% lots of text omitted
+\end{document}
+\end{verbatim}
+This file is also available in the \filefmt{examples} subdirectory
+of \FlowframTk's installation directory.
+
+\item The included \gls{bitmap} images are PNG files, which means that if you
+are using a \LaTeX\ engine with the DVI output format, you will have to convert them
+to Encapsulated Postscript (EPS). It's easier to simply use
+\pdfLaTeX. Compile \filefmt{news.tex}:
+\begin{verbatim}
+pdflatex news
+\end{verbatim}
+The resulting document is shown in \figureref{fig:news25}.
+
+\FloatFig{fig:news25}
+[\setkeys{Gin}{width=\textwidth}]
+{\includeimg{news25}}
+{Newspaper Example\dash Final Document}
+
+\end{enumerate}
+
+Things to note:
+\begin{itemize}
+\item You may have noticed that I had the page list for all my frames
+set to \widget{flowframe.pages_all}. Naturally if you
+want more pages in your document, you will need to change this.
+However on your final page you will need to specify an open ended
+range. For example, if you have a 4 page document, then at least
+one flow frame defined on page~4 should have a page list like
+\verb|>3|. This is because the \sty{flowfram} package looks ahead
+for the next flow frame before it ships out the page. If there are
+no more flow frames defined, it will automatically create a new
+flow frame, and you may end up with an unwanted page.
+
+\item The \opt{twoside} class option is required to ensure the
+\framelabelref{footer} frame's horizontal shift is implemented on even pages.
+Since this example only has one page, there's no noticeable
+difference.
+
+\item If you use \FlowframTk\ to create shaped paragraphs for your
+document, you must make sure that the \gls{normal-font-size} setting
+in \FlowframTk's \dialog{clssettings} dialog box is the same as that
+used by your document, otherwise it will affect the shape of the
+paragraph.  Likewise, if your paragraph contains larger or smaller
+than normal lines this will also adversely affect the paragraph
+shape, and you will need to adjust the shape of the \gls{path}
+accordingly.
+
+Since I exported to a class rather than a package, the class file
+correctly sets the normal font size to match the setting used by the
+image, and I'm only using normal sized text in my paragraphs with no
+displayed material, so I don't need to worry about it. However, if I
+had exported to a package, for example \filefmt{newspaper.sty}, which was then
+included in the document using:
+\begin{verbatim}
+\documentclass[twoside,12pt]{article}
+\usepackage{newspaper}
+
+\begin{document}
+% set the paragraph shape
+\input{sheepcutout}
+% suppress paragraph indentation
+\noindent
+There was much celebration yesterday morning when Little Bo
+% etc
+\end{verbatim}
+Then the paragraph shape will go wrong if the document normal size
+doesn't match the image's normal size setting (see
+\figureref{fig:news26}).
+
+\FloatSubFigs{fig:news26}
+{
+  {fig:news26a}{\includeimg{news26a}}{},
+  {fig:news26b}{\includeimg{news26b}}{}
+}
+[The Normal Font Size Setting Affects Paragraph Shapes]
+{The normal font size setting affects paragraph shapes:
+\subfigref{fig:news26a} both the \LaTeX\ document and \FlowframTk\ have been
+set to use a normal size font of 12pt\dash the paragraph follows the
+correct shape;
+\subfigref{fig:news26b} the \LaTeX\ document used 12pt as
+the normal font size, but \FlowframTk\ had the normal font size set
+to 10pt\dash the paragraph has too many narrow lines and spills over
+the bottom of the frame.}
+
+\end{itemize}
 
 \section{A Brochure}\label{sec:brochure}
 
