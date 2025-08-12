@@ -10516,7 +10516,7 @@ The aim is to create the image shown in \figureref{fig:cheesefinal}.
 
 \begin{enumerate}
 \item Load the image you created in the
-\nameref{sec:lettuce} example, using the
+\nameref{sec:toastexample} example, using the
 \menu{file.open} menu item, or clicking on the \dgls{file.open}
 button.
 
@@ -10885,7 +10885,7 @@ rear. To ensure this, select the bus outline and use the
 \editfn{back} function (\sectionref{sec:moveupordown}).
 
 \item Select all paths, and apply \menu{transform.subtract}.  Set
-the \pathattr{fill-paint} to red using the \menu{edit.fill_paint}
+the \pathattr{fill-paint} to red using the \menu{edit.fill_colour}
 menu item to open the \dialog{fillcolour} dialog box.  The windows
 should appear as holes. See \figureref{fig:bus8}.
 
@@ -10937,8 +10937,242 @@ The wheels on the bus go round and round...
 
 \section{A Poster}\label{sec:postertutorial}
 
-TODO
+This example illustrates how to use \FlowframTk\ to help construct
+frames for use with the \sty{flowfram} package.
+The aim is to create a \LaTeX\ package based on the
+\sty{flowfram} package that defines frames for use with a
+poster. For this example, I used the A4 landscape paper setting,
+but it can just as easily be applied to other paper sizes.
 
+\begin{enumerate}
+\item Set the grid to the unit of your choice using the
+\menu{settings.grid.settings} dialog box. For example,
+I set the grid settings to major divisions of 1in, with
+10 subdivisions. I also
+\hyperref[sec:controlsettings]{set the storage unit} to 1in.
+
+\item I recommend that you set the \gridlock\ on (using
+\menu{settings.grid.lock}), to help prevent
+having frames with slightly different widths, which will result
+in warnings from the \sty{flowfram} package.
+
+\item Set the \gls{typeblock}, using the
+\menu{tex.flowframe.set_typeblock} menu item.
+I used 1in margins. You should now see the typeblock appear
+as a light \manmsg{grey} rectangle on the page. (Note that you can not
+select or move the \gls{typeblock}, you can only modify it using the
+\menu{tex.flowframe.set_typeblock} dialog box.)
+See \figureref{fig:poster1}.
+
+\FloatFig{fig:poster1}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster1}}
+{Poster Example\dash The Typeblock}
+
+\item Select the rectangle tool, and create the rectangles
+shown in \figureref{fig:poster2}. The top rectangle is going to
+be the title frame, the two tall rectangles on the left
+will be flow frames containing the main text for the poster,
+and the two short rectangles on the right will be dynamic frames
+that will contain a table and a figure. (To ensure that the two tall
+rectangles are the same size, you may prefer to use the copy and
+paste function.)
+
+\FloatFig{fig:poster2}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster2}}
+{Poster Example\dash Adding Rectangles}
+
+\item Switch to the select tool, and add a
+\gls{bitmap} using
+\menu{bitmap.insert}, to give the
+poster a logo, and move it to the location shown
+(\figureref{fig:poster3}).
+
+\FloatFig{fig:poster3}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster3}}
+{Poster Example\dash Adding a Bitmap}
+
+\item Garish posters are not recommended, but to illustrate how to
+liven up the poster, set the \pathattr{fill-paint} for the rectangles
+using the \menu{edit.fill_colour} menu item to open
+the \dialog{fillcolour} dialog box. I also added two
+extra smaller rectangles on top of the right hand rectangles, to
+give a double border effect (\figureref{fig:poster4}).
+
+\FloatFig
+{fig:poster4}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster4}}
+{Poster Example\dash Adding Some Paint}
+
+\item Select the top rectangle and the \gls{bitmap}, and
+\gls{group} (\sectionref{sec:grouping}) them.
+Select the bottom right hand rectangles (green) and group them.
+Select the middle right hand rectangles (magenta) and group them.
+
+\item Select the top group, and select the
+\menu{tex.flowframe.set_frame} menu item. This will
+open up the \dialog{flowframe} dialog box shown in \figureref{fig:poster5}.
+Set the type to \widget{flowframe.static}, and call it \qt{title}. Set the
+margins as desired. (I used 0.1in for all the margins, but you
+may want to use different values to ensure that the logo is inside
+the margins so that the frame's text doesn't overlap the image.)
+
+\FloatFig{fig:poster5}
+[\setkeys{Gin}{width=0.5\textwidth}]
+{\includeimg{poster5}}
+[Poster Example\dash Assigning Frame Information]
+{Poster Example\dash assigning frame information. (Note that
+the shape option is not available because the selected object is
+a group not a path.)}
+
+\item Click on the \widget{flowframe.edit} button to open
+the mini \TeX\ editor and type in the code to create the document
+title. For example, I typed in the following:
+\begin{compactcodebox*}
+\gls{title}\marg{A Sample Poster}
+\gls{author}\marg{Nicola Talbot}
+\gls{maketitle}
+\gls{thispagestyle}\marg{empty}
+\end{compactcodebox*}
+as shown in \figureref{fig:postertitlecontents}. (Since
+\gls{maketitle} sets the page style to \pagestyleref{plain}, this sets
+it to \pagestyleref{empty} as page numbers aren't appropriate here.)
+
+\FloatFig{fig:postertitlecontents}
+[\setkeys{Gin}{width=0.5\textwidth}]
+{\includeimg{postertitlecontents}}
+{Poster Example\dash Adding Contents to a Static Frame}
+
+To close the editor either click on the \dgls{okay}
+button (the one with the green tick) or press 
+\accelerator{button.okay}.
+
+\item Similarly, make the left hand rectangle a flow frame
+with label \qt{left} and the middle rectangle a flow frame with label
+\qt{middle}. (Flow frames can't be assigned contents, so the
+\widget{flowframe.edit} button will now be disabled.)
+
+\item  Make the two remaining groups dynamic frames
+with labels \qt{figure} and \qt{table}. For these two, I used larger
+margins (0.2in) to compensate for the double border
+(\figureref{fig:poster6}).
+
+Again use the mini \TeX\ editor to set the contents. The \qt{figure}
+frame's contents are:
+\begin{verbatim}
+\begin{staticfigure}
+\centering
+Insert figure here!
+\caption{A Sample Figure}
+\label{fig:sample}
+\end{staticfigure}
+\end{verbatim}
+The \qt{table} frame's contents are:
+\begin{verbatim}
+\begin{statictable}
+\caption{A Sample Table}
+\label{tab:sample}
+\centering
+Insert table here!
+\par
+\end{statictable}
+\end{verbatim}
+
+\FloatFig{fig:poster6}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster6}}
+{Poster Example\dash Frame Information Assigned}
+
+\item Move the slider between the \gls{canvas} and the preamble
+panel, or use the \menu{tex.set_preamble} menu item to
+show the \gls{preamble} panel. In the \widget{preamble.early}
+tab, add the following:
+\begin{codebox}
+\gls{RequirePackage}\oarg{utf8}\marg{inputenc}
+\gls{RequirePackage}\oarg{T1}\marg{fontenc}
+\gls{RequirePackage}\marg{lmodern}
+\end{codebox}
+as shown in \figureref{fig:posterpreamble}. (You can use
+\gls{usepackage} instead of \gls{RequirePackage}. Any
+instances of \gls{usepackage} will automatically be converted to
+\gls{RequirePackage} if the image is exported to a class or
+package.)
+
+\FloatFig{fig:posterpreamble}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{posterpreamble}}
+{Poster Example\dash Adding Preamble Information}
+
+\item Use the \menu{file.export} menu item to create
+a new \LaTeX\ package or class that defines these frames. Remember to
+select the \widget{filter.sty} file filter.
+I called my file \filefmt{poster.sty} (\figureref{fig:poster7}) which
+will create a package rather than a class.
+
+\FloatFig{fig:poster7}
+[\setkeys{Gin}{width=0.5\textwidth}]
+{\includeimg{poster7}}
+{Poster Example\dash Export Frame Information to a \LaTeX{} Package}
+
+\item Create a \LaTeX\ document that uses this package or class.
+
+First, let's suppose I've exported to a package. Since I
+used A4 landscape paper, it's simplest use the \cls{article}
+class file. If you use a larger size (for example, A0), it would be more
+appropriate to use the \cls{a0poster} class file.
+
+I created the following file called \filefmt{poster.tex}:
+\begin{verbatim}
+\documentclass{article}
+
+% use new package created in this example:
+\usepackage{poster}
+
+\begin{document}
+
+This is the main body of the poster. This text will
+appear in the first of the two flow frames. Once it
+has reached the end of the first flow frame, it will 
+then continue in the second flow frame.
+
+% Lots of text omitted
+
+\end{document}
+\end{verbatim}
+
+Now suppose I've exported to a class by using the
+\widget{filter.cls} filter in the export dialog. Then the start of my
+\filefmt{poster.tex} file just uses this class:
+\begin{verbatim}
+% use new class created with this example:
+\documentclass{poster}
+
+\begin{document}
+This is the main body of the poster. This text will
+appear in the first of the two flow frames. Once it
+has reached the end of the first flow frame, it will 
+then continue in the second flow frame.
+
+% Lots of text omitted
+
+\end{document}
+\end{verbatim}
+This is actually more convenient than creating a package.
+
+\item To make the poster a PDF document, do:
+\begin{terminal}
+pdflatex poster.tex
+\end{terminal}%
+The final document is illustrated in \figureref{fig:posterfinal}.
+\end{enumerate}
+
+\FloatFig{fig:posterfinal}
+[\setkeys{Gin}{width=\textwidth}]
+{\includeimg{posterfinal}}
+{Poster Example\dash Final Document}
 
 \section{A Newspaper}\label{sec:newstutorial}
 

@@ -3425,6 +3425,9 @@ Merge Region: {2}</entry>
 <entry key="button.default.tooltip">Restore defaults</entry>
 <entry key="button.default.iconimage">default</entry>
 
+<entry key="button.okay.iconimage">okay</entry>
+<entry key="button.cancel.iconimage">cancel</entry>
+
 <entry key="label.filename">Filename</entry>
 <entry key="label.filename.mnemonic">F</entry>
 
