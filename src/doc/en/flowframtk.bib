@@ -536,8 +536,8 @@ replicas.}
 
 @term{storageunit,
   name="storage unit",
-  description = {The length unit used when storing co-ordinates. The default unit
-    is bp (PostScript point) but may be changed in the configuration
+  description = {The length unit used when storing \glspl{co-ordinate}. The default unit
+    is \gls{bp} (PostScript point) but may be changed in the configuration
     dialog.}
 }
 
@@ -1199,6 +1199,20 @@ limitation. The \app{flowframtk} application matches the omission.}
  name={\optfmt{valign}}
 }
 
+@indexplural{co-ordinate,
+ seealso={storageunit}
+}
+
+@index{co-ordinate.rectangular,
+ parent={co-ordinate},
+ name={rectangular}
+}
+
+@index{co-ordinate.radial,
+ parent={co-ordinate},
+ name={radial}
+}
+
 % PUNCTUATION
 
 @punctuation{mshift,
@@ -1224,6 +1238,11 @@ limitation. The \app{flowframtk} application matches the omission.}
 @punctuation{hash,
   symbol={\code{\char`\# }},
   description={hash}
+}
+
+@cspunctuation{cshash,
+  symbol={\cspuncfmt{\#}},
+  description={hash symbol}
 }
 
 @punctuation{underscore,

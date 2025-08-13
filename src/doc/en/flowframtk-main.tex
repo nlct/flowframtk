@@ -62,6 +62,11 @@
 \newcommand{\setframeopt}[1]{\opt{settypeframe.#1}}
 \newcommand{\setframeoptval}[2]{\optval{settypeframe.#1}{#2}}
 
+\newcommand*{\radialcoords}[2]{$(#1:#2)$}
+\newcommand*{\radiusmark}{\ensuremath{r}}
+\newcommand*{\anglemark}{\ensuremath{\theta}}
+
+
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
 
@@ -12153,13 +12158,608 @@ is shown in \figureref{fig:brochure-final}.
 
 \section{A House With No Mouse}\label{sec:accesstutorial}
 
-TODO
+This example illustrates how to create and edit pictures without
+using the mouse.
 
+\begin{enumerate}
+\item For this example I'm going to use \gls{bp} units, both for the
+grid and for the \gls{storageunit}. First for the grid, use the menu mnemonics
+\mnemonictrail{settings.grid.settings}. This will open up the
+\dialog{grid} dialog box shown in
+\figureref{fig:gridsettings}.  The \widget{grid.major}
+field should already have the focus, but if not, you can do
+\mnemonic{grid.major}. Set this value to 100. Press the
+\keys{\keyref{tab}} key to move to the unit \gls{dropdown}. Press the
+\code{b} key to select \widgetfmt{bp}. Press \keys{\keyref{tab}} or
+\mnemonic{grid.sub_divisions} to select the
+\widget{grid.sub_divisions} field. Set this value to 10.
+Then press \keys{\keyref{return}} or \accelerator{okay} to
+apply these settings and close the \dialog{grid} dialog box.
+
+\FloatFig{fig:gridsettings}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{gridsettings1a}}
+{No Mouse Example\dash Grid Settings Dialog Box}
+
+\item Use the menu mnemonics \mnemonictrail{settings.config} to open
+the \dialog{config} dialog
+(\figureref{fig:housenomousestorageunit}). If the
+\widget{controls.title} tab isn't already visible, you can
+do \mnemonic{controls} to select it. Then do
+\mnemonic{graphics.storage_unit} to move the focus to the
+\gls*{storageunit} \gls{dropdown}. Press \code{b} to select
+\widgetfmt{bp} or use the up/down cursor keys. If the focus is on
+a \gls*{dropdown} you need to use \accelerator{okay} to apply these
+settings and close the dialog box. If you move the focus to another
+component, you can use \keys{\keyref{return}} instead.
+
+\FloatFig{fig:housenomousestorageunit}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomousestorageunit}}
+{No Mouse Example\dash Storage Unit}
+
+\item Make sure that you don't have the \gridlock\ on as some of the
+co-ordinates that this example uses lie between tick marks.
+\accelerator{settings.grid.lock} or
+\mnemonictrail{settings.grid.lock}
+toggles between setting the grid lock on and off.
+
+\item Select the \tool{rectangle},
+using either \accelerator{tools.rectangle} or 
+\mnemonictrail{tools.rectangle}.
+
+\item The rectangle forming the main part of the house will go from
+(100bp, 100bp) to (250bp, 200bp). To move the mouse either press
+\accelerator{navigate.goto} or use the menu mnemonic 
+\mnemonictrail{navigate}{goto}.
+This will open up the \dialog{goto} dialog box shown in
+\figureref{fig:housenomouse}. Set the \widget{coordinates.x} field
+to 100bp and the \widget{coordinates.y} field to 100bp.  (You can
+use the \keys{\keyref{tab}} key to move to the next focusable component, or you
+can use \mnemonic{coordinates.x} to select the \widget{coordinates.x} field
+and \mnemonic{coordinates.y} to select the \widget{coordinates.y} field.)
+Then press \keys{\keyref{return}} or \accelerator{okay}.
+
+\FloatFig{fig:housenomouse}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomousegoto}}
+{No Mouse Example\dash Go To Co-Ordinate Dialog Box}
+
+\item Press \accelerator{construct_click} to emulate a mouse
+click.  This will anchor the rectangle at (100bp, 100bp). Then use
+either \accelerator{navigate.goto} or
+\mnemonictrail{navigate.goto} to display the \dialog{goto} dialog
+box. Set the \widget{coordinates.x} field to 250bp and the
+\widget{coordinates.y} field to 200bp. Then press
+\keys{\keyref{return}} or \accelerator{okay}.
+
+\item To complete the rectangle, press either \keys{\keyref{return}} or 
+\accelerator{tools.finish}.
+(See \figureref{fig:housenomouse1}.)
+
+\FloatFig{fig:housenomouse1}
+[\setkeys{Gin}{width=0.6\textwidth}]
+{\includeimg{housenomouse1}}
+{No Mouse Example\dash Completed Rectangle}
+
+\item Let's make it a yellow brick house. To change the rectangle's
+\pathattr{fill-paint}, we first need to switch to the \tool{select}. To do this
+either use \accelerator{tools.select} or use the menu mnemonic
+\mnemonictrail{tools.select}.
+
+\item To select the rectangle, use either
+\accelerator{navigate.skip} or \mnemonictrail{navigate.skip}.
+Alternatively, you can use \mnemonictrail{navigate.by_description} which
+will show the \dialog{description} dialog box with a \gls{dropdown} that you can use to
+select an object by its description.
+
+\begin{information}
+Since there is only one object on the canvas, you could use any of the other select
+functions in the \menu{navigate} menu, but
+\accelerator{navigate.skip} is easier to type.
+\end{information}
+
+\item To change the \pathattr{fill-paint} use the menu mnemonic
+\mnemonictrail{edit.fill_colour}. This will open up
+the \dialog{fillcolour} dialog box shown in \figureref{fig:housenomouse2}.
+
+\FloatFig{fig:housenomouse2}
+[\setkeys{Gin}{width=\textwidth}]
+{\includeimg{housenomouse2}}
+{No Mouse Example\dash Set Fill Paint Dialog Box}
+
+\item To select the \widget{colour.single} radio button,
+either do \mnemonic{colour.single} or press \keys{\keyref{tab}} until
+the \widget{colour.single} button has the focus, and then
+press \keys{\keyref{space}}.
+
+\item The single \manmsg{colour} selector will now be enabled. To change the
+\manmsg{colour} to yellow, you can do one of the following:
+\begin{itemize}
+\item Press \keys{\keyref{tab}} until the yellow swatch
+is selected, and then press \keys{\keyref{space}}.
+
+\item Press \mnemonic{colour.rgb} to select the
+\widget{colour.rgb} panel and set the
+\widget{colour.red} field to 100, the
+\widget{colour.green} field to 100, the
+\widget{colour.blue} field to 0 and the
+\widget{colour.alpha} field to 100.
+
+\item Press \mnemonic{colour.cmyk} to select the
+\widget{colour.cmyk} panel and set the
+\widget{colour.cyan} field to 0, the
+\widget{colour.magenta} field to 0, the
+\widget{colour.yellow} field to 100, the
+\widget{colour.black} field to 0 and the
+\widget{colour.alpha} field to 100.
+\end{itemize}
+Then press \keys{\keyref{return}} or \accelerator{okay} to apply the
+\pathattr{fill-paint} and close the dialog box (see \figureref{fig:housenomouse3}).
+
+\FloatFig{fig:housenomouse3}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse3}}
+{No Mouse Example\dash Fill Paint Set}
+
+\item Next we need to construct a triangle for the roof. The
+\tool{closed_line} is needed for this, so either use
+\accelerator{tools.closed_line} or use the menu mnemonic
+\mnemonictrail{tools.closed_line}.
+
+\item The triangle vertices will be at (80bp, 100bp), (175bp, 50bp)
+and (270bp, 100bp). Move to the first co-ordinate using either
+\accelerator{navigate.goto} or \mnemonic{navigate}{goto} to open the
+\dialog{goto} dialog, and set the \widget{coordinates.x} field to
+80bp and the \widget{coordinates.y} field to 100bp. 
+Press \keys{\keyref{return}} or \accelerator{okay} to
+close the \dialog{goto} dialog box and move the mouse to the required location,
+and press \accelerator{construct_click} to set the first vertex.
+
+\item Repeat the process for the second and third vertices, and press
+\accelerator{tools.finish} to complete the path. The path will automatically close.
+(See \figureref{fig:housenomouse4}.)
+
+\FloatFig{fig:housenomouse4}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse4}}
+{No Mouse Example\dash Completed Triangle}
+
+\item Let's make the roof red. First switch to the \tool{select}
+using either \accelerator{tools.select} or \mnemonictrail{tools.select}.
+
+\item Select the triangle using \accelerator{navigate.skip} or
+\mnemonictrail{navigate.skip}.
+
+\item Open the \dialog{fillcolour} dialog box using the menu mnemonic
+\mnemonictrail{edit.fill_colour}.
+
+\item Use \mnemonic{colour.single} to select the
+\widget{colour.single} radio button.
+
+\item To set the \manmsg{colour} to red either use the
+\keys{\keyref{tab}} key to move
+the focus to the red \manmsg{colour} swatch and press
+\keys{\keyref{space}} or use
+\mnemonic{colour.rgb} to select the
+\widget{colour.rgb} tab and set the
+\widget{colour.red} field to 100, the
+\widget{colour.green} and \widget{colour.blue}
+fields to 0 and the \widget{colour.alpha} field to 100.
+
+\item Press \keys{\keyref{return}} or \accelerator{okay} to set the
+\pathattr{fill-paint} and close the dialog box. (See
+\figureref{fig:housenomouse5}).
+
+\FloatFig{fig:housenomouse5}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse5}}
+{No Mouse Example\dash Triangle Fill Paint Set to Red}
+
+\item Now for the windows: press \accelerator{tools.rectangle} or use the menu mnemonic
+\mnemonictrail{tools.rectangle} to select the \tool{rectangle}.
+
+\item Create four rectangles using the method described above with
+opposing vertices at:
+\begin{itemize}
+\item Window 1: (120bp, 180bp), (145bp, 155bp)
+\item Window 2: (120bp, 135bp), (145bp, 110bp)
+\item Window 3: (205bp, 135bp), (230bp, 110bp)
+\item Window 4: (205bp, 180bp), (230bp, 155bp)
+\end{itemize}
+See \figureref{fig:housenomouse6}.
+
+\FloatFig{fig:housenomouse6}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse6}}
+{No Mouse Example\dash Windows Added}
+
+\item To change the \pathattr{fill-paint} of the window rectangles, you will
+first need to switch to the \tool{select} using either 
+\accelerator{tools.select} or \mnemonictrail{tools.select}.
+
+\item It's more efficient to select all four of the window
+rectangles and change their \pathattr{fill-paint} simultaneously,
+rather than setting the \pathattr{fill-paint} individually. Since
+the four small rectangles are at the \gls{front} of the \gls{stack},
+pressing \accelerator{navigate.add_next} four times will select
+these four rectangles.
+
+\item Now use the menu mnemonic
+\mnemonic{edit.fill_colour} to set the \pathattr{fill-paint}
+to white, following the same process as before to produce the
+image shown in \figureref{fig:housenomouse7}.
+
+\FloatFig{fig:housenomouse7}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse7}}
+{No Mouse Example\dash Window Fill Paint Set}
+
+\item Now make a black rectangle with
+opposing corners at (160bp, 200bp) and (190bp, 160bp) using the
+same method as above, to produce the image shown in
+\figureref{fig:housenomouse8}.
+
+\FloatFig{fig:housenomouse8}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse8}}
+{No Mouse Example\dash Completed House}
+
+\item To illustrate how to move \glspl{object} using the keyboard, let's
+now shift the house 100bp to the right and 50bp down. First make
+sure you are using the \tool{select}. Then \select\ all the objects using
+either \accelerator{edit.select_all} or \mnemonictrail{edit.select_all}.
+
+\item Then either press \accelerator{edit.moveby} or use the menu mnemonic
+\mnemonictrail{edit.moveby}. This will open up the \dialog{moveby} dialog box
+shown in \figureref{fig:housenomouse9}. Set the
+\widget{coordinates.x} field to 100bp and the
+\widget{coordinates.y} field to 50bp.
+
+\FloatFig{fig:housenomouse9}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse9}}
+{No Mouse Example\dash Move Dialog Box}
+
+\item To illustrate how to edit a path using only the keyboard,
+let's make the roof a bit shallower. First deselect all the objects
+using \accelerator{edit.deselect_all} or \mnemonictrail{edit.deselect_all}.
+
+\item Press \accelerator{navigate.skip} repeatedly until the triangle is selected.
+
+\item To enter \editpathmode, use either \accelerator{edit.path.edit} or
+\mnemonictrail{edit.path.edit}. You should now see the
+path in edit mode. (See \figureref{fig:housenomouse10}.)
+
+\FloatFig{fig:housenomouse10}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse10}}
+{No Mouse Example\dash Edit Mode}
+
+\item Press \accelerator{editpath.next_control} until the highest vertex is selected.
+
+\item Press \accelerator{popup} to display the edit path menu
+(\figureref{fig:housenomouse11}).
+
+\FloatFig{fig:housenomouse11}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse11}}
+{No Mouse Example\dash Edit Path Menu}
+
+\item Press \mnemonic{editpath.coordinates} to display the
+\dialog{coordinates} dialog box shown in \figureref{fig:housenomouse12}.
+
+\FloatSideBySideFigs
+ [][\setkeys{Gin}{width=\linewidth}]
+{fig:housenomouse12}
+{\includeimg{housenomouse12}}
+{No Mouse Example\dash Control Point Co-Ordinates Dialog Box}
+[
+  \item Set the \widget{coordinates.y} field to 120bp,
+  and press \accelerator{okay}.
+  \item Press \accelerator{edit.path.edit} to exit \editpathmode. The image should now
+  look like \figureref{fig:housenomouse13}.
+]
+{fig:housenomouse13}
+{\includeimg{housenomouse13}}
+{No Mouse Example\dash Editing Finished}
+
+\item To illustrate how to create a \gls{textarea} using
+the keyboard, let's add a label. First select the
+\tool{textarea} using either \accelerator{tools.textarea} or 
+\mnemonictrail{tools.textarea}.
+
+\item Press \accelerator{navigate.goto} or \mnemonictrail{navigate.goto} to display
+the \dialog{goto} dialog box. Set the
+\widget{coordinates.x} field to 200bp and the
+\widget{coordinates.y} field to 100bp.
+Press \accelerator{okay} to close the dialog.
+
+\item Press \accelerator{construct_click} to start the
+\gls{textarea}.  You should now see a small pale rectangle with a
+cursor, as illustrated in \figureref{fig:housenomouse14}. Whilst
+this rectangle contains a cursor, you can type in text or press
+\accelerator{popup} to display the \gls{index.menu.textarea}.
+
+\FloatFig{fig:housenomouse14}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse14}}
+{No Mouse Example\dash Creating a New Text Area}
+
+\item Type in the text \code{House \glssymbol{hash}1}, then switch to the
+\tool{select} (using \accelerator{tools.select} or \mnemonic{tools.select}.)
+
+\item The \gls{textarea} contains one of \TeX's special characters,
+namely the \gls{hash} character. This will cause a problem if you want
+to save your image as a \env{pgfpicture} environment if the
+\widget{textconfig.escape} (\sectionref{sec:texconfigtext}) is
+not enabled. If so, you will need to modify the \gls{textarea} so
+that it has an alternative text to be used if the image is saved in
+a \LaTeX\ file. You can do this as follows:
+
+\begin{enumerate}
+\item Press \accelerator{navigate.skip} to select the \gls{textarea}.
+
+\item Press \accelerator{edit.textarea.edit} or
+\mnemonictrail{edit.textarea.edit}
+to display the \dialog{edittext} dialog box. Select the
+\widget{edittext.different} button (either \keys{\keyref{tab}} to it and
+press \keys{\keyref{space}} or use \mnemonic{edittext.different}.) This will enable
+the alternate text field. Change the text to \code{House \gls+{cshash}1}
+(\figureref{fig:housenomouse15}).
+
+\FloatFig{fig:housenomouse15}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse15}}
+{No Mouse Example\dash Editing Text Area}
+
+\item Press \keys{\keyref{return}} or \accelerator{okay} to update the
+\gls{textarea}, and close the dialog box.
+\end{enumerate}
+
+\item It would look better if the label was \manmsg{centred} over the
+house. In order to use the align function, it is necessary to
+\gls{group} all the objects that make up the house. This is done as
+follows:
+
+\item Assuming you created all the objects in the same order as
+listing in this example, the \gls{textarea} should be at
+the front of the \gls{stack}, then the door, the four windows, the roof
+and lastly the body of the house. You should still have the
+\gls{textarea} selected, and nothing else. If not, deselect all
+objects (\accelerator{edit.deselect_all}) and press 
+\accelerator{navigate.skip} to select the \gls{textarea}.
+
+\item Press \accelerator{navigate.skip} to deselect the \gls{textarea} and select
+the next object in the \gls{stack} (the door).
+
+\item Press \accelerator{navigate.add_next} to add the next object to the selection.
+Keep pressing \accelerator{navigate.add_next} until everything has been selected except
+the \gls{textarea}.
+
+\item Press \accelerator{transform.group} or \mnemonictrail{transform.group} to
+group the selected objects.
+
+\item Press \accelerator{navigate.add_next} to add the \gls{textarea} to the selection.
+
+\item Press \accelerator{transform.group} or
+\mnemonictrail{transform.group} to group the selected objects.
+
+\item Use the menu mnemonic
+\mnemonictrail{transform.justify.centre} to \manmsg{centre} the
+objects.
+
+\item Press \accelerator{transform.ungroup} or
+\mnemonictrail{transform.ungroup} to
+ungroup the objects. The image should now look like
+\figureref{fig:housenomouse16}.
+
+\begin{information}
+The house had to be grouped
+and that group then grouped with the \gls{textarea} to
+ensure that the individual house components maintained their
+position relative to each other.
+\end{information}
+
+\FloatFig{fig:housenomouse16}
+[\setkeys{Gin}{width=0.6\linewidth}]
+{\includeimg{housenomouse16}}
+{No Mouse Example\dash Text is Now \Manmsg{centred}}
+
+\item If you want to save your image as a \env{pgfpicture}
+environment, you will need to change the \textattr{anchor}
+(\sectionref{sec:fontanchor}) settings to ensure that the
+\gls{textarea} in the \LaTeX\ file remains \manmsg{centred}.
+(Otherwise font differences may cause the text to appear slightly
+off \manmsg{centre}.) To do this:
+
+\begin{enumerate}
+\item Ensure that the \gls{textarea} is selected.
+
+\item Use the menu mnemonic
+\mnemonictrail{edit.textarea.font.anchor.horizontal} to
+display the \widget{font.hanchor} dialog box.
+
+\item If the \gls{dropdown} doesn't already have the focus,
+press \mnemonic{font.hanchor}.
+
+\item Press \code{c} or use the arrow keys to set the
+horizontal setting to \widget{font.anchor.hcentre}.
+
+\item Press \keys{\keyref{return}} or \accelerator{okay} to apply the settings
+and close the dialog box.
+\end{enumerate}
+
+Note that you don't need to do this if the
+\widget{textconfig.anchor} \gls*{checkbox} is selected
+in the \dialog{texconfig} dialog (\sectionref{sec:texconfig}) as it will
+automatically update the anchor when you align the \gls*{textarea}.
+
+\end{enumerate}
 
 \section{A Lute Rose}\label{sec:rosetutorial}
 
-TODO
+This example illustrates how to use \glspl{symmetricshape} and
+\glspl{pattern}. The aim is to design the lute rose (the decorative
+cover of a lute's sound hole) shown in
+\figureref{fig:rose-completed}. This example uses a radial grid. All
+co-ordinates \radialcoords{\radiusmark}{\anglemark} are radial
+co-ordinates where \radiusmark\ is the radius (\gls{bp}) and \anglemark\
+is the angle (degrees).
 
+\begin{warning}
+Although the \glspl{co-ordinate} will be specified using the
+\gls{co-ordinate.radial} components, these will be converted to the
+usual left-handed \gls{co-ordinate.rectangular} coordinates for
+internal storage, so if you change the \gls{grid}, the objects will
+remain in the same place on the \gls{canvas} relative to the
+rectangular grid origin.
+This conversion may cause slight rounding errors.
+\end{warning}
+
+\begin{enumerate}
+  \item Set the paper size to A3 landscape using the
+  \menu{settings.paper} menu.
+
+  \item Use \menu{settings.grid.settings} to select a
+   radial grid with 100\gls{bp} major division interval, 10 sub-divisions and
+   32 spokes. (See \figureref{fig:rose1}.)
+
+\FloatFig{fig:rose1}
+  {\includeimg{rose1}}
+  {Selecting a Radial Grid}
+
+  \item Create a \gls{path} (using the \tool{open_curve}
+  and \editpathmode) starting at \radialcoords{20}{-170}
+  containing three \glspl{Bezier-curve} with  \glspl{controlpt}:
+  \begin{enumerate}
+    \item \radialcoords{145}{-145}, \radialcoords{215}{-145}, \radialcoords{200}{-170}
+    \item \radialcoords{200}{135}, \radialcoords{200}{-115}, \radialcoords{200}{170}
+    \item \radialcoords{210}{150}, \radialcoords{255}{115}, \radialcoords{200}{100}
+  \end{enumerate}
+  (See \figureref{fig:rose2})
+
+\FloatFig{fig:rose2}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{rose2}}
+{The Underlying Path}
+
+  \item In \editpathmode\, use the
+   \gls{index.menu.editpath} and select 
+   \menu{editpath.symmetry.has_symmetry}
+   (see \figureref{fig:rose3}).
+
+\FloatSideBySideFigs
+[][\setkeys{Gin}{width=\linewidth]}]
+{fig:rose3}
+{\includeimg{rose3}}
+{Give the Path Symmetry Using the Popup Menu}
+[
+     \item Using the \gls{index.menu.editpath} again, deselect
+     \menu{editpath.symmetry.join_anchor} (see
+     \figureref{fig:rose4}).
+]
+{fig:rose4}
+{\includeimg[width=\linewidth]{rose4}}
+{De-anchoring the End Control Using the Popup Menu}
+
+  \item Still in edit path mode, move the \glspl{controlpt}
+    governing the line of symmetry (shown in blue by default) to
+    \radialcoords{85}{-90} and \radialcoords{215}{90} (see \figureref{fig:rose5}).
+
+\FloatSideBySideFigs
+[][\setkeys{Gin}{width=\linewidth}]
+{fig:rose5}
+{\includeimg{rose5}}
+{Move the Line of Symmetry}
+[
+   \item Select the last \gls{controlpt} on the path (not including
+     the line of symmetry) and select the edit path popup menu item
+     \menu{editpath.convert_to_curve}. This should add a curve
+     segment that joins the underlying path with its reflection (see
+     \figureref{fig:rose6}). Note that this joining segment only has
+    one curvature control to enforce symmetry.
+]
+{fig:rose6}
+{\includeimg{rose6}}
+{Add a Joining Curve Between the Underlying Path and its
+Reflection}
+
+  \item Move the curvature \gls{controlpt} on the join segment to
+   \radialcoords{200}{0} (see \figureref{fig:rose7}).
+
+\FloatFig{fig:rose7}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{rose7}}
+{Adjust the Curvature Control of the Join Segment}
+
+  \item Switch off \editpathmode\ and, ensuring the path is still
+   selected, use the \menu{edit.path.style.all_styles}
+   menu item to change the path style to: 10\gls*{bp} 
+   \pathattr{line-width}, round \pathattr{cap-style} and 
+   round \pathattr{join-style} (see \figureref{fig:rose8}).
+
+\FloatFig{fig:rose8}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{rose8}}
+{Change the Path Style}
+
+  \item The path should now look like that shown in
+    \figureref{fig:rose9}.
+
+\FloatFig{fig:rose9}
+[\setkeys{Gin}{width=\linewidth}]
+{\includeimg{rose9}}
+{The Symmetric Path}
+
+  \item Ensure that the path is selected. Use the
+   \menu{transform.pattern.set} menu item. This should
+   open the dialog box shown in \figureref{fig:rose10}. Set the
+   number of replicas to 11. Select the \widget{pattern.rotational}
+   tab, and set the angle of rotation to 30 degrees.
+
+\FloatFig{fig:rose10}
+{\includeimg{rose10}}
+{Setting the Pattern}
+
+  \item The \gls{shape} should now look like that shown in
+   \figureref{fig:rose11}.
+
+\FloatSideBySideFigs
+[][\setkeys{Gin}{width=\linewidth}]
+{fig:rose11}
+{\includeimg{rose11}}
+{The Pattern}
+[
+  \item Switch to edit path mode. You should now see an extra
+    \gls{controlpt} (shown in green by default). Move this control
+    to \radialcoords{0}{0} (see \figureref{fig:rose12}).
+]
+{fig:rose12}
+{\includeimg{rose12}}
+{Move the Control Governing the Rotational Anchor}
+
+  \item Switch off \editpathmode, select the
+    \tool{ellipse} and draw a circle
+   around the pattern (see \figureref{fig:rose13}).
+
+\FloatSideBySideFigs
+[][\setkeys{Gin}{width=\linewidth}]
+{fig:rose13}
+{\includeimg{rose13}}
+{Add a Circle Around the Pattern}
+[
+   \item Select the circle, set its \pathattr{fill-paint}
+     to black and move the circle to the \gls{back}
+     of the \gls{stack}. Select the pattern, and set its
+     \pathattr{line-paint} to white. The
+     image should now look as \figureref{fig:rose-completed}.
+]
+{fig:rose-completed}
+{\includeimg{rose-completed}}
+{The Completed Lute Rose}
+
+\end{enumerate}
 
 \chapter{JDR/AJR File Formats}\label{sec:jdrajrformat}
 
