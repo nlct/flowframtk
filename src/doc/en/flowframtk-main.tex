@@ -66,6 +66,11 @@
 \newcommand*{\radiusmark}{\ensuremath{r}}
 \newcommand*{\anglemark}{\ensuremath{\theta}}
 
+\newcommand*{\typedef}[1]{\inlineglsdef{ajdr-format.#1}}
+\newcommand*{\type}[1]{\gls{ajdr-format.#1}}
+
+\tjhnewtitledbox{versionbox}{JDR version}{teal}
+\newenvironment{jdrversion}[1]{\begin{versionbox}[title={JDR #1}]}{\end{versionbox}}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -12763,7 +12768,311 @@ Reflection}
 
 \chapter{JDR/AJR File Formats}\label{sec:jdrajrformat}
 
+\FlowframTk\ has two native file formats that it can both read and
+write. The \maingls{JDR} (\inlineglsdef{ext.jdr}) format is binary written
+in the big-endian fashion. The \maingls{AJR} (\inlineglsdef{ext.ajr}) format is
+an ASCII format. The \gls*{AJR} format has less precision than the
+\gls*{JDR} format. The current version number for both formats
+is~2.0.
+
+The first line of the ASCII \gls*{AJR} format must be:
+\begin{compactcodebox}
+AJR \meta{version}
+\end{compactcodebox}
+where \meta{version} is the version number. For example:
+\begin{verbatim}
+AJR 1.8
+\end{verbatim}
+The version number must be followed by white space (such as a
+newline or space character).
+
+The binary \gls*{JDR} format starts with a sequence of the three 16-bit Unicode
+characters \qt{JDR} followed by the version \emph{\type{string}} (not a
+decimal number) which is save as an integer (the string length)
+followed by each character of the version string. In Java this is
+implemented using:
+\begin{verbatim}
+dout.writeChars("JDR");
+dout.writeInt(version.length());
+dout.writeChars(version);
+\end{verbatim}
+where \code{dout} is a \code{java.io.DataOutputStream} object
+and \code{version} is a \code{java.lang.String}.
+
+The remainder of both the \gls*{JDR} and \gls*{AJR} formats have the
+same syntax but the data types are stored differently.
+
+\begin{deflist}
+\itemtitle{\typedef{integer}}
+\begin{itemdesc}
+The binary version writes 32-bit signed two's complement integers using the
+\code{writeInt(int)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version writes
+the integer to the file followed by white space.
+\end{itemdesc}
+
+\itemtitle{\typedef{byte}}
+\begin{itemdesc}
+The binary version writes 8-bit signed two's complement bytes using the
+\code{writeByte(byte)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version is the
+same as for the \type{integer} type, but the range of values is more
+limited.
+\end{itemdesc}
+
+\itemtitle{\typedef{long}}
+\begin{itemdesc}
+The binary version writes 64-bit two's complement integers using the 
+\code{writeLong(long)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version is the
+same as for the \type{integer} type.
+\end{itemdesc}
+
+\itemtitle{\typedef{float}}
+\begin{itemdesc}
+The binary version writes single-precision 32-bit floating point
+values using the \code{writeFloat(float)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version writes
+the number (possibly truncated) to the file followed by white space.
+\end{itemdesc}
+
+\itemtitle{\typedef{double}}
+\begin{itemdesc}
+The binary version writes double-precision 64-bit floating point
+values using the \code{writeDouble(double)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version is the
+same as for the \type{float} type.
+\end{itemdesc}
+
+\itemtitle{\typedef{boolean}}
+\begin{itemdesc}
+The binary version writes boolean values using the
+\code{writeBoolean(boolean)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version writes
+the number \code{0} (false) or \code{1} (true) to the file
+followed by white space.
+\end{itemdesc}
+
+\itemtitle{\typedef{char}}
+\begin{itemdesc}
+The binary version writes a single 16-bit Unicode character using
+the \code{writeChar(int)} method of the
+\code{java.io.DataOutputStream} class. The ASCII version writes
+the character followed by white space.
+\end{itemdesc}
+
+\itemtitle{\typedef{string}}
+\begin{itemdesc}
+A string consisting of \meta{n} 16-bit Unicode characters is written
+as an \type{integer} followed by the \meta{n} characters of type
+\type{char}. For the binary format, this is equivalent to:
+\begin{verbatim}
+dout.writeInt(text.length());
+dout.writeChars(text);
+\end{verbatim}
+where \code{dout} is a \code{java.io.DataOutputStream} object
+and \code{text} is a \code{java.lang.String}. For the ASCII format,
+the length is written as an integer followed by a \emph{single}
+white space character. (Avoid using \code{println} for just \meta{n} as the
+end-of-line character for some operating systems consists of two
+characters.) Then the string is written followed by white space.
+For example:
+\begin{verbatim}
+out.print(String.format("%d %s ", text.length(), text));
+\end{verbatim}
+or
+\begin{verbatim}
+out.println(String.format("%d %s", text.length(), text));
+\end{verbatim}
+(where \code{out} is a \code{java.io.PrintWriter} object.)
+As in the above example, a newline character can be used after the
+string, just not after the number.
+
+A null or empty string is just written as the number 0. For example,
+for the binary version:
+\begin{verbatim}
+dout.writeInt(0);
+\end{verbatim}
+or for the ASCII version:
+\begin{verbatim}
+out.print("0 ");
+\end{verbatim}
+\end{itemdesc}
+
+\itemtitle{\typedef{transform-matrix}}
+\begin{itemdesc}
+A transformation matrix is saved as six \type{double} values
+representing the scale-$x$ factor, the shear-$y$
+factor, the shear-$x$ factor, the scale-$y$
+factor, the $x$-translation and the
+$y$-translation. For versions below 1.8, the translations
+are in terms of the \gls{bp} PostScript unit, otherwise they are in
+terms of the \gls{storageunit}.
+\end{itemdesc}
+
+\itemtitle{\typedef{float-array}}
+\begin{itemdesc}
+An array of \type{float} values is stored as an \type{integer}
+\meta{n} indicating the length of the array (may be 0 for a null or empty
+array) followed by the \meta{n} \type{float} array elements.
+\end{itemdesc}
+
+\itemtitle{\typedef{double-array}}
+\begin{itemdesc}
+An array of \type{double} values is stored as an \type{integer}
+\meta{n} indicating the length of the array (may be 0 for a null or empty
+array) followed by the \meta{n} \type{double} array elements.
+\end{itemdesc}
+
+\itemtitle{\typedef{unit-id}}
+\begin{itemdesc}
+A unit identifier is stored as a \type{byte}. This may take one of eight
+values: 0 (\gls{pt}), 1 (inch), 2 (cm), 3 (\gls{bp}), 4 (mm), 5
+(pc), 6 (dd) or 7 (cc).
+\end{itemdesc}
+
+\itemtitle{\typedef{length}}
+\begin{itemdesc}
+Lengths that are independent of the \gls{storageunit} are stored as a
+\type{double} followed by the \type{unit-id}.
+\end{itemdesc}
+
+\itemtitle{\typedef{angle}}
+\begin{itemdesc}
+An angle is stored as a \type{double} followed by a \type{byte}
+indicating the unit where 0 represents radians and 1 represents
+degrees.
+\end{itemdesc}
+
+\itemtitle{\typedef{paint}}
+\begin{itemdesc}
+\Manmsg{colour} data is stored as a \type{char} indicating the
+\manmsg{colour} type (\meta{col-id}).  Available types are listed in
+\tableref{tab:jdrcolourtypes}.
+
+If \meta{col-id} is \code{T} (transparent) this ends the paint
+information. Otherwise \meta{col-id} is followed by the
+\manmsg{colour} specifications (\meta{\manmsg{colour}-specs}).
+
+\begin{table}[htbp]
+\caption{Available \Manmsg{colour} Types}
+\label{tab:jdrcolourtypes}
+\centering
+\begin{tabular}{lll}
+\bfseries Type & \bfseries ID & \bfseries Version\\
+Transparent & \code{T} & 1.0 onwards\\
+RGB & \code{R} & 1.0 onwards\\
+CMYK & \code{C} & 1.0 onwards\\
+Linear Gradient & \code{G} & 1.0 onwards\\
+Radial Gradient & \code{D} & 1.3 onwards\\
+\Manmsg{grey} & \code{Y} & 1.4 onwards\\
+HSB & \code{S} & 1.4 onwards
+\end{tabular}
+\end{table}
+\end{itemdesc}
+
+
+\itemtitle{\typedef{rgb}}
+\begin{itemdesc}
+RGB \manmsg{colour} specs are saved as four \type{float} values in the
+range 0 to 1 (inclusive) representing the red, green, blue and alpha
+components.
+\end{itemdesc}
+
+\itemtitle{\typedef{cmyk}}
+\begin{itemdesc}
+CYMK \manmsg{colour} specs are saved as five \type{float} values in the
+range 0 to 1 (inclusive) representing the cyan, magenta, yellow, black
+and alpha components.
+\end{itemdesc}
+
+\itemtitle{\typedef{hsb}}
+\begin{itemdesc}
+HSB \manmsg{colour} specs are saved as four \type{float} values
+representing the hue, saturation, brightness and alpha components.
+The hue value must lie in the range 0 (inclusive) to 360
+(exclusive). The other values must lie in the range 0 to 1
+(inclusive).
+\end{itemdesc}
+
+\itemtitle{\typedef{grey}}
+\begin{itemdesc}
+\Manmsg{grey} specs are saved as two \type{float} values in the range 0 to
+1 (inclusive) representing the \manmsg{grey} and alpha components.
+\end{itemdesc}
+
+\itemtitle{\typedef{linear-paint}}
+\begin{itemdesc}
+Linear gradient paint specs are saved as the start \type{paint}, the
+end \type{paint} followed by an \type{integer} indicating the
+direction, which may be one of: 0 (North), 1 (North-East), 2 (East),
+3 (South-East), 4 (South), 5 (South-West), 6 (West) or 7 (North-West).
+\FlowframTk\ doesn't support another gradient type as the
+start or end paint.
+\end{itemdesc}
+
+\itemtitle{\typedef{radial-paint}}
+\begin{itemdesc}
+Radial gradient paint specs are saved as the start \type{paint}, the
+end \type{paint} followed by an \type{integer} indicating the
+starting location, which may be one of: 0 (North), 1 (North-East), 2 (East),
+3 (South-East), 4 (South), 5 (South-West), 6 (West), 7 (North-West)
+or 8 (\Manmsg{centre}).
+\FlowframTk\ doesn't support another gradient type as the
+start or end paint.
+\end{itemdesc}
+
+\end{deflist}
+
+\begin{important}
+Spaces in any syntax specifications below are for clarity and ease
+of line breaking only and don't form part of the specification
+(although white space may be acceptable at that point in the ASCII
+\gls{AJR} format, according to the above data types).
+\end{important}
+
+\begin{enumerate}
+
+\item \label{jdr:storageunit}\Gls{storageunit}
+\begin{jdrversion}{1.8 onwards}
+\meta{storage-id}
+\end{jdrversion}
+Regardless of whether or not the settings are saved in the file, as
+from JDR/AJR version 1.8 the \gls{storageunit} \meta{storage-id} is
+always present immediately after the version number and is used for
+all lengths described below (including \glspl{co-ordinate}) unless
+otherwise indicated. The unit is saved as a \type{unit-id} type.
+
+Versions below 1.8 must have all lengths stored as
+\glslink{bp}{PostScript points}.
+
+\item\label{jdr:settings-id}Setting ID.
+\meta{settings-id}
+Next is a value \meta{settings-id} indicating whether or not the
+\FlowframTk\ settings (\sectionref{sec:settings}) are
+stored.
+In version 1.3 onwards, this value is a \type{byte}, and may take one of three
+values: 0 (no settings), 1 (all settings) or 2 (paper size only).
+In versions prior to 1.3, this value is a \type{boolean} value,
+where true indicates all settings and false indicates no settings.
+
+\item\label{jdr:settings}
+The settings information is stored as follows when the
+\meta{settings-id} is 1 (or true):
+\begin{jdrversion}{1.0--1.7}
+\meta{show-grid} \meta{lock-grid} \meta{show-rulers} \meta{tool-id}
+\meta{normalsize} \meta{paper} \meta{grid}
+\end{jdrversion}
+\begin{jdrversion}{1.8 onwards}
+\meta{show-grid} \meta{lock-grid} \meta{show-rulers} \meta{tool-id}
+\meta{paper} \meta{grid} \meta{point size} \meta{scale flag}
+\end{jdrversion}
+If \meta{settings-id} is 2, just \meta{paper} is present.
+
+
 TODO
+
+\end{enumerate}
 
 
 \chapter{Help Windows}
