@@ -13213,7 +13213,7 @@ If \meta{settings-id} is 2, just \meta{paper} is present.
   \end{syntaxline}
   This is the same as the \meta{grid-specs}
   for the \hyperref[jdr:rectgrid]{rectangular grid} described below, 
-  however the \meta{major} unit is an \type{integer} not a
+  however the \meta{major} unit for versions below 1.6 is an \type{integer} not a
   \type{double}. The \meta{unit} is restricted to
   0 (\glslink{pt}{\TeX\ pt}), 1 (inches),
   2 (centimetres) or 3 (\glslink{bp}{PostScript points}).
@@ -13223,7 +13223,7 @@ If \meta{settings-id} is 2, just \meta{paper} is present.
   \meta{grid-id} \meta{grid-specs}
   \end{syntaxline}
   The \meta{grid-id} is a \type{byte} representing the grid style ID.
-  Recognised IDs are listed in \Tableref{tab:jdrgridids}
+  Recognised IDs are listed in \Tableref{tab:jdrgridids}.
   \end{jdrversion}
 
 \FloatTable{tab:jdrgridids}
@@ -13876,6 +13876,120 @@ If no controls are anchored, the $-1$ is still required.
     \end{enumerate}% end of segment info
 
   \end{enumerate}% end of path info
+
+\item\label{jdr:textarea}%
+\Gls{textarea} (\code{T}) data is stored as follows:
+\begin{jdrversion}{1.0--1.7}
+\begin{syntaxline}
+\meta{font-specs} \meta{transform}
+\meta{latex-flag} [\meta{latex-specs}] \meta{text paint} \meta{text}
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.8 onwards}
+\meta{outline-flag} [\meta{fill paint}]
+\meta{font-specs} \meta{transform}
+\meta{latex-flag} [\meta{latex-specs}] \meta{text paint} \meta{text}
+\end{jdrversion}
+
+  \begin{enumerate}
+  \item\label{jdr:outline} \meta{outline-flag} is a \type{boolean}
+  value that indicates whether or not the text should be rendered as
+  an \textattr{outline}. If true, \meta{fill paint} follows, which is the
+  \type{paint} used to fill the interior. A transparent \type{paint}
+  indicates the interior shouldn't be filled.
+
+  \item\label{jdr:fontspecs} \meta{font-specs} has the syntax:
+  \begin{syntaxline}
+  \meta{family} \meta{shape} \meta{weight} \meta{size}
+  \end{syntaxline}
+  The \meta{family} must be a non-empty, non-null \type{string}
+  indicating the name of the font (as used by \FlowframTk, not
+  when exported to a \LaTeX\ file, so it's a system font rather than a
+  \TeX\ font).
+
+  The \meta{shape} is a \type{byte} indicating the font shape (0 for
+  upright, 1 for emphasized, 2 for italic, 3 for slanted and 4 for
+  smallcaps).  Version 1.6 and below only permitted 0 or 1 for the shape.
+  Although the file format allows five different shape styles,
+  \code{java.awt.Font} only supports plain or italic, so when
+  rendering on the \gls{canvas}, \FlowframTk\ treats emphasized,
+  italic and slanted as \code{Font.ITALIC} and the other styles as
+  \code{Font.PLAIN}. The \widget{font.shape.italic} option
+  in the font style dialogs actually sets the shape to type~1 (emphasized) rather
+  than type~2.
+
+  The \meta{weight} is a \type{byte} indicating the font weight (0 for medium,
+  1 for bold).
+
+  For versions below 1.8 the font size is a non-negative
+  \type{integer}, otherwise it's stored as a non-negative
+  \type{length}.
+
+  \item \meta{transform} is a \type{transform-matrix} indicating the
+  text transformation relative to the top left corner of the
+  \gls{canvas}.
+
+  \item\label{jdr:latexspecs} The \meta{latex-flag} is a \type{boolean} value that indicates
+  whether the \LaTeX-related attributes (\meta{latex specs}) are saved.
+  If true, the syntax for \meta{latex specs} is
+  \begin{jdrversion}{below 1.8}
+  \begin{syntaxline}
+  \meta{latex font specs} \meta{h-align} \meta{v-align} \meta{latex text}
+  \end{syntaxline}
+  \end{jdrversion}
+  \begin{jdrversion}{1.8 onwards}
+  \begin{syntaxline}
+  \meta{latex font specs} \meta{h-align} \meta{v-align} \meta{latex text}
+  \meta{left delim} \meta{right delim}
+  \end{syntaxline}
+  \end{jdrversion}
+  The \meta{latex font specs} are the \LaTeX\ font declarations: \meta{family},
+  \meta{weight}, \meta{shape} and \meta{size}. Each attribute is
+  stored as a \type{string}.
+
+  The \meta{h-align} element represents the horizontal alignment and
+  is stored as a \type{byte} that may be one of: 0 (left), 1
+  (\manmsg{centre}) or 2 (right).
+
+  The \meta{v-align} element represents the vertical alignment and
+  is stored as a \type{byte} that may be one of: 0 (top), 1
+  (middle), 2 (baseline) or 3 (bottom).
+
+  The \LaTeX\ alternative text \meta{latex text} is a \type{string}.
+  If empty or null, the \LaTeX\ alternative text should be considered equivalent
+  to \meta{text}.
+  \end{enumerate}% end of text info
+
+\item\label{jdr:bitmap} Bitmap (\texttt{I}) information is stored as follows:
+\begin{syntaxline}
+\meta{filename} \meta{latex-flag} [\meta{latex-bitmap-specs}]
+\meta{transformation}
+\end{syntaxline}
+where:
+  \begin{enumerate}
+  \item \meta{filename} is a non-empty, non-null \type{string}
+  containing the file name. This may be a path relative to the
+  \gls{JDR}\slash\gls{AJR} file for version 1.8 onwards.
+
+  \item If the \type{boolean} value \meta{latex-flag} is true, it must
+  be followed by \meta{latex-bitmap-specs}
+
+  \item\label{jdr:latexbitmap}
+  \meta{latex-bitmaps-specs} has the following format:
+  \begin{syntaxline}
+  \meta{lfilename}\meta{imgcmd}
+  \end{syntaxline}
+  where \meta{lfilename} is a \type{string} containing the \LaTeX\
+  pathname for the bitmap. A null or empty value indicates it should
+  be determined from \meta{filename} (replacing the pathname
+  separator with a \gls{forwardslash} if necessary). The image command is stored
+  in the \type{string} \meta{imgcmd} and may be empty or null.
+
+  \item \meta{transformation} is a \type{transform-matrix}. The origin
+  is the bottom left corner of the \gls{bitmap}.
+  \end{enumerate}% end of bitmap info
+
+
 
 \end{numbered}
 
