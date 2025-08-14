@@ -14361,8 +14361,80 @@ dialog (see \sectionref{sec:licence}).
 
 \chapter{Multilingual Support}\label{sec:multilingualsupport}
 
-TODO
+All the language dependent information is stored in the
+\filefmt{lib/resources} subdirectory of the installation directory.
+If you want all the menus, tooltips
+etc in another language, you will need to translate the
+dictionary file (found in \filefmt{lib/resources/dictionaries/}). 
+These are in XML format. Only the element content (not the key)
+should be changed. Parameters are denoted \code{\marg{0}},
+\code{\marg{1}}, etc. Any literal brace needs to be delimited with
+a straight single quote. A literal straight single quote should be
+doubled.
 
+The \code{key} attribute of each \code{entry} element has a specific
+format. The prefix indicates the entry type. For example,
+\qtt{menu.} indicates a menu or menu item, \qtt{index.} indicates an
+index entry for the manual, and \qtt{manual.} indicates a
+non-indexed entry for the manual.  The suffix may also be
+significant. For example, \qtt{.title} indicates a dialog or panel
+title, and \qtt{.text}, \qtt{.plural}, \qtt{.description},
+\qtt{.symbol}, \qtt{.initvalue}, \qtt{.mnemonic}, \qtt{.keystroke},
+\qtt{.tooltip}, and \qtt{.iconimage} all correspond to glossary
+entry fields. In the case of \qtt{.mnemonic}, \qtt{.keystroke} and
+\qtt{.tooltip}, they are also used by \FlowframTk\ for the widget's
+mnemonic, accelerator and tooltip text.  The tag in between the
+prefix and suffix has the indexing hierarchy denoted with a dot.
+
+There are three keys (\code{about.translator},
+\code{about.translator\_info} and \code{about.translator\_url})
+which can be used to identify yourself as the translator. If
+the \code{about.translator} value is set, the information will be
+displayed in the \menu{help.about} dialog box.
+
+The dictionary file should be named
+\metafilefmt{flowframtk-}{locale}{.xml}
+where \meta{locale} is the locale identifier.
+\FlowframTk\ will search for a match on the language first
+and load that if found, but will also search for a closer match to
+the default locale and load that, if found. For example,
+if the default locale is \qt{en-US}, then first
+\filefmt{flowframtk-en.xml} will be loaded. As there isn't a file
+for \qt{en-US} no further file is loaded.
+However, if the default locale is \qt{en-GB}, then first
+\filefmt{flowframtk-en.xml} will be loaded, but after that
+\filefmt{flowframtk-en-GB.xml} will be loaded and any entries in
+that will override an existing entry with the same key.
+If there's no match on \meta{locale}, then 
+\filefmt{flowframtk-en.xml} will be used.
+
+The easiest way to create the XML file is to copy an existing
+resource file, for example \filefmt{flowframtk-en.xml}, and replace
+all the content of the \code{entry} elements. Ensure that the file
+is UTF-8. If you want to add your translations to \FlowframTk, you
+can do so via a pull request in the \FlowframTk\ repository on
+GitHub (\url{https://github.com/nlct/flowframtk}).
+
+The \FlowframTk\ source code uses the \TeX\ Java Help Library
+command line tools to convert the \LaTeX\ documentation source code
+(\sectionref{sec:docsource}) into the HTML and XML files required by
+the in-application help system (\sectionref{sec:helpwindows}). The
+\TeX\ Java Help Library is also used by \FlowframTk\ to provide the
+windows used by the in-application help system. All
+language-sensitive text needed by the in-application help are
+in the file \metafilefmt{texjavahelplib-}{locale}{.xml} which has
+the same scheme as \metafilefmt{flowframtk-}{locale}{.xml}.
+The \TeX\ Java Help Library dictionary files are always loaded first
+so any entries with duplicate tags in \metafilefmt{flowframtk-}{locale}{.xml}
+will override the ones in  \metafilefmt{flowframtk-}{locale}{.xml}.
+If you want to add translations for the \TeX\ Java Help Library,
+you can do so via a pull request in the \TeX\ Java Help Library
+repository (\url{https://github.com/nlct/texjavahelp}).
+
+\seealsorefs{
+  sec:languages,
+  sec:docsource
+}
 
 \chapter{Source Code}\label{sec:sourcecode}
 
