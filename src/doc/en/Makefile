@@ -48,8 +48,9 @@ jdrview-props-en-GB.bib	: $(dictdir)/jdrview-en.xml $(dictdir)/jdrcommon-en.xml 
 
 
 version.tex	: $(baseclass)
-	@echo "\\date{Version " > version.tex
+	@echo "\\versiondate{" > version.tex
 	@grep 'String APP_VERSION = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_VERSION\s=//" | tr -d "\"\; " >> version.tex
+	@echo "}{" >> version.tex
 	@grep 'String APP_DATE = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_DATE\s=//" | tr -d "\"\; " >> version.tex
 	@echo "}" >> version.tex
 

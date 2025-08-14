@@ -14408,6 +14408,10 @@ that will override an existing entry with the same key.
 If there's no match on \meta{locale}, then 
 \filefmt{flowframtk-en.xml} will be used.
 
+Elements that are common to both \FlowframTk\ and JDRView 
+are in \metafilefmt{jdrcommon-}{locale}{.xml}. This is loaded before
+\metafilefmt{flowframtk-}{locale}{.xml}.
+
 The easiest way to create the XML file is to copy an existing
 resource file, for example \filefmt{flowframtk-en.xml}, and replace
 all the content of the \code{entry} elements. Ensure that the file
@@ -14438,27 +14442,332 @@ repository (\url{https://github.com/nlct/texjavahelp}).
 
 \chapter{Source Code}\label{sec:sourcecode}
 
-TODO
+The source code is available in the \FlowframTk\ GitHub repository
+(\url{https://github.com/nlct/flowframtk}).
+The creation of the HTML and XML helpset files is integral to the 
+build process.
+Requirements:
+\begin{itemize}
+\item The \TeX\ Java Help Library (\filefmt{texjavahelplib.jar})
+available from \url{https://github.com/nlct/texjavahelp}.
+This should be placed in the \filefmt{lib} sub-directory.
+It needs to be on the Java class path as it's used by both the
+localisation support and the in-application help (\sectionref{sec:helpwindows}).
+ 
+\item The Java Development Kit to compile the Java source code.
 
+\item The \TeX\ Java Help command line tools.
+
+\item A \TeX\ installation to build the documentation.
+This installation should include \styfmt{glossaries},
+\styfmt{glossaries-extra} and \appfmt{bib2gls}.
+\end{itemize}
+
+I've only compiled and tested the source under Linux using GNU Make.
+I can't guarantee that it will work on other systems.
+
+\begin{enumerate}
+\item Compile the Java source code (\sectionref{sec:javasource}).
+
+\item Use \appfmt{tjhxml2bib} (one of the \TeX\ Java Help command
+line tools) to convert the applicable XML dictionary files to 
+a \appfmt{bib2gls} file. This ensures that the manual uses the
+correct text for the menus and widgets etc, and has the correct
+hierarchical structure. For example, the sequence
+\menu{help.manual} is created with
+\verb|\menu{help.manual}|.
+
+\item Compile the PDF from the documentation source
+(\sectionref{sec:docsource}). Don't delete any of the temporary
+files created in the document build process. They're needed in the
+next step. Note that some of the labels (created with \csfmt{label}
+in the document source) are referenced in the Java code when
+creating context-sensitive help buttons, such as those in dialog
+boxes. These labels should not be changed. (The labels are also used
+to determine the HTML file basenames.)
+The documentation requires the \styfmt{texjavahelp} package which is
+part of the \TeX\ Java Help system.
+
+\item Use \appfmt{texjavahelpmk} (the other \TeX\ Java Help command
+line tool) to convert the \LaTeX\ source to the HTML and XML files
+that are required by the in-application help.
+This uses the \TeX\ Parser Library to parse the source code and 
+associated files to create the helpset files. These consist of an
+HTML file for each sectional unit, an XML file for the document
+structure (used in the navigation tree on the side of the help
+window and obtained from the table of contents), 
+an XML file containing all indexed terms (using
+information in the files created by \appfmt{bib2gls}), and
+an XML file containing the search data. This is created as
+\appfmt{texjavahelpmk} writes the HTML content, which is done via a
+buffer that detects paragraphs and word boundaries before writing
+the content to the destination HTML file.
+
+Note that since the \TeX\ Parser Library isn't a \TeX\ engine, it
+only has limited support for classes and packages. The
+\appfmt{texjavahelpmk} tool provides support for the commands and
+environments defined in the \styfmt{texjavahelp} package but
+the \code{JEditorPane} used by the help windows only has limited
+HTML and CSS support so some effects can't be replicated in the
+helpset files.
+
+\end{enumerate}
 
 \section{Java Source}\label{sec:javasource}
 
-TODO
+The source code is contained in subdirectories of
+\filefmt{src/java}.
 
+\begin{deflist}
+\itemtitle{\filefmt{src/java/jdr/}}
+\begin{itemdesc}
+This contains the source code for \filefmt{jdr.jar}. This deals with
+all the information that constitutes an image as well as methods to
+save and load images. The import code for other file formats is
+still experimental.
+\end{itemdesc}
+
+\itemtitle{\filefmt{src/java/jdrresources/}}
+\begin{itemdesc}
+This contains the source code for \filefmt{jdrresources.jar}. This
+deals with common application resources used by both \FlowframTk\
+and JDRView.
+\end{itemdesc}
+
+\itemtitle{\filefmt{src/java/flowframtk/}}
+\begin{itemdesc}
+This contains the source code for \filefmt{flowframtk.jar}. This
+has the main file and deals with most of the \gls{gui} parts of 
+\FlowframTk\ (that are not provided by \filefmt{jdrresources}).
+\end{itemdesc}
+
+\itemtitle{\filefmt{src/java/jdrview/}}
+\begin{itemdesc}
+This contains the source code for \filefmt{jdrview.jar}. This has
+the main file and deals with the \gls{gui} parts of JDRView
+(that are not provided by \filefmt{jdrresources}).
+\end{itemdesc}
+
+\itemtitle{\filefmt{src/java/jdrinfo/}}
+\begin{itemdesc}
+This contains the source code for \filefmt{jdrinfo.jar}. I wrote this
+command line application to detect the file format version numbers for my sample 
+\gls{JDR}/\gls{AJR} files.
+\end{itemdesc}
+
+\itemtitle{\filefmt{flowframtk/src/*2*}}
+\begin{itemdesc}
+These directories contain the source code for the command line
+converters that together form jdrutils. I plan to combine them all
+into a single application.
+\end{itemdesc}
+
+\end{deflist}
 
 \section{Document Source}\label{sec:docsource}
 
-TODO
+The documentation source (in \filefmt{src/doc/}) is written in
+\LaTeX\ but requires additional tools to create all the necessary
+files. To reduce duplication, shared images are in
+\filefmt{src/doc/sharedimages} (if they are independent of the
+localisation settings) or
+\metafilefmt{src/doc/}{lang}{-sharedimages} if they are shared by
+multiple regional dialects with the same root language.
+For example, \filefmt{en-sharedimages} has the images that look the
+same regardless of whether \code{en} or \code{en-GB} has been
+selected as the language. The source code for the documentation is
+in the \metafilefmt{src/doc/}{lang}{/} (for example,
+\filefmt{src/doc/en/}).
 
+You will need \filefmt{texjavahelp.sty} on your \TeX\ path. This is
+provided by the \TeX\ Java Help system. You will also need the
+command line tools provided by the \TeX\ Java Help system.
+
+The \filefmt{version.tex} file needs to be created. For example
+\begin{compactcodebox}
+\cmd{versiondate}\marg{\thedocversion}\marg{\thedocdate}
+\end{compactcodebox}
+The accompanying \filefmt{Makefile} does this automatically by
+searching the \filefmt{JDRResources.java} file for the relevant
+information.
+
+The \metafilefmt{flowframtk-props-}{locale}{.bib} file needs to be
+created with \appfmt{tjhxml2bib}. This is a \appfmt{bib2gls} file
+that's created from all the applicable dictionary XML files.
+For example, \filefmt{flowframtk-props-en-GB.bib} is created using
+(no line breaks):
+\begin{terminal}
+tjhxml2bib  \longargfmt{copy-overwrite-xml} \meta{dictdir}/flowframtk-en.xml \meta{dictdir}/flowframtk-en-GB.xml \meta{dictdir}/jdrcommon-en.xml \meta{dictdir}/jdrcommon-en-GB.xml \shortargfmt{o} flowframtk-props-en-GB.bib
+\end{terminal}
+where \meta{dictdir} is the path to the XML files.
+This will work out the hierarchical structure and entry type based
+on the tag attribute for each entry element.
+
+The files \filefmt{flowframtk-en.tex} and
+\filefmt{flowframtk-en-GB.tex} correspond to the regionless
+English and British English documents. They setup the
+locale-specific information and then input
+\filefmt{flowframtk-main.tex} which has the rest of the document
+preamble and the document environment.
+
+The file \filefmt{helpinterface.tex} is copied over from the \TeX\
+Java Help system and is input in \sectionref{sec:helpwindows}.
+It's shared by other applications that use the \TeX\ Java Help
+library.
+
+The document build requires \LuaLaTeX, \BibTeX, and Bib2Gls.
+If you have Arara installed, there are Arara directives at the
+start, so you can simply do, for example:
+\begin{terminal}
+arara flowframtk-en.tex
+\end{terminal}
+Otherwise you will need to run the following:
+\begin{terminal}
+lualatex flowframtk-en
+bib2gls --group --no-warn-unknown-entry-types flowframtk-en
+bibtex flowframtk-en
+lualatex flowframtk-en
+lualatex flowframtk-en
+\end{terminal}
+(You may need to repeat some steps on the very first run to ensure
+everything is up-to-date.) Don't delete any of the temporary files
+created in this step as they are needed in the next step.
+
+The HTML and XML files used by the helpset are created from the
+\LaTeX\ document source and the temporary files created during the
+document build. Each sectional unit in the document source should be
+followed by a label. For example:
+\begin{compactcodebox}
+\cmd{section}\marg{Document Source}\cmd{label}\marg{sec:docsource}
+\end{compactcodebox}
+The label may be referenced in the Java code for context-sensitive
+help, such as \dgls{help} buttons in dialogs. The
+\filefmt{navigation.xml} file has the mappings from each label
+to the corresponding HTML file. The basename for the HTML file
+is derived from the label. Any leading \qtt{sec:} is stripped
+and the remainder is the basename (for example, this section has the
+label \code{sec:docsource} so the corresponding HTML is
+called \filefmt{docsource.html}).
+It's therefore important not to change any labels that are
+referenced in the Java code and the label should be appropriate 
+as a filename.
+
+These HTML and XML files are created with \appfmt{texjavahelpmk},
+a command line tool provided with \TeX\ Java Help. For example:
+\begin{terminal}
+texjavahelpmk flowframtk-en.tex \meta{targetdir}/flowframtk/en
+\end{terminal}
+where \meta{targetdir} is the directory containing the helpsets
+(in the \filefmt{resources/helpsets} subdirectory of the
+\filefmt{lib} directory).
+
+\begin{information}
+The \appfmt{texjavahelpmk} tool can take a while to run.
+The \TeX\ Parser Library is not a \TeX\ engine and was originally
+designed just to parse fragments or short passages (as it does with
+\appfmt{bib2gls}). It's not particularly efficient for large
+documents and \appfmt{texjavahelpmk} is additionally creating the
+search database while it's creating the HTML content.
+\end{information}
 
 \chapter{Troubleshooting}\label{sec:troubleshooting}
 
-TODO
+\begin{enumerate}
+\item My settings aren't remembered.
 
+Check which option is selected in the
+\widget{initsettings.title} tab of the
+\widget{config.title} dialog. This should be set to
+\widget{initsettings.last} if you want the settings
+remembered from the last time you quit the application. Also check
+the \widget{jdr.on_load} option in the \widget{jdr.title} tab.
+If this is set to \widget{jdr.on_load.all} then any settings
+stored in an image that you load will override the current settings.
+
+\item Sometimes the canvas doesn't get correctly redrawn after I've
+loaded an image from a file.
+
+This is a known bug. Use \accelerator{menu.debug.revalidate} to force a redraw.
+
+\item Sometimes lines don't show up.
+
+If you have a thin line and the magnification is small or you
+have low resolution, the line may be too thin to show up on your
+display. Try either using a thicker line style or increasing the
+magnification.
+
+\item When I try clicking on the canvas to add a new point, nothing
+happens.
+
+Make sure that you are actually clicking and not dragging. (Some
+touch sensitive mouse pads can mistake a click for a move or drag.)
+Make sure that you have selected the correct tool.
+
+\item I tried to select and drag a point, but another point moved.
+
+When you select the new point, make sure it's highlighted before you
+try dragging it. The click to select operation is separate to the
+drag operation.
+
+\item I tried changing the line/text style but nothing
+happened.
+
+Remember to use the \menu{edit.path} and \menu{edit.textarea}
+submenus to change the styles for existing objects,
+and use \menu{settings.styles} for all subsequent new
+objects.
+
+\item I tried to create a package based on the \sty{flowfram}
+package, but it didn't define some (or all) of my frames.
+
+Remember to identify each \gls{object} as a flow frame,
+a dynamic frame or a static frame. Any \gls{object}
+that hasn't been thus identified will not be written to
+the sty file.
+
+\item When I exported to a package or class, the \sty{flowfram}
+package complained the option \qt{hide} or \qt{hidethis} isn't available.
+
+Upgrade to at least version 1.16 of the \sty{flowfram}
+package.
+
+\item When I exported to a package or class, the \sty{flowfram}
+package complained that I couldn't use \gls{Shapepar}.
+
+Upgrade to at least version 1.16 of the \sty{flowfram}
+package.
+
+\item I got an error that \gls{Shapepar} isn't defined.
+
+Upgrade to the latest version of the \sty{shapepar} package.
+
+\item I get an error when I try to \LaTeX\ a \env{pgfpicture} environment created by \FlowframTk.
+
+Remember to include the \sty{pgf} package. \FlowframTk\ was
+tested using version 3.0 of the \sty{pgf} package.
+It may not work with earlier versions.
+
+\end{enumerate}
 
 \section{Known Bugs}\label{sec:knownbugs}
 
-TODO
+If for some reason you are unable to access the save dialog box, you
+can do an emergency save by pressing
+\accelerator{menu.debug.dumpall}. This will save all
+currently open images to a subdirectory in the
+\gls{config_dir} (This works for most, but not all windows used by \FlowframTk.)
+
+\begin{enumerate}
+\item Occasionally bits of the screen don't get repainted.
+Use \accelerator{menu.debug.revalidate} to force a redraw.
+
+\item Occasionally the message window doesn't automatically close
+when there are no new warning messages.
+
+\item Occasionally the \code{java.awt.*} or \code{javax.swing.*}
+classes throw a NullPointerException.
+
+\end{enumerate}
 
 \chapter{\MFUsentencecase{\glsentrytext{index.licence}}}
 \label{sec:licence}
