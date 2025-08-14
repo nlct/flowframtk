@@ -13405,7 +13405,7 @@ stored. For example, if an image contains a \gls{path}, a
 \gls{JDR}/\gls{AJR} file these three objects will be stored as a single
 group structure containing the three objects. If in \FlowframTk\ you
 explicitly \gls{group} all the objects, then in the
-\gls{JDR} file, the outermost implicit group will contain
+\gls{JDR} file, the \hyperref[jdr:object]{outermost implicit group} will contain
 only one \gls{object} which will be this \gls{group}. It's an error
 for the top-level object to be anything other than a \gls{group}.
 
@@ -13450,9 +13450,9 @@ flowframe specifications \meta{flowframe-specs} should follow
 and above contains the \type{string} \meta{description}, which was
 omitted in earlier versions.
 
-Recall from above that the image is stored with an implied outer grouping. The
+Recall from \hyperref[jdr:object]{above} that the image is stored with an implied outer grouping. The
 \meta{flowframe-specs} for this implicit group represents the image
-typeblock and the \meta{description} represents the image description.
+\gls{typeblock} and the \meta{description} represents the image description.
 
 \end{numbered}
 
@@ -14264,11 +14264,85 @@ The \meta{modifier specs} are as follows:
   \end{enumerate}% end of composite shape info
 \end{numbered}% end of object info
 
+\plabel[Flowframe Data]{jdr:flowframe}\Gls{flowframe} data is stored as
+follows:
+\begin{jdrversion}{1.0--1.1}
+\begin{syntaxline}
+\meta{type} [\meta{border} \meta{label} \meta{pages}]
+\meta{top} \meta{bottom} \meta{left} \meta{right}
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.2}
+\begin{syntaxline}
+\meta{type} [\meta{border} \meta{label} \meta{pages}]
+\meta{top} \meta{bottom} \meta{left} \meta{right}
+[\meta{shape}]
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.3--1.7}
+\begin{syntaxline}
+\meta{type} [\meta{border} \meta{label} \meta{pages}]
+\meta{top} \meta{bottom} \meta{left} \meta{right}
+[\meta{shape} \meta{v-align}]
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.8 onwards}
+\begin{syntaxline}
+\meta{type} [\meta{border} \meta{label} \meta{pages}]
+\meta{top} \meta{bottom} \meta{left} \meta{right}
+[\meta{shape} \meta{v-align} \meta{contents}] \meta{even-x-shift}
+[\meta{even-y-shift}]
+\end{syntaxline}
+\end{jdrversion}
+where:
+\begin{numbered}
+\item The frame \meta{type} is stored as a \type{byte}. This may only
+take one of the following values: 0 (static), 1 (flow), 2 (dynamic)
+and 3 (\gls{typeblock}). There should only be one \gls{typeblock} and this
+should belong to the \hyperref[jdr:object]{outermost implicit group}.
 
+\item If \meta{type} is not equal to 3 (i.e.\ is not the \gls{typeblock}), the following
+information should also be saved:
+  \begin{enumerate}
+  \item a \type{boolean} value (\meta{border})
+  indicating whether or not the frame should have a border;
+  \item the identification label (\meta{label}) stored as a
+  \type{string};
+  \item the page list (\meta{pages}) should be stored as a
+  \type{string}.
+  \end{enumerate}
 
+\item The margins \meta{top} \meta{bottom} \meta{left} and
+\meta{right} are each stored as a \type{float} (in terms of the
+PostScript point \gls{bp}) for versions below 1.8 and are stored
+as a \type{double} (in terms of the storage unit) otherwise.
 
+\item (Version 1.2 onwards.) If the frame type
+is either 0 (static frame) or 2 (dynamic frame) \meta{shape}
+is a \type{byte} indicating the paragraph shape. This may be one of:
+0 (standard shape), 1 (use \gls{parshape}) or 2 (use \gls{shapepar}).
+This value should be omitted if the frame type is 0 or 2.
 
-TODO
+\item (Version 1.3 onwards.) If the frame type is
+either 0 (static frame) or 2 (dynamic frame) \meta{v-align} is a
+\type{byte} that represents the vertical alignment. This may be one
+of: 0 (top), 1 (\manmsg{centre}) or 2 (bottom).
+This value should be omitted if the frame type is 0 or 2.
+
+\item (Version 1.8 onwards.)  If the frame type is
+either 0 (static frame) or 2 (dynamic frame) \meta{contents} is a
+\type{string} with the frame's contents. This may be an empty or
+null \type{string}.
+This value should be omitted if the frame type is 0 or 2.
+
+\item (Version 1.8 onwards.) The horizontal even page shift
+\meta{even-x-shift} is stored as a \type{double}.
+
+\item (Version 1.8 onwards.) The vertical even page shift
+\meta{even-y-shift} is stored as a \type{double}. This value is
+omitted for the \gls{typeblock} (type~3).
+
+\end{numbered}% end of flowframe info
 
 \chapter{Help Windows}
 \label{sec:helpwindows}
