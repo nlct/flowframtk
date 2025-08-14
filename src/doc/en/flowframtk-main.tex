@@ -13989,9 +13989,282 @@ where:
   is the bottom left corner of the \gls{bitmap}.
   \end{enumerate}% end of bitmap info
 
+\item \label{jdr:composite}Composite Shapes
+
+As from version 1.6, all \glspl{compositeshape} except
+for \glspl{symmetricshape} (that is, 
+\hyperref[jdr:textpath]{\code{X}},
+\hyperref[jdr:rotational]{\code{R}},
+\hyperref[jdr:scaled]{\code{C}} and 
+\hyperref[jdr:spiral]{\code{L}}) have \meta{object-specs} in
+the form:
+\begin{syntaxline}
+\meta{modifier specs} \meta{underlying shape specs}
+\end{syntaxline}
+For \glspl{symmetricshape} (\hyperref[jdr:symmetric]{\code{S}}) the syntax is:
+\begin{syntaxline}
+\meta{underlying shape specs} \meta{modifier specs}
+\end{syntaxline}
+
+The \meta{underlying shape specs} is the specification for the
+underlying shape in the form:
+\begin{syntaxline}
+\meta{id-char} \meta{object-specs}
+\end{syntaxline}
+where \meta{id-char} is the object type identifier (see
+\tableref{tab:jdrobjecttypes}), but the type is limited to shapes, so the 
+\gls*{textarea} (\hyperref[jdr:textarea]{\code{T}}), 
+\gls*{bitmap} (\hyperref[jdr:bitmap]{\code{B}}) and
+\gls*{group} (\hyperref[jdr:group]{\code{G}}) IDs aren't permitted here.
+
+The \gls{underlying-shape} may be another \gls{compositeshape}.
+\emph{\Inlineglspluraldef{underlying-shape.descendent}} 
+refers to the \gls{compositeshape}['s]
+\gls{underlying-shape} and any descendent of that underlying shape if it
+is also a \gls*{compositeshape}. The
+\emph{\inlineglstextdef{underlying-shape.base}} is the
+maximal \gls{underlying-shape.descendent} and must be a 
+\gls*{path} (\hyperref[jdr:path]{\code{P}}),
+in which case \meta{id-char} \meta{object-specs} will be
+\code{P} \meta{path style} \meta{path specs} \meta{anchor info}
+(\meta{anchor info} is omitted below version 1.7).
+
+Although the \glspl{underlying-shape.descendent} may be another
+\gls*{compositeshape}, they can't share the same type as either
+their \gls{underlying-shape-ancestor} or
+\glsfirstplural{underlying-shape.descendent}. For example, a
+\gls{textpath} may have a \gls{pattern} as its \gls{underlying-shape}, but
+a pattern can't have another pattern as its \gls{underlying-shape}.
+
+The \meta{modifier specs} are as follows:
+
+  \begin{enumerate}% start of composite shapes
+  \item\label{jdr:textpath}%
+  \Glspl{textpath} (\code{X}) are not available for versions below 1.5.
+
+  For this type of \gls{compositeshape}, the \meta{modifier specs} are only
+  present from version 1.8 and relate to the outline option
+  \meta{outline-flag} [\meta{fill paint}], which is
+  the same as for \glspl*{textarea} (\hyperref[jdr:textarea]{\code{T}}). So the
+  \meta{object-specs} are:
+  \begin{jdrversion}{1.8 onwards}
+  \begin{syntaxline}
+  \meta{outline-flag} [\meta{fill paint}] \meta{underlying shape specs}
+  \end{syntaxline}
+  \end{jdrversion}
+  \begin{jdrversion}{1.6--1.7}
+  \begin{syntaxline}
+  \meta{underlying shape specs}
+  \end{syntaxline}
+  \end{jdrversion}
+
+  For version 1.5 the \meta{object-specs} are:
+  \begin{jdrversion}{1.5}
+  \begin{syntaxline}
+  \meta{text paint} \meta{line style} \meta{path specs}
+  \end{syntaxline}
+  For version 1.5, the \meta{line style} and \meta{path specs} are as described
+  for paths (\hyperref[jdr:path]{\code{P}}). The base path must have the
+  text-path stroke (id 1) \hyperref[jdr:pathstyle]{\meta{path style}}.
+  \end{jdrversion}
+
+    \begin{enumerate}% text-path info
+
+    \item\label{jdr:textpathstroke} The \meta{text-path style} is
+    stored as:
+    \begin{syntaxline}
+    \meta{font specs} \meta{transform} \meta{latex-flag}
+    [\meta{latex specs}] \meta{text}
+    \end{syntaxline}
+    where:
+      \begin{enumerate}
+      \item \meta{font specs} are the same as for
+      \hyperref[jdr:textarea]{text areas}.
+
+      \item \meta{transform} is a \type{transform-matrix} indicating the
+      text transformation relative to the underlying shape (see
+      \sectionref{sec:textpath}).
+
+      \item The \meta{latex-flag} is a \type{boolean} value that indicates
+      whether the \LaTeX-related attributes (\meta{latex specs}) are saved.
+      If true, the syntax for \meta{latex specs} is
+      \begin{jdrversion}{below 1.8}
+      \begin{syntaxline}
+      \meta{latex font specs} \meta{h-align} \meta{v-align} \meta{latex text}
+      \end{syntaxline}
+      \end{jdrversion}
+      \begin{jdrversion}{1.8 onwards}
+      \begin{syntaxline}
+      \meta{latex font specs} \meta{h-align} \meta{v-align} \meta{latex text}
+      \meta{left delim} \meta{right delim}
+      \end{syntaxline}
+      \end{jdrversion}
+      This is the same as for \hyperref[jdr:textarea]{text areas} but
+      additionally includes the delimiters used by the
+      \sty{pgf} package's text decoration function for version 1.8
+      onwards. These are both stored as a \type{char}.
+%\begin{jdrversion}{1.8--2.0}
+%Both \meta{left delim} and \meta{right delim} are stored as a
+%\type{char}.
+%\end{jdrversion}
+%\begin{jdrversion}{2.1 onwards}
+%Both \meta{left delim} and \meta{right delim} are stored as a
+%\type{integer} that corresponds to the character's codepoint.
+%\end{jdrversion}
+      \end{enumerate}% end of text-path font specs
+
+    \item The \meta{text} is stored as a \type{string} and shouldn't be
+    empty or null.
+    \end{enumerate}% end of text-path info
+
+  \item\label{jdr:symmetric}%
+  \Glspl{symmetricshape} (\code{S}) are not available for versions
+  below 1.6. For newer versions, the \meta{modifier specs} are:
+  \begin{syntaxline}
+  \meta{join anchored} [\meta{join segment}]
+  \meta{symmetry x0} \meta{symmetry y0} \meta{symmetry x1} \meta{symmetry y1}
+  \meta{closed} [\meta{close anchored} [\meta{closing segment}]]
+  \end{syntaxline}
+  where:
+  \begin{enumerate}
+  \item The \type{boolean} value \meta{join anchored} indicates
+   whether or not the join between the original shape and its
+   reflection is anchored.
+
+  \item\label{jdr:joinsegment}%
+  If the join isn't anchored, \meta{join segment} is the
+  information about the joining segment. This is omitted if
+  \meta{join anchored} is true. The syntax for the join segment is:
+  \begin{syntaxline}
+  \meta{segment-id} [\meta{segment specs}]
+  \end{syntaxline}
+  where the \meta{segment-id} is a \type{char} indicating the
+  segment type. This may be one of \code{m} (gap), \code{l}
+  (line) or \code{c} (\gls{Bezier-curve}).
+    \begin{enumerate}
+    \item The \meta{segment specs} for both the gap (\code{m}) and
+    line (\code{l}) segments is omitted.
+
+    \item The \meta{segment specs} for the \gls{Bezier-curve} is:
+    \begin{syntaxline}
+    \meta{cx} \meta{cy}
+    \end{syntaxline}
+    where \meta{cx} and \meta{cy} are the $x$ and
+    $y$ \glspl{co-ordinate} of the curvature
+    control, respectively, and are each stored as a \type{double}
+    (in terms of the PostScript point \gls{bp} for versions below
+    1.8 and in terms of the storage unit otherwise).
+
+    \end{enumerate}
+
+  \item The \glspl{co-ordinate} for the line of symmetry
+  \meta{symmetry x0} \meta{symmetry y0} \meta{symmetry x1} and
+  \meta{symmetry y1} are each stored as a \type{double} and are in
+  terms of the PostScript point (\gls{bp}) for versions below 1.8
+  otherwise are in terms of the storage unit.
+
+  \item The \type{boolean} value \meta{closed} indicates if the
+  shape is closed.
+
+  \item If the shape is closed, the \meta{boolean} \meta{close anchor}
+  indicates whether or not the starting control is anchored to the
+  line of symmetry (true indicates the anchor setting is on).
+  If the shape isn't closed, this value is omitted.
+
+  \item If the \meta{close anchor} is false, the \meta{closing
+  segment} is the information about the segment used to close the
+  shape. This has the same syntax as for the
+  \hyperref[jdr:joinsegment]{\meta{join segment}}. The \meta{closing segment}
+  data is omitted if \meta{close anchor} is true.
+  \end{enumerate}
+
+  \item\label{jdr:rotational}%
+  \Glspl{rotationalpattern} (\code{R}) are not available for versions below 1.6.
+  For newer versions, the \meta{modifier specs} are:
+  \begin{syntaxline}
+  \meta{shape-specs} \meta{anchor-x} \meta{anchor-y} \meta{angle}
+  \meta{replicas} \meta{mode} \meta{show}
+  \end{syntaxline}
+  where:
+  \begin{enumerate}
+  \item \meta{shape-specs} are the \hyperref[jdr:composite]{underlying-shape's
+    specifications}.
+
+  \item \meta{anchor-x} is a \type{double} representing the
+    $x$ \gls{co-ordinate} of the anchor point (in terms of the PostScript point
+    \gls*{bp} for versions below 1.8, otherwise in terms of the
+    storage unit).
+
+  \item \meta{anchor-y} is a \type{double} representing the
+    $y$ \gls{co-ordinate} of the anchor point (in terms of the PostScript point
+    \gls*{bp} for versions below 1.8, otherwise in terms of the
+    storage unit).
+
+  \item \meta{angle} is the angle of rotation and is stored as a
+  \type{double} (in radians) for versions below 1.8, otherwise is
+  stored as an \type{angle}.
+
+  \item \meta{replicas} is an \type{integer} representing the number
+    of replicas.
+
+  \item \meta{mode} is a \type{boolean} variable, true if single-path mode.
+
+  \item \meta{show} is a \type{boolean} variable, true if the underlying
+    path is visible.
+  \end{enumerate}% end of rotational pattern specs
+
+  \item\label{jdr:scaled}%
+  \Glspl{scaledpattern} (\code{C}) are not available for versions below 1.6.
+  For newer versions, the specifications are:
+  \begin{syntaxline}
+  \meta{shape-specs} \meta{anchor-x} \meta{anchor-y} \meta{adjust-x}
+  \meta{adjust-y} \meta{scale-x} \meta{scale-y} \meta{replicas} \meta{mode}
+  \meta{show}
+  \end{syntaxline}
+  where \meta{shape-specs}, \meta{anchor-x}, \meta{anchor-y},
+  \meta{replicas}, \meta{mode} and \meta{show} are as for the
+  \hyperref[jdr:rotational]{rotational pattern}. Additionally:
+    \begin{enumerate}
+    \item \meta{adjust-x} is a \type{double} representing the
+    $x$ \gls{co-ordinate} of the adjust control point (in terms of the
+    PostScript point \gls{bp} for versions below 1.8, otherwise in terms
+    of the storage unit).
+
+    \item \meta{adjust-y} is a \type{double} representing the
+    $y$ \gls{co-ordinate} of the adjust control point (in terms of the
+    PostScript point \gls{bp} for versions below 1.8, otherwise in terms
+    of the storage unit).
+
+    \item \meta{scale-x} is a \type{double} representing the
+     $x$-scale factor.
+
+    \item \meta{scale-y} is a \type{double} representing the
+     $y$-scale factor.
+    \end{enumerate}% end of scaled pattern info
+
+  \item\label{jdr:spiral}%
+  \Glspl{spiralpattern} (\code{L}) are not available for versions below 1.6.
+  For newer versions, the specifications are:
+  \begin{syntaxline}
+  \meta{shape-specs} \meta{anchor-x} \meta{anchor-y} \meta{adjust-x}
+  \meta{adjust-y} \meta{angle} \meta{distance} \meta{replicas} \meta{mode}
+  \meta{show}
+  \end{syntaxline}
+  where \meta{shape-specs}, \meta{anchor-x}, \meta{anchor-y},
+  \meta{adjust-x}, \meta{adjust-y}, \meta{replicas}, \meta{mode} and
+  \meta{show} are as for \hyperref[jdr:scaled]{scaled patterns}. Additionally:
+    \begin{enumerate}
+    \item \meta{angle} is the spiral angle
+    parameter and is stored as a \type{double} (in radians) for
+    versions below 1.8, otherwise is stored as an \type{angle}.
+
+    \item \meta{distance} is a 64-bit double representing the spiral
+      distance parameter.
+    \end{enumerate}% end of spiral pattern info
+  \end{enumerate}% end of composite shape info
+\end{numbered}% end of object info
 
 
-\end{numbered}
 
 
 
