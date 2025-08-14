@@ -70,7 +70,12 @@
 \newcommand*{\type}[1]{\gls{ajdr-format.#1}}
 
 \tjhnewtitledbox{versionbox}{JDR version}{teal}
-\newenvironment{jdrversion}[1]{\begin{versionbox}[title={JDR #1}]}{\end{versionbox}}
+
+\NewDocumentEnvironment{jdrversion}{m+b}%
+{\begin{versionbox}[title={JDR #1}]#2\end{versionbox}}
+{}
+
+\NewDocumentEnvironment{syntaxline}{b}{\par\noindent#1\par\noindent}{\ignorespacesafterend}
 
 \title{User Manual for \FlowframTk}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -13031,11 +13036,13 @@ of line breaking only and don't form part of the specification
 \gls{AJR} format, according to the above data types).
 \end{important}
 
-\begin{enumerate}
+\begin{numbered}
 
 \item \label{jdr:storageunit}\Gls{storageunit}
 \begin{jdrversion}{1.8 onwards}
+\begin{syntaxline}
 \meta{storage-id}
+\end{syntaxline}
 \end{jdrversion}
 Regardless of whether or not the settings are saved in the file, as
 from JDR/AJR version 1.8 the \gls{storageunit} \meta{storage-id} is
@@ -13047,7 +13054,9 @@ Versions below 1.8 must have all lengths stored as
 \glslink{bp}{PostScript points}.
 
 \item\label{jdr:settings-id}Setting ID.
+\begin{syntaxline}
 \meta{settings-id}
+\end{syntaxline}
 Next is a value \meta{settings-id} indicating whether or not the
 \FlowframTk\ settings (\sectionref{sec:settings}) are
 stored.
@@ -13060,19 +13069,297 @@ where true indicates all settings and false indicates no settings.
 The settings information is stored as follows when the
 \meta{settings-id} is 1 (or true):
 \begin{jdrversion}{1.0--1.7}
+\begin{syntaxline}
 \meta{show-grid} \meta{lock-grid} \meta{show-rulers} \meta{tool-id}
 \meta{normalsize} \meta{paper} \meta{grid}
+\end{syntaxline}
 \end{jdrversion}
 \begin{jdrversion}{1.8 onwards}
+\begin{syntaxline}
 \meta{show-grid} \meta{lock-grid} \meta{show-rulers} \meta{tool-id}
 \meta{paper} \meta{grid} \meta{point size} \meta{scale flag}
+\end{syntaxline}
 \end{jdrversion}
 If \meta{settings-id} is 2, just \meta{paper} is present.
+
+  \begin{enumerate}% settings info
+  \item \meta{show-grid} is a \type{boolean} variable indicating whether or
+  not to display the \gls{grid}.
+
+  \item \meta{lock-grid} is a \type{boolean} variable indicating whether or
+  not to lock the \gls{grid}.
+
+  \item \meta{show-rulers} is a \type{boolean} variable indicating whether
+  or not to show the \glspl{ruler}.
+
+  \item \meta{tool-id} is an \type{integer} indicating which tool to select. For
+  versions below 1.8, this must be an \type{integer} in the range 0 and~7
+  (inclusive). As from version 1.8, this must be in the range 0 and~8
+  (inclusive).  \tableref{tab:toolid} indicates the ID for each tool.
+
+\FloatTable
+{tab:toolid}
+{%
+  \begin{tabular}{ll}
+  \bfseries ID & \bfseries Tool\\
+  0 & Select\\
+  1 & Open Line Path\\
+  2 & Closed Line Path\\
+  3 & Open Curve Path\\
+  4 & Closed Curve Path\\
+  5 & Rectangle\\
+  6 & Ellipse\\
+  7 & Text\\
+  8 & \Manmsg{maths} (as from version 1.8)
+  \end{tabular}
+}
+{Tool Identifiers}
+
+\item \Gls{normal-font-size}.
+  \begin{jdrversion}{1.0--1.7}
+  For versions below 1.8, \meta{normalsize} is an \type{integer} indicating the
+  \LaTeX\ \gls{normal-font-size}. As from version 1.8, this value
+  is stored later (see \ref{jdr:imagetex} below) and isn't governed by
+  the settings flag.
+  \end{jdrversion}
+
+  \item\label{jdr:paper}The \meta{paper} specs are:
+  \begin{jdrversion}{1.0--1.2}
+  \begin{syntaxline}
+  \meta{paper-id} [\meta{width} \meta{height} \meta{portrait-flag}]
+  \end{syntaxline}
+  \end{jdrversion}
+  \begin{jdrversion}{1.3 onwards}
+  \begin{syntaxline}
+  \meta{paper-id} [\meta{width} \meta{height}]
+  \end{syntaxline}
+  \end{jdrversion}
+  The paper size \meta{paper-id} is specified as a \type{byte}.
+  For versions below 1.3, this must be a number in the range 0 to~18
+  (inclusive), otherwise it must be in the range 0 to~72 (inclusive).
+  Table~\ref{tab:paperid} indicates the ID for each paper size,
+  and Table~\ref{tab:paperid1.3} shows additional values for version
+  1.3 onwards.  If the paper size has an ID of 18 (user defined), then there
+  must follow the paper \meta{width} (a \type{double} in \gls{bp})
+  and \meta{height} (a \type{double} in \gls{bp}). For versions prior to 1.3,
+  the user defined setting must also be followed by
+  \meta{portrait-flag} a \type{boolean} variable to indicate
+  whether or not the orientation is portrait (true) or
+  landscape (false). The paper dimensions are always stored
+  in PostScript points (\gls{bp}) and the unit id isn't saved.
+  (This is still true for version 1.8.)
+
+\FloatTable
+{tab:paperid}
+{%
+  \begin{tabular}{llll}
+  \bfseries ID & \bfseries Paper Size &
+  \bfseries ID & \bfseries Paper Size\\
+  0 & A0 (portrait) & 9 & A0 (landscape)\\
+  1 & A1 (portrait) & 10 & A1 (landscape)\\
+  2 & A2 (portrait) & 11 & A2 (landscape)\\
+  3 & A3 (portrait) & 12 & A3 (landscape)\\
+  4 & A4 (portrait) & 13 & A4 (landscape)\\
+  5 & A5 (portrait) & 14 & A5 (landscape)\\
+  6 & letter (portrait) & 15 & letter (landscape)\\
+  7 & legal (portrait) & 16 & legal (landscape)\\
+  8 & executive (portrait) & 17 & executive (landscape)\\
+  18 & user defined
+  \end{tabular}
+}
+{Paper Size Identifiers}
+
+\FloatTable{tab:paperid1.3}
+{%
+  \begin{tabular}{llll}
+  \bfseries ID & \bfseries Paper Size &
+  \bfseries ID & \bfseries Paper Size\\
+  19 & A6 (portrait) & 46 & A6 (landscape)\\
+  20 & A7 (portrait) & 47 & A7 (landscape)\\
+  21 & A8 (portrait) & 48 & A8 (landscape)\\
+  22 & A9 (portrait) & 49 & A9 (landscape)\\
+  23 & A10 (portrait) & 50 & A10 (landscape)\\
+  24 & B0 (portrait) & 51 & B0 (landscape)\\
+  25 & B1 (portrait) & 52 & B1 (landscape)\\
+  26 & B2 (portrait) & 53 & B2 (landscape)\\
+  27 & B3 (portrait) & 54 & B3 (landscape)\\
+  28 & B4 (portrait) & 55 & B4 (landscape)\\
+  29 & B5 (portrait) & 56 & B5 (landscape)\\
+  30 & B6 (portrait) & 57 & B6 (landscape)\\
+  31 & B7 (portrait) & 58 & B7 (landscape)\\
+  32 & B8 (portrait) & 59 & B8 (landscape)\\
+  33 & B9 (portrait) & 60 & B9 (landscape)\\
+  34 & B10 (portrait) & 61 & B10 (landscape)\\
+  35 & C0 (portrait) & 62 & C0 (landscape)\\
+  36 & C1 (portrait) & 63 & C1 (landscape)\\
+  37 & C2 (portrait) & 64 & C2 (landscape)\\
+  38 & C3 (portrait) & 65 & C3 (landscape)\\
+  39 & C4 (portrait) & 66 & C4 (landscape)\\
+  40 & C5 (portrait) & 67 & C5 (landscape)\\
+  41 & C6 (portrait) & 68 & C6 (landscape)\\
+  42 & C7 (portrait) & 69 & C7 (landscape)\\
+  43 & C8 (portrait) & 70 & C8 (landscape)\\
+  44 & C9 (portrait) & 71 & C9 (landscape)\\
+  45 & C10 (portrait) & 72 & C10 (landscape)
+  \end{tabular}
+}
+{Additional Paper Size Identifiers (JDR v1.3 onwards)}
+
+  \item The \meta{grid style} has the syntax:
+  \begin{jdrversion}{1.0--1.5}
+  \begin{syntaxline}
+  \meta{unit} \meta{major} \meta{minor}
+  \end{syntaxline}
+  This is the same as the \meta{grid-specs}
+  for the \hyperref[jdr:rectgrid]{rectangular grid} described below, 
+  however the \meta{major} unit is an \type{integer} not a
+  \type{double}. The \meta{unit} is restricted to
+  0 (\glslink{pt}{\TeX\ pt}), 1 (inches),
+  2 (centimetres) or 3 (\glslink{bp}{PostScript points}).
+  \end{jdrversion}
+  \begin{jdrversion}{1.6 onwards}
+  \begin{syntaxline}
+  \meta{grid-id} \meta{grid-specs}
+  \end{syntaxline}
+  The \meta{grid-id} is a \type{byte} representing the grid style ID.
+  Recognised IDs are listed in \Tableref{tab:jdrgridids}
+  \end{jdrversion}
+
+\FloatTable{tab:jdrgridids}
+{%
+ \begin{tabular}{lll}
+  \bfseries ID & \bfseries Grid & \bfseries From Version\\
+  0 & Rectangular & 1.6\\
+  1 & Radial & 1.6 \\
+  2 & Isometric & 1.8\\
+  3 & Tschichold & 1.8\\
+  4 & Path-Based & 2.0
+ \end{tabular}
+}
+{Grid Identifiers}
+
+  The grid specification (1.6 onwards) is as follows
+
+    \begin{enumerate}
+    \item\label{jdr:rectgrid} Rectangular Grid. The \meta{grid-specs} are:
+    \begin{syntaxline}
+    \meta{unit} \meta{major} \meta{minor}
+    \end{syntaxline}
+    where
+     \begin{enumerate}
+     \item \meta{unit} is the \type{unit-id} representing the grid unit.
+
+       \item \meta{major} is a \type{double} representing the major
+        grid division (in terms of the grid unit).
+
+       \item \meta{minor} is an \type{integer} representing the grid subdivision.
+
+     \end{enumerate}
+
+     \item Radial Grid. The \meta{grid-specs} are:
+    \begin{syntaxline}
+    \meta{unit} \meta{major} \meta{minor} \meta{spokes}
+    \end{syntaxline}
+    where:
+      \begin{enumerate}
+       \item \meta{unit} is the \type{unit-id}.
+
+       \item \meta{major} is a \type{double} representing the major grid division.
+
+       \item \meta{minor} is an \type{integer} representing the grid subdivision.
+
+       \item \meta{spokes} is an \type{integer} representing the number of spokes.
+      \end{enumerate}
+
+     \item Isometric Grid. The \meta{grid-specs} are:
+    \begin{syntaxline}
+    \meta{unit} \meta{major} \meta{minor}
+    \end{syntaxline}
+    where
+      \begin{enumerate}
+       \item \meta{unit} is the \type{unit-id} representing the grid unit.
+
+       \item \meta{major} is a \type{double} representing the major
+        grid division (in terms of the grid unit). This is the
+length of each side of the equilateral triangles that form the grid.
+
+       \item \meta{minor} is an \type{integer} representing the grid subdivision.
+      \end{enumerate}
+ 
+    \item A Tschichold grid. The
+     \meta{grid-specs} are the same as for the 
+     \hyperref[jdr:rectgrid]{rectangular grid}.
+
+    \item A path-based grid. The \meta{grid-specs} are:
+     \begin{syntaxline}
+     \meta{unit} \meta{major} \meta{minor} \meta{segment-spec}+
+     \end{syntaxline}
+     where \meta{unit}, \meta{major} and \meta{minor} are as above. The
+     \meta{segment-spec} elements define the path used by the grid.
+     (Note that the grid-path syntax is much simpler than the
+     \gls{path} object syntax, as there's no associated paint or
+     style etc.) Each \meta{segment-spec} has the syntax
+     \begin{syntaxline}
+     \meta{segment-type} [\meta{coords}]
+     \end{syntaxline}
+    The \meta{segment-type} is an \type{integer} representing the
+     segment type. The path must start with a move segment. The
+     \meta{segment-type} may only be one of the following values:
+     \begin{description}
+      \item[-1] End of path. The \meta{coords} element should be
+       omitted. This must always be the last \meta{segment spec}.
+       No further \meta{segment spec} elements are
+       permitted after this.
+      \item[0] A move. The \meta{coords} must have the syntax
+      \begin{syntaxline}
+       \meta{x} \meta{y}
+      \end{syntaxline}
+      which describe the co-ordinates to move to. These are both a
+      \type{double}.
+      \item[1] A line. The \meta{coords} are the same as for
+      a move.
+      \item[2] A quadratic \gls{Bezier-curve}. The \meta{coords} must have
+       the syntax
+      \begin{syntaxline}
+       \meta{cx} \meta{cy} \meta{x} \meta{y}
+      \end{syntaxline}
+      where the curvature control is given by (\meta{cx}, \meta{cy})
+      and the end point is given by (\meta{x}, \meta{y}). Each
+      co-ordinate is a \type{double}.
+      \item[3] A cubic \gls{Bezier-curve}. The \meta{coords} must have
+       the syntax
+      \begin{syntaxline}
+       \meta{c1x} \meta{c1y} \meta{c2x} \meta{c2y} \meta{x} \meta{y}
+      \end{syntaxline}
+      where the curvature controls are given by (\meta{c1x},
+      \meta{c1y}) and (\meta{c2x}, \meta{c2y})
+      and the end point is given by (\meta{x}, \meta{y}). Each
+      co-ordinate is a \type{double}.
+      \item[4] A line segment that closes the path or sub-path.
+      The \meta{coords} element should be omitted.
+     \end{description}
+
+     The co-ordinate units must match the grid unit.
+
+    \end{enumerate}
+
+    \item \Gls{controlpt} setting.
+  \begin{jdrversion}{1.8 onwards}
+  \begin{syntaxline}
+  \meta{point size} \meta{scale flag}
+  \end{syntaxline}
+  As from JDR version 1.8, the \meta{point size} is also saved as a
+  \type{length}, followed by a \type{boolean} value \meta{scale flag}
+  indicating whether the \gls{controlpt} scaling is enabled.
+  \end{jdrversion}
+
+  \end{enumerate}% end of settings info
+
 
 
 TODO
 
-\end{enumerate}
+\end{numbered}
 
 
 \chapter{Help Windows}
