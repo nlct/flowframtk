@@ -4029,11 +4029,17 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="index.path-attribute.fill-paint">fill paint</entry>
 <entry key="index.path-attribute.line-width">line width</entry>
 <entry key="index.path-attribute.dash-pattern">dash pattern</entry>
+
 <entry key="index.path-attribute.cap-style">cap style</entry>
+<entry key="index.path-attribute.cap-style.square">square</entry>
+<entry key="index.path-attribute.cap-style.round">round</entry>
+<entry key="index.path-attribute.cap-style.butt">butt</entry>
+
 <entry key="index.path-attribute.join-style">join style</entry>
 <entry key="index.path-attribute.join-style.bevel">bevel</entry>
 <entry key="index.path-attribute.join-style.round">round</entry>
 <entry key="index.path-attribute.join-style.mitre">miter</entry>
+<entry key="index.path-attribute.join-style.mitre-limit">miter limit</entry>
 <entry key="index.path-attribute.winding-rule">winding rule</entry>
 
 <entry key="index.marker">markers</entry>

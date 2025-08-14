@@ -68,6 +68,7 @@
 
 \newcommand*{\typedef}[1]{\inlineglsdef{ajdr-format.#1}}
 \newcommand*{\type}[1]{\gls{ajdr-format.#1}}
+\newcommand*{\typepl}[1]{\glspl{ajdr-format.#1}}
 
 \tjhnewtitledbox{versionbox}{JDR version}{teal}
 
@@ -13355,12 +13356,532 @@ length of each side of the equilateral triangles that form the grid.
 
   \end{enumerate}% end of settings info
 
+\item\label{jdr:imagetex}\TeX\ settings.
+\begin{jdrversion}{1.9 onwards}
+\begin{syntaxline}
+\meta{normalsize} \meta{preamble} \meta{mid-preamble}
+\meta{end-preamble} \meta{class name}
+\meta{absolute pages flag}
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.8}
+\begin{syntaxline}
+\meta{normalsize} \meta{preamble} \meta{class name}
+\meta{absolute pages flag}
+\end{syntaxline}
+\end{jdrversion}
+For version 1.8 onwards, the \LaTeX\ normal size value is always
+saved at this point, regardless of the
+\hyperref[jdr:settings-id]{\meta{settings-id}}.  In addition, from
+version 1.8, preamble text, document class and absolute pages
+setting are now saved. Version 1.8 only stores the early-preamble
+text.  As from version 1.9, the mid-preamble and end-preamble text
+are also stored.
+\begin{enumerate}
+\item The normal size value \meta{normalsize} is stored as an \type{integer}.
 
+\item The preamble text \meta{preamble} is stored as a \type{string}
+and may be empty or null. Similarly for the \meta{mid-preamble}
+and \meta{end-preamble} for version 1.9 onwards.
 
-TODO
+\item If the default document class setting is enabled, \meta{class
+name} is saved as an empty or null \type{string} otherwise the user
+specified \meta{class name} is saved.
+
+\item The \meta{absolute pages flag} is saved as a \type{boolean} value,
+where true indicates \sty{flowfram}'s \optval{pages}{absolute}
+option and false indicates \sty{flowfram}'s
+\optval{pages}{relative} option.
+\end{enumerate}
+
+\item\label{jdr:object} The \glspl{object} that constitute the
+image are now stored.  When saving to a file, an outer grouping is
+implied that is not evident whilst using \FlowframTk. This means that
+there should always be a single group structure saved to file which
+contains all the \glspl{object} that
+constitute the picture. Each \gls{object} is then recursively
+stored. For example, if an image contains a \gls{path}, a
+\gls{group} and a \gls{textarea}, in the
+\gls{JDR}/\gls{AJR} file these three objects will be stored as a single
+group structure containing the three objects. If in \FlowframTk\ you
+explicitly \gls{group} all the objects, then in the
+\gls{JDR} file, the outermost implicit group will contain
+only one \gls{object} which will be this \gls{group}. It's an error
+for the top-level object to be anything other than a \gls{group}.
+
+Each \gls{object} is saved as \meta{object data} which has the following format:
+\begin{syntaxline}
+\begin{jdrversion}{1.0 \& 1.1}
+\meta{id-char} \meta{object-specs} \meta{fflag} [\meta{flowframe-specs}]
+\end{jdrversion}
+\begin{jdrversion}{1.2 onwards}
+\meta{id-char} \meta{object-specs} \meta{fflag} [\meta{flowframe-specs}]
+\meta{description}
+\end{jdrversion}
+\end{syntaxline}
+where \meta{id-char} is a \type{char} determining the object type.
+Valid object type identifiers are listed in
+\Tableref{tab:jdrobjecttypes}.
+
+\FloatTable{tab:jdrobjecttypes}
+{%
+  \begin{tabular}{lll}
+  \bfseries ID &  \bfseries Object & \bfseries From Version\\
+  \code{G} & \hyperref[jdr:group]{Group} & 1.0\\
+  \code{P} & \hyperref[jdr:path]{Path} & 1.0\\
+  \code{T} & \hyperref[jdr:textarea]{Text Area} & 1.0\\
+  \code{I} & \hyperref[jdr:bitmap]{Bitmap} & 1.0\\
+  \code{X} & \hyperref[jdr:textpath]{Text Path} & 1.5\\
+  \code{S} & \hyperref[jdr:symmetric]{Symmetric Shape} & 1.6\\
+  \code{R} & \hyperref[jdr:rotational]{Rotational Pattern} & 1.6\\
+  \code{C} & \hyperref[jdr:scaled]{Scaled Pattern} & 1.6\\
+  \code{L} & \hyperref[jdr:spiral]{Spiral Pattern} & 1.6
+  \end{tabular}
+}
+{Object Type Identifiers}
+
+The object specifications \meta{object-specs} vary according to the
+object type and are described \hyperref[jdr:objectspecs]{below}.
+\meta{fflag} is a \type{boolean} value indicating whether or not
+this object has flowframe data associated with it. If true, then the
+flowframe specifications \meta{flowframe-specs} should follow
+(\hyperref[jdr:flowframe]{see below}), otherwise
+\meta{flowframe-specs} should be omitted. Note that JDR version 1.2
+and above contains the \type{string} \meta{description}, which was
+omitted in earlier versions.
+
+Recall from above that the image is stored with an implied outer grouping. The
+\meta{flowframe-specs} for this implicit group represents the image
+typeblock and the \meta{description} represents the image description.
 
 \end{numbered}
 
+\plabel[Object Specs]{jdr:objectspecs}The \meta{object-specs} are as follows:
+
+\begin{numbered}
+\item\label{jdr:group} Group data, \code{G}, has the
+\meta{object-specs} stored as:
+\begin{syntaxline}
+\meta{n} \meta{object data}+
+\end{syntaxline}
+where \meta{n} is an \type{integer} indicating the number of
+\glspl{object} within the
+\gls{group}. There should then follow \meta{n} lots of
+\meta{object data}, where \meta{object data} is the data for each
+\gls{object} within the group, and is
+as \hyperref[jdr:object]{described above}.
+
+\item\label{jdr:path} Path data, \code{P}, has the
+\meta{object-specs} stored as follows:
+\begin{syntaxline}
+\begin{jdrversion}{1.0--1.2}
+\meta{line paint} \meta{fill paint} \meta{line style}
+\code{O}\textbar\code{C}
+\meta{n} \meta{segment data}+
+\end{jdrversion}
+\begin{jdrversion}{1.3--1.5}
+\meta{line paint} \meta{fill paint} \meta{line style} \meta{path specs}
+\end{jdrversion}
+\begin{jdrversion}{1.6}
+\meta{path style} \meta{path specs}
+\end{jdrversion}
+\begin{jdrversion}{1.7 onwards}
+\meta{path style} \meta{path specs}\meta{anchor info}
+\end{jdrversion}
+\end{syntaxline}
+where \meta{line paint} and \meta{fill paint} are \type{paint}
+specifications and \meta{line style}
+is the line style data (\hyperref[jdr:linestyle]{see below}).
+
+The \meta{path specs} are
+\begin{syntaxline}
+\code{O}\textbar\code{C} \meta{n} \meta{start point} \meta{segment data}+
+\end{syntaxline}
+where the \type{char} value \code{O} or \code{C} indicates whether the path is
+open (\code{O}) or closed (\code{C}), \meta{n} is an \type{integer}
+indicating the number of segments that constitute the path. This
+should be followed by \meta{n} lots of \meta{segment data}
+(\hyperref[jdr:segment]{described below}).
+
+Version 1.3 removed the redundancy present in earlier versions
+but requires that the starting point \meta{start point}
+follows the number of segments (\meta{n}). The starting point
+is stored as two \type{double} numbers. For versions below 1.8,
+these values are always in terms of the PostScript point \gls{bp}.
+As from version 1.8, they are in terms of the storage unit, as
+\hyperref[jdr:storageunit]{described above}.
+
+Version 1.7 added anchor information (\meta{anchor info}). This comes
+after the above path specifications. Control points are
+indexed from 0 and include curvature control points. For example, a
+path that consists of a line segment followed by a \gls{Bezier-curve} segment
+has 5 control points: index 0 is the point at the start of the path
+(the start of the line segment), index 1 is the point at the join
+between the line segment and \gls{Bezier-curve} segment, indices 2 and 3 are
+the two curvature control points and index 4 is the end point. The
+anchor information is the list of \type{integer} indices for which the anchor is
+\emph{on}. This list must be in ascending order of index and is
+terminated by $-1$. Only control points occurring between a
+continuous join may be anchored.
+
+For example, in the ASCII \gls{AJR} version
+\begin{verbatim}
+3 6 9 -1
+\end{verbatim}
+indicates that control points 3, 6 and 9 have the anchor setting on.
+If no controls are anchored, the $-1$ is still required.
+
+  \begin{enumerate}
+  \item\label{jdr:pathstyle} Version 1.6 onwards stores the \meta{path style}
+  specification as
+  \begin{syntaxline}
+  \meta{id} \meta{specs}
+  \end{syntaxline}
+  where \meta{id} is a \type{byte}
+  indicating the path style. This may be 0 (basic stroke) or 1
+  (\gls{textpath} stroke).
+
+    \begin{enumerate}
+    \item The basic stroke \meta{specs} are:
+    \begin{syntaxline}
+    \meta{line paint} \meta{fill paint} \meta{line style}
+    \end{syntaxline}
+    where \meta{line style} is described \hyperref[jdr:linestyle]{below}.
+
+    \item The \gls*{textpath} stroke \meta{specs} are:
+    \begin{syntaxline}
+    \meta{line paint} \meta{text-path style}
+    \end{syntaxline}
+    where \meta{text-path style} is described
+    \hyperref[jdr:textpathstroke]{below}.
+
+    A path should only have a \gls*{textpath} stroke if it is the
+    base path for a \hyperref[jdr:composite]{composite shape}.
+    \end{enumerate}
+
+  \item\label{jdr:linestyle}
+  The \meta{line style} data has changed from file version 1.0 to 1.1 to
+  take into account the inclusion of mid point markers,
+  and is stored as follows:
+  \begin{syntaxline}
+  \begin{jdrversion}{1.0}
+  \meta{linewidth} \meta{dash} \meta{cap} \meta{join} [\meta{mitre-limit}] \meta{winding} \meta{start arrow} \meta{end arrow}
+  \end{jdrversion}
+  \begin{jdrversion}{1.1 and above}
+  \meta{linewidth} \meta{dash} \meta{cap} \meta{join} [\meta{mitre-limit}] \meta{winding} \meta{start arrow} \meta{mid marker} \meta{end arrow}
+  \end{jdrversion}
+  \end{syntaxline}
+  where:
+    \begin{enumerate}
+    \item \meta{linewidth} the line width stored as a \type{float}
+    (below version 1.8) in PostScript points (\gls*{bp}). For version
+    1.8 onwards, the line width is stored as a \type{length}.
+
+    \item \meta{dash} is the dash pattern. This is stored as
+    a \type{float-array}, optionally followed by the \type{float} offset.
+    The array may be empty or null to indicate a solid line, otherwise
+    it should have an even number of elements representing
+    \meta{dash} \meta{gap} pairs. The offset is only saved for a
+    non-empty, non-null array.
+
+    The unit of measurement (not saved in
+    the dash pattern specs) is \gls{bp} for versions below 1.8 and the
+    \hyperref[jdr:storageunit]{storage unit} for version 1.8 onwards.
+
+    \item \meta{cap} is the \pathattr{cap-style}, stored as a \type{byte}. It may
+    only have one of the following values: 0
+    (\pathattr{cap-style.butt}), 1 (\pathattr{cap-style.round}) or 2
+    (\pathattr{cap-style.square}).
+
+    \item \meta{join} is the \pathattr{join-style}, stored as a \type{byte}.
+    It may only have one of the following values: 0
+    (\pathattr{join-style.mitre}), 1 (\pathattr{join-style.round})
+    or 2 (\pathattr{join-style.bevel}).
+
+    \item \meta{mitre-limit} is the \pathattr{join-style.mitre-limit}
+    and should only be stored if the join style is a
+    \pathattr{join-style.mitre}. For versions below 1.8, 
+    the \pathattr{join-style.mitre-limit} is stored as a \type{float}, otherwise
+    it's stored as a \type{length}.
+
+    \item \meta{winding} is the winding rule, stored as a \type{byte}.
+    It may only have one of the following values: 0 (Even-Odd) or
+    1 (Non Zero).
+
+    \item \meta{start arrow} and \meta{end arrow} are the starting and
+    ending marker styles. The \meta{mid marker} is the style for the
+    mid-point markers.  Each marker type (start/mid/end) has the same
+    format, but the file format varies as follows:
+    \begin{jdrversion}{1.0}
+    \begin{syntaxline}
+    \meta{id} [\meta{size} \meta{is double} \meta{is reversed}]
+    \end{syntaxline}
+    where \meta{id} is a \type{byte} identifying the arrow type. This may
+    be one of: 0 (none), 1 (pointed), 2 (triangle), 3 (circle),
+    4 (diamond), 5 (square), 6 (bar) or 7 (single). \meta{size} is
+    \type{float} representing the arrow size.
+    (Some arrows only have a fixed size, but a size must still be
+    present.) \meta{is double} is a \type{boolean} value indicating whether the
+    arrow head is a double arrow (\meta{true}) or a single arrow
+    (\meta{false}). \meta{is reversed} is a \type{boolean} value indicating
+    whether the arrow head has been reversed. The values
+    \meta{size}\meta{is double}\meta{is reversed} are omitted if
+    \meta{id} equals 0 (no arrow head).
+    \end{jdrversion}
+    \begin{jdrversion}{1.1--1.3}
+    \begin{syntaxline}
+    \meta{id} [\meta{marker data}]
+    \end{syntaxline}
+    \end{jdrversion}
+    where \meta{id} is a \type{byte} identifying the marker type.
+    If \meta{id} is 0, then \meta{marker data} should be omitted,
+    otherwise it should be present. Valid \meta{id} values are listed
+    in \tableref{tab:jdrarrowid}.
+
+    The \meta{marker data} is stored as follows:
+    \begin{syntaxline}
+    \meta{size} \meta{repeat} \meta{is reversed} \meta{orient data}
+\meta{\manmsg{colour} data} \meta{overlay} \meta{composite data}
+    \end{syntaxline}
+    where:
+      \begin{itemize}
+      \item \meta{size} is a \type{float} representing the marker size
+      (some markers will ignore this attribute, but it must still be
+      present in the file.)
+
+      \item \meta{repeat} is a \type{byte} identifying the repeat factor
+      (a value of 1 indicates a single marker, a value of 2 indicates
+      a double marker, a value of 3 indicates a triple marker.)
+
+      \item \meta{is reversed} is a \type{boolean} value indicating whether
+      or not the marker has been reversed.
+
+      \item \meta{orient data} is the marker orientation data. This has
+      the form \meta{auto-orient} [\meta{angle}] where \meta{auto-orient}
+      is a \type{boolean} value indicating whether the marker should be
+      oriented along the path. If \meta{auto-orient} is true, \meta{angle}
+      should be omitted, otherwise \meta{angle} should be a \type{float}
+      representing the orientation angle (in Radians).
+
+      \item \meta{\manmsg{colour} data} is the marker \type{paint} where
+      a transparent value indicates the \manmsg{colour} should be derived from
+      the path to which the marker is attached, and there is no provision
+      for gradient paint markers.
+
+      \item \meta{overlay} is a \type{boolean} value indicating whether
+      to overlay composite markers.
+
+      \item \meta{composite data} is the data for composite markers.
+      This has the same format as the \meta{marker data}. If the
+      \meta{composite data} has a marker id of 0, then the marker
+      is not a composite marker. Although the format allows for nested
+      composite markers, \FlowframTk's marker settings dialog boxes do not
+      allow for it.
+      \end{itemize}
+
+\FloatTable{tab:jdrarrowid}
+{%
+    \begin{tabular}{llll}
+    0 & No marker &
+    11 & Box Filled\\
+    1 & Pointed &
+    12 & Box Open\\
+    2 & Triangle &
+    13 & Cross \\
+    3 & Circle &
+    14 & Plus\\
+    4 & Diamond &
+    15 & Star\\
+    5 & Square bracket &
+    16 & Triangle Up Filled\\
+    6 & Bar &
+  17 & Triangle Up Open\\
+  7 & Single &
+  18 & Triangle Down Filled\\
+  8 & Round bracket &
+  19 & Triangle Down Open\\
+  9 & Dot Filled &
+  20 & Rhombus Filled \\
+  10 & Dot Open &
+  21 & Rhombus Open
+  \end{tabular}
+}
+{Marker IDs (Version 1.0 Onwards)}
+
+\FloatTable{tab:jdrarrowid1.4}
+{%
+  \begin{tabular}{llllll}
+  22 & Pentagon Filled & 41 & Half Cusp Down & 60 & Open Semicircle\\
+  23 & Pentagon Open & 42 & Alt Single & 61 & Filled Semicircle \\
+  24 & Hexagon Filled & 43 & Alt Single Open & 62 & Open 5 Pointed star\\
+  25 & Hexagon Open & 44 & Triangle Open & 63 & Filled 5 Pointed star\\
+  26 & Octagon Filled & 45 & Circle Open & 64 & Asterisk\\
+  27 & Octagon Open & 46 & Diamond Open & 65 & Scissors Down Filled\\
+  28 & Pointed 60 & 47 & Brace & 66 & Scissors Up Filled\\
+  29 & Pointed 45 & 48 & Rectangle Cap & 67 & Scissors Down Open\\
+  30 & Hooks & 49 & Chevron Cap & 68 & Scissors Up Open\\
+  31 & Hook up & 50 & Fast Cap & 69 & Heart Right Filled\\
+  32 & Hook Down & 51 & Round Cap & 70 & Heart Right Open\\
+  33 & Half Pointed Up & 52 & Triangle Cap & 71 & Heart Filled\\
+  34 & Half Pointed Down & 53 & Inverted Triangle Cap & 72 & Heart Open\\
+  35 & Half Pointed 60 Up & 54 & Inverted Chevron Cap & 73 & Snowflake\\
+  36 & Half Pointed 60 Down & 55 & Inverted Fast Cap & 74 & Star Chevron Open\\
+  37 & Half Pointed 45 Up & 56 & Alt Bar & 75 & Star Chevron Filled\\
+  38 & Half Pointed 45 Down & 57 & Alt Round & 76 & Star 6 Filled\\
+  39 & Cusp & 58 & Alt Square & 77 & Star 6 Open\\
+  40 & Half Cusp Up & 59 & Alt Brace & 78 & Equilateral Filled\\
+   & & & & 79 & Equilateral Open
+  \end{tabular}
+}
+{Additional Marker IDs (Version 1.4 Onwards)}
+
+\FloatTable{tab:jdrarrowid1.6}
+{%
+  \begin{tabular}{llll}
+  80 & Ball Cap & 85 & Forward Triple Leaf Cap \\
+  81 & Leaf Cap & 86 & Back Triple Leaf Cap \\
+  82 & Double Leaf Cap & 87 & Forward Double Leaf Cap \\
+  83 & Triple Leaf Cap & 88 & Back Double Leaf Cap \\
+  84 & Club Cap & 89 & Cutout Bulge Cap
+  \end{tabular}
+}
+{Additional Marker IDs (Version 1.6 Onwards)}
+
+
+  For version 1.4 onwards the markers are stored as
+  \begin{syntaxline}
+  \meta{id}[\meta{marker data}]
+  \end{syntaxline}
+  where \meta{id} is a \type{byte} identifying the marker type.
+  If \meta{id} is 0, then \meta{marker data} should be omitted,
+  otherwise it should be present. Valid \meta{id} values are listed
+  in \tableref{tab:jdrarrowid} and \tableref{tab:jdrarrowid1.4}.
+  Additional markers listed in \tableref{tab:jdrarrowid1.6} are also
+  available for version 1.6 onwards.
+
+  The \meta{marker data} is stored as follows:
+  \begin{syntaxline}
+  \meta{size} \meta{repeat} \meta{is reversed} \meta{orient data}
+  \meta{\manmsg{colour} data} \meta{overlay}
+  [\meta{user offset flag} [\meta{user offset}]
+  \meta{repeat offset flag} [\meta{repeat offset}]]
+  \meta{composite data}
+  \end{syntaxline}
+  where:
+  \meta{user offset flag} [\meta{user offset}]
+  \meta{repeat offset flag} [\meta{repeat offset}]
+  are only specified if the \meta{overlay} is false.
+  Additionally,
+  \meta{user offset} and \meta{repeat offset} are only
+  specified if \meta{user offset flag} or \meta{repeat offset flag}
+  are true, respectively.
+
+    \begin{itemize}
+    \item \meta{size} is a \type{float} (\gls*{bp} unit implied) for
+    versions below 1.8 and is a \type{length} for version 1.8 onwards.
+
+    \item \meta{repeat} is a \type{byte} identifying the repeat factor
+    (a value of 1 indicates a single marker, a value of 2 indicates
+    a double marker, a value of 3 indicates a triple marker.)
+
+    \item \meta{is reversed} is a \type{boolean} value indicating whether
+    or not the marker has been reversed.
+
+    \item \meta{orient data} is the marker orientation data. This is as
+    for versions 1.1--1.3 except that for version 1.8 onwards the
+    orientation \meta{angle} (if required) is stored as an \type{angle}.
+
+    \item \meta{\manmsg{colour} data} is the marker \type{paint} is as for
+    versions 1.1--1.3.
+
+    \item \meta{overlay} is a \type{boolean} value indicating whether
+    to overlay composite markers.
+
+    If the \meta{overlay} is false:
+      \begin{itemize}
+      \item \meta{user offset flag} is a \type{boolean} value indicating
+      whether the marker offset is specified by the user (true) or
+      determined automatically (false).
+
+      \item \meta{user offset} indicates the marker
+      offset from the vertex. For versions below 1.8 this is stored as a
+      \type{float} (\gls*{bp} unit implied) otherwise it's stored as a \type{length}. This is only
+      present if \meta{user offset flag} is true.
+
+      \item \meta{repeat offset flag} is a \type{boolean} indicating whether the
+      repeat offset (i.e. gap between repeat markers) is specified by
+      the user (true) or determined automatically (false).
+
+      \item \meta{repeat offset} indicates the
+      gap between repeat markers. For versions below 1.8 this is stored as a
+      \type{float} (\gls*{bp} unit implied) otherwise it's stored as a
+      \type{length}. This is only
+      present if \meta{repeat offset flag} is true.
+      \end{itemize}
+
+    \item \meta{composite data} is the data for composite markers.
+    This has the same format as the \meta{marker data}. If the
+    \meta{composite data} has a marker id of 0, then the marker
+    is not a composite marker. Although the format allows for nested
+    composite markers, \FlowframTk's marker settings dialog boxes do not
+    allow for it.
+    \end{itemize}
+  \end{enumerate}% end of line style
+
+  \item\label{jdr:segment} Each path segment \meta{segment data} is stored as:
+  \begin{syntaxline}
+  \meta{id} \meta{specs}
+  \end{syntaxline}
+  where \meta{id} is a \type{char} representing the segment type. This
+  can be one of: \code{B} (cubic \gls{Bezier-curve}), \code{L} (line) or
+  \code{M} (move). For versions below 1.8, the co-ordinates are
+  always \gls{bp}. As from version 1.8, the co-ordinate unit is as
+  specified by the storage unit \hyperref[jdr:storageunit]{described
+  above}.
+
+    \begin{enumerate}
+    \item\label{jdr:bezier} \gls{Bezier-curve} segments are stored as follows:
+    \begin{jdrversion}{1.0--1.2}
+    \meta{c0x} \meta{c0y} \meta{c1x} \meta{c1y} \meta{c2x} \meta{c2y}
+    \meta{c3x} \meta{c3y}
+    \end{jdrversion}
+    \begin{jdrversion}{1.3 onwards}
+    \meta{c1x} \meta{c1y} \meta{c2x} \meta{c2y} \meta{c3x} \meta{c3y}
+    \end{jdrversion} 
+    where \meta{c0x} and \meta{c0y} are the $x$ and $y$ 
+    co-ordinates of the starting point, \meta{c1x} and \meta{c1y} are the
+    $x$ and $y$ co-ordinates of the first curvature control
+    point, \meta{c2x} and \meta{c2y} are the $x$ and
+    $y$ co-ordinates of the second curvature control point, and
+    \meta{c3x} and \meta{c3y} are the $x$ and $y$ co-ordinates
+    of the end point.  Each value is stored as a \type{double}. The unit of
+    measurement is \gls{bp} for versions below 1.8, otherwise it's the storage
+    unit as \hyperref[jdr:storageunit]{described above}.
+    
+    \item\label{jdr:line}
+    Line and move to (gap) segments are stored as follows:
+    \begin{jdrversion}{1.0--1.2}
+    \meta{x0} \meta{y0} \meta{x1} \meta{y1}
+    \end{jdrversion}
+    \begin{jdrversion}{1.3 onwards}
+    \meta{x1} \meta{y1}
+    \end{jdrversion}
+    where \meta{x0} and \meta{y0} are the $x$ and
+    $y$ co-ordinates of the starting point and
+    \meta{x1} and \meta{y1} are the $x$ and
+    $y$ co-ordinates of the end point. Each value is stored as
+    a \type{double}. The unit of
+    measurement is \gls{bp} for versions below 1.8, otherwise it's the
+    storage unit as \hyperref[jdr:storageunit]{described above}.
+    \end{enumerate}% end of segment info
+
+  \end{enumerate}% end of path info
+
+\end{numbered}
+
+
+
+TODO
 
 \chapter{Help Windows}
 \label{sec:helpwindows}

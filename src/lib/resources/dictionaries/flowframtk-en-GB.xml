@@ -156,6 +156,7 @@
 <entry key="index.pen-colour">pen colour</entry>
 
 <entry key="index.path-attribute.join-style.mitre">mitre</entry>
+<entry key="index.path-attribute.join-style.mitre-limit">mitre limit</entry>
 
 <entry key="index.marker.colour">colour</entry>
 
