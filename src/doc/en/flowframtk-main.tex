@@ -194,7 +194,7 @@ exported (\sectionref{sec:exportimage}) as:
     \item \pgls{svg} file.
 \end{itemize}
 
-Note that the export to PS/PDF/SVG functions use external
+Note that the export to PS/PDF/\glsxtrshort{svg} functions use external
 processes, such as \app{latex} and \app{dvips}.
 \strong{You can't import back from the files you can export to.}
 
@@ -1280,13 +1280,25 @@ interface.)
 
 The \widget{controls.title} tab
 (\figureref{fig:configdialog-controlsettings})
-allows you to:
-\begin{itemize}
- \item set the size of the \glspl{controlpt};
- \item specify whether the \gls{controlpt} size should be affected by
-the zoom setting;
- \item set the \gls{storageunit}.
-\end{itemize}
+has the following settings.
+
+\widgetdef{controls.control_size}
+
+Set the size of the \glspl+{controlpt} with
+\widget{controls.control_size} length field.
+
+\widgetdef{controls.scale_controls}
+
+You can choose whether or not to scale the \glspl{controlpt}
+when the image has the magnification changed.
+Deselect \widget{controls.scale_controls} if you want the
+\glspl{controlpt} to remain the same size regardless of the zoom
+setting.
+
+\widgetdef{controls.storage_unit}
+
+Set the \gls{storageunit} in the \gls{dropdown} selector (\gls+{pt},
+\gls+{bp}, in, cm, mm, pc, dd or cc).
 
 It's best to set the \gls{storageunit} before you start creating an
 image. If the selected \gls{canvas} isn't empty, all \glspl{object} will
@@ -1295,7 +1307,6 @@ may take a while if there are many \glspl{object} or \glspl{path}
 with many segments.  You can also open a dialog window with just the
 storage unit panel in it by \glslink{doubleclick}{double-clicking}
 the mouse on the storage unit area of the \gls{statusbar}.
-
 
 \subsubsection{Startup Directory}\label{sec:startdir}
 
@@ -1412,7 +1423,7 @@ your preferred default image command, which may be either
   {\includeimg{configureDialog-apppaths}}
   {Configuration Dialog Box (Application Paths)}
 
-If you \filefn{export} your image to PDF, EPS or SVG
+If you \filefn{export} your image to PDF, EPS or \gls{svg}
 \FlowframTk\ will first save the image as an encapsulated \LaTeX\
 document and will then run external applications to create the
 desired file format. In order to do this, \FlowframTk\ needs to know
@@ -1464,7 +1475,7 @@ shape also require this information.
 
 \widgetdef{clssettings.normalsize}
 
-The \gls{normal-font-size} can be set using the
+The \inlineglsdef{normal-font-size} can be set using the
 \widget{clssettings.title} tab (\figureref{fig:normalsize}).  Select the
 required value from the \widget{clssettings.normalsize} \gls*{dropdown} and select
 \dgls{okay} to set it. Note that you must remember
@@ -1573,7 +1584,7 @@ if you require a different bounding box for some other reason, then
 switch on the \widget{clssettings.use_typeblock_as_bbox}
 \gls*{checkbox} and if the image has a \gls{image.typeblock} set
 (see \sectionref{sec:typeblock}) the \gls{image.typeblock} will be used as the image
-\gls{image.bbox}. If the image doesn't have a \gls{image.typeblock} set, then the
+\gls{image.bbox}. If the image doesn't have a \gls+{image.typeblock} set, then the
 default bounding box will be used. See also \figureref{fig:equation}
 in \sectionref{sec:exportdoc}.
 
@@ -1737,6 +1748,8 @@ the export to PDF function.) The \mathstool\ automatically
 inserts \glsname{mshift} at the start and end of the
 alternative text. 
 
+\widgetdef{textconfig.escape}
+
 If the \inlineglspluraldef{textarea-mapping} are enabled, Unicode symbols present in
 the text when a new \gls*{textarea} is constructed can be mapped to
 a \LaTeX\ command.
@@ -1749,6 +1762,8 @@ in the \widget{textconfig.textmappings} tab (see
 text mappings applied, deselect the
 \widget{textconfig.escape} \gls{checkbox}.
 
+\widgetdef{textconfig.escape_mathchar}
+
 With the \mathstool, the \gls{hash} and \gls{percent} characters are the
 only two of the ten \TeX\ special characters that are mapped by
 default. However there are other mappings of \manmsg{maths}-related Unicode
@@ -1756,7 +1771,7 @@ characters and these are listed in the table shown in the
 \widget{textconfig.mathmappings} tab (see
 \figureref{fig:configdialog-mathsettings}). If you don't want
 \mathsmode\ mappings applied, deselect the
-\widget{textconfig.escape.mathchar} \gls*{checkbox}.
+\widget{textconfig.escape_mathchar} \gls*{checkbox}.
 
 \FloatFig
   {fig:configdialog-mathsettings}
@@ -1851,7 +1866,6 @@ be overwritten.
   {\includeimg{addTeXMapping}}
   {Adding a New Text Mapping} 
 
-\widgetdef{textconfig.textmappings.import}
 You can also import mappings from a tab-separated file (\ext{tsv})
 where the first column is the hexadecimal code, the second column is
 the command (or commands) and the third column is the package name
@@ -1864,6 +1878,14 @@ the file may look like:
 00260E  \Telephone      [misc]ifsym
 0026A1  \Lightning      [weather]ifsym
 \end{verbatim}
+
+\widgetdef{textconfig.textmappings.import}
+Import \textmode\ mappings with \widget{textconfig.textmappings.import}
+in the \widget{textconfig.textmappings} tab.
+
+\widgetdef{textconfig.mathmappings.import}
+Import \mathsmode\ mappings with \widget{textconfig.mathmappings.import}
+in the \widget{textconfig.mathmappings} tab.
 
 You can find extra mappings using the Symbol Lookup page at
 \url{http://www.dickimaw-books.com/latex/symbol-lookup.php} which
@@ -2606,13 +2628,13 @@ with filenames of the form \file{imagen.jdr}.
 
 \FlowframTk\ uses a \gls{mdi}. This means that you can have multiple
 images loaded in separate child windows, without having to start up
-new instances of \FlowframTk. Most of the buttons and menu items
+new instances of \FlowframTk\ (these can be selected or rearranged
+with the \menu{window} menu). Most of the buttons and menu items
 will only be applied to the child window that currently has the
 focus. If there are no child windows, or if they have all been
 minimized, then the relevant buttons and menu items will be disabled.
 The only exceptions are the non-\gls{canvas} specific items.
 The main \FlowframTk\ window is shown in \figureref{fig:mainwindow}.
-
 
 \section{The Canvas}\label{sec:thecanvas}
 
@@ -2740,6 +2762,36 @@ full message (\figureref{fig:information}).
 You can show or hide the \gls*{statusbar}, or elements within the
 bar, using the \dialog{configui} dialog. You can also use this
 dialog to change the font used in the \gls*{statusbar}.
+
+\section{The Window Menu}\label{sec:thewindowmenu}
+\menudef{menu.window}
+
+If you have multiple images open,
+the \menu{window} menu provides a convenient way of bringing 
+another image into view or tiling images so that all images can be
+viewed at the same time.
+
+\menudef{menu.window.tile}
+
+The \menu{window.tile} menu will tile all open images.
+
+\menudef{menu.window.vertically}
+
+The \menu{window.vertically} menu will arrange all open images
+vertically.
+
+\menudef{menu.window.horizontally}
+
+The \menu{window.horizontally} menu will arrange all open images
+horizontally.
+
+\menudef{menu.window.minimize}
+
+The \menu{window.minimize} will minimize all open images.
+
+\menudef{menu.window.maximize}
+
+The \menu{window.maximize} will maximize all open images.
 
 \section{Common Dialog Buttons}\label{sec:commonwidgets}
 
@@ -2990,7 +3042,7 @@ sec:neuronexample}
 To create a standalone \LaTeX\ document (\inlineglsdef{ext.tex}), select
 the \widget{filter.pgfdoc} file filter, which will use the image's
 paper \gls{paper.size}, or select the \widget{filter.pgfencapdoc} file filter to
-set the page geometry to the image's \gls{image.bbox} (or \gls{image.typeblock}
+set the page geometry to the image's \gls{image.bbox} (or \gls+{image.typeblock}
 if \widget{clssettings.use_typeblock_as_bbox} is set, see
 \sectionref{sec:normalsize}).
 
@@ -3042,7 +3094,7 @@ Changes caused by differences in the way that \FlowframTk\ renders
 can cause the image to be clipped if the bounding box
 has been underestimated. If this is a problem, you can switch on
 the \widget{clssettings.use_typeblock_as_bbox}
-option and use the \gls{image.typeblock} function to mark your
+option and use the \gls+{image.typeblock} function to mark your
 preferred bounding box.
 \end{warning}
 
@@ -3112,7 +3164,7 @@ syntax error in a \gls{textarea} or \gls{textpath}.
 
 \subsection{Export to SVG or EPS}\label{sec:exportsvgeps}
 
-The export to SVG or EPS functions both work in the same way
+The export to \gls{svg} or EPS functions both work in the same way
 as \hyperref[sec:exportdoc]{exporting to an encapsulating PDF}
 in that a temporary encapsulated \LaTeX\ file is first created.
 
@@ -3132,7 +3184,7 @@ them to EPS, where necessary.
 Note that PostScript does not support transparency.
 \end{important}
 
-As with the export to encapsulated PDF, if the resulting SVG or EPS
+As with the export to encapsulated PDF, if the resulting \gls{svg} or EPS
 file has unexpected results or fails to be created, try exporting to
 an encapsulated \LaTeX\ document and then manually building the
 document.
@@ -3379,7 +3431,7 @@ click in \gls{construction}.
 
 \menudef{menu.tools.open_line}
 
-To construct an open line \gls{path}, select the open line tool,
+To construct an open line \gls+{path}, select the open line tool,
 either by clicking on the open line button or by selecting
 \menu{tools.open_line}. You can later close the \gls{path}
 with the \gls{menu.edit.path.edit} function.
@@ -3424,7 +3476,7 @@ and the initial vertex.
 
 \menudef{menu.tools.open_curve}
 
-To construct an open curve \gls{path}, select the open curve tool,
+To construct an open curve \gls+{path}, select the open curve tool,
 either by clicking on the open curve button or by selecting
 \menu{tools.open_curve}. You can later close the \gls{path}
 with the \gls{menu.edit.path.edit} function.
@@ -3485,7 +3537,7 @@ the opposite corner, and \gls{click} or press
 
 Note that this function is just a shortcut to using the
 \gls{menu.tools.closed_line} function. Once the rectangle is
-created, it is simply another closed \gls{path}, and can be edited in
+created, it is simply another closed \gls+{path}, and can be edited in
 exactly the same way.
 
 \seealsorefs{
@@ -3516,7 +3568,7 @@ to create a circle, I recommend that you first enable the \gridlock\ or use the
 
 Note that this function is just a shortcut to using the
 \gls{menu.tools.closed_curve} function. Once the ellipse is
-created, it is simply another closed \gls{path}, and can be edited in
+created, it is simply another closed \gls+{path}, and can be edited in
 exactly the same way.
 
 \seealsorefs{
@@ -3559,7 +3611,7 @@ substituted according to the \widget{textconfig.textmappings} settings.
 The \manmsg{maths} tool can be selected either by clicking on the
 \gls{menu.tools.math} tool button or by selecting \menu{tools.math}.
 
-If \widget{textconfig.escape.mathchar} is enabled, the alternative text will be set
+If \widget{textconfig.escape_mathchar} is enabled, the alternative text will be set
 to the original supplied text with any identified characters
 substituted according to the \widget{textconfig.textmappings} settings.
 
@@ -3906,6 +3958,38 @@ the \switch{experimental} switch.
 Currently undocumented and may be removed.
 
 
+\section{From SVG Specs}\label{sec:newfromsvg}
+
+\menudef{menu.tools.create_path_from_svg}
+
+It's also possible to create a \gls+{path} by using the same syntax
+as the \gls{svg} path \qtt{d} property. Use the \menu{tools.create_path_from_svg}
+menu item to open the \dialog{svg_path} dialog.
+
+\widgetdef{svg_path.title}
+
+The \dialog{svg_path} dialog has an upper panel that's used to draw
+the \gls{svg} path so that you can check it before adding it to the
+\gls{canvas}. The lower panel has a text box in which you can type
+in the data. For example: 
+\begin{compactcodebox}
+M 100 100 L 300 400
+\end{compactcodebox}
+This would create a path consisting of a single line segment.
+
+\widgetdef{svg_path.unit}
+
+Select the unit of measurement in the \inlineglsdef{svg_path.unit} 
+\gls{dropdown} box.
+
+\widgetdef{svg_path.dotask}
+
+Click on the \widget{svg_path.dotask} button to create a draft path. (The current
+styles will be added to the path when it's added to the canvas.)
+
+Once you're happy with the draft path, click on the \widget{okay}
+button to close the dialog and add the new \gls{path} to the \gls{canvas}.
+
 \chapter{Selecting, Navigation and Basic Editing}\label{sec:selectobjects}
 
 \menudef{menu.tools.select}
@@ -4074,6 +4158,12 @@ items are also available.
   {\includeimg{selectPopupPath}}
   {Popup Menu when only Paths are Selected}
 
+\menudef{menu.selectedpath.path_description}
+
+To set or edit the \gls{path}['s] description, use
+\menu{selectedpath.path_description}. This is the same as
+the general \menu{selected.object_description} menu item but has a more specific label.
+
 In addition to the \gls{index.menu.selected},
 if a path is selected then the following options will be available
 (\figureref{fig:selectpopups.path}).
@@ -4176,6 +4266,12 @@ use \menu{selectedpath.marker.end}. This is the same as using the
   {\includeimg{selectPopupText}}
   {Popup Menu when only Text-Areas are Selected}
 
+\menudef{menu.selectedtext.textarea_description}
+
+To set or edit the \gls{path}['s] description, use
+\menu{selectedtext.textarea_description}. This is the same as
+the general \menu{selected.object_description} menu item but has a more specific label.
+
 In addition to the \gls{index.menu.selected},
 if a \gls{textarea} is selected then the following options will be available
 (\figureref{fig:selectpopups.text}).
@@ -4269,6 +4365,12 @@ If a text-path has been selected then the
 \menu{selectedpath.edit} menu item to switch on edit mode for the
 underlying path.
 
+\menudef{menu.selectedtextpath.textpath_description}
+
+To set or edit the \gls{textpath}['s] description, use
+\menu{selectedtextpath.textpath_description}. This is the same as
+the general \menu{selected.object_description} menu item but has a more specific label.
+
 % BITMAP POPUP
 
 \menudef{index.menu.selectedbitmap}
@@ -4277,6 +4379,12 @@ underlying path.
   {fig:selectpopups.bitmap}
   {\includeimg{selectPopupBitmap}}
   {Popup Menu when only Bitmaps are Selected}
+
+\menudef{menu.selectedbitmap.bitmap_description}
+
+To set or edit the \gls{bitmap}['s] description, use
+\menu{selectedbitmap.bitmap_description}. This is the same as
+the general \menu{selected.object_description} menu item but has a more specific label.
 
 In addition to the \gls{index.menu.selected},
 if a \gls{bitmap} is selected then the following options will be available
@@ -4311,6 +4419,12 @@ bar.
   {fig:selectpopups.other}
   {\includeimg{selectPopupOther}}
   {Popup Menu when Groups or Mixture are Selected}
+
+\menudef{menu.selectedgroup.group_description}
+
+To set or edit a selected \gls{group}['s] description, use
+\menu{selectedgroup.group_description}. This is the same as
+the general \menu{selected.object_description} menu item but has a more specific label.
 
 In addition to the \gls{index.menu.selected},
 if any \glspl{group} or mixture of \glspl{object} are selected 
@@ -5407,7 +5521,7 @@ functions are described in \sectionref{sec:modshape}.
 \section{Moving an Object}\label{sec:moveobjects}
 
 To move an \gls{object} or \glspl*{object}
-(\inlineglsdef{affine-transform.translation}), first \select\ the
+(\inlineglsdef{affine-transformation.translation}), first \select\ the
 \glspl*{object} you want to move and then depress the
 \glslink{primaryclick}{primary mouse button} somewhere inside the
 selection, and drag the mouse.  Release the mouse button when the
@@ -5453,9 +5567,14 @@ The \menu{edit.moveby} function is unaffected by the \gridlock.
 \menudef{menu.transform.rotate}
 
 Selected \glspl{object} can be rotated with the
-\menu{transform.rotate} menu item. This will display a dialog box in
-which you can specify the angle of
-\inlineglsdef{affine-transform.rotation}.
+\menu{transform.rotate} menu item. This will display the
+\dialog{rotate} dialog box.
+
+\widgetdef{rotate.title}
+
+In the \dialog{rotate} dialog,
+you can specify the angle of
+\inlineglsdef{affine-transformation.rotation}.
 
 Notes:
 \begin{itemize}
@@ -5554,10 +5673,28 @@ are dragging will be transformed.
 \menudef{menu.transform.scale}
 
 Selected \glspl{object} can be scaled with the
-\menu{transform.scale} menu item. This will open up a dialog box
-in which you can specify the \inlineglsdef{affine-transform.scaling} factor.
-There is a choice of scaling just the $x$ dimension, just the $y$ dimension
-or both dimensions.
+\menu{transform.scale} menu item. This will open up the
+\dialog{scale} dialog box.
+
+\widgetdef{scale.title}
+
+In the \dialog{scale} dialog, you can specify the
+\inlineglsdef{affine-transformation.scaling} factor.
+
+\widgetdef{scale.both}
+
+Select the \widget{scale.both} radio button to scale both the
+$x$ and $y$ dimension by the same amount.
+
+\widgetdef{scale.x}
+
+Select the \widget{scale.x} radio button to scale just the
+$x$ dimension.
+
+\widgetdef{scale.y}
+
+Select the \widget{scale.y} radio button to scale just the
+$y$ dimension.
 
 Notes:
 \begin{itemize}
@@ -5665,10 +5802,21 @@ hotspot you are dragging will be transformed.
 \menudef{menu.transform.shear}
 
 Selected \glspl{object} can be sheared with
-the \menu{transform.shear} menu item. This will open up a dialog box
-in which you can specify the
-\inlineglsdef{affine-transform.shearing} factors. The shearing
-transformation is given by:
+the \menu{transform.shear} menu item. This will open up the
+\dialog{shear} dialog box.
+
+\widgetdef{shear.title}
+
+In the \dialog{shear} dialog, you can specify the
+\inlineglsdef{affine-transformation.shearing} factors.
+
+\widgetdef{shear.x}
+Enter the $x$ shear factor ($s_x$) in the \widget{shear.x} field.
+
+\widgetdef{shear.y}
+Enter the $y$ shear factor ($s_y$) in the \widget{shear.y} field.
+
+The shearing transformation is given by:
 \TeXParserLibToImage
 [div=displaymath,alt={
  (
@@ -9839,8 +9987,8 @@ change the even page shift}
 
 It's possible you might want to round the left and top margins to
 the nearest unit. In which case you can do so by editing the
-\widget{flowframe.margin.left} and
-\widget{flowframe.margin.top} fields. Additionally, you
+\widget{flowframe.margins.left} and
+\widget{flowframe.margins.top} fields. Additionally, you
 might want to adjust the right margin so that the
 \gls{typeblock} width is rounded to, say, the nearest whole mm or whole or half
 pc. To do this, type in the required value in the
@@ -9931,8 +10079,8 @@ is enabled (as shown in \figureref{fig:setframe}) since all the other
 fields aren't valid for type \widget{flowframe.none}.
 
 \begin{warning}
-Make sure you set the typeblock before you set any frames.
-If you later adjust the typeblock, you may need to readjust the even
+Make sure you set the \gls+{typeblock} before you set any frames.
+If you later adjust the \gls{typeblock}, you may need to readjust the even
 shifts for all frames that may be displayed on \gls{verso} pages.
 \end{warning}
 
@@ -10060,7 +10208,7 @@ frames.
 \widgetdef{flowframe.compute_sym_x_shift}
 
 By default, the frame location on even pages is the same
-\strong{relative to the \gls{typeblock}} as on odd pages. You can override this by
+\strong{relative to the \gls+{typeblock}} as on odd pages. You can override this by
 specifying a shift to apply to the location when the frame is
 displayed on an even page. \emph{However, this setting only has an effect
 if you use the \opt{twoside} class option.} This is usually
@@ -10211,7 +10359,7 @@ contained in the frame.
 \menudef{menu.tex.flowframe.scale_to_typeblock}
 
 In addition to the \affinetrans{scaling} function described in
-\sectionref{sec:scaleobjects}, if you have set the \gls{typeblock}, you can scale
+\sectionref{sec:scaleobjects}, if you have set the \gls+{typeblock}, you can scale
 selected \glspl{object} so that they fit the \gls{typeblock} area using the
 \menu{tex.flowframe.scale_to_typeblock} menu item.
 Note that this may change the aspect ratio of the scaled
@@ -11872,12 +12020,12 @@ is disabled, close the dialog and check that the rectangle has been
 selected.) This will fill the margins, but it looks a bit untidy
 with all those decimal places and since a \gls{pt} is so small such
 precision seems unnecessary so round the
-\widget{flowframe.margin.left} and
-\widget{flowframe.margin.top} margins to the nearest
+\widget{flowframe.margins.left} and
+\widget{flowframe.margins.top} margins to the nearest
 \gls{pt} (66\gls*{pt} and 94\gls*{pt}, respectively). Make sure
 the \widget{typeblock.adjust_width_label} field is set to
 1pc and click on the \widget{typeblock.adjust_width} button.
-This should alter the \widget{flowframe.margin.right} field.
+This should alter the \widget{flowframe.margins.right} field.
 Make sure the \widget{typeblock.use_baseline} radio button
 is selected and click on the
 \widget{typeblock.adjust_height} button. Finally, click on
@@ -11962,10 +12110,10 @@ set the \widget{flowframe.pages} to
 \widget{flowframe.pages_odd} and set the
 \widget{flowframe.align} to
 \widget{flowframe.align_middle}.  Set the
-\widget{flowframe.margin.left} and
-\widget{flowframe.margin.top} margins to 40\gls{pt} and the
-\widget{flowframe.margin.right} and
-\widget{flowframe.margin.bottom} margins to 10\gls{pt}.
+\widget{flowframe.margins.left} and
+\widget{flowframe.margins.top} margins to 40\gls{pt} and the
+\widget{flowframe.margins.right} and
+\widget{flowframe.margins.bottom} margins to 10\gls{pt}.
 Next, click on the \widget{flowframe.edit} button to open
 the mini \TeX\ editor and enter:
 \begin{verbatim}
@@ -12014,8 +12162,8 @@ flip the duplicate arc.
 \widget{flowframe.label} to \framelabelref{evenfooter}, set the
 \widget{flowframe.pages} to
 \widget{flowframe.pages_even}, set the
-\widget{flowframe.margin.left} margin to 10\gls{pt} and the
-\widget{flowframe.margin.right} margin to 40\gls*{pt}.
+\widget{flowframe.margins.left} margin to 10\gls{pt} and the
+\widget{flowframe.margins.right} margin to 40\gls*{pt}.
 The dialog should now appear as shown in \figureref{fig:brochure14}.
 
 \FloatFig{fig:brochure14}
@@ -12084,7 +12232,7 @@ again. Set the \widget{flowframe.type} to
 \widget{flowframe.pages_odd}, set the \widget{flowframe.border} to
 \widget{flowframe.border_as_shown}, set the \widget{flowframe.align}
 to \widget{flowframe.align_middle}, set the
-\widget{flowframe.margin.left} to 50\gls{pt} and set the remaining
+\widget{flowframe.margins.left} to 50\gls{pt} and set the remaining
 margins to 10\gls{pt}. Then click on the \widget{flowframe.edit}
 button to open the editor, and set the contents to:
 \begin{verbatim}
@@ -12219,7 +12367,7 @@ the \dialog{config} dialog
 (\figureref{fig:housenomousestorageunit}). If the
 \widget{controls.title} tab isn't already visible, you can
 do \mnemonic{controls.title} to select it. Then do
-\mnemonic{graphics.storage_unit} to move the focus to the
+\mnemonic{controls.storage_unit} to move the focus to the
 \gls*{storageunit} \gls{dropdown}. Press \code{b} to select
 \widgetfmt{bp} or use the up/down cursor keys. If the focus is on
 a \gls*{dropdown} you need to use \accelerator{okay} to apply these
@@ -13474,7 +13622,7 @@ omitted in earlier versions.
 
 Recall from \hyperref[jdr:object]{above} that the image is stored with an implied outer grouping. The
 \meta{flowframe-specs} for this implicit group represents the image
-\gls{typeblock} and the \meta{description} represents the image description.
+\gls+{typeblock} and the \meta{description} represents the image description.
 
 \end{numbered}
 
@@ -14320,7 +14468,7 @@ where:
 \begin{numbered}
 \item The frame \meta{type} is stored as a \type{byte}. This may only
 take one of the following values: 0 (static), 1 (flow), 2 (dynamic)
-and 3 (\gls{typeblock}). There should only be one \gls{typeblock} and this
+and 3 (\gls+{typeblock}). There should only be one \gls{typeblock} and this
 should belong to the \hyperref[jdr:object]{outermost implicit group}.
 
 \item If \meta{type} is not equal to 3 (i.e.\ is not the \gls{typeblock}), the following
@@ -14443,7 +14591,7 @@ GitHub (\url{https://github.com/nlct/flowframtk}).
 
 The \FlowframTk\ source code uses the \TeX\ Java Help Library
 command line tools to convert the \LaTeX\ documentation source code
-(\sectionref{sec:docsource}) into the HTML and XML files required by
+(\sectionref{sec:docsource}) into the \gls+{html} and XML files required by
 the in-application help system (\sectionref{sec:helpwindows}). The
 \TeX\ Java Help Library is also used by \FlowframTk\ to provide the
 windows used by the in-application help system. All
