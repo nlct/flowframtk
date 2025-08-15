@@ -678,8 +678,8 @@ class TextConfigPanel extends JPanel
       panel.add(box, "East");
 
       addTextMapButton = resources.createDialogButton(
-        "textconfig.add.textmap", "add.textmap", this, null, 
-        resources.getMessage("textconfig.add.textmap.tooltip"));
+        "textconfig.textmappings.add", "textmappings.add", this, null, 
+        resources.getMessage("textconfig.textmappings.add.tooltip"));
       box.add(addTextMapButton);
 
       removeTextMapButton = resources.createDialogButton(

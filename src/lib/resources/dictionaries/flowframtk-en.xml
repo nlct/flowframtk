@@ -1883,6 +1883,8 @@ Nicola Talbot
 
 <!--  Size Panel -->
 
+<entry key="arrow.title">Marker Selector</entry>
+
 <entry key="arrow.size">Size</entry>
 <entry key="arrow.size.mnemonic">Z</entry>
 
@@ -1893,7 +1895,7 @@ Nicola Talbot
 <entry key="arrow.altsquare">Alt Square</entry>
 <entry key="arrow.altbrace">Alt Brace</entry>
 <entry key="arrow.altlatex">Alt LaTeX</entry>
-<entry key="arrow.altlatex.open">Alt LaTeX Open</entry>
+<entry key="arrow.altlatex_open">Alt LaTeX Open</entry>
 <entry key="arrow.asterisk">Asterisk</entry>
 
 <entry key="arrow.autogap">Auto Repeat Gap</entry>
@@ -1916,7 +1918,7 @@ Nicola Talbot
 <entry key="arrow.bulgecap">Bulge Cap</entry>
 <entry key="arrow.chevroncap">Chevron Cap</entry>
 <entry key="arrow.circle">Circle</entry>
-<entry key="arrow.circle.open">Circle Open</entry>
+<entry key="arrow.circle_open">Circle Open</entry>
 <entry key="arrow.clubcap">Club Cap</entry>
 
 <entry key="arrow.composite">Composite</entry>
@@ -1927,7 +1929,7 @@ Nicola Talbot
 <entry key="arrow.cusp">Cusp</entry>
 <entry key="arrow.cutoutbulgecap">Cutout Bulge Cap</entry>
 <entry key="arrow.diamond">Diamond</entry>
-<entry key="arrow.diamond.open">Diamond Open</entry>
+<entry key="arrow.diamond_open">Diamond Open</entry>
 <entry key="arrow.dotfilled">Dot Filled</entry>
 <entry key="arrow.dotopen">Dot Open</entry>
 
@@ -1938,25 +1940,25 @@ Nicola Talbot
 <entry key="arrow.doubleleafcap">Double Leaf Cap</entry>
 <entry key="arrow.doubleleafbackcap">Backwards Double Leaf Cap</entry>
 <entry key="arrow.doubleleafforwardcap">Forward Double Leaf Cap</entry>
-<entry key="arrow.equilateral.filled">Equilateral Filled</entry>
-<entry key="arrow.equilateral.open">Equilateral Open</entry>
+<entry key="arrow.equilateral_filled">Equilateral Filled</entry>
+<entry key="arrow.equilateral_open">Equilateral Open</entry>
 <entry key="arrow.fastcap">Fast Cap</entry>
-<entry key="arrow.halfcusp.down">Half Cusp Down</entry>
-<entry key="arrow.halfcusp.up">Half Cusp Up</entry>
-<entry key="arrow.halfpointed.down">Half Pointed Down</entry>
-<entry key="arrow.halfpointed.up">Half Pointed Up</entry>
-<entry key="arrow.halfpointed45.down">Half Pointed 45 Down</entry>
-<entry key="arrow.halfpointed45.up">Half Pointed 45 Up</entry>
-<entry key="arrow.halfpointed60.down">Half Pointed 60 Down</entry>
-<entry key="arrow.halfpointed60.up">Half Pointed 60 Up</entry>
-<entry key="arrow.heart.filled">Heart Filled</entry>
-<entry key="arrow.heart.open">Heart Open</entry>
-<entry key="arrow.heart.right.filled">Right Heart Filled</entry>
-<entry key="arrow.heart.right.open">Right Heart Open</entry>
-<entry key="arrow.hexagon.filled">Hexagon Filled</entry>
-<entry key="arrow.hexagon.open">Hexagon Open</entry>
-<entry key="arrow.hook.up">Hook Up</entry>
-<entry key="arrow.hook.down">Hook Down</entry>
+<entry key="arrow.halfcusp_down">Half Cusp Down</entry>
+<entry key="arrow.halfcusp_up">Half Cusp Up</entry>
+<entry key="arrow.halfpointed_down">Half Pointed Down</entry>
+<entry key="arrow.halfpointed_up">Half Pointed Up</entry>
+<entry key="arrow.halfpointed45_down">Half Pointed 45 Down</entry>
+<entry key="arrow.halfpointed45_up">Half Pointed 45 Up</entry>
+<entry key="arrow.halfpointed60_down">Half Pointed 60 Down</entry>
+<entry key="arrow.halfpointed60_up">Half Pointed 60 Up</entry>
+<entry key="arrow.heart_filled">Heart Filled</entry>
+<entry key="arrow.heart_open">Heart Open</entry>
+<entry key="arrow.heart_right_filled">Right Heart Filled</entry>
+<entry key="arrow.heart_right_open">Right Heart Open</entry>
+<entry key="arrow.hexagon_filled">Hexagon Filled</entry>
+<entry key="arrow.hexagon_open">Hexagon Open</entry>
+<entry key="arrow.hook_up">Hook Up</entry>
+<entry key="arrow.hook_down">Hook Down</entry>
 <entry key="arrow.hooks">Hooks</entry>
 <entry key="arrow.invertchevroncap">Inverted Chevron Cap</entry>
 <entry key="arrow.invertfastcap">Inverted Fast Cap</entry>
@@ -1969,21 +1971,23 @@ Nicola Talbot
 <entry key="arrow.nomarker.initvalue">on</entry>
 
 <entry key="arrow.none">None</entry>
-<entry key="arrow.octagon.filled">Octagon Filled</entry>
-<entry key="arrow.octagon.open">Octagon Open</entry>
+<entry key="arrow.octagon_filled">Octagon Filled</entry>
+<entry key="arrow.octagon_open">Octagon Open</entry>
 
 <entry key="arrow.overlay">Overlay</entry>
 <entry key="arrow.overlay.mnemonic">Y</entry>
 <entry key="arrow.overlay.initvalue">false</entry>
 
-<entry key="arrow.pentagon.filled">Pentagon Filled</entry>
-<entry key="arrow.pentagon.open">Pentagon Open</entry>
+<entry key="arrow.pentagon_filled">Pentagon Filled</entry>
+<entry key="arrow.pentagon_open">Pentagon Open</entry>
 <entry key="arrow.plus">Plus</entry>
 <entry key="arrow.pointed">Pointed</entry>
 <entry key="arrow.pointed45">Pointed 45</entry>
 <entry key="arrow.pointed60">Pointed 60</entry>
+
 <entry key="arrow.primary">Primary Marker</entry>
 <entry key="arrow.primary.mnemonic">P</entry>
+
 <entry key="arrow.rectanglecap">Rectangle Cap</entry>
 <entry key="arrow.roundcap">Round Cap</entry>
 
@@ -1991,17 +1995,19 @@ Nicola Talbot
 <entry key="arrow.reversed.mnemonic">V</entry>
 <entry key="arrow.reversed.initvalue">false</entry>
 
-<entry key="arrow.rhombus.filled">Rhombus Filled</entry>
-<entry key="arrow.rhombus.open">Rhombus Open</entry>
+<entry key="arrow.rhombus_filled">Rhombus Filled</entry>
+<entry key="arrow.rhombus_open">Rhombus Open</entry>
 <entry key="arrow.round">Round Bracket</entry>
-<entry key="arrow.scissors.down.filled">Scissors Down Filled</entry>
-<entry key="arrow.scissors.down.open">Scissors Down Open</entry>
-<entry key="arrow.scissors.up.filled">Scissors Up Filled</entry>
-<entry key="arrow.scissors.up.open">Scissors Up Open</entry>
+<entry key="arrow.scissors_down_filled">Scissors Down Filled</entry>
+<entry key="arrow.scissors_down_open">Scissors Down Open</entry>
+<entry key="arrow.scissors_up_filled">Scissors Up Filled</entry>
+<entry key="arrow.scissors_up_open">Scissors Up Open</entry>
+
 <entry key="arrow.secondary">Secondary Marker</entry>
 <entry key="arrow.secondary.mnemonic">E</entry>
-<entry key="arrow.semicircle.filled">Filled Semicircle</entry>
-<entry key="arrow.semicircle.open">Open Semicircle</entry>
+
+<entry key="arrow.semicircle_filled">Filled Semicircle</entry>
+<entry key="arrow.semicircle_open">Open Semicircle</entry>
 
 <entry key="arrow.single">Single</entry>
 <entry key="arrow.single.mnemonic">S</entry>
@@ -2010,24 +2016,28 @@ Nicola Talbot
 <entry key="arrow.snowflake">Snowflake</entry>
 <entry key="arrow.square">Square Bracket</entry>
 <entry key="arrow.star">Star</entry>
-<entry key="arrow.star5.open">Open 5 Pointed Star</entry>
-<entry key="arrow.star5.filled">Filled 5 Pointed Star</entry>
-<entry key="arrow.star6.open">Open 6 Pointed Star</entry>
-<entry key="arrow.star6.filled">Filled 6 Pointed Star</entry>
-<entry key="arrow.starchevron.filled">Star Chevron Filled</entry>
-<entry key="arrow.starchevron.open">Star Chevron Open</entry>
+<entry key="arrow.star5_open">Open 5 Pointed Star</entry>
+<entry key="arrow.star5_filled">Filled 5 Pointed Star</entry>
+<entry key="arrow.star6_open">Open 6 Pointed Star</entry>
+<entry key="arrow.star6_filled">Filled 6 Pointed Star</entry>
+<entry key="arrow.starchevron_filled">Star Chevron Filled</entry>
+<entry key="arrow.starchevron_open">Star Chevron Open</entry>
+
+<entry key="arrow.tab.title">Marker Tabs</entry>
+
 <entry key="arrow.tab.arrows">Arrows</entry>
 <entry key="arrow.tab.bracket">Brackets</entry>
 <entry key="arrow.tab.caps">Caps</entry>
 <entry key="arrow.tab.data">Data Points</entry>
 <entry key="arrow.tab.decorative">Decorative</entry>
 <entry key="arrow.tab.partial">Partial</entry>
+
 <entry key="arrow.triangle">Triangle</entry>
-<entry key="arrow.triangle.open">Triangle Open</entry>
-<entry key="arrow.triangle.down.filled">Triangle Down Filled</entry>
-<entry key="arrow.triangle.down.open">Triangle Down Open</entry>
-<entry key="arrow.triangle.up.filled">Triangle Up Filled</entry>
-<entry key="arrow.triangle.up.open">Triangle Up Open</entry>
+<entry key="arrow.triangle_open">Triangle Open</entry>
+<entry key="arrow.triangle_down_filled">Triangle Down Filled</entry>
+<entry key="arrow.triangle_down_open">Triangle Down Open</entry>
+<entry key="arrow.triangle_up_filled">Triangle Up Filled</entry>
+<entry key="arrow.triangle_up_open">Triangle Up Open</entry>
 <entry key="arrow.trianglecap">Triangle Cap</entry>
 
 <entry key="arrow.triple">Triple</entry>

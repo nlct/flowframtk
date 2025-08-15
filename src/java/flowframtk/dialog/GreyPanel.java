@@ -85,7 +85,7 @@ public class GreyPanel extends JPanel
       gbc.gridy = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      greyLabel = new JLabel(getResources().getMessage("colour.grey"),
+      greyLabel = new JLabel(getResources().getMessage("paintselector.grey"),
                             SwingConstants.RIGHT);
       sliders.add(greyLabel, gbc);
 
@@ -111,7 +111,7 @@ public class GreyPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      alphaLabel = new JLabel(getResources().getMessage("colour.alpha"),
+      alphaLabel = new JLabel(getResources().getMessage("paintselector.alpha"),
                               SwingConstants.RIGHT);
       sliders.add(alphaLabel, gbc);
       gbc.gridx = 1;

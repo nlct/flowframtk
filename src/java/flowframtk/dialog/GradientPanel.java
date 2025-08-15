@@ -56,7 +56,7 @@ public class GradientPanel extends JPanel
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
       // start colour
-      JLabel startLabel = getResources().createAppLabel("colour.start");
+      JLabel startLabel = getResources().createAppLabel("paintselector.start");
       startLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       add(startLabel);
@@ -64,14 +64,14 @@ public class GradientPanel extends JPanel
       startPanel = new ColorPanel(this);
 
       startPanel.setMnemonics(
-         getResources().getCodePoint("colour.rgb.mnemonic"),
-         getResources().getCodePoint("colour.cmyk.mnemonic"));
+         getResources().getCodePoint("paintselector.rgb.mnemonic"),
+         getResources().getCodePoint("paintselector.cmyk.mnemonic"));
       startPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       add(startPanel);
 
       // end colour
-      JLabel endLabel = getResources().createAppLabel("colour.end");
+      JLabel endLabel = getResources().createAppLabel("paintselector.end");
       endLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       add(endLabel);
@@ -79,8 +79,8 @@ public class GradientPanel extends JPanel
       endPanel = new ColorPanel(this);
 
       endPanel.setMnemonics(
-         getResources().getCodePoint("colour.rgb2.mnemonic"),
-         getResources().getCodePoint("colour.cmyk2.mnemonic"));
+         getResources().getCodePoint("paintselector.rgb2.mnemonic"),
+         getResources().getCodePoint("paintselector.cmyk2.mnemonic"));
       endPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       add(endPanel);
@@ -93,7 +93,7 @@ public class GradientPanel extends JPanel
 
       ButtonGroup gradientTypeGroup = new ButtonGroup();
 
-      linearButton = getResources().createAppRadioButton("colour",
+      linearButton = getResources().createAppRadioButton("paintselector",
          "linear", gradientTypeGroup, true, this);
       linearButton.setAlignmentX(Component.LEFT_ALIGNMENT);
       linearButton.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -104,7 +104,7 @@ public class GradientPanel extends JPanel
       linearDirectionPanel.setAlignmentY(Component.TOP_ALIGNMENT);
       gradientTypePanel.add(linearDirectionPanel);
 
-      radialButton = getResources().createAppRadioButton("colour", "radial",
+      radialButton = getResources().createAppRadioButton("paintselector", "radial",
          gradientTypeGroup, false, this);
       radialButton.setAlignmentX(Component.LEFT_ALIGNMENT);
       radialButton.setAlignmentY(Component.TOP_ALIGNMENT);
