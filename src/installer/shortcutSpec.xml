@@ -117,14 +117,14 @@
     applications="no"
     startMenu="yes"
     startup="no"
-    target="$INSTALL_PATH\doc\flowframtk-en-US.pdf"
+    target="$INSTALL_PATH\doc\flowframtk-en.pdf"
     commandLine=""
     encoding="UTF-8"
     iconFile="%SystemRoot%\system32\SHELL32.dll"
     iconIndex="23"
     description="FlowframTk ${project.version} user manual (PDF format)">
 
-    <createForPack name="Docs en-US"/>
+    <createForPack name="Docs en"/>
   </shortcut>
 
   <shortcut
@@ -134,14 +134,14 @@
     applications="no"
     startMenu="yes"
     startup="no"
-    target="$INSTALL_PATH\doc\jdrview-en-US.pdf"
+    target="$INSTALL_PATH\doc\jdrview-en.pdf"
     commandLine=""
     encoding="UTF-8"
     iconFile="%SystemRoot%\system32\SHELL32.dll"
     iconIndex="23"
     description="JDRView ${project.version} user manual (PDF format)">
 
-    <createForPack name="Docs en-US"/>
+    <createForPack name="Docs en"/>
   </shortcut>
 
   <shortcut
@@ -151,14 +151,14 @@
     applications="no"
     startMenu="yes"
     startup="no"
-    target="$INSTALL_PATH\doc\jdrutils-en-US.pdf"
+    target="$INSTALL_PATH\doc\jdrutils-en.pdf"
     commandLine=""
     encoding="UTF-8"
     iconFile="%SystemRoot%\system32\SHELL32.dll"
     iconIndex="23"
     description="JDRUtils ${project.version} user manual (PDF format)">
 
-    <createForPack name="Docs en-US"/>
+    <createForPack name="Docs en"/>
    </shortcut>
 
 </izpack:shortcuts>

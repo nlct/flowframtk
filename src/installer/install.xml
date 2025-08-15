@@ -5,14 +5,14 @@
   <properties>
     <property name="info.appName" value="flowframtk"/>
     <property name="info.url" value="http://www.dickimaw-books.com/software/flowframtk/"/>
-    <property name="project.version" value="0.8.5" />
+    <property name="project.version" value="0.8.7" />
   </properties>
 
     <info>
         <appname>@{info.appName}</appname>
         <appversion>@{project.version}</appversion>
         <authors>
-            <author name="Nicola L. C. Talbot" email="www.dickimaw-books.com/contact.html"/>
+            <author name="Nicola L. C. Talbot" email="dickimaw-books.com/contact"/>
         </authors>
         <url>@{info.url}</url>
         <javaversion>1.8</javaversion>
@@ -83,13 +83,13 @@
 
         <pack name="Docs en-GB" required="no" preselected="no">
             <description>English (GB) documentation</description>
-            <fileset dir="doc" includes="**/*-en-GB.pdf" targetdir="$INSTALL_PATH/doc"/>
+            <fileset dir="doc/en" includes="**/*-en-GB.pdf" targetdir="$INSTALL_PATH/doc"/>
             <fileset dir="examples" includes="**/*.jdr,**/*.ajr,**/*.tex,**/*.png" targetdir="$INSTALL_PATH/examples"/>
         </pack>
 
-        <pack name="Docs en-US" required="no" preselected="no">
-            <description>English (US) documentation</description>
-            <fileset dir="doc" includes="**/*-en-US.pdf" targetdir="$INSTALL_PATH/doc"/>
+        <pack name="Docs en" required="no" preselected="no">
+            <description>English (Regionless) documentation</description>
+            <fileset dir="doc/en" includes="**/*-en.pdf" targetdir="$INSTALL_PATH/doc"/>
             <fileset dir="examples" includes="**/*.jdr,**/*.ajr,**/*.tex,**/*.png" targetdir="$INSTALL_PATH/examples"/>
         </pack>
 

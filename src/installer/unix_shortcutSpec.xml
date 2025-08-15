@@ -2,7 +2,7 @@
 
 <izpack:shortcuts version="5.0" xmlns:izpack="http://izpack.org/schema/shortcuts" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://izpack.org/schema/shortcuts http://izpack.org/schema/5.0/izpack-shortcuts-5.0.xsd">
 
-  <programGroup defaultName="DickimawBooks/FlowframTk"
+  <programGroup defaultName="Graphics"
   location="applications"/>
 
   <shortcut
@@ -113,14 +113,14 @@
      desktop="no"
      workingDirectory=""
      target="evince"
-     commandLine="$INSTALL_PATH/doc/flowframtk-en-US.pdf"
+     commandLine="$INSTALL_PATH/doc/flowframtk-en.pdf"
      initialState="normal"
      type="Application"
      mimetype="application/pdf"
      encoding="UTF-8"
      description="FlowframTk user documentation (PDF format)">
 
-     <createForPack name="Docs en-US"/>
+     <createForPack name="Docs en"/>
    </shortcut>
 
    <shortcut
@@ -132,14 +132,14 @@
      desktop="no"
      workingDirectory=""
      target="evince"
-     commandLine="$INSTALL_PATH/doc/jdrutils-en-US.pdf"
+     commandLine="$INSTALL_PATH/doc/jdrutils-en.pdf"
      initialState="normal"
      type="Application"
      mimetype="application/pdf"
      encoding="UTF-8"
      description="JDRUtils user documentation (PDF format)">
 
-     <createForPack name="Docs en-US"/>
+     <createForPack name="Docs en"/>
    </shortcut>
 
    <shortcut
@@ -151,14 +151,14 @@
      desktop="no"
      workingDirectory=""
      target="evince"
-     commandLine="$INSTALL_PATH/doc/jdrview-en-US.pdf"
+     commandLine="$INSTALL_PATH/doc/jdrview-en.pdf"
      initialState="normal"
      type="Application"
      mimetype="application/pdf"
      encoding="UTF-8"
      description="JDRView user documentation (PDF format)">
 
-     <createForPack name="Docs en-US"/>
+     <createForPack name="Docs en"/>
    </shortcut>
 
    <shortcut
