@@ -11,6 +11,14 @@
       can point and click with the mouse.}
 }
 
+@abbreviation{mdi,
+  short="MDI",
+  long="multiple-Document interface",
+  description = {A main (parent) window containing child
+       windows allowing you to process several documents in
+       parallel.}
+}
+
 @commonabbreviation{pdf,
   short = {PDF},
   long = {portable document format}
@@ -31,16 +39,22 @@
   description = {\FlowframTk's native ASCII format. Files in this format 
       should have the extension \ext{ajr}. This format is 
       primarily provided to assist conversion to and from \gls{JDR} files 
-      or for version control.}
+      or for version control.},
+ defaultkeys={format=glsignore}
 }
 
 @entry{JDR,
    name="JDR",
    description = {\FlowframTk's native binary format. Files in this format 
       should have the extension \ext{jdr}. The abbreviation comes
-      from the precursor \glslink{JpgfDraw}{\strong{J}pgf\strong{Dr}aw}.}
+      from the precursor \glslink{JpgfDraw}{\strong{J}pgf\strong{Dr}aw}.},
+ defaultkeys={format=glsignore}
 }
 
+@term{object,
+ description =  {A path, text area, text-path, bitmap or group.},
+ defaultkeys={format=glsignore}
+}
 
 % FILE EXTENSIONS/FORMATS
 

@@ -34,6 +34,7 @@ Nicola Talbot
 <entry key="menu.settings.antialias">Anti-Alias</entry>
 <entry key="menu.settings.antialias.mnemonic">A</entry>
 <entry key="menu.settings.antialias.tooltip">Enable/disable anti-aliasing</entry>
+<entry key="menu.settings.antialias.initvalue">true</entry>
 
 
 <!-- Properties Dialogue -->

@@ -12,6 +12,7 @@
 \DeclareGraphicsExtensions{.png,.pdf,.tex}
 
 \newcommand{\JDRView}{JDRView}
+\newcommand{\FlowframTk}{FlowframTk}
 
 \title{User Manual for \JDRView}
 \author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
@@ -31,28 +32,132 @@
 \frontmatter
 \tableofcontents
 \listoffigures
+\mainmatter
 
 \chapter{Introduction}
 \label{sec:intro}
 
-TODO
+\JDRView\ is a \gls+{JDR}/\gls+{AJR} image viewer. It is designed for viewing
+\gls{JDR} or \gls{AJR} images that have been created by an external
+application.  Its main purpose is to assist testing applications
+that create \gls{JDR} or \gls{AJR} files, and so has a reload facility, but does
+not have any functions that modify the image.
+
+Unlike \FlowframTk, \JDRView\ does not have a \gls{mdi}, and so
+requires new instances if additional images need to be viewed
+at the same time.
+
+If any \glspl{object} have been assigned a description, move the
+pointer over the \gls{object} and the description will appear.
+If the pointer is positioned over an empty area, the image's
+description will appear, if it has been given one.
+
+\chapter{Command Line Options}
+
+\JDRView\ can be invoked from a command prompt:
+\appdef{jdrview}
+
+The \meta{option-list} and \meta{filename} may be omitted.
+Only one filename is permitted, and it must be either a
+\gls{JDR} or \gls{AJR} file. This script uses the environment
+variable \gls{JDR_JVMOPTS} to pass options to the \gls{jvm}.
+For example, if you want to run \JDRView\ with a maximum size
+of 128Mb for the memory allocation pool, you can set
+\gls{JDR_JVMOPTS} to \code{-Xmx128m}:
+\begin{verbatim}
+setenv JDR_JVMOPTS -Xmx128m
+\end{verbatim}
+Note that \FlowframTk\ also uses this environment variable.
+
+If you can't use the \file{jdrview} script, you can invoke
+\JDRView\ from the command line using:
+\begin{terminal}
+java -jar jdrview.jar \meta{option-list} \meta{filename}
+\end{terminal}
+(You may need to include the full pathname to \file{jdrview.jar}.)
+
+The following options are provided:
+
+\switchdef{antialias}
+Switch on the anti-aliasing (default).
+
+\switchdef{noantialias}
+Switch off the anti-aliasing.
+
+\switchdef{cwd}
+Set the current working directory to \meta{path}.
+
+\switchdef{version}
+Print the version information and exit.
+
+\switchdef{help}
+Print the syntax help and exit.
+
+\chapter{The File Menu}\label{sec:thefilemenu}
+
+\menudef{menu.file}
+
+The \menu{file} menu can be used to load and reload \gls{JDR}
+or \gls{AJR} images.
+
+\menudef{menu.file.open}
+
+A new image can be loaded using the \menu{file.open} menu item.
+This will replace the display, rather than creating a new window.
+
+\menudef{menu.file.reload}
+
+An image can be reloaded using \menu{file.reload}. This
+facility is only available if an image has already been loaded.
+
+\menudef{menu.file.properties}
+
+The image properties can be displayed using
+\menu{file.properties}. This will display: the file name,
+the file size, the file format (\gls{JDR} or \gls{AJR} and version number), the
+image bounding box, the paper size (if one was specified in the
+file), the image's description and the last time the image was
+modified.
+
+\menudef{menu.file.quit}
+
+To quit \JDRView\ use \menu{file.quit}.
+
 
 \chapter{Settings}
 \label{sec:settings}
 
-\subsection{The \glsfmttext{menu.settings.zoom} Sub-Menu}
+\menudef{menu.settings.antialias}
+
+The \menu{settings.antialias} menu item can be used to switch
+the anti-aliasing on or off.
+
+\section{The \glsfmttext{menu.settings.zoom} Sub-Menu}
 \label{sec:zoommenu}
 
 \menudef{menu.settings.zoom}
 
-The \menu{settings.zoom} sub-menu allows the magnification to
-be changed.
+The \menu{settings.zoom} sub-menu allows you to change
+the magnification. You can choose one of the predefined
+settings or you can specify an arbitrary setting.
 
 \menudef{menu.settings.zoom.user}
 
-The \menu{settings.zoom.user} menu item opens the
-\InlineMsgDef{zoom.title} dialog where you can specify a custom
-magnification.
+The \menu{settings.zoom.user} menu item will open the
+\inlineglsdef{zoom.title} dialog box (see \figureref{fig:zoom}) in
+which to specify an arbitrary magnification.  The magnification
+value may be entered as either a percentage
+(\figureref{fig:zoompercent}) or a decimal value
+(\figureref{fig:zoomdecimal}). For example, either 150\% or 1.5 to
+zoom by a factor of 1.5. 
+
+\FloatSubFigs{fig:zoom}
+ {
+   {fig:zoompercent}{\includeimg{setMagnificationPercent}}{Percentage},
+   {fig:zoomdecimal}{\includeimg{setMagnificationDecimal}}{Decimal}
+ }
+ {Setting Custom Magnification}
+
 
 \chapter{Help Windows}
 \label{sec:helpwindows}

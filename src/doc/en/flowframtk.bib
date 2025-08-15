@@ -22,14 +22,6 @@
   description = {Also known as the \glsxtrfull{jre}.}
 }
 
-@abbreviation{mdi,
-  short="MDI",
-  long="multiple-Document interface",
-  description = {A main (parent) window containing child
-       windows allowing you to process several documents in
-       parallel.}
-}
-
 @abbreviation{svg,
   prefix="an\space ",
   prefixfirst="a~",
@@ -104,7 +96,8 @@ objects.}
 
 @package{pkg.flowfram,
  name={\styfmt{flow\-fram}},
- syntax={\meta{options}}
+ syntax={\meta{options}},
+ defaultkeys={format=glsignore}
 }
 
 @option{opt.pages,
@@ -454,22 +447,26 @@ vertical rulers.}
 
 @term{canvas,
   plural="canvases",
-  description = {The white area on which you construct your picture.}
+  description = {The white area on which you construct your picture.},
+ defaultkeys={format=glsignore}
 }
 
 @term{shape,
-  description = {Either a path, text-path or a composite shape.}
+  description = {Either a path, text-path or a composite shape.},
+ defaultkeys={format=glsignore}
 }
 
 @term{path,
   description = {A shape made up of line segments, moves and cubic
-Bézier segments.}
+Bézier segments.},
+ defaultkeys={format=glsignore}
 }
 
 @term{textarea,
   name="text area",
   description = {An object consisting of a single line of text. The text may be moved,
-    scaled, rotated, sheared or converted to a path.}
+    scaled, rotated, sheared or converted to a path.},
+ defaultkeys={format=glsignore}
 }
 
 @term{textpath,
@@ -578,7 +575,8 @@ is also an \gls{underlying-shape}, any ancestor of that \gls{compositeshape}.}
     orange or red squares. Composite paths also have control points that
     govern how the full path is created from the underlying shape. The
     composite control points are \manualtext{coloured} differently to the standard
-    path controls.}
+    path controls.},
+ defaultkeys={format=glsignore}
 }
 
 @term{ptindex,
@@ -591,13 +589,10 @@ is also an \gls{underlying-shape}, any ancestor of that \gls{compositeshape}.}
     through the points in increasing order of index.}
 }
 
-@term{object,
- description =  {A path, text area, text-path, bitmap or group.}
-}
-
 @term{group,
   description = {A collection of \glspl{object} treated as a
-single entity.}
+single entity.},
+ defaultkeys={format=glsignore}
 }
 
 @term{bbox,
@@ -624,14 +619,16 @@ single entity.}
 
 @term{frontobject,
   name="frontmost object",
-  description = {The last object to be painted on the canvas.}
+  description = {The last object to be painted on the canvas.},
+ defaultkeys={format=glsignore}
 }
 
 @index{front, alias="frontobject"}
 
 @term{backobject,
   name="backmost object",
-  description = {The first object to be painted on the canvas.}
+  description = {The first object to be painted on the canvas.},
+ defaultkeys={format=glsignore}
 }
 
 @index{back, alias="backobject"}
@@ -648,7 +645,8 @@ points, lines and curves.}
 }
 
 @term{bitmap,
-  description={Representing images as a collection of pixels.}
+  description={Representing images as a collection of pixels.},
+ defaultkeys={format=glsignore}
 }
 
 @term{construction,
@@ -658,12 +656,14 @@ points, lines and curves.}
 
 @term{pt,
   description = {\TeX's point. Not to be confused with bp (a PostScript point).
-    72.27pt=1in.}
+    72.27pt=1in.},
+ defaultkeys={format=glsignore}
 }
 
 @term{bp,
   description = {\TeX's \qt{big point}. This is the same as a PostScript point.
-    72bp=1in.}
+    72bp=1in.},
+ defaultkeys={format=glsignore}
 }
 
 @term{dropdown,
@@ -672,17 +672,20 @@ points, lines and curves.}
     When inactive, it only displays the selected value. When activated
     (usually by pressing an arrow button to on one side) it displays
     a list of all available values from which the user can select
-    the required value.}
+    the required value.},
+ defaultkeys={format=glsignore}
 }
 
 @term{combobox,
   name="combo box",
   description = {A \gls{gui} element similar to a drop-down list, but can be edited if the
-    required value is not in the list.}
+    required value is not in the list.},
+ defaultkeys={format=glsignore}
 }
 
 @term{checkbox,
-  description = {A \gls{gui} element with two states: on (true) and off (false).}
+  description = {A \gls{gui} element with two states: on (true) and off (false).},
+ defaultkeys={format=glsignore}
 }
 
 @term{recto,
@@ -703,7 +706,8 @@ or even-numbered page).}
     \FlowframTk\ it is also possible to invoke popup menus using
     \accelerator{popup} or your keyboard may have a context-menu
     \accelerator{context_menu} key.},
-  see={index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.menu.none}
+  see={index.menu.textarea,index.menu.editpath,index.menu.distort,index.menu.selectedtextpath,index.menu.selectedtext,index.menu.selectedpath,index.menu.selectedbitmap,index.menu.selectedgroup,index.menu.selected,index.menu.none},
+ defaultkeys={format=glsignore}
 }
 
 @index{context-menu,
@@ -748,13 +752,15 @@ interpreted as tapping the appropriate side of the pad.}
 @term{doubleclick,
   name="double-click",
   description = {Press and release the mouse button twice in rapid succession.
-    If no button is specified, assume the primary button.}
+    If no button is specified, assume the primary button.},
+ defaultkeys={format=glsignore}
 }
 
 @term{click,
   description = {Press and release a mouse button (or tap on the
     touchpad, if applicable). If the button isn't specified, 
-    assume the \gls{primary-mouse-button}.}
+    assume the \gls{primary-mouse-button}.},
+ defaultkeys={format=glsignore}
 }
 
 @term{config_dir,
@@ -788,6 +794,7 @@ limitation. The \app{flowframtk} application matches the omission.}
 @index{painting,
  name={painting (on canvas)},
  text={painting},
+ defaultkeys={format=glsignore},
  see={anti-aliasing,rendering}
 }
 
@@ -828,7 +835,8 @@ limitation. The \app{flowframtk} application matches the omission.}
 }
 
 @index{Bezier-curve,
- name={Bézier curve}
+ name={Bézier curve},
+ defaultkeys={format=glsignore}
 }
 
 @indexplural{curve,
@@ -947,7 +955,8 @@ limitation. The \app{flowframtk} application matches the omission.}
 }
 @indexplural{image.typeblock,
  parent={image},
- name={typeblock}
+ name={typeblock},
+ defaultkeys={format=glsignore}
 }
 
 @index{typeblock,
@@ -1202,18 +1211,22 @@ limitation. The \app{flowframtk} application matches the omission.}
 }
 
 @option{opt.page-style.empty,
+ parent={page-style},
  name={\optfmt{empty}}
 }
 
 @option{opt.page-style.plain,
+ parent={page-style},
  name={\optfmt{plain}}
 }
 
 @option{opt.page-style.headings,
+ parent={page-style},
  name={\optfmt{headings}}
 }
 
 @option{opt.page-style.flowframtk,
+ parent={page-style},
  name={\optfmt{flowframtk}}
 }
 
@@ -1226,6 +1239,7 @@ limitation. The \app{flowframtk} application matches the omission.}
 }
 
 @indexplural{co-ordinate,
+ defaultkeys={format=glsignore},
  seealso={storageunit}
 }
 
@@ -1244,86 +1258,128 @@ limitation. The \app{flowframtk} application matches the omission.}
 }
 
 @index{ajdr-format.integer,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={integer}
 }
 
 @index{ajdr-format.string,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={string}
 }
 
 @index{ajdr-format.byte,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={byte}
 }
 
 @index{ajdr-format.long,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={long}
 }
 
 @index{ajdr-format.float,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={float}
 }
 
 @index{ajdr-format.double,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={double}
 }
 
 @index{ajdr-format.boolean,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={boolean}
 }
 
 @index{ajdr-format.char,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={char}
 }
 
 @index{ajdr-format.transform-matrix,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={transform-matrix}
 }
 
 @index{ajdr-format.float-array,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={float-array}
 }
 
 @index{ajdr-format.double-array,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={double-array}
 }
 
 @index{ajdr-format.unit-id,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={unit-id}
 }
 
 @index{ajdr-format.length,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={length}
 }
 
 @index{ajdr-format.angle,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={angle}
 }
 
 @index{ajdr-format.paint,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={paint}
 }
 
 @index{ajdr-format.rgb,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={rgb}
 }
 
 @index{ajdr-format.cmyk,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={cmyk}
 }
 
 @index{ajdr-format.hsb,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={hsb}
 }
 
 @index{ajdr-format.grey,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={grey}
 }
 
 @index{ajdr-format.linear-paint,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={linear-paint}
 }
 
 @index{ajdr-format.radial-paint,
+ parent={ajdr-format},
+ defaultkeys={format=glsignore},
  name={radial-paint}
 }
 

@@ -1,0 +1,65 @@
+
+\usepackage{fontspec}
+\setmainfont{Linux Libertine O}
+\usepackage{verbatim}
+\usepackage
+ [
+    novref,
+%   debug=showwrgloss
+ ]{texjavahelp}
+
+\hypersetup{colorlinks,linkcolor=blue}
+\DeclareGraphicsExtensions{.png,.pdf,.tex}
+
+\title{jdrutils}
+\author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
+
+\InputIfFileExists{version}{}{}
+
+\GlsXtrLoadResources[src={jdrutils,shared,\langbibsrcs},
+ \TeXJavaHelpSymbolResourceOptions
+]
+
+\GlsXtrLoadResources[src={jdrutils,shared,\langbibsrcs},
+ \TeXJavaHelpGlsResourceOptions
+]
+
+\providecommand{\FlowframTk}{FlowframTk}
+
+\begin{document}
+\maketitle
+\frontmatter
+\tableofcontents
+\mainmatter
+
+\chapter{Introduction}
+\label{sec:intro}
+
+\FlowframTk\ comes with a number of command line applications for
+converting \gls+{JDR} and \gls+{AJR} files to other formats. This document
+describes those applications.
+
+\begin{information}
+The command line converters such as \appfmt{ajr2jdr} are due to 
+all be combined into a single command line tool. 
+\end{information}
+
+\chapter{jdrinfo}
+
+\appdef{jdrinfo}
+
+The \app{jdrinfo} command line application simply displays the file
+format (\gls{JDR}/\gls{AJR}) and version number for the given
+file.
+
+TODO (pending update).
+
+%\listentrydescendents
+% [title={Summary of \apptext{jdrview} Switches}]
+% {app.jdrview}
+
+\printmain
+\printindex 
+
+\end{document} 
+

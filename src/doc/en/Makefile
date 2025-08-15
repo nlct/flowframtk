@@ -6,7 +6,7 @@ arara=arara --verbose
 texjavahelpmk=texjavahelpmk
 tjhxml2bib=tjhxml2bib --copy-overwrite-xml
 
-all	: en-GB en flowframtk.1
+all	: en-GB en flowframtk.1 jdrutils-en.pdf jdrutils-en-GB.pdf
 
 flowframtk.1	: flowframtk.pod
 		pod2man -c flowframtk flowframtk.pod flowframtk.1
@@ -102,6 +102,24 @@ jdrview-en-GB.glstex	: jdrview.bib shared.bib jdrview-props-en-GB.bib \
 			../sharedimages/*.png ../sharedimages/*.tex
 	lualatex jdrview-en-GB
 	bib2gls -g --no-warn-unknown-entry-types jdrview-en-GB
+
+jdrutils-en.pdf	: jdrutils-en.glstex
+	lualatex jdrutils-en
+	lualatex jdrutils-en
+
+jdrutils-en.glstex	: jdrutils.bib shared.bib flowframtk-props-en.bib \
+		jdrutils-en.tex jdrutils-main.tex version.tex 
+	lualatex jdrutils-en
+	bib2gls -g --no-warn-unknown-entry-types jdrutils-en
+
+jdrutils-en-GB.pdf	: jdrutils-en-GB.glstex
+	lualatex jdrutils-en-GB
+	lualatex jdrutils-en-GB
+
+jdrutils-en-GB.glstex	: jdrutils.bib shared.bib flowframtk-props-en-GB.bib \
+			jdrutils-en-GB.tex jdrutils-main.tex version.tex 
+	lualatex jdrutils-en-GB
+	bib2gls -g --no-warn-unknown-entry-types jdrutils-en-GB
 
 en-GB	: $(targetdir)/flowframtk/en-GB/index.xml \
 	$(targetdir)/jdrview/en-GB/index.xml
