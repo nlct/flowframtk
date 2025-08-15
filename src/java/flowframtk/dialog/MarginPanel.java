@@ -63,7 +63,7 @@ public class MarginPanel extends JPanel
       gbc.gridx++;
       gbc.gridy++;
 
-      leftLabel = resources.createAppLabel("flowframe.margin.left");
+      leftLabel = resources.createAppLabel("flowframe.margins.left");
 
       add(leftLabel, gbc);
 
@@ -77,7 +77,7 @@ public class MarginPanel extends JPanel
 
       gbc.gridx++;
 
-      rightLabel = resources.createAppLabel("flowframe.margin.right");
+      rightLabel = resources.createAppLabel("flowframe.margins.right");
 
       add(rightLabel, gbc);
 
@@ -92,7 +92,7 @@ public class MarginPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridy++;
 
-      topLabel = resources.createAppLabel("flowframe.margin.top");
+      topLabel = resources.createAppLabel("flowframe.margins.top");
 
       add(topLabel, gbc);
 
@@ -105,7 +105,7 @@ public class MarginPanel extends JPanel
 
       gbc.gridx++;
 
-      bottomLabel = resources.createAppLabel("flowframe.margin.bottom");
+      bottomLabel = resources.createAppLabel("flowframe.margins.bottom");
 
       add(bottomLabel, gbc);
 

@@ -43,7 +43,7 @@ public class StorageUnitPanel extends JPanel
       Box b = Box.createHorizontalBox();
       add(b);
 
-      JLabel storageLabel = resources.createAppLabel("graphics.storage_unit");
+      JLabel storageLabel = resources.createAppLabel("controls.storage_unit");
       b.add(storageLabel);
 
       unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
@@ -53,7 +53,7 @@ public class StorageUnitPanel extends JPanel
       b.add(Box.createHorizontalGlue());
 
       JTextArea textArea = resources.createAppInfoArea(
-         "graphics.storage_unit.note");
+         "controls.storage_unit.note");
 
       Font font = textArea.getFont();
 

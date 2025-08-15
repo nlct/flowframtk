@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
@@ -108,6 +110,16 @@ public class CreatePathFromSvgDialog extends JDialog
 
       buttonPanel.add(okayButton); 
       buttonPanel.add(resources.createCancelButton(this));
+
+      try
+      {
+         buttonPanel.add(resources.createHelpDialogButton(this, "sec:newfromsvg"));
+      }
+      catch (HelpSetNotInitialisedException e)
+      {
+         getResources().internalError(null, e);
+      }
+
 
       pack();
       setLocationRelativeTo(application);

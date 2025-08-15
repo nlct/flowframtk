@@ -39,7 +39,7 @@ public class StorageUnitDialog extends JDialog
    public StorageUnitDialog(FlowframTk application)
    {
       super(application,
-            application.getResources().getMessage("graphics.storage_unit.title"),
+            application.getResources().getMessage("storage_unit.title"),
             true);
       application_ = application;
 

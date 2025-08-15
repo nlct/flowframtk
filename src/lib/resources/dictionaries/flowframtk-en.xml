@@ -357,7 +357,7 @@ Nicola Talbot
 
 <entry key="menu.edit.adjustcol.rgb">Convert to RGB</entry>
 <entry key="menu.edit.adjustcol.rgb.mnemonic">R</entry>
-<entry key="menu.edit.adjustcol.rbg.tooltip">Convert colors to RGB for selected shapes or text areas</entry>
+<entry key="menu.edit.adjustcol.rgb.tooltip">Convert colors to RGB for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.hsb">Convert to HSB</entry>
 <entry key="menu.edit.adjustcol.hsb.mnemonic">H</entry>
@@ -848,23 +848,23 @@ Nicola Talbot
 <entry key="menu.debug.writelog">Write Log</entry>
 <entry key="menu.debug.writelog.mnemonic">W</entry>
 <entry key="menu.debug.writelog.keystroke">control shift F11</entry>
-<entry key="menu.debug.writelog.description">Writes debugging information to a log file in the configuration directory</entry>
+<entry key="menu.debug.writelog.tooltip">Writes debugging information to a log file in the configuration directory</entry>
 
 
 <entry key="menu.debug.dumpall">Dump All</entry>
 <entry key="menu.debug.dumpall.mnemonic">A</entry>
 <entry key="menu.debug.dumpall.keystroke">control F11</entry>
-<entry key="menu.debug.dumpall.descriptions">Saves all open images to the configuration directory</entry>
+<entry key="menu.debug.dumpall.tooltip">Saves all open images to the configuration directory</entry>
 
 <entry key="menu.debug.objectinfo">Object Info...</entry>
 <entry key="menu.debug.objectinfo.mnemonic">O</entry>
 <entry key="menu.debug.objectinfo.keystroke">shift F11</entry>
-<entry key="menu.debug.objectinfo.description">Display debugging information</entry>
+<entry key="menu.debug.objectinfo.tooltip">Display debugging information</entry>
 
 <entry key="menu.debug.revalidate">Revalidate Image</entry>
 <entry key="menu.debug.revalidate.mnemonic">R</entry>
 <entry key="menu.debug.revalidate.keystroke">F11</entry>
-<entry key="menu.debug.revalidate.description">Updates all components and redraws the current image</entry>
+<entry key="menu.debug.revalidate.tooltip">Updates all components and redraws the current image</entry>
 
 <!--  Popup Menus -->
 
@@ -955,7 +955,7 @@ Nicola Talbot
 
 <entry key="menu.editpath.convert_to_move">Convert To Move</entry>
 <entry key="menu.editpath.convert_to_move.mnemonic">M</entry>
-<entry key="menu.editpath.convert_to_move.tool">Replace the current segment with a gap</entry>
+<entry key="menu.editpath.convert_to_move.tooltip">Replace the current segment with a gap</entry>
 
 <entry key="menu.editpath.next_control">Next Control</entry>
 <entry key="menu.editpath.next_control.mnemonic">N</entry>
@@ -1548,12 +1548,15 @@ Nicola Talbot
 
 <entry key="scale.both">Scale both</entry>
 <entry key="scale.both.mnemonic">B</entry>
+<entry key="scale.both.initvalue">on</entry>
 
 <entry key="scale.x">Scale X</entry>
 <entry key="scale.x.mnemonic">X</entry>
+<entry key="scale.x.initvalue">off</entry>
 
 <entry key="scale.y">Scale Y</entry>
 <entry key="scale.y.mnemonic">Y</entry>
+<entry key="scale.y.initvalue">off</entry>
 
 <!--  Shear Dialog Box -->
 <entry key="shear.title">Shear Selection</entry>
@@ -1592,11 +1595,13 @@ Nicola Talbot
 <entry key="svg_path.title">Create Path from SVG</entry>
 
 <entry key="svg_path.dotask">Create Path</entry>
+<entry key="svg_path.dotask.mnemonic">Create Path</entry>
+<entry key="svg_path.dotask.iconimage">dotask</entry>
 
 <entry key="svg_path.unit">Unit:</entry>
 <entry key="svg_path.unit.mnemonic">Unit:</entry>
 
-<entry key="svg_path.info">Enter the path data (as per the SVG path "d" property) in the box below. For example: M 100 100 L 300 400 Z. Select the unit of measurement and click on the {0} button to create a draft path. (The current styles will be added to the path when it''s added to the canvas.)</entry>
+<entry key="svg_path.info">Enter the path data (as per the SVG path "d" property) in the box below. For example: M 100 100 L 300 400. Select the unit of measurement and click on the {0} button to create a draft path. (The current styles will be added to the path when it''s added to the canvas.)</entry>
 <entry key="svg_path.default_unit_info">The unit should correspond to the SVG data. The co-ordinates will be converted to the current storage unit while the SVG data is parsed.</entry>
 <entry key="svg_path.update_unit_info">You will need to reparse the SVG data to make the change in unit take effect.</entry>
 <entry key="svg_path.confirm.abandon">Are you sure you want to abandon the changes you have made to the SVG data?</entry>
@@ -2429,23 +2434,33 @@ Nicola Talbot
 <entry key="render.speed">Speed</entry>
 <entry key="render.speed.mnemonic">S</entry>
 
-<!--  Control points panel -->
-
-<entry key="controls.title">Control Points</entry>
-<entry key="controls.mnemonic">N</entry>
-<entry key="render.control_size">Control Size</entry>
-<entry key="render.control_size.mnemonic">Z</entry>
-<entry key="render.scale_controls">Scale Controls</entry>
-<entry key="render.scale_controls.mnemonic">L</entry>
+<entry key="render.control">Special Controls</entry>
 <entry key="render.control.standard">Regular Control</entry>
 <entry key="render.control.symmetry">Symmetry Line</entry>
 <entry key="render.control.patternanchor">Pattern Anchor</entry>
 <entry key="render.control.patternadjust">Pattern Adjust</entry>
 <entry key="render.control.selected">Selected</entry>
 <entry key="render.control.unselected">Unselected</entry>
-<!--  {0} -> control type (e.g. value of render.control.standard) -->
-<!--  {1} -> value of render.control.selected or render.control.unselected -->
+<!--  {0} -> control type (e.g. value of controls.control.standard) -->
+<!--  {1} -> value of controls.control.selected or controls.control.unselected -->
 <entry key="render.control.choosertitle">{0} ({1})</entry>
+
+<!--  Control points panel -->
+
+<entry key="controls.title">Control Points</entry>
+<entry key="controls.mnemonic">N</entry>
+<entry key="controls.control_size">Control Size</entry>
+<entry key="controls.control_size.mnemonic">Z</entry>
+
+<entry key="controls.scale_controls">Scale Controls</entry>
+<entry key="controls.scale_controls.mnemonic">L</entry>
+<entry key="controls.scale_controls.initvalue">false</entry>
+
+<entry key="storage_unit.title">Set Storage Unit</entry>
+
+<entry key="controls.storage_unit">Storage Unit:</entry>
+<entry key="controls.storage_unit.mnemonic">U</entry>
+<entry key="controls.storage_unit.note">If you change the storage unit, all coordinates in the current frame will be converted to the new storage unit. This may take a while if you have a large or complex image, so it's generally best to set the storage unit before you start your image. The storage unit is independent of the grid unit. Some settings, such as line width or font size, are independent of the storage unit.</entry>
 
 <!--  Splash Screen Settings -->
 
@@ -2515,11 +2530,6 @@ Nicola Talbot
 <entry key="processes.timeout">Time-out:</entry>
 <entry key="processes.timeout.mnemonic">M</entry>
 <entry key="processes.millisecs">Milliseconds</entry>
-
-<entry key="graphics.storage_unit.title">Storage Unit</entry>
-<entry key="graphics.storage_unit">Storage Unit:</entry>
-<entry key="graphics.storage_unit.mnemonic">U</entry>
-<entry key="graphics.storage_unit.note">If you change the storage unit, all coordinates in the current frame will be converted to the new storage unit. This may take a while if you have a large or complex image, so it's generally best to set the storage unit before you start your image. The storage unit is independent of the grid unit. Some settings, such as line width or font size, are independent of the storage unit.</entry>
 
 <!--  TeX settings -->
 
@@ -2595,9 +2605,9 @@ Nicola Talbot
 <entry key="textconfig.escape">Auto escape text symbols</entry>
 <entry key="textconfig.escape.mnemonic">E</entry>
 <entry key="textconfig.escape.tooltip">Automatically escape TeX's special characters when creating new text areas</entry>
-<entry key="textconfig.escape.mathchar">Auto escape math symbols</entry>
-<entry key="textconfig.escape.mathchar.mnemonic">M</entry>
-<entry key="textconfig.escape.mathchar.tooltip">Automatically escape TeX's special characters when creating new math areas</entry>
+<entry key="textconfig.escape_mathchar">Auto escape math symbols</entry>
+<entry key="textconfig.escape_mathchar.mnemonic">M</entry>
+<entry key="textconfig.escape_mathchar.tooltip">Automatically escape TeX's special characters when creating new math areas</entry>
 
 <entry key="textconfig.textmappings">Text Mode Mappings</entry>
 <entry key="textconfig.mathmappings">Math Mode Mappings</entry>
@@ -2904,14 +2914,14 @@ Nicola Talbot
 <entry key="flowframe.label">Label</entry>
 <entry key="flowframe.label.mnemonic">A</entry>
 <entry key="flowframe.margins">Margins</entry>
-<entry key="flowframe.margin.left">Left</entry>
-<entry key="flowframe.margin.left.mnemonic">L</entry>
-<entry key="flowframe.margin.right">Right</entry>
-<entry key="flowframe.margin.right.mnemonic">R</entry>
-<entry key="flowframe.margin.top">Top</entry>
-<entry key="flowframe.margin.top.mnemonic">T</entry>
-<entry key="flowframe.margin.bottom">Bottom</entry>
-<entry key="flowframe.margin.bottom.mnemonic">B</entry>
+<entry key="flowframe.margins.left">Left</entry>
+<entry key="flowframe.margins.left.mnemonic">L</entry>
+<entry key="flowframe.margins.right">Right</entry>
+<entry key="flowframe.margins.right.mnemonic">R</entry>
+<entry key="flowframe.margins.top">Top</entry>
+<entry key="flowframe.margins.top.mnemonic">T</entry>
+<entry key="flowframe.margins.bottom">Bottom</entry>
+<entry key="flowframe.margins.bottom.mnemonic">B</entry>
 <entry key="flowframe.pages.label">Page: {0}</entry>
 <entry key="flowframe.pages">Pages</entry>
 <entry key="flowframe.pages.mnemonic">P</entry>

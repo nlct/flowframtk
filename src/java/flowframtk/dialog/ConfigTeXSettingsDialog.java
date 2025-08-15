@@ -737,7 +737,7 @@ class TextConfigPanel extends JPanel
       panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       autoEscapeMathSymBox = resources.createAppCheckBox(
-        "textconfig", "escape.mathchar", true, this);
+        "textconfig", "escape_mathchar", true, this);
 
       panel.add(autoEscapeMathSymBox, "North");
 
@@ -890,7 +890,7 @@ class TextConfigPanel extends JPanel
       {
          updateEnableTextMappings();
       }
-      else if (action.equals("escape.mathchar"))
+      else if (action.equals("escape_mathchar"))
       {
          updateEnableMathMappings();
       }

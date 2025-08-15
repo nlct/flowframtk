@@ -597,7 +597,7 @@ class ControlSizePanel extends JPanel
 
       setBorder(BorderFactory.createLoweredBevelBorder());
 
-      JLabel label = resources.createAppLabel("render.control_size");
+      JLabel label = resources.createAppLabel("controls.control_size");
       add(label);
 
       controlSize = resources.createNonNegativeLengthPanel();
@@ -607,7 +607,7 @@ class ControlSizePanel extends JPanel
 
       add(controlSize);
 
-      scaleControlsBox = resources.createAppCheckBox("render",
+      scaleControlsBox = resources.createAppCheckBox("controls",
          "scale_controls", false, null);
 
       scaleControlsBox.setSelected(cg.isScaleControlPointsEnabled());

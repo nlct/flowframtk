@@ -34,7 +34,7 @@
 
 <entry key="menu.edit.adjustcol.cmyk.tooltip">Convert colours to CMYK for selected shapes or text areas</entry>
 
-<entry key="menu.edit.adjustcol.rbg.tooltip">Convert colours to RGB for selected shapes or text areas</entry>
+<entry key="menu.edit.adjustcol.rgb.tooltip">Convert colours to RGB for selected shapes or text areas</entry>
 
 <entry key="menu.edit.adjustcol.hsb.tooltip">Convert colours to HSB for selected shapes or text areas</entry>
 
