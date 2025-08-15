@@ -46,7 +46,7 @@ public class FillPaintSelector extends JDRSelector
    public FillPaintSelector(FlowframTk application)
    {
       super(application, 
-         application.getResources().getMessage("fillcolour.title"),
+         application.getResources().getMessage("fillpaintselector.title"),
       true, false, "sec:fillpaint");
 
       paintPanel = new PaintPanel(this);

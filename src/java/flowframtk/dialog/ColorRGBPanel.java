@@ -87,7 +87,7 @@ public class ColorRGBPanel extends JPanel
       gbc.gridy = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      redLabel = new JLabel(getResources().getMessage("colour.red"),
+      redLabel = new JLabel(getResources().getMessage("paintselector.red"),
                             SwingConstants.RIGHT);
       sliders.add(redLabel, gbc);
 
@@ -113,7 +113,7 @@ public class ColorRGBPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      greenLabel = new JLabel(getResources().getMessage("colour.green"),
+      greenLabel = new JLabel(getResources().getMessage("paintselector.green"),
                               SwingConstants.RIGHT);
       sliders.add(greenLabel, gbc);
       gbc.gridx = 1;
@@ -134,7 +134,7 @@ public class ColorRGBPanel extends JPanel
       gbc.fill = GridBagConstraints.BOTH;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      blueLabel = new JLabel(getResources().getMessage("colour.blue"),
+      blueLabel = new JLabel(getResources().getMessage("paintselector.blue"),
                              SwingConstants.RIGHT);
       sliders.add(blueLabel, gbc);
       gbc.gridx = 1;
@@ -155,7 +155,7 @@ public class ColorRGBPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      alphaLabel = new JLabel(getResources().getMessage("colour.alpha"),
+      alphaLabel = new JLabel(getResources().getMessage("paintselector.alpha"),
                               SwingConstants.RIGHT);
       sliders.add(alphaLabel, gbc);
       gbc.gridx = 1;

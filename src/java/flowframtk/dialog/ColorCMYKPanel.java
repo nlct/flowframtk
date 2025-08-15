@@ -88,7 +88,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridy = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      cyanLabel = new JLabel(getResources().getMessage("colour.cyan"),
+      cyanLabel = new JLabel(getResources().getMessage("paintselector.cyan"),
                              SwingConstants.RIGHT);
       sliders.add(cyanLabel, gbc);
 
@@ -113,7 +113,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      magentaLabel = new JLabel(getResources().getMessage("colour.magenta"),
+      magentaLabel = new JLabel(getResources().getMessage("paintselector.magenta"),
                                 SwingConstants.RIGHT);
       sliders.add(magentaLabel,gbc);
       gbc.gridx = 1;
@@ -134,7 +134,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.fill = GridBagConstraints.BOTH;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      yellowLabel = new JLabel(getResources().getMessage("colour.yellow"),
+      yellowLabel = new JLabel(getResources().getMessage("paintselector.yellow"),
                                SwingConstants.RIGHT);
       sliders.add(yellowLabel, gbc);
       gbc.gridx = 1;
@@ -155,7 +155,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      blackLabel = new JLabel(getResources().getMessage("colour.black"),
+      blackLabel = new JLabel(getResources().getMessage("paintselector.black"),
                               SwingConstants.RIGHT);
       sliders.add(blackLabel, gbc);
       gbc.gridx = 1;
@@ -176,7 +176,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      alphaLabel = new JLabel(getResources().getMessage("colour.alpha"),
+      alphaLabel = new JLabel(getResources().getMessage("paintselector.alpha"),
                               SwingConstants.RIGHT);
       sliders.add(alphaLabel, gbc);
       gbc.gridx = 1;

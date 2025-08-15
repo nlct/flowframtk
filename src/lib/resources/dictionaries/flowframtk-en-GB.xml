@@ -80,42 +80,45 @@
 
 <entry key="fade.title">Fade Colours</entry>
 
-<entry key="linecolour.title">Set Line Colour</entry>
-<entry key="linecolour.tab">Line Colour</entry>
+<entry key="linepaintselector.title">Set Line Colour</entry>
+<entry key="linepaintselector.tab">Line Colour</entry>
 
 <entry key="linestyle.join.mitre">Mitre</entry>
 <entry key="linestyle.mitre_limit">Mitre Limit</entry>
 
 
 <!--  fill colour selector -->
-<entry key="fillcolour.title">Set Fill Colour</entry>
-<entry key="fillcolour.tab">Fill Colour</entry>
+<entry key="fillpaintselector.title">Set Fill Colour</entry>
+<entry key="fillpaintselector.tab">Fill Colour</entry>
 
 <!--  arrow colour -->
 <entry key="arrow.colour.dependent">Colour As Path</entry>
 <entry key="arrow.colour.independent">Specific Colour</entry>
 
 <!--  text colour selector -->
-<entry key="textcolour.title">Set Text Colour</entry>
-<entry key="textcolour.tab">Text Colour</entry>
+<entry key="textpaintselector.title">Set Text Colour</entry>
+<entry key="textpaintselector.tab">Text Colour</entry>
+
 <entry key="font.anchor.hcentre">Centre</entry>
 <entry key="font.anchor.vcentre">Centre</entry>
 
-<entry key="colour.single">Colour</entry>
-<entry key="colour.grey">Grey</entry>
-<entry key="colour.start">Start Colour</entry>
-<entry key="colour.end">End Colour</entry>
+<entry key="paintselector.single">Colour</entry>
+<entry key="paintselector.grey">Grey</entry>
+<entry key="paintselector.start">Start Colour</entry>
+<entry key="paintselector.end">End Colour</entry>
 
 <entry key="textconfig.textualshading.average">Average Colours</entry>
 <entry key="textconfig.textualshading.start">Use Start Colour</entry>
 <entry key="textconfig.textualshading.end">Use End Colour</entry>
+
 <entry key="textconfig.escape.mathchar">Auto escape maths symbols</entry>
 <entry key="textconfig.escape.mathchar.tooltip">Automatically escape TeX's special characters when creating new maths areas</entry>
-<entry key="textconfig.mathmode">Maths Mode Mappings</entry>
+<entry key="textconfig.mathmappings">Maths Mode Mappings</entry>
+
 <entry key="textconfig.mathmappings.import.tooltip">Import Maths Mappings</entry>
 
-<entry key="textconfig.remove.mathmap.tooltip">Remove maths mapping</entry>
-<entry key="textconfig.add.mathmap.tooltip">Add new maths mapping</entry>
+<entry key="textconfig.mathmappings.remove.tooltip">Remove maths mapping</entry>
+<entry key="textconfig.mathmappings.add.tooltip">Add new maths mapping</entry>
 
 <entry key="texeditorui.comment">Comment colour</entry>
 <entry key="texeditorui.cs">Control Sequence colour</entry>

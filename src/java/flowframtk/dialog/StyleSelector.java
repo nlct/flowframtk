@@ -57,24 +57,24 @@ public class StyleSelector extends JDRSelector
       linePanel = new PaintPanel(this);
 
       tabbedPane.addTab(
-         getResources().getMessage("linecolour.title"), null, linePanel,
+         getResources().getMessage("linepaintselector.title"), null, linePanel,
          getResources().getMessage("menu.edit.path.line_colour.tooltip"));
 
       linePanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(0,
-         getResources().getCodePoint("linecolour.mnemonic"));
+         getResources().getCodePoint("linepaintselector.mnemonic"));
 
       // Fill colour selection panel
 
       fillPanel = new PaintPanel(this);
 
-      tabbedPane.addTab(getResources().getMessage("fillcolour.title"),
+      tabbedPane.addTab(getResources().getMessage("fillpaintselector.title"),
          null, fillPanel,
          getResources().getMessage("menu.edit.fill_colour.tooltip"));
 
       fillPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(1,
-         getResources().getCodePoint("fillcolour.mnemonic"));
+         getResources().getCodePoint("fillpaintselector.mnemonic"));
 
       // line style panel
       linestylePanel = new LineStylePanel(this);
@@ -91,13 +91,13 @@ public class StyleSelector extends JDRSelector
       // JDRText colour selection panel
       textPanel = new PaintPanel(this);
 
-      tabbedPane.addTab(getResources().getMessage("textcolour.title"),
+      tabbedPane.addTab(getResources().getMessage("textpaintselector.title"),
          null, textPanel,
          getResources().getMessage("menu.edit.textarea.colour.tooltip"));
 
       textPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(3,
-         getResources().getCodePoint("textcolour.mnemonic"));
+         getResources().getCodePoint("textpaintselector.mnemonic"));
 
       // font panel
 

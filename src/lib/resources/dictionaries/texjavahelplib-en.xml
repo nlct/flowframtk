@@ -29,29 +29,35 @@ Nicola Talbot
 <entry key="button.okay.mnemonic">O</entry>
 <entry key="button.okay.keystroke">shift ENTER</entry>
 <entry key="button.okay.defaultkeys">format=glsignore</entry>
+<entry key="button.okay.tooltip">Accept changes and close window</entry>
 
 <entry key="button.cancel">Cancel</entry>
 <entry key="button.cancel.mnemonic">C</entry>
 <entry key="button.cancel.keystroke">ESCAPE</entry>
 <entry key="button.cancel.defaultkeys">format=glsignore</entry>
+<entry key="button.cancel.tooltip">Discard changes and close window</entry>
 
 <entry key="button.apply">Apply</entry>
 <entry key="button.apply.mnemonic">A</entry>
 <entry key="button.apply.defaultkeys">format=glsignore</entry>
+<entry key="button.okay.tooltip">Apply changes</entry>
 
 <entry key="button.close">Close</entry>
 <entry key="button.close.mnemonic">C</entry>
 <entry key="button.close.keystroke">ENTER</entry>
 <entry key="button.close.defaultkeys">format=glsignore</entry>
+<entry key="button.okay.tooltip">Close window</entry>
 
 <entry key="button.copy">Copy</entry>
 <entry key="button.copy.mnemonic">C</entry>
 <entry key="button.copy.keystroke">control C</entry>
 <entry key="button.copy.defaultkeys">format=glsignore</entry>
+<entry key="button.copy.tooltip">Copy selected</entry>
 
 <entry key="button.copy_all">Copy All</entry>
 <entry key="button.copy_all.mnemonic">A</entry>
 <entry key="button.copy_all.keystroke">control shift C</entry>
+<entry key="button.copy_all.tooltip">Select all and copy</entry>
 
 <!-- TeXJavaHelpLibAppAdapter error reporting -->
 

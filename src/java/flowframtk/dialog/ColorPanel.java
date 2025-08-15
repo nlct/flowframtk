@@ -100,7 +100,7 @@ public class ColorPanel extends JPanel
 
       // RGB selector panel
 
-      tabbedPane.addTab(getResources().getMessage("colour.rgb"),
+      tabbedPane.addTab(getResources().getMessage("paintselector.rgb"),
                         null, rgbPanel,
                         getResources().getMessage("tooltip.rgb"));
       tabbedPane.addChangeListener(this);
@@ -108,19 +108,19 @@ public class ColorPanel extends JPanel
 
       // CMYK selector panel
 
-      tabbedPane.addTab(getResources().getMessage("colour.cmyk"),
+      tabbedPane.addTab(getResources().getMessage("paintselector.cmyk"),
                         null, cmykPanel,
                         getResources().getMessage("tooltip.cmyk"));
 
       // HSB selector panel
 
-      tabbedPane.addTab(getResources().getMessage("colour.hsb"),
+      tabbedPane.addTab(getResources().getMessage("paintselector.hsb"),
                         null, hsbPanel,
                         getResources().getMessage("tooltip.hsb"));
 
       // Grey selector panel
 
-      tabbedPane.addTab(getResources().getMessage("colour.grey"),
+      tabbedPane.addTab(getResources().getMessage("paintselector.grey"),
                         null, greyPanel,
                         getResources().getMessage("tooltip.grey"));
 

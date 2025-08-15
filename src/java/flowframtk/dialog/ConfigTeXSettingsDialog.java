@@ -585,20 +585,20 @@ class TextConfigPanel extends JPanel
       tabbedPane.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(tabbedPane, "Center");
 
-      tabbedPane.addTab(resources.getMessage("textconfig.textmode"),
+      tabbedPane.addTab(resources.getMessage("textconfig.textmappings"),
         resources.getSmallButtonIcon("textarea"),
         createTextMappingsComponent(),
-        resources.getToolTipText("textconfig.textmode"));
+        resources.getToolTipText("textconfig.textmappings"));
       tabbedPane.setMnemonicAt(0, 
-        resources.getCodePoint("textconfig.textmode.mnemonic"));
+        resources.getCodePoint("textconfig.textmappings.mnemonic"));
 
       tabbedPane.addTab(
-        resources.getMessage("textconfig.mathmode"),
+        resources.getMessage("textconfig.mathmappings"),
         resources.getSmallButtonIcon("math"),
         createMathsMappingsComponent(),
-        resources.getToolTipText("textconfig.mathmode"));
+        resources.getToolTipText("textconfig.mathmappings"));
       tabbedPane.setMnemonicAt(1, 
-        resources.getCodePoint("textconfig.mathmode.mnemonic"));
+        resources.getCodePoint("textconfig.mathmappings.mnemonic"));
 
       removedTextMappings = new Vector<Integer>();
       removedMathMappings = new Vector<Integer>();
@@ -683,8 +683,8 @@ class TextConfigPanel extends JPanel
       box.add(addTextMapButton);
 
       removeTextMapButton = resources.createDialogButton(
-        "textconfig.remove.textmap", "remove.textmap", this, null, 
-        resources.getMessage("textconfig.remove.textmap.tooltip"));
+        "textconfig.textmappings.remove", "textmappings.remove", this, null, 
+        resources.getMessage("textconfig.textmappings.remove.tooltip"));
       box.add(removeTextMapButton);
 
       box.add(resources.createDialogButton("textconfig.textmappings.import",
@@ -695,10 +695,10 @@ class TextConfigPanel extends JPanel
       textModeMappings = application.getTextModeMappings();
 
       columnNames = new Vector<String>(2);
-      columnNames.add(resources.getMessage("textconfig.codepoint"));
-      columnNames.add(resources.getMessage("textconfig.symbol"));
-      columnNames.add(resources.getMessage("textconfig.command"));
-      columnNames.add(resources.getMessage("textconfig.package"));
+      columnNames.add(resources.getMessage("textconfig.mapping.codepoint"));
+      columnNames.add(resources.getMessage("textconfig.mapping.character"));
+      columnNames.add(resources.getMessage("textconfig.mapping.command"));
+      columnNames.add(resources.getMessage("textconfig.mapping.package"));
 
       textMapTable = new JTable()
       {
@@ -745,13 +745,13 @@ class TextConfigPanel extends JPanel
       panel.add(box, "East");
 
       addMathMapButton = resources.createDialogButton(
-        "textconfig.add.mathmap", "add.mathmap", this, null, 
-        resources.getMessage("textconfig.add.mathmap.tooltip"));
+        "textconfig.mathmappings.add", "mathmappings.add", this, null, 
+        resources.getMessage("textconfig.mathmappings.add.tooltip"));
       box.add(addMathMapButton);
 
       removeMathMapButton = resources.createDialogButton(
-        "textconfig.remove.mathmap", "remove.mathmap", this, null, 
-        resources.getMessage("textconfig.remove.mathmap.tooltip"));
+        "textconfig.mathmappings.remove", "mathmappings.remove", this, null, 
+        resources.getMessage("textconfig.mathmappings.remove.tooltip"));
       box.add(removeMathMapButton);
 
       box.add(resources.createDialogButton("textconfig.mathmappings.import",
@@ -894,7 +894,7 @@ class TextConfigPanel extends JPanel
       {
          updateEnableMathMappings();
       }
-      else if (action.equals("remove.textmap"))
+      else if (action.equals("textmappings.remove"))
       {
          int[] indexes = textMapTable.getSelectedRows();
 
@@ -909,7 +909,7 @@ class TextConfigPanel extends JPanel
             model.removeRow(indexes[i]);
          }
       }
-      else if (action.equals("remove.mathmap"))
+      else if (action.equals("mathmappings.remove"))
       {
          int[] indexes = mathMapTable.getSelectedRows();
 
@@ -924,9 +924,9 @@ class TextConfigPanel extends JPanel
             model.removeRow(indexes[i]);
          }
       }
-      else if (action.equals("add.textmap"))
+      else if (action.equals("textmappings.add"))
       {
-         texMapDialog.setTitle(resources.getMessage("textconfig.add.textmap"));
+         texMapDialog.setTitle(resources.getMessage("textconfig.textmappings.add"));
 
          TeXMapRow map = texMapDialog.requestMapping();
 
@@ -935,9 +935,9 @@ class TextConfigPanel extends JPanel
             addMap((DefaultTableModel)textMapTable.getModel(), map);
          }
       }
-      else if (action.equals("add.mathmap"))
+      else if (action.equals("mathmappings.add"))
       {
-         texMapDialog.setTitle(resources.getMessage("textconfig.add.mathmap"));
+         texMapDialog.setTitle(resources.getMessage("textconfig.mathmappings.add"));
 
          TeXMapRow map = texMapDialog.requestMapping();
 
@@ -1210,7 +1210,7 @@ class TeXMapDialog extends JDialog
 {
    public TeXMapDialog(JDialog parent, JDRResources resources)
    {
-      super(parent, "Set Mapping", true);
+      super(parent, resources.getMessage("textconfig.mapping.title"), true);
 
       this.resources = resources;
       setIconImage(resources.getSmallAppIcon().getImage());
@@ -1218,7 +1218,7 @@ class TeXMapDialog extends JDialog
       JPanel mainPanel = new JPanel();
       getContentPane().add(mainPanel, "Center");
 
-      JLabel hexLabel = resources.createAppLabel("textconfig.codepoint");
+      JLabel hexLabel = resources.createAppLabel("textconfig.mapping.codepoint");
       mainPanel.add(hexLabel);
 
       symbolHexField = new HexField(0);
@@ -1227,7 +1227,7 @@ class TeXMapDialog extends JDialog
       hexLabel.setLabelFor(symbolHexField);
       mainPanel.add(symbolHexField);
 
-      JLabel symbolLabel = resources.createAppLabel("textconfig.symbol");
+      JLabel symbolLabel = resources.createAppLabel("textconfig.mapping.character");
       mainPanel.add(symbolLabel);
 
       symbolField = new JTextField();
@@ -1255,14 +1255,14 @@ class TeXMapDialog extends JDialog
          }
       });
 
-      JLabel commandLabel = resources.createAppLabel("textconfig.command");
+      JLabel commandLabel = resources.createAppLabel("textconfig.mapping.command");
       mainPanel.add(commandLabel);
 
       commandField = new JTextField(10);
       commandLabel.setLabelFor(commandField);
       mainPanel.add(commandField);
 
-      JLabel styLabel = resources.createAppLabel("textconfig.package");
+      JLabel styLabel = resources.createAppLabel("textconfig.mapping.package");
       mainPanel.add(styLabel);
 
       styField = new JTextField(8);

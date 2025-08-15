@@ -61,7 +61,7 @@ public class PaintPanel extends JPanel
 
       // Transparent
       transparentButton = getResources().createAppRadioButton(
-         "colour", "transparent", buttonGroup, false, this);
+         "paintselector", "transparent", buttonGroup, false, this);
       transparentButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       buttonPanel.add(transparentButton);
@@ -74,7 +74,7 @@ public class PaintPanel extends JPanel
       // Single colour
 
       singleColourButton = getResources().createAppRadioButton
-         ("colour", "single", buttonGroup, false, this);
+         ("paintselector", "single", buttonGroup, false, this);
 
       singleColourButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -84,8 +84,8 @@ public class PaintPanel extends JPanel
       singleColourPanel = new ColorPanel(getResources(), this);
       singleColourPanel.setAlignmentY(Component.TOP_ALIGNMENT);
       singleColourPanel.setMnemonics(
-         getResources().getCodePoint("colour.rgb.mnemonic"),
-         getResources().getCodePoint("colour.cmyk.mnemonic"));
+         getResources().getCodePoint("paintselector.rgb.mnemonic"),
+         getResources().getCodePoint("paintselector.cmyk.mnemonic"));
 
       JPanel singleColourCard = new JPanel();
       singleColourCard.setLayout(new BorderLayout());
@@ -96,7 +96,7 @@ public class PaintPanel extends JPanel
       // Gradient Color
 
       gradientColourButton = getResources().createAppRadioButton(
-         "colour", "gradient", buttonGroup, false, this);
+         "paintselector", "gradient", buttonGroup, false, this);
       gradientColourButton.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       buttonPanel.add(gradientColourButton);

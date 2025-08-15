@@ -46,7 +46,7 @@ public class TextPaintSelector extends JDRSelector
    public TextPaintSelector(FlowframTk application)
    {
       super(application, 
-            application.getResources().getMessage("textcolour.title"),
+            application.getResources().getMessage("textpaintselector.title"),
             false, true, "sec:textpaint");
 
       paintPanel = new PaintPanel(this);

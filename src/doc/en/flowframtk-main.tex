@@ -1600,8 +1600,8 @@ relative setting page number 3 refers to both the page
 \manmsg{labelled} iii and the page \manmsg{labelled} 3. (See the
 \sty{flowfram} documentation for further details.) If you want to
 use the absolute setting, select the
-\widget{flfsettings.pages_opt.absolute} button otherwise select the
-\widget{flfsettings.pages_opt.relative} button.
+\inlineglsdef{flfsettings.pages_opt.absolute} button otherwise select the
+\inlineglsdef{flfsettings.pages_opt.relative} button.
 
 \widgetdef{flfsettings.shapeparcs}
 
@@ -1737,14 +1737,14 @@ the export to PDF function.) The \mathstool\ automatically
 inserts \glsname{mshift} at the start and end of the
 alternative text. 
 
-If the \inlineglsdef{textarea-mapping} are enabled, Unicode symbols present in
+If the \inlineglspluraldef{textarea-mapping} are enabled, Unicode symbols present in
 the text when a new \gls*{textarea} is constructed can be mapped to
 a \LaTeX\ command.
 The mappings applied depend on which tool has been selected. With
 the regular \texttool, all the ten \TeX\ special characters are
 mapped to commands. In addition, there are some other characters
 that are also mapped by default. These are listed in the table shown
-in the \widget{textconfig.textmode} tab (see
+in the \widget{textconfig.textmappings} tab (see
 \figureref{fig:configdialog-texsettings}). If you don't want any
 text mappings applied, deselect the
 \widget{textconfig.escape} \gls{checkbox}.
@@ -1753,7 +1753,7 @@ With the \mathstool, the \gls{hash} and \gls{percent} characters are the
 only two of the ten \TeX\ special characters that are mapped by
 default. However there are other mappings of \manmsg{maths}-related Unicode
 characters and these are listed in the table shown in the
-\widget{textconfig.mathmode} tab (see
+\widget{textconfig.mathmappings} tab (see
 \figureref{fig:configdialog-mathsettings}). If you don't want
 \mathsmode\ mappings applied, deselect the
 \widget{textconfig.escape.mathchar} \gls*{checkbox}.
@@ -1779,42 +1779,61 @@ You can use \keys{\keyref{shift}}+\gls{click} or
 \keys{\keyref{ctrl}}+\gls{click} to add to the
 current selection.
 
-\widgetdef{textconfig.remove.textmap}
+\widgetdef{textconfig.textmappings.remove}
 
-To delete a mapping or mappings, select the appropriate row or rows of the
-mapping table and click on the \widget{textconfig.remove.textmap} button
-to the side of the table.  To restore all the original mappings,
-quit \FlowframTk\ and delete or rename the files
-\file{mathmappings.prop} and \file{textmappings.prop} in the
-\gls{config_dir}.
+To delete a \textmode\ mapping or mappings, select the appropriate row or rows of the
+\widget{textconfig.textmappings} table and click on the
+\widget{textconfig.textmappings.remove} button
+to the side of the table. 
+
+\widgetdef{textconfig.mathmappings.remove}
+
+To delete a \mathsmode\ mapping or mappings, select the appropriate row or rows of the
+\widget{textconfig.mathmappings} table and click on the
+\widget{textconfig.mathmappings.remove} button
+to the side of the table. 
+
+To restore all the original mappings, quit \FlowframTk\ and delete
+or rename the files \file{mathmappings.prop} and
+\file{textmappings.prop} in the \gls{config_dir}.
 
 To edit an existing mapping, \gls{doubleclick} on the second and
 third columns of the mapping table. The first two columns can't be
 edited.
 
-\widgetdef{textconfig.add.textmap}
+\widgetdef{textconfig.textmappings.add}
 \plabel[New \TeX\ Mappings]{mi:newtexmappings}% HelpSet id
-To add a new mapping, \gls{click} on the green plus button to the
-side of the relevant table.  This will open the add new mapping
+To add a \textmode\ new mapping, \gls{click} on the
+\widget{textconfig.textmappings.add} button to the
+side of the \widget{textconfig.textmappings} table. 
+
+\widgetdef{textconfig.mathmappings.add}
+To add a \mathsmode\ new mapping, \gls{click} on the
+\widget{textconfig.mathmappings.add} button to the
+side of the \widget{textconfig.mathmappings} table. 
+
+\widgetdef{textconfig.mapping.title}
+
+In either case, this will open the \widget{textconfig.mapping.title} mapping
 dialog. Enter the character you want mapped in the
-\widget{textconfig.symbol} box or type the hexadecimal value in the
-\widget{textconfig.codepoint} box and then enter the replacement
-command in the \widget{textconfig.command} box.  If the command is
+\widget{textconfig.mapping.character} box or type the hexadecimal value in the
+\widget{textconfig.mapping.codepoint} box and then enter the replacement
+command in the \widget{textconfig.mapping.command} box.  If the command is
 defined in a package, enter the package name (without the \ext{sty}
-extension) in the \widget{textconfig.package} box. If the mapping
+extension) in the \widget{textconfig.mapping.package} box. If the mapping
 requires multiple commands from different packages, you can specify
 a comma-separated list of packages in the
-\widget{textconfig.package} box. If the replacement command is
+\widget{textconfig.mapping.package} box. If the replacement command is
 available in the \LaTeX\ kernel, you can leave this box blank.
 (These packages will be automatically added to the
-\hyperref[sec:preamble]{image's early-preamble} code, whenever the
+image's \gls{preamble.early} code (\sectionref{sec:preamble}), whenever the
 mapping is applied.)
 
 The package name may be preceded by optional arguments in square
 brackets, for example \code{[weather]ifsym} (note that the package name
 isn't enclosed in braces). Set the package name to \qt{none} or
-leave it empty if you don't want it automatically added to the early-preamble
-code when the mappings are applied.
+leave it empty if you don't want it automatically added to the
+\gls{preamble.early} code when the mappings are applied.
 
 For example, in \figureref{fig:addTeXMapping} the new mapping dialog
 is being used to define a new text mapping from the Unicode dagger
@@ -1822,8 +1841,8 @@ is being used to define a new text mapping from the Unicode dagger
 Since this command is defined in the \LaTeX\ kernel, the package
 field can be left empty. The Unicode symbol can be specified either
 by typing the hexadecimal code into the
-\widget{textconfig.codepoint} field or by typing the actual
-symbol into the \widget{textconfig.symbol} field. If there
+\widget{textconfig.mapping.codepoint} field or by typing the actual
+symbol into the \widget{textconfig.mapping.character} field. If there
 is already a mapping for this Unicode symbol, the old mapping will
 be overwritten.
 
@@ -1919,7 +1938,7 @@ the option to set the required font. For example
 Once all these modifications have been made, the file can then be
 imported by clicking on the import button in the appropriate mapping
 pane. In this case, I have fetched mappings that are valid in
-\textmode, so I need to select the \widget{textconfig.textmode} tab
+\textmode, so I need to select the \widget{textconfig.textmappings} tab
 and then click on the import button to the right of the mapping
 table. This will open a file chooser which I can use to select the
 TSV file.
@@ -3533,7 +3552,7 @@ The text tool can be selected either by clicking on the
 
 If \widget{textconfig.escape} is enabled, the alternative text will be set
 to the original supplied text with any identified characters
-substituted according to the \widget{textconfig.textmode} settings.
+substituted according to the \widget{textconfig.textmappings} settings.
 
 \menudef{menu.tools.math}
 
@@ -3542,7 +3561,7 @@ The \manmsg{maths} tool can be selected either by clicking on the
 
 If \widget{textconfig.escape.mathchar} is enabled, the alternative text will be set
 to the original supplied text with any identified characters
-substituted according to the \widget{textconfig.textmode} settings.
+substituted according to the \widget{textconfig.textmappings} settings.
 
 After any substitutions on the alternative have been performed, 
 the \gls{mshift} character will be added to the start and end
@@ -4741,15 +4760,15 @@ only support a \gls{index.paint.solid-colour}.)
 
 \section{Paint Selector}\label{sec:paint}
 
-\widgetdef{colour.title}
+\widget{paintselector.title}
 
-The \widget{colour.title} panel is used in various \gls{index.paint}
+The \widget{paintselector.title} panel is used in various \gls{index.paint}
 selection dialog boxes.
-In most cases, the \widget{colour.single} option is the default
+In most cases, the \widget{paintselector.single} option is the default
 (such as the \pathattr{line-paint}).  However, the
-\pathattr{fill-paint} defaults to \widget{colour.transparent}.
+\pathattr{fill-paint} defaults to \widget{paintselector.transparent}.
 Where only a \gls{index.paint.solid-colour} is supported, the radio
-buttons will be omitted and only the \widget{colour.single} panel
+buttons will be omitted and only the \widget{paintselector.single} panel
 will be available.
 
 \begin{warning}
@@ -4758,28 +4777,28 @@ The \dglspl{colour} you see on the screen may not exactly match
 mapping between \dgls{colour} spaces.
 \end{warning}
 
-\widgetdef{colour.transparent}
+\widget{paintselector.transparent}
 
-Selecting the \widget{colour.transparent} radio button indicates
+Selecting the \widget{paintselector.transparent} radio button indicates
 \inlineglsdef{transparent}. For example, if a \pathattr{line-paint} is set to
-\widget{colour.transparent} then this indicates that the \gls{shape}
+\widget{paintselector.transparent} then this indicates that the \gls{shape}
 outline should not be \glslink{drawing-on-canvas}{drawn} or if a
-\pathattr{fill-paint} is set to \widget{colour.transparent} then
+\pathattr{fill-paint} is set to \widget{paintselector.transparent} then
 this indicates that the \gls{shape} should not be filled.
 
 If you require \gls{translucency} (where there is some \dgls{paint}
 but \glspl{object} behind show \manmsg{through}) then select one of
 the other \dgls{paint} options and adjust the alpha channel.
 
-\widgetdef{colour.single}
+\widget{paintselector.single}
 
 \FloatFig{fig:paint-solid}
 {\includeimg{paint-solid}}
 {Solid \Manmsg{colour} Selector}
 
-Selecting the \widget{colour.single} radio button indicates a
+Selecting the \widget{paintselector.single} radio button indicates a
 \inlineglsdef{index.colour.solid} \dgls{colour} and enables the
-\widget{colour.single} panel (see \figureref{fig:paint-solid}). 
+\widget{paintselector.single} panel (see \figureref{fig:paint-solid}). 
 
 A \dgls{paint.solid-colour} may be expressed as
 \inlineglsdef{index.colour.rgb} (red, green, blue),
@@ -4796,20 +4815,20 @@ The parameters are specified as integer values between 0 and 100,
 or between 0 and 359 in the case of hue.
 You can type in the number in the appropriate box, or use
 the slider bars. Alternatively, you can click on one of the predefined swatches
-which are to the right of the \widget{colour.single} panel 
+which are to the right of the \widget{paintselector.single} panel 
 and can be used to quickly set a \manmsg{colour}. Click on the 
 appropriate swatch and the \manmsg{colour} specification will be
 filled in.
 
-\widgetdef{colour.gradient}
+\widget{paintselector.gradient}
 
 \FloatFig{fig:paint-linear-gradient}
 {\includeimg{paint-linear-gradient}}
 {Gradient Paint Selector (Linear Selected)}
 
-Selecting the \widget{colour.gradient} radio button indicates a 
+Selecting the \widget{paintselector.gradient} radio button indicates a 
 \inlineglsdef{index.gradient-paint} and enables the
-\widget{colour.gradient} panel (see
+\widget{paintselector.gradient} panel (see
 \figureref{fig:paint-linear-gradient}). 
 
 A \gls{index.gradient-paint} is a shading that smoothly transitions
@@ -4820,8 +4839,8 @@ of \gls{index.gradient-paint.linear} or
 transitions from one \dgls{colour} (the
 \inlineglsdef{index.gradient-paint.start-colour}) to another (the
 \inlineglsdef{index.gradient-paint.end-colour}).  The
-\inlineglsdef{colour.start} and \inlineglsdef{colour.end} selectors
-each have the same interface as the \widget{colour.single} panel.
+\inlineglsdef{paintselector.start} and \inlineglsdef{paintselector.end} selectors
+each have the same interface as the \widget{paintselector.single} panel.
 
 \FloatSubFigs{fig:shadingex}
 {
@@ -4830,13 +4849,13 @@ each have the same interface as the \widget{colour.single} panel.
 }
 {Gradient Shading}
 
-\widgetdef{colour.linear}
+\widget{paintselector.linear}
 
 A \inlineglsdef{index.gradient-paint.linear} shading transitions in
 a band from the \gls{index.gradient-paint.start-colour} to the
 \gls{index.gradient-paint.end-colour} in the given direction. There
 are eight directions which are enabled when the
-\widget{colour.linear} radio button is selected: North, North-East,
+\widget{paintselector.linear} radio button is selected: North, North-East,
 East, South-East, South, South-West, West, and North-West.  The
 direction buttons can either be clicked on or selected with the
 keystrokes \keys{\keyref{alt}+\actualkey{1}} \ldots\
@@ -4848,11 +4867,11 @@ gradient paint from yellow to magenta. The direction is set to North
 so the bottom of the shape is yellow and the shading transitions to
 magenta at the top of the shape.
 
-\widgetdef{colour.radial}
+\widget{paintselector.radial}
 
 A \inlineglsdef{index.gradient-paint.radial} shading radiates
 outwards from a starting location. There are nine locations which
-become enabled with the \widget{colour.radial} radio button is
+become enabled with the \widget{paintselector.radial} radio button is
 selected. These are arranged in a three by three grid referencing
 regions of a \gls*{shape}['s] \gls{bbox}.
 The location buttons can either be clicked on or
@@ -5387,7 +5406,8 @@ functions are described in \sectionref{sec:modshape}.
 
 \section{Moving an Object}\label{sec:moveobjects}
 
-To move an \gls{object} or \glspl*{object}, first \select\ the
+To move an \gls{object} or \glspl*{object}
+(\inlineglsdef{affine-transform.translation}), first \select\ the
 \glspl*{object} you want to move and then depress the
 \glslink{primaryclick}{primary mouse button} somewhere inside the
 selection, and drag the mouse.  Release the mouse button when the
@@ -5434,7 +5454,8 @@ The \menu{edit.moveby} function is unaffected by the \gridlock.
 
 Selected \glspl{object} can be rotated with the
 \menu{transform.rotate} menu item. This will display a dialog box in
-which you can specify the angle of rotation.
+which you can specify the angle of
+\inlineglsdef{affine-transform.rotation}.
 
 Notes:
 \begin{itemize}
@@ -5534,8 +5555,8 @@ are dragging will be transformed.
 
 Selected \glspl{object} can be scaled with the
 \menu{transform.scale} menu item. This will open up a dialog box
-in which you can specify the scale factor. There is a choice of
-scaling just the $x$ dimension, just the $y$ dimension
+in which you can specify the \inlineglsdef{affine-transform.scaling} factor.
+There is a choice of scaling just the $x$ dimension, just the $y$ dimension
 or both dimensions.
 
 Notes:
@@ -5645,7 +5666,8 @@ hotspot you are dragging will be transformed.
 
 Selected \glspl{object} can be sheared with
 the \menu{transform.shear} menu item. This will open up a dialog box
-in which you can specify the shear factors. The shearing
+in which you can specify the
+\inlineglsdef{affine-transform.shearing} factors. The shearing
 transformation is given by:
 \TeXParserLibToImage
 [div=displaymath,alt={
@@ -7468,13 +7490,13 @@ effect next time you use \FlowframTk, unless you change the
 
 The \dialog{styles} dialog has the following tabs:
 \begin{deflist}
-\itemtitle{\widget{linecolour.title}}
+\itemtitle{\widget{linepaintselector.title}}
 \begin{itemdesc}
 Specifies the current \pathattr{line-paint} (see
 \sectionref{sec:linepaint}).
 \end{itemdesc}
 
-\itemtitle{\widget{fillcolour.title}}
+\itemtitle{\widget{fillpaintselector.title}}
 \begin{itemdesc}
 Specifies the current \pathattr{fill-paint} (see
 \sectionref{sec:fillpaint}).
@@ -7486,7 +7508,7 @@ Specifies the current \gls{line-style} (see
 \sectionref{sec:pathstyle}).
 \end{itemdesc}
 
-\itemtitle{\widget{textcolour.title}}
+\itemtitle{\widget{textpaintselector.title}}
 \begin{itemdesc}
 Specifies the current \gls{index.text-colour} (see
 \sectionref{sec:textpaint}).
@@ -7508,23 +7530,23 @@ of the dialog box may be used to restore the default settings.
 \menudef{menu.edit.path.line_colour}
 
 The \menu{edit.path.line_colour} menu item opens a dialog
-with a \widget{linecolour.title} panel in which
+with a \widget{linepaintselector.title} panel in which
 you can change the \inlineglsdef{index.path-attribute.line-paint} 
 of all \selected\ \glspl{shape}.
 
-\widgetdef{linecolour.title}
+\widgetdef{linepaintselector.title}
 
-The \widget{linecolour.title} panel has a \dialog{colour} panel
+The \widget{linepaintselector.title} panel has a \dialog{paintselector} panel
 (see \sectionref{sec:paint}) that may be used to set the 
 \pathattr{line-paint}. This panel is also a tab
 in the \dialog{styles} dialog to set the current
 \pathattr{line-paint}.
 The default \pathattr{line-paint} is black.
 
-Selecting the \widget{colour.transparent} radio button indicates
+Selecting the \widget{paintselector.transparent} radio button indicates
 that \gls{shape} outlines should not be drawn.  (The \pathattr{fill-paint}
 will need to be set to something other than
-\widget{colour.transparent} in order for the \glspl{shape} to be
+\widget{paintselector.transparent} in order for the \glspl{shape} to be
 visible.)
 
 There is a sample panel along the top (\menu{edit.path.line_colour})
@@ -7536,14 +7558,14 @@ effects of the \pathattr{line-paint} setting that you choose
 \menudef{menu.edit.fill_colour}
 
 The \menu{edit.fill_colour} menu item opens a dialog with a
-\widget{fillcolour.title} panel in which you can change the
+\widget{fillpaintselector.title} panel in which you can change the
 \inlineglsdef{index.path-attribute.fill-paint} of all \selected\
 \glspl{shape}. The \pathattr{fill-paint} is also used to fill
 \glspl{textarea} or \glspl{textpath} in \textattr{outline} mode. 
 
-\widgetdef{fillcolour.title}
+\widgetdef{fillpaintselector.title}
 
-The \widget{fillcolour.title} panel has a \dialog{colour} panel (see
+The \widget{fillpaintselector.title} panel has a \dialog{paintselector} panel (see
 \sectionref{sec:paint}) that may be used to set the
 \pathattr{fill-paint}. This panel is also a tab in the
 \dialog{styles} dialog to set the current \pathattr{fill-paint}.
@@ -7551,7 +7573,7 @@ The \widget{fillcolour.title} panel has a \dialog{colour} panel (see
 The default \pathattr{fill-paint} is \gls{transparent} which indicates
 that \glspl{shape} should not be filled.  (The \pathattr{line-paint}
 will need to be set to something other than
-\widget{colour.transparent} in order for the \glspl{shape} to be
+\widget{paintselector.transparent} in order for the \glspl{shape} to be
 visible.)
 
 There is a sample panel along the top (\menu{edit.fill_colour})
@@ -8548,7 +8570,7 @@ have the same \gls{index.marker.colour} as the \gls*{path}['s]
 If the \widget{arrow.colour.independent} box is selected, the marker
 \gls{index.marker.colour} will be independent of the \gls*{path}['s]
 \pathattr{line-paint}. Selecting the \widget{arrow.colour.independent} box 
-will enable the \widget{colour.single} panel where you can choose
+will enable the \widget{paintselector.single} panel where you can choose
 the marker's \gls{index.marker.colour}.
 For example, \figureref{fig:sampleplot} shows a \gls*{path} with
 a \gls{transparent} \pathattr{line-paint} and blue start, mid and end
@@ -8581,13 +8603,13 @@ pentagon will remain yellow.
 \menudef{menu.edit.textarea.colour}
 
 The \menu{edit.textarea.colour} menu item opens a dialog
-with a \widget{textcolour.title} panel in which
+with a \widget{textpaintselector.title} panel in which
 you can change the \inlineglsdef{index.text-attribute.paint} 
 of all \selected\ \glspl{textarea} and \glspl{textpath}.
 
-\widgetdef{textcolour.title}
+\widgetdef{textpaintselector.title}
 
-The \widget{textcolour.title} panel has a \dialog{colour} panel
+The \widget{textpaintselector.title} panel has a \dialog{paintselector} panel
 (see \sectionref{sec:paint}) that may be used to set the 
 text \textattr{paint}. This panel is also a tab
 in the \dialog{styles} dialog to set the current
@@ -8596,7 +8618,7 @@ There is a sample panel along the top illustrating the effects of
 the \textattr{paint} you choose.
 
 \begin{information}
-If the text \textattr{paint} is set to \widget{colour.transparent}
+If the text \textattr{paint} is set to \widget{paintselector.transparent}
 then the \gls{textarea} is not painted on the canvas, but it does
 have a \gls{bbox}. When \hyperref[sec:exportimage]{exporting} to a
 \LaTeX\ document, \gls{transparent} \glspl*{textarea} have their
@@ -10902,7 +10924,7 @@ rear. To ensure this, select the bus outline and use the
 
 \item Select all paths, and apply \menu{transform.subtract}.  Set
 the \pathattr{fill-paint} to red using the \menu{edit.fill_colour}
-menu item to open the \dialog{fillcolour} dialog box.  The windows
+menu item to open the \dialog{fillpaintselector} dialog box.  The windows
 should appear as holes. See \figureref{fig:bus8}.
 
 \FloatFig{fig:bus8}
@@ -11013,7 +11035,7 @@ poster a logo, and move it to the location shown
 \item Garish posters are not recommended, but to illustrate how to
 liven up the poster, set the \pathattr{fill-paint} for the rectangles
 using the \menu{edit.fill_colour} menu item to open
-the \dialog{fillcolour} dialog box. I also added two
+the \dialog{fillpaintselector} dialog box. I also added two
 extra smaller rectangles on top of the right hand rectangles, to
 give a double border effect (\figureref{fig:poster4}).
 
@@ -12196,7 +12218,7 @@ apply these settings and close the \dialog{grid} dialog box.
 the \dialog{config} dialog
 (\figureref{fig:housenomousestorageunit}). If the
 \widget{controls.title} tab isn't already visible, you can
-do \mnemonic{controls} to select it. Then do
+do \mnemonic{controls.title} to select it. Then do
 \mnemonic{graphics.storage_unit} to move the focus to the
 \gls*{storageunit} \gls{dropdown}. Press \code{b} to select
 \widgetfmt{bp} or use the up/down cursor keys. If the focus is on
@@ -12272,16 +12294,16 @@ functions in the \menu{navigate} menu, but
 
 \item To change the \pathattr{fill-paint} use the menu mnemonic
 \mnemonictrail{edit.fill_colour}. This will open up
-the \dialog{fillcolour} dialog box shown in \figureref{fig:housenomouse2}.
+the \dialog{fillpaintselector} dialog box shown in \figureref{fig:housenomouse2}.
 
 \FloatFig{fig:housenomouse2}
 [\setkeys{Gin}{width=\textwidth}]
 {\includeimg{housenomouse2}}
 {No Mouse Example\dash Set Fill Paint Dialog Box}
 
-\item To select the \widget{colour.single} radio button,
-either do \mnemonic{colour.single} or press \keys{\keyref{tab}} until
-the \widget{colour.single} button has the focus, and then
+\item To select the \widget{paintselector.single} radio button,
+either do \mnemonic{paintselector.single} or press \keys{\keyref{tab}} until
+the \widget{paintselector.single} button has the focus, and then
 press \keys{\keyref{space}}.
 
 \item The single \manmsg{colour} selector will now be enabled. To change the
@@ -12290,20 +12312,20 @@ press \keys{\keyref{space}}.
 \item Press \keys{\keyref{tab}} until the yellow swatch
 is selected, and then press \keys{\keyref{space}}.
 
-\item Press \mnemonic{colour.rgb} to select the
-\widget{colour.rgb} panel and set the
-\widget{colour.red} field to 100, the
-\widget{colour.green} field to 100, the
-\widget{colour.blue} field to 0 and the
-\widget{colour.alpha} field to 100.
+\item Press \mnemonic{paintselector.rgb} to select the
+\widget{paintselector.rgb} panel and set the
+\widget{paintselector.red} field to 100, the
+\widget{paintselector.green} field to 100, the
+\widget{paintselector.blue} field to 0 and the
+\widget{paintselector.alpha} field to 100.
 
-\item Press \mnemonic{colour.cmyk} to select the
-\widget{colour.cmyk} panel and set the
-\widget{colour.cyan} field to 0, the
-\widget{colour.magenta} field to 0, the
-\widget{colour.yellow} field to 100, the
-\widget{colour.black} field to 0 and the
-\widget{colour.alpha} field to 100.
+\item Press \mnemonic{paintselector.cmyk} to select the
+\widget{paintselector.cmyk} panel and set the
+\widget{paintselector.cyan} field to 0, the
+\widget{paintselector.magenta} field to 0, the
+\widget{paintselector.yellow} field to 100, the
+\widget{paintselector.black} field to 0 and the
+\widget{paintselector.alpha} field to 100.
 \end{itemize}
 Then press \keys{\keyref{return}} or \accelerator{okay} to apply the
 \pathattr{fill-paint} and close the dialog box (see \figureref{fig:housenomouse3}).
@@ -12342,21 +12364,21 @@ using either \accelerator{tools.select} or \mnemonictrail{tools.select}.
 \item Select the triangle using \accelerator{navigate.skip} or
 \mnemonictrail{navigate.skip}.
 
-\item Open the \dialog{fillcolour} dialog box using the menu mnemonic
+\item Open the \dialog{fillpaintselector} dialog box using the menu mnemonic
 \mnemonictrail{edit.fill_colour}.
 
-\item Use \mnemonic{colour.single} to select the
-\widget{colour.single} radio button.
+\item Use \mnemonic{paintselector.single} to select the
+\widget{paintselector.single} radio button.
 
 \item To set the \manmsg{colour} to red either use the
 \keys{\keyref{tab}} key to move
 the focus to the red \manmsg{colour} swatch and press
 \keys{\keyref{space}} or use
 \mnemonic{colour.rgb} to select the
-\widget{colour.rgb} tab and set the
-\widget{colour.red} field to 100, the
-\widget{colour.green} and \widget{colour.blue}
-fields to 0 and the \widget{colour.alpha} field to 100.
+\widget{paintselector.rgb} tab and set the
+\widget{paintselector.red} field to 100, the
+\widget{paintselector.green} and \widget{paintselector.blue}
+fields to 0 and the \widget{paintselector.alpha} field to 100.
 
 \item Press \keys{\keyref{return}} or \accelerator{okay} to set the
 \pathattr{fill-paint} and close the dialog box. (See
@@ -14488,7 +14510,7 @@ to determine the HTML file basenames.)
 The documentation requires the \styfmt{texjavahelp} package which is
 part of the \TeX\ Java Help system.
 
-\item Use \appfmt{texjavahelpmk} (the other \TeX\ Java Help command
+\item Use \appfmt{texjavahelpmk} (another \TeX\ Java Help command
 line tool) to convert the \LaTeX\ source to the HTML and XML files
 that are required by the in-application help.
 This uses the \TeX\ Parser Library to parse the source code and 

@@ -1797,15 +1797,15 @@ Nicola Talbot
 
 <!--  Line Colour Selector (Dialog and Tab in All Styles) -->
 
-<entry key="linecolour.title">Set Line Color</entry>
-<entry key="linecolour.tab">Line Color</entry>
-<entry key="linecolour.tab.mnemonic">I</entry>
+<entry key="linepaintselector.title">Set Line Color</entry>
+<entry key="linepaintselector.tab">Line Color</entry>
+<entry key="linepaintselector.tab.mnemonic">I</entry>
 
 <!--  Fill Colour Selector (Dialog and Tab in All Styles) -->
 
-<entry key="fillcolour.title">Set Fill Color</entry>
-<entry key="fillcolour.tab">Fill Color</entry>
-<entry key="fillcolour.tab.mnemonic">F</entry>
+<entry key="fillpaintselector.title">Set Fill Color</entry>
+<entry key="fillpaintselector.tab">Fill Color</entry>
+<entry key="fillpaintselector.tab.mnemonic">F</entry>
 
 <!--  Line Style Selector (Dialog and Tab in All Styles) -->
 
@@ -2071,9 +2071,9 @@ Nicola Talbot
 
 <!--  Text Colour Selector -->
 
-<entry key="textcolour.title">Set Text Color</entry>
-<entry key="textcolour.tab">Text Color</entry>
-<entry key="textcolour.tab.mnemonic">T</entry>
+<entry key="textpaintselector.title">Set Text Color</entry>
+<entry key="textpaintselector.tab">Text Color</entry>
+<entry key="textpaintselector.tab.mnemonic">T</entry>
 
 <!--  font selector -->
 <entry key="font.title">Set Font</entry>
@@ -2309,60 +2309,60 @@ Nicola Talbot
 
 <!--  colour selector -->
 
-<entry key="colour.title">Paint Selector</entry>
+<entry key="paintselector.title">Paint Selector</entry>
 
-<entry key="colour.alpha">Alpha</entry>
-<entry key="colour.red">Red</entry>
-<entry key="colour.green">Green</entry>
-<entry key="colour.blue">Blue</entry>
+<entry key="paintselector.alpha">Alpha</entry>
+<entry key="paintselector.red">Red</entry>
+<entry key="paintselector.green">Green</entry>
+<entry key="paintselector.blue">Blue</entry>
 
-<entry key="colour.rgb">RGB</entry>
-<entry key="colour.rgb.mnemonic">R</entry>
-<entry key="colour.rgb2.mnemonic">B</entry>
-<entry key="colour.rgb.initvalue">on</entry>
+<entry key="paintselector.rgb">RGB</entry>
+<entry key="paintselector.rgb.mnemonic">R</entry>
+<entry key="paintselector.rgb2.mnemonic">B</entry>
+<entry key="paintselector.rgb.initvalue">on</entry>
 `
-<entry key="colour.cyan">Cyan</entry>
-<entry key="colour.magenta">Magenta</entry>
-<entry key="colour.yellow">Yellow</entry>
-<entry key="colour.black">Black</entry>
+<entry key="paintselector.cyan">Cyan</entry>
+<entry key="paintselector.magenta">Magenta</entry>
+<entry key="paintselector.yellow">Yellow</entry>
+<entry key="paintselector.black">Black</entry>
 
-<entry key="colour.cmyk">CMYK</entry>
-<entry key="colour.cmyk.mnemonic">K</entry>
-<entry key="colour.cmyk2.mnemonic">M</entry>
-<entry key="colour.cmyk.initvalue">off</entry>
+<entry key="paintselector.cmyk">CMYK</entry>
+<entry key="paintselector.cmyk.mnemonic">K</entry>
+<entry key="paintselector.cmyk2.mnemonic">M</entry>
+<entry key="paintselector.cmyk.initvalue">off</entry>
 
-<entry key="colour.hue">Hue</entry>
-<entry key="colour.saturation">Saturation</entry>
-<entry key="colour.brightness">Brightness</entry>
+<entry key="paintselector.hue">Hue</entry>
+<entry key="paintselector.saturation">Saturation</entry>
+<entry key="paintselector.brightness">Brightness</entry>
 
-<entry key="colour.hsb">HSB</entry>
-<entry key="colour.hsb.initvalue">off</entry>
+<entry key="paintselector.hsb">HSB</entry>
+<entry key="paintselector.hsb.initvalue">off</entry>
 
-<entry key="colour.grey">Gray</entry>
-<entry key="colour.grey.initvalue">off</entry>
+<entry key="paintselector.grey">Gray</entry>
+<entry key="paintselector.grey.initvalue">off</entry>
 
-<entry key="colour.transparent">Transparent</entry>
-<entry key="colour.transparent.mnemonic">P</entry>
-<entry key="colour.transparent.initvalue">off</entry>
+<entry key="paintselector.transparent">Transparent</entry>
+<entry key="paintselector.transparent.mnemonic">P</entry>
+<entry key="paintselector.transparent.initvalue">off</entry>
 
-<entry key="colour.single">Color</entry>
-<entry key="colour.single.mnemonic">L</entry>
-<entry key="colour.single.initvalue">on</entry>
+<entry key="paintselector.single">Color</entry>
+<entry key="paintselector.single.mnemonic">L</entry>
+<entry key="paintselector.single.initvalue">on</entry>
 
-<entry key="colour.gradient">Gradient</entry>
-<entry key="colour.gradient.mnemonic">G</entry>
-<entry key="colour.gradient.initvalue">off</entry>
+<entry key="paintselector.gradient">Gradient</entry>
+<entry key="paintselector.gradient.mnemonic">G</entry>
+<entry key="paintselector.gradient.initvalue">off</entry>
 
-<entry key="colour.start">Start Color</entry>
-<entry key="colour.end">End Color</entry>
+<entry key="paintselector.start">Start Color</entry>
+<entry key="paintselector.end">End Color</entry>
 
-<entry key="colour.linear">Linear</entry>
-<entry key="colour.linear.mnemonic">E</entry>
-<entry key="colour.linear.initvalue">on</entry>
+<entry key="paintselector.linear">Linear</entry>
+<entry key="paintselector.linear.mnemonic">E</entry>
+<entry key="paintselector.linear.initvalue">on</entry>
 
-<entry key="colour.radial">Radial</entry>
-<entry key="colour.radial.mnemonic">A</entry>
-<entry key="colour.radial.initvalue">off</entry>
+<entry key="paintselector.radial">Radial</entry>
+<entry key="paintselector.radial.mnemonic">A</entry>
+<entry key="paintselector.radial.initvalue">off</entry>
 
 <!--  Configuration Settings Dialog Box -->
 
@@ -2576,20 +2576,23 @@ Nicola Talbot
 <entry key="textconfig.textualshading.start">Use Start Color</entry>
 <entry key="textconfig.textualshading.end">Use End Color</entry>
 <entry key="textconfig.textualshading.path">Convert to Path</entry>
+
 <entry key="textconfig.textpathoutline">When exporting text-paths with outlines:</entry>
 <entry key="textconfig.textpathoutline.mnemonic">L</entry>
 <entry key="textconfig.textpathoutline.path">Convert to Path</entry>
 <entry key="textconfig.textpathoutline.ignore">Ignore Outline</entry>
+
 <entry key="textconfig.escape">Auto escape text symbols</entry>
 <entry key="textconfig.escape.mnemonic">E</entry>
 <entry key="textconfig.escape.tooltip">Automatically escape TeX's special characters when creating new text areas</entry>
 <entry key="textconfig.escape.mathchar">Auto escape math symbols</entry>
 <entry key="textconfig.escape.mathchar.mnemonic">M</entry>
 <entry key="textconfig.escape.mathchar.tooltip">Automatically escape TeX's special characters when creating new math areas</entry>
-<entry key="textconfig.textmode">Text Mode Mappings</entry>
-<entry key="textconfig.mathmode">Math Mode Mappings</entry>
-<entry key="textconfig.textmode.mnemonic">T</entry>
-<entry key="textconfig.mathmode.mnemonic">M</entry>
+
+<entry key="textconfig.textmappings">Text Mode Mappings</entry>
+<entry key="textconfig.mathmappings">Math Mode Mappings</entry>
+<entry key="textconfig.textmappings.mnemonic">T</entry>
+<entry key="textconfig.mathmappings.mnemonic">M</entry>
 
 <entry key="textconfig.textmappings.import">Import</entry>
 <entry key="textconfig.textmappings.import.mnemonic">I</entry>
@@ -2601,34 +2604,36 @@ Nicola Talbot
 <entry key="textconfig.mathmappings.import.tooltip">Import Math Mappings</entry>
 <entry key="textconfig.mathmappings.import.iconimage">import</entry>
 
-<entry key="textconfig.codepoint">Code Point</entry>
-<entry key="textconfig.codepoint.mnemonic">D</entry>
-<entry key="textconfig.symbol">Symbol</entry>
-<entry key="textconfig.symbol.mnemonic">S</entry>
-<entry key="textconfig.command">Command</entry>
-<entry key="textconfig.command.mnemonic">C</entry>
-<entry key="textconfig.package">Package</entry>
-<entry key="textconfig.package.mnemonic">P</entry>
+<entry key="textconfig.mapping.title">Set Mapping</entry>
 
-<entry key="textconfig.remove.textmap">Remove</entry>
-<entry key="textconfig.remove.textmap.mnemonic">R</entry>
-<entry key="textconfig.remove.textmap.tooltip">Remove text mapping</entry>
-<entry key="textconfig.remove.textmap.iconimage">remove</entry>
+<entry key="textconfig.mapping.codepoint">Code Point</entry>
+<entry key="textconfig.mapping.codepoint.mnemonic">D</entry>
+<entry key="textconfig.mapping.character">Symbol</entry>
+<entry key="textconfig.mapping.character.mnemonic">S</entry>
+<entry key="textconfig.mapping.command">Command</entry>
+<entry key="textconfig.mapping.command.mnemonic">C</entry>
+<entry key="textconfig.mapping.package">Package</entry>
+<entry key="textconfig.mapping.package.mnemonic">P</entry>
 
-<entry key="textconfig.add.textmap">Add</entry>
-<entry key="textconfig.add.textmap.mnemonic">D</entry>
-<entry key="textconfig.add.textmap.tooltip">Add new text mapping</entry>
-<entry key="textconfig.add.textmap.iconimage">add</entry>
+<entry key="textconfig.textmappings.remove">Remove</entry>
+<entry key="textconfig.textmappings.remove.mnemonic">R</entry>
+<entry key="textconfig.textmappings.remove.tooltip">Remove text mapping</entry>
+<entry key="textconfig.textmappings.remove.iconimage">remove</entry>
 
-<entry key="textconfig.remove.mathmap">Remove</entry>
-<entry key="textconfig.remove.mathmap.mnemonic">R</entry>
-<entry key="textconfig.remove.mathmap.tooltip">Remove math mapping</entry>
-<entry key="textconfig.remove.mathmap.iconimage">remove</entry>
+<entry key="textconfig.textmappings.add">Add</entry>
+<entry key="textconfig.textmappings.add.mnemonic">D</entry>
+<entry key="textconfig.textmappings.add.tooltip">Add new text mapping</entry>
+<entry key="textconfig.textmappings.add.iconimage">add</entry>
 
-<entry key="textconfig.add.mathmap">Add</entry>
-<entry key="textconfig.add.mathmap.mnemonic">D</entry>
-<entry key="textconfig.add.mathmap.tooltip">Add new math mapping</entry>
-<entry key="textconfig.add.mathmap.iconimage">add</entry>
+<entry key="textconfig.mathmappings.remove">Remove</entry>
+<entry key="textconfig.mathmappings.remove.mnemonic">R</entry>
+<entry key="textconfig.mathmappings.remove.tooltip">Remove math mapping</entry>
+<entry key="textconfig.mathmappings.remove.iconimage">remove</entry>
+
+<entry key="textconfig.mathmappings.add">Add</entry>
+<entry key="textconfig.mathmappings.add.mnemonic">D</entry>
+<entry key="textconfig.mathmappings.add.tooltip">Add new math mapping</entry>
+<entry key="textconfig.mathmappings.add.iconimage">add</entry>
 
 <!--  Modify contents of preamble.tex -->
 

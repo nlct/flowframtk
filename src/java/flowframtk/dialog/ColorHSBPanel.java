@@ -87,7 +87,7 @@ public class ColorHSBPanel extends JPanel
       gbc.gridy = 0;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      hueLabel = new JLabel(getResources().getMessage("colour.hue"),
+      hueLabel = new JLabel(getResources().getMessage("paintselector.hue"),
                             SwingConstants.RIGHT);
       sliders.add(hueLabel, gbc);
 
@@ -113,7 +113,7 @@ public class ColorHSBPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      saturationLabel = new JLabel(getResources().getMessage("colour.saturation"),
+      saturationLabel = new JLabel(getResources().getMessage("paintselector.saturation"),
                               SwingConstants.RIGHT);
       sliders.add(saturationLabel, gbc);
       gbc.gridx = 1;
@@ -134,7 +134,7 @@ public class ColorHSBPanel extends JPanel
       gbc.fill = GridBagConstraints.BOTH;
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
-      brightnessLabel = new JLabel(getResources().getMessage("colour.brightness"),
+      brightnessLabel = new JLabel(getResources().getMessage("paintselector.brightness"),
                              SwingConstants.RIGHT);
       sliders.add(brightnessLabel, gbc);
       gbc.gridx = 1;
@@ -155,7 +155,7 @@ public class ColorHSBPanel extends JPanel
       gbc.gridwidth = 1;
       gbc.gridheight = 1;
       gbc.fill = GridBagConstraints.BOTH;
-      alphaLabel = new JLabel(getResources().getMessage("colour.alpha"),
+      alphaLabel = new JLabel(getResources().getMessage("paintselector.alpha"),
                               SwingConstants.RIGHT);
       sliders.add(alphaLabel, gbc);
       gbc.gridx = 1;

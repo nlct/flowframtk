@@ -47,7 +47,7 @@ public class LinePaintSelector extends JDRSelector
    public LinePaintSelector(FlowframTk application)
    {
       super(application, 
-            application.getResources().getMessage("linecolour.title"),
+            application.getResources().getMessage("linepaintselector.title"),
             true, false, "sec:linepaint");
 
       // JDRLine colour selection panel
