@@ -2369,7 +2369,7 @@ public class FlowframTk extends JFrame
 
       createPathFromSvgItem = FlowframTkAction.createMenuItem(this,
          "menu.tools", "create_path_from_svg", toolsM,
-         TOOL_FLAG_SELECT | TOOL_FLAG_ANY_PATHS, EDIT_FLAG_NONE,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_NONE,
          FlowframTkAction.SELECTION_NONE, true, false, false,
          new FlowframTkActionListener()
