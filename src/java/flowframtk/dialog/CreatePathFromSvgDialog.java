@@ -39,8 +39,6 @@ import com.dickimawbooks.jdrresources.numfield.*;
 
 import com.dickimawbooks.flowframtk.*;
 
-// TODO add right-handed/left-handed coordinate system options
-
 /**
  * Dialog box for converting a shape to a polygon.
  * @author Nicola L C Talbot
@@ -58,6 +56,16 @@ public class CreatePathFromSvgDialog extends JDialog
 
    private void init()
    {
+      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+      addWindowListener(new WindowAdapter()
+       {
+          public void windowClosing(WindowEvent evt)
+          {
+             cancel();
+          }
+       });
+
       JDRResources resources = application.getResources();
 
       samplePanel = new CreateFromSVGSamplePanel(this);
@@ -73,6 +81,18 @@ public class CreatePathFromSvgDialog extends JDialog
 
       JComponent sidePanel = Box.createVerticalBox();
       detailsComp.add(sidePanel, "East");
+
+      sidePanel.add(resources.createAppLabel("svg_path.data_coords"));
+
+      ButtonGroup bg = new ButtonGroup();
+
+      rightHandCoordsButton = resources.createAppRadioButton(
+        "svg_path.data_coords", "righthand", bg, true, null);
+      sidePanel.add(rightHandCoordsButton);
+
+      leftHandCoordsButton = resources.createAppRadioButton(
+        "svg_path.data_coords", "lefthand", bg, false, null);
+      sidePanel.add(leftHandCoordsButton);
 
       JComponent actionPanel = new JPanel();
       sidePanel.add(actionPanel);
@@ -152,8 +172,11 @@ public class CreatePathFromSvgDialog extends JDialog
       okayButton.setEnabled(false);
       doTaskButton.setEnabled(true);
       unitBox.setEnabled(true);
+      unitBox.setUnit(frame.getUnit());
       svgField.setEnabled(true);
       svgField.setText("");
+      leftHandCoordsButton.setEnabled(true);
+      rightHandCoordsButton.setEnabled(true);
 
       setWorkingShape(null);
 
@@ -169,13 +192,18 @@ public class CreatePathFromSvgDialog extends JDialog
 
    public void okay()
    {
-      if (!confirmClose()) return;
+      if (!confirmClose(false)) return;
 
       frame.getCanvas().addObject(shape, getResources().getMessage("undo.new_path"));
       setVisible(false);
    }
 
    private boolean confirmClose()
+   {
+      return confirmClose(true);
+   }
+
+   private boolean confirmClose(boolean isCancel)
    {
       JDRResources resources = getResources();
 
@@ -195,7 +223,9 @@ public class CreatePathFromSvgDialog extends JDialog
          task = null;
       }
       else if (modified
-         && resources.confirm(this, resources.getMessage("svg_path.confirm.abandon"))
+         && resources.confirm(this,
+             resources.getMessage(
+               isCancel ? "svg_path.confirm.abandon" : "svg_path.confirm.abandon_edits"))
              != JOptionPane.YES_OPTION)
       {
          return false;
@@ -204,6 +234,7 @@ public class CreatePathFromSvgDialog extends JDialog
       return true;
    }
 
+   @Override
    public void actionPerformed(ActionEvent evt)
    {
       String action = evt.getActionCommand();
@@ -238,6 +269,8 @@ public class CreatePathFromSvgDialog extends JDialog
       doTaskButton.setEnabled(false);
       unitBox.setEnabled(false);
       svgField.setEnabled(false);
+      leftHandCoordsButton.setEnabled(false);
+      rightHandCoordsButton.setEnabled(false);
       setWorkingShape(null);
       task = new CreateShapeTask(this, svgSpecs);
       task.execute();
@@ -268,15 +301,17 @@ public class CreatePathFromSvgDialog extends JDialog
       unitInfoField.setText(defaultUnitInfo);
       doTaskButton.setEnabled(true);
       unitBox.setEnabled(true);
+      leftHandCoordsButton.setEnabled(true);
+      rightHandCoordsButton.setEnabled(true);
       svgField.setEnabled(true);
 
       modified = false;
       task = null;
    }
 
-   public void setWorkingShape(Path2D shape)
+   public void setWorkingShape(Path2D path)
    {
-      samplePanel.setWorkingShape(shape);
+      samplePanel.setWorkingShape(path);
    }
 
    public void addToBounds(Rectangle rect)
@@ -297,6 +332,12 @@ public class CreatePathFromSvgDialog extends JDialog
       return canvasUnit.fromUnit(num, svgUnit);
    }
 
+   public JDRUnit getStorageUnit()
+   {
+      return getCanvasGraphics().getStorageUnit();
+   }
+
+   @Override
    public void unitChanged(UnitChangeEvent evt)
    {
       if (shape != null)
@@ -305,21 +346,35 @@ public class CreatePathFromSvgDialog extends JDialog
       }
    }
 
+   public boolean isDataRightHanded()
+   {
+      return rightHandCoordsButton.isSelected();
+   }
+
+   public double getPaperHeight()
+   {
+      JDRUnit canvasUnit = getCanvasGraphics().getStorageUnit();
+      return canvasUnit.fromBp(frame.getPaper().getHeight());
+   }
+
    private void svgDataChanged()
    {
       modified = true;
    }
 
+   @Override
    public void changedUpdate(DocumentEvent e)
    {
       svgDataChanged();
    }
 
+   @Override
    public void insertUpdate(DocumentEvent e)
    {
       svgDataChanged();
    }
 
+   @Override
    public void removeUpdate(DocumentEvent e)
    {
       svgDataChanged();
@@ -335,6 +390,7 @@ public class CreatePathFromSvgDialog extends JDialog
    private JTextArea svgField, unitInfoField;
    private UnitField unitBox;
    private JLabel unitLabel;
+   private JRadioButton leftHandCoordsButton, rightHandCoordsButton;
 
    boolean modified = false;
 
@@ -435,17 +491,25 @@ class CreateFromSVGSamplePanel extends JPanel implements Scrollable
 
    public void addToBounds(Rectangle rect)
    {
+      JDRUnit unit = dialog.getStorageUnit();
+
+      double minX = unit.toBp(rect.getX());
+      double minY = unit.toBp(rect.getY());
+      double width = unit.toBp(rect.getWidth());
+      double height = unit.toBp(rect.getHeight());
+
       if (bounds == null)
       {
-         bounds = rect;
+         bounds = new Rectangle2D.Double(minX, minY, width, height);
       }
       else
       {
-         bounds.add(rect);
+         bounds.add(minX, minY);
+         bounds.add(minX+width, minY+height);
       }
 
-      int w = (int)Math.max(viewportDim.width, bounds.width);
-      int h = (int)Math.max(viewportDim.height, bounds.height);
+      int w = (int)Math.max(viewportDim.width, bounds.getWidth()+2*paddingX);
+      int h = (int)Math.max(viewportDim.height, bounds.getHeight()+2*paddingY);
 
       setSize(new Dimension(w, h));
       repaint(rect);
@@ -462,12 +526,21 @@ class CreateFromSVGSamplePanel extends JPanel implements Scrollable
    {
       if (workingShape != null && workingShape.getCurrentPoint() != null)
       {
-         bounds = workingShape.getBounds2D().getBounds();
+         bounds = workingShape.getBounds2D();
+
+         JDRUnit unit = dialog.getStorageUnit();
+
+         bounds.setFrame(
+            unit.toBp(bounds.getX()),
+            unit.toBp(bounds.getY()),
+            unit.toBp(bounds.getWidth()),
+            unit.toBp(bounds.getHeight())
+         );
 
          Dimension dim = getPreferredSize();
 
-         int w = (int)Math.max(viewportDim.width, bounds.width);
-         int h = (int)Math.max(viewportDim.height, bounds.height);
+         int w = (int)Math.max(viewportDim.width, bounds.getWidth()+2*paddingX);
+         int h = (int)Math.max(viewportDim.height, bounds.getHeight()+2*paddingY);
 
          setSize(new Dimension(w, h));
          repaint();
@@ -486,6 +559,7 @@ class CreateFromSVGSamplePanel extends JPanel implements Scrollable
       Graphics2D g2 = (Graphics2D)g;
 
       AffineTransform oldAf = g2.getTransform();
+      Stroke oldStroke = g2.getStroke();
       Paint oldPaint = g2.getPaint();
       RenderingHints oldHints = g2.getRenderingHints();
 
@@ -498,23 +572,31 @@ class CreateFromSVGSamplePanel extends JPanel implements Scrollable
 
       Dimension dim = getSize();
 
-      double offsetX = bounds.getMinX()+0.5*(bounds.getWidth()-dim.getWidth());
-      double offsetY = bounds.getMinY()+0.5*(bounds.getHeight()-dim.getHeight());
+      double offsetX = bounds.getMinX() - paddingX;
+      double offsetY = bounds.getMinY() - paddingY;
 
       g2.translate(-offsetX, -offsetY);
 
+      JDRUnit unit = dialog.getStorageUnit();
+      double scale = unit.toBp(1.0);
+
+      g2.scale(scale, scale);
+
+      g2.setStroke(new BasicStroke((float)(1.0/scale)));
       g2.setPaint(Color.BLACK);
       g2.draw(workingShape);
 
       g2.setTransform(oldAf);
       g2.setPaint(oldPaint);
       g2.setRenderingHints(oldHints);
+      g2.setStroke(oldStroke);
    }
 
    private CreatePathFromSvgDialog dialog;
    private Path2D workingShape;
-   private Rectangle bounds = null;
+   private Rectangle2D bounds = null;
    private Dimension viewportDim;
+   private int paddingX = 10, paddingY = 10;
 }
 
 class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
@@ -534,6 +616,9 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
       Path2D workingShape = new Path2D.Double();
 
       dialog.setWorkingShape(workingShape);
+
+      boolean isRH = dialog.isDataRightHanded();
+      double paperHeight = dialog.getPaperHeight();
 
       double prevX = 0.0;
       double prevY = 0.0;
@@ -594,6 +679,11 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
                nextCommand = 'L';
             }
 
+            if (isRH)
+            {
+               y = paperHeight - y;
+            }
+
             workingShape.moveTo(x, y);
             prevCubic = null;
             prevQuad = null;
@@ -616,6 +706,11 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
                y += prevY;
             }
 
+            if (isRH)
+            {
+               y = paperHeight - y;
+            }
+
             workingShape.lineTo(x, y);
 
             nextCommand = command;
@@ -633,6 +728,11 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
                y += prevY;
             }
 
+            if (isRH)
+            {
+               y = paperHeight - y;
+            }
+
             workingShape.lineTo(x, y);
 
             nextCommand = command;
@@ -648,6 +748,11 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             {
                x += prevX;
                y += prevY;
+            }
+
+            if (isRH)
+            {
+               y = paperHeight - y;
             }
 
             workingShape.lineTo(x, y);
@@ -675,6 +780,13 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
                c2y += prevY;
                x += prevX;
                y += prevY;
+            }
+
+            if (isRH)
+            {
+               c1y = paperHeight - c1y;
+               c2y = paperHeight - c2y;
+               y = paperHeight - y;
             }
 
             workingShape.curveTo(c1x, c1y, c2x, c2y, x, y);
@@ -711,6 +823,13 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
                y += prevY;
             }
 
+            if (isRH)
+            {
+               c1y = paperHeight - c1y;
+               c2y = paperHeight - c2y;
+               y = paperHeight - y;
+            }
+
             workingShape.curveTo(c1x, c1y, c2x, c2y, x, y);
 
             nextCommand = command;
@@ -732,6 +851,12 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
                cy += prevY;
                x += prevX;
                y += prevY;
+            }
+
+            if (isRH)
+            {
+               cy = paperHeight - cy;
+               y = paperHeight - y;
             }
 
             workingShape.quadTo(cx, cy, x, y);
@@ -761,6 +886,12 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             {
                x += prevX;
                y += prevY;
+            }
+
+            if (isRH)
+            {
+               cy = paperHeight - cy;
+               y = paperHeight - y;
             }
 
             workingShape.quadTo(cx, cy, x, y);

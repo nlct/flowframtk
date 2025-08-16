@@ -1608,9 +1608,24 @@
 <entry key="svg_path.unit.mnemonic">Unit:</entry>
 
 <entry key="svg_path.info">Enter the path data (as per the SVG path "d" property) in the box below. For example: M 100 100 L 300 400. Select the unit of measurement and click on the {0} button to create a draft path. (The current styles will be added to the path when it''s added to the canvas.)</entry>
-<entry key="svg_path.default_unit_info">The unit should correspond to the SVG data. The co-ordinates will be converted to the current storage unit while the SVG data is parsed.</entry>
+<entry key="svg_path.default_unit_info">The unit should correspond to the SVG data. The co-ordinates will be converted to the current storage unit while the SVG data is parsed. If the data source uses right handed co-ordinates (y increases upwards) they will be converted to the left-handed system (y increases downwards) used by the canvas.</entry>
 <entry key="svg_path.update_unit_info">You will need to reparse the SVG data to make the change in unit take effect.</entry>
 <entry key="svg_path.confirm.abandon">Are you sure you want to abandon the changes you have made to the SVG data?</entry>
+<entry key="svg_path.confirm.abandon_edits">Discard the edits made to the SVG data?
+Select ''Yes'' to add the current working path to the canvas.</entry>
+
+<entry key="svg_path.data_coords">Data Co-ordinate System</entry>
+
+<entry key="svg_path.data_coords.lefthand">Left-handed</entry>
+<entry key="svg_path.data_coords.lefthand.mnemonic">L</entry>
+<entry key="svg_path.data_coords.lefthand.tooltip">Origin top left with y increasing downwards</entry>
+<entry key="svg_path.data_coords.lefthand.initvalue">off</entry>
+
+<entry key="svg_path.data_coords.righthand">Right-handed</entry>
+<entry key="svg_path.data_coords.righthand.mnemonic">G</entry>
+<entry key="svg_path.data_coords.righthand.tooltip">Origin bottom left with y increasing upwards</entry>
+<entry key="svg_path.data_coords.righthand.initvalue">on</entry>
+
 
 <!--  Symbol Selector -->
 
