@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>
+
+ Simplified Chinese
+
+ FlowframTk 简体中文语言包
+ 王勇献 (wang_yongxian[at]hotmail[dot]com)
+
+</comment>
+
+<!-- 
+     Messages relating to TeXJavaHelpLib are
+     in texjavahelplib-en.xml
+ -->
+
+<entry key="xml.lang">en</entry>
+
+<!-- Command line invocation syntax messages -->
+
+<entry key="syntax.options">Options:</entry>
+<entry key="syntax.other_options">Other options:</entry>
+
+
+<!-- File Menu -->
+
+<entry key="menu.file">文件(F)</entry>
+<entry key="menu.file.mnemonic">F</entry>
+
+<entry key="menu.file.open">打开(O)...</entry>
+<entry key="menu.file.open.mnemonic">O</entry>
+<entry key="menu.file.open.keystroke">control O</entry>
+<entry key="menu.file.open.tooltip">打开图片</entry>
+
+<entry key="menu.file.print">打印(P)...</entry>
+<entry key="menu.file.print.mnemonic">P</entry>
+<entry key="menu.file.print.tooltip">Print current image</entry>
+
+<entry key="menu.file.quit">退出(Q)</entry>
+<entry key="menu.file.quit.mnemonic">Q</entry>
+<entry key="menu.file.quit.keystroke">control Q</entry>
+
+<entry key="action.close_window">关闭(C)</entry>
+<entry key="action.close_window.keystroke">alt F4</entry>
+
+<!-- Settings Menu -->
+
+<entry key="menu.settings">选项设置(S)</entry>
+<entry key="menu.settings.mnemonic">S</entry>
+
+<!-- Settings -> Zoom Sub-Menu -->
+
+<entry key="menu.settings.zoom">显示比例(Z)</entry>
+<entry key="menu.settings.zoom.mnemonic">Z</entry>
+
+<entry key="menu.settings.zoom.width">Fit Width</entry>
+<entry key="menu.settings.zoom.width.mnemonic">W</entry>
+<entry key="menu.settings.zoom.width.tooltip">Zoom to fit page width</entry>
+
+<entry key="menu.settings.zoom.height">Fit Height</entry>
+<entry key="menu.settings.zoom.height.mnemonic">H</entry>
+<entry key="menu.settings.zoom.height.tooltip">Zoom to fit page height</entry>
+
+<entry key="menu.settings.zoom.page">Fit Page</entry>
+<entry key="menu.settings.zoom.page.mnemonic">P</entry>
+<entry key="menu.settings.zoom.page.tooltip">Zoom to fit page</entry>
+
+<entry key="menu.settings.zoom.user">自定义(U)...</entry>
+<entry key="menu.settings.zoom.user.mnemonic">U</entry>
+<entry key="menu.settings.zoom.user.tooltip">Apply custom magnification</entry>
+
+<entry key="menu.settings.zoom.25">25%</entry>
+<entry key="menu.settings.zoom.25.mnemonic">2</entry>
+
+<entry key="menu.settings.zoom.50">50%</entry>
+<entry key="menu.settings.zoom.50.mnemonic">5</entry>
+
+<entry key="menu.settings.zoom.75">75%</entry>
+<entry key="menu.settings.zoom.75.mnemonic">7</entry>
+
+<entry key="menu.settings.zoom.100">100%</entry>
+<entry key="menu.settings.zoom.100.mnemonic">1</entry>
+
+<entry key="menu.settings.zoom.200">200%</entry>
+<entry key="menu.settings.zoom.200.mnemonic">0</entry>
+
+<entry key="menu.settings.zoom.400">400%</entry>
+<entry key="menu.settings.zoom.400.mnemonic">4</entry>
+
+<entry key="menu.settings.zoom.800">800%</entry>
+<entry key="menu.settings.zoom.800.mnemonic">8</entry>
+
+<!-- Help Menu -->
+
+<entry key="menu.help.manual.iconimage">help</entry>
+
+<entry key="menu.help.license">许可协议(L)...</entry>
+<entry key="menu.help.license.mnemonic">L</entry>
+
+<entry key="menu.help.about">关于(A)...</entry>
+<entry key="menu.help.about.mnemonic">A</entry>
+
+
+
+<!-- Open Dialog -->
+
+<entry key="filter.jdrajr">flowframtk 文件 (*.jdr, *.ajr)</entry>
+<entry key="filter.bitmap">图片文件 ({0})</entry>
+
+<!-- Zoom Dialogue -->
+
+<entry key="zoom.title">放大比例</entry>
+<entry key="zoom.magnification">Magnification</entry>
+<entry key="zoom.magnification.mnemonic">M</entry>
+<entry key="zoom.invalid">Invalid value ''{0}''</entry>
+<entry key="zoom.width">Fit Width</entry>
+<entry key="zoom.height">Fit Height</entry>
+<entry key="zoom.page">Fit Page</entry>
+<entry key="zoom.user">User Defined</entry>
+<entry key="zoom.invalid">Invalid</entry>
+
+<!-- License Dialogue -->
+
+<entry key="license.title">许可协议</entry>
+
+<!-- About Dialogue -->
+
+<entry key="about.title">关于 {0}</entry>
+
+
+<entry key="about.version">{0}  版本</entry>
+<entry key="about.copyright">版权所有 (C)</entry>
+<entry key="about.disclaimer">{0} 不做任何保证</entry>
+<entry key="about.see_licence">详细内容请参见许可协议文本</entry>
+
+<entry key="about.translated_by">翻译：</entry>
+<entry key="about.translator">王勇献[wang_yongxian[at]hotmail[dot]com]</entry>
+<entry key="about.translator_info">国防科技大学PDL</entry>
+
+<!-- Buttons -->
+
+<entry key="button.abort">Abort</entry>
+<entry key="button.abort.mnemonic">A</entry>
+<entry key="button.abort.tooltip">Abort current process</entry>
+
+<!-- Actions Without a Corresponding Widget -->
+
+<entry key="action.menubarfocus">Menu Bar Focus</entry>
+<entry key="action.menubarfocus.keystroke">F10</entry>
+<entry key="action.menubarfocus.description">Switch focus to menu bar</entry>
+
+<entry key="action.focusnext">Focus next</entry>
+<entry key="action.focusnext.keystroke">TAB</entry>
+<entry key="action.focusnext.description">Move focus to next focusable component</entry>
+
+<entry key="action.focusselect">Focus select</entry>
+<entry key="action.focusselect.keystroke">SPACE</entry>
+<entry key="action.focusselect.description">Select component with current focus</entry>
+
+
+<!--  font used for annotations, such as flowframe labels -->
+<entry key="font.annote.family">SansSerif</entry>
+<entry key="font.annote.size">10</entry>
+
+<!--  File Chooser -->
+<entry key="fc.append_ext">添加扩展名</entry>
+
+<!--  Browse bitmap dialog box -->
+
+<entry key="browsebitmap.title">未找到位图</entry>
+<entry key="browsebitmap.browse">浏览(B)...</entry>
+<entry key="browsebitmap.browse.mnemonic">B</entry>
+<entry key="browsebitmap.not_found">未找到位图。是否选择新的文件？</entry>
+<entry key="browsebitmap.cant_refresh">无法刷新位图</entry>
+<entry key="browsebitmap.invalid_format">Invalid or unrecognised image format</entry>
+<entry key="browsebitmap.invalid_title">Bitmap Invalid</entry>
+<entry key="browsebitmap.discard">放弃</entry>
+
+
+
+<!-- Messages -->
+
+<entry key="process.confirm.abort">Are you sure you want to abort this operation?</entry>
+<entry key="process.confirm">Confirm</entry>
+<entry key="process.running">Running {0}</entry>
+<entry key="process.aborted">Task aborted.</entry>
+<entry key="process.cancelling">Canceling task.</entry>
+
+
+<!-- Warning Messages -->
+
+<entry key="warning.title">Warning</entry>
+
+<entry key="warning.tag">Warning: {0}</entry>
+<entry key="warning.draft_bitmap">Insufficient memory to load bitmap.
+Reverting to draft mode.</entry>
+<entry key="warning.draft_bitmaps">Insufficient memory to load one or more bitmaps.
+Reverting to draft mode.</entry>
+
+
+<!-- Error Messages -->
+
+<entry key="error.title">错误</entry>
+
+<entry key="error.throwable.FileNotFoundException">File not found</entry>
+<entry key="error.throwable.IOException">I/O error has occurred</entry>
+
+<!-- Manual -->
+
+
+<entry key="index.licence">license</entry>
+
+</properties>
