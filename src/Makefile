@@ -287,6 +287,11 @@ classes/com/dickimawbooks/svg2jdr/Svg2Jdr.class : lib/jdr.jar java/svg2jdr/*.jav
 	-cp ../../lib/jdr.jar \
 	*.java
 
+../unstable/flowframtk-installer.jar	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar installer/install.xml
+	"$(IZPACKDIR)/bin/compile" installer/install.xml -b . \
+	-h "$(IZPACKDIR)" \
+	-o ../unstable/flowframtk-installer.jar -k standard
+
 clean	:
 	\rm -r -f classes
 	\rm -f lib/jdr.jar lib/jdrresources.jar
