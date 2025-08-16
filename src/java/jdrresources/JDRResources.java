@@ -1514,7 +1514,7 @@ public class JDRResources
          return new String[] {"en"};
       }
 
-      File[] files = parent.listFiles(directoryFilter);
+      File[] files = parent.listFiles(helpsetDirectoryFilter);
 
       if (files == null)
       {
@@ -3187,7 +3187,7 @@ public class JDRResources
    private Font startupInfoFont = new Font("Serif", Font.PLAIN, 10);
    private Font startupVersionFont = new Font("Serif", Font.BOLD, 20);
 
-   private static DirectoryFilter directoryFilter = new DirectoryFilter();
+   private static DirectoryFilter helpsetDirectoryFilter = new DirectoryFilter();
    private static DictionaryFilter dictionaryFilter = new DictionaryFilter();
 
 
@@ -3338,7 +3338,7 @@ class DirectoryFilter implements java.io.FilenameFilter
 {
    public boolean accept(File dir, String name)
    {
-      return (new File(dir, name)).isDirectory();
+      return !name.contains("image") && (new File(dir, name)).isDirectory();
    }
 }
 
