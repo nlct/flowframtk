@@ -1279,7 +1279,7 @@ Nicola Talbot
 <entry key="tooltip.initsettings">Specify settings at start up</entry>
 <entry key="tooltip.ellipse">Ellipse tool</entry>
 <entry key="tooltip.finish">Finish current path</entry>
-<entry key="tooltip.gap">Make a gap in the currect path</entry>
+<entry key="tooltip.gap">Make a gap in the current path</entry>
 <entry key="tooltip.grey">Gray selector </entry>
 <entry key="tooltip.grid.rectangular">Rectangular grid (origin at top left)</entry>
 <entry key="tooltip.grid.radial">Radial grid (origin at center of canvas)</entry>
@@ -3655,7 +3655,6 @@ Merge Region: {2}</entry>
 
 <!--  Error Messages -->
 
-<entry key="error.title">Error</entry>
 <entry key="error.cant_create_intersect">Can't create intersection</entry>
 <entry key="error.with_line">Line {0}: {1}</entry>
 <entry key="error.with_line_and_col">Line {0}, Column {1}: {2}</entry>
@@ -3920,7 +3919,7 @@ File doesn''t exist</entry>
 <entry key="error.missing_cwd">Missing path after -cwd switch</entry>
 <entry key="error.missing_verbosity">Missing level after -verbosity switch</entry>
 <entry key="error.invalid_verbosity">Number expected after -verbosity switch</entry>
-<entry key="error.negative_dash">Can't have a negative dash pattern length</entry>
+<entry key="error.negative_dash">Can''t have a negative dash pattern length</entry>
 <entry key="error.no_filename">No filename supplied</entry>
 <entry key="error.no_helpset">HelpSet not found</entry>
 <entry key="error.no_typeblock">Typeblock not set</entry>
@@ -3968,8 +3967,8 @@ File doesn''t exist</entry>
 
 <entry key="internal_error.title">Internal Error</entry>
 <entry key="internal_error.can_only_merge_paths">Can only merge paths</entry>
-<entry key="internal_error.cant_find_selected_segment">Can't find selected segment</entry>
-<entry key="internal_error.cant_find_selected_text">Can't find selected text</entry>
+<entry key="internal_error.cant_find_selected_segment">Can''t find selected segment</entry>
+<entry key="internal_error.cant_find_selected_text">Can''t find selected text</entry>
 <entry key="internal_error.close_empty">Unable to close empty path</entry>
 <entry key="internal_error.convert_to_path">Unable to convert to path</entry>
 <entry key="internal_error.empty_path">Empty path</entry>

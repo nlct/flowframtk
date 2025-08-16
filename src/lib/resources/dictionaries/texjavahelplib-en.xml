@@ -40,13 +40,13 @@ Nicola Talbot
 <entry key="button.apply">Apply</entry>
 <entry key="button.apply.mnemonic">A</entry>
 <entry key="button.apply.defaultkeys">format=glsignore</entry>
-<entry key="button.okay.tooltip">Apply changes</entry>
+<entry key="button.apply.tooltip">Apply changes</entry>
 
 <entry key="button.close">Close</entry>
 <entry key="button.close.mnemonic">C</entry>
 <entry key="button.close.keystroke">ENTER</entry>
 <entry key="button.close.defaultkeys">format=glsignore</entry>
-<entry key="button.okay.tooltip">Close window</entry>
+<entry key="button.close.tooltip">Close window</entry>
 
 <entry key="button.copy">Copy</entry>
 <entry key="button.copy.mnemonic">C</entry>
