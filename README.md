@@ -44,7 +44,7 @@ applicable language XML files in the `lib/resources/dictionaries`
 directory. The TeX Java Help Library comes with some command line
 tools that are used to build the documentation:
 
- - `xml2bib` converts the XML language files to Bib2Gls bib files
+ - `tjhxml2bib` converts the XML language files to Bib2Gls bib files
    (this allows the documentation to pick up the widget text and
    menu hierarchy);
  - `texjavahelpmk` needs to be run after the PDF is created (so that
@@ -68,7 +68,7 @@ For example, to create flowframtk-en.pdf:
 Create `flowframtk-props-en.bib` from the XML dictionaries
     (where `$dictdir` is the path to `lib/resources/dictionaries`):
 ```bash
-xml2bib --copy-overwrite $dictdir/texjavahelplib-en.xml $dictdir/flowframtk-en.xml $dictdir/jdrcommon-en.xml -o flowframtk-props-en.bib
+tjhxml2bib --copy-overwrite $dictdir/texjavahelplib-en.xml $dictdir/flowframtk-en.xml $dictdir/jdrcommon-en.xml -o flowframtk-props-en.bib
 ```
 
 Build the document. This can be done with Arara:
