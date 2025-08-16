@@ -92,22 +92,6 @@ public class ConfigUISettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("annotations.mnemonic"));
 
-      langPanel = new LanguagePanel(application);
-
-      tabbedPane.addTab(getResources().getMessage("lang.title"),
-         null, new JScrollPane(langPanel),
-         getResources().getMessage("lang.tooltip"));
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("lang.mnemonic"));
-
-      acceleratorPanel = new AcceleratorPanel(this);
-
-      tabbedPane.addTab(getResources().getMessage("accelerators.title"),
-         null, acceleratorPanel,
-         getResources().getMessage("accelerators.tooltip"));
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("accelerators.mnemonic"));
-
       rulerFormatPanel = new RulerFormatPanel(application);
       rulerFormatPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -116,6 +100,14 @@ public class ConfigUISettingsDialog extends JDialog
          getResources().getMessage("borders.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("ruler.mnemonic"));
+
+      langPanel = new LanguagePanel(application);
+
+      tabbedPane.addTab(getResources().getMessage("lang.title"),
+         null, new JScrollPane(langPanel),
+         getResources().getMessage("lang.tooltip"));
+      tabbedPane.setMnemonicAt(idx++,
+         getResources().getCodePoint("lang.mnemonic"));
 
       normalizePanel = new NormalizePanel(getResources()); 
 
@@ -132,6 +124,18 @@ public class ConfigUISettingsDialog extends JDialog
          getResources().getMessage("texeditorui.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
          getResources().getCodePoint("texeditorui.mnemonic"));
+
+      // pack before the large panels are added
+
+      pack();
+
+      acceleratorPanel = new AcceleratorPanel(this);
+
+      tabbedPane.addTab(getResources().getMessage("accelerators.title"),
+         null, acceleratorPanel,
+         getResources().getMessage("accelerators.tooltip"));
+      tabbedPane.setMnemonicAt(idx++,
+         getResources().getCodePoint("accelerators.mnemonic"));
 
       lookAndFeelPanel = new LookAndFeelPanel(application);
 
@@ -168,7 +172,6 @@ public class ConfigUISettingsDialog extends JDialog
          getResources().internalError(null, e);
       }
 
-      pack();
       setLocationRelativeTo(application);
    }
 
