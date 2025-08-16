@@ -692,18 +692,26 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             if (cp == 'm')
             {
                x += prevX;
-               y += prevY;
+
+               if (isRH)
+               {
+                  y = prevY - y;
+               }
+               else
+               {
+                  y += prevY;
+               }
 
                nextCommand = 'l';
             }
             else
             {
-               nextCommand = 'L';
-            }
+               if (isRH)
+               {
+                  y = paperHeight - y;
+               }
 
-            if (isRH)
-            {
-               y = paperHeight - y;
+               nextCommand = 'L';
             }
 
             workingShape.moveTo(x, y);
@@ -725,10 +733,17 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             if (command == 'l')
             {
                x += prevX;
-               y += prevY;
-            }
 
-            if (isRH)
+               if (isRH)
+               {
+                  y = prevY - y;
+               }
+               else
+               {
+                  y += prevY;
+               }
+            }
+            else if (isRH)
             {
                y = paperHeight - y;
             }
@@ -742,17 +757,11 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
          else if (command == 'H' || command == 'h')
          {
             x = readLength(false);
-            y = 0;
+            y = prevY;
 
             if (command == 'h')
             {
                x += prevX;
-               y += prevY;
-            }
-
-            if (isRH)
-            {
-               y = paperHeight - y;
             }
 
             workingShape.lineTo(x, y);
@@ -763,16 +772,21 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
          }
          else if (command == 'V' || command == 'v')
          {
-            x = 0;
+            x = prevX;
             y = readLength(false);
 
             if (command == 'v')
             {
-               x += prevX;
-               y += prevY;
+               if (isRH)
+               {
+                  y = prevY - y;
+               }
+               else
+               {
+                  y += prevY;
+               }
             }
-
-            if (isRH)
+            else if (isRH)
             {
                y = paperHeight - y;
             }
@@ -797,14 +811,23 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             if (command == 'c')
             {
                c1x += prevX;
-               c1y += prevY;
                c2x += prevX;
-               c2y += prevY;
                x += prevX;
-               y += prevY;
-            }
 
-            if (isRH)
+               if (isRH)
+               {
+                  c1y = prevY - c1y;
+                  c2y = prevY - c2y;
+                  y = prevY - y;
+               }
+               else
+               {
+                  c1y += prevY;
+                  c2y += prevY;
+                  y += prevY;
+               }
+            }
+            else if (isRH)
             {
                c1y = paperHeight - c1y;
                c2y = paperHeight - c2y;
@@ -840,12 +863,20 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             if (command == 'c')
             {
                c2x += prevX;
-               c2y += prevY;
                x += prevX;
-               y += prevY;
-            }
 
-            if (isRH)
+               if (isRH)
+               {
+                  c2y = prevY - c2y;
+                  y = prevY - y;
+               }
+               else
+               {
+                  c2y += prevY;
+                  y += prevY;
+               }
+            }
+            else if (isRH)
             {
                c1y = paperHeight - c1y;
                c2y = paperHeight - c2y;
@@ -870,12 +901,20 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             if (command == 'q')
             {
                cx += prevX;
-               cy += prevY;
                x += prevX;
-               y += prevY;
-            }
 
-            if (isRH)
+               if (isRH)
+               {
+                  cy = prevY - cy;
+                  y = prevY - y;
+               }
+               else
+               {
+                  cy += prevY;
+                  y += prevY;
+               }
+            }
+            else if (isRH)
             {
                cy = paperHeight - cy;
                y = paperHeight - y;
@@ -907,12 +946,18 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
             if (command == 't')
             {
                x += prevX;
-               y += prevY;
-            }
 
-            if (isRH)
+               if (isRH)
+               {
+                  y = prevY - y;
+               }
+               else
+               {
+                  y += prevY;
+               }
+            }
+            else if (isRH)
             {
-               cy = paperHeight - cy;
                y = paperHeight - y;
             }
 
@@ -936,6 +981,11 @@ class CreateShapeTask extends SwingWorker<JDRPath,Rectangle>
 
             x = readLength();
             y = readLength();
+
+            if (isRH)
+            {
+               y = paperHeight - y;
+            }
 
             // TODO
 System.err.println("arc not yet implemented");
