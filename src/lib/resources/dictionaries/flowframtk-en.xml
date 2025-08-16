@@ -1620,6 +1620,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="svg_path.data_coords.righthand.tooltip">Origin bottom left with y increasing upwards</entry>
 <entry key="svg_path.data_coords.righthand.initvalue">on</entry>
 
+<entry key="svg_path.description">Path description:</entry>
+<entry key="svg_path.description.mnemonic">D</entry>
+<entry key="svg_path.default_description">Path Created From SVG</entry>
+
 <!--  Symbol Selector -->
 
 <entry key="symbolselector.title">Insert Symbol</entry>

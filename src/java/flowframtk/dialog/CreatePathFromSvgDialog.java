@@ -79,8 +79,19 @@ public class CreatePathFromSvgDialog extends JDialog
       svgField.getDocument().addDocumentListener(this);
       detailsComp.add(new JScrollPane(svgField), "Center");
 
+      JComponent pathDescPanel = Box.createHorizontalBox();
+      detailsComp.add(pathDescPanel, "North");
+
       JComponent sidePanel = Box.createVerticalBox();
       detailsComp.add(sidePanel, "East");
+
+      JLabel descLabel = resources.createAppLabel("svg_path.description");
+      pathDescPanel.add(descLabel);
+
+      descTextComp = new JTextField(
+        resources.getMessage("svg_path.default_description"));
+      descLabel.setLabelFor(descTextComp);
+      pathDescPanel.add(descTextComp);
 
       sidePanel.add(resources.createAppLabel("svg_path.data_coords"));
 
@@ -177,6 +188,7 @@ public class CreatePathFromSvgDialog extends JDialog
       svgField.setText("");
       leftHandCoordsButton.setEnabled(true);
       rightHandCoordsButton.setEnabled(true);
+      descTextComp.setText(getResources().getMessage("svg_path.default_description"));
 
       setWorkingShape(null);
 
@@ -194,7 +206,16 @@ public class CreatePathFromSvgDialog extends JDialog
    {
       if (!confirmClose(false)) return;
 
+      String description = descTextComp.getText().trim();
+
+      if (!description.isEmpty())
+      {
+         shape.setDescription(description);
+      }
+
       frame.getCanvas().addObject(shape, getResources().getMessage("undo.new_path"));
+      frame.getCanvas().scrollToObject(shape);
+
       setVisible(false);
    }
 
@@ -391,6 +412,7 @@ public class CreatePathFromSvgDialog extends JDialog
    private UnitField unitBox;
    private JLabel unitLabel;
    private JRadioButton leftHandCoordsButton, rightHandCoordsButton;
+   private JTextField descTextComp;
 
    boolean modified = false;
 

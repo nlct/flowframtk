@@ -3963,8 +3963,10 @@ Currently undocumented and may be removed.
 \menudef{menu.tools.create_path_from_svg}
 
 It's also possible to create a \gls+{path} by using the same syntax
-as the \gls{svg} path \qtt{d} property. Use the \menu{tools.create_path_from_svg}
+as the \gls+{svg} path \qtt{d} property. Use the \menu{tools.create_path_from_svg}
 menu item to open the \dialog{svg_path} dialog.
+(You will need to be in \selectmode\ with no selected
+\glspl{object}.)
 
 \widgetdef{svg_path.title}
 
@@ -3976,16 +3978,57 @@ in the data. For example:
 M 100 100 L 300 400
 \end{compactcodebox}
 This would create a path consisting of a single line segment.
+Note that the sample panel will shift the path to the top left
+corner so that you don't need to scroll to find it. When the actual path
+is added to the \gls{canvas}, it will be placed at the calculated
+co-ordinates.
+
+\begin{warning}
+Arcs are currently not implemented.
+\end{warning}
+
+\widgetdef{svg_path.data_coords}
+
+\gls{svg} data normally uses a right-handed \gls{co-ordinate} system.
+That is, the origin is at the bottom left and $y$ increases upwards.
+The \gls{canvas} uses a left-handed \gls{co-ordinate} system
+with the origin at the top left and $y$ increases downwards.
+The \gls{co-ordinate} system needs to be set before creating the
+draft path.
+
+\widgetdef{svg_path.data_coords.righthand}
+
+If the \widget{svg_path.data_coords.righthand} button is selected,
+the \glspl{co-ordinate} will be converted from right-handed to
+left-handed. This will take the current paper size into account.
+
+\widgetdef{svg_path.data_coords.lefthand}
+
+If the \widget{svg_path.data_coords.lefthand} button is selected,
+no \gls{co-ordinate} conversion will be applied.
 
 \widgetdef{svg_path.unit}
 
 Select the unit of measurement in the \inlineglsdef{svg_path.unit} 
-\gls{dropdown} box.
+\gls{dropdown} box. This should be done before creating the draft
+path.
+
+\begin{important}
+If you change either the \gls{co-ordinate} system
+or unit after the draft path has been created, you will need to recreate the
+draft path to update the \glspl{co-ordinate}.
+\end{important}
 
 \widgetdef{svg_path.dotask}
 
 Click on the \widget{svg_path.dotask} button to create a draft path. (The current
 styles will be added to the path when it's added to the canvas.)
+
+\widgetdef{svg_path.description}
+
+If you want the new path to have a description, enter the required 
+description in the \widget{svg_path.description} text box.
+Clear the box if you don't want a description.
 
 Once you're happy with the draft path, click on the \widget{okay}
 button to close the dialog and add the new \gls{path} to the \gls{canvas}.
