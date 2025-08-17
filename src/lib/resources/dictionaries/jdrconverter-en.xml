@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English language file for jdrconverter
+https://github.com/nlct/flowframtk
+GPL-3.0
+Nicola Talbot
+</comment>
+
+<!--  Syntax -->
+<entry key="syntax.title">Syntax:</entry>
+<entry key="syntax.options">{0} [&lt;option&gt;]+ &lt;input file&gt; &lt;output file&gt;</entry>
+<entry key="syntax.in">{0} (or {1}) &lt;file&gt;	Input file name.</entry>
+<entry key="syntax.out">{0} (or {1}) &lt;file&gt;	The output file.</entry>
+<entry key="syntax.debug">{0}	Enable on debug mode.</entry>
+<entry key="syntax.locale">{0} &lt;lang-tag&gt;	Use localisation support for the given locale (if available).</entry>
+<entry key="syntax.jdr_version">{0} &lt;version&gt;	If the output format is JDR or AJR, use this version.</entry>
+
+<entry key="syntax.list_output_formats">{0}	List all supported output formats and exit.</entry>
+<entry key="syntax.list_input_formats">{0}	List all supported output formats and exit.</entry>
+
+<entry key="syntax.settings">{0} &lt;value&gt;	Indicates what settings should be saved (only applicable if the output format is JDR or AJR). The &lt;value&gt; may be one of:
+		"none"	Don''t save any settings.
+		"all"	Save all settings.
+		"paper"	Only save the paper (AJR/JDR v1.3+).
+		"match-input"	Match the input file (provide it''s supported by the output format).
+</entry>
+
+<entry key="syntax.in.charset">{0} &lt;charset&gt;	Set the character encoding to &lt;charset&gt; for the input file (where applicable).</entry>
+<entry key="syntax.out.charset">{0} &lt;charset&gt;	Set the character encoding to &lt;charset&gt; for the output file (where applicable).</entry>
+
+<!-- Syntax error messages -->
+<entry key="error.syntax">Syntax error: {0}</entry>
+<entry key="error.syntax.unknown_option">Unknown option ''{0}''. (Use {1} for help.)</entry>
+<entry key="error.syntax.only_one">Only one {0} permitted</entry>
+<entry key="error.syntax.too_many_files">Unexpected value ''{0}'': only one input and one output file permitted. (Use {1} for help.)</entry>
+<entry key="error.syntax.missing_filename">Filename expected after {0}</entry>
+<entry key="error.syntax.missing_input">File name expected after {0}</entry>
+<entry key="error.syntax.missing_in">Missing input file. (Use {0} for help.)</entry>
+<entry key="error.syntax.missing_out">Missing output file. (Use {0} for help.)</entry>
+<entry key="error.syntax.missing_value">Value expected after {0}</entry>
+
+<entry key="error.syntax.invalid_file_version">Invalid {0} version ''{1}''</entry>
+<entry key="error.syntax.unknown_file_format">Unknown file format ''{0}''</entry>
+<entry key="error.syntax.invalid_settings">Invalid settings option ''{0}''</entry>
+
+<entry key="error.cant_import_from">Unable to import from file format ''{0}'' (export only).</entry>
+<entry key="error.cant_load_format">Unable to load file format ''{0}''.</entry>
+<entry key="error.cant_save_format">Unable to save file format ''{0}''.</entry>
+
+<!-- Warning messages -->
+<entry key="warning.ignoring_file_version">Ignoring {0} version identifier: {1}</entry>
+<entry key="warning.option_not_supported">Option ''{0}'' not available for {1} version {2}. Falling back on ''{3}''</entry>
+
+</properties>
+

@@ -9,7 +9,8 @@ target_version := --release 8 -Xlint:-options
 
 all	: $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar \
 	  $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrview.jar \
-	  $(LIBDIR)/ajr2ajr.jar $(LIBDIR)/jdrinfo.jar \
+	  $(LIBDIR)/jdrinfo.jar $(LIBDIR)/jdrconverter.jar \
+	  $(LIBDIR)/ajr2ajr.jar \
 	  $(LIBDIR)/ajr2jdr.jar $(LIBDIR)/ajr2tex.jar \
 	  $(LIBDIR)/eps2jdr.jar $(LIBDIR)/jdr2ajr.jar \
 	  $(LIBDIR)/jdr2eps.jar $(LIBDIR)/jdr2png.jar \
@@ -34,6 +35,8 @@ jdrview	: $(LIBDIR)/jdrview.jar
 ../lib/jdrview.jar	: $(LIBDIR)/jdrview.jar
 
 ../lib/flowframtk.jar	: $(LIBDIR)/flowframtk.jar
+
+../lib/jdrconverter.jar	: $(LIBDIR)/jdrconverter.jar
 
 ../lib/ajr2ajr.jar	: $(LIBDIR)/ajr2ajr.jar
 
@@ -99,6 +102,13 @@ $(LIBDIR)/jdrview.jar	: jdr jdrresources classes/$(CLASSTREE)/jdrview/JDRView.cl
 	jar cmf ../jdrview/Manifest.txt \
 	   $(LIBDIR)/jdrview.jar \
 	   $(CLASSTREE)/jdrview/*.class
+
+$(LIBDIR)/jdrconverter.jar	: classes/$(CLASSTREE)/jdrconverter/JDRConverter.class \
+		  jdrconverter/Manifest.txt
+		cd classes ; \
+		jar cmf ../jdrconverter/Manifest.txt \
+	          $(LIBDIR)/jdrconverter.jar \
+		  $(CLASSTREE)/jdrconverter/*.class
 
 $(LIBDIR)/ajr2ajr.jar	: classes/$(CLASSTREE)/ajr2ajr/Ajr2Ajr.class \
 		  ajr2ajr/Manifest.txt
@@ -218,6 +228,14 @@ classes/$(CLASSTREE)/jdrview/JDRView.class : \
 	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java
 
+classes/$(CLASSTREE)/jdrconverter/JDRConverter.class : \
+	classes \
+	jdrconverter/*.java
+	cd jdrconverter ; \
+	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
+	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
+	*.java
+
 classes/$(CLASSTREE)/ajr2ajr/Ajr2Ajr.class : \
 	classes \
 	ajr2ajr/*.java
@@ -322,7 +340,7 @@ classes/$(CLASSTREE)/flowframtk	:
 
 clean	:
 	\rm -f $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar $(LIBDIR)/jdrview.jar
-	\rm -f $(LIBDIR)/flowframtk.jar $(LIBDIR)/ajr2ajr.jar $(LIBDIR)/ajr2jdr.jar $(LIBDIR)/ajr2tex.jar $(LIBDIR)/jdrinfo.jar
+	\rm -f $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrconverter.jar $(LIBDIR)/ajr2ajr.jar $(LIBDIR)/ajr2jdr.jar $(LIBDIR)/ajr2tex.jar $(LIBDIR)/jdrinfo.jar
 	\rm -f $(LIBDIR)/eps2jdr.jar $(LIBDIR)/jdr2ajr.jar $(LIBDIR)/jdr2eps.jar $(LIBDIR)/jdr2png.jar
 	\rm -f $(LIBDIR)/jdr2svg.jar $(LIBDIR)/jdr2tex.jar $(LIBDIR)/svg2jdr.jar
 	\rm -f -r classes

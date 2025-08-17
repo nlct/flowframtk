@@ -10,7 +10,7 @@ target_version := --release 8 -Xlint:-options
 target_version := --release 8 -Xlint:-options
 
 
-all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar \
+all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar \
 	lib/ajr2ajr.jar \
 	lib/ajr2jdr.jar \
 	lib/ajr2tex.jar \
@@ -280,11 +280,18 @@ lib/svg2jdr.jar   : classes/com/dickimawbooks/svg2jdr/Svg2Jdr.class \
 	  ../lib/svg2jdr.jar \
 	  com/dickimawbooks/svg2jdr/*.class
 
-classes/com/dickimawbooks/svg2jdr/Svg2Jdr.class : lib/jdr.jar java/svg2jdr/*.java
-	cd java/svg2jdr ; \
+lib/jdrconverter.jar   : classes/com/dickimawbooks/jdrconverter/JDRConverter.class \
+	java/jdrconverter/Manifest.txt
+	cd classes ; \
+	jar cmf ../java/jdrconverter/Manifest.txt \
+	  ../lib/jdrconverter.jar \
+	  com/dickimawbooks/jdrconverter/*.class
+
+classes/com/dickimawbooks/jdrconverter/JDRConverter.class : lib/jdr.jar java/jdrconverter/*.java
+	cd java/jdrconverter ; \
 	javac $(target_version) \
 	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar \
+	-cp ../../lib/jdr.jar:../../lib/jdrresources.jar:../../lib/texjavahelplib.jar \
 	*.java
 
 ../unstable/flowframtk-installer.jar	: ../unstable lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar installer/install.xml
