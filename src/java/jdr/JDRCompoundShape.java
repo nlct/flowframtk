@@ -49,6 +49,21 @@ public abstract class JDRCompoundShape extends JDRShape
 
    public abstract void setUnderlyingShape(JDRShape shape);
 
+   @Override
+   public JDRPath getBaseUnderlyingPath()
+   {
+      JDRShape shape = getUnderlyingShape();
+
+      if (shape instanceof JDRPath)
+      {
+         return (JDRPath)shape;
+      }
+      else
+      {
+         return shape.getBaseUnderlyingPath();
+      }
+   }
+
    public boolean isDistortable()
    {
       return getUnderlyingShape().isDistortable();
@@ -65,7 +80,7 @@ public abstract class JDRCompoundShape extends JDRShape
    }
 
    public void close(int closeType)
-      throws EmptyPathException
+      throws InvalidPathException
    {
       getUnderlyingShape().close(closeType);
    }

@@ -241,7 +241,20 @@ public class JDRPath extends JDRShape
             segment = ((JDRPartialSegment)segment).getFullSegment();
          }
 
-         path.add((JDRSegment)segment);
+         try
+         {
+            path.add((JDRSegment)segment);
+         }
+         catch (ClosingMoveException e)
+         {
+            path.segmentList_[e.getSegmentIndex()]
+              = e.getSegment().convertToNonClosingMove();
+         }
+         catch (InvalidPathException e)
+         {
+            path.getCanvasGraphics().getMessageSystem().postMessage(
+              MessageInfo.createInternalError(e));
+         }
       }
 
       if (shape.isClosed())
@@ -250,8 +263,10 @@ public class JDRPath extends JDRShape
          {
             path.close();
          }
-         catch (EmptyPathException e)
+         catch (InvalidPathException e)
          {
+            shape.getCanvasGraphics().getMessageSystem().postMessage(
+              MessageInfo.createInternalError(e));
          }
       }
 
@@ -279,12 +294,14 @@ public class JDRPath extends JDRShape
       pointIterator = new JDRPointIterator(this);
    }
 
+   @Override
    public JDRPathIterator getIterator()
    {
       iterator.reset();
       return iterator;
    }
 
+   @Override
    public JDRPointIterator getPointIterator()
    {
       pointIterator.reset();
@@ -334,6 +351,7 @@ public class JDRPath extends JDRShape
     * @see #setLinePaint(JDRPaint)
     * @see #getFillPaint()
     */
+   @Override
    public JDRPaint getLinePaint()
    {
       return linePaint;
@@ -345,6 +363,7 @@ public class JDRPath extends JDRShape
     * @see #setFillPaint(JDRPaint)
     * @see #getLinePaint()
     */
+   @Override
    public JDRPaint getFillPaint()
    {
       return fillPaint;
@@ -355,6 +374,7 @@ public class JDRPath extends JDRShape
     * @return the stroke for this path
     * @see #setStroke(JDRStroke)
     */
+   @Override
    public JDRStroke getStroke()
    {
       return stroke;
@@ -365,6 +385,7 @@ public class JDRPath extends JDRShape
     * @param s the new stroke
     * @see #getStroke()
     */
+   @Override
    public void setStroke(JDRStroke s)
    {
       stroke = s;
@@ -380,6 +401,7 @@ public class JDRPath extends JDRShape
     * @param paint the new line colour
     * @see #getLinePaint()
     */
+   @Override
    public void setLinePaint(JDRPaint paint)
    {
       if (paint == null)
@@ -425,8 +447,7 @@ public class JDRPath extends JDRShape
     * shape specified by the given path iterator
     */
    public static JDRPath getPath(CanvasGraphics cg, PathIterator pi)
-   throws MissingMoveException,
-          EmptyPathException
+   throws InvalidPathException
    {
       JDRPath path = null;
 
@@ -434,8 +455,9 @@ public class JDRPath extends JDRShape
       double oldX=0, oldY=0;
       double startX=0, startY=0;
       int moveto=0;
-
       boolean isClosed = false;
+
+      JDRSegment lastPostMoveSeg = null;
 
       while (!pi.isDone())
       {
@@ -452,8 +474,20 @@ public class JDRPath extends JDRShape
                }
                else
                {
-                  JDRSegment segment = new JDRSegment(cg, oldX, oldY,
+                  JDRSegment segment;
+
+                  if (isClosed && lastPostMoveSeg != null)
+                  {
+                     segment = new JDRClosingMove(
+                                     oldX, oldY, coords[0],coords[1],
+                                     path, path.size(), lastPostMoveSeg);
+                  }
+                  else
+                  {
+                     segment = new JDRSegment(cg, oldX, oldY,
                                                 coords[0],coords[1]);
+                  }
+
                   oldX = coords[0];
                   oldY = coords[1];
                   if (path == null)
@@ -464,7 +498,9 @@ public class JDRPath extends JDRShape
                }
                startX = coords[0];
                startY = coords[1];
+               lastPostMoveSeg = null;
                moveto++;
+               isClosed = false;
             break;
             case PathIterator.SEG_LINETO :
                JDRLine line = new JDRLine(cg, oldX, oldY, coords[0],coords[1]);
@@ -475,6 +511,11 @@ public class JDRPath extends JDRShape
                   throw new MissingMoveException(cg);
                }
                path.add(line);
+
+               if (lastPostMoveSeg == null)
+               {
+                  lastPostMoveSeg = line;
+               }
             break;
             case PathIterator.SEG_QUADTO :
                JDRBezier curve = JDRBezier.quadToCubic(cg, oldX, oldY, 
@@ -487,6 +528,11 @@ public class JDRPath extends JDRShape
                   throw new MissingMoveException(cg);
                }
                path.add(curve);
+
+               if (lastPostMoveSeg == null)
+               {
+                  lastPostMoveSeg = curve;
+               }
             break;
             case PathIterator.SEG_CUBICTO :
                JDRBezier cubic = new JDRBezier(cg, oldX, oldY, 
@@ -500,25 +546,21 @@ public class JDRPath extends JDRShape
                   throw new MissingMoveException(cg);
                }
                path.add(cubic);
+
+               if (lastPostMoveSeg == null)
+               {
+                  lastPostMoveSeg = cubic;
+               }
             break;
             case PathIterator.SEG_CLOSE :
-               isClosed = true;
 
                if (path == null)
                {
                   throw new MissingMoveException(cg);
                }
 
-               if (JDRLine.getManhattanDistance(oldX, oldY,
-                    startX, startY) > 0.0)
-               {
-                  JDRLine lineseg = new JDRLine(cg, coords[0],coords[1],
-                     startX, startY);
-                  path.add(lineseg);
-               }
-
-               oldX = startX;
-               oldY = startY;
+               isClosed = true;
+            break;
          }
 
          pi.next();
@@ -565,8 +607,7 @@ public class JDRPath extends JDRShape
     * shape specified by the given path iterator
     */
    public static JDRCompleteObject getPaths(CanvasGraphics cg, PathIterator pi)
-   throws MissingMoveException,
-          EmptyPathException
+   throws InvalidPathException
    {
       JDRGroup group = null;
       JDRPath path = null;
@@ -730,8 +771,16 @@ public class JDRPath extends JDRShape
 
             // replace previous and current segments with new line
 
-            removeSegmentFromList(i);
-            setSegment(i-1, line);
+            try
+            {
+               removeSegmentFromList(i);
+               setSegment(i-1, line);
+            }
+            catch (InvalidPathException e)
+            {// shouldn't occur
+               getCanvasGraphics().getMessageSystem().postMessage(
+                 MessageInfo.createInternalError(e));
+            }
 
             smoothLines(i-1, tolerance);
 
@@ -739,6 +788,19 @@ public class JDRPath extends JDRShape
          }
 
          prevSegment = segment;
+      }
+
+      try
+      {
+         firePathChangeEvent(JDRPathChangeEvent.Type.PATH_CHANGED);
+      }
+      catch (ClosingMoveException e)
+      {
+         // Shouldn't occur as this method is just replacing one or
+         // more curves with one or more lines.
+
+         getCanvasGraphics().getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
       }
    }
 
@@ -817,10 +879,10 @@ public class JDRPath extends JDRShape
    /**
     * Creates a new path that is the reverse of this path.
     * @return the reverse of this path
-    * @throws EmptyPathException if this path is empty
+    * @throws InvalidPathException if this path can't be reversed
     */
-   public JDRShape reverse()
-      throws EmptyPathException
+   @Override
+   public JDRShape reverse() throws InvalidPathException
    {
       int n = size_;
 
@@ -834,18 +896,19 @@ public class JDRPath extends JDRShape
 
          if (i == 0 && closed)
          {
-            try
-            {
-               path.close(segment);
-            }
-            catch (IllFittingPathException ignore)
-            {
-               // this shouldn't happen
-            }
+            path.close(segment);
          }
          else
          {
-            path.add(segment);
+            try
+            {
+               path.add(segment);
+            }
+            catch (ClosingMoveException e)
+            {
+               segmentList_[e.getSegmentIndex()] =
+                e.getSegment().convertToNonClosingMove();
+            }
          }
       }
 
@@ -858,9 +921,9 @@ public class JDRPath extends JDRShape
     * @param path the other path
     * @return new path that is this path XOR the other path
     */
+   @Override
    public JDRShape exclusiveOr(JDRShape path)
-   throws MissingMoveException,
-          EmptyPathException
+   throws InvalidPathException
    {
       Area area1 = new Area(getGeneralPath());
       Area area2 = new Area(path.getGeneralPath());
@@ -881,9 +944,9 @@ public class JDRPath extends JDRShape
     * @param path the other path
     * @return new path that is this path AND the other path
     */
+   @Override
    public JDRShape pathUnion(JDRShape path)
-   throws MissingMoveException,
-          EmptyPathException
+   throws InvalidPathException
    {
       Area area1 = new Area(getGeneralPath());
       Area area2 = new Area(path.getGeneralPath());
@@ -905,9 +968,9 @@ public class JDRPath extends JDRShape
     * @return a new path that is the intersection of this path
     * and another path
     */
+   @Override
    public JDRShape intersect(JDRShape path)
-   throws MissingMoveException,
-          EmptyPathException
+   throws InvalidPathException
    {
       Area area1 = new Area(getGeneralPath());
       Area area2 = new Area(path.getGeneralPath());
@@ -927,8 +990,9 @@ public class JDRPath extends JDRShape
     * @param path the other path
     * @return a new path that is this path less another path
     */
+   @Override
    public JDRShape subtract(JDRShape path)
-      throws InvalidShapeException
+      throws InvalidPathException
    {
       Area area1 = new Area(getGeneralPath());
       Area area2 = new Area(path.getGeneralPath());
@@ -956,6 +1020,7 @@ public class JDRPath extends JDRShape
     * Returns the current capacity of this path.
     * @return current capacity of this path
     */
+   @Override
    public int getCapacity()
    {
       return capacity_;
@@ -968,6 +1033,7 @@ public class JDRPath extends JDRShape
     * @throws IllegalArgumentException if the new capacity is less
     * than the size of the path
     */
+   @Override
    public void setCapacity(int capacity)
       throws IllegalArgumentException
    {
@@ -1007,7 +1073,7 @@ public class JDRPath extends JDRShape
    }
 
    private void addSegmentToList(JDRSegment s)
-   throws NullPointerException
+   throws NullPointerException,ClosingMoveException
    {
       if (s == null)
       {
@@ -1023,10 +1089,15 @@ public class JDRPath extends JDRShape
       segmentList_[size_] = s;
 
       size_++;
+
+      firePathChangeEvent(size_-1, JDRPathChangeEvent.Type.SEGMENT_ADDED,
+       null, s);
    }
 
    private void addSegmentToList(int index, JDRSegment s)
-      throws ArrayIndexOutOfBoundsException,NullPointerException
+      throws ArrayIndexOutOfBoundsException,
+        NullPointerException,
+        ClosingMoveException
    {
       if (index < 0 || index > size_)
       {
@@ -1052,6 +1123,9 @@ public class JDRPath extends JDRShape
       segmentList_[index] = s;
 
       size_++;
+
+      firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_INSERTED,
+        null, s);
    }
 
    protected JDRSegment removeSegmentFromList(JDRSegment segment)
@@ -1093,7 +1167,8 @@ public class JDRPath extends JDRShape
    }
 
    public JDRSegment removeSegment(int index)
-     throws ArrayIndexOutOfBoundsException
+     throws ArrayIndexOutOfBoundsException,
+      ClosingMoveException
    {
       JDRPathSegment segment = removeSegmentFromList(index);
 
@@ -1111,11 +1186,51 @@ public class JDRPath extends JDRShape
          segmentList_[index].setEnd(segmentList_[0].getStart());
       }
 
+      firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_REMOVED,
+         segment, null);
+
       return (JDRSegment)segment;
    }
 
+   public JDRSegment removeLastSegment()
+   {
+      // NB check not empty before calling this method
+      int index = size()-1;
+
+      JDRPathSegment segment = removeSegmentFromList(index);
+
+      if (index > 0)
+      {
+         segmentList_[index].setStart(segmentList_[index-1].getEnd());
+      }
+
+      if (index < size()-2)
+      {
+         segmentList_[index+1].setStart(segmentList_[index].getEnd());
+      }
+      else if (index == size()-1 && isClosed())
+      {
+         segmentList_[index].setEnd(segmentList_[0].getStart());
+      }
+
+      try
+      {
+         firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_REMOVED,
+            segment, null);
+      }
+      catch (ClosingMoveException e)
+      {// shouldn't happen
+         getCanvasGraphics().getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
+      }
+
+      return (JDRSegment)segment;
+   }
+
+   @Override
    public JDRPathSegment setSegment(int index, JDRPathSegment segment)
-   throws ArrayIndexOutOfBoundsException,NullPointerException
+   throws ArrayIndexOutOfBoundsException,NullPointerException,
+    InvalidPathException
    {
       if (index < 0 || index >= size_)
       {
@@ -1141,6 +1256,9 @@ public class JDRPath extends JDRShape
          segment.setEnd(segmentList_[0].getStart());
       }
 
+      firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_CHANGED,
+        oldSegment, segment);
+
       return oldSegment;
    }
 
@@ -1149,7 +1267,8 @@ public class JDRPath extends JDRShape
     * capacity if necessary.
     * @param s the segment to append to this path
     */
-   public void add(JDRSegment s)
+   @Override
+   public void add(JDRSegment s) throws InvalidPathException
    {
       JDRPathSegment lastSegment = getLastSegment();
 
@@ -1187,7 +1306,18 @@ public class JDRPath extends JDRShape
 
       JDRPathSegment newSegment = currentSegment.split();
 
-      addSegmentToList(currentSegmentIndex+1, (JDRSegment)newSegment);
+      try
+      {
+         addSegmentToList(currentSegmentIndex+1, (JDRSegment)newSegment);
+      }
+      catch (ClosingMoveException e)
+      {
+         // shouldn't occur as splitting a closing move will 
+         // create a non-closing move
+
+         getCanvasGraphics().getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
+      }
 
       JDRPoint p = selectControl(currentPointIndex);
 
@@ -1201,6 +1331,7 @@ public class JDRPath extends JDRShape
     * @param atStart if segment should be made continuous at the
     * start
     */
+   @Override
    public void makeContinuous(boolean atStart, boolean equiDistant)
    {
       if (selectedSegment == null || !(selectedSegment instanceof JDRBezier))
@@ -1291,6 +1422,20 @@ public class JDRPath extends JDRShape
             }
          }
       }
+
+      try
+      {
+         firePathChangeEvent(idx, JDRPathChangeEvent.Type.CONTROLS_ADJUSTED,
+          curve, curve);
+      }
+      catch (ClosingMoveException e)
+      {
+         // Shouldn't occur as not replacing, adding or removing any
+         // segments.
+
+         getCanvasGraphics().getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
+      }
    }
 
    /**
@@ -1302,6 +1447,7 @@ public class JDRPath extends JDRShape
     * of this path
     * @see #getLastIndex(JDRPathSegment)
     */
+   @Override
    public int getIndex(JDRPathSegment segment)
    {
       for (int i = 0; i < size_; i++)
@@ -1315,6 +1461,7 @@ public class JDRPath extends JDRShape
       return -1;
    }
 
+   @Override
    public boolean segmentHasEnd(JDRPathSegment segment)
    {
       return (!isClosed() && segment == getLastSegment());
@@ -1329,6 +1476,7 @@ public class JDRPath extends JDRShape
     * of this path
     * @see #getIndex(JDRPathSegment)
     */
+   @Override
    public int getLastIndex(JDRPathSegment segment)
    {
       for (int i = size_-1; i >= 0; i--)
@@ -1348,7 +1496,9 @@ public class JDRPath extends JDRShape
     * @param idx the index at which to substitute the new segment
     * @param newSegment the new segment
     */
+   @Override
    public void convertSegment(int idx, JDRPathSegment newSegment)
+   throws InvalidPathException
    {
       JDRPathSegment oldSegment = setSegment(idx, newSegment);
 
@@ -1425,6 +1575,9 @@ public class JDRPath extends JDRShape
       {
          newSegment.setStart(get(n).getEnd());
       }
+
+      firePathChangeEvent(idx, JDRPathChangeEvent.Type.SEGMENT_CHANGED,
+       oldSegment, newSegment);
    }
 
    /**
@@ -1433,7 +1586,8 @@ public class JDRPath extends JDRShape
     * @param i the index of the segment to remove
     * @return the removed segment
     */
-   public JDRSegment remove(int i)
+   @Override
+   public JDRSegment remove(int i) throws InvalidPathException
    {
       JDRSegment segment = (JDRSegment)get(i);
       JDRPoint dp = segment.getEnd();
@@ -1472,6 +1626,9 @@ public class JDRPath extends JDRShape
          selectControl(0);
       }
 
+      firePathChangeEvent(i, JDRPathChangeEvent.Type.SEGMENT_REMOVED,
+         oldSegment, null);
+
       return oldSegment;
    }
 
@@ -1481,7 +1638,9 @@ public class JDRPath extends JDRShape
     * @param segment the segment to remove
     * @return the removed segment or null if not found
     */
+   @Override
    public JDRPathSegment remove(JDRPathSegment segment)
+   throws InvalidPathException
    {
       for (int i = 0; i < size_; i++)
       {
@@ -1494,7 +1653,9 @@ public class JDRPath extends JDRShape
       return null;
    }
 
+   @Override
    public JDRPathSegment removeSelectedSegment()
+   throws InvalidPathException
    {
       JDRPathSegment segment = null;
 
@@ -1513,7 +1674,7 @@ public class JDRPath extends JDRShape
     * segment can't be found
     */
    public JDRShape breakPath()
-      throws InvalidShapeException
+      throws InvalidPathException
    {
       if (selectedSegment == null)
       {
@@ -1539,7 +1700,15 @@ public class JDRPath extends JDRShape
 
          if (index > -1)
          {
-            newPath.add((JDRSegment)segment.clone());
+            try
+            {
+               newPath.add((JDRSegment)segment.clone());
+            }
+            catch (ClosingMoveException e)
+            {
+               newPath.segmentList_[e.getSegmentIndex()]
+                 = e.getSegment().convertToNonClosingMove();
+            }
          }
       }
 
@@ -1553,6 +1722,8 @@ public class JDRPath extends JDRShape
       // chop remaining segments from this path
       size_ = index+1;
 
+      firePathChangeEvent(JDRPathChangeEvent.Type.PATH_CHANGED);
+
       return newPath;
    }
 
@@ -1562,6 +1733,7 @@ public class JDRPath extends JDRShape
     * @throws ArrayIndexOutOfBoundsException if the index is out
     * of range (<code>index &lt; 0 || index &gt;= size()</code>)
     */
+   @Override
    public JDRPathSegment get(int index)
       throws ArrayIndexOutOfBoundsException
    {
@@ -1578,6 +1750,7 @@ public class JDRPath extends JDRShape
     * @return the last segment in this path or null if this path
     * is empty
     */
+   @Override
    public JDRPathSegment getLastSegment()
    {
       if (size_ == 0) return null;
@@ -1590,6 +1763,7 @@ public class JDRPath extends JDRShape
     * @return the first segment in this path or null if this path
     * is empty
     */
+   @Override
    public JDRPathSegment getFirstSegment()
    {
       if (size_ == 0) return null;
@@ -1601,7 +1775,8 @@ public class JDRPath extends JDRShape
     * Opens this path, removing the final segment.
     * @see #open(boolean)
     */
-   public void open()
+   @Override
+   public void open() throws InvalidPathException
    {
       open(true);
    }
@@ -1612,15 +1787,21 @@ public class JDRPath extends JDRShape
     * removed
     * @see #open()
     */
+   @Override
    public void open(boolean removeLastSegment)
+   throws InvalidPathException
    {
       if (size_ == 0) return;
 
       if (closed)
       {
+         JDRPathSegment oldSegment = null;
+
          if (removeLastSegment)
          {
             size_--;
+
+            oldSegment = segmentList_[size_];
          }
          else
          {
@@ -1634,6 +1815,14 @@ public class JDRPath extends JDRShape
          }
 
          closed = false;
+
+         firePathChangeEvent(JDRPathChangeEvent.Type.PATH_OPENED);
+
+         if (oldSegment != null)
+         {
+            firePathChangeEvent(size_, JDRPathChangeEvent.Type.SEGMENT_REMOVED,
+              oldSegment, null);
+         }
       }
    }
 
@@ -1641,7 +1830,7 @@ public class JDRPath extends JDRShape
     * Close this path with a segment matching the previous
     * final segment.
     */
-   public void closeMatch()
+   public void closeMatch() throws InvalidPathException
    {
       if (isEmpty()) return;
 
@@ -1665,6 +1854,8 @@ public class JDRPath extends JDRShape
          }
          
          closed = true;
+
+         firePathChangeEvent(JDRPathChangeEvent.Type.PATH_CLOSED);
       }
    }
 
@@ -1673,11 +1864,12 @@ public class JDRPath extends JDRShape
     * and end points must fit the gap between the original opened 
     * path's end and start points.
     * @param segment the segment to use to close the path
-    * @throws EmptyPathException if this path is empty
-    * @throws IllFittingPathException if the segment doesn't fit
+    * @throws InvalidPathException if this path is empty
+    * or if the segment doesn't fit
     */
+   @Override
    public void close(JDRPathSegment segment)
-      throws EmptyPathException,IllFittingPathException
+      throws InvalidPathException
    {
       if (isEmpty())
       {
@@ -1702,10 +1894,13 @@ public class JDRPath extends JDRShape
       add((JDRSegment)segment);
 
       closed=true;
+
+      firePathChangeEvent(JDRPathChangeEvent.Type.PATH_CLOSED);
    }
 
+   @Override
    public void close(int closeType)
-      throws EmptyPathException
+      throws InvalidPathException
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -1750,12 +1945,15 @@ public class JDRPath extends JDRShape
             throw new JdrIllegalArgumentException(
                JdrIllegalArgumentException.CLOSE_TYPE, closeType, cg);
       }
+
+      firePathChangeEvent(JDRPathChangeEvent.Type.PATH_CLOSED);
    }
 
    /**
     * Returns true if this path is closed.
     * @return true if this path is closed
     */
+   @Override
    public boolean isClosed()
    {
       return closed;
@@ -1766,6 +1964,7 @@ public class JDRPath extends JDRShape
     * consists of lines.
     * @return true if this path is a polygon
     */
+   @Override
    public boolean isPolygon()
    {
       for (int i = 0, n = size(); i < n; i++)
@@ -1783,6 +1982,7 @@ public class JDRPath extends JDRShape
     * Gets this path as a Path2D.
     * @return this path as a Path2D
     */
+   @Override
    public Path2D getGeneralPath()
    {
       if (isEmpty()) return null;
@@ -1816,8 +2016,9 @@ public class JDRPath extends JDRShape
       return path;
    }
 
+   @Override
    public JDRShape toPolygon(double flatness)
-    throws InvalidShapeException
+    throws InvalidPathException
    {
       Shape path = getGeneralPath();
 
@@ -1832,13 +2033,12 @@ public class JDRPath extends JDRShape
    /**
     * Creates a new path from the stroked outline of this path.
     * @return the path following this path's stroked outline
-    * @throws EmptyPathException if this path is empty
-    * @throws IllFittingPathException if something is wrong with 
-    * the closing segment
+    * @throws InvalidPathException if this path is empty
+    * or something is wrong with a closing segment
     */
+   @Override
    public JDRShape outlineToPath()
-      throws EmptyPathException,
-             IllFittingPathException
+      throws InvalidPathException
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -1862,6 +2062,7 @@ public class JDRPath extends JDRShape
       path.setFillPaint((JDRPaint)getLinePaint().clone());
       path.setStroke(new JDRBasicStroke(cg));
       boolean closeflag=false;
+      JDRSegment lastPostMoveSeg = null;
 
       while (!pi.isDone())
       {
@@ -1877,6 +2078,13 @@ public class JDRPath extends JDRShape
                              new Point2D.Double(coords[4],coords[5]));
                startpt = new Point2D.Double(coords[4], coords[4]);
                path.add(segment);
+
+               if (lastPostMoveSeg == null)
+               {
+                  lastPostMoveSeg = segment;
+               }
+               closeflag = false;
+
             break;
             case PathIterator.SEG_QUADTO :
                segment = JDRBezier.quadToCubic(cg, startpt.getX(),
@@ -1885,6 +2093,13 @@ public class JDRPath extends JDRShape
                                             coords[2],coords[3]);
                startpt = new Point2D.Double(coords[4], coords[4]);
                path.add(segment);
+
+               if (lastPostMoveSeg == null)
+               {
+                  lastPostMoveSeg = segment;
+               }
+               closeflag = false;
+
             break;
             case PathIterator.SEG_LINETO :
                segment = new JDRLine(cg, startpt.getX(),
@@ -1892,13 +2107,32 @@ public class JDRPath extends JDRShape
                                   coords[0], coords[1]);
                startpt = new Point2D.Double(coords[0], coords[1]);
                path.add(segment);
+
+               if (lastPostMoveSeg == null)
+               {
+                  lastPostMoveSeg = segment;
+               }
+               closeflag = false;
             break;
             case PathIterator.SEG_MOVETO :
-               segment = new JDRSegment(cg, startpt.getX(),
+               if (closeflag && lastPostMoveSeg != null)
+               {
+                  segment = new JDRClosingMove(startpt.getX(),
+                              startpt.getY(), coords[0], coords[1],
+                              this, path.size(), lastPostMoveSeg);
+               }
+               else
+               {
+                  segment = new JDRSegment(cg, startpt.getX(),
                                      startpt.getY(),
                                      coords[0], coords[1]);
+               }
+
                startpt = new Point2D.Double(coords[0], coords[1]);
                path.add(segment);
+
+               lastPostMoveSeg = null;
+               closeflag = false;
             break;
             case PathIterator.SEG_CLOSE :
                closeflag = true;
@@ -2424,9 +2658,12 @@ public class JDRPath extends JDRShape
     * @param x the x shift to move the control point
     * @param y the y shift to move the control point
     */
+   @Override
    public void translateControl(JDRPathSegment segment, JDRPoint p, 
                                 double x, double y)
    {
+      int segIdx = -1;
+
       if (segment instanceof JDRBezier)
       {
          if (p == ((JDRBezier)segment).control1 ||
@@ -2447,6 +2684,8 @@ public class JDRPath extends JDRShape
 
             if (seg == segment)
             {
+               segIdx = i;
+
                if (i < n)
                {
                   next = (JDRSegment)get(i+1);
@@ -2482,6 +2721,18 @@ public class JDRPath extends JDRShape
       }
 
       p.translate(x, y);
+
+      try
+      {
+         firePathChangeEvent(segIdx, JDRPathChangeEvent.Type.CONTROLS_ADJUSTED,
+          segment, segment);
+      }
+      catch (ClosingMoveException e)
+      {
+         // Shouldn't occur
+         getCanvasGraphics().getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
+      }
    }
 
    /**
@@ -2511,18 +2762,20 @@ public class JDRPath extends JDRShape
    {
       JDRPath path = new JDRPath(cg);
 
-      path.add(new JDRLine(cg, new Point2D.Double(p1x, p1y),
-                        new Point2D.Double(p1x, p2y)));
-      path.add(new JDRLine(cg, new Point2D.Double(p1x, p2y),
-                        new Point2D.Double(p2x, p2y)));
-      path.add(new JDRLine(cg, new Point2D.Double(p2x, p2y),
-                        new Point2D.Double(p2x, p1y)));
       try
       {
+         path.add(new JDRLine(cg, new Point2D.Double(p1x, p1y),
+                           new Point2D.Double(p1x, p2y)));
+         path.add(new JDRLine(cg, new Point2D.Double(p1x, p2y),
+                           new Point2D.Double(p2x, p2y)));
+         path.add(new JDRLine(cg, new Point2D.Double(p2x, p2y),
+                           new Point2D.Double(p2x, p1y)));
          path.close();
       }
-      catch (EmptyPathException e)
-      {
+      catch (InvalidPathException e)
+      {// shouldn't occur
+         cg.getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
       }
 
       return path;
@@ -2574,11 +2827,12 @@ public class JDRPath extends JDRShape
                if (i==4) path.close(arc);
                else path.add(arc);
             }
-            catch (EmptyPathException ignore)
+            catch (InvalidPathException e)
             {
-            }
-            catch (IllFittingPathException ignore)
-            {
+               // shouldn't occur
+
+               cg.getMessageSystem().postMessage(
+                 MessageInfo.createInternalError(e));
             }
          }
 
@@ -2660,11 +2914,10 @@ public class JDRPath extends JDRShape
                add(newsegment);
             }
          }
-         catch (EmptyPathException ignore)
+         catch (InvalidPathException e)
          {
-         }
-         catch (IllFittingPathException ignore)
-         {
+            getCanvasGraphics().getMessageSystem().postMessage(
+              MessageInfo.createInternalError(e));
          }
 
          if (segment == path.selectedSegment)
@@ -2698,6 +2951,7 @@ public class JDRPath extends JDRShape
 
    }
 
+   @Override
    public Object clone()
    {
       JDRPath path = new JDRPath(getCanvasGraphics(), capacity_);
@@ -2706,15 +2960,23 @@ public class JDRPath extends JDRShape
       return path;
    }
 
+   @Override
+   public JDRPath getBaseUnderlyingPath()
+   {
+      return this;
+   }
+
    /**
     * Returns a copy of this path.
     */
+   @Override
    public JDRShape getFullPath()
-      throws InvalidShapeException
+      throws InvalidPathException
    {
       return (JDRPath)clone();
    }
 
+   @Override
    protected void stopEditing()
    {
       if (selectedSegment != null)
@@ -2757,21 +3019,25 @@ public class JDRPath extends JDRShape
     * @return the index of the currently selected control point,
     * or -1 if none selected
     */
+   @Override
    public int getSelectedControlIndex()
    {
       return selectedControlIndex;
    }
 
+   @Override
    public JDRPathSegment getSelectedSegment()
    {
       return selectedSegment;
    }
 
+   @Override
    public JDRPoint getSelectedControl()
    {
       return selectedControl;
    }
 
+   @Override
    public int getSelectedIndex()
    {
       return selectedSegmentIndex;
@@ -3048,6 +3314,7 @@ public class JDRPath extends JDRShape
       return segmentList_;
    }
 
+   @Override
    protected void selectControl(JDRPoint p, int pointIndex, int segmentIndex)
    {
       stopEditing();
@@ -3073,41 +3340,49 @@ public class JDRPath extends JDRShape
       editMode = true;
    }
 
+   @Override
    public JDRTextual getTextual()
    {
       return null;
    }
 
+   @Override
    public boolean hasTextual()
    {
       return false;
    }
 
+   @Override
    public boolean showPath()
    {
       return true;
    }
 
+   @Override
    public boolean hasSymmetricPath()
    {
       return false;
    }
 
+   @Override
    public JDRSymmetricPath getSymmetricPath()
    {
       return null;
    }
 
+   @Override
    public boolean hasPattern()
    {
       return false;
    }
 
+   @Override
    public JDRPattern getPattern()
    {
       return null;
    }
 
+   @Override
    protected void setSelectedElements(
       int segmentIndex, int controlIndex,
       JDRPathSegment segment, JDRPoint control)
@@ -3160,6 +3435,7 @@ public class JDRPath extends JDRShape
       }
    }
 
+   @Override
    public BBox getStorageDistortionBounds()
    {
       return getStorageBBox();
@@ -3169,6 +3445,60 @@ public class JDRPath extends JDRShape
    {
       return super.getObjectFlag() | SELECT_FLAG_PATH
            | SELECT_FLAG_NON_TEXTUAL_SHAPE;
+   }
+
+   public void addPathChangeListener(JDRPathChangeListener listener)
+   {
+      if (pathChangeListeners == null)
+      {
+         pathChangeListeners = new Vector<JDRPathChangeListener>();
+      }
+
+      if (!pathChangeListeners.contains(listener))
+      {
+         pathChangeListeners.add(listener);
+      }
+   }
+
+   public void removePathChangeListener(JDRPathChangeListener listener)
+   {
+      if (pathChangeListeners != null)
+      {
+         pathChangeListeners.remove(listener);
+      }
+   }
+
+   protected void firePathChangeEvent(JDRPathChangeEvent.Type type)
+   throws ClosingMoveException
+   {
+      firePathChangeEvent(-1, type);
+   }
+
+   protected void firePathChangeEvent(int index, JDRPathChangeEvent.Type type)
+   throws ClosingMoveException
+   {
+      firePathChangeEvent(index, type, null, null);
+   }
+
+   protected void firePathChangeEvent(int index, JDRPathChangeEvent.Type type,
+     JDRPathSegment oldSegment, JDRPathSegment newSegment)
+   throws ClosingMoveException
+   {
+      if (pathChangeListeners != null)
+      {
+         JDRPathChangeEvent evt = new JDRPathChangeEvent(this, index, type,
+           oldSegment, newSegment);
+
+         for (JDRPathChangeListener l : pathChangeListeners)
+         {
+            l.pathChanged(evt);
+
+            if (evt.isConsumed())
+            {
+               break;
+            }
+         }
+      }
    }
 
    private boolean closed;
@@ -3200,4 +3530,6 @@ public class JDRPath extends JDRShape
 
    private JDRPaint fillPaint, linePaint;
    private JDRStroke stroke;
+
+   private Vector<JDRPathChangeListener> pathChangeListeners;
 }

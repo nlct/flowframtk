@@ -835,6 +835,22 @@ public class JDRCanvas extends JPanel
             }
          }));
 
+      // Close subpath
+
+      editPathPopupMenu.add(EditPathAction.createMenuItem(this,
+         "menu.editpath", "close_sub_path",
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               convertToClosingMove();
+            }
+         },
+         SELECT_FLAG_SHAPE,
+         SEGMENT_FLAG_MOVE | SEGMENT_FLAG_LAST ,
+         CONTROL_FLAG_REGULAR
+         ));
+
       editPathPopupMenu.addSeparator();
 
       // Move point
@@ -2466,38 +2482,49 @@ public class JDRCanvas extends JPanel
          }
       }
 
-      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
-
-      int n = editedPath.size();
-
-      if (n == 1 || (n == 2 && editedPath.isClosed()))
+      try
       {
-         JDRCompleteObject object = null;
+         JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
-         // Remove path
+         int n = editedPath.size();
 
-         for (int i = 0, m = paths.size(); i < m; i++)
+         if (n == 1 || (n == 2 && editedPath.isClosed()))
          {
-            object = paths.get(i);
+            JDRCompleteObject object = null;
 
-            if (object == editedPath)
+            // Remove path
+
+            for (int i = 0, m = paths.size(); i < m; i++)
             {
-               UndoableEdit edit = new EditPath(editedPath,false);
-               ce.addEdit(edit);
-               edit = new RemoveObject(object, i);
-               ce.addEdit(edit);
-               break;
+               object = paths.get(i);
+
+               if (object == editedPath)
+               {
+                  UndoableEdit edit = new EditPath(editedPath,false);
+                  ce.addEdit(edit);
+                  edit = new RemoveObject(object, i);
+                  ce.addEdit(edit);
+                  break;
+               }
             }
          }
-      }
-      else
-      {
-         UndoableEdit edit = new DeletePoint(editedPath);
-         ce.addEdit(edit);
-      }
+         else
+         {
+            UndoableEdit edit = new DeletePoint(editedPath);
+            ce.addEdit(edit);
+         }
 
-      ce.end();
-      frame_.postEdit(ce);
+         ce.end();
+         frame_.postEdit(ce);
+      }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.delete_point"), e);
+      }
+      catch (InvalidPathException e)
+      {
+         getResources().internalError(frame_, e);
+      }
    }
 
    public void addControlPoint()
@@ -2564,12 +2591,15 @@ public class JDRCanvas extends JPanel
 
          frame_.postEdit(edit);
       }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.convert_to_line"), e);
+      }
       catch (Exception e)
       {
          getResources().internalError(frame_, e);
       }
    }
-
 
    public void convertToCurve()
    {
@@ -2615,6 +2645,10 @@ public class JDRCanvas extends JPanel
          }
 
          frame_.postEdit(edit);
+      }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.convert_to_curve"), e);
       }
       catch (Exception e)
       {
@@ -2667,10 +2701,120 @@ public class JDRCanvas extends JPanel
 
          frame_.postEdit(edit);
       }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.convert_to_move"), e);
+      }
       catch (Exception e)
       {
          getResources().internalError(frame_, e);
       }
+   }
+
+   public void convertToClosingMove()
+   {
+      if (editedPath == null) return;
+
+      JDRPathSegment segment = editedPath.getSelectedSegment();
+
+      if (segment == null) return;
+
+      if (editedPath.size() < 2)
+      {
+         getResources().error(frame_, getMessage("error.close_lonely_subpath"));
+         return;
+      }
+
+      try
+      {
+         if (editedPath instanceof JDRSymmetricPath)
+         {
+            JDRSymmetricPath path = (JDRSymmetricPath)editedPath;
+
+            if (segment == path.getSymmetry()
+              || segment == path.getJoin()
+              || segment == path.getClosingSegment()
+               )
+            {
+               return;
+            }
+
+         }
+
+         JDRPath basePath = editedPath.getBaseUnderlyingPath();
+
+         if (!segment.isGap() && segment == basePath.getLastSegment())
+         {
+            JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+            if (basePath.isClosed())
+            {
+               ce.addEdit(new OpenPath(editedPath, true));
+               JDRPoint p0 = editedPath.getLastSegment().getEnd();
+               JDRPoint p1 = segment.getStart();
+
+               JDRClosingMove move = new JDRClosingMove(p0.getX(), p0.getY(),
+                p1.getX(), p1.getY(), basePath, basePath.size());
+
+               ce.addEdit(new AppendSegment(basePath, move));
+               ce.addEdit(new AppendSegment(basePath, (JDRSegment)segment));
+
+               ce.addEdit(new ClosePath(editedPath, JDRShape.CLOSE_MERGE_ENDS));
+            }
+            else
+            {
+               JDRPoint p0 = segment.getEnd();
+               JDRPoint p1 = basePath.getFirstSegment().getStart();
+
+               JDRClosingMove move = new JDRClosingMove(p0.getX(), p0.getY(),
+                p1.getX(), p1.getY(), basePath, basePath.size());
+
+               ce.addEdit(new AppendSegment(basePath, move));
+               ce.addEdit(new ClosePath(editedPath, JDRShape.CLOSE_MERGE_ENDS));
+            }
+
+            ce.end();
+            frame_.postEdit(ce);
+         }
+         else
+         {
+            UndoableEdit edit = new ConvertToClosingMove(editedPath, segment);
+
+            frame_.postEdit(edit);
+         }
+      }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.close_sub_path"), e);
+      }
+      catch (Exception e)
+      {
+         getResources().internalError(frame_, e);
+      }
+   }
+
+   public void closingMoveError(ClosingMoveException e)
+   {
+      JDRClosingMove seg = e.getSegment();
+      JDRPoint p0 = seg.getStart();
+      JDRPoint p1 = seg.getEnd();
+
+      getResources().error(frame_, getResources().getMessage(
+       "error.closed_subpath_action",
+       e.getSegmentIndex(), p0.getX(), p0.getY(), p1.getX(), p1.getY()),
+       e);
+   }
+
+   public void closingMoveError(String actionName, ClosingMoveException e)
+   {
+      JDRClosingMove seg = e.getSegment();
+      JDRPoint p0 = seg.getStart();
+      JDRPoint p1 = seg.getEnd();
+
+      getResources().error(frame_, getResources().getMessage(
+       "error.closed_subpath_named_action", actionName,
+       e.getSegmentIndex(), p0.getX(), p0.getY(), p1.getX(), p1.getY()),
+       e);
    }
 
    public void anchorSymmetry()
@@ -2740,6 +2884,10 @@ public class JDRCanvas extends JPanel
       {
          UndoableEdit edit = new BreakPath(editedPath);
          frame_.postEdit(edit);
+      }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.break"), e);
       }
       catch (Throwable e)
       {
@@ -2836,6 +2984,10 @@ public class JDRCanvas extends JPanel
          UndoableEdit edit = new OpenPath(editedPath, removeSeg);
          frame_.postEdit(edit);
       }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.open"), e);
+      }
       catch (Throwable e)
       {
          getResources().internalError(frame_, e);
@@ -2850,6 +3002,10 @@ public class JDRCanvas extends JPanel
       {
          UndoableEdit edit = new ClosePath(editedPath, closeType);
          frame_.postEdit(edit);
+      }
+      catch (ClosingMoveException e)
+      {
+         closingMoveError(getMessage("undo.close"), e);
       }
       catch (Throwable e)
       {
@@ -3126,7 +3282,7 @@ public class JDRCanvas extends JPanel
       BBox box = currentPath.getComponentControlBBox();
       currentSegment.mergeComponentControlBBox(box);
 
-      JDRPathSegment seg = currentPath.removeSegment(n-1);
+      JDRPathSegment seg = currentPath.removeLastSegment();
 
       currentSegment.setStart(seg.getStartX(), seg.getStartY());
 
@@ -3511,6 +3667,11 @@ public class JDRCanvas extends JPanel
    public JDRResources getResources()
    {
       return frame_.getResources();
+   }
+
+   public String getMessage(String tag, Object... params)
+   {
+      return getResources().getMessage(tag, params);
    }
 
    public JDRGuiMessage getMessageSystem()
@@ -11724,7 +11885,7 @@ public class JDRCanvas extends JPanel
       private JDRCompleteObject object_;
 
       public ConvertTextToPath(JDRText text)
-         throws MissingMoveException,EmptyGroupException
+         throws InvalidPathException,EmptyGroupException
       {
          super(getFrame());
 
@@ -13558,6 +13719,7 @@ public class JDRCanvas extends JPanel
       private boolean startAnchor, endAnchor;
 
       public ConvertToLine(JDRShape path, JDRPathSegment segment)
+      throws InvalidPathException
       {
          super(getFrame());
 
@@ -13600,7 +13762,15 @@ public class JDRCanvas extends JPanel
       public void redo() throws CannotRedoException
       {
          frame_.selectThisFrame();
-         path_.convertSegment(index_, newSegment_);
+         try
+         {
+            path_.convertSegment(index_, newSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotRedoException();
+         }
 
          newSegment_.getStart().setAnchored(false);
          newSegment_.getEnd().setAnchored(false);
@@ -13613,7 +13783,15 @@ public class JDRCanvas extends JPanel
       public void undo() throws CannotUndoException
       {
          frame_.selectThisFrame();
-         path_.convertSegment(index_, oldSegment_);
+         try
+         {
+            path_.convertSegment(index_, oldSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotUndoException();
+         }
 
          oldSegment_.getStart().setAnchored(startAnchor);
          oldSegment_.getEnd().setAnchored(endAnchor);
@@ -13641,6 +13819,7 @@ public class JDRCanvas extends JPanel
       private boolean startAnchor, endAnchor;
 
       public ConvertToSegment(JDRShape path, JDRPathSegment segment)
+      throws InvalidPathException
       {
          super(getFrame());
 
@@ -13683,7 +13862,15 @@ public class JDRCanvas extends JPanel
       public void redo() throws CannotRedoException
       {
          frame_.selectThisFrame();
-         path_.convertSegment(index_, newSegment_);
+         try
+         {
+            path_.convertSegment(index_, newSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotRedoException();
+         }
 
          newSegment_.getStart().setAnchored(false);
          newSegment_.getEnd().setAnchored(false);
@@ -13696,7 +13883,15 @@ public class JDRCanvas extends JPanel
       public void undo() throws CannotUndoException
       {
          frame_.selectThisFrame();
-         path_.convertSegment(index_, oldSegment_);
+         try
+         {
+            path_.convertSegment(index_, oldSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotUndoException();
+         }
 
          oldSegment_.getStart().setAnchored(startAnchor);
          oldSegment_.getEnd().setAnchored(endAnchor);
@@ -13715,6 +13910,110 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   class ConvertToClosingMove extends CanvasUndoableEdit
+   {
+      private JDRPathSegment oldSegment_, newSegment_;
+      private int index_;
+      private JDRShape path_;
+      private JDRPoint oldPt_=null, newPt_=null;
+      private boolean startAnchor, endAnchor;
+
+      public ConvertToClosingMove(JDRShape path, JDRPathSegment segment)
+      throws InvalidPathException
+      {
+         super(getFrame());
+
+         index_ = path.getIndex(segment);
+         path_ = path;
+         oldPt_ = getSelectedStoragePoint();
+
+         oldSegment_ = segment;
+
+         startAnchor = oldSegment_.getStart().isAnchored();
+         endAnchor = oldSegment_.getEnd().isAnchored();
+
+         newSegment_ = new JDRClosingMove(
+           segment.getStart(), segment.getEnd(),
+           path.getBaseUnderlyingPath(), index_);
+
+         path_.convertSegment(index_, newSegment_);
+
+         newPt_ = oldPt_;
+
+         if (oldSegment_ instanceof JDRBezier)
+         {
+            if (oldPt_ == ((JDRBezier)oldSegment_).getControl1())
+            {
+               newPt_ = oldSegment_.getStart();
+            }
+            else if (oldPt_ == ((JDRBezier)oldSegment_).getControl2())
+            {
+               newPt_ = oldSegment_.getEnd();
+            }
+         }
+
+         editedPath.selectControl(newPt_);
+
+         BBox box = oldSegment_.getBpControlBBox();
+         box.merge(newSegment_.getBpControlBBox());
+         mergeRefreshBounds(path_, box);
+
+         setRefreshBounds(box);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+
+         try
+         {
+            path_.convertSegment(index_, newSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotRedoException();
+         }
+
+         newSegment_.getStart().setAnchored(false);
+         newSegment_.getEnd().setAnchored(false);
+
+         editedPath.selectControl(newPt_);
+
+         repaintRegion();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+
+         try
+         {
+            path_.convertSegment(index_, oldSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotUndoException();
+         }
+
+         oldSegment_.getStart().setAnchored(startAnchor);
+         oldSegment_.getEnd().setAnchored(endAnchor);
+
+         editedPath.selectControl(oldPt_);
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.close_sub_path");
+      }
+   }
+
    class ConvertToCurve extends CanvasUndoableEdit
    {
       private JDRPathSegment oldSegment_, newSegment_;
@@ -13723,6 +14022,7 @@ public class JDRCanvas extends JPanel
       private JDRPoint pt_=null;
 
       public ConvertToCurve(JDRShape path, JDRPathSegment segment)
+      throws InvalidPathException
       {
          super(getFrame());
 
@@ -13748,9 +14048,18 @@ public class JDRCanvas extends JPanel
       public void redo() throws CannotRedoException
       {
          frame_.selectThisFrame();
-         path_.convertSegment(index_, newSegment_);
-         editedPath.selectControl(pt_);
 
+         try
+         {
+            path_.convertSegment(index_, newSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotRedoException();
+         }
+
+         editedPath.selectControl(pt_);
          repaintRegion();
          updateEditPathActions();
       }
@@ -13758,9 +14067,18 @@ public class JDRCanvas extends JPanel
       public void undo() throws CannotUndoException
       {
          frame_.selectThisFrame();
-         path_.convertSegment(index_, oldSegment_);
-         editedPath.selectControl(pt_);
 
+         try
+         {
+            path_.convertSegment(index_, oldSegment_);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotUndoException();
+         }
+
+         editedPath.selectControl(pt_);
          repaintRegion();
          updateEditPathActions();
       }
@@ -13771,6 +14089,63 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return getResources().getMessage("undo.convert_to_curve");
+      }
+   }
+
+   class AppendSegment extends CanvasUndoableEdit
+   {
+      private JDRPath path_;
+      private JDRSegment newSegment=null;
+      private BBox bounds;
+
+      public AppendSegment(JDRPath path, JDRSegment segment)
+      throws InvalidPathException
+      {
+         super(getFrame());
+
+         path_ = path;
+         newSegment = segment;
+
+         path_.add(newSegment);
+
+         bounds = newSegment.getBpControlBBox();
+         setRefreshBounds(bounds);
+         updateEditPathActions();
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+         try
+         {
+            path_.add(newSegment);
+         }
+         catch (InvalidPathException e)
+         {
+            getResources().debug(e);
+            throw new CannotRedoException();
+         }
+
+         bounds = newSegment.getBpControlBBox();
+         repaintRegion();
+         updateEditPathActions();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+         path_.removeLastSegment();
+
+         repaintRegion();
+         updateEditPathActions();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.add_point");
       }
    }
 
@@ -13843,7 +14218,7 @@ public class JDRCanvas extends JPanel
       private boolean pathRemoved_=false;
       private int oldPtIndex_, newPtIndex_;
 
-      public DeletePoint(JDRShape path)
+      public DeletePoint(JDRShape path) throws InvalidPathException
       {
          super(getFrame());
 
@@ -14024,6 +14399,7 @@ public class JDRCanvas extends JPanel
       private int oldPtIdx, newPtIdx;
 
       public OpenPath(JDRShape path, boolean removeLast)
+      throws InvalidPathException
       {
          super(getFrame());
 
@@ -14093,7 +14469,7 @@ public class JDRCanvas extends JPanel
       private int oldPtIdx;
 
       public ClosePath(JDRShape path, int closeType)
-         throws EmptyPathException
+         throws InvalidPathException
       {
          super(getFrame());
 

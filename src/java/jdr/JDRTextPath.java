@@ -798,17 +798,19 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    public void open()
+   throws InvalidPathException
    {
       path_.open();
    }
 
    public void open(boolean removeLastSegment)
+   throws InvalidPathException
    {
       path_.open(removeLastSegment);
    }
 
    public void close(JDRPathSegment segment)
-      throws EmptyPathException,IllFittingPathException
+      throws InvalidPathException,IllFittingPathException
    {
       path_.close(segment);
    }
@@ -896,12 +898,13 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    public JDRPathSegment setSegment(int index, JDRPathSegment segment)
-      throws ArrayIndexOutOfBoundsException
+      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return path_.setSegment(index, segment);
    }
 
    public void add(JDRSegment s)
+   throws InvalidPathException
    {
       path_.add(s);
    }
@@ -917,30 +920,31 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    public void convertSegment(int idx, JDRPathSegment segment)
+   throws InvalidPathException
    {
       path_.convertSegment(idx, segment);
    }
 
    public JDRPathSegment remove(int i)
-      throws ArrayIndexOutOfBoundsException
+      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return path_.remove(i);
    }
 
    public JDRPathSegment remove(JDRPathSegment segment)
-      throws ArrayIndexOutOfBoundsException
+      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return path_.remove(segment);
    }
 
    public JDRPathSegment removeSelectedSegment()
-      throws ArrayIndexOutOfBoundsException
+      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return path_.removeSelectedSegment();
    }
 
    public JDRSegment removeSegment(int i)
-      throws ArrayIndexOutOfBoundsException
+      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return path_.removeSegment(i);
    }

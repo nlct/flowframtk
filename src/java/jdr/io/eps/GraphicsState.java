@@ -218,8 +218,7 @@ public class GraphicsState implements EPSObject
     * @throws IllFittingPathException if the path is poorly defined
     */
    public void reversePath()
-      throws MissingMoveException,EmptyPathException,
-             IllFittingPathException
+      throws InvalidPathException
    {
       JDRPath jdrpath 
          = (JDRPath)JDRPath.getPath(eps_.getCanvasGraphics(),
@@ -235,8 +234,7 @@ public class GraphicsState implements EPSObject
     * @throws IllFittingPathException if the path is poorly defined
     */
    public void strokePath()
-      throws MissingMoveException,EmptyPathException,
-             IllFittingPathException
+      throws InvalidPathException
    {
       JDRPath jdrpath 
          = JDRPath.getPath(eps_.getCanvasGraphics(), 

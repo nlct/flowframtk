@@ -922,6 +922,9 @@
 <entry key="menu.editpath.close_path.merge">Merge Ends</entry>
 <entry key="menu.editpath.close_path.merge.mnemonic">M</entry>
 
+<entry key="menu.editpath.close_sub_path">Close Sub Path</entry>
+<entry key="menu.editpath.close_sub_path.mnemonic">B</entry>
+
 <entry key="menu.editpath.continuity">曲线平滑(U)</entry>
 <entry key="menu.editpath.continuity.mnemonic">U</entry>
 <entry key="menu.editpath.continuity.tooltip">Adjust the curvature controls to ensure a continuous gradient between segments</entry>
@@ -1372,6 +1375,7 @@
 <entry key="undo.break">断开路径</entry>
 <entry key="undo.clear_flowframes">清除流动文本框</entry>
 <entry key="undo.close">结束一条封闭路径</entry>
+<entry key="undo.close_sub_path">Close Sub Path</entry>
 <entry key="undo.colour">更改颜色</entry>
 <entry key="undo.continuous">曲线平滑</entry>
 <entry key="undo.convert_to_curve">转换为曲线段</entry>
@@ -3620,6 +3624,7 @@ Merge Region: {2}</entry>
 <entry key="class.com.dickimawbooks.jdr.JDRBasicStroke">basic stroke</entry>
 <entry key="class.com.dickimawbooks.jdr.JDRBezier">cubic Bézier curve</entry>
 <entry key="class.com.dickimawbooks.jdr.JDRBitmap">bitmap</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRClosingMove">closing move</entry>
 <entry key="class.com.dickimawbooks.jdr.JDRColorCMYK">cmyk</entry>
 <entry key="class.com.dickimawbooks.jdr.JDRColorHSB">hsb</entry>
 <entry key="class.com.dickimawbooks.jdr.JDRColor">rgb</entry>
@@ -3987,6 +3992,13 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.string_parse.invalid_command">Command expected while parsing ''{0}''. Found ''{1}''.</entry>
 <entry key="error.string_parse.invalid_flag">Flag (0 or 1) expected while parsing ''{0}''. Found ''{1}''.</entry>
 <entry key="error.no_path_data">No path data!</entry>
+<entry key="error.close_lonely_subpath">Not enough segments to close sub path</entry>
+<entry key="error.close_subpath">Unable to close sub path</entry>
+<entry key="error.closed_subpath_action">Unable to perform action due to closing move.
+You will first have to replace the blocking closing move (segment index {0}, from ({1},{2}) to ({3},{4})) with a non closing move.</entry>
+<entry key="error.closed_subpath_named_action">Unable to perform action ''{0}'' due to closing move.
+You will first have to replace the blocking closing move (segment index {1}, from ({2},{3}) to ({4},{5})) with a non closing move.</entry>
+
 
 <!--  Internal Error Messages -->
 

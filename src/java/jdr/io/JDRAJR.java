@@ -409,6 +409,7 @@ public abstract class JDRAJR
           segmentLoader.addListener(new JDRSegmentLoaderListener());
           segmentLoader.addListener(new JDRLineLoaderListener());
           segmentLoader.addListener(new JDRBezierLoaderListener());
+          segmentLoader.addListener(new JDRClosingMoveLoaderListener());
           segmentLoader.addListener(new JDRPartialSegmentLoaderListener());
           segmentLoader.addListener(new JDRPartialLineLoaderListener());
           segmentLoader.addListener(new JDRPartialBezierLoaderListener());

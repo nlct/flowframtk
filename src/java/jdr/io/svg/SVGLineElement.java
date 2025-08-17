@@ -3,6 +3,7 @@ package com.dickimawbooks.jdr.io.svg;
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
+import com.dickimawbooks.jdr.io.MessageInfo;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
@@ -64,7 +65,16 @@ public class SVGLineElement extends SVGShape
 
       JDRPath path = new JDRPath(cg);
 
-      path.add(new JDRLine(cg, p1x, p1y, p2x, p2y));
+      try
+      {
+         path.add(new JDRLine(cg, p1x, p1y, p2x, p2y));
+      }
+      catch (InvalidPathException e)
+      {
+         // shouldn't happen
+         cg.getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
+      }
 
       return path;
    }
@@ -82,6 +92,8 @@ public class SVGLineElement extends SVGShape
       }
       catch (InvalidFormatException e)
       {
+         getCanvasGraphics().getMessageSystem().postMessage(
+           MessageInfo.createInternalError(e));
       }
 
       return null;

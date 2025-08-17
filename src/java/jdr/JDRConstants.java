@@ -212,11 +212,15 @@ public interface JDRConstants
    public static final int SEGMENT_FIRST = 7;
    public static final int SEGMENT_LAST = 8;
    public static final int SEGMENT_MID = 9;
-   public static final int SEGMENT_NONE = 10;
+   public static final int SEGMENT_CLOSING_MOVE = 10;
+   public static final int SEGMENT_NONE = 11;
 
    public static final int SEGMENT_FLAG_MOVE = (1 << SEGMENT_MOVE);
    public static final int SEGMENT_FLAG_LINE = (1 << SEGMENT_LINE);
    public static final int SEGMENT_FLAG_CURVE = (1 << SEGMENT_CURVE);
+   public static final int SEGMENT_FLAG_CLOSING_MOVE
+       = (1 << SEGMENT_CLOSING_MOVE);
+
    public static final int SEGMENT_FLAG_PARTIAL_MOVE = 
       (1 << SEGMENT_PARTIAL_MOVE);
    public static final int SEGMENT_FLAG_PARTIAL_LINE = 
@@ -235,7 +239,9 @@ public interface JDRConstants
    public static final int SEGMENT_FLAG_NONE = (1 << SEGMENT_NONE);
 
    public static final int SEGMENT_FLAG_ANY_FULL =
-    (SEGMENT_FLAG_MOVE | SEGMENT_FLAG_LINE | SEGMENT_FLAG_CURVE);
+    (SEGMENT_FLAG_MOVE | SEGMENT_FLAG_CLOSING_MOVE
+   | SEGMENT_FLAG_LINE | SEGMENT_FLAG_CURVE);
+
    public static final int SEGMENT_FLAG_ANY_PARTIAL =
     (SEGMENT_FLAG_PARTIAL_MOVE 
    | SEGMENT_FLAG_PARTIAL_LINE

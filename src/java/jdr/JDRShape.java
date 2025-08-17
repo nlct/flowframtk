@@ -67,12 +67,14 @@ public abstract class JDRShape extends JDRCompleteObject
     */
    public abstract JDRShape reverse() throws InvalidShapeException;
 
+   public abstract JDRPath getBaseUnderlyingPath();
+
    /**
     * Creates a new shape that is a reflection of this shape.
     * @return the reflection of this shape
     */
    public JDRShape reflection(JDRLine symmetryLine)
-     throws InvalidShapeException
+     throws InvalidPathException
    {
       JDRShape reflection = (JDRShape)clone();
 
@@ -126,7 +128,7 @@ public abstract class JDRShape extends JDRCompleteObject
    /**
     * Creates a new shape from the stroked outline of this shape.
     * @return the shape following this shape's stroked outline
-    * @throws InvalidShapeException if something is wrong with 
+    * @throws InvalidPathException if something is wrong with 
     * the shape outline
     */
    public JDRShape outlineToPath() throws InvalidShapeException
@@ -152,6 +154,7 @@ public abstract class JDRShape extends JDRCompleteObject
       path.setLinePaint(new JDRTransparent(cg));
       path.setFillPaint((JDRPaint)getLinePaint().clone());
       boolean closeflag=false;
+      JDRSegment postLastMoveSegment = null;
 
       while (!pi.isDone())
       {
@@ -167,6 +170,11 @@ public abstract class JDRShape extends JDRCompleteObject
                              new Point2D.Double(coords[4],coords[5]));
                startpt = new Point2D.Double(coords[4], coords[4]);
                path.add(segment);
+
+               if (postLastMoveSegment == null)
+               {
+                  postLastMoveSegment = segment;
+               }
             break;
             case PathIterator.SEG_QUADTO :
                segment = JDRBezier.quadToCubic(cg, startpt.getX(),
@@ -175,6 +183,11 @@ public abstract class JDRShape extends JDRCompleteObject
                                             coords[2],coords[3]);
                startpt = new Point2D.Double(coords[4], coords[4]);
                path.add(segment);
+
+               if (postLastMoveSegment == null)
+               {
+                  postLastMoveSegment = segment;
+               }
             break;
             case PathIterator.SEG_LINETO :
                segment = new JDRLine(cg, startpt.getX(),
@@ -182,13 +195,32 @@ public abstract class JDRShape extends JDRCompleteObject
                                   coords[0], coords[1]);
                startpt = new Point2D.Double(coords[0], coords[1]);
                path.add(segment);
+
+               if (postLastMoveSegment == null)
+               {
+                  postLastMoveSegment = segment;
+               }
             break;
             case PathIterator.SEG_MOVETO :
-               segment = new JDRSegment(cg, startpt.getX(),
+
+               if (closeflag && postLastMoveSegment != null)
+               {
+                  segment = new JDRClosingMove(
+                                 startpt.getX(), startpt.getY(),
+                                 coords[0], coords[1],
+                                 path, path.size(), postLastMoveSegment);
+               }
+               else
+               {
+                  segment = new JDRSegment(cg, startpt.getX(),
                                      startpt.getY(),
                                      coords[0], coords[1]);
+               }
+
                startpt = new Point2D.Double(coords[0], coords[1]);
                path.add(segment);
+               postLastMoveSegment = null;
+               closeflag = false;
             break;
             case PathIterator.SEG_CLOSE :
                closeflag = true;
@@ -210,7 +242,7 @@ public abstract class JDRShape extends JDRCompleteObject
     * Breaks shape at the currently selected segment and returns the
     * left over part as a new shape.
     * @return left over shape
-    * @throws InvalidShapeException if the path can't be broken
+    * @throws InvalidPathException if the path can't be broken
     */
    public abstract JDRShape breakPath() throws InvalidShapeException;
 
@@ -249,7 +281,7 @@ public abstract class JDRShape extends JDRCompleteObject
     * Opens this shape.
     * @see #open(boolean)
     */
-   public abstract void open();
+   public abstract void open() throws InvalidPathException;
 
    /**
     * Opens this shape, optionally removing the final segment.
@@ -257,9 +289,10 @@ public abstract class JDRShape extends JDRCompleteObject
     * removed
     * @see #open()
     */
-   public abstract void open(boolean removeLastSegment);
+   public abstract void open(boolean removeLastSegment)
+    throws InvalidPathException;
 
-   public void close() throws EmptyPathException
+   public void close() throws InvalidPathException
    {
       close(CLOSE_LINE);
    }
@@ -270,18 +303,18 @@ public abstract class JDRShape extends JDRCompleteObject
     * {@link #CLOSE_CONT} or {@link #CLOSE_MERGE_ENDS}
     * @throws EmptyPathException if this path is empty
     */
-   public abstract void close(int closeType) throws EmptyPathException;
+   public abstract void close(int closeType) throws InvalidPathException;
 
    /**
     * Closes this path with the given segment. The segment's start
     * and end points must fit the gap between the original opened 
     * path's end and start points.
     * @param segment the segment to use to close the path
-    * @throws EmptyPathException if this path is empty
-    * @throws IllFittingPathException if the segment doesn't fit
+    * @throws InvalidPathException if this path is empty
+    * or if the segment doesn't fit
     */
    public abstract void close(JDRPathSegment segment)
-      throws EmptyPathException,IllFittingPathException;
+      throws InvalidPathException;
 
    /**
     * Returns true if this shape is closed.
@@ -950,14 +983,15 @@ public abstract class JDRShape extends JDRCompleteObject
     * @return the old segment at the given index
     */
    public abstract JDRPathSegment setSegment(int index, JDRPathSegment segment)
-     throws ArrayIndexOutOfBoundsException;
+     throws ArrayIndexOutOfBoundsException,InvalidPathException;
 
    /**
     * Appends the given segment, enlarging the
     * capacity if necessary.
     * @param s the segment to append to this shape
     */
-   public abstract void add(JDRSegment s);
+   public abstract void add(JDRSegment s)
+   throws InvalidPathException;
 
    /**
     * Adds a new point midway along the currently edited segment.
@@ -983,7 +1017,8 @@ public abstract class JDRShape extends JDRCompleteObject
     * @param idx the index at which to substitute the new segment
     * @param newSegment the new segment
     */
-   public abstract void convertSegment(int idx, JDRPathSegment newSegment);
+   public abstract void convertSegment(int idx, JDRPathSegment newSegment)
+   throws InvalidPathException;
 
    /**
     * Removes the segment at the given index and adjusts surrounding
@@ -992,13 +1027,13 @@ public abstract class JDRShape extends JDRCompleteObject
     * @return the removed segment
     */
    public abstract JDRPathSegment remove(int i)
-     throws ArrayIndexOutOfBoundsException;
+     throws ArrayIndexOutOfBoundsException,InvalidPathException;
 
    /**
     * Removes the given segment from the segment list.
     */
    public abstract JDRSegment removeSegment(int index)
-      throws ArrayIndexOutOfBoundsException;
+      throws ArrayIndexOutOfBoundsException,InvalidPathException;
 
    /**
     * Removes the given segment and adjusts surrounding
@@ -1006,13 +1041,15 @@ public abstract class JDRShape extends JDRCompleteObject
     * @param segment the segment to remove
     * @return the removed segment or null if not found
     */
-   public abstract JDRPathSegment remove(JDRPathSegment segment);
+   public abstract JDRPathSegment remove(JDRPathSegment segment)
+    throws InvalidPathException;
 
    /**
     * Removes the currently selected segment.
     * @return the removed segment
     */
-   public abstract JDRPathSegment removeSelectedSegment();
+   public abstract JDRPathSegment removeSelectedSegment()
+    throws InvalidPathException;
 
    /**
     * Translate the given control point on the given segment.

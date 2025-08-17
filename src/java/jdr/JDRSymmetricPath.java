@@ -53,6 +53,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
     * @param line line of symmetry
     */
     public JDRSymmetricPath(JDRShape path, boolean endAnchor, JDRLine line)
+    throws InvalidPathException
     {
        super(path.getCanvasGraphics());
 
@@ -70,21 +71,14 @@ public class JDRSymmetricPath extends JDRCompoundShape
        if (path_.isClosed())
        {
           path_.open(false);
-          try
-          {
-             close(CLOSE_MERGE_ENDS);
-          }
-          catch (EmptyPathException e)
-          {
-              throw new IllegalArgumentException(
-                 "Can't make a symmetric shape out from an empty path", e);
-          }
+          close(CLOSE_MERGE_ENDS);
        }
 
        super.setEditMode(path_.isEdited());
     }
 
     protected JDRSymmetricPath(JDRShape path, JDRPartialSegment joinSegment, JDRLine line)
+    throws InvalidPathException
     {
        super(path.getCanvasGraphics());
 
@@ -107,15 +101,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
        if (path_.isClosed())
        {
           path_.open(false);
-          try
-          {
-             close(CLOSE_MERGE_ENDS);
-          }
-          catch (EmptyPathException e)
-          {
-              throw new IllegalArgumentException(
-                 "Can't make a symmetric shape out from an empty path", e);
-          }
+          close(CLOSE_MERGE_ENDS);
        }
 
        super.setEditMode(path_.isEdited());
@@ -241,6 +227,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
     }
 
     public static JDRSymmetricPath createFrom(JDRShape path)
+    throws InvalidPathException
     {
        CanvasGraphics cg = path.getCanvasGraphics();
 
@@ -354,7 +341,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
        }
     }
 
-    public void add(JDRSegment s)
+    public void add(JDRSegment s) throws InvalidPathException
     {
        path_.add(s);
     }
@@ -767,6 +754,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
    }
 
    public JDRPathSegment removeSelectedSegment()
+   throws InvalidPathException
    {
       int selectedSegmentIndex = getSelectedIndex();
 
@@ -779,6 +767,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
    }
 
    public JDRPathSegment remove(JDRPathSegment segment)
+   throws InvalidPathException
    {
       for (int i = 0, n = path_.size(); i < n; i++)
       {
@@ -792,13 +781,13 @@ public class JDRSymmetricPath extends JDRCompoundShape
    }
 
    public JDRSegment removeSegment(int index)
-     throws ArrayIndexOutOfBoundsException
+     throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return (JDRSegment)path_.remove(index);
    }
 
    public JDRPathSegment setSegment(int index, JDRPathSegment segment)
-     throws ArrayIndexOutOfBoundsException
+     throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       int n = path_.size();
 
@@ -838,7 +827,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
       throw new ArrayIndexOutOfBoundsException(index);
    }
 
-   public JDRSegment remove(int i)
+   public JDRSegment remove(int i) throws InvalidPathException
    {
       JDRSegment segment = (JDRSegment)path_.get(i);
       JDRPoint dp = segment.getEnd();
@@ -1246,6 +1235,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
 
     public void convertSegment(int idx, JDRPathSegment segment)
+    throws InvalidPathException
     {
        JDRPathSegment orgSegment = get(idx);
 

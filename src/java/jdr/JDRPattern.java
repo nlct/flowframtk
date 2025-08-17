@@ -135,7 +135,7 @@ public abstract class JDRPattern extends JDRCompoundShape
       path_ = shape;
    }
 
-   public void add(JDRSegment s)
+   public void add(JDRSegment s) throws InvalidPathException
    {
       path_.add(s);
    }
@@ -260,6 +260,7 @@ public abstract class JDRPattern extends JDRCompoundShape
 
 
    public void convertSegment(int idx, JDRPathSegment segment)
+   throws InvalidPathException
    {
       path_.convertSegment(idx, segment);
    }
@@ -436,17 +437,19 @@ public abstract class JDRPattern extends JDRCompoundShape
    }
 
    public void open()
+   throws InvalidPathException
    {
       path_.open();
    }
 
    public void open(boolean removeLastSegment)
+   throws InvalidPathException
    {
       path_.open(removeLastSegment);
    }
 
    public void close(JDRPathSegment segment)
-     throws EmptyPathException,IllFittingPathException
+     throws InvalidPathException,IllFittingPathException
    {
       path_.close(segment);
    }
@@ -1545,28 +1548,30 @@ public abstract class JDRPattern extends JDRCompoundShape
    }
 
    public JDRPathSegment removeSelectedSegment()
+   throws InvalidPathException
    {
       return path_.removeSelectedSegment();
    }
 
    public JDRPathSegment remove(JDRPathSegment segment)
+   throws InvalidPathException
    {
       return path_.remove(segment);
    }
 
    public JDRSegment removeSegment(int index)
-     throws ArrayIndexOutOfBoundsException
+     throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return (JDRSegment)path_.remove(index);
    }
 
    public JDRPathSegment setSegment(int index, JDRPathSegment segment)
-     throws ArrayIndexOutOfBoundsException
+     throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       return path_.setSegment(index, segment);
    }
 
-   public JDRPathSegment remove(int i)
+   public JDRPathSegment remove(int i) throws InvalidPathException
    {
       return path_.remove(i);
    }

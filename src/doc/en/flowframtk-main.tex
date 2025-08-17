@@ -6208,6 +6208,9 @@ The \menu{editpath.convert_to_move} menu item will convert the
 current segment to a \gls{gap} (\qt{move to}). This function will be
 unavailable if the current segment is already a \gls{gap} or if it
 isn't a normal path segment.
+If you want to close a sub path and move to the start of a new sub
+path, change the \gls{move-to} segment to a \gls{closing-move}
+segment with the \menu{editpath.close_sub_path} menu item.
 
 \menudef{menu.editpath.symmetry}
 
@@ -6291,6 +6294,32 @@ the path in \subfigref{fig:closepatha} was closed with a line;
 curve continuous at the join between adjacent segments;
 \subfigref{fig:closepathd} the path in \subfigref{fig:closepatha} was closed, merging
 the end points}
+
+\menudef{menu.editpath.close_sub_path}
+
+If a \gls{move-to} segment is selected or if the final segment of a
+\gls{path} is selected, then the \menu{editpath.close_sub_path} menu
+item can be used to close a \gls+{sub-path}.
+
+In the first case, where a \gls{move-to} segment is selected, the
+existing segment will be replaced with a special \gls+{closing-move}
+segment, which will draw a line from its starting \gls{controlpt} to the
+start of the \gls{sub-path} and then move to the \gls{controlpt} at the start of
+the next \gls{sub-path}. The line will move if the \gls{controlpt} at the
+start of the \gls{sub-path} is moved. The path will still be considered
+open if it was previously open.
+
+In the second case, if the final segment is selected but isn't a \gls{move-to}, a
+new \gls{closing-move} segment will be added and its end
+\gls{controlpt} will be merged to the \gls{path}['s] first
+\gls{controlpt}. The path will then be considered closed.
+
+To open a closed \gls{sub-path}, simply select the \gls{closing-move}
+segment and use the \menu{editpath.convert_to_move} menu item to 
+convert it to a normal \gls{move-to} segment (or convert to a line
+or a \gls{Bezier-curve}).
+
+TODO
 
 \menudef{menu.editpath.coordinates}
 
@@ -14045,12 +14074,24 @@ If no controls are anchored, the $-1$ is still required.
   \begin{syntaxline}
   \meta{id} \meta{specs}
   \end{syntaxline}
-  where \meta{id} is a \type{char} representing the segment type. This
-  can be one of: \code{B} (cubic \gls{Bezier-curve}), \code{L} (line) or
-  \code{M} (move). For versions below 1.8, the co-ordinates are
+  where \meta{id} is a \type{char} representing the segment type.
+  Valid identifiers are listed in \tableref{tab:jdrsegments}. 
+  For versions below 1.8, the co-ordinates are
   always \gls{bp}. As from version 1.8, the co-ordinate unit is as
   specified by the storage unit \hyperref[jdr:storageunit]{described
   above}.
+
+\FloatTable{tab:jdrsegments}
+{%
+  \begin{tabular}{ll}
+  \bfseries Identifier & \bfseries Description\\
+  \code{M} & \gls+{move-to}\\
+  \code{L} & line\\
+  \code{B} & cubic \gls+{Bezier-curve}\\
+  \code{Z} & \gls+{closing-move} (2.1 onwards)
+  \end{tabular}
+}
+{Path Segment Identifiers}
 
     \begin{enumerate}
     \item\label{jdr:bezier} \gls{Bezier-curve} segments are stored as follows:
@@ -14086,6 +14127,18 @@ If no controls are anchored, the $-1$ is still required.
     a \type{double}. The unit of
     measurement is \gls{bp} for versions below 1.8, otherwise it's the
     storage unit as \hyperref[jdr:storageunit]{described above}.
+
+    \item\label{jdr:closingmove}
+    The \gls+{closing-move} segment combines two actions in one. It closes
+    the sub path immediately before it and moves to the start of the
+    next sub-path. This is different from the closing path boolean
+    that determines whether or not to join the path start and end
+    points.
+    \begin{jdrversion}{2.1 onwards}
+    \meta{x1} \meta{y1}
+    \end{jdrversion}
+    The \meta{x1} and \meta{y1} are as for the line and move
+    segments.
     \end{enumerate}% end of segment info
 
   \end{enumerate}% end of path info
@@ -14315,15 +14368,15 @@ The \meta{modifier specs} are as follows:
       This is the same as for \hyperref[jdr:textarea]{text areas} but
       additionally includes the delimiters used by the
       \sty{pgf} package's text decoration function for version 1.8
-      onwards. These are both stored as a \type{char}.
-%\begin{jdrversion}{1.8--2.0}
-%Both \meta{left delim} and \meta{right delim} are stored as a
-%\type{char}.
-%\end{jdrversion}
-%\begin{jdrversion}{2.1 onwards}
-%Both \meta{left delim} and \meta{right delim} are stored as a
-%\type{integer} that corresponds to the character's codepoint.
-%\end{jdrversion}
+      onwards.
+\begin{jdrversion}{1.8--2.0}
+Both \meta{left delim} and \meta{right delim} are stored as a
+\type{char}.
+\end{jdrversion}
+\begin{jdrversion}{2.1 onwards}
+Both \meta{left delim} and \meta{right delim} are stored as a
+\type{integer} that corresponds to the character's codepoint.
+\end{jdrversion}
       \end{enumerate}% end of text-path font specs
 
     \item The \meta{text} is stored as a \type{string} and shouldn't be

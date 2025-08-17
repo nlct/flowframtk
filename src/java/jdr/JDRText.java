@@ -607,13 +607,13 @@ public class JDRText extends JDRCompleteObject
     * @return group containing new paths
     */
    public JDRGroup convertToPath() 
-      throws MissingMoveException,EmptyGroupException
+      throws InvalidPathException,EmptyGroupException
    {
       return convertToPath(new JDRBasicStroke(getCanvasGraphics()));
    }
 
    public JDRGroup convertToPath(JDRStroke stroke) 
-      throws MissingMoveException,EmptyGroupException
+      throws InvalidPathException,EmptyGroupException
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -672,6 +672,8 @@ public class JDRText extends JDRCompleteObject
          double oldX=0, oldY=0;
 
          boolean startFlag=true;
+         JDRSegment lastPostMoveSegment=null;
+         boolean isClosed = false;
 
          while (!pi.isDone())
          {
@@ -690,8 +692,19 @@ public class JDRText extends JDRCompleteObject
                   }
                   else
                   {
-                     JDRSegment segment = new JDRSegment(bpCG, oldX, oldY,
+                     JDRSegment segment;
+
+                     if (isClosed && lastPostMoveSegment != null)
+                     {
+                        segment = new JDRClosingMove(oldX, oldY,
+                         coords[0], coords[1], path, path.size(), lastPostMoveSegment);
+                     }
+                     else
+                     {
+                        segment = new JDRSegment(bpCG, oldX, oldY,
                                                    coords[0],coords[1]);
+                     }
+
                      oldX = coords[0];
                      oldY = coords[1];
                      if (path == null)
@@ -699,16 +712,22 @@ public class JDRText extends JDRCompleteObject
                         throw new MissingMoveException(cg);
                      }
                      path.add(segment);
+                     isClosed = false;
+                     lastPostMoveSegment = null;
                   }
                break;
                case PathIterator.SEG_LINETO :
                   JDRLine line = new JDRLine(bpCG, oldX, oldY, coords[0],coords[1]);
                   oldX = coords[0];
                   oldY = coords[1];
-                  path.add(line);
                   if (path == null)
                   {
                      throw new MissingMoveException(cg);
+                  }
+                  path.add(line);
+                  if (lastPostMoveSegment == null)
+                  {
+                     lastPostMoveSegment = line;
                   }
                break;
                case PathIterator.SEG_QUADTO :
@@ -717,10 +736,14 @@ public class JDRText extends JDRCompleteObject
                                             coords[2],coords[3]);
                   oldX = coords[2];
                   oldY = coords[3];
-                  path.add(curve);
                   if (path == null)
                   {
                      throw new MissingMoveException(cg);
+                  }
+                  path.add(curve);
+                  if (lastPostMoveSegment == null)
+                  {
+                     lastPostMoveSegment = curve;
                   }
                break;
                case PathIterator.SEG_CUBICTO :
@@ -730,11 +753,19 @@ public class JDRText extends JDRCompleteObject
                                      coords[4],coords[5]);
                   oldX = coords[4];
                   oldY = coords[5];
-                  path.add(curve);
                   if (path == null)
                   {
                      throw new MissingMoveException(cg);
                   }
+                  path.add(curve);
+                  if (lastPostMoveSegment == null)
+                  {
+                     lastPostMoveSegment = curve;
+                  }
+               break;
+               case PathIterator.SEG_CLOSE :
+                  lastPostMoveSegment = null;
+                  isClosed = true;
                break;
             }
 
@@ -743,13 +774,21 @@ public class JDRText extends JDRCompleteObject
 
          if (path != null)
          {
+            if (isClosed && !path.isClosed())
+            {
+               path.close();
+               isClosed = false;
+            }
+
             if (bpCG != cg)
             {
                path.applyCanvasGraphics(cg);
             }
+
             group.add(path);
          }
       }
+
 
       if (group.size() == 0)
       {

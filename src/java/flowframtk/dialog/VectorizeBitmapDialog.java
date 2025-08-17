@@ -18332,7 +18332,7 @@ class Result
    }
 
    public JDRPath getJDRPath(CanvasGraphics cg)
-     throws MissingMoveException,EmptyPathException
+     throws InvalidPathException
    {
       PathIterator pi = shape.getPathIterator(null);
 
