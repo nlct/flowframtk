@@ -194,12 +194,15 @@ public class JDRConverter
          
       helpLib.printSyntaxItem(getMessage("syntax.out", "--output", "-o"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.from", "--from", "-f"));
+      helpLib.printSyntaxItem(getMessage("syntax.to", "--to", "-t"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.jdr_version", "--jdr-version"));
+
       helpLib.printSyntaxItem(getMessage("syntax.settings", "--settings"));
 
       helpLib.printSyntaxItem(getMessage("syntax.in.charset", "--in-charset"));
       helpLib.printSyntaxItem(getMessage("syntax.out.charset", "--out-charset"));
-
-      helpLib.printSyntaxItem(getMessage("syntax.jdr_version", "--jdr-version"));
 
       helpLib.printSyntaxItem(getMessage("syntax.list_input_formats",
        "--list-input-formats"));
@@ -304,8 +307,8 @@ public class JDRConverter
              || arg.equals("--output") || arg.equals("-o")
              || arg.equals("--in-charset")
              || arg.equals("--out-charset")
-             || arg.equals("--from")
-             || arg.equals("--to")
+             || arg.equals("--from") || arg.equals("-f")
+             || arg.equals("--to") || arg.equals("-t")
              || arg.equals("--jdr-version")
              || arg.equals("--settings")
                ) 
@@ -538,7 +541,7 @@ public class JDRConverter
                    getMessage("error.syntax.invalid_file_version", "JDR/AJR", ver));
                }
             }
-            else if (isArg(arg, "--to", returnVals))
+            else if (isArg(arg, "--to", "-t", returnVals))
             {
                if (returnVals[0] == null)
                {
@@ -599,7 +602,7 @@ public class JDRConverter
                   }
                }
             }
-            else if (isArg(arg, "--from", returnVals))
+            else if (isArg(arg, "--from", "-f", returnVals))
             {
                if (returnVals[0] == null)
                {

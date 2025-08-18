@@ -12,12 +12,14 @@ Nicola Talbot
 <entry key="syntax.options">{0} [&lt;option&gt;]+ &lt;input file&gt; &lt;output file&gt;</entry>
 <entry key="syntax.in">{0} (or {1}) &lt;file&gt;	Input file name.</entry>
 <entry key="syntax.out">{0} (or {1}) &lt;file&gt;	The output file.</entry>
+<entry key="syntax.from">{0} (or {1}) &lt;format&gt;	Input file format.</entry>
+<entry key="syntax.to">{0} (or {1}) &lt;format&gt;	Output file format.</entry>
 <entry key="syntax.debug">{0}	Enable on debug mode.</entry>
 <entry key="syntax.locale">{0} &lt;lang-tag&gt;	Use localisation support for the given locale (if available).</entry>
 <entry key="syntax.jdr_version">{0} &lt;version&gt;	If the output format is JDR or AJR, use this version.</entry>
 
 <entry key="syntax.list_output_formats">{0}	List all supported output formats and exit.</entry>
-<entry key="syntax.list_input_formats">{0}	List all supported output formats and exit.</entry>
+<entry key="syntax.list_input_formats">{0}	List all supported input formats and exit.</entry>
 
 <entry key="syntax.settings">{0} &lt;value&gt;	Indicates what settings should be saved (only applicable if the output format is JDR or AJR). The &lt;value&gt; may be one of:
 		"none"	Don''t save any settings.
