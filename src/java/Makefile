@@ -11,7 +11,7 @@ all	: $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar \
 	  $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrview.jar \
 	  $(LIBDIR)/jdrinfo.jar $(LIBDIR)/jdrconverter.jar \
 	  $(LIBDIR)/eps2jdr.jar \
-	  $(LIBDIR)/jdr2eps.jar $(LIBDIR)/jdr2png.jar \
+	  $(LIBDIR)/jdr2png.jar \
 	  $(LIBDIR)/jdr2svg.jar  \
 	  $(LIBDIR)/svg2jdr.jar
 
@@ -41,8 +41,6 @@ jdrview	: $(LIBDIR)/jdrview.jar
 ../lib/svg2jdr.jar	: $(LIBDIR)/svg2jdr.jar
 
 ../lib/eps2jdr.jar	: $(LIBDIR)/eps2jdr.jar
-
-../lib/jdr2eps.jar	: $(LIBDIR)/jdr2eps.jar
 
 ../lib/jdr2png.jar	: $(LIBDIR)/jdr2png.jar
 
@@ -111,13 +109,6 @@ $(LIBDIR)/eps2jdr.jar	: classes/$(CLASSTREE)/eps2jdr/Eps2Jdr.class \
 		jar cmf ../eps2jdr/Manifest.txt \
 	          $(LIBDIR)/eps2jdr.jar \
 		  $(CLASSTREE)/eps2jdr/*.class
-
-$(LIBDIR)/jdr2eps.jar	: classes/$(CLASSTREE)/jdr2eps/Jdr2Eps.class \
-		  jdr2eps/Manifest.txt
-		cd classes ; \
-		jar cmf ../jdr2eps/Manifest.txt \
-	          $(LIBDIR)/jdr2eps.jar \
-		  $(CLASSTREE)/jdr2eps/*.class
 
 $(LIBDIR)/jdr2png.jar	: classes/$(CLASSTREE)/jdr2png/Jdr2Png.class \
 		  jdr2png/Manifest.txt
@@ -205,14 +196,6 @@ classes/$(CLASSTREE)/eps2jdr/Eps2Jdr.class : \
 	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
 	*.java
 
-classes/$(CLASSTREE)/jdr2eps/Jdr2Eps.class : \
-	classes \
-	jdr2eps/*.java
-	cd jdr2eps ; \
-	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar \
-	*.java
-
 classes/$(CLASSTREE)/jdr2png/Jdr2Png.class : \
 	classes \
 	jdr2png/*.java
@@ -254,6 +237,6 @@ classes/$(CLASSTREE)/flowframtk	:
 clean	:
 	\rm -f $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar $(LIBDIR)/jdrview.jar
 	\rm -f $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrconverter.jar  $(LIBDIR)/jdrinfo.jar
-	\rm -f $(LIBDIR)/eps2jdr.jar $(LIBDIR)/jdr2eps.jar $(LIBDIR)/jdr2png.jar
+	\rm -f $(LIBDIR)/eps2jdr.jar $(LIBDIR)/jdr2png.jar
 	\rm -f $(LIBDIR)/jdr2svg.jar $(LIBDIR)/svg2jdr.jar
 	\rm -f -r classes

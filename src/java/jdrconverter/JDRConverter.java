@@ -974,6 +974,9 @@ public class JDRConverter
                  pgf.save(paths, useTypeblock);
               }
             break;
+            case EPS:
+               EPS.save(paths, out, NAME);
+            break;
             default:
               throw new InvalidFormatException(
                 getMessage("error.cant_save_format", outFormat));
