@@ -1,2 +1,2 @@
 @echo off
-java -jar "%~dp0\..\lib\svg2jdr.jar" %*
+java -jar "%~dp0\..\lib\jdrconverter.jar" --from SVG --to JDR %*

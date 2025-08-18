@@ -23,13 +23,17 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.charset.Charset;
 import java.util.Locale;
-
+import java.util.Properties;
 import java.text.MessageFormat;
+import java.awt.geom.NoninvertibleTransformException;
+import org.xml.sax.SAXException;
 
 import com.dickimawbooks.texjavahelplib.*;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
+import com.dickimawbooks.jdr.io.eps.*;
+import com.dickimawbooks.jdr.io.svg.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.JDRResources;
 
@@ -38,6 +42,134 @@ public class JDRConverter
    public JDRConverter()
    {
       msgPublisher = new ConverterPublisher(this);
+      userConfigProperties = new Properties();
+   }
+
+   protected void initConfig() throws IOException
+   {
+      userConfigDir = JDRResources.findUserConfigDir(false);
+      BufferedReader in = null;
+      File file;
+
+      try
+      {
+         if (userConfigDir != null && userConfigDir.exists())
+         {
+            file = new File(userConfigDir, "flowframtk.conf");
+
+            if (!file.exists())
+            {
+               file = new File(userConfigDir, "jpgfdraw.conf");
+            }
+
+            if (file.exists())
+            {
+               in = new BufferedReader(new FileReader(file));
+               loadConfig(in);
+               in.close();
+               in = null;
+            }
+
+            normalsize = getIntProperty("normalsize", normalsize);
+
+            useRelativeBitmaps = getBoolProperty("relative_bitmaps",
+               useRelativeBitmaps);
+
+            useTypeblockAsBBox = getBoolProperty("use_typeblock_as_bbox",
+               useTypeblockAsBBox);
+
+            addAlphaChannel = getBoolProperty("png_alpha", addAlphaChannel);
+
+            encapsulate = getBoolProperty("png_encap", encapsulate);
+
+            flowframeAbsPages = getBoolProperty("flowframe_abs_pages",
+               flowframeAbsPages);
+
+            usePdfInfo = getBoolProperty("pdfinfo", encapsulate);
+
+            useHPaddingShapepar = getBoolProperty("shapeparhpadding",
+               useHPaddingShapepar);
+
+            textualShadingExportSetting = getIntProperty("textualshadingexport",
+               textualShadingExportSetting);
+
+            textualOutlineExportSetting = getIntProperty("textpathoutlineexport",
+               textualOutlineExportSetting);
+
+            file = new File(userConfigDir, "languages.conf");
+
+            if (file.exists())
+            {
+               in = Files.newBufferedReader(file.toPath());
+               userConfigProperties.load(in);
+               in.close();
+               in = null;
+            }
+         }
+      }
+      finally
+      {
+         if (in != null)
+         {
+            in.close();
+         }
+      }
+   }
+
+
+   protected void loadConfig(BufferedReader in) throws IOException
+   {
+      String line;
+
+      while ((line = in.readLine()) != null)
+      {
+         String trimmed = line.trim();
+
+         if (trimmed.isEmpty() || trimmed.startsWith("#")) continue;
+
+         String[] split = line.split("=", 2);
+
+         if (split.length == 2)
+         {
+            userConfigProperties.put(split[0], split[1]);
+         }
+      }
+   }
+
+   protected boolean getBoolProperty(String propName, boolean defValue)
+   {
+      String val = userConfigProperties.getProperty(propName);
+
+      if (val != null)
+      {
+         try
+         {
+            return (Integer.parseInt(val) == 1);
+         }
+         catch (NumberFormatException e)
+         {
+         }
+      }
+
+      return defValue;
+   }
+
+   protected int getIntProperty(String propName, int defValue)
+   {
+      String val = userConfigProperties.getProperty(propName);
+
+      if (val != null)
+      {
+         try
+         {
+            return Integer.parseInt(val);
+         }
+         catch (NumberFormatException e)
+         {
+         }
+      }
+
+      return defValue;
    }
 
    protected void initHelpLibrary() throws IOException
@@ -70,6 +202,8 @@ public class JDRConverter
 
       if (helpSetLocale == null)
       {
+         String dictLangTag = userConfigProperties.getProperty("dict_lang");
+
          if (dictLangTag == null)
          {
             helpSetLocale = new HelpSetLocale(Locale.getDefault());
@@ -90,6 +224,11 @@ public class JDRConverter
    public TeXJavaHelpLib getHelpLib()
    {
       return helpLib;
+   }
+
+   public ConverterPublisher getMessageSystem()
+   {
+      return msgPublisher;
    }
 
    public String getMessageWithFallback(String label,
@@ -215,7 +354,15 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
         "--[no]bitmaps-to-eps"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.latex_dvi", "--latex-dvi"));
+      helpLib.printSyntaxItem(getMessage("syntax.latex_pdf", "--latex-pdf"));
+      helpLib.printSyntaxItem(getMessage("syntax.dvips", "--dvips"));
+      helpLib.printSyntaxItem(getMessage("syntax.dvisvgm", "--dvisvgm"));
+      helpLib.printSyntaxItem(getMessage("syntax.libgs", "--libgs"));
+
       helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no]alpha"));
+      helpLib.printSyntaxItem(getMessage("syntax.normalsize", "--normalsize"));
+      helpLib.printSyntaxItem(getMessage("syntax.bitmap_basename", "--bitmap-basename"));
 
       System.out.println();
 
@@ -315,6 +462,8 @@ public class JDRConverter
             {
                cliParser.setHelpLib(helpLib);
             }
+
+            initConfig();
          }
          catch (IOException e)
          {
@@ -339,6 +488,13 @@ public class JDRConverter
              || arg.equals("--to") || arg.equals("-t")
              || arg.equals("--jdr-version")
              || arg.equals("--settings")
+             || arg.equals("--normalsize")
+             || arg.equals("--bitmap-basename")
+             || arg.equals("--latex-dvi")
+             || arg.equals("--latex-pdf")
+             || arg.equals("--dvips")
+             || arg.equals("--dvisvgm")
+             || arg.equals("--libgs")
                ) 
             {
                return 1;
@@ -351,6 +507,7 @@ public class JDRConverter
          public boolean setDebugOption(String option, Integer value)
          throws InvalidSyntaxException
          {
+            // called by --debug
             debugMode = true;
 
             return true;
@@ -388,13 +545,14 @@ public class JDRConverter
                   throw new InvalidSyntaxException("Missing value after --locale");
                }
 
-               dictLangTag = originalArgList[preparseIndex];
+               userConfigProperties.put("dict_lang", originalArgList[preparseIndex]);
 
                ensureHelpSetLoaded();
             }
             else if (originalArgList[preparseIndex].startsWith("--locale="))
             {
-               dictLangTag = originalArgList[preparseIndex].substring(10);
+               userConfigProperties.put("dict_lang",
+                  originalArgList[preparseIndex].substring(10));
 
                ensureHelpSetLoaded();
             }
@@ -453,6 +611,10 @@ public class JDRConverter
             {
                deque.add("--nouse-typeblock");
             }
+            else if (originalArgList[preparseIndex].equals("-bitmap"))
+            {
+               deque.add("--bitmap-basename");
+            }
             else if (originalArgList[preparseIndex].equals("-nosettings")
                   || originalArgList[preparseIndex].equals("-doc")
                   || originalArgList[preparseIndex].equals("-nodoc")
@@ -460,6 +622,7 @@ public class JDRConverter
                   || originalArgList[preparseIndex].equals("-noalpha")
                   || originalArgList[preparseIndex].equals("-crop")
                   || originalArgList[preparseIndex].equals("-nocrop")
+                  || originalArgList[preparseIndex].equals("-normalsize")
                     )
             {
                deque.add("-"+originalArgList[preparseIndex]);
@@ -537,11 +700,11 @@ public class JDRConverter
             }
             else if (arg.equals("--use-typeblock"))
             {
-               useTypeblock = true;
+               useTypeblockAsBBox = true;
             }
             else if (arg.equals("--nouse-typeblock"))
             {
-               useTypeblock = false;
+               useTypeblockAsBBox = false;
             }
             else if (arg.equals("--crop") || arg.equals("-C"))
             {
@@ -845,6 +1008,76 @@ public class JDRConverter
                      getMessage("error.syntax.invalid_settings", val));
                }
             }
+            else if (isIntArg(arg, "--normalsize", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               normalsize = returnVals[0].intValue();
+            }
+            else if (isArg(arg, "--bitmap-basename", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               bitmapBase = returnVals[0].toString();
+            }
+            else if (isArg(arg, "--latex-dvi", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               userConfigProperties.put("latex_app", returnVals[0].toString());
+            }
+            else if (isArg(arg, "--pdflatex-dvi", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               userConfigProperties.put("pdflatex_app", returnVals[0].toString());
+            }
+            else if (isArg(arg, "--dvips", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               userConfigProperties.put("dvips_app", returnVals[0].toString());
+            }
+            else if (isArg(arg, "--dvisvgm", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               userConfigProperties.put("dvisvgm_app", returnVals[0].toString());
+            }
+            else if (isArg(arg, "--libgs", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               userConfigProperties.put("libgs_app", returnVals[0].toString());
+            }
             else
             {
                return false;
@@ -896,14 +1129,47 @@ public class JDRConverter
             outFormat = FileFormatType.JDR;
          }
       }
+
+      if (!outFormat.canTeXToolsCreate())
+      {
+         useLaTeX = false;
+      }
+      else if (outFormat.requiresTeXTools())
+      {
+         useLaTeX = true;
+      }
+
+      if (bitmapBase == null)
+      {
+         String name = outFile.getName();
+         int idx = name.lastIndexOf(".");
+
+         if (idx > 0)
+         {
+            bitmapBase = name.substring(0, idx);
+         }
+         else
+         {
+            bitmapBase = name;
+         }
+      }
+
    }
 
-   protected void run() throws IOException,InvalidFormatException
+   protected void run()
+     throws IOException,
+            InvalidFormatException,
+            NoninvertibleTransformException,
+            InterruptedException,
+            SAXException
    {
       JDRGroup paths = null;
 
       CanvasGraphics canvasGraphics 
          = new CanvasGraphics(msgPublisher);
+
+      canvasGraphics.getLaTeXFontBase().setNormalSize(normalsize);
+      canvasGraphics.setUseAbsolutePages(flowframeAbsPages);
 
       BufferedReader in = null;
       DataInputStream din = null;
@@ -940,6 +1206,13 @@ public class JDRConverter
               paths = ajr.load(in, canvasGraphics);
               settingsFlag = ajr.getLastLoadedSettingsID();
             break;
+            case EPS:
+               paths = loadEps(canvasGraphics, in);
+            break;
+            case SVG:
+// TODO fix this
+               paths = SVG.load(canvasGraphics, in);
+            break;
             default:
               throw new InvalidFormatException(
                 getMessage("error.cant_load_format", inFormat));
@@ -956,6 +1229,11 @@ public class JDRConverter
          {
             din.close();
          }
+      }
+
+      if (paths == null || paths.size() == 0)
+      {
+         throw new InvalidFormatException(getMessage("error.no_image"));
       }
 
       JDRPaper paper = null;
@@ -1022,20 +1300,23 @@ public class JDRConverter
       PrintWriter out = null;
       DataOutputStream dout = null;
 
-      if (outFormat.isTextFile())
+      if (!useLaTeX)
       {
-         if (outCharset == null)
+         if (outFormat.isTextFile())
          {
-            out = new PrintWriter(Files.newBufferedWriter(outFile.toPath()));
+            if (outCharset == null)
+            {
+               out = new PrintWriter(Files.newBufferedWriter(outFile.toPath()));
+            }
+            else
+            {
+               out = new PrintWriter(Files.newBufferedWriter(outFile.toPath(), inCharset));
+            }
          }
-         else
+         else if (outFormat != FileFormatType.PNG)
          {
-            out = new PrintWriter(Files.newBufferedWriter(outFile.toPath(), inCharset));
+            dout = new DataOutputStream(new FileOutputStream(outFile));
          }
-      }
-      else if (outFormat != FileFormatType.PNG)
-      {
-         dout = new DataOutputStream(new FileOutputStream(outFile));
       }
 
       try
@@ -1051,39 +1332,23 @@ public class JDRConverter
               ajr.save(paths, out, outVersion, settingsFlag);
             break;
             case TEX:
-              PGF pgf = new PGF(outFile.getParentFile(), out);
-              pgf.comment(getMessage("message.created_by", NAME));
-              pgf.writeCreationDate();
-
-              if (completeDoc)
-              {
-                 pgf.saveDoc(paths, null, encapsulate, convertBitmapToEps, useTypeblock);
-              }
-              else
-              {
-                 pgf.println("\\iffalse");
-
-                 pgf.comment(getMessage("message.required_preamble_commands"));
-                 pgf.writePreambleCommands(paths);
-
-                 pgf.comment(getMessage("message.assumed_normalsize",
-                  paths.getCanvasGraphics().getLaTeXNormalSize()));
-
-                 pgf.comment(getMessage("message.end_preamble_info"));
-
-                 pgf.println("\\fi");
-
-                 pgf.save(paths, useTypeblock);
-              }
+              savePgf(paths, out);
+            break;
+            case CLS:
+            case STY:
+              saveFlf(paths, out);
             break;
             case EPS:
-               EPS.save(paths, out, NAME);
+               saveEps(paths, out);
             break;
             case PNG:
                PNG.save(paths, outFile, addAlphaChannel, encapsulate);
             break;
             case SVG:
-               SVG.save(paths, paths.getDescription(), out);
+               saveSvg(paths, out);
+            break;
+            case PDF:
+               savePdf(paths);
             break;
             default:
               throw new InvalidFormatException(
@@ -1097,6 +1362,326 @@ public class JDRConverter
             out.close();
          }
       }
+   }
+
+   protected void savePgf(JDRGroup paths, PrintWriter out)
+     throws IOException,InvalidFormatException
+   {
+      PGF pgf = new PGF(outFile.getParentFile(), out);
+      pgf.comment(getMessage("message.created_by", NAME));
+      pgf.writeCreationDate();
+
+      if (completeDoc)
+      {
+         pgf.saveDoc(paths, null, encapsulate, convertBitmapToEps, useTypeblockAsBBox);
+      }
+      else
+      {
+         pgf.println("\\iffalse");
+
+         pgf.comment(getMessage("message.required_preamble_commands"));
+         pgf.writePreambleCommands(paths);
+
+         pgf.comment(getMessage("message.assumed_normalsize",
+          paths.getCanvasGraphics().getLaTeXNormalSize()));
+
+         pgf.comment(getMessage("message.end_preamble_info"));
+
+         pgf.println("\\fi");
+
+         pgf.save(paths, useTypeblockAsBBox);
+      }
+   }
+
+   protected void saveFlf(JDRGroup paths, PrintWriter out)
+     throws IOException,InvalidFormatException
+   {
+      File dir = outFile.getParentFile();
+
+      if (dir == null)
+      {
+         dir = new File(System.getProperty("user.dir"));
+      }
+
+      FLF flf = new FLF(dir, out);
+
+      flf.setTextualExportShadingSetting(
+         getTextualExportShadingSetting());
+      flf.setTextPathExportOutlineSetting(
+         getTextPathExportOutlineSetting());
+
+      flf.comment(getMessage("tex.comment.created_by",
+            NAME, JDRResources.APP_VERSION));
+      flf.writeCreationDate();
+
+      if (outFormat == FileFormatType.STY)
+      {
+         flf.comment(getMessage("tex.comment.fontsize",
+            ""+normalsize+"pt"));
+      }
+
+      flf.save(paths, outFile.getName(), useHPaddingShapepar);
+
+      if (!paths.anyFlowFrameData())
+      {
+         getMessageSystem().warning(getMessage("warning.no_flowframe_data"));
+      }
+   }
+
+   protected void savePdf(JDRGroup paths)
+      throws IOException,InvalidFormatException,InterruptedException
+   {
+      ExportImage exporter = new ExportImage(this, outFile, paths)
+       {
+          @Override
+          protected File processImage(String texBase)
+            throws IOException,InterruptedException
+          {
+             File dir = getTeXFile().getParentFile();
+
+             File pdfFile = new File(dir, texBase+".pdf");
+
+             exec(new String[] {getPdfLaTeXPath(), "-interaction", "batchmode", texBase});
+
+             return pdfFile;
+          }
+       };
+
+       exporter.createImage();
+   }
+
+   protected void saveSvg(JDRGroup paths, PrintWriter out)
+      throws IOException,InvalidFormatException,InterruptedException
+   {
+      if (useLaTeX)
+      {
+         ExportImage exporter = new ExportImage(this, outFile, paths)
+          {
+             @Override
+             protected File processImage(String texBase)
+               throws IOException,InterruptedException
+             {
+                File dir = getTeXFile().getParentFile();
+
+                File dviFile = new File(dir, texBase+".dvi");
+                dviFile.deleteOnExit();
+
+                exec(new String[] {getDviLaTeXPath(),
+                 "-interaction", "batchmode", texBase});
+
+                String[] cmd;
+
+                File svgFile = new File(dir, texBase+".svg");
+
+                String libgs = getLibGsPath();
+
+                if (libgs == null || libgs.isEmpty())
+                {
+                   cmd = new String[] {getDviSvgmPath(), "-o", svgFile.getName(),
+                      dviFile.getName()};
+                }
+                else
+                {
+                   cmd = new String[] {getDviSvgmPath(),
+                     "--libgs="+libgs,
+                     "-o", svgFile.getName(), dviFile.getName()};
+                }
+
+                exec(cmd);
+
+                return svgFile;
+             }
+          };
+
+          exporter.createImage();
+      }
+      else
+      {
+         SVG.save(paths, paths.getDescription(), out);
+      }
+   }
+
+   protected void saveEps(JDRGroup paths, PrintWriter out)
+    throws IOException,InvalidFormatException,InterruptedException
+   {
+      if (useLaTeX)
+      {
+         ExportImage exporter = new ExportImage(this, outFile, paths)
+          {
+             @Override
+             protected File processImage(String texBase)
+               throws IOException,InterruptedException
+             {
+                File dir = getTeXFile().getParentFile();
+
+                File dviFile = new File(dir, texBase+".dvi");
+                dviFile.deleteOnExit();
+
+                exec(new String[] {getDviLaTeXPath(),
+                  "-interaction", "batchmode", texBase});
+
+                File epsFile = new File(dir, outputFile.getName());
+
+                exec(new String[] {getDviPsPath(),
+                  "-o", epsFile.getName(), dviFile.getName()});
+
+                return epsFile;
+             }
+          };
+
+          exporter.createImage();
+      }
+      else
+      {
+         EPS.save(paths, out, NAME);
+      }
+   }
+
+   protected JDRGroup loadEps(CanvasGraphics cg, BufferedReader in)
+   throws IOException,InvalidFormatException,NoninvertibleTransformException
+   {
+      if (userConfigDir != null)
+      {
+         File file = new File(userConfigDir, "psfontmap");
+
+         if (file.exists() && file.isFile())
+         {
+            LaTeXFont.loadPostScriptMappings(getMessageSystem(), file);
+         }
+      }
+
+      return EPS.load(cg, in, bitmapBase);
+   }
+
+
+   public String getDviLaTeXPath()
+   {
+      return userConfigProperties.getProperty("latex_app", "latex");
+   }
+
+   public String getPdfLaTeXPath()
+   {
+      return userConfigProperties.getProperty("pdflatex_app", "pdflatex");
+   }
+
+   public String getDviPsPath()
+   {
+      return userConfigProperties.getProperty("dvips_app", "dvips");
+   }
+
+   public String getDviSvgmPath()
+   {
+      return userConfigProperties.getProperty("dvisvgm_app", "dvisvgm");
+   }
+
+   public String getLibGsPath()
+   {
+      String path = userConfigProperties.getProperty("libgs");
+
+      if (path == null)
+      {
+         path = System.getenv("LIBGS");
+      }
+
+      return path;
+   }
+
+   public String getBitmapCs()
+   {
+      return userConfigProperties.getProperty("bitmap_default_cs", "\\includegraphics");
+   }
+
+   public long getMaxProcessTime()
+   {
+      return maxProcessTime;
+   }
+
+   public boolean isUsePdfInfoOn()
+   {
+      return usePdfInfo;
+   }
+
+   public int getTextualExportShadingSetting()
+   {
+      return textualShadingExportSetting;
+   }
+
+   public int getTextPathExportOutlineSetting()
+   {
+      return textualOutlineExportSetting;
+   }
+
+   public boolean isEncapsulateOn()
+   {
+      return encapsulate;
+   }
+
+   public boolean isConvertBitmapToEpsOn()
+   {
+      return convertBitmapToEps;
+   }
+
+   public boolean isUseTypeblockAsBoundingBoxOn()
+   {
+      return useTypeblockAsBBox;
+   }
+
+   protected void initConfigPreamble() throws IOException
+   {
+      File file = new File(userConfigDir, "preamble.tex");
+
+      if (file.exists())
+      {
+         StringBuilder builder = new StringBuilder();
+
+         BufferedReader in = null;
+
+         String eol = System.getProperty("line.separator");
+
+         try
+         {
+            in = Files.newBufferedReader(file.toPath());
+
+            String line;
+
+            while ((line = in.readLine()) != null)
+            {
+               builder.append(line);
+               builder.append(eol);
+            }
+         }
+         finally
+         {
+            if (in != null)
+            {
+               in.close();
+            }
+         }
+
+         configPreamble = builder.toString();
+      }
+   }
+
+   public String getConfigPreamble()
+   {
+      if (configPreamble == null)
+      {
+         configPreamble = "";
+
+         if (userConfigDir != null)
+         {
+            try
+            {
+               initConfigPreamble();
+            }
+            catch (IOException e)
+            {
+               getMessageSystem().warning(e);
+            }
+         }
+      }
+
+      return configPreamble;
    }
 
    public static void main(String[] args)
@@ -1118,20 +1703,35 @@ public class JDRConverter
       {
          app.error(null, e);
 
+         e.printStackTrace();
+
          System.exit(EXIT_OTHER);
       }
    }
 
    protected CLISyntaxParser cliParser;
-   protected JDRDefaultMessage msgPublisher;
+   protected ConverterPublisher msgPublisher;
+
    protected boolean debugMode = false;
    protected boolean shownVersion = false;
    protected File inFile, outFile; // --in / -i , --output / -o
    protected boolean completeDoc = false; // --doc
-   protected boolean useTypeblock = false; // --use-typeblock
+   protected boolean useTypeblockAsBBox = false; // --use-typeblock
    protected boolean encapsulate = false; // --crop / -C
    protected boolean convertBitmapToEps = false; // --bitmaps-to-eps
    protected boolean addAlphaChannel = false; // --alpha
+   protected String bitmapBase; // --bitmap-basename
+   protected boolean useRelativeBitmaps = true;
+   protected boolean flowframeAbsPages = false;
+   protected boolean usePdfInfo = false;
+   protected boolean antialias=true, renderquality=true;
+   protected long maxProcessTime = 300000L;
+   protected boolean useLaTeX=false;
+   protected int textualShadingExportSetting = TeX.TEXTUAL_EXPORT_SHADING_AVERAGE;
+   protected int textualOutlineExportSetting = TeX.TEXTPATH_EXPORT_OUTLINE_TO_PATH;
+   protected boolean useHPaddingShapepar = false;
+
+   protected int normalsize=10;// --normalsize
 
    // --settings --nosettings
    protected SaveSettingsType saveSettingsType = SaveSettingsType.MATCH_INPUT;
@@ -1144,122 +1744,13 @@ public class JDRConverter
    TeXJavaHelpLib helpLib;
    private TeXJavaHelpLibAppAdapter helpLibApp;
    private HelpSetLocale helpSetLocale;
-   private String dictLangTag;
+
+   private File userConfigDir = null;
+   private Properties userConfigProperties = null;
+   private String configPreamble=null;
 
    public static final String NAME = "jdrconverter";
 
    public static final int EXIT_SYNTAX=1;
    public static final int EXIT_OTHER=2;
-}
-
-enum SaveSettingsType
-{
-   NONE("none", 0), ALL("all", 1), PAPER_ONLY("paper-only", 2),
-   MATCH_INPUT("match-input", 3);
-
-   private SaveSettingsType(final String tag, final int id)
-   {
-      this.tag = tag;
-      this.id = id;
-   }
-
-   public static SaveSettingsType getFromTag(String typeTag)
-   {
-      for (SaveSettingsType type : values())
-      {
-         if (type.tag.equals(typeTag))
-         {
-            return type;
-         }
-      }
-
-      return null;
-   }
-
-   public static SaveSettingsType valueOf(int typeId)
-   {
-      for (SaveSettingsType type : values())
-      {
-         if (type.id == typeId)
-         {
-            return type;
-         }
-      }
-
-      return null;
-   }
-
-   public String getTag()
-   {
-      return tag;
-   }
-
-   public int getId()
-   {
-      return id;
-   }
-
-   private final String tag;
-   private final int id;
-}
-
-enum FileFormatType
-{
-  JDR(true, false), AJR(true, true), EPS(true, true), SVG(true, true), 
-  PNG(false, false), TEX(false, true), CLS(false, true), STY(false, true);
-
-  private FileFormatType(final boolean inputSupported, final boolean isTextFile)
-  {
-     this.inputSupported = inputSupported;
-     this.isTextFile = isTextFile;
-  }
-
-  public boolean isInputSupported()
-  {
-     return inputSupported;
-  }
-
-  public boolean isTextFile()
-  {
-     return isTextFile;
-  }
-
-  public static FileFormatType getFormat(File file)
-  {
-      FileFormatType type = null;
-
-      // guess from file extension
-
-      String name = file.getName();
-      int idx = name.lastIndexOf(".");
-
-      if (idx > 0)
-      {
-         String ext = name.substring(idx+1).toUpperCase();
-
-         type = valueOf(ext);
-      }
-
-      return type;
-  }
-
-  private final boolean inputSupported;
-  private final boolean isTextFile;
-}
-
-class ConverterPublisher extends JDRDefaultMessage
-{
-   public ConverterPublisher(JDRConverter converter)
-   {
-      this.converter = converter;
-   }
-
-   @Override
-   public String getMessageWithFallback(String tag, String altFormat,
-     Object... values)
-   {  
-      return converter.getMessageWithFallback(tag, altFormat, values);
-   }
-
-   JDRConverter converter;
 }

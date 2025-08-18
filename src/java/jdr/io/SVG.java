@@ -116,15 +116,6 @@ public class SVG
    public static JDRGroup load(CanvasGraphics cg, File file)
      throws SAXException,IOException
    {
-      XMLReader xr = XMLReaderFactory.createXMLReader();
-
-      JDRGroup group = new JDRGroup(cg);
-
-      SVGHandler handler = new SVGHandler(group);
-
-      xr.setContentHandler(handler);
-      xr.setErrorHandler(handler);
-
       JDRMessage msgSys = cg.getMessageSystem();
 
       FileReader r = new FileReader(file);
@@ -136,7 +127,24 @@ public class SVG
           "Loading ''{0}''",
           file.getAbsolutePath())));
 
-      xr.parse(new InputSource(r));
+      return load(cg, r);
+   }
+
+   public static JDRGroup load(CanvasGraphics cg, Reader reader)
+     throws SAXException,IOException
+   {
+      XMLReader xr = XMLReaderFactory.createXMLReader();
+
+      JDRGroup group = new JDRGroup(cg);
+
+      SVGHandler handler = new SVGHandler(group);
+
+      xr.setContentHandler(handler);
+      xr.setErrorHandler(handler);
+
+      JDRMessage msgSys = cg.getMessageSystem();
+
+      xr.parse(new InputSource(reader));
 
       return group;
    }

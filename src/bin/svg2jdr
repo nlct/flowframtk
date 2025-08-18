@@ -1,4 +1,4 @@
 #!/bin/sh
 
 bindir=`dirname $0`
-java -jar "$bindir/../lib/svg2jdr.jar" "$@"
+java -jar "$bindir/../lib/jdrconverter.jar" --from SVG --to JDR "$@"

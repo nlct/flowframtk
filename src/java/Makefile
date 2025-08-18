@@ -9,9 +9,7 @@ target_version := --release 8 -Xlint:-options
 
 all	: $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar \
 	  $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrview.jar \
-	  $(LIBDIR)/jdrinfo.jar $(LIBDIR)/jdrconverter.jar \
-	  $(LIBDIR)/eps2jdr.jar \
-	  $(LIBDIR)/svg2jdr.jar
+	  $(LIBDIR)/jdrinfo.jar $(LIBDIR)/jdrconverter.jar 
 
 jdr	: $(LIBDIR)/jdr.jar
 
@@ -35,10 +33,6 @@ jdrview	: $(LIBDIR)/jdrview.jar
 ../lib/jdrconverter.jar	: $(LIBDIR)/jdrconverter.jar
 
 ../lib/jdrinfo.jar	: $(LIBDIR)/jdrinfo.jar
-
-../lib/svg2jdr.jar	: $(LIBDIR)/svg2jdr.jar
-
-../lib/eps2jdr.jar	: $(LIBDIR)/eps2jdr.jar
 
 $(LIBDIR)/jdr.jar	: classes/$(CLASSTREE)/jdr/JDRObject.class
 	cd classes ; \
@@ -97,20 +91,6 @@ $(LIBDIR)/jdrinfo.jar	: classes/$(CLASSTREE)/jdrinfo/JdrInfo.class \
 	          $(LIBDIR)/jdrinfo.jar \
 		  $(CLASSTREE)/jdrinfo/*.class
 
-$(LIBDIR)/eps2jdr.jar	: classes/$(CLASSTREE)/eps2jdr/Eps2Jdr.class \
-		  eps2jdr/Manifest.txt
-		cd classes ; \
-		jar cmf ../eps2jdr/Manifest.txt \
-	          $(LIBDIR)/eps2jdr.jar \
-		  $(CLASSTREE)/eps2jdr/*.class
-
-$(LIBDIR)/svg2jdr.jar	: classes/$(CLASSTREE)/svg2jdr/Svg2Jdr.class \
-		  svg2jdr/Manifest.txt
-		cd classes ; \
-		jar cmf ../svg2jdr/Manifest.txt \
-	          $(LIBDIR)/svg2jdr.jar \
-		  $(CLASSTREE)/svg2jdr/*.class
-
 classes/$(CLASSTREE)/jdr/JDRObject.class : \
 	classes \
 	jdr/*.java \
@@ -168,22 +148,6 @@ classes/$(CLASSTREE)/jdrinfo/JdrInfo.class : \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
-classes/$(CLASSTREE)/eps2jdr/Eps2Jdr.class : \
-	classes \
-	eps2jdr/*.java
-	cd eps2jdr ; \
-	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
-	*.java
-
-classes/$(CLASSTREE)/svg2jdr/Svg2Jdr.class : \
-	classes \
-	svg2jdr/*.java
-	cd svg2jdr ; \
-	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar \
-	*.java
-
 classes	:
 	mkdir -p classes
 
@@ -201,6 +165,4 @@ classes/$(CLASSTREE)/flowframtk	:
 clean	:
 	\rm -f $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar $(LIBDIR)/jdrview.jar
 	\rm -f $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrconverter.jar  $(LIBDIR)/jdrinfo.jar
-	\rm -f $(LIBDIR)/eps2jdr.jar 
-	\rm -f $(LIBDIR)/svg2jdr.jar
 	\rm -f -r classes

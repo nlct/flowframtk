@@ -1,3 +1,3 @@
 Main-Class: com/dickimawbooks/jdrconverter/JDRConverter
-Class-Path: jdr.jar texjavahelplib.jar .
+Class-Path: jdr.jar jdrresources.jar texjavahelplib.jar .
 

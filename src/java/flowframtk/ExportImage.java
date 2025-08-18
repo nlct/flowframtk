@@ -1,4 +1,4 @@
-// File          : SaveImage.java
+// File          : ExportImage.java
 // Description   : Export image.
 // Creation Date : 2015-10-01
 // Author        : Nicola L.C. Talbot

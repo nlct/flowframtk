@@ -22,6 +22,15 @@ Nicola Talbot
 <entry key="syntax.encapsulate">{0} (or {1})	Crop or encapsulate output image (if applicable).</entry>
 <entry key="syntax.bitmaps_to_eps">{0}	Convert bitmaps to EPS (if applicable).</entry>
 <entry key="syntax.alpha">{0}	Include alpha channel (if applicable).</entry>
+<entry key="syntax.normalsize">{0} &lt;n&gt;	Set the default normalsize to &lt;n&gt; (may be overridden if input file is JDR/AJR).</entry>
+<entry key="syntax.bitmap_basename">{0} &lt;basename&gt;	Set the basename prefix for exported embedded bitmaps (if applicable).</entry>
+
+
+<entry key="syntax.latex-dvi">{0} &lt;path&gt;	Path to latex application (DVI output).</entry>
+<entry key="syntax.latex-pdf">{0} &lt;path&gt;	Path to pdflatex application.</entry>
+<entry key="syntax.dvips">{0} &lt;path&gt;	Path to dvips application.</entry>
+<entry key="syntax.dvisvgm">{0} &lt;path&gt;	Path to dvisvgm application.</entry>
+<entry key="syntax.libgs">{0} &lt;path&gt;	Path to the libgs library.</entry>
 
 <entry key="syntax.tex_settings">(La)TeX output settings.</entry>
 
@@ -68,6 +77,8 @@ Nicola Talbot
 <entry key="error.cant_import_from">Unable to import from file format ''{0}'' (export only).</entry>
 <entry key="error.cant_load_format">Unable to load file format ''{0}''.</entry>
 <entry key="error.cant_save_format">Unable to save file format ''{0}''.</entry>
+<entry key="error.no_image">No image found: nothing to save.</entry>
+
 
 <!-- Warning messages -->
 <entry key="warning.ignoring_file_version">Ignoring {0} version identifier: {1}</entry>

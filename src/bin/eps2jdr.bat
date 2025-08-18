@@ -1,2 +1,2 @@
 @echo off
-java -jar "%~dp0\..\lib\eps2jdr.jar" %*
+java -jar "%~dp0\..\lib\jdrconverter.jar" --from EPS --to JDR %*

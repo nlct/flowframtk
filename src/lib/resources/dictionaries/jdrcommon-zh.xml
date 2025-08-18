@@ -187,17 +187,57 @@
 <entry key="process.aborted">Task aborted.</entry>
 <entry key="process.cancelling">Canceling task.</entry>
 
+<entry key="info.saving">Saving {0}</entry>
+<entry key="message.done">Done</entry>
+<entry key="message.failed">Failed: {0}</entry>
+<entry key="message.load_settings">从以下文件载入设置: {0}</entry>
+
+<!--  Comments in TeX/LaTeX Files -->
+
+<entry key="tex.comment.border_command">Border command for frame</entry>
+<entry key="tex.comment.created_by">Created by {0} version {1}</entry>
+<entry key="tex.comment.preamble">This image may require the following commands in the preamble:</entry>
+<entry key="tex.comment.fontsize">The normal size font is assumed to be {0}</entry>
+<entry key="tex.comment.endpreamble">End of preamble information</entry>
+
 
 <!-- Warning Messages -->
 
-<entry key="warning.title">Warning</entry>
+<entry key="warning.title">警告</entry>
+<entry key="warning.tag">警告: {0}</entry>
 
-<entry key="warning.tag">Warning: {0}</entry>
 <entry key="warning.draft_bitmap">Insufficient memory to load bitmap.
 Reverting to draft mode.</entry>
 <entry key="warning.draft_bitmaps">Insufficient memory to load one or more bitmaps.
 Reverting to draft mode.</entry>
 
+<entry key="warning.save.ajr">保存为旧版本的AJR格式({0})可能会引发数据丢失.\n确认继续吗?</entry>
+<entry key="warning.save.jdr">保存为旧版本的JDR格式({0})可能会引发数据丢失.\n确认继续吗?</entry>
+<entry key="warning.load.jdr">检测到旧的JDR格式({0}).
+当再次保存时将转换为\n新的JDR格式, 若仍要保留原始格式, 请另存为"flowframtk
+图片文件 1.0 (*.jdr)"格式.
+</entry>
+<entry key="warning.load.ajr">检测到旧的AJR格式({0}).
+当再次保存时将转换为\n新的AJR格式, 若仍要保留原始格式, 请另存为"flowframtk
+ascii 文件 1.0 (*.ajr)"格式.</entry>
+<entry key="warning.no_flowframe_data">No flow frame data found.</entry>
+
+<entry key="warning.pgf-no-text-shading">text shading paint can''t be exported to pgf</entry>
+<entry key="warning.pgf-no-textpath-outline">text-path outline can''t be exported to pgf</entry>
+<entry key="warning.pgf-no-stroke-shading">stroke shading paint can't be exported to pgf</entry>
+<entry key="warning.pgf-shading-mixed-opacity">pgf shading mixed opacity has been averaged</entry>
+<entry key="warning.pgf-no-marker-shading">marker shading paint can''t be exported to pgf</entry>
+
+<entry key="warning.save_unsupported_object">Object type ''{0}'' not supported in JDR/AJR version {1}</entry>
+<entry key="warning.save_unsupported_paint">Paint type ''{0}'' not supported in JDR/AJR version {1}</entry>
+<entry key="warning.save_unsupported_segment">Segment type ''{0}'' not supported in JDR/AJR version {1}</entry>
+<entry key="warning.save_unsupported_grid">Grid type ''{0}'' not supported in JDR/AJR version {1}</entry>
+<entry key="warning.save_unsupported_preamble">Preamble not supported in JDR/AJDR version {0}</entry>
+<entry key="warning.save_unsupported_extra_preamble">Mid/End Preamble not supported in JDR/AJDR version {0}</entry>
+<entry key="warning.save_unsupported_docclass">Document class not supported in JDR/AJDR version {0}</entry>
+<entry key="warning.save_unsupported_storage_unit">Storage unit ''{0}'' not supported in JDR/AJDR version {1} (co-ordinates will be converted to bp)</entry>
+<entry key="warning.save_unsupported_flow_frame">Flow frame data not supported by JDR/AJR version {0} has been omitted</entry>
+<entry key="warning.save_unsupported_text_path_delim">Text path format delimiters not supported by JDR/AJR version {0}</entry>
 
 <!-- Error Messages -->
 
@@ -205,6 +245,264 @@ Reverting to draft mode.</entry>
 
 <entry key="error.throwable.FileNotFoundException">File not found</entry>
 <entry key="error.throwable.IOException">I/O error has occurred</entry>
+
+<entry key="error.interrupted">Process interrupted</entry>
+<entry key="error.timedout">Process timed-out (process time limit: {0}ms)</entry>
+<entry key="error.exec_failed">Failed to execute: {0}</entry>
+<entry key="error.exec_failed_withcode">Failed to execute: {0} (error code {1})</entry>
+<entry key="error.exec_failed_withcode_and_dir">Failed to execute: {0} running in directory ''{1}'' (error code {2})</entry>
+<entry key="error.try_latex_export">Try exporting to a LaTeX document and compile it using your usual build process.</entry>
+<entry key="error.cant_find_app">Can''t locate application ''{0}''</entry>
+
+<entry key="error.not_a_directory">不是一个目录 ''{0}''</entry>
+<entry key="error.not_ajr">不是一个AJR文件</entry>
+<entry key="error.not_found">文件未找到</entry>
+<entry key="error.not_jdr">不是一个JDR文件</entry>
+
+<entry key="error.top_level_missing">缺少顶层组合标识符</entry>
+<entry key="error.unknown_ajr_version">AJR文件版本号不明</entry>
+<entry key="error.unknown_jdr_version">JDR文件版本号不明</entry>
+<entry key="error.unknown_papersize">未知的纸张大小 ''{0}''</entry>
+<entry key="error.possible_malformed_1_7">Possible malformed 1.7 file. Attempting to read again.</entry>
+
+<entry key="error.no_path_data">No path data!</entry>
+<entry key="error.close_lonely_subpath">Not enough segments to close sub path</entry>
+<entry key="error.close_subpath">Unable to close sub path</entry>
+
+<entry key="error.no_typeblock">未设定Typeblock</entry>
+<entry key="error.misplaced_typeblock">Missplaced typeblock</entry>
+<entry key="error.negative_dash">虚线模式中线段长度不能取负值</entry>
+<entry key="error.no_idl">未指定标签</entry>
+
+<entry key="error.io.load">无法装载文件</entry>
+<entry key="error.io.close">无法关闭文件</entry>
+<entry key="error.io.dir_not_exists">Directory ''{0}'' doesn''t exist</entry>
+<entry key="error.io.not_exists">无法打开文件(找不到文件) ''{0}''</entry>
+<entry key="error.io.open">无法打开文件 ''{0}''</entry>
+<entry key="error.io.save">无法保存文件</entry>
+<entry key="error.io.rename">Unable to rename ''{0}'' -&gt; ''{1}''</entry>
+
+<entry key="error.with_line">Line {0}: {1}</entry>
+<entry key="error.with_line_and_col">Line {0}, Column {1}: {2}</entry>
+<entry key="error.with_file_and_line">{0}:{1}: {2}</entry>
+<entry key="error.with_id">{0} ({1})</entry>
+<entry key="error.with_found">{0}; found ''{1}''</entry>
+
+<entry key="error.empty_string">空串</entry>
+<entry key="error.eof">File ended prematurely</entry>
+<entry key="error.fatal">致使错误</entry>
+<entry key="error.file_not_found">无法找到文件</entry>
+<entry key="error.file_not_found_with_name">无法找到文件: {0}</entry>
+
+<entry key="error.invalid_paint-id">无效的颜色标识符</entry>
+<entry key="error.id.endcolour">无效的颜色结束标识符</entry>
+<entry key="error.id.linestyle">缺少线条样式标识符</entry>
+<entry key="error.invalid_object-id">无效的对象标识符</entry>
+<entry key="error.invalid_path-open-close-id">缺少 open/closed 标识符</entry>
+<entry key="error.invalid_paper-id">无效的纸张标识符</entry>
+<entry key="error.invalid_segment-id">无效的线段标识符</entry>
+<entry key="error.invalid_settings-id">无效的设置标识符</entry>
+<entry key="error.id.shape">无效的开关标识符</entry>
+<entry key="error.id.startcolour">无效的颜色起始标识符</entry>
+<entry key="error.invalid_setting-tool">无效的工具标识符</entry>
+<entry key="error.invalid_unit-id">无效的单位标识符</entry>
+<entry key="error.id.point">Invalid point index</entry>
+<entry key="error.idl_exists">此标签已存在</entry>
+<entry key="error.invalid_alpha">无效的透明度取值</entry>
+<entry key="error.invalid_arrow_type">无效的箭头类型</entry>
+<entry key="error.invalid_arrow_composite">无效的箭头复合</entry>
+<entry key="error.invalid_black">无效的"黑色"取值</entry>
+<entry key="error.invalid_blue">无效的"蓝色"取值</entry>
+<entry key="error.invalid_cap-style">无效的线头样式</entry>
+<entry key="error.invalid_cyan">无效的"青色"取值</entry>
+<entry key="error.invalid_description_length">描述长度不能为负值</entry>
+<entry key="error.invalid_dimension">无效的度量</entry>
+<entry key="error.invalid_gradient-direction">无效的梯度方向</entry>
+<entry key="error.invalid_radial-gradient-location">Invalid radial location</entry>
+<entry key="error.invalid_gradient-end">无效的结束颜色类型</entry>
+<entry key="error.invalid_radial-gradient-end">Invalid radial end color type</entry>
+<entry key="error.invalid_family_length">字体家族长度不能为0或负值</entry>
+<entry key="error.invalid_filename_length">文件名长度不能为0或负值</entry>
+<entry key="error.invalid_format">无效的格式, 行号:</entry>
+<entry key="error.invalid_frame-type">无效的框架类型</entry>
+<entry key="error.invalid_green">无效的"绿色"取值</entry>
+<entry key="error.invalid_idl_length">IDL 长度值不能为负</entry>
+<entry key="error.invalid_imageformat">Unrecognised image format</entry>
+<entry key="error.invalid_join-style">无效的接头样式</entry>
+<entry key="error.invalid_latexfilename_length">LaTeX文件名长度不能为0或负值</entry>
+<entry key="error.invalid_halign">无效的 LaTeX halign 取值</entry>
+<entry key="error.invalid_latex_family_length">LaTeX 字体家族长度不能为0或负值</entry>
+<entry key="error.invalid_latex_imagecmd_length">LaTeX 图片命令长度不能为负值</entry>
+<entry key="error.invalid_latex_series_length">LaTeX 字体系列长度不能为负值</entry>
+<entry key="error.invalid_latex_shape_length">LaTeX 字体形状长度不能为负值</entry>
+<entry key="error.invalid_latex_size_length">LaTeX 字体大小长度不能为负值</entry>
+<entry key="error.invalid_valign">无效的 LaTeX valign 取值</entry>
+<entry key="error.invalid_linkname">Invalid bitmap link name ''{0}''</entry>
+<entry key="error.invalid_magenta">无效的"洋红色"取值</entry>
+<entry key="error.invalid_mitre-limit">无效的斜角延长上限值(取值不能小于11)</entry>
+<entry key="error.invalid_object">无效的对象</entry>
+<entry key="error.invalid_frame-page-list">无效的页面列表</entry>
+<entry key="error.invalid_pagelist_length">=页面列表长度不能为负值</entry>
+<entry key="error.invalid_paper_dimension">无效的纸张大小 ''{0}''</entry>
+<entry key="error.invalid_penwidth">线条宽度不能为负值</entry>
+<entry key="error.invalid_ruler_width">Invalid ruler width ''{0}''</entry>
+<entry key="error.invalid_ruler_height">Invalid ruler height ''{0}''</entry>
+<entry key="error.invalid_series">无效的字体系列标识符</entry>
+<entry key="error.invalid_shape">无效的字体形状标识符</entry>
+<entry key="error.invalid_size">字体大小不能为负值</entry>
+<entry key="error.invalid_gradient-start">无效的起始颜色类型</entry>
+<entry key="error.invalid_radial-gradient-start">Invalid radial start color type</entry>
+<entry key="error.invalid_red">无效的"红色"取值</entry>
+<entry key="error.invalid_text_length">文本长度不能为0或负值</entry>
+<entry key="error.invalid_unit-name">无效的单位</entry>
+<entry key="error.invalid_winding-rule">无效的区域内外识别绕行规则</entry>
+<entry key="error.invalid_yellow">无效的"黄色"取值</entry>
+<entry key="error.invalid_codepoint">Invalid code point ''{0}''</entry>
+<entry key="error.invalid_group-size">Invalid group size</entry>
+<entry key="error.invalid_angle">Invalid angle</entry>
+<entry key="error.invalid_angle_id">Invalid angle ID</entry>
+<entry key="error.invalid_angle_value">Invalid angle value</entry>
+<entry key="error.invalid_setting-absolute-pages">Invalid absolute pages setting</entry>
+<entry key="error.invalid_setting-cls">Invalid document class setting</entry>
+<entry key="error.invalid_setting-preamble">Invalid early preamble setting</entry>
+<entry key="error.invalid_setting-mid-preamble">Invalid mid preamble setting</entry>
+<entry key="error.invalid_setting-end-preamble">Invalid late preamble setting</entry>
+<entry key="error.invalid_setting-scale-control">Invalid scale control setting</entry>
+<entry key="error.invalid_setting-pointsize">Invalid control size setting</entry>
+<entry key="error.invalid_setting-normalsize">Invalid normalsize setting</entry>
+<entry key="error.invalid_setting-show-rulers">Invalid show rulers setting</entry>
+<entry key="error.invalid_setting-show-grid">Invalid show grid setting</entry>
+<entry key="error.invalid_setting-grid-lock">Invalid grid lock setting</entry>
+<entry key="error.invalid_paper-portrait-flag">Invalid portrait setting</entry>
+<entry key="error.invalid_paper-width">Invalid paper width setting</entry>
+<entry key="error.invalid_paper-height">Invalid paper height setting</entry>
+<entry key="error.invalid_frame-even-x-shift">Invalid frame even page x shift</entry>
+<entry key="error.invalid_frame-even-y-shift">Invalid frame even page y shift</entry>
+<entry key="error.invalid_frame-contents">Invalid frame contents</entry>
+<entry key="error.invalid_frame-valign">Invalid frame valign</entry>
+<entry key="error.invalid_frame-shape">Invalid frame shape</entry>
+<entry key="error.invalid_frame-margin-right">Invalid frame right margin</entry>
+<entry key="error.invalid_frame-margin-left">Invalid frame left margin</entry>
+<entry key="error.invalid_frame-margin-top">Invalid frame top margin</entry>
+<entry key="error.invalid_frame-margin-bottom">Invalid frame bottom margin</entry>
+<entry key="error.invalid_frame-idl">Invalid frame label</entry>
+<entry key="error.invalid_frame-flag">Invalid frame flag</entry>
+<entry key="error.invalid_frame-border-flag">Invalid frame flag</entry>
+<entry key="error.invalid_text-path-delim-left">Invalid text-path left delimiter</entry>
+<entry key="error.invalid_text-path-delim-right">Invalid text-path right delimiter</entry>
+<entry key="error.invalid_text-path-text">Invalid text-path text</entry>
+<entry key="error.invalid_text-path-LaTeX-text">Invalid text-path LaTeX text</entry>
+<entry key="error.invalid_text-path-LaTeX-flag">Invalid text-path LaTeX flag</entry>
+<entry key="error.invalid_text-path-valign">Invalid text-path vertical alignment</entry>
+<entry key="error.invalid_text-path-halign">Invalid text-path horizontal alignment</entry>
+<entry key="error.invalid_text-path-transform">Invalid text-path transformation</entry>
+<entry key="error.invalid_text-path-unsupported-version">Text-paths not supported for this version</entry>
+<entry key="error.invalid_text-path-shape">Invalid text-path shape</entry>
+<entry key="error.invalid_symmetric-close-anchored">Invalid symmetric close anchored setting</entry>
+<entry key="error.invalid_symmetric-closed">Invalid symmetric closed setting</entry>
+<entry key="error.invalid_symmetric-line-x0">Invalid symmetric line x0 setting</entry>
+<entry key="error.invalid_symmetric-line-y0">Invalid symmetric line y0 setting</entry>
+<entry key="error.invalid_symmetric-line-x1">Invalid symmetric line x1 setting</entry>
+<entry key="error.invalid_symmetric-line-y1">Invalid symmetric line y1 setting</entry>
+<entry key="error.invalid_symmetric-anchored">Invalid symmetric anchored setting</entry>
+<entry key="error.invalid_symmetric-shape">Invalid symmetric shape setting</entry>
+<entry key="error.invalid_spiral-show-original">Invalid spiral show original setting</entry>
+<entry key="error.invalid_spiral-single">Invalid spiral single setting</entry>
+<entry key="error.invalid_spiral-replicas">Invalid spiral replicas setting</entry>
+<entry key="error.invalid_spiral-distance">Invalid spiral distance setting</entry>
+<entry key="error.invalid_spiral-angle">Invalid spiral angle setting</entry>
+<entry key="error.invalid_spiral-adjust-x">Invalid spiral adjust x setting</entry>
+<entry key="error.invalid_spiral-adjust-y">Invalid spiral adjust y setting</entry>
+<entry key="error.invalid_spiral-anchor-x">Invalid spiral anchor x setting</entry>
+<entry key="error.invalid_spiral-anchor-y">Invalid spiral anchor y setting</entry>
+<entry key="error.invalid_spiral-shape">Invalid spiral shape setting</entry>
+<entry key="error.invalid_scaled-show-original">Invalid scaled pattern show original setting</entry>
+<entry key="error.invalid_scaled-single">Invalid scaled pattern single setting</entry>
+<entry key="error.invalid_scaled-replicas">Invalid scaled pattern replicas setting</entry>
+<entry key="error.invalid_scaled-factor-x">Invalid scaled pattern factor x setting</entry>
+<entry key="error.invalid_scaled-factor-y">Invalid scaled pattern factor y setting</entry>
+<entry key="error.invalid_scaled-adjust-x">Invalid scaled pattern adjust x setting</entry>
+<entry key="error.invalid_scaled-adjust-y">Invalid scaled pattern adjust y setting</entry>
+<entry key="error.invalid_scaled-anchor-x">Invalid scaled pattern anchor x setting</entry>
+<entry key="error.invalid_scaled-anchor-y">Invalid scaled pattern anchor y setting</entry>
+<entry key="error.invalid_scaled-shape">Invalid scaled pattern shape setting</entry>
+<entry key="error.invalid_rotational-show-original">Invalid rotational pattern show original setting</entry>
+<entry key="error.invalid_rotational-single">Invalid rotational pattern single setting</entry>
+<entry key="error.invalid_rotational-replicas">Invalid rotational pattern replicas setting</entry>
+<entry key="error.invalid_rotational-angle">Invalid rotational pattern angle setting</entry>
+<entry key="error.invalid_rotational-anchor-x">Invalid rotational pattern anchor x setting</entry>
+<entry key="error.invalid_rotational-anchor-y">Invalid rotational pattern anchor y setting</entry>
+<entry key="error.invalid_rotational-shape">Invalid rotational pattern shape setting</entry>
+<entry key="error.invalid_path-anchor-index">Invalid path anchor index</entry>
+<entry key="error.invalid_path-start-x">Invalid path start x</entry>
+<entry key="error.invalid_path-start-y">Invalid path start y</entry>
+<entry key="error.invalid_path-size">Invalid path size</entry>
+<entry key="error.invalid_hsb">Invalid HSB</entry>
+<entry key="error.invalid_cmyk">Invalid CMYK</entry>
+<entry key="error.invalid_rgb">Invalid RGB</entry>
+<entry key="error.invalid_gray">Invalid gray</entry>
+<entry key="error.invalid_hue">Invalid hue</entry>
+<entry key="error.invalid_saturation">Invalid saturation</entry>
+<entry key="error.invalid_brightness">Invalid brightness</entry>
+<entry key="error.invalid_partial-bezier-cy">Invalid partial Bézier cy</entry>
+<entry key="error.invalid_partial-bezier-cx">Invalid partial Bézier cx</entry>
+<entry key="error.invalid_move-x0">Invalid move x0</entry>
+<entry key="error.invalid_move-y0">Invalid move y0</entry>
+<entry key="error.invalid_move-x1">Invalid move x1</entry>
+<entry key="error.invalid_move-y1">Invalid move y1</entry>
+<entry key="error.invalid_line-x0">Invalid line x0</entry>
+<entry key="error.invalid_line-y0">Invalid line y0</entry>
+<entry key="error.invalid_line-x1">Invalid line x1</entry>
+<entry key="error.invalid_line-y1">Invalid line y1</entry>
+<entry key="error.invalid_bezier-x0">Invalid Bézier x0</entry>
+<entry key="error.invalid_bezier-y0">Invalid Bézier y0</entry>
+<entry key="error.invalid_bezier-x1">Invalid Bézier x1</entry>
+<entry key="error.invalid_bezier-y1">Invalid Bézier y1</entry>
+<entry key="error.invalid_bezier-c1x">Invalid Bézier c1x</entry>
+<entry key="error.invalid_bezier-c1y">Invalid Bézier c1y</entry>
+<entry key="error.invalid_bezier-c2x">Invalid Bézier c2x</entry>
+<entry key="error.invalid_bezier-c2y">Invalid Bézier c2y</entry>
+<entry key="error.invalid_grid-major">Invalid grid major value</entry>
+<entry key="error.invalid_grid-minor">Invalid grid minor value</entry>
+<entry key="error.invalid_grid-spokes">Invalid grid spokes value</entry>
+<entry key="error.invalid_pen-width">Invalid pen width</entry>
+<entry key="error.invalid_path-style-id">Invalid path style ID</entry>
+<entry key="error.invalid_grid-id">Invalid grid ID</entry>
+<entry key="error.invalid_LaTeX-image-cmd">Invalid LaTeX image command</entry>
+<entry key="error.invalid_LaTeX-filename">Invalid LaTeX filename</entry>
+<entry key="error.invalid_bitmap-transform">Invalid bitmap transformation</entry>
+<entry key="error.invalid_bitmap-LaTeX-flag">Invalid bitmap LaTeX flag</entry>
+<entry key="error.invalid_bitmap-filename">Invalid bitmap filename</entry>
+<entry key="error.invalid_LaTeX-font-size">Invalid LaTeX font size</entry>
+<entry key="error.invalid_LaTeX-font-shape">Invalid LaTeX font shape</entry>
+<entry key="error.invalid_LaTeX-font-weight">Invalid LaTeX font weight</entry>
+<entry key="error.invalid_LaTeX-font-family">Invalid LaTeX font family</entry>
+<entry key="error.invalid_LaTeX-font-flag">Invalid LaTeX font flag</entry>
+<entry key="error.invalid_text-outline-flag">Invalid text outline flag</entry>
+<entry key="error.invalid_font-transform">Invalid font transformation</entry>
+<entry key="error.invalid_font-size">Invalid font size</entry>
+<entry key="error.invalid_font-shape">Invalid font shape</entry>
+<entry key="error.invalid_font-weight">Invalid font weight</entry>
+<entry key="error.invalid_format-tag">Invalid format tag</entry>
+<entry key="error.invalid_jdr-format">Invalid JDR format</entry>
+<entry key="error.invalid_version">Invalid version</entry>
+<entry key="error.invalid_text">Invalid text</entry>
+<entry key="error.invalid_LaTeX-text">Invalid LaTeX text</entry>
+<entry key="error.invalid_dash-offset">Invalid dash offset</entry>
+<entry key="error.invalid_dash-pattern">Invalid dash pattern</entry>
+<entry key="error.invalid_marker-repeat-offset">Invalid marker repeat offset</entry>
+<entry key="error.invalid_marker-repeat-offset-flag">Invalid marker repeat offset flag</entry>
+<entry key="error.invalid_marker-offset">Invalid marker offset</entry>
+<entry key="error.invalid_marker-offset-flag">Invalid marker offset flag</entry>
+<entry key="error.invalid_marker-overlay-flag">Invalid marker overlay flag</entry>
+<entry key="error.invalid_marker-orient-angle">Invalid marker orient angle</entry>
+<entry key="error.invalid_marker-auto-orient">Invalid marker auto orient setting</entry>
+<entry key="error.invalid_marker-reversed">Invalid marker reversed setting</entry>
+<entry key="error.invalid_marker-repeat">Invalid marker repeat setting</entry>
+<entry key="error.invalid_marker-size">Invalid marker size</entry>
+<entry key="error.invalid_marker-id">Invalid marker ID</entry>
+<entry key="error.invalid_length">Invalid length</entry>
+<entry key="error.invalid_description">Invalid description</entry>
 
 <!-- Manual -->
 

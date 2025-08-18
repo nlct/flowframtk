@@ -1124,10 +1124,84 @@ public class JDRResources
    private void initUserConfigDir()
     throws IOException,URISyntaxException
    {
+      usersettings=null;
+      File file = findUserConfigDir(true);
+
+      if (file != null)
+      {
+         setUserSettings(file);
+      }
+      else
+      {
+         // neither "user.home" nor JDRSETTINGS are defined, so
+         // assume settings are in "settings" subdirectory of
+         // FlowframTk's installation directory.
+
+         String dir = "settings";
+         String user = System.getenv("USER");
+         if (user == null) user = System.getenv("USERNAME");
+
+         // Using URI, so forward slash required regardless of OS
+
+         if (user != null) dir += "/"+user;
+
+         URL url = getClass().getResource(dir);
+
+         if (url != null)
+         {
+            String path = url.toURI().getPath();
+
+            file = new File(path);
+
+            if (file.isDirectory())
+            {
+               setUserSettings(file);
+               return;
+            }
+            else if (file.exists())
+            {
+               throw new IOException(
+                 getMessageWithFallback("error.not_a_directory",
+                  "''{0}'' is not a directory", file));
+            }
+         }
+         else
+         {
+            url = getClass().getResource(".");
+
+            if (url != null)
+            {
+               file = new File(url.toURI().getPath(), dir);
+
+               if ((file.exists() && file.isDirectory())
+                 || file.mkdirs())
+               {
+                  url = getClass().getResource(dir);
+
+                  if (url != null)
+                  {
+                     setUserSettings(url.toURI().getPath());
+                     return;
+                  }
+               }
+               else
+               {
+                  throw new IOException(
+                     getMessageWithFallback("error.config_cant_create",
+                       "Can''t create config directory ''{0}''",
+                       file));
+               }
+            }
+         }
+      }
+   }
+
+   public static File findUserConfigDir(boolean mkdirIfNotExist)
+    throws IOException
+   {
       // does JDRSETTINGS exist?
 
       String jdrsettings = System.getenv("JDRSETTINGS");
-      usersettings=null;
       File file=null;
 
       if (jdrsettings != null)
@@ -1136,8 +1210,7 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            setUserSettings(file);
-            return;
+            return file;
          }
       }
 
@@ -1162,16 +1235,14 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            setUserSettings(file);
-            return;
+            return file;
          }
 
          file = new File(homeDir, "jpgfdraw-settings");
 
          if (file.exists() && file.isDirectory())
          {
-            setUserSettings(file);
-            return;
+            return file;
          }
 
          // Now try new "flowframtk" name
@@ -1187,14 +1258,12 @@ public class JDRResources
 
          if (file.exists() && file.isDirectory())
          {
-            setUserSettings(file);
-            return;
+            return file;
          }
 
-         if (file.mkdir())
+         if (mkdirIfNotExist && file.mkdir())
          {
-            setUserSettings(file);
-            return;
+            return file;
          }
 
          if (!dirname.equals("flowframtk-settings"))
@@ -1203,76 +1272,17 @@ public class JDRResources
 
             if (file.exists() && file.isDirectory())
             {
-               setUserSettings(file);
-               return;
+               return file;
             }
 
-            if (file.mkdir())
+            if (mkdirIfNotExist && file.mkdir())
             {
-               setUserSettings(file);
-               return;
+               return file;
             }
          }
       }
 
-      // neither "user.home" nor JDRSETTINGS are defined, so
-      // assume settings are in "settings" subdirectory of
-      // FlowframTk's installation directory.
-
-      String dir = "settings";
-      String user = System.getenv("USER");
-      if (user == null) user = System.getenv("USERNAME");
-
-      // Using URI, so forward slash required regardless of OS
-
-      if (user != null) dir += "/"+user;
-
-      URL url = getClass().getResource(dir);
-
-      if (url != null)
-      {
-         String path = url.toURI().getPath();
-
-         file = new File(path);
-
-         if (file.isDirectory())
-         {
-            setUserSettings(file);
-         }
-         else if (file.exists())
-         {
-            throw new IOException(
-              getMessageWithFallback("error.not_a_directory",
-               "''{0}'' is not a directory", file));
-         }
-      }
-      else
-      {
-         url = getClass().getResource(".");
-
-         if (url != null)
-         {
-            file = new File(url.toURI().getPath(), dir);
-
-            if ((file.exists() && file.isDirectory())
-              || file.mkdirs())
-            {
-               url = getClass().getResource(dir);
-
-               if (url != null)
-               {
-                  setUserSettings(url.toURI().getPath());
-               }
-            }
-            else
-            {
-               throw new IOException(
-                  getMessageWithFallback("error.config_cant_create",
-                    "Can''t create config directory ''{0}''",
-                    file));
-            }
-         }
-      }
+      return null;
    }
 
    public void saveLanguageSettings() throws IOException
