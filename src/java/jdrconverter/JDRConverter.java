@@ -1033,7 +1033,7 @@ public class JDRConverter
             out = new PrintWriter(Files.newBufferedWriter(outFile.toPath(), inCharset));
          }
       }
-      else
+      else if (outFormat != FileFormatType.PNG)
       {
          dout = new DataOutputStream(new FileOutputStream(outFile));
       }
@@ -1078,6 +1078,9 @@ public class JDRConverter
             break;
             case EPS:
                EPS.save(paths, out, NAME);
+            break;
+            case PNG:
+               PNG.save(paths, outFile, addAlphaChannel, encapsulate);
             break;
             default:
               throw new InvalidFormatException(

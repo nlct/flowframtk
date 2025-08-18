@@ -1,2 +1,2 @@
 @echo off
-java -jar "%~dp0\..\lib\jdr2png.jar" %*
+java -jar "%~dp0\..\lib\jdrconverter.jar" --from JDR --to PNG %*
