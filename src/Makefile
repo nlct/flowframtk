@@ -13,7 +13,6 @@ target_version := --release 8 -Xlint:-options
 all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar \
 	lib/ajr2tex.jar \
 	lib/eps2jdr.jar \
-	lib/jdr2ajr.jar \
 	lib/jdr2eps.jar \
 	lib/jdr2png.jar \
 	lib/jdr2svg.jar \
@@ -173,20 +172,6 @@ classes/com/dickimawbooks/eps2jdr/Eps2Jdr.class : lib/jdr.jar lib/jdrresources.j
 	-cp ../../lib/jdr.jar:../../lib/jdrresources.jar:../../lib/texjavahelplib.jar \
 	*.java
 
-lib/jdr2ajr.jar   : classes/com/dickimawbooks/jdr2ajr/Jdr2Ajr.class \
-	java/jdr2ajr/Manifest.txt
-	cd classes ; \
-	jar cmf ../java/jdr2ajr/Manifest.txt \
-	  ../lib/jdr2ajr.jar \
-	  com/dickimawbooks/jdr2ajr/*.class
-
-classes/com/dickimawbooks/jdr2ajr/Jdr2Ajr.class : lib/jdr.jar java/jdr2ajr/*.java
-	cd java/jdr2ajr ; \
-	javac $(target_version) \
-	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar \
-	*.java
-
 lib/jdr2eps.jar   : classes/com/dickimawbooks/jdr2eps/Jdr2Eps.class \
 	java/jdr2eps/Manifest.txt
 	cd classes ; \
@@ -278,7 +263,6 @@ clean	:
 	\rm -f lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar
 	\rm -f lib/ajr2tex.jar
 	\rm -f lib/eps2jdr.jar
-	\rm -f lib/jdr2ajr.jar
 	\rm -f lib/jdr2eps.jar
 	\rm -f lib/jdr2png.jar
 	\rm -f lib/jdr2svg.jar

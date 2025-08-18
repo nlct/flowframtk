@@ -1,2 +1,0 @@
-Main-Class: com/dickimawbooks/jdr2ajr/Jdr2Ajr
-Class-Path: jdr.jar .
