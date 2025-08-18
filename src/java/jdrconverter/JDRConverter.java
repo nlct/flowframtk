@@ -186,13 +186,19 @@ public class JDRConverter
 
       System.out.println();
       System.out.println(getMessage("clisyntax.usage",
-        getMessage("syntax.options", getApplicationName())));
+        getMessage("syntax.options", getApplicationName(), "--in", "--output")));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.option_info", "--in", "--output"));
 
       System.out.println();
 
       helpLib.printSyntaxItem(getMessage("syntax.in", "--in", "-i"));
          
       helpLib.printSyntaxItem(getMessage("syntax.out", "--output", "-o"));
+
+      System.out.println();
 
       helpLib.printSyntaxItem(getMessage("syntax.from", "--from", "-f"));
       helpLib.printSyntaxItem(getMessage("syntax.to", "--to", "-t"));
@@ -209,12 +215,22 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
         "--[no]bitmaps-to-eps"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no]alpha"));
+
+      System.out.println();
+
       helpLib.printSyntaxItem(getMessage("syntax.tex_settings"));
+
+      System.out.println();
 
       helpLib.printSyntaxItem(getMessage("syntax.doc", "--[no]doc"));
       helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no]use-typeblock"));
 
+      System.out.println();
+
       helpLib.printSyntaxItem(getMessage("syntax.other"));
+
+      System.out.println();
 
       helpLib.printSyntaxItem(getMessage("syntax.list_input_formats",
        "--list-input-formats"));
@@ -553,29 +569,83 @@ public class JDRConverter
             }
             else if (arg.equals("--list-input-formats"))
             {
+               int idx = 0;
+
                for (FileFormatType type : FileFormatType.values())
                {
                   if (type.isInputSupported())
                   {
-                     System.out.println(type);
+                     System.out.print(type);
+
+                     idx += type.toString().length();
+
+                     if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
+                     {
+                        System.out.println();
+                        idx = 0;
+                     }
+                     else
+                     {
+                        System.out.print(" ");
+                        idx++;
+                     }
                   }
+               }
+
+               if (idx != 0)
+               {
+                  System.out.println();
                }
 
                System.exit(0);
             }
             else if (arg.equals("--list-output-formats"))
             {
+               int idx = 0;
+
                for (FileFormatType type : FileFormatType.values())
                {
-                  System.out.println(type);
+                  System.out.print(type);
+
+                  idx += type.toString().length();
+
+                  if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
+                  {
+                     System.out.println();
+                     idx = 0;
+                  }
+                  else
+                  {
+                     System.out.print(" ");
+                     idx++;
+                  }
 
                   if (type == FileFormatType.JDR || type == FileFormatType.AJR)
                   {
                      for (String ver : JDRAJR.VALID_VERSIONS_STRING)
                      {
-                        System.out.println(type+"-"+ver);
+                        String str = type+"-"+ver;
+                        System.out.print(str);
+
+                        idx += str.length();
+
+                        if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
+                        {
+                           System.out.println();
+                           idx = 0;
+                        }
+                        else
+                        {
+                           System.out.print(" ");
+                           idx++;
+                        }
                      }
                   }
+               }
+
+               if (idx != 0)
+               {
+                  System.out.println();
                }
 
                System.exit(0);
@@ -589,6 +659,15 @@ public class JDRConverter
                }
 
                String ver = returnVals[0].toString();
+
+               try
+               {
+                  Integer.parseInt(ver);
+                  ver += ".0";
+               }
+               catch (NumberFormatException e)
+               {
+               }
 
                boolean found = false;
 
@@ -643,6 +722,15 @@ public class JDRConverter
 
                if (ver != null)
                {
+                  try
+                  {
+                     Integer.parseInt(ver);
+                     ver += ".0";
+                  }
+                  catch (NumberFormatException e)
+                  {
+                  }
+
                   if (outFormat == FileFormatType.JDR || outFormat == FileFormatType.AJR)
                   {
                      boolean found = false;
