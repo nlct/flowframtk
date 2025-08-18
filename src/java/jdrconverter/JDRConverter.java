@@ -197,15 +197,17 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.from", "--from", "-f"));
       helpLib.printSyntaxItem(getMessage("syntax.to", "--to", "-t"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.jdr_version", "--jdr-version"));
+      helpLib.printSyntaxItem(getMessage("syntax.jdr_version",
+       "--jdr-version", JDRAJR.CURRENT_VERSION));
 
       helpLib.printSyntaxItem(getMessage("syntax.settings", "--settings"));
 
       helpLib.printSyntaxItem(getMessage("syntax.in.charset", "--in-charset"));
       helpLib.printSyntaxItem(getMessage("syntax.out.charset", "--out-charset"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.encapsulate", "--[no]encapsulate", "-E"));
-      helpLib.printSyntaxItem(getMessage("syntax.bitmap_to_eps", "--[no]bitmap-to-eps"));
+      helpLib.printSyntaxItem(getMessage("syntax.encapsulate", "--[no]crop", "-C"));
+      helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
+        "--[no]bitmaps-to-eps"));
 
       helpLib.printSyntaxItem(getMessage("syntax.tex_settings"));
 
@@ -438,6 +440,10 @@ public class JDRConverter
             else if (originalArgList[preparseIndex].equals("-nosettings")
                   || originalArgList[preparseIndex].equals("-doc")
                   || originalArgList[preparseIndex].equals("-nodoc")
+                  || originalArgList[preparseIndex].equals("-alpha")
+                  || originalArgList[preparseIndex].equals("-noalpha")
+                  || originalArgList[preparseIndex].equals("-crop")
+                  || originalArgList[preparseIndex].equals("-nocrop")
                     )
             {
                deque.add("-"+originalArgList[preparseIndex]);
@@ -521,11 +527,11 @@ public class JDRConverter
             {
                useTypeblock = false;
             }
-            else if (arg.equals("--encapsulate") || arg.equals("-E"))
+            else if (arg.equals("--crop") || arg.equals("-C"))
             {
                encapsulate = true;
             }
-            else if (arg.equals("--noencapsulate"))
+            else if (arg.equals("--nocrop"))
             {
                encapsulate = false;
             }
@@ -536,6 +542,14 @@ public class JDRConverter
             else if (arg.equals("--nobitmaps-to-eps"))
             {
                convertBitmapToEps = false;
+            }
+            else if (arg.equals("--alpha"))
+            {
+               addAlphaChannel = true;
+            }
+            else if (arg.equals("--noalpha"))
+            {
+               addAlphaChannel = false;
             }
             else if (arg.equals("--list-input-formats"))
             {
@@ -1021,8 +1035,9 @@ public class JDRConverter
    protected File inFile, outFile; // --in / -i , --output / -o
    protected boolean completeDoc = false; // --doc
    protected boolean useTypeblock = false; // --use-typeblock
-   protected boolean encapsulate = false; // --encapsulate / -E
+   protected boolean encapsulate = false; // --crop / -C
    protected boolean convertBitmapToEps = false; // --bitmaps-to-eps
+   protected boolean addAlphaChannel = false; // --alpha
 
    // --settings --nosettings
    protected SaveSettingsType saveSettingsType = SaveSettingsType.MATCH_INPUT;
