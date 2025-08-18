@@ -383,9 +383,38 @@ public class JDRConverter
                deque.add("--settings");
                deque.add(SaveSettingsType.MATCH_INPUT.getTag());
             }
-            else if (originalArgList[preparseIndex].equals("-settings")
-                  || originalArgList[preparseIndex].equals("-nosettings")
-                    )
+            else if (originalArgList[preparseIndex].equals("-settings"))
+            {
+               deque.add("--settings");
+
+               int idx = preparseIndex+1;
+
+               if (idx == originalArgList.length || originalArgList[idx].length() != 1)
+               {
+                  deque.add(SaveSettingsType.ALL.getTag());
+               }
+               else
+               {
+                  switch (originalArgList[idx].charAt(0))
+                  {
+                     case '0':
+                        deque.add(SaveSettingsType.NONE.getTag());
+                        preparseIndex++;
+                     break;
+                     case '1':
+                        deque.add(SaveSettingsType.ALL.getTag());
+                        preparseIndex++;
+                     break;
+                     case '2':
+                        deque.add(SaveSettingsType.PAPER_ONLY.getTag());
+                        preparseIndex++;
+                     break;
+                     default:
+                        deque.add(SaveSettingsType.ALL.getTag());
+                  }
+               }
+            }
+            else if (originalArgList[preparseIndex].equals("-nosettings"))
             {
                deque.add("-"+originalArgList[preparseIndex]);
             }
@@ -650,15 +679,7 @@ public class JDRConverter
 
                String val = returnVals[0].toString();
 
-               try
-               {
-                  saveSettingsType = SaveSettingsType.valueOf(
-                     Integer.parseInt(val));
-               }
-               catch (NumberFormatException e)
-               {
-                  saveSettingsType = SaveSettingsType.getFromTag(val);
-               }
+               saveSettingsType = SaveSettingsType.getFromTag(val);
 
                if (saveSettingsType == null)
                {
@@ -695,15 +716,7 @@ public class JDRConverter
       {
          // guess from file extension
 
-         String name = inFile.getName();
-         int idx = name.lastIndexOf(".");
-
-         if (idx > 0)
-         {
-            String ext = name.substring(idx+1).toUpperCase();
-
-            inFormat = FileFormatType.valueOf(ext);
-         }
+         inFormat = FileFormatType.getFormat(inFile);
 
          if (inFormat == null)
          {
@@ -718,17 +731,7 @@ public class JDRConverter
 
       if (outFormat == null)
       {
-         // guess from file extension
-
-         String name = outFile.getName();
-         int idx = name.lastIndexOf(".");
-
-         if (idx > 0)
-         {
-            String ext = name.substring(idx+1).toUpperCase();
-
-            outFormat = FileFormatType.valueOf(ext);
-         }
+         outFormat = FileFormatType.getFormat(outFile);
 
          if (outFormat == null)
          {
@@ -1021,6 +1024,25 @@ enum FileFormatType
   public boolean isTextFile()
   {
      return isTextFile;
+  }
+
+  public static FileFormatType getFormat(File file)
+  {
+      FileFormatType type = null;
+
+      // guess from file extension
+
+      String name = file.getName();
+      int idx = name.lastIndexOf(".");
+
+      if (idx > 0)
+      {
+         String ext = name.substring(idx+1).toUpperCase();
+
+         type = valueOf(ext);
+      }
+
+      return type;
   }
 
   private final boolean inputSupported;
