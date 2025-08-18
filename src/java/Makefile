@@ -10,7 +10,7 @@ target_version := --release 8 -Xlint:-options
 all	: $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar \
 	  $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrview.jar \
 	  $(LIBDIR)/jdrinfo.jar $(LIBDIR)/jdrconverter.jar \
-	  $(LIBDIR)/ajr2jdr.jar $(LIBDIR)/ajr2tex.jar \
+	  $(LIBDIR)/ajr2tex.jar \
 	  $(LIBDIR)/eps2jdr.jar $(LIBDIR)/jdr2ajr.jar \
 	  $(LIBDIR)/jdr2eps.jar $(LIBDIR)/jdr2png.jar \
 	  $(LIBDIR)/jdr2svg.jar $(LIBDIR)/jdr2tex.jar \
@@ -38,8 +38,6 @@ jdrview	: $(LIBDIR)/jdrview.jar
 ../lib/jdrconverter.jar	: $(LIBDIR)/jdrconverter.jar
 
 ../lib/jdrinfo.jar	: $(LIBDIR)/jdrinfo.jar
-
-../lib/ajr2jdr.jar	: $(LIBDIR)/ajr2jdr.jar
 
 ../lib/svg2jdr.jar	: $(LIBDIR)/svg2jdr.jar
 
@@ -113,13 +111,6 @@ $(LIBDIR)/jdrinfo.jar	: classes/$(CLASSTREE)/jdrinfo/JdrInfo.class \
 		jar cmf ../jdrinfo/Manifest.txt \
 	          $(LIBDIR)/jdrinfo.jar \
 		  $(CLASSTREE)/jdrinfo/*.class
-
-$(LIBDIR)/ajr2jdr.jar	: classes/$(CLASSTREE)/ajr2jdr/Ajr2Jdr.class \
-		  ajr2jdr/Manifest.txt
-		cd classes ; \
-		jar cmf ../ajr2jdr/Manifest.txt \
-	          $(LIBDIR)/ajr2jdr.jar \
-		  $(CLASSTREE)/ajr2jdr/*.class
 
 $(LIBDIR)/ajr2tex.jar	: classes/$(CLASSTREE)/ajr2tex/Ajr2Tex.class \
 		  ajr2tex/Manifest.txt
@@ -234,14 +225,6 @@ classes/$(CLASSTREE)/jdrinfo/JdrInfo.class : \
 	-cp $(LIBDIR)/jdr.jar \
 	*.java
 
-classes/$(CLASSTREE)/ajr2jdr/Ajr2Jdr.class : \
-	classes \
-	ajr2jdr/*.java
-	cd ajr2jdr ; \
-	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar \
-	*.java
-
 classes/$(CLASSTREE)/ajr2tex/Ajr2Tex.class : \
 	classes \
 	ajr2tex/*.java
@@ -322,7 +305,7 @@ classes/$(CLASSTREE)/flowframtk	:
 
 clean	:
 	\rm -f $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar $(LIBDIR)/jdrview.jar
-	\rm -f $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrconverter.jar  $(LIBDIR)/ajr2jdr.jar $(LIBDIR)/ajr2tex.jar $(LIBDIR)/jdrinfo.jar
+	\rm -f $(LIBDIR)/flowframtk.jar $(LIBDIR)/jdrconverter.jar  $(LIBDIR)/ajr2tex.jar $(LIBDIR)/jdrinfo.jar
 	\rm -f $(LIBDIR)/eps2jdr.jar $(LIBDIR)/jdr2ajr.jar $(LIBDIR)/jdr2eps.jar $(LIBDIR)/jdr2png.jar
 	\rm -f $(LIBDIR)/jdr2svg.jar $(LIBDIR)/jdr2tex.jar $(LIBDIR)/svg2jdr.jar
 	\rm -f -r classes
