@@ -1082,6 +1082,9 @@ public class JDRConverter
             case PNG:
                PNG.save(paths, outFile, addAlphaChannel, encapsulate);
             break;
+            case SVG:
+               SVG.save(paths, paths.getDescription(), out);
+            break;
             default:
               throw new InvalidFormatException(
                 getMessage("error.cant_save_format", outFormat));
