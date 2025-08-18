@@ -1,4 +1,4 @@
 #!/bin/sh
 
 bindir=`dirname $0`
-java -jar "$bindir/../lib/jdr2tex.jar" "$@"
+java -jar "$bindir/../lib/jdrconverter.jar" --from JDR --to TEX "$@"

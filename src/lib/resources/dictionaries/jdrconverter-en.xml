@@ -18,6 +18,16 @@ Nicola Talbot
 <entry key="syntax.locale">{0} &lt;lang-tag&gt;	Use localisation support for the given locale (if available).</entry>
 <entry key="syntax.jdr_version">{0} &lt;version&gt;	If the output format is JDR or AJR, use this version.</entry>
 
+<entry key="syntax.encapsulate">{0} (or {1})	Create encapsulated image (if applicable).</entry>
+<entry key="syntax.bitmaps_to_eps">{0}	Convert bitmaps to EPS (if applicable).</entry>
+
+<entry key="syntax.tex_settings">(La)TeX output settings.</entry>
+
+<entry key="syntax.other">Other options.</entry>
+
+<entry key="syntax.doc">{0}	Create complete document (if applicable).</entry>
+<entry key="syntax.use_typeblock">{0}	Use typeblock (if applicable).</entry>
+
 <entry key="syntax.list_output_formats">{0}	List all supported output formats and exit.</entry>
 <entry key="syntax.list_input_formats">{0}	List all supported input formats and exit.</entry>
 
@@ -30,6 +40,13 @@ Nicola Talbot
 
 <entry key="syntax.in.charset">{0} &lt;charset&gt;	Set the character encoding to &lt;charset&gt; for the input file (where applicable).</entry>
 <entry key="syntax.out.charset">{0} &lt;charset&gt;	Set the character encoding to &lt;charset&gt; for the output file (where applicable).</entry>
+
+<!-- General messages -->
+
+<entry key="message.created_by">Created by {0}</entry>
+<entry key="message.required_preamble_commands">This image requires the following commands in the preamble:</entry>
+<entry key="message.assumed_normalsize">The normal size font is assumed to be {0}pt</entry>
+<entry key="message.end_preamble_info">End of preamble information</entry>
 
 <!-- Syntax error messages -->
 <entry key="error.syntax">Syntax error: {0}</entry>

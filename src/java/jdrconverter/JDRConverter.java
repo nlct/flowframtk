@@ -204,6 +204,16 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.in.charset", "--in-charset"));
       helpLib.printSyntaxItem(getMessage("syntax.out.charset", "--out-charset"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.encapsulate", "--[no]encapsulate", "-E"));
+      helpLib.printSyntaxItem(getMessage("syntax.bitmap_to_eps", "--[no]bitmap-to-eps"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.tex_settings"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.doc", "--[no]doc"));
+      helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no]use-typeblock"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.other"));
+
       helpLib.printSyntaxItem(getMessage("syntax.list_input_formats",
        "--list-input-formats"));
 
@@ -417,7 +427,18 @@ public class JDRConverter
                   }
                }
             }
-            else if (originalArgList[preparseIndex].equals("-nosettings"))
+            else if (originalArgList[preparseIndex].equals("-use_typeblock"))
+            {
+               deque.add("--use-typeblock");
+            }
+            else if (originalArgList[preparseIndex].equals("-nouse_typeblock"))
+            {
+               deque.add("--nouse-typeblock");
+            }
+            else if (originalArgList[preparseIndex].equals("-nosettings")
+                  || originalArgList[preparseIndex].equals("-doc")
+                  || originalArgList[preparseIndex].equals("-nodoc")
+                    )
             {
                deque.add("-"+originalArgList[preparseIndex]);
             }
@@ -483,6 +504,38 @@ public class JDRConverter
             if (arg.equals("--nosettings"))
             {
                saveSettingsType = SaveSettingsType.NONE;
+            }
+            else if (arg.equals("--doc"))
+            {
+               completeDoc = true;
+            }
+            else if (arg.equals("--nodoc"))
+            {
+               completeDoc = false;
+            }
+            else if (arg.equals("--use-typeblock"))
+            {
+               useTypeblock = true;
+            }
+            else if (arg.equals("--nouse-typeblock"))
+            {
+               useTypeblock = false;
+            }
+            else if (arg.equals("--encapsulate") || arg.equals("-E"))
+            {
+               encapsulate = true;
+            }
+            else if (arg.equals("--noencapsulate"))
+            {
+               encapsulate = false;
+            }
+            else if (arg.equals("--bitmaps-to-eps"))
+            {
+               convertBitmapToEps = true;
+            }
+            else if (arg.equals("--nobitmaps-to-eps"))
+            {
+               convertBitmapToEps = false;
             }
             else if (arg.equals("--list-input-formats"))
             {
@@ -895,6 +948,32 @@ public class JDRConverter
               AJR ajr = new AJR();
               ajr.save(paths, out, outVersion, settingsFlag);
             break;
+            case TEX:
+              PGF pgf = new PGF(outFile.getParentFile(), out);
+              pgf.comment(getMessage("message.created_by", NAME));
+              pgf.writeCreationDate();
+
+              if (completeDoc)
+              {
+                 pgf.saveDoc(paths, null, encapsulate, convertBitmapToEps, useTypeblock);
+              }
+              else
+              {
+                 pgf.println("\\iffalse");
+
+                 pgf.comment(getMessage("message.required_preamble_commands"));
+                 pgf.writePreambleCommands(paths);
+
+                 pgf.comment(getMessage("message.assumed_normalsize",
+                  paths.getCanvasGraphics().getLaTeXNormalSize()));
+
+                 pgf.comment(getMessage("message.end_preamble_info"));
+
+                 pgf.println("\\fi");
+
+                 pgf.save(paths, useTypeblock);
+              }
+            break;
             default:
               throw new InvalidFormatException(
                 getMessage("error.cant_save_format", outFormat));
@@ -937,6 +1016,10 @@ public class JDRConverter
    protected boolean debugMode = false;
    protected boolean shownVersion = false;
    protected File inFile, outFile; // --in / -i , --output / -o
+   protected boolean completeDoc = false; // --doc
+   protected boolean useTypeblock = false; // --use-typeblock
+   protected boolean encapsulate = false; // --encapsulate / -E
+   protected boolean convertBitmapToEps = false; // --bitmaps-to-eps
 
    // --settings --nosettings
    protected SaveSettingsType saveSettingsType = SaveSettingsType.MATCH_INPUT;

@@ -11,12 +11,10 @@ target_version := --release 8 -Xlint:-options
 
 
 all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar \
-	lib/ajr2tex.jar \
 	lib/eps2jdr.jar \
 	lib/jdr2eps.jar \
 	lib/jdr2png.jar \
 	lib/jdr2svg.jar \
-	lib/jdr2tex.jar \
 	lib/svg2jdr.jar
 
 test	: lib/flowframtk.jar
@@ -144,20 +142,6 @@ classes/com/dickimawbooks/jdrinfo/JdrInfo.class : lib/jdr.jar java/jdrinfo/*.jav
 	-cp ../../lib/jdr.jar \
 	*.java
 
-lib/ajr2tex.jar   : classes/com/dickimawbooks/ajr2tex/Ajr2Tex.class \
-	java/ajr2tex/Manifest.txt
-	cd classes ; \
-	jar cmf ../java/ajr2tex/Manifest.txt \
-	  ../lib/ajr2tex.jar \
-	  com/dickimawbooks/ajr2tex/*.class
-
-classes/com/dickimawbooks/ajr2tex/Ajr2Tex.class : lib/jdr.jar java/ajr2tex/*.java
-	cd java/ajr2tex ; \
-	javac $(target_version) \
-	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar \
-	*.java
-
 lib/eps2jdr.jar   : classes/com/dickimawbooks/eps2jdr/Eps2Jdr.class \
 	java/eps2jdr/Manifest.txt
 	cd classes ; \
@@ -214,20 +198,6 @@ classes/com/dickimawbooks/jdr2svg/Jdr2Svg.class : lib/jdr.jar java/jdr2svg/*.jav
 	-cp ../../lib/jdr.jar \
 	*.java
 
-lib/jdr2tex.jar   : classes/com/dickimawbooks/jdr2tex/Jdr2Tex.class \
-	java/jdr2tex/Manifest.txt
-	cd classes ; \
-	jar cmf ../java/jdr2tex/Manifest.txt \
-	  ../lib/jdr2tex.jar \
-	  com/dickimawbooks/jdr2tex/*.class
-
-classes/com/dickimawbooks/jdr2tex/Jdr2Tex.class : lib/jdr.jar java/jdr2tex/*.java
-	cd java/jdr2tex ; \
-	javac $(target_version) \
-	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar \
-	*.java
-
 lib/svg2jdr.jar   : classes/com/dickimawbooks/svg2jdr/Svg2Jdr.class \
 	java/svg2jdr/Manifest.txt
 	cd classes ; \
@@ -261,11 +231,9 @@ clean	:
 	\rm -r -f classes
 	\rm -f lib/jdr.jar lib/jdrresources.jar
 	\rm -f lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar
-	\rm -f lib/ajr2tex.jar
 	\rm -f lib/eps2jdr.jar
 	\rm -f lib/jdr2eps.jar
 	\rm -f lib/jdr2png.jar
 	\rm -f lib/jdr2svg.jar
-	\rm -f lib/jdr2tex.jar
 	\rm -f lib/svg2jdr.jar
 	make -C doc/en clean
