@@ -5,7 +5,7 @@
 \usepackage
  [
     novref,
-   debug=showwrgloss
+   %debug=showwrgloss
  ]{texjavahelp}
 
 \hypersetup{colorlinks,linkcolor=blue}
@@ -47,12 +47,13 @@ Unlike \FlowframTk, \JDRView\ does not have a \gls{mdi}, and so
 requires new instances if additional images need to be viewed
 at the same time.
 
-If any \glspl{object} have been assigned a description, move the
+If any \glspl+{object} have been assigned a description, move the
 pointer over the \gls{object} and the description will appear.
 If the pointer is positioned over an empty area, the image's
 description will appear, if it has been given one.
 
 \chapter{Command Line Options}
+\label{sec:commandlineopts}
 
 \JDRView\ can be invoked from a command prompt:
 \appdef{jdrview}
@@ -69,7 +70,7 @@ setenv JDR_JVMOPTS -Xmx128m
 \end{verbatim}
 Note that \FlowframTk\ also uses this environment variable.
 
-If you can't use the \file{jdrview} script, you can invoke
+If you can't use the \app{jdrview} script, you can invoke
 \JDRView\ from the command line using:
 \begin{terminal}
 java -jar jdrview.jar \meta{option-list} \meta{filename}
@@ -139,7 +140,20 @@ the anti-aliasing on or off.
 
 The \menu{settings.zoom} sub-menu allows you to change
 the magnification. You can choose one of the predefined
-settings or you can specify an arbitrary setting.
+settings%
+\glsaddeach{%
+menu.settings.zoom.width,%
+menu.settings.zoom.height,%
+menu.settings.zoom.page,%
+menu.settings.zoom.25,%
+menu.settings.zoom.50,%
+menu.settings.zoom.75,%
+menu.settings.zoom.100,%
+menu.settings.zoom.200,%
+menu.settings.zoom.400,%
+menu.settings.zoom.800%
+} 
+or you can specify an arbitrary setting.
 
 \menudef{menu.settings.zoom.user}
 

@@ -75,6 +75,7 @@ Nicola Talbot
 <entry key="error.syntax.invalid_settings">Invalid settings option ''{0}''</entry>
 
 <entry key="error.cant_import_from">Unable to import from file format ''{0}'' (export only).</entry>
+<entry key="error.cant_export_to">Unable to export to file format ''{0}'' (import only).</entry>
 <entry key="error.cant_load_format">Unable to load file format ''{0}''.</entry>
 <entry key="error.cant_save_format">Unable to save file format ''{0}''.</entry>
 <entry key="error.no_image">No image found: nothing to save.</entry>

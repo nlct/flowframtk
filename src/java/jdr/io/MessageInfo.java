@@ -135,8 +135,13 @@ public class MessageInfo
    public static MessageInfo createVerbose(int level, String message,
      boolean newline)
    {
-      return new MessageInfo(String.format(
-        newline ? "%s%d%n" : "%s%d", VERBOSE, level), message);
+      if (newline)
+      {
+         message = String.format("%s%n", message);
+      }
+
+      return new MessageInfo(String.format("%s%d", VERBOSE, level),
+         message);
    }
    
    public static MessageInfo createVerbose(int level, Throwable cause)
@@ -152,6 +157,12 @@ public class MessageInfo
    public static MessageInfo createSetVisible(boolean isVisible)
    {
       return new MessageInfo(VISIBLE, new Boolean(isVisible));
+   }
+
+   public String toString()
+   {
+      return String.format("%s[action=%s,value=%s]",
+       getClass().getSimpleName(), action, value);
    }
    
    private String action;

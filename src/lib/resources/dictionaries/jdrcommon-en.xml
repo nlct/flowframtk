@@ -178,10 +178,18 @@ Nicola Talbot
 <entry key="process.aborted">Task aborted.</entry>
 <entry key="process.cancelling">Canceling task.</entry>
 
+<entry key="info.loading">Loading {0}</entry>
 <entry key="info.saving">Saving {0}</entry>
 <entry key="message.done">Done</entry>
 <entry key="message.failed">Failed: {0}</entry>
 <entry key="message.load_settings">loading settings from {0}</entry>
+
+<entry key="message.acorn_drawfile.major">Major version: {0}</entry>
+<entry key="message.acorn_drawfile.minor">Minor version: {0}</entry>
+<entry key="message.acorn_drawfile.producer">Producer: {0}</entry>
+<entry key="message.acorn_drawfile.bounding_box">Bounding Box: ({0}, {1}) ({2}, {3})</entry>
+<entry key="message.acorn_drawfile.object_id">Object identifier: {0}</entry>
+<entry key="message.acorn_drawfile.papersize">Paper size: {0}</entry>
 
 <!--  Comments in TeX/LaTeX Files -->
 
@@ -234,6 +242,10 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <!-- Error Messages -->
 
 <entry key="error.title">Error</entry>
+<entry key="error.tag">Error: {0}</entry>
+
+<entry key="error.fatal">Fatal error</entry>
+<entry key="error.fatal.tag">Fatal error: {0}</entry>
 
 <entry key="error.throwable.FileNotFoundException">File not found</entry>
 <entry key="error.throwable.IOException">I/O error has occurred</entry>
@@ -250,6 +262,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="error.not_ajr">Not an AJR file</entry>
 <entry key="error.not_found">File not found</entry>
 <entry key="error.not_jdr">Not a JDR file</entry>
+<entry key="error.not_acorn_drawfile">Not an Acorn Draw file</entry>
 
 <entry key="error.top_level_missing">Top level group identifier missing</entry>
 <entry key="error.unknown_ajr_version">Unknown ajr file version</entry>
@@ -286,7 +299,6 @@ File doesn''t exist</entry>
 
 <entry key="error.empty_string">Empty string</entry>
 <entry key="error.eof">File ended prematurely</entry>
-<entry key="error.fatal">Fatal error</entry>
 <entry key="error.file_not_found">File not found</entry>
 <entry key="error.file_not_found_with_name">File not found: {0}</entry>
 
@@ -499,6 +511,13 @@ File doesn''t exist</entry>
 <entry key="error.invalid_marker-id">Invalid marker ID</entry>
 <entry key="error.invalid_length">Invalid length</entry>
 <entry key="error.invalid_description">Invalid description</entry>
+
+<entry key="error.acorn_drawfile.unsupported_object_id">Unsupported object identifier: {0}</entry>
+
+<!-- Internal Error Messages -->
+
+<entry key="internal_error.title">Internal Error</entry>
+<entry key="internal_error.tag">Internal Error: {0}</entry>
 
 <!-- Manual -->
 

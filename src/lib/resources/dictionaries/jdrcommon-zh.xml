@@ -187,6 +187,7 @@
 <entry key="process.aborted">Task aborted.</entry>
 <entry key="process.cancelling">Canceling task.</entry>
 
+<entry key="info.loading">Loading {0}</entry>
 <entry key="info.saving">Saving {0}</entry>
 <entry key="message.done">Done</entry>
 <entry key="message.failed">Failed: {0}</entry>
@@ -242,6 +243,10 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <!-- Error Messages -->
 
 <entry key="error.title">错误</entry>
+<entry key="error.tag">错误: {0}</entry>
+
+<entry key="error.fatal">致使错误</entry>
+<entry key="error.fatal.tag">致使错误: {0}</entry>
 
 <entry key="error.throwable.FileNotFoundException">File not found</entry>
 <entry key="error.throwable.IOException">I/O error has occurred</entry>
@@ -258,6 +263,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.not_ajr">不是一个AJR文件</entry>
 <entry key="error.not_found">文件未找到</entry>
 <entry key="error.not_jdr">不是一个JDR文件</entry>
+<entry key="error.not_acorn_drawfile">不是一个Acorn DrawFile文件</entry>
 
 <entry key="error.top_level_missing">缺少顶层组合标识符</entry>
 <entry key="error.unknown_ajr_version">AJR文件版本号不明</entry>
@@ -290,7 +296,6 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 
 <entry key="error.empty_string">空串</entry>
 <entry key="error.eof">File ended prematurely</entry>
-<entry key="error.fatal">致使错误</entry>
 <entry key="error.file_not_found">无法找到文件</entry>
 <entry key="error.file_not_found_with_name">无法找到文件: {0}</entry>
 
@@ -504,8 +509,12 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_length">Invalid length</entry>
 <entry key="error.invalid_description">Invalid description</entry>
 
-<!-- Manual -->
+<!--  Internal Error Messages -->
 
+<entry key="internal_error.title">内部错误</entry>
+<entry key="internal_error.tag">内部错误: {0}</entry>
+
+<!-- Manual -->
 
 <entry key="index.licence">license</entry>
 

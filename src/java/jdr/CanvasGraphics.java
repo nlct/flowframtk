@@ -1284,6 +1284,11 @@ public class CanvasGraphics
       storageUnit = unit;
    }
 
+   public synchronized void setStorageUnit(JDRUnit unit)
+   {
+      storageUnit = unit;
+   }
+
    public double getBpPointSize()
    {
       return pointSize.getValue(JDRUnit.bp);

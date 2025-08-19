@@ -133,7 +133,7 @@ classes/$(CLASSTREE)/jdrview/JDRView.class : \
 	  *.java
 
 classes/$(CLASSTREE)/jdrconverter/JDRConverter.class : \
-	classes \
+	$(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar classes \
 	jdrconverter/*.java
 	cd jdrconverter ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \

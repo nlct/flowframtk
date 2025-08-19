@@ -42,6 +42,7 @@ public class JDRConverter
    public JDRConverter()
    {
       msgPublisher = new ConverterPublisher(this);
+      msgPublisher.setVerbosity(0);
       userConfigProperties = new Properties();
    }
 
@@ -509,6 +510,9 @@ public class JDRConverter
          {
             // called by --debug
             debugMode = true;
+            msgPublisher.setDebugMode(true);
+            msgPublisher.setVerbosity(2);
+            msgPublisher.displayMessages();
 
             return true;
          }
@@ -522,19 +526,11 @@ public class JDRConverter
                return true;
             }
 
-            if (originalArgList[preparseIndex].equals("--verbose"))
-            {
-               msgPublisher.setVerbosity(1);
-            }
-            else if (originalArgList[preparseIndex].equals("--noverbose"))
-            {
-               msgPublisher.setVerbosity(0);
-            }
-            else if (originalArgList[preparseIndex].equals("--nodebug")
+            if (originalArgList[preparseIndex].equals("--nodebug")
                    || originalArgList[preparseIndex].equals("--no-debug")
                     )
             {
-               debugMode = false;
+               msgPublisher.setDebugMode(false);
             }
             else if (originalArgList[preparseIndex].equals("--locale"))
             {
@@ -686,7 +682,21 @@ public class JDRConverter
          protected boolean parseArg(String arg, CLIArgValue[] returnVals)
          throws InvalidSyntaxException
          {
-            if (arg.equals("--nosettings"))
+            if (arg.equals("--verbose"))
+            {
+               msgPublisher.setVerbosity(1);
+               msgPublisher.displayMessages();
+            }
+            else if (arg.equals("--noverbose"))
+            {
+               msgPublisher.setVerbosity(0);
+               msgPublisher.displayMessages();
+            }
+            else if (arg.equals("--quiet"))
+            {
+               msgPublisher.hideMessages();
+            }
+            else if (arg.equals("--nosettings"))
             {
                saveSettingsType = SaveSettingsType.NONE;
             }
@@ -768,39 +778,42 @@ public class JDRConverter
 
                for (FileFormatType type : FileFormatType.values())
                {
-                  System.out.print(type);
-
-                  idx += type.toString().length();
-
-                  if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
+                  if (type.isOutputSupported())
                   {
-                     System.out.println();
-                     idx = 0;
-                  }
-                  else
-                  {
-                     System.out.print(" ");
-                     idx++;
-                  }
+                     System.out.print(type);
 
-                  if (type == FileFormatType.JDR || type == FileFormatType.AJR)
-                  {
-                     for (String ver : JDRAJR.VALID_VERSIONS_STRING)
+                     idx += type.toString().length();
+
+                     if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
                      {
-                        String str = type+"-"+ver;
-                        System.out.print(str);
+                        System.out.println();
+                        idx = 0;
+                     }
+                     else
+                     {
+                        System.out.print(" ");
+                        idx++;
+                     }
 
-                        idx += str.length();
+                     if (type == FileFormatType.JDR || type == FileFormatType.AJR)
+                     {
+                        for (String ver : JDRAJR.VALID_VERSIONS_STRING)
+                        {
+                           String str = type+"-"+ver;
+                           System.out.print(str);
 
-                        if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
-                        {
-                           System.out.println();
-                           idx = 0;
-                        }
-                        else
-                        {
-                           System.out.print(" ");
-                           idx++;
+                           idx += str.length();
+
+                           if (idx >= TeXJavaHelpLib.SYNTAX_ITEM_LINEWIDTH)
+                           {
+                              System.out.println();
+                              idx = 0;
+                           }
+                           else
+                           {
+                              System.out.print(" ");
+                              idx++;
+                           }
                         }
                      }
                   }
@@ -1088,6 +1101,12 @@ public class JDRConverter
       };
 
       cliParser.preparse();
+
+      if (debugMode)
+      {
+         msgPublisher.setDebugVerbosityThreshold(-1);
+      }
+
       ensureHelpSetLoaded();
       cliParser.parseArgs();
 
@@ -1128,6 +1147,11 @@ public class JDRConverter
          {
             outFormat = FileFormatType.JDR;
          }
+      }
+
+      if (!outFormat.isOutputSupported())
+      {
+         throw new InvalidSyntaxException(getMessage("error.cant_export_to", outFormat));
       }
 
       if (!outFormat.canTeXToolsCreate())
@@ -1212,6 +1236,11 @@ public class JDRConverter
             case SVG:
 // TODO fix this
                paths = SVG.load(canvasGraphics, in);
+            break;
+            case ACORN_DRAWFILE:
+// TODO Work in progress
+               paths = AcornDrawFile.load(canvasGraphics, din);
+               settingsFlag = JDR.ALL_SETTINGS;
             break;
             default:
               throw new InvalidFormatException(
@@ -1699,11 +1728,21 @@ public class JDRConverter
 
          System.exit(EXIT_SYNTAX);
       }
+      catch (IOException e)
+      {
+         app.error(e.getMessage(), app.debugMode ? e : null);
+
+         System.exit(EXIT_IO);
+      }
+      catch (InvalidFormatException e)
+      {
+         app.error(e.getMessage(), app.debugMode ? e : null);
+
+         System.exit(EXIT_FORMAT);
+      }
       catch (Throwable e)
       {
          app.error(null, e);
-
-         e.printStackTrace();
 
          System.exit(EXIT_OTHER);
       }
@@ -1752,5 +1791,7 @@ public class JDRConverter
    public static final String NAME = "jdrconverter";
 
    public static final int EXIT_SYNTAX=1;
-   public static final int EXIT_OTHER=2;
+   public static final int EXIT_FORMAT=2;
+   public static final int EXIT_IO=3;
+   public static final int EXIT_OTHER=100;
 }

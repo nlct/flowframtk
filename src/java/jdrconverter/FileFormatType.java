@@ -23,18 +23,24 @@ import java.io.File;
 
 public enum FileFormatType
 {
-  JDR(true, false, false, false), AJR(true, true, false, false),
-  EPS(true, true, true, false), SVG(true, true, true, false), 
-  PNG(false, false, false, false), // TODO
-  TEX(false, true, false, false),
-  CLS(false, true, false, false),
-  STY(false, true, false, false),
-  PDF(false, false, true, true);
+  JDR(true, true, false, false, false),
+  AJR(true, true, true, false, false),
+  EPS(true, true, true, true, false),
+  SVG(true, true, true, true, false), 
+  PNG(false, true, false, false, false), // TODO
+  TEX(false, true, true, false, false),
+  CLS(false, true, true, false, false),
+  STY(false, true, true, false, false),
+  PDF(false, true, false, true, true),
+  ACORN_DRAWFILE(true, false, false, false, false);
 
-  private FileFormatType(final boolean inputSupported, final boolean isTextFile,
+  private FileFormatType(final boolean inputSupported,
+   final boolean outputSupported,
+   final boolean isTextFile,
    final boolean canTeXToolsCreate, final boolean requiresTeXTools)
   {
      this.inputSupported = inputSupported;
+     this.outputSupported = outputSupported;
      this.isTextFile = isTextFile;
      this.canTeXToolsCreate = canTeXToolsCreate;
      this.requiresTeXTools = requiresTeXTools;
@@ -43,6 +49,11 @@ public enum FileFormatType
   public boolean isInputSupported()
   {
      return inputSupported;
+  }
+
+  public boolean isOutputSupported()
+  {
+     return outputSupported;
   }
 
   public boolean isTextFile()
@@ -67,6 +78,12 @@ public enum FileFormatType
       // guess from file extension
 
       String name = file.getName();
+
+      if (name.endsWith(",aff"))
+      {
+         return ACORN_DRAWFILE;
+      }
+
       int idx = name.lastIndexOf(".");
 
       if (idx > 0)
@@ -80,6 +97,7 @@ public enum FileFormatType
   }
 
   private final boolean inputSupported;
+  private final boolean outputSupported;
   private final boolean isTextFile;
   private final boolean canTeXToolsCreate;
   private final boolean requiresTeXTools;

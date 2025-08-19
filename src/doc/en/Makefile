@@ -141,7 +141,7 @@ $(targetdir)/jdrview/en/index.xml	: $(targetdir)/jdrview/en \
 
 $(targetdir)/jdrview/en-GB/index.xml	: $(targetdir)/jdrview/en-GB \
 	  jdrview-en-GB.pdf  
-	$(texjavahelpmk) jdrview-en.tex $(targetdir)/jdrview/en-GB
+	$(texjavahelpmk) jdrview-en-GB.tex $(targetdir)/jdrview/en-GB
 
 
 $(targetdir)/flowframtk/en	:

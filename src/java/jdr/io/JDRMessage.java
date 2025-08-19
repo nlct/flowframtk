@@ -39,6 +39,8 @@ public interface JDRMessage extends JDRMessageDictionary
    public void setVerbosity(int verbosity);
    public int getVerbosity();
 
+   public default boolean isDebuggingOn() { return false; }
+
    public int getProgress();
    public int getMaxProgress();
 

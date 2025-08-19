@@ -38,6 +38,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       publisher = this;
    }
 
+   @Override
    public void postMessage(MessageInfo info)
    {
       String action = info.getAction();
@@ -68,11 +69,11 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
          if (value instanceof Throwable)
          {
-            warning((Throwable)value);
+            warningnoln((Throwable)value);
          }
          else
          {
-            warning(value.toString());
+            warningnoln(value.toString());
          }
       }
       else if (action.equals(MessageInfo.ERROR))
@@ -81,11 +82,11 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
          if (value instanceof Throwable)
          {
-            error((Throwable)value);
+            errornoln((Throwable)value);
          }
          else
          {
-            error(value.toString());
+            errornoln(value.toString());
          }
       }
       else if (action.equals(MessageInfo.FATAL_ERROR))
@@ -131,7 +132,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
             }
          }
 
-         verbose(level, info.getValue().toString());
+         verbosenoln(level, info.getValue().toString());
       }
       else
       {
@@ -144,6 +145,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       indeterminate_ = indeterminate;
    }
 
+   @Override
    public boolean isIndeterminate()
    {
       return indeterminate_;
@@ -159,6 +161,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       setProgress(progressValue+inc);
    }
 
+   @Override
    public int getProgress()
    {
       return progressValue;
@@ -276,55 +279,106 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       }
    }
 
+   public void warningnoln(String messageText)
+   {
+      System.err.print(
+        getMessageWithFallback("warning.tag", "Warning: {0}", messageText));
+   }
+
+   public void warningnoln(Throwable cause)
+   {
+      warningnoln(cause.getMessage());
+      debug(cause);
+   }
+
    public void warning(String messageText)
    {
-      System.err.println("Warning: "+messageText);
+      System.err.println(
+        getMessageWithFallback("warning.tag", "Warning: {0}", messageText));
    }
 
    public void warning(Throwable cause)
    {
-      System.err.println("Warning: "+cause.getMessage());
+      warning(getMessage(cause));
+      debug(cause);
+   }
+
+   public void errornoln(String messageText)
+   {
+      System.err.print(
+        getMessageWithFallback("error.tag", "Error: {0}", messageText));
+   }
+
+   public void errornoln(Throwable cause)
+   {
+      errornoln(cause.getMessage());
+      debug(cause);
    }
 
    public void error(String messageText)
    {
-      System.err.println("Error: "+messageText);
+      System.err.println(
+        getMessageWithFallback("error.tag", "Error: {0}", messageText));
    }
 
    public void error(Throwable cause)
    {
-      System.err.println("Error: "+cause.getMessage());
+      error(getMessage(cause));
+      debug(cause);
    }
 
    public void internalerror(String messageText)
    {
-      System.err.println("Internal error: "+messageText);
+      System.err.println(
+       getMessageWithFallback("internal_error.tag",
+         "Internal error: {0}", messageText));
    }
 
    public void internalerror(Throwable cause)
    {
-      System.err.println("Internal error: "+cause.getMessage());
-      cause.printStackTrace();
+      internalerror(getMessage(cause));
+      debug(cause);
    }
 
    public void fatalerror(String messageText)
    {
-      System.err.println("Fatal error: "+messageText);
+      System.err.println(
+        getMessageWithFallback("error.fatal.tag", "Fatal error: {0}", messageText));
    }
 
    public void fatalerror(Throwable cause)
    {
-      System.err.println("Fatal error: "+cause.getMessage());
+      fatalerror(getMessage(cause));
    }
 
-   public void debug(Exception excp)
+   @Override
+   public boolean isDebuggingOn()
    {
-      excp.printStackTrace();
+      return verbosity >= debugVerbosityThreshold;
+   }
+
+   public void debug(Throwable excp)
+   {
+      if (isDebuggingOn())
+      {
+         excp.printStackTrace();
+      }
    }
 
    public void debug(String msg)
    {
-      System.err.println(msg);
+      if (isDebuggingOn())
+      {
+         System.err.println(msg);
+      }
+   }
+
+   public void verbosenoln(int level, String msg)
+   {
+      if (level <= verbosity)
+      {
+         System.out.print(msg);
+      }
    }
 
    public void verbose(int level, String msg)
@@ -335,6 +389,13 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       }
    }
 
+   public String getMessage(Throwable e)
+   {
+      String msg = e.getMessage();
+
+      return msg == null ? e.getClass().getSimpleName() : msg;
+   }
+
    @Override
    public String getMessageWithFallback(String tag, String altFormat, 
      Object... values)
@@ -342,26 +403,41 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       return MessageFormat.format(altFormat, values);
    }
 
+   @Override
    public void setVerbosity(int level)
    {
       verbosity = level;
    }
 
+   @Override
    public int getVerbosity()
    {
       return verbosity;
    }
 
+   public void setDebugVerbosityThreshold(int level)
+   {
+      debugVerbosityThreshold = level;
+   }
+
+   public int getDebugVerbosityThreshold()
+   {
+      return debugVerbosityThreshold;
+   }
+
+   @Override
    public MessageInfoPublisher getPublisher()
    {
       return publisher;
    }
 
+   @Override
    public void setPublisher(MessageInfoPublisher publisher)
    {
       this.publisher = publisher;
    }
 
+   @Override
    public void publishMessages(MessageInfo... chunks)
    {
       for (MessageInfo info : chunks)
@@ -378,6 +454,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    private boolean suspended=false;
 
    private int verbosity=1;
+   private int debugVerbosityThreshold = 2;
 
    private MessageInfoPublisher publisher;
 }

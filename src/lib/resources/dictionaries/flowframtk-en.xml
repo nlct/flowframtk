@@ -1476,7 +1476,6 @@ Nicola Talbot
 <entry key="info.ellipse">Click on centre point, move mouse and click to complete.</entry>
 <entry key="info.grid.lock_on">Grid lock on</entry>
 <entry key="info.grid.lock_off">Grid lock off</entry>
-<entry key="info.loading">Loading {0}</entry>
 <entry key="info.modified">Modified</entry>
 <entry key="info.modified.tooltip">Image has been modified</entry>
 <entry key="info.unmodified.tooltip">Image hasn't been modified</entry>
@@ -3729,7 +3728,6 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 
 <!--  Internal Error Messages -->
 
-<entry key="internal_error.title">Internal Error</entry>
 <entry key="internal_error.can_only_merge_paths">Can only merge paths</entry>
 <entry key="internal_error.cant_find_selected_segment">Can''t find selected segment</entry>
 <entry key="internal_error.cant_find_selected_text">Can''t find selected text</entry>
