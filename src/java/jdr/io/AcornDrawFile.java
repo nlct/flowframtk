@@ -27,6 +27,7 @@ import java.awt.geom.GeneralPath;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
+import com.dickimawbooks.jdr.marker.*;
 
 /**
  * Functions to save and load Acorn DrawFile format.
@@ -348,6 +349,7 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       isometricGrid = (readInt() != 0);
       autoAdjust = (readInt() != 0);
       showGrid = (readInt() != 0);
+      lockGrid = (readInt() != 0);
 
       gridInches = (readInt() == 0);
 
@@ -376,18 +378,19 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
 
       cg.setGrid(grid);
       cg.setDisplayGrid(showGrid);
+      cg.setGridLock(lockGrid);
 
       affineTransform.setTransform(
-       DRAW_PT_TO_CM, 0, 0, -DRAW_PT_TO_CM, 
+       drawPointToUnit(1), 0, 0, -drawPointToUnit(1), 
        0.0, unit.fromBp(paper.getHeight()));
 
       readInt(); // zoom multiplier (1-8)
       readInt(); // zoom divider (1-8)
       readInt(); // zoom locking (0-> none, otherwise powers of 2)
 
-      showTools = (readInt() != 0);
+      showTools = (readInt() != 0);// show/hide toolbox
 
-      int drawTool = readInt(); // initial entry mode
+      int drawTool = readInt(); // current tool (initial entry mode)
 
       try
       {
@@ -397,9 +400,7 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       {// shouldn't happen
       }
 
-      bufferSize = readInt(); // undo buffer size
-
-      readInt(); // ?? 00 20 00 00 -> 1 bit set
+      readInt(); // undo buffer size (in bytes)
    }
 
    protected void readGrid()
@@ -446,10 +447,11 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       int outlineWidth = readInt();
 
       JDRBasicStroke stroke = new JDRBasicStroke(cg);
+      JDRLength penWidth = new JDRLength(cg, outlineWidth/640.0, JDRUnit.bp);
 
       if (outlineWidth > 0)
       {
-         stroke.setPenWidth(new JDRLength(cg, outlineWidth/640.0, JDRUnit.bp));
+         stroke.setPenWidth(penWidth);
       }
 
       int pathStyle = readInt();
@@ -496,29 +498,78 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       switch (capStyle)
       {
          case PATH_STYLE_END_CAP_BUTT:
-           stroke.setCapStyle(BasicStroke.CAP_BUTT);
+           endCap = BasicStroke.CAP_BUTT;
          break;
          case PATH_STYLE_END_CAP_ROUND:
-           stroke.setCapStyle(BasicStroke.CAP_ROUND);
+           endCap = BasicStroke.CAP_ROUND;
          break;
          case PATH_STYLE_END_CAP_SQUARE:
-           stroke.setCapStyle(BasicStroke.CAP_SQUARE);
+           endCap = BasicStroke.CAP_SQUARE;
          break;
          case PATH_STYLE_END_CAP_TRIANGLE:
             hasTriangleEnd = true;
          break;
       }
 
-      if (startCap == endCap)
+      int triangleWidth = (pathStyle & PATH_STYLE_TRIANGLE_WIDTH)>>16;
+      int triangleHeight = (pathStyle & PATH_STYLE_TRIANGLE_HEIGHT)>>24;
+
+      if (startCap != endCap || hasTriangleStart || hasTriangleEnd)
+      {
+         stroke.setCapStyle(BasicStroke.CAP_BUTT);
+
+         JDRMarker marker = null;
+
+         if (hasTriangleStart)
+         {
+// TODO
+            marker = JDRMarker.getPredefinedMarker(canvasGraphics,
+              JDRMarker.ARROW_TRIANGLE_CAP);
+         }
+         else if (startCap == BasicStroke.CAP_SQUARE)
+         {
+            marker = new ArrowRectangleCap(penWidth, 1, false, 
+               new JDRLength(cg, 0.5*penWidth.getValue(), penWidth.getUnit()));
+         }
+         else if (startCap == BasicStroke.CAP_ROUND)
+         {
+            marker = new ArrowRoundCap(penWidth, 1, false, 
+               new JDRLength(cg, 0.5*penWidth.getValue(), penWidth.getUnit()));
+         }
+
+         if (marker != null)
+         {
+            stroke.setStartArrow(marker);
+            marker = null;
+         }
+
+         if (hasTriangleEnd)
+         {
+// TODO
+            marker = JDRMarker.getPredefinedMarker(canvasGraphics,
+              JDRMarker.ARROW_TRIANGLE_CAP);
+         }
+         else if (endCap == BasicStroke.CAP_SQUARE)
+         {
+            marker = new ArrowRectangleCap(penWidth, 1, false, 
+               new JDRLength(cg, 0.5*penWidth.getValue(), penWidth.getUnit()));
+         }
+         else if (endCap == BasicStroke.CAP_ROUND)
+         {
+            marker = new ArrowRoundCap(penWidth, 1, false, 
+               new JDRLength(cg, 0.5*penWidth.getValue(), penWidth.getUnit()));
+         }
+
+         if (marker != null)
+         {
+            stroke.setEndArrow(marker);
+         }
+
+      }
+      else
       {
          stroke.setCapStyle(startCap);
       }
-
-      int triangleWidth = (pathStyle & PATH_STYLE_TRIANGLE_WIDTH)>>16;
-      int triangleHeight = (pathStyle & PATH_STYLE_TRIANGLE_WIDTH)>>24;
-
-      // TODO
-
 
       if ((pathStyle & PATH_STYLE_WINDING_RULE_EVEN_ODD)
             == PATH_STYLE_WINDING_RULE_EVEN_ODD)
@@ -534,15 +585,16 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
             == PATH_STYLE_PATTERN_DASH)
       {
          int offset = readInt(); // user co-ordinates
+         float dashOffset = (float)drawPointToUnit(offset);
          int n = readInt();
-         int[] pattern = new int[n];
+         float[] pattern = new float[n];
 
          for (int i = 0; i < n; i++)
          {
-            pattern[i] = readInt();
+            pattern[i] = (float)drawPointToUnit(readInt());
          }
 
-         // TODO
+         stroke.setDashPattern(new DashPattern(cg, pattern, dashOffset));
       }
 
       JDRPath path = new JDRPath(linePaint, fillPaint, stroke);
@@ -817,9 +869,16 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       return JDRConstants.ACTION_SELECT;
    }
 
-   public double drawPointToCm(int x)
+   public double drawPointToUnit(int x)
    {
-      return DRAW_PT_TO_CM * x;
+      if (gridInches)
+      {
+         return DRAW_PT_TO_IN * x;
+      }
+      else
+      {
+         return DRAW_PT_TO_CM * x;
+      }
    }
 
    CanvasGraphics canvasGraphics;
@@ -840,9 +899,9 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    boolean isometricGrid=false;
    boolean autoAdjust=false;
    boolean showGrid=false;
+   boolean lockGrid=false;
    boolean gridInches=false; // in or cm
    boolean showTools = true;
-   int bufferSize=8;
 
    AffineTransform affineTransform;
 
@@ -873,31 +932,31 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    static final int PAPER_LIMIT_LANDSCAPE = 1<<4;
    static final int PAPER_LIMIT_PRINTER = 1<<8;
 
-   static final int ACORN_TOOL_LINE=0;
-   static final int ACORN_TOOL_CLOSED_LINE=1;
-   static final int ACORN_TOOL_CURVE=2;
-   static final int ACORN_TOOL_CLOSED_CURVE=3;
-   static final int ACORN_TOOL_RECTANGLE=4;
-   static final int ACORN_TOOL_ELLIPSE=5;
-   static final int ACORN_TOOL_TEXTLINE=6;
-   static final int ACORN_TOOL_SELECT=7;
+   static final int ACORN_TOOL_LINE=1;
+   static final int ACORN_TOOL_CLOSED_LINE=2;
+   static final int ACORN_TOOL_CURVE=4;
+   static final int ACORN_TOOL_CLOSED_CURVE=8;
+   static final int ACORN_TOOL_RECTANGLE=16;
+   static final int ACORN_TOOL_ELLIPSE=32;
+   static final int ACORN_TOOL_TEXTLINE=64;
+   static final int ACORN_TOOL_SELECT=128;
 
    static final int PATH_STYLE_JOIN=3;
    static final int PATH_STYLE_JOIN_MITRED=0;
    static final int PATH_STYLE_JOIN_ROUND=1;
    static final int PATH_STYLE_JOIN_BEVELLED=2;
 
-   static final int PATH_STYLE_START_CAP=12;
-   static final int PATH_STYLE_START_CAP_BUTT=0;
-   static final int PATH_STYLE_START_CAP_ROUND=4;
-   static final int PATH_STYLE_START_CAP_SQUARE=8;
-   static final int PATH_STYLE_START_CAP_TRIANGLE=12;
-
-   static final int PATH_STYLE_END_CAP=48;
+   static final int PATH_STYLE_END_CAP=12;
    static final int PATH_STYLE_END_CAP_BUTT=0;
-   static final int PATH_STYLE_END_CAP_ROUND=16;
-   static final int PATH_STYLE_END_CAP_SQUARE=32;
-   static final int PATH_STYLE_END_CAP_TRIANGLE=48;
+   static final int PATH_STYLE_END_CAP_ROUND=4;
+   static final int PATH_STYLE_END_CAP_SQUARE=8;
+   static final int PATH_STYLE_END_CAP_TRIANGLE=12;
+
+   static final int PATH_STYLE_START_CAP=48;
+   static final int PATH_STYLE_START_CAP_BUTT=0;
+   static final int PATH_STYLE_START_CAP_ROUND=16;
+   static final int PATH_STYLE_START_CAP_SQUARE=32;
+   static final int PATH_STYLE_START_CAP_TRIANGLE=48;
 
    static final int PATH_STYLE_WINDING_RULE_EVEN_ODD=64;
 
@@ -913,4 +972,5 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    static final int PATH_TAG_LINE=8;
 
    static final double DRAW_PT_TO_CM=1.0/18144.0;
+   static final double DRAW_PT_TO_IN = DRAW_PT_TO_CM * 0.3937008;
 }
