@@ -408,12 +408,12 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    protected void readGrid()
    throws IOException,InvalidFormatException
    {
-      // ??
-      readInt();
-      readInt();
-      readInt();// subdivisions?
-      readInt();// spacing?
-      readInt();// colour id?
+      int value;
+      value = readInt();
+      value = readInt();
+      value = readInt();// y-only subdivisions
+      value = readInt();// y-only inch or cm
+      value = readInt();// colour id (0-15)
    }
 
    protected void readPath()
@@ -642,6 +642,8 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
               coords[3] = (double)readInt();
               coords[4] = (double)readInt();
               coords[5] = (double)readInt();
+
+              affineTransform.transform(coords, 0, coords, 0, 3);
 
               path.add(new JDRBezier(cg, prevX, prevY, 
                coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]));
