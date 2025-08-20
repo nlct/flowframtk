@@ -175,7 +175,7 @@ public class AcornDrawFile
 
    protected void readData() throws IOException,InvalidFormatException
    {
-      String word = readWord(4);
+      String word = readString(4);
 
       if (!word.equals("Draw"))
       {
@@ -193,7 +193,7 @@ public class AcornDrawFile
       printlnVerbose(getMessageWithFallback("message.acorn_drawfile.minor",
         "Minor version: {0}", minorVersion));
 
-      producer = readWord(12).trim();
+      producer = readString(12).trim();
 
       printlnVerbose(getMessageWithFallback("message.acorn_drawfile.producer", 
         "Producer: {0}", producer));
@@ -227,7 +227,8 @@ public class AcornDrawFile
    throws IOException,InvalidFormatException
    {
 System.out.println("OBJECT ID: "+objectId);
-      int size = readInt(); // Word aligned size, including header
+      objectSize = readInt(); // Word aligned size, including header
+System.out.println("SIZE: "+objectSize);
 
       // bounding box
       int lowX = readInt();
@@ -256,6 +257,7 @@ System.out.println("OBJECT ID: "+objectId);
          break;
          case OBJECT_GROUP:
            System.out.println("GROUP");
+           readGroup();
          break;
          case OBJECT_TAGGED:
            System.out.println("TAGGED");
@@ -659,6 +661,34 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       }
    }
 
+   protected void readGroup() throws IOException,InvalidFormatException
+   {
+      JDRGroup prevGroup = currentGroup;
+      JDRGroup group = new JDRGroup(image.getCanvasGraphics());
+      currentGroup.add(group);
+      currentGroup = group;
+
+      int groupSize = objectSize;
+      int currentSize = 32;
+
+      String name = readString(12).trim();
+
+      if (!name.isEmpty())
+      {
+         group.setDescription(name);
+      }
+
+      while (currentSize < groupSize)
+      {
+         int objectId = readInt();
+         readObject(objectId);
+
+         currentSize += objectSize;
+      }
+
+      currentGroup = prevGroup;
+   }
+
    protected byte[] getDataBuffer(int length)
    {
       if (dataBuffer == null || dataBuffer.length < length)
@@ -683,7 +713,7 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       return stringBuffer;
    }
 
-   public String readWord(int length) throws IOException
+   public String readString(int length) throws IOException
    {
       if (length == 0) return "";
 
@@ -693,7 +723,7 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
 
       if (isDebuggingOn())
       {
-         printlnDebug(String.format("readWord: %d byte(s) read", r));
+         printlnDebug(String.format("readString: %d byte(s) read", r));
 
          for (int i = 0; i < r; i++)
          {
@@ -902,6 +932,7 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    boolean lockGrid=false;
    boolean gridInches=false; // in or cm
    boolean showTools = true;
+   int objectSize;
 
    AffineTransform affineTransform;
 
