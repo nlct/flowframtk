@@ -1241,6 +1241,15 @@ public class JDRConverter
          }
       }
 
+      if (bitmapDir == null)
+      {
+         bitmapDir = outFile.getParentFile();
+
+         if (bitmapDir == null)
+         {
+            bitmapDir = outFile.getAbsoluteFile().getParentFile();
+         }
+      }
    }
 
    protected void run()
@@ -1302,7 +1311,7 @@ public class JDRConverter
             break;
             case ACORN_DRAWFILE:
 // TODO Work in progress
-               paths = AcornDrawFile.load(canvasGraphics, din);
+               paths = AcornDrawFile.load(canvasGraphics, din, bitmapDir, bitmapBase);
                settingsFlag = JDR.ALL_SETTINGS;
             break;
             default:
@@ -1835,6 +1844,7 @@ public class JDRConverter
    protected boolean convertBitmapToEps = false; // --bitmaps-to-eps
    protected boolean addAlphaChannel = false; // --alpha
    protected String bitmapBase; // --bitmap-basename
+   protected File bitmapDir;
    protected boolean useRelativeBitmaps = true;
    protected boolean flowframeAbsPages = false;
    protected boolean usePdfInfo = false;

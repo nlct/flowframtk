@@ -43,7 +43,8 @@ public class AcornDrawFile
       setCanvasGraphics(cg);
    }
 
-   private AcornDrawFile(CanvasGraphics cg, DataInputStream din)
+   private AcornDrawFile(CanvasGraphics cg, DataInputStream din,
+     File bitmapDir, String bitmapPrefix)
    {
       this(cg);
       image = new JDRGroup(cg);
@@ -51,12 +52,15 @@ public class AcornDrawFile
       affineTransform = new AffineTransform(
        DRAW_PT_TO_CM, 0, 0, -DRAW_PT_TO_CM, 0, 0);
       this.din = din;
+      this.bitmapDir = bitmapDir;
+      this.bitmapPrefix = bitmapPrefix;
    }
 
-   public static JDRGroup load(CanvasGraphics cg, DataInputStream din)
+   public static JDRGroup load(CanvasGraphics cg, DataInputStream din,
+    File bitmapDir, String bitmapPrefix)
    throws IOException,InvalidFormatException
    {
-      AcornDrawFile arf = new AcornDrawFile(cg, din);
+      AcornDrawFile arf = new AcornDrawFile(cg, din, bitmapDir, bitmapPrefix);
 
       arf.readData();
 
@@ -230,48 +234,44 @@ public class AcornDrawFile
    {
 System.out.println("OBJECT ID: "+objectId);
       objectSize = readInt(); // Word aligned size, including header
-System.out.println("SIZE: "+objectSize);
 
       switch (objectId)
       {
          case OBJECT_FONT_TABLE:
-           System.out.println("FONT");
            readFontTable();
          break;
          case OBJECT_TEXT:
-           System.out.println("TEXT");
            readText();
          break;
          case OBJECT_PATH:
            readPath();
          break;
          case OBJECT_SPRITE:
-           System.out.println("SPRITE");
+           readSprite();
          break;
          case OBJECT_GROUP:
            readGroup();
          break;
          case OBJECT_TAGGED:
-           System.out.println("TAGGED");
            readTagged();
          break;
          case OBJECT_TEXTAREA:
-           System.out.println("TEXTAREA");
+           readTextArea();
          break;
          case OBJECT_TEXTCOLUMN:
-           System.out.println("TEXTCOLUMN");
+           readTextColumn();
          break;
          case OBJECT_OPTIONS:
            readOptions();
          break;
          case OBJECT_TRANSFORMED_TEXT:
-           System.out.println("TRANSFORMED_TEXT");
+           readTransformedText();
          break;
          case OBJECT_TRANSFORMED_SPRITE:
-           System.out.println("TRANSFORMED_SPRITE");
+           readTransformedSprite();
          break;
          case OBJECT_JPEG:
-           System.out.println("JPEG");
+           readJpg();
          break;
          case OBJECT_GRID:
            System.out.println("GRID");
@@ -717,6 +717,8 @@ System.out.println("highY: "+highY);
 
    protected void readTagged() throws IOException,InvalidFormatException
    {
+      System.out.println("TAGGED");
+
       // bounding box
       int lowX = readInt();
       int lowY = readInt();
@@ -791,7 +793,7 @@ System.out.println("highY: "+highY);
 
       fontTable.put(Byte.valueOf(id), new JDRFont(family, weight, shape, size));
 
-      readString((objectSize-8)-(bytesRead-oldBytesRead));
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
    protected JDRFont getFont(byte b)
@@ -865,7 +867,145 @@ System.out.println("highY: "+highY);
 
       currentGroup.add(jdrText);
 
-      readString((objectSize-8)-(bytesRead-oldBytesRead));
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected void readJpg() throws IOException,InvalidFormatException
+   {
+System.out.println("JPEG");
+      int oldBytesRead = bytesRead;
+
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+      int height = readInt();
+System.out.println("height: "+height);
+
+      int width = readInt();
+System.out.println("width: "+width);
+
+      int xdpi = readInt();
+      int ydpi = readInt();
+
+      // transformation matrix
+      double[] matrix = new double[6];
+      matrix[0] = readInt()/65536.0;
+      matrix[1] = readInt()/65536.0;
+      matrix[2] = readInt()/65536.0;
+      matrix[3] = readInt()/65536.0;
+      matrix[4] = readInt();
+      matrix[5] = readInt();
+
+      affineTransform.transform(matrix, 4, matrix, 4, 1);
+//TODO correct y shift
+
+      int dataLength = readInt();
+
+      byte[] data = readBytes(dataLength);
+
+      if (bitmapDir == null)
+      {// warn and discard
+// TODO
+      }
+      else
+      {
+         bitmapCount++;
+         File file = new File(bitmapDir, bitmapPrefix+bitmapCount+".jpg");
+
+         DataOutputStream dout = null;
+
+         try
+         {
+            dout = new DataOutputStream(new FileOutputStream(file));
+            dout.write(data, 0, dataLength);
+         }
+         finally
+         {
+            if (dout != null)
+            {
+               dout.close();
+            }
+         }
+
+         JDRBitmap bitmap = new JDRBitmap(image.getCanvasGraphics(), file);
+         bitmap.setTransformation(matrix);
+         currentGroup.add(bitmap);
+      }
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected void readTextArea() throws IOException,InvalidFormatException
+   {
+      System.out.println("TEXT AREA");
+// TODO
+      int oldBytesRead = bytesRead;
+
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected void readTextColumn() throws IOException,InvalidFormatException
+   {
+      System.out.println("TEXTCOLUMN");
+      System.out.println("TEXT AREA");
+// TODO
+      int oldBytesRead = bytesRead;
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected void readSprite() throws IOException,InvalidFormatException
+   {
+      System.out.println("SPRITE");
+// TODO
+      int oldBytesRead = bytesRead;
+
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected void readTransformedSprite() throws IOException,InvalidFormatException
+   {
+        System.out.println("TRANSFORMED_SPRITE");
+// TODO
+      int oldBytesRead = bytesRead;
+
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected void readTransformedText() throws IOException,InvalidFormatException
+   {
+      System.out.println("TRANSFORMED_TEXT");
+// TODO
+      int oldBytesRead = bytesRead;
+
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
    protected byte[] getDataBuffer(int length)
@@ -897,6 +1037,44 @@ System.out.println("highY: "+highY);
       byte b = din.readByte();
       bytesRead++;
       return b;
+   }
+
+   public byte[] readBytes(int length) throws IOException
+   {
+      if (length <= 0) return null;
+
+      byte[] array = new byte[length];
+
+      int r = din.read(array, 0, length);
+
+      if (isDebuggingOn())
+      {
+         printlnDebug(String.format("readBytes: %d byte(s) read", r));
+
+         for (int i = 0; i < r; i++)
+         {
+            if (i > 0)
+            {
+               printDebug(" ");
+            }
+
+            printDebug(""+octet(dataBuffer[i]));
+         }
+
+         if (r == -1)
+         {
+            printlnDebug("");
+         }
+      }
+
+      if (r == -1)
+      {
+         throw new EOFException();
+      }
+
+      bytesRead += length;
+
+      return array;
    }
 
    public String readString(int length) throws IOException
@@ -1121,6 +1299,10 @@ System.out.println("highY: "+highY);
 
    CanvasGraphics canvasGraphics;
    DataInputStream din;
+
+   File bitmapDir;
+   String bitmapPrefix;
+   int bitmapCount=0;
 
    JDRGroup image;
    JDRGroup currentGroup=null;

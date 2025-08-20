@@ -66,6 +66,22 @@ public class JDRBitmap extends JDRCompleteObject
    /**
     * Creates a new bitmap JDR object.
     * This loads a bitmap from the given location.
+    * @param file the bitmap file
+    * @throws FileNotFoundException if file doesn't exist
+    * @throws InvalidImageFormatException if file isn't a recognised image
+    */
+   public JDRBitmap(CanvasGraphics cg, File file)
+      throws FileNotFoundException,
+             InvalidImageFormatException
+   {
+      super(cg);
+
+      init(file, "");
+   }
+
+   /**
+    * Creates a new bitmap JDR object.
+    * This loads a bitmap from the given location.
     * @param fullpathname the name of the bitmap file
     * @param latexpathname the pathname to use when importing the
     * image in a LaTeX file
@@ -79,6 +95,24 @@ public class JDRBitmap extends JDRCompleteObject
    {
       super(cg);
       init(fullpathname, latexpathname);
+   }
+
+   /**
+    * Creates a new bitmap JDR object.
+    * This loads a bitmap from the given location.
+    * @param file the bitmap file
+    * @param latexpathname the pathname to use when importing the
+    * image in a LaTeX file
+    * @throws FileNotFoundException if file doesn't exist
+    * @throws InvalidImageFormatException if file isn't a recognised image
+    */
+   public JDRBitmap(CanvasGraphics cg,
+     File file, String latexpathname)
+      throws FileNotFoundException,
+             InvalidImageFormatException
+   {
+      super(cg);
+      init(file, latexpathname);
    }
 
    /**
@@ -136,6 +170,51 @@ public class JDRBitmap extends JDRCompleteObject
       }
 
       name_ = f.getName();
+
+      imageLoaded = true;
+
+      Image image = Toolkit.getDefaultToolkit().createImage(filename_);
+      ic = new ImageIcon(image);
+
+      imageLoaded =
+         (ic.getImageLoadStatus() == MediaTracker.COMPLETE);
+
+      flatmatrix = new double[6];
+      reset();
+   }
+
+
+   private void init(File file, String latexpathname)
+      throws FileNotFoundException,
+             InvalidImageFormatException
+   {
+      filename_      = file.getAbsolutePath();
+      latexlinkname_ = latexpathname;
+
+      if (!file.exists())
+      {
+         throw new FileNotFoundException(filename_);
+      }
+
+      String imageFormat = null;
+
+      try
+      {
+         imageFormat = getImageFormat(file);
+      }
+      catch (IOException e)
+      {
+         throw new InvalidImageFormatException(file.getAbsolutePath(),
+           getCanvasGraphics(), e);
+      }
+
+      if (imageFormat == null)
+      {
+         throw new InvalidImageFormatException(file.getAbsolutePath(),
+           getCanvasGraphics());
+      }
+
+      name_ = file.getName();
 
       imageLoaded = true;
 
