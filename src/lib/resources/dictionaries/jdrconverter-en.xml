@@ -23,7 +23,7 @@ Nicola Talbot
 <entry key="syntax.bitmaps_to_eps">{0}	Convert bitmaps to EPS (if applicable).</entry>
 <entry key="syntax.alpha">{0}	Include alpha channel (if applicable).</entry>
 <entry key="syntax.normalsize">{0} &lt;n&gt;	Set the default normalsize to &lt;n&gt; (may be overridden if input file is JDR/AJR).</entry>
-<entry key="syntax.bitmap_basename">{0} &lt;basename&gt;	Set the basename prefix for exported embedded bitmaps (if applicable).</entry>
+<entry key="syntax.bitmap_basename">{0} &lt;prefix&gt;	Set the basename prefix for exported embedded bitmaps (if applicable).</entry>
 
 
 <entry key="syntax.latex-dvi">{0} &lt;path&gt;	Path to latex application (DVI output).</entry>
@@ -31,6 +31,8 @@ Nicola Talbot
 <entry key="syntax.dvips">{0} &lt;path&gt;	Path to dvips application.</entry>
 <entry key="syntax.dvisvgm">{0} &lt;path&gt;	Path to dvisvgm application.</entry>
 <entry key="syntax.libgs">{0} &lt;path&gt;	Path to the libgs library.</entry>
+
+<entry key="syntax.rm-tmp-files">{0}	Remove temporary files on exit.</entry>
 
 <entry key="syntax.tex_settings">(La)TeX output settings.</entry>
 
@@ -46,7 +48,7 @@ Nicola Talbot
 		"none"	Don''t save any settings.
 		"all"	Save all settings.
 		"paper"	Only save the paper (AJR/JDR v1.3+).
-		"match-input"	Match the input file (provide it''s supported by the output format).
+		"match-input"	Match the input file (provided it''s supported by the output format).
 </entry>
 
 <entry key="syntax.in.charset">{0} &lt;charset&gt;	Set the character encoding to &lt;charset&gt; for the input file (where applicable).</entry>

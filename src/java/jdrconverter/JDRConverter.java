@@ -173,6 +173,41 @@ public class JDRConverter
       return defValue;
    }
 
+   public int getExitCode()
+   {
+      return helpLibApp == null ? exitCode : helpLibApp.getExitCode();
+   }
+
+   public void setExitCode(int code)
+   {
+      if (helpLibApp != null)
+      {
+         helpLibApp.setExitCode(code);
+      }
+
+      exitCode = code;
+   }
+
+   public int getExitCode(Throwable e, boolean isFatal)
+   {
+      if (helpLibApp != null)
+      {
+         return helpLibApp.getExitCode(e, isFatal);
+      }
+      else if (e instanceof InvalidSyntaxException)
+      {
+         return TeXJavaHelpLibAppAdapter.EXIT_SYNTAX;
+      }
+      else if (e instanceof IOException)
+      {
+         return TeXJavaHelpLibAppAdapter.EXIT_IO;
+      }
+      else
+      {
+         return TeXJavaHelpLibAppAdapter.EXIT_OTHER;
+      }
+   }
+
    protected void initHelpLibrary() throws IOException
    {
       helpLibApp = new TeXJavaHelpLibAppAdapter()
@@ -196,6 +231,24 @@ public class JDRConverter
           public void message(String msg)
           {
              msgPublisher.message(msg);
+          }
+
+      
+          @Override
+          public int getExitCode(Throwable e, boolean isFatal)
+          {
+             if (e instanceof InvalidFormatException)
+             {
+                return EXIT_INVALID_DATA;
+             }
+             else if (e instanceof InterruptedException)
+             {
+                return EXIT_PROCESS_FAILED;
+             }
+             else
+             {
+                return super.getExitCode(e, isFatal);
+             }
           }
 
        };
@@ -355,8 +408,8 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
         "--[no]bitmaps-to-eps"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.latex_dvi", "--latex-dvi"));
-      helpLib.printSyntaxItem(getMessage("syntax.latex_pdf", "--latex-pdf"));
+      helpLib.printSyntaxItem(getMessage("syntax.latex-dvi", "--latex-dvi"));
+      helpLib.printSyntaxItem(getMessage("syntax.latex-pdf", "--latex-pdf"));
       helpLib.printSyntaxItem(getMessage("syntax.dvips", "--dvips"));
       helpLib.printSyntaxItem(getMessage("syntax.dvisvgm", "--dvisvgm"));
       helpLib.printSyntaxItem(getMessage("syntax.libgs", "--libgs"));
@@ -389,6 +442,8 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.locale", "--locale"));
 
       helpLib.printSyntaxItem(getMessage("syntax.debug", "--[no]debug"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.rm-tmp-files", "--[no]rm-tmp-files"));
 
       helpLib.printSyntaxItem(getMessage("clisyntax.version2", "--version", "-v"));
 
@@ -469,7 +524,7 @@ public class JDRConverter
          catch (IOException e)
          {
             e.printStackTrace();
-            System.exit(EXIT_OTHER);
+            System.exit(TeXJavaHelpLibAppAdapter.EXIT_HELPSET);
          }
       }
    }
@@ -695,6 +750,14 @@ public class JDRConverter
             else if (arg.equals("--quiet"))
             {
                msgPublisher.hideMessages();
+            }
+            else if (arg.equals("--rm-tmp-files"))
+            {
+               removeTempFiles = true;
+            }
+            else if (arg.equals("--norm-tmp-files"))
+            {
+               removeTempFiles = false;
             }
             else if (arg.equals("--nosettings"))
             {
@@ -1713,6 +1776,21 @@ public class JDRConverter
       return configPreamble;
    }
 
+   public File getInputFile()
+   {
+      return inFile;
+   }
+
+   public File getOutputFile()
+   {
+      return outFile;
+   }
+
+   public boolean isRemoveTempOn()
+   {
+      return removeTempFiles;
+   }
+
    public static void main(String[] args)
    {
       final JDRConverter app = new JDRConverter();
@@ -1725,33 +1803,30 @@ public class JDRConverter
       catch (InvalidSyntaxException e)
       {
          app.error(e.getMessage(), null);
-
-         System.exit(EXIT_SYNTAX);
+         app.setExitCode(TeXJavaHelpLibAppAdapter.EXIT_SYNTAX);
       }
       catch (IOException e)
       {
          app.error(e.getMessage(), app.debugMode ? e : null);
-
-         System.exit(EXIT_IO);
       }
       catch (InvalidFormatException e)
       {
          app.error(e.getMessage(), app.debugMode ? e : null);
-
-         System.exit(EXIT_FORMAT);
       }
       catch (Throwable e)
       {
          app.error(null, e);
-
-         System.exit(EXIT_OTHER);
       }
+
+      System.exit(app.getExitCode());
    }
 
    protected CLISyntaxParser cliParser;
    protected ConverterPublisher msgPublisher;
 
+   protected int exitCode = 0;
    protected boolean debugMode = false;
+   protected boolean removeTempFiles = true;
    protected boolean shownVersion = false;
    protected File inFile, outFile; // --in / -i , --output / -o
    protected boolean completeDoc = false; // --doc
@@ -1789,9 +1864,4 @@ public class JDRConverter
    private String configPreamble=null;
 
    public static final String NAME = "jdrconverter";
-
-   public static final int EXIT_SYNTAX=1;
-   public static final int EXIT_FORMAT=2;
-   public static final int EXIT_IO=3;
-   public static final int EXIT_OTHER=100;
 }

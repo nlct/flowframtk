@@ -20,12 +20,19 @@ package com.dickimawbooks.jdrconverter;
 import java.io.*;
 import java.nio.file.*;
 import java.util.concurrent.TimeUnit;
+import java.util.Map;
+
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLibAppAdapter;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 
+/**
+ * For use where the export function needs to build a LaTeX document
+ * as an intermediate step.
+ */
 public abstract class ExportImage implements MessageInfoPublisher
 {
    public ExportImage(JDRConverter converter, File outputFile, JDRGroup jdrImage)
@@ -65,13 +72,29 @@ public abstract class ExportImage implements MessageInfoPublisher
       return converter.getMessageSystem();
    }
 
+   protected File getWorkingDirectory() throws IOException
+   {
+      if (texDir == null)
+      {
+         texDir = Files.createTempDirectory(converter.NAME).toFile();
+
+         if (converter.isRemoveTempOn())
+         {
+            texDir.deleteOnExit();
+         }
+      }
+
+      return texDir;
+   }
+
    // Temporary file for intermediate process
    protected File getTeXFile() throws IOException
    {
       if (texFile == null)
       {
-         texFile = File.createTempFile(converter.NAME, ".tex");
-         texFile.deleteOnExit();
+         getWorkingDirectory();
+         texFile = File.createTempFile(converter.NAME, ".tex", texDir);
+         texBase = getBaseName(texFile);
       }
 
       return texFile;
@@ -80,7 +103,13 @@ public abstract class ExportImage implements MessageInfoPublisher
    protected void exec(String[] cmdList)
      throws IOException,InterruptedException
    {
-      File dir = getTeXFile().getParentFile();
+      getTeXFile();
+      File orgDir = converter.getInputFile().getParentFile();
+
+      if (orgDir == null)
+      {
+         orgDir = converter.getInputFile().getAbsoluteFile().getParentFile();
+      }
 
       Process process = null;
 
@@ -105,7 +134,12 @@ public abstract class ExportImage implements MessageInfoPublisher
       {
          ProcessBuilder processBuilder = new ProcessBuilder(cmdList);
 
-         processBuilder.directory(dir);
+         processBuilder.directory(texDir);
+
+         Map<String,String> env = processBuilder.environment();
+
+         env.put("TEXINPUTS", String.format("%s%c",
+              orgDir.getAbsolutePath(), File.pathSeparatorChar));
 
          process = processBuilder.start();
 
@@ -134,9 +168,11 @@ public abstract class ExportImage implements MessageInfoPublisher
 
          if (exitCode != 0)
          {
+            converter.setExitCode(TeXJavaHelpLibAppAdapter.EXIT_PROCESS_FAILED);
+
             throw new IOException(String.format("%s%n%s",
                 converter.getMessage("error.exec_failed_withcode_and_dir",
-              buff.toString(), dir.toString(), exitCode),
+              buff.toString(), texDir.toString(), exitCode),
               converter.getMessage("error.try_latex_export")));
          }
       }
@@ -168,18 +204,13 @@ public abstract class ExportImage implements MessageInfoPublisher
    }
 
    protected void save() 
-     throws IOException,InterruptedException,InvalidFormatException
+     throws IOException,InterruptedException,InvalidFormatException,SecurityException
    {
-      File texFile = getTeXFile();
+      getTeXFile();
 
-      File dir = texFile.getParentFile();
-      String texBase = getBaseName(texFile);
+      File auxFile = new File(texDir, texBase+".aux");
 
-      File auxFile = new File(dir, texBase+".aux");
-      auxFile.deleteOnExit();
-
-      File logFile = new File(dir, texBase+".log");
-      logFile.deleteOnExit();
+      File logFile = new File(texDir, texBase+".log");
 
       PrintWriter out = null;
 
@@ -187,7 +218,7 @@ public abstract class ExportImage implements MessageInfoPublisher
       {
          out = new PrintWriter(new FileWriter(texFile));
 
-         PGF pgf = new PGF(texFile.getParentFile().toPath(), out);
+         PGF pgf = new PGF(texDir.toPath(), out);
 
          pgf.setUsePdfInfoEnabled(converter.isUsePdfInfoOn());
 
@@ -212,27 +243,27 @@ public abstract class ExportImage implements MessageInfoPublisher
 
          File result = processImage(texBase);
 
-         if (result != null && !result.equals(outputFile))
+         if (result != null)
          {
-            if (outputFile.exists())
-            {
-               outputFile.delete();
-            }
-
-            if (!result.renameTo(outputFile))
-            {
-               Files.copy(result.toPath(), outputFile.toPath(),
-                  StandardCopyOption.REPLACE_EXISTING);
-               result.deleteOnExit();
-            }
+            Files.copy(result.toPath(), outputFile.toPath(),
+               StandardCopyOption.REPLACE_EXISTING);
          }
-
       }
       finally
       {
          if (out != null)
          {
             out.close();
+         }
+
+         if (converter.isRemoveTempOn())
+         {
+            File[] files = texDir.listFiles();
+
+            for (File f : files)
+            {
+               f.deleteOnExit();
+            }
          }
       }
    }
@@ -252,4 +283,6 @@ public abstract class ExportImage implements MessageInfoPublisher
    protected JDRGroup image;
    protected JDRConverter converter;
    protected File texFile = null;
+   protected File texDir = null;
+   protected String texBase;
 }
