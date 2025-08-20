@@ -20,10 +20,12 @@
 package com.dickimawbooks.jdr.io;
 
 import java.io.*;
+import java.util.HashMap;
 import java.awt.Color;
 import java.awt.BasicStroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -230,37 +232,28 @@ System.out.println("OBJECT ID: "+objectId);
       objectSize = readInt(); // Word aligned size, including header
 System.out.println("SIZE: "+objectSize);
 
-      // bounding box
-      int lowX = readInt();
-      int lowY = readInt();
-      int highX = readInt();
-      int highY = readInt();
-
-      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box", 
-        "Bounding Box: ({0},{1}) ({2},{3})", 
-        lowX, lowY, highX, highY));
-
       switch (objectId)
       {
          case OBJECT_FONT_TABLE:
            System.out.println("FONT");
+           readFontTable();
          break;
          case OBJECT_TEXT:
            System.out.println("TEXT");
+           readText();
          break;
          case OBJECT_PATH:
-           System.out.println("PATH");
            readPath();
          break;
          case OBJECT_SPRITE:
            System.out.println("SPRITE");
          break;
          case OBJECT_GROUP:
-           System.out.println("GROUP");
            readGroup();
          break;
          case OBJECT_TAGGED:
            System.out.println("TAGGED");
+           readTagged();
          break;
          case OBJECT_TEXTAREA:
            System.out.println("TEXTAREA");
@@ -269,7 +262,6 @@ System.out.println("SIZE: "+objectSize);
            System.out.println("TEXTCOLUMN");
          break;
          case OBJECT_OPTIONS:
-           System.out.println("OPTIONS");
            readOptions();
          break;
          case OBJECT_TRANSFORMED_TEXT:
@@ -298,6 +290,12 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    protected void readOptions()
    throws IOException,InvalidFormatException
    {
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
       CanvasGraphics cg = image.getCanvasGraphics();
 
       int paperSize = readInt();
@@ -408,6 +406,16 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    protected void readGrid()
    throws IOException,InvalidFormatException
    {
+      // bounding box
+      int lowX = readInt();
+System.out.println("lowX: "+lowX);
+      int lowY = readInt();
+System.out.println("lowY: "+lowY);
+      int highX = readInt();
+System.out.println("highX: "+highX);
+      int highY = readInt();
+System.out.println("highY: "+highY);
+
       int value;
       value = readInt();
       value = readInt();
@@ -419,6 +427,16 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    protected void readPath()
    throws IOException,InvalidFormatException
    {
+      // bounding box
+      int lowX = readInt();
+System.out.println("lowX: "+lowX);
+      int lowY = readInt();
+System.out.println("lowY: "+lowY);
+      int highX = readInt();
+System.out.println("highX: "+highX);
+      int highY = readInt();
+System.out.println("highY: "+highY);
+
       CanvasGraphics cg = image.getCanvasGraphics();
 
       int fillCol = readInt();
@@ -665,6 +683,12 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
 
    protected void readGroup() throws IOException,InvalidFormatException
    {
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
       JDRGroup prevGroup = currentGroup;
       JDRGroup group = new JDRGroup(image.getCanvasGraphics());
       currentGroup.add(group);
@@ -691,6 +715,159 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       currentGroup = prevGroup;
    }
 
+   protected void readTagged() throws IOException,InvalidFormatException
+   {
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+     // not sure about this
+
+     int id = readInt();
+
+     int objectId = readInt();
+     readObject(objectId);
+   }
+
+   protected void readFontTable() throws IOException,InvalidFormatException
+   {
+      int oldBytesRead = bytesRead;
+      byte id = readByte();
+
+      String fontName = readString();
+
+      if (fontTable == null)
+      {
+         fontTable = new HashMap<Byte,JDRFont>();
+      }
+
+      int idx = fontName.indexOf(".");
+      String family = fontName;
+      String variant = "";
+
+      if (idx > 0)
+      {
+         family = fontName.substring(0, idx);
+         variant = fontName.substring(idx+1);
+      }
+
+      if (family.equals("System") || family.equals("Portrhouse"))
+      {
+         family = "Monospaced";
+      }
+      else if (family.equals("Homerton")
+            || family.equals("Sassoon")
+              )
+      {
+         family = "SansSerif";
+      }
+// TODO Selwyn, Sidney
+      else
+      {
+         family = "Serif";
+      }
+
+      int weight = JDRFont.SERIES_MEDIUM;
+      int shape = JDRFont.SHAPE_UPRIGHT;
+
+      if (variant.contains("Oblique"))
+      {
+         shape = JDRFont.SHAPE_SLANTED;
+      }
+      else if (variant.contains("Italic"))
+      {
+         shape = JDRFont.SHAPE_ITALIC;
+      }
+
+      if (variant.contains("Bold"))
+      {
+         weight = JDRFont.SERIES_BOLD;
+      }
+
+      JDRLength size = new JDRLength(image.getCanvasGraphics(), 
+        10, JDRUnit.bp);
+
+      fontTable.put(Byte.valueOf(id), new JDRFont(family, weight, shape, size));
+
+      readString((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected JDRFont getFont(byte b)
+   {
+      return fontTable == null ? null : fontTable.get(Byte.valueOf(b));
+   }
+
+   protected void readText() throws IOException,InvalidFormatException
+   {
+      int oldBytesRead = bytesRead;
+
+      // bounding box
+      int lowX = readInt();
+      int lowY = readInt();
+      int highX = readInt();
+      int highY = readInt();
+
+      CanvasGraphics cg = image.getCanvasGraphics();
+
+      int textCol = readInt();
+
+      JDRPaint textPaint;
+
+      if (textCol == -1)
+      {
+         textPaint = new JDRTransparent(cg);
+      }
+      else
+      {
+         textPaint = new JDRColor(cg, new Color(textCol));
+      }
+
+      int backCol = readInt();// background hint
+
+      int textStyle = readInt();
+      // lowest byte is the font number
+      // the remainder should be 0
+
+      JDRFont font = getFont(dataBuffer[0]);
+
+      int xSize = readInt(); // 1/640 of a point
+      int ySize = readInt(); // draw units
+
+      JDRLength fontSize = new JDRLength(cg, ((double)ySize)/640.0, JDRUnit.bp);
+
+      if (xSize != ySize)
+      {// TODO
+      }
+
+      String family = "Monospaced";
+      int weight = JDRFont.SERIES_MEDIUM;
+      int shape = JDRFont.SHAPE_UPRIGHT;
+
+      if (font != null)
+      {
+         family = font.getFamily();
+         weight = font.getWeight();
+         shape = font.getShape();
+      }
+
+      int x = readInt();
+      int y = readInt();
+
+      Point2D.Double p = new Point2D.Double(x, y);
+      affineTransform.transform(p, p);
+
+      String text = readString(); // zero terminated string padding
+
+      JDRText jdrText = new JDRText(cg, p, family, weight, shape, fontSize, text);
+      jdrText.setTextPaint(textPaint);
+
+      currentGroup.add(jdrText);
+
+      readString((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
    protected byte[] getDataBuffer(int length)
    {
       if (dataBuffer == null || dataBuffer.length < length)
@@ -715,9 +892,16 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       return stringBuffer;
    }
 
+   public byte readByte() throws IOException
+   {
+      byte b = din.readByte();
+      bytesRead++;
+      return b;
+   }
+
    public String readString(int length) throws IOException
    {
-      if (length == 0) return "";
+      if (length <= 0) return "";
 
       getDataBuffer(length);
 
@@ -748,6 +932,8 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
          throw new EOFException();
       }
 
+      bytesRead += length;
+
       getStringBuffer(length);
 
       for (int i = 0; i < length; i++)
@@ -758,6 +944,22 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       if (isDebuggingOn())
       {
          printlnDebug("\t"+stringBuffer);
+      }
+
+      return stringBuffer.toString();
+   }
+
+   public String readString() throws IOException
+   {
+      // read to null
+
+      getStringBuffer(256);
+
+      byte b;
+
+      while ((b = readByte()) != 0)
+      {
+         stringBuffer.append((char)b);
       }
 
       return stringBuffer.toString();
@@ -794,6 +996,8 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       {
          throw new EOFException();
       }
+
+      bytesRead += length;
 
       getStringBuffer(length);
 
@@ -851,6 +1055,8 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
       {
          throw new EOFException();
       }
+
+      bytesRead += length;
 
       getStringBuffer(length);
 
@@ -921,6 +1127,8 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
 
    StringBuilder stringBuffer;
    byte[] dataBuffer;
+   int bytesRead=0;
+
    int majorVersion;
    int minorVersion;
    String producer;
@@ -937,6 +1145,8 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    int objectSize;
 
    AffineTransform affineTransform;
+
+   HashMap<Byte,JDRFont> fontTable;
 
    static final int OBJECT_FONT_TABLE=0;
    static final int OBJECT_TEXT=1;
