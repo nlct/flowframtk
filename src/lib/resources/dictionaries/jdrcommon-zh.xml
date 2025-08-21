@@ -291,6 +291,9 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.io.load">无法装载文件</entry>
 <entry key="error.io.close">无法关闭文件</entry>
 <entry key="error.io.dir_not_exists">Directory ''{0}'' doesn''t exist</entry>
+<entry key="error.io.invalid_map">Invalid mapping ''{0}''</entry>
+<entry key="error.io.invalid_array_length">Invalid array length {0}</entry>
+<entry key="error.io.not_directory">''{0}'' is not a directory</entry>
 <entry key="error.io.not_exists">无法打开文件(找不到文件) ''{0}''</entry>
 <entry key="error.io.open">无法打开文件 ''{0}''</entry>
 <entry key="error.io.save">无法保存文件</entry>
@@ -516,6 +519,11 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_marker-id">Invalid marker ID</entry>
 <entry key="error.invalid_length">Invalid length</entry>
 <entry key="error.invalid_description">Invalid description</entry>
+
+<entry key="error.acorn_drawfile.unsupported_object_id">Unsupported object identifier: {0}</entry>
+<entry key="error.acorn_drawfile.unknown_object_id">Unknown object identifier: {0}</entry>
+<entry key="error.acorn_drawfile.not_implemented_object_id">Object identifier {0} not yet implemented</entry>
+<entry key="error.acorn_drawfile.not_fully_implemented_object_id">Object identifier {0} not fully implemented</entry>
 
 <!--  Internal Error Messages -->
 

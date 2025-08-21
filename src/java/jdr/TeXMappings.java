@@ -22,29 +22,29 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-package com.dickimawbooks.flowframtk;
+package com.dickimawbooks.jdr;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.io.*;
 
-import com.dickimawbooks.jdrresources.*;
+import com.dickimawbooks.jdr.io.JDRMessageDictionary;
 
-public class TeXMappings extends Hashtable<Integer,TeXLookup>
+public class TeXMappings extends HashMap<Integer,TeXLookup>
 {
-   public TeXMappings(JDRResources resources, String name)
+   public TeXMappings(JDRMessageDictionary msgSys, String name)
    {
       super();
-      this.resources = resources;
+      this.msgSys = msgSys;
       this.modeName = name;
    }
 
    public TeXLookup get(int i)
    {
-      return get(new Integer(i));
+      return get(Integer.valueOf(i));
    }
 
    public TeXLookup put(char chr, String map)
@@ -59,7 +59,7 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
 
    public TeXLookup put(int code, String map, String styName)
    {
-      return put(new Integer(code), new TeXLookup(map, styName));
+      return put(Integer.valueOf(code), new TeXLookup(map, styName));
    }
 
    public String applyMappings(String original, Vector<String> styNames)
@@ -73,7 +73,7 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
 
       for (int i = 0; i < n; )
       {
-         Integer codePoint = new Integer(original.codePointAt(i));
+         Integer codePoint = Integer.valueOf(original.codePointAt(i));
          i += Character.charCount(codePoint.intValue());
 
          TeXLookup map = get(codePoint);
@@ -202,9 +202,9 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
    public void save(PrintWriter writer)
      throws IOException
    {
-      for (Enumeration<Integer> en = keys(); en.hasMoreElements(); )
+      for (Iterator<Integer> it = keySet().iterator(); it.hasNext(); )
       {
-         Integer codePoint = en.nextElement();
+         Integer codePoint = it.next();
          TeXLookup map = get(codePoint);
 
          writer.println(String.format("%X", codePoint)+"\t"+map.getCommand()
@@ -231,6 +231,13 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
       }
    }
 
+   public String getMessageWithFallback(int lineNum, String tag,
+     String fallbackFormat, Object... params)
+   {
+      return msgSys.getMessageWithFallback("error.with_line", "Line {0}: {1}",
+        lineNum, msgSys.getMessageWithFallback(tag, fallbackFormat, params));
+   }
+
    public void read(BufferedReader reader)
       throws IOException
    {
@@ -250,8 +257,8 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
 
          if (split == null || split.length != 3)
          {
-            throw new IOException(resources.getMessage(lineNum,
-               "error.io.invalid_map", line));
+            throw new IOException(getMessageWithFallback(lineNum,
+               "error.io.invalid_map", "Invalid mapping ''{0}''", line));
          }
 
          try
@@ -261,8 +268,9 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
          }
          catch (NumberFormatException e)
          {
-            throw new IOException(resources.getMessage(
-               lineNum, "error.io.invalid_map", line));
+            throw new IOException(getMessageWithFallback(
+               lineNum, "error.io.invalid_map",
+               "Invalid mapping ''{0}''", line));
          }
       }
    }
@@ -272,7 +280,7 @@ public class TeXMappings extends Hashtable<Integer,TeXLookup>
       return modeName;
    }
 
-   private JDRResources resources;
+   private JDRMessageDictionary msgSys;
 
    private String modeName;
 

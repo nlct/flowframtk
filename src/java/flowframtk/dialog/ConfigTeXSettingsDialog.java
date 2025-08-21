@@ -787,10 +787,10 @@ class TextConfigPanel extends JPanel
    {
       textMapData.clear();
 
-      for (Enumeration<Integer> en = textModeMappings.keys();
-           en.hasMoreElements();)
+      for (Iterator<Integer> it = textModeMappings.keySet().iterator();
+           it.hasNext(); )
       {
-         Integer key = en.nextElement();
+         Integer key = it.next();
 
          textMapData.add(new TeXMapRow(key, textModeMappings.get(key)));
       }
@@ -800,10 +800,10 @@ class TextConfigPanel extends JPanel
    {
       mathMapData.clear();
 
-      for (Enumeration<Integer> en = mathModeMappings.keys();
-           en.hasMoreElements();)
+      for (Iterator<Integer> it = mathModeMappings.keySet().iterator();
+           it.hasNext(); )
       {
-         Integer key = en.nextElement();
+         Integer key = it.next();
 
          mathMapData.add(new TeXMapRow(key, mathModeMappings.get(key)));
       }

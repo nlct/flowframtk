@@ -28,7 +28,10 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 import java.io.*;
 
-import com.dickimawbooks.jdrresources.*;
+import com.dickimawbooks.jdr.TeXMappings;
+import com.dickimawbooks.jdr.TeXLookup;
+
+import com.dickimawbooks.jdrresources.JDRResources;
 
 public class MathModeMappings extends TeXMappings
 {

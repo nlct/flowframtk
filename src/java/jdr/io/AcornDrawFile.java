@@ -22,6 +22,7 @@ package com.dickimawbooks.jdr.io;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Vector;
 import java.awt.Color;
 import java.awt.BasicStroke;
 import java.awt.geom.AffineTransform;
@@ -236,10 +237,35 @@ public class AcornDrawFile
       }
    }
 
+   protected void provideTypeblock()
+   {
+      FlowFrame flowframe = image.getFlowFrame();
+
+      if (flowframe == null)
+      {
+         flowframe = new FlowFrame(getCanvasGraphics(), FlowFrame.TYPEBLOCK);
+         image.setFlowFrame(flowframe);
+
+         double[] coords = new double[4];
+         coords[0] = lowBoundingX;
+         coords[1] = lowBoundingY;
+         coords[2] = highBoundingX;
+         coords[3] = highBoundingY;
+
+         affineTransform.transform(coords, 0, coords, 0, 2);
+
+         JDRPaper paper = getCanvasGraphics().getPaper();
+
+         flowframe.setLeft(coords[0]);
+         flowframe.setTop(coords[1]);
+         flowframe.setRight(paper.getWidth()-coords[2]);
+         flowframe.setBottom(paper.getHeight()-coords[3]);
+      }
+   }
+
    protected void readObject(int objectId)
    throws IOException,InvalidFormatException
    {
-System.out.println("OBJECT ID: "+objectId);
       objectSize = readInt(); // Word aligned size, including header
 
       switch (objectId)
@@ -266,8 +292,9 @@ System.out.println("OBJECT ID: "+objectId);
            readTextArea();
          break;
          case OBJECT_TEXTCOLUMN:
-           readTextColumn();
-         break;
+           throw new InvalidFormatException(
+            getMessageWithFallback("error.acorn_drawfile.misplaced_text_column",
+             "Text column found outside text area"));
          case OBJECT_OPTIONS:
            readOptions();
          break;
@@ -281,16 +308,20 @@ System.out.println("OBJECT ID: "+objectId);
            readJpg();
          break;
          case OBJECT_GRID:
-           System.out.println("GRID");
            readGrid();
          break;
-         default:
-System.out.println("UNKNOWN OBJECT ID "+objectId);
-/*
-         throw new UnsupportedFeatureException(
-          getMessageWithFallback("error.acorn_drawfile.unsupported_object_id",
+         case 3: // unimplemented
+         case 4: // unimplemented
+         case 8: // not used
+         case 14: // not used
+         case 15: // not used
+           warning(getMessageWithFallback("error.acorn_drawfile.unsupported_object_id",
            "Unsupported object identifier: {0}", objectId));
-*/
+         break;
+         default:
+         throw new UnsupportedFeatureException(
+          getMessageWithFallback("error.acorn_drawfile.unknown_object_id",
+           "Unknown object identifier: {0}", objectId));
       }
    }
 
@@ -415,13 +446,9 @@ System.out.println("UNKNOWN OBJECT ID "+objectId);
    {
       // bounding box
       int lowX = readInt();
-System.out.println("lowX: "+lowX);
       int lowY = readInt();
-System.out.println("lowY: "+lowY);
       int highX = readInt();
-System.out.println("highX: "+highX);
       int highY = readInt();
-System.out.println("highY: "+highY);
 
       int value;
       value = readInt();
@@ -436,13 +463,9 @@ System.out.println("highY: "+highY);
    {
       // bounding box
       int lowX = readInt();
-System.out.println("lowX: "+lowX);
       int lowY = readInt();
-System.out.println("lowY: "+lowY);
       int highX = readInt();
-System.out.println("highX: "+highX);
       int highY = readInt();
-System.out.println("highY: "+highY);
 
       CanvasGraphics cg = image.getCanvasGraphics();
 
@@ -724,7 +747,10 @@ System.out.println("highY: "+highY);
 
    protected void readTagged() throws IOException,InvalidFormatException
    {
-      System.out.println("TAGGED");
+      warning(getMessageWithFallback("error.acorn_drawfile.not_implemented_object_id",
+       "Object identifier {0} not yet implemented", OBJECT_TAGGED));
+
+      int oldBytesRead = bytesRead;
 
       // bounding box
       int lowX = readInt();
@@ -738,6 +764,8 @@ System.out.println("highY: "+highY);
 
      int objectId = readInt();
      readObject(objectId);
+
+     readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
    protected void readFontTable() throws IOException,InvalidFormatException
@@ -808,6 +836,7 @@ System.out.println("highY: "+highY);
       return fontTable == null ? null : fontTable.get(Byte.valueOf(b));
    }
 
+   // The Acorn Draw "text line" is analogous to JDRText
    protected void readText() throws IOException,InvalidFormatException
    {
       int oldBytesRead = bytesRead;
@@ -818,6 +847,14 @@ System.out.println("highY: "+highY);
       int highX = readInt();
       int highY = readInt();
 
+      JDRText jdrText = readTextSpecs();
+      currentGroup.add(jdrText);
+
+      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+   }
+
+   protected JDRText readTextSpecs() throws IOException,InvalidFormatException
+   {
       CanvasGraphics cg = image.getCanvasGraphics();
 
       int textCol = readInt();
@@ -872,9 +909,8 @@ System.out.println("highY: "+highY);
       JDRText jdrText = new JDRText(cg, p, family, weight, shape, fontSize, text);
       jdrText.setTextPaint(textPaint);
 
-      currentGroup.add(jdrText);
 
-      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+      return jdrText;
    }
 
    protected void readJpg() throws IOException,InvalidFormatException
@@ -950,10 +986,14 @@ System.out.println("highY: "+highY);
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
+   // NB the Acorn Draw File "text area" is a multi-line area.
    protected void readTextArea() throws IOException,InvalidFormatException
    {
-      System.out.println("TEXT AREA");
+      warning(getMessageWithFallback("error.acorn_drawfile.not_implemented_object_id",
+       "Object identifier {0} not yet implemented", OBJECT_TEXTAREA));
+
 // TODO
+
       int oldBytesRead = bytesRead;
 
       // bounding box
@@ -962,22 +1002,76 @@ System.out.println("highY: "+highY);
       int highX = readInt();
       int highY = readInt();
 
+      provideTypeblock();
+
+      int objectId;
+
+      Vector<JDRPath> columns = new Vector<JDRPath>();
+
+      while ((objectId = readInt()) != 0)
+      {
+         if (objectId == OBJECT_TEXTCOLUMN)
+         {
+            JDRPath path = readTextColumn();
+            columns.add(path);
+            currentGroup.add(path);
+         }
+         else if (objectId != 0)
+         {
+            throw new InvalidFormatException(
+               getMessageWithFallback("error.acorn_drawfile.misplaced_object_in_textarea",
+                "Misplaced object identifier {0} found in text area ({1} or 0 expected)",
+                 objectId,
+                OBJECT_TEXTCOLUMN));
+         }
+      }
+
+System.out.println("Number of columns: "+columns);
+
+      readInt();// reserved
+      readInt();// reserved
+
+      int fgCol = readInt();
+      int bgCol = readInt();
+
+      String content = readString();
+
+System.out.println("CONTENT: "+content);
+
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
-   protected void readTextColumn() throws IOException,InvalidFormatException
+   protected JDRPath readTextColumn() throws IOException,InvalidFormatException
    {
-      System.out.println("TEXTCOLUMN");
-      System.out.println("TEXT AREA");
-// TODO
-      int oldBytesRead = bytesRead;
+      readInt();// size
 
-      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+      // bounding box
+
+      double[] coords = new double[4];
+
+      coords[0] = readInt();
+      coords[1] = readInt();
+      coords[2] = readInt();
+      coords[3] = readInt();
+
+      affineTransform.transform(coords, 0, coords, 0, 2);
+
+      JDRPath path = JDRPath.constructRectangle(getCanvasGraphics(),
+       coords[0], coords[1], coords[2], coords[3]);
+
+      path.setLinePaint(new JDRColor(getCanvasGraphics(), Color.BLACK));
+
+      path.setStroke(new JDRBasicStroke(getCanvasGraphics(), 1.0,
+       BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+
+      return path;
    }
 
    protected void readSprite() throws IOException,InvalidFormatException
    {
-      System.out.println("SPRITE");
+      warning(getMessageWithFallback("error.acorn_drawfile.not_implemented_object_id",
+       "Object identifier {0} not yet implemented", OBJECT_SPRITE));
+
 // TODO
       int oldBytesRead = bytesRead;
 
@@ -992,7 +1086,9 @@ System.out.println("highY: "+highY);
 
    protected void readTransformedSprite() throws IOException,InvalidFormatException
    {
-        System.out.println("TRANSFORMED_SPRITE");
+      warning(getMessageWithFallback("error.acorn_drawfile.not_implemented_object_id",
+       "Object identifier {0} not yet implemented", OBJECT_TRANSFORMED_SPRITE));
+
 // TODO
       int oldBytesRead = bytesRead;
 
@@ -1007,8 +1103,9 @@ System.out.println("highY: "+highY);
 
    protected void readTransformedText() throws IOException,InvalidFormatException
    {
-      System.out.println("TRANSFORMED_TEXT");
-// TODO
+      warning(getMessageWithFallback("error.acorn_drawfile.not_fully_implemented_object_id",
+       "Object identifier {0} not fully implemented", OBJECT_TRANSFORMED_TEXT));
+
       int oldBytesRead = bytesRead;
 
       // bounding box
@@ -1016,6 +1113,25 @@ System.out.println("highY: "+highY);
       int lowY = readInt();
       int highX = readInt();
       int highY = readInt();
+
+      // transformation matrix
+      double[] matrix = new double[6];
+      matrix[0] = readInt()/65536.0;
+      matrix[1] = readInt()/65536.0;
+      matrix[2] = readInt()/65536.0;
+      matrix[3] = readInt()/65536.0;
+      matrix[4] = readInt();
+      matrix[5] = readInt();
+
+      affineTransform.transform(matrix, 4, matrix, 4, 1);
+
+      int fontFlags = readInt(); // bit 0 -> kern, bit 1 -> right to left
+
+      JDRText jdrText = readTextSpecs();
+
+// TODO apply transform
+
+      currentGroup.add(jdrText);
 
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }

@@ -22,13 +22,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-package com.dickimawbooks.flowframtk;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.io.*;
-
-import com.dickimawbooks.jdrresources.*;
+package com.dickimawbooks.jdr;
 
 public class TeXLookup
 {
