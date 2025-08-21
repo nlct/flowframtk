@@ -190,6 +190,7 @@ Nicola Talbot
 <entry key="message.acorn_drawfile.bounding_box">Bounding Box: ({0}, {1}) ({2}, {3})</entry>
 <entry key="message.acorn_drawfile.object_id">Object identifier: {0}</entry>
 <entry key="message.acorn_drawfile.papersize">Paper size: {0}</entry>
+<entry key="message.acorn_drawfile.ignoring_jpeg">Ignoring embedded JPEG</entry>
 
 <!--  Comments in TeX/LaTeX Files -->
 

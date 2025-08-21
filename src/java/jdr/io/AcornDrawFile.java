@@ -21,6 +21,7 @@ package com.dickimawbooks.jdr.io;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Locale;
 import java.awt.Color;
 import java.awt.BasicStroke;
 import java.awt.geom.AffineTransform;
@@ -131,6 +132,12 @@ public class AcornDrawFile
    public boolean isDebuggingOn()
    {
       return getMessageSystem().isDebuggingOn();
+   }
+
+   public void warning(String message)
+   {
+      getMessageSystem().getPublisher().publishMessages(
+         MessageInfo.createWarning(message));
    }
 
    /**
@@ -872,7 +879,6 @@ System.out.println("highY: "+highY);
 
    protected void readJpg() throws IOException,InvalidFormatException
    {
-System.out.println("JPEG");
       int oldBytesRead = bytesRead;
 
       // bounding box
@@ -881,11 +887,8 @@ System.out.println("JPEG");
       int highX = readInt();
       int highY = readInt();
 
-      int height = readInt();
-System.out.println("height: "+height);
-
       int width = readInt();
-System.out.println("width: "+width);
+      int height = readInt();
 
       int xdpi = readInt();
       int ydpi = readInt();
@@ -900,20 +903,29 @@ System.out.println("width: "+width);
       matrix[5] = readInt();
 
       affineTransform.transform(matrix, 4, matrix, 4, 1);
-//TODO correct y shift
+
+      CanvasGraphics cg = image.getCanvasGraphics();
+
+      double yShift = cg.getStorageUnit().fromBp(height / 480.0);
+
+      matrix[5] -= yShift;
 
       int dataLength = readInt();
 
       byte[] data = readBytes(dataLength);
 
       if (bitmapDir == null)
-      {// warn and discard
-// TODO
+      {
+         // warn and discard
+
+         warning(getMessageWithFallback("message.acorn_drawfile.ignoring_jpeg",
+           "Ignoring embedded JPEG"));
       }
       else
       {
          bitmapCount++;
-         File file = new File(bitmapDir, bitmapPrefix+bitmapCount+".jpg");
+         File file = new File(bitmapDir, 
+           String.format((Locale)null, "%s%06d.jpg", bitmapPrefix, bitmapCount));
 
          DataOutputStream dout = null;
 
@@ -930,7 +942,7 @@ System.out.println("width: "+width);
             }
          }
 
-         JDRBitmap bitmap = new JDRBitmap(image.getCanvasGraphics(), file);
+         JDRBitmap bitmap = new JDRBitmap(cg, file);
          bitmap.setTransformation(matrix);
          currentGroup.add(bitmap);
       }
@@ -1058,7 +1070,7 @@ System.out.println("width: "+width);
                printDebug(" ");
             }
 
-            printDebug(""+octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer[i]));
          }
 
          if (r == -1)
@@ -1096,7 +1108,7 @@ System.out.println("width: "+width);
                printDebug(" ");
             }
 
-            printDebug(""+octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer[i]));
          }
 
          if (r == -1)
@@ -1161,7 +1173,7 @@ System.out.println("width: "+width);
                printDebug(" ");
             }
 
-            printDebug(""+octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer[i]));
          }
 
          if (r == -1)
@@ -1197,9 +1209,7 @@ System.out.println("width: "+width);
 
    protected String octet(byte b)
    {
-      String str = String.format("%X", b);
-
-      return str.length() == 1 ? "0"+str : str;
+      return String.format("%02X", b);
    }
 
    public double readDouble() throws IOException
@@ -1220,7 +1230,7 @@ System.out.println("width: "+width);
                printDebug(" ");
             }
 
-            printDebug(""+octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer[i]));
          }
 
          if (r == -1)

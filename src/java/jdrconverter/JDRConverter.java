@@ -396,13 +396,42 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.from", "--from", "-f"));
       helpLib.printSyntaxItem(getMessage("syntax.to", "--to", "-t"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.in.charset", "--in-charset"));
+      helpLib.printSyntaxItem(getMessage("syntax.out.charset", "--out-charset"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.save_settings"));
+
+      System.out.println();
+
       helpLib.printSyntaxItem(getMessage("syntax.jdr_version",
        "--jdr-version", JDRAJR.CURRENT_VERSION));
 
       helpLib.printSyntaxItem(getMessage("syntax.settings", "--settings"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.in.charset", "--in-charset"));
-      helpLib.printSyntaxItem(getMessage("syntax.out.charset", "--out-charset"));
+      helpLib.printSyntaxItem(getMessage("syntax.relative_bitmaps",
+        "--[no]relative-bitmaps"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.import_settings"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.bitmap_basename",
+        "--bitmap-prefix", "-B"));
+      helpLib.printSyntaxItem(getMessage("syntax.bitmap_dir", "--bitmap-dir"));
+      helpLib.printSyntaxItem(getMessage("syntax.extract_bitmaps",
+        "--[no]extract-bitmaps"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.export_settings"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.doc", "--[no]doc"));
+      helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no]use-typeblock"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no]alpha"));
+      helpLib.printSyntaxItem(getMessage("syntax.normalsize", "--normalsize"));
 
       helpLib.printSyntaxItem(getMessage("syntax.encapsulate", "--[no]crop", "-C"));
       helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
@@ -413,19 +442,6 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.dvips", "--dvips"));
       helpLib.printSyntaxItem(getMessage("syntax.dvisvgm", "--dvisvgm"));
       helpLib.printSyntaxItem(getMessage("syntax.libgs", "--libgs"));
-
-      helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no]alpha"));
-      helpLib.printSyntaxItem(getMessage("syntax.normalsize", "--normalsize"));
-      helpLib.printSyntaxItem(getMessage("syntax.bitmap_basename", "--bitmap-basename"));
-
-      System.out.println();
-
-      helpLib.printSyntaxItem(getMessage("syntax.tex_settings"));
-
-      System.out.println();
-
-      helpLib.printSyntaxItem(getMessage("syntax.doc", "--[no]doc"));
-      helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no]use-typeblock"));
 
       System.out.println();
 
@@ -545,7 +561,8 @@ public class JDRConverter
              || arg.equals("--jdr-version")
              || arg.equals("--settings")
              || arg.equals("--normalsize")
-             || arg.equals("--bitmap-basename")
+             || arg.equals("--bitmap-prefix") || args.equals("-B")
+             || arg.equals("--bitmap-dir")
              || arg.equals("--latex-dvi")
              || arg.equals("--latex-pdf")
              || arg.equals("--dvips")
@@ -664,7 +681,7 @@ public class JDRConverter
             }
             else if (originalArgList[preparseIndex].equals("-bitmap"))
             {
-               deque.add("--bitmap-basename");
+               deque.add("--bitmap-prefix");
             }
             else if (originalArgList[preparseIndex].equals("-nosettings")
                   || originalArgList[preparseIndex].equals("-doc")
@@ -1094,7 +1111,7 @@ public class JDRConverter
 
                normalsize = returnVals[0].intValue();
             }
-            else if (isArg(arg, "--bitmap-basename", returnVals))
+            else if (isArg(arg, "--bitmap-prefix", "-B", returnVals))
             {
                if (returnVals[0] == null)
                {
@@ -1102,7 +1119,35 @@ public class JDRConverter
                      getMessage("error.clisyntax.missing.value", arg));
                }
 
-               bitmapBase = returnVals[0].toString();
+               bitmapNamePrefix = returnVals[0].toString();
+               extractBitmaps = true;
+            }
+            else if (isArg(arg, "--bitmap-dir", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               bitmapDir = new File(returnVals[0].toString());
+               extractBitmaps = true;
+            }
+            else if (arg.equals("--extract-bitmaps"))
+            {
+               extractBitmaps = true;
+            }
+            else if (arg.equals("--noextract-bitmaps"))
+            {
+               extractBitmaps = false;
+            }
+            else if (arg.equals("--relative-bitmaps"))
+            {
+               useRelativeBitmaps = true;
+            }
+            else if (arg.equals("--[no]relative-bitmaps"))
+            {
+               useRelativeBitmaps = false;
             }
             else if (isArg(arg, "--latex-dvi", returnVals))
             {
@@ -1226,29 +1271,37 @@ public class JDRConverter
          useLaTeX = true;
       }
 
-      if (bitmapBase == null)
+      if (extractBitmaps)
       {
-         String name = outFile.getName();
-         int idx = name.lastIndexOf(".");
-
-         if (idx > 0)
+         if (bitmapNamePrefix == null)
          {
-            bitmapBase = name.substring(0, idx);
-         }
-         else
-         {
-            bitmapBase = name;
-         }
-      }
+            String name = outFile.getName();
+            int idx = name.lastIndexOf(".");
 
-      if (bitmapDir == null)
-      {
-         bitmapDir = outFile.getParentFile();
+            if (idx > 0)
+            {
+               bitmapNamePrefix = name.substring(0, idx);
+            }
+            else
+            {
+               bitmapNamePrefix = name;
+            }
+         }
 
          if (bitmapDir == null)
          {
-            bitmapDir = outFile.getAbsoluteFile().getParentFile();
+            bitmapDir = outFile.getParentFile();
+
+            if (bitmapDir == null)
+            {
+               bitmapDir = outFile.getAbsoluteFile().getParentFile();
+            }
          }
+      }
+      else
+      {
+         bitmapNamePrefix = null;
+         bitmapDir  = null;
       }
    }
 
@@ -1311,7 +1364,7 @@ public class JDRConverter
             break;
             case ACORN_DRAWFILE:
 // TODO Work in progress
-               paths = AcornDrawFile.load(canvasGraphics, din, bitmapDir, bitmapBase);
+               paths = AcornDrawFile.load(canvasGraphics, din, bitmapDir, bitmapNamePrefix);
                settingsFlag = JDR.ALL_SETTINGS;
             break;
             default:
@@ -1420,16 +1473,25 @@ public class JDRConverter
          }
       }
 
+      File outDir = outFile.getParentFile();
+
+      if (outDir == null || !outDir.isAbsolute())
+      {
+         outDir = outFile.getAbsoluteFile().getParentFile();
+      }
+
       try
       {
          switch (outFormat)
          {
             case JDR:
               JDR jdr = new JDR();
+              jdr.setBaseDir(useRelativeBitmaps ? outDir : null);
               jdr.save(paths, dout, outVersion, settingsFlag);
             break;
             case AJR:
               AJR ajr = new AJR();
+              ajr.setBaseDir(useRelativeBitmaps ? outDir : null);
               ajr.save(paths, out, outVersion, settingsFlag);
             break;
             case TEX:
@@ -1651,7 +1713,7 @@ public class JDRConverter
          }
       }
 
-      return EPS.load(cg, in, bitmapBase);
+      return EPS.load(cg, in, bitmapNamePrefix);
    }
 
 
@@ -1843,9 +1905,10 @@ public class JDRConverter
    protected boolean encapsulate = false; // --crop / -C
    protected boolean convertBitmapToEps = false; // --bitmaps-to-eps
    protected boolean addAlphaChannel = false; // --alpha
-   protected String bitmapBase; // --bitmap-basename
-   protected File bitmapDir;
-   protected boolean useRelativeBitmaps = true;
+   protected String bitmapNamePrefix; // --bitmap-prefix
+   protected File bitmapDir; // --bitmap-dir
+   protected boolean extractBitmaps = true; // --import-extract-bitmaps
+   protected boolean useRelativeBitmaps = true; // --relative-bitmaps
    protected boolean flowframeAbsPages = false;
    protected boolean usePdfInfo = false;
    protected boolean antialias=true, renderquality=true;

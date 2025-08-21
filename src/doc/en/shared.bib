@@ -48,10 +48,12 @@
 
 @term{AJR,
   name="AJR",
-  description = {\FlowframTk's native ASCII format. Files in this format 
+  description = {\FlowframTk's native text format. Files in this format 
       should have the extension \gls+{ext.ajr}. This format is 
       primarily provided to assist conversion to and from \gls{JDR} files 
-      or for version control.},
+      or for version control or debugging. Note that although all the tag
+      identifiers are ASCII, any textual content, such as \glspl{textarea}
+      or object descriptions may require a non-ASCII encoding},
  defaultkeys={format=glsignore}
 }
 

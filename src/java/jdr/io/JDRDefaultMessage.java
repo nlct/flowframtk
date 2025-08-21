@@ -69,11 +69,11 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
          if (value instanceof Throwable)
          {
-            warningnoln((Throwable)value);
+            warning((Throwable)value);
          }
          else
          {
-            warningnoln(value.toString());
+            warning(value.toString());
          }
       }
       else if (action.equals(MessageInfo.ERROR))
@@ -82,11 +82,11 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
          if (value instanceof Throwable)
          {
-            errornoln((Throwable)value);
+            error((Throwable)value);
          }
          else
          {
-            errornoln(value.toString());
+            error(value.toString());
          }
       }
       else if (action.equals(MessageInfo.FATAL_ERROR))
