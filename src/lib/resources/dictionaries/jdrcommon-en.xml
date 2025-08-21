@@ -521,6 +521,8 @@ File doesn''t exist</entry>
 <entry key="error.acorn_drawfile.not_fully_implemented_object_id">Object identifier {0} not fully implemented.</entry>
 <entry key="error.acorn_drawfile.misplaced_text_column">Text column found outside text area.</entry>
 <entry key="error.acorn_drawfile.misplaced_object_text_column">Misplaced object identifier {0} found in text area ({1} or 0 expected).</entry>
+<entry key="error.acorn_drawfile.invalid_font_id">Invalid font identifier: {0}</entry>
+<entry key="error.acorn_drawfile.invalid_font_format">Invalid font format</entry>
 
 <!-- Internal Error Messages -->
 

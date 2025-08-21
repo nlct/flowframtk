@@ -234,6 +234,17 @@ public class AcornDrawFile
          MessageInfo.createWarning(message));
    }
 
+   public void warning(String message, Throwable e)
+   {
+      getMessageSystem().getPublisher().publishMessages(
+         MessageInfo.createWarning(message));
+
+      if (isDebuggingOn())
+      {
+         e.printStackTrace();
+      }
+   }
+
    /**
     * Resets message system if verbose level greater than 0.
     */
@@ -818,19 +829,19 @@ public class AcornDrawFile
 
       String fontName = readString().trim();
 
-      if (fontTable == null)
+      if (fontTables == null)
       {
-         fontTable = new HashMap<Byte,FontTable>();
+         fontTables = new HashMap<Byte,FontTable>();
       }
 
-      fontTable.put(Byte.valueOf(id), new FontTable(fontName));
+      fontTables.put(Byte.valueOf(id), new FontTable(this, fontName));
 
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
    protected FontTable getFontTable(byte b)
    {
-      return fontTable == null ? null : fontTable.get(Byte.valueOf(b));
+      return fontTables == null ? null : fontTables.get(Byte.valueOf(b));
    }
 
    // The Acorn Draw "text line" is analogous to JDRText
@@ -914,6 +925,11 @@ public class AcornDrawFile
 
       JDRText jdrText = new JDRText(cg, p, jdrFont, text);
       jdrText.setTextPaint(textPaint);
+
+      if (fontTable != null)
+      {
+         jdrText.setLaTeXFont(fontTable.getLaTeXFont(fontSize));
+      }
 
       String latexText = null;
 
@@ -1049,15 +1065,249 @@ public class AcornDrawFile
          }
       }
 
-System.out.println("Number of columns: "+columns);
-
       readInt();// reserved
       readInt();// reserved
 
       int fgCol = readInt();
       int bgCol = readInt();
 
-      String content = readString();
+      int offset = 0;
+
+      CharacterMap map = CharacterMap.SYSTEM_FONT;
+      byte fontId;
+      String fontName, str;
+      int fontSize;
+      DataBuffer db = new DataBuffer(this, 32);
+      FontTable ft;
+
+      HashMap<Byte,FontTable> localFontTable = new HashMap<Byte,FontTable>();
+
+      getStringBuffer(32);
+      readBytes();
+
+      for (int i = 0; i < dataBuffer.length(); i++)
+      {
+         byte b = dataBuffer.get(i);
+
+         if (b == '\\')
+         {
+            if (i > offset)
+            {
+               String text = dataBuffer.toString(offset, i-offset, map);
+
+               if (!(stringBuffer.length() == 0 && text.trim().isEmpty()))
+               {
+                  if (textModeMappings != null)
+                  {
+                     text = textModeMappings.applyMappings(text, styNames);
+                  }
+
+                  stringBuffer.append(text);
+               }
+            }
+
+            i++;
+            b = dataBuffer.get(i);
+
+            switch (b)
+            {
+               case '!':
+               // version
+                 do
+                 {
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+                 while (Character.isWhitespace((char)b));
+                 // b should be 1
+               break;
+               case 'A':
+
+                 // alignment
+                 i++;
+                 b = dataBuffer.get(i);
+
+                 if (b == 'L')
+                 {
+                    stringBuffer.append("\\flushleft ");
+                 }
+                 else if (b == 'R')
+                 {
+                    stringBuffer.append("\\flushright ");
+                 }
+                 else if (b == 'C')
+                 {
+                    stringBuffer.append("\\centering ");
+                 }
+
+                 if (dataBuffer.get(i+1) == '/')
+                 {
+                    i++;
+                 }
+               break;
+               case 'B':
+                 // background hint
+               case 'C':
+                 // foreground colour
+               case 'D':
+                 // number of columns
+               case 'P':
+                 // Paragraph leading
+               case 'L':
+                 // Leading
+                 do
+                 {
+                    //skip space
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+                 while (Character.isWhitespace((char)b));
+                 // read value (currently ignored)
+                 db.setLength(0);
+                 while (!Character.isWhitespace((char)b))
+                 {
+                    db.append(b);
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+               break;
+
+               case 'F':
+                 // Font table
+                 do
+                 {
+                    //skip space
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+                 while (Character.isWhitespace((char)b));
+                 // read font id
+                 db.setLength(0);
+                 do
+                 {
+                    db.append(b);
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+                 while (!Character.isWhitespace((char)b));
+                 fontId = 0;
+                 str = db.toString(CharacterMap.SYSTEM_FONT);
+                 try
+                 {
+                    fontId = Byte.parseByte(str);
+                    do
+                    {
+                       //skip space
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+                    while (Character.isWhitespace((char)b));
+                    // read font name
+                    db.setLength(0);
+                    do
+                    {
+                       db.append(b);
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+                    while (!Character.isWhitespace((char)b));
+                    fontName = db.toString(CharacterMap.SYSTEM_FONT);
+                    do
+                    {
+                       //skip space
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+                    while (Character.isWhitespace((char)b));
+                    db.setLength(0);
+                    // read font size
+                    do
+                    {
+                       db.append(b);
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+                    while (Character.isDigit((char)b));
+                    i--;
+                    str = db.toString(CharacterMap.SYSTEM_FONT);
+                    fontSize = 0;
+
+                    fontSize = Integer.parseInt(str);
+
+                    localFontTable.put(Byte.valueOf(fontId),
+                       new FontTable(this, fontName, fontSize));
+                 }
+                 catch (NumberFormatException e)
+                 {
+                    warning(getMessageWithFallback(
+                      "error.acorn_drawfile.invalid_font_format",
+                      "Invalid font format"), e);
+                 }
+               break;
+               case '-':
+                  stringBuffer.append("\\-");
+               break;
+               default:
+                 if (Character.isDigit((char)b))
+                 {
+                    db.setLength(0);
+                    // select font
+                    while (Character.isDigit((char)b))
+                    {
+                       db.append(b);
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+
+                    i--;
+                    str = db.toString(CharacterMap.SYSTEM_FONT);
+                    try
+                    {
+                       fontId = Byte.parseByte(str);
+
+                       ft = localFontTable.get(Byte.valueOf(fontId));
+
+                       if (ft == null)
+                       {
+                          ft = fontTables.get(Byte.valueOf(fontId));
+                       }
+
+                       if (ft != null)
+                       {
+                          map = ft.getMap();
+                          stringBuffer.append(ft.getDeclarations());
+                       }
+                    }
+                    catch (NumberFormatException e)
+                    {
+                       warning(getMessageWithFallback(
+                         "error.acorn_drawfile.invalid_font_id",
+                         "Invalid font id {0}", str), e);
+                    }
+                 }
+                 else
+                 {
+                    stringBuffer.append((char)b);
+                 }
+            }
+
+            offset = i+1;
+         }
+      }
+
+      if (dataBuffer.length() > offset)
+      {
+         String text = dataBuffer.toString(offset, dataBuffer.length()-offset, map);
+
+         if (textModeMappings != null)
+         {
+            text = textModeMappings.applyMappings(text, styNames);
+         }
+
+         stringBuffer.append(text);
+      }
+
+      String content = stringBuffer.toString();
 
 System.out.println("CONTENT: "+content);
 
@@ -1218,7 +1468,7 @@ System.out.println("CONTENT: "+content);
                printDebug(" ");
             }
 
-            printDebug(octet(dataBuffer.get(i)));
+            printDebug(octet(array[i]));
          }
 
          if (r == -1)
@@ -1235,6 +1485,52 @@ System.out.println("CONTENT: "+content);
       bytesRead += length;
 
       return array;
+   }
+
+   // read up to \0
+   public int readBytes() throws IOException
+   {
+      getDataBuffer(32);
+
+      byte b;
+      int length = 0;
+
+      while ((b = readByte()) != 0)
+      {
+         if (b == -1) return -1;
+
+         dataBuffer.append(b);
+         length++;
+      }
+
+      if (isDebuggingOn())
+      {
+         printlnDebug(String.format("readBytes: %d byte(s) read", length));
+
+         for (int i = 0; i < length; i++)
+         {
+            if (i > 0)
+            {
+               printDebug(" ");
+            }
+
+            printDebug(octet(dataBuffer.get(i)));
+         }
+
+         if (length == -1)
+         {
+            printlnDebug("");
+         }
+      }
+
+      if (length == -1)
+      {
+         throw new EOFException();
+      }
+
+      bytesRead += length;
+
+      return length;
    }
 
    public String readString(int length) throws IOException
@@ -1516,7 +1812,7 @@ System.out.println("CONTENT: "+content);
 
    AffineTransform affineTransform;
 
-   HashMap<Byte,FontTable> fontTable;
+   HashMap<Byte,FontTable> fontTables;
    Vector<String> styNames;
 
    static final int OBJECT_FONT_TABLE=0;
@@ -1985,9 +2281,24 @@ class DataBuffer
 
 class FontTable
 {
-   public FontTable(String fontName)
+   public FontTable(AcornDrawFile adf, String fontName)
    {
+      this(adf, fontName, 0);
+   }
+
+   public FontTable(AcornDrawFile adf, String fontName, int defSize)
+   {
+      this.adf = adf;
       this.name = fontName;
+      this.defSize = defSize;
+
+      if (defSize > 0)
+      {
+         fontHeight = new JDRLength(adf.getCanvasGraphics(), defSize, 
+           JDRUnit.bp);
+      }
+
+      latexFontBase = adf.getCanvasGraphics().getLaTeXFontBase();
 
       charMap = AcornDrawFile.CharacterMap.SYSTEM_FONT;
 
@@ -2005,26 +2316,31 @@ class FontTable
        || family.equals("Portrhouse"))
       {
          family = "Monospaced";
+         latexFamily = "\\ttfamily";
       }
       else if (family.equals("Homerton")
             || family.equals("Sassoon")
               )
       {
          family = "SansSerif";
+         latexFamily = "\\sffamily";
       }
       else if (family.equals("Sidney"))
       {
          family = "Serif";
          charMap = AcornDrawFile.CharacterMap.SIDNEY;
+         latexFamily = "\\rmfamily";
       }
       else if (family.equals("Selwyn"))
       {
          family = "Serif";
          charMap = AcornDrawFile.CharacterMap.SELWYN;
+         latexFamily = "\\rmfamily";
       }
       else
       {
          family = "Serif";
+         latexFamily = "\\rmfamily";
       }
 
       int weight = JDRFont.SERIES_MEDIUM;
@@ -2033,15 +2349,18 @@ class FontTable
       if (variant.contains("Oblique"))
       {
          shape = JDRFont.SHAPE_SLANTED;
+         latexShape = "\\slshape";
       }
       else if (variant.contains("Italic"))
       {
          shape = JDRFont.SHAPE_ITALIC;
+         latexShape = "\\itshape";
       }
 
       if (variant.contains("Bold"))
       {
          weight = JDRFont.SERIES_BOLD;
+         latexShape = "\\bfseries";
       }
 
    }
@@ -2049,6 +2368,26 @@ class FontTable
    public JDRFont getFont(JDRLength size)
    {
       return new JDRFont(family, weight, shape, size);
+   }
+
+   public LaTeXFont getLaTeXFont(JDRLength size)
+   {
+      return new LaTeXFont(latexFamily, latexWeight, latexShape,
+       latexFontBase.getLaTeXCmd(size));
+   }
+
+   public String getDeclarations()
+   {
+      if (fontHeight != null)
+      {
+         return latexFamily + latexWeight + latexShape
+          + latexFontBase.getLaTeXCmd(fontHeight)
+          + " ";
+      }
+      else
+      {
+         return latexFamily + latexWeight + latexShape + " ";
+      }
    }
 
    public AcornDrawFile.CharacterMap getMap()
@@ -2062,7 +2401,12 @@ class FontTable
    }
 
    String name;
+   AcornDrawFile adf;
    AcornDrawFile.CharacterMap charMap;  
    String family;
    int weight=0, shape=0;
+   int defSize;
+   JDRLength fontHeight;
+   LaTeXFontBase latexFontBase;
+   String latexFamily="\\rmfamily", latexWeight="\\mdseries", latexShape="\\upshape";
 }
