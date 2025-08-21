@@ -22,27 +22,25 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-package com.dickimawbooks.flowframtk;
+package com.dickimawbooks.jdr;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.io.*;
 
-import com.dickimawbooks.jdr.TeXMappings;
-import com.dickimawbooks.jdr.TeXLookup;
-
-import com.dickimawbooks.jdrresources.JDRResources;
+import com.dickimawbooks.jdr.io.JDRMessageDictionary;
 
 public class MathModeMappings extends TeXMappings
 {
-   public MathModeMappings(JDRResources resources)
+   public MathModeMappings(JDRMessageDictionary msgSys)
    {
-      super(resources, resources.getMessage("symbolselector.mode_maths"));
+      super(msgSys, msgSys.getMessageWithFallback(
+        "symbolselector.mode_maths", "Math Mode Mappings"));
    }
 
-   public static MathModeMappings createDefaultMappings(JDRResources resources)
+   public static MathModeMappings createDefaultMappings(JDRMessageDictionary msgSys)
    {
-      MathModeMappings mappings = new MathModeMappings(resources);
+      MathModeMappings mappings = new MathModeMappings(msgSys);
 
       mappings.put(0x0023, new TeXLookup("\\#", "none"));
       mappings.put(0x0025, new TeXLookup("\\%", "none"));
@@ -507,10 +505,10 @@ public class MathModeMappings extends TeXMappings
       return mappings;
    }
 
-   public static MathModeMappings load(JDRResources resources, File file)
+   public static MathModeMappings load(JDRMessageDictionary msgSys, File file)
       throws IOException
    {
-      MathModeMappings mappings = new MathModeMappings(resources);
+      MathModeMappings mappings = new MathModeMappings(msgSys);
 
       mappings.read(file);
 

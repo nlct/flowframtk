@@ -22,27 +22,25 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-package com.dickimawbooks.flowframtk;
+package com.dickimawbooks.jdr;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.io.*;
 
-import com.dickimawbooks.jdr.TeXMappings;
-import com.dickimawbooks.jdr.TeXLookup;
-
-import com.dickimawbooks.jdrresources.JDRResources;
+import com.dickimawbooks.jdr.io.JDRMessageDictionary;
 
 public class TextModeMappings extends TeXMappings
 {
-   public TextModeMappings(JDRResources resources)
+   public TextModeMappings(JDRMessageDictionary msgSys)
    {
-      super(resources, resources.getMessage("symbolselector.mode_text"));
+      super(msgSys, msgSys.getMessageWithFallback(
+        "symbolselector.mode_text", "Text Mode Mappings"));
    }
 
-   public static TextModeMappings createDefaultMappings(JDRResources resources)
+   public static TextModeMappings createDefaultMappings(JDRMessageDictionary msgSys)
    {
-      TextModeMappings mappings = new TextModeMappings(resources);
+      TextModeMappings mappings = new TextModeMappings(msgSys);
 
       mappings.put('\\', "\\textbackslash{}");
       mappings.put('#', "\\#");
@@ -87,10 +85,10 @@ public class TextModeMappings extends TeXMappings
       return mappings;
    }
 
-   public static TextModeMappings load(JDRResources resources, File file)
+   public static TextModeMappings load(JDRMessageDictionary msgSys, File file)
       throws IOException
    {
-      TextModeMappings mappings = new TextModeMappings(resources);
+      TextModeMappings mappings = new TextModeMappings(msgSys);
 
       mappings.read(file);
 
