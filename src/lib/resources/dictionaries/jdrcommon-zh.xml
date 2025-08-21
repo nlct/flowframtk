@@ -299,6 +299,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.io.open">无法打开文件 ''{0}''</entry>
 <entry key="error.io.save">无法保存文件</entry>
 <entry key="error.io.rename">Unable to rename ''{0}'' -&gt; ''{1}''</entry>
+<entry key="error.io.unsupported_char">Unsupported character 0x{0}</entry>
 
 <entry key="error.with_line">Line {0}: {1}</entry>
 <entry key="error.with_line_and_col">Line {0}, Column {1}: {2}</entry>

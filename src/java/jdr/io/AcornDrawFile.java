@@ -816,65 +816,19 @@ public class AcornDrawFile
       int oldBytesRead = bytesRead;
       byte id = readByte();
 
-      String fontName = readString();
+      String fontName = readString().trim();
 
       if (fontTable == null)
       {
-         fontTable = new HashMap<Byte,JDRFont>();
+         fontTable = new HashMap<Byte,FontTable>();
       }
 
-      int idx = fontName.indexOf(".");
-      String family = fontName;
-      String variant = "";
-
-      if (idx > 0)
-      {
-         family = fontName.substring(0, idx);
-         variant = fontName.substring(idx+1);
-      }
-
-      if (family.equals("System") || family.equals("Portrhouse"))
-      {
-         family = "Monospaced";
-      }
-      else if (family.equals("Homerton")
-            || family.equals("Sassoon")
-              )
-      {
-         family = "SansSerif";
-      }
-// TODO Selwyn, Sidney
-      else
-      {
-         family = "Serif";
-      }
-
-      int weight = JDRFont.SERIES_MEDIUM;
-      int shape = JDRFont.SHAPE_UPRIGHT;
-
-      if (variant.contains("Oblique"))
-      {
-         shape = JDRFont.SHAPE_SLANTED;
-      }
-      else if (variant.contains("Italic"))
-      {
-         shape = JDRFont.SHAPE_ITALIC;
-      }
-
-      if (variant.contains("Bold"))
-      {
-         weight = JDRFont.SERIES_BOLD;
-      }
-
-      JDRLength size = new JDRLength(image.getCanvasGraphics(), 
-        10, JDRUnit.bp);
-
-      fontTable.put(Byte.valueOf(id), new JDRFont(family, weight, shape, size));
+      fontTable.put(Byte.valueOf(id), new FontTable(fontName));
 
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
-   protected JDRFont getFont(byte b)
+   protected FontTable getFontTable(byte b)
    {
       return fontTable == null ? null : fontTable.get(Byte.valueOf(b));
    }
@@ -918,11 +872,12 @@ public class AcornDrawFile
       int textStyle = readInt();
       // lowest byte is the font number
       // the remainder should be 0
-
-      JDRFont font = getFont(dataBuffer.get(0));
+      byte fontId = dataBuffer.get(0);
 
       int xSize = readInt(); // 1/640 of a point
       int ySize = readInt(); // draw units
+
+      FontTable fontTable = getFontTable(fontId);
 
       JDRLength fontSize = new JDRLength(cg, ((double)ySize)/640.0, JDRUnit.bp);
 
@@ -930,15 +885,16 @@ public class AcornDrawFile
       {// TODO
       }
 
-      String family = "Monospaced";
-      int weight = JDRFont.SERIES_MEDIUM;
-      int shape = JDRFont.SHAPE_UPRIGHT;
+      JDRFont jdrFont;
 
-      if (font != null)
+      if (fontTable == null)
       {
-         family = font.getFamily();
-         weight = font.getWeight();
-         shape = font.getShape();
+         jdrFont = new JDRFont("Monospaced", JDRFont.SERIES_MEDIUM,
+            JDRFont.SHAPE_UPRIGHT, fontSize);
+      }
+      else
+      {
+         jdrFont = fontTable.getFont(fontSize);
       }
 
       int x = readInt();
@@ -947,9 +903,16 @@ public class AcornDrawFile
       Point2D.Double p = new Point2D.Double(x, y);
       affineTransform.transform(p, p);
 
-      String text = readString(); // zero terminated string padding
+      CharacterMap map = CharacterMap.SYSTEM_FONT;
 
-      JDRText jdrText = new JDRText(cg, p, family, weight, shape, fontSize, text);
+      if (fontTable != null)
+      {
+         map = fontTable.getMap();
+      }
+
+      String text = readString(map); // zero terminated string padding
+
+      JDRText jdrText = new JDRText(cg, p, jdrFont, text);
       jdrText.setTextPaint(textPaint);
 
       String latexText = null;
@@ -1515,7 +1478,9 @@ System.out.println("CONTENT: "+content);
       LATIN8,
       LATIN9,
       LATIN10,
-      WELSH
+      WELSH,
+      SELWYN,
+      SIDNEY;
    }
 
    CanvasGraphics canvasGraphics;
@@ -1551,7 +1516,7 @@ System.out.println("CONTENT: "+content);
 
    AffineTransform affineTransform;
 
-   HashMap<Byte,JDRFont> fontTable;
+   HashMap<Byte,FontTable> fontTable;
    Vector<String> styNames;
 
    static final int OBJECT_FONT_TABLE=0;
@@ -1648,7 +1613,19 @@ class DataBuffer
          latin1 = Charset.forName("ISO-8859-1");
       }
       catch (Exception e)
-      {// shouldn't happen
+      {
+         if (adf.isDebuggingOn())
+         {
+            e.printStackTrace();
+         }
+      }
+
+      try
+      {
+         latin2 = Charset.forName("ISO-8859-2");
+      }
+      catch (Exception e)
+      {
          if (adf.isDebuggingOn())
          {
             e.printStackTrace();
@@ -1764,40 +1741,200 @@ class DataBuffer
 
    public String toString(AcornDrawFile.CharacterMap map)
    {
+      return toString(0, length, map);
+   }
+
+   public String toString(int offset, int n, AcornDrawFile.CharacterMap map)
+   {
+      Charset charset = latin1;
+      builder.setLength(0);
 
       switch (map)
       {
+         case UTF8 :
+            return new String(data, offset, n);
          case SYSTEM_FONT :
-            builder.setLength(0);
-            for (int i = 0; i < length; i++)
-            {
-               appendSystemFontChar(data[i]);
-            }
-         return builder.toString();
+         case LATIN1 :
+            appendLatinFontChar(offset, n, latin1);
+         break;
+         case LATIN2 :
+            appendLatinFontChar(offset, n, latin2);
+         break;
+         case SELWYN :
+            appendSelwynFontChar(offset, n);
+         break;
+// TODO
+         default:
+            appendLatinFontChar(offset, n, latin1);
       }
 
-      return new String(data, 0, length);
+      return builder.toString();
    }
 
-   private void appendSystemFontChar(byte c)
+   private void appendSelwynFontChar(int offset, int n)
+   {
+      for (int i = 0; i < n; i++)
+      {
+         appendSelwynFontChar(data[i+offset]);
+      }
+   }
+
+   private void appendSelwynFontChar(byte c)
+   {
+      switch ((char)c)
+      {
+         case 0x2A: builder.appendCodePoint(0x1F59B); break;
+         case 0x2B: builder.appendCodePoint(0x1F599); break;
+         case 0x34: builder.append('\u2742'); break;
+         case 0x38: builder.append('\u2743'); break;
+         case 0x48: builder.append('\u2745'); break;
+         case 0x5D: builder.append('\u2746'); break;
+         case 0x61: builder.append('\u260E'); break;
+         case 0x62: builder.append('\u2714'); break;
+         case 0x63: builder.append('\u2718'); break;
+         case 0x64: builder.append('\u2744'); break;
+         case 0x65: builder.append('\u2605'); break;
+         case 0x66: builder.append('\u273B'); break;
+         case 0x67: builder.append('\u2750'); break;
+         case 0x68: builder.append('\u2751'); break;
+         case 0x69: builder.append('\u2752'); break;
+         case 0x6A: builder.append('\u2B25'); break;
+         case 0x6B: builder.append('\u27A7'); break;
+         case 0x6C: builder.append('\u25CF'); break;
+         case 0x6D: builder.append('\u274D'); break;
+         case 0x6E: builder.append('\u25A0'); break;
+         case 0x6F: builder.append('\u274F'); break;
+         case 0x70: builder.append('\u2748'); break;
+         case 0x71: builder.append('\u2749'); break;
+         case 0x72: builder.append('\u274B'); break;//??
+         case 0x73: builder.append('\u25B2'); break;
+         case 0x74: builder.append('\u25BC'); break;
+         case 0x75: builder.append('\u274A'); break;
+         case 0x76: builder.append('\u2756'); break;
+// 0x77 ??
+         case 0x78: builder.append('\u2758'); break;
+         case 0x79: builder.append('\u2759'); break;
+         case 0x7A: builder.append('\u275A'); break;
+         case 0x7B: builder.append('\u275B'); break;
+         case 0x7C: builder.append('\u275C'); break;
+         case 0x7D: builder.append('\u275D'); break;
+         case 0x7E: builder.append('\u275E'); break;
+
+         case 0x92: builder.append('\u276C'); break;
+         case 0x93: builder.append('\u2771'); break;
+         case 0x94: builder.append('\u2770'); break;
+         case 0x95: builder.append('\u276A'); break;
+         case 0x96: builder.append('\u2768'); break;
+         case 0x97: builder.append('\u2773'); break;
+         case 0x98: builder.append('\u276E'); break;
+         case 0x99: builder.append('\u276F'); break;
+         case 0x9A: builder.append('\u2772'); break;
+         case 0x9B: builder.append('\u276D'); break;
+         case 0x9C: builder.append('\u2769'); break;
+         case 0x9D: builder.append('\u276B'); break;
+         case 0x9E: builder.append('\u2774'); break;
+         case 0x9F: builder.append('\u2775'); break;
+
+         case 0xA1: builder.append('\u2761'); break;
+         case 0xA2: builder.append('\u2762'); break;
+         case 0xA3: builder.append('\u2763'); break;
+         case 0xA4: builder.append('\u2764'); break;
+         case 0xA5: builder.append('\u2765'); break;
+         case 0xA6: builder.append('\u2766'); break;
+         case 0xA7: builder.append('\u2767'); break;
+         case 0xA8: builder.append('\u2663'); break;
+         case 0xA9: builder.append('\u2666'); break;
+         case 0xAA: builder.append('\u2665'); break;
+         case 0xAB: builder.append('\u2660'); break;
+
+         case 0xD5: builder.append('\u2192'); break;
+         case 0xD6: builder.append('\u2194'); break;
+         case 0xD7: builder.append('\u2195'); break;
+
+         case 0xE7: builder.append('\u2733'); break;
+
+//TODO
+
+         default: 
+
+          if (
+                  (0x21 <= c && c <= 0x29)
+               || (0x2C <= c && c <= 0x33)
+               || (0x2C <= c && c <= 0x33)
+               || (0x35 <= c && c <= 0x37)
+               || (0x39 <= c && c <= 0x47)
+               || (0x49 <= c && c <= 0x5C)
+               || (0x5E <= c && c <= 0x60)
+             )
+          {
+             builder.appendCodePoint(0x26E0 + c);
+          }
+          else if (0xAC <= c && c <= 0xB5)
+          {
+             // circled numbers 1-10
+             builder.append(0x23B4 + c);
+          }
+          else if (
+                    (0xB6 <= c && c <= 0xD4)
+                 || (0xB8 <= c && c <= 0xE6)
+                 || (0xE8 <= c && c <= 0xFE)
+                  )
+          {
+             // negative circled numbers 1-10
+             // sans-serif circled numbers 1-10
+             // negative sans-serif circled numbers 1-10
+             // arrows
+             builder.append(0x26C0 + c);
+          }
+          else if (((char)c) > 0x7F)
+          {
+             if (latin1 != null)
+             {
+                builder.append(new String(new byte[] { c }, latin1));
+             }
+             else
+             {
+                adf.warning(adf.getMessageWithFallback(
+                 "error.io.unsupported_char", 
+                 "Unsupported character 0x{0}", String.format("%02X", c)));
+
+                builder.appendCodePoint(0xFFFD);
+             }
+          }
+          else
+          {
+             builder.append((char)c);
+          }
+      }
+   }
+
+   private void appendLatinFontChar(int offset, int n, Charset charset)
+   {
+      for (int i = 0; i < n; i++)
+      {
+         appendLatinFontChar(data[i+offset], charset);
+      }
+   }
+
+   private void appendLatinFontChar(byte c, Charset charset)
    {
       switch ((char)c)
       {
          case 0x80: builder.append("\u20AC"); break;
          case 0x81: builder.append("\u0174"); break;
          case 0x82: builder.append("\u0175"); break;
-         case 0x83: builder.append("\uD83D\uDDB1"); break;
+         case 0x83: builder.append("\u25F0"); break;
          case 0x84: builder.append("\uD83D\uDDD9"); break;
          case 0x85: builder.append("\u0176"); break;
          case 0x86: builder.append("\u0177"); break;
-// 0x87 ??      
+// 0x87 8^7 ??
          case 0x88: builder.append("\u21E6"); break;
          case 0x89: builder.append("\u21E8"); break;
          case 0x8A: builder.append("\u21E9"); break;
          case 0x8B: builder.append("\u21E7"); break;
          case 0x8C: builder.append("\u2026"); break;
          case 0x8D: builder.append("\u2122"); break;
-         case 0x8E: builder.append("+"); break;// ??
+         case 0x8E: builder.append("\u2030"); break;
          case 0x8F: builder.append("\u2022"); break;
          case 0x90: builder.append("\u2018"); break;
          case 0x91: builder.append("\u2019"); break;
@@ -1816,11 +1953,20 @@ class DataBuffer
          case 0x9E: builder.append("fi"); break;
          case 0x9F: builder.append("fl"); break;
          default: 
+
           if (((char)c) > 0x7F)
           {
-             if (latin1 != null)
+             if (charset != null)
              {
-                builder.append(new String(new byte[] { c }, latin1));
+                builder.append(new String(new byte[] { c }, charset));
+             }
+             else
+             {
+                adf.warning(adf.getMessageWithFallback(
+                 "error.io.unsupported_char", 
+                 "Unsupported character 0x{0}", String.format("%02X", c)));
+
+                builder.appendCodePoint(0xFFFD);
              }
           }
           else
@@ -1833,6 +1979,90 @@ class DataBuffer
    byte[] data;
    int length=0;
    StringBuilder builder;
-   Charset latin1;
+   Charset latin1, latin2;
    AcornDrawFile adf;
+}
+
+class FontTable
+{
+   public FontTable(String fontName)
+   {
+      this.name = fontName;
+
+      charMap = AcornDrawFile.CharacterMap.SYSTEM_FONT;
+
+      int idx = fontName.indexOf(".");
+      String family = fontName;
+      String variant = "";
+
+      if (idx > 0)
+      {
+         family = fontName.substring(0, idx);
+         variant = fontName.substring(idx+1);
+      }
+
+      if (family.startsWith("System")
+       || family.equals("Portrhouse"))
+      {
+         family = "Monospaced";
+      }
+      else if (family.equals("Homerton")
+            || family.equals("Sassoon")
+              )
+      {
+         family = "SansSerif";
+      }
+      else if (family.equals("Sidney"))
+      {
+         family = "Serif";
+         charMap = AcornDrawFile.CharacterMap.SIDNEY;
+      }
+      else if (family.equals("Selwyn"))
+      {
+         family = "Serif";
+         charMap = AcornDrawFile.CharacterMap.SELWYN;
+      }
+      else
+      {
+         family = "Serif";
+      }
+
+      int weight = JDRFont.SERIES_MEDIUM;
+      int shape = JDRFont.SHAPE_UPRIGHT;
+
+      if (variant.contains("Oblique"))
+      {
+         shape = JDRFont.SHAPE_SLANTED;
+      }
+      else if (variant.contains("Italic"))
+      {
+         shape = JDRFont.SHAPE_ITALIC;
+      }
+
+      if (variant.contains("Bold"))
+      {
+         weight = JDRFont.SERIES_BOLD;
+      }
+
+   }
+
+   public JDRFont getFont(JDRLength size)
+   {
+      return new JDRFont(family, weight, shape, size);
+   }
+
+   public AcornDrawFile.CharacterMap getMap()
+   {
+      return charMap;
+   }
+
+   public String toString()
+   {
+      return name;
+   }
+
+   String name;
+   AcornDrawFile.CharacterMap charMap;  
+   String family;
+   int weight=0, shape=0;
 }

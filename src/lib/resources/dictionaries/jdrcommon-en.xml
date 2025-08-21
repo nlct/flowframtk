@@ -292,6 +292,7 @@ File doesn''t exist</entry>
 <entry key="error.io.open">Unable to open file ''{0}''</entry>
 <entry key="error.io.save">Unable to save file</entry>
 <entry key="error.io.rename">Unable to rename ''{0}'' -&gt; ''{1}''</entry>
+<entry key="error.io.unsupported_char">Unsupported character 0x{0}</entry>
 
 <entry key="error.with_line">Line {0}: {1}</entry>
 <entry key="error.with_line_and_col">Line {0}, Column {1}: {2}</entry>
