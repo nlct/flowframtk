@@ -1182,6 +1182,16 @@ public abstract class JDRAJR
       return basePath.relativize(path);
    }
 
+   public Path relativizePath(Path path)
+   {
+      if (basePath == null || !path.isAbsolute())
+      {
+         return path;
+      }
+
+      return basePath.relativize(path);
+   }
+
    public abstract int getLineNum();
 
    public abstract int getColumnIndex();

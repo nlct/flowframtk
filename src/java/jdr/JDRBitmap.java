@@ -124,6 +124,7 @@ public class JDRBitmap extends JDRCompleteObject
 
       this.latexCommand = bitmap.latexCommand;
       this.filename_ = bitmap.filename_;
+      this.imageFile = bitmap.imageFile;
       this.latexlinkname_ = bitmap.latexlinkname_;
       this.name_ = bitmap.name_;
       this.ic = bitmap.ic;
@@ -144,32 +145,32 @@ public class JDRBitmap extends JDRCompleteObject
       filename_      = fullpathname;
       latexlinkname_ = latexpathname;
 
-      File f = new File(filename_);
+      imageFile = new File(filename_);
 
-      if (!f.exists())
+      if (!imageFile.exists())
       {
-         throw new FileNotFoundException(f.getAbsolutePath());
+         throw new FileNotFoundException(imageFile.getAbsolutePath());
       }
 
       String imageFormat = null;
 
       try
       {
-         imageFormat = getImageFormat(f);
+         imageFormat = getImageFormat(imageFile);
       }
       catch (IOException e)
       {
-         throw new InvalidImageFormatException(f.getAbsolutePath(),
+         throw new InvalidImageFormatException(imageFile.getAbsolutePath(),
            getCanvasGraphics(), e);
       }
 
       if (imageFormat == null)
       {
-         throw new InvalidImageFormatException(f.getAbsolutePath(),
+         throw new InvalidImageFormatException(imageFile.getAbsolutePath(),
            getCanvasGraphics());
       }
 
-      name_ = f.getName();
+      name_ = imageFile.getName();
 
       imageLoaded = true;
 
@@ -188,7 +189,8 @@ public class JDRBitmap extends JDRCompleteObject
       throws FileNotFoundException,
              InvalidImageFormatException
    {
-      filename_      = file.getAbsolutePath();
+      imageFile      = file;
+      filename_      = imageFile.getAbsolutePath();
       latexlinkname_ = latexpathname;
 
       if (!file.exists())
@@ -200,21 +202,21 @@ public class JDRBitmap extends JDRCompleteObject
 
       try
       {
-         imageFormat = getImageFormat(file);
+         imageFormat = getImageFormat(imageFile);
       }
       catch (IOException e)
       {
-         throw new InvalidImageFormatException(file.getAbsolutePath(),
+         throw new InvalidImageFormatException(imageFile.getAbsolutePath(),
            getCanvasGraphics(), e);
       }
 
       if (imageFormat == null)
       {
-         throw new InvalidImageFormatException(file.getAbsolutePath(),
+         throw new InvalidImageFormatException(imageFile.getAbsolutePath(),
            getCanvasGraphics());
       }
 
-      name_ = file.getName();
+      name_ = imageFile.getName();
 
       imageLoaded = true;
 
@@ -444,10 +446,10 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public boolean refresh()
    {
-      File file = new File(filename_);
-      name_ = file.getName();
+      imageFile = new File(filename_);
+      name_ = imageFile.getName();
 
-      if (!file.exists())
+      if (!imageFile.exists())
       {
          CanvasGraphics cg = getCanvasGraphics();
          cg.setBitmapReplaced(true);
@@ -469,16 +471,16 @@ public class JDRBitmap extends JDRCompleteObject
 
          if (result == JOptionPane.YES_OPTION)
          {
-            String filename = cg.chooseBitmap(file);
+            String filename = cg.chooseBitmap(imageFile);
 
             if (filename != null)
             {
                filename_ = filename;
 
-               file = new File(filename_);
-               name_ = file.getName();
+               imageFile = new File(filename_);
+               name_ = imageFile.getName();
 
-               if (!file.exists())
+               if (!imageFile.exists())
                {
                   refresh();
                }
@@ -922,6 +924,11 @@ public class JDRBitmap extends JDRCompleteObject
       return filename_;
    }
 
+   public File getFile()
+   {
+      return imageFile;
+   }
+
    public String getName()
    {
       return name_;
@@ -952,6 +959,22 @@ public class JDRBitmap extends JDRCompleteObject
       boolean imageChanged = !filename_.equals(fullfilename);
 
       filename_      = fullfilename;
+      imageFile      = new File(fullfilename);
+      latexlinkname_ = latexLinkName;
+
+      if (imageChanged)
+      {
+         refresh();
+      }
+   }
+
+   public void setProperties(File file,
+                             String latexLinkName)
+   {
+      boolean imageChanged = !file.equals(imageFile);
+
+      imageFile      = file;
+      filename_      = imageFile.getAbsolutePath();
       latexlinkname_ = latexLinkName;
 
       if (imageChanged)
@@ -1069,6 +1092,7 @@ public class JDRBitmap extends JDRCompleteObject
       super.makeEqual(bitmap);
       ic = bitmap.ic;
       filename_ = bitmap.getFilename();
+      imageFile = bitmap.imageFile;
       name_ = bitmap.name_;
       latexlinkname_ = bitmap.getLaTeXLinkName();
       latexCommand = bitmap.latexCommand;
@@ -1464,6 +1488,7 @@ public class JDRBitmap extends JDRCompleteObject
 
    private volatile double[] flatmatrix;
    private volatile String filename_, latexlinkname_, name_;
+   private volatile File imageFile;
 
    private volatile ImageIcon ic;
 

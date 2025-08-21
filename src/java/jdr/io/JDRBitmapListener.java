@@ -61,7 +61,7 @@ public class JDRBitmapListener implements JDRObjectLoaderListener
       }
       else
       {
-         jdr.writeString(jdr.relativizePath(bitmap.getFilename()).toString());
+         jdr.writeString(jdr.relativizePath(bitmap.getFile().toPath()).toString());
       }
 
       // LaTeX flag
