@@ -220,6 +220,23 @@ public class JDRText extends JDRCompleteObject
       setFont(family, series, shape, size);
    }
 
+   public JDRText(CanvasGraphics cg, JDRFont jdrFont, String str)
+   {
+      this(jdrFont, str, new JDRTransform(cg));
+   }
+
+   public JDRText(JDRFont jdrFont, String str, JDRTransform transform)
+   {
+      super(transform.getCanvasGraphics());
+      init(jdrFont, str, transform);
+   }
+
+   public JDRText(CanvasGraphics cg, Point2D p, JDRFont jdrFont, String str)
+   {
+      this(jdrFont, str, new JDRTransform(cg));
+      setPosition(p.getX(),p.getY());
+   }
+
    /**
     * Creates a copy.
     */ 
@@ -285,6 +302,26 @@ public class JDRText extends JDRCompleteObject
       pgfHalign = PGF_HALIGN_LEFT;
 
       setFont(family, series, shape, size);
+
+      setTextPaint(new JDRColor(getCanvasGraphics(), 0,0,0));
+   }
+
+   private void init(JDRFont jdrFont, String str, JDRTransform trans)
+   {
+      this.jdrFont = jdrFont;
+      jdrtransform = trans;
+
+      text = str.replaceAll("[\t\r\n]", " ");
+
+      latexFont   = new LaTeXFont();
+      latexText   = text;
+
+      pgfValign = PGF_VALIGN_BASE;
+      pgfHalign = PGF_HALIGN_LEFT;
+
+      font = new Font(jdrFont.getFamily(), getFontWeight(),
+         jdrFont.getBpSize());
+      updateBounds();
 
       setTextPaint(new JDRColor(getCanvasGraphics(), 0,0,0));
    }
