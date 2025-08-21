@@ -26,6 +26,7 @@ Nicola Talbot
 <entry key="syntax.bitmap_basename">{0} (or {1}) &lt;prefix&gt;	Set the basename prefix for exported embedded bitmaps (if applicable).</entry>
 <entry key="syntax.bitmap_dir">{0} &lt;path&gt;	Set the directory for exported embedded bitmaps (if applicable).</entry>
 <entry key="syntax.extract_bitmaps">{0}	Extract embedded bitmaps when importing (if applicable).</entry>
+<entry key="syntax.apply_mappings">{0}	Apply mappings when importing (if applicable).</entry>
 
 
 <entry key="syntax.latex-dvi">{0} &lt;path&gt;	Path to latex application (DVI output).</entry>

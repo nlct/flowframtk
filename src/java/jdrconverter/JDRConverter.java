@@ -423,6 +423,9 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.extract_bitmaps",
         "--[no]extract-bitmaps"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.apply_mappings",
+        "--[no]apply-mappings"));
+
       helpLib.printSyntaxItem(getMessage("syntax.export_settings"));
 
       System.out.println();
@@ -1149,6 +1152,14 @@ public class JDRConverter
             {
                useRelativeBitmaps = false;
             }
+            else if (arg.equals("--apply-mappings"))
+            {
+               useMappings = true;
+            }
+            else if (arg.equals("--noapply-mappings"))
+            {
+               useMappings = false;
+            }
             else if (isArg(arg, "--latex-dvi", returnVals))
             {
                if (returnVals[0] == null)
@@ -1303,6 +1314,47 @@ public class JDRConverter
          bitmapNamePrefix = null;
          bitmapDir  = null;
       }
+
+      if (useMappings)
+      {
+         File file = new File(userConfigDir, "textmappings.prop");
+
+         if (file.exists())
+         {
+            try
+            {
+               textModeMappings = TextModeMappings.load(msgPublisher, file);
+            }
+            catch (IOException e)
+            {
+               error(getMessage("error.io.failed_to_load_mapping", file), e);
+            }
+         }
+
+         if (textModeMappings == null)
+         {
+            textModeMappings = TextModeMappings.createDefaultMappings(msgPublisher);
+         }
+
+         file = new File(userConfigDir, "mathmappings.prop");
+
+         if (file.exists())
+         {
+            try
+            {
+               mathModeMappings = MathModeMappings.load(msgPublisher, file);
+            }
+            catch (IOException e)
+            {
+               error(getMessage("error.io.failed_to_load_mapping", file), e);
+            }
+         }
+
+         if (mathModeMappings == null)
+         {
+            mathModeMappings = MathModeMappings.createDefaultMappings(msgPublisher);
+         }
+      }
    }
 
    protected void run()
@@ -1363,8 +1415,7 @@ public class JDRConverter
                paths = SVG.load(canvasGraphics, in);
             break;
             case ACORN_DRAWFILE:
-// TODO Work in progress
-               paths = AcornDrawFile.load(canvasGraphics, din, bitmapDir, bitmapNamePrefix);
+               paths = loadAcornDrawFile(din, canvasGraphics);
                settingsFlag = JDR.ALL_SETTINGS;
             break;
             default:
@@ -1525,6 +1576,25 @@ public class JDRConverter
             out.close();
          }
       }
+   }
+
+   protected JDRGroup loadAcornDrawFile(DataInputStream din, CanvasGraphics canvasGraphics)
+     throws IOException,InvalidFormatException
+   {
+      AcornDrawFile adf = new AcornDrawFile(canvasGraphics, din);
+
+      if (extractBitmaps)
+      {
+         adf.enableImportBitmaps(bitmapDir, bitmapNamePrefix);
+      }
+
+      if (useMappings)
+      {
+         adf.setTextModeMappings(textModeMappings);
+         adf.setMathModeMappings(mathModeMappings);
+      }
+
+      return adf.readData();
    }
 
    protected void savePgf(JDRGroup paths, PrintWriter out)
@@ -1919,6 +1989,10 @@ public class JDRConverter
    protected boolean useHPaddingShapepar = false;
 
    protected int normalsize=10;// --normalsize
+
+   protected TextModeMappings textModeMappings;
+   protected MathModeMappings mathModeMappings;
+   protected boolean useMappings=true;
 
    // --settings --nosettings
    protected SaveSettingsType saveSettingsType = SaveSettingsType.MATCH_INPUT;

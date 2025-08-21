@@ -285,6 +285,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="error.io.dir_not_exists">Directory ''{0}'' doesn''t exist</entry>
 <entry key="error.io.invalid_map">Invalid mapping ''{0}''</entry>
 <entry key="error.io.invalid_array_length">Invalid array length {0}</entry>
+<entry key="error.io.failed_to_load_mapping">Failed to load mappings from file ''{0}''</entry>
 <entry key="error.io.not_directory">''{0}'' is not a directory</entry>
 <entry key="error.io.not_exists">Unable to open ''{0}''
 File doesn''t exist</entry>

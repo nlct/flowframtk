@@ -20,6 +20,7 @@
 package com.dickimawbooks.jdr.io;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Vector;
@@ -45,8 +46,7 @@ public class AcornDrawFile
       setCanvasGraphics(cg);
    }
 
-   private AcornDrawFile(CanvasGraphics cg, DataInputStream din,
-     File bitmapDir, String bitmapPrefix)
+   public AcornDrawFile(CanvasGraphics cg, DataInputStream din)
    {
       this(cg);
       image = new JDRGroup(cg);
@@ -54,19 +54,112 @@ public class AcornDrawFile
       affineTransform = new AffineTransform(
        DRAW_PT_TO_CM, 0, 0, -DRAW_PT_TO_CM, 0, 0);
       this.din = din;
+      styNames = new Vector<String>();
+
+   }
+
+   public Vector<String> getRequiredPackages()
+   {
+      return styNames;
+   }
+
+   public void enableImportBitmaps(File bitmapDir, String bitmapPrefix)
+   {
       this.bitmapDir = bitmapDir;
       this.bitmapPrefix = bitmapPrefix;
    }
 
-   public static JDRGroup load(CanvasGraphics cg, DataInputStream din,
-    File bitmapDir, String bitmapPrefix)
-   throws IOException,InvalidFormatException
+   public void disableImportBitmaps()
    {
-      AcornDrawFile arf = new AcornDrawFile(cg, din, bitmapDir, bitmapPrefix);
+      this.bitmapDir = null;
+   }
 
-      arf.readData();
+   public void setTextModeMappings(TeXMappings texMappings)
+   {
+      this.textModeMappings = texMappings;
+   }
 
-      return arf.image;
+   public void setMathModeMappings(TeXMappings texMappings)
+   {
+      this.mathModeMappings = texMappings;
+   }
+
+   public JDRGroup readData() throws IOException,InvalidFormatException
+   {
+      String word = readString(4);
+
+      if (!word.equals("Draw"))
+      {
+         throw new InvalidFormatException(
+          getMessageWithFallback("error.not_acorn_drawfile", "Not an Acorn Draw file"));
+      }
+
+      majorVersion = readInt();
+
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.major",
+        "Major version: {0}", majorVersion));
+
+      minorVersion = readInt();
+
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.minor",
+        "Minor version: {0}", minorVersion));
+
+      producer = readString(12).trim();
+
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.producer", 
+        "Producer: {0}", producer));
+
+      lowBoundingX = readInt();
+      lowBoundingY = readInt();
+      highBoundingX = readInt();
+      highBoundingY = readInt();
+
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box", 
+        "Bounding Box: ({0},{1}) ({2},{3})", 
+        lowBoundingX, lowBoundingY, highBoundingX, highBoundingY));
+
+      int objectId;
+
+      while (true)
+      {
+         try
+         {
+            objectId = readInt();
+            readObject(objectId);
+         }
+         catch (EOFException e)
+         {
+            break;
+         }
+      }
+
+      if (!styNames.isEmpty())
+      {
+         String preamble = getCanvasGraphics().getPreamble();
+
+         getStringBuffer(preamble.length()+styNames.firstElement().length()+12);
+
+         stringBuffer.append(preamble);
+
+         for (String sty : styNames)
+         {
+            if (sty.startsWith("["))
+            {
+               int idx = sty.indexOf("]");
+
+               stringBuffer.append(String.format("\\usepackage%s{%s}%n",
+                 sty.substring(0, idx+1), sty.substring(idx+1)));
+            }
+            else
+            {
+               stringBuffer.append(String.format("\\usepackage{%s}%n", sty));
+            }
+         }
+
+         getCanvasGraphics().setPreamble(stringBuffer.toString());
+      }
+
+      return image;
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)
@@ -186,56 +279,6 @@ public class AcornDrawFile
       return getMessageSystem().getVerbosity();
    }
 
-
-   protected void readData() throws IOException,InvalidFormatException
-   {
-      String word = readString(4);
-
-      if (!word.equals("Draw"))
-      {
-         throw new InvalidFormatException(
-          getMessageWithFallback("error.not_acorn_drawfile", "Not an Acorn Draw file"));
-      }
-
-      majorVersion = readInt();
-
-      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.major",
-        "Major version: {0}", majorVersion));
-
-      minorVersion = readInt();
-
-      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.minor",
-        "Minor version: {0}", minorVersion));
-
-      producer = readString(12).trim();
-
-      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.producer", 
-        "Producer: {0}", producer));
-
-      lowBoundingX = readInt();
-      lowBoundingY = readInt();
-      highBoundingX = readInt();
-      highBoundingY = readInt();
-
-      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box", 
-        "Bounding Box: ({0},{1}) ({2},{3})", 
-        lowBoundingX, lowBoundingY, highBoundingX, highBoundingY));
-
-      int objectId;
-
-      while (true)
-      {
-         try
-         {
-            objectId = readInt();
-            readObject(objectId);
-         }
-         catch (EOFException e)
-         {
-            break;
-         }
-      }
-   }
 
    protected void provideTypeblock()
    {
@@ -876,7 +919,7 @@ public class AcornDrawFile
       // lowest byte is the font number
       // the remainder should be 0
 
-      JDRFont font = getFont(dataBuffer[0]);
+      JDRFont font = getFont(dataBuffer.get(0));
 
       int xSize = readInt(); // 1/640 of a point
       int ySize = readInt(); // draw units
@@ -909,6 +952,23 @@ public class AcornDrawFile
       JDRText jdrText = new JDRText(cg, p, family, weight, shape, fontSize, text);
       jdrText.setTextPaint(textPaint);
 
+      String latexText = null;
+
+      if (mathModeMappings != null
+           && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
+      {
+         latexText = mathModeMappings.applyMappings(
+           text.substring(1, text.length()-1), styNames);
+      }
+      else if (textModeMappings != null)
+      {
+         latexText = textModeMappings.applyMappings(text, styNames);
+      }
+
+      if (latexText != null && !latexText.equals(text))
+      {
+         jdrText.setLaTeXText(latexText);
+      }
 
       return jdrText;
    }
@@ -1136,21 +1196,30 @@ System.out.println("CONTENT: "+content);
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
-   protected byte[] getDataBuffer(int length)
+   protected DataBuffer getDataBuffer(int minCapacity)
    {
-      if (dataBuffer == null || dataBuffer.length < length)
+      if (dataBuffer == null)
       {
-         dataBuffer = new byte[length];
+         dataBuffer = new DataBuffer(this, minCapacity);
+      }
+      else
+      {
+         dataBuffer.setLength(0);
+
+         if (dataBuffer.getCapacity() < minCapacity)
+         {
+            dataBuffer.setMinimumCapacity(minCapacity);
+         }
       }
 
       return dataBuffer;
    }
 
-   protected StringBuilder getStringBuffer(int length)
+   protected StringBuilder getStringBuffer(int minCapacity)
    {
       if (stringBuffer == null)
       {
-         stringBuffer = new StringBuilder(length);
+         stringBuffer = new StringBuilder(minCapacity);
       }
       else
       {
@@ -1186,7 +1255,7 @@ System.out.println("CONTENT: "+content);
                printDebug(" ");
             }
 
-            printDebug(octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer.get(i)));
          }
 
          if (r == -1)
@@ -1207,11 +1276,16 @@ System.out.println("CONTENT: "+content);
 
    public String readString(int length) throws IOException
    {
+      return readString(length, CharacterMap.SYSTEM_FONT);
+   }
+
+   public String readString(int length, CharacterMap map) throws IOException
+   {
       if (length <= 0) return "";
 
       getDataBuffer(length);
 
-      int r = din.read(dataBuffer, 0, length);
+      int r = dataBuffer.read(din, length);
 
       if (isDebuggingOn())
       {
@@ -1224,7 +1298,7 @@ System.out.println("CONTENT: "+content);
                printDebug(" ");
             }
 
-            printDebug(octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer.get(i)));
          }
 
          if (r == -1)
@@ -1240,35 +1314,35 @@ System.out.println("CONTENT: "+content);
 
       bytesRead += length;
 
-      getStringBuffer(length);
-
-      for (int i = 0; i < length; i++)
-      {
-         stringBuffer.append((char)dataBuffer[i]);
-      }
+      String text = dataBuffer.toString(map);
 
       if (isDebuggingOn())
       {
-         printlnDebug("\t"+stringBuffer);
+         printlnDebug("\t"+text);
       }
 
-      return stringBuffer.toString();
+      return text;
    }
 
    public String readString() throws IOException
    {
-      // read to null
+      return readString(CharacterMap.SYSTEM_FONT);
+   }
 
-      getStringBuffer(256);
+   public String readString(CharacterMap map) throws IOException
+   {
+      // read to null
 
       byte b;
 
+      getDataBuffer(16);
+
       while ((b = readByte()) != 0)
       {
-         stringBuffer.append((char)b);
+         dataBuffer.append(b);
       }
 
-      return stringBuffer.toString();
+      return dataBuffer.toString(map);
    }
 
    public int readInt() throws IOException
@@ -1276,7 +1350,8 @@ System.out.println("CONTENT: "+content);
       int length = 4;
 
       getDataBuffer(length);
-      int r = din.read(dataBuffer, 0, length);
+
+      int r = dataBuffer.read(din, length);
 
       if (isDebuggingOn())
       {
@@ -1289,7 +1364,7 @@ System.out.println("CONTENT: "+content);
                printDebug(" ");
             }
 
-            printDebug(octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer.get(i)));
          }
 
          if (r == -1)
@@ -1308,10 +1383,10 @@ System.out.println("CONTENT: "+content);
       getStringBuffer(length);
 
       stringBuffer.append(String.format("%s%s%s%s",
-        octet(dataBuffer[3]), 
-        octet(dataBuffer[2]),
-        octet(dataBuffer[1]), 
-        octet(dataBuffer[0])));
+        octet(dataBuffer.get(3)), 
+        octet(dataBuffer.get(2)),
+        octet(dataBuffer.get(1)), 
+        octet(dataBuffer.get(0))));
 
       int value = (int)Long.parseLong(stringBuffer.toString(), 16);
 
@@ -1333,7 +1408,7 @@ System.out.println("CONTENT: "+content);
       int length = 8;
 
       getDataBuffer(length);
-      int r = din.read(dataBuffer, 0, length);
+      int r = dataBuffer.read(din, length);
 
       if (isDebuggingOn())
       {
@@ -1346,7 +1421,7 @@ System.out.println("CONTENT: "+content);
                printDebug(" ");
             }
 
-            printDebug(octet(dataBuffer[i]));
+            printDebug(octet(dataBuffer.get(i)));
          }
 
          if (r == -1)
@@ -1365,14 +1440,14 @@ System.out.println("CONTENT: "+content);
       getStringBuffer(length);
 
       stringBuffer.append(String.format("%s%s%s%s%s%s%s%s",
-        octet(dataBuffer[3]), 
-        octet(dataBuffer[2]),
-        octet(dataBuffer[1]), 
-        octet(dataBuffer[0]),
-        octet(dataBuffer[7]), 
-        octet(dataBuffer[6]),
-        octet(dataBuffer[5]), 
-        octet(dataBuffer[4])
+        octet(dataBuffer.get(3)), 
+        octet(dataBuffer.get(2)),
+        octet(dataBuffer.get(1)), 
+        octet(dataBuffer.get(0)),
+        octet(dataBuffer.get(7)), 
+        octet(dataBuffer.get(6)),
+        octet(dataBuffer.get(5)), 
+        octet(dataBuffer.get(4))
       ));
 
       long longHex = Long.parseUnsignedLong(stringBuffer.toString(), 16); 
@@ -1423,18 +1498,40 @@ System.out.println("CONTENT: "+content);
       }
    }
 
+   public static enum CharacterMap
+   {
+      SYSTEM_FONT,
+      UTF8,
+      CYRILLIC,
+      GREEK,
+      HEBREW,
+      LATIN1,
+      LATIN2,
+      LATIN3,
+      LATIN4,
+      LATIN5,
+      LATIN6,
+      LATIN7,
+      LATIN8,
+      LATIN9,
+      LATIN10,
+      WELSH
+   }
+
    CanvasGraphics canvasGraphics;
    DataInputStream din;
 
    File bitmapDir;
    String bitmapPrefix;
    int bitmapCount=0;
+   TeXMappings textModeMappings=null;
+   TeXMappings mathModeMappings=null;
 
    JDRGroup image;
    JDRGroup currentGroup=null;
 
    StringBuilder stringBuffer;
-   byte[] dataBuffer;
+   DataBuffer dataBuffer;
    int bytesRead=0;
 
    int majorVersion;
@@ -1455,6 +1552,7 @@ System.out.println("CONTENT: "+content);
    AffineTransform affineTransform;
 
    HashMap<Byte,JDRFont> fontTable;
+   Vector<String> styNames;
 
    static final int OBJECT_FONT_TABLE=0;
    static final int OBJECT_TEXT=1;
@@ -1524,4 +1622,217 @@ System.out.println("CONTENT: "+content);
 
    static final double DRAW_PT_TO_CM=1.0/18144.0;
    static final double DRAW_PT_TO_IN = DRAW_PT_TO_CM * 0.3937008;
+}
+
+class DataBuffer
+{
+   public DataBuffer(AcornDrawFile adf)
+   {
+      this(adf, 64);
+   }
+
+   public DataBuffer(AcornDrawFile adf, int capacity)
+   {
+      if (capacity <= 1)
+      {
+         throw new IllegalArgumentException("Invalid capacity "+capacity);
+      }
+
+      this.adf = adf;
+
+      data = new byte[capacity];
+      builder = new StringBuilder(capacity);
+
+      try
+      {
+         latin1 = Charset.forName("ISO-8859-1");
+      }
+      catch (Exception e)
+      {// shouldn't happen
+         if (adf.isDebuggingOn())
+         {
+            e.printStackTrace();
+         }
+      }
+   }
+
+   public int getCapacity()
+   {
+      return data.length;
+   }
+
+   public int length()
+   {
+      return length;
+   }
+
+   public void setLength(int n)
+   {
+      length = n;
+   }
+
+   public byte get(int i)
+   throws ArrayIndexOutOfBoundsException
+   {
+      if (i < 0 || i > length)
+      {
+         throw new ArrayIndexOutOfBoundsException("Invalid array index "+i);
+      }
+
+      return data[i];
+   }
+
+   public void append(byte b)
+   {
+      if (length < data.length)
+      {
+         data[length] = b;
+         length++;
+      }
+      else
+      {
+         enlarge();
+         data[length] = b;
+         length++;
+      }
+   }
+
+   protected void enlarge()
+   {
+      enlarge((int) Math.ceil(1.5 * data.length));
+   }
+
+   protected void enlarge(int newCapacity)
+   {
+      byte[] orgData = data;
+      data = new byte[newCapacity];
+
+      for (int i = 0; i < orgData.length; i++)
+      {
+         data[i] = orgData[i];
+      }
+
+      length = orgData.length;
+   }
+
+   public void setMinimumCapacity(int newCapacity)
+   {
+      if (newCapacity > data.length)
+      {
+         enlarge(newCapacity);
+      }
+   }
+
+   public int read(DataInputStream din, int size)
+   throws IOException
+   {
+      length = 0;
+
+      if (size > getCapacity())
+      {
+         enlarge(size);
+      }
+
+      int result = din.read(data, 0, size);
+
+      if (result >= 0)
+      {
+         length = size;
+      }
+
+      return result;
+   }
+
+   public int append(DataInputStream din, int size)
+   throws IOException
+   {
+      if (size > data.length + size)
+      {
+         enlarge(data.length + size);
+         data = new byte[data.length + size];
+      }
+
+      int result = din.read(data, length, size);
+
+      if (result >= 0)
+      {
+         length += size;
+      }
+
+      return result;
+   }
+
+   public String toString(AcornDrawFile.CharacterMap map)
+   {
+
+      switch (map)
+      {
+         case SYSTEM_FONT :
+            builder.setLength(0);
+            for (int i = 0; i < length; i++)
+            {
+               appendSystemFontChar(data[i]);
+            }
+         return builder.toString();
+      }
+
+      return new String(data, 0, length);
+   }
+
+   private void appendSystemFontChar(byte c)
+   {
+      switch ((char)c)
+      {
+         case 0x80: builder.append("\u20AC"); break;
+         case 0x81: builder.append("\u0174"); break;
+         case 0x82: builder.append("\u0175"); break;
+         case 0x83: builder.append("\uD83D\uDDB1"); break;
+         case 0x84: builder.append("\uD83D\uDDD9"); break;
+         case 0x85: builder.append("\u0176"); break;
+         case 0x86: builder.append("\u0177"); break;
+// 0x87 ??      
+         case 0x88: builder.append("\u21E6"); break;
+         case 0x89: builder.append("\u21E8"); break;
+         case 0x8A: builder.append("\u21E9"); break;
+         case 0x8B: builder.append("\u21E7"); break;
+         case 0x8C: builder.append("\u2026"); break;
+         case 0x8D: builder.append("\u2122"); break;
+         case 0x8E: builder.append("+"); break;// ??
+         case 0x8F: builder.append("\u2022"); break;
+         case 0x90: builder.append("\u2018"); break;
+         case 0x91: builder.append("\u2019"); break;
+         case 0x92: builder.append("\u2039"); break;
+         case 0x93: builder.append("\u203A"); break;
+         case 0x94: builder.append("\u201C"); break;
+         case 0x95: builder.append("\u201D"); break;
+         case 0x96: builder.append("\u201E"); break;
+         case 0x97: builder.append("\u2010"); break;
+         case 0x98: builder.append("\u2014"); break;
+         case 0x99: builder.append("\u2013"); break;
+         case 0x9A: builder.append("\u0152"); break;
+         case 0x9B: builder.append("\u0153"); break;
+         case 0x9C: builder.append("\u2020"); break;
+         case 0x9D: builder.append("\u2021"); break;
+         case 0x9E: builder.append("fi"); break;
+         case 0x9F: builder.append("fl"); break;
+         default: 
+          if (((char)c) > 0x7F)
+          {
+             if (latin1 != null)
+             {
+                builder.append(new String(new byte[] { c }, latin1));
+             }
+          }
+          else
+          {
+             builder.append((char)c);
+          }
+      }
+   }
+
+   byte[] data;
+   int length=0;
+   StringBuilder builder;
+   Charset latin1;
+   AcornDrawFile adf;
 }
