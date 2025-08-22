@@ -47,7 +47,13 @@ Nicola Talbot
 
 <entry key="syntax.other">Other options.</entry>
 
-<entry key="syntax.doc">{0}	Create complete document (if applicable).</entry>
+<entry key="syntax.export-latex">{0} &lt;type&gt;	Export to a LaTeX file. The &lt;type&gt; may be one of:
+	"pgf" just the pgfpicture environment that draws the image.
+	"doc" a complete LaTeX document that draws the image.
+	"flow" a complete LaTeX document that uses the flowfram package (only objects with flow frame data will be exported).</entry>
+
+<entry key="syntax.doc">{0}	Shortcut for {1}.</entry>
+
 <entry key="syntax.use_typeblock">{0}	Use typeblock (if applicable).</entry>
 
 <entry key="syntax.list_output_formats">{0}	List all supported output formats and exit.</entry>

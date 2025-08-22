@@ -201,6 +201,8 @@
 <entry key="message.acorn_drawfile.papersize">Paper size: {0}</entry>
 <entry key="message.acorn_drawfile.ignoring_jpeg">Ignoring embedded JPEG</entry>
 
+<entry key="message.omitting_object_no_flowframe">Omitting object ''{0}'' (no flow frame data set).</entry>
+
 <!--  Comments in TeX/LaTeX Files -->
 
 <entry key="tex.comment.border_command">Border command for frame</entry>
@@ -537,6 +539,52 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 
 <entry key="internal_error.title">内部错误</entry>
 <entry key="internal_error.tag">内部错误: {0}</entry>
+
+<!--  class names -->
+<entry key="class.com.dickimawbooks.jdr.DashPattern">dash pattern</entry>
+<entry key="class.com.dickimawbooks.jdr.FlowFrame">flowfram data</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRAngle">angle</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRBasicStroke">basic stroke</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRBezier">cubic Bézier curve</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRBitmap">bitmap</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRClosingMove">closing move</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRColorCMYK">cmyk</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRColorHSB">hsb</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRColor">rgb</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRDistortShape">distorted shape</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRFont">font</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRGradient">gradient</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRGray">grey</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRGroup">group</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRLength">length</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRLine">line</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPaper">paper</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPartialBezier">partial Bézier curve</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPartialLine">partial line</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPartialSegment">partial gap</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPath">path</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPatternAdjustPoint">pattern adjust</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPatternAnchorPoint">pattern anchor</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRPoint">control point</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRRadialGrid">radial-grid</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRRadial">radial-shading</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRRadialPoint">radial control point</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRRectangularGrid">rectangular-grid</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRRotationalPattern">rotational pattern</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRScaledPattern">scaled pattern</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRSegment">gap</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRSpiralPattern">spiral pattern</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRSymmetricPath">symmetric path</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRSymmetryLinePoint">symmetry control point</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRText">text area</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRTextPath">text path</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRTextPathStroke">text path stroke</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRTransform">affine transform</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRTransparent">transparent</entry>
+<entry key="class.com.dickimawbooks.jdr.JDRUnit">unit</entry>
+<entry key="class.com.dickimawbooks.jdr.LaTeXFontBase">LaTeX font base</entry>
+<entry key="class.com.dickimawbooks.jdr.LaTeXFont">LaTeX font</entry>
+<entry key="class.com.dickimawbooks.jdr.marker.JDRMarker">marker</entry>
 
 <!-- Manual -->
 

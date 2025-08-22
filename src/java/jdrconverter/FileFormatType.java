@@ -29,6 +29,9 @@ public enum FileFormatType
   SVG(true, true, true, true, false), 
   PNG(false, true, false, false, false), // TODO
   TEX(false, true, true, false, false),
+  TEX_PGF(false, true, true, false, false),
+  TEX_DOC(false, true, true, false, false),
+  TEX_FLF(false, true, true, false, false),
   CLS(false, true, true, false, false),
   STY(false, true, true, false, false),
   PDF(false, true, false, true, true),

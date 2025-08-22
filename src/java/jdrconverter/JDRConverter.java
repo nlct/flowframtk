@@ -430,7 +430,10 @@ public class JDRConverter
 
       System.out.println();
 
-      helpLib.printSyntaxItem(getMessage("syntax.doc", "--[no]doc"));
+      helpLib.printSyntaxItem(getMessage("syntax.export-latex", "--export-latex", "-L"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.doc", "--doc", "--export-latex doc"));
+
       helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no]use-typeblock"));
 
       helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no]alpha"));
@@ -561,6 +564,7 @@ public class JDRConverter
              || arg.equals("--out-charset")
              || arg.equals("--from") || arg.equals("-f")
              || arg.equals("--to") || arg.equals("-t")
+             || arg.equals("--export-latex") || arg.equals("-L")
              || arg.equals("--jdr-version")
              || arg.equals("--settings")
              || arg.equals("--normalsize")
@@ -783,13 +787,41 @@ public class JDRConverter
             {
                saveSettingsType = SaveSettingsType.NONE;
             }
+            else if (isArg(arg, "--export-latex", "-L", returnVals))
+            {
+               if (returnVals[0] == null)
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.missing.value", arg));
+               }
+
+               String type = returnVals[0].toString();
+
+               if (type.equals("pgf"))
+               {
+                  outFormat = FileFormatType.TEX_PGF;
+               }
+               else if (type.startsWith("doc"))
+               {
+                  outFormat = FileFormatType.TEX_DOC;
+               }
+               else if (type.startsWith("flow"))
+               {
+                  outFormat = FileFormatType.TEX_FLF;
+               }
+               else
+               {
+                  throw new InvalidSyntaxException(
+                     getMessage("error.clisyntax.invalid.syntax", type));
+               }
+            }
             else if (arg.equals("--doc"))
             {
-               completeDoc = true;
+               outFormat = FileFormatType.TEX_DOC;
             }
             else if (arg.equals("--nodoc"))
             {
-               completeDoc = false;
+               outFormat = FileFormatType.TEX_PGF;
             }
             else if (arg.equals("--use-typeblock"))
             {
@@ -1546,7 +1578,12 @@ public class JDRConverter
               ajr.save(paths, out, outVersion, settingsFlag);
             break;
             case TEX:
+            case TEX_PGF:
+            case TEX_DOC:
               savePgf(paths, out);
+            break;
+            case TEX_FLF:
+              saveFlfDoc(paths, out);
             break;
             case CLS:
             case STY:
@@ -1604,7 +1641,7 @@ public class JDRConverter
       pgf.comment(getMessage("message.created_by", NAME));
       pgf.writeCreationDate();
 
-      if (completeDoc)
+      if (outFormat == FileFormatType.TEX_DOC)
       {
          pgf.saveDoc(paths, null, encapsulate, convertBitmapToEps, useTypeblockAsBBox);
       }
@@ -1659,6 +1696,30 @@ public class JDRConverter
       {
          getMessageSystem().warning(getMessage("warning.no_flowframe_data"));
       }
+   }
+
+   protected void saveFlfDoc(JDRGroup paths, PrintWriter out)
+     throws IOException,InvalidFormatException
+   {
+      File dir = outFile.getParentFile();
+
+      if (dir == null)
+      {
+         dir = new File(System.getProperty("user.dir"));
+      }
+
+      FLF flf = new FLF(dir, out);
+
+      flf.setTextualExportShadingSetting(
+         getTextualExportShadingSetting());
+      flf.setTextPathExportOutlineSetting(
+         getTextPathExportOutlineSetting());
+
+      flf.comment(getMessage("tex.comment.created_by",
+            NAME, JDRResources.APP_VERSION));
+      flf.writeCreationDate();
+
+      flf.saveCompleteDoc(paths, useHPaddingShapepar);
    }
 
    protected void savePdf(JDRGroup paths)
@@ -1970,7 +2031,6 @@ public class JDRConverter
    protected boolean removeTempFiles = true;
    protected boolean shownVersion = false;
    protected File inFile, outFile; // --in / -i , --output / -o
-   protected boolean completeDoc = false; // --doc
    protected boolean useTypeblockAsBBox = false; // --use-typeblock
    protected boolean encapsulate = false; // --crop / -C
    protected boolean convertBitmapToEps = false; // --bitmaps-to-eps

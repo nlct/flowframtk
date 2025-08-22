@@ -82,6 +82,7 @@ public class FLF extends TeX
           InvalidShapeException,
           MissplacedTypeBlockException
    {
+      this.group = group;
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRUnit unit = cg.getStorageUnit();
 
@@ -134,10 +135,10 @@ public class FLF extends TeX
 
       writeOutlineDef();
 
-      String preamble = cg.getPreamble();
-
-      if (preamble != null)
+      if (cg.hasPreamble())
       {
+         String preamble = cg.getPreamble();
+
          preamble = preamble.replaceAll("\\\\usepackage\\b", "\\\\RequirePackage");
 
          println(preamble);
@@ -192,10 +193,10 @@ public class FLF extends TeX
 
       println("\\RequirePackage{flowfram}");
 
-      String midPreamble = cg.getMidPreamble();
-
-      if (midPreamble != null)
+      if (cg.hasMidPreamble())
       {
+         String midPreamble = cg.getMidPreamble();
+
          midPreamble = midPreamble.replaceAll("\\\\usepackage\\b", "\\\\RequirePackage");
 
          println(midPreamble);
@@ -225,478 +226,7 @@ public class FLF extends TeX
             useHPaddingShapepar);
       }
 
-      String list = "";
-      String headerlist = "";
-      String footerlist = "";
-
-      String psheadingsoddhead = "{\\jdrheadingfmt\\rightmark}\\hfill\\thepage";
-      String psheadingsevenhead = "\\thepage\\hfill{\\jdrheadingfmt\\leftmark}";
-
-      String psflowframtkoddhead = "\\flowframtkoddheaderfmt{\\rightmark}";
-      String psflowframtkevenhead = "\\flowframtkevenheaderfmt{\\leftmark}";
-
-      String headerlabel = cg.getHeaderLabel();
-
-      FlowFrame header = group.getFlowFrame(FlowFrame.DYNAMIC, headerlabel);
-
-      String evenheaderlabel = cg.getEvenHeaderLabel();
-      FlowFrame evenheader = group.getFlowFrame(
-            FlowFrame.DYNAMIC, evenheaderlabel);
-
-      if (header != null)
-      {
-         println("\\renewcommand{\\@dothehead}{}%");
-         println("\\renewcommand{\\@dodynamicthehead}{%");
-
-         String contents = header.getContents();
-
-         if (contents != null)
-         {
-            psheadingsoddhead = contents
-                              + "{{\\jdrheadingfmt\\rightmark}\\hfill\\thepage}";
-            psflowframtkoddhead = "\\flowframtkoddheaderfmt{"
-                                 + contents + "\\rightmark}";
-         }
-
-         if (evenheader == null)
-         {
-            println(" \\setdynamiccontents*{"+headerlabel+"}{\\@thehead}%");
-            list = headerlabel;
-
-            if (contents != null)
-            {
-               psheadingsevenhead = contents
-                              + "{\\thepage\\hfill{\\jdrheadingfmt\\leftmark}}";
-               psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
-                                    + contents + "\\leftmark}";
-            }
-         }
-         else
-         {
-            println(" \\setdynamiccontents*{"+headerlabel+"}{\\@oddhead}%");
-            println(" \\setdynamiccontents*{"+evenheaderlabel+"}{\\@evenhead}%");
-            list = headerlabel+","+evenheaderlabel;
-
-            contents = evenheader.getContents();
-
-            if (contents != null)
-            {
-               psheadingsevenhead = contents
-                              + "{\\thepage\\hfill{\\jdrheadingfmt\\leftmark}}";
-               psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
-                                     + contents + "\\leftmark}";
-            }
-         }
-
-         println("}%");
-      }
-      else if (evenheader != null)
-      {
-         list = evenheaderlabel;
-         println("\\renewcommand{\\@dothehead}{}%");
-         println("\\renewcommand{\\@dodynamicthehead}{%");
-         println(" \\setdynamiccontents*{"+evenheaderlabel+"}{\\@evenhead}%");
-         println("}%");
-
-         String contents = evenheader.getContents();
-
-         if (contents != null)
-         {
-            psheadingsevenhead = contents
-                           + "{\\thepage\\hfil{\\jdrheadingfmt\\leftmark}}";
-
-            psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
-                                  + contents + "\\leftmark}";
-         }
-      }
-
-      headerlist = list;
-
-      String psplainoddfoot = "\\flowframtkoddfooterfmt{\\thepage}";
-      String psplainevenfoot = "\\flowframtkevenfooterfmt{\\thepage}";
-
-      String footerlabel = cg.getFooterLabel();
-
-      FlowFrame footer = group.getFlowFrame(FlowFrame.DYNAMIC, footerlabel);
-
-      String evenfooterlabel = cg.getEvenFooterLabel();
-      FlowFrame evenfooter = group.getFlowFrame(
-            FlowFrame.DYNAMIC, evenfooterlabel);
-
-      if (footer != null)
-      {
-         if (!list.isEmpty()) list = list+",";
-
-         println("\\renewcommand{\\@dothefoot}{}%");
-         println("\\renewcommand{\\@dodynamicthefoot}{%");
-
-         String contents = footer.getContents();
-
-         if (contents != null)
-         {
-            psplainoddfoot = "\\flowframtkoddfooterfmt{" + contents+"\\thepage}";
-         }
-
-         if (evenfooter == null)
-         {
-            list += footerlabel;
-
-            footerlist = footerlabel;
-
-            println(" \\setdynamiccontents*{"+footerlabel+"}{\\@thefoot}%");
-
-            if (contents != null)
-            {
-               psplainevenfoot = "\\flowframtkevenfooterfmt{" + contents+"\\thepage}";
-            }
-
-         }
-         else
-         {
-            footerlist = footerlabel+","+evenfooterlabel;
-
-            list += footerlist;
-
-            println(" \\setdynamiccontents*{"+footerlabel+"}{\\@oddfoot}%");
-            println(" \\setdynamiccontents*{"+evenfooterlabel+"}{\\@evenfoot}%");
-
-            contents = evenfooter.getContents();
-
-            if (contents != null)
-            {
-               psplainevenfoot = "\\flowframtkevenfooterfmt{"
-                               + contents+"\\thepage}";
-            }
-         }
-
-         println("}%");
-      }
-      else if (evenfooter != null)
-      {
-         if (list.isEmpty())
-         {
-            list = evenfooterlabel;
-         }
-         else
-         {
-            list += ","+evenfooterlabel;
-         }
-
-         footerlist = evenfooterlabel;
-
-         println("\\renewcommand{\\@dothefoot}{}%");
-         println("\\renewcommand{\\@dodynamicthefoot}{%");
-         println(" \\setdynamiccontents*{"+evenfooterlabel+"}{\\@evenfoot}%");
-         println("}%");
-
-         String contents = evenfooter.getContents();
-
-         if (contents != null)
-         {
-            psplainevenfoot = "\\flowframtkevenfooterfmt{"
-                            + contents+"\\thepage}";
-         }
-      }
-
-      if (!list.isEmpty())
-      {
-         println("\\renewcommand*{\\thispagestyle}[1]{%");
-         println("  \\@ifundefined{ps@#1}\\undefinedpagestyle");
-         println("  {%");
-         println("    \\global\\@specialpagetrue");
-         println("    \\gdef\\@specialstyle {#1}%");
-         println("    \\@ifundefined{thisps@extra@#1}%");
-         println("     {\\@nameuse{thisps@extra@other}}%");
-         println("     {\\@nameuse{thisps@extra@#1}}%");
-         println("  }%");
-         println("}");
-
-         println("\\newcommand*{\\thisps@extra@other}{%");
-         println(" \\setdynamicframe*{"+list+"}{hidethis=false}%");
-         println("}");
-         println("\\newcommand*{\\thisps@extra@empty}{%");
-         println(" \\setdynamicframe*{"+list+"}{hidethis=true}%");
-         println("}");
-
-         println("\\newcommand*{\\thisps@extra@plain}{%");
-
-         if (!headerlist.isEmpty())
-         {
-            println("  \\setdynamicframe*{"+headerlist+"}{hidethis=true}%");
-         }
-
-         if (!footerlist.isEmpty())
-         {
-            println("  \\setdynamicframe*{"+footerlist+"}{hidethis=false}%");
-         }
-
-         println("}");
-
-         println("  \\newcommand*{\\thisps@extra@headings}{%");
-
-         if (!footerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+footerlist+"}{hidethis=true}%");
-         }
-
-         if (!headerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+headerlist+"}{hidethis=false}%");
-         }
-
-         println("  }%");
-
-         println("  \\newcommand*{\\thisps@extra@myheadings}{%");
-
-         if (!footerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+footerlist+"}{hidethis=true}%");
-         }
-
-         if (!headerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+headerlist+"}{hidethis=false}%");
-         }
-
-         println("  }%");
-
-
-         println("\\renewcommand*{\\pagestyle}[1]{%");
-         println("  \\@ifundefined{ps@#1}\\undefinedpagestyle");
-         println("  {%");
-         println("    \\@nameuse{ps@#1}%");
-         println("    \\@ifundefined{ps@extra@#1}%");
-         println("     {\\@nameuse{ps@extra@other}}%");
-         println("     {\\@nameuse{ps@extra@#1}}%");
-         println("  }%");
-         println("}");
-
-         println("\\newcommand*{\\ps@extra@other}{%");
-         println(" \\setdynamicframe*{"+list+"}{hide=false}%");
-         println("}");
-         println("\\newcommand*{\\ps@extra@empty}{%");
-         println(" \\setdynamicframe*{"+list+"}{hide=true}%");
-         println("}");
-
-         // Redefine plain style
-
-         println("\\renewcommand*{\\ps@plain}{%");
-         println("  \\let\\@mkboth\\@gobbletwo");
-         println("  \\let\\@oddhead\\@empty");
-         println("  \\let\\@evenhead\\@empty");
-         println("  \\def\\@oddfoot{"+psplainoddfoot+"}%");
-         println("  \\def\\@evenfoot{"+psplainevenfoot+"}%");
-         println("}");
-
-         println("\\newcommand*{\\ps@extra@plain}{%");
-
-         if (!headerlist.isEmpty())
-         {
-            println("  \\setdynamicframe*{"+headerlist+"}{hide=true}%");
-         }
-
-         if (!footerlist.isEmpty())
-         {
-            println("  \\setdynamicframe*{"+footerlist+"}{hide=false}%");
-         }
-
-         println("}");
-
-         println("\\providecommand*{\\jdrheadingfmt}{\\slshape}");
-         println("\\providecommand*{\\jdrheadingcase}{\\MakeUppercase}");
-         println("\\providecommand*{\\flowframtkoddheaderfmt}[1]{\\reset@font\\hfill#1}");
-         println("\\providecommand*{\\flowframtkevenheaderfmt}[1]{\\reset@font#1\\hfill}");
-         println("\\providecommand*{\\flowframtkoddfooterfmt}[1]{\\reset@font\\hfil#1\\hfil}");
-         println("\\providecommand*{\\flowframtkevenfooterfmt}[1]{\\reset@font\\hfil#1\\hfil}");
-
-         println("\\@ifundefined{chapter}");
-         println("{%");
-
-         // Redefine headings style (no chapters)
-
-         println("  \\renewcommand*{\\ps@headings}{%");
-         println("    \\let\\@oddfoot\\@empty");
-         println("    \\let\\@evenfoot\\@empty");
-         println("    \\def\\@oddhead{"+psheadingsoddhead+"}%");
-
-         if (evenheader == null)
-         {
-            println("    \\let\\@evenhead\\@oddhead");
-         }
-         else
-         {
-            println("    \\def\\@evenhead{"+psheadingsevenhead+"}%");
-         }
-
-         println("    \\let\\@mkboth\\markboth");
-         println("    \\def\\sectionmark##1{%");
-         println("      \\markright{\\jdrheadingcase{\\ifnum\\c@secnumdepth >\\m@ne\\thesection\\quad\\fi ##1}}}%");
-
-         println("  }%");
-
-         println("  \\newcommand*{\\ps@extra@headings}{%");
-
-         if (!footerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+footerlist+"}{hide=true}%");
-         }
-
-         if (!headerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+headerlist+"}{hide=false}%");
-         }
-
-         println("  }%");
-
-         // Redefine myheadings style (no chapters)
-
-         println("  \\renewcommand*{\\ps@myheadings}{%");
-         println("    \\let\\@oddfoot\\@empty");
-         println("    \\let\\@evenfoot\\@empty");
-         println("    \\def\\@oddhead{"+psheadingsoddhead+"}%");
-         println("    \\def\\@evenhead{"+psheadingsevenhead+"}%");
-
-         println("    \\let\\@mkboth\\@gobbletwo");
-         println("    \\let\\sectionmark\\@gobble");
-         println("    \\let\\subsectionmark\\@gobble");
-
-         println("  }%");
-
-         println("  \\newcommand*{\\ps@extra@myheadings}{%");
-
-         if (!footerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+footerlist+"}{hide=true}%");
-         }
-
-         if (!headerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+headerlist+"}{hide=false}%");
-         }
-
-         println("  }%");
-
-
-         // Define flowframtk style (no chapters)
-
-         println("  \\newcommand*{\\ps@flowframtk}{%");
-
-         println("    \\def\\@oddfoot{"+psplainoddfoot+"}%");
-         println("    \\def\\@evenfoot{"+psplainevenfoot+"}%");
-         println("    \\def\\@oddhead{"+psflowframtkoddhead+"}%");
-         println("    \\def\\@evenhead{"+psflowframtkevenhead+"}%");
-
-         println("    \\let\\@mkboth\\markboth");
-         println("    \\def\\sectionmark##1{%");
-         println("      \\markboth{\\jdrheadingcase{\\ifnum\\c@secnumdepth >\\m@ne\\thesection\\quad\\fi ##1}}{\\jdrheadingcase{\\ifnum\\c@secnumdepth >\\m@ne\\thesection\\quad\\fi ##1}}}%");
-         println("    \\def\\subsectionmark##1{%");
-         println("      \\markright{\\jdrheadingcase{\\ifnum\\c@secnumdepth >\\tw@\\thesubsection\\quad\\fi ##1}}}%");
-
-         println("  }%");
-
-
-         println("}%"); // end of true part of \@ifundefined
-         println("{%");
-
-         // Redefine headings style (chapters)
-
-         println("  \\renewcommand*{\\ps@headings}{%");
-         println("    \\let\\@oddfoot\\@empty");
-         println("    \\let\\@evenfoot\\@empty");
-         println("    \\def\\@oddhead{"+psheadingsoddhead+"}%");
-         println("    \\def\\@evenhead{"+psheadingsevenhead+"}%");
-         println("    \\let\\@mkboth\\markboth");
-         println("    \\def\\chaptermark##1{%");
-         println("      \\markboth");
-         println("      {\\jdrheadingcase{%");
-         println("        \\ifnum \\c@secnumdepth >\\m@ne");
-         println("          \\if@mainmatter");
-         println("            \\@chapapp\\ \\thechapter. \\ ");
-         println("          \\fi");
-         println("        \\fi ##1%");
-         println("      }}%");
-         println("      {}%");
-         println("    }%");
-         println("    \\def\\sectionmark##1{%");
-         println("      \\markright{\\jdrheadingcase{\\ifnum\\c@secnumdepth >\\z@\\thesection. \\ \\fi ##1}}}%");
-         println("  }%");
-
-         println("  \\newcommand*{\\ps@extra@headings}{%");
-
-         if (!footerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+footerlist+"}{hide=true}%");
-         }
-
-         if (!headerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+headerlist+"}{hide=false}%");
-         }
-
-         println("  }%");
-
-         // Redefine myheadings style (chapters)
-
-         println("  \\renewcommand*{\\ps@myheadings}{%");
-         println("    \\let\\@oddfoot\\@empty");
-         println("    \\let\\@evenfoot\\@empty");
-         println("    \\def\\@oddhead{"+psheadingsoddhead+"}%");
-         println("    \\def\\@evenhead{"+psheadingsevenhead+"}%");
-         println("    \\let\\@mkboth\\@gobbletwo");
-         println("    \\let\\chaptermark\\@gobble");
-         println("    \\let\\sectionmark\\@gobble");
-         println("  }%");
-
-         println("  \\newcommand*{\\ps@extra@myheadings}{%");
-
-         if (!footerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+footerlist+"}{hide=true}%");
-         }
-
-         if (!headerlist.isEmpty())
-         {
-            println("    \\setdynamicframe*{"+headerlist+"}{hide=false}%");
-         }
-
-         println("  }%");
-
-         // Define flowframtk style (chapters)
-
-         println("  \\newcommand*{\\ps@flowframtk}{%");
-
-         println("    \\def\\@oddfoot{"+psplainoddfoot+"}%");
-         println("    \\def\\@evenfoot{"+psplainevenfoot+"}%");
-         println("    \\def\\@oddhead{"+psflowframtkoddhead+"}%");
-         println("    \\def\\@evenhead{"+psflowframtkevenhead+"}%");
-         println("    \\let\\@mkboth\\markboth");
-         println("    \\def\\chaptermark##1{%");
-         println("      \\markboth");
-         println("      {\\jdrheadingcase{%");
-         println("        \\ifnum \\c@secnumdepth >\\m@ne");
-         println("          \\if@mainmatter");
-         println("            \\@chapapp\\ \\thechapter. \\ ");
-         println("          \\fi");
-         println("        \\fi ##1%");
-         println("      }}%");
-         println("      {}%");
-         println("    }%");
-         println("    \\def\\sectionmark##1{%");
-         println("      \\markright{\\jdrheadingcase{\\ifnum\\c@secnumdepth >\\z@\\thesection. \\ \\fi ##1}}}%");
-         println("  }%");
-
-         println("}");
-
-         if (headerlist.isEmpty() || footerlist.isEmpty())
-         {
-            print("\\@ifundefined{chapter}");
-            println("{\\pagestyle{plain}}{\\pagestyle{headings}}");
-         }
-         else
-         {
-            println("\\pagestyle{flowframtk}");
-         }
-      }
+      printHeaderFooter();
 
       String endPreamble = cg.getEndPreamble();
 
@@ -716,6 +246,7 @@ public class FLF extends TeX
           InvalidShapeException,
           MissplacedTypeBlockException
    {
+      this.group = group;
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRUnit unit = cg.getStorageUnit();
 
@@ -771,14 +302,29 @@ public class FLF extends TeX
       writeOutlineDef();
       println("\\makeatother");
 
-      String preamble = cg.getPreamble();
-
-      if (preamble != null)
+      if (cg.hasPreamble())
       {
+         String preamble = cg.getPreamble();
+
+         preamble = preamble.replaceAll("\\\\RequirePackage\\b", "\\\\usepackage");
+
          println(preamble);
       }
 
       println("\\usepackage["+cg.getPaper().tex(cg)+"]{geometry}");
+
+      print("\\usepackage[");
+
+      if (cg.useAbsolutePages())
+      {
+         println("pages=absolute");
+      }
+      else
+      {
+         println("pages=relative");
+      }
+
+      println("]{flowfram}");
 
       double bpToStorage = cg.bpToStorage(1.0);
 
@@ -795,41 +341,164 @@ public class FLF extends TeX
 
       typeblock.tex(this, group, typeblockRect, baselineskip, false);
 
-      print("\\usepackage[");
-
-      if (cg.useAbsolutePages())
+      if (cg.hasMidPreamble())
       {
-         println("pages=absolute");
-      }
-      else
-      {
-         println("pages=relative");
-      }
+         String midPreamble = cg.getMidPreamble();
 
-      println("]{flowfram}");
+         midPreamble = midPreamble.replaceAll("\\\\RequirePackage\\b", "\\\\usepackage");
 
-      String midPreamble = cg.getMidPreamble();
-
-      if (midPreamble != null)
-      {
          println(midPreamble);
       }
+
+      int minPage = 1;
+      int numFlows = 0;
+
+      println("\\makeatletter");
 
       for (int i = 0; i < group.size(); i++)
       {
          JDRCompleteObject object = group.get(i);
          FlowFrame flowframe = object.getFlowFrame();
 
-         if (flowframe != null && 
-             flowframe.getType() == FlowFrame.TYPEBLOCK)
+         if (flowframe == null)
          {
-            throw new MissplacedTypeBlockException(cg);
-         }
+            JDRMessage msgSys = cg.getMessageSystem();
 
-         object.saveFlowframe(this, typeblockRect, baselineskip, 
-            useHPaddingShapepar);
+            String description = object.getDescription();
+
+            if (description == null)
+            {
+               Object[] info = object.getDescriptionInfo();
+
+               description = msgSys.getMessageWithFallback(
+                object.getClass().getCanonicalName(),
+                object.getClass().getSimpleName());
+
+               if (info.length > 0)
+               {
+                  description += " " + info[0].toString();
+               }
+            }
+
+            msgSys.getPublisher().publishMessages(
+              MessageInfo.createMessage(
+                msgSys.getMessageWithFallback("message.omitting_object_no_flowframe",
+                  "Omitting object ''{0}'' (no flow frame data set).",
+                description),
+                true));
+         }
+         else
+         {
+            int type = flowframe.getType();
+
+            if (type == FlowFrame.TYPEBLOCK)
+            {
+               throw new MissplacedTypeBlockException(cg);
+            }
+
+            if (type == FlowFrame.FLOW)
+            {
+               numFlows++;
+            }
+
+            String pages = flowframe.getPages();
+
+            if (pages.equals("even"))
+            {
+               minPage = Math.max(2, minPage);
+            }
+            else if (!(pages.equals("all") || pages.equals("odd") || pages.equals("none")))
+            {
+               for (int j = pages.length()-2; j >= 0; j--)
+               {
+                  char c = pages.charAt(j);
+                  int n = 0;
+
+                  try
+                  {
+                     switch (c)
+                     {
+                        case '>':
+                          n = Integer.parseInt(pages.substring(j+1).trim())+1;
+                        break;
+                        case '<':
+                          n = Integer.parseInt(pages.substring(j+1).trim())-1;
+                        break;
+                        case '-':
+                        case ',':
+                          n = Integer.parseInt(pages.substring(j+1).trim());
+                        break;
+                        default:
+                          if (!(Character.isDigit(c) || Character.isWhitespace(c)))
+                          {
+                             break;
+                          }
+                          else if (j == 0)
+                          {
+                             n = Integer.parseInt(pages.trim());
+                          }
+                     }
+                  }
+                  catch (NumberFormatException e)
+                  {
+                  }
+
+                  if (n > 0)
+                  {
+                     minPage = Math.max(n, minPage);
+                     break;
+                  }
+               }
+            }
+
+            flowframe.tex(this, object, typeblockRect, baselineskip, 
+               useHPaddingShapepar);
+         }
       }
 
+      printHeaderFooter();
+
+      println("\\makeatother");
+
+      String endPreamble = cg.getEndPreamble();
+
+      if (endPreamble != null)
+      {
+         println(endPreamble);
+      }
+
+      if (numFlows == 0)
+      {
+         println("\\onecolumn");
+      }
+
+      println("\\begin{document}");
+
+      String docBody = cg.getDocBody();
+
+      if (docBody == null || docBody.isEmpty())
+      {
+         for (int i = 0; i < minPage; i++)
+         {
+            if (i > 0)
+            {
+               println("\\clearpage");
+            }
+
+            println("\\null");
+         }
+      }
+      else
+      {
+         println(docBody);
+      }
+
+      println("\\end{document}");
+   }
+
+   protected void printHeaderFooter() throws IOException
+   {
+      CanvasGraphics cg = group.getCanvasGraphics();
       String list = "";
       String headerlist = "";
       String footerlist = "";
@@ -847,8 +516,6 @@ public class FLF extends TeX
       String evenheaderlabel = cg.getEvenHeaderLabel();
       FlowFrame evenheader = group.getFlowFrame(
             FlowFrame.DYNAMIC, evenheaderlabel);
-
-      println("\\makeatletter");
 
       if (header != null)
       {
@@ -1304,31 +971,7 @@ public class FLF extends TeX
             println("\\pagestyle{flowframtk}");
          }
       }
-
-      println("\\makeatother");
-
-
-      String endPreamble = cg.getEndPreamble();
-
-      if (endPreamble != null)
-      {
-         println(endPreamble);
-      }
-
-      println("\\begin{document}");
-
-      String docBody = cg.getDocBody();
-
-      if (docBody == null || docBody.isEmpty())
-      {
-         println("\\null");
-      }
-      else
-      {
-         println(docBody);
-      }
-
-      println("\\end{document}");
    }
 
+   JDRGroup group;
 }
