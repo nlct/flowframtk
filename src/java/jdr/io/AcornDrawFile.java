@@ -137,7 +137,7 @@ public class AcornDrawFile
       {
          String preamble = getCanvasGraphics().getPreamble();
 
-         getStringBuffer(preamble.length()+styNames.firstElement().length()+12);
+         resetStringBuffer(preamble.length()+styNames.firstElement().length()+12);
 
          stringBuffer.append(preamble);
 
@@ -1028,12 +1028,7 @@ public class AcornDrawFile
    // NB the Acorn Draw File "text area" is a multi-line area.
    protected void readTextArea() throws IOException,InvalidFormatException
    {
-      warning(getMessageWithFallback("error.acorn_drawfile.not_implemented_object_id",
-       "Object identifier {0} not yet implemented", OBJECT_TEXTAREA));
-
-// TODO
-
-      int oldBytesRead = bytesRead;
+      int orgSize = objectSize;
 
       // bounding box
       int lowX = readInt();
@@ -1082,8 +1077,8 @@ public class AcornDrawFile
 
       HashMap<Byte,FontTable> localFontTable = new HashMap<Byte,FontTable>();
 
-      getStringBuffer(32);
-      readBytes();
+      int textAreaSize = readBytes();
+      resetStringBuffer(textAreaSize);
 
       for (int i = 0; i < dataBuffer.length(); i++)
       {
@@ -1309,9 +1304,54 @@ public class AcornDrawFile
 
       String content = stringBuffer.toString();
 
-System.out.println("CONTENT: "+content);
+      if (columns.size() == 1)
+      {
+         JDRPath path = columns.firstElement();
 
-      readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+         String idl = "textareacolumn";
+
+         if (totalColumnCount > 0)
+         {
+            idl = idl + totalColumnCount;
+         }
+
+         FlowFrame flowFrame = new FlowFrame(getCanvasGraphics(),
+          FlowFrame.DYNAMIC, false, idl, "all");
+
+         flowFrame.setContents(content);
+
+         path.setFlowFrame(flowFrame);
+
+         totalColumnCount++;
+      }
+      else
+      {
+         getCanvasGraphics().setDocBody(content);
+
+         for (JDRPath path : columns)
+         {
+            String idl = "textareacolumn";
+
+            if (totalColumnCount > 0)
+            {
+               idl = idl + totalColumnCount;
+            }
+
+            FlowFrame flowFrame = new FlowFrame(getCanvasGraphics(),
+             FlowFrame.FLOW, false, idl, "all");
+
+            path.setFlowFrame(flowFrame);
+
+            totalColumnCount++;
+         }
+      }
+
+      int padding = (orgSize-(32+28*columns.size()+textAreaSize))/4;
+
+      if (padding > 0)
+      {
+         readBytes(padding);
+      }
    }
 
    protected JDRPath readTextColumn() throws IOException,InvalidFormatException
@@ -1409,7 +1449,12 @@ System.out.println("CONTENT: "+content);
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
 
-   protected DataBuffer getDataBuffer(int minCapacity)
+   protected DataBuffer resetDataBuffer()
+   {
+      return resetDataBuffer(16);
+   }
+
+   protected DataBuffer resetDataBuffer(int minCapacity)
    {
       if (dataBuffer == null)
       {
@@ -1428,7 +1473,12 @@ System.out.println("CONTENT: "+content);
       return dataBuffer;
    }
 
-   protected StringBuilder getStringBuffer(int minCapacity)
+   protected StringBuilder resetStringBuffer()
+   {
+      return resetStringBuffer(16);
+   }
+
+   protected StringBuilder resetStringBuffer(int minCapacity)
    {
       if (stringBuffer == null)
       {
@@ -1490,47 +1540,19 @@ System.out.println("CONTENT: "+content);
    // read up to \0
    public int readBytes() throws IOException
    {
-      getDataBuffer(32);
+      resetDataBuffer();
 
       byte b;
-      int length = 0;
 
       while ((b = readByte()) != 0)
       {
          if (b == -1) return -1;
 
          dataBuffer.append(b);
-         length++;
+         bytesRead++;
       }
 
-      if (isDebuggingOn())
-      {
-         printlnDebug(String.format("readBytes: %d byte(s) read", length));
-
-         for (int i = 0; i < length; i++)
-         {
-            if (i > 0)
-            {
-               printDebug(" ");
-            }
-
-            printDebug(octet(dataBuffer.get(i)));
-         }
-
-         if (length == -1)
-         {
-            printlnDebug("");
-         }
-      }
-
-      if (length == -1)
-      {
-         throw new EOFException();
-      }
-
-      bytesRead += length;
-
-      return length;
+      return dataBuffer.length();
    }
 
    public String readString(int length) throws IOException
@@ -1542,7 +1564,7 @@ System.out.println("CONTENT: "+content);
    {
       if (length <= 0) return "";
 
-      getDataBuffer(length);
+      resetDataBuffer(length);
 
       int r = dataBuffer.read(din, length);
 
@@ -1594,7 +1616,7 @@ System.out.println("CONTENT: "+content);
 
       byte b;
 
-      getDataBuffer(16);
+      resetDataBuffer();
 
       while ((b = readByte()) != 0)
       {
@@ -1608,7 +1630,7 @@ System.out.println("CONTENT: "+content);
    {
       int length = 4;
 
-      getDataBuffer(length);
+      resetDataBuffer(length);
 
       int r = dataBuffer.read(din, length);
 
@@ -1639,7 +1661,7 @@ System.out.println("CONTENT: "+content);
 
       bytesRead += length;
 
-      getStringBuffer(length);
+      resetStringBuffer(length);
 
       stringBuffer.append(String.format("%s%s%s%s",
         octet(dataBuffer.get(3)), 
@@ -1666,7 +1688,7 @@ System.out.println("CONTENT: "+content);
    {
       int length = 8;
 
-      getDataBuffer(length);
+      resetDataBuffer(length);
       int r = dataBuffer.read(din, length);
 
       if (isDebuggingOn())
@@ -1696,7 +1718,7 @@ System.out.println("CONTENT: "+content);
 
       bytesRead += length;
 
-      getStringBuffer(length);
+      resetStringBuffer(length);
 
       stringBuffer.append(String.format("%s%s%s%s%s%s%s%s",
         octet(dataBuffer.get(3)), 
@@ -1809,6 +1831,7 @@ System.out.println("CONTENT: "+content);
    boolean gridInches=false; // in or cm
    boolean showTools = true;
    int objectSize;
+   int totalColumnCount = 0;
 
    AffineTransform affineTransform;
 
