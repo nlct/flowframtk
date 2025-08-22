@@ -740,6 +740,7 @@ public class CanvasGraphics
       cg.setPreamble(preamble);
       cg.setMidPreamble(midPreamble);
       cg.setEndPreamble(endPreamble);
+      cg.setDocBody(docBody);
       cg.setDocClass(docClass);
 
       cg.isEvenPage = isEvenPage;
@@ -844,6 +845,20 @@ public class CanvasGraphics
          for (int i = 0; i < n; i++)
          {
             out.writeChar(endPreamble.charAt(i));
+         }
+      }
+
+      // document body
+
+      n = (docBody == null ? 0 : docBody.length());
+
+      out.writeInt(n);
+
+      if (n > 0)
+      {
+         for (int i = 0; i < n; i++)
+         {
+            out.writeChar(docBody.charAt(i));
          }
       }
 
@@ -957,6 +972,7 @@ public class CanvasGraphics
       preamble = null;
       midPreamble = null;
       endPreamble = null;
+      docBody = null;
       docClass = null;
       absolutePages = false;
       optimize = OPTIMIZE_SPEED;
@@ -1119,6 +1135,21 @@ public class CanvasGraphics
       return endPreamble != null && !endPreamble.isEmpty();
    }
 
+   public synchronized void setDocBody(String text)
+   {
+      docBody = text;
+   }
+
+   public String getDocBody()
+   {
+      return docBody;
+   }
+
+   public boolean hasDocBody()
+   {
+      return docBody != null && !docBody.isEmpty();
+   }
+
    public synchronized void setDocClass(String cls)
    {
       docClass = cls;
@@ -1155,6 +1186,7 @@ public class CanvasGraphics
       preamble = cg.preamble;
       midPreamble = cg.midPreamble;
       endPreamble = cg.endPreamble;
+      docBody = cg.docBody;
       docClass = cg.docClass;
       absolutePages = cg.absolutePages;
       display_grid = cg.display_grid;
@@ -1517,6 +1549,8 @@ public class CanvasGraphics
    private volatile String midPreamble = null;
 
    private volatile String endPreamble = null;
+
+   private volatile String docBody = null;
 
    private volatile String docClass = null;
 

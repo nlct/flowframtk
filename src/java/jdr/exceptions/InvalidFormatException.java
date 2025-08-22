@@ -382,6 +382,7 @@ public class InvalidFormatException extends Exception
    public static final String SETTING_PREAMBLE = "setting-preamble";
    public static final String SETTING_MID_PREAMBLE = "setting-mid-preamble";
    public static final String SETTING_END_PREAMBLE = "setting-end-preamble";
+   public static final String SETTING_DOC_BODY = "setting-doc-body";
    public static final String SETTING_DOCCLASS = "setting-cls";
    public static final String SETTING_ABS_PAGES = "setting-absolute-pages";
 

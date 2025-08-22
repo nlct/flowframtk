@@ -179,11 +179,30 @@ public abstract class JDRAJR
          {
             writeString(cg.getMidPreamble());
             writeString(cg.getEndPreamble());
+
+            if (version >= 2.1f)
+            {
+               writeString(cg.getDocBody());
+            }
+            else if (cg.hasDocBody())
+            {
+               warningMessage("Document body not supported in JDR/AJR version {0}",
+                 "warning.save_unsupported_doc_body", version);
+            }
          }
-         else if (cg.hasMidPreamble() || cg.hasEndPreamble())
+         else
          {
-            warningMessage("Mid/End Preamble not supported in JDR/AJR version {0}",
-              "warning.save_unsupported_extra_preamble", version);
+            if (cg.hasMidPreamble() || cg.hasEndPreamble())
+            {
+               warningMessage("Mid/End Preamble not supported in JDR/AJR version {0}",
+                 "warning.save_unsupported_extra_preamble", version);
+            }
+
+            if (cg.hasDocBody())
+            {
+               warningMessage("Document body not supported in JDR/AJR version {0}",
+                 "warning.save_unsupported_doc_body", version);
+            }
          }
 
          writeString(cg.getDocClass());
@@ -195,6 +214,12 @@ public abstract class JDRAJR
          {
             warningMessage("Preamble not supported in JDR/AJR version {0}",
               "warning.save_unsupported_preamble", version);
+         }
+
+         if (cg.hasDocBody())
+         {
+            warningMessage("Document body not supported in JDR/AJR version {0}",
+              "warning.save_unsupported_doc_body", version);
          }
 
          if (cg.hasDocClass())
@@ -334,7 +359,7 @@ public abstract class JDRAJR
 
       if (version >= 1.8f)
       {
-         // Read preamble, document class and absolute pages setting
+         // Read preamble, document body, document class and absolute pages setting
 
          cg.setLaTeXNormalSize(readIntGt(
             InvalidFormatException.SETTING_NORMALSIZE, 0));
@@ -346,6 +371,12 @@ public abstract class JDRAJR
               readString(InvalidFormatException.SETTING_MID_PREAMBLE));
             cg.setEndPreamble(
               readString(InvalidFormatException.SETTING_END_PREAMBLE));
+
+            if (version >= 2.1f)
+            {
+               cg.setDocBody(
+                 readString(InvalidFormatException.SETTING_DOC_BODY));
+            }
          }
 
          cg.setDocClass(readString(InvalidFormatException.SETTING_DOCCLASS));
