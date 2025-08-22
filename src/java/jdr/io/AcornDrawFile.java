@@ -37,6 +37,8 @@ import com.dickimawbooks.jdr.marker.*;
 /**
  * Functions to save and load Acorn DrawFile format.
  * https://www.riscosopen.org/wiki/documentation/show/File%20formats:%20DrawFile
+ * Note that the bytes are in a different order so 
+ * DataInputStream.readInt() etc can't be used.
  */
 
 public class AcornDrawFile
@@ -923,25 +925,32 @@ public class AcornDrawFile
 
       String text = readString(map); // zero terminated string padding
 
+      String latexText = null;
+
+      if (map == CharacterMap.SIDNEY && mathModeMappings != null)
+      {
+         latexText = "$" + mathModeMappings.applyMappings(
+           text, styNames) + "$";
+      }
+      else if (mathModeMappings != null
+           && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
+      {
+         text = text.substring(1, text.length()-1);
+
+         latexText = "$" + mathModeMappings.applyMappings(
+           text, styNames) + "$";
+      }
+      else if (textModeMappings != null)
+      {
+         latexText = textModeMappings.applyMappings(text, styNames);
+      }
+
       JDRText jdrText = new JDRText(cg, p, jdrFont, text);
       jdrText.setTextPaint(textPaint);
 
       if (fontTable != null)
       {
          jdrText.setLaTeXFont(fontTable.getLaTeXFont(fontSize));
-      }
-
-      String latexText = null;
-
-      if (mathModeMappings != null
-           && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
-      {
-         latexText = mathModeMappings.applyMappings(
-           text.substring(1, text.length()-1), styNames);
-      }
-      else if (textModeMappings != null)
-      {
-         latexText = textModeMappings.applyMappings(text, styNames);
       }
 
       if (latexText != null && !latexText.equals(text))
@@ -1385,7 +1394,6 @@ public class AcornDrawFile
       warning(getMessageWithFallback("error.acorn_drawfile.not_implemented_object_id",
        "Object identifier {0} not yet implemented", OBJECT_SPRITE));
 
-// TODO
       int oldBytesRead = bytesRead;
 
       // bounding box
@@ -1395,6 +1403,10 @@ public class AcornDrawFile
       int highY = readInt();
 
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
+
+      // dataBuffer should now hold the sprite content which should
+      // be scaled to the bounding box.
+      // TODO convert to PNG or JPG.
    }
 
    protected void readTransformedSprite() throws IOException,InvalidFormatException
@@ -1410,6 +1422,15 @@ public class AcornDrawFile
       int lowY = readInt();
       int highX = readInt();
       int highY = readInt();
+
+      // transformation matrix
+      double[] matrix = new double[6];
+      matrix[0] = readInt()/65536.0;
+      matrix[1] = readInt()/65536.0;
+      matrix[2] = readInt()/65536.0;
+      matrix[3] = readInt()/65536.0;
+      matrix[4] = readInt();
+      matrix[5] = readInt();
 
       readBytes((objectSize-8)-(bytesRead-oldBytesRead));
    }
@@ -2090,6 +2111,217 @@ class DataBuffer
       return builder.toString();
    }
 
+   private void appendSidneyFontChar(int offset, int n)
+   {
+      for (int i = 0; i < n; i++)
+      {
+         appendSidneyFontChar(data[i+offset]);
+      }
+   }
+
+   private void appendSidneyFontChar(byte c)
+   {
+      switch ((char)c)
+      {
+         case 0x22: builder.appendCodePoint(0x2200); break;
+         case 0x24: builder.appendCodePoint(0x2203); break;
+         case 0x27: builder.appendCodePoint(0x220B); break;
+         case 0x40: builder.appendCodePoint(0x2245); break;
+         case 0x41: builder.appendCodePoint(0x1D6E2); break;
+         case 0x42: builder.appendCodePoint(0x1D6E3); break;
+         case 0x43: builder.appendCodePoint(0x1D6F8); break;
+         case 0x44: builder.appendCodePoint(0x1D6E5); break;
+         case 0x45: builder.appendCodePoint(0x1D6E6); break;
+         case 0x46: builder.appendCodePoint(0x1D6F7); break;
+         case 0x47: builder.appendCodePoint(0x1D6E4); break;
+         case 0x48: builder.appendCodePoint(0x1D6E8); break;
+         case 0x49: builder.appendCodePoint(0x1D6EA); break;
+         case 0x4A: builder.appendCodePoint(0x1D717); break;
+         case 0x4B: builder.appendCodePoint(0x1D6EB); break;
+         case 0x4C: builder.appendCodePoint(0x1D6EC); break;
+         case 0x4D: builder.appendCodePoint(0x1D6ED); break;
+         case 0x4E: builder.appendCodePoint(0x1D6EE); break;
+         case 0x4F: builder.appendCodePoint(0x1D6F0); break;
+         case 0x50: builder.appendCodePoint(0x1D6F1); break;
+         case 0x51: builder.appendCodePoint(0x1D6E9); break;
+         case 0x52: builder.appendCodePoint(0x1D6E2); break;
+         case 0x53: builder.appendCodePoint(0x1D6F4); break;
+         case 0x54: builder.appendCodePoint(0x1D6F5); break;
+         case 0x55: builder.append('Y'); break;
+         case 0x56: builder.appendCodePoint(0x1D70D); break;
+         case 0x57: builder.appendCodePoint(0x1D6FA); break;
+         case 0x58: builder.appendCodePoint(0x1D6EF); break;
+         case 0x59: builder.appendCodePoint(0x1D6F9); break;
+         case 0x5A: builder.appendCodePoint(0x1D6E7); break;
+         case 0x5C: builder.appendCodePoint(0x2234); break;
+         case 0x5E: builder.appendCodePoint(0x22A5); break;
+         case 0x61: builder.appendCodePoint(0x1D6FC); break;
+         case 0x62: builder.appendCodePoint(0x1D6FD); break;
+         case 0x63: builder.appendCodePoint(0x1D712); break;
+         case 0x64: builder.appendCodePoint(0x1D6FF); break;
+         case 0x65: builder.appendCodePoint(0x1D700); break;
+         case 0x66: builder.appendCodePoint(0x1D719); break;
+         case 0x67: builder.appendCodePoint(0x1D6FE); break;
+         case 0x68: builder.appendCodePoint(0x1D702); break;
+         case 0x69: builder.appendCodePoint(0x1D704); break;
+         case 0x6A: builder.appendCodePoint(0x1D711); break;
+         case 0x6B: builder.appendCodePoint(0x1D705); break;
+         case 0x6C: builder.appendCodePoint(0x1D706); break;
+         case 0x6D: builder.appendCodePoint(0x1D707); break;
+         case 0x6E: builder.appendCodePoint(0x1D708); break;
+         case 0x6F: builder.appendCodePoint(0x1D70A); break;
+         case 0x70: builder.appendCodePoint(0x1D70B); break;
+         case 0x71: builder.appendCodePoint(0x1D703); break;
+         case 0x72: builder.appendCodePoint(0x1D70C); break;
+         case 0x73: builder.appendCodePoint(0x1D70E); break;
+         case 0x74: builder.appendCodePoint(0x1D70F); break;
+         case 0x75: builder.appendCodePoint(0x1D710); break;
+         case 0x76: builder.appendCodePoint(0x1D71B); break;
+         case 0x77: builder.appendCodePoint(0x1D714); break;
+         case 0x78: builder.appendCodePoint(0x1D709); break;
+         case 0x79: builder.appendCodePoint(0x1D713); break;
+         case 0x7A: builder.appendCodePoint(0x1D701); break;
+
+         case 0xA1: builder.appendCodePoint(0x1D6F6); break;
+         case 0xA2: builder.appendCodePoint(0x2032); break;
+         case 0xA3: builder.appendCodePoint(0x2264); break;
+         case 0xA4: builder.appendCodePoint(0x2215); break;
+         case 0xA5: builder.appendCodePoint(0x221E); break;
+         case 0xA6: builder.append('f'); break;
+         case 0xA7: builder.appendCodePoint(0x2663); break;
+         case 0xA8: builder.appendCodePoint(0x2666); break;
+         case 0xA9: builder.appendCodePoint(0x2665); break;
+         case 0xAA: builder.appendCodePoint(0x2660); break;
+
+         case 0xAB: builder.appendCodePoint(0x2194); break;
+         case 0xAC: builder.appendCodePoint(0x2190); break;
+         case 0xAD: builder.appendCodePoint(0x2191); break;
+         case 0xAE: builder.appendCodePoint(0x2192); break;
+         case 0xAF: builder.appendCodePoint(0x2193); break;
+
+         case 0xB2: builder.appendCodePoint(0x2033); break;
+         case 0xB3: builder.appendCodePoint(0x2265); break;
+         case 0xB4: builder.appendCodePoint(0x00D7); break;
+         case 0xB5: builder.appendCodePoint(0x221D); break;
+         case 0xB6: builder.appendCodePoint(0x2202); break;
+         case 0xB7: builder.appendCodePoint(0x2022); break;
+         case 0xB8: builder.appendCodePoint(0x00F7); break;
+         case 0xB9: builder.appendCodePoint(0x2260); break;
+         case 0xBA: builder.appendCodePoint(0x2261); break;
+         case 0xBB: builder.appendCodePoint(0x2248); break;
+
+         case 0xBC: builder.appendCodePoint(0x2026); break;
+         case 0xBD: builder.appendCodePoint(0x2223); break;
+         case 0xBE: builder.appendCodePoint(0x2015); break;
+         case 0xBF: builder.appendCodePoint(0x2BA0); break;
+
+         case 0xC0: builder.appendCodePoint(0x2135); break;
+         case 0xC1: builder.appendCodePoint(0x2111); break;
+         case 0xC2: builder.appendCodePoint(0x211C); break;
+         case 0xC3: builder.appendCodePoint(0x2118); break;
+         case 0xC4: builder.appendCodePoint(0x2297); break;
+         case 0xC5: builder.appendCodePoint(0x2295); break;
+         case 0xC6: builder.appendCodePoint(0x2205); break;
+         case 0xC7: builder.appendCodePoint(0x2229); break;
+         case 0xC8: builder.appendCodePoint(0x222A); break;
+         case 0xC9: builder.appendCodePoint(0x2283); break;
+         case 0xCA: builder.appendCodePoint(0x2287); break;
+         case 0xCB: builder.appendCodePoint(0x2284); break;
+         case 0xCC: builder.appendCodePoint(0x2282); break;
+         case 0xCD: builder.appendCodePoint(0x2286); break;
+         case 0xCE: builder.appendCodePoint(0x2208); break;
+         case 0xCF: builder.appendCodePoint(0x2209); break;
+         case 0xD0: builder.appendCodePoint(0x2220); break;
+         case 0xD1: builder.appendCodePoint(0x2207); break;
+
+         case 0xD2: builder.appendCodePoint(0x00AE); break;
+         case 0xD3: builder.appendCodePoint(0x00A9); break;
+         case 0xD4: builder.appendCodePoint(0x2122); break;
+
+         case 0xD5: builder.appendCodePoint(0x220F); break;
+         case 0xD6: builder.appendCodePoint(0x221A); break;
+         case 0xD7: builder.appendCodePoint(0x2219); break;
+         case 0xD8: builder.appendCodePoint(0x00AC); break;
+         case 0xD9: builder.appendCodePoint(0x2227); break;
+         case 0xDA: builder.appendCodePoint(0x2228); break;
+
+         case 0xDB: builder.appendCodePoint(0x21D4); break;
+         case 0xDC: builder.appendCodePoint(0x21D0); break;
+         case 0xDD: builder.appendCodePoint(0x21D1); break;
+         case 0xDE: builder.appendCodePoint(0x21D2); break;
+         case 0xDF: builder.appendCodePoint(0x21D3); break;
+
+         case 0xE0: builder.appendCodePoint(0x22C4); break;
+         case 0xE1: builder.appendCodePoint(0x27E8); break;
+         case 0xE2: builder.appendCodePoint(0x00AE); break;
+         case 0xE3: builder.appendCodePoint(0x00A9); break;
+         case 0xE4: builder.appendCodePoint(0x2122); break;
+
+         case 0xE5: builder.appendCodePoint(0x2211); break;
+
+         case 0xE6: builder.appendCodePoint(0x239B); break;
+         case 0xE7: builder.appendCodePoint(0x239C); break;
+         case 0xE8: builder.appendCodePoint(0x239D); break;
+         case 0xE9: builder.appendCodePoint(0x23A1); break;
+         case 0xEA: builder.appendCodePoint(0x23A2); break;
+         case 0xEB: builder.appendCodePoint(0x23A3); break;
+         case 0xEC: builder.appendCodePoint(0x23A7); break;
+         case 0xED: builder.appendCodePoint(0x23A8); break;
+         case 0xEE: builder.appendCodePoint(0x23A9); break;
+         case 0xEF: builder.appendCodePoint(0x23AA); break;
+
+         case 0xF0: builder.appendCodePoint(0x20AC); break;
+         case 0xF1: builder.appendCodePoint(0x27E9); break;
+         case 0xF2: builder.appendCodePoint(0x222B); break;
+
+         case 0xF3: builder.appendCodePoint(0x2320); break;
+         case 0xF4: builder.appendCodePoint(0x23AE); break;
+         case 0xF5: builder.appendCodePoint(0x2321); break;
+
+         case 0xF6: builder.appendCodePoint(0x239E); break;
+         case 0xF7: builder.appendCodePoint(0x239F); break;
+         case 0xF8: builder.appendCodePoint(0x23A0); break;
+
+         case 0xF9: builder.appendCodePoint(0x23A4); break;
+         case 0xFA: builder.appendCodePoint(0x23A5); break;
+         case 0xFB: builder.appendCodePoint(0x23A6); break;
+
+         case 0xFC: builder.appendCodePoint(0x23AB); break;
+         case 0xFD: builder.appendCodePoint(0x23AC); break;
+         case 0xFE: builder.appendCodePoint(0x23AD); break;
+         default: 
+
+          if (
+                (0x20 <= c && c <= 0x3F)
+             || c == '[' || c == ']' || c == '_'
+             || (0x7B <= c && c <= 0x7F)
+             || c == 0xB1 || c == 0xB2
+             )
+          {
+             builder.appendCodePoint(c);
+          }
+          else if (((char)c) > 0x7F)
+          {
+             if (latin1 != null)
+             {
+                builder.append(new String(new byte[] { c }, latin1));
+             }
+             else
+             {
+                adf.warning(adf.getMessageWithFallback(
+                 "error.io.unsupported_char", 
+                 "Unsupported character 0x{0}", String.format("%02X", c)));
+
+                builder.appendCodePoint(0xFFFD);
+             }
+          }
+          else
+          {
+             builder.append((char)c);
+          }
+      }
+   }
+
    private void appendSelwynFontChar(int offset, int n)
    {
       for (int i = 0; i < n; i++)
@@ -2171,8 +2403,6 @@ class DataBuffer
          case 0xD7: builder.append('\u2195'); break;
 
          case 0xE7: builder.append('\u2733'); break;
-
-//TODO
 
          default: 
 
