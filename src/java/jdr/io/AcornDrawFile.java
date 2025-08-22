@@ -1335,7 +1335,17 @@ public class AcornDrawFile
       }
       else
       {
-         getCanvasGraphics().setDocBody(content);
+         String body = getCanvasGraphics().getDocBody();
+
+         if (body == null || body.isEmpty())
+         {
+            getCanvasGraphics().setDocBody(content);
+         }
+         else
+         {
+            getCanvasGraphics().setDocBody(
+             String.format("%s%n\\newpage%n%s", body, content));
+         }
 
          for (JDRPath path : columns)
          {
