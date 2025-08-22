@@ -65,6 +65,17 @@ public class PNG
       throws IOException
    {
       CanvasGraphics cg = group.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      boolean indeter = (group.size() <= 1);
+
+      publisher.publishMessages(MessageInfo.createIndeterminate(indeter));
+
+      if (!indeter)
+      {
+         publisher.publishMessages(MessageInfo.createMaxProgress(group.size()));
+      }
 
       int width;
       int height;
@@ -126,6 +137,8 @@ public class PNG
 
          for (int i = 0; i < group.size(); i++)
          {
+             publisher.publishMessages(MessageInfo.createIncProgress());
+
              group.get(i).print(g2);
          }
 

@@ -230,9 +230,8 @@ public class JDRConverter
           @Override
           public void message(String msg)
           {
-             msgPublisher.message(msg);
+             msgPublisher.messageln(msg);
           }
-
       
           @Override
           public int getExitCode(Throwable e, boolean isFatal)
@@ -321,6 +320,16 @@ public class JDRConverter
       }
 
       return helpLib.getMessage(label, params);
+   }
+
+   public void verboseln(String msg)
+   {
+      msgPublisher.publishMessages(MessageInfo.createVerbose(1, msg, true));
+   }
+
+   public void verbosenoln(String msg)
+   {
+      msgPublisher.publishMessages(MessageInfo.createVerbose(1, msg, false));
    }
 
    public void error(String message, Throwable e)
@@ -413,6 +422,8 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.relative_bitmaps",
         "--[no]relative-bitmaps"));
 
+      System.out.println();
+
       helpLib.printSyntaxItem(getMessage("syntax.import_settings"));
 
       System.out.println();
@@ -425,6 +436,8 @@ public class JDRConverter
 
       helpLib.printSyntaxItem(getMessage("syntax.apply_mappings",
         "--[no]apply-mappings"));
+
+      System.out.println();
 
       helpLib.printSyntaxItem(getMessage("syntax.export_settings"));
 
@@ -443,6 +456,13 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
         "--[no]bitmaps-to-eps"));
 
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.processes"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.use-latex", "--[no]use-latex"));
       helpLib.printSyntaxItem(getMessage("syntax.latex-dvi", "--latex-dvi"));
       helpLib.printSyntaxItem(getMessage("syntax.latex-pdf", "--latex-pdf"));
       helpLib.printSyntaxItem(getMessage("syntax.dvips", "--dvips"));
@@ -1192,6 +1212,14 @@ public class JDRConverter
             {
                useMappings = false;
             }
+            else if (arg.equals("--use-latex"))
+            {
+               useLaTeX = true;
+            }
+            else if (arg.equals("--nouse-latex"))
+            {
+               useLaTeX = false;
+            }
             else if (isArg(arg, "--latex-dvi", returnVals))
             {
                if (returnVals[0] == null)
@@ -1404,6 +1432,12 @@ public class JDRConverter
       canvasGraphics.getLaTeXFontBase().setNormalSize(normalsize);
       canvasGraphics.setUseAbsolutePages(flowframeAbsPages);
 
+      if (!inFile.exists())
+      {
+         throw new FileNotFoundException(
+           getMessage("error.file_not_found_with_name", inFile));
+      }
+
       BufferedReader in = null;
       DataInputStream din = null;
 
@@ -1425,17 +1459,28 @@ public class JDRConverter
 
       int settingsFlag = -1;
 
+      File inDir = inFile.getParentFile();
+
+      if (inDir == null || !inDir.isAbsolute())
+      {
+         inDir = inFile.getAbsoluteFile().getParentFile();
+      }
+
+      verbosenoln(getMessageWithFallback("info.loading", "Loading {0}", inFile));
+
       try
       {
          switch (inFormat)
          {
             case JDR:
               JDR jdr = new JDR();
+              jdr.setBaseDir(inDir);
               paths = jdr.load(din, canvasGraphics);
               settingsFlag = jdr.getLastLoadedSettingsID();
             break;
             case AJR:
               AJR ajr = new AJR();
+              ajr.setBaseDir(inDir);
               paths = ajr.load(in, canvasGraphics);
               settingsFlag = ajr.getLastLoadedSettingsID();
             break;
@@ -1467,6 +1512,8 @@ public class JDRConverter
             din.close();
          }
       }
+
+      msgPublisher.clearEol();
 
       if (paths == null || paths.size() == 0)
       {
@@ -1563,6 +1610,11 @@ public class JDRConverter
          outDir = outFile.getAbsoluteFile().getParentFile();
       }
 
+      if (!useLaTeX)
+      {
+         verbosenoln(getMessageWithFallback("info.saving", "Saving {0}", outFile)+" ");
+      }
+
       try
       {
          switch (outFormat)
@@ -1613,6 +1665,8 @@ public class JDRConverter
             out.close();
          }
       }
+
+      msgPublisher.clearEol();
    }
 
    protected JDRGroup loadAcornDrawFile(DataInputStream din, CanvasGraphics canvasGraphics)
@@ -1993,6 +2047,14 @@ public class JDRConverter
       return removeTempFiles;
    }
 
+   public void shutdown()
+   {
+      if (msgPublisher != null)
+      {
+         msgPublisher.shutdown();
+      }
+   }
+
    public static void main(String[] args)
    {
       final JDRConverter app = new JDRConverter();
@@ -2020,6 +2082,7 @@ public class JDRConverter
          app.error(null, e);
       }
 
+      app.shutdown();
       System.exit(app.getExitCode());
    }
 

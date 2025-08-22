@@ -167,6 +167,21 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       return progressValue;
    }
 
+   @Override
+   public void shutdown()
+   {
+      clearEol();
+   }
+
+   public void clearEol()
+   {
+      if (eolRequired)
+      {
+         System.out.println();
+         eolRequired = false;
+      }
+   }
+
    public void setProgress(int value)
    {
       progressValue = value;
@@ -182,21 +197,12 @@ public class JDRDefaultMessage extends JDRMessagePublisher
             int n = (int)Math.round(
                ((double)value/(double)progressMax)*100);
 
-            if (n < 10)
-            {
-               System.out.print("  "+n+"%");
-            }
-            else if (n < 99)
-            { 
-              System.out.print(" "+n+"%");
-            }
-            else
-            {
-               System.out.print(""+n+"%");
-            }
+            System.out.format("%3d%%", n);
 
             System.out.print("\b\b\b\b");
          }
+
+         eolRequired = true;
       }
    }
 
@@ -249,6 +255,8 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void message(String messageText)
    {
+      clearEol();
+
       if (showMessages && !suspended)
       {
          System.out.print(messageText);
@@ -257,6 +265,8 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void message(Exception excp)
    {
+      clearEol();
+
       if (showMessages && !suspended)
       {
          System.out.print(excp.getMessage());
@@ -265,6 +275,8 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void messageln(String messageText)
    {
+      clearEol();
+
       if (showMessages && !suspended)
       {
          System.out.println(messageText);
@@ -273,6 +285,8 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void messageln(Exception excp)
    {
+      clearEol();
+
       if (showMessages && !suspended)
       {
          System.out.println(excp.getMessage());
@@ -281,6 +295,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void warningnoln(String messageText)
    {
+      clearEol();
       System.err.print(
         getMessageWithFallback("warning.tag", "Warning: {0}", messageText));
    }
@@ -293,6 +308,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void warning(String messageText)
    {
+      clearEol();
       System.err.println(
         getMessageWithFallback("warning.tag", "Warning: {0}", messageText));
    }
@@ -305,6 +321,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void errornoln(String messageText)
    {
+      clearEol();
       System.err.print(
         getMessageWithFallback("error.tag", "Error: {0}", messageText));
    }
@@ -317,6 +334,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void error(String messageText)
    {
+      clearEol();
       System.err.println(
         getMessageWithFallback("error.tag", "Error: {0}", messageText));
    }
@@ -329,6 +347,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void internalerror(String messageText)
    {
+      clearEol();
       System.err.println(
        getMessageWithFallback("internal_error.tag",
          "Internal error: {0}", messageText));
@@ -342,6 +361,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void fatalerror(String messageText)
    {
+      clearEol();
       System.err.println(
         getMessageWithFallback("error.fatal.tag", "Fatal error: {0}", messageText));
    }
@@ -361,6 +381,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (isDebuggingOn())
       {
+         clearEol();
          excp.printStackTrace();
       }
    }
@@ -369,6 +390,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (isDebuggingOn())
       {
+         clearEol();
          System.err.println(msg);
       }
    }
@@ -377,6 +399,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (level <= verbosity)
       {
+         clearEol();
          System.out.print(msg);
       }
    }
@@ -385,6 +408,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (level <= verbosity)
       {
+         clearEol();
          System.out.println(msg);
       }
    }
@@ -452,6 +476,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    private boolean showMessages=false;
    private boolean suspended=false;
+   private boolean eolRequired = false;
 
    private int verbosity=1;
    private int debugVerbosityThreshold = 2;

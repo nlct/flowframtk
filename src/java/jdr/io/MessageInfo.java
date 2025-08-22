@@ -64,7 +64,7 @@ public class MessageInfo
 
    public static MessageInfo createProgress(int max)
    {
-      return new MessageInfo(PROGRESS, new Integer(max));
+      return new MessageInfo(PROGRESS, Integer.valueOf(max));
    }
 
    public static MessageInfo createIncProgress()
@@ -74,22 +74,22 @@ public class MessageInfo
 
    public static MessageInfo createIncProgress(int increment)
    {
-      return new MessageInfo(INCREMENT_PROGRESS, new Integer(increment));
+      return new MessageInfo(INCREMENT_PROGRESS, Integer.valueOf(increment));
    }
 
    public static MessageInfo createSetProgress(int progress)
    {
-      return new MessageInfo(SET_PROGRESS, new Integer(progress));
+      return new MessageInfo(SET_PROGRESS, Integer.valueOf(progress));
    }
 
    public static MessageInfo createMaxProgress(int max)
    {
-      return new MessageInfo(MAX_PROGRESS, new Integer(max));
+      return new MessageInfo(MAX_PROGRESS, Integer.valueOf(max));
    }
 
    public static MessageInfo createIndeterminate(boolean isOn)
    {
-      return new MessageInfo(INDETERMINATE, new Boolean(isOn));
+      return new MessageInfo(INDETERMINATE, Boolean.valueOf(isOn));
    }
 
    public static MessageInfo createWarning(String message)
@@ -151,12 +151,12 @@ public class MessageInfo
 
    public static MessageInfo createSetActive(boolean isActive)
    {
-      return new MessageInfo(ACTIVE, new Boolean(isActive));
+      return new MessageInfo(ACTIVE, Boolean.valueOf(isActive));
    }
    
    public static MessageInfo createSetVisible(boolean isVisible)
    {
-      return new MessageInfo(VISIBLE, new Boolean(isVisible));
+      return new MessageInfo(VISIBLE, Boolean.valueOf(isVisible));
    }
 
    public String toString()

@@ -63,6 +63,17 @@ public class SVG
       SVG svg = new SVG(null, out);
 
       CanvasGraphics cg = image.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      boolean indeter = (image.size() <= 1);
+
+      publisher.publishMessages(MessageInfo.createIndeterminate(indeter));
+
+      if (!indeter)
+      {
+         publisher.publishMessages(MessageInfo.createMaxProgress(image.size()));
+      }
 
       svg.setCanvasGraphics(cg);
 
@@ -108,8 +119,11 @@ public class SVG
 
       for (int i = 0; i < image.size(); i++)
       {
+         publisher.publishMessages(MessageInfo.createIncProgress());
+
          image.get(i).saveSVG(svg);
       }
+
       out.println("</svg>");
    }
 

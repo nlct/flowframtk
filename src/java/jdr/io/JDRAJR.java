@@ -1179,6 +1179,16 @@ public abstract class JDRAJR
       basePath = (dir == null ? null : dir.toPath());
    }
 
+   public void setBasePath(Path path)
+   {
+      basePath = path;
+   }
+
+   public Path getBasePath()
+   {
+      return basePath;
+   }
+
    public File resolveFile(URI uri)
    {
       return resolveFile(new File(uri));

@@ -59,6 +59,17 @@ public class PGF extends TeX
       throws IOException
    {
       CanvasGraphics cg = allObjects.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      boolean indeter = (allObjects.size() <= 1);
+
+      publisher.publishMessages(MessageInfo.createIndeterminate(indeter));
+
+      if (!indeter)
+      {
+         publisher.publishMessages(MessageInfo.createMaxProgress(allObjects.size()));
+      }
 
       double storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
 
@@ -95,7 +106,20 @@ public class PGF extends TeX
 
       println("\\pgfusepath{use as bounding box}");
 
-      allObjects.savePgf(this);
+      String description = allObjects.getDescription();
+
+      if (!description.isEmpty())
+      {
+         comment(allObjects.getDescription());
+      }
+
+      for (int i = 0; i < allObjects.size(); i++)
+      {
+         publisher.publishMessages(MessageInfo.createIncProgress());
+
+         allObjects.get(i).savePgf(this);
+      }
+
       println("\\end{pgfpicture}");
    }
 
@@ -122,9 +146,21 @@ public class PGF extends TeX
       boolean useTypeblockAsBoundingBox)
       throws IOException
    {
+      CanvasGraphics cg = allObjects.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      boolean indeter = (allObjects.size() <= 1);
+
+      publisher.publishMessages(MessageInfo.createIndeterminate(indeter));
+
+      if (!indeter)
+      {
+         publisher.publishMessages(MessageInfo.createMaxProgress(allObjects.size()));
+      }
+
       setConvertBitmapToEpsEnabled(convertBitmapToEps);
 
-      CanvasGraphics cg = allObjects.getCanvasGraphics();
       BBox box;
 
       double storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
@@ -259,7 +295,20 @@ public class PGF extends TeX
       println("\\pgfusepath{use as bounding box}");
 
 
-      allObjects.savePgf(this);
+      String description = allObjects.getDescription();
+
+      if (!description.isEmpty())
+      {
+         comment(allObjects.getDescription());
+      }
+
+      for (int i = 0; i < allObjects.size(); i++)
+      {
+         publisher.publishMessages(MessageInfo.createIncProgress());
+
+         allObjects.get(i).savePgf(this);
+      }
+
       println("\\end{pgfpicture}}");
 
       println("\\end{document}");

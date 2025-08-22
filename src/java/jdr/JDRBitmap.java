@@ -306,7 +306,7 @@ public class JDRBitmap extends JDRCompleteObject
    {
       String filename = originalFilename;
 
-      File file = new File(filename);
+      File file = jdr.resolveFile(filename);
 
       CanvasGraphics cg = jdr.getCanvasGraphics();
 
@@ -324,7 +324,10 @@ public class JDRBitmap extends JDRCompleteObject
          else
          {
             jdr.getMessageSystem().getPublisher().publishMessages(
-               MessageInfo.createWarning(new FileNotFoundException(filename)));
+               MessageInfo.createWarning(new FileNotFoundException(
+                jdr.getMessageSystem().getMessageWithFallback(
+                  "error.file_not_found_with_name", "File not found: {0}",
+                  filename))));
             return null;
          }
 
@@ -557,16 +560,16 @@ public class JDRBitmap extends JDRCompleteObject
 
       if (name == null || name.isEmpty())
       {
-         name = getLaTeXPath(tex.relativize(filename_).toString());
+         name = getLaTeXPath(tex.relativize(imageFile).toString());
       }
-
-      int idx = name.lastIndexOf(".");
 
       tex.print(latexCommand
           + "[width="
           + tex.length(cg, unit.fromBp(w))
           + ",height="
           + tex.length(cg, unit.fromBp(h))+"]{");
+
+      int idx = name.lastIndexOf(".");
 
       if (idx > -1)
       {
@@ -1336,7 +1339,7 @@ public class JDRBitmap extends JDRCompleteObject
          +ic.getIconHeight()+"pt\"");
        svg.println("      xlink:href=\""+filename_+"\">");
        svg.println("   <desc>");
-       svg.println(filename_);
+       svg.println(imageFile.getName());
        svg.println("   </desc>");
        svg.println("   </image>");
    } 
@@ -1482,7 +1485,7 @@ public class JDRBitmap extends JDRCompleteObject
 
    /**
     * The LaTeX command to use to insert this image into a
-    * LaTeX document. This is initialised to "\pgfimage".
+    * LaTeX document. This is initialised to "\includegraphics".
     */
    private volatile String latexCommand="\\includegraphics";
 

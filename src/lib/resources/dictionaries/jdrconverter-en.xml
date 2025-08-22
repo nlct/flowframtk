@@ -29,14 +29,6 @@ Nicola Talbot
 <entry key="syntax.apply_mappings">{0}	Apply mappings when importing (if applicable).</entry>
 
 
-<entry key="syntax.latex-dvi">{0} &lt;path&gt;	Path to latex application (DVI output).</entry>
-<entry key="syntax.latex-pdf">{0} &lt;path&gt;	Path to pdflatex application.</entry>
-<entry key="syntax.dvips">{0} &lt;path&gt;	Path to dvips application.</entry>
-<entry key="syntax.dvisvgm">{0} &lt;path&gt;	Path to dvisvgm application.</entry>
-<entry key="syntax.libgs">{0} &lt;path&gt;	Path to the libgs library.</entry>
-
-<entry key="syntax.rm-tmp-files">{0}	Remove temporary files on exit.</entry>
-
 <entry key="syntax.import_settings">Import settings.</entry>
 
 <entry key="syntax.export_settings">Export settings.</entry>
@@ -45,16 +37,28 @@ Nicola Talbot
 
 <entry key="syntax.relative_bitmaps">{0}	Use relative paths for bitmaps.</entry>
 
-<entry key="syntax.other">Other options.</entry>
-
 <entry key="syntax.export-latex">{0} &lt;type&gt;	Export to a LaTeX file. The &lt;type&gt; may be one of:
-	"pgf" just the pgfpicture environment that draws the image.
-	"doc" a complete LaTeX document that draws the image.
-	"flow" a complete LaTeX document that uses the flowfram package (only objects with flow frame data will be exported).</entry>
+		"pgf" just a pgfpicture environment.
+		"doc" complete document that draws the image.
+		"flow" complete document that uses the flowfram package (only objects with flow frame data will be exported).</entry>
 
 <entry key="syntax.doc">{0}	Shortcut for {1}.</entry>
 
 <entry key="syntax.use_typeblock">{0}	Use typeblock (if applicable).</entry>
+
+<entry key="syntax.processes">External processes.</entry>
+
+<entry key="syntax.use-latex">{0}	Use LaTeX (and friends) to create the output file (if supported). This option will be ignored if the output format always requires or never requires external processes.</entry>
+
+<entry key="syntax.latex-dvi">{0} &lt;path&gt;	Path to latex application (DVI output).</entry>
+<entry key="syntax.latex-pdf">{0} &lt;path&gt;	Path to pdflatex application.</entry>
+<entry key="syntax.dvips">{0} &lt;path&gt;	Path to dvips application.</entry>
+<entry key="syntax.dvisvgm">{0} &lt;path&gt;	Path to dvisvgm application.</entry>
+<entry key="syntax.libgs">{0} &lt;path&gt;	Path to the libgs library.</entry>
+
+<entry key="syntax.rm-tmp-files">{0}	Remove temporary files on exit.</entry>
+
+<entry key="syntax.other">Other options.</entry>
 
 <entry key="syntax.list_output_formats">{0}	List all supported output formats and exit.</entry>
 <entry key="syntax.list_input_formats">{0}	List all supported input formats and exit.</entry>

@@ -105,6 +105,18 @@ public class EPS
       throws IOException
    {
       CanvasGraphics cg = allObjects.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+         
+      boolean indeter = (allObjects.size() <= 1);
+
+      publisher.publishMessages(MessageInfo.createIndeterminate(indeter));
+
+      if (!indeter)
+      {
+         publisher.publishMessages(MessageInfo.createMaxProgress(allObjects.size()));
+      }
+
       BBox box = allObjects.getBpBBox();
 
       out.println("%!PS-Adobe-3.0 EPSF-3.0");
@@ -140,7 +152,14 @@ public class EPS
       out.println("1 setlinewidth");
       out.println("0 setlinecap");
       out.println("0 setlinejoin");
-      allObjects.saveEPS(out);
+
+      for (int i = 0; i < allObjects.size(); i++)
+      {
+         publisher.publishMessages(MessageInfo.createIncProgress());
+
+         allObjects.get(i).saveEPS(out);
+      }
+
       out.println("grestore");
       out.println("%%Trailer");
       out.println("%%EOF");

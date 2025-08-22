@@ -33,7 +33,7 @@ import com.dickimawbooks.jdrresources.*;
  * For use where the export function needs to build a LaTeX document
  * as an intermediate step.
  */
-public abstract class ExportImage implements MessageInfoPublisher
+public abstract class ExportImage
 {
    public ExportImage(JDRConverter converter, File outputFile, JDRGroup jdrImage)
    {
@@ -46,15 +46,7 @@ public abstract class ExportImage implements MessageInfoPublisher
    public void createImage() 
      throws InvalidFormatException,IOException,InterruptedException
    {
-      getMessageSystem().setPublisher(this);
-
-      publishMessages(MessageInfo.createMessage(
-        converter.getMessage("info.saving", outputFile.toString())));
-
       save();
-
-      publishMessages(
-         MessageInfo.createMessage(converter.getMessage("message.done")));
    }
 
    public void process(MessageInfo... chunks)
@@ -203,6 +195,37 @@ public abstract class ExportImage implements MessageInfoPublisher
       return basename;
    }
 
+   protected void createTeXFile(PrintWriter out) throws IOException
+   {
+      File src = converter.getInputFile();
+      File base = src.getParentFile();
+
+      if (base == null)
+      {
+         base = src.getAbsoluteFile().getParentFile();
+      }
+
+      PGF pgf = new PGF(base.toPath(), out);
+
+      pgf.setUsePdfInfoEnabled(converter.isUsePdfInfoOn());
+
+      pgf.setTextualExportShadingSetting(
+         converter.getTextualExportShadingSetting());
+      pgf.setTextPathExportOutlineSetting(
+         converter.getTextPathExportOutlineSetting());
+
+      writeComments(pgf);
+
+      String preamble = null;
+
+      preamble = converter.getConfigPreamble();
+
+      pgf.saveDoc(image, preamble, 
+        converter.isEncapsulateOn(), 
+        converter.isConvertBitmapToEpsOn(),
+        converter.isUseTypeblockAsBoundingBoxOn());
+   }
+
    protected void save() 
      throws IOException,InterruptedException,InvalidFormatException,SecurityException
    {
@@ -218,25 +241,12 @@ public abstract class ExportImage implements MessageInfoPublisher
       {
          out = new PrintWriter(new FileWriter(texFile));
 
-         PGF pgf = new PGF(texDir.toPath(), out);
+         converter.verbosenoln(
+            converter.getMessageWithFallback("info.saving", "Saving {0}", texFile)+" ");
 
-         pgf.setUsePdfInfoEnabled(converter.isUsePdfInfoOn());
+         createTeXFile(out);
 
-         pgf.setTextualExportShadingSetting(
-            converter.getTextualExportShadingSetting());
-         pgf.setTextPathExportOutlineSetting(
-            converter.getTextPathExportOutlineSetting());
-
-         writeComments(pgf);
-
-         String preamble = null;
-
-         preamble = converter.getConfigPreamble();
-
-         pgf.saveDoc(image, preamble, 
-           converter.isEncapsulateOn(), 
-           converter.isConvertBitmapToEpsOn(),
-           converter.isUseTypeblockAsBoundingBoxOn());
+         converter.getMessageSystem().clearEol();
 
          out.close();
          out = null;
@@ -245,6 +255,10 @@ public abstract class ExportImage implements MessageInfoPublisher
 
          if (result != null)
          {
+            converter.verboseln(
+              converter.getMessageWithFallback("info.saving", "Saving {0}",
+                 outputFile)+" ");
+
             Files.copy(result.toPath(), outputFile.toPath(),
                StandardCopyOption.REPLACE_EXISTING);
          }

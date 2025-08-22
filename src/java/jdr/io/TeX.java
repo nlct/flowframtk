@@ -351,14 +351,29 @@ public class TeX
 
    public Path relativize(String filename)
    {
-      Path path = (new File(filename)).toPath();
+      return relativize(new File(filename));
+   }
 
+   public Path relativize(File file)
+   {
+      return relativize(file.toPath());
+   }
+
+   public Path relativize(Path path)
+   {
       if (basePath == null || !path.isAbsolute())
       {
          return path;
       }
 
-      return basePath.relativize(path).normalize();
+      try
+      {
+         return basePath.relativize(path).normalize();
+      }
+      catch (IllegalArgumentException e)
+      {
+         return path;
+      }
    }
 
    public void setWriter(Writer writer)

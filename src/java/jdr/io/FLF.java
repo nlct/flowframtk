@@ -82,8 +82,11 @@ public class FLF extends TeX
           InvalidShapeException,
           MissplacedTypeBlockException
    {
-      this.group = group;
       CanvasGraphics cg = group.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      this.group = group;
       JDRUnit unit = cg.getStorageUnit();
 
       FlowFrame typeblock = group.getFlowFrame();
@@ -127,6 +130,7 @@ public class FLF extends TeX
             }
          }
       }
+
       println("\\Provides"+(isCls ? "Class" : "Package")+"{"
                   +(idx==-1?styName:styName.substring(0,idx))+"}");
 
@@ -211,27 +215,47 @@ public class FLF extends TeX
          println("\\renewcommand*{\\@ff@pages@countreg}{\\c@page}");
       }
 
+      publisher.publishMessages(MessageInfo.createIndeterminate(false));
+      publisher.publishMessages(MessageInfo.createMaxProgress(group.size()+1));
+
       for (int i = 0; i < group.size(); i++)
       {
+         publisher.publishMessages(MessageInfo.createIncProgress());
+
          JDRCompleteObject object = group.get(i);
          FlowFrame flowframe = object.getFlowFrame();
 
-         if (flowframe != null && 
-             flowframe.getType() == FlowFrame.TYPEBLOCK)
+         if (flowframe == null)
          {
-            throw new MissplacedTypeBlockException(cg);
-         }
+            String description = getDescription(object);
 
-         object.saveFlowframe(this, typeblockRect, baselineskip, 
-            useHPaddingShapepar);
+            publisher.publishMessages(
+              MessageInfo.createMessage(
+                msgSys.getMessageWithFallback("message.omitting_object_no_flowframe",
+                  "Omitting object ''{0}'' (no flow frame data set).",
+                description),
+                true));
+         }
+         else
+         {
+            if (flowframe.getType() == FlowFrame.TYPEBLOCK)
+            {
+               throw new MissplacedTypeBlockException(cg);
+            }
+
+            flowframe.tex(this, object, typeblockRect, baselineskip, 
+               useHPaddingShapepar);
+         }
       }
 
       printHeaderFooter();
 
-      String endPreamble = cg.getEndPreamble();
+      publisher.publishMessages(MessageInfo.createIncProgress());
 
-      if (endPreamble != null)
+      if (cg.hasEndPreamble())
       {
+         String endPreamble = cg.getEndPreamble();
+
          endPreamble = endPreamble.replaceAll("\\\\usepackage\\b", "\\\\RequirePackage");
 
          println(endPreamble);
@@ -246,8 +270,11 @@ public class FLF extends TeX
           InvalidShapeException,
           MissplacedTypeBlockException
    {
-      this.group = group;
       CanvasGraphics cg = group.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      this.group = group;
       JDRUnit unit = cg.getStorageUnit();
 
       FlowFrame typeblock = group.getFlowFrame();
@@ -355,32 +382,21 @@ public class FLF extends TeX
 
       println("\\makeatletter");
 
+      publisher.publishMessages(MessageInfo.createIndeterminate(false));
+      publisher.publishMessages(MessageInfo.createMaxProgress(group.size()+1));
+
       for (int i = 0; i < group.size(); i++)
       {
+         publisher.publishMessages(MessageInfo.createIncProgress());
+
          JDRCompleteObject object = group.get(i);
          FlowFrame flowframe = object.getFlowFrame();
 
          if (flowframe == null)
          {
-            JDRMessage msgSys = cg.getMessageSystem();
+            String description = getDescription(object);
 
-            String description = object.getDescription();
-
-            if (description == null)
-            {
-               Object[] info = object.getDescriptionInfo();
-
-               description = msgSys.getMessageWithFallback(
-                object.getClass().getCanonicalName(),
-                object.getClass().getSimpleName());
-
-               if (info.length > 0)
-               {
-                  description += " " + info[0].toString();
-               }
-            }
-
-            msgSys.getPublisher().publishMessages(
+            publisher.publishMessages(
               MessageInfo.createMessage(
                 msgSys.getMessageWithFallback("message.omitting_object_no_flowframe",
                   "Omitting object ''{0}'' (no flow frame data set).",
@@ -460,10 +476,12 @@ public class FLF extends TeX
 
       println("\\makeatother");
 
-      String endPreamble = cg.getEndPreamble();
+      publisher.publishMessages(MessageInfo.createIncProgress());
 
-      if (endPreamble != null)
+      if (cg.hasEndPreamble())
       {
+         String endPreamble = cg.getEndPreamble();
+
          println(endPreamble);
       }
 
@@ -971,6 +989,29 @@ public class FLF extends TeX
             println("\\pagestyle{flowframtk}");
          }
       }
+   }
+
+   protected String getDescription(JDRCompleteObject object)
+   {
+      JDRMessage msgSys = group.getCanvasGraphics().getMessageSystem();
+
+      String description = object.getDescription();
+
+      if (description == null)
+      {
+         Object[] info = object.getDescriptionInfo();
+
+         description = msgSys.getMessageWithFallback(
+          object.getClass().getCanonicalName(),
+          object.getClass().getSimpleName());
+
+         if (info.length > 0)
+         {
+            description += " " + info[0].toString();
+         }
+      }
+
+      return description;
    }
 
    JDRGroup group;
