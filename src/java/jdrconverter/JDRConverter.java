@@ -420,7 +420,7 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.settings", "--settings"));
 
       helpLib.printSyntaxItem(getMessage("syntax.relative_bitmaps",
-        "--[no]relative-bitmaps"));
+        "--[no-]relative-bitmaps"));
 
       System.out.println();
 
@@ -432,10 +432,10 @@ public class JDRConverter
         "--bitmap-prefix", "-B"));
       helpLib.printSyntaxItem(getMessage("syntax.bitmap_dir", "--bitmap-dir"));
       helpLib.printSyntaxItem(getMessage("syntax.extract_bitmaps",
-        "--[no]extract-bitmaps"));
+        "--[no-]extract-bitmaps"));
 
       helpLib.printSyntaxItem(getMessage("syntax.apply_mappings",
-        "--[no]apply-mappings"));
+        "--[no-]apply-mappings"));
 
       System.out.println();
 
@@ -447,14 +447,14 @@ public class JDRConverter
 
       helpLib.printSyntaxItem(getMessage("syntax.doc", "--doc", "--export-latex doc"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no]use-typeblock"));
+      helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no-]use-typeblock"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no]alpha"));
+      helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no-]alpha"));
       helpLib.printSyntaxItem(getMessage("syntax.normalsize", "--normalsize"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.encapsulate", "--[no]crop", "-C"));
+      helpLib.printSyntaxItem(getMessage("syntax.encapsulate", "--[no-]crop", "-C"));
       helpLib.printSyntaxItem(getMessage("syntax.bitmaps_to_eps",
-        "--[no]bitmaps-to-eps"));
+        "--[no-]bitmaps-to-eps"));
 
       System.out.println();
 
@@ -462,7 +462,7 @@ public class JDRConverter
 
       System.out.println();
 
-      helpLib.printSyntaxItem(getMessage("syntax.use-latex", "--[no]use-latex"));
+      helpLib.printSyntaxItem(getMessage("syntax.use-latex", "--[no-]use-latex"));
       helpLib.printSyntaxItem(getMessage("syntax.latex-dvi", "--latex-dvi"));
       helpLib.printSyntaxItem(getMessage("syntax.latex-pdf", "--latex-pdf"));
       helpLib.printSyntaxItem(getMessage("syntax.dvips", "--dvips"));
@@ -483,11 +483,13 @@ public class JDRConverter
 
       helpLib.printSyntaxItem(getMessage("syntax.locale", "--locale"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.debug", "--[no]debug"));
+      helpLib.printSyntaxItem(getMessage("syntax.verbose", "--[no-]verbose", "-v"));
 
-      helpLib.printSyntaxItem(getMessage("syntax.rm-tmp-files", "--[no]rm-tmp-files"));
+      helpLib.printSyntaxItem(getMessage("syntax.debug", "--[no-]debug"));
 
-      helpLib.printSyntaxItem(getMessage("clisyntax.version2", "--version", "-v"));
+      helpLib.printSyntaxItem(getMessage("syntax.rm-tmp-files", "--[no-]rm-tmp-files"));
+
+      helpLib.printSyntaxItem(getMessage("clisyntax.version2", "--version", "-V"));
 
       helpLib.printSyntaxItem(getMessage("clisyntax.help2", "--help", "-h"));
 
@@ -573,7 +575,7 @@ public class JDRConverter
 
    private void parseArgs(String[] args) throws InvalidSyntaxException
    {
-      cliParser = new CLISyntaxParser(helpLib, args, "-h", "-v")
+      cliParser = new CLISyntaxParser(helpLib, args, "-h", "-V")
       {
          @Override
          protected int argCount(String arg)
@@ -625,7 +627,7 @@ public class JDRConverter
                return true;
             }
 
-            if (originalArgList[preparseIndex].equals("--nodebug")
+            if (originalArgList[preparseIndex].equals("-nodebug")
                    || originalArgList[preparseIndex].equals("--no-debug")
                     )
             {
@@ -704,19 +706,23 @@ public class JDRConverter
             }
             else if (originalArgList[preparseIndex].equals("-nouse_typeblock"))
             {
-               deque.add("--nouse-typeblock");
+               deque.add("--no-use-typeblock");
             }
             else if (originalArgList[preparseIndex].equals("-bitmap"))
             {
                deque.add("--bitmap-prefix");
             }
             else if (originalArgList[preparseIndex].equals("-nosettings")
-                  || originalArgList[preparseIndex].equals("-doc")
                   || originalArgList[preparseIndex].equals("-nodoc")
-                  || originalArgList[preparseIndex].equals("-alpha")
                   || originalArgList[preparseIndex].equals("-noalpha")
-                  || originalArgList[preparseIndex].equals("-crop")
                   || originalArgList[preparseIndex].equals("-nocrop")
+                    )
+            {
+               deque.add("--no-"+originalArgList[preparseIndex].substring(3));
+            }
+            else if (originalArgList[preparseIndex].equals("-doc")
+                  || originalArgList[preparseIndex].equals("-alpha")
+                  || originalArgList[preparseIndex].equals("-crop")
                   || originalArgList[preparseIndex].equals("-normalsize")
                     )
             {
@@ -786,7 +792,7 @@ public class JDRConverter
                msgPublisher.setVerbosity(1);
                msgPublisher.displayMessages();
             }
-            else if (arg.equals("--noverbose"))
+            else if (arg.equals("--no-verbose"))
             {
                msgPublisher.setVerbosity(0);
                msgPublisher.displayMessages();
@@ -799,11 +805,11 @@ public class JDRConverter
             {
                removeTempFiles = true;
             }
-            else if (arg.equals("--norm-tmp-files"))
+            else if (arg.equals("--no-rm-tmp-files"))
             {
                removeTempFiles = false;
             }
-            else if (arg.equals("--nosettings"))
+            else if (arg.equals("--no-settings"))
             {
                saveSettingsType = SaveSettingsType.NONE;
             }
@@ -839,7 +845,7 @@ public class JDRConverter
             {
                outFormat = FileFormatType.TEX_DOC;
             }
-            else if (arg.equals("--nodoc"))
+            else if (arg.equals("--no-doc"))
             {
                outFormat = FileFormatType.TEX_PGF;
             }
@@ -847,7 +853,7 @@ public class JDRConverter
             {
                useTypeblockAsBBox = true;
             }
-            else if (arg.equals("--nouse-typeblock"))
+            else if (arg.equals("--no-use-typeblock"))
             {
                useTypeblockAsBBox = false;
             }
@@ -855,7 +861,7 @@ public class JDRConverter
             {
                encapsulate = true;
             }
-            else if (arg.equals("--nocrop"))
+            else if (arg.equals("--no-crop"))
             {
                encapsulate = false;
             }
@@ -863,7 +869,7 @@ public class JDRConverter
             {
                convertBitmapToEps = true;
             }
-            else if (arg.equals("--nobitmaps-to-eps"))
+            else if (arg.equals("--no-bitmaps-to-eps"))
             {
                convertBitmapToEps = false;
             }
@@ -871,7 +877,7 @@ public class JDRConverter
             {
                addAlphaChannel = true;
             }
-            else if (arg.equals("--noalpha"))
+            else if (arg.equals("--no-alpha"))
             {
                addAlphaChannel = false;
             }
@@ -1192,7 +1198,7 @@ public class JDRConverter
             {
                extractBitmaps = true;
             }
-            else if (arg.equals("--noextract-bitmaps"))
+            else if (arg.equals("--no-extract-bitmaps"))
             {
                extractBitmaps = false;
             }
@@ -1200,7 +1206,7 @@ public class JDRConverter
             {
                useRelativeBitmaps = true;
             }
-            else if (arg.equals("--[no]relative-bitmaps"))
+            else if (arg.equals("--no-relative-bitmaps"))
             {
                useRelativeBitmaps = false;
             }
@@ -1208,7 +1214,7 @@ public class JDRConverter
             {
                useMappings = true;
             }
-            else if (arg.equals("--noapply-mappings"))
+            else if (arg.equals("--no-apply-mappings"))
             {
                useMappings = false;
             }
@@ -1216,7 +1222,7 @@ public class JDRConverter
             {
                useLaTeX = true;
             }
-            else if (arg.equals("--nouse-latex"))
+            else if (arg.equals("--no-use-latex"))
             {
                useLaTeX = false;
             }
