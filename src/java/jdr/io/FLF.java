@@ -55,6 +55,16 @@ public class FLF extends TeX
       super(basePath, out);
    }
 
+   public FLF(File baseFile, Writer out, boolean useFlowframTkSty)
+   {
+      this(baseFile.toPath(), out, useFlowframTkSty);
+   }
+
+   public FLF(Path basePath, Writer out, boolean useFlowframTkSty)
+   {
+      super(basePath, out, useFlowframTkSty);
+   }
+
    /**
     * Exports flowframe information.
     * The typeblock for the document should be specified by the
@@ -134,19 +144,7 @@ public class FLF extends TeX
       println("\\Provides"+(isCls ? "Class" : "Package")+"{"
                   +(idx==-1?styName:styName.substring(0,idx))+"}");
 
-      println("\\RequirePackage{pgf}");
-      println("\\RequirePackage{ifpdf}");
-
-      writeOutlineDef();
-
-      if (cg.hasPreamble())
-      {
-         String preamble = cg.getPreamble();
-
-         preamble = preamble.replaceAll("\\\\usepackage\\b", "\\\\RequirePackage");
-
-         println(preamble);
-      }
+      writePreambleCommands(group, false);
 
       println("\\DeclareOption{draft}{\\PassOptionsToPackage{draft}{flowfram}}");
       println("\\DeclareOption{final}{\\PassOptionsToPackage{final}{flowfram}}");
@@ -195,6 +193,15 @@ public class FLF extends TeX
 
       typeblock.tex(this, group, typeblockRect, baselineskip, false);
 
+      if (cg.useAbsolutePages())
+      {
+         println("\\PassOptionsToPackage{pages=absolute}{flowfram}");
+      }
+      else
+      {
+         println("\\PassOptionsToPackage{pages=relative}{flowfram}");
+      }
+
       println("\\RequirePackage{flowfram}");
 
       if (cg.hasMidPreamble())
@@ -204,15 +211,6 @@ public class FLF extends TeX
          midPreamble = midPreamble.replaceAll("\\\\usepackage\\b", "\\\\RequirePackage");
 
          println(midPreamble);
-      }
-
-      if (cg.useAbsolutePages())
-      {
-         println("\\renewcommand*{\\@ff@pages@countreg}{\\c@absolutepage}");
-      }
-      else
-      {
-         println("\\renewcommand*{\\@ff@pages@countreg}{\\c@page}");
       }
 
       publisher.publishMessages(MessageInfo.createIndeterminate(false));
@@ -225,30 +223,23 @@ public class FLF extends TeX
          JDRCompleteObject object = group.get(i);
          FlowFrame flowframe = object.getFlowFrame();
 
-         if (flowframe == null)
+         if (flowframe != null && flowframe.getType() == FlowFrame.TYPEBLOCK)
          {
-            String description = getDescription(object);
-
-            publisher.publishMessages(
-              MessageInfo.createMessage(
-                msgSys.getMessageWithFallback("message.omitting_object_no_flowframe",
-                  "Omitting object ''{0}'' (no flow frame data set).",
-                description),
-                true));
+            throw new MissplacedTypeBlockException(cg);
          }
-         else
-         {
-            if (flowframe.getType() == FlowFrame.TYPEBLOCK)
-            {
-               throw new MissplacedTypeBlockException(cg);
-            }
 
-            flowframe.tex(this, object, typeblockRect, baselineskip, 
-               useHPaddingShapepar);
-         }
+         object.saveFlowframe(this, typeblockRect, baselineskip, 
+            useHPaddingShapepar);
       }
 
-      printHeaderFooter();
+      if (useFlowframTkSty)
+      {
+         printFlowframTkStyHeaderFooter();
+      }
+      else
+      {
+         printHeaderFooter();
+      }
 
       publisher.publishMessages(MessageInfo.createIncProgress());
 
@@ -264,7 +255,8 @@ public class FLF extends TeX
       println("\\endinput");
    }
 
-   public void saveCompleteDoc(JDRGroup group, boolean useHPaddingShapepar)
+   public void saveCompleteDoc(JDRGroup group, String extraPreamble,
+     boolean useHPaddingShapepar)
    throws IOException,
           MissingTypeBlockException,
           InvalidShapeException,
@@ -322,21 +314,14 @@ public class FLF extends TeX
          }
       }
 
-      println("\\usepackage{pgf}");
-      println("\\usepackage{ifpdf}");
-
-      println("\\makeatletter");
-      writeOutlineDef();
-      println("\\makeatother");
-
-      if (cg.hasPreamble())
+      if (extraPreamble != null && !extraPreamble.isEmpty())
       {
-         String preamble = cg.getPreamble();
-
-         preamble = preamble.replaceAll("\\\\RequirePackage\\b", "\\\\usepackage");
-
-         println(preamble);
+         println(extraPreamble);
       }
+
+      writePreambleCommands(group, true);
+
+      writeDocInfo(group.getDescription());
 
       println("\\usepackage["+cg.getPaper().tex(cg)+"]{geometry}");
 
@@ -377,8 +362,8 @@ public class FLF extends TeX
          println(midPreamble);
       }
 
-      int minPage = 1;
-      int numFlows = 0;
+      minPage = 1;
+      numFlows = 0;
 
       println("\\makeatletter");
 
@@ -389,87 +374,8 @@ public class FLF extends TeX
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
 
-         JDRCompleteObject object = group.get(i);
-         FlowFrame flowframe = object.getFlowFrame();
-
-         if (flowframe == null)
-         {
-            String description = getDescription(object);
-
-            publisher.publishMessages(
-              MessageInfo.createMessage(
-                msgSys.getMessageWithFallback("message.omitting_object_no_flowframe",
-                  "Omitting object ''{0}'' (no flow frame data set).",
-                description),
-                true));
-         }
-         else
-         {
-            int type = flowframe.getType();
-
-            if (type == FlowFrame.TYPEBLOCK)
-            {
-               throw new MissplacedTypeBlockException(cg);
-            }
-
-            if (type == FlowFrame.FLOW)
-            {
-               numFlows++;
-            }
-
-            String pages = flowframe.getPages();
-
-            if (pages.equals("even"))
-            {
-               minPage = Math.max(2, minPage);
-            }
-            else if (!(pages.equals("all") || pages.equals("odd") || pages.equals("none")))
-            {
-               for (int j = pages.length()-2; j >= 0; j--)
-               {
-                  char c = pages.charAt(j);
-                  int n = 0;
-
-                  try
-                  {
-                     switch (c)
-                     {
-                        case '>':
-                          n = Integer.parseInt(pages.substring(j+1).trim())+1;
-                        break;
-                        case '<':
-                          n = Integer.parseInt(pages.substring(j+1).trim())-1;
-                        break;
-                        case '-':
-                        case ',':
-                          n = Integer.parseInt(pages.substring(j+1).trim());
-                        break;
-                        default:
-                          if (!(Character.isDigit(c) || Character.isWhitespace(c)))
-                          {
-                             break;
-                          }
-                          else if (j == 0)
-                          {
-                             n = Integer.parseInt(pages.trim());
-                          }
-                     }
-                  }
-                  catch (NumberFormatException e)
-                  {
-                  }
-
-                  if (n > 0)
-                  {
-                     minPage = Math.max(n, minPage);
-                     break;
-                  }
-               }
-            }
-
-            flowframe.tex(this, object, typeblockRect, baselineskip, 
-               useHPaddingShapepar);
-         }
+         writeAndUpdateMinPage(group.get(i), typeblockRect,
+            baselineskip, useHPaddingShapepar);
       }
 
       printHeaderFooter();
@@ -991,6 +897,232 @@ public class FLF extends TeX
       }
    }
 
+   protected void printFlowframTkStyHeaderFooter() throws IOException
+   {
+      CanvasGraphics cg = group.getCanvasGraphics();
+      String list = "";
+      String headerlist = "";
+      String footerlist = "";
+
+      String psheadingsoddhead = "{\\jdrheadingfmt\\rightmark}\\hfill\\thepage";
+      String psheadingsevenhead = "\\thepage\\hfill{\\jdrheadingfmt\\leftmark}";
+
+      String psflowframtkoddhead = "\\flowframtkoddheaderfmt{\\rightmark}";
+      String psflowframtkevenhead = "\\flowframtkevenheaderfmt{\\leftmark}";
+
+      String headerlabel = cg.getHeaderLabel();
+
+      FlowFrame header = group.getFlowFrame(FlowFrame.DYNAMIC, headerlabel);
+
+      String evenheaderlabel = cg.getEvenHeaderLabel();
+      FlowFrame evenheader = group.getFlowFrame(
+            FlowFrame.DYNAMIC, evenheaderlabel);
+
+      if (header != null)
+      {
+         String contents = header.getContents();
+
+         if (contents != null)
+         {
+            psheadingsoddhead = contents
+                              + "{{\\jdrheadingfmt\\rightmark}\\hfill\\thepage}";
+            psflowframtkoddhead = "\\flowframtkoddheaderfmt{"
+                                 + contents + "\\rightmark}";
+         }
+
+         if (evenheader == null)
+         {
+            print("\\flowframtkSetDynamicOddHead{");
+            print(headerlabel);
+            println("}");
+
+            list = headerlabel;
+
+            if (contents != null)
+            {
+               psheadingsevenhead = contents
+                              + "{\\thepage\\hfill{\\jdrheadingfmt\\leftmark}}";
+               psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
+                                    + contents + "\\leftmark}";
+            }
+         }
+         else
+         {
+            print("\\flowframtkSetDynamicOddEvenHead{");
+            print(headerlabel);
+            print("}{");
+            print(evenheaderlabel);
+            println("}");
+
+            list = headerlabel+","+evenheaderlabel;
+
+            contents = evenheader.getContents();
+
+            if (contents != null)
+            {
+               psheadingsevenhead = contents
+                              + "{\\thepage\\hfill{\\jdrheadingfmt\\leftmark}}";
+               psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
+                                     + contents + "\\leftmark}";
+            }
+         }
+
+      }
+      else if (evenheader != null)
+      {
+         list = evenheaderlabel;
+         print("\\flowframtkSetDynamicEvenHead{");
+         print(evenheaderlabel);
+         println("}");
+
+         String contents = evenheader.getContents();
+
+         if (contents != null)
+         {
+            psheadingsevenhead = contents
+                           + "{\\thepage\\hfil{\\jdrheadingfmt\\leftmark}}";
+
+            psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
+                                  + contents + "\\leftmark}";
+         }
+      }
+
+      headerlist = list;
+
+      String psplainoddfoot = "\\flowframtkoddfooterfmt{\\thepage}";
+      String psplainevenfoot = "\\flowframtkevenfooterfmt{\\thepage}";
+
+      String footerlabel = cg.getFooterLabel();
+
+      FlowFrame footer = group.getFlowFrame(FlowFrame.DYNAMIC, footerlabel);
+
+      String evenfooterlabel = cg.getEvenFooterLabel();
+      FlowFrame evenfooter = group.getFlowFrame(
+            FlowFrame.DYNAMIC, evenfooterlabel);
+
+      if (footer != null)
+      {
+         if (!list.isEmpty()) list = list+",";
+
+         String contents = footer.getContents();
+
+         if (contents != null)
+         {
+            psplainoddfoot = "\\flowframtkoddfooterfmt{" + contents+"\\thepage}";
+         }
+
+         if (evenfooter == null)
+         {
+            list += footerlabel;
+
+            footerlist = footerlabel;
+
+            print("\\flowframtkSetDynamicOddFoot{");
+            print(footerlabel);
+            println("}");
+
+            if (contents != null)
+            {
+               psplainevenfoot = "\\flowframtkevenfooterfmt{" + contents+"\\thepage}";
+            }
+
+         }
+         else
+         {
+            footerlist = footerlabel+","+evenfooterlabel;
+
+            list += footerlist;
+
+            print("\\flowframtkSetDynamicOddFoot{");
+            print(footerlabel);
+            print("}{");
+            print(evenfooterlabel);
+            println("}");
+
+            contents = evenfooter.getContents();
+
+            if (contents != null)
+            {
+               psplainevenfoot = "\\flowframtkevenfooterfmt{"
+                               + contents+"\\thepage}";
+            }
+         }
+      }
+      else if (evenfooter != null)
+      {
+         if (list.isEmpty())
+         {
+            list = evenfooterlabel;
+         }
+         else
+         {
+            list += ","+evenfooterlabel;
+         }
+
+         footerlist = evenfooterlabel;
+
+         print("\\flowframtkSetDynamicEvenFoot{");
+         print(evenfooterlabel);
+         println("}");
+
+         String contents = evenfooter.getContents();
+
+         if (contents != null)
+         {
+            psplainevenfoot = "\\flowframtkevenfooterfmt{"
+                            + contents+"\\thepage}";
+         }
+      }
+
+      if (!list.isEmpty())
+      {
+         print("\\flowframtkSetExtraPageStyles{");
+         print(list);
+         print("}{");
+         print(headerlist);
+         print("}{");
+         print(footerlist);
+         print("}{");
+         print(psplainoddfoot);
+         print("}{");
+         print(psplainevenfoot);
+         println("}");
+
+         if (evenheader == null)
+         {
+            print("\\flowframtkSetExtraOddHeadings{");
+            print(headerlist);
+            print("}{");
+            print(footerlist);
+            print("}{");
+            print(psheadingsoddhead);
+            println("}");
+         }
+         else
+         {
+            print("\\flowframtkSetExtraOddEvenHeadings{");
+            print(headerlist);
+            print("}{");
+            print(footerlist);
+            print("}{");
+            print(psheadingsoddhead);
+            print("}{");
+            print(psheadingsevenhead);
+            println("}");
+         }
+
+         if (headerlist.isEmpty() || footerlist.isEmpty())
+         {
+            println("\\flowframtkSetDefaultPageStyle");
+         }
+         else
+         {
+            println("\\pagestyle{flowframtk}");
+         }
+      }
+   }
+
+
    protected String getDescription(JDRCompleteObject object)
    {
       JDRMessage msgSys = group.getCanvasGraphics().getMessageSystem();
@@ -1014,5 +1146,114 @@ public class FLF extends TeX
       return description;
    }
 
+   protected void writeAndUpdateMinPage(JDRCompleteObject object,
+    Rectangle2D typeblockRect, double baselineskip,
+      boolean useHPaddingShapepar)
+    throws IOException,
+     MissplacedTypeBlockException,
+     InvalidShapeException
+   {
+      CanvasGraphics cg = group.getCanvasGraphics();
+      JDRMessage msgSys = cg.getMessageSystem();
+      MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      FlowFrame flowframe = object.getFlowFrame();
+
+      if (flowframe == null)
+      {
+         if (object instanceof JDRGroup)
+         {
+            JDRGroup group = (JDRGroup)object;
+
+            for (int i = 0; i < group.size(); i++)
+            {
+               writeAndUpdateMinPage(group.get(i), typeblockRect,
+                  baselineskip, useHPaddingShapepar);
+            }
+         }
+         else
+         {
+            String description = getDescription(object);
+
+            publisher.publishMessages(
+              MessageInfo.createVerbose(1,
+                msgSys.getMessageWithFallback("message.omitting_object_no_flowframe",
+                  "Omitting object ''{0}'' (no flow frame data set).",
+                description),
+                true));
+         }
+      }
+      else
+      {
+         int type = flowframe.getType();
+
+         if (type == FlowFrame.TYPEBLOCK)
+         {
+            throw new MissplacedTypeBlockException(cg);
+         }
+
+         if (type == FlowFrame.FLOW)
+         {
+            numFlows++;
+         }
+
+         String pages = flowframe.getPages();
+
+         if (pages.equals("even"))
+         {
+            minPage = Math.max(2, minPage);
+         }
+         else if (!(pages.equals("all") || pages.equals("odd") || pages.equals("none")))
+         {
+            for (int j = pages.length()-2; j >= 0; j--)
+            {
+               char c = pages.charAt(j);
+               int n = 0;
+
+               try
+               {
+                  switch (c)
+                  {
+                     case '>':
+                       n = Integer.parseInt(pages.substring(j+1).trim())+1;
+                     break;
+                     case '<':
+                       n = Integer.parseInt(pages.substring(j+1).trim())-1;
+                     break;
+                     case '-':
+                     case ',':
+                       n = Integer.parseInt(pages.substring(j+1).trim());
+                     break;
+                     default:
+                       if (!(Character.isDigit(c) || Character.isWhitespace(c)))
+                       {
+                          break;
+                       }
+                       else if (j == 0)
+                       {
+                          n = Integer.parseInt(pages.trim());
+                       }
+                  }
+               }
+               catch (NumberFormatException e)
+               {
+               }
+
+               if (n > 0)
+               {
+                  minPage = Math.max(n, minPage);
+                  break;
+               }
+            }
+         }
+
+         flowframe.tex(this, object, typeblockRect, baselineskip, 
+            useHPaddingShapepar);
+      }
+   }
+
    JDRGroup group;
+   int minPage = 1;
+   int numFlows = 0;
+
 }

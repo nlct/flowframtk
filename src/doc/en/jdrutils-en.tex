@@ -175,8 +175,10 @@ from the output file extension.
 Use \convswitch{list-output-formats} for a list of
 recognised formats.
 
-In the case of \gls{JDR} or \gls{AJR}, the format may be appended
-with the version number. For example, \code{JDR-1.8} indicates
+In the case of \gls{JDR} or \gls{AJR}, the value may be
+\code{\meta{format}-\meta{version}}, where \meta{format} is either
+\code{JDR} or \code{AJR} and \meta{version} is
+the \gls{JDR} version number. For example, \code{JDR-1.8} indicates
 \gls{JDR} version 1.8. Alternatively, you can use
 \convswitch{jdr-version} to specify the version number.
 
@@ -235,15 +237,17 @@ If the input file contained settings, save those settings.
 \convswitchdef{export-latex}
 
 When exporting to a \LaTeX\ (\ext+{tex}) file, this option indicates
-what content should be added to the file. The value may be one of:
+what content should be written to the file. This option is ignored
+if the output file is not a \LaTeX\ file.
+The value may be one of:
 \begin{deflist}
-\itemtitle{pgf}
+\itemtitle{\optfmt{pgf}}
 \begin{itemdesc}
 Just save the \env{pgfpicture} environment that draws the image.
 The \ext{tex} file is intended to be \gls{input} in another file.
 \end{itemdesc}
 
-\itemtitle{doc}
+\itemtitle{\optfmt{doc}}
 \begin{itemdesc}
 Create a complete standalone document that contains a
 \env{pgfpicture} environment in the \gls{document-body} that draws the image.
@@ -263,7 +267,7 @@ If the input image contains any \gls{early-preamble},
 to the document preamble in the corresponding places.
 \end{itemdesc}
 
-\itemtitle{flow}
+\itemtitle{\optfmt{flow}}
 \begin{itemdesc}
 Create a complete standalone document that loads the \sty{flowfram}
 package and sets up the \gls{typeblock}, flow frames, static frames
@@ -289,7 +293,7 @@ to the document preamble in the corresponding places.
 
 If the input image contains a \gls{document-body}, this code
 will be placed in the \env{document} environment, otherwise
-the minimum number of required packages will be calculated
+the minimum number of required pages will be calculated
 and the appropriate number of \gls{null} and \gls{clearpage}
 commands will be placed in the
 \env{document} environment to ensure that number of pages are
@@ -298,6 +302,131 @@ generated.
 \end{itemdesc}
 
 \end{deflist}
+
+\convswitchdef{doc}
+
+A shortcut for \code{\convswitch{export-latex} doc}.
+
+\convswitchdef{normalsize}
+
+Set the default \gls{normal-font-size} to \meta{n}.
+This option may be overridden if the input file contains a 
+\gls{normal-font-size} setting.
+It's intended for input files that don't contain
+a \gls{normal-font-size} value.
+
+\convswitchdef{crop}
+
+For output formats that support cropping, crop the image
+either to its \gls{image.bbox} or (if \convswitch{use-typeblock})
+to the \gls{typeblock}.
+This option is ignored for output formats that don't support
+cropping.
+
+\convswitchdef{use-typeblock}
+
+If the \convswitch{crop} option is applied then use the
+\gls{typeblock} rather than the image's \gls{image.bbox}
+for the cropped area. The input file will need to have 
+a \gls{typeblock} identified.
+This option is ignored for output formats that don't support
+cropping.
+
+\convswitchdef{no-use-typeblock}
+
+Don't use the \gls{typeblock} when determining the cropped area.
+This option is ignored for output formats that don't support
+cropping.
+
+\convswitchdef{use-flowframtksty}
+
+Assume that the \sty{flowframtk} package is installed and use that
+package instead of writing all the internal command definitions.
+Only applicable if exporting to a \LaTeX\ format, such as creating a
+package, class, \sty{pgf} image or document file or a format that's
+derived from a temporary \LaTeX\ file.
+
+\begin{information}
+The \sty{flowframtk} package is a supplementary package provided
+with the \sty{flowfram} package (v1.18+) specifically for use
+with \FlowframTk. If you have an older version of \sty{flowfram}
+installed, the \sty{flowframtk} package won't be available.
+\end{information}
+
+\convswitchdef{no-use-flowframtksty}
+
+The \sty{flowframtk} package isn't installed 
+so write all the internal command definitions to support the
+required export features.
+
+\convswitchdef{alpha}
+
+Include the alpha channel (transparency) when exporting to
+\ext+{png} files.
+This option is ignored for other output formats.
+
+\convswitchdef{no-alpha}
+
+Don't include the alpha channel (transparency) when exporting to
+\ext+{png} files.
+This option is ignored for other output formats.
+
+\convswitchdef{bitmaps-to-eps}
+
+Convert any \glspl{bitmap} found in the input
+file to \ext+{eps} files (if they don't already exist).
+This option is designed for use when \convswitch{use-latex} is on
+and the \LaTeX\ engine used requires DVI output.
+
+\convswitchdef{no-bitmaps-to-eps}
+
+Don't convert any \glspl{bitmap}.
+
+\convswitchdef{use-latex}
+
+Use \LaTeX\ (and friends) to create the output file (if supported).
+This option will be ignored if the output format always requires
+or never requires external processes.
+
+For example, if the output format is PDF, then \pdfLaTeX\ must be
+used, but if the output format is \gls{JDR} or \gls{AJR} then 
+no external processes are required. In both these cases, the
+\convswitch{use-latex} option is ignored as there's no choice.
+
+However, if the output format is EPS or SVG then you can choose
+whether or not to use external tools.
+
+\convswitchdef{no-use-latex}
+
+Don't use \LaTeX\ (and friends) to create the output file (if
+the output file can be created without any external processes).
+
+\convswitchdef{latex-dvi}
+
+If an external process is required to use a \LaTeX\ engine that creates DVI
+output, this option identifies the path to the \app{latex} application.
+
+\convswitchdef{latex-pdf}
+
+If an external process is required to use a \LaTeX\ engine that
+creates PDF output, this option identifies the path to the
+\app{pdflatex} application.
+
+\convswitchdef{dvips}
+
+If an external process is required that needs to convert DVI to
+PostScript, this option identifies the path to the \app{dvips} application.
+
+\convswitchdef{dvisvgm}
+
+If an external process is required that needs to convert DVI to SVG, 
+this option identifies the path to the \app{dvisvgm} application.
+
+\convswitchdef{libgs}
+
+If you need to use \app{dvisvgm} then you can additionally identify
+the path to the \file{libgs} library.
+
 
 \subsection{Other Options}
 \label{sec:other}

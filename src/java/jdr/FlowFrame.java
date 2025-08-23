@@ -414,7 +414,16 @@ public class FlowFrame implements Cloneable,Serializable
       if (border)
       {
          pgf.comment(borderCommand+ " '"+label+"'");
-         pgf.println("\\expandafter\\def\\csname @flf@border@"+label+"\\endcsname#1{%");
+
+         if (pgf.isFlowframTkStyUsed())
+         {
+            pgf.println("\\flowframtkNewFrameBorder{"+label+"}{%");
+         }
+         else
+         {
+            pgf.println("\\expandafter\\def\\csname @flf@border@"+label+"\\endcsname#1{%");
+         }
+
          pgf.println("\\begin{pgfpicture}{0pt"+"}{0pt"+"}{"
             +pgf.length(cg, bbox.getWidth())+"}{"
             +pgf.length(cg, bbox.getHeight())+"}");
@@ -449,7 +458,21 @@ public class FlowFrame implements Cloneable,Serializable
          }
 
          pgf.print("{"+label
-           +"}{offset=0pt,border={@flf@border@"+label+"}");
+           +"}{offset=0pt,border={");
+
+         if (pgf.isFlowframTkStyUsed())
+         {
+            pgf.print("\\flowframtkUseFrameBorderCsName{");
+            pgf.print(label);
+            pgf.print("}");
+         }
+         else
+         {
+            pgf.print("@flf@border@");
+            pgf.print(label);
+         }
+
+         pgf.print("}");
 
          if (evenXShift != 0.0 || evenYShift != 0.0)
          {

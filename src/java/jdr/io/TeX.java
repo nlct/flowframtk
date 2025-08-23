@@ -46,11 +46,28 @@ public class TeX
 
    public TeX(Path basePath, Writer out)
    {
+      this(basePath, out, false);
+   }
+
+   public TeX(Path basePath, Writer out, boolean useFlowframTkSty)
+   {
       this.basePath = basePath;
       setWriter(out);
+      this.useFlowframTkSty = useFlowframTkSty;
+   }
+
+   public boolean isFlowframTkStyUsed()
+   {
+      return useFlowframTkSty;
    }
 
    public void writeOutlineDef()
+     throws IOException
+   {
+      writeOutlineDef(false);
+   }
+
+   public void writeOutlineDef(boolean comment)
      throws IOException
    {
 /*
@@ -65,32 +82,127 @@ public class TeX
  * pdf-trans defines \mod which is likely to conflict with other
  * packages so patch it.
  */
-      println("\\newcommand*{\\jdroutline}[3]{%");
-      println("  \\GenericWarning{}{text outline can't be implemented}#3%");
-      println("}%");
-      println("\\ifpdf");
-      println(" \\let\\jdrorgmod\\mod");
-      println(" \\InputIfFileExists{pdf-trans}%");
-      println(" {%");
-      println("   \\renewcommand*{\\jdroutline}[3]{%");
-      println("     {\\def\\mod{\\expandtwonumexprafter \\modulo}%");
-      println("     \\setbox\\@tempboxa\\hbox{##3}%");
-      println("     \\boxgs{##1}{}\\copy\\@tempboxa");
-      println("     }%");
-      println("   }%");
-      println(" }{}");
-      println(" \\let\\mod\\jdrorgmod");
-      println("\\else");
-      println(" \\IfFileExists{pst-char.sty}%");
-      println(" {%");
-      println("   \\usepackage{pst-char}");
-      println("   \\renewcommand*{\\jdroutline}[3]{%");
-      println("     \\begin{pspicture}(0,0)");
-      println("     \\pscharpath[##2]{##3}");
-      println("     \\end{pspicture}");
-      println("   }");
-      println(" }{}");
-      println("\\fi");
+      println(comment, "\\newcommand*{\\jdroutline}[3]{%");
+      println(comment, "  \\GenericWarning{}{text outline can't be implemented}#3%");
+      println(comment, "}%");
+      println(comment, "\\ifpdf");
+      println(comment, " \\let\\jdrorgmod\\mod");
+      println(comment, " \\InputIfFileExists{pdf-trans}%");
+      println(comment, " {%");
+      println(comment, "   \\renewcommand*{\\jdroutline}[3]{%");
+      println(comment, "     {\\def\\mod{\\expandtwonumexprafter \\modulo}%");
+      println(comment, "     \\setbox\\@tempboxa\\hbox{##3}%");
+      println(comment, "     \\boxgs{##1}{}\\copy\\@tempboxa");
+      println(comment, "     }%");
+      println(comment, "   }%");
+      println(comment, " }{}");
+      println(comment, " \\let\\mod\\jdrorgmod");
+      println(comment, "\\else");
+      println(comment, " \\IfFileExists{pst-char.sty}%");
+      println(comment, " {%");
+      println(comment, "   \\usepackage{pst-char}");
+      println(comment, "   \\renewcommand*{\\jdroutline}[3]{%");
+      println(comment, "     \\begin{pspicture}(0,0)");
+      println(comment, "     \\pscharpath[##2]{##3}");
+      println(comment, "     \\end{pspicture}");
+      println(comment, "   }");
+      println(comment, " }{}");
+      println(comment, "\\fi");
+   }
+
+   public void writeDocInfo(String title)
+     throws IOException
+   {
+      if (isUsePdfInfoEnabled())
+      {
+         if (useFlowframTkSty)
+         {
+            println("\\flowframtkimageinfo{");
+
+            if (title != null && !title.isEmpty())
+            {
+               print(" title={");
+
+               StringBuilder builder = new StringBuilder();
+
+               for (int i = 0; i < title.length(); )
+               {
+                  int cp = title.codePointAt(i);
+                  i += Character.charCount(cp);
+
+                  switch (cp)
+                  {
+                     case '~':
+                       builder.append("\\string~");
+                     break;
+                     case '^':
+                       builder.append("\\string^");
+                     break;
+                     case '\\':
+                     case '$':
+                     case '%':
+                     case '&':
+                     case '{':
+                     case '}':
+                     case '_':
+                     case '#':
+                        builder.append('\\');
+                     default:
+                        builder.appendCodePoint(cp);
+                  }
+               }
+
+               print(builder.toString());
+
+               println("},");
+            }
+
+            Calendar now = Calendar.getInstance();
+            int timezone = now.get(Calendar.ZONE_OFFSET)
+                         + now.get(Calendar.DST_OFFSET);
+
+            int tzmins = timezone/60000;
+            int tzhours = tzmins/60;
+
+            tzmins = tzmins % 60;
+
+            print(" creationdate={D:");
+
+            if (timezone == 0)
+            {
+               println(
+                String.format(Locale.ROOT, "%d%02d%02d%02d%02d%02dZ",
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH),
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        now.get(Calendar.SECOND)));
+            }
+            else
+            {
+               println(
+                String.format(Locale.ROOT, "%d%02d%02d%02d%02d%02d%+03d'%02d'",
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH),
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        now.get(Calendar.SECOND),
+                        tzhours, tzmins));
+            }
+
+            println("}");
+
+            println("}");
+         }
+         else
+         {
+            println("\\ifpdf");
+            writePdfInfo(title);
+            println("\\fi");
+         }
+      }
    }
 
    public void writePdfInfo(String title)
@@ -104,25 +216,26 @@ public class TeX
       {
          StringBuilder builder = new StringBuilder();
 
-         for (int i = 0; i < n; i++)
+         for (int i = 0; i < n; )
          {
-            char c = title.charAt(i);
+            int cp = title.codePointAt(i);
+            i += Character.charCount(cp);
 
-            if (c == '(')
+            if (cp == '(')
             {
                builder.append("\\(");
             }
-            else if (c == ')')
+            else if (cp == ')')
             {
                builder.append("\\)");
             }
-            else if (c == '\\')
+            else if (cp == '\\')
             {
                builder.append("\\string\\\\");
             }
             else
             {
-               builder.append(c);
+               builder.appendCodePoint(cp);
             }
          }
 
@@ -398,6 +511,19 @@ public class TeX
       print(string+System.getProperty("line.separator", "\n"));
    }
 
+   public void println(boolean comment, String string)
+     throws IOException
+   {
+      if (comment)
+      {
+         comment(string);
+      }
+      else
+      {
+         println(string);
+      }
+   }
+
    public void println()
      throws IOException
    {
@@ -410,17 +536,132 @@ public class TeX
       println("% "+string);
    }
 
-   public void writePreambleCommands(JDRGroup image)
+   protected void checkForRequiredSupport(JDRGroup group)
+   {
+      if (supportOutline && supportTextPath)
+      {
+         return;
+      }
+
+      for (int i = 0; i < group.size(); i++)
+      {
+         JDRCompleteObject object = group.get(i);
+
+         if (object instanceof JDRGroup)
+         {
+            checkForRequiredSupport((JDRGroup)object);
+         }
+         else if (object.hasTextual())
+         {
+            if (object.hasShape())
+            {
+               checkShapeForRequiredSupport((JDRShape)object);
+            }
+            else
+            {
+               supportOutline = ((JDRTextual)object).isOutline();
+            }
+         }
+
+         if (supportOutline && supportTextPath)
+         {
+            return;
+         }
+      }
+   }
+
+   protected void checkShapeForRequiredSupport(JDRShape shape)
+   {
+      if (shape instanceof JDRCompoundShape)
+      {
+         checkShapeForRequiredSupport(((JDRCompoundShape)shape).getUnderlyingShape());
+      }
+      else if (shape instanceof JDRTextPath)
+      {
+         supportTextPath = true;
+         supportOutline = ((JDRTextPath)shape).isOutline();
+      }
+   }
+
+   protected void writeUsePackageFlowframTk(String usepackage)
      throws IOException
    {
-      println("\\usepackage{pgf}");
-      println("\\usepgflibrary{decorations.text}");
+      if (supportOutline)
+      {
+         print("\\PassOptionsToPackage{outline}{flowframtk}");
+      }
+
+      if (supportTextPath)
+      {
+         print("\\PassOptionsToPackage{textpath}{flowframtk}");
+      }
+
+      print("\\");
+      print(usepackage);
+      println("{flowframtk}");
+   }
+
+   public void writePreambleCommands(JDRGroup image, boolean inDoc)
+     throws IOException
+   {
+      writePreambleCommands(image, inDoc, false);
+   }
+
+   public void writePreambleCommands(JDRGroup image, boolean inDoc, boolean comment)
+     throws IOException
+   {
+      if (useFlowframTkSty)
+      {
+         checkForRequiredSupport(image);
+
+         if (inDoc)
+         {
+            writeUsePackageFlowframTk("usepackage");
+         }
+         else
+         {
+            writeUsePackageFlowframTk("RequirePackage");
+         }
+      }
+      else
+      {
+         if (inDoc)
+         {
+            println("\\usepackage{pgf}");
+            println("\\usepackage{ifpdf}");
+         }
+         else
+         {
+            println("\\RequiredPackage{pgf}");
+            println("\\RequiredPackage{ifpdf}");
+         }
+
+         println("\\usepgflibrary{decorations.text}");
+      }
 
       CanvasGraphics cg = image.getCanvasGraphics();
 
       if (cg.hasPreamble())
       {
-         println(cg.getPreamble());
+         String preamble = cg.getPreamble();
+
+         if (inDoc)
+         {
+            preamble = preamble.replaceAll("\\\\RequirePackage\\b", "\\\\usepackage");
+         }
+         else
+         {
+            preamble = preamble.replaceAll("\\\\usepackage\\b", "\\\\RequirePackage");
+         }
+
+         println(preamble);
+      }
+
+      if (!useFlowframTkSty)
+      {
+         println("\\makeatletter");
+         writeOutlineDef(comment);
+         println("\\makeatother");
       }
    }
 
@@ -542,6 +783,10 @@ public class TeX
    protected boolean convertBitmapToEps = false;
 
    protected boolean usePdfInfo = false;
+
+   protected boolean supportOutline=false;
+   protected boolean supportTextPath=false;
+   protected boolean useFlowframTkSty = false;
 
    public static final int TEXTPATH_EXPORT_OUTLINE_TO_PATH=0;
    public static final int TEXTPATH_EXPORT_OUTLINE_IGNORE=1;

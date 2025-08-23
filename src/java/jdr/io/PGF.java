@@ -50,6 +50,16 @@ public class PGF extends TeX
       this(baseFile == null ? null : baseFile.toPath(), out);
    }
 
+   public PGF(Path basePath, Writer out, boolean useFlowframTkSty)
+   {
+      super(basePath, out, useFlowframTkSty);
+   }
+
+   public PGF(File baseFile, Writer out, boolean useFlowframTkSty)
+   {
+      this(baseFile == null ? null : baseFile.toPath(), out, useFlowframTkSty);
+   }
+
    /**
     * Saves the image as a pgfpicture environment.
     * @param allObjects all the objects that constitute the image
@@ -214,25 +224,14 @@ public class PGF extends TeX
 
       println();
 
-      println("\\usepackage{ifpdf}");
-
       if (extraPreamble != null && !extraPreamble.isEmpty())
       {
          println(extraPreamble);
       }
 
-      writePreambleCommands(allObjects);
+      writePreambleCommands(allObjects, true);
 
-      if (isUsePdfInfoEnabled())
-      {
-         println("\\ifpdf");
-         writePdfInfo(allObjects.getDescription());
-         println("\\fi");
-      }
-
-      println("\\makeatletter");
-      writeOutlineDef();
-      println("\\makeatother");
+      writeDocInfo(allObjects.getDescription());
 
       println();
 
@@ -276,13 +275,19 @@ public class PGF extends TeX
       println("\\pagestyle{empty}");
       println();
 
-      comment("This is just in case numerical rounding errors ");
-      comment("cause the image to be marginally larger than the ");
-      comment("typeblock, which can cause a spurious blank page:");
-      println("\\newcommand{\\jdrimagebox}[1]{\\vbox to \\textheight{\\hbox to \\textwidth{#1}}}");
+      if (!useFlowframTkSty)
+      {
+         comment("This is just in case numerical rounding errors ");
+         comment("cause the image to be marginally larger than the ");
+         comment("typeblock, which can cause a spurious blank page:");
+         println("\\newcommand{\\jdrimagebox}[1]{\\vbox to \\textheight{\\hbox to \\textwidth{#1}}}");
+
+      }
 
       println();
+
       writeEndPreambleCommands(allObjects);
+
       println("\\begin{document}\\noindent");
 
       println("\\jdrimagebox{\\begin{pgfpicture}");

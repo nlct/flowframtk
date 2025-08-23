@@ -62,13 +62,10 @@ public class SavePgf extends ExportImage
          pgf.writeCreationDate();
 
          pgf.println("\\iffalse");
+
          pgf.comment(getResources().getMessage("tex.comment.preamble"));
 
-         pgf.println("\\usepackage{ifpdf}");
-         pgf.println("\\makeatletter");
-         pgf.writeOutlineDef();
-         pgf.println("\\makeatother");
-         pgf.writePreambleCommands(image);
+         pgf.writePreambleCommands(image, true, true);
 
          pgf.comment(getResources().getMessage(
             "tex.comment.fontsize", 

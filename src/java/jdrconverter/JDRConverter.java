@@ -466,6 +466,9 @@ public class JDRConverter
 
       helpLib.printSyntaxItem(getMessage("syntax.use_typeblock", "--[no-]use-typeblock"));
 
+      helpLib.printSyntaxItem(getMessage("syntax.use-flowframtksty",
+         "--[no-]use-flowframtksty", "-p"));
+
       helpLib.printSyntaxItem(getMessage("syntax.alpha", "--[no-]alpha"));
       helpLib.printSyntaxItem(getMessage("syntax.normalsize", "--normalsize"));
 
@@ -835,6 +838,14 @@ public class JDRConverter
             else if (arg.equals("--no-settings"))
             {
                saveSettingsType = SaveSettingsType.NONE;
+            }
+            else if (arg.equals("--use-flowframtksty") || arg.equals("-p"))
+            {
+               useFlowframTkSty = true;
+            }
+            else if (arg.equals("--no-use-flowframtksty"))
+            {
+               useFlowframTkSty = false;
             }
             else if (isArg(arg, "--export-latex", "-L", returnVals))
             {
@@ -1720,7 +1731,7 @@ public class JDRConverter
    protected void savePgf(JDRGroup paths, PrintWriter out)
      throws IOException,InvalidFormatException
    {
-      PGF pgf = new PGF(outFile.getParentFile(), out);
+      PGF pgf = new PGF(outFile.getParentFile(), out, useFlowframTkSty);
       pgf.comment(getMessage("message.created_by", NAME));
       pgf.writeCreationDate();
 
@@ -1732,13 +1743,13 @@ public class JDRConverter
       {
          pgf.println("\\iffalse");
 
-         pgf.comment(getMessage("message.required_preamble_commands"));
-         pgf.writePreambleCommands(paths);
+         pgf.comment(getMessage("tex.comment.preamble"));
+         pgf.writePreambleCommands(paths, true, true);
 
-         pgf.comment(getMessage("message.assumed_normalsize",
+         pgf.comment(getMessage("tex.comment.fontsize",
           paths.getCanvasGraphics().getLaTeXNormalSize()));
 
-         pgf.comment(getMessage("message.end_preamble_info"));
+         pgf.comment(getMessage("tex.comment.endpreamble"));
 
          pgf.println("\\fi");
 
@@ -1756,7 +1767,7 @@ public class JDRConverter
          dir = new File(System.getProperty("user.dir"));
       }
 
-      FLF flf = new FLF(dir, out);
+      FLF flf = new FLF(dir, out, useFlowframTkSty);
 
       flf.setTextualExportShadingSetting(
          getTextualExportShadingSetting());
@@ -1791,7 +1802,7 @@ public class JDRConverter
          dir = new File(System.getProperty("user.dir"));
       }
 
-      FLF flf = new FLF(dir, out);
+      FLF flf = new FLF(dir, out, useFlowframTkSty);
 
       flf.setTextualExportShadingSetting(
          getTextualExportShadingSetting());
@@ -1802,7 +1813,7 @@ public class JDRConverter
             NAME, JDRResources.APP_VERSION));
       flf.writeCreationDate();
 
-      flf.saveCompleteDoc(paths, useHPaddingShapepar);
+      flf.saveCompleteDoc(paths, extraPreamble, useHPaddingShapepar);
    }
 
    protected void savePdf(JDRGroup paths)
@@ -2142,6 +2153,8 @@ public class JDRConverter
    protected boolean useHPaddingShapepar = false;
 
    protected int normalsize=10;// --normalsize
+   protected String extraPreamble="";//TODO
+   protected boolean useFlowframTkSty = false;
 
    protected TextModeMappings textModeMappings;
    protected MathModeMappings mathModeMappings;

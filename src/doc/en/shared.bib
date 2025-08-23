@@ -105,6 +105,12 @@
 
 % APPLICATIONS
 
+@application{app.latex}
+@application{app.pdflatex}
+@application{app.lualatex}
+@application{app.dvips}
+@application{app.dvisvgm}
+
 @application{app.flowframtk,
   name={\appfmt{flow\-fram\-tk}},
   syntax={\meta{options} \meta{filename} \ldots\ \meta{filename}}
@@ -238,6 +244,27 @@
 @switch{switch.jdrconverter.no-use-typeblock,
  parent={app.jdrconverter},
  name={\longargfmt{no\dhyphen use\dhyphen typeblock}}
+}
+
+@switch{switch.jdrconverter.use-latex,
+ parent={app.jdrconverter},
+ name={\longargfmt{use\dhyphen latex}}
+}
+
+@switch{switch.jdrconverter.no-use-latex,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen use\dhyphen latex}}
+}
+
+@switch{switch.jdrconverter.use-flowframtksty,
+ parent={app.jdrconverter},
+ shortswitch={p},
+ name={\longargfmt{use\dhyphen flowframtksty}}
+}
+
+@switch{switch.jdrconverter.no-use-flowframtksty,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen use\dhyphen flowframtksty}}
 }
 
 @switch{switch.jdrconverter.alpha,
@@ -382,6 +409,20 @@
  defaultkeys={format=glsignore}
 }
 
+@package{pkg.flowframtk,
+ syntax={\meta{options}},
+}
+
+@option{opt.flowframtk.outline,
+ parent={pkg.flowframtk},
+ name={\optfmt{outline}}
+}
+
+@option{opt.flowframtk.textpath,
+ parent={pkg.flowframtk},
+ name={\optfmt{textpath}}
+}
+
 % LaTeX ENVIRONMENTS
 
 @environment{env.pgfpicture,
@@ -491,9 +532,10 @@ limitation. The \app{flowframtk} application matches the omission.}
  parent={image},
  name={description}
 }
-@indexplural{image.typeblock,
+
+@index{image.typeblock,
  parent={image},
- name={typeblock},
+ text={typeblock},
  defaultkeys={format=glsignore}
 }
 
@@ -501,7 +543,7 @@ limitation. The \app{flowframtk} application matches the omission.}
  alias={image.typeblock}
 }
 
-@indexplural{image.bbox,
+@index{image.bbox,
  parent={image},
  name={bounding box}
 }
