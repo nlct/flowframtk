@@ -1,0 +1,321 @@
+% arara: lualatex
+% arara: bib2gls: { group: on, options: [ --no-warn-unknown-entry-types ] }
+% arara: lualatex
+% arara: lualatex
+\documentclass[toc=listof]{scrarticle}
+\usepackage[english]{tracklang}
+
+
+\usepackage{fontspec}
+\setmainfont{Linux Libertine O}
+\usepackage{verbatim}
+\usepackage
+ [
+    novref,
+%   debug=showwrgloss
+ ]{texjavahelp}
+
+\hypersetup{colorlinks,linkcolor=blue}
+\DeclareGraphicsExtensions{.png,.pdf,.tex}
+
+\title{jdrutils}
+\author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
+
+\InputIfFileExists{version}{}{}
+\InputIfFileExists{jdrversion}{}{}
+\providecommand{\jdrversion}{??}
+
+\GlsXtrLoadResources[src={jdrutils,shared},
+ \TeXJavaHelpSymbolResourceOptions
+]
+
+\GlsXtrLoadResources[src={jdrutils,shared},
+ \TeXJavaHelpGlsResourceOptions
+]
+
+\providecommand{\FlowframTk}{FlowframTk}
+
+\glsxtrnewgls{switch.jdrconverter.}{\convswitch}
+\newcommand{\convswitchdef}[1]{\switchdef{jdrconverter.#1}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+
+\FlowframTk\ comes with some command line applications for
+converting \gls+{JDR} and \gls+{AJR} files to or from other formats. This document
+describes those applications.
+
+\section{jdrinfo}
+\label{sec:jdrinfo}
+
+\appdef{jdrinfo}
+
+The \app{jdrinfo} command line application simply displays the file
+format (\gls{JDR}/\gls{AJR}) and version number for the given
+file. It requires a \ext+{jdr} or \ext+{ajr} file to input.
+For example:
+\begin{terminal}
+\app{jdrinfo} myimage.jdr
+\end{terminal}
+If the file is found and is a valid \gls{JDR} or \gls{AJR} file, the
+format and version will be printed to STDOUT. For example:
+\begin{compactcodebox}
+myimage.jdr: JDR 1.4
+\end{compactcodebox}
+
+\section{jdrconverter}
+\label{sec:jdrconverter}
+
+\FlowframTk\ (and formerly \gls{JpgfDraw}) used to be supplied with
+a number of command line tools to convert between specific formats:
+\app{ajr2ajr} (convert from one \gls{AJR} version to another),
+\app{ajr2jdr} (convert from \gls{AJR} to \gls{JDR}),
+\app{ajr2tex} (convert an image in \gls{AJR} format to a \ext+{tex} file),
+\app{eps2jdr} (import an image from an \ext+{eps} file and save as \gls{JDR}),
+\app{jdr2ajr} (convert from \gls{JDR} to \gls{AJR}),
+\app{jdr2eps} (convert an image in \gls{JDR} format to an \ext+{eps} file),
+\app{jdr2png} (convert an image in \gls{JDR} format to a \ext+{png} file),
+\app{jdr2svg} (convert an image in \gls{JDR} format to an \ext+{svg} file),
+\app{jdr2tex} (convert an image in \gls{AJR} format to a \ext+{tex} file),
+\app{svg2jdr} (import an image from an \ext+{svg} file and save as \gls{JDR}).
+
+As from version 0.8.8, these separate tools have all been combined
+into a single converter tool:
+
+\appdef{jdrconverter}
+
+One input file and one output file must be specified. The switches
+\convswitch{in} and \convswitch{output} are optional but if 
+\convswitch{output} is omitted then the output file must 
+come after the input file. For example:
+\begin{terminal}
+\app{jdrconverter} \convswitch{output} \meta{outfile} \meta{infile}
+\app{jdrconverter} \convswitch{output} \meta{outfile} \convswitch{in} \meta{infile}
+\app{jdrconverter} \meta{infile} \convswitch{output} \meta{outfile}
+\app{jdrconverter} \convswitch{in} \meta{infile} \convswitch{output} \meta{outfile}
+\app{jdrconverter} \convswitch{in} \meta{infile} \meta{outfile}
+\app{jdrconverter} \meta{infile} \meta{outfile}
+\end{terminal}
+The last two cases above can't have the output file listed before
+the input file.
+
+The options from the old \metafilefmt{fmt}{2}{fmt} conversion tools
+are recognised but deprecated. For example:
+\begin{terminal}
+jdr2tex \shortargfmt{doc} image.jdr imagedoc.tex
+\end{terminal}
+can be replaced with:
+\begin{terminal}
+\app{jdrconverter} \shortargfmt{doc} image.jdr imagedoc.tex
+\end{terminal}
+but it's better to use:
+\begin{terminal}
+\app{jdrconverter} \convswitch{doc} image.jdr imagedoc.tex
+\end{terminal}
+
+\subsection{Input Options}
+\label{sec:input}
+
+\convswitchdef{in}
+
+The input file, which must be in a supported format.
+Use \convswitch{list-input-formats} for a list of
+recognised formats.
+
+\convswitchdef{from}
+
+The input file format. This may be omitted if it can be inferred
+from the input file extension.
+Use \convswitch{list-input-formats} for a list of
+recognised formats.
+
+\convswitchdef{in-charset}
+
+If the input file is a text file, then \convswitch{in-charset}
+may be used to identify the file encoding.
+
+\subsection{Output Options}
+\label{sec:output}
+
+\convswitchdef{output}
+
+The output file, which must be in a supported format.
+Use \convswitch{list-output-formats} for a list of
+recognised formats.
+
+\convswitchdef{jdr-version}
+
+If the output file format is either \gls{JDR} or \gls{AJR}, use
+this version. This option is ignored for other output file formats.
+Note that if \convswitch{to} is also used with a version number then
+that may override this switch depending on the command line argument
+order.
+
+If no version is specified then the latest stable version is
+assumed. This is currently \strong{\jdrversion}.
+There may be a newer version listed in
+\convswitch{list-output-formats}, but that should be considered
+unstable and liable to change. Only use unstable formats for
+temporary test files.
+
+\convswitchdef{to}
+
+The output file format. This may be omitted if it can be inferred
+from the output file extension.
+Use \convswitch{list-output-formats} for a list of
+recognised formats.
+
+In the case of \gls{JDR} or \gls{AJR}, the format may be appended
+with the version number. For example, \code{JDR-1.8} indicates
+\gls{JDR} version 1.8. Alternatively, you can use
+\convswitch{jdr-version} to specify the version number.
+
+\convswitchdef{out-charset}
+
+If the output file is a text file, then \convswitch{out-charset}
+may be used to identify the file encoding.
+
+\convswitchdef{settings}
+
+If the output format is \gls{JDR} or \gls{AJR}, then the
+\convswitch{settings} switch indicates which settings should be
+saved in the output file. The value may be one of:
+
+\begin{deflist}
+\itemtitle{\optfmt{none}}
+\begin{itemdesc}
+Don't save any settings (not even the paper size).
+\end{itemdesc}
+
+\itemtitle{\optfmt{all}}
+\begin{itemdesc}
+Save all settings.
+\end{itemdesc}
+
+\itemtitle{\optfmt{paper}}
+\begin{itemdesc}
+Only save the paper size.
+\end{itemdesc}
+
+\itemtitle{\optfmt{match-input}}
+\begin{itemdesc}
+If the input file contained settings, save those settings.
+\end{itemdesc}
+\end{deflist}
+
+\convswitchdef{export-latex}
+
+When exporting to a \LaTeX\ (\ext+{tex}) file, this option indicates
+what content should be added to the file. The value may be one of:
+\begin{deflist}
+\itemtitle{pgf}
+\begin{itemdesc}
+Just save the \env{pgfpicture} environment that draws the image.
+The \ext{tex} file is intended to be \gls{input} in another file.
+\end{itemdesc}
+
+\itemtitle{doc}
+\begin{itemdesc}
+Create a complete standalone document that contains a
+\env{pgfpicture} environment in the \gls{document-body} that draws the image.
+If used with \convswitch{crop} then the document \gls{paper} size will be set
+to the image's \gls{image.bbox}, otherwise the paper size in the input
+file settings will be used.
+
+If the input image included a \gls{document-class}, this will be used
+otherwise the default setting will be used. The
+\gls{normal-font-size} will either be obtained from the input image
+or from \convswitch{normalsize}.
+
+The document will automatically include the code to load the
+\sty{pgf} package.
+If the input image contains any \gls{early-preamble}, 
+\gls{mid-preamble} or \gls{late-preamble} code, this will be added
+to the document preamble in the corresponding places.
+\end{itemdesc}
+
+\itemtitle{flow}
+\begin{itemdesc}
+Create a complete standalone document that loads the \sty{flowfram}
+package and sets up the \gls{typeblock}, flow frames, static frames
+and dynamic frames defined in the input file.
+
+\begin{important}
+An error will occur if the input file does not provide any 
+\gls{flowframe} data.
+Any \glspl{object} in the image that don't have \gls{flowframe} data
+assigned will be omitted.
+\end{important}
+
+If the input image included a \gls{document-class}, this will be used
+otherwise the default setting will be used. The
+\gls{normal-font-size} will either be obtained from the input image
+or from \convswitch{normalsize}.
+
+The document will automatically include the code to load the
+\sty{pgf} and \sty{flowfram} packages.
+If the input image contains any \gls{early-preamble}, 
+\gls{mid-preamble} or \gls{late-preamble} code, this will be added
+to the document preamble in the corresponding places.
+
+If the input image contains a \gls{document-body}, this code
+will be placed in the \env{document} environment, otherwise
+the minimum number of required packages will be calculated
+and the appropriate number of \gls{null} and \gls{clearpage}
+commands will be placed in the
+\env{document} environment to ensure that number of pages are
+generated.
+
+\end{itemdesc}
+
+\end{deflist}
+
+\subsection{Other Options}
+\label{sec:other}
+
+\convswitchdef{list-input-formats}
+
+List all recognised input formats and exit.
+
+\convswitchdef{list-output-formats}
+
+List all recognised output formats and exit.
+
+\convswitchdef{help}
+
+Prints syntax help and exits.
+
+\convswitchdef{version}
+
+Prints the application version information and exits.
+
+\convswitchdef{verbose}
+
+Enable verbose mode.
+
+\convswitchdef{no-verbose}
+
+Disable verbose mode (default).
+Errors and warnings will still be printed to STDOUT.
+
+\convswitchdef{debug}
+
+Enable debugging mode.
+
+\convswitchdef{no-debug}
+
+Disable debugging mode (default).
+
+\listentrydescendents
+ [title={Summary of \apptext{jdrconverter} Switches}]
+ {app.jdrconverter}
+
+\printmain
+\printindex 
+
+\end{document} 
+
