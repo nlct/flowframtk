@@ -89,33 +89,38 @@ into a single converter tool:
 \appdef{jdrconverter}
 
 One input file and one output file must be specified. The switches
-\convswitch{in} and \convswitch{output} are optional but if 
+\convswitch{in} and \convswitch{output} may be omitted but if 
 \convswitch{output} is omitted then the output file must 
 come after the input file. For example:
 \begin{terminal}
-\app{jdrconverter} \convswitch{output} \meta{outfile} \meta{infile}
-\app{jdrconverter} \convswitch{output} \meta{outfile} \convswitch{in} \meta{infile}
 \app{jdrconverter} \meta{infile} \convswitch{output} \meta{outfile}
 \app{jdrconverter} \convswitch{in} \meta{infile} \convswitch{output} \meta{outfile}
+\app{jdrconverter} \convswitch{output} \meta{outfile} \meta{infile}
+\app{jdrconverter} \convswitch{output} \meta{outfile} \convswitch{in} \meta{infile}
 \app{jdrconverter} \convswitch{in} \meta{infile} \meta{outfile}
 \app{jdrconverter} \meta{infile} \meta{outfile}
 \end{terminal}
 The last two cases above can't have the output file listed before
 the input file.
 
-The options from the old \metafilefmt{fmt}{2}{fmt} conversion tools
+The options from the old \meta{fmt}\filefmt{2}\meta{fmt} conversion tools
 are recognised but deprecated. For example:
 \begin{terminal}
 jdr2tex \shortargfmt{doc} image.jdr imagedoc.tex
-\end{terminal}
+\end{terminal}%
 can be replaced with:
 \begin{terminal}
 \app{jdrconverter} \shortargfmt{doc} image.jdr imagedoc.tex
-\end{terminal}
+\end{terminal}%
 but it's better to use:
 \begin{terminal}
 \app{jdrconverter} \convswitch{doc} image.jdr imagedoc.tex
 \end{terminal}
+
+If \FlowframTk's \gls{config_dir} exists, \app{jdrconverter} will
+load the default settings from the \file{flowframtk.conf} file.
+These settings may be overridden by the applicable command line
+switches.
 
 \subsection{Input Options}
 \label{sec:input}
@@ -137,6 +142,7 @@ recognised formats.
 
 If the input file is a text file, then \convswitch{in-charset}
 may be used to identify the file encoding.
+This option is ignored if the input file format is binary.
 
 \subsection{Output Options}
 \label{sec:output}
@@ -174,10 +180,29 @@ with the version number. For example, \code{JDR-1.8} indicates
 \gls{JDR} version 1.8. Alternatively, you can use
 \convswitch{jdr-version} to specify the version number.
 
+For example:
+\begin{terminal}
+\app{jdrconverter} img.ajr img.jdr
+\end{terminal}%
+The output format can be inferred from the \ext{jdr} extension. No
+version has been specified, so this is equivalent to:
+\begin{terminal}
+\app{jdrconverter} \convswitch{to} JDR-\jdrversion\ img.ajr img.jdr
+\end{terminal}%
+or:
+\begin{terminal}
+\app{jdrconverter} \convswitch{to} JDR \convswitch{jdr-version} \jdrversion\ img.ajr img.jdr
+\end{terminal}%
+or (since \gls{JDR} can be inferred from the \ext{jdr} extension):
+\begin{terminal}
+\app{jdrconverter} \convswitch{jdr-version} \jdrversion\ img.ajr img.jdr
+\end{terminal}%
+
 \convswitchdef{out-charset}
 
 If the output file is a text file, then \convswitch{out-charset}
 may be used to identify the file encoding.
+This option is ignored if the output file format is binary.
 
 \convswitchdef{settings}
 
@@ -300,11 +325,16 @@ Enable verbose mode.
 \convswitchdef{no-verbose}
 
 Disable verbose mode (default).
-Errors and warnings will still be printed to STDOUT.
+Errors and warnings will still be printed to STDERR.
+
+\convswitchdef{quiet}
+
+Silent mode.
 
 \convswitchdef{debug}
 
 Enable debugging mode.
+This will override the verbose or silent mode settings.
 
 \convswitchdef{no-debug}
 

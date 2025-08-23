@@ -79,7 +79,7 @@
 
 % FILE EXTENSIONS/FORMATS
 
-@indexplural{fileextension, name={file extension}}
+@indexplural{fileextension, text={file extension}}
 
 @fileext{ext.jdr, parent={fileextension}}
 @fileext{ext.ajr, parent={fileextension}}
@@ -154,13 +154,13 @@
 
 @switch{switch.jdrconverter.in-charset,
  parent={app.jdrconverter},
- name={\longargfmt{in\dhyphen charser}},
+ name={\longargfmt{in\dhyphen charset}},
  syntax={\meta{charset name}}
 }
 
 @switch{switch.jdrconverter.out-charset,
  parent={app.jdrconverter},
- name={\longargfmt{out\dhyphen charser}},
+ name={\longargfmt{out\dhyphen charset}},
  syntax={\meta{charset name}}
 }
 
@@ -298,6 +298,12 @@
 @switch{switch.jdrconverter.no-verbose,
  parent={app.jdrconverter},
  name={\longargfmt{no\dhyphen verbose}}
+}
+
+@switch{switch.jdrconverter.quiet,
+ parent={app.jdrconverter},
+ name={\longargfmt{quiet}},
+ shortswitch={q}
 }
 
 @switch{switch.jdrconverter.debug,
@@ -469,6 +475,14 @@ limitation. The \app{flowframtk} application matches the omission.}
 @indexplural{textarea-mapping,
  text={text area mapping},
  seealso={file.textmappings.prop,file.mathmappings.prop}
+}
+
+@indexplural{font-mapping,
+  text={font mapping}
+}
+
+@indexplural{mapping,
+  see={font-mapping,textarea-mapping}
 }
 
 @index{image}

@@ -324,28 +324,43 @@ public class JDRConverter
 
    public void verboseln(String msg)
    {
-      msgPublisher.publishMessages(MessageInfo.createVerbose(1, msg, true));
+      if (!silent)
+      {
+         msgPublisher.publishMessages(MessageInfo.createVerbose(1, msg, true));
+      }
    }
 
    public void verbosenoln(String msg)
    {
-      msgPublisher.publishMessages(MessageInfo.createVerbose(1, msg, false));
+      if (!silent)
+      {
+         msgPublisher.publishMessages(MessageInfo.createVerbose(1, msg, false));
+      }
    }
 
    public void error(String message, Throwable e)
    {
-      if (helpLibApp != null)
+      if (silent)
       {
-         helpLibApp.error(message, e);
+         setExitCode(getExitCode(e, false));
       }
       else
       {
-         message("error", message, e);
+         if (helpLibApp != null)
+         {
+            helpLibApp.error(message, e);
+         }
+         else
+         {
+            message("error", message, e);
+         }
       }
    }
 
    public void message(String msgTag, String message, Throwable e)
    {
+      if (silent) return;
+
       if (message == null)
       {
          if (e != null)
@@ -376,6 +391,8 @@ public class JDRConverter
 
    public void debug(String message, Throwable e)
    {
+      if (silent) return;
+
       if (debugMode)
       {
          error(message, e);
@@ -410,20 +427,6 @@ public class JDRConverter
 
       System.out.println();
 
-      helpLib.printSyntaxItem(getMessage("syntax.save_settings"));
-
-      System.out.println();
-
-      helpLib.printSyntaxItem(getMessage("syntax.jdr_version",
-       "--jdr-version", JDRAJR.CURRENT_VERSION));
-
-      helpLib.printSyntaxItem(getMessage("syntax.settings", "--settings"));
-
-      helpLib.printSyntaxItem(getMessage("syntax.relative_bitmaps",
-        "--[no-]relative-bitmaps"));
-
-      System.out.println();
-
       helpLib.printSyntaxItem(getMessage("syntax.import_settings"));
 
       System.out.println();
@@ -436,6 +439,20 @@ public class JDRConverter
 
       helpLib.printSyntaxItem(getMessage("syntax.apply_mappings",
         "--[no-]apply-mappings"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.save_settings"));
+
+      System.out.println();
+
+      helpLib.printSyntaxItem(getMessage("syntax.jdr_version",
+       "--jdr-version", JDRAJR.CURRENT_VERSION));
+
+      helpLib.printSyntaxItem(getMessage("syntax.settings", "--settings"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.relative_bitmaps",
+        "--[no-]relative-bitmaps"));
 
       System.out.println();
 
@@ -484,6 +501,8 @@ public class JDRConverter
       helpLib.printSyntaxItem(getMessage("syntax.locale", "--locale"));
 
       helpLib.printSyntaxItem(getMessage("syntax.verbose", "--[no-]verbose", "-v"));
+
+      helpLib.printSyntaxItem(getMessage("syntax.quiet", "--quiet", "-q"));
 
       helpLib.printSyntaxItem(getMessage("syntax.debug", "--[no-]debug"));
 
@@ -610,6 +629,7 @@ public class JDRConverter
          throws InvalidSyntaxException
          {
             // called by --debug
+            silent = false;
             debugMode = true;
             msgPublisher.setDebugMode(true);
             msgPublisher.setVerbosity(2);
@@ -631,6 +651,7 @@ public class JDRConverter
                    || originalArgList[preparseIndex].equals("--no-debug")
                     )
             {
+               debugMode = false;
                msgPublisher.setDebugMode(false);
             }
             else if (originalArgList[preparseIndex].equals("--locale"))
@@ -796,9 +817,11 @@ public class JDRConverter
             {
                msgPublisher.setVerbosity(0);
                msgPublisher.displayMessages();
+               silent = false;
             }
-            else if (arg.equals("--quiet"))
+            else if (arg.equals("--quiet") || arg.equals("-q"))
             {
+               silent = true;
                msgPublisher.hideMessages();
             }
             else if (arg.equals("--rm-tmp-files"))
@@ -2097,6 +2120,7 @@ public class JDRConverter
 
    protected int exitCode = 0;
    protected boolean debugMode = false;
+   protected boolean silent = false;
    protected boolean removeTempFiles = true;
    protected boolean shownVersion = false;
    protected File inFile, outFile; // --in / -i , --output / -o
