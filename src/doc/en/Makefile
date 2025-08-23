@@ -1,12 +1,13 @@
 targetdir=../../lib/resources/helpsets
 dictdir=../../lib/resources/dictionaries
 baseclass=../../java/jdrresources/JDRResources.java
+jdrajrclass=../../java/jdr/io/JDRAJR.java
 arara=arara --verbose
 #texjavahelpmk=texjavahelpmk --debug-mode all --log texjavahelpmk.log
 texjavahelpmk=texjavahelpmk
 tjhxml2bib=tjhxml2bib --copy-overwrite-xml
 
-all	: en-GB en flowframtk.1 jdrutils-en.pdf jdrutils-en-GB.pdf
+all	: en-GB en flowframtk.1 jdrutils-en.pdf
 
 flowframtk.1	: flowframtk.pod
 		pod2man -c flowframtk flowframtk.pod flowframtk.1
@@ -53,6 +54,11 @@ version.tex	: $(baseclass)
 	@echo "}{" >> version.tex
 	@grep 'String APP_DATE = ' $(baseclass) | sed "s/public\sstatic\sfinal\sString\sAPP_DATE\s=//" | tr -d "\"\; " >> version.tex
 	@echo "}" >> version.tex
+
+jdrversion.tex	: $(jdrajrclass)
+	@echo "\\newcommand\\jdrversion{%" > jdrversion.tex
+	@grep '// latest stable version' $(jdrajrclass) | sed "s/public\sstatic\sfinal\sfloat\sCURRENT_VERSION\s=//" | tr -d "f\;// latest stable version" >> jdrversion.tex
+	@echo "\\unskip}" >> jdrversion.tex
 
 flowframtk-en-GB.pdf	: flowframtk-en-GB.glstex 
 	lualatex flowframtk-en-GB
@@ -108,18 +114,9 @@ jdrutils-en.pdf	: jdrutils-en.glstex
 	lualatex jdrutils-en
 
 jdrutils-en.glstex	: jdrutils.bib shared.bib flowframtk-props-en.bib \
-		jdrutils-en.tex jdrutils-main.tex version.tex 
+		jdrutils-en.tex version.tex jdrversion.tex
 	lualatex jdrutils-en
 	bib2gls -g --no-warn-unknown-entry-types jdrutils-en
-
-jdrutils-en-GB.pdf	: jdrutils-en-GB.glstex
-	lualatex jdrutils-en-GB
-	lualatex jdrutils-en-GB
-
-jdrutils-en-GB.glstex	: jdrutils.bib shared.bib flowframtk-props-en-GB.bib \
-			jdrutils-en-GB.tex jdrutils-main.tex version.tex 
-	lualatex jdrutils-en-GB
-	bib2gls -g --no-warn-unknown-entry-types jdrutils-en-GB
 
 en-GB	: $(targetdir)/flowframtk/en-GB/index.xml \
 	$(targetdir)/jdrview/en-GB/index.xml
@@ -157,8 +154,11 @@ $(targetdir)/jdrview/en-GB	:
 	mkdir -p $(targetdir)/jdrview/en-GB
 
 clean	:
-	\rm -f flowframtk-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
+	\rm -f version.tex
+	\rm -f jdrversion.tex
+	\rm -f flowframtk-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot,bbl,blg}
 	\rm -f jdrview-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
+	\rm -f jdrutils-en.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
 	\rm -rf $(targetdir)/flowframtk
 	\rm -rf $(targetdir)/jdrview
 	\rm -f flowframtk-props-en*.bib

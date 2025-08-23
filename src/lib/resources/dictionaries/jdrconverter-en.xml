@@ -58,6 +58,8 @@ Nicola Talbot
 
 <entry key="syntax.rm-tmp-files">{0}	Remove temporary files on exit.</entry>
 
+<entry key="syntax.verbose">{0} (or {1})	Enable verbose mode.</entry>
+
 <entry key="syntax.other">Other options.</entry>
 
 <entry key="syntax.list_output_formats">{0}	List all supported output formats and exit.</entry>

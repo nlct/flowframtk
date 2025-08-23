@@ -30,26 +30,14 @@ objects.}
 
 % FILE EXTENSIONS/FORMATS
 
-@fileext{ext.tex, parent={fileextension}}
-@fileext{ext.pdf, parent={fileextension}}
-@fileext{ext.svg, parent={fileextension}}
 @fileext{ext.xml, parent={fileextension}}
-@fileext{ext.eps, parent={fileextension}}
-@fileext{ext.sty, parent={fileextension}}
-@fileext{ext.cls, parent={fileextension}}
 @fileext{ext.tsv, parent={fileextension}}
-@fileext{ext.png, parent={fileextension}}
 
 % FILES
 
 @file{file.flowframtk.jar}
-@file{file.libgs}
-@file{file.textmappings.prop}
-@file{file.mathmappings.prop}
-@file{file.preamble.tex}
 @file{file.accelerators.prop}
 @file{file.startup.conf}
-@file{file.languages.conf}
 @file{file.flowframtk.log}
 
 @file{file.latexfontmap.prop}
@@ -82,12 +70,6 @@ objects.}
 
 % PACKAGES
 
-@package{pkg.flowfram,
- name={\styfmt{flow\-fram}},
- syntax={\meta{options}},
- defaultkeys={format=glsignore}
-}
-
 @option{opt.pages,
   parent={pkg.flowfram}
 }
@@ -96,7 +78,6 @@ objects.}
  name={\styfmt{shape\-par}}
 }
 
-@package{pkg.pgf}
 
 @package{pkg.extsizes}
 
@@ -194,7 +175,6 @@ objects.}
 @command{slshape}
 @command{em}
 
-@command{input}
 @command{ifpdf}
 @command{pdfinfo}
 
@@ -260,12 +240,6 @@ objects.}
 
 @command{phantom}
 @command{endinput}
-
-% ENVIRONMENTS
-
-@environment{env.pgfpicture,
- name={\envfmt{pgf\-picture}}
-}
 
 % ENVIRONMENT VARIABLES
 
@@ -435,24 +409,6 @@ vertical rulers.}
  defaultkeys={format=glsignore}
 }
 
-@term{shape,
-  description = {Either a path, text-path or a composite shape.},
- defaultkeys={format=glsignore}
-}
-
-@term{path,
-  description = {A shape made up of line segments, moves and cubic
-Bézier segments.},
- defaultkeys={format=glsignore}
-}
-
-@term{textarea,
-  name="text area",
-  description = {An object consisting of a single line of text. The text may be moved,
-    scaled, rotated, sheared or converted to a path.},
- defaultkeys={format=glsignore}
-}
-
 @term{textpath,
   name="text-path",
   description = {A composite object formed by combining a path and a text area
@@ -617,37 +573,9 @@ single entity.},
 
 @index{back, alias="backobject"}
 
-@term{vectorgraphics,
-  name="vector graphics",
-  description = {A means of describing images through the use of
-points, lines and curves.}
-}
-
-@index{rastergraphics,
-  name="raster graphics",
-  alias={bitmap}
-}
-
-@term{bitmap,
-  description={Representing images as a collection of pixels.},
- defaultkeys={format=glsignore}
-}
-
 @term{construction,
   name="construction mode",
   description = {Any of the tools except the select tool.}
-}
-
-@term{pt,
-  description = {\TeX's point. Not to be confused with bp (a PostScript point).
-    72.27pt=1in.},
- defaultkeys={format=glsignore}
-}
-
-@term{bp,
-  description = {\TeX's \qt{big point}. This is the same as a PostScript point.
-    72bp=1in.},
- defaultkeys={format=glsignore}
 }
 
 @term{dropdown,
@@ -747,25 +675,6 @@ interpreted as tapping the appropriate side of the pad.}
  defaultkeys={format=glsignore}
 }
 
-@term{config_dir,
-  name="configuration directory",
-  description = {This directory contains application settings, the list of recent files and 
-    \gls{font-mapping} files. It's also the location used for log files and the
-dump all function.}
-}
-
-@term{flowframe,
- description={Any information relating to the \sty{flowfram} package.
-The omission of the final \qt{e} in the \sty{flowfram} package name
-is for historical reasons as the first version of \sty{flowfram} was
-developed when CTAN still had an eight-dot-three filename
-limitation. The \app{flowframtk} application matches the omission.}
-}
-
-@index{normal-font-size,
- name={normal font size}
-}
-
 @index{anti-aliasing}
 @index{rendering}
 
@@ -792,11 +701,6 @@ limitation. The \app{flowframtk} application matches the omission.}
 
 @indexplural{font-mapping,
   text={font mapping}
-}
-
-@indexplural{textarea-mapping,
- text={text area mapping},
- seealso={file.textmappings.prop,file.mathmappings.prop}
 }
 
 @indexplural{mapping,
@@ -942,64 +846,6 @@ limitation. The \app{flowframtk} application matches the omission.}
  alias={index.gradient-paint.centre}
 }
 
-@index{image}
-
-@index{image.description,
- parent={image},
- name={description}
-}
-@indexplural{image.typeblock,
- parent={image},
- name={typeblock},
- defaultkeys={format=glsignore}
-}
-
-@index{typeblock,
- alias={image.typeblock}
-}
-
-@indexplural{image.bbox,
- parent={image},
- name={bounding box}
-}
-
-@indexplural{margin,
- see={image.typeblock,paper.margin}
-}
-
-@index{paper}
-
-@indexplural{paper.margin,
-  parent={paper},
-  text={margin}
-}
-
-@index{printing}
-
-@indexplural{printer-margin,
- text={printer margin},
- alias={paper.margin}
-}
-
-@index{paper.size,
-  parent={paper},
-  name={size}
-}
-
-@index{paper.orientation,
-  parent={paper},
-  name={orientation}
-}
-
-@index{page-layout,
- name={page layout},
- see={image.typeblock,paper}
-}
-
-@index{document-class,
- name={document class}
-}
-
 @index{cag.addition,
  parent={cag},
  name={addition (union)},
@@ -1140,32 +986,6 @@ limitation. The \app{flowframtk} application matches the omission.}
   parent={font},
   name={shape},
   alias={index.text-attribute.font-shape}
-}
-
-@index{preamble}
-
-@index{preamble.default,
- parent={preamble},
- name={default},
- text={default preamble}
-}
-
-@index{preamble.early,
- parent={preamble},
- name={early},
- text={early preamble}
-}
-
-@index{preamble.mid,
- parent={preamble},
- name={mid},
- text={mid preamble}
-}
-
-@index{preamble.late,
- parent={preamble},
- name={late},
- text={late preamble}
 }
 
 @index{frame-label,

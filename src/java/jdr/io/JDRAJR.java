@@ -1250,8 +1250,8 @@ public abstract class JDRAJR
    /**
     * Newest JDR/AJR version number.
     */
-   //public static final float CURRENT_VERSION = 2.1f;//pending
-   public static final float CURRENT_VERSION = 2.0f;
+   //public static final float CURRENT_VERSION = 2.1f;//pending unstable version
+   public static final float CURRENT_VERSION = 2.0f;// latest stable version
 
    public static final float[] VALID_VERSIONS
     = {1.0f, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2.0f, 2.1f};

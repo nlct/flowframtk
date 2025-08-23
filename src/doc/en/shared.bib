@@ -85,9 +85,23 @@
 @fileext{ext.ajr, parent={fileextension}}
 @fileext{ext.jar, parent={fileextension}}
 
+@fileext{ext.tex, parent={fileextension}}
+@fileext{ext.pdf, parent={fileextension}}
+@fileext{ext.svg, parent={fileextension}}
+@fileext{ext.eps, parent={fileextension}}
+@fileext{ext.sty, parent={fileextension}}
+@fileext{ext.cls, parent={fileextension}}
+@fileext{ext.png, parent={fileextension}}
+
 % FILES
 
 @file{file.flowframtk.conf}
+
+@file{file.textmappings.prop}
+@file{file.mathmappings.prop}
+@file{file.preamble.tex}
+@file{file.libgs}
+@file{file.languages.conf}
 
 % APPLICATIONS
 
@@ -101,10 +115,462 @@
   syntax={\meta{options} \meta{filename}}
 }
 
+@application{app.jdrinfo,
+ syntax={\meta{jdr/ajr file}}
+}
 
-@index{JpgfDraw,
+@application{app.jdrconverter,
+ syntax={\meta{options} \switch{jdrconverter.in} \meta{in-file}
+ \switch{jdrconverter.output} \meta{out-file}}
+}
+
+@switch{switch.jdrconverter.in,
+ parent={app.jdrconverter},
+ name={\longargfmt{in}},
+ shortswitch={i},
+ syntax={\meta{filename}}
+}
+
+@switch{switch.jdrconverter.output,
+ parent={app.jdrconverter},
+ name={\longargfmt{output}},
+ shortswitch={o},
+ syntax={\meta{filename}}
+}
+
+@switch{switch.jdrconverter.from,
+ parent={app.jdrconverter},
+ name={\longargfmt{from}},
+ shortswitch={f},
+ syntax={\meta{format}}
+}
+
+@switch{switch.jdrconverter.to,
+ parent={app.jdrconverter},
+ name={\longargfmt{to}},
+ shortswitch={t},
+ syntax={\meta{format}}
+}
+
+@switch{switch.jdrconverter.in-charset,
+ parent={app.jdrconverter},
+ name={\longargfmt{in\dhyphen charser}},
+ syntax={\meta{charset name}}
+}
+
+@switch{switch.jdrconverter.out-charset,
+ parent={app.jdrconverter},
+ name={\longargfmt{out\dhyphen charser}},
+ syntax={\meta{charset name}}
+}
+
+@switch{switch.jdrconverter.jdr-version,
+ parent={app.jdrconverter},
+ name={\longargfmt{jdr\dhyphen version}},
+ syntax={\meta{version}}
+}
+
+@switch{switch.jdrconverter.settings,
+ parent={app.jdrconverter},
+ name={\longargfmt{settings}},
+ syntax={\meta{value}}
+}
+
+@switch{switch.jdrconverter.relative-bitmaps,
+ parent={app.jdrconverter},
+ name={\longargfmt{relative\dhyphen bitmaps}}
+}
+
+@switch{switch.jdrconverter.no-relative-bitmaps,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen relative\dhyphen bitmaps}}
+}
+
+@switch{switch.jdrconverter.bitmap-prefix,
+ parent={app.jdrconverter},
+ name={\longargfmt{bitmap\dhyphen prefix}},
+ shortswitch={B},
+ syntax={\meta{prefix}}
+}
+
+@switch{switch.jdrconverter.bitmap-dir,
+ parent={app.jdrconverter},
+ name={\longargfmt{bitmap\dhyphen dir}},
+ syntax={\meta{path}}
+}
+
+@switch{switch.jdrconverter.extract-bitmaps,
+ parent={app.jdrconverter},
+ name={\longargfmt{extract\dhyphen bitmaps}}
+}
+
+@switch{switch.jdrconverter.no-extract-bitmaps,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen extract\dhyphen bitmaps}}
+}
+
+@switch{switch.jdrconverter.apply-mappings,
+ parent={app.jdrconverter},
+ name={\longargfmt{apply\dhyphen mappings}}
+}
+
+@switch{switch.jdrconverter.no-apply-mappings,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen apply\dhyphen mappings}}
+}
+
+@switch{switch.jdrconverter.export-latex,
+ parent={app.jdrconverter},
+ name={\longargfmt{export\dhyphen latex}},
+ syntax={\meta{value}}
+}
+
+@switch{switch.jdrconverter.doc,
+ parent={app.jdrconverter},
+ name={\longargfmt{doc}}
+}
+
+@switch{switch.jdrconverter.use-typeblock,
+ parent={app.jdrconverter},
+ name={\longargfmt{use\dhyphen typeblock}}
+}
+
+@switch{switch.jdrconverter.no-use-typeblock,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen use\dhyphen typeblock}}
+}
+
+@switch{switch.jdrconverter.alpha,
+ parent={app.jdrconverter},
+ name={\longargfmt{alpha}}
+}
+
+@switch{switch.jdrconverter.no-alpha,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen alpha}}
+}
+
+@switch{switch.jdrconverter.normalsize,
+ parent={app.jdrconverter},
+ name={\longargfmt{normalsize}},
+ syntax={\meta{n}}
+}
+
+@switch{switch.jdrconverter.crop,
+ parent={app.jdrconverter},
+ name={\longargfmt{crop}},
+ shortswitch={C}
+}
+
+@switch{switch.jdrconverter.no-crop,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen crop}}
+}
+
+@switch{switch.jdrconverter.bitmaps-to-eps,
+ parent={app.jdrconverter},
+ name={\longargfmt{bitmaps\dhyphen to\dhyphen eps}}
+}
+
+@switch{switch.jdrconverter.no-bitmaps-to-eps,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen bitmaps\dhyphen to\dhyphen eps}}
+}
+
+@switch{switch.jdrconverter.help,
+ parent={app.jdrconverter},
+ name={\longargfmt{help}},
+ shortswitch={h}
+}
+
+@switch{switch.jdrconverter.version,
+ parent={app.jdrconverter},
+ name={\longargfmt{version}},
+ shortswitch={V}
+}
+
+@switch{switch.jdrconverter.verbose,
+ parent={app.jdrconverter},
+ name={\longargfmt{verbose}},
+ shortswitch={v}
+}
+
+@switch{switch.jdrconverter.no-verbose,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen verbose}}
+}
+
+@switch{switch.jdrconverter.debug,
+ parent={app.jdrconverter},
+ name={\longargfmt{debug}}
+}
+
+@switch{switch.jdrconverter.no-debug,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen debug}}
+}
+
+@switch{switch.jdrconverter.rm-tmp-files,
+ parent={app.jdrconverter},
+ name={\longargfmt{rm\dhyphen tmp\dhyphen files}}
+}
+
+@switch{switch.jdrconverter.no-rm-tmp-files,
+ parent={app.jdrconverter},
+ name={\longargfmt{no\dhyphen rm\dhyphen tmp\dhyphen files}}
+}
+
+@switch{switch.jdrconverter.list-input-formats,
+ parent={app.jdrconverter},
+ name={\longargfmt{list\dhyphen input\dhyphen formats}}
+}
+
+@switch{switch.jdrconverter.list-output-formats,
+ parent={app.jdrconverter},
+ name={\longargfmt{list\dhyphen output\dhyphen formats}}
+}
+
+@switch{switch.jdrconverter.locale,
+ parent={app.jdrconverter},
+ name={\longargfmt{locale}},
+ syntax={\meta{lang-tag}}
+}
+
+@switch{switch.jdrconverter.latex-dvi,
+ parent={app.jdrconverter},
+ name={\longargfmt{latex\dhyphen dvi}},
+ syntax={\meta{path}}
+}
+
+@switch{switch.jdrconverter.latex-pdf,
+ parent={app.jdrconverter},
+ name={\longargfmt{latex\dhyphen pdf}},
+ syntax={\meta{path}}
+}
+
+@switch{switch.jdrconverter.dvips,
+ parent={app.jdrconverter},
+ name={\longargfmt{dvips}},
+ syntax={\meta{path}}
+}
+
+@switch{switch.jdrconverter.dvisvgm,
+ parent={app.jdrconverter},
+ name={\longargfmt{dvisvgm}},
+ syntax={\meta{path}}
+}
+
+@switch{switch.jdrconverter.libgs,
+ parent={app.jdrconverter},
+ name={\longargfmt{libgs}},
+ syntax={\meta{path}}
+}
+
+% PACKAGES
+
+@package{pkg.pgf}
+
+@package{pkg.flowfram,
+ name={\styfmt{flow\-fram}},
+ syntax={\meta{options}},
+ defaultkeys={format=glsignore}
+}
+
+% LaTeX ENVIRONMENTS
+
+@environment{env.pgfpicture,
+ name={\envfmt{pgf\-picture}}
+}
+
+@environment{env.document}
+
+% LaTeX COMMANDS
+
+@command{input}
+@command{clearpage}
+@command{null}
+
+% TERMS
+
+@term{JpgfDraw,
  description={The precursor to \FlowframTk\ (\strong{J}ava
 \strong{pgf}-code generating \strong{draw}ing application).
 The original JpgfDraw code was refactored and renamed \FlowframTk.). 
 }
 }
+
+@term{textarea,
+  name="text area",
+  description = {An object consisting of a single line of text. The text may be moved,
+    scaled, rotated, sheared or converted to a path.},
+ defaultkeys={format=glsignore}
+}
+
+@term{shape,
+  description = {Either a path, text-path or a composite shape.},
+ defaultkeys={format=glsignore}
+}
+
+@term{path,
+  description = {A shape made up of line segments, moves and cubic
+Bézier segments.},
+ defaultkeys={format=glsignore}
+}
+
+@term{vectorgraphics,
+  name="vector graphics",
+  description = {A means of describing images through the use of
+points, lines and curves.}
+}
+
+@index{rastergraphics,
+  name="raster graphics",
+  alias={bitmap}
+}
+
+@term{bitmap,
+  description={Representing images as a collection of pixels.},
+ defaultkeys={format=glsignore}
+}
+
+@term{pt,
+  description = {\TeX's point. Not to be confused with bp (a PostScript point).
+    72.27pt=1in.},
+ defaultkeys={format=glsignore}
+}
+
+@term{bp,
+  description = {\TeX's \qt{big point}. This is the same as a PostScript point.
+    72bp=1in.},
+ defaultkeys={format=glsignore}
+}
+
+@term{config_dir,
+  name="configuration directory",
+  description = {This directory contains application settings, the list of recent files and 
+    \gls{font-mapping} files. It's also the location used for log files and the
+dump all function.}
+}
+
+@term{flowframe,
+ description={Any information relating to the \sty{flowfram} package.
+The omission of the final \qt{e} in the \sty{flowfram} package name
+is for historical reasons as the first version of \sty{flowfram} was
+developed when CTAN still had an eight-dot-three filename
+limitation. The \app{flowframtk} application matches the omission.}
+}
+
+% INDEX
+
+@index{normal-font-size,
+ name={normal font size}
+}
+
+@indexplural{textarea-mapping,
+ text={text area mapping},
+ seealso={file.textmappings.prop,file.mathmappings.prop}
+}
+
+@index{image}
+
+@index{image.description,
+ parent={image},
+ name={description}
+}
+@indexplural{image.typeblock,
+ parent={image},
+ name={typeblock},
+ defaultkeys={format=glsignore}
+}
+
+@index{typeblock,
+ alias={image.typeblock}
+}
+
+@indexplural{image.bbox,
+ parent={image},
+ name={bounding box}
+}
+
+@indexplural{margin,
+ see={image.typeblock,paper.margin}
+}
+
+@index{paper}
+
+@indexplural{paper.margin,
+  parent={paper},
+  text={margin}
+}
+
+@index{printing}
+
+@indexplural{printer-margin,
+ text={printer margin},
+ alias={paper.margin}
+}
+
+@index{paper.size,
+  parent={paper},
+  name={size}
+}
+
+@index{paper.orientation,
+  parent={paper},
+  name={orientation}
+}
+
+@index{page-layout,
+ name={page layout},
+ see={image.typeblock,paper}
+}
+
+@index{document-class,
+ name={document class}
+}
+
+@index{preamble}
+
+@index{preamble.default,
+ parent={preamble},
+ name={default},
+ text={default preamble}
+}
+
+@index{preamble.early,
+ parent={preamble},
+ name={early},
+ text={early preamble}
+}
+
+@index{early-preamble,
+ name={early preamble},
+ alias={preamble.early}
+}
+
+@index{preamble.mid,
+ parent={preamble},
+ name={mid},
+ text={mid preamble}
+}
+
+@index{mid-preamble,
+ name={mid preamble},
+ alias={preamble.mid}
+}
+
+@index{preamble.late,
+ parent={preamble},
+ name={late},
+ text={late preamble}
+}
+
+@index{late-preamble,
+ name={late preamble},
+ alias={preamble.late}
+}
+
+@index{document-body,
+ name={document body}
+}
+

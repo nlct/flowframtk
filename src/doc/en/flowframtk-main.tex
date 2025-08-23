@@ -28,7 +28,6 @@
 }
 
 \newcommand{\sharedimagesdir}{../sharedimages}
-\newcommand{\FlowframTk}{FlowframTk}
 \newcommand{\tool}[1]{\gls{menu.tools.#1} tool}
 \newcommand{\texttool}{\tool{textarea}}
 \newcommand{\mathstool}{\tool{math}}
@@ -78,9 +77,6 @@
 
 \NewDocumentEnvironment{syntaxline}{b}{\par\noindent#1\par\noindent}{\ignorespacesafterend}
 
-\title{User Manual for \FlowframTk}
-\author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
-
 \subtitle{\bigskip\includeimg{title}\bigskip}
 
 \InputIfFileExists{version}{}{}
@@ -92,6 +88,11 @@
 \GlsXtrLoadResources[src={flowframtk,shared,\langbibsrcs},
  \TeXJavaHelpGlsResourceOptions
 ]
+
+\providecommand{\FlowframTk}{FlowframTk}
+
+\title{User Manual for \FlowframTk}
+\author{Nicola L.C. Talbot\\\href{https://www.dickimaw-books.com/}{\nolinkurl{dickimaw-books.com}}}
 
 \begin{document}
 \maketitle
@@ -1841,14 +1842,14 @@ a comma-separated list of packages in the
 \widget{textconfig.mapping.package} box. If the replacement command is
 available in the \LaTeX\ kernel, you can leave this box blank.
 (These packages will be automatically added to the
-image's \gls{preamble.early} code (\sectionref{sec:preamble}), whenever the
+image's \gls{early-preamble} code (\sectionref{sec:preamble}), whenever the
 mapping is applied.)
 
 The package name may be preceded by optional arguments in square
 brackets, for example \code{[weather]ifsym} (note that the package name
 isn't enclosed in braces). Set the package name to \qt{none} or
 leave it empty if you don't want it automatically added to the
-\gls{preamble.early} code when the mappings are applied.
+\gls{early-preamble} code when the mappings are applied.
 
 For example, in \figureref{fig:addTeXMapping} the new mapping dialog
 is being used to define a new text mapping from the Unicode dagger
@@ -2994,11 +2995,11 @@ will be used. If exporting to a class, the provided class will be
 used as a basis (using \gls{LoadClass}). The class setting is
 ignored when exporting to a package.
 
-The early-\hyperref[sec:preamble]{preamble text} is added before the
+The \gls{early-preamble} text (\sectionref{sec:preamble}) is added before the
 start of the package option declarations, which provides a means to
-add extra package options, if required.  The mid-preamble text will
+add extra package options, if required.  The \gls{mid-preamble} text will
 be placed after the class or packages are loaded and the
-end-preamble text is placed at the end of the class or package.
+\gls{late-preamble} text is placed at the end of the class or package.
 
 \begin{important}
 The \hyperref[sec:texconfigpreamble]{default preamble} is not used
@@ -9470,20 +9471,20 @@ Note that the \gls{preamble.default} isn't used by the export to package
 or class functions.
 \end{information}
 
-The \gls{preamble.early} (\meta{Early-Preamble}), 
-\gls{preamble.mid} (\meta{Mid-Preamble}) and \gls{preamble.late}
+The \gls{early-preamble} (\meta{Early-Preamble}), 
+\gls{mid-preamble} (\meta{Mid-Preamble}) and \gls{late-preamble}
 (\meta{Late-Preamble}) code is assigned to a specific image, and can
 be used to add any additional \gls{preamble} code required for that image.
 For example, if any of the \glspl{textarea} have alternative text
 that contains a command that isn't part of the \LaTeX\ kernel, the
-\gls{preamble.early} can include the code to load the package that defines
-the command or the \glsname{preamble.mid} or \gls{preamble.late} can include the command
+\gls{early-preamble} can include the code to load the package that defines
+the command or the \glsname{preamble.mid} or \gls{late-preamble} can include the command
 definition.
 
 \menudef{menu.tex.set_preamble}
 
 The \glsname{preamble.early}, \glsname{preamble.mid} and
-\gls{preamble.late} code can be edited in the
+\gls{late-preamble} code can be edited in the
 \gls{preamble} panel attached to the side of the
 \gls{canvas} (see \figureref{fig:preambleeditor}). There is a
 divider between these two areas that can be moved to adjust the
@@ -9519,10 +9520,10 @@ The \widget{texeditor.preamble.early} panel is for the
 loading. If the \glspl{textarea-mapping} are enabled (see
 \sectionref{sec:texconfigtext}), any
 required packages for mapped symbols will automatically be
-added to the \gls{preamble.early}.
+added to the \gls{early-preamble}.
 
 If you use the \hyperref[sec:exportsty]{export to package or document
-class} functions, the \gls{preamble.early} code will be
+class} functions, the \gls{early-preamble} code will be
 inserted before the option declarations, which allows you to add
 extra options, if required.
 
@@ -9533,7 +9534,7 @@ The \widget{texeditor.preamble.mid} panel is for the
 commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
 
 If you use the \hyperref[sec:exportsty]{export to package or document
-class} functions, the \gls{preamble.mid} code will be inserted after
+class} functions, the \gls{mid-preamble} code will be inserted after
 the underlying class or package has been loaded.
 
 \widgetdef{texeditor.preamble.late}
@@ -9543,7 +9544,7 @@ The \widget{texeditor.preamble.late} panel is for the
 commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
 
 If you use the \hyperref[sec:exportsty]{export to package or document
-class} functions, the \gls{preamble.late} code will be inserted 
+class} functions, the \gls{late-preamble} code will be inserted 
 at the end of the file, just before
 \gls{endinput}. Any instances of \gls{usepackage} found in
 the preamble code will be replaced by \gls{RequirePackage}
@@ -9564,16 +9565,16 @@ alternative text is also visible.
   {The Late-Preamble Tab}
 
 The image's \glsname{preamble.early}, \glsname{preamble.mid} and
-\gls{preamble.late} code is stored in \gls{JDR}\slash \gls{AJR}
+\gls{late-preamble} code is stored in \gls{JDR}\slash \gls{AJR}
 files, but not for versions less than 1.9, so make sure you use the
 latest file version when you save your image. (This is done
 automatically if you use \menu{file.save}.) \gls{JDR}\slash\gls{AJR}
 version 1.8, introduced in \FlowframTk\ version 0.7, only stores the
-\gls{preamble.early} code.  \FlowframTk\ version 0.8
-(\gls{JDR}\slash\gls{AJR} v1.9) introduced \gls{preamble.mid} and
-late-preamble panels. The original preamble panel (which was
+\gls{early-preamble} code.  \FlowframTk\ version 0.8
+(\gls{JDR}\slash\gls{AJR} v1.9) introduced \gls{mid-preamble} and
+\gls{late-preamble} panels. The original preamble panel (which was
 previously just in a dialog window) is now referred to as the
-\gls{preamble.early}.
+\gls{early-preamble}.
 
 \section{\TeX\ Editor}\label{sec:texeditor}
 
@@ -11346,7 +11347,7 @@ Insert table here!
 
 \item Move the slider between the \gls{canvas} and the preamble
 panel, or use the \menu{tex.set_preamble} menu item to
-show the \gls{preamble} panel. In the \widget{preamble.early}
+show the \gls{preamble} panel. In the \widget{texeditor.preamble.early}
 tab, add the following:
 \begin{codebox}
 \gls{RequirePackage}\oarg{utf8}\marg{inputenc}
@@ -11877,7 +11878,7 @@ parameters:
 
 \item Open the preamble pane either using 
 \menu{tex.set_preamble} or just move the divider across and set the
-\gls{preamble.early} code as follows:
+\gls{early-preamble} code as follows:
 \begin{verbatim}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -13599,10 +13600,17 @@ length of each side of the equilateral triangles that form the grid.
   \end{enumerate}% end of settings info
 
 \item\label{jdr:imagetex}\TeX\ settings.
-\begin{jdrversion}{1.9 onwards}
+\begin{jdrversion}{2.1 onwards}
 \begin{syntaxline}
 \meta{normalsize} \meta{preamble} \meta{mid-preamble}
-\meta{end-preamble} \meta{class name}
+\meta{late-preamble} \meta{document body} \meta{class name}
+\meta{absolute pages flag}
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.9--2.0}
+\begin{syntaxline}
+\meta{normalsize} \meta{preamble} \meta{mid-preamble}
+\meta{late-preamble} \meta{class name}
 \meta{absolute pages flag}
 \end{syntaxline}
 \end{jdrversion}
@@ -13612,19 +13620,21 @@ length of each side of the equilateral triangles that form the grid.
 \meta{absolute pages flag}
 \end{syntaxline}
 \end{jdrversion}
-For version 1.8 onwards, the \LaTeX\ normal size value is always
+For version 1.8 onwards, the \LaTeX\ \gls{normal-font-size} value is always
 saved at this point, regardless of the
 \hyperref[jdr:settings-id]{\meta{settings-id}}.  In addition, from
 version 1.8, preamble text, document class and absolute pages
-setting are now saved. Version 1.8 only stores the early-preamble
-text.  As from version 1.9, the mid-preamble and end-preamble text
-are also stored.
+setting are now saved. Version 1.8 only stores the \gls{early-preamble}
+text.  As from version 1.9, the \gls{mid-preamble} and
+\gls{late-preamble} text are also stored. As from version 2.1, 
+the \gls{document-body} is also stored.
 \begin{enumerate}
 \item The normal size value \meta{normalsize} is stored as an \type{integer}.
 
 \item The preamble text \meta{preamble} is stored as a \type{string}
 and may be empty or null. Similarly for the \meta{mid-preamble}
-and \meta{end-preamble} for version 1.9 onwards.
+and \meta{late-preamble}, for version 1.9 onwards, and for the
+\meta{document body}, for version 2.1 onwards.
 
 \item If the default document class setting is enabled, \meta{class
 name} is saved as an empty or null \type{string} otherwise the user
