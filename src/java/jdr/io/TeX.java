@@ -133,12 +133,17 @@ public class TeX
                   switch (cp)
                   {
                      case '~':
-                       builder.append("\\string~");
+                       builder.append(
+                       "\\flowframtkimgtitlechar{\\textasciitilde}{\\176}");
                      break;
                      case '^':
-                       builder.append("\\string^");
+                       builder.append(
+                       "\\flowframtkimgtitlechar{\\textasciicircum}{\\136}");
                      break;
                      case '\\':
+                       builder.append(
+                       "\\flowframtkimgtitlechar{\\textbackslash}{\\\\}");
+                     break;
                      case '$':
                      case '%':
                      case '&':
@@ -146,9 +151,27 @@ public class TeX
                      case '}':
                      case '_':
                      case '#':
-                        builder.append('\\');
+                       builder.append(String.format(
+                       "\\flowframtkimgtitlechar{\\%c}{\\%03o}", (char)cp, cp));
+                     break;
+                     case '(':
+                     case ')':
+                       builder.append(String.format(
+                       "\\flowframtkimgtitlechar{%c}{\\%c}", (char)cp, cp));
+                     break;
                      default:
-                        builder.appendCodePoint(cp);
+                       if (cp < 0x7F)
+                       {
+                          builder.appendCodePoint(cp);
+                       }
+                       else
+                       {
+                          builder.append("\\flowframtkimgtitlechar{");
+                          builder.appendCodePoint(cp);
+                          builder.append("}{");
+                          builder.append(Integer.toOctalString(cp));
+                          builder.append("}");
+                       }
                   }
                }
 
@@ -551,16 +574,16 @@ public class TeX
          {
             checkForRequiredSupport((JDRGroup)object);
          }
-         else if (object.hasTextual())
+         else if (object instanceof JDRText)
          {
-            if (object.hasShape())
+            if (((JDRText)object).isOutline())
             {
-               checkShapeForRequiredSupport((JDRShape)object);
+               supportOutline = true;
             }
-            else
-            {
-               supportOutline = ((JDRTextual)object).isOutline();
-            }
+         }
+         else if (object.hasShape())
+         {
+            checkShapeForRequiredSupport((JDRShape)object);
          }
 
          if (supportOutline && supportTextPath)
@@ -579,26 +602,52 @@ public class TeX
       else if (shape instanceof JDRTextPath)
       {
          supportTextPath = true;
-         supportOutline = ((JDRTextPath)shape).isOutline();
+         // No support for text path outlines so don't bother checking
       }
    }
 
-   protected void writeUsePackageFlowframTk(String usepackage)
+   protected void writeUsePackageFlowframTk(boolean usepackage)
      throws IOException
    {
-      if (supportOutline)
+      if (usepackage)
       {
-         print("\\PassOptionsToPackage{outline}{flowframtk}");
+         print("\\usepackage");
+
+         if (supportOutline && supportTextPath)
+         {
+            print("[outline,textpath]");
+         }
+         else if (supportOutline)
+         {
+            print("[outline]");
+         }
+         else if (supportTextPath)
+         {
+            print("[textpath]");
+         }
+      }
+      else
+      {
+         if (supportOutline)
+         {
+            print("\\PassOptionsToPackage{outline}{");
+            print(FLOWFRAME_STY);
+            println("}");
+         }
+
+         if (supportTextPath)
+         {
+            print("\\PassOptionsToPackage{textpath}{");
+            print(FLOWFRAME_STY);
+            println("}");
+         }
+
+         print("\\RequirePackage");
       }
 
-      if (supportTextPath)
-      {
-         print("\\PassOptionsToPackage{textpath}{flowframtk}");
-      }
-
-      print("\\");
-      print(usepackage);
-      println("{flowframtk}");
+      print("{");
+      print(FLOWFRAME_STY);
+      println("}");
    }
 
    public void writePreambleCommands(JDRGroup image, boolean inDoc)
@@ -616,11 +665,11 @@ public class TeX
 
          if (inDoc)
          {
-            writeUsePackageFlowframTk("usepackage");
+            writeUsePackageFlowframTk(true);
          }
          else
          {
-            writeUsePackageFlowframTk("RequirePackage");
+            writeUsePackageFlowframTk(false);
          }
       }
       else
@@ -787,6 +836,8 @@ public class TeX
    protected boolean supportOutline=false;
    protected boolean supportTextPath=false;
    protected boolean useFlowframTkSty = false;
+
+   public static final String FLOWFRAME_STY = "flowframtkutils";
 
    public static final int TEXTPATH_EXPORT_OUTLINE_TO_PATH=0;
    public static final int TEXTPATH_EXPORT_OUTLINE_IGNORE=1;

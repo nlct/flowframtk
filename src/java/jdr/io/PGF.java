@@ -231,8 +231,6 @@ public class PGF extends TeX
 
       writePreambleCommands(allObjects, true);
 
-      writeDocInfo(allObjects.getDescription());
-
       println();
 
       double boxHeight = box.getHeight();
@@ -272,6 +270,12 @@ public class PGF extends TeX
 
       writeMidPreambleCommands(allObjects);
 
+      // Since user may prefer \hypersetup to \pdfinfo,
+      // the image information has been moved after the
+      // mid-preamble to allow hyperref to be loaded after flowfram
+
+      writeDocInfo(allObjects.getDescription());
+
       println("\\pagestyle{empty}");
       println();
 
@@ -288,7 +292,12 @@ public class PGF extends TeX
 
       writeEndPreambleCommands(allObjects);
 
-      println("\\begin{document}\\noindent");
+      println("\\begin{document}");
+
+      if (!useFlowframTkSty)
+      {
+        println("\\noindent");
+      }
 
       println("\\jdrimagebox{\\begin{pgfpicture}");
 

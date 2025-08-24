@@ -321,8 +321,6 @@ public class FLF extends TeX
 
       writePreambleCommands(group, true);
 
-      writeDocInfo(group.getDescription());
-
       println("\\usepackage["+cg.getPaper().tex(cg)+"]{geometry}");
 
       print("\\usepackage[");
@@ -361,6 +359,12 @@ public class FLF extends TeX
 
          println(midPreamble);
       }
+
+      // Since user may prefer \hypersetup to \pdfinfo,
+      // the image information has been moved after the
+      // mid-preamble to allow hyperref to be loaded after flowfram
+
+      writeDocInfo(group.getDescription());
 
       minPage = 1;
       numFlows = 0;
@@ -1121,7 +1125,6 @@ public class FLF extends TeX
          }
       }
    }
-
 
    protected String getDescription(JDRCompleteObject object)
    {
