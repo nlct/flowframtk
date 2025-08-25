@@ -611,6 +611,7 @@ Unable to open URL {0}</entry>
 <entry key="error.missing_search_term">Missing search term</entry>
 <entry key="error.image_load_failed">Failed to load image ''{0}''</entry>
 <entry key="error.index_item_file_not_exists">Index item filename ''{0}'' for key ''{1}'' doesn''t exist (check all sections have a label)</entry>
+<entry key="error.timedout">Process timed-out (process time limit: {0}ms)</entry>
 
 <!-- CLI syntax parsing -->
 
