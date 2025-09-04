@@ -48,7 +48,8 @@ public class SavePgf extends ExportImage
       {
          out = new PrintWriter(new FileWriter(outputFile));
 
-         PGF pgf = new PGF(outputFile.getParentFile().toPath(), out);
+         PGF pgf = new PGF(outputFile.getParentFile().toPath(), out,
+          app.getSettings().hasMinimumFlowFramSty119());
 
          pgf.comment(jdrFrame.getFilename());
 

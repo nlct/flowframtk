@@ -157,7 +157,8 @@ public abstract class ExportDocImage extends ExportImage
 
          out = new PrintWriter(new FileWriter(texFile));
 
-         PGF pgf = new PGF(texFile.getParentFile().toPath(), out);
+         PGF pgf = new PGF(texFile.getParentFile().toPath(), out,
+          app.getSettings().hasMinimumFlowFramSty119());
 
          pgf.setUsePdfInfoEnabled(app.usePdfInfo());
 
