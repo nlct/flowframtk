@@ -117,7 +117,6 @@ public class JDRConverter
       }
    }
 
-
    protected void loadConfig(BufferedReader in) throws IOException
    {
       String line;
@@ -134,6 +133,107 @@ public class JDRConverter
          {
             userConfigProperties.put(split[0], split[1]);
          }
+      }
+
+      // pdflatex command line arguments
+
+      String val = userConfigProperties.getProperty("pdflatex_opts", "$basename");
+
+      String[] split = val.split("\t");
+      pdfLaTeXCmd = new String[split.length+1];
+      pdfLaTeXCmd[0] = 
+         userConfigProperties.getProperty("pdflatex_app", "pdflatex");
+
+      for (int i = 0; i < split.length; i++)
+      {
+         pdfLaTeXCmd[i+1] = split[i];
+      }
+
+      // latex command line arguments
+
+      val = userConfigProperties.getProperty("latex_opts", "$basename");
+
+      split = val.split("\t");
+      dviLaTeXCmd = new String[split.length+1];
+      dviLaTeXCmd[0] = 
+         userConfigProperties.getProperty("latex_app", "latex");
+
+      for (int i = 0; i < split.length; i++)
+      {
+         dviLaTeXCmd[i+1] = split[i];
+      }
+
+      // dvips command line arguments
+
+      val = userConfigProperties.getProperty("dvips_opts",
+        "-E\t-o\t$outputfile\t$inputfile");
+
+      split = val.split("\t");
+      dvipsCmd = new String[split.length+1];
+      dvipsCmd[0] = 
+         userConfigProperties.getProperty("dvips_app", "dvips");
+
+      for (int i = 0; i < split.length; i++)
+      {
+         dvipsCmd[i+1] = split[i];
+      }
+
+      // dvisvgm command line arguments
+
+      String libgs = getLibGsPath();
+
+      val = userConfigProperties.getProperty("dvisvgm_opts");
+
+      if (val == null)
+      {
+         if (libgs == null)
+         {
+            val = "-o\t$outputfile\t$inputfile";
+         }
+         else
+         {
+            val = "--libgs\t$libgs\t-o\t$outputfile\t$inputfile";
+         }
+      }
+
+      if (libgs == null)
+      {
+         int idx = val.indexOf("--libgs");
+
+         if (idx > -1 )
+         {
+            int tabIdx;
+
+            if (val.charAt(idx+7) == '=')
+            {
+               tabIdx = val.indexOf("\t", idx+7);
+            }
+            else
+            {
+               tabIdx = val.indexOf("\t", idx+8);
+            }
+
+            if (tabIdx > -1)
+            {
+               val = val.substring(0, idx) + val.substring(tabIdx+1);
+            }
+            else
+            {
+               val = val.substring(0, idx);
+            }
+         }
+      }
+
+      split = val.split("\t");
+
+      dvisvgmCmd = new String[split.length+1];
+
+      dvisvgmCmd[0] =
+        userConfigProperties.getProperty("dvisvgm_app", "dvisvgm");
+
+      for (int i = 0; i < split.length; i++)
+      {
+         dvisvgmCmd[i+1] = split[i];
       }
    }
 
@@ -1829,7 +1929,7 @@ public class JDRConverter
 
              File pdfFile = new File(dir, texBase+".pdf");
 
-             exec(new String[] {getPdfLaTeXPath(), "-interaction", "batchmode", texBase});
+             runPdfLaTeX(texBase);
 
              return pdfFile;
           }
@@ -1854,28 +1954,13 @@ public class JDRConverter
                 File dviFile = new File(dir, texBase+".dvi");
                 dviFile.deleteOnExit();
 
-                exec(new String[] {getDviLaTeXPath(),
-                 "-interaction", "batchmode", texBase});
+                runDviLaTeX(texBase);
 
                 String[] cmd;
 
                 File svgFile = new File(dir, texBase+".svg");
 
-                String libgs = getLibGsPath();
-
-                if (libgs == null || libgs.isEmpty())
-                {
-                   cmd = new String[] {getDviSvgmPath(), "-o", svgFile.getName(),
-                      dviFile.getName()};
-                }
-                else
-                {
-                   cmd = new String[] {getDviSvgmPath(),
-                     "--libgs="+libgs,
-                     "-o", svgFile.getName(), dviFile.getName()};
-                }
-
-                exec(cmd);
+                runDviSvgm(texBase, dviFile, svgFile);
 
                 return svgFile;
              }
@@ -1905,13 +1990,11 @@ public class JDRConverter
                 File dviFile = new File(dir, texBase+".dvi");
                 dviFile.deleteOnExit();
 
-                exec(new String[] {getDviLaTeXPath(),
-                  "-interaction", "batchmode", texBase});
+                runDviLaTeX(texBase);
 
                 File epsFile = new File(dir, outputFile.getName());
 
-                exec(new String[] {getDviPsPath(),
-                  "-o", epsFile.getName(), dviFile.getName()});
+                runDviPs(texBase, dviFile, epsFile);
 
                 return epsFile;
              }
@@ -1941,25 +2024,82 @@ public class JDRConverter
       return EPS.load(cg, in, bitmapNamePrefix);
    }
 
-
-   public String getDviLaTeXPath()
+   public String[] getCmdList(String[] list, String basename,
+     String inFileName, String outFileName)
    {
-      return userConfigProperties.getProperty("latex_app", "latex");
+      String[] cmdList = new String[list.length];
+
+      for (int i = 0; i < list.length; i++)
+      {
+         if (list[i].equals("$outputfile"))
+         {
+            cmdList[i] = outFileName;
+         }
+         else if (list[i].equals("$inputfile"))
+         {
+            cmdList[i] = inFileName;
+         }
+         else if (list[i].equals("$basename"))
+         {
+            cmdList[i] = basename;
+         }
+         else if (list[i].equals("$libgs"))
+         {
+            cmdList[i] = getLibGsPath();
+
+            if (cmdList[i] == null)
+            {
+               // shouldn't happen as already checked
+               cmdList[i] = "";
+            }
+         }
+         else if (list[i].equals("--libgs=$libgs"))
+         {
+            cmdList[i] = getLibGsPath();
+
+            if (cmdList[i] == null)
+            {
+              // shouldn't happen as already checked
+               cmdList[i] = "--libgs=";
+            }
+         }
+         else
+         {
+            cmdList[i] = list[i];
+         }
+      }
+
+      return cmdList;
    }
 
-   public String getPdfLaTeXPath()
+   public String[] getDviLaTeXCmd(String basename)
    {
-      return userConfigProperties.getProperty("pdflatex_app", "pdflatex");
+      return getCmdList(dviLaTeXCmd, basename, basename+".tex", basename+".dvi");
    }
 
-   public String getDviPsPath()
+   public String[] getPdfLaTeXCmd(String basename)
    {
-      return userConfigProperties.getProperty("dvips_app", "dvips");
+      return getCmdList(pdfLaTeXCmd, basename, basename+".tex", basename+".pdf");
    }
 
-   public String getDviSvgmPath()
+   public String[] getDviPsCmd(String basename)
    {
-      return userConfigProperties.getProperty("dvisvgm_app", "dvisvgm");
+      return getDviPsCmd(basename, basename+".dvi", basename+".eps");
+   }
+
+   public String[] getDviPsCmd(String basename, String dviFile, String psFile)
+   {
+      return getCmdList(dvipsCmd, basename, dviFile, psFile);
+   }
+
+   public String[] getDviSvgmCmd(String basename)
+   {
+      return getDviSvgmCmd(basename, basename+".dvi", basename+".svg");
+   }
+
+   public String[] getDviSvgmCmd(String basename, String dviFile, String svgFile)
+   {
+      return getCmdList(dvisvgmCmd, basename, dviFile, svgFile);
    }
 
    public String getLibGsPath()
@@ -2111,7 +2251,11 @@ public class JDRConverter
       }
       catch (IOException e)
       {
-         app.error(e.getMessage(), app.debugMode ? e : null);
+         app.error(app.getMessageWithFallback(
+           "error"+e.getClass().getSimpleName(),
+           e.getClass().getSimpleName()+" {0}",
+           e.getLocalizedMessage()),
+          app.debugMode ? e : null);
       }
       catch (InvalidFormatException e)
       {
@@ -2146,8 +2290,11 @@ public class JDRConverter
    protected boolean flowframeAbsPages = false;
    protected boolean usePdfInfo = false;
    protected boolean antialias=true, renderquality=true;
+
    protected long maxProcessTime = 300000L;
    protected boolean useLaTeX=false;
+   protected String[] dviLaTeXCmd, pdfLaTeXCmd, dvipsCmd, dvisvgmCmd;
+
    protected int textualShadingExportSetting = TeX.TEXTUAL_EXPORT_SHADING_AVERAGE;
    protected int textualOutlineExportSetting = TeX.TEXTPATH_EXPORT_OUTLINE_TO_PATH;
    protected boolean useHPaddingShapepar = false;

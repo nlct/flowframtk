@@ -174,7 +174,6 @@ Nicola Talbot
 
 <entry key="process.confirm.abort">Are you sure you want to abort this operation?</entry>
 <entry key="process.confirm">Confirm</entry>
-<entry key="process.running">Running {0}</entry>
 <entry key="process.aborted">Task aborted.</entry>
 <entry key="process.cancelling">Canceling task.</entry>
 

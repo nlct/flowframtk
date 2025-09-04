@@ -588,6 +588,11 @@ code should appear in the PDF</entry>
 <entry key="manual.idxmenu">menu</entry>
 <entry key="manual.idxbutton">button</entry>
 
+<!-- Messages -->
+
+<entry key="process.running">Running {0}</entry>
+<entry key="process.running_in_dir">Running {0} in directory {1}</entry>
+
 <!--  Errors -->
 <entry key="error.xml.more_than_one_tag">More than 1 &lt;{0}&gt; found</entry>
 <entry key="error.xml.missing_attr_in_tag">Missing ''{0}'' attribute in &lt;{1}&gt;</entry>

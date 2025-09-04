@@ -22,6 +22,7 @@ import java.nio.file.*;
 import java.util.concurrent.TimeUnit;
 import java.util.Map;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLibAppAdapter;
 
 import com.dickimawbooks.jdr.*;
@@ -92,93 +93,57 @@ public abstract class ExportImage
       return texFile;
    }
 
-   protected void exec(String[] cmdList)
+   protected void runPdfLaTeX(String texBase)
+     throws IOException,InterruptedException
+   {
+      exec(converter.getPdfLaTeXCmd(texBase));
+   }
+
+   protected void runDviLaTeX(String texBase)
+     throws IOException,InterruptedException
+   {
+      exec(converter.getDviLaTeXCmd(texBase));
+   }
+
+   protected void runDviPs(String texBase, File dviFile, File epsFile)
+     throws IOException,InterruptedException
+   {
+      exec(converter.getDviPsCmd(texBase, dviFile.getName(), epsFile.getName()));
+   }
+
+   protected void runDviSvgm(String texBase, File dviFile, File svgFile)
+     throws IOException,InterruptedException
+   {
+      exec(converter.getDviSvgmCmd(texBase, dviFile.getName(), svgFile.getName()));
+   }
+
+   protected void exec(String... cmdList)
      throws IOException,InterruptedException
    {
       getTeXFile();
-      File orgDir = converter.getInputFile().getParentFile();
+      File inDir = converter.getInputFile().getParentFile();
 
-      if (orgDir == null)
+      if (inDir == null)
       {
-         orgDir = converter.getInputFile().getAbsoluteFile().getParentFile();
+         inDir = converter.getInputFile().getAbsoluteFile().getParentFile();
       }
 
-      Process process = null;
+      long maxTime = converter.getMaxProcessTime();
 
-      BufferedReader in = null;
-      BufferedReader err = null;
+      TeXJavaHelpLib helpLib = converter.getHelpLib();
 
-      String line = null;
+      int exitCode = helpLib.execCommandAndWaitFor(texDir,
+        inDir, false, TeXJavaHelpLib.MessageType.WARNING, 
+        (StringBuilder)null, maxTime, 0, cmdList);
 
-      StringBuffer buff = new StringBuffer();
-
-      for (int i = 0; i < cmdList.length; i++)
+      if (exitCode != 0)
       {
-         buff.append(String.format(i == 0 ? "'%s'" : " '%s'", cmdList[i]));
-      }
+         converter.setExitCode(TeXJavaHelpLibAppAdapter.EXIT_PROCESS_FAILED);
 
-      String cmdListString = buff.toString();
-
-      publishMessages(MessageInfo.createMessage(converter.getMessage(
-         "process.running", cmdListString)));
-
-      try
-      {
-         ProcessBuilder processBuilder = new ProcessBuilder(cmdList);
-
-         processBuilder.directory(texDir);
-
-         Map<String,String> env = processBuilder.environment();
-
-         env.put("TEXINPUTS", String.format("%s%c",
-              orgDir.getAbsolutePath(), File.pathSeparatorChar));
-
-         process = processBuilder.start();
-
-         in = new BufferedReader(
-            new InputStreamReader(process.getInputStream()));
-         err = new BufferedReader(
-            new InputStreamReader(process.getErrorStream()));
-
-         long maxTime = converter.getMaxProcessTime();
-
-         if (!process.waitFor(maxTime, TimeUnit.MILLISECONDS))
-         {
-            throw new TimedOutException(getMessageSystem(), maxTime);
-         }
-
-         int exitCode = process.exitValue();
-
-         while ((line = in.readLine()) != null)
-         {
-         }
-
-         while ((line = err.readLine()) != null)
-         {
-            publishMessages(MessageInfo.createWarning(line));
-         }
-
-         if (exitCode != 0)
-         {
-            converter.setExitCode(TeXJavaHelpLibAppAdapter.EXIT_PROCESS_FAILED);
-
-            throw new IOException(String.format("%s%n%s",
-                converter.getMessage("error.exec_failed_withcode_and_dir",
-              buff.toString(), texDir.toString(), exitCode),
-              converter.getMessage("error.try_latex_export")));
-         }
-      }
-      finally
-      {
-         if (in != null)
-         {
-            in.close();
-         }
-
-         if (err != null)
-         {
-            err.close();
-         }
+         throw new IOException(String.format("%s%n%s",
+             converter.getMessage("error.exec_failed_withcode_and_dir",
+           helpLib.cmdListToString(cmdList), texDir.toString(), exitCode),
+           converter.getMessage("error.try_latex_export")));
       }
    }
 
@@ -216,9 +181,16 @@ public abstract class ExportImage
 
       writeComments(pgf);
 
-      String preamble = null;
+      String preamble = converter.getConfigPreamble();
 
-      preamble = converter.getConfigPreamble();
+      if (preamble == null)
+      {
+         preamble = "\\batchmode ";
+      }
+      else
+      {
+         preamble = "\\batchmode " + preamble;
+      }
 
       pgf.saveDoc(image, preamble, 
         converter.isEncapsulateOn(), 
