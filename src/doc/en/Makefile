@@ -72,6 +72,8 @@ flowframtk-en-GB.glstex	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 	lualatex flowframtk-en-GB
 	bibtex flowframtk-en-GB
 	bib2gls -g --no-warn-unknown-entry-types flowframtk-en-GB
+	lualatex flowframtk-en-GB
+	bib2gls -g --no-warn-unknown-entry-types flowframtk-en-GB
 
 flowframtk-en.pdf	: flowframtk-en.glstex 
 	lualatex flowframtk-en
@@ -85,6 +87,8 @@ flowframtk-en.glstex	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 	lualatex flowframtk-en
 	bibtex flowframtk-en
 	bib2gls -g --no-warn-unknown-entry-types flowframtk-en
+	lualatex flowframtk-en
+	bibtex flowframtk-en
 
 
 jdrview-en.pdf	: jdrview-en.glstex
@@ -106,6 +110,8 @@ jdrview-en-GB.glstex	: jdrview.bib shared.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
 			../sharedimages/*.png ../sharedimages/*.tex
+	lualatex jdrview-en-GB
+	bib2gls -g --no-warn-unknown-entry-types jdrview-en-GB
 	lualatex jdrview-en-GB
 	bib2gls -g --no-warn-unknown-entry-types jdrview-en-GB
 
@@ -158,7 +164,7 @@ clean	:
 	\rm -f jdrversion.tex
 	\rm -f flowframtk-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot,bbl,blg}
 	\rm -f jdrview-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
-	\rm -f jdrutils-en.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
+	\rm -f jdrutils-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
 	\rm -rf $(targetdir)/flowframtk
 	\rm -rf $(targetdir)/jdrview
 	\rm -f flowframtk-props-en*.bib

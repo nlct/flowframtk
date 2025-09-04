@@ -37,7 +37,7 @@ import com.dickimawbooks.flowframtk.*;
  * Component used to setup external process setting.
  */
 
-public class ExportSettingsPanel extends JPanel
+public class ExportSettingsPanel extends JPanel implements ActionListener
 {
    public ExportSettingsPanel(FlowframTk application, JDRAppSelector appSelector,
       String appname)
@@ -54,10 +54,68 @@ public class ExportSettingsPanel extends JPanel
       fileField = new FileField(getResources(), this, appname, 
          appSelector.getFileChooser(), fileFieldLabel);
 
+      fileField.getEastComponent().add(Box.createHorizontalStrut(20));
+
       add(fileField, "North");
 
+      eastComp = Box.createVerticalBox();
+      add(eastComp, "East");
+
+      JComponent row = Box.createHorizontalBox();
+      eastComp.add(row);
+
+      addButton =  getResources().createDialogButton(
+        "appselect", "add", this, (KeyStroke)null);
+      row.add(addButton);
+
+      upButton =  getResources().createDialogButton(
+        "appselect", "up", this, (KeyStroke)null);
+      row.add(upButton);
+
+      row.add(Box.createHorizontalStrut(20));
+
+      row = Box.createHorizontalBox();
+      eastComp.add(row);
+
+      removeButton =  getResources().createDialogButton(
+        "appselect", "remove", this, (KeyStroke)null);
+      row.add(removeButton);
+
+      downButton =  getResources().createDialogButton(
+        "appselect", "down", this, (KeyStroke)null);
+      row.add(downButton);
+
+      row.add(Box.createHorizontalStrut(20));
+
       optionsTableModel = new DefaultTableModel(2, 1);
-      optionsTable = new JTable(optionsTableModel);
+      optionsTable = new JTable(optionsTableModel)
+        {
+          @Override
+           public void valueChanged(ListSelectionEvent evt)
+           {
+              super.valueChanged(evt);
+
+              if (!evt.getValueIsAdjusting())
+              {
+                 int n = getSelectedRowCount();
+                 removeButton.setEnabled(n > 0 && getRowCount() > 1);
+
+                 if (n == 1)
+                 {
+                    upButton.setEnabled(getSelectedRow() > 0);
+                    downButton.setEnabled(getSelectedRow() < getRowCount()-1);
+                 }
+                 else
+                 {
+                    upButton.setEnabled(false);
+                    downButton.setEnabled(false);
+                 }
+              }
+           }
+        };
+
+      optionsTable.setRowSelectionAllowed(true);
+      optionsTable.setColumnSelectionAllowed(false);
 
       add(optionsTable, "Center");
 
@@ -73,10 +131,43 @@ public class ExportSettingsPanel extends JPanel
 
       westComp.add(optionsLabel, "North");
 
-      eastComp = Box.createVerticalBox();
-      add(eastComp, "East");
+   }
 
-// TODO add buttons
+   @Override
+   public void actionPerformed(ActionEvent evt)
+   {
+      String action = evt.getActionCommand();
+
+      if (action == null) return;
+
+      if (action.equals("add"))
+      {
+         optionsTableModel.addRow(new String[] { "" });
+         removeButton.setEnabled(true);
+      }
+      else if (action.equals("remove"))
+      {
+         int[] rowIdxs = optionsTable.getSelectedRows();
+
+         for (int i = rowIdxs.length - 1; i >= 0; i--)
+         {
+            optionsTableModel.removeRow(rowIdxs[i]);
+         }
+      }
+      else if (action.equals("up"))
+      {
+         int rowIdx = optionsTable.getSelectedRow();
+         int j = rowIdx-1;
+         optionsTableModel.moveRow(rowIdx, rowIdx, j);
+         optionsTable.setRowSelectionInterval(j, j);
+      }
+      else if (action.equals("down"))
+      {
+         int rowIdx = optionsTable.getSelectedRow();
+         int j = rowIdx+1;
+         optionsTableModel.moveRow(rowIdx, rowIdx, j);
+         optionsTable.setRowSelectionInterval(j, j);
+      }
    }
 
    public void initialise(String appPath, String options)
@@ -94,6 +185,10 @@ public class ExportSettingsPanel extends JPanel
       {
          optionsTableModel.setValueAt(options[i], i, 0);
       }
+
+      removeButton.setEnabled(options.length > 1);
+      upButton.setEnabled(false);
+      downButton.setEnabled(false);
    }
 
    public String getFileName()
@@ -107,7 +202,8 @@ public class ExportSettingsPanel extends JPanel
 
       for (int i = 0; i < optionsTableModel.getRowCount(); i++)
       {
-         String val = optionsTableModel.getValueAt(i, 0).toString().trim();
+         int idx = optionsTable.convertRowIndexToModel(i);
+         String val = optionsTableModel.getValueAt(idx, 0).toString().trim();
 
          if (!val.isEmpty())
          {
@@ -139,4 +235,5 @@ public class ExportSettingsPanel extends JPanel
    private FileField fileField;
    private JTable optionsTable;
    private DefaultTableModel optionsTableModel;
+   private JButton addButton, removeButton, upButton, downButton;
 }

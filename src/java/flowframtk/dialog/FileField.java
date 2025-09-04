@@ -83,14 +83,20 @@ public class FileField extends JPanel
       mainPanel.add(textField);
       mainPanel.add(Box.createVerticalStrut(5));
 
+      eastComp = Box.createHorizontalBox();
+      add(eastComp, "East");
+
       button = getResources().createDialogButton("button.choose", "open",
          this, null, getResources().getMessage("tooltip.choose_file"));
 
-      add(button, "East");
+      eastComp.add(button);
+
+      westComp = Box.createHorizontalBox();
+      add(westComp, "West");
 
       if (label != null)
       {
-         add(label, "West");
+         westComp.add(label);
          label.setLabelFor(textField);
       }
 
@@ -204,6 +210,16 @@ public class FileField extends JPanel
       label.setLabelFor(textField);
    }
 
+   public JComponent getEastComponent()
+   {
+      return eastComp;
+   }
+
+   public JComponent getWestComponent()
+   {
+      return westComp;
+   }
+
    public JDRResources getResources()
    {
       return resources;
@@ -212,6 +228,7 @@ public class FileField extends JPanel
    private JTextField textField;
 
    private JButton button;
+   private JComponent eastComp, westComp;
 
    private JFileChooser fileChooser;
 

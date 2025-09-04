@@ -698,6 +698,8 @@ class ProcessesPanel extends JPanel
          appSelector.getFileChooser());
       libgsField.setLabel(label);
 
+      libgsField.getEastComponent().add(Box.createHorizontalStrut(20));
+
       row.add(label);
       row.add(libgsField);
 

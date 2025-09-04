@@ -2537,7 +2537,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="processes.title">Application Paths</entry>
 <entry key="processes.mnemonic">P</entry>
 <entry key="processes.tooltip">Set the paths to applications used by some export functions</entry>
-<entry key="processes.latex">LaTeX</entry>
+<entry key="processes.latex">(DVI) LaTeX</entry>
 <entry key="processes.latex.mnemonic">L</entry>
 <entry key="processes.pdflatex">PDFLaTeX</entry>
 <entry key="processes.pdflatex.mnemonic">F</entry>
@@ -2889,6 +2889,15 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="appselect.setup">Setup</entry>
 <entry key="appselect.info">You need to check some settings before you continue with this function. If these are correct, click on the 'Okay' button to continue.</entry>
 <entry key="appselect.libgs">Please specify the location of the libgs library. (Leave empty if you want to use the LIBGS environment variable.) The file will probably be called something like libgs.so (Unix-like) or gsdll32.dll (32-bit Windows) or gsdll64.dll (64-bit Windows)</entry>
+
+<entry key="appselect.add">Add</entry>
+<entry key="appselect.add.tooltip">Add Option</entry>
+<entry key="appselect.remove">Remove</entry>
+<entry key="appselect.remove.tooltip">Remove selected option</entry>
+<entry key="appselect.up">Up</entry>
+<entry key="appselect.up.tooltip">Move selected row up</entry>
+<entry key="appselect.down">Down</entry>
+<entry key="appselect.down.tooltip">Move selected row down</entry>
 
 <entry key="file.select">Select</entry>
 <entry key="file.select.mnemonic">S</entry>

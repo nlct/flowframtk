@@ -1,4 +1,6 @@
 % arara: lualatex
+% arara: bib2gls: { group: on, options: [ --no-warn-unknown-entry-types ] } if missing("glstex")
+% arara: lualatex if changed("glstex")
 % arara: bib2gls: { group: on, options: [ --no-warn-unknown-entry-types ] }
 % arara: lualatex
 % arara: lualatex

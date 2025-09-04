@@ -1504,7 +1504,7 @@ public class FlowframTkInvoker
                {
                   settings.setDvipsApp(value);
                }
-               else if (key.equals("dvips_options"))
+               else if (key.equals("dvips_opts"))
                {
                   settings.setDvipsOptions(value);
                }
