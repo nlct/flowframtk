@@ -2884,6 +2884,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="appselect.pathlabel">Select path to application</entry>
 <entry key="appselect.pathlabel.mnemonic">P</entry>
 <entry key="appselect.query.location">Please specify location of ''{0}'' application</entry>
+<entry key="appselect.options">Options</entry>
+
 <entry key="appselect.setup">Setup</entry>
 <entry key="appselect.info">You need to check some settings before you continue with this function. If these are correct, click on the 'Okay' button to continue.</entry>
 <entry key="appselect.libgs">Please specify the location of the libgs library. (Leave empty if you want to use the LIBGS environment variable.) The file will probably be called something like libgs.so (Unix-like) or gsdll32.dll (32-bit Windows) or gsdll64.dll (64-bit Windows)</entry>

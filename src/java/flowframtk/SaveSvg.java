@@ -33,54 +33,23 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveSvg extends ExportDocImage
 {
-   public SaveSvg(JDRFrame frame, File file, JDRGroup jdrImage,
-      String latexApp, String dvisvgmApp, String libgs)
+   public SaveSvg(JDRFrame frame, File file, JDRGroup jdrImage)
    {
       super(frame, file, jdrImage, true, true);
-
-      this.latexApp = latexApp;
-      this.dvisvgmApp = dvisvgmApp;
-      this.libgs = libgs;
    }
 
-   protected File processImage(String texBase)
+   @Override
+   protected File processImage()
       throws IOException,InterruptedException
    {
+      FlowframTkSettings settings = getSettings();
       File dir = getTeXFile().getParentFile();
 
-      File dviFile = new File(dir, texBase+".dvi");
-      dviFile.deleteOnExit();
+      exec(settings.getLaTeXCmd(texBase));
 
-      exec(new String[] {latexApp, "-interaction", "batchmode", texBase});
+      exec(settings.getDviSvgmCmd(texBase));
 
-      String[] cmd;
-
-      File svgFile = new File(dir, texBase+".svg");
-
-      if (libgs == null || libgs.isEmpty())
-      {
-         cmd = new String[] {dvisvgmApp, "-o", svgFile.getName(),
-            dviFile.getName()};
-      }
-      else
-      {
-         cmd = new String[] {dvisvgmApp,
-           "--libgs="+libgs,
-           "-o", svgFile.getName(), dviFile.getName()};
-      }
-
-      exec(cmd);
-
-      return svgFile;
+      return new File(dir, texBase+".svg");
    }
 
-   protected File getTeXFile() throws IOException
-   {
-      File texFile = File.createTempFile("jdr2svg", ".tex");
-      texFile.deleteOnExit();
-
-      return texFile;
-   }
-
-   private String latexApp, dvisvgmApp, libgs;
 }

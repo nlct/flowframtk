@@ -40,6 +40,7 @@ import java.beans.PropertyChangeEvent;
 
 import com.dickimawbooks.texjavahelplib.MessageSystem;
 import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+import com.dickimawbooks.texjavahelplib.UserCancelledException;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;

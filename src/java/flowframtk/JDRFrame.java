@@ -1524,19 +1524,19 @@ public class JDRFrame extends JInternalFrame
       canvas.savePNG(file);
    }
 
-   public void saveEPS(File file, String latexApp, String dvipsApp)
+   public void saveEPS(File file)
    {
-      canvas.saveEPS(file, latexApp, dvipsApp);
+      canvas.saveEPS(file);
    }
 
-   public void savePdf(File file, String pdflatexApp)
+   public void savePdf(File file)
    {
-      canvas.savePdf(file, pdflatexApp);
+      canvas.savePdf(file);
    }
 
-   public void saveSVG(File file, String latexApp, String dvisvgmApp, String libgs)
+   public void saveSVG(File file)
    {
-      canvas.saveSVG(file, latexApp, dvisvgmApp, libgs);
+      canvas.saveSVG(file);
    }
 
    public boolean canDiscard()

@@ -11207,27 +11207,25 @@ public class JDRCanvas extends JPanel
       (new SavePng(frame_, file, paths)).execute();
    }
 
-   public void saveEPS(File file, String latexApp, String dvipsApp)
+   public void saveEPS(File file)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveEps(frame_, file, paths, latexApp, dvipsApp)).execute();
+      (new SaveEps(frame_, file, paths)).execute();
    }
 
-   public void savePdf(File file, String pdflatexApp)
+   public void savePdf(File file)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePdf(frame_, file, paths, pdflatexApp)).execute();
+      (new SavePdf(frame_, file, paths)).execute();
    }
 
-   public void saveSVG(File file, String latexApp,
-     String dvisvgmApp, String libgs)
+   public void saveSVG(File file)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveSvg(frame_, file, 
-         paths, latexApp, dvisvgmApp, libgs)).execute();
+      (new SaveSvg(frame_, file, paths)).execute();
    }
 
    public void updateTextAreaBounds()

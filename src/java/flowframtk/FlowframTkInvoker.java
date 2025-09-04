@@ -683,6 +683,8 @@ public class FlowframTkInvoker
 
       StringBuilder messages = null;
 
+      boolean foundFlowFramv119 = false;
+
       try
       {
          while ((s=in.readLine()) != null)
@@ -1486,17 +1488,33 @@ public class FlowframTkInvoker
                {
                   settings.setLaTeXApp(value);
                }
+               else if (key.equals("latex_opts"))
+               {
+                  settings.setLaTeXOptions(value);
+               }
                else if (key.equals("pdflatex_app"))
                {
                   settings.setPdfLaTeXApp(value);
+               }
+               else if (key.equals("pdflatex_opts"))
+               {
+                  settings.setPdfLaTeXOptions(value);
                }
                else if (key.equals("dvips_app"))
                {
                   settings.setDvipsApp(value);
                }
+               else if (key.equals("dvips_options"))
+               {
+                  settings.setDvipsOptions(value);
+               }
                else if (key.equals("dvisvgm_app"))
                {
                   settings.setDvisvgmApp(value);
+               }
+               else if (key.equals("dvisvgm_opts"))
+               {
+                  settings.setDvisvgmOptions(value);
                }
                else if (key.equals("libgs"))
                {
@@ -1505,6 +1523,11 @@ public class FlowframTkInvoker
                else if (key.equals("timeout"))
                {
                   settings.setMaxProcessTime(parseLong(value, line));
+               }
+               else if (key.equals("flowfram_v1.19"))
+               {
+                  settings.setHasMinimumFlowFramSty119(parseBoolean(value, line));
+                  foundFlowFramv119 = true;
                }
                else if (key.equals("unicode"))
                {
@@ -1693,6 +1716,32 @@ public class FlowframTkInvoker
             }
          }
 
+         if (!foundFlowFramv119)
+         {
+            // The simplest way of determining if flowfram v1.19 or
+            // above is installed is to test if flowframtkutils.sty
+            // is on TeX's path.
+
+            try
+            {
+               String p = resources.getHelpLib().kpsewhich("flowframtkutils.sty");
+
+               if (p != null && !p.isEmpty())
+               {
+                  settings.setHasMinimumFlowFramSty119(true);
+               }
+            }
+            catch (Throwable e)
+            {
+               if (resources.isDebuggingOn())
+               {
+                  e.printStackTrace();
+               }
+
+               messages.append(String.format("%n%s", e.getMessage()));
+            }
+         }
+
          if (messages != null && resources.isDebuggingOn())
          {
             resources.error(messages.toString());
@@ -1834,10 +1883,19 @@ public class FlowframTkInvoker
       out.println("robot="+(settings.robot==null?0:1));
 
       saveIfNotNullOrEmpty(out, "latex_app", settings.getLaTeXApp());
+      saveIfNotNullOrEmpty(out, "latex_opts", settings.getLaTeXOptions());
       saveIfNotNullOrEmpty(out, "pdflatex_app", settings.getPdfLaTeXApp());
+      saveIfNotNullOrEmpty(out, "pdflatex_opts", settings.getPdfLaTeXOptions());
       saveIfNotNullOrEmpty(out, "dvips_app", settings.getDvipsApp());
+      saveIfNotNullOrEmpty(out, "dvips_opts", settings.getDvipsOptions());
       saveIfNotNullOrEmpty(out, "dvisvgm_app", settings.getDvisvgmApp());
+      saveIfNotNullOrEmpty(out, "dvisvgm_opts", settings.getDvisvgmOptions());
       saveIfNotNullOrEmpty(out, "libgs", settings.getLibgs());
+
+      if (settings.hasMinimumFlowFramSty119())
+      {
+         out.println("flowfram_v1.19=1");
+      }
 
       out.println("unicode="+settings.getUnicodeRangesSpec());
       out.println("look_and_feel="+settings.getLookAndFeel());

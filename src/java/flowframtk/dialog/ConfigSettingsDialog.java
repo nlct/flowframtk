@@ -42,6 +42,7 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -123,7 +124,7 @@ public class ConfigSettingsDialog extends JDialog
       processesPanel = new ProcessesPanel(application, appSelector);
 
       tabbedPane.addTab(getResources().getMessage("processes.title"), null,
-        processesPanel, getResources().getMessage("processes.tooltip"));
+        new JScrollPane(processesPanel), getResources().getMessage("processes.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
         getResources().getCodePoint("processes.mnemonic"));
 
@@ -636,225 +637,167 @@ class ProcessesPanel extends JPanel
 {
    public ProcessesPanel(FlowframTk application, JDRAppSelector appSelector)
    {
-      super(new GridBagLayout());
-      GridBagConstraints gbc = new GridBagConstraints();
+      super(null);
+
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
       JDRResources resources = application.getResources();
 
-      gbc.gridx=0;
-      gbc.gridy=0;
-      gbc.gridwidth=1;
-      gbc.gridheight=1;
-      gbc.fill=GridBagConstraints.BOTH;
-      gbc.anchor=GridBagConstraints.LINE_START;
-      gbc.weightx=1;
-      gbc.weighty=1;
+      JLabelGroup grp = new JLabelGroup();
 
-      String latexApp = application.getLaTeXApp();
-      String pdflatexApp = application.getPdfLaTeXApp();
-      String dvipsApp = application.getDvipsApp();
-      String dvisvgmApp = application.getDvisvgmApp();
+      JLabel label = resources.createAppLabel("processes.latex");
+      grp.add(label);
+
+      latexPanel = new ExportSettingsPanel(application, appSelector,
+        "latex", label, grp);
+
+      add(latexPanel);
+
+      label = resources.createAppLabel("processes.pdflatex");
+      grp.add(label);
+
+      pdflatexPanel = new ExportSettingsPanel(application, appSelector,
+        "pdflatex", label, grp);
+
+      add(pdflatexPanel);
+
+      label = resources.createAppLabel("processes.dvips");
+      grp.add(label);
+
+      dvipsPanel = new ExportSettingsPanel(application, appSelector,
+        "dvips", label, grp);
+
+      add(dvipsPanel);
+
+      label = resources.createAppLabel("processes.dvisvgm");
+      grp.add(label);
+
+      dvisvgmPanel = new ExportSettingsPanel(application, appSelector,
+        "dvisvgm", label, grp);
+
+      add(dvisvgmPanel);
+
+      JTextArea libgsArea =
+         resources.createAppInfoArea(20, "appselect.libgs");
+      libgsArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      JComponent row = Box.createHorizontalBox();
+      add(row);
+
+      row.add(libgsArea);
+
       String libGs = application.getLibgs();
 
-      if (dvisvgmApp == null || dvisvgmApp.isEmpty())
-      {
-         File file = appSelector.findApp("dvisvgm");
+      row = Box.createHorizontalBox();
+      add(row);
 
-         if (file != null)
-         {
-            dvisvgmApp = file.getAbsolutePath();
-         }
-
-         // User's version of dvisvgm may have been precompiled to
-         // use PostScript, so only attempt to locate libgs if
-         // dvisvgm hasn't been set.
-         if (libGs == null)
-         {
-            libGs = ExportToSvgSettings.getDefaultLibgs(appSelector);
-         }
-      }
-
-      if (latexApp == null)
-      {
-         File file = appSelector.findApp("latex");
-
-         if (file != null)
-         {
-            latexApp = file.getAbsolutePath();
-         }
-      }
-
-      if (pdflatexApp == null)
-      {
-         File file = appSelector.findApp("pdflatex");
-
-         if (file != null)
-         {
-            pdflatexApp = file.getAbsolutePath();
-         }
-      }
-
-      if (dvipsApp == null)
-      {
-         File file = appSelector.findApp("dvips");
-
-         if (file != null)
-         {
-            dvipsApp = file.getAbsolutePath();
-         }
-      }
-
-      if (dvisvgmApp == null)
-      {
-         File file = appSelector.findApp("dvisvgm");
-
-         if (file != null)
-         {
-            dvisvgmApp = file.getAbsolutePath();
-         }
-      }
-
-      JLabel latexLabel = resources.createAppLabel("processes.latex");
-
-      latexField = new FileField(resources, this, latexApp,
-         appSelector.getFileChooser());
-      latexField.setLabel(latexLabel);
-
-      JLabel pdflatexLabel = resources.createAppLabel("processes.pdflatex");
-
-      pdflatexField = new FileField(resources, this, pdflatexApp,
-         appSelector.getFileChooser());
-      pdflatexField.setLabel(pdflatexLabel);
-
-      JLabel dvipsLabel = resources.createAppLabel("processes.dvips");
-
-      dvipsField = new FileField(resources, this, dvipsApp,
-         appSelector.getFileChooser());
-      dvipsField.setLabel(dvipsLabel);
-
-      JLabel dvisvgmLabel = resources.createAppLabel("processes.dvisvgm");
-
-      dvisvgmField = new FileField(resources, this, dvisvgmApp,
-         appSelector.getFileChooser());
-      dvisvgmField.setLabel(dvisvgmLabel);
-
-      JLabel libgsLabel = resources.createAppLabel("processes.libgs");
+      label = resources.createAppLabel("processes.libgs");
+      grp.add(label);
 
       libgsField = new FileField(resources, this, libGs,
          appSelector.getFileChooser());
-      libgsField.setLabel(libgsLabel);
+      libgsField.setLabel(label);
 
-      JTextArea libgsArea =
-         resources.createAppInfoArea("appselect.libgs");
-      libgsArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+      row.add(label);
+      row.add(libgsField);
 
       JLabel timeoutLabel = resources.createAppLabel("processes.timeout");
-      timeoutField = new NonNegativeLongField(300000L);
-      timeoutField.setColumns(8);
+      grp.add(timeoutLabel);
+
+      timeoutModel = new SpinnerNumberModel(
+        300000L, Long.valueOf(0L), null, Long.valueOf(1));
+
+      timeoutField = new JSpinner(timeoutModel);
+      JSpinner.DefaultEditor ed = (JSpinner.DefaultEditor)timeoutField.getEditor();
+      ed.getTextField().setColumns(9);
+
       timeoutLabel.setLabelFor(timeoutField);
 
-      add(latexLabel, gbc);
-      gbc.gridx++;
-      add(latexField, gbc);
+      row = Box.createHorizontalBox();
+      add(row);
 
-      gbc.gridy++;
-      gbc.gridx=0;
-
-      add(pdflatexLabel, gbc);
-      gbc.gridx++;
-      add(pdflatexField, gbc);
-
-      gbc.gridy++;
-      gbc.gridx=0;
-
-      add(dvipsLabel, gbc);
-      gbc.gridx++;
-      add(dvipsField, gbc);
-
-      gbc.gridy++;
-      gbc.gridx=0;
-
-      add(dvisvgmLabel, gbc);
-      gbc.gridx++;
-      add(dvisvgmField, gbc);
-
-      gbc.gridy++;
-      gbc.gridx=0;
-      gbc.gridwidth=2;
-
-      add(libgsArea, gbc);
-
-      gbc.gridy++;
-      gbc.gridwidth=1;
-
-      add(libgsLabel, gbc);
-      gbc.gridx++;
-      add(libgsField, gbc);
-
-      gbc.gridy++;
-      gbc.gridx=0;
-
-      gbc.fill=GridBagConstraints.HORIZONTAL;
-      add(timeoutLabel, gbc);
-      gbc.gridx++;
-
-      Box box = Box.createHorizontalBox();
-      box.add(timeoutField);
-      box.add(new JLabel(resources.getMessage("processes.millisecs")));
-
-      add(box, gbc);
+      row.add(timeoutLabel);
+      row.add(timeoutField);
+      row.add(new JLabel(resources.getMessage("processes.millisecs")));
+      row.add(Box.createHorizontalGlue());
    }
 
    public void initialise(FlowframTk application)
    {
-      String latexApp = application.getLaTeXApp();
-      String pdflatexApp = application.getPdfLaTeXApp();
-      String dvipsApp = application.getDvipsApp();
-      String dvisvgmApp = application.getDvisvgmApp();
+      latexPanel.initialise(application.getLaTeXApp(),
+        application.getLaTeXOptions());
+
+      pdflatexPanel.initialise(application.getPdfLaTeXApp(),
+        application.getPdfLaTeXOptions());
+
+      dvipsPanel.initialise(application.getDvipsApp(),
+        application.getDvipsOptions());
+
+      dvisvgmPanel.initialise(application.getDvisvgmApp(),
+        application.getDvisvgmOptions());
+
       String libGs = application.getLibgs();
 
-      if (latexApp != null && !latexApp.isEmpty())
-      {
-         latexField.setFileName(latexApp);
-      }
-
-      if (pdflatexApp != null && !pdflatexApp.isEmpty())
-      {
-         pdflatexField.setFileName(pdflatexApp);
-      }
-
-      if (dvipsApp != null && !dvipsApp.isEmpty())
-      {
-         dvipsField.setFileName(dvipsApp);
-      }
-
-      if (dvipsApp != null && !dvipsApp.isEmpty())
-      {
-         dvipsField.setFileName(dvipsApp);
-
-         libgsField.setFileName(libGs == null ? "" : libGs);
-      }
-      else if (libGs != null && !libGs.isEmpty())
+      if (libGs != null && !libGs.isEmpty())
       {
          libgsField.setFileName(libGs);
       }
 
-      timeoutField.setValue(application.getMaxProcessTime());
+      timeoutModel.setValue(Long.valueOf(application.getMaxProcessTime()));
    }
 
    public void okay(FlowframTk application)
    {
-      application.setLaTeXApp(latexField.getFileName());
-      application.setPdfLaTeXApp(pdflatexField.getFileName());
-      application.setDvipsApp(dvipsField.getFileName());
-      application.setDvisvgmApp(dvisvgmField.getFileName());
+      // DVI LaTeX
+      application.setLaTeXApp(latexPanel.getFileName());
+
+      String options = latexPanel.getOptions();
+
+      if (!options.equals(application.getLaTeXOptions()))
+      {
+         application.setLaTeXOptions(options);
+      }
+
+      // PDF LaTeX
+      application.setPdfLaTeXApp(pdflatexPanel.getFileName());
+
+      options = pdflatexPanel.getOptions();
+
+      if (!options.equals(application.getPdfLaTeXOptions()))
+      {
+         application.setPdfLaTeXOptions(options);
+      }
+
+      // dvips
+      application.setDvipsApp(dvipsPanel.getFileName());
+
+      options = dvipsPanel.getOptions();
+
+      if (!options.equals(application.getDvipsOptions()))
+      {
+         application.setDvipsOptions(options);
+      }
+
+      // dvisvgm
+      application.setDvisvgmApp(dvisvgmPanel.getFileName());
+
+      options = dvisvgmPanel.getOptions();
+
+      if (!options.equals(application.getDvisvgmOptions()))
+      {
+         application.setDvisvgmOptions(options);
+      }
+
       application.setLibgs(libgsField.getFileName());
-      application.setMaxProcessTime(timeoutField.getLong());
+      application.setMaxProcessTime(timeoutModel.getNumber().longValue());
    }
 
-   private FileField latexField, pdflatexField, dvipsField,
-     dvisvgmField, libgsField;
+   private FileField libgsField;
 
-   private NonNegativeLongField timeoutField;
+   private ExportSettingsPanel latexPanel, pdflatexPanel,
+     dvipsPanel, dvisvgmPanel;
+
+   private JSpinner timeoutField;
+   private SpinnerNumberModel timeoutModel;
 }
 

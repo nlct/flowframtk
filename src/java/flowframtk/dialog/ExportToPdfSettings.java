@@ -60,21 +60,7 @@ public class ExportToPdfSettings extends JDialog
       mainPanel.add(new JLabel(getResources().getMessage(
          "appselect.query.location", "pdflatex")));
 
-      String pdflatexApp = application.getPdfLaTeXApp();
-
-      if (pdflatexApp == null)
-      {
-         File file = appSelector.findApp("pdflatex");
-
-         if (file != null)
-         {
-            pdflatexApp = file.getAbsolutePath();
-         }
-      }
-
-      pdflatexField = new FileField(getResources(), this, pdflatexApp, 
-         appSelector.getFileChooser());
-      mainPanel.add(pdflatexField);
+      exportPanel = new ExportSettingsPanel(application, appSelector, "pdflatex");
 
       getContentPane().add(mainPanel, "Center");
 
@@ -92,17 +78,8 @@ public class ExportToPdfSettings extends JDialog
 
    public boolean display()
    {
-      String pdflatexApp = pdflatexField.getFileName();
-
-      if (pdflatexApp == null || pdflatexApp.isEmpty())
-      {
-         pdflatexApp = application.getPdfLaTeXApp();
-      }
-
-      if (pdflatexApp != null && !pdflatexApp.isEmpty())
-      {
-         pdflatexField.setFileName(pdflatexApp);
-      }
+      exportPanel.initialise(application.getPdfLaTeXApp(),
+                application.getPdfLaTeXOptions());
 
       success = false;
       setVisible(true);
@@ -118,7 +95,15 @@ public class ExportToPdfSettings extends JDialog
 
       if (action.equals("okay"))
       {
-         application.setPdfLaTeXApp(pdflatexField.getFileName());
+         application.setPdfLaTeXApp(exportPanel.getFileName());
+
+         String options = exportPanel.getOptions();
+
+         if (!options.equals(application.getPdfLaTeXOptions()))
+         {
+            application.setPdfLaTeXOptions(options);
+         }
+
          success = true;
          setVisible(false);
       }
@@ -136,5 +121,5 @@ public class ExportToPdfSettings extends JDialog
    private FlowframTk application;
    private boolean success = false;
 
-   private FileField pdflatexField;
+   private ExportSettingsPanel exportPanel;
 }

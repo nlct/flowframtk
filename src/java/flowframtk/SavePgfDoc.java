@@ -36,7 +36,7 @@ public class SavePgfDoc extends ExportDocImage
    public SavePgfDoc(JDRFrame frame, File file, JDRGroup jdrImage,
      boolean encapsulate)
    {
-      super(frame, file, jdrImage, encapsulate, false);
+      super(frame, file, jdrImage, encapsulate, false, false);
    }
 
    public File getTeXFile()
@@ -44,7 +44,8 @@ public class SavePgfDoc extends ExportDocImage
       return outputFile;
    }
 
-   protected File processImage(String texBase)
+   @Override
+   protected File processImage()
       throws IOException,InterruptedException
    {
       return null;

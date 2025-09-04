@@ -33,38 +33,24 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveEps extends ExportDocImage
 {
-   public SaveEps(JDRFrame frame, File file, JDRGroup jdrImage,
-     String latexApp, String dvipsApp)
+   public SaveEps(JDRFrame frame, File file, JDRGroup jdrImage)
    {
       super(frame, file, jdrImage, true, true);
-      this.latexApp = latexApp;
-      this.dvipsApp = dvipsApp;
    }
 
-   protected File processImage(String texBase)
+   @Override
+   protected File processImage()
       throws IOException,InterruptedException
    {
+      FlowframTkSettings settings = getSettings();
+
       File dir = getTeXFile().getParentFile();
 
-      File dviFile = new File(dir, texBase+".dvi");
-      dviFile.deleteOnExit();
+      exec(settings.getLaTeXCmd(texBase));
 
-      exec(new String[] {latexApp, "-interaction", "batchmode", texBase});
+      exec(settings.getDviPsCmd(texBase));
 
-      File epsFile = new File(dir, outputFile.getName());
-
-      exec(new String[] {dvipsApp, "-o", epsFile.getName(), dviFile.getName()});
-
-      return epsFile;
+      return new File(dir, texBase+".eps");
    }
 
-   protected File getTeXFile() throws IOException
-   {
-      File texFile = File.createTempFile("jdr2eps", ".tex");
-      texFile.deleteOnExit();
-
-      return texFile;
-   }
-
-   private String latexApp, dvipsApp;
 }

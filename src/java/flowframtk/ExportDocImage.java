@@ -27,8 +27,8 @@ import java.io.*;
 import java.nio.file.*;
 import java.awt.*;
 import javax.swing.*;
-import java.util.concurrent.TimeUnit;
 
+import com.dickimawbooks.texjavahelplib.*;
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdrresources.*;
@@ -38,93 +38,58 @@ public abstract class ExportDocImage extends ExportImage
    public ExportDocImage(JDRFrame frame, File file, JDRGroup jdrImage,
       boolean encapsulate, boolean convertBitmapToEps)
    {
+      this(frame, file, jdrImage, encapsulate, convertBitmapToEps, true);
+   }
+
+   public ExportDocImage(JDRFrame frame, File file, JDRGroup jdrImage,
+      boolean encapsulate, boolean convertBitmapToEps,
+      boolean externalProcessRequired)
+   {
       super(frame, file, jdrImage);
       this.encapsulate = encapsulate;
       this.convertBitmapToEps = convertBitmapToEps;
+      this.externalProcessRequired = externalProcessRequired;
+
+      File imageFile = frame.getFile();
+
+      if (imageFile != null)
+      {
+         imageBase = imageFile.getParentFile();
+
+         if (imageBase == null)
+         {
+            imageBase = imageFile.getAbsoluteFile().getParentFile();
+         }
+      }
    }
 
-   protected void exec(String[] cmdList)
+   protected void exec(String... cmdList)
      throws IOException,InterruptedException
    {
+      TeXJavaHelpLib helpLib = getResources().getHelpLib();
+
       File dir = getTeXFile().getParentFile();
 
-      Process process = null;
+      long maxTime = jdrFrame.getApplication().getMaxProcessTime();
 
-      BufferedReader in = null;
-      BufferedReader err = null;
-
-      String line = null;
-
-      StringBuffer buff = new StringBuffer();
-
-      for (int i = 0; i < cmdList.length; i++)
-      {
-         buff.append(String.format(i == 0 ? "'%s'" : " '%s'", cmdList[i]));
-      }
-
-      String cmdListString = buff.toString();
+      String cmdListString = helpLib.cmdListToString(cmdList);
 
       publish(MessageInfo.createMessage(getResources().getMessage(
          "process.running", cmdListString)));
 
+      int exitCode = -1;
+
       try
       {
-         ProcessBuilder processBuilder = new ProcessBuilder(cmdList);
-
-         processBuilder.directory(dir);
-
-         process = processBuilder.start();
-
-         getMessageSystem().registerProcess(process);
-
-         in = new BufferedReader(
-            new InputStreamReader(process.getInputStream()));
-         err = new BufferedReader(
-            new InputStreamReader(process.getErrorStream()));
-
-         long maxTime = jdrFrame.getApplication().getMaxProcessTime();
-
-         if (!process.waitFor(maxTime, TimeUnit.MILLISECONDS))
-         {
-            throw new TimedOutException(getResources(), maxTime);
-         }
-
-         int exitCode = process.exitValue();
-
-         getMessageSystem().checkForInterrupt();
-
-         while ((line = in.readLine()) != null)
-         {
-            getMessageSystem().checkForInterrupt();
-         }
-
-         while ((line = err.readLine()) != null)
-         {
-            publish(MessageInfo.createWarning(line));
-            getMessageSystem().checkForInterrupt();
-         }
-
-         if (exitCode != 0)
-         {
-            throw new IOException(String.format("%s%n%s",
-                getResources().getMessage("error.exec_failed_withcode_and_dir",
-              buff.toString(), dir.toString(), exitCode),
-              getResources().getMessage("error.try_latex_export")));
-         }
+         exitCode = helpLib.execCommandAndWaitFor(dir,
+           imageBase, true, TeXJavaHelpLib.MessageType.WARNING,
+            (StringBuilder)null, maxTime, 0,
+            getMessageSystem(),
+            cmdList);
       }
       finally
       {
          getMessageSystem().processDone();
-
-         if (in != null)
-         {
-            in.close();
-         }
-
-         if (err != null)
-         {
-            err.close();
-         }
       }
    }
 
@@ -137,13 +102,49 @@ public abstract class ExportDocImage extends ExportImage
       pgf.comment(jdrFrame.getFilename());
    }
 
-   protected abstract File processImage(String texBase)
+   protected abstract File processImage()
       throws IOException,InterruptedException;
 
-   protected abstract File getTeXFile() throws IOException;
+   protected File getTeXFile() throws IOException
+   {
+      return texFile;
+   }
+
+   protected void ensureWorkingDirectoryCreated()
+   throws IOException
+   {
+      if (texDir == null)
+      {
+         texDir = Files.createTempDirectory(
+           getResources().getApplicationName().toLowerCase()).toFile();
+
+         texDir.deleteOnExit();
+
+         texBase = texDir.getName();
+         texFile = new File(texDir, texBase + ".tex");
+      }
+   }
+
+   public String getBaseName(File file)
+   {
+      String basename = file.getName();
+      int idx = basename.lastIndexOf(".");
+
+      if (idx > 0) 
+      {
+         basename = basename.substring(0, idx);
+      }
+
+      return basename;
+   }
 
    protected void save() throws IOException,InterruptedException
    {
+      if (externalProcessRequired)
+      {
+         ensureWorkingDirectoryCreated();
+      }
+
       PrintWriter out = null;
 
       FlowframTk app = jdrFrame.getApplication();
@@ -153,14 +154,6 @@ public abstract class ExportDocImage extends ExportImage
          File texFile = getTeXFile();
 
          File dir = texFile.getParentFile();
-         String texBase = texFile.getName();
-         texBase = texBase.substring(0, texBase.lastIndexOf("."));
-
-         File auxFile = new File(dir, texBase+".aux");
-         auxFile.deleteOnExit();
-
-         File logFile = new File(dir, texBase+".log");
-         logFile.deleteOnExit();
 
          out = new PrintWriter(new FileWriter(texFile));
 
@@ -186,13 +179,25 @@ public abstract class ExportDocImage extends ExportImage
             publish(MessageInfo.createWarning(e));
          }
 
+         if (externalProcessRequired)
+         {
+            if (preamble == null)
+            {
+               preamble = "\\batchmode ";
+            }
+            else
+            {
+               preamble = "\\batchmode " + preamble;
+            }
+         }
+
          pgf.saveDoc(image, preamble, encapsulate, convertBitmapToEps, 
            app.getSettings().useTypeblockAsBoundingBox);
 
          out.close();
          out = null;
 
-         File result = processImage(texBase);
+         File result = processImage();
 
          if (result != null && !result.equals(outputFile))
          {
@@ -212,6 +217,11 @@ public abstract class ExportDocImage extends ExportImage
       }
       finally
       {
+         if (externalProcessRequired)
+         {
+            removeTempFiles();
+         }
+
          if (out != null)
          {
             out.close();
@@ -219,6 +229,22 @@ public abstract class ExportDocImage extends ExportImage
       }
    }
 
+   protected void removeTempFiles()
+   {
+      File[] files = texDir.listFiles();
+
+      for (File f : files)
+      {
+         f.deleteOnExit();
+      }
+   }
+
    protected boolean encapsulate=true;
    protected boolean convertBitmapToEps=false;
+   protected File imageBase;
+
+   protected File texFile = null;
+   protected File texDir = null;
+   protected String texBase;
+   protected boolean externalProcessRequired;
 }

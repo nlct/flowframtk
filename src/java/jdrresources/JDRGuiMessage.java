@@ -32,6 +32,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+import com.dickimawbooks.texjavahelplib.UserCancellationListener;
+import com.dickimawbooks.texjavahelplib.UserCancelledException;
 
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -41,7 +43,7 @@ import com.dickimawbooks.jdr.exceptions.*;
  * @author Nicola L C Talbot
  */
 
-public class JDRGuiMessage extends JDRMessagePublisher
+public class JDRGuiMessage extends JDRMessagePublisher implements UserCancellationListener
 {
    public JDRGuiMessage(JDRResources resources)
    {
@@ -196,6 +198,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
       frame.enableAbort(enabled);
    }
 
+   @Override
    public void checkForInterrupt() throws UserCancelledException
    {
       frame.checkForInterrupt();
@@ -214,6 +217,12 @@ public class JDRGuiMessage extends JDRMessagePublisher
    public void debug(String msg)
    {
       frame.debug(msg);
+   }
+
+   @Override
+   public void setProcess(Process process)
+   {
+      registerProcess(process);
    }
 
    public void registerProcess(Process process)
@@ -670,7 +679,7 @@ class JDRGuiMessageFrame extends JFrame
       {
          abortButton.setActionCommand("confirmabort");
 
-         throw new UserCancelledException(this);
+         throw new UserCancelledException(resources.getHelpLib());
       }
    }
 

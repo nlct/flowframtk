@@ -3201,8 +3201,8 @@ public class JDRResources
    private static DictionaryFilter dictionaryFilter = new DictionaryFilter();
 
 
-   public static final String APP_VERSION = "0.8.8.20250821";
-   public static final String APP_DATE = "2025-08-21";
+   public static final String APP_VERSION = "0.8.8.20250904";
+   public static final String APP_DATE = "2025-09-04";
    public static final String START_COPYRIGHT_YEAR = "2006";
    public static final String COPYRIGHT_YEAR
     = APP_DATE.substring(0,4);

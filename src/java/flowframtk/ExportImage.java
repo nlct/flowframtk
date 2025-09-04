@@ -27,6 +27,7 @@ import java.io.*;
 import java.awt.*;
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.*;
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -142,6 +143,11 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
    public JDRGuiMessage getMessageSystem()
    {
       return jdrFrame.getApplication().getMessageSystem();
+   }
+
+   public FlowframTkSettings getSettings()
+   {
+      return jdrFrame.getApplication().getSettings();
    }
 
    protected abstract void save() 

@@ -33,30 +33,20 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SavePdf extends ExportDocImage
 {
-   public SavePdf(JDRFrame frame, File file, JDRGroup jdrImage,
-     String pdflatexApp)
+   public SavePdf(JDRFrame frame, File file, JDRGroup jdrImage)
    {
       super(frame, file, jdrImage, true, false);
-      this.pdflatexApp = pdflatexApp;
    }
 
-   protected File processImage(String texBase)
+   @Override
+   protected File processImage()
       throws IOException,InterruptedException
    {
-      File pdfFile = new File(getTeXFile().getParentFile(), texBase+".pdf");
+      File pdfFile = new File(texDir, texBase+".pdf");
 
-      exec(new String[] {pdflatexApp, "-interaction", "batchmode", texBase});
+      exec(getSettings().getPdfLaTeXCmd(texBase));
 
       return pdfFile;
    }
 
-   protected File getTeXFile() throws IOException
-   {
-      File texFile = File.createTempFile("jdr2pdf", ".tex");
-      texFile.deleteOnExit();
-
-      return texFile;
-   }
-
-   private String pdflatexApp;
 }

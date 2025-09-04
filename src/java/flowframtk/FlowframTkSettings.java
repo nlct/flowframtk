@@ -34,6 +34,8 @@ import java.io.*;
 import javax.swing.JFileChooser;
 import javax.swing.JSplitPane;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -553,6 +555,179 @@ public class FlowframTkSettings
       return bitmapCommand;
    }
 
+   public void setHasMinimumFlowFramSty119(boolean has)
+   {
+      hasMinFlowFrameSty119 = has;
+   }
+
+   public boolean hasMinimumFlowFramSty119()
+   {
+      return hasMinFlowFrameSty119; // flowfram v1.19 or above installed
+   }
+
+   public String[] getLaTeXCmd(String basename)
+   {
+      if (latexCmd == null)
+      {
+         String[] split = latexOptions.split("\t");
+
+         latexCmd = new String[split.length+1];
+         latexCmd[0] = latexApp;
+
+         for (int i = 0; i < split.length; i++)
+         {
+            latexCmd[i+1] = split[i];
+         }
+      }
+
+      return getCmdList(latexCmd, basename, basename+".tex", basename+".dvi");
+   }
+
+   public String[] getPdfLaTeXCmd(String basename)
+   {
+      if (pdflatexCmd == null)
+      {
+         String[] split = pdflatexOptions.split("\t");
+
+         pdflatexCmd = new String[split.length+1];
+         pdflatexCmd[0] = pdflatexApp;
+
+         for (int i = 0; i < split.length; i++)
+         {
+            pdflatexCmd[i+1] = split[i];
+         }
+      }
+
+      return getCmdList(pdflatexCmd, basename, basename+".tex", basename+".pdf");
+   }
+
+   public String[] getDviPsCmd(String basename)
+   {
+      return getDviPsCmd(basename, basename+".dvi", basename+".eps");
+   }
+
+   public String[] getDviPsCmd(String basename, String dviFile, String epsFile)
+   {
+      if (dvipsCmd == null)
+      {
+         String[] split = dvipsOptions.split("\t");
+
+         dvipsCmd = new String[split.length+1];
+         dvipsCmd[0] = dvipsApp;
+
+         for (int i = 0; i < split.length; i++)
+         {
+            dvipsCmd[i+1] = split[i];
+         }
+      }
+
+      return getCmdList(dvipsCmd, basename, dviFile, epsFile);
+   }
+
+   public String[] getDviSvgmCmd(String basename)
+   {
+      return getDviSvgmCmd(basename, basename+".dvi", basename+".svg");
+   }
+
+   public String[] getDviSvgmCmd(String basename, String dviFile, String svgFile)
+   {
+      if (dvisvgmCmd == null)
+      {
+         String libGsPath = getLibGsPath();
+
+         String opts = dvisvgmOptions;
+
+         if (libGsPath == null)
+         {     
+            int idx = opts.indexOf("--libgs");
+
+            if (idx > -1 )
+            {
+               int tabIdx;
+
+               if (opts.charAt(idx+7) == '=')
+               {
+                  tabIdx = opts.indexOf("\t", idx+7);
+               }
+               else
+               {
+                  tabIdx = opts.indexOf("\t", idx+8);
+               }
+
+               if (tabIdx > -1)
+               {
+                  opts = opts.substring(0, idx) + opts.substring(tabIdx+1);
+               }
+               else
+               {
+                  opts = opts.substring(0, idx);
+               }
+            }
+         }
+
+         String[] split = opts.split("\t");
+
+         dvisvgmCmd = new String[split.length+1];
+         dvisvgmCmd[0] = dvisvgmApp;
+
+         for (int i = 0; i < split.length; i++)
+         {
+            dvisvgmCmd[i+1] = split[i];
+         }
+      }
+
+      return getCmdList(dvisvgmCmd, basename, dviFile, svgFile);
+   }
+
+   public String[] getCmdList(String[] list, String basename,
+     String inFileName, String outFileName)
+   {           
+      String[] cmdList = new String[list.length];
+                     
+      for (int i = 0; i < list.length; i++)
+      {      
+         if (list[i].equals("$outputfile"))
+         {  
+            cmdList[i] = outFileName;
+         }  
+         else if (list[i].equals("$inputfile"))
+         {     
+            cmdList[i] = inFileName;
+         }           
+         else if (list[i].equals("$basename"))
+         {   
+            cmdList[i] = basename;
+         }  
+         else if (list[i].equals("$libgs"))
+         {
+            cmdList[i] = getLibGsPath();
+
+            if (cmdList[i] == null)
+            {
+               // shouldn't happen as already checked
+               cmdList[i] = "";
+            }
+         }  
+         else if (list[i].equals("--libgs=$libgs"))
+         {  
+            cmdList[i] = getLibGsPath();
+
+            if (cmdList[i] == null)
+            {
+              // shouldn't happen as already checked
+               cmdList[i] = "--libgs=";
+            }
+         }
+         else
+         {
+            cmdList[i] = list[i];
+         }
+      }
+
+      return cmdList;
+   }
+
+
    public String getLaTeXApp()
    {
       return latexApp;
@@ -561,6 +736,22 @@ public class FlowframTkSettings
    public void setLaTeXApp(String path)
    {
       latexApp = path;
+
+      if (latexCmd != null)
+      {
+         latexCmd[0] = path;
+      }
+   }
+
+   public String getLaTeXOptions()
+   {
+      return latexOptions;
+   }
+
+   public void setLaTeXOptions(String options)
+   {
+      latexOptions = options;
+      latexCmd = null;
    }
 
    public String getPdfLaTeXApp()
@@ -571,6 +762,22 @@ public class FlowframTkSettings
    public void setPdfLaTeXApp(String path)
    {
       pdflatexApp = path;
+
+      if (pdflatexCmd != null)
+      {
+         pdflatexCmd[0] = path;
+      }
+   }
+
+   public String getPdfLaTeXOptions()
+   {
+      return pdflatexOptions;
+   }
+
+   public void setPdfLaTeXOptions(String options)
+   {
+      pdflatexOptions = options;
+      pdflatexCmd = null;
    }
 
    public String getDvipsApp()
@@ -581,6 +788,22 @@ public class FlowframTkSettings
    public void setDvipsApp(String path)
    {
       dvipsApp = path;
+
+      if (dvipsCmd != null)
+      {
+         dvipsCmd[0] = path;
+      }
+   }
+
+   public String getDvipsOptions()
+   {
+      return dvipsOptions;
+   }
+
+   public void setDvipsOptions(String options)
+   {
+      dvipsOptions = options;
+      dvipsCmd = null;
    }
 
    public String getDvisvgmApp()
@@ -591,6 +814,22 @@ public class FlowframTkSettings
    public void setDvisvgmApp(String path)
    {
       dvisvgmApp = path;
+
+     if (dvisvgmCmd != null)
+     {
+        dvisvgmCmd[0] = path;
+     }
+   }
+
+   public String getDvisvgmOptions()
+   {
+      return dvisvgmOptions;
+   }
+
+   public void setDvisvgmOptions(String options)
+   {
+      dvisvgmOptions = options;
+      dvisvgmCmd = null;
    }
 
    public String getLibgs()
@@ -598,9 +837,22 @@ public class FlowframTkSettings
       return libgs;
    }
 
+   private String getLibGsPath()
+   {
+      if (libgs == null)
+      {
+         return System.getenv("LIBGS");
+      }
+      else
+      {
+         return libgs;
+      }
+   }
+
    public void setLibgs(String libgs)
    {
       this.libgs = libgs;
+      dvisvgmCmd = null;
    }
 
    public long getMaxProcessTime()
@@ -1239,6 +1491,11 @@ public class FlowframTkSettings
       return resources;
    }
 
+   public TeXJavaHelpLib getHelpLib()
+   {
+      return resources.getHelpLib();
+   }
+
    public boolean isExportPngEncap()
    {
       return pngexportencap;
@@ -1322,14 +1579,24 @@ public class FlowframTkSettings
 
    private Locale rulerLocale;
 
-   private String latexApp = null;
-   private String pdflatexApp = null;
-   private String dvipsApp = null;
-   private String dvisvgmApp = null;
+   private String latexApp = "latex";
+   private String latexOptions = "$basename";
+   private String[] latexCmd = null;
+   private String pdflatexApp = "pdflatex";
+   private String pdflatexOptions = "$basename";
+   private String[] pdflatexCmd = null;
+   private String dvipsApp = "dvips";
+   private String dvipsOptions = "-E\t-o\t$outputfile\t$inputfile";
+   private String[] dvipsCmd = null;
+   private String dvisvgmApp = "dvisvgm";
+   private String dvisvgmOptions = "--libgs\t$libgs\t-o\t$outputfile\t$inputfile";
+   private String[] dvisvgmCmd = null;
 
    private String libgs = null;
 
    private long maxProcessTime = 300000L;
+
+   private boolean hasMinFlowFrameSty119 = false;
 
    private TextModeMappings textModeMappings;
 

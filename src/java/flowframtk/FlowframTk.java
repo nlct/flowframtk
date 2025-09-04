@@ -4388,9 +4388,24 @@ public class FlowframTk extends JFrame
       return getSettings().getLaTeXApp();
    }
 
+   public String getLaTeXOptions()
+   {
+      return getSettings().getLaTeXOptions();
+   }
+
+   public String[] getLaTeXCmd(String basename)
+   {
+      return getSettings().getLaTeXCmd(basename);
+   }
+
    public void setLaTeXApp(String path)
    {
       getSettings().setLaTeXApp(path);
+   }
+
+   public void setLaTeXOptions(String path)
+   {
+      getSettings().setLaTeXOptions(path);
    }
 
    public String getPdfLaTeXApp()
@@ -4398,9 +4413,24 @@ public class FlowframTk extends JFrame
       return getSettings().getPdfLaTeXApp();
    }
 
+   public String getPdfLaTeXOptions()
+   {
+      return getSettings().getPdfLaTeXOptions();
+   }
+
+   public String[] getPdfLaTeXCmd(String basename)
+   {
+      return getSettings().getPdfLaTeXCmd(basename);
+   }
+
    public void setPdfLaTeXApp(String path)
    {
       getSettings().setPdfLaTeXApp(path);
+   }
+
+   public void setPdfLaTeXOptions(String path)
+   {
+      getSettings().setPdfLaTeXOptions(path);
    }
 
    public String getDvipsApp()
@@ -4408,9 +4438,24 @@ public class FlowframTk extends JFrame
       return invoker.getSettings().getDvipsApp();
    }
 
+   public String getDvipsOptions()
+   {
+      return getSettings().getDvipsOptions();
+   }
+
+   public String[] getDviPsCmd(String basename)
+   {
+      return getSettings().getDviPsCmd(basename);
+   }
+
    public void setDvipsApp(String path)
    {
       invoker.getSettings().setDvipsApp(path);
+   }
+
+   public void setDvipsOptions(String path)
+   {
+      invoker.getSettings().setDvipsOptions(path);
    }
 
    public String getDvisvgmApp()
@@ -4418,9 +4463,24 @@ public class FlowframTk extends JFrame
       return invoker.getSettings().getDvisvgmApp();
    }
 
+   public String getDvisvgmOptions()
+   {
+      return getSettings().getDvisvgmOptions();
+   }
+
+   public String[] getDviSvgmCmd(String basename)
+   {
+      return getSettings().getDviSvgmCmd(basename);
+   }
+
    public void setDvisvgmApp(String path)
    {
       invoker.getSettings().setDvisvgmApp(path);
+   }
+
+   public void setDvisvgmOptions(String path)
+   {
+      invoker.getSettings().setDvisvgmOptions(path);
    }
 
    public String getLibgs()
@@ -6725,12 +6785,9 @@ public class FlowframTk extends JFrame
                {
                   return;
                }
-
-               latexApp = getLaTeXApp();
-               dvipsApp = getDvipsApp();
             }
 
-            frame.saveEPS(file, latexApp, dvipsApp);
+            frame.saveEPS(file);
          }
          else if (filter == pdfFileFilter)
          {         
@@ -6742,11 +6799,9 @@ public class FlowframTk extends JFrame
                {
                   return;
                }
-
-               pdflatexApp = getPdfLaTeXApp();
             }
 
-            frame.savePdf(file, pdflatexApp);
+            frame.savePdf(file);
          }
          else if (filter == svgFileFilter)
          {
@@ -6761,13 +6816,9 @@ public class FlowframTk extends JFrame
                {
                   return;
                }
-
-               latexApp = getLaTeXApp();
-               dvisvgmApp = getDvisvgmApp();
-               libGs = getLibgs();
             }
 
-            frame.saveSVG(file, latexApp, dvisvgmApp, libGs);
+            frame.saveSVG(file);
          }
          else
          {

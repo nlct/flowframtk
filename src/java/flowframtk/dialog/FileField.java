@@ -25,13 +25,19 @@ import javax.swing.*;
 
 import com.dickimawbooks.jdrresources.JDRResources;
 
-public class FileField extends Box
+public class FileField extends JPanel
   implements ActionListener
 {
    public FileField(JDRResources resources, Container parent, 
       JFileChooser fileChooser)
    {
       this(resources, parent, null, fileChooser, JFileChooser.FILES_ONLY);
+   }
+
+   public FileField(JDRResources resources, Container parent, 
+      JFileChooser fileChooser, JLabel label)
+   {
+      this(resources, parent, null, fileChooser, JFileChooser.FILES_ONLY, label);
    }
 
    public FileField(JDRResources resources, Container parent, 
@@ -47,35 +53,46 @@ public class FileField extends Box
    }
 
    public FileField(JDRResources resources, Container parent, String fileName, 
+      JFileChooser fileChooser, JLabel label)
+   {
+      this(resources, parent, fileName, fileChooser, JFileChooser.FILES_ONLY,
+        label);
+   }
+
+   public FileField(JDRResources resources, Container parent, String fileName, 
       JFileChooser fileChooser, int mode)
    {
-      super(BoxLayout.Y_AXIS);
+      this(resources, parent, fileName, fileChooser, mode, null);
+   }
+
+   public FileField(JDRResources resources, Container parent, String fileName, 
+      JFileChooser fileChooser, int mode, JLabel label)
+   {
+      super(new BorderLayout());
 
       this.resources = resources;
       this.fileChooser = fileChooser;
       this.parent = parent;
       this.mode = mode;
 
-      add(Box.createVerticalGlue());
-
-      Box box = Box.createHorizontalBox();
-      add(box);
-
+      Box mainPanel = Box.createVerticalBox();
+      add(mainPanel, "Center");
       textField = new JTextField(fileName == null ? "" : fileName, 20);
 
-      Dimension dim = textField.getPreferredSize();
-      dim.width = (int)textField.getMaximumSize().getWidth();
-
-      textField.setMaximumSize(dim);
-
-      box.add(textField);
+      mainPanel.add(Box.createVerticalStrut(5));
+      mainPanel.add(textField);
+      mainPanel.add(Box.createVerticalStrut(5));
 
       button = getResources().createDialogButton("button.choose", "open",
          this, null, getResources().getMessage("tooltip.choose_file"));
 
-      box.add(button);
+      add(button, "East");
 
-      add(Box.createVerticalGlue());
+      if (label != null)
+      {
+         add(label, "West");
+         label.setLabelFor(textField);
+      }
 
       setAlignmentY(Component.CENTER_ALIGNMENT);
       setAlignmentX(Component.LEFT_ALIGNMENT);
