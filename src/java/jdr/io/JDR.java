@@ -100,6 +100,64 @@ public class JDR extends JDRAJR
       writeString(versionString);
    }
 
+   public byte[] toByteArray(JDRGroup selection) throws IOException
+   {
+      ByteArrayOutputStream bout = null;
+      DataOutputStream dout = null;
+      byte[] array = null;
+
+      try
+      {
+         bout = new ByteArrayOutputStream();
+         dout = new DataOutputStream(bout);
+         save(selection, dout, JDR.NO_SETTINGS);
+         array = bout.toByteArray();
+      }
+      finally
+      {
+         if (dout != null)
+         {
+            dout.close();
+         }
+
+         if (bout != null)
+         {
+            bout.close();
+         }
+      }
+
+      return array;
+   }
+
+   public JDRGroup fromByteArray(byte[] array, CanvasGraphics cg)
+     throws InvalidFormatException,IOException
+   {
+      ByteArrayInputStream bin = null;
+      DataInputStream din = null;
+      JDRGroup grp = null;
+
+      try
+      {
+         bin = new ByteArrayInputStream(array);
+         din = new DataInputStream(bin);
+         grp = load(din, canvasGraphics);
+      }
+      finally
+      {
+         if (din != null)
+         {
+            din.close();
+         }
+
+         if (bin != null)
+         {
+            bin.close();
+         }
+      }
+
+      return grp;
+   }
+
    /**
     * Reads image from JDR formatted file. The
     * image is returned as a {@link JDRGroup}.

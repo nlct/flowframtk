@@ -7395,6 +7395,7 @@ public class JDRCanvas extends JPanel
    }
 
    /* JDRImage method used by transfer handler */
+   @Override
    public void copySelection(JDRGroup grp)
    {
       copySelection(grp, true);
@@ -7425,6 +7426,11 @@ public class JDRCanvas extends JPanel
       JDRGrid grid = frame_.getGrid();
 
       CanvasGraphics cg = getCanvasGraphics();
+
+      if (cg != grp.getCanvasGraphics())
+      {
+         grp.applyCanvasGraphics(cg);
+      }
 
       Point2D offset = null;
 

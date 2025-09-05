@@ -31,6 +31,7 @@ import java.io.*;
 import javax.swing.*;
 
 import com.dickimawbooks.jdr.*;
+import com.dickimawbooks.jdr.io.*;
 
 /**
  * Transfer handler for JDRGroup.
@@ -38,10 +39,11 @@ import com.dickimawbooks.jdr.*;
 
 public class JDRTransferHandler extends TransferHandler implements Transferable
 {
-   public JDRTransferHandler()
+   public JDRTransferHandler(CanvasGraphics cg)
    {
       super();
-      flavors[0] = new DataFlavor((new JDRGroup()).getClass(), "JDRGroup");
+      this.canvasGraphics = cg;
+      this.jdr = new JDR();
    }
 
    public int getSourceActions(JComponent c)
@@ -70,16 +72,28 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
    public Transferable createTransferable(JComponent c)
    {
       source = null;
-      group  = null;
+      byteArray  = null;
 
       if (c instanceof JDRImage)
       {
          JDRImage img = (JDRImage)c;
          JDRGroup g = img.getSelection();
-         group = g;
+
+         try
+         {
+            byteArray = jdr.toByteArray(g);
+         }
+         catch (IOException e)
+         {
+            canvasGraphics.getMessageSystem().postMessage(
+              MessageInfo.createInternalError(e));
+            return null;
+         }
+
          source = img;
          return this;
       }
+
       return null;
    }
 
@@ -88,12 +102,14 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
       if (c instanceof JDRImage)
       {
          JDRImage img = (JDRImage)c;
+
          if (t.isDataFlavorSupported(flavors[0]))
          {
             try
             {
-               group = (JDRGroup)t.getTransferData(flavors[0]);
+               JDRGroup group = (JDRGroup)t.getTransferData(flavors[0]);
                img.copySelection(group);
+
                return true;
             }
             catch (UnsupportedFlavorException ignored)
@@ -101,7 +117,8 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
             }
             catch (Exception e)
             {
-               e.printStackTrace();
+               canvasGraphics.getMessageSystem().postMessage(
+                 MessageInfo.createError(e));
             }
          }
       }
@@ -112,8 +129,16 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
    {
       if (isDataFlavorSupported(f))
       {
-         return group;
+         try
+         {
+            return jdr.fromByteArray(byteArray, canvasGraphics);
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
       }
+
       return null;
    }
 
@@ -124,12 +149,19 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
 
    public boolean isDataFlavorSupported(DataFlavor f)
    {
-      return f.isMimeTypeEqual(DataFlavor.javaSerializedObjectMimeType);
+      return f.isMimeTypeEqual(DATA_FLAVOR_JDR);
    }
 
-   private DataFlavor flavors[] = new DataFlavor[1]; 
-
    private JDRImage source;
-   private JDRGroup group;
+   private byte[] byteArray;
+   private CanvasGraphics canvasGraphics;
+   private JDR jdr;
 
+   public static final DataFlavor DATA_FLAVOR_JDR
+    = new DataFlavor("application/x-jdr", "FlowFramTk Binary Format");
+
+   private static final DataFlavor flavors[] = new DataFlavor[]
+    {
+      DATA_FLAVOR_JDR
+    }; 
 }

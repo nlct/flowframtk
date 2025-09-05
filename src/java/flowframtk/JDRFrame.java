@@ -81,7 +81,7 @@ public class JDRFrame extends JInternalFrame
       preambleEditor = new PreambleEditor(this);
 
       canvas = new JDRCanvas(this, cg);
-      canvas.setTransferHandler(new JDRTransferHandler());
+      canvas.setTransferHandler(new JDRTransferHandler(cg));
 
       int prefWidth = (int)getComponentPaperWidth();
       int prefHeight = (int)getComponentPaperHeight();
@@ -1821,11 +1821,10 @@ public class JDRFrame extends JInternalFrame
       Clipboard clipboard = getClipboard();
 
       Transferable clipData = clipboard.getContents(clipboard);
+
       if (clipData != null)
       {
-         if (clipData.isDataFlavorSupported(
-           new DataFlavor((new JDRGroup(getCanvasGraphics())).getClass(),
-                          "JDRGroup")))
+         if (clipData.isDataFlavorSupported(JDRTransferHandler.DATA_FLAVOR_JDR))
          {
             TransferHandler handler = canvas.getTransferHandler();
             handler.importData(canvas, clipData);
@@ -1838,14 +1837,14 @@ public class JDRFrame extends JInternalFrame
    {
       TransferHandler handler = canvas.getTransferHandler();
       handler.exportToClipboard(canvas,
-         getClipboard(),TransferHandler.COPY);
+         getClipboard(), TransferHandler.COPY);
    }
 
    public void cutSelectedPaths()
    {
       TransferHandler handler = canvas.getTransferHandler();
       handler.exportToClipboard(canvas,
-         getClipboard(),TransferHandler.MOVE);
+         getClipboard(), TransferHandler.MOVE);
       canvas.deleteSelection();
       canvas.repaint();
    }
