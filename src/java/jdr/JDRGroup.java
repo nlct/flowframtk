@@ -2068,6 +2068,8 @@ t
 
       JDRShape newPath = (JDRShape)object.clone();
 
+      newPath.description = description;
+
       if (newPath.size() == 0)
       {
          throw new EmptyPathException(getCanvasGraphics());

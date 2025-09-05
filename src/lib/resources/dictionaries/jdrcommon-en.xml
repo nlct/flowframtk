@@ -200,7 +200,7 @@ Nicola Talbot
 <entry key="tex.comment.border_command">Border command for frame</entry>
 <entry key="tex.comment.created_by">Created by {0} version {1}</entry> 
 <entry key="tex.comment.preamble">This image may require the following commands in the preamble:</entry>
-<entry key="tex.comment.fontsize">The normal size font is assumed to be {0}pt</entry>
+<entry key="tex.comment.fontsize">The normal size font is assumed to be {0}</entry>
 <entry key="tex.comment.endpreamble">End of preamble information</entry>
 
 <!-- Warning Messages -->

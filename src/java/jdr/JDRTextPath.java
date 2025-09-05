@@ -144,6 +144,8 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    {
       JDRText text = ((JDRTextPathStroke)getStroke()).getJDRText();
 
+      text.description = description;
+
       JDRPoint p = getFirstSegment().getStart();
 
       text.setPosition(p.x, p.y);
@@ -173,6 +175,8 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       JDRGroup group = new JDRGroup(getCanvasGraphics());
 
+      group.description = description;
+
       group.add(path);
       group.add(text);
 
@@ -183,7 +187,18 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    public JDRGroup splitText()
      throws InvalidShapeException
    {
-      return ((JDRTextPathStroke)getStroke()).split(this);
+      JDRGroup grp = ((JDRTextPathStroke)getStroke()).split(this);
+
+      if (description.isEmpty())
+      {
+         grp.description = getText();
+      }
+      else
+      {
+         grp.description = description;
+      }
+
+      return grp;
    }
 
    /**
@@ -460,7 +475,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
          cg.setPaint(paint.getPaint(box));
 
          Stroke oldStroke = cg.getStroke();
-         cg.setStroke(JDRText.outlineStroke);
+         cg.setStroke(JDRText.getOutlineStroke(cg));
 
          cg.draw(shape);
          cg.setStroke(oldStroke);
@@ -652,6 +667,10 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       {
          shape.description = getText();
       }
+      else
+      {
+         shape.description = description;
+      }
 
       return shape;
    }
@@ -669,6 +688,10 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       if (description.isEmpty())
       {
          newShape.description = getText();
+      }
+      else
+      {
+         newShape.description = description;
       }
 
       return newShape;

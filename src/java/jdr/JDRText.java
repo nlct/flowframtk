@@ -406,7 +406,7 @@ public class JDRText extends JDRCompleteObject
 
          if (isOutline)
          {
-            outline = outlineStroke.createStrokedShape(outline);
+            outline = getOutlineStroke(cg).createStrokedShape(outline);
          }
 
          Rectangle2D bounds = outline.getBounds2D();
@@ -1027,7 +1027,9 @@ public class JDRText extends JDRCompleteObject
          g2.setPaint(getTextPaint().getPaint(box));
 
          Stroke oldStroke = g2.getStroke();
-         g2.setStroke(outlineStroke);
+
+         g2.setStroke(getOutlineStroke(cg));
+
          g2.draw(outline);
 
          g2.setStroke(oldStroke);
@@ -1072,7 +1074,7 @@ public class JDRText extends JDRCompleteObject
       if (isOutline)
       {
          Stroke oldStroke = g2.getStroke();
-         g2.setStroke(outlineStroke);
+         g2.setStroke(getOutlineStroke(cg));
          g2.draw(outline);
 
          g2.setStroke(oldStroke);
@@ -1978,6 +1980,31 @@ public class JDRText extends JDRCompleteObject
       return fillPaint;
    }
 
+   public static Stroke getOutlineStroke(CanvasGraphics cg)
+   {
+      return getOutlineStroke(cg.getStorageUnit());
+   }
+
+   public static Stroke getOutlineStroke(JDRUnit unit)
+   {
+      switch (unit.getID())
+      {
+         case JDRUnit.BP:
+           return BP_OUTLINE_STROKE;
+         case JDRUnit.IN:
+           return IN_OUTLINE_STROKE;
+         case JDRUnit.MM:
+           return MM_OUTLINE_STROKE;
+         case JDRUnit.CM:
+           return CM_OUTLINE_STROKE;
+         case JDRUnit.PT:
+           return PT_OUTLINE_STROKE;
+         default:
+           return new BasicStroke((float)unit.fromBp(1.0), 
+             BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+      }
+   }
+
    private volatile String text;
    protected volatile JDRFont jdrFont;
    protected volatile Font font;
@@ -2026,6 +2053,22 @@ public class JDRText extends JDRCompleteObject
 
    private volatile boolean isOutline = false;
 
-   protected static final Stroke outlineStroke = 
+   protected static final Stroke BP_OUTLINE_STROKE = 
       new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+
+   protected static final Stroke IN_OUTLINE_STROKE = 
+      new BasicStroke((float)JDRUnit.in.fromBp(1.0),
+        BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+
+   protected static final Stroke MM_OUTLINE_STROKE = 
+      new BasicStroke((float)JDRUnit.mm.fromBp(1.0),
+        BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+
+   protected static final Stroke CM_OUTLINE_STROKE = 
+      new BasicStroke((float)JDRUnit.cm.fromBp(1.0),
+        BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+
+   protected static final Stroke PT_OUTLINE_STROKE = 
+      new BasicStroke((float)JDRUnit.pt.fromBp(1.0),
+        BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
 }

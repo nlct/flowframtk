@@ -916,6 +916,15 @@ public class JDRTextPathStroke implements JDRStroke
 
       JDRGroup group = new JDRGroup(cg);
 
+      if (textPath.description.isEmpty())
+      {
+         group.description = text;
+      }
+      else
+      {
+         group.description = textPath.description;
+      }
+
       double[] mtx = new double[6];
 
       FontRenderContext frc = new FontRenderContext(null, true, true);
