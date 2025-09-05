@@ -664,6 +664,15 @@ public class JDRText extends JDRCompleteObject
 
       JDRGroup group = new JDRGroup(cg);
 
+      if (description.isEmpty())
+      {
+         group.description = getText();
+      }
+      else
+      {
+         group.description = description;
+      }
+
       int n = text.length();
 
       JDRPaint pathStrokePaint;
@@ -825,7 +834,6 @@ public class JDRText extends JDRCompleteObject
             group.add(path);
          }
       }
-
 
       if (group.size() == 0)
       {

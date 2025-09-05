@@ -156,6 +156,8 @@ public abstract class JDRShape extends JDRCompleteObject
       boolean closeflag=false;
       JDRSegment postLastMoveSegment = null;
 
+      path.description = description;
+
       while (!pi.isDone())
       {
          type = pi.currentSegment(coords);

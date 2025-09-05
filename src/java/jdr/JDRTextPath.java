@@ -648,6 +648,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       shape.setStroke(new JDRBasicStroke(getCanvasGraphics()));
 
+      if (description.isEmpty())
+      {
+         shape.description = getText();
+      }
+
       return shape;
    }
 
@@ -660,6 +665,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    {
       JDRTextPath newShape = new JDRTextPath(path_.getFullPath(),
         (JDRTextPathStroke)getStroke().clone());
+
+      if (description.isEmpty())
+      {
+         newShape.description = getText();
+      }
 
       return newShape;
    }

@@ -1714,7 +1714,7 @@ public abstract class JDRPattern extends JDRCompoundShape
 
           JDRGroup group = new JDRGroup(cg);
 
-          JDRShape full = (JDRShape)path_.clone();
+          JDRShape full = path_.getFullPath();
 
           group.add(full);
 
@@ -1722,7 +1722,7 @@ public abstract class JDRPattern extends JDRCompoundShape
 
           for (int i = 1; i <= replicas_; i++)
           {
-             JDRShape shape = (JDRShape)full.clone();
+             JDRShape shape = (JDRShape)full.getFullPath();
 
              getReplicaTransform(matrix, i);
 
@@ -1733,8 +1733,6 @@ public abstract class JDRPattern extends JDRCompoundShape
 
           return group.mergePaths(null);
        }
-
-       int n = path_.size();
 
        JDRShape shape = null;
 
