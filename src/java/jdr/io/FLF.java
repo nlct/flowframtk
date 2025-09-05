@@ -112,6 +112,17 @@ public class FLF extends TeX
 
       int idx = styName.lastIndexOf(".");
 
+      String basename ;
+
+      if (idx > 0)
+      {
+         basename = styName.substring(0, idx);
+      }
+      else
+      {
+         basename = styName;
+      }
+
       boolean isCls = styName.endsWith(".cls");
 
       String docClass = null;
@@ -142,27 +153,63 @@ public class FLF extends TeX
       }
 
       println("\\Provides"+(isCls ? "Class" : "Package")+"{"
-                  +(idx==-1?styName:styName.substring(0,idx))+"}");
+                  +basename+"}");
 
       writePreambleCommands(group, false);
 
-      println("\\DeclareOption{draft}{\\PassOptionsToPackage{draft}{flowfram}}");
-      println("\\DeclareOption{final}{\\PassOptionsToPackage{final}{flowfram}}");
-      println("\\DeclareOption{rotate}{\\PassOptionsToPackage{rotate}{flowfram}}");
-      println("\\DeclareOption{norotate}{\\PassOptionsToPackage{norotate}{flowfram}}");
-      println("\\DeclareOption{ttbtitle}{\\PassOptionsToPackage{ttbtitle}{flowfram}}");
-      println("\\DeclareOption{ttbnotitle}{\\PassOptionsToPackage{ttbnotitle}{flowfram}}");
-      println("\\DeclareOption{ttbnum}{\\PassOptionsToPackage{ttbnum}{flowfram}}");
-      println("\\DeclareOption{ttbnonum}{\\PassOptionsToPackage{ttbnonum}{flowfram}}");
-      println("\\DeclareOption{color}{\\PassOptionsToPackage{color}{flowfram}}");
-      println("\\DeclareOption{nocolor}{\\PassOptionsToPackage{nocolor}{flowfram}}");
-
-      if (docClass != null)
+      if (useFlowframTkSty)
       {
-        println("\\DeclareOption*{\\PassOptionsToClass{\\CurrentOption}{"+docClass+"}}");
-      }
+         println("\\FlowFramTkDeclareKeys{"+basename+"}");
 
-      println("\\ProcessOptions");
+         if (docClass != null)
+         {
+            println("\\DeclareUnknownKeyHandler["+basename+"]{");
+            println("  \\IfValueTF{#2}");
+            println("  {\\PassOptionsToClass{#1=#2}{"+docClass+"}}");
+            println("  {\\PassOptionsToClass{#1}{"+docClass+"}}");
+            println("}");
+         }
+
+         if (cg.useAbsolutePages())
+         {
+            println("\\FlowFramTkSetKey{pages=absolute}");
+         }
+         else
+         {
+            println("\\FlowFramTkSetKey{pages=relative}");
+         }
+
+         println("\\ProcessKeyOptions["+basename+"]");
+      }
+      else
+      {
+         println("\\DeclareOption{draft}{\\PassOptionsToPackage{draft}{flowfram}}");
+         println("\\DeclareOption{final}{\\PassOptionsToPackage{final}{flowfram}}");
+         println("\\DeclareOption{rotate}{\\PassOptionsToPackage{rotate}{flowfram}}");
+         println("\\DeclareOption{norotate}{\\PassOptionsToPackage{norotate}{flowfram}}");
+         println("\\DeclareOption{ttbtitle}{\\PassOptionsToPackage{ttbtitle}{flowfram}}");
+         println("\\DeclareOption{ttbnotitle}{\\PassOptionsToPackage{ttbnotitle}{flowfram}}");
+         println("\\DeclareOption{ttbnum}{\\PassOptionsToPackage{ttbnum}{flowfram}}");
+         println("\\DeclareOption{ttbnonum}{\\PassOptionsToPackage{ttbnonum}{flowfram}}");
+         println("\\DeclareOption{color}{\\PassOptionsToPackage{color}{flowfram}}");
+         println("\\DeclareOption{nocolor}{\\PassOptionsToPackage{nocolor}{flowfram}}");
+
+         if (docClass != null)
+         {
+           println("\\DeclareOption*{\\PassOptionsToClass{\\CurrentOption}{"+docClass+"}}");
+         }
+
+         println("\\ProcessOptions");
+
+         if (cg.useAbsolutePages())
+         {
+            println("\\PassOptionsToPackage{pages=absolute}{flowfram}");
+         }
+         else
+         {
+            println("\\PassOptionsToPackage{pages=relative}{flowfram}");
+         }
+      }
 
       if (docClass != null)
       {
@@ -192,15 +239,6 @@ public class FLF extends TeX
       double baselineskip = cg.getStorageBaselineskip(LaTeXFontBase.NORMALSIZE);
 
       typeblock.tex(this, group, typeblockRect, baselineskip, false);
-
-      if (cg.useAbsolutePages())
-      {
-         println("\\PassOptionsToPackage{pages=absolute}{flowfram}");
-      }
-      else
-      {
-         println("\\PassOptionsToPackage{pages=relative}{flowfram}");
-      }
 
       println("\\RequirePackage{flowfram}");
 
