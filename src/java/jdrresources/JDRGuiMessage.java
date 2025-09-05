@@ -51,21 +51,6 @@ public class JDRGuiMessage extends JDRMessagePublisher implements UserCancellati
       frame = new JDRGuiMessageFrame(resources);
    }
 
-   private void writeObject(java.io.ObjectOutputStream stream)
-     throws IOException
-   {
-   }
-
-   private void readObject(java.io.ObjectInputStream stream)
-     throws IOException, ClassNotFoundException
-   {
-   }
-
-   private void readObjectNoData()
-     throws ObjectStreamException
-   {
-   }
-
    @Override
    public void postMessage(MessageInfo info)
    {
