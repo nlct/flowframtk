@@ -538,11 +538,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (pathBBox == null) return;
 
-      if (!description.equals(""))
-      {
-         tex.comment(description);
-      }
-
       JDRPaint textPaint = getTextPaint();
 
       if (textPaint instanceof JDRShading)

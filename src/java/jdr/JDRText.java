@@ -1519,11 +1519,6 @@ public class JDRText extends JDRCompleteObject
          break;
       }
 
-      if (!description.equals(""))
-      {
-         tex.comment(description);
-      }
-
       JDRPaint p = getTextPaint();
       JDRPaint fill = fillPaint;
 

@@ -42,6 +42,44 @@ public class TeXMappings extends HashMap<Integer,TeXLookup>
       this.modeName = name;
    }
 
+   public static String replaceSpecialChars(String text)
+   {
+      if (text.isEmpty()) return text;
+
+      StringBuilder builder = new StringBuilder(text.length());
+
+      for (int i = 0; i < text.length(); )
+      {
+         int cp = text.codePointAt(i);
+         i += Character.charCount(cp);
+
+         if (cp == '\\')
+         {
+            builder.append("\\textbackslash{}");
+         }
+         else if (cp == '^')
+         {
+            builder.append("\\textasciicircum{}");
+         }
+         else if (cp == '~')
+         {
+            builder.append("\\textasciitilde{}");
+         }
+         else if (cp == '#' || cp == '%' || cp == '_' || cp == '$'
+               || cp == '&' || cp == '{' || cp == '}')
+         {
+            builder.append('\\');
+            builder.appendCodePoint(cp);
+         }
+         else
+         {
+            builder.appendCodePoint(cp);
+         }
+      }
+
+      return builder.toString();
+   }
+
    public TeXLookup get(int i)
    {
       return get(Integer.valueOf(i));

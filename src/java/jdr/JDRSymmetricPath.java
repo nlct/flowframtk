@@ -2148,11 +2148,6 @@ public class JDRSymmetricPath extends JDRCompoundShape
          return;
       }
 
-      if (!description.equals(""))
-      {
-         tex.comment(description);
-      }
-
       tex.println("\\begin{pgfscope}");
 
       JDRStroke stroke = getStroke();

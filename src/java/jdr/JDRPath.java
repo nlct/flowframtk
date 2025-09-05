@@ -3058,11 +3058,6 @@ public class JDRPath extends JDRShape
 
       CanvasGraphics cg = getCanvasGraphics();
 
-      if (!description.equals(""))
-      {
-         tex.comment(description);
-      }
-
       JDRPaint linePaint = getLinePaint();
 
       JDRPaint paint = getFillPaint();

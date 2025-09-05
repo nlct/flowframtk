@@ -123,11 +123,16 @@ public class PGF extends TeX
          comment(allObjects.getDescription());
       }
 
+      objectId = 0;
+
       for (int i = 0; i < allObjects.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
 
-         allObjects.get(i).savePgf(this);
+         JDRCompleteObject obj = allObjects.get(i);
+         int idx = writeStartObject(obj);
+         obj.savePgf(this);
+         writeEndObject(idx, obj);
       }
 
       println("\\end{pgfpicture}");
@@ -316,11 +321,16 @@ public class PGF extends TeX
          comment(allObjects.getDescription());
       }
 
+      objectId = 0;
+
       for (int i = 0; i < allObjects.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
 
-         allObjects.get(i).savePgf(this);
+         JDRCompleteObject obj = allObjects.get(i);
+         int idx = writeStartObject(obj);
+         obj.savePgf(this);
+         writeEndObject(idx, obj);
       }
 
       println("\\end{pgfpicture}}");

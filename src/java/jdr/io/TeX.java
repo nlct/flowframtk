@@ -302,6 +302,45 @@ public class TeX
       println("}");
    }
 
+   public int writeStartObject(JDRCompleteObject obj)
+   throws IOException
+   {
+      String description = obj.getDescription();
+
+      if (!description.isEmpty())
+      {
+         comment(description);
+      }
+
+      objectId++;
+
+      if (isFlowframTkStyUsed())
+      {
+         print("\\flowframtkstartobject{"+objectId+"}{");
+         print(obj.getClass().getSimpleName());
+         print("}{");
+         print(TeXMappings.replaceSpecialChars(description));
+         println("}%");
+      }
+
+      return objectId;
+   }
+
+   public void writeEndObject(int idx, JDRCompleteObject obj)
+   throws IOException
+   {
+      String description = obj.getDescription();
+
+      if (isFlowframTkStyUsed())
+      {
+         print("\\flowframtkendobject{"+idx+"}{");
+         print(obj.getClass().getSimpleName());
+         print("}{");
+         print(TeXMappings.replaceSpecialChars(description));
+         println("}%");
+      }
+   }
+
    public AffineTransform getTransform()
    {
       return affineTransform;
@@ -832,6 +871,8 @@ public class TeX
    protected boolean convertBitmapToEps = false;
 
    protected boolean usePdfInfo = false;
+
+   protected int objectId = 0;
 
    protected boolean supportOutline=false;
    protected boolean supportTextPath=false;

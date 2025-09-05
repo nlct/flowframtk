@@ -533,11 +533,6 @@ public class JDRBitmap extends JDRCompleteObject
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      if (!description.isEmpty())
-      {
-         tex.comment(description);
-      }
-
       AffineTransform concat = new AffineTransform();
       concat.concatenate(tex.getTransform());
       concat.concatenate(getAffineTransform());

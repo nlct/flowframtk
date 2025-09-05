@@ -2223,14 +2223,13 @@ t
    public void savePgf(TeX tex)
     throws IOException
    {
-      if (!description.equals(""))
-      {
-         tex.comment(description);
-      }
-
       for (int i = 0; i < size_; i++)
       {
-         get(i).savePgf(tex);
+         JDRCompleteObject obj = get(i);
+
+         int idx = tex.writeStartObject(obj);
+         obj.savePgf(tex);
+         tex.writeEndObject(idx, obj);
       }
    }
 
