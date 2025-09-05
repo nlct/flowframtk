@@ -694,145 +694,41 @@ public class JDRText extends JDRCompleteObject
          pathFillPaint = getTextPaint();
       }
 
-      for (int i = 0; i < n; i++)
+      for (int i = 0; i < n; )
       {
-         char c = text.charAt(i);
-         if (c == ' ') continue;
+         int cp = text.codePointAt(i);
+         i += Character.charCount(cp);
+
+         if (cp == ' ') continue;
+
+         String charStr = new String(Character.toChars(cp));
 
          FontMetrics fm = g2.getFontMetrics(font);
       
-         Rectangle2D rect = fm.getStringBounds(text,0,i+1,g2);
-         int cw = fm.charWidth(c);
+         Rectangle2D rect = fm.getStringBounds(text, 0, i, g2);
+         int cw = fm.charWidth(cp);
 
          AffineTransform af = AffineTransform.getTranslateInstance(
-                             rect.getWidth()-cw, 0);
+                             rect.getWidth() - cw, 0);
 
-         TextLayout tl = new TextLayout(""+c, font, frc);
+         TextLayout tl = new TextLayout(charStr, font, frc);
          Shape outline = tl.getOutline(af);
 
          PathIterator pi = outline.getPathIterator(null);
 
-         JDRPath path = null;
+         JDRPath path = JDRPath.getPath(bpCG, pi);
+         path.setLinePaint(pathStrokePaint);
+         path.setFillPaint(pathFillPaint);
+         path.setStroke((JDRStroke)stroke.clone());
 
-         double[] coords = new double[6];
-         double oldX=0, oldY=0;
-
-         boolean startFlag=true;
-         JDRSegment lastPostMoveSegment=null;
-         boolean isClosed = false;
-
-         while (!pi.isDone())
+         if (bpCG != cg)
          {
-            int type = pi.currentSegment(coords);
-
-            switch (type)
-            {
-               case PathIterator.SEG_MOVETO :
-                  if (startFlag)
-                  {
-                     startFlag = false;
-                     oldX = coords[0];
-                     oldY = coords[1];
-                     path = new JDRPath(bpCG, pathStrokePaint, pathFillPaint, 
-                        (JDRStroke)stroke.clone());
-                  }
-                  else
-                  {
-                     JDRSegment segment;
-
-                     if (isClosed && lastPostMoveSegment != null)
-                     {
-                        segment = new JDRClosingMove(oldX, oldY,
-                         coords[0], coords[1], path, path.size(), lastPostMoveSegment);
-                     }
-                     else
-                     {
-                        segment = new JDRSegment(bpCG, oldX, oldY,
-                                                   coords[0],coords[1]);
-                     }
-
-                     oldX = coords[0];
-                     oldY = coords[1];
-                     if (path == null)
-                     {
-                        throw new MissingMoveException(cg);
-                     }
-                     path.add(segment);
-                     isClosed = false;
-                     lastPostMoveSegment = null;
-                  }
-               break;
-               case PathIterator.SEG_LINETO :
-                  JDRLine line = new JDRLine(bpCG, oldX, oldY, coords[0],coords[1]);
-                  oldX = coords[0];
-                  oldY = coords[1];
-                  if (path == null)
-                  {
-                     throw new MissingMoveException(cg);
-                  }
-                  path.add(line);
-                  if (lastPostMoveSegment == null)
-                  {
-                     lastPostMoveSegment = line;
-                  }
-               break;
-               case PathIterator.SEG_QUADTO :
-                  JDRBezier curve = JDRBezier.quadToCubic(bpCG, oldX, oldY, 
-                                            coords[0],coords[1],
-                                            coords[2],coords[3]);
-                  oldX = coords[2];
-                  oldY = coords[3];
-                  if (path == null)
-                  {
-                     throw new MissingMoveException(cg);
-                  }
-                  path.add(curve);
-                  if (lastPostMoveSegment == null)
-                  {
-                     lastPostMoveSegment = curve;
-                  }
-               break;
-               case PathIterator.SEG_CUBICTO :
-                  curve = new JDRBezier(bpCG, oldX, oldY, 
-                                     coords[0],coords[1],
-                                     coords[2],coords[3],
-                                     coords[4],coords[5]);
-                  oldX = coords[4];
-                  oldY = coords[5];
-                  if (path == null)
-                  {
-                     throw new MissingMoveException(cg);
-                  }
-                  path.add(curve);
-                  if (lastPostMoveSegment == null)
-                  {
-                     lastPostMoveSegment = curve;
-                  }
-               break;
-               case PathIterator.SEG_CLOSE :
-                  lastPostMoveSegment = null;
-                  isClosed = true;
-               break;
-            }
-
-            pi.next();
+            path.applyCanvasGraphics(cg);
          }
 
-         if (path != null)
-         {
-            if (isClosed && !path.isClosed())
-            {
-               path.close();
-               isClosed = false;
-            }
+         path.description = charStr;
 
-            if (bpCG != cg)
-            {
-               path.applyCanvasGraphics(cg);
-            }
-
-            group.add(path);
-         }
+         group.add(path);
       }
 
       if (group.size() == 0)
