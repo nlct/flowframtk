@@ -1920,6 +1920,8 @@ public class JDRFrame extends JInternalFrame
    {
       this.ioInProgress = flag;
 
+      getApplication().getMessageSystem().enableAbort(flag);
+
       if (flag)
       {
          repaint();
