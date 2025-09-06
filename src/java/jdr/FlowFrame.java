@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package com.dickimawbooks.jdr;
 
 import java.io.*;
+import java.util.regex.Pattern;
 import java.awt.*;
 import java.util.*;
 import java.lang.*;
@@ -361,6 +362,18 @@ public class FlowFrame implements Cloneable,Serializable
 
       BBox bbox = object.getStorageBBox();
 
+      double bheight = bbox.getHeight();
+
+      double x0 = bbox.getMinX()-typeblock.getX();
+      double x = x0 + left;
+
+      double y0 = typeblock.getHeight()-bheight
+                - (bbox.getMinY()-typeblock.getY());
+      double y = y0 + bottom;
+
+      double width = bbox.getWidth()-left-right;
+      double height = bheight-bottom-top;
+
       switch (type)
       {
          case TYPEBLOCK :
@@ -388,21 +401,19 @@ public class FlowFrame implements Cloneable,Serializable
             pgf.print("\\newflowframe");
          break;
          case DYNAMIC :
+            if (pgf instanceof FLF)
+            {
+               FLF flf = (FLF)pgf;
+
+               if (THUMBTAB_LABEL.matcher(label).matches())
+               {
+                  flf.foundThumbtab(height);
+               }
+            }
+
             pgf.print("\\newdynamicframe");
          break;
       }
-
-      double bheight = bbox.getHeight();
-
-      double x0 = bbox.getMinX()-typeblock.getX();
-      double x = x0 + left;
-
-      double y0 = typeblock.getHeight()-bheight
-                - (bbox.getMinY()-typeblock.getY());
-      double y = y0 + bottom;
-
-      double width = bbox.getWidth()-left-right;
-      double height = bheight-bottom-top;
 
       pgf.println("["+pages+"]{"
          + pgf.length(cg, width)+"}{"
@@ -1376,4 +1387,7 @@ public class FlowFrame implements Cloneable,Serializable
 
    private int shape=STANDARD;
    private int valign=CENTER;
+
+   public static final Pattern THUMBTAB_LABEL
+     = Pattern.compile("(even)?thumbtab(index)?\\d+");
 }

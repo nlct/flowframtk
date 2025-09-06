@@ -255,6 +255,8 @@ public class FLF extends TeX
       publisher.publishMessages(MessageInfo.createIndeterminate(false));
       publisher.publishMessages(MessageInfo.createMaxProgress(group.size()+1));
 
+      resetThumbtabs();
+
       for (int i = 0; i < group.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
@@ -279,6 +281,8 @@ public class FLF extends TeX
       {
          printHeaderFooter();
       }
+
+      printThumbtabs();
 
       publisher.publishMessages(MessageInfo.createIncProgress());
 
@@ -414,6 +418,8 @@ public class FLF extends TeX
       publisher.publishMessages(MessageInfo.createIndeterminate(false));
       publisher.publishMessages(MessageInfo.createMaxProgress(group.size()+1));
 
+      resetThumbtabs();
+
       for (int i = 0; i < group.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
@@ -423,6 +429,8 @@ public class FLF extends TeX
       }
 
       printHeaderFooter();
+
+      printThumbtabs();
 
       println("\\makeatother");
 
@@ -1295,8 +1303,44 @@ public class FLF extends TeX
       }
    }
 
+   public void foundThumbtab(double height)
+   {
+      hasThumbtabs = true;
+      thumbtabs++;
+      sumThumbtabHeight += height;
+   }
+
+   protected void resetThumbtabs()
+   {
+      hasThumbtabs = false;
+      thumbtabs = 0;
+      sumThumbtabHeight = 0.0;
+   }
+
+   protected void printThumbtabs() throws IOException
+   {
+      CanvasGraphics cg = group.getCanvasGraphics();
+
+      if (hasThumbtabs)
+      {
+         if (useFlowframTkSty)
+         {
+            println("\\makethumbtabs{"+length(cg, sumThumbtabHeight/thumbtabs)+"}");
+            println("\\enablethumbtabs");
+         }
+         else
+         {
+            cg.warning("warning.bespoke_thumbtabs_unsupported",
+             "Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v1.19 required).");
+         }
+      }
+   }
+
    JDRGroup group;
    int minPage = 1;
    int numFlows = 0;
 
+   boolean hasThumbtabs = false;
+   int thumbtabs = 0;
+   double sumThumbtabHeight=0;
 }
