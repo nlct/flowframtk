@@ -344,7 +344,7 @@ public class FlowFrame implements Cloneable,Serializable
     * is required to determine the correct co-ordinates.
     * @param object the object to which this frame belongs
     * @param typeblock the typeblock for the LaTeX document
-    * @param borderCommand comment for the definition of the border 
+    * @param borderCommandComment comment for the definition of the border 
     * command
     * @param baselineskip the value of \baselineskip for the LaTeX
     * document (in terms of the storage unit)
@@ -354,10 +354,29 @@ public class FlowFrame implements Cloneable,Serializable
     * required shape
     */
    public void tex(TeX pgf, JDRObject object, Rectangle2D typeblock,
-                   String borderCommand,
+                   String borderCommandComment,
                    double baselineskip, boolean useHPaddingShapepar)
       throws IOException,InvalidShapeException
    {
+      tex(pgf, object, typeblock, borderCommandComment, baselineskip,
+          useHPaddingShapepar, pages, label, label);
+   }
+
+   public void tex(TeX pgf, JDRObject object, Rectangle2D typeblock,
+                   String borderCommandComment,
+                   double baselineskip, boolean useHPaddingShapepar,
+                   String pageList, String objectLabel, String borderLabel)
+      throws IOException,InvalidShapeException
+   {
+      String typeStr = "";
+
+      switch (type)
+      {
+         case FLOW: typeStr = "flow"; break;
+         case STATIC: typeStr = "static"; break;
+         case DYNAMIC: typeStr = "dynamic"; break;
+      }
+
       CanvasGraphics cg = getCanvasGraphics();
 
       BBox bbox = object.getStorageBBox();
@@ -405,9 +424,9 @@ public class FlowFrame implements Cloneable,Serializable
             {
                FLF flf = (FLF)pgf;
 
-               if (THUMBTAB_LABEL.matcher(label).matches())
+               if (THUMBTAB_LABEL.matcher(objectLabel).matches())
                {
-                  flf.foundThumbtab(height);
+                  flf.foundThumbtab(object, height);
                }
             }
 
@@ -415,45 +434,49 @@ public class FlowFrame implements Cloneable,Serializable
          break;
       }
 
-      pgf.println("["+pages+"]{"
+      pgf.println("["+pageList+"]{"
          + pgf.length(cg, width)+"}{"
          + pgf.length(cg, height)+"}{"
          + pgf.length(cg, x)+"}{" 
-         + pgf.length(cg, y)+"}["+label+"]");
+         + pgf.length(cg, y)+"}["+objectLabel+"]");
       pgf.println();
 
       if (border)
       {
-         pgf.comment(borderCommand+ " '"+label+"'");
-
-         if (pgf.isFlowframTkStyUsed())
+         if (objectLabel.equals(borderLabel))
          {
-            pgf.println("\\flowframtkNewFrameBorder{"+label+"}{%");
+            pgf.comment(borderCommandComment+ " '"+objectLabel+"'");
+
+            if (pgf.isFlowframTkStyUsed())
+            {
+               pgf.println("\\flowframtkNewFrameBorder{"+borderLabel+"}{%");
+            }
+            else
+            {
+               pgf.println("\\expandafter\\def\\csname @flf@border@"
+                 +borderLabel+"\\endcsname#1{%");
+            }
+
+            pgf.println("\\begin{pgfpicture}{0pt"+"}{0pt"+"}{"
+               +pgf.length(cg, bbox.getWidth())+"}{"
+               +pgf.length(cg, bbox.getHeight())+"}");
+
+            pgf.println("\\pgfputat{"
+               + pgf.point(cg, -left, -bottom) +"}{%");
+
+            AffineTransform af = new AffineTransform(1, 0, 0, -1,
+               -bbox.getMinX(), bbox.getMaxY());
+
+            pgf.setTransform(af);
+
+            object.savePgf(pgf);
+
+            pgf.setTransform(null);
+
+            pgf.println("}");
+            pgf.println("\\pgfputat{\\pgfpoint{0pt}{0pt}}{\\pgftext[left,bottom]{#1}}");
+            pgf.println("\\end{pgfpicture}}");
          }
-         else
-         {
-            pgf.println("\\expandafter\\def\\csname @flf@border@"+label+"\\endcsname#1{%");
-         }
-
-         pgf.println("\\begin{pgfpicture}{0pt"+"}{0pt"+"}{"
-            +pgf.length(cg, bbox.getWidth())+"}{"
-            +pgf.length(cg, bbox.getHeight())+"}");
-
-         pgf.println("\\pgfputat{"
-            + pgf.point(cg, -left, -bottom) +"}{%");
-
-         AffineTransform af = new AffineTransform(1, 0, 0, -1,
-            -bbox.getMinX(), bbox.getMaxY());
-
-         pgf.setTransform(af);
-
-         object.savePgf(pgf);
-
-         pgf.setTransform(null);
-
-         pgf.println("}");
-         pgf.println("\\pgfputat{\\pgfpoint{0pt}{0pt}}{\\pgftext[left,bottom]{#1}}");
-         pgf.println("\\end{pgfpicture}}");
 
          switch (type)
          {
@@ -468,19 +491,18 @@ public class FlowFrame implements Cloneable,Serializable
             break;
          }
 
-         pgf.print("{"+label
-           +"}{offset=0pt,border={");
+         pgf.print("{"+objectLabel +"}{offset=0pt,border={");
 
          if (pgf.isFlowframTkStyUsed())
          {
             pgf.print("\\flowframtkUseFrameBorderCsName{");
-            pgf.print(label);
+            pgf.print(borderLabel);
             pgf.print("}");
          }
          else
          {
             pgf.print("@flf@border@");
-            pgf.print(label);
+            pgf.print(borderLabel);
          }
 
          pgf.print("}");
@@ -510,7 +532,7 @@ public class FlowFrame implements Cloneable,Serializable
             break;
          }
 
-         pgf.println("{"+label
+         pgf.println("{"+objectLabel
            +"}{evenx=" + pgf.length(cg, x+evenXShift)
            + ",eveny="+pgf.length(cg, y+evenYShift)
            +"}");
@@ -537,18 +559,17 @@ public class FlowFrame implements Cloneable,Serializable
 
          if (type == STATIC)
          {
-            pgf.println("\\setstaticframe*{"+label+"}{shape={"+shapecmd+"}}");
+            pgf.println("\\setstaticframe*{"+objectLabel+"}{shape={"+shapecmd+"}}");
          }
          else
          {
-            pgf.println("\\setdynamicframe*{"+label+"}{shape={"+shapecmd+"}}");
+            pgf.println("\\setdynamicframe*{"+objectLabel+"}{shape={"+shapecmd+"}}");
          }
       }
 
       if (type == STATIC || type == DYNAMIC)
       {
-         pgf.print("\\set"+(type==STATIC?"static":"dynamic")
-                   +"frame*{"+label+"}{valign=");
+         pgf.print("\\set"+typeStr +"frame*{"+objectLabel+"}{valign=");
          switch (valign)
          {
             case TOP :
@@ -561,13 +582,52 @@ public class FlowFrame implements Cloneable,Serializable
                pgf.print("b");
             break;
          }
+
+         if (clear)
+         {
+            pgf.print(",clear");
+         }
+
+         if (type == DYNAMIC && !styleCommands.isEmpty())
+         {
+            pgf.print(",style={");
+            pgf.print(styleCommands);
+            pgf.print("}");
+         }
+
          pgf.println("}");
 
          if (contents != null && !contents.isEmpty())
          {
             pgf.println("\\set"+(type==STATIC?"static":"dynamic")
-                      +"contents*{"+label+"}{"+contents+"}");
+                      +"contents*{"+objectLabel+"}{"+contents+"}");
          }
+      }
+      else if (type == FLOW)
+      {
+         switch (marginPosition)
+         {
+            case MARGIN_OUTER:
+              pgf.println("\\setflowframe*{"+objectLabel+"}{margin=outer}");
+            break;
+            case MARGIN_INNER:
+              pgf.println("\\setflowframe*{"+objectLabel+"}{margin=inner}");
+            break;
+            case MARGIN_LEFT:
+              pgf.println("\\setflowframe*{"+objectLabel+"}{margin=left}");
+            break;
+            case MARGIN_RIGHT:
+              pgf.println("\\setflowframe*{"+objectLabel+"}{margin=right}");
+            break;
+         }
+      }
+
+      if (type != TYPEBLOCK && textColor != null)
+      {
+         float[] rgb = textColor.getRGBColorComponents(null);
+
+         pgf.format("\\set%sframe*{%s}{textcolor=[rgb]{%f,%f,%f}}%n",
+            typeStr, objectLabel, rgb[0], rgb[1], rgb[2]);
       }
    }
 
@@ -619,6 +679,20 @@ public class FlowFrame implements Cloneable,Serializable
                if (version >= 1.8f)
                {
                   jdr.writeString(contents);
+
+                  if (version >= 2.1f)
+                  {
+                     jdr.writeBoolean(clear);
+
+                     if (clear) omitted = true;
+
+                     if (type == DYNAMIC)
+                     {
+                        jdr.writeString(styleCommands);
+
+                        if (!styleCommands.isEmpty()) omitted = true;
+                     }
+                  }
                }
                else if (!(contents != null || contents.isEmpty()))
                {
@@ -631,6 +705,18 @@ public class FlowFrame implements Cloneable,Serializable
                omitted = true;
             }
          }
+         else if (type == FLOW)
+         {
+            if (version >= 2.1f)
+            {
+               jdr.writeByte((byte)marginPosition);
+
+               if (marginPosition != MARGIN_OUTER)
+               {
+                  omitted = true;
+               }
+            }
+         }
 
          if (version >= 1.8f)
          {
@@ -639,6 +725,20 @@ public class FlowFrame implements Cloneable,Serializable
             if (type != TYPEBLOCK)
             {
                jdr.writeDouble(evenYShift);
+
+               if (version >= 2.1f)
+               {
+                  jdr.writeBoolean(textColor != null);
+
+                  if (textColor != null)
+                  {
+                     jdr.writeInt(textColor.getRGB());
+                  }
+                  else
+                  {
+                     omitted = true;
+                  }
+               }
             }
          }
          else if (evenXShift != 0.0)
@@ -754,7 +854,27 @@ public class FlowFrame implements Cloneable,Serializable
                {
                   f.setContents(jdr.readString(
                      InvalidFormatException.FRAME_CONTENTS));
+
+                  if (version >= 2.1f)
+                  {
+                     f.clear = jdr.readBoolean(
+                      InvalidFormatException.FRAME_CLEAR);
+
+                     if (f.type == DYNAMIC)
+                     {
+                        f.styleCommands = jdr.readString(
+                          InvalidFormatException.FRAME_STYLE_COMMANDS);
+                     }
+                  }
                }
+            }
+         }
+         else if (f.type == FLOW)
+         {
+            if (version >= 2.1f)
+            {
+               f.setMarginPosition(jdr.readByte(
+                  InvalidFormatException.FRAME_MARGIN_POSITION));
             }
          }
 
@@ -767,6 +887,18 @@ public class FlowFrame implements Cloneable,Serializable
             {
                f.setEvenYShift(jdr.readDouble(
                   InvalidFormatException.FRAME_EVEN_Y_SHIFT));
+
+               if (version >= 2.1f)
+               {
+                  boolean hasTextCol = jdr.readBoolean(
+                   InvalidFormatException.FRAME_TEXT_COLOUR_FLAG);
+
+                  if (hasTextCol)
+                  {
+                     f.textColor = new Color(jdr.readInt(
+                       InvalidFormatException.FRAME_TEXT_COLOUR));
+                  }
+               }
             }
          }
       }
@@ -1293,6 +1425,37 @@ public class FlowFrame implements Cloneable,Serializable
       right = margin;
    }
 
+   public void setMarginPosition(int setting) throws InvalidFormatException
+   {
+      if (type == FLOW)
+      {
+         switch (setting)
+         {
+            case MARGIN_OUTER:
+            case MARGIN_INNER:
+            case MARGIN_LEFT:
+            case MARGIN_RIGHT:
+             marginPosition = setting;
+            break;
+            default:
+              throw new InvalidValueException(
+                InvalidFormatException.FRAME_MARGIN_POSITION,
+                setting, canvasGraphics);
+         }
+      }
+      else
+      {
+         throw new InvalidValueException(
+           InvalidFormatException.FRAME_MARGIN_POSITION_TYPE,
+           setting, canvasGraphics);
+      }
+   }
+
+   public int getMarginPosition()
+   {
+      return marginPosition;
+   }
+
    /**
     * Indicates that a frame is a static frame.
     */
@@ -1340,6 +1503,26 @@ public class FlowFrame implements Cloneable,Serializable
     */
    public static final int BOTTOM=2;
 
+   /**
+    * Indicates that a flow frame should have an outer margin.
+    */
+   public static final int MARGIN_OUTER=0;
+
+   /**
+    * Indicates that a flow frame should have an inner margin.
+    */
+   public static final int MARGIN_INNER=1;
+
+   /**
+    * Indicates that a flow frame should have a left margin.
+    */
+   public static final int MARGIN_LEFT=2;
+
+   /**
+    * Indicates that a flow frame should have a right margin.
+    */
+   public static final int MARGIN_RIGHT=3;
+
    private static int maxid=0;
 
    private CanvasGraphics canvasGraphics;
@@ -1350,9 +1533,24 @@ public class FlowFrame implements Cloneable,Serializable
    public boolean border=false;
 
    /**
+    * Indicates whether this frame should be clear by the output
+    * routine (only applicable to static or dynamic frames).
+    */
+   private boolean clear=false;
+
+   /**
+    * Style commands (dynamic only)
+    */
+   private String styleCommands = "";
+
+   private Color textColor = null;
+
+   /**
     * The type assigned to this frame.
     */
    private volatile int type;
+
+   private int marginPosition = MARGIN_OUTER;// only applicable for flow frames
 
    /**
     * The label identifying this frame.

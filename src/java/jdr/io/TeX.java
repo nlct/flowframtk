@@ -561,6 +561,12 @@ public class TeX
       return writer;
    }
 
+   public void format(String fmtStr, Object... args)
+     throws IOException
+   {
+      print(String.format(Locale.ROOT, fmtStr, args));
+   }
+
    public void print(String string)
      throws IOException
    {
@@ -570,7 +576,8 @@ public class TeX
    public void println(String string)
      throws IOException
    {
-      print(string+System.getProperty("line.separator", "\n"));
+      print(string);
+      print(System.getProperty("line.separator", "\n"));
    }
 
    public void println(boolean comment, String string)

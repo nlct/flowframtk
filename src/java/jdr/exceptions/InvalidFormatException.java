@@ -368,6 +368,12 @@ public class InvalidFormatException extends Exception
    public static final String FRAME_CONTENTS = "frame-contents";
    public static final String FRAME_EVEN_X_SHIFT = "frame-even-x-shift";
    public static final String FRAME_EVEN_Y_SHIFT = "frame-even-y-shift";
+   public static final String FRAME_MARGIN_POSITION = "frame-margin-position";
+   public static final String FRAME_MARGIN_POSITION_TYPE = "frame-margin-position-type";
+   public static final String FRAME_CLEAR = "frame-clear";
+   public static final String FRAME_STYLE_COMMANDS = "frame-style-commands";
+   public static final String FRAME_TEXT_COLOUR_FLAG = "frame-text-colour-flag";
+   public static final String FRAME_TEXT_COLOUR = "frame-text-colour";
 
    public static final String PAPER_ID = "paper-id";
    public static final String PAPER_WIDTH = "paper-width";

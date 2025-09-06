@@ -29,6 +29,9 @@ Nicola Talbot
 
 <!-- Warning Messages -->
 
+<entry key="error.invalid_frame-text-colour-flag">Invalid text colour flag</entry>
+<entry key="error.invalid_frame-text-colour">Invalid text colour</entry>
+
 <!-- Error Messages -->
 
 <entry key="error.title">Error</entry>

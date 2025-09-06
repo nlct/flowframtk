@@ -35,52 +35,52 @@ public class InvalidValueException extends InvalidFormatException
 {
    public InvalidValueException(String tag, int value, JDRAJR jdr)
    {
-      this(tag, new Integer(value), jdr);
+      this(tag, Integer.valueOf(value), jdr);
    }
 
    public InvalidValueException(String tag, double value, JDRAJR jdr)
    {
-      this(tag, new Double(value), jdr);
+      this(tag, Double.valueOf(value), jdr);
    }
 
    public InvalidValueException(String tag, float value, JDRAJR jdr)
    {
-      this(tag, new Float(value), jdr);
+      this(tag, Float.valueOf(value), jdr);
    }
 
    public InvalidValueException(String tag, byte value, JDRAJR jdr)
    {
-      this(tag, new Byte(value), jdr);
+      this(tag, Byte.valueOf(value), jdr);
    }
 
    public InvalidValueException(String tag, char value, JDRAJR jdr)
    {
-      this(tag, new Character(value), jdr);
+      this(tag, Character.valueOf(value), jdr);
    }
 
    public InvalidValueException(String tag, int value, JDRAJR jdr, Throwable cause)
    {
-      this(tag, new Integer(value), jdr, cause);
+      this(tag, Integer.valueOf(value), jdr, cause);
    }
 
    public InvalidValueException(String tag, double value, JDRAJR jdr, Throwable cause)
    {
-      this(tag, new Double(value), jdr, cause);
+      this(tag, Double.valueOf(value), jdr, cause);
    }
 
    public InvalidValueException(String tag, float value, JDRAJR jdr, Throwable cause)
    {
-      this(tag, new Float(value), jdr, cause);
+      this(tag, Float.valueOf(value), jdr, cause);
    }
 
    public InvalidValueException(String tag, byte value, JDRAJR jdr, Throwable cause)
    {
-      this(tag, new Byte(value), jdr, cause);
+      this(tag, Byte.valueOf(value), jdr, cause);
    }
 
    public InvalidValueException(String tag, char value, JDRAJR jdr, Throwable cause)
    {
-      this(tag, new Character(value), jdr, cause);
+      this(tag, Character.valueOf(value), jdr, cause);
    }
 
    public InvalidValueException(String tag, Object value, CanvasGraphics cg)

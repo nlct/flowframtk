@@ -63,6 +63,8 @@ public class FLF extends TeX
    public FLF(Path basePath, Writer out, boolean useFlowframTkSty)
    {
       super(basePath, out, useFlowframTkSty);
+
+      thumbtabObjects = new HashMap<String,JDRCompleteObject>();
    }
 
    /**
@@ -95,6 +97,7 @@ public class FLF extends TeX
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
+      this.useHPaddingShapepar = useHPaddingShapepar;
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
@@ -235,9 +238,9 @@ public class FLF extends TeX
       double width = bpToStorage*cg.getPaperWidth()-(left+right);
       double height = bpToStorage*cg.getPaperHeight()-(top+bottom);
 
-      Rectangle2D typeblockRect = new Rectangle2D.Double(left,top,width,height);
+      typeblockRect = new Rectangle2D.Double(left,top,width,height);
 
-      double baselineskip = cg.getStorageBaselineskip(LaTeXFontBase.NORMALSIZE);
+      baselineskip = cg.getStorageBaselineskip(LaTeXFontBase.NORMALSIZE);
 
       typeblock.tex(this, group, typeblockRect, baselineskip, false);
 
@@ -308,6 +311,7 @@ public class FLF extends TeX
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
+      this.useHPaddingShapepar = useHPaddingShapepar;
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
@@ -389,9 +393,9 @@ public class FLF extends TeX
       double width = bpToStorage*cg.getPaperWidth()-(left+right);
       double height = bpToStorage*cg.getPaperHeight()-(top+bottom);
 
-      Rectangle2D typeblockRect = new Rectangle2D.Double(left,top,width,height);
+      typeblockRect = new Rectangle2D.Double(left,top,width,height);
 
-      double baselineskip = cg.getStorageBaselineskip(LaTeXFontBase.NORMALSIZE);
+      baselineskip = cg.getStorageBaselineskip(LaTeXFontBase.NORMALSIZE);
 
       typeblock.tex(this, group, typeblockRect, baselineskip, false);
 
@@ -1303,29 +1307,82 @@ public class FLF extends TeX
       }
    }
 
-   public void foundThumbtab(double height)
+   public void foundThumbtab(JDRObject obj, double height)
    {
       hasThumbtabs = true;
-      thumbtabs++;
+      numThumbtabs++;
       sumThumbtabHeight += height;
+
+      if (obj instanceof JDRCompleteObject)
+      {
+         JDRCompleteObject completeObject = (JDRCompleteObject)obj;
+
+         FlowFrame ff = completeObject.getFlowFrame();
+
+         thumbtabObjects.put(ff.getLabel(), completeObject);
+      }
    }
 
    protected void resetThumbtabs()
    {
       hasThumbtabs = false;
-      thumbtabs = 0;
+      numThumbtabs = 0;
       sumThumbtabHeight = 0.0;
+      thumbtabObjects.clear();
    }
 
-   protected void printThumbtabs() throws IOException
+   protected void printThumbtabs() throws IOException,InvalidShapeException
    {
       CanvasGraphics cg = group.getCanvasGraphics();
 
       if (hasThumbtabs)
       {
+         for (int i = 1; i <= numThumbtabs; i++)
+         {
+            String ttlabel = "thumbtab"+i;
+            JDRCompleteObject tt = thumbtabObjects.get(ttlabel);
+
+            if (tt != null)
+            {
+               // Has an index thumbtab also been created?
+
+               String ittlabel = "thumbtabindex"+i;
+               JDRCompleteObject itt = thumbtabObjects.get(ittlabel);
+               FlowFrame ff = tt.getFlowFrame();
+
+               if (itt == null)
+               {
+                  // Not defined so replicate thumbtab
+
+                  ff.tex(this, tt, typeblockRect, "", baselineskip,
+                   useHPaddingShapepar, "none", ittlabel, ttlabel);
+               }
+            }
+
+            ttlabel = "eventhumbtab"+i;
+            tt = thumbtabObjects.get(ttlabel);
+
+            if (tt != null)
+            {
+               // Has an even index thumbtab also been created?
+
+               String ittlabel = "eventhumbtabindex"+i;
+               JDRCompleteObject itt = thumbtabObjects.get(ittlabel);
+               FlowFrame ff = tt.getFlowFrame();
+
+               if (itt == null)
+               {
+                  // Not defined so replicate thumbtab
+
+                  ff.tex(this, tt, typeblockRect, "", baselineskip,
+                   useHPaddingShapepar, "none", ittlabel, ttlabel);
+               }
+            }
+         }
+
          if (useFlowframTkSty)
          {
-            println("\\makethumbtabs{"+length(cg, sumThumbtabHeight/thumbtabs)+"}");
+            println("\\makethumbtabs{"+length(cg, sumThumbtabHeight/numThumbtabs)+"}");
             println("\\enablethumbtabs");
          }
          else
@@ -1341,6 +1398,11 @@ public class FLF extends TeX
    int numFlows = 0;
 
    boolean hasThumbtabs = false;
-   int thumbtabs = 0;
+   int numThumbtabs = 0;
    double sumThumbtabHeight=0;
+   HashMap<String,JDRCompleteObject> thumbtabObjects;
+
+   Rectangle2D typeblockRect;
+   double baselineskip;
+   boolean useHPaddingShapepar;
 }

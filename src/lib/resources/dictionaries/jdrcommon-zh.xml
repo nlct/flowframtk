@@ -413,6 +413,12 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_frame-margin-left">Invalid frame left margin</entry>
 <entry key="error.invalid_frame-margin-top">Invalid frame top margin</entry>
 <entry key="error.invalid_frame-margin-bottom">Invalid frame bottom margin</entry>
+<entry key="error.invalid_frame-margin-position">Invalid frame margin position</entry>
+<entry key="error.invalid_frame-margin-position-type">Margin position setting invalid for frame type</entry>
+<entry key="error.invalid_frame-clear">Invalid frame clear setting</entry>
+<entry key="error.invalid_frame-style-commands">Invalid frame style commands</entry>
+<entry key="error.invalid_frame-text-colour-flag">Invalid text color flag</entry>
+<entry key="error.invalid_frame-text-colour">Invalid text color</entry>
 <entry key="error.invalid_frame-idl">Invalid frame label</entry>
 <entry key="error.invalid_frame-flag">Invalid frame flag</entry>
 <entry key="error.invalid_frame-border-flag">Invalid frame flag</entry>
