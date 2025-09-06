@@ -14573,12 +14573,21 @@ follows:
 [\meta{shape} \meta{v-align}]
 \end{syntaxline}
 \end{jdrversion}
-\begin{jdrversion}{1.8 onwards}
+\begin{jdrversion}{1.8--2.0}
 \begin{syntaxline}
 \meta{type} [\meta{border} \meta{label} \meta{pages}]
 \meta{top} \meta{bottom} \meta{left} \meta{right}
 [\meta{shape} \meta{v-align} \meta{contents}] \meta{even-x-shift}
 [\meta{even-y-shift}]
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{2.1 onwards}
+\begin{syntaxline}
+\meta{type} [\meta{border} \meta{label} \meta{pages}]
+\meta{top} \meta{bottom} \meta{left} \meta{right}
+[\meta{shape} \meta{v-align} \meta{contents} \meta{clear-flag} [\meta{style}] ]
+[\meta{flow-margin-pos}]
+\meta{even-x-shift} [\meta{even-y-shift} \meta{text-rgb-flag} [\meta{text-rgb}]]
 \end{syntaxline}
 \end{jdrversion}
 where:
@@ -14588,7 +14597,7 @@ take one of the following values: 0 (static), 1 (flow), 2 (dynamic)
 and 3 (\gls+{typeblock}). There should only be one \gls{typeblock} and this
 should belong to the \hyperref[jdr:object]{outermost implicit group}.
 
-\item If \meta{type} is not equal to 3 (i.e.\ is not the \gls{typeblock}), the following
+\item If \meta{type} is not equal to 3 (that is, it's not the \gls{typeblock}), the following
 information should also be saved:
   \begin{enumerate}
   \item a \type{boolean} value (\meta{border})
@@ -14608,19 +14617,35 @@ as a \type{double} (in terms of the storage unit) otherwise.
 is either 0 (static frame) or 2 (dynamic frame) \meta{shape}
 is a \type{byte} indicating the paragraph shape. This may be one of:
 0 (standard shape), 1 (use \gls{parshape}) or 2 (use \gls{shapepar}).
-This value should be omitted if the frame type is 0 or 2.
+This value should be omitted for other frame types.
 
 \item (Version 1.3 onwards.) If the frame type is
 either 0 (static frame) or 2 (dynamic frame) \meta{v-align} is a
 \type{byte} that represents the vertical alignment. This may be one
 of: 0 (top), 1 (\manmsg{centre}) or 2 (bottom).
-This value should be omitted if the frame type is 0 or 2.
+This value should be omitted for other frame types.
 
 \item (Version 1.8 onwards.)  If the frame type is
 either 0 (static frame) or 2 (dynamic frame) \meta{contents} is a
 \type{string} with the frame's contents. This may be an empty or
 null \type{string}.
-This value should be omitted if the frame type is 0 or 2.
+This value should be omitted for other frame types.
+
+\item (Version 2.1 onwards.) The \meta{clear-flag} is a
+\type{boolean} that's only present for static or dynamic frames.
+This value should be omitted for other frame types.
+
+\item (Version 2.1 onwards.) The \meta{style} is a
+\type{string} that's only present for dynamic frames. (The string
+may be empty or consist of \LaTeX\ font
+changing commands where the last may be a text-block command.)
+This value should be omitted for other frame types.
+
+\item (Version 2.1 onwards.) The \meta{flow-margin-pos} is a \type{byte}
+that may be one of the values: 0 (outer), 1 (inner), 2 (left) or 3
+(right). This indicates the position of the marginpar and is only
+present for type 1 (flow frame).
+This value should be omitted for other frame types.
 
 \item (Version 1.8 onwards.) The horizontal even page shift
 \meta{even-x-shift} is stored as a \type{double}.
@@ -14628,6 +14653,17 @@ This value should be omitted if the frame type is 0 or 2.
 \item (Version 1.8 onwards.) The vertical even page shift
 \meta{even-y-shift} is stored as a \type{double}. This value is
 omitted for the \gls{typeblock} (type~3).
+
+\item (Version 2.1 onwards.) The \meta{text-rgb-flag} is a
+\type{boolean} indicating whether or not the \meta{text-rgb} data is
+present. If the flag is false, the text \manmsg{colour} is the default
+for the document. If the flag is true, the \meta{text-rgb} data must
+follow, which is an integer representation of an RGB
+\manmsg{colour} specification.  (Bits 24--31 are alpha, 16--23 are red,
+8--15 are green, 0--7 are blue.) Note that although this includes
+the alpha channel, this isn't supported as a pen \manmsg{colour} in
+\LaTeX, so the alpha component will be omitted when exported to a class, package or
+\LaTeX\ document.
 
 \end{numbered}% end of flowframe info
 
