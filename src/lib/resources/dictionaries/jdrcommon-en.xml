@@ -223,7 +223,9 @@ you select the "flowframtk image file {0} (*.jdr)" file filter</entry>
 <entry key="warning.load.ajr">Old AJR format {0} detected. When you save this file it
 will be saved to the new AJR format unless
 you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
+
 <entry key="warning.no_flowframe_data">No flow frame data found.</entry>
+<entry key="warning.warning.bespoke_thumbtabs_unsupported">Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v1.19 required).</entry>
 
 <entry key="warning.pgf-no-text-shading">text shading paint can''t be exported to pgf</entry>
 <entry key="warning.pgf-no-textpath-outline">text-path outline can''t be exported to pgf</entry>
@@ -355,6 +357,8 @@ File doesn''t exist</entry>
 <entry key="error.invalid_magenta">Invalid magenta value</entry>
 <entry key="error.invalid_mitre-limit">Invalid miter limit (miter limit can't be less than 1)</entry>
 <entry key="error.invalid_object">Invalid object</entry>
+<entry key="error.invalid_origin-x">Invalid origin X</entry>
+<entry key="error.invalid_origin-y">Invalid origin Y</entry>
 <entry key="error.invalid_frame-page-list">Invalid page list</entry>
 <entry key="error.invalid_pagelist_length">Negative page list length</entry>
 <entry key="error.invalid_paper_dimension">Invalid paper dimensions ''{0}''</entry>

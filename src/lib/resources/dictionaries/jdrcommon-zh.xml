@@ -233,7 +233,9 @@ Reverting to draft mode.</entry>
 <entry key="warning.load.ajr">检测到旧的AJR格式({0}).
 当再次保存时将转换为\n新的AJR格式, 若仍要保留原始格式, 请另存为"flowframtk
 ascii 文件 1.0 (*.ajr)"格式.</entry>
+
 <entry key="warning.no_flowframe_data">No flow frame data found.</entry>
+<entry key="warning.warning.bespoke_thumbtabs_unsupported">Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v1.19 required).</entry>
 
 <entry key="warning.pgf-no-text-shading">text shading paint can''t be exported to pgf</entry>
 <entry key="warning.pgf-no-textpath-outline">text-path outline can''t be exported to pgf</entry>
@@ -321,6 +323,8 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.id.endcolour">无效的颜色结束标识符</entry>
 <entry key="error.id.linestyle">缺少线条样式标识符</entry>
 <entry key="error.invalid_object-id">无效的对象标识符</entry>
+<entry key="error.invalid_origin-x">Invalid origin X</entry>
+<entry key="error.invalid_origin-y">Invalid origin Y</entry>
 <entry key="error.invalid_path-open-close-id">缺少 open/closed 标识符</entry>
 <entry key="error.invalid_paper-id">无效的纸张标识符</entry>
 <entry key="error.invalid_segment-id">无效的线段标识符</entry>

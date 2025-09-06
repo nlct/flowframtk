@@ -1199,6 +1199,8 @@ public class CanvasGraphics
       scaleControlPoint = cg.scaleControlPoint;
       optimize = cg.optimize;
       setGrid((JDRGrid)cg.grid.clone());
+      originX = cg.originX;
+      originY = cg.originY;
    }
 
    /**
@@ -1296,6 +1298,26 @@ public class CanvasGraphics
    public Rectangle2D getImageableArea()
    {
       return paper.getImageableArea();
+   }
+
+   public double getOriginX()
+   {
+      return originX;
+   }
+
+   public void setOriginX(double x)
+   {
+      originX = x;
+   }
+
+   public double getOriginY()
+   {
+      return originY;
+   }
+
+   public void setOriginY(double y)
+   {
+      originY = y;
    }
 
    public JDRUnit getStorageUnit()
@@ -1479,6 +1501,11 @@ public class CanvasGraphics
     */
    private int optimize=OPTIMIZE_SPEED;
 
+   // TODO
+   // Now that the copy & paste uses the JDR binary format instead
+   // of serialization all volatile and transient can probably be
+   // removed.
+
    /**
     * Indicates whether to show the grid.
     */
@@ -1512,6 +1539,8 @@ public class CanvasGraphics
     * Storage unit. This is independent of the grid unit(s).
     */
    private volatile JDRUnit storageUnit;
+
+   private double originX=0.0, originY=0.0; // TODO
 
    /**
     * Point size.

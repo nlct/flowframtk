@@ -111,6 +111,12 @@ public abstract class JDRAJR
          // save storage unit.
 
          writeByte((byte)cg.getStorageUnit().getID());
+
+         if (version >= 2.1f)
+         {
+            writeDouble(cg.getOriginX());
+            writeDouble(cg.getOriginY());
+         }
       }
       else if (cg.getStorageUnit().getID() != JDRUnit.BP)
       {
@@ -325,6 +331,12 @@ public abstract class JDRAJR
          {
             throw new InvalidValueException(
                InvalidValueException.UNIT_ID, id, this, e);
+         }
+
+         if (version >= 2.1f)
+         {
+            double x = readDouble(InvalidFormatException.ORIGIN_X);
+            double y = readDouble(InvalidFormatException.ORIGIN_Y);
          }
       }
       else

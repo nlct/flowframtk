@@ -201,6 +201,8 @@ public class InvalidFormatException extends Exception
    public static final String MARKER_OFFSET = "marker-offset";
    public static final String MARKER_REPEAT_OFFSET_FLAG = "marker-repeat-offset-flag";
    public static final String MARKER_REPEAT_OFFSET = "marker-repeat-offset";
+   public static final String ORIGIN_X = "origin-x";
+   public static final String ORIGIN_Y = "origin-y";
 
    public static final String DASH_PATTERN = "dash-pattern";
    public static final String DASH_OFFSET = "dash-offset";

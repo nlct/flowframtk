@@ -13297,6 +13297,17 @@ otherwise indicated. The unit is saved as a \type{unit-id} type.
 Versions below 1.8 must have all lengths stored as
 \glslink{bp}{PostScript points}.
 
+\item Versions 2.1 and above only include the origin shift.
+\begin{jdrversion}{2.1 onwards}
+\begin{syntaxline}
+\meta{origin-x} \meta{origin-y}
+\end{syntaxline}
+\end{jdrversion}
+These values are in terms of the storage unit and indicate where the
+co-ordinate origin is in relation to the top left corner of the
+\gls{canvas}.
+% TODO implement this
+
 \item\label{jdr:settings-id}Setting ID.
 \begin{syntaxline}
 \meta{settings-id}
