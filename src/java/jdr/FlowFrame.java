@@ -896,7 +896,7 @@ public class FlowFrame implements Cloneable,Serializable
                   if (hasTextCol)
                   {
                      f.textColor = new Color(jdr.readInt(
-                       InvalidFormatException.FRAME_TEXT_COLOUR));
+                       InvalidFormatException.FRAME_TEXT_COLOUR), true);
                   }
                }
             }
