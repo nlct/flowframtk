@@ -55,7 +55,7 @@ public class JDRObjectLoader
     * {@link JDRObjectLoaderListener#getId(float)} and then 
     * writes the object specifications using 
     * {@link JDRObjectLoaderListener#write(JDRAJR,JDRObject)}.
-    * Additionally writes flowframe and description information if
+    * Additionally writes flowframe, tag and description information if
     * the object is an instance of {@link JDRCompleteObject}.
     * @param theObject the object that needs to be saved
     * @throws IOException if an I/O error occurs
@@ -113,6 +113,11 @@ public class JDRObjectLoader
          if (version >= 1.2f)
          {
             jdr.writeString(obj.getDescription());
+
+            if (version >= 2.1f)
+            {
+               jdr.writeString(obj.getTag());
+            }
          }
       }
    }
@@ -122,7 +127,7 @@ public class JDRObjectLoader
     * character and checks through the list of listeners
     * to determine which type is identified by the  
     * character (using {@link JDRObjectLoaderListener#getId(float)}).
-    * Additionally reads flowframe and description information if
+    * Additionally reads flowframe, tag and description information if
     * the object is an instance of {@link JDRCompleteObject}.
     * @return the specified object (maybe null if bitmap link is
     * invalid, in which case object needs to be discarded)
@@ -147,7 +152,7 @@ public class JDRObjectLoader
             JDRObject object = listener.read(jdr);
 
             // If object is null, it's a discarded bitmap
-            // Need to read the flowframe and description
+            // Need to read the flowframe, tag and description
             // even though they're not required.
 
             if (object == null || object instanceof JDRCompleteObject)
@@ -160,11 +165,18 @@ public class JDRObjectLoader
                }
 
                String description = "";
+               String tag = "";
 
                if (version >= 1.2f)
                {
                   description = jdr.readString(
                     InvalidFormatException.DESCRIPTION);
+
+                  if (version >= 2.1f)
+                  {
+                     tag = jdr.readString(
+                       InvalidFormatException.OBJECT_TAG);
+                  }
                }
 
                if (object != null)
@@ -173,6 +185,7 @@ public class JDRObjectLoader
 
                   obj.setFlowFrame(flowframe);
                   obj.setDescription(description);
+                  obj.setTag(tag);
                }
             }
 

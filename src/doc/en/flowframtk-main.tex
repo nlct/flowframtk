@@ -13677,9 +13677,13 @@ Each \gls{object} is saved as \meta{object data} which has the following format:
 \begin{jdrversion}{1.0 \& 1.1}
 \meta{id-char} \meta{object-specs} \meta{fflag} [\meta{flowframe-specs}]
 \end{jdrversion}
-\begin{jdrversion}{1.2 onwards}
+\begin{jdrversion}{1.2--2.0}
 \meta{id-char} \meta{object-specs} \meta{fflag} [\meta{flowframe-specs}]
 \meta{description}
+\end{jdrversion}
+\begin{jdrversion}{2.1 onwards}
+\meta{id-char} \meta{object-specs} \meta{fflag} [\meta{flowframe-specs}]
+\meta{description} \meta{tag}
 \end{jdrversion}
 \end{syntaxline}
 where \meta{id-char} is a \type{char} determining the object type.
@@ -13706,16 +13710,19 @@ Valid object type identifiers are listed in
 The object specifications \meta{object-specs} vary according to the
 object type and are described \hyperref[jdr:objectspecs]{below}.
 \meta{fflag} is a \type{boolean} value indicating whether or not
-this object has flowframe data associated with it. If true, then the
-flowframe specifications \meta{flowframe-specs} should follow
+this object has \gls{flowframe} data associated with it. If true, then the
+\gls{flowframe} specifications \meta{flowframe-specs} should follow
 (\hyperref[jdr:flowframe]{see below}), otherwise
 \meta{flowframe-specs} should be omitted. Note that JDR version 1.2
 and above contains the \type{string} \meta{description}, which was
-omitted in earlier versions.
+omitted in earlier versions, and version 2.1 and above contains the
+\type{string} tag.
 
 Recall from \hyperref[jdr:object]{above} that the image is stored with an implied outer grouping. The
 \meta{flowframe-specs} for this implicit group represents the image
 \gls+{typeblock} and the \meta{description} represents the image description.
+The \meta{tag} is also included for version 2.1 and above which
+represents the image's tag.
 
 \end{numbered}
 

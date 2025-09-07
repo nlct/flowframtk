@@ -89,7 +89,11 @@ public class PGF extends TeX
       affineTransform = new AffineTransform(
          1, 0, 0, -1, 0, storagePaperHeight);
 
+      clearObjectArgList();
+
       println("\\begin{pgfpicture}");
+
+      int objectId = writeStartObject(allObjects);
 
       FlowFrame flowframe = allObjects.getFlowFrame();
 
@@ -123,7 +127,6 @@ public class PGF extends TeX
          comment(allObjects.getDescription());
       }
 
-      objectId = 0;
 
       for (int i = 0; i < allObjects.size(); i++)
       {
@@ -135,6 +138,7 @@ public class PGF extends TeX
          writeEndObject(idx, obj);
       }
 
+      writeEndObject(objectId, allObjects);
       println("\\end{pgfpicture}");
    }
 
@@ -304,7 +308,11 @@ public class PGF extends TeX
         println("\\noindent");
       }
 
+      clearObjectArgList();
+
       println("\\jdrimagebox{\\begin{pgfpicture}");
+
+      int objectId = writeStartObject(allObjects);
 
       println(String.format("\\pgfpathmoveto{%s}",
               point(cg, box.getMinX(), storagePaperHeight-box.getMaxY())));
@@ -321,8 +329,6 @@ public class PGF extends TeX
          comment(allObjects.getDescription());
       }
 
-      objectId = 0;
-
       for (int i = 0; i < allObjects.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
@@ -332,6 +338,8 @@ public class PGF extends TeX
          obj.savePgf(this);
          writeEndObject(idx, obj);
       }
+
+      writeEndObject(objectId, allObjects);
 
       println("\\end{pgfpicture}}");
 

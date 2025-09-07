@@ -73,6 +73,7 @@ public abstract class JDRCompleteObject extends JDRObject
        }
 
        description = obj.description;
+       tag = obj.tag;
        editMode = obj.editMode;
        parent = obj.parent;
        index_ = obj.index_;
@@ -592,6 +593,7 @@ public abstract class JDRCompleteObject extends JDRObject
       JDRCompleteObject obj = (JDRCompleteObject)object;
 
       description = obj.description;
+      tag = obj.tag;
       parent = obj.parent;
       index_ = obj.index_;
       editMode = obj.editMode;
@@ -635,6 +637,8 @@ public abstract class JDRCompleteObject extends JDRObject
 
       if (!description.equals(obj.description)) return false;
 
+      if (!tag.equals(obj.tag)) return false;
+
       //if (parent != obj.parent) return false;
 
       return true;
@@ -651,8 +655,8 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public String info()
    {
-      return String.format("description: %s%nflowframe: %s%nis selected: %s%nbounding box:%s%nhash code: %s%n",
-        description, flowframe, isSelected(), getStorageBBox().info(), 
+      return String.format("description: %s%ntag: %s%nflowframe: %s%nis selected: %s%nbounding box:%s%nhash code: %s%n",
+        description, tag, flowframe, isSelected(), getStorageBBox().info(), 
         hashCode());
    }
 
@@ -943,6 +947,16 @@ public abstract class JDRCompleteObject extends JDRObject
       description = desc;
    }
 
+   public String getTag()
+   {
+      return tag;
+   }
+
+   public void setTag(String newTag)
+   {
+      tag = newTag;
+   }
+
    public int getIndex()
    {
       return index_;
@@ -972,6 +986,11 @@ public abstract class JDRCompleteObject extends JDRObject
     * This object's description. Initialised to an empty string.
     */
    protected volatile String description="";
+
+   /**
+    * This object's tag. Initialised to an empty string.
+    */
+   protected String tag="";// TODO
 
    /**
     * Font used for annotations, such as flowframe information

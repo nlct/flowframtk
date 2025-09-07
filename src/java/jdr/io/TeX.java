@@ -54,6 +54,7 @@ public class TeX
       this.basePath = basePath;
       setWriter(out);
       this.useFlowframTkSty = useFlowframTkSty;
+      this.objectArgs = new Vector<String>();
    }
 
    public boolean isFlowframTkStyUsed()
@@ -302,6 +303,11 @@ public class TeX
       println("}");
    }
 
+   protected void clearObjectArgList()
+   {
+      objectArgs.clear();
+   }
+
    public int writeStartObject(JDRCompleteObject obj)
    throws IOException
    {
@@ -312,15 +318,28 @@ public class TeX
          comment(description);
       }
 
-      objectId++;
+      int objectId = objectArgs.size();
 
       if (isFlowframTkStyUsed())
       {
-         print("\\flowframtkstartobject{"+objectId+"}{");
-         print(obj.getClass().getSimpleName());
-         print("}{");
-         print(TeXMappings.replaceSpecialChars(description));
-         println("}%");
+         CanvasGraphics cg = obj.getCanvasGraphics();
+
+         BBox bbox = obj.getStorageBBox();
+
+         String args = String.format(Locale.ROOT,
+          "{%d}{%s}{%s}{%s}{%s}{%s}{%s}",
+          objectId, obj.getClass().getSimpleName(),
+          TeXMappings.replaceSpecialChars(description),
+          TeXMappings.replaceSpecialChars(obj.getTag()),
+          point(cg, bbox.getMinX(), bbox.getMinY()),
+          length(cg, bbox.getWidth()),
+          length(cg, bbox.getHeight()));
+
+         objectArgs.add(args);
+
+         print("\\flowframtkstartobject");
+         print(args);
+         println("%");
       }
 
       return objectId;
@@ -333,11 +352,9 @@ public class TeX
 
       if (isFlowframTkStyUsed())
       {
-         print("\\flowframtkendobject{"+idx+"}{");
-         print(obj.getClass().getSimpleName());
-         print("}{");
-         print(TeXMappings.replaceSpecialChars(description));
-         println("}%");
+         print("\\flowframtkendobject");
+         print(objectArgs.get(idx));
+         println("%");
       }
    }
 
@@ -879,7 +896,7 @@ public class TeX
 
    protected boolean usePdfInfo = false;
 
-   protected int objectId = 0;
+   protected Vector<String> objectArgs;
 
    protected boolean supportOutline=false;
    protected boolean supportTextPath=false;

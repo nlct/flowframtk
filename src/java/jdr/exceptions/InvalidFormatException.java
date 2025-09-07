@@ -180,6 +180,7 @@ public class InvalidFormatException extends Exception
    public static final String PARSE_FORMAT = "parse-format";
 
    public static final String DESCRIPTION = "description";
+   public static final String OBJECT_TAG = "object-tag";
    public static final String CAP_STYLE = "cap-style";
    public static final String JOIN_STYLE = "join-style";
    public static final String MITRE_LIMIT = "mitre-limit";
