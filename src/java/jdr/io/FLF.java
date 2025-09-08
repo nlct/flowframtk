@@ -101,7 +101,7 @@ public class FLF extends TeX
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
-      objectId = 0;
+      int objectId = 0;
 
       FlowFrame typeblock = group.getFlowFrame();
 
@@ -315,7 +315,7 @@ public class FLF extends TeX
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
-      objectId = 0;
+      int objectId = 0;
 
       FlowFrame typeblock = group.getFlowFrame();
 

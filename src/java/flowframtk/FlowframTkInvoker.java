@@ -1526,7 +1526,7 @@ public class FlowframTkInvoker
                }
                else if (key.equals("flowfram_v2.0"))
                {
-                  settings.setHasMinimumFlowFramSty119(parseBoolean(value, line));
+                  settings.setHasMinimumFlowFramSty2_0(parseBoolean(value, line));
                   foundFlowFramv2_0 = true;
                }
                else if (key.equals("unicode"))
@@ -1728,7 +1728,7 @@ public class FlowframTkInvoker
 
                if (p != null && !p.isEmpty())
                {
-                  settings.setHasMinimumFlowFramSty119(true);
+                  settings.setHasMinimumFlowFramSty2_0(true);
                }
             }
             catch (Throwable e)

@@ -904,7 +904,7 @@ public class TeX
       NONE, START_END, ENCAP;
    }
 
-   ObjectMarkup objectMarkup = START_END;
+   ObjectMarkup objectMarkup = ObjectMarkup.START_END;
 
    /**
     * Number format to use to print decimal numbers in LaTeX file.
