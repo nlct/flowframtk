@@ -1388,7 +1388,7 @@ public class FLF extends TeX
          else
          {
             cg.warning("warning.bespoke_thumbtabs_unsupported",
-             "Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v1.19 required).");
+             "Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v2.0 required).");
          }
       }
    }

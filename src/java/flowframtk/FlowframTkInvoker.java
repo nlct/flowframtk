@@ -683,7 +683,7 @@ public class FlowframTkInvoker
 
       StringBuilder messages = null;
 
-      boolean foundFlowFramv119 = false;
+      boolean foundFlowFramv2_0 = false;
 
       try
       {
@@ -1524,10 +1524,10 @@ public class FlowframTkInvoker
                {
                   settings.setMaxProcessTime(parseLong(value, line));
                }
-               else if (key.equals("flowfram_v1.19"))
+               else if (key.equals("flowfram_v2.0"))
                {
                   settings.setHasMinimumFlowFramSty119(parseBoolean(value, line));
-                  foundFlowFramv119 = true;
+                  foundFlowFramv2_0 = true;
                }
                else if (key.equals("unicode"))
                {
@@ -1716,9 +1716,9 @@ public class FlowframTkInvoker
             }
          }
 
-         if (!foundFlowFramv119)
+         if (!foundFlowFramv2_0)
          {
-            // The simplest way of determining if flowfram v1.19 or
+            // The simplest way of determining if flowfram v2.0 or
             // above is installed is to test if flowframtkutils.sty
             // is on TeX's path.
 
@@ -1892,9 +1892,9 @@ public class FlowframTkInvoker
       saveIfNotNullOrEmpty(out, "dvisvgm_opts", settings.getDvisvgmOptions());
       saveIfNotNullOrEmpty(out, "libgs", settings.getLibgs());
 
-      if (settings.hasMinimumFlowFramSty119())
+      if (settings.hasMinimumFlowFramSty2_0())
       {
-         out.println("flowfram_v1.19=1");
+         out.println("flowfram_v2.0=1");
       }
 
       out.println("unicode="+settings.getUnicodeRangesSpec());

@@ -320,7 +320,7 @@ public class TeX
 
       int objectId = objectArgs.size();
 
-      if (isFlowframTkStyUsed())
+      if (isFlowframTkStyUsed() && objectMarkup != ObjectMarkup.NONE)
       {
          CanvasGraphics cg = obj.getCanvasGraphics();
 
@@ -337,9 +337,19 @@ public class TeX
 
          objectArgs.add(args);
 
-         print("\\flowframtkstartobject");
-         print(args);
-         println("%");
+         switch (objectMarkup)
+         {
+            case START_END:
+             print("\\flowframtkstartobject");
+             print(args);
+             println("%");
+            break;
+            case ENCAP:
+             print("\\flowframtkencapobject");
+             print(args);
+             println("{%");
+            break;
+        }
       }
 
       return objectId;
@@ -350,11 +360,19 @@ public class TeX
    {
       String description = obj.getDescription();
 
-      if (isFlowframTkStyUsed())
+      if (isFlowframTkStyUsed() && objectMarkup != ObjectMarkup.NONE)
       {
-         print("\\flowframtkendobject");
-         print(objectArgs.get(idx));
-         println("%");
+         switch (objectMarkup)
+         {
+            case START_END:
+               print("\\flowframtkendobject");
+               print(objectArgs.get(idx));
+               println("%");
+            break;
+            case ENCAP:
+               println("}%");
+            break;
+         }
       }
    }
 
@@ -870,6 +888,23 @@ public class TeX
    {
       return textualExportShadingSetting;
    }
+
+   public void setObjectMarkup(ObjectMarkup markup)
+   {
+      this.objectMarkup = markup;
+   }
+
+   public ObjectMarkup getObjectMarkup()
+   {
+      return objectMarkup;
+   }
+
+   public static enum ObjectMarkup
+   {
+      NONE, START_END, ENCAP;
+   }
+
+   ObjectMarkup objectMarkup = START_END;
 
    /**
     * Number format to use to print decimal numbers in LaTeX file.

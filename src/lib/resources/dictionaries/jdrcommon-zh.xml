@@ -235,7 +235,7 @@ Reverting to draft mode.</entry>
 ascii 文件 1.0 (*.ajr)"格式.</entry>
 
 <entry key="warning.no_flowframe_data">No flow frame data found.</entry>
-<entry key="warning.warning.bespoke_thumbtabs_unsupported">Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v1.19 required).</entry>
+<entry key="warning.warning.bespoke_thumbtabs_unsupported">Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v2.0 required).</entry>
 
 <entry key="warning.pgf-no-text-shading">text shading paint can''t be exported to pgf</entry>
 <entry key="warning.pgf-no-textpath-outline">text-path outline can''t be exported to pgf</entry>

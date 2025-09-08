@@ -555,14 +555,14 @@ public class FlowframTkSettings
       return bitmapCommand;
    }
 
-   public void setHasMinimumFlowFramSty119(boolean has)
+   public void setHasMinimumFlowFramSty2_0(boolean has)
    {
-      hasMinFlowFrameSty119 = has;
+      hasMinFlowFrameSty2_0 = has;
    }
 
-   public boolean hasMinimumFlowFramSty119()
+   public boolean hasMinimumFlowFramSty2_0()
    {
-      return hasMinFlowFrameSty119; // flowfram v1.19 or above installed
+      return hasMinFlowFrameSty2_0; // flowfram v2.0 or above installed
    }
 
    public String[] getLaTeXCmd(String basename)
@@ -1596,7 +1596,7 @@ public class FlowframTkSettings
 
    private long maxProcessTime = 300000L;
 
-   private boolean hasMinFlowFrameSty119 = false;
+   private boolean hasMinFlowFrameSty2_0 = false;
 
    private TextModeMappings textModeMappings;
 

@@ -51,7 +51,7 @@ public class SaveFlf extends ExportImage
          out = new PrintWriter(new FileWriter(outputFile));
 
          FLF flf = new FLF(outputFile.getParentFile(), out,
-          app.getSettings().hasMinimumFlowFramSty119());
+          app.getSettings().hasMinimumFlowFramSty2_0());
 
          flf.setTextualExportShadingSetting(
             app.getTextualExportShadingSetting());
