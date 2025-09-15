@@ -120,14 +120,6 @@ public class PGF extends TeX
 
       println("\\pgfusepath{use as bounding box}");
 
-      String description = allObjects.getDescription();
-
-      if (!description.isEmpty())
-      {
-         comment(allObjects.getDescription());
-      }
-
-
       for (int i = 0; i < allObjects.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
@@ -321,13 +313,6 @@ public class PGF extends TeX
 
       println("\\pgfusepath{use as bounding box}");
 
-
-      String description = allObjects.getDescription();
-
-      if (!description.isEmpty())
-      {
-         comment(allObjects.getDescription());
-      }
 
       for (int i = 0; i < allObjects.size(); i++)
       {

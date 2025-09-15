@@ -194,7 +194,7 @@ public class TeX
 
             if (timezone == 0)
             {
-               println(
+               print(
                 String.format(Locale.ROOT, "%d%02d%02d%02d%02d%02dZ",
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
@@ -205,7 +205,7 @@ public class TeX
             }
             else
             {
-               println(
+               print(
                 String.format(Locale.ROOT, "%d%02d%02d%02d%02d%02d%+03d'%02d'",
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
@@ -326,12 +326,19 @@ public class TeX
 
          BBox bbox = obj.getStorageBBox();
 
+         Point2D p = new Point2D.Double(bbox.getMinX(), bbox.getMinY());
+
+         if (affineTransform != null)
+         {
+            affineTransform.transform(p, p);
+         }
+
          String args = String.format(Locale.ROOT,
           "{%d}{%s}{%s}{%s}{%s}{%s}{%s}",
           objectId, obj.getClass().getSimpleName(),
           TeXMappings.replaceSpecialChars(description),
           TeXMappings.replaceSpecialChars(obj.getTag()),
-          point(cg, bbox.getMinX(), bbox.getMinY()),
+          point(cg, p.getX(), p.getY()),
           length(cg, bbox.getWidth()),
           length(cg, bbox.getHeight()));
 
