@@ -37,15 +37,15 @@ import com.dickimawbooks.flowframtk.*;
  * Component used to setup external process setting.
  */
 
-public class ExportSettingsPanel extends JPanel implements ActionListener
+public class ProcessSettingsPanel extends JPanel implements ActionListener
 {
-   public ExportSettingsPanel(FlowframTk application, JDRAppSelector appSelector,
+   public ProcessSettingsPanel(FlowframTk application, JDRAppSelector appSelector,
       String appname)
    {
      this(application, appSelector, appname, null, null);
    }
 
-   public ExportSettingsPanel(FlowframTk application, JDRAppSelector appSelector,
+   public ProcessSettingsPanel(FlowframTk application, JDRAppSelector appSelector,
       String appname, JLabel fileFieldLabel, JLabelGroup labelGrp)
    {
       super(new BorderLayout());

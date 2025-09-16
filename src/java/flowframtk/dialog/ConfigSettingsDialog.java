@@ -648,7 +648,7 @@ class ProcessesPanel extends JPanel
       JLabel label = resources.createAppLabel("processes.latex");
       grp.add(label);
 
-      latexPanel = new ExportSettingsPanel(application, appSelector,
+      latexPanel = new ProcessSettingsPanel(application, appSelector,
         "latex", label, grp);
 
       add(latexPanel);
@@ -656,7 +656,7 @@ class ProcessesPanel extends JPanel
       label = resources.createAppLabel("processes.pdflatex");
       grp.add(label);
 
-      pdflatexPanel = new ExportSettingsPanel(application, appSelector,
+      pdflatexPanel = new ProcessSettingsPanel(application, appSelector,
         "pdflatex", label, grp);
 
       add(pdflatexPanel);
@@ -664,7 +664,7 @@ class ProcessesPanel extends JPanel
       label = resources.createAppLabel("processes.dvips");
       grp.add(label);
 
-      dvipsPanel = new ExportSettingsPanel(application, appSelector,
+      dvipsPanel = new ProcessSettingsPanel(application, appSelector,
         "dvips", label, grp);
 
       add(dvipsPanel);
@@ -672,7 +672,7 @@ class ProcessesPanel extends JPanel
       label = resources.createAppLabel("processes.dvisvgm");
       grp.add(label);
 
-      dvisvgmPanel = new ExportSettingsPanel(application, appSelector,
+      dvisvgmPanel = new ProcessSettingsPanel(application, appSelector,
         "dvisvgm", label, grp);
 
       add(dvisvgmPanel);
@@ -796,7 +796,7 @@ class ProcessesPanel extends JPanel
 
    private FileField libgsField;
 
-   private ExportSettingsPanel latexPanel, pdflatexPanel,
+   private ProcessSettingsPanel latexPanel, pdflatexPanel,
      dvipsPanel, dvisvgmPanel;
 
    private JSpinner timeoutField;

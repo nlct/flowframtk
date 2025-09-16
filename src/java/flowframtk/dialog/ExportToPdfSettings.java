@@ -60,7 +60,7 @@ public class ExportToPdfSettings extends JDialog
       mainPanel.add(new JLabel(getResources().getMessage(
          "appselect.query.location", "pdflatex")));
 
-      exportPanel = new ExportSettingsPanel(application, appSelector, "pdflatex");
+      exportPanel = new ProcessSettingsPanel(application, appSelector, "pdflatex");
 
       getContentPane().add(mainPanel, "Center");
 
@@ -121,5 +121,5 @@ public class ExportToPdfSettings extends JDialog
    private FlowframTk application;
    private boolean success = false;
 
-   private ExportSettingsPanel exportPanel;
+   private ProcessSettingsPanel exportPanel;
 }
