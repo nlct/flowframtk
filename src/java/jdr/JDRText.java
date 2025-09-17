@@ -1519,6 +1519,8 @@ public class JDRText extends JDRCompleteObject
          break;
       }
 
+      ExportSettings exportSettings = tex.getExportSettings();
+
       JDRPaint p = getTextPaint();
       JDRPaint fill = fillPaint;
 
@@ -1544,18 +1546,18 @@ public class JDRText extends JDRCompleteObject
 
             JDRShading shading = (JDRShading)p;
 
-            switch (tex.getTextualExportShadingSetting())
+            switch (exportSettings.textualShading)
             {
-               case TeX.TEXTUAL_EXPORT_SHADING_AVERAGE:
+               case AVERAGE:
                   p = shading.getStartColor().average(shading.getEndColor());
                break;
-               case TeX.TEXTUAL_EXPORT_SHADING_START:
+               case START:
                   p = shading.getStartColor();
                break;
-               case TeX.TEXTUAL_EXPORT_SHADING_END:
+               case END:
                   p = shading.getEndColor();
                break;
-               case TeX.TEXTUAL_EXPORT_SHADING_TO_PATH:
+               case TO_PATH:
                   try
                   {
                      JDRGroup g = convertToPath();
@@ -1585,18 +1587,18 @@ public class JDRText extends JDRCompleteObject
 
                JDRShading shading = (JDRShading)fill;
 
-               switch (tex.getTextualExportShadingSetting())
+               switch (exportSettings.textualShading)
                {
-                  case TeX.TEXTUAL_EXPORT_SHADING_AVERAGE:
+                  case AVERAGE:
                      fill = shading.getStartColor().average(shading.getEndColor());
                   break;
-                  case TeX.TEXTUAL_EXPORT_SHADING_START:
+                  case START:
                      fill = shading.getStartColor();
                   break;
-                  case TeX.TEXTUAL_EXPORT_SHADING_END:
+                  case END:
                      fill = shading.getEndColor();
                   break;
-                  case TeX.TEXTUAL_EXPORT_SHADING_TO_PATH:
+                  case TO_PATH:
                      try
                      {
                         JDRGroup g = convertToPath();

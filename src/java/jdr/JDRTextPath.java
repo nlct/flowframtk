@@ -538,6 +538,8 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (pathBBox == null) return;
 
+      ExportSettings exportSettings = tex.getExportSettings();
+
       JDRPaint textPaint = getTextPaint();
 
       if (textPaint instanceof JDRShading)
@@ -559,11 +561,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       }
 
       if (((textPaint instanceof JDRShading)
-           && (tex.getTextualExportShadingSetting() == 
-               TeX.TEXTUAL_EXPORT_SHADING_TO_PATH))
+           && (exportSettings.textualShading == 
+               ExportSettings.TextualShading.TO_PATH))
        || (isOutline()
-           && (tex.getTextPathExportOutlineSetting() ==
-               TeX.TEXTPATH_EXPORT_OUTLINE_TO_PATH)))
+           && (exportSettings.textPathOutline ==
+               ExportSettings.TextPathOutline.TO_PATH)))
       {
          try
          {
@@ -591,16 +593,16 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       {
          JDRShading shading = (JDRShading)textPaint;
 
-         switch (tex.getTextualExportShadingSetting())
+         switch (exportSettings.textualShading)
          {
-            case TeX.TEXTUAL_EXPORT_SHADING_AVERAGE:
+            case AVERAGE:
                textPaint 
                   = shading.getStartColor().average(shading.getEndColor());
             break;
-            case TeX.TEXTUAL_EXPORT_SHADING_END:
+            case END:
                textPaint = shading.getEndColor();
             break;
-            case TeX.TEXTUAL_EXPORT_SHADING_START:
+            case START:
             default:
                textPaint = shading.getStartColor();
          }

@@ -33,22 +33,17 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdrresources.*;
 
+/**
+ * Export to a file format that's created from a temporary LaTeX
+ * document using external processes.
+ */
+
 public abstract class ExportDocImage extends ExportImage
 {
    public ExportDocImage(JDRFrame frame, File file, JDRGroup jdrImage,
-      boolean encapsulate, boolean convertBitmapToEps)
+      ExportSettings exportSettings)
    {
-      this(frame, file, jdrImage, encapsulate, convertBitmapToEps, true);
-   }
-
-   public ExportDocImage(JDRFrame frame, File file, JDRGroup jdrImage,
-      boolean encapsulate, boolean convertBitmapToEps,
-      boolean externalProcessRequired)
-   {
-      super(frame, file, jdrImage);
-      this.encapsulate = encapsulate;
-      this.convertBitmapToEps = convertBitmapToEps;
-      this.externalProcessRequired = externalProcessRequired;
+      super(frame, file, jdrImage, exportSettings);
 
       File imageFile = frame.getFile();
 
@@ -140,10 +135,7 @@ public abstract class ExportDocImage extends ExportImage
 
    protected void save() throws IOException,InterruptedException
    {
-      if (externalProcessRequired)
-      {
-         ensureWorkingDirectoryCreated();
-      }
+      ensureWorkingDirectoryCreated();
 
       PrintWriter out = null;
 
@@ -158,14 +150,7 @@ public abstract class ExportDocImage extends ExportImage
          out = new PrintWriter(new FileWriter(texFile));
 
          PGF pgf = new PGF(texFile.getParentFile().toPath(), out,
-          app.getSettings().hasMinimumFlowFramSty2_0());
-
-         pgf.setUsePdfInfoEnabled(app.usePdfInfo());
-
-         pgf.setTextualExportShadingSetting(
-            app.getTextualExportShadingSetting());
-         pgf.setTextPathExportOutlineSetting(
-            app.getTextPathExportOutlineSetting());
+          exportSettings);
 
          writeComments(pgf);
 
@@ -180,20 +165,16 @@ public abstract class ExportDocImage extends ExportImage
             publish(MessageInfo.createWarning(e));
          }
 
-         if (externalProcessRequired)
+         if (preamble == null)
          {
-            if (preamble == null)
-            {
-               preamble = "\\batchmode ";
-            }
-            else
-            {
-               preamble = "\\batchmode " + preamble;
-            }
+            preamble = "\\batchmode ";
+         }
+         else
+         {
+            preamble = "\\batchmode " + preamble;
          }
 
-         pgf.saveDoc(image, preamble, encapsulate, convertBitmapToEps, 
-           app.getSettings().useTypeblockAsBoundingBox);
+         pgf.saveDoc(image, preamble);
 
          out.close();
          out = null;
@@ -218,10 +199,7 @@ public abstract class ExportDocImage extends ExportImage
       }
       finally
       {
-         if (externalProcessRequired)
-         {
-            removeTempFiles();
-         }
+         removeTempFiles();
 
          if (out != null)
          {
@@ -240,12 +218,9 @@ public abstract class ExportDocImage extends ExportImage
       }
    }
 
-   protected boolean encapsulate=true;
-   protected boolean convertBitmapToEps=false;
    protected File imageBase;
 
    protected File texFile = null;
    protected File texDir = null;
    protected String texBase;
-   protected boolean externalProcessRequired;
 }

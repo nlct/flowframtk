@@ -11184,54 +11184,46 @@ public class JDRCanvas extends JPanel
       sa.execute();
    }
 
-   public void savePGF(File file)
+   public void savePGF(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePgf(frame_, file, paths)).execute();
+      (new SavePgf(frame_, file, paths, exportSettings)).execute();
    }
 
-   public void savePGFDoc(File file, boolean encapsulate)
+   public void saveFlowFrame(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePgfDoc(frame_, file, paths, encapsulate)).execute();
-
+      (new SaveFlf(frame_, file, paths, exportSettings)).execute();
    }
 
-   public void saveFlowFrame(File file)
+   public void savePNG(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveFlf(frame_, file, paths)).execute();
+      (new SavePng(frame_, file, paths, exportSettings)).execute();
    }
 
-   public void savePNG(File file)
+   public void saveEPS(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePng(frame_, file, paths)).execute();
+      (new SaveEps(frame_, file, paths, exportSettings)).execute();
    }
 
-   public void saveEPS(File file)
+   public void savePDF(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveEps(frame_, file, paths)).execute();
+      (new SavePdf(frame_, file, paths, exportSettings)).execute();
    }
 
-   public void savePdf(File file)
+   public void saveSVG(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePdf(frame_, file, paths)).execute();
-   }
-
-   public void saveSVG(File file)
-   {
-      if (currentText != null) finishTextAndPostEdit();
-
-      (new SaveSvg(frame_, file, paths)).execute();
+      (new SaveSvg(frame_, file, paths, exportSettings)).execute();
    }
 
    public void updateTextAreaBounds()

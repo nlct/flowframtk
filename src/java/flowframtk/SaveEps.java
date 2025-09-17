@@ -33,22 +33,21 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveEps extends ExportDocImage
 {
-   public SaveEps(JDRFrame frame, File file, JDRGroup jdrImage)
+   public SaveEps(JDRFrame frame, File file, JDRGroup jdrImage,
+        ExportSettings exportSettings)
    {
-      super(frame, file, jdrImage, true, true);
+      super(frame, file, jdrImage, exportSettings);
    }
 
    @Override
    protected File processImage()
       throws IOException,InterruptedException
    {
-      FlowframTkSettings settings = getSettings();
-
       File dir = getTeXFile().getParentFile();
 
-      exec(settings.getLaTeXCmd(texBase));
+      exec(exportSettings.getDviLaTeXCmd(texBase));
 
-      exec(settings.getDviPsCmd(texBase));
+      exec(exportSettings.getDviPsCmd(texBase));
 
       return new File(dir, texBase+".eps");
    }

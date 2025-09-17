@@ -77,6 +77,8 @@ public class FlowframTkSettings
 
       rulerLocale = Locale.getDefault();
       rulerFormat = (DecimalFormat)NumberFormat.getNumberInstance(rulerLocale);
+
+      exportSettings = new ExportSettings();
    }
 
 
@@ -558,6 +560,7 @@ public class FlowframTkSettings
    public void setHasMinimumFlowFramSty2_0(boolean has)
    {
       hasMinFlowFrameSty2_0 = has;
+      exportSettings.useFlowframTkSty = has;
    }
 
    public boolean hasMinimumFlowFramSty2_0()
@@ -567,302 +570,157 @@ public class FlowframTkSettings
 
    public String[] getLaTeXCmd(String basename)
    {
-      if (latexCmd == null)
-      {
-         String[] split = latexOptions.split("\t");
-
-         latexCmd = new String[split.length+1];
-         latexCmd[0] = latexApp;
-
-         for (int i = 0; i < split.length; i++)
-         {
-            latexCmd[i+1] = split[i];
-         }
-      }
-
-      return getCmdList(latexCmd, basename, basename+".tex", basename+".dvi");
+      return exportSettings.getDviLaTeXCmd(basename);
    }
 
    public String[] getPdfLaTeXCmd(String basename)
    {
-      if (pdflatexCmd == null)
-      {
-         String[] split = pdflatexOptions.split("\t");
-
-         pdflatexCmd = new String[split.length+1];
-         pdflatexCmd[0] = pdflatexApp;
-
-         for (int i = 0; i < split.length; i++)
-         {
-            pdflatexCmd[i+1] = split[i];
-         }
-      }
-
-      return getCmdList(pdflatexCmd, basename, basename+".tex", basename+".pdf");
+      return exportSettings.getPdfLaTeXCmd(basename);
    }
 
    public String[] getDviPsCmd(String basename)
    {
-      return getDviPsCmd(basename, basename+".dvi", basename+".eps");
+      return exportSettings.getDviPsCmd(basename);
    }
 
    public String[] getDviPsCmd(String basename, String dviFile, String epsFile)
    {
-      if (dvipsCmd == null)
-      {
-         String[] split = dvipsOptions.split("\t");
-
-         dvipsCmd = new String[split.length+1];
-         dvipsCmd[0] = dvipsApp;
-
-         for (int i = 0; i < split.length; i++)
-         {
-            dvipsCmd[i+1] = split[i];
-         }
-      }
-
-      return getCmdList(dvipsCmd, basename, dviFile, epsFile);
+      return exportSettings.getDviPsCmd(basename, dviFile, epsFile);
    }
 
    public String[] getDviSvgmCmd(String basename)
    {
-      return getDviSvgmCmd(basename, basename+".dvi", basename+".svg");
+      return exportSettings.getDviSvgmCmd(basename);
    }
 
    public String[] getDviSvgmCmd(String basename, String dviFile, String svgFile)
    {
-      if (dvisvgmCmd == null)
-      {
-         String libGsPath = getLibGsPath();
-
-         String opts = dvisvgmOptions;
-
-         if (libGsPath == null)
-         {     
-            int idx = opts.indexOf("--libgs");
-
-            if (idx > -1 )
-            {
-               int tabIdx;
-
-               if (opts.charAt(idx+7) == '=')
-               {
-                  tabIdx = opts.indexOf("\t", idx+7);
-               }
-               else
-               {
-                  tabIdx = opts.indexOf("\t", idx+8);
-               }
-
-               if (tabIdx > -1)
-               {
-                  opts = opts.substring(0, idx) + opts.substring(tabIdx+1);
-               }
-               else
-               {
-                  opts = opts.substring(0, idx);
-               }
-            }
-         }
-
-         String[] split = opts.split("\t");
-
-         dvisvgmCmd = new String[split.length+1];
-         dvisvgmCmd[0] = dvisvgmApp;
-
-         for (int i = 0; i < split.length; i++)
-         {
-            dvisvgmCmd[i+1] = split[i];
-         }
-      }
-
-      return getCmdList(dvisvgmCmd, basename, dviFile, svgFile);
+      return exportSettings.getDviSvgmCmd(basename, dviFile, svgFile);
    }
 
    public String[] getCmdList(String[] list, String basename,
      String inFileName, String outFileName)
-   {           
-      String[] cmdList = new String[list.length];
-                     
-      for (int i = 0; i < list.length; i++)
-      {      
-         if (list[i].equals("$outputfile"))
-         {  
-            cmdList[i] = outFileName;
-         }  
-         else if (list[i].equals("$inputfile"))
-         {     
-            cmdList[i] = inFileName;
-         }           
-         else if (list[i].equals("$basename"))
-         {   
-            cmdList[i] = basename;
-         }  
-         else if (list[i].equals("$libgs"))
-         {
-            cmdList[i] = getLibGsPath();
-
-            if (cmdList[i] == null)
-            {
-               // shouldn't happen as already checked
-               cmdList[i] = "";
-            }
-         }  
-         else if (list[i].equals("--libgs=$libgs"))
-         {  
-            cmdList[i] = getLibGsPath();
-
-            if (cmdList[i] == null)
-            {
-              // shouldn't happen as already checked
-               cmdList[i] = "--libgs=";
-            }
-         }
-         else
-         {
-            cmdList[i] = list[i];
-         }
-      }
-
-      return cmdList;
+   {
+      return exportSettings.getCmdList(list, basename, inFileName, outFileName);
    }
-
 
    public String getLaTeXApp()
    {
-      return latexApp;
+      return exportSettings.dviLaTeXApp;
    }
 
    public void setLaTeXApp(String path)
    {
-      latexApp = path;
-
-      if (latexCmd != null)
-      {
-         latexCmd[0] = path;
-      }
+      exportSettings.dviLaTeXApp = path;
    }
 
+   @Deprecated
    public String getLaTeXOptions()
    {
-      return latexOptions;
+      return String.join("\t", exportSettings.dviLaTeXOptions);
    }
 
    public void setLaTeXOptions(String options)
    {
-      latexOptions = options;
-      latexCmd = null;
+      exportSettings.dviLaTeXOptions = options.split("\t");
+   }
+
+   public void setLaTeXOptions(String[] options)
+   {
+      exportSettings.dviLaTeXOptions = options;
    }
 
    public String getPdfLaTeXApp()
    {
-      return pdflatexApp;
+      return exportSettings.pdfLaTeXApp;
    }
 
    public void setPdfLaTeXApp(String path)
    {
-      pdflatexApp = path;
-
-      if (pdflatexCmd != null)
-      {
-         pdflatexCmd[0] = path;
-      }
+      exportSettings.pdfLaTeXApp = path;
    }
 
+   @Deprecated
    public String getPdfLaTeXOptions()
    {
-      return pdflatexOptions;
+      return String.join("\t", exportSettings.pdfLaTeXOptions);
    }
 
    public void setPdfLaTeXOptions(String options)
    {
-      pdflatexOptions = options;
-      pdflatexCmd = null;
+      exportSettings.pdfLaTeXOptions = options.split("\t");
+   }
+
+   public void setPdfLaTeXOptions(String[] options)
+   {
+      exportSettings.pdfLaTeXOptions = options;
    }
 
    public String getDvipsApp()
    {
-      return dvipsApp;
+      return exportSettings.dvipsApp;
    }
 
    public void setDvipsApp(String path)
    {
-      dvipsApp = path;
-
-      if (dvipsCmd != null)
-      {
-         dvipsCmd[0] = path;
-      }
+      exportSettings.dvipsApp = path;
    }
 
+   @Deprecated
    public String getDvipsOptions()
    {
-      return dvipsOptions;
+      return String.join("\t", exportSettings.dvipsOptions);
    }
 
    public void setDvipsOptions(String options)
    {
-      dvipsOptions = options;
-      dvipsCmd = null;
+      exportSettings.dvipsOptions = options.split("\t");
+   }
+
+   public void setDvipsOptions(String[] options)
+   {
+      exportSettings.dvipsOptions = options;
    }
 
    public String getDvisvgmApp()
    {
-      return dvisvgmApp;
+      return exportSettings.dvisvgmApp;
    }
 
    public void setDvisvgmApp(String path)
    {
-      dvisvgmApp = path;
-
-     if (dvisvgmCmd != null)
-     {
-        dvisvgmCmd[0] = path;
-     }
+      exportSettings.dvisvgmApp = path;
    }
 
+   @Deprecated
    public String getDvisvgmOptions()
    {
-      return dvisvgmOptions;
+      return String.join("\t", exportSettings.dvisvgmOptions);
    }
 
    public void setDvisvgmOptions(String options)
    {
-      dvisvgmOptions = options;
-      dvisvgmCmd = null;
+      exportSettings.dvisvgmOptions = options.split("\t");
    }
 
    public String getLibgs()
    {
-      return libgs;
-   }
-
-   private String getLibGsPath()
-   {
-      if (libgs == null)
-      {
-         return System.getenv("LIBGS");
-      }
-      else
-      {
-         return libgs;
-      }
+      return exportSettings.libgs;
    }
 
    public void setLibgs(String libgs)
    {
-      this.libgs = libgs;
-      dvisvgmCmd = null;
+      exportSettings.libgs = libgs;
    }
 
    public long getMaxProcessTime()
    {
-      return maxProcessTime;
+      return exportSettings.timeout;
    }
 
    public void setMaxProcessTime(long millisecs)
    {
-      maxProcessTime = millisecs;
+      exportSettings.timeout = millisecs;
    }
 
    public String applyTextModeMappings(String original, Vector<String> styNames)
@@ -1332,12 +1190,12 @@ public class FlowframTkSettings
 
    public boolean useHPaddingShapepar()
    {
-      return shapeparUseHpadding;
+      return exportSettings.shapeparUseHpadding;
    }
 
    public void setHPaddingShapepar(boolean flag)
    {
-      shapeparUseHpadding = flag;
+      exportSettings.shapeparUseHpadding = flag;
    }
 
    public boolean useRelativeFontDeclarations()
@@ -1352,32 +1210,76 @@ public class FlowframTkSettings
 
    public boolean usePdfInfo()
    {
-      return usePdfInfo;
+      return exportSettings.usePdfInfo;
    }
 
    public void setUsePdfInfoEnabled(boolean enabled)
    {
-      usePdfInfo = enabled;
+      exportSettings.usePdfInfo = enabled;
    }
 
+   @Deprecated
    public void setTextPathExportOutlineSetting(int flag)
    {
-      textPathExportOutlineSetting = flag;
+      switch (flag)
+      {
+         case 0:
+           exportSettings.textPathOutline = ExportSettings.TextPathOutline.TO_PATH;
+         break;
+         case 1:
+           exportSettings.textPathOutline = ExportSettings.TextPathOutline.IGNORE;
+         break;
+         default:
+            throw new IllegalArgumentException();
+      }
    }
 
+   @Deprecated
    public int getTextPathExportOutlineSetting()
    {
-      return textPathExportOutlineSetting;
+      switch (exportSettings.textPathOutline)
+      {
+         case TO_PATH: return 0;
+         case IGNORE: return 1;
+      }
+
+      return 0;
    }
 
+   @Deprecated
    public void setTextualExportShadingSetting(int flag)
    {
-      textualExportShadingSetting = flag;
+      switch (flag)
+      {
+         case 0:
+            exportSettings.textualShading = ExportSettings.TextualShading.AVERAGE;
+         break;
+         case 1:
+            exportSettings.textualShading = ExportSettings.TextualShading.START;
+         break;
+         case 2:
+            exportSettings.textualShading = ExportSettings.TextualShading.END;
+         break;
+         case 3:
+            exportSettings.textualShading = ExportSettings.TextualShading.TO_PATH;
+         break;
+         default:
+            throw new IllegalArgumentException();
+      }
    }
 
+   @Deprecated
    public int getTextualExportShadingSetting()
    {
-      return textualExportShadingSetting;
+      switch (exportSettings.textualShading)
+      {
+         case AVERAGE: return 0;
+         case START: return 1;
+         case END: return 2;
+         case TO_PATH: return 3;
+      }
+
+      return 0;
    }
 
    public String getVerticalToolBarLocation()
@@ -1496,24 +1398,43 @@ public class FlowframTkSettings
       return resources.getHelpLib();
    }
 
-   public boolean isExportPngEncap()
+   public ExportSettings getExportSettings()
    {
-      return pngexportencap;
+      return exportSettings;
    }
 
+   public void copyFrom(ExportSettings other)
+   {
+      exportSettings.copyFrom(other);
+   }
+
+   @Deprecated
+   public boolean isExportPngEncap()
+   {
+      return exportSettings.bounds != ExportSettings.Bounds.PAPER;
+   }
+
+   @Deprecated
    public void setExportPngEncap(boolean isencap)
    {
-      pngexportencap = isencap;
+      if (isencap)
+      {
+         exportSettings.bounds = ExportSettings.Bounds.IMAGE;
+      }
+      else
+      {
+         exportSettings.bounds = ExportSettings.Bounds.PAPER;
+      }
    }
 
    public boolean useExportPngAlpha()
    {
-      return pngExportUseAlpha;
+      return exportSettings.pngUseAlpha;
    }
 
    public void setExportPngAlpha(boolean usealpha)
    {
-      pngExportUseAlpha = usealpha;
+      exportSettings.pngUseAlpha = usealpha;
    }
 
    private CanvasGraphics canvasGraphics;
@@ -1562,9 +1483,7 @@ public class FlowframTkSettings
 
    private String bitmapCommand = "\\includegraphics";
 
-   private boolean pngExportUseAlpha = false;
-
-   private boolean pngexportencap = true;
+   public ExportSettings exportSettings;
 
    public Robot robot=null;
 
@@ -1578,23 +1497,6 @@ public class FlowframTkSettings
    private DecimalFormat rulerFormat;
 
    private Locale rulerLocale;
-
-   private String latexApp = "latex";
-   private String latexOptions = "$basename";
-   private String[] latexCmd = null;
-   private String pdflatexApp = "pdflatex";
-   private String pdflatexOptions = "$basename";
-   private String[] pdflatexCmd = null;
-   private String dvipsApp = "dvips";
-   private String dvipsOptions = "-E\t-o\t$outputfile\t$inputfile";
-   private String[] dvipsCmd = null;
-   private String dvisvgmApp = "dvisvgm";
-   private String dvisvgmOptions = "--libgs\t$libgs\t-o\t$outputfile\t$inputfile";
-   private String[] dvisvgmCmd = null;
-
-   private String libgs = null;
-
-   private long maxProcessTime = 300000L;
 
    private boolean hasMinFlowFrameSty2_0 = false;
 
@@ -1630,17 +1532,7 @@ public class FlowframTkSettings
    private Color vectorizeControlColor = Color.ORANGE;
    private int vectorizeControlSize = 4;
 
-   private boolean shapeparUseHpadding = false;
-
    private boolean useRelativeFontDeclarations = true;
-
-   private boolean usePdfInfo = false;
-
-   private int textPathExportOutlineSetting
-      = TeX.TEXTPATH_EXPORT_OUTLINE_TO_PATH;
-
-   private int textualExportShadingSetting
-      = TeX.TEXTUAL_EXPORT_SHADING_AVERAGE;
 
    private String verticalToolBarLocation = "West";
 
@@ -1662,8 +1554,6 @@ public class FlowframTkSettings
    public boolean showStatusUnit = true;
    public boolean showStatusInfo = true;
    public boolean showStatusHelp = true;
-
-   public boolean useTypeblockAsBoundingBox = false;
 
    public boolean canvasClickExitsPathEdit = false;
 

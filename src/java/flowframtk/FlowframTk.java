@@ -436,8 +436,6 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(fileM, exportItem);
 
-      exportPngDialog = new ExportPngDialog(this);
-
       exportFC = new JDRFileChooser(resources);
 
       exportFC.setDialogTitle(
@@ -483,6 +481,12 @@ public class FlowframTk extends JFrame
       exportFC.addChoosableFileFilter(svgFileFilter);
 
       exportFC.setFileFilter(pgfFileFilter);
+
+      exportDialog = new ExportDialog(this, exportFC,
+        pgfFileFilter, pgfDocFileFilter, 
+        clsFileFilter, styFileFilter,
+        pngFileFilter, epsFileFilter, pdfFileFilter,
+        svgFileFilter, appSelector);
 
       texFC = new JDRFileChooser(resources);
 
@@ -3475,10 +3479,6 @@ public class FlowframTk extends JFrame
          resources.getMessage("browsebitmap.discard")));
       appSettings.setBitmapChooser(bitmapFC);
 
-      exportToEpsSettings = new ExportToEpsSettings(this, appSelector);
-      exportToSvgSettings = new ExportToSvgSettings(this, appSelector);
-      exportToPdfSettings = new ExportToPdfSettings(this, appSelector);
-
       segmentInfoDialog = new SegmentInfoDialog(this);
 
       invoker.setStartupInfo(resources.getMessage("message.init_desktop"));
@@ -3683,21 +3683,25 @@ public class FlowframTk extends JFrame
       return getSettings().getVerticalToolBarLocation();
    }
 
+   @Deprecated
    public void setTextPathExportOutlineSetting(int flag)
    {
       getSettings().setTextPathExportOutlineSetting(flag);
    }
 
+   @Deprecated
    public int getTextPathExportOutlineSetting()
    {
       return getSettings().getTextPathExportOutlineSetting();
    }
 
+   @Deprecated
    public void setTextualExportShadingSetting(int flag)
    {
       getSettings().setTextualExportShadingSetting(flag);
    }
 
+   @Deprecated
    public int getTextualExportShadingSetting()
    {
       return getSettings().getTextualExportShadingSetting();
@@ -4383,11 +4387,17 @@ public class FlowframTk extends JFrame
       getCurrentFrame().getCanvas().requestSymbolFocus();
    }
 
+   public ExportSettings getExportSettings()
+   {
+      return getSettings().getExportSettings();
+   }
+
    public String getLaTeXApp()
    {
       return getSettings().getLaTeXApp();
    }
 
+   @Deprecated
    public String getLaTeXOptions()
    {
       return getSettings().getLaTeXOptions();
@@ -4413,6 +4423,7 @@ public class FlowframTk extends JFrame
       return getSettings().getPdfLaTeXApp();
    }
 
+   @Deprecated
    public String getPdfLaTeXOptions()
    {
       return getSettings().getPdfLaTeXOptions();
@@ -4438,6 +4449,7 @@ public class FlowframTk extends JFrame
       return invoker.getSettings().getDvipsApp();
    }
 
+   @Deprecated
    public String getDvipsOptions()
    {
       return getSettings().getDvipsOptions();
@@ -4463,6 +4475,7 @@ public class FlowframTk extends JFrame
       return invoker.getSettings().getDvisvgmApp();
    }
 
+   @Deprecated
    public String getDvisvgmOptions()
    {
       return getSettings().getDvisvgmOptions();
@@ -4491,6 +4504,82 @@ public class FlowframTk extends JFrame
    public void setLibgs(String libgs)
    {
       invoker.getSettings().setLibgs(libgs);
+   }
+
+   public static String getDefaultLibgs(JDRAppSelector appSelector)
+   {
+      String libGs = System.getenv("LIBGS");
+
+      if (libGs == null)
+      {
+         if (!System.getProperty("os.name").toLowerCase().contains("win"))
+         {
+            libGs = findGsLib();
+         }
+
+         if (libGs == null)
+         {
+            File file = appSelector.findApp("libgs.so", "gsdll32.dll", 
+               "gsdll64.dll");
+
+            if (file != null)
+            {
+               libGs = file.getAbsolutePath();
+            }
+         }
+      }
+
+      return libGs;
+   }
+
+   public static String findGsLib()
+   {
+      File dir = new File("/usr/lib");
+
+      FilenameFilter filter = new FilenameFilter()
+       {
+          public boolean accept(File dir, String name)
+          {
+             return name.startsWith("libgs.so");
+          }
+       
+       };
+
+      String[] list = dir.list(filter);
+
+      if (list != null && list.length > 0)
+      {
+         return list[0];
+      }
+
+      dir = new File("/usr/lib64");
+
+      list = dir.list(filter);
+
+      if (list != null && list.length > 0)
+      {
+         return list[0];
+      }
+
+      dir = new File("/usr/local/lib");
+
+      list = dir.list(filter);
+
+      if (list != null && list.length > 0)
+      {
+         return list[0];
+      }
+
+      dir = new File("/usr/local/lib64");
+
+      list = dir.list(filter);
+
+      if (list != null && list.length > 0)
+      {
+         return list[0];
+      }
+
+      return null;
    }
 
    public String requestLaTeXApp()
@@ -6702,129 +6791,7 @@ public class FlowframTk extends JFrame
          frame.selectThisFrame();
       }
 
-      File file = frame.getCurrentExportFile();
-
-      if (file == null && !frame.getFilename().isEmpty())
-      {
-         file = new File(frame.getFilename());
-
-         String name = file.getName();
-
-         int i = name.lastIndexOf(".jdr");
-
-         if (i == -1) i = name.lastIndexOf(".ajr");
-
-         if (i != -1)
-         {
-            name = name.substring(0, i);
-         }
-
-         File currentDir = exportFC.getCurrentDirectory();
-
-         file = new File(currentDir, name);
-      }
-
-      if (file != null)
-      {
-         exportFC.setSelectedFile(file);
-      }
-
-      int result = exportFC.showSaveDialog(frame);
-
-      if (result == JFileChooser.APPROVE_OPTION)
-      {
-         file = exportFC.getSelectedFile();
-         String filename = file.getAbsolutePath();
-
-         FileFilter filter = exportFC.getFileFilter();
-
-         // does the file already exist?
-         if (file.exists())
-         {
-            int selection = getResources().confirm(frame,
-               new String[]
-               {filename,
-               getResources().getMessage("warning.file_exists")},
-               getResources().getMessage("warning.title"),
-               JOptionPane.YES_NO_OPTION,
-               JOptionPane.WARNING_MESSAGE);
-
-               if (selection != JOptionPane.YES_OPTION) return;
-         }
-
-         frame.setCurrentExportFile(file);
-
-         if (filter == pgfFileFilter)
-         {         
-            frame.savePGF(file);
-         }
-         else if (filter == pgfDocFileFilter)
-         {         
-            frame.savePGFDoc(file, false);
-         }
-         else if (filter == pgfEncapDocFileFilter)
-         {         
-            frame.savePGFDoc(file, true);
-         }
-         else if (filter == pngFileFilter)
-         {         
-            if (exportPngDialog.display())
-            {
-               frame.savePNG(file);
-            }
-         }
-         else if (filter == epsFileFilter)
-         {         
-            String latexApp = getLaTeXApp();
-            String dvipsApp = getDvipsApp();
-
-            if ((latexApp == null || latexApp.isEmpty())
-             || (dvipsApp == null || dvipsApp.isEmpty()))
-            {
-               if (!exportToEpsSettings.display())
-               {
-                  return;
-               }
-            }
-
-            frame.saveEPS(file);
-         }
-         else if (filter == pdfFileFilter)
-         {         
-            String pdflatexApp = getPdfLaTeXApp();
-
-            if (pdflatexApp == null || pdflatexApp.isEmpty())
-            {
-               if (!exportToPdfSettings.display())
-               {
-                  return;
-               }
-            }
-
-            frame.savePdf(file);
-         }
-         else if (filter == svgFileFilter)
-         {
-            String latexApp = getLaTeXApp();
-            String dvisvgmApp = getDvisvgmApp();
-            String libGs = getLibgs();
-
-            if ((latexApp == null || latexApp.isEmpty())
-             || (dvisvgmApp == null || dvisvgmApp.isEmpty()))
-            {
-               if (!exportToSvgSettings.display())
-               {
-                  return;
-               }
-            }
-
-            frame.saveSVG(file);
-         }
-         else
-         {
-            frame.saveFlowFrame(file);
-         }
-      }
+      exportDialog.display(frame);
    }
 
    public void close()
@@ -7274,7 +7241,6 @@ public class FlowframTk extends JFrame
    private FadeDialogBox fadeDialog;
    private TeXEditorDialog texEditorDialog;
    private CharacterSelector characterSelector;
-   private ExportPngDialog exportPngDialog;
    private SegmentInfoDialog segmentInfoDialog;
 
    // file choosers
@@ -7285,9 +7251,8 @@ public class FlowframTk extends JFrame
    private ImagePreview imagePreviewPanel;
 
    private JDRAppSelector appSelector;
-   private ExportToEpsSettings exportToEpsSettings;
-   private ExportToSvgSettings exportToSvgSettings;
-   private ExportToPdfSettings exportToPdfSettings;
+
+   private ExportDialog exportDialog;
 
    // file filters
 

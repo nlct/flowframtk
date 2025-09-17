@@ -18,6 +18,7 @@
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.io.File;
+import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -51,8 +52,25 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
       super(new BorderLayout());
       this.application = application;
 
+      if (fileFieldLabel != null)
+      {
+         String name = fileFieldLabel.getText().trim();
+
+         if (name.endsWith(":"))
+         {
+            name = name.substring(0, name.length()-1);
+         }
+
+         setName(name);
+      }
+
       fileField = new FileField(getResources(), this, appname, 
          appSelector.getFileChooser(), fileFieldLabel);
+
+      if (labelGrp != null && fileFieldLabel != null)
+      {
+         labelGrp.add(fileFieldLabel);
+      }
 
       fileField.getEastComponent().add(Box.createHorizontalStrut(20));
 
@@ -217,6 +235,24 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
       }
 
       return builder.toString();
+   }
+
+   public String[] getOptionArray()
+   {
+      Vector<String> list = new Vector<String>(optionsTableModel.getRowCount());
+
+      for (int i = 0; i < optionsTableModel.getRowCount(); i++)
+      {
+         int idx = optionsTable.convertRowIndexToModel(i);
+         String val = optionsTableModel.getValueAt(idx, 0).toString().trim();
+
+         if (!val.isEmpty())
+         {
+            list.add(val);
+         }
+      }
+
+      return list.toArray(new String[list.size()]);
    }
 
    public JDRResources getResources()

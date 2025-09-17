@@ -726,72 +726,47 @@ class ProcessesPanel extends JPanel
 
    public void initialise(FlowframTk application)
    {
-      latexPanel.initialise(application.getLaTeXApp(),
-        application.getLaTeXOptions());
+      ExportSettings exportSettings = application.getExportSettings();
 
-      pdflatexPanel.initialise(application.getPdfLaTeXApp(),
-        application.getPdfLaTeXOptions());
+      latexPanel.initialise(exportSettings.dviLaTeXApp,
+        exportSettings.dviLaTeXOptions);
 
-      dvipsPanel.initialise(application.getDvipsApp(),
-        application.getDvipsOptions());
+      pdflatexPanel.initialise(exportSettings.pdfLaTeXApp,
+        exportSettings.pdfLaTeXOptions);
 
-      dvisvgmPanel.initialise(application.getDvisvgmApp(),
-        application.getDvisvgmOptions());
+      dvipsPanel.initialise(exportSettings.dvipsApp,
+        exportSettings.dvipsOptions);
 
-      String libGs = application.getLibgs();
+      dvisvgmPanel.initialise(exportSettings.dvisvgmApp,
+        exportSettings.dvisvgmOptions);
 
-      if (libGs != null && !libGs.isEmpty())
-      {
-         libgsField.setFileName(libGs);
-      }
+      libgsField.setFileName(exportSettings.libgs);
 
-      timeoutModel.setValue(Long.valueOf(application.getMaxProcessTime()));
+      timeoutModel.setValue(Long.valueOf(exportSettings.timeout));
    }
 
    public void okay(FlowframTk application)
    {
+      ExportSettings exportSettings = application.getExportSettings();
+
       // DVI LaTeX
-      application.setLaTeXApp(latexPanel.getFileName());
-
-      String options = latexPanel.getOptions();
-
-      if (!options.equals(application.getLaTeXOptions()))
-      {
-         application.setLaTeXOptions(options);
-      }
+      exportSettings.dviLaTeXApp = latexPanel.getFileName();
+      exportSettings.dviLaTeXOptions = latexPanel.getOptionArray();
 
       // PDF LaTeX
-      application.setPdfLaTeXApp(pdflatexPanel.getFileName());
-
-      options = pdflatexPanel.getOptions();
-
-      if (!options.equals(application.getPdfLaTeXOptions()))
-      {
-         application.setPdfLaTeXOptions(options);
-      }
+      exportSettings.pdfLaTeXApp = pdflatexPanel.getFileName();
+      exportSettings.pdfLaTeXOptions = pdflatexPanel.getOptionArray();
 
       // dvips
-      application.setDvipsApp(dvipsPanel.getFileName());
-
-      options = dvipsPanel.getOptions();
-
-      if (!options.equals(application.getDvipsOptions()))
-      {
-         application.setDvipsOptions(options);
-      }
+      exportSettings.dvipsApp = dvipsPanel.getFileName();
+      exportSettings.dvipsOptions = dvipsPanel.getOptionArray();
 
       // dvisvgm
-      application.setDvisvgmApp(dvisvgmPanel.getFileName());
+      exportSettings.dvisvgmApp = dvisvgmPanel.getFileName();
+      exportSettings.dvisvgmOptions = dvisvgmPanel.getOptionArray();
 
-      options = dvisvgmPanel.getOptions();
-
-      if (!options.equals(application.getDvisvgmOptions()))
-      {
-         application.setDvisvgmOptions(options);
-      }
-
-      application.setLibgs(libgsField.getFileName());
-      application.setMaxProcessTime(timeoutModel.getNumber().longValue());
+      exportSettings.libgs = libgsField.getFileName();
+      exportSettings.timeout = timeoutModel.getNumber().longValue();
    }
 
    private FileField libgsField;

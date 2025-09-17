@@ -33,15 +33,14 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SavePng extends ExportImage
 {
-   public SavePng(JDRFrame frame, File file, JDRGroup jdrImage)
+   public SavePng(JDRFrame frame, File file, JDRGroup jdrImage,
+     ExportSettings exportSettings)
    {
-      super(frame, file, jdrImage);
+      super(frame, file, jdrImage, exportSettings);
    }
 
    public void save() throws InterruptedException,IOException
    {
-      PNG.save(image, outputFile, 
-               getApplicationSettings().useExportPngAlpha(),
-               getApplicationSettings().isExportPngEncap());
+      PNG.save(image, outputFile, exportSettings);
    }
 }

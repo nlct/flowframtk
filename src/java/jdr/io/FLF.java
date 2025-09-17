@@ -52,17 +52,17 @@ public class FLF extends TeX
 
    public FLF(Path basePath, Writer out)
    {
-      super(basePath, out);
+      super(basePath, out, new ExportSettings());
    }
 
-   public FLF(File baseFile, Writer out, boolean useFlowframTkSty)
+   public FLF(File baseFile, Writer out, ExportSettings exportSettings)
    {
-      this(baseFile.toPath(), out, useFlowframTkSty);
+      this(baseFile.toPath(), out, exportSettings);
    }
 
-   public FLF(Path basePath, Writer out, boolean useFlowframTkSty)
+   public FLF(Path basePath, Writer out, ExportSettings exportSettings)
    {
-      super(basePath, out, useFlowframTkSty);
+      super(basePath, out, exportSettings);
 
       thumbtabObjects = new HashMap<String,JDRCompleteObject>();
    }
@@ -75,7 +75,6 @@ public class FLF extends TeX
     * @param group the image containing flow frame information
     * @param styName the package or class file name (including
     * extension)
-    * @param useHPaddingShapepar use \Shapepar instead of \shapepar
     * @throws IOException if I/O error occurs
     * @throws MissingTypeBlockException if the typeblock is missing
     * (i.e. <code>group.flowframe==null</code>)
@@ -87,8 +86,7 @@ public class FLF extends TeX
     * <code>group.flowframe</code> should have the type
     * {@link FlowFrame#TYPEBLOCK})
     */
-   public void save(JDRGroup group, String styName,  
-     boolean useHPaddingShapepar)
+   public void save(JDRGroup group, String styName)
    throws IOException,
           MissingTypeBlockException,
           InvalidShapeException,
@@ -97,7 +95,6 @@ public class FLF extends TeX
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
-      this.useHPaddingShapepar = useHPaddingShapepar;
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
@@ -131,9 +128,14 @@ public class FLF extends TeX
 
       String docClass = null;
 
+      if (isCls)
+      {
+         docClass = exportSettings.docClass;
+      }
+
       int normalsize = (int)cg.getLaTeXNormalSize();
 
-      if (isCls)
+      if (isCls && docClass == null)
       {
          if (cg.hasDocClass())
          {
@@ -161,11 +163,11 @@ public class FLF extends TeX
 
       writePreambleCommands(group, false);
 
-      if (useFlowframTkSty)
+      if (isFlowframTkStyUsed())
       {
          println("\\FlowFramTkDeclareKeys{"+basename+"}");
 
-         if (docClass != null)
+         if (isCls)
          {
             println("\\DeclareUnknownKeyHandler["+basename+"]{");
             println("  \\IfValueTF{#2}");
@@ -198,7 +200,7 @@ public class FLF extends TeX
          println("\\DeclareOption{color}{\\PassOptionsToPackage{color}{flowfram}}");
          println("\\DeclareOption{nocolor}{\\PassOptionsToPackage{nocolor}{flowfram}}");
 
-         if (docClass != null)
+         if (isCls)
          {
            println("\\DeclareOption*{\\PassOptionsToClass{\\CurrentOption}{"+docClass+"}}");
          }
@@ -215,16 +217,17 @@ public class FLF extends TeX
          }
       }
 
-      if (docClass != null)
+      if (isCls)
       {
-         if (docClass.equals("a0poster"))
-         {
-            println("\\LoadClass{a0poster}");
-         }
-         else
-         {
-            println("\\LoadClass[" +normalsize+"pt]{"+docClass+"}");
-         }
+         print("\\PassOptionsToClass{");
+
+         printNormalFontSizeOption(cg, normalsize, docClass);
+
+         print("}{");
+         print(docClass);
+         println("}");
+
+         println("\\LoadClass{"+docClass+"}");
       }
 
       println("\\RequirePackage["+cg.getPaper().tex(cg)+"]{geometry}");
@@ -273,10 +276,10 @@ public class FLF extends TeX
          }
 
          object.saveFlowframe(this, typeblockRect, baselineskip, 
-            useHPaddingShapepar);
+            exportSettings.shapeparUseHpadding);
       }
 
-      if (useFlowframTkSty)
+      if (isFlowframTkStyUsed())
       {
          printFlowframTkStyHeaderFooter();
       }
@@ -301,8 +304,7 @@ public class FLF extends TeX
       println("\\endinput");
    }
 
-   public void saveCompleteDoc(JDRGroup group, String extraPreamble,
-     boolean useHPaddingShapepar)
+   public void saveCompleteDoc(JDRGroup group, String extraPreamble)
    throws IOException,
           MissingTypeBlockException,
           InvalidShapeException,
@@ -311,7 +313,6 @@ public class FLF extends TeX
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
-      this.useHPaddingShapepar = useHPaddingShapepar;
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
@@ -428,8 +429,7 @@ public class FLF extends TeX
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
 
-         writeAndUpdateMinPage(group.get(i), typeblockRect,
-            baselineskip, useHPaddingShapepar);
+         writeAndUpdateMinPage(group.get(i), typeblockRect, baselineskip);
       }
 
       printHeaderFooter();
@@ -1202,8 +1202,7 @@ public class FLF extends TeX
    }
 
    protected void writeAndUpdateMinPage(JDRCompleteObject object,
-    Rectangle2D typeblockRect, double baselineskip,
-      boolean useHPaddingShapepar)
+    Rectangle2D typeblockRect, double baselineskip)
     throws IOException,
      MissplacedTypeBlockException,
      InvalidShapeException
@@ -1222,8 +1221,7 @@ public class FLF extends TeX
 
             for (int i = 0; i < group.size(); i++)
             {
-               writeAndUpdateMinPage(group.get(i), typeblockRect,
-                  baselineskip, useHPaddingShapepar);
+               writeAndUpdateMinPage(group.get(i), typeblockRect, baselineskip);
             }
          }
          else
@@ -1303,7 +1301,7 @@ public class FLF extends TeX
          }
 
          flowframe.tex(this, object, typeblockRect, baselineskip, 
-            useHPaddingShapepar);
+            exportSettings.shapeparUseHpadding);
       }
    }
 
@@ -1355,7 +1353,7 @@ public class FLF extends TeX
                   // Not defined so replicate thumbtab
 
                   ff.tex(this, tt, typeblockRect, "", baselineskip,
-                   useHPaddingShapepar, "none", ittlabel, ttlabel);
+                   exportSettings.shapeparUseHpadding, "none", ittlabel, ttlabel);
                }
             }
 
@@ -1375,12 +1373,12 @@ public class FLF extends TeX
                   // Not defined so replicate thumbtab
 
                   ff.tex(this, tt, typeblockRect, "", baselineskip,
-                   useHPaddingShapepar, "none", ittlabel, ttlabel);
+                   exportSettings.shapeparUseHpadding, "none", ittlabel, ttlabel);
                }
             }
          }
 
-         if (useFlowframTkSty)
+         if (isFlowframTkStyUsed())
          {
             println("\\makethumbtabs{"+length(cg, sumThumbtabHeight/numThumbtabs)+"}");
             println("\\enablethumbtabs");
@@ -1404,5 +1402,4 @@ public class FLF extends TeX
 
    Rectangle2D typeblockRect;
    double baselineskip;
-   boolean useHPaddingShapepar;
 }

@@ -48,10 +48,10 @@ public class PNG
     * @throws IOException if I/O exception occurs
     */
    public static void save(JDRGroup group, String filename,
-     boolean hasAlpha, boolean cropimage)
+     ExportSettings exportSettings)
       throws IOException
    {
-      save(group, new File(filename), hasAlpha, cropimage);
+      save(group, new File(filename), exportSettings);
    }
 
    /**
@@ -61,12 +61,16 @@ public class PNG
     * @throws IOException if I/O exception occurs
     */
    public static void save(JDRGroup group, File file,
-    boolean hasAlpha, boolean cropimage)
+    ExportSettings exportSettings)
       throws IOException
    {
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      boolean hasAlpha = exportSettings.pngUseAlpha;
+      boolean cropimage = 
+       (exportSettings.bounds != ExportSettings.Bounds.PAPER);
 
       boolean indeter = (group.size() <= 1);
 

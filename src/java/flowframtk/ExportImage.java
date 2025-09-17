@@ -36,12 +36,14 @@ import com.dickimawbooks.jdrresources.*;
 public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
  implements MessageInfoPublisher
 {
-   public ExportImage(JDRFrame frame, File file, JDRGroup jdrImage)
+   public ExportImage(JDRFrame frame, File file, JDRGroup jdrImage,
+     ExportSettings exportSettings)
    {
       super();
       this.jdrFrame = frame;
       this.outputFile = file;
       this.image = jdrImage;
+      this.exportSettings = exportSettings;
    }
 
    public Void doInBackground() 
@@ -156,4 +158,5 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
    protected File outputFile;
    protected JDRGroup image;
    protected JDRFrame jdrFrame;
+   protected ExportSettings exportSettings;
 }

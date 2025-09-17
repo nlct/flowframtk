@@ -47,17 +47,17 @@ public class PGF extends TeX
 
    public PGF(File baseFile, Writer out)
    {
-      this(baseFile == null ? null : baseFile.toPath(), out);
+      this(baseFile == null ? null : baseFile.toPath(), out, new ExportSettings());
    }
 
-   public PGF(Path basePath, Writer out, boolean useFlowframTkSty)
+   public PGF(Path basePath, Writer out, ExportSettings exportSettings)
    {
-      super(basePath, out, useFlowframTkSty);
+      super(basePath, out, exportSettings);
    }
 
-   public PGF(File baseFile, Writer out, boolean useFlowframTkSty)
+   public PGF(File baseFile, Writer out, ExportSettings exportSettings)
    {
-      this(baseFile == null ? null : baseFile.toPath(), out, useFlowframTkSty);
+      this(baseFile == null ? null : baseFile.toPath(), out, exportSettings);
    }
 
    /**
@@ -65,9 +65,12 @@ public class PGF extends TeX
     * @param allObjects all the objects that constitute the image
     * @throws IOException if I/O error occurs
     */
-   public void save(JDRGroup allObjects, boolean useTypeblockAsBoundingBox)
+   public void save(JDRGroup allObjects)
       throws IOException
    {
+      boolean useTypeblockAsBoundingBox = 
+        (exportSettings.bounds == ExportSettings.Bounds.TYPEBLOCK);
+
       CanvasGraphics cg = allObjects.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
@@ -143,20 +146,18 @@ public class PGF extends TeX
    public void saveDoc(JDRGroup allObjects)
       throws IOException
    {
-      saveDoc(allObjects, null, false, false, false);
+      saveDoc(allObjects, null);
    }
 
    public void saveDoc(JDRGroup allObjects, String extraPreamble)
       throws IOException
    {
-      saveDoc(allObjects, extraPreamble, false, false, false);
-   }
+      boolean encapsulate =
+        (exportSettings.bounds != ExportSettings.Bounds.PAPER);
 
-   public void saveDoc(JDRGroup allObjects, String extraPreamble,
-      boolean encapsulate, boolean convertBitmapToEps, 
-      boolean useTypeblockAsBoundingBox)
-      throws IOException
-   {
+      boolean useTypeblockAsBoundingBox = 
+        (exportSettings.bounds == ExportSettings.Bounds.TYPEBLOCK);
+
       CanvasGraphics cg = allObjects.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
@@ -169,8 +170,6 @@ public class PGF extends TeX
       {
          publisher.publishMessages(MessageInfo.createMaxProgress(allObjects.size()));
       }
-
-      setConvertBitmapToEpsEnabled(convertBitmapToEps);
 
       BBox box;
 
@@ -201,9 +200,25 @@ public class PGF extends TeX
       affineTransform = new AffineTransform(
          1, 0, 0, -1, 0, storagePaperHeight);
 
-      if (cg.hasDocClass())
+      if (exportSettings.docClass != null)
       {
-         println("\\documentclass[" +normalsize+"pt]{"+cg.getDocClass()+"}");
+         print("\\documentclass[");
+
+         printNormalFontSizeOption(cg, normalsize, exportSettings.docClass);
+
+         print("]{");
+         print(exportSettings.docClass);
+         println("}");
+      }
+      else if (cg.hasDocClass())
+      {
+         print("\\documentclass[");
+
+         printNormalFontSizeOption(cg, normalsize, cg.getDocClass());
+
+         print("]{");
+         print(cg.getDocClass());
+         println("}");
       }
       else
       {
@@ -280,7 +295,7 @@ public class PGF extends TeX
       println("\\pagestyle{empty}");
       println();
 
-      if (!useFlowframTkSty)
+      if (!isFlowframTkStyUsed())
       {
          comment("This is just in case numerical rounding errors ");
          comment("cause the image to be marginally larger than the ");
@@ -295,7 +310,7 @@ public class PGF extends TeX
 
       println("\\begin{document}");
 
-      if (!useFlowframTkSty)
+      if (!isFlowframTkStyUsed())
       {
         println("\\noindent");
       }

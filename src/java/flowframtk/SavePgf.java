@@ -33,9 +33,19 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SavePgf extends ExportImage
 {
-   public SavePgf(JDRFrame frame, File file, JDRGroup jdrImage)
+   public SavePgf(JDRFrame frame, File file, JDRGroup jdrImage,
+       ExportSettings exportSettings)
    {
-      super(frame, file, jdrImage);
+      super(frame, file, jdrImage, exportSettings);
+   }
+
+   protected void writeComments(PGF pgf) throws IOException
+   {
+      pgf.comment(getResources().getMessage("tex.comment.created_by",
+            getInvoker().getName(), getInvoker().getVersion()));
+      pgf.writeCreationDate();
+   
+      pgf.comment(jdrFrame.getFilename());
    }
 
    public void save() throws IOException,InterruptedException
@@ -49,34 +59,43 @@ public class SavePgf extends ExportImage
          out = new PrintWriter(new FileWriter(outputFile));
 
          PGF pgf = new PGF(outputFile.getParentFile().toPath(), out,
-          app.getSettings().hasMinimumFlowFramSty2_0());
+          exportSettings);
 
-         pgf.comment(jdrFrame.getFilename());
+         writeComments(pgf);
 
-         pgf.setTextualExportShadingSetting(
-            app.getTextualExportShadingSetting());
-         pgf.setTextPathExportOutlineSetting(
-            app.getTextPathExportOutlineSetting());
+         if (exportSettings.type == ExportSettings.Type.IMAGE_DOC)
+         {
+            String preamble = null;
 
-         pgf.comment(getResources().getMessage("tex.comment.created_by",
-               getInvoker().getName(), getInvoker().getVersion()));
-         pgf.writeCreationDate();
+            try
+            {
+               preamble = app.getConfigPreamble();
+            }
+            catch (IOException e)
+            {
+               publish(MessageInfo.createWarning(e));
+            }
 
-         pgf.println("\\iffalse");
+            pgf.saveDoc(image, preamble);
+         }
+         else
+         {
 
-         pgf.comment(getResources().getMessage("tex.comment.preamble"));
+            pgf.println("\\iffalse");
 
-         pgf.writePreambleCommands(image, true, true);
+            pgf.comment(getResources().getMessage("tex.comment.preamble"));
 
-         pgf.comment(getResources().getMessage(
-            "tex.comment.fontsize", 
-            ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
+            pgf.writePreambleCommands(image, true, true);
 
-         pgf.comment(getResources().getMessage("tex.comment.endpreamble"));
-         pgf.println("\\fi");
+            pgf.comment(getResources().getMessage(
+               "tex.comment.fontsize", 
+               ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
 
-         pgf.save(image, app.getSettings().useTypeblockAsBoundingBox);
+            pgf.comment(getResources().getMessage("tex.comment.endpreamble"));
+            pgf.println("\\fi");
 
+            pgf.save(image);
+         }
       }
       finally
       {

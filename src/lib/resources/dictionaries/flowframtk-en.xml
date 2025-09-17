@@ -2338,6 +2338,102 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <!--  Export dialog box -->
 <entry key="export.title">Export</entry>
+<entry key="export.file">File:</entry>
+<entry key="export.file.mnemonic">F</entry>
+
+<entry key="export.type">Type:</entry>
+
+<entry key="export.pgfpicture">pgfpicture</entry>
+<entry key="export.pgfpicture.mnemonic">T</entry>
+
+<entry key="export.imagedoc">LaTeX Image Document</entry>
+<entry key="export.imagedoc.mnemonic">A</entry>
+
+<entry key="export.flfdoc">LaTeX Document (flowfram.sty)</entry>
+<entry key="export.flfdoc.mnemonic">M</entry>
+
+<entry key="export.sty">LaTeX Package</entry>
+<entry key="export.sty.mnemonic">K</entry>
+
+<entry key="export.cls">LaTeX Class</entry>
+<entry key="export.cls.mnemonic">X</entry>
+
+<entry key="export.pdf">PDF</entry>
+<entry key="export.pdf.mnemonic">P</entry>
+
+<entry key="export.eps">EPS</entry>
+<entry key="export.eps.mnemonic">E</entry>
+
+<entry key="export.svg">SVG</entry>
+<entry key="export.svg.mnemonic">S</entry>
+
+<entry key="export.png">PNG</entry>
+<entry key="export.png.mnemonic">N</entry>
+
+<entry key="export.use_process">Use external application(s)</entry>
+<entry key="export.use_process.mnemonic">U</entry>
+
+<entry key="export.remember">Remember settings</entry>
+<entry key="export.remember.mnemonic">R</entry>
+
+<entry key="export.bounds">Bounding Box:</entry>
+
+<entry key="export.bounds.papersize">Paper Size</entry>
+<entry key="export.bounds.papersize.mnemonic">Z</entry>
+<entry key="export.bounds.papersize.tooltip">Don''t crop image</entry>
+
+<entry key="export.bounds.image">Image</entry>
+<entry key="export.bounds.image.mnemonic">I</entry>
+<entry key="export.bounds.image.tooltip">Crop to image</entry>
+
+<entry key="export.bounds.typeblock">Typeblock</entry>
+<entry key="export.bounds.typeblock.mnemonic">Y</entry>
+<entry key="export.bounds.typeblock.tooltip">Crop to Typeblock</entry>
+
+
+<entry key="export.markup">Object Markup:</entry>
+
+<entry key="export.markup.none">None</entry>
+<entry key="export.markup.none.tooltip">No markup except for comments</entry>
+
+<entry key="export.markup.paired">Paired</entry>
+<entry key="export.markup.paired.tooltip">Use paired \flowframtkstartobject and \flowframtkendobject</entry>
+<entry key="export.markup.encap">Encapsulated</entry>
+<entry key="export.markup.encap.tooltip">Use \flowframtkencapobject</entry>
+
+<entry key="export.textualshading">Text Gradient Paint:</entry>
+
+<entry key="export.textualshading.average">Average</entry>
+<entry key="export.textualshading.average.tooltip">Average the start and end paint</entry>
+
+<entry key="export.textualshading.start">Start</entry>
+<entry key="export.textualshading.start.tooltip">Just use the start paint</entry>
+
+<entry key="export.textualshading.end">End</entry>
+<entry key="export.textualshading.end.tooltip">Just use the end paint</entry>
+
+<entry key="export.textualshading.topath">To Path</entry>
+<entry key="export.textualshading.topath.tooltip">Export the text as a path with gradient fill paint</entry>
+
+<entry key="export.textpathoutline">Text-Path Outlines:</entry>
+
+<entry key="export.textpathoutline.ignore">Ignore</entry>
+<entry key="export.textpathoutline.ignore.tooltip">Ignore the outline setting</entry>
+
+<entry key="export.textpathoutline.topath">To Path</entry>
+<entry key="export.textpathoutline.topath.tooltip">Export the text-path as a path</entry>
+
+<entry key="export.shapeparcs">shapepar command: </entry>
+
+<entry key="export.load_doc_class">Use/Load Class:</entry>
+
+<entry key="export.load_doc_class.default">Default</entry>
+<entry key="export.load_doc_class.specified">Class Name:</entry>
+
+<entry key="export.use_alpha">Transparent Background</entry>
+<entry key="export.pdf_info">Add title and creation date</entry>
+<entry key="export.bitmaps_to_eps">Convert bitmaps to EPS</entry>
+
 
 <!--  Import dialog box -->
 <entry key="import.title">Import</entry>
@@ -2580,13 +2676,14 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="clssettings.relative_fontsize.mnemonic">R</entry>
 <entry key="clssettings.relative_fontsize.initvalue">true</entry>
 
-<entry key="clssettings.pdfinfo">Add \pdfinfo to exported LaTeX documents</entry>
+<entry key="clssettings.pdfinfo">Add title and creation date to exported LaTeX documents</entry>
 <entry key="clssettings.pdfinfo.mnemonic">I</entry>
 <entry key="clssettings.pdfinfo.initvalue">false</entry>
 
-<entry key="clssettings.use_typeblock_as_bbox">Use typeblock as bounding box for pgfpicture</entry>
-<entry key="clssettings.use_typeblock_as_bbox.mnemonic">T</entry>
-<entry key="clssettings.use_typeblock_as_bbox.initvalue">false</entry>
+<entry key="clssettings.bounds">Default export bounds:</entry>
+<entry key="clssettings.bounds.paper">Paper Size</entry>
+<entry key="clssettings.bounds.image">Image Bounding Box</entry>
+<entry key="clssettings.bounds.typeblock">Typeblock</entry>
 
 <!--  Flowframe Settings -->
 
@@ -3666,6 +3763,7 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.invalid_verbosity">Number expected after -verbosity switch</entry>
 <entry key="error.no_filename">No filename supplied</entry>
 <entry key="error.no_helpset">HelpSet not found or can''t find referenced node.</entry>
+<entry key="error.no_required_setting">No {0} supplied</entry>
 <entry key="error.one_filename">Only one filename permitted</entry>
 <entry key="error.out_of_memory">Out of memory</entry>
 <entry key="error.paper_dimension">Paper dimensions expected after "-paper user"</entry>
@@ -3718,6 +3816,7 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 <entry key="warning.no_robot">Unable to initialise robot. You will not be able to move the mouse using cursor keys.</entry>
 <entry key="warning.no_background_image">Not enough memory to create a background image. Switching to optimize memory setting.</entry>
 <entry key="warning.unknown_drop">Don''t know what to do with dropped file ''{0}''</entry>
+<entry key="warning.unsupported_cls_opt">Class ''{0}'' doesn''t support option ''{1}''</entry>
 
 <!-- Manual -->
 

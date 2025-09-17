@@ -19,6 +19,7 @@ Nicola Talbot
 <entry key="syntax.locale">{0} &lt;lang-tag&gt;	Use localisation support for the given locale (if available).</entry>
 <entry key="syntax.jdr_version">{0} &lt;version&gt;	If the output format is JDR or AJR, use this version (default: {1}).</entry>
 
+<entry key="syntax.bounds">{0} &lt;setting&gt;	Set bounding box of output image (if applicable) where &lt;setting&gt; may be one of: paper, image, typeblock.</entry>
 <entry key="syntax.encapsulate">{0} (or {1})	Crop or encapsulate output image (if applicable).</entry>
 <entry key="syntax.bitmaps_to_eps">{0}	Convert bitmaps to EPS (if applicable).</entry>
 <entry key="syntax.alpha">{0}	Include alpha channel (if applicable).</entry>

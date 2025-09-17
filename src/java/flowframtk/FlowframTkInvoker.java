@@ -643,6 +643,8 @@ public class FlowframTkInvoker
 
       settings.configFile = file;
 
+      ExportSettings exportSettings = settings.getExportSettings();
+
       setStartupInfo(file.toString());
       debugMessage("reading: "+file);
 
@@ -742,14 +744,6 @@ public class FlowframTkInvoker
                else if (key.equals("preview_bitmaps"))
                {
                   settings.previewBitmaps = parseBoolean(value, line);
-               }
-               else if (key.equals("png_alpha"))
-               {
-                  settings.setExportPngAlpha(parseBoolean(value, line));
-               }
-               else if (key.equals("png_encap"))
-               {
-                  settings.setExportPngEncap(parseBoolean(value, line));
                }
                else if (key.equals("show_grid"))
                {
@@ -1471,64 +1465,6 @@ public class FlowframTkInvoker
                {
                   settings.setRulerFont(Font.decode(value));
                }
-               else if (key.equals("use_typeblock_as_bbox"))
-               {
-                  settings.useTypeblockAsBoundingBox 
-                     = parseBoolean(value, line);
-               }
-               else if (key.equals("relative_bitmaps"))
-               {
-                  settings.setRelativeBitmaps(parseBoolean(value, line));
-               }
-               else if (key.equals("bitmap_default_cs"))
-               {
-                  settings.setDefaultBitmapCommand(value);
-               }
-               else if (key.equals("latex_app"))
-               {
-                  settings.setLaTeXApp(value);
-               }
-               else if (key.equals("latex_opts"))
-               {
-                  settings.setLaTeXOptions(value);
-               }
-               else if (key.equals("pdflatex_app"))
-               {
-                  settings.setPdfLaTeXApp(value);
-               }
-               else if (key.equals("pdflatex_opts"))
-               {
-                  settings.setPdfLaTeXOptions(value);
-               }
-               else if (key.equals("dvips_app"))
-               {
-                  settings.setDvipsApp(value);
-               }
-               else if (key.equals("dvips_opts"))
-               {
-                  settings.setDvipsOptions(value);
-               }
-               else if (key.equals("dvisvgm_app"))
-               {
-                  settings.setDvisvgmApp(value);
-               }
-               else if (key.equals("dvisvgm_opts"))
-               {
-                  settings.setDvisvgmOptions(value);
-               }
-               else if (key.equals("libgs"))
-               {
-                  settings.setLibgs(value);
-               }
-               else if (key.equals("timeout"))
-               {
-                  settings.setMaxProcessTime(parseLong(value, line));
-               }
-               else if (key.equals("flowfram_v2.0"))
-               {
-                  settings.setHasMinimumFlowFramSty2_0(parseBoolean(value, line));
-                  foundFlowFramv2_0 = true;
-               }
                else if (key.equals("unicode"))
                {
                   settings.setUnicodeRanges(value);
@@ -1661,35 +1597,154 @@ public class FlowframTkInvoker
                   JDRSymmetryLinePoint.symmetrySelectedColor 
                      = new Color(parseInt(value, line));
                }
-               else if (key.equals("shapeparhpadding"))
-               {
-                  settings.setHPaddingShapepar(parseBoolean(value, line));
-               }
                else if (key.equals("relativefontsizes"))
                {
                   settings.setRelativeFontDeclarations(parseBoolean(value, line));
-               }
-               else if (key.equals("pdfinfo"))
-               {
-                  settings.setUsePdfInfoEnabled(parseBoolean(value, line));
                }
                else if (key.equals("flowframe_abs_pages"))
                {
                   settings.setUseAbsolutePages(parseBoolean(value, line));
                }
-               else if (key.equals("textualshadingexport"))
-               {
-                  settings.setTextualExportShadingSetting(parseNonNegInt(
-                     TeX.TEXTUAL_EXPORT_SHADING_MAX_INDEX, value, line));
-               }
-               else if (key.equals("textpathoutlineexport"))
-               {
-                  settings.setTextPathExportOutlineSetting(parseNonNegInt(
-                     TeX.TEXTPATH_EXPORT_OUTLINE_MAX_INDEX, value, line));
-               }
                else if (key.equals("verticaltoolbar"))
                {
                   settings.setVerticalToolBarLocation(value);
+               }
+               else if (key.equals("relative_bitmaps"))
+               {
+                  settings.setRelativeBitmaps(parseBoolean(value, line));
+               }
+               else if (key.equals("bitmap_default_cs"))
+               {
+                  settings.setDefaultBitmapCommand(value);
+               }
+               // Export Settings
+               else if (key.equals("png_alpha"))
+               {
+                  exportSettings.pngUseAlpha = parseBoolean(value, line);
+               }
+               else if (key.equals("png_encap")) // old version
+               {
+                  if (parseBoolean(value, line))
+                  {
+                     exportSettings.bounds = ExportSettings.Bounds.IMAGE;
+                  }
+               }
+               else if (key.equals("use_typeblock_as_bbox")) // old version
+               {
+                  if (parseBoolean(value, line))
+                  {
+                     exportSettings.bounds = ExportSettings.Bounds.TYPEBLOCK;
+                  }
+               }
+               else if (key.equals("export_bounds"))
+               {// replaces png_encap and use_typeblock_as_bbox
+                  exportSettings.bounds = ExportSettings.Bounds.valueOf(value);
+               }
+               else if (key.equals("object_markup"))
+               {
+                  exportSettings.objectMarkup
+                   = ExportSettings.ObjectMarkup.valueOf(value);
+               }
+               else if (key.equals("shapeparhpadding"))
+               {
+                  exportSettings.shapeparUseHpadding = parseBoolean(value, line);
+               }
+               else if (key.equals("pdfinfo"))
+               {
+                  exportSettings.usePdfInfo = parseBoolean(value, line);
+               }
+               else if (key.equals("textualshadingexport"))
+               {
+                  // old setting is int
+                  if (value.equals("0"))
+                  {
+                     exportSettings.textualShading
+                       = ExportSettings.TextualShading.AVERAGE;
+                  }
+                  else if (value.equals("1"))
+                  {
+                     exportSettings.textualShading
+                       = ExportSettings.TextualShading.START;
+                  }
+                  else if (value.equals("2"))
+                  {
+                     exportSettings.textualShading
+                       = ExportSettings.TextualShading.END;
+                  }
+                  else if (value.equals("3"))
+                  {
+                     exportSettings.textualShading
+                       = ExportSettings.TextualShading.TO_PATH;
+                  }
+                  else
+                  {
+                     exportSettings.textualShading
+                        = ExportSettings.TextualShading.valueOf(value);
+                  }
+               }
+               else if (key.equals("textpathoutlineexport"))
+               {
+                  // old setting is int
+                  if (value.equals("0"))
+                  {
+                     exportSettings.textPathOutline
+                      = ExportSettings.TextPathOutline.TO_PATH;
+                  }
+                  else if (value.equals("0"))
+                  {
+                     exportSettings.textPathOutline
+                      = ExportSettings.TextPathOutline.IGNORE;
+                  }
+                  else
+                  {
+                     exportSettings.textPathOutline
+                      = ExportSettings.TextPathOutline.valueOf(value);
+                  }
+               }
+               else if (key.equals("latex_app"))
+               {
+                  exportSettings.dviLaTeXApp = value;
+               }
+               else if (key.equals("latex_opts"))
+               {
+                  exportSettings.dviLaTeXOptions = value.split("\t");
+               }
+               else if (key.equals("pdflatex_app"))
+               {
+                  exportSettings.pdfLaTeXApp = value;
+               }
+               else if (key.equals("pdflatex_opts"))
+               {
+                  exportSettings.pdfLaTeXOptions = value.split("\t");
+               }
+               else if (key.equals("dvips_app"))
+               {
+                  exportSettings.dvipsApp = value;
+               }
+               else if (key.equals("dvips_opts"))
+               {
+                  exportSettings.dvipsOptions = value.split("\t");
+               }
+               else if (key.equals("dvisvgm_app"))
+               {
+                  exportSettings.dvisvgmApp = value;
+               }
+               else if (key.equals("dvisvgm_opts"))
+               {
+                  exportSettings.dvisvgmOptions = value.split("\t");
+               }
+               else if (key.equals("libgs"))
+               {
+                  exportSettings.libgs = value;
+               }
+               else if (key.equals("timeout"))
+               {
+                  exportSettings.timeout = parseLong(value, line);
+               }
+               else if (key.equals("flowfram_v2.0"))
+               {
+                  settings.setHasMinimumFlowFramSty2_0(parseBoolean(value, line));
+                  foundFlowFramv2_0 = true;
                }
                else
                {
@@ -1882,20 +1937,34 @@ public class FlowframTkInvoker
       out.println("version="+JDRResources.APP_VERSION);
       out.println("robot="+(settings.robot==null?0:1));
 
-      saveIfNotNullOrEmpty(out, "latex_app", settings.getLaTeXApp());
-      saveIfNotNullOrEmpty(out, "latex_opts", settings.getLaTeXOptions());
-      saveIfNotNullOrEmpty(out, "pdflatex_app", settings.getPdfLaTeXApp());
-      saveIfNotNullOrEmpty(out, "pdflatex_opts", settings.getPdfLaTeXOptions());
-      saveIfNotNullOrEmpty(out, "dvips_app", settings.getDvipsApp());
-      saveIfNotNullOrEmpty(out, "dvips_opts", settings.getDvipsOptions());
-      saveIfNotNullOrEmpty(out, "dvisvgm_app", settings.getDvisvgmApp());
-      saveIfNotNullOrEmpty(out, "dvisvgm_opts", settings.getDvisvgmOptions());
+      ExportSettings exportSettings = settings.exportSettings;
+
+      out.println("latex_app=" + exportSettings.dviLaTeXApp);
+      out.println("latex_opts=" 
+       + String.join("\t", exportSettings.dviLaTeXOptions));
+
+      out.println("pdflatex_app=" + exportSettings.pdfLaTeXApp);
+      out.println("pdflatex_opts="
+       + String.join("\t", exportSettings.pdfLaTeXOptions));
+
+      out.println("dvips_app=" + exportSettings.dvipsApp);
+      out.println("dvips_opts="
+       + String.join("\t", exportSettings.dvipsOptions));
+
+      out.println("dvisvgm_app=" + exportSettings.dvisvgmApp);
+      out.println("dvisvgm_opts="
+        + String.join("\t", exportSettings.dvisvgmOptions));
+
       saveIfNotNullOrEmpty(out, "libgs", settings.getLibgs());
 
       if (settings.hasMinimumFlowFramSty2_0())
       {
          out.println("flowfram_v2.0=1");
       }
+
+      out.println("timeout="+exportSettings.timeout);
+
+      out.println("export_bounds="+exportSettings.bounds);
 
       out.println("unicode="+settings.getUnicodeRangesSpec());
       out.println("look_and_feel="+settings.getLookAndFeel());
@@ -1938,11 +2007,7 @@ public class FlowframTkInvoker
        settings.getVectorizeControlColor());
       out.println("vectorizecontrolsize="+settings.getVectorizeControlSize());
 
-      out.println("timeout="+settings.getMaxProcessTime());
-
       out.println("preview_bitmaps="+(settings.previewBitmaps?1:0));
-      out.println("png_alpha="+(settings.useExportPngAlpha()?1:0));
-      out.println("png_encap="+(settings.isExportPngEncap()?1:0));
 
       out.println("verticaltoolbar="
         + settings.getVerticalToolBarLocation());
@@ -2083,8 +2148,6 @@ public class FlowframTkInvoker
       out.println("symmetryunselected="
          + JDRSymmetryLinePoint.symmetrySelectedColor.getRGB());
 
-      out.println("use_typeblock_as_bbox="
-        +(settings.useTypeblockAsBoundingBox ? 1 : 0));
       out.println("relative_bitmaps="+(settings.useRelativeBitmaps()? 1: 0));
       out.println("bitmap_default_cs="+settings.getDefaultBitmapCommand());
 
@@ -2168,13 +2231,21 @@ public class FlowframTkInvoker
          out.println("paper="+cg.getPaperName());
       }
 
-      out.println("shapeparhpadding=" + (settings.useHPaddingShapepar() ? 1 : 0));
       out.println("relativefontsizes=" + (settings.useRelativeFontDeclarations() ? 1 : 0));
-      out.println("pdfinfo="+(settings.usePdfInfo() ? 1 : 0));
+
+      // Export settings
+
+      ExportSettings exportSettings = settings.exportSettings;
+
+      out.println("shapeparhpadding=" + (exportSettings.shapeparUseHpadding ? 1 : 0));
+      out.println("pdfinfo="+(exportSettings.usePdfInfo ? 1 : 0));
       out.println("textualshadingexport="
-        + settings.getTextualExportShadingSetting());
+        + exportSettings.textualShading);
       out.println("textpathoutlineexport="
-        + settings.getTextPathExportOutlineSetting());
+        + exportSettings.textPathOutline);
+      out.println("object_markup="
+        + exportSettings.objectMarkup);
+
       out.println("flowframe_abs_pages="
         + (settings.useAbsolutePages() ? 1 : 0));
 

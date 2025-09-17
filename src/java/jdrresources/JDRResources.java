@@ -783,6 +783,11 @@ public class JDRResources
 
    public int getMnemonic(String label)
    {
+      if (!label.endsWith(".mnemonic"))
+      {
+         label += ".mnemonic";
+      }
+
       return helpLib.getMnemonic(label);
    }
 
@@ -2420,11 +2425,18 @@ public class JDRResources
 
       JRadioButton button = new JRadioButton(getMessage(label), selected);
 
-      int mnemonic = getCodePoint(label+".mnemonic", 0);
+      int mnemonic = getMnemonic(label);
 
-      if (mnemonic != 0)
+      if (mnemonic > 0)
       {
          button.setMnemonic(mnemonic);
+      }
+
+      String tooltip = getToolTipText(label);
+
+      if (tooltip != null)
+      {
+         button.setToolTipText(tooltip);
       }
 
       bg.add(button);
@@ -2469,9 +2481,9 @@ public class JDRResources
 
       JCheckBox button = new JCheckBox(getMessage(label), selected);
 
-      int mnemonic = getCodePoint(label+".mnemonic", 0);
+      int mnemonic = getMnemonic(label);
 
-      if (mnemonic != 0)
+      if (mnemonic > 0)
       {
          button.setMnemonic(mnemonic);
       }

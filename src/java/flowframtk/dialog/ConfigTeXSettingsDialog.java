@@ -308,20 +308,35 @@ class TeXSettingsPanel extends Box
       usePdfInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(usePdfInfo);
 
-      useTypeblockAsBoundingBox = getResources().createAppCheckBox("clssettings",
-        "use_typeblock_as_bbox", false, null);
-      useTypeblockAsBoundingBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(useTypeblockAsBoundingBox);
+      b2 = Box.createHorizontalBox();
+      b2.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(b2);
+
+      bg = new ButtonGroup();
+
+      usePaperSizeBoundsBox = getResources().createAppRadioButton("clssettings",
+        "bounds.paper", bg, false, null);
+      bg.add(usePaperSizeBoundsBox);
+
+      useImageBoundsBox = getResources().createAppRadioButton("clssettings",
+        "bounds.image", bg, true, null);
+      bg.add(useImageBoundsBox);
+
+      useTypeblockBoundsBox = getResources().createAppRadioButton("clssettings",
+        "bounds.typeblock", bg, false, null);
+      bg.add(useTypeblockBoundsBox);
 
       add(Box.createVerticalGlue());
    }
 
    public void initialise(JDRFrame frame)
    {
+      ExportSettings exportSettings = frame.getExportSettings();
+
       useRelativeFontDeclarations.setSelected(
          application_.useRelativeFontDeclarations());
 
-      usePdfInfo.setSelected(application_.usePdfInfo());
+      usePdfInfo.setSelected(exportSettings.usePdfInfo);
 
       int normalSize = (int)frame.getNormalSize();
 
@@ -351,8 +366,18 @@ class TeXSettingsPanel extends Box
 
       updateExample(normalSize);
 
-      useTypeblockAsBoundingBox.setSelected(
-       application_.getSettings().useTypeblockAsBoundingBox);
+      switch (exportSettings.bounds)
+      {
+         case PAPER:
+            usePaperSizeBoundsBox.setSelected(true);
+         break;
+         case IMAGE:
+            useImageBoundsBox.setSelected(true);
+         break;
+         case TYPEBLOCK:
+            useTypeblockBoundsBox.setSelected(true);
+         break;
+      }
    }
 
    public void updateExample(int normalsize)
@@ -391,9 +416,12 @@ class TeXSettingsPanel extends Box
 
    public void okay(JDRFrame frame)
    {
+      ExportSettings exportSettings = frame.getExportSettings();
+
       application_.setRelativeFontDeclarations(
          useRelativeFontDeclarations.isSelected());
-      application_.setUsePdfInfoEnabled(usePdfInfo.isSelected());
+
+      exportSettings.usePdfInfo = usePdfInfo.isSelected();
 
       double normalsize = ((Integer)sizeBox.getSelectedItem()).intValue();
 
@@ -412,8 +440,18 @@ class TeXSettingsPanel extends Box
       frame.getCanvas().setDocClass(
         useDefaultCls.isSelected() ? null : customClsField.getText());
 
-      application_.getSettings().useTypeblockAsBoundingBox
-        = useTypeblockAsBoundingBox.isSelected();
+      if (usePaperSizeBoundsBox.isSelected())
+      {
+         exportSettings.bounds = ExportSettings.Bounds.PAPER;
+      }
+      else if (useImageBoundsBox.isSelected())
+      {
+         exportSettings.bounds = ExportSettings.Bounds.IMAGE;
+      }
+      else if (useTypeblockBoundsBox.isSelected())
+      {
+         exportSettings.bounds = ExportSettings.Bounds.TYPEBLOCK;
+      }
    }
 
    public boolean getLaTeXFontUpdate()
@@ -475,7 +513,7 @@ class TeXSettingsPanel extends Box
 
    private JCheckBox useRelativeFontDeclarations, usePdfInfo;
 
-   private JCheckBox useTypeblockAsBoundingBox;
+   private JRadioButton usePaperSizeBoundsBox, useImageBoundsBox, useTypeblockBoundsBox;
 
    private FlowframTk application_;
 }
@@ -813,10 +851,33 @@ class TextConfigPanel extends JPanel
    {
       autoAdjustAnchorBox.setSelected(application.isAutoAnchorEnabled());
 
-      textualShading.setSelectedIndex(
-         application.getTextualExportShadingSetting());
-      textPathOutline.setSelectedIndex(
-         application.getTextPathExportOutlineSetting());
+      ExportSettings exportSettings = application.getExportSettings();
+
+      switch (exportSettings.textualShading)
+      {
+         case AVERAGE:
+            textualShading.setSelectedIndex(TEXTUAL_SHADING_AVERAGE);
+         break;
+         case START:
+            textualShading.setSelectedIndex(TEXTUAL_SHADING_START);
+         break;
+         case END:
+            textualShading.setSelectedIndex(TEXTUAL_SHADING_END);
+         break;
+         case TO_PATH:
+            textualShading.setSelectedIndex(TEXTUAL_SHADING_PATH);
+         break;
+      }
+
+      switch (exportSettings.textPathOutline)
+      {
+         case TO_PATH:
+           textPathOutline.setSelectedIndex(TEXT_PATH_OUTLINE_PATH);
+         break;
+         case IGNORE:
+           textPathOutline.setSelectedIndex(TEXT_PATH_OUTLINE_IGNORE);
+         break;
+      }
 
       autoEscapeTextSpCharBox.setSelected(
          application.isAutoEscapeSpCharsEnabled());
@@ -838,10 +899,34 @@ class TextConfigPanel extends JPanel
    {
       application.setAutoAnchor(autoAdjustAnchorBox.isSelected());
       application.setAutoEscapeSpChars(autoEscapeTextSpCharBox.isSelected());
-      application.setTextualExportShadingSetting(
-         textualShading.getSelectedIndex());
-      application.setTextPathExportOutlineSetting(
-         textPathOutline.getSelectedIndex());
+
+      ExportSettings exportSettings = application.getExportSettings();
+
+      switch (textualShading.getSelectedIndex())
+      {
+         case TEXTUAL_SHADING_AVERAGE:
+           exportSettings.textualShading = ExportSettings.TextualShading.AVERAGE;
+         break;
+         case TEXTUAL_SHADING_START:
+           exportSettings.textualShading = ExportSettings.TextualShading.START;
+         break;
+         case TEXTUAL_SHADING_END:
+           exportSettings.textualShading = ExportSettings.TextualShading.END;
+         break;
+         case TEXTUAL_SHADING_PATH:
+           exportSettings.textualShading = ExportSettings.TextualShading.TO_PATH;
+         break;
+      }
+
+      switch (textPathOutline.getSelectedIndex())
+      {
+         case TEXT_PATH_OUTLINE_PATH:
+            exportSettings.textPathOutline = ExportSettings.TextPathOutline.TO_PATH;
+         break;
+         case TEXT_PATH_OUTLINE_IGNORE:
+            exportSettings.textPathOutline = ExportSettings.TextPathOutline.IGNORE;
+         break;
+      }
 
       for (TeXMapRow row : textMapData)
       {
@@ -1153,6 +1238,13 @@ class TextConfigPanel extends JPanel
    private TeXMapDialog texMapDialog;
 
    private JComboBox<String> textualShading, textPathOutline;
+
+   public final static int TEXTUAL_SHADING_AVERAGE=0,
+    TEXTUAL_SHADING_START=1, TEXTUAL_SHADING_END=2,
+    TEXTUAL_SHADING_PATH=3;
+
+   public final static int TEXT_PATH_OUTLINE_PATH=0,
+     TEXT_PATH_OUTLINE_IGNORE=1;
 
    private JDRResources resources;
    private FlowframTk application;

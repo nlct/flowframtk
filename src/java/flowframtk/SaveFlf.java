@@ -34,9 +34,10 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveFlf extends ExportImage
 {
-   public SaveFlf(JDRFrame frame, File file, JDRGroup jdrImage)
+   public SaveFlf(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
    {
-      super(frame, file, jdrImage);
+      super(frame, file, jdrImage, exportSettings);
    }
 
    public void save() 
@@ -51,27 +52,29 @@ public class SaveFlf extends ExportImage
          out = new PrintWriter(new FileWriter(outputFile));
 
          FLF flf = new FLF(outputFile.getParentFile(), out,
-          app.getSettings().hasMinimumFlowFramSty2_0());
-
-         flf.setTextualExportShadingSetting(
-            app.getTextualExportShadingSetting());
-         flf.setTextPathExportOutlineSetting(
-            app.getTextPathExportOutlineSetting());
+          exportSettings);
 
          flf.comment(getResources().getMessage("tex.comment.created_by",
                getInvoker().getName(), getInvoker().getVersion()));
          flf.writeCreationDate();
+
          flf.comment(jdrFrame.getFilename());
 
-         if (!outputFile.getName().toLowerCase().endsWith(".cls"))
+         if (exportSettings.type == ExportSettings.Type.FLF_DOC)
          {
-            flf.comment(getResources().getMessage(
-               "tex.comment.fontsize",
-               ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
+            flf.saveCompleteDoc(image, "");
          }
+         else
+         {
+            if (exportSettings.type == ExportSettings.Type.STY)
+            {
+               flf.comment(getResources().getMessage(
+                  "tex.comment.fontsize",
+                  ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
+            }
 
-         flf.save(image, outputFile.getName(), 
-           jdrFrame.getApplication().useHPaddingShapepar());
+            flf.save(image, outputFile.getName());
+         }
 
          if (!image.anyFlowFrameData())
          {

@@ -33,9 +33,10 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SavePdf extends ExportDocImage
 {
-   public SavePdf(JDRFrame frame, File file, JDRGroup jdrImage)
+   public SavePdf(JDRFrame frame, File file, JDRGroup jdrImage,
+     ExportSettings exportSettings)
    {
-      super(frame, file, jdrImage, true, false);
+      super(frame, file, jdrImage, exportSettings);
    }
 
    @Override

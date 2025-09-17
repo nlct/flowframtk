@@ -177,7 +177,7 @@ public class FileField extends JPanel
 
    public void setFileName(String name)
    {
-      textField.setText(name);
+      textField.setText(name == null ? "" : name);
    }
 
    public void setCurrentDirectory(String dirPath)

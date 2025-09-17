@@ -1504,39 +1504,39 @@ public class JDRFrame extends JInternalFrame
       canvas.saveAJR(file, ajrversion, exitAfter);
    }
 
-   public void savePGF(File file)
+   public void savePGF(File file, ExportSettings exportSettings)
    {
-      canvas.savePGF(file);
+      canvas.savePGF(file, exportSettings);
    }
 
-   public void savePGFDoc(File file, boolean encapsulate)
+   public void saveFlowFrame(File file, ExportSettings exportSettings)
    {
-      canvas.savePGFDoc(file, encapsulate);
+      canvas.saveFlowFrame(file, exportSettings);
    }
 
-   public void saveFlowFrame(File file)
+   public void savePNG(File file, ExportSettings exportSettings)
    {
-      canvas.saveFlowFrame(file);
+      canvas.savePNG(file, exportSettings);
    }
 
-   public void savePNG(File file)
+   public void saveEPS(File file, ExportSettings exportSettings)
    {
-      canvas.savePNG(file);
+      canvas.saveEPS(file, exportSettings);
    }
 
-   public void saveEPS(File file)
+   public void savePDF(File file, ExportSettings exportSettings)
    {
-      canvas.saveEPS(file);
+      canvas.savePDF(file, exportSettings);
    }
 
-   public void savePdf(File file)
+   public void saveSVG(File file, ExportSettings exportSettings)
    {
-      canvas.savePdf(file);
+      canvas.saveSVG(file, exportSettings);
    }
 
-   public void saveSVG(File file)
+   public ExportSettings getExportSettings()
    {
-      canvas.saveSVG(file);
+      return application_.getExportSettings();
    }
 
    public boolean canDiscard()

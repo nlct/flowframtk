@@ -46,20 +46,20 @@ public class TeX
 
    public TeX(Path basePath, Writer out)
    {
-      this(basePath, out, false);
+      this(basePath, out, new ExportSettings());
    }
 
-   public TeX(Path basePath, Writer out, boolean useFlowframTkSty)
+   public TeX(Path basePath, Writer out, ExportSettings exportSettings)
    {
       this.basePath = basePath;
       setWriter(out);
-      this.useFlowframTkSty = useFlowframTkSty;
+      this.exportSettings = exportSettings;
       this.objectArgs = new Vector<String>();
    }
 
    public boolean isFlowframTkStyUsed()
    {
-      return useFlowframTkSty;
+      return exportSettings.useFlowframTkSty;
    }
 
    public void writeOutlineDef()
@@ -116,7 +116,7 @@ public class TeX
    {
       if (isUsePdfInfoEnabled())
       {
-         if (useFlowframTkSty)
+         if (isFlowframTkStyUsed())
          {
             println("\\flowframtkimageinfo{");
 
@@ -320,7 +320,8 @@ public class TeX
 
       int objectId = objectArgs.size();
 
-      if (isFlowframTkStyUsed() && objectMarkup != ObjectMarkup.NONE)
+      if (isFlowframTkStyUsed()
+           && exportSettings.objectMarkup != ExportSettings.ObjectMarkup.NONE)
       {
          CanvasGraphics cg = obj.getCanvasGraphics();
 
@@ -344,9 +345,9 @@ public class TeX
 
          objectArgs.add(args);
 
-         switch (objectMarkup)
+         switch (exportSettings.objectMarkup)
          {
-            case START_END:
+            case PAIRED:
              print("\\flowframtkstartobject");
              print(args);
              println("%");
@@ -367,11 +368,12 @@ public class TeX
    {
       String description = obj.getDescription();
 
-      if (isFlowframTkStyUsed() && objectMarkup != ObjectMarkup.NONE)
+      if (isFlowframTkStyUsed()
+        && exportSettings.objectMarkup != ExportSettings.ObjectMarkup.NONE)
       {
-         switch (objectMarkup)
+         switch (exportSettings.objectMarkup)
          {
-            case START_END:
+            case PAIRED:
                print("\\flowframtkendobject");
                print(objectArgs.get(idx));
                println("%");
@@ -747,7 +749,7 @@ public class TeX
    public void writePreambleCommands(JDRGroup image, boolean inDoc, boolean comment)
      throws IOException
    {
-      if (useFlowframTkSty)
+      if (isFlowframTkStyUsed())
       {
          checkForRequiredSupport(image);
 
@@ -794,7 +796,7 @@ public class TeX
          println(preamble);
       }
 
-      if (!useFlowframTkSty)
+      if (!isFlowframTkStyUsed())
       {
          println("\\makeatletter");
          writeOutlineDef(comment);
@@ -836,82 +838,62 @@ public class TeX
       comment(dateFormat.format(date));
    }
 
+   public void printNormalFontSizeOption(CanvasGraphics cg, int normalsize, String docClass)
+   throws IOException
+   {
+      if (docClass.equals("a0poster"))
+      {
+         if (normalsize != 25)
+         {
+            JDRMessage msgSys = cg.getMessageSystem();
+            MessageInfoPublisher publisher = msgSys.getPublisher();
+
+            publisher.publishMessages(MessageInfo.createWarning(
+             msgSys.getMessageWithFallback(
+              "warning.unsupported_cls_opt",
+              "Class ''{0}'' doesn''t support option ''{1}''",
+              docClass, normalsize+"pt")));
+         }
+      }
+      else if (docClass.equals("scrbook") || docClass.equals("scrreport")
+        || docClass.equals("scrartcl") || docClass.equals("scrreprt"))
+      {
+         print("fontsize="+normalsize+"pt");
+      }
+      else
+      {
+         print(""+normalsize+"pt");
+      }
+   }
    public boolean isConvertBitmapToEpsEnabled()
    {
-      return convertBitmapToEps;
-   }
-
-   public void setConvertBitmapToEpsEnabled(boolean enabled)
-   {
-      convertBitmapToEps = enabled;
+      return exportSettings.bitmapsToEps;
    }
 
    public boolean isUsePdfInfoEnabled()
    {
-      return usePdfInfo;
+      return exportSettings.usePdfInfo;
    }
 
-   public void setUsePdfInfoEnabled(boolean enabled)
+   public ExportSettings.TextPathOutline getTextPathExportOutlineSetting()
    {
-      usePdfInfo = enabled;
+      return exportSettings.textPathOutline;
    }
 
-   public void setTextPathExportOutlineSetting(int flag)
+   public ExportSettings.TextualShading getTextualExportShadingSetting()
    {
-      switch (flag)
-      {
-         case TEXTPATH_EXPORT_OUTLINE_TO_PATH:
-         case TEXTPATH_EXPORT_OUTLINE_IGNORE:
-            textPathExportOutlineSetting = flag;
-         break;
-         default:
-            throw new IllegalArgumentException(
-               "Invalid textpath export outline setting "+flag);
-      }
+      return exportSettings.textualShading;
    }
 
-   public int getTextPathExportOutlineSetting()
+   public ExportSettings.ObjectMarkup getObjectMarkup()
    {
-      return textPathExportOutlineSetting;
+      return exportSettings.objectMarkup;
    }
 
-   public void setTextualExportShadingSetting(int flag)
+   public ExportSettings getExportSettings()
    {
-      switch (flag)
-      {
-         case TEXTUAL_EXPORT_SHADING_AVERAGE:
-         case TEXTUAL_EXPORT_SHADING_START:
-         case TEXTUAL_EXPORT_SHADING_END:
-         case TEXTUAL_EXPORT_SHADING_TO_PATH:
-            textualExportShadingSetting = flag;
-         break;
-         default:
-            throw new IllegalArgumentException(
-               "Invalid textual export shading setting "+flag);
-      }
+      return exportSettings;
    }
-
-   public int getTextualExportShadingSetting()
-   {
-      return textualExportShadingSetting;
-   }
-
-   public void setObjectMarkup(ObjectMarkup markup)
-   {
-      this.objectMarkup = markup;
-   }
-
-   public ObjectMarkup getObjectMarkup()
-   {
-      return objectMarkup;
-   }
-
-   public static enum ObjectMarkup
-   {
-      NONE, START_END, ENCAP;
-   }
-
-   ObjectMarkup objectMarkup = ObjectMarkup.START_END;
 
    /**
     * Number format to use to print decimal numbers in LaTeX file.
@@ -934,34 +916,11 @@ public class TeX
 
    protected Writer writer;
 
-   protected boolean convertBitmapToEps = false;
-
-   protected boolean usePdfInfo = false;
-
    protected Vector<String> objectArgs;
 
-   protected boolean supportOutline=false;
-   protected boolean supportTextPath=false;
-   protected boolean useFlowframTkSty = false;
+   protected boolean supportOutline=false, supportTextPath=false;
+
+   ExportSettings exportSettings;
 
    public static final String FLOWFRAME_STY = "flowframtkutils";
-
-   public static final int TEXTPATH_EXPORT_OUTLINE_TO_PATH=0;
-   public static final int TEXTPATH_EXPORT_OUTLINE_IGNORE=1;
-
-   public static final int TEXTPATH_EXPORT_OUTLINE_MAX_INDEX=1;
-
-   private volatile int textPathExportOutlineSetting 
-      = TEXTPATH_EXPORT_OUTLINE_TO_PATH;
-
-   public static final int TEXTUAL_EXPORT_SHADING_AVERAGE = 0;
-   public static final int TEXTUAL_EXPORT_SHADING_START = 1;
-   public static final int TEXTUAL_EXPORT_SHADING_END = 2;
-   public static final int TEXTUAL_EXPORT_SHADING_TO_PATH = 3;
-
-   public static final int TEXTUAL_EXPORT_SHADING_MAX_INDEX = 3;
-
-   private volatile int textualExportShadingSetting 
-      = TEXTUAL_EXPORT_SHADING_AVERAGE;
-
 }

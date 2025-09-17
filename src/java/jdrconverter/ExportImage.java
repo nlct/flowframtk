@@ -170,14 +170,7 @@ public abstract class ExportImage
          base = src.getAbsoluteFile().getParentFile();
       }
 
-      PGF pgf = new PGF(base.toPath(), out);
-
-      pgf.setUsePdfInfoEnabled(converter.isUsePdfInfoOn());
-
-      pgf.setTextualExportShadingSetting(
-         converter.getTextualExportShadingSetting());
-      pgf.setTextPathExportOutlineSetting(
-         converter.getTextPathExportOutlineSetting());
+      PGF pgf = new PGF(base.toPath(), out, converter.getExportSettings());
 
       writeComments(pgf);
 
@@ -192,10 +185,7 @@ public abstract class ExportImage
          preamble = "\\batchmode " + preamble;
       }
 
-      pgf.saveDoc(image, preamble, 
-        converter.isEncapsulateOn(), 
-        converter.isConvertBitmapToEpsOn(),
-        converter.isUseTypeblockAsBoundingBoxOn());
+      pgf.saveDoc(image, preamble);
    }
 
    protected void save() 
