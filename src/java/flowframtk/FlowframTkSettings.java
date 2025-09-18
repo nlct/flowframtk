@@ -568,6 +568,16 @@ public class FlowframTkSettings
       return hasMinFlowFrameSty2_0; // flowfram v2.0 or above installed
    }
 
+   public boolean isSupportExportEpsSvgEnabled()
+   {
+      return supportExportEpsSvg;
+   }
+
+   public void setSupportExportEpsSvg(boolean enable)
+   {
+      supportExportEpsSvg = enable;
+   }
+
    public String[] getLaTeXCmd(String basename)
    {
       return exportSettings.getDviLaTeXCmd(basename);
@@ -612,6 +622,26 @@ public class FlowframTkSettings
    public void setLaTeXApp(String path)
    {
       exportSettings.dviLaTeXApp = path;
+   }
+
+   public String getPdfToPngApp()
+   {
+      return exportSettings.pdftopngApp;
+   }
+
+   public void setPdfToPngApp(String path)
+   {
+      exportSettings.pdftopngApp = path;
+   }
+
+   public String[] getPdfToPngOptions()
+   {
+      return exportSettings.pdftopngOptions;
+   }
+
+   public void setPdfToPngOptions(String[] options)
+   {
+      exportSettings.pdftopngOptions = options;
    }
 
    @Deprecated
@@ -1484,6 +1514,7 @@ public class FlowframTkSettings
    private String bitmapCommand = "\\includegraphics";
 
    public ExportSettings exportSettings;
+   private boolean supportExportEpsSvg = false;
 
    public Robot robot=null;
 

@@ -1737,6 +1737,18 @@ public class FlowframTkInvoker
                {
                   exportSettings.libgs = value;
                }
+               else if (key.equals("pdftopng_app"))
+               {
+                  exportSettings.pdftopngApp = value;
+               }
+               else if (key.equals("pdftopng_opts"))
+               {
+                  exportSettings.pdftopngOptions = value.split("\t");
+               }
+               else if (key.equals("support_eps_svg_export"))
+               {
+                  settings.setSupportExportEpsSvg(parseBoolean(value, line));
+               }
                else if (key.equals("timeout"))
                {
                   exportSettings.timeout = parseLong(value, line);
@@ -1957,6 +1969,17 @@ public class FlowframTkInvoker
 
       saveIfNotNullOrEmpty(out, "libgs", settings.getLibgs());
 
+      out.println("support_eps_svg_export="
+       + (settings.isSupportExportEpsSvgEnabled() ? 1 : 0));
+
+      saveIfNotNullOrEmpty(out, "pdftopng_app", exportSettings.pdftopngApp);
+
+      if (exportSettings.pdftopngOptions != null)
+      {
+         out.println("pdftopng_opts="
+          + String.join("\t", exportSettings.pdftopngOptions));
+      }
+
       if (settings.hasMinimumFlowFramSty2_0())
       {
          out.println("flowfram_v2.0=1");
@@ -2028,6 +2051,10 @@ public class FlowframTkInvoker
       newSettings.setDvipsApp(orgSettings.getDvipsApp());
       newSettings.setDvisvgmApp(orgSettings.getDvisvgmApp());
       newSettings.setLibgs(orgSettings.getLibgs());
+      newSettings.setSupportExportEpsSvg(orgSettings.isSupportExportEpsSvgEnabled());
+      newSettings.setPdfToPngApp(orgSettings.getPdfToPngApp());
+      newSettings.setPdfToPngOptions(orgSettings.getPdfToPngOptions());
+
       newSettings.setUnicodeRanges(orgSettings.getUnicodeRanges());
       newSettings.setLookAndFeel(orgSettings.getLookAndFeel());
       newSettings.setButtonStyle(orgSettings.getButtonStyle());

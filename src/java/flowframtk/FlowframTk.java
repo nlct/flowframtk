@@ -4418,6 +4418,18 @@ public class FlowframTk extends JFrame
       getSettings().setLaTeXOptions(path);
    }
 
+
+   public boolean isSupportExportEpsSvgEnabled()
+   {
+      return getSettings().isSupportExportEpsSvgEnabled();
+   }
+
+   public void setSupportExportEpsSvg(boolean enable)
+   {
+      getSettings().setSupportExportEpsSvg(enable);
+      exportDialog.setEpsSvgSupport(enable);
+   }
+
    public String getPdfLaTeXApp()
    {
       return getSettings().getPdfLaTeXApp();

@@ -63,6 +63,8 @@ public class ExportDialog extends JDialog
       JDRResources resources = getResources();
       exportSettings = new ExportSettings();
 
+      exportSettings.copyFrom(application.getExportSettings());
+
       JLabelGroup labelGrp = new JLabelGroup();
 
       JLabel fileLabel = resources.createAppLabel("export.file");
@@ -445,6 +447,8 @@ public class ExportDialog extends JDialog
 
       bottomPanel.add(buttonPanel, "Center");
 
+      // SVG has the longest panel so temporarily enable to
+      // calculate maximum preferred height
       fileTypeButtons[TYPE_SVG].setSelected(true);
 
       pack();
@@ -452,6 +456,9 @@ public class ExportDialog extends JDialog
       libGsComp.setMaximumSize(libGsComp.getPreferredSize());
 
       pack();
+
+      supportEpsSvg = true;
+      setEpsSvgSupport(application.getSettings().isSupportExportEpsSvgEnabled());
 
       fileTypeButtons[TYPE_PGF].setSelected(true);
 
@@ -465,6 +472,40 @@ public class ExportDialog extends JDialog
       return comp;
    }
 
+   public void setEpsSvgSupport(boolean enable)
+   {
+      if (supportEpsSvg != enable)
+      {
+         supportEpsSvg = enable;
+
+         fileTypeButtons[TYPE_EPS].setVisible(supportEpsSvg);
+         fileTypeButtons[TYPE_SVG].setVisible(supportEpsSvg);
+         fileTypeButtons[TYPE_EPS].setEnabled(supportEpsSvg);
+         fileTypeButtons[TYPE_SVG].setEnabled(supportEpsSvg);
+
+         if (supportEpsSvg)
+         {
+            exportFC.addChoosableFileFilter(
+             fileTypeButtons[TYPE_EPS].getFileFilter());
+            exportFC.addChoosableFileFilter(
+             fileTypeButtons[TYPE_SVG].getFileFilter());
+         }
+         else
+         {
+            exportFC.removeChoosableFileFilter(
+             fileTypeButtons[TYPE_EPS].getFileFilter());
+            exportFC.removeChoosableFileFilter(
+             fileTypeButtons[TYPE_SVG].getFileFilter());
+
+            if (currentFileTypeButton == fileTypeButtons[TYPE_EPS]
+             || currentFileTypeButton == fileTypeButtons[TYPE_SVG])
+            {
+               fileTypeButtons[TYPE_IMAGE_PDF].setSelected(true);
+            }
+         }
+      }
+   }
+
    public void display(JDRFrame frame)
    {
       this.frame = frame;
@@ -472,23 +513,26 @@ public class ExportDialog extends JDialog
 
       exportSettings.copyFrom(application.getSettings().getExportSettings());
 
-      dviLaTeXPanel.initialise(
-        exportSettings.dviLaTeXApp,
-        exportSettings.dviLaTeXOptions);
-
       pdfLaTeXPanel.initialise(
         exportSettings.pdfLaTeXApp,
         exportSettings.pdfLaTeXOptions);
 
-      dvipsPanel.initialise(
-        exportSettings.dvipsApp,
-        exportSettings.dvipsOptions);
+      if (supportEpsSvg)
+      {
+         dviLaTeXPanel.initialise(
+           exportSettings.dviLaTeXApp,
+           exportSettings.dviLaTeXOptions);
 
-      dvisvgmPanel.initialise(
-        exportSettings.dvisvgmApp,
-        exportSettings.dvisvgmOptions);
+         dvipsPanel.initialise(
+           exportSettings.dvipsApp,
+           exportSettings.dvipsOptions);
 
-      libGsFileField.setFileName(exportSettings.libgs);
+         dvisvgmPanel.initialise(
+           exportSettings.dvisvgmApp,
+           exportSettings.dvisvgmOptions);
+
+         libGsFileField.setFileName(exportSettings.libgs);
+      }
 
       FlowFrame ff = image.getFlowFrame();
 
@@ -592,7 +636,7 @@ public class ExportDialog extends JDialog
          {
             for (FileTypeButton btn : fileTypeButtons)
             {
-               if (btn.accept(file))
+               if (btn.isEnabled() && btn.accept(file))
                {
                   fileTypeBtn = btn;
                   break;
@@ -1180,6 +1224,7 @@ public class ExportDialog extends JDialog
    private JDRGroup image;
    private JFileChooser exportFC;
    private ExportSettings exportSettings;
+   private boolean supportEpsSvg;
 
    public static final int TYPE_PGF=0, TYPE_IMAGE_DOC=1, TYPE_FLF_DOC=2,
     TYPE_CLS=3, TYPE_STY=4, TYPE_IMAGE_PDF=5, TYPE_FLF_PDF=6,

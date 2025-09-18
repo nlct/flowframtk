@@ -633,7 +633,7 @@ class ControlSizePanel extends JPanel
    private JCheckBox scaleControlsBox;
 }
 
-class ProcessesPanel extends JPanel
+class ProcessesPanel extends JPanel implements ActionListener
 {
    public ProcessesPanel(FlowframTk application, JDRAppSelector appSelector)
    {
@@ -644,14 +644,7 @@ class ProcessesPanel extends JPanel
       JDRResources resources = application.getResources();
 
       JLabelGroup grp = new JLabelGroup();
-
-      JLabel label = resources.createAppLabel("processes.latex");
-      grp.add(label);
-
-      latexPanel = new ProcessSettingsPanel(application, appSelector,
-        "latex", label, grp);
-
-      add(latexPanel);
+      JLabel label;
 
       label = resources.createAppLabel("processes.pdflatex");
       grp.add(label);
@@ -660,6 +653,20 @@ class ProcessesPanel extends JPanel
         "pdflatex", label, grp);
 
       add(pdflatexPanel);
+
+      supportEpsSvgExportBox = resources.createAppCheckBox("processes",
+         "support_eps_svg", application.isSupportExportEpsSvgEnabled(), this);
+      supportEpsSvgExportBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      add(supportEpsSvgExportBox);
+
+      label = resources.createAppLabel("processes.latex");
+      grp.add(label);
+
+      latexPanel = new ProcessSettingsPanel(application, appSelector,
+        "latex", label, grp);
+
+      add(latexPanel);
 
       label = resources.createAppLabel("processes.dvips");
       grp.add(label);
@@ -681,15 +688,15 @@ class ProcessesPanel extends JPanel
          resources.createAppInfoArea(20, "appselect.libgs");
       libgsArea.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-      JComponent row = Box.createHorizontalBox();
-      add(row);
+      libgsInfoRow = Box.createHorizontalBox();
+      add(libgsInfoRow);
 
-      row.add(libgsArea);
+      libgsInfoRow.add(libgsArea);
 
       String libGs = application.getLibgs();
 
-      row = Box.createHorizontalBox();
-      add(row);
+      libgsRow = Box.createHorizontalBox();
+      add(libgsRow);
 
       label = resources.createAppLabel("processes.libgs");
       grp.add(label);
@@ -700,8 +707,8 @@ class ProcessesPanel extends JPanel
 
       libgsField.getEastComponent().add(Box.createHorizontalStrut(20));
 
-      row.add(label);
-      row.add(libgsField);
+      libgsRow.add(label);
+      libgsRow.add(libgsField);
 
       JLabel timeoutLabel = resources.createAppLabel("processes.timeout");
       grp.add(timeoutLabel);
@@ -715,7 +722,7 @@ class ProcessesPanel extends JPanel
 
       timeoutLabel.setLabelFor(timeoutField);
 
-      row = Box.createHorizontalBox();
+      JComponent row = Box.createHorizontalBox();
       add(row);
 
       row.add(timeoutLabel);
@@ -724,23 +731,45 @@ class ProcessesPanel extends JPanel
       row.add(Box.createHorizontalGlue());
    }
 
+   @Override
+   public void actionPerformed(ActionEvent evt)
+   {
+      if (evt.getSource() == supportEpsSvgExportBox)
+      {
+         boolean supportDviOptions = supportEpsSvgExportBox.isSelected();
+
+         latexPanel.setVisible(supportDviOptions);
+         dvipsPanel.setVisible(supportDviOptions);
+         dvisvgmPanel.setVisible(supportDviOptions);
+         libgsInfoRow.setVisible(supportDviOptions);
+         libgsRow.setVisible(supportDviOptions);
+      }
+   }
+
    public void initialise(FlowframTk application)
    {
       ExportSettings exportSettings = application.getExportSettings();
 
-      latexPanel.initialise(exportSettings.dviLaTeXApp,
-        exportSettings.dviLaTeXOptions);
-
       pdflatexPanel.initialise(exportSettings.pdfLaTeXApp,
         exportSettings.pdfLaTeXOptions);
 
-      dvipsPanel.initialise(exportSettings.dvipsApp,
-        exportSettings.dvipsOptions);
+      boolean supportDviOptions = application.isSupportExportEpsSvgEnabled();
 
-      dvisvgmPanel.initialise(exportSettings.dvisvgmApp,
-        exportSettings.dvisvgmOptions);
+      supportEpsSvgExportBox.setSelected(supportDviOptions);
 
-      libgsField.setFileName(exportSettings.libgs);
+      if (supportDviOptions)
+      {
+         latexPanel.initialise(exportSettings.dviLaTeXApp,
+           exportSettings.dviLaTeXOptions);
+
+         dvipsPanel.initialise(exportSettings.dvipsApp,
+           exportSettings.dvipsOptions);
+
+         dvisvgmPanel.initialise(exportSettings.dvisvgmApp,
+           exportSettings.dvisvgmOptions);
+
+         libgsField.setFileName(exportSettings.libgs);
+      }
 
       timeoutModel.setValue(Long.valueOf(exportSettings.timeout));
    }
@@ -749,30 +778,45 @@ class ProcessesPanel extends JPanel
    {
       ExportSettings exportSettings = application.getExportSettings();
 
-      // DVI LaTeX
-      exportSettings.dviLaTeXApp = latexPanel.getFileName();
-      exportSettings.dviLaTeXOptions = latexPanel.getOptionArray();
-
       // PDF LaTeX
       exportSettings.pdfLaTeXApp = pdflatexPanel.getFileName();
       exportSettings.pdfLaTeXOptions = pdflatexPanel.getOptionArray();
 
-      // dvips
-      exportSettings.dvipsApp = dvipsPanel.getFileName();
-      exportSettings.dvipsOptions = dvipsPanel.getOptionArray();
-
-      // dvisvgm
-      exportSettings.dvisvgmApp = dvisvgmPanel.getFileName();
-      exportSettings.dvisvgmOptions = dvisvgmPanel.getOptionArray();
-
-      exportSettings.libgs = libgsField.getFileName();
       exportSettings.timeout = timeoutModel.getNumber().longValue();
+
+      boolean supportDviOptions = supportEpsSvgExportBox.isSelected();
+
+      if (application.isSupportExportEpsSvgEnabled()
+           != supportDviOptions)
+      {
+         application.setSupportExportEpsSvg(supportDviOptions);
+      }
+
+      if (supportDviOptions)
+      {
+         // DVI LaTeX
+         exportSettings.dviLaTeXApp = latexPanel.getFileName();
+         exportSettings.dviLaTeXOptions = latexPanel.getOptionArray();
+
+         // dvips
+         exportSettings.dvipsApp = dvipsPanel.getFileName();
+         exportSettings.dvipsOptions = dvipsPanel.getOptionArray();
+
+         // dvisvgm
+         exportSettings.dvisvgmApp = dvisvgmPanel.getFileName();
+         exportSettings.dvisvgmOptions = dvisvgmPanel.getOptionArray();
+
+         exportSettings.libgs = libgsField.getFileName();
+      }
    }
 
    private FileField libgsField;
 
    private ProcessSettingsPanel latexPanel, pdflatexPanel,
      dvipsPanel, dvisvgmPanel;
+   private JComponent libgsRow, libgsInfoRow;
+
+   private JCheckBox supportEpsSvgExportBox;
 
    private JSpinner timeoutField;
    private SpinnerNumberModel timeoutModel;

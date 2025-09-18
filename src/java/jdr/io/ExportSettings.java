@@ -242,6 +242,9 @@ public class ExportSettings
    public String pdfLaTeXApp = "pdflatex";
    public String[] pdfLaTeXOptions = new String[] { "$basename" };
 
+   public String pdftopngApp = null;
+   public String[] pdftopngOptions = null;
+
    public String dvipsApp = "dvips";
    public String[] dvipsOptions
       = new String[] { "-o", "$outputfile", "$inputfile" };
@@ -251,7 +254,7 @@ public class ExportSettings
       = new String[] { "--libgs=$libgs", "-o", "$outputfile", "$inputfile" };
 
    public String libgs = null;
-   public boolean useExternalProcess = true;
+   public boolean useExternalProcess = false;
    public long timeout = 300000L;
    public boolean pngUseAlpha=false;
    public boolean useFlowframTkSty = false;
