@@ -1566,28 +1566,21 @@ setting.
 \widgetdef{clssettings.pdfinfo}
 
 The \widget{clssettings.pdfinfo} \gls*{checkbox} governs whether or
-not to add \gls{pdfinfo} to exported \LaTeX\ documents. If the image
-has a description (\sectionref{sec:imagedescription}), this will be
-added to the \gls{pdfinfo/Title} attribute. The only other attribute
-that is set is the \gls{pdfinfo/CreationDate} attribute. This setting is
-not used for the export to PostScript or \gls{svg} functions as they
-use \app{latex} rather than \app{pdflatex}.
-
-\widgetdef{clssettings.use_typeblock_as_bbox}
-
-When an image is exported to an encapsulated \LaTeX\ document
-or complete \LaTeX\ document, by default the image \gls{image.bbox}
-is calculated as the minimal sized rectangle that encompasses all
-\glspl{object} on the \gls{canvas}. If the image contains an
-\glspl*{textarea}, this may result in text being clipped to the left
-or right of the image due to the font differences. In this case, or
-if you require a different bounding box for some other reason, then
-switch on the \widget{clssettings.use_typeblock_as_bbox}
-\gls*{checkbox} and if the image has a \gls{image.typeblock} set
-(see \sectionref{sec:typeblock}) the \gls{image.typeblock} will be used as the image
-\gls{image.bbox}. If the image doesn't have a \gls+{image.typeblock} set, then the
-default bounding box will be used. See also \figureref{fig:equation}
-in \sectionref{sec:exportdoc}.
+not to add the title and creation date meta data to the exported
+document. If you have \sty{flowframtkutils} installed, the
+information will be written to the exported file in the form
+\begin{compactcodebox}
+\gls{flowframtkimageinfo}\marg{
+ title=\margm{image-description},
+ creationdate=\margm{PDF date}
+}
+\end{compactcodebox}
+where \meta{image-description} is the image's description
+(see \sectionref{sec:imagedescription}) and \meta{PDF date}
+is the date in PDF date format. The title will be omitted if the
+image's description hasn't been set.
+If \sty{flowframtkutils} isn't available, then \gls{pdfinfo} will be
+used instead, if it's available.
 
 
 \subsubsection{Flowframe Settings}\label{sec:texconfigflf}
@@ -2938,9 +2931,14 @@ strongly recommend that you first save the picture as a
 wish to edit it later.
 \end{warning}
 
-The \menu{file.export} menu allows you to export your image. The
-\inlineglsdef{export.title} dialog box provides a way to specify the name
-and location of the file.  The file format for the exported file
+The \menu{file.export} menu item allows you to export your image.
+This will open the \inlineglsdef{export.title} dialog box, which
+provides a way to specify the name and location of the file as well
+as what format to export to. 
+
+% TODO update this section
+
+The file format for the exported file
 depends on the selected file filter.  A default filename will be
 provided with the same basename as the image (if it has one).
 
@@ -3044,7 +3042,7 @@ To create a standalone \LaTeX\ document (\inlineglsdef{ext.tex}), select
 the \widget{filter.pgfdoc} file filter, which will use the image's
 paper \gls{paper.size}, or select the \widget{filter.pgfencapdoc} file filter to
 set the page geometry to the image's \gls{image.bbox} (or \gls+{image.typeblock}
-if \widget{clssettings.use_typeblock_as_bbox} is set, see
+if the \widget{export.bounds.typeblock} button is selected, see
 \sectionref{sec:normalsize}).
 
 \begin{information}
@@ -3093,9 +3091,10 @@ in case the image contains any \glspl{textpath}.
 Changes caused by differences in the way that \FlowframTk\ renders
 \glspl{textarea} with the way that \LaTeX\ typesets them
 can cause the image to be clipped if the bounding box
-has been underestimated. If this is a problem, you can switch on
-the \widget{clssettings.use_typeblock_as_bbox}
-option and use the \gls+{image.typeblock} function to mark your
+has been underestimated. If this is a problem, use
+the \widget{export.bounds.typeblock}
+option in the \widget{export.bounds} button group of the
+\dialog{export} dialog, and use the \gls+{image.typeblock} function to mark your
 preferred bounding box.
 \end{warning}
 
@@ -3132,9 +3131,8 @@ The easiest way to do this is to \select\ the rectangle, use the
 \dialog{typeblock} dialog box, and click on the
 \widget{typeblock.compute_from_path} button. Then delete the
 rectangle. The \gls{image.typeblock} is now shown as a \manmsg{grey} rectangle in
-\figureref{fig:equatione}. Now make sure that the
-\widget{clssettings.use_typeblock_as_bbox}
-setting is on. Redoing the export to PDF now
+\figureref{fig:equatione}. Redoing the export to PDF with the
+\widget{export.bounds.typeblock} button selected now
 produces the image shown in \figureref{fig:equationf}.
 
 \FloatSubFigs{fig:equation}
@@ -3168,6 +3166,13 @@ syntax error in a \gls{textarea} or \gls{textpath}.
 The export to \gls{svg} or EPS functions both work in the same way
 as \hyperref[sec:exportdoc]{exporting to an encapsulating PDF}
 in that a temporary encapsulated \LaTeX\ file is first created.
+
+\begin{warning}
+In both cases, \app{latex} rather than \app{pdflatex} is used to
+create a DVI file. The DVI format is quite old and is more
+problematic than the newer PDF format engines. Consider exporting to
+PDF and then converting from that instead.
+\end{warning}
 
 If the \widget{filter.svg} file filter is chosen, then the temporary
 file will be compiled with \app{latex} followed by

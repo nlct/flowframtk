@@ -283,6 +283,13 @@
  syntax={\meta{n}}
 }
 
+@switch{switch.jdrconverter.bounds,
+ parent={app.jdrconverter},
+ name={\longargfmt{bounds}},
+ syntax={\meta{setting}}
+}
+
+
 @switch{switch.jdrconverter.crop,
  parent={app.jdrconverter},
  name={\longargfmt{crop}},
@@ -409,17 +416,17 @@
  defaultkeys={format=glsignore}
 }
 
-@package{pkg.flowframtk,
+@package{pkg.flowframtkutils,
  syntax={\meta{options}},
 }
 
-@option{opt.flowframtk.outline,
- parent={pkg.flowframtk},
+@option{opt.flowframtkutils.outline,
+ parent={pkg.flowframtkutils},
  name={\optfmt{outline}}
 }
 
-@option{opt.flowframtk.textpath,
- parent={pkg.flowframtk},
+@option{opt.flowframtkutils.textpath,
+ parent={pkg.flowframtkutils},
  name={\optfmt{textpath}}
 }
 

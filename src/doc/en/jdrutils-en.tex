@@ -317,47 +317,49 @@ This option may be overridden if the input file contains a
 It's intended for input files that don't contain
 a \gls{normal-font-size} value.
 
+\convswitchdef{bounds}
+
+For output formats that support setting the image bounds,
+this option indicates whether to use the paper size (not applicable
+when \convswitch{export-latex} isn't used with \convswitch{doc}),
+the image bounding box or (if set) the
+\gls{typeblock}. Allowed values are: \optfmt{paper}, \optfmt{image}
+and \optfmt{typeblock}.
+
 \convswitchdef{crop}
 
-For output formats that support cropping, crop the image
-either to its \gls{image.bbox} or (if \convswitch{use-typeblock})
-to the \gls{typeblock}.
-This option is ignored for output formats that don't support
-cropping.
+Equivalent to \code{\convswitch{bounds} image}.
+
+\convswitchdef{no-crop}
+
+This option is deprecated. Use \code{\convswitch{bounds} paper} instead.
 
 \convswitchdef{use-typeblock}
 
-If the \convswitch{crop} option is applied then use the
-\gls{typeblock} rather than the image's \gls{image.bbox}
-for the cropped area. The input file will need to have 
-a \gls{typeblock} identified.
-This option is ignored for output formats that don't support
-cropping.
+Equivalent to \code{\convswitch{bounds} typeblock}.
 
 \convswitchdef{no-use-typeblock}
 
-Don't use the \gls{typeblock} when determining the cropped area.
-This option is ignored for output formats that don't support
-cropping.
+This option is deprecated. Use \code{\convswitch{bounds} image} instead.
 
 \convswitchdef{use-flowframtksty}
 
-Assume that the \sty{flowframtk} package is installed and use that
+Assume that the \sty{flowframtkutils} package is installed and use that
 package instead of writing all the internal command definitions.
 Only applicable if exporting to a \LaTeX\ format, such as creating a
 package, class, \sty{pgf} image or document file or a format that's
 derived from a temporary \LaTeX\ file.
 
 \begin{information}
-The \sty{flowframtk} package is a supplementary package provided
+The \sty{flowframtkutils} package is a supplementary package provided
 with the \sty{flowfram} package (v1.18+) specifically for use
 with \FlowframTk. If you have an older version of \sty{flowfram}
-installed, the \sty{flowframtk} package won't be available.
+installed, the \sty{flowframtkutils} package won't be available.
 \end{information}
 
 \convswitchdef{no-use-flowframtksty}
 
-The \sty{flowframtk} package isn't installed 
+The \sty{flowframtkutils} package isn't installed 
 so write all the internal command definitions to support the
 required export features.
 
