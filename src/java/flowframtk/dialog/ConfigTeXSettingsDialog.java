@@ -308,24 +308,6 @@ class TeXSettingsPanel extends Box
       usePdfInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(usePdfInfo);
 
-      b2 = Box.createHorizontalBox();
-      b2.setAlignmentX(Component.LEFT_ALIGNMENT);
-      add(b2);
-
-      bg = new ButtonGroup();
-
-      usePaperSizeBoundsBox = getResources().createAppRadioButton("clssettings",
-        "bounds.paper", bg, false, null);
-      bg.add(usePaperSizeBoundsBox);
-
-      useImageBoundsBox = getResources().createAppRadioButton("clssettings",
-        "bounds.image", bg, true, null);
-      bg.add(useImageBoundsBox);
-
-      useTypeblockBoundsBox = getResources().createAppRadioButton("clssettings",
-        "bounds.typeblock", bg, false, null);
-      bg.add(useTypeblockBoundsBox);
-
       add(Box.createVerticalGlue());
    }
 
@@ -365,19 +347,6 @@ class TeXSettingsPanel extends Box
       }
 
       updateExample(normalSize);
-
-      switch (exportSettings.bounds)
-      {
-         case PAPER:
-            usePaperSizeBoundsBox.setSelected(true);
-         break;
-         case IMAGE:
-            useImageBoundsBox.setSelected(true);
-         break;
-         case TYPEBLOCK:
-            useTypeblockBoundsBox.setSelected(true);
-         break;
-      }
    }
 
    public void updateExample(int normalsize)
@@ -439,19 +408,6 @@ class TeXSettingsPanel extends Box
 
       frame.getCanvas().setDocClass(
         useDefaultCls.isSelected() ? null : customClsField.getText());
-
-      if (usePaperSizeBoundsBox.isSelected())
-      {
-         exportSettings.bounds = ExportSettings.Bounds.PAPER;
-      }
-      else if (useImageBoundsBox.isSelected())
-      {
-         exportSettings.bounds = ExportSettings.Bounds.IMAGE;
-      }
-      else if (useTypeblockBoundsBox.isSelected())
-      {
-         exportSettings.bounds = ExportSettings.Bounds.TYPEBLOCK;
-      }
    }
 
    public boolean getLaTeXFontUpdate()
@@ -512,8 +468,6 @@ class TeXSettingsPanel extends Box
    private JTextField customClsField;
 
    private JCheckBox useRelativeFontDeclarations, usePdfInfo;
-
-   private JRadioButton usePaperSizeBoundsBox, useImageBoundsBox, useTypeblockBoundsBox;
 
    private FlowframTk application_;
 }
