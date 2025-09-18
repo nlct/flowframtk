@@ -440,8 +440,8 @@ public class ExportDialog extends JDialog
       bottomPanel.add(rememberSettingsBox, "West");
 
       JPanel buttonPanel = new JPanel();
-      buttonPanel.add(resources.createOkayButton(getRootPane(), this));
-      buttonPanel.add(resources.createCancelButton(this));
+
+      resources.createOkayCancelHelpButtons(this, buttonPanel, this, "sec:exportimage");
 
       bottomPanel.add(buttonPanel, "Center");
 
@@ -985,6 +985,25 @@ public class ExportDialog extends JDialog
          libGsComp.setVisible(false);
 
          currentFileTypeButton.showProcessPanels();
+
+         exportFC.setFileFilter(currentFileTypeButton.getFileFilter());
+
+         File file = fileField.getFile();
+
+         if (file != null && !currentFileTypeButton.accept(file))
+         {
+            String name = file.getName();
+            int idx = name.lastIndexOf(".");
+
+            if (idx > 0)
+            {
+               name = name.substring(0, idx)
+                 + currentFileTypeButton.getDefaultExtension() ;
+
+               file = new File(file.getParentFile(), name);
+               fileField.setFile(file);
+            }
+         }
       }
 
       boolean requiresExternalProcess = currentFileTypeButton.requiresProcesses();
