@@ -104,12 +104,12 @@ public class PGF extends TeX
       {
          double storagePaperWidth = cg.bpToStorage(cg.getPaperWidth());
 
+         Rectangle2D bounds = flowframe.getBounds2D(storagePaperWidth, storagePaperHeight);
+
          println(String.format("\\pgfpathmoveto{%s}",
-                 point(cg, flowframe.getLeft(), 
-                           storagePaperHeight-flowframe.getTop())));
+                 point(cg, bounds.getMinX(), storagePaperHeight-bounds.getMaxY())));
          println(String.format("\\pgfpathlineto{%s}",
-                 point(cg, storagePaperWidth-flowframe.getRight(),
-                           storagePaperHeight-flowframe.getBottom())));
+                 point(cg, bounds.getMaxX(), storagePaperHeight-bounds.getMinY())));
       }
       else
       {
