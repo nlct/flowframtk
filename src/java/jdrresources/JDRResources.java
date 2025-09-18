@@ -2341,6 +2341,43 @@ public class JDRResources
       return button;
    }
 
+   public Component createButtonSpacer()
+   {
+      return Box.createHorizontalStrut(10);
+   }
+
+   public JDRButton createOkayCancelButtons(JDialog dialog, JComponent comp,
+      ActionListener listener)
+   {
+      return createOkayCancelHelpButtons(dialog, comp, listener, null);
+   }
+
+   public JDRButton createOkayCancelHelpButtons(JDialog dialog, JComponent comp,
+      ActionListener listener, String helpId)
+   {
+      JDRButton okayButton = createOkayButton(dialog.getRootPane(), listener);
+
+      comp.add(okayButton);
+      comp.add(createButtonSpacer());
+      comp.add(createCancelButton(listener));
+
+      if (helpId != null)
+      {
+         comp.add(createButtonSpacer());
+
+         try
+         {
+            comp.add(createHelpDialogButton(dialog, helpId));
+         }
+         catch (HelpSetNotInitialisedException e)
+         {
+            internalError(null, e);
+         }
+      }
+
+      return okayButton;
+   }
+
    public JDRButton createOkayButton(JRootPane rootPane, ActionListener listener)
    {
       return createOkayButton(rootPane, listener, getMessage("button.okay"));
