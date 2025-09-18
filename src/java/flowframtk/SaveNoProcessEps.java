@@ -18,6 +18,7 @@
 package com.dickimawbooks.flowframtk;
 
 import java.io.*;
+import java.nio.file.*;
 import java.awt.*;
 import javax.swing.*;
 
@@ -40,7 +41,7 @@ public class SaveNoProcessEps extends ExportImage
       try
       {
          out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
-         EPS.save(image, out, frame.getApplication().getApplicationName());
+         EPS.save(image, out, jdrFrame.getResources().getApplicationName());
       }
       finally
       {

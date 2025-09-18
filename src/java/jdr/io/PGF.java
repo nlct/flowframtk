@@ -40,16 +40,6 @@ import com.dickimawbooks.jdr.*;
 
 public class PGF extends TeX
 {
-   public PGF(Path basePath, Writer out)
-   {
-      super(basePath, out);
-   }
-
-   public PGF(File baseFile, Writer out)
-   {
-      this(baseFile == null ? null : baseFile.toPath(), out, new ExportSettings());
-   }
-
    public PGF(Path basePath, Writer out, ExportSettings exportSettings)
    {
       super(basePath, out, exportSettings);

@@ -4404,6 +4404,7 @@ public class FlowframTk extends JFrame
    }
 
    public String[] getLaTeXCmd(String basename)
+   throws MissingProcessorException
    {
       return getSettings().getLaTeXCmd(basename);
    }
@@ -4476,6 +4477,7 @@ public class FlowframTk extends JFrame
    }
 
    public String[] getPdfLaTeXCmd(String basename)
+   throws MissingProcessorException
    {
       return getSettings().getPdfLaTeXCmd(basename);
    }
@@ -4502,6 +4504,7 @@ public class FlowframTk extends JFrame
    }
 
    public String[] getDviPsCmd(String basename)
+   throws MissingProcessorException
    {
       return getSettings().getDviPsCmd(basename);
    }
@@ -4528,6 +4531,7 @@ public class FlowframTk extends JFrame
    }
 
    public String[] getDviSvgmCmd(String basename)
+   throws MissingProcessorException
    {
       return getSettings().getDviSvgmCmd(basename);
    }

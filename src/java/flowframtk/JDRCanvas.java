@@ -11204,6 +11204,7 @@ public class JDRCanvas extends JPanel
 
       if (exportSettings.useExternalProcess)
       {
+         (new SavePng(frame_, file, paths, exportSettings)).execute();
       }
       else
       {

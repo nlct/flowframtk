@@ -274,6 +274,8 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.try_latex_export">Try exporting to a LaTeX document and compile it using your usual build process.</entry>
 <entry key="error.cant_find_app">Can''t locate application ''{0}''</entry>
 
+<entry key="error.export_no_process">Required path or options for application ''{0}'' has not been setup.</entry>
+
 <entry key="error.not_a_directory">不是一个目录 ''{0}''</entry>
 <entry key="error.not_ajr">不是一个AJR文件</entry>
 <entry key="error.not_found">文件未找到</entry>

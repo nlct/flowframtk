@@ -264,6 +264,8 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="error.try_latex_export">Try exporting to a LaTeX document and compile it using your usual build process.</entry>
 <entry key="error.cant_find_app">Can''t locate application ''{0}''</entry>
 
+<entry key="error.export_no_process">Required path or options for application ''{0}'' has not been setup.</entry>
+
 <entry key="error.not_a_directory">''{0}'' is not a directory</entry>
 <entry key="error.not_ajr">Not an AJR file</entry>
 <entry key="error.not_found">File not found</entry>

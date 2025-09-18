@@ -41,12 +41,7 @@ public class TeX
 {
    protected TeX()
    {
-      this(null, null);
-   }
-
-   public TeX(Path basePath, Writer out)
-   {
-      this(basePath, out, new ExportSettings());
+      this(null, null, null);
    }
 
    public TeX(Path basePath, Writer out, ExportSettings exportSettings)

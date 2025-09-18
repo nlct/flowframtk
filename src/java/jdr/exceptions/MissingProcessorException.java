@@ -15,40 +15,24 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-package com.dickimawbooks.flowframtk;
 
-import java.io.*;
-import java.nio.file.*;
-import java.awt.*;
-import javax.swing.*;
+package com.dickimawbooks.jdr.exceptions;
 
-import com.dickimawbooks.jdr.*;
-import com.dickimawbooks.jdr.io.*;
-import com.dickimawbooks.jdrresources.*;
-
-public class SaveNoProcessSvg extends ExportImage
+/**
+ * Exception thrown when a processor hasn't been initialised.
+ * @author Nicola L C Talbot
+ */
+public class MissingProcessorException extends Exception
 {
-   public SaveNoProcessSvg(JDRFrame frame, File file, JDRGroup jdrImage,
-     ExportSettings exportSettings)
+   public MissingProcessorException(String msg)
    {
-      super(frame, file, jdrImage, exportSettings);
+      super(msg);
    }
 
-   public void save() throws InterruptedException,IOException
+   public MissingProcessorException(String msg, Throwable cause)
    {
-      PrintWriter out = null;
-
-      try
-      {
-         out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
-         SVG.save(image, image.getDescription(), out);
-      }
-      finally
-      {
-         if (out != null)
-         {
-            out.close();
-         }
-      }
+      super(msg, cause);
    }
+
 }
+

@@ -29,6 +29,7 @@ import javax.swing.*;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
+import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 
 public class SavePdf extends ExportDocImage
@@ -41,7 +42,7 @@ public class SavePdf extends ExportDocImage
 
    @Override
    protected File processImage()
-      throws IOException,InterruptedException
+      throws IOException,InterruptedException,MissingProcessorException
    {
       File pdfFile = new File(texDir, texBase+".pdf");
 

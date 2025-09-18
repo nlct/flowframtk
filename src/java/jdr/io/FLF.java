@@ -45,16 +45,6 @@ import com.dickimawbooks.jdr.exceptions.*;
  */
 public class FLF extends TeX
 {
-   public FLF(File baseFile, Writer out)
-   {
-      this(baseFile.toPath(), out);
-   }
-
-   public FLF(Path basePath, Writer out)
-   {
-      super(basePath, out, new ExportSettings());
-   }
-
    public FLF(File baseFile, Writer out, ExportSettings exportSettings)
    {
       this(baseFile.toPath(), out, exportSettings);

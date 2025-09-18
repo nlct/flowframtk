@@ -45,7 +45,10 @@ public abstract class ExportImage
    }
 
    public void createImage() 
-     throws InvalidFormatException,IOException,InterruptedException
+     throws InvalidFormatException,
+      IOException,
+      InterruptedException,
+      MissingProcessorException
    {
       save();
    }
@@ -94,27 +97,33 @@ public abstract class ExportImage
    }
 
    protected void runPdfLaTeX(String texBase)
-     throws IOException,InterruptedException
+     throws IOException,InterruptedException,MissingProcessorException
    {
       exec(converter.getPdfLaTeXCmd(texBase));
    }
 
    protected void runDviLaTeX(String texBase)
-     throws IOException,InterruptedException
+     throws IOException,InterruptedException,MissingProcessorException
    {
       exec(converter.getDviLaTeXCmd(texBase));
    }
 
    protected void runDviPs(String texBase, File dviFile, File epsFile)
-     throws IOException,InterruptedException
+     throws IOException,InterruptedException,MissingProcessorException
    {
       exec(converter.getDviPsCmd(texBase, dviFile.getName(), epsFile.getName()));
    }
 
    protected void runDviSvgm(String texBase, File dviFile, File svgFile)
-     throws IOException,InterruptedException
+     throws IOException,InterruptedException,MissingProcessorException
    {
       exec(converter.getDviSvgmCmd(texBase, dviFile.getName(), svgFile.getName()));
+   }
+
+   protected void runPdfToPng(String texBase, File pdfFile, File pngFile)
+     throws IOException,InterruptedException,MissingProcessorException
+   {
+      exec(converter.getPdfToPngCmd(texBase, pdfFile.getName(), pngFile.getName()));
    }
 
    protected void exec(String... cmdList)
@@ -206,7 +215,8 @@ public abstract class ExportImage
    }
 
    protected void save() 
-     throws IOException,InterruptedException,InvalidFormatException,SecurityException
+     throws IOException,InterruptedException,InvalidFormatException,SecurityException,
+      MissingProcessorException
    {
       getTeXFile();
 
@@ -262,7 +272,7 @@ public abstract class ExportImage
    }
 
    protected abstract File processImage(String texBase)
-      throws IOException,InterruptedException;
+      throws IOException,InterruptedException,MissingProcessorException;
 
    protected void writeComments(TeX tex) throws IOException
    {

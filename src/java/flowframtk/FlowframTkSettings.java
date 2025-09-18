@@ -78,7 +78,7 @@ public class FlowframTkSettings
       rulerLocale = Locale.getDefault();
       rulerFormat = (DecimalFormat)NumberFormat.getNumberInstance(rulerLocale);
 
-      exportSettings = new ExportSettings();
+      exportSettings = new ExportSettings(resources.getMessageSystem());
    }
 
 
@@ -579,39 +579,39 @@ public class FlowframTkSettings
    }
 
    public String[] getLaTeXCmd(String basename)
+    throws MissingProcessorException
    {
       return exportSettings.getDviLaTeXCmd(basename);
    }
 
    public String[] getPdfLaTeXCmd(String basename)
+    throws MissingProcessorException
    {
       return exportSettings.getPdfLaTeXCmd(basename);
    }
 
    public String[] getDviPsCmd(String basename)
+    throws MissingProcessorException
    {
       return exportSettings.getDviPsCmd(basename);
    }
 
    public String[] getDviPsCmd(String basename, String dviFile, String epsFile)
+    throws MissingProcessorException
    {
       return exportSettings.getDviPsCmd(basename, dviFile, epsFile);
    }
 
    public String[] getDviSvgmCmd(String basename)
+    throws MissingProcessorException
    {
       return exportSettings.getDviSvgmCmd(basename);
    }
 
    public String[] getDviSvgmCmd(String basename, String dviFile, String svgFile)
+    throws MissingProcessorException
    {
       return exportSettings.getDviSvgmCmd(basename, dviFile, svgFile);
-   }
-
-   public String[] getCmdList(String[] list, String basename,
-     String inFileName, String outFileName)
-   {
-      return exportSettings.getCmdList(list, basename, inFileName, outFileName);
    }
 
    public String getLaTeXApp()

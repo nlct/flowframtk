@@ -44,7 +44,7 @@ public class JDRConverter
       msgPublisher = new ConverterPublisher(this);
       msgPublisher.setVerbosity(0);
       userConfigProperties = new Properties();
-      exportSettings = new ExportSettings();
+      exportSettings = new ExportSettings(msgPublisher);
    }
 
    protected void initConfig() throws IOException
@@ -1640,6 +1640,7 @@ public class JDRConverter
             InvalidFormatException,
             NoninvertibleTransformException,
             InterruptedException,
+            MissingProcessorException,
             SAXException
    {
       JDRGroup paths = null;
@@ -1874,7 +1875,7 @@ public class JDRConverter
             break;
             case PNG:
                exportSettings.type = ExportSettings.Type.PNG;
-               PNG.save(paths, outFile, exportSettings);
+               savePng(paths);
             break;
             case SVG:
                exportSettings.type = ExportSettings.Type.SVG;
@@ -2002,13 +2003,14 @@ public class JDRConverter
    }
 
    protected void savePdf(JDRGroup paths)
-      throws IOException,InvalidFormatException,InterruptedException
+      throws IOException,InvalidFormatException,InterruptedException,
+      MissingProcessorException
    {
       ExportImage exporter = new ExportImage(this, outFile, paths)
        {
           @Override
           protected File processImage(String texBase)
-            throws IOException,InterruptedException
+            throws IOException,InterruptedException,MissingProcessorException
           {
              File dir = getTeXFile().getParentFile();
 
@@ -2023,8 +2025,9 @@ public class JDRConverter
        exporter.createImage();
    }
 
-   protected void saveSvg(JDRGroup paths, PrintWriter out)
-      throws IOException,InvalidFormatException,InterruptedException
+   protected void savePng(JDRGroup paths)
+    throws IOException,InvalidFormatException,InterruptedException,
+     MissingProcessorException
    {
       if (exportSettings.useExternalProcess)
       {
@@ -2032,7 +2035,42 @@ public class JDRConverter
           {
              @Override
              protected File processImage(String texBase)
-               throws IOException,InterruptedException
+               throws IOException,InterruptedException,MissingProcessorException
+             {
+                File dir = getTeXFile().getParentFile();
+
+                File pdfFile = new File(dir, texBase+".pdf");
+                pdfFile.deleteOnExit();
+
+                runPdfLaTeX(texBase);
+
+                File pngFile = new File(dir, outputFile.getName());
+
+                runPdfToPng(texBase, pdfFile, pngFile);
+
+                return pngFile;
+             }
+          };
+
+          exporter.createImage();
+      }
+      else
+      {
+         PNG.save(paths, outFile, exportSettings);
+      }
+   }
+
+   protected void saveSvg(JDRGroup paths, PrintWriter out)
+      throws IOException,InvalidFormatException,InterruptedException,
+      MissingProcessorException
+   {
+      if (exportSettings.useExternalProcess)
+      {
+         ExportImage exporter = new ExportImage(this, outFile, paths)
+          {
+             @Override
+             protected File processImage(String texBase)
+               throws IOException,InterruptedException,MissingProcessorException
              {
                 File dir = getTeXFile().getParentFile();
 
@@ -2058,7 +2096,8 @@ public class JDRConverter
    }
 
    protected void saveEps(JDRGroup paths, PrintWriter out)
-    throws IOException,InvalidFormatException,InterruptedException
+    throws IOException,InvalidFormatException,InterruptedException,
+      MissingProcessorException
    {
       if (exportSettings.useExternalProcess)
       {
@@ -2066,7 +2105,7 @@ public class JDRConverter
           {
              @Override
              protected File processImage(String texBase)
-               throws IOException,InterruptedException
+               throws IOException,InterruptedException,MissingProcessorException
              {
                 File dir = getTeXFile().getParentFile();
 
@@ -2122,24 +2161,32 @@ public class JDRConverter
       return exportSettings.timeout;
    }
 
-   public String[] getDviLaTeXCmd(String texBase)
+   public String[] getDviLaTeXCmd(String texBase) throws MissingProcessorException
    {
       return exportSettings.getDviLaTeXCmd(texBase);
    }
 
-   public String[] getPdfLaTeXCmd(String texBase)
+   public String[] getPdfLaTeXCmd(String texBase) throws MissingProcessorException
    {
       return exportSettings.getPdfLaTeXCmd(texBase);
    }
 
    public String[] getDviPsCmd(String texBase, String dviFileName, String psFileName)
+     throws MissingProcessorException
    {
       return exportSettings.getDviPsCmd(texBase, dviFileName, psFileName);
    }
 
    public String[] getDviSvgmCmd(String texBase, String dviFileName, String svgFileName)
+     throws MissingProcessorException
    {
       return exportSettings.getDviSvgmCmd(texBase, dviFileName, svgFileName);
+   }
+
+   public String[] getPdfToPngCmd(String texBase, String pdfFileName, String pngFileName)
+     throws MissingProcessorException
+   {
+      return exportSettings.getPdfToPngCmd(texBase, pdfFileName, pngFileName);
    }
 
    protected void initConfigPreamble() throws IOException

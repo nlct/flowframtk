@@ -61,7 +61,7 @@ public class ExportDialog extends JDialog
       this.exportFC = exportFC;
 
       JDRResources resources = getResources();
-      exportSettings = new ExportSettings();
+      exportSettings = new ExportSettings(resources.getMessageDictionary());
 
       exportSettings.copyFrom(application.getExportSettings());
 

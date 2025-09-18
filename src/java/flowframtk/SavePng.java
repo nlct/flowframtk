@@ -18,37 +18,33 @@
 package com.dickimawbooks.flowframtk;
 
 import java.io.*;
-import java.nio.file.*;
 import java.awt.*;
 import javax.swing.*;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
+import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 
-public class SaveNoProcessSvg extends ExportImage
+public class SavePng extends ExportDocImage
 {
-   public SaveNoProcessSvg(JDRFrame frame, File file, JDRGroup jdrImage,
-     ExportSettings exportSettings)
+   public SavePng(JDRFrame frame, File file, JDRGroup jdrImage,
+        ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
    }
 
-   public void save() throws InterruptedException,IOException
+   @Override
+   protected File processImage()
+      throws IOException,InterruptedException,MissingProcessorException
    {
-      PrintWriter out = null;
+      File dir = getTeXFile().getParentFile();
 
-      try
-      {
-         out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
-         SVG.save(image, image.getDescription(), out);
-      }
-      finally
-      {
-         if (out != null)
-         {
-            out.close();
-         }
-      }
+      exec(exportSettings.getPdfLaTeXCmd(texBase));
+
+      exec(exportSettings.getPdfToPngCmd(texBase));
+
+      return new File(dir, texBase+".png");
    }
+
 }

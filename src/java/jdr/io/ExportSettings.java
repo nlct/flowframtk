@@ -20,8 +20,15 @@ package com.dickimawbooks.jdr.io;
 
 import java.util.Vector;
 
+import com.dickimawbooks.jdr.exceptions.MissingProcessorException;
+
 public class ExportSettings
 {
+   public ExportSettings(JDRMessageDictionary dictionary)
+   {
+      this.dictionary = dictionary;
+   }
+
    public static enum Type
    {
       PGF, IMAGE_DOC, FLF_DOC, CLS, STY, IMAGE_PDF, FLF_PDF, EPS, SVG, PNG;
@@ -75,8 +82,21 @@ public class ExportSettings
       docClass = other.docClass;
    }
 
-   public String[] getDviLaTeXCmd(String basename)
+   protected String getMissingAppMessage(String name)
    {
+      return dictionary.getMessageWithFallback(
+        "error.export_no_process",
+        "Required path or options for application ''{0}'' has not been setup.",
+         name);
+   }
+
+   public String[] getDviLaTeXCmd(String basename) throws MissingProcessorException
+   {
+      if (dviLaTeXApp == null || dviLaTeXApp.isEmpty() || dviLaTeXOptions == null)
+      {
+         throw new MissingProcessorException(getMissingAppMessage("latex"));
+      }
+
       String[] latexCmd = new String[dviLaTeXOptions.length+1];
       latexCmd[0] = dviLaTeXApp;
 
@@ -88,8 +108,13 @@ public class ExportSettings
       return getCmdList(latexCmd, basename, basename+".tex", basename+".dvi");
    }
    
-   public String[] getPdfLaTeXCmd(String basename)
+   public String[] getPdfLaTeXCmd(String basename) throws MissingProcessorException
    {
+      if (pdfLaTeXApp == null || pdfLaTeXApp.isEmpty() || pdfLaTeXOptions == null)
+      {
+         throw new MissingProcessorException(getMissingAppMessage("pdflatex"));
+      }
+
       String[] latexCmd = new String[pdfLaTeXOptions.length+1];
       latexCmd[0] = pdfLaTeXApp;
 
@@ -101,13 +126,44 @@ public class ExportSettings
       return getCmdList(latexCmd, basename, basename+".tex", basename+".pdf");
    }
    
-   public String[] getDviPsCmd(String basename)
+   public String[] getPdfToPngCmd(String basename)
+     throws MissingProcessorException
+   {
+      return getPdfToPngCmd(basename, basename+".pdf", basename+".png");
+   }
+
+   public String[] getPdfToPngCmd(String basename, String pdfFile, String pngFile)
+     throws MissingProcessorException
+   {
+      if (pdftopngApp == null || pdftopngApp.isEmpty() || pdftopngOptions == null)
+      {
+         throw new MissingProcessorException(getMissingAppMessage("magick"));
+      }
+
+      String[] cmd = new String[pdftopngOptions.length+1];
+      cmd[0] = pdftopngApp;
+
+      for (int i = 0; i < pdftopngOptions.length; i++)
+      {
+         cmd[i+1] = pdftopngOptions[i];
+      }
+   
+      return getCmdList(cmd, basename, basename+".pdf", basename+".png");
+   }
+   
+   public String[] getDviPsCmd(String basename) throws MissingProcessorException
    {
       return getDviPsCmd(basename, basename+".dvi", basename+".eps");
    }
 
    public String[] getDviPsCmd(String basename, String dviFile, String epsFile)
+     throws MissingProcessorException
    {
+      if (dvipsApp == null || dvipsApp.isEmpty() || dvipsOptions == null)
+      {
+         throw new MissingProcessorException(getMissingAppMessage("dvips"));
+      }
+
       String[] dvipsCmd = new String[dvipsOptions.length+1];
       dvipsCmd[0] = dvipsApp;
 
@@ -120,12 +176,19 @@ public class ExportSettings
    }
 
    public String[] getDviSvgmCmd(String basename)
+     throws MissingProcessorException
    {
       return getDviSvgmCmd(basename, basename+".dvi", basename+".svg");
    }
 
    public String[] getDviSvgmCmd(String basename, String dviFile, String svgFile)
+     throws MissingProcessorException
    {
+      if (dvisvgmApp == null || dvisvgmApp.isEmpty() || dvisvgmOptions == null)
+      {
+         throw new MissingProcessorException(getMissingAppMessage("dvisvgm"));
+      }
+
       String libGsPath = getLibGsPath();
 
       String[] opts = dvisvgmOptions;
@@ -266,4 +329,6 @@ public class ExportSettings
    public boolean shapeparUseHpadding = true; // use \Shapepar instead of \shapepar
 
    public String docClass = null;
+
+   JDRMessageDictionary dictionary;
 }

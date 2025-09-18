@@ -99,7 +99,7 @@ public abstract class ExportDocImage extends ExportImage
    }
 
    protected abstract File processImage()
-      throws IOException,InterruptedException;
+      throws IOException,InterruptedException,MissingProcessorException;
 
    protected File getTeXFile() throws IOException
    {
@@ -138,7 +138,8 @@ public abstract class ExportDocImage extends ExportImage
     throws IOException,InterruptedException,
       MissingTypeBlockException,
       InvalidShapeException,
-      MissplacedTypeBlockException
+      MissplacedTypeBlockException,
+      MissingProcessorException
    {
       ensureWorkingDirectoryCreated();
 

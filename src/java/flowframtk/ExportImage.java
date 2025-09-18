@@ -47,7 +47,8 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
    }
 
    public Void doInBackground() 
-     throws InvalidFormatException,IOException,InterruptedException
+     throws InvalidFormatException,IOException,InterruptedException,
+      MissingProcessorException
    {
       FlowframTk app = jdrFrame.getApplication();
       JDRResources resources = app.getResources();
@@ -153,7 +154,8 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
    }
 
    protected abstract void save() 
-     throws IOException,InterruptedException,InvalidFormatException;
+     throws IOException,InterruptedException,InvalidFormatException,
+     MissingProcessorException;
 
    protected File outputFile;
    protected JDRGroup image;
