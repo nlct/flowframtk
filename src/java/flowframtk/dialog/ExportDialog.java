@@ -109,6 +109,18 @@ public class ExportDialog extends JDialog
       dim = pdfLaTeXPanel.getPreferredSize();
       height = Math.max(height, dim.height);
 
+      pdftopngPanel = new ProcessSettingsPanel(application,
+        appSelector, application.getPdfToPngApp(),
+        resources.createAppLabel("processes.pdftopng"), labelGrp);
+      pdftopngPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      pdftopngPanel.initialise(
+        exportSettings.pdftopngApp,
+        exportSettings.pdftopngOptions);
+
+      dim = pdftopngPanel.getPreferredSize();
+      height = Math.max(height, dim.height);
+
       dvipsPanel = new ProcessSettingsPanel(application,
          appSelector, "dvips",
          resources.createAppLabel("processes.dvips"),
@@ -150,6 +162,10 @@ public class ExportDialog extends JDialog
       dim = dvisvgmPanel.getMaximumSize();
       dim.height = height;
       dvisvgmPanel.setMaximumSize(dim);
+
+      dim = pdftopngPanel.getMaximumSize();
+      dim.height = height;
+      pdftopngPanel.setMaximumSize(dim);
 
       libGsComp = Box.createVerticalBox();
       libGsComp.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -249,7 +265,7 @@ public class ExportDialog extends JDialog
 
       fileTypeButtons[TYPE_PNG] = new FileTypeButton(this, 
          ExportSettings.Type.PNG, "png", bg,
-         pngFileFilter, ".png");
+         pngFileFilter, ".png", false, pdftopngPanel);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
 
@@ -277,6 +293,12 @@ public class ExportDialog extends JDialog
       useTypeblockBoundsBox = resources.createAppRadioButton("export",
         "bounds.typeblock", bg, false, null);
       boundsComp.add(useTypeblockBoundsBox);
+
+      pngUseAlphaBox = resources.createAppCheckBox(
+        "export", "use_alpha", true, null);
+      pngUseAlphaBox.addItemListener(this);
+      pngUseAlphaBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      settingsPanel.add(pngUseAlphaBox);
 
       markupComp = createRow();
       settingsPanel.add(markupComp);
@@ -382,12 +404,6 @@ public class ExportDialog extends JDialog
         "markup.encap", bg, false, null);
       markupComp.add(markupEncapBox);
 
-      pngUseAlphaBox = resources.createAppCheckBox(
-        "export", "use_alpha", true, null);
-      pngUseAlphaBox.addItemListener(this);
-      pngUseAlphaBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      settingsPanel.add(pngUseAlphaBox);
-
       usePdfInfoBox = resources.createAppCheckBox(
         "export", "pdf_info", true, null);
       usePdfInfoBox.addItemListener(this);
@@ -395,12 +411,13 @@ public class ExportDialog extends JDialog
       settingsPanel.add(usePdfInfoBox);
 
       bitmapsToEpsBox = resources.createAppCheckBox(
-        "export", "bitmaps_to_eps", true, null);
+        "export", "bitmaps_to_eps", false, null);
       bitmapsToEpsBox.addItemListener(this);
       bitmapsToEpsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(bitmapsToEpsBox);
 
       settingsPanel.add(pdfLaTeXPanel);
+      settingsPanel.add(pdftopngPanel);
       settingsPanel.add(dviLaTeXPanel);
       settingsPanel.add(dvipsPanel);
       settingsPanel.add(dvisvgmPanel);
@@ -516,6 +533,10 @@ public class ExportDialog extends JDialog
       pdfLaTeXPanel.initialise(
         exportSettings.pdfLaTeXApp,
         exportSettings.pdfLaTeXOptions);
+
+      pdftopngPanel.initialise(
+        exportSettings.pdftopngApp,
+        exportSettings.pdftopngOptions);
 
       if (supportEpsSvg)
       {
@@ -831,6 +852,25 @@ public class ExportDialog extends JDialog
          exportSettings.libgs = libGsFileField.getFileName();
       }
 
+      if (pdftopngPanel.isVisible())
+      {
+         exportSettings.pdftopngApp = pdftopngPanel.getFileName();
+
+         if (exportSettings.pdftopngApp == null
+          || exportSettings.pdftopngApp.isEmpty())
+         {
+            String name = pdftopngPanel.getName();
+
+            getResources().error(this,
+             getResources().getMessage("error.no_required_setting", 
+              name == null ? "pdftopng" : name));
+
+            return;
+         }
+
+         exportSettings.pdftopngOptions = pdftopngPanel.getOptionArray();
+      }
+
       if (file.exists())
       {
          int selection = getResources().confirm(frame,
@@ -1024,6 +1064,7 @@ public class ExportDialog extends JDialog
       {
          dviLaTeXPanel.setVisible(false);
          pdfLaTeXPanel.setVisible(false);
+         pdftopngPanel.setVisible(false);
          dvipsPanel.setVisible(false);
          dvisvgmPanel.setVisible(false);
          libGsComp.setVisible(false);
@@ -1094,7 +1135,7 @@ public class ExportDialog extends JDialog
            showShapePar = true;
          break;
          case PNG:
-            showAlpha = true;
+            showAlpha = !useExternalProcessBox.isSelected();
          break;
          case PGF:
             if (usePaperSizeBoundsBox.isSelected())
@@ -1189,7 +1230,7 @@ public class ExportDialog extends JDialog
    private FileField fileField, libGsFileField;
 
    private ProcessSettingsPanel dviLaTeXPanel, pdfLaTeXPanel, dvipsPanel,
-     dvisvgmPanel;
+     dvisvgmPanel, pdftopngPanel;
    private JComponent libGsComp;
 
    private JComponent timeoutComp;

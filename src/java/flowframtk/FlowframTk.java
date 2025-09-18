@@ -4430,6 +4430,40 @@ public class FlowframTk extends JFrame
       exportDialog.setEpsSvgSupport(enable);
    }
 
+   public String getPdfToPngApp()
+   {
+      ExportSettings exportSettings = getExportSettings();
+
+      if (exportSettings.pdftopngApp == null)
+      {
+         File file = appSelector.findApp("magick", "pdftoppm", "convert");
+
+         if (file != null)
+         {
+            exportSettings.pdftopngApp = file.getAbsolutePath();
+
+            String name = file.getName();
+
+            if (name.startsWith("pdftoppm"))
+            {
+               exportSettings.pdftopngOptions
+                = new String[] { "-singlefile", "-png", "$inputfile", "$basename" };
+            }
+            else
+            {
+               exportSettings.pdftopngOptions
+                = new String[] { "$inputfile", "$outputfile" };
+            }
+         }
+         else
+         {
+            exportSettings.pdftopngApp = "";
+         }
+      }
+
+      return exportSettings.pdftopngApp;
+   }
+
    public String getPdfLaTeXApp()
    {
       return getSettings().getPdfLaTeXApp();

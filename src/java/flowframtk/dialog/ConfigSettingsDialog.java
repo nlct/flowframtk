@@ -633,7 +633,7 @@ class ControlSizePanel extends JPanel
    private JCheckBox scaleControlsBox;
 }
 
-class ProcessesPanel extends JPanel implements ActionListener
+class ProcessesPanel extends JPanel implements ItemListener
 {
    public ProcessesPanel(FlowframTk application, JDRAppSelector appSelector)
    {
@@ -641,10 +641,33 @@ class ProcessesPanel extends JPanel implements ActionListener
 
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
+      setAlignmentX(Component.LEFT_ALIGNMENT);
+
       JDRResources resources = application.getResources();
 
       JLabelGroup grp = new JLabelGroup();
       JLabel label;
+
+      JLabel timeoutLabel = resources.createAppLabel("processes.timeout");
+      grp.add(timeoutLabel);
+
+      timeoutModel = new SpinnerNumberModel(
+        300000L, Long.valueOf(0L), null, Long.valueOf(1));
+
+      timeoutField = new JSpinner(timeoutModel);
+      JSpinner.DefaultEditor ed = (JSpinner.DefaultEditor)timeoutField.getEditor();
+      ed.getTextField().setColumns(9);
+
+      timeoutLabel.setLabelFor(timeoutField);
+
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(row);
+
+      row.add(timeoutLabel);
+      row.add(timeoutField);
+      row.add(new JLabel(resources.getMessage("processes.millisecs")));
+      row.add(Box.createHorizontalGlue());
 
       label = resources.createAppLabel("processes.pdflatex");
       grp.add(label);
@@ -654,9 +677,18 @@ class ProcessesPanel extends JPanel implements ActionListener
 
       add(pdflatexPanel);
 
+      label = resources.createAppLabel("processes.pdftopng");
+      grp.add(label);
+
+      pdftopngPanel = new ProcessSettingsPanel(application, appSelector, 
+       application.getPdfToPngApp(), label, grp);
+
+      add(pdftopngPanel);
+
       supportEpsSvgExportBox = resources.createAppCheckBox("processes",
-         "support_eps_svg", application.isSupportExportEpsSvgEnabled(), this);
+         "support_eps_svg", application.isSupportExportEpsSvgEnabled(), null);
       supportEpsSvgExportBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      supportEpsSvgExportBox.addItemListener(this);
 
       add(supportEpsSvgExportBox);
 
@@ -686,9 +718,9 @@ class ProcessesPanel extends JPanel implements ActionListener
 
       JTextArea libgsArea =
          resources.createAppInfoArea(20, "appselect.libgs");
-      libgsArea.setAlignmentX(Component.LEFT_ALIGNMENT);
 
       libgsInfoRow = Box.createHorizontalBox();
+      libgsInfoRow.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(libgsInfoRow);
 
       libgsInfoRow.add(libgsArea);
@@ -696,6 +728,7 @@ class ProcessesPanel extends JPanel implements ActionListener
       String libGs = application.getLibgs();
 
       libgsRow = Box.createHorizontalBox();
+      libgsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(libgsRow);
 
       label = resources.createAppLabel("processes.libgs");
@@ -710,29 +743,19 @@ class ProcessesPanel extends JPanel implements ActionListener
       libgsRow.add(label);
       libgsRow.add(libgsField);
 
-      JLabel timeoutLabel = resources.createAppLabel("processes.timeout");
-      grp.add(timeoutLabel);
+      add(Box.createVerticalGlue());
 
-      timeoutModel = new SpinnerNumberModel(
-        300000L, Long.valueOf(0L), null, Long.valueOf(1));
+      boolean supportDviOptions = supportEpsSvgExportBox.isSelected();
 
-      timeoutField = new JSpinner(timeoutModel);
-      JSpinner.DefaultEditor ed = (JSpinner.DefaultEditor)timeoutField.getEditor();
-      ed.getTextField().setColumns(9);
-
-      timeoutLabel.setLabelFor(timeoutField);
-
-      JComponent row = Box.createHorizontalBox();
-      add(row);
-
-      row.add(timeoutLabel);
-      row.add(timeoutField);
-      row.add(new JLabel(resources.getMessage("processes.millisecs")));
-      row.add(Box.createHorizontalGlue());
+      latexPanel.setVisible(supportDviOptions);
+      dvipsPanel.setVisible(supportDviOptions);
+      dvisvgmPanel.setVisible(supportDviOptions);
+      libgsInfoRow.setVisible(supportDviOptions);
+      libgsRow.setVisible(supportDviOptions);
    }
 
    @Override
-   public void actionPerformed(ActionEvent evt)
+   public void itemStateChanged(ItemEvent evt)
    {
       if (evt.getSource() == supportEpsSvgExportBox)
       {
@@ -753,23 +776,23 @@ class ProcessesPanel extends JPanel implements ActionListener
       pdflatexPanel.initialise(exportSettings.pdfLaTeXApp,
         exportSettings.pdfLaTeXOptions);
 
+      pdftopngPanel.initialise(exportSettings.pdftopngApp,
+        exportSettings.pdftopngOptions);
+
       boolean supportDviOptions = application.isSupportExportEpsSvgEnabled();
 
       supportEpsSvgExportBox.setSelected(supportDviOptions);
 
-      if (supportDviOptions)
-      {
-         latexPanel.initialise(exportSettings.dviLaTeXApp,
-           exportSettings.dviLaTeXOptions);
+      latexPanel.initialise(exportSettings.dviLaTeXApp,
+        exportSettings.dviLaTeXOptions);
 
-         dvipsPanel.initialise(exportSettings.dvipsApp,
-           exportSettings.dvipsOptions);
+      dvipsPanel.initialise(exportSettings.dvipsApp,
+        exportSettings.dvipsOptions);
 
-         dvisvgmPanel.initialise(exportSettings.dvisvgmApp,
-           exportSettings.dvisvgmOptions);
+      dvisvgmPanel.initialise(exportSettings.dvisvgmApp,
+        exportSettings.dvisvgmOptions);
 
-         libgsField.setFileName(exportSettings.libgs);
-      }
+      libgsField.setFileName(exportSettings.libgs);
 
       timeoutModel.setValue(Long.valueOf(exportSettings.timeout));
    }
@@ -781,6 +804,10 @@ class ProcessesPanel extends JPanel implements ActionListener
       // PDF LaTeX
       exportSettings.pdfLaTeXApp = pdflatexPanel.getFileName();
       exportSettings.pdfLaTeXOptions = pdflatexPanel.getOptionArray();
+
+      // PDF to PNG
+      exportSettings.pdftopngApp = pdftopngPanel.getFileName();
+      exportSettings.pdftopngOptions = pdftopngPanel.getOptionArray();
 
       exportSettings.timeout = timeoutModel.getNumber().longValue();
 
@@ -813,7 +840,7 @@ class ProcessesPanel extends JPanel implements ActionListener
    private FileField libgsField;
 
    private ProcessSettingsPanel latexPanel, pdflatexPanel,
-     dvipsPanel, dvisvgmPanel;
+     dvipsPanel, dvisvgmPanel, pdftopngPanel;
    private JComponent libgsRow, libgsInfoRow;
 
    private JCheckBox supportEpsSvgExportBox;

@@ -58,6 +58,8 @@ public class ExportSettings
       dviLaTeXOptions = other.dviLaTeXOptions;
       pdfLaTeXApp = other.pdfLaTeXApp;
       pdfLaTeXOptions = other.pdfLaTeXOptions;
+      pdftopngApp = other.pdftopngApp;
+      pdftopngOptions = other.pdftopngOptions;
       dvipsApp = other.dvipsApp;
       dvipsOptions = other.dvipsOptions;
       dvisvgmApp = other.dvisvgmApp;

@@ -11202,14 +11202,27 @@ public class JDRCanvas extends JPanel
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePng(frame_, file, paths, exportSettings)).execute();
+      if (exportSettings.useExternalProcess)
+      {
+      }
+      else
+      {
+         (new SaveNoProcessPng(frame_, file, paths, exportSettings)).execute();
+      }
    }
 
    public void saveEPS(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveEps(frame_, file, paths, exportSettings)).execute();
+      if (exportSettings.useExternalProcess)
+      {
+         (new SaveEps(frame_, file, paths, exportSettings)).execute();
+      }
+      else
+      {
+         (new SaveNoProcessEps(frame_, file, paths, exportSettings)).execute();
+      }
    }
 
    public void savePDF(File file, ExportSettings exportSettings)
@@ -11223,7 +11236,14 @@ public class JDRCanvas extends JPanel
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveSvg(frame_, file, paths, exportSettings)).execute();
+      if (exportSettings.useExternalProcess)
+      {
+         (new SaveSvg(frame_, file, paths, exportSettings)).execute();
+      }
+      else
+      {
+         (new SaveNoProcessSvg(frame_, file, paths, exportSettings)).execute();
+      }
    }
 
    public void updateTextAreaBounds()

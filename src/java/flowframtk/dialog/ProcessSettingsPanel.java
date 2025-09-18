@@ -52,6 +52,8 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
       super(new BorderLayout());
       this.application = application;
 
+      setAlignmentX(Component.LEFT_ALIGNMENT);
+
       if (fileFieldLabel != null)
       {
          String name = fileFieldLabel.getText().trim();
@@ -197,14 +199,16 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
    {
       fileField.setFileName(appPath);
 
-      optionsTableModel.setNumRows(options.length);
+      int n = (options == null ? 0 : options.length);
 
-      for (int i = 0; i < options.length; i++)
+      optionsTableModel.setNumRows(n);
+
+      for (int i = 0; i < n; i++)
       {
          optionsTableModel.setValueAt(options[i], i, 0);
       }
 
-      removeButton.setEnabled(options.length > 1);
+      removeButton.setEnabled(n > 1);
       upButton.setEnabled(false);
       downButton.setEnabled(false);
    }
@@ -221,16 +225,21 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
       for (int i = 0; i < optionsTableModel.getRowCount(); i++)
       {
          int idx = optionsTable.convertRowIndexToModel(i);
-         String val = optionsTableModel.getValueAt(idx, 0).toString().trim();
+         Object obj = optionsTableModel.getValueAt(idx, 0);
 
-         if (!val.isEmpty())
+         if (obj != null)
          {
-            if (builder.length() > 0)
-            {
-               builder.append('\t');
-            }
+            String val = obj.toString().trim();
 
-            builder.append(val);
+            if (!val.isEmpty())
+            {
+               if (builder.length() > 0)
+               {
+                  builder.append('\t');
+               }
+
+               builder.append(val);
+            }
          }
       }
 
@@ -244,11 +253,17 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
       for (int i = 0; i < optionsTableModel.getRowCount(); i++)
       {
          int idx = optionsTable.convertRowIndexToModel(i);
-         String val = optionsTableModel.getValueAt(idx, 0).toString().trim();
 
-         if (!val.isEmpty())
+         Object obj = optionsTableModel.getValueAt(idx, 0);
+
+         if (obj != null)
          {
-            list.add(val);
+            String val = obj.toString().trim();
+
+            if (!val.isEmpty())
+            {
+               list.add(val);
+            }
          }
       }
 

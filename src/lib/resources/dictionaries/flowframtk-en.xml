@@ -2635,23 +2635,25 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="bitmapconfig.default_command">Default LaTeX Command:</entry>
 <entry key="bitmapconfig.default_command.mnemonic">L</entry>
 
-<entry key="processes.title">Application Paths</entry>
+<entry key="processes.title">Export Processes</entry>
 <entry key="processes.mnemonic">P</entry>
 <entry key="processes.tooltip">Set the paths to applications used by some export functions</entry>
 <entry key="processes.latex">(DVI) LaTeX</entry>
 <entry key="processes.latex.mnemonic">L</entry>
 <entry key="processes.pdflatex">PDFLaTeX</entry>
 <entry key="processes.pdflatex.mnemonic">F</entry>
-<entry key="processes.dvips">DVIPS</entry>
+<entry key="processes.dvips">DVI to PS</entry>
 <entry key="processes.dvips.mnemonic">D</entry>
-<entry key="processes.dvisvgm">DVISVGM</entry>
+<entry key="processes.dvisvgm">DVI to SVGM</entry>
 <entry key="processes.dvisvgm.mnemonic">V</entry>
 <entry key="processes.libgs">libgs</entry>
 <entry key="processes.libgs.mnemonic">G</entry>
+<entry key="processes.pdftopng">PDF to PNG</entry>
+<entry key="processes.pdftopng.mnemonic">N</entry>
 <entry key="processes.timeout">Time-out:</entry>
 <entry key="processes.timeout.mnemonic">M</entry>
 <entry key="processes.millisecs">Milliseconds</entry>
-<entry key="processes.support_eps_svg">Support export to EPS and SVG</entry>
+<entry key="processes.support_eps_svg">Support export to PostScript and SVG</entry>
 
 <!--  TeX settings -->
 

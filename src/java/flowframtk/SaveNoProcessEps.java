@@ -1,11 +1,5 @@
-// File          : SavePng.java
-// Description   : Export to PNG.
-// Creation Date : 14th July 2008
-// Author        : Nicola L.C. Talbot
-//                 http://www.dickimaw-books.com/
-
 /*
-    Copyright (C) 2008-2025 Nicola L.C. Talbot
+    Copyright (C) 2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,9 +25,9 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdrresources.*;
 
-public class SavePng extends ExportImage
+public class SaveNoProcessEps extends ExportImage
 {
-   public SavePng(JDRFrame frame, File file, JDRGroup jdrImage,
+   public SaveNoProcessEps(JDRFrame frame, File file, JDRGroup jdrImage,
      ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
@@ -41,6 +35,19 @@ public class SavePng extends ExportImage
 
    public void save() throws InterruptedException,IOException
    {
-      PNG.save(image, outputFile, exportSettings);
+      PrintWriter out = null;
+
+      try
+      {
+         out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
+         EPS.save(image, out, frame.getApplication().getApplicationName());
+      }
+      finally
+      {
+         if (out != null)
+         {
+            out.close();
+         }
+      }
    }
 }
