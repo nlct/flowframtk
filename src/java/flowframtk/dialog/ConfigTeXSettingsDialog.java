@@ -119,17 +119,7 @@ public class ConfigTeXSettingsDialog extends JDialog
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
-      p.add(getResources().createOkayButton(getRootPane(), this));
-      p.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p.add(getResources().createHelpDialogButton(this, "sec:texconfig"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      getResources().createOkayCancelHelpButtons(this, p, this, "sec:texconfig");
 
       pack();
       Dimension dim = getSize();
