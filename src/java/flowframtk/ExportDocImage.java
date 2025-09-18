@@ -78,7 +78,7 @@ public abstract class ExportDocImage extends ExportImage
       try
       {
          exitCode = helpLib.execCommandAndWaitFor(dir,
-           imageBase, true, TeXJavaHelpLib.MessageType.WARNING,
+           imageBase, true, TeXJavaHelpLib.MessageType.NORMAL,
             (StringBuilder)null, maxTime, 0,
             getMessageSystem(),
             cmdList);
