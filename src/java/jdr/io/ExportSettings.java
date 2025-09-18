@@ -24,7 +24,7 @@ public class ExportSettings
 {
    public static enum Type
    {
-      PGF, IMAGE_DOC, FLF_DOC, CLS, STY, PDF, EPS, SVG, PNG;
+      PGF, IMAGE_DOC, FLF_DOC, CLS, STY, IMAGE_PDF, FLF_PDF, EPS, SVG, PNG;
    }
 
    public static enum Bounds
@@ -247,7 +247,7 @@ public class ExportSettings
       = new String[] { "--libgs", "$libgs", "-o", "$outputfile", "$inputfile" };
 
    public String libgs = null;
-   public boolean useExternalProcess = false;
+   public boolean useExternalProcess = true;
    public long timeout = 300000L;
    public boolean pngUseAlpha=false;
    public boolean useFlowframTkSty = false;

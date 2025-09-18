@@ -1880,8 +1880,12 @@ public class JDRConverter
                exportSettings.type = ExportSettings.Type.SVG;
                saveSvg(paths, out);
             break;
-            case PDF:
-               exportSettings.type = ExportSettings.Type.PDF;
+            case IMAGE_PDF:
+               exportSettings.type = ExportSettings.Type.IMAGE_PDF;
+               savePdf(paths);
+            break;
+            case FLF_PDF:
+               exportSettings.type = ExportSettings.Type.FLF_PDF;
                savePdf(paths);
             break;
             default:

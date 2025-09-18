@@ -2340,33 +2340,38 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.file">File:</entry>
 <entry key="export.file.mnemonic">F</entry>
 
-<entry key="export.type">Type:</entry>
+<entry key="export.format">Export Format</entry>
 
-<entry key="export.pgfpicture">pgfpicture</entry>
+<entry key="export.format.image_type">Export Image:</entry>
+<entry key="export.format.flf_type">Export Flow Frame Data:</entry>
+
+<entry key="export.pgfpicture">pgfpicture (*.tex)</entry>
 <entry key="export.pgfpicture.mnemonic">T</entry>
 
-<entry key="export.imagedoc">LaTeX Image Document</entry>
+<entry key="export.imagedoc">LaTeX Document (*.tex)</entry>
 <entry key="export.imagedoc.mnemonic">A</entry>
 
-<entry key="export.flfdoc">LaTeX Document (flowfram.sty)</entry>
+<entry key="export.flfdoc">LaTeX Document (*.tex)</entry>
 <entry key="export.flfdoc.mnemonic">M</entry>
 
-<entry key="export.sty">LaTeX Package</entry>
+<entry key="export.sty">Package (*.sty)</entry>
 <entry key="export.sty.mnemonic">K</entry>
 
-<entry key="export.cls">LaTeX Class</entry>
+<entry key="export.cls">Class (*.cls)</entry>
 <entry key="export.cls.mnemonic">X</entry>
 
-<entry key="export.pdf">PDF</entry>
-<entry key="export.pdf.mnemonic">P</entry>
+<entry key="export.imagepdf">Image PDF (*.pdf)</entry>
+<entry key="export.imagepdf.mnemonic">P</entry>
 
-<entry key="export.eps">EPS</entry>
+<entry key="export.flfpdf">Multi-Page PDF (*.pdf)</entry>
+
+<entry key="export.eps">EPS (*.eps)</entry>
 <entry key="export.eps.mnemonic">E</entry>
 
-<entry key="export.svg">SVG</entry>
+<entry key="export.svg">SVG (*svg)</entry>
 <entry key="export.svg.mnemonic">S</entry>
 
-<entry key="export.png">PNG</entry>
+<entry key="export.png">PNG (*.png)</entry>
 <entry key="export.png.mnemonic">N</entry>
 
 <entry key="export.use_process">Use external application(s)</entry>

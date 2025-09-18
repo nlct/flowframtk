@@ -164,6 +164,29 @@ public class ExportDialog extends JDialog
 
       libGsComp.add(libGsFileField);
 
+      JComponent mainPanel = new JPanel(new BorderLayout());
+      getContentPane().add(mainPanel, "Center");
+
+      Box typeComp = Box.createVerticalBox();
+      typeComp.setBorder(BorderFactory.createTitledBorder(
+         resources.getMessage("export.format")));
+
+      mainPanel.add(typeComp, "North");
+
+      JComponent imageFileTypeComp = createRow();
+      typeComp.add(imageFileTypeComp);
+
+      JLabel typeLabel = resources.createAppLabel("export.format.image_type");
+      labelGrp.add(typeLabel);
+      imageFileTypeComp.add(typeLabel);
+
+      flfFileTypeComp = createRow();
+      typeComp.add(flfFileTypeComp);
+
+      typeLabel = resources.createAppLabel("export.format.flf_type");
+      labelGrp.add(typeLabel);
+      flfFileTypeComp.add(typeLabel);
+
       fileTypeButtons = new FileTypeButton[MAX_FILE_TYPE_BUTTONS];
 
       ButtonGroup bg = new ButtonGroup();
@@ -172,57 +195,68 @@ public class ExportDialog extends JDialog
          ExportSettings.Type.PGF, "pgfpicture", bg,
          pgfFileFilter, ".tex");
 
+      imageFileTypeComp.add(fileTypeButtons[TYPE_PGF]);
+
       fileTypeButtons[TYPE_IMAGE_DOC] = new FileTypeButton(this, 
          ExportSettings.Type.IMAGE_DOC, "imagedoc", bg,
          latexDocFileFilter, ".tex");
+
+      imageFileTypeComp.add(fileTypeButtons[TYPE_IMAGE_DOC]);
 
       fileTypeButtons[TYPE_FLF_DOC] = new FileTypeButton(this, 
          ExportSettings.Type.FLF_DOC, "flfdoc", bg,
          latexDocFileFilter, ".tex");
 
+      flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_DOC]);
+
       fileTypeButtons[TYPE_CLS] = new FileTypeButton(this, 
          ExportSettings.Type.CLS, "cls", bg,
          clsFileFilter, ".cls");
+
+      flfFileTypeComp.add(fileTypeButtons[TYPE_CLS]);
 
       fileTypeButtons[TYPE_STY] = new FileTypeButton(this,
          ExportSettings.Type.STY, "sty", bg,
          styFileFilter, ".sty");
 
-      fileTypeButtons[TYPE_PDF] = new FileTypeButton(this,
-         ExportSettings.Type.PDF, "pdf", bg,
+      flfFileTypeComp.add(fileTypeButtons[TYPE_STY]);
+
+      fileTypeButtons[TYPE_IMAGE_PDF] = new FileTypeButton(this,
+         ExportSettings.Type.IMAGE_PDF, "imagepdf", bg,
          pdfFileFilter, ".pdf", true, pdfLaTeXPanel);
+
+      imageFileTypeComp.add(fileTypeButtons[TYPE_IMAGE_PDF]);
+
+      fileTypeButtons[TYPE_FLF_PDF] = new FileTypeButton(this,
+         ExportSettings.Type.FLF_PDF, "flfpdf", bg,
+         pdfFileFilter, ".pdf", true, pdfLaTeXPanel);
+
+      flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_PDF]);
 
       fileTypeButtons[TYPE_EPS] = new FileTypeButton(this,
          ExportSettings.Type.EPS, "eps", bg,
          epsFileFilter, ".eps", false, dviLaTeXPanel, dvipsPanel);
 
+      imageFileTypeComp.add(fileTypeButtons[TYPE_EPS]);
+
       fileTypeButtons[TYPE_SVG] = new FileTypeButton(this, 
          ExportSettings.Type.SVG, "svg", bg,
          svgFileFilter, ".svg", false, dviLaTeXPanel, dvisvgmPanel, libGsComp);
+
+      imageFileTypeComp.add(fileTypeButtons[TYPE_SVG]);
 
       fileTypeButtons[TYPE_PNG] = new FileTypeButton(this, 
          ExportSettings.Type.PNG, "png", bg,
          pngFileFilter, ".png");
 
-      Box mainPanel = Box.createVerticalBox();
-      mainPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
 
-      JComponent row;
+      Box settingsPanel = Box.createVerticalBox();
+      settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-      row = createRow();
-      mainPanel.add(row);
-
-      JLabel typeLabel = resources.createAppLabel("export.type");
-      labelGrp.add(typeLabel);
-      row.add(typeLabel);
-
-      for (FileTypeButton btn : fileTypeButtons)
-      {     
-         row.add(btn);
-      }
 
       boundsComp = createRow();
-      mainPanel.add(boundsComp);
+      settingsPanel.add(boundsComp);
 
       JLabel boundsLabel = resources.createAppLabel("export.bounds");
       labelGrp.add(boundsLabel);
@@ -243,27 +277,10 @@ public class ExportDialog extends JDialog
       boundsComp.add(useTypeblockBoundsBox);
 
       markupComp = createRow();
-      mainPanel.add(markupComp);
-
-      JLabel markupLabel = resources.createAppLabel("export.markup");
-      labelGrp.add(markupLabel);
-      markupComp.add(markupLabel);
-      bg = new ButtonGroup();
-
-      markupNoneBox = resources.createAppRadioButton("export",
-        "markup.none", bg, true, null);
-      markupComp.add(markupNoneBox);
-
-      markupPairedBox = resources.createAppRadioButton("export",
-        "markup.paired", bg, false, null);
-      markupComp.add(markupPairedBox);
-
-      markupEncapBox = resources.createAppRadioButton("export",
-        "markup.encap", bg, false, null);
-      markupComp.add(markupEncapBox);
+      settingsPanel.add(markupComp);
 
       textualShadingComp = createRow();
-      mainPanel.add(textualShadingComp);
+      settingsPanel.add(textualShadingComp);
 
       JLabel textualShadingLabel = resources.createAppLabel("export.textualshading");
       labelGrp.add(textualShadingLabel);
@@ -287,7 +304,7 @@ public class ExportDialog extends JDialog
       textualShadingComp.add(textualShadingToPathBox);
 
       textPathOutlineComp = createRow();
-      mainPanel.add(textPathOutlineComp);
+      settingsPanel.add(textPathOutlineComp);
 
       JLabel textPathOutlineLabel = resources.createAppLabel("export.textpathoutline");
       labelGrp.add(textPathOutlineLabel);
@@ -303,7 +320,7 @@ public class ExportDialog extends JDialog
       textPathOutlineComp.add(textPathOutlineToPathBox);
 
       shapeparUseHPaddingComp = createRow();
-      mainPanel.add(shapeparUseHPaddingComp);
+      settingsPanel.add(shapeparUseHPaddingComp);
 
       JLabel shapeparUseHPaddingLabel = resources.createAppLabel("export.shapeparcs");
       labelGrp.add(shapeparUseHPaddingLabel);
@@ -322,10 +339,10 @@ public class ExportDialog extends JDialog
         "export", "use_process", true, null);
       useExternalProcessBox.addItemListener(this);
       useExternalProcessBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      mainPanel.add(useExternalProcessBox);
+      settingsPanel.add(useExternalProcessBox);
 
       docClassComp = createRow();
-      mainPanel.add(docClassComp);
+      settingsPanel.add(docClassComp);
       bg = new ButtonGroup();
 
       JLabel docClassLabel = resources.createAppLabel("export.load_doc_class");
@@ -346,32 +363,49 @@ public class ExportDialog extends JDialog
 
       docClassField.setMaximumSize(docClassField.getPreferredSize());
 
+      JLabel markupLabel = resources.createAppLabel("export.markup");
+      labelGrp.add(markupLabel);
+      markupComp.add(markupLabel);
+      bg = new ButtonGroup();
+
+      markupNoneBox = resources.createAppRadioButton("export",
+        "markup.none", bg, true, null);
+      markupComp.add(markupNoneBox);
+
+      markupPairedBox = resources.createAppRadioButton("export",
+        "markup.paired", bg, false, null);
+      markupComp.add(markupPairedBox);
+
+      markupEncapBox = resources.createAppRadioButton("export",
+        "markup.encap", bg, false, null);
+      markupComp.add(markupEncapBox);
+
       pngUseAlphaBox = resources.createAppCheckBox(
         "export", "use_alpha", true, null);
       pngUseAlphaBox.addItemListener(this);
       pngUseAlphaBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      mainPanel.add(pngUseAlphaBox);
+      settingsPanel.add(pngUseAlphaBox);
 
       usePdfInfoBox = resources.createAppCheckBox(
         "export", "pdf_info", true, null);
       usePdfInfoBox.addItemListener(this);
       usePdfInfoBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      mainPanel.add(usePdfInfoBox);
+      settingsPanel.add(usePdfInfoBox);
 
       bitmapsToEpsBox = resources.createAppCheckBox(
         "export", "bitmaps_to_eps", true, null);
       bitmapsToEpsBox.addItemListener(this);
       bitmapsToEpsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      mainPanel.add(bitmapsToEpsBox);
+      settingsPanel.add(bitmapsToEpsBox);
 
-      mainPanel.add(pdfLaTeXPanel);
-      mainPanel.add(dviLaTeXPanel);
-      mainPanel.add(dvipsPanel);
-      mainPanel.add(dvisvgmPanel);
-      mainPanel.add(libGsComp);
+      settingsPanel.add(pdfLaTeXPanel);
+      settingsPanel.add(dviLaTeXPanel);
+      settingsPanel.add(dvipsPanel);
+      settingsPanel.add(dvisvgmPanel);
+      settingsPanel.add(libGsComp);
 
       timeoutComp = createRow();
-      mainPanel.add(timeoutComp);
+      settingsPanel.add(timeoutComp);
 
       JLabel timeoutLabel = resources.createAppLabel("processes.timeout");
       labelGrp.add(timeoutLabel);
@@ -394,9 +428,9 @@ public class ExportDialog extends JDialog
       timeoutComp.add(new JLabel(resources.getMessage("processes.millisecs")));
       timeoutComp.add(Box.createHorizontalGlue());
 
-      mainPanel.add(Box.createVerticalGlue());
+      settingsPanel.add(Box.createVerticalGlue());
 
-      getContentPane().add(new JScrollPane(mainPanel), "Center");
+      mainPanel.add(new JScrollPane(settingsPanel), "Center");
 
       JPanel bottomPanel = new JPanel(new BorderLayout());
       getContentPane().add(bottomPanel, "South");
@@ -467,9 +501,10 @@ public class ExportDialog extends JDialog
 
          useTypeblockBoundsBox.setEnabled(false);
 
-         fileTypeButtons[TYPE_STY].setEnabled(false);
-         fileTypeButtons[TYPE_CLS].setEnabled(false);
-         fileTypeButtons[TYPE_FLF_DOC].setEnabled(false);
+         for (int i = 0; i < flfFileTypeComp.getComponentCount(); i++)
+         {
+            flfFileTypeComp.getComponent(i).setEnabled(false);
+         }
 
          if (exportSettings.type == ExportSettings.Type.STY
           || exportSettings.type == ExportSettings.Type.CLS)
@@ -485,9 +520,10 @@ public class ExportDialog extends JDialog
       {
          useTypeblockBoundsBox.setEnabled(true);
 
-         fileTypeButtons[TYPE_STY].setEnabled(true);
-         fileTypeButtons[TYPE_CLS].setEnabled(true);
-         fileTypeButtons[TYPE_FLF_DOC].setEnabled(true);
+         for (int i = 0; i < flfFileTypeComp.getComponentCount(); i++)
+         {
+            flfFileTypeComp.getComponent(i).setEnabled(true);
+         }
       }
 
       File file = frame.getCurrentExportFile();
@@ -520,7 +556,8 @@ public class ExportDialog extends JDialog
             case STY:
               ext = ".sty";
             break;
-            case PDF:
+            case IMAGE_PDF:
+            case FLF_PDF:
               ext = ".pdf";
             break;
             case EPS:
@@ -895,7 +932,7 @@ public class ExportDialog extends JDialog
 
       switch (exportSettings.type)
       {
-         case PDF:
+         case IMAGE_PDF:
            frame.savePDF(file, exportSettings);
          break;
          case EPS:
@@ -963,12 +1000,13 @@ public class ExportDialog extends JDialog
       boolean enablePaperSize = true;
       boolean showShapePar = false;
       boolean showBitmapsToEps = false;
-      boolean showMarkup = true;
+      boolean showMarkup = false;
       boolean showDocClassComp = false;
 
       if (useExternalProcessBox.isVisible() && useExternalProcessBox.isSelected())
       {
          showDocClassComp = true;
+         showMarkup = true;
       }
 
       ExportSettings.Type type = currentFileTypeButton.getType();
@@ -979,17 +1017,18 @@ public class ExportDialog extends JDialog
          case SVG:
             showBitmapsToEps = useExternalProcessBox.isSelected();
          break;
-         case PDF:
+         case IMAGE_PDF:
          case IMAGE_DOC:
            showDocClassComp = true;
+           showMarkup = true;
          break;
          case CLS:
          case FLF_DOC:
+         case FLF_PDF:
            showDocClassComp = true;
          case STY:
            showBounds = false;
            showShapePar = true;
-           showMarkup = false;
          break;
          case PNG:
             showAlpha = true;
@@ -1001,6 +1040,7 @@ public class ExportDialog extends JDialog
             }
 
             enablePaperSize = false;
+            showMarkup = true;
          break;
       }
 
@@ -1081,6 +1121,7 @@ public class ExportDialog extends JDialog
 
    private FileTypeButton[] fileTypeButtons;
    private FileTypeButton currentFileTypeButton;
+   private JComponent flfFileTypeComp;
 
    private FileField fileField, libGsFileField;
 
@@ -1122,9 +1163,10 @@ public class ExportDialog extends JDialog
    private ExportSettings exportSettings;
 
    public static final int TYPE_PGF=0, TYPE_IMAGE_DOC=1, TYPE_FLF_DOC=2,
-    TYPE_CLS=3, TYPE_STY=4, TYPE_PDF=5, TYPE_EPS=6, TYPE_SVG=7, TYPE_PNG=8;
+    TYPE_CLS=3, TYPE_STY=4, TYPE_IMAGE_PDF=5, TYPE_FLF_PDF=6,
+    TYPE_EPS=7, TYPE_SVG=8, TYPE_PNG=9;
 
-   public static final int MAX_FILE_TYPE_BUTTONS = 9;
+   public static final int MAX_FILE_TYPE_BUTTONS = 10;
 }
 
 class FileTypeButton extends JRadioButton

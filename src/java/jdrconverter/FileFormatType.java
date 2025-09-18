@@ -34,7 +34,8 @@ public enum FileFormatType
   TEX_FLF(false, true, true, false, false),
   CLS(false, true, true, false, false),
   STY(false, true, true, false, false),
-  PDF(false, true, false, true, true),
+  IMAGE_PDF(false, true, false, true, true),
+  FLF_PDF(false, true, false, true, true),
   ACORN_DRAWFILE(true, false, false, false, false);
 
   private FileFormatType(final boolean inputSupported,

@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.dickimawbooks.texjavahelplib.*;
 import com.dickimawbooks.jdr.*;
+import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdrresources.*;
 
@@ -88,13 +89,13 @@ public abstract class ExportDocImage extends ExportImage
       }
    }
 
-   protected void writeComments(PGF pgf) throws IOException
+   protected void writeComments(TeX tex) throws IOException
    {
-      pgf.comment(getResources().getMessage("tex.comment.created_by",
+      tex.comment(getResources().getMessage("tex.comment.created_by",
             getInvoker().getName(), getInvoker().getVersion()));
-      pgf.writeCreationDate();
+      tex.writeCreationDate();
 
-      pgf.comment(jdrFrame.getFilename());
+      tex.comment(jdrFrame.getFilename());
    }
 
    protected abstract File processImage()
@@ -133,7 +134,11 @@ public abstract class ExportDocImage extends ExportImage
       return basename;
    }
 
-   protected void save() throws IOException,InterruptedException
+   protected void save()
+    throws IOException,InterruptedException,
+      MissingTypeBlockException,
+      InvalidShapeException,
+      MissplacedTypeBlockException
    {
       ensureWorkingDirectoryCreated();
 
@@ -148,11 +153,6 @@ public abstract class ExportDocImage extends ExportImage
          File dir = texFile.getParentFile();
 
          out = new PrintWriter(new FileWriter(texFile));
-
-         PGF pgf = new PGF(texFile.getParentFile().toPath(), out,
-          exportSettings);
-
-         writeComments(pgf);
 
          String preamble = null;
 
@@ -174,7 +174,23 @@ public abstract class ExportDocImage extends ExportImage
             preamble = "\\batchmode " + preamble;
          }
 
-         pgf.saveDoc(image, preamble);
+         if (exportSettings.type == ExportSettings.Type.FLF_PDF)
+         {
+            FLF flf = new FLF(dir, out, exportSettings);
+   
+            writeComments(flf);
+
+            flf.saveCompleteDoc(image, preamble);
+         }
+         else
+         {
+            PGF pgf = new PGF(texFile.getParentFile().toPath(), out,
+             exportSettings);
+
+            writeComments(pgf);
+
+            pgf.saveDoc(image, preamble);
+         }
 
          out.close();
          out = null;

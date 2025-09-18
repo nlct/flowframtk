@@ -160,7 +160,11 @@ public abstract class ExportImage
       return basename;
    }
 
-   protected void createTeXFile(PrintWriter out) throws IOException
+   protected void createTeXFile(PrintWriter out)
+     throws IOException,
+     MissingTypeBlockException,
+     InvalidShapeException,
+     MissplacedTypeBlockException
    {
       File src = converter.getInputFile();
       File base = src.getParentFile();
@@ -169,10 +173,6 @@ public abstract class ExportImage
       {
          base = src.getAbsoluteFile().getParentFile();
       }
-
-      PGF pgf = new PGF(base.toPath(), out, converter.getExportSettings());
-
-      writeComments(pgf);
 
       String preamble = converter.getConfigPreamble();
 
@@ -185,7 +185,24 @@ public abstract class ExportImage
          preamble = "\\batchmode " + preamble;
       }
 
-      pgf.saveDoc(image, preamble);
+      ExportSettings exportSettings = converter.getExportSettings();
+
+      if (exportSettings.type == ExportSettings.Type.FLF_PDF)
+      {
+         FLF flf = new FLF(base.toPath(), out, exportSettings);
+
+         writeComments(flf);
+
+         flf.saveCompleteDoc(image, preamble);
+      }
+      else
+      {
+         PGF pgf = new PGF(base.toPath(), out, exportSettings);
+
+         writeComments(pgf);
+
+         pgf.saveDoc(image, preamble);
+      }
    }
 
    protected void save() 
@@ -247,11 +264,11 @@ public abstract class ExportImage
    protected abstract File processImage(String texBase)
       throws IOException,InterruptedException;
 
-   protected void writeComments(PGF pgf) throws IOException
+   protected void writeComments(TeX tex) throws IOException
    {
-      pgf.comment(converter.getMessage("tex.comment.created_by",
+      tex.comment(converter.getMessage("tex.comment.created_by",
             converter.getApplicationName(), JDRResources.APP_VERSION));
-      pgf.writeCreationDate();
+      tex.writeCreationDate();
    }
 
 
