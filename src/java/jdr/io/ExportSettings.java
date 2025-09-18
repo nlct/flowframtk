@@ -203,6 +203,10 @@ public class ExportSettings
               // shouldn't happen as already checked
                cmdList[i] = "--libgs=";
             }
+            else
+            {
+               cmdList[i] = "--libgs=" + cmdList[i];
+            }
          }
          else
          {
@@ -240,11 +244,11 @@ public class ExportSettings
 
    public String dvipsApp = "dvips";
    public String[] dvipsOptions
-      = new String[] { "-E", "-o", "$outputfile", "$inputfile" };
+      = new String[] { "-o", "$outputfile", "$inputfile" };
 
    public String dvisvgmApp = "dvisvgm";
    public String[] dvisvgmOptions
-      = new String[] { "--libgs", "$libgs", "-o", "$outputfile", "$inputfile" };
+      = new String[] { "--libgs=$libgs", "-o", "$outputfile", "$inputfile" };
 
    public String libgs = null;
    public boolean useExternalProcess = true;
