@@ -1834,6 +1834,8 @@ public class JDRConverter
          verbosenoln(getMessageWithFallback("info.saving", "Saving {0}", outFile)+" ");
       }
 
+      exportSettings.currentFile = outFile;
+
       try
       {
          switch (outFormat)

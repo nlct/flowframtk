@@ -86,6 +86,16 @@ public class FLF extends TeX
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
 
+      writeCommentHeaderBlock();
+
+      if (exportSettings.type == ExportSettings.Type.STY)
+      {
+         comment(msgSys.getMessageWithFallback(
+            "tex.comment.fontsize",
+            "The normal size font is assumed to be {0}",
+            ""+((int)cg.getLaTeXNormalSize())+"pt"));
+      }
+
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
       int objectId = 0;
@@ -307,6 +317,13 @@ public class FLF extends TeX
       CanvasGraphics cg = group.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      if (cg.hasMagicComments())
+      {
+         println(cg.getMagicComments());
+      }
+
+      writeCommentHeaderBlock();
 
       this.group = group;
       JDRUnit unit = cg.getStorageUnit();
@@ -995,7 +1012,7 @@ public class FLF extends TeX
          println("}");
       }
 
-      if (header != null && header.hasStyleCommands())
+      if (header != null && !header.hasStyleCommands())
       {
          String contents = header.getContents();
 
@@ -1010,7 +1027,7 @@ public class FLF extends TeX
          }
       }
 
-      if (evenheader != null && evenheader.hasStyleCommands())
+      if (evenheader != null && !evenheader.hasStyleCommands())
       {
          String contents = header.getContents();
 
@@ -1062,7 +1079,7 @@ public class FLF extends TeX
          println("}");
       }
 
-      if (footer != null && footer.hasStyleCommands())
+      if (footer != null && !footer.hasStyleCommands())
       {
          String contents = footer.getContents();
 
@@ -1077,7 +1094,7 @@ public class FLF extends TeX
          }
       }
 
-      if (evenfooter != null && evenfooter.hasStyleCommands())
+      if (evenfooter != null && !evenfooter.hasStyleCommands())
       {
          String contents = footer.getContents();
 

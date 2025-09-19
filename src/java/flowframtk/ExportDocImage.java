@@ -89,15 +89,6 @@ public abstract class ExportDocImage extends ExportImage
       }
    }
 
-   protected void writeComments(TeX tex) throws IOException
-   {
-      tex.comment(getResources().getMessage("tex.comment.created_by",
-            getInvoker().getName(), getInvoker().getVersion()));
-      tex.writeCreationDate();
-
-      tex.comment(jdrFrame.getFilename());
-   }
-
    protected abstract File processImage()
       throws IOException,InterruptedException,MissingProcessorException;
 
@@ -179,16 +170,12 @@ public abstract class ExportDocImage extends ExportImage
          {
             FLF flf = new FLF(dir, out, exportSettings);
    
-            writeComments(flf);
-
             flf.saveCompleteDoc(image, preamble);
          }
          else
          {
             PGF pgf = new PGF(texFile.getParentFile().toPath(), out,
              exportSettings);
-
-            writeComments(pgf);
 
             pgf.saveDoc(image, preamble);
          }

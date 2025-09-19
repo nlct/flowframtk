@@ -65,10 +65,17 @@ public class ExportDialog extends JDialog
 
       exportSettings.copyFrom(application.getExportSettings());
 
-      JLabelGroup labelGrp = new JLabelGroup();
+      this.pgfFileFilter = pgfFileFilter;
+      this.latexDocFileFilter = latexDocFileFilter;
+      this.clsFileFilter = clsFileFilter;
+      this.styFileFilter = styFileFilter;
+      this.pngFileFilter = pngFileFilter;
+      this.epsFileFilter = epsFileFilter;
+      this.pdfFileFilter = pdfFileFilter;
+      this.svgFileFilter = svgFileFilter;
+      this.appSelector = appSelector;
 
       JLabel fileLabel = resources.createAppLabel("export.file");
-      labelGrp.add(fileLabel);
 
       fileField = new FileField(resources, this, exportFC, 
         fileLabel);
@@ -77,10 +84,70 @@ public class ExportDialog extends JDialog
 
       getContentPane().add(fileField, "North");
 
-      int height = 0;
-      Dimension dim;
+      createProcessorComponents();
 
       ExportSettings exportSettings = application.getExportSettings();
+
+      JComponent mainPanel = new JPanel(new BorderLayout());
+      getContentPane().add(new JScrollPane(mainPanel), "Center");
+
+      JComponent typeComp = createFormatComponents();
+      mainPanel.add(typeComp, "North");
+
+      JComponent settingsPanel = createSettingsComponents();
+      settingsPanel.add(Box.createVerticalGlue());
+
+      mainPanel.add(settingsPanel, "Center");
+
+      JPanel bottomPanel = new JPanel(new BorderLayout());
+      getContentPane().add(bottomPanel, "South");
+      
+      rememberSettingsBox = resources.createAppCheckBox("export", "remember", true, null);
+      rememberSettingsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      bottomPanel.add(rememberSettingsBox, "West");
+
+      // balance
+
+      bottomPanel.add(
+       new Box.Filler(
+           rememberSettingsBox.getMinimumSize(),
+           rememberSettingsBox.getPreferredSize(),
+           rememberSettingsBox.getMaximumSize()
+          ),
+       "East");
+
+      JPanel buttonPanel = new JPanel();
+
+      resources.createOkayCancelHelpButtons(this, buttonPanel, this, "sec:exportimage");
+
+      bottomPanel.add(buttonPanel, "Center");
+
+      // SVG has the longest panel so temporarily enable to
+      // calculate maximum preferred height
+      fileTypeButtons[TYPE_SVG].setSelected(true);
+
+      pack();
+      libGsArea.setMinimumSize(libGsArea.getPreferredSize());
+      libGsComp.setMaximumSize(libGsComp.getPreferredSize());
+
+      pack();
+
+      supportEpsSvg = true;
+      setEpsSvgSupport(application.getSettings().isSupportExportEpsSvgEnabled());
+
+      fileTypeButtons[TYPE_PGF].setSelected(true);
+
+      setLocationRelativeTo(application);
+   }
+
+   protected void createProcessorComponents()
+   {
+      JDRResources resources = getResources();
+
+      JLabelGroup labelGrp = new JLabelGroup();
+
+      int height = 0;
+      Dimension dim;
 
       dviLaTeXPanel = new ProcessSettingsPanel(application,
          appSelector, "latex",
@@ -170,7 +237,7 @@ public class ExportDialog extends JDialog
       libGsComp = Box.createVerticalBox();
       libGsComp.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-      JTextArea libGsArea = resources.createAppInfoArea("appselect.libgs");
+      libGsArea = resources.createAppInfoArea("appselect.libgs");
       libGsArea.setAlignmentX(Component.LEFT_ALIGNMENT);
       libGsComp.add(libGsArea);
 
@@ -182,28 +249,53 @@ public class ExportDialog extends JDialog
 
       libGsComp.add(libGsFileField);
 
-      JComponent mainPanel = new JPanel(new BorderLayout());
-      getContentPane().add(mainPanel, "Center");
+   }
+
+   protected JComponent createFormatComponents()
+   {
+      JDRResources resources = getResources();
+
+      JLabelGroup labelGrp = new JLabelGroup();
 
       Box typeComp = Box.createVerticalBox();
       typeComp.setBorder(BorderFactory.createTitledBorder(
          resources.getMessage("export.format")));
 
-      mainPanel.add(typeComp, "North");
+      // Export to Image
 
-      JComponent imageFileTypeComp = createRow();
-      typeComp.add(imageFileTypeComp);
+      JComponent row = createRow();
+
+      typeComp.add(row);
 
       JLabel typeLabel = resources.createAppLabel("export.format.image_type");
       labelGrp.add(typeLabel);
-      imageFileTypeComp.add(typeLabel);
+      row.add(typeLabel);
 
-      flfFileTypeComp = createRow();
-      typeComp.add(flfFileTypeComp);
+      row.add(resources.createLabelSpacer());
+
+      JComponent imageFileTypeComp = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      imageFileTypeComp.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+      imageFileTypeComp.setBackground(Color.WHITE);
+      imageFileTypeComp.setOpaque(true);
+
+      row.add(imageFileTypeComp);
+
+      // Export flowfram Data
+
+      row = createRow();
+      typeComp.add(row);
 
       typeLabel = resources.createAppLabel("export.format.flf_type");
       labelGrp.add(typeLabel);
-      flfFileTypeComp.add(typeLabel);
+      row.add(typeLabel);
+
+      row.add(resources.createLabelSpacer());
+
+      flfFileTypeComp = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      flfFileTypeComp.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+      flfFileTypeComp.setBackground(Color.WHITE);
+      flfFileTypeComp.setOpaque(true);
+      row.add(flfFileTypeComp);
 
       fileTypeButtons = new FileTypeButton[MAX_FILE_TYPE_BUTTONS];
 
@@ -269,9 +361,18 @@ public class ExportDialog extends JDialog
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
 
+      return typeComp;
+   }
+
+   protected JComponent createSettingsComponents()
+   {
+      JDRResources resources = getResources();
+
+      Dimension dim;
+      JLabelGroup labelGrp = new JLabelGroup();
+
       Box settingsPanel = Box.createVerticalBox();
       settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
 
       boundsComp = createRow();
       settingsPanel.add(boundsComp);
@@ -280,7 +381,7 @@ public class ExportDialog extends JDialog
       labelGrp.add(boundsLabel);
       boundsComp.add(boundsLabel);
 
-      bg = new ButtonGroup();
+      ButtonGroup bg = new ButtonGroup();
 
       usePaperSizeBoundsBox = resources.createAppRadioButton("export",
         "bounds.papersize", bg, false, null);
@@ -449,49 +550,7 @@ public class ExportDialog extends JDialog
       timeoutComp.add(new JLabel(resources.getMessage("processes.millisecs")));
       timeoutComp.add(Box.createHorizontalGlue());
 
-      settingsPanel.add(Box.createVerticalGlue());
-
-      mainPanel.add(new JScrollPane(settingsPanel), "Center");
-
-      JPanel bottomPanel = new JPanel(new BorderLayout());
-      getContentPane().add(bottomPanel, "South");
-      
-      rememberSettingsBox = resources.createAppCheckBox("export", "remember", true, null);
-      rememberSettingsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      bottomPanel.add(rememberSettingsBox, "West");
-
-      // balance
-
-      bottomPanel.add(
-       new Box.Filler(
-           rememberSettingsBox.getMinimumSize(),
-           rememberSettingsBox.getPreferredSize(),
-           rememberSettingsBox.getMaximumSize()
-          ),
-       "East");
-
-      JPanel buttonPanel = new JPanel();
-
-      resources.createOkayCancelHelpButtons(this, buttonPanel, this, "sec:exportimage");
-
-      bottomPanel.add(buttonPanel, "Center");
-
-      // SVG has the longest panel so temporarily enable to
-      // calculate maximum preferred height
-      fileTypeButtons[TYPE_SVG].setSelected(true);
-
-      pack();
-      libGsArea.setMinimumSize(libGsArea.getPreferredSize());
-      libGsComp.setMaximumSize(libGsComp.getPreferredSize());
-
-      pack();
-
-      supportEpsSvg = true;
-      setEpsSvgSupport(application.getSettings().isSupportExportEpsSvgEnabled());
-
-      fileTypeButtons[TYPE_PGF].setSelected(true);
-
-      setLocationRelativeTo(application);
+      return settingsPanel;
    }
 
    protected JComponent createRow()
@@ -541,6 +600,8 @@ public class ExportDialog extends JDialog
       image = frame.getAllPaths();
 
       exportSettings.copyFrom(application.getSettings().getExportSettings());
+
+      exportSettings.currentFile = null;
 
       pdfLaTeXPanel.initialise(
         exportSettings.pdfLaTeXApp,
@@ -1026,6 +1087,8 @@ public class ExportDialog extends JDialog
          }
       }
 
+      exportSettings.currentFile = file;
+
       setVisible(false);
 
       switch (exportSettings.type)
@@ -1281,6 +1344,7 @@ public class ExportDialog extends JDialog
    private ProcessSettingsPanel dviLaTeXPanel, pdfLaTeXPanel, dvipsPanel,
      dvisvgmPanel, pdftopngPanel;
    private JComponent libGsComp;
+   private JTextArea libGsArea;
 
    private JComponent timeoutComp;
    private JSpinner timeoutSpinner;
@@ -1316,6 +1380,17 @@ public class ExportDialog extends JDialog
    private ExportSettings exportSettings;
    private boolean supportEpsSvg;
 
+
+   TeXFileFilter pgfFileFilter;
+   TeXFileFilter latexDocFileFilter;
+   ClsFileFilter clsFileFilter;
+   StyFileFilter styFileFilter;
+   PngFileFilter pngFileFilter;
+   EpsFileFilter epsFileFilter;
+   PdfFileFilter pdfFileFilter;
+   SvgFileFilter svgFileFilter;
+   JDRAppSelector appSelector;
+
    public static final int TYPE_PGF=0, TYPE_IMAGE_DOC=1, TYPE_FLF_DOC=2,
     TYPE_CLS=3, TYPE_STY=4, TYPE_IMAGE_PDF=5, TYPE_FLF_PDF=6,
     TYPE_EPS=7, TYPE_SVG=8, TYPE_PNG=9;
@@ -1345,6 +1420,7 @@ class FileTypeButton extends JRadioButton
       this.processComps = processComps;
 
       bg.add(this);
+      setOpaque(false);
 
       tag = "export."+tag;
       int mnemonic = dialog.getResources().getMnemonic(tag);

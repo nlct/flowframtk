@@ -54,25 +54,12 @@ public class SaveFlf extends ExportImage
          FLF flf = new FLF(outputFile.getParentFile(), out,
           exportSettings);
 
-         flf.comment(getResources().getMessage("tex.comment.created_by",
-               getInvoker().getName(), getInvoker().getVersion()));
-         flf.writeCreationDate();
-
-         flf.comment(jdrFrame.getFilename());
-
          if (exportSettings.type == ExportSettings.Type.FLF_DOC)
          {
             flf.saveCompleteDoc(image, "");
          }
          else
          {
-            if (exportSettings.type == ExportSettings.Type.STY)
-            {
-               flf.comment(getResources().getMessage(
-                  "tex.comment.fontsize",
-                  ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
-            }
-
             flf.save(image, outputFile.getName());
          }
 

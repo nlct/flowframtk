@@ -97,6 +97,7 @@ public class FileField extends JPanel
       {
          westComp.add(label);
          label.setLabelFor(textField);
+         westComp.add(resources.createLabelSpacer());
       }
 
       setAlignmentY(Component.CENTER_ALIGNMENT);

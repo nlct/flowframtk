@@ -19,6 +19,7 @@
 package com.dickimawbooks.jdr.io;
 
 import java.util.Vector;
+import java.io.File;
 
 import com.dickimawbooks.jdr.exceptions.MissingProcessorException;
 
@@ -88,6 +89,11 @@ public class ExportSettings
         "error.export_no_process",
         "Required path or options for application ''{0}'' has not been setup.",
          name);
+   }
+
+   public JDRMessageDictionary getMessageDictionary()
+   {
+      return dictionary;
    }
 
    public String[] getDviLaTeXCmd(String basename) throws MissingProcessorException
@@ -330,5 +336,7 @@ public class ExportSettings
 
    public String docClass = null;
 
+   public boolean includeBoilerPlateBlock = true;
+   public File currentFile = null;
    JDRMessageDictionary dictionary;
 }

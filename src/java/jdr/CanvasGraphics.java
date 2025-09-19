@@ -741,6 +741,7 @@ public class CanvasGraphics
       cg.setMidPreamble(midPreamble);
       cg.setEndPreamble(endPreamble);
       cg.setDocBody(docBody);
+      cg.setMagicComments(magicComments);
       cg.setDocClass(docClass);
 
       cg.isEvenPage = isEvenPage;
@@ -812,12 +813,9 @@ public class CanvasGraphics
 
       out.writeInt(n);
 
-      if (n > 0)
+      for (int i = 0; i < n; i++)
       {
-         for (int i = 0; i < n; i++)
-         {
-            out.writeChar(preamble.charAt(i));
-         }
+         out.writeChar(preamble.charAt(i));
       }
 
       // mid preamble
@@ -826,12 +824,9 @@ public class CanvasGraphics
 
       out.writeInt(n);
 
-      if (n > 0)
+      for (int i = 0; i < n; i++)
       {
-         for (int i = 0; i < n; i++)
-         {
-            out.writeChar(midPreamble.charAt(i));
-         }
+         out.writeChar(midPreamble.charAt(i));
       }
 
       // end preamble
@@ -840,12 +835,9 @@ public class CanvasGraphics
 
       out.writeInt(n);
 
-      if (n > 0)
+      for (int i = 0; i < n; i++)
       {
-         for (int i = 0; i < n; i++)
-         {
-            out.writeChar(endPreamble.charAt(i));
-         }
+         out.writeChar(endPreamble.charAt(i));
       }
 
       // document body
@@ -854,24 +846,31 @@ public class CanvasGraphics
 
       out.writeInt(n);
 
-      if (n > 0)
+      for (int i = 0; i < n; i++)
       {
-         for (int i = 0; i < n; i++)
-         {
-            out.writeChar(docBody.charAt(i));
-         }
+         out.writeChar(docBody.charAt(i));
       }
+
+      // magic comments
+
+      n = (magicComments == null ? 0 : magicComments.length());
+
+      out.writeInt(n);
+
+      for (int i = 0; i < n; i++)
+      {
+         out.writeChar(magicComments.charAt(i));
+      }
+
+      // document class
 
       n = (docClass == null ? 0 : docClass.length());
 
       out.writeInt(n);
 
-      if (n > 0)
+      for (int i = 0; i < n; i++)
       {
-         for (int i = 0; i < n; i++)
-         {
-            out.writeChar(docClass.charAt(i));
-         }
+         out.writeChar(docClass.charAt(i));
       }
 
       out.writeBoolean(absolutePages);
@@ -936,6 +935,38 @@ public class CanvasGraphics
          setEndPreamble(new String(str));
       }
 
+      // document body
+
+      n = in.readInt();
+
+      if (n > 0)
+      {
+         char[] str = new char[n];
+
+         for (int i = 0; i < n; i++)
+         {
+            str[i] = in.readChar();
+         }
+
+         setDocBody(new String(str));
+      }
+
+      // magic comments
+
+      n = in.readInt();
+
+      if (n > 0)
+      {
+         char[] str = new char[n];
+
+         for (int i = 0; i < n; i++)
+         {
+            str[i] = in.readChar();
+         }
+
+         setMagicComments(new String(str));
+      }
+
       // document class
 
       n = in.readInt();
@@ -973,6 +1004,7 @@ public class CanvasGraphics
       midPreamble = null;
       endPreamble = null;
       docBody = null;
+      magicComments = null;
       docClass = null;
       absolutePages = false;
       optimize = OPTIMIZE_SPEED;
@@ -1150,6 +1182,21 @@ public class CanvasGraphics
       return docBody != null && !docBody.isEmpty();
    }
 
+   public void setMagicComments(String text)
+   {
+      magicComments = text;
+   }
+
+   public String getMagicComments()
+   {
+      return magicComments;
+   }
+
+   public boolean hasMagicComments()
+   {
+      return magicComments != null && !magicComments.isEmpty();
+   }
+
    public synchronized void setDocClass(String cls)
    {
       docClass = cls;
@@ -1187,6 +1234,7 @@ public class CanvasGraphics
       midPreamble = cg.midPreamble;
       endPreamble = cg.endPreamble;
       docBody = cg.docBody;
+      magicComments = cg.magicComments;
       docClass = cg.docClass;
       absolutePages = cg.absolutePages;
       display_grid = cg.display_grid;
@@ -1580,6 +1628,9 @@ public class CanvasGraphics
    private volatile String endPreamble = null;
 
    private volatile String docBody = null;
+
+   // header block designed for directives/magic comments
+   private String magicComments = null;
 
    private volatile String docClass = null;
 

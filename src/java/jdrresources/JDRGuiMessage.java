@@ -245,6 +245,18 @@ public class JDRGuiMessage extends JDRMessagePublisher implements UserCancellati
       return frame;
    }
 
+   @Override
+   public String getApplicationName()
+   {
+      return getResources().getApplicationName();
+   }
+
+   @Override
+   public String getApplicationVersion()
+   {
+      return getResources().getApplicationVersion();
+   }
+
    JDRGuiMessageFrame frame;
 }
 
@@ -932,6 +944,18 @@ class JDRGuiMessageFrame extends JFrame
    private void readObjectNoData()
      throws ObjectStreamException
    {
+   }
+
+   @Override
+   public String getApplicationName()
+   {
+      return resources.getApplicationName();
+   }
+
+   @Override
+   public String getApplicationVersion()
+   {
+      return resources.getApplicationVersion();
    }
 
    private JProgressBar progressBar;

@@ -5209,6 +5209,22 @@ public class JDRCanvas extends JPanel
       return frame_.getLaTeXCodeEditor().getDocumentText();
    }
 
+   /**
+    * Sets the magic comments.
+    */
+   public void setMagicComments(String comments)
+   {
+      getCanvasGraphics().setMagicComments(comments);
+   }
+
+   /**
+    * Gets the magic comments.
+    */
+   public String getMagicComments()
+   {
+      return frame_.getLaTeXCodeEditor().getMagicComments();
+   }
+
    public void addPackagesToPreamble(Vector<String> styNames)
      throws BadLocationException
    {
@@ -7532,9 +7548,10 @@ public class JDRCanvas extends JPanel
       String midPreamble = image.getCanvasGraphics().getMidPreamble();
       String endPreamble = image.getCanvasGraphics().getEndPreamble();
       String docEnv = image.getCanvasGraphics().getDocBody();
+      String magicComments = image.getCanvasGraphics().getMagicComments();
 
       frame_.getLaTeXCodeEditor().setLaTeXCode(
-        preamble, midPreamble, endPreamble, docEnv);
+        preamble, midPreamble, endPreamble, docEnv, magicComments);
    }
 
    public void updateBounds()

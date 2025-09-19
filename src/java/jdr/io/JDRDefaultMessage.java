@@ -470,6 +470,18 @@ public class JDRDefaultMessage extends JDRMessagePublisher
       }
    }
 
+   @Override
+   public String getApplicationName()
+   {
+      return "jdr/io";
+   }
+
+   @Override
+   public String getApplicationVersion()
+   {
+      return "??";
+   }
+
    private int progressMax=100;
    private int progressValue=0;
    private boolean indeterminate_=true;

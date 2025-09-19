@@ -44,4 +44,7 @@ public interface JDRMessageDictionary
 
    public String getMessageWithFallback(String label,
        String fallbackFormat, Object... params);
+
+   public String getApplicationName();
+   public String getApplicationVersion();
 }

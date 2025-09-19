@@ -46,6 +46,18 @@ public class ConverterPublisher extends JDRDefaultMessage
       debugMode = on;
    }
 
+   @Override
+   public String getApplicationName()
+   {
+      return converter.getApplicationName();
+   }
+
+   @Override
+   public String getApplicationVersion()
+   {
+      return converter.getApplicationVersion();
+   }
+
    JDRConverter converter;
    boolean debugMode=false;
 }

@@ -1462,6 +1462,7 @@ public class JDRFrame extends JInternalFrame
          canvas.setMidPreamble(latexCodeEditor.getMidPreambleText());
          canvas.setEndPreamble(latexCodeEditor.getEndPreambleText());
          canvas.setDocumentBody(latexCodeEditor.getDocumentText());
+         canvas.setMagicComments(latexCodeEditor.getMagicComments());
       }
    }
 
@@ -1970,18 +1971,12 @@ public class JDRFrame extends JInternalFrame
       return latexCodeEditor;
    }
 
-   @Deprecated
-   public void updatePreamble(String newPreamble, 
-     String newMidPreamble, String newEndPreamble)
-   {
-      updateLaTeXCode(newPreamble, newMidPreamble, newEndPreamble, "");
-   }
-
    public void updateLaTeXCode(String newPreamble, 
-     String newMidPreamble, String newEndPreamble, String newDocText)
+     String newMidPreamble, String newEndPreamble, 
+     String newDocText, String newMagicComments)
    {
       latexCodeEditor.updateLaTeXCode(newPreamble, newMidPreamble, newEndPreamble,
-        newDocText);
+        newDocText, newMagicComments);
    }
 
    public void updateEditorStyles(FlowframTkSettings appSettings)

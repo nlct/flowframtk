@@ -39,15 +39,6 @@ public class SavePgf extends ExportImage
       super(frame, file, jdrImage, exportSettings);
    }
 
-   protected void writeComments(PGF pgf) throws IOException
-   {
-      pgf.comment(getResources().getMessage("tex.comment.created_by",
-            getInvoker().getName(), getInvoker().getVersion()));
-      pgf.writeCreationDate();
-   
-      pgf.comment(jdrFrame.getFilename());
-   }
-
    public void save() throws IOException,InterruptedException
    {
       PrintWriter out = null;
@@ -60,8 +51,6 @@ public class SavePgf extends ExportImage
 
          PGF pgf = new PGF(outputFile.getParentFile().toPath(), out,
           exportSettings);
-
-         writeComments(pgf);
 
          if (exportSettings.type == ExportSettings.Type.IMAGE_DOC)
          {
@@ -80,19 +69,6 @@ public class SavePgf extends ExportImage
          }
          else
          {
-
-            pgf.println("\\iffalse");
-
-            pgf.comment(getResources().getMessage("tex.comment.preamble"));
-
-            pgf.writePreambleCommands(image, true, true);
-
-            pgf.comment(getResources().getMessage(
-               "tex.comment.fontsize", 
-               ""+((int)image.getCanvasGraphics().getLaTeXNormalSize())+"pt"));
-
-            pgf.comment(getResources().getMessage("tex.comment.endpreamble"));
-            pgf.println("\\fi");
 
             pgf.save(image);
          }

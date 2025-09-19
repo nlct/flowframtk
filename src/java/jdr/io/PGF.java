@@ -65,6 +65,28 @@ public class PGF extends TeX
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
 
+      writeCommentHeaderBlock();
+
+      if (exportSettings.includeBoilerPlateBlock)
+      {
+         println("\\iffalse");
+
+         comment(msgSys.getMessageWithFallback("tex.comment.preamble",
+          "This image may require the following commands in the preamble:"));
+
+         writePreambleCommands(allObjects, true, true);
+
+         comment(msgSys.getMessageWithFallback(
+               "tex.comment.fontsize",
+               "The normal size font is assumed to be {0}",
+               ""+((int)cg.getLaTeXNormalSize())+"pt"));
+
+         comment(msgSys.getMessageWithFallback("tex.comment.endpreamble",
+          "End of preamble information"));
+
+         println("\\fi");
+      }
+
       boolean indeter = (allObjects.size() <= 1);
 
       publisher.publishMessages(MessageInfo.createIndeterminate(indeter));
@@ -151,6 +173,13 @@ public class PGF extends TeX
       CanvasGraphics cg = allObjects.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
+
+      if (cg.hasMagicComments())
+      {
+         println(cg.getMagicComments());
+      }
+
+      writeCommentHeaderBlock();
 
       boolean indeter = (allObjects.size() <= 1);
 

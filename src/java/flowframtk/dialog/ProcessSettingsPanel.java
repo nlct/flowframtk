@@ -74,7 +74,7 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
          labelGrp.add(fileFieldLabel);
       }
 
-      fileField.getEastComponent().add(Box.createHorizontalStrut(20));
+      fileField.getEastComponent().add(getResources().createButtonSpacer());
 
       add(fileField, "North");
 
@@ -92,7 +92,7 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
         "appselect", "up", this, (KeyStroke)null);
       row.add(upButton);
 
-      row.add(Box.createHorizontalStrut(20));
+      row.add(getResources().createButtonSpacer());
 
       row = Box.createHorizontalBox();
       eastComp.add(row);
@@ -105,7 +105,7 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
         "appselect", "down", this, (KeyStroke)null);
       row.add(downButton);
 
-      row.add(Box.createHorizontalStrut(20));
+      row.add(getResources().createButtonSpacer());
 
       optionsTableModel = new DefaultTableModel(2, 1);
       optionsTable = new JTable(optionsTableModel)
@@ -149,7 +149,12 @@ public class ProcessSettingsPanel extends JPanel implements ActionListener
       westComp = new JPanel(new BorderLayout());
       add(westComp, "West");
 
-      westComp.add(optionsLabel, "North");
+      JComponent topPanel = Box.createHorizontalBox();
+      topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      topPanel.add(optionsLabel);
+      topPanel.add(getResources().createLabelSpacer());
+
+      westComp.add(topPanel, "North");
 
    }
 

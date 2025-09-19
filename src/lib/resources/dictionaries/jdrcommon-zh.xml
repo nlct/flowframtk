@@ -250,6 +250,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="warning.save_unsupported_preamble">Preamble not supported in JDR/AJDR version {0}</entry>
 <entry key="warning.save_unsupported_extra_preamble">Mid/End Preamble not supported in JDR/AJDR version {0}</entry>
 <entry key="warning.save_unsupported_doc_body">Document body not supported in JDR/AJDR version {0}</entry>
+<entry key="warning.save_unsupported_magic_comments">Magic comments not supported in JDR/AJDR version {0}</entry>
 <entry key="warning.save_unsupported_docclass">Document class not supported in JDR/AJDR version {0}</entry>
 <entry key="warning.save_unsupported_storage_unit">Storage unit ''{0}'' not supported in JDR/AJDR version {1} (co-ordinates will be converted to bp)</entry>
 <entry key="warning.save_unsupported_flow_frame">Flow frame data not supported by JDR/AJR version {0} has been omitted</entry>
@@ -397,6 +398,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_setting-mid-preamble">Invalid mid preamble setting</entry>
 <entry key="error.invalid_setting-end-preamble">Invalid late preamble setting</entry>
 <entry key="error.invalid_setting-doc-body">Invalid document body setting</entry>
+<entry key="error.invalid_setting-magic-comments">Invalid magic comments setting</entry>
 <entry key="error.invalid_setting-scale-control">Invalid scale control setting</entry>
 <entry key="error.invalid_setting-pointsize">Invalid control size setting</entry>
 <entry key="error.invalid_setting-normalsize">Invalid normalsize setting</entry>

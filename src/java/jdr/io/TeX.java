@@ -821,6 +821,25 @@ public class TeX
       }
    }
 
+   public void writeCommentHeaderBlock() throws IOException
+   {
+      if (exportSettings.includeBoilerPlateBlock)
+      {
+         JDRMessageDictionary dict = exportSettings.getMessageDictionary();
+
+         comment(dict.getMessageWithFallback("tex.comment.created_by",
+            "Created by {0} version {1}",
+            dict.getApplicationName(), dict.getApplicationVersion()));
+
+         writeCreationDate();
+
+         if (exportSettings.currentFile != null)
+         {
+            comment(exportSettings.currentFile.toString());
+         }
+      }
+   }
+
    public void writeCreationDate()
      throws IOException
    {

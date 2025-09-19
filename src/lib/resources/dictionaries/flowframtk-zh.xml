@@ -3124,6 +3124,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="texeditor.latexcodeblock.midpreamble">Mid Preamble</entry>
 <entry key="texeditor.latexcodeblock.latepreamble">Late Preamble</entry>
 <entry key="texeditor.latexcodeblock.document">Document</entry>
+<entry key="texeditor.latexcodeblock.magic_comments">Magic Comments</entry>
 <entry key="texeditor.frame_contents">Frame Contents</entry>
 
 <entry key="index.menu.texeditor">TeX Editor Popup Menu</entry>

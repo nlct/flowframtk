@@ -43,6 +43,11 @@ public class LaTeXCodeEditor extends JPanel
        frame.getResources().getMessage("texeditor.latexcodeblock.document"));
 
       tabbedPane.add(documentEnv);
+
+      magicComments = new LaTeXCodeBlockEditor(frame,
+       frame.getResources().getMessage("texeditor.latexcodeblock.magic_comments"));
+
+      tabbedPane.add(magicComments);
    }
 
    public void showPopup(Component comp, int x, int y)
@@ -61,25 +66,28 @@ public class LaTeXCodeEditor extends JPanel
       return earlyPreamble.isEditing()
           || midPreamble.isEditing()
           || latePreamble.isEditing()
-          || documentEnv.isEditing();
+          || documentEnv.isEditing()
+          || magicComments.isEditing();
    }
 
    public void setLaTeXCode(String text,
-     String midText, String endText, String docText)
+     String midText, String endText, String docText, String magicText)
    {
       earlyPreamble.setLaTeXCode(text);
       midPreamble.setLaTeXCode(midText);
       latePreamble.setLaTeXCode(endText);
       documentEnv.setLaTeXCode(docText);
+      magicComments.setLaTeXCode(magicText);
    }
 
    public void updateLaTeXCode(String text,
-     String midText, String endText, String docText)
+     String midText, String endText, String docText, String magicText)
    {
       earlyPreamble.updateLaTeXCode(text);
       midPreamble.updateLaTeXCode(midText);
       latePreamble.updateLaTeXCode(endText);
-      documentEnv.updateLaTeXCode(endText);
+      documentEnv.updateLaTeXCode(docText);
+      magicComments.updateLaTeXCode(magicText);
    }
 
    public void appendToLaTeXCode(String text)
@@ -127,12 +135,18 @@ public class LaTeXCodeEditor extends JPanel
       return documentEnv.getLaTeXCode();
    }
 
+   public String getMagicComments()
+   {
+      return magicComments.getLaTeXCode();
+   }
+
    public boolean isModified()
    {
       return earlyPreamble.isModified()
           || midPreamble.isModified()
           || latePreamble.isModified()
-          || documentEnv.isModified();
+          || documentEnv.isModified()
+          || magicComments.isModified();
    }
 
    public void updateStyles(FlowframTkSettings settings)
@@ -141,10 +155,11 @@ public class LaTeXCodeEditor extends JPanel
       midPreamble.updateStyles(settings);
       latePreamble.updateStyles(settings);
       documentEnv.updateStyles(settings);
+      magicComments.updateStyles(settings);
    }
 
    private LaTeXCodeBlockEditor earlyPreamble, midPreamble, latePreamble,
-    documentEnv;
+    documentEnv, magicComments;
 
    private JTabbedPane tabbedPane;
 }

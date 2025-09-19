@@ -188,12 +188,23 @@ public abstract class JDRAJR
 
             if (version >= 2.1f)
             {
+               // Save document body and magic comments
                writeString(cg.getDocBody());
+               writeString(cg.getMagicComments());
             }
-            else if (cg.hasDocBody())
+            else
             {
-               warningMessage("Document body not supported in JDR/AJR version {0}",
-                 "warning.save_unsupported_doc_body", version);
+               if (cg.hasDocBody())
+               {
+                  warningMessage("Document body not supported in JDR/AJR version {0}",
+                    "warning.save_unsupported_doc_body", version);
+               }
+
+               if (cg.hasMagicComments())
+               {
+                  warningMessage("Magic comments not supported in JDR/AJR version {0}",
+                    "warning.save_unsupported_magic_comments", version);
+               }
             }
          }
          else
@@ -388,6 +399,9 @@ public abstract class JDRAJR
             {
                cg.setDocBody(
                  readString(InvalidFormatException.SETTING_DOC_BODY));
+
+               cg.setMagicComments(
+                 readString(InvalidFormatException.SETTING_MAGIC_COMMENTS));
             }
          }
 

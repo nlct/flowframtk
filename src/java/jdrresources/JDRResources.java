@@ -154,6 +154,12 @@ public class JDRResources
    }
 
    @Override
+   public String getApplicationVersion()
+   {
+      return APP_VERSION;
+   }
+
+   @Override
    public boolean isGUI()
    {
       return true;
@@ -2349,6 +2355,11 @@ public class JDRResources
         put(getAccelerator("button.alt_okay"), "okay");
 
       return button;
+   }
+
+   public Component createLabelSpacer()
+   {
+      return Box.createHorizontalStrut(5);
    }
 
    public Component createButtonSpacer()

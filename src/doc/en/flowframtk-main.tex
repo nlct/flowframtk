@@ -2654,16 +2654,18 @@ new \gls{textarea} containing the file's path (or URI).
 
 \section{The Preamble and Document Text Pane}\label{sec:thepreamblepane}
 
-The preamble code and document text pane is, by default, on the right of the \gls{canvas},
-which may be used to specify code that should go in the document
-preamble or (where applicable) the \env{document} environment of exported files. 
-(This includes exports that use \LaTeX\ as an intermediate step.)
+The \widget{texeditor.latexcodeblock} area is, by default, on the
+right of the \gls{canvas}, which may be used to specify code that
+should go in the document preamble or (where applicable) the
+content of the \env{document} environment of exported files.  (This includes
+exports that use \LaTeX\ as an intermediate step.)
 
-This area is split into three tabs for the early preamble code,
-the mid-preamble code, and the late preamble code, and a fourth tab
-for the content of the \env{document} environment (only applicable
-with \gls{flowframe} exports that include the \env{document}
-environment).
+This area is split into tabs for the \gls{early-preamble} code,
+the \gls{mid-preamble} code, the \gls{late-preamble} code,
+the content of the \env{document} environment and an area for
+\glspl{magic-comment} or \glspl{directive} (the last two are
+only applicable with \gls{flowframe} exports that create a complete
+\LaTeX\ document).
 
 See \sectionref{sec:preamble} for further details on how this
 code is added during the export process, and
@@ -9418,6 +9420,7 @@ class and \inlineglsdef{preamble}.
 As from version 0.8.8 and if the \sty{flowframtkutils} package is
 available, the generated \ext{tex} file has the form:
 \begin{compactcodebox}
+\meta{Magic Comments}
 \cmd{documentclass}\oargm{cls size opt}\margm{class-name}
 
 \meta{Default Preamble}
@@ -9440,6 +9443,9 @@ available, the generated \ext{tex} file has the form:
 \cmd{jdrimagebox}\margm{image code}
 \cmd{end}\marg{document}
 \end{compactcodebox}
+The \meta{Magic Comments} header block provides a way of including
+special comments (\glspl{directive} or \qt{\glspl{magic-comment}}) 
+for document build tools.
 
 With old versions of \FlowframTk, or when the \sty{flowframtkutils}
 package isn't available, the generated \ext{tex} file has the form:
@@ -9542,17 +9548,24 @@ definition.
 The export to multi-paged PDF function, creates a \LaTeX\ document
 that loads the \sty{flowfram} package and defines all flow frames,
 static frames and dynamic frames, as per the export to class or
-package. In this case, you can specify the \LaTeX\ code to add the
-\env{document} environment.
+package. In this case, you can provide the \LaTeX\ code to add the
+\env{document} environment in the
+\widget{texeditor.latexcodeblock.document} panel.
 
-If the document content is empty, blank pages will be created. The
-number depends on the page lists of all objects that have
-\gls{flowframe} data. If all page lists are simply set to \qt{all},
-then only one page will be created. If some page lists are set to
-\qt{even} then two pages will be created, otherwise the number of
-pages will be determined by the maximum end range of all page lists.
-If a page list has an open-ended range then the end will be treated
-as the minimum valid number for that range.
+If the document content has cross-references, you can use the
+\widget{texeditor.latexcodeblock.magic_comments} panel to add
+\glspl{directive} and change the \widget{processes.pdflatex} setting
+to a build tool, such as \app{arara}.
+
+If the \widget{texeditor.latexcodeblock.document} content is empty,
+blank pages will be created. The number depends on the page lists of
+all objects that have \gls{flowframe} data. If all page lists are
+simply set to \qt{all}, then only one page will be created. If some
+page lists are set to \qt{even} then two pages will be created,
+otherwise the number of pages will be determined by the maximum end
+range of all page lists.  If a page list has an open-ended range
+then the end will be treated as the minimum valid number for that
+range.
 
 \menudef{menu.tex.set_preamble}
 
@@ -9620,7 +9633,17 @@ commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
 
 The \widget{texeditor.latexcodeblock.document} panel is for the
 \inlineglstextdef{env.document} body. This is only used when
-exporting \gls{flowframe} data to a multi-paged PDF.
+exporting \gls{flowframe} data to a complete \LaTeX\ file
+(which is used to create a multi-paged PDF).
+
+\widgetdef{texeditor.latexcodeblock.magic_comments}
+
+The \widget{texeditor.latexcodeblock.magic_comments} panel is only
+applicable when creating a complete document, either exporting the
+actual image or exporting \gls{flowframe} data to a \LaTeX\ file
+(not a class or package). This means that you can replace the
+\widget{processes.pdflatex} setting so that a build tool, such as
+\app{arara}, may be used instead of \app{pdflatex}.
 
 
 If you use the \hyperref[sec:exportsty]{export to package or document
@@ -13694,7 +13717,7 @@ length of each side of the equilateral triangles that form the grid.
 \begin{jdrversion}{2.1 onwards}
 \begin{syntaxline}
 \meta{normalsize} \meta{preamble} \meta{mid-preamble}
-\meta{late-preamble} \meta{document body} \meta{class name}
+\meta{late-preamble} \meta{document body} \meta{magic comments} \meta{class name}
 \meta{absolute pages flag}
 \end{syntaxline}
 \end{jdrversion}
@@ -13718,14 +13741,14 @@ version 1.8, preamble text, document class and absolute pages
 setting are now saved. Version 1.8 only stores the \gls{early-preamble}
 text.  As from version 1.9, the \gls{mid-preamble} and
 \gls{late-preamble} text are also stored. As from version 2.1, 
-the \gls{document-body} is also stored.
+the \gls{document-body} and \glspl{magic-comment} are also stored.
 \begin{enumerate}
 \item The normal size value \meta{normalsize} is stored as an \type{integer}.
 
 \item The preamble text \meta{preamble} is stored as a \type{string}
 and may be empty or null. Similarly for the \meta{mid-preamble}
 and \meta{late-preamble}, for version 1.9 onwards, and for the
-\meta{document body}, for version 2.1 onwards.
+\meta{document body} and \meta{magic comments}, for version 2.1 onwards.
 
 \item If the default document class setting is enabled, \meta{class
 name} is saved as an empty or null \type{string} otherwise the user
