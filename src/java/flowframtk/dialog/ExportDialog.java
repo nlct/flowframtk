@@ -221,12 +221,6 @@ public class ExportDialog extends JDialog
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_IMAGE_DOC]);
 
-      fileTypeButtons[TYPE_FLF_DOC] = new FileTypeButton(this, 
-         ExportSettings.Type.FLF_DOC, "flfdoc", bg,
-         latexDocFileFilter, ".tex");
-
-      flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_DOC]);
-
       fileTypeButtons[TYPE_CLS] = new FileTypeButton(this, 
          ExportSettings.Type.CLS, "cls", bg,
          clsFileFilter, ".cls");
@@ -244,6 +238,12 @@ public class ExportDialog extends JDialog
          pdfFileFilter, ".pdf", true, pdfLaTeXPanel);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_IMAGE_PDF]);
+
+      fileTypeButtons[TYPE_FLF_DOC] = new FileTypeButton(this, 
+         ExportSettings.Type.FLF_DOC, "flfdoc", bg,
+         latexDocFileFilter, ".tex");
+
+      flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_DOC]);
 
       fileTypeButtons[TYPE_FLF_PDF] = new FileTypeButton(this,
          ExportSettings.Type.FLF_PDF, "flfpdf", bg,
@@ -374,11 +374,13 @@ public class ExportDialog extends JDialog
       docClassComp.add(docClassLabel);
 
       useDefaultDocClassBox = resources.createAppRadioButton("export",
-       "load_doc_class.default", bg, true, this);
+       "load_doc_class.default", bg, true, null);
+      useDefaultDocClassBox.addItemListener(this);
       docClassComp.add(useDefaultDocClassBox);
 
       useSpecifiedDocClassBox = resources.createAppRadioButton("export",
-       "load_doc_class.specified", bg, false, this);
+       "load_doc_class.specified", bg, false, null);
+      useSpecifiedDocClassBox.addItemListener(this);
       docClassComp.add(useSpecifiedDocClassBox);
 
       docClassField = new JTextField(16);
@@ -744,7 +746,7 @@ public class ExportDialog extends JDialog
 
       if (cg.hasDocClass())
       {
-         useSpecifiedDocClassBox.setSelected(true);
+         useSpecifiedDocClassBox.setSelected(false);
          docClassField.setText(cg.getDocClass());
       }
       else if (exportSettings.docClass != null)
@@ -764,6 +766,8 @@ public class ExportDialog extends JDialog
       {
          fileTypeBtn.setSelected(true);
       }
+
+      fileField.requestFocusInWindow();
 
       setVisible(true);
    }
@@ -1043,6 +1047,29 @@ public class ExportDialog extends JDialog
    @Override
    public void itemStateChanged(ItemEvent evt)
    {
+      Object src = evt.getSource();
+
+      if (src == useDefaultDocClassBox
+        || src == useSpecifiedDocClassBox)
+      {
+         if (useDefaultDocClassBox.isSelected())
+         {
+            docClassField.setEnabled(false);
+         }
+         else
+         {
+            docClassField.setEnabled(true);
+            docClassField.requestFocusInWindow();
+         }
+      }
+      else
+      {
+         updateWidgets(evt);
+      }
+   }
+
+   protected void updateWidgets(ItemEvent evt)
+   {
       FileTypeButton prevButton = currentFileTypeButton;
 
       for (FileTypeButton btn : fileTypeButtons)
@@ -1201,15 +1228,6 @@ public class ExportDialog extends JDialog
                return;
             }
          }
-      }
-      else if (action.equals("load_doc_class.default"))
-      {
-         docClassField.setEnabled(false);
-      }
-      else if (action.equals("load_doc_class.specified"))
-      {
-         docClassField.setEnabled(true);
-         docClassField.requestFocusInWindow();
       }
    }
 
