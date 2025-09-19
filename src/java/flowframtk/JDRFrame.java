@@ -78,7 +78,7 @@ public class JDRFrame extends JInternalFrame
 
       setFrameIcon(getResources().getSmallAppIcon());
 
-      preambleEditor = new PreambleEditor(this);
+      latexCodeEditor = new LaTeXCodeEditor(this);
 
       canvas = new JDRCanvas(this, cg);
       canvas.setTransferHandler(new JDRTransferHandler(cg));
@@ -127,7 +127,7 @@ public class JDRFrame extends JInternalFrame
       {
          public void mouseClicked(MouseEvent evt)
          {
-            if (isEditingPreamble())
+            if (isEditingLaTeXCode())
             {
                canvas.requestFocusInWindow();
             }
@@ -147,7 +147,7 @@ public class JDRFrame extends JInternalFrame
                application_.displayGridSettings();
             }
 
-            if (isEditingPreamble())
+            if (isEditingLaTeXCode())
             {
                canvas.requestFocusInWindow();
             }
@@ -176,13 +176,13 @@ public class JDRFrame extends JInternalFrame
       {
          splitPane = new JSplitPane(
            application_.getSettings().getCanvasSplit(), 
-           scrollPane, preambleEditor);
+           scrollPane, latexCodeEditor);
       }
       else
       {
          splitPane = new JSplitPane(
            application_.getSettings().getCanvasSplit(), 
-           preambleEditor, scrollPane);
+           latexCodeEditor, scrollPane);
       }
 
       getContentPane().add(splitPane, "Center");
@@ -1456,11 +1456,12 @@ public class JDRFrame extends JInternalFrame
 
    public void preSave()
    {
-      if (preambleEditor.isModified())
+      if (latexCodeEditor.isModified())
       {
-         canvas.setPreamble(preambleEditor.getPreambleText());
-         canvas.setMidPreamble(preambleEditor.getMidPreambleText());
-         canvas.setEndPreamble(preambleEditor.getEndPreambleText());
+         canvas.setPreamble(latexCodeEditor.getEarlyPreambleText());
+         canvas.setMidPreamble(latexCodeEditor.getMidPreambleText());
+         canvas.setEndPreamble(latexCodeEditor.getEndPreambleText());
+         canvas.setDocumentBody(latexCodeEditor.getDocumentText());
       }
    }
 
@@ -1958,31 +1959,45 @@ public class JDRFrame extends JInternalFrame
       newImage = isnew;
    }
 
-   public void displayPreambleEditor()
+   public void displayLaTeXCodeEditor()
    {
       splitPane.setDividerLocation(0.5);
-      preambleEditor.display();
+      latexCodeEditor.display();
    }
 
-   public PreambleEditor getPreambleEditor()
+   public LaTeXCodeEditor getLaTeXCodeEditor()
    {
-      return preambleEditor;
+      return latexCodeEditor;
    }
 
+   @Deprecated
    public void updatePreamble(String newPreamble, 
      String newMidPreamble, String newEndPreamble)
    {
-      preambleEditor.updatePreambleText(newPreamble, newMidPreamble, newEndPreamble);
+      updateLaTeXCode(newPreamble, newMidPreamble, newEndPreamble, "");
+   }
+
+   public void updateLaTeXCode(String newPreamble, 
+     String newMidPreamble, String newEndPreamble, String newDocText)
+   {
+      latexCodeEditor.updateLaTeXCode(newPreamble, newMidPreamble, newEndPreamble,
+        newDocText);
    }
 
    public void updateEditorStyles(FlowframTkSettings appSettings)
    {
-      preambleEditor.updateStyles(appSettings);
+      latexCodeEditor.updateStyles(appSettings);
    }
 
+   @Deprecated
    public boolean isEditingPreamble()
    {
-      return preambleEditor == null ? false : preambleEditor.isEditing();
+      return latexCodeEditor == null ? false : latexCodeEditor.isEditing();
+   }
+
+   public boolean isEditingLaTeXCode()
+   {
+      return latexCodeEditor == null ? false : latexCodeEditor.isEditing();
    }
 
    public void displaySegmentInfoDialog(JDRShape shape, JDRPathSegment segment)
@@ -2017,7 +2032,7 @@ public class JDRFrame extends JInternalFrame
 
    private JLabel unitLabel;
 
-   private PreambleEditor preambleEditor;
+   private LaTeXCodeEditor latexCodeEditor;
 
    private JSplitPane splitPane;
 

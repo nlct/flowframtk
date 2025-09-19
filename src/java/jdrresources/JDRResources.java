@@ -1952,22 +1952,32 @@ public class JDRResources
      String tag, String actionName, ActionListener listener,
      KeyStroke keyStroke, String tooltipText)
    {
-      String buttonText = getMessageIfExists("button."+actionName);
+      String buttonText;
 
-      if (buttonText == null)
+      if (tag.equals("button"))
       {
-         buttonText = getMessageIfExists("label."+actionName);
+         tag += "."+actionName;
+         buttonText = getMessage(tag);
       }
-
-      if (buttonText == null)
+      else
       {
+         buttonText = getMessageIfExists("button."+actionName);
+
          if (buttonText == null)
          {
-            buttonText = getMessageIfExists(tag+"."+actionName);
+            buttonText = getMessageIfExists("label."+actionName);
+         }
 
-            if (buttonText != null)
+         if (buttonText == null)
+         {
+            if (buttonText == null)
             {
-               tag += "."+actionName;
+               buttonText = getMessageIfExists(tag+"."+actionName);
+
+               if (buttonText != null)
+               {
+                  tag += "."+actionName;
+               }
             }
          }
       }

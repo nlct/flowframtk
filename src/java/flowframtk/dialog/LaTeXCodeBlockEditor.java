@@ -1,9 +1,21 @@
-// File          : PreamblePartEditor.java
-// Description   : Component for typing TeX code
-// Creation Date : 2014-09-16
-// Author        : Nicola L.C. Talbot
-//                 http://www.dickimaw-books.com/
+/*
+    Copyright (C) 2025 Nicola L.C. Talbot
+    www.dickimaw-books.com
 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.util.regex.*;
@@ -20,24 +32,23 @@ import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.flowframtk.*;
 
 /**
- * Component for editing (La)TeX code.
+ * Component for editing a block of (La)TeX code.
  */
-public class PreamblePartEditor extends JPanel
+public class LaTeXCodeBlockEditor extends JPanel
   implements TeXEditorListener,ActionListener
 {
-   public PreamblePartEditor(JDRFrame frame)
+   public LaTeXCodeBlockEditor(JDRFrame frame, String name)
    {
       super(new BorderLayout());
 
       this.frame = frame;
       FlowframTk application = frame.getApplication();
+      setName(name);
 
       Box toolBar = Box.createHorizontalBox();
 
       SlidingToolBar sToolBar =
          new SlidingToolBar(getResources(), toolBar, SwingConstants.HORIZONTAL);
-
-      setName(getResources().getMessage("texeditor.preamble"));
 
       add(sToolBar, BorderLayout.NORTH);
 
@@ -203,8 +214,10 @@ public class PreamblePartEditor extends JPanel
       document.replace(startIdx, endIdx-startIdx, replacement);
    }
 
-   // set text but don't change modified status
-   public void setPreambleText(String text)
+   /**
+    * Sets the JTextPane's content but doesn't change the modified status.
+    */
+   public void setLaTeXCode(String text)
    {
       boolean isMod = isModified();
       try
@@ -224,7 +237,7 @@ public class PreamblePartEditor extends JPanel
       redoItem.setEnabled(false);
    }
 
-   public void updatePreambleText(String text)
+   public void updateLaTeXCode(String text)
    {
       int pos = textPane.getCaretPosition();
       textPane.selectAll();
@@ -245,7 +258,7 @@ public class PreamblePartEditor extends JPanel
       revalidate();
    }
 
-   public void appendToPreamble(String text)
+   public void appendToLaTeXCode(String text)
    {
       try
       {
@@ -260,7 +273,7 @@ public class PreamblePartEditor extends JPanel
       revalidate();
    }
 
-   public String getPreambleText()
+   public String getLaTeXCode()
    {
       return textPane.getText();
    }

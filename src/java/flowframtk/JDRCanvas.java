@@ -3091,7 +3091,7 @@ public class JDRCanvas extends JPanel
 
    public void showPopup(Component comp, int x, int y)
    {
-      PreambleEditor editor = getFrame().getPreambleEditor();
+      LaTeXCodeEditor editor = getFrame().getLaTeXCodeEditor();
 
       if (editor.isEditing())
       {
@@ -5145,34 +5145,68 @@ public class JDRCanvas extends JPanel
       return true;
    }
 
+   /**
+    * Sets the early preamble text.
+    */
    public void setPreamble(String preamble)
    {
       getCanvasGraphics().setPreamble(preamble);
    }
 
+   /**
+    * Gets the early preamble text.
+    */
    public String getPreamble()
    {
-      return frame_.getPreambleEditor().getPreambleText();
+      return frame_.getLaTeXCodeEditor().getEarlyPreambleText();
    }
 
+   /**
+    * Sets the mid preamble text.
+    */
    public void setMidPreamble(String preamble)
    {
       getCanvasGraphics().setMidPreamble(preamble);
    }
 
+   /**
+    * Gets the mid preamble text.
+    */
    public String getMidPreamble()
    {
-      return frame_.getPreambleEditor().getMidPreambleText();
+      return frame_.getLaTeXCodeEditor().getMidPreambleText();
    }
 
+   /**
+    * Sets the end preamble text.
+    */
    public void setEndPreamble(String preamble)
    {
       getCanvasGraphics().setEndPreamble(preamble);
    }
 
+   /**
+    * Gets the end preamble text.
+    */
    public String getEndPreamble()
    {
-      return frame_.getPreambleEditor().getEndPreambleText();
+      return frame_.getLaTeXCodeEditor().getEndPreambleText();
+   }
+
+   /**
+    * Sets the document text.
+    */
+   public void setDocumentBody(String body)
+   {
+      getCanvasGraphics().setDocBody(body);
+   }
+
+   /**
+    * Gets the document text.
+    */
+   public String getDocumentBody()
+   {
+      return frame_.getLaTeXCodeEditor().getDocumentText();
    }
 
    public void addPackagesToPreamble(Vector<String> styNames)
@@ -5207,7 +5241,7 @@ public class JDRCanvas extends JPanel
 
          if (append.length() > 0)
          {
-            frame_.getPreambleEditor().appendToPreamble(append.toString());
+            frame_.getLaTeXCodeEditor().appendToLaTeXCode(append.toString());
          }
 
          return;
@@ -5262,7 +5296,7 @@ public class JDRCanvas extends JPanel
                {
                   if (opti == null)
                   {
-                     frame_.getPreambleEditor().earlyReplace(startIdx, endIdx,
+                     frame_.getLaTeXCodeEditor().earlyReplace(startIdx, endIdx,
                         String.format("%s[%s]{%s}", cs, opt, name));
                   }
                   else if (!opt.equals(opti))
@@ -5292,7 +5326,7 @@ public class JDRCanvas extends JPanel
 
                      if (!extraOpts.isEmpty())
                      {
-                        frame_.getPreambleEditor().earlyReplace(
+                        frame_.getLaTeXCodeEditor().earlyReplace(
                            startIdx, endIdx,
                            String.format("%s[%s%s]{%s}", cs, opti, extraOpts, 
                               name));
@@ -5336,7 +5370,7 @@ public class JDRCanvas extends JPanel
 
       if (append.length() > 0)
       {
-         frame_.getPreambleEditor().appendToPreamble(append.toString());
+         frame_.getLaTeXCodeEditor().appendToLaTeXCode(append.toString());
       }
    }
 
@@ -7497,9 +7531,10 @@ public class JDRCanvas extends JPanel
       String preamble = image.getCanvasGraphics().getPreamble();
       String midPreamble = image.getCanvasGraphics().getMidPreamble();
       String endPreamble = image.getCanvasGraphics().getEndPreamble();
+      String docEnv = image.getCanvasGraphics().getDocBody();
 
-      frame_.getPreambleEditor().setPreambleText(
-        preamble, midPreamble, endPreamble);
+      frame_.getLaTeXCodeEditor().setLaTeXCode(
+        preamble, midPreamble, endPreamble, docEnv);
    }
 
    public void updateBounds()
@@ -8874,7 +8909,7 @@ public class JDRCanvas extends JPanel
 
    public void mousePressed(MouseEvent evt)
    {
-      if (frame_.isEditingPreamble())
+      if (frame_.isEditingLaTeXCode())
       {
          requestFocusInWindow();
       }
@@ -9075,7 +9110,7 @@ public class JDRCanvas extends JPanel
 
    public void mouseReleased(MouseEvent evt)
    {
-      if (frame_.isEditingPreamble())
+      if (frame_.isEditingLaTeXCode())
       {
          requestFocusInWindow();
       }

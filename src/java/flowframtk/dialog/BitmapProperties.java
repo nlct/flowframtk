@@ -75,8 +75,8 @@ public class BitmapProperties extends JDialog
       filenameLabel.setLabelFor(filename);
       rowBox.add(filename);
 
-      browse = getResources().createDialogButton("browsebitmap.browse", "open",
-         this, null, getResources().getMessage("tooltip.choose_file"));
+      browse = getResources().createDialogButton("browsebitmap", "browse",
+         this, null);
 
       rowBox.add(browse);
 
@@ -321,7 +321,7 @@ public class BitmapProperties extends JDialog
          bitmap=null;
          setVisible(false);
       }
-      else if (action.equals("open"))
+      else if (action.equals("browse"))
       {
          browseAction();
       }

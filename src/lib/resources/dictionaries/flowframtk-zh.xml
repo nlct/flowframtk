@@ -1364,7 +1364,6 @@
 <entry key="tooltip.hScrollEndRight">Scroll right to end</entry>
 <entry key="tooltip.hScrollUnitLeft">Scroll left</entry>
 <entry key="tooltip.hScrollUnitRight">Scroll right</entry>
-<entry key="tooltip.choose_file">Open file selector to choose a file</entry>
 
 <!--  undo/redo information -->
 
@@ -2305,8 +2304,12 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <!--  Browse Bitmap Dialog Box -->
 
 <entry key="browsebitmap.title">Bitmap not found</entry>
+
 <entry key="browsebitmap.browse">Browse...</entry>
 <entry key="browsebitmap.browse.mnemonic">B</entry>
+<entry key="browsebitmap.browse.tooltip">Open file selector to choose another file</entry>
+<entry key="browsebitmap.browse.iconimage">open</entry>
+
 <entry key="browsebitmap.not_found">Bitmap not found. Select new file?</entry>
 <entry key="browsebitmap.cant_refresh">Can't refresh bitmap</entry>
 <entry key="browsebitmap.invalid_format">Invalid or unrecognised image format</entry>
@@ -2322,11 +2325,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="filter.ajr">flowframtk ascii 文件 (*.ajr)</entry>
 <entry key="filter.version.ajr">flowframtk ascii 文件 v{0} (*.ajr)</entry>
+<entry key="filter.experimental_version.ajr">Experimental flowframtk ascii 文件 v{0} (*.ajr)</entry>
 <entry key="filter.eps">PostScript (*.eps, *.ps)</entry>
 <entry key="filter.sty">Package (*.sty)</entry>
 <entry key="filter.cls">Class (*.cls)</entry>
 <entry key="filter.jdr">flowframtk  图片文件 (*.jdr)</entry>
 <entry key="filter.version.jdr">flowframtk  图片文件 v{0} (*.jdr)</entry>
+<entry key="filter.experimental_version.jdr">Experimental flowframtk  图片文件 v{0} (*.jdr)</entry>
 <entry key="filter.pgf">pgf environment (*.tex, *.ltx)</entry>
 <entry key="filter.pgfdoc">LaTeX document (*.tex, *.ltx)</entry>
 <entry key="filter.pgfencapdoc">Encapsulated LaTeX document (*.tex, *.ltx)</entry>
@@ -3114,9 +3119,11 @@ Are you sure you want to ungroup it?</entry>
 <!--  Preamble Panel and Frame Contents Editor -->
 
 <entry key="texeditor.preamble">Preamble</entry>
-<entry key="texeditor.preamble.early">Early</entry>
-<entry key="texeditor.preamble.mid">Mid</entry>
-<entry key="texeditor.preamble.late">Late</entry>
+<entry key="texeditor.latexcodeblock">Preamble and Document Content</entry>
+<entry key="texeditor.latexcodeblock.earlypreamble">Early Preamble</entry>
+<entry key="texeditor.latexcodeblock.midpreamble">Mid Preamble</entry>
+<entry key="texeditor.latexcodeblock.latepreamble">Late Preamble</entry>
+<entry key="texeditor.latexcodeblock.document">Document</entry>
 <entry key="texeditor.frame_contents">Frame Contents</entry>
 
 <entry key="index.menu.texeditor">TeX Editor Popup Menu</entry>
@@ -3588,6 +3595,10 @@ Merge Region: {2}</entry>
 <entry key="label.hidden_objects">{0} 隐藏对象</entry>
 
 <entry key="label.untitled">无标题</entry>
+
+<entry key="button.selectfile">选择...</entry>
+<entry key="button.selectfile.tooltip">Open file selector to choose a file</entry>
+<entry key="button.selectfile.iconimage">open</entry>
 
 <entry key="button.choose">选择...</entry>
 <entry key="button.choose.tooltip">Choose a new setting</entry>

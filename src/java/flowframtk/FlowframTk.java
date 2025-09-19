@@ -314,6 +314,29 @@ public class FlowframTk extends JFrame
          resources.getMessage("filter.ajr"));
       savejdrFC.addChoosableFileFilter(ajrFileFilter);
 
+      if (invoker.isExperimentalMode())
+      {
+         if (JDRAJR.CURRENT_VERSION
+              < JDRAJR.VALID_VERSIONS[JDRAJR.VALID_VERSIONS.length-1])
+         {
+            // an experimental version is available for testing
+
+            float thisVersion = JDRAJR.VALID_VERSIONS[JDRAJR.VALID_VERSIONS.length-1];
+
+            jdrExperimentalFileFilter = new JdrFileFilter(
+              resources.getMessage("filter.experimental_version.jdr", thisVersion), 
+              thisVersion);
+
+            savejdrFC.addChoosableFileFilter(jdrExperimentalFileFilter);
+
+            ajrExperimentalFileFilter = new AjrFileFilter(
+              resources.getMessage("filter.experimental_version.ajr", thisVersion), 
+              thisVersion);
+
+            savejdrFC.addChoosableFileFilter(ajrExperimentalFileFilter);
+         }
+      }
+
       int version = (int)Math.round(10.0*(JDRAJR.CURRENT_VERSION-0.1f))-10;
 
       int numOldVersions = version+1;
@@ -459,10 +482,6 @@ public class FlowframTk extends JFrame
       pgfDocFileFilter = new TeXFileFilter(
          resources.getMessage("filter.pgfdoc"));
       exportFC.addChoosableFileFilter(pgfDocFileFilter);
-
-      pgfEncapDocFileFilter = new TeXFileFilter(
-         resources.getMessage("filter.pgfencapdoc"));
-      exportFC.addChoosableFileFilter(pgfEncapDocFileFilter);
 
       pngFileFilter = new PngFileFilter(
          resources.getMessage("filter.png"));
@@ -2661,7 +2680,7 @@ public class FlowframTk extends JFrame
 
                if (frame != null)
                {
-                  frame.displayPreambleEditor();
+                  frame.displayLaTeXCodeEditor();
                }
             }
          });
@@ -7311,9 +7330,12 @@ public class FlowframTk extends JFrame
    private JdrFileFilter[] oldJdrFileFilter;
    private AjrFileFilter ajrFileFilter;
    private AjrFileFilter[] oldAjrFileFilter;
+
+   private JdrFileFilter jdrExperimentalFileFilter;
+   private AjrFileFilter ajrExperimentalFileFilter;
+
    private TeXFileFilter pgfFileFilter;
    private TeXFileFilter pgfDocFileFilter;
-   private TeXFileFilter pgfEncapDocFileFilter;
    private StyFileFilter styFileFilter;
    private ClsFileFilter clsFileFilter;
    private PngFileFilter pngFileFilter;

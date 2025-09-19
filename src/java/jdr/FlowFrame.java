@@ -111,6 +111,8 @@ public class FlowFrame implements Cloneable,Serializable
       contents = flowframe.contents;
       evenXShift = flowframe.evenXShift;
       evenYShift = flowframe.evenYShift;
+      styleCommands = flowframe.styleCommands;
+      clear = flowframe.clear;
    }
 
    /**
@@ -132,6 +134,8 @@ public class FlowFrame implements Cloneable,Serializable
       evenXShift = f.evenXShift;
       evenYShift = f.evenYShift;
       contents  = f.contents;
+      styleCommands = f.styleCommands;
+      clear = f.clear;
       setCanvasGraphics(f.getCanvasGraphics());
    }
 
@@ -169,6 +173,12 @@ public class FlowFrame implements Cloneable,Serializable
       if (shape != f.shape) return false;
       if (evenXShift != f.evenXShift) return false;
       if (evenYShift != f.evenYShift) return false;
+      if (clear != f.clear) return false;
+
+      if (!styleCommands.equals(f.styleCommands))
+      {
+         return false;
+      }
 
       if ((contents == null && f.contents != null)
         ||(contents != null && f.contents == null))
@@ -539,6 +549,14 @@ public class FlowFrame implements Cloneable,Serializable
          pgf.println();
      }
 
+     boolean addStyle = false;
+
+     if (pgf.isFlowframTkStyUsed() && hasStyleCommands())
+     {
+        pgf.println("\\flowframtkNewDynamicStyle{"+label+"}{"+styleCommands+"}");
+        addStyle = true;
+     }
+
      if (shape != STANDARD
        && (type == STATIC || type == DYNAMIC)
        && (object instanceof JDRPath))
@@ -588,11 +606,12 @@ public class FlowFrame implements Cloneable,Serializable
             pgf.print(",clear");
          }
 
-         if (type == DYNAMIC && !styleCommands.isEmpty())
+         if (addStyle)
          {
             pgf.print(",style={");
-            pgf.print(styleCommands);
-            pgf.print("}");
+            pgf.print("\\flowframtkUseDynamicStyleCsName{");
+            pgf.print(label);
+            pgf.print("}}");
          }
 
          pgf.println("}");
@@ -684,12 +703,17 @@ public class FlowFrame implements Cloneable,Serializable
                   {
                      jdr.writeBoolean(clear);
 
+                     if (type == DYNAMIC)
+                     {
+                        jdr.writeString(styleCommands);
+                     }
+                  }
+                  else
+                  {
                      if (clear) omitted = true;
 
                      if (type == DYNAMIC)
                      {
-                        jdr.writeString(styleCommands);
-
                         if (!styleCommands.isEmpty()) omitted = true;
                      }
                   }
@@ -710,7 +734,9 @@ public class FlowFrame implements Cloneable,Serializable
             if (version >= 2.1f)
             {
                jdr.writeByte((byte)marginPosition);
-
+            }
+            else
+            {
                if (marginPosition != MARGIN_OUTER)
                {
                   omitted = true;
@@ -734,7 +760,10 @@ public class FlowFrame implements Cloneable,Serializable
                   {
                      jdr.writeInt(textColor.getRGB());
                   }
-                  else
+               }
+               else
+               {
+                  if (textColor != null)
                   {
                      omitted = true;
                   }
@@ -1034,6 +1063,51 @@ public class FlowFrame implements Cloneable,Serializable
    public int getVAlign()
    {
       return valign;
+   }
+
+   public boolean isClearOn()
+   {
+      return clear;
+   }
+
+   public void setClear(boolean on)
+   {
+      if (type == DYNAMIC || type == STATIC)
+      {
+         clear = on;
+      }
+      else if (on)
+      {
+         throw new JdrIllegalArgumentException(
+           JdrIllegalArgumentException.FRAME_CONTENTS_TYPE, type,
+           getCanvasGraphics());
+      }
+   }
+
+   public String getStyleCommands()
+   {
+      return styleCommands;
+   }
+
+   public boolean hasStyleCommands()
+   {
+      return type == DYNAMIC && !styleCommands.trim().isEmpty();
+   }
+
+   public void setStyleCommands(String cmds)
+   {
+      if (cmds == null) cmds = "";
+
+      if (type == DYNAMIC)
+      {
+         styleCommands = cmds;
+      }
+      else if (!cmds.isEmpty())
+      {
+         throw new JdrIllegalArgumentException(
+           JdrIllegalArgumentException.FRAME_CONTENTS_TYPE, type,
+           getCanvasGraphics());
+      }
    }
 
    public void setContents(String text)

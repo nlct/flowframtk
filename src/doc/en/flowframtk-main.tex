@@ -2652,19 +2652,23 @@ text onto the canvas to add to the current image. With the
 the canvas. If you attempt to drop a file instead, you will get a
 new \gls{textarea} containing the file's path (or URI). 
 
-\section{The Preamble Pane}\label{sec:thepreamblepane}
+\section{The Preamble and Document Text Pane}\label{sec:thepreamblepane}
 
-The preamble pane by default is on the right of the \gls{canvas},
+The preamble code and document text pane is, by default, on the right of the \gls{canvas},
 which may be used to specify code that should go in the document
-preamble of exported files. (This includes exports that use \LaTeX\
-as an intermediate step.)
+preamble or (where applicable) the \env{document} environment of exported files. 
+(This includes exports that use \LaTeX\ as an intermediate step.)
 
 This area is split into three tabs for the early preamble code,
-the mid-preamble code, and the late preamble code.
+the mid-preamble code, and the late preamble code, and a fourth tab
+for the content of the \env{document} environment (only applicable
+with \gls{flowframe} exports that include the \env{document}
+environment).
+
 See \sectionref{sec:preamble} for further details on how this
 code is added during the export process, and
 see \sectionref{sec:configureuidialog} to set a default preamble
-for all images and to reposition the preamble pane.
+for all images and to reposition the preamble code and document text pane.
 
 \section{The Toolbars}\label{sec:thetoolbars}
 
@@ -2932,9 +2936,21 @@ wish to edit it later.
 \end{warning}
 
 The \menu{file.export} menu item allows you to export your image.
-This will open the \inlineglsdef{export.title} dialog box, which
+This will open the \dialog{export} dialog box, which
 provides a way to specify the name and location of the file as well
 as what format to export to. 
+
+\widgetdef{export.title}
+
+At the top of the \dialog{export} dialog is a field for the path to
+the desired export file. You can either type in the full path or use
+the \btn{selectfile} button at the side to open the file chooser.
+
+There are two different types of data to export: the actual image as
+shown on the \gls{canvas} (or as close as can be obtained given the
+export format) or the \gls{flowframe} data associated with the
+image (that is, the \gls{typeblock} and any \gls{flowframe} data
+associated with any of the \glspl{object} that make up the image).
 
 % TODO update this section
 
@@ -2960,10 +2976,10 @@ dialog box will open (see \figureref{fig:exportpngdialog}).
   {\includeimg{exportpngdialog}}
   {Export to PNG Settings}
 
-Select the \widget{exportpng.usealpha} box if you want a \gls{transparent}
+Select the \widget{export.use_alpha} box if you want a \gls{transparent}
 background. If the box isn't checked, the background will be white.
 
-Select the \widget{exportpng.crop} checkbox if you want the image cropped
+Select the \widget{export.bounds.image} box if you want the image cropped
 to the image's \gls{image.bbox}. If the checkbox isn't checked, the image
 will be the same size as the paper \gls{paper.size}. 
 
@@ -9393,11 +9409,40 @@ package. Although the \sty{pgf} package is available for
 \TeX\ formats other than \LaTeX, \FlowframTk\ currently only exports
 images using \LaTeX\ syntax.
 
-\section{Adding Commands to the Preamble}\label{sec:preamble}
+\section{Adding Commands to the Preamble and Providing Document Text}\label{sec:preamble}
 
 The \hyperref[sec:exportdoc]{export to single-paged document}
 functions create a complete \LaTeX\ document, including the document
-class and \inlineglsdef{preamble}.  The generated \ext{tex} file has the form:
+class and \inlineglsdef{preamble}.  
+
+As from version 0.8.8 and if the \sty{flowframtkutils} package is
+available, the generated \ext{tex} file has the form:
+\begin{compactcodebox}
+\cmd{documentclass}\oargm{cls size opt}\margm{class-name}
+
+\meta{Default Preamble}
+
+\cmd{usepackage}\marg{flowframtktutils}
+
+\meta{Early-Preamble}
+
+\cmd{usepackage}\oargm{options}\marg{geometry}
+
+\meta{Mid-Preamble}
+
+\meta{Document Info}
+
+\cmd{pagestyle}\marg{empty}
+
+\meta{Late-Preamble}
+
+\cmd{begin}\marg{document}\cmd{noindent}
+\cmd{jdrimagebox}\margm{image code}
+\cmd{end}\marg{document}
+\end{compactcodebox}
+
+With old versions of \FlowframTk, or when the \sty{flowframtkutils}
+package isn't available, the generated \ext{tex} file has the form:
 \begin{compactcodebox}
 \cmd{documentclass}\oargm{cls size opt}\margm{class-name}
 \strut
@@ -9432,17 +9477,17 @@ The document class \meta{class-name} and base font size
 \widget{clssettings.title} tab of the
 \dialog{texconfig} dialog (see \sectionref{sec:normalsize}).
 
-As shown above, the \sty{pgf}, \sty{geometry} and
-\sty{ifpdf} packages are automatically added to the \gls{preamble},
-and the \sty*{pgf} \sty{decorations.text} library is also
-loaded, in case the image contains any \glspl{textpath}.
-\FlowframTk\ also defines the command:
+In the newer first case, \sty{flowframtkutils} (which loads
+\sty{pgf}) and \sty{geometry} are automatically added.
+The \sty{flowframtkutils} package defines:
 \cmddef{jdroutline}
 This is used for any outline \glspl{textarea} (but not
 \glspl{textpath}, as outline \glspl*{textpath} are not supported by
-the \LaTeX-related export functions.)
+the \LaTeX-related export functions.) The package will also load the 
+\sty{decorations.text} library if applicable. 
 
-The other command that's automatically defined in the \gls{preamble} is:
+Another command defined \sty{flowframtkutils} which is used in the
+export to complete \LaTeX\ document function is:
 \cmddef{jdrimagebox}
 This is used in case the image turns out to be slightly larger than
 calculated. (This could be caused by rounding errors, or the
@@ -9450,21 +9495,29 @@ difference in fonts, as discussed in \sectionref{sec:fontanchor}.)
 The \env{pgfpicture} environment is placed inside the argument of
 \gls{jdrimagebox} to prevent spurious blank pages occurring.
 
+If the export setting includes the document creation date and
+title, this will be set with:
+\cmddef{flowframtkimageinfo}
+How this is implemented depends on whether or not \sty{hyperref} has
+is loaded or of \gls{pdfinfo} is available.
+(The document title is obtained from the image description, see
+\sectionref{sec:imagedescription}.)
+
+In the older second case, the \sty{ifpdf} package is also loaded
+along with the \sty*{pgf} \sty{decorations.text} library, in
+case the image contains any \glspl{textpath} as well as defining
+\gls{jdroutline} and \gls{jdrimagebox}.
+If the export setting includes the document creation date and
+title, this will be set with \gls{pdfinfo} if \gls{ifpdf} is true.
+The newer first case 
+produces shorter code as these commands are already defined.
+
 \begin{information}
 If you \hyperref[sec:exportpgf]{export} to a file containing \sty{pgf}
 code to be input by another document, you will need to inspect the 
 created \ext{tex} file for information regarding required files and
 command definitions.
 \end{information}
-
-In addition \gls{pdfinfo} is added with the creation date and
-optionally a title if the \widget{clssettings.pdfinfo} option
-is selected in the \dialog{texconfig} dialog.
-(The title is obtained from the image description, see
-\sectionref{sec:imagedescription}.) The relevant code is placed
-after the early-preamble code and before the definition of
-\gls{jdroutline}. The conditional \gls{ifpdf} is used so
-that \gls{pdfinfo} is only used with \pdfLaTeX.
 
 The \gls{preamble.default} code (\meta{Default Preamble}) is set using the
 \widget{preambleconfig.title} tab of the \dialog{texconfig} dialog
@@ -9485,6 +9538,21 @@ that contains a command that isn't part of the \LaTeX\ kernel, the
 \gls{early-preamble} can include the code to load the package that defines
 the command or the \glsname{preamble.mid} or \gls{late-preamble} can include the command
 definition.
+
+The export to multi-paged PDF function, creates a \LaTeX\ document
+that loads the \sty{flowfram} package and defines all flow frames,
+static frames and dynamic frames, as per the export to class or
+package. In this case, you can specify the \LaTeX\ code to add the
+\env{document} environment.
+
+If the document content is empty, blank pages will be created. The
+number depends on the page lists of all objects that have
+\gls{flowframe} data. If all page lists are simply set to \qt{all},
+then only one page will be created. If some page lists are set to
+\qt{even} then two pages will be created, otherwise the number of
+pages will be determined by the maximum end range of all page lists.
+If a page list has an open-ended range then the end will be treated
+as the minimum valid number for that range.
 
 \menudef{menu.tex.set_preamble}
 
@@ -9508,9 +9576,9 @@ way across so that one of the panels is no longer visible. However,
 for some look and feels, it's not possible to completely hide the
 preamble panel.
 
-\widgetdef{texeditor.preamble}
+\widgetdef{texeditor.latexcodeblock}
 
-The \widget{texeditor.preamble} panel has three tabbed panels.
+The \widget{texeditor.latexcodeblock} panel has four panels.
 Each panel has the same layout with a horizontal toolbar and an
 editor area below it in which you can type the code. 
 
@@ -9518,9 +9586,9 @@ The editor area has syntax highlighting. You can change the
 \manmsgpl{colour} used or switch off the highlighting using the
 \dialog{texeditorui} dialog (\sectionref{sec:texeditorui}).
 
-\widgetdef{texeditor.preamble.early}
+\widgetdef{texeditor.latexcodeblock.earlypreamble}
 
-The \widget{texeditor.preamble.early} panel is for the 
+The \widget{texeditor.latexcodeblock.earlypreamble} panel is for the 
 \inlineglstextdef{preamble.early}, which is typically for package
 loading. If the \glspl{textarea-mapping} are enabled (see
 \sectionref{sec:texconfigtext}), any
@@ -9532,9 +9600,9 @@ class} functions, the \gls{early-preamble} code will be
 inserted before the option declarations, which allows you to add
 extra options, if required.
 
-\widgetdef{texeditor.preamble.mid}
+\widgetdef{texeditor.latexcodeblock.midpreamble}
 
-The \widget{texeditor.preamble.mid} panel is for the
+The \widget{texeditor.latexcodeblock.midpreamble} panel is for the
 \inlineglstextdef{preamble.mid}, which may be used to define
 commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
 
@@ -9542,11 +9610,18 @@ If you use the \hyperref[sec:exportsty]{export to package or document
 class} functions, the \gls{mid-preamble} code will be inserted after
 the underlying class or package has been loaded.
 
-\widgetdef{texeditor.preamble.late}
+\widgetdef{texeditor.latexcodeblock.latepreamble}
 
-The \widget{texeditor.preamble.late} panel is for the
+The \widget{texeditor.latexcodeblock.latepreamble} panel is for the
 \inlineglstextdef{preamble.late}, which may also be used to define
 commands for use in any \gls{textarea}['s] alternative \LaTeX\ text.
+
+\widgetdef{texeditor.latexcodeblock.document}
+
+The \widget{texeditor.latexcodeblock.document} panel is for the
+\inlineglstextdef{env.document} body. This is only used when
+exporting \gls{flowframe} data to a multi-paged PDF.
+
 
 If you use the \hyperref[sec:exportsty]{export to package or document
 class} functions, the \gls{late-preamble} code will be inserted 
@@ -9555,7 +9630,7 @@ at the end of the file, just before
 the preamble code will be replaced by \gls{RequirePackage}
 during the export.
 
-The \widget{texeditor.preamble.late} panel is shown in \figureref{fig:preambleeditor2},
+The \widget{texeditor.latexcodeblock.latepreamble} panel is shown in \figureref{fig:preambleeditor2},
 where a command has been defined:
 \begin{verbatim}
 \newcommand*{\bvec}[1]{\boldsymbol{#1}}
@@ -9583,7 +9658,7 @@ previously just in a dialog window) is now referred to as the
 
 \section{\TeX\ Editor}\label{sec:texeditor}
 
-The \TeX\ editor is used for the \widget{texeditor.preamble} panels,
+The \TeX\ editor is used for the \widget{texeditor.latexcodeblock} panels,
 the \dialog{preambleconfig} dialog (\sectionref{sec:texconfigpreamble}),
 and for the static and dynamic frame contents dialog.
 
@@ -11352,7 +11427,7 @@ Insert table here!
 
 \item Move the slider between the \gls{canvas} and the preamble
 panel, or use the \menu{tex.set_preamble} menu item to
-show the \gls{preamble} panel. In the \widget{texeditor.preamble.early}
+show the \gls{preamble} panel. In the \widget{texeditor.latexcodeblock.earlypreamble}
 tab, add the following:
 \begin{codebox}
 \gls{RequirePackage}\oarg{utf8}\marg{inputenc}

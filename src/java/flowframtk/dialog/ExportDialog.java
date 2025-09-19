@@ -460,6 +460,16 @@ public class ExportDialog extends JDialog
       rememberSettingsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       bottomPanel.add(rememberSettingsBox, "West");
 
+      // balance
+
+      bottomPanel.add(
+       new Box.Filler(
+           rememberSettingsBox.getMinimumSize(),
+           rememberSettingsBox.getPreferredSize(),
+           rememberSettingsBox.getMaximumSize()
+          ),
+       "East");
+
       JPanel buttonPanel = new JPanel();
 
       resources.createOkayCancelHelpButtons(this, buttonPanel, this, "sec:exportimage");
@@ -1021,6 +1031,7 @@ public class ExportDialog extends JDialog
       switch (exportSettings.type)
       {
          case IMAGE_PDF:
+         case FLF_PDF:
            frame.savePDF(file, exportSettings);
          break;
          case EPS:
@@ -1221,6 +1232,11 @@ public class ExportDialog extends JDialog
          // file chooser selection approved
 
          FileFilter filter = exportFC.getFileFilter();
+
+         if (currentFileTypeButton.getFileFilter() == filter)
+         {
+            return;
+         }
 
          for (FileTypeButton btn : fileTypeButtons)
          {

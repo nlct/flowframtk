@@ -366,19 +366,6 @@ public class FLF extends TeX
 
       println("\\usepackage["+cg.getPaper().tex(cg)+"]{geometry}");
 
-      print("\\usepackage[");
-
-      if (cg.useAbsolutePages())
-      {
-         println("pages=absolute");
-      }
-      else
-      {
-         println("pages=relative");
-      }
-
-      println("]{flowfram}");
-
       double bpToStorage = cg.bpToStorage(1.0);
 
       double left = typeblock.getLeft();
@@ -393,6 +380,21 @@ public class FLF extends TeX
       baselineskip = cg.getStorageBaselineskip(LaTeXFontBase.NORMALSIZE);
 
       typeblock.tex(this, group, typeblockRect, baselineskip, false);
+
+      // NB load flowfram.sty after page geometry set up
+
+      print("\\usepackage[");
+
+      if (cg.useAbsolutePages())
+      {
+         print("pages=absolute");
+      }
+      else
+      {
+         print("pages=relative");
+      }
+
+      println("]{flowfram}");
 
       if (cg.hasMidPreamble())
       {
@@ -412,8 +414,6 @@ public class FLF extends TeX
       minPage = 1;
       numFlows = 0;
 
-      println("\\makeatletter");
-
       publisher.publishMessages(MessageInfo.createIndeterminate(false));
       publisher.publishMessages(MessageInfo.createMaxProgress(group.size()+1));
 
@@ -426,11 +426,16 @@ public class FLF extends TeX
          writeAndUpdateMinPage(group.get(i), typeblockRect, baselineskip);
       }
 
-      printHeaderFooter();
+      if (isFlowframTkStyUsed())
+      {
+         printFlowframTkStyHeaderFooter();
+      }
+      else
+      {
+         printHeaderFooter();
+      }
 
       printThumbtabs();
-
-      println("\\makeatother");
 
       publisher.publishMessages(MessageInfo.createIncProgress());
 
@@ -990,6 +995,36 @@ public class FLF extends TeX
          println("}");
       }
 
+      if (header != null && header.hasStyleCommands())
+      {
+         String contents = header.getContents();
+
+         if (contents != null && !contents.isEmpty())
+         {
+            println("\\flowframtkNewDynamicStyle{"+headerlabel+"}{"+contents+"}");
+            print("\\setdynamicframe*{");
+            print(headerlabel);
+            print("}{style=\\flowframtkUseDynamicStyleCsName{");
+            print(headerlabel);
+            println("}}");
+         }
+      }
+
+      if (evenheader != null && evenheader.hasStyleCommands())
+      {
+         String contents = header.getContents();
+
+         if (contents != null && !contents.isEmpty())
+         {
+            println("\\flowframtkNewDynamicStyle{"+evenheaderlabel+"}{"+contents+"}");
+            print("\\setdynamicframe*{");
+            print(evenheaderlabel);
+            print("}{style=\\flowframtkUseDynamicStyleCsName{");
+            print(evenheaderlabel);
+            println("}}");
+         }
+      }
+
       String footerlabel = cg.getFooterLabel();
 
       FlowFrame footer = group.getFlowFrame(FlowFrame.DYNAMIC, footerlabel);
@@ -1025,6 +1060,36 @@ public class FLF extends TeX
          print("\\flowframtkSetDynamicEvenFoot{");
          print(evenfooterlabel);
          println("}");
+      }
+
+      if (footer != null && footer.hasStyleCommands())
+      {
+         String contents = footer.getContents();
+
+         if (contents != null && !contents.isEmpty())
+         {
+            println("\\flowframtkNewDynamicStyle{"+footerlabel+"}{"+contents+"}");
+            print("\\setdynamicframe*{");
+            print(footerlabel);
+            print("}{style=\\flowframtkUseDynamicStyleCsName{");
+            print(footerlabel);
+            println("}}");
+         }
+      }
+
+      if (evenfooter != null && evenfooter.hasStyleCommands())
+      {
+         String contents = footer.getContents();
+
+         if (contents != null && !contents.isEmpty())
+         {
+            println("\\flowframtkNewDynamicStyle{"+evenfooterlabel+"}{"+contents+"}");
+            print("\\setdynamicframe*{");
+            print(evenfooterlabel);
+            print("}{style=\\flowframtkUseDynamicStyleCsName{");
+            print(evenfooterlabel);
+            println("}}");
+         }
       }
 
       if (hasHeadOrFoot)

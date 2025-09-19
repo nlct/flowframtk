@@ -86,8 +86,7 @@ public class FileField extends JPanel
       eastComp = Box.createHorizontalBox();
       add(eastComp, "East");
 
-      button = getResources().createDialogButton("button.choose", "open",
-         this, null, getResources().getMessage("tooltip.choose_file"));
+      button = getResources().createDialogButton("button", "selectfile", this, null);
 
       eastComp.add(button);
 
@@ -124,7 +123,7 @@ public class FileField extends JPanel
 
       if (action == null) return;
 
-      if (action.equals("open"))
+      if (action.equals("selectfile"))
       {
          fileChooser.setFileSelectionMode(mode);
 
