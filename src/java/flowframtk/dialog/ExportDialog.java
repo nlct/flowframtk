@@ -265,7 +265,7 @@ public class ExportDialog extends JDialog
 
       fileTypeButtons[TYPE_PNG] = new FileTypeButton(this, 
          ExportSettings.Type.PNG, "png", bg,
-         pngFileFilter, ".png", false, pdftopngPanel);
+         pngFileFilter, ".png", false, pdfLaTeXPanel, pdftopngPanel);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
 
@@ -1133,6 +1133,8 @@ public class ExportDialog extends JDialog
       boolean showBitmapsToEps = false;
       boolean showMarkup = false;
       boolean showDocClassComp = false;
+      boolean showTextualShading = true;
+      boolean showPathOutline = true;
 
       if (useExternalProcessBox.isVisible() && useExternalProcessBox.isSelected())
       {
@@ -1162,7 +1164,18 @@ public class ExportDialog extends JDialog
            showShapePar = true;
          break;
          case PNG:
-            showAlpha = !useExternalProcessBox.isSelected();
+            if (useExternalProcessBox.isSelected())
+            {
+               showAlpha = false;
+               showTextualShading = true;
+               showPathOutline = true;
+            }
+            else
+            {
+               showAlpha = true;
+               showTextualShading = false;
+               showPathOutline = false;
+            }
          break;
          case PGF:
             if (usePaperSizeBoundsBox.isSelected())
@@ -1184,6 +1197,8 @@ public class ExportDialog extends JDialog
         && !(type == ExportSettings.Type.STY || type == ExportSettings.Type.PNG));
       bitmapsToEpsBox.setVisible(showBitmapsToEps);
       markupComp.setVisible(showMarkup);
+      textualShadingComp.setVisible(showTextualShading);
+      textPathOutlineComp.setVisible(showPathOutline);
    }
 
    @Override

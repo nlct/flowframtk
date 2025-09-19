@@ -2434,7 +2434,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.load_doc_class.default">Default</entry>
 <entry key="export.load_doc_class.specified">Class Name:</entry>
 
-<entry key="export.use_alpha">Transparent Background</entry>
+<entry key="export.use_alpha">Add Alpha Channel</entry>
 <entry key="export.pdf_info">Add title and creation date</entry>
 <entry key="export.bitmaps_to_eps">Convert bitmaps to EPS</entry>
 
