@@ -159,11 +159,15 @@ public class FLF extends TeX
 
          if (isCls)
          {
+            println("\\ExplSyntaxOn");
             println("\\DeclareUnknownKeyHandler["+basename+"]{");
-            println("  \\IfValueTF{#2}");
-            println("  {\\PassOptionsToClass{#1=#2}{"+docClass+"}}");
-            println("  {\\PassOptionsToClass{#1}{"+docClass+"}}");
+            println("  \\bool_lazy_or:nnTF");
+            println("   { \\tl_if_empty_p:n { #2 } }");
+            println("   { \\tl_if_novalue_p: { #2 } }");
+            println("  { \\PassOptionsToClass { #1 } {"+docClass+"} }");
+            println("  { \\PassOptionsToClass { #1 = { #2 } } {"+docClass+"} }");
             println("}");
+            println("\\ExplSyntaxOff");
          }
 
          if (cg.useAbsolutePages())
@@ -946,51 +950,27 @@ public class FLF extends TeX
    protected void printFlowframTkStyHeaderFooter() throws IOException
    {
       CanvasGraphics cg = group.getCanvasGraphics();
-      String list = "";
-      String headerlist = "";
-      String footerlist = "";
 
-      String psheadingsoddhead = "{\\jdrheadingfmt\\rightmark}\\hfill\\thepage";
-      String psheadingsevenhead = "\\thepage\\hfill{\\jdrheadingfmt\\leftmark}";
-
-      String psflowframtkoddhead = "\\flowframtkoddheaderfmt{\\rightmark}";
-      String psflowframtkevenhead = "\\flowframtkevenheaderfmt{\\leftmark}";
+      boolean hasHeadOrFoot = false;
 
       String headerlabel = cg.getHeaderLabel();
 
       FlowFrame header = group.getFlowFrame(FlowFrame.DYNAMIC, headerlabel);
 
       String evenheaderlabel = cg.getEvenHeaderLabel();
+
       FlowFrame evenheader = group.getFlowFrame(
             FlowFrame.DYNAMIC, evenheaderlabel);
 
       if (header != null)
       {
-         String contents = header.getContents();
-
-         if (contents != null)
-         {
-            psheadingsoddhead = contents
-                              + "{{\\jdrheadingfmt\\rightmark}\\hfill\\thepage}";
-            psflowframtkoddhead = "\\flowframtkoddheaderfmt{"
-                                 + contents + "\\rightmark}";
-         }
+         hasHeadOrFoot = true;
 
          if (evenheader == null)
          {
             print("\\flowframtkSetDynamicOddHead{");
             print(headerlabel);
             println("}");
-
-            list = headerlabel;
-
-            if (contents != null)
-            {
-               psheadingsevenhead = contents
-                              + "{\\thepage\\hfill{\\jdrheadingfmt\\leftmark}}";
-               psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
-                                    + contents + "\\leftmark}";
-            }
          }
          else
          {
@@ -999,172 +979,57 @@ public class FLF extends TeX
             print("}{");
             print(evenheaderlabel);
             println("}");
-
-            list = headerlabel+","+evenheaderlabel;
-
-            contents = evenheader.getContents();
-
-            if (contents != null)
-            {
-               psheadingsevenhead = contents
-                              + "{\\thepage\\hfill{\\jdrheadingfmt\\leftmark}}";
-               psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
-                                     + contents + "\\leftmark}";
-            }
          }
-
       }
       else if (evenheader != null)
       {
-         list = evenheaderlabel;
+         hasHeadOrFoot = true;
+
          print("\\flowframtkSetDynamicEvenHead{");
          print(evenheaderlabel);
          println("}");
-
-         String contents = evenheader.getContents();
-
-         if (contents != null)
-         {
-            psheadingsevenhead = contents
-                           + "{\\thepage\\hfil{\\jdrheadingfmt\\leftmark}}";
-
-            psflowframtkevenhead = "\\flowframtkevenheaderfmt{"
-                                  + contents + "\\leftmark}";
-         }
       }
-
-      headerlist = list;
-
-      String psplainoddfoot = "\\flowframtkoddfooterfmt{\\thepage}";
-      String psplainevenfoot = "\\flowframtkevenfooterfmt{\\thepage}";
 
       String footerlabel = cg.getFooterLabel();
 
       FlowFrame footer = group.getFlowFrame(FlowFrame.DYNAMIC, footerlabel);
 
       String evenfooterlabel = cg.getEvenFooterLabel();
+
       FlowFrame evenfooter = group.getFlowFrame(
             FlowFrame.DYNAMIC, evenfooterlabel);
 
       if (footer != null)
       {
-         if (!list.isEmpty()) list = list+",";
-
-         String contents = footer.getContents();
-
-         if (contents != null)
-         {
-            psplainoddfoot = "\\flowframtkoddfooterfmt{" + contents+"\\thepage}";
-         }
+         hasHeadOrFoot = true;
 
          if (evenfooter == null)
          {
-            list += footerlabel;
-
-            footerlist = footerlabel;
-
             print("\\flowframtkSetDynamicOddFoot{");
             print(footerlabel);
             println("}");
-
-            if (contents != null)
-            {
-               psplainevenfoot = "\\flowframtkevenfooterfmt{" + contents+"\\thepage}";
-            }
-
          }
          else
          {
-            footerlist = footerlabel+","+evenfooterlabel;
-
-            list += footerlist;
-
-            print("\\flowframtkSetDynamicOddFoot{");
+            print("\\flowframtkSetDynamicOddEvenFoot{");
             print(footerlabel);
             print("}{");
             print(evenfooterlabel);
             println("}");
-
-            contents = evenfooter.getContents();
-
-            if (contents != null)
-            {
-               psplainevenfoot = "\\flowframtkevenfooterfmt{"
-                               + contents+"\\thepage}";
-            }
          }
       }
       else if (evenfooter != null)
       {
-         if (list.isEmpty())
-         {
-            list = evenfooterlabel;
-         }
-         else
-         {
-            list += ","+evenfooterlabel;
-         }
-
-         footerlist = evenfooterlabel;
+         hasHeadOrFoot = true;
 
          print("\\flowframtkSetDynamicEvenFoot{");
          print(evenfooterlabel);
          println("}");
-
-         String contents = evenfooter.getContents();
-
-         if (contents != null)
-         {
-            psplainevenfoot = "\\flowframtkevenfooterfmt{"
-                            + contents+"\\thepage}";
-         }
       }
 
-      if (!list.isEmpty())
+      if (hasHeadOrFoot)
       {
-         print("\\flowframtkSetExtraPageStyles{");
-         print(list);
-         print("}{");
-         print(headerlist);
-         print("}{");
-         print(footerlist);
-         print("}{");
-         print(psplainoddfoot);
-         print("}{");
-         print(psplainevenfoot);
-         println("}");
-
-         if (evenheader == null)
-         {
-            print("\\flowframtkSetExtraOddHeadings{");
-            print(headerlist);
-            print("}{");
-            print(footerlist);
-            print("}{");
-            print(psheadingsoddhead);
-            println("}");
-         }
-         else
-         {
-            print("\\flowframtkSetExtraOddEvenHeadings{");
-            print(headerlist);
-            print("}{");
-            print(footerlist);
-            print("}{");
-            print(psheadingsoddhead);
-            print("}{");
-            print(psheadingsevenhead);
-            println("}");
-         }
-
-         if (headerlist.isEmpty() || footerlist.isEmpty())
-         {
-            println("\\flowframtkSetDefaultPageStyle");
-         }
-         else
-         {
-            println("\\pagestyle{flowframtk}");
-         }
+         println("\\flowframtkMakeDFHeaderFooter");
       }
    }
 
