@@ -106,6 +106,7 @@ objects.}
 
 @class{cls.extarticle}
 @class{cls.a0poster}
+@class{cls.beamer}
 
 % COMMON OPTIONS
 
@@ -132,6 +133,26 @@ objects.}
  syntax={\marg{\keyvallist}}
 }
 
+@command{includeteximage,
+  syntax={\oarg{\keyvallist}\margm{filename}}
+}
+
+@command{flowframtkstartobject,
+ name={\csfmt{flow\-fram\-tk\-start\-object}}
+ syntax={\margm{n}\margm{class name}\margm{description}\margm{tag}\margm{pgf point}\margm{width}\margm{height}}
+}
+
+@command{flowframtkendobject,
+ name={\csfmt{flow\-fram\-tk\-end\-object}}
+ syntax={\margm{n}\margm{class name}\margm{description}\margm{tag}\margm{pgf point}\margm{width}\margm{height}}
+}
+
+@command{flowframtkencapobject,
+ name={\csfmt{flow\-fram\-tk\-encap\-object}}
+ syntax={\margm{n}\margm{class name}\margm{description}\margm{tag}\margm{pgf point}\margm{width}\margm{height}\margm{object}}
+}
+
+@command{pgfpoint}
 @command{textheight}
 @command{textwidth}
 @command{evensidemargin}
@@ -251,6 +272,8 @@ objects.}
 % ENVIRONMENT VARIABLES
 
 @variable{PATH}
+
+@variable{LIBGS}
 
 @variable{FLOWFRAMTK_OPTS,
  name={\varfmt{FLOW\-FRAM\-TK\_OPTS}}
@@ -1240,4 +1263,24 @@ interpreted as tapping the appropriate side of the pad.}
 @indexplural{pgf.delimiter,
  parent={pkg.pgf},
  text={delimiter}
+}
+
+@indexplural{processor-placeholder,
+  text={processor placeholder}
+}
+
+@index{placeholder-basename,
+ name={\code{\$base\-name}}
+}
+
+@index{placeholder-inputfile,
+ name={\code{\$in\-put\-file}}
+}
+
+@index{placeholder-outputfile,
+ name={\code{\$out\-put\-file}}
+}
+
+@index{placeholder-libgs,
+ name={\code{\$libgs}}
 }

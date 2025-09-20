@@ -2372,9 +2372,11 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="export.use_process">Use external application(s)</entry>
 <entry key="export.use_process.mnemonic">U</entry>
+<entry key="export.use_process.initvalue">false</entry>
 
 <entry key="export.remember">Remember settings</entry>
 <entry key="export.remember.mnemonic">R</entry>
+<entry key="export.remember.initvalue">true</entry>
 
 <entry key="export.bounds">Bounding Box:</entry>
 
@@ -2431,8 +2433,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.load_doc_class.specified">Class Name:</entry>
 
 <entry key="export.use_alpha">Add Alpha Channel</entry>
+<entry key="export.use_alpha.initvalue">false</entry>
+
 <entry key="export.pdf_info">Add title and creation date</entry>
+<entry key="export.pdf_info.initvalue">false</entry>
+
 <entry key="export.bitmaps_to_eps">Convert bitmaps to EPS</entry>
+<entry key="export.bitmaps_to_eps.initvalue">false</entry>
 
 
 <!--  Import dialog box -->

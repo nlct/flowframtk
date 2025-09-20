@@ -1434,11 +1434,22 @@ can't find them you can use the \widget{processes.title} tab
 (\figureref{fig:configdialog-apppaths}) to set their locations.  The
 \file{libgs} library is needed by \app{dvisvgm}, so you only
 need it if you intend to export to \gls{svg}.
+These settings can also be changed in the \dialog{export} dialog.
 
 To reduce the chance of zombie processes, each process is run with a
 timer that will kill the process if it exceeds the value specified
 in the \widget{processes.timeout} box.
 
+\widgetdef{processes.support_eps_svg}
+
+The DVI format was still widely in use when \gls{JpgfDraw} was first
+created (around 2005) so it was useful to be able to export to EPS.
+However, the DVI format has mostly fallen out of use so, to reduce
+clutter in the \dialog{export} dialog, the export functions that rely
+on the DVI format are no longer supported by default.
+If you still require EPS or \gls{svg}, you need to enable support
+by ensuring that the \widget{processes.support_eps_svg} checkbox is
+selected.
 
 \subsection{\TeX\ Settings Dialog}\label{sec:texconfig}
 
@@ -2937,10 +2948,23 @@ strongly recommend that you first save the picture as a
 wish to edit it later.
 \end{warning}
 
+\FloatFig
+ {fig:export-pgfpicture-dialog}
+ {\includeimg{export-pgfpicture-dialog}}
+ {Export Dialog}
+
 The \menu{file.export} menu item allows you to export your image.
-This will open the \dialog{export} dialog box, which
-provides a way to specify the name and location of the file as well
-as what format to export to. 
+This will open the \dialog{export} dialog box
+(\figureref{fig:export-pgfpicture-dialog}), which provides a way to
+specify the name and location of the file as well as what format to
+export to and what settings to apply. 
+
+\begin{information}
+\FlowframTk\ is designed to produce files suitable for inclusion in
+\LaTeX\ documents. As such, you will need a \TeX\ distribution for
+most of the export formats, particularly those that use an external
+process.
+\end{information}
 
 \widgetdef{export.title}
 
@@ -2948,68 +2972,489 @@ At the top of the \dialog{export} dialog is a field for the path to
 the desired export file. You can either type in the full path or use
 the \btn{selectfile} button at the side to open the file chooser.
 
+\widgetdef{export.format}
+
+Below the file field is the \widget{export.format} area where you
+can select the required export format.
 There are two different types of data to export: the actual image as
 shown on the \gls{canvas} (or as close as can be obtained given the
 export format) or the \gls{flowframe} data associated with the
 image (that is, the \gls{typeblock} and any \gls{flowframe} data
 associated with any of the \glspl{object} that make up the image).
 
-% TODO update this section
+\widgetdef{export.format.image_type}
 
-The file format for the exported file
-depends on the selected file filter.  A default filename will be
-provided with the same basename as the image (if it has one).
+The \widget{export.format.image_type} row is for exporting the
+actual image. Available image exports are:
+\begin{deflist}
+\itemtitle{\widget{export.pgfpicture}}
+\begin{itemdesc}
+Create a file that just contains the \env{pgfpicture} environment,
+which can be included in a \LaTeX\ document with \gls{input}
+or (provided by \sty{flowframtkutils}) \gls{includeteximage}.
 
-The \gls{filter.png} file filter (export to PNG) will ignore all
-\LaTeX\ settings and render the image as \glslink{painting}{drawn}
-on the \gls{canvas} (without annotations or \glspl{selection-bbox}).
-The other formats all expect a \TeX\ distribution.
+This is the default export type and is the current setting shown in
+\figureref{fig:export-pgfpicture-dialog}. Remember to include 
+\sty{flowframtkutils} in your document. If \FlowframTk\ can't detect
+\sty{flowframtkutils} on \TeX's path, it will assume it's not
+available and the exported file will include comments about how to
+define the required commands.
+\end{itemdesc}
+
+\itemtitle{\widget{export.imagedoc}}
+
+\begin{itemdesc}
+Create a file that's a complete single-paged \LaTeX\ document that
+has no page header or footer and the document environment simply
+contains the \env{pgfpicture} environment that renders the image.
+The \env{pgfpicture} environment will be encapsulated with
+\gls{jdrimagebox} (provided by \sty{flowframtkutils}).
+The page size will depend on the \widget{export.bounds} setting.
+If \FlowframTk\ can't detect \sty{flowframtkutils} on \TeX's path,
+it will include the relevant command definitions.
+
+You can then compile (typeset/build) the exported file using your
+usual document build method (such as running \app{pdflatex}).
+However, if you want \FlowframTk\ to do this for you, use the 
+\widget{export.imagepdf} export setting instead.
+\end{itemdesc}
+
+\itemtitle{\widget{export.imagepdf}}
+
+\begin{itemdesc}
+A convenient shortcut that creates a temporary directory, 
+exports a complete single-paged \LaTeX\
+document, as per the \widget{export.imagedoc} method, to that
+temporary location, compiles the document, and copies the resulting
+PDF file to the location specified in the file field. The temporary
+directory will then be deleted.
+\end{itemdesc}
+
+\itemtitle{\widget{export.png} (see \sectionref{sec:exportpng})}
+
+\begin{itemdesc}
+There are two possible ways of exporting the image to a PNG file.
+The first is for \FlowframTk\ to create PNG data that the same as
+the way the image is \glslink{painting}{drawn} on the \gls{canvas}
+(at 100\% magnification and without annotations or
+\glspl{selection-bbox}), optionally cropped either to the image's
+bounding box or (if set) the \gls{typeblock}. You can choose whether
+or not to include the alpha channel (which provides transparency).
+
+The second method is for \FlowframTk\ to create the PNG using a PDF
+file as an intermediate step. This basically works in much the same
+way as the \widget{export.imagepdf} function but after the PDF is
+created, a PDF to PNG tool is used to create the PNG file from the
+PDF file.
+\end{itemdesc}
+
+\itemtitle{\widget{export.eps}}
+
+\begin{itemdesc}
+The export to EPS function is no longer available by default but can
+be enabled with the \widget{processes.support_eps_svg} setting in 
+the \widget{processes.title} tab of the \dialog{config} dialog.
+
+This works in much the same way as the \widget{export.png} option.
+You can either get \FlowframTk\ to write the EPS content directly
+(which doesn't fully support all features) or you can use external
+processes to create the file from a temporary \LaTeX\ document.
+In this case, it's necessary to use the DVI \app{latex} rather than
+\app{pdflatex}, followed by \app{dvips}.
+\end{itemdesc}
+
+\itemtitle{\widget{export.svg}}
+
+\begin{itemdesc}
+As with the export to EPS function, the export to SVG function is no
+longer available by default but can be enabled with the
+\widget{processes.support_eps_svg} setting in the
+\widget{processes.title} tab of the \dialog{config} dialog.
+
+This works in much the same way as the \widget{export.eps} option.
+In this case, \app{dvisvgm} is used instead of \app{dvips}.
+\end{itemdesc}
+
+\end{deflist}
+
+\widgetdef{export.format.flf_type}
+
+The \widget{export.format.flf_type} row is for exporting the
+\gls{flowframe} data. (Ensure that you have at least version 2.0 of
+the \sty{flowfram} package installed.) The buttons in this row are only enabled when
+the image has a \gls{typeblock} set
+(see \sectionref{sec:exportsty}). Available \gls{flowframe}
+exports are:
+\begin{deflist}
+\itemtitle{\widget{export.cls}}
+
+\begin{itemdesc}
+Create a \LaTeX\ class file which loads the \sty{flowfram} package.
+\end{itemdesc}
+
+\itemtitle{\widget{export.sty}}
+
+\begin{itemdesc}
+As \widget{export.sty} but creates a \LaTeX\ package rather than a
+class.
+\end{itemdesc}
+
+\itemtitle{\widget{export.flfdoc}}
+
+\begin{itemdesc}
+As \widget{export.sty} but a complete \LaTeX\ document instead.
+\end{itemdesc}
+
+\itemtitle{\widget{export.flfpdf}}
+
+\begin{itemdesc}
+A convenient shortcut that creates a temporary directory, 
+exports a complete document, as per the \widget{export.flfdoc} method, to that
+temporary location, compiles the document, and copies the resulting
+PDF file to the location specified in the file field. The temporary
+directory will then be deleted.
+The PDF may only be a single page if all page lists are set to
+\qt{all} but, unlike the \widget{export.imagepdf} option,
+the resulting PDF may have multiple pages.
+\end{itemdesc}
+\end{deflist}
+
+\widgetdef{export.remember}
+
+The \widget{export.remember} checkbox (located on the bottom left)
+may be used to remember the current settings. If this checkbox is
+selected, the currently available settings will be updated when the
+image or \gls{flowframe} data is exported. Any settings that are
+currently hidden won't be changed.
+
+There are common settings shared by the different export functions.
+These are described below.
+
+\widgetdef{export.bounds}
+
+The \widget{export.bounds} panel isn't always available, but when it
+is, it may be used to specify the bounds of the exported image (the
+page size for \widget{export.imagedoc} and any export settings that
+that's based on that function).
+It's not available for any of the \widget{export.format.flf_type}
+export functions.
+
+\widgetdef{export.bounds.papersize}
+
+The bounds should be set to the \gls{canvas}['s] paper setting. This
+option is not available for the \widget{export.pgfpicture} function.
+
+\widgetdef{export.bounds.image}
+
+The bounds should be set to the image's bounding box.
+Note that this may not be correct if different fonts or alternative
+text in \glspl{textarea} are wider in the \LaTeX\ document than they
+are when drawn on the \gls{canvas}.
+
+\widgetdef{export.bounds.typeblock}
+
+The bounds should be set to the image's \gls{typeblock}.
+This option is not available if the image doesn't have a
+\gls{typeblock} set.
+
+\widgetdef{export.markup}
+
+The \widget{export.markup} options are only applicable for the
+\widget{export.format.image_type} functions that either create a
+\LaTeX\ file or use a complete \LaTeX\ document as an intermediate
+step. The markup is a command or pair of commands inserted into
+the code in the body of the \env{pgfpicture} environment.
+The following settings are available:
+
+\widgetdef{export.markup.none}
+
+No markup is added to the exported image.
+
+\widgetdef{export.markup.paired}
+
+Each object in the \env{pgfpicture} environment is book-ended by
+\cmddef{flowframtkstartobject}
+and
+\cmddef{flowframtkendobject}
+These commands are defined by \sty{flowframtkutils}. They initially
+do nothing but may be redefined in conjunction with the
+the \widget{export.markup.paired} option.
+For example, suppose you want to export an image to a file that can
+be input in a \cls{beamer} presentation. If this option is set, then each object can be
+uncovered one at a time with the following redefinition:
+\begin{codebox}
+\csfmt{renewcommand}\gls{flowframtkendobject}\oarg{7}{\csfmt{pause}}
+\end{codebox}
+
+The first argument \meta{n} starts at 0 (the entire image) and is
+incremented for every \gls{object}, descending down the
+\glspl{group}, so that each \gls{object} has a unique value.
+The value of \meta{n} will match the start and end pair.
+
+The \meta{class name} is the Java class name of the \gls{object}:
+\code{JDRGroup} for a \gls{group}, \code{JDRPath} for a \gls{path},
+\code{JDRText} for a \gls{textarea},
+\code{JDRTextPath} for a \gls{textpath},
+\code{JDRRotationalPattern} for a rotational \gls{pattern},
+\code{JDRScaledPattern} for a scaled \gls{pattern},
+\code{JDRSpiralPattern} for a spiral \gls{pattern}, and
+\code{JDRSymmetricPath} for a symmetric shape.
+
+The \meta{description} is the image's description when \meta{n} is 0
+otherwise it's the \gls{object}['s] description. This argument will
+be empty if no description has been set.
+
+The \meta{tag} is the object's tag. This argument will be empty if
+no tag has been set.
+
+The \meta{pgf point} argument is the lower left point of the object's bounding
+box in \sty{pgf} point notation (\gls{pgfpoint}\margm{x}\margm{y}).
+
+The \meta{width} and \meta{height} arguments are the width and
+height of the object's bounding box.
+
+\widgetdef{export.markup.encap}
+
+TODO
+
+\widgetdef{export.use_process}
+
+For export options that can be created with or without external
+processes, the \widget{export.use_process} checkbox will be
+available to choose which method to use. This checkbox is not
+shown if no external processes are required (such as when creating a
+\LaTeX\ file) or if an external process is required (such as
+exporting to a PDF).
+
+
+If external processes are required or if the
+\widget{export.use_process} checkbox has been selected, then one or
+more of the following processor panels will be shown. These are the
+same as in the \widget{processes.title} tab of the \dialog{config}
+dialog.
+If the \widget{export.remember} checkbox is selected, the
+corresponding settings in the \dialog{config} dialog will be
+updated when the image is exported.
+
+Each processor panel has the same format. The file field may be used
+to set the path to the required command line tool. You can use the
+\btn{selectfile} button to navigate your way to it. Below this, is
+a list of command line options to pass to the application. Each
+option should be on a separate line. The following placeholders are
+available:
+\begin{deflist}
+\itemtitle{\inlineglsdef{placeholder-inputfile}}
+
+\begin{itemdesc}
+The name of the input file. This is a file in the temporary
+directory, not the current image file.
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{placeholder-outputfile}}
+
+\begin{itemdesc}
+The name of the output file. This is a file in the temporary
+directory, not the designated export file.
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{placeholder-basename}}
+
+\begin{itemdesc}
+The input file's basename, which will also be the job name. (Don't change
+the job name or \FlowframTk\ won't be able to find the created file.)
+\end{itemdesc}
+
+\itemtitle{\inlineglsdef{placeholder-libgs}}
+
+\begin{itemdesc}
+The path to the \file{libgs} library for use with \app{dvisvgm}.
+\end{itemdesc}
+
+\end{deflist}
+
+\widgetdef{processes.timeout}
+
+To reduce the chance of zombie processes, each process is run with a
+timer that will kill the process if it exceeds the value specified
+in the \widget{processes.timeout} box.
+
+\widgetdef{processes.pdflatex}
+
+\FloatFig{fig:pdfprocessor}
+ {\includeimg{pdfprocessor}}
+ {The \pdfLaTeX\ Processor Panel (Default Setting)}
+
+The default is to use the \app{pdflatex} application to create a PDF
+file (\figureref{fig:pdfprocessor}). You can change this, for example to \app{lualatex}.
+This setting is not only used for exports to PDF but also for any
+exports that use PDF as an intermediate step (such as
+\widget{export.png} with the \widget{export.use_process} checkbox
+selected).
+
+Any \LaTeX\ engine that creates a PDF file should be sufficient for
+the image exports, but the \widget{export.flfpdf} function may
+require a more complicated build if there are any cross-references.
+In that case, you can use an automation tool. For example, in
+\figureref{fig:pdfprocessor-latexmk} the application has been set to
+\app{latexmk}. Note the need to add \code{-pdf} to the list of
+options to ensure that a PDF file is created.
+
+\FloatFig{fig:pdfprocessor-latexmk}
+ {\includeimg{pdfprocessor-latexmk}}
+ {The \pdfLaTeX\ Processor Panel (LaTeXMk)}
+
+If you want to use an automation tool that requires \glspl{directive}
+or \glspl{magic-comment}, then you will need to set the appropriate
+comments in the \widget{texeditor.latexcodeblock.magic_comments}
+panel.
+
+\widgetdef{processes.latex}
+
+\FloatFig{fig:dviprocessor}
+ {\includeimg{dviprocessor}}
+ {The DVI \LaTeX\ Processor Panel}
+
+The default is to use the \app{latex} application to create a PDF
+file (\figureref{fig:processor}).  This setting is used for exports
+that use DVI as an intermediate step (that is, \widget{export.eps}
+or \widget{export.svg} with the \widget{export.use_process} checkbox
+selected).
 
 \subsection{Export to PNG}\label{sec:exportpng}
 
-Select the \inlineglsdef{filter.png} file filter in the
-\dialog{export} dialog box to export to a PNG file. This export type
-ignores all \LaTeX\ settings. Once you have selected the destination
-\inlineglsdef{ext.png} file, the \inlineglsdef{exportpng.title}
-dialog box will open (see \figureref{fig:exportpngdialog}).
+\FloatFig{fig:exportpngdialog}
+ {\includeimg{exportpngdialog}}
+ {Export Dialog (PNG)}
 
-\FloatFig
-  {fig:exportpngdialog}
-  {\includeimg{exportpngdialog}}
-  {Export to PNG Settings}
+\widget{export.png}
 
-Select the \widget{export.use_alpha} box if you want a \gls{transparent}
-background. If the box isn't checked, the background will be white.
+To create a PNG of the current image, select the \widget{export.png}
+button in the \dialog{export} dialog.
+Use the buttons in the \widget{export.bounds} row to determine the
+size of the exported PNG. The \widget{export.bounds.image}
+or (where available) \widget{export.bounds.typeblock} buttons may be
+used to crop the image.
 
-Select the \widget{export.bounds.image} box if you want the image cropped
-to the image's \gls{image.bbox}. If the checkbox isn't checked, the image
-will be the same size as the paper \gls{paper.size}. 
+The \widget{export.use_process} checkbox is shown. Leave it
+unselected if you simply want to create a PNG file where the image
+looks as it is \glslink{painting}{drawn} on the \gls{canvas}(at
+100\% magnification and without annotations or
+\glspl{selection-bbox}).
 
+\widgetdef{export.use_alpha}
+
+If the \widget{export.use_process} checkbox is not selected, the
+\widget{export.use_alpha} checkbox will be available. Select it if
+you want the PNG to have an alpha channel (which provides
+transparency). If it's unselected, the PNG will have a white
+background otherwise it will have a \gls{transparent} background.
 Note that all \manmsgpl{colour} will be converted to RGB.
-The resulting PNG image won't include the grid or any annotations
-but will otherwise render as the image shown on the \gls{canvas}.
+
+If you want the PNG file to be created via the
+\widget{export.imagepdf} function, select the
+\widget{export.use_process}. This will ensure that \LaTeX\ fonts and
+any \LaTeX\ alternative text will be used.
+
+\widgetdef{processes.pdftopng}
+
+If \widget{export.use_process} is selected, the \widget{processes.pdflatex}
+and \widget{processes.pdftopng} panels will be shown. 
+For the \widget{processes.pdftopng} tool, \FlowframTk\ will search
+for \app{magick} (Image Magick), \app{pdftoppm}, or
+\app{convert} (the old name for \app{magick}). If none of these are
+found on the system path, you will need to supply an alternative
+tool.
 
 \subsection{Export to a \LaTeX\ Class or Package}\label{sec:exportsty}
 
-Select the \widget{filter.cls} file filter in the
-\dialog{export} dialog box to export to a \LaTeX\ class
-(\inlineglsdef{ext.cls}) or selected the \widget{filter.sty}
-file filter to export to a \LaTeX\ package (\inlineglsdef{ext.sty}).
+\FloatFig{fig:exportclsdialog}
+ {\includeimg{exportclsdialog}}
+ {Export Dialog (CLS)}
 
-The class or package will require the \sty{flowfram} package to
-create the page layout defined by the image through the functions in
-the \menu{tex.flowframe} menu.  The \sty{pgf} package will also be
+\begin{information}
+Although \FlowframTk\ can still export to files suitable for
+the older 1.17 version of \sty{flowfram}, it's best to upgrade to
+\sty{flowfram} v2.0+. Note only does this provide
+\sty{flowframtkutils}, which simplifies the code written to the
+exported file, but \sty{flowfram} v2.0 has been rewritten to take
+the new \LaTeX\ kernel output routine into account.
+Unexpected results may occur with older versions of \sty{flowfram}.
+\end{information}
+
+\widgetdef{export.cls}
+
+Select the \widget{export.cls} button
+(\figureref{fig:exportclsdialog}) to create a \LaTeX\ class file
+which loads the \sty{flowfram} package (and the
+\sty{flowframtkutils} package if \FlowframTk\ detects it).
+The class will have class options provided that can be passed to the
+\sty{flowfram} package when it loads.
+
+The \widget{export.load_doc_class} setting will be available. The
+specified class (or the default) will be loaded by the exported
+class. Any class options that aren't picked up as \sty{flowfram}
+options will be passed to this underlying class.
+
+Any occurrences of \gls{usepackage} in the image
+preamble will be converted to \gls{RequirePackage} on export.
+
+The rest of the exported content is as for \widget{export.sty}
+and \widget{export.flfdoc}.
+
+\widgetdef{export.sty}
+
+Select the \widget{export.sty} button to create a \LaTeX\ package
+file with loads the \sty{flowfram} package (and the
+\sty{flowframtkutils} package if \FlowframTk\ detects it).
+The package will have package options provided that can be passed to the
+\sty{flowfram} package when it loads.
+
+Any occurrences of \gls{usepackage} in the image
+preamble will be converted to \gls{RequirePackage} on export.
+
+\wigdefdef{export.flfdoc}
+
+Select the \widget{export.flfdoc} button to create a complete
+\LaTeX\ document that loads the \sty{flowfram} package (and the
+\sty{flowframtkutils} package if \FlowframTk\ detects it).
+
+Any occurrences of \gls{RequirePackage} in the image
+preamble will be converted to \gls{usepackage} on export.
+
+If a \gls{document-body} has been provided, the content will be
+placed in the \env{document} environment,
+otherwise \FlowframTk\ will attempt to work out how many pages to
+create by inspecting the page list of each \gls{object} that has
+\gls{flowframe} data assigned and will just write a series of
+\gls{null} separated by \gls{clearpage} to create the appropriate
+number of pages. This facility is provided as it's used as an
+intermediate step in the \widget{export.flfpdf} function where it
+may be useful to quickly check the document layout without adding
+text. You may prefer to use a package that provides dummy text, such
+as \sty{lipsum}.
+
+In each of the above three cases, the \sty{geometry} package will be
+loaded (before \sty{flowfram}) to set the page layout according to
+the \gls{canvas} paper size and the \gls{typeblock}. (Note that
+changing the page geometry after \sty{flowfram} has been loaded is
+likely to cause an wanted shift in the frames.)
+The \sty{pgf} package will also be
 required to create borders and backgrounds, where applicable.
+(It's also automatically loaded by \sty{flowframtkutils}.)
 
 Only \glspl{object} that have been identified as static, flow or
 dynamic frames will be exported (see \sectionref{sec:flowframe}).
 This means that you can create additional \glspl{object} for use as
-guidelines and they won't be included in the class or package.
+guidelines and they won't be included in the exported file.
 
-The settings provided in the \dialog{textconfig} configuration
-will be used. If exporting to a class, the provided class will be
-used as a basis (using \gls{LoadClass}). The class setting is
-ignored when exporting to a package.
+Each \gls{object} that has \gls{flowframe} data
+assigned to it will have a corresponding \gls{newflowframe},
+\gls{newstaticframe} or \gls{newdynamicframe} line, as applicable,
+written to the exported file.
+
+If the \widget{flowframe.border} option was set to \widget{flowframe.border_as_shown}
+then the command definition for the border will be written to the
+file. The frame attributes will be set.
 
 The \gls{early-preamble} text (\sectionref{sec:preamble}) is added before the
 start of the package option declarations, which provides a means to
@@ -3021,9 +3466,6 @@ be placed after the class or packages are loaded and the
 The \hyperref[sec:texconfigpreamble]{default preamble} is not used
 when exporting to a class or package.
 \end{important}
-
-Any occurrences of \gls{usepackage} in the image
-preamble will be converted to \gls{RequirePackage} on export.
 
 \seealsorefs{sec:texconfig,
 sec:preamble,
@@ -3181,9 +3623,41 @@ syntax error in a \gls{textarea} or \gls{textpath}.
 
 \subsection{Export to SVG or EPS}\label{sec:exportsvgeps}
 
-The export to \gls{svg} or EPS functions both work in the same way
-as \hyperref[sec:exportdoc]{exporting to an encapsulating PDF}
-in that a temporary encapsulated \LaTeX\ file is first created.
+\FloatFig{fig:exportepsdialog}
+ {\includeimg{exportepsdialog}}
+ {Export Dialog (EPS)}
+
+The export to \gls{svg} or EPS functions are only available if the
+\widget{processes.support_eps_svg} checkbox has been selected
+(in the \widget{processes.title} tab of the \dialog{config} dialog).
+
+\widgetdef{export.eps}
+
+The \widget{export.eps} function is similar to the \widget{export.png}
+in that you can choose whether or not to use external tools to
+create the exported file. Note that \FlowframTk's support for
+exporting to EPS without an external tool is quite basic and may not
+work correctly.
+
+If the \widget{export.use_process} checkbox is
+selected (\figureref{fig:exportepsdialog}), then the
+\widget{processes.latex} processor panel and the
+\inlineglsdef{processes.dvips} processor panel will be shown.
+A temporary \LaTeX\ file will be created, as for
+\widget{export.imagepdf}, but in this case \app{latex} not
+\app{pdflatex} is needed.
+
+\widgetdef{export.svg}
+
+The \widget{export.svg} function is much the same as
+\widget{export.eps} but in this case, if the  \widget{export.use_process} checkbox is
+selected, then the 
+\widget{processes.latex} processor panel and the
+\inlineglsdef{processes.dvisvgm} processor panel will be shown.
+Additionally, the \widget{processes.libgs} panel will also be shown
+where you can optionally specify the path to the \file{libgs}
+library. You may leave this blank if this information can be
+obtained from the \gls{LIBGS} environment variable.
 
 \begin{warning}
 In both cases, \app{latex} rather than \app{pdflatex} is used to
@@ -3192,17 +3666,12 @@ problematic than the newer PDF format engines. Consider exporting to
 PDF and then converting from that instead.
 \end{warning}
 
-If the \widget{filter.svg} file filter is chosen, then the temporary
-file will be compiled with \app{latex} followed by
-\app{dvisvgm} to created an  \inlineglsdef{ext.svg} file.
-
-If the \widget{filter.eps} file filter is chosen, then the temporary
-file will be compiled with \app{latex} followed by
-\app{dvips} to created an \inlineglsdef{ext.eps} file.
+\widgetdef{export.bitmaps_to_eps}
 
 In either case, if the image contains any
 \glspl{bitmap}, \FlowframTk\ will attempt to convert
-them to EPS, where necessary.
+them to EPS, where necessary, if the \widget{export.bitmaps_to_eps}.
+checkbox is selected.
 
 \begin{important}
 Note that PostScript does not support transparency.

@@ -338,6 +338,12 @@ public class ExportDialog extends JDialog
 
       flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_PDF]);
 
+      fileTypeButtons[TYPE_PNG] = new FileTypeButton(this, 
+         ExportSettings.Type.PNG, "png", bg,
+         pngFileFilter, ".png", false, pdfLaTeXPanel, pdftopngPanel);
+
+      imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
+
       fileTypeButtons[TYPE_EPS] = new FileTypeButton(this,
          ExportSettings.Type.EPS, "eps", bg,
          epsFileFilter, ".eps", false, dviLaTeXPanel, dvipsPanel);
@@ -349,12 +355,6 @@ public class ExportDialog extends JDialog
          svgFileFilter, ".svg", false, dviLaTeXPanel, dvisvgmPanel, libGsComp);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_SVG]);
-
-      fileTypeButtons[TYPE_PNG] = new FileTypeButton(this, 
-         ExportSettings.Type.PNG, "png", bg,
-         pngFileFilter, ".png", false, pdfLaTeXPanel, pdftopngPanel);
-
-      imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
 
       return typeComp;
    }
