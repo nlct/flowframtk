@@ -115,7 +115,7 @@ public class JDRGuiMessage extends JDRMessagePublisher implements UserCancellati
    @Override
    public void message(String messageText)
    {
-      frame.message(messageText);
+      frame.messageln(messageText);
    }
 
    public void finished(JComponent comp)
@@ -768,6 +768,9 @@ class JDRGuiMessageFrame extends JFrame
       else if (action.equals(MessageInfo.INDETERMINATE))
       {
          setIndeterminate(((Boolean)info.getValue()).booleanValue());
+      }
+      else if (action.equals(MessageInfo.VISIBLE))
+      {// ignore
       }
       else if (action.equals(MessageInfo.WARNING))
       {

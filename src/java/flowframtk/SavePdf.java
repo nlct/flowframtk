@@ -46,7 +46,7 @@ public class SavePdf extends ExportDocImage
    {
       File pdfFile = new File(texDir, texBase+".pdf");
 
-      exec(getSettings().getPdfLaTeXCmd(texBase));
+      exec(exportSettings.getPdfLaTeXCmd(texBase));
 
       return pdfFile;
    }

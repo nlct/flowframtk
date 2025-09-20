@@ -24,7 +24,8 @@
 package com.dickimawbooks.flowframtk;
 
 import java.io.*;
-import java.awt.*;
+import java.awt.Cursor;
+import java.util.List;
 import javax.swing.*;
 
 import com.dickimawbooks.texjavahelplib.*;
@@ -133,11 +134,13 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
       getMessageSystem().finished(jdrFrame);
    }
 
-   public void process(MessageInfo... chunks)
+   @Override
+   protected void process(List<MessageInfo> chunks)
    {
-      getMessageSystem().publishMessages(chunks);
+      getMessageSystem().publishMessages(chunks.toArray(new MessageInfo[chunks.size()]));
    }
 
+   @Override
    public void publishMessages(MessageInfo... chunks)
    {
       getMessageSystem().publishMessages(chunks);

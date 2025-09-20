@@ -44,12 +44,11 @@ public class SaveSvg extends ExportDocImage
    protected File processImage()
       throws IOException,InterruptedException,MissingProcessorException
    {
-      FlowframTkSettings settings = getSettings();
       File dir = getTeXFile().getParentFile();
 
-      exec(settings.getLaTeXCmd(texBase));
+      exec(exportSettings.getDviLaTeXCmd(texBase));
 
-      exec(settings.getDviSvgmCmd(texBase));
+      exec(exportSettings.getDviSvgmCmd(texBase));
 
       return new File(dir, texBase+".svg");
    }

@@ -578,36 +578,42 @@ public class FlowframTkSettings
       supportExportEpsSvg = enable;
    }
 
+   @Deprecated
    public String[] getLaTeXCmd(String basename)
     throws MissingProcessorException
    {
       return exportSettings.getDviLaTeXCmd(basename);
    }
 
+   @Deprecated
    public String[] getPdfLaTeXCmd(String basename)
     throws MissingProcessorException
    {
       return exportSettings.getPdfLaTeXCmd(basename);
    }
 
+   @Deprecated
    public String[] getDviPsCmd(String basename)
     throws MissingProcessorException
    {
       return exportSettings.getDviPsCmd(basename);
    }
 
+   @Deprecated
    public String[] getDviPsCmd(String basename, String dviFile, String epsFile)
     throws MissingProcessorException
    {
       return exportSettings.getDviPsCmd(basename, dviFile, epsFile);
    }
 
+   @Deprecated
    public String[] getDviSvgmCmd(String basename)
     throws MissingProcessorException
    {
       return exportSettings.getDviSvgmCmd(basename);
    }
 
+   @Deprecated
    public String[] getDviSvgmCmd(String basename, String dviFile, String svgFile)
     throws MissingProcessorException
    {

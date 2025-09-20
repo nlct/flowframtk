@@ -23,8 +23,6 @@
 */
 package com.dickimawbooks.jdr.io;
 
-import java.io.*;
-
 import com.dickimawbooks.jdr.*;
 
 /**
