@@ -96,7 +96,7 @@ public class PGF extends TeX
          publisher.publishMessages(MessageInfo.createMaxProgress(allObjects.size()));
       }
 
-      double storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
+      storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
 
       // transformation to convert from left handed
       // co-ordinate system to right-hand co-ordinate system
@@ -192,7 +192,7 @@ public class PGF extends TeX
 
       BBox box;
 
-      double storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
+      storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
 
       FlowFrame flowframe = allObjects.getFlowFrame();
 
@@ -321,6 +321,16 @@ public class PGF extends TeX
          comment("typeblock, which can cause a spurious blank page:");
          println("\\newcommand{\\jdrimagebox}[1]{\\vbox to \\textheight{\\hbox to \\textwidth{#1}}}");
 
+         switch (exportSettings.objectMarkup)
+         {
+            case ENCAP:
+               println("\\providecommand\\flowframtkencapobject[8]{#8}");
+            break;
+            case PAIRED:
+               println("\\providecommand\\flowframtkstartobject[7]{}");
+               println("\\providecommand\\flowframtkendobject[7]{}");
+            break;
+         }
       }
 
       println();

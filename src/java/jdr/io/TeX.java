@@ -315,28 +315,31 @@ public class TeX
 
       int objectId = objectArgs.size();
 
-      if (isFlowframTkStyUsed()
-           && exportSettings.objectMarkup != ExportSettings.ObjectMarkup.NONE)
+      if (exportSettings.objectMarkup != ExportSettings.ObjectMarkup.NONE)
       {
          CanvasGraphics cg = obj.getCanvasGraphics();
 
+         if (storagePaperHeight == 0.0)
+         {
+            storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
+         }
+
          BBox bbox = obj.getStorageBBox();
 
-         Point2D p = new Point2D.Double(bbox.getMinX(), bbox.getMinY());
+         double x1 = bbox.getMinX();
+         double y1 = storagePaperHeight - bbox.getMaxY();
+         double x2 = bbox.getMaxX();
+         double y2 = storagePaperHeight - bbox.getMinY();
 
-         if (affineTransform != null)
-         {
-            affineTransform.transform(p, p);
-         }
 
          String args = String.format(Locale.ROOT,
           "{%d}{%s}{%s}{%s}{%s}{%s}{%s}",
           objectId, obj.getClass().getSimpleName(),
           TeXMappings.replaceSpecialChars(description),
           TeXMappings.replaceSpecialChars(obj.getTag()),
-          point(cg, p.getX(), p.getY()),
-          length(cg, bbox.getWidth()),
-          length(cg, bbox.getHeight()));
+          point(cg, x1, y1),
+          length(cg, x2-x1),
+          length(cg, y2-y1));
 
          objectArgs.add(args);
 
@@ -933,6 +936,8 @@ public class TeX
    protected Vector<String> objectArgs;
 
    protected boolean supportOutline=false, supportTextPath=false;
+
+   protected double storagePaperHeight = 0;
 
    ExportSettings exportSettings;
 
