@@ -259,11 +259,12 @@ public class ExportDialog extends JDialog
 
       Box typeComp = Box.createVerticalBox();
       typeComp.setBorder(BorderFactory.createTitledBorder(
+         BorderFactory.createRaisedBevelBorder(),
          resources.getMessage("export.format")));
 
       // Export to Image
 
-      JComponent row = createRow();
+      JComponent row = createRigidRow();
 
       typeComp.add(row);
 
@@ -273,16 +274,13 @@ public class ExportDialog extends JDialog
 
       row.add(resources.createLabelSpacer());
 
-      JComponent imageFileTypeComp = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      imageFileTypeComp.setBorder(BorderFactory.createLoweredSoftBevelBorder());
-      imageFileTypeComp.setBackground(Color.WHITE);
-      imageFileTypeComp.setOpaque(true);
+      JComponent imageFileTypeComp = createBevelledRow();
 
       row.add(imageFileTypeComp);
 
       // Export flowfram Data
 
-      row = createRow();
+      row = createRigidRow();
       typeComp.add(row);
 
       typeLabel = resources.createAppLabel("export.format.flf_type");
@@ -291,10 +289,7 @@ public class ExportDialog extends JDialog
 
       row.add(resources.createLabelSpacer());
 
-      flfFileTypeComp = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      flfFileTypeComp.setBorder(BorderFactory.createLoweredSoftBevelBorder());
-      flfFileTypeComp.setBackground(Color.WHITE);
-      flfFileTypeComp.setOpaque(true);
+      flfFileTypeComp = createBevelledRow();
       row.add(flfFileTypeComp);
 
       fileTypeButtons = new FileTypeButton[MAX_FILE_TYPE_BUTTONS];
@@ -368,32 +363,39 @@ public class ExportDialog extends JDialog
    {
       JDRResources resources = getResources();
 
-      Dimension dim;
       JLabelGroup labelGrp = new JLabelGroup();
 
       Box settingsPanel = Box.createVerticalBox();
       settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-      boundsComp = createRow();
+      // Image Bounds
+
+      boundsComp = createRigidRow();
       settingsPanel.add(boundsComp);
 
       JLabel boundsLabel = resources.createAppLabel("export.bounds");
       labelGrp.add(boundsLabel);
       boundsComp.add(boundsLabel);
 
+      JComponent boundsWidgets = createBevelledRow();
+      boundsComp.add(boundsWidgets);
       ButtonGroup bg = new ButtonGroup();
 
       usePaperSizeBoundsBox = resources.createAppRadioButton("export",
         "bounds.papersize", bg, false, null);
-      boundsComp.add(usePaperSizeBoundsBox);
+      boundsWidgets.add(usePaperSizeBoundsBox);
 
       useImageBoundsBox = resources.createAppRadioButton("export",
         "bounds.image", bg, true, null);
-      boundsComp.add(useImageBoundsBox);
+      boundsWidgets.add(useImageBoundsBox);
 
       useTypeblockBoundsBox = resources.createAppRadioButton("export",
         "bounds.typeblock", bg, false, null);
-      boundsComp.add(useTypeblockBoundsBox);
+      boundsWidgets.add(useTypeblockBoundsBox);
+
+      adjustMaxHeight(boundsWidgets);
+
+      // PNG Alpha Channel
 
       pngUseAlphaBox = resources.createAppCheckBox(
         "export", "use_alpha", true, null);
@@ -401,10 +403,36 @@ public class ExportDialog extends JDialog
       pngUseAlphaBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(pngUseAlphaBox);
 
-      markupComp = createRow();
+      // Object Markup
+
+      markupComp = createRigidRow();
       settingsPanel.add(markupComp);
 
-      textualShadingComp = createRow();
+      JLabel markupLabel = resources.createAppLabel("export.markup");
+      labelGrp.add(markupLabel);
+      markupComp.add(markupLabel);
+      bg = new ButtonGroup();
+
+      JComponent markupWidgets = createBevelledRow();
+      markupComp.add(markupWidgets);
+
+      markupNoneBox = resources.createAppRadioButton("export",
+        "markup.none", bg, true, null);
+      markupWidgets.add(markupNoneBox);
+
+      markupPairedBox = resources.createAppRadioButton("export",
+        "markup.paired", bg, false, null);
+      markupWidgets.add(markupPairedBox);
+
+      markupEncapBox = resources.createAppRadioButton("export",
+        "markup.encap", bg, false, null);
+      markupWidgets.add(markupEncapBox);
+
+      adjustMaxHeight(markupWidgets);
+
+      // Text Gradient Paint
+
+      textualShadingComp = createRigidRow();
       settingsPanel.add(textualShadingComp);
 
       JLabel textualShadingLabel = resources.createAppLabel("export.textualshading");
@@ -412,23 +440,30 @@ public class ExportDialog extends JDialog
       textualShadingComp.add(textualShadingLabel);
       bg = new ButtonGroup();
 
+      JComponent textualShadingWidgets = createBevelledRow();
+      textualShadingComp.add(textualShadingWidgets);
+
       textualShadingAverageBox = resources.createAppRadioButton("export",
         "textualshading.average", bg, true, null);
-      textualShadingComp.add(textualShadingAverageBox);
+      textualShadingWidgets.add(textualShadingAverageBox);
 
       textualShadingStartBox = resources.createAppRadioButton("export",
         "textualshading.start", bg, false, null);
-      textualShadingComp.add(textualShadingStartBox);
+      textualShadingWidgets.add(textualShadingStartBox);
 
       textualShadingEndBox = resources.createAppRadioButton("export",
         "textualshading.end", bg, false, null);
-      textualShadingComp.add(textualShadingEndBox);
+      textualShadingWidgets.add(textualShadingEndBox);
 
       textualShadingToPathBox = resources.createAppRadioButton("export",
         "textualshading.topath", bg, false, null);
-      textualShadingComp.add(textualShadingToPathBox);
+      textualShadingWidgets.add(textualShadingToPathBox);
 
-      textPathOutlineComp = createRow();
+      adjustMaxHeight(textualShadingWidgets);
+
+      // Text-Path Outlines
+
+      textPathOutlineComp = createRigidRow();
       settingsPanel.add(textPathOutlineComp);
 
       JLabel textPathOutlineLabel = resources.createAppLabel("export.textpathoutline");
@@ -436,15 +471,22 @@ public class ExportDialog extends JDialog
       textPathOutlineComp.add(textPathOutlineLabel);
       bg = new ButtonGroup();
 
+      JComponent textPathOutlineWidgets = createBevelledRow();
+      textPathOutlineComp.add(textPathOutlineWidgets);
+
       textPathOutlineIgnoreBox = resources.createAppRadioButton("export",
         "textpathoutline.ignore", bg, true, null);
-      textPathOutlineComp.add(textPathOutlineIgnoreBox);
+      textPathOutlineWidgets.add(textPathOutlineIgnoreBox);
 
       textPathOutlineToPathBox = resources.createAppRadioButton("export",
         "textpathoutline.topath", bg, false, null);
-      textPathOutlineComp.add(textPathOutlineToPathBox);
+      textPathOutlineWidgets.add(textPathOutlineToPathBox);
 
-      shapeparUseHPaddingComp = createRow();
+      adjustMaxHeight(textPathOutlineWidgets);
+
+      // \Shapepar or \shapepar
+
+      shapeparUseHPaddingComp = createRigidRow();
       settingsPanel.add(shapeparUseHPaddingComp);
 
       JLabel shapeparUseHPaddingLabel = resources.createAppLabel("export.shapeparcs");
@@ -452,13 +494,22 @@ public class ExportDialog extends JDialog
       shapeparUseHPaddingComp.add(shapeparUseHPaddingLabel);
       bg = new ButtonGroup();
 
+      JComponent shapeparUseHPaddingWidgets = createBevelledRow();
+      shapeparUseHPaddingComp.add(shapeparUseHPaddingWidgets);
+
       shapeparUseHPaddingOnBox = new JRadioButton("\\Shapepar", true);
+      shapeparUseHPaddingOnBox.setOpaque(false);
       bg.add(shapeparUseHPaddingOnBox);
-      shapeparUseHPaddingComp.add(shapeparUseHPaddingOnBox);
+      shapeparUseHPaddingWidgets.add(shapeparUseHPaddingOnBox);
 
       shapeparUseHPaddingOffBox = new JRadioButton("\\shapepar");
+      shapeparUseHPaddingOffBox.setOpaque(false);
       bg.add(shapeparUseHPaddingOffBox);
-      shapeparUseHPaddingComp.add(shapeparUseHPaddingOffBox);
+      shapeparUseHPaddingWidgets.add(shapeparUseHPaddingOffBox);
+
+      adjustMaxHeight(shapeparUseHPaddingWidgets);
+
+      // Use External Processes
 
       useExternalProcessBox = resources.createAppCheckBox(
         "export", "use_process", true, null);
@@ -466,7 +517,9 @@ public class ExportDialog extends JDialog
       useExternalProcessBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(useExternalProcessBox);
 
-      docClassComp = createRow();
+      // Document Class
+
+      docClassComp = createRigidRow();
       settingsPanel.add(docClassComp);
       bg = new ButtonGroup();
 
@@ -474,38 +527,28 @@ public class ExportDialog extends JDialog
       labelGrp.add(docClassLabel);
       docClassComp.add(docClassLabel);
 
+      JComponent docClassWidgets = createBevelledRow();
+      docClassComp.add(docClassWidgets);
+
       useDefaultDocClassBox = resources.createAppRadioButton("export",
        "load_doc_class.default", bg, true, null);
       useDefaultDocClassBox.addItemListener(this);
-      docClassComp.add(useDefaultDocClassBox);
+      docClassWidgets.add(useDefaultDocClassBox);
 
       useSpecifiedDocClassBox = resources.createAppRadioButton("export",
        "load_doc_class.specified", bg, false, null);
       useSpecifiedDocClassBox.addItemListener(this);
-      docClassComp.add(useSpecifiedDocClassBox);
+      docClassWidgets.add(useSpecifiedDocClassBox);
 
       docClassField = new JTextField(16);
       docClassField.setEnabled(false);
-      docClassComp.add(docClassField);
+      docClassWidgets.add(docClassField);
 
       docClassField.setMaximumSize(docClassField.getPreferredSize());
 
-      JLabel markupLabel = resources.createAppLabel("export.markup");
-      labelGrp.add(markupLabel);
-      markupComp.add(markupLabel);
-      bg = new ButtonGroup();
+      adjustMaxHeight(docClassWidgets);
 
-      markupNoneBox = resources.createAppRadioButton("export",
-        "markup.none", bg, true, null);
-      markupComp.add(markupNoneBox);
-
-      markupPairedBox = resources.createAppRadioButton("export",
-        "markup.paired", bg, false, null);
-      markupComp.add(markupPairedBox);
-
-      markupEncapBox = resources.createAppRadioButton("export",
-        "markup.encap", bg, false, null);
-      markupComp.add(markupEncapBox);
+      // Title and Creation Date
 
       usePdfInfoBox = resources.createAppCheckBox(
         "export", "pdf_info", true, null);
@@ -513,25 +556,25 @@ public class ExportDialog extends JDialog
       usePdfInfoBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(usePdfInfoBox);
 
+      // Convert Bitmaps to EPS (EPS and SVG only)
+
       bitmapsToEpsBox = resources.createAppCheckBox(
         "export", "bitmaps_to_eps", false, null);
       bitmapsToEpsBox.addItemListener(this);
       bitmapsToEpsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(bitmapsToEpsBox);
 
-      settingsPanel.add(pdfLaTeXPanel);
-      settingsPanel.add(pdftopngPanel);
-      settingsPanel.add(dviLaTeXPanel);
-      settingsPanel.add(dvipsPanel);
-      settingsPanel.add(dvisvgmPanel);
-      settingsPanel.add(libGsComp);
+      // Processor Timeout
 
-      timeoutComp = createRow();
+      timeoutComp = createRigidRow();
       settingsPanel.add(timeoutComp);
 
       JLabel timeoutLabel = resources.createAppLabel("processes.timeout");
       labelGrp.add(timeoutLabel);
       timeoutComp.add(timeoutLabel);
+
+      JComponent timeoutWidgets = createBevelledRow();
+      timeoutComp.add(timeoutWidgets);
 
       timeoutModel = new SpinnerNumberModel(
         300000L, Long.valueOf(0L), null, Long.valueOf(1));
@@ -540,24 +583,53 @@ public class ExportDialog extends JDialog
       JSpinner.DefaultEditor ed = (JSpinner.DefaultEditor)timeoutSpinner.getEditor();
 
       ed.getTextField().setColumns(9);
-      timeoutComp.add(timeoutSpinner);
-
-      dim = timeoutSpinner.getPreferredSize();
-      timeoutSpinner.setMaximumSize(dim);
+      timeoutWidgets.add(timeoutSpinner);
 
       timeoutLabel.setLabelFor(timeoutSpinner);
 
-      timeoutComp.add(new JLabel(resources.getMessage("processes.millisecs")));
-      timeoutComp.add(Box.createHorizontalGlue());
+      timeoutWidgets.add(new JLabel(resources.getMessage("processes.millisecs")));
+
+      adjustMaxHeight(timeoutWidgets);
+
+      // Processor Paths and Switches
+
+      settingsPanel.add(pdfLaTeXPanel);
+      settingsPanel.add(pdftopngPanel);
+      settingsPanel.add(dviLaTeXPanel);
+      settingsPanel.add(dvipsPanel);
+      settingsPanel.add(dvisvgmPanel);
+      settingsPanel.add(libGsComp);
+
+      settingsPanel.add(Box.createVerticalGlue());
 
       return settingsPanel;
    }
 
-   protected JComponent createRow()
+   protected JComponent createRigidRow()
    {
       JComponent comp = Box.createHorizontalBox();
       comp.setAlignmentX(Component.LEFT_ALIGNMENT);
       return comp;
+   }
+
+   protected JComponent createBevelledRow()
+   {
+      JComponent comp = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      comp.setAlignmentX(Component.LEFT_ALIGNMENT);
+      comp.setBorder(BorderFactory.createLoweredSoftBevelBorder());
+      comp.setBackground(Color.WHITE);
+      comp.setOpaque(true);
+
+      return comp;
+   }
+
+   protected void adjustMaxHeight(JComponent comp)
+   {
+      Dimension dim = comp.getPreferredSize();
+      int height = dim.height;
+      dim = comp.getMaximumSize();
+      dim.height = height;
+      comp.setMaximumSize(dim);
    }
 
    public void setEpsSvgSupport(boolean enable)

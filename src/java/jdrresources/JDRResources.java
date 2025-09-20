@@ -2483,6 +2483,8 @@ public class JDRResources
 
       JRadioButton button = new JRadioButton(getMessage(label), selected);
 
+      button.setOpaque(false);
+
       int mnemonic = getMnemonic(label);
 
       if (mnemonic > 0)
@@ -2514,6 +2516,8 @@ public class JDRResources
    {
       JRadioButton button = new JRadioButton(getMessage(label), selected);
 
+      button.setOpaque(false);
+
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
       if (mnemonic != 0)
@@ -2539,6 +2543,8 @@ public class JDRResources
 
       JCheckBox button = new JCheckBox(getMessage(label), selected);
 
+      button.setOpaque(false);
+
       int mnemonic = getMnemonic(label);
 
       if (mnemonic > 0)
@@ -2562,6 +2568,8 @@ public class JDRResources
       boolean selected, ChangeListener listener)
    {
       JCheckBox button = new JCheckBox(getMessage(label), selected);
+
+      button.setOpaque(false);
 
       int mnemonic = getCodePoint(label+".mnemonic", 0);
 
