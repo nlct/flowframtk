@@ -96,6 +96,7 @@ objects.}
 }
 
 @package{pkg.blindtext}
+@package{pkg.lipsum}
 @package{pkg.hyperref}
 
 % CLASSES
@@ -138,18 +139,33 @@ objects.}
 }
 
 @command{flowframtkstartobject,
- name={\csfmt{flow\-fram\-tk\-start\-object}}
+ name={\csfmt{flow\-fram\-tk\-start\-object}},
  syntax={\margm{n}\margm{class name}\margm{description}\margm{tag}\margm{pgf point}\margm{width}\margm{height}}
 }
 
 @command{flowframtkendobject,
- name={\csfmt{flow\-fram\-tk\-end\-object}}
+ name={\csfmt{flow\-fram\-tk\-end\-object}},
  syntax={\margm{n}\margm{class name}\margm{description}\margm{tag}\margm{pgf point}\margm{width}\margm{height}}
 }
 
 @command{flowframtkencapobject,
- name={\csfmt{flow\-fram\-tk\-encap\-object}}
+ name={\csfmt{flow\-fram\-tk\-encap\-object}},
  syntax={\margm{n}\margm{class name}\margm{description}\margm{tag}\margm{pgf point}\margm{width}\margm{height}\margm{object}}
+}
+
+@command{newflowframe,
+ name={\csfmt{new\-flow\-frame}},
+ syntax={\oargm{page list}\margm{width}\margm{height}\margm{x}\margm{y}\oargm{label}}
+}
+
+@command{newstaticframe,
+ name={\csfmt{new\-static\-frame}},
+ syntax={\oargm{page list}\margm{width}\margm{height}\margm{x}\margm{y}\oargm{label}}
+}
+
+@command{newdynamicframe,
+ name={\csfmt{new\-dynamic\-frame}},
+ syntax={\oargm{page list}\margm{width}\margm{height}\margm{x}\margm{y}\oargm{label}}
 }
 
 @command{pgfpoint}
@@ -656,7 +672,7 @@ the cursor keys or for moving the pointer to a specific location on
 the canvas (such as with the \gls{menu.navigate.goto} and
 \gls{menu.navigate.find} functions). Some platforms or environments
 may prohibit some or all robot functions. If this occurs, you may
-receive the warning \warnmsg{no_robot}}
+receive the warning \gls{warning.no_robot}}
 }
 
 @term{menuclick,
