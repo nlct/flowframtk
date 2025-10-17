@@ -1424,8 +1424,9 @@ your preferred default image command, which may be either
   {\includeimg{configureDialog-apppaths}}
   {Configuration Dialog Box (Application Paths)}
 
-If you \filefn{export} your image to PDF, EPS or \gls{svg}
-\FlowframTk\ will first save the image as an encapsulated \LaTeX\
+If you \filefn{export} your image to PDF or if you export to 
+PNG (or, if enabled, EPS or \gls{svg}) with the \widget{export.use_process} option on then
+\FlowframTk\ will first save the image as a \LaTeX\
 document and will then run external applications to create the
 desired file format. In order to do this, \FlowframTk\ needs to know
 the correct paths to these applications. It will try to find them
@@ -2644,17 +2645,9 @@ The main \FlowframTk\ window is shown in \figureref{fig:mainwindow}.
 \section{The Canvas}\label{sec:thecanvas}
 
 The \inlineglsdef{canvas} is the white area (that may optionally
-have a~grid) in each of \FlowframTk's child windows on which you create
+have a~\gls{grid}) in each of \FlowframTk's child windows on which you create
 your picture. It shares a~child window with the
-\hyperref[sec:thepreamblepane]{preamble editor pane}. The canvas and
-preamble areas are separated by a divider that can be adjusted to
-allow one side to take up more room in the window. This can be done
-by dragging the divider.  With some \glspl{look-and-feel}, the
-divider has small triangular buttons which you can click on to
-collapse or expand one side, but not all have this function nor can
-some of them completely hide the \gls{preamble} pane (such as the GTK+
-Look and Feel).  You can also use the \menu{tex.set_preamble} menu
-item to show the preamble pane.
+\gls{preamble-and-document-text-editor-area}.
 
 In \selectmode\ (but not when you're editing or
 distorting a shape) you can \gls{drag-and-drop} image files or
@@ -2663,25 +2656,34 @@ text onto the canvas to add to the current image. With the
 the canvas. If you attempt to drop a file instead, you will get a
 new \gls{textarea} containing the file's path (or URI). 
 
-\section{The Preamble and Document Text Pane}\label{sec:thepreamblepane}
+\section{The Preamble and Document Text Editor Area}\label{sec:thepreamblepane}
 
-The \widget{texeditor.latexcodeblock} area is, by default, on the
+The \inlineglsdef{preamble-and-document-text-editor-area} is, by default, on the
 right of the \gls{canvas}, which may be used to specify code that
 should go in the document preamble or (where applicable) the
 content of the \env{document} environment of exported files.  (This includes
-exports that use \LaTeX\ as an intermediate step.)
+exports that use \LaTeX\ as an intermediate step, such as export to PDF.)
 
-This area is split into tabs for the \gls{early-preamble} code,
+This \gls{editor-area} is split into tabs for the \gls{early-preamble} code,
 the \gls{mid-preamble} code, the \gls{late-preamble} code,
 the content of the \env{document} environment and an area for
 \glspl{magic-comment} or \glspl{directive} (the last two are
 only applicable with \gls{flowframe} exports that create a complete
 \LaTeX\ document).
 
+The \gls{canvas} and \gls{editor-area} are separated by a divider that can be adjusted to
+allow one side to take up more room in the window. This can be done
+by dragging the divider.  With some \glspl{look-and-feel}, the
+divider has small triangular buttons which you can click on to
+collapse or expand one side, but not all have this function nor can
+some of them completely hide the editor area (such as the GTK+
+Look and Feel).  You can also use the \menu{tex.set_preamble} menu
+item to show the editor area.
+
 See \sectionref{sec:preamble} for further details on how this
 code is added during the export process, and
 see \sectionref{sec:configureuidialog} to set a default preamble
-for all images and to reposition the preamble code and document text pane.
+for all images and to reposition the \gls{preamble-and-document-text-editor-area}.
 
 \section{The Toolbars}\label{sec:thetoolbars}
 
@@ -2698,8 +2700,8 @@ the vertical toolbar so that it appears on the right of \FlowframTk's
 main window using the \widget{borders.title} tab in the
 \dialog{configui} dialog.
 
-The \hyperref[sec:thepreamblepane]{preamble pane} has its own
-toolbar with buttons to edit the preamble text.
+Each tab of the \gls{editor-area} has its own
+toolbar with buttons to edit the preamble code and document text.
 
 
 \section{The Rulers}\label{sec:therulers}
@@ -3315,7 +3317,7 @@ panel.
  {The DVI \LaTeX\ Processor Panel}
 
 The default is to use the \app{latex} application to create a PDF
-file (\figureref{fig:processor}).  This setting is used for exports
+file (\figureref{fig:dviprocessor}).  This setting is used for exports
 that use DVI as an intermediate step (that is, \widget{export.eps}
 or \widget{export.svg} with the \widget{export.use_process} checkbox
 selected).
