@@ -24,30 +24,41 @@ public class LaTeXCodeEditor extends JPanel
       add(tabbedPane, BorderLayout.CENTER);
 
       earlyPreamble = new LaTeXCodeBlockEditor(frame,
-       frame.getResources().getMessage(
-        "texeditor.latexcodeblock.earlypreamble"));
+        "texeditor.latexcodeblock.earlypreamble");
 
-      tabbedPane.add(earlyPreamble);
+      addTab(earlyPreamble);
 
       midPreamble = new LaTeXCodeBlockEditor(frame,
-       frame.getResources().getMessage("texeditor.latexcodeblock.midpreamble"));
+       "texeditor.latexcodeblock.midpreamble");
 
-      tabbedPane.add(midPreamble);
+      addTab(midPreamble);
 
       latePreamble = new LaTeXCodeBlockEditor(frame,
-       frame.getResources().getMessage("texeditor.latexcodeblock.latepreamble"));
+       "texeditor.latexcodeblock.latepreamble");
 
-      tabbedPane.add(latePreamble);
+      addTab(latePreamble);
 
       documentEnv = new LaTeXCodeBlockEditor(frame,
-       frame.getResources().getMessage("texeditor.latexcodeblock.document"));
+       "texeditor.latexcodeblock.document");
 
-      tabbedPane.add(documentEnv);
+      addTab(documentEnv);
 
       magicComments = new LaTeXCodeBlockEditor(frame,
-       frame.getResources().getMessage("texeditor.latexcodeblock.magic_comments"));
+       "texeditor.latexcodeblock.magic_comments");
 
-      tabbedPane.add(magicComments);
+      addTab(magicComments);
+   }
+
+   protected void addTab(LaTeXCodeBlockEditor comp)
+   {
+      tabbedPane.add(comp);
+
+      String tooltip = comp.getToolTipText();
+
+      if (tooltip != null)
+      {
+         tabbedPane.setToolTipTextAt(tabbedPane.getTabCount()-1, tooltip);
+      }
    }
 
    public void showPopup(Component comp, int x, int y)

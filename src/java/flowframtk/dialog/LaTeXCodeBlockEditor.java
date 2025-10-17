@@ -37,13 +37,22 @@ import com.dickimawbooks.flowframtk.*;
 public class LaTeXCodeBlockEditor extends JPanel
   implements TeXEditorListener,ActionListener
 {
-   public LaTeXCodeBlockEditor(JDRFrame frame, String name)
+   public LaTeXCodeBlockEditor(JDRFrame frame, String id)
    {
       super(new BorderLayout());
 
       this.frame = frame;
       FlowframTk application = frame.getApplication();
+
+      String name = getResources().getMessage(id);
+      String tooltip = getResources().getToolTipText(id);
+
       setName(name);
+
+      if (tooltip != null)
+      {
+         setToolTipText(tooltip);
+      }
 
       Box toolBar = Box.createHorizontalBox();
 
