@@ -281,7 +281,7 @@ public class StatusBar extends JPanel
          {
             if (evt.getClickCount() > 1)
             {
-               infoDialog.display(infoField.getText(), helpId);
+               infoDialog.display(infoField.getText(), targetRef, navNode, helpId);
             }
          }
       });
@@ -453,6 +453,7 @@ public class StatusBar extends JPanel
       {
          helpButton.setVisible(true);
          helpButton.setEnabled(true);
+
          try
          {
             refreshHelpReference();
@@ -462,6 +463,8 @@ public class StatusBar extends JPanel
             getResources().error(application, e);
          }
       }
+
+      infoDialog.update(infoText, targetRef, navNode, helpId);
    }
 
    protected void refreshHelpReference() throws UnknownNodeException

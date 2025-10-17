@@ -1639,10 +1639,44 @@ public class JDRResources
       TJHAbstractAction helpAction = helpLib.createHelpDialogAction(
         dialog, id, icSet, (IconSet)null);
 
-      JButton button = buttonStyle.createButton(this, helpAction);
+      return createButton(buttonStyle, helpAction);
+   }
 
-      KeyStroke ks = (KeyStroke)helpAction.getValue(Action.ACCELERATOR_KEY);
-      String actionName = (String)helpAction.getValue(Action.ACTION_COMMAND_KEY);
+   public HelpDialogAction createHelpDialogAction(JDialog dialog, String id)
+   {
+      return createHelpDialogAction(dialogButtonStyle, dialog, id);
+   }
+
+   public HelpDialogAction createHelpDialogAction(int style, JDialog dialog, String id)
+   {
+      JDRButtonStyle buttonStyle;
+
+      if (style == DIALOG_BUTTON_AS_GENERAL)
+      {
+         buttonStyle = getButtonStyle();
+      }
+      else
+      {
+         buttonStyle = DIALOG_BUTTON_STYLES[style];
+      }
+
+      IconSet icSet = buttonStyle.getIconSet(this, 
+        helpLib.getIconPrefix("button.help", "help"));
+
+      return helpLib.createHelpDialogAction(dialog, id, icSet, (IconSet)null);
+   }
+
+   public JButton createButton(TJHAbstractAction action)
+   {
+      return createButton(getButtonStyle(), action);
+   }
+
+   public JButton createButton(JDRButtonStyle buttonStyle, TJHAbstractAction action)
+   {
+      JButton button = buttonStyle.createButton(this, action);
+
+      KeyStroke ks = (KeyStroke)action.getValue(Action.ACCELERATOR_KEY);
+      String actionName = (String)action.getValue(Action.ACTION_COMMAND_KEY);
 
       if (ks != null && actionName != null)
       {
@@ -2440,6 +2474,22 @@ public class JDRResources
    {
       return createDialogButton("button.close", "close", 
        listener, getAccelerator("button.close"), tooltipText);
+   }
+
+   public JDRButton createCloseButton(JRootPane rootPane, ActionListener listener)
+   {
+      return createCloseButton(rootPane, listener, getMessage("button.close"));
+   }
+
+   public JDRButton createCloseButton(JRootPane rootPane, ActionListener listener, 
+     String tooltipText)
+   {
+      JDRButton button = createDialogButton("button.close", "close", 
+       listener, getAccelerator("button.close"), tooltipText);
+
+      rootPane.setDefaultButton(button);
+
+      return button;
    }
 
    public JDRButton createDefaultButton(ActionListener listener)

@@ -41,8 +41,10 @@ public class InfoDialog extends JDialog
    public InfoDialog(FlowframTk application, String helpSectionId)
    {
       super(application,
-         application.getResources().getMessage("info.title"), true);
+         application.getResources().getMessage("info.title"), false);
       application_ = application;
+ 
+      helpId = helpSectionId;
 
       textArea = new JTextArea(10,20);
       textArea.setEditable(false);
@@ -51,29 +53,19 @@ public class InfoDialog extends JDialog
 
       getContentPane().add(new JScrollPane(textArea), "Center");
 
-      // OK/Cancel Button panel
+      // Button panel
 
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
       JDRResources resources = getResources();
 
-      p.add(resources.createOkayButton(getRootPane(), this));
-      p.add(resources.createCancelButton(this));
+      p.add(resources.createCloseButton(getRootPane(), this));
 
-      try
-      {
-         helpAction = resources.getHelpLib().createHelpDialogAction(this,
-           helpSectionId);
+      helpButton = resources.createDialogButton("button.help", "help", this,
+       resources.getAccelerator("button.help"));
 
-         helpButton = resources.getButtonStyle().createButton(resources, helpAction);
-
-         p.add(helpButton);
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         resources.internalError(null, e);
-      }
+      p.add(helpButton);
 
       pack();
       setLocationRelativeTo(application_);
@@ -85,64 +77,69 @@ public class InfoDialog extends JDialog
 
       if (action == null) return;
 
-      if (action.equals("okay"))
-      {
-         okay();
-      }
-      else if (action.equals("cancel"))
+      if (action.equals("close"))
       {
          setVisible(false);
       }
       else if (action.equals("help"))
       {
-         helpAction.doAction();
+         setVisible(false);
 
-         if (helpId != null)
+         try
          {
-            HelpDialog helpDialog = helpAction.getHelpDialog();
-
-            try
+            if (targetRef != null)
             {
-               helpDialog.setPage(helpId);
+               getResources().getHelpLib().openHelp(targetRef);
             }
-            catch (IOException e)
+            else if (navNode != null)
             {
-               getResources().error(this, e);
+               getResources().getHelpLib().openHelp(navNode);
             }
+            else if (helpId != null)
+            {
+               getResources().getHelpLib().openHelpForId(helpId);
+            }
+         }
+         catch (Exception e)
+         {
+            getResources().error(application_, e);
          }
       }
    }
 
    public void display(String text)
    {
-      display(text, null);
+      display(text, null, null, null);
    }
 
-   public void display(String text, String helpId)
+   public void display(String text, TargetRef targetRef,
+      NavigationNode navNode, String helpId)
    {
-      this.helpId = helpId;
-      textArea.setText(text);
-
-      if (helpButton != null)
-      {
-         if (helpId == null)
-         {
-            helpButton.setEnabled(false);
-            helpButton.setVisible(false);
-         }
-         else
-         {
-            helpButton.setEnabled(true);
-            helpButton.setVisible(true);
-         }
-      }
+      update(text, targetRef, navNode, helpId);
 
       setVisible(true);
    }
 
-   public void okay()
+   public void update(String text, TargetRef targetRef,
+      NavigationNode navNode, String helpId)
    {
-      setVisible(false);
+      this.helpId = helpId;
+      this.navNode = navNode;
+      this.targetRef = targetRef;
+
+      textArea.setText(text);
+
+      if (helpId == null && targetRef == null && navNode == null)
+      {
+         helpButton.setEnabled(false);
+         helpButton.setVisible(false);
+      }
+      else
+      {
+         helpButton.setEnabled(true);
+         helpButton.setVisible(true);
+      }
+
    }
 
    public JDRResources getResources()
@@ -156,5 +153,6 @@ public class InfoDialog extends JDialog
 
    private AbstractButton helpButton;
    private String helpId;
-   private HelpDialogAction helpAction;
+   private NavigationNode navNode = null;
+   private TargetRef targetRef = null;
 }
