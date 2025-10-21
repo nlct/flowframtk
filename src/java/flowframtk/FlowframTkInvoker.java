@@ -2266,6 +2266,7 @@ public class FlowframTkInvoker
 
       out.println("shapeparhpadding=" + (exportSettings.shapeparUseHpadding ? 1 : 0));
       out.println("pdfinfo="+(exportSettings.usePdfInfo ? 1 : 0));
+      out.println("png_alpha="+(exportSettings.pngUseAlpha ? 1 : 0));
       out.println("textualshadingexport="
         + exportSettings.textualShading);
       out.println("textpathoutlineexport="
