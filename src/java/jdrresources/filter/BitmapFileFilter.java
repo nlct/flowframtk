@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,8 +31,7 @@ import com.dickimawbooks.jdr.io.*;
  * Filter for raster image files. Recognised image extensions:
  * tiff, tif, gif, jpeg, jpg, png.
  */
-public class BitmapFileFilter extends javax.swing.filechooser.FileFilter
-implements JDRFileFilterInterface
+public class BitmapFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates a bitmap file filter with default description.
@@ -48,15 +47,15 @@ implements JDRFileFilterInterface
     */
    public BitmapFileFilter(String description, String[] extensions)
    {
-      super();
+      super(description);
 
-      description_ = description;
       validExtensions = extensions;
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       if (f.isDirectory()) return true;
@@ -83,32 +82,11 @@ implements JDRFileFilterInterface
       return false;
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "png";
    }
-
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   public float getVersion()
-   {
-      return version;
-   }
-
-   private float version = 1.0f;
-
-   private String description_;
 
    private String[] validExtensions;
 }

@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,8 +29,7 @@ import com.dickimawbooks.jdr.io.*;
 /**
  * Filter for AJR files. Recognised image extension: ajr.
  */
-public class AjrFileFilter extends javax.swing.filechooser.FileFilter
-   implements JDRFileFilterInterface
+public class AjrFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates an AJR file filter with default description.
@@ -56,9 +55,7 @@ public class AjrFileFilter extends javax.swing.filechooser.FileFilter
     */
    public AjrFileFilter(String description)
    {
-      super();
-
-      description_ = description;
+      super(description, JDRAJR.CURRENT_VERSION);
    }
 
    /**
@@ -67,15 +64,13 @@ public class AjrFileFilter extends javax.swing.filechooser.FileFilter
     */
    public AjrFileFilter(String description, float versionNumber)
    {
-      super();
-
-      description_ = description;
-      version = versionNumber;
+      super(description, versionNumber);
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       if (f.isDirectory()) return true;
@@ -85,29 +80,10 @@ public class AjrFileFilter extends javax.swing.filechooser.FileFilter
       return name.endsWith(".ajr");
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "ajr";
    }
 
-   public float getVersion()
-   {
-      return version;
-   }
-
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   private float version = JDRAJR.CURRENT_VERSION;
-   private String description_;
 }

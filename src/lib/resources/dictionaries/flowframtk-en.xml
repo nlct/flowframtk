@@ -2330,6 +2330,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="filter.svg">Scalable Vector Graphics (*.svg)</entry>
 <entry key="filter.tex">TeX/LaTeX (*.tex, *.ltx)</entry>
 <entry key="filter.pdf">Portable Document Format (*.pdf)</entry>
+<entry key="filter.acorndraw">Acorn Draw File (*,aff)</entry>
 
 <!--  Export dialog box -->
 <entry key="export.title">Export</entry>
@@ -2444,6 +2445,20 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <!--  Import dialog box -->
 <entry key="import.title">Import</entry>
+
+<entry key="import.use_mappings">Use text mappings</entry>
+<entry key="import.use_mappings.mnemonic">M</entry>
+<entry key="import.use_mappings.initvalue">true</entry>
+
+<entry key="import.extract_bitmaps">Extract any embedded bitmaps</entry>
+<entry key="import.extract_bitmaps.mnemonic">B</entry>
+<entry key="import.extract_bitmaps.initvalue">false</entry>
+
+<entry key="import.bitmap_dir">Bitmap Directory:</entry>
+<entry key="import.bitmap_dir.mnemonic">D</entry>
+
+<entry key="import.bitmap_prefix">Bitmap Prefix:</entry>
+<entry key="import.bitmap_prefix.mnemonic">P</entry>
 
 <!--  colour selector -->
 
@@ -3595,6 +3610,7 @@ Merge Region: {2}</entry>
 
 <entry key="button.okay.iconimage">okay</entry>
 <entry key="button.cancel.iconimage">cancel</entry>
+<entry key="button.help.iconimage">help</entry>
 
 <entry key="label.filename">Filename</entry>
 <entry key="label.filename.mnemonic">F</entry>

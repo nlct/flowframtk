@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,8 +29,7 @@ import com.dickimawbooks.jdr.io.*;
 /**
  * Filter for PNG image files. Recognised image extension: png.
  */
-public class PngFileFilter extends javax.swing.filechooser.FileFilter
-implements JDRFileFilterInterface
+public class PngFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates a PNG file filter with default description.
@@ -46,14 +45,13 @@ implements JDRFileFilterInterface
     */
    public PngFileFilter(String description)
    {
-      super();
-
-      description_ = description;
+      super(description);
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       if (f.isDirectory()) return true;
@@ -63,29 +61,9 @@ implements JDRFileFilterInterface
       return name.endsWith(".png");
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "png";
    }
-
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   public float getVersion()
-   {
-      return version;
-   }
-
-   private float version = 1.0f;
-   private String description_;
 }

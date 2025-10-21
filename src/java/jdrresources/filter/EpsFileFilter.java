@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,22 +31,20 @@ import com.dickimawbooks.jdr.io.*;
  * the extension <code>eps</code> or <code>ps</code>.
  */
 
-public class EpsFileFilter extends javax.swing.filechooser.FileFilter
-implements JDRFileFilterInterface
+public class EpsFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates an EPS file filter with given description.
     */
    public EpsFileFilter(String description)
    {
-      super();
-
-      description_ = description;
+      super(description);
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       String name = f.getName().toLowerCase();
@@ -56,29 +54,9 @@ implements JDRFileFilterInterface
           || f.isDirectory();
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "eps";
    }
-
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   public float getVersion()
-   {
-      return version;
-   }
-
-   private float version = 1.0f;
-   private String description_;
 }

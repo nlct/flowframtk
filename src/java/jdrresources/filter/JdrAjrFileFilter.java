@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,8 +30,7 @@ import com.dickimawbooks.jdr.io.*;
  * Filter for AJR and JDR files.
  * Recognised image extensions: ajr, jdr.
  */
-public class JdrAjrFileFilter extends javax.swing.filechooser.FileFilter
-   implements JDRFileFilterInterface
+public class JdrAjrFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates an AJR file filter with default description.
@@ -57,9 +56,7 @@ public class JdrAjrFileFilter extends javax.swing.filechooser.FileFilter
     */
    public JdrAjrFileFilter(String description)
    {
-      super();
-
-      description_ = description;
+      super(description, JDRAJR.CURRENT_VERSION);
    }
 
    /**
@@ -68,15 +65,13 @@ public class JdrAjrFileFilter extends javax.swing.filechooser.FileFilter
     */
    public JdrAjrFileFilter(String description, float versionNumber)
    {
-      super();
-
-      description_ = description;
-      version = versionNumber;
+      super(description, versionNumber);
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       if (f.isDirectory()) return true;
@@ -86,29 +81,9 @@ public class JdrAjrFileFilter extends javax.swing.filechooser.FileFilter
       return (name.endsWith(".jdr")||name.endsWith(".ajr"));
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "jdr";
    }
-
-   public float getVersion()
-   {
-      return version;
-   }
-
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   private float version = JDRAJR.CURRENT_VERSION;
-   private String description_;
 }

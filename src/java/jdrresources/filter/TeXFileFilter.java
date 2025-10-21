@@ -29,8 +29,7 @@ import com.dickimawbooks.jdr.io.*;
 /**
  * Filter for TeX/LaTeX files. Recognised extensions: tex, ltx.
  */
-public class TeXFileFilter extends javax.swing.filechooser.FileFilter
-implements JDRFileFilterInterface
+public class TeXFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates a TeX/LaTeX file filter with default description.
@@ -46,14 +45,13 @@ implements JDRFileFilterInterface
     */
    public TeXFileFilter(String description)
    {
-      super();
-
-      description_ = description;
+      super(description);
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       if (f.isDirectory()) return true;
@@ -69,29 +67,10 @@ implements JDRFileFilterInterface
       return false;
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "tex";
    }
 
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   public float getVersion()
-   {
-      return version;
-   }
-
-   private float version = 1.0f;
-   private String description_;
 }

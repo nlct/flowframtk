@@ -6,7 +6,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2008-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ package com.dickimawbooks.jdrresources;
 import java.io.File;
 import java.beans.*;
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -80,13 +82,35 @@ public class JDRFileChooser extends JFileChooser
       {
          FileFilter filter = getFileFilter();
 
-         if (filter instanceof JDRFileFilterInterface)
+         if (filter instanceof AbstractJDRFileFilter)
          {
+            AbstractJDRFileFilter jdrFileFilter = (AbstractJDRFileFilter)filter;
+
             if (!filter.accept(file))
             {
+               String base = file.getName();
+
+               int idx = base.lastIndexOf(".");
+
+               if (idx == -1)
+               {
+                  Matcher m = PATTERN_NFS_STYLE_SUFFIX.matcher(base);
+
+                  if (m.matches())
+                  {
+                     idx = base.lastIndexOf(",");
+                  }
+               }
+
+               if (idx > 0)
+               {
+                  base = base.substring(0, idx);
+               }
+
                return new File(file.getParentFile(), 
-                 file.getName()+"."
-                 +((JDRFileFilterInterface)filter).getDefaultExtension());
+                 base
+                 + jdrFileFilter.getExtensionSeparator()
+                 + jdrFileFilter.getDefaultExtension());
             }
          }
       }
@@ -175,9 +199,9 @@ public class JDRFileChooser extends JFileChooser
        {
           Object value = evt.getNewValue();
 
-          if (value instanceof JDRFileFilterInterface)
+          if (value instanceof AbstractJDRFileFilter)
           {
-             JDRFileFilterInterface filter = (JDRFileFilterInterface)value;
+             AbstractJDRFileFilter filter = (AbstractJDRFileFilter)value;
 
              String name = getFileName();
 
@@ -188,11 +212,22 @@ public class JDRFileChooser extends JFileChooser
 
              int idx = name.lastIndexOf(".");
 
+             if (idx == -1)
+             {
+                Matcher m = PATTERN_NFS_STYLE_SUFFIX.matcher(name);
+
+                if (m.matches())
+                {
+                   idx = name.lastIndexOf(",");
+                }
+             }
+
              if (idx > -1 && 
                 !filter.accept(new File(getCurrentDirectory(),name)))
              {
                 name = name.substring(0, idx)
-                     + "." + filter.getDefaultExtension();
+                     + filter.getExtensionSeparator()
+                     + filter.getDefaultExtension();
 
                 setSelectedFile(new File(name));
              }
@@ -239,11 +274,30 @@ public class JDRFileChooser extends JFileChooser
                {
                   String base = name;
 
-                  if (filter instanceof JDRFileFilterInterface)
+                  int idx = name.lastIndexOf(".");
+
+                  if (idx == -1)
                   {
-                     base = base + "."
-                          + ((JDRFileFilterInterface)filter)
-                              .getDefaultExtension();
+                     Matcher m = PATTERN_NFS_STYLE_SUFFIX.matcher(name);
+
+                     if (m.matches())
+                     {
+                        idx = name.lastIndexOf(",");
+                     }
+                  }
+
+                  if (idx > 0)
+                  {
+                     base = name.substring(0, idx);
+                  }
+
+                  if (filter instanceof AbstractJDRFileFilter)
+                  {
+                     AbstractJDRFileFilter jdrFileFilter = (AbstractJDRFileFilter)filter;
+
+                     base = base 
+                          + jdrFileFilter.getExtensionSeparator()
+                          + jdrFileFilter.getDefaultExtension();
                   }
 
                   ui.setFileName(base);
@@ -254,4 +308,7 @@ public class JDRFileChooser extends JFileChooser
    }
 
    private JCheckBox addExtBox;
+
+   public static final Pattern PATTERN_NFS_STYLE_SUFFIX = 
+    Pattern.compile(".*,[0-9a-f]{3}", Pattern.CASE_INSENSITIVE);
 }

@@ -1,14 +1,10 @@
-// File          : SvgFileFilter.java
-// Creation Date : 1st February 2006
-// Author        : Nicola L.C. Talbot
-//                 http://www.dickimaw-books.com/
-
 /*
-    Copyright (C) 2006-2025 Nicola L.C. Talbot
+    Copyright (C) 2025 Nicola L.C. Talbot
+    www.dickimaw-books.com
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
+    the Free Software Foundation; either version 3 of the License, or
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
@@ -27,14 +23,17 @@ import java.io.*;
 import com.dickimawbooks.jdr.io.*;
 
 /**
- * Filter for SVG files. Only recognises the extension <code>svg</code>.
+ * Filter for Acorn Draw files. Since RISC OS doesn't recognise file
+ * extensions, this uses the NFS style <code>,aff</code>
+ * (NB comma not dot). 
  */
-public class SvgFileFilter extends AbstractJDRFileFilter
+
+public class AcornDrawFileFilter extends AbstractJDRFileFilter
 {
    /**
-    * Creates an SVG file filter with given description.
+    * Creates an Acorn Draw file filter with given description.
     */
-   public SvgFileFilter(String description)
+   public AcornDrawFileFilter(String description)
    {
       super(description);
    }
@@ -45,14 +44,18 @@ public class SvgFileFilter extends AbstractJDRFileFilter
    @Override
    public boolean accept(File f)
    {
-      return f.getName().toLowerCase().endsWith(".svg")
-            || f.isDirectory();
+      String name = f.getName().toLowerCase();
+
+      return name.endsWith(",aff")
+          || f.isDirectory();
    }
 
    @Override
    public String getDefaultExtension()
    {
-      return "svg";
+      return "aff";
    }
-}
 
+   @Override
+   public String getExtensionSeparator() { return ","; }
+}

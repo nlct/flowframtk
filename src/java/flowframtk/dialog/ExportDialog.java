@@ -298,61 +298,61 @@ public class ExportDialog extends JDialog
 
       fileTypeButtons[TYPE_PGF] = new FileTypeButton(this,
          ExportSettings.Type.PGF, "pgfpicture", bg,
-         pgfFileFilter, ".tex");
+         pgfFileFilter);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_PGF]);
 
       fileTypeButtons[TYPE_IMAGE_DOC] = new FileTypeButton(this, 
          ExportSettings.Type.IMAGE_DOC, "imagedoc", bg,
-         latexDocFileFilter, ".tex");
+         latexDocFileFilter);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_IMAGE_DOC]);
 
       fileTypeButtons[TYPE_CLS] = new FileTypeButton(this, 
          ExportSettings.Type.CLS, "cls", bg,
-         clsFileFilter, ".cls");
+         clsFileFilter);
 
       flfFileTypeComp.add(fileTypeButtons[TYPE_CLS]);
 
       fileTypeButtons[TYPE_STY] = new FileTypeButton(this,
          ExportSettings.Type.STY, "sty", bg,
-         styFileFilter, ".sty");
+         styFileFilter);
 
       flfFileTypeComp.add(fileTypeButtons[TYPE_STY]);
 
       fileTypeButtons[TYPE_IMAGE_PDF] = new FileTypeButton(this,
          ExportSettings.Type.IMAGE_PDF, "imagepdf", bg,
-         pdfFileFilter, ".pdf", true, pdfLaTeXPanel);
+         pdfFileFilter, true, pdfLaTeXPanel);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_IMAGE_PDF]);
 
       fileTypeButtons[TYPE_FLF_DOC] = new FileTypeButton(this, 
          ExportSettings.Type.FLF_DOC, "flfdoc", bg,
-         latexDocFileFilter, ".tex");
+         latexDocFileFilter);
 
       flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_DOC]);
 
       fileTypeButtons[TYPE_FLF_PDF] = new FileTypeButton(this,
          ExportSettings.Type.FLF_PDF, "flfpdf", bg,
-         pdfFileFilter, ".pdf", true, pdfLaTeXPanel);
+         pdfFileFilter, true, pdfLaTeXPanel);
 
       flfFileTypeComp.add(fileTypeButtons[TYPE_FLF_PDF]);
 
       fileTypeButtons[TYPE_PNG] = new FileTypeButton(this, 
          ExportSettings.Type.PNG, "png", bg,
-         pngFileFilter, ".png", false, pdfLaTeXPanel, pdftopngPanel);
+         pngFileFilter, false, pdfLaTeXPanel, pdftopngPanel);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_PNG]);
 
       fileTypeButtons[TYPE_EPS] = new FileTypeButton(this,
          ExportSettings.Type.EPS, "eps", bg,
-         epsFileFilter, ".eps", false, dviLaTeXPanel, dvipsPanel);
+         epsFileFilter, false, dviLaTeXPanel, dvipsPanel);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_EPS]);
 
       fileTypeButtons[TYPE_SVG] = new FileTypeButton(this, 
          ExportSettings.Type.SVG, "svg", bg,
-         svgFileFilter, ".svg", false, dviLaTeXPanel, dvisvgmPanel, libGsComp);
+         svgFileFilter, false, dviLaTeXPanel, dvisvgmPanel, libGsComp);
 
       imageFileTypeComp.add(fileTypeButtons[TYPE_SVG]);
 
@@ -1252,12 +1252,25 @@ public class ExportDialog extends JDialog
          if (file != null && !currentFileTypeButton.accept(file))
          {
             String name = file.getName();
-            int idx = name.lastIndexOf(".");
+            int idx;
+
+            // If export to Acorn Draw file is later implemented, a workaround
+            // to deal with comma pseudo extension will be needed.
+
+            if (name.endsWith(",aff"))
+            {
+               idx = name.lastIndexOf(",");
+            }
+            else
+            {
+               idx = name.lastIndexOf(".");
+            }
 
             if (idx > 0)
             {
-               name = name.substring(0, idx)
-                 + currentFileTypeButton.getDefaultExtension() ;
+               name = name.substring(0, idx-1)
+                 + currentFileTypeButton.getExtensionSeparator() 
+                 + currentFileTypeButton.getDefaultExtension();
 
                file = new File(file.getParentFile(), name);
                fileField.setFile(file);
@@ -1475,20 +1488,19 @@ class FileTypeButton extends JRadioButton
 {
    public FileTypeButton(ExportDialog dialog, ExportSettings.Type type,
      String tag, ButtonGroup bg,
-     FileFilter filter, String defExt)
+     AbstractJDRFileFilter filter)
    {
-      this(dialog, type, tag, bg, filter, defExt, false);
+      this(dialog, type, tag, bg, filter, false);
    }
 
    public FileTypeButton(ExportDialog dialog, ExportSettings.Type type,
      String tag, ButtonGroup bg,
-     FileFilter filter, String defExt, boolean requiresProcesses, JComponent... processComps)
+     AbstractJDRFileFilter filter, boolean requiresProcesses, JComponent... processComps)
    {
       super(dialog.getResources().getMessage("export."+tag));
       this.dialog = dialog;
       this.type = type;
       this.filter = filter;
-      this.defExt = defExt;
       this.requiresProcesses = requiresProcesses;
       this.processComps = processComps;
 
@@ -1533,7 +1545,7 @@ class FileTypeButton extends JRadioButton
       }
    }
 
-   public FileFilter getFileFilter()
+   public AbstractJDRFileFilter getFileFilter()
    {
       return filter;
    }
@@ -1545,7 +1557,12 @@ class FileTypeButton extends JRadioButton
 
    public String getDefaultExtension()
    {
-      return defExt;
+      return filter.getDefaultExtension();
+   }
+
+   public String getExtensionSeparator()
+   {
+      return filter.getExtensionSeparator();
    }
 
    public ExportSettings.Type getType()
@@ -1554,9 +1571,8 @@ class FileTypeButton extends JRadioButton
    }
 
    ExportDialog dialog;
-   FileFilter filter;
+   AbstractJDRFileFilter filter;
    boolean requiresProcesses;
    JComponent[] processComps;
-   String defExt;
    ExportSettings.Type type;
 }

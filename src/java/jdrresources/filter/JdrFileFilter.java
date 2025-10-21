@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,8 +29,7 @@ import com.dickimawbooks.jdr.io.*;
 /**
  * Filter for JDR files. Recognised image extension: jdr.
  */
-public class JdrFileFilter extends javax.swing.filechooser.FileFilter
-implements JDRFileFilterInterface
+public class JdrFileFilter extends AbstractJDRFileFilter
 {
    /**
     * Creates a JDR file filter with default description.
@@ -48,7 +47,7 @@ implements JDRFileFilterInterface
     */
    public JdrFileFilter(float versionNumber)
    {
-      this("JDR Image Files", versionNumber);
+      super("JDR Image Files", versionNumber);
    }
 
    /**
@@ -56,9 +55,7 @@ implements JDRFileFilterInterface
     */
    public JdrFileFilter(String description)
    {
-      super();
-
-      description_ = description;
+      super(description, JDRAJR.CURRENT_VERSION);
    }
 
    /**
@@ -67,15 +64,13 @@ implements JDRFileFilterInterface
     */
    public JdrFileFilter(String description, float versionNumber)
    {
-      super();
-
-      description_ = description;
-      version = versionNumber;
+      super(description, versionNumber);
    }
 
    /**
     * Determines whether given file is accepted by this filter.
     */
+   @Override
    public boolean accept(File f)
    {
       if (f.isDirectory()) return true;
@@ -85,29 +80,9 @@ implements JDRFileFilterInterface
       return name.endsWith(".jdr");
    }
 
-   /**
-    * Gets the description of this filter.
-    */
-   public String getDescription()
-   {
-      return description_;
-   }
-
+   @Override
    public String getDefaultExtension()
    {
       return "jdr";
    }
-
-   public float getVersion()
-   {
-      return version;
-   }
-
-   public void setVersion(float versionNumber)
-   {
-      version = versionNumber;
-   }
-
-   private float version = JDRAJR.CURRENT_VERSION;
-   private String description_;
 }

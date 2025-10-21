@@ -519,30 +519,36 @@ public class FlowframTk extends JFrame
 
       // not fully implemented
 
+      importDialog = new ImportDialog(this);
+
+      acornDrawFileFilter = new AcornDrawFileFilter(
+        resources.getMessage("filter.acorndraw"));
+
+      importItem = FlowframTkAction.createMenuItem(this,
+        "menu.file", "import", fileM,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               importImage();
+            }
+         });
+
+      incStartupProgress(fileM, importItem);
+
+      importFC = new JDRFileChooser(resources, false);
+      importFC.setDialogTitle(
+         resources.getMessage("import.title"));
+
+      importFC.setCurrentDirectory(
+         new File(appSettings.startDir));
+      importFC.setAcceptAllFileFilterUsed(false);
+
+      importFC.addChoosableFileFilter(acornDrawFileFilter);
+
       if (invoker.isExperimentalMode() || resources.isDebuggingOn())
       {
-         importItem = FlowframTkAction.createMenuItem(this,
-           "menu.file", "import", fileM,
-            new FlowframTkActionListener()
-            {
-               public void doAction(FlowframTkAction action, ActionEvent evt)
-               {
-                  importImage();
-               }
-            });
-
-         incStartupProgress(fileM, importItem);
-
-         importFC = new JDRFileChooser(resources, false);
-         importFC.setDialogTitle(
-            resources.getMessage("import.title"));
-
-         importFC.setCurrentDirectory(
-            new File(appSettings.startDir));
-         importFC.setAcceptAllFileFilterUsed(false);
-
          importFC.addChoosableFileFilter(epsFileFilter);
-
       }
 
       // Printer Page Setup dialog
@@ -6683,28 +6689,53 @@ public class FlowframTk extends JFrame
 
       if (result == JFileChooser.APPROVE_OPTION)
       {
-         JDRFrame currentFrame = getSelectedFrame();
+         File file = new File(
+            importFC.getSelectedFile().getAbsolutePath());
+         FileFilter filter = importFC.getFileFilter();
 
-         if (currentFrame == null)
+         if (filter instanceof AcornDrawFileFilter)
          {
-            currentFrame = addFrame((CanvasGraphics)getSettings().getCanvasGraphics().clone());
+            importDialog.display(ImportSettings.Type.ACORN_DRAW, file);
          }
-         else if (currentFrame.isNewImage())
+         else if (filter instanceof EpsFileFilter)
          {
-            if (currentFrame.isIcon())
-            {
-               currentFrame.selectThisFrame();
-            }
+            importDialog.display(ImportSettings.Type.EPS, file);
          }
          else
          {
-            currentFrame = addFrame((CanvasGraphics)getSettings().getCanvasGraphics().clone());
+            getResources().internalError("Unknown file filter "+filter);
          }
+      }
+   }
 
-         File file = new File(
-            importFC.getSelectedFile().getAbsolutePath());
+   public void importImage(ImportSettings importSettings)
+   {
+      JDRFrame currentFrame = getSelectedFrame();
 
-         (new LoadEps(currentFrame, file)).execute();
+      if (currentFrame == null)
+      {
+         currentFrame = addFrame((CanvasGraphics)getSettings().getCanvasGraphics().clone());
+      }
+      else if (currentFrame.isNewImage())
+      {
+         if (currentFrame.isIcon())
+         {
+            currentFrame.selectThisFrame();
+         }
+      }
+      else
+      {
+         currentFrame = addFrame((CanvasGraphics)getSettings().getCanvasGraphics().clone());
+      }
+
+      switch (importSettings.type)
+      {
+         case ACORN_DRAW:
+            (new LoadAcornDrawFile(currentFrame, importSettings)).execute();
+         break;
+         case EPS:
+            (new LoadEps(currentFrame, importSettings.currentFile)).execute();
+         break;
       }
    }
 
@@ -6775,8 +6806,8 @@ public class FlowframTk extends JFrame
    {
       File file = savejdrFC.getSelectedFile();
 
-      JDRFileFilterInterface filter 
-         = (JDRFileFilterInterface)savejdrFC.getFileFilter();
+      AbstractJDRFileFilter filter 
+         = (AbstractJDRFileFilter)savejdrFC.getFileFilter();
 
       String filenameLC = file.getName().toLowerCase();
 
@@ -7326,6 +7357,7 @@ public class FlowframTk extends JFrame
    private JDRAppSelector appSelector;
 
    private ExportDialog exportDialog;
+   private ImportDialog importDialog;
 
    // file filters
 
@@ -7348,6 +7380,7 @@ public class FlowframTk extends JFrame
    private SvgFileFilter svgFileFilter;
    private PdfFileFilter pdfFileFilter;
    private BitmapFileFilter bitmapFileFilter;
+   private AcornDrawFileFilter acornDrawFileFilter;
 
    // undo/redo stuff
    private UndoManager undoManager;

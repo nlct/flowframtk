@@ -2835,16 +2835,16 @@ closes the dialog window.
 The \widget{cancel} button discards any changes that have been made
 and closes the dialog window.
 
-\widgetdef{button.default}
-
-The \widget{button.default} button may be used to restore default
-settings.
-
 \widgetdef{button.help}
 
 The \widget{button.help} button may be used to open a help
 window for the section that describes the dialog box (see
 \sectionref{sec:secondaryhelp}).
+
+\widgetdef{button.default}
+
+The \widget{button.default} button may be used to restore default
+settings.
 
 \widgetdef{button.choose}
 
@@ -2881,9 +2881,9 @@ a new child window. You can switch between child windows using the
 To load a \gls{JDR} or \gls{AJR} file, select \menu{file.open}.
 If there is already a picture in the current child window, a new
 child window will open to display the file. Note that although
-\FlowframTk\ can export to other formats, it can only load
-\gls{JDR} and \gls{AJR} files. (Although there is an import option
-available in the experimental mode.)
+\FlowframTk\ can export to other formats, it only has limited
+import capability, so be sure to save your images as 
+\gls{JDR} or \gls{AJR} files.
 
 If you load an image that contains a link to a \gls{bitmap} and
 the bitmap is no longer in the same location, you will be prompted
@@ -2892,8 +2892,8 @@ select a new link, the \LaTeX\ link will also be updated.
 If there is insufficient memory in the \gls{jre} to load a bitmap,
 \FlowframTk\ will revert to draft mode for that bitmap.
 
-On some systems you may be able to \gls{drag-and-drop} \gls{JDR} or
-\gls{AJR} files from a filer window onto \FlowframTk's internal desktop
+On some systems you may be able to \gls{drag-and-drop} \gls*{JDR} or
+\gls*{AJR} files from a filer window onto \FlowframTk's internal desktop
 (the \manmsg{grey} background of \FlowframTk's main window) and this
 will load each file into \FlowframTk. If you drag and drop a
 \gls{bitmap} it will be equivalent to \hyperref[sec:newimage]{creating a
@@ -2921,7 +2921,7 @@ inserted instead. If you drop onto a \gls{canvas}, the file contents
 will be added to the current image (in the case of a \gls{JDR} or
 \gls{AJR} file) or a link will inserted into the current image (in the
 case of a \gls{bitmap} file). You can only drop a file onto the
-\gls{canvas} in \selectmode\ (and no objects are being distorted or
+\gls{canvas} in \selectmode\ (when no objects are being distorted or
 edited).
 
 \section{Recent Files}\label{sec:recentfiles}
@@ -2940,11 +2940,12 @@ directory.
 
 You can use the \menu{file.image_description} dialog box to give the
 image a description. The description is not visible in the image,
-but may be saved as a comment if you \filefn{export} the image. If you have the
-\widget{clssettings.pdfinfo} option selected in the
-\widget{clssettings.title} tab of the \dialog{texconfig} dialog box,
+but may be saved as a comment if you \filefn{export} the image. If
+you have the \widget{clssettings.pdfinfo} option selected,
 the image description will be added to an exported \LaTeX\ document
-in the \gls{pdfinfo/Title} attribute of the \gls{pdfinfo} argument.
+using \gls{flowframtkimageinfo} (if \sty{flowframtkutils} is
+detected) or in the \gls{pdfinfo/Title} attribute of the
+\gls{pdfinfo} argument (otherwise).
 
 \section{Save and Save As}\label{sec:saveimage}
 
@@ -2964,7 +2965,7 @@ higher precision values than the \gls{AJR} format.
 \menudef{menu.file.export}
 
 \begin{warning}
-Note that \FlowframTk\ can't load the files that it can export, so I
+\FlowframTk\ only has very limited import capability, so I
 strongly recommend that you first save the picture as a
 \gls{JDR} or \gls{AJR} file before exporting it, in case you
 wish to edit it later.
@@ -2990,13 +2991,14 @@ process.
 
 \widgetdef{export.title}
 
-At the top of the \dialog{export} dialog is a field for the path to
+At the top of the \dialog{export} dialog is the
+\inlineglsdef{export.file} field for the path to
 the desired export file. You can either type in the full path or use
-the \btn{selectfile} button at the side to open the file chooser.
+the \widget{selectfile} button at the side to open the file chooser.
 
 \widgetdef{export.format}
 
-Below the file field is the \widget{export.format} area where you
+Below the \widget{export.file} field is the \widget{export.format} area where you
 can select the required export format.
 There are two different types of data to export: the actual image as
 shown on the \gls{canvas} (or as close as can be obtained given the
@@ -3703,6 +3705,53 @@ As with the export to encapsulated PDF, if the resulting \gls{svg} or EPS
 file has unexpected results or fails to be created, try exporting to
 an encapsulated \LaTeX\ document and then manually building the
 document.
+
+\section{Import}\label{sec:importimage}
+
+\menudef{menu.file.import}
+
+A supported file format can be imported using the \menu{file.import}
+menu item. The experimental mode may provide additional import options.
+This menu item will first open a file chooser to select the required
+file to import and will then open the \dialog{import} dialog.
+The selected file filter in the file chooser determines the import
+file format. No attempt is currently made to probe for the file format.
+
+\begin{information}
+There is currently only one file format type that is supported in
+normal (non-experimental) mode.
+\end{information}
+
+The original \gls{JpgfDraw} application was inspired by Acorn's Draw
+application. The Acorn Draw file format is a little-endian binary format that can
+now be imported by \FlowframTk. However there are some limitations
+and also some differences.
+
+\begin{itemize}
+\item a \FlowframTk\ \gls{textarea} corresponds to a Draw \qt{text line};
+\item the Draw \qt{text area} supports multiple paragraphs
+and columns, which will be implemented in \FlowframTk\ as
+\gls{flowframe} data;
+\item \FlowframTk\ currently can't extract embedded Sprite data
+but can extract embedded JPEG data;
+\item \FlowframTk\ currently doesn't support Draw's transformed text;
+\item some basic conversion for the System Font, Selwyn, Latin1 and
+Latin2 is provided but characters from other fonts may not be
+correctly converted;
+\item \FlowframTk\ doesn't support different $x$ and $y$ divisions
+in the \gls{grid};
+% TODO:
+\item \FlowframTk\ currently doesn't support Draw's arrow markers;
+\item \FlowframTk\ uses a left-handed co-ordinate system so the 
+right-handed co-ordinates in the Draw file will be converted;
+\item since RISC OS doesn't use dot file extensions, the file
+chooser uses the NFS style \ext+{aff} suffix (comma followed by three
+hexadecimal digits) for the Acorn Draw file filter.
+\end{itemize}
+
+
+\widgetdef{import.title}
+
 
 \section{Page Setup}\label{sec:pagesetup}
 

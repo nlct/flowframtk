@@ -1,10 +1,5 @@
-// File          : JDRFileFilterInterface.java
-// Creation Date : 24th March 2008
-// Author        : Nicola L.C. Talbot
-//                 http://www.dickimaw-books.com/
-
 /*
-    Copyright (C) 2006-2025 Nicola L.C. Talbot
+    Copyright (C) 2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,29 +18,57 @@
 package com.dickimawbooks.jdrresources.filter;
 
 import java.io.File;
+import javax.swing.filechooser.FileFilter;
 
 /**
- * Filter interface.
+ * Abstract filter.
  */
-public interface JDRFileFilterInterface
+public abstract class AbstractJDRFileFilter
+  extends javax.swing.filechooser.FileFilter
 {
-   public boolean accept(File file);
+   public AbstractJDRFileFilter(String description)
+   {
+      this.description = description;
+   }
+
+   public AbstractJDRFileFilter(String description, float versionNumber)
+   {
+      this.description = description;
+      this.versionNumber = versionNumber;
+   }
+
+   public abstract boolean accept(File file);
+
+   @Override
+   public String getDescription()
+   {
+      return description;
+   }
 
    /**
     * Gets default file extension for this filter (not including
     * dot).
     */
-   public String getDefaultExtension();
+   public abstract String getDefaultExtension();
+
+   public String getExtensionSeparator() { return "."; }
 
    /**
     * Gets the version number associated with this file filter
     */
-  public float getVersion();
+   public float getVersion()
+   {
+      return versionNumber;
+   }
 
   /**
    * Sets the version number associated with this file filter
    */
-  public void setVersion(float versionNumber);
+   public void setVersion(float versionNumber)
+   {
+      this.versionNumber = versionNumber;
+   }
 
-  public default String getExtensionSeparator() { return "."; }
+   protected String description;
+   protected float versionNumber;
 }
