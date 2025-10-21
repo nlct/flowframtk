@@ -797,6 +797,7 @@ public class ExportDialog extends JDialog
       if (file != null)
       {
          exportFC.setSelectedFile(file);
+         fileField.setFile(file);
 
          if (fileTypeBtn != null && !fileTypeBtn.accept(file))
          {
