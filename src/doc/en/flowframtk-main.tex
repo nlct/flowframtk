@@ -2758,14 +2758,28 @@ between them where the magnification value is displayed, you can
 \item A help button \includeimg{statushelp} that you can \gls{click} on
 to open the manual at the section related to the current operation.
 This button is only present when the current operation has a section
-in the manual.
+in the manual. You may also use the keyboard shortcut
+\accelerator{contexthelp}.
 
 \item A brief message about the currently selected tool or
 operation. If the message is too long to fit in the provided area,
-you can \gls{doubleclick} on it to open a dialog window with the
-full message (\figureref{fig:information}).
+you can \gls{doubleclick} on it to open the \dialog{info} dialog window with the
+full message.
 
 \end{itemize}
+
+\widgetdef{info.title}
+
+The \dialog{info} dialog (\figureref{fig:information}) has two
+buttons: \widget{close} (closes the dialog) and \widget{help} (opens
+the manual at the applicable page, as per the \gls{statusbar} help
+button, but also closes the \dialog{info} dialog). If the focus has
+switched to the \gls{canvas} or \gls{editor-area}, you will need to
+use \accelerator{contexthelp} not \accelerator{help} if you want to
+use a keyboard shortcut. Note that in this case the \dialog{info}
+dialog won't be automatically closed as the
+\accelerator{contexthelp} shortcut is equivalent to clicking on the
+help button in the status bar.
 
 \FloatFig
   {fig:information}
@@ -2825,6 +2839,12 @@ and closes the dialog window.
 
 The \widget{button.default} button may be used to restore default
 settings.
+
+\widgetdef{button.help}
+
+The \widget{button.help} button may be used to open a help
+window for the section that describes the dialog box (see
+\sectionref{sec:secondaryhelp}).
 
 \widgetdef{button.choose}
 
