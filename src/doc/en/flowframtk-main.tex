@@ -2969,13 +2969,6 @@ higher precision values than the \gls{AJR} format.
 
 \menudef{menu.file.export}
 
-\begin{warning}
-\FlowframTk\ only has very limited import capability, so I
-strongly recommend that you first save the picture as a
-\gls{JDR} or \gls{AJR} file before exporting it, in case you
-wish to edit it later.
-\end{warning}
-
 \FloatFig
  {fig:export-pgfpicture-dialog}
  {\includeimg{export-pgfpicture-dialog}}
@@ -2987,7 +2980,14 @@ as a \inlineglsdef{ext.tex}, \inlineglsdef{ext.sty},
 \inlineglsdef{ext.png} file. You may also export to a
 \inlineglsdef{ext.ps}, \inlineglsdef{ext.eps} or 
 \inlineglsdef{ext.svg} file, but you will need to enable export support for
-PostScript and SVG first.
+PostScript and \gls{svg} first.
+
+\begin{warning}
+\FlowframTk\ only has very limited import capability, so I
+strongly recommend that you first save the picture as a
+\gls{JDR} or \gls{AJR} file before exporting it, in case you
+wish to edit it later.
+\end{warning}
 
 The \menu{file.export} menu item will open the \dialog{export} dialog box
 (\figureref{fig:export-pgfpicture-dialog}), which provides a way to
@@ -3102,7 +3102,7 @@ In this case, it's necessary to use the DVI \app{latex} rather than
 \itemtitle{\widget{export.svg}}
 
 \begin{itemdesc}
-As with the export to EPS function, the export to SVG function is no
+As with the export to EPS function, the export to \gls{svg} function is no
 longer available by default but can be enabled with the
 \widget{processes.support_eps_svg} setting in the
 \widget{processes.title} tab of the \dialog{config} dialog.
@@ -3131,14 +3131,17 @@ Create a \LaTeX\ class file which loads the \sty{flowfram} package.
 \itemtitle{\widget{export.sty}}
 
 \begin{itemdesc}
-As \widget{export.sty} but creates a \LaTeX\ package rather than a
+As \widget{export.cls} but creates a \LaTeX\ package rather than a
 class.
 \end{itemdesc}
 
 \itemtitle{\widget{export.flfdoc}}
 
 \begin{itemdesc}
-As \widget{export.sty} but a complete \LaTeX\ document instead.
+As \widget{export.cls} but creates a complete \LaTeX\ document instead.
+If no \gls{document-body} has been set, default content will be
+created according to the page lists specified in the \gls{flowframe}
+data assigned to \glspl{object}.
 \end{itemdesc}
 
 \itemtitle{\widget{export.flfpdf}}
@@ -3150,7 +3153,8 @@ temporary location, compiles the document, and copies the resulting
 PDF file to the location specified in the file field. The temporary
 directory will then be deleted.
 The PDF may only be a single page if all page lists are set to
-\qt{all} but, unlike the \widget{export.imagepdf} option,
+\qt{all} or if the \gls{document-body} is less than a page long but, 
+unlike the \widget{export.imagepdf} option,
 the resulting PDF may have multiple pages.
 \end{itemdesc}
 \end{deflist}
@@ -3219,7 +3223,7 @@ For example, suppose you want to export an image to a file that can
 be input in a \cls{beamer} presentation. If this option is set, then each object can be
 uncovered one at a time with the following redefinition:
 \begin{codebox}
-\csfmt{renewcommand}\gls{flowframtkendobject}\oarg{7}{\csfmt{pause}}
+\csfmt{renewcommand}\gls{flowframtkendobject}\oarg{7}\marg{\csfmt{pause}}
 \end{codebox}
 
 The first argument \meta{n} starts at 0 (the entire image) and is
@@ -3295,13 +3299,13 @@ file.
 
 \widgetdef{export.textpathoutline.ignore}
 
-If \widgetdef{export.textpathoutline.ignore} is selected, all
+If \widget{export.textpathoutline.ignore} is selected, all
 \glspl{textpath} will be exported as though the \textattr{outline} mode
 was off.
 
 \widgetdef{export.textpathoutline.topath}
 
-If \widgetdef{export.textpathoutline.topath} is selected, all
+If \widget{export.textpathoutline.topath} is selected, all
 \glspl{textpath} with the \textattr{outline} mode attribute set 
 will be exported as though they had been converted to a path.
 
@@ -3959,7 +3963,7 @@ The following file types may be recognised:
 \begin{itemize}
 \item Acorn Draw (always available);
 \item EPS (\ext+{eps} or \ext+{ps}, only in experimental mode);
-\item SVG (\ext+{svg}, only in experimental mode).
+\item \gls{svg} (\ext+{svg}, only in experimental mode).
 \end{itemize}
 Note that \FlowframTk\ doesn't probe the file to determine the file
 type but simply tests which file filter accepts the filename. 
