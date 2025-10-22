@@ -549,6 +549,7 @@ public class FlowframTk extends JFrame
       if (invoker.isExperimentalMode() || resources.isDebuggingOn())
       {
          importFC.addChoosableFileFilter(epsFileFilter);
+         importFC.addChoosableFileFilter(svgFileFilter);
       }
 
       // Printer Page Setup dialog
@@ -6701,6 +6702,10 @@ public class FlowframTk extends JFrame
          {
             importDialog.display(ImportSettings.Type.EPS, file);
          }
+         else if (filter instanceof SvgFileFilter)
+         {
+            importDialog.display(ImportSettings.Type.SVG, file);
+         }
          else
          {
             getResources().internalError("Unknown file filter "+filter);
@@ -6735,6 +6740,9 @@ public class FlowframTk extends JFrame
          break;
          case EPS:
             (new LoadEps(currentFrame, importSettings)).execute();
+         break;
+         case SVG:
+            (new LoadSvg(currentFrame, importSettings)).execute();
          break;
       }
    }
