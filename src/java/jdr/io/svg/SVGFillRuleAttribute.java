@@ -11,9 +11,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFillRuleAttribute implements SVGNumberAttribute
 {
-   public SVGFillRuleAttribute(String valueString)
+   public SVGFillRuleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString);
    }
 
@@ -31,11 +32,11 @@ public class SVGFillRuleAttribute implements SVGNumberAttribute
 
       if (valueString.equals("nonzero"))
       {
-         rule = new Integer(GeneralPath.WIND_NON_ZERO);
+         rule = Integer.valueOf(GeneralPath.WIND_NON_ZERO);
       }
       else if (valueString.equals("evenodd"))
       {
-         rule = new Integer(GeneralPath.WIND_EVEN_ODD);
+         rule = Integer.valueOf(GeneralPath.WIND_EVEN_ODD);
       }
       else
       {
@@ -72,7 +73,7 @@ public class SVGFillRuleAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGFillRuleAttribute attr = new SVGFillRuleAttribute(null);
+         SVGFillRuleAttribute attr = new SVGFillRuleAttribute(handler, null);
 
          attr.makeEqual(this);
 
@@ -93,9 +94,10 @@ public class SVGFillRuleAttribute implements SVGNumberAttribute
       }
       else
       {
-         rule = new Integer(attr.rule.intValue());
+         rule = Integer.valueOf(attr.rule.intValue());
       }
    }
 
    private Integer rule;
+   SVGHandler handler;
 }

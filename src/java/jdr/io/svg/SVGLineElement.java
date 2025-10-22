@@ -30,25 +30,25 @@ public class SVGLineElement extends SVGShape
    protected void setLineX1(String valueString)
      throws InvalidFormatException
    {
-      addAttribute(new SVGLengthAttribute("x1", valueString, true));
+      addAttribute(new SVGLengthAttribute(handler, "x1", valueString, true));
    }
 
    protected void setLineY1(String valueString)
      throws InvalidFormatException
    {
-      addAttribute(new SVGLengthAttribute("y1", valueString, false));
+      addAttribute(new SVGLengthAttribute(handler, "y1", valueString, false));
    }
 
    protected void setLineX2(String valueString)
      throws InvalidFormatException
    {
-      addAttribute(new SVGLengthAttribute("x2", valueString, true));
+      addAttribute(new SVGLengthAttribute(handler, "x2", valueString, true));
    }
 
    protected void setLineY2(String valueString)
      throws InvalidFormatException
    {
-      addAttribute(new SVGLengthAttribute("y2", valueString, false));
+      addAttribute(new SVGLengthAttribute(handler, "y2", valueString, false));
    }
 
    public String getName()

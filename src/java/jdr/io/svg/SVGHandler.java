@@ -13,10 +13,11 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGHandler extends DefaultHandler
 {
-   public SVGHandler(JDRGroup group)
+   public SVGHandler(SVG svg, JDRGroup group)
    {
       super();
       this.group = group;
+      this.svg = svg;
       stack = new ArrayDeque<SVGAbstractElement>();
 
       msgSystem = group.getCanvasGraphics().getMessageSystem();
@@ -139,12 +140,18 @@ public class SVGHandler extends DefaultHandler
       msgSystem.getPublisher().publishMessages(MessageInfo.createFatalError(e));
    }
 
+   public SVG getSVG()
+   {
+      return svg;
+   }
+
    public CanvasGraphics getCanvasGraphics()
    {
       return group.getCanvasGraphics();
    }
 
    private JDRGroup group;
+   private SVG svg;
 
    private ArrayDeque<SVGAbstractElement> stack;
    private SVGAbstractElement current = null;

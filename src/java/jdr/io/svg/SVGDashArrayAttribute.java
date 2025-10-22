@@ -11,10 +11,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
 {
-   public SVGDashArrayAttribute(String valueString)
+   public SVGDashArrayAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
-      super("stroke-dasharray", valueString);
+      super(handler, "stroke-dasharray", valueString);
    }
 
    protected void parse(String valueString)
@@ -35,7 +35,7 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
    {
       if (isSolid)
       {
-         return new DashPattern(element.getCanvasGraphics());
+         return new DashPattern(handler.getCanvasGraphics());
       }
 
       SVGLength[] lengtharray = getArray();
@@ -47,14 +47,14 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
          dashPattern[i] = (float)lengtharray[i].getBpValue(element, true);
       }
 
-      return new DashPattern(element.getCanvasGraphics(), dashPattern);
+      return new DashPattern(handler.getCanvasGraphics(), dashPattern);
    }
 
    public Object clone()
    {
       try
       {
-         SVGDashArrayAttribute attr = new SVGDashArrayAttribute(null);
+         SVGDashArrayAttribute attr = new SVGDashArrayAttribute(handler, null);
 
          attr.makeEqual(this);
 

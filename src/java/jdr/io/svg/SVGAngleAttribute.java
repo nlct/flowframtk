@@ -6,16 +6,16 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
 {
-   public SVGAngleAttribute(String value)
+   public SVGAngleAttribute(SVGHandler handler, String value)
      throws InvalidFormatException
    {
-      this("angle", value);
+      this(handler, "angle", value);
    }
 
-   public SVGAngleAttribute(String attrName, String value)
+   public SVGAngleAttribute(SVGHandler handler, String attrName, String value)
      throws InvalidFormatException
    {
-      super(value, "deg");
+      super(handler, value, "deg");
 
       if (value != null)
       {
@@ -55,7 +55,7 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
    {
       try
       {
-         SVGAngleAttribute angle = new SVGAngleAttribute(name, null);
+         SVGAngleAttribute angle = new SVGAngleAttribute(handler, name, null);
 
          angle.makeEqual(this);
 

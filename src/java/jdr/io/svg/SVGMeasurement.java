@@ -6,7 +6,7 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGMeasurement
 {
-   public SVGMeasurement(String valueString, int defUnitId)
+   public SVGMeasurement(SVGHandler handler, String valueString, int defUnitId)
      throws InvalidFormatException
    {
       if (defUnitId < 0 || defUnitId >= UNIT_NAMES.length)
@@ -15,12 +15,15 @@ public class SVGMeasurement
             "Invalid default unit id: "+defUnitId);
       }
 
+      this.handler = handler;
+
       parse(valueString, UNIT_NAMES[defUnitId]);
    }
 
-   public SVGMeasurement(String valueString, String defUnit)
+   public SVGMeasurement(SVGHandler handler, String valueString, String defUnit)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString, defUnit);
    }
 
@@ -136,6 +139,7 @@ public class SVGMeasurement
    private Double value;
    private String unitName;
    private int unitId=-1;
+   SVGHandler handler;
 
    public static final String[] UNIT_NAMES =
    {

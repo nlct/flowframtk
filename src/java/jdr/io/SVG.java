@@ -44,6 +44,11 @@ import com.dickimawbooks.jdr.io.svg.*;
 
 public class SVG
 {
+   protected SVG(ImportSettings importSettings)
+   {
+      this.importSettings = importSettings;
+   }
+
    protected SVG(Path basePath, PrintWriter out)
    {
       this.basePath = basePath;
@@ -127,7 +132,8 @@ public class SVG
       out.println("</svg>");
    }
 
-   public static JDRGroup load(CanvasGraphics cg, File file)
+   public static JDRGroup load(CanvasGraphics cg, File file,
+      ImportSettings importSettings)
      throws SAXException,IOException
    {
       JDRMessage msgSys = cg.getMessageSystem();
@@ -141,17 +147,27 @@ public class SVG
           "Loading ''{0}''",
           file.getAbsolutePath())));
 
-      return load(cg, r);
+      return load(cg, r, importSettings);
    }
 
-   public static JDRGroup load(CanvasGraphics cg, Reader reader)
+   public static JDRGroup load(CanvasGraphics cg, Reader reader,
+      ImportSettings importSettings)
      throws SAXException,IOException
    {
+      if (importSettings == null)
+      {
+         importSettings = new ImportSettings(cg.getMessageDictionary());
+         importSettings.type = ImportSettings.Type.SVG;
+      }
+
       XMLReader xr = XMLReaderFactory.createXMLReader();
 
       JDRGroup group = new JDRGroup(cg);
 
-      SVGHandler handler = new SVGHandler(group);
+      SVG svg = new SVG(importSettings);
+      svg.canvasGraphics = cg;
+
+      SVGHandler handler = new SVGHandler(svg, group);
 
       xr.setContentHandler(handler);
       xr.setErrorHandler(handler);
@@ -322,4 +338,5 @@ public class SVG
    private AffineTransform affineTransform;
    private PrintWriter writer;
    private Path basePath;
+   private ImportSettings importSettings;
 }

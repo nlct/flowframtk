@@ -11,15 +11,16 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPaintAttribute implements SVGAttribute
 {
-   public SVGPaintAttribute(String attrName, String valueString)
+   public SVGPaintAttribute(SVGHandler handler, String attrName, String valueString)
      throws InvalidFormatException
    {
-      this(attrName, valueString, null);
+      this(handler, attrName, valueString, null);
    }
 
-   public SVGPaintAttribute(String attrName, String valueString, JDRPaint currentVal)
+   public SVGPaintAttribute(SVGHandler handler, String attrName, String valueString, JDRPaint currentVal)
      throws InvalidFormatException
    {
+      this.handler = handler;
       this.name = attrName;
       parse(valueString, currentVal);
    }
@@ -27,7 +28,7 @@ public class SVGPaintAttribute implements SVGAttribute
    private void parse(String valueString, JDRPaint currentValue)
       throws InvalidFormatException
    {
-      CanvasGraphics cg = currentValue.getCanvasGraphics();
+      CanvasGraphics cg = handler.getCanvasGraphics();
 
       if (valueString == null || valueString.equals("inherit"))
       {
@@ -159,7 +160,7 @@ public class SVGPaintAttribute implements SVGAttribute
    {
       try
       {
-         SVGPaintAttribute attr = new SVGPaintAttribute(name, null);
+         SVGPaintAttribute attr = new SVGPaintAttribute(handler, name, null);
 
          attr.makeEqual(this);
 
@@ -189,6 +190,7 @@ public class SVGPaintAttribute implements SVGAttribute
    private JDRPaint paint;
 
    private String name;
+   SVGHandler handler;
 
    private static final Pattern[] PATTERNS =
    {

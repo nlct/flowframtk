@@ -8,15 +8,17 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGDoubleAttribute implements SVGNumberAttribute
 {
-   public SVGDoubleAttribute(String attrName, String valueString)
+   public SVGDoubleAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
    {
-      this(attrName, valueString, true);
+      this(handler, attrName, valueString, true);
    }
 
-   public SVGDoubleAttribute(String attrName, String valueString, boolean horizontal)
+   public SVGDoubleAttribute(SVGHandler handler, 
+      String attrName, String valueString, boolean horizontal)
       throws InvalidFormatException
    {
+      this.handler = handler;
       isHorizontal = horizontal;
 
       if (valueString == null || valueString.equals("inherit"))
@@ -76,7 +78,7 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGDoubleAttribute attr = new SVGDoubleAttribute(name, null);
+         SVGDoubleAttribute attr = new SVGDoubleAttribute(handler, name, null);
 
          attr.makeEqual(this);
 
@@ -110,6 +112,8 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
 
    private boolean isPercent;
    private boolean isHorizontal;
+
+   SVGHandler handler;
 
    private static final Pattern pattern = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[Ee][+\\-]?\\d*\\.?\\d+)?)\\s*(%?)\\s*");
 }

@@ -11,8 +11,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPathDataAttribute implements SVGAttribute
 {
-   public SVGPathDataAttribute(String valueString)
+   public SVGPathDataAttribute(SVGHandler handler, String valueString)
    {
+      this.handler = handler;
       if (valueString == null || valueString.equals("inherit"))
       {
          data = null;
@@ -605,7 +606,7 @@ public class SVGPathDataAttribute implements SVGAttribute
          String group1 = m.group(1);
          String group2 = m.group(2);
 
-         coord = new SVGLengthAttribute("coordinate", group2,
+         coord = new SVGLengthAttribute(handler, "coordinate", group2,
             isHorizontal);
 
          iter.setIndex(idx+group1.length()+group2.length());
@@ -629,7 +630,7 @@ public class SVGPathDataAttribute implements SVGAttribute
          String group1 = m.group(1);
          String group2 = m.group(2);
 
-         angle = new SVGAngleAttribute(group2);
+         angle = new SVGAngleAttribute(handler, group2);
 
          iter.setIndex(idx+group1.length()+group2.length());
 
@@ -687,7 +688,7 @@ public class SVGPathDataAttribute implements SVGAttribute
 
    public Object clone()
    {
-      SVGPathDataAttribute attr = new SVGPathDataAttribute(null);
+      SVGPathDataAttribute attr = new SVGPathDataAttribute(handler, null);
 
       attr.makeEqual(this);
 
@@ -700,6 +701,7 @@ public class SVGPathDataAttribute implements SVGAttribute
    }
 
    private String data;
+   SVGHandler handler;
 
    private static final Pattern pattern = 
      Pattern.compile("([\\s,]*)((?:[+\\-]?\\d*)(?:\\.?\\d+)(?:[eE][=\\-]?\\d+)?[a-zA-Z]*)([,\\s].*)?");

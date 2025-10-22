@@ -2447,6 +2447,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <!--  Import dialog box -->
 <entry key="import.title">Import</entry>
 
+<entry key="import.file">File:</entry>
+<entry key="import.file.mnemonic">F</entry>
+
+<entry key="import.type.ACORN_DRAW">Acorn Draw</entry>
+<entry key="import.type.EPS">EPS</entry>
+<entry key="import.type.SVG">SVG</entry>
+
 <entry key="import.use_mappings">Use text mappings</entry>
 <entry key="import.use_mappings.mnemonic">M</entry>
 <entry key="import.use_mappings.initvalue">true</entry>

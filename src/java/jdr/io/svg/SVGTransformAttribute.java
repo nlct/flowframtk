@@ -9,9 +9,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGTransformAttribute implements SVGAttribute
 {
-   public SVGTransformAttribute(String valueString)
+   public SVGTransformAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       transform = new AffineTransform();
       parse(valueString);
    }
@@ -195,7 +196,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
       try
       {
-         attr = new SVGTransformAttribute(null);
+         attr = new SVGTransformAttribute(handler, null);
 
          attr.transform = (AffineTransform)transform.clone();
       }
@@ -208,6 +209,7 @@ public class SVGTransformAttribute implements SVGAttribute
    }
 
    private AffineTransform transform;
+   SVGHandler handler;
 
    private static final Pattern transformPattern 
       = Pattern.compile("\\s*,?\\s*([a-zA-Z]+)\\s*\\(([^\\)]+)\\)(?:[\\s,]+(.*))?");

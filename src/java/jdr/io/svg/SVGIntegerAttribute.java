@@ -8,15 +8,18 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGIntegerAttribute implements SVGNumberAttribute
 {
-   public SVGIntegerAttribute(String attrName, String valueString)
+   public SVGIntegerAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
    {
-      this(attrName, valueString, true);
+      this(handler, attrName, valueString, true);
    }
 
-   public SVGIntegerAttribute(String attrName, String valueString, boolean horizontal)
+   public SVGIntegerAttribute(SVGHandler handler,
+      String attrName, String valueString, boolean horizontal)
       throws InvalidFormatException
    {
+      this.handler = handler;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          value = null;
@@ -27,7 +30,7 @@ public class SVGIntegerAttribute implements SVGNumberAttribute
 
          try
          {
-            value = new Integer(m.group(1));
+            value = Integer.valueOf(m.group(1));
 
             isPercent = m.group(2).equals("%");
          }
@@ -69,7 +72,7 @@ public class SVGIntegerAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGIntegerAttribute attr = new SVGIntegerAttribute(name, null);
+         SVGIntegerAttribute attr = new SVGIntegerAttribute(handler, name, null);
 
          attr.makeEqual(this);
 
@@ -90,7 +93,7 @@ public class SVGIntegerAttribute implements SVGNumberAttribute
       }
       else
       {
-         value = new Integer(attr.value.intValue());
+         value = Integer.valueOf(attr.value.intValue());
       }
 
       name = attr.name;
@@ -102,6 +105,7 @@ public class SVGIntegerAttribute implements SVGNumberAttribute
    private Integer value;
 
    private boolean isPercent, isHorizontal;
+   SVGHandler handler;
 
    private static final Pattern pattern = Pattern.compile("\\s*([+\\-]?\\d+)\\s*(%?)\\s*");
 }

@@ -11,9 +11,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGCapStyleAttribute implements SVGNumberAttribute
 {
-   public SVGCapStyleAttribute(String valueString)
+   public SVGCapStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString);
    }
 
@@ -31,15 +32,15 @@ public class SVGCapStyleAttribute implements SVGNumberAttribute
 
       if (valueString.equals("butt"))
       {
-         capStyle = new Integer(BasicStroke.CAP_BUTT);
+         capStyle = Integer.valueOf(BasicStroke.CAP_BUTT);
       }
       else if (valueString.equals("round"))
       {
-         capStyle = new Integer(BasicStroke.CAP_ROUND);
+         capStyle = Integer.valueOf(BasicStroke.CAP_ROUND);
       }
       else if (valueString.equals("square"))
       {
-         capStyle = new Integer(BasicStroke.CAP_SQUARE);
+         capStyle = Integer.valueOf(BasicStroke.CAP_SQUARE);
       }
       else
       {
@@ -76,7 +77,7 @@ public class SVGCapStyleAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGCapStyleAttribute attr = new SVGCapStyleAttribute(null);
+         SVGCapStyleAttribute attr = new SVGCapStyleAttribute(handler, null);
 
          attr.makeEqual(this);
 
@@ -97,9 +98,10 @@ public class SVGCapStyleAttribute implements SVGNumberAttribute
       }
       else
       {
-         capStyle = new Integer(attr.capStyle.intValue());
+         capStyle = Integer.valueOf(attr.capStyle.intValue());
       }
    }
 
    private Integer capStyle;
+   SVGHandler handler;
 }

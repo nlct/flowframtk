@@ -6,16 +6,16 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
 {
-   public SVGLengthAttribute(String attrName, String valueString)
+   public SVGLengthAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
    {
-      this(attrName, valueString, true);
+      this(handler, attrName, valueString, true);
    }
 
-   public SVGLengthAttribute(String attrName, String valueString, boolean horizontal)
+   public SVGLengthAttribute(SVGHandler handler, String attrName, String valueString, boolean horizontal)
       throws InvalidFormatException
    {
-      super(valueString);
+      super(handler, valueString);
       this.isHorizontal = horizontal;
       this.name = attrName;
    }
@@ -44,7 +44,7 @@ public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
    {
       try
       {
-         SVGLengthAttribute attr = new SVGLengthAttribute(name, null);
+         SVGLengthAttribute attr = new SVGLengthAttribute(handler, name, null);
 
          attr.makeEqual(this);
 

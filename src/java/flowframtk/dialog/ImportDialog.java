@@ -22,24 +22,46 @@ import java.io.File;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileFilter;
 
 import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.io.ImportSettings;
 import com.dickimawbooks.jdrresources.*;
+import com.dickimawbooks.jdrresources.filter.*;
 import com.dickimawbooks.flowframtk.*;
 
 public class ImportDialog extends JDialog
   implements ActionListener,ItemListener
 {
-   public ImportDialog(FlowframTk application)
+   public ImportDialog(FlowframTk application,
+    JFileChooser importFC)
    {
       super(application, 
          application.getResources().getMessage("import.title"), true);
       this.application = application;
+      this.importFC = importFC;
+
+      importFC.addActionListener(this);
 
       JDRResources resources = getResources();
       importSettings = new ImportSettings(resources.getMessageDictionary());
+
+      JComponent row;
+
+      JLabel label = resources.createAppLabel("import.file");
+
+      importFileField = new FileField(resources, this, "", importFC,
+       JFileChooser.FILES_ONLY, label);
+
+      formatField = new JTextField(resources.getMessage("import.type.ACORN_DRAW"));
+      formatField.setEditable(false);
+      formatField.setBorder(null);
+
+      importFileField.getEastComponent().add(resources.createButtonSpacer());
+      importFileField.getEastComponent().add(formatField);
+
+      getContentPane().add(importFileField, "North");
 
       JLabelGroup labelGrp = new JLabelGroup();
 
@@ -59,10 +81,8 @@ public class ImportDialog extends JDialog
       bitmapComp.setAlignmentX(0f);
       mainComp.add(bitmapComp);
 
-      JLabel label = resources.createAppLabel("import.bitmap_dir");
+      label = resources.createAppLabel("import.bitmap_dir");
       labelGrp.add(label);
-
-      JComponent row;
 
       bitmapDirField = new FileField(resources, this, "",
         new JFileChooser(), JFileChooser.DIRECTORIES_ONLY, label);
@@ -94,7 +114,68 @@ public class ImportDialog extends JDialog
       setLocationRelativeTo(application);
    }
 
-   public void display(ImportSettings.Type type, File file)
+   public void display()
+   {
+      importSettings.currentFile = null;
+      bitmapNamePrefixField.setText("");
+
+      setVisible(true);
+   }
+
+   protected void update()
+   {
+      update(importFileField.getFile());
+   }
+
+   protected void update(File file)
+   {
+      ImportSettings.Type type = ImportSettings.Type.ACORN_DRAW;
+
+      if (file == null)
+      {
+         importSettings.currentFile = null;
+         bitmapNamePrefixField.setText("");
+      }
+      else
+      {
+         FileFilter filter = importFC.getFileFilter();
+
+         AbstractJDRFileFilter jdrFileFilter = null;
+
+         if (filter instanceof AbstractJDRFileFilter)
+         {
+            jdrFileFilter = (AbstractJDRFileFilter)filter;
+         }
+
+         if (jdrFileFilter == null || !jdrFileFilter.accept(file))
+         {
+            for (FileFilter f : importFC.getChoosableFileFilters())
+            {
+               if (f instanceof AbstractJDRFileFilter
+                    && f.accept(file))
+               {
+                  jdrFileFilter = (AbstractJDRFileFilter)f;
+                  break;
+               }
+            }
+         }
+
+         if (jdrFileFilter instanceof EpsFileFilter)
+         {
+            type = ImportSettings.Type.EPS;
+         }
+         else if (jdrFileFilter instanceof SvgFileFilter)
+         {
+            type = ImportSettings.Type.SVG;
+         }
+
+         update(type, file);
+      }
+
+      formatField.setText(getResources().getMessage("import.type."+type));
+   }
+
+   protected void update(ImportSettings.Type type, File file)
    {
       importSettings.type = type;
       importSettings.currentFile = file;
@@ -120,8 +201,6 @@ public class ImportDialog extends JDialog
 
          bitmapNamePrefixField.setText(base);
       }
-
-      setVisible(true);
    }
 
    @Override
@@ -135,12 +214,13 @@ public class ImportDialog extends JDialog
       }
       else if (action.equals("cancel"))
       {
-         if (!importSettings.extractBitmaps)
-         {
-            bitmapNamePrefixField.setText("");
-         }
-
          setVisible(false);
+      }
+      else if (action.equals("ApproveSelection"))
+      {
+         // file chooser selection approved
+
+         update(importFC.getSelectedFile());
       }
    }
 
@@ -157,6 +237,21 @@ public class ImportDialog extends JDialog
 
    protected void okay()
    {
+      File file = importFileField.getFile();
+
+      if (file == null)
+      {
+         getResources().error(this, getResources().getMessage("error.no_filename"));
+
+         return;
+      }
+
+      if (!file.equals(importSettings.currentFile))
+      {
+         // file field has been edited instead of using file chooser
+         update(file);
+      }
+
       importSettings.useMappings = useMappingsButton.isSelected();
       importSettings.extractBitmaps = extractBitmapsButton.isSelected();
 
@@ -164,10 +259,6 @@ public class ImportDialog extends JDialog
       {
          importSettings.bitmapDir = bitmapDirField.getFile();
          importSettings.bitmapNamePrefix = bitmapNamePrefixField.getText();
-      }
-      else
-      {
-         bitmapNamePrefixField.setText("");
       }
 
       setVisible(false);
@@ -184,7 +275,9 @@ public class ImportDialog extends JDialog
 
    JCheckBox useMappingsButton;
    JCheckBox extractBitmapsButton;
-   FileField bitmapDirField;
+   FileField importFileField, bitmapDirField;
    JTextField bitmapNamePrefixField;
    JComponent bitmapComp;
+   JFileChooser importFC;
+   JTextField formatField;
 }

@@ -27,19 +27,19 @@ public class SVGElement extends SVGAbstractElement
 
       if (value != null)
       {
-         width = new SVGLength(value);
+         width = new SVGLength(handler, value);
       }
 
       value = attr.getValue("height");
 
       if (value != null)
       {
-         height = new SVGLength(value);
+         height = new SVGLength(handler, value);
       }
 
       value = attr.getValue("color");
 
-      addAttribute(new SVGPaintAttribute("color", value));
+      addAttribute(new SVGPaintAttribute(handler, "color", value));
    }
 
    public int getCurrentLengthUnit()

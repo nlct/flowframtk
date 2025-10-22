@@ -519,8 +519,6 @@ public class FlowframTk extends JFrame
 
       // not fully implemented
 
-      importDialog = new ImportDialog(this);
-
       acornDrawFileFilter = new AcornDrawFileFilter(
         resources.getMessage("filter.acorndraw"));
 
@@ -542,7 +540,6 @@ public class FlowframTk extends JFrame
 
       importFC.setCurrentDirectory(
          new File(appSettings.startDir));
-      importFC.setAcceptAllFileFilterUsed(false);
 
       importFC.addChoosableFileFilter(acornDrawFileFilter);
 
@@ -551,6 +548,10 @@ public class FlowframTk extends JFrame
          importFC.addChoosableFileFilter(epsFileFilter);
          importFC.addChoosableFileFilter(svgFileFilter);
       }
+
+      importFC.setFileFilter(acornDrawFileFilter);
+
+      importDialog = new ImportDialog(this, importFC);
 
       // Printer Page Setup dialog
 
@@ -6686,31 +6687,7 @@ public class FlowframTk extends JFrame
 
    public void importImage()
    {
-      int result = importFC.showOpenDialog(this);
-
-      if (result == JFileChooser.APPROVE_OPTION)
-      {
-         File file = new File(
-            importFC.getSelectedFile().getAbsolutePath());
-         FileFilter filter = importFC.getFileFilter();
-
-         if (filter instanceof AcornDrawFileFilter)
-         {
-            importDialog.display(ImportSettings.Type.ACORN_DRAW, file);
-         }
-         else if (filter instanceof EpsFileFilter)
-         {
-            importDialog.display(ImportSettings.Type.EPS, file);
-         }
-         else if (filter instanceof SvgFileFilter)
-         {
-            importDialog.display(ImportSettings.Type.SVG, file);
-         }
-         else
-         {
-            getResources().internalError("Unknown file filter "+filter);
-         }
-      }
+      importDialog.display();
    }
 
    public void importImage(ImportSettings importSettings)

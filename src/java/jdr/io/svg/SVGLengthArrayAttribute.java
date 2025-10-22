@@ -8,9 +8,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGLengthArrayAttribute implements SVGAttribute
 {
-   public SVGLengthArrayAttribute(String attrName, String valueString)
+   public SVGLengthArrayAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
    {
+      this.handler = handler;
       this.name = attrName;
       parse(valueString);
    }
@@ -30,7 +31,7 @@ public class SVGLengthArrayAttribute implements SVGAttribute
 
       for (int i = 0; i < split.length; i++)
       {
-         array[i] = new SVGLength(split[i]);
+         array[i] = new SVGLength(handler, split[i]);
       }
    }
 
@@ -58,7 +59,7 @@ public class SVGLengthArrayAttribute implements SVGAttribute
    {
       try
       {
-         SVGLengthArrayAttribute attr = new SVGLengthArrayAttribute(name, null);
+         SVGLengthArrayAttribute attr = new SVGLengthArrayAttribute(handler, name, null);
 
          attr.makeEqual(this);
 
@@ -93,4 +94,5 @@ public class SVGLengthArrayAttribute implements SVGAttribute
    private SVGLength[] array;
 
    private String name;
+   SVGHandler handler;
 }

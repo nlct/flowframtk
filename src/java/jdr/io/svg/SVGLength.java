@@ -8,10 +8,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGLength extends SVGMeasurement
 {
-   public SVGLength(String value)
+   public SVGLength(SVGHandler handler, String value)
      throws InvalidFormatException
    {
-      super(value, "pt");
+      super(handler, value, "pt");
 
       if (value != null)
       {
@@ -120,7 +120,7 @@ public class SVGLength extends SVGMeasurement
                }
             }
 
-            return new JDRLength(element.getCanvasGraphics(), 
+            return new JDRLength(handler.getCanvasGraphics(), 
                0.01*val*relValue, JDRUnit.bp);
 // TODO:
          case SVGMeasurement.UNIT_PX :
@@ -128,14 +128,14 @@ public class SVGLength extends SVGMeasurement
          case SVGMeasurement.UNIT_EX :
       }
 
-      return new JDRLength(element.getCanvasGraphics(), 1, JDRUnit.bp);
+      return new JDRLength(handler.getCanvasGraphics(), 1, JDRUnit.bp);
    }
 
    public Object clone()
    {
       try
       {
-         SVGLength length = new SVGLength(null);
+         SVGLength length = new SVGLength(handler, null);
 
          length.makeEqual(this);
 

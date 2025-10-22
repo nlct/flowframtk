@@ -10,9 +10,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
 {
-   public SVGVisibilityStyleAttribute(String valueString)
+   public SVGVisibilityStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString);
    }
 
@@ -30,15 +31,15 @@ public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
 
       if (valueString.equals("visible"))
       {
-         style = new Integer(VISIBLE);
+         style = Integer.valueOf(VISIBLE);
       }
       else if (valueString.equals("hidden"))
       {
-         style = new Integer(HIDDEN);
+         style = Integer.valueOf(HIDDEN);
       }
       else if (valueString.equals("collapse"))
       {
-         style = new Integer(COLLAPSE);
+         style = Integer.valueOf(COLLAPSE);
       }
       else
       {
@@ -75,7 +76,7 @@ public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGVisibilityStyleAttribute attr = new SVGVisibilityStyleAttribute(null);
+         SVGVisibilityStyleAttribute attr = new SVGVisibilityStyleAttribute(handler, null);
 
          attr.makeEqual(this);
 
@@ -96,11 +97,12 @@ public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
       }
       else
       {
-         style = new Integer(attr.style.intValue());
+         style = Integer.valueOf(attr.style.intValue());
       }
    }
 
    private Integer style;
+   SVGHandler handler;
 
    public static final int VISIBLE=0;
    public static final int HIDDEN=1;

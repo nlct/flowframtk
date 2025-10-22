@@ -8,8 +8,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGStringAttribute implements SVGAttribute
 {
-   public SVGStringAttribute(String attrName, String attrValue)
+   public SVGStringAttribute(SVGHandler handler, String attrName, String attrValue)
    {
+      this.handler = handler;
       this.name = attrName;
       this.value = attrValue;
    }
@@ -31,7 +32,7 @@ public class SVGStringAttribute implements SVGAttribute
 
    public Object clone()
    {
-      SVGStringAttribute attr = new SVGStringAttribute(name, null);
+      SVGStringAttribute attr = new SVGStringAttribute(handler, name, null);
 
       attr.makeEqual(this);
 
@@ -45,4 +46,5 @@ public class SVGStringAttribute implements SVGAttribute
    }
 
    private String name, value;
+   SVGHandler handler;
 }

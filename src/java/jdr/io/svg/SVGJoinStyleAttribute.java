@@ -11,9 +11,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGJoinStyleAttribute implements SVGNumberAttribute
 {
-   public SVGJoinStyleAttribute(String valueString)
+   public SVGJoinStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString);
    }
 
@@ -75,7 +76,7 @@ public class SVGJoinStyleAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGJoinStyleAttribute attr = new SVGJoinStyleAttribute(null);
+         SVGJoinStyleAttribute attr = new SVGJoinStyleAttribute(handler, null);
 
          attr.makeEqual(this);
 
@@ -96,9 +97,10 @@ public class SVGJoinStyleAttribute implements SVGNumberAttribute
       }
       else
       {
-         joinStyle = new Integer(attr.joinStyle.intValue());
+         joinStyle = Integer.valueOf(attr.joinStyle.intValue());
       }
    }
 
    private Integer joinStyle;
+   SVGHandler handler;
 }

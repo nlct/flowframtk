@@ -11,9 +11,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGGradientUnitsAttribute implements SVGNumberAttribute
 {
-   public SVGGradientUnitsAttribute(String valueString)
+   public SVGGradientUnitsAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString);
    }
 
@@ -70,7 +71,7 @@ public class SVGGradientUnitsAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGGradientUnitsAttribute attr = new SVGGradientUnitsAttribute(null);
+         SVGGradientUnitsAttribute attr = new SVGGradientUnitsAttribute(handler, null);
 
          attr.makeEqual(this);
 
@@ -91,11 +92,12 @@ public class SVGGradientUnitsAttribute implements SVGNumberAttribute
       }
       else
       {
-         rule = new Integer(attr.rule.intValue());
+         rule = Integer.valueOf(attr.rule.intValue());
       }
    }
 
    private Integer rule;
+   SVGHandler handler;
 
    public static final int USER_SPACE=0;
    public static final int OBJECT_BBOX=1;

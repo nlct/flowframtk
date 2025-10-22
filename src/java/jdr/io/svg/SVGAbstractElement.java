@@ -262,125 +262,125 @@ public abstract class SVGAbstractElement implements Cloneable
 
       if (name.equals("stroke"))
       {
-         attr = new SVGPaintAttribute(name, style,
+         attr = new SVGPaintAttribute(handler, name, style,
             getPaintAttribute("color", null));
       }
       else if (name.equals("fill"))
       {
-         attr = new SVGPaintAttribute(name, style,
+         attr = new SVGPaintAttribute(handler, name, style,
             getPaintAttribute("color", null));
       }
       else if (name.equals("stroke-width"))
       {
-         attr = new SVGLengthAttribute(name, style);
+         attr = new SVGLengthAttribute(handler, name, style);
       }
       else if (name.equals("stroke-opacity"))
       {
-         attr = new SVGDoubleAttribute(name, style);
+         attr = new SVGDoubleAttribute(handler, name, style);
       }
       else if (name.equals("fill-opacity"))
       {
-         attr = new SVGDoubleAttribute(name, style);
+         attr = new SVGDoubleAttribute(handler, name, style);
       }
       else if (name.equals("fill-rule"))
       {
-         attr = new SVGFillRuleAttribute(style);
+         attr = new SVGFillRuleAttribute(handler, style);
       }
       else if (name.equals("stroke-linecap"))
       {
-         attr = new SVGCapStyleAttribute(style);
+         attr = new SVGCapStyleAttribute(handler, style);
       }
       else if (name.equals("stroke-linejoin"))
       {
-         attr = new SVGJoinStyleAttribute(style);
+         attr = new SVGJoinStyleAttribute(handler, style);
       }
       else if (name.equals("stroke-miterlimit"))
       {
-         attr = new SVGDoubleAttribute(name, style);
+         attr = new SVGDoubleAttribute(handler, name, style);
       }
       else if (name.equals("stroke-dashoffset"))
       {
-         attr = new SVGLengthAttribute(name, style);
+         attr = new SVGLengthAttribute(handler, name, style);
       }
       else if (name.equals("stroke-dasharray"))
       {
-         attr = new SVGDashArrayAttribute(style);
+         attr = new SVGDashArrayAttribute(handler, style);
       }
       else if (name.equals("x"))
       {
-         attr = new SVGLengthAttribute(name, style, true);
+         attr = new SVGLengthAttribute(handler, name, style, true);
       }
       else if (name.equals("y"))
       {
-         attr = new SVGLengthAttribute(name, style, false);
+         attr = new SVGLengthAttribute(handler, name, style, false);
       }
       else if (name.equals("x1"))
       {
-         attr = new SVGLengthAttribute(name, style, true);
+         attr = new SVGLengthAttribute(handler, name, style, true);
       }
       else if (name.equals("y1"))
       {
-         attr = new SVGLengthAttribute(name, style, false);
+         attr = new SVGLengthAttribute(handler, name, style, false);
       }
       else if (name.equals("x2"))
       {
-         attr = new SVGLengthAttribute(name, style, true);
+         attr = new SVGLengthAttribute(handler, name, style, true);
       }
       else if (name.equals("y2"))
       {
-         attr = new SVGLengthAttribute(name, style, false);
+         attr = new SVGLengthAttribute(handler, name, style, false);
       }
       else if (name.equals("cx"))
       {
-         attr = new SVGLengthAttribute(name, style, true);
+         attr = new SVGLengthAttribute(handler, name, style, true);
       }
       else if (name.equals("cy"))
       {
-         attr = new SVGLengthAttribute(name, style, false);
+         attr = new SVGLengthAttribute(handler, name, style, false);
       }
       else if (name.equals("r"))
       {
-         attr = new SVGLengthAttribute(name, style);
+         attr = new SVGLengthAttribute(handler, name, style);
       }
       else if (name.equals("rx"))
       {
-         attr = new SVGLengthAttribute(name, style, true);
+         attr = new SVGLengthAttribute(handler, name, style, true);
       }
       else if (name.equals("ry"))
       {
-         attr = new SVGLengthAttribute(name, style, false);
+         attr = new SVGLengthAttribute(handler, name, style, false);
       }
       else if (name.equals("width"))
       {
-         attr = new SVGLengthAttribute(name, style, true);
+         attr = new SVGLengthAttribute(handler, name, style, true);
       }
       else if (name.equals("height"))
       {
-         attr = new SVGLengthAttribute(name, style, false);
+         attr = new SVGLengthAttribute(handler, name, style, false);
       }
       else if (name.equals("points"))
       {
-         attr = new SVGLengthArrayAttribute(name, style);
+         attr = new SVGLengthArrayAttribute(handler, name, style);
       }
       else if (name.equals("d"))
       {
-         attr = new SVGPathDataAttribute(style);
+         attr = new SVGPathDataAttribute(handler, style);
       }
       else if (name.equals("display"))
       {
-         attr = new SVGDisplayStyleAttribute(style);
+         attr = new SVGDisplayStyleAttribute(handler, style);
       }
       else if (name.equals("visibility"))
       {
-         attr = new SVGVisibilityStyleAttribute(style);
+         attr = new SVGVisibilityStyleAttribute(handler, style);
       }
       else if (name.equals("id") || name.equals("xlink:href"))
       {
-         attr = new SVGStringAttribute(name, style);
+         attr = new SVGStringAttribute(handler, name, style);
       }
       else if (name.equals("transform"))
       {
-         attr = new SVGTransformAttribute(style);
+         attr = new SVGTransformAttribute(handler, style);
       }
 
       if (attr == null)
@@ -718,6 +718,11 @@ public abstract class SVGAbstractElement implements Cloneable
    public JDRMessage getMessageSystem()
    {
       return handler.getMessageSystem();
+   }
+
+   public SVG getSVG()
+   {
+      return handler.getSVG();
    }
 
    public CanvasGraphics getCanvasGraphics()

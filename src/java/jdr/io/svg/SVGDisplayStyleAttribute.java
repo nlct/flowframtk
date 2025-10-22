@@ -10,9 +10,10 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGDisplayStyleAttribute implements SVGNumberAttribute
 {
-   public SVGDisplayStyleAttribute(String valueString)
+   public SVGDisplayStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
+      this.handler = handler;
       parse(valueString);
    }
 
@@ -30,71 +31,71 @@ public class SVGDisplayStyleAttribute implements SVGNumberAttribute
 
       if (valueString.equals("inline"))
       {
-         style = new Integer(INLINE);
+         style = Integer.valueOf(INLINE);
       }
       else if (valueString.equals("block"))
       {
-         style = new Integer(BLOCK);
+         style = Integer.valueOf(BLOCK);
       }
       else if (valueString.equals("list-item"))
       {
-         style = new Integer(LIST_ITEM);
+         style = Integer.valueOf(LIST_ITEM);
       }
       else if (valueString.equals("run-in"))
       {
-         style = new Integer(RUN_IN);
+         style = Integer.valueOf(RUN_IN);
       }
       else if (valueString.equals("compact"))
       {
-         style = new Integer(COMPACT);
+         style = Integer.valueOf(COMPACT);
       }
       else if (valueString.equals("marker"))
       {
-         style = new Integer(MARKER);
+         style = Integer.valueOf(MARKER);
       }
       else if (valueString.equals("table"))
       {
-         style = new Integer(TABLE);
+         style = Integer.valueOf(TABLE);
       }
       else if (valueString.equals("inline-table"))
       {
-         style = new Integer(INLINE_TABLE);
+         style = Integer.valueOf(INLINE_TABLE);
       }
       else if (valueString.equals("table-row-group"))
       {
-         style = new Integer(TABLE_ROW_GROUP);
+         style = Integer.valueOf(TABLE_ROW_GROUP);
       }
       else if (valueString.equals("table-header-group"))
       {
-         style = new Integer(TABLE_HEADER_GROUP);
+         style = Integer.valueOf(TABLE_HEADER_GROUP);
       }
       else if (valueString.equals("table-footer-group"))
       {
-         style = new Integer(TABLE_FOOTER_GROUP);
+         style = Integer.valueOf(TABLE_FOOTER_GROUP);
       }
       else if (valueString.equals("table-row"))
       {
-         style = new Integer(TABLE_ROW);
+         style = Integer.valueOf(TABLE_ROW);
       }
       else if (valueString.equals("table-column-group"))
       {
-         style = new Integer(TABLE_COLUMN_GROUP);
+         style = Integer.valueOf(TABLE_COLUMN_GROUP);
       }
       else if (valueString.equals("table-column"))
       {
-         style = new Integer(TABLE_COLUMN);
+         style = Integer.valueOf(TABLE_COLUMN);
       }
       else if (valueString.equals("table-cell"))
       {
-         style = new Integer(TABLE_CELL);
+         style = Integer.valueOf(TABLE_CELL);
       }
       else if (valueString.equals("table-caption"))
       {
-         style = new Integer(TABLE_CAPTION);
+         style = Integer.valueOf(TABLE_CAPTION);
       }
       else if (valueString.equals("none"))
       {
-         style = new Integer(NONE);
+         style = Integer.valueOf(NONE);
       }
       else
       {
@@ -131,7 +132,7 @@ public class SVGDisplayStyleAttribute implements SVGNumberAttribute
    {
       try
       {
-         SVGDisplayStyleAttribute attr = new SVGDisplayStyleAttribute(null);
+         SVGDisplayStyleAttribute attr = new SVGDisplayStyleAttribute(handler, null);
 
          attr.makeEqual(this);
 
@@ -152,11 +153,12 @@ public class SVGDisplayStyleAttribute implements SVGNumberAttribute
       }
       else
       {
-         style = new Integer(attr.style.intValue());
+         style = Integer.valueOf(attr.style.intValue());
       }
    }
 
    private Integer style;
+   SVGHandler handler;
 
    public static final int INLINE=0;
    public static final int BLOCK=1;
