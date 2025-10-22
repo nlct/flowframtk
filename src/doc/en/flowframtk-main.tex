@@ -2848,8 +2848,13 @@ settings.
 
 \widgetdef{button.choose}
 
-The \widget{button.choose} button opens a new dialog in which you
+The \widget{button.choose} button (\btn{choose}) opens a new dialog in which you
 can choose a sub-setting from the main dialog window.
+
+\widgetdef{button.selectfile}
+
+The \widget{button.selectfile} button (\btn{selectfile}) opens a file chooser in
+which you can choose a file or (if applicable) a directory.
 
 \chapter{The File Menu}\label{sec:filemenu}
 
@@ -2976,8 +2981,15 @@ wish to edit it later.
  {\includeimg{export-pgfpicture-dialog}}
  {Export Dialog}
 
-The \menu{file.export} menu item allows you to export your image.
-This will open the \dialog{export} dialog box
+The \menu{file.export} menu item allows you to export your image
+as a \inlineglsdef{ext.tex}, \inlineglsdef{ext.sty},
+\inlineglsdef{ext.cls}, \inlineglsdef{ext.pdf} or
+\inlineglsdef{ext.png} file. You may also export to a
+\inlineglsdef{ext.ps}, \inlineglsdef{ext.eps} or 
+\inlineglsdef{ext.svg} file, but you will need to enable export support for
+PostScript and SVG first.
+
+The \menu{file.export} menu item will open the \dialog{export} dialog box
 (\figureref{fig:export-pgfpicture-dialog}), which provides a way to
 specify the name and location of the file as well as what format to
 export to and what settings to apply. 
@@ -3054,11 +3066,11 @@ PDF file to the location specified in the file field. The temporary
 directory will then be deleted.
 \end{itemdesc}
 
-\itemtitle{\widget{export.png} (see \sectionref{sec:exportpng})}
+\itemtitle{\widget{export.png}}
 
 \begin{itemdesc}
 There are two possible ways of exporting the image to a PNG file.
-The first is for \FlowframTk\ to create PNG data that the same as
+The first is for \FlowframTk\ to create PNG data that replicates
 the way the image is \glslink{painting}{drawn} on the \gls{canvas}
 (at 100\% magnification and without annotations or
 \glspl{selection-bbox}), optionally cropped either to the image's
@@ -3239,7 +3251,87 @@ height of the object's bounding box.
 
 \widgetdef{export.markup.encap}
 
-TODO
+Each object in the \env{pgfpicture} environment is encapsulated with
+\cmddef{flowframtkencapobject}
+The first seven arguments are as for \gls{flowframtkstartobject}
+and \gls{flowframtkendobject}. The final argument is the object
+code.
+
+\widgetdef{export.textualshading}
+
+If the export format doesn't support text \dgls{gradient-paint}, the
+\widget{export.textualshading} panel provides options to indicate
+what should be done if the image contains any text with a 
+\dgls{gradient-paint}. Note that this option doesn't change
+the image itself but just governs the way the image is saved in the export
+file.
+
+\widgetdef{export.textualshading.average}
+
+If \widget{export.textualshading.average} is selected, any text
+with a \dgls{gradient-paint} will be exported with the paint set to
+the average of the start and end \manmsgpl{colour}.
+
+\widgetdef{export.textualshading.start}
+
+If \widget{export.textualshading.start} is selected, any text
+with a \dgls{gradient-paint} will be exported with the paint set to
+the start \manmsg{colour}.
+
+\widgetdef{export.textualshading.end}
+
+If \widget{export.textualshading.end} is selected, any text
+with a \dgls{gradient-paint} will be exported with the paint set to
+the end \manmsg{colour}.
+
+\widgetdef{export.textpathoutline}
+
+If the export format doesn't support \gls{textpath} outlines, the
+\widget{export.textpathoutline} panel provides options to indicate
+what should be done if the image contains any \glspl{textpath} with 
+the \textattr{outline} mode on. Note that this option doesn't change
+the image itself but just governs the way the image is saved in the export
+file.
+
+\widgetdef{export.textpathoutline.ignore}
+
+If \widgetdef{export.textpathoutline.ignore} is selected, all
+\glspl{textpath} will be exported as though the \textattr{outline} mode
+was off.
+
+\widgetdef{export.textpathoutline.topath}
+
+If \widgetdef{export.textpathoutline.topath} is selected, all
+\glspl{textpath} with the \textattr{outline} mode attribute set 
+will be exported as though they had been converted to a path.
+
+\widgetdef{export.load_doc_class}
+
+The export to class and export to complete \LaTeX\ document options will
+need to load a document class.  In the case of \widget{export.cls},
+this is the underlying class that will be loaded with
+\gls{LoadClass} otherwise the class is loaded with
+\gls{documentclass}.
+
+\widgetdef{export.load_doc_class.default}
+
+Select \widget{export.load_doc_class.default} if you want to use the
+class associated with the image (as specified in the
+\widget{clssettings.title} tab of the \dialog{texconfig} dialog,
+see \sectionref{sec:normalsize}).
+
+\widgetdef{export.load_doc_class.specified}
+
+Select \widget{export.load_doc_class.specified} and enter the class
+name if you want a different class.
+
+\widgetdef{export.pdf_info}
+
+For export options that create a \LaTeX\ document, the
+\widget{export.pdf_info} checkbox is available. If selected, 
+the document title and creation date will be set
+using \gls{flowframtkimageinfo} (if \sty{flowframtkutils} is
+available) or \gls{pdfinfo} otherwise.
 
 \widgetdef{export.use_process}
 
@@ -3346,21 +3438,22 @@ selected).
 
 \subsection{Export to PNG}\label{sec:exportpng}
 
+\widgetdef{export.png}
+
 \FloatFig{fig:exportpngdialog}
  {\includeimg{exportpngdialog}}
  {Export Dialog (PNG)}
 
-\widget{export.png}
-
-To create a PNG of the current image, select the \widget{export.png}
-button in the \dialog{export} dialog.
+To create a PNG of the current image, specify the target \ext+{png}
+file in the \widget{export.file} field and make sure that the \widget{export.png}
+radio button in the \dialog{export} dialog is selected. 
 Use the buttons in the \widget{export.bounds} row to determine the
 size of the exported PNG. The \widget{export.bounds.image}
 or (where available) \widget{export.bounds.typeblock} buttons may be
 used to crop the image.
 
-The \widget{export.use_process} checkbox is shown. Leave it
-unselected if you simply want to create a PNG file where the image
+The \widget{export.use_process} checkbox is visible with this export
+option. Leave it unselected if you simply want to create a PNG file where the image
 looks as it is \glslink{painting}{drawn} on the \gls{canvas}(at
 100\% magnification and without annotations or
 \glspl{selection-bbox}).
@@ -3376,8 +3469,10 @@ Note that all \manmsgpl{colour} will be converted to RGB.
 
 If you want the PNG file to be created via the
 \widget{export.imagepdf} function, select the
-\widget{export.use_process}. This will ensure that \LaTeX\ fonts and
-any \LaTeX\ alternative text will be used.
+\widget{export.use_process} checkbox. This will first export the
+image to a PDF in a temporary directory and then convert that PDF to
+a PNG file, which ensures that \LaTeX\ fonts and any \LaTeX\
+alternative text will be used.
 
 \widgetdef{processes.pdftopng}
 
@@ -3389,7 +3484,10 @@ for \app{magick} (Image Magick), \app{pdftoppm}, or
 found on the system path, you will need to supply an alternative
 tool.
 
-\subsection{Export to a \LaTeX\ Class or Package}\label{sec:exportsty}
+\subsection{Export to a \LaTeX\ Class or Package or Multi-Paged Document}
+\label{sec:exportsty}
+
+\widgetdef{export.cls}
 
 \FloatFig{fig:exportclsdialog}
  {\includeimg{exportclsdialog}}
@@ -3405,14 +3503,14 @@ the new \LaTeX\ kernel output routine into account.
 Unexpected results may occur with older versions of \sty{flowfram}.
 \end{information}
 
-\widgetdef{export.cls}
-
-Select the \widget{export.cls} button
-(\figureref{fig:exportclsdialog}) to create a \LaTeX\ class file
-which loads the \sty{flowfram} package (and the
-\sty{flowframtkutils} package if \FlowframTk\ detects it).
-The class will have class options provided that can be passed to the
-\sty{flowfram} package when it loads.
+To create a \LaTeX\ class that loads the \sty{flowfram}
+package (and the \sty{flowframtkutils} package if \FlowframTk\
+detects it) specify the target \ext+{cls} file in the
+\widget{export.file} field and make sure that the
+\widget{export.cls} radio button in the \dialog{export} dialog is
+selected (\figureref{fig:exportclsdialog}).  The class will have
+class options provided that can be passed to the \sty{flowfram}
+package when it loads.
 
 The \widget{export.load_doc_class} setting will be available. The
 specified class (or the default) will be loaded by the exported
@@ -3423,24 +3521,30 @@ Any occurrences of \gls{usepackage} in the image
 preamble will be converted to \gls{RequirePackage} on export.
 
 The rest of the exported content is as for \widget{export.sty}
-and \widget{export.flfdoc}.
+and \widget{export.flfdoc} (except for the \gls{document-body}, which
+isn't applicable).
 
 \widgetdef{export.sty}
 
-Select the \widget{export.sty} button to create a \LaTeX\ package
-file with loads the \sty{flowfram} package (and the
-\sty{flowframtkutils} package if \FlowframTk\ detects it).
-The package will have package options provided that can be passed to the
-\sty{flowfram} package when it loads.
+To create a \LaTeX\ package that loads the \sty{flowfram}
+package (and the \sty{flowframtkutils} package if \FlowframTk\
+detects it) specify the target \ext+{sty} file in the
+\widget{export.file} field and make sure that the
+\widget{export.sty} radio button in the \dialog{export} dialog is
+selected.  The package will have package options provided that can
+be passed to the \sty{flowfram} package when it loads.
 
 Any occurrences of \gls{usepackage} in the image
 preamble will be converted to \gls{RequirePackage} on export.
 
 \widgetdef{export.flfdoc}
 
-Select the \widget{export.flfdoc} button to create a complete
-\LaTeX\ document that loads the \sty{flowfram} package (and the
-\sty{flowframtkutils} package if \FlowframTk\ detects it).
+To create a complete \LaTeX\ document that loads the \sty{flowfram}
+package (and the \sty{flowframtkutils} package if \FlowframTk\
+detects it) specify the target \ext+{tex} file in the
+\widget{export.file} field and make sure that the
+\widget{export.flfdoc} radio button in the \dialog{export} dialog is
+selected.
 
 Any occurrences of \gls{RequirePackage} in the image
 preamble will be converted to \gls{usepackage} on export.
@@ -3450,14 +3554,29 @@ placed in the \env{document} environment,
 otherwise \FlowframTk\ will attempt to work out how many pages to
 create by inspecting the page list of each \gls{object} that has
 \gls{flowframe} data assigned and will just write a series of
-\gls{null} separated by \gls{clearpage} to create the appropriate
+\gls{null} commands separated by \gls{clearpage} to create the appropriate
 number of pages. This facility is provided as it's used as an
 intermediate step in the \widget{export.flfpdf} function where it
 may be useful to quickly check the document layout without adding
 text. You may prefer to use a package that provides dummy text, such
 as \sty{lipsum}.
 
-In each of the above three cases, the \sty{geometry} package will be
+\widgetdef{export.flfpdf}
+
+If you want \FlowframTk\ to automatically create a multi-paged PDF 
+document, specify the target \ext+{pdf} file in the
+\widget{export.file} field and make sure that the
+\widget{export.flfpdf} radio button in the \dialog{export} dialog
+is selected.
+
+This function works by first creating a \LaTeX\ document
+(as per \widgetdef{export.flfdoc})
+in a temporary file and then compiling it with
+\app{pdflatex} (or whatever tool has been specified in the
+\widget{processes.pdflatex} panel). The temporary file (and any
+associated files created in the process) will then be deleted.
+
+In each of the above cases, the \sty{geometry} package will be
 loaded (before \sty{flowfram}) to set the page layout according to
 the \gls{canvas} paper size and the \gls{typeblock}. (Note that
 changing the page geometry after \sty{flowfram} has been loaded is
@@ -3485,11 +3604,26 @@ start of the package option declarations, which provides a means to
 add extra package options, if required.  The \gls{mid-preamble} text will
 be placed after the class or packages are loaded and the
 \gls{late-preamble} text is placed at the end of the class or package.
+(With \widget{export.flfdoc} and \widget{export.flfpdf}, the
+preamble blocks are placed in roughly analogous positions.
+Additionally, any \glspl{magic-comment} will be placed at the start
+of the \ext{tex} file.)
 
 \begin{important}
 The \hyperref[sec:texconfigpreamble]{default preamble} is not used
 when exporting to a class or package.
 \end{important}
+
+\widgetdef{export.shapeparcs}
+
+Any frames that have the shape set to
+\widget{flowframe.shape_shapepar} will use the command identified
+in the \widget{export.shapeparcs} panel (\gls{shapepar} or
+\gls{Shapepar}).
+
+The export to class and export to document functions (that is, not the
+export to package function), will have the
+\widget{export.load_doc_class} panel available.
 
 \seealsorefs{sec:texconfig,
 sec:preamble,
@@ -3501,15 +3635,29 @@ sec:newstutorial}
 
 \subsection{Export to PGF}\label{sec:exportpgf}
 
-Select the \widget{filter.pgf} file filter in the \dialog{export}
-dialog box to export to a \LaTeX\ file that contains a
-\env{pgfpicture} environment, which can then be included into a
-\LaTeX\ document using \gls{input}.
+\widgetdef{export.pgfpicture}
 
-The start of the file will include comments with
-code between an \csfmt{iffalse} \ldots\ \csfmt{fi} block
-that may be required in your preamble. If necessary, copy that block
-into your document's preamble.
+To create a file that just contains the \env{pgfpicture} environment, 
+specify the target \ext+{tex}
+file in the \widget{export.file} field and make sure that the
+\widget{export.pgfpicture} radio button in the \dialog{export} dialog is selected
+(\figureref{fig:export-pgfpicture-dialog}). 
+The file can then be included in a \LaTeX\ document with \gls{input}
+or (provided by \sty{flowframtkutils}) \gls{includeteximage}.
+
+Remember to include \sty{flowframtkutils} in your document. If
+\FlowframTk\ can't detect \sty{flowframtkutils} on \TeX's path, it
+will assume it's not available and the exported file will include
+comments about how to define the required commands.
+
+The \widget{export.bounds} panel will be available but the
+\widget{export.bounds.papersize} option will be disabled.
+The \widget{export.bounds.image} option is the default.
+The \widget{export.bounds.typeblock} option will only be available
+if the \gls{typeblock} has been set.
+
+The \widget{export.markup}, \widget{export.textualshading}
+and \widget{export.textpathoutline} panels will be available. 
 
 If you want to create a standalone file, complete with a document
 class and document environment, you will need the
@@ -3522,39 +3670,72 @@ sec:neuronexample}
 
 \subsection{Export to Single-Paged Document}\label{sec:exportdoc}
 
-To create a standalone \LaTeX\ document (\inlineglsdef{ext.tex}), select
-the \widget{filter.pgfdoc} file filter, which will use the image's
-paper \gls{paper.size}, or select the \widget{filter.pgfencapdoc} file filter to
-set the page geometry to the image's \gls{image.bbox} (or \gls+{image.typeblock}
-if the \widget{export.bounds.typeblock} button is selected, see
-\sectionref{sec:normalsize}).
+\widgetdef{export.imagedoc}
+
+To create a standalone single-paged \LaTeX\ document that just
+displays the image, specify the target \ext+{tex} file in the
+\widget{export.file} field and make sure that the
+\widget{export.imagedoc} radio button in the \dialog{export} dialog
+is selected.
+
+The \widget{export.bounds} panel will be available which determines
+the page geometry.  The \widget{export.bounds.typeblock} option will
+only be available if the \gls{typeblock} has been set.  (If the
+\widget{export.bounds.typeblock} button is selected, see
+\sectionref{sec:normalsize}.)
 
 \begin{information}
-For the encapsulated export function,
+For the encapsulated export function (that is, where the
+\widget{export.bounds.papersize} option isn't selected),
 if the bounding box is smaller than the baselineskip, the page
 height is set to the baselineskip, according to the given
 \hyperref[sec:normalsize]{normal size} for the image.
 \end{information}
 
-Alternatively, select the \widget{filter.pdf} file filter to create
-a \inlineglsdef{ext.pdf} file.  This function works by first creating a
-standalone encapsulated \LaTeX\ document in a temporary file and
-then compiling it with \app{pdflatex}. The temporary file (and any
+The preamble information written to the exported \LaTeX\ file is as detailed below.
+
+\widgetdef{export.imagepdf}
+
+If you want \FlowframTk\ to automatically create a single-paged PDF 
+of the image from a \LaTeX\ document, specify the target \ext+{pdf} file in the
+\widget{export.file} field and make sure that the
+\widget{export.imagepdf} radio button in the \dialog{export} dialog
+is selected.
+
+This function works by first creating a standalone encapsulated
+\LaTeX\ document (as per the \widget{export.imagedoc} option) 
+in a temporary file and then compiling it with
+\app{pdflatex} (or whatever tool has been specified in the
+\widget{processes.pdflatex} panel). The temporary file (and any
 associated files created in the process) will then be deleted.
 
-If a default preamble has been set (see
-\sectionref{sec:texconfigpreamble}) the code will be included in the
-\ext{tex} file's preamble.  This is in
-addition to the contents of the image's early-, mid- and
-late-\hyperref[sec:preamble]{preamble}. For example, I have set the
-default preamble to:
+\begin{information}
+If the \widget{export.imagepdf} function fails, try exporting to a
+\LaTeX\ document (\widget{export.imagedoc}) and then manually
+building the document. It may be that the preamble code or 
+a \gls{textarea} has a command that needs to be defined or that has
+been misspelt.
+\end{information}
+
+Any \glspl{magic-comment} that have been provided will be added to
+the start of the \LaTeX\ source file.  If a \gls{preamble.default}
+has been set (see \sectionref{sec:texconfigpreamble}) the code will
+be included in the \ext{tex} file's preamble.  This is in addition
+to the contents of the image's \glsname{preamble.early}-,
+\glsname{preamble.mid}- and \gls{preamble.late} (see
+\sectionref{sec:preamble}). For example, I have set the default
+preamble to:
 \begin{verbatim}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \end{verbatim}
-If you prefer to use \sty{fontspec}, change the application path for
-\app{pdflatex} to \app{lualatex}.
+If you prefer to use \sty{fontspec} and you are using the
+\widget{export.imagepdf} option, change the
+\widget{processes.pdflatex} path from \app{pdflatex} to
+\app{lualatex} or \app{xelatex}. Alternatively, you could set the
+\widget{processes.pdflatex} tool to \app{arara} and set the
+\glspl{magic-comment} as appropriate.
 
 If your image includes \LaTeX\ commands that require a particular
 package, you will need to add these packages to the
@@ -3564,12 +3745,8 @@ by the \gls{textarea-mapping} function, if it has been
 \sectionsref{sec:texconfigtext,sec:preamble} for further details.
 
 \FlowframTk\ will automatically add
-\verb|\usepackage{pgf}| to the preamble and other packages such as
-\sty{geometry} and \sty{ifpdf}. It will also add
-\begin{verbatim}
-\usepgflibrary{decorations.text}
-\end{verbatim}
-in case the image contains any \glspl{textpath}.
+the code to load the \sty{flowframtkutils} package (if detected),
+and other packages, such as \sty{pgf} and \sty{geometry}.
 
 \begin{warning}
 Changes caused by differences in the way that \FlowframTk\ renders
@@ -3663,6 +3840,11 @@ create the exported file. Note that \FlowframTk's support for
 exporting to EPS without an external tool is quite basic and may not
 work correctly.
 
+To create a PostScript file of the current image, specify the target
+\ext+{ps} or \ext+{eps} file in the \widget{export.file} field and
+make sure that the \widget{export.eps} radio button in the
+\dialog{export} dialog is selected. 
+
 If the \widget{export.use_process} checkbox is
 selected (\figureref{fig:exportepsdialog}), then the
 \widget{processes.latex} processor panel and the
@@ -3671,14 +3853,25 @@ A temporary \LaTeX\ file will be created, as for
 \widget{export.imagepdf}, but in this case \app{latex} not
 \app{pdflatex} is needed.
 
+\begin{warning}
+The \app{dvips} \code{-E} switch can be problematic when the file only
+contains images. It's best to omit it and use the appropriate
+\widget{export.bounds} option.
+\end{warning}
+
 \widgetdef{export.svg}
+
+To create an \gls{svg} file of the current image, specify the target
+\ext+{svg} file in the \widget{export.file} field and
+make sure that the \widget{export.svg} radio button in the
+\dialog{export} dialog is selected. 
 
 The \widget{export.svg} function is much the same as
 \widget{export.eps} but in this case, if the  \widget{export.use_process} checkbox is
 selected, then the 
 \widget{processes.latex} processor panel and the
 \inlineglsdef{processes.dvisvgm} processor panel will be shown.
-Additionally, the \widget{processes.libgs} panel will also be shown
+Additionally, the \widget{processes.libgs} panel will be shown
 where you can optionally specify the path to the \file{libgs}
 library. You may leave this blank if this information can be
 obtained from the \gls{LIBGS} environment variable.
@@ -3701,9 +3894,9 @@ checkbox is selected.
 Note that PostScript does not support transparency.
 \end{important}
 
-As with the export to encapsulated PDF, if the resulting \gls{svg} or EPS
+As with the \widget{export.imagepdf} option, if the resulting \gls{svg} or EPS
 file has unexpected results or fails to be created, try exporting to
-an encapsulated \LaTeX\ document and then manually building the
+a \LaTeX\ document (\widget{export.imagedoc}) and then manually building the
 document.
 
 \section{Import}\label{sec:importimage}
@@ -3711,15 +3904,13 @@ document.
 \menudef{menu.file.import}
 
 A supported file format can be imported using the \menu{file.import}
-menu item. The experimental mode may provide additional import options.
-This menu item will first open a file chooser to select the required
-file to import and will then open the \dialog{import} dialog.
-The selected file filter in the file chooser determines the import
-file format. No attempt is currently made to probe for the file format.
+menu item, which will open the \dialog{import} dialog. The
+experimental mode may provide additional import options.
 
 \begin{information}
 There is currently only one file format type that is supported in
-normal (non-experimental) mode.
+normal (non-experimental) mode, and that is the Acorn Draw file
+format.
 \end{information}
 
 The original \gls{JpgfDraw} application was inspired by Acorn Computers' Draw
@@ -3742,8 +3933,8 @@ correctly converted;
 in the \gls{grid};
 % TODO:
 \item \FlowframTk\ currently doesn't support Draw's arrow markers;
-\item \FlowframTk\ uses a left-handed co-ordinate system so the 
-right-handed co-ordinates in the Draw file will be converted;
+\item \FlowframTk\ uses a left-handed \gls{co-ordinate} system so the 
+right-handed \glspl{co-ordinate} in the Draw file will be converted;
 \item since \gls{RISCOS} doesn't use dot file extensions, the file
 chooser uses the \gls{RISCOS} \gls{NFS} style \ext+{aff} suffix 
 (\href{http://www.riscos.com/support/users/omniclient/6_filemap.html}{comma 
@@ -3752,10 +3943,33 @@ followed by three hexadecimal digits}) for the Acorn Draw filter in the file cho
 
 \widgetdef{import.title}
 
-Once you have chosen the import file from the file chooser, the
-\dialog{import} dialog will open where you can specify import
-options. (For formats that are only available in experimental mode,
-some or all of these settings may be ignored.)
+\FloatFig
+  {fig:importdialog}
+  {\includeimg{importdialog}}
+  {Import Dialog}
+
+The \dialog{import} dialog (see \figureref{fig:importdialog}) has a
+field at the top to specify the import file. You can use the
+\widget{selectfile} button on the right to open a file chooser to
+navigate your way to the required file. Once you have selected the
+file and accepted it, the file name will be set in the
+\widget{import.file} field.
+
+The following file types may be recognised:
+\begin{itemize}
+\item Acorn Draw (always available);
+\item EPS (\ext+{eps} or \ext+{ps}, only in experimental mode);
+\item SVG (\ext+{svg}, only in experimental mode).
+\end{itemize}
+Note that \FlowframTk\ doesn't probe the file to determine the file
+type but simply tests which file filter accepts the filename. 
+The default is Acorn Draw. If the Draw file doesn't have the
+\ext+{aff} suffix, you can just use the \qt{All Files} filter.
+
+\begin{information}
+For formats that are only available in experimental mode,
+some or all of the following settings may be ignored.
+\end{information}
 
 \widgetdef{import.use_mappings}
 
@@ -3777,7 +3991,9 @@ is selected, the \widget{import.bitmap_dir} and
 
 The \widget{import.bitmap_dir} field may be used to specify the
 destination directory for any extracted \glspl{bitmap}. If left
-empty, the current directory will be used.
+empty, the current directory will be used. You can either type in
+the directory path or click on the \widget{selectfile}
+button on the right to open a directory chooser.
 
 \widgetdef{import.bitmap_prefix}
 
@@ -3786,8 +4002,9 @@ Each extracted \gls{bitmap} will be saved as
 the \meta{prefix} is specified in the \widget{import.bitmap_prefix}
 field, \meta{n} is an integer that's incremented for each extracted
 \gls{bitmap} and \meta{ext} is the file extension.
-The default prefix is obtained from the base name of the imported
-file.
+If an import file is selected via the file chooser and the
+\widget{import.bitmap_prefix} field is empty, this field will be set to the
+file's basename.
 
 \section{Page Setup}\label{sec:pagesetup}
 
@@ -4581,7 +4798,7 @@ This would create a path consisting of a single line segment.
 Note that the sample panel will shift the path to the top left
 corner so that you don't need to scroll to find it. When the actual path
 is added to the \gls{canvas}, it will be placed at the calculated
-co-ordinates.
+\glspl{co-ordinate}.
 
 \begin{warning}
 Arcs are currently not implemented.
