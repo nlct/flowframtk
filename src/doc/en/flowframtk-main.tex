@@ -3722,14 +3722,14 @@ There is currently only one file format type that is supported in
 normal (non-experimental) mode.
 \end{information}
 
-The original \gls{JpgfDraw} application was inspired by Acorn's Draw
+The original \gls{JpgfDraw} application was inspired by Acorn Computers' Draw
 application. The Acorn Draw file format is a little-endian binary format that can
 now be imported by \FlowframTk. However there are some limitations
 and also some differences.
 
 \begin{itemize}
 \item a \FlowframTk\ \gls{textarea} corresponds to a Draw \qt{text line};
-\item the Draw \qt{text area} supports multiple paragraphs
+\item the Draw \qt{text area} specification supports multiple paragraphs
 and columns, which will be implemented in \FlowframTk\ as
 \gls{flowframe} data;
 \item \FlowframTk\ currently can't extract embedded Sprite data
@@ -3744,14 +3744,50 @@ in the \gls{grid};
 \item \FlowframTk\ currently doesn't support Draw's arrow markers;
 \item \FlowframTk\ uses a left-handed co-ordinate system so the 
 right-handed co-ordinates in the Draw file will be converted;
-\item since RISC OS doesn't use dot file extensions, the file
-chooser uses the NFS style \ext+{aff} suffix (comma followed by three
-hexadecimal digits) for the Acorn Draw file filter.
+\item since \gls{RISCOS} doesn't use dot file extensions, the file
+chooser uses the \gls{RISCOS} \gls{NFS} style \ext+{aff} suffix 
+(\href{http://www.riscos.com/support/users/omniclient/6_filemap.html}{comma 
+followed by three hexadecimal digits}) for the Acorn Draw filter in the file chooser.
 \end{itemize}
-
 
 \widgetdef{import.title}
 
+Once you have chosen the import file from the file chooser, the
+\dialog{import} dialog will open where you can specify import
+options. (For formats that are only available in experimental mode,
+some or all of these settings may be ignored.)
+
+\widgetdef{import.use_mappings}
+
+If the \widget{import.use_mappings} checkbox is selected, any text
+found in the imported file will have the current
+\hyperref[mi:texmappings]{\TeX\ mappings}
+applied. Note that when importing from an Acorn Draw file, any text
+lines that have the Selwyn font will be converted to \mathsmode, 
+and the \mathsmode\ mappings will be used.
+
+\widgetdef{import.extract_bitmaps}
+
+If the \widget{import.extract_bitmaps} checkbox is selected,
+any supported embedded \glspl{bitmap} will be extracted. If this checkbox
+is selected, the \widget{import.bitmap_dir} and
+\widget{import.bitmap_prefix} fields will be visible.
+
+\widgetdef{import.bitmap_dir}
+
+The \widget{import.bitmap_dir} field may be used to specify the
+destination directory for any extracted \glspl{bitmap}. If left
+empty, the current directory will be used.
+
+\widgetdef{import.bitmap_prefix}
+
+Each extracted \gls{bitmap} will be saved as
+\meta{prefix}\meta{n}\filefmt{.}\meta{ext} where
+the \meta{prefix} is specified in the \widget{import.bitmap_prefix}
+field, \meta{n} is an integer that's incremented for each extracted
+\gls{bitmap} and \meta{ext} is the file extension.
+The default prefix is obtained from the base name of the imported
+file.
 
 \section{Page Setup}\label{sec:pagesetup}
 
