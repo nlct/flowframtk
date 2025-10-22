@@ -50,35 +50,34 @@ public class AcornDrawFile
 
    public AcornDrawFile(CanvasGraphics cg, DataInputStream din)
    {
+      this(cg, din, null);
+   }
+
+   public AcornDrawFile(CanvasGraphics cg,
+     DataInputStream din, ImportSettings importSettings)
+   {
       this(cg);
       image = new JDRGroup(cg);
       currentGroup = image;
       affineTransform = new AffineTransform(
        DRAW_PT_TO_CM, 0, 0, -DRAW_PT_TO_CM, 0, 0);
+
       this.din = din;
+      this.importSettings = importSettings;
+
       styNames = new Vector<String>();
 
-   }
-
-   public Vector<String> getRequiredPackages()
-   {
-      return styNames;
-   }
-
-   public void enableImportBitmaps(File bitmapDir, String bitmapPrefix)
-   {
-      this.bitmapDir = bitmapDir;
-      this.bitmapPrefix = bitmapPrefix;
-   }
-
-   public void disableImportBitmaps()
-   {
-      this.bitmapDir = null;
+      if (this.importSettings == null)
+      {
+         this.importSettings = new ImportSettings(cg.getMessageDictionary());
+      }
    }
 
    public void setTextModeMappings(TeXMappings texMappings)
    {
       this.textModeMappings = texMappings;
+
+      importSettings.useMappings = (texMappings != null);
    }
 
    public void setMathModeMappings(TeXMappings texMappings)
@@ -925,27 +924,37 @@ public class AcornDrawFile
 
       String text = readString(map); // zero terminated string padding
 
+      JDRText jdrText = new JDRText(cg, p, jdrFont, text);
+
       String latexText = null;
 
-      if (map == CharacterMap.SIDNEY && mathModeMappings != null)
+      if (importSettings.useMappings)
       {
-         latexText = "$" + mathModeMappings.applyMappings(
-           text, styNames) + "$";
-      }
-      else if (mathModeMappings != null
-           && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
-      {
-         text = text.substring(1, text.length()-1);
+         if (map == CharacterMap.SIDNEY && mathModeMappings != null)
+         {
+            latexText = "$" + mathModeMappings.applyMappings(
+              text, styNames) + "$";
+         }
+         else if (mathModeMappings != null
+              && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
+         {
+            text = text.substring(1, text.length()-1);
 
-         latexText = "$" + mathModeMappings.applyMappings(
-           text, styNames) + "$";
-      }
-      else if (textModeMappings != null)
-      {
-         latexText = textModeMappings.applyMappings(text, styNames);
+            latexText = "$" + mathModeMappings.applyMappings(
+              text, styNames) + "$";
+
+            jdrText.setText(text);
+         }
+         else if (textModeMappings != null)
+         {
+            latexText = textModeMappings.applyMappings(text, styNames);
+         }
+         else
+         {
+            jdrText.escapeTeXChars();
+         }
       }
 
-      JDRText jdrText = new JDRText(cg, p, jdrFont, text);
       jdrText.setTextPaint(textPaint);
 
       if (fontTable != null)
@@ -998,7 +1007,7 @@ public class AcornDrawFile
 
       byte[] data = readBytes(dataLength);
 
-      if (bitmapDir == null)
+      if (!importSettings.extractBitmaps)
       {
          // warn and discard
 
@@ -1008,8 +1017,9 @@ public class AcornDrawFile
       else
       {
          bitmapCount++;
-         File file = new File(bitmapDir, 
-           String.format((Locale)null, "%s%06d.jpg", bitmapPrefix, bitmapCount));
+         File file = new File(importSettings.bitmapDir, 
+           String.format((Locale)null, "%s%06d.jpg",
+            importSettings.bitmapNamePrefix, bitmapCount));
 
          DataOutputStream dout = null;
 
@@ -1101,7 +1111,7 @@ public class AcornDrawFile
 
                if (!(stringBuffer.length() == 0 && text.trim().isEmpty()))
                {
-                  if (textModeMappings != null)
+                  if (importSettings.useMappings && textModeMappings != null)
                   {
                      text = textModeMappings.applyMappings(text, styNames);
                   }
@@ -1303,7 +1313,7 @@ public class AcornDrawFile
       {
          String text = dataBuffer.toString(offset, dataBuffer.length()-offset, map);
 
-         if (textModeMappings != null)
+         if (importSettings.useMappings && textModeMappings != null)
          {
             text = textModeMappings.applyMappings(text, styNames);
          }
@@ -1835,8 +1845,7 @@ public class AcornDrawFile
    CanvasGraphics canvasGraphics;
    DataInputStream din;
 
-   File bitmapDir;
-   String bitmapPrefix;
+   ImportSettings importSettings;
    int bitmapCount=0;
    TeXMappings textModeMappings=null;
    TeXMappings mathModeMappings=null;

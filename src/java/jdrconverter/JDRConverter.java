@@ -45,6 +45,7 @@ public class JDRConverter
       msgPublisher.setVerbosity(0);
       userConfigProperties = new Properties();
       exportSettings = new ExportSettings(msgPublisher);
+      importSettings = new ImportSettings(msgPublisher);
    }
 
    protected void initConfig() throws IOException
@@ -1373,8 +1374,8 @@ public class JDRConverter
                      getMessage("error.clisyntax.missing.value", arg));
                }
 
-               bitmapNamePrefix = returnVals[0].toString();
-               extractBitmaps = true;
+               importSettings.bitmapNamePrefix = returnVals[0].toString();
+               importSettings.extractBitmaps = true;
             }
             else if (isArg(arg, "--bitmap-dir", returnVals))
             {
@@ -1384,16 +1385,16 @@ public class JDRConverter
                      getMessage("error.clisyntax.missing.value", arg));
                }
 
-               bitmapDir = new File(returnVals[0].toString());
-               extractBitmaps = true;
+               importSettings.bitmapDir = new File(returnVals[0].toString());
+               importSettings.extractBitmaps = true;
             }
             else if (arg.equals("--extract-bitmaps"))
             {
-               extractBitmaps = true;
+               importSettings.extractBitmaps = true;
             }
             else if (arg.equals("--no-extract-bitmaps"))
             {
-               extractBitmaps = false;
+               importSettings.extractBitmaps = false;
             }
             else if (arg.equals("--relative-bitmaps"))
             {
@@ -1405,11 +1406,11 @@ public class JDRConverter
             }
             else if (arg.equals("--apply-mappings"))
             {
-               useMappings = true;
+               importSettings.useMappings = true;
             }
             else if (arg.equals("--no-apply-mappings"))
             {
-               useMappings = false;
+               importSettings.useMappings = false;
             }
             else if (arg.equals("--use-latex"))
             {
@@ -1560,40 +1561,35 @@ public class JDRConverter
          exportSettings.useExternalProcess = true;
       }
 
-      if (extractBitmaps)
+      if (importSettings.extractBitmaps)
       {
-         if (bitmapNamePrefix == null)
+         if (importSettings.bitmapNamePrefix == null)
          {
             String name = outFile.getName();
             int idx = name.lastIndexOf(".");
 
             if (idx > 0)
             {
-               bitmapNamePrefix = name.substring(0, idx);
+               importSettings.bitmapNamePrefix = name.substring(0, idx);
             }
             else
             {
-               bitmapNamePrefix = name;
+               importSettings.bitmapNamePrefix = name;
             }
          }
 
-         if (bitmapDir == null)
+         if (importSettings.bitmapDir == null)
          {
-            bitmapDir = outFile.getParentFile();
+            importSettings.bitmapDir = outFile.getParentFile();
 
-            if (bitmapDir == null)
+            if (importSettings.bitmapDir == null)
             {
-               bitmapDir = outFile.getAbsoluteFile().getParentFile();
+               importSettings.bitmapDir = outFile.getAbsoluteFile().getParentFile();
             }
          }
       }
-      else
-      {
-         bitmapNamePrefix = null;
-         bitmapDir  = null;
-      }
 
-      if (useMappings)
+      if (importSettings.useMappings)
       {
          File file = new File(userConfigDir, "textmappings.prop");
 
@@ -1910,14 +1906,9 @@ public class JDRConverter
    protected JDRGroup loadAcornDrawFile(DataInputStream din, CanvasGraphics canvasGraphics)
      throws IOException,InvalidFormatException
    {
-      AcornDrawFile adf = new AcornDrawFile(canvasGraphics, din);
+      AcornDrawFile adf = new AcornDrawFile(canvasGraphics, din, importSettings);
 
-      if (extractBitmaps)
-      {
-         adf.enableImportBitmaps(bitmapDir, bitmapNamePrefix);
-      }
-
-      if (useMappings)
+      if (importSettings.useMappings)
       {
          adf.setTextModeMappings(textModeMappings);
          adf.setMathModeMappings(mathModeMappings);
@@ -2145,12 +2136,17 @@ public class JDRConverter
          }
       }
 
-      return EPS.load(cg, in, bitmapNamePrefix);
+      return EPS.load(cg, in, importSettings);
    }
 
    public String getBitmapCs()
    {
       return userConfigProperties.getProperty("bitmap_default_cs", "\\includegraphics");
+   }
+
+   public ImportSettings getImportSettings()
+   {
+      return importSettings;
    }
 
    public ExportSettings getExportSettings()
@@ -2319,9 +2315,6 @@ public class JDRConverter
 
    protected boolean useTypeblockAsBBox = false; // --use-typeblock
 
-   protected String bitmapNamePrefix; // --bitmap-prefix
-   protected File bitmapDir; // --bitmap-dir
-   protected boolean extractBitmaps = true; // --import-extract-bitmaps
    protected boolean useRelativeBitmaps = true; // --relative-bitmaps
    protected boolean flowframeAbsPages = false;
    protected boolean antialias=true, renderquality=true;
@@ -2330,10 +2323,10 @@ public class JDRConverter
    protected String extraPreamble="";//TODO
 
    ExportSettings exportSettings;
+   ImportSettings importSettings;
 
    protected TextModeMappings textModeMappings;
    protected MathModeMappings mathModeMappings;
-   protected boolean useMappings=true;
 
    // --settings --nosettings
    protected SaveSettingsType saveSettingsType = SaveSettingsType.MATCH_INPUT;

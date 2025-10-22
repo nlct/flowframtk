@@ -1807,62 +1807,47 @@ public class JDRText extends JDRCompleteObject
    {
       boolean replaced=false;
 
-      String newString="";
+      int n = text.length();
+      StringBuilder buffer = new StringBuilder(n);
 
-      for (int i = 0, n=text.length(); i < n; i++)
+      for (int i = 0; i < n; )
       {
-         char c = text.charAt(i);
+         int cp = text.codePointAt(i);
+         i += Character.charCount(cp);
 
-         switch (c)
+         switch (cp)
          {
             case '\\' :
-               newString += "\\textbackslash ";
+               buffer.append("\\textbackslash{}");
                replaced = true;
             break;
             case '^' :
-               newString += "\\textasciicirum ";
+               buffer.append("\\textasciicircum{}");
                replaced = true;
             break;
             case '~' :
-               newString += "\\textasciitilde ";
+               buffer.append("\\textasciitilde{}");
                replaced = true;
             break;
             case '$' :
-               newString += "\\$";
-               replaced = true;
-            break;
             case '&' :
-               newString += "\\&";
-               replaced = true;
-            break;
             case '#' :
-               newString += "\\#";
-               replaced = true;
-            break;
             case '%' :
-               newString += "\\%";
-               replaced = true;
-            break;
             case '_' :
-               newString += "\\_";
-               replaced = true;
-            break;
             case '{' :
-               newString += "\\{";
-               replaced = true;
-            break;
             case '}' :
-               newString += "\\}";
+               buffer.append("\\");
+               buffer.appendCodePoint(cp);
                replaced = true;
             break;
             default :
-               newString += c;
+               buffer.appendCodePoint(cp);
          }
       }
 
       if (replaced)
       {
-         latexText = newString;
+         latexText = buffer.toString();
       }
    }
 

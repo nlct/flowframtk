@@ -55,9 +55,9 @@ public class EPSFont implements EPSDictionaryInterface
     * @param psName the PostScript font name
     * @param fontBase the LaTeX font base
     */
-   public EPSFont(String psName, LaTeXFontBase fontBase)
+   public EPSFont(EPS eps, String psName)
    {
-      init(psName, fontBase, new AffineTransform());
+      init(eps, psName, new AffineTransform());
    }
 
    /**
@@ -66,14 +66,14 @@ public class EPSFont implements EPSDictionaryInterface
     * This attempts to find the closest matching font to the
     * given PostScript font, but there are no guarantees that
     * it will produce a good match.
+    * @param eps
     * @param psName the PostScript font name
-    * @param fontBase the LaTeX font base
     * @param trans the transformation to apply to the font
     */
-   public EPSFont(String psName, LaTeXFontBase fontBase,
+   public EPSFont(EPS eps, String psName,
        AffineTransform trans)
    {
-      init(psName, fontBase, trans);
+      init(eps, psName, trans);
    }
 
    private EPSFont()
@@ -82,11 +82,12 @@ public class EPSFont implements EPSDictionaryInterface
    }
 
 
-   private void init(String psName, LaTeXFontBase fontBase,
+   private void init(EPS eps, String psName,
       AffineTransform trans)
    {
+      this.eps = eps;
       postscriptName = psName;
-      latexFontBase = fontBase;
+      latexFontBase = eps.getLaTeXFontBase();
       series = JDRFont.SERIES_MEDIUM;
       shape  = JDRFont.SHAPE_UPRIGHT;
       family = new String(psName);
@@ -285,6 +286,7 @@ public class EPSFont implements EPSDictionaryInterface
       family = font.family;
       series = font.series;
       shape = font.shape;
+      eps = font.eps;
 
       for (Enumeration<String> en=font.dict.keys();
            en.hasMoreElements();)
@@ -383,7 +385,7 @@ public class EPSFont implements EPSDictionaryInterface
 
       textarea.transform(af2);
 
-      textarea.escapeTeXChars();
+      eps.setLaTeXText(textarea);
 
       if (displacement != null)
       {
@@ -488,6 +490,7 @@ public class EPSFont implements EPSDictionaryInterface
    protected String family;
    private String postscriptName;
 
+   private EPS eps;
    private EPSArray transformationMatrix;
 
    protected LaTeXFontBase latexFontBase;

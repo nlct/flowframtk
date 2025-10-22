@@ -96,25 +96,29 @@ public class EPSColorImage extends EPSOperator
            bitsPerSample, data[0], nComp, eps);
       }
 
-      String filename = eps.getNextBitmapName("png");
-      eps.printlnMessage("Saving '"+filename+"'");
+      File file = eps.getNextBitmapFile("png");
 
-      File file = new File(filename);
+      if (file != null)
+      {
+         String filename = file.getCanonicalPath();
 
-      ImageIO.write(image, "png", file);
+         eps.printlnMessage("Saving '"+filename+"'");
 
-      JDRBitmap bitmap = new JDRBitmap(eps.getCanvasGraphics(),
-         file.getCanonicalPath());
+         ImageIO.write(image, "png", file);
 
-      // map back onto 1 x 1 unit square
-      AffineTransform af = trans.getTransform().createInverse();
-      AffineTransform ctm = currentGraphicsState.getTransform();
-      af.preConcatenate(ctm);
+         JDRBitmap bitmap = new JDRBitmap(eps.getCanvasGraphics(),
+            filename);
 
-      // apply transformation to bitmap
-      bitmap.setTransformation(af);
+         // map back onto 1 x 1 unit square
+         AffineTransform af = trans.getTransform().createInverse();
+         AffineTransform ctm = currentGraphicsState.getTransform();
+         af.preConcatenate(ctm);
 
-      eps.addJDRObject(bitmap);
+         // apply transformation to bitmap
+         bitmap.setTransformation(af);
+
+         eps.addJDRObject(bitmap);
+      }
    }
 
    private BufferedImage getColourRGBImage(int width, int height, 

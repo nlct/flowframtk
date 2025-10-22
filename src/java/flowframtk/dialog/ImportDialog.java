@@ -170,6 +170,7 @@ public class ImportDialog extends JDialog
          bitmapNamePrefixField.setText("");
       }
 
+      setVisible(false);
       application.importImage(importSettings);
    }
 

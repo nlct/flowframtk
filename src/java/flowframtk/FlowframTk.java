@@ -6734,7 +6734,7 @@ public class FlowframTk extends JFrame
             (new LoadAcornDrawFile(currentFrame, importSettings)).execute();
          break;
          case EPS:
-            (new LoadEps(currentFrame, importSettings.currentFile)).execute();
+            (new LoadEps(currentFrame, importSettings)).execute();
          break;
       }
    }

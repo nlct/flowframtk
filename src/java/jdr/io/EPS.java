@@ -55,11 +55,10 @@ public class EPS
     * Initialises device default, graphics stack and current 
     * graphics state, {@link #bitmapN} is reset to 0 and
     * empty {@link JDRGroup} is created.
-    * @param bitmapBase the directory in which to put any extracted 
-    * bitmap images
+    * @param importSettings import settings
     * @param in currentfile
     */
-   protected EPS(CanvasGraphics cg, String bitmapBase,
+   protected EPS(CanvasGraphics cg, ImportSettings importSettings,
       BufferedReader in)
    {
       setCanvasGraphics(cg);
@@ -87,7 +86,12 @@ public class EPS
       seed = (new Date()).getTime();
       random = new Random(seed);
 
-      bitmapbase = bitmapBase;
+      this.importSettings = importSettings;
+
+      if (importSettings.useMappings)
+      {
+         styNames = new Vector<String>();
+      }
 
       bitmapN = 0;
    }
@@ -298,13 +302,11 @@ public class EPS
       return canvasGraphics.getMessageSystem();
    }
 
-
    /**
     * Loads an Encapsulated PostScript file and returns the image
     * as a {@link JDRGroup}.
     * @param in input stream
-    * @param bitmapBase the directory in which to save any raster
-    * images found in the EPS file
+    * @param importSettings import settings
     * @throws IOException if I/O error occurs
     * @throws InvalidFormatException if invalid PostScript code
     * found, or if PostScript code can't be implemented
@@ -313,13 +315,13 @@ public class EPS
     * inverting a non-invertible matrix
     */
    public static JDRGroup load(CanvasGraphics cg, BufferedReader in, 
-      String bitmapBase)
+      ImportSettings importSettings)
    throws IOException,InvalidFormatException,
           NoninvertibleTransformException
    {
       String title = "";
 
-      EPS eps = new EPS(cg, bitmapBase, in);
+      EPS eps = new EPS(cg, importSettings, in);
 
       String line = eps.currentfile.readline();
 
@@ -416,6 +418,33 @@ public class EPS
          {
             eps.group.translate(-bb.getMinX(),-bb.getMinY()); 
          }
+      }
+
+      if (eps.styNames != null && !eps.styNames.isEmpty())
+      {
+         String preamble = cg.getPreamble();
+
+         StringBuilder stringBuffer = new StringBuilder(
+           preamble.length()+eps.styNames.firstElement().length()+12);
+
+         stringBuffer.append(preamble);
+
+         for (String sty : eps.styNames)
+         {
+            if (sty.startsWith("["))
+            {
+               int idx = sty.indexOf("]");
+
+               stringBuffer.append(String.format("\\usepackage%s{%s}%n",
+                 sty.substring(0, idx+1), sty.substring(idx+1)));
+            }
+            else
+            {
+               stringBuffer.append(String.format("\\usepackage{%s}%n", sty));
+            }
+         }
+
+         cg.setPreamble(stringBuffer.toString());
       }
 
       return eps.group;
@@ -670,14 +699,77 @@ public class EPS
    /**
     * Gets the name of the next bitmap to be saved. This method
     * increments {@link #bitmapN} and constructs the filename
-    * from {@link #bitmapbase} and {@link #bitmapN}.
+    * from the import settings and {@link #bitmapN}.
     * @param extension file extension (without the dot)
     * @return the file name
     */
    public String getNextBitmapName(String extension)
    {
       bitmapN++;
-      return bitmapbase+bitmapN+"."+extension;
+
+      return String.format((Locale)null,
+       "%s%d.%s", importSettings.bitmapNamePrefix, bitmapN, extension);
+   }
+
+   /**
+    * Gets the file for the next bitmap to be saved or null if
+    * bitmap should not be extracted.
+    */
+   public File getNextBitmapFile(String extension)
+   {
+      if (importSettings.extractBitmaps)
+      {
+         return new File(importSettings.bitmapDir, getNextBitmapName(extension));
+      }
+      else
+      {
+         return null;
+      }
+   }
+
+   public void setTextModeMappings(TeXMappings texMappings)
+   {
+      this.textModeMappings = texMappings;
+
+      importSettings.useMappings = (texMappings != null);
+   }
+
+   public void setMathModeMappings(TeXMappings texMappings)
+   {
+      this.mathModeMappings = texMappings;
+   }
+
+   public void setLaTeXText(JDRText jdrText)
+   {
+      if (importSettings.useMappings && styNames != null)
+      {
+         String text = jdrText.getText();
+         String latexText = null;
+
+         if (mathModeMappings != null
+              && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
+         {
+            text = text.substring(1, text.length()-1);
+
+            latexText = "$" + mathModeMappings.applyMappings(
+              text, styNames) + "$";
+
+            jdrText.setText(text);
+         }
+         else if (textModeMappings != null)
+         {
+            latexText = textModeMappings.applyMappings(text, styNames);
+         }
+         else
+         {
+            jdrText.escapeTeXChars();
+         }
+
+         if (latexText != null && !latexText.equals(text))
+         {
+            jdrText.setLaTeXText(latexText);
+         }
+      }
    }
 
    /**
@@ -779,7 +871,7 @@ public class EPS
       catch (NoReadAccessException e)
       {
          // this shouldn't happen
-         return new EPSFont(name, latexFontBase);
+         return new EPSFont(this, name);
       }
 
       if (fontDict != null)
@@ -787,7 +879,7 @@ public class EPS
          return fontDict;
       }
 
-      fontDict = new EPSFont(name, latexFontBase);
+      fontDict = new EPSFont(this, name);
 
       fontDirectory.put(name, fontDict);
 
@@ -832,7 +924,12 @@ public class EPS
     * Directory in which to place raster images found in 
     * EPS file.
     */
-   protected String bitmapbase;
+   protected ImportSettings importSettings;
+
+   TeXMappings textModeMappings=null;
+   TeXMappings mathModeMappings=null;
+
+   Vector<String> styNames;
 
    /**
     * Keeps a count of the number of raster images found.

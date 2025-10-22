@@ -38,7 +38,6 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
    public LoadAcornDrawFile(JDRFrame frame, ImportSettings importSettings)
    {
       jdrFrame = frame;
-      drawFile = importSettings.currentFile;
       this.importSettings = importSettings;
    }
 
@@ -60,6 +59,7 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
 
+      File drawFile = importSettings.currentFile;
       String fileName = drawFile.getAbsolutePath();
 
       app.showMessageFrame(getResources().getMessage("info.loading", fileName));
@@ -74,13 +74,7 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
       {
          din = new DataInputStream(new BufferedInputStream(new FileInputStream(drawFile)));
 
-         AcornDrawFile adf = new AcornDrawFile(cg, din);
-
-         if (importSettings.extractBitmaps)
-         {
-            adf.enableImportBitmaps(
-              importSettings.bitmapDir, importSettings.bitmapNamePrefix);
-         }
+         AcornDrawFile adf = new AcornDrawFile(cg, din, importSettings);
 
          if (importSettings.useMappings)
          {     
@@ -173,7 +167,6 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
       return jdrFrame.getResources();
    }
 
-   private File drawFile;
    private JDRFrame jdrFrame;
    private ImportSettings importSettings;
 }

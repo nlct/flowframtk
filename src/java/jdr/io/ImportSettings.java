@@ -51,7 +51,7 @@ public class ImportSettings
    public File currentFile = null;
    public boolean extractBitmaps = false;
    public File bitmapDir = null;
-   public String bitmapNamePrefix = null;
+   public String bitmapNamePrefix = "";
    public boolean useMappings = true;
    JDRMessageDictionary dictionary;
 }

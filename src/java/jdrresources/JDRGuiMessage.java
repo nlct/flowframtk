@@ -846,7 +846,6 @@ class JDRGuiMessageFrame extends JFrame
 
       if (level <= verbosity)
       {
-         System.out.println(mess);
          message(mess);
       }
    }

@@ -41,10 +41,10 @@ import com.dickimawbooks.jdrresources.*;
 public class LoadEps extends SwingWorker<Void,MessageInfo>
   implements MessageInfoPublisher
 {
-   public LoadEps(JDRFrame frame, File file)
+   public LoadEps(JDRFrame frame, ImportSettings importSettings)
    {
       jdrFrame = frame;
-      epsFile = file;
+      this.importSettings = importSettings;
    }
 
    public Void doInBackground()
@@ -65,6 +65,7 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
 
+      File epsFile = importSettings.currentFile;
       String fileName = epsFile.getAbsolutePath();
 
       app.showMessageFrame(getResources().getMessage("info.loading", fileName));
@@ -79,14 +80,7 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
       {
          in = new BufferedReader(new FileReader(epsFile));
 
-         int index = fileName.lastIndexOf(".");
-
-         if (index != -1)
-         {
-            fileName = fileName.substring(0, index);
-         }
-
-         image = EPS.load(cg, in, fileName+"Img");
+         image = EPS.load(cg, in, importSettings);
 
          if (image.anyDraftBitmaps())
          {
@@ -171,6 +165,6 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
       return jdrFrame.getResources();
    }
 
-   private File epsFile;
    private JDRFrame jdrFrame;
+   ImportSettings importSettings;
 }

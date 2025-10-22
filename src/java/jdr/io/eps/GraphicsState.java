@@ -62,7 +62,7 @@ public class GraphicsState implements EPSObject
       paint = new JDRColor(eps.getCanvasGraphics(), Color.black);
       path = new Path2D.Double();
       clippingPath = null;
-      font = new EPSFont("Times-Roman", eps.getLaTeXFontBase());
+      font = new EPSFont(eps, "Times-Roman");
       flatten_ = false;
       flatness = 1.0;
 
@@ -118,7 +118,7 @@ public class GraphicsState implements EPSObject
       paint = new JDRColor(eps_.getCanvasGraphics(), Color.black);
       path = new Path2D.Double();
       clippingPath = null;
-      font = new EPSFont("Times-Roman", eps.getLaTeXFontBase());
+      font = new EPSFont(eps, "Times-Roman");
       flatten_ = false;
       flatness = 1.0;
 
@@ -314,6 +314,8 @@ public class GraphicsState implements EPSObject
          jdrtext = font.getJDRText(cg, text, af,
             cp, displacement);
       }
+
+      eps_.setLaTeXText(jdrtext);
 
       path.moveTo((float)(currentPosition.getX()+displacement.getX()),
                   (float)(currentPosition.getY()+displacement.getY()));

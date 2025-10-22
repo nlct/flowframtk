@@ -82,23 +82,26 @@ public class EPSImage extends EPSOperator
             "invalid parameter to image", eps.getLineNum());
       }
 
-      String filename = eps.getNextBitmapName("png");
-      eps.printlnMessage("Saving '"+filename+"'");
+      File file = eps.getNextBitmapFile("png");
 
-      File file = new File(filename);
+      if (file != null)
+      {
+         String filename = file.getCanonicalPath();
+         eps.printlnMessage("Saving '"+filename+"'");
 
-      ImageIO.write(image, "png", file);
+         ImageIO.write(image, "png", file);
 
-      JDRBitmap bitmap = new JDRBitmap(
-        eps.getCanvasGraphics(), file.getCanonicalPath());
+         JDRBitmap bitmap = new JDRBitmap(
+           eps.getCanvasGraphics(), filename);
 
-      // map back onto 1 x 1 unit square
-      AffineTransform af = trans.getTransform().createInverse();
-      AffineTransform ctm = currentGraphicsState.getTransform();
-      af.preConcatenate(ctm);
+         // map back onto 1 x 1 unit square
+         AffineTransform af = trans.getTransform().createInverse();
+         AffineTransform ctm = currentGraphicsState.getTransform();
+         af.preConcatenate(ctm);
 
-      bitmap.setTransformation(af);
-      eps.addJDRObject(bitmap);
+         bitmap.setTransformation(af);
+         eps.addJDRObject(bitmap);
+      }
    }
 
 
