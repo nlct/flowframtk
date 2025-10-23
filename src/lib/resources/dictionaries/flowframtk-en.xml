@@ -3283,16 +3283,44 @@ Are you sure you want to ungroup it?</entry>
 
 <!--  Find By Description Dialog Box -->
 <entry key="findbydescription.title">Find Object By Description</entry>
-<entry key="findbydescription.path">Path: {0}</entry>
-<entry key="findbydescription.textarea">Text: {0} ({1})</entry>
-<entry key="findbydescription.bitmap">Bitmap: {0} ({1},{2})</entry>
-<entry key="findbydescription.group">Group: {0}</entry>
-<entry key="findbydescription.textpath">TextPath: {0} ({1})</entry>
-<entry key="findbydescription.symmetricpath">SymmetricPath: {0}</entry>
-<entry key="findbydescription.rotationalpattern">RotationalPattern: {0} ({1})</entry>
-<entry key="findbydescription.scaledpattern">ScaledPattern: {0} ({1}, {2})</entry>
-<entry key="findbydescription.spiralpattern">SpiralPattern: {0} ({1}:{2})</entry>
+<entry key="addbydescription.title">Add Object By Description</entry>
 
+<entry key="findbydescription.JDRPath">Path: {0}</entry>
+<entry key="findbydescription.JDRText">Text: {0} ({1})</entry>
+<entry key="findbydescription.JDRBitmap">Bitmap: {0} ({1},{2})</entry>
+<entry key="findbydescription.JDRGroup">Group: {0}</entry>
+<entry key="findbydescription.JDRTextPath">TextPath: {0} ({1})</entry>
+<entry key="findbydescription.JDRSymmetricPath">SymmetricPath: {0}</entry>
+<entry key="findbydescription.JDRRotationalPattern">RotationalPattern: {0} ({1})</entry>
+<entry key="findbydescription.JDRScaledPattern">ScaledPattern: {0} ({1}, {2})</entry>
+<entry key="findbydescription.JDRSpiralPattern">SpiralPattern: {0} ({1}:{2})</entry>
+
+<entry key="findbydescription.filter">Filter</entry>
+
+<entry key="findbydescription.match">Match:</entry>
+<entry key="findbydescription.match.all">All</entry>
+<entry key="findbydescription.match.any">Any</entry>
+
+<entry key="findbydescription.update">Update</entry>
+<entry key="findbydescription.update.mnemonic">U</entry>
+<entry key="findbydescription.update.tooltip">Update list</entry>
+<entry key="findbydescription.update.iconimage">dotask</entry>
+
+<entry key="findbydescription.reset">Reset</entry>
+<entry key="findbydescription.reset.mnemonic">R</entry>
+<entry key="findbydescription.reset.tooltip">Reset filters</entry>
+<entry key="findbydescription.reset.iconimage">default</entry>
+
+<entry key="findbydescription.object_type">Any of Type:</entry>
+<entry key="findbydescription.object_type.JDRPath">Path</entry>
+<entry key="findbydescription.object_type.JDRText">Text</entry>
+<entry key="findbydescription.object_type.JDRBitmap">Bitmap</entry>
+<entry key="findbydescription.object_type.JDRGroup">Group</entry>
+<entry key="findbydescription.object_type.JDRTextPath">Text-Path</entry>
+<entry key="findbydescription.object_type.JDRSymmetricPath">Symmetric Path</entry>
+<entry key="findbydescription.object_type.JDRRotationalPattern">Rotational Pattern</entry>
+<entry key="findbydescription.object_type.JDRScaledPattern">Scaled Pattern</entry>
+<entry key="findbydescription.object_type.JDRSpiralPattern">Spiral Pattern</entry>
 
 <!--  Vectorize Bitmap UI -->
 

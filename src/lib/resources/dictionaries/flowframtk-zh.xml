@@ -3276,16 +3276,44 @@ Are you sure you want to ungroup it?</entry>
 
 <!--  Find By Description Dialog Box -->
 <entry key="findbydescription.title">通过描述查找对象</entry>
-<entry key="findbydescription.path">路径: {0}</entry>
-<entry key="findbydescription.textarea">文本: {0} ({1})</entry>
-<entry key="findbydescription.bitmap">位图: {0} ({1},{2})</entry>
-<entry key="findbydescription.group">组合: {0}</entry>
-<entry key="findbydescription.textpath">TextPath: {0} ({1})</entry>
-<entry key="findbydescription.symmetricpath">SymmetricPath: {0}</entry>
-<entry key="findbydescription.rotationalpattern">RotationalPattern: {0} ({1})</entry>
-<entry key="findbydescription.scaledpattern">ScaledPattern: {0} ({1}, {2})</entry>
-<entry key="findbydescription.spiralpattern">SpiralPattern: {0} ({1}:{2})</entry>
+<entry key="addbydescription.title">根据描述增选对象</entry>
 
+<entry key="findbydescription.JDRPath">路径: {0}</entry>
+<entry key="findbydescription.JDRText">文本: {0} ({1})</entry>
+<entry key="findbydescription.JDRBitmap">位图: {0} ({1},{2})</entry>
+<entry key="findbydescription.JDRGroup">组合: {0}</entry>
+<entry key="findbydescription.JDRTextPath">TextPath: {0} ({1})</entry>
+<entry key="findbydescription.JDRSymmetricPath">SymmetricPath: {0}</entry>
+<entry key="findbydescription.JDRRotationalPattern">RotationalPattern: {0} ({1})</entry>
+<entry key="findbydescription.JDRScaledPattern">ScaledPattern: {0} ({1}, {2})</entry>
+<entry key="findbydescription.JDRSpiralPattern">SpiralPattern: {0} ({1}:{2})</entry>
+
+<entry key="findbydescription.filter">Filter</entry>
+
+<entry key="findbydescription.match">Match:</entry>
+<entry key="findbydescription.match.all">All</entry>
+<entry key="findbydescription.match.any">Any</entry> 
+
+<entry key="findbydescription.update">Update</entry>
+<entry key="findbydescription.update.mnemonic">U</entry>
+<entry key="findbydescription.update.tooltip">Update list</entry>
+<entry key="findbydescription.update.iconimage">dotask</entry>
+
+<entry key="findbydescription.reset">Reset</entry>
+<entry key="findbydescription.reset.mnemonic">R</entry>
+<entry key="findbydescription.reset.tooltip">Reset filters</entry>
+<entry key="findbydescription.reset.iconimage">default</entry>
+
+<entry key="findbydescription.object_type">Any of Type:</entry>
+<entry key="findbydescription.object_type.JDRPath">路径</entry>
+<entry key="findbydescription.object_type.JDRText">文本</entry>
+<entry key="findbydescription.object_type.JDRBitmap">位图</entry>
+<entry key="findbydescription.object_type.JDRGroup">组合</entry>
+<entry key="findbydescription.object_type.JDRTextPath">Text-Path</entry>
+<entry key="findbydescription.object_type.JDRSymmetricPath">Symmetric Path</entry>
+<entry key="findbydescription.object_type.JDRRotationalPattern">Rotational Pattern</entry>
+<entry key="findbydescription.object_type.JDRScaledPattern">Scaled Pattern</entry>
+<entry key="findbydescription.object_type.JDRSpiralPattern">Spiral Pattern</entry>
 
 <!--  Vectorize Bitmap UI -->
 

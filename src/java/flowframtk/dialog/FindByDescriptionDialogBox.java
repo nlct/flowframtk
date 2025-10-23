@@ -23,6 +23,9 @@
 */
 package com.dickimawbooks.flowframtk.dialog;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -49,34 +52,183 @@ public class FindByDescriptionDialogBox extends JDialog
             true);
       application_ = application;
 
-      descriptionModel = new DefaultComboBoxModel<String>();
-      descriptionBox = new JComboBox<String>(descriptionModel);
+      JDRResources resources = getResources();
 
-      // add a temporary element to help pack the container
-      descriptionModel.addElement(getTitle());
+      findByTitle = getTitle();
+      addByTitle = resources.getMessage("addbydescription.title");
 
-      getContentPane().add(descriptionBox, "Center");
+      JComponent mainPanel = Box.createVerticalBox();
+
+      filterButton = resources.createAppCheckBox(
+       "findbydescription", "filter", true, null);
+      filterButton.setAlignmentX(0.0f);
+
+      mainPanel.add(filterButton);
+      mainPanel.add(createFilterPanel());
+
+      filterButton.addItemListener(new ItemListener()
+       {
+          @Override
+          public void itemStateChanged(ItemEvent evt)
+          {
+             filterPanel.setVisible(filterButton.isSelected());
+          }
+       });
+
+      descriptionModel = new DefaultListModel<String>();
+      descriptionBox = new JList<String>(descriptionModel);
+
+      descriptionBox.setPrototypeCellValue(
+       "Rotational Pattern 000 (360)"+getTitle());
+
+      JScrollPane sp = new JScrollPane(descriptionBox);
+      sp.setAlignmentX(0.0f);
+
+      mainPanel.add(sp);
+
+      getContentPane().add(new JScrollPane(mainPanel), "Center");
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
+      p2.add(resources.createOkayButton(getRootPane(), this));
+      p2.add(resources.createCancelButton(this));
 
       getContentPane().add(p2, "South");
       pack();
+
+      filterButton.setSelected(false);
+
       setLocationRelativeTo(application);
+   }
+
+   protected JComponent createFilterPanel()
+   {
+      JDRResources resources = getResources();
+      JComponent row, panel;
+
+      filterPanel = Box.createVerticalBox();
+      filterPanel.setAlignmentX(0.0f);
+
+      row = new JPanel(new BorderLayout());
+      filterPanel.add(row);
+
+      resetButton = resources.createDialogButton(
+       "findbydescription", "reset", this, null, null);
+
+      row.add(resetButton, "West");
+
+      updateButton = resources.createDialogButton(
+       "findbydescription", "update", this, null, null);
+
+      row.add(updateButton, "East");
+
+      panel = new JPanel(new FlowLayout());
+      row.add(panel, "Center");
+
+      panel.add(resources.createAppLabel("findbydescription.match"));
+
+      ButtonGroup bg = new ButtonGroup();
+
+      filterAllButton = resources.createAppRadioButton(
+        "findbydescription.match", "all", bg, false, null);
+
+      panel.add(filterAllButton);
+
+      filterAnyButton = resources.createAppRadioButton(
+        "findbydescription.match", "any", bg, true, null);
+
+      panel.add(filterAnyButton);
+
+      row = Box.createHorizontalBox();
+      filterPanel.add(row);
+
+      row.add(resources.createAppLabel("findbydescription.object_type"));
+
+      filterObjectClassMap = new HashMap<String,JCheckBox>();
+
+      row.add(createFilterObjectClassCheckBox("JDRPath"));
+      row.add(createFilterObjectClassCheckBox("JDRText"));
+      row.add(createFilterObjectClassCheckBox("JDRBitmap"));
+      row.add(createFilterObjectClassCheckBox("JDRGroup"));
+      row.add(createFilterObjectClassCheckBox("JDRTextPath"));
+      row.add(createFilterObjectClassCheckBox("JDRSymmetricPath"));
+      row.add(createFilterObjectClassCheckBox("JDRRotationalPattern"));
+      row.add(createFilterObjectClassCheckBox("JDRScaledPattern"));
+      row.add(createFilterObjectClassCheckBox("JDRSpiralPattern"));
+
+      return filterPanel;
+   }
+
+   protected JCheckBox createFilterObjectClassCheckBox(String className)
+   {
+      JCheckBox box = getResources().createAppCheckBox(
+        "findbydescription.object_type", className, true, null);
+
+      filterObjectClassMap.put(className, box);
+
+      return box;
+   }
+
+   protected void resetFilter()
+   {
+      for (Iterator<String> it = filterObjectClassMap.keySet().iterator(); 
+           it.hasNext(); )
+      {
+         String key = it.next();
+
+         filterObjectClassMap.get(key).setSelected(true);
+      }
+
+      filterAnyButton.setSelected(true);
    }
 
    public void display(boolean deselect)
    {
+      setTitle(deselect ? findByTitle : addByTitle);
+
       mainPanel = application_.getCurrentFrame();
-      descriptionModel.removeAllElements();
       paths = mainPanel.getAllPaths();
       deselect_ = deselect;
+      update();
+      descriptionBox.requestFocusInWindow();
+      setVisible(true);
+   }
+
+   protected boolean filterAccepts(JDRCompleteObject object, String description)
+   {
+      if (filterButton.isSelected())
+      {
+         boolean match = false;
+         boolean any = filterAnyButton.isSelected();
+
+         JCheckBox box = filterObjectClassMap.get(object.getClass().getSimpleName());
+
+         if (box != null && box.isSelected())
+         {
+            if (any)
+            {
+               return true;
+            }
+
+            match = true;
+         }
+
+         return match;
+      }
+      else
+      {
+         return true;
+      }
+   }
+
+   protected void update()
+   {
+      descriptionModel.removeAllElements();
 
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i); 
+
          String description = object.getDescription();
 
          if (description.isEmpty())
@@ -84,11 +236,13 @@ public class FindByDescriptionDialogBox extends JDialog
             description = getResources().getDefaultDescription(object);
          }
 
-         descriptionModel.addElement(description);
+         if (filterAccepts(object, description))
+         {
+            descriptionModel.addElement(description);
+         }
       }
 
-      descriptionBox.requestFocusInWindow();
-      setVisible(true);
+      revalidate();
    }
 
    public void okay()
@@ -112,6 +266,14 @@ public class FindByDescriptionDialogBox extends JDialog
       {
          okay();
       } 
+      else if (action.equals("update"))
+      {
+         update();
+      } 
+      else if (action.equals("reset"))
+      {
+         resetFilter();
+      } 
       else if (action.equals("cancel"))
       {
          setVisible(false);
@@ -123,11 +285,21 @@ public class FindByDescriptionDialogBox extends JDialog
       return application_.getResources();
    }
 
-   private JComboBox<String> descriptionBox;
-   private DefaultComboBoxModel<String> descriptionModel;
+   private JList<String> descriptionBox;
+   private DefaultListModel<String> descriptionModel;
+
+   private JCheckBox filterButton;
+   private JComponent filterPanel;
+   private JRadioButton filterAllButton, filterAnyButton;
+   private JButton updateButton, resetButton;
+
+   private HashMap<String,JCheckBox> filterObjectClassMap;
+
    private FlowframTk application_;
    private JDRFrame mainPanel = null;
    private JDRGroup paths;
    private boolean deselect_=true;
    private boolean doPack=true;
+
+   private String findByTitle, addByTitle;
 }

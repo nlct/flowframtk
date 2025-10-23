@@ -822,8 +822,7 @@ public class JDRResources
 
       if (flowframe == null)
       {
-         String tag = object.getClass().getName().toLowerCase()
-            .substring(object.getClass().getPackage().getName().length()+4);
+         String tag = object.getClass().getSimpleName();
 
          description = getMessage("findbydescription."+tag,
                   object.getDescriptionInfo());
