@@ -309,12 +309,33 @@ public class AcornDrawFile
 
          affineTransform.transform(coords, 0, coords, 0, 2);
 
-         JDRPaper paper = getCanvasGraphics().getPaper();
+         CanvasGraphics cg = getCanvasGraphics();
 
-         flowframe.setLeft(coords[0]);
-         flowframe.setTop(coords[1]);
-         flowframe.setRight(paper.getWidth()-coords[2]);
-         flowframe.setBottom(paper.getHeight()-coords[3]);
+         JDRPaper paper = cg.getPaper();
+
+         // Paper width and height is in PostScript points
+
+         double w = cg.bpToStorage(paper.getWidth());
+         double h = cg.bpToStorage(paper.getHeight());
+         double right = w - coords[2];
+         double bottom = h - coords[3];
+
+         // make sure the margins don't overlap or exceed paper
+         // bounds
+
+         if (coords[0] >= 0.0 && right >= 0.0
+             && (coords[0] + right < w))
+         {
+            flowframe.setLeft(coords[0]);
+            flowframe.setRight(right);
+         }
+
+         if (coords[1] >= 0.0 && bottom >= 0.0
+             && (coords[1] + bottom < h))
+         {
+            flowframe.setTop(coords[1]);
+            flowframe.setBottom(bottom);
+         }
       }
    }
 
