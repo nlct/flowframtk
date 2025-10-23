@@ -1354,7 +1354,8 @@ public class ExportDialog extends JDialog
       shapeparUseHPaddingComp.setVisible(showShapePar);
       docClassComp.setVisible(showDocClassComp);
       usePdfInfoBox.setVisible(showDocClassComp 
-        && !(type == ExportSettings.Type.STY || type == ExportSettings.Type.PNG));
+        && !(type == ExportSettings.Type.CLS
+          || type == ExportSettings.Type.PNG));
       bitmapsToEpsBox.setVisible(showBitmapsToEps);
       markupComp.setVisible(showMarkup);
       textualShadingComp.setVisible(showTextualShading);
