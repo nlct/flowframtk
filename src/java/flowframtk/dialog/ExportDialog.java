@@ -1255,7 +1255,7 @@ public class ExportDialog extends JDialog
             int idx;
 
             // If export to Acorn Draw file is later implemented, a workaround
-            // to deal with comma pseudo extension will be needed.
+            // to deal with RISC OS NFS style comma three hex suffix will be needed.
 
             if (name.endsWith(",aff"))
             {
@@ -1268,7 +1268,7 @@ public class ExportDialog extends JDialog
 
             if (idx > 0)
             {
-               name = name.substring(0, idx-1)
+               name = name.substring(0, idx)
                  + currentFileTypeButton.getExtensionSeparator() 
                  + currentFileTypeButton.getDefaultExtension();
 
