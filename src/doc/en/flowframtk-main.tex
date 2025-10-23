@@ -5739,7 +5739,15 @@ You can assign a space-separated list of tags to \selected\
 This will display the \dialog{tag} dialog box. Type the space
 separated tag list into the text field and click on \btn{okay}
 or press \keys{\keyref{return}}. The list will automatically be
-trimmed. For example, \figureref{fig:objectTag} shows the house
+trimmed.
+
+\begin{important}
+Tag lists are restricted to alphanumerics, spaces, and the following
+punctuation characters: \code{+} (plus), \code{-} (hyphen), 
+\code{|} (pipe), and \code{.} (period).
+\end{important}
+
+For example, \figureref{fig:objectTag} shows the house
 image from \sectionref{sec:houseexample} where the four squares
 representing windows have been selected and assigned the tag
 \qt{window}.
@@ -14656,11 +14664,17 @@ and above contains the \type{string} \meta{description}, which was
 omitted in earlier versions, and version 2.1 and above contains the
 \type{string} tag.
 
+Note that the \dialog{tag} dialog box (see
+\sectionref{sec:objecttag}) restricts allowed characters in the tag,
+but \FlowframTk\ doesn't enforce this when loading a \gls{JDR}
+or \gls{AJR} file.
+
 Recall from \hyperref[jdr:object]{above} that the image is stored with an implied outer grouping. The
 \meta{flowframe-specs} for this implicit group represents the image
 \gls+{typeblock} and the \meta{description} represents the image description.
 The \meta{tag} is also included for version 2.1 and above which
-represents the image's tag.
+represents the image's tag, but \FlowframTk\ currently doesn't
+provide a function to set a tag for the complete image.
 
 \end{numbered}
 

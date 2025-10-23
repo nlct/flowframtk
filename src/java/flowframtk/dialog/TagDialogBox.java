@@ -23,6 +23,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
+import javax.swing.text.*;
 
 import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
 
@@ -46,7 +47,7 @@ public class TagDialogBox extends JDialog
             true);
       application_ = application;
 
-      textField = new JTextField("", 20);
+      textField = new JTextField(new TagDocument(), "", 20);
 
       getContentPane().add(textField, "Center");
 
@@ -114,4 +115,26 @@ public class TagDialogBox extends JDialog
    private JTextField textField;
    private FlowframTk application_;
    private JDRFrame mainPanel = null;
+}
+
+class TagDocument extends PlainDocument
+{
+   public TagDocument()
+   {
+      super();
+   }
+
+   public void insertString(int offs, String str, AttributeSet a)
+      throws BadLocationException
+   {
+      if (str == null) return;
+
+      str = str.replaceAll("[^\\+\\-\\|\\./\\p{IsAlphabetic}\\p{IsDigit} ]", "");
+
+      if (!str.isEmpty())
+      {
+         super.insertString(offs, str, a);
+      }
+   }
+
 }
