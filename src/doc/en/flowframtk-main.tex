@@ -3177,7 +3177,7 @@ is, it may be used to specify the bounds of the exported image (the
 page size for \widget{export.imagedoc} and any export settings that
 that's based on that function).
 It's not available for any of the \widget{export.format.flf_type}
-export functions.
+functions.
 
 \widgetdef{export.bounds.papersize}
 
@@ -3336,6 +3336,11 @@ For export options that create a \LaTeX\ document, the
 the document title and creation date will be set
 using \gls{flowframtkimageinfo} (if \sty{flowframtkutils} is
 available) or \gls{pdfinfo} otherwise.
+
+Note that this option isn't available for \widget{export.png} even
+if \widget{export.use_process} is on as the information will be lost
+when the PDF is converted to PNG, so the setting in this case would
+be superfluous.
 
 \widgetdef{export.use_process}
 
@@ -5716,13 +5721,46 @@ The description will not appear in the image, but it can be used to
 locate and select \glspl*{object} on the canvas using the
 \menu{navigate.by_description} or
 \menu{navigate.add_description} menu items. The description
-may also be used as a comment when
+may also be used as a comment or in the object markup commands when
 \hyperref[sec:exportimage]{exporting images}, depending on the
-file type.
+export options.
 
 \begin{important}
 If you assign a description to a \gls{group},
 you will lose the description if you later ungroup it.
+\end{important}
+
+\section{Object Tag}\label{sec:objecttag}
+
+\menudef{menu.edit.object_tag}
+
+You can assign a space-separated list of tags to \selected\
+\glspl*{object} using the \menu{edit.object_tag} menu item.
+This will display the \dialog{tag} dialog box. Type the space
+separated tag list into the text field and click on \btn{okay}
+or press \keys{\keyref{return}}. The list will automatically be
+trimmed. For example, \figureref{fig:objectTag} shows the house
+image from \sectionref{sec:houseexample} where the four squares
+representing windows have been selected and assigned the tag
+\qt{window}.
+
+\FloatFig
+ {fig:objectTag}
+ {\includeimg{house-tag}}
+ {Setting the Tag for Selected Objects}
+
+\begin{information}
+If you have selected more than one \gls{object} with different tags,
+the tags will be combined into a single list.
+\end{information}
+
+The tag list will not appear in the image but may be included in
+object markup when \hyperref[sec:exportimage]{exporting images},
+depending on the export options.
+
+\begin{important}
+If you assign a tag list to a \gls{group},
+you will lose the information if you later ungroup it.
 \end{important}
 
 \chapter{Paint (\Glsentrytext{manual.colour} and Shading)}

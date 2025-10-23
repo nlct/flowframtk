@@ -918,6 +918,11 @@ public class JDRFrame extends JInternalFrame
       return canvas.getSelectedObject();
    }
 
+   public String getSelectedTag()
+   {
+      return canvas.getSelectedTag();
+   }
+
    public JDRCompleteObject getObject(int index)
    {
       return canvas.getObject(index);

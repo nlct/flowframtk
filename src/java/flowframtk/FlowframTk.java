@@ -827,6 +827,26 @@ public class FlowframTk extends JFrame
       objectDescriptionDialog
          = new DescriptionDialogBox(this, "sec:objectdescription");
 
+      // Object Tag
+
+      objectTagItem = FlowframTkAction.createMenuItem(this, 
+        "menu.edit", "object_tag", editM,
+        TOOL_FLAG_SELECT, EDIT_FLAG_NONE, 
+        SELECT_FLAG_OBJECT,
+        FlowframTkAction.SELECTION_IGNORE_COUNT,
+        true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               displayObjectTagDialog(
+                  action.getFrame().getSelectedTag());
+            }
+         }
+        );
+
+      objectTagDialog
+         = new TagDialogBox(this, "sec:objecttag");
 
       editM.addSeparator();
 
@@ -3936,6 +3956,14 @@ public class FlowframTk extends JFrame
       if (printJob.printDialog(printRequestAttributeSet))
       {
          printJob.print(printRequestAttributeSet);
+      }
+   }
+
+   public void displayObjectTagDialog(String tag)
+   {
+      if (tag != null)
+      {
+         objectTagDialog.initialise(tag);
       }
    }
 
@@ -7320,6 +7348,7 @@ public class FlowframTk extends JFrame
    private DisplayPageDialog displayPageDialog;
    private DescriptionDialogBox imageDescriptionDialog;
    private DescriptionDialogBox objectDescriptionDialog;
+   private TagDialogBox objectTagDialog;
    private FindByDescriptionDialogBox findByDescDialog;
    private PaperDialogBox paperDialog;
    private SetTransformDialogBox textMatrixDialog;
@@ -7424,6 +7453,7 @@ public class FlowframTk extends JFrame
                      addNextItem, skipItem, moveByItem,
                      findSelectedItem, displayPageItem,
                      imageDescriptionItem, objectDescriptionItem,
+                     objectTagItem,
                      findByDescriptionItem, addByDescriptionItem,
                      zoomWidthItem, zoomHeightItem, zoomPageItem,
                      reduceToGreyItem, removeAlphaItem, convertToCMYKItem,

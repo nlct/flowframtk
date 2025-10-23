@@ -931,6 +931,8 @@ public class JDRCanvas extends JPanel
 
       CanvasSelectAction objectDescriptionAction 
          = addCanvasSelectAction("object_description");
+      CanvasSelectAction objectTagAction 
+         = addCanvasSelectAction("object_tag");
       CanvasSelectAction cutAction
          = addCanvasSelectAction("cut");
       CanvasSelectAction copyAction
@@ -1030,6 +1032,11 @@ public class JDRCanvas extends JPanel
 
       selectTextPopupMenu.add(objectDescriptionAction.createMenuItem(
          "menu.selectedtext.textarea_description"));
+
+      // Tag
+
+      selectTextPopupMenu.add(objectTagAction.createMenuItem(
+         "menu.selectedtext.textarea_tag"));
 
       // Edit text
 
@@ -1157,6 +1164,11 @@ public class JDRCanvas extends JPanel
 
       selectPathPopupMenu.add(objectDescriptionAction.createMenuItem(
          "menu.selectedpath.path_description"));
+
+      // Tag
+
+      selectPathPopupMenu.add(objectTagAction.createMenuItem(
+         "menu.selectedpath.path_tag"));
 
       // Edit path
 
@@ -1329,6 +1341,11 @@ public class JDRCanvas extends JPanel
       selectTextPathPopupMenu.add(objectDescriptionAction.createMenuItem(
          "menu.selectedtextpath.textpath_description"));
 
+      // Tag
+
+      selectTextPathPopupMenu.add(objectTagAction.createMenuItem(
+         "menu.selectedtextpath.textpath_tag"));
+
       // Edit text
 
       selectTextPathPopupMenu.add(editTextAction.createMenuItem(
@@ -1460,6 +1477,11 @@ public class JDRCanvas extends JPanel
       selectBitmapPopupMenu.add(objectDescriptionAction.createMenuItem(
          "menu.selectedbitmap.bitmap_description"));
 
+      // Tag
+
+      selectBitmapPopupMenu.add(objectTagAction.createMenuItem(
+         "menu.selectedbitmap.bitmap_tag"));
+
       // Properties
 
       selectBitmapPopupMenu.add(bitmapPropsAction.createMenuItem(
@@ -1531,6 +1553,11 @@ public class JDRCanvas extends JPanel
 
       selectPopupMenu.add(objectDescriptionAction.createMenuItem(
          "menu.selected.object_description"));
+
+      // Tag
+
+      selectPopupMenu.add(objectTagAction.createMenuItem(
+         "menu.selected.object_tag"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
@@ -5425,6 +5452,26 @@ public class JDRCanvas extends JPanel
       frame_.postEdit(new SetDescription(object, description));
    }
 
+   public void setSelectedTag(String tag)
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+      UndoableEdit edit = null;
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            edit = new SetTag(object, tag);
+            ce.addEdit(edit);
+         }
+      }
+
+      ce.end();
+      if (edit != null) frame_.postEdit(ce);
+   }
+
    public void setUseAbsolutePages(boolean useAbsolutePages)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -5451,6 +5498,42 @@ public class JDRCanvas extends JPanel
       }
 
       return null;
+   }
+
+   public String getSelectedTag()
+   {
+      Vector<String> list = new Vector<String>();
+ 
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            String tag = object.getTag().trim();
+
+            for (String s : tag.split(" +"))
+            {
+               if (!list.contains(s))
+               {
+                  list.add(s);
+               }
+            }
+         }
+      }
+
+      if (list.isEmpty())
+      {
+         return null;
+      }
+      else if (list.size() == 1)
+      {
+         return list.firstElement();
+      }
+
+      list.remove("");
+
+      return String.join(" ", list);
    }
 
    public JDRCompleteObject getObject(int index)
@@ -11715,6 +11798,46 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return getResources().getMessage("undo.set_description");
+      }
+   }
+
+   class SetTag extends CanvasUndoableEdit
+   {
+      private JDRCompleteObject object_;
+      private String oldTag, newTag;
+
+      public SetTag(JDRCompleteObject object, String tag)
+      {
+         super(getFrame());
+
+         object_ = object;
+
+         oldTag = object.getTag();
+         newTag = tag;
+
+         object_.setTag(newTag);
+         markAsModified();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         object_.setTag(oldTag);
+         markAsModified();
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         object_.setTag(newTag);
+         markAsModified();
+      }
+
+      public boolean canUndo() {return true;}
+
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.set_tag");
       }
    }
 

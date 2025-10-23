@@ -118,6 +118,13 @@ public class JDRObjectLoader
             {
                jdr.writeString(obj.getTag());
             }
+            else if (!obj.getTag().isEmpty())
+            {
+               jdr.warningWithFallback(
+                  "warning.save_unsupported_tag",
+                  "Tags not supported by JDR/AJR version {0}",
+                   version);
+            }
          }
       }
    }

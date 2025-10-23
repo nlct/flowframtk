@@ -166,6 +166,10 @@
 <entry key="menu.edit.object_description.mnemonic">O</entry>
 <entry key="menu.edit.object_description.tooltip">Set or edit the selected object''s description</entry>
 
+<entry key="menu.edit.object_tag">Object Tag...</entry>
+<entry key="menu.edit.object_tag.mnemonic">J</entry>
+<entry key="menu.edit.object_tag.tooltip">Set or edit the selected object''s tag</entry>
+
 <!--  Edit -> Path Sub Menu -->
 
 <entry key="menu.edit.path">路径(P)</entry>
@@ -1029,6 +1033,9 @@
 <entry key="menu.selectedtextpath.textpath_description.mnemonic">I</entry>
 <entry key="menu.selectedtextpath.textpath_description.tooltip">Set or edit the description for the selected text-path</entry>
 
+<entry key="menu.selectedtextpath.textpath_tag">Text Along Path Tag...</entry>
+<entry key="menu.selectedtextpath.textpath_tag.tooltip">Set or edit the tag for the selected text-path</entry>
+
 <!--  Selected Text Popup Menu -->
 
 <entry key="index.menu.selectedtext">Text Popup Menu</entry>
@@ -1036,6 +1043,9 @@
 <entry key="menu.selectedtext.textarea_description">对象描述(I)...</entry>
 <entry key="menu.selectedtext.textarea_description.mnemonic">I</entry>
 <entry key="menu.selectedtext.textarea_description.tooltip">Set or edit the description of the selected text</entry>
+
+<entry key="menu.selectedtext.textarea_tag">Text Area Tag...</entry>
+<entry key="menu.selectedtext.textarea_tag.tooltip">Set or edit the tag of the selected text</entry>
 
 <entry key="menu.selectedtext.edit">编辑文本(X)...</entry>
 <entry key="menu.selectedtext.edit.mnemonic">X</entry>
@@ -1081,6 +1091,9 @@
 <entry key="menu.selectedpath.path_description">对象描述(I)...</entry>
 <entry key="menu.selectedpath.path_description.mnemonic">I</entry>
 <entry key="menu.selectedpath.path_description.tooltip">Set or edit the description of the selected path</entry>
+
+<entry key="menu.selectedpath.path_tag">Path Tag...</entry>
+<entry key="menu.selectedpath.path_tag.tooltip">Set or edit the tag of the selected path</entry>
 
 <entry key="menu.selectedpath.edit">编辑路径(E)</entry>
 <entry key="menu.selectedpath.edit.mnemonic">E</entry>
@@ -1143,6 +1156,10 @@
 <entry key="menu.selectedbitmap.bitmap_description.mnemonic">I</entry>
 <entry key="menu.selectedbitmap.bitmap_description.tooltip">Set or edit the description of the selected bitmap</entry>
 
+<entry key="menu.selectedbitmap.bitmap_tag">Bitmap Tag...</entry>
+<entry key="menu.selectedbitmap.bitmap_tag.tooltip">Set or edit the tag of the selected bitmap</entry>
+
+
 <entry key="menu.selectedbitmap.properties">属性(P)...</entry>
 <entry key="menu.selectedbitmap.properties.mnemonic">R</entry>
 
@@ -1168,6 +1185,9 @@
 <entry key="menu.selected.object_description">对象描述(I)...</entry>
 <entry key="menu.selected.object_description.mnemonic">I</entry>
 <entry key="menu.selected.object_description.tooltip">Set or edit the description of the selected object</entry>
+
+<entry key="menu.selected.object_tag">Tag...</entry>
+<entry key="menu.selected.object_tag.tooltip">Set or edit the tag of the selected object</entry>
 
 <entry key="menu.selected.cut">剪切(T)</entry>
 <entry key="menu.selected.cut.mnemonic">T</entry>
@@ -1449,6 +1469,7 @@
 <entry key="undo.set_absolute_pages">flowframe pages setting</entry>
 <entry key="undo.set_preamble">Edit Preamble</entry>
 <entry key="undo.set_description">Set Description</entry>
+<entry key="undo.set_tag">Set Tag</entry>
 <entry key="undo.set_current_settings">设定当前选项</entry>
 <entry key="undo.set_transform">Set Transformation</entry>
 <entry key="undo.set_typeblock">设定 Typeblock</entry>
@@ -3248,6 +3269,10 @@ Are you sure you want to ungroup it?</entry>
 <!--  Description Dialog Box -->
 
 <entry key="description.title">描述</entry>
+
+<!--  Tag Dialog Box -->
+
+<entry key="tag.title">Tag</entry>
 
 <!--  Find By Description Dialog Box -->
 <entry key="findbydescription.title">通过描述查找对象</entry>

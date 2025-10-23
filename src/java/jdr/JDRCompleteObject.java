@@ -990,7 +990,7 @@ public abstract class JDRCompleteObject extends JDRObject
    /**
     * This object's tag. Initialised to an empty string.
     */
-   protected String tag="";// TODO
+   protected String tag="";
 
    /**
     * Font used for annotations, such as flowframe information

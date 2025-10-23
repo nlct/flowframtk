@@ -162,6 +162,10 @@ Nicola Talbot
 <entry key="menu.edit.object_description.mnemonic">O</entry>
 <entry key="menu.edit.object_description.tooltip">Set or edit the selected object''s description</entry>
 
+<entry key="menu.edit.object_tag">Object Tag...</entry>
+<entry key="menu.edit.object_tag.mnemonic">J</entry>
+<entry key="menu.edit.object_tag.tooltip">Set or edit the selected object''s tag</entry>
+
 <!--  Edit -> Path Sub Menu -->
 
 <entry key="menu.edit.path">Path</entry>
@@ -1025,6 +1029,9 @@ Nicola Talbot
 <entry key="menu.selectedtextpath.textpath_description.mnemonic">I</entry>
 <entry key="menu.selectedtextpath.textpath_description.tooltip">Set or edit the description for the selected text-path</entry>
 
+<entry key="menu.selectedtextpath.textpath_tag">Text Along Path Tag...</entry>
+<entry key="menu.selectedtextpath.textpath_tag.tooltip">Set or edit the tag for the selected text-path</entry>
+
 <!--  Selected Text Popup Menu -->
 
 <entry key="index.menu.selectedtext">Text Popup Menu</entry>
@@ -1032,6 +1039,9 @@ Nicola Talbot
 <entry key="menu.selectedtext.textarea_description">Text Area Description...</entry>
 <entry key="menu.selectedtext.textarea_description.mnemonic">I</entry>
 <entry key="menu.selectedtext.textarea_description.tooltip">Set or edit the description of the selected text</entry>
+
+<entry key="menu.selectedtext.textarea_tag">Text Area Tag...</entry>
+<entry key="menu.selectedtext.textarea_tag.tooltip">Set or edit the tag of the selected text</entry>
 
 <entry key="menu.selectedtext.edit">Edit Text...</entry>
 <entry key="menu.selectedtext.edit.mnemonic">X</entry>
@@ -1075,6 +1085,9 @@ Nicola Talbot
 <entry key="menu.selectedpath.path_description">Path Description...</entry>
 <entry key="menu.selectedpath.path_description.mnemonic">I</entry>
 <entry key="menu.selectedpath.path_description.tooltip">Set or edit the description of the selected path</entry>
+
+<entry key="menu.selectedpath.path_tag">Path Tag...</entry>
+<entry key="menu.selectedpath.path_tag.tooltip">Set or edit the tag of the selected path</entry>
 
 <entry key="menu.selectedpath.edit">Edit Path</entry>
 <entry key="menu.selectedpath.edit.mnemonic">E</entry>
@@ -1134,6 +1147,9 @@ Nicola Talbot
 <entry key="menu.selectedbitmap.bitmap_description.mnemonic">I</entry>
 <entry key="menu.selectedbitmap.bitmap_description.tooltip">Set or edit the description of the selected bitmap</entry>
 
+<entry key="menu.selectedbitmap.bitmap_tag">Bitmap Tag...</entry>
+<entry key="menu.selectedbitmap.bitmap_tag.tooltip">Set or edit the tag of the selected bitmap</entry>
+
 <entry key="menu.selectedbitmap.properties">Bitmap Properties...</entry>
 <entry key="menu.selectedbitmap.properties.mnemonic">R</entry>
 
@@ -1159,6 +1175,9 @@ Nicola Talbot
 <entry key="menu.selected.object_description">Description...</entry>
 <entry key="menu.selected.object_description.mnemonic">I</entry>
 <entry key="menu.selected.object_description.tooltip">Set or edit the description of the selected object</entry>
+
+<entry key="menu.selected.object_tag">Tag...</entry>
+<entry key="menu.selected.object_tag.tooltip">Set or edit the tag of the selected object</entry>
 
 <entry key="menu.selected.cut">Cut</entry>
 <entry key="menu.selected.cut.mnemonic">T</entry>
@@ -1437,6 +1456,7 @@ Nicola Talbot
 <entry key="undo.set_absolute_pages">flowframe pages setting</entry>
 <entry key="undo.set_preamble">Edit Preamble</entry>
 <entry key="undo.set_description">Set Description</entry>
+<entry key="undo.set_tag">Set Tag</entry>
 <entry key="undo.set_current_settings">Set Current Settings</entry>
 <entry key="undo.set_transform">Set Transformation</entry>
 <entry key="undo.set_typeblock">Set Typeblock</entry>
@@ -3256,6 +3276,10 @@ Are you sure you want to ungroup it?</entry>
 <!--  Description Dialog Box -->
 
 <entry key="description.title">Description</entry>
+
+<!--  Tag Dialog Box -->
+
+<entry key="tag.title">Tag</entry>
 
 <!--  Find By Description Dialog Box -->
 <entry key="findbydescription.title">Find Object By Description</entry>
