@@ -1922,7 +1922,8 @@ public class JDRText extends JDRCompleteObject
 
    public Object[] getDescriptionInfo()
    {
-      return new Object[] {getText(), latexText};
+      return new Object[] {getText(),
+         latexText == null || latexText.isEmpty() ? text : latexText};
    }
 
    public JDRPoint getControlFromStoragePoint(double x, double y, boolean endPoint)

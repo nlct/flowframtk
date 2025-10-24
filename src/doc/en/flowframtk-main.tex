@@ -5403,19 +5403,152 @@ cursor (via the \gls{robot}), the cursor will be moved to the top left corner of
 
 \menudef{menu.navigate.by_description}
 
+\plabel[Find by Description]{mi:findbydesc}%
 The \menu{navigate.by_description} menu item will open the
-\inlineglsdef{description.title} dialog box. This has all the \glspl{object}
-listed by their description.  If a description hasn't been set, a
-generic description is used.  Select the required description and
-click \btn{okay} to select the corresponding \gls{object} (and
-deselect any currently selected \gls{object}).
+\dialog{findbydescription} dialog box. 
+
+\widgetdef{findbydescription.title}
+
+\FloatFig
+ {fig:findbydescription}
+ {\includeimg{findbydesc}}
+ {Find By Description Dialog (Filter Widgets Visible)}
+
+The \dialog{findbydescription} dialog has all the
+\glspl{object} (that are not part of a \gls{group}) listed by their
+description.  If an object doesn't have the description set, a
+generic description is used. 
+
+The generic description starts with the object type followed by a
+colon and a space. The part after that depends on the object type.
+For example, a \gls{textarea} and a \gls{textpath} will show the
+text followed by the \LaTeX\ text in parentheses. A path will show
+the number of segments.
+
+Select the required row (or rows) and
+click \btn{okay}.  This will first deselect any currently selected
+\glspl{object} and then select each object corresponding to the
+selected row or rows.
+
+\widgetdef{findbydescription.filter}
+
+If your image has many \glspl{object}, you may find it difficult
+searching through the list. In this case, you may prefer to filter
+the list. This may be done by selecting the \widget{findbydescription.filter}
+checkbox, which will show the filter widgets (see \figureref{fig:findbydescription}).
+
+\begin{important}
+Remember that \keys{\keyref{return}} will be equivalent to using the
+\widget{okay} button, which will search for the \glspl{object}
+corresponding to the selected items in the list. If you change the
+filter settings, you need to use the \widget{findbydescription.update} button or the
+mnemonic \mnemonic{findbydescription.update}.
+\end{important}
+
+\widgetdef{findbydescription.match}
+There are three conditional rows: a match on the object type, a
+match on the object's description (or generic description if not
+set), and a match on the object's tag. The \widget{findbydescription.match}
+radio buttons indicate whether or not all three conditional rows
+must match or whether only at least one should match.
+
+\widgetdef{findbydescription.match.all}
+If the \widget{findbydescription.match.all} button is selected then
+all three conditional rows must be true.
+
+\widgetdef{findbydescription.match.any}
+If the \widget{findbydescription.match.any} button is selected then
+one or more of the three conditional rows must be true.
+
+\widgetdef{findbydescription.object_type}
+The first conditional row is a match on the object type. If the
+object matches any of the selected checkboxes in this row, then the
+conditional for this row is true. Note that for
+\glspl{compositeshape}, the type refers to the outermost shape not
+the underlying shape.
+
+\widgetdef{findbydescription.match_description}
+The second conditional row is a match on the description or on the
+generic description. 
+
+\widgetdef{findbydescription.match_tag}
+The third conditional row is a match on the tag. 
+
+For both the second and third row, the 
+\inlineglsdef{findbydescription.str_match_op} \gls{dropdown} determines
+the test criteria.
+
+\widgetdef{findbydescription.str_match_op.any}
+The \widget{findbydescription.str_match_op.any} operand
+automatically makes the conditional row true.
+
+\widgetdef{findbydescription.str_match_op.set}
+The \widget{findbydescription.str_match_op.set} operand makes the
+conditional row
+true if the object's description (for the second row) or the
+object's tag (for the third row) has been set to a non-empty value.
+
+\widgetdef{findbydescription.str_match_op.not_set}
+The \widget{findbydescription.str_match_op.not_set} operand makes the
+conditional row
+true if the object's description (for the second row) or the
+object's tag (for the third row) has not been set to a non-empty value.
+
+\widgetdef{findbydescription.str_match_op.equals}
+The \widget{findbydescription.str_match_op.equals} operand makes the
+conditional row
+true if the displayed description (for the second row) or the
+object's tag (for the third row) has been set to the text provided
+in the next field (which should automatically become visible when
+this operand is selected).
+
+The displayed description is the description shown in the selection
+list. (That is, the object's description, if set, or the generic
+description, otherwise.)
+
+\widgetdef{findbydescription.str_match_op.not_equals}
+The \widget{findbydescription.str_match_op.not_equals} operand makes the
+conditional row
+true if the displayed description (for the second row) or the
+object's tag (for the third row) is not equal to the text in the
+next field (which should automatically become visible when
+this operand is selected).
+
+\widgetdef{findbydescription.str_match_op.contains}
+The \widget{findbydescription.str_match_op.contains} operand makes the
+conditional row
+true if the displayed description (for the second row) or the
+object's tag (for the third row) contains the text provided
+in the next field (which should automatically become visible when
+this operand is selected).
+
+\widgetdef{findbydescription.str_match_op.regex}
+The \widget{findbydescription.str_match_op.regex} operand makes the
+conditional row
+true if the displayed description (for the second row) or the
+object's tag (for the third row) matches the anchored regular
+expression provided in the next field (which should automatically
+become visible when this operand is selected).
+
+For example, if an object has its tag set to \code{window} then
+the regular expression \code{.*in.*} will match but \code{.*in} won't.
+
+\widgetdef{findbydescription.update}
+
+Once you have setup the filter criteria, click on the
+\widget{findbydescription.update} button to the right to update the
+list of matching objects.
+
+\widgetdef{findbydescription.reset}
+The \widget{findbydescription.reset} button will reset the filter
+criteria back to its default settings.
 
 \menudef{menu.navigate.add_description}
 
-The \menu{navigate.add_description} menu item is similar to 
-\menu{navigate.by_description} but will select the \gls{object}
-without deselecting any other \glspl{object} that are already
-selected.
+The \menu{navigate.add_description} menu item will open the
+\inlineglsdef{addbydescription.title} dialog box. This is the same
+as the \dialog{findbydescription} dialog box, but in this case any
+existing selection won't first be deselected.
 
 \section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
 
@@ -5734,15 +5867,14 @@ you will lose the description if you later ungroup it.
 
 \menudef{menu.edit.object_tag}
 
-You can assign a space-separated list of tags to \selected\
-\glspl*{object} using the \menu{edit.object_tag} menu item.
-This will display the \dialog{tag} dialog box. Type the space
-separated tag list into the text field and click on \btn{okay}
-or press \keys{\keyref{return}}. The list will automatically be
-trimmed.
+You can assign a tag to \selected\ \glspl*{object} using the
+\menu{edit.object_tag} menu item.  This will display the
+\dialog{tag} dialog box. Type the tag into the text field and click
+on \btn{okay} or press \keys{\keyref{return}}. The tag will
+automatically be trimmed.
 
 \begin{important}
-Tag lists are restricted to alphanumerics, spaces, and the following
+Tag are restricted to alphanumerics, spaces, and the following
 punctuation characters: \code{+} (plus), \code{-} (hyphen), 
 \code{|} (pipe), and \code{.} (period).
 \end{important}
@@ -5759,15 +5891,18 @@ representing windows have been selected and assigned the tag
 
 \begin{information}
 If you have selected more than one \gls{object} with different tags,
-the tags will be combined into a single list.
+the tags will be combined in the text field. You may then edit the
+field as required.
 \end{information}
 
-The tag list will not appear in the image but may be included in
+The tag will not appear in the image but may be included in
 object markup when \hyperref[sec:exportimage]{exporting images},
-depending on the export options.
+depending on the export options. You can also use tags to filter the
+list of objects when using \menu{navigate.by_description}
+or \menu{menu.navigate.by_description}.
 
 \begin{important}
-If you assign a tag list to a \gls{group},
+If you assign a tag to a \gls{group},
 you will lose the information if you later ungroup it.
 \end{important}
 

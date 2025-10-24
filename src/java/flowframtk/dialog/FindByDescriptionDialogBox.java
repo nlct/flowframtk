@@ -25,6 +25,7 @@ package com.dickimawbooks.flowframtk.dialog;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.PatternSyntaxException;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -32,6 +33,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
+
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
@@ -57,14 +60,14 @@ public class FindByDescriptionDialogBox extends JDialog
       findByTitle = getTitle();
       addByTitle = resources.getMessage("addbydescription.title");
 
-      JComponent mainPanel = Box.createVerticalBox();
+      JComponent upperComp = Box.createVerticalBox();
 
       filterButton = resources.createAppCheckBox(
        "findbydescription", "filter", true, null);
       filterButton.setAlignmentX(0.0f);
 
-      mainPanel.add(filterButton);
-      mainPanel.add(createFilterPanel());
+      upperComp.add(filterButton);
+      upperComp.add(createFilterPanel());
 
       filterButton.addItemListener(new ItemListener()
        {
@@ -72,6 +75,7 @@ public class FindByDescriptionDialogBox extends JDialog
           public void itemStateChanged(ItemEvent evt)
           {
              filterPanel.setVisible(filterButton.isSelected());
+             mainComp.resetToPreferredSizes();
           }
        });
 
@@ -81,17 +85,16 @@ public class FindByDescriptionDialogBox extends JDialog
       descriptionBox.setPrototypeCellValue(
        "Rotational Pattern 000 (360)"+getTitle());
 
-      JScrollPane sp = new JScrollPane(descriptionBox);
-      sp.setAlignmentX(0.0f);
+      JScrollPane descSp = new JScrollPane(descriptionBox);
 
-      mainPanel.add(sp);
+      mainComp = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+        new JScrollPane(upperComp), descSp);
 
-      getContentPane().add(new JScrollPane(mainPanel), "Center");
+      getContentPane().add(mainComp, "Center");
 
       JPanel p2 = new JPanel();
 
-      p2.add(resources.createOkayButton(getRootPane(), this));
-      p2.add(resources.createCancelButton(this));
+      resources.createOkayCancelHelpButtons(this, p2, this, "mi:findbydesc");
 
       getContentPane().add(p2, "South");
       pack();
@@ -130,12 +133,12 @@ public class FindByDescriptionDialogBox extends JDialog
       ButtonGroup bg = new ButtonGroup();
 
       filterAllButton = resources.createAppRadioButton(
-        "findbydescription.match", "all", bg, false, null);
+        "findbydescription.match", "all", bg, true, null);
 
       panel.add(filterAllButton);
 
       filterAnyButton = resources.createAppRadioButton(
-        "findbydescription.match", "any", bg, true, null);
+        "findbydescription.match", "any", bg, false, null);
 
       panel.add(filterAnyButton);
 
@@ -155,6 +158,16 @@ public class FindByDescriptionDialogBox extends JDialog
       row.add(createFilterObjectClassCheckBox("JDRRotationalPattern"));
       row.add(createFilterObjectClassCheckBox("JDRScaledPattern"));
       row.add(createFilterObjectClassCheckBox("JDRSpiralPattern"));
+
+      JLabelGroup labelGrp = new JLabelGroup();
+
+      filterDesc = new MatchStringComponent(
+        resources, "findbydescription.match_description", labelGrp);
+      filterPanel.add(filterDesc);
+
+      filterTag = new MatchStringComponent(
+        resources, "findbydescription.match_tag", labelGrp);
+      filterPanel.add(filterTag);
 
       return filterPanel;
    }
@@ -180,21 +193,25 @@ public class FindByDescriptionDialogBox extends JDialog
       }
 
       filterAnyButton.setSelected(true);
+      filterDesc.reset();
+      filterTag.reset();
    }
 
    public void display(boolean deselect)
    {
       setTitle(deselect ? findByTitle : addByTitle);
 
-      mainPanel = application_.getCurrentFrame();
-      paths = mainPanel.getAllPaths();
+      currentFrame = application_.getCurrentFrame();
+      paths = currentFrame.getAllPaths();
       deselect_ = deselect;
       update();
       descriptionBox.requestFocusInWindow();
       setVisible(true);
    }
 
-   protected boolean filterAccepts(JDRCompleteObject object, String description)
+   protected boolean filterAccepts(JDRCompleteObject object,
+        String actualDescription, String displayedDescription)
+   throws PatternSyntaxException
    {
       if (filterButton.isSelected())
       {
@@ -213,6 +230,34 @@ public class FindByDescriptionDialogBox extends JDialog
             match = true;
          }
 
+         boolean descMatch = filterDesc.accepts(actualDescription, displayedDescription);
+
+         if (any)
+         {
+            if (descMatch) return true;
+         }
+         else
+         {
+            if (!descMatch) return false;
+
+            match = (match && descMatch);
+         }
+
+         String tag = object.getTag();
+
+         boolean tagMatch = filterTag.accepts(tag, tag);
+
+         if (any)
+         {
+            if (tagMatch) return true;
+         }
+         else
+         {
+            if (!tagMatch) return false;
+
+            match = (match && tagMatch);
+         }
+
          return match;
       }
       else
@@ -225,21 +270,31 @@ public class FindByDescriptionDialogBox extends JDialog
    {
       descriptionModel.removeAllElements();
 
-      for (int i = 0, n = paths.size(); i < n; i++)
+      try
       {
-         JDRCompleteObject object = paths.get(i); 
-
-         String description = object.getDescription();
-
-         if (description.isEmpty())
+         for (int i = 0, n = paths.size(); i < n; i++)
          {
-            description = getResources().getDefaultDescription(object);
-         }
+            JDRCompleteObject object = paths.get(i); 
 
-         if (filterAccepts(object, description))
-         {
-            descriptionModel.addElement(description);
+            String description = object.getDescription();
+            String displayedDescription = description;
+
+            if (description.isEmpty())
+            {
+               displayedDescription = getResources().getDefaultDescription(object);
+            }
+
+            if (filterAccepts(object, description, displayedDescription))
+            {
+               descriptionModel.addElement(displayedDescription);
+            }
          }
+      }
+      catch (PatternSyntaxException e)
+      {
+         getResources().error(this, 
+           getResources().getMessage("error.invalid_regex",
+             e.getPattern()));
       }
 
       revalidate();
@@ -247,15 +302,35 @@ public class FindByDescriptionDialogBox extends JDialog
 
    public void okay()
    {
-      int i = descriptionBox.getSelectedIndex();
+      int minIdx = descriptionBox.getMinSelectionIndex();
+
+      if (minIdx == -1)
+      {
+         getResources().error(this, getResources().getMessage("error.invalid_no_item"));
+
+         return;
+      }
+
+      int maxIdx = descriptionBox.getMaxSelectionIndex();
+
       if (deselect_)
       {
-         mainPanel.deselectAll();
+         currentFrame.deselectAll();
       }
-      mainPanel.selectObjectAndScroll(paths.get(i));
+
+      if (minIdx == maxIdx)
+      {
+         currentFrame.selectObjectAndScroll(paths.get(minIdx));
+      }
+      else
+      {
+         currentFrame.selectObjectsAndScroll(descriptionBox.getSelectedIndices());
+      }
+
       setVisible(false);
    }
 
+   @Override
    public void actionPerformed(ActionEvent e)
    {
       String action = e.getActionCommand();
@@ -285,6 +360,7 @@ public class FindByDescriptionDialogBox extends JDialog
       return application_.getResources();
    }
 
+   private JSplitPane mainComp;
    private JList<String> descriptionBox;
    private DefaultListModel<String> descriptionModel;
 
@@ -293,13 +369,134 @@ public class FindByDescriptionDialogBox extends JDialog
    private JRadioButton filterAllButton, filterAnyButton;
    private JButton updateButton, resetButton;
 
+   private MatchStringComponent filterDesc, filterTag;
+
    private HashMap<String,JCheckBox> filterObjectClassMap;
 
    private FlowframTk application_;
-   private JDRFrame mainPanel = null;
+   private JDRFrame currentFrame = null;
    private JDRGroup paths;
    private boolean deselect_=true;
    private boolean doPack=true;
 
    private String findByTitle, addByTitle;
+}
+
+class MatchStringComponent extends JPanel implements ItemListener
+{
+   public MatchStringComponent(JDRResources resources, String labelTag, JLabelGroup labelGrp)
+   {
+      super(new FlowLayout(FlowLayout.LEADING));
+
+      JLabel label = resources.createAppLabel(labelTag);
+      add(label);
+
+      if (labelGrp != null)
+      {
+         labelGrp.add(label);
+      }
+
+      opBox = new JComboBox<String>
+       (
+          new String[]
+           {
+              resources.getMessage("findbydescription.str_match_op.any"),
+              resources.getMessage("findbydescription.str_match_op.set"),
+              resources.getMessage("findbydescription.str_match_op.not_set"),
+              resources.getMessage("findbydescription.str_match_op.equals"),
+              resources.getMessage("findbydescription.str_match_op.not_equals"),
+              resources.getMessage("findbydescription.str_match_op.contains"),
+              resources.getMessage("findbydescription.str_match_op.regex")
+           }
+       );
+
+      add(opBox);
+      opBox.setName(resources.getMessage("findbydescription.str_match_op"));
+
+      inputCompLayout = new CardLayout();
+      inputComp = new JPanel(inputCompLayout);
+
+      add(inputComp);
+
+      stringField = new JTextField(20);
+      inputComp.add(stringField, "string");
+
+      regexField = new JTextField(20);
+      regexField.setToolTipText(resources.getMessage("findbydescription.regex.tooltip"));
+
+      inputComp.add(regexField, "regex");
+
+      inputComp.setVisible(false);
+      opBox.addItemListener(this);
+   }
+
+   public void reset()
+   {
+      opBox.setSelectedIndex(STRING_MATCH_ANY);
+   }
+
+   public boolean accepts(String orgStr, String displayedStr)
+    throws PatternSyntaxException
+   {
+      switch (opBox.getSelectedIndex())
+      {
+         case STRING_MATCH_ANY:
+           return true;
+         case STRING_MATCH_SET:
+           return !orgStr.isEmpty();
+         case STRING_MATCH_NOT_SET:
+           return orgStr.isEmpty();
+         case STRING_MATCH_EQUALS:
+           return displayedStr.equals(stringField.getText());
+         case STRING_MATCH_NOT_EQUALS:
+           return !displayedStr.equals(stringField.getText());
+         case STRING_MATCH_CONTAINS:
+           return displayedStr.contains(stringField.getText());
+         case STRING_MATCH_REGEX:
+           return displayedStr.matches(regexField.getText());
+      }
+
+      return true;
+   }
+
+   @Override
+   public void itemStateChanged(ItemEvent evt)
+   {
+      if (evt.getStateChange() == ItemEvent.SELECTED)
+      {
+         switch (opBox.getSelectedIndex())
+         {
+            case STRING_MATCH_EQUALS:
+            case STRING_MATCH_NOT_EQUALS:
+            case STRING_MATCH_CONTAINS:
+              inputComp.setVisible(true);
+              inputCompLayout.show(inputComp, "string");
+            break;
+            case STRING_MATCH_REGEX:
+              inputComp.setVisible(true);
+              inputCompLayout.show(inputComp, "regex");
+            break;
+            default:
+              inputComp.setVisible(false);
+         }
+      }
+   }
+
+   public String getRegex()
+   {
+      return regexField.getText();
+   }
+
+   JComboBox<String> opBox;
+   JComponent inputComp;
+   CardLayout inputCompLayout;
+   JTextField stringField, regexField;
+
+   static final int STRING_MATCH_ANY = 0;
+   static final int STRING_MATCH_SET=1;
+   static final int STRING_MATCH_NOT_SET=2;
+   static final int STRING_MATCH_EQUALS=3;
+   static final int STRING_MATCH_NOT_EQUALS=4;
+   static final int STRING_MATCH_CONTAINS=5;
+   static final int STRING_MATCH_REGEX=6;
 }

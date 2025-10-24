@@ -3289,10 +3289,16 @@ Are you sure you want to ungroup it?</entry>
 <entry key="findbydescription.JDRSpiralPattern">SpiralPattern: {0} ({1}:{2})</entry>
 
 <entry key="findbydescription.filter">Filter</entry>
+<entry key="findbydescription.filter.mnemonic">F</entry>
+<entry key="findbydescription.filter.initvalue">false</entry>
 
 <entry key="findbydescription.match">Match:</entry>
+
 <entry key="findbydescription.match.all">All</entry>
+<entry key="findbydescription.match.all.mnemonic">L</entry>
+
 <entry key="findbydescription.match.any">Any</entry> 
+<entry key="findbydescription.match.any.mnemonic">Y</entry>
 
 <entry key="findbydescription.update">Update</entry>
 <entry key="findbydescription.update.mnemonic">U</entry>
@@ -3305,15 +3311,52 @@ Are you sure you want to ungroup it?</entry>
 <entry key="findbydescription.reset.iconimage">default</entry>
 
 <entry key="findbydescription.object_type">Any of Type:</entry>
-<entry key="findbydescription.object_type.JDRPath">路径</entry>
-<entry key="findbydescription.object_type.JDRText">文本</entry>
-<entry key="findbydescription.object_type.JDRBitmap">位图</entry>
-<entry key="findbydescription.object_type.JDRGroup">组合</entry>
+
+<entry key="findbydescription.object_type.JDRPath">路径(P)</entry>
+<entry key="findbydescription.object_type.JDRPath.mnemonic">P</entry>
+
+<entry key="findbydescription.object_type.JDRText">文本(X)</entry>
+<entry key="findbydescription.object_type.JDRText.mnemonic">X</entry>
+
+<entry key="findbydescription.object_type.JDRBitmap">位图(B)</entry>
+<entry key="findbydescription.object_type.JDRBitmap.mnemonic">B</entry>
+
+<entry key="findbydescription.object_type.JDRGroup">组合(G)</entry>
+<entry key="findbydescription.object_type.JDRGroup.mnemonic">G</entry>
+
 <entry key="findbydescription.object_type.JDRTextPath">Text-Path</entry>
+<entry key="findbydescription.object_type.JDRTextPath.mnemonic">H</entry>
+
 <entry key="findbydescription.object_type.JDRSymmetricPath">Symmetric Path</entry>
+<entry key="findbydescription.object_type.JDRSymmetricPath.mnemonic">M</entry>
+
 <entry key="findbydescription.object_type.JDRRotationalPattern">Rotational Pattern</entry>
+<entry key="findbydescription.object_type.JDRRotationalPattern.mnemonic">N</entry>
+
 <entry key="findbydescription.object_type.JDRScaledPattern">Scaled Pattern</entry>
+<entry key="findbydescription.object_type.JDRScaledPattern.mnemonic">E</entry>
+
 <entry key="findbydescription.object_type.JDRSpiralPattern">Spiral Pattern</entry>
+<entry key="findbydescription.object_type.JDRSpiralPattern.mnemonic">I</entry>
+
+<entry key="findbydescription.match_description">Description</entry>
+<entry key="findbydescription.match_description.mnemonic">D</entry>
+
+<entry key="findbydescription.match_tag">Tag</entry>
+<entry key="findbydescription.match_tag.mnemonic">T</entry>
+
+<entry key="findbydescription.str_match_op">match operand</entry>
+
+<entry key="findbydescription.str_match_op.any">Any</entry>
+<entry key="findbydescription.str_match_op.set">Is Set</entry>
+<entry key="findbydescription.str_match_op.not_set">Not Set</entry>
+<entry key="findbydescription.str_match_op.equals">Equals</entry>
+<entry key="findbydescription.str_match_op.not_equals">Not Equals</entry>
+<entry key="findbydescription.str_match_op.contains">Contains</entry>
+<entry key="findbydescription.str_match_op.regex">REGEX</entry>
+
+<entry key="findbydescription.regex">Regular expression</entry>
+<entry key="findbydescription.regex.tooltip">Anchored regular expression</entry>
 
 <!--  Vectorize Bitmap UI -->
 
@@ -3846,6 +3889,8 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.missing_cwd">Missing path after -cwd switch</entry>
 <entry key="error.missing_verbosity">Missing level after -verbosity switch</entry>
 <entry key="error.invalid_verbosity">Number expected after -verbosity switch</entry>
+<entry key="error.invalid_regex">Invalid regular expression: {0}</entry>
+<entry key="error.invalid_no_item">No item has been selected</entry>
 <entry key="error.no_filename">没有指定文件名</entry>
 <entry key="error.no_required_setting">No {0} supplied</entry>
 <entry key="error.no_helpset">帮助文档集未找到</entry>

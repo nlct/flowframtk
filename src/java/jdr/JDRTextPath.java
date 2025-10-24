@@ -1038,7 +1038,15 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
    public Object[] getDescriptionInfo()
    {
-      return new Object[] {getText(), getLaTeXText()};
+      String text = getText();
+      String latexText = getLaTeXText();
+
+      if (latexText == null || latexText.isEmpty())
+      {
+         latexText = text;
+      }
+
+      return new Object[] {text, latexText};
    }
 
    public int getTotalPathSegments()

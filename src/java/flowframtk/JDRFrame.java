@@ -1891,6 +1891,11 @@ public class JDRFrame extends JInternalFrame
       canvas.selectObjectAndScroll(object);
    }
 
+   public void selectObjectsAndScroll(int[] indexes)
+   {
+      canvas.selectObjectsAndScroll(indexes);
+   }
+
    public void updateLaTeXFontSize()
    {
       canvas.updateLaTeXFontSize(getCanvasGraphics().getLaTeXFontBase());
