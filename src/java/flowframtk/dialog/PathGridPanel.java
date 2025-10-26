@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
@@ -57,16 +59,25 @@ public class PathGridPanel extends GridPanel
       row.setAlignmentX(0.0f);
       add(row);
 
+      JLabelGroup labelGroup = new JLabelGroup();
+
       JLabel majorLabel = resources.createAppLabel("grid.major");
       row.add(majorLabel);
+      labelGroup.add(majorLabel);
 
-      majorDivisions = new NonNegativeIntField(100);
-      majorLabel.setLabelFor(majorDivisions);
-      row.add(majorDivisions);
+      row.add(resources.createLabelSpacer());
+
+      majorDivisionsModel = new SpinnerNumberModel(
+         Integer.valueOf(100), Integer.valueOf(1), null, Integer.valueOf(1));
+      majorDivisionsSpinner = new JSpinner(majorDivisionsModel);
+      majorLabel.setLabelFor(majorDivisionsSpinner);
+      row.add(majorDivisionsSpinner);
 
       unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
       unitBox.setSelectedIndex(JDRUnit.PT);
       row.add(unitBox);
+
+      row.add(Box.createHorizontalGlue());
 
       row = Box.createHorizontalBox();
       row.setAlignmentX(0.0f);
@@ -76,38 +87,30 @@ public class PathGridPanel extends GridPanel
          "grid.sub_divisions");
 
       row.add(subdivisionsLabel);
+      labelGroup.add(subdivisionsLabel);
 
-      subDivisions = new NonNegativeIntField(10);
-      subdivisionsLabel.setLabelFor(subDivisions);
+      subDivisionsModel = new SpinnerNumberModel(
+         Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1));
+      subDivisionsSpinner = new JSpinner(subDivisionsModel);
+      subdivisionsLabel.setLabelFor(subDivisionsSpinner);
 
-      row.add(subDivisions);
+      row.add(subDivisionsSpinner);
 
       row.add(Box.createHorizontalStrut(
          (int)unitBox.getPreferredSize().getWidth()));
 
-      Dimension majorLabelDim = majorLabel.getPreferredSize();
+      row.add(Box.createHorizontalGlue());
 
-      Dimension subDivLabelDim = subdivisionsLabel.getPreferredSize();
-
-      int maxWidth = 
-        (int)Math.max(majorLabelDim.getWidth(), subDivLabelDim.getWidth());
-
-      majorLabelDim.width = maxWidth;
-      subDivLabelDim.width = maxWidth;
-
-      majorLabel.setPreferredSize(majorLabelDim);
-      subdivisionsLabel.setPreferredSize(subDivLabelDim);
-
-      Dimension dim = majorDivisions.getPreferredSize();
+      Dimension dim = majorDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      majorDivisions.setMaximumSize(dim);
+      majorDivisionsSpinner.setMaximumSize(dim);
 
       dim = unitBox.getPreferredSize();
       unitBox.setMaximumSize(dim);
 
-      dim = subDivisions.getPreferredSize();
+      dim = subDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      subDivisions.setMaximumSize(dim);
+      subDivisionsSpinner.setMaximumSize(dim);
 
       JTextArea info = resources.createAppInfoArea("grid.path.info");
       info.setAlignmentX(0.0f);
@@ -149,8 +152,7 @@ public class PathGridPanel extends GridPanel
       descriptionBox.setEnabled(false);
       row.add(descriptionBox);
 
-      // add a temporary element to help pack the container
-      descriptionModel.addElement(resources.getMessage("button.choose"));
+      descriptionBox.setPrototypeDisplayValue("Rotational Pattern 000 (000 degrees)");
 
       dim = descriptionBox.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
@@ -191,7 +193,7 @@ public class PathGridPanel extends GridPanel
       }
       else
       {
-         majorDivisions.requestFocusInWindow();
+         majorDivisionsSpinner.requestFocusInWindow();
       }
    }
 
@@ -270,9 +272,9 @@ public class PathGridPanel extends GridPanel
 
    public void setGrid(JDRGrid grid)
    {
-      majorDivisions.setValue(
+      setMajor(
          (int)((JDRPathGrid)grid).getMajorInterval());
-      subDivisions.setValue(((JDRPathGrid)grid).getSubDivisions());
+      setSubDivisions(((JDRPathGrid)grid).getSubDivisions());
       setUnit(((JDRPathGrid)grid).getUnit());
 
       currentGrid = (JDRPathGrid)grid;
@@ -366,18 +368,28 @@ public class PathGridPanel extends GridPanel
 
    public int getMajor()
    {
-      int d = majorDivisions.getInt();
+      int d = majorDivisionsModel.getNumber().intValue();
       if (d == 0) d = 1;
 
       return d;
    }
 
+   protected void setMajor(int value)
+   {
+      majorDivisionsModel.setValue(Integer.valueOf(value));
+   }
+
    public int getSubDivisions()
    {
-      int d = subDivisions.getInt();
+      int d = subDivisionsModel.getNumber().intValue();
       if (d == 0) d = 1;
 
       return d;
+   }
+
+   protected void setSubDivisions(int value)
+   {
+      subDivisionsModel.setValue(Integer.valueOf(value));
    }
 
    public void setUnit(JDRUnit unit)
@@ -390,7 +402,8 @@ public class PathGridPanel extends GridPanel
       return JDRUnit.getUnit(unitBox.getSelectedIndex()); 
    }
 
-   private NonNegativeIntField majorDivisions, subDivisions;
+   private JSpinner majorDivisionsSpinner, subDivisionsSpinner;
+   private SpinnerNumberModel majorDivisionsModel, subDivisionsModel;
    private JComboBox<String> unitBox;
 
    private JComboBox<String> descriptionBox;

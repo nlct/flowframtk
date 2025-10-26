@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
@@ -52,16 +54,25 @@ public class IsoGridPanel extends GridPanel
       Box row = Box.createHorizontalBox();
       add(row);
 
+      JLabelGroup labelGroup = new JLabelGroup();
+
       JLabel majorLabel = resources.createAppLabel("grid.major");
       row.add(majorLabel);
+      labelGroup.add(majorLabel);
 
-      majorDivisions = new NonNegativeIntField(100);
-      majorLabel.setLabelFor(majorDivisions);
-      row.add(majorDivisions);
+      row.add(resources.createLabelSpacer());
+
+      majorDivisionsModel = new SpinnerNumberModel(
+        Integer.valueOf(100), Integer.valueOf(1), null, Integer.valueOf(1));
+      majorDivisionsSpinner = new JSpinner(majorDivisionsModel);
+      majorLabel.setLabelFor(majorDivisionsSpinner);
+      row.add(majorDivisionsSpinner);
 
       unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
       unitBox.setSelectedIndex(JDRUnit.BP);
       row.add(unitBox);
+
+      row.add(Box.createHorizontalGlue());
 
       row = Box.createHorizontalBox();
       add(row);
@@ -69,52 +80,49 @@ public class IsoGridPanel extends GridPanel
       JLabel subdivisionsLabel = resources.createAppLabel("grid.sub_divisions");
 
       row.add(subdivisionsLabel);
+      labelGroup.add(subdivisionsLabel);
 
-      subDivisions = new NonNegativeIntField(10);
-      subdivisionsLabel.setLabelFor(subDivisions);
+      row.add(resources.createLabelSpacer());
 
-      row.add(subDivisions);
+      subDivisionsModel = new SpinnerNumberModel(
+         Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1));
+      subDivisionsSpinner = new JSpinner(subDivisionsModel);
+      subdivisionsLabel.setLabelFor(subDivisionsSpinner);
+
+      row.add(subDivisionsSpinner);
 
       row.add(Box.createHorizontalStrut(
          (int)unitBox.getPreferredSize().getWidth()));
 
-      Dimension majorLabelDim = majorLabel.getPreferredSize();
+      row.add(Box.createHorizontalGlue());
 
-      Dimension subDivLabelDim = subdivisionsLabel.getPreferredSize();
-
-      int maxWidth = 
-        (int)Math.max(majorLabelDim.getWidth(), subDivLabelDim.getWidth());
-
-      majorLabelDim.width = maxWidth;
-      subDivLabelDim.width = maxWidth;
-
-      majorLabel.setPreferredSize(majorLabelDim);
-      subdivisionsLabel.setPreferredSize(subDivLabelDim);
-
-      Dimension dim = majorDivisions.getPreferredSize();
+      Dimension dim = majorDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      majorDivisions.setMaximumSize(dim);
+      int height = dim.height;
+      majorDivisionsSpinner.setMaximumSize(dim);
 
       dim = unitBox.getPreferredSize();
       unitBox.setMaximumSize(dim);
 
-      dim = subDivisions.getPreferredSize();
+      dim = subDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      subDivisions.setMaximumSize(dim);
+      subDivisionsSpinner.setMaximumSize(dim);
+
+      add(Box.createVerticalStrut(4*height));
 
       add(Box.createVerticalGlue());
    }
 
    public void requestDefaultFieldFocus()
    {
-      majorDivisions.requestFocusInWindow();
+      majorDivisionsSpinner.requestFocusInWindow();
    }
 
    public void setGrid(JDRGrid grid)
    {
-      majorDivisions.setValue(
+      setMajor(
          (int)((JDRIsoGrid)grid).getMajorInterval());
-      subDivisions.setValue(((JDRIsoGrid)grid).getSubDivisions());
+      setSubDivisions(((JDRIsoGrid)grid).getSubDivisions());
       setUnit(((JDRIsoGrid)grid).getUnit());
    }
 
@@ -137,18 +145,28 @@ public class IsoGridPanel extends GridPanel
 
    public int getMajor()
    {
-      int d = majorDivisions.getInt();
+      int d = majorDivisionsModel.getNumber().intValue();
       if (d == 0) d = 1;
 
       return d;
    }
 
+   protected void setMajor(int value)
+   {
+      majorDivisionsModel.setValue(Integer.valueOf(value));
+   }
+
    public int getSubDivisions()
    {
-      int d = subDivisions.getInt();
+      int d = subDivisionsModel.getNumber().intValue();
       if (d == 0) d = 1;
 
       return d;
+   }
+
+   protected void setSubDivisions(int value)
+   {
+      subDivisionsModel.setValue(Integer.valueOf(value));
    }
 
    public void setUnit(JDRUnit unit)
@@ -161,6 +179,7 @@ public class IsoGridPanel extends GridPanel
       return JDRUnit.getUnit(unitBox.getSelectedIndex()); 
    }
 
-   private NonNegativeIntField majorDivisions, subDivisions;
+   private JSpinner majorDivisionsSpinner, subDivisionsSpinner;
+   private SpinnerNumberModel majorDivisionsModel, subDivisionsModel;
    private JComboBox<String> unitBox;
 }

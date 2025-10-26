@@ -30,6 +30,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
@@ -52,16 +54,25 @@ public class RadialGridPanel extends GridPanel
       Box row = Box.createHorizontalBox();
       add(row);
 
+      JLabelGroup labelGroup = new JLabelGroup();
+
       JLabel majorLabel = resources.createAppLabel("grid.major");
       row.add(majorLabel);
+      labelGroup.add(majorLabel);
 
-      majorDivisions = new NonNegativeIntField(100);
-      majorLabel.setLabelFor(majorDivisions);
-      row.add(majorDivisions);
+      row.add(resources.createLabelSpacer());
+
+      majorDivisionsModel = new SpinnerNumberModel(
+       Integer.valueOf(100), Integer.valueOf(1), null, Integer.valueOf(1));
+      majorDivisionsSpinner = new JSpinner(majorDivisionsModel);
+      majorLabel.setLabelFor(majorDivisionsSpinner);
+      row.add(majorDivisionsSpinner);
 
       unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
       unitBox.setSelectedIndex(JDRUnit.BP);
       row.add(unitBox);
+
+      row.add(Box.createHorizontalGlue());
 
       int strut = (int)unitBox.getPreferredSize().getWidth();
 
@@ -70,58 +81,56 @@ public class RadialGridPanel extends GridPanel
 
       JLabel subdivisionsLabel = resources.createAppLabel("grid.sub_divisions");
       row.add(subdivisionsLabel);
+      labelGroup.add(subdivisionsLabel);
 
-      subDivisions = new NonNegativeIntField(10);
-      subdivisionsLabel.setLabelFor(subDivisions);
-      row.add(subDivisions);
+      row.add(resources.createLabelSpacer());
+
+      subDivisionsModel = new SpinnerNumberModel(
+        Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1));
+      subDivisionsSpinner = new JSpinner(subDivisionsModel);
+      subdivisionsLabel.setLabelFor(subDivisionsSpinner);
+      row.add(subDivisionsSpinner);
 
       row.add(Box.createHorizontalStrut(strut));
+
+      row.add(Box.createHorizontalGlue());
 
       row = Box.createHorizontalBox();
       add(row);
 
       spokesLabel = resources.createAppLabel("grid.spokes");
       row.add(spokesLabel);
+      labelGroup.add(spokesLabel);
 
-      spokes = new NonNegativeIntField(8);
-      spokesLabel.setLabelFor(spokes);
-      row.add(spokes);
+      row.add(resources.createLabelSpacer());
+
+      spokesModel = new SpinnerNumberModel(
+         Integer.valueOf(8), Integer.valueOf(1), null, Integer.valueOf(1));
+      spokesSpinner = new JSpinner(spokesModel);
+      spokesLabel.setLabelFor(spokesSpinner);
+      row.add(spokesSpinner);
 
       row.add(Box.createHorizontalStrut(strut));
 
-      Dimension majorLabelDim = majorLabel.getPreferredSize();
+      row.add(Box.createHorizontalGlue());
 
-      Dimension subDivLabelDim = subdivisionsLabel.getPreferredSize();
-
-      Dimension spokeLabelDim = spokesLabel.getPreferredSize();
-
-      int maxWidth =
-        (int)Math.max(majorLabelDim.getWidth(), subDivLabelDim.getWidth());
-
-      maxWidth = (int)Math.max(maxWidth, spokeLabelDim.getWidth());
-
-      majorLabelDim.width = maxWidth;
-      subDivLabelDim.width = maxWidth;
-      spokeLabelDim.width = maxWidth;
-
-      majorLabel.setPreferredSize(majorLabelDim);
-      subdivisionsLabel.setPreferredSize(subDivLabelDim);
-      spokesLabel.setPreferredSize(spokeLabelDim);
-
-      Dimension dim = majorDivisions.getPreferredSize();
+      Dimension dim = majorDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      majorDivisions.setMaximumSize(dim);
+      int height = dim.height;
+      majorDivisionsSpinner.setMaximumSize(dim);
 
       dim = unitBox.getPreferredSize();
       unitBox.setMaximumSize(dim);
 
-      dim = subDivisions.getPreferredSize();
+      dim = subDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      subDivisions.setMaximumSize(dim);
+      subDivisionsSpinner.setMaximumSize(dim);
 
-      dim = spokes.getPreferredSize();
+      dim = spokesSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
-      spokes.setMaximumSize(dim);
+      spokesSpinner.setMaximumSize(dim);
+
+      add(Box.createVerticalStrut(3*height));
 
       add(Box.createVerticalGlue());
 
@@ -129,15 +138,15 @@ public class RadialGridPanel extends GridPanel
 
    public void requestDefaultFieldFocus()
    {
-      majorDivisions.requestFocusInWindow();
+      majorDivisionsSpinner.requestFocusInWindow();
    }
 
    public void setGrid(JDRGrid grid)
    {
-      majorDivisions.setValue((int)((JDRRadialGrid)grid).getMajorInterval());
-      subDivisions.setValue(((JDRRadialGrid)grid).getSubDivisions());
+      setMajor((int)((JDRRadialGrid)grid).getMajorInterval());
+      setSubDivisions(((JDRRadialGrid)grid).getSubDivisions());
       setUnit(((JDRRadialGrid)grid).getUnit());
-      spokes.setValue(((JDRRadialGrid)grid).getSpokes());
+      setSpokes(((JDRRadialGrid)grid).getSpokes());
    }
 
    public JDRGrid getGrid(JDRGrid grid)
@@ -156,9 +165,24 @@ public class RadialGridPanel extends GridPanel
       return grid;
    }
 
+   protected void setSpokes(int spokes)
+   {
+      spokesModel.setValue(Integer.valueOf(spokes));
+   }
+
+   protected void setSubDivisions(int value)
+   {
+      subDivisionsModel.setValue(Integer.valueOf(value));
+   }
+
+   protected void setMajor(int value)
+   {
+      majorDivisionsModel.setValue(Integer.valueOf(value));
+   }
+
    public int getSpokes()
    {
-      int s = spokes.getInt();
+      int s = spokesModel.getNumber().intValue();
 
       if (s == 0) s = 1;
 
@@ -167,7 +191,7 @@ public class RadialGridPanel extends GridPanel
 
    public int getMajor()
    {
-      int d = majorDivisions.getInt();
+      int d = majorDivisionsModel.getNumber().intValue();
 
       if (d == 0) d = 1;
 
@@ -176,7 +200,7 @@ public class RadialGridPanel extends GridPanel
 
    public int getSubDivisions()
    {
-      int d = subDivisions.getInt();
+      int d = subDivisionsModel.getNumber().intValue();
       if (d == 0) d = 1;
 
       return d;
@@ -192,7 +216,8 @@ public class RadialGridPanel extends GridPanel
       return JDRUnit.getUnit(unitBox.getSelectedIndex());
    }
 
-   private NonNegativeIntField majorDivisions, subDivisions, spokes;
+   private JSpinner majorDivisionsSpinner, subDivisionsSpinner, spokesSpinner;
+   private SpinnerNumberModel majorDivisionsModel, subDivisionsModel, spokesModel;
    private JComboBox<String> unitBox; 
    private JLabel spokesLabel;
 }
