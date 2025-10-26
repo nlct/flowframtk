@@ -7447,16 +7447,14 @@ public class JDRCanvas extends JPanel
       scrollToStorageLocation(box.getMinX(), box.getMinY());
    }
 
-   public void selectObjectsAndScroll(int[] indexes)
+   public void selectObjectsAndScroll(JDRCompleteObject[] objects)
    {
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit = null;
       JDRCompleteObject object = null;
 
-      for (int index : indexes)
+      for (JDRCompleteObject obj : objects)
       {
-         JDRCompleteObject obj = paths.get(index);
-
          if (object == null)
          {
             object = obj;

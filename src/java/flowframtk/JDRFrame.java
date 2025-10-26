@@ -1881,6 +1881,16 @@ public class JDRFrame extends JInternalFrame
       return canvas.getDisplayPage();
    }
 
+   public boolean isObjectVisible(JDRCompleteObject object)
+   {
+      return canvas.isObjectVisible(object);
+   }
+
+   public Vector<JDRCompleteObject> getVisibleObjects()
+   {
+      return canvas.getVisibleObjects();
+   }
+
    public JDRGroup getAllPaths()
    {
       return canvas.getAllPaths();
@@ -1891,9 +1901,9 @@ public class JDRFrame extends JInternalFrame
       canvas.selectObjectAndScroll(object);
    }
 
-   public void selectObjectsAndScroll(int[] indexes)
+   public void selectObjectsAndScroll(JDRCompleteObject[] objects)
    {
-      canvas.selectObjectsAndScroll(indexes);
+      canvas.selectObjectsAndScroll(objects);
    }
 
    public void updateLaTeXFontSize()

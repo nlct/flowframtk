@@ -3313,8 +3313,8 @@ public class JDRResources
    private static DictionaryFilter dictionaryFilter = new DictionaryFilter();
 
 
-   public static final String APP_VERSION = "0.8.8.20250916";
-   public static final String APP_DATE = "2025-09-16";
+   public static final String APP_VERSION = "0.8.8.20251026";
+   public static final String APP_DATE = "2025-10-26";
    public static final String START_COPYRIGHT_YEAR = "2006";
    public static final String COPYRIGHT_YEAR
     = APP_DATE.substring(0,4);

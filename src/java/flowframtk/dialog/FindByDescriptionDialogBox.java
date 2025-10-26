@@ -79,11 +79,12 @@ public class FindByDescriptionDialogBox extends JDialog
           }
        });
 
-      descriptionModel = new DefaultListModel<String>();
-      descriptionBox = new JList<String>(descriptionModel);
+      descriptionModel = new DefaultListModel<FindListItem>();
+      descriptionBox = new JList<FindListItem>(descriptionModel);
 
       descriptionBox.setPrototypeCellValue(
-       "Rotational Pattern 000 (360)"+getTitle());
+       new FindListItem(null, "Rotational Pattern 000 (360)"+getTitle()));
+
 
       JScrollPane descSp = new JScrollPane(descriptionBox);
 
@@ -276,6 +277,8 @@ public class FindByDescriptionDialogBox extends JDialog
          {
             JDRCompleteObject object = paths.get(i); 
 
+            if (!currentFrame.isObjectVisible(object)) continue;
+
             String description = object.getDescription();
             String displayedDescription = description;
 
@@ -286,7 +289,8 @@ public class FindByDescriptionDialogBox extends JDialog
 
             if (filterAccepts(object, description, displayedDescription))
             {
-               descriptionModel.addElement(displayedDescription);
+               descriptionModel.addElement(
+                 new FindListItem(object, displayedDescription));
             }
          }
       }
@@ -320,11 +324,20 @@ public class FindByDescriptionDialogBox extends JDialog
 
       if (minIdx == maxIdx)
       {
-         currentFrame.selectObjectAndScroll(paths.get(minIdx));
+         currentFrame.selectObjectAndScroll(descriptionModel.get(minIdx).getObject());
       }
       else
       {
-         currentFrame.selectObjectsAndScroll(descriptionBox.getSelectedIndices());
+         int[] indexes = descriptionBox.getSelectedIndices();
+
+         JDRCompleteObject[] objects = new JDRCompleteObject[indexes.length];
+
+         for (int i=0; i < indexes.length; i++)
+         {
+            objects[i] = descriptionModel.get(i).getObject();
+         }
+
+         currentFrame.selectObjectsAndScroll(objects);
       }
 
       setVisible(false);
@@ -361,8 +374,8 @@ public class FindByDescriptionDialogBox extends JDialog
    }
 
    private JSplitPane mainComp;
-   private JList<String> descriptionBox;
-   private DefaultListModel<String> descriptionModel;
+   private JList<FindListItem> descriptionBox;
+   private DefaultListModel<FindListItem> descriptionModel;
 
    private JCheckBox filterButton;
    private JComponent filterPanel;
@@ -380,6 +393,29 @@ public class FindByDescriptionDialogBox extends JDialog
    private boolean doPack=true;
 
    private String findByTitle, addByTitle;
+}
+
+class FindListItem
+{
+   public FindListItem(JDRCompleteObject object, 
+      String displayedDescription)
+   {
+      this.object = object;
+      this.displayedDescription = displayedDescription;
+   }
+
+   public String toString()
+   {
+      return displayedDescription;
+   }
+
+   public JDRCompleteObject getObject()
+   {
+      return object;
+   }
+
+   JDRCompleteObject object;
+   String displayedDescription;
 }
 
 class MatchStringComponent extends JPanel implements ItemListener
