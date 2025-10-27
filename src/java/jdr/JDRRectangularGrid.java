@@ -518,8 +518,8 @@ public class JDRRectangularGrid extends JDRGrid
          compMaxY = clip.y + clip.height;
       }
 
-      double compOffsetX = cg.getOriginX() * bpToCompXFactor;
-      double compOffsetY = cg.getOriginY() * bpToCompYFactor;
+      double compOffsetX = cg.getBpOriginX() * bpToCompXFactor;
+      double compOffsetY = cg.getBpOriginY() * bpToCompYFactor;
 
       compMinX -= compOffsetX;
       compMinY -= compOffsetY;
@@ -532,7 +532,7 @@ public class JDRRectangularGrid extends JDRGrid
       compMaxX += HALF_MAJOR_TIC;
       compMaxY += HALF_MAJOR_TIC;
 
-      g2.setColor(minorGridColor);
+      g2.setColor(axesGridColor);
       g2.drawLine(compMinX, 0, compMaxX, 0);
       g2.drawLine(0, compMinY, 0, compMaxY);
 
@@ -545,44 +545,66 @@ public class JDRRectangularGrid extends JDRGrid
 
       // Is the origin in range?
 
-      if (compMinX > 0 || compMinY > 0)
+      if (compMinX == 0)
       {
-         // Origin is outside clip bounds. Find the nearest tic.
-
+         currentMajorXidx = 0;
+         currentMinorXidx = 0;
+         currentCompX = 0;
+      }
+      else
+      {
          try
          {
-            currentMajorXidx = compMinX / (int)majorCompX;
-            currentMinorXidx = (compMinX % (int)majorCompX) / (int)minorCompX;
+            currentMajorXidx = Math.abs(compMinX) / (int)majorCompX;
+            currentMinorXidx = (Math.abs(compMinX) % (int)majorCompX) / (int)minorCompX;
 
             currentCompX = majorCompX * currentMajorXidx
                          + minorCompX * currentMinorXidx;
 
-            initialMajorYidx = compMinY / (int)majorCompY;
-            initialMinorYidx = (compMinY % (int)majorCompY) / (int)minorCompY;
-
-            initialCurrentCompY = majorCompY * initialMajorYidx
-                        + minorCompY * initialMinorYidx;
+            if (compMinX < 0)
+            {
+               currentCompX = -currentCompX;
+               currentMajorXidx = -currentMajorXidx;
+               currentMinorXidx = (subDivisions - currentMinorXidx) % subDivisions;
+            }
          }
          catch (ArithmeticException e)
          {
             currentMajorXidx = 0;
             currentMinorXidx = 0;
             currentCompX = 0;
+         }
+      }
 
+      if (compMinY == 0)
+      {
+         initialMajorYidx = 0;
+         initialMinorYidx = 0;
+         initialCurrentCompY = 0;
+      }
+      else
+      {
+         try
+         {
+            initialMajorYidx = Math.abs(compMinY) / (int)majorCompY;
+            initialMinorYidx = (Math.abs(compMinY) % (int)majorCompY) / (int)minorCompY;
+
+            initialCurrentCompY = majorCompY * initialMajorYidx
+                        + minorCompY * initialMinorYidx;
+
+            if (compMinY < 0)
+            {
+               initialCurrentCompY = -initialCurrentCompY;
+               initialMajorYidx = -initialMajorYidx;
+               initialMinorYidx = (subDivisions - initialMinorYidx) % subDivisions;
+            }
+         }
+         catch (ArithmeticException e)
+         {
             initialMajorYidx = 0;
             initialMinorYidx = 0;
             initialCurrentCompY = 0;
          }
-      }
-      else
-      {
-         currentMajorXidx = 0;
-         currentMinorXidx = 0;
-         currentCompX = 0;
-
-         initialMajorYidx = 0;
-         initialMinorYidx = 0;
-         initialCurrentCompY = 0;
       }
 
       while (currentCompX < compMaxX)

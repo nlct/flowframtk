@@ -359,6 +359,7 @@ public abstract class JDRGrid implements Cloneable
 
    public static Color majorGridColor = Color.gray;
    public static Color minorGridColor = new Color(222,222,255);
+   public static Color axesGridColor = Color.gray;
 
    public static final byte GRID_RECTANGULAR = 0;
    public static final byte GRID_RADIAL = 1;

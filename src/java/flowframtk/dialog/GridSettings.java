@@ -127,7 +127,7 @@ public class GridSettings extends JDialog
       label = resources.createAppLabel("grid.offset.x");
       offsetPanel.add(label);
 
-      offsetXModel = new SpinnerNumberModel();
+      offsetXModel = new SpinnerNumberModel(Double.valueOf(0.0), null, null, Double.valueOf(1.0));
       offsetXSpinner = new JSpinner(offsetXModel);
       label.setLabelFor(offsetXSpinner);
       offsetPanel.add(offsetXSpinner);
@@ -139,7 +139,7 @@ public class GridSettings extends JDialog
       label = resources.createAppLabel("grid.offset.y");
       offsetPanel.add(label);
 
-      offsetYModel = new SpinnerNumberModel();
+      offsetYModel = new SpinnerNumberModel(Double.valueOf(0.0), null, null, Double.valueOf(1.0));
       offsetYSpinner = new JSpinner(offsetYModel);
       label.setLabelFor(offsetYSpinner);
       offsetPanel.add(offsetYSpinner);
