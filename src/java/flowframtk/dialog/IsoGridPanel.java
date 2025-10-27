@@ -113,11 +113,13 @@ public class IsoGridPanel extends GridPanel
       add(Box.createVerticalGlue());
    }
 
+   @Override
    public void requestDefaultFieldFocus()
    {
       majorDivisionsSpinner.requestFocusInWindow();
    }
 
+   @Override
    public void setGrid(JDRGrid grid)
    {
       setMajor(
@@ -126,6 +128,7 @@ public class IsoGridPanel extends GridPanel
       setUnit(((JDRIsoGrid)grid).getUnit());
    }
 
+   @Override
    public JDRGrid getGrid(JDRGrid grid)
    {
       if (grid instanceof JDRIsoGrid)
@@ -151,6 +154,7 @@ public class IsoGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    protected void setMajor(int value)
    {
       majorDivisionsModel.setValue(Integer.valueOf(value));
@@ -164,11 +168,13 @@ public class IsoGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    protected void setSubDivisions(int value)
    {
       subDivisionsModel.setValue(Integer.valueOf(value));
    }
 
+   @Override
    public void setUnit(JDRUnit unit)
    {
       unitBox.setSelectedIndex(unit.getID());

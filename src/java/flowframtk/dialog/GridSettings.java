@@ -117,6 +117,14 @@ public class GridSettings extends JDialog
       getContentPane().add(
          getResources().createAppInfoArea("grid.info"), "North");
 
+      JComponent commonPanel = Box.createVerticalBox();
+      getContentPane().add(commonPanel, "East");
+
+      for (int i = 0; i < GridPanel.GRID_MAX_COMMON; i++)
+      {
+         commonPanel.add(createCommonButton(i));
+      }
+
       JPanel p2 = new JPanel();
 
       p2.add(getResources().createOkayButton(getRootPane(), this));
@@ -135,6 +143,26 @@ public class GridSettings extends JDialog
 
       setLocationRelativeTo(application_);
       pack();
+   }
+
+   protected JButton createCommonButton(final int idx)
+   {
+      JButton btn = new JButton(GridPanel.getCommonString(idx));
+
+      btn.addActionListener(new ActionListener()
+       {
+          @Override
+          public void actionPerformed(ActionEvent evt)
+          {
+             rectangularGridPanel.setCommon(idx);
+             radialGridPanel.setCommon(idx);
+             isoGridPanel.setCommon(idx);
+             tschicholdGridPanel.setCommon(idx);
+             pathGridPanel.setCommon(idx);
+          }
+       });
+
+      return btn;
    }
 
    public void display()

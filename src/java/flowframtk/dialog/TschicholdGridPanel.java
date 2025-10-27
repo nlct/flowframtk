@@ -111,11 +111,13 @@ public class TschicholdGridPanel extends GridPanel
       add(Box.createVerticalGlue());
    }
 
+   @Override
    public void requestDefaultFieldFocus()
    {
       majorDivisionsSpinner.requestFocusInWindow();
    }
 
+   @Override
    public void setGrid(JDRGrid grid)
    {
       setMajor(
@@ -124,6 +126,7 @@ public class TschicholdGridPanel extends GridPanel
       setUnit(((JDRTschicholdGrid)grid).getUnit());
    }
 
+   @Override
    public JDRGrid getGrid(JDRGrid grid)
    {
       if (grid instanceof JDRTschicholdGrid)
@@ -149,6 +152,7 @@ public class TschicholdGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    protected void setMajor(int value)
    {
       majorDivisionsModel.setValue(Integer.valueOf(value));
@@ -162,11 +166,13 @@ public class TschicholdGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    protected void setSubDivisions(int value)
    {
       subDivisionsModel.setValue(Integer.valueOf(value));
    }
 
+   @Override
    public void setUnit(JDRUnit unit)
    {
       unitBox.setSelectedIndex(unit.getID());

@@ -163,6 +163,7 @@ public class PathGridPanel extends GridPanel
       add(Box.createVerticalGlue());
    }
 
+   @Override
    public void stateChanged(ChangeEvent evt)
    {
       if (isVisible())
@@ -171,6 +172,7 @@ public class PathGridPanel extends GridPanel
       }
    }
 
+   @Override
    public void actionPerformed(ActionEvent evt)
    {
       String action = evt.getActionCommand();
@@ -185,6 +187,7 @@ public class PathGridPanel extends GridPanel
       }
    }
 
+   @Override
    public void requestDefaultFieldFocus()
    {
       if (descriptionBox.isEnabled())
@@ -270,6 +273,7 @@ public class PathGridPanel extends GridPanel
       }
    }
 
+   @Override
    public void setGrid(JDRGrid grid)
    {
       setMajor(
@@ -284,6 +288,7 @@ public class PathGridPanel extends GridPanel
       updatePathSelector();
    }
 
+   @Override
    public JDRGrid getGrid(JDRGrid grid)
    {
       Shape shape = null;
@@ -374,6 +379,7 @@ public class PathGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    protected void setMajor(int value)
    {
       majorDivisionsModel.setValue(Integer.valueOf(value));
@@ -387,11 +393,13 @@ public class PathGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    protected void setSubDivisions(int value)
    {
       subDivisionsModel.setValue(Integer.valueOf(value));
    }
 
+   @Override
    public void setUnit(JDRUnit unit)
    {
       unitBox.setSelectedIndex(unit.getID());

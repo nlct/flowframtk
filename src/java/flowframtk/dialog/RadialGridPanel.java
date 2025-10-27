@@ -136,11 +136,13 @@ public class RadialGridPanel extends GridPanel
 
    }
 
+   @Override
    public void requestDefaultFieldFocus()
    {
       majorDivisionsSpinner.requestFocusInWindow();
    }
 
+   @Override
    public void setGrid(JDRGrid grid)
    {
       setMajor((int)((JDRRadialGrid)grid).getMajorInterval());
@@ -149,6 +151,7 @@ public class RadialGridPanel extends GridPanel
       setSpokes(((JDRRadialGrid)grid).getSpokes());
    }
 
+   @Override
    public JDRGrid getGrid(JDRGrid grid)
    {
       if (grid instanceof JDRRadialGrid)
@@ -165,16 +168,18 @@ public class RadialGridPanel extends GridPanel
       return grid;
    }
 
-   protected void setSpokes(int spokes)
+   public void setSpokes(int spokes)
    {
       spokesModel.setValue(Integer.valueOf(spokes));
    }
 
+   @Override
    protected void setSubDivisions(int value)
    {
       subDivisionsModel.setValue(Integer.valueOf(value));
    }
 
+   @Override
    protected void setMajor(int value)
    {
       majorDivisionsModel.setValue(Integer.valueOf(value));
@@ -206,6 +211,7 @@ public class RadialGridPanel extends GridPanel
       return d;
    }
 
+   @Override
    public void setUnit(JDRUnit unit)
    {
       unitBox.setSelectedIndex(unit.getID());

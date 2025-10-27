@@ -43,4 +43,95 @@ public abstract class GridPanel extends JPanel
     */
    public abstract JDRGrid getGrid(JDRGrid grid);
 
+   /**
+    * Set common shortcut.
+    */
+   public void setCommon(int setting)
+   {
+      switch (setting)
+      {
+         case GRID_1CM_X_2:
+           setUnit(JDRUnit.cm);
+           setMajor(1);
+           setSubDivisions(2);
+         break;
+         case GRID_1CM_X_4:
+           setUnit(JDRUnit.cm);
+           setMajor(1);
+           setSubDivisions(4);
+         break;
+         case GRID_1CM_X_10:
+           setUnit(JDRUnit.cm);
+           setMajor(1);
+           setSubDivisions(10);
+         break;
+         case GRID_1IN_X_4:
+           setUnit(JDRUnit.in);
+           setMajor(1);
+           setSubDivisions(4);
+         break;
+         case GRID_1IN_X_8:
+           setUnit(JDRUnit.in);
+           setMajor(1);
+           setSubDivisions(8);
+         break;
+         case GRID_1IN_X_10:
+           setUnit(JDRUnit.in);
+           setMajor(1);
+           setSubDivisions(10);
+         break;
+         case GRID_1IN_X_16:
+           setUnit(JDRUnit.in);
+           setMajor(1);
+           setSubDivisions(16);
+         break;
+         case GRID_100BP_X_10:
+           setUnit(JDRUnit.bp);
+           setMajor(100);
+           setSubDivisions(10);
+         break;
+         case GRID_100PT_X_10:
+           setUnit(JDRUnit.pt);
+           setMajor(100);
+           setSubDivisions(10);
+         break;
+         default:
+           throw new IllegalArgumentException("Unknown common setting: "+setting);
+      }
+   }
+
+   public static String getCommonString(int setting)
+   {
+      switch (setting)
+      {
+         case GRID_1CM_X_2: return "1cm x 2";
+         case GRID_1CM_X_4: return "1cm x 4";
+         case GRID_1CM_X_10: return "1cm x 10";
+         case GRID_1IN_X_4: return "1in x 4";
+         case GRID_1IN_X_8: return "1in x 8";
+         case GRID_1IN_X_10: return "1in x 10";
+         case GRID_1IN_X_16: return "1in x 16";
+         case GRID_100BP_X_10: return "100bp x 10";
+         case GRID_100PT_X_10: return "100pt x 10";
+         default:
+           throw new IllegalArgumentException("Unknown common setting: "+setting);
+      }
+   }
+
+
+   protected void setMajor(int value) { }
+   protected void setSubDivisions(int value) { }
+   public abstract void setUnit(JDRUnit unit);
+
+   public static final int GRID_1CM_X_2=0;
+   public static final int GRID_1CM_X_4=1;
+   public static final int GRID_1CM_X_10=2;
+   public static final int GRID_1IN_X_4=3;
+   public static final int GRID_1IN_X_8=4;
+   public static final int GRID_1IN_X_10=5;
+   public static final int GRID_1IN_X_16=6;
+   public static final int GRID_100BP_X_10=7;
+   public static final int GRID_100PT_X_10=8;
+
+   public static final int GRID_MAX_COMMON=9;
 }
