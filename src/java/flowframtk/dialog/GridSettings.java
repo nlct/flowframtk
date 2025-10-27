@@ -51,13 +51,15 @@ public class GridSettings extends JDialog
             true);
       application_ = application;
 
-      rectangularGridPanel = new RectangularGridPanel(getResources());
+      JDRResources resources = getResources();
 
-      radialGridPanel = new RadialGridPanel(getResources());
+      rectangularGridPanel = new RectangularGridPanel(resources);
 
-      isoGridPanel = new IsoGridPanel(getResources());
+      radialGridPanel = new RadialGridPanel(resources);
 
-      tschicholdGridPanel = new TschicholdGridPanel(getResources());
+      isoGridPanel = new IsoGridPanel(resources);
+
+      tschicholdGridPanel = new TschicholdGridPanel(resources);
 
       pathGridPanel = new PathGridPanel(application);
 
@@ -65,57 +67,90 @@ public class GridSettings extends JDialog
 
       int idx = 0;
 
-      tabbedPane.addTab(getResources().getMessage("grid.rectangular"),
+      tabbedPane.addTab(resources.getMessage("grid.rectangular"),
          null, rectangularGridPanel,
-        getResources().getMessage("tooltip.grid.rectangular"));
+        resources.getMessage("tooltip.grid.rectangular"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getCodePoint("grid.rectangular.mnemonic"));
+         resources.getCodePoint("grid.rectangular.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getMessage("grid.radial"),
+      tabbedPane.addTab(resources.getMessage("grid.radial"),
          null, radialGridPanel,
-         getResources().getMessage("tooltip.grid.radial"));
+         resources.getMessage("tooltip.grid.radial"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getCodePoint("grid.radial.mnemonic"));
+         resources.getCodePoint("grid.radial.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getMessage("grid.iso"),
+      tabbedPane.addTab(resources.getMessage("grid.iso"),
          null, isoGridPanel,
-         getResources().getMessage("tooltip.grid.iso"));
+         resources.getMessage("tooltip.grid.iso"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getCodePoint("grid.iso.mnemonic"));
+         resources.getCodePoint("grid.iso.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getMessage("grid.tschichold"),
+      tabbedPane.addTab(resources.getMessage("grid.tschichold"),
          null, tschicholdGridPanel,
-         getResources().getMessage("tooltip.grid.tschichold"));
+         resources.getMessage("tooltip.grid.tschichold"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getCodePoint("grid.tschichold.mnemonic"));
+         resources.getCodePoint("grid.tschichold.mnemonic"));
 
       idx++;
 
-      tabbedPane.addTab(getResources().getMessage("grid.path"),
+      tabbedPane.addTab(resources.getMessage("grid.path"),
          null, pathGridPanel,
-         getResources().getMessage("tooltip.grid.path"));
+         resources.getMessage("tooltip.grid.path"));
 
       tabbedPane.setMnemonicAt(idx,
-         getResources().getCodePoint("grid.path.mnemonic"));
+         resources.getCodePoint("grid.path.mnemonic"));
 
       tabbedPane.addChangeListener(pathGridPanel);
 
       idx++;
 
-      getContentPane().add(tabbedPane, "Center");
+      JComponent mainPanel = new JPanel(new BorderLayout());
+      mainPanel.add(tabbedPane, "Center");
+
+      JComponent offsetPanel = new JPanel(new FlowLayout());
+      mainPanel.add(offsetPanel, "South");
+
+      JLabel label = resources.createAppLabel("grid.offset");
+      offsetPanel.add(label);
+      offsetPanel.add(resources.createLabelSpacer());
+
+      label = resources.createAppLabel("grid.offset.x");
+      offsetPanel.add(label);
+
+      offsetXModel = new SpinnerNumberModel();
+      offsetXSpinner = new JSpinner(offsetXModel);
+      label.setLabelFor(offsetXSpinner);
+      offsetPanel.add(offsetXSpinner);
+
+      JSpinner.NumberEditor editor = (JSpinner.NumberEditor)offsetXSpinner.getEditor();
+      editor.getTextField().setColumns(6);
+
+      offsetPanel.add(resources.createLabelSpacer());
+      label = resources.createAppLabel("grid.offset.y");
+      offsetPanel.add(label);
+
+      offsetYModel = new SpinnerNumberModel();
+      offsetYSpinner = new JSpinner(offsetYModel);
+      label.setLabelFor(offsetYSpinner);
+      offsetPanel.add(offsetYSpinner);
+
+      editor = (JSpinner.NumberEditor)offsetYSpinner.getEditor();
+      editor.getTextField().setColumns(6);
+
+      getContentPane().add(mainPanel, "Center");
 
       getContentPane().add(
-         getResources().createAppInfoArea("grid.info"), "North");
+         resources.createAppInfoArea("grid.info"), "North");
 
       JComponent commonPanel = Box.createVerticalBox();
       getContentPane().add(commonPanel, "East");
@@ -127,17 +162,7 @@ public class GridSettings extends JDialog
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p2.add(getResources().createHelpDialogButton(this, "sec:gridmenu"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p2, this, "sec:gridmenu");
 
       getContentPane().add(p2, "South");
 
@@ -202,6 +227,10 @@ public class GridSettings extends JDialog
       gridPanel.setGrid(grid);
       tabbedPane.setSelectedComponent(gridPanel);
 
+      CanvasGraphics cg = grid.getCanvasGraphics();
+      offsetXModel.setValue(Double.valueOf(cg.getOriginX()));
+      offsetYModel.setValue(Double.valueOf(cg.getOriginY()));
+
       gridPanel.requestDefaultFieldFocus();
 
       setVisible(true);
@@ -219,6 +248,11 @@ public class GridSettings extends JDialog
       {
          return;
       }
+
+      CanvasGraphics cg = grid.getCanvasGraphics();
+
+      cg.setOriginX(offsetXModel.getNumber().doubleValue());
+      cg.setOriginY(offsetYModel.getNumber().doubleValue());
 
       mainPanel.setGrid(grid);
 
@@ -254,6 +288,9 @@ public class GridSettings extends JDialog
       tschicholdGridPanel;
 
    private PathGridPanel pathGridPanel;
+
+   private SpinnerNumberModel offsetXModel, offsetYModel;
+   private JSpinner offsetXSpinner, offsetYSpinner;
 
    private JDRFrame mainPanel = null;
 }

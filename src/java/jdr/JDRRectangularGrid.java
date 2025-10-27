@@ -518,10 +518,23 @@ public class JDRRectangularGrid extends JDRGrid
          compMaxY = clip.y + clip.height;
       }
 
+      double compOffsetX = cg.getOriginX() * bpToCompXFactor;
+      double compOffsetY = cg.getOriginY() * bpToCompYFactor;
+
+      compMinX -= compOffsetX;
+      compMinY -= compOffsetY;
+
+      compMaxX -= compOffsetX;
+      compMaxY -= compOffsetY;
+
       compMinX -= HALF_MAJOR_TIC;
       compMinY -= HALF_MAJOR_TIC;
       compMaxX += HALF_MAJOR_TIC;
       compMaxY += HALF_MAJOR_TIC;
+
+      g2.setColor(minorGridColor);
+      g2.drawLine(compMinX, 0, compMaxX, 0);
+      g2.drawLine(0, compMinY, 0, compMaxY);
 
       int currentMajorXidx, currentMajorYidx;
       int currentMinorXidx, currentMinorYidx;

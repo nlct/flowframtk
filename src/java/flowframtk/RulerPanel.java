@@ -68,7 +68,8 @@ public class RulerPanel extends JPanel
    public void updateFromBp(double x, double y)
    {
       repaintMarker(oldP.getX(), oldP.getY());
-      oldP.setLocation(x, y);
+      CanvasGraphics cg = canvas_.getCanvasGraphics();
+      oldP.setLocation(x+cg.getBpOriginX(), y+cg.getBpOriginY());
       repaintMarker(oldP.getX(), oldP.getY());
    }
 
@@ -124,7 +125,7 @@ public class RulerPanel extends JPanel
 
       Point2D originBp = new Point2D.Double();
 
-      grid.toCartesianBp(new Point2D.Double(), originBp);
+      grid.toCartesianBp(new Point2D.Double(cg.getOriginX(), 0.0), originBp);
 
       JDRUnit unit = grid.getMainUnit();
 
@@ -204,7 +205,7 @@ public class RulerPanel extends JPanel
 
       Point2D originBp = new Point2D.Double();
 
-      grid.toCartesianBp(new Point2D.Double(), originBp);
+      grid.toCartesianBp(new Point2D.Double(0, cg.getOriginY()), originBp);
 
       JDRUnit unit = grid.getMainUnit();
 

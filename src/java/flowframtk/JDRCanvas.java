@@ -3313,7 +3313,7 @@ public class JDRCanvas extends JPanel
 
       currentSegment.setStart(seg.getStartX(), seg.getStartY());
 
-      repaint(box.getRectangle());
+      repaint(box.getRectangle(), true);
    }
 
    public void findSelectedObjects()
@@ -4031,7 +4031,7 @@ public class JDRCanvas extends JPanel
             }
 
             scanshape = null;
-            repaint(p.getComponentBBox().getRectangle());
+            repaint(p.getComponentBBox().getRectangle(), true);
             return;
          }
       }
@@ -4076,7 +4076,7 @@ public class JDRCanvas extends JPanel
             }
             
             scanshape = null;
-            repaint(p.getComponentBBox().getRectangle());
+            repaint(p.getComponentBBox().getRectangle(), true);
             return;
          }
       }
@@ -8429,13 +8429,13 @@ public class JDRCanvas extends JPanel
       if (currentPath != null)
       {
          box = currentPath.getComponentControlBBox();
-         repaint(box.getRectangle());
+         repaint(box.getRectangle(), true);
       }
 
       if (currentSegment != null)
       {
          box = currentSegment.getComponentControlBBox();
-         repaint(box.getRectangle());
+         repaint(box.getRectangle(), true);
       }
 
       currentSegment = null;
@@ -8667,6 +8667,22 @@ public class JDRCanvas extends JPanel
       return frame_.getRenderingHints();
    }
 
+   public void repaint(Rectangle rect, boolean shift)
+   {
+      if (shift)
+      {
+         CanvasGraphics cg = getCanvasGraphics();
+         repaint(0L, 
+           (int)(rect.getX() + cg.getComponentOriginX()),
+           (int)(rect.getY() + cg.getComponentOriginY()),
+           rect.width, rect.height);
+      }
+      else
+      {
+         repaint(rect);
+      }
+   }
+
    public void paintComponent(Graphics g)
    {
       Graphics2D g2 = (Graphics2D)g;
@@ -8707,6 +8723,12 @@ public class JDRCanvas extends JPanel
       {
          setBackgroundImage(true);
       }
+
+      JDRGrid grid = cg.getGrid();
+      JDRUnit gridUnit = grid.getMainUnit();
+      JDRUnit storageUnit = cg.getStorageUnit();
+      double offsetX = gridUnit.toUnit(cg.getOriginX(), storageUnit);
+      double offsetY = gridUnit.toUnit(cg.getOriginY(), storageUnit);
 
       double bpToCompXScale = cg.bpToComponentX(1.0);
       double bpToCompYScale = cg.bpToComponentY(1.0);
@@ -8778,6 +8800,7 @@ public class JDRCanvas extends JPanel
          g2.scale(storageToCompXScale, storageToCompYScale);
 
          AffineTransform oddAf = g2.getTransform();
+         oddAf.translate(offsetX, offsetY);
          AffineTransform evenAf = oddAf;
 
          if (typeblock != null && cg.isEvenPage())
@@ -8853,6 +8876,7 @@ public class JDRCanvas extends JPanel
       g2.setRenderingHints(oldHints);
       g2.setStroke(oldStroke);
       g2.setTransform(oldAf);
+      g2.translate(offsetX * storageToCompXScale, offsetY * storageToCompYScale);
 
       if (selectedBBoxes != null)
       {
@@ -8922,6 +8946,8 @@ public class JDRCanvas extends JPanel
 
          g2.setPaintMode();
       }
+
+      g2.setTransform(oldAf);
    }
 
    public void deselectAll()
@@ -9146,7 +9172,7 @@ public class JDRCanvas extends JPanel
 
                frame_.postEdit(edit);
                repaint(editedPath.getComponentControlBBox().
-                  getRectangle());
+                  getRectangle(), true);
             }
             catch (NullPointerException e)
             {
@@ -9291,7 +9317,7 @@ public class JDRCanvas extends JPanel
                   grp = paths.getAllIntersectsStorageBox(box);
                }
 
-               repaint(box.getComponentRectangle());
+               repaint(box.getComponentRectangle(), true);
 
                int n=0;
                JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
@@ -9901,11 +9927,11 @@ public class JDRCanvas extends JPanel
                double maxx = Math.max(anchor.getX(), x);
                double maxy = Math.max(anchor.getY(), y);
 
-               repaint(dragBBox.getComponentRectangle());
+               repaint(dragBBox.getComponentRectangle(), true);
 
                dragBBox.reset(minx, miny, maxx, maxy);
 
-               repaint(dragBBox.getComponentRectangle());
+               repaint(dragBBox.getComponentRectangle(), true);
             }
          }
       }
@@ -10918,11 +10944,16 @@ public class JDRCanvas extends JPanel
       }
    }
 
-   // x0 and y0 are in terms of the mouse position relative to the
-   // top corner of the canvas. Returns point in storage units.
-   // If actual is not null, the actual point in storage units is
-   // stored in that.
-   
+   /**
+    * Gets the nearest tic position in storage unit from the
+    * given mouse position.
+    * x0 and y0 are in terms of the mouse position relative to the
+    * top corner of the canvas. Returns point in storage units.
+    * If actual is not null, the actual point in storage units is
+    * stored in that.
+   * @param x0 mouse x
+   * @param y0 mouse y
+   */
    public Point2D getNearestStorageTicFromComponent(double x0, double y0,
     Point2D actual)
    {
@@ -10931,7 +10962,8 @@ public class JDRCanvas extends JPanel
       if (actual != null)
       {
          actual.setLocation(
-           cg.componentXToStorage(x0), cg.componentYToStorage(y0));
+           cg.componentXToStorage(x0)-cg.getStorageOriginX(), 
+           cg.componentYToStorage(y0)-cg.getStorageOriginY());
       }
 
       if (!frame_.getGridLock())
@@ -10939,7 +10971,8 @@ public class JDRCanvas extends JPanel
          if (actual == null)
          {
             return new Point2D.Double(
-              cg.componentXToStorage(x0), cg.componentYToStorage(y0));
+              cg.componentXToStorage(x0)-cg.getStorageOriginX(), 
+              cg.componentYToStorage(y0)-cg.getStorageOriginY());
          }
          else
          {
@@ -10948,7 +10981,8 @@ public class JDRCanvas extends JPanel
       }
 
       Point2D p = frame_.getGrid().getClosestBpTic(
-         cg.componentXToBp(x0), cg.componentYToBp(y0));
+         cg.componentXToBp(x0)-cg.getBpOriginX(), 
+         cg.componentYToBp(y0)-cg.getBpOriginY());
 
       if (cg.getStorageUnitID() == JDRUnit.BP)
       {
@@ -11055,9 +11089,16 @@ public class JDRCanvas extends JPanel
          return;
       }
 
+      JDRGrid grid = cg.getGrid();
+      JDRUnit gridUnit = grid.getMainUnit();
+      JDRUnit storageUnit = cg.getStorageUnit();
+      double offsetX = gridUnit.toUnit(cg.getOriginX(), storageUnit);
+      double offsetY = gridUnit.toUnit(cg.getOriginY(), storageUnit);
 
       double bpToCompXScale = cg.bpToComponentX(1.0);
       double bpToCompYScale = cg.bpToComponentY(1.0);
+      double storageToCompXScale = cg.storageToComponentX(1.0);
+      double storageToCompYScale = cg.storageToComponentY(1.0);
 
       int compPaperWidth =
          (int)Math.ceil(frame_.getBpPaperWidth()*bpToCompXScale);
@@ -11224,7 +11265,8 @@ public class JDRCanvas extends JPanel
             BasicStroke stroke = new BasicStroke(1);
             g.setStroke(stroke);
 
-            g.translate(-originX,-originY);
+            g.translate(offsetX*storageToCompXScale-originX,
+                        offsetY*storageToCompYScale-originY);
 
             if (frame_.showGrid())
             {
@@ -19737,8 +19779,11 @@ class CanvasTextField extends JTextField
 
          CanvasGraphics cg = canvas.getCanvasGraphics();
 
-         setBounds((int)Math.round(cg.storageToComponentX(pos.getX())),
-                   (int)Math.round(cg.storageToComponentY(pos.getY())
+         double x = pos.getX() + cg.getStorageOriginX();
+         double y = pos.getY() + cg.getStorageOriginY();
+
+         setBounds((int)Math.round(cg.storageToComponentX(x)),
+                   (int)Math.round(cg.storageToComponentY(y)
                                    -maxAscent),
                    (int)Math.ceil(width),
                    (int)Math.ceil((maxAscent+maxDescent)));

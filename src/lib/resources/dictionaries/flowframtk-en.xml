@@ -2244,6 +2244,11 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="grid.path.select">Select new shape</entry>
 <entry key="grid.path.select.mnemonic">N</entry>
 <entry key="grid.path.info">Major division setting only affects rulers.</entry>
+<entry key="grid.offset">Origin Offset</entry>
+<entry key="grid.offset.x">Shift x:</entry>
+<entry key="grid.offset.x.mnemonic">X</entry>
+<entry key="grid.offset.y">Shift y:</entry>
+<entry key="grid.offset.y.mnemonic">Y</entry>
 
 <!--  Pattern Dialog Box -->
 

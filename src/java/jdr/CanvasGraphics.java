@@ -153,7 +153,7 @@ public class CanvasGraphics
 
    public double bpToComponentX(double bpLength)
    {
-      return getMagNormX()*bpLength;
+      return getMagNormX()*(bpLength);
    }
 
    public double bpToComponentY(double bpLength)
@@ -1366,6 +1366,36 @@ public class CanvasGraphics
    public void setOriginY(double y)
    {
       originY = y;
+   }
+
+   public double getStorageOriginX()
+   {
+      return grid.getMainUnit().toUnit(originX, getStorageUnit());
+   }
+
+   public double getStorageOriginY()
+   {
+      return grid.getMainUnit().toUnit(originY, getStorageUnit());
+   }
+
+   public double getBpOriginX()
+   {
+      return grid.getMainUnit().toBp(originX);
+   }
+
+   public double getBpOriginY()
+   {
+      return grid.getMainUnit().toBp(originY);
+   }
+
+   public double getComponentOriginX()
+   {
+      return bpToComponentX(getBpOriginX());
+   }
+
+   public double getComponentOriginY()
+   {
+      return bpToComponentY(getBpOriginY());
    }
 
    public JDRUnit getStorageUnit()

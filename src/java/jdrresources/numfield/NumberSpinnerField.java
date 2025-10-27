@@ -139,12 +139,12 @@ public class NumberSpinnerField extends JSpinner implements NumberComponent
 
    public void setValue(float val)
    {
-      setNumber(Float.valueOf(val));
+      setValue((double)val);
    }
 
    public void setValue(byte val)
    {
-      setNumber(Byte.valueOf(val));
+      setValue((int)val);
    }
 
    public void setValue(int val)
