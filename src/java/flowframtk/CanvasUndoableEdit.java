@@ -100,6 +100,8 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
                        -canvasGraphics.storageToBp(yshift));
       }
 
+      box.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
+
       return box;
    }
 
@@ -141,6 +143,8 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
          box.translate(-canvasGraphics.storageToBp(xshift), 
                        -canvasGraphics.storageToBp(yshift));
       }
+
+      box.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
 
       return box;
    }
@@ -194,6 +198,8 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
                        -canvasGraphics.storageToBp(yshift));
       }
 
+      box.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
+
       box.merge(bpBox);
    }
 
@@ -221,6 +227,8 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
          bpBox.translate(-canvasGraphics.storageToBp(xshift), 
                        -canvasGraphics.storageToBp(yshift));
       }
+
+      bpBox.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
 
       box.merge(bpBox);
 
@@ -306,6 +314,8 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
                        -canvasGraphics.storageToBp(yshift));
       }
 
+      bpBox.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
+
       box.merge(bpBox);
 
       setRefreshBounds(box);
@@ -324,8 +334,15 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
       BBox box = getRefreshBounds(oldObject, oldObjectFlowFrame);
       mergeRefreshBounds(newObject, newObjectFlowFrame, box);
 
-      box.merge(oldObject.getBpControlBBox());
-      box.merge(newObject.getBpControlBBox());
+      BBox bpBox = oldObject.getBpControlBBox();
+      bpBox.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
+
+      box.merge(bpBox);
+
+      bpBox = newObject.getBpControlBBox();
+      bpBox.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
+
+      box.merge(bpBox);
 
       setRefreshBounds(box);
    }

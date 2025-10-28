@@ -1618,7 +1618,7 @@ public class CanvasGraphics
     */
    private volatile JDRUnit storageUnit;
 
-   private double originX=0.0, originY=0.0; // TODO
+   private double originX=0.0, originY=0.0;
 
    /**
     * Point size.

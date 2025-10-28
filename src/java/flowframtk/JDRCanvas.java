@@ -12460,6 +12460,9 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldShape.getStorageBBox();
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getStorageOriginX(), -cg.getStorageOriginY());
+
          newShape.setPatternAnchor(box.getMidX(), box.getMidY());
 
          newShape.setUnderlyingShape(oldShape);
@@ -12663,8 +12666,8 @@ public class JDRCanvas extends JPanel
          oldFillPaint = path.getFillPaint();
          oldTextPaint = text.getTextPaint();
 
-         BBox box = path.getBpBBox();
-         box.merge(text.getBpBBox());
+         BBox box = getRefreshBounds(path);
+         mergeRefreshBounds((JDRCompleteObject)text, box);
 
          textPath = new JDRTextPath(path, text);
          textPath.setSelected(true);
@@ -12676,7 +12679,7 @@ public class JDRCanvas extends JPanel
 
          enableTools();
 
-         box.merge(textPath.getBpBBox());
+         mergeRefreshBounds((JDRCompleteObject)textPath, box);
 
          setRefreshBounds(box);
       }
@@ -12921,6 +12924,9 @@ public class JDRCanvas extends JPanel
 
          enableTools();
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(box);
       }
 
@@ -13019,6 +13025,9 @@ public class JDRCanvas extends JPanel
 
          enableTools();
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(box);
       }
 
@@ -13116,6 +13125,9 @@ public class JDRCanvas extends JPanel
          paths.add(index_, newPath);
 
          enableTools();
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
 
          setRefreshBounds(box);
       }
@@ -13304,6 +13316,9 @@ public class JDRCanvas extends JPanel
 
          enableTools();
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(box);
       }
 
@@ -13392,6 +13407,9 @@ public class JDRCanvas extends JPanel
          }
 
          enableTools();
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
 
          setRefreshBounds(box);
       }
@@ -13745,6 +13763,9 @@ public class JDRCanvas extends JPanel
          box.merge(editedDistortion.getUnderlyingObject()
                      .getBpDistortionBounds());
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          point.setLocation(newX, newY);
 
          if (nextPoint != null)
@@ -13924,6 +13945,10 @@ public class JDRCanvas extends JPanel
          BBox box = editedDistortion.getBpControlBBox();
          box.merge(editedDistortion.getUnderlyingObject()
            .getBpDistortionBounds());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          distObject = editedDistortion;
          editedDistortion.setEditMode(false);
          editedDistortion = null;
@@ -14014,6 +14039,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment_.getBpControlBBox();
          box.merge(newSegment_.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -14114,6 +14143,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment_.getBpControlBBox();
          box.merge(newSegment_.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -14216,6 +14249,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment_.getBpControlBBox();
          box.merge(newSegment_.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -14299,6 +14336,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment_.getBpControlBBox();
          box.merge(newSegment_.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -14369,6 +14410,10 @@ public class JDRCanvas extends JPanel
          path_.add(newSegment);
 
          bounds = newSegment.getBpControlBBox();
+
+         CanvasGraphics cg = getCanvasGraphics();
+         bounds.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(bounds);
          updateEditPathActions();
       }
@@ -14941,15 +14986,22 @@ public class JDRCanvas extends JPanel
             adjoining.mergeBpControlBBox(box);
          }
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          if (p1 != null)
          {
-            box.merge(p1.getBpControlBBox());
+            BBox pb = p1.getBpControlBBox();
+            pb.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+            box.merge(pb);
 
             path_.translateControl(segment_, p1, x1, y1);
 
-            box.merge(p1.getBpControlBBox());
+            pb = p1.getBpControlBBox();
+            pb.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+            box.merge(pb);
          }
 
          setRefreshBounds(box);
@@ -15029,6 +15081,9 @@ public class JDRCanvas extends JPanel
          BBox box = oldPath_.getBpControlBBox();
          box.merge(newPath_.getBpControlBBox());
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(box);
 
          updateEditPathActions();
@@ -15102,6 +15157,9 @@ public class JDRCanvas extends JPanel
          BBox box = oldPath_.getBpControlBBox();
          box.merge(newPath_.getBpControlBBox());
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(box);
 
          updateEditPathActions();
@@ -15157,6 +15215,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldJoin.getBpControlBBox();
          box.merge(newJoin.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -15211,6 +15273,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment.getBpControlBBox();
          box.merge(newSegment.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -15281,6 +15347,9 @@ public class JDRCanvas extends JPanel
          BBox box = oldJoin.getBpControlBBox();
          box.merge(newJoin.getBpControlBBox());
 
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          setRefreshBounds(box);
 
          updateEditPathActions();
@@ -15333,6 +15402,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment.getBpControlBBox();
          box.merge(newSegment.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -15404,6 +15477,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldJoin.getBpControlBBox();
          box.merge(newJoin.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -15462,6 +15539,10 @@ public class JDRCanvas extends JPanel
 
          BBox box = oldSegment.getBpControlBBox();
          box.merge(newSegment.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
@@ -15521,8 +15602,12 @@ public class JDRCanvas extends JPanel
          this.point = point;
 
          point.setAnchored(!point.isAnchored());
+         BBox box = point.getBpControlBBox();
 
-         setRefreshBounds(point.getBpControlBBox());
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
+         setRefreshBounds(box);
       }
 
       public void redo() throws CannotRedoException
@@ -15615,6 +15700,9 @@ public class JDRCanvas extends JPanel
          }
 
          box.merge(editedPath.getBpControlBBox());
+
+         CanvasGraphics cg = getCanvasGraphics();
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
 
          setRefreshBounds(box);
       }
@@ -15740,7 +15828,7 @@ public class JDRCanvas extends JPanel
             box.merge(editedPath.getSelectedControl().getBpControlBBox());
          }
 
-         box.translate(cg.storageToBp(hoffset), 0.0);
+         box.translate(cg.storageToBp(hoffset)-cg.getBpOriginX(), -cg.getBpOriginY());
 
          setRefreshBounds(box);
 
@@ -15828,7 +15916,12 @@ public class JDRCanvas extends JPanel
 
          if (seg != seg2 && seg2 != null)
          {
-            box.merge(seg2.getBpControlBBox());
+            BBox segbox = seg2.getBpControlBBox();
+
+            CanvasGraphics cg = getCanvasGraphics();
+            segbox.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
+            box.merge(segbox);
          }
 
          setRefreshBounds(box);
