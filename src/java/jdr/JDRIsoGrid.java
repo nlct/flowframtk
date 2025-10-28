@@ -749,10 +749,23 @@ public class JDRIsoGrid extends JDRGrid
          compMaxY = clip.y + clip.height;
       }
 
+      double compOffsetX = cg.getBpOriginX() * bpToCompXFactor;
+      double compOffsetY = cg.getBpOriginY() * bpToCompYFactor;
+
+      compMinX -= compOffsetX;
+      compMinY -= compOffsetY;
+
+      compMaxX -= compOffsetX;
+      compMaxY -= compOffsetY;
+
       compMinX -= HALF_MAJOR_TIC;
       compMinY -= HALF_MAJOR_TIC;
       compMaxX += HALF_MAJOR_TIC;
       compMaxY += HALF_MAJOR_TIC;
+
+      g2.setColor(axesGridColor);
+      g2.drawLine(compMinX, 0, compMaxX, 0);
+      g2.drawLine(0, compMinY, 0, compMaxY);
 
       int currentMajorXidx, currentMajorYidx;
       int currentMinorXidx, currentMinorYidx;
@@ -766,32 +779,58 @@ public class JDRIsoGrid extends JDRGrid
 
       // Is the origin in range?
 
-      if (compMinX > 0 || compMinY > 0)
+      if (compMinX == 0)
       {
-         // Origin is outside clip bounds. Find the nearest (floor) major tic.
-
+         currentMajorXidx = 0;
+         currentCompX = 0;
+      }
+      else
+      {
          try
          {
-            currentMajorXidx = compMinX / (int)majorCompX;
-            currentCompX = majorCompX * currentMajorXidx;
+            if (compMinX > 0)
+            {
+               currentMajorXidx = compMinX / (int)majorCompX;
+            }
+            else
+            {
+               currentMajorXidx = -(int)Math.ceil(-compMinX / majorCompX);
+            }
 
-            initialMajorYidx = compMinY / (int)majorCompY;
-            initialCurrentCompY = majorCompY * initialMajorYidx;
+            currentCompX = majorCompX * currentMajorXidx;
          }
          catch (ArithmeticException e)
          {
             currentMajorXidx = 0;
-            initialMajorYidx = 0;
-            initialCurrentCompY = 0;
             currentCompX = 0;
          }
       }
-      else
+
+      if (compMinY == 0)
       {
-         currentMajorXidx = 0;
          initialMajorYidx = 0;
          initialCurrentCompY = 0;
-         currentCompX = 0;
+      }
+      else
+      {
+         try
+         {
+            if (compMinY > 0)
+            {
+               initialMajorYidx = compMinY / (int)majorCompY;
+            }
+            else
+            {
+               initialMajorYidx = -(int)Math.ceil(-compMinY / majorCompY);
+            }
+
+            initialCurrentCompY = majorCompY * initialMajorYidx;
+         }
+         catch (ArithmeticException e)
+         {
+            initialMajorYidx = 0;
+            initialCurrentCompY = 0;
+         }
       }
 
       int halfSubDivisions = subDivisions/2;
@@ -804,7 +843,7 @@ public class JDRIsoGrid extends JDRGrid
 
          double y = 0.0;
 
-         if ((currentMajorXidx % 2) == 1)
+         if ((Math.abs(currentMajorXidx) % 2) == 1)
          {
             y = yCompOffset;
 
