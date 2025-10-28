@@ -1104,6 +1104,37 @@ public class JDRTschicholdGrid extends JDRGrid
       double compPaperWidth = bpToCompXFactor * cg.getPaperWidth();
       double compPaperHeight = bpToCompYFactor * cg.getPaperHeight();
 
+      double compOffsetX = cg.getBpOriginX() * bpToCompXFactor;
+      double compOffsetY = cg.getBpOriginY() * bpToCompYFactor;
+
+      Rectangle clip = g2.getClipBounds();
+
+      int compMinX, compMinY, compMaxX, compMaxY;
+
+      if (clip == null)
+      {
+         compMinX = 0;
+         compMinY = 0;
+         compMaxX = (int)compPaperWidth;
+         compMaxY = (int)compPaperHeight;
+      }
+      else
+      {
+         compMinX = clip.x;
+         compMinY = clip.y;
+         compMaxX = clip.x + clip.width;
+         compMaxY = clip.y + clip.height;
+      }
+
+      compMinX -= compOffsetX;
+      compMinY -= compOffsetY;
+      compMaxX -= compOffsetX;
+      compMaxY -= compOffsetY;
+
+      g2.setColor(axesGridColor);
+      g2.drawLine(compMinX, 0, compMaxX, 0);
+      g2.drawLine(0, compMinY, 0, compMaxY);
+
       double halfCompPaperHeight = 0.5*compPaperHeight;
 
       double thirdCompPaperHeight = compPaperHeight/3.0;
