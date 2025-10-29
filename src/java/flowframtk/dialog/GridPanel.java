@@ -68,6 +68,11 @@ public abstract class GridPanel extends JPanel
            setMajor(1);
            setSubDivisions(10);
          break;
+         case GRID_1IN_X_2:
+           setUnit(JDRUnit.in);
+           setMajor(1);
+           setSubDivisions(2);
+         break;
          case GRID_1IN_X_4:
            setUnit(JDRUnit.in);
            setMajor(1);
@@ -110,6 +115,7 @@ public abstract class GridPanel extends JPanel
          case GRID_1CM_X_2: return "1cm x 2";
          case GRID_1CM_X_4: return "1cm x 4";
          case GRID_1CM_X_10: return "1cm x 10";
+         case GRID_1IN_X_2: return "1in x 2";
          case GRID_1IN_X_4: return "1in x 4";
          case GRID_1IN_X_8: return "1in x 8";
          case GRID_1IN_X_10: return "1in x 10";
@@ -130,12 +136,13 @@ public abstract class GridPanel extends JPanel
    public static final int GRID_1CM_X_2=0;
    public static final int GRID_1CM_X_4=1;
    public static final int GRID_1CM_X_10=2;
-   public static final int GRID_1IN_X_4=3;
-   public static final int GRID_1IN_X_8=4;
-   public static final int GRID_1IN_X_10=5;
-   public static final int GRID_1IN_X_16=6;
-   public static final int GRID_100BP_X_10=7;
-   public static final int GRID_100PT_X_10=8;
+   public static final int GRID_1IN_X_2=3;
+   public static final int GRID_1IN_X_4=4;
+   public static final int GRID_1IN_X_8=5;
+   public static final int GRID_1IN_X_10=6;
+   public static final int GRID_1IN_X_16=7;
+   public static final int GRID_100BP_X_10=8;
+   public static final int GRID_100PT_X_10=9;
 
-   public static final int GRID_MAX_COMMON=9;
+   public static final int GRID_MAX_COMMON=10;
 }
