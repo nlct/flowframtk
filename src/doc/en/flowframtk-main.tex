@@ -1041,10 +1041,15 @@ or \menutrail{menu.editpath.prev_control} functions.
 \menudef{menu.settings.grid.settings}
 
 The \menu{settings.grid.settings} menu item will open the
-\dialog{grid} dialog box in which you can specify the position of the tick marks
-and the units used. You can also open this dialog box by
+\dialog{grid} dialog box (see \figureref{fig:griddialog}) in which
+you can specify the position of the tick marks and the units used.
+You can also open this dialog box by
 \glslink{doubleclick}{double-clicking} on the top left corner
 between the \glspl{ruler}, where the current grid unit is displayed.
+
+\FloatFig{fig:griddialog}
+{\includeimg{annoteGridDialog}}
+{The Grid Dialog}
 
 \begin{important}
 The grid unit is independent of the 
@@ -1052,57 +1057,144 @@ The grid unit is independent of the
 grid unit and storage unit that have a convenient conversion factor
 between them. For example, \code{mm} storage unit and \code{cm}
 grid unit. Regardless of the grid used, co-ordinates are always
-stored as left-handed rectangular co-ordinates where the origin is
-at the top left. This may cause slight rounding errors in the
-conversion between rectangular and radial co-ordinates. If you are
-using a radial grid and you change the paper size or orientation,
-the grid origin will shift but the \glspl{object} will maintain
-their original positions relative to the top left corner of the
-\gls{canvas}.
+stored as left-handed rectangular co-ordinates where the \gls{origin} is
+at the top left of the paper. This may cause slight rounding errors in the
+conversion between rectangular and radial co-ordinates.
 \end{important}
 
 \widgetdef{grid.title}
 
 The default grid type is a left-handed rectangular grid. You can
 switch to a different grid by selecting a different tab.
+The \inlineglsdef{origin} is the top left hand corner of the paper.
+This defaults to the top left hand corner of the \gls{canvas}, but
+the \gls{origin} may be shifted.
 
-\FloatSubFigs*{fig:grid}
+Imagine that a page with the paper size
+and orientation governed by the paper setting (see
+\sectionref{sec:papermenu}) is overlaid on the \gls{canvas}. The
+\gls{canvas} has the same height and width as the page and initially
+the page exactly fits the \gls{canvas} with the page \gls{origin} (the top
+left corner of the page) aligned with the top left corner of the
+\gls{canvas}. Shifting the \gls{origin} is essentially moving the page
+horizontally or vertically around the \gls{canvas}. Anything outside
+of the page can be viewed in \FlowframTk\ but may not be visible if
+the image or \gls{flowframe} data is exported.
+
+The $x$ and $y$ axes are drawn although they may be hard to see when
+they're aligned along the \gls{canvas} borders. See, for example, 
+\figureref{fig:grid-radial-shift} where the \gls{origin} has been
+shifted 1cm to the right and 2cm down.
+
+\widgetdef{grid.offset}
+
+The \gls{origin} offset panel is always show in the \dialog{grid}
+dialog, regardless of which tab has been selected.
+Enter the horizontal shift in the \inlineglsdef{grid.offset.x} box
+and the vertical shift in the \inlineglsdef{grid.offset.y} box. The unit of
+measurement is always the unit associated with the grid's major
+divisions setting. Note that the offset values aren't automatically
+updated if you change the grid unit or paper size or orientation.
+
+For convenience, there are nine buttons that you can click on to
+calculate the shift required to position the \gls{origin} at the page:
+top left, top middle, top right, left middle, middle, right middle,
+bottom left, bottom middle, or bottom right. If you change the grid
+unit or the paper, then you will need to recalculate the positions.
+
+Each grid type has a \inlineglsdef{grid.major} setting with an
+associated unit and a \inlineglsdef{grid.sub_divisions} setting. In
+some cases, these may just apply to the \glspl{ruler}.
+There are buttons arranged in a column on the right hand side
+of the \dialog{grid} dialog which may be used to quickly fill in the
+\widget{grid.major} and \gls{grid.sub_divisions} boxes in each grid tab for common
+settings.
+
+\FloatSubFigs{fig:grid}
 {
-  {fig:grida}{\includeimg{grid-rect}}{},
-  {fig:gridb}{\includeimg{grid-radial}}{},
-  {fig:gridc}{\includeimg{grid-iso}}{}
+  {fig:grid-rect}{\includeimg{grid-rect}}{},
+  {fig:grid-iso}{\includeimg{grid-iso}}{},
+  {fig:grid-radial-page}{\includeimg{grid-radial}}{},
+  {fig:grid-radial-origin}{\includeimg{grid-radial-origin}}{}
 }
 [Available Regular Grids]
 {Available regular grids:
-\subfigref{fig:grida} rectangular grid;
-\subfigref{fig:gridb} radial grid;
-\subfigref{fig:gridc} isomorphic grid.}
+\subfigref{fig:grid-rect} rectangular grid;
+\subfigref{fig:grid-iso} isomorphic grid;
+\subfigref{fig:grid-radial-page} radial grid (page-dependent);
+\subfigref{fig:grid-radial-origin} radial grid (origin).}
 
 \widgetdef{grid.rectangular}
 
-The rectangular has the origin at the top left hand corner of the \gls{canvas}
-(\figureref{fig:grida}). This has two parameters: \widget{grid.major}
-(which identifies the grid unit) and \widget{grid.sub_divisions}
-which indicates the number of minor tick marks between each major
-tick.
-
-\widgetdef{grid.radial}
-
-The radial grid has the origin at the \manmsg{centre} of the
-\gls{canvas} (\figureref{fig:gridb}). Bear in mind that any
-radial co-ordinates will be converted to rectangular co-ordinates.
-So the radial co-ordinate (0:0) will be converted to the rectangular
-co-ordinate of the current paper \manmsg{centre}.
-In addition to the \widget{grid.major} and
-\widget{grid.sub_divisions} parameters, the radial grid also has 
-the \widget{grid.spokes} parameter.
+The rectangular grid matches the left-handed internal co-ordinate
+storage with the horizontal $x$ values increasing to the right and the
+vertical $y$ values increasing downwards
+(\figureref{fig:grid-rect}). This grid has two parameters:
+\widget{grid.major} (which identifies the grid unit) and
+\widget{grid.sub_divisions} which indicates the number of minor tick
+marks between each major tick.
 
 \widgetdef{grid.iso}
 
-The isometric grid has the origin at the top left hand corner of the
-\gls{canvas} where the major divisions indicate the length of each
+The isometric grid is likewise a left-handed co-ordinate system but in this case
+the major divisions indicate the length of each
 side of the equilateral triangles forming the grid
-(\figureref{fig:gridc}).
+(\figureref{fig:grid-iso}).
+
+\widgetdef{grid.radial}
+
+The radial grid also has the \widget{grid.major} and
+\widget{grid.sub_divisions} but additionally has a \inlineglsdef{grid.spokes}
+setting, which indicates the number of spokes that radiate out from
+the \manmsg{centre} of the grid. The tick marks are positioned along
+the spokes.
+
+The \inlineglsdef{grid.radial.centre} setting governs where the
+\manmsg{centre} of the grid is drawn. Remember that the
+\widget{grid.offset} will cause the grid to shift (compare
+\figureref{fig:grid-radial-page} and
+\figureref{fig:grid-radial-origin} with
+\figureref{fig:grid-radial-page-shift} and
+\figureref{fig:grid-radial-origin-shift}, where the \gls{origin} has
+been shifted by 1cm to the right and 2cm down).
+
+\FloatSubFigs{fig:grid-radial-shift}
+{
+  {fig:grid-radial-page-shift}{\includeimg{grid-radial-page-shift}}{},
+  {fig:grid-radial-origin-shift}{\includeimg{grid-radial-origin-shift}}{}
+}
+[Radial Grid with Origin Shift]
+{Radial grid with origin shift (1cm to the right and 2cm down):
+\subfigref{fig:grid-radial-page-shift} radial grid (page-dependent);
+\subfigref{fig:grid-radial-origin-shift} radial grid (origin).}
+
+\widgetdef{grid.radial.centre.origin}
+
+The \widget{grid.radial.centre.origin} setting will \manmsg{centre}
+the grid on the actual \gls{origin}, which is at the top left
+hand corner of the page. So the radial co-ordinate (0:0) will be
+converted to the rectangular co-ordinate (0,0). With this setting
+on, the grid is unaffected by the paper size or orientation.
+
+\widgetdef{grid.radial.centre.paper}
+
+The paper-dependent radial grid is \manmsg{centred} in the middle of
+the paper (\figureref{fig:grid-radial-page}). Bear in mind that any
+radial co-ordinates will be converted to rectangular co-ordinates.
+So the radial co-ordinate (0:0) will be converted to the rectangular
+co-ordinate of the current paper \manmsg{centre}.
+
+\begin{important}
+If you use a radial grid with the \widget{grid.radial.centre.paper}
+setting and you change the paper size or orientation,
+the grid will shift but the \glspl{object} will maintain
+their original positions relative to the rectangular co-ordinate
+\gls{origin}.
+\end{important}
+
+Remember that shifting the paper \gls{origin} is like shifting the
+page around on the \gls{canvas}. This will cause the grid to also
+shift so that it's no longer \manmsg{centred} on the \gls{canvas}.
 
 \widgetdef{grid.tschichold}
 
@@ -1127,10 +1219,12 @@ used for the default \widget{displaypage.all} setting.
 Note that you are limited to only fourteen locations with the
 \widget{grid.tschichold} grid if you have the
 \gridlock\ on. The settings for this grid style are the same as for
-the rectangular grid and are only applied to the rulers. The origin
+the rectangular grid and are only applied to the rulers. The \gls{origin}
 is the top left corner of the \gls{canvas} for both the \gls{recto}
 and \gls{verso} displays. The grid settings (major and subdivisions)
-are only applied to the rulers.
+are only applied to the rulers. In general, it's best not to shift
+the \gls{origin} with this grid (unless you're trying to find an
+\gls{object} that has somehow moved outside the page bounds).
 
 \widgetdef{grid.path}
 
