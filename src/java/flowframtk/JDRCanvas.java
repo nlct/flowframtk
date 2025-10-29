@@ -3261,16 +3261,8 @@ public class JDRCanvas extends JPanel
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      goToComponentCoordinate(cg.storageToComponentX(x),
-                              cg.storageToComponentY(y));
-   }
-
-   public void goToBpCoordinate(double x, double y)
-   {
-      CanvasGraphics cg = getCanvasGraphics();
-
-      goToComponentCoordinate(cg.bpToComponentX(x),
-                              cg.bpToComponentY(y));
+      goToComponentCoordinate(cg.storageToComponentX(x)+cg.getComponentOriginX(),
+                              cg.storageToComponentY(y)+cg.getComponentOriginY());
    }
 
    public void goToComponentCoordinate(double compX, double compY)
@@ -7442,9 +7434,8 @@ public class JDRCanvas extends JPanel
       UndoableEdit edit = new SelectObject(
          object, true, getResources().getMessage("undo.select"));
       frame_.postEdit(edit);
-      BBox box = object.getStorageBBox();
 
-      scrollToStorageLocation(box.getMinX(), box.getMinY());
+      scrollToObject(object);
    }
 
    public void selectObjectsAndScroll(JDRCompleteObject[] objects)
@@ -7863,19 +7854,8 @@ public class JDRCanvas extends JPanel
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      return scrollToComponentLocation(cg.storageToComponentX(x),
-                                       cg.storageToComponentY(y),
-                                       frame_.getComponentPaperWidth(),
-                                       frame_.getComponentPaperHeight(),
-                                       true);
-   }
-
-   public Point2D scrollToBpLocation(double x, double y)
-   {
-      CanvasGraphics cg = getCanvasGraphics();
-
-      return scrollToComponentLocation(cg.bpToComponentX(x),
-                                       cg.bpToComponentY(y),
+      return scrollToComponentLocation(cg.storageToComponentX(x)+cg.getComponentOriginX(),
+                                       cg.storageToComponentY(y)+cg.getComponentOriginY(),
                                        frame_.getComponentPaperWidth(),
                                        frame_.getComponentPaperHeight(),
                                        true);
