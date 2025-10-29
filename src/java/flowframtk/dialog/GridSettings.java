@@ -194,6 +194,7 @@ public class GridSettings extends JDialog
          resources.createAppInfoArea("grid.info"), "North");
 
       JComponent commonPanel = Box.createVerticalBox();
+      commonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
       getContentPane().add(commonPanel, "East");
 
       for (int i = 0; i < GridPanel.GRID_MAX_COMMON; i++)
