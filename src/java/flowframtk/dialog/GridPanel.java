@@ -122,6 +122,7 @@ public abstract class GridPanel extends JPanel
    protected void setMajor(int value) { }
    protected void setSubDivisions(int value) { }
    public abstract void setUnit(JDRUnit unit);
+   public abstract JDRUnit getUnit();
 
    public static final int GRID_1CM_X_2=0;
    public static final int GRID_1CM_X_4=1;

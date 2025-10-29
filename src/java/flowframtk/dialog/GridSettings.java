@@ -117,35 +117,68 @@ public class GridSettings extends JDialog
       JComponent mainPanel = new JPanel(new BorderLayout());
       mainPanel.add(tabbedPane, "Center");
 
-      JComponent offsetPanel = new JPanel(new FlowLayout());
-      mainPanel.add(offsetPanel, "South");
+      JComponent offsetComp = new JPanel(new BorderLayout());
+      mainPanel.add(offsetComp, "South");
+
+      JComponent offsetRow = new JPanel(new FlowLayout());
+      offsetComp.add(offsetRow, "North");
 
       JLabel label = resources.createAppLabel("grid.offset");
-      offsetPanel.add(label);
-      offsetPanel.add(resources.createLabelSpacer());
+      offsetRow.add(label);
+      offsetRow.add(resources.createLabelSpacer());
 
       label = resources.createAppLabel("grid.offset.x");
-      offsetPanel.add(label);
+      offsetRow.add(label);
 
       offsetXModel = new SpinnerNumberModel(Double.valueOf(0.0), null, null, Double.valueOf(1.0));
       offsetXSpinner = new JSpinner(offsetXModel);
       label.setLabelFor(offsetXSpinner);
-      offsetPanel.add(offsetXSpinner);
+      offsetRow.add(offsetXSpinner);
 
       JSpinner.NumberEditor editor = (JSpinner.NumberEditor)offsetXSpinner.getEditor();
       editor.getTextField().setColumns(6);
 
-      offsetPanel.add(resources.createLabelSpacer());
+      offsetRow.add(resources.createLabelSpacer());
       label = resources.createAppLabel("grid.offset.y");
-      offsetPanel.add(label);
+      offsetRow.add(label);
 
       offsetYModel = new SpinnerNumberModel(Double.valueOf(0.0), null, null, Double.valueOf(1.0));
       offsetYSpinner = new JSpinner(offsetYModel);
       label.setLabelFor(offsetYSpinner);
-      offsetPanel.add(offsetYSpinner);
+      offsetRow.add(offsetYSpinner);
 
       editor = (JSpinner.NumberEditor)offsetYSpinner.getEditor();
       editor.getTextField().setColumns(6);
+
+      JComponent offsetCenterComp = new JPanel(new FlowLayout());
+      offsetComp.add(offsetCenterComp, "Center");
+
+      JComponent offsetButtonComp = new JPanel(new GridLayout(3, 3, 0, 0));
+      offsetCenterComp.add(offsetButtonComp);
+
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_topleft",
+        this, null));
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_middletop",
+        this, null));
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_topright",
+        this, null));
+
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_middleleft",
+        this, null));
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_middle",
+        this, null));
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_middleright",
+        this, null));
+
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_bottomleft",
+        this, null));
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_middlebottom",
+        this, null));
+      offsetButtonComp.add(resources.createDialogButton("grid.offset", "grid_origin_bottomright",
+        this, null));
+
+
+      offsetComp.add(resources.createAppInfoArea("grid.offset.grid_origin_info"), "South");
 
       getContentPane().add(mainPanel, "Center");
 
@@ -259,6 +292,11 @@ public class GridSettings extends JDialog
       setVisible(false);
    }
 
+   protected JDRUnit getGridUnit()
+   {
+      return ((GridPanel)tabbedPane.getSelectedComponent()).getUnit();
+   }
+
    public void actionPerformed(ActionEvent e)
    {
       String action = e.getActionCommand();
@@ -272,6 +310,63 @@ public class GridSettings extends JDialog
       else if (action.equals("cancel"))
       {
          setVisible(false);
+      }
+      else if (action.startsWith("grid_origin_"))
+      {
+         action = action.substring(12);
+
+         if (action.equals("topleft"))
+         {
+            offsetXModel.setValue(Double.valueOf(0));
+            offsetYModel.setValue(Double.valueOf(0));
+         }
+         else
+         {
+            JDRUnit unit = getGridUnit();
+            double w = mainPanel.getBpPaperWidth();
+            double h = mainPanel.getBpPaperHeight();
+
+            if (action.equals("middletop"))
+            {
+               offsetXModel.setValue(Double.valueOf(unit.fromBp(0.5*w)));
+               offsetYModel.setValue(Double.valueOf(0));
+            }
+            else if (action.equals("topright"))
+            {
+               offsetXModel.setValue(Double.valueOf(unit.fromBp(w)));
+               offsetYModel.setValue(Double.valueOf(0));
+            }
+            else if (action.equals("middleleft"))
+            {
+               offsetXModel.setValue(Double.valueOf(0));
+               offsetYModel.setValue(Double.valueOf(unit.fromBp(0.5*h)));
+            }
+            else if (action.equals("middle"))
+            {
+               offsetXModel.setValue(Double.valueOf(unit.fromBp(0.5*w)));
+               offsetYModel.setValue(Double.valueOf(unit.fromBp(0.5*h)));
+            }
+            else if (action.equals("middleright"))
+            {
+               offsetXModel.setValue(Double.valueOf(unit.fromBp(w)));
+               offsetYModel.setValue(Double.valueOf(unit.fromBp(0.5*h)));
+            }
+            else if (action.equals("bottomleft"))
+            {
+               offsetXModel.setValue(Double.valueOf(0));
+               offsetYModel.setValue(Double.valueOf(unit.fromBp(h)));
+            }
+            else if (action.equals("middlebottom"))
+            {
+               offsetXModel.setValue(Double.valueOf(unit.fromBp(0.5*w)));
+               offsetYModel.setValue(Double.valueOf(unit.fromBp(h)));
+            }
+            else if (action.equals("bottomright"))
+            {
+               offsetXModel.setValue(Double.valueOf(unit.fromBp(w)));
+               offsetYModel.setValue(Double.valueOf(unit.fromBp(h)));
+            }
+         }
       }
    }
 

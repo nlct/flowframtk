@@ -2244,11 +2244,24 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="grid.path.select">Select new shape</entry>
 <entry key="grid.path.select.mnemonic">N</entry>
 <entry key="grid.path.info">Major division setting only affects rulers.</entry>
+
 <entry key="grid.offset">Origin Offset</entry>
 <entry key="grid.offset.x">Shift x:</entry>
 <entry key="grid.offset.x.mnemonic">X</entry>
 <entry key="grid.offset.y">Shift y:</entry>
 <entry key="grid.offset.y.mnemonic">Y</entry>
+
+<entry key="grid.offset.grid_origin_topleft">Top Left</entry>
+<entry key="grid.offset.grid_origin_middletop">Top Middle</entry>
+<entry key="grid.offset.grid_origin_topright">Top Right</entry>
+<entry key="grid.offset.grid_origin_middleleft">Middle Left</entry>
+<entry key="grid.offset.grid_origin_middle">Middle</entry>
+<entry key="grid.offset.grid_origin_middleright">Middle Right</entry>
+<entry key="grid.offset.grid_origin_bottomleft">Bottom Left</entry>
+<entry key="grid.offset.grid_origin_middlebottom">Bottom Middle</entry>
+<entry key="grid.offset.grid_origin_bottomright">Bottom Right</entry>
+
+<entry key="grid.offset.grid_origin_info">The above buttons may be used to calculate the origin shift based on the current paper size and currently selected unit. If you change the grid unit or the paper size or orientation the values won''t be automatically updated.</entry>
 
 <!--  Pattern Dialog Box -->
 
