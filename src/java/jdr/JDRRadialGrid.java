@@ -72,6 +72,16 @@ public class JDRRadialGrid extends JDRGrid
          unit, majorDivisions, subDivisions, spokes);
    }
 
+   public void setPageCentred(boolean centred)
+   {
+      pageCentred = centred;
+   }
+
+   public boolean isPageCentred()
+   {
+      return pageCentred;
+   }
+
    /**
     * Change the grid settings settings.
     * @param gridUnit the grid units
@@ -210,14 +220,21 @@ public class JDRRadialGrid extends JDRGrid
 
    public Point2D fromCartesianBp(double bpX, double bpY)
    {
-      JDRPaper paper = getCanvasGraphics().getPaper();
-
       JDRRadialPoint p = new JDRRadialPoint(
          getCanvasGraphics().getMessageSystem());
 
-      p.setLocation(
-         unit.fromBp(bpX-0.5*paper.getWidth()),
-         unit.fromBp(bpY-0.5*paper.getHeight()));
+      if (pageCentred)
+      {
+         JDRPaper paper = getCanvasGraphics().getPaper();
+
+         p.setLocation(
+            unit.fromBp(bpX-0.5*paper.getWidth()),
+            unit.fromBp(bpY-0.5*paper.getHeight()));
+      }
+      else
+      {
+         p.setLocation(unit.fromBp(bpX), unit.fromBp(bpY));
+      }
 
       return p;
    }
@@ -226,52 +243,89 @@ public class JDRRadialGrid extends JDRGrid
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      JDRPaper paper = cg.getPaper();
       JDRUnit storageUnit = cg.getStorageUnit();
 
       JDRRadialPoint p = new JDRRadialPoint(cg.getMessageSystem());
 
-      p.setLocation(
-         unit.fromUnit(storageX-storageUnit.fromBp(0.5*paper.getWidth()), storageUnit),
-         unit.fromUnit(storageY-storageUnit.fromBp(0.5*paper.getHeight()), storageUnit));
+      if (pageCentred)
+      {
+         JDRPaper paper = cg.getPaper();
+
+         p.setLocation(
+            unit.fromUnit(storageX-storageUnit.fromBp(0.5*paper.getWidth()), storageUnit),
+            unit.fromUnit(storageY-storageUnit.fromBp(0.5*paper.getHeight()), storageUnit));
+      }
+      else
+      {
+         p.setLocation(
+            unit.fromUnit(storageX, storageUnit),
+            unit.fromUnit(storageY, storageUnit));
+      }
 
       return p;
    }
 
    public void fromCartesianBp(Point2D cartesianPoint, Point2D target)
    {
-      JDRPaper paper = getCanvasGraphics().getPaper();
+      if (pageCentred)
+      {
+         JDRPaper paper = getCanvasGraphics().getPaper();
 
-      target.setLocation(
-         unit.fromBp(cartesianPoint.getX()-0.5*paper.getWidth()),
-         unit.fromBp(cartesianPoint.getY()-0.5*paper.getHeight()));
+         target.setLocation(
+            unit.fromBp(cartesianPoint.getX()-0.5*paper.getWidth()),
+            unit.fromBp(cartesianPoint.getY()-0.5*paper.getHeight()));
+      }
+      else
+      {
+         target.setLocation(
+            unit.fromBp(cartesianPoint.getX()),
+            unit.fromBp(cartesianPoint.getY()));
+      }
    }
 
    public void toCartesianBp(Point2D original, Point2D target)
    {
-      JDRPaper paper = getCanvasGraphics().getPaper();
+      if (pageCentred)
+      {
+         JDRPaper paper = getCanvasGraphics().getPaper();
 
-      // Shift the origin to the top left corner
+         // Shift the origin to the top left corner
 
-      target.setLocation(
-         unit.toBp(original.getX())+0.5*paper.getWidth(),
-         unit.toBp(original.getY())+0.5*paper.getHeight());
+         target.setLocation(
+            unit.toBp(original.getX())+0.5*paper.getWidth(),
+            unit.toBp(original.getY())+0.5*paper.getHeight());
+      }
+      else
+      {
+         target.setLocation(
+            unit.toBp(original.getX()),
+            unit.toBp(original.getY()));
+      }
    }
 
    public void toCartesian(Point2D original, Point2D target)
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      JDRPaper paper = cg.getPaper();
       JDRUnit storageUnit = cg.getStorageUnit();
 
-      // Shift the origin to the top left corner
+      if (pageCentred)
+      {
+         JDRPaper paper = cg.getPaper();
+         // Shift the origin to the top left corner
 
-      target.setLocation(
-         unit.toUnit(original.getX(), storageUnit)
-           +storageUnit.fromBp(0.5*paper.getWidth()),
-         unit.toUnit(original.getY(), storageUnit)
-           +storageUnit.fromBp(0.5*paper.getHeight()));
+         target.setLocation(
+            unit.toUnit(original.getX(), storageUnit)
+              +storageUnit.fromBp(0.5*paper.getWidth()),
+            unit.toUnit(original.getY(), storageUnit)
+              +storageUnit.fromBp(0.5*paper.getHeight()));
+      }
+      else
+      {
+         target.setLocation(
+            unit.toUnit(original.getX(), storageUnit),
+            unit.toUnit(original.getY(), storageUnit));
+      }
    }
 
    public void drawGrid()
@@ -301,10 +355,16 @@ public class JDRRadialGrid extends JDRGrid
 
       double maxRadius;
 
-      double halfW = 0.5*paper.getWidth();
-      double halfH = 0.5*paper.getHeight();
+      double bpWidth = paper.getWidth();
+      double bpHeight = paper.getHeight();
 
-      g.translate(scaleX*halfW, scaleY*halfH);
+      double halfW = 0.5*bpWidth;
+      double halfH = 0.5*bpHeight;
+
+      if (pageCentred)
+      {
+         g.translate(scaleX*halfW, scaleY*halfH);
+      }
 
       Rectangle clip = g.getClipBounds();
 
@@ -312,10 +372,20 @@ public class JDRRadialGrid extends JDRGrid
 
       if (clip == null)
       {
-         minX = -halfW;
-         minY = -halfH;
-         maxX = halfW;
-         maxY = halfH;
+         if (pageCentred)
+         {
+            minX = -halfW;
+            minY = -halfH;
+            maxX = halfW;
+            maxY = halfH;
+         }
+         else
+         {
+            minX = 0;
+            minY = 0;
+            maxX = bpWidth;
+            maxY = bpHeight;
+         }
       }
       else
       {
@@ -329,6 +399,30 @@ public class JDRRadialGrid extends JDRGrid
       minY -= HALF_MAJOR_TIC;
       maxX += HALF_MAJOR_TIC;
       maxY += HALF_MAJOR_TIC;
+
+      double bpOffsetX = cg.getBpOriginX();
+      double bpOffsetY = cg.getBpOriginY();
+
+      minX -= bpOffsetX;
+      minY -= bpOffsetY;
+      maxX -= bpOffsetX;
+      maxY -= bpOffsetY;
+
+      g.setColor(axesGridColor);
+
+      if (pageCentred)
+      {
+         double x = scaleX * halfW;
+         double y = scaleY * halfH;
+
+         g.drawLine((int)(minX*scaleX-x), (int)-y, (int)(maxX*scaleX), (int)-y);
+         g.drawLine((int)-x, (int)(minY*scaleY-y), (int)-x, (int)(maxY*scaleY));
+      }
+      else
+      {
+         g.drawLine((int)(minX*scaleX), 0, (int)(maxX*scaleX), 0);
+         g.drawLine(0, (int)(minY*scaleY), 0, (int)(maxY*scaleY));
+      }
 
       ImageObserver obs = cg.getComponent();
 
@@ -971,6 +1065,7 @@ public class JDRRadialGrid extends JDRGrid
       subDivisions = radGrid.subDivisions;
       unit = radGrid.unit;
       spokes = radGrid.spokes;
+      pageCentred = radGrid.pageCentred;
    }
 
    public JDRRectangularGrid getRectangularGrid()
@@ -1002,6 +1097,8 @@ public class JDRRadialGrid extends JDRGrid
     * The unit used by the grid.
     */
    private JDRUnit unit;
+
+   private boolean pageCentred=true;
 
    public static double HALF_PI = 0.5*Math.PI;
    public static double ONE_HALF_PI = 1.5*Math.PI;

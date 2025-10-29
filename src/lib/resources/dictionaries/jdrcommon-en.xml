@@ -237,6 +237,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 <entry key="warning.save_unsupported_paint">Paint type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_segment">Segment type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_grid">Grid type ''{0}'' not supported in JDR/AJR version {1}</entry>
+<entry key="warning.save_unsupported_radial_origin_grid">Origin-based radial grid type not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_preamble">Preamble not supported in JDR/AJDR version {0}</entry>
 <entry key="warning.save_unsupported_extra_preamble">Mid/End Preamble not supported in JDR/AJDR version {0}</entry>
 <entry key="warning.save_unsupported_doc_body">Document body not supported in JDR/AJDR version {0}</entry>
@@ -495,6 +496,7 @@ File doesn''t exist</entry>
 <entry key="error.invalid_grid-major">Invalid grid major value</entry>
 <entry key="error.invalid_grid-minor">Invalid grid minor value</entry>
 <entry key="error.invalid_grid-spokes">Invalid grid spokes value</entry>
+<entry key="error.invalid_grid-radial-page-dependent">Invalid grid radial page dependent value</entry>
 <entry key="error.invalid_pen-width">Invalid pen width</entry>
 <entry key="error.invalid_path-style-id">Invalid path style ID</entry>
 <entry key="error.invalid_grid-id">Invalid grid ID</entry>

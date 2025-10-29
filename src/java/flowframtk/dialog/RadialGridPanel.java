@@ -114,6 +114,27 @@ public class RadialGridPanel extends GridPanel
 
       row.add(Box.createHorizontalGlue());
 
+      row = Box.createHorizontalBox();
+      add(row);
+
+      JLabel label = resources.createAppLabel("grid.radial.centre");
+      row.add(label);
+      labelGroup.add(label);
+
+      ButtonGroup bg = new ButtonGroup();
+
+      pageCentredButton = resources.createAppRadioButton(
+       "grid.radial.centre", "paper", bg, true, null);
+      row.add(pageCentredButton);
+
+      originCentredButton = resources.createAppRadioButton(
+       "grid.radial.centre", "origin", bg, false, null);
+      row.add(originCentredButton);
+
+      row.add(Box.createHorizontalStrut(strut));
+
+      row.add(Box.createHorizontalGlue());
+
       Dimension dim = majorDivisionsSpinner.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
       int height = dim.height;
@@ -130,7 +151,7 @@ public class RadialGridPanel extends GridPanel
       dim.width = Integer.MAX_VALUE;
       spokesSpinner.setMaximumSize(dim);
 
-      add(Box.createVerticalStrut(3*height));
+      add(Box.createVerticalStrut(2*height));
 
       add(Box.createVerticalGlue());
 
@@ -149,23 +170,36 @@ public class RadialGridPanel extends GridPanel
       setSubDivisions(((JDRRadialGrid)grid).getSubDivisions());
       setUnit(((JDRRadialGrid)grid).getUnit());
       setSpokes(((JDRRadialGrid)grid).getSpokes());
+
+      if (((JDRRadialGrid)grid).isPageCentred())
+      {
+         pageCentredButton.setSelected(true);
+      }
+      else
+      {
+         originCentredButton.setSelected(true);
+      }
    }
 
    @Override
    public JDRGrid getGrid(JDRGrid grid)
    {
+      JDRRadialGrid radGrid;
+
       if (grid instanceof JDRRadialGrid)
       {
-         JDRRadialGrid g = (JDRRadialGrid)grid;
-         g.set(getUnit(), getMajor(), getSubDivisions(), getSpokes());
+         radGrid = (JDRRadialGrid)grid;
+         radGrid.set(getUnit(), getMajor(), getSubDivisions(), getSpokes());
       }
       else
       {
-         grid = new JDRRadialGrid(grid.getCanvasGraphics(), 
+         radGrid = new JDRRadialGrid(grid.getCanvasGraphics(), 
             getUnit(), getMajor(), getSubDivisions(), getSpokes());
       }
 
-      return grid;
+      radGrid.setPageCentred(pageCentredButton.isSelected());
+
+      return radGrid;
    }
 
    public void setSpokes(int spokes)
@@ -226,4 +260,5 @@ public class RadialGridPanel extends GridPanel
    private SpinnerNumberModel majorDivisionsModel, subDivisionsModel, spokesModel;
    private JComboBox<String> unitBox; 
    private JLabel spokesLabel;
+   private JRadioButton pageCentredButton, originCentredButton;
 }

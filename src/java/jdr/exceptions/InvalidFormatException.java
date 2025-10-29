@@ -242,6 +242,7 @@ public class InvalidFormatException extends Exception
    public static final String GRID_MAJOR = "grid-major";
    public static final String GRID_MINOR = "grid-minor";
    public static final String GRID_SPOKES = "grid-spokes";
+   public static final String GRID_RADIAL_PAGE_DEPENDENT = "grid-radial-page-dependent";
 
    public static final String BEZIER_X0 = "bezier-x0";
    public static final String BEZIER_Y0 = "bezier-y0";

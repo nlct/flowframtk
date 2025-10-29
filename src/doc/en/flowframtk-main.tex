@@ -14595,9 +14595,16 @@ If \meta{settings-id} is 2, just \meta{paper} is present.
      \end{enumerate}
 
      \item Radial Grid. The \meta{grid-specs} are:
+    \begin{jdrversion}{1.6--2.0}
     \begin{syntaxline}
     \meta{unit} \meta{major} \meta{minor} \meta{spokes}
     \end{syntaxline}
+    \end{jdrversion}
+    \begin{jdrversion}{2.1 onwards}
+    \begin{syntaxline}
+    \meta{unit} \meta{major} \meta{minor} \meta{spokes} \meta{page-dependent}
+    \end{syntaxline}
+    \end{jdrversion}
     where:
       \begin{enumerate}
        \item \meta{unit} is the \type{unit-id}.
@@ -14607,6 +14614,14 @@ If \meta{settings-id} is 2, just \meta{paper} is present.
        \item \meta{minor} is an \type{integer} representing the grid subdivision.
 
        \item \meta{spokes} is an \type{integer} representing the number of spokes.
+
+       \item \meta{page-dependent} is a \type{boolean} setting
+       introduced in version 2.1. A value of true indicates that the
+       radial grid depends on the paper (that is, the grid is
+       \manmsg{centred} on the paper, with the top left of the paper
+       bounds coinciding with the underlying rectangular grid origin). 
+       A value of false indicates that the radial grid is \manmsg{centred} 
+       on the underlying rectangular origin.
       \end{enumerate}
 
      \item Isometric Grid. The \meta{grid-specs} are:

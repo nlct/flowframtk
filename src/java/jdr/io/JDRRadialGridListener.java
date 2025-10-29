@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -69,6 +69,19 @@ public class JDRRadialGridListener implements JDRGridLoaderListener
       jdr.writeDouble(grid.getMajorInterval());
       jdr.writeInt(grid.getSubDivisions());
       jdr.writeInt(grid.getSpokes());
+
+      boolean pageDependent = grid.isPageCentred();
+
+      if (version >= 2.1f)
+      {
+         jdr.writeBoolean(pageDependent);
+      }
+      else if (!pageDependent)
+      {
+         jdr.warningWithFallback("warning.save_unsupported_radial_origin_grid",
+          "Origin-based radial grid type not supported in JDR/AJR version {1}",
+          version);
+      }
    }
 
    public JDRGrid read(JDRAJR jdr) throws InvalidFormatException
@@ -106,8 +119,16 @@ public class JDRRadialGridListener implements JDRGridLoaderListener
 
       int spokes = jdr.readIntGe(InvalidFormatException.GRID_SPOKES, 0);
 
-      return new JDRRadialGrid(jdr.getCanvasGraphics(),
+      JDRRadialGrid grid = new JDRRadialGrid(jdr.getCanvasGraphics(),
          unit, majorDivisions, subDivisions, spokes);
+
+      if (version >= 2.1f)
+      {
+         grid.setPageCentred(
+          jdr.readBoolean(InvalidFormatException.GRID_RADIAL_PAGE_DEPENDENT));
+      }
+
+      return grid;
    }
 
 }

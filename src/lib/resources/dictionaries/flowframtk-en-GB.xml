@@ -102,6 +102,9 @@
 <entry key="font.anchor.hcentre">Centre</entry>
 <entry key="font.anchor.vcentre">Centre</entry>
 
+<entry key="grid.radial.centre">Centred on:</entry>
+<entry key="grid.radial.centre.paper">paper centre</entry>
+
 <entry key="paintselector.single">Colour</entry>
 <entry key="paintselector.grey">Grey</entry>
 <entry key="paintselector.start">Start Colour</entry>

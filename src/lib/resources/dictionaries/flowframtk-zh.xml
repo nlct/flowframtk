@@ -2239,6 +2239,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="grid.radial.mnemonic">L</entry>
 <entry key="grid.spokes">Spokes</entry>
 <entry key="grid.spokes.mnemonic">K</entry>
+
+<entry key="grid.radial.centre">Centered on:</entry>
+<entry key="grid.radial.centre.origin">origin</entry>
+<entry key="grid.radial.centre.origin.mnemonic">N</entry>
+<entry key="grid.radial.centre.paper">paper center</entry>
+<entry key="grid.radial.centre.paper.mnemonic">R</entry>
+
 <entry key="grid.info">Grid units are independent of the storage unit.</entry>
 <entry key="grid.iso">Isometric</entry>
 <entry key="grid.iso.mnemonic">I</entry>
