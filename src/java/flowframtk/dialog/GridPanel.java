@@ -23,6 +23,7 @@
 */
 package com.dickimawbooks.flowframtk.dialog;
 
+import java.awt.event.ItemListener;
 import javax.swing.*;
 
 import com.dickimawbooks.jdr.*;
@@ -34,6 +35,8 @@ import com.dickimawbooks.jdr.*;
 public abstract class GridPanel extends JPanel
 {
    public abstract void requestDefaultFieldFocus();
+
+   public abstract void addUnitChangeListener(ItemListener listener);
 
    public abstract void setGrid(JDRGrid grid);
 

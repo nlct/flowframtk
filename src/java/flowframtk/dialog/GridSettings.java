@@ -43,7 +43,7 @@ import com.dickimawbooks.flowframtk.*;
  * @author Nicola L C Talbot
  */
 public class GridSettings extends JDialog
-   implements ActionListener
+   implements ActionListener,ItemListener
 {
    public GridSettings(FlowframTk application)
    {
@@ -54,14 +54,19 @@ public class GridSettings extends JDialog
       JDRResources resources = getResources();
 
       rectangularGridPanel = new RectangularGridPanel(resources);
+      rectangularGridPanel.addUnitChangeListener(this);
 
       radialGridPanel = new RadialGridPanel(resources);
+      radialGridPanel.addUnitChangeListener(this);
 
       isoGridPanel = new IsoGridPanel(resources);
+      isoGridPanel.addUnitChangeListener(this);
 
       tschicholdGridPanel = new TschicholdGridPanel(resources);
+      tschicholdGridPanel.addUnitChangeListener(this);
 
       pathGridPanel = new PathGridPanel(application);
+      pathGridPanel.addUnitChangeListener(this);
 
       tabbedPane = new JTabbedPane();
 
@@ -150,6 +155,9 @@ public class GridSettings extends JDialog
       editor = (JSpinner.NumberEditor)offsetYSpinner.getEditor();
       editor.getTextField().setColumns(6);
 
+      offsetUnitLabel = new JLabel("mm");
+      offsetRow.add(offsetUnitLabel);
+
       JComponent offsetCenterComp = new JPanel(new FlowLayout());
       offsetComp.add(offsetCenterComp, "Center");
 
@@ -199,8 +207,11 @@ public class GridSettings extends JDialog
 
       getContentPane().add(p2, "South");
 
-      setLocationRelativeTo(application_);
       pack();
+      setLocationRelativeTo(application_);
+
+      JDRUnit unit = getGridUnit();
+      offsetUnitLabel.setText(unit.getLabel());
    }
 
    protected JButton createCommonButton(final int idx)
@@ -370,6 +381,15 @@ public class GridSettings extends JDialog
       }
    }
 
+   public void itemStateChanged(ItemEvent evt)
+   {
+      if (evt.getStateChange() == ItemEvent.SELECTED && offsetUnitLabel != null)
+      {
+         JDRUnit unit = getGridUnit();
+         offsetUnitLabel.setText(unit.getLabel());
+      }
+   }
+
    public JDRResources getResources()
    {
       return application_.getResources();
@@ -386,6 +406,7 @@ public class GridSettings extends JDialog
 
    private SpinnerNumberModel offsetXModel, offsetYModel;
    private JSpinner offsetXSpinner, offsetYSpinner;
+   private JLabel offsetUnitLabel;
 
    private JDRFrame mainPanel = null;
 }

@@ -405,9 +405,16 @@ public class PathGridPanel extends GridPanel
       unitBox.setSelectedIndex(unit.getID());
    }
 
+   @Override
    public JDRUnit getUnit()
    {
       return JDRUnit.getUnit(unitBox.getSelectedIndex()); 
+   }
+
+   @Override
+   public void addUnitChangeListener(ItemListener listener)
+   {
+      unitBox.addItemListener(listener);
    }
 
    private JSpinner majorDivisionsSpinner, subDivisionsSpinner;
