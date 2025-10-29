@@ -3310,10 +3310,7 @@ public class JDRCanvas extends JPanel
 
    public void findSelectedObjects()
    {
-      boolean done = false;
-
-      double minX = frame_.getStoragePaperWidth();
-      double minY = frame_.getStoragePaperHeight();
+      BBox minBox = null;
 
       for (int i = 0, n = paths.size(); i < n; i++)
       {
@@ -3321,15 +3318,116 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            done = true;
             BBox box = object.getStorageBBox();
 
-            if (box.getMinX() < minX) minX = box.getMinX();
-            if (box.getMinY() < minY) minY = box.getMinY();
+            if (minBox == null
+             || box.getMinX() < minBox.getMinX()
+             || box.getMinY() < minBox.getMinY())
+            {
+               minBox = box;
+            }
          }
       }
 
-      if (done) goToStorageCoordinate(minX, minY);
+      if (minBox != null) 
+      {
+         CanvasGraphics cg = getCanvasGraphics();
+
+         double canvasMinX = -cg.getStorageOriginX();
+         double canvasMinY = -cg.getStorageOriginY();
+
+         double paperWidth = cg.getStoragePaperWidth();
+         double paperHeight = cg.getStoragePaperHeight();
+
+         double canvasMaxX = paperWidth + canvasMinX;
+         double canvasMaxY = paperHeight + canvasMinY;
+
+         double minX = minBox.getMinX();
+         double minY = minBox.getMinY();
+         double maxX = minBox.getMaxX();
+         double maxY = minBox.getMaxY();
+
+         boolean originChange = false;
+
+         if (minX < canvasMinX)
+         {
+            if (maxX > canvasMinX)
+            {
+               // object bounding box overlaps left border
+               minX = canvasMinX;
+            }
+            else
+            {
+               cg.setStorageOriginX(-minX);
+               originChange = true;
+            }
+         }
+         else if (minX > canvasMaxX)
+         {
+            if (minX >= 0 && minX <= paperWidth)
+            {
+               cg.setOriginX(0);
+            }
+            else
+            {
+               double w = minBox.getWidth();
+
+               if (w < paperWidth)
+               {
+                  cg.setStorageOriginX(paperWidth-maxX);
+               }
+               else
+               {
+                  cg.setStorageOriginX(-minX);
+               }
+            }
+
+            originChange = true;
+         }
+
+         if (minY < canvasMinY)
+         {
+            if (maxY > canvasMinY)
+            {
+               // object bounding box overlaps top border
+               minY = canvasMinY;
+            }
+            else
+            {
+               cg.setStorageOriginY(-minY);
+               originChange = true;
+            }
+         }
+         else if (minY > canvasMaxY)
+         {
+            if (minY >= 0 && minY <= paperHeight)
+            {
+               cg.setOriginY(0);
+            }
+            else
+            {
+               double h = minBox.getHeight();
+
+               if (h < paperHeight)
+               {
+                  cg.setStorageOriginY(paperHeight-maxY);
+               }
+               else
+               {
+                  cg.setStorageOriginY(-minY);
+               }
+            }
+
+            originChange = true;
+         }
+
+         if (originChange)
+         {
+            frame_.forceUpdate();
+         }
+
+         goToStorageCoordinate(minX, minY);
+      }
    }
 
    public void doConstructMouseClick()

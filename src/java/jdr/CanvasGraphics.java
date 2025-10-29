@@ -1353,9 +1353,15 @@ public class CanvasGraphics
       return originX;
    }
 
+   // grid units
    public void setOriginX(double x)
    {
       originX = x;
+   }
+
+   public void setStorageOriginX(double storageX)
+   {
+      setOriginX(getStorageUnit().toUnit(storageX, grid.getMainUnit()));
    }
 
    public double getOriginY()
@@ -1363,9 +1369,15 @@ public class CanvasGraphics
       return originY;
    }
 
+   // grid units
    public void setOriginY(double y)
    {
       originY = y;
+   }
+
+   public void setStorageOriginY(double storageY)
+   {
+      setOriginY(getStorageUnit().toUnit(storageY, grid.getMainUnit()));
    }
 
    public double getStorageOriginX()
