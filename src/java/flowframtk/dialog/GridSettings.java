@@ -43,7 +43,7 @@ import com.dickimawbooks.flowframtk.*;
  * @author Nicola L C Talbot
  */
 public class GridSettings extends JDialog
-   implements ActionListener,ItemListener
+   implements ActionListener,ItemListener,ChangeListener
 {
    public GridSettings(FlowframTk application)
    {
@@ -211,8 +211,8 @@ public class GridSettings extends JDialog
       pack();
       setLocationRelativeTo(application_);
 
-      JDRUnit unit = getGridUnit();
-      offsetUnitLabel.setText(unit.getLabel());
+      updateOffsetUnitLabel();
+      tabbedPane.addChangeListener(this);
    }
 
    protected JButton createCommonButton(final int idx)
@@ -384,7 +384,20 @@ public class GridSettings extends JDialog
 
    public void itemStateChanged(ItemEvent evt)
    {
-      if (evt.getStateChange() == ItemEvent.SELECTED && offsetUnitLabel != null)
+      if (evt.getStateChange() == ItemEvent.SELECTED)
+      {
+         updateOffsetUnitLabel();
+      }
+   }
+
+   public void stateChanged(ChangeEvent evt)
+   {
+      updateOffsetUnitLabel();
+   }
+
+   protected void updateOffsetUnitLabel()
+   {
+      if (offsetUnitLabel != null)
       {
          JDRUnit unit = getGridUnit();
          offsetUnitLabel.setText(unit.getLabel());
