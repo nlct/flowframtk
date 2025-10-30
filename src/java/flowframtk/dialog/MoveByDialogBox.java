@@ -30,7 +30,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
@@ -50,29 +50,70 @@ public class MoveByDialogBox extends JDialog
       super(application, application.getResources().getMessage("moveby.title"),
             true);
       application_ = application;
-      setLocationRelativeTo(application_);
+      JDRResources resources = application.getResources();
+
+      JComponent mainComp = Box.createVerticalBox();
+      getContentPane().add(mainComp, "Center");
 
       locationPane = new RectangularCoordPanel(getResources());
+      mainComp.add(locationPane);
 
-      getContentPane().add(locationPane, "Center");
+      JComponent row = Box.createHorizontalBox();
+      mainComp.add(row);
+
+      row.add(resources.createAppLabel("moveby.calculate"));
+      row.add(Box.createHorizontalGlue());
+
+      row = Box.createHorizontalBox();
+      mainComp.add(row);
+
+      row.add(resources.createButtonSpacer());
+
+      widthNumberModel = new SpinnerNumberModel(50, -1000, 1000, 1);
+      widthSpinner = new JSpinner(widthNumberModel);
+
+      row.add(widthSpinner);
+
+      JLabelGroup labelGroup = new JLabelGroup();
+
+      JLabel label = resources.createAppLabel("moveby.percent_width");
+      label.setLabelFor(widthSpinner);
+      row.add(label);
+      labelGroup.add(label);
+
+      row.add(resources.createButtonSpacer());
+
+      row.add(resources.createDialogButton("moveby", "calc_x", this, null));
+      row.add(Box.createHorizontalGlue());
+
+      row = Box.createHorizontalBox();
+      mainComp.add(row);
+
+      row.add(resources.createButtonSpacer());
+
+      heightNumberModel = new SpinnerNumberModel(50, -1000, 1000, 1);
+      heightSpinner = new JSpinner(heightNumberModel);
+
+      row.add(heightSpinner);
+
+      label = resources.createAppLabel("moveby.percent_height");
+      label.setLabelFor(heightSpinner);
+      row.add(label);
+      labelGroup.add(label);
+
+      row.add(resources.createButtonSpacer());
+
+      row.add(resources.createDialogButton("moveby", "calc_y", this, null));
+      row.add(Box.createHorizontalGlue());
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p2.add(getResources().createHelpDialogButton(this, "sec:moveobjects"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p2, this, "sec:moveobjects");
 
       getContentPane().add(p2, "South");
 
       pack();
+      setLocationRelativeTo(application_);
    }
 
    public void initialise()
@@ -111,6 +152,46 @@ public class MoveByDialogBox extends JDialog
       {
          setVisible(false);
       }
+      else if (action.equals("calc_x"))
+      {
+         int pc = widthNumberModel.getNumber().intValue();
+         double bpW = mainPanel.getBpPaperWidth();
+
+         JDRUnit unit = locationPane.getUnitX();
+
+         if (pc == 1)
+         {
+            locationPane.setXCoord(unit.fromBp(bpW), unit);
+         }
+         else if (pc == 0)
+         {
+            locationPane.setXCoord(0.0, unit);
+         }
+         else
+         {
+            locationPane.setXCoord(unit.fromBp(0.01*pc * bpW), unit);
+         }
+      }
+      else if (action.equals("calc_y"))
+      {
+         int pc = heightNumberModel.getNumber().intValue();
+         double bpH = mainPanel.getBpPaperHeight();
+
+         JDRUnit unit = locationPane.getUnitY();
+
+         if (pc == 1)
+         {
+            locationPane.setYCoord(unit.fromBp(bpH), unit);
+         }
+         else if (pc == 0)
+         {
+            locationPane.setYCoord(0.0, unit);
+         }
+         else
+         {
+            locationPane.setYCoord(unit.fromBp(0.01*pc * bpH), unit);
+         }
+      }
    }
 
    public String info()
@@ -132,6 +213,9 @@ public class MoveByDialogBox extends JDialog
 
    private FlowframTk application_;
    RectangularCoordPanel locationPane;
+
+   SpinnerNumberModel widthNumberModel, heightNumberModel;
+   JSpinner widthSpinner, heightSpinner;
 
    private JDRFrame mainPanel = null;
 }

@@ -2183,6 +2183,18 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="moveby.title">平移量</entry>
 
+<entry key="moveby.calculate">Calculate:</entry>
+
+<entry key="moveby.percent_width">% of paper width</entry>
+<entry key="moveby.percent_width.mnemonic">W</entry>
+<entry key="moveby.calc_x">Calculate X</entry>
+<entry key="moveby.calc_x.iconimage">dotask</entry>
+
+<entry key="moveby.percent_height">% of paper height</entry>
+<entry key="moveby.percent_height.mnemonic">T</entry>
+<entry key="moveby.calc_y">Calculate Y</entry>
+<entry key="moveby.calc_y.iconimage">dotask</entry>
+
 <!--  Paper Dialog Box -->
 
 <entry key="paper.title">设置纸张</entry>
