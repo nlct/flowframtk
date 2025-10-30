@@ -2390,14 +2390,14 @@ public class JDRResources
       return button;
    }
 
-   public Component createLabelSpacer()
+   public static Component createLabelSpacer()
    {
-      return Box.createHorizontalStrut(5);
+      return Box.createHorizontalStrut(LABEL_SPACER);
    }
 
-   public Component createButtonSpacer()
+   public static Component createButtonSpacer()
    {
-      return Box.createHorizontalStrut(10);
+      return Box.createHorizontalStrut(BUTTON_SPACER);
    }
 
    public JDRButton createOkayCancelButtons(JDialog dialog, JComponent comp,
@@ -3312,6 +3312,8 @@ public class JDRResources
    private static DirectoryFilter helpsetDirectoryFilter = new DirectoryFilter();
    private static DictionaryFilter dictionaryFilter = new DictionaryFilter();
 
+   public static final int LABEL_SPACER=5;
+   public static final int BUTTON_SPACER=10;
 
    public static final String APP_VERSION = "0.8.8.20251026";
    public static final String APP_DATE = "2025-10-26";

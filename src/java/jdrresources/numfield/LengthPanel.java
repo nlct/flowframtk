@@ -63,6 +63,7 @@ public class LengthPanel extends JPanel
       unitBox.addUnitChangeListener(this);
 
       add(sizeLabel);
+      add(JDRResources.createLabelSpacer());
       add(numberField.getComponent());
       add(unitBox);
    }
@@ -226,7 +227,7 @@ public class LengthPanel extends JPanel
       unitBox.setUnit(unit);
    }
 
-   private JDRUnit getUnit()
+   public JDRUnit getUnit()
    {
       return unitBox.getUnit();
    }
