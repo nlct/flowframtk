@@ -41,7 +41,6 @@ import javax.swing.text.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
 import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
@@ -69,6 +68,8 @@ public class ConfigSettingsDialog extends JDialog
          application.getResources().getMessage("config.title"), true);
       application_ = application;
 
+      JDRResources resources = application.getResources();
+
       JTabbedPane tabbedPane = new JTabbedPane();
       getContentPane().add(tabbedPane, "Center");
 
@@ -78,72 +79,62 @@ public class ConfigSettingsDialog extends JDialog
 
       JComponent panel = Box.createVerticalBox();
 
-      controlPointsPanel = new ControlSizePanel(getResources(), cg);
+      controlPointsPanel = new ControlSizePanel(resources, cg);
       panel.add(controlPointsPanel);
 
-      storageUnitPanel = new StorageUnitPanel(getResources());
+      storageUnitPanel = new StorageUnitPanel(resources);
       storageUnitPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
       panel.add(storageUnitPanel);
 
-      tabbedPane.addTab(getResources().getMessage("controls.title"),
+      tabbedPane.addTab(resources.getMessage("controls.title"),
          null, panel,
-         getResources().getMessage("tooltip.controls"));
+         resources.getMessage("tooltip.controls"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("controls.mnemonic"));
+         resources.getCodePoint("controls.mnemonic"));
 
-      dirPanel = new DirPanel(getResources());
+      dirPanel = new DirPanel(resources);
 
-      tabbedPane.addTab(getResources().getMessage("startdir.title"),
-         null, dirPanel, getResources().getMessage("tooltip.startdir"));
+      tabbedPane.addTab(resources.getMessage("startdir.title"),
+         null, dirPanel, resources.getMessage("tooltip.startdir"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("startdir.mnemonic"));
+         resources.getCodePoint("startdir.mnemonic"));
 
-      jdrPanel = new JDRSettingsPanel(getResources());
+      jdrPanel = new JDRSettingsPanel(resources);
 
-      tabbedPane.addTab(getResources().getMessage("jdr.title"), null,
-        jdrPanel, getResources().getMessage("tooltip.jdr"));
+      tabbedPane.addTab(resources.getMessage("jdr.title"), null,
+        jdrPanel, resources.getMessage("tooltip.jdr"));
       tabbedPane.setMnemonicAt(idx++,
-        getResources().getCodePoint("jdr.mnemonic"));
+        resources.getCodePoint("jdr.mnemonic"));
 
-      initAppSettingsPanel = new InitAppSettingsPanel(getResources());
+      initAppSettingsPanel = new InitAppSettingsPanel(resources);
 
-      tabbedPane.addTab(getResources().getMessage("initsettings.title"),
+      tabbedPane.addTab(resources.getMessage("initsettings.title"),
          null, initAppSettingsPanel,
-         getResources().getMessage("tooltip.initsettings"));
+         resources.getMessage("tooltip.initsettings"));
       tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("initsettings.mnemonic"));
+         resources.getCodePoint("initsettings.mnemonic"));
 
-      bitmapPanel = new BitmapPanel(getResources());
+      bitmapPanel = new BitmapPanel(resources);
 
-      tabbedPane.addTab(getResources().getMessage("bitmapconfig.title"), null,
-        bitmapPanel, getResources().getMessage("bitmapconfig.tooltip"));
+      tabbedPane.addTab(resources.getMessage("bitmapconfig.title"), null,
+        bitmapPanel, resources.getMessage("bitmapconfig.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-        getResources().getCodePoint("bitmapconfig.mnemonic"));
+        resources.getCodePoint("bitmapconfig.mnemonic"));
 
       processesPanel = new ProcessesPanel(application, appSelector);
 
-      tabbedPane.addTab(getResources().getMessage("processes.title"), null,
-        new JScrollPane(processesPanel), getResources().getMessage("processes.tooltip"));
+      tabbedPane.addTab(resources.getMessage("processes.title"), null,
+        new JScrollPane(processesPanel), resources.getMessage("processes.tooltip"));
       tabbedPane.setMnemonicAt(idx++,
-        getResources().getCodePoint("processes.mnemonic"));
+        resources.getCodePoint("processes.mnemonic"));
 
       // OK/Cancel Button panel
 
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
-      p.add(getResources().createOkayButton(getRootPane(), this));
-      p.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p.add(getResources().createHelpDialogButton(this, "sec:configuredialog"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p, this, "sec:configuredialog");
 
       pack();
       Dimension dim = getSize();
