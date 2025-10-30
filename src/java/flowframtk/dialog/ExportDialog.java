@@ -830,6 +830,13 @@ public class ExportDialog extends JDialog
          break;
       }
 
+      if ((useTypeblockBoundsBox.isSelected() && !useTypeblockBoundsBox.isEnabled())
+       || (usePaperSizeBoundsBox.isSelected() && !usePaperSizeBoundsBox.isEnabled()))
+      {
+         exportSettings.bounds = ExportSettings.Bounds.IMAGE;
+         useImageBoundsBox.setSelected(true);
+      }
+
       switch (exportSettings.objectMarkup)
       {
          case NONE:
@@ -1038,19 +1045,20 @@ public class ExportDialog extends JDialog
 
       if (boundsComp.isVisible())
       {
-         if (usePaperSizeBoundsBox.isSelected())
+         if (usePaperSizeBoundsBox.isSelected()
+           && usePaperSizeBoundsBox.isEnabled())
          {
             exportSettings.bounds = ExportSettings.Bounds.PAPER;
-         }
-         else if (useImageBoundsBox.isSelected())
-         {
-            exportSettings.bounds = ExportSettings.Bounds.IMAGE;
          }
          else if ( useTypeblockBoundsBox.isEnabled()
                 && useTypeblockBoundsBox.isSelected()
                  )
          {
             exportSettings.bounds = ExportSettings.Bounds.TYPEBLOCK;
+         }
+         else
+         {
+            exportSettings.bounds = ExportSettings.Bounds.IMAGE;
          }
       }
 
