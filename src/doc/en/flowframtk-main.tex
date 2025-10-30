@@ -1546,6 +1546,14 @@ size, the \gls{paper} attributes, the grid style, the size of the
 \glspl{controlpt} and whether they should be affected by the
 magnification setting.
 
+\widgetdef{jdr.warn_load_old}
+
+If the \widget{jdr.warn_load_old} setting is on, there will be a
+warning if you load a \gls{JDR} or \gls{AJR} file that is in an
+old format. When you save the file with \menu{file.save}, it will 
+by default use the latest stable format. If you still want to use
+the old format, you will need to use \menu{file.save_as} and select
+the appropriate filter.
 
 \subsubsection{Startup Settings}\label{sec:initsettings}
 
@@ -1772,7 +1780,7 @@ setting.
 The \widget{clssettings.pdfinfo} \gls*{checkbox} governs whether or
 not to add the title and creation date meta data to the exported
 document. If you have \sty{flowframtkutils} installed, the
-information will be written to the exported file in the form
+information will be written to the exported file in the form:
 \begin{compactcodebox}
 \gls{flowframtkimageinfo}\marg{
  title=\margm{image-description},
@@ -2222,8 +2230,8 @@ settings.)
   {Configuration UI Dialog Box (Graphics Settings)}
 
 The \widget{graphics.title} tab (\figureref{fig:graphics})
-allows you to make adjustments to the way the image is rendered on
-the \gls{canvas}.
+allows you to make adjustments to the way the image is
+\glslink{rendering}{rendered} on the \gls{canvas}.
 
 \widgetdef{render.anti_alias}
 
@@ -2248,6 +2256,14 @@ If enabled, this setting will cause a mouse \gls{click} on the
 
 If enabled, the \gridlock\ will be ignored when using the
 mouse to select a \gls{controlpt} in \editpathmode.
+
+Each type of \gls{controlpt} has a particular \manmsg{colour}
+depending on whether or not the \gls{controlpt} is selected.  The
+\manmsg{colour} can be changed for each type and selection status.
+Use the \btn{choose_colour} button next to the sample and state
+(\widget{render.control.unselected} or
+\widget{render.control.selected}) to open a \manmsg{colour} dialog
+to choose a new \manmsg{colour}.
 
 \widgetdef{render.control.standard}
 
@@ -2470,6 +2486,9 @@ isn't running).
 
 You can use the \widget{borders.title} tab (\figureref{fig:rulers})
 to customise the \glspl{ruler}, \glspl{toolbar} and \gls{statusbar}.
+
+\widgetdef{borders.showtools}
+
 You can show or hide the \glspl{toolbar} using the
 \widget{borders.showtools} checkbox. If this check box is selected,
 you can also specify the location of the vertical toolbar.
@@ -2500,10 +2519,13 @@ a setting to show or hide the rulers as this is done for the
 currently selected \gls{canvas} using the main menu item
 \menu{settings.rulers}.
 
+\widgetdef{borders.showstatus}
+
 You can show or hide the \gls{statusbar} using the
 \widget{borders.showstatus} check box. If this box is
 selected, you can additionally choose to show or hide the
-individual \gls{statusbar} elements.
+individual \gls{statusbar} elements (see \figureref{fig:statusbar}
+in \sectionref{sec:thestatusbar}).
 
 \seealsorefs{sec:thetoolbars,sec:therulers,sec:thestatusbar}
 
@@ -2561,11 +2583,16 @@ The font used by this editor can be changed in the
 \widget{texeditorui.title} tab (\figureref{fig:texeditorui}).
 You can also set the default width (in terms of approximate number
 of characters per line) and the default height (in terms of lines)
-for the editor when it's first created at startup. You can also
-enable or disable syntax highlighting by selecting or deselecting
+for the editor when it's first created at startup.
+
+\widgetdef{texeditorui.highlight}
+
+You can enable or disable syntax highlighting by selecting or deselecting
 the button marked \widget{texeditorui.highlight}. If
 selected, you can also set the \manmsg{colour} used for comments
-(indicated by \TeX's \glssymbol{percent} comment character) or for commands. The
+(indicated by \TeX's \glssymbol{percent} comment character) or for commands.
+(Use the \btn{button.choose_colour} button to open the
+\manmsg{colour} selector dialog.) The
 editor currently doesn't have any spell-checking support.
 The \hyperref[sec:texconfigpreamble]{default preamble} panel
 of the \dialog{texconfig} dialog also
@@ -2629,6 +2656,16 @@ window and for the dialog boxes vary.
 \subfigref{fig:lookandfeelex-nimbus} Nimbus;
 \subfigref{fig:lookandfeelex-cdemotif} CDE\slash Motif;
 \subfigref{fig:lookandfeelex-gtk} GTK+}
+
+\widgetdef{lookandfeel.dialog.as_general}
+
+The dialog buttons by defaylt have the same style as general
+buttons, but if you uncheck the \widget{lookandfeel.dialog.as_general} 
+checkbox you can select your preferred style for dialog buttons
+using the settings that will become visible in the
+\widget{lookandfeel.dialog_button_styles} area.
+
+\widgetdef{lookandfeel.button.style}
 
 In addition to changing the look and feel, you can also change how
 the buttons that have icons are displayed. By default, the buttons
@@ -2708,9 +2745,8 @@ Some of these styles also display a textual label, which may be
 above, below, to the left or to the right of the icon.
 Alternatively, you can just select the text only option. If you
 prefer to have a different style for the dialog windows, you can
-uncheck the \widget{lookandfeel.dialog.as_general} button,
-which will display a set of button styles that you can apply to the
-dialog windows. For example, \figureref{fig:icontext} shows the
+uncheck the \widget{lookandfeel.dialog.as_general} button. 
+For example, \figureref{fig:icontext} shows the
 dialog window from \figureref{fig:graphics} with the
 small icons and trailing text dialog button option.
 
@@ -2898,7 +2934,7 @@ toolbar with buttons to edit the preamble code and document text.
 
 \section{The Rulers}\label{sec:therulers}
 
-There are two \inlineglspluraldef{ruler}.The horizontal ruler
+There are two \inlineglspluraldef{ruler}: the horizontal ruler
 positioned above the \gls{canvas} which marks out the $x$-ticks, and
 the vertical ruler positioned to the left of the \gls*{canvas} which
 marks out the $y$-ticks. The gap between tick marks can be changed
@@ -3042,6 +3078,11 @@ settings.
 
 The \widget{button.choose} button (\btn{choose}) opens a new dialog in which you
 can choose a sub-setting from the main dialog window.
+
+\widgetdef{button.choose_colour}
+
+The \widget{button.choose_colour} button (\btn{choose_colour}) opens
+a dialog in which you can choose a \manmsg{colour}.
 
 \widgetdef{button.selectfile}
 
@@ -3432,12 +3473,14 @@ The \meta{class name} is the Java class name of the \gls{object}:
 \code{JDRSpiralPattern} for a spiral \gls{pattern}, and
 \code{JDRSymmetricPath} for a symmetric shape.
 
-The \meta{description} is the image's description when \meta{n} is 0
-otherwise it's the \gls{object}['s] description. This argument will
-be empty if no description has been set.
+The \meta{description} is the image's description
+(\sectionref{sec:imagedescription}) when \meta{n} is 0 otherwise
+it's the \gls{object}['s] description
+(\sectionref{sec:objectdescription}). This argument will be empty if
+no description has been set.
 
-The \meta{tag} is the object's tag. This argument will be empty if
-no tag has been set.
+The \meta{tag} is the object's tag (\sectionref{sec:objecttag}).
+This argument will be empty if no tag has been set.
 
 The \meta{pgf point} argument is the lower left point of the object's bounding
 box in \sty{pgf} point notation (\gls{pgfpoint}\margm{x}\margm{y}).

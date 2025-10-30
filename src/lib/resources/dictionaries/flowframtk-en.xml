@@ -2600,9 +2600,11 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="editpathui.title">Edit Path Settings</entry>
 <entry key="editpathui.canvasclick">Canvas click to exit</entry>
 <entry key="editpathui.canvasclick.mnemonic">E</entry>
+<entry key="editpathui.canvasclick.initvalue">false</entry>
 <entry key="editpathui.canvasclick.tooltip">Click on the canvas to exit edit path mode</entry>
 <entry key="editpathui.ignorelock">Ignore grid lock when selecting control</entry>
 <entry key="editpathui.ignorelock.mnemonic">I</entry>
+<entry key="editpathui.ignorelock.initvalue">false</entry>
 <entry key="editpathui.ignorelock.tooltip">When using the mouse to select a control point use the actual mouse co-ordinates not the nearest tick even if the grid lock is on</entry>
 
 <!--  graphics panel -->
@@ -2707,6 +2709,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="jdr.on_load.paper">Only apply paper settings stored in the file</entry>
 <entry key="jdr.warn_load_old">Warn when loading old JDR version</entry>
 <entry key="jdr.warn_load_old.mnemonic">W</entry>
+<entry key="jdr.warn_load_old.initvalue">true</entry>
 
 <entry key="bitmapconfig.title">Bitmaps</entry>
 <entry key="bitmapconfig.mnemonic">B</entry>
@@ -2735,6 +2738,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="processes.timeout.mnemonic">M</entry>
 <entry key="processes.millisecs">Milliseconds</entry>
 <entry key="processes.support_eps_svg">Support export to PostScript and SVG</entry>
+<entry key="processes.support_eps_svg.initvalue">false</entry>
 
 <!--  TeX settings -->
 
@@ -2810,9 +2814,11 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="textconfig.escape">Auto escape text symbols</entry>
 <entry key="textconfig.escape.mnemonic">E</entry>
+<entry key="textconfig.escape.initvalue">true</entry>
 <entry key="textconfig.escape.tooltip">Automatically escape TeX's special characters when creating new text areas</entry>
 <entry key="textconfig.escape_mathchar">Auto escape math symbols</entry>
 <entry key="textconfig.escape_mathchar.mnemonic">M</entry>
+<entry key="textconfig.escape_mathchar.initvalue">true</entry>
 <entry key="textconfig.escape_mathchar.tooltip">Automatically escape TeX's special characters when creating new math areas</entry>
 
 <entry key="textconfig.textmappings">Text Mode Mappings</entry>
@@ -2904,8 +2910,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="borders.showruler.info">Use the {0} -&gt; {1} menu item to show or hide rulers for the current canvas.</entry>
 <entry key="borders.showtools">Show Tools</entry>
 <entry key="borders.showtools.mnemonic">S</entry>
+<entry key="borders.showtools.initvalue">true</entry>
 <entry key="borders.showstatus">Show Status Bar</entry>
 <entry key="borders.showstatus.mnemonic">B</entry>
+<entry key="borders.showstatus.initvalue">true</entry>
 <entry key="borders.statusfont.family">Status Bar Font:</entry>
 <entry key="borders.statusfont.size">Size</entry>
 <entry key="borders.statusfont.bold">Bold</entry>
@@ -2998,6 +3006,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="texeditorui.height.tooltip">Approximate number of lines</entry>
 <entry key="texeditorui.highlight">Syntax highlighting</entry>
 <entry key="texeditorui.highlight.mnemonic">Y</entry>
+<entry key="texeditorui.highlight.initvalue">true</entry>
 <entry key="texeditorui.comment">Comment color</entry>
 <entry key="texeditorui.comment.mnemonic">E</entry>
 <entry key="texeditorui.cs">Control Sequence color</entry>
@@ -3016,7 +3025,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="lookandfeel.title">Look &amp; Feel</entry>
 <entry key="lookandfeel.mnemonic">K</entry>
 <entry key="lookandfeel.tooltip">Change the look and feel of the widgets</entry>
-<entry key="lookandfeel.info">A restart is required for these settings to take effect. Sample buttons don't perform any actions when you click on them. They just demonstrate their appearance. The "Plain" icon styles aren't suitable for L&amp;F styles that don't place a border around toggle and radio buttons.</entry>
+<entry key="lookandfeel.info">A restart is required for these settings to take effect. Sample buttons don''t perform any actions when you click on them. They just demonstrate their appearance. The "Plain" icon styles aren''t suitable for L&amp;F styles that don''t place a border around toggle and radio buttons.</entry>
 <entry key="lookandfeel.lfname">Look &amp; Feel Name:</entry>
 <entry key="lookandfeel.lfname.mnemonic">N</entry>
 <entry key="lookandfeel.button_styles">General Button Styles</entry>
@@ -3049,6 +3058,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="lookandfeel.button_style.text">Text Only</entry>
 <entry key="lookandfeel.button_style.text.mnemonic">T</entry>
 <entry key="lookandfeel.dialog.as_general">As General Button Style</entry>
+<entry key="lookandfeel.dialog.as_general.initvalue">true</entry>
 <entry key="lookandfeel.dialog_button_default">Default</entry>
 <entry key="lookandfeel.dialog_button_text_only">Text Only</entry>
 <entry key="lookandfeel.dialog_button_large_icons_and_text_trailing">Large Icons and Trailing Text</entry>
@@ -3768,6 +3778,10 @@ Merge Region: {2}</entry>
 <entry key="button.choose">Select...</entry>
 <entry key="button.choose.tooltip">Choose a new setting</entry>
 <entry key="button.choose.iconimage">choose</entry>
+
+<entry key="button.choose_colour">Select Color...</entry>
+<entry key="button.choose_colour.tooltip">Choose a new color</entry>
+<entry key="button.choose_colour.iconimage">choose_colour</entry>
 
 <entry key="button.quit_without_saving">Quit Without Saving</entry>
 

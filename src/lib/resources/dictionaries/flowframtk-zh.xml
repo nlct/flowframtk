@@ -3760,6 +3760,10 @@ Merge Region: {2}</entry>
 <entry key="button.choose.tooltip">Choose a new setting</entry>
 <entry key="button.choose.iconimage">choose</entry>
 
+<entry key="button.choose_colour">Select Color...</entry>
+<entry key="button.choose_colour.tooltip">Choose a new color</entry>
+<entry key="button.choose_colour.iconimage">choose_colour</entry>
+
 <entry key="button.quit_without_saving">直接退出而不保存</entry>
 
 <entry key="label.duplicate">(Copy)</entry>
