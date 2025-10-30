@@ -61,6 +61,26 @@ public class RectangularCoordPanel extends JPanel implements CoordPanel
       yPanel.setUnit(unit);
    }
 
+   public JDRUnit getUnitX()
+   {
+      return xPanel.getUnit();
+   }
+
+   public JDRUnit getUnitY()
+   {
+      return yPanel.getUnit();
+   }
+
+   public void setXCoord(double x, JDRUnit unit)
+   {
+      xPanel.setValue(x, unit);
+   }
+
+   public void setYCoord(double y, JDRUnit unit)
+   {
+      yPanel.setValue(y, unit);
+   }
+
    public void setCoords(double x, double y, JDRUnit unit, JDRPaper paper)
    {
       xPanel.setValue(x, unit);
