@@ -79,7 +79,7 @@ public class JDRRadialGridListener implements JDRGridLoaderListener
       else if (!pageDependent)
       {
          jdr.warningWithFallback("warning.save_unsupported_radial_origin_grid",
-          "Origin-based radial grid type not supported in JDR/AJR version {1}",
+          "Origin-based radial grid type not supported in JDR/AJR version {0}",
           version);
       }
    }
