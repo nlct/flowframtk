@@ -46,7 +46,6 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 import com.dickimawbooks.texjavahelplib.JLabelGroup;
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -160,17 +159,7 @@ public class ConfigUISettingsDialog extends JDialog
       JPanel p = new JPanel();
       getContentPane().add(p, "South");
 
-      p.add(getResources().createOkayButton(getRootPane(), this));
-      p.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p.add(getResources().createHelpDialogButton(this, "sec:configureuidialog"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      getResources().createOkayCancelHelpButtons(this, p, this, "sec:configureuidialog");
 
       setLocationRelativeTo(application);
    }
@@ -675,7 +664,7 @@ class ControlPaintPanel extends JPanel implements ActionListener
 
       add(label);
 
-      selectButton = resources.createDialogButton("button.choose",
+      selectButton = resources.createDialogButton("button.choose_colour",
         "choose", this, null);
 
       add(selectButton);
@@ -2642,7 +2631,7 @@ class TeXEditorUIPanel extends JPanel
       panel.add(Box.createHorizontalStrut(10));
 
       commentSelectButton = resources.createDialogButton(
-         "button.choose", "choose", this, null);
+         "button.choose_colour", "choose_colour", this, null);
       commentSelectButton.setActionCommand("commentselect");
       commentColorLabel.setLabelFor(commentSelectButton);
 
@@ -2668,7 +2657,7 @@ class TeXEditorUIPanel extends JPanel
       panel.add(Box.createHorizontalStrut(10));
 
       csSelectButton = resources.createDialogButton(
-         "button.choose", "choose", this, null);
+         "button.choose_colour", "choose_colour", this, null);
       csSelectButton.setActionCommand("csselect");
       csColorLabel.setLabelFor(csSelectButton);
 
