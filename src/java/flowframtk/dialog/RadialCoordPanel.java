@@ -73,6 +73,14 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
       anglePanel.setValue(p.getAngle());
    }
 
+   public void translate(JDRUnit unit, double dx, double dy)
+   {
+      JDRLength xlen = getXCoord();
+      JDRLength ylen = getYCoord();
+
+      setCoords(xlen.getValue(unit)+dx, ylen.getValue(unit)+dy, unit, paper);
+   }
+
    public JDRLength getXCoord()
    {
       JDRLength coord = radiusPanel.getLength();

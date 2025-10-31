@@ -466,6 +466,9 @@ public class SegmentInfoDialog extends JDialog
          endControlPanel.setEnabled(false);
       }
 
+      originalSelectedIndex = selectedIndex;
+      indexBase = workingPath.getSelectedControlIndex() - selectedIndex;
+
       detailsUpdated(false);
       pack();
       setLocationRelativeTo(frame);
@@ -479,13 +482,19 @@ public class SegmentInfoDialog extends JDialog
 
    public void okay()
    {
+      JDRCanvas canvas = frame.getCanvas();
+
+      if (originalSelectedIndex != selectedIndex)
+      {
+         canvas.setSelectedControl(indexBase + selectedIndex);
+      }
+
       if (!modified)
       {
          setVisible(false);
          return;
       }
 
-      JDRCanvas canvas = frame.getCanvas();
       JDRUnit unit = getStorageUnit();
 
       for (int i = 0, n = Math.min(infoPanels.size(), workingSegment.controlCount());
@@ -588,12 +597,70 @@ public class SegmentInfoDialog extends JDialog
       return endControlPanel.isEnabled();
    }
 
+   public int getSelectedControlIndex()
+   {
+      return selectedIndex;
+   }
+
+   public JDRPoint selectControl(double x, double y)
+   {
+      JDRPoint controlPt = null;
+
+      for (int i = 0; i < workingSegment.controlCount(); i++)
+      {
+         controlPt = workingSegment.getControl(i);
+
+         if (controlPt.containsStoragePoint(x, y))
+         {
+            setSelectedControlIndex(i);
+            return controlPt;
+         }
+      }
+
+      if (isEndEnabled())
+      {
+         controlPt = workingSegment.getEnd();
+
+         if (controlPt.containsStoragePoint(x, y))
+         {
+            setSelectedControlIndex(workingSegment.controlCount());
+            return controlPt;
+         }
+      }
+
+      return null;
+   }
+
+   public void setSelectedControlIndex(int newIndex)
+   {
+      if (newIndex != selectedIndex)
+      {
+         workingPath.selectControl(indexBase + newIndex);
+         selectedIndex = newIndex;
+         samplePanel.repaint();
+      }
+   }
+
+   public void moveSelectedPoint(double dx, double dy)
+   {
+      if (selectedIndex == workingSegment.controlCount() && isEndEnabled())
+      {
+         endControlPanel.translate(dx, dy);
+      }
+      else
+      {
+         infoPanels.get(selectedIndex).translate(dx, dy);
+      }
+   }
+
    private JDRShape workingPath;
    private Shape completeShape;
    private JDRPathSegment segment, workingSegment;
    private JDRFrame frame;
    private FlowframTk application;
    private double hoffset = 0.0, voffset = 0.0;
+   private int indexBase = 0;
+   private int originalSelectedIndex;
    private int selectedIndex;
    private boolean modified=false;
 
@@ -610,7 +677,7 @@ public class SegmentInfoDialog extends JDialog
 }
 
 class SegmentSamplePanel extends JPanel 
-   implements ComponentListener,Scrollable
+   implements ComponentListener,Scrollable,MouseListener,MouseMotionListener
 {
    public SegmentSamplePanel(SegmentInfoDialog dialog)
    {
@@ -621,6 +688,8 @@ class SegmentSamplePanel extends JPanel
       setPreferredSize(MIN_SIZE);
 
       addComponentListener(this);
+      addMouseListener(this);
+      addMouseMotionListener(this);
    }
 
    public Dimension getMinimumSize()
@@ -697,6 +766,74 @@ class SegmentSamplePanel extends JPanel
          return (unitIncrement.height >= visibleRect.height) ?
            visibleRect.height :
            visibleRect.height - unitIncrement.height;
+   }
+
+   @Override
+   public void mouseClicked(MouseEvent evt)
+   {
+      anchorPt = null;
+   }
+
+   @Override
+   public void mouseEntered(MouseEvent evt)
+   {
+   }
+
+   @Override
+   public void mouseExited(MouseEvent evt)
+   {
+   }
+
+   @Override
+   public void mousePressed(MouseEvent evt)
+   {
+      anchorPt = null;
+
+      if (evt.getClickCount() == 1
+          && (evt.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK)
+                == InputEvent.BUTTON1_DOWN_MASK)
+      {
+         JDRPathSegment segment = dialog.getSegment();
+         CanvasGraphics cg = segment.getCanvasGraphics();
+
+         double x = cg.componentXToStorage(evt.getX()-xOffset);
+         double y = cg.componentYToStorage(evt.getY()-yOffset);
+
+         JDRPoint controlPt = dialog.selectControl(x, y);
+
+         if (controlPt != null)
+         {
+            anchorPt = evt.getPoint();
+         }
+      }
+   }
+
+   @Override
+   public void mouseReleased(MouseEvent evt)
+   {
+      anchorPt = null;
+   }
+
+   @Override
+   public void mouseDragged(MouseEvent evt)
+   {
+      if (anchorPt != null)
+      {
+         CanvasGraphics cg = dialog.getCanvasGraphics();
+
+         double x = evt.getX() - anchorPt.getX();
+         double y = evt.getY() - anchorPt.getY();
+
+         dialog.moveSelectedPoint(cg.componentXToStorage(x), 
+           cg.componentYToStorage(y));
+
+         anchorPt.setLocation(evt.getX(), evt.getY());
+      }
+   }
+
+   @Override
+   public void mouseMoved(MouseEvent evt)
+   {
    }
 
    public void detailsUpdated()
@@ -788,7 +925,7 @@ class SegmentSamplePanel extends JPanel
       g2.draw(shape);
 
       g2.setPaint(Color.BLACK);
-      segment.draw();
+      segment.drawSelectedNoControls();
       segment.drawControls(dialog.isEndEnabled());
 
       g2.setTransform(oldAf);
@@ -836,6 +973,7 @@ class SegmentSamplePanel extends JPanel
    private BBox bounds=null, segmentBBox=null;
    private Dimension prefViewportSize = MIN_SIZE;
    private double xOffset=0.0, yOffset = 0.0;
+   private Point anchorPt;
    private SegmentInfoDialog dialog;
    private static final Dimension MIN_SIZE = new Dimension(100, 100);
 
@@ -900,6 +1038,11 @@ class ControlInfoPanel extends JPanel implements ChangeListener
    public int getIndex()
    {
       return index;
+   }
+
+   public void translate(double dx, double dy)
+   {
+      locationPane.translate(dialog.getCanvasGraphics().getStorageUnit(), dx, dy);
    }
 
    public JDRLength getXCoord()

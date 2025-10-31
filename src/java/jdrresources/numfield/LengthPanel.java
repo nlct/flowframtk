@@ -216,6 +216,12 @@ public class LengthPanel extends JPanel
       setUnit(length.getUnit());
    }
 
+   public void translate(JDRUnit unit, double offset)
+   {
+      double val = getNumberComponent().getDouble() + unit.toUnit(offset, getUnit());
+      setValue(val, getUnit());
+   }
+
    public void addKeyListener(KeyListener kl)
    {
       getTextField().addKeyListener(kl);

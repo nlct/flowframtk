@@ -8171,6 +8171,12 @@ public class JDRCanvas extends JPanel
       setStoragePoint(segment, point, x.getValue(unit), y.getValue(unit));
    }
 
+   public void setSelectedControl(int selectedIndex)
+   {
+      UndoableEdit edit = new SelectControl(selectedIndex);
+      frame_.postEdit(edit);
+   }
+
    public void setSymbolText(String str)
    {
       textField.setText(str);
@@ -15906,6 +15912,56 @@ public class JDRCanvas extends JPanel
          {
             throw new NullPointerException();
          }
+
+         editedPath.selectControl(newIndex_);
+
+         if (box == null)
+         {
+            box = editedPath.getSelectedControl().getBpControlBBox();
+         }
+         else
+         {
+            box.merge(editedPath.getSelectedControl().getBpControlBBox());
+         }
+
+         box.translate(cg.storageToBp(hoffset)-cg.getBpOriginX(), -cg.getBpOriginY());
+
+         setRefreshBounds(box);
+
+         updateEditPathActions();
+      }
+
+      public SelectControl(int newIndex)
+      {
+         super(getFrame());
+
+         CanvasGraphics cg = getCanvasGraphics();
+
+         double hoffset = 0.0;
+
+         FlowFrame flowframe = editedPath.getFlowFrame();
+         FlowFrame typeblock = paths.getFlowFrame();
+
+         if (flowframe != null && cg.isEvenPage())
+         {
+            hoffset = -flowframe.getEvenXShift();
+
+            if (typeblock != null)
+            {
+               hoffset -= typeblock.getEvenXShift();
+            }
+         }
+
+         oldIndex_ = editedPath.getSelectedControlIndex();
+
+         BBox box = null;
+
+         if (oldIndex_ != -1)
+         {
+            box = editedPath.getSelectedControl().getBpControlBBox();
+         }
+
+         newIndex_ = newIndex;
 
          editedPath.selectControl(newIndex_);
 

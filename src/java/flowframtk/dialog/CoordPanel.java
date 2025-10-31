@@ -34,6 +34,8 @@ public interface CoordPanel
 
    public void setCoords(double x, double y, JDRUnit unit, JDRPaper paper);
 
+   public void translate(JDRUnit unit, double dx, double dy);
+
    public void setUnit(JDRUnit unit);
 
    public JDRLength getXCoord();

@@ -128,6 +128,12 @@ public class LocationPane extends JTabbedPane
       getCoordPanel().requestCoordFocus();
    }
 
+   public void translate(JDRUnit unit, double dx, double dy)
+   {
+      rectCoordPanel.translate(unit, dx, dy);
+      radialCoordPanel.translate(unit, dx, dy);
+   }
+
    public JDRLength getXCoord()
    {
       return getCoordPanel().getXCoord();
@@ -153,6 +159,21 @@ public class LocationPane extends JTabbedPane
    {
       rectCoordPanel.setEnabled(enabled);
       radialCoordPanel.setEnabled(enabled);
+   }
+
+   public JDRPaper getPaper()
+   {
+      return paper;
+   }
+
+   public JDRUnit getUnit()
+   {
+      return unit;
+   }
+
+   public JDRGrid getGrid()
+   {
+      return grid;
    }
 
    private RectangularCoordPanel rectCoordPanel;

@@ -87,6 +87,12 @@ public class RectangularCoordPanel extends JPanel implements CoordPanel
       yPanel.setValue(y, unit);
    }
 
+   public void translate(JDRUnit unit, double dx, double dy)
+   {
+      xPanel.translate(unit, dx);
+      yPanel.translate(unit, dy);
+   }
+
    public JDRLength getXCoord()
    {
       return xPanel.getLength();
