@@ -86,7 +86,23 @@ public class PNG
       double offsetx = 0;
       double offsety = 0;
 
-      if (cropimage)
+      FlowFrame flowframe = group.getFlowFrame();
+
+      if (exportSettings.bounds == ExportSettings.Bounds.TYPEBLOCK
+          && flowframe != null)
+      {
+         JDRUnit storageUnit = cg.getStorageUnit();
+
+         double w = cg.getStoragePaperWidth() - flowframe.getLeft() - flowframe.getRight();
+         double h = cg.getStoragePaperHeight() - flowframe.getTop() - flowframe.getBottom();
+
+         width = (int)Math.ceil(storageUnit.toBp(w));
+         height = (int)Math.ceil(storageUnit.toBp(h));
+
+         offsetx = -storageUnit.toBp(flowframe.getLeft());
+         offsety = -storageUnit.toBp(flowframe.getTop());
+      }
+      else if (cropimage)
       {
          BBox bbox = group.getBpBBox();
 
