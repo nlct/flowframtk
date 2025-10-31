@@ -25,6 +25,8 @@
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.awt.*;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -50,12 +52,47 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
 
       add(anglePanel);
 
+      pageCentredButton = resources.createAppCheckBox("coordinates", "radial_page", true, null);
+      add(pageCentredButton);
+
+      pageCentredButton.addItemListener(new ItemListener()
+       {
+          @Override
+          public void itemStateChanged(ItemEvent evt)
+          {
+             if (paper != null)
+             {
+                double x = 0.5*paper.getWidth();
+                double y = 0.5*paper.getHeight();
+
+                if (isPageCentred())
+                {
+                   translate(JDRUnit.bp, -x, -y);
+                }
+                else
+                {
+                   translate(JDRUnit.bp, x, y);
+                }
+             }
+          }
+       });
+
       setName(resources.getMessage("grid.radial"));
    }
 
    public void requestCoordFocus()
    {
       radiusPanel.getTextField().requestFocusInWindow();
+   }
+
+   public void setPageCentred(boolean pageCentred)
+   {
+      pageCentredButton.setSelected(pageCentred);
+   }
+
+   public boolean isPageCentred()
+   {
+      return pageCentredButton.isSelected();
    }
 
    public void setCoords(double x, double y, JDRUnit unit, JDRPaper paper)
@@ -65,8 +102,16 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
       JDRRadialPoint p = new JDRRadialPoint(0, 
         new JDRAngle(resources.getMessageSystem(), 0, anglePanel.getUnit()));
 
-      p.setLocation(unit.toBp(x)-0.5*paper.getWidth(),
-                    unit.toBp(y)-0.5*paper.getHeight());
+      double bpX = unit.toBp(x);
+      double bpY = unit.toBp(y);
+
+      if (isPageCentred())
+      {
+         bpX -= 0.5*paper.getWidth();
+         bpY -= 0.5*paper.getHeight();
+      }
+
+      p.setLocation(bpX, bpY);
 
       radiusPanel.setValue(unit.fromBp(p.getRadius()), unit);
 
@@ -75,10 +120,13 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
 
    public void translate(JDRUnit unit, double dx, double dy)
    {
-      JDRLength xlen = getXCoord();
-      JDRLength ylen = getYCoord();
+      if (paper != null)
+      {
+         JDRLength xlen = getXCoord();
+         JDRLength ylen = getYCoord();
 
-      setCoords(xlen.getValue(unit)+dx, ylen.getValue(unit)+dy, unit, paper);
+         setCoords(xlen.getValue(unit)+dx, ylen.getValue(unit)+dy, unit, paper);
+      }
    }
 
    public JDRLength getXCoord()
@@ -87,7 +135,10 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
 
       coord.scale(Math.cos(anglePanel.getValue().toRadians()));
 
-      coord.add(0.5*paper.getWidth(), JDRUnit.bp);
+      if (isPageCentred())
+      {
+         coord.add(0.5*paper.getWidth(), JDRUnit.bp);
+      }
 
       return coord;
    }
@@ -98,7 +149,10 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
 
       coord.scale(Math.sin(anglePanel.getValue().toRadians()));
 
-      coord.add(0.5*paper.getHeight(), JDRUnit.bp);
+      if (isPageCentred())
+      {
+         coord.add(0.5*paper.getHeight(), JDRUnit.bp);
+      }
 
       return coord;
    }
@@ -124,6 +178,7 @@ public class RadialCoordPanel extends JPanel implements CoordPanel
    private NonNegativeLengthPanel radiusPanel;
 
    private AnglePanel anglePanel;
+   private JCheckBox pageCentredButton;
 
    private JDRPaper paper;
 

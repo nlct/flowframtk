@@ -7610,11 +7610,31 @@ conversion factor with the \gls{storageunit}.
 \menudef{menu.editpath.info}
 
 The \menu{editpath.info} menu item will option the 
-\inlineglsdef{segmentinfo.title} dialog box shown in
-\figureref{fig:segmentinfo}, which describes the segment type and
+\dialog{segmentinfo} dialog box shown in
+\figureref{fig:segmentinfo}.
+
+\widgetdef{segmentinfo.title}
+
+The \dialog{segmentinfo} dialog describes the segment type and
 provides numeric fields in which to adjust the co-ordinates of the
 segment. Note that the end \gls{controlpt} won't be enabled unless 
-it's the end point of an open path.
+it's the end point of an open path or the end point of a
+\gls{line-of-symmetry}.
+
+You can also adjust the \glspl{controlpt} with the mouse in the
+sample area. This behaves slightly differently to moving
+\glspl{controlpt} on the \gls{canvas}: the \gridlock\ setting is
+ignored, and you can only drag a \gls{controlpt} if you initiate the
+drag from within the \gls{controlpt}['s] bounding box.
+
+\begin{information}
+The \dialog{segmentinfo} dialog allows you to focus in on a specific
+segment without the \glspl{controlpt} from the other segments
+getting in the way. The \gls{shape} shown in draft mode is just a
+guide. Any constraints, such as \gls{line-of-symmetry} or
+\gls{continuity} \glspl{anchor}, won't be applied to the
+\gls{shape} until the segment changes are confirmed.
+\end{information}
 
 Any changes made in this dialog won't take effect until you click on
 the \btn{okay} button. The \btn{cancel} button will discard all the

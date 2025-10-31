@@ -35,8 +35,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
-
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
@@ -73,19 +71,21 @@ public class SegmentInfoDialog extends JDialog
 
       JDRResources resources = application.getResources();
 
+      JComponent upperPane = new JPanel(new BorderLayout());
+
+      upperPane.add(resources.createAppInfoArea("segmentinfo.info"), "North");
+
       samplePanel = new SegmentSamplePanel(this);
       samplePanelSp = new JScrollPane(samplePanel);
 
+      upperPane.add(samplePanelSp, "Center");
+
       zoomComp = new ZoomComponent(this);
 
-      JComponent lowerPane = new JPanel(new BorderLayout());
-
-      textComp = resources.createAppInfoArea();
-      textComp.setRows(6);
-      lowerPane.add(new JScrollPane(textComp), "North");
+      textComp = resources.createAppInfoArea("segmentinfo.details.curve");
+      upperPane.add(new JScrollPane(textComp), "South");
 
       JComponent detailsComp = Box.createVerticalBox();
-      lowerPane.add(new JScrollPane(detailsComp), "Center");
 
       mainControlComp = Box.createVerticalBox();
       detailsComp.add(mainControlComp);
@@ -96,7 +96,10 @@ public class SegmentInfoDialog extends JDialog
       detailsComp.add(Box.createVerticalGlue());
 
       JSplitPane splitPane = new JSplitPane(
-        JSplitPane.VERTICAL_SPLIT, samplePanelSp, lowerPane);
+        JSplitPane.VERTICAL_SPLIT, 
+        upperPane,
+        new JScrollPane(detailsComp)
+      );
       splitPane.setResizeWeight(0.5);
 
       getContentPane().add(splitPane, "Center");
@@ -144,17 +147,7 @@ public class SegmentInfoDialog extends JDialog
       JPanel p2 = new JPanel();
       bottomPanel.add(p2, "Center");
 
-      p2.add(resources.createOkayButton(getRootPane(), this));
-      p2.add(resources.createCancelButton(this));
-
-      try
-      {
-         p2.add(resources.createHelpDialogButton(this, "mi:segmentinfo"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p2, this, "mi:segmentinfo");
 
       revertButton = resources.createDialogButton(
         "segmentinfo", "default", this, null);
@@ -975,7 +968,7 @@ class SegmentSamplePanel extends JPanel
    private double xOffset=0.0, yOffset = 0.0;
    private Point anchorPt;
    private SegmentInfoDialog dialog;
-   private static final Dimension MIN_SIZE = new Dimension(100, 100);
+   private static final Dimension MIN_SIZE = new Dimension(300, 300);
 
    public static final Color PATH_PAINT = new Color(220, 220, 220);
    public static final int PADDING=10;

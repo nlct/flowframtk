@@ -123,6 +123,7 @@ public class LocationPane extends JTabbedPane
       {
          setSelectedComponent(radialCoordPanel);
          current = RADIAL;
+         radialCoordPanel.setPageCentred(((JDRRadialGrid)grid).isPageCentred());
       }
 
       getCoordPanel().requestCoordFocus();

@@ -2324,10 +2324,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="coordinates.radius.mnemonic">R</entry>
 <entry key="coordinates.angle">Angle</entry>
 <entry key="coordinates.angle.mnemonic">A</entry>
+<entry key="coordinates.radial_page">Page Centered</entry>
 
 <!--  segment information dialog box -->
 
 <entry key="segmentinfo.title">Segment Details</entry>
+<entry key="segmentinfo.info">The draft shape shown is just a working copy. Any constraints won''t be applied until the new coordinates have been accepted. You may move control points either by typing in the coordinates or using your mouse to drag them in the area below. The grid lock (if enabled) does not apply.</entry>
+
 <entry key="segmentinfo.default">Revert</entry>
 <entry key="segmentinfo.default.mnemonic">R</entry>
 <entry key="segmentinfo.default.tooltip">Reset coordinates</entry>

@@ -126,6 +126,8 @@
 <entry key="texeditorui.comment">Comment colour</entry>
 <entry key="texeditorui.cs">Control Sequence colour</entry>
 
+<entry key="coordinates.radial_page">Page Centred</entry>
+
 <entry key="process.cancelling">Cancelling task.</entry>
 
 <!--  Vectorize Bitmap UI -->
