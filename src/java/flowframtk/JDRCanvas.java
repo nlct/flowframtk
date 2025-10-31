@@ -608,6 +608,7 @@ public class JDRCanvas extends JPanel
        | SEGMENT_FLAG_CURVE
        | SEGMENT_FLAG_PARTIAL_MOVE
        | SEGMENT_FLAG_PARTIAL_CURVE
+       | SEGMENT_FLAG_CLOSING_MOVE
          ));
 
       // Convert to curve
@@ -626,6 +627,7 @@ public class JDRCanvas extends JPanel
        | SEGMENT_FLAG_LINE
        | SEGMENT_FLAG_PARTIAL_MOVE
        | SEGMENT_FLAG_PARTIAL_LINE
+       | SEGMENT_FLAG_CLOSING_MOVE
          ));
 
       // Convert to move
@@ -644,13 +646,18 @@ public class JDRCanvas extends JPanel
        | SEGMENT_FLAG_LINE
        | SEGMENT_FLAG_PARTIAL_CURVE
        | SEGMENT_FLAG_PARTIAL_LINE
+       | SEGMENT_FLAG_CLOSING_MOVE
          ));
 
       editPathPopupMenu.addSeparator();
 
       // Symmetry submenu
 
-      JMenu symmetryMenu = getResources().createAppMenu("menu.editpath.symmetry");
+      JMenu symmetryMenu = EditPathAction.createMenu(this,
+        "menu.editpath", "symmetry",
+         SELECT_FLAG_NO_CLOSED_SUB_PATHS,
+         SEGMENT_FLAG_ANY);
+
       editPathPopupMenu.add(symmetryMenu);
 
       // Toggle symmetry
@@ -856,9 +863,23 @@ public class JDRCanvas extends JPanel
                convertToClosingMove();
             }
          },
-         SELECT_FLAG_SHAPE,
+         SELECT_FLAG_PATH,
          SEGMENT_FLAG_MOVE | SEGMENT_FLAG_LAST ,
-         CONTROL_FLAG_REGULAR
+         CONTROL_FLAG_REGULAR,
+         new ValidSegmentListener()
+         {
+            public boolean isValid(JDRSelection selection,
+               int currentSegmentFlag)
+            {
+               if ((currentSegmentFlag & SEGMENT_FLAG_CLOSING_MOVE)
+                      == SEGMENT_FLAG_CLOSING_MOVE)
+               {
+                  return false;
+               }
+
+               return true;
+            }
+         }
          ));
 
       editPathPopupMenu.addSeparator();
@@ -14142,6 +14163,7 @@ public class JDRCanvas extends JPanel
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
+         updateEditPathActions();
       }
 
       public void redo() throws CannotRedoException
@@ -14246,6 +14268,7 @@ public class JDRCanvas extends JPanel
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
+         updateEditPathActions();
       }
 
       public void redo() throws CannotRedoException
@@ -14352,6 +14375,7 @@ public class JDRCanvas extends JPanel
          mergeRefreshBounds(path_, box);
 
          setRefreshBounds(box);
+         updateEditPathActions();
       }
 
       public void redo() throws CannotRedoException

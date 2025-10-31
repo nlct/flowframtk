@@ -79,6 +79,12 @@ public abstract class JDRCompoundShape extends JDRShape
       return getUnderlyingShape().getStorageDistortionBounds();
    }
 
+    @Override
+    public boolean hasClosedSubPaths()
+    {
+       return getUnderlyingShape().hasClosedSubPaths();
+    }
+
    public void close(int closeType)
       throws InvalidPathException
    {

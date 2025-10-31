@@ -50,8 +50,10 @@ public interface JDRConstants
    public static final int OBJECT_SYMMETRIC_ANCHORED_CLOSE=17;
    public static final int OBJECT_DISTORTED=18;
    public static final int OBJECT_OUTLINE=19;
+   public static final int OBJECT_CLOSED_SUB_PATHS=20;
+   public static final int OBJECT_NO_CLOSED_SUB_PATHS=21;
 
-   public static final int OBJECT_MAX_INDEX=19;
+   public static final int OBJECT_MAX_INDEX=21;
 
    /*
     * Selection flags.
@@ -89,6 +91,12 @@ public interface JDRConstants
 
    public static final int SELECT_FLAG_OPEN =
      (1 << OBJECT_OPEN);
+
+   public static final int SELECT_FLAG_CLOSED_SUB_PATHS =
+     (1 << OBJECT_CLOSED_SUB_PATHS);
+
+   public static final int SELECT_FLAG_NO_CLOSED_SUB_PATHS =
+     (1 << OBJECT_NO_CLOSED_SUB_PATHS);
 
    public static final int SELECT_FLAG_SYMMETRIC_ANCHORED_JOIN =
      (1 << OBJECT_SYMMETRIC_ANCHORED_JOIN);

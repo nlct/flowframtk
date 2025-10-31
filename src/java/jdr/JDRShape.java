@@ -324,6 +324,8 @@ public abstract class JDRShape extends JDRCompleteObject
     */
    public abstract boolean isClosed();
 
+   public abstract boolean hasClosedSubPaths();
+
    /**
     * Determines whether the given segment has an end point that
     * doesn't coincide with the starting point of another segment.
@@ -1930,6 +1932,15 @@ public abstract class JDRShape extends JDRCompleteObject
       else
       {
          flag = (flag | SELECT_FLAG_OPEN);
+      }
+
+      if (hasClosedSubPaths())
+      {
+         flag = (flag | SELECT_FLAG_CLOSED_SUB_PATHS);
+      }
+      else
+      {
+         flag = (flag | SELECT_FLAG_NO_CLOSED_SUB_PATHS);
       }
 
       return flag;

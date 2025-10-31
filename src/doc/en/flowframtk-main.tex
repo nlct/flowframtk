@@ -7491,7 +7491,8 @@ segment with the \menu{editpath.close_sub_path} menu item.
 \menudef{menu.editpath.symmetry}
 
 The \menu{editpath.symmetry} sub menu can be used to add or remove
-\gls{symmetry}.
+\gls{symmetry}. This sub menu is unavailable if there are any closed
+sub-paths.
 See \sectionref{sec:symmetric} for further details.
 
 \menudef{menu.editpath.continuity}
@@ -7573,6 +7574,12 @@ the end points}
 
 \menudef{menu.editpath.close_sub_path}
 
+\begin{warning}
+Closed sub-paths are problematic with \glspl{compositeshape}
+and, in particular, don't work with \glspl{symmetricshape} as they
+cause the shape to lose its symmetry.
+\end{warning}
+
 If a \gls{move-to} segment is selected or if the final segment of a
 \gls{path} is selected, then the \menu{editpath.close_sub_path} menu
 item can be used to close a \gls+{sub-path}.
@@ -7593,9 +7600,9 @@ new \gls{closing-move} segment will be added and its end
 To open a closed \gls{sub-path}, simply select the \gls{closing-move}
 segment and use the \menu{editpath.convert_to_move} menu item to 
 convert it to a normal \gls{move-to} segment (or convert to a line
-or a \gls{Bezier-curve}).
-
-TODO
+or a \gls{Bezier-curve}). If the \gls{closing-move} is the final
+segment of a closed path, use \menu{editpath.open_path.remove_last}
+instead.
 
 \menudef{menu.editpath.coordinates}
 

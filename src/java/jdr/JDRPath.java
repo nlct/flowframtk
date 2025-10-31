@@ -1090,6 +1090,11 @@ public class JDRPath extends JDRShape
 
       size_++;
 
+      if (s instanceof JDRClosingMove)
+      {
+         numClosedSubPaths++;
+      }
+
       firePathChangeEvent(size_-1, JDRPathChangeEvent.Type.SEGMENT_ADDED,
        null, s);
    }
@@ -1123,6 +1128,11 @@ public class JDRPath extends JDRShape
       segmentList_[index] = s;
 
       size_++;
+
+      if (s instanceof JDRClosingMove)
+      {
+         numClosedSubPaths++;
+      }
 
       firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_INSERTED,
         null, s);
@@ -1162,6 +1172,11 @@ public class JDRPath extends JDRShape
       }
 
       size_--;
+
+      if (segment instanceof JDRClosingMove)
+      {
+         numClosedSubPaths--;
+      }
 
       return segment;
    }
@@ -1254,6 +1269,16 @@ public class JDRPath extends JDRShape
       if (index == size()-1 && isClosed())
       {
          segment.setEnd(segmentList_[0].getStart());
+      }
+
+      if (oldSegment instanceof JDRClosingMove)
+      {
+         numClosedSubPaths--;
+      }
+
+      if (segment instanceof JDRClosingMove)
+      {
+         numClosedSubPaths++;
       }
 
       firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_CHANGED,
@@ -1959,6 +1984,12 @@ public class JDRPath extends JDRShape
       return closed;
    }
 
+   @Override
+   public boolean hasClosedSubPaths()
+   {
+      return numClosedSubPaths > 0;
+   }
+
    /**
     * Returns true if this path is a polygon. That is, it only
     * consists of lines.
@@ -1995,6 +2026,8 @@ public class JDRPath extends JDRShape
          path.setWindingRule(stroke.getWindingRule());
       }
 
+      boolean closePath = closed;
+
       JDRPathIterator pi = getIterator();
 
       JDRPathSegment segment = pi.next();
@@ -2006,12 +2039,18 @@ public class JDRPath extends JDRShape
       while (pi.hasNext())
       {
          segment = pi.next();
+
          segment.appendToGeneralPath(path);
+
+         if (closed && !pi.hasNext() && segment instanceof JDRClosingMove)
+         {
+            closePath = false;
+         }
       }
 
       segment = null;
 
-      if (closed) path.closePath();
+      if (closePath) path.closePath();
 
       return path;
    }
@@ -3244,16 +3283,20 @@ public class JDRPath extends JDRShape
     */
    public String toString()
    {
-      String str = "Path: size="+size_+", segments=[";
+      StringBuilder builder = new StringBuilder();
+
+      builder.append("Path: size="+size_+", segments=[");
 
       for (int i = 0; i < size_; i++)
       {
-         str += get(i)+",";
+         builder.append(get(i));
+         builder.append(',');
       }
 
-      str += "]";
+      builder.append("], closed="+isClosed());
+      builder.append(", closed sub paths="+numClosedSubPaths);
 
-      return str;
+      return builder.toString();
    }
 
    public JDRObjectLoaderListener getListener()
@@ -3484,9 +3527,9 @@ public class JDRPath extends JDRShape
          JDRPathChangeEvent evt = new JDRPathChangeEvent(this, index, type,
            oldSegment, newSegment);
 
-         for (JDRPathChangeListener l : pathChangeListeners)
+         for (int i = 0; i < pathChangeListeners.size(); i++)
          {
-            l.pathChanged(evt);
+            pathChangeListeners.get(i).pathChanged(evt);
 
             if (evt.isConsumed())
             {
@@ -3497,6 +3540,8 @@ public class JDRPath extends JDRShape
    }
 
    private boolean closed;
+
+   private int numClosedSubPaths = 0;
 
    protected int selectedSegmentIndex=-1;
    protected JDRPathSegment selectedSegment=null;

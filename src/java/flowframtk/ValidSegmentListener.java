@@ -32,6 +32,6 @@ import com.dickimawbooks.jdrresources.*;
 
 public interface ValidSegmentListener
 {
-   public boolean isValid(JDRSelection currentSelectiona,
+   public boolean isValid(JDRSelection currentSelection,
       int currentSegmentFlag);
 }

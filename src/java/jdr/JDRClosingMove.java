@@ -817,7 +817,7 @@ implements JDRPathChangeListener
    {
       return String.format("%s:(%f,%f)(%f,%f)(%f%f),startMarker=%s,endMarker=%s",
        getClass().getSimpleName(),
-       start, start.y, subPathStart.x, subPathStart.y,
+       start.x, start.y, subPathStart.x, subPathStart.y,
        end.x, end.y, startMarker, endMarker);
    }
 
