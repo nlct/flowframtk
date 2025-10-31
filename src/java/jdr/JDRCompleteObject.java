@@ -500,6 +500,8 @@ public abstract class JDRCompleteObject extends JDRObject
       {
          BBox box = getStorageBBox();
 
+         box.translate(-cg.getStorageOriginX(), -cg.getStorageOriginY());
+
          if (cg.isEvenPage())
          {
             FlowFrame typeblock = getTypeblock();

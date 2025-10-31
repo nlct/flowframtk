@@ -8851,8 +8851,9 @@ public class JDRCanvas extends JPanel
          if (typeblock != null)
          {
             typeblock.draw(
-               new BBox(cg, 0,0,frame_.getStoragePaperWidth(),
-                            frame_.getStoragePaperHeight()));
+               new BBox(cg, offsetX, offsetY,
+                  frame_.getStoragePaperWidth()+offsetX,
+                  frame_.getStoragePaperHeight()+offsetY));
          }
 
          g2.setRenderingHints(frame_.getRenderingHints());
@@ -11360,8 +11361,9 @@ public class JDRCanvas extends JPanel
             if (typeblock != null)
             {
                typeblock.draw(
-                  new BBox(cg, 0,0,frame_.getStoragePaperWidth(),
-                               frame_.getStoragePaperHeight()));
+                  new BBox(cg, offsetX, offsetY,
+                           frame_.getStoragePaperWidth()+offsetX,
+                           frame_.getStoragePaperHeight()+offsetY));
             }
 
             if (editedPath != null || editedDistortion != null)
