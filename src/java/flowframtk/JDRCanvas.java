@@ -506,6 +506,16 @@ public class JDRCanvas extends JPanel
 
       editPathPopupMenu = new JPopupMenu();
 
+      // exit edit path
+
+      CanvasSelectAction editPathAction
+         = addCanvasSelectAction("path.edit");
+
+      editPathPopupMenu.add(editPathAction.createCheckBoxMenuItem(
+         "menu.selectedpath.edit", true, "menu.edit.path.edit.tooltip"));
+
+      editPathPopupMenu.add(new JPopupMenu.Separator());
+
       // Next control
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
