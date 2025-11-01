@@ -2854,6 +2854,8 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(settingsM);
 
+      colorChooser = new JColorChooser();
+
       // Styles
 
       stylesItem = FlowframTkAction.createMenuItem(this,
@@ -4078,6 +4080,11 @@ public class FlowframTk extends JFrame
       JDRShape shape, JDRPathSegment segment)
    {
       segmentInfoDialog.display(frame, shape, segment);
+   }
+
+   public JColorChooser getColorChooser()
+   {
+      return colorChooser;
    }
 
    public void displayTextPaintChooser()
@@ -7364,6 +7371,8 @@ public class FlowframTk extends JFrame
    // file choosers
    private JFileChooser savejdrFC, openjdrFC,
       exportFC, bitmapFC, texFC, importFC;
+
+   private JColorChooser colorChooser;
 
    // thumbnail image panel
    private ImagePreview imagePreviewPanel;

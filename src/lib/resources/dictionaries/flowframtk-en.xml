@@ -1355,6 +1355,9 @@ Nicola Talbot
 <entry key="tooltip.swatch.orchid">Orchid</entry>
 <entry key="tooltip.swatch.magenta">Magenta</entry>
 <entry key="tooltip.swatch.pink">Pink</entry>
+<entry key="tooltip.swatch.teal">Teal</entry>
+<entry key="tooltip.swatch.brown">Brown</entry>
+<entry key="tooltip.swatch.lime">Lime</entry>
 <entry key="tooltip.close_anchor">Toggle whether the start point of the underlying path should be anchored</entry>
 <entry key="tooltip.has_symmetry">Add or remove symmetry from the path</entry>
 <entry key="tooltip.join_anchor">Toggle whether the last point of the underlying path should be anchored</entry>
@@ -3782,6 +3785,7 @@ Merge Region: {2}</entry>
 <entry key="button.choose.tooltip">Choose a new setting</entry>
 <entry key="button.choose.iconimage">choose</entry>
 
+<entry key="choose_colour.title">Select Color</entry>
 <entry key="button.choose_colour">Select Color...</entry>
 <entry key="button.choose_colour.tooltip">Choose a new color</entry>
 <entry key="button.choose_colour.iconimage">choose_colour</entry>

@@ -172,6 +172,7 @@ public class ColorRGBPanel extends JPanel
       alphaSB.addAdjustmentListener(this);
    }
 
+   @Override
    public boolean requestDefaultColourFocus()
    {
       return redText.requestFocusInWindow();
@@ -200,6 +201,7 @@ public class ColorRGBPanel extends JPanel
       }
    }
 
+   @Override
    public JDRPaint getPaint(CanvasGraphics cg)
    {
       return new JDRColor(cg, 0.01*redSB.getValue(),
@@ -208,6 +210,16 @@ public class ColorRGBPanel extends JPanel
                           0.01*alphaSB.getValue());
    }
 
+   @Override
+   public Color getColor()
+   {
+      return new Color(0.01f*redSB.getValue(),
+                       0.01f*greenSB.getValue(),
+                       0.01f*blueSB.getValue(),
+                       0.01f*alphaSB.getValue());
+   }
+
+   @Override
    public void setPaint(Color c)
    {
       double factor = 100.0/255.0;
@@ -217,6 +229,7 @@ public class ColorRGBPanel extends JPanel
       alphaSB.setValue((int)Math.round((c.getAlpha()*factor)));
    }
 
+   @Override
    public void setPaint(JDRPaint paint)
    {
       JDRColor c = paint.getJDRColor();

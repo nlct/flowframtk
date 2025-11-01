@@ -128,6 +128,7 @@ public class GreyPanel extends JPanel
       alphaSB.addAdjustmentListener(this);
    }
 
+   @Override
    public boolean requestDefaultColourFocus()
    {
       return greyText.requestFocusInWindow();
@@ -146,12 +147,22 @@ public class GreyPanel extends JPanel
       }
    }
 
+   @Override
    public JDRPaint getPaint(CanvasGraphics cg)
    {
       return new JDRGray(cg, 0.01*greySB.getValue(),
                          0.01*alphaSB.getValue());
    }
 
+   @Override
+   public Color getColor()
+   {
+      float grey = 0.01f*greySB.getValue();
+
+      return new Color(grey, grey, grey, 0.01f*alphaSB.getValue());
+   }
+
+   @Override
    public void setPaint(JDRPaint paint)
    {
       JDRGray g = paint.getJDRGray();
@@ -160,6 +171,7 @@ public class GreyPanel extends JPanel
       alphaSB.setValue((int)Math.round((g.getAlpha()*100.0)));
    }
 
+   @Override
    public void setPaint(Color paint)
    {
       double gray = (paint.getRed()+paint.getGreen()+paint.getBlue())

@@ -153,6 +153,7 @@
 
 <!-- Buttons -->
 
+<entry key="choose_colour.title">Select Colour</entry>
 <entry key="button.choose_colour">Select Colour...</entry>
 <entry key="button.choose_colour.tooltip">Choose a new colour</entry>
 

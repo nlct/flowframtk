@@ -193,6 +193,7 @@ public class ColorCMYKPanel extends JPanel
       alphaSB.addAdjustmentListener(this);
    }
 
+   @Override
    public boolean requestDefaultColourFocus()
    {
       return cyanText.requestFocusInWindow();
@@ -226,6 +227,7 @@ public class ColorCMYKPanel extends JPanel
       }
    }
 
+   @Override
    public JDRPaint getPaint(CanvasGraphics cg)
    {
       return new JDRColorCMYK(cg, 0.01*cyanText.getInt(),
@@ -235,6 +237,22 @@ public class ColorCMYKPanel extends JPanel
                           0.01*alphaText.getInt());
    }
 
+   @Override
+   public Color getColor()
+   {
+      double cyan    = 0.01*cyanText.getInt();
+      double magenta = 0.01*magentaText.getInt();
+      double yellow  = 0.01*yellowText.getInt();
+      double key     = 0.01*blackText.getInt();
+
+      double red   = 1.0-Math.min(1.0,cyan*(1-key)+key);
+      double green = 1.0-Math.min(1.0,magenta*(1-key)+key);
+      double blue  = 1.0-Math.min(1.0,yellow*(1-key)+key);
+
+      return new Color((float)red, (float)green, (float)blue, 0.01f*alphaText.getInt());
+   }
+
+   @Override
    public void setPaint(JDRPaint paint)
    {
       JDRColorCMYK c = paint.getJDRColorCMYK();
@@ -246,6 +264,7 @@ public class ColorCMYKPanel extends JPanel
       alphaSB.setValue((int)Math.round(100.0*c.getAlpha()));
    }
 
+   @Override
    public void setPaint(Color paint)
    {
       double red = paint.getRed()/255.0;

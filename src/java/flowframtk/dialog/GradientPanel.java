@@ -61,7 +61,7 @@ public class GradientPanel extends JPanel
 
       add(startLabel);
 
-      startPanel = new ColorPanel(this);
+      startPanel = new ColorPanel(this, getApplication().getColorChooser());
 
       startPanel.setMnemonics(
          getResources().getCodePoint("paintselector.rgb.mnemonic"),
@@ -76,7 +76,7 @@ public class GradientPanel extends JPanel
 
       add(endLabel);
 
-      endPanel = new ColorPanel(this);
+      endPanel = new ColorPanel(this, getApplication().getColorChooser());
 
       endPanel.setMnemonics(
          getResources().getCodePoint("paintselector.rgb2.mnemonic"),
@@ -219,6 +219,11 @@ public class GradientPanel extends JPanel
    public JDRResources getResources()
    {
       return selector_.getResources();
+   }
+
+   public FlowframTk getApplication()
+   {
+      return selector_.getApplication();
    }
 
    private JDRSelector selector_;

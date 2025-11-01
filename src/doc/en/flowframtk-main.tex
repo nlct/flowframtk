@@ -3076,17 +3076,17 @@ settings.
 
 \widgetdef{button.choose}
 
-The \widget{button.choose} button (\btn{choose}) opens a new dialog in which you
+The \widget{button.choose} button (\btntooltip{choose}) opens a new dialog in which you
 can choose a sub-setting from the main dialog window.
 
 \widgetdef{button.choose_colour}
 
-The \widget{button.choose_colour} button (\btn{choose_colour}) opens
+The \widget{button.choose_colour} button (\btntooltip{choose_colour}) opens
 a dialog in which you can choose a \manmsg{colour}.
 
 \widgetdef{button.selectfile}
 
-The \widget{button.selectfile} button (\btn{selectfile}) opens a file chooser in
+The \widget{button.selectfile} button (\btntooltip{selectfile}) opens a file chooser in
 which you can choose a file or (if applicable) a directory.
 
 \chapter{The File Menu}\label{sec:filemenu}
@@ -6156,7 +6156,7 @@ only support a \gls{index.paint.solid-colour}.)
 
 \section{Paint Selector}\label{sec:paint}
 
-\widget{paintselector.title}
+\widgetdef{paintselector.title}
 
 The \widget{paintselector.title} panel is used in various \gls{index.paint}
 selection dialog boxes.
@@ -6173,7 +6173,7 @@ The \dglspl{colour} you see on the screen may not exactly match
 mapping between \dgls{colour} spaces.
 \end{warning}
 
-\widget{paintselector.transparent}
+\widgetdef{paintselector.transparent}
 
 Selecting the \widget{paintselector.transparent} radio button indicates
 \inlineglsdef{transparent}. For example, if a \pathattr{line-paint} is set to
@@ -6186,7 +6186,7 @@ If you require \gls{translucency} (where there is some \dgls{paint}
 but \glspl{object} behind show \manmsg{through}) then select one of
 the other \dgls{paint} options and adjust the alpha channel.
 
-\widget{paintselector.single}
+\widgetdef{paintselector.single}
 
 \FloatFig{fig:paint-solid}
 {\includeimg{paint-solid}}
@@ -6214,9 +6214,21 @@ the slider bars. Alternatively, you can click on one of the predefined swatches
 which are to the right of the \widget{paintselector.single} panel 
 and can be used to quickly set a \manmsg{colour}. Click on the 
 appropriate swatch and the \manmsg{colour} specification will be
-filled in.
+filled in. The final button in the swatch panel is actually the 
+\btn{choose_colour} button which will open the
+\inlineglsdef{choose_colour.title} dialog with
+alternative ways of selecting a \manmsg{colour}.
 
-\widget{paintselector.gradient}
+\begin{information}
+If you select a \manmsg{colour} using
+either the \dialog{choose_colour} dialog or one of the swatch
+buttons, the \manmsg{colour} model won't change. This means that if,
+for example, you have the \widget{paintselector.grey} tab selected,
+the selected \manmsg{colour} will be converted to
+\dgls{colour.greyscale}.
+\end{information}
+
+\widgetdef{paintselector.gradient}
 
 \FloatFig{fig:paint-linear-gradient}
 {\includeimg{paint-linear-gradient}}
@@ -6245,7 +6257,7 @@ each have the same interface as the \widget{paintselector.single} panel.
 }
 {Gradient Shading}
 
-\widget{paintselector.linear}
+\widgetdef{paintselector.linear}
 
 A \inlineglsdef{index.gradient-paint.linear} shading transitions in
 a band from the \gls{index.gradient-paint.start-colour} to the
@@ -6263,7 +6275,7 @@ gradient paint from yellow to magenta. The direction is set to North
 so the bottom of the shape is yellow and the shading transitions to
 magenta at the top of the shape.
 
-\widget{paintselector.radial}
+\widgetdef{paintselector.radial}
 
 A \inlineglsdef{index.gradient-paint.radial} shading radiates
 outwards from a starting location. There are nine locations which

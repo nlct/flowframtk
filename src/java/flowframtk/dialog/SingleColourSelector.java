@@ -37,5 +37,6 @@ public interface SingleColourSelector
    public void setPaint(Color paint);
    public void setPaint(JDRPaint paint);
    public JDRPaint getPaint(CanvasGraphics cg);
+   public Color getColor();
    public boolean requestDefaultColourFocus();
 }

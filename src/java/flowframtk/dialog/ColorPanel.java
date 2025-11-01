@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,9 +41,10 @@ import com.dickimawbooks.jdrresources.*;
 public class ColorPanel extends JPanel
    implements ActionListener,ChangeListener
 {
-   public ColorPanel(JDRResources resources)
+   public ColorPanel(JDRResources resources, JColorChooser colorChooser)
    {
       this.resources = resources;
+      this.colorChooser = colorChooser;
       rgbPanel = new ColorRGBPanel(resources);
       cmykPanel = new ColorCMYKPanel(resources);
       hsbPanel = new ColorHSBPanel(resources);
@@ -51,18 +52,22 @@ public class ColorPanel extends JPanel
       initialise();
    }
 
-   public ColorPanel(GradientPanel gradientPanel)
+   public ColorPanel(GradientPanel gradientPanel, JColorChooser colorChooser)
    {
       this.resources = gradientPanel.getResources();
+      this.colorChooser = colorChooser;
       rgbPanel = new ColorRGBPanel(resources, gradientPanel);
       cmykPanel = new ColorCMYKPanel(resources, gradientPanel);
       hsbPanel = new ColorHSBPanel(resources, gradientPanel);
       greyPanel = new GreyPanel(resources, gradientPanel);
       initialise();
    }
-   public ColorPanel(JDRResources resources, AdjustmentListener al)
+
+   public ColorPanel(JDRResources resources, AdjustmentListener al,
+     JColorChooser colorChooser)
    {
       this.resources = resources;
+      this.colorChooser = colorChooser;
       rgbPanel = new ColorRGBPanel(resources, al);
       cmykPanel = new ColorCMYKPanel(resources, al);
       hsbPanel = new ColorHSBPanel(resources, al);
@@ -131,10 +136,12 @@ public class ColorPanel extends JPanel
       constraints.gridheight = 1;
       constraints.weightx = 0;
       constraints.anchor= GridBagConstraints.EAST;
+
       predefinedPanel  = new JPanel();
       predefinedPanel.setAlignmentY(Component.TOP_ALIGNMENT);
       add(predefinedPanel, constraints);
-      predefinedPanel.setLayout(new GridLayout(4,5));
+
+      predefinedPanel.setLayout(new GridLayout(4,6));
       predefinedButtons = new ColorButton[MAX_PREDEFINED];
       predefined_n = 0;
 
@@ -148,9 +155,9 @@ public class ColorPanel extends JPanel
          getResources().getMessage("tooltip.swatch.lightgrey"));
       addPredefinedColor(Color.white,
          getResources().getMessage("tooltip.swatch.white"));
-
       addPredefinedColor(new Color(0,0,128),
          getResources().getMessage("tooltip.swatch.darkblue"));
+
       addPredefinedColor(Color.blue,
          getResources().getMessage("tooltip.swatch.blue"));
       addPredefinedColor(Color.cyan,
@@ -159,6 +166,10 @@ public class ColorPanel extends JPanel
          getResources().getMessage("tooltip.swatch.green"));
       addPredefinedColor(new Color(0,128,0),
          getResources().getMessage("tooltip.swatch.darkgreen"));
+      addPredefinedColor(new Color(0,128,128),
+         getResources().getMessage("tooltip.swatch.teal"));
+      addPredefinedColor(new Color(192,255,0),
+         getResources().getMessage("tooltip.swatch.lime"));
 
       addPredefinedColor(Color.yellow,
          getResources().getMessage("tooltip.swatch.yellow"));
@@ -170,6 +181,8 @@ public class ColorPanel extends JPanel
          getResources().getMessage("tooltip.swatch.tan"));
       addPredefinedColor(cmyk(0.0,0.72,1.0,0.45),
          getResources().getMessage("tooltip.swatch.rawsienna"));
+      addPredefinedColor(new Color(192,128,64),
+         getResources().getMessage("tooltip.swatch.brown"));
 
       addPredefinedColor(Color.red,
          getResources().getMessage("tooltip.swatch.red"));
@@ -181,6 +194,16 @@ public class ColorPanel extends JPanel
          getResources().getMessage("tooltip.swatch.magenta"));
       addPredefinedColor(Color.pink,
          getResources().getMessage("tooltip.swatch.pink"));
+
+      predefinedPanel.add(getResources().createDialogButton(
+         "button.choose_colour", "choose_colour", this, null));
+
+      if (colorChooser == null)
+      {
+         colorChooser = new JColorChooser();
+      }
+
+      colorChooserTitle = getResources().getMessage("choose_colour.title");
    }
 
    private Color cmyk(double cyan, double magenta, double yellow,
@@ -237,6 +260,16 @@ public class ColorPanel extends JPanel
             tabbedPane.getSelectedComponent();
 
          currentPanel.setPaint(((ColorButton)source).getBackground());
+      }
+      else if ("choose_colour".equals(evt.getActionCommand()))
+      {
+         Color result = colorChooser.showDialog(this, colorChooserTitle,
+            currentPanel.getColor());
+
+         if (result != null)
+         {
+            setPaint(result);
+         }
       }
    }
 
@@ -330,10 +363,13 @@ public class ColorPanel extends JPanel
 
    // predefined colour buttons
    private ColorButton[] predefinedButtons;
-   private static final int MAX_PREDEFINED=20; 
+   private static final int MAX_PREDEFINED=23; 
 
    private JPanel predefinedPanel;
    private int predefined_n=0;
+
+   private JColorChooser colorChooser;
+   private String colorChooserTitle;
 
    private JDRResources resources;
 }

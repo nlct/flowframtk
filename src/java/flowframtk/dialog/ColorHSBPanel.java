@@ -172,6 +172,7 @@ public class ColorHSBPanel extends JPanel
       alphaSB.addAdjustmentListener(this);
    }
 
+   @Override
    public boolean requestDefaultColourFocus()
    {
       return hueText.requestFocusInWindow();
@@ -200,6 +201,7 @@ public class ColorHSBPanel extends JPanel
       }
    }
 
+   @Override
    public JDRPaint getPaint(CanvasGraphics cg)
    {
       return new JDRColorHSB(cg, hueSB.getValue(),
@@ -208,6 +210,58 @@ public class ColorHSBPanel extends JPanel
                           0.01*alphaSB.getValue());
    }
 
+   @Override
+   public Color getColor()
+   {
+      double hue = hueSB.getValue();
+      double saturation = 0.01*saturationSB.getValue();
+      double brightness = 0.01*brightnessSB.getValue();
+
+      int h = ((int)Math.floor(hue/60)) % 6;
+      double f = hue/60 - Math.floor(hue/60);
+      double p = brightness*(1-saturation);
+      double q = brightness*(1-f*saturation);
+      double t = brightness*(1-(1-f)*saturation);
+      double red, green, blue;
+
+      switch (h)
+      {
+         case 0:
+            red   = brightness;
+            green = t;
+            blue  = p;
+         break;
+         case 1:
+            red   = q;
+            green = brightness;
+            blue  = p;
+         break;
+         case 2:
+            red   = p;
+            green = brightness;
+            blue  = t;
+         break;
+         case 3:
+            red   = p;
+            green = q;
+            blue  = brightness;
+         break;
+         case 4:
+            red   = t;
+            green = p;
+            blue  = brightness;
+         break;
+         default:
+            red   = brightness;
+            green = p;
+            blue  = q;
+      }
+
+      return new Color((float)red, (float)green, (float)blue,
+        0.01f * alphaSB.getValue());
+   }
+
+   @Override
    public void setPaint(JDRPaint paint)
    {
       JDRColorHSB c = paint.getJDRColorHSB();
@@ -218,6 +272,7 @@ public class ColorHSBPanel extends JPanel
       alphaSB.setValue((int)Math.round((c.getAlpha()*100.0)));
    }
 
+   @Override
    public void setPaint(Color paint)
    {
       paint.RGBtoHSB(paint.getRed(), paint.getGreen(), 

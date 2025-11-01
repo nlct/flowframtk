@@ -309,7 +309,9 @@ public class MarkerPanel extends JPanel
       colourOptionsPanel.add(notAsLineButton);
       colourGroup.add(notAsLineButton);
 
-      colourPanel = new ColorPanel(getResources());
+      colourPanel = new ColorPanel(getResources(),
+         selector_.getApplication().getColorChooser());
+
       colourPanel.setMnemonics(
          getResources().getCodePoint("colour.rgb.mnemonic"),
          getResources().getCodePoint("colour.cmyk.mnemonic"));

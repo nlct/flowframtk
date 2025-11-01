@@ -81,7 +81,9 @@ public class PaintPanel extends JPanel
       buttonGroup.add(singleColourButton);
       buttonPanel.add(singleColourButton);
 
-      singleColourPanel = new ColorPanel(getResources(), this);
+      singleColourPanel = new ColorPanel(getResources(), this,
+         selector_.getApplication().getColorChooser());
+
       singleColourPanel.setAlignmentY(Component.TOP_ALIGNMENT);
       singleColourPanel.setMnemonics(
          getResources().getCodePoint("paintselector.rgb.mnemonic"),
