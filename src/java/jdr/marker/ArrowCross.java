@@ -121,7 +121,7 @@ public class ArrowCross extends JDRMarker
    {
       JDRMarker marker = new ArrowCross(penWidth, repeated,
                                  reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

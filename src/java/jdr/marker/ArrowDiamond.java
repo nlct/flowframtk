@@ -109,7 +109,7 @@ public class ArrowDiamond extends JDRMarker
    {
       JDRMarker marker = new ArrowDiamond(penWidth, repeated,
                                    reversed);
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

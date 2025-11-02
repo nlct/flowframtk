@@ -112,7 +112,7 @@ public class ArrowRound extends JDRMarker
    {
       JDRMarker marker = new ArrowRound(penWidth, repeated,
                                  reversed);
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

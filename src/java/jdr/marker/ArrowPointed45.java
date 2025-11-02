@@ -110,7 +110,7 @@ public class ArrowPointed45 extends JDRMarker
    {
       JDRMarker marker = new ArrowPointed45(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

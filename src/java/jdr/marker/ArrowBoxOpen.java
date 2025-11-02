@@ -116,7 +116,7 @@ public class ArrowBoxOpen extends JDRMarker
    {
       JDRMarker marker = new ArrowBoxOpen(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

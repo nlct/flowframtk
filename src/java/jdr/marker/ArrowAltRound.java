@@ -109,7 +109,7 @@ public class ArrowAltRound extends JDRMarker
    {
       JDRMarker marker = new ArrowAltRound(penWidth, repeated,
                                  reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

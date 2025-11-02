@@ -116,7 +116,7 @@ public class ArrowAsterisk extends JDRMarker
    {
       JDRMarker marker = new ArrowAsterisk(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

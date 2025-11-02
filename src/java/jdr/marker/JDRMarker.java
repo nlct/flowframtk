@@ -227,6 +227,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
          penWidth.getUnit());
       angle_ = new JDRAngle(msgSys);
       size = new JDRLength(msgSys, 5, JDRUnit.bp);
+      width = null;
    }
 
    /**
@@ -244,9 +245,38 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
    public JDRMarker(JDRLength penwidth, int repeat, boolean isReversed,
                     JDRLength arrowSize)
    {
-      this(penwidth, repeat, isReversed);
-      size.makeEqual(arrowSize);
+      this(penwidth, repeat, isReversed, arrowSize, null);
    }
+
+   /**
+    * Create a generic marker of given length and width for a path with 
+    * given pen width.
+    * Markers may be repeated and/or reversed. Some markers
+    * may depend on the line width of the associated path as
+    * well as having a specified size or length and width.
+    * @param penwidth the width of the associated path in
+    * PostScript points
+    * @param repeat the repeat factor (can't be less than 1)
+    * @param isReversed specifies if marker should be reversed
+    * @param arrowLength the length of the marker (or size if no width)
+    * @param arrowWidth the width of the marker (may be null)
+    */
+   public JDRMarker(JDRLength penwidth, int repeat, boolean isReversed,
+                    JDRLength arrowLength, JDRLength arrowWidth)
+   {
+      this(penwidth, repeat, isReversed);
+      size.makeEqual(arrowLength);
+
+      if (arrowWidth == null || width == null)
+      {
+         width = arrowWidth;
+      }
+      else
+      {
+         width.makeEqual(arrowWidth);
+      }
+   }
+
 
    /**
     * Create default marker. This is equivalent to
@@ -779,6 +809,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * shape of this marker (in storage units).
     * Sub classes need to override this method (using 
     * {@link #getSize()} if the marker may have a variable size,
+    * or {@link #getWidth()} if the marker may have a variable width,
     * and using {@link #getPenWidth()} if marker size
     * should depend on the line width of the associated path.)
     * @return empty <code>GeneralPath</code>
@@ -1114,6 +1145,32 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       int markerID, JDRLength penwidth, int repeat, boolean isReversed,
       JDRLength arrowSize)
    {
+      return getPredefinedMarker(cg, markerID, penwidth, repeat, isReversed,
+      arrowSize, null);
+   }
+
+   /**
+    * Gets a known marker with given settings and size.
+    * Note that some predefined markers may only have a size
+    * dependent on the line width.
+    * @param markerID the number uniquely identifying a 
+    * known marker
+    * @param penwidth the line width of the associated path (can't
+    * be negative).
+    * @param repeat the number of times the marker is repeated
+    * (can't be less than 1)
+    * @param isReversed determines whether or not to reverse
+    * @param arrowSize the size of the marker where the marker
+    * may have a variable size
+    * the marker
+    * @param arrowWidth the width of the marker if the marker may
+    * have both an length (size) and width (may be null).
+    * @return the marker
+    */
+   public static JDRMarker getPredefinedMarker(CanvasGraphics cg,
+      int markerID, JDRLength penwidth, int repeat, boolean isReversed,
+      JDRLength arrowSize, JDRLength arrowWidth)
+   {
       JDRMarker marker = null;
 
       switch (markerID)
@@ -1129,6 +1186,11 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
          case ARROW_TRIANGLE :
             marker = new ArrowTriangle(penwidth, repeat, isReversed,
                arrowSize);
+            break;
+         case ARROW_TRIANGLE2:
+            marker = new ArrowTriangle2(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
          case ARROW_CIRCLE :
             marker = new ArrowCircle(penwidth, repeat, isReversed,
@@ -1495,7 +1557,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       JDRMarker marker = new JDRMarker(penWidth, 
          repeated, reversed, (JDRLength)size.clone());
 
-      marker.makeEqual(this);
+      marker.makeOtherEqual(this);
 
       return marker;
    }
@@ -1526,6 +1588,13 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       if (userOffset != m.userOffset) return false;
       if (userRepeatOffset != m.userRepeatOffset) return false;
 
+      if ((width == null && m.width != null)
+       || (width != null && m.width == null)
+       || (width != null && m.width != null && !width.equals(m.width)))
+      {
+         return false;
+      }
+
       if (fillPaint == null)
       {
          if (m.fillPaint != null) return false;
@@ -1549,9 +1618,11 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
 
    /**
     * Makes given marker identical to this marker.
+    * NB this was makeEqual but the behaviour is inconsistent with
+    * other classes with makeEqual method.
     * @param marker the marker to make the same as this marker
     */
-   public void makeEqual(JDRMarker marker)
+   public void makeOtherEqual(JDRMarker marker)
    {
       if (fillPaint != null)
       {
@@ -1569,6 +1640,19 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       marker.repeatOffset.makeEqual(repeatOffset);
       marker.userOffset  = userOffset;
       marker.userRepeatOffset  = userRepeatOffset;
+
+      if (width == null)
+      {
+         marker.width = null;
+      }
+      else if (marker.width == null)
+      {
+         marker.width = (JDRLength)width.clone();
+      }
+      else
+      {
+         marker.width.makeEqual(width);
+      }
 
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -1653,6 +1737,18 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
             else
             {
                jdr.writeLength(size);
+            }
+
+            if (version >= 2.1f)
+            {
+               boolean hasWidth = (supportsWidth() && width != null);
+
+               jdr.writeBoolean(hasWidth);
+
+               if (hasWidth)
+               {
+                  jdr.writeLength(width);
+               }
             }
 
             jdr.writeByte((byte)repeated);
@@ -1778,13 +1874,30 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       }
       else
       {
-         int maxType = (version < 1.4f ?  NUM_ARROWS1_1 :
-            (version < 1.6f ? NUM_ARROWS1_4 : NUM_ARROWS1_6));
+         int maxType;
+
+         if (version < 1.4f)
+         {
+            maxType = NUM_ARROWS1_1;
+         }
+         else if (version < 1.6f)
+         {
+            maxType = NUM_ARROWS1_4;
+         }
+         else if (version < 2.1f)
+         {
+            maxType = NUM_ARROWS1_6;
+         }
+         else
+         {
+            maxType = NUM_ARROWS2_1;
+         }
 
          int arrowType = (int)jdr.readByte(
             InvalidFormatException.MARKER_ID, 0, maxType, true, false);
 
          JDRLength arrowSize = new JDRLength(msgSys, 5.0, JDRUnit.bp);
+         JDRLength width = null;
          int arrowRepeated = 1;
          boolean arrowReversed=false;
          boolean autoorient=true;
@@ -1809,6 +1922,15 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
             else
             {
                jdr.readLength(InvalidFormatException.MARKER_SIZE, arrowSize);
+            }
+
+            if (version >= 2.1f)
+            {
+               if (jdr.readBoolean(InvalidFormatException.MARKER_WIDTH_FLAG))
+               {
+                  width = new JDRLength(msgSys, 1.0, JDRUnit.bp);
+                  jdr.readLength(InvalidFormatException.MARKER_WIDTH, width);
+               }
             }
 
             arrowRepeated = (int)jdr.readByteGe(
@@ -1900,7 +2022,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
 
          JDRMarker marker = getPredefinedMarker(cg,
                   arrowType, new JDRLength(msgSys, 1.0, JDRUnit.bp),
-                  arrowRepeated, arrowReversed, arrowSize);
+                  arrowRepeated, arrowReversed, arrowSize, width);
 
          marker.fillPaint=paint;
          marker.setCompositeMarker(compositeMarker);
@@ -2355,6 +2477,24 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       return size;
    }
 
+   public boolean supportsWidth()
+   {
+      return false;
+   }
+
+   public void setWidth(JDRLength markerWidth)
+   {
+      if (supportsWidth())
+      {
+         width = markerWidth;
+      }
+   }
+
+   public JDRLength getWidth()
+   {
+      return width;
+   }
+
    /**
     * Sets the overlay property for this marker.
     * If the overlay property is enabled, the composite
@@ -2545,6 +2685,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
    public String toString()
    {
       return "JDRMarker[type:"+type+",size:"+size
+        +",width:"+width
         +",autoorient:"+autoOrient_+",angle:"+angle_
         +",fill:"+fillPaint+",repeat:"+repeated
         +",reversed:"+reversed+",overlay:"+overlay
@@ -2594,11 +2735,18 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * This marker's directional setting.
     */
    protected boolean reversed=false;
+
    /**
     * This marker's size property. Some markers ignore this
     * value.
     */
    protected JDRLength size;
+
+   /**
+    * This marker's width property. Requires minimum JDR/AJR v2.1.
+    */
+   protected JDRLength width;
+
 
    /**
     * This marker's composite marker. If <code>null</code>, this
@@ -3100,6 +3248,12 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
 
    /**
     * Maximum number of known markers for AJR and JDR file
+    * versions 2.1 onwards
+    */
+   public static final int NUM_ARROWS2_1=92;
+
+   /**
+    * Maximum number of known markers for AJR and JDR file
     * versions 1.6 onwards
     */
    public static final int NUM_ARROWS1_6=91;
@@ -3115,6 +3269,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * versions 1.1 to 1.3.
     */
    public static final int NUM_ARROWS1_1=22;
+
    /**
     * Maximum number of known markers for AJR/JDR file version
     * 1.0.
@@ -3186,6 +3341,13 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * (JDR/AJR file formats version 1.6 onwards.)
     */
    public static final int ARROW_CUTOUTBULGE_CAP=90;
+
+   /**
+    * Triangle2. This marker has width and length and is
+    * independent of the pen width.
+    * (JDR/AJR file formats version 2.1 onwards.)
+    */
+   public static final int ARROW_TRIANGLE2=91;
 
    /**
     * Indicates whether or not this marker is at the start of

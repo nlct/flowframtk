@@ -105,7 +105,7 @@ public class ArrowTriangleCap extends JDRMarker
    {
       JDRMarker marker = new ArrowTriangleCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

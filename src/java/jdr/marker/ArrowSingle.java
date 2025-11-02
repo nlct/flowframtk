@@ -107,7 +107,7 @@ public class ArrowSingle extends JDRMarker
    {
       JDRMarker marker = new ArrowSingle(penWidth, repeated,
                                   reversed);
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

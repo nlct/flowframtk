@@ -193,6 +193,8 @@ public class InvalidFormatException extends Exception
    public static final String SETTINGS_ID = "settings-id";
    public static final String MARKER_ID = "marker-id";
    public static final String MARKER_SIZE = "marker-size";
+   public static final String MARKER_WIDTH_FLAG = "marker-width-flag";
+   public static final String MARKER_WIDTH = "marker-width";
    public static final String MARKER_REPEAT = "marker-repeat";
    public static final String MARKER_REVERSED = "marker-reversed";
    public static final String MARKER_AUTO_ORIENT = "marker-auto-orient";

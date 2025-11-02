@@ -542,6 +542,8 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_marker-repeat">Invalid marker repeat setting</entry>
 <entry key="error.invalid_marker-size">Invalid marker size</entry>
 <entry key="error.invalid_marker-id">Invalid marker ID</entry>
+<entry key="error.invalid_marker-width">Invalid marker width</entry>
+<entry key="error.invalid_marker-width-flag">Invalid marker width flag</entry>
 <entry key="error.invalid_length">Invalid length</entry>
 <entry key="error.invalid_description">Invalid description</entry>
 <entry key="error.invalid_object-tag">Invalid object tag</entry>

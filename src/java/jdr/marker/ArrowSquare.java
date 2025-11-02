@@ -112,7 +112,7 @@ public class ArrowSquare extends JDRMarker
    {
       JDRMarker marker = new ArrowSquare(penWidth, repeated,
                                   reversed);
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

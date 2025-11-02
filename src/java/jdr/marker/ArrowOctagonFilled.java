@@ -114,7 +114,7 @@ public class ArrowOctagonFilled extends JDRMarker
    {
       JDRMarker marker = new ArrowOctagonFilled(penWidth, repeated,
                                      reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

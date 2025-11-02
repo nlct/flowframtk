@@ -109,7 +109,7 @@ public class ArrowAltSquare extends JDRMarker
    {
       JDRMarker marker = new ArrowAltSquare(penWidth, repeated,
                                   reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

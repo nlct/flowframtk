@@ -115,7 +115,7 @@ public class ArrowHookDown extends JDRMarker
    {
       JDRMarker marker = new ArrowHookDown(penWidth, repeated,
                                  reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

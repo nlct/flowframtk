@@ -120,7 +120,7 @@ public class ArrowBrace extends JDRMarker
    {
       JDRMarker marker = new ArrowBrace(penWidth, repeated,
                                   reversed);
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

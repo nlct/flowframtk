@@ -543,6 +543,17 @@ public class JDRBasicStroke implements JDRStroke
    }
 
    /**
+    * Gets the start marker's width.
+    * @return the start marker's width (null if not supported)
+    * @see #getMidArrowWidth()
+    * @see #getEndArrowWidth()
+    */
+   public JDRLength getStartArrowWidth()
+   {
+      return startMarker.getWidth();
+   }
+
+   /**
     * Gets the size of the mid markers.
     * @return the size of the mid markers
     * @see #getStartArrowSize()
@@ -554,6 +565,17 @@ public class JDRBasicStroke implements JDRStroke
    }
 
    /**
+    * Gets the mid marker's width.
+    * @return the mid marker's width (null if not supported)
+    * @see #getStartArrowWidth()
+    * @see #getEndArrowWidth()
+    */
+   public JDRLength getMidArrowWidth()
+   {
+      return midMarker.getWidth();
+   }
+
+   /**
     * Gets the end marker's size.
     * @return the sendmarker's size
     * @see #getStartArrowSize()
@@ -562,6 +584,17 @@ public class JDRBasicStroke implements JDRStroke
    public JDRLength getEndArrowSize()
    {
       return endMarker.getSize();
+   }
+
+   /**
+    * Gets the end marker's width.
+    * @return the end marker's width (null if not supported)
+    * @see #getStartArrowWidth()
+    * @see #getMidArrowWidth()
+    */
+   public JDRLength getEndArrowWidth()
+   {
+      return endMarker.getWidth();
    }
 
    /**
@@ -885,6 +918,15 @@ public class JDRBasicStroke implements JDRStroke
    }
 
    /**
+    * Sets the width of the start marker (if supported).
+    * @param size the size to set the start marker
+    */
+   public void setStartArrowWidth(JDRLength width)
+   {
+      startMarker.setWidth(width);
+   }
+
+   /**
     * Sets whether the start marker should be oriented so that its
     * x axis lies along the path's gradient vector.
     * @param orient true if the start marker should be oriented so
@@ -931,6 +973,7 @@ public class JDRBasicStroke implements JDRStroke
    public void setStartArrow(int type)
    {
       setStartArrow(type, getStartArrowSize(),
+         getStartArrowWidth(),
          getStartArrowRepeated(),
          getStartArrowReverse());
    }
@@ -946,13 +989,21 @@ public class JDRBasicStroke implements JDRStroke
     * @see #setMidArrow(int,double,int,boolean)
     * @see #setEndArrow(int,double,int,boolean)
     */
+   @Deprecated
    public void setStartArrow(int type, JDRLength size,
+                             int repeat,
+                             boolean isReversed)
+   {
+      setStartArrow(type, size, null, repeat, isReversed);
+   }
+
+   public void setStartArrow(int type, JDRLength size, JDRLength width,
                              int repeat,
                              boolean isReversed)
    {
       startMarker = JDRMarker.getPredefinedMarker(getCanvasGraphics(),
          type, penWidth, repeat, 
-         isReversed, size);
+         isReversed, size, width);
    }
 
    /**
@@ -1004,6 +1055,15 @@ public class JDRBasicStroke implements JDRStroke
    }
 
    /**
+    * Sets the width of the mid markers (if supported).
+    * @param size the size to set the mid marker
+    */
+   public void setMidArrowWidth(JDRLength width)
+   {
+      midMarker.setWidth(width);
+   }
+
+   /**
     * Sets the mid markers.
     * @param marker the marker to use at the mid point vertices
     * of the path
@@ -1029,7 +1089,7 @@ public class JDRBasicStroke implements JDRStroke
     */
    public void setMidArrow(int type)
    {
-      setMidArrow(type, getMidArrowSize(),
+      setMidArrow(type, getMidArrowSize(), getMidArrowWidth(),
          getMidArrowRepeated(),
          getMidArrowReverse());
    }
@@ -1045,13 +1105,21 @@ public class JDRBasicStroke implements JDRStroke
     * @see #setStartArrow(int,double,int,boolean)
     * @see #setEndArrow(int,double,int,boolean)
     */
+   @Deprecated
    public void setMidArrow(int type, JDRLength size,
+                             int repeat,
+                             boolean isReversed)
+   {
+      setMidArrow(type, size, null, repeat, isReversed);
+   }
+
+   public void setMidArrow(int type, JDRLength size, JDRLength width,
                              int repeat,
                              boolean isReversed)
    {
       midMarker = JDRMarker.getPredefinedMarker(getCanvasGraphics(),
          type, penWidth, repeat, 
-         isReversed, size);
+         isReversed, size, width);
    }
 
    /**
@@ -1103,6 +1171,15 @@ public class JDRBasicStroke implements JDRStroke
    }
 
    /**
+    * Sets the width of the end marker (if supported).
+    * @param width the size to set the end marker
+    */
+   public void setEndArrowWidth(JDRLength width)
+   {
+      endMarker.setWidth(width);
+   }
+
+   /**
     * Sets the end marker.
     * @param marker the marker to use at the end of the path
     * @see #setEndArrow(int)
@@ -1127,7 +1204,7 @@ public class JDRBasicStroke implements JDRStroke
     */
    public void setEndArrow(int type)
    {
-      setEndArrow(type, getEndArrowSize(), getEndArrowRepeated(),
+      setEndArrow(type, getEndArrowSize(), getEndArrowWidth(), getEndArrowRepeated(),
          getEndArrowReverse());
    }
 
@@ -1142,13 +1219,21 @@ public class JDRBasicStroke implements JDRStroke
     * @see #setStartArrow(int,double,int,boolean)
     * @see #setMidArrow(int,double,int,boolean)
     */
+   @Deprecated
    public void setEndArrow(int type, JDRLength size,
+                           int repeat,
+                           boolean isReversed)
+   {
+      setEndArrow(type, size, null, repeat, isReversed);
+   }
+
+   public void setEndArrow(int type, JDRLength size, JDRLength width,
                            int repeat,
                            boolean isReversed)
    {
       endMarker = JDRMarker.getPredefinedMarker(getCanvasGraphics(), 
          type, penWidth, repeat, isReversed,
-         size);
+         size, width);
    }
 
    /**

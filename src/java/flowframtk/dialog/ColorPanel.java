@@ -195,8 +195,10 @@ public class ColorPanel extends JPanel
       addPredefinedColor(Color.pink,
          getResources().getMessage("tooltip.swatch.pink"));
 
-      predefinedPanel.add(getResources().createDialogButton(
-         "button.choose_colour", "choose_colour", this, null));
+      chooserButton = getResources().createDialogButton(
+         "button.choose_colour", "choose_colour", this, null);
+
+      predefinedPanel.add(chooserButton);
 
       if (colorChooser == null)
       {
@@ -345,6 +347,8 @@ public class ColorPanel extends JPanel
       {
          predefinedButtons[i].setVisible(flag);
       }
+
+      chooserButton.setVisible(flag);
    }
 
    public JDRResources getResources()
@@ -368,6 +372,7 @@ public class ColorPanel extends JPanel
    private JPanel predefinedPanel;
    private int predefined_n=0;
 
+   private JButton chooserButton;
    private JColorChooser colorChooser;
    private String colorChooserTitle;
 

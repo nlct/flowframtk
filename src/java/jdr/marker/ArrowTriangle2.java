@@ -1,10 +1,5 @@
-// File          : ArrowEquilateralOpen.java
-// Creation Date : 10th July 2008
-// Author        : Nicola L.C. Talbot
-//                 http://www.dickimaw-books.com/
-
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2025 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,39 +23,40 @@ import java.awt.*;
 import java.awt.geom.*;
 
 import com.dickimawbooks.jdr.*;
-import com.dickimawbooks.jdr.io.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
 /**
- * Open equilateral triangle marker marker.
- *  The basic marker shape looks like:
- * <img src="../images/equilateralOpenMarker.png" alt="[open equilateral triangle]">
- * (the origin is along the left edge of the shape.)
+ * Triangle cap marker with both length and width.
  * This marker's shape does not depend on the associated path's
- * line width. Instead it depends on the given marker size.
+ * line width.
  * See {@link JDRMarker} for a description of markers.
  *
  */
-public class ArrowEquilateralOpen extends JDRMarker
+public class ArrowTriangle2 extends JDRMarker
 {
    /**
-    * Creates open equilateral triangle marker of given size.
+    * Creates triangle marker for a path with the given pen width.
     * The marker may be repeated and/or reversed.
     */
-   public ArrowEquilateralOpen(JDRLength penwidth, int repeat,
-                      boolean isReversed, JDRLength markerSize)
+   public ArrowTriangle2(JDRLength penwidth, int repeat,
+                      boolean isReversed, JDRLength arrowLength, JDRLength arrowWidth)
    {
-      super(penwidth, repeat, isReversed, markerSize);
+      super(penwidth, repeat, isReversed, arrowLength, arrowWidth);
 
-      type = ARROW_EQUILATERAL_OPEN;
+      if (arrowWidth == null)
+      {
+         arrowWidth = (JDRLength)arrowLength.clone();
+      }
+
+      type = ARROW_TRIANGLE2;
    }
 
    public String getID()
    {
       return reversed ?
-           "arrow-r"+repeated+"equilateralopen":
-           "arrow-"+repeated+"equilateralopen";
+           "arrow-r"+repeated+"triangle2cap-"+size+"-"+width:
+           "arrow-"+repeated+"triangle2cap-"+size+"-"+width;
    }
 
    /**
@@ -70,21 +66,24 @@ public class ArrowEquilateralOpen extends JDRMarker
    {
       JDRUnit storageUnit = getCanvasGraphics().getStorageUnit();
 
-      double markerSize = size.getValue(storageUnit);
-
-      double y = markerSize*0.5;
-      double x = markerSize*0.866025404;
+      double markerLength = size.getValue(storageUnit);
 
       GeneralPath path = new GeneralPath();
 
-      path.moveTo(0.0f, (float)y);
-      path.lineTo((float)x, 0.0f);
-      path.lineTo(0.0f, (float)-y);
+      double halfWidth = width.getValue(storageUnit);
+
+      path.moveTo(0.0f, (float)-halfWidth);
+      path.lineTo((float)markerLength, 0.0f);
+      path.lineTo(0.0f, (float)halfWidth);
       path.closePath();
 
-      BasicStroke stroke = new BasicStroke((float)storageUnit.fromBp(1.0));
+      return path;
+   }
 
-      return new GeneralPath(stroke.createStrokedShape(path));
+   @Override
+   public boolean supportsWidth()
+   {
+      return true;
    }
 
    public boolean isResizable()
@@ -98,7 +97,7 @@ public class ArrowEquilateralOpen extends JDRMarker
    }
 
    /**
-    * Returns empty string.
+    * Not implemented (returns empty string).
     * @deprecated
     */
    protected String pgfarrow()
@@ -108,8 +107,9 @@ public class ArrowEquilateralOpen extends JDRMarker
 
    public Object clone()
    {
-      JDRMarker marker = new ArrowEquilateralOpen(penWidth, repeated,
-                                     reversed, (JDRLength)size.clone());
+      JDRMarker marker = new ArrowTriangle2(penWidth, repeated,
+                                         reversed, (JDRLength)size.clone(),
+                                         (JDRLength)width.clone());
       makeOtherEqual(marker);
 
       return marker;

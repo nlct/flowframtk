@@ -149,7 +149,7 @@ public class ArrowLeaf2Cap extends JDRMarker
    {
       JDRMarker marker = new ArrowLeaf2Cap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

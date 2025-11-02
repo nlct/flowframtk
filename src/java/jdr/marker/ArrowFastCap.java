@@ -116,7 +116,7 @@ public class ArrowFastCap extends JDRMarker
    {
       JDRMarker marker = new ArrowFastCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

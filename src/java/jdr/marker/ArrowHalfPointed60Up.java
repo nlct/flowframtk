@@ -111,7 +111,7 @@ public class ArrowHalfPointed60Up extends JDRMarker
    {
       JDRMarker marker = new ArrowHalfPointed60Up(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

@@ -961,6 +961,11 @@ public class FlowframTkInvoker
                   settings.getStroke().setStartArrowSize(
                      parseNonNegLength(value, line));
                }
+               else if (key.equals("startarrowwidth"))
+               {
+                  settings.getStroke().setStartArrowWidth(
+                     parseNonNegLength(value, line));
+               }
                else if (key.equals("startarrowrepeat"))
                {
                   settings.getStroke().setStartArrowRepeat(
@@ -1028,6 +1033,10 @@ public class FlowframTkInvoker
                {
                   startComposite.setSize(parseNonNegLength(value, line));
                }
+               else if (key.equals("secondarystartarrowwidth"))
+               {
+                  startComposite.setWidth(parseNonNegLength(value, line));
+               }
                else if (key.equals("secondarystartarrowrepeat"))
                {
                   startComposite.setRepeated(parseMinInt(1, value, line));
@@ -1073,6 +1082,11 @@ public class FlowframTkInvoker
                else if (key.equals("midarrowsize"))
                {
                   settings.getStroke().setMidArrowSize(
+                    parseNonNegLength(value, line));
+               }
+               else if (key.equals("midarrowwidth"))
+               {
+                  settings.getStroke().setMidArrowWidth(
                     parseNonNegLength(value, line));
                }
                else if (key.equals("midarrowrepeat"))
@@ -1134,6 +1148,10 @@ public class FlowframTkInvoker
                {
                   midComposite.setSize(parseNonNegLength(value, line));
                }
+               else if (key.equals("secondarymidarrowwidth"))
+               {
+                  midComposite.setWidth(parseNonNegLength(value, line));
+               }
                else if (key.equals("secondarymidarrowrepeat"))
                {
                   midComposite.setRepeated(parseMinInt(1, value, line));
@@ -1179,6 +1197,11 @@ public class FlowframTkInvoker
                else if (key.equals("endarrowsize"))
                {
                   settings.getStroke().setEndArrowSize(
+                     parseNonNegLength(value, line));
+               }
+               else if (key.equals("endarrowwidth"))
+               {
+                  settings.getStroke().setEndArrowWidth(
                      parseNonNegLength(value, line));
                }
                else if (key.equals("endarrowrepeat"))
@@ -1246,6 +1269,10 @@ public class FlowframTkInvoker
                else if (key.equals("secondaryendarrowsize"))
                {
                   endComposite.setSize(parseNonNegLength(value, line));
+               }
+               else if (key.equals("secondaryendarrowwidth"))
+               {
+                  endComposite.setWidth(parseNonNegLength(value, line));
                }
                else if (key.equals("secondaryendarrowrepeat"))
                {
@@ -2348,6 +2375,13 @@ public class FlowframTkInvoker
 
       JDRMarker startMarker = settings.getStroke().getStartArrow();
 
+      JDRLength markerWidth = startMarker.getWidth();
+
+      if (markerWidth != null)
+      {
+         out.println("startarrowwidth="+markerWidth);
+      }
+
       JDRPaint paint = startMarker.getFillPaint();
 
       if (paint != null)
@@ -2379,6 +2413,13 @@ public class FlowframTkInvoker
 
       JDRMarker midMarker = settings.getStroke().getMidArrow();
 
+      markerWidth = midMarker.getWidth();
+
+      if (markerWidth != null)
+      {
+         out.println("midarrowwidth="+markerWidth);
+      }
+
       paint = midMarker.getFillPaint();
 
       if (paint!=null)
@@ -2409,6 +2450,13 @@ public class FlowframTkInvoker
 
       JDRMarker endMarker = settings.getStroke().getEndArrow();
 
+      markerWidth = endMarker.getWidth();
+
+      if (markerWidth != null)
+      {
+         out.println("endarrowwidth="+markerWidth);
+      }
+
       paint = endMarker.getFillPaint();
 
       if (paint != null)
@@ -2438,6 +2486,13 @@ public class FlowframTkInvoker
             +(startComposite.getAutoOrient() ? 1 : 0));
          out.println("secondarystartarrowangle="
             +startComposite.getAngle());
+
+         markerWidth = startComposite.getWidth();
+
+         if (markerWidth != null)
+         {
+            out.println("secondarystartarrowwidth="+markerWidth);
+         }
 
          paint = startComposite.getFillPaint();
 
@@ -2477,6 +2532,13 @@ public class FlowframTkInvoker
          out.println("secondarymidarrowangle="
             +midComposite.getAngle());
 
+         markerWidth = midComposite.getWidth();
+
+         if (markerWidth != null)
+         {
+            out.println("secondarymidarrowwidth="+markerWidth);
+         }
+
          paint = midComposite.getFillPaint();
 
          if (paint != null)
@@ -2514,6 +2576,13 @@ public class FlowframTkInvoker
             +(endComposite.getAutoOrient() ? 1 : 0));
          out.println("secondaryendarrowangle="
             +endComposite.getAngle());
+
+         markerWidth = endComposite.getWidth();
+
+         if (markerWidth != null)
+         {
+            out.println("secondaryendarrowwidth="+markerWidth);
+         }
 
          if (endComposite.getFillPaint() != null)
          {

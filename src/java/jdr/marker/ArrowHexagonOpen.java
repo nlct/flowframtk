@@ -119,7 +119,7 @@ public class ArrowHexagonOpen extends JDRMarker
    {
       JDRMarker marker = new ArrowHexagonOpen(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

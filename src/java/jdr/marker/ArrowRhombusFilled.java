@@ -115,7 +115,7 @@ public class ArrowRhombusFilled extends JDRMarker
    {
       JDRMarker marker = new ArrowRhombusFilled(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

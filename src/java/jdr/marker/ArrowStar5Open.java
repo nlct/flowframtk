@@ -126,7 +126,7 @@ public class ArrowStar5Open extends JDRMarker
    {
       JDRMarker marker = new ArrowStar5Open(penWidth, repeated,
                                      reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

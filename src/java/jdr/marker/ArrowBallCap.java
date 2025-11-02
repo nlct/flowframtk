@@ -101,7 +101,7 @@ public class ArrowBallCap extends JDRMarker
    {
       JDRMarker marker = new ArrowBallCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

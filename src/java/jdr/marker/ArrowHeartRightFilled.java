@@ -122,7 +122,7 @@ public class ArrowHeartRightFilled extends JDRMarker
    {
       JDRMarker marker = new ArrowHeartRightFilled(penWidth, repeated,
                                     reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

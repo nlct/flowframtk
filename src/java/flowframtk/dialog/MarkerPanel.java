@@ -182,16 +182,41 @@ public class MarkerPanel extends JPanel
       settingsPanel.setLayout(new BoxLayout(settingsPanel,
          BoxLayout.Y_AXIS));
 
-      JPanel repeatPanel = new JPanel(
-         new FlowLayout(FlowLayout.LEADING));
-      settingsPanel.add(repeatPanel);
+      arrowDimLayout = new CardLayout();
+      arrowDimPanel = new JPanel(arrowDimLayout);
+      settingsPanel.add(arrowDimPanel);
+
+      JComponent arrowSizeComp = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      arrowDimPanel.add(arrowSizeComp, "sizeonly");
 
       arrowSize = getResources().createNonNegativeLengthPanel("arrow.size",
        selector_.getSamplePathPanel());
 
       arrowSize.setEnabled(false);
       arrowSize.setValue(5.0, JDRUnit.bp);
-      repeatPanel.add(arrowSize);
+      arrowSizeComp.add(arrowSize);
+      arrowSizeComp.add(Box.createHorizontalGlue());
+
+      JComponent arrow2DimComp = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      arrowDimPanel.add(arrow2DimComp, "bothdim");
+
+      arrowWidth = getResources().createNonNegativeLengthPanel("arrow.width",
+       selector_.getSamplePathPanel());
+      arrowWidth.setEnabled(false);
+      arrowWidth.setValue(5.0, JDRUnit.bp);
+      arrow2DimComp.add(arrowWidth);
+
+      arrowLength = getResources().createNonNegativeLengthPanel("arrow.length",
+       selector_.getSamplePathPanel());
+      arrowLength.setEnabled(false);
+      arrowLength.setValue(10.0, JDRUnit.bp);
+      arrow2DimComp.add(arrowLength);
+
+      arrowDimLayout.first(arrowDimPanel);
+
+      JPanel repeatPanel = new JPanel(
+         new FlowLayout(FlowLayout.LEADING));
+      settingsPanel.add(repeatPanel);
 
       ButtonGroup repeatGroup = new ButtonGroup();
 
@@ -431,13 +456,25 @@ public class MarkerPanel extends JPanel
 
       boolean noMarker = (item.getType() == JDRMarker.ARROW_NONE);
       boolean isResizable = item.isResizable();
+      boolean supportsWidth = item.supportsWidth();
 
       arrowStylePanel.updatePanel();
       enableMarkerBoxes();
 
       if (arrowSize == null) return;
 
-      arrowSize.setEnabled(isResizable);
+      if (supportsWidth)
+      {
+         arrowDimLayout.show(arrowDimPanel, "bothdim");
+      }
+      else
+      {
+         arrowDimLayout.show(arrowDimPanel, "sizeonly");
+      }
+
+      arrowSize.setEnabled(isResizable && !supportsWidth);
+      arrowLength.setEnabled(isResizable && supportsWidth);
+      arrowWidth.setEnabled(isResizable && supportsWidth);
 
       arrowSingle.setEnabled(!noMarker);
 
@@ -483,11 +520,26 @@ public class MarkerPanel extends JPanel
       boolean isResizable =
          (marker == null ? false : marker.isResizable());
 
+      boolean supportsWidth =
+         (marker == null ? false : marker.supportsWidth());
+
       useMarkerButton.setEnabled(flag);
       noMarkerButton.setEnabled(flag);
       enableMarkerBoxes(flag);
 
-      arrowSize.setEnabled(flag && isResizable);
+      if (supportsWidth)
+      {
+         arrowDimLayout.show(arrowDimPanel, "bothdim");
+      }
+      else
+      {
+         arrowDimLayout.show(arrowDimPanel, "sizeonly");
+      }
+
+      arrowSize.setEnabled(flag && isResizable && !supportsWidth);
+      arrowLength.setEnabled(flag && isResizable && supportsWidth);
+      arrowWidth.setEnabled(flag && isResizable && supportsWidth);
+
       arrowSingle.setEnabled(flag && !noMarker);
       arrowDouble.setEnabled(flag && !noMarker);
       arrowTriple.setEnabled(flag && !noMarker);
@@ -735,6 +787,16 @@ public class MarkerPanel extends JPanel
       return arrowSize.getLength();
    }
 
+   public JDRLength getArrowLength()
+   {
+      return arrowLength.getLength();
+   }
+
+   public JDRLength getArrowWidth()
+   {
+      return arrowWidth.isEnabled() ? arrowWidth.getLength() : null;
+   }
+
    public int getArrowRepeated()
    {
       if (arrowDouble.isSelected()) return 2;
@@ -769,6 +831,16 @@ public class MarkerPanel extends JPanel
       arrowReverse.setSelected(isReverseArrow);
    }
 
+   public void setArrowLength(JDRLength width)
+   {
+      arrowLength.setLength(width);
+   }
+
+   public void setArrowWidth(JDRLength width)
+   {
+      arrowWidth.setLength(width);
+   }
+
    public void setArrowSize(JDRLength width)
    {
       arrowSize.setLength(width);
@@ -781,12 +853,30 @@ public class MarkerPanel extends JPanel
 
    public JDRMarker getMarker(CanvasGraphics cg)
    {
-      JDRMarker marker = JDRMarker.getPredefinedMarker(cg,
-         getArrowStyle(),
-         new JDRLength(getResources().getMessageDictionary(), 1.0, JDRUnit.bp),
-         getArrowRepeated(),
-         getArrowReverse(),
-         getArrowSize());
+      MarkerItem markerItem = getSelectedMarker();
+      int arrowStyle = (markerItem == null ? JDRMarker.ARROW_NONE : markerItem.getType());
+
+      JDRMarker marker;
+
+      if (markerItem.supportsWidth())
+      {
+         marker = JDRMarker.getPredefinedMarker(cg,
+            arrowStyle,
+            new JDRLength(getResources().getMessageDictionary(), 1.0, JDRUnit.bp),
+            getArrowRepeated(),
+            getArrowReverse(),
+            getArrowLength(),
+            getArrowWidth());
+      }
+      else
+      {
+         marker = JDRMarker.getPredefinedMarker(cg,
+            arrowStyle,
+            new JDRLength(getResources().getMessageDictionary(), 1.0, JDRUnit.bp),
+            getArrowRepeated(),
+            getArrowReverse(),
+            getArrowSize());
+      }
 
       marker.setFillPaint(getArrowColour(cg));
 
@@ -822,7 +912,15 @@ public class MarkerPanel extends JPanel
 
       if (marker.isResizable())
       {
-         setArrowSize(marker.getSize());
+         if (marker.supportsWidth())
+         {
+            setArrowLength(marker.getSize());
+            setArrowWidth(marker.getWidth());
+         }
+         else
+         {
+            setArrowSize(marker.getSize());
+         }
       }
 
       setArrowColour(marker.fillPaint);
@@ -877,7 +975,14 @@ public class MarkerPanel extends JPanel
 
       if (item.isResizable())
       {
-         str += " "+getArrowSize();
+         if (item.supportsWidth())
+         {
+            str += " " + getArrowLength() + " "+getArrowWidth();
+         }
+         else
+         {
+            str += " "+getArrowSize();
+         }
       }
 
       if (getArrowRepeated()==2)
@@ -934,6 +1039,8 @@ public class MarkerPanel extends JPanel
             getResources().getMessage("arrow.equilateral_filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_EQUILATERAL_OPEN,
             getResources().getMessage("arrow.equilateral_open")),
+         new MarkerItem(getResources(), JDRMarker.ARROW_TRIANGLE2,
+            getResources().getMessage("arrow.triangle2")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HOOKS,
             getResources().getMessage("arrow.hooks"))
       };
@@ -1128,8 +1235,13 @@ public class MarkerPanel extends JPanel
 
    private JRadioButton noMarkerButton, useMarkerButton;
 
+   private JPanel arrowDimPanel;
+   private CardLayout arrowDimLayout;
+
    // arrow size
    private NonNegativeLengthPanel arrowSize;
+   private NonNegativeLengthPanel arrowLength;
+   private NonNegativeLengthPanel arrowWidth;
 
    // arrow single/double/triple?
    private JRadioButton arrowSingle, arrowDouble, arrowTriple;
@@ -1208,6 +1320,12 @@ class MarkerItem implements ListCellRenderer<MarkerItem>
          new JDRLength(resources.getMessageDictionary(), 5.0, JDRUnit.bp));
 
       resizable = marker.isResizable();
+      supportsWidth = marker.supportsWidth();
+
+      if (supportsWidth)
+      {
+         marker.setSize(new JDRLength(resources.getMessageDictionary(), 10.0, JDRUnit.bp));
+      }
 
       if (type != JDRMarker.ARROW_NONE)
       {
@@ -1361,6 +1479,11 @@ class MarkerItem implements ListCellRenderer<MarkerItem>
       return resizable;
    }
 
+   public boolean supportsWidth()
+   {
+      return supportsWidth;
+   }
+
    public String toString()
    {
       return "MarkerItem [type="+type+", label="+label+"]";
@@ -1373,6 +1496,7 @@ class MarkerItem implements ListCellRenderer<MarkerItem>
    private JLabel textComp=null;
    private JPanel panel=null;
    private boolean resizable = false;
+   private boolean supportsWidth = false;
 
    private boolean cellHasFocus=false;
 

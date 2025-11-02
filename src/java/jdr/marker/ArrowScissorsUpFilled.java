@@ -180,7 +180,7 @@ public class ArrowScissorsUpFilled extends JDRMarker
    {
       JDRMarker marker = new ArrowScissorsUpFilled(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

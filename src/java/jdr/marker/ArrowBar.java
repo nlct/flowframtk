@@ -108,7 +108,7 @@ public class ArrowBar extends JDRMarker
    {
       JDRMarker marker = new ArrowBar(penWidth, repeated,
                                          reversed);
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

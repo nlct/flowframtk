@@ -152,7 +152,7 @@ public class ArrowLeaf3BackCap extends JDRMarker
    {
       JDRMarker marker = new ArrowLeaf3BackCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

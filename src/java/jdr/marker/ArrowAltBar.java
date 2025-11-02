@@ -107,7 +107,7 @@ public class ArrowAltBar extends JDRMarker
    {
       JDRMarker marker  = new ArrowAltBar(penWidth, repeated,
                                   reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

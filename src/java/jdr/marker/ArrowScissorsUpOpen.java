@@ -182,7 +182,7 @@ public class ArrowScissorsUpOpen extends JDRMarker
    {
       JDRMarker marker = new ArrowScissorsUpOpen(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

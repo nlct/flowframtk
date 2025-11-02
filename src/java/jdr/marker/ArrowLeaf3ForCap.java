@@ -152,7 +152,7 @@ public class ArrowLeaf3ForCap extends JDRMarker
    {
       JDRMarker marker = new ArrowLeaf3ForCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

@@ -114,7 +114,7 @@ public class ArrowCusp extends JDRMarker
    {
       JDRMarker marker = new ArrowCusp(penWidth, repeated,
                                  reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

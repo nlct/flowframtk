@@ -124,7 +124,7 @@ public class ArrowStar6Filled extends JDRMarker
    {
       JDRMarker marker = new ArrowStar6Filled(penWidth, repeated,
                                      reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

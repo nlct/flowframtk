@@ -121,7 +121,7 @@ public class ArrowTriangleUpFilled extends JDRMarker
    {
       JDRMarker marker = new ArrowTriangleUpFilled(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

@@ -112,7 +112,7 @@ public class ArrowAltSingleOpen extends JDRMarker
    {
       JDRMarker marker = new ArrowAltSingleOpen(penWidth, repeated,
                                   reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

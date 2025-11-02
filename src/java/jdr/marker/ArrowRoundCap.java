@@ -109,7 +109,7 @@ public class ArrowRoundCap extends JDRMarker
    {
       JDRMarker marker = new ArrowRoundCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

@@ -120,7 +120,7 @@ public class ArrowInvertFastCap extends JDRMarker
    {
       JDRMarker marker = new ArrowInvertFastCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

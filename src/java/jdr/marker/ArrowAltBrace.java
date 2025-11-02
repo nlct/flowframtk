@@ -121,7 +121,7 @@ public class ArrowAltBrace extends JDRMarker
    {
       JDRMarker marker  = new ArrowAltBrace(penWidth, repeated,
                                   reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

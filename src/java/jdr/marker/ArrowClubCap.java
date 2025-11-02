@@ -121,7 +121,7 @@ public class ArrowClubCap extends JDRMarker
    {
       JDRMarker marker = new ArrowClubCap(penWidth, repeated,
                                          reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

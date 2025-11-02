@@ -166,7 +166,7 @@ public class ArrowStarChevronOpen extends JDRMarker
    {
       JDRMarker marker = new ArrowStarChevronOpen(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

@@ -116,7 +116,7 @@ public class ArrowHalfCuspDown extends JDRMarker
    {
       JDRMarker marker = new ArrowHalfCuspDown(penWidth, repeated,
                                    reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

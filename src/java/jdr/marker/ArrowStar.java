@@ -133,7 +133,7 @@ public class ArrowStar extends JDRMarker
    {
       JDRMarker marker = new ArrowStar(penWidth, repeated,
                                 reversed, (JDRLength)size.clone());
-      makeEqual(marker);
+      makeOtherEqual(marker);
 
       return marker;
    }

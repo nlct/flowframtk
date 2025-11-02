@@ -1925,6 +1925,9 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.size">Size</entry>
 <entry key="arrow.size.mnemonic">Z</entry>
 
+<entry key="arrow.width">Width</entry>
+<entry key="arrow.length">Length</entry>
+
 <!--  Arrow Styles -->
 
 <entry key="arrow.altbar">Alt Bar</entry>
@@ -2075,6 +2078,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.triangle_down_open">Triangle Down Open</entry>
 <entry key="arrow.triangle_up_filled">Triangle Up Filled</entry>
 <entry key="arrow.triangle_up_open">Triangle Up Open</entry>
+<entry key="arrow.triangle2">Triangle2</entry>
 <entry key="arrow.trianglecap">Triangle Cap</entry>
 
 <entry key="arrow.triple">Triple</entry>
