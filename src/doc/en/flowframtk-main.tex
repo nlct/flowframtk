@@ -4153,12 +4153,12 @@ experimental mode may provide additional import options.
 
 \begin{information}
 There is currently only one file format type that is supported in
-normal (non-experimental) mode, and that is the Acorn Draw file
-format.
+normal (non-experimental) mode, and that is the
+\gls{Acorn-DrawFile-format}.
 \end{information}
 
-The original \gls{JpgfDraw} application was inspired by Acorn Computers' Draw
-application. The Acorn Draw file format is a little-endian binary format that can
+The original \gls{JpgfDraw} application was inspired by \gls{Acorn Computers}['s] Draw
+application. The \gls{Acorn-DrawFile-format} is a little-endian binary format that can
 now be imported by \FlowframTk. However there are some limitations
 and also some differences.
 
@@ -4175,14 +4175,13 @@ Latin2 is provided but characters from other fonts may not be
 correctly converted;
 \item \FlowframTk\ doesn't support different $x$ and $y$ divisions
 in the \gls{grid};
-% TODO:
-\item \FlowframTk\ currently doesn't support Draw's arrow markers;
 \item \FlowframTk\ uses a left-handed \gls{co-ordinate} system so the 
 right-handed \glspl{co-ordinate} in the Draw file will be converted;
 \item since \gls{RISCOS} doesn't use dot file extensions, the file
 chooser uses the \gls{RISCOS} \gls{NFS} style \ext+{aff} suffix 
 (\href{http://www.riscos.com/support/users/omniclient/6_filemap.html}{comma 
-followed by three hexadecimal digits}) for the Acorn Draw filter in the file chooser.
+followed by three hexadecimal digits}) for the
+\inlineglsdef{filter.acorndraw} filter in the file chooser.
 \end{itemize}
 
 \widgetdef{import.title}
@@ -4201,13 +4200,13 @@ file and accepted it, the file name will be set in the
 
 The following file types may be recognised:
 \begin{itemize}
-\item Acorn Draw (always available);
+\item \gls{Acorn-DrawFile-format} (always available);
 \item EPS (\ext+{eps} or \ext+{ps}, only in experimental mode);
 \item \gls{svg} (\ext+{svg}, only in experimental mode).
 \end{itemize}
 Note that \FlowframTk\ doesn't probe the file to determine the file
 type but simply tests which file filter accepts the filename. 
-The default is Acorn Draw. If the Draw file doesn't have the
+The default is \widget{filter.acorndraw}. If the DrawFile doesn't have the
 \ext+{aff} suffix, you can just use the \qt{All Files} filter.
 
 \begin{information}
@@ -4220,7 +4219,8 @@ some or all of the following settings may be ignored.
 If the \widget{import.use_mappings} checkbox is selected, any text
 found in the imported file will have the current
 \hyperref[mi:texmappings]{\TeX\ mappings}
-applied. Note that when importing from an Acorn Draw file, any text
+applied. Note that when importing from a
+\glslink{DrawFile}{Acorn-DrawFile-format}, any text
 lines that have the Selwyn font will be converted to \mathsmode, 
 and the \mathsmode\ mappings will be used.
 
@@ -9422,7 +9422,7 @@ markers require a size, some of them are dependent on the line width
 and some of them require a size as well as being dependent on the
 line width.
 
-Markers can be specified by clicking on the \widget{button.choose}
+Markers can be specified by clicking on the \btn{choose}
 button alongside the applicable \widget{linestyle.arrow.start},
 \widget{linestyle.arrow.mid} or \widget{linestyle.arrow.end}
 row in the \dialog{linestyle} panel (accessed with \menu{edit.path.style.all_styles}
@@ -9435,7 +9435,7 @@ to new \glspl{path}).
 If you want to set the start, mid and end \glspl{index.marker} to
 the same type for currently \selected\ shapes, you can use
 \menu{edit.path.style.all_markers} which will open a marker dialog.
-When you click on the \widget{button.okay} button, the marker type
+When you click on the \btn{okay} button, the marker type
 will be applied to all the markers on the \selected\ shapes.
 
 Alternatively, you can set the start, mid and end
@@ -9528,6 +9528,11 @@ To enable a marker, select the \widget{arrow.usemarker}
 radio button. This will enable the applicable widgets for the
 selected marker (see \sectionref{sec:markertypes}).
 
+\begin{information}
+In general, markers work best with the \pathattr{cap-style.butt} cap
+style.
+\end{information}
+
 \widgetdef{arrow.nomarker}
 
 To disable a marker, select the \widget{arrow.nomarker} radio
@@ -9544,6 +9549,18 @@ An arrow marker looks like an arrow head or triangle or hook.
 The tips may protrude forward beyond the vertex but mostly they protrude
 back from the vertex.
 Available arrow markers are listed in \tableref{tab:arrowmarkers}.
+
+The \widget{arrow.triangle2} marker is a new style of marker that
+has separate \dgls{marker.length} and \dgls{marker.width} attributes (entered into the
+\widget{arrow.length} and \widget{arrow.width} boxes). This marker is not
+dependent on the \pathattr{line-width}, so if you change the line width you may
+need to change the marker length and width attributes to compensate.
+The base lies on the vertex and the marker protrudes
+forwards.
+
+Note that there are other triangle markers in other categories but
+the ones in \widget{arrow.tab.arrows} are designed as \qt{pointing} style
+markers.
 
 \widgetdef{arrow.tab.partial}
 
@@ -9569,6 +9586,10 @@ Available decorative markers are listed in \tableref{tab:decorativemarkers}.
 
 \widgetdef{arrow.tab.caps}
 Cap style markers protrude forward beyond the vertex.
+The \dgls{marker.size} governs the protrusion. The marker width is set to
+the \pathattr{line-width}. This means that the cap markers will be
+narrow on thin \glspl{path}. Increasing the marker size will simply make
+the cap markers long and thin.
 Available cap markers are listed in \tableref{tab:capmarkers}.
 
 \begin{important}
@@ -9581,35 +9602,39 @@ markers generally look best in combination with the
 \FloatTable[htbp]{tab:arrowmarkers}
 {%
 \begin{tabular}{@{}lcccc@{}}
-\bfseries Marker & \bfseries Size? &
+\bfseries Marker & \bfseries Dimensions? &
 \bfseries \tablecellstack{Line Width\\Dependent?} &
 \bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
 \bfseries Sample\\
-\widget{arrow.pointed} & Required & Dependent & No &
+\inlineglsdef{arrow.pointed} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerpointed}\\
-\widget{arrow.pointed60} & Required & Dependent & No &
+\inlineglsdef{arrow.pointed60} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerpointed60}\\
-\widget{arrow.pointed45} & Required & Dependent & No &
+\inlineglsdef{arrow.pointed45} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerpointed45}\\
-\widget{arrow.cusp} & Required & Dependent & No &
+\inlineglsdef{arrow.cusp} & \widget{arrow.size} & Dependent & No &
 \includeimg{markercusp}\\
-\widget{arrow.latex} & N/A & Dependent & No &
+\inlineglsdef{arrow.latex} & N/A & Dependent & No &
 \includeimg{markerlatex}\\
-\widget{arrow.altlatex} & N/A & Dependent & No &
+\inlineglsdef{arrow.altlatex} & N/A & Dependent & No &
 \includeimg{markeraltlatex}\\
-\widget{arrow.altlatex_open} & N/A & Dependent & No &
+\inlineglsdef{arrow.altlatex_open} & N/A & Dependent & No &
 \includeimg{markeraltlatexopen}\\
-\widget{arrow.triangle} & Required & Dependent & No &
+\inlineglsdef{arrow.triangle} & \widget{arrow.size} & Dependent & No &
 \includeimg{markertriangle}\\
-\widget{arrow.triangle_open} & Required & Dependent & No &
+\inlineglsdef{arrow.triangle_open} & \widget{arrow.size} & Dependent & No &
 \includeimg{markertriangleopen}\\
-\widget{arrow.equilateral_filled} & Required & Independent
+\inlineglsdef{arrow.equilateral_filled} & \widget{arrow.size} & Independent
 & No & \includeimg{markerequilateralfilled}\\
-\widget{arrow.equilateral_open} & Required & Independent
+\inlineglsdef{arrow.equilateral_open} & \widget{arrow.size} & Independent
 & No & \includeimg{markerequilateralopen}\\
-\widget{arrow.hooks} & Required & Dependent & No &
+\fnsym{1}\inlineglsdef{arrow.triangle2}
+  & \widget{arrow.length} \& \widget{arrow.width} & Independent
+ & No & \includeimg{markertriangle2}\\
+\inlineglsdef{arrow.hooks} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhooks}
 \end{tabular}
+\tablefns{\fnsymtext{1}{Sample has marker length 8bp and marker width 4bp}}
 }
 [Available Marker Styles and Dependencies for Arrow Style Markers]
 {Available marker styles and dependencies for arrow
@@ -9619,29 +9644,29 @@ Markers are shown in red to distinguish them from the line.}
 \FloatTable[htbp]{tab:partialmarkers}
 {%
 \begin{tabular}{@{}lcccc@{}}
-\bfseries Marker & \bfseries Size? &
+\bfseries Marker & \bfseries Dimensions? &
 \bfseries \tablecellstack{Line Width\\Dependent?} &
 \bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
 \bfseries Sample\\
-\widget{arrow.hook_up} & Required & Dependent & No &
+\inlineglsdef{arrow.hook_up} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhookup}\\
-\widget{arrow.hook_down} & Required & Dependent & No &
+\inlineglsdef{arrow.hook_down} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhookdown}\\
-\widget{arrow.halfpointed_up} & Required & Dependent & No &
+\inlineglsdef{arrow.halfpointed_up} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfpointedup}\\
-\widget{arrow.halfpointed_down} & Required & Dependent & No &
+\inlineglsdef{arrow.halfpointed_down} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfpointeddown}\\
-\widget{arrow.halfpointed60_up} & Required & Dependent & No &
+\inlineglsdef{arrow.halfpointed60_up} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfpointed60up}\\
-\widget{arrow.halfpointed60_down} & Required & Dependent & No &
+\inlineglsdef{arrow.halfpointed60_down} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfpointed60down}\\
-\widget{arrow.halfpointed45_up} & Required & Dependent & No &
+\inlineglsdef{arrow.halfpointed45_up} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfpointed45up}\\
-\widget{arrow.halfpointed45_down} & Required & Dependent & No &
+\inlineglsdef{arrow.halfpointed45_down} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfpointed45down}\\
-\widget{arrow.halfcusp_up} & Required & Dependent & No &
+\inlineglsdef{arrow.halfcusp_up} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfcuspup}\\
-\widget{arrow.halfcusp_down} & Required & Dependent & No &
+\inlineglsdef{arrow.halfcusp_down} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhalfcuspdown}
 \end{tabular}
 }
@@ -9655,63 +9680,63 @@ style.) Markers are shown in red to distinguish them from the line.}
 [\renewcommand*{\arraystretch}{1.5}]
 {@{}lcccc@{}}
 {%
-\bfseries Marker & \bfseries Size? &
+\bfseries Marker & \bfseries Dimensions? &
 \bfseries \tablecellstack{Line Width\\Dependent?} &
 \bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
 \bfseries Sample
 }
 {%
-\widget{arrow.dotfilled} & Required & Independent & Yes &
+\inlineglsdef{arrow.dotfilled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerdotfilled}\\
-\widget{arrow.dotopen} & Required & Independent & Yes &
+\inlineglsdef{arrow.dotopen} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerdotopen}\\
-\widget{arrow.boxfilled} & Required & Independent & Yes &
+\inlineglsdef{arrow.boxfilled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerboxfilled}\\
-\widget{arrow.boxopen} & Required & Independent & Yes &
+\inlineglsdef{arrow.boxopen} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerboxopen}\\
-\widget{arrow.cross} & Required & Independent & Yes &
+\inlineglsdef{arrow.cross} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markercross}\\
-\widget{arrow.plus} & Required & Independent & Yes &
+\inlineglsdef{arrow.plus} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerplus}\\
-\widget{arrow.star} & Required & Independent & Yes &
+\inlineglsdef{arrow.star} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstar}\\
-\widget{arrow.asterisk} & Required & Independent & Yes &
+\inlineglsdef{arrow.asterisk} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerasterisk}\\
-\widget{arrow.star5_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.star5_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstar5open}\\
-\widget{arrow.star5_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.star5_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstar5filled}\\
-\widget{arrow.star6_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.star6_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstar6open}\\
-\widget{arrow.star6_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.star6_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstar6filled}\\
-\widget{arrow.triangle_up_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.triangle_up_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markertriangleupfilled}\\
-\widget{arrow.triangle_up_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.triangle_up_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markertriangleupopen}\\
-\widget{arrow.triangle_down_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.triangle_down_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markertriangledownfilled}\\
-\widget{arrow.triangle_down_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.triangle_down_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markertriangledownopen}\\
-\widget{arrow.rhombus_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.rhombus_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerrhombusfilled}\\
-\widget{arrow.rhombus_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.rhombus_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerrhombusopen}\\
-\widget{arrow.pentagon_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.pentagon_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerpentagonfilled}\\
-\widget{arrow.pentagon_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.pentagon_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerpentagonopen}\\
-\widget{arrow.hexagon_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.hexagon_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerhexagonfilled}\\
-\widget{arrow.hexagon_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.hexagon_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerhexagonopen}\\
-\widget{arrow.octagon_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.octagon_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markeroctagonfilled}\\
-\widget{arrow.octagon_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.octagon_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markeroctagonopen}\\
-\widget{arrow.semicircle_filled} & Required & Independent & No &
+\inlineglsdef{arrow.semicircle_filled} & \widget{arrow.size} & Independent & No &
 \includeimg{markersemicirclefilled}\\
-\widget{arrow.semicircle_open} & Required & Independent & No &
+\inlineglsdef{arrow.semicircle_open} & \widget{arrow.size} & Independent & No &
 \includeimg{markersemicircleopen}
 }
 [Available Marker Styles and Dependencies for Data Point Style Markers]
@@ -9723,25 +9748,25 @@ style.) Markers are shown in red to distinguish them from the line.}
 [\renewcommand*{\arraystretch}{1.75}]
 {%
 \begin{tabular}{@{}lcccc@{}}
-\bfseries Marker & \bfseries Size? &
+\bfseries Marker & \bfseries Dimensions? &
 \bfseries \tablecellstack{Line Width\\Dependent?} &
 \bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
 \bfseries Sample\\
-\widget{arrow.square} & N/A & Dependent & No&
+\inlineglsdef{arrow.square} & N/A & Dependent & No&
 \includeimg{markersquare}\\
-\widget{arrow.bar} & N/A & Dependent & Yes &
+\inlineglsdef{arrow.bar} & N/A & Dependent & Yes &
 \includeimg{markerbar}\\
-\widget{arrow.round} & N/A & Dependent & No &
+\inlineglsdef{arrow.round} & N/A & Dependent & No &
 \includeimg{markerround}\\
-\widget{arrow.brace} & N/A & Dependent & No &
+\inlineglsdef{arrow.brace} & N/A & Dependent & No &
 \includeimg{markerbrace}\\
-\widget{arrow.altsquare} & Required & Dependent & No&
+\inlineglsdef{arrow.altsquare} & \widget{arrow.size} & Dependent & No&
 \includeimg{markeraltsquare}\\
-\widget{arrow.altbar} & Required & Dependent & Yes &
+\inlineglsdef{arrow.altbar} & \widget{arrow.size} & Dependent & Yes &
 \includeimg{markeraltbar}\\
-\widget{arrow.altround} & Required & Dependent & No &
+\inlineglsdef{arrow.altround} & \widget{arrow.size} & Dependent & No &
 \includeimg{markeraltround}\\
-\widget{arrow.altbrace} & Required & Dependent & No &
+\inlineglsdef{arrow.altbrace} & \widget{arrow.size} & Dependent & No &
 \includeimg{markeraltbrace}
 \end{tabular}
 }
@@ -9756,49 +9781,49 @@ Markers are shown in red to distinguish them from the line.}
 [\renewcommand*{\arraystretch}{1.75}]
 {@{}lcccc@{}}
 {%
-\bfseries Marker & \bfseries Size? & 
+\bfseries Marker & \bfseries Dimensions? & 
 \bfseries \tablecellstack{Line Width\\Dependent?} &
 \bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
 \bfseries Sample
 }
 {%
-\widget{arrow.rectanglecap} & Required & Dependent & No &
+\inlineglsdef{arrow.rectanglecap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerrectanglecap}\\
-\widget{arrow.roundcap} & Required & Dependent & No &
+\inlineglsdef{arrow.roundcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerroundcap}\\
-\widget{arrow.trianglecap} & Required & Dependent & No &
+\inlineglsdef{arrow.trianglecap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markertrianglecap}\\
-\widget{arrow.inverttrianglecap} & Required & Dependent & No &
+\inlineglsdef{arrow.inverttrianglecap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerinverttrianglecap}\\
-\widget{arrow.chevroncap} & Required & Dependent & No &
+\inlineglsdef{arrow.chevroncap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerchevroncap}\\
-\widget{arrow.invertchevroncap} & Required & Dependent & No &
+\inlineglsdef{arrow.invertchevroncap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerinvertchevroncap}\\
-\widget{arrow.fastcap} & Required & Dependent & No &
+\inlineglsdef{arrow.fastcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerfastcap}\\
-\widget{arrow.invertfastcap} & Required & Dependent & No &
+\inlineglsdef{arrow.invertfastcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerinvertfastcap}\\
-\widget{arrow.ballcap} & Required & Dependent & No &
+\inlineglsdef{arrow.ballcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerballcap}\\
-\widget{arrow.leafcap} & Required & Dependent & No &
+\inlineglsdef{arrow.leafcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleafcap}\\
-\widget{arrow.doubleleafcap} & Required & Dependent & No &
+\inlineglsdef{arrow.doubleleafcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleaf2cap}\\
-\widget{arrow.tripleleafcap} & Required & Dependent & No &
+\inlineglsdef{arrow.tripleleafcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleaf3cap}\\
-\widget{arrow.clubcap} & Required & Dependent & No &
+\inlineglsdef{arrow.clubcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerclubcap}\\
-\widget{arrow.tripleleafforwardcap} & Required & Dependent & No &
+\inlineglsdef{arrow.tripleleafforwardcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleaf3forcap}\\
-\widget{arrow.tripleleafbackcap} & Required & Dependent & No &
+\inlineglsdef{arrow.tripleleafbackcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleaf3backcap}\\
-\widget{arrow.doubleleafforwardcap} & Required & Dependent & No &
+\inlineglsdef{arrow.doubleleafforwardcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleaf2forcap}\\
-\widget{arrow.doubleleafbackcap} & Required & Dependent & No &
+\inlineglsdef{arrow.doubleleafbackcap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerleaf2backcap}\\
-\widget{arrow.bulgecap} & Required & Dependent & No &
+\inlineglsdef{arrow.bulgecap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerbulgecap}\\
-\widget{arrow.cutoutbulgecap} & Required & Dependent & No &
+\inlineglsdef{arrow.cutoutbulgecap} & \widget{arrow.size} & Dependent & No &
 \includeimg{markercutoutbulgecap}
 }
 [Available Marker Styles and Dependencies for Cap Style Markers]
@@ -9812,39 +9837,39 @@ Markers are shown in red to distinguish them from the line.}
 [\renewcommand*{\arraystretch}{1.75}]
 {%
 \begin{tabular}{@{}lcccc@{}}
-\bfseries Marker & \bfseries Size? &
+\bfseries Marker & \bfseries Dimensions? &
 \bfseries \tablecellstack{Line Width\\Dependent?} &
 \bfseries \tablecellstack{\Manmsg{centred} on\\Vertex?} &
 \bfseries Sample\\
-\widget{arrow.circle} & Required & Dependent & No &
+\inlineglsdef{arrow.circle} & \widget{arrow.size} & Dependent & No &
 \includeimg{markercircle}\\
-\widget{arrow.diamond} & N/A & Dependent & No &
+\inlineglsdef{arrow.diamond} & N/A & Dependent & No &
 \includeimg{markerdiamond}\\
-\widget{arrow.circle_open} & Required & Dependent & No &
+\inlineglsdef{arrow.circle_open} & \widget{arrow.size} & Dependent & No &
 \includeimg{markercircleopen}\\
-\widget{arrow.diamond_open} & N/A & Dependent & No &
+\inlineglsdef{arrow.diamond_open} & N/A & Dependent & No &
 \includeimg{markerdiamondopen}\\
-\widget{arrow.scissors_up_filled} & Required & Dependent & No &
+\inlineglsdef{arrow.scissors_up_filled} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerscissorsupfilled}\\
-\widget{arrow.scissors_down_filled} & Required & Dependent & No &
+\inlineglsdef{arrow.scissors_down_filled} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerscissorsdownfilled}\\
-\widget{arrow.scissors_up_open} & Required & Dependent & No &
+\inlineglsdef{arrow.scissors_up_open} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerscissorsupopen}\\
-\widget{arrow.scissors_down_open} & Required & Dependent & No &
+\inlineglsdef{arrow.scissors_down_open} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerscissorsdownopen}\\
-\widget{arrow.heart_right_filled} & Required & Independent & No &
+\inlineglsdef{arrow.heart_right_filled} & \widget{arrow.size} & Independent & No &
 \includeimg{markerheartrightfilled}\\
-\widget{arrow.heart_right_open} & Required & Independent & No &
+\inlineglsdef{arrow.heart_right_open} & \widget{arrow.size} & Independent & No &
 \includeimg{markerheartrightopen}\\
-\widget{arrow.heart_filled} & Required & Independent & No &
+\inlineglsdef{arrow.heart_filled} & \widget{arrow.size} & Independent & No &
 \includeimg{markerheartfilled}\\
-\widget{arrow.heart_open} & Required & Independent & No &
+\inlineglsdef{arrow.heart_open} & \widget{arrow.size} & Independent & No &
 \includeimg{markerheartopen}\\
-\widget{arrow.snowflake} & Required & Independent & Yes &
+\inlineglsdef{arrow.snowflake} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markersnowflake}\\
-\widget{arrow.starchevron_open} & Required & Independent & Yes &
+\inlineglsdef{arrow.starchevron_open} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstarchevronopen}\\
-\widget{arrow.starchevron_filled} & Required & Independent & Yes &
+\inlineglsdef{arrow.starchevron_filled} & \widget{arrow.size} & Independent & Yes &
 \includeimg{markerstarchevronfilled}
 \end{tabular}
 }
@@ -9861,10 +9886,28 @@ Markers are shown in red to distinguish them from the line.}
 \widgetdef{arrow.size}
 
 The \widget{arrow.size} box will be enabled for only the
-resizeable markers. This box can be used to vary the 
+resizeable markers that don't have a separate width and length. 
+This box can be used to vary the 
 \inlineglsdef{index.marker.size},
 but some markers also depend on the line width, so the size box is
 only meant as a general guide.
+
+Resizeable markers that have a separate width and length attribute
+will instead use the \widget{arrow.width} and \widget{arrow.length}
+boxes.
+
+\widgetdef{arrow.width}
+
+The marker \inlineglsdef{index.marker.width} is given by the value
+in the \widget{arrow.width} box. If an independent width isn't
+supported, the marker width will either depend on the line width or
+on the \widget{arrow.size} setting.
+
+\widgetdef{arrow.length}
+
+The marker \inlineglsdef{index.marker.length} is given by the value in the
+\widget{arrow.length} box. This is how far the marker protrudes from its
+base.
 
 \subsubsection{Repeating Markers}\label{sec:repeatingmarkers}
 
@@ -14416,7 +14459,7 @@ write. The \maingls{JDR} (\inlineglsdef{ext.jdr}) format is binary written
 in the big-endian fashion. The \maingls{AJR} (\inlineglsdef{ext.ajr}) format is
 an ASCII format. The \gls*{AJR} format has less precision than the
 \gls*{JDR} format. The current version number for both formats
-is~2.0.
+is~2.1.
 
 The first line of the ASCII \gls*{AJR} format must be:
 \begin{compactcodebox}
@@ -14691,7 +14734,7 @@ otherwise indicated. The unit is saved as a \type{unit-id} type.
 Versions below 1.8 must have all lengths stored as
 \glslink{bp}{PostScript points}.
 
-\item Versions 2.1 and above only include the origin shift.
+\item Versions 2.1 and above include the origin shift.
 \begin{jdrversion}{2.1 onwards}
 \begin{syntaxline}
 \meta{origin-x} \meta{origin-y}
@@ -14700,7 +14743,6 @@ Versions below 1.8 must have all lengths stored as
 These values are in terms of the storage unit and indicate where the
 co-ordinate origin is in relation to the top left corner of the
 \gls{canvas}.
-% TODO implement this
 
 \item\label{jdr:settings-id}Setting ID.
 \begin{syntaxline}
@@ -15367,28 +15409,28 @@ If no controls are anchored, the $-1$ is still required.
 \FloatTable{tab:jdrarrowid}
 {%
     \begin{tabular}{llll}
-    0 & No marker &
-    11 & Box Filled\\
-    1 & Pointed &
-    12 & Box Open\\
-    2 & Triangle &
-    13 & Cross \\
-    3 & Circle &
-    14 & Plus\\
-    4 & Diamond &
-    15 & Star\\
-    5 & Square bracket &
-    16 & Triangle Up Filled\\
-    6 & Bar &
-  17 & Triangle Up Open\\
-  7 & Single &
-  18 & Triangle Down Filled\\
-  8 & Round bracket &
-  19 & Triangle Down Open\\
-  9 & Dot Filled &
-  20 & Rhombus Filled \\
-  10 & Dot Open &
-  21 & Rhombus Open
+    0 & \widget{arrow.nomarker} &
+       11 & \widget{arrow.boxfilled}\\
+    1 & \widget{arrow.pointed} &
+       12 & \widget{arrow.boxopen}\\
+    2 & \widget{arrow.triangle} &
+       13 & \widget{arrow.cross} \\
+    3 & \widget{arrow.circle} &
+       14 & \widget{arrow.plus}\\
+    4 & \widget{arrow.diamond} &
+       15 & \widget{arrow.star}\\
+    5 & \widget{arrow.square} &
+       16 & \widget{arrow.triangle_up_filled}\\
+    6 & \widget{arrow.bar} &
+       17 & \widget{arrow.triangle_up_open}\\
+    7 & \widget{arrow.latex} &
+       18 & \widget{arrow.triangle_down_filled}\\
+    8 & \widget{arrow.round} &
+       19 & \widget{arrow.triangle_down_open}\\
+    9 & \widget{arrow.dotfilled} &
+       20 & \widget{arrow.rhombus_filled} \\
+    10 & \widget{arrow.dotopen} &
+       21 & \widget{arrow.rhombus_open}
   \end{tabular}
 }
 {Marker IDs (Version 1.0 Onwards)}
@@ -15396,26 +15438,45 @@ If no controls are anchored, the $-1$ is still required.
 \FloatTable{tab:jdrarrowid1.4}
 {%
   \begin{tabular}{llllll}
-  22 & Pentagon Filled & 41 & Half Cusp Down & 60 & Open Semicircle\\
-  23 & Pentagon Open & 42 & Alt Single & 61 & Filled Semicircle \\
-  24 & Hexagon Filled & 43 & Alt Single Open & 62 & Open 5 Pointed star\\
-  25 & Hexagon Open & 44 & Triangle Open & 63 & Filled 5 Pointed star\\
-  26 & Octagon Filled & 45 & Circle Open & 64 & Asterisk\\
-  27 & Octagon Open & 46 & Diamond Open & 65 & Scissors Down Filled\\
-  28 & Pointed 60 & 47 & Brace & 66 & Scissors Up Filled\\
-  29 & Pointed 45 & 48 & Rectangle Cap & 67 & Scissors Down Open\\
-  30 & Hooks & 49 & Chevron Cap & 68 & Scissors Up Open\\
-  31 & Hook up & 50 & Fast Cap & 69 & Heart Right Filled\\
-  32 & Hook Down & 51 & Round Cap & 70 & Heart Right Open\\
-  33 & Half Pointed Up & 52 & Triangle Cap & 71 & Heart Filled\\
-  34 & Half Pointed Down & 53 & Inverted Triangle Cap & 72 & Heart Open\\
-  35 & Half Pointed 60 Up & 54 & Inverted Chevron Cap & 73 & Snowflake\\
-  36 & Half Pointed 60 Down & 55 & Inverted Fast Cap & 74 & Star Chevron Open\\
-  37 & Half Pointed 45 Up & 56 & Alt Bar & 75 & Star Chevron Filled\\
-  38 & Half Pointed 45 Down & 57 & Alt Round & 76 & Star 6 Filled\\
-  39 & Cusp & 58 & Alt Square & 77 & Star 6 Open\\
-  40 & Half Cusp Up & 59 & Alt Brace & 78 & Equilateral Filled\\
-   & & & & 79 & Equilateral Open
+  22 & \widget{arrow.pentagon_filled} & 41 & \widget{arrow.halfcusp_down}
+     & 60 & \widget{arrow.semicircle_open}\\
+  23 & \widget{arrow.pentagon_open} & 42 & \widget{arrow.altlatex}
+     & 61 & \widget{arrow.semicircle_filled} \\
+  24 & \widget{arrow.hexagon_filled} & 43 & \widget{arrow.altlatex_open}
+     & 62 & \widget{arrow.star5_open}\\
+  25 & \widget{arrow.hexagon_open} & 44 & \widget{arrow.triangle_open}
+     & 63 & \widget{arrow.star5_filled}\\
+  26 & \widget{arrow.octagon_filled} & 45 & \widget{arrow.circle_open}
+     & 64 & \widget{arrow.asterisk}\\
+  27 & \widget{arrow.octagon_open} & 46 & \widget{arrow.diamond_open}
+     & 65 & \widget{arrow.scissors_down_filled}\\
+  28 & \widget{arrow.pointed60} & 47 & \widget{arrow.brace}
+     & 66 & \widget{arrow.scissors_up_filled}\\
+  29 & \widget{arrow.pointed45} & 48 & \widget{arrow.rectanglecap}
+     & 67 & \widget{arrow.scissors_down_open}\\
+  30 & \widget{arrow.hooks} & 49 & \widget{arrow.chevroncap}
+     & 68 & \widget{arrow.scissors_up_open}\\
+  31 & \widget{arrow.hook_up} & 50 & \widget{arrow.fastcap}
+     & 69 & \widget{arrow.heart_right_filled}\\
+  32 & \widget{arrow.hook_down} & 51 & \widget{arrow.roundcap}
+     & 70 & \widget{arrow.heart_right_open}\\
+  33 & \widget{arrow.halfpointed_up} & 52 & \widget{arrow.trianglecap}
+     & 71 & \widget{arrow.heart_filled}\\
+  34 & \widget{arrow.halfpointed_down} & 53 & \widget{arrow.inverttrianglecap}
+     & 72 & \widget{arrow.heart_open}\\
+  35 & \widget{arrow.halfpointed60_up} & 54 & \widget{arrow.invertchevroncap}
+     & 73 & \widget{arrow.snowflake}\\
+  36 & \widget{arrow.halfpointed60_down} & 55 & \widget{arrow.invertfastcap}
+     & 74 & \widget{arrow.starchevron_open}\\
+  37 & \widget{arrow.halfpointed45_up} & 56 & \widget{arrow.altbar}
+     & 75 & \widget{arrow.starchevron_filled}\\
+  38 & \widget{arrow.halfpointed45_down} & 57 & \widget{arrow.altround}
+     & 76 & \widget{arrow.star6_filled}\\
+  39 & \widget{arrow.cusp} & 58 & \widget{arrow.altsquare}
+     & 77 & \widget{arrow.star6_open}\\
+  40 & \widget{arrow.halfcusp_up} & 59 & \widget{arrow.altbrace}
+     & 78 & \widget{arrow.equilateral_filled}\\
+   & & & & 79 & \widget{arrow.equilateral_open}
   \end{tabular}
 }
 {Additional Marker IDs (Version 1.4 Onwards)}
@@ -15423,12 +15484,14 @@ If no controls are anchored, the $-1$ is still required.
 \FloatTable{tab:jdrarrowid1.6}
 {%
   \begin{tabular}{llll}
-  80 & Ball Cap & 85 & Forward Triple Leaf Cap \\
-  81 & Leaf Cap & 86 & Back Triple Leaf Cap \\
-  82 & Double Leaf Cap & 87 & Forward Double Leaf Cap \\
-  83 & Triple Leaf Cap & 88 & Back Double Leaf Cap \\
-  84 & Club Cap & 89 & Cutout Bulge Cap
+  80 & \widget{arrow.ballcap} & 85 & \widget{arrow.tripleleafforwardcap} \\
+  81 & \widget{arrow.leafcap} & 86 & \widget{arrow.tripleleafbackcap} \\
+  82 & \widget{arrow.doubleleafcap} & 87 & \widget{arrow.doubleleafforwardcap} \\
+  83 & \widget{arrow.tripleleafcap} & 88 & \widget{arrow.doubleleafbackcap} \\
+  84 & \widget{arrow.clubcap} & 89 & \widget{arrow.bulgecap}\\
+  90 & \widget{arrow.cutoutbulgecap} & 90 & \fnsym{1}\widget{arrow.triangle2}
   \end{tabular}
+  \tablefns{\fnsymtext{1}{Version 2.1 onwards only (has width)}}
 }
 {Additional Marker IDs (Version 1.6 Onwards)}
 
@@ -15445,6 +15508,7 @@ If no controls are anchored, the $-1$ is still required.
   available for version 1.6 onwards.
 
   The \meta{marker data} is stored as follows:
+  \begin{jdrversion}{1.4--2.0}
   \begin{syntaxline}
   \meta{size} \meta{repeat} \meta{is reversed} \meta{orient data}
   \meta{\manmsg{colour} data} \meta{overlay}
@@ -15452,6 +15516,17 @@ If no controls are anchored, the $-1$ is still required.
   \meta{repeat offset flag} [\meta{repeat offset}]]
   \meta{composite data}
   \end{syntaxline}
+  \end{jdrversion}
+  \begin{jdrversion}{2.1 onwards}
+  \begin{syntaxline}
+  \meta{size} \meta{width-flag} [\meta{width}]
+  \meta{repeat} \meta{is reversed} \meta{orient data}
+  \meta{\manmsg{colour} data} \meta{overlay}
+  [\meta{user offset flag} [\meta{user offset}]
+  \meta{repeat offset flag} [\meta{repeat offset}]]
+  \meta{composite data}
+  \end{syntaxline}
+  \end{jdrversion}
   where:
   \meta{user offset flag} [\meta{user offset}]
   \meta{repeat offset flag} [\meta{repeat offset}]
@@ -15464,6 +15539,18 @@ If no controls are anchored, the $-1$ is still required.
     \begin{itemize}
     \item \meta{size} is a \type{float} (\gls*{bp} unit implied) for
     versions below 1.8 and is a \type{length} for version 1.8 onwards.
+    This value is present even for markers that don't have a 
+    \gls{index.marker.size} attribute.
+
+    \item For version 2.1 onwards, there is now support for markers
+    that have a \gls{index.marker.width} in addition to the size (which is considered
+    the marker length). The marker width attribute is not the same
+    as the pen width. If the marker supports an independent width
+    attribute, the \type{boolean} \meta{width-flag} should be true
+    and should be followed by \meta{width} which is a \type{length}.
+    If the marker doesn't support an independent width attribute,
+    \meta{width-flag} should be false and \meta{width} should be
+    omitted.
 
     \item \meta{repeat} is a \type{byte} identifying the repeat factor
     (a value of 1 indicates a single marker, a value of 2 indicates

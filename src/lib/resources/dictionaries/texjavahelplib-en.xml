@@ -506,6 +506,10 @@ Nicola Talbot
 <entry key="manual.definition.description">the syntax and usage of a command,
 environment or option etc</entry>
 
+<entry key="manual.dialog">Dialog</entry>
+<entry key="manual.dialog.description">a dialog or similar 
+window to change settings or input values</entry>
+
 <entry key="manual.valuesetting">Setting</entry>
 <entry key="manual.valuesetting.description">an option 
 that takes a value</entry>

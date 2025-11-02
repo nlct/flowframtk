@@ -2397,7 +2397,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="filter.svg">Scalable Vector Graphics (*.svg)</entry>
 <entry key="filter.tex">TeX/LaTeX (*.tex, *.ltx)</entry>
 <entry key="filter.pdf">Portable Document Format (*.pdf)</entry>
-<entry key="filter.acorndraw">Acorn Draw File (*,aff)</entry>
+<entry key="filter.acorndraw">Acorn DrawFile (*,aff)</entry>
 
 <!--  Export dialog box -->
 <entry key="export.title">Export</entry>
@@ -4066,6 +4066,8 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 
 <entry key="index.marker.colour">color</entry>
 <entry key="index.marker.size">size</entry>
+<entry key="index.marker.width">width</entry>
+<entry key="index.marker.length">length</entry>
 <entry key="index.marker.type">type</entry>
 <entry key="index.marker.repeating">repeating</entry>
 <entry key="index.marker.reversed">reversed</entry>
