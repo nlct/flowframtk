@@ -1192,6 +1192,11 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
+         case ARROW_ALT_TRIANGLE2:
+            marker = new ArrowAltTriangle2(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
          case ARROW_CIRCLE :
             marker = new ArrowCircle(penwidth, repeat, isReversed,
                arrowSize);
@@ -3247,36 +3252,6 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
    public static final int ARROW_EQUILATERAL_OPEN=79;
 
    /**
-    * Maximum number of known markers for AJR and JDR file
-    * versions 2.1 onwards
-    */
-   public static final int NUM_ARROWS2_1=92;
-
-   /**
-    * Maximum number of known markers for AJR and JDR file
-    * versions 1.6 onwards
-    */
-   public static final int NUM_ARROWS1_6=91;
-
-   /**
-    * Maximum number of known markers for AJR and JDR file
-    * versions 1.4 onwards
-    */
-   public static final int NUM_ARROWS1_4=80;
-
-   /**
-    * Maximum number of known markers for AJR and JDR file 
-    * versions 1.1 to 1.3.
-    */
-   public static final int NUM_ARROWS1_1=22;
-
-   /**
-    * Maximum number of known markers for AJR/JDR file version
-    * 1.0.
-    */
-   public static final int NUM_ARROWS1_0=8;
-
-   /**
     * Ball cap.
     * (JDR/AJR file formats version 1.6 onwards.)
     */
@@ -3348,6 +3323,43 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * (JDR/AJR file formats version 2.1 onwards.)
     */
    public static final int ARROW_TRIANGLE2=91;
+
+   /**
+    * Alt Triangle2. This marker has width and length and is
+    * dependent of the pen width.
+    * (JDR/AJR file formats version 2.1 onwards.)
+    */
+   public static final int ARROW_ALT_TRIANGLE2=92;
+
+   /**
+    * Maximum number of known markers for AJR and JDR file
+    * versions 2.1 onwards
+    */
+   public static final int NUM_ARROWS2_1=93;
+
+   /**
+    * Maximum number of known markers for AJR and JDR file
+    * versions 1.6 onwards
+    */
+   public static final int NUM_ARROWS1_6=91;
+
+   /**
+    * Maximum number of known markers for AJR and JDR file
+    * versions 1.4 onwards
+    */
+   public static final int NUM_ARROWS1_4=80;
+
+   /**
+    * Maximum number of known markers for AJR and JDR file 
+    * versions 1.1 to 1.3.
+    */
+   public static final int NUM_ARROWS1_1=22;
+
+   /**
+    * Maximum number of known markers for AJR/JDR file version
+    * 1.0.
+    */
+   public static final int NUM_ARROWS1_0=8;
 
    /**
     * Indicates whether or not this marker is at the start of

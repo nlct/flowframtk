@@ -4157,7 +4157,7 @@ normal (non-experimental) mode, and that is the
 \gls{Acorn-DrawFile-format}.
 \end{information}
 
-The original \gls{JpgfDraw} application was inspired by \gls{Acorn Computers}['s] Draw
+The original \gls{JpgfDraw} application was inspired by \gls{Acorn}['s] Draw
 application. The \gls{Acorn-DrawFile-format} is a little-endian binary format that can
 now be imported by \FlowframTk. However there are some limitations
 and also some differences.
@@ -4175,6 +4175,8 @@ Latin2 is provided but characters from other fonts may not be
 correctly converted;
 \item \FlowframTk\ doesn't support different $x$ and $y$ divisions
 in the \gls{grid};
+\item \FlowframTk's triangle markers are different from
+Draw's triangle markers;
 \item \FlowframTk\ uses a left-handed \gls{co-ordinate} system so the 
 right-handed \glspl{co-ordinate} in the Draw file will be converted;
 \item since \gls{RISCOS} doesn't use dot file extensions, the file
@@ -4220,7 +4222,7 @@ If the \widget{import.use_mappings} checkbox is selected, any text
 found in the imported file will have the current
 \hyperref[mi:texmappings]{\TeX\ mappings}
 applied. Note that when importing from a
-\glslink{DrawFile}{Acorn-DrawFile-format}, any text
+\glslink{Acorn-DrawFile-format}{DrawFile}, any text
 lines that have the Selwyn font will be converted to \mathsmode, 
 and the \mathsmode\ mappings will be used.
 
@@ -9550,17 +9552,53 @@ The tips may protrude forward beyond the vertex but mostly they protrude
 back from the vertex.
 Available arrow markers are listed in \tableref{tab:arrowmarkers}.
 
-The \widget{arrow.triangle2} marker is a new style of marker that
-has separate \dgls{marker.length} and \dgls{marker.width} attributes (entered into the
-\widget{arrow.length} and \widget{arrow.width} boxes). This marker is not
+The \widget{arrow.triangle2} and  \widget{arrow.alttriangle2}
+markers are a new style of marker that have separate
+\dgls{marker.length} and \dgls{marker.width} attributes (entered
+into the \widget{arrow.length} and \widget{arrow.width} boxes). 
+
+The \widget{arrow.triangle2} marker is not
 dependent on the \pathattr{line-width}, so if you change the line width you may
 need to change the marker length and width attributes to compensate.
-The base lies on the vertex and the marker protrudes
-forwards.
+The \widget{arrow.alttriangle2} is dependent on the
+\pathattr{line-width}. In this case, the actual marker dimensions
+are the specified marker length plus half the line width for the
+protrusion and the specified width plus the line width across the base.
+In both cases, the base lies on the vertex and the marker protrudes forwards.
 
-Note that there are other triangle markers in other categories but
+To illustrate the difference between the \widget{arrow.triangle2} and
+\widget{arrow.alttriangle2} markers, \figureref{fig:samplemarkertriangle2}
+has four lines. The top two have a \widget{arrow.triangle2} end marker
+with the \widget{arrow.width} set to 5bp and the \widget{arrow.length}
+set to 10bp. The bottom two have an \widget{arrow.alttriangle2} end marker
+with the \widget{arrow.width} set to 5bp and the \widget{arrow.length}
+set to 10bp. The two left hand lines have 1bp line width and the
+two right hand lines have 10bp line width. (All lines have the cap
+set to \widget{linestyle.cap.butt} and the marker \manmsg{colour}
+set to red.)
+
+The difference between the two markers is more noticeable with the
+thicker line width. The \widget{arrow.triangle2} marker (which
+is independent of the line width) is now much narrower than the line
+width. The  \widget{arrow.alttriangle2} marker (which does take the
+line width into account) is still wider than the line width.
+
+\FloatFig{fig:samplemarkertriangle2}
+{\includeimg{samplemarkertriangle2}}
+[Triangle2 and Alt Triangle2 Markers]
+{\widget{arrow.triangle2} and \widget{arrow.alttriangle2} markers:
+the left two lines have 1bp line width,
+the right two lines have 10bp line width,
+the top two lines have a \widget{arrow.triangle2} end marker
+with 5bp width and 10bp length, and
+the bottom two lines have a \widget{arrow.alttriangle2} end marker
+with 5bp width and 10bp length.}
+
+\begin{information}
+There are other triangle markers in other categories but
 the ones in \widget{arrow.tab.arrows} are designed as \qt{pointing} style
 markers.
+\end{information}
 
 \widgetdef{arrow.tab.partial}
 
@@ -9631,10 +9669,13 @@ markers generally look best in combination with the
 \fnsym{1}\inlineglsdef{arrow.triangle2}
   & \widget{arrow.length} \& \widget{arrow.width} & Independent
  & No & \includeimg{markertriangle2}\\
+\fnsym{1}\inlineglsdef{arrow.alttriangle2}
+  & \widget{arrow.length} \& \widget{arrow.width} & Dependent
+ & No & \includeimg{markeralttriangle2}\\
 \inlineglsdef{arrow.hooks} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhooks}
 \end{tabular}
-\tablefns{\fnsymtext{1}{Sample has marker length 8bp and marker width 4bp}}
+\tablefns{\fnsymtext{1}{Sample has marker length 12bp and marker width 8bp}}
 }
 [Available Marker Styles and Dependencies for Arrow Style Markers]
 {Available marker styles and dependencies for arrow
@@ -15489,12 +15530,18 @@ If no controls are anchored, the $-1$ is still required.
   82 & \widget{arrow.doubleleafcap} & 87 & \widget{arrow.doubleleafforwardcap} \\
   83 & \widget{arrow.tripleleafcap} & 88 & \widget{arrow.doubleleafbackcap} \\
   84 & \widget{arrow.clubcap} & 89 & \widget{arrow.bulgecap}\\
-  90 & \widget{arrow.cutoutbulgecap} & 90 & \fnsym{1}\widget{arrow.triangle2}
+  90 & \widget{arrow.cutoutbulgecap} 
   \end{tabular}
-  \tablefns{\fnsymtext{1}{Version 2.1 onwards only (has width)}}
 }
 {Additional Marker IDs (Version 1.6 Onwards)}
 
+\FloatTable{tab:jdrarrowid2.1}
+{%
+  \begin{tabular}{llll}
+  90 & \widget{arrow.triangle2} & 91 & \widget{arrow.alttriangle2}
+  \end{tabular}
+}
+{Additional Marker IDs (Version 2.1 Onwards)}
 
   For version 1.4 onwards the markers are stored as
   \begin{syntaxline}
@@ -15505,7 +15552,8 @@ If no controls are anchored, the $-1$ is still required.
   otherwise it should be present. Valid \meta{id} values are listed
   in \tableref{tab:jdrarrowid} and \tableref{tab:jdrarrowid1.4}.
   Additional markers listed in \tableref{tab:jdrarrowid1.6} are also
-  available for version 1.6 onwards.
+  available for version 1.6 onwards, and markers listed in
+  \tableref{tab:jdrarrowid2.1} are available for version 2.1 onwards.
 
   The \meta{marker data} is stored as follows:
   \begin{jdrversion}{1.4--2.0}

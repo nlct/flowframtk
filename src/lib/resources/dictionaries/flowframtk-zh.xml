@@ -1944,6 +1944,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.altbrace">Alt Brace</entry>
 <entry key="arrow.altlatex">Alt LaTeX</entry>
 <entry key="arrow.altlatex_open">Alt LaTeX Open</entry>
+<entry key="arrow.alttriangle2">Alt Triangle2</entry>
 <entry key="arrow.asterisk">Asterisk</entry>
 
 <entry key="arrow.autogap">Auto Repeat Gap</entry>

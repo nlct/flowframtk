@@ -648,11 +648,9 @@ public class AcornDrawFile
 
          if (hasTriangleStart)
          {
-            marker = new ArrowTriangle2(penWidth, 1, false,
-              new JDRLength(cg, drawPointToUnit(triangleHeight), 
-               gridInches ? JDRUnit.in : JDRUnit.cm),
-              new JDRLength(cg, drawPointToUnit(triangleWidth), 
-               gridInches ? JDRUnit.in : JDRUnit.cm)
+            marker = new ArrowAltTriangle2(penWidth, 1, false,
+              new JDRLength(cg, triangleHeight*penWidth.getValue(), penWidth.getUnit()),
+              new JDRLength(cg, triangleWidth*penWidth.getValue(), penWidth.getUnit())
              );
          }
          else if (startCap == BasicStroke.CAP_SQUARE)
@@ -674,11 +672,9 @@ public class AcornDrawFile
 
          if (hasTriangleEnd)
          {
-            marker = new ArrowTriangle2(penWidth, 1, false,
-              new JDRLength(cg, drawPointToUnit(triangleHeight), 
-               gridInches ? JDRUnit.in : JDRUnit.cm),
-              new JDRLength(cg, drawPointToUnit(triangleWidth), 
-               gridInches ? JDRUnit.in : JDRUnit.cm)
+            marker = new ArrowAltTriangle2(penWidth, 1, false,
+              new JDRLength(cg, triangleHeight*penWidth.getValue(), penWidth.getUnit()),
+              new JDRLength(cg, triangleWidth*penWidth.getValue(), penWidth.getUnit())
              );
          }
          else if (endCap == BasicStroke.CAP_SQUARE)

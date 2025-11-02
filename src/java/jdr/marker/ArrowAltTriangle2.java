@@ -33,13 +33,13 @@ import com.dickimawbooks.jdr.exceptions.*;
  * See {@link JDRMarker} for a description of markers.
  *
  */
-public class ArrowTriangle2 extends JDRMarker
+public class ArrowAltTriangle2 extends JDRMarker
 {
    /**
     * Creates triangle marker for a path with the given pen width.
     * The marker may be repeated and/or reversed.
     */
-   public ArrowTriangle2(JDRLength penwidth, int repeat,
+   public ArrowAltTriangle2(JDRLength penwidth, int repeat,
                       boolean isReversed, JDRLength arrowLength, JDRLength arrowWidth)
    {
       super(penwidth, repeat, isReversed, arrowLength, arrowWidth);
@@ -49,14 +49,14 @@ public class ArrowTriangle2 extends JDRMarker
          arrowWidth = (JDRLength)arrowLength.clone();
       }
 
-      type = ARROW_TRIANGLE2;
+      type = ARROW_ALT_TRIANGLE2;
    }
 
    public String getID()
    {
       return reversed ?
-           "arrow-r"+repeated+"triangle2cap-"+size+"-"+width:
-           "arrow-"+repeated+"triangle2cap-"+size+"-"+width;
+           "arrow-r"+repeated+"alttriangle2cap-"+size+"-"+width+"-"+penWidth:
+           "arrow-"+repeated+"alttriangle2cap-"+size+"-"+width+"-"+penWidth;
    }
 
    /**
@@ -66,11 +66,13 @@ public class ArrowTriangle2 extends JDRMarker
    {
       JDRUnit storageUnit = getCanvasGraphics().getStorageUnit();
 
-      double markerLength = size.getValue(storageUnit);
+      double halfPenWidth = 0.5*penWidth.getValue(storageUnit);
+
+      double markerLength = size.getValue(storageUnit)+halfPenWidth;
 
       GeneralPath path = new GeneralPath();
 
-      double halfWidth = 0.5*width.getValue(storageUnit);
+      double halfWidth = 0.5*width.getValue(storageUnit)+halfPenWidth;
 
       path.moveTo(0.0f, (float)-halfWidth);
       path.lineTo((float)markerLength, 0.0f);
@@ -93,7 +95,7 @@ public class ArrowTriangle2 extends JDRMarker
 
    public boolean usesLineWidth()
    {
-      return false;
+      return true;
    }
 
    /**
@@ -107,7 +109,7 @@ public class ArrowTriangle2 extends JDRMarker
 
    public Object clone()
    {
-      JDRMarker marker = new ArrowTriangle2(penWidth, repeated,
+      JDRMarker marker = new ArrowAltTriangle2(penWidth, repeated,
                                          reversed, (JDRLength)size.clone(),
                                          (JDRLength)width.clone());
       makeOtherEqual(marker);
