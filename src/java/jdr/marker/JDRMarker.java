@@ -1171,6 +1171,8 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       int markerID, JDRLength penwidth, int repeat, boolean isReversed,
       JDRLength arrowSize, JDRLength arrowWidth)
    {
+      if (cg == null) throw new NullPointerException();
+
       JDRMarker marker = null;
 
       switch (markerID)
@@ -2710,7 +2712,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     */
    public static int maxMarkers()
    {
-      return NUM_ARROWS1_6;
+      return NUM_ARROWS2_1;
    }
 
    /**
