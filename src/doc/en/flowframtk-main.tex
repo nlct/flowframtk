@@ -9552,7 +9552,8 @@ The tips may protrude forward beyond the vertex but mostly they protrude
 back from the vertex.
 Available arrow markers are listed in \tableref{tab:arrowmarkers}.
 
-The \widget{arrow.triangle2} and  \widget{arrow.alttriangle2}
+The \widget{arrow.triangle2}, \widget{arrow.alttriangle2}
+and \widget{arrow.offsettriangle2}
 markers are a new style of marker that have separate
 \dgls{marker.length} and \dgls{marker.width} attributes (entered
 into the \widget{arrow.length} and \widget{arrow.width} boxes). 
@@ -9672,6 +9673,10 @@ markers generally look best in combination with the
 \fnsym{1}\inlineglsdef{arrow.alttriangle2}
   & \widget{arrow.length} \& \widget{arrow.width} & Dependent
  & No & \includeimg{markeralttriangle2}\\
+\fnsym{1}\inlineglsdef{arrow.offsettriangle2}
+  & \widget{arrow.length} \& \widget{arrow.width} & Dependent
+ & No & %\includeimg{markeroffsettriangle2}% TODO
+\\
 \inlineglsdef{arrow.hooks} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhooks}
 \end{tabular}
@@ -15538,7 +15543,8 @@ If no controls are anchored, the $-1$ is still required.
 \FloatTable{tab:jdrarrowid2.1}
 {%
   \begin{tabular}{llll}
-  90 & \widget{arrow.triangle2} & 91 & \widget{arrow.alttriangle2}
+  90 & \widget{arrow.triangle2} & 91 & \widget{arrow.alttriangle2}\\
+  92 & \widget{arrow.offsettriangle2} 
   \end{tabular}
 }
 {Additional Marker IDs (Version 2.1 Onwards)}

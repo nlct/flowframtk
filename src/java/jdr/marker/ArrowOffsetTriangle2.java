@@ -27,19 +27,20 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 
 /**
- * Triangle cap marker with both length and width.
+ * Triangle cap marker with both length and width offset so that its
+ * base is before the vertex with a minor protuberance.
  * This marker's shape does depend on the associated path's
  * line width.
  * See {@link JDRMarker} for a description of markers.
  *
  */
-public class ArrowAltTriangle2 extends JDRMarker
+public class ArrowOffsetTriangle2 extends JDRMarker
 {
    /**
     * Creates triangle marker for a path with the given pen width.
     * The marker may be repeated and/or reversed.
     */
-   public ArrowAltTriangle2(JDRLength penwidth, int repeat,
+   public ArrowOffsetTriangle2(JDRLength penwidth, int repeat,
                       boolean isReversed, JDRLength arrowLength, JDRLength arrowWidth)
    {
       super(penwidth, repeat, isReversed, arrowLength, arrowWidth);
@@ -49,14 +50,14 @@ public class ArrowAltTriangle2 extends JDRMarker
          arrowWidth = (JDRLength)arrowLength.clone();
       }
 
-      type = ARROW_ALT_TRIANGLE2;
+      type = ARROW_OFFSET_TRIANGLE2;
    }
 
    public String getID()
    {
       return reversed ?
-           "arrow-r"+repeated+"alttriangle2cap-"+size+"-"+width+"-"+penWidth:
-           "arrow-"+repeated+"alttriangle2cap-"+size+"-"+width+"-"+penWidth;
+           "arrow-r"+repeated+"offsettriangle2cap-"+size+"-"+width+"-"+penWidth:
+           "arrow-"+repeated+"offsettriangle2cap-"+size+"-"+width+"-"+penWidth;
    }
 
    /**
@@ -70,13 +71,16 @@ public class ArrowAltTriangle2 extends JDRMarker
 
       double markerLength = size.getValue(storageUnit)+halfPenWidth;
 
-      GeneralPath path = new GeneralPath();
-
       double halfWidth = 0.5*width.getValue(storageUnit)+halfPenWidth;
 
-      path.moveTo(0.0f, (float)-halfWidth);
-      path.lineTo((float)markerLength, 0.0f);
-      path.lineTo(0.0f, (float)halfWidth);
+      double protrusion = markerLength / (halfWidth * halfPenWidth);
+      double offset = markerLength - protrusion;
+
+      GeneralPath path = new GeneralPath();
+
+      path.moveTo((float)-offset, (float)-halfWidth);
+      path.lineTo((float)protrusion, 0.0f);
+      path.lineTo((float)-offset, (float)halfWidth);
       path.closePath();
 
       return path;
@@ -109,7 +113,7 @@ public class ArrowAltTriangle2 extends JDRMarker
 
    public Object clone()
    {
-      JDRMarker marker = new ArrowAltTriangle2(penWidth, repeated,
+      JDRMarker marker = new ArrowOffsetTriangle2(penWidth, repeated,
                                          reversed, (JDRLength)size.clone(),
                                          (JDRLength)width.clone());
       makeOtherEqual(marker);

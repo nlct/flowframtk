@@ -2024,6 +2024,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.none">无</entry>
 <entry key="arrow.octagon_filled">Octagon Filled</entry>
 <entry key="arrow.octagon_open">Octagon Open</entry>
+<entry key="arrow.offsettriangle2">Offset Triangle2</entry>
 
 <entry key="arrow.overlay">允许多种箭头重叠(Y)</entry>
 <entry key="arrow.overlay.mnemonic">Y</entry>

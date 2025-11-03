@@ -2014,6 +2014,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.none">None</entry>
 <entry key="arrow.octagon_filled">Octagon Filled</entry>
 <entry key="arrow.octagon_open">Octagon Open</entry>
+<entry key="arrow.offsettriangle2">Offset Triangle2</entry>
 
 <entry key="arrow.overlay">Overlay</entry>
 <entry key="arrow.overlay.mnemonic">Y</entry>
