@@ -191,14 +191,18 @@ exported (\sectionref{sec:exportimage}) as:
 
     \item a PNG file;
 
-    \item a PostScript file;
+    \item a PDF file (requires \TeX\ installation);
 
-    \item \pgls{svg} file.
+    \item (only if \widget{processes.support_eps_svg} is on)
+     a PostScript file or \pgls{svg} file.
 \end{itemize}
 
-Note that the export to PS/PDF/\glsxtrshort{svg} functions use external
-processes, such as \app{latex} and \app{dvips}.
-\strong{You can't import back from the files you can export to.}
+Note that some export functions, such as export to PDF use external
+processes, such as \app{pdflatex}.
+
+\begin{important}
+You can't import back from the files you can export to.
+\end{important}
 
 The low-level \sty{pgf} basic layer commands are used during
 exports to \LaTeX\ files. These commands aren't particularly easy to
@@ -214,7 +218,6 @@ package, version 1.16 of the \sty{flowfram} package and version
 may not work with earlier versions of those packages. Note that some
 DVI viewers may not understand PGF specials. I strongly recommend
 that you read the user manuals for those packages.
-
 
 Notation: a \gls{primaryclick} is a single click with the
 \gls{primary-mouse-button}. This is typically the left button for a
@@ -5097,6 +5100,14 @@ Once you're happy with the draft path, click on the \widget{okay}
 button to close the dialog and add the new \gls{path} to the \gls{canvas}.
 
 \chapter{Selecting, Navigation and Basic Editing}\label{sec:selectobjects}
+
+This chapter describes how to select one or more \glspl{object},
+move \glspl{object} up and down the \gls{stackingorder} (that is, in
+front or behind other \glspl{object}), how to perform basic editing
+such as grouping, alignment, cut, copy and paste, and how to set an \gls{object}['s]
+description and tag. See \sectionref{sec:text} to edit
+\glspl{textarea}, \sectionref{sec:modshape} to modify \glspl{shape},
+and \sectionref{sec:styles} to change path and text styles.
 
 \menudef{menu.tools.select}
 
