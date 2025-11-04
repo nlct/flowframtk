@@ -67,13 +67,15 @@ public class ArrowOffsetTriangle2 extends JDRMarker
    {
       JDRUnit storageUnit = getCanvasGraphics().getStorageUnit();
 
-      double halfPenWidth = 0.5*penWidth.getValue(storageUnit);
+      double penW = penWidth.getValue(storageUnit);
+      double halfPenWidth = 0.5 * penW;
 
       double markerLength = size.getValue(storageUnit)+halfPenWidth;
 
-      double halfWidth = 0.5*width.getValue(storageUnit)+halfPenWidth;
+      double w = width.getValue(storageUnit) + penW;
+      double halfWidth = 0.5*w;
 
-      double protrusion = markerLength / (halfWidth * halfPenWidth);
+      double protrusion = markerLength * penW / w;
       double offset = markerLength - protrusion;
 
       GeneralPath path = new GeneralPath();
