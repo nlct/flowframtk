@@ -1,45 +1,13 @@
-% /home/nlct/programming/java/flowframtk/src/doc/image-src/dashpatterns.jdr
-% Created by FlowframTk version 0.8.7
-% 8 Aug 2025, 23:06:31
+% Created by FlowframTk version 0.8.8.20251105
 \iffalse
 % This image may require the following commands in the preamble:
-\usepackage{ifpdf}
-\makeatletter
-\newcommand*{\jdroutline}[3]{%
-  \GenericWarning{}{text outline can't be implemented}#3%
-}%
-\ifpdf
- \let\jdrorgmod\mod
- \InputIfFileExists{pdf-trans}%
- {%
-   \renewcommand*{\jdroutline}[3]{%
-     {\def\mod{\expandtwonumexprafter \modulo}%
-     \setbox\@tempboxa\hbox{##3}%
-     \boxgs{##1}{}\copy\@tempboxa
-     }%
-   }%
- }{}
- \let\mod\jdrorgmod
-\else
- \IfFileExists{pst-char.sty}%
- {%
-   \usepackage{pst-char}
-   \renewcommand*{\jdroutline}[3]{%
-     \begin{pspicture}(0,0)
-     \pscharpath[##2]{##3}
-     \end{pspicture}
-   }
- }{}
-\fi
-\makeatother
-\usepackage{pgf}
-\usepgflibrary{decorations.text}
+\usepackage{flowframtkutils}
 % The normal size font is assumed to be 11pt
 % End of preamble information
 \fi
 \begin{pgfpicture}
-\pgfpathmoveto{\pgfpoint{170.625bp}{679.631521bp}}
-\pgfpathlineto{\pgfpoint{400.0bp}{748.609129bp}}
+\pgfpathmoveto{\pgfpoint{170.484375bp}{678.787771bp}}
+\pgfpathlineto{\pgfpoint{400.0bp}{748.031004bp}}
 \pgfusepath{use as bounding box}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}

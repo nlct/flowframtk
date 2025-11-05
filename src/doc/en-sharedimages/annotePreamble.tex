@@ -1,45 +1,13 @@
-% /home/nlct/programming/java/flowframtk/src/doc/image-src/annotePreamble.jdr
-% Created by FlowframTk version 0.8.7
-% 11 Aug 2025, 15:26:11
+% Created by FlowframTk version 0.8.8.20251105
 \iffalse
 % This image may require the following commands in the preamble:
-\usepackage{ifpdf}
-\makeatletter
-\newcommand*{\jdroutline}[3]{%
-  \GenericWarning{}{text outline can't be implemented}#3%
-}%
-\ifpdf
- \let\jdrorgmod\mod
- \InputIfFileExists{pdf-trans}%
- {%
-   \renewcommand*{\jdroutline}[3]{%
-     {\def\mod{\expandtwonumexprafter \modulo}%
-     \setbox\@tempboxa\hbox{##3}%
-     \boxgs{##1}{}\copy\@tempboxa
-     }%
-   }%
- }{}
- \let\mod\jdrorgmod
-\else
- \IfFileExists{pst-char.sty}%
- {%
-   \usepackage{pst-char}
-   \renewcommand*{\jdroutline}[3]{%
-     \begin{pspicture}(0,0)
-     \pscharpath[##2]{##3}
-     \end{pspicture}
-   }
- }{}
-\fi
-\makeatother
-\usepackage{pgf}
-\usepgflibrary{decorations.text}
+\usepackage{flowframtkutils}
 % The normal size font is assumed to be 11pt
 % End of preamble information
 \fi
 \begin{pgfpicture}
-\pgfpathmoveto{\pgfpoint{10.0mm}{132.628038mm}}
-\pgfpathlineto{\pgfpoint{146.525005mm}{288.206684mm}}
+\pgfpathmoveto{\pgfpoint{10.0mm}{132.617014mm}}
+\pgfpathlineto{\pgfpoint{146.525005mm}{287.99171mm}}
 \pgfusepath{use as bounding box}
 \begin{pgfscope}
 \pgftransformcm{0.75}{-0.0}{0.0}{0.75}{\pgfpoint{10.0mm}{262.0mm}}
@@ -87,12 +55,12 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{26.358985mm}{135.340017mm}}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{24.658485mm}{135.125043mm}}
 \pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Canvas Panel}
 \end{pgfscope}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{122.139801mm}{279.466927mm}}
-\pgftext[center,bottom]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Preamble Panel}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{120.072742mm}{281.963932mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Preamble Panel}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{2.0bp}
@@ -115,12 +83,12 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{43.100911mm}{277.766667mm}}
-\pgftext[right,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Expand to the Left}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{24.897027mm}{280.230599mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Expand to the Left}
 \end{pgfscope}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{77.731013mm}{284.678906mm}}
-\pgftext[center,bottom]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Expand to the Right}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{75.520638mm}{287.99171mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Expand to the Right}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{2.0bp}
@@ -163,7 +131,7 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{74.741667mm}{135.370573mm}}
-\pgftext[left,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Divider}
+\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{80.333746mm}{135.155599mm}}
+\pgftext[center,top]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}Divider}
 \end{pgfscope}
 \end{pgfpicture}

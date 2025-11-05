@@ -3580,6 +3580,21 @@ if \widget{export.use_process} is on as the information will be lost
 when the PDF is converted to PNG, so the setting in this case would
 be superfluous.
 
+\widgetdef{export.write_src_path}
+
+For export options that create a \ext{tex}, \ext{sty} or \ext{cls}
+file, the \widget{export.write_src_path} setting determines whether
+or not to write the path of the original \ext{jdr}\slash\ext{ajr} of
+the image (if it has been saved) as a comment near the start of the
+exported file.
+
+\widgetdef{export.write_date_comment}
+
+For export options that create a \ext{tex}, \ext{sty} or \ext{cls}
+file, the \widget{export.write_date_comment} setting determines whether
+or not to write the file creation date as a comment near the start
+of the exported file.
+
 \widgetdef{export.use_process}
 
 For export options that can be created with or without external

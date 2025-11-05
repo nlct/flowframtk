@@ -1,50 +1,18 @@
-% historybuttons-annote.ajr
-% Created by FlowframTk version 0.8.5
-% 5 May 2024, 13:27:29
+% Created by FlowframTk version 0.8.8.20251105
 \iffalse
 % This image may require the following commands in the preamble:
-\usepackage{ifpdf}
-\makeatletter
-\newcommand*{\jdroutline}[3]{%
-  \GenericWarning{}{text outline can't be implemented}#3%
-}%
-\ifpdf
- \let\jdrorgmod\mod
- \InputIfFileExists{pdf-trans}%
- {%
-   \renewcommand*{\jdroutline}[3]{%
-     {\def\mod{\expandtwonumexprafter \modulo}%
-     \setbox\@tempboxa\hbox{##3}%
-     \boxgs{##1}{}\copy\@tempboxa
-     }%
-   }%
- }{}
- \let\mod\jdrorgmod
-\else
- \IfFileExists{pst-char.sty}%
- {%
-   \usepackage{pst-char}
-   \renewcommand*{\jdroutline}[3]{%
-     \begin{pspicture}(0,0)
-     \pscharpath[##2]{##3}
-     \end{pspicture}
-   }
- }{}
-\fi
-\makeatother
-\usepackage{pgf}
-\usepgflibrary{decorations.text}
-% The normal size font is assumed to be 10pt
+\usepackage{flowframtkutils}
+% The normal size font is assumed to be 11pt
 % End of preamble information
 \fi
 \begin{pgfpicture}
-\pgfpathmoveto{\pgfpoint{100.0bp}{825.359375bp}}
-\pgfpathlineto{\pgfpoint{255.484375bp}{979.359375bp}}
+\pgfpathmoveto{\pgfpoint{100.0bp}{825.6875bp}}
+\pgfpathlineto{\pgfpoint{237.5bp}{977.46875bp}}
 \pgfusepath{use as bounding box}
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{100.0bp}{931.0bp}}
 \pgflowlevelsynccm
-\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\includegraphics[width=132.0bp,height=50.0bp]{historybuttons}}}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\includegraphics[width=132.0bp,height=50.0bp]{../../../../texjavahelp/src/doc/images/historybuttons}}}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
@@ -68,7 +36,7 @@
 \end{pgfscope}}
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{110.0bp}{971.0bp}}
-\pgftext[left,base]{\rmfamily\mdseries\upshape\large\color[rgb]{0.0,0.0,0.0}\btn{helpframe.navigation.history}}
+\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\btn{helpframe.navigation.history}}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
@@ -91,8 +59,8 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{177.875bp}{859.359375bp}}
-\pgftext[right,top]{\rmfamily\mdseries\upshape\large\color[rgb]{0.0,0.0,0.0}\btn{helpframe.navigation.historyback}}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{110.0bp}{851.0bp}}
+\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\btn{helpframe.navigation.historyback}}
 \end{pgfscope}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
@@ -115,7 +83,7 @@
 \pgfusepathqfill
 \end{pgfscope}}
 \begin{pgfscope}
-\pgftransformcm{1.0}{-0.0}{0.0}{1.0}{\pgfpoint{255.90625bp}{836.359375bp}}
-\pgftext[right,top]{\rmfamily\mdseries\upshape\large\color[rgb]{0.0,0.0,0.0}\btn{helpframe.navigation.historyforward}}
+\pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{164.0bp}{828.0bp}}
+\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\btn{helpframe.navigation.historyforward}}
 \end{pgfscope}
 \end{pgfpicture}
