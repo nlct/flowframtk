@@ -2512,6 +2512,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="export.use_alpha">Add Alpha Channel</entry>
 <entry key="export.pdf_info">Add title and creation date</entry>
+<entry key="export.write_src_path">Add path of source file as a comment</entry>
+<entry key="export.write_date_comment">Add creation date as a comment</entry>
 <entry key="export.bitmaps_to_eps">Convert bitmaps to EPS</entry>
 
 <!--  Import dialog box -->

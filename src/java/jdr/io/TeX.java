@@ -834,9 +834,12 @@ public class TeX
             "Created by {0} version {1}",
             dict.getApplicationName(), dict.getApplicationVersion()));
 
-         writeCreationDate();
+         if (exportSettings.writeDateComment)
+         {
+            writeCreationDate();
+         }
 
-         if (exportSettings.currentFile != null)
+         if (exportSettings.currentFile != null && exportSettings.writeSrcFilename)
          {
             comment(exportSettings.currentFile.toString());
          }

@@ -552,9 +552,22 @@ public class ExportDialog extends JDialog
 
       usePdfInfoBox = resources.createAppCheckBox(
         "export", "pdf_info", true, null);
-      usePdfInfoBox.addItemListener(this);
       usePdfInfoBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(usePdfInfoBox);
+
+      // Write path of image source file as comment
+
+      writeSrcFilenameBox = resources.createAppCheckBox(
+         "export", "write_src_path", false, null);
+      writeSrcFilenameBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      settingsPanel.add(writeSrcFilenameBox);
+
+      // Write creation date as comment
+
+      writeDateCommentBox = resources.createAppCheckBox(
+         "export", "write_date_comment", false, null);
+      writeDateCommentBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      settingsPanel.add(writeDateCommentBox);
 
       // Convert Bitmaps to EPS (EPS and SVG only)
 
@@ -882,6 +895,9 @@ public class ExportDialog extends JDialog
 
       usePdfInfoBox.setSelected(exportSettings.usePdfInfo);
 
+      writeSrcFilenameBox.setSelected(exportSettings.writeSrcFilename);
+      writeDateCommentBox.setSelected(exportSettings.writeDateComment);
+
       bitmapsToEpsBox.setSelected(exportSettings.bitmapsToEps);
 
       if (exportSettings.shapeparUseHpadding)
@@ -1130,6 +1146,16 @@ public class ExportDialog extends JDialog
          exportSettings.usePdfInfo = usePdfInfoBox.isSelected();
       }
 
+      if (writeSrcFilenameBox.isVisible())
+      {
+         exportSettings.writeSrcFilename = writeSrcFilenameBox.isSelected();
+      }
+
+      if (writeDateCommentBox.isVisible())
+      {
+         exportSettings.writeDateComment = writeDateCommentBox.isSelected();
+      }
+
       if (bitmapsToEpsBox.isVisible())
       {
          exportSettings.bitmapsToEps = bitmapsToEpsBox.isSelected();
@@ -1311,6 +1337,7 @@ public class ExportDialog extends JDialog
       }
 
       ExportSettings.Type type = currentFileTypeButton.getType();
+      boolean texExport = (type == ExportSettings.Type.STY);
 
       switch (type)
       {
@@ -1324,6 +1351,7 @@ public class ExportDialog extends JDialog
            showMarkup = true;
          break;
          case CLS:
+            texExport = true;
          case FLF_DOC:
          case FLF_PDF:
            showDocClassComp = true;
@@ -1353,6 +1381,7 @@ public class ExportDialog extends JDialog
 
             enablePaperSize = false;
             showMarkup = true;
+            texExport = true;
          break;
       }
 
@@ -1364,6 +1393,8 @@ public class ExportDialog extends JDialog
       usePdfInfoBox.setVisible(showDocClassComp 
         && !(type == ExportSettings.Type.CLS
           || type == ExportSettings.Type.PNG));
+      writeSrcFilenameBox.setVisible(texExport);
+      writeDateCommentBox.setVisible(texExport);
       bitmapsToEpsBox.setVisible(showBitmapsToEps);
       markupComp.setVisible(showMarkup);
       textualShadingComp.setVisible(showTextualShading);
@@ -1446,7 +1477,7 @@ public class ExportDialog extends JDialog
    private SpinnerNumberModel timeoutModel;
 
    private JCheckBox useExternalProcessBox, rememberSettingsBox, pngUseAlphaBox,
-     usePdfInfoBox, bitmapsToEpsBox;
+     usePdfInfoBox, bitmapsToEpsBox, writeSrcFilenameBox, writeDateCommentBox;
 
    private JComponent boundsComp;
    private JRadioButton usePaperSizeBoundsBox, useImageBoundsBox, useTypeblockBoundsBox;

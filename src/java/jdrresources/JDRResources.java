@@ -3315,8 +3315,8 @@ public class JDRResources
    public static final int LABEL_SPACER=5;
    public static final int BUTTON_SPACER=10;
 
-   public static final String APP_VERSION = "0.8.8.20251026";
-   public static final String APP_DATE = "2025-10-26";
+   public static final String APP_VERSION = "0.8.8.20251105";
+   public static final String APP_DATE = "2025-11-05";
    public static final String START_COPYRIGHT_YEAR = "2006";
    public static final String COPYRIGHT_YEAR
     = APP_DATE.substring(0,4);

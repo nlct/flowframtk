@@ -330,6 +330,8 @@ public class ExportSettings
    public boolean pngUseAlpha=false;
    public boolean useFlowframTkSty = false;
    public boolean usePdfInfo = false;
+   public boolean writeSrcFilename = false;
+   public boolean writeDateComment = false;
    public boolean bitmapsToEps = false;
 
    public boolean shapeparUseHpadding = true; // use \Shapepar instead of \shapepar
