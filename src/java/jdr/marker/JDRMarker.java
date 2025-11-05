@@ -1194,8 +1194,8 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
-         case ARROW_ALT_TRIANGLE2:
-            marker = new ArrowAltTriangle2(penwidth, repeat,
+         case ARROW_DEP_TRIANGLE2:
+            marker = new ArrowDepTriangle2(penwidth, repeat,
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
@@ -3336,7 +3336,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * dependent of the pen width.
     * (JDR/AJR file formats version 2.1 onwards.)
     */
-   public static final int ARROW_ALT_TRIANGLE2=92;
+   public static final int ARROW_DEP_TRIANGLE2=92;
 
    /**
     * Offset Triangle2. This marker has width and length and is

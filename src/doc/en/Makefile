@@ -63,6 +63,7 @@ jdrversion.tex	: $(jdrajrclass)
 flowframtk-en-GB.pdf	: flowframtk-en-GB.glstex 
 	lualatex flowframtk-en-GB
 	lualatex flowframtk-en-GB
+	@grep -E '(Package glossaries-extra Warning:|unreferenced destination)' flowframtk-en-GB.log || true
 
 flowframtk-en-GB.glstex	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
@@ -78,6 +79,7 @@ flowframtk-en-GB.glstex	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 flowframtk-en.pdf	: flowframtk-en.glstex 
 	lualatex flowframtk-en
 	lualatex flowframtk-en
+	@grep -E '(Package glossaries-extra Warning:|unreferenced destination)' flowframtk-en.log || true
 
 flowframtk-en.glstex	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			 flowframtk-en.tex flowframtk-main.tex version.tex \

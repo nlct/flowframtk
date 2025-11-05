@@ -648,7 +648,7 @@ public class AcornDrawFile
 
          if (hasTriangleStart)
          {
-            marker = new ArrowAltTriangle2(penWidth, 1, false,
+            marker = new ArrowDepTriangle2(penWidth, 1, false,
               new JDRLength(cg, triangleHeight*penWidth.getValue(), penWidth.getUnit()),
               new JDRLength(cg, triangleWidth*penWidth.getValue(), penWidth.getUnit())
              );
@@ -672,7 +672,7 @@ public class AcornDrawFile
 
          if (hasTriangleEnd)
          {
-            marker = new ArrowAltTriangle2(penWidth, 1, false,
+            marker = new ArrowDepTriangle2(penWidth, 1, false,
               new JDRLength(cg, triangleHeight*penWidth.getValue(), penWidth.getUnit()),
               new JDRLength(cg, triangleWidth*penWidth.getValue(), penWidth.getUnit())
              );

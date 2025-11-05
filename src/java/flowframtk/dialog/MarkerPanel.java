@@ -1041,7 +1041,7 @@ public class MarkerPanel extends JPanel
             getResources().getMessage("arrow.equilateral_open")),
          new MarkerItem(getResources(), JDRMarker.ARROW_INDEP_TRIANGLE2,
             getResources().getMessage("arrow.indeptriangle2")),
-         new MarkerItem(getResources(), JDRMarker.ARROW_ALT_TRIANGLE2,
+         new MarkerItem(getResources(), JDRMarker.ARROW_DEP_TRIANGLE2,
             getResources().getMessage("arrow.deptriangle2")),
          new MarkerItem(getResources(), JDRMarker.ARROW_OFFSET_TRIANGLE2,
             getResources().getMessage("arrow.offsettriangle2")),
