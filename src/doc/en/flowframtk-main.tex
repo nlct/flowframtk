@@ -9289,7 +9289,23 @@ If you have a thick \pathattr{line-width} with a non-butt cap, the
 gaps between the dashes may be obscured as the cap will be applied
 to each dash. If you need a cap on either end but not on the dashes,
 use a cap style start and end \pathattr{marker} instead.
+However, be aware that marker caps are placed relative to the vertex
+without taking the dash pattern into account.
 \end{information}
+
+\Figureref{fig:dashcapstyles} shows four lines with the same dash
+pattern but different line caps. The gap is smaller with protruding
+line caps. The fourth line has a butt cap with a rectangle cap start
+marker (shown in blue) and a round cap end marker (show in red). 
+Note that the markers are placed at the vertex which may be in the
+gap phase (as is the case for the end marker).
+
+\FloatFig{fig:dashcapstyles}
+{\includeimg{dashcapstyle}}
+[Dash Pattern with Cap Styles]
+{Dash Pattern with cap styles: \subfigurefmt{a} butt, \subfigurefmt{b} round,
+\subfigurefmt{c} square, \subfigurefmt{d} butt with 
+start and end marker caps.}
 
 
 \subsection{Cap Style}\label{sec:capstyle}
@@ -9300,7 +9316,7 @@ The \inlineglsdef{index.path-attribute.cap-style} for a \selected\
 path can either be set in the \menu{edit.path.style.capstyle} sub
 menu or in the \inlineglsdef{linestyle.cap} \gls{dropdown} in the
 \widget{linestyle.title} panel. The cap styles are more noticeable
-with thick lines.
+with thick lines (see \figureref{fig:capstyles}).
 
 \menudef{menu.edit.path.style.capstyle.butt}
 
