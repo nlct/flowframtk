@@ -1680,6 +1680,14 @@ public class FlowframTkInvoker
                {
                   exportSettings.usePdfInfo = parseBoolean(value, line);
                }
+               else if (key.equals("srcfilecomment"))
+               {
+                  exportSettings.writeSrcFilename = parseBoolean(value, line);
+               }
+               else if (key.equals("datecomment"))
+               {
+                  exportSettings.writeDateComment = parseBoolean(value, line);
+               }
                else if (key.equals("textualshadingexport"))
                {
                   // old setting is int
@@ -2293,6 +2301,8 @@ public class FlowframTkInvoker
 
       out.println("shapeparhpadding=" + (exportSettings.shapeparUseHpadding ? 1 : 0));
       out.println("pdfinfo="+(exportSettings.usePdfInfo ? 1 : 0));
+      out.println("srcfilecomment="+(exportSettings.writeSrcFilename ? 1 : 0));
+      out.println("datecomment="+(exportSettings.writeDateComment ? 1 : 0));
       out.println("png_alpha="+(exportSettings.pngUseAlpha ? 1 : 0));
       out.println("textualshadingexport="
         + exportSettings.textualShading);
