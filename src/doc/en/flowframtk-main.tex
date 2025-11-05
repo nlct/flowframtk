@@ -9563,26 +9563,26 @@ The tips may protrude forward beyond the vertex but mostly they protrude
 back from the vertex.
 Available arrow markers are listed in \tableref{tab:arrowmarkers}.
 
-The \widget{arrow.triangle2}, \widget{arrow.alttriangle2}
+The \widget{arrow.indeptriangle2}, \widget{arrow.depalttriangle2}
 and \widget{arrow.offsettriangle2}
 markers are a new style of marker that have separate
 \dgls{marker.length} and \dgls{marker.width} attributes (entered
 into the \widget{arrow.length} and \widget{arrow.width} boxes). 
 
-The \widget{arrow.triangle2} marker is not
+The \widget{arrow.indeptriangle2} marker is not
 dependent on the \pathattr{line-width}, so if you change the line width you may
 need to change the marker length and width attributes to compensate.
-The \widget{arrow.alttriangle2} is dependent on the
+The \widget{arrow.deptriangle2} is dependent on the
 \pathattr{line-width}. In this case, the actual marker dimensions
 are the specified marker length plus half the line width for the
 protrusion and the specified width plus the line width across the base.
 In both cases, the base lies on the vertex and the marker protrudes forwards.
 
-To illustrate the difference between the \widget{arrow.triangle2} and
-\widget{arrow.alttriangle2} markers, \figureref{fig:samplemarkertriangle2}
-has four lines. The top two have a \widget{arrow.triangle2} end marker
+To illustrate the difference between the \widget{arrow.indeptriangle2} and
+\widget{arrow.deptriangle2} markers, \figureref{fig:samplemarkertriangle2}
+has four lines. The top two have a \widget{arrow.indeptriangle2} end marker
 with the \widget{arrow.width} set to 5bp and the \widget{arrow.length}
-set to 10bp. The bottom two have an \widget{arrow.alttriangle2} end marker
+set to 10bp. The bottom two have an \widget{arrow.deptriangle2} end marker
 with the \widget{arrow.width} set to 5bp and the \widget{arrow.length}
 set to 10bp. The two left hand lines have 1bp line width and the
 two right hand lines have 10bp line width. (All lines have the cap
@@ -9590,20 +9590,20 @@ set to \widget{linestyle.cap.butt} and the marker \manmsg{colour}
 set to red.)
 
 The difference between the two markers is more noticeable with the
-thicker line width. The \widget{arrow.triangle2} marker (which
+thicker line width. The \widget{arrow.indeptriangle2} marker (which
 is independent of the line width) is now much narrower than the line
-width. The  \widget{arrow.alttriangle2} marker (which does take the
+width. The  \widget{arrow.deptriangle2} marker (which does take the
 line width into account) is still wider than the line width.
 
 \FloatFig{fig:samplemarkertriangle2}
 {\includeimg{samplemarkertriangle2}}
-[Triangle2 and Alt Triangle2 Markers]
-{\widget{arrow.triangle2} and \widget{arrow.alttriangle2} markers:
+[\glsentrytext{arrow.indeptriangle2} and \glsentrytext{arrow.deptriangle2} Markers]
+{\widget{arrow.indeptriangle2} and \widget{arrow.deptriangle2} markers:
 the left two lines have 1bp line width,
 the right two lines have 10bp line width,
-the top two lines have a \widget{arrow.triangle2} end marker
+the top two lines have a \widget{arrow.indeptriangle2} end marker
 with 5bp width and 10bp length, and
-the bottom two lines have a \widget{arrow.alttriangle2} end marker
+the bottom two lines have a \widget{arrow.deptriangle2} end marker
 with 5bp width and 10bp length.}
 
 \begin{information}
@@ -9678,10 +9678,10 @@ markers generally look best in combination with the
 & No & \includeimg{markerequilateralfilled}\\
 \inlineglsdef{arrow.equilateral_open} & \widget{arrow.size} & Independent
 & No & \includeimg{markerequilateralopen}\\
-\fnsym{1}\inlineglsdef{arrow.triangle2}
+\fnsym{1}\inlineglsdef{arrow.indeptriangle2}
   & \widget{arrow.length} \& \widget{arrow.width} & Independent
- & No & \includeimg{markertriangle2}\\
-\fnsym{1}\inlineglsdef{arrow.alttriangle2}
+ & No & \includeimg{markerindeptriangle2}\\
+\fnsym{1}\inlineglsdef{arrow.deptriangle2}
   & \widget{arrow.length} \& \widget{arrow.width} & Dependent
  & No & \includeimg{markeralttriangle2}\\
 \fnsym{1}\inlineglsdef{arrow.offsettriangle2}
@@ -15553,7 +15553,7 @@ If no controls are anchored, the $-1$ is still required.
 \FloatTable{tab:jdrarrowid2.1}
 {%
   \begin{tabular}{llll}
-  90 & \widget{arrow.triangle2} & 91 & \widget{arrow.alttriangle2}\\
+  90 & \widget{arrow.indeptriangle2} & 91 & \widget{arrow.deptriangle2}\\
   92 & \widget{arrow.offsettriangle2} 
   \end{tabular}
 }

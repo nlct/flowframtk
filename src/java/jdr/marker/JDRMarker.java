@@ -1189,8 +1189,8 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
             marker = new ArrowTriangle(penwidth, repeat, isReversed,
                arrowSize);
             break;
-         case ARROW_TRIANGLE2:
-            marker = new ArrowTriangle2(penwidth, repeat,
+         case ARROW_INDEP_TRIANGLE2:
+            marker = new ArrowIndepTriangle2(penwidth, repeat,
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
@@ -3329,7 +3329,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * independent of the pen width.
     * (JDR/AJR file formats version 2.1 onwards.)
     */
-   public static final int ARROW_TRIANGLE2=91;
+   public static final int ARROW_INDEP_TRIANGLE2=91;
 
    /**
     * Alt Triangle2. This marker has width and length and is

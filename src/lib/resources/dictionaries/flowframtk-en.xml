@@ -1936,7 +1936,6 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.altbrace">Alt Brace</entry>
 <entry key="arrow.altlatex">Alt LaTeX</entry>
 <entry key="arrow.altlatex_open">Alt LaTeX Open</entry>
-<entry key="arrow.alttriangle2">Alt Triangle2</entry>
 <entry key="arrow.asterisk">Asterisk</entry>
 
 <entry key="arrow.autogap">Auto Repeat Gap</entry>
@@ -1969,6 +1968,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.cross">Cross</entry>
 <entry key="arrow.cusp">Cusp</entry>
 <entry key="arrow.cutoutbulgecap">Cutout Bulge Cap</entry>
+<entry key="arrow.deptriangle2">Dep Triangle2</entry>
 <entry key="arrow.diamond">Diamond</entry>
 <entry key="arrow.diamond_open">Diamond Open</entry>
 <entry key="arrow.dotfilled">Dot Filled</entry>
@@ -2001,6 +2001,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.hook_up">Hook Up</entry>
 <entry key="arrow.hook_down">Hook Down</entry>
 <entry key="arrow.hooks">Hooks</entry>
+<entry key="arrow.indeptriangle2">Indep Triangle2</entry>
 <entry key="arrow.invertchevroncap">Inverted Chevron Cap</entry>
 <entry key="arrow.invertfastcap">Inverted Fast Cap</entry>
 <entry key="arrow.inverttrianglecap">Inverted Triangle Cap</entry>
@@ -2080,7 +2081,6 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.triangle_down_open">Triangle Down Open</entry>
 <entry key="arrow.triangle_up_filled">Triangle Up Filled</entry>
 <entry key="arrow.triangle_up_open">Triangle Up Open</entry>
-<entry key="arrow.triangle2">Triangle2</entry>
 <entry key="arrow.trianglecap">Triangle Cap</entry>
 
 <entry key="arrow.triple">Triple</entry>

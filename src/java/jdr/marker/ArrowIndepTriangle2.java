@@ -27,19 +27,18 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 
 /**
- * Triangle cap marker with both length and width.
- * This marker's shape does not depend on the associated path's
+ * Triangle cap marker with both length and width but independent of
  * line width.
  * See {@link JDRMarker} for a description of markers.
  *
  */
-public class ArrowTriangle2 extends JDRMarker
+public class ArrowIndepTriangle2 extends JDRMarker
 {
    /**
     * Creates triangle marker for a path with the given pen width.
     * The marker may be repeated and/or reversed.
     */
-   public ArrowTriangle2(JDRLength penwidth, int repeat,
+   public ArrowIndepTriangle2(JDRLength penwidth, int repeat,
                       boolean isReversed, JDRLength arrowLength, JDRLength arrowWidth)
    {
       super(penwidth, repeat, isReversed, arrowLength, arrowWidth);
@@ -49,14 +48,14 @@ public class ArrowTriangle2 extends JDRMarker
          arrowWidth = (JDRLength)arrowLength.clone();
       }
 
-      type = ARROW_TRIANGLE2;
+      type = ARROW_INDEP_TRIANGLE2;
    }
 
    public String getID()
    {
       return reversed ?
-           "arrow-r"+repeated+"triangle2cap-"+size+"-"+width:
-           "arrow-"+repeated+"triangle2cap-"+size+"-"+width;
+           "arrow-r"+repeated+"indeptriangle2-"+size+"-"+width:
+           "arrow-"+repeated+"indeptriangle2-"+size+"-"+width;
    }
 
    /**
@@ -107,7 +106,7 @@ public class ArrowTriangle2 extends JDRMarker
 
    public Object clone()
    {
-      JDRMarker marker = new ArrowTriangle2(penWidth, repeated,
+      JDRMarker marker = new ArrowIndepTriangle2(penWidth, repeated,
                                          reversed, (JDRLength)size.clone(),
                                          (JDRLength)width.clone());
       makeOtherEqual(marker);
