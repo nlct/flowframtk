@@ -9310,16 +9310,16 @@ without taking the dash pattern into account.
 
 \Figureref{fig:dashcapstyles} shows four lines with the same dash
 pattern but different line caps. The gap is smaller with protruding
-line caps. The fourth line has a butt cap with a rectangle cap start
-marker (shown in blue) and a round cap end marker (show in red). 
+line caps. The fourth line has a butt cap with a \widget{arrow.rectanglecap} start
+marker (shown in blue) and a \widget{arrow.roundcap} end marker (show in red). 
 Note that the markers are placed at the vertex which may be in the
 gap phase (as is the case for the end marker).
 
 \FloatFig{fig:dashcapstyles}
 {\includeimg{dashcapstyle}}
 [Dash Pattern with Cap Styles]
-{Dash Pattern with cap styles: \subfigurefmt{a} butt, \subfigurefmt{b} round,
-\subfigurefmt{c} square, \subfigurefmt{d} butt with 
+{Dash pattern with cap styles: \subfigurefmt{a} butt, \subfigurefmt{b} round,
+\subfigurefmt{c} square, \subfigurefmt{d} butt line cap with 
 start and end marker caps.}
 
 
@@ -9637,6 +9637,29 @@ with 5bp width and 10bp length, and
 the bottom two lines have a \widget{arrow.deptriangle2} end marker
 with 5bp width and 10bp length.}
 
+The \widget{arrow.offsettriangle2} marker is similar to the
+\widget{arrow.deptriangle2} marker but is shifted back so that the
+protuberance is minimised and is just enough to cover a butt line
+\pathattr{cap-style}. To illustrate, \figureref{fig:offsetdeptriangle2markers}
+has two lines with 20bp line width and butt \pathattr{cap-style}.
+The first line has a \glsentrytext{arrow.deptriangle2} end marker and the
+second has an \widget{arrow.offsettriangle2} end marker. Both end
+markers have width 15bp and length 20bp with the \manmsg{colour} set
+to red with 50\% alpha, which allows the end of the line to show
+through the marker. The \glsentrytext{arrow.deptriangle2} is flush
+against the end of the line but the \widget{arrow.offsettriangle2}
+is further back. If the \pathattr{cap-style} were to be changed to
+either rectangle or round, it would protrude into the marker.
+
+\FloatFig{fig:offsetdeptriangle2markers}
+{\includeimg{offsetdeptriangle2markers}}
+[\glsentrytext{arrow.deptriangle2} and
+\glsentrytext{arrow.offsettriangle2} Markers]
+{\widget{arrow.deptriangle2} and
+\widget{arrow.offsettriangle2} markers:
+\subfigurefmt{a} \widget{arrow.deptriangle2};
+\subfigurefmt{b} \widget{arrow.offsettriangle2}.}
+
 \begin{information}
 There are other triangle markers in other categories but
 the ones in \widget{arrow.tab.arrows} are designed as \qt{pointing} style
@@ -9679,6 +9702,13 @@ but are in addition to the line \pathattr{cap-style}. However the cap style
 markers generally look best in combination with the
 \editfn{path.style.capstyle.butt} cap line style.
 \end{important}
+
+Unlike the line \pathattr{cap-style}, the marker caps are always
+positioned with their base on the vertex (although they may be
+shifted due to the offset or secondary settings). This means they
+don't take the dash phase into account if a \pathattr{dash-pattern}
+is applied (see \figureref{fig:dashcapstyles} in
+\sectionref{sec:dashpattern}).
 
 \FloatTable[htbp]{tab:arrowmarkers}
 {%
