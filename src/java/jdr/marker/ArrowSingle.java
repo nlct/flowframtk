@@ -35,8 +35,11 @@ import com.dickimawbooks.jdr.exceptions.*;
 /**
  * LaTeX style marker. The basic LaTeX style marker shape looks like:
  * <img src="../images/singleMarker.png" alt="[LaTeX arrow shape]">
- * This corresponds to the PGF <code>\pgfarrowsingle</code> arrow
- * (hence the name ArrowSingle).
+ * JpgfDraw was first developed when the pgf package was quite new
+ * (long before tikz and libraries) and had very few arrow markers.
+ * This marker corresponds to the PGF <code>\pgfarrowsingle</code> arrow
+ * (hence the name ArrowSingle). With the introduction of composite
+ * markers, "single" became a confusing name.
  * This marker's shape depends on the associated path's
  * line width.
  * See {@link JDRMarker} for a description of markers.
