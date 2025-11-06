@@ -9594,8 +9594,8 @@ The tips may protrude forward beyond the vertex but mostly they protrude
 back from the vertex.
 Available arrow markers are listed in \tableref{tab:arrowmarkers}.
 
-The \widget{arrow.indeptriangle2}, \widget{arrow.deptriangle2}
-and \widget{arrow.offsettriangle2}
+The \widget{arrow.indeptriangle2}, \widget{arrow.deptriangle2},
+\widget{arrow.offsettriangle2} and \widget{arrow.stealth2}
 markers are a new style of marker that have separate
 \dgls{marker.length} and \dgls{marker.width} attributes (entered
 into the \widget{arrow.length} and \widget{arrow.width} boxes). 
@@ -9639,26 +9639,37 @@ with 5bp width and 10bp length.}
 
 The \widget{arrow.offsettriangle2} marker is similar to the
 \widget{arrow.deptriangle2} marker but is shifted back so that the
-protuberance is minimised and is just enough to cover a butt line
+protuberance is minimised and is just enough to cover a butt 
 \pathattr{cap-style}. To illustrate, \figureref{fig:offsetdeptriangle2markers}
-has two lines with 20bp line width and butt \pathattr{cap-style}.
-The first line has a \glsentrytext{arrow.deptriangle2} end marker and the
+has lines with 20bp line width and butt \pathattr{cap-style}.
+The first line has a \widget{arrow.deptriangle2} end marker and the
 second has an \widget{arrow.offsettriangle2} end marker. Both end
 markers have width 15bp and length 20bp with the \manmsg{colour} set
-to red with 50\% alpha, which allows the end of the line to show
-through the marker. The \glsentrytext{arrow.deptriangle2} is flush
+to red with 60\% alpha, which allows the end of the line to show
+through the marker. The \widget{arrow.deptriangle2} is flush
 against the end of the line but the \widget{arrow.offsettriangle2}
 is further back. If the \pathattr{cap-style} were to be changed to
 either rectangle or round, it would protrude into the marker.
 
+The third line in \figureref{fig:offsetdeptriangle2markers}
+illustrates the \widget{arrow.stealth2} marker, which is similar to
+the \widget{arrow.offsettriangle2} but has a \qt{stealth arrow}
+shape. The indent is 40\% of the total length. Note that if the line
+width is much thicker than the length, the offset may be further
+forward than the vertex, which will cause a gap to appear between
+the end of the line and the rear indentation of the arrow head.
+
 \FloatFig{fig:offsetdeptriangle2markers}
 {\includeimg{offsetdeptriangle2markers}}
-[\glsentrytext{arrow.deptriangle2} and
-\glsentrytext{arrow.offsettriangle2} Markers]
-{\widget{arrow.deptriangle2} and
-\widget{arrow.offsettriangle2} markers:
+[\glsentrytext{arrow.deptriangle2},
+\glsentrytext{arrow.offsettriangle2} and
+\glsentrytext{arrow.stealth2} Markers]
+{\widget{arrow.deptriangle2},
+\widget{arrow.offsettriangle2}, and
+\widget{arrow.stealth2} markers:
 \subfigurefmt{a} \widget{arrow.deptriangle2};
-\subfigurefmt{b} \widget{arrow.offsettriangle2}.}
+\subfigurefmt{b} \widget{arrow.offsettriangle2}
+\subfigurefmt{c} \widget{arrow.stealth2}.}
 
 \begin{information}
 There are other triangle markers in other categories but
@@ -9748,6 +9759,9 @@ is applied (see \figureref{fig:dashcapstyles} in
 \fnsym{1}\inlineglsdef{arrow.offsettriangle2}
   & \widget{arrow.length} \& \widget{arrow.width} & Dependent
  & No & \includeimg{markeroffsettriangle2}\\
+\fnsym{1}\inlineglsdef{arrow.stealth2}
+  & \widget{arrow.length} \& \widget{arrow.width} & Dependent
+ & No & \includeimg{markerstealth2}\\
 \inlineglsdef{arrow.hooks} & \widget{arrow.size} & Dependent & No &
 \includeimg{markerhooks}
 \end{tabular}
@@ -15615,7 +15629,7 @@ If no controls are anchored, the $-1$ is still required.
 {%
   \begin{tabular}{llll}
   90 & \widget{arrow.indeptriangle2} & 91 & \widget{arrow.deptriangle2}\\
-  92 & \widget{arrow.offsettriangle2} 
+  92 & \widget{arrow.offsettriangle2} & 93 & \widget{arrow.stealth2} 
   \end{tabular}
 }
 {Additional Marker IDs (Version 2.1 Onwards)}

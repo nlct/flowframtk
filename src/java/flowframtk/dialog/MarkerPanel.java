@@ -1045,6 +1045,8 @@ public class MarkerPanel extends JPanel
             getResources().getMessage("arrow.deptriangle2")),
          new MarkerItem(getResources(), JDRMarker.ARROW_OFFSET_TRIANGLE2,
             getResources().getMessage("arrow.offsettriangle2")),
+         new MarkerItem(getResources(), JDRMarker.ARROW_STEALTH2,
+            getResources().getMessage("arrow.stealth2")),
          new MarkerItem(getResources(), JDRMarker.ARROW_HOOKS,
             getResources().getMessage("arrow.hooks"))
       };
