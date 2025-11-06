@@ -147,16 +147,6 @@ public class StyleSelector extends JDRSelector
 
    public void okay()
    {
-      int joinStyle = linestylePanel.getJoinStyle();
-
-      if (joinStyle == BasicStroke.JOIN_MITER
-        && linestylePanel.getEnteredMitreLimit() < 1.0)
-      {
-         getResources().error(this,
-            getResources().getMessage("error.invalid_mitre_limit"));
-         return;
-      }
-
       application_.setCurrentSettings(getLinePaint(),
          getFillPaint(), getTextPaint(),
          getStroke(),

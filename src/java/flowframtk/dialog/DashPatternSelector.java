@@ -48,12 +48,6 @@ public class DashPatternSelector extends JDRSelector
       super(application,application.getResources().getMessage("dashpattern.title"),
             true, "sec:dashpattern");
 
-/*
-      Dimension dim = getSize();
-      dim.height=220;
-      setSize(dim);
-*/
-
       // dash pattern selection panel
 
       dashpatternPanel = new DashPatternPanel(this);

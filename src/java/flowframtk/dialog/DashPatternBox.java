@@ -44,49 +44,86 @@ class DashPatternBox extends JPanel implements ActionListener
 {
    public DashPatternBox(SamplePanel panel, JDRResources resources)
    {
-      super();
+      super(null);
       samplePanel = panel;
 
-      setLayout(new GridLayout(2, 3));
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+      JComponent row = createRow();
+      add(row);
 
       offsetPanel = resources.createNonNegativeLengthPanel("dashpattern.dash.offset");
       offsetPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       offsetPanel.getTextField().setColumns(2);
-      add(offsetPanel);
+      row.add(offsetPanel);
+
+      row.add(resources.createButtonSpacer());
 
       dashPanel = resources.createNonNegativeLengthPanel("dashpattern.dash.length");
       dashPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       dashPanel.getTextField().setColumns(2);
       dashPanel.setValue(10.0, JDRUnit.bp);
-      add(dashPanel);
+      row.add(dashPanel);
+
+      row.add(resources.createButtonSpacer());
 
       gapPanel = resources.createNonNegativeLengthPanel("dashpattern.dash.gap");
       gapPanel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       gapPanel.getTextField().setColumns(2);
       gapPanel.setValue(5.0, JDRUnit.bp);
-      add(gapPanel);
+      row.add(gapPanel);
+
+      row = createRow();
+      add(row);
 
       secondary = resources.createAppCheckBox("dashpattern.dash", "secondary", false, this);
-      add(secondary);
+      row.add(secondary);
+
+      Dimension offsetDim = offsetPanel.getPreferredSize();
+      Dimension dim = secondary.getPreferredSize();
+
+      if (dim.width < offsetDim.width)
+      {
+         dim.width = offsetDim.width;
+         secondary.setPreferredSize(dim);
+      }
+      else if (dim.width > offsetDim.width)
+      {
+         offsetDim.width = dim.width;
+         offsetPanel.setPreferredSize(offsetDim);
+      }
+
+      row.add(resources.createButtonSpacer());
 
       dash2Panel = resources.createNonNegativeLengthPanel("dashpattern.dash.length");
       dash2Panel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       dash2Panel.getTextField().setColumns(2);
       dash2Panel.setValue(1.0, JDRUnit.bp);
-      add(dash2Panel);
+      row.add(dash2Panel);
+
+      row.add(resources.createButtonSpacer());
 
       gap2Panel = resources.createNonNegativeLengthPanel("dashpattern.dash.gap");
       gap2Panel.getDocument().addDocumentListener(
          new TextFieldSampleListener(panel));
       gap2Panel.getTextField().setColumns(2);
       gap2Panel.setValue(5.0, JDRUnit.bp);
-      add(gap2Panel);
+      row.add(gap2Panel);
 
       setSecondaryDash(false);
+   }
+
+   protected JComponent createRow()
+   {
+      JComponent row = new JPanel(new FlowLayout(FlowLayout.LEADING));
+
+      row.setAlignmentX(0.0f);
+
+      return row;
    }
 
    public void actionPerformed(ActionEvent evt)

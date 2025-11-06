@@ -2028,6 +2028,9 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.pointed45">Pointed 45</entry>
 <entry key="arrow.pointed60">Pointed 60</entry>
 
+<!-- Used for sizing label component -->
+<entry key="arrow.placeholder">Backwards Double Leaf Cap 88mm</entry>
+
 <entry key="arrow.primary">Primary Marker</entry>
 <entry key="arrow.primary.mnemonic">P</entry>
 

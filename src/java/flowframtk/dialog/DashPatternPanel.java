@@ -43,43 +43,38 @@ public class DashPatternPanel extends JPanel
 {
    public DashPatternPanel(JDRSelector selector)
    {
-      super();
+      super(null);
 
       selector_ = selector;
 
-      setLayout(new GridBagLayout());
-      GridBagConstraints constraints = new GridBagConstraints();
-      constraints.gridx = 0;
-      constraints.gridy = 0;
-      constraints.weightx = 0;
-      constraints.weighty = 100;
-      constraints.gridwidth  = 1;
-      constraints.gridheight = 1;
-      constraints.anchor = GridBagConstraints.WEST;
+      BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
+      setLayout(layout);
+      setAlignmentX(0.0f);
 
-      constraints.gridx = 0;
-      constraints.gridy = 0;
-      constraints.gridheight = 1;
-      constraints.anchor = GridBagConstraints.NORTHWEST;
+      JComponent comp = Box.createHorizontalBox();
+      comp.setAlignmentX(0.0f);
+      add(comp);
 
       ButtonGroup dashedGroup = new ButtonGroup();
 
       solidLine = getResources().createAppRadioButton("linestyle", 
         "solid", dashedGroup, true, this);
-      add(solidLine, constraints);
+      comp.add(solidLine);
 
       dashedLine = getResources().createAppRadioButton("linestyle", 
         "dashed", dashedGroup, false, this);
+      comp.add(dashedLine);
 
-      constraints.gridx = 1;
-      add(dashedLine, constraints);
+      comp = Box.createHorizontalBox();
+      comp.setAlignmentX(0.0f);
+      add(comp);
 
       dashPatternBox = new DashPatternBox(
          selector_.getSamplePathPanel(), getResources());
-      constraints.gridx = 2;
-      constraints.gridwidth = 3;
-      add(dashPatternBox, constraints);
+      dashPatternBox.setAlignmentX(0.0f);
+      comp.add(dashPatternBox);
 
+      comp.add(Box.createHorizontalGlue());
    }
 
    public void actionPerformed(ActionEvent e)

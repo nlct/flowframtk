@@ -62,13 +62,23 @@ public class JoinStylePanel extends JPanel implements ItemListener
 
       add(mitreLimitLabel);
 
-      mitreLimitField = new NonNegativeDoubleField(10);
-      mitreLimitLabel.setLabelFor(mitreLimitField);
-      mitreLimitField.getDocument().addDocumentListener(
+      mitreLimitModel = new SpinnerNumberModel(
+        Double.valueOf(10.0), Double.valueOf(1.0), null, Double.valueOf(0.1));
+      mitreLimitSpinner = new JSpinner(mitreLimitModel);
+
+      mitreLimitLabel.setLabelFor(mitreLimitSpinner);
+      mitreLimitSpinner.addChangeListener(
           new TextFieldSampleListener(
              selector_.getSamplePathPanel()));
 
-      add(mitreLimitField);
+      JComponent editor = mitreLimitSpinner.getEditor();
+
+      if (editor instanceof JSpinner.DefaultEditor)
+      {
+         ((JSpinner.DefaultEditor)editor).getTextField().setColumns(4);
+      }
+
+      add(mitreLimitSpinner);
 
    }
 
@@ -81,7 +91,7 @@ public class JoinStylePanel extends JPanel implements ItemListener
          boolean flag = (getJoinStyle() == BasicStroke.JOIN_MITER);
 
          mitreLimitLabel.setEnabled(flag);
-         mitreLimitField.setEnabled(flag);
+         mitreLimitSpinner.setEnabled(flag);
       }
 
       selector_.repaintSample();
@@ -135,21 +145,16 @@ public class JoinStylePanel extends JPanel implements ItemListener
       joinStyleBox.setSelectedIndex(style);
    }
 
-   protected double getEnteredMitreLimit()
-   {
-      return mitreLimitField.getDouble();
-   }
-
    public double getMitreLimit()
    {
-      double limit = mitreLimitField.getDouble();
+      double limit = mitreLimitModel.getNumber().doubleValue();
 
       return limit < 1 ? 1.0 : limit;
    }
 
    public void setMitreLimit(double limit)
    {
-      mitreLimitField.setValue(limit < 1 ? 1.0 : limit);
+      mitreLimitModel.setValue(Double.valueOf(limit < 1 ? 1.0 : limit));
    }
 
    public void setDefaults()
@@ -167,5 +172,6 @@ public class JoinStylePanel extends JPanel implements ItemListener
 
    private JComboBox joinStyleBox;
    private JLabel mitreLimitLabel;
-   private NonNegativeDoubleField mitreLimitField;
+   private SpinnerNumberModel mitreLimitModel;
+   private JSpinner mitreLimitSpinner;
 }

@@ -30,6 +30,8 @@ import java.awt.geom.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
 
@@ -49,36 +51,21 @@ public class LineStylePanel extends JScrollPane
       super();
       selector_ = selector;
 
-      JPanel p = new JPanel();
-
-      p.setLayout(new GridBagLayout());
-      GridBagConstraints constraints = new GridBagConstraints();
-
-      constraints.gridx=0;
-      constraints.gridy=0;
-      constraints.gridwidth=3;
-      constraints.gridheight=1;
-      constraints.fill=GridBagConstraints.NONE;
-      constraints.anchor=GridBagConstraints.LINE_START;
-      constraints.weightx=1;
-      constraints.weighty=1;
+      JComponent mainPanel = Box.createVerticalBox();
 
       // line width panel
       lineWidthPanel = new LineWidthPanel(selector_);
       lineWidthPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
       lineWidthPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      p.add(lineWidthPanel, constraints);
+      mainPanel.add(lineWidthPanel);
 
-      constraints.gridy++;
       // dash pattern panel
+
       dashPatternPanel = new DashPatternPanel(selector_);
       dashPatternPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-      p.add(dashPatternPanel, constraints);
+      mainPanel.add(dashPatternPanel);
 
-      constraints.gridy++;
-      JPanel capAndJoinPanel 
-         = new JPanel(new FlowLayout(FlowLayout.LEADING)); 
-      capAndJoinPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      JComponent capAndJoinPanel = createRow(); 
 
       // cap style
       JLabel capStyleLabel = getResources().createAppLabel("linestyle.cap");
@@ -98,31 +85,31 @@ public class LineStylePanel extends JScrollPane
       joinStylePanel = new JoinStylePanel(selector_);
       capAndJoinPanel.add(joinStylePanel);
 
-      p.add(capAndJoinPanel, constraints);
-
-      Insets oldInsets = constraints.insets;
+      mainPanel.add(capAndJoinPanel);
 
       // start marker 
 
-      constraints.gridy++;
-      constraints.gridwidth=1;
-      constraints.insets = new Insets(0, 5, 0, 0);
+      JLabelGroup labelGroup = new JLabelGroup();
+      String placeholder = getResources().getMessage("arrow.placeholder");
+
+      JComponent startMarkerPanel = createRow();
+      mainPanel.add(startMarkerPanel);
+
       JLabel startArrowLabel = getResources().createAppLabel(
          "linestyle.arrow.start");
-      p.add(startArrowLabel, constraints);
+      labelGroup.add(startArrowLabel);
+      startMarkerPanel.add(startArrowLabel);
 
-      startArrowDesc = new JLabel("None");
+      startArrowDesc = new JLabel(placeholder);
       startArrowDesc.setOpaque(true);
       startArrowDesc.setBackground(Color.white);
       startArrowDesc.setBorder(
          BorderFactory.createLoweredBevelBorder());
 
       Dimension dim = startArrowDesc.getPreferredSize();
-      dim.width = 250;
       startArrowDesc.setPreferredSize(dim);
 
-      constraints.gridx++;
-      p.add(startArrowDesc, constraints);
+      startMarkerPanel.add(startArrowDesc);
 
       startArrowDialog = new ArrowStyleDialog(selector_,
          ArrowStylePanel.START);
@@ -131,26 +118,27 @@ public class LineStylePanel extends JScrollPane
          "choose", this, null);
       startArrowLabel.setLabelFor(startArrowButton);
 
-      constraints.gridx++;
-      p.add(startArrowButton, constraints);
+      startMarkerPanel.add(startArrowButton);
 
-      constraints.gridy++;
-      constraints.gridx=0;
       // mid marker
+
+      JComponent midMarkerPanel = createRow();
+      mainPanel.add(midMarkerPanel);
 
       JLabel midArrowLabel = getResources().createAppLabel(
          "linestyle.arrow.mid");
-      p.add(midArrowLabel, constraints);
+      labelGroup.add(midArrowLabel);
 
-      midArrowDesc = new JLabel("None");
+      midMarkerPanel.add(midArrowLabel);
+
+      midArrowDesc = new JLabel(placeholder);
       midArrowDesc.setOpaque(true);
       midArrowDesc.setBackground(Color.white);
       midArrowDesc.setBorder(
          BorderFactory.createLoweredBevelBorder());
 
       midArrowDesc.setPreferredSize(dim);
-      constraints.gridx++;
-      p.add(midArrowDesc, constraints);
+      midMarkerPanel.add(midArrowDesc);
 
       midArrowDialog = new ArrowStyleDialog(selector_,
          ArrowStylePanel.MID);
@@ -159,19 +147,20 @@ public class LineStylePanel extends JScrollPane
         "choose", this, null);
       midArrowLabel.setLabelFor(midArrowButton);
 
-      constraints.gridx++;
-      p.add(midArrowButton, constraints);
+      midMarkerPanel.add(midArrowButton);
 
       // end marker
 
+      JComponent endMarkerPanel = createRow();
+      mainPanel.add(endMarkerPanel);
+
       JLabel endArrowLabel = getResources().createAppLabel(
          "linestyle.arrow.end");
+      labelGroup.add(endArrowLabel);
 
-      constraints.gridy++;
-      constraints.gridx = 0;
-      p.add(endArrowLabel, constraints);
+      endMarkerPanel.add(endArrowLabel);
 
-      endArrowDesc = new JLabel("None");
+      endArrowDesc = new JLabel(placeholder);
       endArrowDesc.setBackground(Color.white);
       endArrowDesc.setOpaque(true);
       endArrowDesc.setBackground(Color.white);
@@ -180,8 +169,7 @@ public class LineStylePanel extends JScrollPane
 
       endArrowDesc.setPreferredSize(dim);
 
-      constraints.gridx++;
-      p.add(endArrowDesc, constraints);
+      endMarkerPanel.add(endArrowDesc);
 
       endArrowDialog = new ArrowStyleDialog(selector_,
          ArrowStylePanel.END);
@@ -190,12 +178,10 @@ public class LineStylePanel extends JScrollPane
          "choose", this, null);
       endArrowLabel.setLabelFor(endArrowButton);
 
-      constraints.gridx++;
-      p.add(endArrowButton, constraints);
+      endMarkerPanel.add(endArrowButton);
 
       // winding rule
-      JPanel windingRulePanel = new JPanel();
-      windingRulePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      JComponent windingRulePanel = createRow();
 
       JLabel windingRuleLabel = getResources().createAppLabel(
          "linestyle.winding_rule");
@@ -210,13 +196,21 @@ public class LineStylePanel extends JScrollPane
       windingRulePanel.add(windingRuleBox);
       windingRuleBox.addItemListener(this);
 
-      constraints.gridy++;
-      constraints.gridx=0;
-      constraints.gridwidth=3;
-      constraints.insets = oldInsets;
-      p.add(windingRulePanel, constraints);
+      mainPanel.add(windingRulePanel);
 
-      setViewportView(p);
+      mainPanel.add(Box.createVerticalStrut(10));
+      mainPanel.add(Box.createVerticalGlue());
+
+      setViewportView(mainPanel);
+   }
+
+   protected JComponent createRow()
+   {
+      JComponent row = new JPanel(new FlowLayout(FlowLayout.LEADING));
+
+      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      return row;
    }
 
    public void itemStateChanged(ItemEvent e)
@@ -362,11 +356,6 @@ public class LineStylePanel extends JScrollPane
    public void setWindingRule(int rule)
    {
       windingRuleBox.setSelectedIndex(rule);
-   }
-
-   protected double getEnteredMitreLimit()
-   {
-      return joinStylePanel.getEnteredMitreLimit();
    }
 
    public double getMitreLimit()
