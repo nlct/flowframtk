@@ -3184,13 +3184,17 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="typeblock.info">Commands such as \newflowframe, \newstaticframe and \newdynamicframe all require locations relative to the typeblock (the area defined by the margins and \textwidth/\hsize and \textheight/\vsize). This area needs to be defined in order to convert the canvas coordinates into suitable values for the flowfram.sty commands. You won''t be able to define any flowframe data until this area is set.</entry>
 
-<entry key="typeblock.compute_from_path">Compute Margins From Selected Path</entry>
+<entry key="typeblock.select_shape">Shape:</entry>
+<entry key="typeblock.select_shape.mnemonic">E</entry>
+<entry key="typeblock.select_shape.placeholder">Rotational Pattern 000 (360)</entry>
+
+<entry key="typeblock.compute_from_path">Compute Margins From Selected Shape</entry>
 <entry key="typeblock.compute_from_path.mnemonic">P</entry>
 <entry key="typeblock.hshift">Even Page Shift</entry>
-<entry key="typeblock.hshift.mnemonic">E</entry>
+<entry key="typeblock.hshift.mnemonic">V</entry>
 <entry key="typeblock.hshift_info">The even page shift is used to calculate the even margin for two-sided documents. You can use the Compute button to calculate the required shift to create a symmetric layout.</entry>
 <entry key="typeblock.compute_sym_shift">Compute</entry>
-<entry key="typeblock.compute_sym_shift.mnemonic">C</entry>
+<entry key="typeblock.compute_sym_shift.mnemonic">M</entry>
 <entry key="typeblock.compute_sym_shift.tooltip">Calculate the shift from left and right margins for a symmetric layout</entry>
 <entry key="typeblock.adjust_width_label">Adjust width to nearest: </entry>
 <entry key="typeblock.adjust_width_label.mnemonic">W </entry>
@@ -3201,9 +3205,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="typeblock.adjust_height">Adjust Height</entry>
 <entry key="typeblock.adjust_height.mnemonic">D</entry>
 <entry key="typeblock.use_baseline">Baselineskip</entry>
-<entry key="typeblock.use_baseline.mnemonic">B</entry>
-<entry key="typeblock.use_other">Other</entry>
-<entry key="typeblock.use_other.mnemonic">O</entry>
+<entry key="typeblock.use_baseline.mnemonic">K</entry>
+<entry key="typeblock.use_other">Other Skip</entry>
+<entry key="typeblock.use_other.mnemonic">I</entry>
 
 <!--  Display Page -->
 

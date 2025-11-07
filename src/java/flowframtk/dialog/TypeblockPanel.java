@@ -37,7 +37,7 @@ import com.dickimawbooks.flowframtk.*;
  */
 
 public class TypeblockPanel extends JPanel
-   implements ActionListener
+   implements ActionListener,ListSelectionListener
 {
    public TypeblockPanel(FlowframTk application)
    {
@@ -45,6 +45,7 @@ public class TypeblockPanel extends JPanel
       application_ = application;
 
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+      setAlignmentX(0.0f);
 
       JDRResources resources = getResources();
 
@@ -62,17 +63,12 @@ public class TypeblockPanel extends JPanel
       margins.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(margins);
 
-      JPanel row = new JPanel();
-      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      JComponent row;
+
+      row = createShapeSelectionComp();
       settingsPanel.add(row);
 
-      computeFromPathButton = resources.createAppJButton(
-        "typeblock", "compute_from_path", this);
-      computeFromPathButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-      row.add(computeFromPathButton);
-
-      row = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      row = createRow();
       settingsPanel.add(row);
 
       adjustWidthPanel = resources.createLengthPanel(
@@ -90,8 +86,7 @@ public class TypeblockPanel extends JPanel
 
       settingsPanel.add(normalsizeInfoLabel);
 
-      row = new JPanel(new FlowLayout(FlowLayout.LEADING));
-      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      row = createRow();
       settingsPanel.add(row);
 
       row.add(resources.createAppLabel("typeblock.adjust_height_label"));
@@ -117,8 +112,7 @@ public class TypeblockPanel extends JPanel
 
       settingsPanel.add(Box.createVerticalStrut(10));
 
-      row = new JPanel();
-      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      row = createRow();
       settingsPanel.add(row);
 
       shiftPanel = resources.createLengthPanel("typeblock.hshift");
@@ -137,6 +131,50 @@ public class TypeblockPanel extends JPanel
       Dimension dim = getPreferredSize();
       dim.height += 100;
       setPreferredSize(dim);
+   }
+
+   protected JComponent createRow()
+   {
+      JComponent row = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      return row;
+   }
+
+   protected JComponent createShapeSelectionComp()
+   {
+      JDRResources resources = getResources();
+
+      JComponent row = createRow();
+      row.setAlignmentY(Component.TOP_ALIGNMENT);
+
+      objectListLabel = resources.createAppLabel("typeblock.select_shape");
+      row.add(objectListLabel);
+      objectListLabel.setAlignmentX(0.0f);
+      objectListLabel.setAlignmentY(0.0f);
+
+      objectList = new JDRCompleteObjectJList();
+      objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      objectList.setPrototype(resources.getMessage("typeblock.select_shape.placeholder"));
+      objectList.addListSelectionListener(this);
+      objectList.setVisibleRowCount(3);
+      objectListLabel.setLabelFor(objectList);
+
+      JScrollPane sp = new JScrollPane(objectList);
+
+      sp.setAlignmentX(0.0f);
+      sp.setAlignmentY(0.0f);
+
+      row.add(sp);
+
+      computeFromPathButton = resources.createAppJButton(
+        "typeblock", "compute_from_path", this);
+      computeFromPathButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+      row.add(computeFromPathButton);
+
+      computeFromPathButton.setAlignmentX(0.0f);
+      computeFromPathButton.setAlignmentY(0.0f);
+
+      return row;
    }
 
    public void requestDefaultComponentFocus()
@@ -167,11 +205,44 @@ public class TypeblockPanel extends JPanel
          adjustWidthPanel.setValue(1.0, JDRUnit.pc);
       }
 
-      JDRCanvas canvas = application_.getCurrentFrame().getCanvas();
+      JDRFrame frame = application_.getCurrentFrame();
+      JDRCanvas canvas = frame.getCanvas();
 
-      selectedPath = canvas.getSelectedPath();
+      JDRGroup objects = frame.getAllObjects();
+      selectedShape = null;
 
-      computeFromPathButton.setEnabled(selectedPath != null);
+      objectList.removeAllElements();
+      int n = 0;
+
+      for (int i = 0; i < objects.size(); i++)
+      {
+         JDRCompleteObject object = objects.get(i);
+
+         if (object instanceof JDRShape)
+         {
+            objectList.addObject(object, getResources());
+            n++;
+
+            if (selectedShape == null && object.isSelected())
+            {
+               selectedShape = (JDRShape)object;
+               objectList.setSelectedIndex(i);
+            }
+         }
+      }
+
+      if (n == 0)
+      {
+         objectListLabel.setEnabled(false);
+         objectList.setEnabled(false);
+         computeFromPathButton.setEnabled(false);
+      }
+      else
+      {
+         objectListLabel.setEnabled(true);
+         objectList.setEnabled(true);
+         computeFromPathButton.setEnabled(selectedShape != null);
+      }
 
       LaTeXFontBase latexFonts = canvas.getCanvasGraphics()
          .getLaTeXFontBase();
@@ -194,6 +265,23 @@ public class TypeblockPanel extends JPanel
                              shiftPanel.getValue(unit));
    }
 
+   @Override
+   public void valueChanged(ListSelectionEvent evt)
+   {
+      if (evt.getSource() == objectList && !evt.getValueIsAdjusting())
+      {
+         JDRCompleteObject obj = objectList.getSelectedObject();
+
+         if (obj != null && obj instanceof JDRShape)
+         {
+            selectedShape = (JDRShape)obj;
+         }
+
+         computeFromPathButton.setEnabled(selectedShape != null);
+      }
+   }
+
+   @Override
    public void actionPerformed(ActionEvent evt)
    {
       String action = evt.getActionCommand();
@@ -211,9 +299,9 @@ public class TypeblockPanel extends JPanel
       }
       else if (action.equals("compute_from_path"))
       {
-         if (selectedPath == null) return;
+         if (selectedShape == null) return;
 
-         Rectangle2D bounds = selectedPath.getGeneralPath().getBounds2D();
+         Rectangle2D bounds = selectedShape.getGeneralPath().getBounds2D();
 
          double left = bounds.getX();
          double top = bounds.getY();
@@ -309,13 +397,15 @@ public class TypeblockPanel extends JPanel
    private FlowframTk application_;
    private MarginPanel margins;
 
+   private JLabel objectListLabel;
+   private JDRCompleteObjectJList objectList;
    private JButton computeFromPathButton;
 
    private LengthPanel shiftPanel, adjustWidthPanel, adjustHeightPanel;
 
    private JRadioButton useBaselineButton, userButton;
 
-   private JDRPath selectedPath;
+   private JDRShape selectedShape;
 
    private JLabel normalsizeInfoLabel;
 }

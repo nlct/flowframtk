@@ -22,6 +22,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import com.dickimawbooks.jdr.JDRCompleteObject;
+import com.dickimawbooks.jdrresources.JDRResources;
 
 public class JDRCompleteObjectJList extends JList<FindListItem>
 {
@@ -47,9 +48,29 @@ public class JDRCompleteObjectJList extends JList<FindListItem>
       descriptionModel.addElement(element);
    }
 
+   public void addObject(JDRCompleteObject object, JDRResources resources)
+   {
+      String description = object.getDescription();
+      String displayedDescription = description;
+
+      if (description.isEmpty())
+      {
+         displayedDescription = resources.getDefaultDescription(object);
+      }
+
+      addElement(new FindListItem(object, displayedDescription));
+   }
+
    public JDRCompleteObject getObject(int idx)
    {
       return descriptionModel.get(idx).getObject();
+   }
+
+   public JDRCompleteObject getSelectedObject()
+   {
+      FindListItem item = getSelectedValue();
+
+      return item == null ? null : item.getObject();
    }
 
    DefaultListModel<FindListItem> descriptionModel;
