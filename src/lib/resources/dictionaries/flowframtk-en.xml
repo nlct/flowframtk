@@ -3360,6 +3360,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="addbydescription.title">Add Object By Description</entry>
 <entry key="addbydescription.see">findbydescription.title</entry>
 
+<!-- Used to measure minimum width -->
+<entry key="findbydescription.placeholder">Rotational Pattern 000 (360) MMMMMMMM</entry>
+
 <entry key="findbydescription.JDRPath">Path: {0}</entry>
 <entry key="findbydescription.JDRText">Text: {0} ({1})</entry>
 <entry key="findbydescription.JDRBitmap">Bitmap: {0} ({1},{2})</entry>

@@ -3338,6 +3338,9 @@ Are you sure you want to ungroup it?</entry>
 <entry key="findbydescription.title">通过描述查找对象</entry>
 <entry key="addbydescription.title">根据描述增选对象</entry>
 
+<!-- Used to measure minimum width -->
+<entry key="findbydescription.placeholder">Rotational Pattern 000 (360) MMMMMMMM</entry>
+
 <entry key="findbydescription.JDRPath">路径: {0}</entry>
 <entry key="findbydescription.JDRText">文本: {0} ({1})</entry>
 <entry key="findbydescription.JDRBitmap">位图: {0} ({1},{2})</entry>
