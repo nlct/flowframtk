@@ -772,7 +772,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
             return false;
          }
 
-         JDRGroup image = canvas.getAllPaths();
+         JDRGroup image = canvas.getAllObjects();
 
          if (image == null || image.size() == 0)
          {

@@ -204,7 +204,7 @@ public class PathGridPanel extends GridPanel
    {
       JDRFrame frame = application.getCurrentFrame();
       descriptionModel.removeAllElements();
-      paths = frame.getAllPaths();
+      paths = frame.getAllObjects();
       int n = paths.size();
 
       int idx = -1;

@@ -1891,9 +1891,15 @@ public class JDRFrame extends JInternalFrame
       return canvas.getVisibleObjects();
    }
 
+   @Deprecated
    public JDRGroup getAllPaths()
    {
       return canvas.getAllPaths();
+   }
+
+   public JDRGroup getAllObjects()
+   {
+      return canvas.getAllObjects();
    }
 
    public void selectObjectAndScroll(JDRCompleteObject object)

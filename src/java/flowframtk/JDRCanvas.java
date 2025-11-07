@@ -2482,7 +2482,13 @@ public class JDRCanvas extends JPanel
       frame_.markAsModified();
    }
 
+   @Deprecated
    public JDRGroup getAllPaths()
+   {
+      return paths;
+   }
+
+   public JDRGroup getAllObjects()
    {
       return paths;
    }

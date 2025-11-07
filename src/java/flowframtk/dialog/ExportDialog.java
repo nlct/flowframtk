@@ -682,7 +682,7 @@ public class ExportDialog extends JDialog
    public void display(JDRFrame frame)
    {
       this.frame = frame;
-      image = frame.getAllPaths();
+      image = frame.getAllObjects();
 
       exportSettings.copyFrom(application.getSettings().getExportSettings());
 

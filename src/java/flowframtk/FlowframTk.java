@@ -391,7 +391,7 @@ public class FlowframTk extends JFrame
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
                displayImageDescriptionDialog(
-                  action.getFrame().getAllPaths());
+                  action.getFrame().getAllObjects());
             }
          }
       );

@@ -201,7 +201,7 @@ public class FindByDescriptionDialogBox extends JDialog
       setTitle(deselect ? findByTitle : addByTitle);
 
       currentFrame = application_.getCurrentFrame();
-      paths = currentFrame.getAllPaths();
+      paths = currentFrame.getAllObjects();
       deselect_ = deselect;
       update();
       descriptionBox.requestFocusInWindow();
