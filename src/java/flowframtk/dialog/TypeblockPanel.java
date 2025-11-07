@@ -51,6 +51,7 @@ public class TypeblockPanel extends JPanel
 
       JTextArea infoArea = resources.createAppInfoArea("typeblock.info", 20);
       infoArea.setAlignmentX(0.0f);
+      infoArea.setOpaque(true);
 
       add(infoArea);
 
@@ -256,11 +257,14 @@ public class TypeblockPanel extends JPanel
 
    public void apply()
    {
-      JDRFrame settingsPanel = application_.getCurrentFrame();
+      apply(application_.getCurrentFrame());
+   }
 
-      JDRUnit unit = settingsPanel.getCanvasGraphics().getStorageUnit();
+   public void apply(JDRFrame frame)
+   {
+      JDRUnit unit = frame.getCanvasGraphics().getStorageUnit();
 
-      settingsPanel.setTypeblock(margins.left(unit), margins.right(unit),
+      frame.setTypeblock(margins.left(unit), margins.right(unit),
                              margins.top(unit), margins.bottom(unit),
                              shiftPanel.getValue(unit));
    }
@@ -392,6 +396,12 @@ public class TypeblockPanel extends JPanel
    public JDRResources getResources()
    {
       return application_.getResources();
+   }
+
+   public void addChangeListener(ChangeListener listener)
+   {
+      shiftPanel.addChangeListener(listener);
+      margins.addChangeListener(listener);
    }
 
    private FlowframTk application_;

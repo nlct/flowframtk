@@ -2637,6 +2637,11 @@ public class JDRResources
       return button;
    }
 
+   public JButton createJButton(String parent, String action, ActionListener listener)
+   {
+      return helpLib.createJButton(parent, action, listener, true, false);
+   }
+
    public JButton createAppJButton(
       String parentId, String action, ActionListener listener)
    {

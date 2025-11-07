@@ -231,7 +231,7 @@ class TeXSettingsPanel extends Box
       label.setAlignmentX(Component.LEFT_ALIGNMENT);
       b2.add(label);
 
-      b2.add(Box.createHorizontalStrut(10));
+      b2.add(getResources().createLabelSpacer());
 
       sizeBox = new JComboBox<Integer>(availableSizes);
       sizeBox.addItemListener(this);
@@ -268,6 +268,15 @@ class TeXSettingsPanel extends Box
       add(example);
 
       add(Box.createVerticalStrut(10));
+
+      textarea = getResources().createAppInfoArea("clssettings.default_cls.info");
+      textarea.setAlignmentX(Component.LEFT_ALIGNMENT);
+      textarea.setLineWrap(false);
+      dim = textarea.getMaximumSize();
+      dim.height = (int)textarea.getPreferredSize().getHeight();
+      textarea.setMaximumSize(dim);
+
+      add(textarea);
 
       b2 = Box.createHorizontalBox();
       b2.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -367,6 +376,7 @@ class TeXSettingsPanel extends Box
       }
    }
 
+   @Override
    public void itemStateChanged(ItemEvent e)
    {
       int normalsize = ((Integer)sizeBox.getSelectedItem()).intValue();
@@ -439,17 +449,17 @@ class TeXSettingsPanel extends Box
    private JLabel example;
 
    private static final Integer[] availableSizes = new Integer[]
-         {
-            new Integer(25),
-            new Integer(20),
-            new Integer(17),
-            new Integer(14),
-            new Integer(12),
-            new Integer(11),
-            new Integer(10),
-            new Integer(9),
-            new Integer(8)
-         };
+     {
+         Integer.valueOf(25),
+         Integer.valueOf(20),
+         Integer.valueOf(17),
+         Integer.valueOf(14),
+         Integer.valueOf(12),
+         Integer.valueOf(11),
+         Integer.valueOf(10),
+         Integer.valueOf(9),
+         Integer.valueOf(8)
+      };
 
    private JCheckBox updateImageBox;
 

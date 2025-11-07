@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(186);
+      invoker.setStartupDeterminate(187);
 
       // create menu bar, menu and menu item
 
@@ -2743,6 +2743,24 @@ public class FlowframTk extends JFrame
 
       JMenu flowframeM = resources.createAppMenu("menu.tex.flowframe");
       texM.add(flowframeM);
+
+      incStartupProgress(texM, flowframeM);
+
+      // Flow Frame wizard
+
+      flfWizardItem = FlowframTkAction.createMenuItem(this,
+        "menu.tex", "flowframe.wizard", flowframeM,
+        TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
+        FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               flfWizard.display(action.getFrame());
+            }
+         });
+
+      flfWizard = new FlowFrameWizard(this);
 
       incStartupProgress(texM, flowframeM);
 
@@ -7351,6 +7369,7 @@ public class FlowframTk extends JFrame
    private ShearDialogBox shearDB;
    private FLFSelector flfSelector;
    private FLFSetTypeblock setTypeblockSelector;
+   private FlowFrameWizard flfWizard;
    private DiscardDialogBox discardDB;
    private GoToDialogBox gotoDialog;
    private MoveByDialogBox moveByDialog;
@@ -7456,7 +7475,7 @@ public class FlowframTk extends JFrame
                      insertBitmapItem,
                      refreshItem, bitmapPropItem, parshapeItem,
                      shapeparItem, clearAllItem, setFrameItem,
-                     setTypeblockItem, stylesItem, joinItem,
+                     setTypeblockItem, flfWizardItem, stylesItem, joinItem,
                      gridSettingsItem,
                      configSettingsItem, licenceItem, aboutItem,
                      tileItem, verticallyItem, horizontallyItem,

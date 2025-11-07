@@ -208,6 +208,14 @@ public class MarginPanel extends JPanel
       bottomText.setValue(bottom, unit);
    }
 
+   public void addChangeListener(ChangeListener listener)
+   {
+      leftText.addChangeListener(listener);
+      rightText.addChangeListener(listener);
+      topText.addChangeListener(listener);
+      bottomText.addChangeListener(listener);
+   }
+
    private NonNegativeLengthPanel leftText, rightText, topText, bottomText;
    private JLabel label, leftLabel, rightLabel, topLabel, bottomLabel;
 }

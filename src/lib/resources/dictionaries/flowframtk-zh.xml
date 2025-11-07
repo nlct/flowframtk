@@ -728,6 +728,9 @@
 <entry key="menu.tex.flowframe">流动文本框(Flow Frames宏包)</entry>
 <entry key="menu.tex.flowframe.mnemonic">F</entry>
 
+<entry key="menu.tex.flowframe.wizard">Wizard...</entry>
+<entry key="menu.tex.flowframe.wizard.mnemonic">W</entry>
+
 <entry key="menu.tex.flowframe.set_frame">设定文本框(S)...</entry>
 <entry key="menu.tex.flowframe.set_frame.mnemonic">S</entry>
 
@@ -2777,6 +2780,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="clssettings.update.mnemonic">U</entry>
 <entry key="clssettings.update.initvalue">true</entry>
 
+<entry key="clssettings.default_cls.info">The default class is an article-like class that is determined by the normal font size.</entry>
+
 <entry key="clssettings.default_cls">Use default class</entry>
 <entry key="clssettings.default_cls.mnemonic">D</entry>
 <entry key="clssettings.custom_cls">Use class: </entry>
@@ -3209,6 +3214,58 @@ Are you sure you want to ungroup it?</entry>
 <entry key="typeblock.use_baseline.mnemonic">K</entry>
 <entry key="typeblock.use_other">Other Skip</entry>
 <entry key="typeblock.use_other.mnemonic">I</entry>
+
+<!-- Flow Frame Wizard -->
+
+<entry key="flfwizard.title">Flow Frame Wizard</entry>
+
+<entry key="flfwizard.fulltitle">{0}: {1}</entry>
+
+<entry key="flfwizard.confirm_cancel">Are you sure you want to discard all your selections?</entry>
+
+<entry key="flfwizard.cls.title">Class</entry>
+<entry key="flfwizard.cls.info">If you export to a document class (.cls) or a complete LaTeX document (.tex), a document class is required. (This will be the underlying class that needs to be loaded in the case of export to a document class.) The default class is an article-like class that is determined by the normal font size. This setting is not used for the export to package (.sty) function but you will need to make sure that any document that loads the exported package has a matching normal font size.</entry>
+
+
+<entry key="flfwizard.cls.default_cls">Use default class</entry>
+<entry key="flfwizard.cls.default_cls.mnemonic">D</entry>
+<entry key="flfwizard.cls.custom_cls">Use class: </entry>
+<entry key="flfwizard.cls.custom_cls.mnemonic">S </entry>
+
+<entry key="flfwizard.cls.relative_fontsize">Use relative font size declarations</entry>
+<entry key="flfwizard.cls.relative_fontsize.mnemonic">R</entry>
+<entry key="flfwizard.cls.relative_fontsize.initvalue">true</entry>
+
+<entry key="flfwizard.cls.normalsize">Normal Font Size</entry>
+<entry key="flfwizard.cls.normalsize.mnemonic">N</entry>
+<entry key="flfwizard.cls.normalsize.tooltip">Set LaTeX normal font size settings</entry>
+
+<entry key="flfwizard.cls.update">Update all LaTeX font size declarations in current image</entry>
+<entry key="flfwizard.cls.update.mnemonic">U</entry>
+<entry key="flfwizard.cls.update.initvalue">true</entry>
+
+<entry key="flfwizard.typeblock.title">Typeblock</entry>
+
+<entry key="flfwizard.frametype.title">Frame Type</entry>
+<entry key="flfwizard.frametype.object.placeholder">Rotational Pattern 000 (360) MMMMMMMM</entry>
+<entry key="flfwizard.frametype.empty_image">Empty image!</entry>
+<entry key="flfwizard.frametype.selected_object_notset">The selected object will be of type:</entry>
+<entry key="flfwizard.frametype.selected_object_set">The selected object is of type:</entry>
+
+<entry key="flfwizard.frametype.header">Page Header (odd or both)</entry>
+<entry key="flfwizard.frametype.evenheader">Even Page Header</entry>
+<entry key="flfwizard.frametype.footer">Page Footer (odd or both)</entry>
+<entry key="flfwizard.frametype.evenfooter">Even Page Footer</entry>
+<entry key="flfwizard.frametype.thumbtab">Thumbtab (odd or both)</entry>
+<entry key="flfwizard.frametype.eventhumbtab">Even Thumbtab</entry>
+<entry key="flfwizard.frametype.thumbtabindex">Thumbtab Index (odd or both)</entry>
+<entry key="flfwizard.frametype.eventhumbtabindex">Even Thumbtab Index</entry>
+<entry key="flfwizard.frametype.static">Static</entry>
+<entry key="flfwizard.frametype.dynamic">Dynamic</entry>
+<entry key="flfwizard.frametype.flow">Flow</entry>
+
+<entry key="flfwizard.previous">Back</entry>
+<entry key="flfwizard.next">Next</entry>
 
 <!--  Display Page -->
 
