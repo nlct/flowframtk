@@ -2286,6 +2286,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="grid.path.select">Select new shape</entry>
 <entry key="grid.path.select.mnemonic">N</entry>
 <entry key="grid.path.info">Major division setting only affects rulers.</entry>
+<entry key="grid.path.select.placeholder">Rotational Pattern 000 (000 degrees)</entry>
 
 <entry key="grid.offset">Origin Offset</entry>
 <entry key="grid.offset.x">Shift x:</entry>
@@ -3186,7 +3187,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="typeblock.select_shape">Shape:</entry>
 <entry key="typeblock.select_shape.mnemonic">E</entry>
-<entry key="typeblock.select_shape.placeholder">Rotational Pattern 000 (360)</entry>
+<entry key="typeblock.select_shape.placeholder">Rotational Pattern 000 (000 degrees)</entry>
 
 <entry key="typeblock.compute_from_path">Compute Margins From Selected Shape</entry>
 <entry key="typeblock.compute_from_path.mnemonic">P</entry>

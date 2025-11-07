@@ -147,16 +147,19 @@ public class PathGridPanel extends GridPanel
 
       row.add(selectNewPathButton);
 
-      descriptionModel = new DefaultComboBoxModel<String>();
-      descriptionBox = new JComboBox<String>(descriptionModel);
+      descriptionBox = new JDRCompleteObjectJList();
       descriptionBox.setEnabled(false);
-      row.add(descriptionBox);
+      row.add(new JScrollPane(descriptionBox));
 
-      descriptionBox.setPrototypeDisplayValue("Rotational Pattern 000 (000 degrees)");
+      descriptionBox.setPrototype(resources.getMessage("grid.path.select.placeholder"));
+      descriptionBox.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      descriptionBox.setVisibleRowCount(3);
 
+/*
       dim = descriptionBox.getPreferredSize();
       dim.width = Integer.MAX_VALUE;
       descriptionBox.setMaximumSize(dim);
+*/
 
 
       add(Box.createVerticalStrut(40));
@@ -203,7 +206,7 @@ public class PathGridPanel extends GridPanel
    private void updatePathSelector()
    {
       JDRFrame frame = application.getCurrentFrame();
-      descriptionModel.removeAllElements();
+      descriptionBox.removeAllElements();
       paths = frame.getAllObjects();
       int n = paths.size();
 
@@ -212,14 +215,8 @@ public class PathGridPanel extends GridPanel
       for (int i = 0; i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
-         String description = object.getDescription();
 
-         if (description.isEmpty())
-         {
-            description = application.getResources().getDefaultDescription(object);
-         }
-
-         descriptionModel.addElement(description);
+         descriptionBox.addObject(object, getResources());
 
          if (idx == -1 && object.isSelected())
          {
@@ -417,12 +414,16 @@ public class PathGridPanel extends GridPanel
       unitBox.addItemListener(listener);
    }
 
+   public JDRResources getResources()
+   {
+      return application.getResources();
+   }
+
    private JSpinner majorDivisionsSpinner, subDivisionsSpinner;
    private SpinnerNumberModel majorDivisionsModel, subDivisionsModel;
    private JComboBox<String> unitBox;
 
-   private JComboBox<String> descriptionBox;
-   private DefaultComboBoxModel<String> descriptionModel;
+   private JDRCompleteObjectJList descriptionBox;
 
    private JRadioButton keepCurrentPathButton, useBoundaryPathButton,
       selectNewPathButton;
