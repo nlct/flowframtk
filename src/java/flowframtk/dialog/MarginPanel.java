@@ -142,6 +142,11 @@ public class MarginPanel extends JPanel
       bottomText.setLength(bottom);
    }
 
+   public void requestDefaultComponentFocus()
+   {
+      leftText.getTextField().requestFocusInWindow();
+   }
+
    public double left(JDRUnit unit)
    {
       return leftText.getValue(unit);

@@ -2658,6 +2658,8 @@ public class JDRResources
 
       button.setActionCommand(action);
 
+      button.setToolTipText(getToolTipText(label));
+
       return button;
    }
 

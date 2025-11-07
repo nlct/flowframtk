@@ -2746,21 +2746,6 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(texM, flowframeM);
 
-      // Clear All
-
-      clearAllItem = FlowframTkAction.createMenuItem(this, 
-         "menu.tex", "flowframe.clear", flowframeM,
-         true, false,
-         new FlowframTkActionListener()
-         {
-            public void doAction(FlowframTkAction action, ActionEvent evt)
-            {
-               action.getFrame().unsetAllFlowFrames();
-            }
-         });
-
-      incStartupProgress(texM, flowframeM, clearAllItem);
-
       // Set Typeblock
 
       setTypeblockItem = FlowframTkAction.createMenuItem(this,
@@ -2846,6 +2831,23 @@ public class FlowframTk extends JFrame
          });
 
       incStartupProgress(texM, flowframeM, displayPageItem);
+
+      flowframeM.addSeparator();
+
+      // Clear All
+
+      clearAllItem = FlowframTkAction.createMenuItem(this, 
+         "menu.tex", "flowframe.clear", flowframeM,
+         true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().unsetAllFlowFrames();
+            }
+         });
+
+      incStartupProgress(texM, flowframeM, clearAllItem);
 
       // Settings
 
