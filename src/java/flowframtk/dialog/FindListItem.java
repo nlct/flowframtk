@@ -38,6 +38,11 @@ public class FindListItem
    {
       return object;
    }
+
+   public void setDescription(String displayedDescription)
+   {
+      this.displayedDescription = displayedDescription;
+   }
    
    JDRCompleteObject object;
    String displayedDescription;

@@ -3245,7 +3245,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="flfwizard.fulltitle">{0}: {1}</entry>
 
-<entry key="flfwizard.confirm_cancel">Are you sure you want to discard all your selections?</entry>
+<entry key="flfwizard.confirm_cancel">Are you sure you want to cancel?</entry>
 
 <entry key="flfwizard.cls.title">Class</entry>
 <entry key="flfwizard.cls.info">If you export to a document class (.cls) or to a complete LaTeX document (.tex), a document class is required. (This will be the underlying class that needs to be loaded in the case of export to a document class.) The default class is an article-like class that is determined by the normal font size. The class setting is not used for the export to package (.sty) function but you will need to make sure that any document that loads the exported package has a matching normal font size.</entry>
@@ -3311,7 +3311,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.style.title">Style &amp; Content</entry>
 
 <entry key="flfwizard.style.border.info">The selected object may just be used to determine the location, width and height of the frame, but you may also use the object as the frame border or background.</entry>
-<entry key="flfwizard.style.border">Use object as border</entry>
+<entry key="flfwizard.style.border">Use object as border or background</entry>
 <entry key="flfwizard.style.border.mnemonic">B</entry>
 
 <entry key="flfwizard.style.cmds">Style commands:</entry>
@@ -3337,6 +3337,21 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.content.edit">Edit Content</entry>
 <entry key="flfwizard.content.edit.mnemonic">E</entry>
 <entry key="flfwizard.content.edit.tooltip">Open the LaTeX editor window</entry>
+
+<entry key="flfwizard.dimensions.title">Margins &amp; Offsets</entry>
+
+<entry key="flfwizard.dimensions.even_x_shift">Even page horizontal shift:</entry>
+<entry key="flfwizard.dimensions.even_x_shift.mnemonic">Z</entry>
+
+<entry key="flfwizard.dimensions.compute_sym_x_shift">Compute Symmetric X Shift</entry>
+<entry key="flfwizard.dimensions.compute_sym_x_shift.mnemonic">X</entry>
+
+<entry key="flfwizard.dimensions.even_y_shift">Even page vertical shift:</entry>
+<entry key="flfwizard.dimensions.even_y_shift.mnemonic">V</entry>
+
+<entry key="flfwizard.finish.title">Finish</entry>
+
+<entry key="flfwizard.finish.query_repeat">Frame data set. Do you want to move on to the next object?</entry>
 
 <entry key="flfwizard.previous">Back</entry>
 <entry key="flfwizard.next">Next</entry>

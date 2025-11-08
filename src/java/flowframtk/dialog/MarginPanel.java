@@ -147,6 +147,14 @@ public class MarginPanel extends JPanel
       leftText.getTextField().requestFocusInWindow();
    }
 
+   public boolean isAllUnit(JDRUnit unit)
+   {
+      return leftText.getUnit().equals(unit)
+          && rightText.getUnit().equals(unit)
+          && topText.getUnit().equals(unit)
+          && bottomText.getUnit().equals(unit);
+   }
+
    public double left(JDRUnit unit)
    {
       return leftText.getValue(unit);

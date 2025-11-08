@@ -61,6 +61,26 @@ public class JDRCompleteObjectJList extends JList<FindListItem>
       addElement(new FindListItem(object, displayedDescription));
    }
 
+   public void updateDescription(int index, JDRResources resources)
+   {
+      FindListItem item = descriptionModel.get(index);
+
+      if (item != null)
+      {
+         JDRCompleteObject object = item.getObject();
+
+         String description = object.getDescription();
+         String displayedDescription = description;
+
+         if (description.isEmpty())
+         {
+            displayedDescription = resources.getDefaultDescription(object);
+         }
+
+         item.setDescription(displayedDescription);
+      }
+   }
+
    public JDRCompleteObject getObject(int idx)
    {
       return descriptionModel.get(idx).getObject();
@@ -71,6 +91,11 @@ public class JDRCompleteObjectJList extends JList<FindListItem>
       FindListItem item = getSelectedValue();
 
       return item == null ? null : item.getObject();
+   }
+
+   public int getElementCount()
+   {
+      return descriptionModel.getSize();
    }
 
    DefaultListModel<FindListItem> descriptionModel;
