@@ -3319,6 +3319,22 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.content.edit.mnemonic">E</entry>
 <entry key="flfwizard.content.edit.tooltip">Open the LaTeX editor window</entry>
 
+<entry key="flfwizard.dimensions.title">Margins &amp; Offsets</entry>
+
+<entry key="flfwizard.dimensions.even_x_shift">Even page horizontal shift:</entry>
+<entry key="flfwizard.dimensions.even_x_shift.mnemonic">Z</entry>
+
+<entry key="flfwizard.dimensions.compute_sym_x_shift">Compute Symmetric X Shift</entry>
+<entry key="flfwizard.dimensions.compute_sym_x_shift.mnemonic">X</entry>
+
+<entry key="flfwizard.dimensions.even_y_shift">Even page vertical shift:</entry>
+<entry key="flfwizard.dimensions.even_y_shift.mnemonic">V</entry>
+
+<entry key="flfwizard.finish.title">Finish</entry>
+
+<entry key="flfwizard.finish.query_repeat">Frame data set. Do you want to move on to the next object?</entry>
+
+
 <entry key="flfwizard.previous">Back</entry>
 <entry key="flfwizard.next">Next</entry>
 
