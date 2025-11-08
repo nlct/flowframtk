@@ -3147,9 +3147,14 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="flowframe.shape_standard">Standard</entry>
 <entry key="flowframe.shape_parshape">Parshape</entry>
 <entry key="flowframe.shape_shapepar">Shapepar</entry>
+<entry key="flowframe.marginpar">\marginpar:</entry>
+<entry key="flowframe.marginpar.outer">Outer</entry>
+<entry key="flowframe.marginpar.inner">Inner</entry>
+<entry key="flowframe.marginpar.left">Left</entry>
+<entry key="flowframe.marginpar.right">Right</entry>
 <entry key="flowframe.label">Label</entry>
 <entry key="flowframe.label.mnemonic">A</entry>
-<entry key="flowframe.margins">Margins</entry>
+<entry key="flowframe.margins">Inner Padding</entry>
 <entry key="flowframe.margins.left">Left</entry>
 <entry key="flowframe.margins.left.mnemonic">L</entry>
 <entry key="flowframe.margins.right">Right</entry>
@@ -3188,7 +3193,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="typeblock.title">Typeblock</entry>
 
-<entry key="typeblock.info">Commands such as \newflowframe, \newstaticframe and \newdynamicframe all require locations relative to the typeblock (the area defined by the margins and \textwidth/\hsize and \textheight/\vsize). This area needs to be defined in order to convert the canvas coordinates into suitable values for the flowfram.sty commands. You won''t be able to define any flowframe data until this area is set.</entry>
+<entry key="typeblock.info">Commands such as \newflowframe, \newstaticframe and \newdynamicframe all require locations relative to the typeblock (the area defined by the margins and \textwidth/\hsize and \textheight/\vsize). This area needs to be defined in order to set the page geometry and to convert the canvas coordinates into suitable values for the flowfram.sty commands. You won''t be able to define any flowframe data until this area is set.</entry>
 
 <entry key="typeblock.select_shape">Shape:</entry>
 <entry key="typeblock.select_shape.mnemonic">E</entry>
@@ -3224,7 +3229,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.confirm_cancel">Are you sure you want to discard all your selections?</entry>
 
 <entry key="flfwizard.cls.title">Class</entry>
-<entry key="flfwizard.cls.info">If you export to a document class (.cls) or a complete LaTeX document (.tex), a document class is required. (This will be the underlying class that needs to be loaded in the case of export to a document class.) The default class is an article-like class that is determined by the normal font size. This setting is not used for the export to package (.sty) function but you will need to make sure that any document that loads the exported package has a matching normal font size.</entry>
+<entry key="flfwizard.cls.info">If you export to a document class (.cls) or to a complete LaTeX document (.tex), a document class is required. (This will be the underlying class that needs to be loaded in the case of export to a document class.) The default class is an article-like class that is determined by the normal font size. The class setting is not used for the export to package (.sty) function but you will need to make sure that any document that loads the exported package has a matching normal font size.</entry>
 
 
 <entry key="flfwizard.cls.default_cls">Use default class</entry>
@@ -3263,6 +3268,56 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.frametype.static">Static</entry>
 <entry key="flfwizard.frametype.dynamic">Dynamic</entry>
 <entry key="flfwizard.frametype.flow">Flow</entry>
+
+<entry key="flfwizard.labelpages.title">Label &amp; Pages</entry>
+<entry key="flfwizard.labelpages.frame_type">Frame Type:</entry>
+<entry key="flfwizard.labelpages.frame_label">Frame Label:</entry>
+<entry key="flfwizard.labelpages.frame_label.mnemonic">L</entry>
+
+<entry key="flfwizard.labelpages.frame_label.info">The label must be unique to the given frame type.</entry>
+<entry key="flfwizard.labelpages.frame_label.special_info">A dynamic frame with the label ''{0}'' is a special frame.</entry>
+
+
+<entry key="flfwizard.labelpages.pages.info">The flowfram.sty modifications to the output routine check each frame''s page list to determine if a frame is ''active'' for the current page. The page list may be ''none'' initially and later updated or you may use ''all'' for all pages, ''odd'' for only odd pages, ''even'' for only even pages, or a list or range such as''2-4'', ''&lt;5'', ''&gt;6'' or ''1,4,7,9-12,15''. The pages must be referenced by their integer number (not formatted style, such as i or ii). The number may be the absolute page number (not the value of the page counter) or relative to the page counter.</entry>
+
+<entry key="flfwizard.labelpages.pagelist">Page List:</entry>
+<entry key="flfwizard.labelpages.pagelist.mnemonic">P</entry>
+
+<entry key="flfwizard.labelpages.pages">Page references are:</entry>
+<entry key="flfwizard.labelpages.relative">Relative</entry>
+<entry key="flfwizard.labelpages.relative.mnemonic">R</entry>
+<entry key="flfwizard.labelpages.absolute">Absolute</entry>
+<entry key="flfwizard.labelpages.absolute.mnemonic">A</entry>
+
+<entry key="flfwizard.style.title">Style &amp; Content</entry>
+
+<entry key="flfwizard.style.border.info">The selected object may just be used to determine the location, width and height of the frame, but you may also use the object as the frame border or background.</entry>
+<entry key="flfwizard.style.border">Use object as border</entry>
+<entry key="flfwizard.style.border.mnemonic">B</entry>
+
+<entry key="flfwizard.style.cmds">Style commands:</entry>
+<entry key="flfwizard.style.cmds.mnemonic">Y</entry>
+<entry key="flfwizard.style.cmds.info">(such as \bfseries\large)</entry>
+
+<entry key="flfwizard.style.clear">Clear frame contents after each page</entry>
+<entry key="flfwizard.style.clear.mnemonic">R</entry>
+
+<entry key="flfwizard.style.valign">Vertical alignment:</entry>
+<entry key="flfwizard.style.valign.mnemonic">V</entry>
+
+<entry key="flfwizard.style.shape">Shape:</entry>
+<entry key="flfwizard.style.shape.mnemonic">P</entry>
+
+<entry key="flfwizard.style.marginpos">\marginpar:</entry>
+<entry key="flfwizard.style.marginpos.mnemonic">M</entry>
+
+<entry key="flfwizard.style.content_info.dynamic">The contents of a dynamic frame are stored in a token list variable and are typeset whenever the frame is placed in position by the output routine. Special dynamic frames have their contents set automatically.</entry>
+<entry key="flfwizard.style.content_info.static">The contents of a static frame are stored in a ''box'' and are typeset when first set.</entry>
+<entry key="flfwizard.style.content_info.flow">The document text forms the content of flow frames, flowing from one flow frame to the next (similar to the columns with a normal two-column document).</entry>
+
+<entry key="flfwizard.content.edit">Edit Content</entry>
+<entry key="flfwizard.content.edit.mnemonic">E</entry>
+<entry key="flfwizard.content.edit.tooltip">Open the LaTeX editor window</entry>
 
 <entry key="flfwizard.previous">Back</entry>
 <entry key="flfwizard.next">Next</entry>

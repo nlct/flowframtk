@@ -1084,6 +1084,16 @@ public class FlowFrame implements Cloneable,Serializable
       }
    }
 
+   public void setBorder(boolean on)
+   {
+      border = on;
+   }
+
+   public boolean isBorderOn()
+   {
+      return border;
+   }
+
    public String getStyleCommands()
    {
       return styleCommands;

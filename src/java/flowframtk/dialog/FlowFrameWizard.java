@@ -25,12 +25,18 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.dickimawbooks.jdr.*;
+import com.dickimawbooks.jdr.exceptions.InvalidFormatException;
+import com.dickimawbooks.jdr.exceptions.InvalidValueException;
 import com.dickimawbooks.jdr.io.ExportSettings;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.flowframtk.*;
 
 public class FlowFrameWizard extends JDialog
- implements ActionListener,ItemListener,ChangeListener,ListSelectionListener
+ implements ActionListener,
+   ItemListener,
+   ChangeListener,
+   DocumentListener,
+   ListSelectionListener
 {
    public FlowFrameWizard(FlowframTk application)
    {
@@ -67,6 +73,12 @@ public class FlowFrameWizard extends JDialog
 
       cardComponents[CARD_FRAME_TYPE] = createFrameTypeComp();
       mainPanel.add(new JScrollPane(cardComponents[CARD_FRAME_TYPE]), "frametype");
+
+      cardComponents[CARD_LABEL_PAGES] = createLabelPagesComp();
+      mainPanel.add(new JScrollPane(cardComponents[CARD_LABEL_PAGES]), "labelpages");
+
+      cardComponents[CARD_FRAME_STYLE] = createFrameStyleComp();
+      mainPanel.add(new JScrollPane(cardComponents[CARD_FRAME_STYLE]), "framestyle");
 
       getContentPane().add(mainPanel, "Center");
 
@@ -144,7 +156,7 @@ public class FlowFrameWizard extends JDialog
       JComponent clsComp = new JPanel(new BorderLayout());
       clsComp.setName(resources.getMessage("flfwizard.cls.title"));
 
-      JTextArea info = resources.createAppInfoArea("flfwizard.cls.info", 40);
+      JTextArea info = resources.createAppInfoArea("flfwizard.cls.info", INFO_MAX_COLS);
       info.setOpaque(true);
       info.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -174,11 +186,12 @@ public class FlowFrameWizard extends JDialog
 
       customClsField = new JTextField(10);
       customClsField.setAlignmentX(Component.LEFT_ALIGNMENT);
+      customClsField.getDocument().addDocumentListener(this);
       row.add(customClsField);
 
       customClsField.setMaximumSize(customClsField.getPreferredSize());
 
-      clampRowMax(row);
+      clampCompMax(row);
 
       row = createRow();
       comp.add(row);
@@ -205,7 +218,7 @@ public class FlowFrameWizard extends JDialog
       useRelativeFontDeclarations.addItemListener(this);
       row.add(useRelativeFontDeclarations);
 
-      clampRowMax(row);
+      clampCompMax(row);
 
       row = createRow();
       comp.add(row);
@@ -216,7 +229,7 @@ public class FlowFrameWizard extends JDialog
       updateImageBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       row.add(updateImageBox);
 
-      clampRowMax(row);
+      clampCompMax(row);
 
       comp.add(Box.createVerticalGlue());
 
@@ -292,6 +305,288 @@ public class FlowFrameWizard extends JDialog
       return comp;
    }
 
+   public JComponent createLabelPagesComp()
+   {
+      JDRResources resources = getResources();
+      JComponent comp = Box.createVerticalBox();
+      JComponent row;
+
+      comp.setName(resources.getMessage("flfwizard.labelpages.title"));
+
+      JLabel infoLabel = resources.createAppLabel("flfwizard.labelpages.frame_label.info");
+      infoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+      comp.add(infoLabel);
+
+      row = createRow();
+      comp.add(row);
+
+      JLabel label = resources.createAppLabel("flfwizard.labelpages.frame_type");
+      row.add(label);
+      row.add(resources.createLabelSpacer());
+
+      flowText = resources.getMessage("flowframe.flow");
+      int n = flowText.length();
+      staticText = resources.getMessage("flowframe.static");
+      n = Math.max(n, staticText.length());
+      dynamicText = resources.getMessage("flowframe.dynamic");
+      n = Math.max(n, dynamicText.length());
+
+      typeField = new JTextField(n+1);
+      typeField.setEditable(false);
+      row.add(typeField);
+
+      row.add(resources.createButtonSpacer());
+
+      label = resources.createAppLabel("flfwizard.labelpages.frame_label");
+      row.add(label);
+      row.add(resources.createLabelSpacer());
+
+      labelField = new JTextField(20);
+      labelField.getDocument().addDocumentListener(this);
+      label.setLabelFor(labelField);
+
+      row.add(labelField);
+
+      clampCompMax(row);
+
+      row = createRow();
+      comp.add(row);
+
+      specialInfoLabelField = resources.createAppInfoField(
+       "flfwizard.labelpages.frame_label.special_info", "eventhumbtabindex000");
+      specialInfoLabelField.setOpaque(true);
+      row.add(specialInfoLabelField);
+
+      clampCompMax(row);
+
+      comp.add(Box.createVerticalStrut(20));
+
+      row = createRow();
+      comp.add(row);
+
+      label = resources.createAppLabel("flfwizard.labelpages.pagelist");
+      row.add(label);
+      row.add(resources.createLabelSpacer());
+
+      pagesAllText = resources.getMessage("flowframe.pages_all");
+      pagesOddText = resources.getMessage("flowframe.pages_odd");
+      pagesEvenText = resources.getMessage("flowframe.pages_even");
+      pagesNoneText = resources.getMessage("flowframe.pages_none");
+
+      pageList = new JComboBox<String>(new String[]
+       {
+          pagesAllText,
+          pagesOddText,
+          pagesEvenText,
+          pagesNoneText
+       });
+      pageList.setEditable(true);
+      pageList.addItemListener(this);
+      label.setLabelFor(pageList);
+      row.add(pageList);
+
+      clampCompMax(row);
+
+      row = createRow();
+      comp.add(row);
+
+      row.add(resources.createAppLabel("flfwizard.labelpages.pages"));
+      row.add(resources.createLabelSpacer());
+
+      ButtonGroup bg = new ButtonGroup();
+
+      relativePagesBox = createRadioButton(
+        "flfwizard.labelpages", "relative", bg, true);
+      row.add(relativePagesBox);
+
+      absolutePagesBox = createRadioButton(
+        "flfwizard.labelpages", "absolute", bg, false);
+      row.add(absolutePagesBox);
+
+      clampCompMax(row);
+
+      row = createRow();
+      comp.add(row);
+
+      JTextArea pagesInfoField = resources.createAppInfoArea(
+       "flfwizard.labelpages.pages.info", INFO_MAX_COLS);
+      pagesInfoField.setOpaque(true);
+
+      row.add(pagesInfoField);
+
+      return comp;
+   }
+
+   protected JComponent createFrameStyleComp()
+   {
+      JDRResources resources = getResources();
+      JComponent comp = Box.createVerticalBox();
+      JComponent row;
+
+      comp.setName(resources.getMessage("flfwizard.style.title"));
+
+      row = createRow();
+      comp.add(row);
+
+      JTextArea borderInfoField = resources.createAppInfoArea(INFO_MAX_COLS,
+       "flfwizard.style.border.info");
+      borderInfoField.setOpaque(true);
+
+      row.add(borderInfoField);
+      clampCompMax(row);
+
+      row = createRow();
+      comp.add(row);
+
+      useObjectAsBorder = resources.createAppCheckBox(
+        "flfwizard.style", "border", false, null);
+      useObjectAsBorder.addItemListener(this);
+
+      row.add(useObjectAsBorder);
+
+      clampCompMax(row);
+
+      comp.add(Box.createVerticalStrut(10));
+
+      styleCmdsComp = createRow();
+      comp.add(styleCmdsComp);
+
+      JLabel label = resources.createAppLabel("flfwizard.style.cmds");
+      styleCmdsComp.add(label);
+      styleCmdsComp.add(resources.createLabelSpacer());
+
+      dynamicStyleField = new JTextField("\\relax ", 30);
+      label.setLabelFor(dynamicStyleField);
+      dynamicStyleField.getDocument().addDocumentListener(this);
+      styleCmdsComp.add(dynamicStyleField);
+
+      styleCmdsComp.add(resources.createAppLabel("flfwizard.style.cmds.info"));
+
+      clampCompMax(styleCmdsComp);
+
+      comp.add(Box.createVerticalStrut(10));
+      row = createRow();
+      comp.add(row);
+
+      clearBox = resources.createAppCheckBox(
+        "flfwizard.style", "clear", false, null);
+      clearBox.addItemListener(this);
+
+      row.add(clearBox);
+
+      comp.add(Box.createVerticalStrut(10));
+
+      shapeAlignComp = createRow();
+      comp.add(shapeAlignComp);
+
+      label = resources.createAppLabel("flfwizard.style.valign");
+      shapeAlignComp.add(label);
+      shapeAlignComp.add(resources.createLabelSpacer());
+
+      valignBox = new JComboBox<String>(
+        new String[]
+         {
+           resources.getMessage("flowframe.align_top"), // FlowFrame.TOP
+           resources.getMessage("flowframe.align_middle"), // FlowFrame.CENTER
+           resources.getMessage("flowframe.align_bottom") // FlowFrame.BOTTOM
+         }
+       );
+      label.setLabelFor(valignBox);
+      valignBox.addItemListener(this);
+      shapeAlignComp.add(valignBox);
+
+      shapeAlignComp.add(resources.createButtonSpacer());
+
+      label = resources.createAppLabel("flfwizard.style.shape");
+      shapeAlignComp.add(label);
+      shapeAlignComp.add(resources.createLabelSpacer());
+
+      shapeBox = new JComboBox<String>(
+       new String[]
+        {
+           resources.getMessage("flowframe.shape_standard"), // FlowFrame.STANDARD
+           resources.getMessage("flowframe.shape_parshape"), // FlowFrame.PARSHAPE
+           resources.getMessage("flowframe.shape_shapepar") // FlowFrame.SHAPEPAR
+        });
+      label.setLabelFor(shapeBox);
+      shapeBox.addItemListener(this);
+      shapeAlignComp.add(shapeBox);
+
+      clampCompMax(shapeAlignComp);
+
+      marginParComp = createRow();
+      comp.add(marginParComp);
+
+      label = resources.createAppLabel("flfwizard.style.marginpos");
+      marginParComp.add(label);
+      marginParComp.add(resources.createLabelSpacer());
+
+      marginParBox = new JComboBox<String>(
+       new String[]
+        {
+           resources.getMessage("flowframe.marginpar.outer"), // FlowFrame.MARGIN_OUTER
+           resources.getMessage("flowframe.marginpar.inner"), // FlowFrame.MARGIN_INNER
+           resources.getMessage("flowframe.marginpar.left"), // FlowFrame.MARGIN_LEFT
+           resources.getMessage("flowframe.marginpar.right") // FlowFrame.MARGIN_RIGHT
+        });
+      label.setLabelFor(marginParBox);
+      marginParComp.add(marginParBox);
+
+      clampCompMax(marginParComp);
+
+      comp.add(Box.createVerticalStrut(10));
+      row = createRow();
+      comp.add(row);
+
+      contentInfoStaticText = resources.getMessage("flfwizard.style.content_info.static");
+      int n = contentInfoStaticText.length();
+      String text = contentInfoStaticText;
+
+      contentInfoDynamicText = resources.getMessage("flfwizard.style.content_info.dynamic");
+
+      if (contentInfoDynamicText.length() > n)
+      {
+         n = contentInfoDynamicText.length();
+         text = contentInfoDynamicText;
+      }
+
+      contentInfoFlowText = resources.getMessage("flfwizard.style.content_info.flow");
+
+      if (contentInfoFlowText.length() > n)
+      {
+         text = contentInfoFlowText;
+      }
+
+      contentInfoArea = resources.createAppInfoArea(INFO_MAX_COLS);
+      contentInfoArea.setText(text);
+      contentInfoArea.setOpaque(true);
+      row.add(contentInfoArea);
+
+      clampCompMax(row);
+
+      comp.add(Box.createVerticalStrut(10));
+      row = createRow();
+      comp.add(row);
+
+      editContentButton = resources.createJButton("flfwizard.content", "edit", this);
+
+      row.add(editContentButton);
+
+      contentsViewer = new JTextArea();
+      contentsViewer.setEditable(false);
+
+      row = createRow();
+      comp.add(row);
+
+      contentsViewerSp = new JScrollPane(contentsViewer);
+
+      row.add(contentsViewerSp);
+
+      comp.add(Box.createVerticalGlue());
+
+      return comp;
+   }
+
    protected JRadioButton createRadioButton(String parentId, String action, ButtonGroup bg,
       boolean selected)
    {
@@ -303,7 +598,7 @@ public class FlowFrameWizard extends JDialog
       return btn;
    }
 
-   protected void clampRowMax(JComponent row)
+   protected void clampCompMax(JComponent row)
    {
       Dimension dim = row.getPreferredSize();
       dim.height += 20;
@@ -345,11 +640,12 @@ public class FlowFrameWizard extends JDialog
 
    }
 
-   protected void initialiseFrameType()
+   protected void initialiseFrame()
    {
       JDRGroup objects = frame.getAllObjects();
       objectList.removeAllElements();
       selectedObject = null;
+      selectedObjectIndex = -1;
 
       hasHeader = false;
       hasEvenHeader = false;
@@ -465,12 +761,73 @@ public class FlowFrameWizard extends JDialog
       }
 
       emptyImageLabel.setVisible(objects.isEmpty());
+      dynamicStyleField.setText("");
+
+      if (selectedObject != null)
+      {
+         FlowFrame flowframe = selectedObject.getFlowFrame();
+
+         if (flowframe == null)
+         {
+            pageList.setSelectedItem(pagesAllText);
+            labelField.setText("");
+         }
+         else
+         {
+            labelField.setText(flowframe.getLabel());
+            String pages = flowframe.getPages();
+
+            if (pages.equals("all"))
+            {
+               pageList.setSelectedItem(pagesAllText);
+            }
+            else if (pages.equals("even"))
+            {
+               pageList.setSelectedItem(pagesEvenText);
+            }
+            else if (pages.equals("odd"))
+            {
+               pageList.setSelectedItem(pagesOddText);
+            }
+            else if (pages.equals("none"))
+            {
+               pageList.setSelectedItem(pagesNoneText);
+            }
+            else
+            {
+               pageList.setSelectedItem(pages);
+            }
+
+            useObjectAsBorder.setSelected(flowframe.isBorderOn());
+            clearBox.setSelected(flowframe.isClearOn());
+
+            if (flowframe.hasStyleCommands())
+            {
+               dynamicStyleField.setText(flowframe.getStyleCommands());
+            }
+            else
+            {
+               dynamicStyleField.setText("");
+            }
+
+            valignBox.setSelectedIndex(flowframe.getVAlign());
+            shapeBox.setSelectedIndex(flowframe.getShape());
+            marginParBox.setSelectedIndex(flowframe.getMarginPosition());
+
+            String contents = flowframe.getContents();
+
+            contentsViewer.setText(contents == null ? "" : contents);
+         }
+      }
 
       updateFrameTypeComp();
    }
 
    protected void updateFrameTypeComp()
    {
+      currentFrameType = -1;
+      typeField.setText("");
+
       if (selectedObject == null)
       {
          selectedObjectLabel.setText(selectedObjectNotSetText);
@@ -486,6 +843,7 @@ public class FlowFrameWizard extends JDialog
          staticBox.setEnabled(false);
          dynamicBox.setEnabled(false);
          flowBox.setEnabled(false);
+         pageList.setSelectedItem(pagesAllText);
       }
       else
       {
@@ -500,6 +858,7 @@ public class FlowFrameWizard extends JDialog
          }
          else
          {
+            currentFrameType = flowframe.getType();
             selectedObjectLabel.setText(selectedObjectSetText);
          }
 
@@ -508,24 +867,22 @@ public class FlowFrameWizard extends JDialog
          footerBox.setEnabled(!hasFooter && enableSpecial);
          evenFooterBox.setEnabled(!hasEvenFooter && enableSpecial);
 
-         if (!headerBox.isEnabled() && headerBox.isSelected())
+         if (
+              (!headerBox.isEnabled() && headerBox.isSelected())
+           || (!evenHeaderBox.isEnabled() && evenHeaderBox.isSelected())
+           || (!footerBox.isEnabled() && footerBox.isSelected())
+           || (!evenFooterBox.isEnabled() && evenFooterBox.isSelected())
+            )
          {
-            flowBox.setSelected(true);
-         }
-
-         if (!evenHeaderBox.isEnabled() && evenHeaderBox.isSelected())
-         {
-            flowBox.setSelected(true);
-         }
-
-         if (!footerBox.isEnabled() && footerBox.isSelected())
-         {
-            flowBox.setSelected(true);
-         }
-
-         if (!evenFooterBox.isEnabled() && evenFooterBox.isSelected())
-         {
-            flowBox.setSelected(true);
+            switch (currentFrameType)
+            {
+               case FlowFrame.STATIC:
+                 staticBox.setSelected(true);
+               case FlowFrame.DYNAMIC:
+                 dynamicBox.setSelected(true);
+               default:
+                 flowBox.setSelected(true);
+            }
          }
 
          thumbtabBox.setEnabled(enableSpecial);
@@ -536,6 +893,7 @@ public class FlowFrameWizard extends JDialog
          staticBox.setEnabled(true);
          dynamicBox.setEnabled(true);
          flowBox.setEnabled(true);
+
       }
    }
 
@@ -547,7 +905,7 @@ public class FlowFrameWizard extends JDialog
       currentTypeblock = frame.getTypeblock();
       typeblockPanel.updateComponent(currentTypeblock, frame.getUnit());
 
-      initialiseFrameType();
+      initialiseFrame();
 
       if (currentTypeblock == null)
       {
@@ -560,6 +918,17 @@ public class FlowFrameWizard extends JDialog
          cardLayout.show(mainPanel, "frametype");
       }
 
+      CanvasGraphics cg = frame.getCanvasGraphics();
+
+      if (cg.useAbsolutePages())
+      {
+         absolutePagesBox.setSelected(true);
+      }
+      else
+      {
+         relativePagesBox.setSelected(true);
+      }
+
       updateCardButtons();
 
       clsModified = false;
@@ -568,7 +937,7 @@ public class FlowFrameWizard extends JDialog
       setVisible(true);
    }
 
-   public void okay()
+   protected void applyClsTypeblock()
    {
       if (clsModified)
       {
@@ -591,11 +960,127 @@ public class FlowFrameWizard extends JDialog
 
          frame.getCanvas().setDocClass(
            useDefaultCls.isSelected() ? null : customClsField.getText());
+
+         clsModified = false;
       }
 
       if (typeblockModified)
       {
          typeblockPanel.apply(frame);
+         typeblockModified = false;
+         currentTypeblock = frame.getTypeblock();
+      }
+   }
+
+   protected void applyFlowFrame() throws InvalidFormatException
+   {
+      CanvasGraphics cg = frame.getCanvasGraphics();
+      JDRResources resources = getResources();
+
+      if (cg.useAbsolutePages())
+      {
+         if (relativePagesBox.isSelected())
+         {
+            frame.getCanvas().setUseAbsolutePages(false);
+         }
+      }
+      else
+      {
+         if (absolutePagesBox.isSelected())
+         {
+            frame.getCanvas().setUseAbsolutePages(true);
+         }
+      }
+
+      if (frameModified)
+      {
+         String label = labelField.getText().trim();
+
+         // check label supplied
+         if (label.isEmpty())
+         {
+            throw new InvalidValueException("frame-idl", label, cg);
+         }
+
+         // check unique label
+         if (!frame.isUniqueLabel(currentFrameType,selectedObject,label))
+         {
+            throw new InvalidFormatException(resources.getMessage("error.idl_exists"));
+         }
+
+         String pages = getPageList();
+
+         // check page list is valid
+         if (!FlowFrame.isValidPageList(pages))
+         {
+            throw new InvalidValueException("frame-page-list", pages, cg);
+         }
+
+         boolean hasBorder = useObjectAsBorder.isSelected();
+
+         FlowFrame flowframe = new FlowFrame(cg, currentFrameType,
+           hasBorder, label, pages);
+
+         if (currentFrameType == FlowFrame.DYNAMIC
+          || currentFrameType == FlowFrame.STATIC)
+         {
+            flowframe.setClear(clearBox.isSelected());
+            flowframe.setVAlign(valignBox.getSelectedIndex());
+
+            flowframe.setShape(shapeBox.getSelectedIndex());
+
+            if (currentFrameType == FlowFrame.DYNAMIC)
+            {
+               flowframe.setStyleCommands(dynamicStyleField.getText().trim());
+            }
+
+            flowframe.setContents(contentsViewer.getText());
+         }
+         else
+         {
+            flowframe.setMarginPosition(marginParBox.getSelectedIndex());
+         }
+
+         frame.setFlowFrame(selectedObject, flowframe);
+      }
+   }
+
+   protected String getPageList()
+   {
+      String pages = (String)pageList.getSelectedItem();
+
+      if (pages.equals(pagesAllText))
+      {
+         pages = "all";
+      }
+      else if (pages.equals(pagesOddText))
+      {
+         pages = "odd";
+      }
+      else if (pages.equals(pagesEvenText))
+      {
+         pages = "even";
+      }
+      else if (pages.equals(pagesNoneText))
+      {
+         pages = "none";
+      }
+
+      return pages;
+   }
+
+   public void okay()
+   {
+      applyClsTypeblock();
+
+      try
+      {
+         applyFlowFrame();
+      }
+      catch (Throwable e)
+      {
+         getResources().error(this, e.getMessage());
+         return;
       }
 
       setVisible(false);
@@ -603,7 +1088,7 @@ public class FlowFrameWizard extends JDialog
 
    public void cancel()
    {
-      if ((clsModified || typeblockModified)
+      if ((clsModified || typeblockModified || frameModified)
           && getResources().confirm(this, 
               getResources().getMessage("flfwizard.confirm_cancel")) != JOptionPane.YES_OPTION)
       {
@@ -628,6 +1113,17 @@ public class FlowFrameWizard extends JDialog
       {
          cancel();
       }
+      else if (action.equals("edit"))
+      {
+         String contents = application.displayTeXEditorDialog(
+           contentsViewer.getText());
+
+         if (contents != null)
+         {
+            contentsViewer.setText(contents);
+            frameModified = true;
+         }
+      }
       else if (action.equals("previous"))
       {
          if (currentCard > 0)
@@ -641,18 +1137,200 @@ public class FlowFrameWizard extends JDialog
       {
          if (currentCard < MAX_CARDS - 1)
          {
+            if (!canMoveNext())
+            {
+               return;
+            }
+
             cardLayout.next(mainPanel);
             currentCard++;
 
-            if (currentCard == CARD_FRAME_TYPE && !typeblockModified && currentTypeblock == null)
+            if (currentCard == CARD_FRAME_TYPE)
             {
-               typeblockModified = true;
-               okayButton.setEnabled(true);
+               if (currentTypeblock == null)
+               {
+                  typeblockModified = true;
+               }
+
+               applyClsTypeblock();
             }
 
             updateCardButtons();
          }
       }
+   }
+
+   public boolean canMoveNext()
+   {
+      if (currentCard == CARD_FRAME_TYPE)
+      {
+         updateLabelType();
+      }
+      else if (currentCard == CARD_LABEL_PAGES)
+      {
+         JDRResources resources = getResources();
+
+         String label = labelField.getText().trim();
+
+         if (label.isEmpty())
+         {
+            resources.error(this,
+              resources.getMessage("error.no_idl"));
+            labelField.requestFocusInWindow();
+            return false;
+         }
+
+         // check unique label
+         if (!frame.isUniqueLabel(selectedObjectIndex,selectedObject,label))
+         {
+            resources.error(this,
+               resources.getMessage("error.idl_exists"));
+            return false;
+         }
+
+         String pages = getPageList();
+
+         // check page list is valid
+         if (!FlowFrame.isValidPageList(pages))
+         {
+            resources.error(this,
+               resources.getMessage("error.invalid_frame-page-list"));
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   protected void updateLabelType()
+   {
+      FlowFrame flowframe = selectedObject.getFlowFrame();
+      String currentLabel = "";
+
+      if (flowframe != null)
+      {
+         currentLabel = flowframe.getLabel();
+      }
+
+      if (flowBox.isSelected())
+      {
+         currentFrameType = FlowFrame.FLOW;
+         typeField.setText(flowText);
+         updateSpecialLabelInfo("");
+      }
+      else if (staticBox.isSelected())
+      {
+         currentFrameType = FlowFrame.STATIC;
+         typeField.setText(staticText);
+         updateSpecialLabelInfo("");
+      }
+      else
+      {
+         currentFrameType = FlowFrame.DYNAMIC;
+         typeField.setText(dynamicText);
+
+         if (headerBox.isSelected())
+         {
+            currentLabel = "header";
+         }
+         else if (evenHeaderBox.isSelected())
+         {
+            currentLabel = "evenheader";
+            pageList.setSelectedItem(pagesEvenText);
+         }
+         else if (footerBox.isSelected())
+         {
+            currentLabel = "footer";
+         }
+         else if (evenFooterBox.isSelected())
+         {
+            currentLabel = "evenfooter";
+            pageList.setSelectedItem(pagesEvenText);
+         }
+         else if (thumbtabBox.isSelected())
+         {
+            if (!currentLabel.startsWith("thumbtab"))
+            {
+               currentLabel = "thumbtab"+maxThumbtab;
+            }
+         }
+         else if (thumbtabIndexBox.isSelected())
+         {
+            if (!currentLabel.startsWith("thumbtabindex"))
+            {
+               currentLabel = "thumbtabindex"+maxThumbtabIndex;
+            }
+         }
+         else if (evenThumbtabBox.isSelected())
+         {
+            if (!currentLabel.startsWith("eventhumbtab"))
+            {
+               currentLabel = "eventhumbtab"+maxEvenThumbtab;
+            }
+
+            pageList.setSelectedItem(pagesEvenText);
+         }
+         else if (evenThumbtabIndexBox.isSelected())
+         {
+            if (!currentLabel.startsWith("eventhumbtabindex"))
+            {
+               currentLabel = "eventhumbtabindex"+maxEvenThumbtab;
+            }
+
+            pageList.setSelectedItem(pagesEvenText);
+         }
+
+         updateSpecialLabelInfo(currentLabel);
+      }
+
+      labelField.setText(currentLabel);
+
+      if (currentFrameType == FlowFrame.STATIC || currentFrameType == FlowFrame.DYNAMIC)
+      {
+         clearBox.setVisible(true);
+         shapeAlignComp.setVisible(true);
+         marginParComp.setVisible(false);
+
+         if (selectedObject instanceof JDRShape)
+         {
+            shapeBox.setEnabled(true);
+         }
+         else
+         {
+            shapeBox.setSelectedIndex(FlowFrame.STANDARD);
+            shapeBox.setEnabled(false);
+         }
+
+         if (currentFrameType == FlowFrame.STATIC)
+         {
+            styleCmdsComp.setVisible(false);
+            contentInfoArea.setText(contentInfoStaticText);
+
+            setEditContentVisible(true);
+         }
+         else
+         {
+            styleCmdsComp.setVisible(true);
+            contentInfoArea.setText(contentInfoDynamicText);
+
+            setEditContentVisible(!isSpecial);
+         }
+      }
+      else
+      {
+         clearBox.setVisible(false);
+         styleCmdsComp.setVisible(false);
+         shapeAlignComp.setVisible(false);
+         marginParComp.setVisible(true);
+         contentInfoArea.setText(contentInfoFlowText);
+         setEditContentVisible(false);
+      }
+   }
+
+   protected void setEditContentVisible(boolean isVisible)
+   {
+      contentsViewerSp.setVisible(isVisible);
+      editContentButton.setVisible(isVisible);
    }
 
    protected void updateCardButtons()
@@ -668,6 +1346,11 @@ public class FlowFrameWizard extends JDialog
       else
       {
          prevButton.setVisible(false);
+      }
+
+      if (currentCard == CARD_LABEL_PAGES)
+      {
+         labelField.requestFocusInWindow();
       }
 
       if (currentCard < MAX_CARDS - 1)
@@ -718,11 +1401,85 @@ public class FlowFrameWizard extends JDialog
             typeblockModified = true;
          break;
          case CARD_FRAME_TYPE:
-            frametypeModified = true;
+            nextButton.setEnabled(selectedObject != null);
+         break;
+         case CARD_FRAME_STYLE:
+            frameModified = true;
+         break;
+         case CARD_LABEL_PAGES:
+            frameModified = true;
+
+            if (src == labelField.getDocument())
+            {
+               if (currentFrameType == FlowFrame.DYNAMIC)
+               {
+                  String label = labelField.getText();
+
+                  if (label.equals("footer")
+                      || label.equals("evenfooter")
+                      || label.equals("header")
+                      || label.equals("evenheader")
+                     )
+                  {
+                     updateSpecialLabelInfo(label);
+                  }
+                  else if (label.startsWith("thumbtab") || label.startsWith("eventhumbtab"))
+                  {
+                     int idx = 8;
+
+                     if (label.charAt(0) == 'e')
+                     {
+                        idx += 4;
+                     }
+
+                     if (label.substring(8).startsWith("index"))
+                     {
+                        idx += 5;
+                     }
+
+                     try
+                     {
+                        Integer.parseInt(label.substring(idx));
+                        updateSpecialLabelInfo(label);
+                     }
+                     catch (NumberFormatException e)
+                     {
+                        updateSpecialLabelInfo("");
+                     }
+                  }
+                  else
+                  {
+                     updateSpecialLabelInfo("");
+                  }
+               }
+               else
+               {
+                  updateSpecialLabelInfo("");
+               }
+            }
+
          break;
       }
 
-      okayButton.setEnabled(true);
+      okayButton.setEnabled(clsModified || typeblockModified || frameModified);
+   }
+
+   protected void updateSpecialLabelInfo(String label)
+   {
+      if (label.isEmpty())
+      {
+         specialInfoLabelField.setVisible(false);
+         isSpecial = false;
+      }
+      else
+      {
+         specialInfoLabelField.setText(
+           getResources().getMessage(
+           "flfwizard.labelpages.frame_label.special_info", label));
+
+         specialInfoLabelField.setVisible(true);
+         isSpecial = true;
+      }
    }
 
    @Override
@@ -731,8 +1488,28 @@ public class FlowFrameWizard extends JDialog
       if (evt.getSource() == objectList && !evt.getValueIsAdjusting())
       {
          selectedObject = objectList.getSelectedObject();
+         selectedObjectIndex = objectList.getSelectedIndex();
          updateFrameTypeComp();
+         settingChanged(evt.getSource());
       }
+   }
+
+   @Override
+   public void changedUpdate(DocumentEvent evt)
+   {
+      settingChanged(evt.getDocument());
+   }
+
+   @Override
+   public void insertUpdate(DocumentEvent evt)
+   {
+      settingChanged(evt.getDocument());
+   }
+
+   @Override
+   public void removeUpdate(DocumentEvent evt)
+   {
+      settingChanged(evt.getDocument());
    }
 
    public JDRResources getResources()
@@ -769,11 +1546,12 @@ public class FlowFrameWizard extends JDialog
          Integer.valueOf(8)
       };
 
-   boolean clsModified, typeblockModified, frametypeModified;
+   boolean clsModified, typeblockModified, frameModified;
 
    TypeblockPanel typeblockPanel;
    JDRCompleteObjectJList objectList;
    JDRCompleteObject selectedObject;
+   int selectedObjectIndex = -1;
    JLabel emptyImageLabel, selectedObjectLabel;
    String selectedObjectSetText, selectedObjectNotSetText;
    boolean hasHeader, hasEvenHeader, hasFooter, hasEvenFooter;
@@ -783,12 +1561,39 @@ public class FlowFrameWizard extends JDialog
      evenThumbtabBox, thumbtabIndexBox,
      evenThumbtabIndexBox, staticBox, dynamicBox, flowBox;
 
+   int currentFrameType = -1;
+   JTextField typeField, labelField;
+   String flowText, staticText, dynamicText;
+   JTextField specialInfoLabelField;
+   boolean isSpecial = false;
+
+   JRadioButton relativePagesBox, absolutePagesBox;
+
+   JComboBox<String> pageList;
+   String pagesAllText, pagesOddText, pagesEvenText, pagesNoneText;
+
+   JCheckBox useObjectAsBorder, clearBox;
+   JTextField dynamicStyleField;
+   JComboBox<String> valignBox, shapeBox, marginParBox;
+
+   JComponent styleCmdsComp, shapeAlignComp, marginParComp;
+   JTextArea contentInfoArea;
+   String contentInfoStaticText, contentInfoDynamicText, contentInfoFlowText;
+
+   JTextArea contentsViewer;
+   JScrollPane contentsViewerSp;
+   JButton editContentButton;
+
+   public static final int INFO_MAX_COLS=60;
+
    int currentCard;
    public static final int CARD_CLS=0;
    public static final int CARD_TYPEBLOCK=1;
    public static final int CARD_FRAME_TYPE=2;
+   public static final int CARD_LABEL_PAGES=3;
+   public static final int CARD_FRAME_STYLE=4;
 
-   public static final int MAX_CARDS = CARD_FRAME_TYPE + 1;
+   public static final int MAX_CARDS = CARD_FRAME_STYLE + 1;
 
    JComponent[] cardComponents;
    private String mainTitle;
