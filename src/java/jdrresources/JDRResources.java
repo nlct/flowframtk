@@ -822,10 +822,17 @@ public class JDRResources
 
       if (flowframe == null)
       {
-         String tag = object.getClass().getSimpleName();
+         String name = object.getClass().getSimpleName();
 
-         description = getMessage("findbydescription."+tag,
+         description = getMessage("findbydescription."+name,
                   object.getDescriptionInfo());
+
+         String tag = object.getTag();
+
+         if (tag != null && !tag.isEmpty())
+         {
+            description += " [" + tag + "]";
+         }
       }
       else
       {
