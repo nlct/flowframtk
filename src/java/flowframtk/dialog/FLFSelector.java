@@ -31,7 +31,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.border.*;
 
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
 
@@ -55,174 +55,216 @@ public class FLFSelector extends JDialog
          application.getResources().getMessage("flowframe.title"),true);
       application_ = application;
 
+      JDRResources resources = getResources();
 
-      JPanel p1 = new JPanel();
+      JComponent mainPanel = Box.createVerticalBox();
+      getContentPane().add(new JScrollPane(mainPanel), "Center");
 
-      p1.setLayout(new GridBagLayout());
+      JLabelGroup labelGroup1 = new JLabelGroup();
+      JLabelGroup labelGroup2 = new JLabelGroup();
 
-      GridBagConstraints gbc = new GridBagConstraints();
+      JComponent row;
 
-      gbc.weightx    = 100;
-      gbc.weighty    = 100;
-      gbc.gridwidth  = 1;
-      gbc.gridheight = 1;
-      gbc.gridx      = 0;
-      gbc.gridy      = 0;
-      gbc.insets = new Insets(2, 2, 2, 2);
-      gbc.anchor = GridBagConstraints.WEST;
-      gbc.fill   = GridBagConstraints.HORIZONTAL;
+      row = createRow();
+      mainPanel.add(row);
 
-      JLabel typeLabel = getResources().createAppLabel("flowframe.type");
-      p1.add(typeLabel, gbc);
+      JLabel typeLabel = resources.createAppLabel("flowframe.type");
+      labelGroup1.add(typeLabel);
+      row.add(typeLabel);
 
-      gbc.gridx      = 1;
+      row.add(resources.createLabelSpacer());
+
       type = new JComboBox<String>(
          new String[]
          {
-            getResources().getMessage("flowframe.static"),
-            getResources().getMessage("flowframe.flow"),
-            getResources().getMessage("flowframe.dynamic"),
-            getResources().getMessage("flowframe.none")
+            resources.getMessage("flowframe.static"),
+            resources.getMessage("flowframe.flow"),
+            resources.getMessage("flowframe.dynamic"),
+            resources.getMessage("flowframe.none")
          }
       );
       type.addItemListener(this);
       typeLabel.setLabelFor(type);
-      p1.add(type, gbc);
+      row.add(type);
 
-      gbc.gridx      = 2;
-      labelLabel = getResources().createAppLabel("flowframe.label");
-      p1.add(labelLabel, gbc);
+      row.add(resources.createButtonSpacer());
 
-      gbc.gridx      = 3;
-      labelText = new JTextField(8);
+      labelLabel = resources.createAppLabel("flowframe.label");
+      labelGroup2.add(labelLabel);
+      row.add(labelLabel);
+
+      row.add(resources.createLabelSpacer());
+
+      labelText = new JTextField(20);
       labelLabel.setLabelFor(labelText);
-      p1.add(labelText, gbc);
+      row.add(labelText);
 
-      gbc.gridx      = 0;
-      gbc.gridy      ++;
+      clampCompMaxHeight(row);
+
+      row = createRow();
+      mainPanel.add(row);
+
       borderLabel = getResources().createAppLabel("flowframe.border");
-      p1.add(borderLabel, gbc);
+      row.add(borderLabel);
+      labelGroup1.add(borderLabel);
 
-      gbc.gridx      = 1;
+      row.add(resources.createLabelSpacer());
+
       border = new JComboBox<String>(
          new String[]
          {
-             getResources().getMessage("flowframe.border_none"),
-             getResources().getMessage("flowframe.border_as_shown")
+             resources.getMessage("flowframe.border_none"),
+             resources.getMessage("flowframe.border_as_shown")
          }
       );
       border.setSelectedItem(
-         getResources().getMessage("flowframe.border_as_shown"));
+         resources.getMessage("flowframe.border_as_shown"));
       borderLabel.setLabelFor(border);
-      p1.add(border, gbc);
+      row.add(border);
 
-      gbc.gridx = 2;
-      pagesLabel = getResources().createAppLabel("flowframe.pages");
-      p1.add(pagesLabel, gbc);
+      row.add(resources.createButtonSpacer());
 
-      gbc.gridx = 3;
+      pagesLabel = resources.createAppLabel("flowframe.pages");
+      row.add(pagesLabel);
+      labelGroup2.add(pagesLabel);
+
+      row.add(resources.createLabelSpacer());
+
       pageList = new JComboBox<String>(
          new String[]
          {
-            getResources().getMessage("flowframe.pages_all"),
-            getResources().getMessage("flowframe.pages_none"),
-            getResources().getMessage("flowframe.pages_odd"),
-            getResources().getMessage("flowframe.pages_even")
+            resources.getMessage("flowframe.pages_all"),
+            resources.getMessage("flowframe.pages_none"),
+            resources.getMessage("flowframe.pages_odd"),
+            resources.getMessage("flowframe.pages_even")
          }
       );
       pageList.setEditable(true);
+      pageList.setPrototypeDisplayValue("<0,0,0,0-0,>0");
       pagesLabel.setLabelFor(pageList);
-      p1.add(pageList, gbc);
+      row.add(pageList);
+      row.add(Box.createHorizontalGlue());
 
-      gbc.gridy++;
-      gbc.gridx=0;
-      gbc.gridwidth=1;
-      gbc.gridheight=1;
+      clampCompMaxHeight(row);
+
+      row = createRow();
+      mainPanel.add(row);
 
       shapeLabel = getResources().createAppLabel("flowframe.shape");
-      p1.add(shapeLabel, gbc);
+      row.add(shapeLabel);
+      labelGroup1.add(shapeLabel);
 
-      gbc.gridx++;
+      row.add(resources.createLabelSpacer());
 
       shapeBox = new JComboBox<String>(
          new String[]
          {
-            getResources().getMessage("flowframe.shape_standard"),
-            getResources().getMessage("flowframe.shape_parshape"),
-            getResources().getMessage("flowframe.shape_shapepar")
+            resources.getMessage("flowframe.shape_standard"),
+            resources.getMessage("flowframe.shape_parshape"),
+            resources.getMessage("flowframe.shape_shapepar")
           }
       );
       shapeBox.addItemListener(this);
       shapeLabel.setLabelFor(shapeBox);
-      p1.add(shapeBox, gbc);
+      row.add(shapeBox);
 
-      gbc.gridx++;
+      row.add(resources.createButtonSpacer());
 
       alignLabel = getResources().createAppLabel("flowframe.align");
-      p1.add(alignLabel, gbc);
+      row.add(alignLabel);
+      labelGroup2.add(alignLabel);
 
-      gbc.gridx++;
+      row.add(resources.createLabelSpacer());
 
       alignBox = new JComboBox<String>(
          new String[]
          {
-            getResources().getMessage("flowframe.align_top"),
-            getResources().getMessage("flowframe.align_middle"),
-            getResources().getMessage("flowframe.align_bottom")
+            resources.getMessage("flowframe.align_top"),
+            resources.getMessage("flowframe.align_middle"),
+            resources.getMessage("flowframe.align_bottom")
           }
       );
       alignLabel.setLabelFor(alignBox);
-      p1.add(alignBox, gbc);
+      row.add(alignBox);
+      row.add(Box.createHorizontalGlue());
 
-      gbc.gridy++;
-      gbc.gridx = 0;
-      gbc.gridwidth  = 4;
-      margins = new MarginPanel(getResources());
-      p1.add(margins, gbc);
+      clampCompMaxHeight(row);
 
-      gbc.gridy++;
-      p1.add(getResources().createAppInfoArea("flowframe.twoside_note"), gbc);
+      JLabelGroup.setSameMinPrefMaxWidth(type, border, shapeBox);
 
-      gbc.gridy++;
-      Box evenXShiftBox = Box.createHorizontalBox();
-      p1.add(evenXShiftBox, gbc);
+      mainPanel.add(Box.createVerticalStrut(10));
+
+      row = createRow();
+      mainPanel.add(row);
+
+      styleCmdsLabel = resources.createAppLabel("flowframe.style_cmds");
+      row.add(styleCmdsLabel);
+
+      row.add(resources.createLabelSpacer());
+
+      styleCmdsField = new JTextField(20);
+      styleCmdsLabel.setLabelFor(styleCmdsField);
+      row.add(styleCmdsField);
+
+      clampCompMaxHeight(row);
+
+      margins = new MarginPanel(resources,
+       resources.getMessage("flowframe.frame_margins"), true);
+      margins.setAlignmentX(Component.LEFT_ALIGNMENT);
+      mainPanel.add(margins);
+
+      JTextField infoArea = resources.createAppInfoField("flowframe.twoside_note");
+      infoArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+      mainPanel.add(infoArea);
+
+      clampCompMaxHeight(infoArea);
+
+      JComponent evenXShiftBox = createRow();
+      mainPanel.add(evenXShiftBox);
 
       evenXShiftLabel = 
-         getResources().createAppLabel("flowframe.even_x_shift");
+         resources.createAppLabel("flowframe.even_x_shift");
       evenXShiftBox.add(evenXShiftLabel);
 
-      evenXShiftLength = getResources().createLengthPanel();
+      evenXShiftBox.add(resources.createLabelSpacer());
+
+      evenXShiftLength = resources.createLengthPanel();
       evenXShiftLabel.setLabelFor(evenXShiftLength);
       evenXShiftBox.add(evenXShiftLength);
 
-      computeSymXShiftButton = getResources().createAppJButton(
+      evenXShiftBox.add(Box.createHorizontalGlue());
+
+      clampCompMaxHeight(evenXShiftBox);
+
+      row = createRow();
+      mainPanel.add(row);
+
+      computeSymXShiftButton = resources.createAppJButton(
         "flowframe", "compute_sym_x_shift", this);
 
-      gbc.fill = GridBagConstraints.NONE;
-      gbc.gridy++;
-      gbc.anchor = GridBagConstraints.EAST;
-      p1.add(computeSymXShiftButton, gbc);
+      row.add(computeSymXShiftButton);
 
-      gbc.gridy++;
-      gbc.anchor = GridBagConstraints.WEST;
-      gbc.fill = GridBagConstraints.HORIZONTAL;
-      Box evenYShiftBox = Box.createHorizontalBox();
-      p1.add(evenYShiftBox, gbc);
+      clampCompMaxHeight(evenXShiftBox);
+
+      JComponent evenYShiftBox = createRow();
+      mainPanel.add(evenYShiftBox);
 
       evenYShiftLabel = 
-         getResources().createAppLabel("flowframe.even_y_shift");
+         resources.createAppLabel("flowframe.even_y_shift");
       evenYShiftBox.add(evenYShiftLabel);
 
-      evenYShiftLength = getResources().createLengthPanel();
+      evenYShiftBox.add(resources.createLabelSpacer());
+
+      evenYShiftLength = resources.createLengthPanel();
       evenYShiftLabel.setLabelFor(evenYShiftLength);
       evenYShiftBox.add(evenYShiftLength);
 
-      JComponent contentsPane = new JPanel(new BorderLayout());
-      gbc.gridy++;
-      gbc.anchor = GridBagConstraints.CENTER;
-      gbc.fill = GridBagConstraints.BOTH;
+      evenYShiftBox.add(Box.createHorizontalGlue());
 
-      p1.add(contentsPane, gbc);
+      JComponent contentsPane = new JPanel(new BorderLayout());
+      contentsPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      mainPanel.add(contentsPane);
 
       contentsLabel = getResources().createAppLabel("flowframe.contents");
 
@@ -240,34 +282,43 @@ public class FLFSelector extends JDialog
 
       contentsPane.add(contentsSp, "Center");
 
-      Box buttonBox = Box.createVerticalBox();
+      JComponent buttonBox = Box.createVerticalBox();
       contentsPane.add(buttonBox, "East");
 
-      editContentsButton = getResources().createAppJButton(
+      editContentsButton = resources.createAppJButton(
         "flowframe", "edit", this);
       buttonBox.add(editContentsButton);
 
-      getContentPane().add(p1, "Center");
+      clearBox = resources.createAppCheckBox("flowframe", "clear", false, null);
+      buttonBox.add(clearBox);
+
+      mainPanel.add(Box.createVerticalGlue());
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p2.add(getResources().createHelpDialogButton(this, "sec:framedef"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p2, this, "sec:framedef");
 
       getContentPane().add(p2, "South");
 
       pack();
       setLocationRelativeTo(application_);
    }
+
+   protected JComponent createRow()
+   {
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+   
+      return row;
+   }
+
+   protected void clampCompMaxHeight(JComponent row)
+   {
+      Dimension dim = row.getPreferredSize();
+      dim.width = (int)row.getMaximumSize().getWidth();
+      dim.height += 20;
+      row.setMaximumSize(dim);
+   }  
 
    public void display()
    {
@@ -378,6 +429,13 @@ public class FLFSelector extends JDialog
             flowframe.setVAlign(alignBox.getSelectedIndex());
 
             flowframe.setContents(contentsViewer.getText());
+
+            flowframe.setClear(clearBox.isSelected());
+
+            if (idx == FlowFrame.DYNAMIC)
+            {
+               flowframe.setStyleCommands(styleCmdsField.getText());
+            }
          }
          else
          {
@@ -460,7 +518,11 @@ public class FLFSelector extends JDialog
 
             alignLabel.setEnabled(isStaticOrDynamic);
             alignBox.setEnabled(isStaticOrDynamic);
+            clearBox.setEnabled(isStaticOrDynamic);
             enableContents(isStaticOrDynamic);
+
+            styleCmdsLabel.setEnabled(idx == DYNAMIC);
+            styleCmdsField.setEnabled(styleCmdsLabel.isEnabled());
 
             if (idx == NONE)
             {
@@ -523,6 +585,8 @@ public class FLFSelector extends JDialog
          margins.setMargins(unit, 0.0, 0.0, 0.0, 0.0);
          contentsViewer.setText("");
          shapeBox.setSelectedIndex(FlowFrame.STANDARD);
+         clearBox.setSelected(false);
+         styleCmdsField.setText("");
       }
       else
       {
@@ -568,6 +632,21 @@ public class FLFSelector extends JDialog
 
          shapeBox.setSelectedIndex(flowframe.getShape());
          alignBox.setSelectedIndex(flowframe.getVAlign());
+         clearBox.setSelected(flowframe.isClearOn());
+
+         if (idx == DYNAMIC)
+         {
+            styleCmdsLabel.setEnabled(true);
+            styleCmdsField.setEnabled(true);
+            String cmds = flowframe.getStyleCommands();
+            styleCmdsField.setText(cmds == null ? "" : cmds);
+         }
+         else
+         {
+            styleCmdsField.setEnabled(false);
+            styleCmdsLabel.setEnabled(false);
+            styleCmdsField.setText("");
+         }
 
          boolean isStaticOrDynamic = 
            (idx == STATIC || idx == DYNAMIC);
@@ -580,6 +659,7 @@ public class FLFSelector extends JDialog
 
          alignLabel.setEnabled(isStaticOrDynamic);
          alignBox.setEnabled(isStaticOrDynamic);
+         clearBox.setEnabled(isStaticOrDynamic);
          enableContents(isStaticOrDynamic);
 
          String contents = flowframe.getContents();
@@ -642,6 +722,10 @@ public class FLFSelector extends JDialog
    private JButton editContentsButton;
    private JTextArea contentsViewer;
    private JLabel contentsLabel;
+
+   private JCheckBox clearBox;
+   private JLabel styleCmdsLabel;
+   private JTextField styleCmdsField;
 
    private JDRFrame mainPanel;
 }

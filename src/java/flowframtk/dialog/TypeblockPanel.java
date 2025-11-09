@@ -60,7 +60,8 @@ public class TypeblockPanel extends JPanel
 
       add(settingsPanel);
 
-      margins = new MarginPanel(resources);
+      margins = new MarginPanel(resources,
+         resources.getMessage("flowframe.typeblock_margins"), false);
       margins.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(margins);
 

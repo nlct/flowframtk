@@ -29,6 +29,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
@@ -43,78 +45,98 @@ public class MarginPanel extends JPanel
 {
    public MarginPanel(JDRResources resources)
    {
-      super();
+      this(resources, resources.getMessage("flowframe.margins"), false);
+   }
 
-      setLayout(new GridBagLayout());
-      GridBagConstraints gbc = new GridBagConstraints();
+   public MarginPanel(JDRResources resources, String labelText, boolean addNoneBox)
+   {
+      super(new BorderLayout());
 
-      gbc.gridwidth  = 1;
-      gbc.gridheight = 1;
-      gbc.gridx      = 0;
-      gbc.gridy      = 0;
-      gbc.weightx    = 100;
-      gbc.weighty    = 100;
-      gbc.anchor     = GridBagConstraints.EAST;
-      gbc.fill       = GridBagConstraints.HORIZONTAL;
+      JComponent topPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
-      label = resources.createAppLabel("flowframe.margins");
-      add(label, gbc);
+      add(topPanel, "North");
 
-      gbc.gridx++;
-      gbc.gridy++;
+      lengthComp = Box.createVerticalBox();
+      add(lengthComp, "Center");
+
+      label = new JLabel(labelText);
+
+      topPanel.add(label);
+
+      if (addNoneBox)
+      {
+         topPanel.add(resources.createButtonSpacer());
+
+         noneBox = resources.createAppCheckBox("flowframe.margins", "none", false, null);
+         noneBox.addChangeListener(new ChangeListener()
+          {
+             @Override
+             public void stateChanged(ChangeEvent evt)
+             {
+                lengthComp.setVisible(!noneBox.isSelected());
+             }
+          });
+
+         topPanel.add(noneBox);
+      }
+
+      JLabelGroup labelGroup = new JLabelGroup();
+
+      JComponent row = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      lengthComp.add(row);
 
       leftLabel = resources.createAppLabel("flowframe.margins.left");
+      labelGroup.add(leftLabel);
 
-      add(leftLabel, gbc);
-
-      gbc.gridx++;
+      row.add(leftLabel);
+      row.add(resources.createLabelSpacer());
 
       leftText = resources.createNonNegativeLengthPanel();
       leftLabel.setLabelFor(leftText);
       adjustField(leftText);
 
-      add(leftText, gbc);
+      row.add(leftText);
 
-      gbc.gridx++;
+      row.add(resources.createButtonSpacer());
 
       rightLabel = resources.createAppLabel("flowframe.margins.right");
+      labelGroup.add(rightLabel);
 
-      add(rightLabel, gbc);
-
-      gbc.gridx++;
+      row.add(rightLabel);
+      row.add(resources.createLabelSpacer());
 
       rightText = resources.createNonNegativeLengthPanel();
       rightLabel.setLabelFor(rightText);
       adjustField(rightText);
 
-      add(rightText, gbc);
+      row.add(rightText);
 
-      gbc.gridx = 1;
-      gbc.gridy++;
+      row = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      lengthComp.add(row);
 
       topLabel = resources.createAppLabel("flowframe.margins.top");
+      labelGroup.add(topLabel);
 
-      add(topLabel, gbc);
-
-      gbc.gridx++;
+      row.add(topLabel);
+      row.add(resources.createLabelSpacer());
 
       topText = resources.createNonNegativeLengthPanel();
       topLabel.setLabelFor(topText);
       adjustField(topText);
-      add(topText, gbc);
+      row.add(topText);
 
-      gbc.gridx++;
+      row.add(resources.createButtonSpacer());
 
       bottomLabel = resources.createAppLabel("flowframe.margins.bottom");
+      labelGroup.add(bottomLabel);
 
-      add(bottomLabel, gbc);
-
-      gbc.gridx++;
+      row.add(bottomLabel);
+      row.add(resources.createLabelSpacer());
 
       bottomText = resources.createNonNegativeLengthPanel();
       bottomLabel.setLabelFor(bottomText);
       adjustField(bottomText);
-      add(bottomText, gbc);
+      row.add(bottomText);
    }
 
    private void adjustField(LengthPanel panel)
@@ -131,6 +153,12 @@ public class MarginPanel extends JPanel
       rightText.setValue(right, unit);
       topText.setValue(top, unit);
       bottomText.setValue(bottom, unit);
+
+      if (noneBox != null && left == 0.0 && right == 0.0
+           && top == 0.0 && bottom == 0.0)
+      {
+         noneBox.setSelected(true);
+      }
    }
 
    public void setMargins(JDRLength left, JDRLength right,
@@ -140,11 +168,24 @@ public class MarginPanel extends JPanel
       rightText.setLength(right);
       topText.setLength(top);
       bottomText.setLength(bottom);
+
+      if (noneBox != null && left.getValue() == 0.0 && right.getValue() == 0.0
+           && top.getValue() == 0.0 && bottom.getValue() == 0.0)
+      {
+         noneBox.setSelected(true);
+      }
    }
 
    public void requestDefaultComponentFocus()
    {
-      leftText.getTextField().requestFocusInWindow();
+      if (isNoneOn())
+      {
+         noneBox.requestFocusInWindow();
+      }
+      else
+      {
+         leftText.getTextField().requestFocusInWindow();
+      }
    }
 
    public boolean isAllUnit(JDRUnit unit)
@@ -157,22 +198,22 @@ public class MarginPanel extends JPanel
 
    public double left(JDRUnit unit)
    {
-      return leftText.getValue(unit);
+      return isNoneOn() ? 0.0 : leftText.getValue(unit);
    }
 
    public double right(JDRUnit unit)
    {
-      return rightText.getValue(unit);
+      return isNoneOn() ? 0.0 : rightText.getValue(unit);
    }
 
    public double top(JDRUnit unit)
    {
-      return topText.getValue(unit);
+      return isNoneOn() ? 0.0 : topText.getValue(unit);
    }
 
    public double bottom(JDRUnit unit)
    {
-      return bottomText.getValue(unit);
+      return isNoneOn() ? 0.0 : bottomText.getValue(unit);
    }
 
    public void setEnabled(boolean flag)
@@ -186,6 +227,11 @@ public class MarginPanel extends JPanel
       rightLabel.setEnabled(flag);
       topLabel.setEnabled(flag);
       bottomLabel.setEnabled(flag);
+
+      if (noneBox != null)
+      {
+         noneBox.setEnabled(flag);
+      }
    }
 
    public void setUnit(JDRUnit unit)
@@ -216,14 +262,34 @@ public class MarginPanel extends JPanel
       bottomText.setValue(bottom, unit);
    }
 
+   public void setNone(boolean on)
+   {
+      if (noneBox != null)
+      {
+         noneBox.setSelected(on);
+      }
+   }
+
+   public boolean isNoneOn()
+   {
+      return noneBox != null && noneBox.isSelected();
+   }
+
    public void addChangeListener(ChangeListener listener)
    {
       leftText.addChangeListener(listener);
       rightText.addChangeListener(listener);
       topText.addChangeListener(listener);
       bottomText.addChangeListener(listener);
+
+      if (noneBox != null)
+      {
+         noneBox.addChangeListener(listener);
+      }
    }
 
+   private JComponent lengthComp;
    private NonNegativeLengthPanel leftText, rightText, topText, bottomText;
    private JLabel label, leftLabel, rightLabel, topLabel, bottomLabel;
+   private JCheckBox noneBox;
 }

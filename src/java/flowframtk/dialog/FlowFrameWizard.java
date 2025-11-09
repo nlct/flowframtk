@@ -482,6 +482,7 @@ public class FlowFrameWizard extends JDialog
       dynamicStyleField.getDocument().addDocumentListener(this);
       styleCmdsComp.add(dynamicStyleField);
 
+      styleCmdsComp.add(resources.createLabelSpacer());
       styleCmdsComp.add(resources.createAppLabel("flfwizard.style.cmds.info"));
 
       clampCompMax(styleCmdsComp);
@@ -617,7 +618,18 @@ public class FlowFrameWizard extends JDialog
 
       comp.setName(resources.getMessage("flfwizard.dimensions.title"));
 
-      margins = new MarginPanel(resources);
+      row = createRow();
+      comp.add(row);
+
+      JTextArea info = resources.createAppInfoArea(INFO_MAX_COLS, 
+        "flfwizard.dimensions.margins.info");
+      info.setAlignmentX(Component.LEFT_ALIGNMENT);
+      row.add(info);
+
+      clampCompMax(row);
+
+      margins = new MarginPanel(resources, 
+       resources.getMessage("flowframe.frame_margins"), true);
       margins.setAlignmentX(Component.LEFT_ALIGNMENT);
       comp.add(margins);
       clampCompMax(margins);
@@ -627,7 +639,7 @@ public class FlowFrameWizard extends JDialog
       row = createRow();
       comp.add(row);
 
-      JTextArea info = resources.createAppInfoArea(INFO_MAX_COLS, "flowframe.twoside_note");
+      info = resources.createAppInfoArea(INFO_MAX_COLS, "flowframe.twoside_note");
       info.setAlignmentX(Component.LEFT_ALIGNMENT);
       row.add(info);
 
@@ -1186,7 +1198,8 @@ public class FlowFrameWizard extends JDialog
 
    public void cancel()
    {
-      if (getResources().confirm(this, 
+      if (currentCard != CARD_FRAME_TYPE 
+           && getResources().confirm(this, 
             getResources().getMessage("flfwizard.confirm_cancel")) != JOptionPane.YES_OPTION)
       {
          return;
@@ -1264,6 +1277,10 @@ public class FlowFrameWizard extends JDialog
                }
 
                applyClsTypeblock();
+            }
+            else if (currentCard == CARD_FRAME_MARGINS)
+            {
+               margins.setNone(!useObjectAsBorder.isSelected());
             }
             else if (currentCard == CARD_FINISH)
             {
@@ -1443,7 +1460,7 @@ public class FlowFrameWizard extends JDialog
 
       if (currentFrameType == FlowFrame.STATIC || currentFrameType == FlowFrame.DYNAMIC)
       {
-         clearBox.setVisible(true);
+         clearBox.setVisible(!isSpecial);
          shapeAlignComp.setVisible(true);
          marginParComp.setVisible(false);
 
@@ -1499,11 +1516,6 @@ public class FlowFrameWizard extends JDialog
          if (!evenYShiftLength.getUnit().equals(unit))
          {
             evenYShiftLength.setValue(0.0, unit);
-         }
-
-         if (!margins.isAllUnit(unit))
-         {
-            margins.setMargins(unit, 0.0, 0.0, 0.0, 0.0);
          }
       }
       else
@@ -1574,6 +1586,10 @@ public class FlowFrameWizard extends JDialog
       if (src == useDefaultCls || src == useCustomCls)
       {
          customClsField.setEnabled(useCustomCls.isSelected());
+      }
+      else if (src == useObjectAsBorder)
+      {
+         margins.setNone(!useObjectAsBorder.isSelected());
       }
    }
 

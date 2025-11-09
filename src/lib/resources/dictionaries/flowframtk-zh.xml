@@ -3154,7 +3154,11 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="flowframe.marginpar.right">Right</entry>
 <entry key="flowframe.label">Label</entry>
 <entry key="flowframe.label.mnemonic">A</entry>
-<entry key="flowframe.margins">Inner Padding</entry>
+<entry key="flowframe.typeblock_margins">Document Margins</entry>
+<entry key="flowframe.frame_margins">Inner Padding</entry>
+<entry key="flowframe.margins">Margins</entry>
+<entry key="flowframe.margins.none">None</entry>
+<entry key="flowframe.margins.none.mnemonic">N</entry>
 <entry key="flowframe.margins.left">Left</entry>
 <entry key="flowframe.margins.left.mnemonic">L</entry>
 <entry key="flowframe.margins.right">Right</entry>
@@ -3180,6 +3184,11 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="flowframe.contents">Contents:</entry>
 <entry key="flowframe.edit">Edit...</entry>
 <entry key="flowframe.edit.mnemonic">E</entry>
+<entry key="flowframe.clear">Auto Clear</entry>
+<entry key="flowframe.clear.mnemonic">U</entry>
+<entry key="flowframe.clear.tooltip">Clear frame contents after each page</entry>
+<entry key="flowframe.style_cmds">Style commands:</entry>
+<entry key="flowframe.style_cmds.mnemonic">Y</entry>
 
 <entry key="flowframe.confirm.group.title">Confirm Assign Flowframe Data to Group</entry>
 <entry key="flowframe.confirm.group">You will lose all flowframe data associated with the objects within this group,
@@ -3320,6 +3329,8 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.content.edit.tooltip">Open the LaTeX editor window</entry>
 
 <entry key="flfwizard.dimensions.title">Margins &amp; Offsets</entry>
+
+<entry key="flfwizard.dimensions.margins.info">Inner padding adds space between the border and the text. This setting is typically not required if the frame has no border and will conflict with non-standard shapes.</entry>
 
 <entry key="flfwizard.dimensions.even_x_shift">Even page horizontal shift:</entry>
 <entry key="flfwizard.dimensions.even_x_shift.mnemonic">Z</entry>
