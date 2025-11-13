@@ -470,20 +470,28 @@ public class FlowFrameWizard extends JDialog
 
       comp.add(Box.createVerticalStrut(10));
 
-      styleCmdsComp = createRow();
+      styleCmdsComp = Box.createVerticalBox();
       comp.add(styleCmdsComp);
 
+      row = createRow();
+      styleCmdsComp.add(row);
+
       JLabel label = resources.createAppLabel("flfwizard.style.cmds");
-      styleCmdsComp.add(label);
-      styleCmdsComp.add(resources.createLabelSpacer());
+      row.add(label);
+      row.add(resources.createLabelSpacer());
 
       dynamicStyleField = new JTextField("\\relax ", 30);
       label.setLabelFor(dynamicStyleField);
       dynamicStyleField.getDocument().addDocumentListener(this);
-      styleCmdsComp.add(dynamicStyleField);
+      row.add(dynamicStyleField);
 
-      styleCmdsComp.add(resources.createLabelSpacer());
-      styleCmdsComp.add(resources.createAppLabel("flfwizard.style.cmds.info"));
+      row = createRow();
+      styleCmdsComp.add(row);
+
+      JTextArea info = resources.createAppInfoArea(INFO_MAX_COLS,
+       "flfwizard.style.cmds.info");
+      row.add(info);
+      info.setOpaque(true);
 
       clampCompMax(styleCmdsComp);
 

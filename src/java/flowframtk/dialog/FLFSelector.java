@@ -206,6 +206,10 @@ public class FLFSelector extends JDialog
       styleCmdsLabel.setLabelFor(styleCmdsField);
       row.add(styleCmdsField);
 
+      row.add(resources.createLabelSpacer());
+
+      row.add(resources.createAppInfoField("flowframe.style_cmds.info"));
+
       clampCompMaxHeight(row);
 
       margins = new MarginPanel(resources,

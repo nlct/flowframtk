@@ -550,10 +550,19 @@ public class FlowFrame implements Cloneable,Serializable
      }
 
      boolean addStyle = false;
+     String styleCsName = null;
 
      if (pgf.isFlowframTkStyUsed() && hasStyleCommands())
      {
-        pgf.println("\\flowframtkNewDynamicStyle{"+label+"}{"+styleCommands+"}");
+        if (styleCommands.indexOf('\\') > -1)
+        {
+           pgf.println("\\flowframtkNewDynamicStyle{"+label+"}{"+styleCommands+"}");
+        }
+        else
+        {
+           styleCsName = styleCommands;
+        }
+
         addStyle = true;
      }
 
@@ -609,9 +618,19 @@ public class FlowFrame implements Cloneable,Serializable
          if (addStyle)
          {
             pgf.print(",style={");
-            pgf.print("\\flowframtkUseDynamicStyleCsName{");
-            pgf.print(label);
-            pgf.print("}}");
+
+            if (styleCsName == null)
+            { 
+               pgf.print("\\flowframtkUseDynamicStyleCsName{");
+               pgf.print(label);
+               pgf.print("}");
+            }
+            else
+            {
+               pgf.print(styleCsName);
+            }
+
+            pgf.print("}");
          }
 
          pgf.println("}");
@@ -1101,7 +1120,7 @@ public class FlowFrame implements Cloneable,Serializable
 
    public boolean hasStyleCommands()
    {
-      return type == DYNAMIC && !styleCommands.trim().isEmpty();
+      return type == DYNAMIC && !styleCommands.isEmpty();
    }
 
    public void setStyleCommands(String cmds)
