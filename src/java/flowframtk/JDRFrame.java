@@ -1264,6 +1264,36 @@ public class JDRFrame extends JInternalFrame
       canvas.leftAlign();
    }
 
+   public void pageLeftAlign()
+   {
+      canvas.pageLeftAlign();
+   }
+
+   public void pageCentreAlign()
+   {
+      canvas.pageCentreAlign();
+   }
+
+   public void pageRightAlign()
+   {
+      canvas.pageRightAlign();
+   }
+
+   public void pageTopAlign()
+   {
+      canvas.pageTopAlign();
+   }
+
+   public void pageMiddleAlign()
+   {
+      canvas.pageMiddleAlign();
+   }
+
+   public void pageBottomAlign()
+   {
+      canvas.pageBottomAlign();
+   }
+
    public void group()
    {
       canvas.group();

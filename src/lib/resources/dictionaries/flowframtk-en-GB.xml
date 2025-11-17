@@ -44,6 +44,11 @@
 
 <entry key="menu.transform.justify.middle.tooltip">Vertically centre the objects inside the group</entry>
 
+<entry key="menu.transform.align_to_page.centre">Center</entry>
+<entry key="menu.transform.align_to_page.centre.tooltip">Horizontally the objects to the centre of the page</entry>
+
+<entry key="menu.transform.align_to_page.middle.tooltip">Vertically align the objects to the centre of the page</entry>
+
 <entry key="menu.tools.math">Maths</entry>
 <entry key="menu.selectedtext.colour">Text Colour...</entry>
 <entry key="menu.selectedtext.fill_colour">Fill Colour...</entry>

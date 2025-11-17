@@ -389,6 +389,11 @@ public abstract class JDRCompleteObject extends JDRObject
       }
    }
 
+   public void pageLeftAlign()
+   {
+      leftAlign(0.0);
+   }
+
    /**
     * Shifts this object horizontally so that it is right aligned with the given
     * x co-ordinate.
@@ -405,6 +410,11 @@ public abstract class JDRCompleteObject extends JDRObject
       {
          translate(rightmostX-bbox.getMaxX(), 0);
       }
+   }
+
+   public void pageRightAlign()
+   {
+      rightAlign(getCanvasGraphics().getStoragePaperWidth());
    }
 
    /**
@@ -427,6 +437,11 @@ public abstract class JDRCompleteObject extends JDRObject
       }
    }
 
+   public void pageCentreAlign()
+   {
+      centreAlign(0.5*getCanvasGraphics().getStoragePaperWidth());
+   }
+
    /**
     * Shifts this object vertically so that its top is aligned along the given
     * y co-ordinate.
@@ -443,6 +458,11 @@ public abstract class JDRCompleteObject extends JDRObject
       {
          translate(0, topmostY-bbox.getMinY());
       }
+   }
+
+   public void pageTopAlign()
+   {
+      topAlign(0.0);
    }
 
    /**
@@ -465,6 +485,11 @@ public abstract class JDRCompleteObject extends JDRObject
       }
    }
 
+   public void pageMiddleAlign()
+   {
+      middleAlign(0.5*getCanvasGraphics().getStoragePaperHeight());
+   }
+
    /**
     * Shifts this object vertically so that its bottom is aligned along the given
     * y co-ordinate.
@@ -481,6 +506,11 @@ public abstract class JDRCompleteObject extends JDRObject
       {
          translate(0, bottommostY-bbox.getMaxY());
       }
+   }
+
+   public void pageBottomAlign()
+   {
+      bottomAlign(getCanvasGraphics().getStoragePaperHeight());
    }
 
    /**

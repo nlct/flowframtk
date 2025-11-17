@@ -979,6 +979,19 @@ public class JDRCanvas extends JPanel
       CanvasSelectAction resetAction
          = addCanvasSelectAction("reset");
 
+      CanvasSelectAction leftAlignToPageAction
+         = addCanvasSelectAction("align_to_page.left");
+      CanvasSelectAction centreAlignToPageAction
+         = addCanvasSelectAction("align_to_page.centre");
+      CanvasSelectAction rightAlignToPageAction
+         = addCanvasSelectAction("align_to_page.right");
+      CanvasSelectAction topAlignToPageAction
+         = addCanvasSelectAction("align_to_page.top");
+      CanvasSelectAction middleAlignToPageAction
+         = addCanvasSelectAction("align_to_page.middle");
+      CanvasSelectAction bottomAlignToPageAction
+         = addCanvasSelectAction("align_to_page.bottom");
+
       // Text
 
       CanvasSelectAction editTextAction
@@ -1108,6 +1121,39 @@ public class JDRCanvas extends JPanel
 
       selectTextPopupMenu.add(groupAction.createMenuItem(
          "menu.selected.group", "tooltip.group"));
+
+      // Page Alignment sub menu
+
+      JMenu alignToPageMenu = addCanvasSelectAction("align_to_page").createMenu(
+         "menu.selected.align_to_page",
+         "menu.transform.align_to_page.tooltip");
+      selectTextPopupMenu.add(alignToPageMenu);
+
+      alignToPageMenu.add(leftAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.left",
+        "menu.transform.align_to_page.left.tooltip"));
+
+      alignToPageMenu.add(centreAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.centre",
+        "menu.transform.align_to_page.centre.tooltip"));
+
+      alignToPageMenu.add(rightAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.right",
+        "menu.transform.align_to_page.right.tooltip"));
+
+      alignToPageMenu.add(new JPopupMenu.Separator());
+
+      alignToPageMenu.add(topAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.top",
+        "menu.transform.align_to_page.top.tooltip"));
+
+      alignToPageMenu.add(middleAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.middle",
+        "menu.transform.align_to_page.middle.tooltip"));
+
+      alignToPageMenu.add(bottomAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.bottom",
+        "menu.transform.align_to_page.bottom.tooltip"));
 
       selectTextPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1239,6 +1285,39 @@ public class JDRCanvas extends JPanel
 
       selectPathPopupMenu.add(groupAction.createMenuItem(
          "menu.selected.group", "tooltip.group"));
+
+      // Page Alignment sub menu
+
+      alignToPageMenu = addCanvasSelectAction("align_to_page").createMenu(
+         "menu.selected.align_to_page",
+         "menu.transform.align_to_page.tooltip");
+      selectPathPopupMenu.add(alignToPageMenu);
+
+      alignToPageMenu.add(leftAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.left",
+        "menu.transform.align_to_page.left.tooltip"));
+
+      alignToPageMenu.add(centreAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.centre",
+        "menu.transform.align_to_page.centre.tooltip"));
+
+      alignToPageMenu.add(rightAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.right",
+        "menu.transform.align_to_page.right.tooltip"));
+
+      alignToPageMenu.add(new JPopupMenu.Separator());
+
+      alignToPageMenu.add(topAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.top",
+        "menu.transform.align_to_page.top.tooltip"));
+
+      alignToPageMenu.add(middleAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.middle",
+        "menu.transform.align_to_page.middle.tooltip"));
+
+      alignToPageMenu.add(bottomAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.bottom",
+        "menu.transform.align_to_page.bottom.tooltip"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1422,6 +1501,39 @@ public class JDRCanvas extends JPanel
       selectTextPathPopupMenu.add(groupAction.createMenuItem(
          "menu.selected.group", "tooltip.group"));
 
+      // Page Alignment sub menu
+
+      alignToPageMenu = addCanvasSelectAction("align_to_page").createMenu(
+         "menu.selected.align_to_page",
+         "menu.transform.align_to_page.tooltip");
+      selectTextPathPopupMenu.add(alignToPageMenu);
+
+      alignToPageMenu.add(leftAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.left",
+        "menu.transform.align_to_page.left.tooltip"));
+
+      alignToPageMenu.add(centreAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.centre",
+        "menu.transform.align_to_page.centre.tooltip"));
+
+      alignToPageMenu.add(rightAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.right",
+        "menu.transform.align_to_page.right.tooltip"));
+
+      alignToPageMenu.add(new JPopupMenu.Separator());
+
+      alignToPageMenu.add(topAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.top",
+        "menu.transform.align_to_page.top.tooltip"));
+
+      alignToPageMenu.add(middleAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.middle",
+        "menu.transform.align_to_page.middle.tooltip"));
+
+      alignToPageMenu.add(bottomAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.bottom",
+        "menu.transform.align_to_page.bottom.tooltip"));
+
       selectTextPathPopupMenu.add(new JPopupMenu.Separator());
 
       // Text paint
@@ -1565,6 +1677,39 @@ public class JDRCanvas extends JPanel
       selectBitmapPopupMenu.add(groupAction.createMenuItem(
          "menu.selected.group", "tooltip.group"));
 
+      // Page Alignment sub menu
+
+      alignToPageMenu = addCanvasSelectAction("align_to_page").createMenu(
+         "menu.selected.align_to_page",
+         "menu.transform.align_to_page.tooltip");
+      selectBitmapPopupMenu.add(alignToPageMenu);
+
+      alignToPageMenu.add(leftAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.left",
+        "menu.transform.align_to_page.left.tooltip"));
+
+      alignToPageMenu.add(centreAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.centre",
+        "menu.transform.align_to_page.centre.tooltip"));
+
+      alignToPageMenu.add(rightAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.right",
+        "menu.transform.align_to_page.right.tooltip"));
+
+      alignToPageMenu.add(new JPopupMenu.Separator());
+
+      alignToPageMenu.add(topAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.top",
+        "menu.transform.align_to_page.top.tooltip"));
+
+      alignToPageMenu.add(middleAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.middle",
+        "menu.transform.align_to_page.middle.tooltip"));
+
+      alignToPageMenu.add(bottomAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.bottom",
+        "menu.transform.align_to_page.bottom.tooltip"));
+
       if (vectorizeAction != null)
       {
          selectBitmapPopupMenu.add(new JPopupMenu.Separator());
@@ -1628,6 +1773,84 @@ public class JDRCanvas extends JPanel
 
       selectPopupMenu.add(addCanvasSelectAction("ungroup").createMenuItem(
          "menu.selected.ungroup", "tooltip.ungroup"));
+
+      // Justify sub menu
+
+      JMenu justifyMenu = addCanvasSelectAction("justify").createMenu(
+         "menu.selected.justify",
+         "menu.transform.justify.tooltip");
+      selectPopupMenu.add(justifyMenu);
+
+      // Left align
+
+      justifyMenu.add(addCanvasSelectAction("justify.left").createMenuItem(
+         "menu.transform.justify.left",
+         "menu.transform.justify.left.tooltip"));
+
+      // Centre align
+
+      justifyMenu.add(addCanvasSelectAction("justify.centre").createMenuItem(
+         "menu.transform.justify.centre",
+         "menu.transform.justify.centre.tooltip"));
+
+      // Right align
+
+      justifyMenu.add(addCanvasSelectAction("justify.right").createMenuItem(
+         "menu.transform.justify.right",
+         "menu.transform.justify.right.tooltip"));
+
+      justifyMenu.add(new JPopupMenu.Separator());
+
+      // Top align
+
+      justifyMenu.add(addCanvasSelectAction("justify.top").createMenuItem(
+         "menu.transform.justify.top",
+         "menu.transform.justify.top.tooltip"));
+
+      // middle align
+
+      justifyMenu.add(addCanvasSelectAction("justify.middle").createMenuItem(
+         "menu.transform.justify.middle",
+         "menu.transform.justify.middle.tooltip"));
+
+      // bottom align
+
+      justifyMenu.add(addCanvasSelectAction("justify.bottom").createMenuItem(
+         "menu.transform.justify.bottom",
+         "menu.transform.justify.bottom.tooltip"));
+
+      // Page Alignment sub menu
+
+      alignToPageMenu = addCanvasSelectAction("align_to_page").createMenu(
+         "menu.selected.align_to_page",
+         "menu.transform.align_to_page.tooltip");
+      selectPopupMenu.add(alignToPageMenu);
+
+      alignToPageMenu.add(leftAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.left",
+        "menu.transform.align_to_page.left.tooltip"));
+
+      alignToPageMenu.add(centreAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.centre",
+        "menu.transform.align_to_page.centre.tooltip"));
+
+      alignToPageMenu.add(rightAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.right",
+        "menu.transform.align_to_page.right.tooltip"));
+
+      alignToPageMenu.add(new JPopupMenu.Separator());
+
+      alignToPageMenu.add(topAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.top",
+        "menu.transform.align_to_page.top.tooltip"));
+
+      alignToPageMenu.add(middleAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.middle",
+        "menu.transform.align_to_page.middle.tooltip"));
+
+      alignToPageMenu.add(bottomAlignToPageAction.createMenuItem(
+        "menu.transform.align_to_page.bottom",
+        "menu.transform.align_to_page.bottom.tooltip"));
 
       selectPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1848,53 +2071,6 @@ public class JDRCanvas extends JPanel
       bitmapMenu.add(resetAction.createMenuItem(
          "menu.selectedbitmap.reset",
          "menu.transform.reset.tooltip"));
-
-      selectPopupMenu.add(new JPopupMenu.Separator());
-
-      // Justify sub menu
-
-      JMenu justifyMenu = addCanvasSelectAction("justify").createMenu(
-         "menu.selected.justify",
-         "menu.transform.justify.tooltip");
-      selectPopupMenu.add(justifyMenu);
-
-      // Left align
-
-      justifyMenu.add(addCanvasSelectAction("justify.left").createMenuItem(
-         "menu.transform.justify.left",
-         "menu.transform.justify.left.tooltip"));
-
-      // Centre align
-
-      justifyMenu.add(addCanvasSelectAction("justify.centre").createMenuItem(
-         "menu.transform.justify.centre",
-         "menu.transform.justify.centre.tooltip"));
-
-      // Right align
-
-      justifyMenu.add(addCanvasSelectAction("justify.right").createMenuItem(
-         "menu.transform.justify.right",
-         "menu.transform.justify.right.tooltip"));
-
-      justifyMenu.add(new JPopupMenu.Separator());
-
-      // Top align
-
-      justifyMenu.add(addCanvasSelectAction("justify.top").createMenuItem(
-         "menu.transform.justify.top",
-         "menu.transform.justify.top.tooltip"));
-
-      // middle align
-
-      justifyMenu.add(addCanvasSelectAction("justify.middle").createMenuItem(
-         "menu.transform.justify.middle",
-         "menu.transform.justify.middle.tooltip"));
-
-      // bottom align
-
-      justifyMenu.add(addCanvasSelectAction("justify.bottom").createMenuItem(
-         "menu.transform.justify.bottom",
-         "menu.transform.justify.bottom.tooltip"));
 
       // none selected popup menu
 
@@ -4319,6 +4495,56 @@ public class JDRCanvas extends JPanel
          if (object.isSelected() && object instanceof JDRGroup)
          {
             edit = new AlignGroup((JDRGroup)object,i, align);
+            ce.addEdit(edit);
+         }
+      }
+
+      ce.end();
+      if (edit != null) frame_.postEdit(ce);
+   }
+
+   public void pageLeftAlign()
+   {
+      pageAlignSelectedObjects(AlignToPageBorder.LEFT);
+   }
+
+   public void pageCentreAlign()
+   {
+      pageAlignSelectedObjects(AlignToPageBorder.CENTRE);
+   }
+
+   public void pageRightAlign()
+   {
+      pageAlignSelectedObjects(AlignToPageBorder.RIGHT);
+   }
+
+   public void pageTopAlign()
+   {
+      pageAlignSelectedObjects(AlignToPageBorder.TOP);
+   }
+
+   public void pageMiddleAlign()
+   {
+      pageAlignSelectedObjects(AlignToPageBorder.MIDDLE);
+   }
+
+   public void pageBottomAlign()
+   {
+      pageAlignSelectedObjects(AlignToPageBorder.BOTTOM);
+   }
+
+   public void pageAlignSelectedObjects(int align)
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+      UndoableEdit edit = null;
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            edit = new AlignToPageBorder(object, i, align);
             ce.addEdit(edit);
          }
       }
@@ -17187,6 +17413,146 @@ public class JDRCanvas extends JPanel
 
                         text.setVAlign(JDRText.PGF_VALIGN_BOTTOM);
                      }
+                  }
+               }
+            break;
+         }
+
+         paths.set(index_, object_);
+
+         // The bounds of the aligned objects will be smaller
+         // than the original group bounds, so just set the
+         // refresh bounds to the region taken up by the original
+         // object.
+         setRefreshBounds(object);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+         paths.set(index_, object_);
+
+         repaintRegion();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+         paths.set(index_, oldobject_);
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return string_;
+      }
+   }
+
+   class AlignToPageBorder extends CanvasUndoableEdit
+   {
+      private JDRCompleteObject object_, oldobject_;
+      private int index_, align_;
+      private String string_=getResources().getMessage("undo.align_to_page");
+
+      public static final int LEFT=0, CENTRE=1, RIGHT=2,
+                              TOP=3, MIDDLE=4, BOTTOM=5;
+
+      public AlignToPageBorder(JDRCompleteObject object, int index, int align)
+      {
+         super(getFrame());
+
+         oldobject_ = object;
+         object_ = (JDRCompleteObject)object.clone();
+         index_ = index;
+         align_ = align;
+
+         switch (align_)
+         {
+            case LEFT :
+               object_.pageLeftAlign();
+               string_ = getResources().getMessage("undo.align_to_page.left");
+
+               if (getApplication().isAutoAnchorEnabled())
+               {
+                  if (object_ instanceof JDRText)
+                  {
+                     JDRText text = (JDRText)object_;
+
+                     text.setHAlign(JDRText.PGF_HALIGN_LEFT);
+                  }
+               }
+            break;
+            case CENTRE :
+               object_.pageCentreAlign();
+               string_ = getResources().getMessage("undo.align_to_page.centre");
+
+               if (getApplication().isAutoAnchorEnabled())
+               {
+                  if (object_ instanceof JDRText)
+                  {
+                     JDRText text = (JDRText)object_;
+
+                     text.setHAlign(JDRText.PGF_HALIGN_CENTRE);
+                  }
+               }
+            break;
+            case RIGHT :
+               object_.pageRightAlign();
+               string_ = getResources().getMessage("undo.align_to_page.right");
+
+               if (getApplication().isAutoAnchorEnabled())
+               {
+                  if (object_ instanceof JDRText)
+                  {
+                     JDRText text = (JDRText)object_;
+
+                     text.setHAlign(JDRText.PGF_HALIGN_RIGHT);
+                  }
+               }
+            break;
+            case TOP :
+               object_.pageTopAlign();
+               string_ = getResources().getMessage("undo.align_to_page.top");
+
+               if (getApplication().isAutoAnchorEnabled())
+               {
+                  if (object_ instanceof JDRText)
+                  {
+                     JDRText text = (JDRText)object_;
+
+                     text.setVAlign(JDRText.PGF_VALIGN_TOP);
+                  }
+               }
+            break;
+            case MIDDLE :
+               object_.pageMiddleAlign();
+               string_ = getResources().getMessage("undo.align_to_page.middle");
+
+               if (getApplication().isAutoAnchorEnabled())
+               {
+                  if (object_ instanceof JDRText)
+                  {
+                     JDRText text = (JDRText)object_;
+
+                     text.setVAlign(JDRText.PGF_VALIGN_CENTRE);
+                  }
+               }
+            break;
+            case BOTTOM :
+               object_.pageBottomAlign();
+               string_ = getResources().getMessage("undo.align_to_page.bottom");
+
+               if (getApplication().isAutoAnchorEnabled())
+               {
+                  if (object_ instanceof JDRText)
+                  {
+                     JDRText text = (JDRText)object_;
+
+                     text.setVAlign(JDRText.PGF_VALIGN_BOTTOM);
                   }
                }
             break;

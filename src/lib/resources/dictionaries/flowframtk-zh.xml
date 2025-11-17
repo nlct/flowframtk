@@ -571,6 +571,35 @@
 <entry key="menu.transform.justify.bottom.mnemonic">B</entry>
 <entry key="menu.transform.justify.bottom.tooltip">Bottom-align the objects inside the group</entry>
 
+<!--  Transform -> Align to Page Sub Menu -->
+
+<entry key="menu.transform.align_to_page">Align to Page</entry>
+<entry key="menu.transform.align_to_page.mnemonic">L</entry>
+
+<entry key="menu.transform.align_to_page.left">左对齐(L)</entry>
+<entry key="menu.transform.align_to_page.left.mnemonic">L</entry>
+<entry key="menu.transform.align_to_page.left.tooltip">Align the objects along the left edge of the page</entry>
+
+<entry key="menu.transform.align_to_page.centre">水平居中(C)</entry>
+<entry key="menu.transform.align_to_page.centre.mnemonic">C</entry>
+<entry key="menu.transform.align_to_page.centre.tooltip">Horizontally the objects to the center of the page</entry>
+
+<entry key="menu.transform.align_to_page.right">右对齐(R)</entry>
+<entry key="menu.transform.align_to_page.right.mnemonic">R</entry>
+<entry key="menu.transform.align_to_page.right.tooltip">Align the objects along the right edge of the page</entry>
+
+<entry key="menu.transform.align_to_page.top">顶端对齐(T)</entry>
+<entry key="menu.transform.align_to_page.top.mnemonic">T</entry>
+<entry key="menu.transform.align_to_page.top.tooltip">Align the objects along the page top</entry>
+
+<entry key="menu.transform.align_to_page.middle">垂直居中(M)</entry>
+<entry key="menu.transform.align_to_page.middle.mnemonic">M</entry>
+<entry key="menu.transform.align_to_page.middle.tooltip">Vertically align the objects to the center of the page</entry>
+
+<entry key="menu.transform.align_to_page.bottom">底端对齐(B)</entry>
+<entry key="menu.transform.align_to_page.bottom.mnemonic">B</entry>
+<entry key="menu.transform.align_to_page.bottom.tooltip">Align the objects along page bottom</entry>
+
 <!--  tools menu -->
 
 <entry key="menu.tools">工具(O)</entry>
@@ -1242,6 +1271,9 @@
 <entry key="menu.selected.justify">对齐(J)</entry>
 <entry key="menu.selected.justify.mnemonic">J</entry>
 
+<entry key="menu.selected.align_to_page">Align to Page</entry>
+<entry key="menu.selected.align_to_page.mnemonic">L</entry>
+
 <!--  None Selected Popup Menu -->
 
 <entry key="index.menu.none">Image Popup Menu</entry>
@@ -1440,6 +1472,13 @@
 <entry key="undo.justify.middle">垂直居中</entry>
 <entry key="undo.justify.top">顶端对齐</entry>
 <entry key="undo.justify.right">右对齐</entry>
+<entry key="undo.align_to_page">Align to Page</entry>
+<entry key="undo.align_to_page.bottom">Page Bottom Alignment</entry>
+<entry key="undo.align_to_page.centre">Page Center Alignment</entry>
+<entry key="undo.align_to_page.left">Page Left Alignment</entry>
+<entry key="undo.align_to_page.middle">Page Middle Alignment</entry>
+<entry key="undo.align_to_page.top">Page Top Alignment</entry>
+<entry key="undo.align_to_page.right">Page Right Alignment</entry>
 <entry key="undo.latexsize">Set LaTeX font size</entry>
 <entry key="undo.line_colour">更改线条颜色</entry>
 <entry key="undo.line_style">更改线条样式</entry>

@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(187);
+      invoker.setStartupDeterminate(193);
 
       // create menu bar, menu and menu item
 
@@ -2256,6 +2256,118 @@ public class FlowframTk extends JFrame
          });
 
       incStartupProgress(transformM, justifyM, bottomAlignItem);
+
+      // Align to Page Sub Menu
+
+      alignToPageM = FlowframTkAction.createMenu(this,
+         "menu.transform", "align_to_page", transformM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
+
+      incStartupProgress(transformM, alignToPageM);
+
+      // Page Left Align
+
+      alignPageLeftItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "align_to_page.left", alignToPageM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().pageLeftAlign();
+            }
+         });
+
+      incStartupProgress(transformM, alignToPageM, alignPageLeftItem);
+
+      // Page Centre Align
+
+      alignPageCentreItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "align_to_page.centre", alignToPageM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().pageCentreAlign();
+            }
+         });
+
+      incStartupProgress(transformM, alignToPageM, alignPageCentreItem);
+
+      // Page Right Align
+
+      alignPageRightItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "align_to_page.right", alignToPageM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().pageRightAlign();
+            }
+         });
+
+      incStartupProgress(transformM, alignToPageM, alignPageRightItem);
+
+      // Page Top Align
+
+      alignPageTopItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "align_to_page.top", alignToPageM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().pageTopAlign();
+            }
+         });
+
+      incStartupProgress(transformM, alignToPageM, alignPageTopItem);
+
+      // Page Middle Align
+
+      alignPageMiddleItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "align_to_page.middle", alignToPageM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().pageMiddleAlign();
+            }
+         });
+
+      incStartupProgress(transformM, alignToPageM, alignPageMiddleItem);
+
+      // Page Bottom Align
+
+      alignPageBottomItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "align_to_page.bottom", alignToPageM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().pageBottomAlign();
+            }
+         });
+
+      incStartupProgress(transformM, alignToPageM, alignPageBottomItem);
 
       // Tools menu
 
@@ -7471,6 +7583,8 @@ public class FlowframTk extends JFrame
                      subtractPathsItem, pathUnionItem, 
                      leftAlignItem, centreAlignItem,
                      rightAlignItem, topAlignItem, middleAlignItem,
+                     alignPageLeftItem, alignPageRightItem, alignPageCentreItem,
+                     alignPageTopItem, alignPageMiddleItem, alignPageBottomItem,
                      bottomAlignItem, splitTextItem, 
                      insertBitmapItem,
                      refreshItem, bitmapPropItem, parshapeItem,
@@ -7503,7 +7617,7 @@ public class FlowframTk extends JFrame
       showStatusBarItem, 
       showPrinterMarginsItem;
 
-   private JMenu fileM, editM, pathM, textM, transformM, justifyM,
+   private JMenu fileM, editM, pathM, textM, transformM, justifyM, alignToPageM,
                  toolsM, bitmapM, texM, settingsM, windowM, recentM,
                  gridM, zoomM, paperM, navigateM, fontStyleM,
                  lineStyleM, patternM, adjustColM;
