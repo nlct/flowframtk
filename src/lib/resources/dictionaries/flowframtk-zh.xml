@@ -759,6 +759,7 @@
 
 <entry key="menu.tex.flowframe.wizard">Wizard...</entry>
 <entry key="menu.tex.flowframe.wizard.mnemonic">W</entry>
+<entry key="menu.tex.flowframe.wizard.tooltip">Setup typeblock and flowframe data</entry>
 
 <entry key="menu.tex.flowframe.set_frame">设定文本框(S)...</entry>
 <entry key="menu.tex.flowframe.set_frame.mnemonic">S</entry>
@@ -1177,8 +1178,8 @@
 <entry key="menu.selectedpath.marker.end">末端箭头(E)...</entry>
 <entry key="menu.selectedpath.marker.end.mnemonic">E</entry>
 
-<entry key="menu.selectedpath.windingrule">区域内外绕行规则(W)</entry>
-<entry key="menu.selectedpath.windingrule.mnemonic">W</entry>
+<entry key="menu.selectedpath.windingrule">区域内外绕行规则(U)</entry>
+<entry key="menu.selectedpath.windingrule.mnemonic">U</entry>
 
 <!--  Selected Bitmaps Popup Menu -->
 
@@ -1273,6 +1274,9 @@
 
 <entry key="menu.selected.align_to_page">Align to Page</entry>
 <entry key="menu.selected.align_to_page.mnemonic">L</entry>
+
+<entry key="menu.selected.wizard">Flow Frame Wizard...</entry>
+<entry key="menu.selected.wizard.mnemonic">W</entry>
 
 <!--  None Selected Popup Menu -->
 

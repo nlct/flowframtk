@@ -978,6 +978,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("group");
       CanvasSelectAction resetAction
          = addCanvasSelectAction("reset");
+      CanvasSelectAction wizardAction
+         = addCanvasSelectAction("flowframe.wizard");
 
       CanvasSelectAction leftAlignToPageAction
          = addCanvasSelectAction("align_to_page.left");
@@ -1116,6 +1118,11 @@ public class JDRCanvas extends JPanel
 
       selectTextPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
+
+      // Flowframe Wizard
+
+      selectTextPopupMenu.add(wizardAction.createMenuItem(
+         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Group
 
@@ -1280,6 +1287,11 @@ public class JDRCanvas extends JPanel
 
       selectPathPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
+
+      // Flowframe Wizard
+
+      selectPathPopupMenu.add(wizardAction.createMenuItem(
+         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Group
 
@@ -1496,6 +1508,11 @@ public class JDRCanvas extends JPanel
       selectTextPathPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flowframe Wizard
+
+      selectTextPathPopupMenu.add(wizardAction.createMenuItem(
+         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+
       // Group
 
       selectTextPathPopupMenu.add(groupAction.createMenuItem(
@@ -1672,6 +1689,11 @@ public class JDRCanvas extends JPanel
       selectBitmapPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flowframe Wizard
+
+      selectBitmapPopupMenu.add(wizardAction.createMenuItem(
+         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+
       // Group
 
       selectBitmapPopupMenu.add(groupAction.createMenuItem(
@@ -1763,6 +1785,11 @@ public class JDRCanvas extends JPanel
 
       selectPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
+
+      // Flowframe Wizard
+
+      selectPopupMenu.add(wizardAction.createMenuItem(
+         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Group
 
@@ -2086,6 +2113,11 @@ public class JDRCanvas extends JPanel
 
       noneSelectedPopupMenu.add(selectAllAction.createMenuItem(
          "menu.selected.select_all", "tooltip.select_all"));
+
+      // Flowframe Wizard
+
+      noneSelectedPopupMenu.add(wizardAction.createMenuItem(
+         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Find by description
 

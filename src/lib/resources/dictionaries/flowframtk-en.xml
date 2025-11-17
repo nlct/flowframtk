@@ -753,6 +753,7 @@ Nicola Talbot
 
 <entry key="menu.tex.flowframe.wizard">Wizard...</entry>
 <entry key="menu.tex.flowframe.wizard.mnemonic">W</entry>
+<entry key="menu.tex.flowframe.wizard.tooltip">Setup typeblock and flowframe data</entry>
 
 <entry key="menu.tex.flowframe.set_frame">Set Frame...</entry>
 <entry key="menu.tex.flowframe.set_frame.mnemonic">S</entry>
@@ -1167,7 +1168,7 @@ Nicola Talbot
 <entry key="menu.selectedpath.marker.end.mnemonic">E</entry>
 
 <entry key="menu.selectedpath.windingrule">Winding Rule</entry>
-<entry key="menu.selectedpath.windingrule.mnemonic">W</entry>
+<entry key="menu.selectedpath.windingrule.mnemonic">U</entry>
 
 <!--  Selected Bitmaps Popup Menu -->
 
@@ -1258,6 +1259,9 @@ Nicola Talbot
 
 <entry key="menu.selected.align_to_page">Align to Page</entry>
 <entry key="menu.selected.align_to_page.mnemonic">L</entry>
+
+<entry key="menu.selected.wizard">Flow Frame Wizard...</entry>
+<entry key="menu.selected.wizard.mnemonic">W</entry>
 
 <!--  None Selected Popup Menu -->
 
