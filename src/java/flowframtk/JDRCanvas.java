@@ -5162,9 +5162,7 @@ public class JDRCanvas extends JPanel
    private void unsetFlowFrame(JDRCompleteObject object,
       JDRCanvasCompoundEdit ce)
    {
-      FlowFrame f = null;
-
-      if (object instanceof JDRGroup)
+      if (object instanceof JDRGroup && object.getFlowFrame() == null)
       {
          JDRGroup group = (JDRGroup)object;
 
@@ -5173,23 +5171,38 @@ public class JDRCanvas extends JPanel
             unsetFlowFrame(group.get(i), ce);
          }
       }
+      else
+      {
+         UndoableEdit edit = new SetFlowFrame(object, null,
+            getResources().getMessage("undo.clear_flowframes"));
 
-      UndoableEdit edit = new SetFlowFrame(object, f,
-         getResources().getMessage("undo.clear_flowframes"));
-
-      ce.addEdit(edit);
+         ce.addEdit(edit);
+      }
    }
 
    public void unsetAllFlowFrames()
    {
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
-      unsetFlowFrame(paths, ce);
+      try
+      {
+         UndoableEdit edit = new SetTypeblock(null);
+         ce.addEdit(edit);
 
-      ce.end();
-      frame_.postEdit(ce);
-      setBackgroundImage(true);
-      repaint();
+         for (int i = 0, n = paths.size(); i < n; i++)
+         {
+            unsetFlowFrame(paths.get(i), ce);
+         }
+
+         ce.end();
+         frame_.postEdit(ce);
+         setBackgroundImage(true);
+         repaint();
+      }
+      catch (InvalidValueException e)
+      {// shouldn't happen
+         getResources().internalError(this, e);
+      }
    }
 
    public FlowFrame getTypeblock()
@@ -11861,6 +11874,26 @@ public class JDRCanvas extends JPanel
          newTypeblock.setTop(top);
          newTypeblock.setBottom(bottom);
          newTypeblock.setEvenXShift(evenHshift);
+
+         paths.setFlowFrame(newTypeblock);
+
+         frame_.markAsModified();
+         setBackgroundImage();
+         repaint();
+      }
+
+      public SetTypeblock(FlowFrame flowframe)
+        throws InvalidValueException
+      {
+         if (flowframe != null && flowframe.getType() != FlowFrame.TYPEBLOCK)
+         {
+            throw new InvalidValueException(
+             InvalidValueException.FRAME_TYPE, flowframe.getType(),
+               getResources().getMessageDictionary());
+         }
+
+         oldTypeblock = paths.getFlowFrame();
+         newTypeblock = flowframe;
 
          paths.setFlowFrame(newTypeblock);
 
