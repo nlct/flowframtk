@@ -2750,7 +2750,7 @@ public class FlowframTk extends JFrame
 
       flfWizardItem = FlowframTkAction.createMenuItem(this,
         "menu.tex", "flowframe.wizard", flowframeM,
-        TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
+        TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
