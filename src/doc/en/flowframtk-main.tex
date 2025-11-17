@@ -4054,7 +4054,7 @@ default \gls{transparent} \pathattr{fill-paint}) but now it can only been detect
 The easiest way to do this is to \select\ the rectangle, use the
 \menu{tex.flowframe.set_typeblock} menu item to open the
 \dialog{typeblock} dialog box, and click on the
-\widget{typeblock.compute_from_path} button. Then delete the
+\widget{typeblock.compute_from_objects} button. Then delete the
 rectangle. The \gls{image.typeblock} is now shown as a \manmsg{grey} rectangle in
 \figureref{fig:equatione}. Redoing the export to PDF with the
 \widget{export.bounds.typeblock} button selected now
@@ -11651,19 +11651,20 @@ opens up the \dialog{typeblock} dialog box.
 
 \widgetdef{typeblock.title}
 
-In the \dialog{typeblock} dialog you can enter the margins
-between the paper edge and the \gls{typeblock}. You can either type the
-lengths into the supplied fields or, if you have a \gls{path}
-selected, you can get \FlowframTk\ to calculate the margins for a
-\gls{typeblock} that fits the \gls{path}['s] bounding rectangle by
-clicking on the \widget{typeblock.compute_from_path} button.
-(This button is disabled if no \gls*{path} is selected.)
+In the \dialog{typeblock} dialog you can enter the margins between
+the paper edge and the \gls{typeblock}. You can either type the
+lengths into the supplied fields or, if you have one or more
+\glspl{object} selected, you can get \FlowframTk\ to calculate the
+margins for a \gls{typeblock} that fits the bounding rectangle that
+encompasses all the selected \glspl{object} by clicking on the
+\widget{typeblock.compute_from_objects} button.  (This button is
+disabled if no \gls*{object} is selected.)
 
 For example, \figureref{fig:typeblocka} shows a \gls*{path} that
 has been created using the \tool{rectangle} on the
 \widget{grid.tschichold} grid (\sectionref{sec:gridmenu}). This was then selected and the
 \dialog{typeblock} dialog was opened. The
-\widget{typeblock.compute_from_path} button was clicked
+\widget{typeblock.compute_from_objects} button was clicked
 which then filled in the values for the margins.
 
 \FloatSubFigs*{fig:typeblock}
@@ -13718,9 +13719,8 @@ only fourteen tick marks.
 \item Switch to the \tool{select} and \select\ the rectangle. Then
 use \menu{tex.flowframe.set_typeblock} to open the
 \dialog{typeblock} dialog. Click on the
-\widget{typeblock.compute_from_path} button. (If this button
-is disabled, close the dialog and check that the rectangle has been
-selected.) This will fill the margins, but it looks a bit untidy
+\widget{typeblock.compute_from_objects} button. (If this button
+is disabled, select the rectangle from the list.) This will fill the margins, but it looks a bit untidy
 with all those decimal places and since a \gls{pt} is so small such
 precision seems unnecessary so round the
 \widget{flowframe.margins.left} and

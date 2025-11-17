@@ -155,7 +155,6 @@ public class TypeblockPanel extends JPanel
       objectListLabel.setAlignmentY(0.0f);
 
       objectList = new JDRCompleteObjectJList();
-      objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       objectList.setPrototype(resources.getMessage("typeblock.select_shape.placeholder"));
       objectList.addListSelectionListener(this);
       objectList.setVisibleRowCount(3);
@@ -169,7 +168,7 @@ public class TypeblockPanel extends JPanel
       row.add(sp);
 
       computeFromPathButton = resources.createAppJButton(
-        "typeblock", "compute_from_path", this);
+        "typeblock", "compute_from_objects", this);
       computeFromPathButton.setAlignmentX(Component.LEFT_ALIGNMENT);
       row.add(computeFromPathButton);
 
@@ -211,29 +210,24 @@ public class TypeblockPanel extends JPanel
       JDRCanvas canvas = frame.getCanvas();
 
       JDRGroup objects = frame.getAllObjects();
-      selectedShape = null;
 
       objectList.removeAllElements();
-      int n = 0;
+      int numSelected = 0;
 
       for (int i = 0; i < objects.size(); i++)
       {
          JDRCompleteObject object = objects.get(i);
 
-         if (object instanceof JDRShape)
-         {
-            objectList.addObject(object, getResources());
-            n++;
+         objectList.addObject(object, getResources());
 
-            if (selectedShape == null && object.isSelected())
-            {
-               selectedShape = (JDRShape)object;
-               objectList.setSelectedIndex(i);
-            }
+         if (object.isSelected())
+         {
+            objectList.addSelectionInterval(i, i);
+            numSelected++;
          }
       }
 
-      if (n == 0)
+      if (objects.isEmpty())
       {
          objectListLabel.setEnabled(false);
          objectList.setEnabled(false);
@@ -243,7 +237,7 @@ public class TypeblockPanel extends JPanel
       {
          objectListLabel.setEnabled(true);
          objectList.setEnabled(true);
-         computeFromPathButton.setEnabled(selectedShape != null);
+         computeFromPathButton.setEnabled(numSelected > 0);
       }
 
       LaTeXFontBase latexFonts = canvas.getCanvasGraphics()
@@ -277,12 +271,7 @@ public class TypeblockPanel extends JPanel
       {
          JDRCompleteObject obj = objectList.getSelectedObject();
 
-         if (obj != null && obj instanceof JDRShape)
-         {
-            selectedShape = (JDRShape)obj;
-         }
-
-         computeFromPathButton.setEnabled(selectedShape != null);
+         computeFromPathButton.setEnabled(obj != null);
       }
    }
 
@@ -302,11 +291,65 @@ public class TypeblockPanel extends JPanel
 
          shiftPanel.setValue(right-left, unit);
       }
-      else if (action.equals("compute_from_path"))
+      else if (action.equals("compute_from_objects"))
       {
-         if (selectedShape == null) return;
+         int minIdx = objectList.getMinSelectionIndex();
 
-         Rectangle2D bounds = selectedShape.getGeneralPath().getBounds2D();
+         if (minIdx == -1) return;
+
+         Rectangle2D bounds = null;
+
+         if (minIdx == objectList.getMaxSelectionIndex())
+         {
+            JDRCompleteObject obj = objectList.getSelectedObject();
+
+            if (obj instanceof JDRShape)
+            {
+               bounds = ((JDRShape)obj).getGeneralPath().getBounds2D();
+            }
+            else
+            {
+               BBox box = obj.getStorageBBox();
+               bounds = new Rectangle2D.Double(box.getMinX(), box.getMinY(),
+                  box.getWidth(), box.getHeight());
+            }
+         }
+         else
+         {
+            for (FindListItem item : objectList.getSelectedValuesList())
+            {
+               JDRCompleteObject obj = item.getObject();
+
+               if (obj instanceof JDRShape)
+               {
+                  Rectangle2D r = ((JDRShape)obj).getGeneralPath().getBounds2D();
+
+                  if (bounds == null)
+                  {
+                     bounds = r;
+                  }
+                  else
+                  {
+                     bounds.add(r);
+                  }
+               }
+               else
+               {
+                  BBox box = obj.getStorageBBox();
+
+                  if (bounds == null)
+                  {
+                     bounds = new Rectangle2D.Double(box.getMinX(), box.getMinY(),
+                        box.getWidth(), box.getHeight());
+                  }
+                  else
+                  {
+                     bounds.add(box.getMinX(), box.getMinY());
+                     bounds.add(box.getMaxX(), box.getMaxY());
+                  }
+               }
+            }
+         }
 
          double left = bounds.getX();
          double top = bounds.getY();
@@ -415,8 +458,6 @@ public class TypeblockPanel extends JPanel
    private LengthPanel shiftPanel, adjustWidthPanel, adjustHeightPanel;
 
    private JRadioButton useBaselineButton, userButton;
-
-   private JDRShape selectedShape;
 
    private JLabel normalsizeInfoLabel;
 }

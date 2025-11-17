@@ -3269,8 +3269,8 @@ Are you sure you want to ungroup it?</entry>
 <entry key="typeblock.select_shape.mnemonic">E</entry>
 <entry key="typeblock.select_shape.placeholder">Rotational Pattern 000 (000 degrees)</entry>
 
-<entry key="typeblock.compute_from_path">Compute Margins From Selected Shape</entry>
-<entry key="typeblock.compute_from_path.mnemonic">P</entry>
+<entry key="typeblock.compute_from_objects">Compute Margins From Selected Object(s)</entry>
+<entry key="typeblock.compute_from_objects.mnemonic">P</entry>
 <entry key="typeblock.hshift">Even Page Shift</entry>
 <entry key="typeblock.hshift.mnemonic">V</entry>
 <entry key="typeblock.hshift_info">The even page shift is used to calculate the even margin for two-sided documents. You can use the Compute button to calculate the required shift to create a symmetric layout.</entry>
