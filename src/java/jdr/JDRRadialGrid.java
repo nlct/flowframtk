@@ -940,7 +940,34 @@ public class JDRRadialGrid extends JDRGrid
             +f.format(rpt.getAngle().toDegrees())+"°";
    }
 
+   @Override
+   public Point2D getDefaultOffset()
+   {
+      if (subDivisions > 0)
+      {
+         // Compute the length of each sub-division
+
+         double length = majorDivisions/subDivisions;
+
+         double angle = 2.0*Math.PI/spokes;
+
+         return new Point2D.Double(
+            length * Math.cos(angle),
+            length * Math.sin(angle)
+         );
+      }
+      else
+      {
+         return getMinorTicDistance();
+      }
+   }
+
    public Point2D getClosestBpTic(double x, double y)
+   {
+      return getClosestBpTic(x, y, null);
+   }
+
+   public Point2D getClosestBpTic(double x, double y, Point2D target)
    {
       // Convert the original point to radial co-ordinates
 
@@ -989,7 +1016,10 @@ public class JDRRadialGrid extends JDRGrid
 
       // Get this point in Cartesian co-ordinates
 
-      Point2D target = new Point2D.Double();
+      if (target == null)
+      {
+         target = new Point2D.Double();
+      }
 
       toCartesianBp(point, target);
 

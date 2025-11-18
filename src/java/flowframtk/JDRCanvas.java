@@ -8031,7 +8031,7 @@ public class JDRCanvas extends JPanel
 
       if (shift)
       {
-         offset = grid.getMinorTicDistance();
+         offset = grid.getDefaultOffset();
 
          offset.setLocation(cg.bpToStorage(offset.getX()),
                             cg.bpToStorage(offset.getY()));

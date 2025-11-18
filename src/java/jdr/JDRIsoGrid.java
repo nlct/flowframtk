@@ -190,8 +190,20 @@ public class JDRIsoGrid extends JDRGrid
                          unit.toBp(original.getY()));
    }
 
+   @Override
+   public Point2D getDefaultOffset()
+   {
+      Point2D p = getMinorTicDistance();
+      return getClosestBpTic(p.getX(), p.getY(), p);
+   }
+
    // x, y and return values in bp
    public Point2D getClosestBpTic(double x, double y)
+   {
+      return getClosestBpTic(x, y, null);
+   }
+
+   public Point2D getClosestBpTic(double x, double y, Point2D p)
    {
       double length = unit.toBp(majorDivisions);
 
@@ -437,7 +449,16 @@ public class JDRIsoGrid extends JDRGrid
          }
       }
 
-      return new Point2D.Double(nearestX, nearestY);
+      if (p == null)
+      {
+         p = new Point2D.Double(nearestX, nearestY);
+      }
+      else
+      {
+         p.setLocation(nearestX, nearestY);
+      }
+
+      return p;
    }
 
    public Point2D getClosestTic(double x, double y)

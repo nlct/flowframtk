@@ -267,6 +267,15 @@ public abstract class JDRGrid implements Cloneable
       double y);
 
    /**
+    * Gets the default shift in bp. This is used by copy and paste
+    * to offset the pasted objects.
+    */
+   public Point2D getDefaultOffset()
+   {
+      return getMinorTicDistance();
+   }
+
+   /**
     * Gets the distance between minor intervals or 0 if no sub
     * divisions.
     * @return the x and y distance (in bp) between minor intervals or 0 if no sub
