@@ -274,6 +274,24 @@ public class FlowFrameWizard extends JDialog
       objectList.setPrototype(resources.getMessage("flfwizard.frametype.object.placeholder"));
       objectList.addListSelectionListener(this);
 
+      objectList.addMouseListener(new MouseAdapter()
+       {
+          @Override
+          public void mouseClicked(MouseEvent evt)
+          {
+             if (evt.getClickCount() == 2)
+             {
+                int index = objectList.locationToIndex(evt.getPoint());
+
+                if (index > -1)
+                {
+                   JDRCompleteObject object = objectList.getObject(index);
+                   frame.getCanvas().selectObjectAndDeselectRest(object, true);
+                }
+             }
+          }
+       });
+
       JScrollPane sp = new JScrollPane(objectList);
       sp.setAlignmentX(Component.LEFT_ALIGNMENT);
 

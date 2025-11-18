@@ -3827,6 +3827,45 @@ public class JDRCanvas extends JPanel
       return visibleObjects;
    }
 
+   public void selectObjectAndDeselectRest(JDRCompleteObject object, boolean scroll)
+   {
+      if (paths == null)
+      {
+         return;
+      }
+
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+      UndoableEdit edit = null;
+      String undoMsg = getResources().getMessage("undo.select");
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject o = paths.get(i);
+
+         if (o == object)
+         {
+            if (!o.isSelected())
+            {
+               edit = new SelectObject(o, true, undoMsg);
+               ce.addEdit(edit);
+            }
+         }
+         else if (o.isSelected())
+         {
+            edit = new SelectObject(o, false, undoMsg);
+            ce.addEdit(edit);
+         }
+      }
+
+      ce.end();
+      if (edit != null) frame_.postEdit(ce);
+
+      if (scroll)
+      {
+         scrollToObject(object);
+      }
+   }
+
    public void selectObject(JDRCanvasCompoundEdit ce,
      JDRCompleteObject obj, boolean selected)
    {
@@ -9355,11 +9394,16 @@ public class JDRCanvas extends JPanel
 
       for (int i = 0, n = paths.size(); i < n; i++)
       {
-         UndoableEdit edit = new SelectObject(
-            paths.get(i), false,
-            getResources().getMessage("undo.deselect_all"));
-         ce.addEdit(edit);
-         done=true;
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            UndoableEdit edit = new SelectObject(
+               object, false,
+               getResources().getMessage("undo.deselect_all"));
+            ce.addEdit(edit);
+            done=true;
+         }
       }
 
       ce.end();
@@ -9372,11 +9416,16 @@ public class JDRCanvas extends JPanel
 
       for (int i = 0, n = paths.size(); i < n; i++)
       {
-         UndoableEdit edit = new SelectObject(
-            paths.get(i), false,
-            getResources().getMessage("undo.deselect_all"));
-         ce.addEdit(edit);
-         done=true;
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            UndoableEdit edit = new SelectObject(
+               object, false,
+               getResources().getMessage("undo.deselect_all"));
+            ce.addEdit(edit);
+            done=true;
+         }
       }
 
       return done;
