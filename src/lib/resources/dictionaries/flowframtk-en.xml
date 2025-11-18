@@ -4013,7 +4013,7 @@ Merge Region: {2}</entry>
 <entry key="action.context_menu.keystroke">CONTEXT_MENU</entry>
 
 <entry key="action.delete_last">Delete Last</entry>
-<entry key="action.delete_last.keystroke">BACKSPACE</entry>
+<entry key="action.delete_last.keystroke">BACK_SPACE</entry>
 
 <entry key="action.construct_click">Construction Click</entry>
 <entry key="action.construct_click.keystroke">F4</entry>
