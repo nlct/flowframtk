@@ -10822,11 +10822,11 @@ public class JDRCanvas extends JPanel
          {
             // add index to list
 
-            list.add(new Integer(i));
+            list.add(Integer.valueOf(i));
          }
       }
 
-      if (list.size() == 0)
+      if (list.isEmpty())
       {
          return;
       }
@@ -10859,11 +10859,11 @@ public class JDRCanvas extends JPanel
          {
             // add index to list
 
-            list.add(new Integer(i));
+            list.add(Integer.valueOf(i));
          }
       }
 
-      if (list.size() == 0)
+      if (list.isEmpty())
       {
          return;
       }
@@ -13739,13 +13739,8 @@ public class JDRCanvas extends JPanel
 
          indices = new int[n];
 
-         for (int i = 0; i < n; i++)
-         {
-            indices[i] = list_.get(i).getIndex();
-         }
-
 // TODO remove is causing array index out of bounds. Need to check
-// this
+// this (can't reproduce)
          Arrays.sort(indices);
 
          grpIndex_ = indices[0];
@@ -14024,7 +14019,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         paths.swap(oldIndex, newIndex);
+         paths.swap(newIndex, oldIndex);
 
          repaintRegion();
       }
@@ -14067,7 +14062,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         paths.swap(oldIndex, newIndex);
+         paths.swap(newIndex, oldIndex);
 
          repaintRegion();
       }

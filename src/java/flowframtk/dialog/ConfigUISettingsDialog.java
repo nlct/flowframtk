@@ -1408,8 +1408,8 @@ class RulerFormatPanel extends JPanel implements ActionListener
 
       patternField.setText(application.getRulerFormat().toLocalizedPattern());
       localeBox.setSelectedItem(application.getRulerLocale());
-      widthModel.setValue(new Integer(rulerWidth));
-      heightModel.setValue(new Integer(rulerHeight));
+      widthModel.setValue(Integer.valueOf(rulerWidth));
+      heightModel.setValue(Integer.valueOf(rulerHeight));
 
       boolean left = application.getVerticalToolBarLocation().equals("West");
       toolbarLeft.setSelected(left);
@@ -2811,8 +2811,8 @@ class TeXEditorUIPanel extends JPanel
 
       fontSelector.setSelectedFont(application.getTeXEditorFont());
 
-      widthModel.setValue(new Integer(application.getTeXEditorWidth()));
-      heightModel.setValue(new Integer(application.getTeXEditorHeight()));
+      widthModel.setValue(Integer.valueOf(application.getTeXEditorWidth()));
+      heightModel.setValue(Integer.valueOf(application.getTeXEditorHeight()));
 
       FlowframTkSettings settings = application.getSettings();
 

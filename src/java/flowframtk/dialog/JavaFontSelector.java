@@ -198,7 +198,7 @@ public class JavaFontSelector extends JPanel
    public void setSelectedFont(Font f)
    {
       nameBox.setSelectedItem(f.getName());
-      sizeModel.setValue(new Integer(f.getSize()));
+      sizeModel.setValue(Integer.valueOf(f.getSize()));
 
       if (boldBox != null)
       {
