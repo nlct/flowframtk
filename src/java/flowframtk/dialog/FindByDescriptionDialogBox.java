@@ -332,7 +332,7 @@ public class FindByDescriptionDialogBox extends JDialog
 
          for (int i=0; i < indexes.length; i++)
          {
-            objects[i] = descriptionBox.getObject(i);
+            objects[i] = descriptionBox.getObject(indexes[i]);
          }
 
          currentFrame.selectObjectsAndScroll(objects);
