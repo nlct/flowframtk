@@ -390,6 +390,9 @@ t
 
       objectList_[idx1] = objectList_[idx2];
       objectList_[idx2] = tmp;
+
+      objectList_[idx1].index_ = idx1;
+      objectList_[idx2].index_ = idx2;
    }
 
    /**
