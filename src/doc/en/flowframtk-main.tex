@@ -11551,6 +11551,13 @@ location, then pick up the next one and glue that onto the page, and
 so on. If you've glued one sheet down so that it overlaps another,
 the text on the top sheet will obscure the text on the lower sheet.
 
+\FloatFig{fig:flowframe-layers}
+{%
+  \includeimg{flowframe-layers1}
+  \includeimg{flowframe-layers2}
+}
+{Static, Flow and Dynamic Layers}
+
 There are three types of frame defined by the \sty{flowfram}
 package: \qt{flow} frames
 which are the main type of frame. These are the frames in which the
@@ -11593,6 +11600,7 @@ the value of the \ctr{page} counter. So if your document pages
 are numbered, say, 1, i, ii, iii, 1, 2, 3, then the absolute page 3
 is the page numbered ii, since it's the third page of the document.
 
+Each type of frame has its own layer (see \figureref{fig:flowframe-layers}).
 The \sty{flowfram} package stacks the frames on the page in
 the following order: static, flow and dynamic, each in the order
 in which they were defined. For example, if you define a flow frame
