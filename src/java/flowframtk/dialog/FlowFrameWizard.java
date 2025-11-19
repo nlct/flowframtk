@@ -253,6 +253,24 @@ public class FlowFrameWizard extends JDialog
 
       clampCompMax(row);
 
+      row = createRow();
+      comp.add(row);
+
+      row.add(resources.createAppLabel("flfwizard.labelpages.pages"));
+      row.add(resources.createLabelSpacer());
+
+      bg = new ButtonGroup();
+
+      relativePagesBox = createRadioButton(
+        "flfwizard.labelpages", "relative", bg, true);
+      row.add(relativePagesBox);
+
+      absolutePagesBox = createRadioButton(
+        "flfwizard.labelpages", "absolute", bg, false);
+      row.add(absolutePagesBox);
+
+      clampCompMax(row);
+
       comp.add(Box.createVerticalGlue());
 
       return clsComp;
@@ -269,10 +287,14 @@ public class FlowFrameWizard extends JDialog
       emptyImageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
       comp.add(emptyImageLabel);
 
+      JLabel label = resources.createAppLabel("flfwizard.frametype.object");
+      comp.add(label);
+
       objectList = new JDRCompleteObjectJList();
       comp.setAlignmentX(Component.LEFT_ALIGNMENT);
       objectList.setPrototype(resources.getMessage("flfwizard.frametype.object.placeholder"));
       objectList.addListSelectionListener(this);
+      label.setLabelFor(objectList);
 
       objectList.addMouseListener(new MouseAdapter()
        {
@@ -428,22 +450,26 @@ public class FlowFrameWizard extends JDialog
       clampCompMax(row);
 
       row = createRow();
+
       comp.add(row);
 
-      row.add(resources.createAppLabel("flfwizard.labelpages.pages"));
+      JLabel currentPagesLabel = resources.createAppLabel("flfwizard.labelpages.pages");
+      row.add(currentPagesLabel);
+
       row.add(resources.createLabelSpacer());
 
-      ButtonGroup bg = new ButtonGroup();
+      currentPageSettingField = resources.createAppInfoField("flfwizard.labelpages.relative");
 
-      relativePagesBox = createRadioButton(
-        "flfwizard.labelpages", "relative", bg, true);
-      row.add(relativePagesBox);
+      String absStr = resources.getMessage("flfwizard.labelpages.absolute");
 
-      absolutePagesBox = createRadioButton(
-        "flfwizard.labelpages", "absolute", bg, false);
-      row.add(absolutePagesBox);
+      if (absStr.length() > currentPageSettingField.getText().length())
+      {
+         currentPageSettingField.setText(absStr);
+      }
 
-      clampCompMax(row);
+      row.add(currentPageSettingField);
+
+      clampCompMaxHeight(row);
 
       row = createRow();
       comp.add(row);
@@ -726,8 +752,19 @@ public class FlowFrameWizard extends JDialog
       row.setMaximumSize(dim);
    }
 
+   protected void clampCompMaxHeight(JComponent row)
+   {
+      Dimension dim = row.getPreferredSize();
+      int h = dim.height + 20;
+      dim = row.getMaximumSize();
+      dim.height = h;
+      row.setMaximumSize(dim);
+   }
+
    protected void initialiseCls()
    {
+      CanvasGraphics cg = frame.getCanvasGraphics();
+
       ExportSettings exportSettings = frame.getExportSettings();
 
       useRelativeFontDeclarations.setSelected(
@@ -744,7 +781,7 @@ public class FlowFrameWizard extends JDialog
          }
       }
 
-      String cls = frame.getCanvasGraphics().getDocClass();
+      String cls = cg.getDocClass();
 
       if (cls != null && !cls.isEmpty())
       {
@@ -757,6 +794,15 @@ public class FlowFrameWizard extends JDialog
          useDefaultCls.setSelected(true);
          customClsField.setText("");
          customClsField.setEnabled(false);
+      }
+
+      if (cg.useAbsolutePages())
+      {
+         absolutePagesBox.setSelected(true);
+      }
+      else
+      {
+         relativePagesBox.setSelected(true);
       }
 
    }
@@ -955,6 +1001,17 @@ public class FlowFrameWizard extends JDialog
          }
       }
 
+      CanvasGraphics cg = frame.getCanvasGraphics();
+
+      if (cg.useAbsolutePages())
+      {
+         currentPageSettingField.setText(absolutePagesBox.getText());
+      }
+      else
+      {
+         currentPageSettingField.setText(absolutePagesBox.getText());
+      }
+
       updateFrameTypeComp();
    }
 
@@ -1057,15 +1114,6 @@ public class FlowFrameWizard extends JDialog
 
       CanvasGraphics cg = frame.getCanvasGraphics();
 
-      if (cg.useAbsolutePages())
-      {
-         absolutePagesBox.setSelected(true);
-      }
-      else
-      {
-         relativePagesBox.setSelected(true);
-      }
-
       margins.setUnit(cg.getStorageUnit());
 
       updateCardButtons();
@@ -1099,6 +1147,23 @@ public class FlowFrameWizard extends JDialog
          frame.getCanvas().setDocClass(
            useDefaultCls.isSelected() ? null : customClsField.getText());
 
+         CanvasGraphics cg = frame.getCanvasGraphics();
+
+         if (cg.useAbsolutePages())
+         {
+            if (relativePagesBox.isSelected())
+            {
+               frame.getCanvas().setUseAbsolutePages(false);
+            }
+         }
+         else
+         {
+            if (absolutePagesBox.isSelected())
+            {
+               frame.getCanvas().setUseAbsolutePages(true);
+            }
+         }
+
          clsModified = false;
       }
 
@@ -1114,21 +1179,6 @@ public class FlowFrameWizard extends JDialog
    {
       CanvasGraphics cg = frame.getCanvasGraphics();
       JDRResources resources = getResources();
-
-      if (cg.useAbsolutePages())
-      {
-         if (relativePagesBox.isSelected())
-         {
-            frame.getCanvas().setUseAbsolutePages(false);
-         }
-      }
-      else
-      {
-         if (absolutePagesBox.isSelected())
-         {
-            frame.getCanvas().setUseAbsolutePages(true);
-         }
-      }
 
       String label = labelField.getText().trim();
 
@@ -1807,6 +1857,8 @@ public class FlowFrameWizard extends JDialog
    boolean isSpecial = false;
 
    JRadioButton relativePagesBox, absolutePagesBox;
+
+   JTextField currentPageSettingField;
 
    JComboBox<String> pageList;
    String pagesAllText, pagesOddText, pagesEvenText, pagesNoneText;

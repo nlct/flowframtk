@@ -3313,17 +3313,32 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.frametype.selected_object_notset">The selected object will be of type:</entry>
 <entry key="flfwizard.frametype.selected_object_set">The selected object is of type:</entry>
 
+<entry key="flfwizard.frametype.object">Object</entry>
+<entry key="flfwizard.frametype.object.mnemonic">J</entry>
+
 <entry key="flfwizard.frametype.header">Page Header (odd or both)</entry>
+<entry key="flfwizard.frametype.header.mnemonic">P</entry>
 <entry key="flfwizard.frametype.evenheader">Even Page Header</entry>
+<entry key="flfwizard.frametype.evenheader.mnemonic">E</entry>
 <entry key="flfwizard.frametype.footer">Page Footer (odd or both)</entry>
+<entry key="flfwizard.frametype.footer.mnemonic">O</entry>
 <entry key="flfwizard.frametype.evenfooter">Even Page Footer</entry>
+<entry key="flfwizard.frametype.evenfooter.mnemonic">V</entry>
 <entry key="flfwizard.frametype.thumbtab">Thumbtab (odd or both)</entry>
+<entry key="flfwizard.frametype.thumbtab.mnemonic">T</entry>
 <entry key="flfwizard.frametype.eventhumbtab">Even Thumbtab</entry>
+<entry key="flfwizard.frametype.eventhumbtab.mnemonic">N</entry>
 <entry key="flfwizard.frametype.thumbtabindex">Thumbtab Index (odd or both)</entry>
+<entry key="flfwizard.frametype.thumbtabindex.mnemonic">I</entry>
 <entry key="flfwizard.frametype.eventhumbtabindex">Even Thumbtab Index</entry>
+<entry key="flfwizard.frametype.eventhumbtabindex.mnemonic">M</entry>
 <entry key="flfwizard.frametype.static">Static</entry>
+<entry key="flfwizard.frametype.static.mnemonic">S</entry>
 <entry key="flfwizard.frametype.dynamic">Dynamic</entry>
+<entry key="flfwizard.frametype.dynamic.mnemonic">D</entry>
 <entry key="flfwizard.frametype.flow">Flow</entry>
+<entry key="flfwizard.frametype.flow.mnemonic">F</entry>
+
 
 <entry key="flfwizard.labelpages.title">Label &amp; Pages</entry>
 <entry key="flfwizard.labelpages.frame_type">Frame Type:</entry>
@@ -3334,7 +3349,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.labelpages.frame_label.special_info">A dynamic frame with the label ''{0}'' is a special frame.</entry>
 
 
-<entry key="flfwizard.labelpages.pages.info">The flowfram.sty modifications to the output routine check each frame''s page list to determine if a frame is ''active'' for the current page. The page list may be ''none'' initially and later updated or you may use ''all'' for all pages, ''odd'' for only odd pages, ''even'' for only even pages, or a list or range such as''2-4'', ''&lt;5'', ''&gt;6'' or ''1,4,7,9-12,15''. The pages must be referenced by their integer number (not formatted style, such as i or ii). The number may be the absolute page number (not the value of the page counter) or relative to the page counter.</entry>
+<entry key="flfwizard.labelpages.pages.info">The flowfram.sty modifications to the output routine check each frame''s page list to determine if a frame is ''active'' for the current page. The page list may be ''none'' initially and later updated or you may use ''all'' for all pages, ''odd'' for only odd pages, ''even'' for only even pages, or a list or range such as''2-4'', ''&lt;5'', ''&gt;6'' or ''1,4,7,9-12,15''. The pages must be referenced by their integer number (not formatted style, such as i or ii). With the pages=absolute setting, the number is the absolute page number (not the value of the page counter). With the pages=relative setting the number is the value of the page counter.</entry>
 
 <entry key="flfwizard.labelpages.pagelist">Page List:</entry>
 <entry key="flfwizard.labelpages.pagelist.mnemonic">P</entry>
