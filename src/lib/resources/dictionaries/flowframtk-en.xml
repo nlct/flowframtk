@@ -3265,9 +3265,11 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="typeblock.info">Commands such as \newflowframe, \newstaticframe and \newdynamicframe all require locations relative to the typeblock (the area defined by the margins and \textwidth/\hsize and \textheight/\vsize). This area needs to be defined in order to set the page geometry and to convert the canvas coordinates into suitable values for the flowfram.sty commands. You won''t be able to define any flowframe data until this area is set.</entry>
 
-<entry key="typeblock.select_shape">Shape:</entry>
-<entry key="typeblock.select_shape.mnemonic">E</entry>
-<entry key="typeblock.select_shape.placeholder">Rotational Pattern 000 (000 degrees)</entry>
+<entry key="typeblock.select_object.info">If you would like to calculate the margins required to minimally encompass one or more object, select the object(s) in the list below and use the ''{0}'' button. A single mouse click will select an item in the list. A double mouse click will both select the item and select the corresponding object on the canvas.</entry>
+
+<entry key="typeblock.select_object">Object(s):</entry>
+<entry key="typeblock.select_object.mnemonic">E</entry>
+<entry key="typeblock.select_object.placeholder">Rotational Pattern 000 (000 degrees)</entry>
 
 <entry key="typeblock.compute_from_objects">Compute Margins From Selected Object(s)</entry>
 <entry key="typeblock.compute_from_objects.mnemonic">P</entry>

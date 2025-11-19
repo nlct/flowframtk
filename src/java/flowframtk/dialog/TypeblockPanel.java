@@ -49,7 +49,7 @@ public class TypeblockPanel extends JPanel
 
       JDRResources resources = getResources();
 
-      JTextArea infoArea = resources.createAppInfoArea("typeblock.info", 20);
+      JTextArea infoArea = resources.createAppInfoArea("typeblock.info", INFO_COLS);
       infoArea.setAlignmentX(0.0f);
       infoArea.setOpaque(true);
 
@@ -67,8 +67,7 @@ public class TypeblockPanel extends JPanel
 
       JComponent row;
 
-      row = createShapeSelectionComp();
-      settingsPanel.add(row);
+      createShapeSelectionComp(settingsPanel);
 
       row = createRow();
       settingsPanel.add(row);
@@ -126,7 +125,7 @@ public class TypeblockPanel extends JPanel
       computeSymShiftButton.setAlignmentX(Component.LEFT_ALIGNMENT);
       row.add(computeSymShiftButton);
 
-      infoArea = resources.createAppInfoArea("typeblock.hshift_info", 20);
+      infoArea = resources.createAppInfoArea("typeblock.hshift_info", INFO_COLS);
       infoArea.setAlignmentX(0.0f);
       add(infoArea);
 
@@ -142,20 +141,26 @@ public class TypeblockPanel extends JPanel
       return row;
    }
 
-   protected JComponent createShapeSelectionComp()
+   protected void createShapeSelectionComp(JComponent comp)
    {
       JDRResources resources = getResources();
 
-      JComponent row = createRow();
-      row.setAlignmentY(Component.TOP_ALIGNMENT);
+      computeFromPathButton = resources.createAppJButton(
+        "typeblock", "compute_from_objects", this);
 
-      objectListLabel = resources.createAppLabel("typeblock.select_shape");
-      row.add(objectListLabel);
-      objectListLabel.setAlignmentX(0.0f);
-      objectListLabel.setAlignmentY(0.0f);
+      JTextArea info = resources.createAppInfoArea("typeblock.select_object.info",
+        computeFromPathButton.getText());
+
+      info.setColumns(INFO_COLS);
+      info.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      comp.add(info);
+
+      objectListLabel = resources.createAppLabel("typeblock.select_object");
+      comp.add(objectListLabel);
 
       objectList = new JDRCompleteObjectJList();
-      objectList.setPrototype(resources.getMessage("typeblock.select_shape.placeholder"));
+      objectList.setPrototype(resources.getMessage("typeblock.select_object.placeholder"));
       objectList.addListSelectionListener(this);
       objectList.setVisibleRowCount(3);
       objectListLabel.setLabelFor(objectList);
@@ -180,22 +185,21 @@ public class TypeblockPanel extends JPanel
           }
        });
 
+      objectList.setAlignmentX(Component.LEFT_ALIGNMENT);
+      objectList.setAlignmentY(Component.TOP_ALIGNMENT);
+
       JScrollPane sp = new JScrollPane(objectList);
 
-      sp.setAlignmentX(0.0f);
-      sp.setAlignmentY(0.0f);
+      sp.setAlignmentX(Component.LEFT_ALIGNMENT);
+      sp.setAlignmentY(Component.TOP_ALIGNMENT);
 
-      row.add(sp);
+      comp.add(sp);
 
-      computeFromPathButton = resources.createAppJButton(
-        "typeblock", "compute_from_objects", this);
+      JComponent row = createRow();
+      comp.add(row);
+
       computeFromPathButton.setAlignmentX(Component.LEFT_ALIGNMENT);
       row.add(computeFromPathButton);
-
-      computeFromPathButton.setAlignmentX(0.0f);
-      computeFromPathButton.setAlignmentY(0.0f);
-
-      return row;
    }
 
    public void requestDefaultComponentFocus()
@@ -480,4 +484,6 @@ public class TypeblockPanel extends JPanel
    private JRadioButton useBaselineButton, userButton;
 
    private JLabel normalsizeInfoLabel;
+
+   static final int INFO_COLS = 20;
 }

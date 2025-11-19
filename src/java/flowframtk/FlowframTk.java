@@ -2880,7 +2880,7 @@ public class FlowframTk extends JFrame
 
       setTypeblockItem = FlowframTkAction.createMenuItem(this,
         "menu.tex", "flowframe.set_typeblock", flowframeM,
-        TOOL_FLAG_ANY, EDIT_FLAG_ANY, SELECT_FLAG_ANY,
+        TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
