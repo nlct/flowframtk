@@ -3,10 +3,11 @@ Vector graphics application that can be used with flowfram.sty LaTeX package
 
 Home page: https://www.dickimaw-books.com/software/flowframtk
 
-The latest release can be obtained from [CTAN](https://ctan.org/pkg/flowframtk).
+Screenshots: https://www.dickimaw-books.com/software/flowframtk/screenshots/
 
-Under construction (in the process of moving over from a local
-non-git repository and changing structure).
+The latest public release can be obtained from [CTAN](https://ctan.org/pkg/flowframtk).
+Newer releases available for testing can be found in the [Releases
+page](https://github.com/nlct/flowframtk/releases).
 
 FlowframTk is a vector graphics application written in Java. You can use FlowframTk to:
 
@@ -18,20 +19,26 @@ FlowframTk is a vector graphics application written in Java. You can use Flowfra
  - Display text along a shape.
  - Extract the parameters for TeX's `\parshape` command and for [`\shapepar`](https://ctan.org/pkg/shapepar).
  - Construct frames for use with the [`flowfram`](https://ctan.org/pkg/flowfram) package and export as a class or package.
- - Pictures can be saved in FlowframTk's native open binary format or native open ascii format or can be exported as:
-   + a pgfpicture environment for use in LaTeX documents with the pgf package;
-   + a complete single-paged LaTeX document that contains the pgf image code;
-   + a LaTeX package or class based on the flowfram package;
-   + a PNG image file;
-   + a PostScript file;
-   + a PDF image file;
+ - Pictures can be saved in FlowframTk's native open binary format (`.jdr`) or native open plain text format (`.ajr`) or can be exported as:
+   + a `pgfpicture` environment for use in LaTeX documents with the [`pgf`](https://ctan.org/pkg/pgf) package;
+   + a complete single-paged LaTeX document that contains the `pgf` image code;
+   + a LaTeX package or class based on the `flowfram` package;
+   + a PNG image file (full-paged or cropped);
+   + a PDF image file (full-paged or cropped);
+   + a PDF multi-paged document that uses the `flowfram` package for
+     the layout;
+   + a PostScript (PS) file;
    + a scalable vector graphics (SVG) image file.
-   (Export functions for PS, PDF and SVG all require a TeX distribution.) 
+   (Export functions for PDF require a TeX distribution.
+    Export functions for PNG, PS, SVG may need a TeX distribution,
+    depending on the export setting.
+    The export to PS or SVG functions now need to be explicitly
+    enabled.) 
  - Alternative text can be specified to use when exporting to a LaTeX file.
  - Mappings can be used to specify what LaTeX font declarations should be used when exporting to a LaTeX file.
  - Accompanying Applications: 
    + `jdrview`: A lightweight jdr/ajr image viewer
-   + `jdrutils`: A suite of command line converters
+   + `jdrconverter`: converts to or from jdr/ajr file format
 
 ## Source Code
 
