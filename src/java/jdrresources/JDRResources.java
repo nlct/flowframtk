@@ -2388,11 +2388,20 @@ public class JDRResources
    public JDRButton createOkayButton(ActionListener listener, 
      String tooltipText)
    {
-      JDRButton button = createDialogButton("button.okay", "okay", 
-       listener, getAccelerator("button.okay"), tooltipText);
+      return createOkayButton(listener, tooltipText, true);
+   }
 
-      button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
-        put(getAccelerator("button.alt_okay"), "okay");
+   public JDRButton createOkayButton(ActionListener listener, 
+     String tooltipText, boolean bothAccelerators)
+   {
+      JDRButton button = createDialogButton("button.okay", "okay", 
+          listener, getAccelerator("button.okay"), tooltipText);
+
+      if (bothAccelerators)
+      {
+         button.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
+           put(getAccelerator("button.alt_okay"), "okay");
+      }
 
       return button;
    }
@@ -2405,6 +2414,33 @@ public class JDRResources
    public static Component createButtonSpacer()
    {
       return Box.createHorizontalStrut(BUTTON_SPACER);
+   }
+
+   public JDRButton createOkayCancelHelpButtons(JDialog dialog, JComponent comp,
+      ActionListener listener, String helpId, boolean bothOkayAccelerators)
+   {
+      JDRButton okayButton = createOkayButton(listener, getMessage("button.okay"),
+        bothOkayAccelerators);
+
+      comp.add(okayButton);
+      comp.add(createButtonSpacer());
+      comp.add(createCancelButton(listener));
+
+      if (helpId != null)
+      {
+         comp.add(createButtonSpacer());
+
+         try
+         {
+            comp.add(createHelpDialogButton(dialog, helpId));
+         }
+         catch (HelpSetNotInitialisedException e)
+         {
+            internalError(null, e);
+         }
+      }
+
+      return okayButton;
    }
 
    public JDRButton createOkayCancelButtons(JDialog dialog, JComponent comp,

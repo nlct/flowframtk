@@ -3061,7 +3061,9 @@ buttons.
 \widgetdef{button.okay}
 
 The \widget{okay} button applies the settings in the dialog and
-closes the dialog window.
+closes the dialog window. In some dialogs, you may also be able to
+use \inlinekeystrokedef{button.alt_okay} as well, but sometimes an
+active widget with the focus may override this behaviour.
 
 \widgetdef{button.cancel}
 
@@ -5679,9 +5681,12 @@ The \menu{navigate.by_description} menu item will open the
  {\includeimg{findbydesc}}
  {Find By Description Dialog (Filter Widgets Visible)}
 
+\widgetdef{findbydescription.image_objects}
+
 The \dialog{findbydescription} dialog has all the
 \glspl{object} (that are visible and are not part of a \gls{group}) listed by their
-description.  If an object doesn't have the description set, a
+description shown in the \widget{findbydescription.image_objects}
+list. If an object doesn't have the description set, a
 generic description is used. 
 
 The generic description starts with the object type followed by a
@@ -5697,20 +5702,19 @@ click \btn{okay}.  This will first deselect any currently selected
 \glspl{object} and then select each object corresponding to the
 selected row or rows.
 
+\begin{important}
+The \btn{button.okay} can be activated with
+\accelerator{button.okay} but not with
+\accelerator{findbydescription.update} as that is used for the
+\btn{findbydescription.update} button instead.
+\end{important}
+
 \widgetdef{findbydescription.filter}
 
 If your image has many \glspl{object}, you may find it difficult
 searching through the list. In this case, you may prefer to filter
 the list. This may be done by selecting the \widget{findbydescription.filter}
 checkbox, which will show the filter widgets (see \figureref{fig:findbydescription}).
-
-\begin{important}
-Remember that \keys{\keyref{return}} will be equivalent to using the
-\widget{okay} button, which will search for the \glspl{object}
-corresponding to the selected items in the list. If you change the
-filter settings, you need to use the \widget{findbydescription.update} button or the
-mnemonic \mnemonic{findbydescription.update}.
-\end{important}
 
 \widgetdef{findbydescription.match}
 There are three conditional rows: a match on the object type, a
@@ -5802,13 +5806,23 @@ the regular expression \code{.*in.*} will match but \code{.*in} won't.
 
 \widgetdef{findbydescription.update}
 
-Once you have setup the filter criteria, click on the
-\widget{findbydescription.update} button to the right to update the
+Once you have set the filter criteria, click on the
+\widget{findbydescription.update} button to update the
 list of matching objects.
 
 \widgetdef{findbydescription.reset}
 The \widget{findbydescription.reset} button will reset the filter
-criteria back to its default settings.
+criteria back to its default settings. If you only want to reset the
+\gls{object} type checkboxes, use the \widget{findbydescription.selectallitems}
+button instead.
+
+\widgetdef{findbydescription.selectallitems}
+The \widget{findbydescription.selectallitems} button will 
+select all the \gls{object} type checkboxes.
+
+\widgetdef{findbydescription.deselectallitems}
+The \widget{findbydescription.deselectallitems} button will 
+deselect all the \gls{object} type checkboxes.
 
 \menudef{menu.navigate.add_description}
 

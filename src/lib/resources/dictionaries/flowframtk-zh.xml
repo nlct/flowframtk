@@ -3529,6 +3529,9 @@ Are you sure you want to ungroup it?</entry>
 <!-- Used to measure minimum width -->
 <entry key="findbydescription.placeholder">Rotational Pattern 000 (360) MMMMMMMM</entry>
 
+<entry key="findbydescription.image_objects">Image Objects:</entry>
+<entry key="findbydescription.image_objects.mnemonic">J</entry>
+
 <entry key="findbydescription.JDRPath">路径: {0}</entry>
 <entry key="findbydescription.JDRText">文本: {0} ({1})</entry>
 <entry key="findbydescription.JDRBitmap">位图: {0} ({1},{2})</entry>
@@ -3553,13 +3556,25 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="findbydescription.update">Update</entry>
 <entry key="findbydescription.update.mnemonic">U</entry>
+<entry key="findbydescription.update.keystroke">ENTER</entry>
 <entry key="findbydescription.update.tooltip">Update list</entry>
 <entry key="findbydescription.update.iconimage">dotask</entry>
 
 <entry key="findbydescription.reset">Reset</entry>
 <entry key="findbydescription.reset.mnemonic">R</entry>
+<entry key="findbydescription.reset.keystroke">control R</entry>
 <entry key="findbydescription.reset.tooltip">Reset filters</entry>
 <entry key="findbydescription.reset.iconimage">default</entry>
+
+<entry key="findbydescription.selectallitems">Select All</entry>
+<entry key="findbydescription.selectallitems.keystroke">control A</entry>
+<entry key="findbydescription.selectallitems.tooltip">Select all type checkboxes</entry>
+
+<entry key="findbydescription.deselectallitems">Deselect All</entry>
+<entry key="findbydescription.deselectallitems.keystroke">control shift A</entry>
+<entry key="findbydescription.deselectallitems.tooltip">Deselect all type checkboxes</entry>
+
+<entry key="findbydescription.filter_info">Use ''{0}'' button to apply filter settings or ''{1}'' to reset the filter.</entry>
 
 <entry key="findbydescription.object_type">Any of Type:</entry>
 
@@ -3942,7 +3957,8 @@ Merge Region: {2}</entry>
 
 <!-- Buttons -->
 
-<entry key="button.alt_okay">shift ENTER</entry>
+<entry key="button.alt_okay">确定</entry>
+<entry key="button.alt_okay.keystroke">ENTER</entry>
 
 <entry key="button.contexthelp">帮助</entry>
 <entry key="button.contexthelp.mnemonic">H</entry>

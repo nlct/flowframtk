@@ -69,16 +69,6 @@ public class FindByDescriptionDialogBox extends JDialog
       upperComp.add(filterButton);
       upperComp.add(createFilterPanel());
 
-      filterButton.addItemListener(new ItemListener()
-       {
-          @Override
-          public void itemStateChanged(ItemEvent evt)
-          {
-             filterPanel.setVisible(filterButton.isSelected());
-             mainComp.resetToPreferredSizes();
-          }
-       });
-
       descriptionBox = new JDRCompleteObjectJList();
 
       descriptionBox.setPrototype(
@@ -86,17 +76,43 @@ public class FindByDescriptionDialogBox extends JDialog
 
       JScrollPane descSp = new JScrollPane(descriptionBox);
 
+      JComponent descComp = new JPanel(new BorderLayout());
+      descComp.add(descSp, "Center");
+
+      JLabel label = resources.createAppLabel("findbydescription.image_objects");
+      descComp.add(label, "North");
+      label.setLabelFor(descriptionBox);
+
       mainComp = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-        new JScrollPane(upperComp), descSp);
+        new JScrollPane(upperComp), descComp);
 
       getContentPane().add(mainComp, "Center");
 
       JPanel p2 = new JPanel();
 
-      resources.createOkayCancelHelpButtons(this, p2, this, "mi:findbydesc");
+      resources.createOkayCancelHelpButtons(this, p2, this, "mi:findbydesc", false);
 
       getContentPane().add(p2, "South");
       pack();
+
+      filterButton.addItemListener(new ItemListener()
+       {
+          @Override
+          public void itemStateChanged(ItemEvent evt)
+          {
+             filterPanel.setVisible(filterButton.isSelected());
+             mainComp.resetToPreferredSizes();
+
+             if (!filterButton.isSelected())
+             {
+                update();
+             }
+             else
+             {
+                revalidate();
+             }
+          }
+       });
 
       filterButton.setSelected(false);
 
@@ -111,35 +127,22 @@ public class FindByDescriptionDialogBox extends JDialog
       filterPanel = Box.createVerticalBox();
       filterPanel.setAlignmentX(0.0f);
 
-      row = new JPanel(new BorderLayout());
+      row = Box.createHorizontalBox();
       filterPanel.add(row);
 
-      resetButton = resources.createDialogButton(
-       "findbydescription", "reset", this, null, null);
-
-      row.add(resetButton, "West");
-
-      updateButton = resources.createDialogButton(
-       "findbydescription", "update", this, null, null);
-
-      row.add(updateButton, "East");
-
-      panel = new JPanel(new FlowLayout());
-      row.add(panel, "Center");
-
-      panel.add(resources.createAppLabel("findbydescription.match"));
+      row.add(resources.createAppLabel("findbydescription.match"));
 
       ButtonGroup bg = new ButtonGroup();
 
       filterAllButton = resources.createAppRadioButton(
         "findbydescription.match", "all", bg, true, null);
 
-      panel.add(filterAllButton);
+      row.add(filterAllButton);
 
       filterAnyButton = resources.createAppRadioButton(
         "findbydescription.match", "any", bg, false, null);
 
-      panel.add(filterAnyButton);
+      row.add(filterAnyButton);
 
       row = Box.createHorizontalBox();
       filterPanel.add(row);
@@ -168,6 +171,51 @@ public class FindByDescriptionDialogBox extends JDialog
         resources, "findbydescription.match_tag", labelGrp);
       filterPanel.add(filterTag);
 
+      row = new JPanel(new BorderLayout());
+      filterPanel.add(row);
+
+      updateButton = resources.createDialogButton(
+       "findbydescription", "update", this,
+        resources.getAccelerator("findbydescription.update"), 
+        resources.getToolTipText("findbydescription.update"));
+
+      row.add(updateButton, "West");
+
+      JTextArea infoArea = resources.createAppInfoArea("findbydescription.filter_info",
+        resources.getMessage("findbydescription.update"),
+        resources.getMessage("findbydescription.reset")
+      );
+
+      infoArea.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+
+      row.add(infoArea, "Center");
+
+      JComponent resetComp = Box.createHorizontalBox();
+
+      row.add(resetComp, "East");
+
+      resetButton = resources.createDialogButton(
+       "findbydescription", "reset", this, 
+       resources.getAccelerator("findbydescription.reset"), 
+       resources.getToolTipText("findbydescription.reset"));
+      resetComp.add(resetButton);
+
+      resetComp.add(resources.createButtonSpacer());
+
+      resetComp.add(resources.createDialogButton(
+        "findbydescription", "deselectallitems", this,
+        resources.getAccelerator("findbydescription.deselectallitems"),
+        resources.getToolTipText("findbydescription.deselectallitems")
+      ));
+
+      resetComp.add(resources.createButtonSpacer());
+
+      resetComp.add(resources.createDialogButton(
+        "findbydescription", "selectallitems", this,
+        resources.getAccelerator("findbydescription.selectallitems"),
+        resources.getToolTipText("findbydescription.selectallitems")
+      ));
+
       return filterPanel;
    }
 
@@ -181,17 +229,21 @@ public class FindByDescriptionDialogBox extends JDialog
       return box;
    }
 
-   protected void resetFilter()
+   protected void setAllTypes(boolean selected)
    {
       for (Iterator<String> it = filterObjectClassMap.keySet().iterator(); 
            it.hasNext(); )
       {
          String key = it.next();
 
-         filterObjectClassMap.get(key).setSelected(true);
+         filterObjectClassMap.get(key).setSelected(selected);
       }
+   }
 
-      filterAnyButton.setSelected(true);
+   protected void resetFilter()
+   {
+      setAllTypes(true);
+      filterAllButton.setSelected(true);
       filterDesc.reset();
       filterTag.reset();
    }
@@ -269,9 +321,11 @@ public class FindByDescriptionDialogBox extends JDialog
    {
       descriptionBox.removeAllElements();
 
+      int n = paths == null ? 0 : paths.size();
+
       try
       {
-         for (int i = 0, n = paths.size(); i < n; i++)
+         for (int i = 0; i < n; i++)
          {
             JDRCompleteObject object = paths.get(i); 
 
@@ -360,6 +414,14 @@ public class FindByDescriptionDialogBox extends JDialog
       {
          resetFilter();
       } 
+      else if (action.equals("selectallitems"))
+      {
+         setAllTypes(true);
+      } 
+      else if (action.equals("deselectallitems"))
+      {
+         setAllTypes(false);
+      } 
       else if (action.equals("cancel"))
       {
          setVisible(false);
@@ -392,7 +454,7 @@ public class FindByDescriptionDialogBox extends JDialog
    private String findByTitle, addByTitle;
 }
 
-class MatchStringComponent extends JPanel implements ItemListener
+class MatchStringComponent extends JPanel implements ItemListener,PopupMenuListener
 {
    public MatchStringComponent(JDRResources resources, String labelTag, JLabelGroup labelGrp)
    {
@@ -421,6 +483,7 @@ class MatchStringComponent extends JPanel implements ItemListener
        );
 
       add(opBox);
+      label.setLabelFor(opBox);
       opBox.setName(resources.getMessage("findbydescription.str_match_op"));
 
       inputCompLayout = new CardLayout();
@@ -438,6 +501,8 @@ class MatchStringComponent extends JPanel implements ItemListener
 
       inputComp.setVisible(false);
       opBox.addItemListener(this);
+
+      opBox.addPopupMenuListener(this);
    }
 
    public void reset()
@@ -490,6 +555,32 @@ class MatchStringComponent extends JPanel implements ItemListener
               inputComp.setVisible(false);
          }
       }
+   }
+
+   @Override
+   public void popupMenuWillBecomeInvisible(PopupMenuEvent evt)
+   {
+      switch (opBox.getSelectedIndex())
+      {
+         case STRING_MATCH_EQUALS:
+         case STRING_MATCH_NOT_EQUALS:
+         case STRING_MATCH_CONTAINS:
+            stringField.requestFocusInWindow();
+         break;
+         case STRING_MATCH_REGEX:
+            regexField.requestFocusInWindow();
+         break;
+      }
+   }
+
+   @Override
+   public void popupMenuCanceled(PopupMenuEvent evt)
+   {
+   }
+
+   @Override
+   public void popupMenuWillBecomeVisible(PopupMenuEvent evt)
+   {
    }
 
    public String getRegex()
