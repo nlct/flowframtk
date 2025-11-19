@@ -160,6 +160,26 @@ public class TypeblockPanel extends JPanel
       objectList.setVisibleRowCount(3);
       objectListLabel.setLabelFor(objectList);
 
+      objectList.addMouseListener(new MouseAdapter()
+       {
+          @Override
+          public void mouseClicked(MouseEvent evt)
+          {
+             JDRFrame frame = application_.getCurrentFrame();
+
+             if (frame != null && evt.getClickCount() == 2)
+             {
+                int index = objectList.locationToIndex(evt.getPoint());
+
+                if (index > -1)
+                {
+                   JDRCompleteObject object = objectList.getObject(index);
+                   frame.getCanvas().selectObjectAndDeselectRest(object, true);
+                }
+             }
+          }
+       });
+
       JScrollPane sp = new JScrollPane(objectList);
 
       sp.setAlignmentX(0.0f);
