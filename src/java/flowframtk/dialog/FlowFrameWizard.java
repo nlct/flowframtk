@@ -1066,6 +1066,8 @@ public class FlowFrameWizard extends JDialog
          relativePagesBox.setSelected(true);
       }
 
+      margins.setUnit(cg.getStorageUnit());
+
       updateCardButtons();
 
       clsModified = false;
