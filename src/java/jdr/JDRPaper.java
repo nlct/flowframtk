@@ -528,6 +528,40 @@ public class JDRPaper
       return name[id_];
    }
 
+   public String getName(JDRMessageDictionary msgSys, JDRUnit unit,
+      String portraitMsgTag, String landscapeMsgTag,
+      String userMsgTag)
+   {
+      String paperName;
+ 
+      if (id_ == ID_USER)
+      {
+         paperName = msgSys.getMessageWithFallback(
+           userMsgTag, "{0}{3} x {1}{3}",
+           unit.fromBp(getWidth()),
+           unit.fromBp(getHeight()),
+           unit.getLabel());
+      }
+      else
+      {
+         paperName = msgSys.getMessageWithFallback(
+             "paper."+tag[id_], tag[id_].toUpperCase());
+
+         if (portrait)
+         {
+            paperName = msgSys.getMessageWithFallback(
+              portraitMsgTag, "{0} portrait", paperName);
+         }
+         else
+         {
+            paperName = msgSys.getMessageWithFallback(
+             landscapeMsgTag, "{0} landscape", paperName);
+         }
+      }
+
+      return paperName;
+   }
+
    /**
     * Gets predefined paper that has the given dimensions.
     * @param w the paper width
@@ -1237,6 +1271,22 @@ public class JDRPaper
               "b4r", "b5r", "b6r", "b7r", "b8r", "b9r", "b10r",
               "c0r", "c1r", "c2r", "c3r", "c4r", "c5r", "c6r",
               "c7r", "c8r", "c9r", "c10r"
+      };
+
+   private static final String[]
+      tag = {"a0", "a1", "a2", "a3", "a4", "a5",
+              "letter", "legal", "executive",
+              "a0", "a1", "a2", "a3", "a4",
+              "a5", "letter", "legal",
+              "executive", "user",
+              "a6", "a7", "a8", "a9", "a10",
+              "b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7",
+              "b8", "b9", "b10", "c0", "c1", "c2", "c3", "c4",
+              "c5", "c6", "c7", "c8", "c9", "c10", "a6", "a7",
+              "a8", "a9", "a10", "b0", "b1", "b2", "b3",
+              "b4", "b5", "b6", "b7", "b8", "b9", "b10",
+              "c0", "c1", "c2", "c3", "c4", "c5", "c6",
+              "c7", "c8", "c9", "c10"
       };
 
    /**
