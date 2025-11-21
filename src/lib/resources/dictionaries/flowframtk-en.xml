@@ -3321,6 +3321,14 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.cls.update.mnemonic">U</entry>
 <entry key="flfwizard.cls.update.initvalue">true</entry>
 
+<entry key="flfwizard.current_grid_unit">Current Grid Unit:</entry>
+<entry key="flfwizard.current_storage_unit">Current Storage Unit:</entry>
+
+<entry key="flfwizard.current_paper">Current Paper:</entry>
+<entry key="flfwizard.current_paper.landscape">{0} landscape</entry>
+<entry key="flfwizard.current_paper.portrait">{0} portrait</entry>
+<entry key="flfwizard.current_paper.user">{0}{3} x {1}{3}</entry>
+
 <entry key="flfwizard.typeblock.title">Typeblock</entry>
 
 <entry key="flfwizard.frametype.title">Frame Type</entry>
@@ -3423,8 +3431,14 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.finish.query_repeat">Frame data set. Do you want to move on to the next object?</entry>
 
 <entry key="flfwizard.previous">Back</entry>
-<entry key="flfwizard.next">Next</entry>
+<entry key="flfwizard.previous.tooltip">Previous Page</entry>
+<entry key="flfwizard.previous.iconimage">previous</entry>
+<entry key="flfwizard.previous.keystroke">control PAGE_UP</entry>
 
+<entry key="flfwizard.next">Next</entry>
+<entry key="flfwizard.next.tooltip">Next Page</entry>
+<entry key="flfwizard.next.iconimage">next</entry>
+<entry key="flfwizard.next.keystroke">control PAGE_DOWN</entry>
 
 <!--  Display Page -->
 

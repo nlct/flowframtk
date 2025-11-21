@@ -1812,14 +1812,19 @@ The \widget{flfsettings.title} tab
 (\figureref{fig:flfsettings}) allows you to adjust the
 \sty{flowfram} related settings.
 
+\widgetdef{flfsettings.pages_opt}
+
 The \sty{flowfram} package now allows you to use absolute pages
 numbers in the page list rather than using the value of the
 \ctr{page} counter. For example, if your document pages are numbered
 a, b, i, ii, iii, 1, 2, 3, then with the absolute setting page
 number 3 refers to the page \manmsg{labelled} i whereas with the
 relative setting page number 3 refers to both the page
-\manmsg{labelled} iii and the page \manmsg{labelled} 3. (See the
-\sty{flowfram} documentation for further details.) If you want to
+\manmsg{labelled} iii and the page \manmsg{labelled} 3.
+
+Note that regardless of this setting, the page lists may only
+contain plain integers not the formatted page number.
+(See the \sty{flowfram} documentation for further details.) If you want to
 use the absolute setting, select the
 \inlineglsdef{flfsettings.pages_opt.absolute} button otherwise select the
 \inlineglsdef{flfsettings.pages_opt.relative} button.
@@ -11545,6 +11550,29 @@ Remember to include the \sty{shapepar} package:
 \sty{flowfram} package. If you are unfamiliar with this
 package, please ensure that you read the user manual.
 \texdocref{flowfram}
+A brief summary of \sty{flowfram} is provided in \sectionref{sec:flowframesummary}.
+
+Before assigning \gls{flowframe} data to any of the \glspl{object}
+on the \gls{canvas}, you must first setup the \gls{typeblock}.
+This can either be done with the \dialog{typeblock}, which can be
+opened with the \menu{tex.flowframe.set_typeblock} menu item
+(described in \sectionref{sec:typeblock}), or you can use the 
+\dialog{flfwizard.typeblock} page of the \dialog{flfwizard} dialog
+(described in \sectionref{sec:flfwizard}).
+
+Once the \gls{typeblock} can be set, you can then assign
+\gls{flowframe} data to an \gls{object}. This can also be done
+with the \dialog{flfwizard} dialog. Alternatively, select the
+applicable \gls{object} and use the \menu{tex.flowframe.set_frame}
+menu item to open the \dialog{flowframe} dialog (described in
+\sectionref{sec:framedef}).
+
+If you need to adjust the \gls{flowframe} data for an \gls{object}
+that has already been assigned \gls{flowframe} data, select the
+\gls{object} and use the \dialog{flowframe} dialog. It is also
+possible to use the \dialog{flfwizard} dialog but if you only need
+to make a minor adjustment, it's quicker to use the
+\dialog{flowframe} dialog.
 
 \subsection{The \stytext{flowfram} Package: A Brief Summary}
 \label{sec:flowframesummary}
@@ -11602,7 +11630,7 @@ a given frame type, and the frame can optionally have a border. Frames also
 have an associated page list indicating on which pages the frame
 should appear.  The page list can be one of the keywords
 \optfmt{all}, \optfmt{odd}, \optfmt{even} or \optfmt{none}, or it
-can be a comma separated list of pages or page ranges (e.g.\
+can be a comma separated list of pages or page ranges (for example,
 \verb|<4,7,9,10-14,>20|). By default, the \sty{flowfram} package
 assumes these numbers refer to the decimal value of the
 \ctr{page} counter (so 9 means the frame is visible on page 9, on
@@ -11614,18 +11642,20 @@ the value of the \ctr{page} counter. So if your document pages
 are numbered, say, 1, i, ii, iii, 1, 2, 3, then the absolute page 3
 is the page numbered ii, since it's the third page of the document.
 
-Each type of frame has its own layer (see \figureref{fig:flowframe-layers}).
-The \sty{flowfram} package stacks the frames on the page in
-the following order: static, flow and dynamic, each in the order
-in which they were defined. For example, if you define a flow frame
-called \optfmt{left}, then define a static frame called
-\optfmt{title}, then a dynamic frame called \optfmt{header}
-and lastly a flow frame defined \optfmt{right}, then the
-\sty{flowfram} package will stack the frames in the following
-order: \optfmt{title}, \optfmt{left}, \optfmt{right} and
-\optfmt{header}. This means that the static frames can be used for
-background effects.
+Each type of frame has its own layer (see
+\figureref{fig:flowframe-layers}).  The \sty{flowfram} package
+stacks the frames on the page in the following order: static, flow
+and dynamic, each in the order in which they were defined. For
+example, if you define a flow frame \manmsg{labelled} \optfmt{left},
+then define a static frame \manmsg{labelled} \optfmt{title}, then a
+dynamic frame \manmsg{labelled} \optfmt{header} and lastly a flow
+frame \manmsg{labelled} \optfmt{right}, then the \sty{flowfram}
+package will stack the frames in the following order:
+\optfmt{title}, \optfmt{left}, \optfmt{right} and \optfmt{header}.
+This means that the static frames can be used for background
+effects.
 
+\FlowframTk\ doesn't have layers.
 When exporting to a package or class file (\sectionref{sec:exportsty}),
 \FlowframTk\ will define the frames according to its own
 \gls{stackingorder}. However, it will allow you to position, say, a
@@ -11634,16 +11664,180 @@ The object with the static frame data may obscure the other object
 when viewed in \FlowframTk, but it will appear in the background
 when displayed in the document.
 
+In order to export to a package or class file, you must first define
+the \gls{flowframe} data, but the \gls{typeblock} must be defined
+first. The \sty{flowfram} package defines each frame position
+relative to the bottom left corner of the \gls{typeblock}. This is
+because of the way that the output routine works. So when
+\FlowframTk\ exports \gls{flowframe} data it needs the paper
+\gls{paper.size} and orientation and the \gls{typeblock} not only to
+set the page geometry but also to convert its own \gls{canvas}
+co-ordinates into co-ordinates relative to the \gls{typeblock}.
+So the \menu{tex.flowframe.set_frame} menu item only becomes
+available once the \gls{typeblock} has been set.
+
+\FlowframTk\ now provides two ways of defining the \gls{flowframe}
+data: you can first set the \gls{typeblock} with 
+\menu{tex.flowframe.set_typeblock} and then, for each \gls{object}
+that needs to represent a static, flow or dynamic frame, select the
+\gls*{object} and use \menu{tex.flowframe.set_frame} to set (or
+edit) the \gls{flowframe} data.
+
+The second, newer method, is to use the \dialog{flfwizard} dialog.
+This guides you through the process step-by-step (see
+\sectionref{sec:flfwizard}).
+
 \menudef{menu.tex.flowframe.clear}
 
 To clear all data relating to the \sty{flowfram} package,
 select the menu item \menu{tex.flowframe.clear}.
+You can use the \menu{edit.undo} menu item to undo this action.
 
 \seealsorefs{
   sec:postertutorial,
   sec:newstutorial,
   sec:brochure
 }
+
+\subsection{The Flow Frame Wizard}\label{sec:flfwizard}
+
+\menudef{menu.tex.flowframe.wizard}
+
+The \menu{tex.flowframe.wizard} opens the \dialog{flfwizard} dialog,
+which guides you step-by-step through the process of setting up 
+\gls{flowframe} data, in preparation to export to a \LaTeX\ document
+class or package (see \sectionref{sec:exportsty}). This is only
+available with the \tool{select}.
+
+\widgetdef{flfwizard.title}
+
+If the \gls{typeblock} hasn't yet been set, the \dialog{flfwizard} will
+start at the beginning (the \dialog{flfwizard.cls} page) otherwise
+it will skip ahead and start with the \dialog{flfwizard.frametype}
+page. You can go back to the previous page or forward to the next
+page using the \widget{flfwizard.previous} and
+\widget{flfwizard.next} buttons at the bottom of the
+\dialog{flfwizard} dialog. You can cancel at any time by clicking on
+the \btn{cancel} button.
+
+\widgetdef{flfwizard.previous}
+The \widget{flfwizard.previous} button will have its text set to the
+title of the previous page. You can use this button to go back. The
+button is not available on the first page.
+
+\widgetdef{flfwizard.next}
+The \widget{flfwizard.next} button will have its text set to the
+title of the next page. You can use this button to go forwards. On
+the final page it will change to \widget{flfwizard.finish.title}.
+
+\widgetdef{flfwizard.cls.title}
+
+The first page of the \dialog{flfwizard} dialog reminds you of your
+current settings. The \widget{flfwizard.cls.default_cls},
+\widget{flfwizard.cls.custom_cls},
+\widget{flfwizard.cls.relative_fontsize},
+\widget{flfwizard.cls.normalsize}, and
+\widget{flfwizard.cls.update} are the same as the corresponding
+settings in the \dialog{clssettings} tab of the \dialog{texconfig}
+dialog (described in \sectionref{sec:configuredialog}).
+
+The \widget{flfwizard.labelpages.absolute} and
+\widget{flfwizard.labelpages.relative} settings are the same as the
+corresponding \widget{flfsettings.pages_opt} settings in the
+\dialog{flfsettings} tab of the \dialog{texconfig} dialog (see
+\sectionref{sec:texconfigflf}).  If the
+\widget{flfwizard.labelpages.absolute} button is selected, all page
+lists should be given in terms of the absolute page number.  If the
+\widget{flfwizard.labelpages.relative} button is selected, all page
+lists should be given in terms of the numeric (not formatted) value
+of the \ctr{page} counter.
+
+If any of these settings are incorrect, you can change them at this
+point.
+Any changes you make in the \dialog{flfwizard.cls} panel won't be
+applied until you reach the \dialog{flfwizard.frametype} panel.
+
+Additionally, there's a reminder of the current \gls{grid} unit and
+the storage unit. If either of these are incorrect, you will need to
+cancel the \dialog{flfwizard} with the \btn{cancel} button and
+change them. (Ideally the storage unit should be set before you
+start creating your image to reduce rounding errors.)
+
+The \gls{grid} setting can be changed with 
+\menu{settings.grid.settings} or you can double-click on the grid unit
+in the top left corner of the \gls{canvas} between the
+\glspl{ruler}.
+
+The \hyperref[sec:controlsettings]{storage unit} can be set in the
+\dialog{controls} tab of the \dialog{config} dialog
+(see \sectionref{sec:controlsettings}) or you can double-click on
+the storage unit in the \gls{statusbar}.
+When exporting data, most dimensions will be written in terms of the
+storage unit, regardless of the unit you specify in the various
+settings.
+
+\widgetdef{flfwizard.typeblock.title}
+
+The \dialog{flfwizard.typeblock} panel is the second page of the
+\dialog{flfwizard} dialog and has the same interface as the
+\dialog{typeblock} dialog (see \sectionref{sec:typeblock}).
+
+You can either set the document page margins using the 
+\widget{flowframe.typeblock_margins} panel or you can select one or
+more items in the \widget{typeblock.select_object} list
+and click on the \widget{typeblock.compute_from_objects} button.
+
+Each item in the \widget{typeblock.select_object} list represents an \gls{object} on the
+\gls{canvas}. A single mouse click will just select an item in the
+list. A double-click will also select the corresponding \gls{object}
+on the \gls{canvas}, which can be useful to confirm that you have
+selected the correct item in the list. You can select more than one
+item in the list by holding down \keys{\keyref{shift}} (block select)
+or \keys{\keyref{control}} (add to selection or deselect if already
+selected).
+
+The \widget{typeblock.compute_from_objects} button will calculate
+the minimum bounds that encompass all selected \glspl{object} and
+will update the \widget{flowframe.typeblock_margins} panel.
+
+If you want a two-sided document, you can enter the horizontal shift
+for even pages. (This corresponds to the difference between
+\gls{evensidemargin} and \gls{oddsidemargin}.)
+If you want a symmetric layout, click on the \widget{typeblock.compute_sym_shift}
+button to calculate the appropriate shift.
+
+Any changes you make in the \dialog{flfwizard.typeblock} panel won't be
+applied until you click on the \btn{flfwizard.next} button and reach the 
+\dialog{flfwizard.frametype} panel.
+
+\widgetdef{flfwizard.frametype.title}
+
+The \dialog{flfwizard.frametype} panel is the third page of the
+\dialog{flfwizard} dialog. This allows you to setup the
+\gls{flowframe} data for an \gls{object}. You must first select the
+applicable \gls{object} from the \widget{flfwizard.frametype.object}
+list. A single mouse click will select an item from the list. A
+double-click will both select an item from the list and also
+select the corresponding \gls{object} on the \gls{canvas}, which
+allows you to check that you have selected the correct \gls{object}.
+
+If you already had one or more \glspl{object} selected, the list
+item that corresponds to the \glsdisp{backobject}{backmost} of the
+selection will be automatically selected.
+
+\widgetdef{flfwizard.labelpages.title}
+
+\widgetdef{flfwizard.style.title}
+
+\widgetdef{flfwizard.dimensions.title}
+
+\widgetdef{flfwizard.finish.title}
+Click on \widget{flfwizard.finish.title} to make your frame selections have an
+effect. You will then be asked if you want to start over
+with the next \gls{object}.  Click on \widgetfmt{Yes} to go back to the
+\dialog{flfwizard.frametype} page.  The next \gls{object} will be
+automatically selected, but you can change the selection to another
+one. Click on \widgetfmt{No} to close the \dialog{flfwizard} dialog.
 
 \subsection{Defining the Typeblock}\label{sec:typeblock}
 
@@ -11675,12 +11869,27 @@ opens up the \dialog{typeblock} dialog box.
 
 In the \dialog{typeblock} dialog you can enter the margins between
 the paper edge and the \gls{typeblock}. You can either type the
-lengths into the supplied fields or, if you have one or more
-\glspl{object} selected, you can get \FlowframTk\ to calculate the
-margins for a \gls{typeblock} that fits the bounding rectangle that
-encompasses all the selected \glspl{object} by clicking on the
-\widget{typeblock.compute_from_objects} button.  (This button is
-disabled if no \gls*{object} is selected.)
+lengths into the supplied fields or you can get \FlowframTk\ to
+calculate the margins for a \gls{typeblock} by clicking on the
+\widget{typeblock.compute_from_objects} button.
+
+The \widget{typeblock.compute_from_objects} button will calculate
+the minimum bounds required to encompass all \glspl{object} that
+have been selected in the \widget{typeblock.select_object} list.
+This button will be disabled if no items in the list are selected.
+
+If any \glspl{object} were already selected when you opened the
+\dialog{typeblock} dialog, they will be automatically selected in the
+\widget{typeblock.select_object} list. You can scroll up or down
+this list and select different \glspl{object} if you prefer. A
+single mouse click will select an item in the list.  A double-click
+will both select an item in the list and select the corresponding
+\gls{object} on the \gls{canvas}, which allows you to check that
+have selected the correct object.  If you hold down the
+\keys{\keyref{shift}} key while clicking on an item, it will select
+all items in a block from the currently selected item.  If you hold
+down the \keys{\keyref{control}} key while clicking on an item, it
+will add the item to the current selection.
 
 For example, \figureref{fig:typeblocka} shows a \gls*{path} that
 has been created using the \tool{rectangle} on the

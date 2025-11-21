@@ -26,6 +26,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.InvalidFormatException;
@@ -98,7 +99,12 @@ public class FlowFrameWizard extends JDialog
       buttonPanel.add(leftButtonPanel, "West");
 
       prevButton = resources.createJButton("flfwizard", "previous", this);
-      prevButton.setToolTipText(prevButton.getText());
+
+      if (prevButton.getToolTipText() == null)
+      {
+         prevButton.setToolTipText(prevButton.getText());
+      }
+
       prevButton.setHorizontalTextPosition(SwingConstants.TRAILING);
       leftButtonPanel.add(prevButton);
 
@@ -106,7 +112,12 @@ public class FlowFrameWizard extends JDialog
       buttonPanel.add(rightButtonPanel, "East");
 
       nextButton = resources.createJButton("flfwizard", "next", this);
-      nextButton.setToolTipText(nextButton.getText());
+
+      if (nextButton.getToolTipText() == null)
+      {
+         nextButton.setToolTipText(nextButton.getText());
+      }
+
       nextButton.setHorizontalTextPosition(SwingConstants.LEADING);
       rightButtonPanel.add(nextButton);
 
@@ -270,6 +281,52 @@ public class FlowFrameWizard extends JDialog
       row.add(absolutePagesBox);
 
       clampCompMax(row);
+
+      comp.add(Box.createVerticalStrut(20));
+
+      row = createRow();
+      comp.add(row);
+
+      JLabelGroup labelGrp = new JLabelGroup();
+
+      label = resources.createAppLabel("flfwizard.current_grid_unit");
+
+      row.add(label);
+      labelGrp.add(label);
+      row.add(resources.createLabelSpacer());
+
+      currentGridUnitField = resources.createAppInfoField(3);
+      row.add(currentGridUnitField);
+
+      clampCompMax(row);
+
+      row = createRow();
+      comp.add(row);
+
+      label = resources.createAppLabel("flfwizard.current_storage_unit");
+
+      row.add(label);
+      labelGrp.add(label);
+      row.add(resources.createLabelSpacer());
+
+      currentStorageUnitField = resources.createAppInfoField(3);
+      row.add(currentStorageUnitField);
+
+      clampCompMax(row);
+
+      row = createRow();
+      comp.add(row);
+
+      label = resources.createAppLabel("flfwizard.current_paper");
+
+      row.add(label);
+      labelGrp.add(label);
+      row.add(resources.createLabelSpacer());
+
+      currentPaperField = resources.createAppInfoField(INFO_MAX_COLS/2);
+      row.add(currentPaperField);
+
+      clampCompMaxHeight(row);
 
       comp.add(Box.createVerticalGlue());
 
@@ -805,6 +862,16 @@ public class FlowFrameWizard extends JDialog
          relativePagesBox.setSelected(true);
       }
 
+      currentGridUnitField.setText(cg.getGrid().getMainUnit().getLabel());
+
+      JDRUnit unit = cg.getStorageUnit();
+      currentStorageUnitField.setText(unit.getLabel());
+
+      JDRPaper paper = cg.getPaper();
+      currentPaperField.setText(paper.getName(cg.getMessageDictionary(),
+        unit, "flfwizard.current_paper.portrait",
+        "flfwizard.current_paper.landscape",
+        "flfwizard.current_paper.user"));
    }
 
    protected void updateSpecialBooleans(String label)
@@ -1858,7 +1925,8 @@ public class FlowFrameWizard extends JDialog
 
    JRadioButton relativePagesBox, absolutePagesBox;
 
-   JTextField currentPageSettingField;
+   JTextField currentPageSettingField, currentGridUnitField, currentStorageUnitField,
+    currentPaperField;
 
    JComboBox<String> pageList;
    String pagesAllText, pagesOddText, pagesEvenText, pagesNoneText;

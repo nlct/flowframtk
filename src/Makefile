@@ -1,4 +1,3 @@
-PP_VERSION:=$(shell grep "public static final String APP_VERSION" java/flowframtk/FlowframTkInvoker.java | sed "s/public\sstatic\sfinal\sString\sAPP_VERSION=//" | tr -d "\"\; ")
 ifeq ($(IZPACKDIR),)
 IZPACKDIR:=/usr/local/IzPack
 endif
@@ -15,82 +14,27 @@ all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar
 test	: lib/flowframtk.jar
 	bin/flowframtk -debug
 
-lib/jdr.jar	: classes/com/dickimawbooks/jdr/JDRObject.class
-		cd classes ; \
-		jar cvf ../lib/jdr.jar \
-		com/dickimawbooks/jdr/*.class \
-		com/dickimawbooks/jdr/io/*.class \
-		com/dickimawbooks/jdr/io/eps/*.class \
-		com/dickimawbooks/jdr/io/eps/operators/*.class \
-		com/dickimawbooks/jdr/io/svg/*.class \
-		com/dickimawbooks/jdr/exceptions/*.class \
-		com/dickimawbooks/jdr/marker/*.class
-
-classes/com/dickimawbooks/jdr/JDRObject.class	: classes \
-	java/jdr/*.java \
+lib/jdr.jar	: java/jdr/*.java \
 	java/jdr/marker/*.java \
 	java/jdr/exceptions/*.java \
 	java/jdr/io/*.java \
 	java/jdr/io/eps/*.java \
 	java/jdr/io/eps/operators/*.java  \
 	java/jdr/io/svg/*.java
-	cd java/jdr ; \
-	javac $(target_version) \
-	-d ../../classes -Xlint:unchecked -Xlint:deprecation \
-	*.java */*.java */*/*.java */*/*/*.java
+	make -C java ../lib/jdr.jar
 
 lib/jdrresources.jar      : lib/jdr.jar \
-	classes/com/dickimawbooks/jdrresources/JDRResources.class \
-	java/jdrresources/icons/*.png java/jdrresources/icons/*/*.png \
-	classes/com/dickimawbooks/jdrresources/icons 
-	cd classes ; \
-	jar cvf ../lib/jdrresources.jar \
-	com/dickimawbooks/jdrresources/*.class \
-	com/dickimawbooks/jdrresources/filter/*.class \
-	com/dickimawbooks/jdrresources/numfield/*.class \
-	com/dickimawbooks/jdrresources/icons/*.png \
-	com/dickimawbooks/jdrresources/icons/*/*.png
-
-classes/com/dickimawbooks/jdrresources/icons :
-	mkdir -p classes/com/dickimawbooks/jdrresources
-	cd classes/com/dickimawbooks/jdrresources; ln -f -s ../../../../java/jdrresources/icons
-
-classes/com/dickimawbooks/jdrresources/JDRResources.class : classes \
 	java/jdrresources/*.java \
-	java/jdrresources/*/*.java
-	cd java/jdrresources ; \
-	javac $(target_version) \
-	  -d ../../classes -Xlint:deprecation -Xlint:unchecked \
-          -cp ../../lib/jdr.jar:../../lib/texjavahelplib.jar \
-          *.java */*.java
-
-classes	:
-	mkdir -p classes
+	java/jdrresources/*/*.java \
+	java/jdrresources/icons/*.png \
+	java/jdrresources/icons/*/*.png
+	make -C java ../lib/jdrresources.jar
 
 lib/flowframtk.jar	: java/flowframtk/Manifest.txt \
-			lib/jdr.jar lib/jdrresources.jar \
-			classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class \
-			classes/splashimage.png \
-			lib/resources/helpsets/flowframtk/en-GB/index.xml \
-			lib/resources/helpsets/flowframtk/en/index.xml
-	cd classes; \
-	jar cmf ../java/flowframtk/Manifest.txt ../lib/flowframtk.jar \
-	splashimage.png \
-	com/dickimawbooks/flowframtk/*.class \
-	com/dickimawbooks/flowframtk/*/*.class 
-
-classes/com/dickimawbooks/flowframtk/FlowframTkInvoker.class : \
 	lib/jdr.jar lib/jdrresources.jar \
 	java/flowframtk/*.java \
 	java/flowframtk/*/*.java
-	cd java/flowframtk ; \
-	javac $(target_version) \
-	  -d ../../classes -Xlint:unchecked -Xlint:deprecation \
-          -cp ../../lib/texjavahelplib.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
-          *.java */*.java
-
-classes/splashimage.png	: classes images/splashimage.png
-	cp -u images/splashimage.png classes/
+	make -C java ../lib/flowframtk.jar
 
 lib/resources/helpsets/flowframtk/en-GB/index.xml	: doc/en/flowframtk-en-GB.tex \
 			doc/en/flowframtk-main.tex \
@@ -107,49 +51,15 @@ lib/resources/helpsets/flowframtk/en/index.xml	: doc/en/flowframtk-en.tex \
 			make -C doc/en
 
 lib/jdrview.jar   : lib/jdr.jar lib/jdrresources.jar \
-	classes/com/dickimawbooks/jdrview/JDRView.class \
-	java/jdrview/Manifest.txt 
-	cd classes ; \
-	jar cmf ../java/jdrview/Manifest.txt \
-	   ../lib/jdrview.jar \
-	   com/dickimawbooks/jdrview/*.class
-
-classes/com/dickimawbooks/jdrview/JDRView.class : classes \
-	lib/jdr.jar lib/jdrresources.jar \
 	java/jdrview/*.java
-	cd java/jdrview ; \
-	javac $(target_version) \
-	  -d ../../classes -Xlint:unchecked  -Xlint:deprecation \
-	  -cp ../../lib/texjavahelplib.jar:../../lib/jdr.jar:../../lib/jdrresources.jar \
-	  *.java
+	make -C java ../lib/jdrview.jar
 
-lib/jdrinfo.jar   : classes/com/dickimawbooks/jdrinfo/JdrInfo.class \
-	java/jdrinfo/Manifest.txt
-	cd classes ; \
-	jar cmf ../java/jdrinfo/Manifest.txt \
-	../lib/jdrinfo.jar \
-	com/dickimawbooks/jdrinfo/*.class
+lib/jdrinfo.jar   : lib/jdr.jar java/jdrinfo/*.java
+	make -C java ../lib/jdrinfo.jar
 
-classes/com/dickimawbooks/jdrinfo/JdrInfo.class : lib/jdr.jar java/jdrinfo/*.java
-	cd java/jdrinfo ; \
-	javac $(target_version) \
-	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar \
-	*.java
-
-lib/jdrconverter.jar   : classes/com/dickimawbooks/jdrconverter/JDRConverter.class \
-	java/jdrconverter/Manifest.txt
-	cd classes ; \
-	jar cmf ../java/jdrconverter/Manifest.txt \
-	  ../lib/jdrconverter.jar \
-	  com/dickimawbooks/jdrconverter/*.class
-
-classes/com/dickimawbooks/jdrconverter/JDRConverter.class : lib/jdr.jar java/jdrconverter/*.java
-	cd java/jdrconverter ; \
-	javac $(target_version) \
-	-d ../../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp ../../lib/jdr.jar:../../lib/jdrresources.jar:../../lib/texjavahelplib.jar \
-	*.java
+lib/jdrconverter.jar   : java/jdrconverter/Manifest.txt \
+			lib/jdr.jar java/jdrconverter/*.java 
+	make -C java ../lib/jdrconverter.jar
 
 ../unstable/flowframtk-installer.jar	: ../unstable lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar installer/install.xml
 	"$(IZPACKDIR)/bin/compile" installer/install.xml -b . \
@@ -160,7 +70,9 @@ classes/com/dickimawbooks/jdrconverter/JDRConverter.class : lib/jdr.jar java/jdr
 	mkdir ../unstable
 
 clean	:
-	\rm -r -f classes
 	\rm -f lib/jdr.jar lib/jdrresources.jar
 	\rm -f lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar
 	make -C doc/en clean
+
+squeaky	:
+	make -C java clean
