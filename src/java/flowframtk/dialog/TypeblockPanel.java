@@ -60,7 +60,7 @@ public class TypeblockPanel extends JPanel
 
       add(settingsPanel);
 
-      margins = new MarginPanel(resources,
+      margins = new MarginPanel(application,
          resources.getMessage("flowframe.typeblock_margins"), false);
       margins.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(margins);
@@ -162,7 +162,7 @@ public class TypeblockPanel extends JPanel
       objectList = new JDRCompleteObjectJList();
       objectList.setPrototype(resources.getMessage("typeblock.select_object.placeholder"));
       objectList.addListSelectionListener(this);
-      objectList.setVisibleRowCount(3);
+      objectList.setVisibleRowCount(4);
       objectListLabel.setLabelFor(objectList);
 
       objectList.addMouseListener(new MouseAdapter()

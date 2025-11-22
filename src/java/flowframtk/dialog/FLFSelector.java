@@ -212,7 +212,7 @@ public class FLFSelector extends JDialog
 
       clampCompMaxHeight(row);
 
-      margins = new MarginPanel(resources,
+      margins = new MarginPanel(application,
        resources.getMessage("flowframe.frame_margins"), true);
       margins.setAlignmentX(Component.LEFT_ALIGNMENT);
       mainPanel.add(margins);

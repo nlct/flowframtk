@@ -61,7 +61,11 @@ lib/jdrconverter.jar   : java/jdrconverter/Manifest.txt \
 			lib/jdr.jar java/jdrconverter/*.java 
 	make -C java ../lib/jdrconverter.jar
 
-../unstable/flowframtk-installer.jar	: ../unstable lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar installer/install.xml
+../unstable/flowframtk-installer.jar	: ../unstable \
+	lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar \
+        lib/resources/helpsets/flowframtk/en/index.xml \
+        lib/resources/helpsets/flowframtk/en-GB/index.xml \
+	installer/install.xml
 	"$(IZPACKDIR)/bin/compile" installer/install.xml -b . \
 	-h "$(IZPACKDIR)" \
 	-o ../unstable/flowframtk-installer.jar -k standard

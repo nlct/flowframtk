@@ -737,7 +737,7 @@ public class FlowFrameWizard extends JDialog
 
       clampCompMax(row);
 
-      margins = new MarginPanel(resources, 
+      margins = new MarginPanel(application, 
        resources.getMessage("flowframe.frame_margins"), true);
       margins.setAlignmentX(Component.LEFT_ALIGNMENT);
       comp.add(margins);

@@ -36,25 +36,35 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.numfield.*;
 
+import com.dickimawbooks.flowframtk.FlowframTk;
+import com.dickimawbooks.flowframtk.JDRFrame;
+
 /**
  * Panel for specifying margins.
  * @author Nicola L C Talbot
  */
 
-public class MarginPanel extends JPanel
+public class MarginPanel extends JPanel implements ChangeListener
 {
-   public MarginPanel(JDRResources resources)
+   public MarginPanel(FlowframTk application)
    {
-      this(resources, resources.getMessage("flowframe.margins"), false);
+      this(application, application.getResources().getMessage("flowframe.margins"), false);
    }
 
-   public MarginPanel(JDRResources resources, String labelText, boolean addNoneBox)
+   public MarginPanel(FlowframTk application, String labelText, boolean addNoneBox)
    {
       super(new BorderLayout());
+
+      this.application = application;
+      JDRResources resources = application.getResources();
 
       JComponent topPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
       add(topPanel, "North");
+
+      bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+
+      add(bottomPanel, "South");
 
       lengthComp = Box.createVerticalBox();
       add(lengthComp, "Center");
@@ -74,6 +84,7 @@ public class MarginPanel extends JPanel
              public void stateChanged(ChangeEvent evt)
              {
                 lengthComp.setVisible(!noneBox.isSelected());
+                bottomPanel.setVisible(lengthComp.isVisible());
              }
           });
 
@@ -137,6 +148,24 @@ public class MarginPanel extends JPanel
       bottomLabel.setLabelFor(bottomText);
       adjustField(bottomText);
       row.add(bottomText);
+
+      bottomPanel.add(resources.createAppLabel("flowframe.margins.width"));
+
+      bottomPanel.add(resources.createLabelSpacer());
+
+      widthField = resources.createAppInfoField(12);
+      bottomPanel.add(widthField);
+
+      bottomPanel.add(resources.createButtonSpacer());
+
+      bottomPanel.add(resources.createAppLabel("flowframe.margins.height"));
+
+      bottomPanel.add(resources.createLabelSpacer());
+
+      heightField = resources.createAppInfoField(12);
+      bottomPanel.add(heightField);
+
+      addChangeListener(this);
    }
 
    private void adjustField(LengthPanel panel)
@@ -288,8 +317,43 @@ public class MarginPanel extends JPanel
       }
    }
 
+   @Override
+   public void stateChanged(ChangeEvent evt)
+   {
+      JDRFrame frame = application.getCurrentFrame();
+
+      if (frame != null)
+      {
+         JDRPaper paper = frame.getPaper();
+
+         JDRUnit unit = leftText.getUnit();
+
+         double paperWidth = unit.fromBp(paper.getWidth());
+
+         double width = paperWidth - rightText.getValue(unit) - leftText.getValue(unit);
+
+         widthField.setText(String.format("%f%s", width, unit.getLabel()));
+
+         unit = topText.getUnit();
+
+         double paperHeight = unit.fromBp(paper.getHeight());
+
+         double height = paperHeight - topText.getValue(unit) - bottomText.getValue(unit);
+
+         heightField.setText(String.format("%f%s", height, unit.getLabel()));
+      }
+      else
+      {
+         widthField.setText("");
+         heightField.setText("");
+      }
+   }
+
    private JComponent lengthComp;
    private NonNegativeLengthPanel leftText, rightText, topText, bottomText;
    private JLabel label, leftLabel, rightLabel, topLabel, bottomLabel;
    private JCheckBox noneBox;
+   private JTextField widthField, heightField;
+   private JComponent bottomPanel;
+   private FlowframTk application;
 }

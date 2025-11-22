@@ -11757,8 +11757,8 @@ point.
 Any changes you make in the \dialog{flfwizard.cls} panel won't be
 applied until you reach the \dialog{flfwizard.frametype} panel.
 
-Additionally, there's a reminder of the current \gls{grid} unit and
-the storage unit. If either of these are incorrect, you will need to
+Additionally, there's a reminder of the current \gls{grid} unit,
+the storage unit, and the paper size. If any of these are incorrect, you will need to
 cancel the \dialog{flfwizard} with the \btn{cancel} button and
 change them. (Ideally the storage unit should be set before you
 start creating your image to reduce rounding errors.)
@@ -11776,6 +11776,12 @@ When exporting data, most dimensions will be written in terms of the
 storage unit, regardless of the unit you specify in the various
 settings.
 
+The paper setting can be changed with the \menu{settings.paper}
+menu (see \sectionref{sec:papermenu}). It's important to ensure that
+the paper size is correct before setting the \gls{typeblock}.
+You may have to reset the \gls{typeblock} if you change the paper
+size afterwards.
+
 \widgetdef{flfwizard.typeblock.title}
 
 The \dialog{flfwizard.typeblock} panel is the second page of the
@@ -11783,9 +11789,18 @@ The \dialog{flfwizard.typeblock} panel is the second page of the
 \dialog{typeblock} dialog (see \sectionref{sec:typeblock}).
 
 You can either set the document page margins using the 
-\widget{flowframe.typeblock_margins} panel or you can select one or
+\widget{flowframe.typeblock_margins} panel (the default unit is
+obtained from the current \gls{grid}) or you can select one or
 more items in the \widget{typeblock.select_object} list
 and click on the \widget{typeblock.compute_from_objects} button.
+
+The \widget{flowframe.margins.width} and
+\widget{flowframe.margins.height} fields show the \gls{typeblock}
+width and height based on the dimensions supplied in the
+\widget{flowframe.typeblock_margins} panel and the current
+paper size. These values are non-editable. They will be updated if the supplied
+margins change but they may not still have those values if you
+change the paper size before you use the export function.
 
 Each item in the \widget{typeblock.select_object} list represents an \gls{object} on the
 \gls{canvas}. A single mouse click will just select an item in the
@@ -11801,10 +11816,24 @@ the minimum bounds that encompass all selected \glspl{object} and
 will update the \widget{flowframe.typeblock_margins} panel.
 
 If you want a two-sided document, you can enter the horizontal shift
-for even pages. (This corresponds to the difference between
-\gls{evensidemargin} and \gls{oddsidemargin}.)
+for even pages in the \widget{flowframe.even_x_shift} field.
+The \gls{evensidemargin} will be calculated as this
+amount added to the \gls{oddsidemargin}.
 If you want a symmetric layout, click on the \widget{typeblock.compute_sym_shift}
 button to calculate the appropriate shift.
+
+You may use the \widget{typeblock.adjust_width} button to adjust the
+left and right margins so that the typeblock width is rounded to the
+supplied dimension but remember that this depends on the current
+paper width. Likewise you can use the \widget{typeblock.adjust_height}
+button to adjust the top and bottom margins but again the
+calculation uses the current paper height.
+
+\begin{important}
+The \widget{typeblock.adjust_width} and \widget{typeblock.adjust_height}
+buttons don't round the margin values. They round the width or
+height and then adjust the margins to fit.
+\end{important}
 
 Any changes you make in the \dialog{flfwizard.typeblock} panel won't be
 applied until you click on the \btn{flfwizard.next} button and reach the 
@@ -11825,11 +11854,270 @@ If you already had one or more \glspl{object} selected, the list
 item that corresponds to the \glsdisp{backobject}{backmost} of the
 selection will be automatically selected.
 
+Once an item has been selected, the frame type buttons will be
+enabled. There are three types of frame: static, flow or dynamic.
+The \inlineglsdef{flfwizard.frametype.flow} button is the default, but
+if you want the selected object to represent a static frame, 
+ensure that the \inlineglsdef{flfwizard.frametype.static} button is
+selected.
+
+If you want the selected object to represent a dynamic frame,
+you can select the \inlineglsdef{flfwizard.frametype.dynamic} button.
+However, there are some special dynamic frames that are identified
+by a special label. These are the header, footer and thumbtab
+frames. If you can't remember the special label, you can click on
+the appropriate special button instead. These are:
+
+\widgetdef{flfwizard.frametype.header}
+Select the \widget{flfwizard.frametype.header} for a dynamic frame
+with the special \qtt{header} label. If the document is two-sided
+and there is an even header frame, this frame will only be used for
+odd pages. If there is no even header frame it will be used for all
+pages.
+
+The \widget{flfwizard.frametype.header} button will be disabled if
+there is already an object with the special \qtt{header} label.
+If you are editing existing \gls{flowframe} data with this label, the 
+\widget{flfwizard.frametype.dynamic} button will be selected
+instead. The \widget{flfwizard.frametype.header} button will not be
+required in this case, as the label has already been set.
+
+\widgetdef{flfwizard.frametype.evenheader}
+Select the \widget{flfwizard.frametype.evenheader} for a dynamic frame
+with the special \qtt{evenheader} label. If the document is two-sided
+this frame will be used instead of the \qtt{header} frame. Using
+this button will not only fill in the frame's label in
+the next panel but will also set the page list to \qt{Even}.
+
+The \widget{flfwizard.frametype.evenheader} button will be disabled if
+there is already an object with the special \qtt{evenheader} label.
+If you are editing existing \gls{flowframe} data with this label, the 
+\widget{flfwizard.frametype.dynamic} button will be selected
+instead. The \widget{flfwizard.frametype.evenheader} button will not be
+required in this case, as the label has already been set.
+
+\widgetdef{flfwizard.frametype.footer}
+Select the \widget{flfwizard.frametype.footer} for a dynamic frame
+with the special \qtt{footer} label. If the document is two-sided
+and there is an even footer frame, this frame will only be used for
+odd pages. If there is no even footer frame it will be used for all
+pages.
+
+The \widget{flfwizard.frametype.footer} button will be disabled if
+there is already an object with the special \qtt{footer} label.
+If you are editing existing \gls{flowframe} data with this label, the 
+\widget{flfwizard.frametype.dynamic} button will be selected
+instead. The \widget{flfwizard.frametype.footer} button will not be
+required in this case, as the label has already been set.
+
+\widgetdef{flfwizard.frametype.evenfooter}
+Select the \widget{flfwizard.frametype.evenfooter} for a dynamic frame
+with the special \qtt{evenfooter} label. If the document is two-sided
+this frame will be used instead of the \qtt{footer} frame. Using
+this button will not only fill in the frame's label in
+the next panel but will also set the page list to \qt{Even}.
+
+The \widget{flfwizard.frametype.evenfooter} button will be disabled if
+there is already an object with the special \qtt{evenfooter} label.
+If you are editing existing \gls{flowframe} data with this label, the 
+\widget{flfwizard.frametype.dynamic} button will be selected
+instead. The \widget{flfwizard.frametype.evenfooter} button will not be
+required in this case, as the label has already been set.
+
+\widgetdef{flfwizard.frametype.thumbtab}
+Select the \widget{flfwizard.frametype.thumbtab} for a dynamic frame
+with the special \qtt{thumbtab\meta{n}} label. The value of \meta{n}
+will automatically be calculated.
+
+If the document is two-sided and there is an
+\qtt{eventhumbtab\meta{n}} frame, this frame will only be used for
+odd pages. If there is no corresponding even frame, this frame will
+be used for all pages.
+
+\widgetdef{flfwizard.frametype.eventhumbtab}
+Select the \widget{flfwizard.frametype.eventhumbtab} for a dynamic frame
+with the special \qtt{eventhumbtab\meta{n}} label. The value of \meta{n}
+will automatically be calculated.
+If the document is two-sided, this frame will be used instead of
+\qtt{thumbtab\meta{n}} on even pages. Using
+this button will not only fill in the frame's label in
+the next panel but will also set the page list to \qt{Even}.
+
+\begin{information}
+Unless you have a non-symmetric shape as the thumbtab frame, there's
+usually no need for an even thumbtab frame. The even page offset can
+be calculated automatically.
+\end{information}
+
+\widgetdef{flfwizard.frametype.thumbtabindex}
+Select the \widget{flfwizard.frametype.thumbtabindex} for a dynamic frame
+with the special \qtt{thumbtabindex\meta{n}} label. The value of \meta{n}
+will automatically be calculated.
+
+\begin{information}
+Unless you want a different \manmsg{colour} or shape for the
+thumbtab index frames, you don't need to create a thumbtab index.
+\FlowframTk\ will automatically create the \qtt{thumbtabindex\meta{n}} frames
+based on the corresponding \qtt{thumbtab\meta{n}} frame.
+\end{information}
+
+\widgetdef{flfwizard.frametype.eventhumbtabindex}
+Select the \widget{flfwizard.frametype.eventhumbtabindex} for a dynamic frame
+with the special \qtt{eventhumbtabindex\meta{n}} label. The value of \meta{n}
+will automatically be calculated.
+
+\begin{information}
+Unless you have a non-symmetric shape as the thumbtab index frame, there's
+usually no need for an even thumbtab index frame. The even page offset can
+be calculated automatically.
+\end{information}
+
+Once you have selected the appropriate frame type, click on the
+\btn{flfwizard.next} button to continue to the next page.
+
 \widgetdef{flfwizard.labelpages.title}
+
+The \dialog{flfwizard.labelpages} panel confirms the selected frame
+type in the \widget{flfwizard.labelpages.frame_type} field. This is
+non-editable. You will have to go back to the previous page to
+change it, if it is incorrect.
+
+\widgetdef{flfwizard.labelpages.frame_label}
+
+The \widget{flfwizard.labelpages.frame_label} field will
+automatically be filled in for special frames or if the
+\gls{flowframe} data was already set and you are just modifying it.
+Otherwise, you will need to fill it in. The label must be unique
+and should follow the usual character rule for labels in general, so
+avoid \TeX\ special characters.
+
+\begin{important}
+Unlike the \sty{flowfram} package which only requires that the label
+be unique for the given frame type, \FlowframTk\ requires the label
+be unique across all types.
+\end{important}
+
+\widgetdef{flfwizard.labelpages.pagelist}
+
+The frame's page list may be a keyword, which can be obtained from
+the \gls{dropdown} list, or a number, list or range
+(for example, \qtt{1,4,7-12,14}). The number is either the absolute
+page (if the \widget{flfwizard.labelpages.absolute} setting is on)
+or the numeric value of the \ctr{page} counter
+(if the \widget{flfwizard.labelpages.relative} setting is on).
 
 \widgetdef{flfwizard.style.title}
 
+\widgetdef{flfwizard.style.border}
+
+The object you have selected to use for the \gls{flowframe} data may
+just be a simple rectangle that marks out the location and
+dimensions of the frame. In which case, the \widget{flfwizard.style.border}
+checkbox should be unselected.
+
+If the object (such as a \gls{shape} or \gls{bitmap}) should be used
+as a border or background for the frame, make sure that the
+\widget{flfwizard.style.border} checkbox is selected.
+
+\widgetdef{flfwizard.style.cmds}
+The \widget{flfwizard.style.cmds} setting is only available for 
+dynamic frames. The \sty{flowfram} package only allows a control
+sequence name (such as \qtt{textbf} or \qtt{bfseries}) for the
+the style attribute.
+\FlowframTk\ allows either a control sequence name or one or more
+declarations. These can be entered into the \widget{flfwizard.style.cmds}
+field (which will be trimmed).
+
+If the provided value contains a backslash, \FlowframTk\ will add
+code to the exported file that defines a command with the provided
+value as the definition. The name of that command can then be used
+for the style attribute. If the provided value doesn't contain a
+backslash, \FlowframTk\ will assume it's the control sequence name
+(unless the value is empty, in which case no style is set).
+
+The final command may be a text-block command (such as \gls{textbf})
+but in general declarations (such as \gls{bfseries}) work better.
+
+\widgetdef{flfwizard.style.marginpos}
+The \widget{flfwizard.style.marginpos} selector is only available for flow frames.
+This identifies the location of the side area used by
+\gls{marginpar}: \widget{flowframe.marginpar.right} indicates to the
+right of the flow frame, \widget{flowframe.marginpar.left} indicates to the
+left of the flow frame, \widget{flowframe.marginpar.outer} indicates to the
+right of the flow frame for even pages and to the left of the flow
+frame for odd pages, \widget{flowframe.marginpar.inner} indicates to
+the left of the flow frame for even pages and to the right of the
+flow frame for odd pages. 
+
+\widgetdef{flfwizard.style.clear}
+
+The \widget{flfwizard.style.clear} checkbox is only available for static and dynamic frames.
+If selected, the frame content will be automatically cleared after
+each page.
+
+\begin{information}
+This setting should not be used for the special frames
+which require special content. If cleared, the frame would lose its
+special function. Therefore the \widget{flfwizard.style.clear}
+checkbox is not visible for a dynamic frame with a special label.
+\end{information}
+
+\widgetdef{flfwizard.style.valign}
+The \widget{flfwizard.style.valign} selector is only available for static and dynamic frames.
+
+\widgetdef{flfwizard.style.shape}
+The \widget{flfwizard.style.shape} selector is only available for static and dynamic frames
+that are assigned to a \gls{shape} (see \sectionref{sec:frameshape}). 
+
+\widgetdef{flfwizard.content.edit}
+The \widget{flfwizard.content.edit} button is only available for
+static and dynamic frames and will open \FlowframTk's \TeX\ editor
+window (described in \sectionref{sec:texeditor}) in which you can
+type the frame content. This button is not available for flow frames
+(their content is the document text) or for dynamic frames with a
+special label (which require special content to function correctly).
+
 \widgetdef{flfwizard.dimensions.title}
+
+If the frame has the border set, the \widget{flowframe.frame_margins}
+may be used to insert padding between the object's \gls{bbox}
+and the area for the frame's content. If the object is a simple
+rectangle with a thin line width, this may be quite small, but a
+thick line width or a shape that deviates significantly from its
+\gls{bbox} may need more padding to prevent the frame's text from
+overlapping the shape's outline. The padding isn't required if the
+frame doesn't have a border.
+
+The \widget{flowframe.frame_margins} panel can be shown or hidden by
+selecting or deselecting the \widget{flowframe.margins.none}
+checkbox. It will default to deselected if the 
+\widget{flfwizard.style.border} was not selected.
+The \widget{flowframe.frame_margins} panel is not available if the
+frame has been assigned a non-standard
+\widget{flfwizard.style.shape}. If the panel is hidden, all the
+margins will be set to zero.
+
+\widgetdef{flfwizard.dimensions.even_x_shift}
+
+For two-sided documents, the \widget{flfwizard.dimensions.even_x_shift}
+determines the frame's horizontal position on even pages.
+\FlowframTk\ uses this value to calculate the \qtt{evenx} attribute.
+
+\widgetdef{flfwizard.dimensions.compute_sym_x_shift}
+
+If you want to calculate the shift required to provide a symmetric
+layout, use the \widget{flfwizard.dimensions.compute_sym_x_shift}
+button. Note that this doesn't make the object symmetric.
+If you require a different shape for even pages, you will need to
+create two different objects and set the 
+\widget{flfwizard.labelpages.pagelist} for one to 
+\widgetdef{displaypage.odd} and the other to 
+\widgetdef{displaypage.even}.
+
+\widgetdef{flfwizard.dimensions.even_y_shift}
+It's less likely to have a frame with a different vertical position
+on odd and even pages, but this effect can be achieved by setting
+the \widget{flfwizard.dimensions.even_y_shift} dimension.
 
 \widgetdef{flfwizard.finish.title}
 Click on \widget{flfwizard.finish.title} to make your frame selections have an
@@ -11935,6 +12223,13 @@ top margin to 94\gls{pt}. The
 1pc, so I left it at that and clicked on the
 \widget{typeblock.adjust_width} button. This filled in the
 right and bottom margins as shown in \figureref{fig:typeblockc}.
+
+\begin{important}
+The \widget{typeblock.adjust_width} and \widget{typeblock.adjust_height}
+buttons don't round the margin values. They round the width or
+height and then adjust the margins to fit. Make sure you set the
+paper size first.
+\end{important}
 
 You can also adjust the bottom margin so that the \gls{typeblock} height
 is rounded to the nearest baselineskip or another value such as 1in.

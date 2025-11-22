@@ -3227,6 +3227,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="flowframe.margins.top.mnemonic">T</entry>
 <entry key="flowframe.margins.bottom">Bottom</entry>
 <entry key="flowframe.margins.bottom.mnemonic">B</entry>
+<entry key="flowframe.margins.width">Width:</entry>
+<entry key="flowframe.margins.height">Height:</entry>
 <entry key="flowframe.pages.label">Page: {0}</entry>
 <entry key="flowframe.pages">Pages</entry>
 <entry key="flowframe.pages.mnemonic">P</entry>
@@ -3279,7 +3281,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="typeblock.compute_sym_shift">Compute</entry>
 <entry key="typeblock.compute_sym_shift.mnemonic">M</entry>
 <entry key="typeblock.compute_sym_shift.tooltip">Calculate the shift from left and right margins for a symmetric layout</entry>
-<entry key="typeblock.adjust_width_label">Adjust width to nearest: </entry>
+<entry key="typeblock.adjust_width_label">Adjust width to nearest:</entry>
 <entry key="typeblock.adjust_width_label.mnemonic">W </entry>
 <entry key="typeblock.current_normalsize">Your current settings are: normalsize={0}pt and baselineskip={1}pt</entry>
 <entry key="typeblock.adjust_width">Adjust Width</entry>
@@ -3391,7 +3393,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="flfwizard.style.cmds">Style:</entry>
 <entry key="flfwizard.style.cmds.mnemonic">Y</entry>
-<entry key="flfwizard.style.cmds.info">This may be a single command name, such as textbf, or declarations optionally ending in a text-block command, such as \large\textbf</entry>
+<entry key="flfwizard.style.cmds.info">This may be a single command name, such as textbf, or declarations optionally ending in a text-block command (such as \large\textbf) but declarations (such as \large\bfseries) are usually better.</entry>
 
 <entry key="flfwizard.style.clear">Clear frame contents after each page</entry>
 <entry key="flfwizard.style.clear.mnemonic">R</entry>
