@@ -1660,7 +1660,7 @@ intend to export to \gls{svg}.
 
 \menudef{menu.settings.configtex}
 
-The \menu{settings.configtex} menu item will open up 
+The \menu{settings.configtex} menu item will open 
 the \inlineglsdef{texconfig.title} dialog box
 in which you can adjust the \TeX\slash\LaTeX\ settings.
 (\sectionref{sec:configuredialog} covers image settings
@@ -2104,7 +2104,7 @@ Import \mathsmode\ mappings with \widget{textconfig.mathmappings.import}
 in the \widget{textconfig.mathmappings} tab.
 
 You can find extra mappings using the Symbol Lookup page at
-\url{http://www.dickimaw-books.com/latex/symbol-lookup.php} which
+\href{http://www.dickimaw-books.com/latex/symbol-lookup.php}{\nolinkurl{dickimaw-books.com/latex/symbol-lookup.php}} which
 has a web form you can use to look up mappings in the database.  If
 the mapping ends with a control word the import function will
 automatically append a space for \mathsmode\ or
@@ -2209,7 +2209,7 @@ class (\ext{cls}) or package (\ext{sty}) functions.
   {Default Preamble Code}
 
 The \gls{preamble.default} code is stored in a file called
-\file{preamble.tex} in \FlowframTk's \gls{config_dir}. If you edit
+\file{preamble.tex} located in \FlowframTk's \gls{config_dir}. If you edit
 this file outside of \FlowframTk, you'll need to use the reload
 button to refresh this panel. The other buttons are the same as for
 the \TeX\ editor described in \sectionref{sec:texeditor}.  You can
@@ -3506,7 +3506,12 @@ Each object in the \env{pgfpicture} environment is encapsulated with
 \cmddef{flowframtkencapobject}
 The first seven arguments are as for \gls{flowframtkstartobject}
 and \gls{flowframtkendobject}. The final argument is the object
-code.
+code. The \sty{flowframtkutils} package provides a configurable function
+designed for slide overlays that
+may be used in the definition of this command. You can enable it
+with:
+\cmddef{FlowFramTkUtilsSetOverlayEncap}
+See the \sty{flowfram} documentation (v2.0+) for further details.
 
 \widgetdef{export.textualshading}
 
@@ -10971,7 +10976,7 @@ available, the generated \ext{tex} file has the form:
 
 \meta{Default Preamble}
 
-\cmd{usepackage}\marg{flowframtktutils}
+\cmd{usepackage}\marg{flowframtkutils}
 
 \meta{Early-Preamble}
 
@@ -12111,8 +12116,8 @@ button. Note that this doesn't make the object symmetric.
 If you require a different shape for even pages, you will need to
 create two different objects and set the 
 \widget{flfwizard.labelpages.pagelist} for one to 
-\widgetdef{displaypage.odd} and the other to 
-\widgetdef{displaypage.even}.
+\widget{displaypage.odd} and the other to 
+\widget{displaypage.even}.
 
 \widgetdef{flfwizard.dimensions.even_y_shift}
 It's less likely to have a frame with a different vertical position
