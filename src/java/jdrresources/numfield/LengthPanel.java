@@ -200,20 +200,26 @@ public class LengthPanel extends JPanel
 
    public void setValue(double value, JDRUnit unit)
    {
-      getNumberComponent().setValue(value);
+      lengthIsAdjusting = true;
       setUnit(unit);
+      lengthIsAdjusting = false;
+      getNumberComponent().setValue(value);
    }
 
    public void setValue(float value, JDRUnit unit)
    {
-      getNumberComponent().setValue(value);
+      lengthIsAdjusting = true;
       setUnit(unit);
+      lengthIsAdjusting = false;
+      getNumberComponent().setValue(value);
    }
 
    public void setLength(JDRLength length)
    {
-      getNumberComponent().setValue(length.getValue());
+      lengthIsAdjusting = true;
       setUnit(length.getUnit());
+      lengthIsAdjusting = false;
+      getNumberComponent().setValue(length.getValue());
    }
 
    public void translate(JDRUnit unit, double offset)
@@ -238,11 +244,12 @@ public class LengthPanel extends JPanel
       return unitBox.getUnit();
    }
 
+   @Override
    public void unitChanged(UnitChangeEvent evt)
    {
       Object source = evt.getSource();
 
-      if (source == unitBox)
+      if (source == unitBox && !lengthIsAdjusting)
       {
          JDRUnit oldUnit = evt.getOldUnit();
          JDRUnit unit = evt.getNewUnit();
@@ -294,6 +301,7 @@ public class LengthPanel extends JPanel
    private JLabel sizeLabel;
    private UnitField unitBox;
    private NumberComponent numberField;
+   boolean lengthIsAdjusting = false;
 
    private JDRMessageDictionary messageSystem;
 }
