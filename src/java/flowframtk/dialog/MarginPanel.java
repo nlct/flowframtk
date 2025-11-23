@@ -44,7 +44,7 @@ import com.dickimawbooks.flowframtk.JDRFrame;
  * @author Nicola L C Talbot
  */
 
-public class MarginPanel extends JPanel implements ChangeListener
+public class MarginPanel extends JPanel
 {
    public MarginPanel(FlowframTk application)
    {
@@ -165,7 +165,29 @@ public class MarginPanel extends JPanel implements ChangeListener
       heightField = resources.createAppInfoField(12);
       bottomPanel.add(heightField);
 
-      addChangeListener(this);
+      ChangeListener widthListener = new ChangeListener()
+       {
+         @Override
+         public void stateChanged(ChangeEvent evt)
+         {
+            updateWidth();
+         }
+       };
+
+      leftText.addChangeListener(widthListener);
+      rightText.addChangeListener(widthListener);
+
+      ChangeListener heightListener = new ChangeListener()
+       {
+         @Override
+         public void stateChanged(ChangeEvent evt)
+         {
+            updateHeight();
+         }
+       };
+
+      topText.addChangeListener(heightListener);
+      bottomText.addChangeListener(heightListener);
    }
 
    private void adjustField(LengthPanel panel)
@@ -317,8 +339,7 @@ public class MarginPanel extends JPanel implements ChangeListener
       }
    }
 
-   @Override
-   public void stateChanged(ChangeEvent evt)
+   protected void updateWidth()
    {
       JDRFrame frame = application.getCurrentFrame();
 
@@ -326,15 +347,29 @@ public class MarginPanel extends JPanel implements ChangeListener
       {
          JDRPaper paper = frame.getPaper();
 
-         JDRUnit unit = leftText.getUnit();
+         JDRUnit unit = rightText.getUnit();
 
          double paperWidth = unit.fromBp(paper.getWidth());
 
          double width = paperWidth - rightText.getValue(unit) - leftText.getValue(unit);
 
          widthField.setText(String.format("%f%s", width, unit.getLabel()));
+      }
+      else
+      {
+         widthField.setText("");
+      }
+   }
 
-         unit = topText.getUnit();
+   protected void updateHeight()
+   {
+      JDRFrame frame = application.getCurrentFrame();
+
+      if (frame != null)
+      {
+         JDRPaper paper = frame.getPaper();
+
+         JDRUnit unit = bottomText.getUnit();
 
          double paperHeight = unit.fromBp(paper.getHeight());
 
@@ -344,7 +379,6 @@ public class MarginPanel extends JPanel implements ChangeListener
       }
       else
       {
-         widthField.setText("");
          heightField.setText("");
       }
    }
