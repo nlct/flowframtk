@@ -264,6 +264,11 @@ public class TypeblockPanel extends JPanel
          computeFromPathButton.setEnabled(numSelected > 0);
       }
 
+      updateNormalSizeInfo(canvas);
+   }
+
+   public void updateNormalSizeInfo(JDRCanvas canvas)
+   {
       LaTeXFontBase latexFonts = canvas.getCanvasGraphics()
          .getLaTeXFontBase();
 
@@ -426,7 +431,10 @@ public class TypeblockPanel extends JPanel
          if (useBaselineButton.isSelected())
          {
             JDRFrame frame = application_.getCurrentFrame();
-            adjustHeight(frame.getNormalSize(), JDRUnit.pt);
+
+            LaTeXFontBase lfb = frame.getLaTeXFonts();
+
+            adjustHeight(lfb.getBaselineskip(LaTeXFontBase.NORMALSIZE), JDRUnit.pt);
          }
          else
          {

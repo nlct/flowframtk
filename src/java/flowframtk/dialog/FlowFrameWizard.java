@@ -1198,6 +1198,8 @@ public class FlowFrameWizard extends JDialog
    {
       if (clsModified)
       {
+         JDRCanvas canvas = frame.getCanvas();
+
          application.setRelativeFontDeclarations(
             useRelativeFontDeclarations.isSelected());
 
@@ -1205,7 +1207,7 @@ public class FlowFrameWizard extends JDialog
 
          if (normalsize != frame.getNormalSize())
          {
-            frame.getCanvas().setNormalSize(normalsize);
+            canvas.setNormalSize(normalsize);
 
             if (updateImageBox.isSelected())
             {
@@ -1215,7 +1217,7 @@ public class FlowFrameWizard extends JDialog
 
          application.setLaTeXFontUpdate(updateImageBox.isSelected());
 
-         frame.getCanvas().setDocClass(
+         canvas.setDocClass(
            useDefaultCls.isSelected() ? null : customClsField.getText());
 
          CanvasGraphics cg = frame.getCanvasGraphics();
@@ -1224,16 +1226,18 @@ public class FlowFrameWizard extends JDialog
          {
             if (relativePagesBox.isSelected())
             {
-               frame.getCanvas().setUseAbsolutePages(false);
+               canvas.setUseAbsolutePages(false);
             }
          }
          else
          {
             if (absolutePagesBox.isSelected())
             {
-               frame.getCanvas().setUseAbsolutePages(true);
+               canvas.setUseAbsolutePages(true);
             }
          }
+
+         typeblockPanel.updateNormalSizeInfo(canvas);
 
          clsModified = false;
       }
