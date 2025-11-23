@@ -4688,7 +4688,7 @@ affect the default alternative text for the new \gls*{textarea} in
 different ways. You can later \hyperref[sec:edittext]{edit the
 alternative text}, if the default isn't suitable.
 
-Line breaks are not supported in \gls{textarea}. If you are using
+Line breaks are not supported in a \gls{textarea}. If you are using
 the \hyperref[sec:flowframe]{flowframe} functions, you can create a
 static frame and provide multi-lined text for the frame content.
 
@@ -5960,7 +5960,7 @@ This can be done via the \menu{transform.align_to_page} menu item.
 
 Neither method recursively descends into sub groups so if you want
 to shift several \glspl{object} while retaining their relative
-positions to each other, you will need to group them first..
+positions to each other, you will need to group them first.
 
 \menudef{menu.transform.justify}
 
@@ -11559,13 +11559,18 @@ A brief summary of \sty{flowfram} is provided in \sectionref{sec:flowframesummar
 
 Before assigning \gls{flowframe} data to any of the \glspl{object}
 on the \gls{canvas}, you must first setup the \gls{typeblock}.
-This can either be done with the \dialog{typeblock}, which can be
+This can either be done with the \dialog{typeblock} dialog, which can be
 opened with the \menu{tex.flowframe.set_typeblock} menu item
 (described in \sectionref{sec:typeblock}), or you can use the 
 \dialog{flfwizard.typeblock} page of the \dialog{flfwizard} dialog
 (described in \sectionref{sec:flfwizard}).
 
-Once the \gls{typeblock} can be set, you can then assign
+\begin{warning}
+If you assign \gls{flowframe} data to a \gls{group}, the data will be lost
+if you later \hyperref[sec:grouping]{ungroup} it.
+\end{warning}
+
+Once the \gls{typeblock} has been set, you can then assign
 \gls{flowframe} data to an \gls{object}. This can also be done
 with the \dialog{flfwizard} dialog. Alternatively, select the
 applicable \gls{object} and use the \menu{tex.flowframe.set_frame}
@@ -11708,7 +11713,7 @@ You can use the \menu{edit.undo} menu item to undo this action.
 
 \menudef{menu.tex.flowframe.wizard}
 
-The \menu{tex.flowframe.wizard} opens the \dialog{flfwizard} dialog,
+The \menu{tex.flowframe.wizard} menu item opens the \dialog{flfwizard} dialog,
 which guides you step-by-step through the process of setting up 
 \gls{flowframe} data, in preparation to export to a \LaTeX\ document
 class or package (see \sectionref{sec:exportsty}). This is only
@@ -11720,35 +11725,55 @@ If the \gls{typeblock} hasn't yet been set, the \dialog{flfwizard} will
 start at the beginning (the \dialog{flfwizard.cls} page) otherwise
 it will skip ahead and start with the \dialog{flfwizard.frametype}
 page. You can go back to the previous page or forward to the next
-page using the \widget{flfwizard.previous} and
-\widget{flfwizard.next} buttons at the bottom of the
+page using the \btn{flfwizard.previous} and
+\btn{flfwizard.next} buttons at the bottom of the
 \dialog{flfwizard} dialog. You can cancel at any time by clicking on
 the \btn{cancel} button.
 
 \widgetdef{flfwizard.previous}
 The \widget{flfwizard.previous} button will have its text set to the
-title of the previous page. You can use this button to go back. The
+title of the previous page (panel). You can use this button to go back. The
 button is not available on the first page.
 
 \widgetdef{flfwizard.next}
 The \widget{flfwizard.next} button will have its text set to the
-title of the next page. You can use this button to go forwards. On
+title of the next page (panel). You can use this button to go forwards. On
 the final page it will change to \widget{flfwizard.finish.title}.
+
+\subsubsection{Wizard: Class and Normal Size}\label{sec:flfwizardclass}
 
 \widgetdef{flfwizard.cls.title}
 
-The first page of the \dialog{flfwizard} dialog reminds you of your
-current settings. The \widget{flfwizard.cls.default_cls},
-\widget{flfwizard.cls.custom_cls},
-\widget{flfwizard.cls.relative_fontsize},
-\widget{flfwizard.cls.normalsize}, and
-\widget{flfwizard.cls.update} are the same as the corresponding
-settings in the \dialog{clssettings} tab of the \dialog{texconfig}
-dialog (described in \sectionref{sec:configuredialog}).
+\FloatFig{fig:flfwizard-class}
+[\setkeys{Gin}{width=0.5\linewidth}]
+{\includeimg{flfwizard-class}}
+{Flow Frame Wizard: Class and Normal Size}
 
-The \widget{flfwizard.labelpages.absolute} and
-\widget{flfwizard.labelpages.relative} settings are the same as the
-corresponding \widget{flfsettings.pages_opt} settings in the
+The first page of the \dialog{flfwizard} dialog
+(\figureref{fig:flfwizard-class}) reminds you of your current
+settings.  The underlying class if you export to a document class
+should be specified with either \widget{flfwizard.cls.default_cls}
+(an article-like class) or \widget{flfwizard.cls.custom_cls}
+(you provide the class name, for example \qtt{book} or
+\qtt{scrbook} or \qtt{memoir}).
+This setting is also used if you export to a multi-page PDF.
+
+The default class font size should be set with
+\widget{flfwizard.cls.normalsize}. This setting is needed not only
+to set the default if you export to a class file but also to know
+the default \gls{baselineskip} if it's needed for any calculations
+(such as those required for the \widget{flowframe.shape_parshape}
+and \widget{flowframe.shape_shapepar} settings).
+
+These and the \widget{flfwizard.cls.relative_fontsize} and
+\widget{flfwizard.cls.update} widgets are the same as the
+corresponding settings in the \dialog{clssettings} tab of the
+\dialog{texconfig} dialog (described in
+\sectionref{sec:configuredialog}).
+
+The \widget{flfwizard.labelpages.relative} and
+\widget{flfwizard.labelpages.absolute} settings are the same as the
+corresponding \widget{flfsettings.pages_opt} widgets in the
 \dialog{flfsettings} tab of the \dialog{texconfig} dialog (see
 \sectionref{sec:texconfigflf}).  If the
 \widget{flfwizard.labelpages.absolute} button is selected, all page
@@ -11758,9 +11783,8 @@ lists should be given in terms of the numeric (not formatted) value
 of the \ctr{page} counter.
 
 If any of these settings are incorrect, you can change them at this
-point.
-Any changes you make in the \dialog{flfwizard.cls} panel won't be
-applied until you reach the \dialog{flfwizard.frametype} panel.
+point.  Any changes you make in the \dialog{flfwizard.cls} panel
+won't be applied until you move onto the next panel.
 
 Additionally, there's a reminder of the current \gls{grid} unit,
 the storage unit, and the paper size. If any of these are incorrect, you will need to
@@ -11787,7 +11811,18 @@ the paper size is correct before setting the \gls{typeblock}.
 You may have to reset the \gls{typeblock} if you change the paper
 size afterwards.
 
+Once you have confirmed all your class settings, click on the
+\btn{flfwizard.next} button to move to the
+\dialog{flfwizard.typeblock} panel.
+
+\subsubsection{Wizard: Typeblock}\label{sec:flfwizardtypeblock}
+
 \widgetdef{flfwizard.typeblock.title}
+
+\FloatFig{fig:flfwizard-typeblock}
+[\setkeys{Gin}{width=0.5\linewidth}]
+{\includeimg{flfwizard-typeblock}}
+{Flow Frame Wizard: Typeblock}
 
 The \dialog{flfwizard.typeblock} panel is the second page of the
 \dialog{flfwizard} dialog and has the same interface as the
@@ -11813,7 +11848,7 @@ list. A double-click will also select the corresponding \gls{object}
 on the \gls{canvas}, which can be useful to confirm that you have
 selected the correct item in the list. You can select more than one
 item in the list by holding down \keys{\keyref{shift}} (block select)
-or \keys{\keyref{control}} (add to selection or deselect if already
+or \keys{\keyref{ctrl}} (add to selection or deselect if already
 selected).
 
 The \widget{typeblock.compute_from_objects} button will calculate
@@ -11828,36 +11863,49 @@ If you want a symmetric layout, click on the \widget{typeblock.compute_sym_shift
 button to calculate the appropriate shift.
 
 You may use the \widget{typeblock.adjust_width} button to adjust the
-left and right margins so that the typeblock width is rounded to the
-supplied dimension but remember that this depends on the current
+left and right margins so that the typeblock width is an integer
+multiple of the supplied dimension but remember that this depends on the current
 paper width. Likewise you can use the \widget{typeblock.adjust_height}
 button to adjust the top and bottom margins but again the
-calculation uses the current paper height.
+calculation uses the current paper height. Rounding errors may occur
+when converting between different units.
 
 \begin{important}
 The \widget{typeblock.adjust_width} and \widget{typeblock.adjust_height}
 buttons don't round the margin values. They round the width or
-height and then adjust the margins to fit.
+height and then adjust the right or bottom margin to fit.
 \end{important}
 
-Any changes you make in the \dialog{flfwizard.typeblock} panel won't be
-applied until you click on the \btn{flfwizard.next} button and reach the 
-\dialog{flfwizard.frametype} panel.
+Any changes you make in the \dialog{flfwizard.typeblock} panel will
+be applied when you click on the \btn{flfwizard.next} button to move
+onto the \dialog{flfwizard.frametype} panel.
+
+\subsubsection{Wizard: Frame Type}\label{sec:flfwizardframetype}
 
 \widgetdef{flfwizard.frametype.title}
 
+\FloatFig{fig:flfwizard-frametype}
+[\setkeys{Gin}{width=0.5\linewidth}]
+{\includeimg{flfwizard-frametype}}
+{Flow Frame Wizard: Frame Type}
+
 The \dialog{flfwizard.frametype} panel is the third page of the
 \dialog{flfwizard} dialog. This allows you to setup the
-\gls{flowframe} data for an \gls{object}. You must first select the
-applicable \gls{object} from the \widget{flfwizard.frametype.object}
-list. A single mouse click will select an item from the list. A
-double-click will both select an item from the list and also
-select the corresponding \gls{object} on the \gls{canvas}, which
-allows you to check that you have selected the correct \gls{object}.
+\gls{flowframe} data for an \gls{object}. From this point onwards,
+the changes you make won't be applied until you click on the
+\widget{flfwizard.finish.title} button on the final page.
 
-If you already had one or more \glspl{object} selected, the list
-item that corresponds to the \glsdisp{backobject}{backmost} of the
-selection will be automatically selected.
+You must first select the applicable \gls{object} from the
+\widget{flfwizard.frametype.object} list. A single mouse click will
+select an item from the list. A double-click will both select an
+item from the list and also select the corresponding \gls{object} on
+the \gls{canvas}, which allows you to check that you have selected
+the correct \gls{object}.
+
+If you already had one or more \glspl{object} selected on the
+\gls{canvas}, the list item that corresponds to the
+\glsdisp{backobject}{backmost} of the selection will be
+automatically selected.
 
 Once an item has been selected, the frame type buttons will be
 enabled. There are three types of frame: static, flow or dynamic.
@@ -11978,29 +12026,32 @@ be calculated automatically.
 \end{information}
 
 Once you have selected the appropriate frame type, click on the
-\btn{flfwizard.next} button to continue to the next page.
+\btn{flfwizard.next} button to continue to the
+\dialog{flfwizard.labelpages} panel.
+
+\subsubsection{Wizard: Label and Pages}\label{sec:flfwizardlabelpages}
 
 \widgetdef{flfwizard.labelpages.title}
 
-The \dialog{flfwizard.labelpages} panel confirms the selected frame
-type in the \widget{flfwizard.labelpages.frame_type} field. This is
-non-editable. You will have to go back to the previous page to
-change it, if it is incorrect.
+\FloatFig{fig:flfwizard-label+pages}
+[\setkeys{Gin}{width=0.5\linewidth}]
+{\includeimg{flfwizard-label+pages}}
+{Flow Frame Wizard: Label and Pages}
+
+The \dialog{flfwizard.labelpages} panel
+(\figureref{fig:flfwizard-label+pages}) confirms the selected frame
+type in the \widget{flfwizard.labelpages.frame_type} field (Static,
+Flow or Dynamic). This is non-editable. You will have to go back to
+the previous page to change it, if it is incorrect.
 
 \widgetdef{flfwizard.labelpages.frame_label}
 
 The \widget{flfwizard.labelpages.frame_label} field will
 automatically be filled in for special frames or if the
 \gls{flowframe} data was already set and you are just modifying it.
-Otherwise, you will need to fill it in. The label must be unique
-and should follow the usual character rule for labels in general, so
-avoid \TeX\ special characters.
-
-\begin{important}
-Unlike the \sty{flowfram} package which only requires that the label
-be unique for the given frame type, \FlowframTk\ requires the label
-be unique across all types.
-\end{important}
+Otherwise, you will need to fill it in. The label must be unique for
+the given frame type and should follow the usual rule for \LaTeX\
+labels, so avoid \TeX\ special characters.
 
 \widgetdef{flfwizard.labelpages.pagelist}
 
@@ -12011,7 +12062,32 @@ page (if the \widget{flfwizard.labelpages.absolute} setting is on)
 or the numeric value of the \ctr{page} counter
 (if the \widget{flfwizard.labelpages.relative} setting is on).
 
+Click on the \btn{flfwizard.next} button to move onto the
+\dialog{flfwizard.style} panel.
+
+\subsubsection{Wizard: Border, Style and Content}\label{sec:flfwizardstyle}
+
 \widgetdef{flfwizard.style.title}
+
+\FloatSubFigs{fig:flfwizard-style}
+[\setkeys{Gin}{width=0.4\linewidth}]
+{
+  {fig:flfwizard-style-flow}{\includegraphics{flfwizard-style-flow}}{},
+  {fig:flfwizard-style-static}{\includegraphics{flfwizard-style-static}}{},
+  {fig:flfwizard-style-dynamic}{\includegraphics{flfwizard-style-dynamic}}{},
+  {fig:flfwizard-style-special}{\includegraphics{flfwizard-style-special}}{}
+}
+[Flow Frame Wizard: Border and Style]
+{Flow Frame Wizard border and style panel:
+\subfigref{fig:flfwizard-style-flow} flow;
+\subfigref{fig:flfwizard-style-static} static;
+\subfigref{fig:flfwizard-style-dynamic} dynamic;
+\subfigref{fig:flfwizard-style-special} special.}
+
+The \dialog{flfwizard.style} panel provides a way of setting up the
+frame border, style and content. However, not all settings are
+available as they are particular to different types of frame
+(see \figureref{fig:flfwizard-style}).
 
 \widgetdef{flfwizard.style.border}
 
@@ -12025,13 +12101,12 @@ as a border or background for the frame, make sure that the
 \widget{flfwizard.style.border} checkbox is selected.
 
 \widgetdef{flfwizard.style.cmds}
-The \widget{flfwizard.style.cmds} setting is only available for 
+The \widget{flfwizard.style.cmds} setting is only available for
 dynamic frames. The \sty{flowfram} package only allows a control
-sequence name (such as \qtt{textbf} or \qtt{bfseries}) for the
-the style attribute.
-\FlowframTk\ allows either a control sequence name or one or more
-declarations. These can be entered into the \widget{flfwizard.style.cmds}
-field (which will be trimmed).
+sequence name (such as \qtt{textbf} or \qtt{bfseries}) for the style
+attribute.  \FlowframTk\ allows either a control sequence name or
+one or more declarations. These can be entered into the
+\widget{flfwizard.style.cmds} field (which will be trimmed).
 
 If the provided value contains a backslash, \FlowframTk\ will add
 code to the exported file that defines a command with the provided
@@ -12048,9 +12123,9 @@ The \widget{flfwizard.style.marginpos} selector is only available for flow frame
 This identifies the location of the side area used by
 \gls{marginpar}: \widget{flowframe.marginpar.right} indicates to the
 right of the flow frame, \widget{flowframe.marginpar.left} indicates to the
-left of the flow frame, \widget{flowframe.marginpar.outer} indicates to the
+left of the flow frame, \widget{flowframe.marginpar.inner} indicates to the
 right of the flow frame for even pages and to the left of the flow
-frame for odd pages, \widget{flowframe.marginpar.inner} indicates to
+frame for odd pages, \widget{flowframe.marginpar.outer} indicates to
 the left of the flow frame for even pages and to the right of the
 flow frame for odd pages. 
 
@@ -12069,10 +12144,14 @@ checkbox is not visible for a dynamic frame with a special label.
 
 \widgetdef{flfwizard.style.valign}
 The \widget{flfwizard.style.valign} selector is only available for static and dynamic frames.
+This corresponds to the \optfmt{valign} frame attribute.
 
 \widgetdef{flfwizard.style.shape}
 The \widget{flfwizard.style.shape} selector is only available for static and dynamic frames
 that are assigned to a \gls{shape} (see \sectionref{sec:frameshape}). 
+It will not be visible for flow frames and will be visible but disabled for
+static or dynamic frames that aren't a \gls{shape} (such as a
+\gls{group} or \gls{bitmap}).
 
 \widgetdef{flfwizard.content.edit}
 The \widget{flfwizard.content.edit} button is only available for
@@ -12081,8 +12160,24 @@ window (described in \sectionref{sec:texeditor}) in which you can
 type the frame content. This button is not available for flow frames
 (their content is the document text) or for dynamic frames with a
 special label (which require special content to function correctly).
+Once set, the content will be shown in the area below the 
+\btn{flfwizard.content.edit} button. Click on the button again if
+you need to change it.
+
+Use the \btn{flfwizard.next} button to move onto the
+\dialog{flfwizard.dimensions} panel.
+
+\subsubsection{Wizard: Padding and Offsets}\label{sec:flfwizarddimensions}
 
 \widgetdef{flfwizard.dimensions.title}
+
+\FloatFig{fig:flfwizard-dimensions}
+[\setkeys{Gin}{width=0.5\linewidth}]
+{\includegraphics{flfwizard-dimensions}}
+{Flow Frame Wizard: Padding and Offsets}
+
+The final page is the \dialog{flfwizard.dimensions} panel (see
+\figureref{fig:flfwizard-dimensions}).
 
 If the frame has the border set, the \widget{flowframe.frame_margins}
 may be used to insert padding between the object's \gls{bbox}
@@ -12093,13 +12188,22 @@ thick line width or a shape that deviates significantly from its
 overlapping the shape's outline. The padding isn't required if the
 frame doesn't have a border.
 
+The actual frame dimensions are given by the area within the inner
+padding. The frame width is calculated as the object's \gls{bbox}
+width less the left and right padding. The frame height is calculated
+as the object's \gls{bbox} height less the top and bottom padding.
+The frame's $x$ and $y$ position is at the bottom left of the inner
+padding.
+
 The \widget{flowframe.frame_margins} panel can be shown or hidden by
 selecting or deselecting the \widget{flowframe.margins.none}
 checkbox. It will default to deselected if the 
 \widget{flfwizard.style.border} was not selected.
 The \widget{flowframe.frame_margins} panel is not available if the
 frame has been assigned a non-standard
-\widget{flfwizard.style.shape}. If the panel is hidden, all the
+\widget{flfwizard.style.shape}.
+
+If the \widget{flowframe.frame_margins} panel is hidden, all the
 margins will be set to zero.
 
 \widgetdef{flfwizard.dimensions.even_x_shift}
@@ -12181,7 +12285,7 @@ will both select an item in the list and select the corresponding
 have selected the correct object.  If you hold down the
 \keys{\keyref{shift}} key while clicking on an item, it will select
 all items in a block from the currently selected item.  If you hold
-down the \keys{\keyref{control}} key while clicking on an item, it
+down the \keys{\keyref{ctrl}} key while clicking on an item, it
 will add the item to the current selection.
 
 For example, \figureref{fig:typeblocka} shows a \gls*{path} that

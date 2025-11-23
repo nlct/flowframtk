@@ -14,6 +14,29 @@
 <!-- Shared messages are in jdrcommon-en.xml
      Messages relating to TeXJavaHelpLib are
      in texjavahelplib-en.xml
+
+     Special label suffixes:
+
+     Don't translate:
+
+      iconimage (basename of an image file)
+      initvalue (bib2gls field, true and false are keywords)
+      defaultvalue (bib2gls field, true and false are keywords)
+      keystroke (Java keystroke identifier)
+      see, seealso, alias (bib2gls fields with label values)
+      defaultkeys (bib2gls hook)
+
+     Language sensitive:
+
+      mnemonic (GUI and bib2gls field)
+      tooltip (GUI and bib2gls field)
+      description (bib2gls field)
+      text (bib2gls field)
+      plural (bib2gls field)
+      symbol (bib2gls field)
+      user1, ..., user6 (bib2gls field)
+      syntax (bib2gls field)
+      defaultparams (bib2gls field)
  -->
 
 <!-- Command line invocation syntax messages -->
@@ -3375,6 +3398,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.style.border.info">The selected object may just be used to determine the location, width and height of the frame, but you may also use the object as the frame border or background.</entry>
 <entry key="flfwizard.style.border">Use object as border</entry>
 <entry key="flfwizard.style.border.mnemonic">B</entry>
+<entry key="flfwizard.style.border.initvalue">false</entry>
 
 <entry key="flfwizard.style.cmds">Style:</entry>
 <entry key="flfwizard.style.cmds.mnemonic">Y</entry>
@@ -3382,6 +3406,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="flfwizard.style.clear">Clear frame contents after each page</entry>
 <entry key="flfwizard.style.clear.mnemonic">R</entry>
+<entry key="flfwizard.style.clear.initvalue">false</entry>
 
 <entry key="flfwizard.style.valign">Vertical alignment:</entry>
 <entry key="flfwizard.style.valign.mnemonic">V</entry>
@@ -3400,7 +3425,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.content.edit.mnemonic">E</entry>
 <entry key="flfwizard.content.edit.tooltip">Open the LaTeX editor window</entry>
 
-<entry key="flfwizard.dimensions.title">Margins &amp; Offsets</entry>
+<entry key="flfwizard.dimensions.title">Padding &amp; Offsets</entry>
 
 <entry key="flfwizard.dimensions.margins.info">Inner padding adds space between the border and the text. This setting is typically not required if the frame has no border and will conflict with non-standard shapes.</entry>
 
@@ -4187,6 +4212,7 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.convert_to_path_failed">无法转换为路径</entry>
 <entry key="error.iconset_not_found">Icon set not found for base: {0}</entry>
 <entry key="error.finish_or_discard">You must finish or discard the current path before closing the image</entry>
+<entry key="error.idl_exists_for_frame_type">Label ''{0}'' already exists for frame type ''{1}''</entry>
 <entry key="error.io.helpset">帮助文档集合无法打开</entry>
 <entry key="error.io.in_progress">I/O operation in progress</entry>
 <entry key="error.missing_papersize">在 -paper 选项之后缺少纸张大小参数</entry>

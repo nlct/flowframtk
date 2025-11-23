@@ -758,6 +758,8 @@ public class FlowFrameWizard extends JDialog
 
       clampCompMax(row);
 
+      comp.add(Box.createVerticalStrut(10));
+
       row = createRow();
       comp.add(row);
 
@@ -1515,10 +1517,11 @@ public class FlowFrameWizard extends JDialog
          }
 
          // check unique label
-         if (!frame.isUniqueLabel(selectedObjectIndex,selectedObject,label))
+         if (!frame.isUniqueLabel(selectedObjectIndex, selectedObject, label))
          {
             resources.error(this,
-               resources.getMessage("error.idl_exists"));
+               resources.getMessage("error.idl_exists_for_frame_type",
+                label, typeField.getText()));
             return false;
          }
 
