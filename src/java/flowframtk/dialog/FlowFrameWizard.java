@@ -226,6 +226,8 @@ public class FlowFrameWizard extends JDialog
 
       clampCompMax(row);
 
+      comp.add(Box.createVerticalStrut(20));
+
       row = createRow();
       comp.add(row);
 
@@ -264,6 +266,8 @@ public class FlowFrameWizard extends JDialog
 
       clampCompMax(row);
 
+      comp.add(Box.createVerticalStrut(20));
+
       row = createRow();
       comp.add(row);
 
@@ -298,7 +302,7 @@ public class FlowFrameWizard extends JDialog
       currentGridUnitField = resources.createAppInfoField(3);
       row.add(currentGridUnitField);
 
-      clampCompMax(row);
+      clampCompMaxHeight(row);
 
       row = createRow();
       comp.add(row);
@@ -312,7 +316,7 @@ public class FlowFrameWizard extends JDialog
       currentStorageUnitField = resources.createAppInfoField(3);
       row.add(currentStorageUnitField);
 
-      clampCompMax(row);
+      clampCompMaxHeight(row);
 
       row = createRow();
       comp.add(row);
@@ -388,6 +392,15 @@ public class FlowFrameWizard extends JDialog
 
       ButtonGroup bg = new ButtonGroup();
 
+      flowBox = createRadioButton("flfwizard.frametype", "flow", bg, true);
+      comp.add(flowBox);
+
+      staticBox = createRadioButton("flfwizard.frametype", "static", bg, false);
+      comp.add(staticBox);
+
+      dynamicBox = createRadioButton("flfwizard.frametype", "dynamic", bg, false);
+      comp.add(dynamicBox);
+
       headerBox = createRadioButton("flfwizard.frametype", "header", bg, false);
       comp.add(headerBox);
 
@@ -411,15 +424,6 @@ public class FlowFrameWizard extends JDialog
 
       evenThumbtabIndexBox = createRadioButton("flfwizard.frametype", "eventhumbtabindex", bg, false);
       comp.add(evenThumbtabIndexBox);
-
-      staticBox = createRadioButton("flfwizard.frametype", "static", bg, false);
-      comp.add(staticBox);
-
-      dynamicBox = createRadioButton("flfwizard.frametype", "dynamic", bg, false);
-      comp.add(dynamicBox);
-
-      flowBox = createRadioButton("flfwizard.frametype", "flow", bg, true);
-      comp.add(flowBox);
 
       return comp;
    }
