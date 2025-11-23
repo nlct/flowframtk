@@ -9,7 +9,7 @@
   <properties>
     <property name="info.appName" value="flowframtk"/>
     <property name="info.url" value="http://www.dickimaw-books.com/software/flowframtk/"/>
-    <property name="project.version" value="0.8.7" />
+    <property name="project.version" value="0.8.8" />
   </properties>
 
     <info>
@@ -67,16 +67,7 @@
             <executable targetfile="$INSTALL_PATH/bin/@{info.appName}"
             stage="never"/>
             <executable targetfile="$INSTALL_PATH/bin/jdrview" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/ajr2ajr" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/ajr2jdr" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/ajr2tex" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/eps2jdr" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/jdr2ajr" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/jdr2eps" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/jdr2png" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/jdr2svg" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/jdr2tex" stage="never"/>
-            <executable targetfile="$INSTALL_PATH/bin/svg2jdr" stage="never"/>
+            <executable targetfile="$INSTALL_PATH/bin/jdrconverter" stage="never"/>
             <executable targetfile="$INSTALL_PATH/bin/jdrinfo" stage="never"/>
             <executable targetfile="$INSTALL_PATH/bin/flowframtk" stage="never"/>
             <fileset dir="bin" includes="**/*.bat"
