@@ -1194,7 +1194,7 @@ public class FlowFrameWizard extends JDialog
       setVisible(true);
    }
 
-   protected void applyClsTypeblock()
+   protected void applyCls()
    {
       if (clsModified)
       {
@@ -1238,6 +1238,10 @@ public class FlowFrameWizard extends JDialog
          clsModified = false;
       }
 
+   }
+
+   protected void applyTypeblock()
+   {
       if (typeblockModified)
       {
          typeblockPanel.apply(frame);
@@ -1418,14 +1422,18 @@ public class FlowFrameWizard extends JDialog
             cardLayout.next(mainPanel);
             currentCard++;
 
-            if (currentCard == CARD_FRAME_TYPE)
+            if (currentCard == CARD_TYPEBLOCK)
+            {
+               applyCls();
+            }
+            else if (currentCard == CARD_FRAME_TYPE)
             {
                if (currentTypeblock == null)
                {
                   typeblockModified = true;
                }
 
-               applyClsTypeblock();
+               applyTypeblock();
             }
             else if (currentCard == CARD_FRAME_MARGINS)
             {
