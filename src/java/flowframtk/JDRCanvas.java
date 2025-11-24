@@ -2536,9 +2536,9 @@ public class JDRCanvas extends JPanel
           {
              String actionCmd = action.getActionCommand();
 
-             if (actionCmd.equals("text.outline"))
+             if (actionCmd.equals("textarea.outline"))
              {
-                action.setSelected(getSelectedTextual().isOutline());
+                action.setSelected(isSelectedTextOutlineOn());
              }
           }
       }
@@ -3354,6 +3354,54 @@ public class JDRCanvas extends JPanel
        getCanvasGraphics().getTool() == ACTION_MATH ?
        getApplication().getMathModeMappings() :
        getApplication().getTextModeMappings());
+   }
+
+   public boolean isSelectedTextOutlineOn()
+   {
+      for (int i = 0; i < paths.size(); i++)
+      {
+         JDRCompleteObject obj = paths.get(i);
+
+         if (obj.isSelected())
+         {
+            if (obj instanceof JDRTextual)
+            {
+               return ((JDRTextual)obj).isOutline();
+            }
+            else if (obj instanceof JDRGroup)
+            {
+               Boolean bool = isSelectedTextOutlineOn((JDRGroup)obj);
+
+               if (bool != null) return bool.booleanValue();
+            }
+         }
+      }
+
+      return false;
+   }
+
+   protected Boolean isSelectedTextOutlineOn(JDRGroup group)
+   {
+      for (int i = 0; i < group.size(); i++)
+      {
+         JDRCompleteObject obj = group.get(i);
+
+         if (obj.isSelected())
+         {
+            if (obj instanceof JDRTextual)
+            {
+               return Boolean.valueOf(((JDRTextual)obj).isOutline());
+            }
+            else if (obj instanceof JDRGroup)
+            {
+               Boolean bool = isSelectedTextOutlineOn((JDRGroup)obj);
+
+               if (bool != null) return bool.booleanValue();
+            }
+         }
+      }
+
+      return null;
    }
 
    public void showPopup()

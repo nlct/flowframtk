@@ -1318,7 +1318,7 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(editM, textM, textPaintItem);
 
-      JCheckBoxMenuItem textOutlineItem = 
+      textOutlineItem = 
          FlowframTkAction.createToggleMenuItem(this,
          "menu.edit", "textarea.outline", textM, false,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
@@ -1331,14 +1331,30 @@ public class FlowframTk extends JFrame
             {
                Object source = evt.getSource();
 
-               if (source instanceof AbstractButton)
-               {
-                  action.setSelected(((AbstractButton)source).isSelected());
-               }
-
                action.getCanvas().setSelectedTextOutlineMode(action.isSelected());
             }
          });
+
+      textM.addMenuListener(new MenuListener()
+       {
+           @Override
+           public void menuSelected(MenuEvent evt)
+           {
+              if (textOutlineItem.isEnabled())
+              {
+                 textOutlineItem.setSelected(
+                  getCurrentFrame().getCanvas().isSelectedTextOutlineOn());
+              }
+           }
+           @Override
+           public void menuDeselected(MenuEvent evt)
+           {
+           }
+           @Override
+           public void menuCanceled(MenuEvent evt)
+           {
+           }
+       });
 
       incStartupProgress(editM, textM, textOutlineItem);
 
@@ -7615,7 +7631,7 @@ public class FlowframTk extends JFrame
 
    private JCheckBoxMenuItem showRulersItem,
       showStatusBarItem, 
-      showPrinterMarginsItem;
+      showPrinterMarginsItem, textOutlineItem;
 
    private JMenu fileM, editM, pathM, textM, transformM, justifyM, alignToPageM,
                  toolsM, bitmapM, texM, settingsM, windowM, recentM,
