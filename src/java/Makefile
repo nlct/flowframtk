@@ -145,7 +145,7 @@ classes/$(CLASSTREE)/jdrinfo/JdrInfo.class : \
 	jdrinfo/*.java
 	cd jdrinfo ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar \
+	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
 	*.java
 
 classes	:

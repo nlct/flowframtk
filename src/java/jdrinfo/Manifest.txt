@@ -1,2 +1,2 @@
 Main-Class: com/dickimawbooks/jdrinfo/JdrInfo
-Class-Path: jdr.jar .
+Class-Path: jdr.jar jdrresources.jar texjavahelplib.jar .

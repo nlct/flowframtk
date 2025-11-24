@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>English language file for jdrinfo
+https://github.com/nlct/flowframtk
+GPL-3.0
+Nicola Talbot
+</comment>
+
+<!--  Syntax -->
+<entry key="syntax.title">Syntax:</entry>
+<entry key="syntax.options">{0} [&lt;option&gt;]+ &lt;input file|directory&gt;...</entry>
+<entry key="syntax.in">{0} (or {1}) &lt;file&gt;	An input file or directory.</entry>
+<entry key="syntax.verbose">{0} (or {1})	Enable verbose mode.</entry>
+<entry key="syntax.debug">{0}	Enable on debug mode.</entry>
+
+<!-- Error messages -->
+
+<entry key="error.io.file_not_found">File not found: {0}</entry>
+<entry key="error.not_jdr_or_ajr">Not a JDR or AJR file: {0}</entry>
+
+<entry key="error.syntax.missing_in">Missing input file. (Use {0} for help.)</entry>
+<entry key="error.syntax.missing_value">Value expected after {0}</entry>
+
+</properties>
+
