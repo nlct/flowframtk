@@ -928,7 +928,7 @@ public class JDRConverter
               JDRResources.COPYRIGHT_YEAR,
               helpLib.getInfoUrl(false, "www.dickimaw-books.com")),
               TeXJavaHelpLib.LICENSE_GPL3,
-              true, null
+              false, null
             ));
 
             System.exit(0);
