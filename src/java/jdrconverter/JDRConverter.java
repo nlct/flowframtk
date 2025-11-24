@@ -407,7 +407,7 @@ public class JDRConverter
          }
          else
          {
-            helpSetLocale = new HelpSetLocale(Locale.getDefault());
+            helpSetLocale = new HelpSetLocale(dictLangTag);
          }
       }
 
