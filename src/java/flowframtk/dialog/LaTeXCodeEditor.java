@@ -53,11 +53,20 @@ public class LaTeXCodeEditor extends JPanel
    {
       tabbedPane.add(comp);
 
+      int tabIndex = tabbedPane.getTabCount()-1;
+
       String tooltip = comp.getToolTipText();
 
       if (tooltip != null)
       {
-         tabbedPane.setToolTipTextAt(tabbedPane.getTabCount()-1, tooltip);
+         tabbedPane.setToolTipTextAt(tabIndex, tooltip);
+      }
+
+      int mnemonic = comp.getMnemonic();
+
+      if (mnemonic > 0)
+      {
+         tabbedPane.setMnemonicAt(tabIndex, mnemonic);
       }
    }
 

@@ -43,9 +43,11 @@ public class LaTeXCodeBlockEditor extends JPanel
 
       this.frame = frame;
       FlowframTk application = frame.getApplication();
+      JDRResources resources = getResources();
 
-      String name = getResources().getMessage(id);
-      String tooltip = getResources().getToolTipText(id);
+      String name = resources.getMessage(id);
+      String tooltip = resources.getToolTipText(id);
+      displayedMnemonic = resources.getMnemonic(id);
 
       setName(name);
 
@@ -57,7 +59,7 @@ public class LaTeXCodeBlockEditor extends JPanel
       Box toolBar = Box.createHorizontalBox();
 
       SlidingToolBar sToolBar =
-         new SlidingToolBar(getResources(), toolBar, SwingConstants.HORIZONTAL);
+         new SlidingToolBar(resources, toolBar, SwingConstants.HORIZONTAL);
 
       add(sToolBar, BorderLayout.NORTH);
 
@@ -77,7 +79,7 @@ public class LaTeXCodeBlockEditor extends JPanel
 
       popupM.addSeparator();
 
-      popupM.add(getResources().createAppMenuItem(
+      popupM.add(resources.createAppMenuItem(
         "menu.texeditor.selectAllText", "selectAllText",
         null, this, getResources().getToolTipText("selectAllText")));
 
@@ -100,7 +102,7 @@ public class LaTeXCodeBlockEditor extends JPanel
 
       try
       {
-         toolBar.add(getResources().createHelpDialogButton(application, "sec:preamble"));
+         toolBar.add(resources.createHelpDialogButton(application, "sec:preamble"));
       }
       catch (HelpSetNotInitialisedException e)
       {
@@ -159,7 +161,54 @@ public class LaTeXCodeBlockEditor extends JPanel
       textPane.addMouseListener(popupListener);
       toolBar.addMouseListener(popupListener);
 
-      add(new JScrollPane(textPane), BorderLayout.CENTER);
+      KeyStroke popupKeyStroke = resources.getAccelerator("action.popup");
+
+      Action popupAction = new AbstractAction()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               Point p = textPane.getCaret().getMagicCaretPosition();
+
+               if (p == null)
+               {
+                  showPopup(textPane, 0, 0);
+               }
+               else
+               {
+                  showPopup(textPane, p.x, p.y);
+               }
+            }
+         };
+
+      if (popupKeyStroke != null)
+      {
+         textPane.getInputMap(JComponent.WHEN_FOCUSED)
+            .put(popupKeyStroke, "show-popup");
+         textPane.getActionMap().put("show-popup", popupAction);
+      }
+
+      KeyStroke contextMenuKeyStroke = resources.getAccelerator("action.context_menu");
+
+      if (contextMenuKeyStroke != null)
+      {
+         textPane.getInputMap(JComponent.WHEN_FOCUSED)
+            .put(contextMenuKeyStroke, "show-popup");
+
+         if (popupKeyStroke == null)
+         {
+            textPane.getActionMap().put("show-popup", popupAction);
+         }
+      }
+
+      JComponent mainComp = new JPanel(new BorderLayout());
+      JLabel label = resources.createAppLabel("texeditor.latexcodeblock.code");
+      mainComp.add(label, BorderLayout.NORTH);
+
+      label.setLabelFor(textPane);
+
+      mainComp.add(new JScrollPane(textPane), BorderLayout.CENTER);
+
+      add(mainComp, BorderLayout.CENTER);
    }
 
    public void showPopup(MouseEvent e)
@@ -484,6 +533,11 @@ public class LaTeXCodeBlockEditor extends JPanel
       return frame.getResources();
    }
 
+   public int getMnemonic()
+   {
+      return displayedMnemonic;
+   }
+
    private JTextPane textPane;
 
    private TeXEditorDocument document;
@@ -500,4 +554,6 @@ public class LaTeXCodeBlockEditor extends JPanel
    private JPopupMenu popupM;
 
    private UndoManager undoManager;
+
+   private int displayedMnemonic = -1;
 }

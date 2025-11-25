@@ -139,9 +139,10 @@ redraw, use \accelerator{menu.debug.revalidate}.
 
 \FlowframTk\ (formerly \gls{JpgfDraw})
 is a \gls{vectorgraphics} application written in \gls{Java}, with a 
-\gls{gui}.  The main purpose of \FlowframTk\ is to generate \LaTeX\ packages or 
-classes that use the \sty{flowfram} package, and to generate
-\sty{pgf} picture drawing code. As a side-effect, it can also be
+\gls{gui}.  The main purpose of \FlowframTk\ is 
+to generate \sty{pgf} picture drawing code, and 
+to generate \LaTeX\ packages or classes that use the \sty{flowfram} package. 
+As a side-effect, it can also be
 used to generate \gls{parshape} and (\sty{shapepar} package) \gls{shapepar} or 
 \gls{Shapepar} specifications. In order to run the application you 
 must have the \gls{jre} installed.
@@ -177,8 +178,13 @@ In \FlowframTk, you can:
 
 Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
 (\sectionref{sec:loadimage}) from \FlowframTk's native \gls{JDR}
-(binary) or \gls{AJR} (ASCII) file formats. Additionally, images can be
-exported (\sectionref{sec:exportimage}) as:
+(binary) or \gls{AJR} (plain text) file formats.
+
+Images can be imported from the \gls{Acorn-DrawFile-format}.
+\FlowframTk's experimental mode may provided additional import options, but
+they may not be fully functional.
+
+Additionally, images can be exported (\sectionref{sec:exportimage}) as:
 
 \begin{itemize}
     \item a \LaTeX\ file containing a \env{pgfpicture} environment
@@ -211,14 +217,13 @@ read but are faster to compile than the higher-level commands that
 require extra processing to parse the syntax and perform additional
 calculations. The primary purpose of \FlowframTk\ is to provide a
 graphical interface that can generate complicated code that's hard
-to write manually.
+to write manually. (Also, \gls{JpgfDraw} was written before the
+introduction of the \sty{tikz} package.)
 
 \FlowframTk\ was tested with version 3.0.0 of the \sty{pgf}
-package, version 1.16 of the \sty{flowfram} package and version
+package, version 2.0 of the \sty{flowfram} package and version
 2.2 of the \sty{shapepar} package. Files created by \FlowframTk\
-may not work with earlier versions of those packages. Note that some
-DVI viewers may not understand PGF specials. I strongly recommend
-that you read the user manuals for those packages.
+may not work with earlier versions of those packages.
 
 Notation: a \gls{primaryclick} is a single click with the
 \gls{primary-mouse-button}. This is typically the left button for a
@@ -228,7 +233,8 @@ with the \gls{context-menu} mouse button. This button depends on your
 configuration, but is typically the right button for a right-handed
 two-button mouse (and vice-versa for a left-handed two-button mouse). 
 If the button isn't mentioned, a~\gls{click} can
-be assumed to mean a~\gls{primaryclick}.
+be assumed to mean a~\gls{primaryclick}. Keystrokes are represented
+in the form \keys{\keyref{return}} (the Return\slash Enter key).
 
 \chapter{Installation}
 \label{sec:install}
@@ -260,7 +266,7 @@ their menu mnemonic equivalents are listed in \tableref{tab:access}.
 
 \begin{information}
 Some functions will also try to move the pointer (such as
-\menu{navigate.find}). This is done via the \emph{\gls{robot}}.
+\menu{navigate.goto} or \menu{navigate.find}). This is done via the \emph{\gls{robot}}.
 However note that some platforms or environments do not allow applications
 to move the pointer, so keyboard functions that move the pointer are
 not guaranteed to work on every system
@@ -462,6 +468,12 @@ Edit mode: &
 &
 \leftquadpar{Select next \gls{controlpt}} &
 \accelerator{popup} \mnemonic{editpath.next_control}
+\tabularnewline
+&
+In a tabbed pane: &
+\tabularnewline
+&
+\leftquadpar{Switch focus to tab} 
 \tabularnewline
 %
 \keys{\actualkey{F7}} &
@@ -3203,7 +3215,7 @@ detected) or in the \gls{pdfinfo/Title} attribute of the
 \menudef{menu.file.save_as}
 
 You can save the current picture in \FlowframTk's native
-\gls{JDR} (binary) or \gls{AJR} (ASCII) format using either
+\gls{JDR} (binary) or \gls{AJR} (plain text) format using either
 \menu{file.save} (if it already has a name)
 or \menu{file.save_as} (if you want to specify the
 filename).  I strongly recommend that you save your work frequently.
@@ -3540,6 +3552,12 @@ If \widget{export.textualshading.end} is selected, any text
 with a \dgls{gradient-paint} will be exported with the paint set to
 the end \manmsg{colour}.
 
+\widgetdef{export.textualshading.to_path}
+
+If \widget{export.textualshading.to_path} is selected, any text
+with a \dgls{gradient-paint} will be exported as though the
+\gls{textarea} had been converted to a path.
+
 \widgetdef{export.textpathoutline}
 
 If the export format doesn't support \gls{textpath} outlines, the
@@ -3555,9 +3573,9 @@ If \widget{export.textpathoutline.ignore} is selected, all
 \glspl{textpath} will be exported as though the \textattr{outline} mode
 was off.
 
-\widgetdef{export.textpathoutline.topath}
+\widgetdef{export.textpathoutline.to_path}
 
-If \widget{export.textpathoutline.topath} is selected, all
+If \widget{export.textpathoutline.to_path} is selected, all
 \glspl{textpath} with the \textattr{outline} mode attribute set 
 will be exported as though they had been converted to a path.
 
@@ -15285,11 +15303,11 @@ Reflection}
 \FlowframTk\ has two native file formats that it can both read and
 write. The \maingls{JDR} (\inlineglsdef{ext.jdr}) format is binary written
 in the big-endian fashion. The \maingls{AJR} (\inlineglsdef{ext.ajr}) format is
-an ASCII format. The \gls*{AJR} format has less precision than the
+a plain text format. The \gls*{AJR} format has less precision than the
 \gls*{JDR} format. The current version number for both formats
 is~2.1.
 
-The first line of the ASCII \gls*{AJR} format must be:
+The first line of the plain text \gls*{AJR} format must be:
 \begin{compactcodebox}
 AJR \meta{version}
 \end{compactcodebox}
@@ -15299,6 +15317,13 @@ AJR 1.8
 \end{verbatim}
 The version number must be followed by white space (such as a
 newline or space character).
+
+\begin{information}
+All the markup in an \gls{AJR} file is within the ASCII range, but
+textual content (any \glspl{textarea}, \glspl{textpath},
+descriptions, tags or static/dynamic frame content may contain
+non-ASCII characters) so assume UTF-8 rather than ASCII.
+\end{information}
 
 The binary \gls*{JDR} format starts with a sequence of the three 16-bit Unicode
 characters \qt{JDR} followed by the version \emph{\type{string}} (not a
@@ -15321,7 +15346,7 @@ same syntax but the data types are stored differently.
 \begin{itemdesc}
 The binary version writes 32-bit signed two's complement integers using the
 \code{writeInt(int)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version writes
+\code{java.io.DataOutputStream} class. The \gls{AJR} version writes
 the integer to the file followed by white space.
 \end{itemdesc}
 
@@ -15329,7 +15354,7 @@ the integer to the file followed by white space.
 \begin{itemdesc}
 The binary version writes 8-bit signed two's complement bytes using the
 \code{writeByte(byte)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version is the
+\code{java.io.DataOutputStream} class. The \gls{AJR} version is the
 same as for the \type{integer} type, but the range of values is more
 limited.
 \end{itemdesc}
@@ -15338,7 +15363,7 @@ limited.
 \begin{itemdesc}
 The binary version writes 64-bit two's complement integers using the 
 \code{writeLong(long)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version is the
+\code{java.io.DataOutputStream} class. The \gls{AJR} version is the
 same as for the \type{integer} type.
 \end{itemdesc}
 
@@ -15346,7 +15371,7 @@ same as for the \type{integer} type.
 \begin{itemdesc}
 The binary version writes single-precision 32-bit floating point
 values using the \code{writeFloat(float)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version writes
+\code{java.io.DataOutputStream} class. The \gls{AJR} version writes
 the number (possibly truncated) to the file followed by white space.
 \end{itemdesc}
 
@@ -15354,7 +15379,7 @@ the number (possibly truncated) to the file followed by white space.
 \begin{itemdesc}
 The binary version writes double-precision 64-bit floating point
 values using the \code{writeDouble(double)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version is the
+\code{java.io.DataOutputStream} class. The \gls{AJR} version is the
 same as for the \type{float} type.
 \end{itemdesc}
 
@@ -15362,7 +15387,7 @@ same as for the \type{float} type.
 \begin{itemdesc}
 The binary version writes boolean values using the
 \code{writeBoolean(boolean)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version writes
+\code{java.io.DataOutputStream} class. The \gls{AJR} version writes
 the number \code{0} (false) or \code{1} (true) to the file
 followed by white space.
 \end{itemdesc}
@@ -15371,7 +15396,7 @@ followed by white space.
 \begin{itemdesc}
 The binary version writes a single 16-bit Unicode character using
 the \code{writeChar(int)} method of the
-\code{java.io.DataOutputStream} class. The ASCII version writes
+\code{java.io.DataOutputStream} class. The \gls{AJR} version writes
 the character followed by white space.
 \end{itemdesc}
 
@@ -15385,10 +15410,10 @@ dout.writeInt(text.length());
 dout.writeChars(text);
 \end{verbatim}
 where \code{dout} is a \code{java.io.DataOutputStream} object
-and \code{text} is a \code{java.lang.String}. For the ASCII format,
+and \code{text} is a \code{java.lang.String}. For the \gls{AJR} format,
 the length is written as an integer followed by a \emph{single}
-white space character. (Avoid using \code{println} for just \meta{n} as the
-end-of-line character for some operating systems consists of two
+white space character. (Avoid inserting a line break immediately
+after \meta{n} as the end-of-line character for some operating systems consists of two
 characters.) Then the string is written followed by white space.
 For example:
 \begin{verbatim}
@@ -15407,7 +15432,7 @@ for the binary version:
 \begin{verbatim}
 dout.writeInt(0);
 \end{verbatim}
-or for the ASCII version:
+or for the \gls{AJR} version:
 \begin{verbatim}
 out.print("0 ");
 \end{verbatim}
@@ -15541,7 +15566,7 @@ start or end paint.
 \begin{important}
 Spaces in any syntax specifications below are for clarity and ease
 of line breaking only and don't form part of the specification
-(although white space may be acceptable at that point in the ASCII
+(although white space may be acceptable at that point in the
 \gls{AJR} format, according to the above data types).
 \end{important}
 
@@ -16079,7 +16104,7 @@ anchor information is the list of \type{integer} indices for which the anchor is
 terminated by $-1$. Only control points occurring between a
 continuous join may be anchored.
 
-For example, in the ASCII \gls{AJR} version
+For example, in the \gls{AJR} version
 \begin{verbatim}
 3 6 9 -1
 \end{verbatim}
