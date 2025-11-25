@@ -147,7 +147,7 @@ public class SegmentInfoDialog extends JDialog
       JPanel p2 = new JPanel();
       bottomPanel.add(p2, "Center");
 
-      resources.createOkayCancelHelpButtons(this, p2, this, "mi:segmentinfo");
+      resources.createOkayCancelHelpButtons(this, p2, this, "sec:segmentinfo");
 
       revertButton = resources.createDialogButton(
         "segmentinfo", "default", this, null);

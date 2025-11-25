@@ -7046,7 +7046,7 @@ the paper width.
 \widgetdef{moveby.calc_x}
 
 Once you have entered the desired percentage value, click on the
-\widgetdef{moveby.calc_x} button on the side. This will calculate
+\widget{moveby.calc_x} button on the side. This will calculate
 the percentage value of the paper width and insert the value into
 the \widget{coordinates.x} field.
 
@@ -7061,7 +7061,7 @@ the paper height.
 \widgetdef{moveby.calc_y}
 
 Once you have entered the desired percentage value, click on the
-\widgetdef{moveby.calc_y} button on the side. This will calculate
+\widget{moveby.calc_y} button on the side. This will calculate
 the percentage value of the paper width and insert the value into
 the \widget{coordinates.y} field.
 
@@ -7531,6 +7531,19 @@ The \gls{menu.edit.path.edit} menu item
 is only available if exactly one \gls{shape} and no other
 \gls{object} is \selected.
 
+\seealsorefs{
+ sec:reversing,
+ sec:mergepaths,
+ sec:pathunion,
+ sec:xorpath,
+ sec:pathintersect,
+ sec:pathsubtract,
+ sec:outlinetopath,
+ sec:toastexample,
+ sec:busexample,
+ sec:accesstutorial
+}
+
 \subsection{Control Points}\label{sec:editcontrolpt}
 
 The \glspl{controlpt} that define a \gls{shape} only become visible
@@ -7607,7 +7620,9 @@ purposes of selecting \glspl{controlpt}.
 \menudef{index.menu.editpath}
 
 In path edit mode, the \gls{popupmenu} will change from the usual
-\selectmode\ menus to provide functions to edit the \gls{path}.
+\selectmode\ menus to provide functions to edit the \gls{path}
+(\figureref{fig:editPathPopup}).
+The \menu{selectedpath.edit} menu item remains available to switch off path edit mode.
 
 \FloatFig{fig:editPathPopup}
  {\includeimg{editPathPopup}}
@@ -7798,19 +7813,42 @@ point to the required location).  Note that rounding errors may
 occur if the unit used in this dialog doesn't have a convenient
 conversion factor with the \gls{storageunit}.
 
-\plabel[Segment Details]{mi:segmentinfo}% HelpSet id
 \menudef{menu.editpath.info}
 
 The \menu{editpath.info} menu item will option the 
-\dialog{segmentinfo} dialog box shown in
-\figureref{fig:segmentinfo}.
+\dialog{segmentinfo} dialog box. See \sectionref{sec:segmentinfo}
+for further details.
+
+\menudef{menu.editpath.snap}
+
+The \menu{editpath.snap} menu item will
+move the currently selected \gls*{controlpt} to the nearest
+tick mark.
+
+\plabel[Breaking a Path]{mi:breakpath}
+\menudef{menu.editpath.break_path}
+
+The \menu{editpath.break_path} menu item will split the current path
+into two distinct \glspl{path} at the \emph{end} of the currently
+selected segment (not at the currently selected \gls*{controlpt}).
+One path will remain in \editpathmode. 
+If the object is a \gls*{textpath}, the new \glspl*{textpath} will
+both have the same text (that is, the text is not broken between
+them).
+
+\subsection{Segment Details}\label{sec:segmentinfo}
 
 \widgetdef{segmentinfo.title}
 
-The \dialog{segmentinfo} dialog describes the segment type and
-provides numeric fields in which to adjust the co-ordinates of the
-segment. Note that the end \gls{controlpt} won't be enabled unless 
-it's the end point of an open path or the end point of a
+\FloatFig{fig:segmentinfo}
+{\includeimg{segmentinfo}}
+{Segment Details Dialog}
+
+The \menu{editpath.info} menu item opens the \dialog{segmentinfo}
+dialog (\figureref{fig:segmentinfo}), which describes the segment
+type and provides numeric fields in which to adjust the co-ordinates
+of the segment. Note that the end \gls{controlpt} won't be enabled
+unless it's the end point of an open path or the end point of a
 \gls{line-of-symmetry}.
 
 You can also adjust the \glspl{controlpt} with the mouse in the
@@ -7833,43 +7871,6 @@ the \btn{okay} button. The \btn{cancel} button will discard all the
 changes (after prompting for confirmation). Use the 
 \widget{segmentinfo.default} button to revert the working segment
 back to its current state in the actual path.
-
-\FloatFig{fig:segmentinfo}
-{\includeimg{segmentinfo}}
-{Segment Details Dialog}
-
-\menudef{menu.editpath.snap}
-
-The \menu{editpath.snap} menu item will
-move the currently selected \gls*{controlpt} to the nearest
-tick mark.
-
-\plabel[Breaking a Path]{mi:breakpath}
-\menudef{menu.editpath.break_path}
-
-The \menu{editpath.break_path} menu item will split the current path
-into two distinct \glspl{path} at the \emph{end} of the currently
-selected segment (not at the currently selected \gls*{controlpt}).
-One path will remain in \editpathmode. 
-If the object is a \gls*{textpath}, the new \glspl*{textpath} will
-both have the same text (that is, the text is not broken between
-them).
-
-\seealsorefs{
- sec:reversing,
- sec:mergepaths,
- sec:pathunion,
- sec:xorpath,
- sec:pathintersect,
- sec:pathsubtract,
- sec:outlinetopath,
- sec:linepaint,
- sec:fillpaint,
- sec:styles,
- sec:toastexample,
- sec:busexample,
- sec:accesstutorial
-}
 
 \subsection{Gradient Continuity}\label{sec:continous}
 
