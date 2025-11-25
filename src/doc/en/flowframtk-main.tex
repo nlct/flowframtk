@@ -5165,7 +5165,7 @@ If you want the new path to have a description, enter the required
 description in the \widget{svg_path.description} text box.
 Clear the box if you don't want a description.
 
-Once you're happy with the draft path, click on the \widget{okay}
+Once you're happy with the draft path, click on the \btn{okay}
 button to close the dialog and add the new \gls{path} to the \gls{canvas}.
 
 \chapter{Selecting, Navigation and Basic Editing}\label{sec:selectobjects}
@@ -5303,6 +5303,17 @@ object selected.
 This is the same as using the \menu{transform.group} menu item from the
 main menu bar.
 
+\menudef{menu.selected.align_to_page}
+
+Move all selected \glspl{object} so that they are aligned relative
+to the page.
+This is the same as using the \menu{transform.align_to_page} menu item.
+
+\menudef{menu.selected.wizard}
+Opens the \dialog{flfwizard} dialog (see
+\sectionref{sec:flowframe}). This is the same as using the
+\menu{tex.flowframe.wizard} menu item.
+
 % NONE SELECTED POPUP
 
 \menudef{index.menu.none}
@@ -5332,8 +5343,8 @@ To select an \gls{object} by its description, use
 To insert a \gls{bitmap}, use \menu{none.insert_bitmap}. This
 is the same as using the \menu{bitmap.insert} menu item from the main menu bar.
 
-The \menu{selected.select_all} and \menu{selected.paste} common menu
-items are also available.
+The \menu{selected.select_all}, \menu{selected.paste}
+and \menu{selected.wizard} common menu items are also available.
 
 % PATH POPUP
 
@@ -5350,7 +5361,7 @@ To set or edit the \gls{path}['s] description, use
 \menu{selectedpath.path_description}. This is the same as
 the general \menu{selected.object_description} menu item but has a more specific label.
 
-In addition to the \gls{index.menu.selected},
+In addition to the general \gls{index.menu.selected} items,
 if a path is selected then the following options will be available
 (\figureref{fig:selectpopups.path}).
 
@@ -5458,7 +5469,7 @@ To set or edit the \gls{path}['s] description, use
 \menu{selectedtext.textarea_description}. This is the same as
 the general \menu{selected.object_description} menu item but has a more specific label.
 
-In addition to the \gls{index.menu.selected},
+In addition to the general \gls{index.menu.selected} items,
 if a \gls{textarea} is selected then the following options will be available
 (\figureref{fig:selectpopups.text}).
 
@@ -5572,7 +5583,7 @@ To set or edit the \gls{bitmap}['s] description, use
 \menu{selectedbitmap.bitmap_description}. This is the same as
 the general \menu{selected.object_description} menu item but has a more specific label.
 
-In addition to the \gls{index.menu.selected},
+In addition to the general \gls{index.menu.selected} items,
 if a \gls{bitmap} is selected then the following options will be available
 (\figureref{fig:selectpopups.bitmap}).
 
@@ -5612,7 +5623,7 @@ To set or edit a selected \gls{group}['s] description, use
 \menu{selectedgroup.group_description}. This is the same as
 the general \menu{selected.object_description} menu item but has a more specific label.
 
-In addition to the \gls{index.menu.selected},
+In addition to the general \gls{index.menu.selected} items,
 if any \glspl{group} or mixture of \glspl{object} are selected 
 then following option will be available
 (\figureref{fig:selectpopups.other}).
@@ -5625,19 +5636,29 @@ To ungroup any selected \glspl{group}, use
 This option won't be available if there are no
 \glspl{group} selected.
 
+\menudef{menu.selected.justify}
+
+To justify the contents of any selected \glspl{group}, use the
+\menu{selected.justify} sub menu. This is the same as using the
+\menu{transform.justify} sub menu from the main menu bar.
+This option won't be available if there are no
+\glspl{group} selected.
+
 \menudef{menu.selected.path}
 
 If any \glspl{path} have been selected or if any selected
 \glspl{group} contain any \glspl{path}, then the
 \menu{selected.path} sub menu will be available. This has the same
-menu items as \gls{index.menu.selectedpath}.
+menu items as \gls{index.menu.selectedpath} that are specific to
+\glspl{path}.
 
 \menudef{menu.selected.textarea}
 
 If any \glspl{textarea} have been selected or if any selected
 \glspl{group} contain any \glspl{textarea}, then the
 \menu{selected.textarea} sub menu will be available. This has the same
-menu items as \gls{index.menu.selectedtext}.
+menu items as \gls{index.menu.selectedtext} that are specific to
+\glspl{textarea}.
 
 \menudef{menu.selected.fill_colour}
 
@@ -5650,15 +5671,8 @@ menu bar.
 \menudef{menu.selected.bitmap}
 
 The \menu{selected.bitmap} sub menu has the same
-menu items as \gls{index.menu.selectedbitmap}.
-
-\menudef{menu.selected.justify}
-
-To justify the contents of any selected \glspl{group}, use the
-\menu{selected.justify} sub menu. This is the same as using the
-\menu{transform.justify} sub menu from the main menu bar.
-This option won't be available if there are no
-\glspl{group} selected.
+menu items as \gls{index.menu.selectedbitmap} that are specific to
+\glspl{bitmap}.
 
 
 \section{Navigation Menu}\label{sec:navigate}
@@ -5666,7 +5680,7 @@ This option won't be available if there are no
 \menudef{menu.navigate}
 
 The \menu{navigate} menu provides a way to navigate around the
-\gls{canvas} and can help to \select\ \glspl{object}
+\gls{canvas} and can help to \select\ \glspl*{object}
 in a cluttered image.
 
 \menudef{menu.navigate.goto}
