@@ -1,7 +1,9 @@
 
 \usepackage{fontspec}
-\setmainfont{Linux Libertine O}
-\usepackage{verbatim}
+\setmainfont{FreeSerif}
+\setsansfont{FreeSans}[Scale=.9]
+\setmonofont{FreeMono}[Scale=1.1]
+
 \usepackage{longtable}
 \usepackage{booktabs}
 \usepackage[section]{placeins}
@@ -470,7 +472,7 @@ Edit mode: &
 \accelerator{popup} \mnemonic{editpath.next_control}
 \tabularnewline
 &
-In a tabbed pane: &
+In some tabbed panes: &
 \tabularnewline
 &
 \leftquadpar{Switch focus to tab} 
@@ -3488,7 +3490,7 @@ incremented for every \gls{object}, descending down the
 \glspl{group}, so that each \gls{object} has a unique value.
 The value of \meta{n} will match the start and end pair.
 
-The \meta{class name} is the Java class name of the \gls{object}:
+The \meta{Java class name} is the Java class name of the \gls{object}:
 \code{JDRGroup} for a \gls{group}, \code{JDRPath} for a \gls{path},
 \code{JDRText} for a \gls{textarea},
 \code{JDRTextPath} for a \gls{textpath},
@@ -3496,6 +3498,13 @@ The \meta{class name} is the Java class name of the \gls{object}:
 \code{JDRScaledPattern} for a scaled \gls{pattern},
 \code{JDRSpiralPattern} for a spiral \gls{pattern}, and
 \code{JDRSymmetricPath} for a symmetric shape.
+
+\begin{information}
+Even if an export setting causes a \gls{textarea} or \gls{textpath}
+to be converted into a path, the class name will still be
+\code{JDRText} or \code{JDRTextPath}, as applicable, not
+\code{JDRPath}.
+\end{information}
 
 The \meta{description} is the image's description
 (\sectionref{sec:imagedescription}) when \meta{n} is 0 otherwise
@@ -3556,7 +3565,8 @@ the end \manmsg{colour}.
 
 If \widget{export.textualshading.to_path} is selected, any text
 with a \dgls{gradient-paint} will be exported as though the
-\gls{textarea} had been converted to a path.
+\gls{textarea} had been converted to a path (except that the 
+\meta{Java class name} will be \code{JDRText} or \code{JDRTextPath}).
 
 \widgetdef{export.textpathoutline}
 
@@ -3577,7 +3587,8 @@ was off.
 
 If \widget{export.textpathoutline.to_path} is selected, all
 \glspl{textpath} with the \textattr{outline} mode attribute set 
-will be exported as though they had been converted to a path.
+will be exported as though they had been converted to a path (except that the 
+\meta{Java class name} will be \code{JDRTextPath}).
 
 \widgetdef{export.load_doc_class}
 
@@ -3864,7 +3875,7 @@ document, specify the target \ext+{pdf} file in the
 is selected.
 
 This function works by first creating a \LaTeX\ document
-(as per \widgetdef{export.flfdoc})
+(as per \widget{export.flfdoc})
 in a temporary file and then compiling it with
 \app{pdflatex} (or whatever tool has been specified in the
 \widget{processes.pdflatex} panel). The temporary file (and any
@@ -4017,8 +4028,8 @@ has been set (see \sectionref{sec:texconfigpreamble}) the code will
 be included in the \ext{tex} file's preamble.  This is in addition
 to the contents of the image's \glsname{preamble.early}-,
 \glsname{preamble.mid}- and \gls{preamble.late} (see
-\sectionref{sec:preamble}). For example, I have set the default
-preamble to:
+\sectionref{sec:preamble}). For example, the default preamble shown in
+\figureref{fig:texconfig-preamble} in \sectionref{sec:texconfigpreamble} has:
 \begin{verbatim}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -4342,7 +4353,9 @@ files that have been opened, saved or exported, but warnings are
 sometimes written there as well. This window is opened during a read
 or write operation. When an external application is spawned, the
 abort button becomes enabled, which you can use to kill the spawned
-process if required.
+process if required. The window will usually close after the
+operation has been completed but will remain open if any warnings or
+errors were reported.
 
 \section{Close}\label{sec:closeimage}
 
@@ -5073,15 +5086,24 @@ Currently undocumented and may be removed.
 
 \section{From SVG Specs}\label{sec:newfromsvg}
 
+You need to be in \selectmode\ with no selected
+\glspl{object} if you want to use the \menu{tools.create_path_from_svg} menu
+item. If this menu item is disabled, try \menu{tools.select}
+followed by \menu{edit.deselect_all}.
+
 \menudef{menu.tools.create_path_from_svg}
 
-It's also possible to create a \gls+{path} by using the same syntax
-as the \gls+{svg} path \qtt{d} property. Use the \menu{tools.create_path_from_svg}
-menu item to open the \dialog{svg_path} dialog.
-(You will need to be in \selectmode\ with no selected
-\glspl{object}.)
+The \menu{tools.create_path_from_svg} menu item opens the
+\dialog{svg_path} dialog (\figureref{fig:create-path-from-svg})
+which provides a way to create a \gls+{path} from the same
+syntax as the \gls+{svg} path \qtt{d} property. Note that this is
+not the same as importing a complete \gls{svg} file.
 
 \widgetdef{svg_path.title}
+
+\FloatFig{fig:create-path-from-svg}
+{\includeimg{create-path-from-svg}}
+{Create Path from SVG Specs}
 
 The \dialog{svg_path} dialog has an upper panel that's used to draw
 the \gls{svg} path so that you can check it before adding it to the
@@ -11813,15 +11835,15 @@ start creating your image to reduce rounding errors.)
 The \gls{grid} setting can be changed with 
 \menu{settings.grid.settings} or you can double-click on the grid unit
 in the top left corner of the \gls{canvas} between the
-\glspl{ruler}.
+\glspl{ruler} (see \figureref{fig:griddialog} in \sectionref{sec:gridmenu}).
 
 The \hyperref[sec:controlsettings]{storage unit} can be set in the
-\dialog{controls} tab of the \dialog{config} dialog
-(see \sectionref{sec:controlsettings}) or you can double-click on
-the storage unit in the \gls{statusbar}.
-When exporting data, most dimensions will be written in terms of the
-storage unit, regardless of the unit you specify in the various
-settings.
+\dialog{controls} tab of the \dialog{config} dialog (see
+\sectionref{sec:controlsettings}) or you can double-click on the
+storage unit in the \gls{statusbar} (see \figureref{fig:griddialog}
+in \sectionref{sec:gridmenu}).  When exporting data, most dimensions
+will be written in terms of the storage unit, regardless of the unit
+you specify in the various settings.
 
 The paper setting can be changed with the \menu{settings.paper}
 menu (see \sectionref{sec:papermenu}). It's important to ensure that
@@ -11851,6 +11873,14 @@ You can either set the document page margins using the
 obtained from the current \gls{grid}) or you can select one or
 more items in the \widget{typeblock.select_object} list
 and click on the \widget{typeblock.compute_from_objects} button.
+
+\begin{information}
+The \gls{typeblock} margins, shown as an outlined \manmsg{grey}
+rectangle on the \gls{canvas}, are not connected to the 
+\glspl{printer-margin} (shown as a thick \manmsg{grey} border around
+the edge of the page area of the \gls{canvas} if the
+\menu{settings.paper.margins} menu item is selected).
+\end{information}
 
 The \widget{flowframe.margins.width} and
 \widget{flowframe.margins.height} fields show the \gls{typeblock}

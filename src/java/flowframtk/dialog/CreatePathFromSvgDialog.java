@@ -83,6 +83,8 @@ public class CreatePathFromSvgDialog extends JDialog
       detailsComp.add(pathDescPanel, "North");
 
       JComponent sidePanel = Box.createVerticalBox();
+      sidePanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      sidePanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
       detailsComp.add(sidePanel, "East");
 
       JLabel descLabel = resources.createAppLabel("svg_path.description");
@@ -93,19 +95,24 @@ public class CreatePathFromSvgDialog extends JDialog
       descLabel.setLabelFor(descTextComp);
       pathDescPanel.add(descTextComp);
 
-      sidePanel.add(resources.createAppLabel("svg_path.data_coords"));
+      JLabel label = resources.createAppLabel("svg_path.data_coords");
+      label.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      sidePanel.add(label);
 
       ButtonGroup bg = new ButtonGroup();
 
       rightHandCoordsButton = resources.createAppRadioButton(
         "svg_path.data_coords", "righthand", bg, true, null);
+      rightHandCoordsButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       sidePanel.add(rightHandCoordsButton);
 
       leftHandCoordsButton = resources.createAppRadioButton(
         "svg_path.data_coords", "lefthand", bg, false, null);
+      leftHandCoordsButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       sidePanel.add(leftHandCoordsButton);
 
       JComponent actionPanel = new JPanel();
+      actionPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       sidePanel.add(actionPanel);
 
       unitLabel = resources.createAppLabel("svg_path.unit");
@@ -125,6 +132,7 @@ public class CreatePathFromSvgDialog extends JDialog
 
       unitInfoField = resources.createAppInfoArea(15);
       unitInfoField.setText(defaultUnitInfo);
+      unitInfoField.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       sidePanel.add(unitInfoField);
 
       JSplitPane splitPane = new JSplitPane(
@@ -137,20 +145,8 @@ public class CreatePathFromSvgDialog extends JDialog
       JComponent buttonPanel = new JPanel();
       getContentPane().add(buttonPanel, "South");
 
-      okayButton = resources.createOkayButton(getRootPane(), this);
-
-      buttonPanel.add(okayButton); 
-      buttonPanel.add(resources.createCancelButton(this));
-
-      try
-      {
-         buttonPanel.add(resources.createHelpDialogButton(this, "sec:newfromsvg"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
-
+      okayButton = resources.createOkayCancelHelpButtons(this, buttonPanel,
+        this, "sec:newfromsvg", false);
 
       pack();
       setLocationRelativeTo(application);
