@@ -4911,6 +4911,13 @@ just display the symbol in the right hand panel without inserting it
 into the text field. The available Unicode blocks and symbols are govern by the
 \widget{lang.title} tab in the \dialog{configui} dialog.
 
+\begin{information}
+The \dialog{symbolselector} dialog uses the same font as the
+\gls{textarea}. Any characters that are not supported by the font
+will be rendered with the missing glyph character (often shown as a
+rectangle). If you need one of those characters, you will have to change the font.
+\end{information}
+
 Once the \gls{textarea} has been finished (by clicking on the
 \gls{menu.tools.finish} button or by pressing
 \accelerator{menu.tools.finish} or by switching to a non-text
@@ -8111,7 +8118,7 @@ to a full path} before merging.
 
 \begin{information}
 To split an existing \gls{path} into two separate \glspl{path}, use the
-\menu{editpath.break_path} popup menu item in \editpathmode.
+\menu{editpath.break_path} \gls*{popupmenu} item in \editpathmode.
 \end{information}
 
 Once the shape has been merged, it can then be edited as usual in
@@ -11202,7 +11209,7 @@ preamble panel.
 
 \widgetdef{texeditor.latexcodeblock}
 
-The \widget{texeditor.latexcodeblock} panel has four panels.
+The \widget{texeditor.latexcodeblock} panel has five panels.
 Each panel has the same layout with a horizontal toolbar and an
 editor area below it in which you can type the code. 
 
@@ -11489,21 +11496,21 @@ file at the start of the appropriate paragraph in your \TeX\ or
 \LaTeX\ document. For example, if you save the \gls{parshape}
 command to a file called, say, \filefmt{myparshape.tex}, then if
 you are using plain \TeX\ you would need to do:
-\begin{verbatim}
-\input myparshape
+\begin{codebox*}
+\gls{input} myparshape
 This is the start of the paragraph...
-\end{verbatim}
+\end{codebox*}
 or if you are using \LaTeX\ you would need to do:
-\begin{verbatim}
-\input{myparshape}%
+\begin{codebox}
+\gls{input}\marg{myparshape}\comment{}
 This is the start of the paragraph...
-\end{verbatim}
+\end{codebox}
 You may want to suppress the paragraph indentation using
 \gls{noindent}:
-\begin{verbatim}
-\input{myparshape}%
-\noindent This is the start of the paragraph...
-\end{verbatim}
+\begin{codebox}
+\gls{input}\marg{myparshape}\gls{noindent}
+This is the start of the paragraph...
+\end{codebox}
 
 The distance between the scanlines is given by the
 value of \gls{baselineskip} for the \gls{normal-font-size}.
@@ -11583,19 +11590,19 @@ file at the start of the appropriate paragraph in your \TeX\ or
 \LaTeX\ document. For example, if you save the
 command to a file called, say, \filefmt{myshapepar.tex}, then if
 you are using plain \TeX\ you would need to do:
-\begin{verbatim}
-\input myshapepar
+\begin{codebox*}
+\gls{input} myshapepar
 This is the start of the paragraph...
-\end{verbatim}
+\end{codebox*}
 or if you are using \LaTeX\ you would need to do:
-\begin{verbatim}
-\input{myshapepar}%
+\begin{codebox}
+\gls{input}\marg{myshapepar}\comment{}
 This is the start of the paragraph...
-\end{verbatim}
+\end{codebox}
 Remember to include the \sty{shapepar} package:
 \begin{itemize}
-\item \verb|\input shapepar.sty| (plain \TeX)
-\item \verb|\usepackage{shapepar}| (\LaTeX)
+\item \code{\gls{input} shapepar.sty} (plain \TeX)
+\item \code{\gls{usepackage}\marg{shapepar}} (\LaTeX)
 \end{itemize}
 
 
@@ -11791,12 +11798,12 @@ page using the \btn{flfwizard.previous} and
 the \btn{cancel} button.
 
 \widgetdef{flfwizard.previous}
-The \widget{flfwizard.previous} button will have its text set to the
+The \btn{flfwizard.previous} button will have its text set to the
 title of the previous page (panel). You can use this button to go back. The
 button is not available on the first page.
 
 \widgetdef{flfwizard.next}
-The \widget{flfwizard.next} button will have its text set to the
+The \btn{flfwizard.next} button will have its text set to the
 title of the next page (panel). You can use this button to go forwards. On
 the final page it will change to \widget{flfwizard.finish.title}.
 
@@ -11813,9 +11820,10 @@ The first page of the \dialog{flfwizard} dialog
 (\figureref{fig:flfwizard-class}) reminds you of your current
 settings.  The underlying class if you export to a document class
 should be specified with either \widget{flfwizard.cls.default_cls}
-(an article-like class) or \widget{flfwizard.cls.custom_cls}
-(you provide the class name, for example \qtt{book} or
-\qtt{scrbook} or \qtt{memoir}).
+(\cls{article}, \cls{extarticle} or \cls{a0poster}, depending on the
+normal font size) or \widget{flfwizard.cls.custom_cls}
+(you provide the class name, for example \cls{book} or
+\cls{scrbook} or \cls{memoir}).
 This setting is also used if you export to a multi-page PDF.
 
 The default class font size should be set with
@@ -11844,7 +11852,7 @@ of the \ctr{page} counter.
 
 If any of these settings are incorrect, you can change them at this
 point.  Any changes you make in the \dialog{flfwizard.cls} panel
-won't be applied until you move onto the next panel.
+will be applied when you move onto the next panel.
 
 Additionally, there's a reminder of the current \gls{grid} unit,
 the storage unit, and the paper size. If any of these are incorrect, you will need to
@@ -11872,7 +11880,7 @@ You may have to reset the \gls{typeblock} if you change the paper
 size afterwards.
 
 Once you have confirmed all your class settings, click on the
-\btn{flfwizard.next} button to move to the
+\btn{flfwizard.next} button to apply your changes and move to the
 \dialog{flfwizard.typeblock} panel.
 
 \subsubsection{Wizard: Typeblock}\label{sec:flfwizardtypeblock}
@@ -11931,10 +11939,10 @@ If you want a symmetric layout, click on the \widget{typeblock.compute_sym_shift
 button to calculate the appropriate shift.
 
 You may use the \widget{typeblock.adjust_width} button to adjust the
-left and right margins so that the typeblock width is an integer
+right margin so that the typeblock width is an integer
 multiple of the supplied dimension but remember that this depends on the current
 paper width. Likewise you can use the \widget{typeblock.adjust_height}
-button to adjust the top and bottom margins but again the
+button to adjust the bottom margin but again the
 calculation uses the current paper height. Rounding errors may occur
 when converting between different units.
 
@@ -11990,7 +11998,7 @@ frames. If you can't remember the special label, you can click on
 the appropriate special button instead. These are:
 
 \widgetdef{flfwizard.frametype.header}
-Select the \widget{flfwizard.frametype.header} for a dynamic frame
+Select the \widget{flfwizard.frametype.header} button for a dynamic frame
 with the special \qtt{header} label. If the document is two-sided
 and there is an even header frame, this frame will only be used for
 odd pages. If there is no even header frame it will be used for all
@@ -12004,7 +12012,7 @@ instead. The \widget{flfwizard.frametype.header} button will not be
 required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.evenheader}
-Select the \widget{flfwizard.frametype.evenheader} for a dynamic frame
+Select the \widget{flfwizard.frametype.evenheader} button for a dynamic frame
 with the special \qtt{evenheader} label. If the document is two-sided
 this frame will be used instead of the \qtt{header} frame. Using
 this button will not only fill in the frame's label in
@@ -12018,7 +12026,7 @@ instead. The \widget{flfwizard.frametype.evenheader} button will not be
 required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.footer}
-Select the \widget{flfwizard.frametype.footer} for a dynamic frame
+Select the \widget{flfwizard.frametype.footer} button for a dynamic frame
 with the special \qtt{footer} label. If the document is two-sided
 and there is an even footer frame, this frame will only be used for
 odd pages. If there is no even footer frame it will be used for all
@@ -12032,7 +12040,7 @@ instead. The \widget{flfwizard.frametype.footer} button will not be
 required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.evenfooter}
-Select the \widget{flfwizard.frametype.evenfooter} for a dynamic frame
+Select the \widget{flfwizard.frametype.evenfooter} button for a dynamic frame
 with the special \qtt{evenfooter} label. If the document is two-sided
 this frame will be used instead of the \qtt{footer} frame. Using
 this button will not only fill in the frame's label in
@@ -12046,7 +12054,7 @@ instead. The \widget{flfwizard.frametype.evenfooter} button will not be
 required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.thumbtab}
-Select the \widget{flfwizard.frametype.thumbtab} for a dynamic frame
+Select the \widget{flfwizard.frametype.thumbtab} button for a dynamic frame
 with the special \qtt{thumbtab\meta{n}} label. The value of \meta{n}
 will automatically be calculated.
 
@@ -12056,7 +12064,7 @@ odd pages. If there is no corresponding even frame, this frame will
 be used for all pages.
 
 \widgetdef{flfwizard.frametype.eventhumbtab}
-Select the \widget{flfwizard.frametype.eventhumbtab} for a dynamic frame
+Select the \widget{flfwizard.frametype.eventhumbtab} button for a dynamic frame
 with the special \qtt{eventhumbtab\meta{n}} label. The value of \meta{n}
 will automatically be calculated.
 If the document is two-sided, this frame will be used instead of
@@ -12071,8 +12079,8 @@ be calculated automatically.
 \end{information}
 
 \widgetdef{flfwizard.frametype.thumbtabindex}
-Select the \widget{flfwizard.frametype.thumbtabindex} for a dynamic frame
-with the special \qtt{thumbtabindex\meta{n}} label. The value of \meta{n}
+Select the \widget{flfwizard.frametype.thumbtabindex} button for a dynamic frame
+with the special \qtt{thumb\-tab\-index\meta{n}} label. The value of \meta{n}
 will automatically be calculated.
 
 \begin{information}
@@ -12083,8 +12091,8 @@ based on the corresponding \qtt{thumbtab\meta{n}} frame.
 \end{information}
 
 \widgetdef{flfwizard.frametype.eventhumbtabindex}
-Select the \widget{flfwizard.frametype.eventhumbtabindex} for a dynamic frame
-with the special \qtt{eventhumbtabindex\meta{n}} label. The value of \meta{n}
+Select the \widget{flfwizard.frametype.eventhumbtabindex} button for a dynamic frame
+with the special \qtt{even\-thumb\-tab\-index\meta{n}} label. The value of \meta{n}
 will automatically be calculated.
 
 \begin{information}
@@ -12119,7 +12127,7 @@ automatically be filled in for special frames or if the
 \gls{flowframe} data was already set and you are just modifying it.
 Otherwise, you will need to fill it in. The label must be unique for
 the given frame type and should follow the usual rule for \LaTeX\
-labels, so avoid \TeX\ special characters.
+labels, so avoid \TeX\ special characters and avoid commas.
 
 \widgetdef{flfwizard.labelpages.pagelist}
 
@@ -12301,19 +12309,27 @@ Click on \widget{flfwizard.finish.title} to make your frame selections have an
 effect. You will then be asked if you want to start over
 with the next \gls{object}.  Click on \widgetfmt{Yes} to go back to the
 \dialog{flfwizard.frametype} page.  The next \gls{object} will be
-automatically selected, but you can change the selection to another
+automatically selected in the \widget{flfwizard.frametype.object} list, 
+but you can change the selection to another
 one. Click on \widgetfmt{No} to close the \dialog{flfwizard} dialog.
 
 \subsection{Defining the Typeblock}\label{sec:typeblock}
 
-The \inlineglsdef{typeblock} is the main area of the page where the text goes.
-The dimensions of the \gls{typeblock} are given by the \LaTeX\ lengths
-\gls{textwidth} and \gls{textheight}. It's possible to
-define frames that are positioned outside of the \gls{typeblock}, but the
-\gls{typeblock} provides a frame of reference and, unless otherwise
-instructed, the page header and footer will be placed above and
-below the \gls{typeblock} according to \LaTeX's standard page layout
-design.
+The \inlineglsdef{typeblock} is the main area of the page where the
+text goes.  The dimensions of the \gls{typeblock} are given by the
+\LaTeX\ lengths \gls{typeblockwidth} and \gls{typeblockheight}
+(which are initialised by the \sty{flowfram} package to
+\gls{textwidth} and \gls{textheight}). The \gls{typeblock} provides
+a frame of reference and, unless the special header and footer
+dynamic frames are created, the page header and footer will be
+placed above and below the \gls{typeblock} according to \LaTeX's
+standard page layout design.
+
+\begin{information}
+Static and dynamic frames may be positioned outside of the
+\gls{typeblock}, but it's best to ensure that all flow frames are
+within the \gls{typeblock} bounds.
+\end{information}
 
 Note that the \opt{twoside} class option will typically
 shift the typeblock on the even (\gls{verso}) pages (via the
@@ -12326,9 +12342,9 @@ affects the running headers and footers.
 
 \menudef{menu.tex.flowframe.set_typeblock}
 
-In \FlowframTk, you specify the \gls{typeblock} using the
-\menu{tex.flowframe.set_typeblock} menu item.  This
-opens up the \dialog{typeblock} dialog box.
+The \gls{typeblock} can be set with the new \dialog{flfwizard}, but it
+can also be set with the older \dialog{typeblock} dialog box, which can be
+opened with the \menu{tex.flowframe.set_typeblock} menu item.
 
 \widgetdef{typeblock.title}
 
