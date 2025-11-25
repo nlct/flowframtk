@@ -3636,10 +3636,12 @@ Are you sure you want to ungroup it?</entry>
 <entry key="findbydescription.selectallitems">Select All</entry>
 <entry key="findbydescription.selectallitems.keystroke">control A</entry>
 <entry key="findbydescription.selectallitems.tooltip">Select all type checkboxes</entry>
+<entry key="findbydescription.selectallitems.iconimage">selectallitems</entry>
 
 <entry key="findbydescription.deselectallitems">Deselect All</entry>
 <entry key="findbydescription.deselectallitems.keystroke">control shift A</entry>
 <entry key="findbydescription.deselectallitems.tooltip">Deselect all type checkboxes</entry>
+<entry key="findbydescription.deselectallitems.iconimage">deselectallitems</entry>
 
 <entry key="findbydescription.filter_info">Use ''{0}'' button to apply filter settings or ''{1}'' to reset the filter.</entry>
 

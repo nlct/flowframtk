@@ -5728,7 +5728,11 @@ the start when it reaches the end of the stack.
 
 If an \gls{object} is already \selected, the \menu{navigate.find}
 menu item will scroll the \gls{canvas} to ensure the \gls{object} is
-in the viewport. If your system allows applications to move the
+in the viewport.
+If the \gls{object} lies outside of the \gls{canvas}, the grid
+\gls{origin} will be shifted to bring the \gls{object} into view.
+
+If your system allows applications to move the
 cursor (via the \gls{robot}), the cursor will be moved to the top left corner of the
 \gls{object}['s] bounding box.
 
@@ -5877,7 +5881,7 @@ list of matching objects.
 \widgetdef{findbydescription.reset}
 The \widget{findbydescription.reset} button will reset the filter
 criteria back to its default settings. If you only want to reset the
-\gls{object} type checkboxes, use the \widget{findbydescription.selectallitems}
+\gls{object} type checkboxes, use the \btn{findbydescription.selectallitems}
 button instead.
 
 \widgetdef{findbydescription.selectallitems}
@@ -6001,13 +6005,14 @@ removed.
 
 \section{Aligning Objects}\label{sec:alignobjects}
 
-There are two methods of shifting \glspl{object} to align them.
+There are two methods of shifting \glspl{object} to align them
+within a certain area.
 The first is to justify \glspl{object} within a \gls{group} so that
 they are aligned relative to the \gls*{group}['s] \gls{bbox}.
 This can be done via the \menu{transform.justify} menu item.
 
 The second method shifts all selected \glspl{object} to align them
-relative to the page. Note that this refers to the paper area which
+relative to the page boundary. Note that this refers to the paper area which
 may not necessarily coincide with the \gls{canvas} bounds if the
 \gls{grid} has been shifted.
 This can be done via the \menu{transform.align_to_page} menu item.
