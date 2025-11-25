@@ -548,12 +548,15 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       {
          String setting = exportSettings.textualShading.toString().toLowerCase();
 
-         String msg = cg.warningMessage(
-            "Text shading paint can''t be exported to pgf: using export setting {0}",
+         String msg = cg.getMessageWithFallback(
             "warning.pgf-no-text-shading",
+            "Text shading paint can''t be exported to pgf: using export setting {0}",
             cg.getMessageDictionary().getMessageWithFallback(
              "export.textualshading."+setting,
              setting));
+
+         cg.getMessageSystem().getPublisher().publishMessages(
+             MessageInfo.createMessage(msg));
 
          tex.comment(msg);
       }
@@ -562,12 +565,15 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       {
          String setting = exportSettings.textPathOutline.toString().toLowerCase();
 
-         String msg = cg.warningMessage(
-            "Text-path outline can't be exported to pgf: using export setting {0}",
+         String msg = cg.getMessageWithFallback(
             "warning.pgf-no-textpath-outline",
+            "Text-path outline can't be exported to pgf: using export setting {0}",
             cg.getMessageDictionary().getMessageWithFallback(
              "export.textualshading."+setting,
              setting));
+
+         cg.getMessageSystem().getPublisher().publishMessages(
+             MessageInfo.createMessage(msg));
 
          tex.comment(msg);
       }

@@ -237,8 +237,8 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="warning.no_flowframe_data">No flow frame data found.</entry>
 <entry key="warning.warning.bespoke_thumbtabs_unsupported">Currently installed version of flowfram.sty too old to support bespoke thumbtabs (at least v2.0 required).</entry>
 
-<entry key="warning.pgf-no-text-shading">Text shading paint can''t be exported to pgf: using export setting {0}</entry>
-<entry key="warning.pgf-no-textpath-outline">Text-path outline can''t be exported to pgf: using export setting {0}</entry>
+<entry key="warning.pgf-no-text-shading">Text shading paint can''t be exported to pgf: using export setting ''{0}''</entry>
+<entry key="warning.pgf-no-textpath-outline">Text-path outline can''t be exported to pgf: using export setting ''{0}''</entry>
 <entry key="warning.pgf-no-stroke-shading">stroke shading paint can't be exported to pgf</entry>
 <entry key="warning.pgf-shading-mixed-opacity">pgf shading mixed opacity has been averaged</entry>
 <entry key="warning.pgf-no-marker-shading">marker shading paint can''t be exported to pgf</entry>

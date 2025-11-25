@@ -1542,12 +1542,15 @@ public class JDRText extends JDRCompleteObject
          {
             String shadingSetting = exportSettings.textualShading.toString().toLowerCase();
 
-            String msg = cg.warningMessage(
-               "Text shading paint can't be exported to pgf: using export setting {0}",
+            String msg = cg.getMessageWithFallback(
                "warning.pgf-no-text-shading",
+               "Text shading paint can't be exported to pgf: using export setting {0}",
                cg.getMessageDictionary().getMessageWithFallback(
                 "export.textualshading."+shadingSetting,
                 shadingSetting));
+
+            cg.getMessageSystem().getPublisher().publishMessages(
+               MessageInfo.createMessage(msg));
 
             tex.comment(msg);
 
@@ -1589,12 +1592,15 @@ public class JDRText extends JDRCompleteObject
             {
                String shadingSetting = exportSettings.textualShading.toString().toLowerCase();
 
-               String msg = cg.warningMessage(
-                  "Text shading paint can''t be exported to pgf: using export setting {0}",
+               String msg = cg.getMessageWithFallback(
                   "warning.pgf-no-text-shading",
+                  "Text shading paint can''t be exported to pgf: using export setting {0}",
                   cg.getMessageDictionary().getMessageWithFallback(
                    "export.textualshading."+shadingSetting,
                    shadingSetting));
+
+               cg.getMessageSystem().getPublisher().publishMessages(
+                  MessageInfo.createMessage(msg));
 
                tex.comment(msg);
 
