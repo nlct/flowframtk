@@ -1475,6 +1475,8 @@ public class JDRText extends JDRCompleteObject
    public void savePgf(TeX tex)
     throws IOException
    {
+      CanvasGraphics cg = getCanvasGraphics();
+
       String valign="";
       String halign="";
 
@@ -1538,9 +1540,14 @@ public class JDRText extends JDRCompleteObject
       {
          if (p instanceof JDRShading)
          {
-            String msg = getCanvasGraphics().warning(
+            String shadingSetting = exportSettings.textualShading.toString().toLowerCase();
+
+            String msg = cg.warningMessage(
+               "Text shading paint can't be exported to pgf: using export setting {0}",
                "warning.pgf-no-text-shading",
-               "text shading paint can't be exported to pgf");
+               cg.getMessageDictionary().getMessageWithFallback(
+                "export.textualshading."+shadingSetting,
+                shadingSetting));
 
             tex.comment(msg);
 
@@ -1562,13 +1569,14 @@ public class JDRText extends JDRCompleteObject
                   {
                      JDRGroup g = convertToPath();
                      g.mergePaths(null).savePgf(tex);
-                     return;
                   }
                   catch (Exception e)
                   {
-                     getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
+                     cg.getMessageSystem().getPublisher().publishMessages(
                         MessageInfo.createWarning(e));
                   }
+
+                  return;
             }
          }
 
@@ -1579,9 +1587,14 @@ public class JDRText extends JDRCompleteObject
          {
             if (fill instanceof JDRShading)
             {
-               String msg = getCanvasGraphics().warning(
+               String shadingSetting = exportSettings.textualShading.toString().toLowerCase();
+
+               String msg = cg.warningMessage(
+                  "Text shading paint can''t be exported to pgf: using export setting {0}",
                   "warning.pgf-no-text-shading",
-                  "text shading paint can't be exported to pgf");
+                  cg.getMessageDictionary().getMessageWithFallback(
+                   "export.textualshading."+shadingSetting,
+                   shadingSetting));
 
                tex.comment(msg);
 
@@ -1603,13 +1616,14 @@ public class JDRText extends JDRCompleteObject
                      {
                         JDRGroup g = convertToPath();
                         g.mergePaths(null).savePgf(tex);
-                        return;
                      }
                      catch (Exception e)
                      {
-                        getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
+                        cg.getMessageSystem().getPublisher().publishMessages(
                            MessageInfo.createWarning(e));
                      }
+
+                   return;
                }
             }
 

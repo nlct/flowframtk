@@ -2566,16 +2566,16 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.textualshading.end">End</entry>
 <entry key="export.textualshading.end.tooltip">Just use the end paint</entry>
 
-<entry key="export.textualshading.topath">To Path</entry>
-<entry key="export.textualshading.topath.tooltip">Export the text as a path with gradient fill paint</entry>
+<entry key="export.textualshading.to_path">To Path</entry>
+<entry key="export.textualshading.to_path.tooltip">Export the text as a path with gradient fill paint</entry>
 
 <entry key="export.textpathoutline">Text-Path Outlines:</entry>
 
 <entry key="export.textpathoutline.ignore">Ignore</entry>
 <entry key="export.textpathoutline.ignore.tooltip">Ignore the outline setting</entry>
 
-<entry key="export.textpathoutline.topath">To Path</entry>
-<entry key="export.textpathoutline.topath.tooltip">Export the text-path as a path</entry>
+<entry key="export.textpathoutline.to_path">To Path</entry>
+<entry key="export.textpathoutline.to_path.tooltip">Export the text-path as a path</entry>
 
 <entry key="export.shapeparcs">shapepar command: </entry>
 
@@ -3472,10 +3472,17 @@ Are you sure you want to ungroup it?</entry>
 <entry key="texeditor.preamble">Preamble</entry>
 <entry key="texeditor.latexcodeblock">Preamble and Document Content</entry>
 <entry key="texeditor.latexcodeblock.earlypreamble">Early Preamble</entry>
+<entry key="texeditor.latexcodeblock.earlypreamble.mnemonic">P</entry>
 <entry key="texeditor.latexcodeblock.midpreamble">Mid Preamble</entry>
+<entry key="texeditor.latexcodeblock.midpreamble.mnemonic">A</entry>
 <entry key="texeditor.latexcodeblock.latepreamble">Late Preamble</entry>
+<entry key="texeditor.latexcodeblock.latepreamble.mnemonic">R</entry>
 <entry key="texeditor.latexcodeblock.document">Document</entry>
+<entry key="texeditor.latexcodeblock.document.mnemonic">D</entry>
 <entry key="texeditor.latexcodeblock.magic_comments">Magic Comments</entry>
+<entry key="texeditor.latexcodeblock.magic_comments.mnemonic">G</entry>
+<entry key="texeditor.latexcodeblock.code">LaTeX Code:</entry>
+<entry key="texeditor.latexcodeblock.code.mnemonic">C</entry>
 <entry key="texeditor.frame_contents">Frame Contents</entry>
 
 <entry key="index.menu.texeditor">TeX Editor Popup Menu</entry>

@@ -540,22 +540,34 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       ExportSettings exportSettings = tex.getExportSettings();
 
+      CanvasGraphics cg = getCanvasGraphics();
+
       JDRPaint textPaint = getTextPaint();
 
       if (textPaint instanceof JDRShading)
       {
-         String msg = getCanvasGraphics().warning(
+         String setting = exportSettings.textualShading.toString().toLowerCase();
+
+         String msg = cg.warningMessage(
+            "Text shading paint can''t be exported to pgf: using export setting {0}",
             "warning.pgf-no-text-shading",
-            "text shading paint can't be exported to pgf");
+            cg.getMessageDictionary().getMessageWithFallback(
+             "export.textualshading."+setting,
+             setting));
 
          tex.comment(msg);
       }
 
       if (isOutline())
       {
-         String msg = getCanvasGraphics().warning(
+         String setting = exportSettings.textPathOutline.toString().toLowerCase();
+
+         String msg = cg.warningMessage(
+            "Text-path outline can't be exported to pgf: using export setting {0}",
             "warning.pgf-no-textpath-outline",
-            "text-path outline can't be exported to pgf");
+            cg.getMessageDictionary().getMessageWithFallback(
+             "export.textualshading."+setting,
+             setting));
 
          tex.comment(msg);
       }
@@ -579,14 +591,14 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
             }
 
             group.mergePaths(null).savePgf(tex);
-
-            return;
          }
          catch (Exception e)
          {
-            getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
+            cg.getMessageSystem().getPublisher().publishMessages(
                MessageInfo.createWarning(e));
          }
+
+         return;
       }
 
       if (textPaint instanceof JDRShading)
@@ -619,7 +631,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       catch (InvalidShapeException e)
       {
          s.savePgf(tex, textPaint, this);
-         getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
+         cg.getMessageSystem().getPublisher().publishMessages(
            MessageInfo.createWarning(e));
       }
 

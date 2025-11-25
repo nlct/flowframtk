@@ -456,7 +456,7 @@ public class ExportDialog extends JDialog
       textualShadingWidgets.add(textualShadingEndBox);
 
       textualShadingToPathBox = resources.createAppRadioButton("export",
-        "textualshading.topath", bg, false, null);
+        "textualshading.to_path", bg, false, null);
       textualShadingWidgets.add(textualShadingToPathBox);
 
       adjustMaxHeight(textualShadingWidgets);
@@ -479,7 +479,7 @@ public class ExportDialog extends JDialog
       textPathOutlineWidgets.add(textPathOutlineIgnoreBox);
 
       textPathOutlineToPathBox = resources.createAppRadioButton("export",
-        "textpathoutline.topath", bg, false, null);
+        "textpathoutline.to_path", bg, false, null);
       textPathOutlineWidgets.add(textPathOutlineToPathBox);
 
       adjustMaxHeight(textPathOutlineWidgets);
