@@ -870,9 +870,9 @@ height. For example:
 \end{terminal}
 
 The custom size must have positive dimensions.
-Recognised units: \code{\gls{pt}}, \code{\gls{bp}},
-\code{in}, \code{mm}, \code{cm}, \code{pc},
-\code{dd} and \code{cc}. If the unit is omitted,
+Recognised units: \code{\gls+{pt}}, \code{\gls+{bp}},
+\code{in}, \code{mm}, \code{cm}, \code{\gls+{pc}},
+\code{\gls+{dd}} and \code{\gls+{cc}}. If the unit is omitted,
 \code{\gls{bp}} is assumed. Examples:
 \begin{itemize}
 \item \code{\switch{paper} a4r}
@@ -1508,7 +1508,7 @@ setting.
 \widgetdef{controls.storage_unit}
 
 Set the \gls{storageunit} in the \gls{dropdown} selector (\gls+{pt},
-\gls+{bp}, in, cm, mm, pc, dd or cc).
+\gls+{bp}, in, cm, mm, \gls+{pc}, \gls+{dd} or \gls+{cc}).
 
 It's best to set the \gls{storageunit} before you start creating an
 image. If the selected \gls{canvas} isn't empty, all \glspl{object} will
@@ -12315,10 +12315,18 @@ one. Click on \widgetfmt{No} to close the \dialog{flfwizard} dialog.
 
 \subsection{Defining the Typeblock}\label{sec:typeblock}
 
+\begin{information}
+The \gls{typeblock} margins, shown as an outlined \manmsg{grey}
+rectangle on the \gls{canvas}, are not connected to the 
+\glspl{printer-margin} (shown as a thick \manmsg{grey} border around
+the edge of the page area of the \gls{canvas} if the
+\menu{settings.paper.margins} menu item is selected).
+\end{information}
+
 The \inlineglsdef{typeblock} is the main area of the page where the
 text goes.  The dimensions of the \gls{typeblock} are given by the
-\LaTeX\ lengths \gls{typeblockwidth} and \gls{typeblockheight}
-(which are initialised by the \sty{flowfram} package to
+lengths \gls{typeblockwidth} and \gls{typeblockheight}
+(which are defined and initialised by the \sty{flowfram} package to
 \gls{textwidth} and \gls{textheight}). The \gls{typeblock} provides
 a frame of reference and, unless the special header and footer
 dynamic frames are created, the page header and footer will be
@@ -12349,28 +12357,52 @@ opened with the \menu{tex.flowframe.set_typeblock} menu item.
 \widgetdef{typeblock.title}
 
 In the \dialog{typeblock} dialog you can enter the margins between
-the paper edge and the \gls{typeblock}. You can either type the
-lengths into the supplied fields or you can get \FlowframTk\ to
-calculate the margins for a \gls{typeblock} by clicking on the
-\widget{typeblock.compute_from_objects} button.
+the paper edge and the \gls{typeblock}.
+The \gls{typeblock} width and height are calculated from these
+values and the current paper size.
 
-The \widget{typeblock.compute_from_objects} button will calculate
-the minimum bounds required to encompass all \glspl{object} that
-have been selected in the \widget{typeblock.select_object} list.
-This button will be disabled if no items in the list are selected.
+\widgetdef{flowframe.typeblock_margins}
+You can type the margin lengths into the supplied fields
+in the \widget{flowframe.typeblock_margins} area. 
+The \gls{typeblock} width and height, based on the current paper size,
+are shown below this area and will be updated whenever the fields in
+the \widget{flowframe.typeblock_margins} area are changed.
 
-If any \glspl{object} were already selected when you opened the
-\dialog{typeblock} dialog, they will be automatically selected in the
-\widget{typeblock.select_object} list. You can scroll up or down
-this list and select different \glspl{object} if you prefer. A
-single mouse click will select an item in the list.  A double-click
+If you later change the paper (via the \menu{settings.paper} menu)
+the margins will remain the same but the \gls{typeblock} width and
+height will change accordingly.
+
+\widgetdef{typeblock.compute_from_objects}
+If you prefer, you can get \FlowframTk\ to
+calculate the margins from the bounds of one or more \glspl{object}.
+Ensure that you have selected the applicable object or objects
+from the \widget{typeblock.select_object} list and click on the
+\widget{typeblock.compute_from_objects} button to update the
+\widget{flowframe.typeblock_margins} fields. This button will be
+disabled if there are no selected items in the \widget{typeblock.select_object} list.
+
+\widgetdef{typeblock.select_object}
+
+If one or more \gls{object} was already selected when you opened the
+\dialog{typeblock} dialog, the row or rows corresponding to the
+\gls*{canvas} \selection\ will automatically be selected in the
+\widget{typeblock.select_object} list. If more than one row in the
+list is selected, the \widget{typeblock.compute_from_objects} button
+will calculate the margins based on the bounds that minimally
+encompass all the selected items in the list.
+
+If you didn't already have an object selected or you want to use a
+different one, you can change the list selection.  A single mouse
+\gls{click} will select an item in the list.  A \gls{doubleclick}
 will both select an item in the list and select the corresponding
 \gls{object} on the \gls{canvas}, which allows you to check that
-have selected the correct object.  If you hold down the
+you have selected the correct object.  If you hold down the
 \keys{\keyref{shift}} key while clicking on an item, it will select
 all items in a block from the currently selected item.  If you hold
-down the \keys{\keyref{ctrl}} key while clicking on an item, it
-will add the item to the current selection.
+down the \keys{\keyref{ctrl}} key while clicking on an item, it will
+add the item to the current selection.
+The textual representation of each \gls{object} in the list is the
+same as for the \dialog{findbydescription} dialog box. 
 
 For example, \figureref{fig:typeblocka} shows a \gls*{path} that
 has been created using the \tool{rectangle} on the
@@ -12379,9 +12411,12 @@ has been created using the \tool{rectangle} on the
 \widget{typeblock.compute_from_objects} button was clicked
 which then filled in the values for the margins.
 
-\FloatSubFigs*{fig:typeblock}
+\FloatFig{fig:typeblocka}
+{\includeimg{typeblocka}}
+{A Rectangle Drawn on a Tschichold Grid}
+
+\FloatSubFigs{fig:typeblock}
 {
-  {fig:typeblocka}{\includeimg{typeblocka}}{},
   {fig:typeblockb}{\includeimg{typeblockb}}{},
   {fig:typeblockc}{\includeimg{typeblockc}}{},
   {fig:typeblockd}{\includeimg{typeblockd}}{},
@@ -12389,8 +12424,6 @@ which then filled in the values for the margins.
 }
 [Setting the Typeblock]
 {Setting the typeblock:
-\subfigref{fig:typeblocka} a rectangle has been drawn on
-a Tschichold grid;
 \subfigref{fig:typeblockb} the margins computed from the
 selected rectangle;
 \subfigref{fig:typeblockc} the top and left margins were
@@ -12404,26 +12437,37 @@ change the even page shift}
 It's possible you might want to round the left and top margins to
 the nearest unit. In which case you can do so by editing the
 \widget{flowframe.margins.left} and
-\widget{flowframe.margins.top} fields. Additionally, you
-might want to adjust the right margin so that the
-\gls{typeblock} width is rounded to, say, the nearest whole mm or whole or half
-pc. To do this, type in the required value in the
-\widget{typeblock.adjust_width_label} field (for example
-1pc) and click on the \widget{typeblock.adjust_width}
-button. For example, I changed the left margin to 66\gls{pt} and the
-top margin to 94\gls{pt}. The
-\widget{typeblock.adjust_width_label} was already set to
-1pc, so I left it at that and clicked on the
-\widget{typeblock.adjust_width} button. This filled in the
-right and bottom margins as shown in \figureref{fig:typeblockc}.
+\widget{flowframe.margins.top} fields.
+
+Additionally, you might want to adjust the right margin so that the
+\gls{typeblock} width is rounded to, say, the nearest whole mm or
+whole or half \gls{pc} or adjust the bottom margin so that the
+\gls{typeblock} height is rounded to, say, the nearest baselineskip.
+
+\widgetdef{typeblock.adjust_width}
+To automatically round the \gls{typeblock} width, type in the
+required rounding value in the \widget{typeblock.adjust_width_label}
+field (for example 1\gls{pc}) and click on the
+\widget{typeblock.adjust_width} button. For example, I changed the
+left margin to 66\gls{pt} and the top margin to 94\gls{pt}. The
+\widget{typeblock.adjust_width_label} was already set to 1\gls{pc}, so I
+left it at that and clicked on the \widget{typeblock.adjust_width}
+button. This filled in the right margin as shown in
+\figureref{fig:typeblockc}. Note that this has changed the unit for
+the right margin, but all the margins (and most other dimensions)
+will be converted to the storage unit when exporting.
+
+The width is calculated based on the current paper size and the
+value is shown below the margin panel.
 
 \begin{important}
 The \widget{typeblock.adjust_width} and \widget{typeblock.adjust_height}
 buttons don't round the margin values. They round the width or
-height and then adjust the margins to fit. Make sure you set the
+height and then adjust the right or bottom margin to fit. Make sure you set the
 paper size first.
 \end{important}
 
+\widgetdef{typeblock.adjust_height}
 You can also adjust the bottom margin so that the \gls{typeblock} height
 is rounded to the nearest baselineskip or another value such as 1in.
 To round to the nearest baselineskip, make sure the
@@ -12435,12 +12479,13 @@ the \widget{typeblock.adjust_height} button. For example, in
 ensure the \gls{typeblock} height is rounded to the nearest baselineskip.
 
 \begin{warning}
-Rounding errors may occur that caused by the conversion between
+Rounding errors may occur that are caused by the conversion between
 units. If you later change the \gls{normal-font-size}
 (\sectionref{sec:normalsize}),
 you may need to readjust the \gls{typeblock} height.
 \end{warning}
 
+\widgetdef{typeblock.hshift}
 Finally, if you use the \opt{twoside} class option, you can get
 \FlowframTk\ to adjust the value of \gls{evensidemargin}.
 \widget{typeblock.hshift} is the difference between
@@ -12449,17 +12494,17 @@ in the \widget{typeblock.hshift} field is non-zero, when you
 export (\sectionref{sec:exportsty}) to a class or package, 
 \FlowframTk\ will add the commands:
 \begin{compactcodebox}
-\cmd{setlength}\gls{evensidemargin}\{\gls{oddsidemargin}\}
-\cmd{addtolength}\gls{evensidemargin}\{\meta{h-shift}\}
+\cmd{setlength}\gls{evensidemargin}\marg{\gls{oddsidemargin}}
+\cmd{addtolength}\gls{evensidemargin}\margm{h-shift}
 \end{compactcodebox}%
 where \meta{h-shift} is the length specified in the
 \widget{typeblock.hshift} field. If you specify a zero
 length, \gls{evensidemargin} won't be adjusted, but the
-typeblock may not be displayed correctly when you display even
+\gls{typeblock} may not be displayed correctly when you display even
 pages in \FlowframTk. Remember that \gls{evensidemargin} is
 ignored if you use the \opt{oneside} class option.
 
-
+\widgetdef{typeblock.compute_sym_shift}
 If you find it a bit complicated to work out the appropriate shift,
 you can use the \widget{typeblock.compute_sym_shift} button,
 which will work out the shift assuming a symmetric page layout. For
@@ -12502,7 +12547,9 @@ is enabled (as shown in \figureref{fig:setframe}) since all the other
 fields aren't valid for type \widget{flowframe.none}.
 
 \begin{warning}
-Make sure you set the \gls+{typeblock} before you set any frames.
+Make sure you set the paper size and \gls+{typeblock} before you set any frames.
+(The \menu{tex.flowframe.set_frame} menu item won't be enabled until
+you have done so.)
 If you later adjust the \gls{typeblock}, you may need to readjust the even
 shifts for all frames that may be displayed on \gls{verso} pages.
 \end{warning}
@@ -15533,7 +15580,7 @@ array) followed by the \meta{n} \type{double} array elements.
 \begin{itemdesc}
 A unit identifier is stored as a \type{byte}. This may take one of eight
 values: 0 (\gls{pt}), 1 (inch), 2 (cm), 3 (\gls{bp}), 4 (mm), 5
-(pc), 6 (dd) or 7 (cc).
+(\gls{pc}), 6 (\gls{dd}) or 7 (\gls{cc}).
 \end{itemdesc}
 
 \itemtitle{\typedef{length}}
