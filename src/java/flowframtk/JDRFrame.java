@@ -938,6 +938,11 @@ public class JDRFrame extends JInternalFrame
       return canvas.getSelectedPatternIndex();
    }
 
+   /**
+    * Get the bounds that minimally encapsulate all selected objects
+    * in storage units.
+    * @return bounding box or null if none selected
+    */
    public void reduceToGrey()
    {
       canvas.reduceToGrey();
@@ -1382,6 +1387,11 @@ public class JDRFrame extends JInternalFrame
    public void scaleSelectedPaths(double factor)
    {
       canvas.scaleSelectedPaths(factor);
+   }
+
+   public void scaleSelectedPaths(double scaleX, double scaleY)
+   {
+      canvas.scaleSelectedPaths(scaleX, scaleY);
    }
 
    public void shearSelectedPaths(double factorX, double factorY)

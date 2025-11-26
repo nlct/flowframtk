@@ -5985,6 +5985,11 @@ public class JDRCanvas extends JPanel
       return null;
    }
 
+   /**
+    * Get the bounds that minimally encapsulate all selected objects
+    * in storage units.
+    * @return bounding box or null if none selected
+    */
    public String getSelectedTag()
    {
       Vector<String> list = new Vector<String>();
@@ -10726,6 +10731,26 @@ public class JDRCanvas extends JPanel
          if (object.isSelected())
          {
             edit = new Scale(object, factor, i);
+            ce.addEdit(edit);
+         }
+      }
+
+      ce.end();
+      if (edit != null) frame_.postEdit(ce);
+   }
+
+   public void scaleSelectedPaths(double scaleX, double scaleY)
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+      UndoableEdit edit = null;
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            edit = new Scale(object, scaleX, scaleY, i);
             ce.addEdit(edit);
          }
       }

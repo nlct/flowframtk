@@ -1648,6 +1648,31 @@
 <entry key="scale.y.mnemonic">Y</entry>
 <entry key="scale.y.initvalue">off</entry>
 
+<entry key="scale.keep_aspect">Keep Aspect Ratio</entry>
+<entry key="scale.keep_aspect.mnemonic">K</entry>
+<entry key="scale.keep_aspect.initvalue">true</entry>
+
+<entry key="scale.calculate">Calculate from backmost selected object:</entry>
+
+<entry key="scale.percent_of">% of</entry>
+
+<entry key="scale.paper_width">paper width</entry>
+<entry key="scale.paper_height">paper height</entry>
+
+<entry key="scale.typeblock_width">typeblock width</entry>
+<entry key="scale.typeblock_height">typeblock height</entry>
+
+<entry key="scale.width">Scale to fit Width:</entry>
+<entry key="scale.width.mnemonic">W</entry>
+<entry key="scale.calc_x">Calculate Scale X</entry>
+<entry key="scale.calc_x.iconimage">dotask</entry>
+
+<entry key="scale.height">Scale to fit Height:</entry>
+<entry key="scale.height.mnemonic">T</entry>
+<entry key="scale.calc_y">Calculate Scale Y</entry>
+<entry key="scale.calc_y.iconimage">dotask</entry>
+
+
 <!--  Shear Dialog Box -->
 <entry key="shear.title">倾斜</entry>
 
@@ -4240,6 +4265,11 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 <entry key="error.invalid_verbosity">Number expected after -verbosity switch</entry>
 <entry key="error.invalid_regex">Invalid regular expression: {0}</entry>
 <entry key="error.invalid_no_item">No item has been selected</entry>
+
+<entry key="error.nan_or_infinite">NaN (not a number) or infinite value obtained. Possible division by zero.</entry>
+<entry key="error.nan_zero_width">Object has no width.</entry>
+<entry key="error.nan_zero_height">Object has no height.</entry>
+
 <entry key="error.no_filename">没有指定文件名</entry>
 <entry key="error.no_required_setting">No {0} supplied</entry>
 <entry key="error.no_helpset">帮助文档集未找到</entry>
