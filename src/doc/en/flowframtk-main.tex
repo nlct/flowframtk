@@ -5182,7 +5182,9 @@ move \glspl{object} up and down the \gls{stackingorder} (that is, in
 front or behind other \glspl{object}), how to perform basic editing
 such as grouping, alignment, cut, copy and paste, and how to set an \gls{object}['s]
 description and tag. See \sectionref{sec:text} to edit
-\glspl{textarea}, \sectionref{sec:modshape} to modify \glspl{shape},
+\glspl{textarea}, \sectionref{sec:affinetrans} to shift, rotate,
+scale or shear an \gls{object},
+\sectionref{sec:modshape} to modify \glspl{shape},
 and \sectionref{sec:styles} to change path and text styles.
 
 \menudef{menu.tools.select}
@@ -5898,6 +5900,9 @@ select all the \gls{object} type checkboxes.
 \widgetdef{findbydescription.deselectallitems}
 The \widget{findbydescription.deselectallitems} button will 
 deselect all the \gls{object} type checkboxes.
+If you only want one selected, you may find it quicker to deselect
+all and then select the one you want than to individually deselect the
+unwanted ones.
 
 \menudef{menu.navigate.add_description}
 
@@ -5907,6 +5912,12 @@ as the \dialog{findbydescription} dialog box, but in this case any
 existing selection won't first be deselected.
 
 \section{Moving an Object Up or Down the Stacking Order}\label{sec:moveupordown}
+
+\begin{information}
+This section describes how to change the \gls{stackingorder}. If you want
+to move an \gls{object} horizontally or vertically, see
+\sectionref{sec:moveobjects}.
+\end{information}
 
 \Glspl{object} are \glslink{drawing-on-canvas}{painted} on the
 \gls{canvas} according to the
@@ -6992,13 +7003,14 @@ separate \textattr{paint} to each of the new text areas.}
 that are not available for certain other types of \gls{object}. Those
 functions are described in \sectionref{sec:modshape}.
 
-\section{Moving an Object}\label{sec:moveobjects}
+\section{Moving an Object (Translation)}\label{sec:moveobjects}
 
-To move an \gls{object} or \glspl*{object}
-(\inlineglsdef{affine-transformation.translation}), first \select\ the
+To move an \gls{object} or \glspl*{object} horizontally or
+vertically (\inlineglsdef{affine-transformation.translation}), first \select\ the
 \glspl*{object} you want to move and then depress the
-\glslink{primaryclick}{primary mouse button} somewhere inside the
-selection, and drag the mouse.  Release the mouse button when the
+\glslink{primaryclick}{primary mouse button} somewhere inside 
+one of the \glspl{bbox} in the selection, and drag the mouse. 
+Release the mouse button when the
 \glspl*{object} have reached their required location.
 
 \begin{important}
@@ -7015,9 +7027,20 @@ the arrow keys to move the pointer. (This will require the
 
 \menudef{menu.edit.moveby}
 
-An alternative if you need to move a small amount or if you need to
-move by an exact amount is to use the \menu{edit.moveby} menu item.
-This will open the \dialog{moveby} dialog box (\figureref{fig:moveby}).
+If you need to move by only a small amount or if you need to
+move by an exact amount you can use the \menu{edit.moveby} menu item
+instead of using the mouse to drag the \selected\ objects.
+The \menu{edit.moveby} menu item will open the \dialog{moveby} dialog box.
+
+\begin{information}
+The \menu{edit.moveby} function is unaffected by the \gridlock.
+\end{information}
+
+\widgetdef{moveby.title}
+The \dialog{moveby} dialog box (\figureref{fig:moveby}) provides a
+way of specifying the horizontal and vertical displacement to move
+\selected\ objects.
+
 In the field marked \widget{coordinates.x} enter the horizontal
 displacement, and in the field marked \widget{coordinates.y}
 enter the vertical (\strong{downward}) displacement. For example, to move the
@@ -7026,14 +7049,15 @@ type 10 in the \widget{coordinates.x} field and 20 in the
 \widget{coordinates.y} field. To move left or up, use a negative
 value.
 
-\begin{information}
-The \menu{edit.moveby} function is unaffected by the \gridlock.
-\end{information}
-
-\FloatFig
-  {fig:moveby}
-  {\includeimg{moveby}}
-  {Move Selected Objects Dialog Box}
+\FloatSubFigs{fig:moveby}
+{
+  {fig:movebya}{\includeimg{moveby}}{},
+  {fig:movebyb}{\includeimg{movebychoice}}{}
+}
+[Move Selected Objects Dialog Box]
+{Move Selected Objects Dialog Box:
+\subfigref{fig:movebya} no typeblock;
+\subfigref{fig:movebyb} typeblock set}
 
 \widgetdef{moveby.calculate}
 
@@ -7042,36 +7066,48 @@ you can use the \widget{moveby.calculate} area to calculate the
 appropriate value. The percentage fields described below only allow
 integer values.
 
-\widgetdef{moveby.percent_width}
+If the \gls{typeblock} has been set, then you can also move by a
+proportion of the \gls{typeblock} width or height.
+
+\widgetdef{moveby.width}
 
 If you want to move the selected \gls{object} (or \glspl{object})
 horizontally by proportion of the paper width, enter the percentage
-value in the \widget{moveby.percent_width} number field. (You may
+value in the \widget{moveby.width} number field. (You may
 use a negative percentage.) For example, enter \code{50} for half
 the paper width.
+
+If the \gls{typeblock} has been set, a \gls{dropdown} will become
+available. You can choose whether to calculate a percentage of the
+paper width or a percentage of the \gls{typeblock} width.
 
 \widgetdef{moveby.calc_x}
 
 Once you have entered the desired percentage value, click on the
 \widget{moveby.calc_x} button on the side. This will calculate
-the percentage value of the paper width and insert the value into
+the percentage value of the paper or \gls{typeblock} width, as
+applicable, and insert the value into
 the \widget{coordinates.x} field.
 
-\widgetdef{moveby.percent_height}
+\widgetdef{moveby.height}
 
 If you want to move the selected \gls{object} (or \glspl{object})
 vertically by proportion of the paper height, enter the percentage
-value in the \widget{moveby.percent_height} number field. (You may
+value in the \widget{moveby.height} number field. (You may
 use a negative percentage.) For example, enter \code{50} for half
 the paper height.
+
+If the \gls{typeblock} has been set, a \gls{dropdown} will become
+available. You can choose whether to calculate a percentage of the
+paper height or a percentage of the \gls{typeblock} height.
 
 \widgetdef{moveby.calc_y}
 
 Once you have entered the desired percentage value, click on the
 \widget{moveby.calc_y} button on the side. This will calculate
-the percentage value of the paper width and insert the value into
+the percentage value of the paper or \gls{typeblock} width, as
+applicable, and insert the value into
 the \widget{coordinates.y} field.
-
 
 \section{Rotating Objects}\label{sec:rotateobjects}
 

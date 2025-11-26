@@ -67,19 +67,43 @@ public class MoveByDialogBox extends JDialog
       row = Box.createHorizontalBox();
       mainComp.add(row);
 
-      row.add(resources.createButtonSpacer());
+      JLabelGroup labelGroup = new JLabelGroup();
+
+      JLabel label = resources.createAppLabel("moveby.width");
+      row.add(label);
+      labelGroup.add(label);
+
+      row.add(resources.createLabelSpacer());
 
       widthNumberModel = new SpinnerNumberModel(50, -1000, 1000, 1);
       widthSpinner = new JSpinner(widthNumberModel);
 
       row.add(widthSpinner);
 
-      JLabelGroup labelGroup = new JLabelGroup();
-
-      JLabel label = resources.createAppLabel("moveby.percent_width");
       label.setLabelFor(widthSpinner);
-      row.add(label);
-      labelGroup.add(label);
+
+      row.add(resources.createAppLabel("moveby.percent_of"));
+
+      row.add(resources.createLabelSpacer());
+
+      widthCardLayout = new CardLayout();
+      widthComp = new JPanel(widthCardLayout);
+
+      row.add(widthComp);
+
+      paperWidthComp = resources.createAppLabel("moveby.paper_width");
+
+      widthComp.add(paperWidthComp, "paper");
+
+      widthComboBox = new JComboBox<String>(
+        new String[]
+         {
+           resources.getMessage("moveby.paper_width"),
+           resources.getMessage("moveby.typeblock_width")
+         }
+      );
+
+      widthComp.add(widthComboBox, "choice");
 
       row.add(resources.createButtonSpacer());
 
@@ -89,17 +113,40 @@ public class MoveByDialogBox extends JDialog
       row = Box.createHorizontalBox();
       mainComp.add(row);
 
-      row.add(resources.createButtonSpacer());
+      label = resources.createAppLabel("moveby.height");
+      row.add(label);
+      labelGroup.add(label);
+
+      row.add(resources.createLabelSpacer());
 
       heightNumberModel = new SpinnerNumberModel(50, -1000, 1000, 1);
       heightSpinner = new JSpinner(heightNumberModel);
 
       row.add(heightSpinner);
 
-      label = resources.createAppLabel("moveby.percent_height");
       label.setLabelFor(heightSpinner);
-      row.add(label);
-      labelGroup.add(label);
+
+      row.add(resources.createAppLabel("moveby.percent_of"));
+
+      row.add(resources.createLabelSpacer());
+
+      heightCardLayout = new CardLayout();
+      heightComp = new JPanel(heightCardLayout);
+
+      paperHeightComp = resources.createAppLabel("moveby.paper_height");
+      row.add(heightComp);
+
+      heightComp.add(paperHeightComp, "paper");
+
+      heightComboBox = new JComboBox<String>(
+        new String[]
+         {
+           resources.getMessage("moveby.paper_height"),
+           resources.getMessage("moveby.typeblock_height")
+         }
+      );
+
+      heightComp.add(heightComboBox, "choice");
 
       row.add(resources.createButtonSpacer());
 
@@ -125,6 +172,19 @@ public class MoveByDialogBox extends JDialog
       if (mainPanel != prevFrame)
       {
          locationPane.setUnit(mainPanel.getUnit());
+      }
+
+      typeblock = mainPanel.getTypeblock();
+
+      if (typeblock == null)
+      {
+         widthCardLayout.show(widthComp, "paper");
+         heightCardLayout.show(heightComp, "paper");
+      }
+      else
+      {
+         widthCardLayout.show(widthComp, "choice");
+         heightCardLayout.show(heightComp, "choice");
       }
 
       setVisible(true);
@@ -157,6 +217,14 @@ public class MoveByDialogBox extends JDialog
          int pc = widthNumberModel.getNumber().intValue();
          double bpW = mainPanel.getBpPaperWidth();
 
+         if (typeblock != null && widthComboBox.isVisible()
+               && widthComboBox.getSelectedIndex() == TYPEBLOCK)
+         {
+            JDRUnit storageUnit = typeblock.getCanvasGraphics().getStorageUnit();
+            bpW -= storageUnit.toBp(typeblock.getLeft());
+            bpW -= storageUnit.toBp(typeblock.getRight());
+         }
+
          JDRUnit unit = locationPane.getUnitX();
 
          if (pc == 1)
@@ -176,6 +244,14 @@ public class MoveByDialogBox extends JDialog
       {
          int pc = heightNumberModel.getNumber().intValue();
          double bpH = mainPanel.getBpPaperHeight();
+
+         if (typeblock != null && heightComboBox.isVisible()
+               && heightComboBox.getSelectedIndex() == TYPEBLOCK)
+         {
+            JDRUnit storageUnit = typeblock.getCanvasGraphics().getStorageUnit();
+            bpH -= storageUnit.toBp(typeblock.getTop());
+            bpH -= storageUnit.toBp(typeblock.getBottom());
+         }
 
          JDRUnit unit = locationPane.getUnitY();
 
@@ -212,10 +288,18 @@ public class MoveByDialogBox extends JDialog
    }
 
    private FlowframTk application_;
+   private FlowFrame typeblock;
    RectangularCoordPanel locationPane;
 
    SpinnerNumberModel widthNumberModel, heightNumberModel;
    JSpinner widthSpinner, heightSpinner;
+
+   JComponent widthComp, heightComp, paperWidthComp, paperHeightComp;
+   CardLayout widthCardLayout, heightCardLayout;
+
+   JComboBox<String> widthComboBox, heightComboBox;
+
+   static final int PAPER=0, TYPEBLOCK=1;
 
    private JDRFrame mainPanel = null;
 }

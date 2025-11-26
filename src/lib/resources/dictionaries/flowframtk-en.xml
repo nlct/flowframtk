@@ -2255,13 +2255,21 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="moveby.calculate">Calculate:</entry>
 
-<entry key="moveby.percent_width">% of paper width</entry>
-<entry key="moveby.percent_width.mnemonic">W</entry>
+<entry key="moveby.percent_of">% of</entry>
+
+<entry key="moveby.paper_width">paper width</entry>
+<entry key="moveby.paper_height">paper height</entry>
+
+<entry key="moveby.typeblock_width">typeblock width</entry>
+<entry key="moveby.typeblock_height">typeblock height</entry>
+
+<entry key="moveby.width">Width:</entry>
+<entry key="moveby.width.mnemonic">W</entry>
 <entry key="moveby.calc_x">Calculate X</entry>
 <entry key="moveby.calc_x.iconimage">dotask</entry>
 
-<entry key="moveby.percent_height">% of paper height</entry>
-<entry key="moveby.percent_height.mnemonic">T</entry>
+<entry key="moveby.height">Height</entry>
+<entry key="moveby.height.mnemonic">T</entry>
 <entry key="moveby.calc_y">Calculate Y</entry>
 <entry key="moveby.calc_y.iconimage">dotask</entry>
 
