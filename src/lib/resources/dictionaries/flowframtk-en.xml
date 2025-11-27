@@ -1627,15 +1627,20 @@ Nicola Talbot
 
 <entry key="scale.title">Scale Selection</entry>
 
-<entry key="scale.both">Scale both</entry>
+<entry key="scale.both">Scale Both</entry>
 <entry key="scale.both.mnemonic">B</entry>
 <entry key="scale.both.initvalue">on</entry>
 
-<entry key="scale.x">Scale X</entry>
+<entry key="scale.both.x">Scale X</entry>
+<entry key="scale.both.x.mnemonic">S</entry>
+<entry key="scale.both.y">Scale Y</entry>
+<entry key="scale.both.y.mnemonic">L</entry>
+
+<entry key="scale.x">Scale X Only</entry>
 <entry key="scale.x.mnemonic">X</entry>
 <entry key="scale.x.initvalue">off</entry>
 
-<entry key="scale.y">Scale Y</entry>
+<entry key="scale.y">Scale Y Only</entry>
 <entry key="scale.y.mnemonic">Y</entry>
 <entry key="scale.y.initvalue">off</entry>
 
@@ -1643,7 +1648,7 @@ Nicola Talbot
 <entry key="scale.keep_aspect.mnemonic">K</entry>
 <entry key="scale.keep_aspect.initvalue">true</entry>
 
-<entry key="scale.calculate">Calculate from backmost selected object:</entry>
+<entry key="scale.calculate">Calculate scale factor from backmost selected object:</entry>
 
 <entry key="scale.percent_of">% of</entry>
 
@@ -1662,6 +1667,8 @@ Nicola Talbot
 <entry key="scale.height.mnemonic">T</entry>
 <entry key="scale.calc_y">Calculate Scale Y</entry>
 <entry key="scale.calc_y.iconimage">dotask</entry>
+
+<entry key="scale.calculate_info">If the object used for the calculation is a shape then any protrusion caused by the line style will be ignored. If the object is a group that contains one or more shapes, then the line styles will be taken into account.</entry>
 
 <!--  Shear Dialog Box -->
 <entry key="shear.title">Shear Selection</entry>

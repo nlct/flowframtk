@@ -7225,18 +7225,22 @@ Selected \glspl{object} can be scaled with the
 
 \widgetdef{scale.title}
 
-\FloatSubFigs{fig:scaledialog}
-{
-  {fig:scaledialoga}{\includeimg{scaledialoga}}{},
-  {fig:scaledialogb}{\includeimg{scaledialogb}}{}
-}
-[Scale Selection Dialog Box]
-{Scale Selection Dialog Box:
-\subfigref{fig:scaledialoga} no typeblock;
-\subfigref{fig:scaledialogb} typeblock set}
-
 In the \dialog{scale} dialog (see \figureref{fig:scaledialog}), you can specify the
 \inlineglsdef{affine-transformation.scaling} factor.
+
+\FloatFig{fig:scaledialog}
+{\includeimg{scaledialog-keepaspect}}
+{Scale Selection Dialog Box}
+
+\widgetdef{scale.x}
+
+Select the \widget{scale.x} radio button to scale just the
+$x$ dimension. This will alter the aspect ratio.
+
+\widgetdef{scale.y}
+
+Select the \widget{scale.y} radio button to scale just the
+$y$ dimension. This will alter the aspect ratio.
 
 \widgetdef{scale.both}
 
@@ -7245,122 +7249,22 @@ $x$ and $y$ dimension.
 
 \widgetdef{scale.keep_aspect}
 If the \widget{scale.keep_aspect} check box is selected, the scale
-factor is the same for both dimensions otherwise the number field
-next to the \widget{scale.keep_aspect} check box will become
-available and you can set that to
-the required vertical scaling. The other value (next to the
+factor is the same for both dimensions and only one scale factor
+field will be enabled. Otherwise the \inlineglsdef{scale.both.y}
+number field next to the \widget{scale.keep_aspect} check box will
+become available and you can set that to the required vertical
+scaling. The other \inlineglsdef{scale.both.x} field (next to the
 \widget{scale.both} button) will be the horizontal scaling.
-
-\widgetdef{scale.x}
-
-Select the \widget{scale.x} radio button to scale just the
-$x$ dimension.
-
-\widgetdef{scale.y}
-
-Select the \widget{scale.y} radio button to scale just the
-$y$ dimension.
-
-\widgetdef{scale.calculate}
-The scaling factors can be calculated based on the dimensions of the
-\selected\ object and either the paper size or, if set, the
-\gls{typeblock} size. If more than one \gls{object} has been
-selected, the \glsdisp{backobject}{backmost} one of the selection
-will be used for the calculations.
-
-The object's type is also taken into account. If the object is a
-\gls{shape} then the selected area is obtained by discounting the
-line style, such as line width and markers. For example, if the shape is a rectangle with
-co-ordinates at (100\gls{bp},100\gls{bp}), (200\gls{bp},100\gls{bp})
-(200\gls{bp},200\gls{bp}) and (100\gls{bp},200\gls{bp}) then the
-width and height are both 100\gls{bp}.
-
-However, if the selected object is a group containing one or more
-\glspl{shape}, then each shape's line style, if applicable, will be
-included in the area. For example, if the rectangle is in the group
-and the rectangle has 1\gls{bp} line width, then this extends the
-rectangle bounds by 0.5\gls{bp} in each direction, which adds
-1\gls{bp} to the width and 1\gls{bp} to the height. So even if all
-the other objects within the group are within the rectangle bounds, 
-the group's width and height will be slightly larger than the actual
-rectangle co-ordinates which will change the calculations.
-
-The reason for this difference is that the feature is mainly
-provided to help quickly set up static, flow or dynamic frames (see
-\sectionref{sec:flowframe}) with an area that is a percentage of the
-paper or \gls{typeblock}. In this case, the selected object may
-simply be a rectangle used as a guide for the frame and the border
-should not be taken into account. An alternative is to use the
-\menu{tex.flowframe.scale_to_typeblock} menu item (see \sectionref{sec:scaletotypeblock}).
-
-\widgetdef{scale.width}
-To calculate the $x$ scaling factor required to change the selected
-object's width to a percentage of either the paper size or
-\gls{typeblock}, enter the percentage value (an integer) into the
-\widget{scale.width} field. If no \gls{typeblock} has been set
-the percentage can only be of the paper width (see
-\figureref{fig:scaledialoga}). Otherwise, a \gls{dropdown} will be
-available where you can choose either the paper width or
-\gls{typeblock} width (see \figureref{fig:scaledialogb}).
-
-\widgetdef{scale.calc_x}
-Once you have entered the required percentage value in the
-\widget{scale.width} field, click on the \btn{scale.calc_x} button
-to calculate the $x$ scale factor. For example, if the selected
-object's width is 100\gls{bp} and the \gls{typeblock} width is
-400\gls{bp} then the $x$ scale factor required to make the object's
-width 50\% of the \gls{typeblock} width is 2.
-
-\begin{information}
-The \widget{scale.calc_x} button doesn't automatically apply the
-scaling to the selection on the \gls{canvas}. It simply updates the
-applicable scaling field at the top of the dialog.
-\end{information}
-
-If the \widget{scale.x} button is selected, the calculated value
-will be placed in the \widget{scale.x} field. If the
-\widget{scale.both} button is selected, the calculated value will be
-placed in the field next to the \widget{scale.both} button.
-If the \widget{scale.y} button is selected, the setting will
-automatically be switched to the \widget{scale.x} setting.
-
-\widgetdef{scale.height}
-To calculate the $y$ scaling factor required to change the selected
-object's height to a percentage of either the paper size or
-\gls{typeblock}, enter the percentage value (an integer) into the
-\widget{scale.height} field. If no \gls{typeblock} has been set
-the percentage can only be of the paper height (see
-\figureref{fig:scaledialoga}). Otherwise, a \gls{dropdown} will be
-available where you can choose either the paper height or
-\gls{typeblock} height (see \figureref{fig:scaledialogb}).
-
-\widgetdef{scale.calc_y}
-Once you have entered the required percentage value in the
-\widget{scale.height} field, click on the \btn{scale.calc_y}
-to calculate the $y$ scale factor. For example, if the selected
-object's height is 100\gls{bp} and the \gls{typeblock} height is
-400\gls{bp} then the $x$ scale factor required to make the object's
-height 50\% of the \gls{typeblock} height is 2.
-
-\begin{information}
-The \widget{scale.calc_y} button doesn't automatically apply the
-scaling to the selection on the \gls{canvas}. It simply updates the
-applicable scaling field at the top of the dialog.
-\end{information}
-
-If the \widget{scale.y} button is selected, the calculated value
-will be placed in the \widget{scale.y} field. If the
-\widget{scale.both} button is selected, the calculated value will be
-placed in the field next to the \widget{scale.keep_aspect} checkbox.
-If that checkbox is selected, the value will also be placed in the
-field next to the \widget{scale.both} button.
-If the \widget{scale.x} button is selected, the setting will
-automatically be switched to the \widget{scale.y} setting.
 
 Notes:
 \begin{itemize}
 \item \Inlineglsdef{affine-transformation.reflection} can be
 achieved with a negative scale factor.
+
+\item The lower \widget{scale.calculate} part of the \dialog{scale} dialog box
+provides a way to calculate the scaling factors. This simply changes
+the values in the upper part of the dialog. No scaling is actually
+applied until the \btn{okay} button is clicked on.
 
 \item Individual \glspl*{object} will be
 scaled relative to the top left corner of the
@@ -7447,6 +7351,104 @@ vertically, the bottom right hotspot to scale in both directions or
 the middle right hotspot to scale horizontally. Note that even if
 you have more than one object selected, only the object whose
 hotspot you are dragging will be transformed.
+
+\widgetdef{scale.calculate}
+The scaling factors can be calculated based on the dimensions of the
+\selected\ object and either the paper size or, if set, the
+\gls{typeblock} size. If more than one \gls{object} has been
+selected, the \glsdisp{backobject}{backmost} one of the selection
+will be used for the calculations.
+
+\FloatSubFigs{fig:scaledialogcompute}
+{
+  {fig:scaledialog-notypeblock}{\includeimg{scaledialog-notypeblock}}{},
+  {fig:scaledialog-typeblock}{\includeimg{scaledialog-typeblock}}{}
+}
+[Calculate Scale Factors]
+{Calculate Scale Factors:
+\subfigref{fig:scaledialog-notypeblock} no typeblock; \subfigref{fig:scaledialog-typeblock}
+  typeblock set}
+
+The object's type is also taken into account. If the object is a
+\gls{shape} then the selected area is obtained by discounting the
+line style, such as \pathattr{line-width} and \pathattrpl{marker}. 
+For example, if the shape is a rectangle with
+co-ordinates at (100\gls{bp},100\gls{bp}), (200\gls{bp},100\gls{bp})
+(200\gls{bp},200\gls{bp}) and (100\gls{bp},200\gls{bp}) then the
+selected area width and height are both 100\gls{bp}.
+If the \gls{typeblock} width is 400\gls{bp} then the scale factor
+required to make the rectangle's width equal to half the width of
+the \gls{typeblock} is $(400 \times 0.5)/100 = 2$.
+
+However, if the object is a group containing one or more
+\glspl{shape}, then each shape's line style, if applicable, will be
+included in the area. For example, if the rectangle is in the group
+and the rectangle has 1\gls{bp} line width, then this extends the
+rectangle bounds by 0.5\gls{bp} in each direction (left, right, top
+and bottom), which adds 1\gls{bp} to the width and 1\gls{bp} to the
+height. So even if all the other objects within the group are within
+the rectangle bounds, the group's width and height will be slightly
+larger than the actual rectangle co-ordinates which will change the
+calculations.
+For the above example, the scale factor
+required to make the rectangle's width equal to half the width of
+the \gls{typeblock} is now $(400 \times 0.5)/101 \approx 1.9802$.
+
+The reason for this difference is that the calculation feature is mainly
+provided to help quickly set up static, flow or dynamic frames (see
+\sectionref{sec:flowframe}) with an area that is a percentage of the
+paper or \gls{typeblock}. In this case, the selected object may
+simply be a rectangle used as a guide for the frame and the border
+should not be taken into account. An alternative is to use the
+\menu{tex.flowframe.scale_to_typeblock} menu item (see \sectionref{sec:scaletotypeblock}).
+
+\widgetdef{scale.width}
+To calculate the $x$ scaling factor required to change the selected
+object's width to a percentage of either the paper size or
+\gls{typeblock}, enter the percentage value (an integer) into the
+\widget{scale.width} field. If no \gls{typeblock} has been set
+the percentage can only be of the paper width (see
+\figureref{fig:scaledialog-notypeblock}). 
+Otherwise, a \gls{dropdown} will be
+available where you can choose either the paper width or
+\gls{typeblock} width (see \figureref{fig:scaledialog-typeblock}).
+
+\widgetdef{scale.calc_x}
+Once you have entered the required percentage value in the
+\widget{scale.width} field, click on the \btn{scale.calc_x} button
+to calculate the $x$ scale factor.
+
+If the \widget{scale.x} button is selected, the calculated value
+will be placed in the \widget{scale.x} field. If the
+\widget{scale.both} button is selected, the calculated value will be
+placed in the field next to the \widget{scale.both} button.
+If the \widget{scale.y} button is selected, the setting will
+automatically be switched to the \widget{scale.x} setting.
+
+\widgetdef{scale.height}
+To calculate the $y$ scaling factor required to change the selected
+object's height to a percentage of either the paper size or
+\gls{typeblock}, enter the percentage value (an integer) into the
+\widget{scale.height} field. If no \gls{typeblock} has been set the
+percentage can only be of the paper height (see
+\figureref{fig:scaledialog-notypeblock}).
+Otherwise, a \gls{dropdown} will be available where you can choose
+either the paper height or \gls{typeblock} height (see
+\figureref{fig:scaledialog-typeblock}).
+
+\widgetdef{scale.calc_y}
+Once you have entered the required percentage value in the
+\widget{scale.height} field, click on the \btn{scale.calc_y}
+to calculate the $y$ scale factor.
+
+If the \widget{scale.y} button is selected, the calculated value
+will be placed in the \widget{scale.y} field.
+If the \widget{scale.x} button is selected, the setting will
+automatically be switched to the \widget{scale.y} setting.
+If the \widget{scale.both} button is selected then
+if the \widget{scale.keep_aspect} checkbox is selected, the value will be placed in the
+field next to the \widget{scale.both} button, otherwise the calculated value will be
+placed in the \widget{scale.both.y} field next to the \widget{scale.keep_aspect} checkbox.
 
 
 \seealsorefs{

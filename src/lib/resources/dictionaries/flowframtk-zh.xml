@@ -1640,6 +1640,11 @@
 <entry key="scale.both.mnemonic">B</entry>
 <entry key="scale.both.initvalue">on</entry>
 
+<entry key="scale.both.x">水平缩放比例(S)</entry>
+<entry key="scale.both.x.mnemonic">S</entry>
+<entry key="scale.both.y">垂直缩放比例(L)</entry>
+<entry key="scale.both.y.mnemonic">L</entry>
+
 <entry key="scale.x">水平缩放比例(X)</entry>
 <entry key="scale.x.mnemonic">X</entry>
 <entry key="scale.x.initvalue">off</entry>
@@ -1652,7 +1657,7 @@
 <entry key="scale.keep_aspect.mnemonic">K</entry>
 <entry key="scale.keep_aspect.initvalue">true</entry>
 
-<entry key="scale.calculate">Calculate from backmost selected object:</entry>
+<entry key="scale.calculate">Calculate scale factor from backmost selected object:</entry>
 
 <entry key="scale.percent_of">% of</entry>
 
@@ -1671,6 +1676,8 @@
 <entry key="scale.height.mnemonic">T</entry>
 <entry key="scale.calc_y">Calculate Scale Y</entry>
 <entry key="scale.calc_y.iconimage">dotask</entry>
+
+<entry key="scale.calculate_info">If the object used for the calculation is a shape then any protrusion caused by the line style will be ignored. If the object is a group that contains one or more shapes, then the line styles will be taken into account.</entry>
 
 
 <!--  Shear Dialog Box -->

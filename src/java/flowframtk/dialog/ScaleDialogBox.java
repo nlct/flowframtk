@@ -62,7 +62,7 @@ public class ScaleDialogBox extends JDialog
       JComponent mainComp = Box.createVerticalBox();
       mainComp.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 
-      getContentPane().add(mainComp, "Center");
+      getContentPane().add(new JScrollPane(mainComp), "Center");
 
       JComponent row = Box.createHorizontalBox();
       row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -121,10 +121,21 @@ public class ScaleDialogBox extends JDialog
 
       row.add(resources.createLabelSpacer());
 
+      bothScaleXLabelComp = Box.createHorizontalBox();
+      row.add(bothScaleXLabelComp);
+
+      JLabelGroup labelGroup = new JLabelGroup();
+
+      JLabel label = resources.createAppLabel("scale.both.x");
+      labelGroup.add(label);
+      bothScaleXLabelComp.add(label);
+      bothScaleXLabelComp.add(resources.createLabelSpacer());
+
       scaleSpinnerModel = new SpinnerNumberModel(
          Double.valueOf(1.0), null, null, Double.valueOf(0.25));
 
       scaleSpinner = new JSpinner(scaleSpinnerModel);
+      label.setLabelFor(scaleSpinner);
       setSpinnerColumns(scaleSpinner, 6);
       row.add(scaleSpinner);
 
@@ -140,10 +151,19 @@ public class ScaleDialogBox extends JDialog
 
       row.add(resources.createLabelSpacer());
 
+      bothScaleYLabelComp = Box.createHorizontalBox();
+      row.add(bothScaleYLabelComp);
+
+      label = resources.createAppLabel("scale.both.y");
+      labelGroup.add(label);
+      bothScaleYLabelComp.add(label);
+      bothScaleYLabelComp.add(resources.createLabelSpacer());
+
       nonAspectScaleYSpinnerModel = new SpinnerNumberModel(
          Double.valueOf(1.0), null, null, Double.valueOf(0.25));
 
       nonAspectScaleYSpinner = new JSpinner(nonAspectScaleYSpinnerModel);
+      label.setLabelFor(nonAspectScaleYSpinner);
       setSpinnerColumns(nonAspectScaleYSpinner, 6);
       row.add(nonAspectScaleYSpinner);
       nonAspectScaleYSpinner.setEnabled(!keepAspectButton.isSelected());
@@ -152,6 +172,9 @@ public class ScaleDialogBox extends JDialog
 
       JLabelGroup.setSameMinPrefMaxWidth(scaleXButton, scaleYButton, scaleButton,
        keepAspectButton);
+
+      JLabelGroup.setSameMinPrefMaxWidth(scaleXSpinner, scaleYSpinner, 
+       scaleSpinner, nonAspectScaleYSpinner);
 
       row.add(Box.createHorizontalGlue());
 
@@ -168,9 +191,9 @@ public class ScaleDialogBox extends JDialog
       row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       mainComp.add(row);
 
-      JLabelGroup labelGroup = new JLabelGroup();
+      labelGroup = new JLabelGroup();
 
-      JLabel label = resources.createAppLabel("scale.width");
+      label = resources.createAppLabel("scale.width");
       row.add(label);
       labelGroup.add(label);
 
@@ -211,6 +234,8 @@ public class ScaleDialogBox extends JDialog
       row.add(resources.createDialogButton("scale", "calc_x", this, null));
       row.add(resources.createLabelSpacer());
       row.add(Box.createHorizontalGlue());
+
+      resources.clampCompMaxHeight(row, 0, 20);
 
       row = Box.createHorizontalBox();
       row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -258,7 +283,19 @@ public class ScaleDialogBox extends JDialog
       row.add(resources.createLabelSpacer());
       row.add(Box.createHorizontalGlue());
 
+      resources.clampCompMaxHeight(row, 0, 20);
+
+      mainComp.add(Box.createVerticalStrut(10));
+
+      JTextArea info = resources.createAppInfoArea(40, "scale.calculate_info");
+      info.setRows(5);
+      info.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      mainComp.add(info);
+
       mainComp.add(Box.createVerticalGlue());
+
+      JLabelGroup.setSameMinPrefMaxWidth(widthSpinner, heightSpinner);
+      JLabelGroup.setSameMinPrefMaxWidth(widthComp, heightComp);
 
       JPanel p2 = new JPanel();
 
@@ -428,6 +465,8 @@ public class ScaleDialogBox extends JDialog
          {
             nonAspectScaleYSpinner.setEnabled(!keepAspectButton.isSelected());
             nonAspectScaleYSpinner.setVisible(nonAspectScaleYSpinner.isEnabled());
+            bothScaleXLabelComp.setVisible(nonAspectScaleYSpinner.isVisible());
+            bothScaleYLabelComp.setVisible(nonAspectScaleYSpinner.isVisible());
 
             if (evt.getStateChange() == ItemEvent.DESELECTED)
             {
@@ -581,6 +620,8 @@ public class ScaleDialogBox extends JDialog
    JSpinner widthSpinner, heightSpinner;
 
    JCheckBox keepAspectButton;
+
+   JComponent bothScaleXLabelComp, bothScaleYLabelComp;
 
    JComponent widthComp, heightComp, paperWidthComp, paperHeightComp;
    CardLayout widthCardLayout, heightCardLayout;

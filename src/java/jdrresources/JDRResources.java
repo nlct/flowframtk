@@ -2416,6 +2416,14 @@ public class JDRResources
       return Box.createHorizontalStrut(BUTTON_SPACER);
    }
 
+   public void clampCompMaxHeight(JComponent comp, int xpad, int ypad)
+   {
+      Dimension dim = comp.getPreferredSize();
+      dim.width = (int)comp.getMaximumSize().getWidth() + xpad;
+      dim.height += ypad;
+      comp.setMaximumSize(dim);
+   }  
+
    public JDRButton createOkayCancelHelpButtons(JDialog dialog, JComponent comp,
       ActionListener listener, String helpId, boolean bothOkayAccelerators)
    {

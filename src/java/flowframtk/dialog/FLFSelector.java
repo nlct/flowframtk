@@ -318,10 +318,7 @@ public class FLFSelector extends JDialog
 
    protected void clampCompMaxHeight(JComponent row)
    {
-      Dimension dim = row.getPreferredSize();
-      dim.width = (int)row.getMaximumSize().getWidth();
-      dim.height += 20;
-      row.setMaximumSize(dim);
+      getResources().clampCompMaxHeight(row, 0, 20);
    }  
 
    public void display()
