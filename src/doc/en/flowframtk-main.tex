@@ -2385,6 +2385,47 @@ The \widget{annotations.title} tab (\figureref{fig:annotations})
 allows you to set the font used for annotating frames or draft
 \glspl{bitmap} and set the font used on the splash screen during startup.
 
+\widgetdef{annotations.scale}
+
+If the \widget{annotations.scale} checkbox is on, the annotations will scale as you
+increase or decrease the \gls{canvas} magnification 
+(see \sectionref{sec:zoommenu}).
+
+\widgetdef{annotations.annote_font}
+The \widget{annotations.annote_font} is used for \gls{flowframe}
+annotations (at the bottom left of the frame, offset by the inner
+padding) and also for the file name of \glspl{bitmap} shown in draft
+mode.
+
+\widgetdef{annotations.frame_contents.show}
+If the \widget{annotations.frame_contents.show} checkbox is
+selected, any static or dynamic frames with contents set
+will have the contents shown on the \gls{canvas}. This is
+non-editable. You need to use \menu{tex.flowframe.set_frame}
+if you want to change the contents (or use the \dialog{flfwizard}).
+
+This can be distracting if there are many \glspl{object} on the
+\gls{canvas}. In which case, unselect the 
+\widget{annotations.frame_contents.show} to hide the content.
+
+\widgetdef{annotations.frame_contents.font}
+If the \widget{annotations.frame_contents.show} checkbox is
+selected, the \widget{annotations.frame_contents.font} setting is
+used to render the content.
+
+This isn't the same as that used in the 
+\TeX\ editor (see \sectionref{sec:texeditor}). Use the
+\dialog{texeditorui} tab (see \sectionref{sec:texeditorui}) to
+change that.
+
+The frame contents annotation is the only setting in this panel
+where you can also change the annotation text \manmsg{colour}.
+Use the \btn{button.choose_colour} button to open the
+\manmsg{colour} selector dialog.
+
+\widgetdef{splash.title}
+The \widget{splash.title} panel is for the fonts used on the splash
+screen when \FlowframTk\ starts up.
 
 \subsubsection{Language Settings}\label{sec:languages}
 
@@ -2857,7 +2898,7 @@ the \filefn{export} functions
 \hyperref[sec:languages]{language settings} used for the resources and manual;
 
 \item the \file{startup.conf} file that stores the names of the
-fonts used by the \hyperref[sec:graphics]{startup splash screen};
+fonts used by the \hyperref[sec:annotations]{startup splash screen};
 
 \item the \file{latexfontmap.prop} file (created by you, if you want
 it, in any text editor) that contains any \glspl{font-mapping} (see
@@ -12863,9 +12904,16 @@ or environments provided by the \sty{flowfram} package. For your
 convenience, \FlowframTk\ provides a way for you to specify the
 contents and will use the appropriate commands when you export to a
 package or class file.
+
 To add or edit the contents, click on the
 \widget{flowframe.edit} button, which will open
 \FlowframTk's little \TeX\ editor.
+The contents will be shown on the \gls{canvas} if the
+\widget{annotations.frame_contents.show} setting is on
+(see \sectionref{sec:annotations}), but you can only change
+the contents by clicking on the \widget{flowframe.edit}
+button in either the \dialog{flfwizard} or in the
+\dialog{flowframe} dialog.
 
 \begin{important}
 You can't use verbatim text in the contents.

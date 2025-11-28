@@ -2940,8 +2940,10 @@ class AnnoteFontPanel extends JavaFontSelector
 {
    public AnnoteFontPanel(FlowframTk application, JLabelGroup labelGrp)
    {
-      super(application, labelGrp, "annote.font", 
-       "annote.font.bold", "annote.font.italic", "annote.fontsize");
+      super(application, labelGrp, "annotations.annote_font", 
+       "annotations.annote_font.bold",
+       "annotations.annote_font.italic",
+       "annotations.annote_fontsize");
    }
 
    public void initialise(FlowframTkSettings settings)
@@ -2965,19 +2967,22 @@ class FrameContentFontPanel extends JPanel
       JDRResources resources = application.getResources();
 
       showBox = resources.createAppCheckBox(
-       "annote_contents", "show", true, null);
+       "annotations.frame_contents", "show", true, null);
 
       add(showBox, "North");
 
       fontSelector = new JavaFontSelector(application, labelGrp,
-        "annote_contents.font", 
-       "annote_contents.font.bold", "annote_contents.font.italic",
-       "annote_contents.font.size", "annote_contents.font.colour");
+       "annotations.frame_contents.font", 
+       "annotations.frame_contents.font.bold",
+       "annotations.frame_contents.font.italic",
+       "annotations.frame_contents.font.size", 
+       "annotations.frame_contents.colour");
 
       add(fontSelector, "Center");
 
       JTextComponent info = resources.createAppInfoField(
-       "annote_contents.font_info", resources.getMessage("texeditorui.title"));
+       "annotations.frame_contents.editor_font_info",
+          resources.getMessage("texeditorui.title"));
       add(info, "South");
 
       resources.clampCompMaxHeight(this, 0, 10);

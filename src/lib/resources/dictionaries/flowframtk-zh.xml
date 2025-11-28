@@ -2740,31 +2740,6 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="graphics.title">图形</entry>
 <entry key="graphics.mnemonic">G</entry>
 
-<!--  Annotations Panel -->
-
-<entry key="annotations.title">Annotations</entry>
-<entry key="annotations.tooltip">Fonts used in annotations</entry>
-<entry key="annotations.mnemonic">T</entry>
-
-<entry key="annotations.scale">Scale Annotations</entry>
-
-<entry key="annote.font">Annotation Font:</entry>
-<entry key="annote.font.mnemonic">F</entry>
-<entry key="annote.font.bold">Bold</entry>
-<entry key="annote.font.bold.mnemonic">B</entry>
-<entry key="annote.font.italic">Italic</entry>
-<entry key="annote.font.italic.mnemonic">I</entry>
-<entry key="annote.fontsize">Size</entry>
-<entry key="annote.fontsize.mnemonic">Z</entry>
-
-<entry key="annote_contents.show">Show content of static or dynamic frames on the canvas</entry>
-<entry key="annote_contents.font">Frame Contents Font:</entry>
-<entry key="annote_contents.font.bold">Bold</entry>
-<entry key="annote_contents.font.italic">Italic</entry>
-<entry key="annote_contents.font.size">Size</entry>
-<entry key="annote_contents.font.colour">Text Color</entry>
-<entry key="annote_contents.font_info">Use the {0} tab to set the font for the TeX editor</entry>
-
 <entry key="render.anti_alias">消除锯齿</entry>
 <entry key="render.on">启用(N)</entry>
 <entry key="render.on.mnemonic">N</entry>
@@ -2803,6 +2778,34 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="controls.storage_unit">Storage Unit:</entry>
 <entry key="controls.storage_unit.mnemonic">U</entry>
 <entry key="controls.storage_unit.note">If you change the storage unit, all coordinates in the current frame will be converted to the new storage unit. This may take a while if you have a large or complex image, so it's generally best to set the storage unit before you start your image. The storage unit is independent of the grid unit. Some settings, such as line width or font size, are independent of the storage unit.</entry>
+
+<!--  Annotations Panel -->
+
+<entry key="annotations.title">Annotations</entry>
+<entry key="annotations.tooltip">Fonts used in annotations</entry>
+<entry key="annotations.mnemonic">T</entry>
+
+<entry key="annotations.scale">Scale Annotations</entry>
+<entry key="annotations.scale.initvalue">true</entry>
+
+<entry key="annotations.annote_font">Annotation Font:</entry>
+<entry key="annotations.annote_font.mnemonic">F</entry>
+<entry key="annotations.annote_font.bold">Bold</entry>
+<entry key="annotations.annote_font.bold.mnemonic">B</entry>
+<entry key="annotations.annote_font.italic">Italic</entry>
+<entry key="annotations.annote_font.italic.mnemonic">I</entry>
+<entry key="annotations.annote_fontsize">Size</entry>
+<entry key="annotations.annote_fontsize.mnemonic">Z</entry>
+
+<entry key="annotations.frame_contents.show">Show content of static or dynamic frames on the canvas</entry>
+<entry key="annotations.frame_contents.show.initvalue">true</entry>
+
+<entry key="annotations.frame_contents.font">Frame Contents Font:</entry>
+<entry key="annotations.frame_contents.font.bold">Bold</entry>
+<entry key="annotations.frame_contents.font.italic">Italic</entry>
+<entry key="annotations.frame_contents.font.size">Size</entry>
+<entry key="annotations.frame_contents.colour">Text Color</entry>
+<entry key="annotations.frame_contents.editor_font_info">Use the {0} tab to change the font for the TeX editor</entry>
 
 <!--  Splash Screen Settings -->
 
