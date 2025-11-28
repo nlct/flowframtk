@@ -1019,6 +1019,16 @@ public class FlowframTkSettings
       frameContentsAnnote = on;
    }
 
+   public void setScaleAnnotationsOn(boolean on)
+   {
+      scaleAnnotations = on;
+   }
+
+   public boolean isScaleAnnotationsOn()
+   {
+      return scaleAnnotations;
+   }
+
    public void setStatusFont(String name, int style, int size)
    {
       setStatusFont(new Font(name, style, size));
@@ -1587,6 +1597,8 @@ public class FlowframTkSettings
    private Font frameContentsAnnoteFont = FlowFrame.contentFont;
    private Color frameContentsAnnoteFontColour = FlowFrame.contentFontColor;
    private boolean frameContentsAnnote = FlowFrame.showFrameContents;
+
+   private boolean scaleAnnotations = JDRCompleteObject.scaleAnnotations;
 
    private Font statusFont = new Font("Dialog", Font.PLAIN, 10);
 

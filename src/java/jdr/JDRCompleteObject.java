@@ -1029,6 +1029,8 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public static Font annoteFont = new Font("SansSerif", Font.PLAIN, 10);
 
+   public static boolean scaleAnnotations = true;
+
    protected volatile boolean editMode=false;
 
    /**

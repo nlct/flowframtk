@@ -1588,6 +1588,11 @@ public class FlowframTkInvoker
                {
                   settings.setFrameContentsAnnoteFontColour(parseColor(value, line));
                }
+               else if (key.equals("scale_annote"))
+               {
+                  JDRCompleteObject.scaleAnnotations = parseBoolean(value, line);
+                  settings.setScaleAnnotationsOn(JDRCompleteObject.scaleAnnotations);
+               }
                else if (key.equals("annote_font"))
                {
                   annoteFont = Font.decode(value);
@@ -2059,6 +2064,10 @@ public class FlowframTkInvoker
        +(settings.isAnnoteFrameContentsOn()?1:0));
       out.println("contents_annote_font="+settings.getFrameContentsAnnoteSetting());
       writeColor(out, "contents_annote_col", settings.getFrameContentsAnnoteFontColour());
+
+      out.println("scale_annote="
+       +(settings.isScaleAnnotationsOn()?1:0));
+
       out.println("status_font="+settings.getStatusSetting());
 
       out.println("texeditorfont="+settings.getTeXEditorFontName());

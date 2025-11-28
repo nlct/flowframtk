@@ -241,11 +241,17 @@ public class FlowFrame implements Cloneable,Serializable
          width, height);
 
       Stroke oldStroke = g2.getStroke();
-      Font oldFont = g2.getFont();
       Color orgColor = g2.getColor();
 
       g2.setStroke(new BasicStroke());
-      g2.setFont(JDRCompleteObject.annoteFont);
+
+      Font font = JDRCompleteObject.annoteFont;
+
+      if (JDRCompleteObject.scaleAnnotations)
+      {
+         font = font.deriveFont((float)(font.getSize2D() * cg.getMagnification()));
+      }
+
       g2.setColor(annoteColor);
 
       g2.draw(rect);
@@ -253,7 +259,7 @@ public class FlowFrame implements Cloneable,Serializable
       String str = getDisplayLabel();
 
       FontRenderContext frc = g2.getFontRenderContext();
-      TextLayout layout = new TextLayout(str, JDRCompleteObject.annoteFont, frc);
+      TextLayout layout = new TextLayout(str, font, frc);
       layout.draw(g2, (float)x, (float)(y+height-layout.getDescent()));
 
       if (showFrameContents && (type == DYNAMIC || type == STATIC)
@@ -264,7 +270,6 @@ public class FlowFrame implements Cloneable,Serializable
       }
 
       g2.setStroke(oldStroke);
-      g2.setFont(oldFont);
       g2.setColor(orgColor);
 
       if (resetTransform != null)
@@ -276,7 +281,15 @@ public class FlowFrame implements Cloneable,Serializable
    protected void drawFrameContents(Graphics2D g2, Rectangle2D bounds,
      float annoteHeight)
    {
-      g2.setFont(contentFont);
+      CanvasGraphics cg = getCanvasGraphics();
+
+      Font font = contentFont;
+
+      if (JDRCompleteObject.scaleAnnotations)
+      {
+         font = font.deriveFont((float)(font.getSize2D() * cg.getMagnification()));
+      }
+
       g2.setColor(contentFontColor);
 
       float wrappingWidth = (float)bounds.getWidth();
@@ -291,14 +304,15 @@ public class FlowFrame implements Cloneable,Serializable
 
       for (String line : lines)
       {
-         if (!drawContent(g2, line, pen, wrappingWidth, wrappingHeight, y0))
+         if (!drawContent(g2, font, line, pen, wrappingWidth, wrappingHeight, y0))
          {
             break;
          }
       }
    }
 
-   protected boolean drawContent(Graphics2D g2, String line, Point2D.Float pen,
+   protected boolean drawContent(Graphics2D g2, Font font, 
+      String line, Point2D.Float pen,
       float wrappingWidth, float wrappingHeight, float y0)
    {
       if (line.isEmpty())
@@ -309,6 +323,7 @@ public class FlowFrame implements Cloneable,Serializable
       FontRenderContext frc = g2.getFontRenderContext();
 
       AttributedString attStr = new AttributedString(line);
+      attStr.addAttribute(TextAttribute.FONT, font);
 
       AttributedCharacterIterator attrIter = attStr.getIterator();
       LineBreakMeasurer measurer = new LineBreakMeasurer(attrIter, frc);

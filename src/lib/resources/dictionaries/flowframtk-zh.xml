@@ -2746,6 +2746,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="annotations.tooltip">Fonts used in annotations</entry>
 <entry key="annotations.mnemonic">T</entry>
 
+<entry key="annotations.scale">Scale Annotations</entry>
+
 <entry key="annote.font">Annotation Font:</entry>
 <entry key="annote.font.mnemonic">F</entry>
 <entry key="annote.font.bold">Bold</entry>

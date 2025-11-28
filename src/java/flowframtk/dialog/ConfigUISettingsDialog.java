@@ -204,14 +204,23 @@ public class ConfigUISettingsDialog extends JDialog
    private JComponent createAnnotationsPanel()
    {
       JComponent annotationsPanel = Box.createVerticalBox();
+      annotationsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+      scaleAnnoteBox = getResources().createAppCheckBox(
+        "annotations", "scale", true, null);
+
+      scaleAnnoteBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      annotationsPanel.add(scaleAnnoteBox);
 
       JLabelGroup labelGrp = new JLabelGroup();
 
       annoteFontPanel = new AnnoteFontPanel(application, labelGrp);
+      annoteFontPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 
       annotationsPanel.add(annoteFontPanel);
 
       frameContentFontPanel = new FrameContentFontPanel(application, labelGrp);
+      frameContentFontPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 
       annotationsPanel.add(frameContentFontPanel);
 
@@ -219,6 +228,7 @@ public class ConfigUISettingsDialog extends JDialog
 
       splashScreenSettingsPanel
         = new SplashScreenSettingsPanel(application, labelGrp);
+      splashScreenSettingsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 
       annotationsPanel.add(splashScreenSettingsPanel);
 
@@ -250,8 +260,13 @@ public class ConfigUISettingsDialog extends JDialog
       normalizePanel.initialise(application);
       langPanel.initialise();
       texEditorUIPanel.initialise(application);
-      annoteFontPanel.initialise(application.getSettings());
-      frameContentFontPanel.initialise(application.getSettings());
+
+      FlowframTkSettings settings = application.getSettings();
+
+      scaleAnnoteBox.setSelected(settings.isScaleAnnotationsOn());
+      annoteFontPanel.initialise(settings);
+      frameContentFontPanel.initialise(settings);
+
       lookAndFeelPanel.initialise();
 
       if (vectorizeBitmapUIPanel != null)
@@ -292,8 +307,14 @@ public class ConfigUISettingsDialog extends JDialog
       controlPointsPanel.okay(application);
       renderPanel.okay(application);
       texEditorUIPanel.okay(application);
-      annoteFontPanel.okay(application.getSettings());
-      frameContentFontPanel.okay(application.getSettings());
+
+      FlowframTkSettings settings = application.getSettings();
+
+      JDRCompleteObject.scaleAnnotations = scaleAnnoteBox.isSelected();
+      settings.setScaleAnnotationsOn(JDRCompleteObject.scaleAnnotations);
+      annoteFontPanel.okay(settings);
+      frameContentFontPanel.okay(settings);
+
       lookAndFeelPanel.okay();
 
       if (vectorizeBitmapUIPanel != null)
@@ -335,6 +356,7 @@ public class ConfigUISettingsDialog extends JDialog
    private NormalizePanel normalizePanel;
    private TeXEditorUIPanel texEditorUIPanel;
    private AnnoteFontPanel annoteFontPanel;
+   private JCheckBox scaleAnnoteBox;
    private FrameContentFontPanel frameContentFontPanel;
    private LookAndFeelPanel lookAndFeelPanel;
    private VectorizeBitmapUIPanel vectorizeBitmapUIPanel;
