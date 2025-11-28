@@ -435,7 +435,7 @@ public class FLFSelector extends JDialog
 
             if (idx == FlowFrame.DYNAMIC)
             {
-               flowframe.setStyleCommands(styleCmdsField.getText());
+               flowframe.setStyleCommands(styleCmdsField.getText().trim());
             }
          }
          else
