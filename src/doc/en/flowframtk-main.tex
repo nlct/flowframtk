@@ -12394,7 +12394,8 @@ one or more declarations. These can be entered into the
 If the provided value contains a backslash, \FlowframTk\ will add
 code to the exported file that defines a command with the provided
 value as the definition. The name of that command can then be used
-for the style attribute. If the provided value doesn't contain a
+for the style attribute (which \FlowframTk\ will do automatically). 
+If the provided value doesn't contain a
 backslash, \FlowframTk\ will assume it's the control sequence name
 (unless the value is empty, in which case no style is set).
 
@@ -12443,9 +12444,16 @@ window (described in \sectionref{sec:texeditor}) in which you can
 type the frame content. This button is not available for flow frames
 (their content is the document text) or for dynamic frames with a
 special label (which require special content to function correctly).
+
 Once set, the content will be shown in the area below the 
 \btn{flfwizard.content.edit} button. Click on the button again if
 you need to change it.
+The content will be shown on the \gls{canvas} if the
+\widget{annotations.frame_contents.show} setting is on
+(see \sectionref{sec:annotations}), but you can only change
+the contents by clicking on the \widget{flowframe.edit}
+button in either the \dialog{flfwizard} or in the
+\dialog{flowframe} dialog.
 
 Use the \btn{flfwizard.next} button to move onto the
 \dialog{flfwizard.dimensions} panel.
@@ -12494,6 +12502,18 @@ margins will be set to zero.
 For two-sided documents, the \widget{flfwizard.dimensions.even_x_shift}
 determines the frame's horizontal position on even pages.
 \FlowframTk\ uses this value to calculate the \qtt{evenx} attribute.
+
+\begin{information}
+The frame's location is relative to the bottom left corner of the
+\gls{typeblock}. If the \gls{typeblock} has a non-zero
+shift for even pages, given in \widget{flowframe.even_x_shift}
+on the \dialog{flfwizard.typeblock} panel, then the frame's location
+will move with it on even pages. Use the  
+\widget{flfwizard.dimensions.even_x_shift} field if the frame needs
+to be in a different relative location on even pages.
+For example, a frame that needs to be on the right of odd pages but
+on the left of even pages.
+\end{information}
 
 \widgetdef{flfwizard.dimensions.compute_sym_x_shift}
 
@@ -12738,6 +12758,11 @@ the adjustments made.
 
 \subsection{Defining a Frame}\label{sec:framedef}
 
+If you are unfamiliar with setting \gls{flowframe} data, you may
+prefer to use the \dialog{flfwizard}. The \dialog{flowframe} dialog
+is faster as you don't have to progress through multiple steps but
+it provides less guidance.
+
 \menudef{menu.tex.flowframe.set_frame}
 
 An \gls{object} can be identified as a flow, static or
@@ -12853,7 +12878,7 @@ When assigning \gls{flowframe} data (rather than editing existing
 data) the \widget{flowframe.border} setting will default to
 \widget{flowframe.border_none} if the current object is an unfilled
 \gls{path}.  Otherwise it will default to
-\widget{flowframe.border_as_show}. Change it as applicable.
+\widget{flowframe.border_as_shown}. Change it as applicable.
 
 \widgetdef{flowframe.pages}
 
