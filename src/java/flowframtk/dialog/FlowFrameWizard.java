@@ -1544,7 +1544,23 @@ public class FlowFrameWizard extends JDialog
       FlowFrame flowframe = selectedObject.getFlowFrame();
       String currentLabel = "";
 
-      if (flowframe != null)
+      if (flowframe == null)
+      {
+         // If selected object is not an unfilled path with four segments,
+         // set border setting to on.
+
+         if ((selectedObject instanceof JDRPath)
+           && (((JDRPath)selectedObject).getFillPaint() instanceof JDRTransparent)
+            )
+         {
+            useObjectAsBorder.setSelected(false);
+         }
+         else
+         {
+            useObjectAsBorder.setSelected(true);
+         }
+      }
+      else
       {
          currentLabel = flowframe.getLabel();
       }

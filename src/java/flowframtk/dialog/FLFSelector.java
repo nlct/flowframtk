@@ -117,8 +117,7 @@ public class FLFSelector extends JDialog
              resources.getMessage("flowframe.border_as_shown")
          }
       );
-      border.setSelectedItem(
-         resources.getMessage("flowframe.border_as_shown"));
+      border.setSelectedIndex(BORDER_AS_SHOWN);
       borderLabel.setLabelFor(border);
       row.add(border);
 
@@ -350,6 +349,7 @@ public class FLFSelector extends JDialog
       CanvasGraphics cg = mainPanel.getCanvasGraphics();
 
       int idx = type.getSelectedIndex();
+
       if (idx != NONE)
       {
          // check label supplied
@@ -400,7 +400,7 @@ public class FLFSelector extends JDialog
          }
          
          flowframe  = new FlowFrame(cg, idx, 
-            border.getSelectedIndex()==1, labelText.getText(),
+            border.getSelectedIndex()== BORDER_AS_SHOWN, labelText.getText(),
             pages);
 
          JDRUnit unit = cg.getStorageUnit();
@@ -588,6 +588,17 @@ public class FLFSelector extends JDialog
          shapeBox.setSelectedIndex(FlowFrame.STANDARD);
          clearBox.setSelected(false);
          styleCmdsField.setText("");
+
+         if ((object instanceof JDRPath)
+          && (((JDRPath)object).getFillPaint() instanceof JDRTransparent)
+            )
+         {
+            border.setSelectedIndex(BORDER_NONE);
+         }
+         else
+         {
+            border.setSelectedIndex(BORDER_AS_SHOWN);
+         }
       }
       else
       {
@@ -708,6 +719,8 @@ public class FLFSelector extends JDialog
    private JLabel labelLabel, borderLabel, pagesLabel; 
    private MarginPanel margins;
    public static final int STATIC=0, FLOW=1, DYNAMIC=2, NONE=3;
+
+   public static final int BORDER_NONE=0, BORDER_AS_SHOWN=1;
 
    private JComboBox shapeBox;
    private JLabel shapeLabel;

@@ -2416,7 +2416,7 @@ used to render the content.
 This isn't the same as that used in the 
 \TeX\ editor (see \sectionref{sec:texeditor}). Use the
 \dialog{texeditorui} tab (see \sectionref{sec:texeditorui}) to
-change that.
+change that. There's no syntax highlighting in the annotation.
 
 The frame contents annotation is the only setting in this panel
 where you can also change the annotation text \manmsg{colour}.
@@ -12370,6 +12370,19 @@ If the object (such as a \gls{shape} or \gls{bitmap}) should be used
 as a border or background for the frame, make sure that the
 \widget{flfwizard.style.border} checkbox is selected.
 
+\begin{information}
+All \glspl{textarea} are considered to be a part of the
+frame's background, not the frame's contents, and will only appear if
+the border \widget{flowframe.border_as_shown} setting is
+applied. Likewise for \glspl{bitmap}. The border is not available
+for non-standard paragraph shapes.
+\end{information}
+
+When assigning \gls{flowframe} data (rather than editing
+existing data) the \widget{flfwizard.style.border} setting will
+default to off if the current object is an unfilled \gls{path}.
+Otherwise it will default to on. Change it as applicable.
+
 \widgetdef{flfwizard.style.cmds}
 The \widget{flfwizard.style.cmds} setting is only available for
 dynamic frames. The \sty{flowfram} package only allows a control
@@ -12828,11 +12841,19 @@ not be given a border, and the object will be used only as an
 indication of the frame's width, height and location (and
 possibly shape, see \sectionref{sec:frameshape}).
 
-Note that all \glspl{textarea} are considered to be a part of the
+\begin{information}
+All \glspl{textarea} are considered to be a part of the
 frame's background, not the frame's contents, and will only appear if
 the border \widget{flowframe.border_as_shown} setting is
 applied. Likewise for \glspl{bitmap}. The border is not available
 for non-standard paragraph shapes (\sectionref{sec:frameshape}).
+\end{information}
+
+When assigning \gls{flowframe} data (rather than editing existing
+data) the \widget{flowframe.border} setting will default to
+\widget{flowframe.border_none} if the current object is an unfilled
+\gls{path}.  Otherwise it will default to
+\widget{flowframe.border_as_show}. Change it as applicable.
 
 \widgetdef{flowframe.pages}
 
