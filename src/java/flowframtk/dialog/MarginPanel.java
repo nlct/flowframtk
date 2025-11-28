@@ -85,6 +85,12 @@ public class MarginPanel extends JPanel
              {
                 lengthComp.setVisible(!noneBox.isSelected());
                 bottomPanel.setVisible(lengthComp.isVisible());
+
+                if (noneBox.isSelected())
+                {
+                   updateWidth();
+                   updateHeight();
+                }
              }
           });
 

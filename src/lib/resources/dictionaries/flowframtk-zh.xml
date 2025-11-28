@@ -2797,6 +2797,21 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="annotations.annote_fontsize">Size</entry>
 <entry key="annotations.annote_fontsize.mnemonic">Z</entry>
 
+<entry key="annotations.annote_typeblock_pos">Typeblock:</entry>
+<entry key="annotations.annote_typeblock_pos.mnemonic">Y</entry>
+<entry key="annotations.annote_flow_pos">Flow Frame:</entry>
+<entry key="annotations.annote_flow_pos.mnemonic">W</entry>
+<entry key="annotations.annote_static_pos">Static Frame:</entry>
+<entry key="annotations.annote_static_pos.mnemonic">S</entry>
+<entry key="annotations.annote_dynamic_pos">Dynamic Frame:</entry>
+<entry key="annotations.annote_dynamic_pos.mnemonic">D</entry>
+
+<entry key="annotations.annote_pos.none">Omit</entry>
+<entry key="annotations.annote_pos.bottom_left">Bottom Left</entry>
+<entry key="annotations.annote_pos.top_left">Top Left</entry>
+<entry key="annotations.annote_pos.top_right">Top Right</entry>
+<entry key="annotations.annote_pos.bottom_right">Bottom Right</entry>
+
 <entry key="annotations.frame_contents.show">Show content of static or dynamic frames on the canvas</entry>
 <entry key="annotations.frame_contents.show.initvalue">true</entry>
 
@@ -3310,7 +3325,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="flowframe.clear.tooltip">Clear frame contents after each page</entry>
 <entry key="flowframe.style_cmds">Style:</entry>
 <entry key="flowframe.style_cmds.mnemonic">Y</entry>
-<entry key="flowframe.style_cmds.info">(e.g. textbf or \large\textbf)</entry>
+<entry key="flowframe.style_cmds.info">(e.g. textbf or \large\bfseries)</entry>
 
 <entry key="flowframe.confirm.group.title">Confirm Assign Flowframe Data to Group</entry>
 <entry key="flowframe.confirm.group">You will lose all flowframe data associated with the objects within this group,

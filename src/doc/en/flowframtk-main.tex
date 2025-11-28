@@ -2393,9 +2393,23 @@ increase or decrease the \gls{canvas} magnification
 
 \widgetdef{annotations.annote_font}
 The \widget{annotations.annote_font} is used for \gls{flowframe}
-annotations (at the bottom left of the frame, offset by the inner
-padding) and also for the file name of \glspl{bitmap} shown in draft
+annotations and also for the file name of \glspl{bitmap} shown in draft
 mode.
+
+\Gls{flowframe} annotations can become quite cluttered if you have overlapping
+\glspl{object}. The default is to show the \gls{typeblock} or frame
+annotation at the bottom left (offset by the inner padding, if
+applicable). This can be changed with the
+\inlineglsdef{annotations.annote_typeblock_pos},
+\inlineglsdef{annotations.annote_flow_pos},
+\inlineglsdef{annotations.annote_static_pos}, and
+\inlineglsdef{annotations.annote_dynamic_pos}
+annotation settings. The options are:
+\widget{annotations.annote_pos.none} (don't annotate),
+\widget{annotations.annote_pos.bottom_left},
+\widget{annotations.annote_pos.top_left},
+\widget{annotations.annote_pos.top_right}, and
+\widget{annotations.annote_pos.bottom_right}.
 
 \widgetdef{annotations.frame_contents.show}
 If the \widget{annotations.frame_contents.show} checkbox is
@@ -12193,13 +12207,13 @@ the appropriate special button instead. These are:
 
 \widgetdef{flfwizard.frametype.header}
 Select the \widget{flfwizard.frametype.header} button for a dynamic frame
-with the special \qtt{header} label. If the document is two-sided
-and there is an even header frame, this frame will only be used for
-odd pages. If there is no even header frame it will be used for all
-pages.
+with the special \inlineglsdef{opt.frame-label.header} label. 
+If the document is two-sided and there is an even header frame, this
+frame will only be used for odd pages. If there is no even header
+frame it will be used for all pages.
 
 The \widget{flfwizard.frametype.header} button will be disabled if
-there is already an object with the special \qtt{header} label.
+there is already an object with the special \framelabelref{header} label.
 If you are editing existing \gls{flowframe} data with this label, the 
 \widget{flfwizard.frametype.dynamic} button will be selected
 instead. The \widget{flfwizard.frametype.header} button will not be
@@ -12207,13 +12221,14 @@ required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.evenheader}
 Select the \widget{flfwizard.frametype.evenheader} button for a dynamic frame
-with the special \qtt{evenheader} label. If the document is two-sided
-this frame will be used instead of the \qtt{header} frame. Using
-this button will not only fill in the frame's label in
-the next panel but will also set the page list to \qt{Even}.
+with the special \inlineglsdef{opt.frame-label.evenheader} label. 
+If the document is two-sided this frame will be used instead of the
+\qtt{header} frame. Using this button will not only fill in the
+frame's label in the next panel but will also set the page list to
+\qt{Even}.
 
 The \widget{flfwizard.frametype.evenheader} button will be disabled if
-there is already an object with the special \qtt{evenheader} label.
+there is already an object with the special \framelabelref{evenheader} label.
 If you are editing existing \gls{flowframe} data with this label, the 
 \widget{flfwizard.frametype.dynamic} button will be selected
 instead. The \widget{flfwizard.frametype.evenheader} button will not be
@@ -12221,13 +12236,13 @@ required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.footer}
 Select the \widget{flfwizard.frametype.footer} button for a dynamic frame
-with the special \qtt{footer} label. If the document is two-sided
-and there is an even footer frame, this frame will only be used for
-odd pages. If there is no even footer frame it will be used for all
-pages.
+with the special \inlineglsdef{opt.frame-label.footer} label. If the
+document is two-sided and there is an even footer frame, this frame
+will only be used for odd pages. If there is no even footer frame it
+will be used for all pages.
 
 The \widget{flfwizard.frametype.footer} button will be disabled if
-there is already an object with the special \qtt{footer} label.
+there is already an object with the special \framelabelref{footer} label.
 If you are editing existing \gls{flowframe} data with this label, the 
 \widget{flfwizard.frametype.dynamic} button will be selected
 instead. The \widget{flfwizard.frametype.footer} button will not be
@@ -12235,13 +12250,14 @@ required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.evenfooter}
 Select the \widget{flfwizard.frametype.evenfooter} button for a dynamic frame
-with the special \qtt{evenfooter} label. If the document is two-sided
-this frame will be used instead of the \qtt{footer} frame. Using
-this button will not only fill in the frame's label in
-the next panel but will also set the page list to \qt{Even}.
+with the special \inlineglsdef{opt.frame-label.evenfooter} label. If
+the document is two-sided this frame will be used instead of the
+\framelabelref{footer} frame. Using this button will not only fill
+in the frame's label in the next panel but will also set the page
+list to \qt{Even}.
 
 The \widget{flfwizard.frametype.evenfooter} button will be disabled if
-there is already an object with the special \qtt{evenfooter} label.
+there is already an object with the special \framelabelref{evenfooter} label.
 If you are editing existing \gls{flowframe} data with this label, the 
 \widget{flfwizard.frametype.dynamic} button will be selected
 instead. The \widget{flfwizard.frametype.evenfooter} button will not be
@@ -12249,22 +12265,22 @@ required in this case, as the label has already been set.
 
 \widgetdef{flfwizard.frametype.thumbtab}
 Select the \widget{flfwizard.frametype.thumbtab} button for a dynamic frame
-with the special \qtt{thumbtab\meta{n}} label. The value of \meta{n}
+with the special \inlineglsdef{opt.frame-label.thumbtabn} label. The value of \meta{n}
 will automatically be calculated.
 
 If the document is two-sided and there is an
-\qtt{eventhumbtab\meta{n}} frame, this frame will only be used for
+\framelabelref{eventhumbtabn} frame, this frame will only be used for
 odd pages. If there is no corresponding even frame, this frame will
 be used for all pages.
 
 \widgetdef{flfwizard.frametype.eventhumbtab}
 Select the \widget{flfwizard.frametype.eventhumbtab} button for a dynamic frame
-with the special \qtt{eventhumbtab\meta{n}} label. The value of \meta{n}
-will automatically be calculated.
-If the document is two-sided, this frame will be used instead of
-\qtt{thumbtab\meta{n}} on even pages. Using
-this button will not only fill in the frame's label in
-the next panel but will also set the page list to \qt{Even}.
+with the special \inlineglsdef{opt.frame-label.eventhumbtabn} label.
+The value of \meta{n} will automatically be calculated.  If the
+document is two-sided, this frame will be used instead of
+\framelabelref{thumbtabn} on even pages. Using this button will not
+only fill in the frame's label in the next panel but will also set
+the page list to \qt{Even}.
 
 \begin{information}
 Unless you have a non-symmetric shape as the thumbtab frame, there's
@@ -12274,20 +12290,20 @@ be calculated automatically.
 
 \widgetdef{flfwizard.frametype.thumbtabindex}
 Select the \widget{flfwizard.frametype.thumbtabindex} button for a dynamic frame
-with the special \qtt{thumb\-tab\-index\meta{n}} label. The value of \meta{n}
-will automatically be calculated.
+with the special \inlineglsdef{opt.frame-label.thumbtabindexn}
+label. The value of \meta{n} will automatically be calculated.
 
 \begin{information}
 Unless you want a different \manmsg{colour} or shape for the
 thumbtab index frames, you don't need to create a thumbtab index.
-\FlowframTk\ will automatically create the \qtt{thumbtabindex\meta{n}} frames
-based on the corresponding \qtt{thumbtab\meta{n}} frame.
+\FlowframTk\ will automatically create the \framelabelref{thumbtabindexn} frames
+based on the corresponding \framelabelref{thumbtabn} frame.
 \end{information}
 
 \widgetdef{flfwizard.frametype.eventhumbtabindex}
 Select the \widget{flfwizard.frametype.eventhumbtabindex} button for a dynamic frame
-with the special \qtt{even\-thumb\-tab\-index\meta{n}} label. The value of \meta{n}
-will automatically be calculated.
+with the special \inlineglsdef{opt.frame-label.eventhumbtabindexn}
+label. The value of \meta{n} will automatically be calculated.
 
 \begin{information}
 Unless you have a non-symmetric shape as the thumbtab index frame, there's
@@ -12780,8 +12796,8 @@ fields aren't valid for type \widget{flowframe.none}.
 
 \begin{warning}
 Make sure you set the paper size and \gls+{typeblock} before you set any frames.
-(The \menu{tex.flowframe.set_frame} menu item won't be enabled until
-you have done so.)
+(The \menu{tex.flowframe.set_frame} menu item will produce an error
+if you haven't set the \gls{typeblock}.)
 If you later adjust the \gls{typeblock}, you may need to readjust the even
 shifts for all frames that may be displayed on \gls{verso} pages.
 \end{warning}
@@ -12794,6 +12810,9 @@ Once an \gls*{object} has been identified as a frame, a
 \manmsg{grey} rectangle will appear on the screen indicating the area in
 which the contents of the frame will be typeset, along with the
 frame's type, identification label and page list.
+You can change the font or position of the annotation in the
+\dialog{annotations} tab of the \dialog{configui} dialog
+(see \sectionref{sec:annotations}).
 
 \begin{information}
 Note that if the \gls*{object} is a \gls{group}, the frame
@@ -12821,32 +12840,22 @@ document. Each label must be unique for its given frame type.  To
 assign a label to the selected frame, enter it in the box
 marked \widget{flowframe.label}.
 
-There are four dynamic frame labels that have a special meaning for
-\FlowframTk: \inlineglsdef{opt.frame-label.header},
-\inlineglsdef{opt.frame-label.footer},
-\inlineglsdef{opt.frame-label.evenheader} and
-\inlineglsdef{opt.frame-label.evenfooter}. These indicate that the frame should be converted
+There are some dynamic frame labels that have a special meaning for
+\FlowframTk: \framelabelref{header},
+\framelabelref{footer},
+\framelabelref{evenheader} and
+\framelabelref{evenfooter}. These indicate that the frame should be converted
 into the page header or footer frame (analogous to the
 \sty{flowfram} package's \gls{makedfheaderfooter} command).
 If you use any of these special labels, when you export to a package or
-class file, \FlowframTk\ will modify \LaTeX's standard page style
-mechanism to hide the header and footer frames when you use the
-\pagestyleref{empty} page style, hide just the header when you use the
-\pagestyleref{plain} page style and hide just the footer when you use the
-\pagestyleref{headings} page style. If you only define a header frame but
-no footer frame, \FlowframTk\ will switch on the \pagestyleref{headings}
-page style. If you only define a footer frame but no header frame,
-\FlowframTk\ will switch on the \pagestyleref{plain} page style. If you
-define both a header and a footer frame, \FlowframTk\ will switch to
-its own custom page style called \pagestyleref{flowframtk} that puts
-\gls{leftmark} or \gls{rightmark} in the header and
-\gls{thepage} in the footer. This custom page style is
-only defined if you have a header or footer frame.
+class file, \FlowframTk\ will use commands provided by
+\sty{flowframtkutils} to convert these frames in dynamic header and
+footers. Make sure that you have at least version 2.0 of
+\sty{flowfram} installed to ensure that \sty{flowframtkutils} is
+available.
 
 \begin{important}
-The \framelabelref{header}, \framelabelref{footer},
-\framelabelref{evenheader} and \framelabelref{evenfooter} 
-\glspl{frame-label} only have a special significance for dynamic frames.
+The special labels only have a special significance for dynamic frames.
 \end{important}
 
 The \framelabelref{evenheader} and \framelabelref{evenfooter} labels are provided
@@ -12854,6 +12863,24 @@ in case you want to have a different frame for even pages. This will
 typically only be necessary if you want a different border or frame
 dimensions for the header or footer on even pages, as the
 even page horizontal shift is usually sufficient.
+
+There are also special labels for thumbtabs:
+\framelabelref{thumbtabn},
+\framelabelref{eventhumbtabn},
+\framelabelref{thumbtabindexn}, and
+\framelabelref{eventhumbtabindexn}.
+These form a complete set for the \meta{n}th thumbtab. Unless you
+want a different style for even or index thumbtabs, it's usually
+sufficient to just define \framelabelref{thumbtabn}
+and the index thumbtab will be based on that.
+
+\begin{important}
+Unlike the \dialog{flfwizard} dialog, the \dialog{flowframe} dialog
+doesn't hide dynamic frame settings that aren't applicable to
+special frames. Don't set the contents of these frames and don't
+switch on the \widget{flowframe.clear} setting as it will interfere
+with the special frame function.
+\end{important}
 
 \widgetdef{flowframe.border}
 
@@ -12895,13 +12922,18 @@ The page references are as described in
 \dialog{texconfig} dialog (\sectionref{sec:texconfig}) to
 specify whether the page list uses absolute or relative numbers.
 
-\widgetdef{flowframe.border_as_shown}
+\widgetdef{flowframe.frame_margins}
 
-The frame may have margins between the border and the area in which
-the contents are typeset. The margins are usually only relevant
+The frame may have inner padding between the border and the area in which
+the contents are typeset. The padding is usually only relevant
 if you have specified the \widget{flowframe.border_as_shown}
-border option. The margins are not available for non-standard
+border option. If the \widget{flowframe.margins.none} checkbox
+is selected, the inner padding fields are hidden. Deselect
+\widget{flowframe.margins.none} to show them.
+This setting is not available for non-standard
 paragraph shapes (\sectionref{sec:frameshape}).
+There's no need to use \sty{flowfram}['s] \optfmt{offset} attribute
+as \FlowframTk\ calculates the correct position.
 
 \widgetdef{flowframe.align}
 
@@ -12946,7 +12978,8 @@ dialog (\sectionref{sec:displaypage}).
 
 As described in \sectionref{sec:flowframesummary}, the contents of
 static and dynamic frames need to be explicitly set using commands
-or environments provided by the \sty{flowfram} package. For your
+or environments provided by the \sty{flowfram} package (but not for
+the special dynamic frames). For your
 convenience, \FlowframTk\ provides a way for you to specify the
 contents and will use the appropriate commands when you export to a
 package or class file.
@@ -12962,20 +12995,8 @@ button in either the \dialog{flfwizard} or in the
 \dialog{flowframe} dialog.
 
 \begin{important}
-You can't use verbatim text in the contents.
+You can't use verbatim text in the contents of dynamic frames.
 \end{important}
-
-If your frame has been assigned the
-\widget{flowframe.dynamic} type and has been given one of
-the special dynamic labels \framelabelref{header}, \framelabelref{footer},
-\framelabelref{evenheader} or \framelabelref{evenfooter}, as described above,
-setting the contents has a different effect. The code you provide in
-the contents is inserted into the header or footer to enable you to
-modify the formatting. Note that you shouldn't use commands like
-\gls{thepage}, as that will be done automatically. It's best to
-stick to declarations, such as \gls{bfseries}, although the
-final command may be a text-block command, such as \gls{textbf},
-as it is typically followed by \gls{thepage} or the header mark.
 
 \subsection{The Frame Shape}\label{sec:frameshape}
 

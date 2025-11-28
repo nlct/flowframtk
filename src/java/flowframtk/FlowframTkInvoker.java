@@ -1593,6 +1593,26 @@ public class FlowframTkInvoker
                   JDRCompleteObject.scaleAnnotations = parseBoolean(value, line);
                   settings.setScaleAnnotationsOn(JDRCompleteObject.scaleAnnotations);
                }
+               else if (key.equals("annote_typeblock_pos"))
+               {
+                  settings.setAnnotationTypeblockPos(parseInt(value, line));
+                  FlowFrame.typeblockAnnotePos = settings.getAnnotationTypeblockPos();
+               }
+               else if (key.equals("annote_flow_pos"))
+               {
+                  settings.setAnnotationFlowPos(parseInt(value, line));
+                  FlowFrame.flowAnnotePos = settings.getAnnotationFlowPos();
+               }
+               else if (key.equals("annote_static_pos"))
+               {
+                  settings.setAnnotationStaticPos(parseInt(value, line));
+                  FlowFrame.staticAnnotePos = settings.getAnnotationStaticPos();
+               }
+               else if (key.equals("annote_dynamic_pos"))
+               {
+                  settings.setAnnotationDynamicPos(parseInt(value, line));
+                  FlowFrame.dynamicAnnotePos = settings.getAnnotationDynamicPos();
+               }
                else if (key.equals("annote_font"))
                {
                   annoteFont = Font.decode(value);
@@ -2067,6 +2087,11 @@ public class FlowframTkInvoker
 
       out.println("scale_annote="
        +(settings.isScaleAnnotationsOn()?1:0));
+
+      out.println("annote_typeblock_pos="+settings.getAnnotationTypeblockPos());
+      out.println("annote_flow_pos="+settings.getAnnotationFlowPos());
+      out.println("annote_static_pos="+settings.getAnnotationStaticPos());
+      out.println("annote_dynamic_pos="+settings.getAnnotationDynamicPos());
 
       out.println("status_font="+settings.getStatusSetting());
 

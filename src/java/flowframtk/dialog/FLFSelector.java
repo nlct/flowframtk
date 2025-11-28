@@ -207,7 +207,8 @@ public class FLFSelector extends JDialog
 
       row.add(resources.createLabelSpacer());
 
-      row.add(resources.createAppInfoField("flowframe.style_cmds.info"));
+      styleCmdsInfo = resources.createAppInfoField("flowframe.style_cmds.info");
+      row.add(styleCmdsInfo);
 
       clampCompMaxHeight(row);
 
@@ -524,6 +525,7 @@ public class FLFSelector extends JDialog
 
             styleCmdsLabel.setEnabled(idx == DYNAMIC);
             styleCmdsField.setEnabled(styleCmdsLabel.isEnabled());
+            styleCmdsInfo.setEnabled(styleCmdsLabel.isEnabled());
 
             if (idx == NONE)
             {
@@ -739,7 +741,7 @@ public class FLFSelector extends JDialog
 
    private JCheckBox clearBox;
    private JLabel styleCmdsLabel;
-   private JTextField styleCmdsField;
+   private JTextField styleCmdsField, styleCmdsInfo;
 
    private JDRFrame mainPanel;
 }

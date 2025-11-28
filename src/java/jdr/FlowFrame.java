@@ -260,13 +260,70 @@ public class FlowFrame implements Cloneable,Serializable
 
       FontRenderContext frc = g2.getFontRenderContext();
       TextLayout layout = new TextLayout(str, font, frc);
-      layout.draw(g2, (float)x, (float)(y+height-layout.getDescent()));
+
+      int alignPos;
+
+      switch (type)
+      {
+         case TYPEBLOCK:
+            alignPos = typeblockAnnotePos;
+         break;
+         case STATIC:
+            alignPos = staticAnnotePos;
+         break;
+         case FLOW:
+            alignPos = flowAnnotePos;
+         break;
+         case DYNAMIC:
+            alignPos = dynamicAnnotePos;
+         break;
+         default:
+            alignPos = ANNOTE_BOTTOM_LEFT;
+      }
+
+      if (alignPos != ANNOTE_NONE)
+      {
+         float locX;
+         float locY;
+         Rectangle2D bounds;
+
+         switch (alignPos)
+         {
+            case ANNOTE_TOP_LEFT:
+               locX = (float)x;
+               locY = (float)(y
+                         + layout.getAscent()
+                         + layout.getDescent()
+                         + layout.getLeading());
+            break;
+            case ANNOTE_TOP_RIGHT:
+               bounds = layout.getBounds();
+               locX = (float)(x + width - bounds.getWidth());
+               locY = (float)(y
+                         + layout.getAscent()
+                         + layout.getDescent()
+                         + layout.getLeading());
+            break;
+            case ANNOTE_BOTTOM_RIGHT:
+               bounds = layout.getBounds();
+               locX = (float)(x + width - bounds.getWidth());
+               locY = (float)(y+height-layout.getDescent());
+            break;
+            case ANNOTE_BOTTOM_LEFT:
+            default:
+               locX = (float)x;
+               locY = (float)(y+height-layout.getDescent());
+         }
+
+         layout.draw(g2, locX, locY);
+      }
 
       if (showFrameContents && (type == DYNAMIC || type == STATIC)
           && contents != null && !contents.isEmpty())
       {
-         drawFrameContents(g2, rect,
-           layout.getAscent() + layout.getDescent() + layout.getLeading());
+         drawFrameContents(g2, rect, alignPos,
+           alignPos == ANNOTE_NONE ? 0.0f :
+             layout.getAscent() + layout.getDescent() + layout.getLeading());
       }
 
       g2.setStroke(oldStroke);
@@ -279,7 +336,7 @@ public class FlowFrame implements Cloneable,Serializable
    }
 
    protected void drawFrameContents(Graphics2D g2, Rectangle2D bounds,
-     float annoteHeight)
+     int alignPos, float annoteHeight)
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -297,6 +354,11 @@ public class FlowFrame implements Cloneable,Serializable
 
       Point2D.Float pen =
          new Point2D.Float((float)bounds.getX(), (float)bounds.getY());
+
+      if (alignPos == ANNOTE_TOP_LEFT || alignPos == ANNOTE_TOP_RIGHT)
+      {
+         pen.y += annoteHeight;
+      }
 
       float y0 = pen.y;
 
@@ -1774,4 +1836,14 @@ public class FlowFrame implements Cloneable,Serializable
    public static boolean showFrameContents = true;
    public static Color annoteColor = Color.lightGray;
 
+   public static final int ANNOTE_NONE = 0;
+   public static final int ANNOTE_BOTTOM_LEFT = 1;
+   public static final int ANNOTE_TOP_LEFT = 2;
+   public static final int ANNOTE_BOTTOM_RIGHT = 3;
+   public static final int ANNOTE_TOP_RIGHT = 4;
+
+   public static int typeblockAnnotePos = ANNOTE_BOTTOM_LEFT;
+   public static int flowAnnotePos = ANNOTE_BOTTOM_LEFT;
+   public static int staticAnnotePos = ANNOTE_BOTTOM_LEFT;
+   public static int dynamicAnnotePos = ANNOTE_BOTTOM_LEFT;
 }

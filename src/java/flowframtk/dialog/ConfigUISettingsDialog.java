@@ -203,34 +203,7 @@ public class ConfigUISettingsDialog extends JDialog
 
    private JComponent createAnnotationsPanel()
    {
-      JComponent annotationsPanel = Box.createVerticalBox();
-      annotationsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-
-      scaleAnnoteBox = getResources().createAppCheckBox(
-        "annotations", "scale", true, null);
-
-      scaleAnnoteBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-      annotationsPanel.add(scaleAnnoteBox);
-
-      JLabelGroup labelGrp = new JLabelGroup();
-
-      annoteFontPanel = new AnnoteFontPanel(application, labelGrp);
-      annoteFontPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-
-      annotationsPanel.add(annoteFontPanel);
-
-      frameContentFontPanel = new FrameContentFontPanel(application, labelGrp);
-      frameContentFontPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-
-      annotationsPanel.add(frameContentFontPanel);
-
-      annotationsPanel.add(Box.createVerticalStrut(10));
-
-      splashScreenSettingsPanel
-        = new SplashScreenSettingsPanel(application, labelGrp);
-      splashScreenSettingsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-
-      annotationsPanel.add(splashScreenSettingsPanel);
+      annotationsPanel = new AnnotationsPanel(application);
 
       return annotationsPanel;
    }
@@ -261,11 +234,7 @@ public class ConfigUISettingsDialog extends JDialog
       langPanel.initialise();
       texEditorUIPanel.initialise(application);
 
-      FlowframTkSettings settings = application.getSettings();
-
-      scaleAnnoteBox.setSelected(settings.isScaleAnnotationsOn());
-      annoteFontPanel.initialise(settings);
-      frameContentFontPanel.initialise(settings);
+      annotationsPanel.initialise(application.getSettings());
 
       lookAndFeelPanel.initialise();
 
@@ -274,7 +243,6 @@ public class ConfigUISettingsDialog extends JDialog
          vectorizeBitmapUIPanel.initialise();
       }
 
-      splashScreenSettingsPanel.initialise();
       editPathPanel.initialise();
 
       setVisible(true);
@@ -307,13 +275,7 @@ public class ConfigUISettingsDialog extends JDialog
       controlPointsPanel.okay(application);
       renderPanel.okay(application);
       texEditorUIPanel.okay(application);
-
-      FlowframTkSettings settings = application.getSettings();
-
-      JDRCompleteObject.scaleAnnotations = scaleAnnoteBox.isSelected();
-      settings.setScaleAnnotationsOn(JDRCompleteObject.scaleAnnotations);
-      annoteFontPanel.okay(settings);
-      frameContentFontPanel.okay(settings);
+      annotationsPanel.okay(application.getSettings());
 
       lookAndFeelPanel.okay();
 
@@ -322,7 +284,6 @@ public class ConfigUISettingsDialog extends JDialog
          vectorizeBitmapUIPanel.okay();
       }
 
-      splashScreenSettingsPanel.okay();
       editPathPanel.okay();
 
       application.updateAllFrames();
@@ -355,13 +316,10 @@ public class ConfigUISettingsDialog extends JDialog
    private AcceleratorPanel acceleratorPanel;
    private NormalizePanel normalizePanel;
    private TeXEditorUIPanel texEditorUIPanel;
-   private AnnoteFontPanel annoteFontPanel;
-   private JCheckBox scaleAnnoteBox;
-   private FrameContentFontPanel frameContentFontPanel;
    private LookAndFeelPanel lookAndFeelPanel;
    private VectorizeBitmapUIPanel vectorizeBitmapUIPanel;
-   private SplashScreenSettingsPanel splashScreenSettingsPanel;
    private EditPathPanel editPathPanel;
+   private AnnotationsPanel annotationsPanel;
 
    private FlowframTk application;
 }
@@ -2934,6 +2892,161 @@ class TeXEditorUIPanel extends JPanel
    private JRadioButton leftButton, rightButton, aboveButton, belowButton;
 
    private JDRResources resources;
+}
+
+class AnnotationsPanel extends JPanel
+{
+   public AnnotationsPanel(FlowframTk application)
+   {
+      super(null);
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+      setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+      JDRResources resources = application.getResources();
+
+      scaleAnnoteBox = resources.createAppCheckBox(
+        "annotations", "scale", true, null);
+
+      scaleAnnoteBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      add(scaleAnnoteBox);
+
+      JLabelGroup labelGrp = new JLabelGroup();
+
+      annoteFontPanel = new AnnoteFontPanel(application, labelGrp);
+      annoteFontPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+      add(annoteFontPanel);
+
+      String[] posSettings = new String[]
+       {
+          resources.getMessage("annotations.annote_pos.none"),// FlowFrame.ANNOTE_NONE
+          resources.getMessage("annotations.annote_pos.bottom_left"),// FlowFrame.BOTTOM_LEFT
+          resources.getMessage("annotations.annote_pos.top_left"),// FlowFrame.TOP_LEFT
+          resources.getMessage("annotations.annote_pos.top_right"),// FlowFrame.BOTTOM_RIGHT
+          resources.getMessage("annotations.annote_pos.bottom_right")// FlowFrame.TOP_RIGHT
+       };
+
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      add(row);
+
+      JLabel label = resources.createAppLabel("annotations.annote_typeblock_pos");
+      row.add(label);
+      labelGrp.add(label);
+
+      row.add(resources.createLabelSpacer());
+
+      annoteTypeblockPosBox = new JComboBox<String>(posSettings);
+      label.setLabelFor(annoteTypeblockPosBox);
+      row.add(annoteTypeblockPosBox);
+
+      row.add(resources.createButtonSpacer());
+
+
+      label = resources.createAppLabel("annotations.annote_flow_pos");
+      row.add(label);
+      labelGrp.add(label);
+
+      row.add(resources.createLabelSpacer());
+
+      annoteFlowPosBox = new JComboBox<String>(posSettings);
+      label.setLabelFor(annoteFlowPosBox);
+      row.add(annoteFlowPosBox);
+
+      row.add(Box.createHorizontalGlue());
+
+      resources.clampCompMaxHeight(row, 0, 10);
+
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      add(row);
+
+      label = resources.createAppLabel("annotations.annote_static_pos");
+      row.add(label);
+      labelGrp.add(label);
+
+      row.add(resources.createLabelSpacer());
+
+      annoteStaticPosBox = new JComboBox<String>(posSettings);
+      label.setLabelFor(annoteStaticPosBox);
+      row.add(annoteStaticPosBox);
+
+      row.add(resources.createButtonSpacer());
+
+
+      label = resources.createAppLabel("annotations.annote_dynamic_pos");
+      row.add(label);
+      labelGrp.add(label);
+
+      row.add(resources.createLabelSpacer());
+
+      annoteDynamicPosBox = new JComboBox<String>(posSettings);
+      label.setLabelFor(annoteDynamicPosBox);
+      row.add(annoteDynamicPosBox);
+
+      row.add(Box.createHorizontalGlue());
+
+      resources.clampCompMaxHeight(row, 0, 10);
+
+      JLabelGroup.setSameMinPrefMaxWidth(annoteTypeblockPosBox,
+        annoteFlowPosBox, annoteStaticPosBox, annoteDynamicPosBox);
+
+      frameContentFontPanel = new FrameContentFontPanel(application, labelGrp);
+      frameContentFontPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+      add(frameContentFontPanel);
+
+      add(Box.createVerticalStrut(10));
+
+      splashScreenSettingsPanel
+        = new SplashScreenSettingsPanel(application, labelGrp);
+      splashScreenSettingsPanel.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+      add(splashScreenSettingsPanel);
+   }
+
+   public void initialise(FlowframTkSettings settings)
+   {
+      scaleAnnoteBox.setSelected(settings.isScaleAnnotationsOn());
+      annoteFontPanel.initialise(settings);
+      frameContentFontPanel.initialise(settings);
+      splashScreenSettingsPanel.initialise();
+
+      annoteTypeblockPosBox.setSelectedIndex(settings.getAnnotationTypeblockPos());
+      annoteFlowPosBox.setSelectedIndex(settings.getAnnotationFlowPos());
+      annoteStaticPosBox.setSelectedIndex(settings.getAnnotationStaticPos());
+      annoteDynamicPosBox.setSelectedIndex(settings.getAnnotationDynamicPos());
+   }
+
+   public void okay(FlowframTkSettings settings)
+   {
+      JDRCompleteObject.scaleAnnotations = scaleAnnoteBox.isSelected();
+      settings.setScaleAnnotationsOn(JDRCompleteObject.scaleAnnotations);
+      annoteFontPanel.okay(settings);
+      frameContentFontPanel.okay(settings);
+      splashScreenSettingsPanel.okay();
+
+      FlowFrame.typeblockAnnotePos = annoteTypeblockPosBox.getSelectedIndex();
+      settings.setAnnotationTypeblockPos(FlowFrame.typeblockAnnotePos);
+
+      FlowFrame.flowAnnotePos = annoteFlowPosBox.getSelectedIndex();
+      settings.setAnnotationFlowPos(FlowFrame.flowAnnotePos);
+
+      FlowFrame.staticAnnotePos = annoteStaticPosBox.getSelectedIndex();
+      settings.setAnnotationStaticPos(FlowFrame.staticAnnotePos);
+
+      FlowFrame.dynamicAnnotePos = annoteDynamicPosBox.getSelectedIndex();
+      settings.setAnnotationDynamicPos(FlowFrame.dynamicAnnotePos);
+   }
+
+   JCheckBox scaleAnnoteBox;
+   AnnoteFontPanel annoteFontPanel;
+   FrameContentFontPanel frameContentFontPanel;
+   SplashScreenSettingsPanel splashScreenSettingsPanel;
+
+   JComboBox<String> annoteTypeblockPosBox, annoteFlowPosBox,
+     annoteStaticPosBox, annoteDynamicPosBox;
 }
 
 class AnnoteFontPanel extends JavaFontSelector

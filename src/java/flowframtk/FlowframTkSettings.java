@@ -1029,6 +1029,46 @@ public class FlowframTkSettings
       return scaleAnnotations;
    }
 
+   public int getAnnotationTypeblockPos()
+   {
+      return annotationTypeblockPos;
+   }
+
+   public void setAnnotationTypeblockPos(int pos)
+   {
+      annotationTypeblockPos = pos;
+   }
+
+   public int getAnnotationFlowPos()
+   {
+      return annotationFlowPos;
+   }
+
+   public void setAnnotationFlowPos(int pos)
+   {
+      annotationFlowPos = pos;
+   }
+
+   public int getAnnotationStaticPos()
+   {
+      return annotationStaticPos;
+   }
+
+   public void setAnnotationStaticPos(int pos)
+   {
+      annotationStaticPos = pos;
+   }
+
+   public int getAnnotationDynamicPos()
+   {
+      return annotationDynamicPos;
+   }
+
+   public void setAnnotationDynamicPos(int pos)
+   {
+      annotationDynamicPos = pos;
+   }
+
    public void setStatusFont(String name, int style, int size)
    {
       setStatusFont(new Font(name, style, size));
@@ -1599,6 +1639,11 @@ public class FlowframTkSettings
    private boolean frameContentsAnnote = FlowFrame.showFrameContents;
 
    private boolean scaleAnnotations = JDRCompleteObject.scaleAnnotations;
+
+   private int annotationTypeblockPos = FlowFrame.typeblockAnnotePos;
+   private int annotationFlowPos = FlowFrame.flowAnnotePos;
+   private int annotationStaticPos = FlowFrame.staticAnnotePos;
+   private int annotationDynamicPos = FlowFrame.dynamicAnnotePos;
 
    private Font statusFont = new Font("Dialog", Font.PLAIN, 10);
 
