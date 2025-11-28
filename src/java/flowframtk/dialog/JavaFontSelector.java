@@ -120,6 +120,14 @@ public class JavaFontSelector extends JPanel
      String nameId, String boldId, String italicId,
      String sizeId)
    {
+      this(application, labelGrp, nameId, boldId, italicId, sizeId, null);
+   }
+
+   public JavaFontSelector(FlowframTk application,
+     JLabelGroup labelGrp,
+     String nameId, String boldId, String italicId,
+     String sizeId, String colourId)
+   {
       super(null);
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -187,6 +195,17 @@ public class JavaFontSelector extends JPanel
 
       attrComp.add(sizeField);
 
+      if (colourId != null)
+      {
+         colourText = resources.getMessage(colourId);
+         colorChooser = new JColorChooser();
+
+         colourButton = resources.createDialogButton("button.choose_colour",
+            "choose", this, null);
+
+         attrComp.add(colourButton);
+      }
+
       sampleLabel = new JLabel(resources.getMessage("font.sample"));
       attrComp.add(sampleLabel);
 
@@ -231,18 +250,54 @@ public class JavaFontSelector extends JPanel
         style, sizeModel.getNumber().intValue());
    }
 
+   @Override
    public void stateChanged(ChangeEvent e)
    {
       sampleLabel.setFont(getSelectedFont());
    }
 
+   @Override
    public void actionPerformed(ActionEvent e)
    {
-      sampleLabel.setFont(getSelectedFont());
+      if (colorChooser != null && "choose".equals(e.getActionCommand()))
+      {
+         Color c = colorChooser.showDialog(this, colourText, getSelectedFontColour());
+
+         if (c != null)
+         {
+            setSelectedFontColour(c);
+         }
+      }
+      else
+      {
+         sampleLabel.setFont(getSelectedFont());
+      }
+   }
+
+   public void setSelectedFontColour(Color col)
+   {
+      if (colourButton != null)
+      {
+         sampleLabel.setForeground(col);
+      }
+   }
+
+   public Color getSelectedFontColour()
+   {
+      if (colourButton != null)
+      {
+         return sampleLabel.getForeground();
+      }
+
+      return null;
    }
 
    private JComboBox<String> nameBox;
    private SpinnerNumberModel sizeModel;
    private JDRToggleButton boldBox=null, italicBox=null;
    private JLabel sampleLabel, nameLabel;
+
+   private JButton colourButton;
+   private JColorChooser colorChooser;
+   private String colourText=null;
 }

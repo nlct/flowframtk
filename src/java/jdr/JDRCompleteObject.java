@@ -542,7 +542,6 @@ public abstract class JDRCompleteObject extends JDRObject
             }
          }
 
-         cg.setColor(Color.lightGray);
          flowframe.draw(box);
       }
    }

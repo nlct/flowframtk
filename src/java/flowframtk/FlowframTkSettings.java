@@ -984,6 +984,41 @@ public class FlowframTkSettings
       return annoteFont;
    }
 
+   public void setFrameContentsAnnoteFont(Font font)
+   {
+      frameContentsAnnoteFont = font;
+   }
+
+   public Font getFrameContentsAnnoteFont()
+   {
+      return frameContentsAnnoteFont;
+   }
+
+   public String getFrameContentsAnnoteSetting()
+   {
+      return getConfFontSetting(frameContentsAnnoteFont);
+   }
+
+   public void setFrameContentsAnnoteFontColour(Color colour)
+   {
+      frameContentsAnnoteFontColour = colour;
+   }
+
+   public Color getFrameContentsAnnoteFontColour()
+   {
+      return frameContentsAnnoteFontColour;
+   }
+
+   public boolean isAnnoteFrameContentsOn()
+   {
+      return frameContentsAnnote;
+   }
+
+   public void setAnnoteFrameContentsOn(boolean on)
+   {
+      frameContentsAnnote = on;
+   }
+
    public void setStatusFont(String name, int style, int size)
    {
       setStatusFont(new Font(name, style, size));
@@ -1548,6 +1583,10 @@ public class FlowframTkSettings
    private Font rulerFont = null;
 
    private Font annoteFont = null;
+
+   private Font frameContentsAnnoteFont = FlowFrame.contentFont;
+   private Color frameContentsAnnoteFontColour = FlowFrame.contentFontColor;
+   private boolean frameContentsAnnote = FlowFrame.showFrameContents;
 
    private Font statusFont = new Font("Dialog", Font.PLAIN, 10);
 

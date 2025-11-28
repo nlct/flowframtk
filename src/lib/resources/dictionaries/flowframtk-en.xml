@@ -2756,6 +2756,14 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="annote.fontsize">Size</entry>
 <entry key="annote.fontsize.mnemonic">Z</entry>
 
+<entry key="annote_contents.show">Show content of static or dynamic frames on the canvas</entry>
+<entry key="annote_contents.font">Frame Contents Font:</entry>
+<entry key="annote_contents.font.bold">Bold</entry>
+<entry key="annote_contents.font.italic">Italic</entry>
+<entry key="annote_contents.font.size">Size</entry>
+<entry key="annote_contents.font.colour">Text Color</entry>
+<entry key="annote_contents.font_info">Use the {0} tab to set the font for the TeX editor</entry>
+
 <entry key="render.anti_alias">Anti-Alias</entry>
 <entry key="render.on">On</entry>
 <entry key="render.on.mnemonic">N</entry>

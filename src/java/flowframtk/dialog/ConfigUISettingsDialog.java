@@ -211,6 +211,10 @@ public class ConfigUISettingsDialog extends JDialog
 
       annotationsPanel.add(annoteFontPanel);
 
+      frameContentFontPanel = new FrameContentFontPanel(application, labelGrp);
+
+      annotationsPanel.add(frameContentFontPanel);
+
       annotationsPanel.add(Box.createVerticalStrut(10));
 
       splashScreenSettingsPanel
@@ -247,6 +251,7 @@ public class ConfigUISettingsDialog extends JDialog
       langPanel.initialise();
       texEditorUIPanel.initialise(application);
       annoteFontPanel.initialise(application.getSettings());
+      frameContentFontPanel.initialise(application.getSettings());
       lookAndFeelPanel.initialise();
 
       if (vectorizeBitmapUIPanel != null)
@@ -288,6 +293,7 @@ public class ConfigUISettingsDialog extends JDialog
       renderPanel.okay(application);
       texEditorUIPanel.okay(application);
       annoteFontPanel.okay(application.getSettings());
+      frameContentFontPanel.okay(application.getSettings());
       lookAndFeelPanel.okay();
 
       if (vectorizeBitmapUIPanel != null)
@@ -329,6 +335,7 @@ public class ConfigUISettingsDialog extends JDialog
    private NormalizePanel normalizePanel;
    private TeXEditorUIPanel texEditorUIPanel;
    private AnnoteFontPanel annoteFontPanel;
+   private FrameContentFontPanel frameContentFontPanel;
    private LookAndFeelPanel lookAndFeelPanel;
    private VectorizeBitmapUIPanel vectorizeBitmapUIPanel;
    private SplashScreenSettingsPanel splashScreenSettingsPanel;
@@ -2925,6 +2932,61 @@ class AnnoteFontPanel extends JavaFontSelector
       JDRCompleteObject.annoteFont = getSelectedFont();
       settings.setAnnoteFont(JDRCompleteObject.annoteFont);
    }
+}
+
+class FrameContentFontPanel extends JPanel
+{
+   public FrameContentFontPanel(FlowframTk application, JLabelGroup labelGrp)
+   {
+      super(new BorderLayout());
+
+      JDRResources resources = application.getResources();
+
+      showBox = resources.createAppCheckBox(
+       "annote_contents", "show", true, null);
+
+      add(showBox, "North");
+
+      fontSelector = new JavaFontSelector(application, labelGrp,
+        "annote_contents.font", 
+       "annote_contents.font.bold", "annote_contents.font.italic",
+       "annote_contents.font.size", "annote_contents.font.colour");
+
+      add(fontSelector, "Center");
+
+      JTextComponent info = resources.createAppInfoField(
+       "annote_contents.font_info", resources.getMessage("texeditorui.title"));
+      add(info, "South");
+
+      resources.clampCompMaxHeight(this, 0, 10);
+   }
+
+   public void initialise(FlowframTkSettings settings)
+   {
+      fontSelector.setSelectedFont(settings.getFrameContentsAnnoteFont());
+      fontSelector.setSelectedFontColour(settings.getFrameContentsAnnoteFontColour());
+      showBox.setSelected(settings.isAnnoteFrameContentsOn());
+   }
+
+   public void okay(FlowframTkSettings settings)
+   {
+      FlowFrame.contentFont = fontSelector.getSelectedFont();
+      settings.setFrameContentsAnnoteFont(FlowFrame.contentFont);
+
+      Color c = fontSelector.getSelectedFontColour();
+
+      if (c != null)
+      {
+         FlowFrame.contentFontColor = c;
+         settings.setFrameContentsAnnoteFontColour(FlowFrame.contentFontColor);
+      }
+
+      FlowFrame.showFrameContents = showBox.isSelected();
+      settings.setAnnoteFrameContentsOn(FlowFrame.showFrameContents);
+   }
+
+   JCheckBox showBox;
+   JavaFontSelector fontSelector;
 }
 
 class LookAndFeelPanel extends JPanel

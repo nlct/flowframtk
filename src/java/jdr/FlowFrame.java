@@ -24,10 +24,11 @@
 package com.dickimawbooks.jdr;
 
 import java.io.*;
-import java.util.regex.Pattern;
-import java.awt.*;
 import java.util.*;
-import java.lang.*;
+import java.util.regex.Pattern;
+import java.text.*;
+
+import java.awt.*;
 import java.awt.geom.*;
 import java.awt.font.*;
 import javax.swing.*;
@@ -241,36 +242,97 @@ public class FlowFrame implements Cloneable,Serializable
 
       Stroke oldStroke = g2.getStroke();
       Font oldFont = g2.getFont();
+      Color orgColor = g2.getColor();
+
       g2.setStroke(new BasicStroke());
       g2.setFont(JDRCompleteObject.annoteFont);
+      g2.setColor(annoteColor);
 
       g2.draw(rect);
 
       String str = getDisplayLabel();
 
-      // why does this sometimes throw a NullPointerException
-      // at AATextRenderer.java:41 ?
-      try
+      FontRenderContext frc = g2.getFontRenderContext();
+      TextLayout layout = new TextLayout(str, JDRCompleteObject.annoteFont, frc);
+      layout.draw(g2, (float)x, (float)(y+height-layout.getDescent()));
+
+      if (showFrameContents && (type == DYNAMIC || type == STATIC)
+          && contents != null && !contents.isEmpty())
       {
-         g2.drawString(str, (int)x, (int)(y+height));
-      }
-      catch (NullPointerException e)
-      {
-         cg.getMessageSystem().getPublisher().publishMessages(
-           MessageInfo.createVerbose(1, 
-            "NullPointerException occurred while attempting to draw string '"
-            +str+"' on graphics device "+g2),
-           MessageInfo.createVerbose(1, e));
+         drawFrameContents(g2, rect,
+           layout.getAscent() + layout.getDescent() + layout.getLeading());
       }
 
       g2.setStroke(oldStroke);
       g2.setFont(oldFont);
+      g2.setColor(orgColor);
 
       if (resetTransform != null)
       {
          g2.setTransform(orgTransform);
       }
+   }
 
+   protected void drawFrameContents(Graphics2D g2, Rectangle2D bounds,
+     float annoteHeight)
+   {
+      g2.setFont(contentFont);
+      g2.setColor(contentFontColor);
+
+      float wrappingWidth = (float)bounds.getWidth();
+      float wrappingHeight = (float)bounds.getHeight() - annoteHeight;
+
+      Point2D.Float pen =
+         new Point2D.Float((float)bounds.getX(), (float)bounds.getY());
+
+      float y0 = pen.y;
+
+      String[] lines = contents.split("(\r\n|\n)");
+
+      for (String line : lines)
+      {
+         if (!drawContent(g2, line, pen, wrappingWidth, wrappingHeight, y0))
+         {
+            break;
+         }
+      }
+   }
+
+   protected boolean drawContent(Graphics2D g2, String line, Point2D.Float pen,
+      float wrappingWidth, float wrappingHeight, float y0)
+   {
+      if (line.isEmpty())
+      {
+         line = " ";
+      }
+
+      FontRenderContext frc = g2.getFontRenderContext();
+
+      AttributedString attStr = new AttributedString(line);
+
+      AttributedCharacterIterator attrIter = attStr.getIterator();
+      LineBreakMeasurer measurer = new LineBreakMeasurer(attrIter, frc);
+
+      while (measurer.getPosition() < attrIter.getEndIndex())
+      {
+         TextLayout layout = measurer.nextLayout(wrappingWidth);
+
+         pen.y += layout.getAscent();
+
+         if (pen.y - y0 > wrappingHeight)
+         {
+            return false; // no more room
+         }
+
+         float dx = layout.isLeftToRight() ?
+            0f : (wrappingWidth - layout.getAdvance());
+
+         layout.draw(g2, pen.x + dx, pen.y);
+
+         pen.y += layout.getDescent() + layout.getLeading();
+      }
+
+      return true;
    }
 
    /**
@@ -1691,4 +1753,10 @@ public class FlowFrame implements Cloneable,Serializable
 
    public static final Pattern THUMBTAB_LABEL
      = Pattern.compile("(even)?thumbtab(index)?\\d+");
+
+   public static Font contentFont = new Font("Monospaced", Font.PLAIN, 10);
+   public static Color contentFontColor = Color.darkGray;
+   public static boolean showFrameContents = true;
+   public static Color annoteColor = Color.lightGray;
+
 }

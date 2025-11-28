@@ -1574,6 +1574,20 @@ public class FlowframTkInvoker
                {
                   settings.setStatusFont(Font.decode(value));
                }
+               else if (key.equals("contents_annote"))
+               {
+                  FlowFrame.showFrameContents = parseBoolean(value, line);
+                  settings.setAnnoteFrameContentsOn(FlowFrame.showFrameContents);
+               }
+               else if (key.equals("contents_annote_font"))
+               {
+                  FlowFrame.contentFont = Font.decode(value);
+                  settings.setFrameContentsAnnoteFont(FlowFrame.contentFont);
+               }
+               else if (key.equals("contents_annote_col"))
+               {
+                  settings.setFrameContentsAnnoteFontColour(parseColor(value, line));
+               }
                else if (key.equals("annote_font"))
                {
                   annoteFont = Font.decode(value);
@@ -2040,6 +2054,11 @@ public class FlowframTkInvoker
 
       out.println("ruler_font="+settings.getRulerSetting());
       out.println("annote_font="+settings.getAnnoteSetting());
+
+      out.println("contents_annote="
+       +(settings.isAnnoteFrameContentsOn()?1:0));
+      out.println("contents_annote_font="+settings.getFrameContentsAnnoteSetting());
+      writeColor(out, "contents_annote_col", settings.getFrameContentsAnnoteFontColour());
       out.println("status_font="+settings.getStatusSetting());
 
       out.println("texeditorfont="+settings.getTeXEditorFontName());
