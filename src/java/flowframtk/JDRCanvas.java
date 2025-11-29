@@ -995,6 +995,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("flowframe.wizard");
       CanvasSelectAction setFrameAction
          = addCanvasSelectAction("flowframe.set_frame");
+      CanvasSelectAction setTypeblockAction
+         = addCanvasSelectAction("flowframe.set_typeblock");
 
       CanvasSelectAction leftAlignToPageAction
          = addCanvasSelectAction("align_to_page.left");
@@ -1134,15 +1136,28 @@ public class JDRCanvas extends JPanel
       selectTextPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flow Frame Sub Menu
+
+      JMenu selectTextFlowFrameM = getResources().createAppMenu(
+         "menu.selected.flowframe");
+
+      selectTextPopupMenu.add(selectTextFlowFrameM);
+
       // Flowframe Wizard
 
-      selectTextPopupMenu.add(wizardAction.createMenuItem(
-         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+      selectTextFlowFrameM.add(wizardAction.createMenuItem(
+         "menu.selected.flowframe.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Flowframe Set Frame
 
-      selectTextPopupMenu.add(setFrameAction.createMenuItem(
-         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+      selectTextFlowFrameM.add(setFrameAction.createMenuItem(
+         "menu.selected.flowframe.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
+      // Flowframe Set Typeblock
+
+      selectTextFlowFrameM.add(setTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.set_typeblock",
+         "menu.tex.flowframe.set_typeblock.tooltip"));
 
       // Group
 
@@ -1308,15 +1323,28 @@ public class JDRCanvas extends JPanel
       selectPathPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flow Frame Sub Menu
+
+      JMenu selectPathFlowFrameM = getResources().createAppMenu(
+         "menu.selected.flowframe");
+
+      selectPathPopupMenu.add(selectPathFlowFrameM);
+
       // Flowframe Wizard
 
-      selectPathPopupMenu.add(wizardAction.createMenuItem(
-         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+      selectPathFlowFrameM.add(wizardAction.createMenuItem(
+         "menu.selected.flowframe.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Flowframe Set Frame
 
-      selectPathPopupMenu.add(setFrameAction.createMenuItem(
-         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+      selectPathFlowFrameM.add(setFrameAction.createMenuItem(
+         "menu.selected.flowframe.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
+      // Flowframe Set Typeblock
+
+      selectPathFlowFrameM.add(setTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.set_typeblock",
+         "menu.tex.flowframe.set_typeblock.tooltip"));
 
       // Group
 
@@ -1533,15 +1561,28 @@ public class JDRCanvas extends JPanel
       selectTextPathPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flow Frame Sub Menu
+
+      JMenu selectTextPathFlowFrameM = getResources().createAppMenu(
+         "menu.selected.flowframe");
+
+      selectTextPathPopupMenu.add(selectTextPathFlowFrameM);
+
       // Flowframe Wizard
 
-      selectTextPathPopupMenu.add(wizardAction.createMenuItem(
-         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+      selectTextPathFlowFrameM.add(wizardAction.createMenuItem(
+         "menu.selected.flowframe.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Flowframe Set Frame
 
-      selectTextPathPopupMenu.add(setFrameAction.createMenuItem(
-         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+      selectTextPathFlowFrameM.add(setFrameAction.createMenuItem(
+         "menu.selected.flowframe.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
+      // Flowframe Set Typeblock
+
+      selectTextPathFlowFrameM.add(setTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.set_typeblock",
+         "menu.tex.flowframe.set_typeblock.tooltip"));
 
       // Group
 
@@ -1719,15 +1760,28 @@ public class JDRCanvas extends JPanel
       selectBitmapPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flow Frame Sub Menu
+
+      JMenu selectBitmapFlowFrameM = getResources().createAppMenu(
+         "menu.selected.flowframe");
+
+      selectBitmapPopupMenu.add(selectBitmapFlowFrameM);
+
       // Flowframe Wizard
 
-      selectBitmapPopupMenu.add(wizardAction.createMenuItem(
-         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+      selectBitmapFlowFrameM.add(wizardAction.createMenuItem(
+         "menu.selected.flowframe.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Flowframe Set Frame
 
-      selectBitmapPopupMenu.add(setFrameAction.createMenuItem(
-         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+      selectBitmapFlowFrameM.add(setFrameAction.createMenuItem(
+         "menu.selected.flowframe.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
+      // Flowframe Set Typeblock
+
+      selectBitmapFlowFrameM.add(setTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.set_typeblock",
+         "menu.tex.flowframe.set_typeblock.tooltip"));
 
       // Group
 
@@ -1821,15 +1875,28 @@ public class JDRCanvas extends JPanel
       selectPopupMenu.add(deselectAllAction.createMenuItem(
          "menu.selected.deselect_all", "tooltip.deselect_all"));
 
+      // Flow Frame Sub Menu
+
+      JMenu selectFlowFrameM = getResources().createAppMenu(
+         "menu.selected.flowframe");
+
+      selectPopupMenu.add(selectFlowFrameM);
+
       // Flowframe Wizard
 
-      selectPopupMenu.add(wizardAction.createMenuItem(
-         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+      selectFlowFrameM.add(wizardAction.createMenuItem(
+         "menu.selected.flowframe.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
       // Flowframe Set Frame
 
-      selectPopupMenu.add(setFrameAction.createMenuItem(
-         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+      selectFlowFrameM.add(setFrameAction.createMenuItem(
+         "menu.selected.flowframe.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
+      // Flowframe Set Typeblock
+
+      selectFlowFrameM.add(setTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.set_typeblock",
+         "menu.tex.flowframe.set_typeblock.tooltip"));
 
       // Group
 
@@ -2154,10 +2221,23 @@ public class JDRCanvas extends JPanel
       noneSelectedPopupMenu.add(selectAllAction.createMenuItem(
          "menu.selected.select_all", "tooltip.select_all"));
 
+      // Flow Frame Sub Menu
+
+      JMenu noneSelectedFlowFrameM = getResources().createAppMenu(
+         "menu.selected.flowframe");
+
+      noneSelectedPopupMenu.add(noneSelectedFlowFrameM);
+
       // Flowframe Wizard
 
-      noneSelectedPopupMenu.add(wizardAction.createMenuItem(
-         "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+      noneSelectedFlowFrameM.add(wizardAction.createMenuItem(
+         "menu.selected.flowframe.wizard", "menu.tex.flowframe.wizard.tooltip"));
+
+      // Flowframe Set Typeblock
+
+      noneSelectedFlowFrameM.add(setTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.set_typeblock",
+         "menu.tex.flowframe.set_typeblock.tooltip"));
 
       // Find by description
 

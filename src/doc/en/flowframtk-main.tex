@@ -5373,10 +5373,26 @@ Move all selected \glspl{object} so that they are aligned relative
 to the page.
 This is the same as using the \menu{transform.align_to_page} menu item.
 
-\menudef{menu.selected.wizard}
+\menudef{menu.selected.flowframe}
+
+The \menu{selected.flowframe} menu provides \gls{flowframe} related
+menu items.
+
+\menudef{menu.selected.flowframe.wizard}
 Opens the \dialog{flfwizard} dialog (see
 \sectionref{sec:flowframe}). This is the same as using the
 \menu{tex.flowframe.wizard} menu item.
+
+\menudef{menu.selected.flowframe.set_frame}
+Opens the \dialog{flowframe} dialog (see \sectionref{sec:framedef}).
+This is the same as using the \menu{tex.flowframe.set_frame} menu
+item.
+
+\menudef{menu.selected.flowframe.set_typeblock}
+Opens the \dialog{typeblock} dialog (see
+\sectionref{sec:typeblock}).
+This is the same as using the \menu{tex.flowframe.set_typeblock}
+menu item.
 
 % NONE SELECTED POPUP
 
@@ -5407,8 +5423,9 @@ To select an \gls{object} by its description, use
 To insert a \gls{bitmap}, use \menu{none.insert_bitmap}. This
 is the same as using the \menu{bitmap.insert} menu item from the main menu bar.
 
-The \menu{selected.select_all}, \menu{selected.paste}
-and \menu{selected.wizard} common menu items are also available.
+The \menu{selected.select_all}, \menu{selected.paste},
+\menu{selected.flowframe.wizard} and
+\menu{selected.flowframe.set_typeblock} common menu items are also available.
 
 % PATH POPUP
 
@@ -12844,8 +12861,6 @@ fields aren't valid for type \widget{flowframe.none}.
 
 \begin{warning}
 Make sure you set the paper size and \gls+{typeblock} before you set any frames.
-(The \menu{tex.flowframe.set_frame} menu item will produce an error
-if you haven't set the \gls{typeblock}.)
 If you later adjust the \gls{typeblock}, you may need to readjust the even
 shifts for all frames that may be displayed on \gls{verso} pages.
 \end{warning}

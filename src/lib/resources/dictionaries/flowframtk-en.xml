@@ -780,12 +780,14 @@ Nicola Talbot
 
 <entry key="menu.tex.flowframe.set_frame">Set Frame...</entry>
 <entry key="menu.tex.flowframe.set_frame.mnemonic">S</entry>
+<entry key="menu.tex.flowframe.set_frame.tooltip">Setup flowframe data</entry>
 
 <entry key="menu.tex.flowframe.clear">Clear All</entry>
 <entry key="menu.tex.flowframe.clear.mnemonic">C</entry>
 
 <entry key="menu.tex.flowframe.set_typeblock">Set Typeblock...</entry>
 <entry key="menu.tex.flowframe.set_typeblock.mnemonic">T</entry>
+<entry key="menu.tex.flowframe.set_typeblock.tooltip">Setup typeblock</entry>
 
 <entry key="menu.tex.flowframe.scale_to_typeblock">Scale to Fit Typeblock</entry>
 <entry key="menu.tex.flowframe.scale_to_typeblock.mnemonic">K</entry>
@@ -1287,11 +1289,17 @@ Nicola Talbot
 <entry key="menu.selected.align_to_page">Align to Page</entry>
 <entry key="menu.selected.align_to_page.mnemonic">L</entry>
 
-<entry key="menu.selected.wizard">Flow Frame Wizard...</entry>
-<entry key="menu.selected.wizard.mnemonic">W</entry>
+<entry key="menu.selected.flowframe">Flow Frames</entry>
+<entry key="menu.selected.flowframe.mnemonic">W</entry>
 
-<entry key="menu.selected.set_frame">Set Frame...</entry>
-<entry key="menu.selected.set_frame.mnemonic">W</entry>
+<entry key="menu.selected.flowframe.wizard">Wizard...</entry>
+<entry key="menu.selected.flowframe.wizard.mnemonic">W</entry>
+
+<entry key="menu.selected.flowframe.set_frame">Set Frame...</entry>
+<entry key="menu.selected.flowframe.set_frame.mnemonic">F</entry>
+
+<entry key="menu.selected.flowframe.set_typeblock">Set Typeblock...</entry>
+<entry key="menu.selected.flowframe.set_typeblock.mnemonic">T</entry>
 
 <!--  None Selected Popup Menu -->
 
