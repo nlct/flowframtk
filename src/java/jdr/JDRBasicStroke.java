@@ -236,6 +236,13 @@ public class JDRBasicStroke implements JDRStroke
       endMarker.fade(factor);
    }
 
+   public boolean hasMarkers()
+   {
+      return (startMarker.getType() != JDRMarker.ARROW_NONE)
+          || (midMarker.getType() != JDRMarker.ARROW_NONE)
+          || (endMarker.getType() != JDRMarker.ARROW_NONE);
+   }
+
    /**
     * Gets the colour of the start marker for this stroke.
     * @return the start marker paint or null if the marker paint

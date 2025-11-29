@@ -756,15 +756,36 @@ public abstract class JDRShape extends JDRCompleteObject
     */
    public abstract int getSelectedIndex();
 
+   public boolean hasMarkers()
+   {
+      JDRStroke stroke = getStroke();
+
+      return (stroke instanceof JDRBasicStroke)
+               && ((JDRBasicStroke)stroke).hasMarkers();
+   }
+
    /**
-    * Gets the bounding box of the stroked path.
-    * @return bounding box of the stroked path
+    * Gets the bounding box in storage units.
+    * This will be the bounding box of the stroked path unless the line
+    * paint is transparent and there are no markers,
+    * in which case it will be the bounding
+    * box of the general path.
+    * @return bounding box in storage units
     */
    public BBox getStorageBBox()
    {
       if (isEmpty()) return null;
 
-      Rectangle2D bounds = getStorageStrokedPath().getBounds2D();
+      Rectangle2D bounds;
+
+      if (getLinePaint() instanceof JDRTransparent && !hasMarkers())
+      {
+         bounds = getGeneralPath().getBounds2D();
+      }
+      else
+      {
+         bounds = getStorageStrokedPath().getBounds2D();
+      }
 
       if (bounds.getWidth() == 0 && bounds.getHeight() == 0)
       {
