@@ -977,7 +977,7 @@ Nicola Talbot
 <entry key="menu.editpath.close_path.merge.mnemonic">M</entry>
 
 <entry key="menu.editpath.close_sub_path">Close Sub Path</entry>
-<entry key="menu.editpath.close_sub_path.mnemonic">B</entry>
+<entry key="menu.editpath.close_sub_path.mnemonic">H</entry>
 
 <entry key="menu.editpath.continuity">Continuity</entry>
 <entry key="menu.editpath.continuity.mnemonic">U</entry>
@@ -1041,6 +1041,10 @@ Nicola Talbot
 <entry key="menu.editpath.snap.mnemonic">S</entry>
 <entry key="menu.editpath.snap.keystroke">control shift S</entry>
 <entry key="menu.editpath.snap.tooltip">Move the selected control point to the closest tick mark</entry>
+
+<entry key="menu.editpath.anchored_snap">Anchored Snap To Grid</entry>
+<entry key="menu.editpath.anchored_snap.mnemonic">G</entry>
+<entry key="menu.editpath.anchored_snap.tooltip">Move entire shape so that selected control point is on closest tick mark</entry>
 
 <entry key="menu.editpath.symmetry">Path Symmetry</entry>
 <entry key="menu.editpath.symmetry.mnemonic">Y</entry>

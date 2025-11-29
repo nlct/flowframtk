@@ -7181,11 +7181,13 @@ you can specify the angle of
 Notes:
 \begin{itemize}
 \item Individual \glspl{object}
-will be rotated relative to the \manmsg{centre} of the \gls{object}.
+will be rotated relative to the \manmsg{centre} of the \gls{object}'s \gls{bbox}.
 
 \item \Glspl*{object} within a
 \gls{group} will be rotated relative to the \manmsg{centre} of the
-group.
+group's \gls{bbox}.
+
+\item A \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
 
 \item Rotating a \gls{textpath} will rotate the path and the text
 will adjust to follow the transformed path.
@@ -7329,6 +7331,8 @@ object's \gls{bbox}.
 \item \Glspl*{object} within a
 \gls{group} will be scaled relative to the top left corner
 of the group's \gls*{bbox}.
+
+\item A \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
 
 \item Scaling a \gls{textpath} will scale the path and the text
 will adjust to follow the transformed path. Note that the text
@@ -7585,6 +7589,8 @@ object's \gls{bbox}.
 \item \Glspl*{object} within a 
 \gls{group} will be sheared relative to the bottom
 left corner of the group's \gls*{bbox}.
+
+\item A \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
 
 \item Shearing a \gls{textpath} will shear the path and the text
 will adjust to follow the transformed path. Note that the text
@@ -8039,6 +8045,12 @@ for further details.
 The \menu{editpath.snap} menu item will
 move the currently selected \gls*{controlpt} to the nearest
 tick mark.
+
+\menudef{menu.editpath.anchored_snap}
+
+The \menu{editpath.anchored_snap} menu item will move the entire
+shape so that the currently selected \gls{controlpt} is on the
+nearest tick mark.
 
 \plabel[Breaking a Path]{mi:breakpath}
 \menudef{menu.editpath.break_path}

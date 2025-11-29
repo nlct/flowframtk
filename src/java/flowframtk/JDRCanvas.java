@@ -928,6 +928,19 @@ public class JDRCanvas extends JPanel
          }
          ));
 
+      // Anchored snap to grid
+
+      editPathPopupMenu.add(EditPathAction.createMenuItem(this,
+         "menu.editpath", "anchored_snap",
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               anchoredSnapToGrid();
+            }
+         }
+         ));
+
       // Break path
 
       editPathPopupMenu.add(EditPathAction.createMenuItem(this,
@@ -3143,6 +3156,28 @@ public class JDRCanvas extends JPanel
       frame_.setGridLock(lock);
 
       setSelectedStoragePoint(p.getX(),p.getY());
+   }
+
+   public void anchoredSnapToGrid()
+   {
+      JDRPoint selectedPoint = getSelectedStoragePoint();
+
+      if (selectedPoint == null) return;
+
+      boolean lock = frame_.getGridLock();
+      frame_.setGridLock(true);
+
+      Point2D p = getNearestStorageTicFromStorage(selectedPoint.x,
+                                                  selectedPoint.y);
+
+      frame_.setGridLock(lock);
+
+      double dx = p.getX() - selectedPoint.x;
+      double dy = p.getY() - selectedPoint.y;
+
+      UndoableEdit edit = new MoveObject(editedPath, -dx, -dy);
+
+      frame_.postEdit(edit);
    }
 
    public void breakPath()
