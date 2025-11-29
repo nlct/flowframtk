@@ -12160,6 +12160,11 @@ buttons don't round the margin values. They round the width or
 height and then adjust the right or bottom margin to fit.
 \end{important}
 
+The \btn{flowframe.margins.xbalance} button may be used to average
+the left and right margins so that they are equal but the total remains the same.
+The \btn{flowframe.margins.ybalance} button may be used to average
+the top and bottom margins so that they are equal but the total remains the same.
+
 Any changes you make in the \dialog{flfwizard.typeblock} panel will
 be applied when you click on the \btn{flfwizard.next} button to move
 onto the \dialog{flfwizard.frametype} panel.
@@ -12738,6 +12743,23 @@ units. If you later change the \gls{normal-font-size}
 (\sectionref{sec:normalsize}),
 you may need to readjust the \gls{typeblock} height.
 \end{warning}
+
+The adjustment actions only change either the right or bottom
+margin, which may be appropriate for an off-\manmsg{centred}
+symmetric even and odd layout but not if you're interested in a
+one-sided \manmsg{centred} layout.
+
+\widgetdef{flowframe.margins.xbalance}
+The \widget{flowframe.margins.xbalance} button will average the left
+and right margins so that the total remains the same but will then
+be the same on either side. If the left and right margin fields have
+different units, the left will be adjusted to match the right.
+
+\widgetdef{flowframe.margins.ybalance}
+The \widget{flowframe.margins.ybalance} button will average the top
+and bottom margins so that the total remains the same but will then
+be the same both above and below. If the top and bottom margin fields have
+different units, the top will be adjusted to match the bottom.
 
 \widgetdef{typeblock.hshift}
 Finally, if you use the \opt{twoside} class option, you can get

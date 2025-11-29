@@ -45,7 +45,7 @@ import com.dickimawbooks.flowframtk.JDRFrame;
  * @author Nicola L C Talbot
  */
 
-public class MarginPanel extends JPanel
+public class MarginPanel extends JPanel implements ActionListener
 {
    public MarginPanel(FlowframTk application)
    {
@@ -129,6 +129,11 @@ public class MarginPanel extends JPanel
 
       row.add(rightText);
 
+      row.add(resources.createButtonSpacer());
+
+      row.add(
+         resources.createDialogButton("flowframe.margins", "xbalance", this, null));
+
       row = new JPanel(new FlowLayout(FlowLayout.LEADING));
       lengthComp.add(row);
 
@@ -155,6 +160,11 @@ public class MarginPanel extends JPanel
       bottomLabel.setLabelFor(bottomText);
       adjustField(bottomText);
       row.add(bottomText);
+
+      row.add(resources.createButtonSpacer());
+
+      row.add(
+         resources.createDialogButton("flowframe.margins", "ybalance", this, null));
 
       bottomPanel.add(resources.createAppLabel("flowframe.margins.width"));
 
@@ -398,6 +408,29 @@ public class MarginPanel extends JPanel
         box.getWidth(), box.getHeight());
 
       refUnit = unit;
+   }
+
+   @Override
+   public void actionPerformed(ActionEvent evt)
+   {
+      String action = evt.getActionCommand();
+
+      if (action.equals("xbalance"))
+      {
+         JDRUnit unit = rightText.getUnit();
+         double x = 0.5*(rightText.getValue(unit) + leftText.getValue(unit));
+
+         leftText.setValue(x, unit);
+         rightText.setValue(x, unit);
+      }
+      else if (action.equals("ybalance"))
+      {
+         JDRUnit unit = bottomText.getUnit();
+         double y = 0.5*(bottomText.getValue(unit) + topText.getValue(unit));
+
+         topText.setValue(y, unit);
+         bottomText.setValue(y, unit);
+      }
    }
 
    private JComponent lengthComp;

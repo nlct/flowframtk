@@ -3303,6 +3303,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="flowframe.margins.bottom.mnemonic">B</entry>
 <entry key="flowframe.margins.width">Width:</entry>
 <entry key="flowframe.margins.height">Height:</entry>
+<entry key="flowframe.margins.xbalance">Balance</entry>
+<entry key="flowframe.margins.xbalance.tooltip">Balance left and right</entry>
+<entry key="flowframe.margins.ybalance">Balance</entry>
+<entry key="flowframe.margins.ybalance.tooltip">Balance top and bottom</entry>
 <entry key="flowframe.pages.label">Page: {0}</entry>
 <entry key="flowframe.pages">Pages</entry>
 <entry key="flowframe.pages.mnemonic">P</entry>
