@@ -1544,6 +1544,9 @@ public class FlowFrameWizard extends JDialog
       FlowFrame flowframe = selectedObject.getFlowFrame();
       String currentLabel = "";
 
+      margins.setReferenceBounds(selectedObject.getStorageBBox(),
+        selectedObject.getCanvasGraphics().getStorageUnit());
+
       if (flowframe == null)
       {
          // If selected object is not an unfilled path with four segments,

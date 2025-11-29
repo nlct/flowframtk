@@ -209,10 +209,21 @@ public class TypeblockPanel extends JPanel
 
    public void updateComponent(FlowFrame typeblock, JDRUnit unit)
    {
+      JDRFrame frame = application_.getCurrentFrame();
+
+      JDRUnit storageUnit = frame.getCanvasGraphics().getStorageUnit();
+
+      JDRPaper paper = frame.getPaper();
+
+      margins.setReferenceBounds(
+        new Rectangle2D.Double(0, 0,
+          storageUnit.fromBp(paper.getWidth()),
+          storageUnit.fromBp(paper.getHeight())),
+        storageUnit);
+
       if (typeblock != null)
       {
          CanvasGraphics cg = typeblock.getCanvasGraphics();
-         JDRUnit storageUnit = cg.getStorageUnit();
 
          margins.setMargins(unit,
                             storageUnit.toUnit(typeblock.getLeft(), unit),
@@ -230,7 +241,6 @@ public class TypeblockPanel extends JPanel
          adjustWidthPanel.setValue(1.0, JDRUnit.pc);
       }
 
-      JDRFrame frame = application_.getCurrentFrame();
       JDRCanvas canvas = frame.getCanvas();
 
       JDRGroup objects = frame.getAllObjects();

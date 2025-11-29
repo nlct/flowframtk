@@ -4350,6 +4350,7 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 <entry key="internal_error.invalid_startdir">无效的启动目录</entry>
 <entry key="internal_error.missing_move">Missing initial move to</entry>
 <entry key="internal_error.no_bitmap">未选择位图</entry>
+<entry key="internal_error.no_object">No object selected</entry>
 <entry key="internal_error.no_path">未选择路径</entry>
 <entry key="internal_error.no_segment_selected">未选择线段</entry>
 <entry key="internal_error.non_abutting">线段与路径中的最末端不相邻</entry>

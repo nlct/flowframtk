@@ -327,18 +327,22 @@ public class FLFSelector extends JDialog
 
       object = mainPanel.getSelectedObject();
 
+      if (object == null)
+      {
+         getResources().internalError(application_, 
+            getResources().getMessage("internal_error.no_object"));
+
+         return;
+      }
+
+      margins.setReferenceBounds(object.getStorageBBox(),
+        object.getCanvasGraphics().getStorageUnit());
+
       typeblock = mainPanel.getCanvas().getTypeblockBounds();
 
       computeSymXShiftButton.setEnabled(typeblock != null && object != null);
 
-      if (object != null)
-      {
-         setValues(object.getFlowFrame());
-      }
-      else
-      {
-         contentsViewer.setText("");
-      }
+      setValues(object.getFlowFrame());
 
       setVisible(true);
    }

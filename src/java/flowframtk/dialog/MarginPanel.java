@@ -24,6 +24,7 @@
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -347,17 +348,15 @@ public class MarginPanel extends JPanel
 
    protected void updateWidth()
    {
-      JDRFrame frame = application.getCurrentFrame();
-
-      if (frame != null)
+      if (refBounds != null)
       {
-         JDRPaper paper = frame.getPaper();
-
          JDRUnit unit = rightText.getUnit();
 
-         double paperWidth = unit.fromBp(paper.getWidth());
+         double refWidth = unit.fromUnit(refBounds.getWidth(), refUnit);
 
-         double width = paperWidth - rightText.getValue(unit) - leftText.getValue(unit);
+         double width = refWidth
+                      - rightText.getValue(unit)
+                      - leftText.getValue(unit);
 
          widthField.setText(String.format("%f%s", width, unit.getLabel()));
       }
@@ -369,17 +368,15 @@ public class MarginPanel extends JPanel
 
    protected void updateHeight()
    {
-      JDRFrame frame = application.getCurrentFrame();
-
-      if (frame != null)
+      if (refBounds != null)
       {
-         JDRPaper paper = frame.getPaper();
-
          JDRUnit unit = bottomText.getUnit();
 
-         double paperHeight = unit.fromBp(paper.getHeight());
+         double refHeight = unit.fromUnit(refBounds.getHeight(), refUnit);
 
-         double height = paperHeight - topText.getValue(unit) - bottomText.getValue(unit);
+         double height = refHeight
+                       - topText.getValue(unit)
+                       - bottomText.getValue(unit);
 
          heightField.setText(String.format("%f%s", height, unit.getLabel()));
       }
@@ -389,6 +386,20 @@ public class MarginPanel extends JPanel
       }
    }
 
+   public void setReferenceBounds(Rectangle2D bounds, JDRUnit unit)
+   {
+      refBounds = bounds;
+      refUnit = unit;
+   }
+
+   public void setReferenceBounds(BBox box, JDRUnit unit)
+   {
+      refBounds = new Rectangle2D.Double(box.getMinX(), box.getMinY(),
+        box.getWidth(), box.getHeight());
+
+      refUnit = unit;
+   }
+
    private JComponent lengthComp;
    private NonNegativeLengthPanel leftText, rightText, topText, bottomText;
    private JLabel label, leftLabel, rightLabel, topLabel, bottomLabel;
@@ -396,4 +407,7 @@ public class MarginPanel extends JPanel
    private JTextField widthField, heightField;
    private JComponent bottomPanel;
    private FlowframTk application;
+
+   private Rectangle2D refBounds;
+   private JDRUnit refUnit;
 }

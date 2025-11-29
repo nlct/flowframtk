@@ -4369,6 +4369,7 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 <entry key="internal_error.invalid_startdir">Invalid startup directory type</entry>
 <entry key="internal_error.missing_move">Missing initial move to</entry>
 <entry key="internal_error.no_bitmap">No bitmap selected</entry>
+<entry key="internal_error.no_object">No object selected</entry>
 <entry key="internal_error.no_path">No path selected</entry>
 <entry key="internal_error.no_segment_selected">No segment selected</entry>
 <entry key="internal_error.non_abutting">Segment does not abut last segment in path</entry>

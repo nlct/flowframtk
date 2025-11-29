@@ -12509,9 +12509,20 @@ checkbox. It will default to deselected if the
 The \widget{flowframe.frame_margins} panel is not available if the
 frame has been assigned a non-standard
 \widget{flfwizard.style.shape}.
-
 If the \widget{flowframe.frame_margins} panel is hidden, all the
 margins will be set to zero.
+
+The width and height of the area defined by the inner padding is
+calculated and shown below the inner padding fields. Since this
+setting is designed for frames with a border, the calculations take
+any \gls{line-style} into account. For example, if the selected
+object is a rectangle with control points at
+(100\gls{bp},100\gls{bp}), (200\gls{bp},100\gls{bp})
+(200\gls{bp},200\gls{bp}) and (100\gls{bp},200\gls{bp}) but the line
+width is 1\gls{bp} (and there are no \pathattrpl{marker}) then with
+zero inner padding, the width and height will both be 101\gls{bp}
+not 100\gls{bp}.
+
 
 \widgetdef{flfwizard.dimensions.even_x_shift}
 
@@ -12934,6 +12945,17 @@ This setting is not available for non-standard
 paragraph shapes (\sectionref{sec:frameshape}).
 There's no need to use \sty{flowfram}['s] \optfmt{offset} attribute
 as \FlowframTk\ calculates the correct position.
+
+The width and height of the area defined by the inner padding is
+calculated and shown below the inner padding fields. Since this
+setting is designed for frames with a border, the calculations take
+any \gls{line-style} into account. For example, if the selected
+object is a rectangle with control points at
+(100\gls{bp},100\gls{bp}), (200\gls{bp},100\gls{bp})
+(200\gls{bp},200\gls{bp}) and (100\gls{bp},200\gls{bp}) but the line
+width is 1\gls{bp} (and there are no \pathattrpl{marker}) then with
+zero inner padding, the width and height will both be 101\gls{bp}
+not 100\gls{bp}.
 
 \widgetdef{flowframe.align}
 
