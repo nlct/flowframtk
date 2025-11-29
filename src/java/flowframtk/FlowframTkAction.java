@@ -689,6 +689,16 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       requiresNonEmptyImage = flag;
    }
 
+   public boolean requiresTypeblock()
+   {
+      return requiresTypeblock;
+   }
+
+   public void setRequiresTypeblock(boolean flag)
+   {
+      requiresTypeblock = flag;
+   }
+
    public boolean validDuringIO()
    {
       return validDuringIO;
@@ -778,6 +788,11 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
          {
             return false;
          }
+      }
+
+      if (requiresTypeblock() && (canvas == null || canvas.getTypeblock() == null))
+      {
+         return false;
       }
 
       if (currentTool != -1 // current tool is known
@@ -1161,7 +1176,26 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
         CONSTRUCTION_FLAG_ANY,
         validSelectionFlag,
         validSelectionNumbers, requiresCanvas, validDuringIO,
-        requiresNonEmptyImage, listener);
+        requiresNonEmptyImage, listener, false);
+   }
+
+   public static JMenuItem createMenuItem(FlowframTk application,
+      String parentId, String name, 
+      JMenu menu, int validToolsFlag,
+      byte validEditFlag, int validSelectionFlag,
+      int[] validSelectionNumbers,
+      boolean requiresCanvas, boolean validDuringIO,
+      boolean requiresNonEmptyImage,
+      FlowframTkActionListener listener, boolean requiresTypeblock)
+   {
+      return createMenuItem(application, parentId, name,
+        "tooltip."+name, menu,
+        parentId == null ? name : parentId+"."+name,
+        validToolsFlag, validEditFlag, 
+        CONSTRUCTION_FLAG_ANY,
+        validSelectionFlag,
+        validSelectionNumbers, requiresCanvas, validDuringIO,
+        requiresNonEmptyImage, listener, requiresTypeblock);
    }
 
    public static JMenuItem createMenuItem(FlowframTk application,
@@ -1208,6 +1242,27 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       boolean requiresNonEmptyImage,
       FlowframTkActionListener listener)
    {
+      return createMenuItem(application,
+      parentId, name, tooltipId,
+      menu,
+      keystrokeId, validToolsFlag,
+      validEditFlag, validConstructionFlag,
+      validSelectionFlag, validSelectionNumbers,
+      requiresCanvas, validDuringIO, 
+      requiresNonEmptyImage,
+      listener, false);
+   }
+
+   public static JMenuItem createMenuItem(FlowframTk application,
+      String parentId, String name, String tooltipId,
+      JMenu menu,
+      String keystrokeId, int validToolsFlag,
+      byte validEditFlag, byte validConstructionFlag,
+      int validSelectionFlag, int[] validSelectionNumbers,
+      boolean requiresCanvas, boolean validDuringIO, 
+      boolean requiresNonEmptyImage,
+      FlowframTkActionListener listener, boolean requiresTypeblock)
+   {
       String menuId = (parentId == null ? name : parentId+"."+name);
 
       FlowframTkAction action = new FlowframTkAction(application,
@@ -1218,6 +1273,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       action.setRequiresCanvas(requiresCanvas);
       action.setValidDuringIO(validDuringIO);
       action.setRequiresNonEmptyImage(requiresNonEmptyImage);
+      action.setRequiresTypeblock(requiresTypeblock);
 
       application.addAppAction(action);
 
@@ -1891,6 +1947,8 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
    private boolean validDuringIO = false;
 
    private boolean requiresNonEmptyImage = false;
+
+   private boolean requiresTypeblock = false;
 
    private int validToolFlag = TOOL_FLAG_ANY;
 

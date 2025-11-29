@@ -2920,7 +2920,7 @@ public class FlowframTk extends JFrame
       setFrameItem = FlowframTkAction.createMenuItem(this,
         "menu.tex", "flowframe.set_frame", flowframeM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_OBJECT,
-        FlowframTkAction.SELECTION_SINGLE_OBJECT, true, false,
+        FlowframTkAction.SELECTION_SINGLE_OBJECT, true, false, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2938,7 +2938,9 @@ public class FlowframTk extends JFrame
 
                flfSelector.display();
             }
-         });
+         },
+         true
+      );
 
       flfSelector = new FLFSelector(this);
 

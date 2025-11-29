@@ -993,6 +993,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("reset");
       CanvasSelectAction wizardAction
          = addCanvasSelectAction("flowframe.wizard");
+      CanvasSelectAction setFrameAction
+         = addCanvasSelectAction("flowframe.set_frame");
 
       CanvasSelectAction leftAlignToPageAction
          = addCanvasSelectAction("align_to_page.left");
@@ -1136,6 +1138,11 @@ public class JDRCanvas extends JPanel
 
       selectTextPopupMenu.add(wizardAction.createMenuItem(
          "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+
+      // Flowframe Set Frame
+
+      selectTextPopupMenu.add(setFrameAction.createMenuItem(
+         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
 
       // Group
 
@@ -1305,6 +1312,11 @@ public class JDRCanvas extends JPanel
 
       selectPathPopupMenu.add(wizardAction.createMenuItem(
          "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+
+      // Flowframe Set Frame
+
+      selectPathPopupMenu.add(setFrameAction.createMenuItem(
+         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
 
       // Group
 
@@ -1526,6 +1538,11 @@ public class JDRCanvas extends JPanel
       selectTextPathPopupMenu.add(wizardAction.createMenuItem(
          "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
+      // Flowframe Set Frame
+
+      selectTextPathPopupMenu.add(setFrameAction.createMenuItem(
+         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
       // Group
 
       selectTextPathPopupMenu.add(groupAction.createMenuItem(
@@ -1707,6 +1724,11 @@ public class JDRCanvas extends JPanel
       selectBitmapPopupMenu.add(wizardAction.createMenuItem(
          "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
 
+      // Flowframe Set Frame
+
+      selectBitmapPopupMenu.add(setFrameAction.createMenuItem(
+         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
+
       // Group
 
       selectBitmapPopupMenu.add(groupAction.createMenuItem(
@@ -1803,6 +1825,11 @@ public class JDRCanvas extends JPanel
 
       selectPopupMenu.add(wizardAction.createMenuItem(
          "menu.selected.wizard", "menu.tex.flowframe.wizard.tooltip"));
+
+      // Flowframe Set Frame
+
+      selectPopupMenu.add(setFrameAction.createMenuItem(
+         "menu.selected.set_frame", "menu.tex.flowframe.set_frame.tooltip"));
 
       // Group
 
@@ -5649,7 +5676,7 @@ public class JDRCanvas extends JPanel
    {
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
-      if (f.getShape() == FlowFrame.SHAPEPAR)
+      if (f != null && f.getShape() == FlowFrame.SHAPEPAR)
       {
          if (!preambleHasPackage("shapepar"))
          {
@@ -12295,6 +12322,7 @@ public class JDRCanvas extends JPanel
          frame_.markAsModified();
          setBackgroundImage();
          repaint();
+         updateSelectActions();
       }
 
       public SetTypeblock(FlowFrame flowframe)
@@ -12315,6 +12343,7 @@ public class JDRCanvas extends JPanel
          frame_.markAsModified();
          setBackgroundImage();
          repaint();
+         updateSelectActions();
       }
 
       public void undo() throws CannotUndoException
@@ -12324,6 +12353,7 @@ public class JDRCanvas extends JPanel
          frame_.markAsModified();
          setBackgroundImage();
          repaint();
+         updateSelectActions();
       }
 
       public void redo() throws CannotRedoException
@@ -12333,6 +12363,7 @@ public class JDRCanvas extends JPanel
          frame_.markAsModified();
          setBackgroundImage();
          repaint();
+         updateSelectActions();
       }
 
       public boolean canUndo() {return true;}

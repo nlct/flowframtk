@@ -50,6 +50,7 @@ public class CanvasAction extends FlowframTkAction
       setRequiresNonEmptyImage(action.requiresNonEmptyImage());
       setRequiresCanvas(true);
       setValidDuringIO(action.validDuringIO());
+      setRequiresTypeblock(action.requiresTypeblock());
 
       setAccelerator(action.getAccelerator());
    }

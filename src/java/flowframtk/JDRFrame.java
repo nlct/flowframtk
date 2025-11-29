@@ -1427,7 +1427,11 @@ public class JDRFrame extends JInternalFrame
 
    public void setFlowFrame(JDRCompleteObject object, FlowFrame f)
    {
-      f.setCanvasGraphics(getCanvasGraphics());
+      if (f != null)
+      {
+         f.setCanvasGraphics(getCanvasGraphics());
+      }
+
       canvas.setFlowFrame(object, f);
    }
 

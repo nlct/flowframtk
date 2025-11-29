@@ -1290,6 +1290,9 @@ Nicola Talbot
 <entry key="menu.selected.wizard">Flow Frame Wizard...</entry>
 <entry key="menu.selected.wizard.mnemonic">W</entry>
 
+<entry key="menu.selected.set_frame">Set Frame...</entry>
+<entry key="menu.selected.set_frame.mnemonic">W</entry>
+
 <!--  None Selected Popup Menu -->
 
 <entry key="index.menu.none">Image Popup Menu</entry>
