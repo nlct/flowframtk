@@ -7177,7 +7177,16 @@ public class FlowframTk extends JFrame
       if (frame.canDiscard())
       {
          frame.discard();
-         frame = null;
+      }
+   }
+
+   public void frameClosed()
+   {
+      JDRFrame frame = (JDRFrame)theDesktop.getSelectedFrame();
+
+      if (frame == null)
+      {
+         setModified(false);
       }
    }
 

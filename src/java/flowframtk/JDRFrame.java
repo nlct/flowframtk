@@ -1647,6 +1647,8 @@ public class JDRFrame extends JInternalFrame
       newImage = false;
       saved = true;
 
+      application_.frameClosed();
+
       return true;
    }
 
