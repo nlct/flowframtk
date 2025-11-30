@@ -46,6 +46,7 @@ public class GreyPanel extends JPanel
    {
       this.resources = resources;
       initialise();
+      addAdjustmentListener(this);
    }
 
    public GreyPanel(JDRResources resources, AdjustmentListener al)
@@ -53,6 +54,7 @@ public class GreyPanel extends JPanel
       this.resources = resources;
       initialise();
       addAdjustmentListener(al);
+      addAdjustmentListener(this);
    }
 
    public void addAdjustmentListener(AdjustmentListener al)
@@ -90,6 +92,7 @@ public class GreyPanel extends JPanel
       sliders.add(greyLabel, gbc);
 
       greySB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      greySB.setName("grey");
       gbc.gridy = 0;
       gbc.gridx = 1;
       gbc.gridwidth = 4;
@@ -104,7 +107,6 @@ public class GreyPanel extends JPanel
           new TextFieldSBarListener(greyText,greySB));
 
       greySB.setBlockIncrement(10);
-      greySB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy++;
@@ -117,6 +119,7 @@ public class GreyPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       alphaSB = new JScrollBar(Adjustable.HORIZONTAL,100,0,0,100);
+      alphaSB.setName("alpha");
       sliders.add(alphaSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -125,7 +128,6 @@ public class GreyPanel extends JPanel
       alphaText.getDocument().addDocumentListener(
           new TextFieldSBarListener(alphaText,alphaSB));
       alphaSB.setBlockIncrement(10);
-      alphaSB.addAdjustmentListener(this);
    }
 
    @Override
@@ -134,16 +136,26 @@ public class GreyPanel extends JPanel
       return greyText.requestFocusInWindow();
    }
 
+   @Override
    public void adjustmentValueChanged(AdjustmentEvent evt)
    {
-      if (greyText.getInt() != (greySB.getValue()))
-      {
-         greyText.setValue(greySB.getValue());
-      }
+      Object src = evt.getSource();
 
-      if (alphaText.getInt() != (alphaSB.getValue()))
+      if (src == greySB)
       {
-         alphaText.setValue(alphaSB.getValue());
+         if (!greyText.getText().isEmpty()
+           && greyText.getInt() != (greySB.getValue()))
+         {
+            greyText.setValue(greySB.getValue());
+         }
+      }
+      else if (src == alphaSB)
+      {
+         if (!alphaText.getText().isEmpty()
+           && alphaText.getInt() != (alphaSB.getValue()))
+         {
+            alphaText.setValue(alphaSB.getValue());
+         }
       }
    }
 

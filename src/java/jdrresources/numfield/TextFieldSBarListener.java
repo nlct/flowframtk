@@ -53,6 +53,7 @@ public class TextFieldSBarListener implements DocumentListener
       sbar = scrollBar;
    }
 
+   @Override
    public void insertUpdate(DocumentEvent e)
    {
       if (sbar != null)
@@ -61,6 +62,7 @@ public class TextFieldSBarListener implements DocumentListener
       }
    }
 
+   @Override
    public void removeUpdate(DocumentEvent e)
    {
       if (sbar != null)
@@ -69,6 +71,7 @@ public class TextFieldSBarListener implements DocumentListener
       }
    }
 
+   @Override
    public void changedUpdate(DocumentEvent e)
    {
       if (sbar != null)

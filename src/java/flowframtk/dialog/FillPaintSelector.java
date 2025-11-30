@@ -65,6 +65,7 @@ public class FillPaintSelector extends JDRSelector
 */
    }
 
+   @Override
    public JDRPaint getFillPaint()
    {
       return paintPanel.getPaint(getCanvasGraphics());

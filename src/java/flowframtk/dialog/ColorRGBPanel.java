@@ -46,6 +46,7 @@ public class ColorRGBPanel extends JPanel
    {
       this.resources = resources;
       initialise();
+      addAdjustmentListener(this);
    }
 
    public ColorRGBPanel(JDRResources resources, AdjustmentListener al)
@@ -53,6 +54,7 @@ public class ColorRGBPanel extends JPanel
       this.resources = resources;
       initialise();
       addAdjustmentListener(al);
+      addAdjustmentListener(this);
    }
 
    public void addAdjustmentListener(AdjustmentListener al)
@@ -92,6 +94,7 @@ public class ColorRGBPanel extends JPanel
       sliders.add(redLabel, gbc);
 
       redSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      redSB.setName("red");
       gbc.gridy = 0;
       gbc.gridx = 1;
       gbc.gridwidth = 4;
@@ -106,7 +109,6 @@ public class ColorRGBPanel extends JPanel
           new TextFieldSBarListener(redText,redSB));
 
       redSB.setBlockIncrement(10);
-      redSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 1;
@@ -119,6 +121,7 @@ public class ColorRGBPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 3;
       greenSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      greenSB.setName("green");
       sliders.add(greenSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -127,7 +130,6 @@ public class ColorRGBPanel extends JPanel
       greenText.getDocument().addDocumentListener(
           new TextFieldSBarListener(greenText,greenSB));
       greenSB.setBlockIncrement(10);
-      greenSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 2;
@@ -140,6 +142,7 @@ public class ColorRGBPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       blueSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      blueSB.setName("blue");
       sliders.add(blueSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -148,7 +151,6 @@ public class ColorRGBPanel extends JPanel
       blueText.getDocument().addDocumentListener(
           new TextFieldSBarListener(blueText,blueSB));
       blueSB.setBlockIncrement(10);
-      blueSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 3;
@@ -161,6 +163,7 @@ public class ColorRGBPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       alphaSB = new JScrollBar(Adjustable.HORIZONTAL,100,0,0,100);
+      alphaSB.setName("alpha");
       sliders.add(alphaSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -169,7 +172,6 @@ public class ColorRGBPanel extends JPanel
       alphaText.getDocument().addDocumentListener(
           new TextFieldSBarListener(alphaText,alphaSB));
       alphaSB.setBlockIncrement(10);
-      alphaSB.addAdjustmentListener(this);
    }
 
    @Override
@@ -178,26 +180,44 @@ public class ColorRGBPanel extends JPanel
       return redText.requestFocusInWindow();
    }
 
+   @Override
    public void adjustmentValueChanged(AdjustmentEvent evt)
    {
-      if (redText.getInt() != (redSB.getValue()))
-      {
-         redText.setValue(redSB.getValue());
-      }
+      Object src = evt.getSource();
 
-      if (greenText.getInt() != (greenSB.getValue()))
-      {
-         greenText.setValue(greenSB.getValue());
-      }
+      // if text field is empty then it's likely being adjusted
 
-      if (blueText.getInt() != (blueSB.getValue()))
+      if (src == redSB)
       {
-         blueText.setValue(blueSB.getValue());
+         if (!redText.getText().isEmpty()
+          && redText.getInt() != (redSB.getValue()))
+         {
+            redText.setValue(redSB.getValue());
+         }
       }
-
-      if (alphaText.getInt() != (alphaSB.getValue()))
+      else if (src == greenSB)
       {
-         alphaText.setValue(alphaSB.getValue());
+         if (!greenText.getText().isEmpty()
+           && greenText.getInt() != (greenSB.getValue()))
+         {
+            greenText.setValue(greenSB.getValue());
+         }
+      }
+      else if (src == blueSB)
+      {
+         if (!blueText.getText().isEmpty()
+          && blueText.getInt() != (blueSB.getValue()))
+         {
+            blueText.setValue(blueSB.getValue());
+         }
+      }
+      else if (src == alphaSB)
+      {
+         if (!alphaText.getText().isEmpty()
+            && alphaText.getInt() != (alphaSB.getValue()))
+         {
+            alphaText.setValue(alphaSB.getValue());
+         }
       }
    }
 

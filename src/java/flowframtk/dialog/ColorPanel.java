@@ -252,16 +252,14 @@ public class ColorPanel extends JPanel
       return currentPanel.requestDefaultColourFocus();
    }
 
+   @Override
    public void actionPerformed(ActionEvent evt)
    {
       Object source = evt.getSource();
 
       if (source instanceof ColorButton)
       {
-         currentPanel = (SingleColourSelector)
-            tabbedPane.getSelectedComponent();
-
-         currentPanel.setPaint(((ColorButton)source).getBackground());
+         setPaint(((ColorButton)source).getBackground());
       }
       else if ("choose_colour".equals(evt.getActionCommand()))
       {
@@ -275,6 +273,7 @@ public class ColorPanel extends JPanel
       }
    }
 
+   @Override
    public void stateChanged(ChangeEvent e)
    {
       JDRPaint paint = currentPanel.getPaint(null);

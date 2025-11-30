@@ -46,6 +46,7 @@ public class ColorCMYKPanel extends JPanel
    {
       this.resources = resources;
       initialise();
+      addAdjustmentListener(this);
    }
 
    public ColorCMYKPanel(JDRResources resources, AdjustmentListener al)
@@ -53,6 +54,7 @@ public class ColorCMYKPanel extends JPanel
       this.resources = resources;
       initialise();
       addAdjustmentListener(al);
+      addAdjustmentListener(this);
    }
 
    public void addAdjustmentListener(AdjustmentListener al)
@@ -93,6 +95,7 @@ public class ColorCMYKPanel extends JPanel
       sliders.add(cyanLabel, gbc);
 
       cyanSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      cyanSB.setName("cyan");
       gbc.gridy = 0;
       gbc.gridx = 1;
       gbc.gridwidth = 4;
@@ -106,7 +109,6 @@ public class ColorCMYKPanel extends JPanel
       cyanText.getDocument().addDocumentListener(
           new TextFieldSBarListener(cyanText, cyanSB));
       cyanSB.setBlockIncrement(10);
-      cyanSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 1;
@@ -119,6 +121,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 3;
       magentaSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      magentaSB.setName("magenta");
       sliders.add(magentaSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -127,7 +130,6 @@ public class ColorCMYKPanel extends JPanel
       magentaText.getDocument().addDocumentListener(
           new TextFieldSBarListener(magentaText,magentaSB));
       magentaSB.setBlockIncrement(10);
-      magentaSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 2;
@@ -140,6 +142,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       yellowSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      yellowSB.setName("yellow");
       sliders.add(yellowSB, gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -148,7 +151,6 @@ public class ColorCMYKPanel extends JPanel
       yellowText.getDocument().addDocumentListener(
           new TextFieldSBarListener(yellowText,yellowSB));
       yellowSB.setBlockIncrement(10);
-      yellowSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 3;
@@ -161,6 +163,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       blackSB = new JScrollBar(Adjustable.HORIZONTAL,0,0,0,100);
+      blackSB.setName("black");
       sliders.add(blackSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -169,7 +172,6 @@ public class ColorCMYKPanel extends JPanel
       blackText.getDocument().addDocumentListener(
           new TextFieldSBarListener(blackText,blackSB));
       blackSB.setBlockIncrement(10);
-      blackSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 4;
@@ -182,6 +184,7 @@ public class ColorCMYKPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       alphaSB = new JScrollBar(Adjustable.HORIZONTAL,100,0,0,100);
+      alphaSB.setName("alpha");
       sliders.add(alphaSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -190,7 +193,6 @@ public class ColorCMYKPanel extends JPanel
       alphaText.getDocument().addDocumentListener(
           new TextFieldSBarListener(alphaText, alphaSB));
       alphaSB.setBlockIncrement(10);
-      alphaSB.addAdjustmentListener(this);
    }
 
    @Override
@@ -199,31 +201,50 @@ public class ColorCMYKPanel extends JPanel
       return cyanText.requestFocusInWindow();
    }
 
+   @Override
    public void adjustmentValueChanged(AdjustmentEvent evt)
    {
-      if (cyanText.getInt() != (cyanSB.getValue()))
-      {
-         cyanText.setValue(cyanSB.getValue());
-      }
+      Object src = evt.getSource();
 
-      if (magentaText.getInt() != (magentaSB.getValue()))
+      if (src == cyanSB)
       {
-         magentaText.setValue(magentaSB.getValue());
+         if (!cyanText.getText().isEmpty()
+           && cyanText.getInt() != (cyanSB.getValue()))
+         {
+            cyanText.setValue(cyanSB.getValue());
+         }
       }
-
-      if (yellowText.getInt() != (yellowSB.getValue()))
+      else if (src == magentaSB)
       {
-         yellowText.setValue(yellowSB.getValue());
+         if (!magentaText.getText().isEmpty()
+           && magentaText.getInt() != (magentaSB.getValue()))
+         {
+            magentaText.setValue(magentaSB.getValue());
+         }
       }
-
-      if (blackText.getInt() != (blackSB.getValue()))
+      else if (src == yellowSB)
       {
-         blackText.setValue(blackSB.getValue());
+         if (!yellowText.getText().isEmpty()
+           && yellowText.getInt() != (yellowSB.getValue()))
+         {
+            yellowText.setValue(yellowSB.getValue());
+         }
       }
-
-      if (alphaText.getInt() != (alphaSB.getValue()))
+      else if (src == blackSB)
       {
-         alphaText.setValue(alphaSB.getValue());
+         if (!blackText.getText().isEmpty()
+           && blackText.getInt() != (blackSB.getValue()))
+         {
+            blackText.setValue(blackSB.getValue());
+         }
+      }
+      else if (src == alphaSB)
+      {
+         if (!alphaText.getText().isEmpty()
+           && alphaText.getInt() != (alphaSB.getValue()))
+         {
+            alphaText.setValue(alphaSB.getValue());
+         }
       }
    }
 

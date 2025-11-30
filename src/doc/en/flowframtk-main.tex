@@ -13213,8 +13213,10 @@ In addition to the \affinetrans{scaling} function described in
 \sectionref{sec:scaleobjects}, if you have set the \gls+{typeblock}, you can scale
 selected \glspl{object} so that they fit the \gls{typeblock} area using the
 \menu{tex.flowframe.scale_to_typeblock} menu item.
+
 Note that this may change the aspect ratio of the scaled
-\glspl*{object}.
+\glspl*{object}. Remember that the \gls{line-style} contributes to a
+\gls*{shape}['s] \gls{bbox}.
 
 \subsection{Align Objects to Typeblock}\label{sec:aligntotypeblock}
 
@@ -13294,11 +13296,21 @@ the selection includes \glspl{textarea}, the vertical
 
 \menudef{menu.tex.flowframe.display_page}
 
-It is possible to display only those frames that are defined on a
-given page. The \menu{tex.flowframe.display_page} menu item will
-open the \dialog{displaypage} dialog box.
+It is possible to filter out \glspl{object} with \gls{flowframe}
+data from the \gls{canvas} rendering based on their page list. The
+\menu{tex.flowframe.display_page} menu item will open the
+\dialog{displaypage} dialog box.
 
 \widgetdef{displaypage.title}
+
+In this context, a \qt{frame} is an \gls{object} that has \gls{flowframe} data
+assigned to it.
+
+\begin{information}
+\Glspl{object} that have not been assigned \gls{flowframe} data will
+always be displayed.  The title bar will indicate how many objects
+have been hidden.
+\end{information}
 
 You can select to display those frames that are defined
 on all pages or just those that are defined on odd or even pages or
@@ -13306,9 +13318,7 @@ you can specify a particular page number by selecting the
 \widget{displaypage.user} radio button and entering the
 relevant page number in the text field. If you specify \qt{0}, only
 those frames that have the \widget{flowframe.none} page
-setting will be displayed.  Note that \glspl{object} that have not
-been assigned \gls{flowframe} data will always be displayed.  The title
-bar will indicate how many objects have been hidden.
+setting will be displayed. 
 
 It's generally best to apply transformations or edits with the
 \widget{displaypage.all} setting on. If you move an \gls{object}
@@ -13476,18 +13486,39 @@ To include the image in a \LaTeX\ document, select the
 \LaTeX\ file: click on the \qt{File of Type} \gls{dropdown} and
 select \widget{filter.pgf}, and name the file
 (for example, \filefmt{house.tex})
-\figureref{fig:housesavetex}. Remember to use the \sty{pgf} package:
-\begin{verbatim}
-\usepackage{pgf}
-\end{verbatim}
-and to include the image later in the document use \gls{input}, e.g.:
-\begin{verbatim}
-\begin{figure}
-\centering
-\input{house}
-\caption{A House}
-\end{figure}
-\end{verbatim}
+\figureref{fig:housesavetex}. Remember to use the
+\sty{pgf} package:
+\begin{codebox}
+\cmd{usepackage}\marg{pgf}
+\end{codebox}
+Alternatively use \sty{flowframtkutils} which automatically loads
+the \sty{pgf} package but also supplies some additional commands:
+\begin{codebox}
+\cmd{usepackage}\marg{flowframtkutils}
+\end{codebox}
+The image can be included in the document with \gls{input}. For
+example:
+\begin{codebox}
+\cbeg{figure}
+\cmd{centering}
+\gls{input}\marg{house}
+\gls{caption}\marg{A House}
+\cend{figure}
+\end{codebox}
+Alternatively, you can use \gls{includeteximage} provided by
+\sty{flowframtkutils}:
+\begin{codebox}
+\cbeg{figure}
+\cmd{centering}
+\gls{includeteximage}\marg{house}
+\gls{caption}\marg{A House}
+\cend{figure}
+\end{codebox}
+If the image turns out to be too large for your document, you can
+use the optional argument to scale it. For example:
+\begin{codebox}
+\gls{includeteximage}\oarg{scale=0.75}\marg{house}
+\end{codebox}
 
 \FloatFig
 {fig:housesavetex}

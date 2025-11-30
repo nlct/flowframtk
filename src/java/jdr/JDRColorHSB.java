@@ -132,48 +132,11 @@ public class JDRColorHSB extends JDRPaint implements Serializable
 
    public JDRColor getJDRColor()
    {
-      // convert from hsb to rgb
-      int h = ((int)Math.floor(hue/60)) % 6;
-      double f = hue/60 - Math.floor(hue/60);
-      double p = brightness*(1-saturation);
-      double q = brightness*(1-f*saturation);
-      double t = brightness*(1-(1-f)*saturation);
-      double red, green, blue;
+      Color c = getColor();
 
-      switch (h)
-      {
-         case 0:
-            red   = brightness;
-            green = t;
-            blue  = p;
-         break;
-         case 1:
-            red   = q;
-            green = brightness;
-            blue  = p;
-         break;
-         case 2:
-            red   = p;
-            green = brightness;
-            blue  = t;
-         break;
-         case 3:
-            red   = p;
-            green = q;
-            blue  = brightness;
-         break;
-         case 4:
-            red   = t;
-            green = p;
-            blue  = brightness;
-         break;
-         default:
-            red   = brightness;
-            green = p;
-            blue  = q;
-      }
-
-      return new JDRColor(getCanvasGraphics(), red, green,blue,alpha);
+      return new JDRColor(getCanvasGraphics(),
+       c.getRed() / 255.0, c.getGreen() / 255.0, c.getBlue() / 255.0,
+       alpha);
    }
 
    public Paint getPaint(BBox box)

@@ -220,6 +220,7 @@ public class PaintPanel extends JPanel
       selector_.repaintSample();
    }
 
+   @Override
    public void adjustmentValueChanged(AdjustmentEvent evt)
    {
       selector_.repaintSample();
@@ -243,23 +244,6 @@ public class PaintPanel extends JPanel
    private static final String NONEPANEL="None Panel";
    private static final String COLOURPANEL="Colour Panel";
    private static final String GRADIENTPANEL="Gradient Panel";
-
-//   private JButton selectSingleColourButton;
-//   private SingleColourDialog singleColourDialog;
-//   private ColorPanel startGradientPanel, endGradientPanel;
-
-//   private JPanel singleColourSwatch, gradientSwatch;
-
-//   private GradientDialog gradientDialog;
-//   private JButton selectGradientButton;
-/*
-   private JLabel startLabel, endLabel;
-
-   private LinearGradientDirectionPanel linearDirectionPanel;
-   private RadialGradientDirectionPanel radialDirectionPanel;
-
-   private JRadioButton linearButton, radialButton;
-*/
 
    private JDRSelector selector_;
 }

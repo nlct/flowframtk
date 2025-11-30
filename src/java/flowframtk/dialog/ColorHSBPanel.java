@@ -46,6 +46,7 @@ public class ColorHSBPanel extends JPanel
    {
       this.resources = resources;
       initialise();
+      addAdjustmentListener(this);
    }
 
    public ColorHSBPanel(JDRResources resources, AdjustmentListener al)
@@ -53,6 +54,7 @@ public class ColorHSBPanel extends JPanel
       this.resources = resources;
       initialise();
       addAdjustmentListener(al);
+      addAdjustmentListener(this);
    }
 
    public void addAdjustmentListener(AdjustmentListener al)
@@ -92,6 +94,7 @@ public class ColorHSBPanel extends JPanel
       sliders.add(hueLabel, gbc);
 
       hueSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,359);
+      hueSB.setName("hue");
       gbc.gridy = 0;
       gbc.gridx = 1;
       gbc.gridwidth = 4;
@@ -106,7 +109,6 @@ public class ColorHSBPanel extends JPanel
           new TextFieldSBarListener(hueText,hueSB));
 
       hueSB.setBlockIncrement(10);
-      hueSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 1;
@@ -119,6 +121,7 @@ public class ColorHSBPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 3;
       saturationSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      saturationSB.setName("saturation");
       sliders.add(saturationSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -127,7 +130,6 @@ public class ColorHSBPanel extends JPanel
       saturationText.getDocument().addDocumentListener(
           new TextFieldSBarListener(saturationText,saturationSB));
       saturationSB.setBlockIncrement(10);
-      saturationSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 2;
@@ -140,6 +142,7 @@ public class ColorHSBPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       brightnessSB = new JScrollBar(Adjustable.HORIZONTAL, 0,0,0,100);
+      brightnessSB.setName("brightness");
       sliders.add(brightnessSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -148,7 +151,6 @@ public class ColorHSBPanel extends JPanel
       brightnessText.getDocument().addDocumentListener(
           new TextFieldSBarListener(brightnessText,brightnessSB));
       brightnessSB.setBlockIncrement(10);
-      brightnessSB.addAdjustmentListener(this);
 
       gbc.gridx = 0;
       gbc.gridy = 3;
@@ -161,6 +163,7 @@ public class ColorHSBPanel extends JPanel
       gbc.gridx = 1;
       gbc.gridwidth = 4;
       alphaSB = new JScrollBar(Adjustable.HORIZONTAL,100,0,0,100);
+      alphaSB.setName("alpha");
       sliders.add(alphaSB,gbc);
       gbc.gridx = 5;
       gbc.gridwidth = 1;
@@ -169,7 +172,6 @@ public class ColorHSBPanel extends JPanel
       alphaText.getDocument().addDocumentListener(
           new TextFieldSBarListener(alphaText,alphaSB));
       alphaSB.setBlockIncrement(10);
-      alphaSB.addAdjustmentListener(this);
    }
 
    @Override
@@ -178,26 +180,42 @@ public class ColorHSBPanel extends JPanel
       return hueText.requestFocusInWindow();
    }
 
+   @Override
    public void adjustmentValueChanged(AdjustmentEvent evt)
    {
-      if (hueText.getInt() != (hueSB.getValue()))
-      {
-         hueText.setValue(hueSB.getValue());
-      }
+      Object src = evt.getSource();
 
-      if (saturationText.getInt() != (saturationSB.getValue()))
+      if (src == hueSB)
       {
-         saturationText.setValue(saturationSB.getValue());
+         if (!hueText.getText().isEmpty()
+            && hueText.getInt() != (hueSB.getValue()))
+         {
+            hueText.setValue(hueSB.getValue());
+         }
       }
-
-      if (brightnessText.getInt() != (brightnessSB.getValue()))
+      else if (src == saturationSB)
       {
-         brightnessText.setValue(brightnessSB.getValue());
+         if (!saturationText.getText().isEmpty()
+           && saturationText.getInt() != (saturationSB.getValue()))
+         {
+            saturationText.setValue(saturationSB.getValue());
+         }
       }
-
-      if (alphaText.getInt() != (alphaSB.getValue()))
+      else if (src == brightnessSB)
       {
-         alphaText.setValue(alphaSB.getValue());
+         if (!brightnessText.getText().isEmpty()
+           && brightnessText.getInt() != (brightnessSB.getValue()))
+         {
+            brightnessText.setValue(brightnessSB.getValue());
+         }
+      }
+      else if (src == alphaSB)
+      {
+         if (!alphaText.getText().isEmpty()
+             && alphaText.getInt() != (alphaSB.getValue()))
+         {
+            alphaText.setValue(alphaSB.getValue());
+         }
       }
    }
 
@@ -213,52 +231,18 @@ public class ColorHSBPanel extends JPanel
    @Override
    public Color getColor()
    {
-      double hue = hueSB.getValue();
-      double saturation = 0.01*saturationSB.getValue();
-      double brightness = 0.01*brightnessSB.getValue();
+      Color c = Color.getHSBColor(hueSB.getValue(), 
+        0.01f * saturationSB.getValue(),
+        0.01f * brightnessSB.getValue());
 
-      int h = ((int)Math.floor(hue/60)) % 6;
-      double f = hue/60 - Math.floor(hue/60);
-      double p = brightness*(1-saturation);
-      double q = brightness*(1-f*saturation);
-      double t = brightness*(1-(1-f)*saturation);
-      double red, green, blue;
+      int alpha = alphaSB.getValue();
 
-      switch (h)
+      if (alpha < 100)
       {
-         case 0:
-            red   = brightness;
-            green = t;
-            blue  = p;
-         break;
-         case 1:
-            red   = q;
-            green = brightness;
-            blue  = p;
-         break;
-         case 2:
-            red   = p;
-            green = brightness;
-            blue  = t;
-         break;
-         case 3:
-            red   = p;
-            green = q;
-            blue  = brightness;
-         break;
-         case 4:
-            red   = t;
-            green = p;
-            blue  = brightness;
-         break;
-         default:
-            red   = brightness;
-            green = p;
-            blue  = q;
+         c = new Color(c.getRed(), c.getBlue(), c.getGreen(), (255 * alpha) / 100);
       }
 
-      return new Color((float)red, (float)green, (float)blue,
-        0.01f * alphaSB.getValue());
+      return c;
    }
 
    @Override
