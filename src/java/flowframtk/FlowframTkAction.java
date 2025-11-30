@@ -1387,6 +1387,22 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       boolean requiresCanvas, boolean validDuringIO,
       FlowframTkActionListener listener)
    {
+      return createMenu(application, parentId, name, tooltipId, parentMenu,
+      validToolsFlag, validEditFlag, validConstructionFlag,
+      validSelectionFlag, validSelectionNumbers,
+      requiresCanvas, validDuringIO, listener, false);
+   }
+
+   public static JMenu createMenu(FlowframTk application,
+      String parentId, String name, String tooltipId,
+      JMenu parentMenu,
+      int validToolsFlag,
+      byte validEditFlag, byte validConstructionFlag,
+      int validSelectionFlag,
+      int[] validSelectionNumbers,
+      boolean requiresCanvas, boolean validDuringIO,
+      FlowframTkActionListener listener, boolean requiresTypeblock)
+   {
       String menuId = (parentId == null ? name : parentId+"."+name);
 
       FlowframTkAction action = new FlowframTkAction(application,
@@ -1396,6 +1412,7 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
 
       action.setRequiresCanvas(requiresCanvas);
       action.setValidDuringIO(validDuringIO);
+      action.setRequiresTypeblock(requiresTypeblock);
 
       application.addAppAction(action);
 

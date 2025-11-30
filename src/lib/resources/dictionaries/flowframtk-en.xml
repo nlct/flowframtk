@@ -795,6 +795,35 @@ Nicola Talbot
 <entry key="menu.tex.flowframe.display_page">Display Page...</entry>
 <entry key="menu.tex.flowframe.display_page.mnemonic">P</entry>
 
+<!-- Align to Typeblock Sub-Menu -->
+
+<entry key="menu.tex.flowframe.align_to_typeblock">Align to Typeblock</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.mnemonic">L</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.left">Left</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.left.mnemonic">L</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.left.tooltip">Align the objects along the left edge of the typeblock</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.centre">Center</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.centre.mnemonic">C</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.centre.tooltip">Horizontally the objects to the center of the typeblock</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.right">Right</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.right.mnemonic">R</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.right.tooltip">Align the objects along the right edge of the typeblock</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.top">Top</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.top.mnemonic">T</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.top.tooltip">Align the objects along the typeblock top</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.middle">Middle</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.middle.mnemonic">M</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.middle.tooltip">Vertically align the objects to the center of the typeblock</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.bottom">Bottom</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.bottom.mnemonic">B</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.bottom.tooltip">Align the objects along typeblock bottom</entry>
+
 <!--  Settings Menu -->
 
 <entry key="menu.settings.styles">Styles...</entry>
@@ -1301,6 +1330,12 @@ Nicola Talbot
 <entry key="menu.selected.flowframe.set_typeblock">Set Typeblock...</entry>
 <entry key="menu.selected.flowframe.set_typeblock.mnemonic">T</entry>
 
+<entry key="menu.selected.flowframe.scale_to_typeblock">Scale to Fit Typeblock...</entry>
+<entry key="menu.selected.flowframe.scale_to_typeblock.mnemonic">S</entry>
+
+<entry key="menu.selected.flowframe.align_to_typeblock">Align to Typeblock</entry>
+<entry key="menu.selected.flowframe.align_to_typeblock.mnemonic">A</entry>
+
 <!--  None Selected Popup Menu -->
 
 <entry key="index.menu.none">Image Popup Menu</entry>
@@ -1506,6 +1541,13 @@ Nicola Talbot
 <entry key="undo.align_to_page.middle">Page Middle Alignment</entry>
 <entry key="undo.align_to_page.top">Page Top Alignment</entry>
 <entry key="undo.align_to_page.right">Page Right Alignment</entry>
+<entry key="undo.align_to_typeblock">Align to Typeblock</entry>
+<entry key="undo.align_to_typeblock.bottom">Typeblock Bottom Alignment</entry>
+<entry key="undo.align_to_typeblock.centre">Typeblock Center Alignment</entry>
+<entry key="undo.align_to_typeblock.left">Typeblock Left Alignment</entry>
+<entry key="undo.align_to_typeblock.middle">Typeblock Middle Alignment</entry>
+<entry key="undo.align_to_typeblock.top">Typeblock Top Alignment</entry>
+<entry key="undo.align_to_typeblock.right">Typeblock Right Alignment</entry>
 <entry key="undo.latexsize">Set LaTeX font size</entry>
 <entry key="undo.line_colour">Change line color</entry>
 <entry key="undo.line_style">Change line style</entry>

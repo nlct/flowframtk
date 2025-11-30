@@ -1299,6 +1299,36 @@ public class JDRFrame extends JInternalFrame
       canvas.pageBottomAlign();
    }
 
+   public void typeblockLeftAlign()
+   {
+      canvas.typeblockLeftAlign();
+   }
+
+   public void typeblockCentreAlign()
+   {
+      canvas.typeblockCentreAlign();
+   }
+
+   public void typeblockRightAlign()
+   {
+      canvas.typeblockRightAlign();
+   }
+
+   public void typeblockTopAlign()
+   {
+      canvas.typeblockTopAlign();
+   }
+
+   public void typeblockMiddleAlign()
+   {
+      canvas.typeblockMiddleAlign();
+   }
+
+   public void typeblockBottomAlign()
+   {
+      canvas.typeblockBottomAlign();
+   }
+
    public void group()
    {
       canvas.group();

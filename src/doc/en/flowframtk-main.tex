@@ -1880,7 +1880,8 @@ If the \widget{textconfig.anchor} \gls{checkbox} is selected,
 whenever you \hyperref[sec:alignobjects]{justify} a \gls{group}, any
 \glspl{textarea} in that group will have their
 \textattrpl{anchor} automatically adjusted. Similarly if you use the 
-align to page function.
+align to page function or the \hyperref[sec:aligntotypeblock]{align
+to typeblock} function.
 
 \widgetdef{textconfig.textualshading}
 
@@ -5387,12 +5388,32 @@ Opens the \dialog{flfwizard} dialog (see
 Opens the \dialog{flowframe} dialog (see \sectionref{sec:framedef}).
 This is the same as using the \menu{tex.flowframe.set_frame} menu
 item.
+The \menu{selected.flowframe.scale_to_typeblock} menu item is only
+available if the \gls{typeblock} has been set and a single
+object is selected.
 
 \menudef{menu.selected.flowframe.set_typeblock}
 Opens the \dialog{typeblock} dialog (see
 \sectionref{sec:typeblock}).
 This is the same as using the \menu{tex.flowframe.set_typeblock}
 menu item.
+
+\menudef{menu.selected.flowframe.scale_to_typeblock}
+Scales the selected object or objects to fit the \gls{typeblock}
+(aspect ratio may change). This is the same as using the
+\menu{tex.flowframe.scale_to_typeblock} menu item (see \sectionref{sec:scaletotypeblock}).
+The \menu{selected.flowframe.scale_to_typeblock} menu item is only
+available if the \gls{typeblock} has been set and one or more
+objects are selected.
+
+\menudef{menu.selected.flowframe.align_to_typeblock}
+Aligns the selected object or objects to the \gls{typeblock}.
+This sub-menu is the same as the
+\menu{tex.flowframe.align_to_typeblock} sub-menu
+(see \sectionref{sec:aligntotypeblock}).
+The \menu{selected.flowframe.align_to_typeblock} menu item is only
+available if the \gls{typeblock} has been set and one or more
+objects are selected.
 
 % NONE SELECTED POPUP
 
@@ -6095,7 +6116,7 @@ removed.
 
 \section{Aligning Objects}\label{sec:alignobjects}
 
-There are two methods of shifting \glspl{object} to align them
+There are three methods of shifting \glspl{object} to align them
 within a certain area.
 The first is to justify \glspl{object} within a \gls{group} so that
 they are aligned relative to the \gls*{group}['s] \gls{bbox}.
@@ -6107,7 +6128,12 @@ may not necessarily coincide with the \gls{canvas} bounds if the
 \gls{grid} has been shifted.
 This can be done via the \menu{transform.align_to_page} menu item.
 
-Neither method recursively descends into sub groups so if you want
+The third method is similar but only available if the
+\gls{typeblock} has been set and is in the
+\menu{tex.flowframe.align_to_typeblock}
+sub-menu (see \sectionref{sec:aligntotypeblock}).
+
+None of these methods recursively descend into sub groups so if you want
 to shift several \glspl{object} while retaining their relative
 positions to each other, you will need to group them first.
 Bear in mind that a \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
@@ -6251,6 +6277,10 @@ Note that if the grid \gls{origin} has been shifted the \gls{canvas}
 will not coincide with the paper bounds. The alignment is relative
 to the paper not the \gls{canvas}.
 
+If you have the \gls{typeblock} set and want to align to the
+\gls{typeblock} instead of the paper bounds, use
+\menu{tex.flowframe.align_to_typeblock} instead (see \sectionref{sec:aligntotypeblock}).
+
 \menudef{menu.transform.align_to_page.left}
 
 The \menu{transform.align_to_page.left} menu item will move all
@@ -6290,6 +6320,7 @@ lies along the bottom edge of the paper.
 \seealsorefs{
   sec:grouping,
   sec:texconfig,
+  sec:aligntotypeblock,
   sec:neuronexample
 }
 
@@ -13176,6 +13207,80 @@ selected \glspl{object} so that they fit the \gls{typeblock} area using the
 \menu{tex.flowframe.scale_to_typeblock} menu item.
 Note that this may change the aspect ratio of the scaled
 \glspl*{object}.
+
+\subsection{Align Objects to Typeblock}\label{sec:aligntotypeblock}
+
+\menudef{menu.tex.flowframe.align_to_typeblock}
+
+The \menu{tex.flowframe.align_to_typeblock} sub-menu is similar to
+the \menu{transform.align_to_page} sub-menu, but in this case the
+\selected\ object or objects are aligned to the \gls{typeblock}.
+
+Remember that the \gls{line-style} contributes to a
+\gls*{shape}['s] \gls{bbox}. So, for example, if you are aligning a
+path with a non-transparent \pathattr{line-paint} then the outer
+edge of the path's outline will be aligned, not the outermost
+\gls{controlpt}.
+
+This method does not recursively descend into sub groups so if you want
+to shift several \glspl{object} while retaining their relative
+positions to each other, you will need to group them first.
+
+\menudef{menu.tex.flowframe.align_to_typeblock.left}
+
+The \menu{tex.flowframe.align_to_typeblock.left} menu item aligns
+the selected \glspl{object} to the left of the \gls{typeblock}. If
+the selection includes \glspl{textarea}, the horizontal
+\textattr{anchor} will automatically be updated if the
+\widget{textconfig.anchor} setting is on.
+
+\menudef{menu.tex.flowframe.align_to_typeblock.centre}
+
+The \menu{tex.flowframe.align_to_typeblock.centre} menu item
+moves all selected objects so that they are
+\manmsg{centred} horizontally within the \gls{typeblock}. If
+the selection includes \glspl{textarea}, the horizontal
+\textattr{anchor} will automatically be updated if the
+\widget{textconfig.anchor} setting is on.
+
+\menudef{menu.tex.flowframe.align_to_typeblock.right}
+
+The \menu{tex.flowframe.align_to_typeblock.right} menu item aligns
+the selected \glspl{object} to the right of the \gls{typeblock}. If
+the selection includes \glspl{textarea}, the horizontal
+\textattr{anchor} will automatically be updated if the
+\widget{textconfig.anchor} setting is on.
+
+\menudef{menu.tex.flowframe.align_to_typeblock.top}
+
+The \menu{tex.flowframe.align_to_typeblock.top} menu item aligns
+the selected \glspl{object} to the top of the \gls{typeblock}. If
+the selection includes \glspl{textarea}, the vertical
+\textattr{anchor} will automatically be updated if the
+\widget{textconfig.anchor} setting is on.
+
+\menudef{menu.tex.flowframe.align_to_typeblock.middle}
+
+The \menu{tex.flowframe.align_to_typeblock.middle} menu item
+moves all selected objects so that they are
+\manmsg{centred} vertically within the \gls{typeblock}. If
+the selection includes \glspl{textarea}, the vertical
+\textattr{anchor} will automatically be updated if the
+\widget{textconfig.anchor} setting is on.
+
+\menudef{menu.tex.flowframe.align_to_typeblock.bottom}
+
+The \menu{tex.flowframe.align_to_typeblock.bottom} menu item aligns
+the selected \glspl{object} to the bottom of the \gls{typeblock}. If
+the selection includes \glspl{textarea}, the vertical
+\textattr{anchor} will automatically be updated if the
+\widget{textconfig.anchor} setting is on.
+
+\seealsorefs{
+  sec:alignobjects,
+  sec:grouping,
+  sec:texconfig,
+}
 
 \subsection{Only Displaying Objects Defined on a Given Page}\label{sec:displaypage}
 

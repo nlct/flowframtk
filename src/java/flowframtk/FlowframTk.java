@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(193);
+      invoker.setStartupDeterminate(200);
 
       // create menu bar, menu and menu item
 
@@ -2171,7 +2171,7 @@ public class FlowframTk extends JFrame
 
       // Left Align
 
-      leftAlignItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem leftAlignItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "justify.left", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
@@ -2188,7 +2188,7 @@ public class FlowframTk extends JFrame
 
       // Centre Align
 
-      centreAlignItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem centreAlignItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "justify.centre", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
@@ -2205,7 +2205,7 @@ public class FlowframTk extends JFrame
 
       // Right Align
 
-      rightAlignItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem rightAlignItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "justify.right", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
@@ -2224,7 +2224,7 @@ public class FlowframTk extends JFrame
 
       // Top Align
 
-      topAlignItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem topAlignItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "justify.top", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
@@ -2241,7 +2241,7 @@ public class FlowframTk extends JFrame
 
       // Middle Align
 
-      middleAlignItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem middleAlignItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "justify.middle", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
@@ -2258,7 +2258,7 @@ public class FlowframTk extends JFrame
 
       // Bottom Align
 
-      bottomAlignItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem bottomAlignItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "justify.bottom", justifyM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_GROUP,
@@ -2275,7 +2275,7 @@ public class FlowframTk extends JFrame
 
       // Align to Page Sub Menu
 
-      alignToPageM = FlowframTkAction.createMenu(this,
+      JMenu alignToPageM = FlowframTkAction.createMenu(this,
          "menu.transform", "align_to_page", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2285,7 +2285,7 @@ public class FlowframTk extends JFrame
 
       // Page Left Align
 
-      alignPageLeftItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem alignPageLeftItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "align_to_page.left", alignToPageM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2302,7 +2302,7 @@ public class FlowframTk extends JFrame
 
       // Page Centre Align
 
-      alignPageCentreItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem alignPageCentreItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "align_to_page.centre", alignToPageM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2319,7 +2319,7 @@ public class FlowframTk extends JFrame
 
       // Page Right Align
 
-      alignPageRightItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem alignPageRightItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "align_to_page.right", alignToPageM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2334,9 +2334,11 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(transformM, alignToPageM, alignPageRightItem);
 
+      alignToPageM.addSeparator();
+
       // Page Top Align
 
-      alignPageTopItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem alignPageTopItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "align_to_page.top", alignToPageM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2353,7 +2355,7 @@ public class FlowframTk extends JFrame
 
       // Page Middle Align
 
-      alignPageMiddleItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem alignPageMiddleItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "align_to_page.middle", alignToPageM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2370,7 +2372,7 @@ public class FlowframTk extends JFrame
 
       // Page Bottom Align
 
-      alignPageBottomItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem alignPageBottomItem = FlowframTkAction.createMenuItem(this,
          "menu.transform", "align_to_page.bottom", alignToPageM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
          SELECT_FLAG_ANY_OBJECT,
@@ -2951,7 +2953,7 @@ public class FlowframTk extends JFrame
       JMenuItem setTypeblockItem = FlowframTkAction.createMenuItem(this,
         "menu.tex", "flowframe.scale_to_typeblock", flowframeM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY_OBJECT,
-        FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+        FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
@@ -2960,7 +2962,124 @@ public class FlowframTk extends JFrame
 
                canvas.scaleSelectedToTypeblock();
             }
+         },
+        true);
+
+      // Align to Typeblock Sub Menu
+
+      alignToTypeblockM = FlowframTkAction.createMenu(this,
+         "menu.tex.flowframe", "align_to_typeblock",
+         "menu.tex.flowframe.align_to_typeblock.tooltip", flowframeM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, 
+         FlowframTkAction.CONSTRUCTION_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, null, true);
+
+      incStartupProgress(flowframeM, alignToTypeblockM);
+
+      // Typeblock Left Align
+
+      JMenuItem alignTypeblockLeftItem = FlowframTkAction.createMenuItem(this,
+         "menu.tex.flowframe", "align_to_typeblock.left", alignToTypeblockM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().typeblockLeftAlign();
+            }
          });
+
+      incStartupProgress(flowframeM, alignToTypeblockM, alignTypeblockLeftItem);
+
+      // Typeblock Centre Align
+
+      JMenuItem alignTypeblockCentreItem = FlowframTkAction.createMenuItem(this,
+         "menu.tex.flowframe", "align_to_typeblock.centre", alignToTypeblockM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().typeblockCentreAlign();
+            }
+         });
+
+      incStartupProgress(flowframeM, alignToTypeblockM, alignTypeblockCentreItem);
+
+      // Typeblock Right Align
+
+      JMenuItem alignTypeblockRightItem = FlowframTkAction.createMenuItem(this,
+         "menu.tex.flowframe", "align_to_typeblock.right", alignToTypeblockM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().typeblockRightAlign();
+            }
+         });
+
+      incStartupProgress(flowframeM, alignToTypeblockM, alignTypeblockRightItem);
+
+      alignToTypeblockM.addSeparator();
+
+      // Typeblock Top Align
+
+      JMenuItem alignTypeblockTopItem = FlowframTkAction.createMenuItem(this,
+         "menu.tex.flowframe", "align_to_typeblock.top", alignToTypeblockM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().typeblockTopAlign();
+            }
+         });
+
+      incStartupProgress(flowframeM, alignToTypeblockM, alignTypeblockTopItem);
+
+      // Typeblock Middle Align
+
+      JMenuItem alignTypeblockMiddleItem = FlowframTkAction.createMenuItem(this,
+         "menu.tex.flowframe", "align_to_typeblock.middle", alignToTypeblockM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().typeblockMiddleAlign();
+            }
+         });
+
+      incStartupProgress(flowframeM, alignToTypeblockM, alignTypeblockMiddleItem);
+
+      // Typeblock Bottom Align
+
+      JMenuItem alignTypeblockBottomItem = FlowframTkAction.createMenuItem(this,
+         "menu.tex.flowframe", "align_to_typeblock.bottom", alignToTypeblockM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_ANY_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().typeblockBottomAlign();
+            }
+         });
+
+      incStartupProgress(flowframeM, alignToTypeblockM, alignTypeblockBottomItem);
 
       // Display pages
 
@@ -7599,11 +7718,7 @@ public class FlowframTk extends JFrame
                      separateItem,
                      xorPathsItem, intersectPathsItem,
                      subtractPathsItem, pathUnionItem, 
-                     leftAlignItem, centreAlignItem,
-                     rightAlignItem, topAlignItem, middleAlignItem,
-                     alignPageLeftItem, alignPageRightItem, alignPageCentreItem,
-                     alignPageTopItem, alignPageMiddleItem, alignPageBottomItem,
-                     bottomAlignItem, splitTextItem, 
+                     splitTextItem, 
                      insertBitmapItem,
                      refreshItem, bitmapPropItem, parshapeItem,
                      shapeparItem, clearAllItem, setFrameItem,
@@ -7636,7 +7751,7 @@ public class FlowframTk extends JFrame
       showPrinterMarginsItem, textOutlineItem;
 
    private JMenu fileM, editM, pathM, textM, transformM, justifyM, alignToPageM,
-                 toolsM, bitmapM, texM, settingsM, windowM, recentM,
+                 alignToTypeblockM, toolsM, bitmapM, texM, settingsM, windowM, recentM,
                  gridM, zoomM, paperM, navigateM, fontStyleM,
                  lineStyleM, patternM, adjustColM;
 

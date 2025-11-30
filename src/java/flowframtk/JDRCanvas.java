@@ -997,6 +997,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("flowframe.set_frame");
       CanvasSelectAction setTypeblockAction
          = addCanvasSelectAction("flowframe.set_typeblock");
+      CanvasSelectAction scaleToTypeblockAction
+         = addCanvasSelectAction("flowframe.scale_to_typeblock");
 
       CanvasSelectAction leftAlignToPageAction
          = addCanvasSelectAction("align_to_page.left");
@@ -1010,6 +1012,19 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("align_to_page.middle");
       CanvasSelectAction bottomAlignToPageAction
          = addCanvasSelectAction("align_to_page.bottom");
+
+      CanvasSelectAction leftAlignToTypeblockAction
+         = addCanvasSelectAction("align_to_typeblock.left");
+      CanvasSelectAction centreAlignToTypeblockAction
+         = addCanvasSelectAction("align_to_typeblock.centre");
+      CanvasSelectAction rightAlignToTypeblockAction
+         = addCanvasSelectAction("align_to_typeblock.right");
+      CanvasSelectAction topAlignToTypeblockAction
+         = addCanvasSelectAction("align_to_typeblock.top");
+      CanvasSelectAction middleAlignToTypeblockAction
+         = addCanvasSelectAction("align_to_typeblock.middle");
+      CanvasSelectAction bottomAlignToTypeblockAction
+         = addCanvasSelectAction("align_to_typeblock.bottom");
 
       // Text
 
@@ -1158,6 +1173,45 @@ public class JDRCanvas extends JPanel
       selectTextFlowFrameM.add(setTypeblockAction.createMenuItem(
          "menu.selected.flowframe.set_typeblock",
          "menu.tex.flowframe.set_typeblock.tooltip"));
+
+      // Flowframe Scale to Typeblock
+
+      selectTextFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.scale_to_typeblock",
+         "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Typeblock Alignment sub menu
+
+      JMenu alignToTypeblockMenu = addCanvasSelectAction("align_to_typeblock").createMenu(
+         "menu.selected.flowframe.align_to_typeblock",
+         "menu.tex.flowframe.align_to_typeblock.tooltip");
+      selectTextFlowFrameM.add(alignToTypeblockMenu);
+
+      alignToTypeblockMenu.add(leftAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.left",
+        "menu.tex.flowframe.align_to_typeblock.left.tooltip"));
+
+      alignToTypeblockMenu.add(centreAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.centre",
+        "menu.tex.flowframe.align_to_typeblock.centre.tooltip"));
+
+      alignToTypeblockMenu.add(rightAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.right",
+        "menu.tex.flowframe.align_to_typeblock.right.tooltip"));
+
+      alignToTypeblockMenu.add(new JPopupMenu.Separator());
+
+      alignToTypeblockMenu.add(topAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.top",
+        "menu.tex.flowframe.align_to_typeblock.top.tooltip"));
+
+      alignToTypeblockMenu.add(middleAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.middle",
+        "menu.tex.flowframe.align_to_typeblock.middle.tooltip"));
+
+      alignToTypeblockMenu.add(bottomAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.bottom",
+        "menu.tex.flowframe.align_to_typeblock.bottom.tooltip"));
 
       // Group
 
@@ -1345,6 +1399,45 @@ public class JDRCanvas extends JPanel
       selectPathFlowFrameM.add(setTypeblockAction.createMenuItem(
          "menu.selected.flowframe.set_typeblock",
          "menu.tex.flowframe.set_typeblock.tooltip"));
+
+      // Flowframe Scale to Typeblock
+
+      selectPathFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.scale_to_typeblock",
+         "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Typeblock Alignment sub menu
+
+      alignToTypeblockMenu = addCanvasSelectAction("align_to_typeblock").createMenu(
+         "menu.selected.flowframe.align_to_typeblock",
+         "menu.tex.flowframe.align_to_typeblock.tooltip");
+      selectPathFlowFrameM.add(alignToTypeblockMenu);
+
+      alignToTypeblockMenu.add(leftAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.left",
+        "menu.tex.flowframe.align_to_typeblock.left.tooltip"));
+
+      alignToTypeblockMenu.add(centreAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.centre",
+        "menu.tex.flowframe.align_to_typeblock.centre.tooltip"));
+
+      alignToTypeblockMenu.add(rightAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.right",
+        "menu.tex.flowframe.align_to_typeblock.right.tooltip"));
+
+      alignToTypeblockMenu.add(new JPopupMenu.Separator());
+
+      alignToTypeblockMenu.add(topAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.top",
+        "menu.tex.flowframe.align_to_typeblock.top.tooltip"));
+
+      alignToTypeblockMenu.add(middleAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.middle",
+        "menu.tex.flowframe.align_to_typeblock.middle.tooltip"));
+
+      alignToTypeblockMenu.add(bottomAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.bottom",
+        "menu.tex.flowframe.align_to_typeblock.bottom.tooltip"));
 
       // Group
 
@@ -1584,6 +1677,45 @@ public class JDRCanvas extends JPanel
          "menu.selected.flowframe.set_typeblock",
          "menu.tex.flowframe.set_typeblock.tooltip"));
 
+      // Flowframe Scale to Typeblock
+
+      selectTextPathFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.scale_to_typeblock",
+         "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Typeblock Alignment sub menu
+
+      alignToTypeblockMenu = addCanvasSelectAction("align_to_typeblock").createMenu(
+         "menu.selected.flowframe.align_to_typeblock",
+         "menu.tex.flowframe.align_to_typeblock.tooltip");
+      selectTextPathFlowFrameM.add(alignToTypeblockMenu);
+
+      alignToTypeblockMenu.add(leftAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.left",
+        "menu.tex.flowframe.align_to_typeblock.left.tooltip"));
+
+      alignToTypeblockMenu.add(centreAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.centre",
+        "menu.tex.flowframe.align_to_typeblock.centre.tooltip"));
+
+      alignToTypeblockMenu.add(rightAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.right",
+        "menu.tex.flowframe.align_to_typeblock.right.tooltip"));
+
+      alignToTypeblockMenu.add(new JPopupMenu.Separator());
+
+      alignToTypeblockMenu.add(topAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.top",
+        "menu.tex.flowframe.align_to_typeblock.top.tooltip"));
+
+      alignToTypeblockMenu.add(middleAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.middle",
+        "menu.tex.flowframe.align_to_typeblock.middle.tooltip"));
+
+      alignToTypeblockMenu.add(bottomAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.bottom",
+        "menu.tex.flowframe.align_to_typeblock.bottom.tooltip"));
+
       // Group
 
       selectTextPathPopupMenu.add(groupAction.createMenuItem(
@@ -1783,6 +1915,45 @@ public class JDRCanvas extends JPanel
          "menu.selected.flowframe.set_typeblock",
          "menu.tex.flowframe.set_typeblock.tooltip"));
 
+      // Flowframe Scale to Typeblock
+
+      selectBitmapFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.scale_to_typeblock",
+         "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Typeblock Alignment sub menu
+
+      alignToTypeblockMenu = addCanvasSelectAction("align_to_typeblock").createMenu(
+         "menu.selected.flowframe.align_to_typeblock",
+         "menu.tex.flowframe.align_to_typeblock.tooltip");
+      selectBitmapFlowFrameM.add(alignToTypeblockMenu);
+
+      alignToTypeblockMenu.add(leftAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.left",
+        "menu.tex.flowframe.align_to_typeblock.left.tooltip"));
+
+      alignToTypeblockMenu.add(centreAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.centre",
+        "menu.tex.flowframe.align_to_typeblock.centre.tooltip"));
+
+      alignToTypeblockMenu.add(rightAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.right",
+        "menu.tex.flowframe.align_to_typeblock.right.tooltip"));
+
+      alignToTypeblockMenu.add(new JPopupMenu.Separator());
+
+      alignToTypeblockMenu.add(topAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.top",
+        "menu.tex.flowframe.align_to_typeblock.top.tooltip"));
+
+      alignToTypeblockMenu.add(middleAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.middle",
+        "menu.tex.flowframe.align_to_typeblock.middle.tooltip"));
+
+      alignToTypeblockMenu.add(bottomAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.bottom",
+        "menu.tex.flowframe.align_to_typeblock.bottom.tooltip"));
+
       // Group
 
       selectBitmapPopupMenu.add(groupAction.createMenuItem(
@@ -1897,6 +2068,45 @@ public class JDRCanvas extends JPanel
       selectFlowFrameM.add(setTypeblockAction.createMenuItem(
          "menu.selected.flowframe.set_typeblock",
          "menu.tex.flowframe.set_typeblock.tooltip"));
+
+      // Flowframe Scale to Typeblock
+
+      selectFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
+         "menu.selected.flowframe.scale_to_typeblock",
+         "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Typeblock Alignment sub menu
+
+      alignToTypeblockMenu = addCanvasSelectAction("align_to_typeblock").createMenu(
+         "menu.selected.flowframe.align_to_typeblock",
+         "menu.tex.flowframe.align_to_typeblock.tooltip");
+      selectFlowFrameM.add(alignToTypeblockMenu);
+
+      alignToTypeblockMenu.add(leftAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.left",
+        "menu.tex.flowframe.align_to_typeblock.left.tooltip"));
+
+      alignToTypeblockMenu.add(centreAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.centre",
+        "menu.tex.flowframe.align_to_typeblock.centre.tooltip"));
+
+      alignToTypeblockMenu.add(rightAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.right",
+        "menu.tex.flowframe.align_to_typeblock.right.tooltip"));
+
+      alignToTypeblockMenu.add(new JPopupMenu.Separator());
+
+      alignToTypeblockMenu.add(topAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.top",
+        "menu.tex.flowframe.align_to_typeblock.top.tooltip"));
+
+      alignToTypeblockMenu.add(middleAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.middle",
+        "menu.tex.flowframe.align_to_typeblock.middle.tooltip"));
+
+      alignToTypeblockMenu.add(bottomAlignToTypeblockAction.createMenuItem(
+        "menu.tex.flowframe.align_to_typeblock.bottom",
+        "menu.tex.flowframe.align_to_typeblock.bottom.tooltip"));
 
       // Group
 
@@ -4766,32 +4976,32 @@ public class JDRCanvas extends JPanel
 
    public void pageLeftAlign()
    {
-      pageAlignSelectedObjects(AlignToPageBorder.LEFT);
+      pageAlignSelectedObjects(AlignToBounds.LEFT);
    }
 
    public void pageCentreAlign()
    {
-      pageAlignSelectedObjects(AlignToPageBorder.CENTRE);
+      pageAlignSelectedObjects(AlignToBounds.CENTRE);
    }
 
    public void pageRightAlign()
    {
-      pageAlignSelectedObjects(AlignToPageBorder.RIGHT);
+      pageAlignSelectedObjects(AlignToBounds.RIGHT);
    }
 
    public void pageTopAlign()
    {
-      pageAlignSelectedObjects(AlignToPageBorder.TOP);
+      pageAlignSelectedObjects(AlignToBounds.TOP);
    }
 
    public void pageMiddleAlign()
    {
-      pageAlignSelectedObjects(AlignToPageBorder.MIDDLE);
+      pageAlignSelectedObjects(AlignToBounds.MIDDLE);
    }
 
    public void pageBottomAlign()
    {
-      pageAlignSelectedObjects(AlignToPageBorder.BOTTOM);
+      pageAlignSelectedObjects(AlignToBounds.BOTTOM);
    }
 
    public void pageAlignSelectedObjects(int align)
@@ -4805,7 +5015,73 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new AlignToPageBorder(object, i, align);
+            edit = new AlignToBounds(object, i, align);
+            ce.addEdit(edit);
+         }
+      }
+
+      ce.end();
+      if (edit != null) frame_.postEdit(ce);
+   }
+
+   public void typeblockLeftAlign()
+   {
+      typeblockAlignSelectedObjects(AlignToBounds.LEFT);
+   }
+
+   public void typeblockCentreAlign()
+   {
+      typeblockAlignSelectedObjects(AlignToBounds.CENTRE);
+   }
+
+   public void typeblockRightAlign()
+   {
+      typeblockAlignSelectedObjects(AlignToBounds.RIGHT);
+   }
+
+   public void typeblockTopAlign()
+   {
+      typeblockAlignSelectedObjects(AlignToBounds.TOP);
+   }
+
+   public void typeblockMiddleAlign()
+   {
+      typeblockAlignSelectedObjects(AlignToBounds.MIDDLE);
+   }
+
+   public void typeblockBottomAlign()
+   {
+      typeblockAlignSelectedObjects(AlignToBounds.BOTTOM);
+   }
+
+   public void typeblockAlignSelectedObjects(int align)
+   {
+      FlowFrame typeblock = getTypeblock();
+
+      if (typeblock == null)
+      {
+         getResources().error(frame_, getResources().getMessage("error.no_typeblock"));
+         return;
+      }
+
+      CanvasGraphics cg = getCanvasGraphics();
+
+      Rectangle2D bounds = new Rectangle2D.Double(
+       typeblock.getLeft(), typeblock.getTop(),
+        cg.getStoragePaperWidth() - typeblock.getLeft() - typeblock.getRight(),
+        cg.getStoragePaperHeight() - typeblock.getTop() - typeblock.getBottom()
+       );
+
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+      UndoableEdit edit = null;
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            edit = new AlignToBounds(object, i, align, "align_to_typeblock", bounds);
             ce.addEdit(edit);
          }
       }
@@ -17747,7 +18023,7 @@ public class JDRCanvas extends JPanel
       }
    }
 
-   class AlignToPageBorder extends CanvasUndoableEdit
+   class AlignToBounds extends CanvasUndoableEdit
    {
       private JDRCompleteObject object_, oldobject_;
       private int index_, align_;
@@ -17756,7 +18032,17 @@ public class JDRCanvas extends JPanel
       public static final int LEFT=0, CENTRE=1, RIGHT=2,
                               TOP=3, MIDDLE=4, BOTTOM=5;
 
-      public AlignToPageBorder(JDRCompleteObject object, int index, int align)
+      public AlignToBounds(JDRCompleteObject object, int index, int align)
+      {
+         this(object, index, align, "align_to_page",
+            new Rectangle2D.Double(0, 0,
+             getCanvasGraphics().getStoragePaperWidth(),
+             getCanvasGraphics().getStoragePaperHeight()
+           ));
+      }
+
+      public AlignToBounds(JDRCompleteObject object, int index, int align,
+        String tag, Rectangle2D bounds)
       {
          super(getFrame());
 
@@ -17768,8 +18054,8 @@ public class JDRCanvas extends JPanel
          switch (align_)
          {
             case LEFT :
-               object_.pageLeftAlign();
-               string_ = getResources().getMessage("undo.align_to_page.left");
+               object_.leftAlign(bounds.getX());
+               string_ = getResources().getMessage("undo."+tag+".left");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -17782,8 +18068,8 @@ public class JDRCanvas extends JPanel
                }
             break;
             case CENTRE :
-               object_.pageCentreAlign();
-               string_ = getResources().getMessage("undo.align_to_page.centre");
+               object_.centreAlign(bounds.getX() + 0.5*bounds.getWidth());
+               string_ = getResources().getMessage("undo."+tag+".centre");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -17796,8 +18082,8 @@ public class JDRCanvas extends JPanel
                }
             break;
             case RIGHT :
-               object_.pageRightAlign();
-               string_ = getResources().getMessage("undo.align_to_page.right");
+               object_.rightAlign(bounds.getX() + bounds.getWidth());
+               string_ = getResources().getMessage("undo."+tag+".right");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -17810,8 +18096,8 @@ public class JDRCanvas extends JPanel
                }
             break;
             case TOP :
-               object_.pageTopAlign();
-               string_ = getResources().getMessage("undo.align_to_page.top");
+               object_.topAlign(bounds.getY());
+               string_ = getResources().getMessage("undo."+tag+".top");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -17824,8 +18110,8 @@ public class JDRCanvas extends JPanel
                }
             break;
             case MIDDLE :
-               object_.pageMiddleAlign();
-               string_ = getResources().getMessage("undo.align_to_page.middle");
+               object_.middleAlign(bounds.getY() + 0.5*bounds.getHeight());
+               string_ = getResources().getMessage("undo."+tag+".middle");
 
                if (getApplication().isAutoAnchorEnabled())
                {
@@ -17838,8 +18124,8 @@ public class JDRCanvas extends JPanel
                }
             break;
             case BOTTOM :
-               object_.pageBottomAlign();
-               string_ = getResources().getMessage("undo.align_to_page.bottom");
+               object_.bottomAlign(bounds.getY() + bounds.getHeight());
+               string_ = getResources().getMessage("undo."+tag+".bottom");
 
                if (getApplication().isAutoAnchorEnabled())
                {

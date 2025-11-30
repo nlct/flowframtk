@@ -49,6 +49,12 @@
 
 <entry key="menu.transform.align_to_page.middle.tooltip">Vertically align the objects to the centre of the page</entry>
 
+<entry key="menu.tex.flowframe.align_to_typeblock.centre">Centre</entry>
+<entry key="menu.tex.flowframe.align_to_typeblock.centre.tooltip">Horizontally the objects to the centre of the typeblock</entry>
+
+<entry key="menu.tex.flowframe.align_to_typeblock.middle.tooltip">Vertically align the objects to the centre of the typeblock</entry>
+
+
 <entry key="menu.tools.math">Maths</entry>
 <entry key="menu.selectedtext.colour">Text Colour...</entry>
 <entry key="menu.selectedtext.fill_colour">Fill Colour...</entry>
@@ -70,6 +76,8 @@
 <entry key="undo.fill_colour">Change fill colour</entry>
 <entry key="undo.justify.centre">Centre Justify</entry>
 <entry key="undo.line_colour">Change line colour</entry>
+
+<entry key="undo.align_to_typeblock.centre">Typeblock Centre Alignment</entry>
 
 <entry key="error.conf.color">Colour specifier (&lt;rgb&gt; or &lt;rgb,alpha&gt;) expected on line {0}</entry>
 <entry key="error.invalid_paint-id">Invalid colour identifier</entry>
