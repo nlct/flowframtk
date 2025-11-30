@@ -390,10 +390,6 @@
 <entry key="menu.edit.adjustcol.rgb.mnemonic">R</entry>
 <entry key="menu.edit.adjustcol.rgb.tooltip">Convert colors to RGB for selected shapes or text areas</entry>
 
-<entry key="menu.edit.adjustcol.hsb">Convert to HSB</entry>
-<entry key="menu.edit.adjustcol.hsb.mnemonic">H</entry>
-<entry key="menu.edit.adjustcol.hsb.tooltip">Convert colors to HSB for selected shapes or text areas</entry>
-
 <entry key="menu.edit.adjustcol.fade">Fade Alpha</entry>
 <entry key="menu.edit.adjustcol.fade.mnemonic">F</entry>
 <entry key="menu.edit.adjustcol.fade.tooltip">Adjust the transparency for selected shapes or text areas</entry>
@@ -1434,7 +1430,6 @@
 <entry key="tooltip.grid.tschichold">Tschichold grid (origin at top left)</entry>
 <entry key="tooltip.grid.path">Path-based grid (origin at top left)</entry>
 <entry key="tooltip.grid.show">显示/隐藏网格线</entry>
-<entry key="tooltip.hsb">HSB (Hue Saturation Brightness) color selector </entry>
 <entry key="tooltip.jdr">保存或使用JDR文件中保存的画布设置</entry>
 <entry key="tooltip.latex_font">LaTeX中等价的字体家族</entry>
 <entry key="tooltip.latex_font_series">LaTeX中等价的字体系列</entry>
@@ -2734,13 +2729,6 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="paintselector.cmyk.mnemonic">K</entry>
 <entry key="paintselector.cmyk2.mnemonic">M</entry>
 <entry key="paintselector.cmyk.initvalue">off</entry>
-
-<entry key="paintselector.hue">Hue</entry>
-<entry key="paintselector.saturation">Saturation</entry>
-<entry key="paintselector.brightness">Brightness</entry>
-
-<entry key="paintselector.hsb">HSB</entry>
-<entry key="paintselector.hsb.initvalue">off</entry>
 
 <entry key="paintselector.grey">Gray</entry>
 <entry key="paintselector.grey.initvalue">off</entry>
@@ -4506,7 +4494,6 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 
 <entry key="index.colour.rgb">RGB</entry>
 <entry key="index.colour.cmyk">CMYK</entry>
-<entry key="index.colour.hsb">HSB</entry>
 <entry key="index.colour.greyscale">grayscale</entry>
 <entry key="index.colour.transparency">transparency</entry>
 <entry key="index.colour.gradient">gradient</entry>

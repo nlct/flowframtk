@@ -33,6 +33,8 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 /**
  * Class representing HSB colour.
+ * This isn't working correctly. The HSB tab has been removed but
+ * the JColorChooser can be used instead, which has HSV and HSL.
  * @author Nicola L C Talbot
  */
 

@@ -47,7 +47,6 @@ public class ColorPanel extends JPanel
       this.colorChooser = colorChooser;
       rgbPanel = new ColorRGBPanel(resources);
       cmykPanel = new ColorCMYKPanel(resources);
-      hsbPanel = new ColorHSBPanel(resources);
       greyPanel = new GreyPanel(resources);
       initialise();
    }
@@ -58,7 +57,6 @@ public class ColorPanel extends JPanel
       this.colorChooser = colorChooser;
       rgbPanel = new ColorRGBPanel(resources, gradientPanel);
       cmykPanel = new ColorCMYKPanel(resources, gradientPanel);
-      hsbPanel = new ColorHSBPanel(resources, gradientPanel);
       greyPanel = new GreyPanel(resources, gradientPanel);
       initialise();
    }
@@ -70,7 +68,6 @@ public class ColorPanel extends JPanel
       this.colorChooser = colorChooser;
       rgbPanel = new ColorRGBPanel(resources, al);
       cmykPanel = new ColorCMYKPanel(resources, al);
-      hsbPanel = new ColorHSBPanel(resources, al);
       greyPanel = new GreyPanel(resources, al);
       initialise();
    }
@@ -79,7 +76,6 @@ public class ColorPanel extends JPanel
    {
       rgbPanel.addAdjustmentListener(al);
       cmykPanel.addAdjustmentListener(al);
-      hsbPanel.addAdjustmentListener(al);
       greyPanel.addAdjustmentListener(al);
    }
 
@@ -116,12 +112,6 @@ public class ColorPanel extends JPanel
       tabbedPane.addTab(getResources().getMessage("paintselector.cmyk"),
                         null, cmykPanel,
                         getResources().getMessage("tooltip.cmyk"));
-
-      // HSB selector panel
-
-      tabbedPane.addTab(getResources().getMessage("paintselector.hsb"),
-                        null, hsbPanel,
-                        getResources().getMessage("tooltip.hsb"));
 
       // Grey selector panel
 
@@ -235,13 +225,12 @@ public class ColorPanel extends JPanel
    }
 
    public void setMnemonics(int rgbMnemonic, int cmykMnemonic,
-      int hsbMnemonic, int greyMnemonic)
+      int greyMnemonic)
    {
       // set mnemonics
       tabbedPane.setMnemonicAt(0, rgbMnemonic);
       tabbedPane.setMnemonicAt(1, cmykMnemonic);
-      tabbedPane.setMnemonicAt(2, hsbMnemonic);
-      tabbedPane.setMnemonicAt(3, greyMnemonic);
+      tabbedPane.setMnemonicAt(2, greyMnemonic);
    }
 
    public boolean requestDefaultColourFocus()
@@ -310,11 +299,6 @@ public class ColorPanel extends JPanel
          tabbedPane.setSelectedComponent(cmykPanel);
          currentPanel = cmykPanel;
       }
-      else if (paint instanceof JDRColorHSB)
-      {
-         tabbedPane.setSelectedComponent(hsbPanel);
-         currentPanel = hsbPanel;
-      }
       else if (paint instanceof JDRGray)
       {
          tabbedPane.setSelectedComponent(greyPanel);
@@ -338,7 +322,6 @@ public class ColorPanel extends JPanel
    {
       rgbPanel.setEnabled(flag);
       cmykPanel.setEnabled(flag);
-      hsbPanel.setEnabled(flag);
       greyPanel.setEnabled(flag);
       tabbedPane.setEnabled(flag);
 
@@ -357,7 +340,6 @@ public class ColorPanel extends JPanel
 
    private ColorRGBPanel rgbPanel;
    private ColorCMYKPanel cmykPanel;
-   private ColorHSBPanel hsbPanel;
    private GreyPanel greyPanel;
 
    private JTabbedPane tabbedPane;

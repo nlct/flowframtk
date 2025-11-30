@@ -386,10 +386,6 @@ Nicola Talbot
 <entry key="menu.edit.adjustcol.rgb.mnemonic">R</entry>
 <entry key="menu.edit.adjustcol.rgb.tooltip">Convert colors to RGB for selected shapes or text areas</entry>
 
-<entry key="menu.edit.adjustcol.hsb">Convert to HSB</entry>
-<entry key="menu.edit.adjustcol.hsb.mnemonic">H</entry>
-<entry key="menu.edit.adjustcol.hsb.tooltip">Convert colors to HSB for selected shapes or text areas</entry>
-
 <entry key="menu.edit.adjustcol.fade">Fade Alpha</entry>
 <entry key="menu.edit.adjustcol.fade.mnemonic">F</entry>
 <entry key="menu.edit.adjustcol.fade.tooltip">Adjust the transparency for selected shapes or text areas</entry>
@@ -1419,7 +1415,6 @@ Nicola Talbot
 <entry key="tooltip.grid.tschichold">Tschichold grid (origin at top left)</entry>
 <entry key="tooltip.grid.path">Path-based grid (origin at top left)</entry>
 <entry key="tooltip.grid.show">Show/hide grid</entry>
-<entry key="tooltip.hsb">HSB (Hue Saturation Brightness) color selector </entry>
 <entry key="tooltip.jdr">Save/use canvas settings stored in jdr files</entry>
 <entry key="tooltip.latex_font">LaTeX font family equivalent</entry>
 <entry key="tooltip.latex_font_series">LaTeX font series equivalent</entry>
@@ -2733,13 +2728,6 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="paintselector.cmyk.mnemonic">K</entry>
 <entry key="paintselector.cmyk2.mnemonic">M</entry>
 <entry key="paintselector.cmyk.initvalue">off</entry>
-
-<entry key="paintselector.hue">Hue</entry>
-<entry key="paintselector.saturation">Saturation</entry>
-<entry key="paintselector.brightness">Brightness</entry>
-
-<entry key="paintselector.hsb">HSB</entry>
-<entry key="paintselector.hsb.initvalue">off</entry>
 
 <entry key="paintselector.grey">Gray</entry>
 <entry key="paintselector.grey.initvalue">off</entry>

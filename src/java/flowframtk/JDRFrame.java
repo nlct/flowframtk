@@ -963,11 +963,6 @@ public class JDRFrame extends JInternalFrame
       canvas.convertToRGB();
    }
 
-   public void convertToHSB()
-   {
-      canvas.convertToHSB();
-   }
-
    public void fade(double value)
    {
       canvas.fade(value);

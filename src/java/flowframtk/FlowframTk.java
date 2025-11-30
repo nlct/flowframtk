@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(200);
+      invoker.setStartupDeterminate(199);
 
       // create menu bar, menu and menu item
 
@@ -1632,23 +1632,6 @@ public class FlowframTk extends JFrame
          });
 
       incStartupProgress(editM, adjustColM, convertToRGBItem);
-
-      // Convert to HSB
-
-      convertToHSBItem = FlowframTkAction.createMenuItem(this,
-         "menu.edit", "adjustcol.hsb", adjustColM,
-         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_SHAPE | SELECT_FLAG_TEXTUAL,
-         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
-         new FlowframTkActionListener()
-         {
-            public void doAction(FlowframTkAction action, ActionEvent evt)
-            {
-               action.getFrame().convertToHSB();
-            }
-         });
-
-      incStartupProgress(editM, adjustColM, convertToHSBItem);
 
       // Fade
 

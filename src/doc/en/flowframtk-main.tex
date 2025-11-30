@@ -6501,8 +6501,7 @@ Selecting the \widget{paintselector.single} radio button indicates a
 
 A \dgls{paint.solid-colour} may be expressed as
 \inlineglsdef{index.colour.rgb} (red, green, blue),
-\inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black),
-\inlineglsdef{index.colour.hsb} (hue, saturation, brightness) or
+\inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black) or
 \inlineglsdef{index.colour.greyscale}. In each case,
 \inlineglsdef{index.colour.transparency} may be added by adjusting
 the alpha channel.  If the alpha value is 100\% then the
@@ -6511,7 +6510,6 @@ the alpha channel.  If the alpha value is 100\% then the
 \manmsg{through}.
 
 The parameters are specified as integer values between 0 and 100,
-or between 0 and 359 in the case of hue.
 You can type in the number in the appropriate box, or use
 the slider bars. Alternatively, you can click on one of the predefined swatches
 which are to the right of the \widget{paintselector.single} panel 
@@ -6520,7 +6518,8 @@ appropriate swatch and the \manmsg{colour} specification will be
 filled in. The final button in the swatch panel is actually the 
 \btn{choose_colour} button which will open the
 \inlineglsdef{choose_colour.title} dialog with
-alternative ways of selecting a \manmsg{colour}.
+alternative ways of selecting a \manmsg{colour} (including
+specifying the \manmsg{colour} as HSV or HSL).
 
 \begin{information}
 If you select a \manmsg{colour} using
@@ -6611,9 +6610,12 @@ in all directions (clipped by the shape).
 
 \FlowframTk\ supports the
 \inlineglsdef{index.colour.rgb} (red, green, blue),
-\inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black),
-\inlineglsdef{index.colour.hsb} (hue, saturation, brightness) and
+\inlineglsdef{index.colour.cmyk} (cyan, magenta, yellow, black) and
 \gls{index.colour.greyscale} \manmsg{colour} spaces.
+Other ways of specifying a \manmsg{colour} are available with
+the \dialog{choose_colour} dialog, which is opened with the \btn{choose_colour}
+button, but the selected \manmsg{colour} will be converted
+to a \manmsg{colour} space supported by \FlowframTk.
 
 \Glspl{index.line-colour}, \glspl{index.fill-colour} and
 \glspl{index.text-colour} can be converted to a different
@@ -6638,11 +6640,6 @@ The \menu{edit.adjustcol.rgb} menu item will convert to
 
 The \menu{edit.adjustcol.cmyk} menu item will convert to
 \gls{index.colour.cmyk}.
-
-\menudef{menu.edit.adjustcol.hsb}
-
-The \menu{edit.adjustcol.hsb} menu item will convert to
-\gls{index.colour.hsb}.
 
 \begin{warning}
 Note that \manmsg{colour} space conversions are not exact. You may
@@ -13502,7 +13499,7 @@ example:
 \cbeg{figure}
 \cmd{centering}
 \gls{input}\marg{house}
-\gls{caption}\marg{A House}
+\cmd{caption}\marg{A House}
 \cend{figure}
 \end{codebox}
 Alternatively, you can use \gls{includeteximage} provided by
@@ -13511,7 +13508,7 @@ Alternatively, you can use \gls{includeteximage} provided by
 \cbeg{figure}
 \cmd{centering}
 \gls{includeteximage}\marg{house}
-\gls{caption}\marg{A House}
+\cmd{caption}\marg{A House}
 \cend{figure}
 \end{codebox}
 If the image turns out to be too large for your document, you can
@@ -16131,6 +16128,13 @@ representing the hue, saturation, brightness and alpha components.
 The hue value must lie in the range 0 (inclusive) to 360
 (exclusive). The other values must lie in the range 0 to 1
 (inclusive).
+
+The HSB support in \FlowframTk's \dialog{paintselector} panel 
+wasn't working correctly and has been removed as the
+\btn{choose_colour} can now be used instead, but that will convert
+to \gls{index.colour.rgb} or \gls{index.colour.cmyk} or
+\gls{index.colour.greyscale}.
+
 \end{itemdesc}
 
 \itemtitle{\typedef{grey}}

@@ -36,8 +36,6 @@
 
 <entry key="menu.edit.adjustcol.rgb.tooltip">Convert colours to RGB for selected shapes or text areas</entry>
 
-<entry key="menu.edit.adjustcol.hsb.tooltip">Convert colours to HSB for selected shapes or text areas</entry>
-
 
 <entry key="menu.transform.justify.centre">Centre</entry>
 <entry key="menu.transform.justify.centre.tooltip">Horizontally centre the objects inside the group</entry>
@@ -66,7 +64,6 @@
 <entry key="tooltip.arrow.colour.dependent">Make the marker colour depend on the line colour</entry>
 <entry key="tooltip.arrow.colour.independent">Make the marker colour independent of the line colour</entry>
 <entry key="tooltip.cmyk">CMYK (Cyan Magenta Yellow Key) colour selector </entry>
-<entry key="tooltip.hsb">HSB (Hue Saturation Brightness) colour selector </entry>
 <entry key="tooltip.rgb">RGB (Red Green Blue) colour selector </entry>
 <entry key="tooltip.swatch.darkgrey">Dark Grey</entry>
 <entry key="tooltip.swatch.grey">Grey</entry>
