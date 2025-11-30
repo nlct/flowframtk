@@ -14038,8 +14038,11 @@ public class JDRCanvas extends JPanel
 
          indices = new int[n];
 
-// TODO remove is causing array index out of bounds. Need to check
-// this (can't reproduce)
+         for (int i = 0; i < n; i++)
+         {
+            indices[i] = list.get(i).getIndex();
+         }
+
          Arrays.sort(indices);
 
          grpIndex_ = indices[0];

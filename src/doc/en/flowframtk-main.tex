@@ -13640,17 +13640,30 @@ select \widget{filter.pgf}, and name the file,
 for example, \filefmt{lettuce.tex}).
 To include it in your \LaTeX\ document, remember to use the
 \sty{pgf} package:
-\begin{verbatim}
-\usepackage{pgf}
-\end{verbatim}
+\begin{codebox}
+\cmd{usepackage}\marg{pgf}
+\end{codebox}
 and include the image use \gls{input}. For example:
-\begin{verbatim}
-\begin{figure}
-\centering
-\input{lettuce}
-\caption{Lettuce on Toast}
-\end{figure}
-\end{verbatim}
+\begin{codebox}
+\cbeg{figure}
+\cmd{centering}
+\gls{input}\marg{lettuce}
+\cmd{caption}\marg{Lettuce on Toast}
+\cend{figure}
+\end{codebox}
+Alternatively, load the \sty{flowframtkutils} package (which
+automatically loads \sty{pgf}):
+\begin{codebox}
+\cmd{usepackage}\marg{flowframtkutils}
+\end{codebox}
+and use \gls{includeteximage}:
+\begin{codebox}
+\cbeg{figure}
+\cmd{centering}
+\gls{includeteximage}\marg{lettuce}
+\cmd{caption}\marg{Lettuce on Toast}
+\cend{figure}
+\end{codebox}
 
 \section{Cheese and Lettuce on Toast}\label{sec:cheeseexample}
 
@@ -13750,9 +13763,14 @@ and create a rectangle, as shown in \figureref{fig:neuron1}.
 \tool{open_curve} (\sectionref{sec:newcurvepath}), and do a single
 segment (\figureref{fig:neuron3a}).  Then use switch to
 \editpathmode\ to adjust the curvature, as shown in
-\figureref{fig:neuron3b}.  (If you have enabled the \gridlock, you
-may find it easier to disable it while you are editing the curvature
-control points.)
+\figureref{fig:neuron3b}. 
+
+If you have enabled the \gridlock, you may find it easier to disable
+it while you are editing the curvature \glspl{controlpt}. If you
+have trouble selecting a \gls{controlpt}, try cycling round with
+\accelerator{editpath.next_control}. Alternatively, use the
+\dialog{segmentinfo} dialog, which can be opened with
+\menu{editpath.info}.
 
 \FloatSubFigs{fig:neuron3}
 [\setkeys{Gin}{width=0.4\linewidth}]
