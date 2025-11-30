@@ -571,15 +571,9 @@ public class JDRPath extends JDRShape
          throw new EmptyPathException(cg);
       }
 
-      if (isClosed)
+      if (isClosed && moveto == 1)
       {
-         JDRSegment firstSegment = (JDRSegment)path.getFirstSegment();
-         JDRSegment lastSegment  = (JDRSegment)path.getLastSegment();
-         if (moveto == 1)
-         {
-            lastSegment.end = firstSegment.start;
-            path.closed = true;
-         }
+         path.close(CLOSE_LINE);
       }
 
       JDRStroke stroke = path.getStroke();

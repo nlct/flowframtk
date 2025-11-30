@@ -13921,14 +13921,14 @@ To include the image inside a \LaTeX\ document, save the image
 to a \LaTeX\ file using the \menu{file.export} menu item,
 and then include it in your document (assuming the file was called
 \filefmt{neuron.tex}):
-\begin{verbatim}
-\begin{figure}
-\centering
-\input{neuron}
-\caption{An Artificial Neuron}
-\end{figure}
-\end{verbatim}
-(Remember to use the \sty{pgf} package.) The image will appear in
+\begin{codebox}
+\cbeg{figure}
+\cmd{centering}
+\gls{input}\marg{neuron}
+\cmd{caption}\marg{An Artificial Neuron}
+\cend{figure}
+\end{codebox}
+(Remember to use the \sty{pgf} or \sty{flowframtkutils} package.) The image will appear in
 the \LaTeX\ document as illustrated in \figureref{fig:neurontex}.
 
 \FloatFig{fig:neurontex}
