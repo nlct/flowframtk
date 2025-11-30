@@ -5312,7 +5312,7 @@ in \selectmode, the file path (or URI) will be added as a new \gls{textarea}.
 \section{Selection Popup Menus}
 \label{sec:selectpopups}
 
-In \selectmode, you can also \gls{menuclick} to activate the
+In \selectmode, you can \gls{menuclick} to activate the
 selection \gls{popupmenu}. The contents of this menu vary according to
 what types of \glspl*{object} have been \selected, if any.
 
@@ -5326,9 +5326,17 @@ Common popup menu items are listed below.
 
 To assign a description to the selected \gls{object}, use
 \menu{selected.object_description}. This is the same as using the
-\menu{edit.object_description} menu item from the main menu bar.
+\menu{edit.object_description} menu item from the main menu bar
+(see \sectionref{sec:objectdescription}).
 This option will only be available if there is exactly one
 \gls{object} selected.
+
+\menudef{menu.selected.object_tag}
+
+The \menu{selected.object_tag} menu item opens the \dialog{tag}
+dialog from which you assign a tag to all
+\selected\ objects. This is the same as using the 
+\menu{edit.object_tag} menu item from the main menu bar (see \sectionref{sec:objecttag}).
 
 \menudef{menu.selected.cut}
 
