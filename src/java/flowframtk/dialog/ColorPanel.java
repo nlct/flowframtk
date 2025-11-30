@@ -284,6 +284,9 @@ public class ColorPanel extends JPanel
 
    public void setPaint(Color paint)
    {
+      currentPanel = (SingleColourSelector)
+         tabbedPane.getSelectedComponent();
+
       currentPanel.setPaint(paint);
    }
 
@@ -293,29 +296,28 @@ public class ColorPanel extends JPanel
       {
          tabbedPane.setSelectedComponent(rgbPanel);
          currentPanel = rgbPanel;
+         currentPanel.setPaint(paint);
       }
       else if (paint instanceof JDRColorCMYK)
       {
          tabbedPane.setSelectedComponent(cmykPanel);
          currentPanel = cmykPanel;
+         currentPanel.setPaint(paint);
       }
       else if (paint instanceof JDRGray)
       {
          tabbedPane.setSelectedComponent(greyPanel);
          currentPanel = greyPanel;
+         currentPanel.setPaint(paint);
       }
       else if (paint instanceof JDRShading)
       {
          setPaint(((JDRShading)paint).getStartColor());
-         return;
       }
       else
       {
-         setPaint(paint.getJDRColor());
-         return;
+         setPaint(paint.getColor());
       }
-
-      currentPanel.setPaint(paint);
    }
 
    public void setEnabled(boolean flag)
