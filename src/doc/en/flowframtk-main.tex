@@ -8476,6 +8476,72 @@ is at the back of the stack;
 \subfigref{fig:merge2d} new single path resulting from merging 
 the two paths in \subfigref{fig:merge2c}.}
 
+The direction of the \glspl{path} makes a difference, but sometimes
+this difference can be subtle. The direction refers to the order of
+the \glspl{controlpt} that define the path. The easiest way of
+checking this is to add arrow \hyperref[sec:markers]{mid-markers}.
+
+For example, both circles in \figureref{fig:mergedirection-samea}
+have arrow mid-markers that show where the all the joining
+(non-curvature) \glspl{controlpt} are, except for the start and end.
+Each circle has the starting \gls{controlpt} on the right and they
+continue down, round to the left, up and then back to the right
+(that is, clockwise). \Figureref{fig:mergedirection-sameb} shows the
+result of merging both \glspl{path}. The \pathattr{winding-rule} is currently
+even-odd and there is a gap in the fill \manmsg{colour} where the
+original two circles overlapped. The winding rule was then set to
+non-zero and the result is shown in
+\figureref{fig:mergedirection-samec}. The overlap area is now
+filled.
+
+\begin{information}
+The merged path has extra mid-marker arrows. The horizontal one on
+the right marks the move (\gls{gap}) from the end \gls{controlpt} of the original left
+(backmost) circle to the start \gls{controlpt} of the original right
+(frontmost) circle.
+\end{information}
+
+\FloatSubFigs{fig:mergedirection-same}
+{
+  {fig:mergedirection-samea}{\includeimg[scale=0.5]{mergedirection-samea}}{},
+  {fig:mergedirection-sameb}{\includeimg[scale=0.5]{mergedirection-sameb}}{},
+  {fig:mergedirection-samec}{\includeimg[scale=0.5]{mergedirection-samec}}{}
+}
+[Merging Two Clockwise Circles]
+{Merging two clockwise circles:
+\subfigref{fig:mergedirection-samea} two circles with mid-markers
+showing their clockwise direction;
+\subfigref{fig:mergedirection-sameb} the two circles from 
+\subfigref{fig:mergedirection-samea} have been merged into a single
+path (even-odd winding rule);
+\subfigref{fig:mergedirection-samec} winding rule changed to
+non-zero.}
+
+The two circles in \figureref{fig:mergedirection-diff}, started with
+the same two circles from \figureref{fig:mergedirection-samea}, but
+the one on the left had its direction reversed with
+\menu{transform.reverse}. The arrow mid-markers are now following
+the anti-clockwise direction for the left circle.
+\Figureref{fig:mergedirection-diffb} shows the
+result of merging both \glspl{path}. The \pathattr{winding-rule} is currently
+even-odd and there is a gap in the fill \manmsg{colour} where the
+original two circles overlapped. The winding rule was then changed
+to non-zero, but there is no visible difference. There is still a
+gap in the overlap area.
+
+\FloatSubFigs{fig:mergedirection-diff}
+{
+  {fig:mergedirection-diffa}{\includeimg[scale=0.5]{mergedirection-diffa}}{},
+  {fig:mergedirection-diffb}{\includeimg[scale=0.5]{mergedirection-diffb}}{}
+}
+[Merging an Anti-Clockwise and a Clockwise Circle]
+{Merging an anti-clockwise and a clockwise circle:
+\subfigref{fig:mergedirection-diffa} two circles with mid-markers
+showing their anti-clockwise and clockwise direction;
+\subfigref{fig:mergedirection-diffb} the two circles from 
+\subfigref{fig:mergedirection-diffa} have been merged into a single
+path (same image for even-odd and non-zero winding rules)}
+
 \seealsorefs{
  sec:pathunion,
  sec:xorpath,

@@ -9,7 +9,7 @@
   <properties>
     <property name="info.appName" value="flowframtk"/>
     <property name="info.url" value="http://www.dickimaw-books.com/software/flowframtk/"/>
-    <property name="project.version" value="0.8.8" />
+    <property name="project.version" value="0.8.9" />
   </properties>
 
     <info>
