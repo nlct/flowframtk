@@ -571,9 +571,24 @@ public class JDRPath extends JDRShape
          throw new EmptyPathException(cg);
       }
 
-      if (isClosed && moveto == 1)
+      if (isClosed)
       {
-         path.close(CLOSE_LINE);
+         if (moveto == 1)
+         {
+            path.close(CLOSE_LINE);
+         }
+         else if (lastPostMoveSeg != null)
+         {
+            JDRPathSegment lastSegment = path.getLastSegment();
+            JDRPoint p0 = lastSegment.getEnd();
+            JDRPoint p1 = lastPostMoveSeg.getStart();
+
+            JDRSegment segment = new JDRClosingMove(
+               p0.getX(), p0.getY(), p1.getX(), p1.getY(),
+               path, path.size(), lastPostMoveSeg);
+
+            path.add(segment);
+         }
       }
 
       JDRStroke stroke = path.getStroke();
