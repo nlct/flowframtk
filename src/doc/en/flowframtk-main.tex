@@ -14514,8 +14514,8 @@ thing to do is to select the paper size and orientation using
 {\includeimg{news1}}
 {Newspaper Example\dash Setting the \LaTeX{} Normal Font Size}
 
-\item The 12pt font size has a corresponding \gls{baselineskip}
-of 14.5pt. For this example, it is more practical to have a grid
+\item The 12\gls{pt} font size has a corresponding \gls{baselineskip}
+of 14.5\gls{pt}. For this example, it is more practical to have a grid
 that has intervals of this size, as it gives a guide as to how many
 lines there will be in each frame.
 
@@ -14528,8 +14528,9 @@ frame.
 Therefore I set the grid to have 145\gls{pt} major divisions with
 10 subdivisions. This means that each minor tick mark is at a distance
 of 14.5pt (one \gls{baselineskip}) from its neighbour. To do this
-use \menu{settings.grid.settings} to open the \dialog{grid} dialog, and enter the
-values as shown in \figureref{fig:news2}.
+use \menu{settings.grid.settings} to open the \dialog{grid} dialog
+(or double-click on the grid unit in the corner between the
+\glspl{ruler}), and enter the values as shown in \figureref{fig:news2}.
 
 \FloatFig{fig:news2}
 [\setkeys{Gin}{scale=0.5}]
@@ -14538,7 +14539,8 @@ values as shown in \figureref{fig:news2}.
 
 \item To help reduce rounding errors, I'm also going to set the
 \gls{storageunit} to 1pt. To do this use \menu{settings.config} to
-open the \dialog{config} dialog box and change the storage unit in
+open the \dialog{config} dialog box (or double-click on the storage
+unit in the \gls{statusbar}) and change the storage unit in
 the \widget{controls.title} tab, as shown in
 \figureref{fig:newsunit}.
 
@@ -14549,7 +14551,7 @@ the \widget{controls.title} tab, as shown in
 
 \item Next set the \gls{typeblock}. This nominally defines the paper
 margins, although it is possible to define frames outside this
-area. I used 58pt margins on all sides. To do this, use the
+area. I used 58\gls{pt} margins on all sides. To do this, use the
 \menu{tex.flowframe.set_typeblock} menu item to display
 the \dialog{typeblock} dialog box shown in \figureref{fig:news3}. Enter the values
 shown and click on \dgls{okay} or press \accelerator{button.okay}
@@ -14578,21 +14580,21 @@ rectangle with opposing corners at (58pt,58pt) and
 \item Switch to the \tool{select}, and
 \select\ this rectangle. Use the \menu{tex.flowframe.set_frame} menu item
 to open the \dialog{flowframe} dialog and enter the values
-shown in \figureref{fig:news5a}. Note that the
-\widget{flowframe.border} field has been set to
+shown in \figureref{fig:news5a}: static type, label \qtt{title} and
+no inner padding. The \widget{flowframe.border} field has been set to
 \widget{flowframe.border_none}.
 The frame contents should be the title.
 This can be set by clicking on the \widget{flowframe.edit}
 button, which will open the mini \TeX\ editor, shown in
 \figureref{fig:news5b}.
 I typed in the following:
-\begin{verbatim}
-\begin{center}
-\bfseries\Huge
+\begin{compactcodebox}
+\cbeg{center}
+\cmd{bfseries}\cmd{Huge}
 Fairy Tale Times
-\end{center}
-\hfill Issue 2. 7 December 2005.
-\end{verbatim}
+\cend{center}
+\cmd{hfill} Issue 2. 7 December 2005.
+\end{compactcodebox}
 
 \FloatSubFigs{fig:news5}
 [\setkeys{Gin}{width=0.45\textwidth}]
@@ -14625,13 +14627,21 @@ You should now see something like \figureref{fig:news6}.
 
 \item Switch to the \tool{select}, and
 \select\ the left hand frame, and assign the \gls{flowframe} data shown in
-\figureref{fig:news7}. The frame contents contains the section
+\figureref{fig:news7}: dynamic type, label \qtt{leftheading}, no
+border and no inner padding. The frame contents contains the section
 command:
-\begin{verbatim}
-\section{Killer Wolf on the Loose}
-\end{verbatim}
+\begin{compactcodebox}
+\cmd{section}\marg{Killer Wolf on the Loose}
+\end{compactcodebox}
 This is again set using the \widget{flowframe.edit} button
 to open the \TeX\ editor.
+
+\begin{information}
+Numbered section headings are problematic in dynamic frames as the
+contents aren't processed until the page is shipped out. In this
+example, the page numbering will be switched off by changing
+the \ctr{secnumdepth} counter, so it won't be a problem.
+\end{information}
 
 \FloatFig{fig:news7}
 [\setkeys{Gin}{scale=0.5}]
@@ -14642,9 +14652,9 @@ Heading Frame}
 \item Do the same for the right hand rectangle, but
 call it \qt{rightheading}. The frame contents contains the
 section command:
-\begin{verbatim}
-\section{Tragic Wall Accident}
-\end{verbatim}
+\begin{compactcodebox}
+\cmd{section}\marg{Tragic Wall Accident}
+\end{compactcodebox}
 
 \item The left hand column is going to angle around underneath the
 right hand column, as it will have more text in it. Select the
@@ -14660,9 +14670,14 @@ shown in \figureref{fig:news8}.
 
 \item Switch to the \tool{select}, and
 \select\ this L shaped polygon, and assigned the \gls{flowframe} data
-shown in \figureref{fig:news9}. Note that the
-\widget{flowframe.align} field has been set to
-\widget{flowframe.align_top} to ensure that if there is
+shown in \figureref{fig:news9}: dynamic type, label \qtt{lefttext},
+and shape set to \widget{flowframe.shape_parshape}. The border is
+set to none but this field will be disabled as soon as the shape is
+changed as the border option is only available for the default
+standard shape.
+
+Note that the \widget{flowframe.align} field has been set to
+\widget{flowframe.align_top} to ensure that, if there is
 insufficient text to fill the frame, all blank space will go at the
 bottom of the frame, and thus help to keep the frame's shape. I
 used \widget{flowframe.shape_parshape} rather than
@@ -14704,6 +14719,17 @@ people to keep their doors securely fastened at all times.
 {Newspaper Example\dash Assigning Flowframe Data to L Shaped
 Frame}
 
+The \widget{annotations.frame_contents.show} setting uses the frame
+rectangular inner area as a guide to location and dimensions. It
+doesn't take the shape into account. This means that the frame
+contents has lines stretching across to the right. This can result
+in a cluttered \gls{canvas}, so you may prefer to switch off the
+feature at this point. You can do this from the \dialog{annotations}
+tab of the \dialog{configui} dialog, which can be opened with 
+the \menu{settings.configui} menu item. Uncheck the
+\widget{annotations.frame_contents.show} checkbox and click on the
+\btn{okay} button.
+
 \item I'm going to illustrate the story in the right hand column.
 The \gls{bitmap} image \filefmt{egg.png} is supplied with the \sty{flowfram}
 package but is also available in the examples subdirectory of
@@ -14718,13 +14744,19 @@ and a vertical (\widget{coordinates.y}) displacement of 206pt.
 \FloatFig{fig:news10}
 [\setkeys{Gin}{width=\linewidth}]
 {\includeimg{news10}}
-{Newspaper Example\dash Added Image}
+[Newspaper Example\dash Added Image]
+{Newspaper Example\dash Added Image (Frame Contents Now Hidden)}
 
 \item Set the \gls{flowframe} data shown in \figureref{fig:news11} to
-this \gls{bitmap}. Note that you must set the
+this \gls{bitmap}: static type, label \qtt{eggimage}, and border
+shown. No content is required for this frame.
+
+\begin{information}
+When using a \gls{bitmap} as a frame, you must set the
 \widget{flowframe.border} setting to
 \widget{flowframe.border_as_shown}, otherwise the \gls{bitmap}
 will not appear in the document.
+\end{information}
 
 \FloatFig{fig:news11}
 [\setkeys{Gin}{scale=0.5}]
@@ -14748,9 +14780,10 @@ polygon with vertices at:
 
 \item Switch to the \tool{select}, select
 this polygon and assign the \gls{flowframe} data shown in
-\figureref{fig:news13}. Note that the
-\widget{flowframe.shape} field has been set to
-\widget{flowframe.shape_parshape} and the
+\figureref{fig:news13}: dynamic type, label \qtt{righttext}.
+The \widget{flowframe.shape} field has been set to
+\widget{flowframe.shape_parshape} (which automatically disables the
+\widget{flowframe.border} field) and the
 \widget{flowframe.align} field has been set to
 \widget{flowframe.align_top}. Again, the contents of the
 frame are quite long and can either be set using \FlowframTk\ or
@@ -14792,9 +14825,10 @@ blocks to clearly delineate them. Switch to the
 
 \item Switch to the \tool{select}, \select\
 this new path and assign the \gls{flowframe} data shown in
-\figureref{fig:news15}.  Make sure that you have set the
+\figureref{fig:news15}: static type and label \qtt{Lbar}.  Make sure that you have set the
 \widget{flowframe.border} field to
-\widget{flowframe.border_as_shown}.
+\widget{flowframe.border_as_shown}. Since this is decorative, the
+frame has no content.
 
 \FloatFig{fig:news15}
 [\setkeys{Gin}{scale=0.5}]
@@ -14814,8 +14848,9 @@ in \figureref{fig:news16}.
 {Newspaper Example\dash Added Horizontal Divider}
 
 \item Switch to the \tool{select}, \select\
-this line and assign the \gls{flowframe} data shown in
-\figureref{fig:news17}.
+this line (use \accelerator{navigate.skip} if you have difficulty
+selecting it with the mouse) and assign the \gls{flowframe} data shown in
+\figureref{fig:news17}: static type, label \qtt{hline} and border shown.
 
 \FloatFig{fig:news17}
 [\setkeys{Gin}{scale=0.5}]
@@ -14835,7 +14870,8 @@ and construct a rectangle with opposing corners at:
 
 \item Switch to the \tool{select}, \select\
 this rectangle, and assign the \gls{flowframe} data as shown in
-\figureref{fig:news19}. The frame contents is another sectioning
+\figureref{fig:news19}: dynamic type, label \qtt{bottomheading}, no
+border, and middle alignment. The frame contents is another sectioning
 command:
 \begin{verbatim}
 \section{Relief as Missing Sheep Finally Return Home}
@@ -14866,7 +14902,9 @@ Rectangles}
 
 \item Switch to the \tool{select}, select
 the left lower rectangle and assign the \gls{flowframe} data shown in
-\figureref{fig:news21}. Similarly for the right hand lower rectangle.
+\figureref{fig:news21}: flow type, label \qtt{left} and no border. 
+Similarly for the right hand lower rectangle: flow type, label
+\qtt{right} and no border.
 
 \FloatFig{fig:news21}
 [\setkeys{Gin}{scale=0.5}]
@@ -14891,7 +14929,8 @@ to the location shown in \figureref{fig:news22}.
 {Newspaper Example\dash Added Sheep Bitmap}
 
 \item Assign this \gls{bitmap} the \gls{flowframe} data shown in
-\figureref{fig:news23}.
+\figureref{fig:news23}: static type, label \qtt{sheepimage}, and
+border set to \widget{flowframe.border_as_shown}.
 
 \FloatFig{fig:news23}
 [\setkeys{Gin}{scale=0.5}]
@@ -14904,8 +14943,7 @@ the sheep image, so I'm going to construct a new polygon to go
 around the sheep image. This polygon will not form a frame, but
 will be used to construct the parameters of the \gls{parshape}
 command, which can then be input at the start of the flow frame.
-To do this, select the \tool{closed_line}{sec:lines},
-and construct a polygon
+To do this, select the \tool{closed_line}, and construct a polygon
 with vertices at: (116pt, 565.5pt), (116pt, 580pt), (101.5pt, 580pt),
 (101.5pt, 609pt), (58pt, 609pt), (58pt, 783pt), (290pt, 783pt)
 and (290pt, 565.5pt) as shown in \figureref{fig:news24}.
@@ -14937,19 +14975,19 @@ parameters:
 \item Open the preamble pane either using 
 \menu{tex.set_preamble} or just move the divider across and set the
 \gls{early-preamble} code as follows:
-\begin{verbatim}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\end{verbatim}
+\begin{compactcodebox}
+\cmd{usepackage}[utf8]\marg{inputenc}
+\cmd{usepackage}[T1]\marg{fontenc}
+\cmd{usepackage}\marg{lmodern}
+\end{compactcodebox}%
 (see \figureref{fig:newspreamble}) and the late preamble to
-\begin{verbatim}
-% suppress section numbering
-\setcounter{secnumdepth}{0}
-% set the paragraph indentation for static
-% and dynamic frames
-\setlength{\sdfparindent}{\parindent}
-\end{verbatim}
+\begin{compactcodebox*}
+\comment{suppress section numbering}
+\cmd{setcounter}\marg{\ctr{secnumdepth}}\marg{0}
+\comment{set the paragraph indentation for static}
+\comment{and dynamic frames}
+\cmd{setlength}\marg{\gls{sdfparindent}}\marg{\gls{parindent}}
+\end{compactcodebox*}%
 (See \figureref{fig:newspreamble2}.)
 
 \FloatFig{fig:newspreamble}
@@ -14970,54 +15008,97 @@ and (580.0, 826.5) as shown in \figureref{fig:news27}.
 {\includeimg{news27}}
 {Newspaper Example\dash Constructing the Footer Frame}
 
-\item Following the same procedure as before, \select\ this new
-rectangle and make it a dynamic frame with the label
-\framelabelref{footer} and middle alignment. Then click on the
-\widget{flowframe.compute_sym_x_shift} button to calculate the
-horizontal shift for even pages. Set the contents to just
-\gls{itshape} (see \figureref{fig:news28}).
+\item This next step can be done using the \dialog{flowframe}
+dialog as in the earlier steps, but let's use the \dialog{flfwizard}
+instead, which can be opened with the \menu{tex.flowframe.wizard}
+menu item (make sure you switch to the \tool{select} first).
+
+If you haven't already selected the new rectangle, select it from
+the \widget{flfwizard.frametype.object} list. Since it's the most
+recent object to be added, it will be the last in the list. If
+you're not sure, double-click on the list item and the rectangle
+should be selected on the \gls{canvas}, which you can double-check
+without having to close the \dialog{flfwizard}.
 
 \FloatFig{fig:news28}
 [\setkeys{Gin}{scale=0.5}]
 {\includeimg{news28}}
-{Newspaper Example\dash Assigning the Footer Frame Data}
+{Newspaper Example\dash Assigning the Footer Frame Data using the
+Wizard}
+
+Select the \widget{flfwizard.frametype.footer} button, as shown in 
+\figureref{fig:news28}. The \btn{flfwizard.next} button should have
+the text \widget{flfwizard.labelpages.title}. Click on it to move to
+the \dialog{flfwizard.labelpages} page, as shown in \figureref{fig:news29}.
+
+\FloatFig{fig:news29}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news29}}
+{Newspaper Example\dash Footer Label and Pages}
+
+Since this is a special dynamic frame, the label has automatically
+been filled in, so just click on the \btn{flfwizard.next} button to
+move onto the \dialog{flfwizard.style} panel, shown in
+\figureref{fig:news30}. The \widget{flfwizard.style.border} checkbox
+should be unchecked, change the \widget{flfwizard.style.valign}
+field to \widget{flowframe.align_middle} and set the \widget{flfwizard.style.cmds}
+to just \code{itshape}. Since it's just a single declaration, the
+leading backslash may be omitted. If you want extra declarations,
+such as \gls{large}, you will need the leading backslashes.
+
+\FloatFig{fig:news30}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news30}}
+{Newspaper Example\dash Footer Style}
+
+Click on the \btn{flfwizard.next} button to
+move onto the \dialog{flfwizard.dimensions} panel.
+Click on the \widget{flfwizard.dimensions.compute_sym_x_shift}
+button to calculate the horizontal shift for even pages
+(see \figureref{fig:news31}).
+
+\FloatFig{fig:news31}
+[\setkeys{Gin}{scale=0.5}]
+{\includeimg{news31}}
+{Newspaper Example\dash Footer Paddings and Offsets}
+
+The text on the \btn{flfwizard.next} should now be
+\widget{flfwizard.finish.title}. Click on it to finish.
+You will be asked if you want to start over with another object. 
+Click \qt{No} to close the dialog.
 
 \item Save the image as \filefmt{newspaper.jdr} and then select the
 \menu{file.export} menu item. Select the
-\widget{filter.cls} filter, and save as
-\filefmt{newspaper.cls}.
+\widget{export.cls} button, and save as \filefmt{newspaper.cls}.
 
 \item Use your favourite text editor to create a file called
 \filefmt{news.tex} that looks like:
-\begin{verbatim}
-\documentclass{newspaper}
-
-\begin{document}
-% set the paragraph shape
-\input{sheepcutout}
-% suppress paragraph indentation
-\noindent
+\begin{codebox}
+\cmd{documentclass}\marg{newspaper}
+\codepar
+\cbeg{document}
+\comment{set the paragraph shape}
+\gls{input}\marg{sheepcutout}
+\comment{suppress paragraph indentation}
+\cmd{noindent}
 There was much celebration yesterday morning when Little Bo
 Peep's sheep finally returned home. They had been missing
 for more than a week.
-
+\codepar
 ``I just didn't know where to find them,'' the shepherdess
 stated, ``but I was told to leave them alone and they'd come
 home.''
-
-% lots of text omitted
-\end{document}
-\end{verbatim}
+\codepar
+\comment{lots of text omitted}
+\cend{document}
+\end{codebox}
 This file is also available in the \filefmt{examples} subdirectory
 of \FlowframTk's installation directory.
 
-\item The included \gls{bitmap} images are PNG files, which means that if you
-are using a \LaTeX\ engine with the DVI output format, you will have to convert them
-to Encapsulated Postscript (EPS). It's easier to simply use
-\pdfLaTeX. Compile \filefmt{news.tex}:
-\begin{verbatim}
+\item Compile \filefmt{news.tex}:
+\begin{terminal}
 pdflatex news
-\end{verbatim}
+\end{terminal}
 The resulting document is shown in \figureref{fig:news25}.
 
 \FloatFig{fig:news25}
@@ -15060,18 +15141,18 @@ image, and I'm only using normal sized text in my paragraphs with no
 displayed material, so I don't need to worry about it. However, if I
 had exported to a package, for example \filefmt{newspaper.sty}, which was then
 included in the document using:
-\begin{verbatim}
-\documentclass[twoside,12pt]{article}
-\usepackage{newspaper}
-
-\begin{document}
-% set the paragraph shape
-\input{sheepcutout}
-% suppress paragraph indentation
-\noindent
+\begin{codebox}
+\cmd{documentclass}[twoside,12pt]\marg{article}
+\cmd{usepackage}\marg{newspaper}
+\codepar
+\cbeg{document}
+\comment{set the paragraph shape}
+\gls{input}\marg{sheepcutout}
+\comment{suppress paragraph indentation}
+\cmd{noindent}
 There was much celebration yesterday morning when Little Bo
-% etc
-\end{verbatim}
+\comment{etc}
+\end{codebox}
 Then the paragraph shape will go wrong if the document normal size
 doesn't match the image's normal size setting (see
 \figureref{fig:news26}).
