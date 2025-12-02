@@ -13605,7 +13605,11 @@ you can get brown from 40\% Red, 8\% Green and 0\% Blue.
 Alternatively, click on the closest \manmsg{colour} button
 or use the \btn{choose_colour} button to open the
 \dialog{choose_colour} dialog. Create the
-rectangle shown in \figureref{fig:lettuce1}.
+rectangle shown in \figureref{fig:lettuce1}: switch to the
+\tool{rectangle}, \gls{click} at the co-ordinate 
+(100\gls{bp},150\gls{bp}),
+move the mouse to co-ordinate (250\gls{bp},300\gls{bp}) 
+and \gls{click} to complete.
 
 \FloatFig
 {fig:lettuce1}
@@ -13624,6 +13628,11 @@ Select the top segment (by clicking on the segment's start
 \gls{controlpt} or cycle round with \accelerator{editpath.next_control} until
 the segment is selected). The segment will then be highlighted in red
 (\figureref{fig:lettuce2b}).
+
+\begin{information}
+If you created the rectangle by starting at a different corner, the
+\glspl{controlpt} will be in a different order.
+\end{information}
 
 \FloatSubFigs{fig:lettuce2}
 [\setkeys{Gin}{width=0.4\linewidth}]
@@ -13653,13 +13662,24 @@ a curve:
 
 \item The segment now has two extra
 \glspl{controlpt}, these need to be moved
-to change the curvature (\figureref{fig:lettuce4a}). Deselect
-the edit path tool (\menu{edit.path.edit} or
-\accelerator{menu.edit.path.edit}) to exit
-the \editpathmode\ (\figureref{fig:lettuce4b}). Note that if
-you have the \gridlock\ enabled, you may find it easier to
+to change the curvature (\figureref{fig:lettuce4a}).
+I've moved them to (220\gls{bp},90\gls{bp}) and
+(130\gls{bp},90\gls{bp})
+
+\begin{information}
+Click on a \gls{controlpt} to select it. Make sure that it has
+changed \manmsg{colour} to indicate that it has been selected
+before you start dragging or you will end up moving the wrong \gls{controlpt}.
+\end{information}
+
+If you have the \gridlock\ enabled, you may find it easier to
 temporarily disable it while you are editing the curvature control
-points.
+points or use the \dialog{segmentinfo} dialog, which can be opened with
+\menu{editpath.info}.
+
+Deselect the edit path tool (\menu{edit.path.edit} or
+\accelerator{menu.edit.path.edit}) to exit
+the \editpathmode\ (\figureref{fig:lettuce4b}).
 
 \FloatSubFigs{fig:lettuce4}
 [\setkeys{Gin}{width=0.4\linewidth}]
@@ -13768,6 +13788,7 @@ Make a rectangle, as illustrated in \figureref{fig:cheese1}.
 
 \item Now \select\ all the ellipses
 you created in the previous step and the yellow rectangle
+either with the mouse or with \accelerator{navigate.add_next}
 (\figureref{fig:cheese3a}) and 
 merge them (\sectionref{sec:mergepaths}) using the
 \menu{transform.merge} menu item (\figureref{fig:cheese3b}).
@@ -13810,6 +13831,16 @@ in a \LaTeX\ document, as then you can use maths fonts.
 \widget{clssettings.normalsize} value is set to 10 in the
 \dialog{clssettings} tab (\sectionref{sec:normalsize}).
 
+For this example, I have the storage unit set to mm and the major
+grid unit to cm with 4 subdivisions. The storage unit can be set
+in the \dialog{controls} panel of the \dialog{config} dialog
+(which can be opened with the \menu{settings.config} menu item).
+Alternatively, you can double-click on the unit in the
+\gls{statusbar}. The grid can be set with \dialog{grid} dialog,
+which can either be opened with the \menu{settings.grid.settings}
+menu item or by double-clicking on the grid unit in the top left
+corner between the \glspl{ruler}.
+
 \item Select the \tool{rectangle} (\sectionref{sec:rectangles}),
 and create a rectangle, as shown in \figureref{fig:neuron1}.
 
@@ -13831,6 +13862,8 @@ segment (\figureref{fig:neuron3a}).  Then use switch to
 \editpathmode\ to adjust the curvature, as shown in
 \figureref{fig:neuron3b}. 
 
+Make sure that the \gls{controlpt} is selected before you start to
+drag it with the mouse or you may end up moving the wrong \gls{controlpt}.
 If you have enabled the \gridlock, you may find it easier to disable
 it while you are editing the curvature \glspl{controlpt}. If you
 have trouble selecting a \gls{controlpt}, try cycling round with
@@ -13907,6 +13940,14 @@ Unicode subscripts have been converted to \glssymbol{underscore}\code{1} etc. Yo
 see the \LaTeX\ alternative text if you select the \gls{textarea}
 and use \menu{edit.textarea.edit}. This will open up the
 \dialog{edittext} dialog box shown in \figureref{fig:neuron6}.
+
+If the \texttool\ had been used instead of the \mathstool, then
+the \mathsmode\ mappings would not be applied and the \LaTeX\ text
+will include the Unicode subscript characters. If this has happened,
+make sure that the \widget{edittext.different} button is selected
+and type in the appropriate \LaTeX\ code or insert \glssymbol{mshift}
+at the start and end of the alternative \LaTeX\ text and click on
+the \widget{edittext.remap} button.
 
 \FloatFig{fig:neuron6}
 [\setkeys{Gin}{width=0.4\linewidth}]
@@ -14099,7 +14140,7 @@ disable the \gridlock\ while you edit the path.)
  [][\setkeys{Gin}{width=\linewidth}]
 {fig:bus6}
 {\includeimg{bus6}}
-{Bus Example\dash Convert Line Segment to a Curve}
+{Bus Example\dash Convert Line Segment to a Curve and Combine Paths}
 [
    \item Add the windows, as shown in \figureref{fig:bus7}.
 ]
@@ -14132,27 +14173,27 @@ appear. Give the file a name (for example \filefmt{busshape.tex}).
 
 \item If you are using \LaTeX, create a document that looks something
 like:
-\begin{verbatim}
-\documentclass{article}
-\usepackage{shapepar}
-\begin{document}
-\input{busshape}\frenchspacing
+\begin{codebox}
+\cmd{documentclass}\marg{article}
+\cmd{usepackage}\marg{shapepar}
+\cbeg{document}
+\gls{input}\marg{busshape}\cmd{frenchspacing}
 The wheels on the bus go round and round...
-
-\end{document}
-\end{verbatim}
+\codepar
+\cend{document}
+\end{codebox}
 
 \item If you are using plain \TeX, create a document that looks
 something like:
-\begin{verbatim}
-\input shapepar.sty
-
-\input busshape.tex
-\frenchspacing
+\begin{codebox}
+\gls{input} shapepar.sty
+\codepar
+\gls{input} busshape.tex
+\cmd{frenchspacing}
 The wheels on the bus go round and round...
-
-\bye
-\end{verbatim}
+\codepar
+\cmd{bye}
+\end{codebox}
 
 \item The resulting shaped paragraph is shown in \figureref{fig:bus9}.
 
@@ -14189,7 +14230,7 @@ in warnings from the \sty{flowfram} package.
 I used 1in margins. You should now see the typeblock appear
 as a light \manmsg{grey} rectangle on the page. (Note that you can not
 select or move the \gls{typeblock}, you can only modify it using the
-\menu{tex.flowframe.set_typeblock} dialog box.)
+\dialog{typeblock} dialog box or the \dialog{flfwizard}.)
 See \figureref{fig:poster1}.
 
 \FloatFig{fig:poster1}
@@ -14241,12 +14282,15 @@ Select the bottom right hand rectangles (green) and group them.
 Select the middle right hand rectangles (magenta) and group them.
 
 \item Select the top group, and select the
-\menu{tex.flowframe.set_frame} menu item. This will
-open up the \dialog{flowframe} dialog box shown in \figureref{fig:poster5}.
-Set the type to \widget{flowframe.static}, and call it \qt{title}. Set the
-margins as desired. (I used 0.1in for all the margins, but you
-may want to use different values to ensure that the logo is inside
-the margins so that the frame's text doesn't overlap the image.)
+\menu{tex.flowframe.set_frame} menu item. This will open up the
+\dialog{flowframe} dialog box shown in \figureref{fig:poster5}.  Set
+the type to \widget{flowframe.static}, and call it \qt{title}.
+Unselect the \widget{flowframe.margins.none} checkbox to show the
+inner padding fields and set them as desired.  I used 0.1in for all
+the margins. You could increase the left inner padding to avoid the
+\gls{bitmap} but this would affect the \manmsg{centre} alignment
+that will be applied to the title.  (The alignment is relative to
+the inner area not to the border.)
 
 \FloatFig{fig:poster5}
 [\setkeys{Gin}{width=0.5\textwidth}]
@@ -14290,24 +14334,29 @@ margins (0.2in) to compensate for the double border
 
 Again use the mini \TeX\ editor to set the contents. The \qt{figure}
 frame's contents are:
-\begin{verbatim}
-\begin{staticfigure}
-\centering
+\begin{compactcodebox}
+\cbeg{staticfigure}
+\cmd{centering}
 Insert figure here!
-\caption{A Sample Figure}
-\label{fig:sample}
-\end{staticfigure}
-\end{verbatim}
+\cmd{caption}\marg{A Sample Figure}
+\cmd{label}\marg{fig:sample}
+\cend{staticfigure}
+\end{compactcodebox}%
 The \qt{table} frame's contents are:
-\begin{verbatim}
-\begin{statictable}
-\caption{A Sample Table}
-\label{tab:sample}
-\centering
+\begin{compactcodebox}
+\cbeg{statictable}
+\cmd{caption}\marg{A Sample Table}
+\cmd{label}\marg{tab:sample}
+\cmd{centering}
 Insert table here!
-\par
-\end{statictable}
-\end{verbatim}
+\cmd{par}
+\cend{statictable}
+\end{compactcodebox}%
+The frame contents are shown on the \gls{canvas}. (This is
+configurable, see \sectionref{sec:annotations}.) Bear in mind that
+this is just the \LaTeX\ code and is not formatted but simply shown
+ragged right in a monospaced font within the bounds marking the
+inner padding.
 
 \FloatFig{fig:poster6}
 [\setkeys{Gin}{width=0.8\textwidth}]
@@ -14318,30 +14367,48 @@ Insert table here!
 panel, or use the \menu{tex.set_preamble} menu item to
 show the \gls{preamble} panel. In the \widget{texeditor.latexcodeblock.earlypreamble}
 tab, add the following:
-\begin{codebox}
+\begin{compactcodebox}
 \gls{RequirePackage}\oarg{utf8}\marg{inputenc}
 \gls{RequirePackage}\oarg{T1}\marg{fontenc}
 \gls{RequirePackage}\marg{lmodern}
-\end{codebox}
+\end{compactcodebox}
 as shown in \figureref{fig:posterpreamble}. (You can use
 \gls{usepackage} instead of \gls{RequirePackage}. Any
 instances of \gls{usepackage} will automatically be converted to
 \gls{RequirePackage} if the image is exported to a class or
-package.)
+package.) With modern \LaTeX\ kernels, UTF-8 is now the default, so
+the first line may be omitted.
 
 \FloatFig{fig:posterpreamble}
 [\setkeys{Gin}{width=0.8\textwidth}]
 {\includeimg{posterpreamble}}
 {Poster Example\dash Adding Preamble Information}
 
+If you want to quickly check how the layout will look, use
+\menu{file.export} and select the \widget{export.flfpdf} button.
+This will create a temporary file and use \pdfLaTeX\ to compile it.
+As no document body has been set, empty content will be inserted to
+create a page. In \figureref{fig:poster-flfpdfexport}, I've change
+the processor to use \app{latexmk} instead of \pdfLaTeX. This is
+useful if multiple runs are required, but make sure to add the
+\code{-pdf} switch in the command line options.
+You may omit this step and just move onto the next one.
+
+\FloatFig{fig:poster-flfpdfexport}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster-flfpdfexport}}
+{Poster Example\dash Export to PDF Document}
+
+
 \item Use the \menu{file.export} menu item to create
-a new \LaTeX\ package or class that defines these frames. Remember to
-select the \widget{filter.sty} file filter.
-I called my file \filefmt{poster.sty} (\figureref{fig:poster7}) which
-will create a package rather than a class.
+a new \LaTeX\ package or class that defines these frames. To create
+a package, select the \widget{export.sty} button. To create a class,
+select the \widget{export.cls} button. In this example, 
+I've selected \widget{export.sty} to create a package.
+I called my file \filefmt{poster.sty} (\figureref{fig:poster7}).
 
 \FloatFig{fig:poster7}
-[\setkeys{Gin}{width=0.5\textwidth}]
+[\setkeys{Gin}{width=0.8\textwidth}]
 {\includeimg{poster7}}
 {Poster Example\dash Export Frame Information to a \LaTeX{} Package}
 
@@ -14353,41 +14420,41 @@ class file. If you use a larger size (for example, A0), it would be more
 appropriate to use the \cls{a0poster} class file.
 
 I created the following file called \filefmt{poster.tex}:
-\begin{verbatim}
-\documentclass{article}
-
-% use new package created in this example:
-\usepackage{poster}
-
-\begin{document}
-
+\begin{codebox}
+\cmd{documentclass}\marg{article}
+\codepar
+\comment{use new package created in this example:}
+\cmd{usepackage}\marg{poster}
+\codepar
+\cbeg{document}
+\codepar
 This is the main body of the poster. This text will
 appear in the first of the two flow frames. Once it
-has reached the end of the first flow frame, it will 
-then continue in the second flow frame.
-
-% Lots of text omitted
-
-\end{document}
-\end{verbatim}
+has reached the end of the first flow frame, it 
+will then continue in the second flow frame.
+\codepar
+\comment{Lots of text omitted}
+\codepar
+\cend{document}
+\end{codebox}
 
 Now suppose I've exported to a class by using the
-\widget{filter.cls} filter in the export dialog. Then the start of my
+\widget{export.cls} button in the export dialog. Then the start of my
 \filefmt{poster.tex} file just uses this class:
-\begin{verbatim}
-% use new class created with this example:
-\documentclass{poster}
-
-\begin{document}
+\begin{codebox}
+\comment{use new class created with this example:}
+\cmd{documentclass}\marg{poster}
+\codepar
+\cbeg{document}
 This is the main body of the poster. This text will
 appear in the first of the two flow frames. Once it
-has reached the end of the first flow frame, it will 
-then continue in the second flow frame.
-
-% Lots of text omitted
-
-\end{document}
-\end{verbatim}
+has reached the end of the first flow frame, it 
+will then continue in the second flow frame.
+\codepar
+\comment{Lots of text omitted}
+\codepar
+\cend{document}
+\end{codebox}
 This is actually more convenient than creating a package.
 
 \item To make the poster a PDF document, do:
@@ -14401,6 +14468,28 @@ The final document is illustrated in \figureref{fig:posterfinal}.
 [\setkeys{Gin}{width=\textwidth}]
 {\includeimg{posterfinal}}
 {Poster Example\dash Final Document}
+
+Another possibility is to put the document content into the 
+\widget{texeditor.latexcodeblock.document} tab, as shown in
+\figureref{fig:posterdoc}, and then use the \widget{export.flfpdf}
+export option. The resulting PDF is the same as shown in
+\figureref{fig:posterfinal}, provided that the \widget{processes.pdflatex}
+processor has been replaced with \app{latexmk}, as described
+earlier, since a second run is required to resolve the
+cross-references. Alternatively, you can use \app{arara} instead,
+but you will need to add the directives to the
+\widget{texeditor.latexcodeblock.magic_comments} tab, as shown in 
+\figureref{fig:poster-arara}.
+
+\FloatFig{fig:posterdoc}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{posterdoc}}
+{Poster Example\dash Adding Document Body}
+
+\FloatFig{fig:poster-arara}
+[\setkeys{Gin}{width=0.8\textwidth}]
+{\includeimg{poster-arara}}
+{Poster Example\dash Using Arara to Create PDF}
 
 \section{A Newspaper}\label{sec:newstutorial}
 
