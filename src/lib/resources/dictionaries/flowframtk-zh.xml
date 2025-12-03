@@ -3501,7 +3501,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="flfwizard.labelpages.frame_label.special_info">A dynamic frame with the label ''{0}'' is a special frame.</entry>
 
 
-<entry key="flfwizard.labelpages.pages.info">The flowfram.sty modifications to the output routine check each frame''s page list to determine if a frame is ''active'' for the current page. The page list may be ''none'' initially and later updated or you may use ''all'' for all pages, ''odd'' for only odd pages, ''even'' for only even pages, or a list or range such as''2-4'', ''&lt;5'', ''&gt;6'' or ''1,4,7,9-12,15''. The pages must be referenced by their integer number (not formatted style, such as i or ii). With the pages=absolute setting, the number is the absolute page number (not the value of the page counter). With the pages=relative setting the number is the value of the page counter.</entry>
+<entry key="flfwizard.labelpages.pages.info">The flowfram.sty modifications to the output routine check each frame''s page list to determine if a frame is ''active'' for the current page. The page list may be ''none'' initially and later updated or you may use ''all'' for all pages, ''odd'' for only odd pages, ''even'' for only even pages, or a list or range such as ''2-4'', ''&lt;5'', ''&gt;6'' or ''1,4,7,9-12,15''. The pages must be referenced by their integer number (not formatted style, such as i or ii). With the pages=absolute setting, the number is the absolute page number (not the value of the page counter). With the pages=relative setting the number is the value of the page counter.</entry>
 
 <entry key="flfwizard.labelpages.pagelist">Page List:</entry>
 <entry key="flfwizard.labelpages.pagelist.mnemonic">P</entry>

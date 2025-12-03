@@ -12362,7 +12362,7 @@ required in this case, as the label has already been set.
 Select the \widget{flfwizard.frametype.evenheader} button for a dynamic frame
 with the special \inlineglsdef{opt.frame-label.evenheader} label. 
 If the document is two-sided this frame will be used instead of the
-\qtt{header} frame. Using this button will not only fill in the
+\framelabelref{header} frame. Using this button will not only fill in the
 frame's label in the next panel but will also set the page list to
 \qt{Even}.
 
@@ -12667,7 +12667,7 @@ not 100\gls{bp}.
 
 For two-sided documents, the \widget{flfwizard.dimensions.even_x_shift}
 determines the frame's horizontal position on even pages.
-\FlowframTk\ uses this value to calculate the \qtt{evenx} attribute.
+\FlowframTk\ uses this value to calculate the \optfmt{evenx} attribute.
 
 \begin{information}
 The frame's location is relative to the bottom left corner of the
@@ -14580,7 +14580,7 @@ rectangle with opposing corners at (58pt,58pt) and
 \item Switch to the \tool{select}, and
 \select\ this rectangle. Use the \menu{tex.flowframe.set_frame} menu item
 to open the \dialog{flowframe} dialog and enter the values
-shown in \figureref{fig:news5a}: static type, label \qtt{title} and
+shown in \figureref{fig:news5a}: static type, label \qt{title} and
 no inner padding. The \widget{flowframe.border} field has been set to
 \widget{flowframe.border_none}.
 The frame contents should be the title.
@@ -14627,7 +14627,7 @@ You should now see something like \figureref{fig:news6}.
 
 \item Switch to the \tool{select}, and
 \select\ the left hand frame, and assign the \gls{flowframe} data shown in
-\figureref{fig:news7}: dynamic type, label \qtt{leftheading}, no
+\figureref{fig:news7}: dynamic type, label \qt{leftheading}, no
 border and no inner padding. The frame contents contains the section
 command:
 \begin{compactcodebox}
@@ -14670,7 +14670,7 @@ shown in \figureref{fig:news8}.
 
 \item Switch to the \tool{select}, and
 \select\ this L shaped polygon, and assigned the \gls{flowframe} data
-shown in \figureref{fig:news9}: dynamic type, label \qtt{lefttext},
+shown in \figureref{fig:news9}: dynamic type, label \qt{lefttext},
 and shape set to \widget{flowframe.shape_parshape}. The border is
 set to none but this field will be disabled as soon as the shape is
 changed as the border option is only available for the default
@@ -14693,24 +14693,27 @@ loose. He has so far devoured an old grandmother and
 two pig brothers. He is described as being furry with
 big eyes and big teeth.
 
-On Monday this week he broke into a house, and devoured
-an old lady. He then disguised himself as the old lady
-in order to deceive her granddaughter. Luckily for the little
-girl a woodsman arrived in time to rescue her. Parents are
-being cautioned not to let their children wander about on
-their own, and to remind them not to talk to strangers.
+On Monday this week he broke into a house, and 
+devoured an old lady. He then disguised himself as the
+old lady in order to deceive her granddaughter. 
+Luckily for the little girl a woodsman arrived in time 
+to rescue her. Parents are being cautioned not to let 
+their children wander about on their own, and to 
+remind them not to talk to strangers.
 
-The next day the wolf struck again, this time targeting two
-pig brothers who had most incautiously made their dwellings
-on the cheap using inadequate materials. The wolf also made
-an attempt on the third pig brother, but was unable to break
-into his house.
+The next day the wolf struck again, this time 
+targeting two pig brothers who had most incautiously 
+made their dwellings on the cheap using inadequate 
+materials. The wolf also made an attempt on the third 
+pig brother, but was unable to break into his house.
 
-Police are appealing to the public for witnesses, and remind
-people to keep their doors securely fastened at all times.
+Police are appealing to the public for witnesses, and 
+remind people to keep their doors securely fastened 
+at all times.
 
-``Always ask to see identification,'' said one police advisor,
-``and invest in improving the general security of your property.''
+``Always ask to see identification,'' said one police 
+advisor, ``and invest in improving the general 
+security of your property.''
 \end{verbatim}
 
 \FloatFig{fig:news9}
@@ -14748,7 +14751,7 @@ and a vertical (\widget{coordinates.y}) displacement of 206pt.
 {Newspaper Example\dash Added Image (Frame Contents Now Hidden)}
 
 \item Set the \gls{flowframe} data shown in \figureref{fig:news11} to
-this \gls{bitmap}: static type, label \qtt{eggimage}, and border
+this \gls{bitmap}: static type, label \qt{eggimage}, and border
 shown. No content is required for this frame.
 
 \begin{information}
@@ -14780,7 +14783,7 @@ polygon with vertices at:
 
 \item Switch to the \tool{select}, select
 this polygon and assign the \gls{flowframe} data shown in
-\figureref{fig:news13}: dynamic type, label \qtt{righttext}.
+\figureref{fig:news13}: dynamic type, label \qt{righttext}.
 The \widget{flowframe.shape} field has been set to
 \widget{flowframe.shape_parshape} (which automatically disables the
 \widget{flowframe.border} field) and the
@@ -14798,11 +14801,12 @@ that they were unable to help him.
 Humpty Dumpty was believed to be sitting on the wall 
 when he fell.  Police have ruled out foul play, but
 are advising people not to play on high walls, 
-particularly those vulnerable members of the population 
-suffering from eggshell syndrome.
+particularly those vulnerable members of the 
+population suffering from eggshell syndrome.
 
 \small\em
-Exclusive interview with one of the King's men on page 6.
+Exclusive interview with one of the King's men on 
+page 6.
 \end{verbatim}
 
 \FloatFig{fig:news13}
@@ -14825,7 +14829,7 @@ blocks to clearly delineate them. Switch to the
 
 \item Switch to the \tool{select}, \select\
 this new path and assign the \gls{flowframe} data shown in
-\figureref{fig:news15}: static type and label \qtt{Lbar}.  Make sure that you have set the
+\figureref{fig:news15}: static type and label \qt{Lbar}.  Make sure that you have set the
 \widget{flowframe.border} field to
 \widget{flowframe.border_as_shown}. Since this is decorative, the
 frame has no content.
@@ -14850,7 +14854,7 @@ in \figureref{fig:news16}.
 \item Switch to the \tool{select}, \select\
 this line (use \accelerator{navigate.skip} if you have difficulty
 selecting it with the mouse) and assign the \gls{flowframe} data shown in
-\figureref{fig:news17}: static type, label \qtt{hline} and border shown.
+\figureref{fig:news17}: static type, label \qt{hline} and border shown.
 
 \FloatFig{fig:news17}
 [\setkeys{Gin}{scale=0.5}]
@@ -14870,7 +14874,7 @@ and construct a rectangle with opposing corners at:
 
 \item Switch to the \tool{select}, \select\
 this rectangle, and assign the \gls{flowframe} data as shown in
-\figureref{fig:news19}: dynamic type, label \qtt{bottomheading}, no
+\figureref{fig:news19}: dynamic type, label \qt{bottomheading}, no
 border, and middle alignment. The frame contents is another sectioning
 command:
 \begin{verbatim}
@@ -14902,9 +14906,9 @@ Rectangles}
 
 \item Switch to the \tool{select}, select
 the left lower rectangle and assign the \gls{flowframe} data shown in
-\figureref{fig:news21}: flow type, label \qtt{left} and no border. 
+\figureref{fig:news21}: flow type, label \qt{left} and no border. 
 Similarly for the right hand lower rectangle: flow type, label
-\qtt{right} and no border.
+\qt{right} and no border.
 
 \FloatFig{fig:news21}
 [\setkeys{Gin}{scale=0.5}]
@@ -14929,7 +14933,7 @@ to the location shown in \figureref{fig:news22}.
 {Newspaper Example\dash Added Sheep Bitmap}
 
 \item Assign this \gls{bitmap} the \gls{flowframe} data shown in
-\figureref{fig:news23}: static type, label \qtt{sheepimage}, and
+\figureref{fig:news23}: static type, label \qt{sheepimage}, and
 border set to \widget{flowframe.border_as_shown}.
 
 \FloatFig{fig:news23}
@@ -15021,7 +15025,7 @@ should be selected on the \gls{canvas}, which you can double-check
 without having to close the \dialog{flfwizard}.
 
 \FloatFig{fig:news28}
-[\setkeys{Gin}{scale=0.5}]
+[\setkeys{Gin}{width=\linewidth}]
 {\includeimg{news28}}
 {Newspaper Example\dash Assigning the Footer Frame Data using the
 Wizard}
@@ -15032,7 +15036,7 @@ the text \widget{flfwizard.labelpages.title}. Click on it to move to
 the \dialog{flfwizard.labelpages} page, as shown in \figureref{fig:news29}.
 
 \FloatFig{fig:news29}
-[\setkeys{Gin}{scale=0.5}]
+[\setkeys{Gin}{width=\linewidth}]
 {\includeimg{news29}}
 {Newspaper Example\dash Footer Label and Pages}
 
@@ -15047,7 +15051,7 @@ leading backslash may be omitted. If you want extra declarations,
 such as \gls{large}, you will need the leading backslashes.
 
 \FloatFig{fig:news30}
-[\setkeys{Gin}{scale=0.5}]
+[\setkeys{Gin}{width=\linewidth}]
 {\includeimg{news30}}
 {Newspaper Example\dash Footer Style}
 
@@ -15058,7 +15062,7 @@ button to calculate the horizontal shift for even pages
 (see \figureref{fig:news31}).
 
 \FloatFig{fig:news31}
-[\setkeys{Gin}{scale=0.5}]
+[\setkeys{Gin}{width=\linewidth}]
 {\includeimg{news31}}
 {Newspaper Example\dash Footer Paddings and Offsets}
 
@@ -15081,13 +15085,13 @@ Click \qt{No} to close the dialog.
 \gls{input}\marg{sheepcutout}
 \comment{suppress paragraph indentation}
 \cmd{noindent}
-There was much celebration yesterday morning when Little Bo
-Peep's sheep finally returned home. They had been missing
-for more than a week.
+There was much celebration yesterday morning when 
+Little Bo Peep's sheep finally returned home. They 
+had been missing for more than a week.
 \codepar
-``I just didn't know where to find them,'' the shepherdess
-stated, ``but I was told to leave them alone and they'd come
-home.''
+``I just didn't know where to find them,'' the 
+shepherdess stated, ``but I was told to leave them 
+alone and they'd come home.''
 \codepar
 \comment{lots of text omitted}
 \cend{document}
