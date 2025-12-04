@@ -5064,11 +5064,18 @@ public class JDRCanvas extends JPanel
 
       CanvasGraphics cg = getCanvasGraphics();
 
-      Rectangle2D bounds = new Rectangle2D.Double(
-       typeblock.getLeft(), typeblock.getTop(),
-        cg.getStoragePaperWidth() - typeblock.getLeft() - typeblock.getRight(),
-        cg.getStoragePaperHeight() - typeblock.getTop() - typeblock.getBottom()
-       );
+      double x = typeblock.getLeft();
+      double y = typeblock.getTop();
+      double width = cg.getStoragePaperWidth() - x - typeblock.getRight();
+      double height = cg.getStoragePaperHeight() - y - typeblock.getBottom();
+
+      if (cg.isEvenPage())
+      {
+         x += typeblock.getEvenXShift();
+         y += typeblock.getEvenYShift();
+      }
+
+      Rectangle2D bounds = new Rectangle2D.Double(x, y, width, height);
 
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit = null;
@@ -17858,10 +17865,25 @@ public class JDRCanvas extends JPanel
          index_ = index;
          align_ = align;
 
+         CanvasGraphics cg = getCanvasGraphics();
+         double dx = 0.0;
+         double dy = 0.0;
+         FlowFrame flowframe = object.getFlowFrame();
+
+         if (flowframe != null && cg.isEvenPage())
+         {
+            FlowFrame typeblock = paths.getTypeblock();
+
+            dx = flowframe.getEvenXShift() + typeblock.getEvenXShift();
+            dy = flowframe.getEvenYShift() + typeblock.getEvenYShift();
+         }
+
+         BBox box = getRefreshBounds(object);
+
          switch (align_)
          {
             case LEFT :
-               object_.leftAlign(bounds.getX());
+               object_.leftAlign(bounds.getX() - dx);
                string_ = getResources().getMessage("undo."+tag+".left");
 
                if (getApplication().isAutoAnchorEnabled())
@@ -17875,7 +17897,7 @@ public class JDRCanvas extends JPanel
                }
             break;
             case CENTRE :
-               object_.centreAlign(bounds.getX() + 0.5*bounds.getWidth());
+               object_.centreAlign(bounds.getX() + 0.5*bounds.getWidth() - dx);
                string_ = getResources().getMessage("undo."+tag+".centre");
 
                if (getApplication().isAutoAnchorEnabled())
@@ -17889,7 +17911,7 @@ public class JDRCanvas extends JPanel
                }
             break;
             case RIGHT :
-               object_.rightAlign(bounds.getX() + bounds.getWidth());
+               object_.rightAlign(bounds.getX() + bounds.getWidth() - dx);
                string_ = getResources().getMessage("undo."+tag+".right");
 
                if (getApplication().isAutoAnchorEnabled())
@@ -17903,7 +17925,7 @@ public class JDRCanvas extends JPanel
                }
             break;
             case TOP :
-               object_.topAlign(bounds.getY());
+               object_.topAlign(bounds.getY() + dy);
                string_ = getResources().getMessage("undo."+tag+".top");
 
                if (getApplication().isAutoAnchorEnabled())
@@ -17917,7 +17939,7 @@ public class JDRCanvas extends JPanel
                }
             break;
             case MIDDLE :
-               object_.middleAlign(bounds.getY() + 0.5*bounds.getHeight());
+               object_.middleAlign(bounds.getY() + 0.5*bounds.getHeight() + dy);
                string_ = getResources().getMessage("undo."+tag+".middle");
 
                if (getApplication().isAutoAnchorEnabled())
@@ -17931,7 +17953,7 @@ public class JDRCanvas extends JPanel
                }
             break;
             case BOTTOM :
-               object_.bottomAlign(bounds.getY() + bounds.getHeight());
+               object_.bottomAlign(bounds.getY() + bounds.getHeight() + dy);
                string_ = getResources().getMessage("undo."+tag+".bottom");
 
                if (getApplication().isAutoAnchorEnabled())
@@ -17948,11 +17970,8 @@ public class JDRCanvas extends JPanel
 
          paths.set(index_, object_);
 
-         // The bounds of the aligned objects will be smaller
-         // than the original group bounds, so just set the
-         // refresh bounds to the region taken up by the original
-         // object.
-         setRefreshBounds(object);
+         mergeRefreshBounds(object_, box);
+         setRefreshBounds(box);
       }
 
       public void redo() throws CannotRedoException
