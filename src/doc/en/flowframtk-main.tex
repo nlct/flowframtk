@@ -14988,13 +14988,13 @@ This can be set by clicking on the \widget{flowframe.edit}
 button, which will open the mini \TeX\ editor, shown in
 \figureref{fig:news5b}.
 I typed in the following:
-\begin{compactcodebox}
+\begin{compactcodebox*}
 \cbeg{center}
-\cmd{bfseries}\cmd{Huge}
+\gls{bfseries}\gls{Huge}
 Fairy Tale Times
 \cend{center}
 \cmd{hfill} Issue 2. 7 December 2005.
-\end{compactcodebox}
+\end{compactcodebox*}
 
 \FloatSubFigs{fig:news5}
 [\setkeys{Gin}{width=0.45\textwidth}]
@@ -15742,9 +15742,9 @@ set the \widget{flowframe.pages} to
 \widget{flowframe.margins.right} and
 \widget{flowframe.margins.bottom} margins to 10\gls{pt}.
 Set the \widget{flowframe.style_cmds} to:
-\begin{compactcodebox}
+\begin{compactcodebox*}
 \gls{bfseries}\cmd{color}\marg{white}\gls{Huge}
-\end{compactcodebox}%
+\end{compactcodebox*}%
 as shown in \figureref{fig:brochure11}.
 
 \begin{information}
@@ -16006,7 +16006,7 @@ using either \accelerator{tools.rectangle} or
 \item The rectangle forming the main part of the house will go from
 (100bp, 100bp) to (250bp, 200bp). To move the mouse either press
 \accelerator{navigate.goto} or use the menu mnemonic 
-\mnemonictrail{navigate}{goto}.
+\mnemonictrail{navigate.goto}.
 This will open up the \dialog{goto} dialog box shown in
 \figureref{fig:housenomouse}. Set the \widget{coordinates.x} field
 to 100bp and the \widget{coordinates.y} field to 100bp.  (You can
@@ -16028,8 +16028,8 @@ box. Set the \widget{coordinates.x} field to 250bp and the
 \widget{coordinates.y} field to 200bp. Then press
 \keys{\keyref{return}} or \accelerator{okay}.
 
-\item To complete the rectangle, press either \keys{\keyref{return}} or 
-\accelerator{tools.finish}.
+\item To complete the rectangle, press \accelerator{tools.finish}
+or use \mnemonictrail{tools.finish}.
 (See \figureref{fig:housenomouse1}.)
 
 \FloatFig{fig:housenomouse1}
