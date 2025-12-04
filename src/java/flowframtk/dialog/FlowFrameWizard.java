@@ -390,6 +390,8 @@ public class FlowFrameWizard extends JDialog
       selectedObjectLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
       comp.add(selectedObjectLabel);
 
+      dupTag = " " + resources.getMessage("label.duplicate");
+
       ButtonGroup bg = new ButtonGroup();
 
       flowBox = createRadioButton("flfwizard.frametype", "flow", bg, true);
@@ -1116,6 +1118,32 @@ public class FlowFrameWizard extends JDialog
 
          FlowFrame flowframe = selectedObject.getFlowFrame();
          boolean enableSpecial = (flowframe == null);
+
+         if (flowframe != null && flowframe.getType() == FlowFrame.DYNAMIC
+               && flowframe.getLabel().endsWith(dupTag))
+         {
+            enableSpecial = true;
+
+            String label = flowframe.getLabel();
+            String prefix = label.substring(0, label.length() - dupTag.length());
+
+            if (prefix.equals("header") && !hasEvenHeader)
+            {
+               evenHeaderBox.setSelected(true);
+            }
+            else if (prefix.equals("footer") && !hasEvenFooter)
+            {
+               evenFooterBox.setSelected(true);
+            }
+            else if (prefix.startsWith("thumbtabindex"))
+            {
+               evenThumbtabIndexBox.setSelected(true);
+            }
+            else if (prefix.startsWith("thumbtab"))
+            {
+               evenThumbtabBox.setSelected(true);
+            }
+         }
 
          if (enableSpecial)
          {
@@ -1983,6 +2011,8 @@ public class FlowFrameWizard extends JDialog
 
    MarginPanel margins;
    LengthPanel evenXShiftLength, evenYShiftLength;
+
+   String dupTag;
 
    public static final int INFO_MAX_COLS=60;
 
