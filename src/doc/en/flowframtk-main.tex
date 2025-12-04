@@ -13123,6 +13123,22 @@ respectively, provided by \gls{setdynamicframe} and
 \gls{setstaticframe}. This facility is not available for flow
 frames.
 
+\widgetdef{flowframe.style_cmds}
+The \widget{flowframe.style_cmds} setting is only available for
+dynamic frames. The \sty{flowfram} package only allows a control
+sequence name (such as \qtt{textbf} or \qtt{bfseries}) for the style
+attribute.  \FlowframTk\ allows either a control sequence name or
+one or more declarations. These can be entered into the
+\widget{flowframe.style_cmds} field (which will be trimmed).
+The final command may be a text-block command (such as \gls{textbf})
+but in general declarations (such as \gls{bfseries}) work better.
+
+If \FlowframTk\ detects one or more backslash in the \widget{flowframe.style_cmds}
+field it will create a command (via \sty{flowframtkutils}) in the
+exported file whose name can be used for the
+\optfmt{style} attribute. Otherwise it will assume the supplied
+value (if not empty) is a control sequence name.
+
 \widgetdef{flowframe.compute_sym_x_shift}
 
 By default, the frame location on even pages is the same
@@ -14877,9 +14893,9 @@ this rectangle, and assign the \gls{flowframe} data as shown in
 \figureref{fig:news19}: dynamic type, label \qt{bottomheading}, no
 border, and middle alignment. The frame contents is another sectioning
 command:
-\begin{verbatim}
-\section{Relief as Missing Sheep Finally Return Home}
-\end{verbatim}
+\begin{compactcodebox}
+\cmd{section}\marg{Relief as Missing Sheep Finally Return Home}
+\end{compactcodebox}
 
 \FloatFig{fig:news19}
 [\setkeys{Gin}{scale=0.5}]
@@ -15185,10 +15201,17 @@ This example illustrates how to use \FlowframTk\ to create a
 class that loads the \sty{flowfram} package. The aim is to
 produce a two-sided document with different \gls{recto} and
 \gls{verso} headers and footers.
+I've use the \dialog{typeblock} and \dialog{flowframe} dialog boxes,
+but you may prefer to use the \dialog{flfwizard} instead.
 
 \begin{enumerate}
 \item For this example I'm going to start with the
-\gls{grid.tschichold} grid.  Use \menu{settings.grid.settings} to
+\gls{grid.tschichold} grid on A4 portrait paper.  
+To set the paper size and orientation, use the \menu{settings.paper}
+sub-menu.
+
+To set the grid, use \menu{settings.grid.settings} or double-click
+on the grid unit in the top left corner between the \glspl{ruler} to
 open the \gls{grid} dialog box. Select the \widget{grid.tschichold}
 tab and set the \widget{grid.major} to 100\gls{pt}, as shown in
 \figureref{fig:brochure1}. Make sure that the \gridlock\ is on
@@ -15210,8 +15233,10 @@ tab and set the \widget{grid.major} to 100\gls{pt}, as shown in
 {\includeimg{brochure2}}
 {Brochure Example\dash Setting the Normal Font Size}
 
-\item Set the image \gls{storageunit} to \gls{pt} using
-\menu{settings.config} dialog box, as shown in
+\item Either use \menu{settings.config} to open the
+\dialog{config} dialog (and select the \dialog{controls} tab) 
+or double-click on the storage unit in the \gls{statusbar}.
+Set the image \gls{storageunit} to \gls{pt}, as shown in
 \figureref{fig:brochure3}
 
 \FloatFig{fig:brochure3}
@@ -15295,7 +15320,10 @@ segments, and move the control at (400,800) to (400,700). The
 
 \item Exit the \editpathmode\ and move the \gls*{path} to the bottom
 right edge of the \gls{canvas}, as shown in
-\figureref{fig:brochure9}.
+\figureref{fig:brochure9}. You can move the \gls*{path} with the
+mouse or via \menu{edit.moveby} or use
+\menu{transform.align_to_page.right} and
+\menu{transform.align_to_page.bottom}.
 
 \FloatFig{fig:brochure9}
 [\setkeys{Gin}{width=\linewidth}]
@@ -15329,25 +15357,21 @@ set the \widget{flowframe.pages} to
 \widget{flowframe.margins.top} margins to 40\gls{pt} and the
 \widget{flowframe.margins.right} and
 \widget{flowframe.margins.bottom} margins to 10\gls{pt}.
-Next, click on the \widget{flowframe.edit} button to open
-the mini \TeX\ editor and enter:
-\begin{verbatim}
-\bfseries\color{white}\Huge
-\end{verbatim}
-as shown in \figureref{fig:brochure11a}. Click on the
-\dgls{okay} button to close the editor and return to the
-\dialog{flowframe} dialog, which should now look like
-\figureref{fig:brochure11b}.
+Set the \widget{flowframe.style_cmds} to:
+\begin{compactcodebox}
+\gls{bfseries}\cmd{color}\marg{white}\gls{Huge}
+\end{compactcodebox}%
+as shown in \figureref{fig:brochure11}.
 
-\FloatSubFigs{fig:brochure11}
-{
-  {fig:brochure11a}{\includeimg{brochure11a}}{},
-  {fig:brochure11b}{\includeimg{brochure11b}}{}
-}
-[Brochure Example\dash Setting The Odd Footer]
-{Brochure Example\dash Setting the odd footer:
-\subfigref{fig:brochure11a} entering the frame contents;
-\subfigref{fig:brochure11b} the frame settings.}
+\begin{information}
+If you prefer to use the \dialog{flfwizard} dialog, select the
+\widget{flfwizard.frametype.footer} button and the label will
+automatically be filled.
+\end{information}
+
+\FloatFig{fig:brochure11}
+{\includeimg{brochure11}}
+{Brochure Example\dash Setting The Odd Footer}
 
 \item Click \dgls{okay} to apply the new settings and close the dialog. The
 image should now appear as shown in \figureref{fig:brochure12}.
@@ -15448,25 +15472,16 @@ again. Set the \widget{flowframe.type} to
 \widget{flowframe.border_as_shown}, set the \widget{flowframe.align}
 to \widget{flowframe.align_middle}, set the
 \widget{flowframe.margins.left} to 50\gls{pt} and set the remaining
-margins to 10\gls{pt}. Then click on the \widget{flowframe.edit}
-button to open the editor, and set the contents to:
-\begin{verbatim}
-\bfseries\Large
-\end{verbatim}
-as shown in \figureref{fig:brochure20a}. Click on the \dgls{okay} button
-to go close the editor and go back to the
-\dialog{flowframe} dialog, which should now look like
-\figureref{fig:brochure20b}.
+margins to 10\gls{pt}. Set the \widget{flowframe.style_cmds} field
+to:
+\begin{compactcodebox}
+\gls{bfseries}\gls{Large}
+\end{compactcodebox}%
+as shown in \figureref{fig:brochure20}.
 
-\FloatSubFigs{fig:brochure20}
-{
- {fig:brochure20a}{\includeimg{brochure20a}}{},
- {fig:brochure20b}{\includeimg{brochure20b}}{}
-}
+\FloatFigs{fig:brochure20}
+{\includeimg{brochure20}}
 [Brochure Example\dash Setting The Odd Header]
-{Brochure Example\dash Setting the odd header:
-\subfigref{fig:brochure20a} entering the frame contents;
-\subfigref{fig:brochure20b} the frame settings.}
 
 \item Click on the \dgls{okay} button to apply these settings and close the
 dialog. Keep the polygon selected and copy and paste it to create a
@@ -15522,25 +15537,25 @@ Odd Page Position)}
 \filefmt{brochure.ajr} using the \menu{file.save_as} menu
 item. Then use \menu{file.export} to open the
 \dialog{export} dialog. Select the
-\widget{filter.cls} filter and export the image as
+\widget{export.cls} button and export the image as
 \filefmt{brochure.cls}.
 
 \item Create a document that uses this new class. I've used the
 \sty{blindtext} package to generate pages of dummy text for
 illustrative purposes:
-\begin{verbatim}
-\documentclass[twoside]{brochure}
-
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{lmodern}
-
-\usepackage{blindtext}
-
-\begin{document}
-\Blinddocument
-\end{document}
-\end{verbatim}
+\begin{codebox}
+\cmd{documentclass}[twoside]\marg{brochure}
+\codepar
+\cmd{usepackage}[T1]\marg{fontenc}
+\cmd{usepackage}[utf8]\marg{inputenc}
+\cmd{usepackage}\marg{lmodern}
+\codepar
+\cmd{usepackage}\marg{blindtext}
+\codepar
+\cbeg{document}
+\cmd{Blinddocument}
+\cend{document}
+\end{codebox}
 
 A double-page spread view of the resulting document (pages~2 and 3)
 is shown in \figureref{fig:brochure-final}.
