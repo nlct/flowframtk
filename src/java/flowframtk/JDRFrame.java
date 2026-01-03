@@ -81,7 +81,7 @@ public class JDRFrame extends JInternalFrame
       latexCodeEditor = new LaTeXCodeEditor(this);
 
       canvas = new JDRCanvas(this, cg);
-      canvas.setTransferHandler(new JDRTransferHandler(cg));
+      canvas.setTransferHandler(new JDRTransferHandler(cg, getExportSettings()));
 
       int prefWidth = (int)getComponentPaperWidth();
       int prefHeight = (int)getComponentPaperHeight();
@@ -1902,10 +1902,10 @@ public class JDRFrame extends JInternalFrame
 
       if (clipData != null)
       {
-         if (clipData.isDataFlavorSupported(JDRTransferHandler.DATA_FLAVOR_JDR))
+         TransferHandler handler = canvas.getTransferHandler();
+
+         if (handler.importData(canvas, clipData))
          {
-            TransferHandler handler = canvas.getTransferHandler();
-            handler.importData(canvas, clipData);
             repaint();
          }
       }

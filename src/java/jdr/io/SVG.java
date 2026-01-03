@@ -53,7 +53,7 @@ public class SVG
       this.importSettings = importSettings;
    }
 
-   protected SVG(Path basePath, PrintWriter out, ExportSettings exportSettings)
+   protected SVG(Path basePath, Writer out, ExportSettings exportSettings)
    {
       this.exportSettings = exportSettings;
       this.basePath = basePath;
@@ -68,7 +68,7 @@ public class SVG
     * @param exportSettings export settings
     * @throws IOException if I/O error occurs
     */
-   public static void save(JDRGroup image, String title, PrintWriter out,
+   public static void save(JDRGroup image, String title, Writer out,
        ExportSettings exportSettings)
       throws IOException
    {
@@ -235,7 +235,7 @@ public class SVG
       return TeXJavaHelpLib.encodeAttributeValue(text, false);
    }
 
-   public void setWriter(PrintWriter writer)
+   public void setWriter(Writer writer)
    {
       this.writer = writer;
    }
@@ -293,19 +293,35 @@ public class SVG
    public void print(Object text)
       throws IOException
    {
-      writer.print(text);
+      writer.write(text.toString());
    }
 
    public void println(Object text)
       throws IOException
    {
-      writer.println(text);
+      if (writer instanceof PrintWriter)
+      {
+         ((PrintWriter)writer).println(text);
+      }
+      else
+      {
+         writer.write(String.format("%s%n", text));
+         writer.flush();
+      }
    }
 
    public void println()
       throws IOException
    {
-      writer.println();
+      if (writer instanceof PrintWriter)
+      {
+         ((PrintWriter)writer).println();
+      }
+      else
+      {
+         writer.write(String.format("%n"));
+         writer.flush();
+      }
    }
 
    public String transform(AffineTransform af)
@@ -344,7 +360,7 @@ public class SVG
       double xt = x;
       double yt = y;
 
-      writer.print(unit.svg(xt)+" "+unit.svg(yt)+" ");
+      print(unit.svg(xt)+" "+unit.svg(yt)+" ");
    }
 
    public void savePoint(Point2D p)
@@ -369,37 +385,37 @@ public class SVG
          switch (it.currentSegment(coords))
          {
             case PathIterator.SEG_CLOSE:
-               writer.print("Z ");
+               print("Z ");
             break;
             case PathIterator.SEG_CUBICTO:
-               writer.print("C ");
+               print("C ");
                savePoint(coords[0], coords[1]);
                savePoint(coords[2], coords[3]);
                savePoint(coords[4], coords[5]);
-               writer.println();
+               println();
             break;
             case PathIterator.SEG_MOVETO:
-               writer.print("M ");
+               print("M ");
                savePoint(coords[0], coords[1]);
-               writer.println();
+               println();
             break;
             case PathIterator.SEG_LINETO:
-               writer.print("L ");
+               print("L ");
                savePoint(coords[0], coords[1]);
-               writer.println();
+               println();
             break;
             case PathIterator.SEG_QUADTO:
-               writer.print("Q ");
+               print("Q ");
                savePoint(coords[0], coords[1]);
                savePoint(coords[2], coords[3]);
-               writer.println();
+               println();
             break;
          }
       }
    }
 
    private CanvasGraphics canvasGraphics;
-   private PrintWriter writer;
+   private Writer writer;
    private Path basePath;
    private ImportSettings importSettings;
    private ExportSettings exportSettings;
