@@ -644,21 +644,77 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       tex.println("\\end{pgfscope}");
    }
 
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      JDRPaint paint = getTextPaint();
+
+      paint.writeSVGdefs(svg);
+
+      if (isOutline && getFillPaint() != null)
+      {
+         getFillPaint().writeSVGdefs(svg);
+      }
+
+      getStroke().writeSVGdefs(svg, path_);
+   }
+
    public void saveSVG(SVG svg, String attr)
    throws IOException
    {
       JDRPaint paint = getTextPaint();
 
-      Shape shape = getStorageStrokedArea();
+      JDRTextPathStroke stroke = (JDRTextPathStroke)getStroke();
+      String id = stroke.getID();
 
-      svg.print("   <path "+attr+" d=\"");
+      if (isOutline
+            && svg.getExportSettings().textPathOutline
+                 == ExportSettings.TextPathOutline.TO_PATH)
+      {
+         Shape shape = getStorageStrokedArea();
 
-      svg.saveStoragePathData(shape);
+         svg.print("   <path "+attr+" d=\"");
 
-      svg.println(" \"");
+         svg.saveStoragePathData(shape);
 
-      svg.println("      "+getFillPaint().svgFill());
-      svg.println("   />");
+         svg.println(" \"");
+
+         svg.println("      "+paint.svgLine());
+
+         JDRPaint fillPaint = getFillPaint();
+
+         if (fillPaint != null)
+         {
+            svg.println("      "+fillPaint.svgFill());
+         }
+
+         svg.println("   >");
+
+         svg.print("<title>");
+         svg.print(svg.encodeContent(getText()));
+         svg.println("</title>");
+         svg.println("</path>");
+      }
+      else
+      {
+
+         svg.println("    <text "+attr+" "+paint.svgFill() + ">");
+
+         svg.println("      <textPath  xmlns:xlink=\"http://www.w3.org/1999/xlink\" href=\"#"+id+"\">");
+
+         if (description != null && !description.isEmpty())
+         {
+            svg.print("<title>");
+            svg.print(svg.encodeContent(description));
+            svg.println("</title>");
+         }
+
+         svg.println(svg.encodeContent(getText()));
+
+         svg.println("      </textPath>");
+
+         svg.println("    </text>");
+      }
    }
 
    public void saveEPS(PrintWriter out)

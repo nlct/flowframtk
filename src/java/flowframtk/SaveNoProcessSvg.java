@@ -41,7 +41,7 @@ public class SaveNoProcessSvg extends ExportImage
       try
       {
          out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
-         SVG.save(image, image.getDescription(), out);
+         SVG.save(image, image.getDescription(), out, exportSettings);
       }
       finally
       {

@@ -2083,7 +2083,7 @@ public class JDRConverter
       }
       else
       {
-         SVG.save(paths, paths.getDescription(), out);
+         SVG.save(paths, paths.getDescription(), out, exportSettings);
       }
    }
 

@@ -617,6 +617,8 @@ public abstract class JDRCompleteObject extends JDRObject
       }
    }
 
+   public abstract void writeSVGdefs(SVG svg) throws IOException;
+
    public void makeEqual(JDRObject object)
    {
       super.makeEqual(object);
@@ -991,6 +993,18 @@ public abstract class JDRCompleteObject extends JDRObject
    public int getIndex()
    {
       return index_;
+   }
+
+   public String getIndexPath()
+   {
+      if (parent == null)
+      {
+         return ""+index_;
+      }
+      else
+      {
+         return parent.getIndexPath() + "_" + index_;
+      }
    }
 
    public FlowFrame getTypeblock()

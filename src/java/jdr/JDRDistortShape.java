@@ -689,6 +689,12 @@ public class JDRDistortShape extends JDRCompleteObject
       }
    }
 
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      underlyingShape.writeSVGdefs(svg);
+   }
+
    public void savePgf(TeX tex)
      throws IOException
    {

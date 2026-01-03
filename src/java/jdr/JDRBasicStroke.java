@@ -1623,10 +1623,30 @@ public class JDRBasicStroke implements JDRStroke
     * @see #svgEndMarker(JDRPaint)
     * @see JDRMarker#svgDefs(SVG,JDRGroup)
     */
+   @Deprecated
    public static void svgDefs(SVG svg, JDRGroup group)
       throws IOException
    {
       JDRMarker.svgDefs(svg, group);
+   }
+
+   @Override
+   public void writeSVGdefs(SVG svg, JDRShape shape) throws IOException
+   {
+      JDRPaint linePaint = shape.getLinePaint();
+      JDRPaint fillPaint = shape.getFillPaint();
+
+      if (linePaint != null)
+      {
+         linePaint.writeSVGdefs(svg);
+      }
+
+      if (fillPaint != null)
+      {
+         fillPaint.writeSVGdefs(svg);
+      }
+
+      JDRMarker.writeSVGdefs(svg, linePaint, this);
    }
 
    /**

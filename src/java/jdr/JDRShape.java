@@ -1569,6 +1569,12 @@ public abstract class JDRShape extends JDRCompleteObject
       return n;
    }
 
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      getStroke().writeSVGdefs(svg, this);
+   }
+
    public double computeArea()
    {
       return computeArea(getGeneralPath());

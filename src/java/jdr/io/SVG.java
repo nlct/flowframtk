@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,11 +28,15 @@ import java.nio.file.Path;
 
 import java.awt.Shape;
 import java.awt.geom.*;
+
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Vector;
 
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.svg.*;
 
@@ -49,8 +53,9 @@ public class SVG
       this.importSettings = importSettings;
    }
 
-   protected SVG(Path basePath, PrintWriter out)
+   protected SVG(Path basePath, PrintWriter out, ExportSettings exportSettings)
    {
+      this.exportSettings = exportSettings;
       this.basePath = basePath;
       setWriter(out);
    }
@@ -60,13 +65,21 @@ public class SVG
     * @param image image to save
     * @param title image title
     * @param out output stream
+    * @param exportSettings export settings
     * @throws IOException if I/O error occurs
     */
-   public static void save(JDRGroup image, String title, PrintWriter out)
+   public static void save(JDRGroup image, String title, PrintWriter out,
+       ExportSettings exportSettings)
       throws IOException
    {
-      SVG svg = new SVG(null, out);
+      SVG svg = new SVG(null, out, exportSettings);
 
+      svg.save(image, title);
+   }
+
+   protected void save(JDRGroup image, String title)
+      throws IOException
+   {
       CanvasGraphics cg = image.getCanvasGraphics();
       JDRMessage msgSys = cg.getMessageSystem();
       MessageInfoPublisher publisher = msgSys.getPublisher();
@@ -80,56 +93,89 @@ public class SVG
          publisher.publishMessages(MessageInfo.createMaxProgress(image.size()));
       }
 
-      svg.setCanvasGraphics(cg);
+      setCanvasGraphics(cg);
 
-      BBox box = image.getStorageBBox();
+      double storagePaperHeight = cg.getStoragePaperHeight();
 
-      double storagePaperHeight = cg.bpToStorage(cg.getPaperHeight());
+      double imageWidth, imageHeight, minX, minY, maxX, maxY;
 
-      // transformation to convert from left handed
-      // co-ordinate system to right-hand co-ordinate system
+      switch (exportSettings.bounds)
+      {
+         case PAPER:
+           imageWidth = cg.getStoragePaperWidth();
+           imageHeight = storagePaperHeight;
+           minX = 0;
+           minY = 0;
+           maxX = imageWidth;
+           maxY = imageHeight;
+         break;
+         case TYPEBLOCK:
+           FlowFrame typeblock = image.getFlowFrame();
 
-      svg.setTransform(new AffineTransform(
-         1, 0, 0, -1, 0, storagePaperHeight));
+           if (typeblock != null)
+           {
+              minX = typeblock.getLeft();
+              minY = typeblock.getTop();
+              maxX = cg.getStoragePaperWidth() - typeblock.getRight();
+              maxY = storagePaperHeight - typeblock.getBottom();
 
+              imageWidth = maxX - minX;
+              imageHeight = maxY - minY;
 
-      out.println("<?xml version=\"1.0\" standalone=\"no\"?>");
-      out.println("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"");
-      out.println("         \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
-      out.println("<svg width=\""+svg.length(box.getWidth())+"\" height=\""
-         + svg.length(box.getHeight()) + "\"");
-      out.println("     viewBox=\""
-         + svg.length(box.getMinX()) + " " + svg.length(box.getMinY()) + " "
-         + svg.length(box.getMaxX()) + " " + svg.length(box.getMaxY())+"\"");
-//      out.println("     transform=\"scale(1.25,1.25)\"");
-      out.println("     version=\"1.1\"");
-      out.println("     xmlns=\"http://www.w3.org/2000/svg\"");
-      out.println("     xmlns:xlink=\"http://www.w3.org/1999/xlink\">");
-      out.println("   <title>"+title+"</title>");
+              break;
+           }
+
+         case IMAGE:
+           BBox box = image.getStorageBBox();
+           imageWidth = box.getWidth();
+           imageHeight = box.getHeight();
+           minX = box.getMinX();
+           minY = box.getMinY();
+           maxX = box.getMaxX();
+           maxY = box.getMaxY();
+         break;
+         default:
+           throw new AssertionError(exportSettings.bounds);
+      }
+
+      println("<?xml version=\"1.0\" standalone=\"no\"?>");
+      println("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"");
+      println("         \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
+      println("<svg width=\""+length(imageWidth)+"\" height=\""
+         + length(imageHeight) + "\"");
+      println("     viewBox=\""
+         + length(minX) + " " + length(minY) + " "
+         + length(maxX) + " " + length(maxY)+"\"");
+      println("     version=\"1.1\"");
+      println("     xmlns=\"http://www.w3.org/2000/svg\"");
+      println("     xmlns:xlink=\"http://www.w3.org/1999/xlink\">");
+
+      if (title != null && !title.isEmpty())
+      {
+         println("   <title>"+encodeContent(title)+"</title>");
+      }
 
       String desc = image.getDescription();
 
-      if (!desc.equals(""))
+      if (desc != null && !desc.isEmpty())
       {
-         out.println("   <desc>"+desc+"</desc>");
+         println("   <title>"+encodeContent(desc)+"</title>");
       }
 
-      out.println("   <defs>");
+      referenceIDs = null;
 
-      JDRBasicStroke.svgDefs(svg, image);
-      JDRGradient.svgDefs(svg, image);
-      JDRRadial.svgDefs(svg, image);
-
-      out.println("   </defs>");
+      println("   <defs>");
+      image.writeSVGdefs(this);
+      println("   </defs>");
 
       for (int i = 0; i < image.size(); i++)
       {
          publisher.publishMessages(MessageInfo.createIncProgress());
 
-         image.get(i).saveSVG(svg);
+         image.get(i).saveSVG(this);
       }
 
-      out.println("</svg>");
+      println("</svg>");
    }
 
    public static JDRGroup load(CanvasGraphics cg, File file,
@@ -179,14 +225,14 @@ public class SVG
       return group;
    }
 
-   public AffineTransform getTransform()
+   public static String encodeContent(String text)
    {
-      return affineTransform;
+      return TeXJavaHelpLib.encodeHTML(text, false);
    }
 
-   public void setTransform(AffineTransform af)
+   public static String encodeAttributeValue(String text)
    {
-      affineTransform = af;
+      return TeXJavaHelpLib.encodeAttributeValue(text, false);
    }
 
    public void setWriter(PrintWriter writer)
@@ -209,6 +255,11 @@ public class SVG
       return canvasGraphics;
    }
 
+   public ExportSettings getExportSettings()
+   {
+      return exportSettings;
+   }
+
    public Path relativize(String filename)
    {
       Path path = (new File(filename)).toPath();
@@ -219,6 +270,24 @@ public class SVG
       }
 
       return basePath.relativize(path).normalize();
+   }
+
+   public boolean addReferenceID(String id)
+   {
+      if (referenceIDs == null)
+      {
+         referenceIDs = new Vector<String>();
+      }
+
+      if (referenceIDs.contains(id))
+      {
+         return false;
+      }
+      else
+      {
+         referenceIDs.add(id);
+         return true;
+      }
    }
 
    public void print(Object text)
@@ -243,16 +312,16 @@ public class SVG
    {
       return "transform=\"matrix("+af.getScaleX()+","
              + af.getShearY()+","+af.getShearX()+","
-             + af.getScaleY()+","+af.getTranslateX()+","
-             + af.getTranslateY()+")\"";
+             + af.getScaleY()+","+length(af.getTranslateX())+","
+             + length(af.getTranslateY())+")\"";
    }
 
    public String transform(double[] matrix)
    {
       return "transform=\"matrix("+matrix[0]+","
              + matrix[1]+","+matrix[2]+","
-             + matrix[3]+","+matrix[4]+","
-             + matrix[5]+")\"";
+             + matrix[3]+","+length(matrix[4])+","
+             + length(matrix[5])+")\"";
    }
 
    public static String length(JDRLength length)
@@ -275,16 +344,6 @@ public class SVG
       double xt = x;
       double yt = y;
 
-      if (affineTransform != null)
-      {
-         xt = affineTransform.getScaleX()*x
-            + affineTransform.getShearX()*y
-            + affineTransform.getTranslateX();
-         yt = affineTransform.getShearY()*x
-            + affineTransform.getScaleY()*y
-            + affineTransform.getTranslateY();
-      }
-
       writer.print(unit.svg(xt)+" "+unit.svg(yt)+" ");
    }
 
@@ -297,7 +356,12 @@ public class SVG
    public void saveStoragePathData(Shape shape)
      throws IOException
    {
-      PathIterator it = shape.getPathIterator(null);
+      saveStoragePathData(shape.getPathIterator(null));
+   }
+
+   public void saveStoragePathData(PathIterator it)
+     throws IOException
+   {
       double[] coords = new double[6];
 
       for (; !it.isDone(); it.next())
@@ -335,8 +399,10 @@ public class SVG
    }
 
    private CanvasGraphics canvasGraphics;
-   private AffineTransform affineTransform;
    private PrintWriter writer;
    private Path basePath;
    private ImportSettings importSettings;
+   private ExportSettings exportSettings;
+
+   private Vector<String> referenceIDs;
 }

@@ -2168,6 +2168,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * contain paths
     * @throws IOException if I/O error occurs
     */
+   @Deprecated
    public static void svgDefs(SVG svg, JDRGroup group)
       throws IOException
    {
@@ -2225,6 +2226,80 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
 
          JDRMarker marker = (JDRMarker)markers.get(id);
          marker.svgDef(svg, id);
+      }
+   }
+
+   public static void writeSVGdefs(SVG svg, JDRPaint linePaint, JDRBasicStroke stroke)
+   throws IOException
+   {
+      // start marker
+
+      JDRMarker start = stroke.getStartArrow();
+
+      if (start.getType() != ARROW_NONE)
+      {
+         start = (JDRMarker)start.clone();
+
+         if (start.fillPaint == null)
+         {
+            start.fillPaint = linePaint;
+         }
+
+         String id = start.getID(true, linePaint);
+
+         start.reversed = !start.reversed;
+         start.isStart_ = true;
+
+         if (!id.equals("none") && svg.addReferenceID(id))
+         {
+            start.svgDef(svg, id);
+         }
+      }
+
+      // mid-point marker
+
+      JDRMarker mid = stroke.getMidArrow();
+
+      if (mid.getType() != ARROW_NONE)
+      {
+         mid = (JDRMarker)mid.clone();
+
+         if (mid.fillPaint == null)
+         {
+            mid.fillPaint = linePaint;
+         }
+
+         mid.isStart_=false;
+
+         String id = mid.getID(false, linePaint);
+
+         if (!id.equals("none") && svg.addReferenceID(id))
+         {
+            mid.svgDef(svg, id);
+         }
+      }
+
+      // end marker
+
+      JDRMarker end = stroke.getEndArrow();
+
+      if (end.getType() != ARROW_NONE)
+      {
+         end = (JDRMarker)end.clone();
+
+         if (end.fillPaint == null)
+         {
+            end.fillPaint = linePaint;
+         }
+
+         end.isStart_=false;
+
+         String id = end.getID(false, linePaint);
+
+         if (!id.equals("none") && svg.addReferenceID(id))
+         {
+            end.svgDef(svg, id);
+         }
       }
    }
 

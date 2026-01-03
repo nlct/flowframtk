@@ -1341,8 +1341,10 @@ public class ExportDialog extends JDialog
 
       switch (type)
       {
-         case EPS:
          case SVG:
+            showTextualShading = false;
+            // fall through
+         case EPS:
             showBitmapsToEps = useExternalProcessBox.isSelected();
          break;
          case IMAGE_PDF:

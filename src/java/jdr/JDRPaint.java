@@ -235,6 +235,10 @@ public abstract class JDRPaint implements Serializable
     */
    public abstract String svgLine();
 
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+   }
+
    /**
     * Gets the paint loader listener associated with this paint.
     */

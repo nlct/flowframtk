@@ -212,18 +212,7 @@ public class JDRUnit implements Serializable
 
    public String svg(double value)
    {
-      switch (getID())
-      {
-         case JDRUnit.IN :
-         case JDRUnit.CM :
-         case JDRUnit.MM :
-         case JDRUnit.PC :
-           return ""+value+getLabel();
-         case JDRUnit.BP :
-           return ""+value+"pt";
-         default:
-           return ""+toBp(value)+"pt";
-      }
+     return ""+toBp(value);
    }
 
 

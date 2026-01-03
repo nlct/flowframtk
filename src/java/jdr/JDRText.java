@@ -1800,8 +1800,30 @@ public class JDRText extends JDRCompleteObject
       svg.println("   "+getTextPaint().svgFill());
       svg.println("       "+jdrFont.svg()
                   +" "+jdrtransform.svg(svg)+">");
-      svg.println(text);
+
+      if (description != null && !description.isEmpty())
+      {
+         svg.print("<title>");
+         svg.print(svg.encodeContent(description));
+         svg.println("</title>");
+      }
+
+      svg.println(svg.encodeContent(text));
+
       svg.println("   </text>");
+   }
+
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      JDRPaint paint = getTextPaint();
+   
+      paint.writeSVGdefs(svg);
+
+      if (isOutline && getFillPaint() != null)
+      {
+         getFillPaint().writeSVGdefs(svg);
+      }
    }
 
    /**

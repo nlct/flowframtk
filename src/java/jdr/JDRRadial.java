@@ -393,7 +393,18 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       return "radial-"+startColor.getID()+"-"+endColor.getID()+"-"+direction;
    }
 
-   private void svgDef(SVG svg) throws IOException
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      String id = getID();
+      
+      if (svg.addReferenceID(id))
+      {
+         svgDef(svg, id);
+      }
+   }
+
+   private void svgDef(SVG svg, String id) throws IOException
    {
       svg.println("      <radialGradient id=\""+getID()+"\"");
       svg.println("         gradientUnits=\"objectBoundingBox\"");
@@ -458,6 +469,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       svg.println("      </radialGradient>");
    }
 
+   @Deprecated
    public static void svgDefs(SVG svg, JDRGroup paths)
       throws IOException
    {
@@ -503,7 +515,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
          String id = (String)e.nextElement();
 
          JDRRadial p = (JDRRadial)gradients.get(id);
-         p.svgDef(svg);
+         p.svgDef(svg, id);
       }
    }
 

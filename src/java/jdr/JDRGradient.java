@@ -344,9 +344,20 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       return "gradient-"+startColor.getID()+"-"+endColor.getID()+"-"+direction;
    }
 
-   private void svgDef(SVG svg) throws IOException
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
    {
-      svg.println("      <linearGradient id=\""+getID()+"\"");
+      String id = getID();
+      
+      if (svg.addReferenceID(id))
+      {
+         svgDef(svg, id);
+      }
+   }
+
+   private void svgDef(SVG svg, String id) throws IOException
+   {
+      svg.println("      <linearGradient id=\""+id+"\"");
       svg.println("         gradientUnits=\"objectBoundingBox\"");
 
       int x1=0, y1=0, x2=0, y2=100;
@@ -470,7 +481,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
          String id = (String)e.nextElement();
 
          JDRGradient p = (JDRGradient)gradients.get(id);
-         p.svgDef(svg);
+         p.svgDef(svg, id);
       }
    }
 

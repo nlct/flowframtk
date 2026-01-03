@@ -130,6 +130,8 @@ public class JDRTextPathStroke implements JDRStroke
       stroke.setLeftDelim(getLeftDelim());
       stroke.setRightDelim(getRightDelim());
 
+      stroke.svgID = svgID;
+
       return stroke;
    }
 
@@ -587,6 +589,31 @@ public class JDRTextPathStroke implements JDRStroke
       // text
 
       jdr.writeString(text);
+   }
+
+   public String getID()
+   {
+      if (svgID == null)
+      {
+         int id = ++max_id;
+
+         svgID = "textpathstroke-"+id;
+      }
+
+      return svgID;
+   }
+
+   @Override
+   public void writeSVGdefs(SVG svg, JDRShape shape) throws IOException
+   {
+      String id = getID();
+
+      if (svg.addReferenceID(id))
+      {
+         svg.println("<path id=\""+id+"\" fill=\"transparent\" d=\"");
+         svg.saveStoragePathData(shape.getGeneralPath());
+         svg.println("\"/>");
+      }
    }
 
    public Area getStorageStrokedArea(JDRShape path)
@@ -1305,6 +1332,10 @@ public class JDRTextPathStroke implements JDRStroke
    private static final float FLATNESS = 1.0f;
 
    private double[] matrix;
+
+   private String svgID = null;
+
+   private static int max_id=0;
 
    private static JDRPathStyleListener pathStyleListener
       = new JDRTextPathStyleListener();

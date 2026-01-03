@@ -2127,7 +2127,13 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       svg.println("\"");
       svg.println("      "+getLinePaint().svgLine());
-      svg.println("      "+getFillPaint().svgFill());
+
+      JDRPaint fillPaint = getFillPaint();
+
+      if (fillPaint != null)
+      {
+         svg.println("      "+fillPaint.svgFill());
+      }
 
       if (getStroke() instanceof JDRBasicStroke)
       {
@@ -2135,7 +2141,16 @@ public class JDRSymmetricPath extends JDRCompoundShape
             +((JDRBasicStroke)getStroke()).svg(getLinePaint()));
       }
 
-      svg.println("   />");
+      svg.println("   >");
+
+      if (description != null && !description.isEmpty())
+      {
+         svg.print("<title>");
+         svg.print(svg.encodeContent(description));
+         svg.println("</title>");
+      }
+
+      svg.println("   </path>");
    } 
 
    public void savePgf(TeX tex)

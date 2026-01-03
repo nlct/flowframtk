@@ -97,6 +97,8 @@ public interface JDRStroke extends Cloneable,Serializable
    public void saveEPS(JDRShape path, PrintWriter out)
       throws IOException;
 
+   public abstract void writeSVGdefs(SVG svg, JDRShape shape) throws IOException;
+
    /**
     * Gets the path style listener for the shape associated with
     * this stroke.

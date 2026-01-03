@@ -1324,19 +1324,28 @@ public class JDRBitmap extends JDRCompleteObject
       throws IOException
    {
        svg.println("   <image "+attr+" x=\"0\" y=\"0\"");
-       svg.println("      transform=\"matrix("
-       + flatmatrix[0] + "," + flatmatrix[1] +"," 
-       + flatmatrix[2] + "," + flatmatrix[3] +","
-       + flatmatrix[4] + "," + flatmatrix[5] +")\"");
+       svg.println("      " + svg.transform(flatmatrix));
        svg.println("      width=\""
          +ic.getIconWidth()+"pt\"");
        svg.println("      height=\""
          +ic.getIconHeight()+"pt\"");
-       svg.println("      xlink:href=\""+filename_+"\">");
-       svg.println("   <desc>");
-       svg.println(imageFile.getName());
-       svg.println("   </desc>");
+       svg.println("      xlink:href=\""+svg.encodeAttributeValue(filename_)+"\">");
+
+       String title = getDescription();
+
+       if (title == null || title.isEmpty())
+       {
+          svg.println("   <title>");
+          svg.println(title);
+          svg.println("   </title>");
+       }
+
        svg.println("   </image>");
+   } 
+
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
    } 
 
    public JDRObjectLoaderListener getListener()

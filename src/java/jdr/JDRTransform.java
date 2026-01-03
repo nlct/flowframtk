@@ -561,19 +561,7 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public String svg(SVG svg)
    {
-      AffineTransform af = svg.getTransform();
-
-      CanvasGraphics cg = getCanvasGraphics();
-
-      BBox box = getOriginalBBox();
-      double y = box.getMaxY();
-
-      AffineTransform concat = new AffineTransform();
-      concat.concatenate(af);
-      concat.concatenate(getAffineTransform());
-      concat.concatenate(new AffineTransform(1, 0, 0, -1, 0, y));
-
-      return svg.transform(concat);
+      return svg.transform(getAffineTransform());
    }
 
    /**

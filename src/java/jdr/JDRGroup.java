@@ -4,7 +4,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -2465,9 +2465,9 @@ t
    {
       svg.println("   <g>");
 
-      if (!description.equals(""))
+      if (description != null && !description.isEmpty())
       {
-         svg.println("   <desc>"+description+"</desc>");
+         svg.println("   <title>"+description+"</title>");
       }
 
       for (int i = 0; i < size_; i++)
@@ -2476,6 +2476,15 @@ t
       }
 
       svg.println("   </g>");
+   }
+
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      for (int i = 0; i < size_; i++)
+      {
+         get(i).writeSVGdefs(svg);
+      }
    }
 
    /**

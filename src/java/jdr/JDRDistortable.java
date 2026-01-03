@@ -30,6 +30,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 import com.dickimawbooks.jdr.exceptions.*;
+import com.dickimawbooks.jdr.io.SVG;
 
 public interface JDRDistortable extends JDRGraphicObject
 {
@@ -67,4 +68,5 @@ public interface JDRDistortable extends JDRGraphicObject
    public JDRPoint getControlFromStoragePoint(
      double storagePointX, double storagePointY, boolean endPoint);
 
+   public void writeSVGdefs(SVG svg) throws IOException;
 }
