@@ -591,7 +591,7 @@ public class JDRTextPathStroke implements JDRStroke
       jdr.writeString(text);
    }
 
-   public String getID()
+   public String getPathID()
    {
       if (svgID == null)
       {
@@ -606,11 +606,11 @@ public class JDRTextPathStroke implements JDRStroke
    @Override
    public void writeSVGdefs(SVG svg, JDRShape shape) throws IOException
    {
-      String id = getID();
+      String pathID = getPathID();
 
-      if (svg.addReferenceID(id))
+      if (svg.addReferenceID(pathID))
       {
-         svg.println("<path id=\""+id+"\" fill=\"transparent\" d=\"");
+         svg.println("<path id=\""+pathID+"\" fill=\"transparent\" d=\"");
          svg.saveStoragePathData(shape.getGeneralPath());
          svg.println("\"/>");
       }

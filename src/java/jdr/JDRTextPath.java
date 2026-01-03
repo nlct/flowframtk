@@ -665,8 +665,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       JDRPaint paint = getTextPaint();
 
       JDRTextPathStroke stroke = (JDRTextPathStroke)getStroke();
-      String id = stroke.getID();
-
       if (isOutline
             && svg.getExportSettings().textPathOutline
                  == ExportSettings.TextPathOutline.TO_PATH)
@@ -698,9 +696,15 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       else
       {
 
-         svg.println("    <text "+attr+" "+paint.svgFill() + ">");
+         svg.print("    <text ");
+         svg.print(attr);
+         svg.print(" ");
+         svg.print(paint.svgFill());
+         svg.print(" ");
+         svg.print(stroke.getJDRFont().svg());
+         svg.println(">");
 
-         svg.println("      <textPath  xmlns:xlink=\"http://www.w3.org/1999/xlink\" href=\"#"+id+"\">");
+         svg.println("      <textPath href=\"#"+stroke.getPathID()+"\">");
 
          if (description != null && !description.isEmpty())
          {

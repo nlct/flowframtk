@@ -23,10 +23,12 @@
 
 package com.dickimawbooks.jdr;
 
+import java.io.IOException;
 import java.awt.*;
 import java.awt.geom.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
+import com.dickimawbooks.jdr.io.SVG;
 
 /**
  * An object that has an underlying shape combined with either
@@ -48,6 +50,12 @@ public abstract class JDRCompoundShape extends JDRShape
    public abstract JDRShape getUnderlyingShape();
 
    public abstract void setUnderlyingShape(JDRShape shape);
+
+   @Override
+   public void writeSVGdefs(SVG svg) throws IOException
+   {
+      getUnderlyingShape().writeSVGdefs(svg);
+   }
 
    @Override
    public JDRPath getBaseUnderlyingPath()

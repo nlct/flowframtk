@@ -26,6 +26,7 @@ package com.dickimawbooks.jdr;
 import java.io.*;
 import java.awt.Font;
 
+import com.dickimawbooks.texjavahelplib.HelpFontSettings;
 import com.dickimawbooks.jdr.io.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
@@ -296,7 +297,9 @@ public class JDRFont implements Cloneable,Serializable
     */
    public String svg()
    {
-      return "font-family=\""+family+"\""
+      String cssfamily = HelpFontSettings.getFontCssName(family);
+
+      return "font-family=\""+cssfamily+"\""
        + " font-weight=\""
        + (weight == SERIES_MEDIUM ? "normal" : "bold")
        + "\""

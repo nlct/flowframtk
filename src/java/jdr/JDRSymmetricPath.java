@@ -378,6 +378,9 @@ public class JDRSymmetricPath extends JDRCompoundShape
           shape.close(closingSegment.getFullSegment());
        }
 
+       shape.description = description;
+       shape.tag = tag;
+
        return shape;
     }
 
@@ -2108,49 +2111,34 @@ public class JDRSymmetricPath extends JDRCompoundShape
    {
       if (isEmpty()) return;
 
-      JDRPathSegment segment = get(0);
-
-      svg.print("   <path "+ attr+" d=\"M ");
-
-      segment.getStart().saveSVG(svg);
-      segment.saveSVG(svg);
-
-      JDRPathIterator pi = getIterator();
-
-      while (pi.hasNext())
+      if (showPath())
       {
-         segment = pi.next();
-         segment.saveSVG(svg);
+         try
+         {
+            getFullPath().saveSVG(svg, attr);
+         }
+         catch (InvalidShapeException e)
+         {
+            getCanvasGraphics().debugMessage(e);
+
+            getUnderlyingShape().saveSVG(svg, attr);
+         }
       }
-
-      if (isClosed()) svg.print("z");
-
-      svg.println("\"");
-      svg.println("      "+getLinePaint().svgLine());
-
-      JDRPaint fillPaint = getFillPaint();
-
-      if (fillPaint != null)
+      else
       {
-         svg.println("      "+fillPaint.svgFill());
+         JDRShape shape = getUnderlyingShape();
+         shape.saveSVG(svg, attr);
+
+         AffineTransform af = line_.getReflectionTransform(null);
+
+         svg.print("<g ");
+         svg.print(svg.transform(af));
+         svg.println(">");
+
+         shape.saveSVG(svg, attr);
+
+         svg.println("</g>");
       }
-
-      if (getStroke() instanceof JDRBasicStroke)
-      {
-         svg.println("      "
-            +((JDRBasicStroke)getStroke()).svg(getLinePaint()));
-      }
-
-      svg.println("   >");
-
-      if (description != null && !description.isEmpty())
-      {
-         svg.print("<title>");
-         svg.print(svg.encodeContent(description));
-         svg.println("</title>");
-      }
-
-      svg.println("   </path>");
    } 
 
    public void savePgf(TeX tex)

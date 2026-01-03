@@ -1067,6 +1067,15 @@ public class CanvasGraphics
       return message;
    }
 
+   public void debugMessage(Throwable cause)
+   {
+      if (messageSystem.isDebuggingOn())
+      {
+         messageSystem.getPublisher().publishMessages(
+           MessageInfo.createError(cause));
+      }
+   }
+
    @Deprecated
    public String getString(String tag, String alt)
    {
