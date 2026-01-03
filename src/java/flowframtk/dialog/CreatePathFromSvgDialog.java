@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2020-2025 Nicola L.C. Talbot
+    Copyright (C) 2020-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -102,12 +102,12 @@ public class CreatePathFromSvgDialog extends JDialog
       ButtonGroup bg = new ButtonGroup();
 
       rightHandCoordsButton = resources.createAppRadioButton(
-        "svg_path.data_coords", "righthand", bg, true, null);
+        "svg_path.data_coords", "righthand", bg, false, null);
       rightHandCoordsButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       sidePanel.add(rightHandCoordsButton);
 
       leftHandCoordsButton = resources.createAppRadioButton(
-        "svg_path.data_coords", "lefthand", bg, false, null);
+        "svg_path.data_coords", "lefthand", bg, true, null);
       leftHandCoordsButton.setAlignmentX(JComponent.LEFT_ALIGNMENT);
       sidePanel.add(leftHandCoordsButton);
 

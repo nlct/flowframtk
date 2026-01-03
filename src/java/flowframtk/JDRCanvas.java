@@ -8241,13 +8241,14 @@ public class JDRCanvas extends JPanel
    }
 
    /* JDRImage method used by transfer handler */
+   @Override
    public JDRGroup getSelection()
    {
       int n = paths.size();
 
       JDRGroup g;
 
-      if (getCanvasGraphics().getOptimize() == CanvasGraphics.OPTIMIZE_SPEED)
+      if (n > 1 && getCanvasGraphics().getOptimize() == CanvasGraphics.OPTIMIZE_SPEED)
       {
          g = new JDRGroup(getCanvasGraphics(), n);
       }

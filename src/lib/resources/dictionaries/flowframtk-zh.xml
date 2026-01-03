@@ -1787,12 +1787,12 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="svg_path.data_coords.lefthand">Left-handed</entry>
 <entry key="svg_path.data_coords.lefthand.mnemonic">L</entry>
 <entry key="svg_path.data_coords.lefthand.tooltip">Origin top left with y increasing downwards</entry>
-<entry key="svg_path.data_coords.lefthand.initvalue">off</entry>
+<entry key="svg_path.data_coords.lefthand.initvalue">on</entry>
 
 <entry key="svg_path.data_coords.righthand">Right-handed</entry>
 <entry key="svg_path.data_coords.righthand.mnemonic">G</entry>
 <entry key="svg_path.data_coords.righthand.tooltip">Origin bottom left with y increasing upwards</entry>
-<entry key="svg_path.data_coords.righthand.initvalue">on</entry>
+<entry key="svg_path.data_coords.righthand.initvalue">off</entry>
 
 <entry key="svg_path.description">Path description:</entry>
 <entry key="svg_path.description.mnemonic">D</entry>

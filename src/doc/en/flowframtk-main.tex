@@ -5187,10 +5187,13 @@ Arcs are currently not implemented.
 
 \widgetdef{svg_path.data_coords}
 
-\gls{svg} data normally uses a right-handed \gls{co-ordinate} system.
-That is, the origin is at the bottom left and $y$ increases upwards.
-The \gls{canvas} uses a left-handed \gls{co-ordinate} system
-with the origin at the top left and $y$ increases downwards.
+The \gls{svg} specifications use a left-handed \gls{co-ordinate} system,
+which is the same as \FlowframTk's \gls{canvas}.
+(The origin is at the top left and $y$ increases downwards.)
+It's possible you may want to use the same path syntax but for a
+right-handed \gls{co-ordinate} system where the origin is at the
+bottom left with $y$ increasing upwards. This may be done
+by selecting the \widget{svg_path.data_coords.righthand} button.
 The \gls{co-ordinate} system needs to be set before creating the
 draft path.
 
