@@ -1,0 +1,13 @@
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Some graphical objects to use -->
+  <defs>
+    <circle id="Circle1" cx="0" cy="0" r="5" />
+    <circle id="Circle2" cx="20" cy="20" r="10" />
+  </defs>
+
+  <!-- using my graphical objects -->
+  <use x="5" y="10" href="#Circle1" stroke="transparent" fill="rgb(255,0,255)" />
+  <use x="25" y="30" href="#Circle1" fill="#9400D3" />
+
+  <use x="10" y="10" href="#Circle2" stroke="silver" fill="none" />
+</svg>
