@@ -191,6 +191,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                {
                   InputStream ins = (InputStream)data;
 
+                  // InputStream.readAllBytes() requires Java 9+
                   ByteBuffer buffer = ByteBuffer.allocate(256);
 
                   int b;
