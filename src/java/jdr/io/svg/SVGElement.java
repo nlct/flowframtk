@@ -52,9 +52,25 @@ public class SVGElement extends SVGAbstractElement
       return "svg";
    }
 
-   public void addToImage(JDRGroup group)
+   public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
+      String desc = null;
+
+      if (title != null && !title.isEmpty())
+      {
+         desc = title;
+      }
+      else if (description != null && !description.isEmpty())
+      {
+         desc = description;
+      }
+
+      if (desc != null)
+      {
+         group.setDescription(desc.replaceAll("\\R", " "));
+      }
+
       for (SVGAbstractElement element : children)
       {
          getMessageSystem().getPublisher().publishMessages(
@@ -89,6 +105,8 @@ public class SVGElement extends SVGAbstractElement
 
          group.transform(matrix);
       }
+
+      return group;
    }
 
    public double getViewportWidth()
@@ -125,6 +143,26 @@ public class SVGElement extends SVGAbstractElement
 
       return null;
    }
+
+   @Override
+   public void setDescription(String text)
+   {
+      if (text != null)
+      {
+         description = text.trim();
+      }
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
+      if (text != null)
+      {
+         title = text.trim();
+      }
+   }
+
+   String description = null, title = null;
 
    private int currentLengthUnit = SVGMeasurement.UNIT_PT;
 

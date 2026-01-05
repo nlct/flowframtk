@@ -20,9 +20,29 @@ public class SVGDescElement extends SVGAbstractElement
       return "desc";
    }
 
-   public void addToImage(JDRGroup group)
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
    {
-      group.setDescription(getContents());
+      return null;
+   }
+
+   @Override
+   public void endElement()
+   {
+      if (parent != null)
+      {
+         parent.setDescription(getContents());
+      }
+   }
+
+   @Override
+   public void setDescription(String text)
+   {
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
    }
 
    public Object clone()

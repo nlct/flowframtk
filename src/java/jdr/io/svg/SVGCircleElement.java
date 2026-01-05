@@ -25,6 +25,8 @@ public class SVGCircleElement extends SVGShape
       addAttribute("cx", attr);
       addAttribute("cy", attr);
       addAttribute("r", attr);
+
+      applyShapeAttributes(uri, attr);
    }
 
    public String getName()

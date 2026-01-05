@@ -26,8 +26,10 @@ public class SVGDefsElement extends SVGAbstractElement
       return false;
    }
 
-   public void addToImage(JDRGroup group)
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
    {
+      return null;
    }
 
    public Object clone()
@@ -46,4 +48,15 @@ public class SVGDefsElement extends SVGAbstractElement
 
       return null;
    }
+
+   @Override
+   public void setDescription(String text)
+   {
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
+   }
+
 }

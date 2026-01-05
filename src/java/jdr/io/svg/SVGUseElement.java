@@ -1,5 +1,6 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.util.Enumeration;
 import java.util.regex.*;
 
 import org.xml.sax.*;
@@ -27,24 +28,38 @@ public class SVGUseElement extends SVGAbstractElement
       addAttribute("width", attr);
       addAttribute("height", attr);
 
+      addAttribute("cx", attr);
+      addAttribute("cy", attr);
+      addAttribute("r", attr);
+      addAttribute("d", attr);
+      addAttribute("x1", attr);
+      addAttribute("y1", attr);
+      addAttribute("x2", attr);
+      addAttribute("y2", attr);
+
+      applyShapeAttributes(uri, attr);
+      applyTextAttributes(uri, attr);
+
       if (getHref() == null)
       {
          throw new InvalidFormatException(
-            "No xlink:href found for '"+getName()+"' element");
+            "No href found for '"+getName()+"' element");
       }
    }
 
+   @Override
    public String getName()
    {
       return "use";
    }
 
-   public void addToImage(JDRGroup group)
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
       throws InvalidFormatException
    {
       String ref = getHref();
 
-      Matcher m = pattern.matcher(ref);
+      Matcher m = REF_PATTERN.matcher(ref);
 
       if (m.matches())
       {
@@ -52,7 +67,7 @@ public class SVGUseElement extends SVGAbstractElement
       }
       else
       {
-         throw new InvalidFormatException("Can't parse xlink:href '"+ref+"'");
+         throw new InvalidFormatException("Can't parse href '"+ref+"'");
       }
 
       SVGAbstractElement element = getRefElement(ref);
@@ -66,47 +81,64 @@ public class SVGUseElement extends SVGAbstractElement
 
       element.attributeSet.removeAttribute("id");
 
-      SVGAttribute attr = (SVGAttribute)getAttribute(element.getName(),
-           "x", null);
+      SVGAttributeSet newAttrs = (SVGAttributeSet)attributeSet.copyAttributes();
 
-      if (attr != null)
+      newAttrs.removeAttribute("href");
+      newAttrs.removeAttribute("xlink:href");
+
+      SVGLengthAttribute xAttr = (SVGLengthAttribute)newAttrs.getAttribute("x");
+
+      if (xAttr != null)
       {
-         element.addAttribute((SVGAttribute)attr.clone());
+         newAttrs.removeAttribute("x");
       }
 
-      attr = (SVGAttribute)getAttribute(element.getName(),
-           "y", null);
+      SVGLengthAttribute yAttr = (SVGLengthAttribute)newAttrs.getAttribute("y");
 
-      if (attr != null)
+      if (yAttr != null)
       {
-         element.addAttribute((SVGAttribute)attr.clone());
+         newAttrs.removeAttribute("y");
       }
 
-      attr = (SVGAttribute)getAttribute(element.getName(),
-           "width", null);
+      element.attributeSet.addAttributes(newAttrs);
 
-      if (attr != null)
+      if (title != null && !title.isEmpty())
       {
-         element.addAttribute((SVGAttribute)attr.clone());
+         element.setTitle(title);
       }
 
-      attr = (SVGAttribute)getAttribute(element.getName(),
-           "height", null);
-
-      if (attr != null)
+      if (description != null && !description.isEmpty())
       {
-         element.addAttribute((SVGAttribute)attr.clone());
+         element.setDescription(description);
       }
 
-      attr = (SVGAttribute)getAttribute(element.getName(),
-           "transform", null);
+      JDRCompleteObject newObject = element.addToImage(group);
 
-      if (attr != null)
+      if (newObject != null)
       {
-         element.addAttribute((SVGAttribute)attr.clone());
+         if (xAttr != null || yAttr != null)
+         {
+            double x = 0;
+            double y = 0;
+
+            JDRUnit unit = group.getCanvasGraphics().getStorageUnit();
+            BBox bbox = newObject.getStorageBBox();
+
+            if (xAttr != null)
+            {
+               x = xAttr.lengthValue(element).getValue(unit);
+            }
+
+            if (yAttr != null)
+            {
+               y = yAttr.lengthValue(element).getValue(unit);
+            }
+
+            newObject.translate(x-bbox.getMinX(), y-bbox.getMinY());
+         }
       }
 
-      element.addToImage(group);
+      return newObject;
    }
 
    public Object clone()
@@ -126,6 +158,20 @@ public class SVGUseElement extends SVGAbstractElement
       return null;
    }
 
-   private static final Pattern pattern 
+   @Override
+   public void setDescription(String text)
+   {
+      description = text;
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
+      title = text;
+   }
+
+   String description = null, title = null;
+
+   private static final Pattern REF_PATTERN 
       = Pattern.compile("\\s*#([^#]+)\\s*");
 }

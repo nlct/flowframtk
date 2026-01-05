@@ -29,7 +29,7 @@ public class SVGHandler extends DefaultHandler
    public void startDocument()
    {
       msgSystem.getPublisher().publishMessages(
-        MessageInfo.createVerbose(1, "<xml>"));
+        MessageInfo.createVerbose(2, "<xml>"));
    }
 
    public void endDocument()
@@ -37,7 +37,7 @@ public class SVGHandler extends DefaultHandler
       if (base != null)
       {
          msgSystem.getPublisher().publishMessages(
-           MessageInfo.createVerbose(1, "</xml>"),
+           MessageInfo.createVerbose(2, "</xml>"),
            MessageInfo.createVerbose(1, "Generating image"));
 
          try
@@ -55,7 +55,7 @@ public class SVGHandler extends DefaultHandler
    public void startElement(String uri, String name, String qName, Attributes attrs)
    {
       msgSystem.getPublisher().publishMessages(
-        MessageInfo.createVerbose(1, "<"+qName+">"));
+        MessageInfo.createVerbose(2, "<"+qName+">"));
 
       try
       {
@@ -93,7 +93,7 @@ public class SVGHandler extends DefaultHandler
          current.endElement();
       }
 
-      msgSystem.getPublisher().publishMessages(MessageInfo.createVerbose(1, "</"+qName+">"));
+      msgSystem.getPublisher().publishMessages(MessageInfo.createVerbose(2, "</"+qName+">"));
 
       if (!stack.isEmpty())
       {

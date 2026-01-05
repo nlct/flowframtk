@@ -74,8 +74,9 @@ public class JDRLength implements Serializable,Cloneable
       return unit;
    }
 
-   // Get this length in terms of another unit
-
+   /**
+    * Gets this length in terms of another unit.
+    */
    public double getValue(JDRUnit otherUnit)
    {
       if (unit.getID() == otherUnit.getID())

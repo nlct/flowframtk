@@ -139,10 +139,26 @@ public abstract class SVGShape extends SVGAbstractElement
       shape.setLinePaint(linePaint);
    }
 
-   public void addToImage(JDRGroup group)
+   public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
       JDRShape shape = createShape(group.getCanvasGraphics());
+
+      String desc = null;
+
+      if (title != null && !title.isEmpty())
+      {
+         desc = title;
+      }
+      else if (description != null && !description.isEmpty())
+      {
+         desc = description;
+      }
+
+      if (desc != null)
+      {
+         shape.setDescription(desc.replaceAll("\\R", " "));
+      }
 
       applyShapeAttributes(shape);
 
@@ -158,8 +174,30 @@ public abstract class SVGShape extends SVGAbstractElement
       }
 
       group.add(shape);
+
+      return shape;
    }
 
    public abstract JDRShape createShape(CanvasGraphics cg)
      throws InvalidFormatException;
+
+   @Override
+   public void setDescription(String text)
+   {
+      if (text != null)
+      {
+         description = text.trim();
+      }
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
+      if (text != null)
+      {
+         title = text.trim();
+      }
+   }
+
+   String description = null, title = null;
 }

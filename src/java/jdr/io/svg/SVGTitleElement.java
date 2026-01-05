@@ -15,14 +15,35 @@ public class SVGTitleElement extends SVGAbstractElement
       super(handler, parent, uri, attr);
    }
 
+   @Override
    public String getName()
    {
       return "title";
    }
 
-   public void addToImage(JDRGroup group)
+   @Override
+   public void endElement()
    {
-      group.setDescription(getContents());
+      if (parent != null)
+      {
+         parent.setTitle(getContents());
+      }
+   }
+
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
+   {
+      return null;
+   }
+
+   @Override
+   public void setDescription(String text)
+   {
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
    }
 
    public Object clone()

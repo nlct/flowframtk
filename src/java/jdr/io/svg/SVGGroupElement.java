@@ -42,13 +42,27 @@ public class SVGGroupElement extends SVGAbstractElement
       return "g";
    }
 
-   public void addToImage(JDRGroup group)
+   public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
       JDRGroup subgroup = new JDRGroup(group.getCanvasGraphics());
       group.add(subgroup);
 
-      subgroup.setDescription(getId());
+      String desc = null;
+
+      if (title != null && !title.isEmpty())
+      {
+         desc = title;
+      }
+      else if (description != null && !description.isEmpty())
+      {
+         desc = description;
+      }
+
+      if (desc != null)
+      {
+         subgroup.setDescription(desc.replaceAll("\\R", " "));
+      }
 
       for (SVGAbstractElement element : children)
       {
@@ -69,6 +83,8 @@ public class SVGGroupElement extends SVGAbstractElement
 
          subgroup.transform(matrix);
       }
+
+      return subgroup;
    }
 
    public Object clone()
@@ -87,4 +103,24 @@ public class SVGGroupElement extends SVGAbstractElement
 
       return null;
    }
+
+   @Override
+   public void setDescription(String text)
+   {
+      if (text != null)
+      {
+         description = text.trim();
+      }
+   }
+
+   @Override
+   public void setTitle(String text)
+   {
+      if (text != null)
+      {
+         title = text.trim();
+      }
+   }
+
+   String description = null, title = null;
 }

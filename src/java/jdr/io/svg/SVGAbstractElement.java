@@ -21,7 +21,7 @@ public abstract class SVGAbstractElement implements Cloneable
    {
       this.parent = parent;
       this.handler = handler;
-      contents = "";
+      contents = new StringBuilder();
 
       children = new Vector<SVGAbstractElement>();
 
@@ -47,12 +47,15 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void addToContents(char[] ch, int start, int length)
    {
-      contents += new String(ch, start, length);
+      contents.append(ch, start, length);
    }
 
    public void endElement()
    {
-/*
+   }
+
+   protected void printAttributes()
+   {
       System.out.println("attributes for '"+getName()+"':");
 
       for (Enumeration en = attributeSet.getAttributeNames(); en.hasMoreElements();)
@@ -62,15 +65,42 @@ public abstract class SVGAbstractElement implements Cloneable
          System.out.println(attrName+" : "
            +((SVGAttribute)attributeSet.getAttribute(attrName)).getValue());
       }
-*/
    }
 
    protected void applyAttributes(String uri, Attributes attr)
       throws InvalidFormatException
    {
       addAttribute("id", attr);
+      addAttribute("href", attr);
       addAttribute("xlink:href", attr);
       addAttribute("transform", attr);
+      addAttribute("color", attr);
+      addAttribute("opacity", attr);
+   }
+
+   protected void applyShapeAttributes(String uri, Attributes attr)
+      throws InvalidFormatException
+   {
+      addAttribute("fill", attr);
+      addAttribute("fill-opacity", attr);
+      addAttribute("stroke", attr);
+      addAttribute("stroke-dasharray", attr);
+      addAttribute("stroke-dashoffset", attr);
+      addAttribute("stroke-linecap", attr);
+      addAttribute("stroke-linejoin", attr);
+      addAttribute("stroke-miterlimit", attr);
+      addAttribute("stroke-opacity", attr);
+      addAttribute("stroke-width", attr);
+   }
+
+   protected void applyTextAttributes(String uri, Attributes attr)
+      throws InvalidFormatException
+   {
+      addAttribute("text-anchor", attr);
+      addAttribute("font-family", attr);
+      addAttribute("font-size", attr);
+      addAttribute("font-variant", attr);
+      addAttribute("font-weight", attr);
    }
 
    public static SVGAbstractElement getElement(
@@ -140,13 +170,21 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public String getContents()
    {
-      return contents;
+      return contents.toString();
    }
 
    public abstract String getName();
 
-   public abstract void addToImage(JDRGroup group)
+   /**
+    * Add object corresponding to element, if applicable.
+    * @return the new object added or null if not applicable
+    */
+   public abstract JDRCompleteObject addToImage(JDRGroup group)
       throws InvalidFormatException;
+
+   public abstract void setDescription(String text);
+
+   public abstract void setTitle(String text);
 
    public double getViewportWidth()
    {
@@ -374,7 +412,7 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = new SVGVisibilityStyleAttribute(handler, style);
       }
-      else if (name.equals("id") || name.equals("xlink:href"))
+      else if (name.equals("id") || name.equals("href") || name.equals("xlink:href"))
       {
          attr = new SVGStringAttribute(handler, name, style);
       }
@@ -678,7 +716,14 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public String getHref()
    {
-      Object attr = attributeSet.getAttribute("xlink:href");
+      Object attr = attributeSet.getAttribute("href");
+
+      if (attr instanceof SVGStringAttribute)
+      {
+         return ((SVGStringAttribute)attr).getString();
+      }
+
+      attr = attributeSet.getAttribute("xlink:href");
 
       if (attr instanceof SVGStringAttribute)
       {
@@ -707,7 +752,8 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void makeEqual(SVGAbstractElement element)
    {
-      contents = element.contents;
+      contents.setLength(0);
+      contents.append(element.contents);
       parent = element.parent;
       attributeSet = (SVGAttributeSet)element.attributeSet.clone();
 
@@ -732,8 +778,15 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public abstract Object clone();
 
+   @Override
+   public String toString()
+   {
+      return String.format("%s[name=%s,contents=%s,attributes=%s]",
+        getClass().getSimpleName(), getName(), contents, attributeSet);
+   }
+
    protected SVGHandler handler;
-   private String contents;
+   private StringBuilder contents;
    protected SVGAbstractElement parent;
    protected Vector<SVGAbstractElement> children;
 

@@ -36,11 +36,13 @@ public class SVGStyleElement extends SVGAbstractElement
       }
    }
 
+   @Override
    public String getName()
    {
       return "style";
    }
 
+   @Override
    public void endElement()
    {
       if (parent != null)
@@ -49,7 +51,19 @@ public class SVGStyleElement extends SVGAbstractElement
       }
    }
 
-   public void addToImage(JDRGroup group)
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
+   {
+      return null;
+   }
+
+   @Override
+   public void setDescription(String text)
+   {
+   }
+
+   @Override
+   public void setTitle(String text)
    {
    }
 
