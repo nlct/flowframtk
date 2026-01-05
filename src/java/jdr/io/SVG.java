@@ -227,12 +227,22 @@ public class SVG
 
    public static String encodeContent(String text)
    {
-      return TeXJavaHelpLib.encodeHTML(text, false);
+      return encodeContent(text, false);
+   }
+
+   public static String encodeContent(String text, boolean encodeQuotes)
+   {
+      return TeXJavaHelpLib.encodeHTML(text, encodeQuotes);
    }
 
    public static String encodeAttributeValue(String text)
    {
-      return TeXJavaHelpLib.encodeAttributeValue(text, false);
+      return encodeAttributeValue(text, false);
+   }
+
+   public static String encodeAttributeValue(String text, boolean url)
+   {
+      return TeXJavaHelpLib.encodeAttributeValue(text, url);
    }
 
    public void setWriter(Writer writer)

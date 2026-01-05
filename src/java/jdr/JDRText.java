@@ -1796,6 +1796,34 @@ public class JDRText extends JDRCompleteObject
    public void saveSVG(SVG svg, String attr)
       throws IOException
    {
+      ExportSettings exportSettings = svg.getExportSettings();
+
+       if (isOutline()
+           && (exportSettings.textAreaOutline ==
+               ExportSettings.TextAreaOutline.TO_PATH))
+      {
+         JDRShape shape = null;
+
+         try
+         {
+            JDRGroup group = convertToPath();
+            shape = group.mergePaths(null);
+            shape.setDescription(text);
+         }
+         catch (Exception e)
+         {
+            getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
+               MessageInfo.createWarning(e));
+            shape = null;
+         }
+
+         if (shape != null)
+         {
+            shape.saveSVG(svg, attr);
+            return;
+         }
+      }
+
       svg.println("   <text "+attr+" x=\"0\" y=\"0\" ");
       svg.println("   "+getTextPaint().svgFill());
       svg.println("       "+jdrFont.svg()

@@ -2126,17 +2126,27 @@ public class JDRSymmetricPath extends JDRCompoundShape
       }
       else
       {
+         svg.print("<g>");
+
+         if (description != null && !description.isEmpty())
+         {
+            svg.print("<title>");
+            svg.print(svg.encodeContent(description));
+            svg.println("</title>");
+         }
+
          JDRShape shape = getUnderlyingShape();
          shape.saveSVG(svg, attr);
 
          AffineTransform af = line_.getReflectionTransform(null);
 
-         svg.print("<g ");
+         svg.print("  <g ");
          svg.print(svg.transform(af));
          svg.println(">");
 
          shape.saveSVG(svg, attr);
 
+         svg.println("  </g>");
          svg.println("</g>");
       }
    } 

@@ -1329,18 +1329,23 @@ public class JDRBitmap extends JDRCompleteObject
          +ic.getIconWidth()+"pt\"");
        svg.println("      height=\""
          +ic.getIconHeight()+"pt\"");
-       svg.println("      xlink:href=\""+svg.encodeAttributeValue(filename_)+"\">");
+       svg.print("      href=\""+svg.encodeAttributeValue(filename_, true)+"\" ");
 
        String title = getDescription();
 
-       if (title == null || title.isEmpty())
+       if (title != null && !title.isEmpty())
        {
-          svg.println("   <title>");
-          svg.println(title);
-          svg.println("   </title>");
-       }
+          svg.println(">");
+          svg.print("   <title>");
+          svg.print(svg.encodeContent(title));
+          svg.println("</title>");
+          svg.println("   </image>");
 
-       svg.println("   </image>");
+       }
+       else
+       {
+          svg.println("/>");
+       }
    } 
 
    @Override

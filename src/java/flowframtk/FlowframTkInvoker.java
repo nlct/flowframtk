@@ -1775,6 +1775,11 @@ public class FlowframTkInvoker
                       = ExportSettings.TextPathOutline.valueOf(value);
                   }
                }
+               else if (key.equals("textareaoutlineexport"))
+               {
+                  exportSettings.textAreaOutline
+                   = ExportSettings.TextAreaOutline.valueOf(value);
+               }
                else if (key.equals("latex_app"))
                {
                   exportSettings.dviLaTeXApp = value;
@@ -2361,6 +2366,8 @@ public class FlowframTkInvoker
         + exportSettings.textualShading);
       out.println("textpathoutlineexport="
         + exportSettings.textPathOutline);
+      out.println("textareaoutlineexport="
+        + exportSettings.textAreaOutline);
       out.println("object_markup="
         + exportSettings.objectMarkup);
 

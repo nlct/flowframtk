@@ -2653,10 +2653,18 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.textpathoutline">Text-Path Outlines:</entry>
 
 <entry key="export.textpathoutline.ignore">Ignore</entry>
-<entry key="export.textpathoutline.ignore.tooltip">Ignore the outline setting</entry>
+<entry key="export.textpathoutline.ignore.tooltip">Ignore the text-path outline setting</entry>
 
 <entry key="export.textpathoutline.to_path">To Path</entry>
 <entry key="export.textpathoutline.to_path.tooltip">Export the text-path as a path</entry>
+
+<entry key="export.textareaoutline">Text Area Outlines:</entry>
+
+<entry key="export.textareaoutline.ignore">Ignore</entry>
+<entry key="export.textareaoutline.ignore.tooltip">Ignore the text area outline setting</entry>
+
+<entry key="export.textareaoutline.to_path">To Path</entry>
+<entry key="export.textareaoutline.to_path.tooltip">Export the text area as a path</entry>
 
 <entry key="export.shapeparcs">shapepar command: </entry>
 

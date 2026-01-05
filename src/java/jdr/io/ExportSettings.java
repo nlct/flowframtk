@@ -55,6 +55,11 @@ public class ExportSettings
       TO_PATH, IGNORE;
    }
 
+   public static enum TextAreaOutline
+   {
+      TO_PATH, IGNORE;
+   }
+
    public void copyFrom(ExportSettings other)
    {
       type = other.type;
@@ -62,6 +67,7 @@ public class ExportSettings
       objectMarkup = other.objectMarkup;
       textualShading = other.textualShading;
       textPathOutline = other.textPathOutline;
+      textAreaOutline = other.textAreaOutline;
       dviLaTeXApp = other.dviLaTeXApp;
       dviLaTeXOptions = other.dviLaTeXOptions;
       pdfLaTeXApp = other.pdfLaTeXApp;
@@ -306,6 +312,7 @@ public class ExportSettings
    public ObjectMarkup objectMarkup = ObjectMarkup.NONE;
    public TextualShading textualShading = TextualShading.TO_PATH;
    public TextPathOutline textPathOutline = TextPathOutline.TO_PATH;
+   public TextAreaOutline textAreaOutline = TextAreaOutline.TO_PATH;
 
    public String dviLaTeXApp = "latex";
    public String[] dviLaTeXOptions = new String[] { "$basename" };

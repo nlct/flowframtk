@@ -1884,6 +1884,15 @@ public abstract class JDRPattern extends JDRCompoundShape
       {
          // multipath mode
 
+         svg.print("<g>");
+
+         if (description != null && !description.isEmpty())
+         {
+            svg.print("<title>");
+            svg.print(svg.encodeContent(description));
+            svg.println("</title>");
+         }
+
          // Do original
 
          if (showoriginal_)
@@ -1903,6 +1912,8 @@ public abstract class JDRPattern extends JDRCompoundShape
 
             rep.saveSVG(svg, attr);
          }
+
+         svg.print("</g>");
       }
    } 
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2025 Nicola L.C. Talbot
+    Copyright (C) 2025-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -461,6 +461,29 @@ public class ExportDialog extends JDialog
 
       adjustMaxHeight(textualShadingWidgets);
 
+      // Text Area Outlines
+
+      textAreaOutlineComp = createRigidRow();
+      settingsPanel.add(textAreaOutlineComp);
+
+      JLabel textAreaOutlineLabel = resources.createAppLabel("export.textareaoutline");
+      labelGrp.add(textAreaOutlineLabel);
+      textAreaOutlineComp.add(textAreaOutlineLabel);
+      bg = new ButtonGroup();
+
+      JComponent textAreaOutlineWidgets = createBevelledRow();
+      textAreaOutlineComp.add(textAreaOutlineWidgets);
+
+      textAreaOutlineIgnoreBox = resources.createAppRadioButton("export",
+        "textareaoutline.ignore", bg, true, null);
+      textAreaOutlineWidgets.add(textAreaOutlineIgnoreBox);
+
+      textAreaOutlineToPathBox = resources.createAppRadioButton("export",
+        "textareaoutline.to_path", bg, false, null);
+      textAreaOutlineWidgets.add(textAreaOutlineToPathBox);
+
+      adjustMaxHeight(textAreaOutlineWidgets);
+
       // Text-Path Outlines
 
       textPathOutlineComp = createRigidRow();
@@ -889,6 +912,16 @@ public class ExportDialog extends JDialog
          break;
       }
 
+      switch (exportSettings.textAreaOutline)
+      {
+         case TO_PATH:
+            textAreaOutlineToPathBox.setSelected(true);
+         break;
+         case IGNORE:
+            textAreaOutlineIgnoreBox.setSelected(true);
+         break;
+      }
+
       useExternalProcessBox.setSelected(exportSettings.useExternalProcess);
 
       pngUseAlphaBox.setSelected(exportSettings.pngUseAlpha);
@@ -1126,6 +1159,18 @@ public class ExportDialog extends JDialog
          }
       }
 
+      if (textAreaOutlineComp.isVisible())
+      {
+         if (textAreaOutlineToPathBox.isSelected())
+         {
+            exportSettings.textAreaOutline = ExportSettings.TextAreaOutline.TO_PATH;
+         }
+         else if (textAreaOutlineIgnoreBox.isSelected())
+         {
+            exportSettings.textAreaOutline = ExportSettings.TextAreaOutline.IGNORE;
+         }
+      }
+
       if (useExternalProcessBox.isVisible())
       {
          exportSettings.useExternalProcess = useExternalProcessBox.isSelected();
@@ -1329,6 +1374,7 @@ public class ExportDialog extends JDialog
       boolean showDocClassComp = false;
       boolean showTextualShading = true;
       boolean showPathOutline = true;
+      boolean showTextAreaOutline = false;
 
       if (useExternalProcessBox.isVisible() && useExternalProcessBox.isSelected())
       {
@@ -1343,6 +1389,7 @@ public class ExportDialog extends JDialog
       {
          case SVG:
             showTextualShading = false;
+            showTextAreaOutline = true;
             // fall through
          case EPS:
             showBitmapsToEps = useExternalProcessBox.isSelected();
@@ -1401,6 +1448,7 @@ public class ExportDialog extends JDialog
       markupComp.setVisible(showMarkup);
       textualShadingComp.setVisible(showTextualShading);
       textPathOutlineComp.setVisible(showPathOutline);
+      textAreaOutlineComp.setVisible(showTextAreaOutline);
    }
 
    @Override
@@ -1493,6 +1541,9 @@ public class ExportDialog extends JDialog
 
    private JComponent textPathOutlineComp;
    private JRadioButton textPathOutlineToPathBox, textPathOutlineIgnoreBox;
+
+   private JComponent textAreaOutlineComp;
+   private JRadioButton textAreaOutlineToPathBox, textAreaOutlineIgnoreBox;
 
    private JComponent shapeparUseHPaddingComp;
    private JRadioButton shapeparUseHPaddingOnBox, shapeparUseHPaddingOffBox;

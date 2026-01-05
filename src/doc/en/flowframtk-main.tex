@@ -3215,7 +3215,7 @@ If there is insufficient memory in the \gls{jre} to load a bitmap,
 On some systems you may be able to \gls{drag-and-drop} \gls*{JDR} or
 \gls*{AJR} files from a filer window onto \FlowframTk's internal desktop
 (the \manmsg{grey} background of \FlowframTk's main window) and this
-will load each file into \FlowframTk. If you drag and drop a
+will load each file into \FlowframTk. If you \gls*{drag-and-drop} a
 \gls{bitmap} it will be equivalent to \hyperref[sec:newimage]{creating a
 new image} and then \hyperref[sec:insertbitmap]{inserting the bitmap}.
 
@@ -3233,7 +3233,7 @@ untitled image with the link to the \gls{bitmap} inserted.
 }
 {Drag and Drop onto \FlowframTk's Internal Desktop}
 
-If you want to open an image in a new child window using drag and drop,
+If you want to open an image in a new child window using \gls{drag-and-drop},
 make sure you drop onto \FlowframTk's desktop. If you drop a file onto a
 text area, such as the preamble pane or the text field used to
 create a new \gls{textarea} then the filename (or URI) will be
@@ -5302,9 +5302,9 @@ not around the individual elements of the group.
 
 In \selectmode\ you can \gls{drag-and-drop} \gls{JDR} or \gls{AJR}
 files onto the \gls{canvas} (provided your operating system supports
-drag and drop) which will add all the objects from those files to
+\gls*{drag-and-drop}) which will add all the objects from those files to
 the current image. The new objects will be added to the current
-selection. You can't drag and drop if a shape is being edited or
+selection. You can't \gls*{drag-and-drop} if a shape is being edited or
 distorted.
 
 If text is dropped onto the \gls{canvas} in \selectmode, the text
@@ -6339,43 +6339,76 @@ lies along the bottom edge of the paper.
 
 \menudef{menu.edit.cut}
 
+The \menu{edit.cut} menu item is only available in \selectmode.
 To cut a \selection\ of \glspl{object} to the
-clipboard, use \menu{edit.cut} menu item. Note that it will be stored
-on the clipboard as a \code{JDRGroup} Java object, not as text or
-\gls{rastergraphics}, so you won't be able to paste it into a different
-application.  If you want to cut a piece of text
-from a \gls{textarea}, you will need to use the
-\hyperref[sec:edittext]{edit text area} function.
-Note that the \hyperref[sec:preamble]{preamble panes} have
+clipboard, use \menu{edit.cut} menu item. This copies the selection
+as per \menu{edit.copy} and then removes the selection from the
+\gls{canvas}.
+
+\begin{information}
+The \hyperref[sec:preamble]{preamble panes} have
 their own cut button.
+\end{information}
 
 \section{Copy}\label{sec:copyobjects}
 
 \menudef{menu.edit.copy}
 
+The \menu{edit.copy} menu item is only available in \selectmode.
 To copy a \selection\ of \glspl{object} to the
-clipboard, use \menu{edit.copy}. Note that it will be stored
-on the clipboard as a \code{JDRGroup} Java object, not as text or
-\gls{rastergraphics}, so you won't be able to paste it into a different
-application.  If you want to copy a piece of text from a
-\gls{textarea}, you will need to use the
-\hyperref[sec:edittext]{edit text area} function.
-Note that the \hyperref[sec:preamble]{preamble panes} have
+clipboard, use \menu{edit.copy}. The selection is stored as binary
+\gls{JDR} image data with the image tag set to the current filename
+(which may be \widget{label.untitled}). If the content is then
+pasted onto a \gls{canvas} with the same filename, the content will
+be shifted (which makes it more obvious that the paste operation has
+been successful), otherwise no shift will be applied (for example,
+if a selection from one \gls{canvas} is pasted into another).
+
+\begin{information}
+If the selection is copied and pasted from and to the same
+\gls{canvas} but the filename is changed in between the copy and
+paste action, then no shift will be applied.
+\end{information}
+
+The selection will also be stored on the clipboard in \gls{svg}
+format, which may be pasted into another graphics application that
+recognises that format. Any text contained in the selection (such as
+the displayed text for a \gls{textarea}) will also be stored as
+plain text on the clipboard, which can be pasted into a context that
+accepts plain text (such as a text editor). If you want to copy the
+alternative \LaTeX\ text, you will need to use the
+\hyperref[sec:edittext]{edit text area} function and copy the
+applicable field (select the text, for example with
+\accelerator{menu.textarea.select_all}, and copy with
+\accelerator{menu.textarea.copy}).
+
+\begin{information}
+The \hyperref[sec:preamble]{preamble panes} have
 their own copy button.
+\end{information}
 
 \section{Paste}\label{sec:pasteobjects}
 
 \menudef{menu.edit.paste}
 
+The \menu{edit.paste} menu item is only available in \selectmode.
 To paste a \selection\ of \glspl{object} from the clipboard, use
-\menu{edit.paste}. If you want to copy text from another
-application, and paste it into a \gls{textarea} in \FlowframTk, you
-will have to \hyperref[sec:newtext]{create a new text area}, and
-use the \gls{index.menu.textarea} to paste the text into the
-\gls*{textarea}.  If you want to paste plain text into an existing
+\menu{edit.paste}.
+
+If the clipboard doesn't contain a \gls{JDR} image but does contain
+plain text, then a new \gls{textarea} will be created for each
+non-blank line of text. The text for each \gls{textarea} will be
+trimmed. The pasted text will always start at the \gls{canvas}
+origin, offset according to the font size. This is different from
+using \gls{drag-and-drop} with the \texttool\ or \mathstool.
+
+If you want to paste plain text into an existing
 \gls*{textarea}, you will need to use the
-\hyperref[sec:edittext]{edit text area} function.  Note that the
-\hyperref[sec:preamble]{preamble panes} have their own paste button.
+\hyperref[sec:edittext]{edit text area} function.  
+
+\begin{information}
+The \hyperref[sec:preamble]{preamble panes} have their own paste button.
+\end{information}
 
 \section{Object Description}\label{sec:objectdescription}
 
@@ -16185,13 +16218,13 @@ a plain text format. The \gls*{AJR} format has less precision than the
 is~2.1.
 
 \begin{information}
-As from \FlowframTk\ v0.8.8, any \glspl{objects} that are copied
+As from \FlowframTk\ v0.8.8, any \glspl{object} that are copied
 from the \gls{canvas} to the clipboard are stored as a complete
 image in the latest \gls{JDR} format with MIME type
 \code{application/x-flowframtk-jdr}.
 For example, if a \gls{path} and a \gls{textarea} are selected and
 copied to the clipboard, the two objects will be copied to a
-temporary \gls{group} which represents a scratch image that's stored
+temporary \gls{group} which represents an image that's stored
 on the clipboard in the binary \gls{JDR} format (with no settings).
 \end{information}
 

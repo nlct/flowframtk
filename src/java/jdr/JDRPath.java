@@ -3283,7 +3283,22 @@ public class JDRPath extends JDRShape
          svg.println("      "+ ((JDRBasicStroke)s).svg(getLinePaint()));
       }
 
-      svg.println("   />");
+      String title = getDescription();
+
+      if (title != null && !title.isEmpty())
+      {
+         svg.println("   >");
+
+         svg.print("   <title>");
+         svg.println(svg.encodeContent(title));
+         svg.println("</title>");
+
+         svg.println("   </path>");
+      }
+      else
+      {
+         svg.println("   />");
+      }
    } 
 
    /**

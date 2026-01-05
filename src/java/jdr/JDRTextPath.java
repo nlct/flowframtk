@@ -585,6 +585,8 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
            && (exportSettings.textPathOutline ==
                ExportSettings.TextPathOutline.TO_PATH)))
       {
+         JDRShape shape = null;
+
          try
          {
             JDRGroup group = splitText();
@@ -596,7 +598,9 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
                group.set(j, grp.get(0));
             }
 
-            group.mergePaths(null).savePgf(tex);
+            shape = group.mergePaths(null);
+            shape.setDescription(getDescription());
+            shape.setTag(getTag());
          }
          catch (Exception e)
          {
@@ -604,7 +608,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
                MessageInfo.createWarning(e));
          }
 
-         return;
+         if (shape != null)
+         {
+            shape.savePgf(tex);
+            return;
+         }
       }
 
       if (textPaint instanceof JDRShading)
@@ -665,6 +673,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       JDRPaint paint = getTextPaint();
 
       JDRTextPathStroke stroke = (JDRTextPathStroke)getStroke();
+
       if (isOutline
             && svg.getExportSettings().textPathOutline
                  == ExportSettings.TextPathOutline.TO_PATH)
