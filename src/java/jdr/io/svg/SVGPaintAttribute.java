@@ -36,7 +36,7 @@ public class SVGPaintAttribute implements SVGAttribute
          return;
       }
 
-      if (valueString.equals("none"))
+      if (valueString.equals("none") || valueString.equals("transparent"))
       {
          paint = new JDRTransparent(cg);
       }
@@ -67,7 +67,7 @@ public class SVGPaintAttribute implements SVGAttribute
                         String group2 = m.group(2);
 
                         if (group2 == null)
-                        {
+                        {// 3 hex digits
                            red[0]   = group1.charAt(0);
                            green[0] = group1.charAt(1);
                            blue[0]  = group1.charAt(2);
@@ -77,7 +77,7 @@ public class SVGPaintAttribute implements SVGAttribute
                            blue[1]  = blue[0];
                         }
                         else
-                        {
+                        {// 6 hex digits
                            red[0]   = group1.charAt(0);
                            red[1]   = group1.charAt(1);
                            green[0] = group1.charAt(2);
