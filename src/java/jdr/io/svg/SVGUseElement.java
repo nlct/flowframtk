@@ -122,7 +122,6 @@ public class SVGUseElement extends SVGAbstractElement
             double y = 0;
 
             JDRUnit unit = group.getCanvasGraphics().getStorageUnit();
-            BBox bbox = newObject.getStorageBBox();
 
             if (xAttr != null)
             {
@@ -134,7 +133,7 @@ public class SVGUseElement extends SVGAbstractElement
                y = yAttr.lengthValue(element).getValue(unit);
             }
 
-            newObject.translate(x-bbox.getMinX(), y-bbox.getMinY());
+            newObject.translate(x, y);
          }
       }
 
