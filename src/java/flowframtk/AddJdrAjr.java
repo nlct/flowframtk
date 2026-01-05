@@ -147,7 +147,7 @@ public abstract class AddJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
             JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(
               jdrFrame.getCanvas(), undoName);
 
-            jdrFrame.getCanvas().copySelection(ce, image, false);
+            jdrFrame.getCanvas().copySelection(ce, image);
 
             ce.end();
             if (ce.canUndo()) jdrFrame.postEdit(ce);

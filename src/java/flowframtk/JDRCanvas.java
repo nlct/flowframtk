@@ -8267,7 +8267,7 @@ public class JDRCanvas extends JPanel
          }
       }
 
-      g.setDescription(getFrame().getFilename());
+      g.setTag(getFrame().getFilename());
 
       return g;
    }
@@ -8276,29 +8276,25 @@ public class JDRCanvas extends JPanel
    @Override
    public void copySelection(JDRGroup grp)
    {
-      copySelection(grp, true);
-   }
-
-   public void copySelection(JDRGroup grp, boolean shift)
-   {
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       deselectAll();
 
-      copySelection(ce, grp, shift);
+      copySelection(ce, grp);
 
       ce.end();
       if (ce.canUndo()) frame_.postEdit(ce);
    }
 
-   public void copySelection(JDRCanvasCompoundEdit ce, JDRGroup grp,
-    boolean shift)
+   public void copySelection(JDRCanvasCompoundEdit ce, JDRGroup grp)
    {
       String dupTag = null;
+      boolean shift = false;
 
-      if (grp.getDescription().equals(getFrame().getFilename()))
+      if (grp.getTag().equals(getFrame().getFilename()))
       {
          dupTag = " "+getResources().getMessage("label.duplicate");
+         shift = true;
       }
 
       JDRGrid grid = frame_.getGrid();
@@ -8366,6 +8362,13 @@ public class JDRCanvas extends JPanel
             getResources().getMessage("undo.paste"));
          ce.addEdit(edit);
       }
+   }
+
+   /* JDRImage method used by transfer handler */
+   @Override
+   public JDRFont getCurrentFont()
+   {
+      return frame_.getCurrentFont();
    }
 
    public void setImage(JDRGroup image)

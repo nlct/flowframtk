@@ -16184,6 +16184,17 @@ a plain text format. The \gls*{AJR} format has less precision than the
 \gls*{JDR} format. The current version number for both formats
 is~2.1.
 
+\begin{information}
+As from \FlowframTk\ v0.8.8, any \glspl{objects} that are copied
+from the \gls{canvas} to the clipboard are stored as a complete
+image in the latest \gls{JDR} format with MIME type
+\code{application/x-flowframtk-jdr}.
+For example, if a \gls{path} and a \gls{textarea} are selected and
+copied to the clipboard, the two objects will be copied to a
+temporary \gls{group} which represents a scratch image that's stored
+on the clipboard in the binary \gls{JDR} format (with no settings).
+\end{information}
+
 The first line of the plain text \gls*{AJR} format must be:
 \begin{compactcodebox}
 AJR \meta{version}
@@ -16915,8 +16926,13 @@ Recall from \hyperref[jdr:object]{above} that the image is stored with an implie
 \meta{flowframe-specs} for this implicit group represents the image
 \gls+{typeblock} and the \meta{description} represents the image description.
 The \meta{tag} is also included for version 2.1 and above which
-represents the image's tag, but \FlowframTk\ currently doesn't
-provide a function to set a tag for the complete image.
+represents the image's tag. This tag should be empty except for any
+image stored in the clipboard. In which case, the image tag is set
+to the filename that was current when the data was copied to the
+clipboard. (This filename may simply be \widget{label.untitled}
+for a new unsaved image.) The image tag in the clipboard is
+used to determine whether or not to offset the content when pasted
+into a \gls{canvas}.
 
 \end{numbered}
 

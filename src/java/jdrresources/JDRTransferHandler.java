@@ -194,9 +194,9 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                   ByteBuffer buffer = ByteBuffer.allocate(256);
 
                   int b;
-                  double offset = 0;
-                  JDRFont font = new JDRFont(canvasGraphics.getMessageDictionary());
+                  JDRFont font = img.getCurrentFont();
                   double skip = font.getSize(canvasGraphics.getStorageUnit());
+                  double offset = skip;
 
                   while ((b = ins.read()) != -1)
                   {
@@ -209,7 +209,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                   {
                      group = new JDRGroup(canvasGraphics);
 
-                     String[] split = text.split("\\r?\\n");
+                     String[] split = text.split("\\R");
 
                      for (String s : split)
                      {
@@ -331,7 +331,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
    private ExportSettings exportSettings;
 
    public static final DataFlavor DATA_FLAVOR_JDR
-    = new DataFlavor("application/x-jdr", "FlowFramTk Binary Format");
+    = new DataFlavor("application/x-flowframtk-jdr", "FlowFramTk Binary Format");
 
    public static final DataFlavor DATA_FLAVOR_SVG
     = new DataFlavor("image/svg+xml; class=java.io.InputStream", "SVG");

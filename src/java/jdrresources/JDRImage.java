@@ -43,4 +43,9 @@ public interface JDRImage extends JDRConstants
     * Note that the group itself is not copied.
     */
    public void copySelection(JDRGroup group);
+
+   /**
+    * Returns the current font settings.
+    */
+   public JDRFont getCurrentFont();
 }
