@@ -236,7 +236,6 @@ public abstract class SVGAbstractElement implements Cloneable
    }
 
    public void addAttribute(String name, Attributes saxAttr)
-     throws InvalidFormatException
    {
       String value = saxAttr.getValue(name);
 
@@ -244,7 +243,15 @@ public abstract class SVGAbstractElement implements Cloneable
         && getElementAttribute(name) == null
         && attributeSet.getAttribute(name) == null)
       {
-         addAttribute(getStyleAttribute(name, value));
+         try
+         {
+            addAttribute(getStyleAttribute(name, value));
+         }
+         catch (InvalidFormatException e)
+         {
+            getMessageSystem().getPublisher().publishMessages(
+              MessageInfo.createWarning(e));
+         }
       }
    }
 
