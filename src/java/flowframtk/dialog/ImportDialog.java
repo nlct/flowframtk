@@ -172,6 +172,8 @@ public class ImportDialog extends JDialog
          update(type, file);
       }
 
+      extractBitmapsButton.setVisible(type != ImportSettings.Type.SVG);
+
       formatField.setText(getResources().getMessage("import.type."+type));
    }
 
@@ -231,7 +233,8 @@ public class ImportDialog extends JDialog
 
       if (src == extractBitmapsButton)
       {
-         bitmapComp.setVisible(extractBitmapsButton.isSelected());
+         bitmapComp.setVisible(
+          extractBitmapsButton.isVisible() && extractBitmapsButton.isSelected());
       }
    }
 
