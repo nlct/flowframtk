@@ -19,6 +19,7 @@
             fill: none;
           }
           .sample { font-family: sans-serif; font-size: 12; }
+          .sample2 { font: 12 sans-serif; }
         ]]>
   </style>
 

@@ -18,6 +18,26 @@ public class SVGAttributeSet extends SimpleAttributeSet
       super(source);
    }
 
+   public void addAttribute(SVGAttribute attr)
+   {
+      if (attr instanceof SVGCompoundAttribute)
+      {
+         for (Enumeration en = ((SVGCompoundAttribute)attr).getAttributeNames();
+              en.hasMoreElements();
+             )
+         {
+            Object name = en.nextElement();
+            Object value = ((SVGCompoundAttribute)attr).getAttribute(name);
+
+            addAttribute((SVGAttribute)value);
+         }
+      }
+      else
+      {
+         addAttribute(attr.getName(), attr);
+      }
+   }
+
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
       for (Enumeration en = getAttributeNames(); en.hasMoreElements(); )

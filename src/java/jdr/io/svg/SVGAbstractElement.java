@@ -210,6 +210,9 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          return new SVGGroupElement(handler, parent, uri, attr);
       }
+      else if (elementName.equals("link"))
+      {// TODO?
+      }
 
       throw new UnknownSVGElementException(elementName);
    }
@@ -305,7 +308,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void addAttribute(SVGAttribute attr)
    {
-      attributeSet.addAttribute(attr.getName(), attr);
+      attributeSet.addAttribute(attr);
    }
 
    public void addAttributeSet(String attrList)
@@ -325,7 +328,7 @@ public abstract class SVGAbstractElement implements Cloneable
          {
             SVGAttribute attr = createStyleAttribute(m.group(1), m.group(2));
 
-            atSet.addAttribute(attr.getName(), attr);
+            atSet.addAttribute(attr);
          }
          catch (InvalidFormatException e)
          {
@@ -483,12 +486,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = new SVGFontVariantAttribute(handler, style);
       }
-/*
       else if (name.equals("font"))
       {
          attr = new SVGFontAttribute(handler, style);
       }
-*/
 
       if (attr == null)
       {
