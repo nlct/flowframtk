@@ -1997,7 +1997,7 @@ public class JDRFrame extends JInternalFrame
    {
       out.println("is saved: "+saved);
       out.println("new image: "+newImage);
-      out.println("current filename: "+currentFile.toString());
+      out.println("current file: "+currentFile);
       out.println(getCanvasGraphics().getLaTeXFontBase());
       out.println("Image:");
       canvas.printInfo(out);
