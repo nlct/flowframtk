@@ -396,7 +396,8 @@ public class FontPanel extends JScrollPane
 
    public void setFontShape(int shape)
    {
-      fontShape.setSelectedIndex(shape);
+      // Java Font only supports upright/italic
+      fontShape.setSelectedIndex(Math.min(shape, fontShape.getItemCount()-1));
    }
 
    public void setDefaults()
