@@ -108,7 +108,7 @@ public class SVGIntegerAttribute extends SVGAbstractAttribute
       isHorizontal = attr.isHorizontal;
    }
 
-   private Integer value;
+   protected Integer value;
    String name;
 
    private boolean isPercent, isHorizontal;

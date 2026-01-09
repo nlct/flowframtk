@@ -85,5 +85,11 @@ public class SVGFontWeightAttribute extends SVGAbstractAttribute
       }
    }
 
+   @Override
+   public Object getValue()
+   {
+      return fontWeight;
+   }
+
    private Integer fontWeight;
 }

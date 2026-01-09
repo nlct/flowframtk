@@ -120,27 +120,49 @@ public class SVGHandler extends DefaultHandler
       return msgSystem;
    }
 
-   public void processingInstruction(String target, String data)
-      throws SAXException
+   public String getMessageWithFallback(String id, String fallbackFormat,
+     Object... params)
    {
-      msgSystem.getPublisher().publishMessages(
-       MessageInfo.createVerbose(1, "Processing. Target: "+target+". Data: "+data));
+      return msgSystem.getMessageWithFallback(id, fallbackFormat, params);
    }
 
-   public void warning(SAXParseException e)
-      throws SAXException
+   public void debugMessage(String msg)
+   {
+      if (msgSystem.isDebuggingOn())
+      {
+         msgSystem.getPublisher().publishMessages(MessageInfo.createMessage(msg));
+      }
+   }
+
+   public void debugMessage(Throwable cause)
+   {
+      if (msgSystem.isDebuggingOn())
+      {
+         error(cause);
+      }
+   }
+
+   public void verbose(int level, String msg)
+   {
+      msgSystem.getPublisher().publishMessages(MessageInfo.createVerbose(level, msg));
+   }
+
+   public void warning(Throwable e)
    {
       msgSystem.getPublisher().publishMessages(MessageInfo.createWarning(e));
    }
 
-   public void error(SAXParseException e)
-      throws SAXException
+   public void warning(String msg)
+   {
+      msgSystem.getPublisher().publishMessages(MessageInfo.createWarning(msg));
+   }
+
+   public void error(Throwable e)
    {
       msgSystem.getPublisher().publishMessages(MessageInfo.createError(e));
    }
 
-   public void fatalError(SAXParseException e)
-      throws SAXException
+   public void fatalError(Throwable e)
    {
       msgSystem.getPublisher().publishMessages(MessageInfo.createFatalError(e));
    }
@@ -159,6 +181,31 @@ public class SVGHandler extends DefaultHandler
       }
 
       return false;
+   }
+
+   public JDRBasicStroke createDefaultStroke()
+   {
+      return new JDRBasicStroke(getCanvasGraphics());
+   }
+
+   public JDRFont createDefaultFont()
+   {
+      return new JDRFont(msgSystem);
+   }
+
+   public JDRPaint createDefaultTextPaint()
+   {
+      return new JDRColor(getCanvasGraphics(), 0, 0, 0);
+   }
+
+   public JDRPaint createDefaultLinePaint()
+   {
+      return new JDRTransparent(getCanvasGraphics());
+   }
+
+   public JDRPaint createDefaultFillPaint()
+   {
+      return new JDRColor(getCanvasGraphics(), 0, 0, 0);
    }
 
    public SVG getSVG()

@@ -114,7 +114,7 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
    }
 
    private String name;
-   private Double value;
+   protected Double value;
 
    private boolean isPercent;
    private boolean isHorizontal;

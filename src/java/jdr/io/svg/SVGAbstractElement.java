@@ -128,6 +128,7 @@ public abstract class SVGAbstractElement implements Cloneable
    {
       addAttribute("fill", attr);
       addAttribute("fill-opacity", attr);
+      addAttribute("fill-rule", attr);
       addAttribute("stroke", attr);
       addAttribute("stroke-dasharray", attr);
       addAttribute("stroke-dashoffset", attr);
@@ -193,6 +194,10 @@ public abstract class SVGAbstractElement implements Cloneable
       else if (elementName.equals("path"))
       {
          return new SVGPathElement(handler, parent, uri, attr);
+      }
+      else if (elementName.equals("text"))
+      {
+         return new SVGTextElement(handler, parent, uri, attr);
       }
       else if (elementName.equals("style"))
       {
@@ -349,22 +354,22 @@ public abstract class SVGAbstractElement implements Cloneable
          attr = new SVGPaintAttribute(handler, name, style,
             getPaintAttribute("color", null));
       }
+      else if (name.equals("stroke-opacity"))
+      {
+         attr = new SVGDoubleAttribute(handler, name, style);
+      }
       else if (name.equals("fill"))
       {
          attr = new SVGPaintAttribute(handler, name, style,
             getPaintAttribute("color", null));
       }
-      else if (name.equals("stroke-width"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style);
-      }
-      else if (name.equals("stroke-opacity"))
-      {
-         attr = new SVGDoubleAttribute(handler, name, style);
-      }
       else if (name.equals("fill-opacity"))
       {
          attr = new SVGDoubleAttribute(handler, name, style);
+      }
+      else if (name.equals("stroke-width"))
+      {
+         attr = new SVGPenWidthAttribute(handler, style);
       }
       else if (name.equals("fill-rule"))
       {
@@ -380,11 +385,11 @@ public abstract class SVGAbstractElement implements Cloneable
       }
       else if (name.equals("stroke-miterlimit"))
       {
-         attr = new SVGDoubleAttribute(handler, name, style);
+         attr = new SVGMitreLimitAttribute(handler, style);
       }
       else if (name.equals("stroke-dashoffset"))
       {
-         attr = new SVGLengthAttribute(handler, name, style);
+         attr = new SVGDashOffsetAttribute(handler, style);
       }
       else if (name.equals("stroke-dasharray"))
       {
@@ -598,6 +603,33 @@ public abstract class SVGAbstractElement implements Cloneable
       return defPaint;
    }
 
+   public JDRPaint getLinePaint()
+   {
+      return getPaintAttribute("stroke", null);
+   }
+
+   public JDRPaint getFillPaint()
+   {
+      return getPaintAttribute("fill", null);
+   }
+
+   public JDRPaint getDefaultPaint()
+   {
+      return getPaintAttribute("color", null);
+   }
+
+   public SVGNumberAttribute getNumberAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGNumberAttribute)
+      {
+         return (SVGNumberAttribute)attr;
+      }
+
+      return null;
+   }
+
    public double getDoubleAttribute(String attrName, double defValue)
    {
       SVGAttribute attr = getAttribute(attrName, null);
@@ -664,14 +696,14 @@ public abstract class SVGAbstractElement implements Cloneable
       return null;
    }
 
-   public DashPattern getDashArrayAttribute()
+   public SVGDashArrayAttribute getDashArrayAttribute()
      throws InvalidFormatException
    {
       SVGAttribute attr = getAttribute("stroke-dasharray", null);
 
       if (attr != null && attr instanceof SVGDashArrayAttribute)
       {
-         return ((SVGDashArrayAttribute)attr).getDashPattern(this);
+         return (SVGDashArrayAttribute)attr;
       }
 
       return null;
@@ -724,6 +756,144 @@ public abstract class SVGAbstractElement implements Cloneable
 
       return null;
    }
+
+   public void applyTextAttributes(JDRTextual text)
+     throws InvalidFormatException
+   {
+      JDRPaint paint = getDefaultPaint();
+
+      if (paint != null)
+      {
+         text.setTextPaint(paint);
+      }
+
+      SVGNumberAttribute numAttr = getNumberAttribute("opacity");
+
+      if (numAttr != null)
+      {
+         text.getTextPaint().setAlpha(numAttr.doubleValue(this));
+      }
+
+      SVGAttribute fontFam = getAttribute("font-family", null);
+
+      if (fontFam != null)
+      {
+         fontFam.applyTo(this, (JDRCompleteObject)text);
+      }
+
+      SVGAttribute fontSize = getAttribute("font-size", null);
+
+      if (fontSize != null)
+      {
+         fontSize.applyTo(this, (JDRCompleteObject)text);
+      }
+
+      SVGAttribute fontStyle = getAttribute("font-style", null);
+
+      if (fontStyle != null)
+      {
+         fontStyle.applyTo(this, (JDRCompleteObject)text);
+      }
+
+      SVGAttribute fontVariant = getAttribute("font-variant", null);
+
+      if (fontVariant != null)
+      {
+         fontVariant.applyTo(this, (JDRCompleteObject)text);
+      }
+
+      SVGAttribute fontWeight = getAttribute("font-weight", null);
+
+      if (fontWeight != null)
+      {
+         fontWeight.applyTo(this, (JDRCompleteObject)text);
+      }
+   }
+
+   public void applyShapeAttributes(JDRShape shape)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
+      SVGNumberAttribute numAttr;
+
+      attr = getElementAttribute("stroke-width");
+
+      if (attr != null)
+      {
+         attr.applyTo(this, shape);
+      }
+
+      attr = getElementAttribute("stroke-linecap");
+
+      if (attr != null)
+      {
+         attr.applyTo(this, shape);
+      }
+
+      attr = getElementAttribute("stroke-linejoin");
+
+      if (attr != null)
+      {
+         attr.applyTo(this, shape);
+      }
+
+      attr = getElementAttribute("stroke-miterlimit");
+
+      if (attr != null)
+      {
+         attr.applyTo(this, shape);
+      }
+
+      attr = getElementAttribute("fill-rule");
+
+      if (attr != null)
+      {
+         attr.applyTo(this, shape);
+      }
+
+      SVGDashArrayAttribute dashAttr = getDashArrayAttribute();
+
+      if (dashAttr != null)
+      {
+         dashAttr.applyTo(this, shape);
+      }
+
+      attr = getElementAttribute("stroke-dashoffset");
+
+      if (attr != null)
+      {
+         attr.applyTo(this, shape);
+      }
+
+      JDRPaint paint = getFillPaint();
+
+      if (paint != null)
+      {
+         shape.setFillPaint(paint);
+      }
+
+      numAttr = getNumberAttribute("fill-opacity");
+
+      if (numAttr != null && numAttr.getValue() != null)
+      {
+         shape.getFillPaint().setAlpha(numAttr.doubleValue(this));
+      }
+
+      paint = getLinePaint();
+
+      if (paint != null)
+      {
+         shape.setLinePaint(paint);
+      }
+
+      numAttr = getNumberAttribute("stroke-opacity");
+
+      if (numAttr != null && numAttr.getValue() != null)
+      {
+         shape.getLinePaint().setAlpha(numAttr.doubleValue(this));
+      }
+   }
+
 
    public void makeEqual(SVGAbstractElement element)
    {

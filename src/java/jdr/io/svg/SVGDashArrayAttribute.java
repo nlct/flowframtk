@@ -54,6 +54,17 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
    @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
+      if (object instanceof JDRShape)
+      {
+         JDRStroke stroke = ((JDRShape)object).getStroke();
+
+         if (stroke instanceof JDRBasicStroke)
+         {
+            JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
+
+            basicStroke.setDashPattern(getDashPattern(element));
+         }
+      }
    }
 
    @Override
@@ -79,7 +90,6 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
       super.makeEqual(attr);
       isSolid = attr.isSolid;
    }
-
 
    private boolean isSolid;
 }

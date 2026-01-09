@@ -86,6 +86,12 @@ public class SVGFontVariantAttribute extends SVGAbstractAttribute
       }
    }
 
-   boolean isInherit = false;
-   boolean isSmallCaps = false;
+   @Override
+   public Object getValue()
+   {
+      return isInherit ? null : Boolean.valueOf(isSmallCaps);
+   }
+
+   boolean isInherit;
+   boolean isSmallCaps;
 }

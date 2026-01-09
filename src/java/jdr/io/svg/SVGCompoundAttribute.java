@@ -6,7 +6,8 @@ import javax.swing.text.SimpleAttributeSet;
 import com.dickimawbooks.jdr.JDRCompleteObject;
 import com.dickimawbooks.jdr.exceptions.*;
 
-public abstract class SVGCompoundAttribute extends SimpleAttributeSet implements SVGAttribute
+public abstract class SVGCompoundAttribute extends SimpleAttributeSet
+ implements SVGAttribute
 {
    public SVGCompoundAttribute(SVGHandler handler, String name, String valueString)
     throws InvalidFormatException

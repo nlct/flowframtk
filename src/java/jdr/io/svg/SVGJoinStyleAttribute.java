@@ -75,6 +75,17 @@ public class SVGJoinStyleAttribute extends SVGAbstractAttribute
    @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
+      if (joinStyle != null && object instanceof JDRShape)
+      {
+         JDRStroke stroke = ((JDRShape)object).getStroke();
+
+         if (stroke instanceof JDRBasicStroke)
+         {
+            JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
+
+            basicStroke.setJoinStyle(joinStyle.intValue());
+         }
+      }
    }
 
    @Override

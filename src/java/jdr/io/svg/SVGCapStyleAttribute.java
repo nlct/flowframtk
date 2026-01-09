@@ -39,7 +39,10 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown cap style '"+valueString+"'");
+         throw new InvalidFormatException(
+           handler.getMessageWithFallback("error.svg.invalid_attribute_value",
+           "Invalid {0} value: {2}",
+           getName(), valueString));
       }
    }
 
@@ -54,6 +57,7 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
       return "stroke-linecap";
    }
 
+   @Override
    public Object getValue()
    {
       return capStyle;
@@ -74,6 +78,17 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
    @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
+      if (capStyle != null && object instanceof JDRShape)
+      {
+         JDRStroke stroke = ((JDRShape)object).getStroke();
+
+         if (stroke instanceof JDRBasicStroke)
+         {
+            JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
+
+            basicStroke.setCapStyle(capStyle.intValue());
+         }
+      }
    }
 
    @Override

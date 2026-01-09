@@ -21,13 +21,13 @@ public abstract class SVGAbstractAttribute implements SVGAttribute
    @Override
    public String toString()
    {
-      return String.format("%s=\"%s\"", getName(), valueString);
+      return String.format("%s[name=%s,original=%s,value=%s]",
+      getClass().getSimpleName(), getName(), valueString, getValue());
    }
 
-   @Override
-   public Object getValue()
+   public String getCss()
    {
-      return valueString;
+      return String.format("%s=\"%s\"", getName(), valueString);
    }
 
    public void makeEqual(SVGAbstractAttribute other)

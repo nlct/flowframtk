@@ -548,6 +548,9 @@ File doesn''t exist</entry>
 <entry key="error.acorn_drawfile.invalid_font_id">Invalid font identifier: {0}</entry>
 <entry key="error.acorn_drawfile.invalid_font_format">Invalid font format</entry>
 
+<entry key="error.svg.unknown_font_family">No font family available for {0}</entry>
+<entry key="error.svg.invalid_attribute_value">Invalid {0} value: {2}</entry>
+
 <!-- Internal Error Messages -->
 
 <entry key="internal_error.title">Internal Error</entry>

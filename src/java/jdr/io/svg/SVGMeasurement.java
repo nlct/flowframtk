@@ -124,7 +124,7 @@ public class SVGMeasurement
    public static final Pattern pattern
       = Pattern.compile("((?:[+\\-]?\\d*)(?:\\.\\d+)?(?:[eE][=\\-]?\\d+)?)\\s*([a-zA-Z]*)");
 
-   private Double value;
+   protected Double value;
    private String unitName;
    private int unitId=-1;
    protected String valueString;

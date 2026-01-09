@@ -71,6 +71,17 @@ public class SVGFillRuleAttribute extends SVGAbstractAttribute
    @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
+      if (rule != null && object instanceof JDRShape)
+      {
+         JDRStroke stroke = ((JDRShape)object).getStroke();
+
+         if (stroke instanceof JDRBasicStroke)
+         {
+            JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
+
+            basicStroke.setWindingRule(rule.intValue());
+         }
+      }
    }
 
    @Override

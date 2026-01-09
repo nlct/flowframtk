@@ -88,6 +88,7 @@ public class SVGFontSizeAttribute extends SVGAbstractAttribute
    {
       super.makeEqual(attr);
       length = attr.length;
+      valueType = attr.valueType;
    }
 
    @Override
@@ -154,7 +155,13 @@ public class SVGFontSizeAttribute extends SVGAbstractAttribute
       }
    }
 
-   private SVGLength length = null;
+   @Override
+   public Object getValue()
+   {
+      return Integer.valueOf(valueType);
+   }
+
+   private SVGLength length;
 
    static final int INHERIT = -1;
    static final int VALUE = 0;
@@ -168,5 +175,5 @@ public class SVGFontSizeAttribute extends SVGAbstractAttribute
    static final int SMALLER = 8;
    static final int LARGER = 9;
 
-   private int valueType = INHERIT;
+   private int valueType;
 }

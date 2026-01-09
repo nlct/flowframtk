@@ -46,6 +46,14 @@ public class SVGFontFamilyAttribute extends SVGAbstractAttribute
                break;
             }
          }
+
+         if (fontFamily == null)
+         {
+            throw new InvalidFormatException(handler.getMessageWithFallback(
+             "error.svg.unknown_font_family",
+             "No font family available for {0}",
+             valueString));
+         }
       }
    }
 
@@ -90,7 +98,13 @@ public class SVGFontFamilyAttribute extends SVGAbstractAttribute
       }
    }
 
-   private String fontFamily = null;
+   @Override
+   public Object getValue()
+   {
+      return fontFamily;
+   }
+
+   private String fontFamily;
 
    static final Pattern FAMILY_PATTERN = Pattern.compile(
     "\\s*(\"[^\"]+\"|[^,\\s]+)\\s*,?", Pattern.DOTALL);

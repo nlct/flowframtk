@@ -47,7 +47,7 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
          case SVGMeasurement.UNIT_DEG :
             return Math.toRadians(val);
          case SVGMeasurement.UNIT_GRAD :
-            return val*gradFactor;
+            return val*GRAD_FACTOR;
       }
 
       return val;
@@ -76,7 +76,7 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
       return null;
    }
 
-   private static final double gradFactor = Math.PI/200;
+   private static final double GRAD_FACTOR = Math.PI/200;
 
    private String name;
 }

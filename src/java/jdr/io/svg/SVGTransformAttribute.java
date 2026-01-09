@@ -25,7 +25,7 @@ public class SVGTransformAttribute implements SVGAttribute
          return;
       }
 
-      Matcher m = transformPattern.matcher(valueString);
+      Matcher m = TRANSFORM_PATTERN.matcher(valueString);
 
       while (valueString != null && m.matches())
       {
@@ -43,7 +43,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (valueString != null)
          {
-            m = transformPattern.matcher(valueString);
+            m = TRANSFORM_PATTERN.matcher(valueString);
          }
 
          try
@@ -226,7 +226,7 @@ public class SVGTransformAttribute implements SVGAttribute
    SVGHandler handler;
    String valueString;
 
-   private static final Pattern transformPattern 
+   private static final Pattern TRANSFORM_PATTERN 
       = Pattern.compile("\\s*,?\\s*([a-zA-Z]+)\\s*\\(([^\\)]+)\\)(?:[\\s,]+(.*))?");
 
    private static final Pattern MATRIX_PATTERN

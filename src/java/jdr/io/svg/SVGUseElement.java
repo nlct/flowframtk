@@ -116,6 +116,8 @@ public class SVGUseElement extends SVGAbstractElement
 
       if (newObject != null)
       {
+         applyElementAttributes(newObject);
+
          if (xAttr != null || yAttr != null)
          {
             double x = 0;
@@ -138,6 +140,30 @@ public class SVGUseElement extends SVGAbstractElement
       }
 
       return newObject;
+   }
+
+   protected void applyElementAttributes(JDRCompleteObject object)
+   throws InvalidFormatException
+   {
+      if (object instanceof JDRGroup)
+      {
+         for (int i = 0; i < ((JDRGroup)object).size(); i++)
+         {
+            applyElementAttributes(((JDRGroup)object).get(i));
+         }
+      }
+      else
+      {
+         if (object instanceof JDRShape)
+         {
+            applyShapeAttributes((JDRShape)object);
+         }
+
+         if (object instanceof JDRTextual)
+         {
+            applyTextAttributes((JDRTextual)object);
+         }
+      }
    }
 
    public Object clone()
