@@ -63,14 +63,59 @@ public abstract class SVGAbstractElement implements Cloneable
          String attrName = en.nextElement().toString();
 
          System.out.println(attrName+" : "
-           +((SVGAttribute)attributeSet.getAttribute(attrName)).getValue());
+           +((SVGAttribute)attributeSet.getAttribute(attrName)).toString());
       }
+   }
+
+   public String getId()
+   {
+      return id;
+   }
+
+   public String[] getCssClassList()
+   {
+      return cssClassList;
    }
 
    protected void applyAttributes(String uri, Attributes attr)
       throws InvalidFormatException
    {
-      addAttribute("id", attr);
+      String value = attr.getValue("id");
+
+      if (value != null && !value.isEmpty())
+      {
+         id = value;
+      }
+
+      value = attr.getValue("class");
+
+      if (value != null)
+      {
+         cssClassList = value.split("\\s+");
+      }
+
+      value = attr.getValue("style");
+
+      if (value != null && !value.isEmpty())
+      {
+         if (styles == null)
+         {
+            styles = new SVGStyles();
+         }
+
+         if (id != null || cssClassList == null || cssClassList.length == 0)
+         {
+            styles.putRule("", id, "", createAttributeSet(value));
+         }
+         else
+         {
+            for (String s : cssClassList)
+            {
+               styles.putRule("", "", s, createAttributeSet(value));
+            }
+         }
+      }
+
       addAttribute("href", attr);
       addAttribute("xlink:href", attr);
       addAttribute("transform", attr);
@@ -101,6 +146,7 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("font-size", attr);
       addAttribute("font-variant", attr);
       addAttribute("font-weight", attr);
+      addAttribute("font", attr);
    }
 
    public static SVGAbstractElement getElement(
@@ -212,55 +258,54 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void addStyleRules(String ruleList)
    {
-      Matcher m = stylePattern.matcher(ruleList);
+      /* NB javax.swing.text.html.CSS only supports limited HTML
+       attributes. Using
+       javax.swing.text.html.StyleSheet.addRule(String)
+       will only pick up those attributes (which would only be
+       useful for text.)
+      */
 
-      while (m.matches())
+      CSS_IGNORED.matcher(ruleList).replaceAll("");
+
+      if (styles == null)
       {
-         String name = m.group(1);
+         styles = new SVGStyles();
+      }
+
+      Matcher m = STYLE_PATTERN.matcher(ruleList);
+
+      while (m.find())
+      {
+         String selectorRules = m.group(1);
          String attrList = m.group(2);
-         m = stylePattern.matcher(m.group(3));
+         m = STYLE_PATTERN.matcher(m.group(3));
 
          SVGAttributeSet atSet = createAttributeSet(attrList);
 
-         String[] split = name.split("\\s*,\\s*");
-
-         for (int i = 0; i < split.length; i++)
-         {
-            String elemName = split[i].trim();
-
-            SVGAttributeSet set = (SVGAttributeSet)atSet.clone();
-            set.setName(elemName);
-            attributeSet.addAttribute(elemName, set);
-         }
+         styles.addRules(selectorRules, atSet);
       }
    }
 
-   public void addAttribute(String name, Attributes saxAttr)
+   public void addAttribute(String attrName, Attributes saxAttr)
    {
-      String value = saxAttr.getValue(name);
+      String value = saxAttr.getValue(attrName);
 
-      if (value != null
-        && getElementAttribute(name) == null
-        && attributeSet.getAttribute(name) == null)
+      if (value != null)
       {
          try
          {
-            addAttribute(getStyleAttribute(name, value));
+            addAttribute(createStyleAttribute(attrName, value));
          }
          catch (InvalidFormatException e)
          {
-            getMessageSystem().getPublisher().publishMessages(
-              MessageInfo.createWarning(e));
+            warning(e);
          }
       }
    }
 
    public void addAttribute(SVGAttribute attr)
    {
-      if (attr.getValue() != null)
-      {
-         attributeSet.addAttribute(attr.getName(), attr);
-      }
+      attributeSet.addAttribute(attr.getName(), attr);
    }
 
    public void addAttributeSet(String attrList)
@@ -270,37 +315,28 @@ public abstract class SVGAbstractElement implements Cloneable
 
    protected SVGAttributeSet createAttributeSet(String attrList)
    {
-      SVGAttributeSet atSet 
-         = new SVGAttributeSet(getId());
+      SVGAttributeSet atSet = new SVGAttributeSet();
 
-      String[] split = attrList.split("\\s*;\\s*");
+      Matcher m = STYLE_ATTR_PATTERN.matcher(attrList);
 
-      for (int i = 0; i < split.length; i++)
+      while (m.find())
       {
-         String attrDef = split[i].trim();
-
-         Matcher attrM = styleAttrPattern.matcher(attrDef);
-
-         if (attrM.matches())
+         try
          {
-            try
-            {
-               SVGAttribute attr = getStyleAttribute(attrM.group(1), attrM.group(2));
+            SVGAttribute attr = createStyleAttribute(m.group(1), m.group(2));
 
-               atSet.addAttribute(attr.getName(), attr);
-            }
-            catch (InvalidFormatException e)
-            {
-               getMessageSystem().getPublisher().publishMessages(
-                 MessageInfo.createWarning(e));
-            }
+            atSet.addAttribute(attr.getName(), attr);
+         }
+         catch (InvalidFormatException e)
+         {
+            warning(e);
          }
       }
 
       return atSet;
    }
 
-   public SVGAttribute getStyleAttribute(String name, String style)
+   protected SVGAttribute createStyleAttribute(String name, String style)
      throws InvalidFormatException
    {
       SVGAttribute attr = null;
@@ -419,7 +455,7 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = new SVGVisibilityStyleAttribute(handler, style);
       }
-      else if (name.equals("id") || name.equals("href") || name.equals("xlink:href"))
+      else if (name.equals("href") || name.equals("xlink:href"))
       {
          attr = new SVGStringAttribute(handler, name, style);
       }
@@ -427,6 +463,32 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = new SVGTransformAttribute(handler, style);
       }
+      else if (name.equals("font-size"))
+      {
+         attr = new SVGFontSizeAttribute(handler, style);
+      }
+      else if (name.equals("font-family"))
+      {
+         attr = new SVGFontFamilyAttribute(handler, style);
+      }
+      else if (name.equals("font-weight"))
+      {
+         attr = new SVGFontWeightAttribute(handler, style);
+      }
+      else if (name.equals("font-style"))
+      {
+         attr = new SVGFontStyleAttribute(handler, style);
+      }
+      else if (name.equals("font-variant"))
+      {
+         attr = new SVGFontVariantAttribute(handler, style);
+      }
+/*
+      else if (name.equals("font"))
+      {
+         attr = new SVGFontAttribute(handler, style);
+      }
+*/
 
       if (attr == null)
       {
@@ -436,28 +498,52 @@ public abstract class SVGAbstractElement implements Cloneable
       return attr;
    }
 
-   public Object getElementAttribute(String attrName)
+   public SVGAttribute getAttribute(String attrName, SVGAttribute defValue)
    {
-      return getElementAttribute(getName(), attrName);
+      SVGAttribute attr = getElementAttribute(attrName);
+
+      return attr == null ? defValue : attr;
    }
 
-   public Object getElementAttribute(String elementName, String attrName)
+   public SVGAttribute getElementAttribute(String attrName)
    {
-      SVGAttributeSet atSet = getAttributeSet(elementName);
+      return getElementAttribute(getName(), id, cssClassList, attrName);
+   }
 
-      if (atSet != null)
+   public SVGAttribute getElementAttribute(String elementName, String elementId,
+     String[] elementClasses, String attrName)
+   {
+      Object object;
+
+      if (elementName.equals(getName()))
       {
-         Object attr = atSet.getAttribute(attrName);
+         object = attributeSet.getAttribute(attrName);
 
-         if (attr != null)
+         if (object != null)
          {
-            return attr;
+            return (SVGAttribute)object;
+         }
+      }
+
+      if (styles != null)
+      {
+         SVGAttributeSet set = styles.getFor(elementName, elementId, elementClasses);
+
+         if (set != null)
+         {
+            object = set.getAttribute(attrName);
+
+            if (object != null)
+            {
+               return (SVGAttribute)object;
+            }
          }
       }
 
       if (parent != null)
       {
-         return parent.getElementAttribute(elementName, attrName);
+         return parent.getElementAttribute(elementName, elementId, elementClasses,
+           attrName);
       }
 
       return null;
@@ -474,81 +560,6 @@ public abstract class SVGAbstractElement implements Cloneable
       }
 
       return null;
-   }
-
-   public SVGAttributeSet getAttributeSet()
-   {
-      return getAttributeSet(getName());
-   }
-
-   public SVGAttributeSet getAttributeSet(String element)
-   {
-      Object attr = attributeSet.getAttribute(element);
-
-      if (attr != null && attr instanceof SVGAttributeSet)
-      {
-         return (SVGAttributeSet)attr;
-      }
-
-      if (parent != null)
-      {
-         SVGDefsElement defs = parent.getChildDefs();
-
-         if (defs != null)
-         {
-            attr = defs.attributeSet.getAttribute(element);
-
-            if (attr != null && attr instanceof SVGAttributeSet)
-            {
-               SVGAttributeSet atSet = (SVGAttributeSet)attr;
-
-               if (element.equals(atSet.getName()))
-               {
-                  return atSet;
-               }
-            }
-         }
-
-         return parent.getAttributeSet(element);
-      }
-
-      return null;
-   }
-
-   public Object getAttribute(String element, String name, Object defValue)
-   {
-      Object attr = attributeSet.getAttribute(name);
-
-      if (attr != null)
-      {
-         return attr;
-      }
-
-      attr = getElementAttribute(element, name);
-
-      if (attr != null)
-      {
-         return attr;
-      }
-
-      if (parent != null)
-      {
-         return parent.getAttribute(element, name, defValue);
-      }
-
-      return defValue;
-   }
-
-   public boolean attributeExists(String name)
-   {
-      return attributeExists(getName(), name);
-   }
-
-   public boolean attributeExists(String element, String name)
-   {
-      Object attr = getAttribute(element, name, null);
-
-      return attr != null;
    }
 
    public SVGAbstractElement getRefElement(String id)
@@ -574,16 +585,11 @@ public abstract class SVGAbstractElement implements Cloneable
       return parent.getRefElement(id);
    }
 
-   public JDRPaint getPaintAttribute(String name, JDRPaint defPaint)
+   public JDRPaint getPaintAttribute(String attrName, JDRPaint defPaint)
    {
-      return getPaintAttribute(getName(), name, defPaint);
-   }
+      SVGAttribute attr = getAttribute(attrName, null);
 
-   public JDRPaint getPaintAttribute(String element, String name, JDRPaint defPaint)
-   {
-      Object attr = getAttribute(element, name, defPaint);
-
-      if (attr instanceof SVGPaintAttribute)
+      if (attr != null && attr instanceof SVGPaintAttribute)
       {
          return ((SVGPaintAttribute)attr).getPaint();
       }
@@ -591,14 +597,9 @@ public abstract class SVGAbstractElement implements Cloneable
       return defPaint;
    }
 
-   public double getDoubleAttribute(String name, double defValue)
+   public double getDoubleAttribute(String attrName, double defValue)
    {
-      return getDoubleAttribute(getName(), name, defValue);
-   }
-
-   public double getDoubleAttribute(String element, String name, double defValue)
-   {
-      Object attr = getAttribute(element, name, null);
+      SVGAttribute attr = getAttribute(attrName, null);
 
       if (attr != null && attr instanceof SVGNumberAttribute)
       {
@@ -608,14 +609,9 @@ public abstract class SVGAbstractElement implements Cloneable
       return defValue;
    }
 
-   public int getIntegerAttribute(String name, int defValue)
+   public int getIntegerAttribute(String attrName, int defValue)
    {
-      return getIntegerAttribute(getName(), name, defValue);
-   }
-
-   public int getIntegerAttribute(String element, String name, int defValue)
-   {
-      Object attr = getAttribute(element, name, null);
+      SVGAttribute attr = getAttribute(attrName, null);
 
       if (attr != null && attr instanceof SVGNumberAttribute)
       {
@@ -625,14 +621,14 @@ public abstract class SVGAbstractElement implements Cloneable
       return defValue;
    }
 
-   public JDRLength getLengthAttribute(String name, JDRLength defValue)
+   public JDRLength getLengthAttribute(String attrName)
    {
-      return getLengthAttribute(getName(), name, defValue);
+      return getLengthAttribute(attrName, null);
    }
 
-   public JDRLength getLengthAttribute(String element, String name, JDRLength defValue)
+   public JDRLength getLengthAttribute(String attrName, JDRLength defValue)
    {
-      Object attr = getAttribute(element, name, null);
+      SVGAttribute attr = getAttribute(attrName, null);
 
       if (attr != null && attr instanceof SVGLength)
       {
@@ -642,14 +638,9 @@ public abstract class SVGAbstractElement implements Cloneable
       return defValue;
    }
 
-   public SVGLength[] getLengthArrayAttribute(String name)
+   public SVGLength[] getLengthArrayAttribute(String attrName)
    {
-      return getLengthArrayAttribute(getName(), name);
-   }
-
-   public SVGLength[] getLengthArrayAttribute(String element, String name)
-   {
-      Object attr = getAttribute(element, name, null);
+      SVGAttribute attr = getAttribute(attrName, null);
 
       if (attr != null && attr instanceof SVGLengthArrayAttribute)
       {
@@ -662,13 +653,7 @@ public abstract class SVGAbstractElement implements Cloneable
    public Path2D getPathDataAttribute()
      throws InvalidFormatException
    {
-      return getPathDataAttribute(getName());
-   }
-
-   public Path2D getPathDataAttribute(String element)
-     throws InvalidFormatException
-   {
-      Object attr = getAttribute(element, "d", null);
+      SVGAttribute attr = getAttribute("d", null);
 
       if (attr != null && attr instanceof SVGPathDataAttribute)
       {
@@ -681,13 +666,7 @@ public abstract class SVGAbstractElement implements Cloneable
    public DashPattern getDashArrayAttribute()
      throws InvalidFormatException
    {
-      return getDashArrayAttribute(getName());
-   }
-
-   public DashPattern getDashArrayAttribute(String element)
-     throws InvalidFormatException
-   {
-      Object attr = getAttribute(element, "stroke-dasharray", null);
+      SVGAttribute attr = getAttribute("stroke-dasharray", null);
 
       if (attr != null && attr instanceof SVGDashArrayAttribute)
       {
@@ -707,18 +686,6 @@ public abstract class SVGAbstractElement implements Cloneable
    {
       return getIntegerAttribute("visibility", SVGVisibilityStyleAttribute.VISIBLE)
          == SVGVisibilityStyleAttribute.VISIBLE;
-   }
-
-   public String getId()
-   {
-      Object attr = attributeSet.getAttribute("id");
-
-      if (attr instanceof SVGStringAttribute)
-      {
-         return ((SVGStringAttribute)attr).getString();
-      }
-
-      return null;
    }
 
    public String getHref()
@@ -763,6 +730,9 @@ public abstract class SVGAbstractElement implements Cloneable
       contents.append(element.contents);
       parent = element.parent;
       attributeSet = (SVGAttributeSet)element.attributeSet.clone();
+      styles = (element.styles == null ? null : (SVGStyles)element.styles.clone());
+      id = element.id;
+      cssClassList = element.cssClassList;
 
       children.clear();
       children.addAll(element.children);
@@ -771,6 +741,24 @@ public abstract class SVGAbstractElement implements Cloneable
    public JDRMessage getMessageSystem()
    {
       return handler.getMessageSystem();
+   }
+
+   public void warning(Throwable e)
+   {
+      getMessageSystem().getPublisher().publishMessages(
+        MessageInfo.createWarning(e));
+   }
+
+   public void warning(String msg)
+   {
+      getMessageSystem().getPublisher().publishMessages(
+        MessageInfo.createWarning(msg));
+   }
+
+   public String getMessageWithFallback(String label,
+       String fallbackFormat, Object... params)
+   {
+      return getMessageSystem().getMessageWithFallback(label, fallbackFormat, params);
    }
 
    public SVG getSVG()
@@ -788,8 +776,8 @@ public abstract class SVGAbstractElement implements Cloneable
    @Override
    public String toString()
    {
-      return String.format("%s[name=%s,contents=%s,attributes=%s]",
-        getClass().getSimpleName(), getName(), contents, attributeSet);
+      return String.format("%s[name=%s,id=%s,contents=%s,attributes=%s,styles=%s]",
+        getClass().getSimpleName(), getName(), id, contents, attributeSet,styles);
    }
 
    protected SVGHandler handler;
@@ -799,9 +787,21 @@ public abstract class SVGAbstractElement implements Cloneable
 
    protected SVGAttributeSet attributeSet;
 
-   private static final Pattern stylePattern =
-      Pattern.compile("\\s*([^\\{]+)\\s*\\{([^\\}]*)\\}\\s*(.*)");
+   protected SVGStyles styles;
 
-   private static final Pattern styleAttrPattern =
-      Pattern.compile("\\s*([^:]+)\\s*:\\s*([^;]+)\\s*;?\\s*");
+   protected String id;
+   protected String[] cssClassList;
+
+   // pseudo-classes and hierarchy not supported
+   private static final Pattern STYLE_PATTERN =
+      Pattern.compile("\\s*([^\\{]+)\\s*\\{([^\\}]*)\\}\\s*(.*)",
+      Pattern.DOTALL);
+
+   private static final Pattern STYLE_ATTR_PATTERN =
+      Pattern.compile("\\s*([^:]+)\\s*:\\s*([^;]+)\\s*;?\\s*",
+      Pattern.DOTALL);
+
+   private static final Pattern CSS_IGNORED =
+      Pattern.compile("(\\/\\*.+?\\*\\/|\\@import\\(.+?\\);)",
+       Pattern.DOTALL);
 }

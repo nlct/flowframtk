@@ -24,12 +24,7 @@ public class SVGStyleElement extends SVGAbstractElement
 
       String type = attr.getValue("type");
 
-      if (type == null)
-      {
-         throw new InvalidFormatException("No type specified for 'style' element");
-      }
-
-      if (!type.equals("text/css"))
+      if (type != null && !type.equals("text/css"))
       {
          throw new InvalidFormatException("Style type '"+type
             +"' not recognised. (Can only recognise 'text/css' type.)");

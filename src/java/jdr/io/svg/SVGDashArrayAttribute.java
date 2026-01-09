@@ -17,18 +17,19 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
       super(handler, "stroke-dasharray", valueString);
    }
 
-   protected void parse(String valueString)
-     throws InvalidFormatException
+   @Override
+   protected void parse() throws InvalidFormatException
    {
       if ("none".equals(valueString))
       {
          isSolid = true;
-         return;
       }
+      else
+      {
+         isSolid = false;
 
-      isSolid = false;
-
-      super.parse(valueString);
+         super.parse();
+      }
    }
 
    public DashPattern getDashPattern(SVGAbstractElement element)
@@ -50,6 +51,12 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
       return new DashPattern(handler.getCanvasGraphics(), dashPattern);
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try

@@ -7,6 +7,7 @@ import java.util.regex.*;
 
 import org.xml.sax.*;
 
+import com.dickimawbooks.jdr.JDRCompleteObject;
 import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPathDataAttribute implements SVGAttribute
@@ -14,6 +15,8 @@ public class SVGPathDataAttribute implements SVGAttribute
    public SVGPathDataAttribute(SVGHandler handler, String valueString)
    {
       this.handler = handler;
+      this.valueString = valueString;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          data = null;
@@ -24,14 +27,21 @@ public class SVGPathDataAttribute implements SVGAttribute
       }
    }
 
+   @Override
    public String getName()
    {
       return "d";
    }
 
+   @Override
    public Object getValue()
    {
       return data;
+   }
+
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
    }
 
    public Path2D getPath(SVGAbstractElement element)
@@ -662,7 +672,7 @@ public class SVGPathDataAttribute implements SVGAttribute
                throw new NumberFormatException();
             }
 
-            flag = new Boolean(val == 1);
+            flag = Boolean.valueOf(val == 1);
 
             iter.setIndex(idx+group1.length()+group2.length());
          }
@@ -686,6 +696,7 @@ public class SVGPathDataAttribute implements SVGAttribute
       return m.matches();
    }
 
+   @Override
    public Object clone()
    {
       SVGPathDataAttribute attr = new SVGPathDataAttribute(handler, null);
@@ -698,10 +709,12 @@ public class SVGPathDataAttribute implements SVGAttribute
    public void makeEqual(SVGPathDataAttribute attr)
    {
       data = attr.data;
+      valueString = attr.valueString;
    }
 
    private String data;
    SVGHandler handler;
+   String valueString;
 
    private static final Pattern pattern = 
      Pattern.compile("([\\s,]*)((?:[+\\-]?\\d*)(?:\\.?\\d+)(?:[eE][=\\-]?\\d+)?[a-zA-Z]*)([,\\s].*)?");

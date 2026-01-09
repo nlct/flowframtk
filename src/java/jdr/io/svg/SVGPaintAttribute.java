@@ -21,6 +21,7 @@ public class SVGPaintAttribute implements SVGAttribute
      throws InvalidFormatException
    {
       this.handler = handler;
+      this.valueString = valueString;
       this.name = attrName;
       parse(valueString, currentVal);
    }
@@ -33,10 +34,8 @@ public class SVGPaintAttribute implements SVGAttribute
       if (valueString == null || valueString.equals("inherit"))
       {
          paint = null;
-         return;
       }
-
-      if (valueString.equals("none") || valueString.equals("transparent"))
+      else if (valueString.equals("none") || valueString.equals("transparent"))
       {
          paint = new JDRTransparent(cg);
       }
@@ -146,16 +145,24 @@ public class SVGPaintAttribute implements SVGAttribute
       return paint;
    }
 
+   @Override
    public Object getValue()
    {
       return paint;
    }
 
+   @Override
    public String getName()
    {
       return name;
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -185,11 +192,13 @@ public class SVGPaintAttribute implements SVGAttribute
       }
 
       name = attr.name;
+      valueString = attr.valueString;
    }
 
    private JDRPaint paint;
 
    private String name;
+   private String valueString;
    SVGHandler handler;
 
    private static final Pattern[] PATTERNS =

@@ -15,11 +15,13 @@ public class SVGStringAttribute implements SVGAttribute
       this.value = attrValue;
    }
 
+   @Override
    public String getName()
    {
       return name;
    }
 
+   @Override
    public Object getValue()
    {
       return value;
@@ -30,19 +32,17 @@ public class SVGStringAttribute implements SVGAttribute
       return value;
    }
 
-   public Object clone()
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
-      SVGStringAttribute attr = new SVGStringAttribute(handler, name, null);
-
-      attr.makeEqual(this);
-
-      return attr;
    }
 
-   public void makeEqual(SVGStringAttribute attr)
+   @Override
+   public Object clone()
    {
-      name = attr.name;
-      value = attr.value;
+      SVGStringAttribute attr = new SVGStringAttribute(handler, name, value);
+
+      return attr;
    }
 
    private String name, value;

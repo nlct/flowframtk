@@ -3,72 +3,30 @@ package com.dickimawbooks.jdr.io.svg;
 import java.util.Enumeration;
 import javax.swing.text.SimpleAttributeSet;
 
+import com.dickimawbooks.jdr.JDRCompleteObject;
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGAttributeSet extends SimpleAttributeSet implements SVGAttribute
+public class SVGAttributeSet extends SimpleAttributeSet
 {
    public SVGAttributeSet()
    {
-      this((String)null);
-   }
-
-   public SVGAttributeSet(String attrId)
-   {
       super();
-      id = attrId;
    }
 
    public SVGAttributeSet(SVGAttributeSet source)
    {
-      this(source, null);
-   }
-
-   public SVGAttributeSet(SVGAttributeSet source, String attrId)
-   {
       super(source);
-      id = attrId;
    }
 
-   public String getId()
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
-      return id;
-   }
-
-   public void setId(String attrId)
-   {
-      id = attrId;
-   }
-
-   public void addAttribute(Object name, Object value)
-   {
-      if (value == null)
+      for (Enumeration en = getAttributeNames(); en.hasMoreElements(); )
       {
-         removeAttribute(name);
-         return;
+         String attrName = en.nextElement().toString();
+         SVGAttribute attr = (SVGAttribute)getAttribute(attrName);
+
+         attr.applyTo(element, object);
       }
-
-      if (!(value instanceof SVGAttribute))
-      {
-         throw new IllegalArgumentException(
-           "Can't add "+value.getClass() +" to attribute set");
-      }
-
-      super.addAttribute(name, value);
-   }
-
-   public void setName(String attrSetName)
-   {
-      name = attrSetName;
-   }
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public Object getValue()
-   {
-      return this;
    }
 
    public Object clone()
@@ -89,18 +47,13 @@ public class SVGAttributeSet extends SimpleAttributeSet implements SVGAttribute
 
       for (Enumeration en = getAttributeNames(); en.hasMoreElements(); )
       {
-         String name = en.nextElement().toString();
-         Object element = ((SVGAttribute)getAttribute(name)).clone();
+         String attrName = en.nextElement().toString();
+         Object element = ((SVGAttribute)getAttribute(attrName)).clone();
 
-         aSet.addAttribute(name, element);
+         aSet.addAttribute(attrName, element);
       }
-
-      aSet.name = name;
-      aSet.id = id;
 
       return aSet;
    }
 
-   private String id;
-   private String name = null;
 }

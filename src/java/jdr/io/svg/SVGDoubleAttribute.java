@@ -6,7 +6,8 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGDoubleAttribute implements SVGNumberAttribute
+public class SVGDoubleAttribute extends SVGAbstractAttribute
+  implements SVGNumberAttribute
 {
    public SVGDoubleAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
@@ -18,16 +19,21 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
       String attrName, String valueString, boolean horizontal)
       throws InvalidFormatException
    {
-      this.handler = handler;
+      super(handler, valueString);
       isHorizontal = horizontal;
+      name = attrName;
+   }
 
+   @Override
+   protected void parse() throws InvalidFormatException
+   {
       if (valueString == null || valueString.equals("inherit"))
       {
          value = null;
       }
       else
       {
-         Matcher m = pattern.matcher(valueString);
+         Matcher m = VALUE_PATTERN.matcher(valueString);
 
          try
          {
@@ -47,25 +53,27 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
             throw new InvalidFormatException("Invalid numerical attribute "+e.getMessage());
          }
       }
-
-      this.name = attrName;
    }
 
+   @Override
    public String getName()
    {
       return name;
    }
 
+   @Override
    public Object getValue()
    {
       return value;
    }
 
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return (int)Math.round(doubleValue(element));
    }
 
+   @Override
    public double doubleValue(SVGAbstractElement element)
    {
       return isPercent ?
@@ -74,6 +82,12 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
         : value.doubleValue();
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -93,16 +107,8 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
 
    public void makeEqual(SVGDoubleAttribute attr)
    {
-      if (attr.value == null)
-      {
-         value = null;
-      }
-      else
-      {
-         value = new Double(attr.value.doubleValue());
-      }
-
-      name = attr.name;
+      super.makeEqual(attr);
+      value = attr.value;
       isPercent = attr.isPercent;
       isHorizontal = attr.isHorizontal;
    }
@@ -113,7 +119,6 @@ public class SVGDoubleAttribute implements SVGNumberAttribute
    private boolean isPercent;
    private boolean isHorizontal;
 
-   SVGHandler handler;
-
-   private static final Pattern pattern = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[Ee][+\\-]?\\d*\\.?\\d+)?)\\s*(%?)\\s*");
+   private static final Pattern VALUE_PATTERN
+     = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[Ee][+\\-]?\\d*\\.?\\d+)?)\\s*(%?)\\s*");
 }

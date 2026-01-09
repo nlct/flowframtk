@@ -9,28 +9,23 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGCapStyleAttribute implements SVGNumberAttribute
+public class SVGCapStyleAttribute extends SVGAbstractAttribute
+  implements SVGNumberAttribute
 {
    public SVGCapStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
-      this.handler = handler;
-      parse(valueString);
+      super(handler, valueString);
    }
 
-
-   public void parse(String valueString)
-     throws InvalidFormatException
+   @Override
+   protected void parse() throws InvalidFormatException
    {
       if (valueString == null || valueString.equals("inherit"))
       {
          capStyle = null;
-         return;
       }
-
-      valueString = valueString.toLowerCase();
-
-      if (valueString.equals("butt"))
+      else if (valueString.equals("butt"))
       {
          capStyle = Integer.valueOf(BasicStroke.CAP_BUTT);
       }
@@ -53,6 +48,7 @@ public class SVGCapStyleAttribute implements SVGNumberAttribute
       return capStyle.intValue();
    }
 
+   @Override
    public String getName()
    {
       return "stroke-linecap";
@@ -63,16 +59,24 @@ public class SVGCapStyleAttribute implements SVGNumberAttribute
       return capStyle;
    }
 
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return capStyle.intValue();
    }
 
+   @Override
    public double doubleValue(SVGAbstractElement element)
    {
       return (double)intValue(element);
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -92,16 +96,9 @@ public class SVGCapStyleAttribute implements SVGNumberAttribute
 
    public void makeEqual(SVGCapStyleAttribute attr)
    {
-      if (attr.capStyle == null)
-      {
-         capStyle = null;
-      }
-      else
-      {
-         capStyle = Integer.valueOf(attr.capStyle.intValue());
-      }
+      super.makeEqual(attr);
+      capStyle = attr.capStyle;
    }
 
    private Integer capStyle;
-   SVGHandler handler;
 }

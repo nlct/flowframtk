@@ -11,7 +11,7 @@ public class SVGLength extends SVGMeasurement
    public SVGLength(SVGHandler handler, String value)
      throws InvalidFormatException
    {
-      super(handler, value, "pt");
+      super(handler, value);
 
       if (value != null)
       {
@@ -26,6 +26,7 @@ public class SVGLength extends SVGMeasurement
             case SVGMeasurement.UNIT_MM :
             case SVGMeasurement.UNIT_PT :
             case SVGMeasurement.UNIT_PC :
+            case SVGMeasurement.UNIT_DEFAULT :
             break;
             default :
               throw new InvalidFormatException
@@ -46,6 +47,8 @@ public class SVGLength extends SVGMeasurement
 
       switch (getUnitId())
       {
+         case SVGMeasurement.UNIT_DEFAULT :
+            return element.getCanvasGraphics().getStorageUnit().toBp(val);
          case SVGMeasurement.UNIT_IN :
             return JDRUnit.in.toBp(val);
          case SVGMeasurement.UNIT_CM :
@@ -88,19 +91,23 @@ public class SVGLength extends SVGMeasurement
    public JDRLength getLength(SVGAbstractElement element, boolean isHorizontal)
    {
       double val = doubleValue();
+      CanvasGraphics cg = element.getCanvasGraphics();
 
       switch (getUnitId())
       {
+         case SVGMeasurement.UNIT_DEFAULT :
+            return new JDRLength(cg, val, cg.getStorageUnit());
          case SVGMeasurement.UNIT_IN :
-            return new JDRLength(element.getCanvasGraphics(), val, JDRUnit.in);
+            return new JDRLength(cg, val, JDRUnit.in);
          case SVGMeasurement.UNIT_CM :
-            return new JDRLength(element.getCanvasGraphics(), val, JDRUnit.cm);
+            return new JDRLength(cg, val, JDRUnit.cm);
          case SVGMeasurement.UNIT_MM :
-            return new JDRLength(element.getCanvasGraphics(), val, JDRUnit.mm);
+            return new JDRLength(cg, val, JDRUnit.mm);
+         case SVGMeasurement.UNIT_PX : // treat as bp
          case SVGMeasurement.UNIT_PT :
-            return new JDRLength(element.getCanvasGraphics(), val, JDRUnit.bp);
+            return new JDRLength(cg, val, JDRUnit.bp);
          case SVGMeasurement.UNIT_PC :
-            return new JDRLength(element.getCanvasGraphics(), val, JDRUnit.pc);
+            return new JDRLength(cg, val, JDRUnit.pc);
          case SVGMeasurement.UNIT_PERCENT :
             double relValue;
 
@@ -120,15 +127,13 @@ public class SVGLength extends SVGMeasurement
                }
             }
 
-            return new JDRLength(handler.getCanvasGraphics(), 
-               0.01*val*relValue, JDRUnit.bp);
+            return new JDRLength(cg, 0.01*val*relValue, JDRUnit.bp);
 // TODO:
-         case SVGMeasurement.UNIT_PX :
          case SVGMeasurement.UNIT_EM :
          case SVGMeasurement.UNIT_EX :
       }
 
-      return new JDRLength(handler.getCanvasGraphics(), 1, JDRUnit.bp);
+      return new JDRLength(cg, 1, JDRUnit.bp);
    }
 
    public Object clone()

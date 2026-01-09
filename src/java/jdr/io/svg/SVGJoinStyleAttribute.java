@@ -9,27 +9,23 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGJoinStyleAttribute implements SVGNumberAttribute
+public class SVGJoinStyleAttribute extends SVGAbstractAttribute
+  implements SVGNumberAttribute
 {
    public SVGJoinStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
-      this.handler = handler;
-      parse(valueString);
+      super(handler, valueString);
    }
 
-   public void parse(String valueString)
-     throws InvalidFormatException
+   @Override
+   protected void parse() throws InvalidFormatException
    {
       if (valueString == null || valueString.equals("inherit"))
       {
          joinStyle = null;
-         return;
       }
-
-      valueString = valueString.toLowerCase();
-
-      if (valueString.equals("miter"))
+      else if (valueString.equals("miter"))
       {
          joinStyle = BasicStroke.JOIN_MITER;
       }
@@ -52,26 +48,36 @@ public class SVGJoinStyleAttribute implements SVGNumberAttribute
       return joinStyle.intValue();
    }
 
+   @Override
    public String getName()
    {
       return "stroke-linejoin";
    }
 
+   @Override
    public Object getValue()
    {
       return joinStyle;
    }
 
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return joinStyle.intValue();
    }
 
+   @Override
    public double doubleValue(SVGAbstractElement element)
    {
       return (double)intValue(element);
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -91,16 +97,9 @@ public class SVGJoinStyleAttribute implements SVGNumberAttribute
 
    public void makeEqual(SVGJoinStyleAttribute attr)
    {
-      if (attr.joinStyle == null)
-      {
-         joinStyle = null;
-      }
-      else
-      {
-         joinStyle = Integer.valueOf(attr.joinStyle.intValue());
-      }
+      super.makeEqual(attr);
+      joinStyle = attr.joinStyle;
    }
 
    private Integer joinStyle;
-   SVGHandler handler;
 }

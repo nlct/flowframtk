@@ -1,6 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.util.*;
+import java.awt.GraphicsEnvironment;
 
 import org.xml.sax.*;
 import org.xml.sax.ext.*;
@@ -24,6 +25,10 @@ public class SVGHandler extends DefaultHandler
 
       msgSystem.getPublisher().publishMessages(
          MessageInfo.createVerbose(1, "SVG handler initialised"));
+
+      GraphicsEnvironment env = 
+         GraphicsEnvironment.getLocalGraphicsEnvironment();
+      availableFontFamilies = env.getAvailableFontFamilyNames();
    }
 
    public void startDocument()
@@ -140,6 +145,22 @@ public class SVGHandler extends DefaultHandler
       msgSystem.getPublisher().publishMessages(MessageInfo.createFatalError(e));
    }
 
+   public boolean isFontFamilyAvailable(String family)
+   {
+      if (family.equals("Serif") || family.equals("SansSerif")
+          || family.equals("Monospaced"))
+      {
+         return true;
+      }
+
+      for (String f : availableFontFamilies)
+      {
+         if (f.equals(family)) return true;
+      }
+
+      return false;
+   }
+
    public SVG getSVG()
    {
       return svg;
@@ -158,4 +179,5 @@ public class SVGHandler extends DefaultHandler
    private SVGElement base = null;
 
    private JDRMessage msgSystem;
+   private String[] availableFontFamilies;
 }

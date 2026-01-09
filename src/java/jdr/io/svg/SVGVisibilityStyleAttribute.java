@@ -8,28 +8,23 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
+public class SVGVisibilityStyleAttribute extends SVGAbstractAttribute
+  implements SVGNumberAttribute
 {
    public SVGVisibilityStyleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
-      this.handler = handler;
-      parse(valueString);
+      super(handler, valueString);
    }
 
-
-   public void parse(String valueString)
-     throws InvalidFormatException
+   @Override
+   protected void parse() throws InvalidFormatException
    {
       if (valueString == null || valueString.equals("inherit"))
       {
          style = null;
-         return;
       }
-
-      valueString = valueString.toLowerCase();
-
-      if (valueString.equals("visible"))
+      else if (valueString.equals("visible"))
       {
          style = Integer.valueOf(VISIBLE);
       }
@@ -52,26 +47,36 @@ public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
       return style.intValue();
    }
 
+   @Override
    public String getName()
    {
       return "visibility";
    }
 
+   @Override
    public Object getValue()
    {
       return style;
    }
 
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return style.intValue();
    }
 
+   @Override
    public double doubleValue(SVGAbstractElement element)
    {
       return (double)intValue(element);
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -91,18 +96,11 @@ public class SVGVisibilityStyleAttribute implements SVGNumberAttribute
 
    public void makeEqual(SVGVisibilityStyleAttribute attr)
    {
-      if (attr.style == null)
-      {
-         style = null;
-      }
-      else
-      {
-         style = Integer.valueOf(attr.style.intValue());
-      }
+      super.makeEqual(attr);
+      style = attr.style;
    }
 
    private Integer style;
-   SVGHandler handler;
 
    public static final int VISIBLE=0;
    public static final int HIDDEN=1;

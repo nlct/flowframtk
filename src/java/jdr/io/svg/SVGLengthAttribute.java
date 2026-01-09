@@ -6,13 +6,15 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
 {
-   public SVGLengthAttribute(SVGHandler handler, String attrName, String valueString)
+   public SVGLengthAttribute(SVGHandler handler, String attrName,
+        String valueString)
       throws InvalidFormatException
    {
       this(handler, attrName, valueString, true);
    }
 
-   public SVGLengthAttribute(SVGHandler handler, String attrName, String valueString, boolean horizontal)
+   public SVGLengthAttribute(SVGHandler handler, String attrName,
+        String valueString, boolean horizontal)
       throws InvalidFormatException
    {
       super(handler, valueString);
@@ -20,6 +22,7 @@ public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
       this.name = attrName;
    }
 
+   @Override
    public String getName()
    {
       return name;
@@ -30,16 +33,24 @@ public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
       return getLength(element, isHorizontal);
    }
 
+   @Override
    public double doubleValue(SVGAbstractElement element)
    {
       return getBpValue(element, isHorizontal);
    }
 
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return (int)Math.round(doubleValue(element));
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -63,6 +74,12 @@ public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
 
       name = attr.name;
       isHorizontal = attr.isHorizontal;
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format("%s=\"%s\"", getName(), valueString);
    }
 
    private boolean isHorizontal;

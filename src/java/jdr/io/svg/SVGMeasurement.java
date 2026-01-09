@@ -6,29 +6,21 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGMeasurement
 {
-   public SVGMeasurement(SVGHandler handler, String valueString, int defUnitId)
+   public SVGMeasurement(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
-      if (defUnitId < 0 || defUnitId >= UNIT_NAMES.length)
-      {
-         throw new IllegalArgumentException(
-            "Invalid default unit id: "+defUnitId);
-      }
-
-      this.handler = handler;
-
-      parse(valueString, UNIT_NAMES[defUnitId]);
+      this(handler, valueString, "");
    }
 
-   public SVGMeasurement(SVGHandler handler, String valueString, String defUnit)
+   public SVGMeasurement(SVGHandler handler, String valueString, String defUnitName)
      throws InvalidFormatException
    {
       this.handler = handler;
-      parse(valueString, defUnit);
+      this.valueString = valueString;
+      parse(defUnitName);
    }
 
-   private void parse(String valueString, String defUnit)
-     throws InvalidFormatException
+   protected void parse(String defUnitName) throws InvalidFormatException
    {
       if (valueString == null || valueString.equals("inherit"))
       {
@@ -42,7 +34,7 @@ public class SVGMeasurement
       {
          try
          {
-            value = new Double(m.group(1));
+            value = Double.valueOf(m.group(1));
          }
          catch (NumberFormatException e)
          {
@@ -50,21 +42,16 @@ public class SVGMeasurement
               ("Unable to parse '"+valueString+"'");
          }
 
-         unitName = defUnit;
+         unitName = null;
 
          if (m.groupCount() == 2)
          {
             unitName = m.group(2);
-
-            if ("".equals(unitName))
-            {
-               unitName = defUnit;
-            }
          }
 
-         if (unitName == null)
+         if (unitName == null || unitName.isEmpty())
          {
-            throw new InvalidFormatException("Missing unit in '"+valueString+"'");
+            unitName = defUnitName;
          }
 
          setValue(value, unitName);
@@ -131,6 +118,7 @@ public class SVGMeasurement
 
       unitName = measurement.unitName;
       unitId = measurement.unitId;
+      valueString = measurement.valueString;
    }
 
    public static final Pattern pattern
@@ -139,6 +127,7 @@ public class SVGMeasurement
    private Double value;
    private String unitName;
    private int unitId=-1;
+   protected String valueString;
    SVGHandler handler;
 
    public static final String[] UNIT_NAMES =
@@ -155,6 +144,7 @@ public class SVGMeasurement
       "pt",
       "pc",
       "%",
+      ""
    };
 
    public static final int UNIT_DEG=0;
@@ -169,4 +159,5 @@ public class SVGMeasurement
    public static final int UNIT_PT=9;
    public static final int UNIT_PC=10;
    public static final int UNIT_PERCENT=11;
+   public static final int UNIT_DEFAULT=12;
 }

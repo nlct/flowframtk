@@ -6,18 +6,17 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGLengthArrayAttribute implements SVGAttribute
+public class SVGLengthArrayAttribute extends SVGAbstractAttribute
 {
    public SVGLengthArrayAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
    {
-      this.handler = handler;
+      super(handler, valueString);
       this.name = attrName;
-      parse(valueString);
    }
 
-   protected void parse(String valueString)
-      throws InvalidFormatException
+   @Override
+   protected void parse() throws InvalidFormatException
    {
       if (valueString == null || valueString.equals("inherit"))
       {
@@ -35,11 +34,13 @@ public class SVGLengthArrayAttribute implements SVGAttribute
       }
    }
 
+   @Override
    public String getName()
    {
       return name;
    }
 
+   @Override
    public Object getValue()
    {
       return array;
@@ -55,6 +56,12 @@ public class SVGLengthArrayAttribute implements SVGAttribute
       return array.length;
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -74,6 +81,8 @@ public class SVGLengthArrayAttribute implements SVGAttribute
 
    public void makeEqual(SVGLengthArrayAttribute attr)
    {
+      super.makeEqual(attr);
+
       if (attr.array == null)
       {
          array = null;
@@ -94,5 +103,4 @@ public class SVGLengthArrayAttribute implements SVGAttribute
    private SVGLength[] array;
 
    private String name;
-   SVGHandler handler;
 }

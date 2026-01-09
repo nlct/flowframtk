@@ -13,12 +13,12 @@ public class SVGTransformAttribute implements SVGAttribute
      throws InvalidFormatException
    {
       this.handler = handler;
+      this.valueString = valueString;
       transform = new AffineTransform();
-      parse(valueString);
+      parse();
    }
 
-   public void parse(String valueString)
-     throws InvalidFormatException
+   protected void parse() throws InvalidFormatException
    {
       if (valueString == null)
       {
@@ -65,7 +65,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
       if (function.equals("matrix"))
       {
-         m = matrixPattern.matcher(arg);
+         m = MATRIX_PATTERN.matcher(arg);
 
          if (!m.matches())
          {
@@ -85,7 +85,7 @@ public class SVGTransformAttribute implements SVGAttribute
       }
       else if (function.equals("translate"))
       {
-         m = translatePattern.matcher(arg);
+         m = TRANSLATE_PATTERN.matcher(arg);
 
          if (!m.matches())
          {
@@ -102,7 +102,7 @@ public class SVGTransformAttribute implements SVGAttribute
       else if (function.equals("scale"))
       {
          // scale has same pattern as translate
-         m = translatePattern.matcher(arg);
+         m = TRANSLATE_PATTERN.matcher(arg);
 
          if (!m.matches())
          {
@@ -118,7 +118,7 @@ public class SVGTransformAttribute implements SVGAttribute
       }
       else if (function.equals("rotate"))
       {
-         m = rotatePattern.matcher(arg);
+         m = ROTATE_PATTERN.matcher(arg);
 
          if (!m.matches())
          {
@@ -141,7 +141,7 @@ public class SVGTransformAttribute implements SVGAttribute
       }
       else if (function.equals("skewX"))
       {
-         m = skewPattern.matcher(arg);
+         m = SKEW_PATTERN.matcher(arg);
 
          if (!m.matches())
          {
@@ -155,7 +155,7 @@ public class SVGTransformAttribute implements SVGAttribute
       }
       else if (function.equals("skewY"))
       {
-         m = skewPattern.matcher(arg);
+         m = SKEW_PATTERN.matcher(arg);
 
          if (!m.matches())
          {
@@ -175,11 +175,13 @@ public class SVGTransformAttribute implements SVGAttribute
       transform.concatenate(af);
    }
 
+   @Override
    public String getName()
    {
       return "transform";
    }
 
+   @Override
    public Object getValue()
    {
       return transform;
@@ -190,6 +192,12 @@ public class SVGTransformAttribute implements SVGAttribute
       return transform;
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       SVGTransformAttribute attr = null;
@@ -198,7 +206,7 @@ public class SVGTransformAttribute implements SVGAttribute
       {
          attr = new SVGTransformAttribute(handler, null);
 
-         attr.transform = (AffineTransform)transform.clone();
+         attr.makeEqual(this);
       }
       catch (InvalidFormatException e)
       {
@@ -208,22 +216,29 @@ public class SVGTransformAttribute implements SVGAttribute
       return attr;
    }
 
+   public void makeEqual(SVGTransformAttribute attr)
+   {
+      valueString = attr.valueString;
+      transform.setTransform(attr.transform);
+   }
+
    private AffineTransform transform;
    SVGHandler handler;
+   String valueString;
 
    private static final Pattern transformPattern 
       = Pattern.compile("\\s*,?\\s*([a-zA-Z]+)\\s*\\(([^\\)]+)\\)(?:[\\s,]+(.*))?");
 
-   private static final Pattern matrixPattern
+   private static final Pattern MATRIX_PATTERN
       = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)\\s*");
 
-   private static final Pattern translatePattern
+   private static final Pattern TRANSLATE_PATTERN
       = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)(?:[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?))?");
 
-   private static final Pattern rotatePattern
+   private static final Pattern ROTATE_PATTERN
       = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)(?:[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)[\\s,]+([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?))?");
 
-   private static final Pattern skewPattern
+   private static final Pattern SKEW_PATTERN
       = Pattern.compile("\\s*([+\\-]?\\d*\\.?\\d+(?:[eE][+\\-]?\\d*\\.?\\d+)?)\\s*");
 
 }

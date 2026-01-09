@@ -9,28 +9,23 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGFillRuleAttribute implements SVGNumberAttribute
+public class SVGFillRuleAttribute extends SVGAbstractAttribute
+  implements SVGNumberAttribute
 {
    public SVGFillRuleAttribute(SVGHandler handler, String valueString)
      throws InvalidFormatException
    {
-      this.handler = handler;
-      parse(valueString);
+      super(handler, valueString);
    }
 
-
-   public void parse(String valueString)
-     throws InvalidFormatException
+   @Override
+   protected void parse() throws InvalidFormatException
    {
       if (valueString == null || valueString.equals("inherit"))
       {
          rule = null;
-         return;
       }
-
-      valueString = valueString.toLowerCase();
-
-      if (valueString.equals("nonzero"))
+      else if (valueString.equals("nonzero"))
       {
          rule = Integer.valueOf(GeneralPath.WIND_NON_ZERO);
       }
@@ -49,26 +44,36 @@ public class SVGFillRuleAttribute implements SVGNumberAttribute
       return rule.intValue();
    }
 
+   @Override
    public String getName()
    {
       return "fill-rule";
    }
 
+   @Override
    public Object getValue()
    {
       return rule;
    }
 
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return rule.intValue();
    }
 
+   @Override
    public double doubleValue(SVGAbstractElement element)
    {
       return (double)intValue(element);
    }
 
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+   }
+
+   @Override
    public Object clone()
    {
       try
@@ -88,16 +93,9 @@ public class SVGFillRuleAttribute implements SVGNumberAttribute
 
    public void makeEqual(SVGFillRuleAttribute attr)
    {
-      if (attr.rule == null)
-      {
-         rule = null;
-      }
-      else
-      {
-         rule = Integer.valueOf(attr.rule.intValue());
-      }
+      super.makeEqual(attr);
+      rule = attr.rule;
    }
 
    private Integer rule;
-   SVGHandler handler;
 }
