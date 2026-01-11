@@ -36,30 +36,30 @@ public class SVGEllipseElement extends SVGShape
    }
 
    @Override
-   protected SVGAttribute createElementAttribute(String name, String style)
+   protected SVGAttribute createElementAttribute(String name, String value)
      throws InvalidFormatException
    {
       SVGAttribute attr;
 
       if (name.equals("cx"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, true);
+         attr = new SVGLengthAttribute(handler, name, value, true);
       }
       else if (name.equals("cy"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, false);
+         attr = new SVGLengthAttribute(handler, name, value, false);
       }
       else if (name.equals("rx"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, true);
+         attr = new SVGLengthAttribute(handler, name, value, true);
       }
       else if (name.equals("ry"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, false);
+         attr = new SVGLengthAttribute(handler, name, value, false);
       }
       else
       {
-         attr = super.createElementAttribute(name, style);
+         attr = super.createElementAttribute(name, value);
       }
 
       return attr;
@@ -72,9 +72,37 @@ public class SVGEllipseElement extends SVGShape
                     getDoubleAttribute("cx", 0),
                     getDoubleAttribute("cy", 0));
 
-      JDRPath shape = JDRPath.constructEllipse(cg, p,
-         getDoubleAttribute("rx", 0),
-         getDoubleAttribute("ry", 0));
+      double rx = 0;
+      double ry = 0;
+
+      SVGLengthAttribute rxAttr = getLengthAttribute("rx");
+      SVGLengthAttribute ryAttr = getLengthAttribute("ry");
+
+      if (rxAttr == null || rxAttr.isAuto())
+      {
+         if (ryAttr != null && !ryAttr.isAuto())
+         {
+            ry = ryAttr.doubleValue(this);
+            rx = ry;
+         }
+      }
+      else if (ryAttr == null || ryAttr.isAuto())
+      {
+         rx = rxAttr.doubleValue(this);
+         ry = rx;
+      }
+      else
+      {
+         rx = rxAttr.doubleValue(this);
+         ry = ryAttr.doubleValue(this);
+      }
+
+      if (rx <= 0 || ry <= 0)
+      {
+         return null;
+      }
+
+      JDRPath shape = JDRPath.constructEllipse(cg, p, rx, ry);
 
       return shape;
    }

@@ -48,26 +48,6 @@ public class SVGRectElement extends SVGShape
       return attr;
    }
 
-   protected double getRectX()
-   {
-      return getDoubleAttribute("x", 0);
-   }
-
-   protected double getRectY()
-   {
-      return getDoubleAttribute("y", 0);
-   }
-
-   protected double getRectWidth()
-   {
-      return getDoubleAttribute("width", 0);
-   }
-
-   protected double getRectHeight()
-   {
-      return getDoubleAttribute("height", 0);
-   }
-
    @Override
    public String getName()
    {
@@ -77,10 +57,18 @@ public class SVGRectElement extends SVGShape
    @Override
    public JDRShape createShape(CanvasGraphics cg)
    {
-      double p1x = getRectX();
-      double p1y = getRectY();
-      double p2x = p1x + getRectWidth();
-      double p2y = p1y + getRectHeight();
+      double width = getDoubleAttribute("width", 0);
+      double height = getDoubleAttribute("height", 0);
+
+      if (width <= 0 || height <= 0)
+      {
+         return null;
+      }
+
+      double p1x = getDoubleAttribute("x", 0);
+      double p1y = getDoubleAttribute("y", 0);
+      double p2x = p1x + width;
+      double p2y = p1y + height;
 
       JDRPath rect = JDRPath.constructRectangle(cg, p1x, p1y, p2x, p2y);
 

@@ -17,6 +17,7 @@ public class SVGMeasurement
    {
       this.handler = handler;
       this.valueString = valueString;
+      autoValue = false;
       parse(defUnitName);
    }
 
@@ -24,6 +25,13 @@ public class SVGMeasurement
    {
       if (valueString == null || valueString.equals("inherit"))
       {
+         value = null;
+         return;
+      }
+
+      if (valueString.equals("auto"))
+      {
+         autoValue = true;
          value = null;
          return;
       }
@@ -100,6 +108,11 @@ public class SVGMeasurement
       return value.doubleValue();
    }
 
+   public boolean isAuto()
+   {
+      return autoValue;
+   }
+
    public String getUnitName()
    {
       return unitName;
@@ -128,6 +141,7 @@ public class SVGMeasurement
    private String unitName;
    private int unitId=-1;
    protected String valueString;
+   protected boolean autoValue;
    SVGHandler handler;
 
    public static final String[] UNIT_NAMES =
