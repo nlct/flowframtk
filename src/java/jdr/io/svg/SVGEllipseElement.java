@@ -17,10 +17,17 @@ public class SVGEllipseElement extends SVGShape
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
+   @Override
+   public String getName()
+   {
+      return "ellipse";
+   }
+
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
      throws InvalidFormatException
    {
-      super.applyAttributes(uri, attr);
+      super.addAttributes(uri, attr);
 
       addAttribute("cx", attr);
       addAttribute("cy", attr);
@@ -28,11 +35,37 @@ public class SVGEllipseElement extends SVGShape
       addAttribute("ry", attr);
    }
 
-   public String getName()
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String style)
+     throws InvalidFormatException
    {
-      return "ellipse";
+      SVGAttribute attr;
+
+      if (name.equals("cx"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, true);
+      }
+      else if (name.equals("cy"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, false);
+      }
+      else if (name.equals("rx"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, true);
+      }
+      else if (name.equals("ry"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, false);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, style);
+      }
+
+      return attr;
    }
 
+   @Override
    public JDRShape createShape(CanvasGraphics cg)
    {
       Point2D p = new Point2D.Double(
@@ -46,7 +79,7 @@ public class SVGEllipseElement extends SVGShape
       return shape;
    }
 
-
+   @Override
    public Object clone()
    {
       try

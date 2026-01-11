@@ -18,40 +18,13 @@ public class SVGElement extends SVGAbstractElement
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
-   {
-      super.applyAttributes(uri, attr);
-
-      String value = attr.getValue("width");
-
-      if (value != null)
-      {
-         width = new SVGLength(handler, value);
-      }
-
-      value = attr.getValue("height");
-
-      if (value != null)
-      {
-         height = new SVGLength(handler, value);
-      }
-
-      value = attr.getValue("color");
-
-      addAttribute(new SVGPaintAttribute(handler, "color", value));
-   }
-
-   public int getCurrentLengthUnit()
-   {
-      return width == null ? handler.getDefaultUnit().getID() : width.getUnitId();
-   }
-
+   @Override
    public String getName()
    {
       return "svg";
    }
 
+   @Override
    public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
@@ -109,11 +82,13 @@ public class SVGElement extends SVGAbstractElement
       return group;
    }
 
+   @Override
    public double getViewportWidth()
    {
       return width.getStorageValue(parent, true);
    }
 
+   @Override
    public double getViewportHeight()
    {
       return height.getStorageValue(parent, false);
@@ -122,11 +97,11 @@ public class SVGElement extends SVGAbstractElement
    public void makeEqual(SVGElement element)
    {
       super.makeEqual(element);
-      currentLengthUnit = element.currentLengthUnit;
       width = element.width;
       height = element.height;
    }
 
+   @Override
    public Object clone()
    {
       try
@@ -163,8 +138,6 @@ public class SVGElement extends SVGAbstractElement
    }
 
    String description = null, title = null;
-
-   private int currentLengthUnit = SVGMeasurement.UNIT_PT;
 
    private SVGLength width, height;
 }

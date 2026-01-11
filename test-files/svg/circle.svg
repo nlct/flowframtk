@@ -1,9 +1,11 @@
-<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <!-- Some graphical objects to use -->
   <defs>
     <circle id="Circle1" cx="0" cy="0" r="5" />
     <circle id="Circle2" cx="20" cy="20" r="10" />
   </defs>
+
+  <circle cx="80" cy="80" r="10" stroke="red" fill="cyan" />
 
   <!-- using my graphical objects -->
   <use x="5" y="10" href="#Circle1" stroke="transparent" fill="rgb(255,0,255)" />

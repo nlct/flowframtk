@@ -195,6 +195,13 @@ public class SVGPaintAttribute implements SVGAttribute
       valueString = attr.valueString;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format("%s[name=%s,original=%s,value=%s]",
+      getClass().getSimpleName(), getName(), valueString, getValue());
+   }
+
    private JDRPaint paint;
 
    private String name;

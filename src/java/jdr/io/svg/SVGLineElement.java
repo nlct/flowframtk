@@ -16,46 +16,55 @@ public class SVGLineElement extends SVGShape
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
      throws InvalidFormatException
    {
-      super.applyAttributes(uri, attr);
+      super.addAttributes(uri, attr);
 
-      setLineX1(attr.getValue("x1"));
-      setLineY1(attr.getValue("y1"));
-      setLineX2(attr.getValue("x2"));
-      setLineY2(attr.getValue("y2"));
+      addAttribute("x1", attr);
+      addAttribute("y1", attr);
+      addAttribute("x2", attr);
+      addAttribute("y2", attr);
    }
 
-   protected void setLineX1(String valueString)
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String style)
      throws InvalidFormatException
    {
-      addAttribute(new SVGLengthAttribute(handler, "x1", valueString, true));
+      SVGAttribute attr;
+
+      if (name.equals("x1"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, true);
+      }
+      else if (name.equals("y1"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, false);
+      }
+      else if (name.equals("x2"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, true);
+      }
+      else if (name.equals("y2"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, false);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, style);
+      }
+
+      return attr;
    }
 
-   protected void setLineY1(String valueString)
-     throws InvalidFormatException
-   {
-      addAttribute(new SVGLengthAttribute(handler, "y1", valueString, false));
-   }
-
-   protected void setLineX2(String valueString)
-     throws InvalidFormatException
-   {
-      addAttribute(new SVGLengthAttribute(handler, "x2", valueString, true));
-   }
-
-   protected void setLineY2(String valueString)
-     throws InvalidFormatException
-   {
-      addAttribute(new SVGLengthAttribute(handler, "y2", valueString, false));
-   }
-
+   @Override
    public String getName()
    {
       return "line";
    }
 
+   @Override
    public JDRShape createShape(CanvasGraphics cg)
    {
       double p1x = getDoubleAttribute("x1", 0);
@@ -80,6 +89,7 @@ public class SVGLineElement extends SVGShape
    }
 
 
+   @Override
    public Object clone()
    {
       try

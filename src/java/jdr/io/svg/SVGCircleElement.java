@@ -17,23 +17,50 @@ public class SVGCircleElement extends SVGShape
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
-   {
-      super.applyAttributes(uri, attr);
-
-      addAttribute("cx", attr);
-      addAttribute("cy", attr);
-      addAttribute("r", attr);
-
-      applyShapeAttributes(uri, attr);
-   }
-
+   @Override
    public String getName()
    {
       return "circle";
    }
 
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
+     throws InvalidFormatException
+   {
+      super.addAttributes(uri, attr);
+
+      addAttribute("cx", attr);
+      addAttribute("cy", attr);
+      addAttribute("r", attr);
+   }
+
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
+
+      if (name.equals("cx"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, true);
+      }
+      else if (name.equals("cy"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, false);
+      }
+      else if (name.equals("r"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, value);
+      }
+
+      return attr;
+   }
+
+   @Override
    public JDRShape createShape(CanvasGraphics cg)
    {
       Point2D p = new Point2D.Double(
@@ -47,6 +74,7 @@ public class SVGCircleElement extends SVGShape
       return shape;
    }
 
+   @Override
    public Object clone()
    {
       try

@@ -36,7 +36,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
       if (attr != null)
       {
-         applyAttributes(uri, attr);
+         addAttributes(uri, attr);
       }
    }
 
@@ -77,7 +77,10 @@ public abstract class SVGAbstractElement implements Cloneable
       return cssClassList;
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
+   /**
+    * Adds recognised SVG attributes associated with this element.
+    */
+   protected void addAttributes(String uri, Attributes attr)
       throws InvalidFormatException
    {
       String value = attr.getValue("id");
@@ -123,9 +126,13 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("transform", attr);
       addAttribute("color", attr);
       addAttribute("opacity", attr);
+      addAttribute("display", attr);
+      addAttribute("visibility", attr);
+      addAttribute("width", attr);
+      addAttribute("height", attr);
    }
 
-   protected void applyShapeAttributes(String uri, Attributes attr)
+   protected void addShapeAttributes(String uri, Attributes attr)
       throws InvalidFormatException
    {
       addAttribute("fill", attr);
@@ -141,7 +148,7 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("stroke-width", attr);
    }
 
-   protected void applyTextAttributes(String uri, Attributes attr)
+   protected void addTextAttributes(String uri, Attributes attr)
       throws InvalidFormatException
    {
       addAttribute("text-anchor", attr);
@@ -312,7 +319,7 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          try
          {
-            addAttribute(createStyleAttribute(attrName, value));
+            addAttribute(createAttribute(attrName, value));
          }
          catch (InvalidFormatException e)
          {
@@ -341,7 +348,7 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          try
          {
-            SVGAttribute attr = createStyleAttribute(m.group(1), m.group(2));
+            SVGAttribute attr = createAttribute(m.group(1), m.group(2));
 
             atSet.addAttribute(attr);
          }
@@ -354,161 +361,175 @@ public abstract class SVGAbstractElement implements Cloneable
       return atSet;
    }
 
-   protected SVGAttribute createStyleAttribute(String name, String style)
+   /**
+    * Creates an SVGAttribute with the given name and string value
+    * (which may need to be parsed).
+    * @param name the attribute name
+    * @param value the string value which may need to be parsed
+    * @return the attribute or null if attribute name not recognised
+    */
+   protected SVGAttribute createAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr = createCommonAttribute(name, value);
+
+      if (attr == null)
+      {
+         attr = createElementAttribute(name, value);
+      }
+
+      if (attr == null)
+      {
+         throw new UnknownSVGAttributeException(name);
+      }
+
+      return attr;
+   }
+
+   /**
+    * Creates element-specific attributes.
+    * @param name the attribute name
+    * @param value the string value which may need to be parsed
+    * @return the attribute associated with name or null if not
+    * recognised
+    */
+   protected SVGAttribute createElementAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      return null;
+   }
+
+   /**
+    * Creates common attributes.
+    * @param name the attribute name
+    * @param value the string value which may need to be parsed
+    * @return the attribute associated with name or null if not
+    * recognised
+    */
+   protected SVGAttribute createCommonAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr = null;
+
+      if (name.equals("width"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, true);
+      }
+      else if (name.equals("height"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, false);
+      }
+      else if (name.equals("display"))
+      {
+         attr = new SVGDisplayStyleAttribute(handler, value);
+      }
+      else if (name.equals("visibility"))
+      {
+         attr = new SVGVisibilityStyleAttribute(handler, value);
+      }
+      else if (name.equals("href") || name.equals("xlink:href"))
+      {
+         attr = new SVGStringAttribute(handler, name, value);
+      }
+      else if (name.equals("transform"))
+      {
+         attr = new SVGTransformAttribute(handler, value);
+      }
+      else if (name.equals("opacity"))
+      {
+         attr = new SVGDoubleAttribute(handler, name, value);
+      }
+      else if (name.equals("color"))
+      {
+         attr = new SVGPaintAttribute(handler, name, value);
+      }
+
+      return attr;
+   }
+
+   protected SVGAttribute createTextStyleAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr = null;
+
+      if (name.equals("font-size"))
+      {
+         attr = new SVGFontSizeAttribute(handler, value);
+      }
+      else if (name.equals("font-family"))
+      {
+         attr = new SVGFontFamilyAttribute(handler, value);
+      }
+      else if (name.equals("font-weight"))
+      {
+         attr = new SVGFontWeightAttribute(handler, value);
+      }
+      else if (name.equals("font-style"))
+      {
+         attr = new SVGFontStyleAttribute(handler, value);
+      }
+      else if (name.equals("font-variant"))
+      {
+         attr = new SVGFontVariantAttribute(handler, value);
+      }
+      else if (name.equals("font"))
+      {
+         attr = new SVGFontAttribute(handler, value);
+      }
+
+      return attr;
+   }
+
+   protected SVGAttribute createPathStyleAttribute(String name, String value)
      throws InvalidFormatException
    {
       SVGAttribute attr = null;
 
       if (name.equals("stroke"))
       {
-         attr = new SVGPaintAttribute(handler, name, style,
+         attr = new SVGPaintAttribute(handler, name, value,
             getPaintAttribute("color", null));
       }
       else if (name.equals("stroke-opacity"))
       {
-         attr = new SVGDoubleAttribute(handler, name, style);
+         attr = new SVGDoubleAttribute(handler, name, value);
       }
       else if (name.equals("fill"))
       {
-         attr = new SVGPaintAttribute(handler, name, style,
+         attr = new SVGPaintAttribute(handler, name, value,
             getPaintAttribute("color", null));
       }
       else if (name.equals("fill-opacity"))
       {
-         attr = new SVGDoubleAttribute(handler, name, style);
+         attr = new SVGDoubleAttribute(handler, name, value);
       }
       else if (name.equals("stroke-width"))
       {
-         attr = new SVGPenWidthAttribute(handler, style);
+         attr = new SVGPenWidthAttribute(handler, value);
       }
       else if (name.equals("fill-rule"))
       {
-         attr = new SVGFillRuleAttribute(handler, style);
+         attr = new SVGFillRuleAttribute(handler, value);
       }
       else if (name.equals("stroke-linecap"))
       {
-         attr = new SVGCapStyleAttribute(handler, style);
+         attr = new SVGCapStyleAttribute(handler, value);
       }
       else if (name.equals("stroke-linejoin"))
       {
-         attr = new SVGJoinStyleAttribute(handler, style);
+         attr = new SVGJoinStyleAttribute(handler, value);
       }
       else if (name.equals("stroke-miterlimit"))
       {
-         attr = new SVGMitreLimitAttribute(handler, style);
+         attr = new SVGMitreLimitAttribute(handler, value);
       }
       else if (name.equals("stroke-dashoffset"))
       {
-         attr = new SVGDashOffsetAttribute(handler, style);
+         attr = new SVGDashOffsetAttribute(handler, value);
       }
       else if (name.equals("stroke-dasharray"))
       {
-         attr = new SVGDashArrayAttribute(handler, style);
-      }
-      else if (name.equals("x"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, true);
-      }
-      else if (name.equals("y"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, false);
-      }
-      else if (name.equals("x1"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, true);
-      }
-      else if (name.equals("y1"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, false);
-      }
-      else if (name.equals("x2"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, true);
-      }
-      else if (name.equals("y2"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, false);
-      }
-      else if (name.equals("cx"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, true);
-      }
-      else if (name.equals("cy"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, false);
-      }
-      else if (name.equals("r"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style);
-      }
-      else if (name.equals("rx"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, true);
-      }
-      else if (name.equals("ry"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, false);
-      }
-      else if (name.equals("width"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, true);
-      }
-      else if (name.equals("height"))
-      {
-         attr = new SVGLengthAttribute(handler, name, style, false);
-      }
-      else if (name.equals("points"))
-      {
-         attr = new SVGLengthArrayAttribute(handler, name, style);
-      }
-      else if (name.equals("d"))
-      {
-         attr = new SVGPathDataAttribute(handler, style);
-      }
-      else if (name.equals("display"))
-      {
-         attr = new SVGDisplayStyleAttribute(handler, style);
-      }
-      else if (name.equals("visibility"))
-      {
-         attr = new SVGVisibilityStyleAttribute(handler, style);
-      }
-      else if (name.equals("href") || name.equals("xlink:href"))
-      {
-         attr = new SVGStringAttribute(handler, name, style);
-      }
-      else if (name.equals("transform"))
-      {
-         attr = new SVGTransformAttribute(handler, style);
-      }
-      else if (name.equals("font-size"))
-      {
-         attr = new SVGFontSizeAttribute(handler, style);
-      }
-      else if (name.equals("font-family"))
-      {
-         attr = new SVGFontFamilyAttribute(handler, style);
-      }
-      else if (name.equals("font-weight"))
-      {
-         attr = new SVGFontWeightAttribute(handler, style);
-      }
-      else if (name.equals("font-style"))
-      {
-         attr = new SVGFontStyleAttribute(handler, style);
-      }
-      else if (name.equals("font-variant"))
-      {
-         attr = new SVGFontVariantAttribute(handler, style);
-      }
-      else if (name.equals("font"))
-      {
-         attr = new SVGFontAttribute(handler, style);
-      }
-
-      if (attr == null)
-      {
-         throw new UnknownSVGAttributeException(name);
+         attr = new SVGDashArrayAttribute(handler, value);
       }
 
       return attr;
@@ -664,16 +685,23 @@ public abstract class SVGAbstractElement implements Cloneable
       return defValue;
    }
 
-   public JDRLength getLengthAttribute(String attrName)
-   {
-      return getLengthAttribute(attrName, null);
-   }
-
-   public JDRLength getLengthAttribute(String attrName, JDRLength defValue)
+   public SVGLengthAttribute getLengthAttribute(String attrName)
    {
       SVGAttribute attr = getAttribute(attrName, null);
 
-      if (attr != null && attr instanceof SVGLength)
+      if (attr != null && attr instanceof SVGLengthAttribute)
+      {
+         return (SVGLengthAttribute)attr;
+      }
+
+      return null;
+   }
+
+   public JDRLength getLengthFromAttribute(String attrName, JDRLength defValue)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGLengthAttribute)
       {
          return ((SVGLengthAttribute)attr).lengthValue(this);
       }
@@ -688,6 +716,18 @@ public abstract class SVGAbstractElement implements Cloneable
       if (attr != null && attr instanceof SVGLengthArrayAttribute)
       {
          return ((SVGLengthArrayAttribute)attr).getArray();
+      }
+
+      return null;
+   }
+
+   public SVGAngleAttribute[] getAngleArrayAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGAngleArrayAttribute)
+      {
+         return ((SVGAngleArrayAttribute)attr).getArray();
       }
 
       return null;
@@ -926,20 +966,18 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void warning(Throwable e)
    {
-      getMessageSystem().getPublisher().publishMessages(
-        MessageInfo.createWarning(e));
+      handler.warning(e);
    }
 
    public void warning(String msg)
    {
-      getMessageSystem().getPublisher().publishMessages(
-        MessageInfo.createWarning(msg));
+      handler.warning(msg);
    }
 
    public String getMessageWithFallback(String label,
        String fallbackFormat, Object... params)
    {
-      return getMessageSystem().getMessageWithFallback(label, fallbackFormat, params);
+      return handler.getMessageWithFallback(label, fallbackFormat, params);
    }
 
    public SVG getSVG()

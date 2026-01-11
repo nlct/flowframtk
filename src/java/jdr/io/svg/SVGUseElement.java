@@ -18,35 +18,6 @@ public class SVGUseElement extends SVGAbstractElement
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
-   {
-      super.applyAttributes(uri, attr);
-
-      addAttribute("x", attr);
-      addAttribute("y", attr);
-      addAttribute("width", attr);
-      addAttribute("height", attr);
-
-      addAttribute("cx", attr);
-      addAttribute("cy", attr);
-      addAttribute("r", attr);
-      addAttribute("d", attr);
-      addAttribute("x1", attr);
-      addAttribute("y1", attr);
-      addAttribute("x2", attr);
-      addAttribute("y2", attr);
-
-      applyShapeAttributes(uri, attr);
-      applyTextAttributes(uri, attr);
-
-      if (getHref() == null)
-      {
-         throw new InvalidFormatException(
-            "No href found for '"+getName()+"' element");
-      }
-   }
-
    @Override
    public String getName()
    {
@@ -54,10 +25,22 @@ public class SVGUseElement extends SVGAbstractElement
    }
 
    @Override
-   public JDRCompleteObject addToImage(JDRGroup group)
-      throws InvalidFormatException
+   protected void addAttributes(String uri, Attributes attr)
+     throws InvalidFormatException
    {
+      super.addAttributes(uri, attr);
+
+      addAttribute("x", attr);
+      addAttribute("y", attr);
+
       String ref = getHref();
+System.out.println("USING "+ref);
+
+      if (ref == null)
+      {
+         throw new InvalidFormatException(
+            "No href found for '"+getName()+"' element");
+      }
 
       Matcher m = REF_PATTERN.matcher(ref);
 
@@ -70,7 +53,10 @@ public class SVGUseElement extends SVGAbstractElement
          throw new InvalidFormatException("Can't parse href '"+ref+"'");
       }
 
-      SVGAbstractElement element = getRefElement(ref);
+      xAttr = getLengthAttribute("x");
+      yAttr = getLengthAttribute("y");
+
+      element = getRefElement(ref);
 
       if (element == null)
       {
@@ -81,26 +67,36 @@ public class SVGUseElement extends SVGAbstractElement
 
       element.attributeSet.removeAttribute("id");
 
-      SVGAttributeSet newAttrs = (SVGAttributeSet)attributeSet.copyAttributes();
+      element.addAttributes(uri, attr);
+   }
 
-      newAttrs.removeAttribute("href");
-      newAttrs.removeAttribute("xlink:href");
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String style)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
 
-      SVGLengthAttribute xAttr = (SVGLengthAttribute)newAttrs.getAttribute("x");
-
-      if (xAttr != null)
+      if (name.equals("x"))
       {
-         newAttrs.removeAttribute("x");
+         attr = new SVGLengthAttribute(handler, name, style, true);
+      }
+      else if (name.equals("y"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, false);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, style);
       }
 
-      SVGLengthAttribute yAttr = (SVGLengthAttribute)newAttrs.getAttribute("y");
+      return attr;
+   }
 
-      if (yAttr != null)
-      {
-         newAttrs.removeAttribute("y");
-      }
-
-      element.attributeSet.addAttributes(newAttrs);
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
+      throws InvalidFormatException
+   {
+      if (element == null) return null;
 
       if (title != null && !title.isEmpty())
       {
@@ -123,16 +119,14 @@ public class SVGUseElement extends SVGAbstractElement
             double x = 0;
             double y = 0;
 
-            JDRUnit unit = handler.getStorageUnit();
-
             if (xAttr != null)
             {
-               x = xAttr.lengthValue(element).getValue(unit);
+               x = xAttr.getStorageValue(element, true);
             }
 
             if (yAttr != null)
             {
-               y = yAttr.lengthValue(element).getValue(unit);
+               y = yAttr.getStorageValue(element, false);
             }
 
             newObject.translate(x, y);
@@ -196,6 +190,9 @@ public class SVGUseElement extends SVGAbstractElement
    }
 
    String description = null, title = null;
+
+   SVGAbstractElement element;
+   SVGLength xAttr, yAttr;
 
    private static final Pattern REF_PATTERN 
       = Pattern.compile("\\s*#([^#]+)\\s*");

@@ -18,14 +18,30 @@ public abstract class SVGShape extends SVGAbstractElement
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
       throws InvalidFormatException
    {
-      super.applyAttributes(uri, attr);
+      super.addAttributes(uri, attr);
 
-      applyShapeAttributes(uri, attr);
+      addShapeAttributes(uri, attr);
    }
 
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr = createPathStyleAttribute(name, value);
+
+      if (attr == null)
+      {
+         return super.createElementAttribute(name, value);
+      }
+
+      return attr;
+   }
+
+   @Override
    public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {

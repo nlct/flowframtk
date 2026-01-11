@@ -2,6 +2,7 @@ package com.dickimawbooks.jdr.io.svg;
 
 import java.util.*;
 import java.awt.GraphicsEnvironment;
+import java.awt.geom.Point2D;
 
 import org.xml.sax.*;
 import org.xml.sax.ext.*;
@@ -240,8 +241,20 @@ public class SVGHandler extends DefaultHandler
       return group.getCanvasGraphics();
    }
 
+   public void setLastTextPosition(Point2D p)
+   {
+      lastTextPosition = p;
+   }
+
+   public Point2D getLastTextPosition()
+   {
+      return lastTextPosition;
+   }
+
    private JDRGroup group;
    private SVG svg;
+
+   private Point2D lastTextPosition;
 
    private ArrayDeque<SVGAbstractElement> stack;
    private SVGAbstractElement current = null;

@@ -45,6 +45,13 @@ public class SVGStringAttribute implements SVGAttribute
       return attr;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format("%s[name=%s,value=%s]",
+      getClass().getSimpleName(), getName(), getValue());
+   }
+
    private String name, value;
    SVGHandler handler;
 }

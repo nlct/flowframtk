@@ -17,19 +17,40 @@ public class SVGPathElement extends SVGShape
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
-   {
-      super.applyAttributes(uri, attr);
-
-      addAttribute("d", attr);
-   }
-
+   @Override
    public String getName()
    {
       return "path";
    }
 
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
+     throws InvalidFormatException
+   {
+      super.addAttributes(uri, attr);
+
+      addAttribute("d", attr);
+   }
+
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String style)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
+
+      if (name.equals("d"))
+      {
+         attr = new SVGPathDataAttribute(handler, style);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, style);
+      }
+
+      return attr;
+   }
+
+   @Override
    public JDRShape createShape(CanvasGraphics cg)
      throws InvalidFormatException
    {

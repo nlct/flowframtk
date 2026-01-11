@@ -15,15 +15,37 @@ public class SVGRectElement extends SVGShape
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
      throws InvalidFormatException
    {
-      super.applyAttributes(uri, attr);
+      super.addAttributes(uri, attr);
 
-      addAttribute("width", attr);
-      addAttribute("height", attr);
       addAttribute("x", attr);
       addAttribute("y", attr);
+   }
+
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String style)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
+
+      if (name.equals("x"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, true);
+      }
+      else if (name.equals("y"))
+      {
+         attr = new SVGLengthAttribute(handler, name, style, false);
+      }
+// TODO rx and ry (rounded corner radius): auto|<length>|<percent>
+      else
+      {
+         attr = super.createElementAttribute(name, style);
+      }
+
+      return attr;
    }
 
    protected double getRectX()
@@ -46,11 +68,13 @@ public class SVGRectElement extends SVGShape
       return getDoubleAttribute("height", 0);
    }
 
+   @Override
    public String getName()
    {
       return "rect";
    }
 
+   @Override
    public JDRShape createShape(CanvasGraphics cg)
    {
       double p1x = getRectX();
@@ -64,6 +88,7 @@ public class SVGRectElement extends SVGShape
    }
 
 
+   @Override
    public Object clone()
    {
       try

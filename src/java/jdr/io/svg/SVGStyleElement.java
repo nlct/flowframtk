@@ -17,11 +17,16 @@ public class SVGStyleElement extends SVGAbstractElement
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
+   @Override
+   public String getName()
+   {
+      return "style";
+   }
+
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
      throws InvalidFormatException
    {
-      super.applyAttributes(uri, attr);
-
       String type = attr.getValue("type");
 
       if (type != null && !type.equals("text/css"))
@@ -29,12 +34,6 @@ public class SVGStyleElement extends SVGAbstractElement
          throw new InvalidFormatException("Style type '"+type
             +"' not recognised. (Can only recognise 'text/css' type.)");
       }
-   }
-
-   @Override
-   public String getName()
-   {
-      return "style";
    }
 
    @Override
@@ -62,6 +61,7 @@ public class SVGStyleElement extends SVGAbstractElement
    {
    }
 
+   @Override
    public Object clone()
    {
       try

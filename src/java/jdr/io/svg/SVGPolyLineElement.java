@@ -15,19 +15,40 @@ public class SVGPolyLineElement extends SVGShape
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
-   {
-      super.applyAttributes(uri, attr);
-
-      addAttribute("points", attr);
-   }
-
+   @Override
    public String getName()
    {
       return "polyline";
    }
 
+   @Override
+   protected void addAttributes(String uri, Attributes attr)
+     throws InvalidFormatException
+   {
+      super.addAttributes(uri, attr);
+
+      addAttribute("points", attr);
+   }
+
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String style)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
+
+      if (name.equals("points"))
+      {
+         attr = new SVGLengthArrayAttribute(handler, name, style);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, style);
+      }
+
+      return attr;
+   }
+
+   @Override
    public JDRShape createShape(CanvasGraphics cg)
      throws InvalidFormatException
    {
@@ -63,7 +84,7 @@ public class SVGPolyLineElement extends SVGShape
       return path;
    }
 
-
+   @Override
    public Object clone()
    {
       try

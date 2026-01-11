@@ -18,30 +18,13 @@ public class SVGGroupElement extends SVGAbstractElement
       super(handler, parent, uri, attr);
    }
 
-   protected void applyAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
-   {
-      super.applyAttributes(uri, attr);
-
-      addAttribute("stroke", attr);
-      addAttribute("fill", attr);
-      addAttribute("stroke-width", attr);
-      addAttribute("stroke-opacity", attr);
-      addAttribute("fill-opacity", attr);
-      addAttribute("fill-rule", attr);
-      addAttribute("stroke-linecap", attr);
-      addAttribute("stroke-linejoin", attr);
-      addAttribute("stroke-miterlimit", attr);
-      addAttribute("stroke-dashoffset", attr);
-      addAttribute("stroke-dasharray", attr);
-
-   }
-
+   @Override
    public String getName()
    {
       return "g";
    }
 
+   @Override
    public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {

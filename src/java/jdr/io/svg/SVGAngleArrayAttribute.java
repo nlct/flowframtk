@@ -6,9 +6,9 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGLengthArrayAttribute extends SVGAbstractAttribute
+public class SVGAngleArrayAttribute extends SVGAbstractAttribute
 {
-   public SVGLengthArrayAttribute(SVGHandler handler, String attrName, String valueString)
+   public SVGAngleArrayAttribute(SVGHandler handler, String attrName, String valueString)
       throws InvalidFormatException
    {
       super(handler, valueString);
@@ -26,11 +26,11 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
 
       String[] split = valueString.split("(\\s*,\\s*)|(\\s+,?\\s*)");
 
-      array = new SVGLength[split.length];
+      array = new SVGAngleAttribute[split.length];
 
       for (int i = 0; i < split.length; i++)
       {
-         array[i] = new SVGLength(handler, split[i]);
+         array[i] = new SVGAngleAttribute(handler, split[i]);
       }
    }
 
@@ -46,7 +46,7 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
       return array;
    }
 
-   public SVGLength[] getArray()
+   public SVGAngleAttribute[] getArray()
    {
       return array;
    }
@@ -66,7 +66,7 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
    {
       try
       {
-         SVGLengthArrayAttribute attr = new SVGLengthArrayAttribute(handler, name, null);
+         SVGAngleArrayAttribute attr = new SVGAngleArrayAttribute(handler, name, null);
 
          attr.makeEqual(this);
 
@@ -79,7 +79,7 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
       return null;
    }
 
-   public void makeEqual(SVGLengthArrayAttribute attr)
+   public void makeEqual(SVGAngleArrayAttribute attr)
    {
       super.makeEqual(attr);
 
@@ -89,18 +89,18 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
       }
       else
       {
-         array = new SVGLength[attr.array.length];
+         array = new SVGAngleAttribute[attr.array.length];
 
          for (int i = 0; i < attr.array.length; i++)
          {
-            array[i] = (SVGLength)attr.array[i].clone();
+            array[i] = (SVGAngleAttribute)attr.array[i].clone();
          }
       }
 
       name = attr.name;
    }
 
-   private SVGLength[] array;
+   private SVGAngleAttribute[] array;
 
    private String name;
 }
