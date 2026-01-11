@@ -34,7 +34,6 @@ public class SVGUseElement extends SVGAbstractElement
       addAttribute("y", attr);
 
       String ref = getHref();
-System.out.println("USING "+ref);
 
       if (ref == null)
       {
