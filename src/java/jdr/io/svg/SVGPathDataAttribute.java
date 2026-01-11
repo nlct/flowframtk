@@ -87,11 +87,15 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (c == 'M')
                  {
-                    path.moveTo(x.getBpValue(element, true), y.getBpValue(element, false));
+                    path.moveTo(
+                      x.getStorageValue(element, true),
+                      y.getStorageValue(element, false));
                  }
                  else if (c == 'L')
                  {
-                    path.lineTo(x.getBpValue(element, true), y.getBpValue(element, false));
+                    path.lineTo(
+                      x.getStorageValue(element, true),
+                      y.getStorageValue(element, false));
                  }
                  else if (c == 'm' || c == 'l')
                  {
@@ -104,13 +108,13 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                     if (c == 'm')
                     {
-                       path.moveTo(p.getX()+x.getBpValue(element, true),
-                                   p.getY()+y.getBpValue(element, false));
+                       path.moveTo(p.getX()+x.getStorageValue(element, true),
+                                   p.getY()+y.getStorageValue(element, false));
                     }
                     else
                     {
-                       path.lineTo(p.getX()+x.getBpValue(element, true),
-                                   p.getY()+y.getBpValue(element, false));
+                       path.lineTo(p.getX()+x.getStorageValue(element, true),
+                                   p.getY()+y.getStorageValue(element, false));
                     }
                  }
               }
@@ -135,23 +139,23 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (c == 'H')
                  {
-                    path.lineTo(coord.getBpValue(element, true),
+                    path.lineTo(coord.getStorageValue(element, true),
                                 p.getY());
                  }
                  else if (c == 'h')
                  {
-                    path.lineTo(p.getX()+coord.getBpValue(element, true),
+                    path.lineTo(p.getX()+coord.getStorageValue(element, true),
                                 p.getY());
                  }
                  else if (c == 'V')
                  {
                     path.lineTo(p.getX(),
-                                coord.getBpValue(element, false));
+                                coord.getStorageValue(element, false));
                  }
                  else
                  {
                     path.lineTo(p.getX(),
-                                p.getY()+coord.getBpValue(element, false));
+                                p.getY()+coord.getStorageValue(element, false));
                  }
               }
               prevC = null;
@@ -181,32 +185,32 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (c == 'C')
                  {
-                    cx = x2.getBpValue(element, true);
-                    cy = y2.getBpValue(element, false);
+                    cx = x2.getStorageValue(element, true);
+                    cy = y2.getStorageValue(element, false);
 
                     path.curveTo
                       (
-                         x1.getBpValue(element, true),
-                         y1.getBpValue(element, false),
+                         x1.getStorageValue(element, true),
+                         y1.getStorageValue(element, false),
                          cx, cy,
-                         x.getBpValue(element, true),
-                         y.getBpValue(element, false)
+                         x.getStorageValue(element, true),
+                         y.getStorageValue(element, false)
                       );
                  }
                  else
                  {
                     p = path.getCurrentPoint();
 
-                    cx = p.getX()+x2.getBpValue(element, true);
-                    cy = p.getY()+y2.getBpValue(element, false);
+                    cx = p.getX()+x2.getStorageValue(element, true);
+                    cy = p.getY()+y2.getStorageValue(element, false);
 
                     path.curveTo
                       (
-                         p.getX()+x1.getBpValue(element, true),
-                         p.getY()+y1.getBpValue(element, false),
+                         p.getX()+x1.getStorageValue(element, true),
+                         p.getY()+y1.getStorageValue(element, false),
                          cx, cy,
-                         p.getX()+x.getBpValue(element, true),
-                         p.getY()+y.getBpValue(element, false)
+                         p.getX()+x.getStorageValue(element, true),
+                         p.getY()+y.getStorageValue(element, false)
                       );
                  }
 
@@ -255,28 +259,28 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (c == 'S')
                  {
-                    c2x = x2.getBpValue(element, true);
-                    c2y = y2.getBpValue(element, false);
+                    c2x = x2.getStorageValue(element, true);
+                    c2y = y2.getStorageValue(element, false);
 
                     path.curveTo
                       (
                          cx, cy,
                          c2x, c2y,
-                         x.getBpValue(element, true),
-                         y.getBpValue(element, false)
+                         x.getStorageValue(element, true),
+                         y.getStorageValue(element, false)
                       );
                  }
                  else
                  {
-                    c2x = p.getX()+x2.getBpValue(element, true);
-                    c2y = p.getY()+y2.getBpValue(element, false);
+                    c2x = p.getX()+x2.getStorageValue(element, true);
+                    c2y = p.getY()+y2.getStorageValue(element, false);
 
                     path.curveTo
                       (
                          cx, cy,
                          c2x, c2y,
-                         p.getX()+x.getBpValue(element, true),
-                         p.getY()+y.getBpValue(element, false)
+                         p.getX()+x.getStorageValue(element, true),
+                         p.getY()+y.getStorageValue(element, false)
                       );
                  }
 
@@ -311,28 +315,28 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (c == 'Q')
                  {
-                    cx = x1.getBpValue(element, true);
-                    cy = y1.getBpValue(element, false);
+                    cx = x1.getStorageValue(element, true);
+                    cy = y1.getStorageValue(element, false);
 
                     path.quadTo
                       (
                          cx, cy,
-                         x.getBpValue(element, true),
-                         y.getBpValue(element, false)
+                         x.getStorageValue(element, true),
+                         y.getStorageValue(element, false)
                       );
                  }
                  else
                  {
                     p = path.getCurrentPoint();
 
-                    cx = p.getX()+x1.getBpValue(element, true);
-                    cy = p.getY()+y1.getBpValue(element, false);
+                    cx = p.getX()+x1.getStorageValue(element, true);
+                    cy = p.getY()+y1.getStorageValue(element, false);
 
                     path.quadTo
                       (
                          cx, cy,
-                         p.getX()+x.getBpValue(element, true),
-                         p.getY()+y.getBpValue(element, false)
+                         p.getX()+x.getStorageValue(element, true),
+                         p.getY()+y.getStorageValue(element, false)
                       );
                  }
 
@@ -381,8 +385,8 @@ public class SVGPathDataAttribute implements SVGAttribute
                     path.quadTo
                       (
                          cx, cy,
-                         x.getBpValue(element, true),
-                         y.getBpValue(element, false)
+                         x.getStorageValue(element, true),
+                         y.getStorageValue(element, false)
                       );
                  }
                  else
@@ -390,8 +394,8 @@ public class SVGPathDataAttribute implements SVGAttribute
                     path.quadTo
                       (
                          cx, cy,
-                         p.getX()+x.getBpValue(element, true),
-                         p.getY()+y.getBpValue(element, false)
+                         p.getX()+x.getStorageValue(element, true),
+                         p.getY()+y.getStorageValue(element, false)
                       );
                  }
 
@@ -429,8 +433,8 @@ public class SVGPathDataAttribute implements SVGAttribute
                      "Path '"+c+"' command requires 7 parameters");
                  }
 
-                 double x1 = x.getBpValue(element, true);
-                 double y1 = y.getBpValue(element, false);
+                 double x1 = x.getStorageValue(element, true);
+                 double y1 = y.getStorageValue(element, false);
 
                  if (c == 'a')
                  {
@@ -440,8 +444,8 @@ public class SVGPathDataAttribute implements SVGAttribute
                     y1 += p1.getY();
                  }
 
-                 arcTo(path, rx.getBpValue(element, true),
-                       ry.getBpValue(element, false),
+                 arcTo(path, rx.getStorageValue(element, true),
+                       ry.getStorageValue(element, false),
                        angle.getRadians(),
                        largeArcFlag.booleanValue(),
                        sweepFlag.booleanValue(),

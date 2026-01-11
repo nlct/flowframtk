@@ -46,13 +46,13 @@ public class SVGPolyLineElement extends SVGShape
 
       JDRPath path = new JDRPath(cg);
 
-      double p1x = points[0].getBpValue(this, true);
-      double p1y = points[1].getBpValue(this, false);
+      double p1x = points[0].getStorageValue(this, true);
+      double p1y = points[1].getStorageValue(this, false);
 
       for (int i = 2; i < points.length; i += 2)
       {
-         double p2x = points[i].getBpValue(this, true);
-         double p2y = points[i+1].getBpValue(this, false);
+         double p2x = points[i].getStorageValue(this, true);
+         double p2y = points[i+1].getStorageValue(this, false);
 
          path.add(new JDRLine(cg, p1x, p1y, p2x, p2y));
 

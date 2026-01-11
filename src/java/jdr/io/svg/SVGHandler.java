@@ -213,6 +213,28 @@ public class SVGHandler extends DefaultHandler
       return svg;
    }
 
+   public JDRUnit getDefaultUnit()
+   {
+      return JDRUnit.bp;
+   }
+
+   public JDRUnit getStorageUnit()
+   {
+      return getCanvasGraphics().getStorageUnit();
+   }
+
+   public double toStorageUnit(double defaultUnitValue)
+   {
+      return getDefaultUnit().toUnit(defaultUnitValue, getStorageUnit());
+   }
+
+   public JDRLength toStorageLength(double defaultUnitValue)
+   {
+      return new JDRLength(getCanvasGraphics(),
+        toStorageUnit(defaultUnitValue),
+        getStorageUnit());
+   }
+
    public CanvasGraphics getCanvasGraphics()
    {
       return group.getCanvasGraphics();

@@ -122,9 +122,19 @@ public class SVGStyles extends HashMap<SVGStyles.Rule,SVGAttributeSet>
 
       public void setRule(String selectorElem, String selectorId, String selectorClass)
       {
-         if (selectorElem.equals("*"))
+         if (selectorElem == null || selectorElem.equals("*"))
          {
             selectorElem = "";
+         }
+
+         if (selectorId == null)
+         {
+            selectorId = "";
+         }
+
+         if (selectorClass == null)
+         {
+            selectorClass = "";
          }
 
          this.selectorElement = selectorElem;

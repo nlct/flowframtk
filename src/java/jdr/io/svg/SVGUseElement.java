@@ -123,7 +123,7 @@ public class SVGUseElement extends SVGAbstractElement
             double x = 0;
             double y = 0;
 
-            JDRUnit unit = group.getCanvasGraphics().getStorageUnit();
+            JDRUnit unit = handler.getStorageUnit();
 
             if (xAttr != null)
             {

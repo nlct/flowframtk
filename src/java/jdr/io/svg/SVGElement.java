@@ -44,7 +44,7 @@ public class SVGElement extends SVGAbstractElement
 
    public int getCurrentLengthUnit()
    {
-      return width == null ? SVGMeasurement.UNIT_PT : width.getUnitId();
+      return width == null ? handler.getDefaultUnit().getID() : width.getUnitId();
    }
 
    public String getName()
@@ -111,12 +111,12 @@ public class SVGElement extends SVGAbstractElement
 
    public double getViewportWidth()
    {
-      return width.getBpValue(parent, true);
+      return width.getStorageValue(parent, true);
    }
 
    public double getViewportHeight()
    {
-      return height.getBpValue(parent, false);
+      return height.getStorageValue(parent, false);
    }
 
    public void makeEqual(SVGElement element)

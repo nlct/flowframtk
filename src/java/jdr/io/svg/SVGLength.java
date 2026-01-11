@@ -41,26 +41,27 @@ public class SVGLength extends SVGMeasurement
       return "length";
    }
 
-   public double getBpValue(SVGAbstractElement element, boolean isHorizontal)
+   public double getStorageValue(SVGAbstractElement element, boolean isHorizontal)
    {
       double val = doubleValue();
+      JDRUnit storageUnit = handler.getStorageUnit();
 
       switch (getUnitId())
       {
          case SVGMeasurement.UNIT_DEFAULT :
-            return element.getCanvasGraphics().getStorageUnit().toBp(val);
+            return handler.getDefaultUnit().toUnit(val, storageUnit);
          case SVGMeasurement.UNIT_IN :
-            return JDRUnit.in.toBp(val);
+            return JDRUnit.in.toUnit(val, storageUnit);
          case SVGMeasurement.UNIT_CM :
-            return JDRUnit.cm.toBp(val);
+            return JDRUnit.cm.toUnit(val, storageUnit);
          case SVGMeasurement.UNIT_MM :
-            return JDRUnit.mm.toBp(val);
+            return JDRUnit.mm.toUnit(val, storageUnit);
          case SVGMeasurement.UNIT_PT :
-            return val;
+            return JDRUnit.bp.toUnit(val, storageUnit);
          case SVGMeasurement.UNIT_PC :
-            return JDRUnit.pc.toBp(val);
+            return JDRUnit.pc.toUnit(val, storageUnit);
          case SVGMeasurement.UNIT_PERCENT :
-            double relValue;
+            double relValue; // storage units
 
             if (element == null)
             {
@@ -96,7 +97,7 @@ public class SVGLength extends SVGMeasurement
       switch (getUnitId())
       {
          case SVGMeasurement.UNIT_DEFAULT :
-            return new JDRLength(cg, val, cg.getStorageUnit());
+            return handler.toStorageLength(val);
          case SVGMeasurement.UNIT_IN :
             return new JDRLength(cg, val, JDRUnit.in);
          case SVGMeasurement.UNIT_CM :
@@ -109,7 +110,7 @@ public class SVGLength extends SVGMeasurement
          case SVGMeasurement.UNIT_PC :
             return new JDRLength(cg, val, JDRUnit.pc);
          case SVGMeasurement.UNIT_PERCENT :
-            double relValue;
+            double relValue;// storage unit
 
             if (element == null)
             {
@@ -127,7 +128,7 @@ public class SVGLength extends SVGMeasurement
                }
             }
 
-            return new JDRLength(cg, 0.01*val*relValue, JDRUnit.bp);
+            return new JDRLength(cg, 0.01*val*relValue, handler.getStorageUnit());
 // TODO:
          case SVGMeasurement.UNIT_EM :
          case SVGMeasurement.UNIT_EX :

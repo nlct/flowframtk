@@ -36,7 +36,7 @@ public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
    @Override
    public double doubleValue(SVGAbstractElement element)
    {
-      return getBpValue(element, isHorizontal);
+      return getStorageValue(element, isHorizontal);
    }
 
    @Override

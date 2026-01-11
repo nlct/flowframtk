@@ -45,7 +45,7 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
 
       for (int i = 0; i < lengtharray.length; i++)
       {
-         dashPattern[i] = (float)lengtharray[i].getBpValue(element, true);
+         dashPattern[i] = (float)lengtharray[i].getStorageValue(element, true);
       }
 
       return new DashPattern(handler.getCanvasGraphics(), dashPattern);

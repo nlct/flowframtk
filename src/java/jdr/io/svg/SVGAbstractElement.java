@@ -109,9 +109,11 @@ public abstract class SVGAbstractElement implements Cloneable
          }
          else
          {
+            SVGAttributeSet atSet = createAttributeSet(value);
+
             for (String s : cssClassList)
             {
-               styles.putRule("", "", s, createAttributeSet(value));
+               styles.putRule("", "", s, (SVGAttributeSet)atSet.clone());
             }
          }
       }
@@ -240,6 +242,10 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public abstract void setTitle(String text);
 
+   /**
+    * Gets the viewport width in terms of the storage unit.
+    * @return the viewport width (storage unit) or 0 if not set
+    */ 
    public double getViewportWidth()
    {
       if (parent == null)
@@ -252,6 +258,10 @@ public abstract class SVGAbstractElement implements Cloneable
       }
    }
 
+   /**
+    * Gets the viewport height in terms of the storage unit.
+    * @return the viewport height (storage unit) or 0 if not set
+    */ 
    public double getViewportHeight()
    {
       if (parent == null)
