@@ -122,6 +122,7 @@ public class SVGTextElement extends SVGAbstractElement
       JDRText textArea = new JDRText(cg, p, handler.createDefaultFont(),
         getContents());
 
+      handler.setLaTeXText(textArea);
       handler.setLastTextPosition(p);
 
       textArea.setTextPaint(handler.createDefaultTextPaint());

@@ -20,6 +20,7 @@ public class SVGHandler extends DefaultHandler
       super();
       this.group = group;
       this.svg = svg;
+      importSettings = svg.getImportSettings();
       stack = new ArrayDeque<SVGAbstractElement>();
 
       msgSystem = group.getCanvasGraphics().getMessageSystem();
@@ -251,8 +252,15 @@ public class SVGHandler extends DefaultHandler
       return lastTextPosition;
    }
 
+   public void setLaTeXText(JDRText jdrText)
+   {
+      svg.setLaTeXText(jdrText);
+   }
+
    private JDRGroup group;
    private SVG svg;
+
+   ImportSettings importSettings;
 
    private Point2D lastTextPosition;
 

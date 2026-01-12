@@ -179,7 +179,8 @@ public class SVG
    }
 
    public static JDRGroup load(CanvasGraphics cg, File file,
-      ImportSettings importSettings)
+      ImportSettings importSettings,
+      TeXMappings textModeMappings, TeXMappings mathModeMappings)
      throws SAXException,IOException
    {
       JDRMessage msgSys = cg.getMessageSystem();
@@ -193,11 +194,12 @@ public class SVG
           "Loading ''{0}''",
           file.getAbsolutePath())));
 
-      return load(cg, r, importSettings);
+      return load(cg, r, importSettings, textModeMappings, mathModeMappings);
    }
 
    public static JDRGroup load(CanvasGraphics cg, Reader reader,
-      ImportSettings importSettings)
+      ImportSettings importSettings, TeXMappings textModeMappings,
+      TeXMappings mathModeMappings)
      throws SAXException,IOException
    {
       if (importSettings == null)
@@ -206,21 +208,65 @@ public class SVG
          importSettings.type = ImportSettings.Type.SVG;
       }
 
-      XMLReader xr = XMLReaderFactory.createXMLReader();
-
-      JDRGroup group = new JDRGroup(cg);
-
       SVG svg = new SVG(importSettings);
       svg.canvasGraphics = cg;
 
-      SVGHandler handler = new SVGHandler(svg, group);
+      if (textModeMappings != null)
+      {
+         svg.setTextModeMappings(textModeMappings);
+      }
+
+      if (mathModeMappings != null)
+      {
+         svg.setMathModeMappings(mathModeMappings);
+      }
+
+      return svg.load(reader);
+   }
+
+   protected JDRGroup load(Reader reader) throws SAXException,IOException
+   {
+      XMLReader xr = XMLReaderFactory.createXMLReader();
+
+      JDRGroup group = new JDRGroup(canvasGraphics);
+
+      styNames = new Vector<String>();
+
+      SVGHandler handler = new SVGHandler(this, group);
 
       xr.setContentHandler(handler);
       xr.setErrorHandler(handler);
 
-      JDRMessage msgSys = cg.getMessageSystem();
+      JDRMessage msgSys = canvasGraphics.getMessageSystem();
 
       xr.parse(new InputSource(reader));
+
+      if (!styNames.isEmpty())
+      {
+         String preamble = canvasGraphics.getPreamble();
+
+         StringBuilder buffer = new StringBuilder(
+           preamble.length()+styNames.firstElement().length()+12);
+
+         buffer.append(preamble);
+
+         for (String sty : styNames)
+         {
+            if (sty.startsWith("["))
+            {
+               int idx = sty.indexOf("]");
+
+               buffer.append(String.format("\\usepackage%s{%s}%n",
+                 sty.substring(0, idx+1), sty.substring(idx+1)));
+            }
+            else
+            {
+               buffer.append(String.format("\\usepackage{%s}%n", sty));
+            }
+         }
+
+         canvasGraphics.setPreamble(buffer.toString());
+      }
 
       return group;
    }
@@ -268,6 +314,33 @@ public class SVG
    public ExportSettings getExportSettings()
    {
       return exportSettings;
+   }
+
+   public ImportSettings getImportSettings()
+   {
+      return importSettings;
+   }
+
+   public void setTextModeMappings(TeXMappings texMappings)
+   {
+      this.textModeMappings = texMappings;
+
+      importSettings.useMappings = (texMappings != null);
+   }
+
+   public TeXMappings getTextModeMappings()
+   {
+      return textModeMappings;
+   }
+
+   public void setMathModeMappings(TeXMappings texMappings)
+   {
+      this.mathModeMappings = texMappings;
+   }
+
+   public TeXMappings getMathModeMappings()
+   {
+      return mathModeMappings;
    }
 
    public Path relativize(String filename)
@@ -424,11 +497,49 @@ public class SVG
       }
    }
 
+   public void setLaTeXText(JDRText jdrText)
+   {
+      String text = jdrText.getText();
+      String latexText = null;
+
+      if (importSettings.useMappings)
+      {
+         if (mathModeMappings != null
+              && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
+         {
+            text = text.substring(1, text.length()-1);
+
+            latexText = "$" + mathModeMappings.applyMappings(
+              text, styNames) + "$";
+
+            jdrText.setText(text);
+         }
+         else if (textModeMappings != null)
+         {
+            latexText = textModeMappings.applyMappings(text, styNames);
+         }
+         else
+         {
+            jdrText.escapeTeXChars();
+         }
+      }
+
+      if (latexText != null && !latexText.equals(text))
+      {
+         jdrText.setLaTeXText(latexText);
+      }
+
+   }
+
    private CanvasGraphics canvasGraphics;
    private Writer writer;
    private Path basePath;
    private ImportSettings importSettings;
    private ExportSettings exportSettings;
+
+   Vector<String> styNames;
+   TeXMappings textModeMappings=null;
+   TeXMappings mathModeMappings=null;
 
    private Vector<String> referenceIDs;
 }

@@ -77,15 +77,8 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
       {
          in = new BufferedReader(new FileReader(svgFile));
 
-         image = SVG.load(cg, in, importSettings);
-
-         // This won't occur as currently no support for extracting
-         // embedded bitmaps
-         if (image.anyDraftBitmaps())
-         {
-            publish(MessageInfo.createWarning(
-               getResources().getMessage("warning.draft_bitmaps")));
-         }
+         image = SVG.load(cg, in, importSettings,
+           app.getTextModeMappings(), app.getMathModeMappings());
       }
       finally
       {

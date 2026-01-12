@@ -1703,7 +1703,8 @@ public class JDRConverter
                paths = loadEps(canvasGraphics, in);
             break;
             case SVG:
-               paths = SVG.load(canvasGraphics, in, importSettings);
+               paths = SVG.load(canvasGraphics, in, importSettings,
+                textModeMappings, mathModeMappings);
             break;
             case ACORN_DRAWFILE:
                paths = loadAcornDrawFile(din, canvasGraphics);

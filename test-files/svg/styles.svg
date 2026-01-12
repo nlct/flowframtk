@@ -30,7 +30,7 @@
 
   <circle cx="20" cy="20" r="10" class="circleClass" />
   <ellipse cx="30" cy="30" rx="10" ry="5" class="ellipseClass" />
-  <text x="40" y="40" rotate="90" class="sample">Some text</text>
+  <text x="40" y="40" rotate="90" class="sample">Some text #1</text>
 
   <!-- using my graphical objects -->
   <use x="5" y="10" href="#Circle" class="circleClass" />
