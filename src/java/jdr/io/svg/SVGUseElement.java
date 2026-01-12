@@ -3,6 +3,9 @@ package com.dickimawbooks.jdr.io.svg;
 import java.util.Enumeration;
 import java.util.regex.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
@@ -42,15 +45,21 @@ public class SVGUseElement extends SVGAbstractElement
          throw new ElementMissingAttributeException(this, "href");
       }
 
-      Matcher m = REF_PATTERN.matcher(ref);
+      try
+      {
+         URI uriRef = new URI(ref);
+         String path = uriRef.getPath();
 
-      if (m.matches())
-      {
-         ref = m.group(1);
+         if (path != null && !path.isEmpty())
+         {
+            throw new ExternalRefUnsupportedException(this, ref);
+         }
+
+         ref = uriRef.getFragment();
       }
-      else
+      catch (URISyntaxException e)
       {
-         throw new CantParseAttributeValueException(this, "href", ref);
+         throw new InvalidAttributeValueException(this, "href", ref, e);
       }
 
       widthAttr = getLengthAttribute("width");
@@ -247,7 +256,4 @@ public class SVGUseElement extends SVGAbstractElement
    SVGLength xAttr, yAttr;
 
    private SVGLengthAttribute widthAttr, heightAttr;
-
-   private static final Pattern REF_PATTERN 
-      = Pattern.compile("\\s*#([^#]+)\\s*");
 }
