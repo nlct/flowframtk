@@ -31,18 +31,33 @@ public class SVGStyleElement extends SVGAbstractElement
 
       if (type != null && !type.equals("text/css"))
       {
-         throw new InvalidFormatException("Style type '"+type
-            +"' not recognised. (Can only recognise 'text/css' type.)");
+         throw new InvalidAttributeValueException(this, "type", type);
       }
    }
 
    @Override
+   protected SVGAttribute createElementAttribute(String name, String value)
+     throws InvalidFormatException
+   {  
+      SVGAttribute attr = super.createElementAttribute(name, value);
+
+      if (attr == null)
+      {
+         attr = createTextStyleAttribute(name, value);
+      }
+
+      if (attr == null)
+      {
+         attr = createPathStyleAttribute(name, value);
+      }
+
+      return attr;
+   }  
+
+   @Override
    public void endElement()
    {
-      if (parent != null)
-      {
-         parent.addStyleRules(getContents());
-      }
+      addStyleRules(parent, getContents());
    }
 
    @Override

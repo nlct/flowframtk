@@ -32,13 +32,14 @@ public class SVGUseElement extends SVGAbstractElement
 
       addAttribute("x", attr);
       addAttribute("y", attr);
+      addAttribute("width", attr);
+      addAttribute("height", attr);
 
       String ref = getHref();
 
       if (ref == null)
       {
-         throw new InvalidFormatException(
-            "No href found for '"+getName()+"' element");
+         throw new ElementMissingAttributeException(this, "href");
       }
 
       Matcher m = REF_PATTERN.matcher(ref);
@@ -49,7 +50,20 @@ public class SVGUseElement extends SVGAbstractElement
       }
       else
       {
-         throw new InvalidFormatException("Can't parse href '"+ref+"'");
+         throw new CantParseAttributeValueException(this, "href", ref);
+      }
+
+      widthAttr = getLengthAttribute("width");
+      heightAttr = getLengthAttribute("height");
+
+      if (widthAttr != null && widthAttr.getValue() == null)
+      {
+         widthAttr = null;
+      }
+
+      if (heightAttr != null && heightAttr.getValue() == null)
+      {
+         heightAttr = null;
       }
 
       xAttr = getLengthAttribute("x");
@@ -59,7 +73,7 @@ public class SVGUseElement extends SVGAbstractElement
 
       if (element == null)
       {
-         throw new InvalidFormatException("Can't find element with id '"+ref+"'");
+         throw new UnknownReferenceException(element, ref);
       }
 
       element = (SVGAbstractElement)element.clone();
@@ -70,22 +84,30 @@ public class SVGUseElement extends SVGAbstractElement
    }
 
    @Override
-   protected SVGAttribute createElementAttribute(String name, String style)
+   protected SVGAttribute createElementAttribute(String name, String value)
      throws InvalidFormatException
    {
       SVGAttribute attr;
 
       if (name.equals("x"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, true);
+         attr = new SVGLengthAttribute(handler, name, value, true);
       }
       else if (name.equals("y"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, false);
+         attr = new SVGLengthAttribute(handler, name, value, false);
+      }
+      else if (name.equals("width"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, true);
+      }
+      else if (name.equals("height"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, false);
       }
       else
       {
-         attr = super.createElementAttribute(name, style);
+         attr = super.createElementAttribute(name, value);
       }
 
       return attr;
@@ -159,6 +181,7 @@ public class SVGUseElement extends SVGAbstractElement
       }
    }
 
+   @Override
    public Object clone()
    {
       try
@@ -176,6 +199,14 @@ public class SVGUseElement extends SVGAbstractElement
       return null;
    }
 
+   public void makeEqual(SVGUseElement element)
+   {
+      super.makeEqual(element);
+
+      widthAttr = element.widthAttr;
+      heightAttr = element.heightAttr;
+   }
+
    @Override
    public void setDescription(String text)
    {
@@ -188,10 +219,34 @@ public class SVGUseElement extends SVGAbstractElement
       title = text;
    }
 
+   @Override
+   public double getViewportWidth()
+   {
+      if (widthAttr == null)
+      {
+         return super.getViewportWidth();
+      }
+
+      return widthAttr.getStorageValue(parent, true);
+   }
+
+   @Override
+   public double getViewportHeight()
+   {
+      if (heightAttr == null)
+      {
+         return super.getViewportHeight();
+      }
+
+      return heightAttr.getStorageValue(parent, false);
+   }
+
    String description = null, title = null;
 
    SVGAbstractElement element;
    SVGLength xAttr, yAttr;
+
+   private SVGLengthAttribute widthAttr, heightAttr;
 
    private static final Pattern REF_PATTERN 
       = Pattern.compile("\\s*#([^#]+)\\s*");

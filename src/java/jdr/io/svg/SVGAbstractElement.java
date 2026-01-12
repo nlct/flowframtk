@@ -128,8 +128,6 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("opacity", attr);
       addAttribute("display", attr);
       addAttribute("visibility", attr);
-      addAttribute("width", attr);
-      addAttribute("height", attr);
    }
 
    protected void addShapeAttributes(String uri, Attributes attr)
@@ -228,7 +226,7 @@ public abstract class SVGAbstractElement implements Cloneable
       {// TODO?
       }
 
-      throw new UnknownSVGElementException(elementName);
+      throw new UnknownElementException(handler, elementName);
    }
 
    public String getContents()
@@ -283,6 +281,11 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void addStyleRules(String ruleList)
    {
+      addStyleRules(this, ruleList);
+   }
+
+   public void addStyleRules(SVGAbstractElement element, String ruleList)
+   {
       /* NB javax.swing.text.html.CSS only supports limited HTML
        attributes. Using
        javax.swing.text.html.StyleSheet.addRule(String)
@@ -290,11 +293,16 @@ public abstract class SVGAbstractElement implements Cloneable
        useful for text.)
       */
 
+      if (element == null)
+      {
+         element = this;
+      }
+
       CSS_IGNORED.matcher(ruleList).replaceAll("");
 
-      if (styles == null)
+      if (element.styles == null)
       {
-         styles = new SVGStyles();
+         element.styles = new SVGStyles();
       }
 
       Matcher m = STYLE_PATTERN.matcher(ruleList);
@@ -303,11 +311,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          String selectorRules = m.group(1);
          String attrList = m.group(2);
-         m = STYLE_PATTERN.matcher(m.group(3));
 
          SVGAttributeSet atSet = createAttributeSet(attrList);
 
-         styles.addRules(selectorRules, atSet);
+         element.styles.addRules(selectorRules, atSet);
       }
    }
 
@@ -320,6 +327,15 @@ public abstract class SVGAbstractElement implements Cloneable
          try
          {
             addAttribute(createAttribute(attrName, value));
+         }
+         catch (SVGException e)
+         {
+            if (e.getElement() == null)
+            {
+               e.setElement(this);
+            }
+
+            warning(e);
          }
          catch (InvalidFormatException e)
          {
@@ -352,6 +368,15 @@ public abstract class SVGAbstractElement implements Cloneable
 
             atSet.addAttribute(attr);
          }
+         catch (SVGException e)
+         {
+            if (e.getElement() == null)
+            {
+               e.setElement(this);
+            }
+
+            warning(e);
+         }
          catch (InvalidFormatException e)
          {
             warning(e);
@@ -369,7 +394,7 @@ public abstract class SVGAbstractElement implements Cloneable
     * @return the attribute or null if attribute name not recognised
     */
    protected SVGAttribute createAttribute(String name, String value)
-     throws InvalidFormatException
+     throws InvalidFormatException,SVGException
    {
       SVGAttribute attr = createCommonAttribute(name, value);
 
@@ -380,7 +405,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
       if (attr == null)
       {
-         throw new UnknownSVGAttributeException(name);
+         throw new UnknownAttributeException(this, name);
       }
 
       return attr;
@@ -411,15 +436,7 @@ public abstract class SVGAbstractElement implements Cloneable
    {
       SVGAttribute attr = null;
 
-      if (name.equals("width"))
-      {
-         attr = new SVGLengthAttribute(handler, name, value, true);
-      }
-      else if (name.equals("height"))
-      {
-         attr = new SVGLengthAttribute(handler, name, value, false);
-      }
-      else if (name.equals("display"))
+      if (name.equals("display"))
       {
          attr = new SVGDisplayStyleAttribute(handler, value);
       }
@@ -985,6 +1002,11 @@ public abstract class SVGAbstractElement implements Cloneable
       return handler.getSVG();
    }
 
+   public SVGHandler getHandler()
+   {
+      return handler;
+   }
+
    public CanvasGraphics getCanvasGraphics()
    {
       return handler.getCanvasGraphics();
@@ -1013,7 +1035,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
    // pseudo-classes and hierarchy not supported
    private static final Pattern STYLE_PATTERN =
-      Pattern.compile("\\s*([^\\{]+)\\s*\\{([^\\}]*)\\}\\s*(.*)",
+      Pattern.compile("([^\\{]+)\\s*\\{([^\\}]*)\\}",
       Pattern.DOTALL);
 
    private static final Pattern STYLE_ATTR_PATTERN =

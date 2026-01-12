@@ -39,9 +39,9 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException(
+         throw new SVGException(handler,
            handler.getMessageWithFallback("error.svg.invalid_attribute_value",
-           "Invalid {0} value: {2}",
+           "Invalid {0} value: {1}",
            getName(), valueString));
       }
    }

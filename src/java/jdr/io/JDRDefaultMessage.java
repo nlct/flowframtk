@@ -269,7 +269,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
       if (showMessages && !suspended)
       {
-         System.out.print(excp.getMessage());
+         System.out.print(excp.getLocalizedMessage());
       }
    }
 
@@ -289,7 +289,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
       if (showMessages && !suspended)
       {
-         System.out.println(excp.getMessage());
+         System.out.println(excp.getLocalizedMessage());
       }
    }
 
@@ -302,7 +302,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void warningnoln(Throwable cause)
    {
-      warningnoln(cause.getMessage());
+      warningnoln(cause.getLocalizedMessage());
       debug(cause);
    }
 
@@ -328,7 +328,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public void errornoln(Throwable cause)
    {
-      errornoln(cause.getMessage());
+      errornoln(cause.getLocalizedMessage());
       debug(cause);
    }
 
@@ -415,7 +415,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
    public String getMessage(Throwable e)
    {
-      String msg = e.getMessage();
+      String msg = e.getLocalizedMessage();
 
       return msg == null ? e.getClass().getSimpleName() : msg;
    }

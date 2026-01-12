@@ -25,6 +25,51 @@ public class SVGElement extends SVGAbstractElement
    }
 
    @Override
+   protected void addAttributes(String uri, Attributes attr)
+     throws InvalidFormatException
+   {
+      super.addAttributes(uri, attr);
+
+      addAttribute("width", attr);
+      addAttribute("height", attr);
+
+      widthAttr = getLengthAttribute("width");
+      heightAttr = getLengthAttribute("height");
+
+      if (widthAttr != null && widthAttr.getValue() == null)
+      {
+         widthAttr = null;
+      }
+
+      if (heightAttr != null && heightAttr.getValue() == null)
+      {
+         heightAttr = null;
+      }
+   }
+
+   @Override
+   protected SVGAttribute createElementAttribute(String name, String value)
+     throws InvalidFormatException
+   {
+      SVGAttribute attr;
+
+      if (name.equals("width"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, true);
+      }
+      else if (name.equals("height"))
+      {
+         attr = new SVGLengthAttribute(handler, name, value, false);
+      }
+      else
+      {
+         attr = super.createElementAttribute(name, value);
+      }
+
+      return attr;
+   }
+
+   @Override
    public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
@@ -85,20 +130,30 @@ public class SVGElement extends SVGAbstractElement
    @Override
    public double getViewportWidth()
    {
-      return width.getStorageValue(parent, true);
+      if (widthAttr == null)
+      {
+         return super.getViewportWidth();
+      }
+
+      return widthAttr.getStorageValue(parent, true);
    }
 
    @Override
    public double getViewportHeight()
    {
-      return height.getStorageValue(parent, false);
+      if (heightAttr == null)
+      {  
+         return super.getViewportHeight();
+      }
+
+      return heightAttr.getStorageValue(parent, false);
    }
 
    public void makeEqual(SVGElement element)
    {
       super.makeEqual(element);
-      width = element.width;
-      height = element.height;
+      widthAttr = element.widthAttr;
+      heightAttr = element.heightAttr;
    }
 
    @Override
@@ -139,5 +194,5 @@ public class SVGElement extends SVGAbstractElement
 
    String description = null, title = null;
 
-   private SVGLength width, height;
+   private SVGLengthAttribute widthAttr, heightAttr;
 }

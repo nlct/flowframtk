@@ -81,10 +81,10 @@ public class SVGHandler extends DefaultHandler
    
          stack.push(current);
       }
-      catch (UnknownSVGElementException e)
+      catch (UnknownElementException e)
       {
          msgSystem.getPublisher().publishMessages(
-           MessageInfo.createWarning(e.getMessage()));
+           MessageInfo.createWarning(e.getLocalizedMessage()));
       }
       catch (InvalidFormatException e)
       {

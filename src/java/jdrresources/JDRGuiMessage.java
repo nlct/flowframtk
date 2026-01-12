@@ -528,7 +528,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void message(Exception excp)
    {
-      message(excp.getMessage());
+      message(excp.getLocalizedMessage());
    }
 
    public void messageln(String messageText)
@@ -538,7 +538,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void messageln(Exception excp)
    {
-      message(String.format("%s%n", excp.getMessage()));
+      message(String.format("%s%n", excp.getLocalizedMessage()));
    }
 
    public void warning(String messageText)
@@ -563,7 +563,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void warning(Throwable excp)
    {
-      String msg = excp.getMessage();
+      String msg = excp.getLocalizedMessage();
       String classname = excp.getClass().getSimpleName();
       String text = resources.getMessageIfExists("error.throwable."+classname);
 
@@ -608,7 +608,7 @@ class JDRGuiMessageFrame extends JFrame
       }
       else
       {
-         msg = excp.getMessage();
+         msg = excp.getLocalizedMessage();
       }
 
       resources.debugMessage(excp);
@@ -635,7 +635,7 @@ class JDRGuiMessageFrame extends JFrame
 
       try
       {
-         document.insertString(document.getLength(), excp.getMessage(), 
+         document.insertString(document.getLength(), excp.getLocalizedMessage(), 
             attrError);
       }
       catch (BadLocationException e)
@@ -646,7 +646,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void fatalerror(Throwable excp)
    {
-      resources.fatalError(excp.getMessage(), excp);
+      resources.fatalError(excp.getLocalizedMessage(), excp);
    }
 
    @Deprecated
