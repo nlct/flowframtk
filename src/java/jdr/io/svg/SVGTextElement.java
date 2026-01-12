@@ -31,6 +31,12 @@ public class SVGTextElement extends SVGAbstractElement
       super.addAttributes(uri, attr);
 
       addTextAttributes(uri, attr);
+
+      addAttribute("x", attr);
+      addAttribute("y", attr);
+      addAttribute("dx", attr);
+      addAttribute("dy", attr);
+      addAttribute("rotate", attr);
    }
 
    @Override
