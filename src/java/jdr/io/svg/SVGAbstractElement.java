@@ -997,6 +997,23 @@ public abstract class SVGAbstractElement implements Cloneable
       return handler.getMessageWithFallback(label, fallbackFormat, params);
    }
 
+   public SVGAbstractElement getParent()
+   {
+      return parent;
+   }
+
+   public SVGAbstractElement getAncestor(String elementName)
+   {
+      if (parent == null || parent.getName().equals(elementName))
+      {
+         return parent;
+      }
+      else
+      {
+         return parent.getAncestor(elementName);
+      }
+   }
+
    public SVG getSVG()
    {
       return handler.getSVG();
