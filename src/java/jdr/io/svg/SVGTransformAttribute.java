@@ -143,9 +143,13 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (m.groupCount() == 3)
          {
-            af = AffineTransform.getRotateInstance(angle,
-               Double.parseDouble(m.group(2)),
-               Double.parseDouble(m.group(3)));
+            double x = Double.parseDouble(m.group(2));
+            double y = Double.parseDouble(m.group(3));
+
+            x = handler.getDefaultUnit().toUnit(x, storageUnit);
+            y = handler.getDefaultUnit().toUnit(y, storageUnit);
+
+            af = AffineTransform.getRotateInstance(angle, x, y);
          }
          else
          {
