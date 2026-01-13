@@ -62,6 +62,7 @@ public class SVGTransformAttribute implements SVGAttribute
    {
       Matcher m;
       AffineTransform af = null;
+      JDRUnit storageUnit = handler.getStorageUnit();
 
       if (function.equals("matrix"))
       {
@@ -73,14 +74,19 @@ public class SVGTransformAttribute implements SVGAttribute
                "syntax: matrix(a, b, c, d, e, f)\n  in: '"+arg+"'");
          }
 
+         double tx = Double.parseDouble(m.group(5));
+         double ty = Double.parseDouble(m.group(6));
+
+         tx = handler.getDefaultUnit().toUnit(tx, storageUnit);
+         ty = handler.getDefaultUnit().toUnit(ty, storageUnit);
+
          af = new AffineTransform
            (
              Double.parseDouble(m.group(1)),
              Double.parseDouble(m.group(2)),
              Double.parseDouble(m.group(3)),
              Double.parseDouble(m.group(4)),
-             Double.parseDouble(m.group(5)),
-             Double.parseDouble(m.group(6))
+             tx, ty
            );
       }
       else if (function.equals("translate"))
@@ -93,11 +99,18 @@ public class SVGTransformAttribute implements SVGAttribute
                "syntax: translate(tx [ty])\n  in: '"+arg+"'");
          }
 
-         af = AffineTransform.getTranslateInstance
-           (
-              Double.parseDouble(m.group(1)),
-              m.groupCount() == 2 ? Double.parseDouble(m.group(2)) : 0
-           );
+         double tx = Double.parseDouble(m.group(1));
+         double ty = 0;
+
+         tx = handler.getDefaultUnit().toUnit(tx, storageUnit);
+
+         if (m.groupCount() == 2)
+         {
+            ty = Double.parseDouble(m.group(2));
+            ty = handler.getDefaultUnit().toUnit(ty, storageUnit);
+         }
+
+         af = AffineTransform.getTranslateInstance(tx, ty);
       }
       else if (function.equals("scale"))
       {
