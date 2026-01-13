@@ -961,12 +961,27 @@ public class AcornDrawFile
          else if (mathModeMappings != null
               && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
          {
-            text = text.substring(1, text.length()-1);
+            String mid = text.substring(1, text.length()-1);
 
-            latexText = "$" + mathModeMappings.applyMappings(
-              text, styNames) + "$";
+            if (mid.indexOf('$') > -1)
+            {
+               if (textModeMappings != null)
+               {
+                  latexText = textModeMappings.applyMappings(text, styNames);
+               }
+               else
+               {
+                  jdrText.escapeTeXChars();
+               }
+            }
+            else
+            {
+               text = mid;
+               latexText = "$" + mathModeMappings.applyMappings(
+                 mid, styNames) + "$";
 
-            jdrText.setText(text);
+               jdrText.setText(text);
+            }
          }
          else if (textModeMappings != null)
          {

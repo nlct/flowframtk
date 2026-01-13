@@ -505,14 +505,29 @@ public class SVG
       if (importSettings.useMappings)
       {
          if (mathModeMappings != null
-              && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
+              && text.length() > 2 && text.startsWith("$") && text.endsWith("$"))
          {
-            text = text.substring(1, text.length()-1);
+            String mid = text.substring(1, text.length()-1);
 
-            latexText = "$" + mathModeMappings.applyMappings(
-              text, styNames) + "$";
+            if (mid.indexOf('$') > -1)
+            {
+               if (textModeMappings != null)
+               {
+                  latexText = textModeMappings.applyMappings(text, styNames);
+               }
+               else
+               {
+                  jdrText.escapeTeXChars();
+               }
+            }
+            else
+            {
+               latexText = "$" + mathModeMappings.applyMappings(
+                 mid, styNames) + "$";
+               text = mid;
 
-            jdrText.setText(text);
+               jdrText.setText(text);
+            }
          }
          else if (textModeMappings != null)
          {
