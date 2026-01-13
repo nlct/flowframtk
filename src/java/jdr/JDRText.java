@@ -764,6 +764,7 @@ public class JDRText extends JDRCompleteObject
     * Transforms this text area by concatenation a transformation
     * with this text area's transformation matrix.
     */
+   @Override
    public void transform(double[] matrix)
    {
       jdrtransform.concat(matrix);
@@ -784,6 +785,7 @@ public class JDRText extends JDRCompleteObject
     * with this text area's transformation matrix.
     * @param af transformation to apply
     */
+   @Override
    public void transform(AffineTransform af)
    {
       jdrtransform.concat(af);

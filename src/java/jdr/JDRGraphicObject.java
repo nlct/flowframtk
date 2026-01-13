@@ -92,6 +92,12 @@ public interface JDRGraphicObject extends Cloneable
    */
    public void transform(double[] matrix);
 
+  /**
+   * Transforms this object.
+   * @param af the affine transformation
+   */
+   public void transform(AffineTransform af);
+
    public void fade(double value);
 
    /**

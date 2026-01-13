@@ -407,9 +407,16 @@ public class JDRPartialBezier extends JDRPartialSegment
       box.merge(control.getReflection(line_));
    }
 
+   @Override
    public void transform(double[] matrix)
    {
       control.transform(matrix);
+   }
+
+   @Override
+   public void transform(AffineTransform af)
+   {
+      control.transform(af);
    }
 
    public void translate(double x, double y)

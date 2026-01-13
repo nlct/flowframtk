@@ -864,6 +864,7 @@ public class JDRDistortShape extends JDRCompleteObject
       return underlyingShape.getTextual();
    }
 
+   @Override
    public void transform(double[] matrix)
    {
       underlyingShape.transform(matrix);
@@ -872,12 +873,17 @@ public class JDRDistortShape extends JDRCompleteObject
 
       Point2D[] dest = new Point2D.Double[distortion.length];
 
-      af.transform(distortion, 0, dest, 0, distortion.length);
+      af.transform(distortion, 0, distortion, 0, distortion.length);
 
-      for (int i = 0; i < distortion.length; i++)
-      {
-         distortion[i].setLocation(dest[i]);
-      }
+      updateDistortion();
+   }
+
+   @Override
+   public void transform(AffineTransform af)
+   {
+      underlyingShape.transform(af);
+
+      af.transform(distortion, 0, distortion, 0, distortion.length);
 
       updateDistortion();
    }

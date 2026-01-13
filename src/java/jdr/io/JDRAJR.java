@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.text.MessageFormat;
 
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 
@@ -1024,6 +1025,14 @@ public abstract class JDRAJR
             writeDouble(matrix[i]);
          }
       }
+   }
+
+   public void writeTransform(AffineTransform af)
+      throws IOException
+   {
+      double[] matrix = new double[6];
+      af.getMatrix(matrix);
+      writeTransform(matrix);
    }
 
    /**

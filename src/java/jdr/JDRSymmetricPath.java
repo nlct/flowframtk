@@ -1102,14 +1102,12 @@ public class JDRSymmetricPath extends JDRCompoundShape
       JDRGroup group = path_.getTextual().splitText();
 
       AffineTransform af = line_.getReflectionTransform(null);
-      double[] matrix = new double[6];
-      af.getMatrix(matrix);
 
       for (int i = 0, n = group.size(); i < n; i++)
       {
          JDRCompleteObject object = (JDRCompleteObject)group.get(i).clone();
 
-         object.transform(matrix);
+         object.transform(af);
 
          group.add(object);
       }
@@ -1346,6 +1344,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
        }
     }
 
+    @Override
     public void transformParams(double[] matrix)
     {
        if (join != null)
@@ -1358,6 +1357,24 @@ public class JDRSymmetricPath extends JDRCompoundShape
        if (closingSegment != null)
        {
           closingSegment.transform(matrix);
+
+          closingSegment.setEnd(getFirstControl());
+       }
+    }
+
+    @Override
+    public void transformParams(AffineTransform af)
+    {
+       if (join != null)
+       {
+          join.transform(af);
+       }
+
+       line_.transform(af);
+
+       if (closingSegment != null)
+       {
+          closingSegment.transform(af);
 
           closingSegment.setEnd(getFirstControl());
        }

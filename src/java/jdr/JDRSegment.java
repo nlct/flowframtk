@@ -306,6 +306,16 @@ public class JDRSegment extends JDRObject
       end.transform(matrix);
    }
 
+   /**
+    * Transforms this segment.
+    * @param af affine transformation
+    */
+   public void transform(AffineTransform af)
+   {
+      start.transform(af);
+      end.transform(af);
+   }
+
    public JDRPathSegment getReflection(JDRLine line)
    {
       Point2D p1 = start.getReflection(line);

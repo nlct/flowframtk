@@ -1090,6 +1090,7 @@ public abstract class JDRShape extends JDRCompleteObject
       JDRPathSegment segment, JDRPoint p, 
       double x, double y);
 
+   @Override
    public void transform(double[] matrix)
    {
       JDRPointIterator pi = getPointIterator();
@@ -1102,6 +1103,20 @@ public abstract class JDRShape extends JDRCompleteObject
       }
    }
 
+   @Override
+   public void transform(AffineTransform af)
+   {
+      JDRPointIterator pi = getPointIterator();
+
+      while (pi.hasNext())
+      {
+         JDRPoint point = pi.next();
+
+         point.transform(af);
+      }
+   }
+
+   @Override
    public void translate(double x, double y)
    {
       JDRPointIterator pi = getPointIterator();

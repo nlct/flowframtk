@@ -59,6 +59,8 @@ public interface JDRPathSegment extends Cloneable,Serializable
 
    public void transform(double[] matrix);
 
+   public void transform(AffineTransform af);
+
    public double getStartX();
 
    public double getStartY();

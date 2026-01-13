@@ -566,6 +566,18 @@ public class JDRBezier extends JDRSegment
    }
 
    /**
+    * Transforms this curve. 
+    * @param af the affine transformation
+    */
+   public void transform(AffineTransform af)
+   {
+      start.transform(af);
+      end.transform(af);
+      control1.transform(af);
+      control2.transform(af);
+   }
+
+   /**
     * Translates this curve. Translates the start, end and control
     * points defining this curve by (x,y).
     * @param x the x-shift

@@ -781,6 +781,8 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public abstract void transform(double[] matrix);
 
+   public abstract void transform(AffineTransform af);
+
    public abstract Object clone();
 
    /**

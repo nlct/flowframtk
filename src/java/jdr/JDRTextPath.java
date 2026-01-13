@@ -1072,23 +1072,33 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       path_.translateControl(segment, p, x, y);
    }
 
+   @Override
    public void translateParams(double shiftX, double shiftY)
    {
    }
 
+   @Override
    public void scaleParams(Point2D p, double factorX, double factorY)
    {
    }
 
+   @Override
    public void shearParams(Point2D p, double factorX, double factorY)
    {
    }
 
+   @Override
    public void rotateParams(Point2D p, double angle)
    {
    }
 
+   @Override
    public void transformParams(double[] matrix)
+   {
+   }
+
+   @Override
+   public void transformParams(AffineTransform af)
    {
    }
 

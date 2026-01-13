@@ -369,6 +369,15 @@ public class JDRPoint extends JDRObject implements JDRConstants
       y = newy;
    }
 
+   public void transform(AffineTransform af)
+   {
+      Point2D p = new Point2D.Double(x, y);
+      p = af.transform(p, p);
+
+      x = p.getX();
+      y = p.getY();
+   }
+
    public void translate(double px, double py)
    {
       x += px;

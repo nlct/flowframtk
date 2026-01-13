@@ -130,12 +130,7 @@ public class JDRBitmap extends JDRCompleteObject
       this.ic = bitmap.ic;
       this.imageLoaded = bitmap.imageLoaded;
 
-      this.flatmatrix = new double[bitmap.flatmatrix.length];
-
-      for (int i = 0; i < flatmatrix.length; i++)
-      {
-         this.flatmatrix[i] = bitmap.flatmatrix[i];
-      }
+      this.affineTransform = new AffineTransform(bitmap.affineTransform);
    }
 
    private void init(String fullpathname, String latexpathname)
@@ -180,8 +175,7 @@ public class JDRBitmap extends JDRCompleteObject
       imageLoaded =
          (ic.getImageLoadStatus() == MediaTracker.COMPLETE);
 
-      flatmatrix = new double[6];
-      reset();
+      affineTransform = new AffineTransform();
    }
 
 
@@ -226,8 +220,7 @@ public class JDRBitmap extends JDRCompleteObject
       imageLoaded =
          (ic.getImageLoadStatus() == MediaTracker.COMPLETE);
 
-      flatmatrix = new double[6];
-      reset();
+      affineTransform = new AffineTransform();
    }
 
    /**
@@ -431,12 +424,7 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void reset()
    {
-      flatmatrix[0] = 1.0;
-      flatmatrix[1] = 0.0;
-      flatmatrix[2] = 0.0;
-      flatmatrix[3] = 1.0;
-      flatmatrix[4] = 0.0;
-      flatmatrix[5] = 0.0;
+      affineTransform.setToIdentity();
    }
 
    /**
@@ -642,6 +630,7 @@ public class JDRBitmap extends JDRCompleteObject
 
    /**
     * Rotates this object about its centre.
+    * @param angle the angle of rotation in radians
     */
    public void rotate(double angle)
    {
@@ -649,41 +638,18 @@ public class JDRBitmap extends JDRCompleteObject
       double x = box.getMinX()+0.5*box.getWidth();
       double y = box.getMinY()+0.5*box.getHeight();
 
-      rotate(new Point2D.Double(x, y), angle);
+      affineTransform.preConcatenate(
+       AffineTransform.getRotateInstance(angle, x, y));
    }
 
    /**
     * Rotates this object about the given point.
+    * @param angle the angle of rotation in radians
     */
    public void rotate(Point2D p, double angle)
    {
-      // rotate about point p
-
-      // shift p back to origin
-      flatmatrix[4] -= p.getX();
-      flatmatrix[5] -= p.getY();
-
-      // rotate
-      double cosTheta = Math.cos(-angle);
-      double sinTheta = Math.sin(-angle);
-
-      double m0 = flatmatrix[0];
-      double m1 = flatmatrix[1];
-      double m2 = flatmatrix[2];
-      double m3 = flatmatrix[3];
-      double m4 = flatmatrix[4];
-      double m5 = flatmatrix[5];
-
-      flatmatrix[0] = m0*cosTheta+m1*sinTheta;
-      flatmatrix[1] = m1*cosTheta-m0*sinTheta;
-      flatmatrix[2] = m2*cosTheta+m3*sinTheta;
-      flatmatrix[3] = m3*cosTheta-m2*sinTheta;
-      flatmatrix[4] = m4*cosTheta+m5*sinTheta;
-      flatmatrix[5] = m5*cosTheta-m4*sinTheta;
-
-      // shift p back
-      flatmatrix[4] += p.getX();
-      flatmatrix[5] += p.getY();
+      affineTransform.preConcatenate(
+       AffineTransform.getRotateInstance(angle, p.getX(), p.getY()));
    }
 
    public void scaleX(Point2D p, double factor)
@@ -693,7 +659,7 @@ public class JDRBitmap extends JDRCompleteObject
 
    public void scaleY(Point2D p, double factor)
    {
-      scale(p,1.0,factor);
+      scale(p, 1.0, factor);
    }
 
    /**
@@ -706,7 +672,14 @@ public class JDRBitmap extends JDRCompleteObject
       double x = box.getMinX();
       double y = box.getMinY();
 
-      scale(new Point2D.Double(x, y), factorX, factorY);
+      double scaleX = affineTransform.getScaleX() * factorX;
+      double scaleY = affineTransform.getScaleY() * factorY;
+      double shearX = affineTransform.getShearX() * factorX;
+      double shearY = affineTransform.getShearY() * factorY;
+      double tx = (affineTransform.getTranslateX() - x) * factorX + x;
+      double ty = (affineTransform.getTranslateY() - y) * factorY + y;
+
+      affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx, ty);
    }
 
    /**
@@ -714,21 +687,17 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void scale(Point2D p, double factorX, double factorY)
    {
-      // shift p back to origin
-      flatmatrix[4] -= p.getX();
-      flatmatrix[5] -= p.getY();
+      double x = p.getX();
+      double y = p.getY();
 
-      // scale
-      flatmatrix[0] *= factorX;
-      flatmatrix[1] *= factorY;
-      flatmatrix[2] *= factorX;
-      flatmatrix[3] *= factorY;
-      flatmatrix[4] *= factorX;
-      flatmatrix[5] *= factorY;
+      double scaleX = affineTransform.getScaleX() * factorX;
+      double scaleY = affineTransform.getScaleY() * factorY;
+      double shearX = affineTransform.getShearX() * factorX;
+      double shearY = affineTransform.getShearY() * factorY;
+      double tx = (affineTransform.getTranslateX() - x) * factorX + x;
+      double ty = (affineTransform.getTranslateY() - y) * factorY + y;
 
-      // shift back to p
-      flatmatrix[4] += p.getX();
-      flatmatrix[5] += p.getY();
+      affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx, ty);
    }
 
    /**
@@ -741,7 +710,21 @@ public class JDRBitmap extends JDRCompleteObject
       double x = box.getMinX();
       double y = box.getMaxY();
 
-      shear(new Point2D.Double(x, y), factorX, factorY);
+      double scaleX = affineTransform.getScaleX();
+      double scaleY = affineTransform.getScaleY();
+      double shearX = affineTransform.getShearX();
+      double shearY = affineTransform.getShearY();
+      double tx = affineTransform.getTranslateX() - x;
+      double ty = affineTransform.getTranslateY() - y;
+
+      affineTransform.setTransform(
+        scaleX - factorX * shearY,
+        shearY - factorY * scaleX,
+        shearX - factorX * scaleY,
+        scaleY - factorY * shearX,
+        tx - factorX * ty + x,
+        ty - factorY * tx + y
+      );
    }
 
    /**
@@ -749,7 +732,7 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void shear(Point2D p, double factor)
    {
-      shear(p,factor,factor);
+      shear(p, factor, factor);
    }
 
    /**
@@ -757,29 +740,23 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void shear(Point2D p, double factorX, double factorY)
    {
-      // shift p back to origin
-      flatmatrix[4] -= p.getX();
-      flatmatrix[5] -= p.getY();
+      double x = p.getX();
+      double y = p.getY();
+      double scaleX = affineTransform.getScaleX();
+      double scaleY = affineTransform.getScaleY();
+      double shearX = affineTransform.getShearX();
+      double shearY = affineTransform.getShearY();
+      double tx = affineTransform.getTranslateX() - x;
+      double ty = affineTransform.getTranslateY() - y;
 
-      // shear
-
-      double m0 = flatmatrix[0];
-      double m1 = flatmatrix[1];
-      double m2 = flatmatrix[2];
-      double m3 = flatmatrix[3];
-      double m4 = flatmatrix[4];
-      double m5 = flatmatrix[5];
-
-      flatmatrix[0] = m0-factorX*m1;
-      flatmatrix[1] = m1-factorY*m0;
-      flatmatrix[2] = m2-factorX*m3;
-      flatmatrix[3] = m3-factorY*m2;
-      flatmatrix[4] = m4-factorX*m5;
-      flatmatrix[5] = m5-factorY*m4;
-
-      // shift back to p
-      flatmatrix[4] += p.getX();
-      flatmatrix[5] += p.getY();
+      affineTransform.setTransform(
+        scaleX - factorX * shearY,
+        shearY - factorY * scaleX,
+        shearX - factorX * scaleY,
+        scaleY - factorY * shearX,
+        tx - factorX * ty + x,
+        ty - factorY * tx + y
+      );
    }
 
    /**
@@ -787,29 +764,35 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void translate(double x, double y)
    {
-      flatmatrix[4] += x;
-      flatmatrix[5] += y;
+      double scaleX = affineTransform.getScaleX();
+      double scaleY = affineTransform.getScaleY();
+      double shearX = affineTransform.getShearX();
+      double shearY = affineTransform.getShearY();
+      double tx = affineTransform.getTranslateX();
+      double ty = affineTransform.getTranslateY();
+
+      affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx+x, ty+y);
    }
 
    /**
     * Gets this object's (bp) transformation. This is the transformation
     * that is applied to the bitmap when it is drawn or exported.
+    * NB this no longer returns a copy.
     * @return this object's transformation
     */
    public AffineTransform getAffineTransform()
    {
-      return new AffineTransform(flatmatrix);
+      return affineTransform;
    }
 
    /**
     * Transforms this object.
     * @param matrix the transformation matrix to apply to this object
     */
+   @Override
    public void transform(double[] matrix)
    {
-      AffineTransform af = getAffineTransform();
-      af.concatenate(new AffineTransform(matrix));
-      af.getMatrix(flatmatrix);
+      transform(new AffineTransform(matrix));
    }
 
    /**
@@ -818,9 +801,7 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void transform(AffineTransform trans)
    {
-      AffineTransform af = getAffineTransform();
-      af.concatenate(trans);
-      af.getMatrix(flatmatrix);
+      affineTransform.concatenate(trans);
    }
 
    /**
@@ -830,9 +811,7 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void preConcatenate(AffineTransform trans)
    {
-      AffineTransform af = getAffineTransform();
-      af.preConcatenate(trans);
-      af.getMatrix(flatmatrix);
+      affineTransform.preConcatenate(trans);
    }
 
    /**
@@ -888,7 +867,10 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public JDRPoint getStart()
    {
-      return new JDRPoint(getCanvasGraphics(),flatmatrix[4], flatmatrix[5]);
+      double x = affineTransform.getTranslateX();
+      double y = affineTransform.getTranslateY();
+
+      return new JDRPoint(getCanvasGraphics(), x, y);
    }
 
    /**
@@ -1001,9 +983,8 @@ public class JDRBitmap extends JDRCompleteObject
             voffset = parentFrame.getEvenYShift();
          }
 
-         AffineTransform af = new AffineTransform(flatmatrix[0],
-           flatmatrix[1], flatmatrix[2], flatmatrix[3],
-           flatmatrix[4]+hoffset, flatmatrix[5]+voffset);
+         AffineTransform af = new AffineTransform(affineTransform);
+         af.translate(hoffset, voffset);
 
          double bpToStorage = cg.bpToStorage(1.0);
 
@@ -1112,10 +1093,7 @@ public class JDRBitmap extends JDRCompleteObject
       if (!latexlinkname_.equals(b.latexlinkname_)) return false;
       if (!latexCommand.equals(b.latexCommand)) return false;
 
-      for (int i = 0; i < 6; i++)
-      {
-         if (flatmatrix[i] != b.flatmatrix[i]) return false;
-      }
+      if (!affineTransform.equals(b.affineTransform)) return false;
 
       return true;
    }
@@ -1127,7 +1105,7 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void getTransformation(double[] matrix)
    {
-      for (int i = 0; i < 6; i++) matrix[i] = flatmatrix[i];
+      affineTransform.getMatrix(matrix);
    }
 
    /**
@@ -1136,7 +1114,8 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void setTransformation(double[] matrix)
    {
-      for (int i = 0; i < 6; i++) flatmatrix[i] = matrix[i];
+      affineTransform.setTransform(matrix[0], matrix[1],
+       matrix[2], matrix[3], matrix[4], matrix[5]);
    }
 
    /**
@@ -1145,7 +1124,7 @@ public class JDRBitmap extends JDRCompleteObject
     */
    public void setTransformation(AffineTransform af)
    {
-      af.getMatrix(flatmatrix);
+      affineTransform.setTransform(af);
    }
 
    /**
@@ -1192,6 +1171,9 @@ public class JDRBitmap extends JDRCompleteObject
       int bitsPerSample=8;
 
       out.println("gsave");
+
+      double[] flatmatrix = new double[6];
+      affineTransform.getMatrix(flatmatrix);
 
       out.println("/bitmapmat ["+flatmatrix[0]+" "+flatmatrix[1]+" "
                      +flatmatrix[2]+" "+flatmatrix[3]+" "
@@ -1324,7 +1306,7 @@ public class JDRBitmap extends JDRCompleteObject
       throws IOException
    {
        svg.println("   <image "+attr+" x=\"0\" y=\"0\"");
-       svg.println("      " + svg.transform(flatmatrix));
+       svg.println("      " + svg.transform(affineTransform));
        svg.println("      width=\""
          +ic.getIconWidth()+"pt\"");
        svg.println("      height=\""
@@ -1361,6 +1343,9 @@ public class JDRBitmap extends JDRCompleteObject
    public String info()
    {
       String eol = System.getProperty("line.separator", "\n");
+
+      double[] flatmatrix = new double[6];
+      affineTransform.getMatrix(flatmatrix);
 
       String str = "Bitmap:"+eol;
       str += "name: "+name_+eol;
@@ -1415,8 +1400,8 @@ public class JDRBitmap extends JDRCompleteObject
    public Object[] getDescriptionInfo()
    {
       return new Object[] {name_,
-       Math.round(100*flatmatrix[4])/100,
-       Math.round(100*flatmatrix[5])/100};
+       Math.round(100*affineTransform.getTranslateX())/100,
+       Math.round(100*affineTransform.getTranslateY())/100};
    }
 
    public ImageIcon getImageIcon()
@@ -1465,8 +1450,17 @@ public class JDRBitmap extends JDRCompleteObject
       {
          double factor = oldUnit.toUnit(1.0, newUnit);
 
-         flatmatrix[4] *= factor;
-         flatmatrix[5] *= factor;
+         double scaleX = affineTransform.getScaleX();//m00
+         double scaleY = affineTransform.getScaleY();//m11
+
+         double shearX = affineTransform.getShearX();//m01
+         double shearY = affineTransform.getShearY();//m10
+
+         double x = affineTransform.getTranslateX() * factor;
+         double y = affineTransform.getTranslateY() * factor;
+
+         affineTransform.setTransform(scaleX, shearY,
+           shearX, scaleY, x, y);
       }
 
       setCanvasGraphics(cg);
@@ -1496,17 +1490,17 @@ public class JDRBitmap extends JDRCompleteObject
     * The LaTeX command to use to insert this image into a
     * LaTeX document. This is initialised to "\includegraphics".
     */
-   private volatile String latexCommand="\\includegraphics";
+   private String latexCommand="\\includegraphics";
 
-   private volatile double[] flatmatrix;
-   private volatile String filename_, latexlinkname_, name_;
-   private volatile File imageFile;
+   private AffineTransform affineTransform;
+   private String filename_, latexlinkname_, name_;
+   private File imageFile;
 
-   private volatile ImageIcon ic;
+   private ImageIcon ic;
 
    private static JDRBitmapListener bitmapListener = new JDRBitmapListener();
 
-   private volatile boolean imageLoaded;
+   private boolean imageLoaded;
 
    public static Color draftBackgroundColor = new Color(240,240,240,200);
 }

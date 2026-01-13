@@ -375,6 +375,14 @@ public class JDRPartialSegment extends JDRObject
    {
    }
 
+   /**
+    * Doesn't transform the starting point. Only transforms any
+    * associated control points.
+    */
+   public void transform(AffineTransform af)
+   {
+   }
+
 
    /**
     * Doesn't translate the starting point. Only translates any

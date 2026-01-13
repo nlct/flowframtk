@@ -413,6 +413,13 @@ public abstract class JDRPattern extends JDRCompoundShape
       transformAdjust(matrix);
    }
 
+   public void transformAnchor(AffineTransform af)
+   {
+      point_.transform(af);
+
+      transformAdjust(af);
+   }
+
    public void transformAdjust(double[] matrix)
    {
       if (adjust_ != null)
@@ -421,9 +428,24 @@ public abstract class JDRPattern extends JDRCompoundShape
       }
    }
 
+   public void transformAdjust(AffineTransform af)
+   {
+      if (adjust_ != null)
+      {
+         adjust_.transform(af);
+      }
+   }
+
+   @Override
    public void transformParams(double[] matrix)
    {
       transformAnchor(matrix);
+   }
+
+   @Override
+   public void transformParams(AffineTransform af)
+   {
+      transformAnchor(af);
    }
 
    public boolean isEmpty()

@@ -1993,11 +1993,25 @@ t
     * Transforms all objects in this group. This method descends
     * subgroups.
     */
+   @Override
    public void transform(double[] matrix)
    {
       for (int i = 0; i < size_; i++)
       {
          get(i).transform(matrix);
+      }
+   }
+
+   /**
+    * Transforms all objects in this group. This method descends
+    * subgroups.
+    */
+   @Override
+   public void transform(AffineTransform af)
+   {
+      for (int i = 0; i < size_; i++)
+      {
+         get(i).transform(af);
       }
    }
 

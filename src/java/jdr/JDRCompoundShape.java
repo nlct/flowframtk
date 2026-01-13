@@ -231,12 +231,23 @@ public abstract class JDRCompoundShape extends JDRShape
 
    public abstract void transformParams(double[] matrix);
 
+   public abstract void transformParams(AffineTransform af);
+
+   @Override
    public void transform(double[] matrix)
    {
       getUnderlyingShape().transform(matrix);
       transformParams(matrix);
    }
 
+   @Override
+   public void transform(AffineTransform af)
+   {
+      getUnderlyingShape().transform(af);
+      transformParams(af);
+   }
+
+   @Override
    public void setCanvasGraphics(CanvasGraphics cg)
    {
       super.setCanvasGraphics(cg);
