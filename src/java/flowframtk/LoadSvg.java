@@ -77,7 +77,7 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
       {
          in = new BufferedReader(new FileReader(svgFile));
 
-         image = SVG.load(cg, in, importSettings,
+         image = SVG.load(cg, svgFile.getParentFile(), in, importSettings,
            app.getTextModeMappings(), app.getMathModeMappings());
       }
       finally

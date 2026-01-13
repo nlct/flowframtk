@@ -25,6 +25,7 @@ package com.dickimawbooks.jdr.io;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.net.URI;
 
 import java.awt.Shape;
 import java.awt.geom.*;
@@ -194,10 +195,10 @@ public class SVG
           "Loading ''{0}''",
           file.getAbsolutePath())));
 
-      return load(cg, r, importSettings, textModeMappings, mathModeMappings);
+      return load(cg, file.getParentFile(), r, importSettings, textModeMappings, mathModeMappings);
    }
 
-   public static JDRGroup load(CanvasGraphics cg, Reader reader,
+   public static JDRGroup load(CanvasGraphics cg, File baseFile, Reader reader,
       ImportSettings importSettings, TeXMappings textModeMappings,
       TeXMappings mathModeMappings)
      throws SAXException,IOException
@@ -210,6 +211,11 @@ public class SVG
 
       SVG svg = new SVG(importSettings);
       svg.canvasGraphics = cg;
+
+      if (baseFile != null)
+      {
+         svg.basePath = baseFile.toPath().normalize();
+      }
 
       if (textModeMappings != null)
       {
@@ -353,6 +359,33 @@ public class SVG
       }
 
       return basePath.relativize(path).normalize();
+   }
+
+   public Path resolve(String filename)
+   {
+      return resolve(new File(filename));
+   }
+
+   public Path resolve(File file)
+   {
+      Path path = file.toPath();
+
+      if (basePath == null)
+      {
+         return path;
+      }
+
+      return basePath.resolve(path).normalize();
+   }
+
+   public URI resolve(URI uri)
+   {
+      if (basePath == null)
+      {
+         return uri;
+      }
+
+      return basePath.toUri().resolve(uri);
    }
 
    public boolean addReferenceID(String id)
