@@ -211,7 +211,7 @@ public class SVGTextElement extends SVGAbstractElement
 
       if (angle != null)
       {
-         textArea.rotate(angle.getRadians());
+         textArea.rotate(p, angle.getRadians());
       }
 
       AffineTransform af = getTransform();

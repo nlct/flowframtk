@@ -50,6 +50,11 @@ public abstract class SVGAbstractElement implements Cloneable
       contents.append(ch, start, length);
    }
 
+   public void addToContents(CharSequence text)
+   {
+      contents.append(text);
+   }
+
    public void endElement()
    {
    }
@@ -205,6 +210,10 @@ public abstract class SVGAbstractElement implements Cloneable
       else if (elementName.equals("text"))
       {
          return new SVGTextElement(handler, parent, uri, attr);
+      }
+      else if (elementName.equals("tspan"))
+      {
+         return new SVGTspanElement(handler, parent, uri, attr);
       }
       else if (elementName.equals("image"))
       {
