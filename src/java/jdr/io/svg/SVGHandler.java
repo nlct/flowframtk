@@ -25,8 +25,7 @@ public class SVGHandler extends DefaultHandler
 
       msgSystem = group.getCanvasGraphics().getMessageSystem();
 
-      msgSystem.getPublisher().publishMessages(
-         MessageInfo.createVerbose(1, "SVG handler initialised"));
+      debugMessage("SVG handler initialised");
 
       GraphicsEnvironment env = 
          GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -35,34 +34,33 @@ public class SVGHandler extends DefaultHandler
 
    public void startDocument()
    {
-      msgSystem.getPublisher().publishMessages(
-        MessageInfo.createVerbose(2, "<xml>"));
+      setIndeterminate(true);
+
+      debugMessage("<xml>");
    }
 
    public void endDocument()
    {
       if (base != null)
       {
-         msgSystem.getPublisher().publishMessages(
-           MessageInfo.createVerbose(2, "</xml>"),
-           MessageInfo.createVerbose(1, "Generating image"));
+         debugMessages("</xml>", "Generating image");
 
          try
          {
             base.addToImage(group);
          }
-         catch (InvalidFormatException e)
+         catch (Throwable e)
          {
-            msgSystem.getPublisher().publishMessages(
-              MessageInfo.createError(e));
+            error(e);
          }
       }
+
+      resetProgress();
    }
 
    public void startElement(String uri, String name, String qName, Attributes attrs)
    {
-      msgSystem.getPublisher().publishMessages(
-        MessageInfo.createVerbose(2, "<"+qName+">"));
+      debugMessage("<"+qName+">");
 
       try
       {
@@ -84,12 +82,11 @@ public class SVGHandler extends DefaultHandler
       }
       catch (UnknownElementException e)
       {
-         msgSystem.getPublisher().publishMessages(
-           MessageInfo.createWarning(e.getLocalizedMessage()));
+         warning(e);
       }
       catch (InvalidFormatException e)
       {
-         msgSystem.getPublisher().publishMessages(MessageInfo.createError(e));
+         error(e);
       }
    }
 
@@ -100,7 +97,7 @@ public class SVGHandler extends DefaultHandler
          current.endElement();
       }
 
-      msgSystem.getPublisher().publishMessages(MessageInfo.createVerbose(2, "</"+qName+">"));
+      debugMessage("</"+qName+">");
 
       if (!stack.isEmpty())
       {
@@ -128,11 +125,65 @@ public class SVGHandler extends DefaultHandler
       return msgSystem.getMessageWithFallback(id, fallbackFormat, params);
    }
 
+   public int getVerbosity()
+   {
+      return msgSystem.getVerbosity();
+   }
+
+   public void setIndeterminate(boolean on)
+   {
+      if (getVerbosity() > 0)
+      {
+         msgSystem.getPublisher().publishMessages(
+           MessageInfo.createIndeterminate(on));
+      }
+   }
+
+   public void setDeterminate(int max)
+   {
+      if (getVerbosity() > 0)
+      {
+         msgSystem.getPublisher().publishMessages(
+           MessageInfo.createSetProgress(0),
+           MessageInfo.createProgress(max)
+         );
+      }
+   }
+
+   public void resetProgress()
+   {
+      if (getVerbosity() > 0)
+      {
+         msgSystem.getPublisher().publishMessages(
+           MessageInfo.createSetProgress(0)
+         );
+      }
+   }
+
+   public void incProgress()
+   {
+      if (getVerbosity() > 0)
+      {
+         msgSystem.getPublisher().publishMessages(MessageInfo.createIncProgress());
+      }
+   }
+
    public void debugMessage(String msg)
    {
       if (msgSystem.isDebuggingOn())
       {
          msgSystem.getPublisher().publishMessages(MessageInfo.createMessage(msg));
+      }
+   }
+
+   public void debugMessages(String... msg)
+   {
+      if (msgSystem.isDebuggingOn())
+      {
+         for (String s : msg)
+         {
+            msgSystem.getPublisher().publishMessages(MessageInfo.createMessage(s));
+         }
       }
    }
 

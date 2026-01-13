@@ -89,10 +89,13 @@ public class SVGElement extends SVGAbstractElement
          group.setDescription(desc.replaceAll("\\R", " "));
       }
 
+      handler.setDeterminate(children.size());
+
       for (SVGAbstractElement element : children)
       {
-         getMessageSystem().getPublisher().publishMessages(
-            MessageInfo.createVerbose(1, "Adding "+element.getName()));
+         handler.incProgress();
+
+         handler.debugMessage("Adding "+element.getName());
 
          if (element instanceof SVGElement)
          {

@@ -49,9 +49,7 @@ public class SVGGroupElement extends SVGAbstractElement
 
       for (SVGAbstractElement element : children)
       {
-         getMessageSystem().getPublisher().publishMessages(
-           MessageInfo.createVerbose(1, 
-             "Adding "+element.getName()+" to subgroup"));
+         handler.debugMessage("Adding "+element.getName()+" to subgroup");
 
          element.addToImage(subgroup);
       }

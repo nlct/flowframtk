@@ -164,11 +164,11 @@ public class SVGTextElement extends SVGAbstractElement
 
          if (subGrp == null)
          {
-            textArea = createTextArea(cg, x, y, angle, contents);
+            textArea = createTextArea(x, y, angle, contents);
          }
          else if (i == numObjects - 1)
          {
-            textArea = createTextArea(cg, x, y, angle, contents.substring(j));
+            textArea = createTextArea(x, y, angle, contents.substring(j));
             subGrp.add(textArea);
          }
          else
@@ -176,7 +176,7 @@ public class SVGTextElement extends SVGAbstractElement
             int cp = contents.codePointAt(j);
             int n = Character.charCount(cp);
 
-            textArea = createTextArea(cg, x, y, angle, contents.substring(j, j+n));
+            textArea = createTextArea(x, y, angle, contents.substring(j, j+n));
             subGrp.add(textArea);
 
             j += n;
@@ -195,10 +195,12 @@ public class SVGTextElement extends SVGAbstractElement
       }
    }
 
-   protected JDRText createTextArea(CanvasGraphics cg,
+   protected JDRText createTextArea(
      double x, double y, SVGAngleAttribute angle, String text)
    throws InvalidFormatException
    {
+      CanvasGraphics cg = getCanvasGraphics();
+
       Point2D p = new Point2D.Double(x, y);
 
       JDRText textArea = new JDRText(cg, p, handler.createDefaultFont(),
