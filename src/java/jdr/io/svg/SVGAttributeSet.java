@@ -1,6 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.util.Enumeration;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 
 import com.dickimawbooks.jdr.JDRCompleteObject;

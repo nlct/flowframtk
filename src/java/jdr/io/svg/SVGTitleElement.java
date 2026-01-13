@@ -22,7 +22,7 @@ public class SVGTitleElement extends SVGAbstractElement
    }
 
    @Override
-   public void endElement()
+   public void endElement() throws InvalidFormatException
    {
       if (parent != null)
       {

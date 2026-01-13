@@ -79,6 +79,8 @@ public class SVGHandler extends DefaultHandler
          }
    
          stack.push(current);
+
+         current.startElement();
       }
       catch (UnknownElementException e)
       {
@@ -94,7 +96,14 @@ public class SVGHandler extends DefaultHandler
    {
       if (current != null)
       {
-         current.endElement();
+         try
+         {
+            current.endElement();
+         }
+         catch (InvalidFormatException e)
+         {
+            error(e);
+         }
       }
 
       debugMessage("</"+qName+">");

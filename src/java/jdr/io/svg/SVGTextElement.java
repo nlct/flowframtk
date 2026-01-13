@@ -1,5 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
@@ -16,6 +18,7 @@ public class SVGTextElement extends SVGAbstractElement
      throws InvalidFormatException
    {
       super(handler, parent, uri, attr);
+      objects = new JDRGroup(handler.getCanvasGraphics());
    }
 
    @Override
@@ -79,124 +82,171 @@ public class SVGTextElement extends SVGAbstractElement
    }
 
    @Override
-   public JDRCompleteObject addToImage(JDRGroup group)
-     throws InvalidFormatException
+   public void startElement() throws InvalidFormatException
    {
-      CanvasGraphics cg = group.getCanvasGraphics();
+      xArray = getLengthArrayAttribute("x", false);
+      yArray = getLengthArrayAttribute("y", false);
+      dxArray = getLengthArrayAttribute("dx", false);
+      dyArray = getLengthArrayAttribute("dy", false);
+      angleArray = getAngleArrayAttribute("rotate", false);
 
-      SVGLength[] xArray = getLengthArrayAttribute("x");
-      SVGLength[] yArray = getLengthArrayAttribute("y");
-      SVGLength[] dxArray = getLengthArrayAttribute("dx");
-      SVGLength[] dyArray = getLengthArrayAttribute("dy");
-      SVGAngleAttribute[] angleArray = getAngleArrayAttribute("rotate");
-
-      double x = 0;
-      double y = 0;
-
-      SVGAngleAttribute angle = null;
-
-      int numObjects = 1;
+      x = 0;
+      y = 0;
+      angle = null;
+      maxListItems = 1;
+      currentListIndex = 0;
 
       if (xArray != null)
       {
-         numObjects = Math.max(numObjects, xArray.length);
+         maxListItems = Math.max(maxListItems, xArray.length);
       }
 
       if (yArray != null)
       {
-         numObjects = Math.max(numObjects, yArray.length);
+         maxListItems = Math.max(maxListItems, yArray.length);
       }
 
       if (dxArray != null)
       {
-         numObjects = Math.max(numObjects, dxArray.length);
+         maxListItems = Math.max(maxListItems, dxArray.length);
       }
 
       if (dyArray != null)
       {
-         numObjects = Math.max(numObjects, dyArray.length);
+         maxListItems = Math.max(maxListItems, dyArray.length);
       }
 
       if (angleArray != null)
       {
-         numObjects = Math.max(numObjects, angleArray.length);
+         maxListItems = Math.max(maxListItems, angleArray.length);
       }
 
-      String contents = getContents();
-      JDRText textArea = null;
-      JDRGroup subGrp = null;
+   }
 
-      numObjects = Math.min(numObjects, contents.length());
+   @Override
+   public void endElement() throws InvalidFormatException
+   {
+      process();
+   }
 
-      if (numObjects > 1)
+   protected void process() throws InvalidFormatException
+   {
+      String desc = objects.getDescription();
+
+      if (desc == null)
       {
-         subGrp = new JDRGroup(cg);
-      }
-
-      for (int i = 0, j = 0; i < numObjects && j < contents.length(); i++)
-      {
-         if (xArray != null && xArray.length > i)
-         {
-            x = xArray[i].getStorageValue(this, true);
-         }
-         else if (dxArray != null && dxArray.length > i)
-         {
-            Point2D lastP = handler.getLastTextPosition();
-            double dx = dxArray[i].getStorageValue(this, true);
-            x = (lastP == null ? dx : lastP.getX() + dx);
-         }
-
-         if (yArray != null && yArray.length > i)
-         {
-            y = yArray[i].getStorageValue(this, false);
-         }
-         else if (dyArray != null && dyArray.length > 0)
-         {
-            Point2D lastP = handler.getLastTextPosition();
-            double dy = dyArray[i].getStorageValue(this, false);
-            y = (lastP == null ? dy : lastP.getY() + dy);
-         }
-
-         if (angleArray != null && angleArray.length > 0)
-         {
-            angle = angleArray[i];
-         }
-
-         if (subGrp == null)
-         {
-            textArea = createTextArea(x, y, angle, contents);
-         }
-         else if (i == numObjects - 1)
-         {
-            textArea = createTextArea(x, y, angle, contents.substring(j));
-            subGrp.add(textArea);
-         }
-         else
-         {
-            int cp = contents.codePointAt(j);
-            int n = Character.charCount(cp);
-
-            textArea = createTextArea(x, y, angle, contents.substring(j, j+n));
-            subGrp.add(textArea);
-
-            j += n;
-         }
-      }
-
-      if (subGrp == null || subGrp.size() == 1)
-      {
-         group.add(textArea);
-         return textArea;
+         desc = contents.toString().replaceAll("\\R", " ");
       }
       else
       {
-         group.add(subGrp);
-         return subGrp;
+         desc += contents.toString().replaceAll("\\R", " ");
+      }
+
+      objects.setDescription(desc);
+
+      for (int i = 0; i < contents.length(); )
+      {
+         int cp = contents.codePointAt(i);
+         int numChars = Character.charCount(cp);
+
+         boolean separate = false;
+
+         if (xArray != null && xArray.length > currentListIndex)
+         {
+            x = xArray[currentListIndex].getStorageValue(this, true);
+            separate = (xArray.length > 1);
+         }
+         else if (dxArray != null && dxArray.length > currentListIndex)
+         {
+            Point2D lastP = handler.getLastTextPosition();
+            double dx = dxArray[currentListIndex].getStorageValue(this, true);
+            x = (lastP == null ? dx : lastP.getX() + dx);
+            separate = true;
+         }
+
+         if (yArray != null && yArray.length > currentListIndex)
+         {
+            y = yArray[currentListIndex].getStorageValue(this, false);
+            separate = (yArray.length > 1);
+         }
+         else if (dyArray != null && dyArray.length > currentListIndex)
+         {
+            Point2D lastP = handler.getLastTextPosition();
+            double dy = dyArray[currentListIndex].getStorageValue(this, false);
+            y = (lastP == null ? dy : lastP.getY() + dy);
+            separate = true;
+         }
+
+         if (angleArray != null)
+         {
+            if (angleArray.length > currentListIndex)
+            {
+               angle = angleArray[currentListIndex];
+               radians = angle.getRadians();
+            }
+
+            separate = true;
+         }
+
+         String text;
+
+         if (separate)
+         {
+            text = contents.substring(i, i+numChars);
+         }
+         else
+         {
+            text = contents.substring(i);
+            numChars = text.length();
+         }
+
+         JDRText textArea = createTextArea(text);
+
+         if (!text.trim().isEmpty())
+         {
+            objects.add(textArea);
+         }
+
+         currentListIndex++;
+         i += numChars;
+      }
+
+      clearContents();
+   }
+
+   public void append(JDRCompleteObject obj) throws InvalidFormatException
+   {
+      objects.add(obj);
+   }
+
+   @Override
+   public JDRCompleteObject addToImage(JDRGroup group)
+     throws InvalidFormatException
+   {
+      if (objects.isEmpty())
+      {
+         return null;
+      }
+      else if (objects.size() == 1)
+      {
+         JDRCompleteObject obj = objects.firstElement();
+
+         group.add(obj);
+         return obj;
+      }
+      else
+      {
+         group.add(objects);
+         return objects;
       }
    }
 
-   protected JDRText createTextArea(
-     double x, double y, SVGAngleAttribute angle, String text)
+   protected void setLaTeXText(JDRText textArea)
+   {
+      handler.setLaTeXText(textArea);
+   }
+
+   protected JDRText createTextArea(String text)
    throws InvalidFormatException
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -206,14 +256,14 @@ public class SVGTextElement extends SVGAbstractElement
       JDRText textArea = new JDRText(cg, p, handler.createDefaultFont(),
         text);
 
-      handler.setLaTeXText(textArea);
+      setLaTeXText(textArea);
       handler.setLastTextPosition(p);
 
       textArea.setTextPaint(handler.createDefaultTextPaint());
 
       if (angle != null)
       {
-         textArea.rotate(p, angle.getRadians());
+         textArea.rotate(p, radians);
       }
 
       AffineTransform af = getTransform();
@@ -244,6 +294,23 @@ public class SVGTextElement extends SVGAbstractElement
       }
 
       applyTextAttributes(textArea);
+
+      double width = textArea.getWidth();
+
+      if (width > 0)
+      {
+         x += width;
+      }
+      else
+      {
+         Graphics2D g2 = cg.getGraphics();
+
+         if (g2 != null)
+         {
+            FontMetrics fm = g2.getFontMetrics(textArea.getFont());
+            x += fm.stringWidth(text);
+         }
+      }
 
       return textArea;
    }
@@ -285,4 +352,16 @@ public class SVGTextElement extends SVGAbstractElement
    }
 
    String title, description;
+   JDRGroup objects;
+   int currentListIndex, maxListItems;
+
+   SVGLength[] xArray;
+   SVGLength[] yArray;
+   SVGLength[] dxArray;
+   SVGLength[] dyArray;
+   SVGAngleAttribute[] angleArray;
+
+   double x, y, radians;
+
+   SVGAngleAttribute angle;
 }

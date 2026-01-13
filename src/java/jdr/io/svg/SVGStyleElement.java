@@ -55,7 +55,7 @@ public class SVGStyleElement extends SVGAbstractElement
    }  
 
    @Override
-   public void endElement()
+   public void endElement() throws InvalidFormatException
    {
       addStyleRules(parent, getContents());
    }

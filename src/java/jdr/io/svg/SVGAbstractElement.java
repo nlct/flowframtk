@@ -25,14 +25,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
       children = new Vector<SVGAbstractElement>();
 
-      if (parent == null)
-      {
-         attributeSet = new SVGAttributeSet();
-      }
-      else
-      {
-         attributeSet = new SVGAttributeSet(parent.attributeSet);
-      }
+      attributeSet = new SVGAttributeSet();
 
       if (attr != null)
       {
@@ -55,7 +48,11 @@ public abstract class SVGAbstractElement implements Cloneable
       contents.append(text);
    }
 
-   public void endElement()
+   public void startElement() throws InvalidFormatException
+   {
+   }
+
+   public void endElement() throws InvalidFormatException
    {
    }
 
@@ -245,6 +242,11 @@ public abstract class SVGAbstractElement implements Cloneable
    public String getContents()
    {
       return contents.toString();
+   }
+
+   public void clearContents()
+   {
+      contents.setLength(0);
    }
 
    public abstract String getName();
@@ -572,13 +574,33 @@ public abstract class SVGAbstractElement implements Cloneable
       return attr == null ? defValue : attr;
    }
 
+   public SVGAttribute getAttribute(String attrName, SVGAttribute defValue,
+     boolean inherit)
+   {
+      SVGAttribute attr = getElementAttribute(attrName, inherit);
+
+      return attr == null ? defValue : attr;
+   }
+
    public SVGAttribute getElementAttribute(String attrName)
    {
       return getElementAttribute(getName(), id, cssClassList, attrName);
    }
 
+   public SVGAttribute getElementAttribute(String attrName, boolean inherit)
+   {
+      return getElementAttribute(getName(), id, cssClassList, attrName, inherit);
+   }
+
    public SVGAttribute getElementAttribute(String elementName, String elementId,
      String[] elementClasses, String attrName)
+   {
+      return getElementAttribute(elementName,
+         elementId, elementClasses, attrName, true);
+   }
+
+   public SVGAttribute getElementAttribute(String elementName, String elementId,
+     String[] elementClasses, String attrName, boolean inherit)
    {
       Object object;
 
@@ -607,10 +629,10 @@ public abstract class SVGAbstractElement implements Cloneable
          }
       }
 
-      if (parent != null)
+      if (inherit && parent != null)
       {
          return parent.getElementAttribute(elementName, elementId, elementClasses,
-           attrName);
+           attrName, inherit);
       }
 
       return null;
@@ -741,7 +763,12 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public SVGLength[] getLengthArrayAttribute(String attrName)
    {
-      SVGAttribute attr = getAttribute(attrName, null);
+      return getLengthArrayAttribute(attrName, true);
+   }
+
+   public SVGLength[] getLengthArrayAttribute(String attrName, boolean inherit)
+   {
+      SVGAttribute attr = getAttribute(attrName, null, inherit);
 
       if (attr != null && attr instanceof SVGLengthArrayAttribute)
       {
@@ -753,7 +780,12 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public SVGAngleAttribute[] getAngleArrayAttribute(String attrName)
    {
-      SVGAttribute attr = getAttribute(attrName, null);
+      return getAngleArrayAttribute(attrName, true);
+   }
+
+   public SVGAngleAttribute[] getAngleArrayAttribute(String attrName, boolean inherit)
+   {
+      SVGAttribute attr = getAttribute(attrName, null, inherit);
 
       if (attr != null && attr instanceof SVGAngleArrayAttribute)
       {
@@ -1052,7 +1084,7 @@ public abstract class SVGAbstractElement implements Cloneable
    }
 
    protected SVGHandler handler;
-   private StringBuilder contents;
+   protected StringBuilder contents;
    protected SVGAbstractElement parent;
    protected Vector<SVGAbstractElement> children;
 

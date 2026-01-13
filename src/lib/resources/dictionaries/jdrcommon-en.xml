@@ -560,6 +560,7 @@ File doesn''t exist</entry>
 <entry key="error.svg.external_ref_unsupported">external references unsupported ({0})</entry>
 <entry key="error.svg.remote_ref_unsupported">remote references unsupported ({0})</entry>
 <entry key="error.svg.ref_not_found">reference {0} not found ({1})</entry>
+<entry key="error.svg.element_not_in">not inside element ''{0}''</entry>
 
 <!-- Internal Error Messages -->
 

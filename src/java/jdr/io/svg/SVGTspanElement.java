@@ -6,7 +6,7 @@ import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGTspanElement extends SVGAbstractElement
+public class SVGTspanElement extends SVGTextElement
 {
    public SVGTspanElement(SVGHandler handler,
      SVGAbstractElement parent, String uri, Attributes attr)
@@ -22,15 +22,41 @@ public class SVGTspanElement extends SVGAbstractElement
    }
 
    @Override
-   public void endElement()
+   public void startElement() throws InvalidFormatException
    {
-      // no support for changing style within a text area
+      super.startElement();
 
-      SVGAbstractElement element = getAncestor("text");
+      textElement = (SVGTextElement)getAncestor("text");
 
-      if (element != null)
+      if (textElement == null)
       {
-         element.addToContents(getContents());
+         throw new ElementNotInsideException(this, "text");
+      }
+
+      textElement.process();
+
+      x = textElement.x;
+      y = textElement.y;
+
+   }
+
+   @Override
+   public void endElement() throws InvalidFormatException
+   {
+      super.endElement();
+
+      textElement.x = x;
+
+      if (objects.isEmpty())
+      {// do nothing
+      }
+      else if (objects.size() == 1)
+      {
+         textElement.append(objects.firstElement());
+      }
+      else
+      {
+         textElement.append(objects);
       }
    }
 
@@ -58,13 +84,5 @@ public class SVGTspanElement extends SVGAbstractElement
       return null;
    }
 
-   @Override
-   public void setTitle(String title)
-   {
-   }
-
-   @Override
-   public void setDescription(String description)
-   {
-   }
+   SVGTextElement textElement;
 }
