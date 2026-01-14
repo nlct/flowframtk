@@ -214,6 +214,23 @@ public class SVGTextElement extends SVGAbstractElement
    public void append(JDRCompleteObject obj) throws InvalidFormatException
    {
       objects.add(obj);
+
+      String desc = objects.getDescription();
+      String objDesc = obj.getDescription();
+
+      if (objDesc != null)
+      {
+         if (desc == null)
+         {
+            desc = objDesc;
+         }
+         else
+         {
+            desc += objDesc;
+         }
+      }
+
+      objects.setDescription(desc);
    }
 
    @Override

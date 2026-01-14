@@ -50,7 +50,16 @@ public class SVGTspanElement extends SVGTextElement
       }
       else if (objects.size() == 1)
       {
-         textElement.append(objects.firstElement());
+         JDRCompleteObject obj = objects.firstElement();
+
+         String desc = obj.getDescription();
+
+         if (desc == null || desc.isEmpty())
+         {
+            obj.setDescription(objects.getDescription());
+         }
+
+         textElement.append(obj);
       }
       else
       {
