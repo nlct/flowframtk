@@ -102,7 +102,7 @@ public class CanvasGraphics
       scaleControlPoint = true;
    }
 
-   public synchronized void setComponent(JComponent comp)
+   public void setComponent(JComponent comp)
    {
       component = comp;
    }
@@ -112,7 +112,7 @@ public class CanvasGraphics
       return component;
    }
 
-   public synchronized void setMagnification(double magnification)
+   public void setMagnification(double magnification)
    {
       if (magnification <= 0.0)
       {
@@ -251,7 +251,7 @@ public class CanvasGraphics
                        (int)storageToComponentY(storagePoint.y));
    }
 
-   public synchronized void setColor(Color col)
+   public void setColor(Color col)
    {
       if (g2 != null)
       {
@@ -259,7 +259,7 @@ public class CanvasGraphics
       }
    }
 
-   public synchronized void setPaint(Paint paint)
+   public void setPaint(Paint paint)
    {
       if (g2 != null)
       {
@@ -277,13 +277,13 @@ public class CanvasGraphics
       return g2 == null ? null : g2.getFont();
    }
 
-   public synchronized void setFont(Font font)
+   public void setFont(Font font)
    {
       if (g2 == null) return;
       g2.setFont(font);
    }
 
-   public synchronized void setStroke(Stroke stroke)
+   public void setStroke(Stroke stroke)
    {
       if (stroke instanceof JDRStroke)
       {
@@ -401,7 +401,7 @@ public class CanvasGraphics
       return new DoubleDimension(bpToStorage(dx), bpToStorage(dy));
    }
 
-   public synchronized void setPointSize(JDRLength size, boolean scalePointBbox)
+   public void setPointSize(JDRLength size, boolean scalePointBbox)
    {
       if (size.getValue() <= 0)
       {
@@ -655,7 +655,7 @@ public class CanvasGraphics
       return getPaper().getName();
    }
 
-   public synchronized void setPaper(JDRPaper paper)
+   public void setPaper(JDRPaper paper)
    {
       this.paper = paper;
    }
@@ -750,7 +750,7 @@ public class CanvasGraphics
       return cg;
    }
 
-   public synchronized void setLaTeXFontBase(LaTeXFontBase fonts)
+   public void setLaTeXFontBase(LaTeXFontBase fonts)
    {
       latexFonts = fonts;
    }
@@ -765,7 +765,7 @@ public class CanvasGraphics
       return latexFonts.getNormalSize();
    }
 
-   public synchronized void setLaTeXNormalSize(double size)
+   public void setLaTeXNormalSize(double size)
    {
       latexFonts.setNormalSize(size);
    }
@@ -792,7 +792,7 @@ public class CanvasGraphics
       return useSettingsOnLoad;
    }
 
-   public synchronized void setBitmapReplaced(boolean flag)
+   public void setBitmapReplaced(boolean flag)
    {
       bitmapReplaced = flag;
    }
@@ -1131,7 +1131,7 @@ public class CanvasGraphics
         "error.with_line", "Line {0}: {1}", lineNum, msg);
    }
 
-   public synchronized void setPreamble(String preambleText)
+   public void setPreamble(String preambleText)
    {
       preamble = preambleText;
    }
@@ -1146,7 +1146,7 @@ public class CanvasGraphics
       return preamble != null && !preamble.isEmpty();
    }
 
-   public synchronized void setMidPreamble(String preambleText)
+   public void setMidPreamble(String preambleText)
    {
       midPreamble = preambleText;
    }
@@ -1161,7 +1161,7 @@ public class CanvasGraphics
       return midPreamble != null && !midPreamble.isEmpty();
    }
 
-   public synchronized void setEndPreamble(String preambleText)
+   public void setEndPreamble(String preambleText)
    {
       endPreamble = preambleText;
    }
@@ -1176,7 +1176,7 @@ public class CanvasGraphics
       return endPreamble != null && !endPreamble.isEmpty();
    }
 
-   public synchronized void setDocBody(String text)
+   public void setDocBody(String text)
    {
       docBody = text;
    }
@@ -1206,7 +1206,7 @@ public class CanvasGraphics
       return magicComments != null && !magicComments.isEmpty();
    }
 
-   public synchronized void setDocClass(String cls)
+   public void setDocClass(String cls)
    {
       docClass = cls;
    }
@@ -1226,7 +1226,7 @@ public class CanvasGraphics
       return resetTransform;
    }
 
-   public synchronized void setResetTransform(AffineTransform af)
+   public void setResetTransform(AffineTransform af)
    {
       resetTransform = af;
    }
@@ -1264,7 +1264,7 @@ public class CanvasGraphics
     * Sets the current tool.
     * @param toolSetting the new tool
     */
-   public synchronized void setTool(int toolSetting)
+   public void setTool(int toolSetting)
       throws JdrIllegalArgumentException
    {
       if (toolSetting < 0 || toolSetting >= MAX_TOOLS)
@@ -1281,7 +1281,7 @@ public class CanvasGraphics
     * string must be one of those listed in TOOL_NAMES.
     * @param string the string identifying the tool
     */
-   public synchronized void setTool(String string)
+   public void setTool(String string)
      throws JdrIllegalArgumentException
    {
       for (int i = 0; i < TOOL_NAMES.length; i++)
@@ -1332,12 +1332,12 @@ public class CanvasGraphics
       return display_grid;
    }
 
-   public synchronized void setDisplayGrid(boolean showGrid)
+   public void setDisplayGrid(boolean showGrid)
    {
       display_grid = showGrid;
    }
 
-   public synchronized void setGridLock(boolean lockGrid)
+   public void setGridLock(boolean lockGrid)
    {
       grid_lock = lockGrid;
    }
@@ -1347,7 +1347,7 @@ public class CanvasGraphics
       return grid_lock;
    }
 
-   public synchronized void setMargins(PageFormat pf)
+   public void setMargins(PageFormat pf)
    {
       paper.setImageableArea(pf);
    }
@@ -1424,7 +1424,7 @@ public class CanvasGraphics
       return storageUnit;
    }
 
-   public synchronized void setStorageUnit(byte id)
+   public void setStorageUnit(byte id)
    {
       JDRUnit unit = JDRUnit.getUnit(id);
 
@@ -1437,7 +1437,7 @@ public class CanvasGraphics
       storageUnit = unit;
    }
 
-   public synchronized void setStorageUnit(JDRUnit unit)
+   public void setStorageUnit(JDRUnit unit)
    {
       storageUnit = unit;
    }
@@ -1452,7 +1452,7 @@ public class CanvasGraphics
       return pointSize;
    }
 
-   public synchronized void setPointSize(JDRLength point)
+   public void setPointSize(JDRLength point)
    {
       if (point.getValue() <= 0)
       {
@@ -1469,7 +1469,7 @@ public class CanvasGraphics
       return showRulers;
    }
 
-   public synchronized void setShowRulers(boolean flag)
+   public void setShowRulers(boolean flag)
    {
       showRulers = flag;
    }
@@ -1479,12 +1479,12 @@ public class CanvasGraphics
       return scaleControlPoint;
    }
 
-   public synchronized void setScaleControlPoints(boolean flag)
+   public void setScaleControlPoints(boolean flag)
    {
       scaleControlPoint = flag;
    }
 
-   public synchronized void setIsEvenPage(boolean iseven)
+   public void setIsEvenPage(boolean iseven)
    {
       isEvenPage = iseven;
    }
@@ -1499,7 +1499,7 @@ public class CanvasGraphics
       return absolutePages;
    }
 
-   public synchronized void setUseAbsolutePages(boolean flag)
+   public void setUseAbsolutePages(boolean flag)
    {
       absolutePages = flag;
    }
@@ -1509,7 +1509,7 @@ public class CanvasGraphics
       return headerlabel;
    }
 
-   public synchronized void setHeaderLabel(String label)
+   public void setHeaderLabel(String label)
    {
       headerlabel = label;
    }
@@ -1519,7 +1519,7 @@ public class CanvasGraphics
       return footerlabel;
    }
 
-   public synchronized void setFooterLabel(String label)
+   public void setFooterLabel(String label)
    {
       footerlabel = label;
    }
@@ -1529,7 +1529,7 @@ public class CanvasGraphics
       return evenheaderlabel;
    }
 
-   public synchronized void setEvenHeaderLabel(String label)
+   public void setEvenHeaderLabel(String label)
    {
       evenheaderlabel = label;
    }
@@ -1539,7 +1539,7 @@ public class CanvasGraphics
       return evenfooterlabel;
    }
 
-   public synchronized void setEvenFooterLabel(String label)
+   public void setEvenFooterLabel(String label)
    {
       evenfooterlabel = label;
    }
@@ -1600,53 +1600,48 @@ public class CanvasGraphics
     */
    private int optimize=OPTIMIZE_SPEED;
 
-   // TODO
-   // Now that the copy & paste uses the JDR binary format instead
-   // of serialization all volatile and transient can probably be
-   // removed.
-
    /**
     * Indicates whether to show the grid.
     */
-   protected volatile boolean display_grid;
+   protected boolean display_grid;
 
    /**
     * Indicates whether to lock the grid.
     */
-   protected volatile boolean grid_lock;
+   protected boolean grid_lock;
    /**
     * Indicates whether to show the rulers.
     */
-   protected volatile boolean showRulers;
+   protected boolean showRulers;
 
    /**
     * Indicates the current tool.
     */
-   private volatile int tool;
+   private int tool;
 
    /**
     * Stores the current paper.
     */
-   private volatile JDRPaper paper;
+   private JDRPaper paper;
 
    /**
     * Stores the grid.
     */
-   private volatile JDRGrid grid;
+   private JDRGrid grid;
 
    /**
     * Storage unit. This is independent of the grid unit(s).
     */
-   private volatile JDRUnit storageUnit;
+   private JDRUnit storageUnit;
 
    private double originX=0.0, originY=0.0;
 
    /**
     * Point size.
     */
-   private volatile JDRLength pointSize;
+   private JDRLength pointSize;
 
-   private volatile boolean scaleControlPoint;
+   private boolean scaleControlPoint;
 
    public static double DEFAULT_BP_POINT_SIZE = 10;
 
@@ -1658,46 +1653,46 @@ public class CanvasGraphics
 
    private Graphics2D g2;
    private double magnification;
-   private transient JComponent component;
+   private JComponent component;
 
-   private transient AffineTransform resetTransform;
+   private AffineTransform resetTransform;
 
-   private volatile int useSettingsOnLoad = JDRAJR.ALL_SETTINGS;
+   private int useSettingsOnLoad = JDRAJR.ALL_SETTINGS;
 
-   private volatile LaTeXFontBase latexFonts;
+   private LaTeXFontBase latexFonts;
 
-   private transient JDRMessage messageSystem;
+   private JDRMessage messageSystem;
 
-   private transient BrowseUtil browseUtil;
+   private BrowseUtil browseUtil;
 
-   private transient JFileChooser bitmapChooser;
+   private JFileChooser bitmapChooser;
 
-   private volatile String preamble = null;
+   private String preamble = null;
 
-   private volatile String midPreamble = null;
+   private String midPreamble = null;
 
-   private volatile String endPreamble = null;
+   private String endPreamble = null;
 
-   private volatile String docBody = null;
+   private String docBody = null;
 
    // header block designed for directives/magic comments
    private String magicComments = null;
 
-   private volatile String docClass = null;
+   private String docClass = null;
 
-   private volatile boolean bitmapReplaced = false;
+   private boolean bitmapReplaced = false;
 
    public static double normTransformX = 1.0;
    public static double normTransformY = 1.0;
 
-   private volatile boolean isEvenPage = false;
+   private boolean isEvenPage = false;
 
-   private volatile boolean absolutePages = false;
+   private boolean absolutePages = false;
 
-   private volatile String headerlabel = "header";
-   private volatile String evenheaderlabel = "evenheader";
+   private String headerlabel = "header";
+   private String evenheaderlabel = "evenheader";
 
-   private volatile String footerlabel = "footer";
-   private volatile String evenfooterlabel = "evenfooter";
+   private String footerlabel = "footer";
+   private String evenfooterlabel = "evenfooter";
 }
 
