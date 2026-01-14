@@ -11,11 +11,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGElement extends SVGAbstractElement
 {
-   public SVGElement(SVGHandler handler, 
-      SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -25,14 +23,17 @@ public class SVGElement extends SVGAbstractElement
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
       addAttribute("width", attr);
       addAttribute("height", attr);
+   }
 
+   @Override
+   public void startElement() throws InvalidFormatException
+   {
       widthAttr = getLengthAttribute("width");
       heightAttr = getLengthAttribute("height");
 
@@ -162,19 +163,11 @@ public class SVGElement extends SVGAbstractElement
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGElement element = new SVGElement(handler, null, null, null);
+      SVGElement element = new SVGElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 
    @Override

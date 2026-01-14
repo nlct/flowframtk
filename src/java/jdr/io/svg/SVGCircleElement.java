@@ -10,11 +10,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGCircleElement extends SVGShape
 {
-   public SVGCircleElement(SVGHandler handler, 
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGCircleElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -24,8 +22,7 @@ public class SVGCircleElement extends SVGShape
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
@@ -77,18 +74,10 @@ public class SVGCircleElement extends SVGShape
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGCircleElement element = new SVGCircleElement(handler, null, null, null);
+      SVGCircleElement element = new SVGCircleElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 }

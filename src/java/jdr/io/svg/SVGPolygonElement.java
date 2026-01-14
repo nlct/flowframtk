@@ -8,11 +8,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPolygonElement extends SVGPolyLineElement
 {
-   public SVGPolygonElement(SVGHandler handler, 
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGPolygonElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    public String getName()
@@ -21,7 +19,7 @@ public class SVGPolygonElement extends SVGPolyLineElement
    }
 
    public JDRShape createShape(CanvasGraphics cg)
-     throws InvalidFormatException
+    throws InvalidFormatException
    {
       JDRPath path = (JDRPath)super.createShape(cg);
 
@@ -33,18 +31,10 @@ public class SVGPolygonElement extends SVGPolyLineElement
 
    public Object clone()
    {
-      try
-      {
-         SVGPolygonElement element = new SVGPolygonElement(handler, null, null, null);
+      SVGPolygonElement element = new SVGPolygonElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 }

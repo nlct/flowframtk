@@ -62,24 +62,26 @@ public class SVGHandler extends DefaultHandler
    {
       debugMessage("<"+qName+">");
 
+      SVGAbstractElement parent = current;
+
+      current = SVGAbstractElement.getElement(this, parent, name);
+
+      if (parent != null)
+      {
+         parent.addChild(current);
+      }
+
+      if (base == null && current instanceof SVGElement)
+      {
+         base = (SVGElement)current;
+      }
+   
+      stack.push(current);
+
+      current.addAttributes(uri, attrs);
+
       try
       {
-         SVGAbstractElement parent = current;
-
-         current = SVGAbstractElement.getElement(this, parent, name, uri, attrs);
-
-         if (parent != null)
-         {
-            parent.addChild(current);
-         }
-
-         if (base == null && current instanceof SVGElement)
-         {
-            base = (SVGElement)current;
-         }
-   
-         stack.push(current);
-
          current.startElement();
       }
       catch (UnknownElementException e)

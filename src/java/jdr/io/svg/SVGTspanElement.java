@@ -8,11 +8,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGTspanElement extends SVGTextElement
 {
-   public SVGTspanElement(SVGHandler handler,
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGTspanElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -26,7 +24,7 @@ public class SVGTspanElement extends SVGTextElement
    {
       super.startElement();
 
-      textElement = (SVGTextElement)getAncestor("text");
+      textElement = getTextAncestor();
 
       if (textElement == null)
       {
@@ -63,19 +61,11 @@ public class SVGTspanElement extends SVGTextElement
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGTspanElement element = new SVGTspanElement(handler, null, null, null);
+      SVGTspanElement element = new SVGTspanElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 
    @Override

@@ -10,11 +10,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGStyleElement extends SVGAbstractElement
 {
-   public SVGStyleElement(SVGHandler handler, 
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGStyleElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -24,10 +22,9 @@ public class SVGStyleElement extends SVGAbstractElement
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void startElement() throws InvalidFormatException
    {
-      String type = attr.getValue("type");
+      String type = (String)attributeSet.getAttribute("type");
 
       if (type != null && !type.equals("text/css"))
       {
@@ -38,17 +35,26 @@ public class SVGStyleElement extends SVGAbstractElement
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
      throws InvalidFormatException
-   {  
-      SVGAttribute attr = super.createElementAttribute(name, value);
+   {
+      SVGAttribute attr;
 
-      if (attr == null)
+      if (name.equals("type"))
       {
-         attr = createTextStyleAttribute(name, value);
+         attr = new SVGStringAttribute(handler, name, value);
       }
-
-      if (attr == null)
+      else
       {
-         attr = createPathStyleAttribute(name, value);
+         attr = super.createElementAttribute(name, value);
+
+         if (attr == null)
+         {
+            attr = createTextStyleAttribute(name, value);
+         }
+
+         if (attr == null)
+         {
+            attr = createPathStyleAttribute(name, value);
+         }
       }
 
       return attr;
@@ -79,18 +85,10 @@ public class SVGStyleElement extends SVGAbstractElement
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGStyleElement element = new SVGStyleElement(handler, null, null, null);
+      SVGStyleElement element = new SVGStyleElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 }

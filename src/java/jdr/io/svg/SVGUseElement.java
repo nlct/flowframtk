@@ -14,11 +14,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGUseElement extends SVGAbstractElement
 {
-   public SVGUseElement(SVGHandler handler, 
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGUseElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -28,8 +26,7 @@ public class SVGUseElement extends SVGAbstractElement
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
@@ -38,6 +35,13 @@ public class SVGUseElement extends SVGAbstractElement
       addAttribute("width", attr);
       addAttribute("height", attr);
 
+      elemUri = uri;
+      elemAttrs = attr;
+   }
+
+   @Override
+   public void startElement() throws InvalidFormatException
+   {
       String ref = getHref();
 
       if (ref == null)
@@ -89,7 +93,7 @@ public class SVGUseElement extends SVGAbstractElement
 
       element.attributeSet.removeAttribute("id");
 
-      element.addAttributes(uri, attr);
+      element.addAttributes(elemUri, elemAttrs);
    }
 
    @Override
@@ -193,19 +197,11 @@ public class SVGUseElement extends SVGAbstractElement
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGUseElement element = new SVGUseElement(handler, null, null, null);
+      SVGUseElement element = new SVGUseElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 
    public void makeEqual(SVGUseElement element)
@@ -254,6 +250,8 @@ public class SVGUseElement extends SVGAbstractElement
 
    SVGAbstractElement element;
    SVGLength xAttr, yAttr;
+   String elemUri;
+   Attributes elemAttrs;
 
    private SVGLengthAttribute widthAttr, heightAttr;
 }

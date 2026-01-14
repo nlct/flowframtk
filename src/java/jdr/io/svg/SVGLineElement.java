@@ -9,16 +9,13 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGLineElement extends SVGShape
 {
-   public SVGLineElement(SVGHandler handler, 
-      SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGLineElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
@@ -92,20 +89,10 @@ public class SVGLineElement extends SVGShape
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGLineElement element = new SVGLineElement(handler, null, null, null);
+      SVGLineElement element = new SVGLineElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-         getCanvasGraphics().getMessageSystem().postMessage(
-           MessageInfo.createInternalError(e));
-      }
-
-      return null;
+      return element;
    }
 }

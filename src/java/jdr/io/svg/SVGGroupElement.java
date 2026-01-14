@@ -11,11 +11,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGGroupElement extends SVGAbstractElement
 {
-   public SVGGroupElement(SVGHandler handler, 
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGGroupElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -29,7 +27,6 @@ public class SVGGroupElement extends SVGAbstractElement
      throws InvalidFormatException
    {
       JDRGroup subgroup = new JDRGroup(group.getCanvasGraphics());
-      group.add(subgroup);
 
       String desc = null;
 
@@ -47,12 +44,18 @@ public class SVGGroupElement extends SVGAbstractElement
          subgroup.setDescription(desc.replaceAll("\\R", " "));
       }
 
+      // subgroup may be empty even if this element has children
+      // (there's no guarantee that child elements will create
+      // objects)
+
       for (SVGAbstractElement element : children)
       {
          handler.debugMessage("Adding "+element.getName()+" to subgroup");
 
          element.addToImage(subgroup);
       }
+
+      if (subgroup.isEmpty()) return null;
 
       AffineTransform af = getTransform();
 
@@ -65,24 +68,29 @@ public class SVGGroupElement extends SVGAbstractElement
          subgroup.transform(matrix);
       }
 
-      return subgroup;
+      if (subgroup.size() == 1)
+      {
+         JDRCompleteObject obj = subgroup.firstElement();
+
+         group.add(obj);
+
+         return obj;
+      }
+      else
+      {
+         group.add(subgroup);
+
+         return subgroup;
+      }
    }
 
    public Object clone()
    {
-      try
-      {
-         SVGGroupElement element = new SVGGroupElement(handler,null, null, null);
+      SVGGroupElement element = new SVGGroupElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 
    @Override

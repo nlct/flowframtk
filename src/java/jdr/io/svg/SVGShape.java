@@ -11,16 +11,13 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public abstract class SVGShape extends SVGAbstractElement
 {
-   public SVGShape(SVGHandler handler,
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGShape(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-      throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 

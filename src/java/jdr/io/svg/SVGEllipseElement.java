@@ -10,11 +10,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGEllipseElement extends SVGShape
 {
-   public SVGEllipseElement(SVGHandler handler,
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGEllipseElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -24,8 +22,7 @@ public class SVGEllipseElement extends SVGShape
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
@@ -110,18 +107,10 @@ public class SVGEllipseElement extends SVGShape
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGEllipseElement element = new SVGEllipseElement(handler, null, null, null);
+      SVGEllipseElement element = new SVGEllipseElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 }

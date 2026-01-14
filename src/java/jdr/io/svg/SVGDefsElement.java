@@ -9,11 +9,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGDefsElement extends SVGAbstractElement
 {
-   public SVGDefsElement(SVGHandler handler, 
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGDefsElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    public String getName()
@@ -34,19 +32,11 @@ public class SVGDefsElement extends SVGAbstractElement
 
    public Object clone()
    {
-      try
-      {
-         SVGDefsElement element = new SVGDefsElement(handler, null, null, null);
+      SVGDefsElement element = new SVGDefsElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 
    @Override

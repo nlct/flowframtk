@@ -14,11 +14,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGImageElement extends SVGAbstractElement
 {
-   public SVGImageElement(SVGHandler handler,
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGImageElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -28,8 +26,7 @@ public class SVGImageElement extends SVGAbstractElement
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
@@ -37,7 +34,11 @@ public class SVGImageElement extends SVGAbstractElement
       addAttribute("y", attr);
       addAttribute("width", attr);
       addAttribute("height", attr);
+   }
 
+   @Override
+   public void startElement() throws InvalidFormatException
+   {
       String ref = getHref();
 
       if (ref == null)
@@ -112,12 +113,14 @@ public class SVGImageElement extends SVGAbstractElement
    public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
+      if (imageFile == null) return null;
+
       CanvasGraphics cg = group.getCanvasGraphics();
 
-      SVGLengthAttribute xAttr = getLengthAttribute("x");
-      SVGLengthAttribute yAttr = getLengthAttribute("y");
-      SVGLengthAttribute widthAttr = getLengthAttribute("width");
-      SVGLengthAttribute heightAttr = getLengthAttribute("height");
+      SVGLengthAttribute xAttr = getLengthAttribute("x", false);
+      SVGLengthAttribute yAttr = getLengthAttribute("y", false);
+      SVGLengthAttribute widthAttr = getLengthAttribute("width", false);
+      SVGLengthAttribute heightAttr = getLengthAttribute("height", false);
 
       double x = (xAttr == null ? 0 : xAttr.getStorageValue(this, true));
       double y = (yAttr == null ? 0 : yAttr.getStorageValue(this, false));
@@ -233,19 +236,11 @@ public class SVGImageElement extends SVGAbstractElement
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGImageElement element = new SVGImageElement(handler, null, null, null);
+      SVGImageElement element = new SVGImageElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 
    String title, description;

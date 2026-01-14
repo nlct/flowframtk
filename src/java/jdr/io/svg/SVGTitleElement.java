@@ -8,11 +8,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGTitleElement extends SVGAbstractElement
 {
-   public SVGTitleElement(SVGHandler handler,
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGTitleElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -48,18 +46,10 @@ public class SVGTitleElement extends SVGAbstractElement
 
    public Object clone()
    {
-      try
-      {
-         SVGTitleElement element = new SVGTitleElement(handler, null, null, null);
+      SVGTitleElement element = new SVGTitleElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 }

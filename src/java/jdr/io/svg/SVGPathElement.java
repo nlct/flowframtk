@@ -10,11 +10,9 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPathElement extends SVGShape
 {
-   public SVGPathElement(SVGHandler handler,
-     SVGAbstractElement parent, String uri, Attributes attr)
-     throws InvalidFormatException
+   public SVGPathElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent, uri, attr);
+      super(handler, parent);
    }
 
    @Override
@@ -24,8 +22,7 @@ public class SVGPathElement extends SVGShape
    }
 
    @Override
-   protected void addAttributes(String uri, Attributes attr)
-     throws InvalidFormatException
+   public void addAttributes(String uri, Attributes attr)
    {
       super.addAttributes(uri, attr);
 
@@ -66,18 +63,10 @@ public class SVGPathElement extends SVGShape
 
    public Object clone()
    {
-      try
-      {
-         SVGPathElement element = new SVGPathElement(handler, null, null, null);
+      SVGPathElement element = new SVGPathElement(handler, null);
 
-         element.makeEqual(this);
+      element.makeEqual(this);
 
-         return element;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return element;
    }
 }
