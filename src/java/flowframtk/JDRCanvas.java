@@ -9538,7 +9538,12 @@ public class JDRCanvas extends JPanel
                    BBox box = object.getStorageBBox();
                    boolean isShowing;
 
-                   if (getApplication().dragScaleEnabled())
+                   if (box == null)
+                   {
+                      getResources().debugMessage("No bounding box for object "+object);
+                      isShowing = false;
+                   }
+                   else if (getApplication().dragScaleEnabled())
                    {
                       JDRPoint topLeft = box.getTopLeft();
                       JDRPoint bottomRight = box.getBottomRight();

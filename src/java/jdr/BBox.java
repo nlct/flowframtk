@@ -195,6 +195,8 @@ public class BBox implements Cloneable,Serializable
     */
    public boolean intersects(Rectangle rect)
    {
+      if (rect == null) return false;
+
       return intersects(rect.getX(), rect.getY(),
         rect.getWidth(), rect.getHeight());
    }
@@ -209,12 +211,16 @@ public class BBox implements Cloneable,Serializable
     */
    public boolean intersects(Rectangle2D rect)
    {
+      if (rect == null) return false;
+
       return intersects(rect.getX(), rect.getY(),
         rect.getWidth(), rect.getHeight());
    }
 
    public boolean intersects(BBox box)
    {
+      if (box == null) return false;
+
       if (contains(box.minX_, box.minY_)
        || contains(box.minX_, box.maxY_)
        || contains(box.maxX_, box.maxY_)
