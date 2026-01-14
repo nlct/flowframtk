@@ -530,7 +530,7 @@ public class StatusBar extends JPanel
       storageUnitLabel.setText(unit.getLabel());
    }
 
-   public synchronized void enableStatus()
+   public void enableStatus()
    {
       pos.setEnabled(true);
       modifiedLabel.setEnabled(true);
@@ -546,7 +546,7 @@ public class StatusBar extends JPanel
     * @param numFrames the number of frames that exist but are
     * not selected
     */
-   public synchronized void noFramesSelected(int numFrames)
+   public void noFramesSelected(int numFrames)
    {
       if (numFrames == 0)
       {
