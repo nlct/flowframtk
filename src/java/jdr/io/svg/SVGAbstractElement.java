@@ -200,6 +200,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          return new SVGTspanElement(handler, parent);
       }
+      else if (elementName.equals("a"))
+      {
+         return new SVGAnchorElement(handler, parent);
+      }
       else if (elementName.equals("image"))
       {
          return new SVGImageElement(handler, parent);

@@ -251,30 +251,51 @@ public class SVG
       {
          String preamble = canvasGraphics.getPreamble();
 
-         StringBuilder buffer = new StringBuilder(
-           preamble.length()+styNames.firstElement().length()+12);
+         StringBuilder buffer = new StringBuilder();
 
-         buffer.append(preamble);
+         if (preamble != null)
+         {
+            buffer.append(preamble);
+         }
+
+         String hyperref = null;
 
          for (String sty : styNames)
          {
-            if (sty.startsWith("["))
+            if (sty.equals("hyperref") || sty.endsWith("]hyperref"))
             {
-               int idx = sty.indexOf("]");
-
-               buffer.append(String.format("\\usepackage%s{%s}%n",
-                 sty.substring(0, idx+1), sty.substring(idx+1)));
+               hyperref = sty;
             }
             else
             {
-               buffer.append(String.format("\\usepackage{%s}%n", sty));
+               appendSty(sty, buffer);
             }
+         }
+
+         if (hyperref != null)
+         {
+            appendSty(hyperref, buffer);
          }
 
          canvasGraphics.setPreamble(buffer.toString());
       }
 
       return group;
+   }
+
+   protected void appendSty(String sty, StringBuilder buffer)
+   {
+      if (sty.startsWith("["))
+      {
+         int idx = sty.indexOf("]");
+
+         buffer.append(String.format("\\usepackage%s{%s}%n",
+           sty.substring(0, idx+1), sty.substring(idx+1)));
+      }
+      else
+      {
+         buffer.append(String.format("\\usepackage{%s}%n", sty));
+      }
    }
 
    public static String encodeContent(String text)
@@ -577,6 +598,14 @@ public class SVG
          jdrText.setLaTeXText(latexText);
       }
 
+   }
+
+   public void requirePackage(String sty)
+   {
+      if (styNames != null && !styNames.contains(sty))
+      {
+         styNames.add(sty);
+      }
    }
 
    private CanvasGraphics canvasGraphics;
