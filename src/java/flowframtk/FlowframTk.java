@@ -6780,22 +6780,22 @@ public class FlowframTk extends JFrame
       return cg;
    }
 
-   public synchronized JDRFrame addFrame()
+   public JDRFrame addFrame()
    {
       return addFrame(getCurrentCanvasGraphics());
    }
 
-   public synchronized JDRFrame addFrame(File file)
+   public JDRFrame addFrame(File file)
    {
       return addFrame(getCurrentCanvasGraphics(), file);
    }
 
-   public synchronized JDRFrame addFrame(CanvasGraphics cg)
+   public JDRFrame addFrame(CanvasGraphics cg)
    {
       return addFrame(cg, null);
    }
 
-   public synchronized JDRFrame addFrame(CanvasGraphics cg, File file)
+   public JDRFrame addFrame(CanvasGraphics cg, File file)
    {
       JDRFrame frame = new JDRFrame(file, (CanvasGraphics)cg.clone(), 
          windowM, windowButtonGroup, this);
@@ -6981,11 +6981,7 @@ public class FlowframTk extends JFrame
    {
       JDRFrame currentFrame = getSelectedFrame();
 
-      if (currentFrame == null)
-      {
-         currentFrame = addFrame((CanvasGraphics)getSettings().getCanvasGraphics().clone());
-      }
-      else if (currentFrame.isNewImage())
+      if (currentFrame != null && currentFrame.isNewImage())
       {
          if (currentFrame.isIcon())
          {
@@ -6994,21 +6990,29 @@ public class FlowframTk extends JFrame
       }
       else
       {
-         currentFrame = addFrame((CanvasGraphics)getSettings().getCanvasGraphics().clone());
+         currentFrame = addFrame(invoker.getSettings().getCanvasGraphics());
       }
+
+      SwingWorker worker = null;
 
       switch (importSettings.type)
       {
          case ACORN_DRAW:
-            (new LoadAcornDrawFile(currentFrame, importSettings)).execute();
+           worker = new LoadAcornDrawFile(currentFrame, importSettings);
          break;
          case EPS:
-            (new LoadEps(currentFrame, importSettings)).execute();
+           worker = new LoadEps(currentFrame, importSettings);
          break;
          case SVG:
-            (new LoadSvg(currentFrame, importSettings)).execute();
+           worker = new LoadSvg(currentFrame, importSettings);
          break;
+         default:
+            getResources().internalError(this,
+              "Unknown import type "+importSettings.type);
+         return;
       }
+
+      worker.execute();
    }
 
    public boolean saveImage()

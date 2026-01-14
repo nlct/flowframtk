@@ -123,7 +123,7 @@ public class CanvasGraphics
       this.magnification = magnification;
    }
 
-   public synchronized void setGraphicsDevice(Graphics2D g2)
+   public void setGraphicsDevice(Graphics2D g2)
    {
       this.g2 = g2;
    }
@@ -1656,7 +1656,7 @@ public class CanvasGraphics
       "closed_curve", "rectangle", "ellipse", "text", "math"
    };
 
-   private volatile Graphics2D g2;
+   private Graphics2D g2;
    private double magnification;
    private transient JComponent component;
 

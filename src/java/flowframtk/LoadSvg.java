@@ -72,9 +72,16 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
          Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
       BufferedReader in = null;
+      Graphics2D orgG2 = cg.getGraphics();
+      Graphics2D g2 = (Graphics2D)jdrFrame.getCanvas().getGraphics();
 
       try
       {
+         if (g2 != null)
+         {
+            cg.setGraphicsDevice(g2);
+         }
+
          in = new BufferedReader(new FileReader(svgFile));
 
          image = SVG.load(cg, svgFile.getParentFile(), in, importSettings,
@@ -82,6 +89,12 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
       }
       finally
       {
+         if (g2 != null)
+         {
+            cg.setGraphicsDevice(orgG2);
+            g2.dispose();
+         }
+
          jdrFrame.setCursor(oldCursor);
          app.setTool(jdrFrame.currentTool());
          jdrFrame.setIoInProgress(false);
