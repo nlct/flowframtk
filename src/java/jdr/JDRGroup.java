@@ -149,7 +149,7 @@ t
       }
    }
 
-   private synchronized void enlargeList(int capacity)
+   private void enlargeList(int capacity)
    {
       JDRCompleteObject[] list = new JDRCompleteObject[capacity];
 
@@ -161,7 +161,7 @@ t
       objectList_ = list;
    }
 
-  private synchronized void addObjectToList(JDRCompleteObject object)
+  private void addObjectToList(JDRCompleteObject object)
    throws NullPointerException
    {
       if (object == null)
@@ -183,7 +183,7 @@ t
       size_++;
    }
 
-   private synchronized void addObjectToList(int index, JDRCompleteObject object)
+   private void addObjectToList(int index, JDRCompleteObject object)
       throws ArrayIndexOutOfBoundsException,NullPointerException
    {
       if (index < 0 || index > size_)
@@ -216,7 +216,7 @@ t
       size_++;
    }
 
-   private synchronized JDRCompleteObject removeObjectFromList(JDRCompleteObject object)
+   private JDRCompleteObject removeObjectFromList(JDRCompleteObject object)
    {
       int index = -1;
 
@@ -234,7 +234,7 @@ t
       return removeObjectFromList(index);
    }
 
-   private synchronized JDRCompleteObject removeObjectFromList(int index)
+   private JDRCompleteObject removeObjectFromList(int index)
    throws ArrayIndexOutOfBoundsException
    {
       if (index < 0 || index >= size_)
@@ -263,7 +263,7 @@ t
       return object;
    }
 
-   private synchronized JDRCompleteObject setObject(int index, JDRCompleteObject object)
+   private JDRCompleteObject setObject(int index, JDRCompleteObject object)
    throws ArrayIndexOutOfBoundsException,NullPointerException
    {
       if (index < 0 || index >= size_)
@@ -374,7 +374,7 @@ t
     * @param idx2 index of second object
     */ 
 
-   public synchronized void swap(int idx1, int idx2)
+   public void swap(int idx1, int idx2)
    {
       if (idx1 < 0 || idx1 >= size_)
       {
@@ -421,7 +421,7 @@ t
    /**
     * Removes all of the elements from this list.
     */
-   public synchronized void clear()
+   public void clear()
    {
       for (int i = 0; i < size(); i++)
       {
@@ -2709,8 +2709,8 @@ t
       }
    }
 
-   private volatile JDRCompleteObject[] objectList_;
-   private volatile int size_ = 0;
+   private JDRCompleteObject[] objectList_;
+   private int size_ = 0;
 
    private static JDRGroupListener groupListener = new JDRGroupListener();
 

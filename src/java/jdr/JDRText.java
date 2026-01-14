@@ -635,7 +635,7 @@ public class JDRText extends JDRCompleteObject
    {
       TextLayout tl = new TextLayout(text, font, frc);
 
-      return tl.getOutline(jdrtransform.getAffineTransform());
+      return tl.getOutline(jdrtransform.copyAffineTransform());
    }
 
    /**
@@ -992,7 +992,7 @@ public class JDRText extends JDRCompleteObject
 
       double bpToStorage = cg.bpToStorage(1.0);
 
-      AffineTransform af = jdrtransform.getAffineTransform();
+      AffineTransform af = jdrtransform.copyAffineTransform();
 
       if (parentFrame == null)
       {
@@ -1057,7 +1057,7 @@ public class JDRText extends JDRCompleteObject
 
       double bpToStorage = cg.bpToStorage(1.0);
 
-      AffineTransform af = jdrtransform.getAffineTransform();
+      AffineTransform af = jdrtransform.copyAffineTransform();
       af.scale(bpToStorage, bpToStorage);
 
       Shape outline = layout.getOutline(af);
@@ -1103,7 +1103,7 @@ public class JDRText extends JDRCompleteObject
 
       Graphics2D g2 = cg.getGraphics();
 
-      AffineTransform af = jdrtransform.getAffineTransform();
+      AffineTransform af = jdrtransform.copyAffineTransform();
 
       AffineTransform oldAf = g2.getTransform();
 
@@ -2008,7 +2008,6 @@ public class JDRText extends JDRCompleteObject
       setCanvasGraphics(cg);
       textPaint.applyCanvasGraphics(cg);
       jdrtransform.applyCanvasGraphics(cg);
-      updateBounds();
    }
 
    public void setOutlineMode(boolean enable)

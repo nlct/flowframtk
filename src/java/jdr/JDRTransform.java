@@ -59,12 +59,15 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public JDRTransform(CanvasGraphics cg)
    {
-      this(new BBox(cg, 0,0,0,0));
+      canvasGraphics = cg;
+      originalBounds = new Rectangle2D.Double();
+      affineTransform = new AffineTransform();
    }
 
    public JDRTransform()
    {
-      this(new BBox(null, 0,0,0,0));
+      originalBounds = new Rectangle2D.Double();
+      affineTransform = new AffineTransform();
    }
 
    /**
@@ -74,9 +77,9 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public JDRTransform(CanvasGraphics cg, double[] matrix)
    {
-      this(new BBox(cg, 0,0,0,0));
-
-      setTransformation(matrix);
+      canvasGraphics = cg;
+      originalBounds = new Rectangle2D.Double();
+      affineTransform = new AffineTransform(matrix);
    }
 
    /**
@@ -86,7 +89,14 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public JDRTransform(CanvasGraphics cg, Rectangle2D orgBounds)
    {
-      this(new BBox(cg, orgBounds));
+      canvasGraphics = cg;
+
+      originalBounds = new Rectangle2D.Double(
+           orgBounds.getX(), orgBounds.getY(),
+           orgBounds.getWidth(), orgBounds.getHeight());
+
+      affineTransform = new AffineTransform();
+      transformChanged();
    }
 
    /**
@@ -96,13 +106,14 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public JDRTransform(BBox orgBounds)
    {
-      setCanvasGraphics(orgBounds.getCanvasGraphics());
+      canvasGraphics = orgBounds.getCanvasGraphics();
 
       originalBounds = new Rectangle2D.Double(
            orgBounds.getMinX(), orgBounds.getMinY(),
            orgBounds.getWidth(), orgBounds.getHeight());
 
       affineTransform = new AffineTransform();
+      transformChanged();
    }
 
    /**
@@ -119,6 +130,8 @@ public class JDRTransform implements Cloneable,Serializable
          trans.originalBounds.getY(),
          trans.originalBounds.getWidth(),
          trans.originalBounds.getHeight());
+
+      transformChanged();
    }
 
    /**
@@ -133,6 +146,7 @@ public class JDRTransform implements Cloneable,Serializable
       double ty = affineTransform.getTranslateY();
 
       affineTransform.setToTranslation(tx, ty);
+      transformChanged();
    }
 
    /**
@@ -142,6 +156,7 @@ public class JDRTransform implements Cloneable,Serializable
    public void updateOriginalBounds(Rectangle2D orgBounds)
    {
       originalBounds.setRect(orgBounds);
+      transformChanged();
    }
 
    /**
@@ -152,6 +167,7 @@ public class JDRTransform implements Cloneable,Serializable
    {
       originalBounds.setRect(orgBounds.getMinX(), orgBounds.getMinY(),
          orgBounds.getWidth(), orgBounds.getHeight());
+      transformChanged();
    }
 
    /**
@@ -161,18 +177,30 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public void setTransformation(double[] matrix)
    {
-      affineTransform.setTransform(matrix[0], matrix[1],
-       matrix[2], matrix[3], matrix[4], matrix[5]);
+      setTransformation(matrix[0], matrix[1], matrix[2], matrix[3],
+       matrix[4], matrix[5]);
+   }
+
+   public void setTransformation(double m00, double m10, double m01, double m11,
+      double m02, double m12)
+   {
+      affineTransform.setTransform(m00, m10, m01, m11, m02, m12);
+      transformChanged();
+   }
+
+   @Deprecated
+   public AffineTransform getAffineTransform()
+   {
+      return copyAffineTransform();
    }
 
    /**
-    * Gets the affine transformation.
-    * NB this is no longer a copy.
-    * @return the affine transform
+    * Gets a copy of the affine transformation.
+    * @return a new affine transform with the same matrix as this
     */
-   public AffineTransform getAffineTransform()
+   public AffineTransform copyAffineTransform()
    {
-      return affineTransform;
+      return new AffineTransform(affineTransform);
    }
 
    /**
@@ -183,6 +211,7 @@ public class JDRTransform implements Cloneable,Serializable
    public void getTransformation(double[] matrix)
    {
       affineTransform.getMatrix(matrix);
+      transformChanged();
    }
 
    /**
@@ -192,8 +221,18 @@ public class JDRTransform implements Cloneable,Serializable
    public void makeEqual(JDRTransform t)
    {
       affineTransform.setTransform(t.affineTransform);
-      updateOriginalBounds(t.getOriginalBBox());
-      setCanvasGraphics(t.getCanvasGraphics());
+      originalBounds.setRect(t.originalBounds);
+      canvasGraphics = t.canvasGraphics;
+
+      if (t.transformedBounds == null)
+      {
+         transformedBounds = null;
+      }
+      else
+      {
+         transformedBounds = new Rectangle2D.Double();
+         transformedBounds.setRect(t.transformedBounds);
+      }
    }
 
    /**
@@ -202,8 +241,13 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public JDRPoint getTopLeft()
    {
-      BBox box = getBBox();
-      return new JDRPoint(getCanvasGraphics(), box.getMinX(), box.getMinY());
+      if (transformedBounds == null)
+      {
+         transformChanged();
+      }
+
+      return new JDRPoint(canvasGraphics,
+        transformedBounds.getX(), transformedBounds.getY());
    }
 
    /**
@@ -245,9 +289,14 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public JDRPoint getCentre()
    {
-      BBox box = getBBox();
-      return new JDRPoint(getCanvasGraphics(), box.getMinX()+0.5*box.getWidth(),
-                           box.getMinY()+0.5*box.getHeight());
+      if (transformedBounds == null)
+      {
+         transformChanged();
+      }
+
+      return new JDRPoint(canvasGraphics,
+         transformedBounds.getX()+0.5*transformedBounds.getWidth(),
+         transformedBounds.getY()+0.5*transformedBounds.getHeight());
    }
 
    /**
@@ -268,7 +317,7 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public BBox getOriginalBBox()
    {
-      return new BBox(getCanvasGraphics(), originalBounds);
+      return new BBox(canvasGraphics, originalBounds);
    }
 
    /**
@@ -277,8 +326,12 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public BBox getBBox()
    {
-      return new BBox(getCanvasGraphics(), 
-        affineTransform.createTransformedShape(originalBounds).getBounds2D());
+      if (transformedBounds == null)
+      {
+         transformChanged();
+      }
+
+      return new BBox(canvasGraphics, transformedBounds);
    }
 
    /**
@@ -289,6 +342,7 @@ public class JDRTransform implements Cloneable,Serializable
    public void transform(JDRObject object)
    {
       object.transform(affineTransform);
+      transformChanged();
    }
 
    /**
@@ -299,6 +353,7 @@ public class JDRTransform implements Cloneable,Serializable
    public void concat(AffineTransform trans)
    {
       affineTransform.concatenate(trans);
+      transformChanged();
    }
 
    /**
@@ -329,6 +384,7 @@ public class JDRTransform implements Cloneable,Serializable
    public void preConcatenate(AffineTransform trans)
    {
       affineTransform.preConcatenate(trans);
+      transformChanged();
    }
 
    /**
@@ -343,6 +399,7 @@ public class JDRTransform implements Cloneable,Serializable
       double ty = affineTransform.getTranslateY();
 
       affineTransform.translate(x-tx, y-ty);
+      transformChanged();
    }
 
    /**
@@ -361,6 +418,7 @@ public class JDRTransform implements Cloneable,Serializable
       double ty = affineTransform.getTranslateY();
 
       affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx+x, ty+y);
+      transformChanged();
    }
 
    /**
@@ -383,7 +441,8 @@ public class JDRTransform implements Cloneable,Serializable
    public void rotate(Point2D p, double angle)
    {
       affineTransform.preConcatenate(
-       AffineTransform.getRotateInstance(angle, p.getX(), p.getY()));
+        AffineTransform.getRotateInstance(angle, p.getX(), p.getY()));
+      transformChanged();
    }
 
    /**
@@ -394,9 +453,13 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public void scale(double factorX, double factorY)
    {
-      BBox box = getBBox();
-      double x = box.getMinX();
-      double y = box.getMinY();
+      if (transformedBounds == null)
+      {
+         transformChanged();
+      }
+
+      double x = transformedBounds.getMinX();
+      double y = transformedBounds.getMinY();
 
       double scaleX = affineTransform.getScaleX() * factorX;
       double scaleY = affineTransform.getScaleY() * factorY;
@@ -406,6 +469,7 @@ public class JDRTransform implements Cloneable,Serializable
       double ty = (affineTransform.getTranslateY() - y) * factorY + y;
 
       affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx, ty);
+      transformChanged();
    }
 
    /**
@@ -427,6 +491,7 @@ public class JDRTransform implements Cloneable,Serializable
       double ty = (affineTransform.getTranslateY() - y) * factorY + y;
 
       affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx, ty);
+      transformChanged();
    }
 
    /**
@@ -437,9 +502,13 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public void shear(double factorX, double factorY)
    {
-      BBox box = getBBox();
-      double x = box.getMinX();
-      double y = box.getMaxY();
+      if (transformedBounds == null)
+      {
+         transformChanged();
+      }
+
+      double x = transformedBounds.getMinX();
+      double y = transformedBounds.getMaxY();
 
       double scaleX = affineTransform.getScaleX();
       double scaleY = affineTransform.getScaleY();
@@ -456,6 +525,8 @@ public class JDRTransform implements Cloneable,Serializable
         tx - factorX * ty + x,
         ty - factorY * tx + y
       );
+
+      transformChanged();
    }
 
    /**
@@ -483,6 +554,8 @@ public class JDRTransform implements Cloneable,Serializable
         tx - factorX * ty + x,
         ty - factorY * tx + y
       );
+
+      transformChanged();
    }
 
    /**
@@ -601,18 +674,29 @@ public class JDRTransform implements Cloneable,Serializable
 
    public String info()
    {
-      double[] flatmatrix = new double[6];
-      affineTransform.getMatrix(flatmatrix);
+     return String.format("[[%f,%f,%f][%f,%f,%f]]",
+        affineTransform.getScaleX(),
+        affineTransform.getShearX(),
+        affineTransform.getTranslateX(),
+        affineTransform.getScaleY(),
+        affineTransform.getShearY(),
+        affineTransform.getTranslateY()
+      );
+   }
 
-      return "["
-        + "["+flatmatrix[0]+","+flatmatrix[2]+","+flatmatrix[4]+"]"
-        + "["+flatmatrix[1]+","+flatmatrix[3]+","+flatmatrix[5]+"]"
-        + "]";
+   private void transformChanged()
+   {
+      if (originalBounds != null && canvasGraphics != null)
+      {
+         Shape shape = affineTransform.createTransformedShape(originalBounds);
+         transformedBounds = shape.getBounds2D();
+      }
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)
    {
       canvasGraphics = cg;
+      transformChanged();
    }
 
    public CanvasGraphics getCanvasGraphics()
@@ -640,12 +724,18 @@ public class JDRTransform implements Cloneable,Serializable
 
          affineTransform.setTransform(scaleX, shearY,
            shearX, scaleY, x, y);
+
+         originalBounds.setRect(
+            originalBounds.getX() * factor,
+            originalBounds.getY() * factor,
+            originalBounds.getWidth() * factor,
+            originalBounds.getHeight() * factor);
       }
 
       setCanvasGraphics(cg);
    }
 
-   private Rectangle2D originalBounds;
+   private Rectangle2D originalBounds, transformedBounds;
    private AffineTransform affineTransform;
 
    private CanvasGraphics canvasGraphics;
