@@ -11049,6 +11049,16 @@ Specifies the \textattr{anchor} (\sectionref{sec:fontanchor}).
 
 \end{deflist}
 
+The selected font may not support the chosen attributes.
+For example, if \widget{font.shape} is set to 
+\widget{font.shape.sc} the text on the \gls{canvas} won't be
+rendered in small-caps, but changing the \widget{font.shape}
+will also change the associated \LaTeX\ command (\gls{upshape} for
+small-caps) so the text may be rendered as small-caps if the image
+is exported to a \LaTeX\ file. If it still doesn't show as
+small-caps in the \LaTeX\ document, check the log file for font
+messages.
+
 \subsection{Font Family}\label{sec:fontfamily}
 
 \menudef{menu.edit.textarea.font.family}
@@ -11239,10 +11249,34 @@ The available choices are:
 The \widget{font.shape.upright} item indicates upright and
 will automatically set the \LaTeX\ alternative to \gls{upshape}.
 
+\widgetdef{font.shape.em}
+
+The \widget{font.shape.em} item indicates emphasized and
+will automatically set the \LaTeX\ alternative to \gls{em}.
+This setting may appear as italic or slanted when the text is
+\glslink{rendering}{rendered} on the \gls{canvas} depending on the
+font.
+
 \widgetdef{font.shape.italic}
 
 The \widget{font.shape.italic} item indicates italic and
-will automatically set the \LaTeX\ alternative to \gls{em}.
+will automatically set the \LaTeX\ alternative to \gls{itshape}.
+This setting may appear as slanted rather than italic when the text is
+\glslink{rendering}{rendered} on the \gls{canvas} depending on the
+font.
+
+\widgetdef{font.shape.slanted}
+
+The \widget{font.shape.slanted} item indicates slanted (oblique) and
+will automatically set the \LaTeX\ alternative to \gls{slshape}.
+This setting may appear as italic when the text is
+\glslink{rendering}{rendered} on the \gls{canvas} depending on the
+font.
+
+\widgetdef{font.shape.sc}
+
+The \widget{font.shape.slanted} item indicates small-caps and
+will automatically set the \LaTeX\ alternative to \gls{scshape}.
 
 \FloatFig{fig:setfontshape}
 {\includeimg{annoteFontShape}}

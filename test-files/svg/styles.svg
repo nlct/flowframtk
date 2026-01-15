@@ -1,4 +1,4 @@
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
 
   <style>
         <![CDATA[
@@ -34,6 +34,10 @@
   <text x="40" y="40" rotate="45 90" class="sample">Some text #1 with <a href="https://github.com/nlct/flowframtk">a link</a></text>
 
   <text x="20" y="80" class="sample">Some <tspan class="sample2">other</tspan> text containing a link with awkward characters <a class="url" href="https://www.dickimaw-books.com/news.php?action=search&amp;searchstring=flowframtk%20released">https://www.dickimaw-books.com/news.php?action=search&amp;searchstring=flowframtk%20released</a></text>
+
+  <text x="10" y="100" style="font-weight: bold; font-variant: small-caps; font-size: 14;">Some more text.</text>
+
+  <text x="10" y="120" font-style="italic">Some more text.</text>
 
   <!-- using my graphical objects -->
   <use x="5" y="10" href="#Circle" class="circleClass" />

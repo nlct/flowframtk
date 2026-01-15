@@ -174,7 +174,11 @@ public class FontPanel extends JScrollPane
 
       fontShape = new JComboBox<String>(
          new String[] {getResources().getMessage("font.shape.upright"),
-                       getResources().getMessage("font.shape.italic")});
+                       getResources().getMessage("font.shape.em"),
+                       getResources().getMessage("font.shape.italic"),
+                       getResources().getMessage("font.shape.slanted"),
+                       getResources().getMessage("font.shape.sc")
+                      });
       fontShapeLabel.setLabelFor(fontShape);
       constraints.gridx = 1;
       p.add(fontShape, constraints);
@@ -396,8 +400,7 @@ public class FontPanel extends JScrollPane
 
    public void setFontShape(int shape)
    {
-      // Java Font only supports upright/italic
-      fontShape.setSelectedIndex(Math.min(shape, fontShape.getItemCount()-1));
+      fontShape.setSelectedIndex(shape);
    }
 
    public void setDefaults()

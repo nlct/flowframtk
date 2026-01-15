@@ -2301,6 +2301,9 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="font.shape.mnemonic">P</entry>
 <entry key="font.shape.italic">Italic</entry>
 <entry key="font.shape.upright">Upright</entry>
+<entry key="font.shape.em">Emphasized</entry>
+<entry key="font.shape.slanted">Slanted</entry>
+<entry key="font.shape.sc">Small-Caps</entry>
 <entry key="font.size">Font Size</entry>
 <entry key="font.size.mnemonic">Z</entry>
 <entry key="font.default">SansSerif</entry>

@@ -28,7 +28,7 @@ public class SVGFontVariantAttribute extends SVGAbstractAttribute
       }
       else if (valueString.equals("small-caps"))
       {
-         isInherit = true;
+         isInherit = false;
          isSmallCaps = true;
       }
       else

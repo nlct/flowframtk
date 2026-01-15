@@ -49,7 +49,10 @@ public class FontShapePanel extends JPanel implements ItemListener
 
       fontShape = new JComboBox<String>(
          new String[] {getResources().getMessage("font.shape.upright"),
-                       getResources().getMessage("font.shape.italic")});
+                       getResources().getMessage("font.shape.em"),
+                       getResources().getMessage("font.shape.italic"),
+                       getResources().getMessage("font.shape.slanted"),
+                       getResources().getMessage("font.shape.sc")});
       fontShapeLabel.setLabelFor(fontShape);
       add(fontShape);
 

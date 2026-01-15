@@ -81,6 +81,12 @@ public class SVGTextElement extends SVGAbstractElement
    @Override
    public void startElement() throws InvalidFormatException
    {
+      templateText = new JDRText(getCanvasGraphics(),
+         handler.createDefaultFont(), "");
+
+      templateText.setTextPaint(handler.createDefaultTextPaint());
+      applyTextAttributes(templateText);
+
       xArray = getLengthArrayAttribute("x", false);
       yArray = getLengthArrayAttribute("y", false);
       dxArray = getLengthArrayAttribute("dx", false);
@@ -267,13 +273,12 @@ public class SVGTextElement extends SVGAbstractElement
 
       Point2D p = new Point2D.Double(x, y);
 
-      JDRText textArea = new JDRText(cg, p, handler.createDefaultFont(),
-        text);
+      JDRText textArea = new JDRText(cg, p, templateText.getJDRFont(), text);
+
+      textArea.setTextPaint(templateText.getTextPaint());
 
       setLaTeXText(textArea);
       handler.setLastTextPosition(p);
-
-      textArea.setTextPaint(handler.createDefaultTextPaint());
 
       if (angle != null)
       {
@@ -306,8 +311,6 @@ public class SVGTextElement extends SVGAbstractElement
       {
          textArea.setDescription(desc.replaceAll("\\R", " "));
       }
-
-      applyTextAttributes(textArea);
 
       double width = textArea.getWidth();
 
@@ -360,6 +363,7 @@ public class SVGTextElement extends SVGAbstractElement
    String title, description;
    JDRGroup objects;
    int currentListIndex, maxListItems;
+   JDRText templateText;
 
    SVGLength[] xArray;
    SVGLength[] yArray;

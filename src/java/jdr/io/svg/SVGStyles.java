@@ -28,10 +28,14 @@ public class SVGStyles extends HashMap<SVGStyles.Rule,SVGAttributeSet>
       }
    }
 
-   public void putRule(String selectorElem, String selectorId,
+   public Rule putRule(String selectorElem, String selectorId,
      String selectorClass, SVGAttributeSet atSet)
    {
-      put(new Rule(selectorElem, selectorId, selectorClass), atSet);
+      Rule rule = new Rule(selectorElem, selectorId, selectorClass);
+
+      put(rule, atSet);
+
+      return rule;
    }
 
    public void addRules(String selectorRules, SVGAttributeSet atSet)
@@ -235,6 +239,14 @@ public class SVGStyles extends HashMap<SVGStyles.Rule,SVGAttributeSet>
          }
 
          return false;
+      }
+
+      @Override
+      public String toString()
+      {
+         return String.format("%s[selector=%s,element=%s,id=%s,class=%s,comparator=%s]",
+          getClass().getSimpleName(), selector, selectorElement,
+           selectorId, selectorClass, comparator);
       }
 
       private String selector="";
