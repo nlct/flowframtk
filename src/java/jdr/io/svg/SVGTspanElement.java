@@ -19,28 +19,37 @@ public class SVGTspanElement extends SVGTextElement
       return "tspan";
    }
 
-   @Override
-   public void startElement() throws InvalidFormatException
+   protected void assignTextAncestor() throws SVGException
    {
-      super.startElement();
-
       textElement = getTextAncestor();
 
       if (textElement == null)
       {
          throw new ElementNotInsideException(this, "text");
       }
+   }
 
-      textElement.process();
+   @Override
+   public void startElement() throws InvalidFormatException
+   {
+      super.startElement();
 
-      x = textElement.x;
-      y = textElement.y;
+      assignTextAncestor();
 
+      if (textElement != null)
+      {
+         textElement.process();
+
+         x = textElement.x;
+         y = textElement.y;
+      }
    }
 
    @Override
    public void endElement() throws InvalidFormatException
    {
+      if (textElement == null) return;
+
       super.endElement();
 
       textElement.x = x;
