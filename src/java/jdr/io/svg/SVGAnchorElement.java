@@ -21,57 +21,76 @@ public class SVGAnchorElement extends SVGTspanElement
       return "a";
    }
 
+   protected void assignTextAncestor() throws SVGException
+   {
+      textElement = getTextAncestor();
+
+      if (textElement == null)
+      {
+         throw new ElementNotSupportedOutsideException(this, "text");
+      }
+   }
+
    @Override
    public void startElement() throws InvalidFormatException
    {
       String ref = getHref();
 
-      if (ref == null)
+      if (ref != null && !ref.isEmpty())
       {
-         throw new ElementMissingAttributeException(this, "href");
-      }
-
-      try
-      {
-         URI uriRef = new URI(ref);
-
-         StringBuilder buffer = new StringBuilder();
-
-         String href = uriRef.toASCIIString();
-
-         for (int i = 0; i < href.length(); i++)
+         try
          {
-            char c = href.charAt(i);
+            URI uriRef = new URI(ref);
 
-            switch (c)
+            String path = uriRef.getRawPath();
+
+            if (path == null || path.isEmpty())
             {
-               case '\\' :
-               case '^' :
-               case '~' :
-               case '$' :
-               case '_' :
-               case '{' :
-               case '}' :
-               case ' ' :
-                  buffer.append("\\%");
-                  buffer.append(String.format("%02x", (int)c));
-               break;
-               case '&' :
-               case '#' :
-               case '%' :
-                  buffer.append("\\");
-                  buffer.appendCodePoint(c);
-               break;
-               default :
-                  buffer.appendCodePoint(c);
+               throw new InternalRefUnsupportedException(this, ref);
             }
-         }
 
-         uriLaTeXRef = buffer.toString();
-      }
-      catch (Exception e)
-      {
-         throw new InvalidAttributeValueException(this, "href", ref, e);
+            StringBuilder buffer = new StringBuilder();
+
+            String href = uriRef.toASCIIString();
+
+            for (int i = 0; i < href.length(); i++)
+            {
+               char c = href.charAt(i);
+
+               switch (c)
+               {
+                  case '\\' :
+                  case '^' :
+                  case '~' :
+                  case '$' :
+                  case '_' :
+                  case '{' :
+                  case '}' :
+                  case ' ' :
+                     buffer.append("\\%");
+                     buffer.append(String.format("%02x", (int)c));
+                  break;
+                  case '&' :
+                  case '#' :
+                  case '%' :
+                     buffer.append("\\");
+                     buffer.appendCodePoint(c);
+                  break;
+                  default :
+                     buffer.appendCodePoint(c);
+               }
+            }
+
+            uriLaTeXRef = buffer.toString();
+         }
+         catch (SVGException e)
+         {
+            handler.warning(e);
+         }
+         catch (Exception e)
+         {
+            throw new InvalidAttributeValueException(this, "href", ref, e);
+         }
       }
 
       super.startElement();
