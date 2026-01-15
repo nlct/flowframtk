@@ -2947,8 +2947,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="processes.timeout">Time-out:</entry>
 <entry key="processes.timeout.mnemonic">M</entry>
 <entry key="processes.millisecs">Milliseconds</entry>
-<entry key="processes.support_eps_svg">Support export to PostScript and SVG</entry>
-<entry key="processes.support_eps_svg.initvalue">false</entry>
+<entry key="processes.support_eps">Support export to EPS</entry>
+<entry key="processes.support_eps.initvalue">false</entry>
+<entry key="processes.support_svg">Support export to SVG</entry>
+<entry key="processes.support_svg.initvalue">true</entry>
 
 <!--  TeX settings -->
 

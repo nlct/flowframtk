@@ -20,6 +20,16 @@
      \glslink{vectorgraphics}{vector}\slash\glslink{rastergraphics}{raster} graphics in XML.}
 }
 
+@abbreviation{eps,
+  prefix="an\space ",
+  prefixfirst="a~",
+  short="EPS",
+  long="encapsulated PostScript",
+  description={A self-contained PostScript document describing an
+image or drawing that can be included with another PostScript
+document}
+}
+
 @abbreviation{cag,
  short={CAG},
  long={constructive area geometry},
@@ -239,6 +249,7 @@ objects.}
 
 @command{marginpar}
 
+@command{href}
 @command{ifpdf}
 @command{pdfinfo}
 
@@ -435,6 +446,106 @@ or is the keyword \optfmt{user} followed by the width and height.}
   description={Don't enable debugging mode}
 }
 
+% SVG ELEMENTS AND ATTRIBUTES
+
+@indexplural{svg-element,text={SVG element}}
+
+@xmlelement{xmlelement.svg,
+ parent={svg-element},
+ name={\xmltagfmt{svg}}
+}
+
+@xmlelement{xmlelement.title,
+ name={\xmltagfmt{title}},
+ parent={svg-element}
+}
+
+@xmlelement{xmlelement.desc,
+ parent={svg-element},
+ name={\xmltagfmt{desc}}
+}
+
+@xmlelement{xmlelement.image,
+ parent={svg-element},
+ name={\xmltagfmt{image}}
+}
+
+@xmlelement{xmlelement.text,
+ parent={svg-element},
+ name={\xmltagfmt{text}}
+}
+
+@xmlelement{xmlelement.tspan,
+ parent={svg-element},
+ name={\xmltagfmt{tspan}}
+}
+
+@xmlelement{xmlelement.a,
+ parent={svg-element},
+ name={\xmltagfmt{a}}
+}
+
+@xmlelement{xmlelement.rect,
+ parent={svg-element},
+ name={\xmltagfmt{rect}}
+}
+
+@xmlelement{xmlelement.ellipse,
+ parent={svg-element},
+ name={\xmltagfmt{ellipse}}
+}
+
+@xmlelement{xmlelement.circle,
+ parent={svg-element},
+ name={\xmltagfmt{circle}}
+}
+
+@xmlelement{xmlelement.line,
+ parent={svg-element},
+ name={\xmltagfmt{line}}
+}
+
+@xmlelement{xmlelement.polyline,
+ parent={svg-element},
+ name={\xmltagfmt{polyline}}
+}
+
+@xmlelement{xmlelement.polygon,
+ parent={svg-element},
+ name={\xmltagfmt{polygon}}
+}
+
+@xmlelement{xmlelement.path,
+ parent={svg-element},
+ name={\xmltagfmt{path}}
+}
+
+@xmlelement{xmlelement.style,
+ parent={svg-element},
+ name={\xmltagfmt{style}}
+}
+
+@xmlelement{xmlelement.defs,
+ parent={svg-element},
+ name={\xmltagfmt{defs}}
+}
+
+@xmlelement{xmlelement.use,
+ parent={svg-element},
+ name={\xmltagfmt{use}}
+}
+
+@xmlelement{xmlelement.g,
+ parent={svg-element},
+ name={\xmltagfmt{g}}
+}
+
+@indexplural{svg-attribute,text={SVG attribute}}
+
+@xmlattribute{xmlattr.href,
+  parent={svg-attribute},
+  name={\xmlattrfmt{href}}
+}
 
 % GENERAL
 

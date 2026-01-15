@@ -132,8 +132,11 @@ public class ExportDialog extends JDialog
 
       pack();
 
-      supportEpsSvg = true;
-      setEpsSvgSupport(application.getSettings().isSupportExportEpsSvgEnabled());
+      supportEps = true;
+      supportSvg = true;
+
+      setEpsSupport(application.getSettings().isSupportExportEpsEnabled());
+      setSvgSupport(application.getSettings().isSupportExportSvgEnabled());
 
       fileTypeButtons[TYPE_PGF].setSelected(true);
 
@@ -592,7 +595,7 @@ public class ExportDialog extends JDialog
       writeDateCommentBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(writeDateCommentBox);
 
-      // Convert Bitmaps to EPS (EPS and SVG only)
+      // Convert Bitmaps to EPS (EPS and SVG only, which use DVI)
 
       bitmapsToEpsBox = resources.createAppCheckBox(
         "export", "bitmaps_to_eps", false, null);
@@ -668,33 +671,53 @@ public class ExportDialog extends JDialog
       comp.setMaximumSize(dim);
    }
 
-   public void setEpsSvgSupport(boolean enable)
+   public void setEpsSupport(boolean enable)
    {
-      if (supportEpsSvg != enable)
+      if (supportEps != enable)
       {
-         supportEpsSvg = enable;
+         supportEps = enable;
 
-         fileTypeButtons[TYPE_EPS].setVisible(supportEpsSvg);
-         fileTypeButtons[TYPE_SVG].setVisible(supportEpsSvg);
-         fileTypeButtons[TYPE_EPS].setEnabled(supportEpsSvg);
-         fileTypeButtons[TYPE_SVG].setEnabled(supportEpsSvg);
+         fileTypeButtons[TYPE_EPS].setVisible(supportEps);
+         fileTypeButtons[TYPE_EPS].setEnabled(supportEps);
 
-         if (supportEpsSvg)
+         if (supportEps)
          {
             exportFC.addChoosableFileFilter(
              fileTypeButtons[TYPE_EPS].getFileFilter());
+         }
+         else
+         {
+            exportFC.removeChoosableFileFilter(
+             fileTypeButtons[TYPE_EPS].getFileFilter());
+
+            if (currentFileTypeButton == fileTypeButtons[TYPE_EPS])
+            {
+               fileTypeButtons[TYPE_IMAGE_PDF].setSelected(true);
+            }
+         }
+      }
+   }
+
+   public void setSvgSupport(boolean enable)
+   {
+      if (supportSvg != enable)
+      {
+         supportSvg = enable;
+
+         fileTypeButtons[TYPE_SVG].setVisible(supportSvg);
+         fileTypeButtons[TYPE_SVG].setEnabled(supportSvg);
+
+         if (supportSvg)
+         {
             exportFC.addChoosableFileFilter(
              fileTypeButtons[TYPE_SVG].getFileFilter());
          }
          else
          {
             exportFC.removeChoosableFileFilter(
-             fileTypeButtons[TYPE_EPS].getFileFilter());
-            exportFC.removeChoosableFileFilter(
              fileTypeButtons[TYPE_SVG].getFileFilter());
 
-            if (currentFileTypeButton == fileTypeButtons[TYPE_EPS]
-             || currentFileTypeButton == fileTypeButtons[TYPE_SVG])
+            if (currentFileTypeButton == fileTypeButtons[TYPE_SVG])
             {
                fileTypeButtons[TYPE_IMAGE_PDF].setSelected(true);
             }
@@ -719,21 +742,27 @@ public class ExportDialog extends JDialog
         exportSettings.pdftopngApp,
         exportSettings.pdftopngOptions);
 
-      if (supportEpsSvg)
+      if (supportEps || supportSvg)
       {
          dviLaTeXPanel.initialise(
            exportSettings.dviLaTeXApp,
            exportSettings.dviLaTeXOptions);
 
-         dvipsPanel.initialise(
-           exportSettings.dvipsApp,
-           exportSettings.dvipsOptions);
+         if (supportEps)
+         {
+            dvipsPanel.initialise(
+              exportSettings.dvipsApp,
+              exportSettings.dvipsOptions);
+         }
 
-         dvisvgmPanel.initialise(
-           exportSettings.dvisvgmApp,
-           exportSettings.dvisvgmOptions);
+         if (supportSvg)
+         {
+            dvisvgmPanel.initialise(
+              exportSettings.dvisvgmApp,
+              exportSettings.dvisvgmOptions);
 
-         libGsFileField.setFileName(exportSettings.libgs);
+            libGsFileField.setFileName(exportSettings.libgs);
+         }
       }
 
       FlowFrame ff = image.getFlowFrame();
@@ -1557,7 +1586,7 @@ public class ExportDialog extends JDialog
    private JDRGroup image;
    private JFileChooser exportFC;
    private ExportSettings exportSettings;
-   private boolean supportEpsSvg;
+   private boolean supportEps, supportSvg;
 
 
    TeXFileFilter pgfFileFilter;

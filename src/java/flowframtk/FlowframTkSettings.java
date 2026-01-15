@@ -568,14 +568,36 @@ public class FlowframTkSettings
       return hasMinFlowFrameSty2_0; // flowfram v2.0 or above installed
    }
 
+   @Deprecated
    public boolean isSupportExportEpsSvgEnabled()
    {
-      return supportExportEpsSvg;
+      return supportExportEps && supportExportSvg;
    }
 
    public void setSupportExportEpsSvg(boolean enable)
    {
-      supportExportEpsSvg = enable;
+      supportExportEps = enable;
+      supportExportSvg = enable;
+   }
+
+   public boolean isSupportExportEpsEnabled()
+   {
+      return supportExportEps;
+   }
+
+   public void setSupportExportEps(boolean enable)
+   {
+      supportExportEps = enable;
+   }
+
+   public boolean isSupportExportSvgEnabled()
+   {
+      return supportExportSvg;
+   }
+
+   public void setSupportExportSvg(boolean enable)
+   {
+      supportExportSvg = enable;
    }
 
    @Deprecated
@@ -1605,7 +1627,8 @@ public class FlowframTkSettings
    private String bitmapCommand = "\\includegraphics";
 
    public ExportSettings exportSettings;
-   private boolean supportExportEpsSvg = false;
+   private boolean supportExportEps = false;
+   private boolean supportExportSvg = true;
 
    public Robot robot=null;
 

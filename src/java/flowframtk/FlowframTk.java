@@ -542,11 +542,11 @@ public class FlowframTk extends JFrame
          new File(appSettings.startDir));
 
       importFC.addChoosableFileFilter(acornDrawFileFilter);
+      importFC.addChoosableFileFilter(svgFileFilter);
 
       if (invoker.isExperimentalMode() || resources.isDebuggingOn())
       {
          importFC.addChoosableFileFilter(epsFileFilter);
-         importFC.addChoosableFileFilter(svgFileFilter);
       }
 
       importFC.setFileFilter(acornDrawFileFilter);
@@ -4734,16 +4734,39 @@ public class FlowframTk extends JFrame
       getSettings().setLaTeXOptions(path);
    }
 
-
+   @Deprecated
    public boolean isSupportExportEpsSvgEnabled()
    {
       return getSettings().isSupportExportEpsSvgEnabled();
    }
 
+   public boolean isSupportExportEpsEnabled()
+   {
+      return getSettings().isSupportExportEpsEnabled();
+   }
+
+   public boolean isSupportExportSvgEnabled()
+   {
+      return getSettings().isSupportExportSvgEnabled();
+   }
+
+   @Deprecated
    public void setSupportExportEpsSvg(boolean enable)
    {
-      getSettings().setSupportExportEpsSvg(enable);
-      exportDialog.setEpsSvgSupport(enable);
+      setSupportExportSvg(enable);
+      setSupportExportEps(enable);
+   }
+
+   public void setSupportExportSvg(boolean enable)
+   {
+      getSettings().setSupportExportSvg(enable);
+      exportDialog.setSvgSupport(enable);
+   }
+
+   public void setSupportExportEps(boolean enable)
+   {
+      getSettings().setSupportExportEps(enable);
+      exportDialog.setEpsSupport(enable);
    }
 
    public String getPdfToPngApp()

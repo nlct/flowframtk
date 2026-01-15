@@ -182,9 +182,10 @@ Pictures can be saved as (\sectionref{sec:saveimage}) or loaded
 (\sectionref{sec:loadimage}) from \FlowframTk's native \gls{JDR}
 (binary) or \gls{AJR} (plain text) file formats.
 
-Images can be imported from the \gls{Acorn-DrawFile-format}.
-\FlowframTk's experimental mode may provided additional import options, but
-they may not be fully functional.
+Images can be imported from \gls{svg} and the
+\gls{Acorn-DrawFile-format}, although not all features for either
+format are supported.  \FlowframTk's experimental mode may provided
+additional import options, but they may not be fully functional.
 
 Additionally, images can be exported (\sectionref{sec:exportimage}) as:
 
@@ -202,15 +203,22 @@ Additionally, images can be exported (\sectionref{sec:exportimage}) as:
 
     \item a PDF file (requires \TeX\ installation);
 
-    \item (only if \widget{processes.support_eps_svg} is on)
-     a PostScript file or \pgls{svg} file.
+    \item (only if \widget{processes.support_svg} is on)
+     \pgls{svg} file.
+
+    \item (only if \widget{processes.support_eps} is on)
+     \pgls{eps} file.
 \end{itemize}
 
 Note that some export functions, such as export to PDF use external
 processes, such as \app{pdflatex}.
 
 \begin{important}
-You can't import back from the files you can export to.
+All export formats lose information so even if \FlowframTk\ supports
+both export and import for a particular file format, you will not
+get back the same image. It's therefore important to also save your
+image using \FlowframTk's native \gls{JDR} or \gls{AJR} file
+formats.
 \end{important}
 
 The low-level \sty{pgf} basic layer commands are used during
@@ -1642,7 +1650,7 @@ your preferred default image command, which may be either
   {Configuration Dialog Box (Export Processes)}
 
 If you \filefn{export} your image to PDF or if you export to 
-PNG (or, if enabled, EPS or \gls{svg}) with the \widget{export.use_process} option on then
+PNG (or, if enabled, \gls{eps} or \gls{svg}) with the \widget{export.use_process} option on then
 \FlowframTk\ will first save the image as a \LaTeX\
 document and will then run external applications to create the
 desired file format. In order to do this, \FlowframTk\ needs to know
@@ -1656,19 +1664,41 @@ To reduce the chance of zombie processes, each process is run with a
 timer that will kill the process if it exceeds the value specified
 in the \widget{processes.timeout} box.
 
-\widgetdef{processes.support_eps_svg}
+\widgetdef{processes.support_eps}
 
 The DVI format was still widely in use when \gls{JpgfDraw} was first
-created (around 2005) so it was useful to be able to export to EPS.
+created (around 2005) so it was useful to be able to export to \gls{eps}.
 However, the DVI format has mostly fallen out of use so, to reduce
-clutter in the \dialog{export} dialog, the export functions that
-rely on the DVI format are no longer supported by default.  If you
-still require EPS or \gls{svg}, you need to enable support by
-ensuring that the \widget{processes.support_eps_svg} checkbox is
+clutter in the \dialog{export} dialog, the export to \gls{eps} is no
+supported by default.  (The non-processor export to \gls{eps} is limited
+and still a bit experimental.)
+
+If you still require export to \gls{eps}, you need to enable support by
+ensuring that the \widget{processes.support_eps} checkbox is
 selected. This will enable additional fields for \app{latex} (DVI
-format), \app{dvips} and \app{dvisvgm}. The \file{libgs} library is
-only applicable with \app{dvisvgm}, so you only need it if you
-intend to export to \gls{svg}.
+format) and \app{dvips}.
+
+\begin{warning}
+The \code{-E} switch for \app{dvips} can be problematic with
+graphical content. If you want \pgls{eps} file, 
+it's simpler to just select the \widget{export.bounds.image} option 
+in the \dialog{export} dialog.
+\end{warning}
+
+\widgetdef{processes.support_svg}
+
+As with export to \gls{eps}, the external processors used to create
+\pgls{svg} file also use \app{latex} (DVI format),
+but will use \app{dvisvgm} instead of \app{dvips}. The \file{libgs} library is only
+applicable with \app{dvisvgm}, so you only need it if you intend to
+export to \gls{svg} use external processors.
+
+Since the non-processor export to \gls{svg} can support most types of
+\glspl{object}, support for export to \gls{svg} is on by default.
+If you don't need this export format and you want to reduce the
+clutter in the \dialog{export} dialog, then you can switch off this
+setting by unchecking the \widget{processes.support_svg} checkbox.
+
 
 \subsection{\TeX\ Settings Dialog}\label{sec:texconfig}
 
@@ -3295,7 +3325,9 @@ as a \inlineglsdef{ext.tex}, \inlineglsdef{ext.sty},
 \inlineglsdef{ext.png} file. You may also export to a
 \inlineglsdef{ext.ps}, \inlineglsdef{ext.eps} or 
 \inlineglsdef{ext.svg} file, but you will need to enable export support for
-PostScript and \gls{svg} first.
+\gls{eps} or \gls{svg} (as applicable) first.
+The default setting enables support for \gls{svg} but not for
+\gls{eps}.
 
 \begin{warning}
 \FlowframTk\ only has very limited import capability, so I
@@ -3402,12 +3434,12 @@ PDF file.
 \itemtitle{\widget{export.eps}}
 
 \begin{itemdesc}
-The export to EPS function is no longer available by default but can
-be enabled with the \widget{processes.support_eps_svg} setting in 
+The export to \gls{eps} function is no longer available by default but can
+be enabled with the \widget{processes.support_eps} setting in 
 the \widget{processes.title} tab of the \dialog{config} dialog.
 
 This works in much the same way as the \widget{export.png} option.
-You can either get \FlowframTk\ to write the EPS content directly
+You can either get \FlowframTk\ to write the \gls{eps} content directly
 (which doesn't fully support all features) or you can use external
 processes to create the file from a temporary \LaTeX\ document.
 In this case, it's necessary to use the DVI \app{latex} rather than
@@ -3417,13 +3449,18 @@ In this case, it's necessary to use the DVI \app{latex} rather than
 \itemtitle{\widget{export.svg}}
 
 \begin{itemdesc}
-As with the export to EPS function, the export to \gls{svg} function is no
-longer available by default but can be enabled with the
-\widget{processes.support_eps_svg} setting in the
-\widget{processes.title} tab of the \dialog{config} dialog.
+The export to \gls{svg} function is available if the
+\widget{processes.support_svg} setting in the
+\widget{processes.title} tab of the \dialog{config} dialog is
+selected.
 
-This works in much the same way as the \widget{export.eps} option.
-In this case, \app{dvisvgm} is used instead of \app{dvips}.
+When using external processors, this function works in much the same
+way as the \widget{export.eps} option.  In this case, \app{dvisvgm}
+is used instead of \app{dvips}. Unless you need to use \LaTeX\
+features, such as fonts or the \LaTeX\ alternative text, the
+non-processor export to \gls{svg} produces neater code and any
+\glspl{object} that have descriptions will have the description included
+in a \xmlelem{title} element.
 \end{itemdesc}
 
 \end{deflist}
@@ -3645,6 +3682,27 @@ If \widget{export.textpathoutline.to_path} is selected, all
 \glspl{textpath} with the \textattr{outline} mode attribute set 
 will be exported as though they had been converted to a path (except that the 
 \meta{Java class name} will be \code{JDRTextPath}).
+
+\widgetdef{export.textareaoutline}
+
+If the export format doesn't support \gls{textarea} outlines, the
+\widget{export.textareaoutline} panel provides options to indicate
+what should be done if the image contains any \glspl{textarea} with 
+the \textattr{outline} mode on. Note that this option doesn't change
+the image itself but just governs the way the image is saved in the export
+file.
+
+\widgetdef{export.textareaoutline.ignore}
+
+If \widget{export.textareaoutline.ignore} is selected, all
+\glspl{textarea} will be exported as though the \textattr{outline} mode
+was off.
+
+\widgetdef{export.textareaoutline.to_path}
+
+If \widget{export.textareaoutline.to_path} is selected, all
+\glspl{textarea} with the \textattr{outline} mode attribute set 
+will be exported as though they had been converted to a path.
 
 \widgetdef{export.load_doc_class}
 
@@ -4183,25 +4241,70 @@ syntax error in a \gls{textarea} or \gls{textpath}.
 
 \seealsorefs{sec:texconfig,sec:preamble,sec:fontanchor}
 
-\subsection{Export to SVG or EPS}\label{sec:exportsvgeps}
+\subsection{Export to SVG}\label{sec:exportsvg}
+
+%\FloatFig{fig:exportsvgdialog}
+ %{\includeimg{exportsvgdialog}}
+ %{Export Dialog (SVG)}
+
+The export to \gls{svg} function is only available if the
+\widget{processes.support_svg} checkbox has been selected
+(in the \widget{processes.title} tab of the \dialog{config} dialog).
+
+\widgetdef{export.svg}
+
+The \widget{export.eps} function is similar to the \widget{export.png}
+function in that you can choose whether or not to use external tools to
+create the exported file.
+
+To create an \gls{svg} file of the current image, specify the target
+\ext+{svg} file in the \widget{export.file} field and
+make sure that the \widget{export.svg} radio button in the
+\dialog{export} dialog is selected. 
+
+The non-processor export to \gls{svg} produces cleaner code and will
+include any \gls{object} descriptions in a \xmlelem{title} element.
+However, this method doesn't support text outlines so the
+\widget{export.textpathoutline} and \widget{export.textareaoutline}
+panels will be available. If the text is converted to a path
+then the content of the \xmlelem{title} element will be the original text.
+
+If the \widget{export.use_process} checkbox is selected, a temporary
+\LaTeX\ file will be created, as for \widget{export.imagepdf}, but
+in this case \app{latex} not \app{pdflatex} is needed.  The
+\widget{processes.latex} processor panel and the
+\inlineglsdef{processes.dvisvgm} processor panel will be shown.
+Additionally, the \widget{processes.libgs} panel will be shown where
+you can optionally specify the path to the \file{libgs} library. You
+may leave this blank if this information can be obtained from the
+\gls{LIBGS} environment variable.
+
+\begin{warning}
+The DVI format is quite old and is more problematic than the newer
+PDF format engines. Unless you need \LaTeX\ features, such as alternative
+\LaTeX\ text for \glspl{textarea}, using \FlowframTk's native
+non-processor SVG export is simpler and produces more readable code.
+\end{warning}
+
+\subsection{Export to EPS}\label{sec:exporteps}
 
 \FloatFig{fig:exportepsdialog}
  {\includeimg{exportepsdialog}}
  {Export Dialog (EPS)}
 
-The export to \gls{svg} or EPS functions are only available if the
-\widget{processes.support_eps_svg} checkbox has been selected
+The export to \gls{eps} function is only available if the
+\widget{processes.support_eps} checkbox has been selected
 (in the \widget{processes.title} tab of the \dialog{config} dialog).
 
 \widgetdef{export.eps}
 
 The \widget{export.eps} function is similar to the \widget{export.png}
-in that you can choose whether or not to use external tools to
+function in that you can choose whether or not to use external tools to
 create the exported file. Note that \FlowframTk's support for
-exporting to EPS without an external tool is quite basic and may not
+exporting to \gls{eps} without an external tool is quite basic and may not
 work correctly.
 
-To create a PostScript file of the current image, specify the target
+To create \pgls{eps} file of the current image, specify the target
 \ext+{ps} or \ext+{eps} file in the \widget{export.file} field and
 make sure that the \widget{export.eps} radio button in the
 \dialog{export} dialog is selected. 
@@ -4220,45 +4323,20 @@ contains images. It's best to omit it and use the appropriate
 \widget{export.bounds} option.
 \end{warning}
 
-\widgetdef{export.svg}
-
-To create an \gls{svg} file of the current image, specify the target
-\ext+{svg} file in the \widget{export.file} field and
-make sure that the \widget{export.svg} radio button in the
-\dialog{export} dialog is selected. 
-
-The \widget{export.svg} function is much the same as
-\widget{export.eps} but in this case, if the  \widget{export.use_process} checkbox is
-selected, then the 
-\widget{processes.latex} processor panel and the
-\inlineglsdef{processes.dvisvgm} processor panel will be shown.
-Additionally, the \widget{processes.libgs} panel will be shown
-where you can optionally specify the path to the \file{libgs}
-library. You may leave this blank if this information can be
-obtained from the \gls{LIBGS} environment variable.
-
-\begin{warning}
-In both cases, \app{latex} rather than \app{pdflatex} is used to
-create a DVI file. The DVI format is quite old and is more
-problematic than the newer PDF format engines. Consider exporting to
-PDF and then converting from that instead.
-\end{warning}
-
 \widgetdef{export.bitmaps_to_eps}
 
-In either case, if the image contains any
-\glspl{bitmap}, \FlowframTk\ will attempt to convert
-them to EPS, where necessary, if the \widget{export.bitmaps_to_eps}.
+If the image contains any \glspl{bitmap}, \FlowframTk\ will attempt to convert
+them to \gls{eps}, where necessary, if the \widget{export.bitmaps_to_eps}.
 checkbox is selected.
 
 \begin{important}
 Note that PostScript does not support transparency.
 \end{important}
 
-As with the \widget{export.imagepdf} option, if the resulting \gls{svg} or EPS
-file has unexpected results or fails to be created, try exporting to
-a \LaTeX\ document (\widget{export.imagedoc}) and then manually building the
-document.
+As with the \widget{export.imagepdf} option, if the resulting
+\gls{svg} or \gls{eps} file has unexpected results or fails to be
+created, try exporting to a \LaTeX\ document
+(\widget{export.imagedoc}) and then manually building the document.
 
 \section{Import}\label{sec:importimage}
 
@@ -4269,8 +4347,8 @@ menu item, which will open the \dialog{import} dialog. The
 experimental mode may provide additional import options.
 
 \begin{information}
-There is currently only one file format type that is supported in
-normal (non-experimental) mode, and that is the
+There are currently only two file format types that are supported in
+normal (non-experimental) mode: \gls{svg} and the
 \gls{Acorn-DrawFile-format}.
 \end{information}
 
@@ -4285,7 +4363,8 @@ and also some differences.
 and columns, which will be implemented in \FlowframTk\ as
 \gls{flowframe} data;
 \item \FlowframTk\ currently can't extract embedded Sprite data
-but can extract embedded JPEG data;
+but can extract embedded JPEG data (if the
+\widget{import.extract_bitmaps} checkbox is on);
 \item \FlowframTk\ currently doesn't support Draw's transformed text;
 \item some basic conversion for the System Font, Selwyn, Latin1 and
 Latin2 is provided but characters from other fonts may not be
@@ -4293,7 +4372,7 @@ correctly converted;
 \item \FlowframTk\ doesn't support different $x$ and $y$ divisions
 in the \gls{grid};
 \item \FlowframTk's triangle markers are different from
-Draw's triangle markers;
+Draw's triangle markers but the best match will be chosen;
 \item \FlowframTk\ uses a left-handed \gls{co-ordinate} system so the 
 right-handed \glspl{co-ordinate} in the Draw file will be converted;
 \item since \gls{RISCOS} doesn't use dot file extensions, the file
@@ -4302,6 +4381,37 @@ chooser uses the \gls{RISCOS} \gls{NFS} style \ext+{aff} suffix
 followed by three hexadecimal digits}) for the
 \inlineglsdef{filter.acorndraw} filter in the file chooser.
 \end{itemize}
+
+When importing from \gls{svg}, \glspl{co-ordinate} or dimensions without
+units are assumed to be \gls{bp} but they will then be converted to the
+current \gls{storageunit}.  Only a limited subset of \gls{svg}
+elements and attributes are supported by the \gls{svg} import
+function. The following elements are recognised although they may
+not support all attributes:
+\begin{itemize}
+\item \xmlelem{svg} (the main container);
+\item \xmlelem{title} (used to set the image or object description);
+\item \xmlelem{desc} (if \xmlelem{title} not present, used to set
+the image or object description);
+\item \xmlelem{image} (the referenced image file must be
+local, either relative or prefixed with the \code{file} scheme);
+\item \xmlelem{text} (may produce a single \gls{textarea} or a
+\gls{group} of \glspl{textarea} depending on the attributes and
+content);
+\item \xmlelem{tspan} (may produce a single \gls{textarea} or a
+\gls{group} that will be added to the encapsulating \xmlelem{text}
+container's collection);
+\item \xmlelem{a} (restricted to within \xmlelem{text});
+\item shapes: \xmlelem{rect}, \xmlelem{ellipse},
+\xmlelem{circle}, \xmlelem{line}, \xmlelem{polyline},
+\xmlelem{polygon}, \xmlelem{path};
+\item \xmlelem{style} (only limited CSS support);
+\item \xmlelem{defs}, \xmlelem{use} (referenced element must be
+defined within the file);
+\item \xmlelem{g} (will add a \gls{group} if its content causes more
+than one \FlowframTk\ \gls{object} to be created).
+\end{itemize}
+
 
 \widgetdef{import.title}
 
@@ -4320,8 +4430,8 @@ file and accepted it, the file name will be set in the
 The following file types may be recognised:
 \begin{itemize}
 \item \gls{Acorn-DrawFile-format} (always available);
-\item EPS (\ext+{eps} or \ext+{ps}, only in experimental mode);
-\item \gls{svg} (\ext+{svg}, only in experimental mode).
+\item \gls{svg} (\ext+{svg}, always available).
+\item \gls{eps} (\ext+{eps} or \ext+{ps}, only in experimental mode);
 \end{itemize}
 Note that \FlowframTk\ doesn't probe the file to determine the file
 type but simply tests which file filter accepts the filename. 
@@ -4338,10 +4448,28 @@ some or all of the following settings may be ignored.
 If the \widget{import.use_mappings} checkbox is selected, any text
 found in the imported file will have the current
 \hyperref[mi:texmappings]{\TeX\ mappings}
-applied. Note that when importing from a
-\glslink{Acorn-DrawFile-format}{DrawFile}, any text
-lines that have the Selwyn font will be converted to \mathsmode, 
-and the \mathsmode\ mappings will be used.
+applied.
+
+When importing from a \glslink{Acorn-DrawFile-format}{DrawFile}, any
+text lines that have the Selwyn font will be converted to
+\mathsmode, and the \mathsmode\ mappings will be used, otherwise
+\mathsmode\ mappings will only be used if the text starts and end
+with \gls{mshift} and doesn't contain any \glssymbol{mshift} in between.
+
+When importing from \pgls{svg} file, \xmlelem{text} and \xmlelem{tspan}
+are supported but may be converted into either a single
+\gls{textarea} or a \gls{group} containing multiple
+\glspl{textarea}. Each \gls{textarea} will have mappings
+applied. If the text starts and ends with \gls{mshift} and doesn't
+contain any \glssymbol{mshift} in between, then the \mathsmode\
+mappings will be applied otherwise the \textmode\ mappings will be
+applied (if \widget{import.use_mappings} is checked).
+
+The \gls{svg} import setting only supports the \xmlelem{a} element
+inside a \xmlelem{text} container. If found, mappings will be
+applied as per \xmlelem{tspan} but the \LaTeX\ alternative text will
+then be encapsulated with \gls{href}. The import function does not
+support \xmlelem{a} outside of \xmlelem{text}.
 
 \widgetdef{import.extract_bitmaps}
 
@@ -4350,6 +4478,11 @@ any supported embedded \glspl{bitmap} will be extracted. If this checkbox
 is selected, the \widget{import.bitmap_dir} and
 \widget{import.bitmap_prefix} fields will be visible.
 
+This setting is not applicable with \gls{svg} files, which use a
+reference (\xmlattr{href}) in the \xmlelem{image} element, so the
+\widget{import.extract_bitmaps} button and associated fields won't
+be visible if the import type has been set to \gls{svg}.
+
 \widgetdef{import.bitmap_dir}
 
 The \widget{import.bitmap_dir} field may be used to specify the
@@ -4357,6 +4490,8 @@ destination directory for any extracted \glspl{bitmap}. If left
 empty, the current directory will be used. You can either type in
 the directory path or click on the \widget{selectfile}
 button on the right to open a directory chooser.
+The \widget{import.bitmap_dir} field will only be visible if the
+\widget{import.extract_bitmaps} button is both visible and selected.
 
 \widgetdef{import.bitmap_prefix}
 
@@ -4368,6 +4503,8 @@ field, \meta{n} is an integer that's incremented for each extracted
 If an import file is selected via the file chooser and the
 \widget{import.bitmap_prefix} field is empty, this field will be set to the
 file's basename.
+The \widget{import.bitmap_prefix} field will only be visible if the
+\widget{import.extract_bitmaps} button is both visible and selected.
 
 \section{Page Setup}\label{sec:pagesetup}
 
@@ -5130,8 +5267,8 @@ the \widget{bitmap_properties.auto_latexfilename} \gls*{checkbox}
 which will enable the
 \widget{bitmap_properties.latexfilename} field in which you
 can enter the argument to be used by the image command. If you use the
-export to PostScript or \gls{svg} function, \FlowframTk\ will
-attempt to create an EPS version of the bitmap (if it doesn't
+export to \gls{eps} or \gls{svg} function, \FlowframTk\ will
+attempt to create \pgls{eps} version of the bitmap (if it doesn't
 already exist) since \app{latex} (as opposed to
 \app{pdflatex}) can't include bitmap formats, such as PNG and
 JPEG.
@@ -6740,7 +6877,7 @@ has had its \gls{index.fill-colour} removed.
 
 \begin{warning}
 Note that PostScript doesn't support transparency so the
-alpha channel will be ignored if you \filefn{export} to PostScript.
+alpha channel will be ignored if you \filefn{export} to \pgls{eps}.
 \end{warning}
 
 \seealsorefs{

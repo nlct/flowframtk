@@ -1560,21 +1560,21 @@ public abstract class JDRShape extends JDRCompleteObject
          switch (type)
          {
             case PathIterator.SEG_MOVETO:
-              builder.append(String.format("M %f %f", coords[0], coords[1]));
+              builder.append(String.format("M %f %f ", coords[0], coords[1]));
             break;
             case PathIterator.SEG_LINETO:
-              builder.append(String.format("L %f %f", coords[0], coords[1]));
+              builder.append(String.format("L %f %f ", coords[0], coords[1]));
             break;
             case PathIterator.SEG_QUADTO:
-              builder.append(String.format("Q %f %f %f %f",
+              builder.append(String.format("Q %f %f %f %f ",
                 coords[0], coords[1], coords[2], coords[3]));
             break;
             case PathIterator.SEG_CUBICTO:
-              builder.append(String.format("C %f %f %f %f %f %f",
+              builder.append(String.format("C %f %f %f %f %f %f ",
                  coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]));
             break;
             case PathIterator.SEG_CLOSE:
-              builder.append("Z");
+              builder.append("Z ");
             break;
          }
 

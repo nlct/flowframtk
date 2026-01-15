@@ -975,11 +975,12 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       double height = bounds.getHeight();
 
       svg.println("      <marker id=\""+id+"\" ");
-      svg.println("         markerWidth=\""+svg.length(width)+"\" "
-                + "         markerHeight=\""+svg.length(height)+"\"");
+      svg.println("         markerWidth=\""+svg.length(width)+"\"");
+      svg.println("         markerHeight=\""+svg.length(height)+"\"");
       svg.println("         viewBox=\""+svg.length(0)+" "+svg.length(0)
-         +svg.length(width)+" " + svg.length(height)
-         +"\" refX=\""+svg.length(-minX)+"\" refY=\""+svg.length(-minY)+"\"");
+         +svg.length(width)+" " + svg.length(height) + "\"");
+      svg.println("         refX=\""+svg.length(-minX) + "\"");
+      svg.println("         refY=\""+svg.length(-minY) + "\"");
       svg.println("         markerUnits=\"strokeWidth\"");
       svg.println("         orient=\""+(autoOrient_?"auto":angle_.svg())+"\" >");
       svg.print("        <path d=\"");
@@ -993,11 +994,11 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
          {
             case PathIterator.SEG_MOVETO:
                svg.print("M "+svg.length(coords[0]-minX)
-                        +" "+svg.length(coords[1]-minY)+" ");
+                        +" "+svg.length(coords[1]-minY));
             break;
             case PathIterator.SEG_LINETO:
                svg.print("L "+svg.length(coords[0]-minX)
-                         +" "+svg.length(coords[1]-minY)+" ");
+                         +" "+svg.length(coords[1]-minY));
             break;
             case PathIterator.SEG_QUADTO:
                svg.print("S "+svg.length(coords[0]-minX)
@@ -1014,9 +1015,11 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
                          +" "+svg.length(coords[5]-minY));
             break;
             case PathIterator.SEG_CLOSE:
-               svg.print("Z ");
+               svg.print("Z");
             break;
          }
+
+         svg.print(" ");
 
          pi.next();
       }

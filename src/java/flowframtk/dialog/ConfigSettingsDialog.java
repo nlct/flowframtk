@@ -676,12 +676,24 @@ class ProcessesPanel extends JPanel implements ItemListener
 
       add(pdftopngPanel);
 
-      supportEpsSvgExportBox = resources.createAppCheckBox("processes",
-         "support_eps_svg", application.isSupportExportEpsSvgEnabled(), null);
-      supportEpsSvgExportBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-      supportEpsSvgExportBox.addItemListener(this);
+      row = Box.createHorizontalBox();
+      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(row);
 
-      add(supportEpsSvgExportBox);
+      supportSvgExportBox = resources.createAppCheckBox("processes",
+         "support_svg", application.isSupportExportSvgEnabled(), null);
+      supportSvgExportBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      supportSvgExportBox.addItemListener(this);
+
+      row.add(supportSvgExportBox);
+
+      supportEpsExportBox = resources.createAppCheckBox("processes",
+         "support_eps", application.isSupportExportEpsEnabled(), null);
+      supportEpsExportBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      supportEpsExportBox.addItemListener(this);
+
+      row.add(resources.createButtonSpacer());
+      row.add(supportEpsExportBox);
 
       label = resources.createAppLabel("processes.latex");
       grp.add(label);
@@ -736,27 +748,38 @@ class ProcessesPanel extends JPanel implements ItemListener
 
       add(Box.createVerticalGlue());
 
-      boolean supportDviOptions = supportEpsSvgExportBox.isSelected();
+      boolean supportSvg = supportSvgExportBox.isSelected();
+      boolean supportEps = supportEpsExportBox.isSelected();
+
+      boolean supportDviOptions = (supportSvg || supportEps);
 
       latexPanel.setVisible(supportDviOptions);
-      dvipsPanel.setVisible(supportDviOptions);
-      dvisvgmPanel.setVisible(supportDviOptions);
-      libgsInfoRow.setVisible(supportDviOptions);
-      libgsRow.setVisible(supportDviOptions);
+      dvipsPanel.setVisible(supportEps);
+      dvisvgmPanel.setVisible(supportSvg);
+      libgsInfoRow.setVisible(supportSvg);
+      libgsRow.setVisible(supportSvg);
    }
 
    @Override
    public void itemStateChanged(ItemEvent evt)
    {
-      if (evt.getSource() == supportEpsSvgExportBox)
+      Object src = evt.getSource();
+
+      if (src == supportEpsExportBox
+       || src == supportSvgExportBox)
       {
-         boolean supportDviOptions = supportEpsSvgExportBox.isSelected();
+         boolean supportSvg = supportSvgExportBox.isSelected();
+         boolean supportEps = supportEpsExportBox.isSelected();
+
+         boolean supportDviOptions = (supportSvg || supportEps);
 
          latexPanel.setVisible(supportDviOptions);
-         dvipsPanel.setVisible(supportDviOptions);
-         dvisvgmPanel.setVisible(supportDviOptions);
-         libgsInfoRow.setVisible(supportDviOptions);
-         libgsRow.setVisible(supportDviOptions);
+
+         dvipsPanel.setVisible(supportEps);
+
+         dvisvgmPanel.setVisible(supportSvg);
+         libgsInfoRow.setVisible(supportSvg);
+         libgsRow.setVisible(supportSvg);
       }
    }
 
@@ -770,9 +793,11 @@ class ProcessesPanel extends JPanel implements ItemListener
       pdftopngPanel.initialise(exportSettings.pdftopngApp,
         exportSettings.pdftopngOptions);
 
-      boolean supportDviOptions = application.isSupportExportEpsSvgEnabled();
+      boolean supportEps = application.isSupportExportEpsEnabled();
+      boolean supportSvg = application.isSupportExportSvgEnabled();
 
-      supportEpsSvgExportBox.setSelected(supportDviOptions);
+      supportEpsExportBox.setSelected(supportEps);
+      supportSvgExportBox.setSelected(supportSvg);
 
       latexPanel.initialise(exportSettings.dviLaTeXApp,
         exportSettings.dviLaTeXOptions);
@@ -802,13 +827,20 @@ class ProcessesPanel extends JPanel implements ItemListener
 
       exportSettings.timeout = timeoutModel.getNumber().longValue();
 
-      boolean supportDviOptions = supportEpsSvgExportBox.isSelected();
+      boolean supportEps = supportEpsExportBox.isSelected();
+      boolean supportSvg = supportSvgExportBox.isSelected();
 
-      if (application.isSupportExportEpsSvgEnabled()
-           != supportDviOptions)
+      if (application.isSupportExportEpsEnabled() != supportEps)
       {
-         application.setSupportExportEpsSvg(supportDviOptions);
+         application.setSupportExportEps(supportEps);
       }
+
+      if (application.isSupportExportSvgEnabled() != supportSvg)
+      {
+         application.setSupportExportSvg(supportSvg);
+      }
+
+      boolean supportDviOptions = (supportSvg || supportEps);
 
       if (supportDviOptions)
       {
@@ -816,15 +848,21 @@ class ProcessesPanel extends JPanel implements ItemListener
          exportSettings.dviLaTeXApp = latexPanel.getFileName();
          exportSettings.dviLaTeXOptions = latexPanel.getOptionArray();
 
-         // dvips
-         exportSettings.dvipsApp = dvipsPanel.getFileName();
-         exportSettings.dvipsOptions = dvipsPanel.getOptionArray();
+         if (supportEps)
+         {
+            // dvips
+            exportSettings.dvipsApp = dvipsPanel.getFileName();
+            exportSettings.dvipsOptions = dvipsPanel.getOptionArray();
+         }
 
-         // dvisvgm
-         exportSettings.dvisvgmApp = dvisvgmPanel.getFileName();
-         exportSettings.dvisvgmOptions = dvisvgmPanel.getOptionArray();
+         if (supportSvg)
+         {
+            // dvisvgm
+            exportSettings.dvisvgmApp = dvisvgmPanel.getFileName();
+            exportSettings.dvisvgmOptions = dvisvgmPanel.getOptionArray();
 
-         exportSettings.libgs = libgsField.getFileName();
+            exportSettings.libgs = libgsField.getFileName();
+         }
       }
    }
 
@@ -834,7 +872,7 @@ class ProcessesPanel extends JPanel implements ItemListener
      dvipsPanel, dvisvgmPanel, pdftopngPanel;
    private JComponent libgsRow, libgsInfoRow;
 
-   private JCheckBox supportEpsSvgExportBox;
+   private JCheckBox supportEpsExportBox, supportSvgExportBox;
 
    private JSpinner timeoutField;
    private SpinnerNumberModel timeoutModel;

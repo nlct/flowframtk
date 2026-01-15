@@ -497,7 +497,10 @@ public class SVG
       double xt = x;
       double yt = y;
 
-      print(unit.svg(xt)+" "+unit.svg(yt)+" ");
+      print(unit.svg(xt));
+      print(" ");
+      print(unit.svg(yt));
+      print(" ");
    }
 
    public void savePoint(Point2D p)

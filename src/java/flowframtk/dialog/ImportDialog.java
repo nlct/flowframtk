@@ -172,7 +172,10 @@ public class ImportDialog extends JDialog
          update(type, file);
       }
 
-      extractBitmapsButton.setVisible(type != ImportSettings.Type.SVG);
+      boolean embeddedBitmaps = (type != ImportSettings.Type.SVG);
+
+      extractBitmapsButton.setVisible(embeddedBitmaps);
+      bitmapComp.setVisible(embeddedBitmaps && extractBitmapsButton.isSelected());
 
       formatField.setText(getResources().getMessage("import.type."+type));
    }
@@ -256,7 +259,8 @@ public class ImportDialog extends JDialog
       }
 
       importSettings.useMappings = useMappingsButton.isSelected();
-      importSettings.extractBitmaps = extractBitmapsButton.isSelected();
+      importSettings.extractBitmaps =
+       extractBitmapsButton.isVisible() && extractBitmapsButton.isSelected();
 
       if (importSettings.extractBitmaps)
       {
