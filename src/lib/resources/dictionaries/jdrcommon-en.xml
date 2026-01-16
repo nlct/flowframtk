@@ -549,6 +549,7 @@ File doesn''t exist</entry>
 <entry key="error.acorn_drawfile.invalid_font_format">Invalid font format</entry>
 
 <entry key="error.svg.element_msg_prefix">Element {0}: {1}</entry>
+<entry key="error.svg.paren">({0})</entry>
 <entry key="error.svg.unknown_font_family">no font family available for ''{0}''</entry>
 <entry key="error.svg.cant_parse_attribute_value">can''t parse {0} value ''{1}''</entry>
 <entry key="error.svg.cant_parse_measurement">can''t parse measurement ''{0}''</entry>
@@ -573,6 +574,8 @@ File doesn''t exist</entry>
 <entry key="error.svg.path_data_unknown_command">path data specified by {0}: command expected found ''{1}''</entry>
 <entry key="error.svg.path_data_boolean_expected">path data specified by {0}: boolean 0 or 1 expected (found {1})</entry>
 <entry key="error.svg.coord_pairs_expected">co-ordinate pairs x1 y1 x2 y2 required in {0}</entry>
+<entry key="error.svg.no_associated_paint_for_id">no associated paint for id {0}</entry>
+<entry key="error.svg.no_associated_paint">no associated paint</entry>
 
 <!-- Internal Error Messages -->
 

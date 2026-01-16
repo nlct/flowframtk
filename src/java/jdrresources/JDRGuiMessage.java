@@ -169,8 +169,6 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
    private void doShow()
    {
-      debug("Showing message frame");
-
       if (!isInitialised)
       {
          debug("Message frame not initialised");
@@ -178,6 +176,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
       if (!frame.isVisible())
       {
+         debug("Showing message frame");
          frame.setVisible(true);
          frame.toFront();
       }
@@ -373,20 +372,28 @@ public class JDRGuiMessage extends JDRMessagePublisher
       if (!isSuspended)
       {
          String msg = excp.getLocalizedMessage();
+
          String classname = excp.getClass().getSimpleName();
          String text = resources.getMessageIfExists("error.throwable."+classname);
 
          if (text == null)
          {
-            text = classname;
+            if (msg == null)
+            {
+               text = classname;
+            }
+            else
+            {
+               text = msg;
+            }
          }
-
-         if (msg != null)
+         else if (msg != null)
          {
             text += ": " + msg;
          }
 
          warning(text);
+         resources.debugMessage(excp);
       }
    }
 

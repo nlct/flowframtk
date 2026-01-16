@@ -246,6 +246,11 @@ public class SVGHandler extends DefaultHandler
       }
    }
 
+   public void message(String msg)
+   {
+      verbose(1, msg);
+   }
+
    public void verbose(int level, String msg)
    {
       msgSystem.getPublisher().publishMessages(MessageInfo.createVerbose(level, msg));
@@ -254,6 +259,14 @@ public class SVGHandler extends DefaultHandler
    public void warning(Throwable e)
    {
       msgSystem.getPublisher().publishMessages(MessageInfo.createWarning(e));
+
+      Throwable cause = e.getCause();
+
+      if (cause instanceof SVGException)
+      {
+         message(getMessageWithFallback("error.svg.paren", "({0})",
+           cause.getLocalizedMessage()));
+      }
    }
 
    public void warning(String msg)
@@ -264,6 +277,14 @@ public class SVGHandler extends DefaultHandler
    public void error(Throwable e)
    {
       msgSystem.getPublisher().publishMessages(MessageInfo.createError(e));
+
+      Throwable cause = e.getCause();
+
+      if (cause instanceof SVGException)
+      {
+         warning(getMessageWithFallback("error.svg.paren", "({0})",
+           cause.getLocalizedMessage()));
+      }
    }
 
    public void fatalError(Throwable e)
@@ -400,10 +421,12 @@ public class SVGHandler extends DefaultHandler
       return null;
    }
 
-   public SVGAbstractElement getAttributeValueRef(SVGAbstractAttribute attr)
+   public SVGAbstractElement getAttributeValueRef(SVGAttribute attr)
      throws SVGException
    {
       String valueStr = attr.getSourceValue();
+
+      if (valueStr == null) return null;
 
       try
       {
@@ -439,5 +462,5 @@ public class SVGHandler extends DefaultHandler
    private HashMap<String,SVGAbstractElement> idElementMap;
 
    public static final Pattern URI_REF_VALUE_PATTERN
-    = Pattern.compile("url\\('(.+)'\\)");
+    = Pattern.compile("url\\('?(.+)'?\\)");
 }

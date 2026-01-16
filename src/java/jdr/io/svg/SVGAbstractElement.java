@@ -147,6 +147,7 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("font-variant", attr);
       addAttribute("font-weight", attr);
       addAttribute("font", attr);
+      addAttribute("fill", attr);
    }
 
    public static SVGAbstractElement getElement(
@@ -492,6 +493,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = SVGFontAttribute.valueOf(handler, value);
       }
+      else if (name.equals("fill"))
+      {
+         attr = SVGPaintAttribute.valueOf(this, name, value);
+      }
 
       return attr;
    }
@@ -503,8 +508,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
       if (name.equals("stroke"))
       {
-         attr = SVGPaintAttribute.valueOf(handler, name, value,
-            getPaintAttribute("color", null));
+         attr = SVGPaintAttribute.valueOf(this, name, value);
       }
       else if (name.equals("stroke-opacity"))
       {
@@ -512,8 +516,7 @@ public abstract class SVGAbstractElement implements Cloneable
       }
       else if (name.equals("fill"))
       {
-         attr = SVGPaintAttribute.valueOf(handler, name, value,
-            getPaintAttribute("color", null));
+         attr = SVGPaintAttribute.valueOf(this, name, value);
       }
       else if (name.equals("fill-opacity"))
       {
@@ -627,6 +630,11 @@ public abstract class SVGAbstractElement implements Cloneable
       return handler.getElement(id);
    }
 
+   public JDRPaint getPaint() throws SVGException
+   {
+      throw new NoElementPaintException(this);
+   }
+
    public JDRPaint getPaintAttribute(String attrName, JDRPaint defPaint)
    {
       SVGAttribute attr = getAttribute(attrName, null);
@@ -649,7 +657,7 @@ public abstract class SVGAbstractElement implements Cloneable
       return getPaintAttribute("fill", null);
    }
 
-   public JDRPaint getDefaultPaint()
+   public JDRPaint getCurrentPaint()
    {
       return getPaintAttribute("color", null);
    }
@@ -836,18 +844,35 @@ public abstract class SVGAbstractElement implements Cloneable
    public void applyTextAttributes(JDRTextual text)
      throws SVGException
    {
-      JDRPaint paint = getDefaultPaint();
+      JDRPaint paint = getFillPaint();
+      SVGNumberAttribute opacityAttr = null;
 
-      if (paint != null)
+      if (paint == null)
       {
-         text.setTextPaint(paint);
+         paint = getCurrentPaint();
+
+         if (paint == null)
+         {
+            paint = handler.createDefaultTextPaint();
+         }
+
+         opacityAttr = getNumberAttribute("opacity");
+      }
+      else
+      {
+         opacityAttr = getNumberAttribute("fill-opacity");
+
+         if (opacityAttr == null)
+         {
+            opacityAttr = getNumberAttribute("opacity");
+         }
       }
 
-      SVGNumberAttribute numAttr = getNumberAttribute("opacity");
+      text.setTextPaint(paint);
 
-      if (numAttr != null)
+      if (opacityAttr != null)
       {
-         text.getTextPaint().setAlpha(numAttr.doubleValue(this));
+         text.getTextPaint().setAlpha(opacityAttr.doubleValue(this));
       }
 
       SVGAttribute fontFam = getAttribute("font-family", null);

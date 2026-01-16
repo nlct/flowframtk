@@ -84,7 +84,6 @@ public class SVGTextElement extends SVGAbstractElement
       templateText = new JDRText(getCanvasGraphics(),
          handler.createDefaultFont(), "");
 
-      templateText.setTextPaint(handler.createDefaultTextPaint());
       applyTextAttributes(templateText);
 
       xArray = getLengthArrayAttribute("x", false);

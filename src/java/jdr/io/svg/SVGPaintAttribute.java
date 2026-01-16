@@ -17,132 +17,173 @@ public class SVGPaintAttribute implements SVGAttribute
       this.name = attrName;
    }
 
-   public static SVGPaintAttribute valueOf(SVGHandler handler, String attrName, String valueString)
-   throws SVGException
+   protected SVGPaintAttribute(SVGAbstractElement element, String attrName)
    {
-      return valueOf(handler, attrName, valueString, null);
+      this.handler = element.getHandler();
+      this.name = attrName;
+      this.elementOwner = element;
    }
 
-   public static SVGPaintAttribute valueOf(SVGHandler handler, String attrName, String valueString, JDRPaint currentVal)
+   public static SVGPaintAttribute valueOf(SVGHandler handler,
+     String attrName, String valueString)
    throws SVGException
    {
       SVGPaintAttribute attr = new SVGPaintAttribute(handler, attrName);
-      attr.parse(valueString, currentVal);
+      attr.valueString = valueString;
+      attr.parse();
       return attr;
    }
 
-   protected void parse(String str, JDRPaint currentValue)
-      throws SVGException
+   public static SVGPaintAttribute valueOf(SVGAbstractElement element,
+     String attrName, String valueString)
+   throws SVGException
    {
-      this.valueString = str;
+      SVGPaintAttribute attr = new SVGPaintAttribute(element, attrName);
+      attr.valueString = valueString;
+      attr.parse();
+      return attr;
+   }
 
-      CanvasGraphics cg = handler.getCanvasGraphics();
+   protected void parse() throws SVGException
+   {
+      parse(valueString);
+   }
 
-      if (valueString == null || valueString.equals("inherit"))
+   private void parse(String str) throws SVGException
+   {
+      if (str == null || str.equals("inherit"))
       {
          paint = null;
       }
-      else if (valueString.equals("none") || valueString.equals("transparent"))
+      else if (str.equals("none") || str.equals("transparent"))
       {
-         paint = new JDRTransparent(cg);
+         paint = new JDRTransparent(handler.getCanvasGraphics());
       }
-      else if (valueString.equals("currentColor"))
+      else if (str.equals("currentColor"))
       {
-         paint = currentValue;
+         if (elementOwner != null)
+         {
+            paint = elementOwner.getCurrentPaint();
+         }
       }
       else
       {
-         for (int i = 0; i < PATTERNS.length; i++)
-         {
-            Matcher m = PATTERNS[i].matcher(valueString);
+         referencedElement = handler.getAttributeValueRef(this);
 
+         if (referencedElement == null)
+         {
+            parsePattern(str);
+         }
+         else
+         {
             try
             {
-               if (m.matches())
-               {
-                  switch (i)
-                  {
-                     case PATTERN_HEX:
-
-                        char[] red   = new char[2];
-                        char[] green = new char[2];
-                        char[] blue  = new char[2];
-
-                        String group1 = m.group(1);
-
-                        String group2 = m.group(2);
-
-                        if (group2 == null)
-                        {// 3 hex digits
-                           red[0]   = group1.charAt(0);
-                           green[0] = group1.charAt(1);
-                           blue[0]  = group1.charAt(2);
-
-                           red[1]   = red[0];
-                           green[1] = green[0];
-                           blue[1]  = blue[0];
-                        }
-                        else
-                        {// 6 hex digits
-                           red[0]   = group1.charAt(0);
-                           red[1]   = group1.charAt(1);
-                           green[0] = group1.charAt(2);
-                           green[1] = group2.charAt(0);
-                           blue[0]  = group2.charAt(1);
-                           blue[1]  = group2.charAt(2);
-                        }
-
-                        paint = new JDRColor(cg, new Color
-                         (
-                            Integer.parseInt(new String(red), 16),
-                            Integer.parseInt(new String(green), 16),
-                            Integer.parseInt(new String(blue), 16)
-                         ));
-                     break;
-                     case PATTERN_RGB:
-                        paint = new JDRColor(cg, new Color
-                         (
-                            Integer.parseInt(m.group(1)),
-                            Integer.parseInt(m.group(2)),
-                            Integer.parseInt(m.group(3))
-                         ));
-                     break;
-                     case PATTERN_PERCENT:
-                        paint = new JDRColor
-                         (cg, 
-                            Double.parseDouble(m.group(1))*0.01,
-                            Double.parseDouble(m.group(2))*0.01,
-                            Double.parseDouble(m.group(3))*0.01
-                         );
-                     break;
-                     case PATTERN_FUNCIRI:
-                       String iri = m.group(1);
-                       String altValue = m.group(2);
-
-                       if (altValue != null)
-                       {
-                          parse(altValue, currentValue);
-                       }
-                       else
-                       {// FuncIRI not yet implemented
-                          throw new UnsupportedAttributeValueException(
-                            handler, getName(), valueString);
-                       }
-                     break;
-                     case PATTERN_KEYWORD:
-                        paint = SVGColorFactory.getPredefinedColor(handler, valueString);
-                     break;
-                  }
-
-                  return;
-               }
+               paint = referencedElement.getPaint();
             }
-            catch (NumberFormatException e)
+            catch (NoElementPaintException e)
             {
-               throw new CantParseAttributeValueException(handler, getName(), valueString, e);
+               throw new InvalidAttributeValueException(handler, getName(),
+                  str, e);
             }
          }
+      }
+   }
 
+   protected void parsePattern(String str) throws SVGException
+   {
+      CanvasGraphics cg = handler.getCanvasGraphics();
+
+      for (int i = 0; i < PATTERNS.length; i++)
+      {
+         Matcher m = PATTERNS[i].matcher(str);
+
+         try
+         {
+            if (m.matches())
+            {
+               switch (i)
+               {
+                  case PATTERN_HEX:
+
+                     char[] red   = new char[2];
+                     char[] green = new char[2];
+                     char[] blue  = new char[2];
+
+                     String group1 = m.group(1);
+
+                     String group2 = m.group(2);
+
+                     if (group2 == null)
+                     {// 3 hex digits
+                        red[0]   = group1.charAt(0);
+                        green[0] = group1.charAt(1);
+                        blue[0]  = group1.charAt(2);
+
+                        red[1]   = red[0];
+                        green[1] = green[0];
+                        blue[1]  = blue[0];
+                     }
+                     else
+                     {// 6 hex digits
+                        red[0]   = group1.charAt(0);
+                        red[1]   = group1.charAt(1);
+                        green[0] = group1.charAt(2);
+                        green[1] = group2.charAt(0);
+                        blue[0]  = group2.charAt(1);
+                        blue[1]  = group2.charAt(2);
+                     }
+
+                     paint = new JDRColor(cg, new Color
+                      (
+                         Integer.parseInt(new String(red), 16),
+                         Integer.parseInt(new String(green), 16),
+                         Integer.parseInt(new String(blue), 16)
+                      ));
+                  break;
+                  case PATTERN_RGB:
+                     paint = new JDRColor(cg, new Color
+                      (
+                         Integer.parseInt(m.group(1)),
+                         Integer.parseInt(m.group(2)),
+                         Integer.parseInt(m.group(3))
+                      ));
+                  break;
+                  case PATTERN_PERCENT:
+                     paint = new JDRColor
+                      (cg, 
+                         Double.parseDouble(m.group(1))*0.01,
+                         Double.parseDouble(m.group(2))*0.01,
+                         Double.parseDouble(m.group(3))*0.01
+                      );
+                  break;
+                  case PATTERN_FUNCIRI:
+                    String iri = m.group(1);
+                    String altValue = m.group(2);
+
+                    if (altValue != null)
+                    {
+                       parse(altValue);
+                    }
+                    else
+                    {// FuncIRI not yet implemented
+                       throw new UnsupportedAttributeValueException(
+                         handler, getName(), valueString);
+                    }
+                  break;
+                  case PATTERN_KEYWORD:
+                     paint = SVGColorFactory.getPredefinedColor(handler, str);
+                  break;
+               }
+            }
+         }
+         catch (NumberFormatException e)
+         {
+            throw new CantParseAttributeValueException(handler, getName(), valueString, e);
+         }
+      }
+
+      if (paint == null)
+      {
          throw new CantParseAttributeValueException(handler, getName(), valueString);
       }
    }
@@ -190,13 +231,14 @@ public class SVGPaintAttribute implements SVGAttribute
 
       name = attr.name;
       valueString = attr.valueString;
+      referencedElement = attr.referencedElement;
    }
 
    @Override
    public String toString()
    {
-      return String.format("%s[name=%s,original=%s,value=%s]",
-      getClass().getSimpleName(), getName(), valueString, getValue());
+      return String.format("%s[name=%s,original=%s,value=%s,ref=%s]",
+      getClass().getSimpleName(), getName(), valueString, getValue(), referencedElement);
    }
 
    @Override
@@ -210,6 +252,8 @@ public class SVGPaintAttribute implements SVGAttribute
    private String name;
    private String valueString;
    SVGHandler handler;
+
+   SVGAbstractElement referencedElement, elementOwner;
 
    private static final Pattern[] PATTERNS =
    {
@@ -230,6 +274,4 @@ public class SVGPaintAttribute implements SVGAttribute
    private static final int PATTERN_PERCENT=2;
    private static final int PATTERN_FUNCIRI=3;
    private static final int PATTERN_KEYWORD=4;
-
-
 }
