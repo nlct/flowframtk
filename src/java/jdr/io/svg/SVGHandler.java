@@ -3,6 +3,7 @@ package com.dickimawbooks.jdr.io.svg;
 import java.util.*;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import org.xml.sax.*;
 import org.xml.sax.ext.*;
@@ -41,18 +42,47 @@ public class SVGHandler extends DefaultHandler
 
    public void endDocument()
    {
-      if (base != null)
+      try
       {
-         debugMessages("</xml>", "Generating image");
+         if (base == null)
+         {
+            throw new MissingElementException(this, "svg");
+         }
+         else
+         {
+            debugMessages("</xml>", "Generating image");
 
-         try
-         {
             base.addToImage(group);
+
+            Rectangle2D bounds = base.getViewportBounds();
+
+            if (bounds != null)
+            {
+               group.translate(-bounds.getX(), -bounds.getY());
+
+               double widthBp = getStorageUnit().toBp(bounds.getWidth());
+               double heightBp = getStorageUnit().toBp(bounds.getHeight());
+               JDRPaper paper = getCanvasGraphics().getPaper();
+
+               if (paper.getWidth() < widthBp || paper.getHeight() < heightBp)
+               {
+                  paper = JDRPaper.getClosestEnclosingPredefinedPaper(
+                     widthBp, heightBp, JDRAJR.CURRENT_VERSION);
+
+                  if (paper != null)
+                  {
+                     paper = JDRPaper.getClosestPredefinedPaper(
+                        widthBp, heightBp, JDRAJR.CURRENT_VERSION);
+                  }
+
+                  getCanvasGraphics().setPaper(paper);
+               }
+            }
          }
-         catch (Throwable e)
-         {
-            error(e);
-         }
+      }
+      catch (Throwable e)
+      {
+         error(e);
       }
 
       resetProgress();

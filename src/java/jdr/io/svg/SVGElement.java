@@ -1,6 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 import org.xml.sax.*;
 
@@ -29,13 +30,15 @@ public class SVGElement extends SVGAbstractElement
 
       addAttribute("width", attr);
       addAttribute("height", attr);
+      addAttribute("viewBox", attr);
    }
 
    @Override
    public void startElement() throws InvalidFormatException
    {
-      widthAttr = getLengthAttribute("width");
-      heightAttr = getLengthAttribute("height");
+      SVGLengthAttribute widthAttr = getLengthAttribute("width");
+      SVGLengthAttribute heightAttr = getLengthAttribute("height");
+      SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
 
       if (widthAttr != null && widthAttr.getValue() == null)
       {
@@ -45,6 +48,39 @@ public class SVGElement extends SVGAbstractElement
       if (heightAttr != null && heightAttr.getValue() == null)
       {
          heightAttr = null;
+      }
+
+      hasWidth = (widthAttr != null);
+      hasHeight = (heightAttr != null);
+
+      width = hasWidth ? widthAttr.doubleValue(this) : 0.0;
+      height = hasHeight ? heightAttr.doubleValue(this) : 0.0;
+
+      if (viewBox != null)
+      {
+         if (viewBox.length != 4)
+         {
+            throw new CoordPairsRequiredException(this, "viewBox");
+         }
+
+         double x1 = viewBox[0].getStorageValue(this, true);
+         double y1 = viewBox[1].getStorageValue(this, false);
+         double x2 = viewBox[2].getStorageValue(this, true);
+         double y2 = viewBox[3].getStorageValue(this, false);
+
+         bounds = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
+
+         if (!hasWidth)
+         {
+            width = bounds.getWidth();
+            hasWidth = true;
+         }
+
+         if (!hasHeight)
+         {
+            height = bounds.getHeight();
+            hasHeight = true;
+         }
       }
    }
 
@@ -61,6 +97,10 @@ public class SVGElement extends SVGAbstractElement
       else if (name.equals("height"))
       {
          attr = SVGLengthAttribute.valueOf(handler, name, value, false);
+      }
+      else if (name.equals("viewBox"))
+      {
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
       else
       {
@@ -131,33 +171,46 @@ public class SVGElement extends SVGAbstractElement
       return group;
    }
 
+   public Rectangle2D getViewportBounds()
+   {
+      return bounds;
+   }
+
    @Override
    public double getViewportWidth()
    {
-      if (widthAttr == null)
-      {
-         return super.getViewportWidth();
-      }
-
-      return widthAttr.getStorageValue(parent, true);
+      return hasWidth ? width : super.getViewportWidth();
    }
 
    @Override
    public double getViewportHeight()
    {
-      if (heightAttr == null)
-      {  
-         return super.getViewportHeight();
-      }
-
-      return heightAttr.getStorageValue(parent, false);
+      return hasHeight ? height : super.getViewportHeight();
    }
 
    public void makeEqual(SVGElement element)
    {
       super.makeEqual(element);
-      widthAttr = element.widthAttr;
-      heightAttr = element.heightAttr;
+
+      hasWidth = element.hasWidth;
+      hasHeight = element.hasHeight;
+      width = element.width;
+      height = element.height;
+
+      if (element.bounds == null)
+      {
+         bounds = null;
+      }
+      else if (bounds == null)
+      {
+         bounds = new Rectangle2D.Double(
+           element.bounds.getX(), element.bounds.getY(),
+           element.bounds.getWidth(), element.bounds.getHeight());
+      }
+      else
+      {
+         bounds.setRect(element.bounds);
+      }
    }
 
    @Override
@@ -190,5 +243,7 @@ public class SVGElement extends SVGAbstractElement
 
    String description = null, title = null;
 
-   private SVGLengthAttribute widthAttr, heightAttr;
+   private Rectangle2D bounds;
+   boolean hasWidth, hasHeight;
+   double width, height;
 }
