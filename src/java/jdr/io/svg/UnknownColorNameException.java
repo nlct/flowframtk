@@ -4,14 +4,14 @@ public class UnknownColorNameException extends SVGException
 {
    public UnknownColorNameException(SVGHandler h, String name)
    {
-      super(h, String.format( "Unknown SVG attribute: %s", name));
+      super(h, String.format("Unknown color name: %s", name));
 
       attributeName = name;
    }
 
    public UnknownColorNameException(SVGAbstractElement elem, String name)
    {
-      super(elem, String.format( "Unknown SVG attribute: %s", name));
+      super(elem, String.format("Unknown color name: %s", name));
 
       attributeName = name;
    }
@@ -19,7 +19,7 @@ public class UnknownColorNameException extends SVGException
    public UnknownColorNameException(SVGHandler h, String name,
      Throwable cause)
    {
-      super(h, String.format( "Unknown SVG attribute: %s", name), cause);
+      super(h, String.format("Unknown color name: %s", name), cause);
 
       attributeName = name;
    }
@@ -27,7 +27,7 @@ public class UnknownColorNameException extends SVGException
    public UnknownColorNameException(SVGAbstractElement elem, String name,
      Throwable cause)
    {
-      super(elem, String.format( "Unknown SVG attribute: %s", name), cause);
+      super(elem, String.format("Unknown color name: %s", name), cause);
 
       attributeName = name;
    }
@@ -41,7 +41,7 @@ public class UnknownColorNameException extends SVGException
    public String getLocalizedMessage()
    {
       String msg = handler.getMessageWithFallback(
-        "error.svg.unknown_attribute",
+        "error.svg.unknown_color_name",
         "unknown attribute: {0}",
          attributeName);
 

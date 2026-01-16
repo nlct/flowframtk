@@ -38,7 +38,7 @@ Nicola Talbot
 
 <!-- Import Messages -->
 
-<entry key="error.svg.unknown_attribute">unknown colour name: {0}</entry>
+<entry key="error.svg.unknown_color_name">unknown colour name: {0}</entry>
 
 <!-- Manual -->
 

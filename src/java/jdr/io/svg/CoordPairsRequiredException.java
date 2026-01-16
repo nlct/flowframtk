@@ -19,7 +19,7 @@ public class CoordPairsRequiredException extends SVGException
    public CoordPairsRequiredException(SVGHandler h, String name,
      Throwable cause)
    {
-      super(h, String.format( "Coord pairs required in: %s", name), cause);
+      super(h, String.format("Coord pairs required in: %s", name), cause);
 
       attributeName = name;
    }
@@ -27,7 +27,7 @@ public class CoordPairsRequiredException extends SVGException
    public CoordPairsRequiredException(SVGAbstractElement elem, String name,
      Throwable cause)
    {
-      super(elem, String.format( "Coord pairs required in: %s", name), cause);
+      super(elem, String.format("Coord pairs required in: %s", name), cause);
 
       attributeName = name;
    }

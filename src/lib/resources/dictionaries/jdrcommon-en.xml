@@ -558,9 +558,10 @@ File doesn''t exist</entry>
 <entry key="error.svg.unsupported_attribute_value">unsupported {0} value ''{1}''</entry>
 <entry key="error.svg.unknown_attribute">unknown attribute: {0}</entry>
 <entry key="error.svg.unknown_element">Unknown element: {0}</entry>
-<entry key="error.svg.unknown_attribute">unknown color name: {0}</entry>
+<entry key="error.svg.unknown_color_name">unknown color name: {0}</entry>
 <entry key="error.svg.unknown_unit">unknown unit: {0}</entry>
 <entry key="error.svg.unknown_ref">Unknown reference: {0}</entry>
+<entry key="error.svg.missing_element">Missing element: {0}</entry>
 <entry key="error.svg.element_missing_attribute">missing attribute ''{0}''</entry>
 <entry key="error.svg.external_ref_unsupported">external references unsupported ({0})</entry>
 <entry key="error.svg.internal_ref_unsupported">internal references unsupported ({0})</entry>

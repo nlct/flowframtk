@@ -4,14 +4,14 @@ public class UnknownAttributeException extends SVGException
 {
    public UnknownAttributeException(SVGHandler h, String name)
    {
-      super(h, String.format( "Unknown SVG attribute: %s", name));
+      super(h, String.format("Unknown SVG attribute: %s", name));
 
       attributeName = name;
    }
 
    public UnknownAttributeException(SVGAbstractElement elem, String name)
    {
-      super(elem, String.format( "Unknown SVG attribute: %s", name));
+      super(elem, String.format("Unknown SVG attribute: %s", name));
 
       attributeName = name;
    }
@@ -19,7 +19,7 @@ public class UnknownAttributeException extends SVGException
    public UnknownAttributeException(SVGHandler h, String name,
      Throwable cause)
    {
-      super(h, String.format( "Unknown SVG attribute: %s", name), cause);
+      super(h, String.format("Unknown SVG attribute: %s", name), cause);
 
       attributeName = name;
    }
@@ -27,7 +27,7 @@ public class UnknownAttributeException extends SVGException
    public UnknownAttributeException(SVGAbstractElement elem, String name,
      Throwable cause)
    {
-      super(elem, String.format( "Unknown SVG attribute: %s", name), cause);
+      super(elem, String.format("Unknown SVG attribute: %s", name), cause);
 
       attributeName = name;
    }
