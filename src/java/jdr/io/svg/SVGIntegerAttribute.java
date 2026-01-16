@@ -9,25 +9,39 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGIntegerAttribute extends SVGAbstractAttribute
   implements SVGNumberAttribute
 {
-   public SVGIntegerAttribute(SVGHandler handler, String attrName, String valueString)
-      throws InvalidFormatException
+   protected SVGIntegerAttribute(SVGHandler handler, String attrName)
    {
-      this(handler, attrName, valueString, true);
+      this(handler, attrName, true);
    }
 
-   public SVGIntegerAttribute(SVGHandler handler,
-      String attrName, String valueString, boolean horizontal)
-      throws InvalidFormatException
+   protected SVGIntegerAttribute(SVGHandler handler,
+      String attrName, boolean horizontal)
    {
-      super(handler, valueString);
-
+      super(handler);
       this.isHorizontal = horizontal;
       this.name = attrName;
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGIntegerAttribute valueOf(SVGHandler handler,
+      String attrName, String valueString)
+   throws SVGException
    {
+      return valueOf(handler, attrName, valueString, true);
+   }
+
+   public static SVGIntegerAttribute valueOf(SVGHandler handler,
+      String attrName, String valueString, boolean horizontal)
+   throws SVGException
+   {
+      SVGIntegerAttribute attr = new SVGIntegerAttribute(handler, attrName, horizontal);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          value = null;
@@ -44,7 +58,7 @@ public class SVGIntegerAttribute extends SVGAbstractAttribute
          }
          catch (NumberFormatException e)
          {
-            throw new InvalidFormatException("Invalid numerical attribute "+e.getMessage());
+            throw new InvalidAttributeValueException(handler, getName(), valueString, e);
          }
       }
    }
@@ -85,19 +99,9 @@ public class SVGIntegerAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGIntegerAttribute attr = new SVGIntegerAttribute(handler, name, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGIntegerAttribute attr = new SVGIntegerAttribute(handler, name);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGIntegerAttribute attr)

@@ -11,24 +11,31 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPaintAttribute implements SVGAttribute
 {
-   public SVGPaintAttribute(SVGHandler handler, String attrName, String valueString)
-     throws InvalidFormatException
-   {
-      this(handler, attrName, valueString, null);
-   }
-
-   public SVGPaintAttribute(SVGHandler handler, String attrName, String valueString, JDRPaint currentVal)
-     throws InvalidFormatException
+   protected SVGPaintAttribute(SVGHandler handler, String attrName)
    {
       this.handler = handler;
-      this.valueString = valueString;
       this.name = attrName;
-      parse(valueString, currentVal);
    }
 
-   private void parse(String valueString, JDRPaint currentValue)
-      throws InvalidFormatException
+   public static SVGPaintAttribute valueOf(SVGHandler handler, String attrName, String valueString)
+   throws SVGException
    {
+      return valueOf(handler, attrName, valueString, null);
+   }
+
+   public static SVGPaintAttribute valueOf(SVGHandler handler, String attrName, String valueString, JDRPaint currentVal)
+   throws SVGException
+   {
+      SVGPaintAttribute attr = new SVGPaintAttribute(handler, attrName);
+      attr.parse(valueString, currentVal);
+      return attr;
+   }
+
+   protected void parse(String str, JDRPaint currentValue)
+      throws SVGException
+   {
+      this.valueString = str;
+
       CanvasGraphics cg = handler.getCanvasGraphics();
 
       if (valueString == null || valueString.equals("inherit"))
@@ -117,12 +124,13 @@ public class SVGPaintAttribute implements SVGAttribute
                           parse(altValue, currentValue);
                        }
                        else
-                       {
-                          throw new InvalidFormatException("FuncIRI not yet implemented");
+                       {// FuncIRI not yet implemented
+                          throw new UnsupportedAttributeValueException(
+                            handler, getName(), valueString);
                        }
                      break;
                      case PATTERN_KEYWORD:
-                        paint = SVGColorFactory.getPredefinedColor(cg, valueString);
+                        paint = SVGColorFactory.getPredefinedColor(handler, valueString);
                      break;
                   }
 
@@ -131,12 +139,11 @@ public class SVGPaintAttribute implements SVGAttribute
             }
             catch (NumberFormatException e)
             {
-               throw new InvalidFormatException(
-                  "Can't parse number in '"+valueString+"'");
+               throw new CantParseAttributeValueException(handler, getName(), valueString, e);
             }
          }
 
-         throw new InvalidFormatException("Can't parse color '"+valueString+"'");
+         throw new CantParseAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -165,19 +172,9 @@ public class SVGPaintAttribute implements SVGAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGPaintAttribute attr = new SVGPaintAttribute(handler, name, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGPaintAttribute attr = new SVGPaintAttribute(handler, name);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGPaintAttribute attr)
@@ -200,6 +197,12 @@ public class SVGPaintAttribute implements SVGAttribute
    {
       return String.format("%s[name=%s,original=%s,value=%s]",
       getClass().getSimpleName(), getName(), valueString, getValue());
+   }
+
+   @Override
+   public String getSourceValue()
+   {
+      return valueString;
    }
 
    private JDRPaint paint;

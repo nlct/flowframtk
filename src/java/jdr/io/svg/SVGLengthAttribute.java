@@ -1,36 +1,84 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.util.regex.*;
+
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
+public class SVGLengthAttribute extends SVGMeasurement implements SVGNumberAttribute
 {
-   public SVGLengthAttribute(SVGHandler handler, String attrName,
-        String valueString)
-      throws InvalidFormatException
+   protected SVGLengthAttribute(SVGHandler handler)
    {
-      this(handler, attrName, valueString, true);
+      this(handler, "length");
    }
 
-   public SVGLengthAttribute(SVGHandler handler, String attrName,
-        String valueString, boolean horizontal)
-      throws InvalidFormatException
+   protected SVGLengthAttribute(SVGHandler handler, String attrName)
    {
-      super(handler, valueString);
-      this.isHorizontal = horizontal;
+      this(handler, attrName, true);
+   }
+
+   protected SVGLengthAttribute(SVGHandler handler, String attrName, boolean isHorizontal)
+   {
+      super(handler);
       this.name = attrName;
+      this.isHorizontal = isHorizontal;
+   }
+
+
+   public static SVGLengthAttribute valueOf(SVGHandler handler, String attrName, String valueString)
+   throws SVGException
+   {
+      return valueOf(handler, attrName, valueString, "", true);
+   }
+
+   public static SVGLengthAttribute valueOf(SVGHandler handler, String attrName, String valueString, boolean horizontal)
+   throws SVGException
+   {
+      return valueOf(handler, attrName, valueString, "", horizontal);
+   }
+
+   public static SVGLengthAttribute valueOf(SVGHandler handler, String attrName,
+      String valueString, String defUnitName)
+   throws SVGException
+   {
+      return valueOf(handler, attrName, valueString, defUnitName, true);
+   }
+
+   public static SVGLengthAttribute valueOf(SVGHandler handler, String attrName,
+      String valueString, String defUnitName, boolean horizontal)
+   throws SVGException
+   {
+      SVGLengthAttribute attr = new SVGLengthAttribute(handler, attrName, horizontal);
+      attr.parse(valueString, defUnitName);
+      return attr;
    }
 
    @Override
-   public String getName()
+   protected void parse(String str, String defUnitName)
+   throws SVGException
    {
-      return name;
-   }
+      super.parse(str, defUnitName);
 
-   public JDRLength lengthValue(SVGAbstractElement element)
-   {
-      return getLength(element, isHorizontal);
+      if (value != null)
+      {
+         switch (getUnitId())
+         {
+            case SVGMeasurement.UNIT_PERCENT :
+            case SVGMeasurement.UNIT_EM :
+            case SVGMeasurement.UNIT_EX :
+            case SVGMeasurement.UNIT_PX :
+            case SVGMeasurement.UNIT_IN :
+            case SVGMeasurement.UNIT_CM :
+            case SVGMeasurement.UNIT_MM :
+            case SVGMeasurement.UNIT_PT :
+            case SVGMeasurement.UNIT_PC :
+            case SVGMeasurement.UNIT_DEFAULT :
+            break;
+            default :
+              throw new InvalidUnitException(handler, getName(), getUnitName());
+         }
+      }
    }
 
    @Override
@@ -50,39 +98,123 @@ public class SVGLengthAttribute extends SVGLength implements SVGNumberAttribute
    {
    }
 
+   public double getStorageValue(SVGAbstractElement element, boolean isHorizontal)
+   {
+      double val = doubleValue();
+      JDRUnit storageUnit = handler.getStorageUnit();
+
+      switch (getUnitId())
+      {
+         case SVGMeasurement.UNIT_DEFAULT :
+            return handler.getDefaultUnit().toUnit(val, storageUnit);
+         case SVGMeasurement.UNIT_IN :
+            return JDRUnit.in.toUnit(val, storageUnit);
+         case SVGMeasurement.UNIT_CM :
+            return JDRUnit.cm.toUnit(val, storageUnit);
+         case SVGMeasurement.UNIT_MM :
+            return JDRUnit.mm.toUnit(val, storageUnit);
+         case SVGMeasurement.UNIT_PT :
+            return JDRUnit.bp.toUnit(val, storageUnit);
+         case SVGMeasurement.UNIT_PC :
+            return JDRUnit.pc.toUnit(val, storageUnit);
+         case SVGMeasurement.UNIT_PERCENT :
+            double relValue; // storage units
+
+            if (element == null)
+            {
+               relValue = 1.0;
+            }
+            else
+            {
+               if (isHorizontal)
+               {
+                  relValue = element.getViewportWidth();
+               }
+               else
+               {
+                  relValue = element.getViewportHeight();
+               }
+            }
+
+            return 0.01*val*relValue;
+// TODO:
+         case SVGMeasurement.UNIT_PX :
+         case SVGMeasurement.UNIT_EM :
+         case SVGMeasurement.UNIT_EX :
+      }
+
+      return 0;
+   }
+
+   public JDRLength lengthValue(SVGAbstractElement element)
+   {
+      return getLength(element, isHorizontal);
+   }
+
+   public JDRLength getLength(SVGAbstractElement element, boolean isHorizontal)
+   {
+      double val = doubleValue();
+      CanvasGraphics cg = element.getCanvasGraphics();
+
+      switch (getUnitId())
+      {
+         case SVGMeasurement.UNIT_DEFAULT :
+            return handler.toStorageLength(val);
+         case SVGMeasurement.UNIT_IN :
+            return new JDRLength(cg, val, JDRUnit.in);
+         case SVGMeasurement.UNIT_CM :
+            return new JDRLength(cg, val, JDRUnit.cm);
+         case SVGMeasurement.UNIT_MM :
+            return new JDRLength(cg, val, JDRUnit.mm);
+         case SVGMeasurement.UNIT_PX : // treat as bp
+         case SVGMeasurement.UNIT_PT :
+            return new JDRLength(cg, val, JDRUnit.bp);
+         case SVGMeasurement.UNIT_PC :
+            return new JDRLength(cg, val, JDRUnit.pc);
+         case SVGMeasurement.UNIT_PERCENT :
+            double relValue;// storage unit
+
+            if (element == null)
+            {
+               relValue = 1.0;
+            }
+            else
+            {
+               if (isHorizontal)
+               {
+                  relValue = element.getViewportWidth();
+               }
+               else
+               {
+                  relValue = element.getViewportHeight();
+               }
+            }
+
+            return new JDRLength(cg, 0.01*val*relValue, handler.getStorageUnit());
+// TODO:
+         case SVGMeasurement.UNIT_EM :
+         case SVGMeasurement.UNIT_EX :
+      }
+
+      return new JDRLength(cg, 1, JDRUnit.bp);
+   }
+
+   @Override
+   public String getName()
+   {
+      return name;
+   }
+
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGLengthAttribute attr = new SVGLengthAttribute(handler, name, null);
+      SVGLengthAttribute length = new SVGLengthAttribute(handler, getName(), isHorizontal);
 
-         attr.makeEqual(this);
+      length.makeEqual(this);
 
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return length;
    }
 
-   public void makeEqual(SVGLengthAttribute attr)
-   {
-      super.makeEqual(attr);
-
-      name = attr.name;
-      isHorizontal = attr.isHorizontal;
-   }
-
-   @Override
-   public String toString()
-   {
-      return String.format("%s=\"%s\"", getName(), valueString);
-   }
-
-   private boolean isHorizontal;
-
-   private String name;
+   String name;
+   boolean isHorizontal;
 }

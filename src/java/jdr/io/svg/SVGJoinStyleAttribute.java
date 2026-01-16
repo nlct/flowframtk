@@ -12,15 +12,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGJoinStyleAttribute extends SVGAbstractAttribute
   implements SVGNumberAttribute
 {
-   public SVGJoinStyleAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGJoinStyleAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGJoinStyleAttribute valueOf(SVGHandler handler, String valueString)
+      throws SVGException
    {
+      SVGJoinStyleAttribute attr = new SVGJoinStyleAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          joinStyle = null;
@@ -39,7 +47,7 @@ public class SVGJoinStyleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown join style '"+valueString+"'");
+         throw new InvalidAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -91,19 +99,9 @@ public class SVGJoinStyleAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGJoinStyleAttribute attr = new SVGJoinStyleAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGJoinStyleAttribute attr = new SVGJoinStyleAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGJoinStyleAttribute attr)

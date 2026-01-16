@@ -27,6 +27,12 @@ public class SVGStringAttribute implements SVGAttribute
       return value;
    }
 
+   @Override
+   public String getSourceValue()
+   {
+      return value;
+   }
+
    public String getString()
    {
       return value;

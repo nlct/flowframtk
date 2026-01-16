@@ -34,7 +34,7 @@ public class SVGStyleElement extends SVGAbstractElement
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 

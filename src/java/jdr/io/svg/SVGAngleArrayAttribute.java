@@ -8,16 +8,24 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGAngleArrayAttribute extends SVGAbstractAttribute
 {
-   public SVGAngleArrayAttribute(SVGHandler handler, String attrName, String valueString)
-      throws InvalidFormatException
+   protected SVGAngleArrayAttribute(SVGHandler handler, String attrName)
    {
-      super(handler, valueString);
+      super(handler);
       this.name = attrName;
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGAngleArrayAttribute valueOf(SVGHandler handler, String attrName, String valueString)
+   throws SVGException
    {
+      SVGAngleArrayAttribute attr = new SVGAngleArrayAttribute(handler, attrName);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          array = null;
@@ -30,7 +38,7 @@ public class SVGAngleArrayAttribute extends SVGAbstractAttribute
 
       for (int i = 0; i < split.length; i++)
       {
-         array[i] = new SVGAngleAttribute(handler, split[i]);
+         array[i] = SVGAngleAttribute.valueOf(handler, split[i]);
       }
    }
 
@@ -64,19 +72,9 @@ public class SVGAngleArrayAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGAngleArrayAttribute attr = new SVGAngleArrayAttribute(handler, name, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGAngleArrayAttribute attr = new SVGAngleArrayAttribute(handler, name);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGAngleArrayAttribute attr)
@@ -86,6 +84,13 @@ public class SVGAngleArrayAttribute extends SVGAbstractAttribute
       if (attr.array == null)
       {
          array = null;
+      }
+      else if (this.array != null && this.array.length == attr.array.length)
+      {
+         for (int i = 0; i < attr.array.length; i++)
+         {
+            array[i].makeEqual(attr.array[i]);
+         }
       }
       else
       {

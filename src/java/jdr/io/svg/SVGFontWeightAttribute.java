@@ -8,15 +8,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFontWeightAttribute extends SVGAbstractAttribute
 {
-   public SVGFontWeightAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGFontWeightAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFontWeightAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGFontWeightAttribute attr = new SVGFontWeightAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          fontWeight = null;
@@ -40,7 +48,7 @@ public class SVGFontWeightAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown font weight '"+valueString+"'");
+         throw new UnknownAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -53,19 +61,11 @@ public class SVGFontWeightAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGFontWeightAttribute attr = new SVGFontWeightAttribute(handler, null);
+      SVGFontWeightAttribute attr = new SVGFontWeightAttribute(handler);
 
-         attr.makeEqual(this);
+      attr.makeEqual(this);
 
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return attr;
    }
 
    public void makeEqual(SVGFontWeightAttribute attr)

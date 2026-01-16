@@ -8,15 +8,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFontVariantAttribute extends SVGAbstractAttribute
 {
-   public SVGFontVariantAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGFontVariantAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFontVariantAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGFontVariantAttribute attr = new SVGFontVariantAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          isInherit = true;
@@ -33,7 +41,7 @@ public class SVGFontVariantAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown font variant '"+valueString+"'");
+         throw new UnknownAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -46,19 +54,9 @@ public class SVGFontVariantAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGFontVariantAttribute attr = new SVGFontVariantAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGFontVariantAttribute attr = new SVGFontVariantAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGFontVariantAttribute attr)

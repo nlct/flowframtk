@@ -45,7 +45,7 @@ public class SVGPathDataAttribute implements SVGAttribute
    }
 
    public Path2D getPath(SVGAbstractElement element)
-     throws InvalidFormatException
+     throws SVGException
    {
       if (data == null || data.equals("inherit"))
       {
@@ -81,8 +81,8 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (y == null)
                  {
-                    throw new InvalidFormatException(
-                      "Coordinate pairs required for '"+c+"' operation");
+                    throw new InvalidPathSpecException(handler,
+                      getName(), c, "x y");
                  }
 
                  if (c == 'M')
@@ -176,8 +176,8 @@ public class SVGPathDataAttribute implements SVGAttribute
                   || y2 == null || x2 == null
                   || y1 == null)
                  {
-                    throw new InvalidFormatException(
-                      "Three coordinate pairs required for '"+c+"' operation");
+                    throw new InvalidPathSpecException(handler,
+                      getName(), c, "x1 y1 x2 y2 x y");
                  }
 
                  double cx;
@@ -237,8 +237,8 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (y == null || x == null || y2 == null)
                  {
-                    throw new InvalidFormatException(
-                      "Two coordinate pairs required for '"+c+"' operation");
+                    throw new InvalidPathSpecException(handler,
+                      getName(), c, "x2 y2 x y");
                  }
 
                  p = path.getCurrentPoint();
@@ -306,8 +306,8 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (y == null || x == null || y1 == null)
                  {
-                    throw new InvalidFormatException(
-                      "Two coordinate pairs required for '"+c+"' operation");
+                    throw new InvalidPathSpecException(handler,
+                      getName(), c, "x1 y1 x y");
                  }
 
                  double cx;
@@ -360,8 +360,8 @@ public class SVGPathDataAttribute implements SVGAttribute
 
                  if (y == null)
                  {
-                    throw new InvalidFormatException(
-                      "Coordinate pair required for '"+c+"' operation");
+                    throw new InvalidPathSpecException(handler,
+                      getName(), c, "x y");
                  }
 
                  p = path.getCurrentPoint();
@@ -429,8 +429,8 @@ public class SVGPathDataAttribute implements SVGAttribute
                   || largeArcFlag == null || angle == null
                   || ry == null)
                  {
-                    throw new InvalidFormatException(
-                     "Path '"+c+"' command requires 7 parameters");
+                    throw new InvalidPathSpecException(handler,
+                      getName(), c, "rx ry a 0|1 0|1 x y");
                  }
 
                  double x1 = x.getStorageValue(element, true);
@@ -459,7 +459,7 @@ public class SVGPathDataAttribute implements SVGAttribute
               prevC = null;
             break;
             default:
-              throw new InvalidFormatException("Unknown path operator '"+c+"'");
+              throw new UnknownPathCommandException(handler, getName(), c);
          }
       }
 
@@ -607,11 +607,11 @@ public class SVGPathDataAttribute implements SVGAttribute
 
    private SVGLengthAttribute getCoordinate(String text, CharacterIterator iter,
       boolean isHorizontal)
-     throws InvalidFormatException
+     throws SVGException
    {
       int idx = iter.getIndex();
 
-      Matcher m = pattern.matcher(text.substring(idx));
+      Matcher m = NUMERIC_PATTERN.matcher(text.substring(idx));
 
       SVGLengthAttribute coord = null;
 
@@ -620,7 +620,7 @@ public class SVGPathDataAttribute implements SVGAttribute
          String group1 = m.group(1);
          String group2 = m.group(2);
 
-         coord = new SVGLengthAttribute(handler, "coordinate", group2,
+         coord = SVGLengthAttribute.valueOf(handler, "coordinate", group2,
             isHorizontal);
 
          iter.setIndex(idx+group1.length()+group2.length());
@@ -631,11 +631,11 @@ public class SVGPathDataAttribute implements SVGAttribute
    }
 
    private SVGAngleAttribute getAngle(String text, CharacterIterator iter)
-     throws InvalidFormatException
+     throws SVGException
    {
       int idx = iter.getIndex();
 
-      Matcher m = pattern.matcher(text.substring(idx));
+      Matcher m = NUMERIC_PATTERN.matcher(text.substring(idx));
 
       SVGAngleAttribute angle = null;
 
@@ -644,21 +644,20 @@ public class SVGPathDataAttribute implements SVGAttribute
          String group1 = m.group(1);
          String group2 = m.group(2);
 
-         angle = new SVGAngleAttribute(handler, group2);
+         angle = SVGAngleAttribute.valueOf(handler, group2);
 
          iter.setIndex(idx+group1.length()+group2.length());
-
       }
 
       return angle;
    }
 
    private Boolean getBoolean(String text, CharacterIterator iter)
-     throws InvalidFormatException
+     throws SVGException
    {
       int idx = iter.getIndex();
 
-      Matcher m = pattern.matcher(text.substring(idx));
+      Matcher m = NUMERIC_PATTERN.matcher(text.substring(idx));
 
       Boolean flag = null;
 
@@ -673,7 +672,7 @@ public class SVGPathDataAttribute implements SVGAttribute
 
             if (val < 0 || val > 1)
             {
-               throw new NumberFormatException();
+               throw new InvalidPathSpecBooleanException(handler, getName(), group2);
             }
 
             flag = Boolean.valueOf(val == 1);
@@ -682,8 +681,7 @@ public class SVGPathDataAttribute implements SVGAttribute
          }
          catch (NumberFormatException e)
          {
-            throw new InvalidFormatException(
-              "boolean flag requires '0' or '1' value. Found: '"+group2+"'");
+            throw new InvalidPathSpecBooleanException(handler, getName(), group2, e);
          }
 
       }
@@ -695,7 +693,7 @@ public class SVGPathDataAttribute implements SVGAttribute
    {
       int idx = iter.getIndex();
 
-      Matcher m = pattern.matcher(text.substring(idx));
+      Matcher m = NUMERIC_PATTERN.matcher(text.substring(idx));
 
       return m.matches();
    }
@@ -704,9 +702,7 @@ public class SVGPathDataAttribute implements SVGAttribute
    public Object clone()
    {
       SVGPathDataAttribute attr = new SVGPathDataAttribute(handler, null);
-
       attr.makeEqual(this);
-
       return attr;
    }
 
@@ -716,10 +712,16 @@ public class SVGPathDataAttribute implements SVGAttribute
       valueString = attr.valueString;
    }
 
+   @Override
+   public String getSourceValue()
+   {
+      return valueString;
+   }
+
    private String data;
    SVGHandler handler;
    String valueString;
 
-   private static final Pattern pattern = 
+   private static final Pattern NUMERIC_PATTERN = 
      Pattern.compile("([\\s,]*)((?:[+\\-]?\\d*)(?:\\.?\\d+)(?:[eE][=\\-]?\\d+)?[a-zA-Z]*)([,\\s].*)?");
 }

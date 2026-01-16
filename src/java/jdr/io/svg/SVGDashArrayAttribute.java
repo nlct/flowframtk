@@ -11,15 +11,24 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
 {
-   public SVGDashArrayAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGDashArrayAttribute(SVGHandler handler)
    {
-      super(handler, "stroke-dasharray", valueString);
+      super(handler, "stroke-dasharray");
+   }
+
+   public static SVGDashArrayAttribute valueOf(SVGHandler handler, String valueString)
+   throws SVGException
+   {
+      SVGDashArrayAttribute attr = new SVGDashArrayAttribute(handler);
+      attr.parse(valueString);
+      return attr;
    }
 
    @Override
-   protected void parse() throws InvalidFormatException
+   protected void parse(String str) throws SVGException
    {
+      this.valueString = str;
+
       if ("none".equals(valueString))
       {
          isSolid = true;
@@ -28,7 +37,7 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
       {
          isSolid = false;
 
-         super.parse();
+         super.parse(str);
       }
    }
 
@@ -39,7 +48,7 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
          return new DashPattern(handler.getCanvasGraphics());
       }
 
-      SVGLength[] lengtharray = getArray();
+      SVGLengthAttribute[] lengtharray = getArray();
 
       float[] dashPattern = new float[lengtharray.length];
 
@@ -70,19 +79,9 @@ public class SVGDashArrayAttribute extends SVGLengthArrayAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGDashArrayAttribute attr = new SVGDashArrayAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGDashArrayAttribute attr = new SVGDashArrayAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGDashArrayAttribute attr)

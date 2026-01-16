@@ -12,15 +12,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGFillRuleAttribute extends SVGAbstractAttribute
   implements SVGNumberAttribute
 {
-   public SVGFillRuleAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGFillRuleAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFillRuleAttribute valueOf(SVGHandler handler, String valueString)
+      throws SVGException
    {
+      SVGFillRuleAttribute attr = new SVGFillRuleAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          rule = null;
@@ -35,7 +43,7 @@ public class SVGFillRuleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown winding rule '"+valueString+"'");
+         throw new InvalidAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -87,19 +95,9 @@ public class SVGFillRuleAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGFillRuleAttribute attr = new SVGFillRuleAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGFillRuleAttribute attr = new SVGFillRuleAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGFillRuleAttribute attr)

@@ -27,25 +27,25 @@ public class SVGLineElement extends SVGShape
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String style)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("x1"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, style, true);
       }
       else if (name.equals("y1"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, style, false);
       }
       else if (name.equals("x2"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, style, true);
       }
       else if (name.equals("y2"))
       {
-         attr = new SVGLengthAttribute(handler, name, style, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, style, false);
       }
       else
       {

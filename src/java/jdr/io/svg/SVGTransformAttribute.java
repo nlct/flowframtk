@@ -9,17 +9,24 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGTransformAttribute implements SVGAttribute
 {
-   public SVGTransformAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGTransformAttribute(SVGHandler handler)
    {
       this.handler = handler;
-      this.valueString = valueString;
       transform = new AffineTransform();
-      parse();
    }
 
-   protected void parse() throws InvalidFormatException
+   public static SVGTransformAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGTransformAttribute attr = new SVGTransformAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null)
       {
          return;
@@ -52,13 +59,13 @@ public class SVGTransformAttribute implements SVGAttribute
          }
          catch (NumberFormatException e)
          {
-            // shouldn't happen
+            throw new CantParseAttributeValueException(handler, getName(), valueString, e);
          }
       }
    }
 
    private void addTransform(String function, String arg)
-     throws InvalidFormatException,NumberFormatException
+     throws SVGException,NumberFormatException
    {
       Matcher m;
       AffineTransform af = null;
@@ -70,8 +77,8 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (!m.matches())
          {
-            throw new InvalidFormatException(
-               "syntax: matrix(a, b, c, d, e, f)\n  in: '"+arg+"'");
+            throw new CantParseAttributeValueException(handler, getName(),
+               valueString);
          }
 
          double tx = Double.parseDouble(m.group(5));
@@ -95,8 +102,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (!m.matches())
          {
-            throw new InvalidFormatException(
-               "syntax: translate(tx [ty])\n  in: '"+arg+"'");
+            throw new CantParseAttributeValueException(handler, getName(), valueString);
          }
 
          double tx = Double.parseDouble(m.group(1));
@@ -119,8 +125,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (!m.matches())
          {
-            throw new InvalidFormatException(
-               "syntax: scale(sx [sy])\n  in: '"+arg+"'");
+            throw new CantParseAttributeValueException(handler, getName(), valueString);
          }
 
          double sx = Double.parseDouble(m.group(1));
@@ -135,8 +140,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (!m.matches())
          {
-            throw new InvalidFormatException(
-               "syntax: rotate(angle [cx cy])\n  in: '"+arg+"'");
+            throw new CantParseAttributeValueException(handler, getName(), valueString);
          }
 
          double angle = Math.toRadians(Double.parseDouble(m.group(1)));
@@ -162,8 +166,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (!m.matches())
          {
-            throw new InvalidFormatException(
-               "syntax: skew(angle)\n  in: '"+arg+"'");
+            throw new CantParseAttributeValueException(handler, getName(), valueString);
          }
 
          af = AffineTransform.getShearInstance(
@@ -176,8 +179,7 @@ public class SVGTransformAttribute implements SVGAttribute
 
          if (!m.matches())
          {
-            throw new InvalidFormatException(
-               "syntax: skew(angle)\n  in: '"+arg+"'");
+            throw new CantParseAttributeValueException(handler, getName(), valueString);
          }
 
          af = AffineTransform.getShearInstance(0, 
@@ -185,8 +187,7 @@ public class SVGTransformAttribute implements SVGAttribute
       }
       else
       {
-         throw new InvalidFormatException(
-            "Unknown transform function '"+function+"'");
+         throw new UnknownAttributeValueException(handler, getName(), valueString);
       }
 
       transform.concatenate(af);
@@ -217,19 +218,8 @@ public class SVGTransformAttribute implements SVGAttribute
    @Override
    public Object clone()
    {
-      SVGTransformAttribute attr = null;
-
-      try
-      {
-         attr = new SVGTransformAttribute(handler, null);
-
-         attr.makeEqual(this);
-      }
-      catch (InvalidFormatException e)
-      {
-         // this shouldn't happen
-      }
-
+      SVGTransformAttribute attr = new SVGTransformAttribute(handler);
+      attr.makeEqual(this);
       return attr;
    }
 
@@ -237,6 +227,12 @@ public class SVGTransformAttribute implements SVGAttribute
    {
       valueString = attr.valueString;
       transform.setTransform(attr.transform);
+   }
+
+   @Override
+   public String getSourceValue()
+   {
+      return valueString;
    }
 
    private AffineTransform transform;

@@ -33,21 +33,21 @@ public class SVGCircleElement extends SVGShape
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("cx"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
       }
       else if (name.equals("cy"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
       }
       else if (name.equals("r"))
       {
-         attr = new SVGLengthAttribute(handler, name, value);
+         attr = SVGLengthAttribute.valueOf(handler, name, value);
       }
       else
       {

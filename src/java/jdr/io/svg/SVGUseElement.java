@@ -98,25 +98,25 @@ public class SVGUseElement extends SVGAbstractElement
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("x"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
       }
       else if (name.equals("y"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
       }
       else if (name.equals("width"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
       }
       else if (name.equals("height"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
       }
       else
       {
@@ -249,7 +249,7 @@ public class SVGUseElement extends SVGAbstractElement
    String description = null, title = null;
 
    SVGAbstractElement element;
-   SVGLength xAttr, yAttr;
+   SVGLengthAttribute xAttr, yAttr;
    String elemUri;
    Attributes elemAttrs;
 

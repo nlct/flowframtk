@@ -11,10 +11,17 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGDashOffsetAttribute extends SVGLengthAttribute
 {
-   public SVGDashOffsetAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGDashOffsetAttribute(SVGHandler handler)
    {
-      super(handler, "stroke-dashoffset", valueString);
+      super(handler, "stroke-dashoffset");
+   }
+
+   public static SVGDashOffsetAttribute valueOf(SVGHandler handler, String valueString)
+      throws SVGException
+   {
+      SVGDashOffsetAttribute attr = new SVGDashOffsetAttribute(handler);
+      attr.parse(valueString, "");
+      return attr;
    }
 
    @Override
@@ -43,19 +50,9 @@ public class SVGDashOffsetAttribute extends SVGLengthAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGDashOffsetAttribute attr = new SVGDashOffsetAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGDashOffsetAttribute attr = new SVGDashOffsetAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
 }

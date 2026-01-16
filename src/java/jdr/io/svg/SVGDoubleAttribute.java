@@ -9,24 +9,41 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGDoubleAttribute extends SVGAbstractAttribute
   implements SVGNumberAttribute
 {
-   public SVGDoubleAttribute(SVGHandler handler, String attrName, String valueString)
-      throws InvalidFormatException
+   protected SVGDoubleAttribute(SVGHandler handler, String attrName)
    {
-      this(handler, attrName, valueString, true);
+      this(handler, attrName, true);
    }
 
-   public SVGDoubleAttribute(SVGHandler handler, 
-      String attrName, String valueString, boolean horizontal)
-      throws InvalidFormatException
+   protected SVGDoubleAttribute(SVGHandler handler, 
+      String attrName, boolean horizontal)
    {
-      super(handler, valueString);
+      super(handler);
       isHorizontal = horizontal;
       name = attrName;
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGDoubleAttribute valueOf(SVGHandler handler, 
+      String attrName, String value)
+   throws SVGException
    {
+      return valueOf(handler, attrName, value, true);
+   }
+
+   public static SVGDoubleAttribute valueOf(SVGHandler handler, 
+      String attrName, String value, boolean horizontal)
+   throws SVGException
+   {
+      SVGDoubleAttribute attr = new SVGDoubleAttribute(handler, attrName, horizontal);
+
+      attr.parse(value);
+
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          value = null;
@@ -45,12 +62,12 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
             }
             else
             {
-               throw new InvalidFormatException("Can't parse number '"+valueString+"'");
+               throw new CantParseAttributeValueException(handler, getName(), valueString);
             }
          }
          catch (NumberFormatException e)
          {
-            throw new InvalidFormatException("Invalid numerical attribute "+e.getMessage());
+            throw new CantParseAttributeValueException(handler, getName(), valueString, e);
          }
       }
    }
@@ -90,19 +107,9 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGDoubleAttribute attr = new SVGDoubleAttribute(handler, name, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGDoubleAttribute attr = new SVGDoubleAttribute(handler, name);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGDoubleAttribute attr)

@@ -11,23 +11,27 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGMitreLimitAttribute extends SVGDoubleAttribute
 {
-   public SVGMitreLimitAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGMitreLimitAttribute(SVGHandler handler)
    {
-      super(handler, "stroke-mitrelimit", valueString);
+      super(handler, "stroke-mitrelimit");
+   }
+
+   public static SVGMitreLimitAttribute valueOf(SVGHandler handler, String valueString)
+      throws SVGException
+   {
+      SVGMitreLimitAttribute attr = new SVGMitreLimitAttribute(handler);
+      attr.parse(valueString);
+      return attr;
    }
 
    @Override
-   protected void parse() throws InvalidFormatException
+   protected void parse(String str) throws SVGException
    {
-      super.parse();
+      super.parse(str);
       
       if (value != null && value.doubleValue() < 1.0)
       {
-         throw new InvalidFormatException(
-           handler.getMessageWithFallback("error.svg.invalid_attribute_value",
-           "Invalid {0} value: {1}",
-           getName(), valueString));
+         throw new InvalidAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -50,19 +54,9 @@ public class SVGMitreLimitAttribute extends SVGDoubleAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGMitreLimitAttribute attr = new SVGMitreLimitAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGMitreLimitAttribute attr = new SVGMitreLimitAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
 }

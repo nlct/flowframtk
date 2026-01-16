@@ -12,15 +12,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFontFamilyAttribute extends SVGAbstractAttribute
 {
-   public SVGFontFamilyAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGFontFamilyAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFontFamilyAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGFontFamilyAttribute attr = new SVGFontFamilyAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          fontFamily = null;
@@ -49,10 +57,7 @@ public class SVGFontFamilyAttribute extends SVGAbstractAttribute
 
          if (fontFamily == null)
          {
-            throw new InvalidFormatException(handler.getMessageWithFallback(
-             "error.svg.unknown_font_family",
-             "No font family available for {0}",
-             valueString));
+            throw new UnsupportedFontFamilyException(handler, valueString);
          }
       }
    }
@@ -66,19 +71,9 @@ public class SVGFontFamilyAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGFontFamilyAttribute attr = new SVGFontFamilyAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGFontFamilyAttribute attr = new SVGFontFamilyAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGFontFamilyAttribute attr)

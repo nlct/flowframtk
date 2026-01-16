@@ -6,23 +6,17 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGMeasurement
 {
-   public SVGMeasurement(SVGHandler handler, String valueString)
-     throws InvalidFormatException
-   {
-      this(handler, valueString, "");
-   }
-
-   public SVGMeasurement(SVGHandler handler, String valueString, String defUnitName)
-     throws InvalidFormatException
+   protected SVGMeasurement(SVGHandler handler)
    {
       this.handler = handler;
-      this.valueString = valueString;
       autoValue = false;
-      parse(defUnitName);
    }
 
-   protected void parse(String defUnitName) throws InvalidFormatException
+   protected void parse(String str, String defUnitName)
+    throws SVGException
    {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          value = null;
@@ -46,8 +40,7 @@ public class SVGMeasurement
          }
          catch (NumberFormatException e)
          {
-            throw new InvalidFormatException
-              ("Unable to parse '"+valueString+"'");
+            throw new CantParseMeasurementException(handler, valueString, e);
          }
 
          unitName = null;
@@ -66,13 +59,12 @@ public class SVGMeasurement
       }
       else
       {
-         throw new InvalidFormatException("Unable to parse measurement from '"
-           +valueString+"'");
+         throw new CantParseMeasurementException(handler, valueString);
       }
    }
 
    private void setValue(double val, String unitName)
-     throws InvalidFormatException
+     throws UnknownUnitException
    {
       this.value = val;
       this.unitName = unitName.toLowerCase();
@@ -89,7 +81,7 @@ public class SVGMeasurement
 
       if (unitId == -1)
       {
-         throw new InvalidFormatException("Unknown unit '"+unitName+"'");
+         throw new UnknownUnitException(handler, unitName);
       }
    }
 
@@ -126,12 +118,17 @@ public class SVGMeasurement
       }
       else
       {
-         value = new Double(measurement.value.doubleValue());
+         value = Double.valueOf(measurement.value.doubleValue());
       }
 
       unitName = measurement.unitName;
       unitId = measurement.unitId;
       valueString = measurement.valueString;
+   }
+
+   public String getSourceValue()
+   {
+      return valueString;
    }
 
    public static final Pattern pattern

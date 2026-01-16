@@ -9,4 +9,5 @@ public interface SVGAttribute extends Cloneable
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object);
    public Object getValue();
    public Object clone();
+   public String getSourceValue();
 }

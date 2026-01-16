@@ -11,17 +11,28 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGPenWidthAttribute extends SVGLengthAttribute
 {
-   public SVGPenWidthAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGPenWidthAttribute(SVGHandler handler)
    {
-      super(handler, "stroke-width", valueString);
-      
+      super(handler, "stroke-width");
+   }
+
+   public static SVGPenWidthAttribute valueOf(SVGHandler handler, String valueString)
+   throws SVGException
+   {
+      SVGPenWidthAttribute attr = new SVGPenWidthAttribute(handler);
+      attr.parse(valueString, "");
+      return attr;
+   }
+
+   @Override
+   protected void parse(String str, String defUnitName) throws SVGException
+   {
+      super.parse(str, defUnitName);
+
       if (value != null && value.doubleValue() < 0.0)
       {
-         throw new InvalidFormatException(
-           handler.getMessageWithFallback("error.svg.invalid_attribute_value",
-           "Invalid {0} value: {1}",
-           getName(), valueString));
+         throw new InvalidAttributeValueException(handler,
+           getName(), valueString);
       }
    }
 
@@ -44,19 +55,11 @@ public class SVGPenWidthAttribute extends SVGLengthAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGPenWidthAttribute attr = new SVGPenWidthAttribute(handler, null);
+      SVGPenWidthAttribute attr = new SVGPenWidthAttribute(handler);
 
-         attr.makeEqual(this);
+      attr.makeEqual(this);
 
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return attr;
    }
 
 }

@@ -8,9 +8,11 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGColorFactory
 {
-   public static JDRColor getPredefinedColor(CanvasGraphics cg, String name)
-     throws InvalidFormatException
+   public static JDRColor getPredefinedColor(SVGHandler handler, String name)
+     throws SVGException
    {
+      CanvasGraphics cg = handler.getCanvasGraphics();
+
       for (int i = 0; i < PREDEFINED_COLORS.length; i++)
       {
          if (PREDEFINED_COLORS[i].getName().equals(name))
@@ -19,7 +21,7 @@ public class SVGColorFactory
          }
       }
 
-      throw new InvalidFormatException("Unknown svg color name '"+name+"'");
+      throw new UnknownColorNameException(handler, name);
    }
 
    public static SVGPredefinedColor getPredefinedColor(int index)

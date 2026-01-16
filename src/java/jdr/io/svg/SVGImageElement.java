@@ -81,25 +81,25 @@ public class SVGImageElement extends SVGAbstractElement
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("x"))
       {
-         attr = new SVGLengthAttribute(handler, name, value);
+         attr = SVGLengthAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("y"))
       {
-         attr = new SVGLengthAttribute(handler, name, value);
+         attr = SVGLengthAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("width"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
       }
       else if (name.equals("height"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
       }
       else
       {

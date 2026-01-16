@@ -36,6 +36,10 @@ Nicola Talbot
 
 <entry key="error.title">Error</entry>
 
+<!-- Import Messages -->
+
+<entry key="error.svg.unknown_attribute">unknown colour name: {0}</entry>
+
 <!-- Manual -->
 
 <entry key="manual.grey">grey</entry>

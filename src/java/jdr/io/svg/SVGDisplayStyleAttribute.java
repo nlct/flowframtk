@@ -11,15 +11,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGDisplayStyleAttribute extends SVGAbstractAttribute
  implements SVGNumberAttribute
 {
-   public SVGDisplayStyleAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGDisplayStyleAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGDisplayStyleAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGDisplayStyleAttribute attr = new SVGDisplayStyleAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          style = null;
@@ -94,7 +102,7 @@ public class SVGDisplayStyleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown display style '"+valueString+"'");
+         throw new UnknownAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -135,19 +143,9 @@ public class SVGDisplayStyleAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGDisplayStyleAttribute attr = new SVGDisplayStyleAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGDisplayStyleAttribute attr = new SVGDisplayStyleAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGDisplayStyleAttribute attr)

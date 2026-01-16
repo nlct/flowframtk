@@ -12,15 +12,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGGradientUnitsAttribute extends SVGAbstractAttribute
   implements SVGNumberAttribute
 {
-   public SVGGradientUnitsAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGGradientUnitsAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGGradientUnitsAttribute valueOf(SVGHandler handler, String valueString)
+   throws SVGException
    {
+      SVGGradientUnitsAttribute attr = new SVGGradientUnitsAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          rule = null;
@@ -35,7 +43,7 @@ public class SVGGradientUnitsAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown gradientUnits '"+valueString+"'");
+         throw new UnknownAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -76,19 +84,9 @@ public class SVGGradientUnitsAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGGradientUnitsAttribute attr = new SVGGradientUnitsAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGGradientUnitsAttribute attr = new SVGGradientUnitsAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGGradientUnitsAttribute attr)

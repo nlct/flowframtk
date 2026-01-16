@@ -8,15 +8,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFontStyleAttribute extends SVGAbstractAttribute
 {
-   public SVGFontStyleAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGFontStyleAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFontStyleAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGFontStyleAttribute attr = new SVGFontStyleAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          fontStyle = null;
@@ -35,7 +43,7 @@ public class SVGFontStyleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new InvalidFormatException("Unknown font style '"+valueString+"'");
+         throw new UnknownAttributeValueException(handler, getName(), valueString);
       }
    }
 
@@ -48,19 +56,11 @@ public class SVGFontStyleAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGFontStyleAttribute attr = new SVGFontStyleAttribute(handler, null);
+      SVGFontStyleAttribute attr = new SVGFontStyleAttribute(handler);
 
-         attr.makeEqual(this);
+      attr.makeEqual(this);
 
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return attr;
    }
 
    public void makeEqual(SVGFontStyleAttribute attr)

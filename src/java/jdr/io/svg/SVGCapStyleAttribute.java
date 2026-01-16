@@ -12,15 +12,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 public class SVGCapStyleAttribute extends SVGAbstractAttribute
   implements SVGNumberAttribute
 {
-   public SVGCapStyleAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGCapStyleAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGCapStyleAttribute valueOf(SVGHandler handler, String valueString)
+      throws SVGException
    {
+      SVGCapStyleAttribute attr = new SVGCapStyleAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          capStyle = null;
@@ -39,10 +47,8 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
       }
       else
       {
-         throw new SVGException(handler,
-           handler.getMessageWithFallback("error.svg.invalid_attribute_value",
-           "Invalid {0} value: {1}",
-           getName(), valueString));
+         throw new InvalidAttributeValueException(handler,
+           getName(), valueString);
       }
    }
 
@@ -94,19 +100,9 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGCapStyleAttribute attr = new SVGCapStyleAttribute(handler, null);
-
-         attr.makeEqual(this);
-
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGCapStyleAttribute attr = new SVGCapStyleAttribute(handler);
+      attr.makeEqual(this);
+      return attr;
    }
 
    public void makeEqual(SVGCapStyleAttribute attr)

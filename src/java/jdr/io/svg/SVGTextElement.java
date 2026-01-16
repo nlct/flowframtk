@@ -41,29 +41,29 @@ public class SVGTextElement extends SVGAbstractElement
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("x"))
       {
-         attr = new SVGLengthArrayAttribute(handler, name, value);
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("y"))
       {
-         attr = new SVGLengthArrayAttribute(handler, name, value);
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("dx"))
       {
-         attr = new SVGLengthArrayAttribute(handler, name, value);
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("dy"))
       {
-         attr = new SVGLengthArrayAttribute(handler, name, value);
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("rotate"))
       {
-         attr = new SVGAngleArrayAttribute(handler, name, value);
+         attr = SVGAngleArrayAttribute.valueOf(handler, name, value);
       }
       else
       {
@@ -365,10 +365,10 @@ public class SVGTextElement extends SVGAbstractElement
    int currentListIndex, maxListItems;
    JDRText templateText;
 
-   SVGLength[] xArray;
-   SVGLength[] yArray;
-   SVGLength[] dxArray;
-   SVGLength[] dyArray;
+   SVGLengthAttribute[] xArray;
+   SVGLengthAttribute[] yArray;
+   SVGLengthAttribute[] dxArray;
+   SVGLengthAttribute[] dyArray;
    SVGAngleAttribute[] angleArray;
 
    double x, y, radians;

@@ -9,26 +9,29 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFontAttribute extends SVGCompoundAttribute
 {
-   public SVGFontAttribute(SVGHandler handler, String valueString)
-    throws InvalidFormatException
-   {
-      super(handler, "font", valueString);
-   }
-
    protected SVGFontAttribute(SVGHandler handler)
    {
       super(handler, "font");
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFontAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGFontAttribute attr = new SVGFontAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null)
       {
       }
       else if (valueString.equals("inherit"))
       {
-         addAttribute(new SVGFontFamilyAttribute(handler, valueString));
+         addAttribute(SVGFontFamilyAttribute.valueOf(handler, valueString));
       }
       else
       {
@@ -46,32 +49,32 @@ public class SVGFontAttribute extends SVGCompoundAttribute
 
             if (fontStyle != null)
             {
-               addAttribute(new SVGFontStyleAttribute(handler, fontStyle));
+               addAttribute(SVGFontStyleAttribute.valueOf(handler, fontStyle));
             }
 
             if (fontVariant != null)
             {
-               addAttribute(new SVGFontVariantAttribute(handler, fontVariant));
+               addAttribute(SVGFontVariantAttribute.valueOf(handler, fontVariant));
             }
 
             if (fontWeight != null)
             {
-               addAttribute(new SVGFontWeightAttribute(handler, fontWeight));
+               addAttribute(SVGFontWeightAttribute.valueOf(handler, fontWeight));
             }
 
             if (fontSize != null)
             {
-               addAttribute(new SVGFontSizeAttribute(handler, fontSize));
+               addAttribute(SVGFontSizeAttribute.valueOf(handler, fontSize));
             }
 
             if (fontFamily != null)
             {
-               addAttribute(new SVGFontFamilyAttribute(handler, fontFamily));
+               addAttribute(SVGFontFamilyAttribute.valueOf(handler, fontFamily));
             }
          }
          else
          {
-            throw new InvalidFormatException("Unknown font '"+valueString+"'");
+            throw new CantParseAttributeValueException(handler, getName(), valueString);
          }
       }
    }

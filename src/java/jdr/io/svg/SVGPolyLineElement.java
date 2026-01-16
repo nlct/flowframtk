@@ -29,13 +29,13 @@ public class SVGPolyLineElement extends SVGShape
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String style)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("points"))
       {
-         attr = new SVGLengthArrayAttribute(handler, name, style);
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, style);
       }
       else
       {
@@ -49,17 +49,16 @@ public class SVGPolyLineElement extends SVGShape
    public JDRShape createShape(CanvasGraphics cg)
      throws InvalidFormatException
    {
-      SVGLength[] points = getLengthArrayAttribute("points");
+      SVGLengthAttribute[] points = getLengthArrayAttribute("points");
 
       if (points == null)
       {
-         throw new InvalidFormatException("No points given for polyline");
+         throw new ElementMissingAttributeException(this, "points");
       }
 
       if (points.length%2 == 1)
       {
-         throw new InvalidFormatException(
-           "Even number of coordinates required for "+getName()+" point list");
+         throw new CoordPairsRequiredException(this, "points");
       }
 
       JDRPath path = new JDRPath(cg);

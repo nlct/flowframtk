@@ -26,7 +26,7 @@ public abstract class SVGShape extends SVGAbstractElement
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr = createPathStyleAttribute(name, value);
 

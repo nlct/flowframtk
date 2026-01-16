@@ -50,17 +50,17 @@ public class SVGElement extends SVGAbstractElement
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String value)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
       if (name.equals("width"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, true);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
       }
       else if (name.equals("height"))
       {
-         attr = new SVGLengthAttribute(handler, name, value, false);
+         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
       }
       else
       {

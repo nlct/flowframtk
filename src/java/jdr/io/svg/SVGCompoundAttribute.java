@@ -9,22 +9,11 @@ import com.dickimawbooks.jdr.exceptions.*;
 public abstract class SVGCompoundAttribute extends SimpleAttributeSet
  implements SVGAttribute
 {
-   public SVGCompoundAttribute(SVGHandler handler, String name, String valueString)
-    throws InvalidFormatException
-   {
-      this(handler, name);
-      this.valueString = valueString;
-
-      parse();
-   }
-
    protected SVGCompoundAttribute(SVGHandler handler, String name)
    {
       this.handler = handler;
       this.name = name;
    }
-
-   protected abstract void parse() throws InvalidFormatException;
 
    @Override
    public String getName()
@@ -49,6 +38,12 @@ public abstract class SVGCompoundAttribute extends SimpleAttributeSet
 
    @Override
    public Object getValue()
+   {
+      return valueString;
+   }
+
+   @Override
+   public String getSourceValue()
    {
       return valueString;
    }

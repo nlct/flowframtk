@@ -7,16 +7,36 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
 {
-   public SVGAngleAttribute(SVGHandler handler, String value)
-     throws InvalidFormatException
+   protected SVGAngleAttribute(SVGHandler handler)
    {
-      this(handler, "angle", value);
+      this(handler, "angle");
    }
 
-   public SVGAngleAttribute(SVGHandler handler, String attrName, String value)
-     throws InvalidFormatException
+   protected SVGAngleAttribute(SVGHandler handler, String name)
    {
-      super(handler, value, "deg");
+      super(handler);
+      this.name = name;
+   }
+
+   public static SVGAngleAttribute valueOf(SVGHandler handler, String valueString)
+   throws SVGException
+   {
+      return valueOf(handler, valueString, "");
+   }
+
+   public static SVGAngleAttribute valueOf(SVGHandler handler, String valueString, String defUnitName)
+   throws SVGException
+   {
+      SVGAngleAttribute attr = new SVGAngleAttribute(handler);
+      attr.parse(valueString, defUnitName);
+      return attr;
+   }
+
+   @Override
+   protected void parse(String str, String defUnitName)
+   throws SVGException
+   {
+      super.parse(str, "deg");
 
       if (value != null)
       {
@@ -27,7 +47,7 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
             case SVGMeasurement.UNIT_GRAD:
             break;
             default:
-               throw new InvalidFormatException("Invalid angle unit '"+getUnitName()+"'");
+               throw new InvalidUnitException(handler, name, getUnitName());
          }
       }
    }
@@ -61,19 +81,9 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGAngleAttribute angle = new SVGAngleAttribute(handler, name, null);
-
-         angle.makeEqual(this);
-
-         return angle;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      SVGAngleAttribute angle = new SVGAngleAttribute(handler, name);
+      angle.makeEqual(this);
+      return angle;
    }
 
    private static final double GRAD_FACTOR = Math.PI/200;

@@ -8,16 +8,25 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGLengthArrayAttribute extends SVGAbstractAttribute
 {
-   public SVGLengthArrayAttribute(SVGHandler handler, String attrName, String valueString)
-      throws InvalidFormatException
+   protected SVGLengthArrayAttribute(SVGHandler handler, String attrName)
    {
-      super(handler, valueString);
+      super(handler);
       this.name = attrName;
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGLengthArrayAttribute valueOf(SVGHandler handler, String attrName, String valueString)
+   throws SVGException
    {
+      SVGLengthArrayAttribute attr = new SVGLengthArrayAttribute(handler, attrName);
+
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          array = null;
@@ -26,11 +35,11 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
 
       String[] split = valueString.split("(\\s*,\\s*)|(\\s+,?\\s*)");
 
-      array = new SVGLength[split.length];
+      array = new SVGLengthAttribute[split.length];
 
       for (int i = 0; i < split.length; i++)
       {
-         array[i] = new SVGLength(handler, split[i]);
+         array[i] = SVGLengthAttribute.valueOf(handler, getName(), split[i]);
       }
    }
 
@@ -46,7 +55,7 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
       return array;
    }
 
-   public SVGLength[] getArray()
+   public SVGLengthAttribute[] getArray()
    {
       return array;
    }
@@ -64,19 +73,11 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
    @Override
    public Object clone()
    {
-      try
-      {
-         SVGLengthArrayAttribute attr = new SVGLengthArrayAttribute(handler, name, null);
+      SVGLengthArrayAttribute attr = new SVGLengthArrayAttribute(handler, name);
 
-         attr.makeEqual(this);
+      attr.makeEqual(this);
 
-         return attr;
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-
-      return null;
+      return attr;
    }
 
    public void makeEqual(SVGLengthArrayAttribute attr)
@@ -89,18 +90,18 @@ public class SVGLengthArrayAttribute extends SVGAbstractAttribute
       }
       else
       {
-         array = new SVGLength[attr.array.length];
+         array = new SVGLengthAttribute[attr.array.length];
 
          for (int i = 0; i < attr.array.length; i++)
          {
-            array[i] = (SVGLength)attr.array[i].clone();
+            array[i] = (SVGLengthAttribute)attr.array[i].clone();
          }
       }
 
       name = attr.name;
    }
 
-   private SVGLength[] array;
+   private SVGLengthAttribute[] array;
 
    private String name;
 }

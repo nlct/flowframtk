@@ -6,15 +6,23 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGFontSizeAttribute extends SVGAbstractAttribute
 {
-   public SVGFontSizeAttribute(SVGHandler handler, String valueString)
-     throws InvalidFormatException
+   protected SVGFontSizeAttribute(SVGHandler handler)
    {
-      super(handler, valueString);
+      super(handler);
    }
 
-   @Override
-   protected void parse() throws InvalidFormatException
+   public static SVGFontSizeAttribute valueOf(SVGHandler handler, String valueString)
+    throws SVGException
    {
+      SVGFontSizeAttribute attr = new SVGFontSizeAttribute(handler);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   protected void parse(String str) throws SVGException
+   {
+      this.valueString = str;
+
       if (valueString == null || valueString.equals("inherit"))
       {
          valueType = INHERIT;
@@ -57,30 +65,22 @@ public class SVGFontSizeAttribute extends SVGAbstractAttribute
       }
       else
       {
-         length = new SVGLength(handler, valueString);
+         length = SVGLengthAttribute.valueOf(handler, getName(), valueString);
          valueType = VALUE;
       }
    }
 
+   @Override
    public String getName()
    {
       return "font-size";
    }
 
+   @Override
    public Object clone()
    {
-      SVGFontSizeAttribute attr = null;
-
-      try
-      {
-         attr = new SVGFontSizeAttribute(handler, null);
-         attr.makeEqual(this);
-      }
-      catch (InvalidFormatException e)
-      {
-         // this shouldn't happen
-      }
-
+      SVGFontSizeAttribute attr = new SVGFontSizeAttribute(handler);
+      attr.makeEqual(this);
       return attr;
    }
 
@@ -161,7 +161,7 @@ public class SVGFontSizeAttribute extends SVGAbstractAttribute
       return Integer.valueOf(valueType);
    }
 
-   private SVGLength length;
+   private SVGLengthAttribute length;
 
    static final int INHERIT = -1;
    static final int VALUE = 0;

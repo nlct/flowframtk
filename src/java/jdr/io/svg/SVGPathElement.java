@@ -31,7 +31,7 @@ public class SVGPathElement extends SVGShape
 
    @Override
    protected SVGAttribute createElementAttribute(String name, String style)
-     throws InvalidFormatException
+     throws SVGException
    {
       SVGAttribute attr;
 
