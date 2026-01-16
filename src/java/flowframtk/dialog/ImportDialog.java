@@ -116,8 +116,7 @@ public class ImportDialog extends JDialog
 
    public void display()
    {
-      importSettings.currentFile = null;
-      bitmapNamePrefixField.setText("");
+      update((File)null);
 
       setVisible(true);
    }
@@ -129,12 +128,30 @@ public class ImportDialog extends JDialog
 
    protected void update(File file)
    {
-      ImportSettings.Type type = ImportSettings.Type.ACORN_DRAW;
+      ImportSettings.Type type = importSettings.type;
 
       if (file == null)
       {
          importSettings.currentFile = null;
          bitmapNamePrefixField.setText("");
+
+         FileFilter filter = importFC.getFileFilter();
+
+         if (!(filter instanceof AbstractJDRFileFilter
+              && ((AbstractJDRFileFilter)filter).supportsImportType(type)))
+         {
+            FileFilter[] filters = importFC.getChoosableFileFilters();
+
+            for (int i = 0; i < filters.length; i++)
+            {
+               if (filters[i] instanceof AbstractJDRFileFilter
+                    && ((AbstractJDRFileFilter)filters[i]).supportsImportType(type))
+               {
+                  importFC.setFileFilter(filters[i]);
+                  break;
+               }
+            }
+         }
       }
       else
       {
@@ -167,6 +184,10 @@ public class ImportDialog extends JDialog
          else if (jdrFileFilter instanceof SvgFileFilter)
          {
             type = ImportSettings.Type.SVG;
+         }
+         else
+         {
+            type = ImportSettings.Type.ACORN_DRAW;
          }
 
          update(type, file);

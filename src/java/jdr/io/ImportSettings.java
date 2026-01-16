@@ -29,7 +29,7 @@ public class ImportSettings
 
    public static enum Type
    {
-      ACORN_DRAW, EPS, SVG;
+      SVG, ACORN_DRAW, EPS;
    }
 
    public void copyFrom(ImportSettings other)
@@ -47,7 +47,7 @@ public class ImportSettings
    }
 
 
-   public Type type = Type.ACORN_DRAW;
+   public Type type = Type.SVG;
    public File currentFile = null;
    public boolean extractBitmaps = false;
    public File bitmapDir = null;
