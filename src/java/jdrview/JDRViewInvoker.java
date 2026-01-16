@@ -125,7 +125,7 @@ public class JDRViewInvoker
       resources = new JDRResources(APP_NAME);
       resources.initialise();
 
-      messageSystem = new JDRGuiMessage(resources);
+      messageSystem = JDRGuiMessage.create(resources);
 
       TeXJavaHelpLib helpLib = resources.getHelpLib();
 

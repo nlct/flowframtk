@@ -43,248 +43,37 @@ import com.dickimawbooks.jdr.exceptions.*;
  * @author Nicola L C Talbot
  */
 
-public class JDRGuiMessage extends JDRMessagePublisher implements UserCancellationListener
+public class JDRGuiMessage extends JDRMessagePublisher
+   implements UserCancellationListener,JDRMessage,MessageInfoPublisher,ActionListener
 {
-   public JDRGuiMessage(JDRResources resources)
+   protected JDRGuiMessage(JDRResources resources)
    {
-      resources.setMessageSystem(this);
-      frame = new JDRGuiMessageFrame(resources);
-   }
-
-   @Override
-   public void postMessage(MessageInfo info)
-   {
-      frame.postMessage(info);
-   }
-
-   @Override
-   public void setVerbosity(int verbosity)
-   {
-      frame.setVerbosity(verbosity);
-   }
-
-   @Override
-   public int getVerbosity()
-   {
-      return frame.getVerbosity();
-   }
-
-   @Override
-   public int getProgress()
-   {
-      return frame.getProgress();
-   }
-
-   @Override
-   public int getMaxProgress()
-   {
-      return frame.getMaxProgress();
-   }
-
-   @Override
-   public boolean isIndeterminate()
-   {
-      return frame.isIndeterminate();
-   }
-
-   @Override
-   public MessageInfoPublisher getPublisher()
-   {
-      return frame.getPublisher();
-   }
-
-   @Override
-   public void setPublisher(MessageInfoPublisher publisher)
-   {
-      frame.setPublisher(publisher);
-   }
-
-   @Override
-   public void publishMessages(MessageInfo... chunks)
-   {
-      frame.publishMessages(chunks);
-   }
-
-   @Override
-   public String getMessageWithFallback(String label,
-       String fallbackFormat, Object... params)
-   {
-      return frame.getMessageWithFallback(label, fallbackFormat, params);
-   }
-
-   @Override
-   public void message(String messageText)
-   {
-      frame.messageln(messageText);
-   }
-
-   public void finished(JComponent comp)
-   {
-      frame.finished(comp);
-   }
-
-   public void hideMessages()
-   {
-      frame.hideMessages();
-   }
-
-   public void displayMessages()
-   {
-      frame.displayMessages();
-   }
-
-   public void suspend()
-   {
-      frame.suspend();
-   }
-
-   public void resume()
-   {
-      frame.resume();
-   }
-
-   public void message(Exception excp)
-   {
-      frame.message(excp);
-   }
-
-   public void messageln(String messageText)
-   {
-      frame.messageln(messageText);
-   }
-
-   public void messageln(Exception excp)
-   {
-      frame.messageln(excp);
-   }
-
-   public void warning(String messageText)
-   {
-      frame.warning(messageText);
-   }
-
-   public void error(String messageText)
-   {
-      frame.error(messageText);
-   }
-
-   public void error(Throwable excp)
-   {
-      frame.error(excp);
-   }
-
-   public void internalerror(String messageText)
-   {
-      frame.internalerror(messageText);
-   }
-
-   public void internalerror(Throwable excp)
-   {
-      frame.internalerror(excp);
-   }
-
-   public void fatalerror(Throwable excp)
-   {
-      frame.fatalerror(excp);
-   }
-
-   public boolean warningFlagged()
-   {
-      return frame.warningFlagged();
-   }
-
-   public void enableAbort(boolean enabled)
-   {
-      frame.enableAbort(enabled);
-   }
-
-   @Override
-   public void checkForInterrupt() throws UserCancelledException
-   {
-      frame.checkForInterrupt();
-   }
-
-   public void setProcessInfo(String text)
-   {
-      frame.setProcessInfo(text);
-   }
-
-   public void debug(Exception e)
-   {
-      frame.debug(e);
-   }
-
-   public void debug(String msg)
-   {
-      frame.debug(msg);
-   }
-
-   @Override
-   public void setProcess(Process process)
-   {
-      registerProcess(process);
-   }
-
-   public void registerProcess(Process process)
-   {
-      frame.registerProcess(process);
-   }
-
-   public void processDone()
-   {
-      frame.processDone();
-   }
-
-   public JDRResources getResources()
-   {
-      return frame.getResources();
-   }
-
-   public JFrame getFrame()
-   {
-      return frame;
-   }
-
-   @Override
-   public String getApplicationName()
-   {
-      return getResources().getApplicationName();
-   }
-
-   @Override
-   public String getApplicationVersion()
-   {
-      return getResources().getApplicationVersion();
-   }
-
-   JDRGuiMessageFrame frame;
-}
-
-class JDRGuiMessageFrame extends JFrame
-  implements JDRMessage,MessageInfoPublisher,ActionListener,Serializable
-{
-   protected JDRGuiMessageFrame()
-   {
-      super("Messages");
+      warningFlag = false;
+      isInitialised = false;
       isSuspended = true;
-   }
-
-   public JDRGuiMessageFrame(JDRResources resources)
-   {
-      super(resources.getMessageWithFallback("message.title", "Messages"));
-
-      init(resources);
-   }
-
-   private void init(JDRResources resources)
-   {
+      errorBuffer = new StringBuffer();
       this.resources = resources;
       publisher = this;
+   }
+
+   public static JDRGuiMessage create(JDRResources resources)
+   {
+      JDRGuiMessage gm = new JDRGuiMessage(resources);
+      resources.setMessageSystem(gm);
+      gm.createFrame();
+      return gm;
+   }
+
+   protected void createFrame()
+   {
+      frame = new JFrame(resources.getMessageWithFallback(
+         "messages.title", "Messages"));
+
       TeXJavaHelpLib helpLib = resources.getHelpLib();
 
-      setIconImage(resources.getSmallAppIcon().getImage());
+      frame.setIconImage(resources.getSmallAppIcon().getImage());
 
-      addWindowListener(new WindowAdapter()
+      frame.addWindowListener(new WindowAdapter()
       {
          public void windowClosing(WindowEvent evt)
          {
@@ -311,18 +100,16 @@ class JDRGuiMessageFrame extends JFrame
       messageArea.setEditable(false);
       messageArea.setBackground(Color.white);
 
-      errorBuffer = new StringBuffer();
-
       messageScrollPane = new JScrollPane(messageArea);
 
-      getContentPane().add(messageScrollPane, "Center");
+      frame.getContentPane().add(messageScrollPane, "Center");
 
       progressBar = new JProgressBar();
 
-      getContentPane().add(progressBar, "North");
+      frame.getContentPane().add(progressBar, "North");
 
       JPanel buttonPanel = new JPanel(new BorderLayout());
-      getContentPane().add(buttonPanel, "South");
+      frame.getContentPane().add(buttonPanel, "South");
 
       processInfo = new JLabel();
       buttonPanel.add(processInfo, "Center");
@@ -336,12 +123,12 @@ class JDRGuiMessageFrame extends JFrame
 
       enableAbort(false);
 
-      lowerPanel.add(helpLib.createCloseButton((JFrame)this), "South");
+      lowerPanel.add(resources.createCloseButton(frame.getRootPane(), this), "South");
 
       int width = 400;
       int height = 200;
 
-      setSize(width,height);
+      frame.setSize(width,height);
 
       Toolkit tk = Toolkit.getDefaultToolkit();
       Dimension d = tk.getScreenSize();
@@ -351,40 +138,59 @@ class JDRGuiMessageFrame extends JFrame
       int x = (screenWidth-width)/2;
       int y = (screenHeight-height)/2;
 
-      setLocation(x, y);
+      frame.setLocation(x, y);
+
+      isInitialised = true;
+      isSuspended = false;
+   }
+
+   @Override
+   public void setProcess(Process process)
+   {
+      registerProcess(process);
+   }
+
+   public JFrame getFrame()
+   {
+      return frame;
+   }
+
+   @Override
+   public String getApplicationName()
+   {
+      return getResources().getApplicationName();
+   }
+
+   @Override
+   public String getApplicationVersion()
+   {
+      return getResources().getApplicationVersion();
    }
 
    private void doShow()
    {
       debug("Showing message frame");
-      setVisible(true);
-      toFront();
+
+      if (!isInitialised)
+      {
+         debug("Message frame not initialised");
+      }
+
+      if (!frame.isVisible())
+      {
+         frame.setVisible(true);
+         frame.toFront();
+      }
    }
 
    private void doHide()
    {
-      SwingUtilities.invokeLater(new Runnable()
+      if (isInitialised && frame.isVisible())
       {
-         public void run()
-         {
-            debug("Hiding message frame");
-            // Occasionally setVisible(false) doesn't work.
-            // Is it related to
-            // http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6377030
-            // Try waiting a bit before closing in case it's
-            // a timing issue (although that bug is supposed to be
-            // fixed).
-            try
-            {
-               Thread.sleep(1000);
-            }
-            catch (InterruptedException e)
-            {
-            }
-            setVisible(false);
-            warningFlag = false;
-         }
-      });
+         frame.setVisible(false);
+      }
+
+      warningFlag = false;
    }
 
    @Override
@@ -400,7 +206,7 @@ class JDRGuiMessageFrame extends JFrame
       }
       else if (action.equals("confirmabort"))
       {
-         if (getResources().confirm(this,
+         if (getResources().confirm(frame,
              resources.getMessage("process.confirm.abort"))
          == JOptionPane.YES_OPTION)
          {
@@ -449,14 +255,14 @@ class JDRGuiMessageFrame extends JFrame
 
    public void setIndeterminate(boolean indeterminate)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       progressBar.setIndeterminate(indeterminate);
    }
 
    public boolean isIndeterminate()
    {
-      if (isSuspended) return true;
+      if (isSuspended || !isInitialised) return true;
 
       return progressBar.isIndeterminate();
    }
@@ -468,62 +274,71 @@ class JDRGuiMessageFrame extends JFrame
 
    public void incrementProgress(int increment)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
+
       setProgress(progressBar.getValue()+increment);
    }
 
    public void setMaxProgress(int maxValue)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
+
       progressBar.setMaximum(maxValue);
    }
 
    public int getMaxProgress()
    {
-      if (isSuspended) return 0;
+      if (isSuspended || !isInitialised) return 0;
+
       return progressBar.getMaximum();
    }
 
    public void resetProgress(int maxValue)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
+
       progressBar.setValue(0);
       progressBar.setMaximum(maxValue);
    }
 
    public void resetProgress()
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       progressBar.setValue(0);
    }
 
    public int getProgress()
    {
-      if (isSuspended) return 0;
+      if (isSuspended || !isInitialised) return 0;
 
       return progressBar.getValue();
    }
 
    public void setProgress(int value)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       progressBar.setValue(value);
    }
 
-   public void message(String messageText)
+   protected void append(String text, AttributeSet attrs)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       try
       {
-         document.insertString(document.getLength(), messageText, attrPlain);
+         document.insertString(document.getLength(), text, attrs);
       }
       catch (BadLocationException e)
       {// shouldn't happen
          resources.debugMessage(e);
       }
+   }
+
+   public void message(String messageText)
+   {
+      append(messageText, attrPlain);
    }
 
    public void message(Exception excp)
@@ -543,58 +358,47 @@ class JDRGuiMessageFrame extends JFrame
 
    public void warning(String messageText)
    {
-      if (isSuspended) return;
-
-      try
+      if (!isSuspended)
       {
-         document.insertString(document.getLength(), 
-            String.format("%s%n", 
-               resources.getMessage("warning.tag", messageText)),
-            attrWarning);
-      }
-      catch (BadLocationException e)
-      {// shouldn't happen
-         resources.debugMessage(e);
-      }
+         append(String.format("%s%n", 
+           resources.getMessage("warning.tag", messageText)), attrWarning);
 
-      warningFlag = true;
-      displayMessages();
+         displayMessages();
+         warningFlag = true;
+      }
    }
 
    public void warning(Throwable excp)
    {
-      String msg = excp.getLocalizedMessage();
-      String classname = excp.getClass().getSimpleName();
-      String text = resources.getMessageIfExists("error.throwable."+classname);
-
-      if (text == null)
+      if (!isSuspended)
       {
-         text = classname;
-      }
+         String msg = excp.getLocalizedMessage();
+         String classname = excp.getClass().getSimpleName();
+         String text = resources.getMessageIfExists("error.throwable."+classname);
 
-      if (msg != null)
-      {
-         text += ": " + msg;
-      }
+         if (text == null)
+         {
+            text = classname;
+         }
 
-      warning(text);
+         if (msg != null)
+         {
+            text += ": " + msg;
+         }
+
+         warning(text);
+      }
    }
 
    public void error(String messageText)
    {
       errorBuffer.append(messageText);
 
-      try
+      if (!isSuspended)
       {
-         document.insertString(document.getLength(), messageText+"\n",
-           attrError);
+         append(messageText, attrError);
+         displayMessages();
       }
-      catch (BadLocationException e)
-      {// shouldn't happen
-         resources.debugMessage(e);
-      }
-
-      displayMessages();
    }
 
    public void error(Throwable excp)
@@ -619,47 +423,19 @@ class JDRGuiMessageFrame extends JFrame
    {
       resources.internalError(null, messageText);
 
-      try
-      {
-         document.insertString(document.getLength(), messageText, attrError);
-      }
-      catch (BadLocationException e)
-      {// shouldn't happen
-         resources.debugMessage(e);
-      }
+      append(messageText, attrError);
    }
 
    public void internalerror(Throwable excp)
    {
       resources.internalError(null, excp);
 
-      try
-      {
-         document.insertString(document.getLength(), excp.getLocalizedMessage(), 
-            attrError);
-      }
-      catch (BadLocationException e)
-      {// shouldn't happen
-         resources.debugMessage(e);
-      }
+      append(excp.getLocalizedMessage(), attrError);
    }
 
    public void fatalerror(Throwable excp)
    {
       resources.fatalError(excp.getLocalizedMessage(), excp);
-   }
-
-   @Deprecated
-   public String getString(String tag, String alt)
-   {
-      return resources.getString(tag, alt);
-   }
-
-   @Deprecated
-   public String getMessageWithAlt(String altFormat, String tag,
-     Object... values)
-   {
-      return resources.getMessageWithAlt(altFormat, tag, values);
    }
 
    public String getMessageWithFallback(String tag, String altFormat, 
@@ -675,7 +451,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void enableAbort(boolean enabled)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       abortButton.setActionCommand("confirmabort");
       abortButton.setEnabled(enabled);
@@ -685,7 +461,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void checkForInterrupt() throws UserCancelledException
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       if ("abort".equals(abortButton.getActionCommand()))
       {
@@ -697,13 +473,14 @@ class JDRGuiMessageFrame extends JFrame
 
    public void setProcessInfo(String text)
    {
-      processInfo.setText(text);
+      if (processInfo != null)
+      {
+         processInfo.setText(text);
+      }
    }
 
    public void debug(Exception e)
    {
-      if (isSuspended) return;
-
       resources.debugMessage(e);
    }
 
@@ -745,7 +522,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void postMessage(MessageInfo info)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       String action = info.getAction();
 
@@ -866,7 +643,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void publishMessages(MessageInfo... chunks)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       int max = getMaxProgress();
       int progress = getProgress();
@@ -922,7 +699,7 @@ class JDRGuiMessageFrame extends JFrame
 
    public void finished(JComponent comp)
    {
-      if (isSuspended) return;
+      if (isSuspended || !isInitialised) return;
 
       if (!warningFlag && errorBuffer.length() == 0)
       {
@@ -933,33 +710,7 @@ class JDRGuiMessageFrame extends JFrame
       setPublisher(this);
    }
 
-   private void writeObject(java.io.ObjectOutputStream stream)
-     throws IOException
-   {
-   }
-
-   private void readObject(java.io.ObjectInputStream stream)
-     throws IOException, ClassNotFoundException
-   {
-   }
-
-   private void readObjectNoData()
-     throws ObjectStreamException
-   {
-   }
-
-   @Override
-   public String getApplicationName()
-   {
-      return resources.getApplicationName();
-   }
-
-   @Override
-   public String getApplicationVersion()
-   {
-      return resources.getApplicationVersion();
-   }
-
+   private JFrame frame;
    private JProgressBar progressBar;
 
    private StringBuffer errorBuffer;
@@ -975,9 +726,10 @@ class JDRGuiMessageFrame extends JFrame
    private JLabel processInfo;
    private AbstractButton abortButton;
 
-   private boolean warningFlag = false;
+   private boolean warningFlag;
+   private boolean isSuspended;
 
-   private boolean isSuspended = false;
+   private boolean isInitialised;
 
    private Process process;
 

@@ -3767,7 +3767,7 @@ public class FlowframTkInvoker
 
             try
             {
-               resources.setMessageSystem(new JDRGuiMessage(resources));
+               JDRGuiMessage.create(resources);
                invoker.createAndShowGUI();
             }
             catch (InvalidSyntaxException e)

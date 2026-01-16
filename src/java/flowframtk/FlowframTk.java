@@ -589,12 +589,15 @@ public class FlowframTk extends JFrame
 
       fileM.addSeparator();
 
+      // Show Messages
+
       JMenuItem showMessagesItem = FlowframTkAction.createMenuItem(this,
          "menu.file", "messages", fileM,
          new FlowframTkActionListener()
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
+               getMessageSystem().resume();
                getMessageSystem().displayMessages();
             }
          });
