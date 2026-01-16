@@ -319,8 +319,7 @@ public class JDRText extends JDRCompleteObject
       pgfValign = PGF_VALIGN_BASE;
       pgfHalign = PGF_HALIGN_LEFT;
 
-      font = new Font(jdrFont.getFamily(), getFontWeight(),
-         jdrFont.getBpSize());
+      font = jdrFont.getJavaFont();
       updateBounds();
 
       setTextPaint(new JDRColor(getCanvasGraphics(), 0,0,0));
@@ -438,8 +437,7 @@ public class JDRText extends JDRCompleteObject
       jdrFont.setWeight(series);
       jdrFont.setShape(shape);
       jdrFont.setSize(size);
-      font = new Font(jdrFont.getFamily(), getFontWeight(),
-         jdrFont.getBpSize());
+      font = jdrFont.getJavaFont();
       updateBounds();
    }
 
@@ -450,8 +448,7 @@ public class JDRText extends JDRCompleteObject
    public void setFontFamily(String name)
    {
       jdrFont.setFamily(name);
-      font = new Font(jdrFont.getFamily(), getFontWeight(),
-         jdrFont.getBpSize());
+      font = jdrFont.getJavaFont();
       updateBounds();
    }
 
@@ -463,8 +460,7 @@ public class JDRText extends JDRCompleteObject
    public void setFontSeries(int series)
    {
       jdrFont.setWeight(series);
-      font = new Font(jdrFont.getFamily(), getFontWeight(),
-         jdrFont.getBpSize());
+      font = jdrFont.getJavaFont();
       updateBounds();
    }
 
@@ -478,8 +474,7 @@ public class JDRText extends JDRCompleteObject
    public void setFontShape(int shape)
    {
       jdrFont.setShape(shape);
-      font = new Font(jdrFont.getFamily(), getFontWeight(),
-         jdrFont.getBpSize());
+      font = jdrFont.getJavaFont();
       updateBounds();
    }
 
@@ -490,8 +485,7 @@ public class JDRText extends JDRCompleteObject
    public void setFontSize(JDRLength size)
    {
       jdrFont.setSize(size);
-      font = new Font(jdrFont.getFamily(), getFontWeight(),
-         jdrFont.getBpSize());
+      font = jdrFont.getJavaFont();
       updateBounds();
    }
 

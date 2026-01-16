@@ -125,6 +125,11 @@ public class JDRFont implements Cloneable,Serializable
       return shape;
    }
 
+   public Font getJavaFont()
+   {
+      return new Font(family, getJavaFontStyle(), getBpSize());
+   }
+
    public int getJavaFontStyle()
    {
       int style = (weight == SERIES_MEDIUM ?
