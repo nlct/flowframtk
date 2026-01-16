@@ -1,6 +1,10 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -109,6 +113,12 @@ public class SVGHandler extends DefaultHandler
       stack.push(current);
 
       current.addAttributes(uri, attrs);
+      String id = current.getId();
+
+      if (id != null)
+      {
+         addElement(id, current);
+      }
 
       try
       {
@@ -349,6 +359,69 @@ public class SVGHandler extends DefaultHandler
       svg.setLaTeXText(jdrText);
    }
 
+   public void addElement(String id, SVGAbstractElement element)
+   {
+      if (idElementMap == null)
+      {
+         idElementMap = new HashMap<String,SVGAbstractElement>();
+      }
+
+      idElementMap.put(id, element);
+   }
+
+   public SVGAbstractElement getElement(String id)
+   {
+      return idElementMap == null ? null : idElementMap.get(id);
+   }
+
+   public SVGAbstractElement getElement(URI uri)
+     throws SVGException
+   {
+      String path = uri.getPath();
+
+      if (path != null && !path.isEmpty())
+      {
+         throw new ExternalRefUnsupportedException(this, uri.toString());
+      }
+
+      return getElement(uri.getFragment());
+   }
+
+   public URI parseUriValueRef(String str)
+     throws URISyntaxException
+   {
+      Matcher m = URI_REF_VALUE_PATTERN.matcher(str);
+
+      if (m.matches())
+      {
+         return new URI(m.group(1));
+      }
+
+      return null;
+   }
+
+   public SVGAbstractElement getAttributeValueRef(SVGAbstractAttribute attr)
+     throws SVGException
+   {
+      String valueStr = attr.getSourceValue();
+
+      try
+      {
+         URI uri = parseUriValueRef(valueStr);
+
+         if (uri != null)
+         {
+            return getElement(uri);
+         }
+      }
+      catch (URISyntaxException e)
+      {
+         throw new InvalidAttributeValueException(this, attr.getName(), valueStr);
+      }
+
+      return null;
+   }
+
    private JDRGroup group;
    private SVG svg;
 
@@ -362,4 +435,9 @@ public class SVGHandler extends DefaultHandler
 
    private JDRMessage msgSystem;
    private String[] availableFontFamilies;
+
+   private HashMap<String,SVGAbstractElement> idElementMap;
+
+   public static final Pattern URI_REF_VALUE_PATTERN
+    = Pattern.compile("url\\('(.+)'\\)");
 }

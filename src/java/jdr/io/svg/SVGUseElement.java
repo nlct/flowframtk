@@ -51,15 +51,12 @@ public class SVGUseElement extends SVGAbstractElement
 
       try
       {
-         URI uriRef = new URI(ref);
-         String path = uriRef.getPath();
+         element = handler.getElement(new URI(ref));
 
-         if (path != null && !path.isEmpty())
+         if (element == null)
          {
-            throw new ExternalRefUnsupportedException(this, ref);
+            throw new UnknownReferenceException(element, ref);
          }
-
-         ref = uriRef.getFragment();
       }
       catch (URISyntaxException e)
       {
@@ -81,13 +78,6 @@ public class SVGUseElement extends SVGAbstractElement
 
       xAttr = getLengthAttribute("x");
       yAttr = getLengthAttribute("y");
-
-      element = getRefElement(ref);
-
-      if (element == null)
-      {
-         throw new UnknownReferenceException(element, ref);
-      }
 
       element = (SVGAbstractElement)element.clone();
 

@@ -622,40 +622,9 @@ public abstract class SVGAbstractElement implements Cloneable
       return null;
    }
 
-   public SVGDefsElement getChildDefs()
-   {
-      for (SVGAbstractElement child : children)
-      {
-         if (child instanceof SVGDefsElement)
-         {
-            return (SVGDefsElement)child;
-         }
-      }
-
-      return null;
-   }
-
    public SVGAbstractElement getRefElement(String id)
    {
-      if (parent == null)
-      {
-         return null;
-      }
-
-      SVGDefsElement defs = parent.getChildDefs();
-
-      if (defs != null)
-      {
-         for (SVGAbstractElement child : defs.children)
-         {
-            if (id.equals(child.getId()))
-            {
-               return child;
-            }
-         }
-      }
-
-      return parent.getRefElement(id);
+      return handler.getElement(id);
    }
 
    public JDRPaint getPaintAttribute(String attrName, JDRPaint defPaint)
