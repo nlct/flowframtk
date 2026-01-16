@@ -273,7 +273,11 @@ public class SVGTextElement extends SVGAbstractElement
 
       Point2D p = new Point2D.Double(x, y);
 
-      JDRText textArea = new JDRText(cg, p, templateText.getJDRFont(), text);
+      JDRFont jdrFont = (JDRFont)templateText.getJDRFont().clone();
+      JDRText textArea = new JDRText(cg, p, jdrFont, text);
+
+      LaTeXFontBase lfb = cg.getLaTeXFontBase();
+      textArea.setLaTeXFont(LaTeXFont.createFor(lfb, jdrFont));
 
       textArea.setTextPaint(templateText.getTextPaint());
 

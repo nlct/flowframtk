@@ -151,6 +151,7 @@ public class SVGFontSizeAttribute extends SVGAbstractAttribute
             fontSize = length.getLength(element, true);
          }
 
+         fontSize.changeUnit(JDRUnit.pt);
          textual.setFontSize(fontSize);
       }
    }

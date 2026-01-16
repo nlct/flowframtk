@@ -87,25 +87,6 @@ public class SVGFontStyleAttribute extends SVGAbstractAttribute
          {
             textual.setFontShape(fontStyle.intValue());
          }
-
-         switch (textual.getFontShape())
-         {
-            case JDRFont.SHAPE_UPRIGHT:
-              textual.setLaTeXShape("\\upshape");
-            break;
-            case JDRFont.SHAPE_EM:
-              textual.setLaTeXShape("\\em");
-            break;
-            case JDRFont.SHAPE_ITALIC:
-              textual.setLaTeXShape("\\itshape");
-            break;
-            case JDRFont.SHAPE_SLANTED:
-              textual.setLaTeXShape("\\slshape");
-            break;
-            case JDRFont.SHAPE_SC:
-              textual.setLaTeXShape("\\scshape");
-            break;
-         }
       }
    }
 
