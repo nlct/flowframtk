@@ -110,6 +110,45 @@ public class LaTeXFont implements Cloneable,Serializable
       size = font.size;
    }
 
+   public static LaTeXFont createFor(LaTeXFontBase lfb, JDRFont jdrFont)
+   {
+      LaTeXFont lf = new LaTeXFont();
+
+      lf.family = fromJavaFamily(jdrFont.getFamily());
+      lf.size = lfb.getLaTeXCmd(jdrFont.getSize());
+
+      switch (jdrFont.getShape())
+      {
+         case JDRFont.SHAPE_UPRIGHT:
+           lf.shape = "\\upshape";
+         break;
+         case JDRFont.SHAPE_EM:
+           lf.shape = "\\em";
+         break;
+         case JDRFont.SHAPE_ITALIC:
+           lf.shape = "\\itshape";
+         break;
+         case JDRFont.SHAPE_SLANTED:
+           lf.shape = "\\slshape";
+         break;
+         case JDRFont.SHAPE_SC:
+           lf.shape = "\\scshape";
+         break;
+      }
+
+      switch (jdrFont.getWeight())
+      {
+         case JDRFont.SERIES_MEDIUM:
+            lf.weight = "\\mdseries";
+         break;
+         case JDRFont.SERIES_BOLD:
+            lf.weight = "\\bfseries";
+         break;
+      }
+
+      return lf;
+   }
+
    /**
     * Gets the font family.
     * @return the LaTeX declaration that sets the font family
