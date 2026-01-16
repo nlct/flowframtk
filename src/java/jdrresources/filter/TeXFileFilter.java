@@ -68,6 +68,26 @@ public class TeXFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      switch (type)
+      {
+         case PGF:
+         case IMAGE_DOC:
+         case FLF_DOC:
+         return true;
+      }
+
+      return false;
+   }
+
+   @Override
    public String getDefaultExtension()
    {
       return "tex";

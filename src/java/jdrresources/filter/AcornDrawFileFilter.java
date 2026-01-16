@@ -57,5 +57,17 @@ public class AcornDrawFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return type == ImportSettings.Type.ACORN_DRAW;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
    public String getExtensionSeparator() { return ","; }
 }

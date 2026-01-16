@@ -55,6 +55,18 @@ public class EpsFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return type == ImportSettings.Type.EPS;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      return type == ExportSettings.Type.EPS;
+   }
+
+   @Override
    public String getDefaultExtension()
    {
       return "eps";

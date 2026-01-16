@@ -50,6 +50,18 @@ public class SvgFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return type == ImportSettings.Type.SVG;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      return type == ExportSettings.Type.SVG;
+   }
+
+   @Override
    public String getDefaultExtension()
    {
       return "svg";

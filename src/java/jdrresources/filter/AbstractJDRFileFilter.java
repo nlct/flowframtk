@@ -20,6 +20,9 @@ package com.dickimawbooks.jdrresources.filter;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
+import com.dickimawbooks.jdr.io.ImportSettings;
+import com.dickimawbooks.jdr.io.ExportSettings;
+
 /**
  * Abstract filter.
  */
@@ -38,6 +41,9 @@ public abstract class AbstractJDRFileFilter
    }
 
    public abstract boolean accept(File file);
+
+   public abstract boolean supportsImportType(ImportSettings.Type type);
+   public abstract boolean supportsExportType(ExportSettings.Type type);
 
    @Override
    public String getDescription()

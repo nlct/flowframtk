@@ -88,5 +88,17 @@ public class BitmapFileFilter extends AbstractJDRFileFilter
       return "png";
    }
 
+   @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      return false;
+   }
+
    private String[] validExtensions;
 }

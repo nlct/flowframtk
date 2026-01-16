@@ -62,6 +62,18 @@ public class ClsFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      return type == ExportSettings.Type.CLS;
+   }
+
+   @Override
    public String getDefaultExtension()
    {
       return "cls";

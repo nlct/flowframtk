@@ -81,6 +81,18 @@ public class AjrFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
    public String getDefaultExtension()
    {
       return "ajr";

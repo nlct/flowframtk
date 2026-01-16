@@ -52,6 +52,25 @@ public class PdfFileFilter extends AbstractJDRFileFilter
    }
 
    @Override
+   public boolean supportsImportType(ImportSettings.Type type)
+   {
+      return false;
+   }
+
+   @Override
+   public boolean supportsExportType(ExportSettings.Type type)
+   {
+      switch (type)
+      {
+         case IMAGE_PDF:
+         case FLF_PDF:
+         return true;
+      }
+
+      return false;
+   }
+
+   @Override
    public String getDefaultExtension()
    {
       return "pdf";
