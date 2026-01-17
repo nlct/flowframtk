@@ -30,7 +30,7 @@ public class SVGMeasurement
          return;
       }
 
-      Matcher m = pattern.matcher(valueString);
+      Matcher m = PATTERN.matcher(valueString);
 
       if (m.matches())
       {
@@ -141,8 +141,8 @@ public class SVGMeasurement
       return valueString;
    }
 
-   public static final Pattern pattern
-      = Pattern.compile("((?:[+\\-]?\\d*)(?:\\.\\d+)?(?:[eE][=\\-]?\\d+)?)\\s*([a-zA-Z]*)");
+   public static final Pattern PATTERN
+      = Pattern.compile("((?:[+\\-]?\\d*)(?:\\.\\d+)?(?:[eE][=\\-]?\\d+)?)\\s*([a-zA-Z%]*)");
 
    protected Double value;
    private String unitName;
