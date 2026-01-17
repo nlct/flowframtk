@@ -73,6 +73,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
       frame.setIconImage(resources.getSmallAppIcon().getImage());
 
+/*
       frame.addWindowListener(new WindowAdapter()
       {
          public void windowClosing(WindowEvent evt)
@@ -82,6 +83,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
             errorBuffer.setLength(0);
          }
       });
+*/
 
       document = new DefaultStyledDocument();
 
@@ -190,6 +192,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
       }
 
       warningFlag = false;
+      errorBuffer.setLength(0);
    }
 
    @Override
