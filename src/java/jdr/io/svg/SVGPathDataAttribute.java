@@ -14,6 +14,12 @@ public class SVGPathDataAttribute implements SVGAttribute
 {
    public SVGPathDataAttribute(SVGHandler handler, String valueString)
    {
+      this(handler, "d", valueString);
+   }
+
+   public SVGPathDataAttribute(SVGHandler handler, String name, String valueString)
+   {
+      this.name = name;
       this.handler = handler;
       this.valueString = valueString;
 
@@ -30,7 +36,7 @@ public class SVGPathDataAttribute implements SVGAttribute
    @Override
    public String getName()
    {
-      return "d";
+      return name;
    }
 
    @Override
@@ -723,6 +729,7 @@ public class SVGPathDataAttribute implements SVGAttribute
       return valueString;
    }
 
+   String name;
    private String data;
    SVGHandler handler;
    String valueString;

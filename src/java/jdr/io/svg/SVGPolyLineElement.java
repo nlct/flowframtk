@@ -1,5 +1,8 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.Shape;
+import java.awt.geom.Path2D;
+
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
@@ -10,13 +13,12 @@ public class SVGPolyLineElement extends SVGShape
 {
    public SVGPolyLineElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
+      this(handler, "polyline", parent);
    }
 
-   @Override
-   public String getName()
+   public SVGPolyLineElement(SVGHandler handler, String name, SVGAbstractElement parent)
    {
-      return "polyline";
+      super(handler, name, parent);
    }
 
    @Override
@@ -46,10 +48,9 @@ public class SVGPolyLineElement extends SVGShape
    }
 
    @Override
-   public JDRShape createShape(CanvasGraphics cg)
-     throws InvalidFormatException
+   public void startElement() throws InvalidFormatException
    {
-      SVGLengthAttribute[] points = getLengthArrayAttribute("points");
+      points = getLengthArrayAttribute("points");
 
       if (points == null)
       {
@@ -58,23 +59,32 @@ public class SVGPolyLineElement extends SVGShape
 
       if (points.length%2 == 1)
       {
+         points = null;
+
          throw new CoordPairsRequiredException(this, "points");
       }
 
-      JDRPath path = new JDRPath(cg);
+      super.startElement();
+   }
 
-      double p1x = points[0].getStorageValue(this, true);
-      double p1y = points[1].getStorageValue(this, false);
+   @Override
+   protected Shape constructShape() throws SVGException
+   {
+      if (points == null) return null;
+
+      Path2D.Double path = new Path2D.Double();
+
+      double px = points[0].getStorageValue(this, true);
+      double py = points[1].getStorageValue(this, false);
+
+      path.moveTo(px, py);
 
       for (int i = 2; i < points.length; i += 2)
       {
-         double p2x = points[i].getStorageValue(this, true);
-         double p2y = points[i+1].getStorageValue(this, false);
+         px = points[i].getStorageValue(this, true);
+         py = points[i+1].getStorageValue(this, false);
 
-         path.add(new JDRLine(cg, p1x, p1y, p2x, p2y));
-
-         p1x = p2x;
-         p1y = p2y;
+         path.lineTo(px, py);
       }
 
       return path;
@@ -89,4 +99,32 @@ public class SVGPolyLineElement extends SVGShape
 
       return element;
    }
+
+   public void makeEqual(SVGPolyLineElement other)
+   {
+      super.makeEqual(other);
+
+      if (other.points == null)
+      {
+         points = null;
+      }
+      else if (points == null || points.length != other.points.length)
+      {
+         points = new SVGLengthAttribute[other.points.length];
+
+         for (int i = 0; i < other.points.length; i++)
+         {
+            points[i] = (SVGLengthAttribute)other.points[i];
+         }
+      }
+      else
+      {
+         for (int i = 0; i < other.points.length; i++)
+         {
+            points[i].makeEqual((SVGAttribute)other.points[i]);
+         }
+      }
+   }
+
+   SVGLengthAttribute[] points;
 }

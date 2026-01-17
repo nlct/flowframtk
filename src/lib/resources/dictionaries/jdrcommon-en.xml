@@ -576,6 +576,7 @@ File doesn''t exist</entry>
 <entry key="error.svg.coord_pairs_expected">co-ordinate pairs x1 y1 x2 y2 required in {0}</entry>
 <entry key="error.svg.no_associated_paint_for_id">no associated paint for id {0}</entry>
 <entry key="error.svg.no_associated_paint">no associated paint</entry>
+<entry key="error.svg.shape_expected">shape expected in reference ''{0}'' but found element {1}</entry>
 
 <!-- Internal Error Messages -->
 

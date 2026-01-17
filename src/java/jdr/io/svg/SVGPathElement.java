@@ -1,5 +1,6 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.Shape;
 import java.awt.geom.Path2D;
 
 import org.xml.sax.*;
@@ -12,13 +13,7 @@ public class SVGPathElement extends SVGShape
 {
    public SVGPathElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
-   }
-
-   @Override
-   public String getName()
-   {
-      return "path";
+      super(handler, "path", parent);
    }
 
    @Override
@@ -48,19 +43,20 @@ public class SVGPathElement extends SVGShape
    }
 
    @Override
-   public JDRShape createShape(CanvasGraphics cg)
-     throws InvalidFormatException
+   public void startElement() throws InvalidFormatException
    {
-      Path2D path = getPathDataAttribute();
+      pathDataAttr = getPathDataAttribute("d");
 
-      if (path == null)
-      {
-         throw new InvalidFormatException("Missing path data");
-      }
-
-      return JDRPath.getPath(cg, path.getPathIterator(null));
+      super.startElement();
    }
 
+   @Override
+   protected Shape constructShape() throws SVGException
+   {
+      return pathDataAttr == null ? null : pathDataAttr.getPath(this);
+   }
+
+   @Override
    public Object clone()
    {
       SVGPathElement element = new SVGPathElement(handler, null);
@@ -69,4 +65,24 @@ public class SVGPathElement extends SVGShape
 
       return element;
    }
+
+   public void makeEqual(SVGPathElement other)
+   {
+      super.makeEqual(other);
+
+      if (other.pathDataAttr == null)
+      {
+         pathDataAttr = null;
+      }
+      else if (pathDataAttr == null)
+      {
+         pathDataAttr = (SVGPathDataAttribute)other.pathDataAttr.clone();
+      }
+      else
+      {
+         pathDataAttr.makeEqual(other.pathDataAttr);
+      }
+   }
+
+   SVGPathDataAttribute pathDataAttr;
 }

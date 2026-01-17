@@ -4402,6 +4402,7 @@ content);
 \gls{group} that will be added to the encapsulating \xmlelem{text}
 container's collection);
 \item \xmlelem{a} (restricted to within \xmlelem{text});
+\item \xmlelem{textPath} (offset and spacing ignored);
 \item shapes: \xmlelem{rect}, \xmlelem{ellipse},
 \xmlelem{circle}, \xmlelem{line}, \xmlelem{polyline},
 \xmlelem{polygon}, \xmlelem{path};
@@ -4415,6 +4416,9 @@ defined within the file);
 than one \FlowframTk\ \gls{object} to be created).
 \end{itemize}
 
+If the \xmlelem{svg} area (given by the \xmlattr{viewBox}) is larger than the current
+paper size, the paper size will be changed to the next predefined
+size that encompasses the given area.
 
 \widgetdef{import.title}
 

@@ -2,7 +2,9 @@ package com.dickimawbooks.jdr.io.svg;
 
 import org.xml.sax.*;
 
+import java.awt.Shape;
 import java.awt.geom.Point2D;
+import java.awt.geom.Ellipse2D;
 
 import com.dickimawbooks.jdr.*;
 
@@ -12,13 +14,7 @@ public class SVGEllipseElement extends SVGShape
 {
    public SVGEllipseElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
-   }
-
-   @Override
-   public String getName()
-   {
-      return "ellipse";
+      super(handler, "ellipse", parent);
    }
 
    @Override
@@ -63,14 +59,13 @@ public class SVGEllipseElement extends SVGShape
    }
 
    @Override
-   public JDRShape createShape(CanvasGraphics cg)
+   public void startElement() throws InvalidFormatException
    {
-      Point2D p = new Point2D.Double(
-                    getDoubleAttribute("cx", 0),
-                    getDoubleAttribute("cy", 0));
+      px = getDoubleAttribute("cx", 0);
+      py = getDoubleAttribute("cy", 0);
 
-      double rx = 0;
-      double ry = 0;
+      rx = 0;
+      ry = 0;
 
       SVGLengthAttribute rxAttr = getLengthAttribute("rx");
       SVGLengthAttribute ryAttr = getLengthAttribute("ry");
@@ -94,14 +89,18 @@ public class SVGEllipseElement extends SVGShape
          ry = ryAttr.doubleValue(this);
       }
 
-      if (rx <= 0 || ry <= 0)
+      super.startElement();
+   }
+
+   @Override
+   protected Shape constructShape() throws SVGException
+   {
+      if (rx > 0 && ry > 0)
       {
-         return null;
+         return new Ellipse2D.Double(px - rx, py - ry, 2*rx, 2*ry);
       }
 
-      JDRPath shape = JDRPath.constructEllipse(cg, p, rx, ry);
-
-      return shape;
+      return null;
    }
 
    @Override
@@ -113,4 +112,16 @@ public class SVGEllipseElement extends SVGShape
 
       return element;
    }
+
+   public void makeEqual(SVGEllipseElement other)
+   {
+      super.makeEqual(other);
+
+      rx = other.rx;
+      ry = other.ry;
+      px = other.px;
+      py = other.py;
+   }
+
+   double rx, ry, px, py;
 }

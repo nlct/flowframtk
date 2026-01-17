@@ -2,7 +2,9 @@ package com.dickimawbooks.jdr.io.svg;
 
 import org.xml.sax.*;
 
+import java.awt.Shape;
 import java.awt.geom.Point2D;
+import java.awt.geom.Ellipse2D;
 
 import com.dickimawbooks.jdr.*;
 
@@ -12,13 +14,7 @@ public class SVGCircleElement extends SVGShape
 {
    public SVGCircleElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
-   }
-
-   @Override
-   public String getName()
-   {
-      return "circle";
+      super(handler, "circle", parent);
    }
 
    @Override
@@ -58,17 +54,21 @@ public class SVGCircleElement extends SVGShape
    }
 
    @Override
-   public JDRShape createShape(CanvasGraphics cg)
+   public void startElement() throws InvalidFormatException
    {
-      Point2D p = new Point2D.Double(
-         getDoubleAttribute("cx", 0),
-         getDoubleAttribute("cy", 0));
+      x = getDoubleAttribute("cx", 0);
+      y = getDoubleAttribute("cy", 0);
+      r = getDoubleAttribute("r", 0);
 
-      double r = getDoubleAttribute("r", 0);
+      super.startElement();
+   }
 
-      JDRPath shape = JDRPath.constructEllipse(cg, p, r, r);
+   @Override
+   protected Shape constructShape() throws SVGException
+   {
+      double d = 2 * r;
 
-      return shape;
+      return new Ellipse2D.Double(x - r, y - r, d, d);
    }
 
    @Override
@@ -80,4 +80,15 @@ public class SVGCircleElement extends SVGShape
 
       return element;
    }
+
+   public void makeEqual(SVGCircleElement other)
+   {
+      super.makeEqual(other);
+
+      r = other.r;
+      x = other.x;
+      y = other.y;
+   }
+
+   double x, y, r;
 }

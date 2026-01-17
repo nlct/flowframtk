@@ -1,5 +1,8 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.Shape;
+import java.awt.geom.Path2D;
+
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
@@ -10,24 +13,18 @@ public class SVGPolygonElement extends SVGPolyLineElement
 {
    public SVGPolygonElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
+      super(handler, "polygon", parent);
    }
 
-   public String getName()
+   @Override
+   protected Shape constructShape() throws SVGException
    {
-      return "polygon";
-   }
+      Path2D path = (Path2D)super.constructShape();
 
-   public JDRShape createShape(CanvasGraphics cg)
-    throws InvalidFormatException
-   {
-      JDRPath path = (JDRPath)super.createShape(cg);
-
-      path.close(JDRPath.CLOSE_LINE);
+      path.closePath();
 
       return path;
    }
-
 
    public Object clone()
    {

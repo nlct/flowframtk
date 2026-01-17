@@ -78,13 +78,18 @@ public class SVGTextElement extends SVGAbstractElement
       return attr;
    }
 
-   @Override
-   public void startElement() throws InvalidFormatException
+   protected void createTemplate() throws SVGException
    {
       templateText = new JDRText(getCanvasGraphics(),
          handler.createDefaultFont(), "");
 
       applyTextAttributes(templateText);
+   }
+
+   @Override
+   public void startElement() throws InvalidFormatException
+   {
+      createTemplate();
 
       xArray = getLengthArrayAttribute("x", false);
       yArray = getLengthArrayAttribute("y", false);
@@ -231,11 +236,11 @@ public class SVGTextElement extends SVGAbstractElement
          }
          else
          {
-            desc += objDesc;
+            desc += " " + objDesc;
          }
       }
 
-      objects.setDescription(desc);
+      objects.setDescription(desc.trim());
    }
 
    @Override
@@ -312,7 +317,7 @@ public class SVGTextElement extends SVGAbstractElement
 
       if (desc != null)
       {
-         textArea.setDescription(desc.replaceAll("\\R", " "));
+         textArea.setDescription(desc.replaceAll("\\R", " ").trim());
       }
 
       double width = textArea.getWidth();

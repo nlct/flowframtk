@@ -1,5 +1,8 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
@@ -10,7 +13,7 @@ public class SVGRectElement extends SVGShape
 {
    public SVGRectElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
+      super(handler, "rect", parent);
    }
 
    @Override
@@ -56,32 +59,27 @@ public class SVGRectElement extends SVGShape
    }
 
    @Override
-   public String getName()
+   public void startElement() throws InvalidFormatException
    {
-      return "rect";
+      width = getDoubleAttribute("width", 0);
+      height = getDoubleAttribute("height", 0);
+
+      x = getDoubleAttribute("x", 0);
+      y = getDoubleAttribute("y", 0);
+
+      super.startElement();
    }
 
    @Override
-   public JDRShape createShape(CanvasGraphics cg)
+   protected Shape constructShape() throws SVGException
    {
-      double width = getDoubleAttribute("width", 0);
-      double height = getDoubleAttribute("height", 0);
-
-      if (width <= 0 || height <= 0)
+      if (width > 0 && height > 0)
       {
-         return null;
+         return new Rectangle2D.Double(x, y, width, height);
       }
 
-      double p1x = getDoubleAttribute("x", 0);
-      double p1y = getDoubleAttribute("y", 0);
-      double p2x = p1x + width;
-      double p2y = p1y + height;
-
-      JDRPath rect = JDRPath.constructRectangle(cg, p1x, p1y, p2x, p2y);
-
-      return rect;
+      return null;
    }
-
 
    @Override
    public Object clone()
@@ -92,4 +90,17 @@ public class SVGRectElement extends SVGShape
 
       return element;
    }
+
+   public void makeEqual(SVGRectElement other)
+   {
+      super.makeEqual(other);
+
+      x = other.x;
+      y = other.y;
+
+      width = other.width;
+      height = other.height;
+   }
+
+   double x, y, width, height;
 }

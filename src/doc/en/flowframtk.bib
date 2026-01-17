@@ -486,6 +486,11 @@ or is the keyword \optfmt{user} followed by the width and height.}
  name={\xmltagfmt{a}}
 }
 
+@xmlelement{xmlelement.textPath,
+ parent={svg-element},
+ name={\xmltagfmt{textPath}}
+}
+
 @xmlelement{xmlelement.rect,
  parent={svg-element},
  name={\xmltagfmt{rect}}
@@ -548,12 +553,12 @@ or is the keyword \optfmt{user} followed by the width and height.}
 
 @xmlelement{xmlelement.linearGradient,
  parent={svg-element},
- name={\xmltagfmt{linearGradient}}
+ name={\xmltagfmt{linear\-Gradient}}
 }
 
 @xmlelement{xmlelement.radialGradient,
  parent={svg-element},
- name={\xmltagfmt{radialGradient}}
+ name={\xmltagfmt{radial\-Gradient}}
 }
 
 @indexplural{svg-attribute,text={SVG attribute}}
@@ -561,6 +566,11 @@ or is the keyword \optfmt{user} followed by the width and height.}
 @xmlattribute{xmlattr.href,
   parent={svg-attribute},
   name={\xmlattrfmt{href}}
+}
+
+@xmlattribute{xmlattr.viewBox,
+  parent={svg-attribute},
+  name={\xmlattrfmt{view\-Box}}
 }
 
 % GENERAL

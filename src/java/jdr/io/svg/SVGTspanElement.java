@@ -30,11 +30,26 @@ public class SVGTspanElement extends SVGTextElement
    }
 
    @Override
+   protected void createTemplate() throws SVGException
+   {        
+      if (textElement == null)
+      {
+         super.createTemplate();
+      }
+      else
+      {
+         templateText = (JDRText)textElement.templateText.clone();
+
+         applyTextAttributes(templateText);
+      }
+   } 
+
+   @Override
    public void startElement() throws InvalidFormatException
    {
-      super.startElement();
-
       assignTextAncestor();
+
+      super.startElement();
 
       if (textElement != null)
       {

@@ -1,5 +1,8 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.Shape;
+import java.awt.geom.Line2D;
+
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
@@ -11,7 +14,7 @@ public class SVGLineElement extends SVGShape
 {
    public SVGLineElement(SVGHandler handler, SVGAbstractElement parent)
    {
-      super(handler, parent);
+      super(handler, "line", parent);
    }
 
    @Override
@@ -56,33 +59,19 @@ public class SVGLineElement extends SVGShape
    }
 
    @Override
-   public String getName()
+   public void startElement() throws InvalidFormatException
    {
-      return "line";
+      p1x = getDoubleAttribute("x1", 0);
+      p1y = getDoubleAttribute("y1", 0);
+      p2x = getDoubleAttribute("x2", 0);
+      p2y = getDoubleAttribute("y2", 0);
+
+      super.startElement();
    }
 
-   @Override
-   public JDRShape createShape(CanvasGraphics cg)
+   protected Shape constructShape() throws SVGException
    {
-      double p1x = getDoubleAttribute("x1", 0);
-      double p1y = getDoubleAttribute("y1", 0);
-      double p2x = getDoubleAttribute("x2", 0);
-      double p2y = getDoubleAttribute("y2", 0);
-
-      JDRPath path = new JDRPath(cg);
-
-      try
-      {
-         path.add(new JDRLine(cg, p1x, p1y, p2x, p2y));
-      }
-      catch (InvalidPathException e)
-      {
-         // shouldn't happen
-         cg.getMessageSystem().postMessage(
-           MessageInfo.createInternalError(e));
-      }
-
-      return path;
+      return new Line2D.Double(p1x, p1y, p2x, p2y);
    }
 
 
@@ -95,4 +84,16 @@ public class SVGLineElement extends SVGShape
 
       return element;
    }
+
+   public void makeEqual(SVGLineElement other)
+   {
+      super.makeEqual(other);
+
+      p1x = other.p1x;
+      p1y = other.p1y;
+      p2x = other.p2x;
+      p2y = other.p2y;
+   }
+
+   double p1x, p1y, p2x, p2y;
 }

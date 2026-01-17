@@ -205,6 +205,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          return new SVGAnchorElement(handler, parent);
       }
+      else if (elementName.equals("textPath"))
+      {
+         return new SVGTextPathElement(handler, parent);
+      }
       else if (elementName.equals("image"))
       {
          return new SVGImageElement(handler, parent);
@@ -791,14 +795,33 @@ public abstract class SVGAbstractElement implements Cloneable
       return null;
    }
 
-   public Path2D getPathDataAttribute()
+   public Path2D getPathData()
      throws SVGException
    {
-      SVGAttribute attr = getAttribute("d", null);
+      return getPathData("d");
+   }
+
+   public Path2D getPathData(String attrName)
+     throws SVGException
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
 
       if (attr != null && attr instanceof SVGPathDataAttribute)
       {
          return ((SVGPathDataAttribute)attr).getPath(this);
+      }
+
+      return null;
+   }
+
+   public SVGPathDataAttribute getPathDataAttribute(String attrName)
+     throws SVGException
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGPathDataAttribute)
+      {
+         return (SVGPathDataAttribute)attr;
       }
 
       return null;
@@ -892,11 +915,6 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          paint = getCurrentPaint();
 
-         if (paint == null)
-         {
-            paint = handler.createDefaultTextPaint();
-         }
-
          opacityAttr = getNumberAttribute("opacity");
       }
       else
@@ -909,7 +927,17 @@ public abstract class SVGAbstractElement implements Cloneable
          }
       }
 
-      text.setTextPaint(paint);
+      if (paint == null)
+      {
+         if (text.getTextPaint() == null)
+         {
+            text.setTextPaint(handler.createDefaultTextPaint());
+         }
+      }
+      else
+      {
+         text.setTextPaint(paint);
+      }
 
       if (opacityAttr != null)
       {

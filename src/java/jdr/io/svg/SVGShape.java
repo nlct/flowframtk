@@ -1,6 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.awt.BasicStroke;
+import java.awt.Shape;
 import java.awt.geom.*;
 
 import org.xml.sax.*;
@@ -11,9 +12,16 @@ import com.dickimawbooks.jdr.exceptions.*;
 
 public abstract class SVGShape extends SVGAbstractElement
 {
-   public SVGShape(SVGHandler handler, SVGAbstractElement parent)
+   public SVGShape(SVGHandler handler, String name, SVGAbstractElement parent)
    {
       super(handler, parent);
+      this.name = name;
+   }
+
+   @Override
+   public String getName()
+   {
+      return name;
    }
 
    @Override
@@ -39,51 +47,87 @@ public abstract class SVGShape extends SVGAbstractElement
    }
 
    @Override
+   public void endElement() throws InvalidFormatException
+   {
+      jdrShape = createShape(getCanvasGraphics());
+
+      if (jdrShape != null)
+      {
+         jdrShape.setLinePaint(handler.createDefaultLinePaint());
+         jdrShape.setFillPaint(handler.createDefaultFillPaint());
+         jdrShape.setStroke(handler.createDefaultStroke());
+
+         String desc = null;
+
+         if (title != null && !title.isEmpty())
+         {
+            desc = title;
+         }
+         else if (description != null && !description.isEmpty())
+         {
+            desc = description;
+         }
+
+         if (desc != null)
+         {
+            jdrShape.setDescription(desc.replaceAll("\\R", " "));
+         }
+
+         AffineTransform af = getTransform();
+
+         if (af != null)
+         {
+            double[] matrix = new double[6];
+
+            af.getMatrix(matrix);
+
+            jdrShape.transform(matrix);
+         }
+      }
+
+      super.endElement();
+   }
+
+   @Override
    public JDRCompleteObject addToImage(JDRGroup group)
      throws InvalidFormatException
    {
-      JDRShape shape = createShape(group.getCanvasGraphics());
-
-      shape.setLinePaint(handler.createDefaultLinePaint());
-      shape.setFillPaint(handler.createDefaultFillPaint());
-      shape.setStroke(handler.createDefaultStroke());
-
-      String desc = null;
-
-      if (title != null && !title.isEmpty())
+      if (jdrShape != null)
       {
-         desc = title;
-      }
-      else if (description != null && !description.isEmpty())
-      {
-         desc = description;
+         applyShapeAttributes(jdrShape);
+
+         group.add(jdrShape);
       }
 
-      if (desc != null)
-      {
-         shape.setDescription(desc.replaceAll("\\R", " "));
-      }
-
-      applyShapeAttributes(shape);
-
-      AffineTransform af = getTransform();
-
-      if (af != null)
-      {
-         double[] matrix = new double[6];
-
-         af.getMatrix(matrix);
-
-         shape.transform(matrix);
-      }
-
-      group.add(shape);
-
-      return shape;
+      return jdrShape;
    }
 
-   public abstract JDRShape createShape(CanvasGraphics cg)
-     throws InvalidFormatException;
+   protected abstract Shape constructShape() throws SVGException;
+
+   public PathIterator getPathIterator() throws SVGException
+   {
+      if (shape == null)
+      {
+         shape = constructShape();
+      }
+
+      return shape == null ? null : shape.getPathIterator(null);
+   }
+
+   public JDRShape createShape(CanvasGraphics cg)
+     throws InvalidFormatException
+   {
+      PathIterator pi = getPathIterator();
+
+      JDRPath jdrPath = null;
+
+      if (pi != null)
+      {
+         jdrPath = JDRPath.getPath(cg, pi);
+      }
+
+      return jdrPath;
+   }
 
    @Override
    public void setDescription(String text)
@@ -103,5 +147,28 @@ public abstract class SVGShape extends SVGAbstractElement
       }
    }
 
+   public void makeEqual(SVGShape other)
+   {
+      super.makeEqual(this);
+      path = other.path;
+
+      if (other.jdrShape == null)
+      {
+         jdrShape = null;
+      }
+      else if (jdrShape == null)
+      {
+         jdrShape = (JDRShape)other.jdrShape.clone();
+      }
+      else
+      {
+         jdrShape.makeEqual(other.jdrShape);
+      }
+   }
+
+   String name;
+   Path2D path;
    String description = null, title = null;
+   Shape shape;
+   JDRShape jdrShape;
 }
