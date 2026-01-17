@@ -77,32 +77,36 @@ public class SVGAngleArrayAttribute extends SVGAbstractAttribute
       return attr;
    }
 
-   public void makeEqual(SVGAngleArrayAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute other)
    {
-      super.makeEqual(attr);
+      super.makeEqual(other);
 
-      if (attr.array == null)
+      if (other instanceof SVGAngleArrayAttribute)
       {
-         array = null;
-      }
-      else if (this.array != null && this.array.length == attr.array.length)
-      {
-         for (int i = 0; i < attr.array.length; i++)
+         SVGAngleArrayAttribute attr = (SVGAngleArrayAttribute)other;
+
+         if (attr.array == null)
          {
-            array[i].makeEqual(attr.array[i]);
+            array = null;
+         }
+         else if (this.array != null && this.array.length == attr.array.length)
+         {
+            for (int i = 0; i < attr.array.length; i++)
+            {
+               array[i].makeEqual((SVGAttribute)attr.array[i]);
+            }
+         }
+         else
+         {
+            array = new SVGAngleAttribute[attr.array.length];
+
+            for (int i = 0; i < attr.array.length; i++)
+            {
+               array[i] = (SVGAngleAttribute)attr.array[i].clone();
+            }
          }
       }
-      else
-      {
-         array = new SVGAngleAttribute[attr.array.length];
-
-         for (int i = 0; i < attr.array.length; i++)
-         {
-            array[i] = (SVGAngleAttribute)attr.array[i].clone();
-         }
-      }
-
-      name = attr.name;
    }
 
    private SVGAngleAttribute[] array;

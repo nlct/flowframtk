@@ -69,6 +69,24 @@ public class SVGJoinStyleAttribute extends SVGAbstractAttribute
    }
 
    @Override
+   public Number getNumber()
+   {
+      return joinStyle;
+   }
+
+   @Override
+   public boolean isPercentage()
+   {
+      return false;
+   }
+
+   @Override
+   public boolean isHorizontal()
+   {
+      return false;
+   }
+
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return joinStyle.intValue();
@@ -104,10 +122,15 @@ public class SVGJoinStyleAttribute extends SVGAbstractAttribute
       return attr;
    }
 
-   public void makeEqual(SVGJoinStyleAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute attr)
    {
       super.makeEqual(attr);
-      joinStyle = attr.joinStyle;
+
+      if (attr instanceof SVGJoinStyleAttribute)
+      {
+         joinStyle = (Integer)attr.getValue();
+      }
    }
 
    private Integer joinStyle;

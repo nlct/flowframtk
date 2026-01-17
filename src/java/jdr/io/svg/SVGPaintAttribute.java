@@ -218,20 +218,26 @@ public class SVGPaintAttribute implements SVGAttribute
       return attr;
    }
 
-   public void makeEqual(SVGPaintAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute other)
    {
-      if (attr.paint == null)
-      {
-         paint = null;
-      }
-      else
-      {
-         paint = (JDRPaint)attr.paint.clone();
-      }
+      if (other instanceof SVGPaintAttribute)
+      { 
+         SVGPaintAttribute attr = (SVGPaintAttribute)other;
 
-      name = attr.name;
-      valueString = attr.valueString;
-      referencedElement = attr.referencedElement;
+         if (attr.paint == null)
+         {
+            paint = null;
+         }
+         else
+         {
+            paint = (JDRPaint)attr.paint.clone();
+         }
+
+         name = attr.name;
+         valueString = attr.valueString;
+         referencedElement = attr.referencedElement;
+      }
    }
 
    @Override

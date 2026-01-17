@@ -83,14 +83,7 @@ public class SVGFontAttribute extends SVGCompoundAttribute
    public Object clone()
    {
       SVGFontAttribute fontAttr = new SVGFontAttribute(handler);
-      fontAttr.valueString = valueString;
-
-      for (Enumeration en = getAttributeNames(); en.hasMoreElements(); )
-      {
-         SVGAttribute attr = (SVGAttribute)getAttribute(en.nextElement());
-         fontAttr.addAttribute(attr);
-      }
-
+      fontAttr.makeEqual(this);
       return fontAttr;
    }
 

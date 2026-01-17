@@ -223,10 +223,16 @@ public class SVGTransformAttribute implements SVGAttribute
       return attr;
    }
 
-   public void makeEqual(SVGTransformAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute other)
    {
-      valueString = attr.valueString;
-      transform.setTransform(attr.transform);
+      if (other instanceof SVGTransformAttribute)
+      {
+         SVGTransformAttribute attr = (SVGTransformAttribute)other;
+
+         valueString = attr.valueString;
+         transform.setTransform(attr.transform);
+      }
    }
 
    @Override

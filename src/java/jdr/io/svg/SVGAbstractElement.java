@@ -225,6 +225,14 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          return new SVGGroupElement(handler, parent);
       }
+      else if (elementName.equals("stop"))
+      {
+         return new SVGStopElement(handler, parent);
+      }
+      else if (elementName.equals("linearGradient"))
+      {
+         return new SVGLinearGradientElement(handler, parent);
+      }
       else if (elementName.equals("link"))
       {// TODO?
       }
@@ -635,7 +643,7 @@ public abstract class SVGAbstractElement implements Cloneable
       throw new NoElementPaintException(this);
    }
 
-   public JDRPaint getPaintAttribute(String attrName, JDRPaint defPaint)
+   public JDRPaint getPaint(String attrName, JDRPaint defPaint)
    {
       SVGAttribute attr = getAttribute(attrName, null);
 
@@ -647,19 +655,31 @@ public abstract class SVGAbstractElement implements Cloneable
       return defPaint;
    }
 
+   public SVGPaintAttribute getPaintAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGPaintAttribute)
+      {
+         return (SVGPaintAttribute)attr;
+      }
+
+      return null;
+   }
+
    public JDRPaint getLinePaint()
    {
-      return getPaintAttribute("stroke", null);
+      return getPaint("stroke", null);
    }
 
    public JDRPaint getFillPaint()
    {
-      return getPaintAttribute("fill", null);
+      return getPaint("fill", null);
    }
 
    public JDRPaint getCurrentPaint()
    {
-      return getPaintAttribute("color", null);
+      return getPaint("color", null);
    }
 
    public SVGNumberAttribute getNumberAttribute(String attrName)
@@ -793,6 +813,18 @@ public abstract class SVGAbstractElement implements Cloneable
       return null;
    }
 
+   public SVGGradientUnitsAttribute getGradientUnitsAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGGradientUnitsAttribute)
+      {
+         return (SVGGradientUnitsAttribute)attr;
+      }
+
+      return null;
+   }
+
    public boolean isDisplayed()
    {
       return getIntegerAttribute("display", SVGDisplayStyleAttribute.INLINE)
@@ -826,7 +858,12 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public AffineTransform getTransform()
    {
-      Object attr = attributeSet.getAttribute("transform");
+      return getTransform("transform");
+   }
+
+   public AffineTransform getTransform(String attrName)
+   {
+      Object attr = attributeSet.getAttribute(attrName);
 
       if (attr == null)
       {
@@ -1063,6 +1100,23 @@ public abstract class SVGAbstractElement implements Cloneable
          return parent.getTextAncestor();
       }
    }
+
+   public SVGGradientElement getGradientAncestor()
+   {
+      if (parent == null)
+      {
+         return null;
+      }
+      else if (parent instanceof SVGGradientElement)
+      {
+         return (SVGGradientElement)parent;
+      }
+      else
+      {
+         return parent.getGradientAncestor();
+      }
+   }
+
 
    public SVG getSVG()
    {

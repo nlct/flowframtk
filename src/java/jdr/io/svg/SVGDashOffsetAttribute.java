@@ -51,7 +51,7 @@ public class SVGDashOffsetAttribute extends SVGLengthAttribute
    public Object clone()
    {
       SVGDashOffsetAttribute attr = new SVGDashOffsetAttribute(handler);
-      attr.makeEqual(this);
+      attr.makeEqual((SVGAttribute)this);
       return attr;
    }
 

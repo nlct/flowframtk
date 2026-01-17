@@ -85,6 +85,12 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
    }
 
    @Override
+   public Number getNumber()
+   {
+      return value;
+   }
+
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return (int)Math.round(doubleValue(element));
@@ -100,6 +106,18 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
    }
 
    @Override
+   public boolean isPercentage()
+   {
+      return isPercent;
+   }
+
+   @Override
+   public boolean isHorizontal()
+   {
+      return isHorizontal;
+   }
+
+   @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
    }
@@ -112,12 +130,28 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
       return attr;
    }
 
-   public void makeEqual(SVGDoubleAttribute attr)
+   public void makeEqual(SVGAttribute other)
    {
-      super.makeEqual(attr);
-      value = attr.value;
-      isPercent = attr.isPercent;
-      isHorizontal = attr.isHorizontal;
+      super.makeEqual(other);
+
+      if (other instanceof SVGNumberAttribute)
+      {
+         SVGNumberAttribute attr = (SVGNumberAttribute)other;
+
+         Number num = attr.getNumber();
+
+         if (num instanceof Double || num == null)
+         {
+            value = (Double)num;
+         }
+         else
+         {
+            value = Double.valueOf(num.doubleValue());
+         }
+
+         isPercent = attr.isPercentage();
+         isHorizontal = attr.isHorizontal();
+      }
    }
 
    private String name;

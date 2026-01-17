@@ -94,6 +94,12 @@ public class SVGLengthAttribute extends SVGMeasurement implements SVGNumberAttri
    }
 
    @Override
+   public boolean isHorizontal()
+   {
+      return isHorizontal;
+   }
+
+   @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
    {
    }
@@ -210,9 +216,20 @@ public class SVGLengthAttribute extends SVGMeasurement implements SVGNumberAttri
    {
       SVGLengthAttribute length = new SVGLengthAttribute(handler, getName(), isHorizontal);
 
-      length.makeEqual(this);
+      length.makeEqual((SVGAttribute)this);
 
       return length;
+   }
+
+   @Override
+   public void makeEqual(SVGAttribute other)
+   {
+      super.makeEqual((SVGMeasurement)other);
+
+      if (other instanceof SVGLengthAttribute)
+      {
+         isHorizontal = ((SVGLengthAttribute)other).isHorizontal();
+      }
    }
 
    String name;

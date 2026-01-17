@@ -57,7 +57,7 @@ public class SVGPenWidthAttribute extends SVGLengthAttribute
    {
       SVGPenWidthAttribute attr = new SVGPenWidthAttribute(handler);
 
-      attr.makeEqual(this);
+      attr.makeEqual((SVGAttribute)this);
 
       return attr;
    }

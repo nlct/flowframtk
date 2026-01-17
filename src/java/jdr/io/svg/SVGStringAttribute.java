@@ -52,6 +52,12 @@ public class SVGStringAttribute implements SVGAttribute
    }
 
    @Override
+   public void makeEqual(SVGAttribute other)
+   {
+      value = other.getSourceValue();
+   }
+
+   @Override
    public String toString()
    {
       return String.format("%s[name=%s,value=%s]",

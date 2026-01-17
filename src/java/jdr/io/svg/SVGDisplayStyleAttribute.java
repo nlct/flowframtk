@@ -124,6 +124,24 @@ public class SVGDisplayStyleAttribute extends SVGAbstractAttribute
    }
 
    @Override
+   public Number getNumber()
+   {
+      return style;
+   }
+
+   @Override
+   public boolean isPercentage()
+   {
+      return false;
+   }
+
+   @Override
+   public boolean isHorizontal()
+   {
+      return false;
+   }
+
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return style.intValue();
@@ -148,10 +166,15 @@ public class SVGDisplayStyleAttribute extends SVGAbstractAttribute
       return attr;
    }
 
-   public void makeEqual(SVGDisplayStyleAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute attr)
    {
       super.makeEqual(attr);
-      style = attr.style;
+
+      if (attr instanceof SVGDisplayStyleAttribute)
+      {
+         style = (Integer)attr.getValue();
+      }
    }
 
    private Integer style;

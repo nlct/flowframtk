@@ -31,9 +31,10 @@ public abstract class SVGAbstractAttribute implements SVGAttribute
       return String.format("%s=\"%s\"", getName(), valueString);
    }
 
-   public void makeEqual(SVGAbstractAttribute other)
+   @Override
+   public void makeEqual(SVGAttribute other)
    {
-      valueString = other.valueString;
+      valueString = other.getSourceValue();
    }
 
    SVGHandler handler;

@@ -70,6 +70,24 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
    }
 
    @Override
+   public Number getNumber()
+   {
+      return capStyle;
+   }
+
+   @Override
+   public boolean isPercentage()
+   {
+      return false;
+   }
+
+   @Override
+   public boolean isHorizontal()
+   {
+      return false;
+   }
+
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return capStyle.intValue();
@@ -105,10 +123,15 @@ public class SVGCapStyleAttribute extends SVGAbstractAttribute
       return attr;
    }
 
-   public void makeEqual(SVGCapStyleAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute attr)
    {
       super.makeEqual(attr);
-      capStyle = attr.capStyle;
+
+      if (attr instanceof SVGCapStyleAttribute)
+      {
+         capStyle = (Integer)attr.getValue();
+      }
    }
 
    private Integer capStyle;

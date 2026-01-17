@@ -65,6 +65,24 @@ public class SVGGradientUnitsAttribute extends SVGAbstractAttribute
    }
 
    @Override
+   public Number getNumber()
+   {
+      return rule;
+   }
+
+   @Override
+   public boolean isPercentage()
+   {
+      return false;
+   }
+
+   @Override
+   public boolean isHorizontal()
+   {
+      return false;
+   }
+
+   @Override
    public int intValue(SVGAbstractElement element)
    {
       return rule.intValue();
@@ -89,10 +107,15 @@ public class SVGGradientUnitsAttribute extends SVGAbstractAttribute
       return attr;
    }
 
-   public void makeEqual(SVGGradientUnitsAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute attr)
    {
       super.makeEqual(attr);
-      rule = attr.rule;
+
+      if (attr instanceof SVGGradientUnitsAttribute)
+      {
+         rule = ((SVGGradientUnitsAttribute)attr).rule;
+      }
    }
 
    private Integer rule;

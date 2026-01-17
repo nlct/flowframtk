@@ -48,6 +48,30 @@ public abstract class SVGCompoundAttribute extends SimpleAttributeSet
       return valueString;
    }
 
+   @Override
+   public void makeEqual(SVGAttribute other)
+   {  
+      if (other instanceof SVGCompoundAttribute)
+      {  
+         SVGCompoundAttribute compAttr = (SVGCompoundAttribute)other;
+
+         compAttr.valueString = valueString;
+
+         if (!isEmpty())
+         {
+            Enumeration en = getAttributeNames();
+            removeAttributes(en);
+         }
+
+         for (Enumeration en = compAttr.getAttributeNames(); en.hasMoreElements(); )
+         {
+            SVGAttribute attr = (SVGAttribute)compAttr.getAttribute(en.nextElement());
+            addAttribute(attr);
+         }
+      }
+   }
+
+
    String name;
    String valueString;
    SVGHandler handler;

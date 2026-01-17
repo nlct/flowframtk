@@ -95,6 +95,16 @@ public class SVGMeasurement
       return value;
    }
 
+   public Number getNumber()
+   {
+      return value;
+   }
+
+   public boolean isPercentage()
+   {
+      return unitId == UNIT_PERCENT;
+   }
+
    public double doubleValue()
    {
       return value.doubleValue();

@@ -706,10 +706,15 @@ public class SVGPathDataAttribute implements SVGAttribute
       return attr;
    }
 
-   public void makeEqual(SVGPathDataAttribute attr)
+   @Override
+   public void makeEqual(SVGAttribute other)
    {
-      data = attr.data;
-      valueString = attr.valueString;
+      if (other instanceof SVGPathDataAttribute)
+      { 
+         SVGPathDataAttribute attr = (SVGPathDataAttribute)other;
+         data = attr.data;
+         valueString = attr.valueString;
+      }
    }
 
    @Override

@@ -82,8 +82,14 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
    public Object clone()
    {
       SVGAngleAttribute angle = new SVGAngleAttribute(handler, name);
-      angle.makeEqual(this);
+      angle.makeEqual((SVGAttribute)this);
       return angle;
+   }
+
+   @Override
+   public void makeEqual(SVGAttribute other)
+   {
+      super.makeEqual((SVGMeasurement)other);
    }
 
    private static final double GRAD_FACTOR = Math.PI/200;
