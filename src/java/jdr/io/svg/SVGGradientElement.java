@@ -97,42 +97,6 @@ public abstract class SVGGradientElement extends SVGAbstractElement
       }
    }
 
-   protected int getLocationX(double x, double minX, double width)
-   {
-      double thirdW = width/3;
-
-      if (x < minX + thirdW)
-      {
-         return X_LEFT;
-      }
-      else if (x > minX + 2 * thirdW)
-      {
-         return X_RIGHT;
-      }
-      else
-      {
-         return X_MID;
-      }
-   }
-
-   protected int getLocationY(double y, double minY, double height)
-   {
-      double thirdH = height/3;
-
-      if (y < minY + thirdH)
-      {
-         return Y_TOP;
-      }
-      else if (y > minY + 2 * thirdH)
-      {
-         return Y_MID;
-      }
-      else
-      {
-         return Y_BOT;
-      }
-   }
-
    public void makeEqual(SVGGradientElement other)
    {
       super.makeEqual(other);
@@ -180,12 +144,4 @@ public abstract class SVGGradientElement extends SVGAbstractElement
    String name;
    JDRPaint paint;
    SVGStopElement minStopElement, maxStopElement;
-
-   public static final int X_LEFT=0;
-   public static final int X_MID=1;
-   public static final int X_RIGHT=2;
-
-   public static final int Y_TOP=0;
-   public static final int Y_MID=1;
-   public static final int Y_BOT=2;
 }

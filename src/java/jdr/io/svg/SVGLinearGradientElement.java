@@ -89,7 +89,7 @@ public class SVGLinearGradientElement extends SVGGradientElement
       {
          double[] pts = new double[] { x1, y1, x2, y2 };
 
-         af.transform(pts, 0, pts, 0, 4);
+         af.transform(pts, 0, pts, 0, 2);
 
          x1 = pts[0];
          y1 = pts[1];

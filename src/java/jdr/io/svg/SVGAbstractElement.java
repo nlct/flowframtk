@@ -233,6 +233,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          return new SVGLinearGradientElement(handler, parent);
       }
+      else if (elementName.equals("radialGradient"))
+      {
+         return new SVGRadialGradientElement(handler, parent);
+      }
       else if (elementName.equals("link"))
       {// TODO?
       }
