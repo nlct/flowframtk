@@ -73,7 +73,7 @@ public class SVGHandler extends DefaultHandler
                   paper = JDRPaper.getClosestEnclosingPredefinedPaper(
                      widthBp, heightBp, JDRAJR.CURRENT_VERSION);
 
-                  if (paper != null)
+                  if (paper == null)
                   {
                      paper = JDRPaper.getClosestPredefinedPaper(
                         widthBp, heightBp, JDRAJR.CURRENT_VERSION);
