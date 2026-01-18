@@ -2716,6 +2716,21 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="import.bitmap_prefix">Bitmap Prefix:</entry>
 <entry key="import.bitmap_prefix.mnemonic">P</entry>
 
+<entry key="import.markers">Markers:</entry>
+<entry key="import.markers.ignore">Ignore</entry>
+<entry key="import.markers.ignore.mnemonic">I</entry>
+<entry key="import.markers.ignore.initvalue">off</entry>
+<entry key="import.markers.add_shapes">To Shapes</entry>
+<entry key="import.markers.add_shapes.mnemonic">T</entry>
+<entry key="import.markers.add_shapes.initvalue">off</entry>
+<entry key="import.markers.markers">Generic</entry>
+<entry key="import.markers.markers.mnemonic">G</entry>
+<entry key="import.markers.markers.initvalue">on</entry>
+
+<entry key="import.remember">Remember settings</entry>
+<entry key="import.remember.mnemonic">R</entry>
+<entry key="import.remember.initvalue">true</entry>
+
 <!--  colour selector -->
 
 <entry key="paintselector.title">Paint Selector</entry>

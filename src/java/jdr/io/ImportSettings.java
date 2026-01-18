@@ -32,6 +32,11 @@ public class ImportSettings
       SVG, ACORN_DRAW, EPS;
    }
 
+   public static enum Markers
+   {
+      IGNORE, ADD_SHAPES, MARKER;
+   }
+
    public void copyFrom(ImportSettings other)
    {
       type = other.type;
@@ -39,6 +44,7 @@ public class ImportSettings
       bitmapDir = other.bitmapDir;
       bitmapNamePrefix = other.bitmapNamePrefix;
       useMappings = other.useMappings;
+      markers = other.markers;
    }
 
    public JDRMessageDictionary getMessageDictionary()
@@ -53,5 +59,6 @@ public class ImportSettings
    public File bitmapDir = null;
    public String bitmapNamePrefix = "";
    public boolean useMappings = true;
+   public Markers markers = Markers.MARKER;
    JDRMessageDictionary dictionary;
 }

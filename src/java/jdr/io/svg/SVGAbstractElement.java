@@ -31,6 +31,16 @@ public abstract class SVGAbstractElement implements Cloneable
       children.add(child);
    }
 
+   public int getChildCount()
+   {
+      return children.size();
+   }
+
+   public SVGAbstractElement getChild(int i)
+   {
+      return children.get(i);
+   }
+
    public void addToContents(char[] ch, int start, int length)
    {
       contents.append(ch, start, length);
@@ -740,7 +750,6 @@ public abstract class SVGAbstractElement implements Cloneable
 
       return null;
    }
-
 
    public SVGNumberAttribute getNumberAttribute(String attrName)
    {

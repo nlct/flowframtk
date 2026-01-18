@@ -34,14 +34,18 @@ import com.dickimawbooks.flowframtk.*;
 public class ImportDialog extends JDialog
   implements ActionListener,ItemListener
 {
-   public ImportDialog(FlowframTk application,
-    JFileChooser importFC)
+   public ImportDialog(FlowframTk application, JFileChooser importFC)
    {
       super(application, 
          application.getResources().getMessage("import.title"), true);
       this.application = application;
       this.importFC = importFC;
 
+      init();
+   }
+
+   private void init()
+   {
       importFC.addActionListener(this);
 
       JDRResources resources = getResources();
@@ -72,6 +76,24 @@ public class ImportDialog extends JDialog
          true, null);
       mainComp.add(useMappingsButton);
 
+      markerComp = createRow();
+      mainComp.add(markerComp);
+
+      markerComp.add(resources.createAppLabel("import.markers"));
+
+      ButtonGroup bg = new ButtonGroup();
+      markersIgnoreButton = resources.createAppRadioButton(
+        "import.markers", "ignore", bg, false, null);
+      markerComp.add(markersIgnoreButton);
+
+      markersShapesButton = resources.createAppRadioButton(
+        "import.markers", "add_shapes", bg, false, null);
+      markerComp.add(markersShapesButton);
+
+      markersMarkerButton = resources.createAppRadioButton(
+        "import.markers", "markers", bg, false, null);
+      markerComp.add(markersMarkerButton);
+
       extractBitmapsButton = resources.createAppCheckBox("import", "extract_bitmaps",
          true, null);
       extractBitmapsButton.addItemListener(this);
@@ -90,8 +112,7 @@ public class ImportDialog extends JDialog
       bitmapDirField.setAlignmentX(0f);
       bitmapComp.add(bitmapDirField);
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(0f);
+      row = createRow();
       bitmapComp.add(row);
 
       label = resources.createAppLabel("import.bitmap_prefix");
@@ -101,6 +122,12 @@ public class ImportDialog extends JDialog
       bitmapNamePrefixField = new JTextField(12);
       label.setLabelFor(bitmapNamePrefixField);
       row.add(bitmapNamePrefixField);
+
+      mainComp.add(Box.createVerticalStrut(20));
+
+      rememberBox = resources.createAppCheckBox("import", "remember", true, null);
+      rememberBox.setAlignmentX(0f);
+      mainComp.add(rememberBox);
 
       JComponent buttonComp = new JPanel();
       getContentPane().add(buttonComp, "South");
@@ -114,8 +141,30 @@ public class ImportDialog extends JDialog
       setLocationRelativeTo(application);
    }
 
+   protected JComponent createRow()
+   {
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(0f);
+      return row;
+   }
+
    public void display()
    {
+      importSettings.copyFrom(application.getSettings().getImportSettings());
+
+      switch (importSettings.markers)
+      {
+         case IGNORE:
+           markersIgnoreButton.setSelected(true);
+         break;
+         case ADD_SHAPES:
+           markersShapesButton.setSelected(true);
+         break;
+         case MARKER:
+           markersMarkerButton.setSelected(true);
+         break;
+      }
+
       update((File)null);
 
       setVisible(true);
@@ -193,7 +242,11 @@ public class ImportDialog extends JDialog
          update(type, file);
       }
 
-      boolean embeddedBitmaps = (type != ImportSettings.Type.SVG);
+      boolean isSVG = (type == ImportSettings.Type.SVG);
+
+      markerComp.setVisible(isSVG);
+
+      boolean embeddedBitmaps = !isSVG;
 
       extractBitmapsButton.setVisible(embeddedBitmaps);
       bitmapComp.setVisible(embeddedBitmaps && extractBitmapsButton.isSelected());
@@ -289,6 +342,27 @@ public class ImportDialog extends JDialog
          importSettings.bitmapNamePrefix = bitmapNamePrefixField.getText();
       }
 
+      if (markerComp.isVisible())
+      {
+         if (markersIgnoreButton.isSelected())
+         {
+            importSettings.markers = ImportSettings.Markers.IGNORE;
+         }
+         else if (markersShapesButton.isSelected())
+         {
+            importSettings.markers = ImportSettings.Markers.ADD_SHAPES;
+         }
+         else if (markersMarkerButton.isSelected())
+         {
+            importSettings.markers = ImportSettings.Markers.MARKER;
+         }
+      }
+
+      if (rememberBox.isSelected())
+      {
+         application.getSettings().getImportSettings().copyFrom(importSettings);
+      }
+
       setVisible(false);
       application.importImage(importSettings);
    }
@@ -308,4 +382,9 @@ public class ImportDialog extends JDialog
    JComponent bitmapComp;
    JFileChooser importFC;
    JTextField formatField;
+
+   JComponent markerComp;
+   JRadioButton markersIgnoreButton, markersShapesButton, markersMarkerButton;
+
+   JCheckBox rememberBox;
 }

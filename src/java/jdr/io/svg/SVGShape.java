@@ -94,9 +94,8 @@ public abstract class SVGShape extends SVGAbstractElement
    {
       if (jdrShape != null)
       {
-         applyShapeAttributes(jdrShape);
-
          group.add(jdrShape);
+         applyShapeAttributes(jdrShape);
       }
 
       return jdrShape;

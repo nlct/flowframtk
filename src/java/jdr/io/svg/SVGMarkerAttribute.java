@@ -1,11 +1,14 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.awt.geom.Point2D;
+
 import org.xml.sax.*;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.JDRMarker;
 
 import com.dickimawbooks.jdr.exceptions.*;
+import com.dickimawbooks.jdr.io.ImportSettings;
 
 public class SVGMarkerAttribute extends SVGAbstractAttribute
 {
@@ -112,43 +115,177 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
       end = attr.end;
    }
 
-   @Override
-   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   protected void addMarkerShape(JDRGroup group, Point2D pt,
+     Point2D ref, boolean reflect, Point2D gradient)
+   throws InvalidFormatException
    {
-      if (object instanceof JDRShape && markerElement != null)
+      double shiftX = pt.getX() - ref.getX();
+      double shiftY = pt.getY() - ref.getY();
+
+      JDRGroup subGrp = new JDRGroup(group.getCanvasGraphics());
+
+      for (int i = 0, n = markerElement.getChildCount(); i < n; i++)
       {
-         JDRMarker marker = markerElement.getMarker();
+         SVGAbstractElement child = markerElement.getChild(i);
 
-         if (marker != null)
+         child = (SVGAbstractElement)child.clone();
+         child.attributeSet.removeAttribute("id");
+
+         child.addToImage(subGrp);
+      }
+
+      JDRCompleteObject obj = null;
+
+      if (subGrp.size() == 1)
+      {
+         obj = subGrp.firstElement();
+      }
+      else
+      {
+         obj = subGrp;
+      }
+
+      if (obj != null)
+      {
+         obj.setTag("marker");
+
+         if (reflect)
          {
-            JDRStroke stroke = ((JDRShape)object).getStroke();
+            obj.scale(ref, -1, 1);
+         }
 
-            if (stroke instanceof JDRBasicStroke)
+         obj.translate(shiftX, shiftY);
+
+// TODO paint scale and orient
+
+         group.add(obj);
+      }
+
+   }
+
+   protected void addShapes(JDRShape shape) throws InvalidFormatException
+   {
+      JDRCompleteObject parent = shape.getParent();
+
+      if (parent != null && parent instanceof JDRGroup)
+      {
+         JDRGroup group = (JDRGroup)parent;
+
+         JDRPathIterator ptIt = shape.getIterator();
+
+         Point2D ref = markerElement.getRefPoint();
+
+         ref = new Point2D.Double(
+            handler.toStorageUnit(ref.getX()),
+            handler.toStorageUnit(ref.getY())
+           );
+
+         Point2D pt = new Point2D.Double();
+         boolean isFirstSeg = true;
+
+         while (ptIt.hasNext())
+         {
+            JDRPathSegment seg = ptIt.next();
+
+            boolean isEndSeg = !ptIt.hasNext();
+
+            if (isFirstSeg)
             {
-               JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
-
-               JDRMarker copy;
-               JDRLength penW = basicStroke.getPenWidth();
-
                if (start)
                {
-                  copy = (JDRMarker)marker.clone();
-                  copy.setPenWidth(penW);
-                  basicStroke.setStartArrow(copy);
+                  pt.setLocation(seg.getStartX(), seg.getStartY());
+
+                  addMarkerShape(group, pt, ref, true, seg.getdP0());
                }
 
                if (mid)
                {
-                  copy = (JDRMarker)marker.clone();
-                  copy.setPenWidth(penW);
-                  basicStroke.setMidArrow(copy);
-               }
+                  pt.setLocation(seg.getEndX(), seg.getEndY());
 
+                  addMarkerShape(group, pt, ref, false, seg.getdP1());
+               }
+            }
+            else if (isEndSeg)
+            {
                if (end)
                {
-                  copy = (JDRMarker)marker.clone();
-                  copy.setPenWidth(penW);
-                  basicStroke.setEndArrow(copy);
+                  pt.setLocation(seg.getEndX(), seg.getEndY());
+
+                  addMarkerShape(group, pt, ref, false, seg.getdP1());
+               }
+            }
+            else if (mid)
+            {
+               pt.setLocation(seg.getEndX(), seg.getEndY());
+
+               addMarkerShape(group, pt, ref, false, seg.getdP1());
+            }
+
+            isFirstSeg = false;
+         }
+      }
+   }
+
+   @Override
+   public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
+   {
+      ImportSettings importSettings = handler.getImportSettings();
+
+      if (importSettings.markers == ImportSettings.Markers.IGNORE)
+      {// do nothing
+      }
+      else if (object instanceof JDRShape && markerElement != null)
+      {
+         JDRShape shape = (JDRShape)object;
+
+         if (importSettings.markers == ImportSettings.Markers.ADD_SHAPES)
+         {// add shapes
+
+            try
+            {
+               addShapes(shape);
+            }
+            catch (InvalidFormatException e)
+            {
+               handler.warning(e);
+            }
+
+         }
+         else
+         {
+            JDRMarker marker = markerElement.getMarker();
+
+            if (marker != null)
+            {
+               JDRStroke stroke = shape.getStroke();
+
+               if (stroke instanceof JDRBasicStroke)
+               {
+                  JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
+
+                  JDRMarker copy;
+                  JDRLength penW = basicStroke.getPenWidth();
+
+                  if (start)
+                  {
+                     copy = (JDRMarker)marker.clone();
+                     copy.setPenWidth(penW);
+                     basicStroke.setStartArrow(copy);
+                  }
+
+                  if (mid)
+                  {
+                     copy = (JDRMarker)marker.clone();
+                     copy.setPenWidth(penW);
+                     basicStroke.setMidArrow(copy);
+                  }
+
+                  if (end)
+                  {
+                     copy = (JDRMarker)marker.clone();
+                     copy.setPenWidth(penW);
+                     basicStroke.setEndArrow(copy);
+                  }
                }
             }
          }

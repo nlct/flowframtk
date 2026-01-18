@@ -644,6 +644,7 @@ public class FlowframTkInvoker
       settings.configFile = file;
 
       ExportSettings exportSettings = settings.getExportSettings();
+      ImportSettings importSettings = settings.getImportSettings();
 
       setStartupInfo(file.toString());
       debugMessage("reading: "+file);
@@ -1683,6 +1684,19 @@ public class FlowframTkInvoker
                {
                   settings.setDefaultBitmapCommand(value);
                }
+               // Import Settings
+               else if (key.equals("import_markers"))
+               {
+                  importSettings.markers = ImportSettings.Markers.valueOf(value);
+               }
+               else if (key.equals("import_text_mappings"))
+               {
+                  importSettings.useMappings = parseBoolean(value, line);
+               }
+               else if (key.equals("import_extract_bitmaps"))
+               {
+                  importSettings.extractBitmaps = parseBoolean(value, line);
+               }
                // Export Settings
                else if (key.equals("png_alpha"))
                {
@@ -2037,6 +2051,7 @@ public class FlowframTkInvoker
       out.println("robot="+(settings.robot==null?0:1));
 
       ExportSettings exportSettings = settings.exportSettings;
+      ImportSettings importSettings = settings.importSettings;
 
       out.println("latex_app=" + exportSettings.dviLaTeXApp);
       out.println("latex_opts=" 
@@ -2078,6 +2093,10 @@ public class FlowframTkInvoker
       out.println("timeout="+exportSettings.timeout);
 
       out.println("export_bounds="+exportSettings.bounds);
+
+      out.println("import_markers="+importSettings.markers);
+      out.println("import_text_mappings="+(importSettings.useMappings?1:0));
+      out.println("import_extract_bitmaps="+(importSettings.extractBitmaps?1:0));
 
       out.println("unicode="+settings.getUnicodeRangesSpec());
       out.println("look_and_feel="+settings.getLookAndFeel());

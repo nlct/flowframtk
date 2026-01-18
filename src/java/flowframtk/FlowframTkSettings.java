@@ -79,6 +79,7 @@ public class FlowframTkSettings
       rulerFormat = (DecimalFormat)NumberFormat.getNumberInstance(rulerLocale);
 
       exportSettings = new ExportSettings(resources.getMessageSystem());
+      importSettings = new ImportSettings(resources.getMessageSystem());
    }
 
 
@@ -1541,6 +1542,16 @@ public class FlowframTkSettings
       return resources.getHelpLib();
    }
 
+   public ImportSettings getImportSettings()
+   {
+      return importSettings;
+   }
+
+   public void copyFrom(ImportSettings other)
+   {
+      importSettings.copyFrom(other);
+   }
+
    public ExportSettings getExportSettings()
    {
       return exportSettings;
@@ -1626,6 +1637,7 @@ public class FlowframTkSettings
 
    private String bitmapCommand = "\\includegraphics";
 
+   public ImportSettings importSettings;
    public ExportSettings exportSettings;
    private boolean supportExportEps = false;
    private boolean supportExportSvg = true;

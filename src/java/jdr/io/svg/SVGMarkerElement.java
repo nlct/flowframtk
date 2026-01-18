@@ -1,6 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D;
 
 import org.xml.sax.*;
 
@@ -36,8 +37,8 @@ public class SVGMarkerElement extends SVGAbstractElement
       addAttribute("markerWidth", attr);
 //      addAttribute("markerUnits", attr);// userSpaceOnUse | strokeWidth
 //      addAttribute("orient", attr);// auto | auto-start-reverse | angle
-//      addAttribute("refX", attr);// left | right | center | coordinate
-//      addAttribute("refY", attr);// top | center | bottom | coordinate
+      addAttribute("refX", attr);// left | right | center | coordinate
+      addAttribute("refY", attr);// top | center | bottom | coordinate
       addAttribute("viewBox", attr);
    }
 
@@ -58,6 +59,14 @@ public class SVGMarkerElement extends SVGAbstractElement
       else if (name.equals("viewBox"))
       {
          attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
+      }
+      else if (name.equals("refX"))
+      {
+         attr = SVGMarkerRefAttribute.valueOf(handler, name, value, true);
+      }
+      else if (name.equals("refY"))
+      {
+         attr = SVGMarkerRefAttribute.valueOf(handler, name, value, false);
       }
       else
       {
@@ -104,8 +113,70 @@ public class SVGMarkerElement extends SVGAbstractElement
 
          bounds = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
       }
+      else
+      {
+         bounds = new Rectangle2D.Double(0, 0, markerWidth, markerHeight);
+      }
+
+      SVGMarkerRefAttribute refXAttr = getMarkerRefAttribute("refX");
+      SVGMarkerRefAttribute refYAttr = getMarkerRefAttribute("refY");
+
+      double refX = 0;
+      double refY = 0;
+
+      if (refXAttr != null)
+      {
+         switch (refXAttr.getRefType())
+         {
+            case SVGMarkerRefAttribute.MIN:
+               refX = bounds.getMinX();
+            break;
+            case SVGMarkerRefAttribute.MAX:
+               refX = bounds.getMaxX();
+            break;
+            case SVGMarkerRefAttribute.CENTER:
+               refX = bounds.getMinX() + 0.5 * bounds.getWidth();
+            break;
+            case SVGMarkerRefAttribute.COORD:
+               refX = storageUnit.toUnit(refXAttr.doubleValue(this), unit);
+            break;
+         }
+      }
+
+      if (refYAttr != null)
+      {
+         switch (refYAttr.getRefType())
+         {
+            case SVGMarkerRefAttribute.MIN:
+               refY = bounds.getMinY();
+            break;
+            case SVGMarkerRefAttribute.MAX:
+               refY = bounds.getMaxY();
+            break;
+            case SVGMarkerRefAttribute.CENTER:
+               refY = bounds.getMinY() + 0.5 * bounds.getHeight();
+            break;
+            case SVGMarkerRefAttribute.COORD:
+               refY = storageUnit.toUnit(refYAttr.doubleValue(this), unit);
+            break;
+         }
+      }
+
+      refPoint = new Point2D.Double(refX, refY);
 
       super.startElement();
+   }
+
+   protected SVGMarkerRefAttribute getMarkerRefAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr!= null && attr instanceof SVGMarkerRefAttribute)
+      {
+         return (SVGMarkerRefAttribute)attr;
+      }
+
+      return null;
    }
 
    @Override
@@ -231,6 +302,11 @@ public class SVGMarkerElement extends SVGAbstractElement
       super.endElement();
    }
 
+   public Point2D getRefPoint()
+   {
+      return refPoint;
+   }
+
    public Rectangle2D getViewportBounds()
    {
       return bounds;
@@ -303,6 +379,21 @@ public class SVGMarkerElement extends SVGAbstractElement
       {
          other.jdrMarker.makeOtherEqual(jdrMarker);
       }
+
+      if (other.refPoint == null)
+      {
+         refPoint = null;
+      }
+      else if (refPoint == null) 
+      {
+         refPoint = new Point2D.Double(
+           other.refPoint.getX(), other.refPoint.getY());
+      }
+      else
+      {
+         refPoint.setLocation(other.refPoint);
+      }
+
    }
 
    @Override
@@ -313,4 +404,5 @@ public class SVGMarkerElement extends SVGAbstractElement
    double markerWidth, markerHeight;
    Rectangle2D bounds;
    JDRMarker jdrMarker;
+   Point2D.Double refPoint;
 }

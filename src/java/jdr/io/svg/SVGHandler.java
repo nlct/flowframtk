@@ -445,6 +445,11 @@ public class SVGHandler extends DefaultHandler
       return null;
    }
 
+   public ImportSettings getImportSettings()
+   {
+      return importSettings;
+   }
+
    private JDRGroup group;
    private SVG svg;
 
