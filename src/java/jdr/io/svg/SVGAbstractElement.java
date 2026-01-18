@@ -728,13 +728,13 @@ public abstract class SVGAbstractElement implements Cloneable
       return elementCurrentPaint;
    }
 
-   public SVGAbstractMarkerAttribute getMarkerAttribute(String attrName)
+   public SVGMarkerAttribute getMarkerAttribute(String attrName)
    {
       SVGAttribute attr = getAttribute(attrName, null);
 
-      if (attr != null && attr instanceof SVGAbstractMarkerAttribute)
+      if (attr != null && attr instanceof SVGMarkerAttribute)
       {
-         return (SVGAbstractMarkerAttribute)attr;
+         return (SVGMarkerAttribute)attr;
       }
 
       return null;

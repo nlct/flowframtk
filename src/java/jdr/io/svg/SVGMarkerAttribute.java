@@ -92,6 +92,17 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
       return name;
    }
 
+   @Override
+   public Object clone()
+   {
+      SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, name,
+       start, mid, end);
+
+      attr.makeEqual(this);
+
+      return attr;
+   }
+
    public void makeEqual(SVGMarkerAttribute attr)
    {
       super.makeEqual(attr);
@@ -123,21 +134,21 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                {
                   copy = (JDRMarker)marker.clone();
                   copy.setPenWidth(penW);
-                  stroke.setStartArrow(copy);
+                  basicStroke.setStartArrow(copy);
                }
 
                if (mid)
                {
                   copy = (JDRMarker)marker.clone();
                   copy.setPenWidth(penW);
-                  stroke.setMidArrow(copy);
+                  basicStroke.setMidArrow(copy);
                }
 
                if (end)
                {
                   copy = (JDRMarker)marker.clone();
                   copy.setPenWidth(penW);
-                  stroke.setEndArrow(copy);
+                  basicStroke.setEndArrow(copy);
                }
             }
          }
