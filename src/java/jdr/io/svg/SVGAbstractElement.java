@@ -575,19 +575,19 @@ public abstract class SVGAbstractElement implements Cloneable
       }
       else if (name.equals("marker-start"))
       {
-         attr = SVGMarkerStartAttribute.valueOf(handler, value);
+         attr = SVGMarkerAttribute.createStart(handler, value);
       }
       else if (name.equals("marker-mid"))
       {
-         attr = SVGMarkerMidAttribute.valueOf(handler, value);
+         attr = SVGMarkerAttribute.createMid(handler, value);
       }
       else if (name.equals("marker-end"))
       {
-         attr = SVGMarkerEndAttribute.valueOf(handler, value);
+         attr = SVGMarkerAttribute.createEnd(handler, value);
       }
       else if (name.equals("marker"))
       {
-         attr = SVGMarkerAttribute.valueOf(handler, value);
+         attr = SVGMarkerAttribute.createAll(handler, value);
       }
 
       return attr;
@@ -1114,7 +1114,7 @@ public abstract class SVGAbstractElement implements Cloneable
          shape.getLinePaint().setAlpha(numAttr.doubleValue(this));
       }
 
-      SVGAbstractMarkerAttribute markerAttr = getMarkerAttribute("marker");
+      SVGMarkerAttribute markerAttr = getMarkerAttribute("marker");
 
       if (markerAttr != null)
       {

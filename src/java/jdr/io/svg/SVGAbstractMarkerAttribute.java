@@ -7,12 +7,56 @@ import com.dickimawbooks.jdr.marker.JDRMarker;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public abstract class SVGAbstractMarkerAttribute extends SVGAbstractAttribute
+public abstract class SVGMarkerAttribute extends SVGAbstractAttribute
 {
-   protected SVGAbstractMarkerAttribute(SVGHandler handler, String name)
+   protected SVGMarkerAttribute(SVGHandler handler, String name,
+    boolean start, boolean mid, boolean end)
    {
       super(handler);
       this.name = name;
+      this.start = start;
+      this.mid = mid;
+      this.end = end;
+   }
+
+   public static SVGMarkerAttribute createAll(SVGHandler handler,
+       String valueString)
+    throws SVGException
+   {
+      SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
+        "marker", true, true, true);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   public static SVGMarkerAttribute createStart(SVGHandler handler,
+       String valueString)
+    throws SVGException
+   {
+      SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
+        "marker", true, false, false);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   public static SVGMarkerAttribute createMid(SVGHandler handler,
+       String valueString)
+    throws SVGException
+   {
+      SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
+        "marker", false, true, false);
+      attr.parse(valueString);
+      return attr;
+   }
+
+   public static SVGMarkerAttribute createEnd(SVGHandler handler,
+       String valueString)
+    throws SVGException
+   {
+      SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
+        "marker", false, false, true);
+      attr.parse(valueString);
+      return attr;
    }
 
    protected void parse(String str) throws SVGException
@@ -48,13 +92,14 @@ public abstract class SVGAbstractMarkerAttribute extends SVGAbstractAttribute
       return name;
    }
 
-   public void makeEqual(SVGAbstractMarkerAttribute attr)
+   public void makeEqual(SVGMarkerAttribute attr)
    {
       super.makeEqual(attr);
       markerElement = attr.markerElement;
+      start = attr.start;
+      mid = attr.mid;
+      end = attr.end;
    }
-
-   public abstract void addMarker(JDRBasicStroke stroke, JDRMarker marker);
 
    @Override
    public void applyTo(SVGAbstractElement element, JDRCompleteObject object)
@@ -71,11 +116,29 @@ public abstract class SVGAbstractMarkerAttribute extends SVGAbstractAttribute
             {
                JDRBasicStroke basicStroke = (JDRBasicStroke)stroke;
 
-               marker = (JDRMarker)marker.clone();
+               JDRMarker copy;
+               JDRLength penW = basicStroke.getPenWidth();
 
-               marker.setPenWidth(basicStroke.getPenWidth());
+               if (start)
+               {
+                  copy = (JDRMarker)marker.clone();
+                  copy.setPenWidth(penW);
+                  stroke.setStartArrow(copy);
+               }
 
-               addMarker(basicStroke, marker);
+               if (mid)
+               {
+                  copy = (JDRMarker)marker.clone();
+                  copy.setPenWidth(penW);
+                  stroke.setMidArrow(copy);
+               }
+
+               if (end)
+               {
+                  copy = (JDRMarker)marker.clone();
+                  copy.setPenWidth(penW);
+                  stroke.setEndArrow(copy);
+               }
             }
          }
       }
@@ -89,4 +152,5 @@ public abstract class SVGAbstractMarkerAttribute extends SVGAbstractAttribute
 
    private String name;
    SVGMarkerElement markerElement;
+   boolean start, mid, end;
 }
