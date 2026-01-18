@@ -34,7 +34,7 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
     throws SVGException
    {
       SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
-        "marker", true, false, false);
+        "marker-start", true, false, false);
       attr.parse(valueString);
       return attr;
    }
@@ -44,7 +44,7 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
     throws SVGException
    {
       SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
-        "marker", false, true, false);
+        "marker-mid", false, true, false);
       attr.parse(valueString);
       return attr;
    }
@@ -54,7 +54,7 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
     throws SVGException
    {
       SVGMarkerAttribute attr = new SVGMarkerAttribute(handler, 
-        "marker", false, false, true);
+        "marker-end", false, false, true);
       attr.parse(valueString);
       return attr;
    }

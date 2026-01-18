@@ -137,6 +137,7 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("stroke-miterlimit", attr);
       addAttribute("stroke-opacity", attr);
       addAttribute("stroke-width", attr);
+      addAttribute("marker", attr);
       addAttribute("marker-start", attr);
       addAttribute("marker-mid", attr);
       addAttribute("marker-end", attr);
