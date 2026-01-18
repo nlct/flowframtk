@@ -102,6 +102,11 @@ public abstract class SVGShape extends SVGAbstractElement
       return jdrShape;
    }
 
+   public JDRShape getJDRShape()
+   {
+      return jdrShape;
+   }
+
    protected abstract Shape constructShape() throws SVGException;
 
    public PathIterator getPathIterator() throws SVGException

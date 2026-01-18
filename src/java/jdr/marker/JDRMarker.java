@@ -978,7 +978,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       svg.println("         markerWidth=\""+svg.length(width)+"\"");
       svg.println("         markerHeight=\""+svg.length(height)+"\"");
       svg.println("         viewBox=\""+svg.length(0)+" "+svg.length(0)
-         +svg.length(width)+" " + svg.length(height) + "\"");
+       + " " +svg.length(width)+" " + svg.length(height) + "\"");
       svg.println("         refX=\""+svg.length(-minX) + "\"");
       svg.println("         refY=\""+svg.length(-minY) + "\"");
       svg.println("         markerUnits=\"strokeWidth\"");

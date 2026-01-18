@@ -137,6 +137,9 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("stroke-miterlimit", attr);
       addAttribute("stroke-opacity", attr);
       addAttribute("stroke-width", attr);
+      addAttribute("marker-start", attr);
+      addAttribute("marker-mid", attr);
+      addAttribute("marker-end", attr);
    }
 
    protected void addTextAttributes(String uri, Attributes attr)
@@ -208,6 +211,10 @@ public abstract class SVGAbstractElement implements Cloneable
       else if (elementName.equals("textPath"))
       {
          return new SVGTextPathElement(handler, parent);
+      }
+      else if (elementName.equals("marker"))
+      {
+         return new SVGMarkerElement(handler, parent);
       }
       else if (elementName.equals("image"))
       {
@@ -566,6 +573,22 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = SVGDashArrayAttribute.valueOf(handler, value);
       }
+      else if (name.equals("marker-start"))
+      {
+         attr = SVGMarkerStartAttribute.valueOf(handler, value);
+      }
+      else if (name.equals("marker-mid"))
+      {
+         attr = SVGMarkerMidAttribute.valueOf(handler, value);
+      }
+      else if (name.equals("marker-end"))
+      {
+         attr = SVGMarkerEndAttribute.valueOf(handler, value);
+      }
+      else if (name.equals("marker"))
+      {
+         attr = SVGMarkerAttribute.valueOf(handler, value);
+      }
 
       return attr;
    }
@@ -677,18 +700,46 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public JDRPaint getLinePaint()
    {
-      return getPaint("stroke", null);
+      if (elementStrokePaint == null)
+      {
+         elementStrokePaint = getPaint("stroke", null);
+      }
+
+      return elementStrokePaint;
    }
 
    public JDRPaint getFillPaint()
    {
-      return getPaint("fill", null);
+      if (elementFillPaint == null)
+      {
+         elementFillPaint = getPaint("fill", null);
+      }
+
+      return elementFillPaint;
    }
 
    public JDRPaint getCurrentPaint()
    {
-      return getPaint("color", null);
+      if (elementCurrentPaint == null)
+      {
+         elementCurrentPaint = getPaint("color", null);
+      }
+
+      return elementCurrentPaint;
    }
+
+   public SVGAbstractMarkerAttribute getMarkerAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr != null && attr instanceof SVGAbstractMarkerAttribute)
+      {
+         return (SVGAbstractMarkerAttribute)attr;
+      }
+
+      return null;
+   }
+
 
    public SVGNumberAttribute getNumberAttribute(String attrName)
    {
@@ -1062,6 +1113,35 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          shape.getLinePaint().setAlpha(numAttr.doubleValue(this));
       }
+
+      SVGAbstractMarkerAttribute markerAttr = getMarkerAttribute("marker");
+
+      if (markerAttr != null)
+      {
+         markerAttr.applyTo(this, shape);
+      }
+
+      markerAttr = getMarkerAttribute("marker-start");
+
+      if (markerAttr != null)
+      {
+         markerAttr.applyTo(this, shape);
+      }
+
+      markerAttr = getMarkerAttribute("marker-mid");
+
+      if (markerAttr != null)
+      {
+         markerAttr.applyTo(this, shape);
+      }
+
+      markerAttr = getMarkerAttribute("marker-end");
+
+      if (markerAttr != null)
+      {
+         markerAttr.applyTo(this, shape);
+      }
+
    }
 
 
@@ -1178,6 +1258,8 @@ public abstract class SVGAbstractElement implements Cloneable
    protected StringBuilder contents;
    protected SVGAbstractElement parent;
    protected Vector<SVGAbstractElement> children;
+
+   protected JDRPaint elementStrokePaint, elementFillPaint, elementCurrentPaint;
 
    protected SVGAttributeSet attributeSet;
 
