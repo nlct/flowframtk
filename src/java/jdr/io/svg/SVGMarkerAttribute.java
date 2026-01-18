@@ -7,7 +7,7 @@ import com.dickimawbooks.jdr.marker.JDRMarker;
 
 import com.dickimawbooks.jdr.exceptions.*;
 
-public abstract class SVGMarkerAttribute extends SVGAbstractAttribute
+public class SVGMarkerAttribute extends SVGAbstractAttribute
 {
    protected SVGMarkerAttribute(SVGHandler handler, String name,
     boolean start, boolean mid, boolean end)
