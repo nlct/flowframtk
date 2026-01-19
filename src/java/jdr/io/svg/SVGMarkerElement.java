@@ -36,7 +36,7 @@ public class SVGMarkerElement extends SVGAbstractElement
 
       addAttribute("markerHeight", attr);
       addAttribute("markerWidth", attr);
-//      addAttribute("markerUnits", attr);// userSpaceOnUse | strokeWidth
+      addAttribute("markerUnits", attr);// userSpaceOnUse | strokeWidth
       addAttribute("orient", attr);// auto | auto-start-reverse | angle
       addAttribute("refX", attr);// left | right | center | coordinate
       addAttribute("refY", attr);// top | center | bottom | coordinate
@@ -75,6 +75,10 @@ public class SVGMarkerElement extends SVGAbstractElement
       {
          attr = SVGMarkerOrientAttribute.valueOf(handler, value);
       }
+      else if (name.equals("markerUnits"))
+      {
+         attr = SVGMarkerUnitAttribute.valueOf(handler, value);
+      }
       else
       {
          attr = createPathStyleAttribute(name, value);
@@ -96,6 +100,14 @@ public class SVGMarkerElement extends SVGAbstractElement
       SVGLengthAttribute widthAttr = getLengthAttribute("markerWidth");
       SVGLengthAttribute heightAttr = getLengthAttribute("markerHeight");
       SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
+
+      unitStrokeWidth = true;
+
+      SVGMarkerUnitAttribute markerUnitAttr = getMarkerUnitAttribute("markerUnits");
+      if (markerUnitAttr != null && markerUnitAttr.isUserSpaceOnUse())
+      {
+         unitStrokeWidth = false;
+      }
 
       markerWidth = 3;
       markerHeight = 3;
@@ -200,6 +212,18 @@ public class SVGMarkerElement extends SVGAbstractElement
       if (attr!= null && attr instanceof SVGMarkerOrientAttribute)
       {
          return (SVGMarkerOrientAttribute)attr;
+      }
+
+      return null;
+   }
+
+   protected SVGMarkerUnitAttribute getMarkerUnitAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr!= null && attr instanceof SVGMarkerUnitAttribute)
+      {
+         return (SVGMarkerUnitAttribute)attr;
       }
 
       return null;
@@ -432,6 +456,11 @@ public class SVGMarkerElement extends SVGAbstractElement
       return null;
    }
 
+   public boolean isUnitStrokeWidth()
+   {
+      return unitStrokeWidth;
+   }
+
    public Point2D getRefPoint()
    {
       return refPoint;
@@ -491,6 +520,7 @@ public class SVGMarkerElement extends SVGAbstractElement
 
       markerWidth = other.markerWidth;
       markerHeight = other.markerHeight;
+      unitStrokeWidth = other.unitStrokeWidth;
 
       if (other.orientAttr == null)
       {
@@ -558,6 +588,8 @@ public class SVGMarkerElement extends SVGAbstractElement
    Rectangle2D bounds;
    JDRMarker jdrMarker;
    Point2D.Double refPoint;
+
+   boolean unitStrokeWidth;
 
    SVGMarkerOrientAttribute orientAttr;
 

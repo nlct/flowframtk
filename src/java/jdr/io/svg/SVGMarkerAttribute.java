@@ -116,7 +116,7 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
       end = attr.end;
    }
 
-   protected void addMarkerShape(JDRGroup group, Point2D pt,
+   protected void addMarkerShape(JDRShape shape, JDRGroup group, Point2D pt,
      Point2D ref, boolean isFirst, Point2D gradient)
    throws InvalidFormatException
    {
@@ -190,6 +190,27 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
          double scaleX = markerWidth/bounds.getWidth();
          double scaleY = markerHeight/bounds.getHeight();
 
+         if (markerElement.isUnitStrokeWidth())
+         {
+            JDRBasicStroke stroke = null;
+            JDRStroke s = shape.getStroke();
+
+            if (s instanceof JDRBasicStroke)
+            {
+               stroke = (JDRBasicStroke)s;
+            }
+
+            if (stroke != null)
+            {
+               JDRLength penW = stroke.getPenWidth();
+
+               double pen = penW.getValue(unit);
+
+               scaleX *= pen;
+               scaleY *= pen;
+            }
+         }
+
          if (isFirst)
          {
             obj.scale(ref, -scaleX, -scaleY);
@@ -238,14 +259,14 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                {
                   pt.setLocation(seg.getStartX(), seg.getStartY());
 
-                  addMarkerShape(group, pt, ref, true, seg.getdP0());
+                  addMarkerShape(shape, group, pt, ref, true, seg.getdP0());
                }
 
                if (mid)
                {
                   pt.setLocation(seg.getEndX(), seg.getEndY());
 
-                  addMarkerShape(group, pt, ref, false, seg.getdP1());
+                  addMarkerShape(shape, group, pt, ref, false, seg.getdP1());
                }
             }
             else if (isEndSeg)
@@ -254,14 +275,14 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                {
                   pt.setLocation(seg.getEndX(), seg.getEndY());
 
-                  addMarkerShape(group, pt, ref, false, seg.getdP1());
+                  addMarkerShape(shape, group, pt, ref, false, seg.getdP1());
                }
             }
             else if (mid)
             {
                pt.setLocation(seg.getEndX(), seg.getEndY());
 
-               addMarkerShape(group, pt, ref, false, seg.getdP1());
+               addMarkerShape(shape, group, pt, ref, false, seg.getdP1());
             }
 
             isFirstSeg = false;
