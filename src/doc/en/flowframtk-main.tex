@@ -4389,38 +4389,37 @@ elements and attributes are supported by the \gls{svg} import
 function. The following elements are recognised although they may
 not support all attributes:
 \begin{itemize}
-\item \xmlelem{svg} (the main container);
+\item \xmlelem{svg} (the main container, but clipping not supported);
 \item \xmlelem{title} (used to set the image or object description);
 \item \xmlelem{desc} (if \xmlelem{title} not present, used to set
 the image or object description);
 \item \xmlelem{image} (the referenced image file must be
 local, either relative or prefixed with the \code{file} scheme);
-\item \xmlelem{text} (may produce a single \gls{textarea} or a
-\gls{group} of \glspl{textarea} depending on the attributes and
+\item \xmlelem{text} (may produce a single \gls{textualobject} or a
+\gls{group} of \glspl{textualobject} depending on the attributes and
 content);
 \item \xmlelem{tspan} (may produce a single \gls{textarea} or a
 \gls{group} that will be added to the encapsulating \xmlelem{text}
 container's collection);
-\item \xmlelem{a} (restricted to within \xmlelem{text});
-\item \xmlelem{textPath} (offset and spacing ignored);
+\item \xmlelem{a} (restricted to within \xmlelem{text}, but the
+\LaTeX\ alternative text will be encapsulated with \gls{href},
+provided the \xmlattr{href} attribute has a path);
+\item \xmlelem{textPath} (offset and spacing ignored, this will
+create a \gls{textpath});
 \item shapes: \xmlelem{rect}, \xmlelem{ellipse},
 \xmlelem{circle}, \xmlelem{line}, \xmlelem{polyline},
 \xmlelem{polygon}, \xmlelem{path};
-\item \xmlelem{linearGradient}, \xmlelem{radialGradient} \xmlelem{stop}
+\item \xmlelem{linearGradient}, \xmlelem{radialGradient} and \xmlelem{stop}
 (limited as \FlowframTk's \dgls{gradient-paint} only supports two
 \manmsgpl{colour} with fixed starting points or directions);
-\item \xmlelem{marker} (very limited, markers may be omitted or
-replaced with a circle, box, triangle or cross);
-\item \xmlelem{style} (only limited CSS support);
-\item \xmlelem{defs}, \xmlelem{use} (referenced element must be
-defined within the file);
+\item \xmlelem{marker} (very limited);
+\item \xmlelem{style} (limited CSS support);
+\item \xmlelem{defs} and \xmlelem{use} (the referenced element must be
+defined beforehand within the file);
 \item \xmlelem{g} (will add a \gls{group} if its content causes more
-than one \FlowframTk\ \gls{object} to be created).
+than one \FlowframTk\ \gls{object} to be created, otherwise just the
+content will be added).
 \end{itemize}
-
-If the \xmlelem{svg} area (given by the \xmlattr{viewBox}) is larger than the current
-paper size, the paper size will be changed to the next predefined
-size that encompasses the given area.
 
 \widgetdef{import.title}
 
@@ -4480,6 +4479,67 @@ inside a \xmlelem{text} container. If found, mappings will be
 applied as per \xmlelem{tspan} but the \LaTeX\ alternative text will
 then be encapsulated with \gls{href}. The import function does not
 support \xmlelem{a} outside of \xmlelem{text}.
+
+\widgetdef{import.markers}
+
+The \widget{import.markers} row is only available with imports from
+\gls{svg}. The \gls{svg} format allows arbitrary shapes for markers,
+which \FlowframTk\ doesn't currently support. There are three
+choices as to what \FlowframTk\ should do if markers are encountered
+in the imported file.
+
+Select the \inlineglsdef{import.markers.ignore} button to ignore all
+markers. Select the \inlineglsdef{import.markers.add_shapes}
+button to convert all markers to \glspl{shape}. This means that each
+marker will be a separate \gls{object} independent of the path they
+were associated with in the \gls{svg} file and are not part of the
+path's \gls{line-style}. These marker shapes will all have their tag
+set to \qt{marker} to make them easier to find in the
+\dialog{findbydescription} dialog box. 
+
+Select the \inlineglsdef{import.markers.markers} button
+to replace each marker with one of \FlowframTk's predefined 
+\pathattrpl{marker}. Note that this may result in a very different
+shape to the definition in the \gls{svg} file. For example, you may
+simply end up with \gls{arrow.cross} markers. However, they will be
+part of the path's \gls{line-style} and so can be changed when you
+edit the path style.
+
+\widgetdef{import.paper}
+
+The \widget{import.paper} row is only available with imports from
+\gls{svg}. The \gls{Acorn-DrawFile-format} includes the paper \gls{paper.size}
+but \gls{svg} files typically have the \xmlattr{viewBox} attribute
+set to the image bounds. Clipping isn't supported by \FlowframTk,
+but you can choose how the paper \gls{paper.size} for the imported image is
+determined.
+
+\widgetdef{import.paper.current}
+
+If the \widget{import.paper.current} button is selected, the current
+paper setting will be used. Unlike the other two options, no
+shifting is applied. This may result in some or all of the
+imported \glspl{object} ending up outside the \gls{canvas} bounds.
+You can use the \menu{navigate} menu to find them.
+
+\widgetdef{import.paper.custom}
+
+If the \widget{import.paper.custom} button is selected, the paper
+\gls{paper.size} will be set to match the \xmlattr{viewBox}
+attribute, if supplied, or the image \gls{bbox} otherwise.
+The image content will be shifted so that its aligned with the top
+and left of the page bounds.
+
+\widgetdef{import.paper.predefined}
+
+If the \widget{import.paper.predefined} button is selected, the paper
+\gls{paper.size} will be set to one of \FlowframTk's predefined
+paper \glspl{paper.size}. The smallest predefined paper that can
+fully contain the image will be chosen, if possible, otherwise the
+largest closest match will be chosen.
+The image content will be shifted so that its aligned with the top
+and left of the page bounds.
+
 
 \widgetdef{import.extract_bitmaps}
 

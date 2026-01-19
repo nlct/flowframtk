@@ -58,28 +58,53 @@ public class SVGHandler extends DefaultHandler
 
             base.addToImage(group);
 
-            Rectangle2D bounds = base.getViewportBounds();
-
-            if (bounds != null)
+            if (!group.isEmpty() && importSettings.paper != ImportSettings.Paper.CURRENT)
             {
-               group.translate(-bounds.getX(), -bounds.getY());
+               CanvasGraphics cg = getCanvasGraphics();
 
-               double widthBp = getStorageUnit().toBp(bounds.getWidth());
-               double heightBp = getStorageUnit().toBp(bounds.getHeight());
-               JDRPaper paper = getCanvasGraphics().getPaper();
+               Rectangle2D bounds = base.getViewportBounds();
 
-               if (paper.getWidth() < widthBp || paper.getHeight() < heightBp)
+               if (bounds == null)
                {
-                  paper = JDRPaper.getClosestEnclosingPredefinedPaper(
-                     widthBp, heightBp, JDRAJR.CURRENT_VERSION);
+                  BBox box = group.getBpBBox();
 
-                  if (paper == null)
+                  if (box != null)
                   {
-                     paper = JDRPaper.getClosestPredefinedPaper(
-                        widthBp, heightBp, JDRAJR.CURRENT_VERSION);
+                     bounds = new Rectangle2D.Double(box.getMinX(), box.getMinY(),
+                        box.getWidth(), box.getHeight());
                   }
+               }
 
-                  getCanvasGraphics().setPaper(paper);
+               if (bounds != null)
+               {
+                  group.translate(-bounds.getX(), -bounds.getY());
+
+                  double widthBp = getStorageUnit().toBp(bounds.getWidth());
+                  double heightBp = getStorageUnit().toBp(bounds.getHeight());
+
+                  if (importSettings.paper == ImportSettings.Paper.PREDEFINED)
+                  {
+                     JDRPaper paper = cg.getPaper();
+
+                     if (paper.getWidth() < widthBp || paper.getHeight() < heightBp)
+                     {
+                        paper = JDRPaper.getClosestEnclosingPredefinedPaper(
+                           widthBp, heightBp, JDRAJR.CURRENT_VERSION);
+
+                        if (paper == null)
+                        {
+                           paper = JDRPaper.getClosestPredefinedPaper(
+                              widthBp, heightBp, JDRAJR.CURRENT_VERSION);
+                        }
+
+                        cg.setPaper(paper);
+                     }
+                  }
+                  else
+                  {
+                     cg.setPaper(new JDRPaper(cg.getMessageDictionary(),
+                      widthBp, heightBp));
+                  }
                }
             }
          }

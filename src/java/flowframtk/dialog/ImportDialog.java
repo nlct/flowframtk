@@ -94,6 +94,25 @@ public class ImportDialog extends JDialog
         "import.markers", "markers", bg, false, null);
       markerComp.add(markersMarkerButton);
 
+      paperComp = createRow();
+      mainComp.add(paperComp);
+
+      paperComp.add(resources.createAppLabel("import.paper"));
+
+      bg = new ButtonGroup();
+      paperCurrentButton = resources.createAppRadioButton(
+        "import.paper", "current", bg, true, null);
+      paperComp.add(paperCurrentButton);
+
+      paperCustomButton = resources.createAppRadioButton(
+        "import.paper", "custom", bg, false, null);
+      paperComp.add(paperCustomButton);
+
+      paperPredefinedButton = resources.createAppRadioButton(
+        "import.paper", "predefined", bg, false, null);
+      paperComp.add(paperPredefinedButton);
+
+
       extractBitmapsButton = resources.createAppCheckBox("import", "extract_bitmaps",
          true, null);
       extractBitmapsButton.addItemListener(this);
@@ -162,6 +181,19 @@ public class ImportDialog extends JDialog
          break;
          case MARKER:
            markersMarkerButton.setSelected(true);
+         break;
+      }
+
+      switch (importSettings.paper)
+      {
+         case CURRENT:
+            paperCurrentButton.setSelected(true);
+         break;
+         case CUSTOM:
+            paperCustomButton.setSelected(true);
+         break;
+         case PREDEFINED:
+            paperPredefinedButton.setSelected(true);
          break;
       }
 
@@ -248,6 +280,7 @@ public class ImportDialog extends JDialog
       boolean isSVG = (type == ImportSettings.Type.SVG);
 
       markerComp.setVisible(isSVG);
+      paperComp.setVisible(isSVG);
 
       boolean embeddedBitmaps = !isSVG;
 
@@ -361,6 +394,22 @@ public class ImportDialog extends JDialog
          }
       }
 
+      if (paperComp.isVisible())
+      {
+         if (paperCurrentButton.isSelected())
+         {
+            importSettings.paper = ImportSettings.Paper.CURRENT;
+         }
+         else if (paperCustomButton.isSelected())
+         {
+            importSettings.paper = ImportSettings.Paper.CUSTOM;
+         }
+         else if (paperPredefinedButton.isSelected())
+         {
+            importSettings.paper = ImportSettings.Paper.PREDEFINED;
+         }
+      }
+
       if (rememberBox.isSelected())
       {
          application.getSettings().getImportSettings().copyFrom(importSettings);
@@ -388,6 +437,9 @@ public class ImportDialog extends JDialog
 
    JComponent markerComp;
    JRadioButton markersIgnoreButton, markersShapesButton, markersMarkerButton;
+
+   JComponent paperComp;
+   JRadioButton paperCurrentButton, paperCustomButton, paperPredefinedButton;
 
    JCheckBox rememberBox;
 }

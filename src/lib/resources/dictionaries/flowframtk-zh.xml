@@ -2728,6 +2728,14 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="import.markers.markers.mnemonic">G</entry>
 <entry key="import.markers.markers.initvalue">on</entry>
 
+<entry key="import.paper">Paper:</entry>
+<entry key="import.paper.current">Current</entry>
+<entry key="import.paper.current.mnemonic">U</entry>
+<entry key="import.paper.custom">Custom Size</entry>
+<entry key="import.paper.custom.mnemonic">Z</entry>
+<entry key="import.paper.predefined">Best Predefined</entry>
+<entry key="import.paper.predefined.mnemonic">E</entry>
+
 <entry key="import.remember">Remember settings</entry>
 <entry key="import.remember.mnemonic">R</entry>
 <entry key="import.remember.initvalue">true</entry>

@@ -37,6 +37,11 @@ public class ImportSettings
       IGNORE, ADD_SHAPES, MARKER;
    }
 
+   public static enum Paper
+   {
+      CURRENT, CUSTOM, PREDEFINED;
+   }
+
    public void copyFrom(ImportSettings other)
    {
       type = other.type;
@@ -45,6 +50,7 @@ public class ImportSettings
       bitmapNamePrefix = other.bitmapNamePrefix;
       useMappings = other.useMappings;
       markers = other.markers;
+      paper = other.paper;
    }
 
    public JDRMessageDictionary getMessageDictionary()
@@ -60,5 +66,6 @@ public class ImportSettings
    public String bitmapNamePrefix = "";
    public boolean useMappings = true;
    public Markers markers = Markers.MARKER;
+   public Paper paper = Paper.CURRENT;
    JDRMessageDictionary dictionary;
 }

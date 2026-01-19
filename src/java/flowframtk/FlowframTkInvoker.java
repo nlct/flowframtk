@@ -1689,6 +1689,10 @@ public class FlowframTkInvoker
                {
                   importSettings.markers = ImportSettings.Markers.valueOf(value);
                }
+               else if (key.equals("import_paper"))
+               {
+                  importSettings.paper = ImportSettings.Paper.valueOf(value);
+               }
                else if (key.equals("import_text_mappings"))
                {
                   importSettings.useMappings = parseBoolean(value, line);
@@ -2095,6 +2099,7 @@ public class FlowframTkInvoker
       out.println("export_bounds="+exportSettings.bounds);
 
       out.println("import_markers="+importSettings.markers);
+      out.println("import_paper="+importSettings.paper);
       out.println("import_text_mappings="+(importSettings.useMappings?1:0));
       out.println("import_extract_bitmaps="+(importSettings.extractBitmaps?1:0));
 
