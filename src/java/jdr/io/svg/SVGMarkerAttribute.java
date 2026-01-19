@@ -1,6 +1,7 @@
 package com.dickimawbooks.jdr.io.svg;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import org.xml.sax.*;
 
@@ -116,13 +117,22 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
    }
 
    protected void addMarkerShape(JDRGroup group, Point2D pt,
-     Point2D ref, boolean reflect, Point2D gradient)
+     Point2D ref, boolean isFirst, Point2D gradient)
    throws InvalidFormatException
    {
+      CanvasGraphics cg = group.getCanvasGraphics();
+
       double shiftX = pt.getX() - ref.getX();
       double shiftY = pt.getY() - ref.getY();
 
-      JDRGroup subGrp = new JDRGroup(group.getCanvasGraphics());
+      JDRUnit unit = handler.getDefaultUnit();
+      JDRUnit storageUnit = cg.getStorageUnit();
+
+      Rectangle2D bounds = markerElement.getViewportBounds();
+      double markerWidth = markerElement.getMarkerWidth();
+      double markerHeight = markerElement.getMarkerHeight();
+
+      JDRGroup subGrp = new JDRGroup(cg);
 
       for (int i = 0, n = markerElement.getChildCount(); i < n; i++)
       {
@@ -149,14 +159,47 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
       {
          obj.setTag("marker");
 
-         if (reflect)
+         JDRAngle angle = null;
+         double radians = 0.0;
+         int orientType = markerElement.getOrientType();
+
+         switch (orientType)
          {
-            obj.scale(ref, -1, 1);
+            case SVGMarkerOrientAttribute.AUTO:
+               isFirst = false;
+            case SVGMarkerOrientAttribute.AUTO_START_REVERSE:
+               radians = Math.atan2(gradient.getY(), gradient.getX());
+            break;
+            case SVGMarkerOrientAttribute.ANGLE:
+               isFirst = false;
+               angle = markerElement.getOrientAngle();
+               radians = angle.toRadians();
+            break;
+         }
+
+         if (radians != 0.0)
+         {
+            obj.rotate(ref, radians);
+         }
+
+         BBox box = obj.getStorageBBox();
+
+         double objW = storageUnit.toUnit(box.getWidth(), unit);
+         double objH = storageUnit.toUnit(box.getHeight(), unit);
+
+         double scaleX = markerWidth/bounds.getWidth();
+         double scaleY = markerHeight/bounds.getHeight();
+
+         if (isFirst)
+         {
+            obj.scale(ref, -scaleX, -scaleY);
+         }
+         else
+         {
+            obj.scale(ref, scaleX, scaleY);
          }
 
          obj.translate(shiftX, shiftY);
-
-// TODO scale and orient
 
          group.add(obj);
       }
@@ -271,38 +314,11 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                   JDRUnit unit = handler.getDefaultUnit();
                   CanvasGraphics cg = handler.getCanvasGraphics();
 
-                  JDRLength markerLength1 = marker.getSize();
-                  JDRLength markerLength2 = marker.getWidth();
-
-                  double pw = penW.getValue(unit);
-
-                  if (markerLength1 != null)
-                  {
-                     markerLength1 = new JDRLength(cg, 
-                          markerLength1.getValue(unit)*pw, unit);
-                  }
-
-                  if (markerLength2 != null)
-                  {
-                     markerLength2 = new JDRLength(cg, 
-                          markerLength2.getValue(unit)*pw, unit);
-                  }
-
                   if (start)
                   {
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setStartArrow(copy);
-
-                     if (markerLength1 != null)
-                     {
-                        marker.setSize(markerLength1);
-                     }
-
-                     if (markerLength2 != null)
-                     {
-                        marker.setWidth(markerLength2);
-                     }
 
                      if (orientType != SVGMarkerOrientAttribute.AUTO_START_REVERSE)
                      {
@@ -318,17 +334,6 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setMidArrow(copy);
-
-                     if (markerLength1 != null)
-                     {
-                        marker.setSize((JDRLength)markerLength1.clone());
-                     }
-
-                     if (markerLength2 != null)
-                     {
-                        marker.setWidth((JDRLength)markerLength2.clone());
-                     }
-
                   }
 
                   if (end)
@@ -336,17 +341,6 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setEndArrow(copy);
-
-                     if (markerLength1 != null)
-                     {
-                        marker.setSize((JDRLength)markerLength1.clone());
-                     }
-
-                     if (markerLength2 != null)
-                     {
-                        marker.setWidth((JDRLength)markerLength2.clone());
-                     }
-
                   }
                }
             }

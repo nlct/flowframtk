@@ -103,12 +103,12 @@ public class SVGMarkerElement extends SVGAbstractElement
       JDRUnit unit = handler.getDefaultUnit();
       JDRUnit storageUnit = handler.getStorageUnit();
 
-      if (widthAttr != null && widthAttr.getValue() == null)
+      if (widthAttr != null && widthAttr.getValue() != null)
       {
          markerWidth = storageUnit.toUnit(widthAttr.doubleValue(this), unit);
       }
 
-      if (heightAttr != null && heightAttr.getValue() == null)
+      if (heightAttr != null && heightAttr.getValue() != null)
       {
          markerHeight = storageUnit.toUnit(heightAttr.doubleValue(this), unit);
       }
@@ -422,6 +422,16 @@ public class SVGMarkerElement extends SVGAbstractElement
       return orientType;
    }
 
+   public JDRAngle getOrientAngle()
+   {
+      if (orientAttr != null) 
+      {
+         return orientAttr.getAngle();
+      }
+
+      return null;
+   }
+
    public Point2D getRefPoint()
    {
       return refPoint;
@@ -430,6 +440,16 @@ public class SVGMarkerElement extends SVGAbstractElement
    public Rectangle2D getViewportBounds()
    {
       return bounds;
+   }
+
+   public double getMarkerWidth()
+   {
+      return markerWidth;
+   }
+
+   public double getMarkerHeight()
+   {
+      return markerHeight;
    }
 
    @Override
