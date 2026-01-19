@@ -156,7 +156,7 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
 
          obj.translate(shiftX, shiftY);
 
-// TODO paint scale and orient
+// TODO scale and orient
 
          group.add(obj);
       }
@@ -257,6 +257,8 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
 
             if (marker != null)
             {
+               int orientType = markerElement.getOrientType();
+
                JDRStroke stroke = shape.getStroke();
 
                if (stroke instanceof JDRBasicStroke)
@@ -266,11 +268,49 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                   JDRMarker copy;
                   JDRLength penW = basicStroke.getPenWidth();
 
+                  JDRUnit unit = handler.getDefaultUnit();
+                  CanvasGraphics cg = handler.getCanvasGraphics();
+
+                  JDRLength markerLength1 = marker.getSize();
+                  JDRLength markerLength2 = marker.getWidth();
+
+                  double pw = penW.getValue(unit);
+
+                  if (markerLength1 != null)
+                  {
+                     markerLength1 = new JDRLength(cg, 
+                          markerLength1.getValue(unit)*pw, unit);
+                  }
+
+                  if (markerLength2 != null)
+                  {
+                     markerLength2 = new JDRLength(cg, 
+                          markerLength2.getValue(unit)*pw, unit);
+                  }
+
                   if (start)
                   {
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setStartArrow(copy);
+
+                     if (markerLength1 != null)
+                     {
+                        marker.setSize(markerLength1);
+                     }
+
+                     if (markerLength2 != null)
+                     {
+                        marker.setWidth(markerLength2);
+                     }
+
+                     if (orientType != SVGMarkerOrientAttribute.AUTO_START_REVERSE)
+                     {
+                        // JDRMarker always reverses start marker
+                        // so reverse to keep it forward
+
+                        copy.setReversed(true);
+                     }
                   }
 
                   if (mid)
@@ -278,6 +318,17 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setMidArrow(copy);
+
+                     if (markerLength1 != null)
+                     {
+                        marker.setSize((JDRLength)markerLength1.clone());
+                     }
+
+                     if (markerLength2 != null)
+                     {
+                        marker.setWidth((JDRLength)markerLength2.clone());
+                     }
+
                   }
 
                   if (end)
@@ -285,6 +336,17 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setEndArrow(copy);
+
+                     if (markerLength1 != null)
+                     {
+                        marker.setSize((JDRLength)markerLength1.clone());
+                     }
+
+                     if (markerLength2 != null)
+                     {
+                        marker.setWidth((JDRLength)markerLength2.clone());
+                     }
+
                   }
                }
             }

@@ -1,5 +1,6 @@
 package com.dickimawbooks.jdr.io.svg;
 
+import java.util.regex.Pattern;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 
@@ -36,10 +37,12 @@ public class SVGMarkerElement extends SVGAbstractElement
       addAttribute("markerHeight", attr);
       addAttribute("markerWidth", attr);
 //      addAttribute("markerUnits", attr);// userSpaceOnUse | strokeWidth
-//      addAttribute("orient", attr);// auto | auto-start-reverse | angle
+      addAttribute("orient", attr);// auto | auto-start-reverse | angle
       addAttribute("refX", attr);// left | right | center | coordinate
       addAttribute("refY", attr);// top | center | bottom | coordinate
       addAttribute("viewBox", attr);
+
+      addShapeAttributes(uri, attr);
    }
 
    @Override
@@ -68,9 +71,18 @@ public class SVGMarkerElement extends SVGAbstractElement
       {
          attr = SVGMarkerRefAttribute.valueOf(handler, name, value, false);
       }
+      else if (name.equals("orient"))
+      {
+         attr = SVGMarkerOrientAttribute.valueOf(handler, value);
+      }
       else
       {
-         attr = super.createElementAttribute(name, value);
+         attr = createPathStyleAttribute(name, value);
+
+         if (attr == null)
+         {
+            attr = super.createElementAttribute(name, value);
+         }
       }
 
       return attr;
@@ -79,6 +91,8 @@ public class SVGMarkerElement extends SVGAbstractElement
    @Override
    public void startElement() throws InvalidFormatException
    {
+      orientAttr = getMarkerOrientAttribute("orient");
+
       SVGLengthAttribute widthAttr = getLengthAttribute("markerWidth");
       SVGLengthAttribute heightAttr = getLengthAttribute("markerHeight");
       SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
@@ -179,6 +193,18 @@ public class SVGMarkerElement extends SVGAbstractElement
       return null;
    }
 
+   protected SVGMarkerOrientAttribute getMarkerOrientAttribute(String attrName)
+   {
+      SVGAttribute attr = getAttribute(attrName, null);
+
+      if (attr!= null && attr instanceof SVGMarkerOrientAttribute)
+      {
+         return (SVGMarkerOrientAttribute)attr;
+      }
+
+      return null;
+   }
+
    @Override
    public void endElement() throws InvalidFormatException
    {
@@ -188,6 +214,14 @@ public class SVGMarkerElement extends SVGAbstractElement
 
       CanvasGraphics cg = getCanvasGraphics();
       JDRUnit unit = handler.getDefaultUnit();
+
+      boolean isDot = DOT_PATTERN.matcher(id).find();
+      boolean isBox = BOX_PATTERN.matcher(id).find();
+      boolean isBar = BAR_PATTERN.matcher(id).find();
+      boolean isTriangle = TRIANGLE_PATTERN.matcher(id).find();
+      boolean isStealth = STEALTH_PATTERN.matcher(id).find();
+      boolean isUp = UP_PATTERN.matcher(id).find();
+      boolean isDown = DOWN_PATTERN.matcher(id).find();
 
       for (int i = 0, j = 0; i < children.size() && j < 3; i++)
       {
@@ -208,12 +242,32 @@ public class SVGMarkerElement extends SVGAbstractElement
             JDRPaint linePaint = shape.getLinePaint();
             JDRPaint fillPaint = shape.getFillPaint();
 
+            if (linePaint == null)
+            {
+               linePaint = getLinePaint();
+            }
+
+            if (linePaint != null)
+            {
+               jdrShape.setLinePaint(linePaint);
+            }
+
+            if (fillPaint == null)
+            {
+               fillPaint = getFillPaint();
+            }
+
+            if (fillPaint != null)
+            {
+               jdrShape.setFillPaint(fillPaint);
+            }
+
             boolean isFilled = (fillPaint == null
                || !(fillPaint instanceof JDRTransparent));
 
             String shapeName = shape.getName();
 
-            if (shapeName.equals("circle") || shapeName.equals("ellipse"))
+            if (isDot || shapeName.equals("circle") || shapeName.equals("ellipse"))
             {
                if (isFilled)
                {
@@ -224,7 +278,7 @@ public class SVGMarkerElement extends SVGAbstractElement
                   markerType = JDRMarker.ARROW_DOTOPEN;
                }
             }
-            else if (shapeName.equals("rect"))
+            else if (isBox || shapeName.equals("rect"))
             {
                if (isFilled)
                {
@@ -233,6 +287,43 @@ public class SVGMarkerElement extends SVGAbstractElement
                else
                {
                   markerType = JDRMarker.ARROW_BOXOPEN;
+               }
+            }
+            else if (isBar)
+            {
+               markerType = JDRMarker.ARROW_ALT_BAR;
+            }
+            else if (isStealth)
+            {
+               markerType = JDRMarker.ARROW_STEALTH2;
+            }
+            else if (isTriangle)
+            {
+               if (isUp)
+               {
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_TRIANGLE_UP_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_TRIANGLE_UP_OPEN;
+                  }
+               }
+               else if (isDown)
+               {
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_TRIANGLE_DOWN_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_TRIANGLE_DOWN_OPEN;
+                  }
+               }
+               else
+               {
+                  markerType = JDRMarker.ARROW_OFFSET_TRIANGLE2;
                }
             }
             else if (shapeName.equals("polygon") || jdrShape.isPolygon())
@@ -282,6 +373,23 @@ public class SVGMarkerElement extends SVGAbstractElement
                   m.setFillPaint(linePaint);
                }
 
+               JDRAngle angle = null;
+               int orientType = getOrientType();
+
+               if (orientAttr != null)
+               {
+                  angle = orientAttr.getAngle();
+               }
+
+               if (angle == null)
+               {
+                  m.setOrient(true);
+               }
+               else
+               {
+                  m.setOrient(false, angle);
+               }
+
                if (jdrMarker == null)
                {
                   jdrMarker = m;
@@ -300,6 +408,18 @@ public class SVGMarkerElement extends SVGAbstractElement
       }
 
       super.endElement();
+   }
+
+   public int getOrientType()
+   {
+      int orientType = SVGMarkerOrientAttribute.ZERO;
+
+      if (orientAttr != null)
+      {
+         orientType = orientAttr.getOrientType();
+      }
+
+      return orientType;
    }
 
    public Point2D getRefPoint()
@@ -351,6 +471,19 @@ public class SVGMarkerElement extends SVGAbstractElement
 
       markerWidth = other.markerWidth;
       markerHeight = other.markerHeight;
+
+      if (other.orientAttr == null)
+      {
+         orientAttr = null;
+      }
+      else if (orientAttr == null)
+      {
+         orientAttr = (SVGMarkerOrientAttribute)other.orientAttr.clone();
+      }
+      else
+      {
+         orientAttr.makeEqual((SVGAttribute)other.orientAttr);
+      }
 
       if (other.bounds == null)
       {
@@ -405,4 +538,14 @@ public class SVGMarkerElement extends SVGAbstractElement
    Rectangle2D bounds;
    JDRMarker jdrMarker;
    Point2D.Double refPoint;
+
+   SVGMarkerOrientAttribute orientAttr;
+
+   static final Pattern DOT_PATTERN = Pattern.compile("dot|ball|circle");
+   static final Pattern BOX_PATTERN = Pattern.compile("box|square");
+   static final Pattern BAR_PATTERN = Pattern.compile("bar|line|pipe");
+   static final Pattern TRIANGLE_PATTERN = Pattern.compile("triangle|arrow");
+   static final Pattern STEALTH_PATTERN = Pattern.compile("stealth|barb");
+   static final Pattern UP_PATTERN = Pattern.compile("up|north");
+   static final Pattern DOWN_PATTERN = Pattern.compile("down|south");
 }

@@ -165,6 +165,9 @@ public class ImportDialog extends JDialog
          break;
       }
 
+      extractBitmapsButton.setSelected(importSettings.extractBitmaps);
+      useMappingsButton.setSelected(importSettings.useMappings);
+
       update((File)null);
 
       setVisible(true);

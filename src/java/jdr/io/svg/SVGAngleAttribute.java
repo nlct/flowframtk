@@ -3,6 +3,7 @@ package com.dickimawbooks.jdr.io.svg;
 import java.util.regex.*;
 
 import com.dickimawbooks.jdr.JDRCompleteObject;
+import com.dickimawbooks.jdr.JDRAngle;
 import com.dickimawbooks.jdr.exceptions.*;
 
 public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
@@ -71,6 +72,11 @@ public class SVGAngleAttribute extends SVGMeasurement implements SVGAttribute
       }
 
       return val;
+   }
+
+   public JDRAngle getAngle()
+   {
+      return new JDRAngle(handler.getCanvasGraphics(), getRadians(), JDRAngle.RADIAN);
    }
 
    @Override
