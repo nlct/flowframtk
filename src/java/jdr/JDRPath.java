@@ -3104,103 +3104,195 @@ public class JDRPath extends JDRShape
          return;
       }
 
+      ExportSettings exportSettings = tex.getExportSettings();
+
       CanvasGraphics cg = getCanvasGraphics();
 
       JDRPaint linePaint = getLinePaint();
+      JDRPaint fillPaint = getFillPaint();
 
-      JDRPaint paint = getFillPaint();
+      if (fillPaint instanceof JDRTransparent)
+      {
+         fillPaint = null;
+      }
 
       JDRBasicStroke stroke = (JDRBasicStroke)getStroke();
 
-      tex.println("\\begin{pgfscope}");
+      boolean fillStroke = false;
+      boolean drawStroke = !(linePaint instanceof JDRTransparent);
 
       if (linePaint instanceof JDRShading)
       {
-         if (!(paint instanceof JDRTransparent))
+         JDRShading shading = (JDRShading)linePaint;
+
+         switch (exportSettings.strokeShading)
          {
-            stroke.savePgf(tex);
-
-            tex.println(paint.pgffillcolor(pathBBox));
-            tex.print(stroke.windingRule==Path2D.WIND_EVEN_ODD ? 
-                   "\\pgfseteorule " :
-                   "\\pgfsetnonzerorule ");
-
-            if (paint instanceof JDRGradient
-             || paint instanceof JDRRadial)
-            {
-               tex.println(linePaint.pgfstrokecolor(pathBBox));
-
-               if (!(linePaint instanceof JDRTransparent))
-               {
-                  tex.println("\\pgfusepath{stroke}");
-               }
-            }
-            else
-            {
-               tex.println("\\pgfusepath{fill}");
-            }
+            case AVERAGE:
+               linePaint = shading.getStartColor().average(shading.getEndColor());
+            break;
+            case START:
+               linePaint = shading.getStartColor();
+            break;
+            case END:
+               linePaint = shading.getEndColor();
+            break;
+            case TO_PATH:
+               fillStroke = true;
+            break;
          }
+      }
+
+      JDRMarker start = stroke.getStartArrow();
+      JDRMarker mid = stroke.getMidArrow();
+      JDRMarker end = stroke.getEndArrow();
+
+      if (start.getType() == JDRMarker.ARROW_NONE)
+      {
+         start = null;
+      }
+
+      if (mid.getType() == JDRMarker.ARROW_NONE)
+      {
+         mid = null;
+      }
+
+      if (end.getType() == JDRMarker.ARROW_NONE)
+      {
+         end = null;
+      }
+
+      if (exportSettings.markers != ExportSettings.Markers.SEPARATE)
+      {
+         if (start != null
+          &&
+             (exportSettings.markers == ExportSettings.Markers.STROKED
+              || start.getFillPaint() == null)
+            )
+         {
+            start = null;
+            fillStroke = true;
+         }
+
+         if (mid != null
+          &&
+             (exportSettings.markers == ExportSettings.Markers.STROKED
+              || mid.getFillPaint() == null)
+            )
+         {
+            mid = null;
+            fillStroke = true;
+         }
+
+         if (end != null
+          &&
+             (exportSettings.markers == ExportSettings.Markers.STROKED
+              || end.getFillPaint() == null)
+            )
+         {
+            end = null;
+            fillStroke = true;
+         }
+      }
+
+      JDRShape strokedPath = null;
+
+      if (fillStroke)
+      {
+         JDRStroke orgStroke = stroke;
+
+         stroke = (JDRBasicStroke)stroke.clone();
+
+         if (start != null
+           && stroke.getStartArrow().getType() != JDRMarker.ARROW_NONE)
+         {
+            stroke.setStartArrow(
+              JDRMarker.getPredefinedMarker(cg, JDRMarker.ARROW_NONE));
+         }
+
+         if (mid != null
+           && stroke.getMidArrow().getType() != JDRMarker.ARROW_NONE)
+         {
+            stroke.setMidArrow(
+              JDRMarker.getPredefinedMarker(cg, JDRMarker.ARROW_NONE));
+         }
+
+         if (end != null
+           && stroke.getEndArrow().getType() != JDRMarker.ARROW_NONE)
+         {
+            stroke.setEndArrow(
+              JDRMarker.getPredefinedMarker(cg, JDRMarker.ARROW_NONE));
+         }
+
+         setStroke(stroke);
 
          try
          {
-            outlineToPath().savePgf(tex);
+            strokedPath = outlineToPath();
+            strokedPath.setFillPaint(linePaint);
          }
          catch (InvalidPathException e)
          {
-            getCanvasGraphics().getMessageSystem().getPublisher().publishMessages(
-               MessageInfo.createWarning(e));
+            cg.warning(e);
+         }
+         finally
+         {
+            setStroke(orgStroke);
          }
 
+         drawStroke = false;
+      }
+
+      tex.println("\\begin{pgfscope}");
+
+      stroke.savePgf(tex);
+
+      if (fillPaint == null)
+      {
+         savePgfPath(tex);
+
+         if (drawStroke)
+         {
+            tex.println(linePaint.pgfstrokecolor(pathBBox));
+            tex.println("\\pgfusepath{stroke}");
+         }
       }
       else
       {
-         stroke.savePgf(tex);
+         savePgfPath(tex);
 
-         if (paint instanceof JDRTransparent)
+         tex.println(fillPaint.pgffillcolor(pathBBox));
+         tex.println(stroke.windingRule==Path2D.WIND_EVEN_ODD ? 
+                "\\pgfseteorule " :
+                "\\pgfsetnonzerorule ");
+
+         if (fillPaint instanceof JDRShading)
          {
-            savePgfPath(tex);
-
-            if (!(linePaint instanceof JDRTransparent))
+            if (drawStroke)
             {
-               tex.println(linePaint.pgfstrokecolor(pathBBox));
+               tex.print(linePaint.pgfstrokecolor(pathBBox));
                tex.println("\\pgfusepath{stroke}");
             }
          }
+         else if (!drawStroke)
+         {
+            tex.println("\\pgfusepath{fill}");
+         }
          else
          {
-            savePgfPath(tex);
+            tex.println(linePaint.pgfstrokecolor(pathBBox));
 
-            tex.println(paint.pgffillcolor(pathBBox));
-            tex.println(stroke.windingRule==Path2D.WIND_EVEN_ODD ? 
-                   "\\pgfseteorule " :
-                   "\\pgfsetnonzerorule ");
-
-            if (paint instanceof JDRGradient
-             || paint instanceof JDRRadial)
-            {
-               tex.print(linePaint.pgfstrokecolor(pathBBox));
-
-               if (!(linePaint instanceof JDRTransparent))
-               {
-                  tex.println("\\pgfusepath{stroke}");
-               }
-            }
-            else if (linePaint instanceof JDRTransparent)
-            {
-               tex.println("\\pgfusepath{fill}");
-            }
-            else
-            {
-               tex.println(linePaint.pgfstrokecolor(pathBBox));
-
-               tex.println("\\pgfusepath{fill,stroke}");
-            }
+            tex.println("\\pgfusepath{fill,stroke}");
          }
+      }
+
+      if (strokedPath != null)
+      {
+         strokedPath.savePgf(tex);
       }
 
       tex.println("\\end{pgfscope}");
 
-      pgfMarkers(tex, pathBBox);
+      pgfMarkers(tex, pathBBox, linePaint, start, mid, end);
    }
 
    public void pgfMarkers(TeX tex, BBox pathBBox)
@@ -3208,38 +3300,70 @@ public class JDRPath extends JDRShape
    {
       JDRBasicStroke stroke = (JDRBasicStroke)getStroke();
 
-      if (stroke.getStartArrow().getType() == JDRMarker.ARROW_NONE
-       && stroke.getEndArrow().getType() == JDRMarker.ARROW_NONE
-       && stroke.getMidArrow().getType() == JDRMarker.ARROW_NONE)
+      JDRMarker start = stroke.getStartArrow();
+      JDRMarker mid = stroke.getMidArrow();
+      JDRMarker end = stroke.getEndArrow();
+
+      if (start.getType() == JDRMarker.ARROW_NONE)
       {
-         return;
+         start = null;
       }
 
-      JDRPaint linePaint = getLinePaint();
+      if (mid.getType() == JDRMarker.ARROW_NONE)
+      {
+         mid = null;
+      }
+
+      if (end.getType() == JDRMarker.ARROW_NONE)
+      {
+         end = null;
+      }
+
+      pgfMarkers(tex, pathBBox, getLinePaint(), start, mid, end);
+   }
+
+   protected void pgfMarkers(TeX tex, BBox pathBBox, JDRPaint linePaint,
+      JDRMarker start, JDRMarker mid, JDRMarker end)
+     throws IOException
+   {
+      if (start == null && mid == null && end == null) return;
+
+      if (linePaint == null)
+      {
+         linePaint = getLinePaint();
+      }
 
       JDRPathIterator pi = getIterator();
+
+      boolean isStart = true;
 
       while (pi.hasNext())
       {
          JDRPathSegment segment = pi.next();
 
-         JDRMarker marker = segment.getStartMarker();
-
-         if (marker != null && marker.getType() != JDRMarker.ARROW_NONE)
+         if (isStart && start != null)
          {
-            marker.pgfShape(linePaint, pathBBox,
-                      segment, true, tex);
+            start.pgfShape(linePaint, pathBBox, segment, true, tex);
          }
 
-         marker = segment.getEndMarker();
+         isStart = false;
 
-         if (marker != null && marker.getType() != JDRMarker.ARROW_NONE)
+         JDRMarker marker;
+
+         if (pi.hasNext())
          {
-            marker.pgfShape(linePaint, pathBBox,
-                      segment, false, tex);
+            marker = mid;
+         }
+         else
+         {
+            marker = end;
+         }
+
+         if (marker != null)
+         {
+            marker.pgfShape(linePaint, pathBBox, segment, false, tex);
          }
       }
-
    }
 
    public int psLevel()

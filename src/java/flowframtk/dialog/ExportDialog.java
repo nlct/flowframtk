@@ -433,6 +433,65 @@ public class ExportDialog extends JDialog
 
       adjustMaxHeight(markupWidgets);
 
+      // Markers
+
+      strokeMarkersComp = createRigidRow();
+      settingsPanel.add(strokeMarkersComp);
+
+      JLabel strokeMarkersLabel = resources.createAppLabel("export.markers");
+      labelGrp.add(strokeMarkersLabel);
+      strokeMarkersComp.add(strokeMarkersLabel);
+      bg = new ButtonGroup();
+
+      JComponent strokeMarkersWidgets = createBevelledRow();
+      strokeMarkersComp.add(strokeMarkersWidgets);
+
+      strokeMarkersSeparateBox = resources.createAppRadioButton("export",
+        "markers.separate", bg, false, null);
+      strokeMarkersWidgets.add(strokeMarkersSeparateBox);
+
+      strokeMarkersSeparateOrStrokedBox = resources.createAppRadioButton("export",
+        "markers.separate_or_stroked", bg, true, null);
+      strokeMarkersWidgets.add(strokeMarkersSeparateOrStrokedBox);
+
+      strokeMarkersStrokedBox = resources.createAppRadioButton("export",
+        "markers.stroked", bg, false, null);
+      strokeMarkersWidgets.add(strokeMarkersStrokedBox);
+
+      adjustMaxHeight(strokeMarkersWidgets);
+
+      // Stroke Gradient Paint
+
+      strokeShadingComp = createRigidRow();
+      settingsPanel.add(strokeShadingComp);
+
+      JLabel strokeShadingLabel = resources.createAppLabel("export.strokeshading");
+      labelGrp.add(strokeShadingLabel);
+      strokeShadingComp.add(strokeShadingLabel);
+      bg = new ButtonGroup();
+
+      JComponent strokeShadingWidgets = createBevelledRow();
+      strokeShadingComp.add(strokeShadingWidgets);
+
+      strokeShadingAverageBox = resources.createAppRadioButton("export",
+        "strokeshading.average", bg, true, null);
+      strokeShadingWidgets.add(strokeShadingAverageBox);
+
+      strokeShadingStartBox = resources.createAppRadioButton("export",
+        "strokeshading.start", bg, false, null);
+      strokeShadingWidgets.add(strokeShadingStartBox);
+
+      strokeShadingEndBox = resources.createAppRadioButton("export",
+        "strokeshading.end", bg, false, null);
+      strokeShadingWidgets.add(strokeShadingEndBox);
+
+      strokeShadingToPathBox = resources.createAppRadioButton("export",
+        "strokeshading.to_path", bg, false, null);
+      strokeShadingWidgets.add(strokeShadingToPathBox);
+
+      adjustMaxHeight(strokeShadingWidgets);
+
+
       // Text Gradient Paint
 
       textualShadingComp = createRigidRow();
@@ -915,6 +974,35 @@ public class ExportDialog extends JDialog
          break;
       }
 
+      switch (exportSettings.strokeShading)
+      {
+         case AVERAGE:
+            strokeShadingAverageBox.setSelected(true);
+         break;
+         case START:
+            strokeShadingStartBox.setSelected(true);
+         break;
+         case END:
+            strokeShadingEndBox.setSelected(true);
+         break;
+         case TO_PATH:
+            strokeShadingToPathBox.setSelected(true);
+         break;
+      }
+
+      switch (exportSettings.markers)
+      {
+         case SEPARATE:
+            strokeMarkersSeparateBox.setSelected(true);
+         break;
+         case SEPARATE_OR_STROKED:
+            strokeMarkersSeparateOrStrokedBox.setSelected(true);
+         break;
+         case STROKED:
+            strokeMarkersStrokedBox.setSelected(true);
+         break;
+      }
+
       switch (exportSettings.textualShading)
       {
          case AVERAGE:
@@ -1153,6 +1241,42 @@ public class ExportDialog extends JDialog
          else if (markupEncapBox.isSelected())
          {
             exportSettings.objectMarkup = ExportSettings.ObjectMarkup.ENCAP;
+         }
+      }
+
+      if (strokeShadingComp.isVisible())
+      {
+         if (strokeShadingAverageBox.isSelected())
+         {
+            exportSettings.strokeShading = ExportSettings.StrokeShading.AVERAGE;
+         }
+         else if (strokeShadingStartBox.isSelected())
+         {
+            exportSettings.strokeShading = ExportSettings.StrokeShading.START;
+         }
+         else if (strokeShadingEndBox.isSelected())
+         {
+            exportSettings.strokeShading = ExportSettings.StrokeShading.END;
+         }
+         else if (strokeShadingToPathBox.isSelected())
+         {
+            exportSettings.strokeShading = ExportSettings.StrokeShading.TO_PATH;
+         }
+      }
+
+      if (strokeMarkersComp.isVisible())
+      {
+         if (strokeMarkersSeparateBox.isSelected())
+         {
+            exportSettings.markers = ExportSettings.Markers.SEPARATE;
+         }
+         else if (strokeMarkersSeparateOrStrokedBox.isSelected())
+         {
+            exportSettings.markers = ExportSettings.Markers.SEPARATE_OR_STROKED;
+         }
+         else if (strokeMarkersStrokedBox.isSelected())
+         {
+            exportSettings.markers = ExportSettings.Markers.STROKED;
          }
       }
 
@@ -1401,6 +1525,8 @@ public class ExportDialog extends JDialog
       boolean showBitmapsToEps = false;
       boolean showMarkup = false;
       boolean showDocClassComp = false;
+      boolean showStrokeShading = true;
+      boolean showStrokeMarkers = true;
       boolean showTextualShading = true;
       boolean showPathOutline = true;
       boolean showTextAreaOutline = false;
@@ -1417,11 +1543,18 @@ public class ExportDialog extends JDialog
       switch (type)
       {
          case SVG:
+            showStrokeShading = false;
+            showStrokeMarkers = false;
             showTextualShading = false;
             showTextAreaOutline = true;
             // fall through
          case EPS:
-            showBitmapsToEps = useExternalProcessBox.isSelected();
+            if (useExternalProcessBox.isSelected())
+            {
+               showBitmapsToEps = true;
+               showStrokeShading = true;
+               showStrokeMarkers = true;
+            }
          break;
          case IMAGE_PDF:
          case IMAGE_DOC:
@@ -1441,12 +1574,16 @@ public class ExportDialog extends JDialog
             if (useExternalProcessBox.isSelected())
             {
                showAlpha = false;
+               showStrokeShading = true;
+               showStrokeMarkers = true;
                showTextualShading = true;
                showPathOutline = true;
             }
             else
             {
                showAlpha = true;
+               showStrokeShading = false;
+               showStrokeMarkers = false;
                showTextualShading = false;
                showPathOutline = false;
             }
@@ -1475,6 +1612,8 @@ public class ExportDialog extends JDialog
       writeDateCommentBox.setVisible(texExport);
       bitmapsToEpsBox.setVisible(showBitmapsToEps);
       markupComp.setVisible(showMarkup);
+      strokeMarkersComp.setVisible(showStrokeMarkers);
+      strokeShadingComp.setVisible(showStrokeShading);
       textualShadingComp.setVisible(showTextualShading);
       textPathOutlineComp.setVisible(showPathOutline);
       textAreaOutlineComp.setVisible(showTextAreaOutline);
@@ -1563,6 +1702,15 @@ public class ExportDialog extends JDialog
 
    private JComponent markupComp;
    private JRadioButton markupNoneBox, markupPairedBox, markupEncapBox;
+
+   private JComponent strokeMarkersComp;
+   private JRadioButton strokeMarkersSeparateBox,
+     strokeMarkersSeparateOrStrokedBox,
+     strokeMarkersStrokedBox;
+
+   private JComponent strokeShadingComp;
+   private JRadioButton strokeShadingAverageBox, strokeShadingStartBox,
+    strokeShadingEndBox, strokeShadingToPathBox;
 
    private JComponent textualShadingComp;
    private JRadioButton textualShadingAverageBox, textualShadingStartBox,

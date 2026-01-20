@@ -60,6 +60,16 @@ public class ExportSettings
       TO_PATH, IGNORE;
    }
 
+   public static enum StrokeShading
+   {
+      AVERAGE, START, END, TO_PATH;
+   }
+
+   public static enum Markers
+   {
+      SEPARATE, SEPARATE_OR_STROKED, STROKED;
+   }
+
    public void copyFrom(ExportSettings other)
    {
       type = other.type;
@@ -68,6 +78,8 @@ public class ExportSettings
       textualShading = other.textualShading;
       textPathOutline = other.textPathOutline;
       textAreaOutline = other.textAreaOutline;
+      markers = other.markers;
+      strokeShading = other.strokeShading;
       dviLaTeXApp = other.dviLaTeXApp;
       dviLaTeXOptions = other.dviLaTeXOptions;
       pdfLaTeXApp = other.pdfLaTeXApp;
@@ -313,6 +325,8 @@ public class ExportSettings
    public TextualShading textualShading = TextualShading.TO_PATH;
    public TextPathOutline textPathOutline = TextPathOutline.TO_PATH;
    public TextAreaOutline textAreaOutline = TextAreaOutline.TO_PATH;
+   public Markers markers = Markers.SEPARATE_OR_STROKED;
+   public StrokeShading strokeShading = StrokeShading.TO_PATH;
 
    public String dviLaTeXApp = "latex";
    public String[] dviLaTeXOptions = new String[] { "$basename" };

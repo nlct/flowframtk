@@ -513,6 +513,8 @@ public class JDRGuiMessage extends JDRMessagePublisher
    public void processDone()
    {
       this.process = null;
+
+      resetProgress();
    }
 
    public int getVerbosity()

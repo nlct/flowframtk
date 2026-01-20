@@ -1798,6 +1798,16 @@ public class FlowframTkInvoker
                   exportSettings.textAreaOutline
                    = ExportSettings.TextAreaOutline.valueOf(value);
                }
+               else if (key.equals("strokeshadingexport"))
+               {
+                  exportSettings.strokeShading
+                   = ExportSettings.StrokeShading.valueOf(value);
+               }
+               else if (key.equals("strokemarkersexport"))
+               {
+                  exportSettings.markers
+                   = ExportSettings.Markers.valueOf(value);
+               }
                else if (key.equals("latex_app"))
                {
                   exportSettings.dviLaTeXApp = value;
@@ -2404,6 +2414,10 @@ public class FlowframTkInvoker
         + exportSettings.textPathOutline);
       out.println("textareaoutlineexport="
         + exportSettings.textAreaOutline);
+      out.println("strokeshadingexport="
+        + exportSettings.strokeShading);
+      out.println("strokemarkersexport="
+        + exportSettings.markers);
       out.println("object_markup="
         + exportSettings.objectMarkup);
 

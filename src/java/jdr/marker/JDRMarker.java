@@ -719,42 +719,35 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
 
       tex.println("{\\begin{pgfscope}");
 
-      JDRPaint paint = (fillPaint == null ? pathPaint : fillPaint);
-
-      if (paint instanceof JDRShading)
-      {
-         // not yet implemented gradient fill
-
-         //tex.println(paint.pgffillcolor(getStorageBBox()));
-         tex.println(paint.pgffillcolor(null));
-         cg.warning("warning.pgf-no-marker-shading",
-          "marker shading paint can't be exported to pgf");
-      }
-      else
-      {
-         tex.println(paint.pgffillcolor(null));
-      }
-
       while (!pi.isDone())
       {
          switch (pi.currentSegment(coords))
          {
             case PathIterator.SEG_MOVETO:
-               tex.println("\\pgfpathqmoveto{"+tex.length(cg, coords[0])+"}{"
-                    + tex.length(cg, coords[1])+"}");
+               tex.print("\\pgfpathmoveto{");
+               tex.print(tex.point(cg, coords[0], coords[1]));
+               tex.println("}");
             break;
             case PathIterator.SEG_LINETO:
-               tex.println("\\pgfpathqlineto{"+tex.length(cg, coords[0])+"}{"
-                    + tex.length(cg, coords[1])+"}");
+               tex.print("\\pgfpathlineto{");
+               tex.print(tex.point(cg, coords[0], coords[1]));
+               tex.println("}");
+            break;
+            case PathIterator.SEG_QUADTO:
+               tex.print("\\pgfpathquadraticcurveto{");
+               tex.print(tex.point(cg, coords[0], coords[1]));
+               tex.print("}{");
+               tex.print(tex.point(cg, coords[2], coords[3]));
+               tex.println("}");
             break;
             case PathIterator.SEG_CUBICTO:
-               tex.println("\\pgfpathqcurveto{"
-                    + tex.length(cg, coords[0])+"}{"
-                    + tex.length(cg, coords[1])+"}{"
-                    + tex.length(cg, coords[2])+"}{"
-                    + tex.length(cg, coords[3])+"}{"
-                    + tex.length(cg, coords[4])+"}{"
-                    + tex.length(cg, coords[5])+"}");
+               tex.print("\\pgfpathcurveto{");
+               tex.print(tex.point(cg, coords[0], coords[1]));
+               tex.print("}{");
+               tex.print(tex.point(cg, coords[2], coords[3]));
+               tex.print("}{");
+               tex.print(tex.point(cg, coords[4], coords[5]));
+               tex.println("}");
             break;
             case PathIterator.SEG_CLOSE:
                tex.println("\\pgfclosepath");
@@ -764,7 +757,18 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
          pi.next();
       }
 
-      tex.println("\\pgfusepathqfill");
+      JDRPaint paint = (fillPaint == null ? pathPaint : fillPaint);
+
+      if (paint instanceof JDRShading)
+      {
+         tex.println(paint.pgffillcolor(getStorageBBox()));
+      }
+      else
+      {
+         tex.println(paint.pgffillcolor(null));
+         tex.println("\\pgfusepath{fill}");
+      }
+
       tex.println("\\end{pgfscope}}");
 
       if (composite != null)

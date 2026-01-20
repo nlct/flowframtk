@@ -1034,6 +1034,19 @@ public class CanvasGraphics
       return bpToStorage(getPaperHeight()) - originalY;
    }
 
+   public void warning(Throwable e)
+   {
+      if (messageSystem == null)
+      {
+         System.err.println(e.getMessage());
+      }
+      else
+      {
+         messageSystem.getPublisher().publishMessages(
+               MessageInfo.createWarning(e));
+      }
+   }
+
    public String warning(String tag, String alt)
    {
       if (messageSystem == null)

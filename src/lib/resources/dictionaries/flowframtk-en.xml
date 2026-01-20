@@ -2639,6 +2639,32 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.markup.encap">Encapsulated</entry>
 <entry key="export.markup.encap.tooltip">Use \flowframtkencapobject</entry>
 
+<entry key="export.markers">Markers:</entry>
+
+<entry key="export.markers.separate">Separate</entry>
+<entry key="export.markers.separate.tooltip">Draw markers as separate shapes</entry>
+<entry key="export.markers.separate_or_stroked">Separate Unless Gradient</entry>
+<entry key="export.markers.separate_or_stroked.tooltip">Draw as separate shapes unless the stroke has a gradient paint</entry>
+
+<entry key="export.markers.stroked">Merge into Stroked Outline</entry>
+<entry key="export.markers.stroked.tooltip">Convert the stroked path to outline and merge the marker shapes</entry>
+
+
+<entry key="export.strokeshading">Stroke Gradient Paint:</entry>
+
+<entry key="export.strokeshading.average">Average</entry>
+<entry key="export.strokeshading.average.tooltip">Average the start and end paint</entry>
+
+<entry key="export.strokeshading.start">Start</entry>
+<entry key="export.strokeshading.start.tooltip">Just use the start paint</entry>
+
+<entry key="export.strokeshading.end">End</entry>
+<entry key="export.strokeshading.end.tooltip">Just use the end paint</entry>
+
+<entry key="export.strokeshading.to_path">To Path</entry>
+<entry key="export.strokeshading.to_path.tooltip">convert the stroke to a path with gradient fill paint</entry>
+
+
 <entry key="export.textualshading">Text Gradient Paint:</entry>
 
 <entry key="export.textualshading.average">Average</entry>

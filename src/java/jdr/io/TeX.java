@@ -482,7 +482,12 @@ public class TeX
 
    public static String quickPath(CanvasGraphics cg, Shape shape)
    {
-      String str = "";
+      return quickPath(cg, shape, String.format("%n"));
+   }
+
+   public static String quickPath(CanvasGraphics cg, Shape shape, String sep)
+   {
+      StringBuilder buffer = new StringBuilder();
 
       PathIterator pi = shape.getPathIterator(null);
 
@@ -493,32 +498,54 @@ public class TeX
          switch (pi.currentSegment(coords))
          {
             case PathIterator.SEG_CLOSE:
+              buffer.append("\\pgfclosepath");
+              buffer.append(sep);
             break;
             case PathIterator.SEG_MOVETO:
-              str += "\\pgfpathqmoveto{"
-               + length(cg, coords[0])+"}{"
-               + length(cg, coords[1])+"}";
+              buffer.append("\\pgfpathqmoveto{");
+              buffer.append(length(cg, coords[0]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[1]));
+              buffer.append("}");
+              buffer.append(sep);
             break;
             case PathIterator.SEG_LINETO:
-              str += "\\pgfpathqlineto{"
-               + length(cg, coords[0])+"}{"
-               + length(cg, coords[1])+"}";
+              buffer.append("\\pgfpathqlineto{");
+              buffer.append(length(cg, coords[0]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[1]));
+              buffer.append("}");
+              buffer.append(sep);
             break;
             case PathIterator.SEG_QUADTO:
+              // no quick form? (but unlikely to occur)
+              buffer.append("\\pgfpathquadraticcurveto{");
+              buffer.append(point(cg, coords[0], coords[1]));
+              buffer.append("}{");
+              buffer.append(point(cg, coords[2], coords[3]));
+              buffer.append("}");
+              buffer.append(sep);
             break;
             case PathIterator.SEG_CUBICTO:
-              str += "\\pgfpathqcurveto{"
-               + length(cg, coords[0])+"}{"
-               + length(cg, coords[1])+"}{"
-               + length(cg, coords[2])+"}{"
-               + length(cg, coords[3])+"}{"
-               + length(cg, coords[4])+"}{"
-               + length(cg, coords[5])+"}";
+              buffer.append("\\pgfpathqcurveto{");
+              buffer.append(length(cg, coords[0]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[1]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[2]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[3]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[4]));
+              buffer.append("}{");
+              buffer.append(length(cg, coords[5]));
+              buffer.append("}");
+              buffer.append(sep);
             break;
          }
       }
 
-      return str;
+      return buffer.toString();
    }
 
    public void printQuickPath(CanvasGraphics cg, Shape shape)
@@ -533,6 +560,7 @@ public class TeX
          switch (pi.currentSegment(coords))
          {
             case PathIterator.SEG_CLOSE:
+              println("\\pgfclosepath");
             break;
             case PathIterator.SEG_MOVETO:
               println("\\pgfpathqmoveto{"
@@ -545,13 +573,11 @@ public class TeX
                + length(cg, coords[1])+"}");
             break;
             case PathIterator.SEG_QUADTO:
-              println("\\pgfpathqcurveto{"
-               + length(cg, coords[0])+"}{"
-               + length(cg, coords[1])+"}{"
-               + length(cg, coords[0])+"}{"
-               + length(cg, coords[1])+"}{"
-               + length(cg, coords[2])+"}{"
-               + length(cg, coords[3])+"}");
+              print("\\pgfpathquadraticcurveto{");
+              print(point(cg, coords[0], coords[1]));
+              print("}{");
+              print(point(cg, coords[2], coords[3]));
+              println("}");
             break;
             case PathIterator.SEG_CUBICTO:
               println("\\pgfpathqcurveto{"
