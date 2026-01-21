@@ -36,10 +36,17 @@ public class AddJdr extends AddJdrAjr
 {
    private DataInputStream in = null;
 
-   public AddJdr(JDRFrame frame, File file, String undoName)
+   private AddJdr(JDRFrame frame, File file, String undoName)
    {
       super(frame, file, undoName);
       in = null;
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, String undoName)
+   {
+      AddJdr worker = new AddJdr(frame, file, undoName);
+      worker.initialise();
+      worker.execute();
    }
 
    protected JDRAJR openInputStream(File file)

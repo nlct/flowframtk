@@ -33,14 +33,23 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveNoProcessPng extends ExportImage
 {
-   public SaveNoProcessPng(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SaveNoProcessPng(JDRFrame frame, File file, JDRGroup jdrImage,
      ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
    }
 
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SaveNoProcessPng worker = new SaveNoProcessPng(frame,
+        file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
+   }
+
    public void save() throws InterruptedException,IOException
    {
-      PNG.save(image, outputFile, exportSettings);
+      PNG.save(image, file, exportSettings);
    }
 }

@@ -34,10 +34,18 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveSvg extends ExportDocImage
 {
-   public SaveSvg(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SaveSvg(JDRFrame frame, File file, JDRGroup jdrImage,
       ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SaveSvg worker = new SaveSvg(frame, file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
    }
 
    @Override

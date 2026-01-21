@@ -23,6 +23,7 @@
 */
 package com.dickimawbooks.flowframtk;
 
+import java.util.List;
 import java.io.*;
 import java.beans.*;
 import java.awt.*;
@@ -38,23 +39,26 @@ import com.dickimawbooks.jdrresources.*;
  * Import image from EPS format. (This is still
  * experimental.)
  */
-public class LoadEps extends SwingWorker<Void,MessageInfo>
-  implements MessageInfoPublisher
+public class LoadEps extends IOSwingWorker
 {
-   public LoadEps(JDRFrame frame, ImportSettings importSettings)
+   private LoadEps(JDRFrame frame, ImportSettings importSettings)
    {
-      jdrFrame = frame;
+      super(frame, importSettings.currentFile, true);
       this.importSettings = importSettings;
    }
 
-   public Void doInBackground()
+   public static void createAndRun(JDRFrame frame, ImportSettings importSettings)
+   {
+      LoadEps worker = new LoadEps(frame, importSettings);
+      worker.initialise();
+      worker.execute();
+   }
+
+   public JDRGroup doInBackground()
     throws IOException,InterruptedException,InvalidFormatException,
            NoninvertibleTransformException
    {
-      jdrFrame.setIoInProgress(true);
       JDRGroup image=null;
-
-      getMessageSystem().setPublisher(this);
 
       CanvasGraphics cg = jdrFrame.getCanvasGraphics();
 
@@ -65,20 +69,13 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
 
-      File epsFile = importSettings.currentFile;
-      String fileName = epsFile.getAbsolutePath();
-
-      app.showMessageFrame(getResources().getMessage("info.loading", fileName));
-
-      Cursor oldCursor = jdrFrame.getCursor();
-      jdrFrame.setCursor(
-         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+      String fileName = file.getAbsolutePath();
 
       BufferedReader in = null;
 
       try
       {
-         in = new BufferedReader(new FileReader(epsFile));
+         in = new BufferedReader(new FileReader(file));
 
          image = EPS.load(cg, in, importSettings);
 
@@ -90,10 +87,6 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
       }
       finally
       {
-         jdrFrame.setCursor(oldCursor);
-         app.setTool(jdrFrame.currentTool());
-         jdrFrame.setIoInProgress(false);
-
          try
          {
             if (in != null)
@@ -107,64 +100,22 @@ public class LoadEps extends SwingWorker<Void,MessageInfo>
             MessageInfo.createError(getResources().getMessage("error.io.close")),
             MessageInfo.createError(e));
          }
-
-         if (image != null)
-         {
-            jdrFrame.setImage(image);
-            jdrFrame.markAsModified();
-         }
       }
 
-      return null;
+      return image;
    }
 
-   public void done()
+   protected void finish(JDRGroup image)
    {
-      try
-      {
-         get();
-      }
-      catch (java.util.concurrent.ExecutionException e)
-      {
-         Throwable cause = e.getCause();
+       if (image != null)
+       {
+          jdrFrame.setImage(image);
+          jdrFrame.markAsModified();
+          jdrFrame.getApplication().setTool(jdrFrame.currentTool());
+       }
 
-         if (cause != null)
-         {
-            getMessageSystem().error(cause);
-         }
-         else
-         {
-            getMessageSystem().error(e);
-         }
-      }
-      catch (Exception e)
-      {
-         getMessageSystem().error(e);
-      }
-
-      getMessageSystem().finished(jdrFrame);
+       super.finish(image);
    }
 
-   public void process(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public void publishMessages(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public JDRGuiMessage getMessageSystem()
-   {
-      return jdrFrame.getApplication().getMessageSystem();
-   }
-
-   public JDRResources getResources()
-   {
-      return jdrFrame.getResources();
-   }
-
-   private JDRFrame jdrFrame;
    ImportSettings importSettings;
 }

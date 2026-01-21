@@ -154,11 +154,6 @@ public class MessageInfo
       return new MessageInfo(ACTIVE, Boolean.valueOf(isActive));
    }
    
-   public static MessageInfo createSetVisible(boolean isVisible)
-   {
-      return new MessageInfo(VISIBLE, Boolean.valueOf(isVisible));
-   }
-
    public String toString()
    {
       return String.format("%s[action=%s,value=%s]",
@@ -179,6 +174,5 @@ public class MessageInfo
    public static final String FATAL_ERROR = "fatalerror";
    public static final String INTERNAL_ERROR = "internalerror";
    public static final String ACTIVE = "active";
-   public static final String VISIBLE = "visible";
    public static final String VERBOSE = "verbose";
 }

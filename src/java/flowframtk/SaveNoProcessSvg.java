@@ -28,11 +28,21 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveNoProcessSvg extends ExportImage
 {
-   public SaveNoProcessSvg(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SaveNoProcessSvg(JDRFrame frame, File file, JDRGroup jdrImage,
      ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
    }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+     ExportSettings exportSettings)
+   {
+      SaveNoProcessSvg worker = new SaveNoProcessSvg(frame,
+        file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
+   }
+
 
    public void save() throws InterruptedException,IOException
    {
@@ -40,7 +50,7 @@ public class SaveNoProcessSvg extends ExportImage
 
       try
       {
-         out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
+         out = new PrintWriter(Files.newBufferedWriter(file.toPath()));
          SVG.save(image, image.getDescription(), out, exportSettings);
       }
       finally

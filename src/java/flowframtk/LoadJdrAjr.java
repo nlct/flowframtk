@@ -24,6 +24,7 @@
 package com.dickimawbooks.flowframtk;
 
 import java.io.*;
+import java.util.List;
 import java.awt.*;
 import javax.swing.*;
 import java.beans.*;
@@ -36,24 +37,11 @@ import com.dickimawbooks.jdrresources.*;
 /**
  * Runnable to load image in JDR/AJR format.
  */
-public abstract class LoadJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
-  implements MessageInfoPublisher
+public abstract class LoadJdrAjr extends IOSwingWorker
 {
-   private LoadJdrAjr()
+   protected LoadJdrAjr(JDRFrame frame, File file)
    {
-   }
-
-   public LoadJdrAjr(JDRFrame frame, File file)
-   {
-      this.jdrFrame = frame;
-      this.file = file;
-
-      JDRMessage msgSys = frame.getApplication().getMessageSystem();
-
-      if (msgSys instanceof PropertyChangeListener)
-      {
-         addPropertyChangeListener((PropertyChangeListener)msgSys);
-      }
+      super(frame, file, true);
    }
 
    protected abstract JDRAJR openInputStream(File file)
@@ -67,22 +55,9 @@ public abstract class LoadJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
    protected JDRGroup doInBackground()
     throws InvalidFormatException,IOException,InterruptedException
    {
-      jdrFrame.setIoInProgress(true);
-
-      getMessageSystem().setPublisher(this);
-
       JDRGroup image=null;
 
       FlowframTk app = jdrFrame.getApplication();
-
-      String msg = getResources().getMessage("info.loading", 
-         file.toString());
-
-      app.showMessageFrame(msg);
-
-      oldCursor = jdrFrame.getCursor();
-      jdrFrame.setCursor(
-         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
       JDRAJR jdr = null;
 
@@ -135,74 +110,27 @@ public abstract class LoadJdrAjr extends SwingWorker<JDRGroup,MessageInfo>
       return image;
    }
 
-   protected void done()
+   @Override
+   protected void finish(JDRGroup image)
    {
-      try
+      jdrFrame.getApplication().setTool(jdrFrame.currentTool());
+
+      if (image != null)
       {
-         jdrFrame.setIoInProgress(false);
-         jdrFrame.setCursor(oldCursor);
+         jdrFrame.setFile(file);
+         jdrFrame.addRecentFile(file);
 
-         JDRGroup image = get();
-
-         if (image != null)
+         if (image.getCanvasGraphics().isBitmapReplaced())
          {
-            jdrFrame.setFile(file);
-            jdrFrame.addRecentFile(file);
-
-            if (image.getCanvasGraphics().isBitmapReplaced())
-            {
-               getResources().debugMessage("bitmap(s) replaced");
-               jdrFrame.markAsModified();
-               image.getCanvasGraphics().setBitmapReplaced(false);
-            }
-
-            jdrFrame.setImage(image);
+            getResources().debugMessage("bitmap(s) replaced");
+            jdrFrame.markAsModified();
+            image.getCanvasGraphics().setBitmapReplaced(false);
          }
 
-         jdrFrame.getApplication().setTool(jdrFrame.currentTool());
-      }
-      catch (java.util.concurrent.ExecutionException e)
-      {
-         Throwable cause = e.getCause();
-
-         if (cause != null)
-         {
-            getMessageSystem().error(cause);
-         }
-         else
-         {
-            getMessageSystem().error(e);
-         }
-      }
-      catch (Exception e)
-      {
-         getMessageSystem().error(e);
+         jdrFrame.setImage(image);
       }
 
-      getMessageSystem().finished(jdrFrame);
+      super.finish(image);
    }
 
-   public JDRResources getResources()
-   {
-      return jdrFrame.getResources();
-   }
-
-   public void process(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public void publishMessages(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public JDRGuiMessage getMessageSystem()
-   {
-      return jdrFrame.getApplication().getMessageSystem();
-   }
-
-   private File file;
-   private JDRFrame jdrFrame;
-   private Cursor oldCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 }

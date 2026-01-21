@@ -7019,26 +7019,22 @@ public class FlowframTk extends JFrame
          currentFrame = addFrame(invoker.getSettings().getCanvasGraphics());
       }
 
-      SwingWorker worker = null;
-
       switch (importSettings.type)
       {
          case ACORN_DRAW:
-           worker = new LoadAcornDrawFile(currentFrame, importSettings);
+           LoadAcornDrawFile.createAndRun(currentFrame, importSettings);
          break;
          case EPS:
-           worker = new LoadEps(currentFrame, importSettings);
+           LoadEps.createAndRun(currentFrame, importSettings);
          break;
          case SVG:
-           worker = new LoadSvg(currentFrame, importSettings);
+           LoadSvg.createAndRun(currentFrame, importSettings);
          break;
          default:
             getResources().internalError(this,
               "Unknown import type "+importSettings.type);
          return;
       }
-
-      worker.execute();
    }
 
    public boolean saveImage()
@@ -7560,14 +7556,8 @@ public class FlowframTk extends JFrame
       }
    }
 
-   public void showMessageFrame()
+   public void addMessageAndStatus(String text)
    {
-      getMessageSystem().displayMessages();
-   }
-
-   public void showMessageFrame(String text)
-   {
-      getMessageSystem().displayMessages();
       getMessageSystem().getPublisher().publishMessages(
         MessageInfo.createMessage(text));
       setStatusInfo(text);
@@ -7583,14 +7573,6 @@ public class FlowframTk extends JFrame
    {
       getMessageSystem().getPublisher().publishMessages(
         MessageInfo.createMessage(e.getMessage()));
-   }
-
-   public void hideMessageFrame()
-   {
-      if (!getMessageSystem().warningFlagged())
-      {
-         getMessageSystem().hideMessages();
-      }
    }
 
    public JDRGuiMessage getMessageSystem()

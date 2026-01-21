@@ -23,6 +23,7 @@
 */
 package com.dickimawbooks.flowframtk;
 
+import java.util.List;
 import java.io.*;
 import java.beans.*;
 import java.awt.*;
@@ -32,35 +33,24 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdrresources.*;
 
-public abstract class SaveJdrAjr extends SwingWorker<Void,MessageInfo>
-   implements MessageInfoPublisher
+public abstract class SaveJdrAjr extends IOSwingWorker
 {
-   public SaveJdrAjr(JDRFrame frame, File file, float version,
+   protected SaveJdrAjr(JDRFrame frame, File file, float version,
       JDRGroup image, boolean exitAfter)
    {
       this(frame, file, version, image, JDRAJR.ALL_SETTINGS, exitAfter);
    }
 
-   public SaveJdrAjr(JDRFrame frame, File file, float version,
+   protected SaveJdrAjr(JDRFrame frame, File file, float version,
       JDRGroup image, int settingsFlag, boolean exitAfter)
    {
-      if (file == null)
-      {
-         throw new NullPointerException();
-      }
-
-      if (frame == null)
-      {
-         throw new NullPointerException();
-      }
+      super(frame, file, false);
 
       if (image == null)
       {
          throw new NullPointerException();
       }
 
-      this.jdrFrame = frame;
-      this.file = file;
       this.jdrVersion = version;
       this.jdrImage = image;
       this.settingsFlag = settingsFlag;
@@ -75,24 +65,12 @@ public abstract class SaveJdrAjr extends SwingWorker<Void,MessageInfo>
 
    protected abstract void closeInputStream() throws IOException;
 
-   public Void doInBackground() throws IOException,InterruptedException
+   @Override
+   public JDRGroup doInBackground() throws IOException,InterruptedException
    {
-      jdrFrame.setIoInProgress(true);
-      getResources().getMessageSystem().setPublisher(this);
-
       boolean success = false;
 
-      Cursor oldCursor = jdrFrame.getCursor();
-      jdrFrame.setCursor(
-         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
       FlowframTk app = jdrFrame.getApplication();
-
-      String msg = getResources().getMessage("info.saving", 
-         file.toString());
-
-      app.showMessageFrame(msg);
-      app.setStatusInfo(msg);
 
       try
       {
@@ -104,90 +82,39 @@ public abstract class SaveJdrAjr extends SwingWorker<Void,MessageInfo>
          jdrFrame.preSave();
          saveImage(jdr, jdrImage, jdrVersion, settingsFlag);
 
-         publish(MessageInfo.createMessage(
-            getResources().getMessage("message.done")));
-
          success = true;
       }
       finally
       {
-         jdrFrame.setCursor(oldCursor);
-
-         if (success)
-         {
-            jdrFrame.setFile(file);
-            jdrFrame.markAsSaved();
-
-            jdrFrame.addRecentFile(file);
-         }
-
-         app.setTool(jdrFrame.currentTool());
-         jdrFrame.setIoInProgress(false);
-
-         jdrFrame.getCanvas().updateGeneralActions(true);
-
          closeInputStream();
       }
 
-      return null;
+      return success ? jdrImage : null;
    }
 
-   public JDRResources getResources()
+   @Override
+   protected void finish(JDRGroup image)
    {
-      return jdrFrame.getResources();
-   }
+      super.finish(image);
 
-   public void done()
-   {
-      try
+      if (image != null)
       {
-         get();
+         jdrFrame.setFile(file);
+         jdrFrame.markAsSaved();
+         jdrFrame.addRecentFile(file);
+
+         jdrFrame.getApplication().setTool(jdrFrame.currentTool());
+         jdrFrame.getCanvas().updateGeneralActions(true);
 
          if (exitAfter)
          {
             System.exit(0);
          }
       }
-      catch (java.util.concurrent.ExecutionException e)
-      {
-         Throwable cause = e.getCause();
-
-         if (cause != null)
-         {
-            getMessageSystem().error(cause);
-         }
-         else
-         {
-            getMessageSystem().error(e);
-         }
-      }
-      catch (Exception e)
-      {
-         getMessageSystem().error(e);
-      }
-
-      getMessageSystem().finished(jdrFrame);
    }
 
-   public void process(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public void publishMessages(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public JDRGuiMessage getMessageSystem()
-   {
-      return jdrFrame.getApplication().getMessageSystem();
-   }
-
-   private File file;
    private float jdrVersion;
    private JDRGroup jdrImage;
-   private JDRFrame jdrFrame;
    private int settingsFlag;
    private boolean exitAfter;
 }

@@ -39,10 +39,17 @@ public class LoadJdr extends LoadJdrAjr
 {
    private DataInputStream in = null;
 
-   public LoadJdr(JDRFrame frame, File file)
+   private LoadJdr(JDRFrame frame, File file)
    {
       super(frame, file);
       in = null;
+   }
+
+   public static void createAndRun(JDRFrame frame, File file)
+   {
+      LoadJdr worker = new LoadJdr(frame, file);
+      worker.initialise();
+      worker.execute();
    }
 
    protected JDRAJR openInputStream(File file)

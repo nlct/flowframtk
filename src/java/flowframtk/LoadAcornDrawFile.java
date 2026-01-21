@@ -18,6 +18,7 @@
 */
 package com.dickimawbooks.flowframtk;
 
+import java.util.List;
 import java.io.*;
 import java.beans.*;
 import java.awt.*;
@@ -32,23 +33,26 @@ import com.dickimawbooks.jdrresources.*;
 /**
  * Import image from Acorn Draw file.
  */
-public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
-  implements MessageInfoPublisher
+public class LoadAcornDrawFile extends IOSwingWorker
 {
-   public LoadAcornDrawFile(JDRFrame frame, ImportSettings importSettings)
+   private LoadAcornDrawFile(JDRFrame frame, ImportSettings importSettings)
    {
-      jdrFrame = frame;
+      super(frame, importSettings.currentFile, true);
       this.importSettings = importSettings;
    }
 
-   public Void doInBackground()
+   public static void createAndRun(JDRFrame frame, ImportSettings importSettings)
+   {
+      LoadAcornDrawFile worker = new LoadAcornDrawFile(frame, importSettings);
+      worker.initialise();
+      worker.execute();
+   }
+
+   public JDRGroup doInBackground()
     throws IOException,InterruptedException,InvalidFormatException,
            NoninvertibleTransformException
    {
-      jdrFrame.setIoInProgress(true);
       JDRGroup image=null;
-
-      getMessageSystem().setPublisher(this);
 
       CanvasGraphics cg = jdrFrame.getCanvasGraphics();
 
@@ -60,13 +64,6 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
       }
 
       File drawFile = importSettings.currentFile;
-      String fileName = drawFile.getAbsolutePath();
-
-      app.showMessageFrame(getResources().getMessage("info.loading", fileName));
-
-      Cursor oldCursor = jdrFrame.getCursor();
-      jdrFrame.setCursor(
-         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
       DataInputStream din = null;
 
@@ -92,10 +89,6 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
       }
       finally
       {
-         jdrFrame.setCursor(oldCursor);
-         app.setTool(jdrFrame.currentTool());
-         jdrFrame.setIoInProgress(false);
-
          try
          {
             if (din != null)
@@ -109,64 +102,23 @@ public class LoadAcornDrawFile extends SwingWorker<Void,MessageInfo>
             MessageInfo.createError(getResources().getMessage("error.io.close")),
             MessageInfo.createError(e));
          }
-
-         if (image != null)
-         {
-            jdrFrame.setImage(image);
-            jdrFrame.markAsModified();
-         }
       }
 
-      return null;
+      return image;
    }
 
-   public void done()
+   @Override
+   protected void finish(JDRGroup image)
    {
-      try
+      if (image != null)
       {
-         get();
-      }
-      catch (java.util.concurrent.ExecutionException e)
-      {
-         Throwable cause = e.getCause();
-
-         if (cause != null)
-         {
-            getMessageSystem().error(cause);
-         }
-         else
-         {
-            getMessageSystem().error(e);
-         }
-      }
-      catch (Exception e)
-      {
-         getMessageSystem().error(e);
+         jdrFrame.setImage(image);
+         jdrFrame.markAsModified();
+         jdrFrame.getApplication().setTool(jdrFrame.currentTool());
       }
 
-      getMessageSystem().finished(jdrFrame);
+      super.finish(image);
    }
 
-   public void process(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public void publishMessages(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public JDRGuiMessage getMessageSystem()
-   {
-      return jdrFrame.getApplication().getMessageSystem();
-   }
-
-   public JDRResources getResources()
-   {
-      return jdrFrame.getResources();
-   }
-
-   private JDRFrame jdrFrame;
    private ImportSettings importSettings;
 }

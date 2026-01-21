@@ -28,10 +28,19 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SavePng extends ExportDocImage
 {
-   public SavePng(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SavePng(JDRFrame frame, File file, JDRGroup jdrImage,
         ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SavePng worker = new SavePng(frame,
+        file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
    }
 
    @Override

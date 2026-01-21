@@ -774,12 +774,23 @@ public class FlowframTkSettings
 
    public long getMaxProcessTime()
    {
+      // for running external processes
       return exportSettings.timeout;
    }
 
    public void setMaxProcessTime(long millisecs)
    {
       exportSettings.timeout = millisecs;
+   }
+
+   public long getSwingWorkerTimeout()
+   {
+      return swingWorkerTimeout;
+   }
+
+   public void setSwingWorkerTimeout(long millisecs)
+   {
+      swingWorkerTimeout = millisecs;
    }
 
    public String applyTextModeMappings(String original, Vector<String> styNames)
@@ -1726,6 +1737,8 @@ public class FlowframTkSettings
    public boolean canvasClickExitsPathEdit = false;
 
    public boolean selectControlIgnoresLock = false;
+
+   public long swingWorkerTimeout = 600000L;
 
    private JDRResources resources;
 }

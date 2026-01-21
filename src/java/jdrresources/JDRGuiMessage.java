@@ -44,7 +44,7 @@ import com.dickimawbooks.jdr.exceptions.*;
  */
 
 public class JDRGuiMessage extends JDRMessagePublisher
-   implements UserCancellationListener,JDRMessage,MessageInfoPublisher,ActionListener
+   implements UserCancellationListener,ActionListener,PropertyChangeListener
 {
    protected JDRGuiMessage(JDRResources resources)
    {
@@ -53,7 +53,6 @@ public class JDRGuiMessage extends JDRMessagePublisher
       isSuspended = true;
       errorBuffer = new StringBuffer();
       this.resources = resources;
-      publisher = this;
    }
 
    public static JDRGuiMessage create(JDRResources resources)
@@ -72,18 +71,6 @@ public class JDRGuiMessage extends JDRMessagePublisher
       TeXJavaHelpLib helpLib = resources.getHelpLib();
 
       frame.setIconImage(resources.getSmallAppIcon().getImage());
-
-/*
-      frame.addWindowListener(new WindowAdapter()
-      {
-         public void windowClosing(WindowEvent evt)
-         {
-            debug("Message frame closing");
-            warningFlag = false;
-            errorBuffer.setLength(0);
-         }
-      });
-*/
 
       document = new DefaultStyledDocument();
 
@@ -171,28 +158,29 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
    private void doShow()
    {
+/*
       if (!isInitialised)
       {
          debug("Message frame not initialised");
       }
 
-      if (!frame.isVisible())
-      {
-         debug("Showing message frame");
-         frame.setVisible(true);
-         frame.toFront();
-      }
+      debug("Showing message frame");
+      frame.setVisible(true);
+*/
+   }
+
+   private void reset()
+   {
+      warningFlag = false;
+      errorBuffer.setLength(0);
    }
 
    private void doHide()
    {
-      if (isInitialised && frame.isVisible())
-      {
-         frame.setVisible(false);
-      }
-
-      warningFlag = false;
-      errorBuffer.setLength(0);
+/*
+      debug("hiding");
+      frame.setVisible(false);
+*/
    }
 
    @Override
@@ -204,7 +192,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
       if (action.equals("close"))
       {
-         doHide();
+         frame.setVisible(false);
       }
       else if (action.equals("confirmabort"))
       {
@@ -228,10 +216,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
     */
    public void displayMessages()
    {
-      if (!isSuspended)
-      {
-         doShow();
-      }
+      frame.setVisible(true);
    }
 
    /**
@@ -239,10 +224,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
     */
    public void hideMessages()
    {
-      if (!isSuspended)
-      {
-         doHide();
-      }
+      frame.setVisible(false);
    }
 
    public void suspend()
@@ -324,6 +306,11 @@ public class JDRGuiMessage extends JDRMessagePublisher
       progressBar.setValue(value);
    }
 
+   protected void addToErrorBuffer(String text)
+   {
+      errorBuffer.append(text);
+   }
+
    protected void append(String text, AttributeSet attrs)
    {
       if (isSuspended || !isInitialised) return;
@@ -365,7 +352,6 @@ public class JDRGuiMessage extends JDRMessagePublisher
          append(String.format("%s%n", 
            resources.getMessage("warning.tag", messageText)), attrWarning);
 
-         displayMessages();
          warningFlag = true;
       }
    }
@@ -402,12 +388,11 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
    public void error(String messageText)
    {
-      errorBuffer.append(messageText);
+      addToErrorBuffer(messageText);
 
       if (!isSuspended)
       {
          append(messageText, attrError);
-         displayMessages();
       }
    }
 
@@ -512,9 +497,8 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
    public void processDone()
    {
+      debug("process done");
       this.process = null;
-
-      resetProgress();
    }
 
    public int getVerbosity()
@@ -557,9 +541,6 @@ public class JDRGuiMessage extends JDRMessagePublisher
       else if (action.equals(MessageInfo.INDETERMINATE))
       {
          setIndeterminate(((Boolean)info.getValue()).booleanValue());
-      }
-      else if (action.equals(MessageInfo.VISIBLE))
-      {// ignore
       }
       else if (action.equals(MessageInfo.WARNING))
       {
@@ -641,16 +622,11 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
    public MessageInfoPublisher getPublisher()
    {
-      return publisher;
+      return this;
    }
 
    public void setPublisher(MessageInfoPublisher publisher)
    {
-      if (isSuspended) return;
-
-      this.publisher = publisher;
-      warningFlag = false;
-      errorBuffer.setLength(0);
    }
 
    public void publishMessages(MessageInfo... chunks)
@@ -709,17 +685,22 @@ public class JDRGuiMessage extends JDRMessagePublisher
       }
    }
 
-   public void finished(JComponent comp)
+   @Override
+   public void propertyChange(PropertyChangeEvent evt)
    {
-      if (isSuspended || !isInitialised) return;
+      Object value = evt.getNewValue();
 
-      if (!warningFlag && errorBuffer.length() == 0)
+      if (SwingWorker.StateValue.DONE.equals(value))
       {
-         doHide();
-         //comp.requestFocusInWindow();
+         if (warningFlag)
+         {
+            frame.setVisible(true);
+         }
       }
-
-      setPublisher(this);
+      else if (SwingWorker.StateValue.STARTED.equals(value))
+      {
+         reset();
+      }
    }
 
    private JFrame frame;
@@ -746,8 +727,6 @@ public class JDRGuiMessage extends JDRMessagePublisher
    private Process process;
 
    private int verbosity = 1;
-
-   private MessageInfoPublisher publisher;
 
    private JDRResources resources;
 }

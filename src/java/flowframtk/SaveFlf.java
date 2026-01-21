@@ -34,10 +34,18 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveFlf extends ExportImage
 {
-   public SaveFlf(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SaveFlf(JDRFrame frame, File file, JDRGroup jdrImage,
       ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SaveFlf worker = new SaveFlf(frame, file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
    }
 
    public void save() 
@@ -49,9 +57,9 @@ public class SaveFlf extends ExportImage
 
       try
       {
-         out = new PrintWriter(new FileWriter(outputFile));
+         out = new PrintWriter(new FileWriter(file));
 
-         FLF flf = new FLF(outputFile.getParentFile(), out,
+         FLF flf = new FLF(file.getParentFile(), out,
           exportSettings);
 
          if (exportSettings.type == ExportSettings.Type.FLF_DOC)
@@ -60,7 +68,7 @@ public class SaveFlf extends ExportImage
          }
          else
          {
-            flf.save(image, outputFile.getName());
+            flf.save(image, file.getName());
          }
 
          if (!image.anyFlowFrameData())

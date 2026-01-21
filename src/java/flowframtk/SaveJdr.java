@@ -23,6 +23,7 @@
 */
 package com.dickimawbooks.flowframtk;
 
+import java.util.List;
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
@@ -33,16 +34,34 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveJdr extends SaveJdrAjr
 {
-   public SaveJdr(JDRFrame frame, File file, float version,
+   private SaveJdr(JDRFrame frame, File file, float version,
       JDRGroup image, boolean exitAfter)
    {
       super(frame, file, version, image, JDRAJR.ALL_SETTINGS, exitAfter);
    }
 
-   public SaveJdr(JDRFrame frame, File file, float version,
+   private SaveJdr(JDRFrame frame, File file, float version,
       JDRGroup image, int settingsFlag, boolean exitAfter)
    {
       super(frame, file, version, image, settingsFlag, exitAfter);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, float version,
+      JDRGroup image, boolean exitAfter)
+   {
+      SaveJdr worker = new SaveJdr(frame, file, version,
+         image, exitAfter);
+      worker.initialise();
+      worker.execute();
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, float version,
+      JDRGroup image, int settingsFlag, boolean exitAfter)
+   {
+      SaveJdr worker = new SaveJdr(frame, file, version,
+         image, settingsFlag, exitAfter);
+      worker.initialise();
+      worker.execute();
    }
 
    protected JDRAJR openOutputStream(File file)

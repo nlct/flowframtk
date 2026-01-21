@@ -36,10 +36,17 @@ public class LoadAjr extends LoadJdrAjr
 {
    private BufferedReader in = null;
 
-   public LoadAjr(JDRFrame frame, File file)
+   private LoadAjr(JDRFrame frame, File file)
    {
       super(frame, file);
       in = null;
+   }
+
+   public static void createAndRun(JDRFrame frame, File file)
+   {
+      LoadAjr worker = new LoadAjr(frame, file);
+      worker.initialise();
+      worker.execute();
    }
 
    protected JDRAJR openInputStream(File file)

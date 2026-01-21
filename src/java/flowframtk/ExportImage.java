@@ -34,38 +34,23 @@ import com.dickimawbooks.jdr.io.*;
 import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 
-public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
- implements MessageInfoPublisher
+public abstract class ExportImage extends IOSwingWorker
 {
-   public ExportImage(JDRFrame frame, File file, JDRGroup jdrImage,
+   protected ExportImage(JDRFrame frame, File file, JDRGroup jdrImage,
      ExportSettings exportSettings)
    {
-      super();
-      this.jdrFrame = frame;
-      this.outputFile = file;
+      super(frame, file, false);
       this.image = jdrImage;
       this.exportSettings = exportSettings;
    }
 
-   public Void doInBackground() 
+   @Override
+   public JDRGroup doInBackground() 
      throws InvalidFormatException,IOException,InterruptedException,
       MissingProcessorException
    {
       FlowframTk app = jdrFrame.getApplication();
       JDRResources resources = app.getResources();
-
-      jdrFrame.setIoInProgress(true);
-      resources.getMessageSystem().setPublisher(this);
-
-      Cursor oldCursor = jdrFrame.getCursor();
-      jdrFrame.setCursor(
-         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-      String msg = resources.getMessage("info.saving",
-         outputFile.toString());
-
-      app.showMessageFrame(msg);
-      app.setStatusInfo(msg);
 
       try
       {
@@ -79,17 +64,11 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
       catch (UserCancelledException e)
       {
          publish(MessageInfo.createMessage(e.getMessage()));
-      }
-      finally
-      {
-         jdrFrame.setCursor(oldCursor);
-         app.setTool(jdrFrame.currentTool());
 
-         publish(MessageInfo.createSetVisible(false));
-         jdrFrame.setIoInProgress(false);
+         return null;
       }
 
-      return null;
+      return image;
    }
 
    public FlowframTkInvoker getInvoker()
@@ -97,58 +76,20 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
       return jdrFrame.getApplication().getInvoker();
    }
 
-   public JDRResources getResources()
-   {
-      return jdrFrame.getResources();
-   }
-
    public FlowframTkSettings getApplicationSettings()
    {
       return jdrFrame.getApplication().getSettings();
    }
 
-   public void done()
-   {
-      try
-      {
-         get();
-      }
-      catch (java.util.concurrent.ExecutionException e)
-      {
-         Throwable cause = e.getCause();
-
-         if (cause != null)
-         {
-            getMessageSystem().error(cause);
-         }
-         else
-         {
-            getMessageSystem().error(e);
-         }
-      }
-      catch (Exception e)
-      {
-         getMessageSystem().error(e);
-      }
-
-      getMessageSystem().finished(jdrFrame);
-   }
-
    @Override
-   protected void process(List<MessageInfo> chunks)
+   protected void finish(JDRGroup image)
    {
-      getMessageSystem().publishMessages(chunks.toArray(new MessageInfo[chunks.size()]));
-   }
+      if (image != null)
+      {
+         jdrFrame.getApplication().setTool(jdrFrame.currentTool());
+      }
 
-   @Override
-   public void publishMessages(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public JDRGuiMessage getMessageSystem()
-   {
-      return jdrFrame.getApplication().getMessageSystem();
+      super.finish(image);
    }
 
    public FlowframTkSettings getSettings()
@@ -160,8 +101,6 @@ public abstract class ExportImage extends SwingWorker<Void,MessageInfo>
      throws IOException,InterruptedException,InvalidFormatException,
      MissingProcessorException;
 
-   protected File outputFile;
    protected JDRGroup image;
-   protected JDRFrame jdrFrame;
    protected ExportSettings exportSettings;
 }

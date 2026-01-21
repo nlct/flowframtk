@@ -41,12 +41,18 @@ import com.dickimawbooks.jdrresources.*;
 
 public abstract class ExportDocImage extends ExportImage
 {
-   public ExportDocImage(JDRFrame frame, File file, JDRGroup jdrImage,
+   protected ExportDocImage(JDRFrame frame, File file, JDRGroup jdrImage,
       ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
 
-      File imageFile = frame.getFile();
+   @Override
+   protected void initialise()
+   {
+      super.initialise();
+
+      File imageFile = jdrFrame.getFile();
 
       if (imageFile != null)
       {
@@ -185,16 +191,16 @@ public abstract class ExportDocImage extends ExportImage
 
          File result = processImage();
 
-         if (result != null && !result.equals(outputFile))
+         if (result != null && !result.equals(file))
          {
-            if (outputFile.exists())
+            if (file.exists())
             {
-               outputFile.delete();
+               file.delete();
             }
 
-            if (!result.renameTo(outputFile))
+            if (!result.renameTo(file))
             {
-               Files.copy(result.toPath(), outputFile.toPath(),
+               Files.copy(result.toPath(), file.toPath(),
                   StandardCopyOption.REPLACE_EXISTING);
                result.deleteOnExit();
             }

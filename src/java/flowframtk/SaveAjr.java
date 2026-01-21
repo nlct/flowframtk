@@ -23,6 +23,7 @@
 */
 package com.dickimawbooks.flowframtk;
 
+import java.util.List;
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
@@ -33,17 +34,36 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveAjr extends SaveJdrAjr
 {
-   public SaveAjr(JDRFrame frame, File file, float version, JDRGroup image,
+   private SaveAjr(JDRFrame frame, File file, float version, JDRGroup image,
       boolean exitAfter)
    {
       super(frame, file, version, image, JDRAJR.ALL_SETTINGS, exitAfter);
    }
 
-   public SaveAjr(JDRFrame frame, File file, float version, JDRGroup image,
+   private SaveAjr(JDRFrame frame, File file, float version, JDRGroup image,
       int settingsFlag, boolean exitAfter)
    {
       super(frame, file, version, image, settingsFlag, exitAfter);
    }
+
+   public static void createAndRun(JDRFrame frame, File file, float version,
+      JDRGroup image, boolean exitAfter)
+   {
+      SaveAjr worker = new SaveAjr(frame, file, version,
+         image, exitAfter);
+      worker.initialise();
+      worker.execute();
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, float version,
+      JDRGroup image, int settingsFlag, boolean exitAfter)
+   {
+      SaveAjr worker = new SaveAjr(frame, file, version,
+         image, settingsFlag, exitAfter);
+      worker.initialise();
+      worker.execute();
+   }
+
 
    protected JDRAJR openOutputStream(File file)
       throws IOException

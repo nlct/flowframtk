@@ -2030,6 +2030,19 @@ public class JDRFrame extends JInternalFrame
 
          revalidateImage(true);
       }
+
+      if (flag)
+      {
+         Cursor cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+         setCursor(cursor);
+         canvas.setCursor(cursor);
+      }
+      else
+      {
+         Cursor cursor = Cursor.getDefaultCursor();
+         setCursor(cursor);
+         canvas.setToolCursor(currentTool());
+      }
    }
 
    public boolean isIoInProgress()

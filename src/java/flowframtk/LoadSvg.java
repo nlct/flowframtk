@@ -17,6 +17,7 @@
 */
 package com.dickimawbooks.flowframtk;
 
+import java.util.List;
 import java.io.*;
 import java.beans.*;
 import java.awt.*;
@@ -31,27 +32,28 @@ import com.dickimawbooks.jdr.exceptions.*;
 import com.dickimawbooks.jdrresources.*;
 
 /**
- * Import image from SVG format. (This is still
- * experimental and isn't working properly.)
- * The ImportSettings are currently ignored, except for the file.
+ * Import image from SVG format. 
  */
-public class LoadSvg extends SwingWorker<Void,MessageInfo>
-  implements MessageInfoPublisher
+public class LoadSvg extends IOSwingWorker
 {
-   public LoadSvg(JDRFrame frame, ImportSettings importSettings)
+   private LoadSvg(JDRFrame frame, ImportSettings importSettings)
    {
-      jdrFrame = frame;
+      super(frame, importSettings.currentFile, true);
       this.importSettings = importSettings;
    }
 
-   public Void doInBackground()
+   public static void createAndRun(JDRFrame frame, ImportSettings importSettings)
+   {
+      LoadSvg worker = new LoadSvg(frame, importSettings);
+      worker.initialise();
+      worker.execute();
+   }
+
+   public JDRGroup doInBackground()
     throws IOException,InterruptedException,
            SAXException
    {
-      jdrFrame.setIoInProgress(true);
       JDRGroup image=null;
-
-      getMessageSystem().setPublisher(this);
 
       CanvasGraphics cg = jdrFrame.getCanvasGraphics();
 
@@ -61,15 +63,6 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
       {
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
-
-      File svgFile = importSettings.currentFile;
-      String fileName = svgFile.getAbsolutePath();
-
-      app.showMessageFrame(getResources().getMessage("info.loading", fileName));
-
-      Cursor oldCursor = jdrFrame.getCursor();
-      jdrFrame.setCursor(
-         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
       BufferedReader in = null;
       Graphics2D orgG2 = cg.getGraphics();
@@ -82,9 +75,9 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
             cg.setGraphicsDevice(g2);
          }
 
-         in = new BufferedReader(new FileReader(svgFile));
+         in = new BufferedReader(new FileReader(file));
 
-         image = SVG.load(cg, svgFile.getParentFile(), in, importSettings,
+         image = SVG.load(cg, file.getParentFile(), in, importSettings,
            app.getTextModeMappings(), app.getMathModeMappings());
       }
       finally
@@ -94,10 +87,6 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
             cg.setGraphicsDevice(orgG2);
             g2.dispose();
          }
-
-         jdrFrame.setCursor(oldCursor);
-         app.setTool(jdrFrame.currentTool());
-         jdrFrame.setIoInProgress(false);
 
          try
          {
@@ -112,64 +101,23 @@ public class LoadSvg extends SwingWorker<Void,MessageInfo>
             MessageInfo.createError(getResources().getMessage("error.io.close")),
             MessageInfo.createError(e));
          }
-
-         if (image != null)
-         {
-            jdrFrame.setImage(image);
-            jdrFrame.markAsModified();
-         }
       }
 
-      return null;
+      return image;
    }
 
-   public void done()
+   @Override
+   protected void finish(JDRGroup image)
    {
-      try
+      if (image != null)
       {
-         get();
-      }
-      catch (java.util.concurrent.ExecutionException e)
-      {
-         Throwable cause = e.getCause();
-
-         if (cause != null)
-         {
-            getMessageSystem().error(cause);
-         }
-         else
-         {
-            getMessageSystem().error(e);
-         }
-      }
-      catch (Exception e)
-      {
-         getMessageSystem().error(e);
+         jdrFrame.setImage(image);
+         jdrFrame.markAsModified();
+         jdrFrame.getApplication().setTool(jdrFrame.currentTool());
       }
 
-      getMessageSystem().finished(jdrFrame);
+      super.finish(image);
    }
 
-   public void process(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public void publishMessages(MessageInfo... chunks)
-   {
-      getMessageSystem().publishMessages(chunks);
-   }
-
-   public JDRGuiMessage getMessageSystem()
-   {
-      return jdrFrame.getApplication().getMessageSystem();
-   }
-
-   public JDRResources getResources()
-   {
-      return jdrFrame.getResources();
-   }
-
-   private JDRFrame jdrFrame;
    ImportSettings importSettings;
 }

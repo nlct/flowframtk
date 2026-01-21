@@ -1868,6 +1868,10 @@ public class FlowframTkInvoker
                {
                   exportSettings.timeout = parseLong(value, line);
                }
+               else if (key.equals("workertimeout"))
+               {
+                  settings.setSwingWorkerTimeout(parseLong(value, line));
+               }
                else if (key.equals("flowfram_v2.0"))
                {
                   settings.setHasMinimumFlowFramSty2_0(parseBoolean(value, line));
@@ -2105,6 +2109,8 @@ public class FlowframTkInvoker
       }
 
       out.println("timeout="+exportSettings.timeout);
+
+      out.println("workertimeout="+settings.getSwingWorkerTimeout());
 
       out.println("export_bounds="+exportSettings.bounds);
 

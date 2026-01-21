@@ -4589,12 +4589,12 @@ public class JDRCanvas extends JPanel
                {
                   if (getApplication().isJdrExtension(file))
                   {
-                     (new AddJdr(frame_, file, undoName)).execute();
+                     AddJdr.createAndRun(frame_, file, undoName);
                      done = true;
                   }
                   else if (getApplication().isAjrExtension(file))
                   {
-                     (new AddAjr(frame_, file, undoName)).execute();
+                     AddAjr.createAndRun(frame_, file, undoName);
                      done = true;
                   }
                   else if (getApplication().isBitmapExtension(file))
@@ -10850,6 +10850,8 @@ public class JDRCanvas extends JPanel
 
    public void setToolCursor(int tool)
    {
+      if (frame_.isIoInProgress()) return;
+
       switch (tool)
       {
          case ACTION_SELECT :
@@ -12111,10 +12113,8 @@ public class JDRCanvas extends JPanel
          }
       }
 
-      SaveJdr sj = new SaveJdr(frame_, file,
+      SaveJdr.createAndRun(frame_, file,
               jdrversion, paths, frame_.getSaveJDRsettings(), exitAfter);
-
-      sj.execute();
    }
 
    public void saveAJR(File file, float ajrversion, boolean exitAfter)
@@ -12135,24 +12135,22 @@ public class JDRCanvas extends JPanel
          }
       }
 
-      SaveAjr sa = new SaveAjr(frame_, file,
+      SaveAjr.createAndRun(frame_, file,
             ajrversion, paths, frame_.getSaveJDRsettings(), exitAfter);
-
-      sa.execute();
    }
 
    public void savePGF(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePgf(frame_, file, paths, exportSettings)).execute();
+      SavePgf.createAndRun(frame_, file, paths, exportSettings);
    }
 
    public void saveFlowFrame(File file, ExportSettings exportSettings)
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SaveFlf(frame_, file, paths, exportSettings)).execute();
+      SaveFlf.createAndRun(frame_, file, paths, exportSettings);
    }
 
    public void savePNG(File file, ExportSettings exportSettings)
@@ -12161,11 +12159,11 @@ public class JDRCanvas extends JPanel
 
       if (exportSettings.useExternalProcess)
       {
-         (new SavePng(frame_, file, paths, exportSettings)).execute();
+         SavePng.createAndRun(frame_, file, paths, exportSettings);
       }
       else
       {
-         (new SaveNoProcessPng(frame_, file, paths, exportSettings)).execute();
+         SaveNoProcessPng.createAndRun(frame_, file, paths, exportSettings);
       }
    }
 
@@ -12175,11 +12173,11 @@ public class JDRCanvas extends JPanel
 
       if (exportSettings.useExternalProcess)
       {
-         (new SaveEps(frame_, file, paths, exportSettings)).execute();
+         SaveEps.createAndRun(frame_, file, paths, exportSettings);
       }
       else
       {
-         (new SaveNoProcessEps(frame_, file, paths, exportSettings)).execute();
+         SaveNoProcessEps.createAndRun(frame_, file, paths, exportSettings);
       }
    }
 
@@ -12187,7 +12185,7 @@ public class JDRCanvas extends JPanel
    {
       if (currentText != null) finishTextAndPostEdit();
 
-      (new SavePdf(frame_, file, paths, exportSettings)).execute();
+      SavePdf.createAndRun(frame_, file, paths, exportSettings);
    }
 
    public void saveSVG(File file, ExportSettings exportSettings)
@@ -12196,11 +12194,11 @@ public class JDRCanvas extends JPanel
 
       if (exportSettings.useExternalProcess)
       {
-         (new SaveSvg(frame_, file, paths, exportSettings)).execute();
+         SaveSvg.createAndRun(frame_, file, paths, exportSettings);
       }
       else
       {
-         (new SaveNoProcessSvg(frame_, file, paths, exportSettings)).execute();
+         SaveNoProcessSvg.createAndRun(frame_, file, paths, exportSettings);
       }
    }
 
@@ -12268,12 +12266,12 @@ public class JDRCanvas extends JPanel
 
    public void loadJDR(File file)
    {
-      (new LoadJdr(frame_, file)).execute();
+      LoadJdr.createAndRun(frame_, file);
    }
 
    public void loadAJR(File file)
    {
-      (new LoadAjr(frame_, file)).execute();
+      LoadAjr.createAndRun(frame_, file);
    }
 
    public boolean canDiscard()

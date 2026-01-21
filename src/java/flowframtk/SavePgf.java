@@ -33,10 +33,18 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SavePgf extends ExportImage
 {
-   public SavePgf(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SavePgf(JDRFrame frame, File file, JDRGroup jdrImage,
        ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SavePgf worker = new SavePgf(frame, file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
    }
 
    public void save() throws IOException,InterruptedException
@@ -47,9 +55,9 @@ public class SavePgf extends ExportImage
 
       try
       {
-         out = new PrintWriter(new FileWriter(outputFile));
+         out = new PrintWriter(new FileWriter(file));
 
-         PGF pgf = new PGF(outputFile.getParentFile().toPath(), out,
+         PGF pgf = new PGF(file.getParentFile().toPath(), out,
           exportSettings);
 
          if (exportSettings.type == ExportSettings.Type.IMAGE_DOC)

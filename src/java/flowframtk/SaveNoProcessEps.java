@@ -28,10 +28,19 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveNoProcessEps extends ExportImage
 {
-   public SaveNoProcessEps(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SaveNoProcessEps(JDRFrame frame, File file, JDRGroup jdrImage,
      ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SaveNoProcessEps worker = new SaveNoProcessEps(frame,
+        file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
    }
 
    public void save() throws InterruptedException,IOException
@@ -40,7 +49,7 @@ public class SaveNoProcessEps extends ExportImage
 
       try
       {
-         out = new PrintWriter(Files.newBufferedWriter(outputFile.toPath()));
+         out = new PrintWriter(Files.newBufferedWriter(file.toPath()));
          EPS.save(image, out, jdrFrame.getResources().getApplicationName());
       }
       finally

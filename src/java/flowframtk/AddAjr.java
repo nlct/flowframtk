@@ -36,10 +36,17 @@ public class AddAjr extends AddJdrAjr
 {
    private BufferedReader in = null;
 
-   public AddAjr(JDRFrame frame, File file, String undoName)
+   private AddAjr(JDRFrame frame, File file, String undoName)
    {
       super(frame, file, undoName);
       in = null;
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, String undoName)
+   {
+      AddAjr worker = new AddAjr(frame, file, undoName);
+      worker.initialise();
+      worker.execute();
    }
 
    protected JDRAJR openInputStream(File file)

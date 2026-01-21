@@ -34,10 +34,18 @@ import com.dickimawbooks.jdrresources.*;
 
 public class SaveEps extends ExportDocImage
 {
-   public SaveEps(JDRFrame frame, File file, JDRGroup jdrImage,
+   private SaveEps(JDRFrame frame, File file, JDRGroup jdrImage,
         ExportSettings exportSettings)
    {
       super(frame, file, jdrImage, exportSettings);
+   }
+
+   public static void createAndRun(JDRFrame frame, File file, JDRGroup jdrImage,
+      ExportSettings exportSettings)
+   {
+      SaveEps worker = new SaveEps(frame, file, jdrImage, exportSettings);
+      worker.initialise();
+      worker.execute();
    }
 
    @Override
