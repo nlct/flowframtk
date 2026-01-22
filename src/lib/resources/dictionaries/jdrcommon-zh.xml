@@ -586,6 +586,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.svg.no_associated_paint_for_id">no associated paint for id {0}</entry>
 <entry key="error.svg.no_associated_paint">no associated paint</entry>
 <entry key="error.svg.shape_expected">shape expected in reference ''{0}'' but found element {1}</entry>
+<entry key="error.svg.unsupported_namespace">unsupported name space {0}</entry>
 
 
 <!--  Internal Error Messages -->

@@ -360,6 +360,28 @@ public class SVG
       return textModeMappings;
    }
 
+   public String applyTextMapping(String text)
+   {
+      if (importSettings.useMappings && textModeMappings != null)
+      {
+         return textModeMappings.applyMappings(text, styNames);
+      }
+      else
+      {
+         return text;
+      }
+   }
+
+   public String applyTextMapping(int codePoint)
+   {
+      return applyTextMapping(new String(Character.toChars(codePoint)));
+   }
+
+   public boolean hasTextMappings()
+   {
+      return (importSettings.useMappings && textModeMappings != null);
+   }
+
    public void setMathModeMappings(TeXMappings texMappings)
    {
       this.mathModeMappings = texMappings;

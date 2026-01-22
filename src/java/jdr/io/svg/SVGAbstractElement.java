@@ -53,6 +53,35 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public void startElement() throws InvalidFormatException
    {
+      SVGLengthAttribute widthAttr = getLengthAttribute("width");
+      SVGLengthAttribute heightAttr = getLengthAttribute("height");
+
+      if (widthAttr != null)
+      {
+         elementWidth = widthAttr.doubleValue(this);
+      }
+
+      if (heightAttr != null)
+      {
+         elementHeight = heightAttr.doubleValue(this);
+      }
+
+      SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
+
+      if (viewBox != null)
+      {
+         if (viewBox.length != 4)
+         {
+            throw new CoordPairsRequiredException(this, "viewBox");
+         }
+
+         double x1 = viewBox[0].doubleValue(this);
+         double y1 = viewBox[1].doubleValue(this);
+         double x2 = viewBox[2].doubleValue(this);
+         double y2 = viewBox[3].doubleValue(this);
+
+         viewBoxBounds = new Rectangle2D.Double(x1, y1, x2-x1, y2-y1);
+      }
    }
 
    public void endElement() throws InvalidFormatException
@@ -125,6 +154,7 @@ public abstract class SVGAbstractElement implements Cloneable
          }
       }
 
+      addAttribute("xmlns", attr);
       addAttribute("href", attr);
       addAttribute("xlink:href", attr);
       addAttribute("transform", attr);
@@ -132,6 +162,10 @@ public abstract class SVGAbstractElement implements Cloneable
       addAttribute("opacity", attr);
       addAttribute("display", attr);
       addAttribute("visibility", attr);
+
+      addAttribute("width", attr);
+      addAttribute("height", attr);
+      addAttribute("viewBox", attr);
    }
 
    protected void addShapeAttributes(String uri, Attributes attr)
@@ -259,6 +293,34 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          return new SVGRadialGradientElement(handler, parent);
       }
+      else if (elementName.equals("foreignObject"))
+      {
+         return new SVGForeignObjectElement(handler, parent);
+      }
+      else if (elementName.equals("div"))
+      {
+         return new XHTMLDivElement(handler, parent);
+      }
+      else if (elementName.equals("p"))
+      {
+         return new XHTMLParElement(handler, parent);
+      }
+      else if (elementName.equals("span"))
+      {
+         return new XHTMLSpanElement(handler, parent);
+      }
+      else if (elementName.equals("em"))
+      {
+         return new XHTMLEmphElement(handler, parent);
+      }
+      else if (elementName.equals("strong"))
+      {
+         return new XHTMLStrongElement(handler, parent);
+      }
+      else if (elementName.equals("code"))
+      {
+         return new XHTMLCodeElement(handler, parent);
+      }
       else if (elementName.equals("link"))
       {// TODO?
       }
@@ -289,19 +351,47 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public abstract void setTitle(String text);
 
+   public Rectangle2D getViewportBounds()
+   {
+      if (viewBoxBounds == null)
+      {
+         return parent == null ? null : parent.getViewportBounds();
+      }
+      else
+      {
+         return viewBoxBounds;
+      }
+   }
+
    /**
     * Gets the viewport width in terms of the storage unit.
     * @return the viewport width (storage unit) or 0 if not set
     */ 
    public double getViewportWidth()
    {
-      if (parent == null)
+      if (viewBoxBounds != null)
       {
-         return 0;
+         return viewBoxBounds.getWidth();
+      }
+      else if (parent != null)
+      {
+         return parent.getViewportWidth();
       }
       else
       {
-         return parent.getViewportWidth();
+         return 0;
+      }
+   }
+
+   public double getElementWidth()
+   {
+      if (elementWidth == 0)
+      {
+         return parent == null ? 0 : parent.getElementWidth();
+      }
+      else
+      {
+         return elementWidth;
       }
    }
 
@@ -311,13 +401,93 @@ public abstract class SVGAbstractElement implements Cloneable
     */ 
    public double getViewportHeight()
    {
-      if (parent == null)
+      if (viewBoxBounds != null)
       {
-         return 0;
+         return viewBoxBounds.getHeight();
+      }
+      else if (parent != null)
+      {
+         return parent.getViewportHeight();
       }
       else
       {
-         return parent.getViewportHeight();
+         return 0;
+      }
+   }
+
+   public double getElementHeight()
+   {
+      if (elementHeight == 0)
+      {
+         return parent == null ? 0 : parent.getElementHeight();
+      }
+      else
+      {
+         return elementHeight;
+      }
+   }
+
+   public double getViewportMinX()
+   {
+      if (viewBoxBounds != null)
+      {
+         return viewBoxBounds.getMinX();
+      }
+      else if (parent != null)
+      {
+         return parent.getViewportMinX();
+      }
+      else
+      {
+         return 0;
+      }
+   }
+
+   public double getViewportMinY()
+   {
+      if (viewBoxBounds != null)
+      {
+         return viewBoxBounds.getMinY();
+      }
+      else if (parent != null)
+      {
+         return parent.getViewportMinY();
+      }
+      else
+      {
+         return 0;
+      }
+   }
+
+   public double getViewportMaxX()
+   {
+      if (viewBoxBounds != null)
+      {
+         return viewBoxBounds.getMaxX();
+      }
+      else if (parent != null)
+      {
+         return parent.getViewportMaxX();
+      }
+      else
+      {
+         return 0;
+      }
+   }
+
+   public double getViewportMaxY()
+   {
+      if (viewBoxBounds != null)
+      {
+         return viewBoxBounds.getMaxY();
+      }
+      else if (parent != null)
+      {
+         return parent.getViewportMaxY();
+      }
+      else
+      {
+         return 0;
       }
    }
 
@@ -482,6 +652,10 @@ public abstract class SVGAbstractElement implements Cloneable
       {
          attr = new SVGStringAttribute(handler, name, value);
       }
+      else if (name.equals("xmlns"))
+      {
+         attr = new SVGStringAttribute(handler, name, value);
+      }
       else if (name.equals("transform"))
       {
          attr = SVGTransformAttribute.valueOf(handler, value);
@@ -493,6 +667,18 @@ public abstract class SVGAbstractElement implements Cloneable
       else if (name.equals("color"))
       {
          attr = SVGPaintAttribute.valueOf(handler, name, value);
+      }
+      else if (name.equals("width"))
+      {
+         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
+      }
+      else if (name.equals("height"))
+      {
+         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
+      }
+      else if (name.equals("viewBox"))
+      {
+         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
 
       return attr;
@@ -944,6 +1130,18 @@ public abstract class SVGAbstractElement implements Cloneable
       return null;
    }
 
+   public String getNameSpace()
+   {
+      Object attr = attributeSet.getAttribute("xmlns");
+
+      if (attr instanceof SVGStringAttribute)
+      {
+         return ((SVGStringAttribute)attr).getString();
+      }
+
+      return null;
+   }
+
    public AffineTransform getTransform()
    {
       return getTransform("transform");
@@ -1167,6 +1365,24 @@ public abstract class SVGAbstractElement implements Cloneable
 
       children.clear();
       children.addAll(element.children);
+
+      if (element.viewBoxBounds == null)
+      {
+         viewBoxBounds = null;
+      }
+      else if (viewBoxBounds == null)
+      {
+         viewBoxBounds = new Rectangle2D.Double(
+           element.viewBoxBounds.getX(), element.viewBoxBounds.getY(),
+           element.viewBoxBounds.getWidth(), element.viewBoxBounds.getHeight());
+      }
+      else
+      {
+         viewBoxBounds.setRect(element.viewBoxBounds);
+      }
+
+      elementWidth = element.elementWidth;
+      elementHeight = element.elementHeight;
    }
 
    public JDRMessage getMessageSystem()
@@ -1223,6 +1439,22 @@ public abstract class SVGAbstractElement implements Cloneable
       }
    }
 
+   public SVGForeignObjectElement getForeignObjectAncestor()
+   {
+      if (parent == null)
+      {
+         return null;
+      }
+      else if (parent instanceof SVGForeignObjectElement)
+      {
+         return (SVGForeignObjectElement)parent;
+      }
+      else
+      {
+         return parent.getForeignObjectAncestor();
+      }
+   }
+
    public SVGGradientElement getGradientAncestor()
    {
       if (parent == null)
@@ -1270,6 +1502,9 @@ public abstract class SVGAbstractElement implements Cloneable
    protected Vector<SVGAbstractElement> children;
 
    protected JDRPaint elementStrokePaint, elementFillPaint, elementCurrentPaint;
+
+   protected double elementWidth, elementHeight;
+   protected Rectangle2D viewBoxBounds;
 
    protected SVGAttributeSet attributeSet;
 

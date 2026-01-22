@@ -58,11 +58,21 @@ public class SVGHandler extends DefaultHandler
 
             base.addToImage(group);
 
+            CanvasGraphics cg = getCanvasGraphics();
+            FlowFrame typeblock = null;
+            Rectangle2D bounds = null;
+
+            if (requiresTypeblock)
+            {
+               typeblock = new FlowFrame(cg, FlowFrame.TYPEBLOCK);
+
+               group.setFlowFrame(typeblock);
+            }
+
             if (!group.isEmpty() && importSettings.paper != ImportSettings.Paper.CURRENT)
             {
-               CanvasGraphics cg = getCanvasGraphics();
 
-               Rectangle2D bounds = base.getViewportBounds();
+               bounds = base.getViewportBounds();
 
                if (bounds == null)
                {
@@ -81,6 +91,8 @@ public class SVGHandler extends DefaultHandler
 
                   double widthBp = getStorageUnit().toBp(bounds.getWidth());
                   double heightBp = getStorageUnit().toBp(bounds.getHeight());
+
+                  bounds.setRect(0, 0, bounds.getWidth(), bounds.getHeight());
 
                   if (importSettings.paper == ImportSettings.Paper.PREDEFINED)
                   {
@@ -105,6 +117,31 @@ public class SVGHandler extends DefaultHandler
                      cg.setPaper(new JDRPaper(cg.getMessageDictionary(),
                       widthBp, heightBp));
                   }
+               }
+            }
+
+            if (typeblock != null && bounds != null)
+            {
+               double paperW = cg.getStoragePaperWidth();
+               double paperH = cg.getStoragePaperHeight();
+
+               double left = bounds.getMinX();
+               double right = paperW - bounds.getMaxX();
+               double top = bounds.getMinY();
+               double bottom = paperH - bounds.getMaxY();
+
+               if (left > 0 && right > 0
+                     && left + right < paperW)
+               {
+                  typeblock.setLeft(left);
+                  typeblock.setRight(right);
+               }
+
+               if (top > 0 && bottom > 0
+                    && top + bottom < paperH)
+               {
+                  typeblock.setTop(top);
+                  typeblock.setBottom(bottom);
                }
             }
          }
@@ -470,6 +507,11 @@ public class SVGHandler extends DefaultHandler
       return null;
    }
 
+   public void registerHasFlowFrameData()
+   {
+      requiresTypeblock = true;
+   }
+
    public ImportSettings getImportSettings()
    {
       return importSettings;
@@ -485,6 +527,8 @@ public class SVGHandler extends DefaultHandler
    private ArrayDeque<SVGAbstractElement> stack;
    private SVGAbstractElement current = null;
    private SVGElement base = null;
+
+   private boolean requiresTypeblock = false;
 
    private JDRMessage msgSystem;
    private String[] availableFontFamilies;

@@ -40,7 +40,6 @@ public class SVGMarkerElement extends SVGAbstractElement
       addAttribute("orient", attr);// auto | auto-start-reverse | angle
       addAttribute("refX", attr);// left | right | center | coordinate
       addAttribute("refY", attr);// top | center | bottom | coordinate
-      addAttribute("viewBox", attr);
 
       addShapeAttributes(uri, attr);
    }
@@ -58,10 +57,6 @@ public class SVGMarkerElement extends SVGAbstractElement
       else if (name.equals("markerHeight"))
       {
          attr = SVGLengthAttribute.valueOf(handler, name, value, false);
-      }
-      else if (name.equals("viewBox"))
-      {
-         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
       }
       else if (name.equals("refX"))
       {
@@ -95,15 +90,17 @@ public class SVGMarkerElement extends SVGAbstractElement
    @Override
    public void startElement() throws InvalidFormatException
    {
+      super.startElement();
+
       orientAttr = getMarkerOrientAttribute("orient");
 
       SVGLengthAttribute widthAttr = getLengthAttribute("markerWidth");
       SVGLengthAttribute heightAttr = getLengthAttribute("markerHeight");
-      SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
 
       unitStrokeWidth = true;
 
       SVGMarkerUnitAttribute markerUnitAttr = getMarkerUnitAttribute("markerUnits");
+
       if (markerUnitAttr != null && markerUnitAttr.isUserSpaceOnUse())
       {
          unitStrokeWidth = false;
@@ -125,23 +122,9 @@ public class SVGMarkerElement extends SVGAbstractElement
          markerHeight = storageUnit.toUnit(heightAttr.doubleValue(this), unit);
       }
 
-      if (viewBox != null)
+      if (viewBoxBounds == null)
       {
-         if (viewBox.length != 4)
-         {
-            throw new CoordPairsRequiredException(this, "viewBox");
-         }
-
-         double x1 = storageUnit.toUnit(viewBox[0].getStorageValue(this, true), unit);
-         double y1 = storageUnit.toUnit(viewBox[1].getStorageValue(this, false), unit);
-         double x2 = storageUnit.toUnit(viewBox[2].getStorageValue(this, true), unit);
-         double y2 = storageUnit.toUnit(viewBox[3].getStorageValue(this, false), unit);
-
-         bounds = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
-      }
-      else
-      {
-         bounds = new Rectangle2D.Double(0, 0, markerWidth, markerHeight);
+         viewBoxBounds = new Rectangle2D.Double(0, 0, markerWidth, markerHeight);
       }
 
       SVGMarkerRefAttribute refXAttr = getMarkerRefAttribute("refX");
@@ -155,13 +138,13 @@ public class SVGMarkerElement extends SVGAbstractElement
          switch (refXAttr.getRefType())
          {
             case SVGMarkerRefAttribute.MIN:
-               refX = bounds.getMinX();
+               refX = viewBoxBounds.getMinX();
             break;
             case SVGMarkerRefAttribute.MAX:
-               refX = bounds.getMaxX();
+               refX = viewBoxBounds.getMaxX();
             break;
             case SVGMarkerRefAttribute.CENTER:
-               refX = bounds.getMinX() + 0.5 * bounds.getWidth();
+               refX = viewBoxBounds.getMinX() + 0.5 * viewBoxBounds.getWidth();
             break;
             case SVGMarkerRefAttribute.COORD:
                refX = storageUnit.toUnit(refXAttr.doubleValue(this), unit);
@@ -174,13 +157,13 @@ public class SVGMarkerElement extends SVGAbstractElement
          switch (refYAttr.getRefType())
          {
             case SVGMarkerRefAttribute.MIN:
-               refY = bounds.getMinY();
+               refY = viewBoxBounds.getMinY();
             break;
             case SVGMarkerRefAttribute.MAX:
-               refY = bounds.getMaxY();
+               refY = viewBoxBounds.getMaxY();
             break;
             case SVGMarkerRefAttribute.CENTER:
-               refY = bounds.getMinY() + 0.5 * bounds.getHeight();
+               refY = viewBoxBounds.getMinY() + 0.5 * viewBoxBounds.getHeight();
             break;
             case SVGMarkerRefAttribute.COORD:
                refY = storageUnit.toUnit(refYAttr.doubleValue(this), unit);
@@ -466,11 +449,6 @@ public class SVGMarkerElement extends SVGAbstractElement
       return refPoint;
    }
 
-   public Rectangle2D getViewportBounds()
-   {
-      return bounds;
-   }
-
    public double getMarkerWidth()
    {
       return markerWidth;
@@ -479,18 +457,6 @@ public class SVGMarkerElement extends SVGAbstractElement
    public double getMarkerHeight()
    {
       return markerHeight;
-   }
-
-   @Override
-   public double getViewportWidth()
-   {
-      return bounds == null ? markerWidth : bounds.getWidth();
-   }
-
-   @Override
-   public double getViewportHeight()
-   {
-      return bounds == null ? markerHeight : bounds.getHeight();
    }
 
    @Override
@@ -535,21 +501,6 @@ public class SVGMarkerElement extends SVGAbstractElement
          orientAttr.makeEqual((SVGAttribute)other.orientAttr);
       }
 
-      if (other.bounds == null)
-      {
-         bounds = null;
-      }
-      else if (bounds == null) 
-      {
-         bounds = new Rectangle2D.Double(
-           other.bounds.getX(), other.bounds.getY(),
-           other.bounds.getWidth(), other.bounds.getHeight());
-      }
-      else
-      {
-         bounds.setRect(other.bounds);
-      }
-
       if (other.jdrMarker == null)
       {
          jdrMarker = null;
@@ -585,7 +536,6 @@ public class SVGMarkerElement extends SVGAbstractElement
    public void setDescription(String desc) { }
 
    double markerWidth, markerHeight;
-   Rectangle2D bounds;
    JDRMarker jdrMarker;
    Point2D.Double refPoint;
 

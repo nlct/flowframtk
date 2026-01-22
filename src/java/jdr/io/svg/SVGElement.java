@@ -24,90 +24,42 @@ public class SVGElement extends SVGAbstractElement
    }
 
    @Override
-   public void addAttributes(String uri, Attributes attr)
-   {
-      super.addAttributes(uri, attr);
-
-      addAttribute("width", attr);
-      addAttribute("height", attr);
-      addAttribute("viewBox", attr);
-   }
-
-   @Override
    public void startElement() throws InvalidFormatException
    {
-      SVGLengthAttribute widthAttr = getLengthAttribute("width");
-      SVGLengthAttribute heightAttr = getLengthAttribute("height");
-      SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
+      super.startElement();
 
-      if (widthAttr != null && widthAttr.getValue() == null)
+      if (viewBoxBounds == null)
       {
-         widthAttr = null;
-      }
+         double w = elementWidth;
+         double h = elementHeight;
 
-      if (heightAttr != null && heightAttr.getValue() == null)
-      {
-         heightAttr = null;
-      }
-
-      hasWidth = (widthAttr != null);
-      hasHeight = (heightAttr != null);
-
-      width = hasWidth ? widthAttr.doubleValue(this) : 0.0;
-      height = hasHeight ? heightAttr.doubleValue(this) : 0.0;
-
-      if (viewBox != null)
-      {
-         if (viewBox.length != 4)
+         if (parent != null)
          {
-            throw new CoordPairsRequiredException(this, "viewBox");
+            if (elementWidth <= 0)
+            {
+               w = parent.getElementWidth();
+            }
+
+            if (elementHeight <= 0)
+            {
+               h = parent.getElementHeight();
+            }
          }
 
-         double x1 = viewBox[0].getStorageValue(this, true);
-         double y1 = viewBox[1].getStorageValue(this, false);
-         double x2 = viewBox[2].getStorageValue(this, true);
-         double y2 = viewBox[3].getStorageValue(this, false);
+         CanvasGraphics cg = getCanvasGraphics();
 
-         bounds = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
-
-         if (!hasWidth)
+         if (w <= 0)
          {
-            width = bounds.getWidth();
-            hasWidth = true;
+            w = cg.getStoragePaperWidth();
          }
 
-         if (!hasHeight)
+         if (h <= 0)
          {
-            height = bounds.getHeight();
-            hasHeight = true;
+            h = cg.getStoragePaperHeight();
          }
-      }
-   }
 
-   @Override
-   protected SVGAttribute createElementAttribute(String name, String value)
-     throws SVGException
-   {
-      SVGAttribute attr;
-
-      if (name.equals("width"))
-      {
-         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
+         viewBoxBounds = new Rectangle2D.Double(0, 0, w, h);
       }
-      else if (name.equals("height"))
-      {
-         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
-      }
-      else if (name.equals("viewBox"))
-      {
-         attr = SVGLengthArrayAttribute.valueOf(handler, name, value);
-      }
-      else
-      {
-         attr = super.createElementAttribute(name, value);
-      }
-
-      return attr;
    }
 
    @Override
@@ -171,48 +123,6 @@ public class SVGElement extends SVGAbstractElement
       return group;
    }
 
-   public Rectangle2D getViewportBounds()
-   {
-      return bounds;
-   }
-
-   @Override
-   public double getViewportWidth()
-   {
-      return hasWidth ? width : super.getViewportWidth();
-   }
-
-   @Override
-   public double getViewportHeight()
-   {
-      return hasHeight ? height : super.getViewportHeight();
-   }
-
-   public void makeEqual(SVGElement element)
-   {
-      super.makeEqual(element);
-
-      hasWidth = element.hasWidth;
-      hasHeight = element.hasHeight;
-      width = element.width;
-      height = element.height;
-
-      if (element.bounds == null)
-      {
-         bounds = null;
-      }
-      else if (bounds == null)
-      {
-         bounds = new Rectangle2D.Double(
-           element.bounds.getX(), element.bounds.getY(),
-           element.bounds.getWidth(), element.bounds.getHeight());
-      }
-      else
-      {
-         bounds.setRect(element.bounds);
-      }
-   }
-
    @Override
    public Object clone()
    {
@@ -242,8 +152,4 @@ public class SVGElement extends SVGAbstractElement
    }
 
    String description = null, title = null;
-
-   private Rectangle2D bounds;
-   boolean hasWidth, hasHeight;
-   double width, height;
 }
