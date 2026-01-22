@@ -29,6 +29,16 @@ import com.dickimawbooks.jdr.*;
 
 public interface JDRMessageDictionary
 {
+   /**
+    * Gets localised text using the format provided by label.
+    * If no localisation is defined for the given label, the
+    * fallback format (suitable with MessageFormat) will be used, if
+    * not null.
+    * @param label identifies the localisation message format
+    * @param fallbackFormat the fallback format to use if the label
+    * isn't defined (maybe null for no fallback)
+    * @param params the message format parameters
+    */
    public String getMessageWithFallback(String label,
        String fallbackFormat, Object... params);
 

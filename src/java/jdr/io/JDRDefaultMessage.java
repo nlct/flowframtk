@@ -424,7 +424,31 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public String getMessageWithFallback(String tag, String altFormat, 
      Object... values)
    {
-      return MessageFormat.format(altFormat, values);
+      if (altFormat != null)
+      {
+         return MessageFormat.format(altFormat, values);
+      }
+      else
+      {
+         if (params.length == 0)
+         {
+            return label;
+         }
+
+         String msg = label;
+
+         String pre = "[";
+
+         for (int i = 0; i < params.length; i++)
+         {
+            msg += pre + (String)params[i];
+            pre = ",";
+         }
+
+         msg += "]";
+
+         return msg;
+      }
    }
 
    @Override
