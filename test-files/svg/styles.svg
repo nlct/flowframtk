@@ -39,6 +39,10 @@
 
   <text x="10" y="120" font-style="italic">Some more text.</text>
 
+  <text x="10" y="140" class="math">$y = a_2x^2 + a_1x + a_0x$</text>
+
+  <text x="10" y="160" class="math">\[f(\vec{x}) = \sum_{i=1}^n a_i x_i\]</text>
+
   <!-- using my graphical objects -->
   <use x="5" y="10" href="#Circle" class="circleClass" />
   <use x="10" y="10" href="#Ellipse" class="ellipseClass" />

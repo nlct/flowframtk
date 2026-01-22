@@ -558,35 +558,64 @@ public class SVG
    {
       String text = jdrText.getText();
       String latexText = null;
+      String mid = "";
 
-      if (importSettings.useMappings)
+      boolean isMaths = false;
+      boolean display = false;
+
+      if (text.length() > 2 && text.startsWith("$") && text.endsWith("$"))
       {
-         if (mathModeMappings != null
-              && text.length() > 2 && text.startsWith("$") && text.endsWith("$"))
+         mid = text.substring(1, text.length()-1);
+         isMaths = true;
+
+         if (mid.length() > 2
+              && mid.startsWith("$") && mid.endsWith("$"))
          {
-            String mid = text.substring(1, text.length()-1);
-
-            if (mid.indexOf('$') > -1)
-            {
-               if (textModeMappings != null)
-               {
-                  latexText = textModeMappings.applyMappings(text, styNames);
-               }
-               else
-               {
-                  jdrText.escapeTeXChars();
-               }
-            }
-            else
-            {
-               latexText = "$" + mathModeMappings.applyMappings(
-                 mid, styNames) + "$";
-               text = mid;
-
-               jdrText.setText(text);
-            }
+            display = true;
+            mid = mid.substring(1, mid.length()-1);
          }
-         else if (textModeMappings != null)
+
+         if (mid.indexOf('$') > -1 || mid.trim().isEmpty())
+         {
+            isMaths = false;
+            mid = "";
+         }
+      }
+      else if (text.length() > 4 && text.startsWith("\\[") && text.endsWith("\\]"))
+      {
+         mid = text.substring(2, text.length()-2);
+         isMaths = true;
+         display = true;
+
+         if (mid.indexOf("\\]") > -1 || mid.trim().isEmpty())
+         {
+            isMaths = false;
+            mid = "";
+         }
+      }
+
+      if (isMaths)
+      {// possibly MathJax
+
+         latexText = "$";
+
+         if (display)
+         {
+            latexText += "\\displaystyle ";
+         }
+
+         latexText += mid + "$";
+
+         // TODO use TeX Parser library to convert?
+         // L2HStringConverter.convert(String,boolean)
+
+         text = mid;
+
+         jdrText.setText(text);
+      }
+      else if (importSettings.useMappings)
+      {
+         if (textModeMappings != null)
          {
             latexText = textModeMappings.applyMappings(text, styNames);
          }
