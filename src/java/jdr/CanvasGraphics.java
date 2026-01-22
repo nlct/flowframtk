@@ -1594,6 +1594,16 @@ public class CanvasGraphics
       optimize = setting;
    }
 
+   public String convertLaTeX(String source)
+   {
+      if (jdrTeXApp == null)
+      {
+         jdrTeXApp = new JDRTeXApp(this);
+      }
+
+      return jdrTeXApp.convertToString(source);
+   }
+
    /**
     * Speed is more important than memory requirements.
     */
@@ -1707,5 +1717,7 @@ public class CanvasGraphics
 
    private String footerlabel = "footer";
    private String evenfooterlabel = "evenfooter";
+
+   JDRTeXApp jdrTeXApp;
 }
 

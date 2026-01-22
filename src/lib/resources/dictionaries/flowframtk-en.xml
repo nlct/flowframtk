@@ -2740,6 +2740,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="import.use_mappings.mnemonic">M</entry>
 <entry key="import.use_mappings.initvalue">true</entry>
 
+<entry key="import.check_maths">Check for Math Mode</entry>
+<entry key="import.check_maths.mnemonic">K</entry>
+<entry key="import.check_maths.initvalue">true</entry>
+
 <entry key="import.extract_bitmaps">Extract any embedded bitmaps</entry>
 <entry key="import.extract_bitmaps.mnemonic">B</entry>
 <entry key="import.extract_bitmaps.initvalue">false</entry>

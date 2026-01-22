@@ -558,60 +558,21 @@ public class SVG
    {
       String text = jdrText.getText();
       String latexText = null;
-      String mid = "";
 
-      boolean isMaths = false;
-      boolean display = false;
-
-      if (text.length() > 2 && text.startsWith("$") && text.endsWith("$"))
+      if (importSettings.parseMaths &&
+           (text.startsWith("$") || text.startsWith("\\[")))
       {
-         mid = text.substring(1, text.length()-1);
-         isMaths = true;
+         latexText = text;
+         text = canvasGraphics.convertLaTeX(latexText).trim();
 
-         if (mid.length() > 2
-              && mid.startsWith("$") && mid.endsWith("$"))
+         if (text.isEmpty())
          {
-            display = true;
-            mid = mid.substring(1, mid.length()-1);
+            text = latexText;
          }
-
-         if (mid.indexOf('$') > -1 || mid.trim().isEmpty())
+         else
          {
-            isMaths = false;
-            mid = "";
+            jdrText.setText(text);
          }
-      }
-      else if (text.length() > 4 && text.startsWith("\\[") && text.endsWith("\\]"))
-      {
-         mid = text.substring(2, text.length()-2);
-         isMaths = true;
-         display = true;
-
-         if (mid.indexOf("\\]") > -1 || mid.trim().isEmpty())
-         {
-            isMaths = false;
-            mid = "";
-         }
-      }
-
-      if (isMaths)
-      {// possibly MathJax
-
-         latexText = "$";
-
-         if (display)
-         {
-            latexText += "\\displaystyle ";
-         }
-
-         latexText += mid + "$";
-
-         // TODO use TeX Parser library to convert?
-         // L2HStringConverter.convert(String,boolean)
-
-         text = mid;
-
-         jdrText.setText(text);
       }
       else if (importSettings.useMappings)
       {

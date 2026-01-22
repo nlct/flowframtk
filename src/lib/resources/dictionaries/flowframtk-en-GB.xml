@@ -163,6 +163,11 @@
 <entry key="vectorize.unsupported_colour_type">Unsupported colour type: {0}</entry>
 <entry key="vectorize.unsupported_colour_type_name">Unsupported colour type: {0} ({1})</entry>
 
+<!-- Import Dialog -->
+
+<entry key="import.check_maths">Check for Maths Mode</entry>
+
+
 <!-- Buttons -->
 
 <entry key="choose_colour.title">Select Colour</entry>

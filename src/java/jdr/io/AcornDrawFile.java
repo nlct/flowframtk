@@ -951,37 +951,27 @@ public class AcornDrawFile
 
       String latexText = null;
 
-      if (importSettings.useMappings)
+      if (importSettings.parseMaths &&
+           (text.startsWith("$") || text.startsWith("\\[")))
+      {
+         latexText = text;
+         text = canvasGraphics.convertLaTeX(latexText).trim();
+
+         if (text.isEmpty())
+         {
+            text = latexText;
+         }
+         else
+         {
+            jdrText.setText(text);
+         }
+      }
+      else if (importSettings.useMappings)
       {
          if (map == CharacterMap.SIDNEY && mathModeMappings != null)
          {
             latexText = "$" + mathModeMappings.applyMappings(
               text, styNames) + "$";
-         }
-         else if (mathModeMappings != null
-              && text.length() > 1 && text.startsWith("$") && text.endsWith("$"))
-         {
-            String mid = text.substring(1, text.length()-1);
-
-            if (mid.indexOf('$') > -1)
-            {
-               if (textModeMappings != null)
-               {
-                  latexText = textModeMappings.applyMappings(text, styNames);
-               }
-               else
-               {
-                  jdrText.escapeTeXChars();
-               }
-            }
-            else
-            {
-               text = mid;
-               latexText = "$" + mathModeMappings.applyMappings(
-                 mid, styNames) + "$";
-
-               jdrText.setText(text);
-            }
          }
          else if (textModeMappings != null)
          {

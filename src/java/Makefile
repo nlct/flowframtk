@@ -102,7 +102,7 @@ classes/$(CLASSTREE)/jdr/JDRObject.class : \
 	jdr/io/svg/*.java  
 	cd jdr ; \
 	javac $(target_version) -d ../classes -Xlint:unchecked -Xlint:deprecation \
-	  -cp $(LIBDIR)/texjavahelplib.jar \
+	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/texparserlib.jar \
 	  *.java */*.java */*/*.java */*/*/*.java
 
 

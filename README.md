@@ -42,8 +42,8 @@ FlowframTk is a vector graphics application written in Java. You can use Flowfra
 
 ## Source Code
 
-The source code depends on the [TeX Java Help library](https://github.com/nlct/texjavahelp).
-The `texjavahelplib.jar` library needs to be added to the `lib`
+The source code depends on the [TeX Java Help library](https://github.com/nlct/texjavahelp) and the [TeX Parser Library](https://github.com/nlct/texparser).
+The `texjavahelplib.jar` and `texparserlib.jar` libraries needs to be added to the `lib`
 directory.
 
 The documentation has LaTeX source code but depends on the

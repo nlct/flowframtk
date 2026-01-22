@@ -1697,6 +1697,10 @@ public class FlowframTkInvoker
                {
                   importSettings.useMappings = parseBoolean(value, line);
                }
+               else if (key.equals("import_parse_maths"))
+               {
+                  importSettings.parseMaths = parseBoolean(value, line);
+               }
                else if (key.equals("import_extract_bitmaps"))
                {
                   importSettings.extractBitmaps = parseBoolean(value, line);
@@ -2117,6 +2121,7 @@ public class FlowframTkInvoker
       out.println("import_markers="+importSettings.markers);
       out.println("import_paper="+importSettings.paper);
       out.println("import_text_mappings="+(importSettings.useMappings?1:0));
+      out.println("import_parse_maths="+(importSettings.parseMaths?1:0));
       out.println("import_extract_bitmaps="+(importSettings.extractBitmaps?1:0));
 
       out.println("unicode="+settings.getUnicodeRangesSpec());

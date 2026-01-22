@@ -49,6 +49,7 @@ public class ImportSettings
       bitmapDir = other.bitmapDir;
       bitmapNamePrefix = other.bitmapNamePrefix;
       useMappings = other.useMappings;
+      parseMaths = other.parseMaths;
       markers = other.markers;
       paper = other.paper;
    }
@@ -65,6 +66,7 @@ public class ImportSettings
    public File bitmapDir = null;
    public String bitmapNamePrefix = "";
    public boolean useMappings = true;
+   public boolean parseMaths = true;
    public Markers markers = Markers.MARKER;
    public Paper paper = Paper.CURRENT;
    JDRMessageDictionary dictionary;

@@ -72,9 +72,16 @@ public class ImportDialog extends JDialog
       JComponent mainComp = Box.createVerticalBox();
       getContentPane().add(mainComp, "Center");
 
+      row = createRow();
+      mainComp.add(row);
+
       useMappingsButton = resources.createAppCheckBox("import", "use_mappings",
          true, null);
-      mainComp.add(useMappingsButton);
+      row.add(useMappingsButton);
+
+      checkMathsButton = resources.createAppCheckBox("import", "check_maths",
+         true, null);
+      row.add(checkMathsButton);
 
       markerComp = createRow();
       mainComp.add(markerComp);
@@ -199,6 +206,7 @@ public class ImportDialog extends JDialog
 
       extractBitmapsButton.setSelected(importSettings.extractBitmaps);
       useMappingsButton.setSelected(importSettings.useMappings);
+      checkMathsButton.setSelected(importSettings.parseMaths);
 
       update((File)null);
 
@@ -369,6 +377,7 @@ public class ImportDialog extends JDialog
       }
 
       importSettings.useMappings = useMappingsButton.isSelected();
+      importSettings.parseMaths = checkMathsButton.isSelected();
       importSettings.extractBitmaps =
        extractBitmapsButton.isVisible() && extractBitmapsButton.isSelected();
 
@@ -427,7 +436,7 @@ public class ImportDialog extends JDialog
    ImportSettings importSettings;
    FlowframTk application;
 
-   JCheckBox useMappingsButton;
+   JCheckBox useMappingsButton, checkMathsButton;
    JCheckBox extractBitmapsButton;
    FileField importFileField, bitmapDirField;
    JTextField bitmapNamePrefixField;
