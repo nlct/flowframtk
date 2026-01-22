@@ -1,0 +1,35 @@
+AJR 2.1
+3 0.0 0.0 1 1 1 1 0 13 0 3 100.0 10 10.0 3 1 10 0 0 0 0 0 0 0 G 5 T 0 9 SansSerif
+0 0 20.0 0 1.0 0.0 0.0 1.0 100.0 90.0 1 9 \sffamily
+9 \mdseries
+8 \upshape
+5 \huge
+0 2 0 R 0.0 0.0 0.0 1.0 11 Sample text
+0 0 0 T 0 9 SansSerif
+0 0 20.0 0 1.0 0.0 0.0 1.0 100.0 120.0 1 9 \sffamily
+9 \mdseries
+8 \upshape
+5 \huge
+0 2 0 R 0.0 0.0 0.0 1.0 8 Sample 1
+0 0 0 T 0 5 Serif
+0 1 20.0 0 1.0 0.0 0.0 1.0 100.0 148.0 1 9 \rmfamily
+9 \bfseries
+8 \upshape
+5 \huge
+0 2 10 Sample \#2
+R 0.0 0.0 0.0 1.0 9 Sample #2
+0 0 0 T 0 9 SansSerif
+1 0 20.0 0 1.0 0.0 0.0 1.0 100.0 176.0 1 9 \sffamily
+9 \mdseries
+3 \em
+5 \huge
+0 2 12 Sample 100\%
+R 0.0 0.0 0.0 1.0 11 Sample 100%
+0 0 0 T 0 9 SansSerif
+0 0 20.0 0 1.0 0.0 0.0 1.0 100.0 210.0 1 9 \sffamily
+9 \mdseries
+8 \upshape
+5 \huge
+0 2 22 $f(x) = ax^2 + bx + c$
+R 0.0 0.0 0.0 1.0 19 f(x) = ax² + bx + c
+0 0 0 0 0 0 

@@ -797,6 +797,10 @@
 <entry key="menu.tex.flowframe.display_page">显示页面(D)...</entry>
 <entry key="menu.tex.flowframe.display_page.mnemonic">P</entry>
 
+<entry key="menu.tex.flowframe.combine_to_frame">Combine Text To Frame...</entry>
+<entry key="menu.tex.flowframe.combine_to_frame.mnemonic">C</entry>
+<entry key="menu.tex.flowframe.combine_to_frame.tooltip">Replace all selected text areas with a single rectangle containing text as dynamic content</entry>
+
 <!-- Align to Typeblock Sub-Menu -->
 
 <entry key="menu.tex.flowframe.align_to_typeblock">Align to Typeblock</entry>
@@ -1344,6 +1348,9 @@
 <entry key="menu.selected.flowframe.scale_to_typeblock">Scale to Fit Typeblock...</entry>
 <entry key="menu.selected.flowframe.scale_to_typeblock.mnemonic">S</entry>
 
+<entry key="menu.selected.flowframe.combine_to_frame">Combine Text To Frame...</entry>
+<entry key="menu.selected.flowframe.combine_to_frame.mnemonic">C</entry>
+
 <entry key="menu.selected.flowframe.align_to_typeblock">Align to Typeblock</entry>
 <entry key="menu.selected.flowframe.align_to_typeblock.mnemonic">A</entry>
 
@@ -1506,6 +1513,7 @@
 <entry key="undo.close">结束一条封闭路径</entry>
 <entry key="undo.close_sub_path">Close Sub Path</entry>
 <entry key="undo.colour">更改颜色</entry>
+<entry key="undo.combine_to_frame">Combine Text to Frame</entry>
 <entry key="undo.continuous">曲线平滑</entry>
 <entry key="undo.convert_to_curve">转换为曲线段</entry>
 <entry key="undo.convert_to_line">转换为直接段</entry>

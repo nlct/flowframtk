@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(199);
+      invoker.setStartupDeterminate(200);
 
       // create menu bar, menu and menu item
 
@@ -2882,7 +2882,7 @@ public class FlowframTk extends JFrame
 
       // Set Typeblock
 
-      setTypeblockItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem setTypeblockItem = FlowframTkAction.createMenuItem(this,
         "menu.tex", "flowframe.set_typeblock", flowframeM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
@@ -2934,9 +2934,28 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(texM, flowframeM, setFrameItem);
 
+      // Combine text areas into a single rectangle with flow frame
+
+      JMenuItem combineToFrameItem = FlowframTkAction.createMenuItem(this,
+        "menu.tex", "flowframe.combine_to_frame", flowframeM,
+        TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_TEXT,
+        FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               JDRCanvas canvas = action.getCanvas();
+
+               canvas.combineSelectedToFrame();
+            }
+         },
+        true);
+
+      incStartupProgress(texM, flowframeM, combineToFrameItem);
+
       // Scale to fit typeblock
 
-      JMenuItem setTypeblockItem = FlowframTkAction.createMenuItem(this,
+      JMenuItem scaleToTypeblockItem = FlowframTkAction.createMenuItem(this,
         "menu.tex", "flowframe.scale_to_typeblock", flowframeM,
         TOOL_FLAG_SELECT, EDIT_FLAG_NONE, SELECT_FLAG_ANY_OBJECT,
         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
@@ -2950,6 +2969,8 @@ public class FlowframTk extends JFrame
             }
          },
         true);
+
+      incStartupProgress(texM, flowframeM, scaleToTypeblockItem);
 
       // Align to Typeblock Sub Menu
 
@@ -5630,6 +5651,11 @@ public class FlowframTk extends JFrame
       gotoDialog.display();
    }
 
+   public void displaySetFrameDialog(JDRFrame frame, JDRCompleteObject object)
+   {
+      flfSelector.display(frame, object);
+   }
+
    public boolean showMargins()
    {
       return showPrinterMarginsItem.isSelected();
@@ -7726,7 +7752,7 @@ public class FlowframTk extends JFrame
                      insertBitmapItem,
                      refreshItem, bitmapPropItem, parshapeItem,
                      shapeparItem, clearAllItem, setFrameItem,
-                     setTypeblockItem, flfWizardItem, stylesItem, joinItem,
+                     flfWizardItem, stylesItem, joinItem,
                      gridSettingsItem,
                      configSettingsItem, licenceItem, aboutItem,
                      tileItem, verticallyItem, horizontallyItem,

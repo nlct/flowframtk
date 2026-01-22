@@ -25,6 +25,7 @@ package com.dickimawbooks.jdr;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import com.dickimawbooks.jdr.io.*;
 
@@ -276,35 +277,19 @@ public class LaTeXFont implements Cloneable,Serializable
     */
    public String tex()
    {
-      String str = family;
+      return tex(family) + tex(weight) + tex(shape) + tex(size);
+   }
 
-      if (family.matches("\\[a-zA-Z]+\\Z"))
+   public static String tex(String cmd)
+   {
+      if (ENDS_CONTROL_SEQUENCE_NAME.matcher(cmd).matches())
       {
-         str += " ";
+         return cmd + " ";
       }
-
-      str += weight;
-
-      if (weight.matches("\\[a-zA-Z]+\\Z"))
+      else
       {
-         str += " ";
+         return cmd;
       }
-
-      str += shape;
-
-      if (shape.matches("\\[a-zA-Z]+\\Z"))
-      {
-         str += " ";
-      }
-
-      str += size;
-
-      if (size.matches("\\[a-zA-Z]+\\Z"))
-      {
-         str += " ";
-      }
-
-      return str;
    }
 
    /**
@@ -669,5 +654,8 @@ public class LaTeXFont implements Cloneable,Serializable
     * If this is null, default mapping used.
     */
    public static HashMap<String,LaTeXFont> psMapping=null;
+
+   public static final Pattern ENDS_CONTROL_SEQUENCE_NAME 
+     = Pattern.compile(".*\\\\[a-zA-Z]+");
 }
 

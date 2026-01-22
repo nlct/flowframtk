@@ -323,16 +323,24 @@ public class FLFSelector extends JDialog
 
    public void display()
    {
-      mainPanel = application_.getCurrentFrame();
+      display(application_.getCurrentFrame(), null);
+   }
 
-      object = mainPanel.getSelectedObject();
+   public void display(JDRFrame jdrFrame, JDRCompleteObject object)
+   {
+      mainPanel = jdrFrame;
 
       if (object == null)
       {
-         getResources().internalError(application_, 
-            getResources().getMessage("internal_error.no_object"));
+         object = mainPanel.getSelectedObject();
 
-         return;
+         if (object == null)
+         {
+            getResources().internalError(application_, 
+               getResources().getMessage("internal_error.no_object"));
+
+            return;
+         }
       }
 
       margins.setReferenceBounds(object.getStorageBBox(),

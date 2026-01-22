@@ -997,6 +997,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("flowframe.set_typeblock");
       CanvasSelectAction scaleToTypeblockAction
          = addCanvasSelectAction("flowframe.scale_to_typeblock");
+      CanvasSelectAction combineToFrameAction
+         = addCanvasSelectAction("flowframe.combine_to_frame");
 
       CanvasSelectAction leftAlignToPageAction
          = addCanvasSelectAction("align_to_page.left");
@@ -1177,6 +1179,12 @@ public class JDRCanvas extends JPanel
       selectTextFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
          "menu.selected.flowframe.scale_to_typeblock",
          "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Flowframe Combine To Frame
+
+      selectTextFlowFrameM.add(combineToFrameAction.createMenuItem(
+         "menu.selected.flowframe.combine_to_frame",
+         "menu.tex.flowframe.combine_to_frame.tooltip"));
 
       // Typeblock Alignment sub menu
 
@@ -2072,6 +2080,12 @@ public class JDRCanvas extends JPanel
       selectFlowFrameM.add(scaleToTypeblockAction.createMenuItem(
          "menu.selected.flowframe.scale_to_typeblock",
          "menu.tex.flowframe.scale_to_typeblock.tooltip"));
+
+      // Flowframe Combine To Frame
+
+      selectFlowFrameM.add(combineToFrameAction.createMenuItem(
+         "menu.selected.flowframe.combine_to_frame",
+         "menu.tex.flowframe.combine_to_frame.tooltip"));
 
       // Typeblock Alignment sub menu
 
@@ -5093,6 +5107,37 @@ public class JDRCanvas extends JPanel
 
       ce.end();
       if (edit != null) frame_.postEdit(ce);
+   }
+
+   public void combineSelectedToFrame()
+   {
+      FlowFrame typeblock = paths.getFlowFrame();
+
+      if (typeblock == null)
+      {
+         getResources().error(this, getResources().getMessage("error.no_typeblock"));
+         return;
+      }
+
+      Vector<JDRText> selected = new Vector<JDRText>();
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected() && object instanceof JDRText)
+         {
+            selected.add((JDRText)object);
+         }
+      }
+
+      if (!selected.isEmpty())
+      {
+         CombineTextToFrame edit = new CombineTextToFrame(selected);
+         frame_.postEdit(edit);
+
+         getApplication().displaySetFrameDialog(frame_, edit.getNewObject());
+      }
    }
 
    protected void setSelectedLineWidth(JDRLength lineWidth)
@@ -12301,8 +12346,8 @@ public class JDRCanvas extends JPanel
    {
       paths = new JDRGroup(getCanvasGraphics());
       String filename = getResources().getMessage("label.untitled");
-      count++;
-      if (count > 1) filename += count;
+      canvasCount++;
+      if (canvasCount > 1) filename += canvasCount;
       frame_.setDefaultName(filename);
       frame_.setNewImageState(true);
    }
@@ -14031,6 +14076,193 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return getResources().getMessage("undo.path_union");
+      }
+   }
+
+   class CombineTextToFrame extends CanvasUndoableEdit
+   {
+      private int newObjectIndex_=0;
+      private Vector<JDRText> list_;
+      private JDRPath newObject_;
+      private int[] indices;
+      private int n;
+
+      public CombineTextToFrame(Vector<JDRText> list)
+      {
+         super(getFrame());
+
+         // list should be sorted before passed to here
+         list_  = list;
+         n      = list.size();
+
+         indices = new int[n];
+
+         for (int i = 0; i < n; i++)
+         {
+            indices[i] = list.get(i).getIndex();
+         }
+
+         Arrays.sort(indices);
+
+         newObjectIndex_ = indices[0];
+
+         CanvasGraphics cg = getCanvasGraphics();
+         BBox box = null;
+         StringBuilder builder = new StringBuilder();
+
+         LaTeXFont firstFont = null;
+
+         for (int i = 0; i < n; i++)
+         {
+            JDRText object = list_.get(i);
+
+            String decls = "";
+
+            LaTeXFont lf = object.getLaTeXFont();
+
+            if (firstFont == null)
+            {
+               firstFont = lf;
+            }
+            else
+            {
+               String family = lf.getFamily();
+               String weight = lf.getWeight();
+               String shape = lf.getShape();
+               String size = lf.getSize();
+
+               if (!family.equals(firstFont.getFamily()))
+               {
+                  decls = LaTeXFont.tex(family);
+               }
+
+               if (!weight.equals(firstFont.getWeight()))
+               {
+                  decls += LaTeXFont.tex(weight);
+               }
+
+               if (!shape.equals(firstFont.getShape()))
+               {
+                  decls += LaTeXFont.tex(shape);
+               }
+
+               if (!size.equals(firstFont.getSize()))
+               {
+                  decls += LaTeXFont.tex(size);
+               }
+            }
+
+            String latexText = object.getLaTeXText();
+
+            if (latexText == null || latexText.isEmpty())
+            {
+               latexText = object.getText();
+            }
+
+            if (i > 0)
+            {
+               builder.append(String.format("%n"));
+            }
+
+            if (decls.isEmpty())
+            {
+               builder.append(latexText);
+            }
+            else
+            {
+               builder.append('{');
+               builder.append(decls);
+               builder.append(latexText);
+               builder.append('}');
+            }
+
+            if (box == null)
+            {
+               box = object.getBpBBox();
+            }
+            else
+            {
+               object.mergeBpBBox(box);
+            }
+         }
+
+         newObject_ = JDRPath.constructRectangle(cg,
+           box.getMinX(), box.getMinY(),
+           box.getMaxX(), box.getMaxY());
+
+         newObject_.setStroke(new JDRBasicStroke(cg));
+         newObject_.setLinePaint(new JDRColor(cg));
+         newObject_.setFillPaint(new JDRTransparent(cg));
+
+         for (int i = n-1; i >= 0; i--)
+         {
+            paths.remove(indices[i]);
+         }
+
+         paths.add(newObjectIndex_, newObject_);
+         newObject_.setSelected(true);
+
+         autoGeneratedFlowFrameCount++;
+
+         FlowFrame flowframe = new FlowFrame(cg, FlowFrame.DYNAMIC, false,
+           "merged"+autoGeneratedFlowFrameCount, "all");
+
+         flowframe.setContents(builder.toString());
+         flowframe.setStyleCommands(firstFont.tex());
+
+         newObject_.setFlowFrame(flowframe);
+
+         enableTools();
+
+         box.translate(-cg.getBpOriginX(), -cg.getBpOriginY());
+
+         setRefreshBounds(box);
+      }
+
+      public JDRPath getNewObject()
+      {
+         return newObject_;
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+
+         paths.remove(newObjectIndex_);
+
+         for (int i = 0; i < n; i++)
+         {
+            JDRText object = (JDRText)list_.get(i);
+            paths.add(indices[i], object);
+         }
+
+         enableTools();
+
+         repaintRegion();
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+
+         for (int i = n-1; i >= 0; i--)
+         {
+            paths.remove(indices[i]);
+         }
+
+         paths.add(newObjectIndex_, newObject_);
+
+         enableTools();
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.combine_to_frame");
       }
    }
 
@@ -20322,7 +20554,7 @@ public class JDRCanvas extends JPanel
       anchor=null;
       editedSegmentDash=null;
       scanshape=null;
-      count = 0;
+      canvasCount = 0;
       selectedIndex=-1;
       dragScaleIndex=-1;
       dragScaleHotspot=BBox.HOTSPOT_NONE;
@@ -20426,7 +20658,9 @@ public class JDRCanvas extends JPanel
 
    private Parshape scanshape;
 
-   private static int count=0;
+   private static int canvasCount=0;
+
+   private static int autoGeneratedFlowFrameCount=0;
 
    private JDRFrame frame_;
 
