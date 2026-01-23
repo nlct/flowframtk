@@ -163,6 +163,23 @@ public class JDRLength implements Serializable,Cloneable
       value -= unit.fromUnit(otherValue, otherUnit);
    }
 
+   public void multiply(JDRLength other)
+   {
+      multiply(other.value, other.unit);
+   }
+
+   public void multiply(double otherValue, JDRUnit otherUnit)
+   {
+      if (unit.getID() == otherUnit.getID())
+      {
+         value *= otherValue;
+      }
+      else
+      {
+         value *= unit.fromUnit(otherValue, otherUnit);
+      }
+   }
+
    public static JDRLength parse(JDRMessageDictionary msgSys, String text)
      throws InvalidValueException
    {
