@@ -73,12 +73,12 @@ public abstract class SVGAbstractElement implements Cloneable
 
       if (widthAttr != null)
       {
-         elementWidth = widthAttr.doubleValue(this);
+         elementWidth = widthAttr.doubleValue(this);// storageValue
       }
 
       if (heightAttr != null)
       {
-         elementHeight = heightAttr.doubleValue(this);
+         elementHeight = heightAttr.doubleValue(this);// storageValue
       }
 
       SVGLengthAttribute[] viewBox = getLengthArrayAttribute("viewBox");
@@ -434,6 +434,7 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public abstract void setTitle(String text);
 
+   // storage units
    public Rectangle2D getViewportBounds()
    {
       if (viewBoxBounds == null)
@@ -450,6 +451,7 @@ public abstract class SVGAbstractElement implements Cloneable
     * Gets the viewport width in terms of the storage unit.
     * @return the viewport width (storage unit) or 0 if not set
     */ 
+   // storage units
    public double getViewportWidth()
    {
       if (viewBoxBounds != null)
@@ -466,6 +468,7 @@ public abstract class SVGAbstractElement implements Cloneable
       }
    }
 
+   // storage units
    public double getElementWidth()
    {
       if (elementWidth == 0)
@@ -498,6 +501,7 @@ public abstract class SVGAbstractElement implements Cloneable
       }
    }
 
+   // storage units
    public double getElementHeight()
    {
       if (elementHeight == 0)

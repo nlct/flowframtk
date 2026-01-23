@@ -80,8 +80,8 @@ public class SVGImageElement extends SVGAbstractElement
       SVGLengthAttribute xAttr = getLengthAttribute("x", false);
       SVGLengthAttribute yAttr = getLengthAttribute("y", false);
 
-      x = (xAttr == null ? 0 : xAttr.getStorageValue(this, true));
-      y = (yAttr == null ? 0 : yAttr.getStorageValue(this, false));
+      x = (xAttr == null ? 0 : xAttr.doubleValue(this));
+      y = (yAttr == null ? 0 : yAttr.doubleValue(this));
    }
 
    @Override
@@ -132,11 +132,11 @@ public class SVGImageElement extends SVGAbstractElement
 
          if (elementWidth > 0)
          {
-            double bpW = handler.getDefaultUnit().toBp(elementWidth);
+            double bpW = handler.getStorageUnit().toBp(elementWidth);
 
             if (elementHeight > 0)
             {
-               double bpH = handler.getDefaultUnit().toBp(elementHeight);
+               double bpH = handler.getStorageUnit().toBp(elementHeight);
 
                if (icW == (int)Math.round(bpW) && icH == (int)Math.round(bpH))
                {
@@ -158,7 +158,7 @@ public class SVGImageElement extends SVGAbstractElement
          }
          else
          {
-            double bpH = handler.getDefaultUnit().toBp(elementHeight);
+            double bpH = handler.getStorageUnit().toBp(elementHeight);
             double scaleY = bpH/icH;
             bitmap.scaleY(scaleY);
          }
