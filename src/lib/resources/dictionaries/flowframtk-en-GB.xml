@@ -113,6 +113,8 @@
 <entry key="arrow.indep_centred_rectangle2_open">Indep Centred Rectangle2 Open</entry>
 <entry key="arrow.indep_centred_ellipse2_filled">Indep Centred Ellipse2 Filled</entry>
 <entry key="arrow.indep_centred_ellipse2_open">Indep Centred Ellipse2 Open</entry>
+<entry key="arrow.indep_centred_diamond2_filled">Indep Centred Diamond2 Filled</entry>
+<entry key="arrow.indep_centred_diamond2_open">Indep Centred Diamond2 Open</entry>
 
 <!--  text colour selector -->
 <entry key="textpaintselector.title">Set Text Colour</entry>

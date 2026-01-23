@@ -1246,6 +1246,16 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
+         case ARROW_INDEP_CENTRED_DIAMOND2_FILLED:
+            marker = new ArrowIndepCentredDiamond2Filled(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
+         case ARROW_INDEP_CENTRED_DIAMOND2_OPEN:
+            marker = new ArrowIndepCentredDiamond2Open(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
          case ARROW_CIRCLE :
             marker = new ArrowCircle(penwidth, repeat, isReversed,
                arrowSize);
@@ -3510,10 +3520,22 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
    public static final int ARROW_INDEP_CENTRED_ELLIPSE2_OPEN=100;
 
    /**
+    * Filled Independent Centred Diamond2.
+    * (JDR/AJR file formats version 2.2 onwards.)
+    */
+   public static final int ARROW_INDEP_CENTRED_DIAMOND2_FILLED=101;
+
+   /**
+    * Open Independent Centred Diamond2.
+    * (JDR/AJR file formats version 2.2 onwards.)
+    */
+   public static final int ARROW_INDEP_CENTRED_DIAMOND2_OPEN=102;
+
+   /**
     * Maximum number of known markers for AJR and JDR file
     * versions 2.2 onwards
     */
-   public static final int NUM_ARROWS2_2=101;
+   public static final int NUM_ARROWS2_2=103;
 
    /**
     * Maximum number of known markers for AJR and JDR file
