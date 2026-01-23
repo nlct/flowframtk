@@ -208,11 +208,11 @@ public class SVGTextElement extends SVGAbstractElement
             numChars = text.length();
          }
 
-         JDRText textArea = createTextArea(text);
+         text = text.trim();
 
-         if (!text.trim().isEmpty())
+         if (!text.isEmpty())
          {
-            objects.add(textArea);
+            objects.add(createTextArea(text));
          }
 
          currentListIndex++;

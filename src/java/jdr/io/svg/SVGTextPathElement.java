@@ -122,7 +122,7 @@ public class SVGTextPathElement extends SVGTextElement
    @Override
    public void endElement() throws InvalidFormatException
    {
-      String text = getContents();
+      String text = getContents().trim();
 
       if (textElement == null || text.isEmpty()) return;
 
