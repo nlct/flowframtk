@@ -66,6 +66,11 @@ public class SVGForeignObjectElement extends SVGAbstractElement
          viewBoxBounds = new Rectangle2D.Double(x, y,
            getElementWidth(), getElementHeight());
       }
+
+
+      template = new JDRText(getCanvasGraphics(),
+        handler.createDefaultFont(), "");
+      applyTextAttributes(template);
    }
 
    @Override
@@ -103,7 +108,6 @@ public class SVGForeignObjectElement extends SVGAbstractElement
 
       boolean border = true;
       int frameType = (containsVerb ? FlowFrame.STATIC : FlowFrame.DYNAMIC);
-
 
       if (lastObj == null || lastObj.getFlowFrame() != null)
       {
@@ -143,7 +147,28 @@ public class SVGForeignObjectElement extends SVGAbstractElement
 
       obj.setFlowFrame(flowframe);
 
-      flowframe.setContents(contents.toString());
+      JDRFont jdrFont = template.getJDRFont();
+      LaTeXFontBase lfb = cg.getLaTeXFontBase();
+      LaTeXFont lfont = LaTeXFont.createFor(lfb, jdrFont);
+
+      String styleCmds = lfont.tex();
+
+      JDRPaint paint = template.getTextPaint();
+
+      if (!paint.isBlack())
+      {
+         styleCmds = paint.pgf(null) + styleCmds;
+      }
+
+      if (frameType == FlowFrame.DYNAMIC)
+      {
+         flowframe.setStyleCommands(styleCmds);
+         flowframe.setContents(contents.toString());
+      }
+      else
+      {
+         flowframe.setContents(styleCmds + contents.toString());
+      }
 
       if (border)
       {
@@ -366,6 +391,7 @@ public class SVGForeignObjectElement extends SVGAbstractElement
    Mode currentMode = Mode.NORMAL;
 
    boolean containsVerb;
+   JDRText template;
 
    static int frameCount;
 }
