@@ -5,7 +5,7 @@
 //               http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2006-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 package com.dickimawbooks.jdr.io;
 
 import java.text.MessageFormat;
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 
 /**
  * Default message system. This just prints messages to STDOUT and
@@ -35,7 +36,32 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 {
    public JDRDefaultMessage()
    {
+      this(null);
+   }
+
+   public JDRDefaultMessage(TeXJavaHelpLib helpLib)
+   {
       publisher = this;
+      helpLib = helpLib;
+
+      appVersion = "??";
+
+      if (helpLib == null)
+      {
+         appName = "jdr/io";
+      }
+      else
+      {
+         appName = helpLib.getApplicationName();
+      }
+   }
+
+   public JDRDefaultMessage(TeXJavaHelpLib helpLib, String appName, String appVersion)
+   {
+      publisher = this;
+      helpLib = helpLib;
+      this.appName = appName;
+      this.appVersion = appVersion;
    }
 
    @Override
@@ -177,7 +203,11 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (eolRequired)
       {
-         System.out.println();
+         if (helpLib == null)
+         {
+            System.out.println();
+         }
+
          eolRequired = false;
       }
    }
@@ -259,7 +289,14 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
       if (showMessages && !suspended)
       {
-         System.out.print(messageText);
+         if (helpLib == null)
+         {
+            System.out.print(messageText);
+         }
+         else
+         {
+            helpLib.message(messageText);
+         }
       }
    }
 
@@ -269,7 +306,14 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
       if (showMessages && !suspended)
       {
-         System.out.print(excp.getLocalizedMessage());
+         if (helpLib == null)
+         {
+            System.out.print(excp.getLocalizedMessage());
+         }
+         else
+         {
+            helpLib.message(excp.getLocalizedMessage());
+         }
       }
    }
 
@@ -279,7 +323,14 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
       if (showMessages && !suspended)
       {
-         System.out.println(messageText);
+         if (helpLib == null)
+         {
+            System.out.println(messageText);
+         }
+         else
+         {
+            helpLib.message(messageText);
+         }
       }
    }
 
@@ -289,15 +340,32 @@ public class JDRDefaultMessage extends JDRMessagePublisher
 
       if (showMessages && !suspended)
       {
-         System.out.println(excp.getLocalizedMessage());
+         if (helpLib == null)
+         {
+            System.out.println(excp.getLocalizedMessage());
+         }
+         else
+         {
+            helpLib.message(excp.getLocalizedMessage());
+         }
       }
    }
 
    public void warningnoln(String messageText)
    {
       clearEol();
-      System.err.print(
-        getMessageWithFallback("warning.tag", "Warning: {0}", messageText));
+
+      String warnMsg = 
+        getMessageWithFallback("warning.tag", "Warning: {0}", messageText);
+
+      if (helpLib == null)
+      {
+         System.err.print(warnMsg);
+      }
+      else
+      {
+         helpLib.warning(warnMsg);
+      }
    }
 
    public void warningnoln(Throwable cause)
@@ -309,8 +377,18 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public void warning(String messageText)
    {
       clearEol();
-      System.err.println(
-        getMessageWithFallback("warning.tag", "Warning: {0}", messageText));
+
+      String warnMsg = 
+        getMessageWithFallback("warning.tag", "Warning: {0}", messageText);
+
+      if (helpLib == null)
+      {
+         System.err.println(warnMsg);
+      }
+      else
+      {
+         helpLib.warning(warnMsg);
+      }
    }
 
    public void warning(Throwable cause)
@@ -322,8 +400,18 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public void errornoln(String messageText)
    {
       clearEol();
-      System.err.print(
-        getMessageWithFallback("error.tag", "Error: {0}", messageText));
+
+      String errMsg = 
+        getMessageWithFallback("error.tag", "Error: {0}", messageText);
+
+      if (helpLib == null)
+      {
+         System.err.print(errMsg);
+      }
+      else
+      {
+         helpLib.error(errMsg);
+      }
    }
 
    public void errornoln(Throwable cause)
@@ -335,8 +423,18 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public void error(String messageText)
    {
       clearEol();
-      System.err.println(
-        getMessageWithFallback("error.tag", "Error: {0}", messageText));
+
+      String errMsg = 
+        getMessageWithFallback("error.tag", "Error: {0}", messageText);
+
+      if (helpLib == null)
+      {
+         System.err.println(errMsg);
+      }
+      else
+      {
+         helpLib.error(errMsg);
+      }
    }
 
    public void error(Throwable cause)
@@ -348,9 +446,18 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public void internalerror(String messageText)
    {
       clearEol();
-      System.err.println(
-       getMessageWithFallback("internal_error.tag",
-         "Internal error: {0}", messageText));
+
+      String msg = getMessageWithFallback("internal_error.tag",
+         "Internal error: {0}", messageText);
+
+      if (helpLib == null)
+      {
+         System.err.println(msg);
+      }
+      else
+      {
+         helpLib.error(msg);
+      }
    }
 
    public void internalerror(Throwable cause)
@@ -362,8 +469,17 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public void fatalerror(String messageText)
    {
       clearEol();
-      System.err.println(
-        getMessageWithFallback("error.fatal.tag", "Fatal error: {0}", messageText));
+
+      String errMsg = getMessageWithFallback("error.fatal.tag", "Fatal error: {0}", messageText);
+
+      if (helpLib == null)
+      {
+         System.err.println(errMsg);
+      }
+      else
+      {
+         helpLib.error(errMsg);
+      }
    }
 
    public void fatalerror(Throwable cause)
@@ -399,8 +515,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (level <= verbosity)
       {
-         clearEol();
-         System.out.print(msg);
+         message(msg);
       }
    }
 
@@ -408,8 +523,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    {
       if (level <= verbosity)
       {
-         clearEol();
-         System.out.println(msg);
+         messageln(msg);
       }
    }
 
@@ -424,7 +538,11 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    public String getMessageWithFallback(String label, String altFormat, 
      Object... params)
    {
-      if (altFormat != null)
+      if (helpLib != null)
+      {
+         return helpLib.getMessageWithFallback(label, altFormat, params);
+      }
+      else if (altFormat != null)
       {
          return MessageFormat.format(altFormat, params);
       }
@@ -497,13 +615,13 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    @Override
    public String getApplicationName()
    {
-      return "jdr/io";
+      return appName;
    }
 
    @Override
    public String getApplicationVersion()
    {
-      return "??";
+      return appVersion;
    }
 
    private int progressMax=100;
@@ -518,4 +636,7 @@ public class JDRDefaultMessage extends JDRMessagePublisher
    private int debugVerbosityThreshold = 2;
 
    private MessageInfoPublisher publisher;
+   TeXJavaHelpLib helpLib;
+
+   String appName, appVersion;
 }
