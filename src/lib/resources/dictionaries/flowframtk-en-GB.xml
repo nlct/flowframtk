@@ -117,6 +117,8 @@
 <entry key="arrow.indep_centred_diamond2_open">Indep Centred Diamond2 Open</entry>
 <entry key="arrow.indep_centred_triangleup2_filled">Indep Centered TriangleUp2 Filled</entry>
 <entry key="arrow.indep_centred_triangleup2_open">Indep Centered TriangleUp2 Open</entry>
+<entry key="arrow.indep_centred_triangledown2_filled">Indep Centred TriangleDown2 Filled</entry>
+<entry key="arrow.indep_centred_triangledown2_open">Indep Centred TriangleDown2 Open</entry>
 
 <!--  text colour selector -->
 <entry key="textpaintselector.title">Set Text Colour</entry>
