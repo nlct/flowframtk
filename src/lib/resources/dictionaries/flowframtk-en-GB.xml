@@ -105,6 +105,11 @@
 <entry key="arrow.colour.dependent">Colour As Path</entry>
 <entry key="arrow.colour.independent">Specific Colour</entry>
 
+<!-- marker types -->
+
+<entry key="arrow.indep_centred_triangle2_filled">Indep Centred Triangle2 Filled</entry>
+<entry key="arrow.indep_centred_triangle2_open">Indep Centred Triangle2 Open</entry>
+
 <!--  text colour selector -->
 <entry key="textpaintselector.title">Set Text Colour</entry>
 <entry key="textpaintselector.tab">Text Colour</entry>

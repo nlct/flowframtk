@@ -1182,7 +1182,13 @@ public class MarkerPanel extends JPanel
          new MarkerItem(getResources(), JDRMarker.ARROW_SEMICIRCLE_FILLED,
             getResources().getMessage("arrow.semicircle_filled")),
          new MarkerItem(getResources(), JDRMarker.ARROW_SEMICIRCLE_OPEN,
-            getResources().getMessage("arrow.semicircle_open"))
+            getResources().getMessage("arrow.semicircle_open")),
+         new MarkerItem(getResources(),
+            JDRMarker.ARROW_INDEP_CENTRED_TRIANGLE2_FILLED,
+            getResources().getMessage("arrow.indep_centred_triangle2_filled")),
+         new MarkerItem(getResources(),
+            JDRMarker.ARROW_INDEP_CENTRED_TRIANGLE2_OPEN,
+            getResources().getMessage("arrow.indep_centred_triangle2_open"))
       };
 
       capStyles = new MarkerItem[]

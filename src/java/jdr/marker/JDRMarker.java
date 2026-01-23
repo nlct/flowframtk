@@ -1216,6 +1216,16 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
+         case ARROW_INDEP_CENTRED_TRIANGLE2_FILLED:
+            marker = new ArrowIndepCentredTriangle2Filled(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
+         case ARROW_INDEP_CENTRED_TRIANGLE2_OPEN:
+            marker = new ArrowIndepCentredTriangle2Open(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
          case ARROW_CIRCLE :
             marker = new ArrowCircle(penwidth, repeat, isReversed,
                arrowSize);
@@ -1912,9 +1922,13 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
          {
             maxType = NUM_ARROWS1_6;
          }
-         else
+         else if (version < 2.2f)
          {
             maxType = NUM_ARROWS2_1;
+         }
+         else
+         {
+            maxType = NUM_ARROWS2_2;
          }
 
          int arrowType = (int)jdr.readByte(
@@ -2799,7 +2813,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     */
    public static int maxMarkers()
    {
-      return NUM_ARROWS2_1;
+      return NUM_ARROWS2_2;
    }
 
    /**
@@ -3437,6 +3451,25 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * (JDR/AJR file formats version 2.1 onwards.)
     */
    public static final int ARROW_STEALTH2=94;
+
+   /**
+    * Filled Independent Centred Triangle2. As independent triangle2 but
+    * centre on vertex.
+    * (JDR/AJR file formats version 2.2 onwards.)
+    */
+   public static final int ARROW_INDEP_CENTRED_TRIANGLE2_FILLED=95;
+
+   /**
+    * Open Independent Centred Triangle2.
+    * (JDR/AJR file formats version 2.2 onwards.)
+    */
+   public static final int ARROW_INDEP_CENTRED_TRIANGLE2_OPEN=96;
+
+   /**
+    * Maximum number of known markers for AJR and JDR file
+    * versions 2.2 onwards
+    */
+   public static final int NUM_ARROWS2_2=96;
 
    /**
     * Maximum number of known markers for AJR and JDR file

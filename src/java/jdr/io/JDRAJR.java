@@ -1288,10 +1288,10 @@ public abstract class JDRAJR
    public static final float CURRENT_VERSION = 2.1f;// latest stable version
 
    public static final float[] VALID_VERSIONS
-    = {1.0f, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2.0f, 2.1f};
+    = {1.0f, 1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2.0f, 2.1f, 2.2f};
 
    public static final String[] VALID_VERSIONS_STRING
-    = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0", "2.1"};
+    = {"1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0", "2.1", "2.2"};
 
    /**
     * No canvas settings saved in JDR file.
