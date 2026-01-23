@@ -70,18 +70,39 @@ public class ImportDialog extends JDialog
       JLabelGroup labelGrp = new JLabelGroup();
 
       JComponent mainComp = Box.createVerticalBox();
-      getContentPane().add(mainComp, "Center");
+      getContentPane().add(new JScrollPane(mainComp), "Center");
+
+      useMappingsButton = resources.createAppCheckBox("import", "use_mappings",
+         true, null);
+      mainComp.add(useMappingsButton);
 
       row = createRow();
       mainComp.add(row);
 
-      useMappingsButton = resources.createAppCheckBox("import", "use_mappings",
-         true, null);
-      row.add(useMappingsButton);
-
       checkMathsButton = resources.createAppCheckBox("import", "check_maths",
          true, null);
       row.add(checkMathsButton);
+
+      checkMathsButton.addItemListener(this);
+
+      cssClassesComp = new JPanel();
+      row.add(cssClassesComp);
+
+      cssClassesComp.add(resources.createButtonSpacer());
+
+      onlyCssClassesBox = resources.createAppCheckBox("import",
+        "check_maths_css_classes", false, null);
+      onlyCssClassesBox.addItemListener(this);
+
+      cssClassesComp.add(onlyCssClassesBox);
+
+      cssClassesComp.add(resources.createLabelSpacer());
+
+      cssClassesField = new JTextField(20);
+      cssClassesComp.add(cssClassesField);
+      cssClassesField.setEnabled(false);
+
+      resources.clampCompMaxHeight(cssClassesComp, 0, 0);
 
       markerComp = createRow();
       mainComp.add(markerComp);
@@ -155,6 +176,8 @@ public class ImportDialog extends JDialog
       rememberBox.setAlignmentX(0f);
       mainComp.add(rememberBox);
 
+      mainComp.add(Box.createVerticalGlue());
+
       JComponent buttonComp = new JPanel();
       getContentPane().add(buttonComp, "South");
 
@@ -206,6 +229,17 @@ public class ImportDialog extends JDialog
 
       extractBitmapsButton.setSelected(importSettings.extractBitmaps);
       useMappingsButton.setSelected(importSettings.useMappings);
+
+      if (importSettings.hasMathsCssClasses())
+      {
+         onlyCssClassesBox.setSelected(true);
+         cssClassesField.setText(String.join(" ", importSettings.mathsCssClasses));
+      }
+      else
+      {
+         onlyCssClassesBox.setSelected(false);
+      }
+
       checkMathsButton.setSelected(importSettings.parseMaths);
 
       update((File)null);
@@ -287,6 +321,7 @@ public class ImportDialog extends JDialog
 
       boolean isSVG = (type == ImportSettings.Type.SVG);
 
+      cssClassesComp.setVisible(isSVG && checkMathsButton.isSelected());
       markerComp.setVisible(isSVG);
       paperComp.setVisible(isSVG);
 
@@ -357,6 +392,19 @@ public class ImportDialog extends JDialog
          bitmapComp.setVisible(
           extractBitmapsButton.isVisible() && extractBitmapsButton.isSelected());
       }
+      else if (src == onlyCssClassesBox)
+      {
+         cssClassesField.setEnabled(onlyCssClassesBox.isSelected());
+
+         if (cssClassesField.isEnabled())
+         {
+            cssClassesField.requestFocusInWindow();
+         }
+      }
+      else if (src == checkMathsButton)
+      {
+         cssClassesComp.setVisible(checkMathsButton.isSelected());
+      }
    }
 
    protected void okay()
@@ -378,6 +426,28 @@ public class ImportDialog extends JDialog
 
       importSettings.useMappings = useMappingsButton.isSelected();
       importSettings.parseMaths = checkMathsButton.isSelected();
+
+      if (cssClassesComp.isVisible())
+      {
+         if (onlyCssClassesBox.isSelected())
+         {
+            String str = cssClassesField.getText().trim();
+
+            if (str.isEmpty())
+            {
+               importSettings.mathsCssClasses = null;
+            }
+            else
+            {
+               importSettings.mathsCssClasses = str.split("\\s+|\\s*,\\s*");
+            }
+         }
+         else
+         {
+            importSettings.mathsCssClasses = null;
+         }
+      }
+
       importSettings.extractBitmaps =
        extractBitmapsButton.isVisible() && extractBitmapsButton.isSelected();
 
@@ -435,6 +505,10 @@ public class ImportDialog extends JDialog
 
    ImportSettings importSettings;
    FlowframTk application;
+
+   JComponent cssClassesComp;
+   JCheckBox onlyCssClassesBox;
+   JTextField cssClassesField;
 
    JCheckBox useMappingsButton, checkMathsButton;
    JCheckBox extractBitmapsButton;

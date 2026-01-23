@@ -2743,6 +2743,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="import.check_maths.mnemonic">K</entry>
 <entry key="import.check_maths.initvalue">true</entry>
 
+<entry key="import.check_maths_css_classes">Only in CSS classes:</entry>
+<entry key="import.check_maths_css_classes.mnemonic">Y</entry>
+<entry key="import.check_maths_css_classes.tooltip">Only check elements with or within any in the list of css class names</entry>
+
 <entry key="import.extract_bitmaps">Extract any embedded bitmaps</entry>
 <entry key="import.extract_bitmaps.mnemonic">B</entry>
 <entry key="import.extract_bitmaps.initvalue">false</entry>
