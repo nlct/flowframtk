@@ -2041,7 +2041,9 @@ public class JDRFrame extends JInternalFrame
       {
          Cursor cursor = Cursor.getDefaultCursor();
          setCursor(cursor);
-         canvas.setToolCursor(currentTool());
+         int tool = currentTool();
+         canvas.setToolCursor(tool);
+         application_.setTool(tool);
       }
    }
 
