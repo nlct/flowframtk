@@ -250,10 +250,11 @@ public abstract class JDRAJR
       objectLoader.save(this, allObjects);
    }
 
-   public static String getFileFormat(File file)
+   public static String getFileFormat(CanvasGraphics cg, File file)
      throws IOException,InvalidFormatException
    {
       AJR ajr = new AJR();
+      ajr.setCanvasGraphics(cg);
       ajr.currentIn = null;
 
       try
@@ -263,7 +264,7 @@ public abstract class JDRAJR
 
          if (string.equals("AJR"))
          {
-            return "AJR "+ajr.readWord();
+            return "AJR "+ajr.readFormatVersion(true);
          }
       }
       catch (InvalidFormatException e)
@@ -278,6 +279,7 @@ public abstract class JDRAJR
       }
 
       JDR jdr = new JDR();
+      jdr.setCanvasGraphics(cg);
       jdr.currentIn = null;
 
       try

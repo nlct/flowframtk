@@ -165,25 +165,35 @@ public class AJR extends JDRAJR
       return image;
    }
 
+   @Override
    protected String readFormatVersion()
+     throws InvalidFormatException
+   {
+      return readFormatVersion(false);
+   }
+
+   protected String readFormatVersion(boolean prefixAlreadyFound)
      throws InvalidFormatException
    {
       String word;
 
-      try
+      if (!prefixAlreadyFound)
       {
-         word = readWord();
-      }
-      catch (Exception e)
-      {
-         throw new InvalidValueException(
-            InvalidFormatException.PARSE_FORMAT, this, e);
-      }
+         try
+         {
+            word = readWord();
+         }
+         catch (Exception e)
+         {
+            throw new InvalidValueException(
+               InvalidFormatException.PARSE_FORMAT, this, e);
+         }
 
-      if (!word.equals("AJR"))
-      {
-         throw new InvalidValueException(
-           InvalidFormatException.FORMAT_TAG, word, this);
+         if (!word.equals("AJR"))
+         {
+            throw new InvalidValueException(
+              InvalidFormatException.FORMAT_TAG, word, this);
+         }
       }
 
       try

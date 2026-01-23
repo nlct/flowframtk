@@ -309,19 +309,21 @@ public class JdrInfo implements FileFilter
       if (!file.exists())
       {
          throw new FileNotFoundException(
-           getMessage("error.io.file_not_found", file));
+           getMessageWithFallback(
+            "error.io.file_not_found", "File not found: {0}", file));
       }
 
       try
       {
-         String fileFormat = JDRAJR.getFileFormat(file);
+         String fileFormat = JDRAJR.getFileFormat(canvasGraphics, file);
 
          System.out.println(file.toString()+": "+fileFormat);
       }
       catch (InvalidFormatException e)
       {
          System.err.format("jdrinfo: %s%n",
-           getMessage("error.not_jdr_or_ajr", file));
+           getMessageWithFallback(
+             "error.not_jdr_or_ajr", "Not a JDR or AJR file: {0}", file));
 
          setExitCode(TeXJavaHelpLibAppAdapter.EXIT_RUNTIME);
       }
@@ -329,6 +331,10 @@ public class JdrInfo implements FileFilter
 
    protected void run() throws IOException
    {
+      canvasGraphics = new CanvasGraphics(
+         new JDRDefaultMessage(helpLib, NAME, JDRResources.APP_VERSION)
+       );
+
       for (int i = 0; i < inFileNames.size(); i++)
       {
          File file = new File(inFileNames.get(i));
@@ -347,17 +353,6 @@ public class JdrInfo implements FileFilter
             checkFile(file);
          }
       }
-   }
-
-   /**
-    * Prints version information to STDERR.
-    */
-   public static void appVersion()
-   {
-      System.err.println("jdrinfo 1.0");
-      System.err.println("Copyright (C) 2014 Nicola L C Talbot");
-      System.err.println("This is free software distributed under the GNU General Public License.");
-      System.err.println("There is NO WARRANTY. See accompanying licence file for details.");
    }
 
    private void parseArgs(String[] args) throws InvalidSyntaxException
@@ -474,7 +469,9 @@ public class JdrInfo implements FileFilter
       if (inFileNames.isEmpty())
       {
          throw new InvalidSyntaxException(
-            getMessage("error.syntax.missing_in"));
+            getMessageWithFallback(
+              "error.syntax.missing_in", "Missing input file. (Use {0} for help.)",
+              "--help"));
       }
    }
 
@@ -511,6 +508,7 @@ public class JdrInfo implements FileFilter
    private TeXJavaHelpLib helpLib;
    private TeXJavaHelpLibAppAdapter helpLibApp;
    private HelpSetLocale helpSetLocale;
+   private CanvasGraphics canvasGraphics;
 
    public static final String NAME = "jdrinfo";
 }
