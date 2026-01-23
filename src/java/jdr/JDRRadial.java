@@ -107,6 +107,12 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       return startColor.getColor();
    }
 
+   @Override
+   public boolean isBlack()
+   {
+      return startColor.isBlack() && endColor.isBlack();
+   }
+
    public JDRPaint average(JDRPaint paint)
    {
       JDRRadial radial;

@@ -42,7 +42,7 @@ public class JDRGray extends JDRPaint implements Serializable
    /**
     * Creates a new grey.
     * The transparency is set to 1 (opaque).
-    * The grey value must be in the range 0-1, inclusive.
+    * The grey value must be in the range 0 (black) to 1 (white), inclusive.
     * @param g grey scale
     */
    public JDRGray(CanvasGraphics cg, double g)
@@ -134,6 +134,12 @@ public class JDRGray extends JDRPaint implements Serializable
    {
       float val = (float)gray;
       return new Color(val,val,val,(float)alpha);
+   }
+
+   @Override
+   public boolean isBlack()
+   {
+      return gray == 0.0 && alpha == 1.0;
    }
 
    public String toString()

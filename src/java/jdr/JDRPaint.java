@@ -53,6 +53,11 @@ public abstract class JDRPaint implements Serializable
     */
    public abstract Color getColor();
 
+   public boolean isBlack()
+   {
+      return Color.BLACK.equals(getColor());
+   }
+
    /**
     * Gets the <code>java.awt.Paint</code> equivalent.
     * @param box the bounding box of the object to which this

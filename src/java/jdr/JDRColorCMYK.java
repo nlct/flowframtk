@@ -175,6 +175,13 @@ public class JDRColorCMYK extends JDRPaint implements Serializable
       return new Color((float)red, (float)green, (float)blue, (float)alpha);
    }
 
+   @Override
+   public boolean isBlack()
+   {
+      return key == 1.0 && cyan == 0.0 && magenta == 0.0 && yellow == 0.0
+             && alpha == 1.0;
+   }
+
    public String toString()
    {
       return new String("JDRColorCMYK@"+"C:" +cyan+"M:" +magenta+"Y:"

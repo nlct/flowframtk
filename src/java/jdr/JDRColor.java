@@ -205,6 +205,13 @@ public class JDRColor extends JDRPaint implements Serializable
       return new Color((float)red,(float)green,(float)blue,(float)alpha);
    }
 
+   @Override
+   public boolean isBlack()
+   {
+      return red == 0.0 && green == 0.0 && blue == 0.0
+             && alpha == 1.0;
+   }
+
    public String toString()
    {
       return new String("JDRColor@"+"R:" +red+"G:" +green+"B:"

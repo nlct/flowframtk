@@ -91,6 +91,12 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       return startColor.getColor();
    }
 
+   @Override
+   public boolean isBlack()
+   {
+      return startColor.isBlack() && endColor.isBlack();
+   }
+
    public JDRPaint average(JDRPaint paint)
    {
       JDRGradient gradient;
