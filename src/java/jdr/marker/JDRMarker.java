@@ -1256,6 +1256,16 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
               isReversed, arrowSize, 
               arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
             break;
+         case ARROW_INDEP_CENTRED_TRIANGLEUP2_FILLED:
+            marker = new ArrowIndepCentredTriangleUp2Filled(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
+         case ARROW_INDEP_CENTRED_TRIANGLEUP2_OPEN:
+            marker = new ArrowIndepCentredTriangleUp2Open(penwidth, repeat,
+              isReversed, arrowSize, 
+              arrowWidth == null ? (JDRLength)arrowSize.clone() : arrowWidth);
+            break;
          case ARROW_CIRCLE :
             marker = new ArrowCircle(penwidth, repeat, isReversed,
                arrowSize);
@@ -3532,10 +3542,22 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
    public static final int ARROW_INDEP_CENTRED_DIAMOND2_OPEN=102;
 
    /**
+    * Filled Independent Centred TriangleUp2.
+    * (JDR/AJR file formats version 2.2 onwards.)
+    */
+   public static final int ARROW_INDEP_CENTRED_TRIANGLEUP2_FILLED=103;
+
+   /**
+    * Open Independent Centred TriangleUp2.
+    * (JDR/AJR file formats version 2.2 onwards.)
+    */
+   public static final int ARROW_INDEP_CENTRED_TRIANGLEUP2_OPEN=104;
+
+   /**
     * Maximum number of known markers for AJR and JDR file
     * versions 2.2 onwards
     */
-   public static final int NUM_ARROWS2_2=103;
+   public static final int NUM_ARROWS2_2=105;
 
    /**
     * Maximum number of known markers for AJR and JDR file
