@@ -51,6 +51,21 @@ public abstract class SVGAbstractElement implements Cloneable
       contents.append(text);
    }
 
+   public void trimEndContents()
+   {
+      for (int i = contents.length()-1; i >= 0; i--)
+      {
+         if (Character.isWhitespace(contents.charAt(i)))
+         {
+            contents.deleteCharAt(i);
+         }
+         else
+         {
+            break;
+         }
+      }
+   }
+
    public void startElement() throws InvalidFormatException
    {
       SVGLengthAttribute widthAttr = getLengthAttribute("width");
@@ -355,6 +370,10 @@ public abstract class SVGAbstractElement implements Cloneable
       else if (elementName.equals("p"))
       {
          return new XHTMLParElement(handler, parent);
+      }
+      else if (elementName.equals("pre"))
+      {
+         return new XHTMLPreElement(handler, parent);
       }
       else if (elementName.equals("span"))
       {

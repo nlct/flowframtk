@@ -180,10 +180,8 @@ public class SVGForeignObjectElement extends SVGAbstractElement
 
    public void appendParToFrameContent()
    {
-      if (contents.length() > 0)
-      {
-         contents.append(String.format("%n%n"));
-      }
+      trimEndContents();
+      contents.append(String.format("%n"));
    }
 
    public void appendToFrameContent(CharSequence text)

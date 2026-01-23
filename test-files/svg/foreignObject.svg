@@ -1,0 +1,27 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    div {
+      color: blue;
+      font: 18px serif;
+      height: 100%;
+      overflow: auto;
+    }
+  </style>
+
+  <rect x="20" y="30" width="300" height="400" fill="yellow" stroke="black" />
+
+  <foreignObject x="20" y="20" width="160" height="160">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      Lorem <strong>ipsum dolor</strong> sit amet, consectetur adipiscing elit. Sed mollis mollis
+      mi ut ultricies $E=mc^2$. <em>Nullam</em> magna ipsum, porta vel dui convallis, rutrum
+      imperdiet eros. Aliquam erat volutpat. <code> &amp; # \ $ |  </code>.
+    </div>
+    <p>Paragraph #1 <span>$y = mx + c$</span>.</p>
+    <pre>
+#include &lt;stdio.h&gt;;
+    </pre>
+    <p>A function <span class="math">$f(\vec{x})=\sum_{i=1}^n \alpha_i x_i$</span></p>
+  </foreignObject>
+</svg>
+
+
