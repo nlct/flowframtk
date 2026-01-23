@@ -2175,6 +2175,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="arrow.indeptriangle2">Indep Triangle2</entry>
 <entry key="arrow.indep_centred_triangle2_filled">Indep Centered Triangle2 Filled</entry>
 <entry key="arrow.indep_centred_triangle2_open">Indep Centered Triangle2 Open</entry>
+<entry key="arrow.indep_centred_rectangle2_filled">Indep Centered Rectangle2 Filled</entry>
+<entry key="arrow.indep_centred_rectangle2_open">Indep Centered Rectangle2 Open</entry>
 <entry key="arrow.invertchevroncap">Inverted Chevron Cap</entry>
 <entry key="arrow.invertfastcap">Inverted Fast Cap</entry>
 <entry key="arrow.inverttrianglecap">Inverted Triangle Cap</entry>
