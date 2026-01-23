@@ -133,14 +133,27 @@ public abstract class SVGAbstractElement implements Cloneable
 
    public boolean inCssClassList(String cssCls)
    {
-      if (cssClassList == null) return false;
+      return inCssClassList(cssCls, true);
+   }
 
-      for (int i = 0; i < cssClassList.length; i++)
+   public boolean inCssClassList(String cssCls, boolean inherit)
+   {
+      if (cssClassList != null)
       {
-         if (cssClassList[i].equals(cssCls)) return true;
+         for (int i = 0; i < cssClassList.length; i++)
+         {
+            if (cssClassList[i].equals(cssCls)) return true;
+         }
       }
 
-      return false;
+      if (inherit && parent != null)
+      {
+         return parent.inCssClassList(cssCls);
+      }
+      else
+      {
+         return false;
+      }
    }
 
    public boolean supportsParseMaths()
