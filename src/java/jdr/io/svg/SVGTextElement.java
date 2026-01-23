@@ -150,6 +150,7 @@ public class SVGTextElement extends SVGAbstractElement
       }
 
       objects.setDescription(desc);
+      objects.setTag(getName());
 
       for (int i = 0; i < contents.length(); )
       {
@@ -274,6 +275,8 @@ public class SVGTextElement extends SVGAbstractElement
 
       JDRFont jdrFont = (JDRFont)templateText.getJDRFont().clone();
       JDRText textArea = new JDRText(cg, p, jdrFont, text);
+
+      textArea.setTag(getName());
 
       LaTeXFontBase lfb = cg.getLaTeXFontBase();
       textArea.setLaTeXFont(LaTeXFont.createFor(lfb, jdrFont));

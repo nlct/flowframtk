@@ -96,6 +96,13 @@ public abstract class SVGShape extends SVGAbstractElement
       {
          group.add(jdrShape);
          applyShapeAttributes(jdrShape);
+
+         String tag = jdrShape.getTag();
+
+         if (tag == null || tag.isEmpty())
+         {
+            jdrShape.setTag(getName());
+         }
       }
 
       return jdrShape;
