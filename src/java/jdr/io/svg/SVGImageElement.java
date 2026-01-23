@@ -32,13 +32,13 @@ public class SVGImageElement extends SVGAbstractElement
 
       addAttribute("x", attr);
       addAttribute("y", attr);
-      addAttribute("width", attr);
-      addAttribute("height", attr);
    }
 
    @Override
    public void startElement() throws InvalidFormatException
    {
+      super.startElement();
+
       String ref = getHref();
 
       if (ref == null)
@@ -77,6 +77,11 @@ public class SVGImageElement extends SVGAbstractElement
          throw new InvalidAttributeValueException(this, "href", ref, e);
       }
 
+      SVGLengthAttribute xAttr = getLengthAttribute("x", false);
+      SVGLengthAttribute yAttr = getLengthAttribute("y", false);
+
+      x = (xAttr == null ? 0 : xAttr.getStorageValue(this, true));
+      y = (yAttr == null ? 0 : yAttr.getStorageValue(this, false));
    }
 
    @Override
@@ -92,14 +97,6 @@ public class SVGImageElement extends SVGAbstractElement
       else if (name.equals("y"))
       {
          attr = SVGLengthAttribute.valueOf(handler, name, value);
-      }
-      else if (name.equals("width"))
-      {
-         attr = SVGLengthAttribute.valueOf(handler, name, value, true);
-      }
-      else if (name.equals("height"))
-      {
-         attr = SVGLengthAttribute.valueOf(handler, name, value, false);
       }
       else
       {
@@ -117,14 +114,6 @@ public class SVGImageElement extends SVGAbstractElement
 
       CanvasGraphics cg = group.getCanvasGraphics();
 
-      SVGLengthAttribute xAttr = getLengthAttribute("x", false);
-      SVGLengthAttribute yAttr = getLengthAttribute("y", false);
-      SVGLengthAttribute widthAttr = getLengthAttribute("width", false);
-      SVGLengthAttribute heightAttr = getLengthAttribute("height", false);
-
-      double x = (xAttr == null ? 0 : xAttr.getStorageValue(this, true));
-      double y = (yAttr == null ? 0 : yAttr.getStorageValue(this, false));
-
       JDRBitmap bitmap;
 
       try
@@ -136,20 +125,18 @@ public class SVGImageElement extends SVGAbstractElement
          throw new RefNotFoundException(this, uriRef, imageFile, e);
       }
 
-      if (widthAttr != null || heightAttr != null)
+      if (elementWidth > 0 || elementHeight > 0)
       {
          int icW = bitmap.getIconWidth();
          int icH = bitmap.getIconHeight();
 
-         if (widthAttr != null)
+         if (elementWidth > 0)
          {
-            double storageW = widthAttr.getStorageValue(this, true);
-            double bpW = handler.getStorageUnit().toBp(storageW);
+            double bpW = handler.getDefaultUnit().toBp(elementWidth);
 
-            if (heightAttr != null)
+            if (elementHeight > 0)
             {
-               double storageH = heightAttr.getStorageValue(this, false);
-               double bpH = handler.getStorageUnit().toBp(storageH);
+               double bpH = handler.getDefaultUnit().toBp(elementHeight);
 
                if (icW == (int)Math.round(bpW) && icH == (int)Math.round(bpH))
                {
@@ -171,14 +158,13 @@ public class SVGImageElement extends SVGAbstractElement
          }
          else
          {
-            double storageH = heightAttr.getStorageValue(this, false);
-            double bpH = handler.getStorageUnit().toBp(storageH);
+            double bpH = handler.getDefaultUnit().toBp(elementHeight);
             double scaleY = bpH/icH;
             bitmap.scaleY(scaleY);
          }
       }
 
-      if (xAttr != null || yAttr != null)
+      if (x != 0 || y != 0)
       {
          bitmap.translate(x, y);
       }
@@ -209,6 +195,8 @@ public class SVGImageElement extends SVGAbstractElement
       {
          bitmap.setDescription(desc.replaceAll("\\R", " "));
       }
+
+      bitmap.setTag(getName());
 
       group.add(bitmap);
 
@@ -243,7 +231,20 @@ public class SVGImageElement extends SVGAbstractElement
       return element;
    }
 
+   public void makeEqual(SVGImageElement other)
+   {
+      super.makeEqual(other);
+
+      title = other.title;
+      description = other.description;
+      imageFile = other.imageFile;
+      uriRef = other.uriRef;
+      x = other.x;
+      y = other.y;
+   }
+
    String title, description;
    File imageFile;
    URI uriRef;
+   double x, y;
 }
