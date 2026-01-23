@@ -201,13 +201,6 @@ public class SVGForeignObjectElement extends SVGAbstractElement
       }
    }
 
-   protected boolean supportsParseMaths()
-   {
-      ImportSettings importSettings = handler.getImportSettings();
-
-      return importSettings.parseMaths;
-   }
-
    public boolean isVerbatim()
    {
       return false;

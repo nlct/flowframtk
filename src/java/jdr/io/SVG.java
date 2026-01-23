@@ -578,11 +578,15 @@ public class SVG
 
    public void setLaTeXText(JDRText jdrText)
    {
+      setLaTeXText(importSettings.parseMaths, jdrText);
+   }
+
+   public void setLaTeXText(boolean parseMaths, JDRText jdrText)
+   {
       String text = jdrText.getText();
       String latexText = null;
 
-      if (importSettings.parseMaths &&
-           (text.startsWith("$") || text.startsWith("\\[")))
+      if (parseMaths && (text.startsWith("$") || text.startsWith("\\[")))
       {
          latexText = text;
          text = canvasGraphics.convertLaTeX(latexText).trim();

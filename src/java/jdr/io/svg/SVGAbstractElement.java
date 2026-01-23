@@ -111,6 +111,57 @@ public abstract class SVGAbstractElement implements Cloneable
       return cssClassList;
    }
 
+   public boolean hasClassList()
+   {
+      return (cssClassList != null && cssClassList.length > 0);
+   }
+
+   public boolean inCssClassList(String cssCls)
+   {
+      if (cssClassList == null) return false;
+
+      for (int i = 0; i < cssClassList.length; i++)
+      {
+         if (cssClassList[i].equals(cssCls)) return true;
+      }
+
+      return false;
+   }
+
+   public boolean supportsParseMaths()
+   {
+      ImportSettings importSettings = handler.getImportSettings();
+
+      boolean parseMaths = importSettings.parseMaths;
+
+      if (parseMaths && importSettings.hasMathsCssClasses())
+      {
+         boolean found = false;
+
+         for (String cssCls : importSettings.mathsCssClasses)
+         {
+            if (inCssClassList(cssCls))
+            {
+               found = true;
+               break;
+            }
+         }
+
+         if (!found)
+         {
+            parseMaths = false;
+         }
+      }
+
+      return parseMaths;
+   }
+
+   public void setLaTeXText(JDRText textArea)
+   {
+      handler.setLaTeXText(supportsParseMaths(), textArea);
+   }
+
+
    /**
     * Adds recognised SVG attributes associated with this element.
     */

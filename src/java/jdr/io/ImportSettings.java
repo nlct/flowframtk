@@ -19,6 +19,7 @@
 package com.dickimawbooks.jdr.io;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class ImportSettings
 {
@@ -52,6 +53,29 @@ public class ImportSettings
       parseMaths = other.parseMaths;
       markers = other.markers;
       paper = other.paper;
+
+      if (other.mathsCssClasses == null)
+      {
+         mathsCssClasses = other.mathsCssClasses;
+      }
+      else if (mathsCssClasses == null
+            || mathsCssClasses.length != other.mathsCssClasses.length)
+      {
+         mathsCssClasses = Arrays.copyOf(
+           other.mathsCssClasses, other.mathsCssClasses.length);
+      }
+      else
+      {
+         for (int i = 0; i < mathsCssClasses.length; i++)
+         {
+            mathsCssClasses[i] = other.mathsCssClasses[i];
+         }
+      }
+   }
+
+   public boolean hasMathsCssClasses()
+   {
+      return (mathsCssClasses != null && mathsCssClasses.length > 0);
    }
 
    public JDRMessageDictionary getMessageDictionary()
@@ -67,6 +91,7 @@ public class ImportSettings
    public String bitmapNamePrefix = "";
    public boolean useMappings = true;
    public boolean parseMaths = true;
+   public String[] mathsCssClasses = null;
    public Markers markers = Markers.MARKER;
    public Paper paper = Paper.CURRENT;
    JDRMessageDictionary dictionary;

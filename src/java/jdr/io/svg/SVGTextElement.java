@@ -265,11 +265,6 @@ public class SVGTextElement extends SVGAbstractElement
       }
    }
 
-   protected void setLaTeXText(JDRText textArea)
-   {
-      handler.setLaTeXText(textArea);
-   }
-
    protected JDRText createTextArea(String text)
    throws InvalidFormatException
    {

@@ -97,9 +97,9 @@ public class SVGAnchorElement extends SVGTspanElement
    }
 
    @Override
-   protected void setLaTeXText(JDRText textArea)
+   public void setLaTeXText(JDRText textArea)
    {
-      handler.setLaTeXText(textArea);
+      super.setLaTeXText(textArea);
 
       if (uriLaTeXRef != null && !uriLaTeXRef.isEmpty())
       {

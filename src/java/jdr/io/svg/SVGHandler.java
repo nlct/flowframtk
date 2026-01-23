@@ -437,9 +437,9 @@ public class SVGHandler extends DefaultHandler
       return lastTextPosition;
    }
 
-   public void setLaTeXText(JDRText jdrText)
+   public void setLaTeXText(boolean parseMaths, JDRText jdrText)
    {
-      svg.setLaTeXText(jdrText);
+      svg.setLaTeXText(parseMaths, jdrText);
    }
 
    public void addElement(String id, SVGAbstractElement element)

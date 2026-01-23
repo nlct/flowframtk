@@ -17,7 +17,7 @@ public class XHTMLCodeElement extends XHTMLSpanElement
    }
 
    @Override
-   protected boolean supportsParseMaths()
+   public boolean supportsParseMaths()
    {
       return false;
    }
