@@ -278,22 +278,22 @@ public class SVGMarkerElement extends SVGAbstractElement
             {
                if (isFilled)
                {
-                  markerType = JDRMarker.ARROW_DOTFILLED;
+                  markerType = JDRMarker.ARROW_INDEP_CENTRED_ELLIPSE2_FILLED;
                }
                else
                {
-                  markerType = JDRMarker.ARROW_DOTOPEN;
+                  markerType = JDRMarker.ARROW_INDEP_CENTRED_ELLIPSE2_OPEN;
                }
             }
             else if (isBox || shapeName.equals("rect"))
             {
                if (isFilled)
                {
-                  markerType = JDRMarker.ARROW_BOXFILLED;
+                  markerType = JDRMarker.ARROW_INDEP_CENTRED_RECTANGLE2_FILLED;
                }
                else
                {
-                  markerType = JDRMarker.ARROW_BOXOPEN;
+                  markerType = JDRMarker.ARROW_INDEP_CENTRED_RECTANGLE2_OPEN;
                }
             }
             else if (isBar)
@@ -310,27 +310,34 @@ public class SVGMarkerElement extends SVGAbstractElement
                {
                   if (isFilled)
                   {
-                     markerType = JDRMarker.ARROW_TRIANGLE_UP_FILLED;
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLEUP2_FILLED;
                   }
                   else
                   {
-                     markerType = JDRMarker.ARROW_TRIANGLE_UP_OPEN;
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLEUP2_OPEN;
                   }
                }
                else if (isDown)
                {
                   if (isFilled)
                   {
-                     markerType = JDRMarker.ARROW_TRIANGLE_DOWN_FILLED;
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLEDOWN2_FILLED;
                   }
                   else
                   {
-                     markerType = JDRMarker.ARROW_TRIANGLE_DOWN_OPEN;
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLEDOWN2_OPEN;
                   }
                }
                else
                {
-                  markerType = JDRMarker.ARROW_OFFSET_TRIANGLE2;
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLE2_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLE2_OPEN;
+                  }
                }
             }
             else if (shapeName.equals("polygon") || jdrShape.isPolygon())
@@ -341,11 +348,58 @@ public class SVGMarkerElement extends SVGAbstractElement
 
                if (numSeg == 3)
                {
-                  markerType = JDRMarker.ARROW_OFFSET_TRIANGLE2;
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLE2_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_TRIANGLE2_OPEN;
+                  }
                }
                else if (numSeg == 4)
                {
-                  markerType = JDRMarker.ARROW_STEALTH2;
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_DIAMOND2_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_INDEP_CENTRED_DIAMOND2_OPEN;
+                  }
+               }
+               else if (numSeg == 5)
+               {
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_PENTAGON_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_PENTAGON_OPEN;
+                  }
+               }
+               else if (numSeg == 6)
+               {
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_HEXAGON_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_HEXAGON_OPEN;
+                  }
+               }
+               else if (numSeg == 8)
+               {
+                  if (isFilled)
+                  {
+                     markerType = JDRMarker.ARROW_OCTAGON_FILLED;
+                  }
+                  else
+                  {
+                     markerType = JDRMarker.ARROW_OCTAGON_OPEN;
+                  }
                }
             }
             else
@@ -408,7 +462,7 @@ public class SVGMarkerElement extends SVGAbstractElement
                   parentM = m;
                }
 
-               // only support up to three
+               // flowframtk only support up to three
                j++;
             }
          }

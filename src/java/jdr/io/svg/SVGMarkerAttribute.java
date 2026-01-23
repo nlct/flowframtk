@@ -322,6 +322,7 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
             if (marker != null)
             {
                int orientType = markerElement.getOrientType();
+               boolean isUnitStrokeWidth = markerElement.isUnitStrokeWidth();
 
                JDRStroke stroke = shape.getStroke();
 
@@ -341,6 +342,24 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy.setPenWidth(penW);
                      basicStroke.setStartArrow(copy);
 
+                     if (isUnitStrokeWidth && !marker.usesLineWidth()
+                           && marker.isResizable())
+                     {
+                        JDRLength l = copy.getSize();
+
+                        if (l != null)
+                        {
+                           l.multiply(penW);
+                        }
+
+                        l = copy.getWidth();
+
+                        if (l != null)
+                        {
+                           l.multiply(penW);
+                        }
+                     }
+
                      if (orientType != SVGMarkerOrientAttribute.AUTO_START_REVERSE)
                      {
                         // JDRMarker always reverses start marker
@@ -355,6 +374,24 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setMidArrow(copy);
+
+                     if (isUnitStrokeWidth && !marker.usesLineWidth()
+                           && marker.isResizable())
+                     {
+                        JDRLength l = copy.getSize();
+
+                        if (l != null)
+                        {
+                           l.multiply(penW);
+                        }
+
+                        l = copy.getWidth();
+
+                        if (l != null)
+                        {
+                           l.multiply(penW);
+                        }
+                     }
                   }
 
                   if (end)
@@ -362,6 +399,24 @@ public class SVGMarkerAttribute extends SVGAbstractAttribute
                      copy = (JDRMarker)marker.clone();
                      copy.setPenWidth(penW);
                      basicStroke.setEndArrow(copy);
+
+                     if (isUnitStrokeWidth && !marker.usesLineWidth()
+                           && marker.isResizable())
+                     {
+                        JDRLength l = copy.getSize();
+
+                        if (l != null)
+                        {
+                           l.multiply(penW);
+                        }
+
+                        l = copy.getWidth();
+
+                        if (l != null)
+                        {
+                           l.multiply(penW);
+                        }
+                     }
                   }
                }
             }
