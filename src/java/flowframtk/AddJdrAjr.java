@@ -43,7 +43,7 @@ public abstract class AddJdrAjr extends IOSwingWorker
       this.undoName = undoName;
    }
 
-   protected abstract JDRAJR openInputStream(File file)
+   protected abstract JDRAJR openInputStream()
       throws IOException;
 
    protected abstract JDRGroup loadImage(JDRAJR jdr, CanvasGraphics cg)
@@ -66,7 +66,7 @@ public abstract class AddJdrAjr extends IOSwingWorker
 
       try
       {
-         jdr = openInputStream(file);
+         jdr = openInputStream();
 
          jdr.setBaseDir(file.getParentFile());
 

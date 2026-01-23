@@ -57,7 +57,7 @@ public abstract class SaveJdrAjr extends IOSwingWorker
       this.exitAfter = exitAfter;
    }
 
-   protected abstract JDRAJR openOutputStream(File file)
+   protected abstract JDRAJR openOutputStream()
       throws IOException;
 
    protected abstract void saveImage(JDRAJR jdr, JDRGroup image, float version, int settingsFlag)
@@ -74,7 +74,7 @@ public abstract class SaveJdrAjr extends IOSwingWorker
 
       try
       {
-         JDRAJR jdr = openOutputStream(file);
+         JDRAJR jdr = openOutputStream();
 
          jdr.setBaseDir(app.useRelativeBitmaps() ? 
             file.getParentFile() : null);

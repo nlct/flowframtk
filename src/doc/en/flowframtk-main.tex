@@ -16456,7 +16456,7 @@ write. The \maingls{JDR} (\inlineglsdef{ext.jdr}) format is binary written
 in the big-endian fashion. The \maingls{AJR} (\inlineglsdef{ext.ajr}) format is
 a plain text format. The \gls*{AJR} format has less precision than the
 \gls*{JDR} format. The current version number for both formats
-is~2.1.
+is~2.2.
 
 \begin{information}
 As from \FlowframTk\ v0.8.8, any \glspl{object} that are copied
@@ -16470,21 +16470,35 @@ on the clipboard in the binary \gls{JDR} format (with no settings).
 \end{information}
 
 The first line of the plain text \gls*{AJR} format must be:
+\begin{jdrversion}{2.2 onwards}
+\begin{compactcodebox}
+AJR \meta{version} \meta{encoding}
+\end{compactcodebox}
+\end{jdrversion}
+\begin{jdrversion}{1.0--2.1}
 \begin{compactcodebox}
 AJR \meta{version}
 \end{compactcodebox}
-where \meta{version} is the version number. For example:
+\end{jdrversion}
+where \meta{version} is the version number and \meta{encoding}
+(only present from 2.2) is the character encoding name. For example:
 \begin{verbatim}
 AJR 1.8
 \end{verbatim}
+or
+\begin{verbatim}
+AJR 2.2 UTF-8
+\end{verbatim}
 The version number must be followed by white space (such as a
-newline or space character).
+newline or space character). Similarly for the encoding name (for
+AJR 2.2 onwards).
 
 \begin{information}
 All the markup in an \gls{AJR} file is within the ASCII range, but
 textual content (any \glspl{textarea}, \glspl{textpath},
-descriptions, tags or static/dynamic frame content may contain
-non-ASCII characters) so assume UTF-8 rather than ASCII.
+descriptions, tags or static/dynamic frame content, preamble or
+document body) may contain non-ASCII characters so assume UTF-8 
+rather than ASCII for pre 2.2 versions.
 \end{information}
 
 The binary \gls*{JDR} format starts with a sequence of the three 16-bit Unicode
@@ -17530,6 +17544,25 @@ If no controls are anchored, the $-1$ is still required.
 }
 {Additional Marker IDs (Version 2.1 Onwards)}
 
+\FloatTable{tab:jdrarrowid2.2}
+{%
+  \begin{tabular}{llll}
+  95 & \widget{arrow.indep_centred_triangle2_filled} &
+  96 & \widget{arrow.indep_centred_triangle2_open}\\
+  97 & \widget{arrow.indep_centred_rectangle2_filled} &
+  98 & \widget{arrow.indep_centred_rectangle2_open} \\ 
+  99 & \widget{arrow.indep_centred_ellipse2_filled} &
+  100 & \widget{arrow.indep_centred_ellipse2_open} \\ 
+  101 & \widget{arrow.indep_centred_diamond2_filled} &
+  102 & \widget{arrow.indep_centred_diamond2_open} \\ 
+  103 & \widget{arrow.indep_centred_triangleup2_filled} &
+  104 & \widget{arrow.indep_centred_triangleup2_open} \\ 
+  105 & \widget{arrow.indep_centred_triangledown2_filled} &
+  106 & \widget{arrow.indep_centred_triangledown2_open} 
+  \end{tabular}
+}
+{Additional Marker IDs (Version 2.2 Onwards)}
+
   For version 1.4 onwards the markers are stored as
   \begin{syntaxline}
   \meta{id}[\meta{marker data}]
@@ -17539,8 +17572,10 @@ If no controls are anchored, the $-1$ is still required.
   otherwise it should be present. Valid \meta{id} values are listed
   in \tableref{tab:jdrarrowid} and \tableref{tab:jdrarrowid1.4}.
   Additional markers listed in \tableref{tab:jdrarrowid1.6} are also
-  available for version 1.6 onwards, and markers listed in
-  \tableref{tab:jdrarrowid2.1} are available for version 2.1 onwards.
+  available for version 1.6 onwards, markers listed in
+  \tableref{tab:jdrarrowid2.1} are available for version 2.1
+  onwards, and markers listed in
+  \tableref{tab:jdrarrowid2.2} are available for version 2.2 onwards.
 
   The \meta{marker data} is stored as follows:
   \begin{jdrversion}{1.4--2.0}

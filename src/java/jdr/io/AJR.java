@@ -25,7 +25,12 @@
 package com.dickimawbooks.jdr.io;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 
@@ -61,6 +66,14 @@ public class AJR extends JDRAJR
     * @throws IOException if there is an I/O error.
    */
    public void save(JDRGroup allObjects,
+      PrintWriter out, Charset charset, int settingsFlag)
+      throws IOException
+   {
+      save(allObjects, out, charset, CURRENT_VERSION, settingsFlag);
+   }
+
+   @Deprecated
+   public void save(JDRGroup allObjects,
       PrintWriter out, int settingsFlag)
       throws IOException
    {
@@ -88,11 +101,11 @@ public class AJR extends JDRAJR
     * @param settingsFlag indicate whether to save settings
     * @throws IOException if there is an I/O error
    */
-
    public void save(JDRGroup allObjects,
-      PrintWriter out, float version, int settingsFlag)
+      PrintWriter out, Charset charset, float version, int settingsFlag)
       throws IOException
    {
+      encoding = charset;
       lineNum_ = -1;
       colIdx = 0;
       currentOut = out;
@@ -102,10 +115,54 @@ public class AJR extends JDRAJR
       currentOut = null;
    }
 
+   public void save(JDRGroup allObjects,
+      File file, float version, int settingsFlag)
+      throws IOException
+   {
+      encoding = StandardCharsets.UTF_8;
+      lineNum_ = -1;
+      colIdx = 0;
+
+      try
+      {
+         currentOut = new PrintWriter(
+           Files.newBufferedWriter(file.toPath(), encoding));
+
+         saveImage(allObjects, version, settingsFlag);
+      }
+      finally
+      {
+         if (currentOut != null)
+         {
+            currentOut.close();
+         }
+
+         currentOut = null;
+      }
+   }
+
+   @Deprecated
+   public void save(JDRGroup allObjects,
+      PrintWriter out, float version, int settingsFlag)
+      throws IOException
+   {
+      save(allObjects, out, StandardCharsets.UTF_8,
+        version, settingsFlag);
+   }
+
+
    protected void saveFormatVersion(String versionString)
      throws IOException
    {
-      currentOut.println("AJR "+versionString);
+      if (version < 2.2)
+      {
+         currentOut.println("AJR "+versionString);
+      }
+      else
+      {
+         currentOut.println("AJR "+versionString+" "+encoding);
+      }
+
       colIdx = 0;
    }
 
@@ -150,6 +207,99 @@ public class AJR extends JDRAJR
    * @throws InvalidFormatException if the file is incorrectly
    * formatted
    */
+   public JDRGroup load(File file, CanvasGraphics cg)
+      throws InvalidFormatException,IOException
+   {
+      return load(file.toPath(), cg);
+   }
+
+   public JDRGroup load(Path path, CanvasGraphics cg)
+      throws InvalidFormatException,IOException
+   {
+      encoding = StandardCharsets.UTF_8;
+
+      lineNum_ = 1;
+      colIdx = 0;
+
+      JDRGroup image;
+
+      try
+      {
+         currentIn = Files.newBufferedReader(path, encoding);
+         image = loadImage(cg);
+      }
+      catch (MismatchedEncodingException e)
+      {
+         if (currentIn != null)
+         {
+            currentIn.close();
+         }
+
+         encoding = e.getFound();
+
+         lineNum_ = 1;
+         colIdx = 0;
+
+         try
+         {
+            currentIn = Files.newBufferedReader(path, encoding);
+            image = loadImage(cg);
+         }
+         finally
+         {
+            if (currentIn != null)
+            {
+               currentIn.close();
+            }
+
+            currentIn = null;
+         }
+      }
+      finally
+      {
+         if (currentIn != null)
+         {
+            currentIn.close();
+         }
+
+         currentIn = null;
+      }
+
+      return image;
+   }
+
+   /**
+   * Reads image from AJR format.
+   *
+   * The image is stored as a {@link JDRGroup}.
+   * The settings flag can afterwards be retrieved using
+   * {@link #getLastLoadedSettingsID()}.
+   * @param in BufferedReader to input file
+   * @param inCharset the encoding of the BufferedReader
+   * @param cg canvas graphics
+   * @return the image as a <code>JDRGroup</code>
+   * @throws InvalidFormatException if the file is incorrectly
+   * formatted
+   * @throws MismatchedEncodingException if the file contains an
+   * encoding identifier that doesn't match inCharset
+   */
+   public JDRGroup load(BufferedReader in, Charset inCharset,
+      CanvasGraphics cg)
+      throws InvalidFormatException,MismatchedEncodingException
+   {
+      encoding = inCharset;
+      currentIn = in;
+      lineNum_ = 1;
+      colIdx = 0;
+
+      JDRGroup image = loadImage(cg);
+
+      currentIn = null;
+
+      return image;
+   }
+
+   @Deprecated
    public JDRGroup load(BufferedReader in,
       CanvasGraphics cg)
       throws InvalidFormatException
@@ -204,6 +354,35 @@ public class AJR extends JDRAJR
       {
          throw new InvalidValueException(
           InvalidFormatException.VERSION, this, e);
+      }
+   }
+
+   protected void readPostVersion()
+     throws InvalidFormatException
+   {
+      if (version >= 2.2f)
+      {
+         try
+         {
+            String encodingStr = readWord();
+
+            Charset cs = Charset.forName(encodingStr);
+
+            if (!cs.equals(encoding))
+            {
+               throw new MismatchedEncodingException(encoding, cs, this);
+            }
+         }
+         catch (IllegalArgumentException e)
+         {
+            throw new InvalidValueException(
+              InvalidFormatException.ENCODING, this, e);
+         }
+         catch (IOException e)
+         {
+            throw new InvalidValueException(
+              InvalidFormatException.ENCODING, this, e);
+         }
       }
    }
 
@@ -705,6 +884,8 @@ public class AJR extends JDRAJR
    private PrintWriter currentOut;
 
    protected BufferedReader currentIn;
+
+   Charset encoding = StandardCharsets.UTF_8;
 
    public static final int PREFERRED_COL_WIDTH = 80;
 }

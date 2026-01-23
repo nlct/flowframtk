@@ -185,6 +185,7 @@ public class JDR extends JDRAJR
       return image;
    }
 
+   @Override
    protected String readFormatVersion()
      throws InvalidFormatException
    {
@@ -201,6 +202,12 @@ public class JDR extends JDRAJR
 
       return readString(
          InvalidFormatException.VERSION);
+   }
+
+   @Override
+   protected void readPostVersion()
+     throws InvalidFormatException
+   {
    }
 
    public boolean readBoolean()

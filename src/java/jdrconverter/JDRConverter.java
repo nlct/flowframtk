@@ -22,6 +22,7 @@ package com.dickimawbooks.jdrconverter;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Properties;
 import java.text.MessageFormat;
@@ -1660,12 +1661,10 @@ public class JDRConverter
       {
          if (inCharset == null)
          {
-            in = Files.newBufferedReader(inFile.toPath());
+            inCharset = StandardCharsets.UTF_8;
          }
-         else
-         {
-            in = Files.newBufferedReader(inFile.toPath(), inCharset);
-         }
+
+         in = Files.newBufferedReader(inFile.toPath(), inCharset);
       }
       else
       {
@@ -1696,7 +1695,17 @@ public class JDRConverter
             case AJR:
               AJR ajr = new AJR();
               ajr.setBaseDir(inDir);
-              paths = ajr.load(in, canvasGraphics);
+              try
+              {
+                 paths = ajr.load(in, inCharset, canvasGraphics);
+              }
+              catch (MismatchedEncodingException mee)
+              {
+                 inCharset = mee.getFound();
+                 in.close();
+                 in = Files.newBufferedReader(inFile.toPath(), inCharset);
+                 paths = ajr.load(in, inCharset, canvasGraphics);
+              }
               settingsFlag = ajr.getLastLoadedSettingsID();
             break;
             case EPS:
@@ -1805,12 +1814,10 @@ public class JDRConverter
          {
             if (outCharset == null)
             {
-               out = new PrintWriter(Files.newBufferedWriter(outFile.toPath()));
+               outCharset = StandardCharsets.UTF_8;
             }
-            else
-            {
-               out = new PrintWriter(Files.newBufferedWriter(outFile.toPath(), inCharset));
-            }
+
+            out = new PrintWriter(Files.newBufferedWriter(outFile.toPath(), outCharset));
          }
          else if (outFormat != FileFormatType.PNG)
          {
@@ -1844,7 +1851,7 @@ public class JDRConverter
             case AJR:
               AJR ajr = new AJR();
               ajr.setBaseDir(useRelativeBitmaps ? outDir : null);
-              ajr.save(paths, out, outVersion, settingsFlag);
+              ajr.save(paths, out, outCharset, outVersion, settingsFlag);
             break;
             case TEX:
             case TEX_PGF:

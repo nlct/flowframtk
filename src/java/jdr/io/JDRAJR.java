@@ -300,6 +300,9 @@ public abstract class JDRAJR
    protected abstract String readFormatVersion()
      throws InvalidFormatException;
 
+   protected abstract void readPostVersion()
+     throws InvalidFormatException;
+
    protected JDRGroup loadImage(CanvasGraphics cg)
       throws InvalidFormatException
    {
@@ -332,6 +335,8 @@ public abstract class JDRAJR
          throw new JdrIllegalArgumentException(
           JdrIllegalArgumentException.VERSION, thisFileVersion, this);
       }
+
+      readPostVersion();
 
       if (version >= 1.8f)
       {

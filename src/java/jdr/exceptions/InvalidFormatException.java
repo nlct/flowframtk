@@ -212,6 +212,7 @@ public class InvalidFormatException extends Exception
    public static final String LATEX_TEXT = "LaTeX-text";
    public static final String TEXT = "text";
    public static final String VERSION = "version";
+   public static final String ENCODING = "encoding";
    public static final String FORMAT_TAG = "format-tag";
    public static final String INVALID_JDR_FORMAT = "jdr-format";
 

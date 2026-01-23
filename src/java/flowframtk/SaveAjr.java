@@ -25,6 +25,9 @@ package com.dickimawbooks.flowframtk;
 
 import java.util.List;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.awt.*;
 import javax.swing.*;
 
@@ -64,15 +67,16 @@ public class SaveAjr extends SaveJdrAjr
       worker.execute();
    }
 
-
-   protected JDRAJR openOutputStream(File file)
+   @Override
+   protected JDRAJR openOutputStream()
       throws IOException
    {
-      out = new PrintWriter(file);
+      out = new PrintWriter(Files.newBufferedWriter(file.toPath(), encoding));
 
       return new AJR();
    }
 
+   @Override
    protected void closeInputStream() throws IOException
    {
       if (out != null)
@@ -81,10 +85,13 @@ public class SaveAjr extends SaveJdrAjr
       }
    }
 
+   @Override
    protected void saveImage(JDRAJR ajr, JDRGroup image, float version, int settingsFlag) throws IOException
    {
-      ((AJR)ajr).save(image, out, version, settingsFlag);
+      ((AJR)ajr).save(image, out, encoding, version, settingsFlag);
    }
 
    private PrintWriter out = null;
+
+   Charset encoding = StandardCharsets.UTF_8;
 }

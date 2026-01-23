@@ -52,7 +52,7 @@ public class LoadJdr extends LoadJdrAjr
       worker.execute();
    }
 
-   protected JDRAJR openInputStream(File file)
+   protected JDRAJR openInputStream()
      throws IOException
    {
       in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));

@@ -64,7 +64,8 @@ public class SaveJdr extends SaveJdrAjr
       worker.execute();
    }
 
-   protected JDRAJR openOutputStream(File file)
+   @Override
+   protected JDRAJR openOutputStream()
       throws IOException
    {
       out = new DataOutputStream(new FileOutputStream(file));
@@ -72,6 +73,7 @@ public class SaveJdr extends SaveJdrAjr
       return new JDR();
    }
 
+   @Override
    protected void closeInputStream() throws IOException
    {
       if (out != null)
@@ -80,6 +82,7 @@ public class SaveJdr extends SaveJdrAjr
       }
    }
 
+   @Override
    protected void saveImage(JDRAJR jdr, JDRGroup image, float version, int settingsFlag) throws IOException
    {
       ((JDR)jdr).save(image, out, version, settingsFlag);

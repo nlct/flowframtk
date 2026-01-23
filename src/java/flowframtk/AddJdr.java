@@ -49,7 +49,8 @@ public class AddJdr extends AddJdrAjr
       worker.execute();
    }
 
-   protected JDRAJR openInputStream(File file)
+   @Override
+   protected JDRAJR openInputStream()
      throws IOException
    {
       in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -57,6 +58,7 @@ public class AddJdr extends AddJdrAjr
       return new JDR();
    }
 
+   @Override
    protected void closeInputStream()
      throws IOException
    {
@@ -66,6 +68,7 @@ public class AddJdr extends AddJdrAjr
      }
    }
 
+   @Override
    protected JDRGroup loadImage(JDRAJR jdr, CanvasGraphics cg)
       throws IOException,InvalidFormatException
    {

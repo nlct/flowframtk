@@ -24,6 +24,9 @@
 package com.dickimawbooks.flowframtk;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.awt.*;
 import javax.swing.*;
 
@@ -35,6 +38,7 @@ import com.dickimawbooks.jdrresources.*;
 public class LoadAjr extends LoadJdrAjr
 {
    private BufferedReader in = null;
+   Charset encoding = StandardCharsets.UTF_8;
 
    private LoadAjr(JDRFrame frame, File file)
    {
@@ -49,13 +53,15 @@ public class LoadAjr extends LoadJdrAjr
       worker.execute();
    }
 
-   protected JDRAJR openInputStream(File file)
+   @Override
+   protected JDRAJR openInputStream()
     throws IOException
    {
-      in = new BufferedReader(new FileReader(file));
+      in = Files.newBufferedReader(file.toPath(), encoding);
       return new AJR();
    }
 
+   @Override
    protected void closeInputStream()
     throws IOException
    {
@@ -65,10 +71,22 @@ public class LoadAjr extends LoadJdrAjr
       }
    }
 
+   @Override
    protected JDRGroup loadImage(JDRAJR ajr, CanvasGraphics cg)
       throws IOException,InvalidFormatException
    {
-      return ((AJR)ajr).load(in, cg);
+      try
+      {
+         return ((AJR)ajr).load(in, encoding, cg);
+      }
+      catch (MismatchedEncodingException e)
+      {
+         encoding = e.getFound();
+         closeInputStream();
+         in = Files.newBufferedReader(file.toPath(), encoding);
+
+         return ((AJR)ajr).load(in, encoding, cg);
+      }
    }
 
 }
