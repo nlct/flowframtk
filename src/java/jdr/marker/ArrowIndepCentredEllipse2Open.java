@@ -27,18 +27,18 @@ import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
 
 /**
- * Rectangle cap marker with both length and width but independent of
+ * Ellipse cap marker with both length and width but independent of
  * line width and centred on the vertex.
  * See {@link JDRMarker} for a description of markers.
  *
  */
-public class ArrowIndepCentredRectangle2Open extends JDRMarker
+public class ArrowIndepCentredEllipse2Open extends JDRMarker
 {
    /**
-    * Creates rectangle marker for a path with the given pen width.
+    * Creates ellipse marker for a path with the given pen width.
     * The marker may be repeated and/or reversed.
     */
-   public ArrowIndepCentredRectangle2Open(JDRLength penwidth, int repeat,
+   public ArrowIndepCentredEllipse2Open(JDRLength penwidth, int repeat,
                       boolean isReversed, JDRLength arrowLength, JDRLength arrowWidth)
    {
       super(penwidth, repeat, isReversed, arrowLength, arrowWidth);
@@ -48,14 +48,14 @@ public class ArrowIndepCentredRectangle2Open extends JDRMarker
          arrowWidth = (JDRLength)arrowLength.clone();
       }
 
-      type = ARROW_INDEP_CENTRED_RECTANGLE2_OPEN;
+      type = ARROW_INDEP_CENTRED_ELLIPSE2_OPEN;
    }
 
    public String getID()
    {
       return reversed ?
-           "arrow-r"+repeated+"indepcentredrectangle2open-"+size+"-"+width:
-           "arrow-"+repeated+"indepcentredrectangle2open-"+size+"-"+width;
+           "arrow-r"+repeated+"indepcentredellipse2open-"+size+"-"+width:
+           "arrow-"+repeated+"indepcentredellipse2open-"+size+"-"+width;
    }
 
    /**
@@ -66,23 +66,19 @@ public class ArrowIndepCentredRectangle2Open extends JDRMarker
       JDRUnit storageUnit = getCanvasGraphics().getStorageUnit();
 
       double markerLength = size.getValue(storageUnit);
+      double markerWidth = width.getValue(storageUnit);
 
-      GeneralPath path = new GeneralPath();
+      double halfWidth = 0.5*markerWidth;
+      double halfLength = 0.5*markerLength;
 
-      float halfWidth = 0.5f*(float)width.getValue(storageUnit);
-      float halfLength = 0.5f*(float)markerLength;
+      Ellipse2D ellipse = new Ellipse2D.Double(
+       -halfLength, -halfWidth, markerLength, markerWidth);
 
-      float penW = Math.min((float)storageUnit.fromBp(1.0),
-        0.1f * (halfWidth + halfLength));
-
-      path.moveTo(-halfLength, -halfWidth);
-      path.lineTo(halfLength, -halfWidth);
-      path.lineTo(halfLength, halfWidth);
-      path.lineTo(-halfLength, halfWidth);
-      path.closePath();
+      double penW = Math.min(storageUnit.fromBp(1.0),
+        0.1 * (halfWidth + halfLength));
 
       BasicStroke stroke = new BasicStroke((float)penW);
-      Shape shape = stroke.createStrokedShape(path);
+      Shape shape = stroke.createStrokedShape(ellipse);
 
       return new GeneralPath(shape);
    }
@@ -114,7 +110,7 @@ public class ArrowIndepCentredRectangle2Open extends JDRMarker
 
    public Object clone()
    {
-      JDRMarker marker = new ArrowIndepCentredRectangle2Open(penWidth, repeated,
+      JDRMarker marker = new ArrowIndepCentredEllipse2Open(penWidth, repeated,
                                          reversed, (JDRLength)size.clone(),
                                          (JDRLength)width.clone());
       makeOtherEqual(marker);
