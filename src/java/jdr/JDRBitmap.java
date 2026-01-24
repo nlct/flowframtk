@@ -1340,26 +1340,79 @@ public class JDRBitmap extends JDRCompleteObject
       return bitmapListener;
    }
 
-   public String info()
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      double[] flatmatrix = new double[6];
-      affineTransform.getMatrix(flatmatrix);
+      StringBuilder builder = new StringBuilder();
 
-      String str = "Bitmap:"+eol;
-      str += "name: "+name_+eol;
-      str += "filename: "+filename_+eol;
-      str += "transformation matrix: ["
-        + "["+flatmatrix[0]+","+flatmatrix[2]+","+flatmatrix[4]+"]"
-        + "["+flatmatrix[1]+","+flatmatrix[3]+","+flatmatrix[5]+"]"
-        + "]" +eol;
-      str += "LaTeX link name: "+latexlinkname_+eol;
-      str += "LaTeX command: "+latexCommand+eol;
-      str += "image loaded: "+imageLoaded+eol;
-      str += "image icon: "+ic+eol;
+      builder.append(prefix);
 
-      return str+super.info();
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bitmap", "Bitmap:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bitmap.image_name", "Name: {0}", name_));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bitmap.filename", "Filename: {0}", filename_));
+
+      double[] matrix = new double[6];
+      affineTransform.getMatrix(matrix);
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.matrix",
+        "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]",
+        matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bitmap.latex_path", "LaTeX path: {0}", latexlinkname_));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bitmap.latex_command", "LaTeX command: {0}", latexCommand));
+
+      if (msgSys.isDebuggingOn())
+      {
+         builder.append(eol);
+         builder.append(prefix);
+
+         if (imageLoaded)
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.bitmap.image_loaded", "Image has been loaded"));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.bitmap.image_loaded", "Image has not been loaded"));
+         }
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.bitmap.image_icon", "Image icon: {0}", ic));
+      }
+
+      builder.append(super.info(prefix));
+
+      return builder.toString();
    }
 
    public JDRTextual getTextual()

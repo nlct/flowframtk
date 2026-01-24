@@ -626,7 +626,8 @@ public class JDRPoint extends JDRObject implements JDRConstants
 
    public String info()
    {
-      return "("+x+","+y+")";
+      return getCanvasGraphics().getMessageWithFallback(
+       "objectinfo.point", "({0}, {1})", x, y);
    }
 
    public boolean isAnchored()

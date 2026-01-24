@@ -302,14 +302,26 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
          ? OPAQUE : TRANSLUCENT);
    }
 
+   @Override
    public Object clone()
    {
       return new JDRRadial(direction,startColor,endColor);
    }
 
+   @Override
    public String toString()
    {
-      return new String("JDRRadial[D="+direction+",start="+startColor+",end="+endColor);
+      return String.format("%s[D=%d,start=%s,end=%s]",
+       getClass().getSimpleName(), direction, startColor, endColor);
+   }
+
+   @Override
+   public String info()
+   {
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.paint.radial",
+        "radial: direction={0} start={1} end={2}",
+         direction, startColor.info(), endColor.info());
    }
 
    private String pgfdeclareradialshading(BBox box)

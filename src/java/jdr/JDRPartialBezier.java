@@ -530,11 +530,14 @@ public class JDRPartialBezier extends JDRPartialSegment
 
    public boolean isCurve() {return true;}
 
+   @Override
    public String info()
    {
-      return "partial Bezier: start="+start.info()
-        +", control="+control.info()
-        +", symmetry="+line_.info();
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.segment.partial_bezier",
+        "Partial Bezier: start {0} control {1}. Symmetry: ({2}) -- ({3})",
+         start.info(), control.info(),
+         line_.getStart().info(), line_.getEnd().info());
    }
 
    public String getDetails()

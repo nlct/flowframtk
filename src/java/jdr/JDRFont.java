@@ -363,8 +363,61 @@ public class JDRFont implements Cloneable,Serializable
 
    public String info()
    {
-      return "family="+family+",weight="+weight+",shape="+shape
-      +",size="+size;
+      JDRMessageDictionary msgSys = getMessageSystem();
+
+      String weightStr;
+
+      switch (weight)
+      {
+         case SERIES_MEDIUM:
+            weightStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.weight_medium", "medium");
+         break;
+         case SERIES_BOLD:
+            weightStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.weight_bold", "bold");
+         break;
+         default: // shouldn't happen
+            weightStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.weight_unknown",
+             "unknown weight ID {0}", weight);
+      }
+
+      String shapeStr;
+
+      switch (shape)
+      {
+         case SHAPE_UPRIGHT:
+            shapeStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.shape_upright", "upright");
+         break;
+         case SHAPE_EM:
+            shapeStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.shape_em", "em");
+         break;
+         case SHAPE_ITALIC:
+            shapeStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.shape_italic", "italic");
+         break;
+         case SHAPE_SLANTED:
+            shapeStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.shape_slanted", "slanted");
+         break;
+         case SHAPE_SC:
+            shapeStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.shape_sc", "small caps");
+         break;
+         default: // shouldn't happen
+            shapeStr = msgSys.getMessageWithFallback(
+             "objectinfo.textual.font.shape_unknown",
+             "unknown shape ID {0}", shape);
+      }
+
+      return msgSys.getMessageWithFallback(
+        "objectinfo.textual.font",
+        "Font family: {0}, weight: {1}, shape: {2}, size: {3}",
+        family, weightStr, shapeStr,
+        size == null ? "null" : size.info());
    }
 
    public JDRMessageDictionary getMessageSystem()
@@ -372,9 +425,11 @@ public class JDRFont implements Cloneable,Serializable
       return size.getMessageSystem();
    }
 
+   @Override
    public String toString()
    {
-      return String.format("%s[family=%s,weight=%s,shape=%s,size=%s]", getClass().getSimpleName(),
+      return String.format("%s[family=%s,weight=%s,shape=%s,size=%s]",
+         getClass().getSimpleName(),
          family, weight, shape, size);
    }
 

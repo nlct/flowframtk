@@ -195,11 +195,13 @@ public class JDRColor extends JDRPaint implements Serializable
          hue, saturation, brightness);
    }
 
+   @Override
    public Paint getPaint(BBox box)
    {
       return getColor();
    }
 
+   @Override
    public Color getColor()
    {
       return new Color((float)red,(float)green,(float)blue,(float)alpha);
@@ -212,12 +214,26 @@ public class JDRColor extends JDRPaint implements Serializable
              && alpha == 1.0;
    }
 
+   @Override
    public String toString()
    {
-      return new String("JDRColor@"+"R:" +red+"G:" +green+"B:"
-                        +blue+"A:"+alpha);
+      return String.format("%s[R=%f,G=%f,B=%f,A=%f]",
+       getClass().getSimpleName(), red, green, blue, alpha);
    }
 
+   @Override
+   public String info()
+   {
+      return getCanvasGraphics().getMessageWithFallback(
+       "objectinfo.paint.rgba", "rgba({0} {1} {2} {3})",
+        String.format("%02X", (int)Math.round(255*red)),
+        String.format("%02X", (int)Math.round(255*green)),
+        String.format("%02X", (int)Math.round(255*blue)),
+        String.format("%02X", (int)Math.round(255*alpha))
+      );
+   }
+
+   @Override
    public Object clone()
    {
       return new JDRColor(getCanvasGraphics(), red,green,blue,alpha);

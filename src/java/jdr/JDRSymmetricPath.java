@@ -2392,29 +2392,81 @@ public class JDRSymmetricPath extends JDRCompoundShape
       return flag;
    }
 
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "SymmetricPath:"+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "line of symmetry: "+line_.info()+eol;
+      builder.append(prefix);
 
-      str += "anchored: "+isAnchored()+eol;
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.symmetric_shape", "Symmetric shape:"));
 
-      if (join != null)
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.symmetric_shape.line", "Symmetry: {0}", line_.info()));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (isAnchored())
       {
-         str += "join segment: "+join.info();
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.symmetric_shape.anchor_on", "Anchored"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.symmetric_shape.anchor_off", "Not anchored"));
       }
 
-      if (closingSegment != null)
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (join == null)
       {
-         str += "closing segment: "+closingSegment.info();
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.symmetric_shape.no_join", "No join"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.symmetric_shape.join", "Join: {0}", join.info()));
       }
 
-      str += "Underlying shape:"+path_.info();
+      builder.append(eol);
+      builder.append(prefix);
 
-      return str;
+      if (closingSegment == null)
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.symmetric_shape.no_closing", "No closing segment"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.symmetric_shape.closing", "Closing: {0}",
+            closingSegment.info()));
+      }
+
+      builder.append(eol);
+      builder.append(super.info(prefix));
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.underlying", "Underlying object:")
+      );
+
+      builder.append(eol);
+      builder.append(path_.info(prefix+prefix));
+
+      return builder.toString();
    }
 
    protected void setSelectedElements(int segmentIndex, int controlIndex,

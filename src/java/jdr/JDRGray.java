@@ -142,11 +142,24 @@ public class JDRGray extends JDRPaint implements Serializable
       return gray == 0.0 && alpha == 1.0;
    }
 
+   @Override
    public String toString()
    {
-      return new String("JDRGray@"+"Gray:"+gray+"Alpha:"+alpha);
+      return String.format("%s[G=%f,A=%f]",
+       getClass().getSimpleName(), gray, alpha);
    }
 
+   @Override
+   public String info()
+   {  
+      return getCanvasGraphics().getMessageWithFallback(
+       "objectinfo.paint.gray", "gray({0} {1})",
+        String.format("%02x", (int)Math.round(255*gray)),
+        String.format("%02x", (int)Math.round(255*alpha))
+      );
+   }
+
+   @Override
    public Object clone()
    {
       return new JDRGray(getCanvasGraphics(), gray,alpha);

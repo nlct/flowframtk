@@ -288,6 +288,8 @@ public abstract class JDRPaint implements Serializable
     */
    public abstract String toString();
 
+   public abstract String info();
+
    public CanvasGraphics getCanvasGraphics()
    {
       return canvasGraphics;

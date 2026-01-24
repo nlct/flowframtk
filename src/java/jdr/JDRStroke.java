@@ -107,7 +107,7 @@ public interface JDRStroke extends Cloneable,Serializable
     */
    public JDRPathStyleListener getPathStyleListener();
 
-   public String info();
+   public String info(String prefix);
 
    public void setCanvasGraphics(CanvasGraphics cg);
 

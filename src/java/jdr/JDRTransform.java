@@ -674,12 +674,14 @@ public class JDRTransform implements Cloneable,Serializable
 
    public String info()
    {
-     return String.format("[[%f,%f,%f][%f,%f,%f]]",
+      return getCanvasGraphics().getMessageWithFallback(
+       "objectinfo.matrix",
+        "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]",
         affineTransform.getScaleX(),
-        affineTransform.getShearX(),
-        affineTransform.getTranslateX(),
-        affineTransform.getScaleY(),
         affineTransform.getShearY(),
+        affineTransform.getShearX(),
+        affineTransform.getScaleY(),
+        affineTransform.getTranslateX(),
         affineTransform.getTranslateY()
       );
    }

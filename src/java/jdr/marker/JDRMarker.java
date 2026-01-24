@@ -2845,16 +2845,119 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       return repeatOffset;
    }
 
+   @Override
    public String toString()
    {
-      return "JDRMarker[type:"+type+",size:"+size
-        +",width:"+width
-        +",autoorient:"+autoOrient_+",angle:"+angle_
-        +",fill:"+fillPaint+",repeat:"+repeated
-        +",reversed:"+reversed+",overlay:"+overlay
-        +",offset:"+offset_+",userOffset:"+userOffset
-        +",repeatOffset:"+repeatOffset+",userRepeatOffset:"+userRepeatOffset
-        + ",composite:"+composite +"]";
+      return String.format(
+       "%s[type=%d,size=%s,width=%s,autoorient=%s,angle=%s,fill=%s,repeat=%d,reversed=%s,overlay=%s,offset=%s,userOffset=%s,repeatOffset=%s,userRepeatOffset=%s,composite=%s]",
+        getClass().getSimpleName(), type, size, width,
+        autoOrient_, angle_, fillPaint, repeated,
+        reversed, overlay, offset_, userOffset,
+        repeatOffset, userRepeatOffset, composite
+      );
+   }
+
+   public String info()
+   {
+      return info(", ", ", ");
+   }
+
+   public String info(String prefix, String sep)
+   {
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+
+      StringBuilder builder = new StringBuilder();
+
+      builder.append(msgSys.getMessageWithFallback(
+         "objectinfo.marker.type", "ID = {0}", type));
+
+      if (type != ARROW_NONE)
+      {
+         builder.append(prefix);
+
+         if (autoOrient_)
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.marker.autoorient_on", "auto-orient on"));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.marker.autoorient_off",
+              "auto-orient off (angle={0})",
+              angle_ == null ? "null" : angle_.info()));
+         }
+
+         builder.append(sep);
+
+         if (fillPaint == null)
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.marker.paint_dep", "dependent paint"));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.marker.paint_indep", "independent paint {0}",
+              fillPaint.info()));
+         }
+
+         builder.append(sep);
+
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.marker.repeat_factor", "repeat factor = {0}", repeated));
+
+         builder.append(sep);
+
+         if (reversed)
+         {
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.marker.reversed_on", "reversed"));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.marker.reversed_off", "not reversed"));
+         }
+
+         if (size != null)
+         {
+            builder.append(sep);
+
+            builder.append(msgSys.getMessageWithFallback(
+               "objectinfo.marker.size", "size = {0}", size.info()));
+         }
+
+         if (width != null)
+         {
+            builder.append(sep);
+
+            builder.append(msgSys.getMessageWithFallback(
+               "objectinfo.marker.width", "width = {0}", width.info()));
+         }
+
+         if (userOffset)
+         {
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.marker.useroffset_on", "user offset on ({0})",
+             repeatOffset == null ? "null" : repeatOffset.info()));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.marker.useroffset_off", "user offset off"));
+         }
+      }
+
+      if (composite != null)
+      {
+         builder.append(sep);
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.marker.composite", "Composite: {0}", 
+          composite.info(prefix, sep)));
+      }
+
+      return builder.toString();
    }
 
    /**

@@ -957,7 +957,9 @@ public class JDRSegment extends JDRObject
 
    public String info()
    {
-      return "segment["+start.info()+","+end.info()+"]";
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.segment.move", "Move: start {0} end {1}",
+         start.info(), end.info());
    }
 
    public String getDetails()

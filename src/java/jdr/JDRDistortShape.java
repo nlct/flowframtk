@@ -1135,30 +1135,118 @@ public class JDRDistortShape extends JDRCompleteObject
       return -1;
    }
 
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "Distorted Object:"+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "Distortion: ";
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.distort.object", "Distorted Object:"));
+
+      builder.append(prefix);
+      builder.append(eol);
+
+      String str = "";
 
       for (int i = 0; i < distortion.length; i++)
       {
-         str += "("+distortion[i].getX()+","+distortion[i].getY()+") ";
+         str += msgSys.getMessageWithFallback(
+           "objectinfo.point", "({0}, {1})",
+           distortion[i].getX(), distortion[i].getY());
       }
 
-      str += eol;
+      builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.distort.distortion", "Distortion: {0}", str));
 
-      str += "Mid Distort: "+midDistort+eol;
-      str += "Upper trans: "+upperTrans+eol;
-      str += "Right trans: "+rightTrans+eol;
-      str += "Lower trans: "+lowerTrans+eol;
-      str += "Left trans: "+leftTrans+eol;
+      builder.append(prefix);
+      builder.append(eol);
 
-      str += "Underlying Object: "+eol+underlyingShape.info();
+      builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.distort.mid",
+          "Mid distortion point: ({0}, {1})",
+          midDistort.getX(), midDistort.getY()));
 
-      return str+super.info();
+      double[] matrix = new double[6];
+      upperTrans.getMatrix(matrix);
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.distort.upper", "Upper: {0}",
+        msgSys.getMessageWithFallback(
+         "objectinfo.matrix",
+          "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]",
+          matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]
+          )
+        )
+      );
+
+      rightTrans.getMatrix(matrix);
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.distort.right", "Right: {0}",
+        msgSys.getMessageWithFallback(
+         "objectinfo.matrix",
+          "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]",
+          matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]
+          )
+        )
+      );
+
+      lowerTrans.getMatrix(matrix);
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.distort.lower", "Lower: {0}",
+        msgSys.getMessageWithFallback(
+         "objectinfo.matrix",
+          "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]",
+          matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]
+          )
+        )
+      );
+
+      leftTrans.getMatrix(matrix);
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.distort.left", "Left: {0}",
+        msgSys.getMessageWithFallback(
+         "objectinfo.matrix",
+          "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]",
+          matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]
+          )
+        )
+      );
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.underlying", "Underlying Object:"));
+
+      builder.append(eol);
+
+      builder.append(underlyingShape.info(prefix+prefix));
+
+      builder.append(eol);
+
+      builder.append(super.info(prefix));
+
+      return builder.toString();
    }
 
    public void setEditMode(boolean mode)

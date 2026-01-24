@@ -140,9 +140,17 @@ public class JDRTransparent extends JDRPaint implements Serializable
       return new JDRTransparent(getCanvasGraphics());
    }
 
+   @Override
    public String toString()
    {
-      return new String("JDRTransparent");
+      return new String(getClass().getSimpleName());
+   }
+
+   @Override
+   public String info()
+   {
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.paint.transparent", "transparent");
    }
 
    public JDRPaintLoaderListener getListener()

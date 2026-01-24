@@ -151,12 +151,23 @@ public class JDRColorHSB extends JDRPaint implements Serializable
       return Color.getHSBColor((float)hue, (float)saturation, (float)brightness);
    }
 
+   @Override
    public String toString()
    {
       return new String("JDRColorHSB@"+"H:" +hue+"S:" +saturation+"B:"
                         +brightness+"A:"+alpha);
    }
 
+   @Override
+   public String info()
+   {
+      return getCanvasGraphics().getMessageWithFallback(
+       "objectinfo.paint.hsba", "hsba({0} {1} {2} {3})",
+       hue, saturation, brightness, alpha
+      );
+   }
+
+   @Override
    public Object clone()
    {
       return new JDRColorHSB(getCanvasGraphics(),

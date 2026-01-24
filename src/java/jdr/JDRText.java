@@ -1917,25 +1917,151 @@ public class JDRText extends JDRCompleteObject
       }
    }
 
-   public String info()
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "Text:"+eol;
-      str += "contents: "+text+eol;
-      str += "LaTeX equivalent: "+latexText+eol;
-      str += "Paint: "+getTextPaint()+eol;
-      str += "font: "+jdrFont.info()+eol;
-      str += "LaTeX font: "+latexFont.info()+eol;
-      str += "start: "+getStart()+eol;
-      str += "pgfHalign: " +pgfHalign+eol;
-      str += "pgfValign: " +pgfValign+eol;
-      str += "pgfanchor: "+getPGFAnchor()+eol;
-      str += "outline: "+isOutline()+eol;
-      str += "transformation: "+jdrtransform.info()+eol;
-      str += "original bounds: "+jdrtransform.getOriginalBBox().info()+eol;
+      StringBuilder builder = new StringBuilder();
 
-      return str+super.info();
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textarea", "Text area:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textual.canvas_text", "Text: {0}", text));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textual.latex_text", "LaTeX text: {0}", latexText));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textual.paint", "Text paint: {0}", getTextPaint().info()));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(jdrFont.info());
+ 
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(latexFont.info(msgSys));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textarea.start", "Starting point: {0}",
+         getStart().info()));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      switch (pgfHalign)
+      {
+         case PGF_HALIGN_LEFT:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_left",
+              "Horizontal anchor: left"));
+         break;
+         case PGF_HALIGN_CENTRE:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_center",
+              "Horizontal anchor: center"));
+         break;
+         case PGF_HALIGN_RIGHT:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_right",
+              "Horizontal anchor: right"));
+         break;
+         default: // shouldn't happen
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_unknown",
+              "Unknown horizontal anchor ID: {0}", pgfHalign));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      switch (pgfValign)
+      {
+         case PGF_VALIGN_TOP:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_top",
+              "Vertical anchor: top"));
+         break;
+         case PGF_VALIGN_CENTRE:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_middle",
+              "Vertical anchor: middle"));
+         break;
+         case PGF_VALIGN_BASE:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_base",
+              "Vertical anchor: base"));
+         break;
+         case PGF_VALIGN_BOTTOM:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_bottom",
+              "Vertical anchor: bottom"));
+         break;
+         default: // shouldn't happen
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_unknown",
+              "Unknown vertical anchor ID: {0}", pgfValign));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      Point2D p = getPGFAnchor();
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.textarea.anchor", "Anchor point: {0}",
+         msgSys.getMessageWithFallback(
+         "objectinfo.point", "({0}, {1})", p.getX(), p.getY())));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (isOutline())
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.textual.outline_on", "Outline mode on"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.textual.outline_off", "Outline mode off"));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(jdrtransform.info());
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bbox_original", "Original bounding box: {0}",
+          jdrtransform.getOriginalBBox().info()));
+
+      builder.append(eol);
+
+      builder.append(super.info(prefix));
+
+      return builder.toString();
    }
 
    public JDRTextual getTextual()

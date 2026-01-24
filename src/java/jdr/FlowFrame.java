@@ -1544,6 +1544,7 @@ public class FlowFrame implements Cloneable,Serializable
       return true;
    }
 
+   @Override
    public String toString()
    {
       return "FlowFrame["
@@ -1555,12 +1556,219 @@ public class FlowFrame implements Cloneable,Serializable
         + ",bottom="+bottom
         + ",left="+left
         + ",right="+right
+        + ",marginPosition="+marginPosition
+        + ",clear="+clear
         + ",shape="+shape
         + ",valign="+valign
         + ",evenXShift="+evenXShift
         + ",evenYShift="+evenYShift
+        + ",textColor="+textColor
+        + ",styleCommands="+styleCommands
         + ",contents="+contents
         + "]";
+   }
+
+   public String info()
+   {
+      JDRMessage msgSys = canvasGraphics.getMessageSystem();
+      StringBuilder builder = new StringBuilder();
+
+      String sep = msgSys.getMessageWithFallback(
+        "objectinfo.flowframe.sep", "; ");
+
+      switch (type)
+      {
+         case TYPEBLOCK:
+           builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.flowframe.typeblock", "Typeblock"));
+         break;
+         case STATIC:
+           builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.flowframe.static", "Static frame: "));
+         break;
+         case DYNAMIC:
+           builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.flowframe.dynamic", "Dynamic frame: "));
+         break;
+         case FLOW:
+           builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.flowframe.flow", "Flow frame: "));
+         break;
+         default: // shouldn't happen
+           builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.flowframe.unknown_type",
+            "Unknown ID type {0}: ", type));
+      }
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.flowframe.margins",
+       "top={0}, bottom={1}, left={2}, right={3}",
+       top, bottom, left, right));
+
+      builder.append(sep);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.flowframe.even_shift",
+       "even page shift: {0}",
+        msgSys.getMessageWithFallback(
+        "objectinfo.point", "({0}, {1})", evenXShift, evenYShift)));
+
+      if (type != TYPEBLOCK)
+      {
+         builder.append(sep);
+
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.flowframe.label", "label: {0}", label));
+
+         builder.append(sep);
+
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.flowframe.pages", "pages: {0}", label));
+
+         builder.append(sep);
+
+         if (border)
+         {
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.flowframe.border_on", "border on"));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.flowframe.border_off", "border off"));
+         }
+
+         if (textColor != null)
+         {
+            builder.append(sep);
+
+            builder.append(msgSys.getMessageWithFallback
+              ("objectinfo.flowframe.text_color", "text color: {0}",
+               msgSys.getMessageWithFallback(
+                "objectinfo.flowframe.rgba", "rgba({0} {1} {2} {3})",
+                 String.format("%02X", textColor.getRed()),
+                 String.format("%02X", textColor.getGreen()),
+                 String.format("%02X", textColor.getBlue()),
+                 String.format("%02X", textColor.getAlpha())
+              )));
+         }
+
+         if (type == FLOW)
+         {
+            builder.append(sep);
+
+            switch (marginPosition)
+            {
+               case MARGIN_OUTER:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.margin_outer", "margin: outer"));
+               break;
+               case MARGIN_INNER:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.margin_inner", "margin: inner"));
+               break;
+               case MARGIN_LEFT:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.margin_left", "margin: left"));
+               break;
+               case MARGIN_RIGHT:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.margin_right", "margin: right"));
+               break;
+               default:// shouldn't happen
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.margin_unknown",
+                   "unknown margin ID {0}", marginPosition));
+            }
+         }
+         else
+         {
+
+            builder.append(sep);
+
+            if (clear)
+            {
+               builder.append(msgSys.getMessageWithFallback(
+                "objectinfo.flowframe.clear_on", "clear on"));
+            }
+            else
+            {
+               builder.append(msgSys.getMessageWithFallback(
+                "objectinfo.flowframe.clear_off", "clear off"));
+            }
+
+            builder.append(sep);
+
+            switch (shape)
+            {
+               case STANDARD:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.shape_standard", "shape: standard"));
+               break;
+               case PARSHAPE:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.shape_parshape", "shape: parshape"));
+               break;
+               case SHAPEPAR:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.shape_shapepar", "shape: shapepar"));
+               break;
+               default:// shouldn't happen
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.shape_unknown", "unknown shape ID {0}",
+                   shape));
+            }
+
+            builder.append(sep);
+
+            switch (valign)
+            {
+               case TOP:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.valign_top",
+                   "vertical alignment: top"));
+               break;
+               case CENTER:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.valign_center",
+                   "vertical alignment: center"));
+               break;
+               case BOTTOM:
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.valign_bottom",
+                   "vertical alignment: bottom"));
+               break;
+               default: // shouldn't happen
+                  builder.append(msgSys.getMessageWithFallback(
+                   "objectinfo.flowframe.valign_unknown",
+                   "unknown valign ID {0}"));
+            }
+
+            if (type == DYNAMIC)
+            {
+               builder.append(sep);
+
+               builder.append(msgSys.getMessageWithFallback(
+                "objectinfo.flowframe.style_cmds", "style commands: {0}",
+                styleCommands));
+            }
+
+            builder.append(sep);
+
+            if (contents == null)
+            {
+               builder.append(msgSys.getMessageWithFallback(
+                "objectinfo.flowframe.no_content", "no content"));
+            }
+            else
+            {
+               builder.append(msgSys.getMessageWithFallback(
+                "objectinfo.flowframe.content", "content: {0}", contents));
+            }
+         }
+      }
+
+      return builder.toString();
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)

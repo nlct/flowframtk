@@ -32,6 +32,17 @@ Nicola Talbot
 <entry key="error.invalid_frame-text-colour-flag">Invalid text colour flag</entry>
 <entry key="error.invalid_frame-text-colour">Invalid text colour</entry>
 
+<!-- Object Information -->
+
+<entry key="objectinfo.basic_stroke.join_miter">Join: mitre</entry>
+<entry key="objectinfo.basic_stroke.miter_limit">Mitre limit: {0}</entry>
+
+<entry key="objectinfo.textual.halign_center">Horizontal anchor: centre</entry>
+
+<entry key="objectinfo.flowframe.valign_center">vertical alignment: centre</entry>
+<entry key="objectinfo.flowframe.text_color">text colour: {0}</entry>
+
+
 <!-- Error Messages -->
 
 <entry key="error.title">Error</entry>

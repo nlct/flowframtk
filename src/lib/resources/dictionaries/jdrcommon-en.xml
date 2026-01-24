@@ -203,6 +203,230 @@ Nicola Talbot
 <entry key="tex.comment.fontsize">The normal size font is assumed to be {0}</entry>
 <entry key="tex.comment.endpreamble">End of preamble information</entry>
 
+<!-- Object Information -->
+
+<entry key="objectinfo.description">Description: {0}</entry>
+<entry key="objectinfo.tag">Tag: {0}</entry>
+
+<entry key="objectinfo.no_flowframe">No flowframe data</entry>
+
+<entry key="objectinfo.flowframe.sep">; </entry>
+<entry key="objectinfo.flowframe.typeblock">Typeblock: </entry>
+<entry key="objectinfo.flowframe.static">Static frame: </entry>
+<entry key="objectinfo.flowframe.dynamic">Dynamic frame: </entry>
+<entry key="objectinfo.flowframe.flow">Flow frame: </entry>
+<entry key="objectinfo.flowframe.unknown_type">Unknown type ID {0}: </entry>
+<entry key="objectinfo.flowframe.margins">top={0}, bottom={1}, left={2}, right={3}</entry>
+<entry key="objectinfo.flowframe.label">label: {0}</entry>
+<entry key="objectinfo.flowframe.pages">pages: {0}</entry>
+<entry key="objectinfo.flowframe.even_shift">even page shift: {0}</entry>
+<entry key="objectinfo.flowframe.no_content">content not set</entry>
+<entry key="objectinfo.flowframe.content">content: {0}</entry>
+<entry key="objectinfo.flowframe.shape_standard">shape: standard</entry>
+<entry key="objectinfo.flowframe.shape_parshape">shape: parshape</entry>
+<entry key="objectinfo.flowframe.shape_shapepar">shape: shapepar</entry>
+<entry key="objectinfo.flowframe.shape_unknown">unknown shape ID {0}</entry>
+<entry key="objectinfo.flowframe.valign_top">vertical alignment: top</entry>
+<entry key="objectinfo.flowframe.valign_center">vertical alignment: center</entry>
+<entry key="objectinfo.flowframe.valign_bottom">vertical alignment: bottom</entry>
+<entry key="objectinfo.flowframe.valign_unknown">unknown valign ID {0}</entry>
+<entry key="objectinfo.flowframe.margin_outer">margin: outer</entry>
+<entry key="objectinfo.flowframe.margin_inner">margin: inner</entry>
+<entry key="objectinfo.flowframe.margin_left">margin: left</entry>
+<entry key="objectinfo.flowframe.margin_right">margin: right</entry>
+<entry key="objectinfo.flowframe.margin_unknown">unknown margin ID {0}</entry>
+<entry key="objectinfo.flowframe.border_on">border on</entry>
+<entry key="objectinfo.flowframe.border_off">border off</entry>
+<entry key="objectinfo.flowframe.clear_on">clear on</entry>
+<entry key="objectinfo.flowframe.clear_off">clear off</entry>
+<entry key="objectinfo.flowframe.style_cmds">style commands: {0}</entry>
+<entry key="objectinfo.flowframe.text_color">text color: {0}</entry>
+
+<entry key="objectinfo.is_selected">Is selected</entry>
+<entry key="objectinfo.not_selected">Is not selected</entry>
+<entry key="objectinfo.hashcode">Hash code: {0}</entry>
+
+<entry key="objectinfo.bbox">Bounding box: {0}</entry>
+<entry key="objectinfo.bbox_original">Original bounding box: {0}</entry>
+<entry key="objectinfo.bbox.values">min = ({0}, {1}), max = ({2}, {3})</entry>
+
+<entry key="objectinfo.basic_stroke">Basic Stroke:</entry>
+
+<entry key="objectinfo.basic_stroke.pattern">Line pattern: {0}</entry>
+
+<entry key="objectinfo.basic_stroke.cap_butt">Cap: butt</entry>
+<entry key="objectinfo.basic_stroke.cap_round">Cap: round</entry>
+<entry key="objectinfo.basic_stroke.cap_square">Cap: square</entry>
+<entry key="objectinfo.basic_stroke.cap_unknown">Unknown cap ID {0}</entry>
+
+<entry key="objectinfo.basic_stroke.join_bevel">Join: bevel</entry>
+<entry key="objectinfo.basic_stroke.join_miter">Join: miter</entry>
+<entry key="objectinfo.basic_stroke.join_round">Join: round</entry>
+<entry key="objectinfo.basic_stroke.join_unknown">Unknown join ID {0}</entry>
+
+<entry key="objectinfo.basic_stroke.miter_limit">Miter limit: {0}</entry>
+
+<entry key="objectinfo.basic_stroke.wind_evenodd">Winding rule: even-odd</entry>
+<entry key="objectinfo.basic_stroke.wind_nonzero">Winding rule: non-zero</entry>
+<entry key="objectinfo.basic_stroke.wind_unknown">Unknown winding rule ID {0}</entry>
+
+<entry key="objectinfo.basic_stroke.pen_width">Pen width: {0}</entry>
+
+<entry key="objectinfo.basic_stroke.start_marker">Start marker: {0}</entry>
+<entry key="objectinfo.basic_stroke.mid_marker">Mid marker: {0}</entry>
+<entry key="objectinfo.basic_stroke.end_marker">End marker: {0}</entry>
+
+<entry key="objectinfo.marker.type">ID = {0}</entry>
+<entry key="objectinfo.marker.sep">, </entry>
+<entry key="objectinfo.marker.size">size = {0}</entry>
+<entry key="objectinfo.marker.width">width = {0}</entry>
+
+<entry key="objectinfo.marker.autoorient_on">auto-orient on</entry>
+<entry key="objectinfo.marker.autoorient_off">auto-orient off (angle={0})</entry>
+
+<entry key="objectinfo.marker.paint_dep">dependent paint</entry>
+<entry key="objectinfo.marker.paint_indep">independent paint {0}</entry>
+<entry key="objectinfo.marker.repeat_factor">repeat factor = {0}</entry>
+<entry key="objectinfo.marker.reversed_on">reversed</entry>
+<entry key="objectinfo.marker.reversed_off">not reversed</entry>
+
+<entry key="objectinfo.marker.useroffset_on">user offset on ({0})</entry>
+<entry key="objectinfo.marker.useroffset_off">user offset off</entry>
+
+<entry key="objectinfo.marker.composite">Composite: {0}</entry>
+
+<entry key="objectinfo.textpath">Text-Path:</entry>
+
+<entry key="objectinfo.textpath_stroke">Text-Path Stroke:</entry>
+
+<entry key="objectinfo.textarea">Text area:</entry>
+<entry key="objectinfo.textarea.start">Starting point: {0}</entry>
+<entry key="objectinfo.textarea.anchor">Anchor point: {0}</entry>
+
+<entry key="objectinfo.textual.paint">Text paint: {0}</entry>
+
+<entry key="objectinfo.textual.halign_left">Horizontal anchor: left</entry>
+<entry key="objectinfo.textual.halign_center">Horizontal anchor: center</entry>
+<entry key="objectinfo.textual.halign_right">Horizontal anchor: right</entry>
+<entry key="objectinfo.textual.halign_unknown">Unknown horizontal anchor ID {0}</entry>
+
+<entry key="objectinfo.textual.valign_top">Vertical anchor: top</entry>
+<entry key="objectinfo.textual.valign_middle">Vertical anchor: middle</entry>
+<entry key="objectinfo.textual.valign_base">Vertical anchor: base</entry>
+<entry key="objectinfo.textual.valign_bottom">Vertical anchor: bottom</entry>
+<entry key="objectinfo.textual.valign_unknown">Unknown vertical anchor ID {0}</entry>
+
+<entry key="objectinfo.textual.canvas_text">Canvas text: {0}</entry>
+<entry key="objectinfo.textual.latex_text">LaTeX text: {0}</entry>
+
+<entry key="objectinfo.textual.latex_font">LaTeX font family: {0}, weight: {1}, shape: {2}, size: {3}</entry>
+
+<entry key="objectinfo.textual.font">Canvas font family: {0}, weight: {1}, shape: {2}, size: {3}</entry>
+<entry key="objectinfo.textual.font.weight_medium">medium</entry>
+<entry key="objectinfo.textual.font.weight_bold">bold</entry>
+<entry key="objectinfo.textual.font.weight_unknown">unknown weight ID {0}</entry>
+
+<entry key="objectinfo.textual.font.shape_upright">upright</entry>
+<entry key="objectinfo.textual.font.shape_em">em</entry>
+<entry key="objectinfo.textual.font.shape_italic">italic</entry>
+<entry key="objectinfo.textual.font.shape_slanted">slanted</entry>
+<entry key="objectinfo.textual.font.shape_sc">small caps</entry>
+<entry key="objectinfo.textual.font.shape_unknown">unknown shape ID {0}</entry>
+
+<entry key="objectinfo.textual.outline_on">Outline mode on</entry>
+<entry key="objectinfo.textual.outline_off">Outline mode off</entry>
+
+
+<entry key="objectinfo.matrix">Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]</entry>
+
+<entry key="objectinfo.path">Path:</entry>
+<entry key="objectinfo.path.size">size: {0}</entry>
+<entry key="objectinfo.path.segment">Segment {0}:</entry>
+<entry key="objectinfo.path.closed">Closed</entry>
+<entry key="objectinfo.path.not_closed">Not closed</entry>
+<entry key="objectinfo.path.line_paint">Line paint: {0}</entry>
+<entry key="objectinfo.path.fill_paint">Fill paint: {0}</entry>
+<entry key="objectinfo.path.area">Area: {0}</entry>
+
+<entry key="objectinfo.path.capacity">Capacity: {0}</entry>
+<entry key="objectinfo.path.selected_segment">Selected segment: {0}</entry>
+<entry key="objectinfo.path.selected_control">Selected control: {0}</entry>
+<entry key="objectinfo.path.selected_control_index">Selected control index: {0}</entry>
+
+<entry key="objectinfo.point">({0}, {1})</entry>
+<entry key="objectinfo.length">{0}{1}</entry>
+
+<entry key="objectinfo.angle.rad">{0} radians</entry>
+<entry key="objectinfo.angle.deg">{0} degrees</entry>
+
+<entry key="objectinfo.segment.move">Move: start {0} end {1}</entry>
+<entry key="objectinfo.segment.line">Line: start {0} end {1}</entry>
+<entry key="objectinfo.segment.bezier">Bézier: start {0} control {1} control {2} end {3}</entry>
+
+<entry key="objectinfo.segment.closing_move">Closing move: start {0} closing {1} move to {2}</entry>
+
+<entry key="objectinfo.segment.partial_move">Partial move: start {0}. Symmetry line: ({1}) — ({2})</entry>
+<entry key="objectinfo.segment.partial_line">Partial line: start {0}. Symmetry line: ({1}) — ({2})</entry>
+<entry key="objectinfo.segment.partial_bezier">Partial Bézier: start {0} control {1}. Symmetry line: ({2}) — ({3})</entry>
+
+<entry key="objectinfo.bitmap">Bitmap:</entry>
+<entry key="objectinfo.bitmap.image_name">Name: {0}</entry>
+<entry key="objectinfo.bitmap.filename">Filename: {0}</entry>
+<entry key="objectinfo.bitmap.latex_path">LaTeX path: {0}</entry>
+<entry key="objectinfo.bitmap.latex_command">LaTeX command: {0}</entry>
+<entry key="objectinfo.bitmap.image_loaded">Image has been loaded</entry>
+<entry key="objectinfo.bitmap.image_not_loaded">Image has not been loaded</entry>
+<entry key="objectinfo.bitmap.image_icon">Image icon: {0}</entry>
+
+<entry key="objectinfo.jdrgroup">Group:</entry>
+<entry key="objectinfo.jdrgroup.size">Size: {0}</entry>
+<entry key="objectinfo.jdrgroup.capacity">Capacity: {0}</entry>
+<entry key="objectinfo.jdrgroup.object">Object {0}:</entry>
+
+<entry key="objectinfo.pattern.replicas">Number of replicas: {0}</entry>
+<entry key="objectinfo.pattern.anchor">Anchor: {0}</entry>
+
+<entry key="objectinfo.rotational_pattern">Rotational pattern:</entry>
+<entry key="objectinfo.rotational_pattern.angle">Angle of rotation: {0}</entry>
+
+<entry key="objectinfo.scaled_pattern">Scaled pattern:</entry>
+<entry key="objectinfo.scaled_pattern.scale_x">Scale X: {0}</entry>
+<entry key="objectinfo.scaled_pattern.scale_y">Scale Y: {0}</entry>
+
+<entry key="objectinfo.spiral_pattern">Spiral pattern:</entry>
+<entry key="objectinfo.spiral_pattern.adjust_control">Adjustment control: {0}</entry>
+<entry key="objectinfo.spiral_pattern.angle">Angle: {0}</entry>
+<entry key="objectinfo.spiral_pattern.distance">Distance: {0}</entry>
+
+<entry key="objectinfo.symmetric_shape">Symmetric shape:</entry>
+<entry key="objectinfo.symmetric_shape.line">Symmetry: {0}</entry>
+
+<entry key="objectinfo.symmetric_shape.anchor_on">Anchored</entry>
+<entry key="objectinfo.symmetric_shape.anchor_off">Not anchored</entry>
+
+<entry key="objectinfo.symmetric_shape.no_join">No joining segment</entry>
+<entry key="objectinfo.symmetric_shape.join">Join: {0}</entry>
+
+<entry key="objectinfo.symmetric_shape.no_closing">No closing segment</entry>
+<entry key="objectinfo.symmetric_shape.closing">Closing: {0}</entry>
+
+<entry key="objectinfo.paint.transparent">transparent</entry>
+<entry key="objectinfo.paint.rgba">rgba({0} {1} {2} {3})</entry>
+<entry key="objectinfo.paint.cmyka">cmyka({0} {1} {2} {3} {4})</entry>
+<entry key="objectinfo.paint.gray">gray({0} {1})</entry>
+<entry key="objectinfo.paint.radial">radial: direction={0} start={1} end={2}</entry>
+<entry key="objectinfo.paint.gradient">gradient: direction={0} start={1} end={2}</entry>
+
+<entry key="objectinfo.distort.object">Distorted Object:</entry>
+<entry key="objectinfo.distort.distortion">Distortion: {0}</entry>
+<entry key="objectinfo.distort.mid">Mid distortion point: ({0}, {1})</entry>
+<entry key="objectinfo.distort.upper">Upper: {0}</entry>
+<entry key="objectinfo.distort.right">Right: {0}</entry>
+<entry key="objectinfo.distort.lower">Lower: {0}</entry>
+<entry key="objectinfo.distort.left">Left: {0}</entry>
+
+<entry key="objectinfo.underlying">Underlying object:</entry>
+
 <!-- Warning Messages -->
 
 <entry key="warning.title">Warning</entry>

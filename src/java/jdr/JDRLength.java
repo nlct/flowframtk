@@ -121,9 +121,16 @@ public class JDRLength implements Serializable,Cloneable
       return new JDRLength(getMessageSystem(), value, unit);
    }
 
+   @Override
    public String toString()
    {
       return "" + value + unit.getLabel();
+   }
+
+   public String info()
+   {
+      return getMessageSystem().getMessageWithFallback(
+       "objectinfo.length", "{0}{1}", value, unit.getLabel());
    }
 
    public void scale(double factor)

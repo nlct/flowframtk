@@ -2045,6 +2045,45 @@ public abstract class JDRPattern extends JDRCompoundShape
       return p;
    }
 
+   @Override
+   public String info(String prefix)
+   {
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
+
+      StringBuilder builder = new StringBuilder();
+   
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.pattern.anchor", "Anchor: {0}",
+         getPatternAnchor().info())
+      );
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.pattern.replicas", "Number of replicas: {0}",
+         getNumReplicas())
+      );
+
+      builder.append(eol);
+      builder.append(super.info(prefix));
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.underlying", "Underlying object:")
+      );
+
+      builder.append(eol);
+      builder.append(getUnderlyingShape().info(prefix+prefix));
+
+      return builder.toString();
+   }
+
+
    protected JDRPatternIterator iterator;
    protected JDRPatternPointIterator pointIterator;
 

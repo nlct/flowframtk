@@ -685,30 +685,106 @@ public class JDRTextPathStroke implements JDRStroke
       return Path2D.WIND_NON_ZERO;
    }
 
-   public String info()
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "TextPathStroke:"+eol;
-      str += "text: "+text+eol;
-      str += "LaTeX equivalent: "+latexText+eol;
-      str += "font: "+jdrFont.info()+eol;
-      str += "LaTeX font: "+latexFont.info()+eol;
-      str += "HAlign: "+halign+eol;
-      str += "VAlign: "+valign+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "Matrix: [";
+      builder.append(prefix);
 
-      for (int i = 0; i < 6; i++)
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textpath_stroke", "Text-Path Stroke:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textual.canvas_text", "Text: {0}", text));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.textual.latex_text", "LaTeX text: {0}", latexText));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(jdrFont.info());
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(latexFont.info(msgSys));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      switch (halign)
       {
-         if (i != 0) str += ",";
-
-         str += matrix[i];
+         case LEFT:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_left",
+              "Horizontal anchor: left"));
+         break;
+         case CENTER:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_center",
+              "Horizontal anchor: center"));
+         break;
+         case RIGHT:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_right",
+              "Horizontal anchor: right"));
+         break;
+         default: // shouldn't happen
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.halign_unknown",
+              "Unknown horizontal anchor ID: {0}", halign));
       }
 
-      str += "]";
+      builder.append(eol);
+      builder.append(prefix);
 
-      return str;
+      switch (valign)
+      {
+         case TOP:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_top",
+              "Vertical anchor: top"));
+         break;
+         case MIDDLE:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_middle",
+              "Vertical anchor: middle"));
+         break;
+         case BASE:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_base",
+              "Vertical anchor: base"));
+         break;
+         case BOTTOM:
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_bottom",
+              "Vertical anchor: bottom"));
+         break;
+         default: // shouldn't happen
+            builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.textual.valign_unknown",
+              "Unknown vertical anchor ID: {0}", valign));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.matrix",
+        "Transformation matrix: [ [ {0} {2} {4} ] [ {1} {3} {5} ] ]", 
+        matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]));
+
+      return builder.toString();
    }
 
    /**

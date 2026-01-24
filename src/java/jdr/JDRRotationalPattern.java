@@ -190,21 +190,31 @@ public class JDRRotationalPattern extends JDRPattern
     }
 
 
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "RotationalPattern:"+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "point of rotation: "+getPatternAnchor().info()+eol;
+      builder.append(prefix);
 
-      str += "angle of rotation: "+getRotationAngle()+eol;
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.rotational_pattern", "Rotational pattern:"));
 
-      str += "replicas: "+getNumReplicas();
+      builder.append(eol);
+      builder.append(prefix);
 
-      str += "Underlying shape:"+getUnderlyingShape().info();
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.rotational_pattern.angle", "Angle of rotation: {0}",
+         angle_ == null ? "null" : angle_.info())
+      );
 
-      return str;
+      builder.append(eol);
+      builder.append(super.info(prefix));
+
+      return builder.toString();
    }
 
    public JDRAngle getRotationAngle()

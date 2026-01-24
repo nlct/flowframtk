@@ -587,14 +587,18 @@ public class JDRLine extends JDRSegment
       return listener;
    }
 
+   @Override
    public String toString()
    {
       return "JDRLine:("+start.x+","+start.y+")("+end.x+","+end.y+"),startMarker="+startMarker+",endMarker="+endMarker;
    }
 
+   @Override
    public String info()
    {
-      return "line["+start.info()+","+end.info()+"]";
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.segment.line", "Line: start {0} end {1}",
+         start.info(), end.info());
    }
 
    public boolean isGap() {return false;}

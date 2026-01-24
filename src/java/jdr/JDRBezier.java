@@ -1210,10 +1210,13 @@ public class JDRBezier extends JDRSegment
       return listener;
    }
 
+   @Override
    public String info()
    {
-      return "bezier["+start.info()
-      +","+control1+","+control2+","+end.info()+"]";
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.segment.bezier",
+        "Bezier: start {0} control {1} control {2} end {3}",
+         start.info(), control1.info(), control2.info(), end.info());
    }
 
    public String getDetails()

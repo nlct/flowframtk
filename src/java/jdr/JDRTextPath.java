@@ -1122,15 +1122,46 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       return path_.getSymmetricPath();
    }
 
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "TextPath:"+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "Underlying shape: "+path_.info();
+      builder.append(prefix);
 
-      return str;
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.textpath", "Text-Path:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (isOutline())
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.textual.outline_on", "Outline mode on"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.textual.outline_off", "Outline mode off"));
+      }
+
+      builder.append(eol);
+      builder.append(super.info(prefix));
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.underlying", "Underlying object:")
+      );
+
+      builder.append(eol);
+      builder.append(path_.info(prefix+prefix));
+
+      return builder.toString();
    }
 
    public Object[] getDescriptionInfo()

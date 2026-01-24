@@ -3467,24 +3467,123 @@ public class JDRPath extends JDRShape
              : init_capacity_memory);
    }
 
-   public String info()
+   public String info(String prefix)
    {
-      StringBuilder builder = new StringBuilder(
-       String.format("Path:%nsize: %d%n", size_));
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
+
+      StringBuilder builder = new StringBuilder();
+
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.path", "Path:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.path.size", "size: {0}", size_));
 
       for (int i = 0; i < size_; i++)
       {
-         builder.append(String.format("Segment %d:%n%s%n",
-           i, segmentList_[i].info()));
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.path.segment", "Segment {0}:", i));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(segmentList_[i].info());
       }
 
-      builder.append(String.format("closed: %s%nline paint: %s%nfill paint: %s%ncapacity: %d%nedited segment: %s%nedited control: %s%nedited index: %s%nstroke: %s%narea: %f%n",
-        isClosed(), getLinePaint(), getFillPaint(), capacity_, selectedSegment,
-        selectedControl, selectedControlIndex, 
-        stroke == null ? "null" : stroke.info(),
-        computeArea(getGeneralPath())));
+      builder.append(eol);
+      builder.append(prefix);
 
-      builder.append(super.info());
+      if (isClosed())
+      {
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.path.closed", "Closed"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.path.not_closed", "Not closed"));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (msgSys.isDebuggingOn())
+      {
+         builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.path.line_paint", "Line paint: {0}", linePaint));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.path.fill_paint", "Fill paint: {0}", fillPaint));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.path.capacity", "objectinfo.path.capacity", capacity_));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.path.selected_segment", "Selected segment: {0}",
+             selectedSegment));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.path.selected_control", "Selected control: {0}",
+             selectedControl));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+            "objectinfo.path.selected_control_index",
+            "Selected control index: {0}",
+            selectedControlIndex));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.path.line_paint", "Line paint: {0}",
+               linePaint == null ? "null" : linePaint.info()));
+
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.path.fill_paint", "Fill paint: {0}",
+               fillPaint == null ? "null" : fillPaint.info()));
+      }
+
+      if (stroke != null)
+      {
+         builder.append(eol);
+         builder.append(stroke.info(prefix));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.path.area", "Area: {0}", computeArea(getGeneralPath())));
+
+      builder.append(eol);
+
+      builder.append(super.info(prefix));
 
       return builder.toString();
    }

@@ -328,23 +328,39 @@ public class JDRScaledPattern extends JDRPattern
     }
 
 
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "ScaledPattern:"+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "point of rotation: "+getPatternAnchor().info()+eol;
+      builder.append(prefix);
 
-      str += "x scale factor: "+getScaleX()+eol;
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.scaled_pattern", "Scaled pattern:"));
 
-      str += "y scale factor: "+getScaleY()+eol;
+      builder.append(eol);
+      builder.append(prefix);
 
-      str += "replicas: "+getNumReplicas();
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.scaled_pattern.scale_x", "Scale X: {0}",
+         getScaleX())
+      );
 
-      str += "Underlying shape:"+getUnderlyingShape().info();
+      builder.append(eol);
+      builder.append(prefix);
 
-      return str;
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.scaled_pattern.scale_y", "Scale Y: {0}",
+         getScaleY())
+      );
+
+      builder.append(eol);
+      builder.append(super.info(prefix));
+
+      return builder.toString();
    }
 
    public double getScaleX()

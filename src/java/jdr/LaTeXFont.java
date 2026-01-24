@@ -632,10 +632,12 @@ public class LaTeXFont implements Cloneable,Serializable
          "\\normalsize");
    }
 
-   public String info()
+   public String info(JDRMessageDictionary msgSys)
    {
-      return "family="+family+",weight="+weight+",shape="+shape
-      +",size="+size;
+      return msgSys.getMessageWithFallback(
+       "objectinfo.textual.latex_font",
+       "LaTeX font family: {0}, weight: {1}, shape: {2}, size: {3}",
+       family, weight, shape, size);
    }
 
    private String family="\\rmfamily";

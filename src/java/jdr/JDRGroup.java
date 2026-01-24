@@ -2532,34 +2532,49 @@ t
       return init_capacity_memory;
    }
 
-   public String info()
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
+   
+      StringBuilder builder = new StringBuilder();
 
-      String str = "Group:"+eol;
-      str += "size: "+size_+eol;
-      str += "capacity: "+getCapacity()+eol;
-      str += "description: "+description+eol;
-      str += "flowframe: "+flowframe+eol;
-      str += "is selected: "+isSelected()+eol;
-      BBox box = getStorageBBox();
-      if (box == null)
+      builder.append(prefix);
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.jdrgroup", "Group:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.jdrgroup.size", "Size: {0}", size_));
+
+      if (msgSys.isDebuggingOn())
       {
-         str += "bounding box: null"+eol;
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.jdrgroup.capacity", "Capacity: {0}", getCapacity()));
       }
-      else
-      {
-         str += "bounding box: "+getStorageBBox().info()+eol;
-      }
-      str += "hash code: "+hashCode()+eol;
+
+      builder.append(eol);
+      builder.append(super.info(prefix));
+
+      String objectPrefix = prefix+prefix;
 
       for (int i = 0; i < size_; i++)
       {
-         str += "Object "+i+":"+eol;
-         str += objectList_[i].info()+eol;
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.jdrgroup.object", "Object: {0}", i));
+
+         builder.append(objectList_[i].info(objectPrefix));
       }
 
-      return str;
+      return builder.toString();
    }
 
    public Object[] getDescriptionInfo()

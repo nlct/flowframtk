@@ -688,9 +688,73 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public String info()
    {
-      return String.format("description: %s%ntag: %s%nflowframe: %s%nis selected: %s%nbounding box:%s%nhash code: %s%n",
-        description, tag, flowframe, isSelected(), getStorageBBox().info(), 
-        hashCode());
+      return info(" ");
+   }
+
+   public String info(String prefix)
+   {
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
+
+      StringBuilder builder = new StringBuilder();
+
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.description", "Description: {0}", description));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.tag", "Tag: {0}", tag));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (flowframe == null)
+      {
+         builder.append(msgSys.getMessageWithFallback(
+          "objectinfo.no_flowframe", "No flowframe data"));
+      }
+      else
+      {
+         builder.append(flowframe.info());
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (msgSys.isDebuggingOn())
+      {
+         if (isSelected())
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.is_selected", "Is selected"));
+         }
+         else
+         {
+            builder.append(msgSys.getMessageWithFallback(
+              "objectinfo.not_selected", "Is not selected"));
+         }
+
+         builder.append(eol);
+         builder.append(prefix);
+      }
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.bbox", "Bounding box: {0}", getStorageBBox().info()));
+
+      if (msgSys.isDebuggingOn())
+      {
+         builder.append(eol);
+         builder.append(prefix);
+
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.hashcode", "Hash code: {0}", hashCode()));
+      }
+
+      return builder.toString();
    }
 
    /**

@@ -69,14 +69,25 @@ public class JDRAngle implements Serializable,Cloneable
       }
    }
 
+   @Override
    public Object clone()
    {
       return new JDRAngle(getMessageDictionary(), value, unit);
    }
 
+   @Override
    public String toString()
    {
       return String.format(Locale.ROOT, "%f %s", value, getLabel());
+   }
+
+   public String info()
+   {
+      String tag = getLabel();
+
+      return getMessageDictionary().getMessageWithFallback(
+        "objectinfo.angle." + tag, "{0} " + tag,
+        value);
    }
 
    public String getLabel()

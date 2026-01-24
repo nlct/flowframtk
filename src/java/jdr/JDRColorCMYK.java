@@ -182,12 +182,27 @@ public class JDRColorCMYK extends JDRPaint implements Serializable
              && alpha == 1.0;
    }
 
+   @Override
    public String toString()
    {
-      return new String("JDRColorCMYK@"+"C:" +cyan+"M:" +magenta+"Y:"
-                        +yellow+"K:"+key+"A:"+alpha);
+      return String.format("%s[C=%f,M=%f,Y=%f,Y=%f,K=%f,A=%f]",
+       getClass().getSimpleName(), cyan, magenta, yellow, key, alpha);
    }
 
+   @Override
+   public String info()
+   {
+      return getCanvasGraphics().getMessageWithFallback(
+       "objectinfo.paint.cmyka", "cmyka({0} {1} {2} {3} {4})",
+        String.format("%02X", (int)Math.round(255*cyan)),
+        String.format("%02X", (int)Math.round(255*magenta)),
+        String.format("%02X", (int)Math.round(255*yellow)),
+        String.format("%02X", (int)Math.round(255*key)),
+        String.format("%02X", (int)Math.round(255*alpha))
+      );
+   }
+
+   @Override
    public Object clone()
    {
       return new JDRColorCMYK(getCanvasGraphics(),

@@ -209,6 +209,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
                                endColor.getColor());
    }
 
+   @Override
    public Object clone()
    {
       return new JDRGradient(direction,
@@ -216,9 +217,20 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
         (JDRPaint)endColor.clone());
    }
 
+   @Override
    public String toString()
    {
-      return new String("JDRGradient@D:"+direction+startColor+endColor);
+      return String.format("%s[D=%d,start=%s,end=%s]",
+       getClass().getSimpleName(), direction, startColor, endColor);
+   }
+
+   @Override
+   public String info()
+   {
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.paint.gradient",
+        "gradient: direction={0} start={1} end={2}",
+         direction, startColor.info(), endColor.info());
    }
 
    private String pgfdeclareverticalshading(

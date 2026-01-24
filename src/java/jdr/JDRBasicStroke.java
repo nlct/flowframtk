@@ -43,8 +43,8 @@ import com.dickimawbooks.jdr.exceptions.*;
  * <li> Dash pattern
  * <li> Pen width (must be positive)
  * <li> Mitre limit (must be &gt;= 1)
- * <li> Winding rule ({@link GeneralPath#WIND_EVEN_ODD} or
- * {@link GeneralPath#WIND_NON_ZERO})
+ * <li> Winding rule ({@link Path2D#WIND_EVEN_ODD} or
+ * {@link Path2D#WIND_NON_ZERO})
  * <li> Start marker
  * <li> End marker
  * <li> Mid-point marker
@@ -2470,20 +2470,133 @@ public class JDRBasicStroke implements JDRStroke
       return pathStyleListener;
    }
 
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String str = "Basic stroke: dash="+dashPattern;
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      str += ", cap="+capStyle
-           + ", join="+joinStyle
-           + ", mitre="+mitreLimit
-           + ", winding rule="+windingRule
-           + ", pen width="+penWidth
-           + ", start marker="+startMarker
-           + ", mid marker="+midMarker
-           + ", end marker="+endMarker;
+      StringBuilder builder = new StringBuilder();
 
-      return str;
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.basic_stroke", "Basic Stroke:"));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.basic_stroke.pattern", "Line pattern: {0}",
+         dashPattern));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      switch (capStyle)
+      {
+         case BasicStroke.CAP_BUTT:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.cap_butt", "Cap: butt"));
+         break;
+         case BasicStroke.CAP_ROUND:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.cap_round", "Cap: round"));
+         break;
+         case BasicStroke.CAP_SQUARE:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.cap_square", "Cap: square"));
+         break;
+         default:
+           // shouldn't happen
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.cap_unknown", "Unknown cap ID {0}",
+              capStyle));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      switch (joinStyle)
+      {
+         case BasicStroke.JOIN_BEVEL:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.join_bevel", "Join: bevel"));
+         break;
+         case BasicStroke.JOIN_MITER:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.join_miter", "Join: miter"));
+         break;
+         case BasicStroke.JOIN_ROUND:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.join_round", "Join: round"));
+         break;
+         default:
+           // shouldn't happen
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.join_unknown", "Unknown join ID {0}",
+             joinStyle));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.basic_stroke.miter_limit", "Miter limit: {0}", mitreLimit));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      switch (windingRule)
+      {
+         case Path2D.WIND_EVEN_ODD:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.wind_evenodd", "Winding rule: even-odd"));
+         break;
+         case Path2D.WIND_NON_ZERO:
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.wind_nonzero", "Winding rule: non-zero"));
+         break;
+         default:
+           // shouldn't happen
+           builder.append(msgSys.getMessageWithFallback(
+             "objectinfo.basic_stroke.wind_unknown", "Unknown winding rule ID {0}",
+             windingRule));
+      }
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.basic_stroke.pen_width", "Pen width: {0}",
+         penWidth == null ? "null" : penWidth.info()));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      String markerPrefix = eol + prefix;
+      String markerInfoSep = msgSys.getMessageWithFallback(
+         "objectinfo.marker.sep", ", ");
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.basic_stroke.start_marker", "Start marker: {0}",
+        startMarker.info(markerPrefix, markerInfoSep)));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.basic_stroke.mid_marker", "Mid marker: {0}",
+         midMarker.info(markerPrefix, markerInfoSep)));
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.basic_stroke.end_marker", "End marker: {0}",
+        endMarker.info(markerPrefix, markerInfoSep)));
+
+      return builder.toString();
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)

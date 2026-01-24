@@ -198,10 +198,13 @@ public class JDRPartialLine extends JDRPartialSegment
 
    public boolean isGap() {return false;}
 
+   @Override
    public String info()
    {
-      return "partial line: start="+start.info()
-        +", symmetry="+line_.info();
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.segment.partial_line",
+        "Partial line: start {0}. Symmetry: ({1}) -- ({2})",
+         start.info(), line_.getStart().info(), line_.getEnd().info());
    }
 
    public String toString()

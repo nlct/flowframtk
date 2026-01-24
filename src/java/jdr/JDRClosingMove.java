@@ -824,7 +824,10 @@ implements JDRPathChangeListener
 
    public String info()
    {
-      return "closingmove["+start.info()+","+subPathStart.info()+","+end.info()+"]";
+      return getCanvasGraphics().getMessageWithFallback(
+        "objectinfo.segment.closing_move",
+        "Closing move: start {0} closing {1} move to {2}",
+         start.info(), subPathStart.info(), end.info());
    }
 
    public int getSegmentFlag()

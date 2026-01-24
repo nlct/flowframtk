@@ -54,6 +54,8 @@ public interface JDRDistortable extends JDRGraphicObject
    public JDRPattern getPattern();
    public Object clone();
 
+   public String info(String prefix);
+
    public int getHotspotFromStoragePoint(Point2D p);
    public int getHotspotFromBpPoint(Point2D p);
    public int getHotspotFromComponentPoint(Point2D p);

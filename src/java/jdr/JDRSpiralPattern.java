@@ -264,31 +264,57 @@ public class JDRSpiralPattern extends JDRPattern
       return str;
     }
 
-
-   public String info()
+   @Override
+   public String info(String prefix)
    {
-      String eol = System.getProperty("line.separator", "\n");
+      JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
+      String eol = String.format("%n");
 
-      String str = "SpiralPattern:"+eol;
+      StringBuilder builder = new StringBuilder();
 
-      str += "anchor: "+getPatternAnchor().info()+eol;
+      builder.append(prefix);
+
+      builder.append(msgSys.getMessageWithFallback(
+       "objectinfo.spiral_pattern", "Spiral pattern:"));
+
+      builder.append(eol);
+      builder.append(prefix);
 
       JDRPoint adjustPt = getPatternAdjust();
 
-      if (adjustPt != null)
+      if (adjustPt == null)
       {
-         str += "adjust: "+adjustPt.info()+eol;
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.spiral_pattern.adjust_control", "Adjustment control: {0}",
+            "null"));
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.spiral_pattern.adjust_control", "Adjustment control: {0}",
+            adjustPt.info()));
       }
 
-      str += "angle: "+getRotationAngle()+eol;
+      builder.append(eol);
+      builder.append(prefix);
 
-      str += "distance: "+getDistance()+eol;
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.spiral_pattern.angle", "Angle: {0}",
+         angle_ == null ? "null" : angle_.info())
+      );
 
-      str += "replicas: "+getNumReplicas();
+      builder.append(eol);
+      builder.append(prefix);
 
-      str += "Underlying shape:"+getUnderlyingShape().info();
+      builder.append(msgSys.getMessageWithFallback(
+        "objectinfo.spiral_pattern.distance", "Distance: {0}",
+         getDistance())
+      );
 
-      return str;
+      builder.append(eol);
+      builder.append(super.info(prefix));
+
+      return builder.toString();
    }
 
    public JDRAngle getRotationAngle()

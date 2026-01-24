@@ -953,8 +953,9 @@ public class BBox implements Cloneable,Serializable
 
    public String info()
    {
-      return new String("minX="+minX_+", minY="+minY_+", maxX="
-                      +maxX_+", maxY="+maxY_);
+      return getCanvasGraphics().getMessageWithFallback(
+         "objectinfo.bbox.values", "min = ({0} {1}), max = ({2} {3})",
+          minX_, minY_, maxX_, maxY_);
    }
 
    public CanvasGraphics getCanvasGraphics()
