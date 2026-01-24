@@ -1117,46 +1117,31 @@ public class JDRView extends JFrame
       propertiesItem.setEnabled(true);
       reloadItem.setEnabled(true);
       printItem.setEnabled(true);
-      image=null;
 
-      BufferedReader in=null;
+      AJR ajr = new AJR();
 
-      try
+      image = ajr.load(currentFile, canvasGraphics);
+
+      currentFormat = "AJR "+ajr.getLastLoadedVersion();
+
+      settingsFlag = ajr.getLastLoadedSettingsID();
+
+      if (settingsFlag == JDR.NO_SETTINGS)
       {
-         in = new BufferedReader(new FileReader(currentFile));
+         BBox bounds = image.getBpBBox();
 
-         AJR ajr = new AJR();
+         double width = Math.max(100, bounds.getMaxX());
+         double height = Math.max(100, bounds.getMinX());
 
-         image = ajr.load(in, canvasGraphics);
+         JDRPaper paper = JDRPaper.getClosestPredefinedPaper(
+            width, height, ajr.getVersion());
 
-         currentFormat = "AJR "+ajr.getLastLoadedVersion();
-
-         settingsFlag = ajr.getLastLoadedSettingsID();
-
-         if (settingsFlag == JDR.NO_SETTINGS)
+         if (paper == null)
          {
-            BBox bounds = image.getBpBBox();
-
-            double width = Math.max(100, bounds.getMaxX());
-            double height = Math.max(100, bounds.getMinX());
-
-            JDRPaper paper = JDRPaper.getClosestPredefinedPaper(
-               width, height, ajr.getVersion());
-
-            if (paper == null)
-            {
-               paper = new JDRPaper(getMessageSystem(), width, height);
-            }
-
-            canvasGraphics.setPaper(paper);
+            paper = new JDRPaper(getMessageSystem(), width, height);
          }
-      }
-      finally
-      {
-         if (in != null)
-         {
-            in.close();
-         }
+
+         canvasGraphics.setPaper(paper);
       }
 
       setCurrentMagnification(magnification);

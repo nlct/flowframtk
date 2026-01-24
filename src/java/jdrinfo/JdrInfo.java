@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2014 Nicola L.C. Talbot
+    Copyright (C) 2014-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ import com.dickimawbooks.jdrresources.JDRResources;
 
 /**
  * Gets information about a JDR or AJR file.
+ * TODO: add options to obtain extra information (via JDRAJR.FileInfo)
  * @author Nicola L C Talbot
  */
 public class JdrInfo implements FileFilter

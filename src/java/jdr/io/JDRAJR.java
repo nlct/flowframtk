@@ -27,6 +27,9 @@ package com.dickimawbooks.jdr.io;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 import java.awt.Shape;
@@ -253,48 +256,9 @@ public abstract class JDRAJR
    public static String getFileFormat(CanvasGraphics cg, File file)
      throws IOException,InvalidFormatException
    {
-      AJR ajr = new AJR();
-      ajr.setCanvasGraphics(cg);
-      ajr.currentIn = null;
+      FileInfo info = FileInfo.parseFile(cg, file);
 
-      try
-      {
-         ajr.currentIn = new BufferedReader(new FileReader(file));
-         String string = ajr.readString(3);
-
-         if (string.equals("AJR"))
-         {
-            return "AJR "+ajr.readFormatVersion(true);
-         }
-      }
-      catch (InvalidFormatException e)
-      {
-      }
-      finally
-      {
-         if (ajr.currentIn != null)
-         {
-            ajr.currentIn.close();
-         }
-      }
-
-      JDR jdr = new JDR();
-      jdr.setCanvasGraphics(cg);
-      jdr.currentIn = null;
-
-      try
-      {
-         jdr.currentIn = new DataInputStream(new FileInputStream(file));
-
-         return "JDR "+jdr.readFormatVersion();
-      }
-      finally
-      {
-         if (jdr.currentIn != null)
-         {
-            jdr.currentIn.close();
-         }
-      }
+      return info.getFileFormat();
    }
 
    protected abstract String readFormatVersion()
@@ -337,14 +301,28 @@ public abstract class JDRAJR
       }
 
       readPostVersion();
+      readStorageUnit();
+      readSettings();
+      readLaTeXSettings();
 
+      JDRGroup image = loadObjects();
+
+      lastLoadedVersion = version;
+      lastLoadedSettings = settingsFlag;
+
+      return image;
+   }
+
+   protected void readStorageUnit()
+      throws InvalidFormatException
+   {
       if (version >= 1.8f)
       {
          byte id = readByte(InvalidFormatException.UNIT_ID);
 
          try
          {
-            cg.setStorageUnit(id);
+            canvasGraphics.setStorageUnit(id);
          }
          catch (IllegalArgumentException e)
          {
@@ -360,9 +338,13 @@ public abstract class JDRAJR
       }
       else
       {
-         cg.setStorageUnit(JDRUnit.BP);
+         canvasGraphics.setStorageUnit(JDRUnit.BP);
       }
+   }
 
+   protected void readSettings()
+      throws InvalidFormatException
+   {
       if (version < 1.3f)
       {
          settingsFlag = 
@@ -376,11 +358,11 @@ public abstract class JDRAJR
 
       if (settingsFlag == ALL_SETTINGS)
       {
-         cg.read(this);
+         canvasGraphics.read(this);
       }
       else if (settingsFlag == PAPER_ONLY)
       {
-         cg.setPaper(JDRPaper.read(this));
+         canvasGraphics.setPaper(JDRPaper.read(this));
       }
       else if (settingsFlag != NO_SETTINGS)
       {
@@ -388,35 +370,50 @@ public abstract class JDRAJR
             InvalidFormatException.SETTINGS_ID, settingsFlag, this);
       }
 
+   }
+
+   protected void readLaTeXSettings()
+      throws InvalidFormatException
+   {
       if (version >= 1.8f)
       {
          // Read preamble, document body, document class and absolute pages setting
 
-         cg.setLaTeXNormalSize(readIntGt(
+         canvasGraphics.setLaTeXNormalSize(readIntGt(
             InvalidFormatException.SETTING_NORMALSIZE, 0));
-         cg.setPreamble(readString(InvalidFormatException.SETTING_PREAMBLE));
+
+         canvasGraphics.setPreamble(
+            readString(InvalidFormatException.SETTING_PREAMBLE));
 
          if (version >= 1.9f)
          {
-            cg.setMidPreamble(
+            canvasGraphics.setMidPreamble(
               readString(InvalidFormatException.SETTING_MID_PREAMBLE));
-            cg.setEndPreamble(
+
+            canvasGraphics.setEndPreamble(
               readString(InvalidFormatException.SETTING_END_PREAMBLE));
 
             if (version >= 2.1f)
             {
-               cg.setDocBody(
+               canvasGraphics.setDocBody(
                  readString(InvalidFormatException.SETTING_DOC_BODY));
 
-               cg.setMagicComments(
+               canvasGraphics.setMagicComments(
                  readString(InvalidFormatException.SETTING_MAGIC_COMMENTS));
             }
          }
 
-         cg.setDocClass(readString(InvalidFormatException.SETTING_DOCCLASS));
-         cg.setUseAbsolutePages(readBoolean(InvalidFormatException.SETTING_ABS_PAGES));
-      }
+         canvasGraphics.setDocClass(
+           readString(InvalidFormatException.SETTING_DOCCLASS));
 
+         canvasGraphics.setUseAbsolutePages(
+           readBoolean(InvalidFormatException.SETTING_ABS_PAGES));
+      }
+   }
+
+   protected JDRGroup loadObjects()
+      throws InvalidFormatException
+   {
       JDRObject allObjects = null;
 
       try
@@ -431,11 +428,8 @@ public abstract class JDRAJR
 
       if (!(allObjects instanceof JDRGroup))
       {
-        throw new JDRMissingTopLevelException(cg);
+         throw new JDRMissingTopLevelException(canvasGraphics);
       }
-
-      lastLoadedVersion = version;
-      lastLoadedSettings = settingsFlag;
 
       return (JDRGroup)allObjects;
    }
@@ -1273,6 +1267,245 @@ public abstract class JDRAJR
       }
 
       return basePath.relativize(path);
+   }
+
+   public static class FileInfo
+   {
+      public static FileInfo parseFile(JDRMessage msgSys, File file)
+        throws IOException,InvalidFormatException
+      {
+         return parseFile(new CanvasGraphics(msgSys), file);
+      }
+
+      public static FileInfo parseFile(CanvasGraphics cg, File file)
+        throws IOException,InvalidFormatException
+      {
+         return parseFile(cg, file, FORMAT_FLAG);
+      }
+
+      public static FileInfo parseFile(CanvasGraphics cg, File file, int infoFlags)
+        throws IOException,InvalidFormatException
+      {
+         FileInfo info = new FileInfo();
+
+         info.canvasGraphics = cg;
+         info.file = file;
+         info.infoFlags = infoFlags;
+
+         info.parseFile();
+
+         return info;
+      }
+
+      protected void parseFile()
+        throws IOException,InvalidFormatException
+      {
+         jdrAjr = null;
+
+         AJR ajr = new AJR();
+         ajr.setCanvasGraphics(canvasGraphics);
+         ajr.currentIn = null;
+
+         try
+         {
+            ajr.currentIn = Files.newBufferedReader(file.toPath());
+            String string = ajr.readString(3);
+
+            if (string.equals("AJR"))
+            {
+               formatInfo = string;
+               jdrAjr = ajr;
+
+               encoding = StandardCharsets.UTF_8;
+               String thisFileVersion = ajr.readFormatVersion(true);
+
+               read(thisFileVersion);
+            }
+         }
+         catch (FileNotFoundException e)
+         {
+            throw e;
+         }
+         catch (IOException e)
+         {
+            // maybe character encoding if binary file
+            canvasGraphics.debugMessage(e);
+         }
+         finally
+         {
+            if (ajr.currentIn != null)
+            {
+               ajr.currentIn.close();
+            }
+         }
+
+         if (jdrAjr == null)
+         {
+            JDR jdr = new JDR();
+            jdr.setCanvasGraphics(canvasGraphics);
+            jdr.currentIn = null;
+
+            try
+            {
+               jdr.currentIn = new DataInputStream(new FileInputStream(file));
+
+               jdrAjr = jdr;
+               formatInfo = "JDR";
+
+               String thisFileVersion = jdr.readFormatVersion();
+
+               read(thisFileVersion);
+            }
+            finally
+            {
+               if (jdr.currentIn != null)
+               {
+                  jdr.currentIn.close();
+               }
+            }
+         }
+      }
+
+      protected void read(String thisFileVersion)
+        throws IOException,InvalidFormatException
+      {
+         boolean found = false;
+
+         for (int i = 0; i < VALID_VERSIONS.length; i++)
+         {
+            if (thisFileVersion.equals(VALID_VERSIONS_STRING[i]))
+            {
+               jdrAjr.version = VALID_VERSIONS[i];
+               found = true;
+               break;
+            }
+         }
+
+         if (!found)
+         {
+            throw new JdrIllegalArgumentException(
+             JdrIllegalArgumentException.VERSION, thisFileVersion, jdrAjr);
+         }
+
+         versionString = thisFileVersion;
+         formatInfo += " " + versionString;
+
+         AJR ajr = getAJR();
+
+         try
+         {
+            jdrAjr.readPostVersion();
+         }
+         catch (MismatchedEncodingException mme)
+         {
+            encoding = mme.getFound();
+
+            if (ajr != null)
+            {
+               ajr.currentIn.close();
+
+               ajr.currentIn = Files.newBufferedReader(file.toPath(), encoding);
+               ajr.readFormatVersion();
+               ajr.readPostVersion();
+            }
+         }
+
+         if (ajr != null && ajr.version >= 2.2)
+         {
+            formatInfo += " " + encoding;
+         }
+
+         if (((infoFlags | ANY_DETAILS_FLAG) & ANY_DETAILS_FLAG) == ANY_DETAILS_FLAG)
+         {
+            jdrAjr.addAllListeners();
+            jdrAjr.readStorageUnit();
+            jdrAjr.readSettings();
+
+            if (((infoFlags | LATEX_OR_IMAGE_FLAG) & LATEX_OR_IMAGE_FLAG)
+                  == LATEX_OR_IMAGE_FLAG )
+            {
+               jdrAjr.readLaTeXSettings();
+
+               if ((infoFlags & IMAGE_FLAG) == IMAGE_FLAG)
+               {
+                  image = jdrAjr.loadObjects();
+               }
+            }
+         }
+      }
+
+      public boolean isAJR()
+      {
+         return jdrAjr instanceof AJR;
+      }
+
+      public AJR getAJR()
+      {
+         return isAJR() ? (AJR)jdrAjr : null;
+      }
+
+      public Charset getEncoding()
+      {
+         return isAJR() ? encoding : null;
+      }
+
+      public boolean isJDR()
+      {
+         return jdrAjr instanceof JDR;
+      }
+
+      public JDR getJDR()
+      {
+         return isJDR() ? (JDR)jdrAjr : null;
+      }
+
+      public String getFileFormat()
+      {
+         return formatInfo;
+      }
+
+      public CanvasGraphics getCanvasGraphics()
+      {
+         return canvasGraphics;
+      }
+
+      public JDRGroup getImage()
+      {
+         return image;
+      }
+
+      JDRAJR jdrAjr;
+      String formatInfo, versionString;
+      File file;
+      CanvasGraphics canvasGraphics;
+      Charset encoding;
+      int infoFlags;
+      JDRGroup image;
+
+      public static final int INFO_FORMAT = 0;
+      public static final int INFO_STORAGE_UNIT = 1;
+      public static final int INFO_SETTINGS = 2;
+      public static final int INFO_LATEX_SETTINGS = 3;
+      public static final int INFO_IMAGE = 4;
+
+      public static final int FORMAT_FLAG = (1 << INFO_FORMAT);
+      public static final int STORAGE_UNIT_FLAG = (1 << INFO_STORAGE_UNIT);
+      public static final int SETTINGS_FLAG = (1 << INFO_SETTINGS);
+      public static final int LATEX_SETTINGS_FLAG = (1 << INFO_LATEX_SETTINGS);
+      public static final int IMAGE_FLAG = (1 << INFO_IMAGE);
+
+      public static final int LATEX_OR_IMAGE_FLAG =
+       (
+          LATEX_SETTINGS_FLAG
+        | IMAGE_FLAG
+       );
+
+      public static final int ANY_DETAILS_FLAG =
+       (
+          STORAGE_UNIT_FLAG
+        | SETTINGS_FLAG
+        | LATEX_OR_IMAGE_FLAG
+       );
    }
 
    public abstract int getLineNum();

@@ -175,6 +175,7 @@ public class AJR extends JDRAJR
 
       try
       {
+         // only reading three characters (all ASCII)
          ajr.currentIn = new BufferedReader(new FileReader(file));
          String string = ajr.readString(3);
 
@@ -384,6 +385,11 @@ public class AJR extends JDRAJR
               InvalidFormatException.ENCODING, this, e);
          }
       }
+   }
+
+   public Charset getEncoding()
+   {
+      return encoding;
    }
 
    /**
