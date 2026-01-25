@@ -209,6 +209,14 @@ Nicola Talbot
 <entry key="menu.edit.path.line_colour.mnemonic">L</entry>
 <entry key="menu.edit.path.line_colour.tooltip">Set line color for selected paths</entry>
 
+<entry key="menu.edit.path.fill_colour">Fill Color...</entry>
+<entry key="menu.edit.path.fill_colour.mnemonic">L</entry>
+<entry key="menu.edit.path.fill_colour.tooltip">Set fill color for the selected shapes</entry>
+
+<entry key="menu.edit.path.textpathshow">Show path</entry>
+<entry key="menu.edit.path.textpathshow.mnemonic">P</entry>
+<entry key="menu.edit.path.textpathshow.tooltip">Show the underlying path</entry>
+
 <entry key="menu.edit.path.style">Line Styles</entry>
 <entry key="menu.edit.path.style.mnemonic">S</entry>
 <entry key="menu.edit.path.style.tooltip">Set styles for selected paths</entry>
@@ -314,6 +322,10 @@ Nicola Talbot
 <entry key="menu.edit.textarea.outline.initvalue">false</entry>
 <entry key="menu.edit.textarea.outline.tooltip">Display text as an outline for selected text areas</entry>
 
+<entry key="menu.edit.textarea.fill_colour">Fill Color...</entry>
+<entry key="menu.edit.textarea.fill_colour.mnemonic">L</entry>
+<entry key="menu.edit.textarea.fill_colour.tooltip">Set fill color for the selected outlined text areas</entry>
+
 <entry key="menu.edit.textarea.matrix">Transformation Matrix...</entry>
 <entry key="menu.edit.textarea.matrix.mnemonic">M</entry>
 <entry key="menu.edit.textarea.matrix.tooltip">Change the transformation matrix for the selected text area</entry>
@@ -363,10 +375,6 @@ Nicola Talbot
 <entry key="menu.edit.textarea.font.anchor.vertical.tooltip">Change the vertical LaTeX font anchor for the selected text areas</entry>
 
 <!--  Edit Menu Cont -->
-
-<entry key="menu.edit.fill_colour">Fill Color...</entry>
-<entry key="menu.edit.fill_colour.mnemonic">L</entry>
-<entry key="menu.edit.fill_colour.tooltip">Set fill color for the selected shapes or outlined text areas</entry>
 
 <entry key="menu.edit.adjustcol">Adjust Color</entry>
 <entry key="menu.edit.adjustcol.mnemonic">J</entry>
@@ -1183,6 +1191,10 @@ Nicola Talbot
 <entry key="menu.selectedpath.edit.keystroke">control I</entry>
 <entry key="menu.selectedpath.edit.initvalue">false</entry>
 
+<entry key="menu.selectedpath.textpathshow">Show Path</entry>
+<entry key="menu.selectedpath.textpathshow.mnemonic">W</entry>
+<entry key="menu.selectedpath.textpathshow.initvalue">false</entry>
+
 <entry key="menu.selectedpath.distort">Distort</entry>
 <entry key="menu.selectedpath.distort.mnemonic">R</entry>
 <entry key="menu.selectedpath.distort.initvalue">false</entry>
@@ -1305,9 +1317,6 @@ Nicola Talbot
 
 <entry key="menu.selected.textarea">Text</entry>
 <entry key="menu.selected.textarea.mnemonic">X</entry>
-
-<entry key="menu.selected.fill_colour">Fill Color...</entry>
-<entry key="menu.selected.fill_colour.mnemonic">F</entry>
 
 <entry key="menu.selected.bitmap">Bitmap</entry>
 <entry key="menu.selected.bitmap.mnemonic">B</entry>
@@ -1601,6 +1610,7 @@ Nicola Talbot
 <entry key="undo.symmetry.join_anchor">Symmetry Join Anchor</entry>
 <entry key="undo.symmetry.close_anchor">Symmetry Close Anchor</entry>
 <entry key="undo.text.outline">Set Text Outline Mode</entry>
+<entry key="undo.textpath.show">Set Text-Path Show Mode</entry>
 <entry key="undo.ungroup">Ungroup</entry>
 <entry key="undo.valign">Set valign</entry>
 <entry key="undo.xor_paths">XOR Paths</entry>

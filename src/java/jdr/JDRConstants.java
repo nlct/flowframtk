@@ -52,8 +52,9 @@ public interface JDRConstants
    public static final int OBJECT_OUTLINE=19;
    public static final int OBJECT_CLOSED_SUB_PATHS=20;
    public static final int OBJECT_NO_CLOSED_SUB_PATHS=21;
+   public static final int OBJECT_HAS_BASIC_STROKE=22;
 
-   public static final int OBJECT_MAX_INDEX=21;
+   public static final int OBJECT_MAX_INDEX=22;
 
    /*
     * Selection flags.
@@ -109,6 +110,9 @@ public interface JDRConstants
 
    public static final int SELECT_FLAG_OUTLINE = 
      (1 << OBJECT_OUTLINE);
+
+   public static final int SELECT_FLAG_HAS_BASIC_STROKE =
+     (1 << OBJECT_HAS_BASIC_STROKE);
 
    public static final int SELECT_FLAG_ANY
       = (1 << (OBJECT_MAX_INDEX+2)) - 1;

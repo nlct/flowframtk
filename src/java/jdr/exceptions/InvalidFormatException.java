@@ -222,6 +222,7 @@ public class InvalidFormatException extends Exception
    public static final String FONT_SIZE = "font-size";
    public static final String FONT_TRANSFORM = "font-transform";
    public static final String TEXT_OUTLINE_FLAG = "text-outline-flag";
+   public static final String SHOW_PATH_FLAG = "show-path-flag";
 
    public static final String LATEX_FONT_FLAG = "LaTeX-font-flag";
    public static final String LATEX_FONT_FAMILY = "LaTeX-font-family";

@@ -64,7 +64,7 @@ public class JDRPathListener implements JDRObjectLoaderListener
 
          paintLoader.save(jdr, path.getLinePaint());
 
-         paintLoader.save(jdr, path.getFillPaint());
+         paintLoader.save(jdr, path.getShapeFillPaint());
 
          path.getStroke().save(jdr);
       }
@@ -136,7 +136,7 @@ public class JDRPathListener implements JDRObjectLoaderListener
          JDRPaintLoader paintLoader = jdr.getPaintLoader();
 
          path.setLinePaint(paintLoader.load(jdr));
-         path.setFillPaint(paintLoader.load(jdr));
+         path.setShapeFillPaint(paintLoader.load(jdr));
          path.setStroke(JDRBasicStroke.read(jdr));
       }
       else

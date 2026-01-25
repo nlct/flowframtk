@@ -1253,16 +1253,22 @@ t
     * @return the fill colour of the first shape found or null
     * if no paths found
     */
-   public JDRPaint getFillPaint()
+   public JDRPaint getShapeFillPaint()
    {
       JDRShape path = getShape();
 
       if (path != null)
       {
-         return path.getFillPaint();
+         return path.getShapeFillPaint();
       }
 
       return null;
+   }
+
+   @Deprecated
+   public JDRPaint getFillPaint()
+   {
+      return getShapeFillPaint();
    }
 
    /**
@@ -1273,11 +1279,23 @@ t
     */
    public JDRPaint getTextPaint()
    {
-      JDRText text = getText();
+      JDRTextual text = getTextual();
 
       if (text != null)
       {
          return text.getTextPaint();
+      }
+
+      return null;
+   }
+
+   public JDRPaint getOutlineFillPaint()
+   {
+      JDRTextual text = getTextual();
+
+      if (text != null)
+      {
+         return text.getOutlineFillPaint();
       }
 
       return null;
@@ -1550,10 +1568,10 @@ t
    }
 
    /**
-    * Sets the fill colour for all paths contained within this group.
+    * Sets the fill colour for all shapes contained within this group.
     * This method descends subgroups.
     */
-   public void setFillPaint(JDRPaint paint)
+   public void setShapeFillPaint(JDRPaint paint)
    {
       if (objectList_ == null) return;
 
@@ -1563,13 +1581,19 @@ t
 
          if (object instanceof JDRShape)
          {
-            ((JDRShape)object).setFillPaint(paint);
+            ((JDRShape)object).setShapeFillPaint(paint);
          }
          else if (object instanceof JDRGroup)
          {
-            ((JDRGroup)object).setFillPaint(paint);
+            ((JDRGroup)object).setShapeFillPaint(paint);
          }
       }
+   }
+
+   @Deprecated
+   public void setFillPaint(JDRPaint paint)
+   {
+      setShapeFillPaint(paint);
    }
 
    /**
@@ -1592,6 +1616,25 @@ t
          else if (object instanceof JDRGroup)
          {
             ((JDRGroup)object).setTextPaint(paint);
+         }
+      }
+   }
+
+   public void setOutlineFillPaint(JDRPaint paint)
+   {
+      if (objectList_ == null) return;
+
+      for (int i = 0; i < size_; i++)
+      {
+         JDRCompleteObject object = get(i);
+
+         if (object instanceof JDRTextual)
+         {
+            ((JDRTextual)object).setOutlineFillPaint(paint);
+         }
+         else if (object instanceof JDRGroup)
+         {
+            ((JDRGroup)object).setOutlineFillPaint(paint);
          }
       }
    }

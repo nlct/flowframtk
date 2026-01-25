@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(200);
+      invoker.setStartupDeterminate(202);
 
       // create menu bar, menu and menu item
 
@@ -861,7 +861,7 @@ public class FlowframTk extends JFrame
          "menu", "edit.path", editM,
          TOOL_FLAG_SELECT, 
          EDIT_FLAG_NONE_OR_PATH,
-         SELECT_FLAG_SHAPE | SELECT_FLAG_NON_TEXTUAL_SHAPE, 
+         SELECT_FLAG_SHAPE, 
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
       incStartupProgress(editM, pathM);
@@ -900,7 +900,7 @@ public class FlowframTk extends JFrame
       linePaintItem = FlowframTkAction.createMenuItem(this,
          "menu.edit.path", "line_colour", pathM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_SHAPE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -914,12 +914,75 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(editM, pathM, linePaintItem);
 
+      // Shape fill colour
+
+      JMenuItem fillPaintItem = FlowframTkAction.createMenuItem(this,
+         "menu.edit", "path.fill_colour", pathM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_SHAPE,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               displayShapeFillPaintChooser();
+            }
+         });
+
+
+      shapeFillPaintChooserBox = new ShapeFillPaintSelector(this);
+
+      incStartupProgress(editM, pathM, fillPaintItem);
+
+      // Show Path
+
+      showPathItem = 
+         FlowframTkAction.createToggleMenuItem(this,
+         "menu.edit", "path.textpathshow", pathM, false,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         FlowframTkAction.CONSTRUCTION_FLAG_NONE,
+         SELECT_FLAG_TEXTPATH,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, 
+         true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               Object source = evt.getSource();
+
+               action.getCanvas().setSelectedTextPathShow(action.isSelected());
+            }
+         });
+
+      pathM.addMenuListener(new MenuListener()
+       {
+           @Override
+           public void menuSelected(MenuEvent evt)
+           {
+              if (showPathItem.isEnabled())
+              {
+                 showPathItem.setSelected(
+                  getCurrentFrame().getCanvas().isSelectedTextPathShowOn());
+              }
+           }
+           @Override
+           public void menuDeselected(MenuEvent evt)
+           {
+           }
+           @Override
+           public void menuCanceled(MenuEvent evt)
+           {
+           }
+       });
+
+      incStartupProgress(editM, pathM, showPathItem);
+
       // Edit Line Style sub menu
 
       lineStyleM = FlowframTkAction.createMenu(this, 
          "menu.edit", "path.style", pathM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
       incStartupProgress(editM, pathM, lineStyleM);
@@ -929,7 +992,7 @@ public class FlowframTk extends JFrame
       lineStyleItem = FlowframTkAction.createMenuItem(this,
          "menu.edit", "path.style.all_styles", lineStyleM,
           TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-          SELECT_FLAG_NON_TEXTUAL_SHAPE,
+          SELECT_FLAG_HAS_BASIC_STROKE,
           FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -948,7 +1011,7 @@ public class FlowframTk extends JFrame
       allMarkersItem = FlowframTkAction.createMenuItem(this,
          "menu.edit.path.style", "all_markers", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -970,7 +1033,7 @@ public class FlowframTk extends JFrame
       lineWidthItem = FlowframTkAction.createMenuItem(this,
          "menu.edit.path.style", "linewidth", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -989,7 +1052,7 @@ public class FlowframTk extends JFrame
       dashItem = FlowframTkAction.createMenuItem(this,
          "menu.edit.path.style", "dashpattern", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1008,7 +1071,7 @@ public class FlowframTk extends JFrame
       JMenu capM = FlowframTkAction.createMenu(this,
          "menu.edit.path.style", "capstyle", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
       capM.addMenuListener(new MenuListener()
@@ -1053,7 +1116,7 @@ public class FlowframTk extends JFrame
       capButtItem = FlowframTkAction.createRadioButtonMenuItem(this,
          "menu.edit.path.style", "capstyle.butt", capM, capGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1070,7 +1133,7 @@ public class FlowframTk extends JFrame
       capRoundItem = FlowframTkAction.createRadioButtonMenuItem(this,
          "menu.edit.path.style", "capstyle.round", capM, capGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1087,7 +1150,7 @@ public class FlowframTk extends JFrame
       capSquareItem = FlowframTkAction.createRadioButtonMenuItem(this,
          "menu.edit.path.style", "capstyle.square", capM, capGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1104,7 +1167,7 @@ public class FlowframTk extends JFrame
       joinItem = FlowframTkAction.createMenuItem(this,
          "menu.edit.path.style", "joinstyle", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1124,7 +1187,7 @@ public class FlowframTk extends JFrame
       startArrowItem = FlowframTkAction.createMenuItem(this,
         "menu.edit", "path.style.startarrow", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1145,7 +1208,7 @@ public class FlowframTk extends JFrame
       midArrowItem = FlowframTkAction.createMenuItem(this,
         "menu.edit", "path.style.midarrow", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1166,7 +1229,7 @@ public class FlowframTk extends JFrame
       endArrowItem = FlowframTkAction.createMenuItem(this,
         "menu.edit", "path.style.endarrow", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1187,7 +1250,7 @@ public class FlowframTk extends JFrame
       JMenu windingM = FlowframTkAction.createMenu(this, 
         "menu.edit.path.style", "windingrule", lineStyleM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false);
 
       ButtonGroup windingGroup = new ButtonGroup();
@@ -1230,7 +1293,7 @@ public class FlowframTk extends JFrame
          "menu.edit.path.style", "windingrule.evenodd", windingM,
          windingGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1250,7 +1313,7 @@ public class FlowframTk extends JFrame
          "menu.edit.path.style", "windingrule.nonzero", windingM,
          windingGroup,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -1360,6 +1423,26 @@ public class FlowframTk extends JFrame
        });
 
       incStartupProgress(editM, textM, textOutlineItem);
+
+      // Outline fill colour
+
+      JMenuItem outlineFillPaintItem = FlowframTkAction.createMenuItem(this,
+         "menu.edit", "textarea.fill_colour", textM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_OUTLINE,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               displayOutlineFillPaintChooser();
+            }
+         });
+
+      incStartupProgress(editM, textM, outlineFillPaintItem);
+
+      outlineFillPaintChooserBox = new OutlineFillPaintSelector(this);
+
 
       // JDRText transformation matrix
 
@@ -1555,27 +1638,6 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(editM, textM, fontStyleM, fontAnchorM,
          fontVAnchorItem);
-
-      // Fill colour
-
-      fillPaintItem = FlowframTkAction.createMenuItem(this,
-         "menu.edit", "fill_colour", editM,
-         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_NON_TEXTUAL_SHAPE | SELECT_FLAG_OUTLINE,
-         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
-         new FlowframTkActionListener()
-         {
-            public void doAction(FlowframTkAction action, ActionEvent evt)
-            {
-               displayFillPaintChooser();
-            }
-         });
-
-
-      fillPaintChooserBox = new FillPaintSelector(this);
-
-      incStartupProgress(editM, pathM, fillPaintItem);
-
 
       // Adjust colour sub menu
 
@@ -4413,9 +4475,14 @@ public class FlowframTk extends JFrame
       linePaintChooserBox.initialise();
    }
 
-   public void displayFillPaintChooser()
+   public void displayShapeFillPaintChooser()
    {
-      fillPaintChooserBox.initialise();
+      shapeFillPaintChooserBox.initialise();
+   }
+
+   public void displayOutlineFillPaintChooser()
+   {
+      outlineFillPaintChooserBox.initialise();
    }
 
    public void displayLineWidthChooser()
@@ -6038,7 +6105,7 @@ public class FlowframTk extends JFrame
       {
          oldLinePaint_ = getSettings().getLinePaint();
          linePaint_    = linePaint;
-         oldFillPaint_ = getSettings().getFillPaint();
+         oldFillPaint_ = getSettings().getShapeFillPaint();
          fillPaint_    = fillPaint;
          oldTextPaint_ = getSettings().getTextPaint();
          textPaint_    = textPaint;
@@ -6066,7 +6133,7 @@ public class FlowframTk extends JFrame
          latexSeries_    = latexFontSeries;
 
          getSettings().setLinePaint(linePaint_);
-         getSettings().setFillPaint(fillPaint_);
+         getSettings().setShapeFillPaint(fillPaint_);
          getSettings().setTextPaint(textPaint_);
          getSettings().setStroke(stroke_);
          getSettings().setFontFamily(familyName_);
@@ -6086,7 +6153,7 @@ public class FlowframTk extends JFrame
       public void redo() throws CannotRedoException
       {
          getSettings().setLinePaint(linePaint_);
-         getSettings().setFillPaint(fillPaint_);
+         getSettings().setShapeFillPaint(fillPaint_);
          getSettings().setTextPaint(textPaint_);
          getSettings().setStroke(stroke_);
          getSettings().setFontFamily(familyName_);
@@ -6106,7 +6173,7 @@ public class FlowframTk extends JFrame
       public void undo() throws CannotUndoException
       {
          getSettings().setLinePaint(oldLinePaint_);
-         getSettings().setFillPaint(oldFillPaint_);
+         getSettings().setShapeFillPaint(oldFillPaint_);
          getSettings().setTextPaint(oldTextPaint_);
          getSettings().setStroke(oldStroke_);
          getSettings().setFontFamily(oldFamilyName_);
@@ -6142,9 +6209,20 @@ public class FlowframTk extends JFrame
       return getSettings().getLinePaint();
    }
 
+   @Deprecated
    public JDRPaint getCurrentFillPaint()
    {
       return getSettings().getFillPaint();
+   }
+
+   public JDRPaint getCurrentShapeFillPaint()
+   {
+      return getSettings().getShapeFillPaint();
+   }
+
+   public JDRPaint getCurrentOutlineFillPaint()
+   {
+      return getSettings().getOutlineFillPaint();
    }
 
    public JDRPaint getCurrentTextPaint()
@@ -7461,7 +7539,7 @@ public class FlowframTk extends JFrame
          }
 
          out.println(linePaintChooserBox.info());
-         out.println(fillPaintChooserBox.info());
+         out.println(shapeFillPaintChooserBox.info());
          out.println(lineStyleChooserBox.info());
          out.println(lineWidthChooserBox.info());
          out.println(dashPatternChooserBox.info());
@@ -7472,6 +7550,7 @@ public class FlowframTk extends JFrame
          out.println(allMarkersChooserBox.info());
          out.println(editTextBox.info());
          out.println(textPaintChooserBox.info());
+         out.println(outlineFillPaintChooserBox.info());
          out.println(textStyleChooserBox.info());
          out.println(fontFamilyChooserBox.info());
          out.println(fontSizeChooserBox.info());
@@ -7617,7 +7696,8 @@ public class FlowframTk extends JFrame
    // dialog boxes
 
    private LinePaintSelector linePaintChooserBox;
-   private FillPaintSelector fillPaintChooserBox;
+   private ShapeFillPaintSelector shapeFillPaintChooserBox;
+   private OutlineFillPaintSelector outlineFillPaintChooserBox;
    private LineStyleSelector lineStyleChooserBox;
    private LineWidthSelector lineWidthChooserBox;
    private DashPatternSelector dashPatternChooserBox;
@@ -7731,7 +7811,7 @@ public class FlowframTk extends JFrame
                      exportItem, importItem, printItem, 
                      pageDialogItem,
                      closeItem, quitItem,
-                     deselectAllItem, linePaintItem, fillPaintItem,
+                     deselectAllItem, linePaintItem,
                      lineStyleItem, lineWidthItem, dashItem,
                      startArrowItem, midArrowItem, endArrowItem,
                      allMarkersItem, editTextItem, textPaintItem,
@@ -7778,7 +7858,7 @@ public class FlowframTk extends JFrame
 
    private JCheckBoxMenuItem showRulersItem,
       showStatusBarItem, 
-      showPrinterMarginsItem, textOutlineItem;
+      showPrinterMarginsItem, textOutlineItem, showPathItem;
 
    private JMenu fileM, editM, pathM, textM, transformM, justifyM, alignToPageM,
                  alignToTypeblockM, toolsM, bitmapM, texM, settingsM, windowM, recentM,

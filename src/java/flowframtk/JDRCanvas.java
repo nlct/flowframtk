@@ -1034,6 +1034,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("textarea.colour");
       CanvasSelectAction textOutlineAction
          = addCanvasSelectAction("textarea.outline");
+      CanvasSelectAction textFillPaintAction
+         = addCanvasSelectAction("textarea.fill_colour");
       CanvasSelectAction allFontStylesAction
          = addCanvasSelectAction("font.all_styles");
       CanvasSelectAction fontFamilyAction
@@ -1059,8 +1061,8 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("distort");
       CanvasSelectAction linePaintAction
          = addCanvasSelectAction("line_colour");
-      CanvasSelectAction fillPaintAction
-         = addCanvasSelectAction("fill_colour");
+      CanvasSelectAction pathFillPaintAction
+         = addCanvasSelectAction("path.fill_colour");
       CanvasSelectAction pathStyleAction
          = addCanvasSelectAction("path.style.all_styles");
       CanvasSelectAction lineWidthAction
@@ -1087,6 +1089,9 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("windingrule.evenodd");
       CanvasSelectAction nonZeroAction
          = addCanvasSelectAction("windingrule.nonzero");
+
+      CanvasSelectAction textPathShowAction
+         = addCanvasSelectAction("path.textpathshow");
 
       // Bitmap
 
@@ -1269,9 +1274,9 @@ public class JDRCanvas extends JPanel
          "menu.selectedtext.outline", false,
          "menu.edit.textarea.outline.tooltip"));
 
-      selectTextPopupMenu.add(fillPaintAction.createMenuItem(
+      selectTextPopupMenu.add(textFillPaintAction.createMenuItem(
          "menu.selectedtext.fill_colour",
-         "menu.edit.fill_colour.tooltip"));
+         "menu.edit.textarea.fill_colour.tooltip"));
 
       selectTextPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1500,9 +1505,9 @@ public class JDRCanvas extends JPanel
 
       // Fill paint
 
-      selectPathPopupMenu.add(fillPaintAction.createMenuItem(
+      selectPathPopupMenu.add(pathFillPaintAction.createMenuItem(
          "menu.selectedpath.fill_colour",
-         "menu.edit.fill_colour.tooltip"));
+         "menu.edit.path.fill_colour.tooltip"));
 
       selectPathPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1606,7 +1611,7 @@ public class JDRCanvas extends JPanel
          "menu.edit.path.style.windingrule.nonzero", windingGroup, false,
          "menu.edit.path.style.windingrule.nonzero.tooltip"));
 
-      // only textpaths selected popup menu
+      // Only textpaths selected popup menu
 
       selectTextPathPopupMenu = new JPopupMenu();
 
@@ -1620,16 +1625,229 @@ public class JDRCanvas extends JPanel
       selectTextPathPopupMenu.add(objectTagAction.createMenuItem(
          "menu.selectedtextpath.textpath_tag"));
 
-      // Edit text
+      // Paths sub menu
 
-      selectTextPathPopupMenu.add(editTextAction.createMenuItem(
-         "menu.selectedtext.edit",
-         "menu.edit.textarea.edit.tooltip"));
+      JMenu tpPathMenu = addCanvasSelectAction("edit.path").createMenu(
+         "menu.selected.path",
+         "menu.edit.path.edit.tooltip");
+
+      selectTextPathPopupMenu.add(tpPathMenu);
 
       // Edit Path
 
-      selectTextPathPopupMenu.add(editPathAction.createCheckBoxMenuItem(
+      tpPathMenu.add(editPathAction.createCheckBoxMenuItem(
          "menu.selectedpath.edit", false, "menu.edit.path.edit.tooltip"));
+
+      // Show path
+
+      tpPathMenu.add(textPathShowAction.createCheckBoxMenuItem(
+         "menu.selectedpath.textpathshow", false,
+         "menu.edit.path.textpathshow.tooltip"));
+
+      // Line paint
+
+      tpPathMenu.add(linePaintAction.createMenuItem(
+         "menu.selectedpath.line_colour",
+         "menu.edit.path.line_colour.tooltip"));
+
+      // Path Fill paint
+
+      tpPathMenu.add(pathFillPaintAction.createMenuItem(
+         "menu.selectedpath.fill_colour",
+         "menu.edit.path.fill_colour.tooltip"));
+
+      // All styles
+
+      tpPathMenu.add(pathStyleAction.createMenuItem(
+         "menu.selectedpath.all_styles",
+         "menu.edit.path.style.all_styles.tooltip"));
+
+      // Pen width
+
+      tpPathMenu.add(lineWidthAction.createMenuItem(
+         "menu.selectedpath.linewidth",
+         "menu.edit.path.style.linewidth.tooltip"));
+
+      // Dash pattern
+
+      tpPathMenu.add(dashPatternAction.createMenuItem(
+         "menu.selectedpath.dashpattern",
+         "menu.edit.path.style.dashpattern.tooltip"));
+
+      // Cap submenu
+
+      capMenu = getResources().createAppMenu("menu.selectedpath.capstyle");
+      tpPathMenu.add(capMenu);
+
+      capGroup = new ButtonGroup();
+
+      // Butt cap
+
+      capMenu.add(capStyleButtAction.createRadioButtonMenuItem(
+         "menu.edit.path.style.capstyle.butt", capGroup, false, 
+         "menu.edit.path.style.capstyle.butt.tooltip"));
+
+      // Round cap
+
+      capMenu.add(capStyleRoundAction.createRadioButtonMenuItem(
+         "menu.edit.path.style.capstyle.round", capGroup, false, 
+         "menu.edit.path.style.capstyle.round.tooltip"));
+
+      // Square cap
+
+      capMenu.add(capStyleSquareAction.createRadioButtonMenuItem(
+         "menu.edit.path.style.capstyle.square", capGroup, false, 
+         "menu.edit.path.style.capstyle.square.tooltip"));
+
+      // Join
+
+      tpPathMenu.add(joinStyleAction.createMenuItem(
+         "menu.selectedpath.joinstyle",
+         "menu.edit.path.style.joinstyle.tooltip"));
+
+      // Markers
+
+      markerMenu = getResources().createAppMenu("menu.selectedpath.marker");
+      tpPathMenu.add(markerMenu);
+
+      // All markers
+
+      markerMenu.add(allMarkersAction.createMenuItem(
+         "menu.edit.path.style.all_markers",
+         "menu.edit.path.style.all_markers.tooltip"));
+
+      markerMenu.addSeparator();
+
+      // Start Marker
+
+      markerMenu.add(startMarkerAction.createMenuItem(
+         "menu.edit.path.style.startarrow",
+         "menu.edit.path.style.startarrow.tooltip"));
+
+      // Mid Marker
+
+      markerMenu.add(midMarkerAction.createMenuItem(
+         "menu.edit.path.style.midarrow",
+         "menu.edit.path.style.midarrow.tooltip"));
+
+      // End Marker
+
+      markerMenu.add(endMarkerAction.createMenuItem(
+         "menu.edit.path.style.endarrow",
+         "menu.edit.path.style.endarrow.tooltip"));
+
+      // Winding rule sub menu
+
+      windingMenu = getResources().createAppMenu(
+         "menu.selectedpath.windingrule");
+      tpPathMenu.add(windingMenu);
+
+      windingGroup = new ButtonGroup();
+
+      // Even odd
+
+      windingMenu.add(evenOddAction.createRadioButtonMenuItem(
+         "menu.edit.path.style.windingrule.evenodd", windingGroup, false,
+         "menu.edit.path.style.windingrule.evenodd.tooltip"));
+
+      // Non zero
+
+      windingMenu.add(nonZeroAction.createRadioButtonMenuItem(
+         "menu.edit.path.style.windingrule.nonzero", windingGroup, false,
+         "menu.edit.path.style.windingrule.nonzero.tooltip"));
+
+      // Text sub menu
+
+      JMenu tpTextMenu = addCanvasSelectAction("edit.textarea").createMenu(
+         "menu.selected.textarea",
+         "menu.edit.textarea.edit.tooltip");
+
+      selectTextPathPopupMenu.add(tpTextMenu);
+
+      // Edit text
+
+      tpTextMenu.add(editTextAction.createMenuItem(
+         "menu.selectedtext.edit",
+         "menu.edit.textarea.edit.tooltip"));
+
+      // Text paint
+
+      tpTextMenu.add(textPaintAction.createMenuItem(
+         "menu.selectedtext.colour", "menu.edit.textarea.colour.tooltip"));
+
+      tpTextMenu.add(textOutlineAction.createCheckBoxMenuItem(
+         "menu.selectedtext.outline", false,
+         "menu.edit.textarea.outline.tooltip"));
+
+      tpTextMenu.add(textFillPaintAction.createMenuItem(
+         "menu.selectedtext.fill_colour",
+         "menu.edit.textarea.fill_colour.tooltip"));
+
+      tpTextMenu.add(new JPopupMenu.Separator());
+
+      // All font styles
+
+      tpTextMenu.add(allFontStylesAction.createMenuItem(
+         "menu.selectedtext.all_styles",
+         "menu.edit.textarea.font.all_styles.tooltip"));
+
+      // Family
+
+      tpTextMenu.add(fontFamilyAction.createMenuItem(
+         "menu.selectedtext.family",
+         "menu.edit.textarea.font.family.tooltip"));
+
+      // Size
+
+      tpTextMenu.add(fontSizeAction.createMenuItem(
+         "menu.selectedtext.size",
+         "menu.edit.textarea.font.size.tooltip"));
+
+      // Shape
+
+      tpTextMenu.add(fontShapeAction.createMenuItem(
+         "menu.selectedtext.shape",
+         "menu.edit.textarea.font.shape.tooltip"));
+
+      // Series
+
+      tpTextMenu.add(fontSeriesAction.createMenuItem(
+         "menu.selectedtext.series",
+         "menu.edit.textarea.font.series.tooltip"));
+
+      // anchor
+
+      sTextAnchorM = getResources().createAppMenu(
+         "menu.selectedtext.anchor");
+
+      tpTextMenu.add(sTextAnchorM);
+
+      // both
+
+      sTextAnchorM.add(fontAnchorBothAction.createMenuItem(
+         "menu.edit.textarea.font.anchor.both",
+         "menu.edit.textarea.font.anchor.both.tooltip"));
+
+      // horizontal
+
+      sTextAnchorM.add(fontAnchorHorizontalAction.createMenuItem(
+         "menu.edit.textarea.font.anchor.horizontal",
+         "menu.edit.textarea.font.anchor.horizontal.tooltip"));
+
+      // vertical
+
+      sTextAnchorM.add(fontAnchorVerticalAction.createMenuItem(
+         "menu.edit.textarea.font.anchor.vertical",
+         "menu.edit.textarea.font.anchor.vertical.tooltip"));
+
+      // Reset Matrix
+
+      tpTextMenu.add(resetAction.createMenuItem(
+         "menu.selectedtext.reset",
+         "menu.transform.reset.tooltip"));
+
+
+      // Back to text path menu
 
       selectTextPathPopupMenu.add(new JPopupMenu.Separator());
 
@@ -1760,82 +1978,6 @@ public class JDRCanvas extends JPanel
         "menu.transform.align_to_page.bottom",
         "menu.transform.align_to_page.bottom.tooltip"));
 
-      selectTextPathPopupMenu.add(new JPopupMenu.Separator());
-
-      // Text paint
-
-      selectTextPathPopupMenu.add(textPaintAction.createMenuItem(
-         "menu.selectedtext.colour", "menu.edit.textarea.colour.tooltip"));
-
-      selectTextPathPopupMenu.add(textOutlineAction.createCheckBoxMenuItem(
-         "menu.selectedtext.outline", false,
-         "menu.edit.textarea.outline.tooltip"));
-
-      selectTextPathPopupMenu.add(fillPaintAction.createMenuItem(
-         "menu.selectedtext.fill_colour",
-         "menu.edit.fill_colour.tooltip"));
-
-      selectTextPathPopupMenu.add(new JPopupMenu.Separator());
-
-      // All font styles
-
-      selectTextPathPopupMenu.add(allFontStylesAction.createMenuItem(
-         "menu.selectedtext.all_styles",
-         "menu.edit.textarea.font.all_styles.tooltip"));
-
-      // Family
-
-      selectTextPathPopupMenu.add(fontFamilyAction.createMenuItem(
-         "menu.selectedtext.family",
-         "menu.edit.textarea.font.family.tooltip"));
-
-      // Size
-
-      selectTextPathPopupMenu.add(fontSizeAction.createMenuItem(
-         "menu.selectedtext.size",
-         "menu.edit.textarea.font.size.tooltip"));
-
-      // Shape
-
-      selectTextPathPopupMenu.add(fontShapeAction.createMenuItem(
-         "menu.selectedtext.shape",
-         "menu.edit.textarea.font.shape.tooltip"));
-
-      // Series
-
-      selectTextPathPopupMenu.add(fontSeriesAction.createMenuItem(
-         "menu.selectedtext.series",
-         "menu.edit.textarea.font.series.tooltip"));
-
-      // anchor
-
-      sTextAnchorM = getResources().createAppMenu(
-         "menu.selectedtext.anchor");
-      selectTextPathPopupMenu.add(sTextAnchorM);
-
-      // both
-
-      sTextAnchorM.add(fontAnchorBothAction.createMenuItem(
-         "menu.edit.textarea.font.anchor.both",
-         "menu.edit.textarea.font.anchor.both.tooltip"));
-
-      // horizontal
-
-      sTextAnchorM.add(fontAnchorHorizontalAction.createMenuItem(
-         "menu.edit.textarea.font.anchor.horizontal",
-         "menu.edit.textarea.font.anchor.horizontal.tooltip"));
-
-      // vertical
-
-      sTextAnchorM.add(fontAnchorVerticalAction.createMenuItem(
-         "menu.edit.textarea.font.anchor.vertical",
-         "menu.edit.textarea.font.anchor.vertical.tooltip"));
-
-      // Reset Matrix
-
-      selectTextPathPopupMenu.add(resetAction.createMenuItem(
-         "menu.selectedtext.reset",
-         "menu.transform.reset.tooltip"));
 
       // only bitmaps selected popup menu
 
@@ -2224,7 +2366,17 @@ public class JDRCanvas extends JPanel
          "menu.selectedpath.line_colour",
          "menu.edit.path.line_colour.tooltip"));
 
-      selectPopupMenu.add(pathMenu);
+      // Path Fill paint
+
+      pathMenu.add(pathFillPaintAction.createMenuItem(
+         "menu.selectedpath.fill_colour",
+         "menu.edit.path.fill_colour.tooltip"));
+
+      // Show path
+
+      pathMenu.add(textPathShowAction.createCheckBoxMenuItem(
+         "menu.selectedpath.textpathshow", false,
+         "menu.edit.path.textpathshow.tooltip"));
 
       // All styles
 
@@ -2331,6 +2483,7 @@ public class JDRCanvas extends JPanel
       JMenu textMenu = addCanvasSelectAction("edit.textarea").createMenu(
          "menu.selected.textarea",
          "menu.edit.textarea.edit.tooltip");
+
       selectPopupMenu.add(textMenu);
 
       // Text paint
@@ -2342,6 +2495,12 @@ public class JDRCanvas extends JPanel
       textMenu.add(textOutlineAction.createCheckBoxMenuItem(
          "menu.selectedtext.outline", false,
          "menu.edit.textarea.outline.tooltip"));
+
+      // Fill paint
+
+      textMenu.add(textFillPaintAction.createMenuItem(
+         "menu.selectedtext.fill_colour",
+         "menu.edit.textarea.fill_colour.tooltip"));
 
       textMenu.add(new JPopupMenu.Separator());
 
@@ -2400,12 +2559,6 @@ public class JDRCanvas extends JPanel
 
       textMenu.add(resetAction.createMenuItem(
          "menu.selectedtext.reset", "menu.transform.reset"));
-
-      // Fill paint
-
-      selectPopupMenu.add(fillPaintAction.createMenuItem(
-         "menu.selected.fill_colour",
-         "menu.edit.fill_colour.tooltip"));
 
       // bitmap sub menu
 
@@ -2587,10 +2740,16 @@ public class JDRCanvas extends JPanel
          else if (((selectFlag & SELECT_FLAG_TEXTUAL) != 0)
                || ((selectFlag & SELECT_FLAG_TEXT) != 0))
          {
-            selectTextActionList.add((CanvasSelectAction)action);
+            if ((selectFlag & (SELECT_FLAG_SHAPE)) != 0)
+            {
+               selectPathActionList.add((CanvasSelectAction)action);
+            }
+            else
+            {
+               selectTextActionList.add((CanvasSelectAction)action);
+            }
          }
-         else if ((selectFlag &
-                  (SELECT_FLAG_SHAPE | SELECT_FLAG_NON_TEXTUAL_SHAPE)) != 0)
+         else if ((selectFlag & (SELECT_FLAG_SHAPE)) != 0)
          {
             selectPathActionList.add((CanvasSelectAction)action);
          }
@@ -2820,7 +2979,7 @@ public class JDRCanvas extends JPanel
 
       JDRBasicStroke stroke = null;
 
-      if ((selectionFlag & SELECT_FLAG_NON_TEXTUAL_SHAPE) != 0)
+      if ((selectionFlag & SELECT_FLAG_SHAPE) != 0)
       {
          stroke = getSelectedBasicStroke();
       }
@@ -2864,6 +3023,10 @@ public class JDRCanvas extends JPanel
                 {
                    action.setSelected(
                      stroke.getWindingRule() == GeneralPath.WIND_NON_ZERO);
+                }
+                else if (actionCmd.equals("path.textshowpath"))
+                {
+                   action.setSelected(isSelectedTextPathShowOn());
                 }
              }
           }
@@ -3728,9 +3891,9 @@ public class JDRCanvas extends JPanel
 
          if (obj.isSelected())
          {
-            if (obj instanceof JDRTextual)
+            if (obj.hasTextual())
             {
-               return ((JDRTextual)obj).isOutline();
+               return obj.getTextual().isOutline();
             }
             else if (obj instanceof JDRGroup)
             {
@@ -3752,13 +3915,71 @@ public class JDRCanvas extends JPanel
 
          if (obj.isSelected())
          {
-            if (obj instanceof JDRTextual)
+            if (obj.hasTextual())
             {
-               return Boolean.valueOf(((JDRTextual)obj).isOutline());
+               return Boolean.valueOf(obj.getTextual().isOutline());
             }
             else if (obj instanceof JDRGroup)
             {
                Boolean bool = isSelectedTextOutlineOn((JDRGroup)obj);
+
+               if (bool != null) return bool.booleanValue();
+            }
+         }
+      }
+
+      return null;
+   }
+
+   public boolean isSelectedTextPathShowOn()
+   {
+      for (int i = 0; i < paths.size(); i++)
+      {
+         JDRCompleteObject obj = paths.get(i);
+
+         if (obj.isSelected())
+         {
+            if (obj.hasTextual())
+            {
+               JDRTextual textual = obj.getTextual();
+
+               if (textual instanceof JDRTextPath)
+               {
+                  return ((JDRTextPath)textual).showPath();
+               }
+            }
+            else if (obj instanceof JDRGroup)
+            {
+               Boolean bool = isSelectedTextPathShowOn((JDRGroup)obj);
+
+               if (bool != null) return bool.booleanValue();
+            }
+         }
+      }
+
+      return false;
+   }
+
+   protected Boolean isSelectedTextPathShowOn(JDRGroup group)
+   {
+      for (int i = 0; i < group.size(); i++)
+      {
+         JDRCompleteObject obj = group.get(i);
+
+         if (obj.isSelected())
+         {
+            if (obj.hasTextual())
+            {
+               JDRTextual textual = obj.getTextual();
+
+               if (textual instanceof JDRTextPath)
+               {
+                  return Boolean.valueOf(((JDRTextPath)textual).showPath());
+               }
+            }
+            else if (obj instanceof JDRGroup)
+            {
+               Boolean bool = isSelectedTextPathShowOn((JDRGroup)obj);
 
                if (bool != null) return bool.booleanValue();
             }
@@ -4098,7 +4319,7 @@ public class JDRCanvas extends JPanel
    public void doConstructMouseClick(Point2D currentPos)
    {
       JDRPaint currentLinePaint = frame_.getCurrentLinePaint();
-      JDRPaint currentFillPaint = frame_.getCurrentFillPaint();
+      JDRPaint currentFillPaint = frame_.getCurrentShapeFillPaint();
       JDRBasicStroke currentStroke = frame_.getCurrentStroke();
       int tool = frame_.currentTool();
 
@@ -5154,7 +5375,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setLineWidth(lineWidth, object, ce);
+               flag = setLineWidth(lineWidth, object, ce) || flag;
             }
          }
 
@@ -5173,17 +5394,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setLineWidth(width, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object instanceof JDRShape
-       && !(object instanceof JDRTextual))
+                 && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetLineWidth((JDRShape)object, width);
          ce.addEdit(edit);
@@ -5205,7 +5427,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            flag = setDashPattern(pattern, object, ce);
+            flag = setDashPattern(pattern, object, ce) || flag;
          }
       }
 
@@ -5219,20 +5441,22 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setDashPattern(pattern, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if ((object instanceof JDRShape)
-        && !(object instanceof JDRTextual))
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetDashPattern((JDRShape)object, pattern);
          ce.addEdit(edit);
+
          return true;
       }
 
@@ -5253,7 +5477,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setCapStyle(capStyle, object, ce);
+               flag = setCapStyle(capStyle, object, ce) || flag;
             }
          }
 
@@ -5272,17 +5496,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setCapStyle(style, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object instanceof JDRShape
-       && !(object instanceof JDRTextual))
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetCapStyle((JDRShape)object, style);
          ce.addEdit(edit);
@@ -5306,7 +5531,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setJoinStyle(joinStyle, object, ce);
+               flag = setJoinStyle(joinStyle, object, ce) || flag;
             }
          }
 
@@ -5325,17 +5550,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setJoinStyle(style, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object instanceof JDRShape
-        && !(object instanceof JDRTextual))
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetJoinStyle((JDRShape)object, style);
          ce.addEdit(edit);
@@ -5359,7 +5585,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setJoinStyle(joinStyle, mitreLimit, object, ce);
+               flag = setJoinStyle(joinStyle, mitreLimit, object, ce) || flag;
             }
          }
 
@@ -5378,7 +5604,7 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -5386,10 +5612,11 @@ public class JDRCanvas extends JPanel
             flag = setJoinStyle(style, mitreLimit, grp.get(i), ce)
                  || flag;
          }
+
          return flag;
       }
       else if (object instanceof JDRShape
-        && !(object instanceof JDRTextual))
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetJoinStyle((JDRShape)object, style);
          ce.addEdit(edit);
@@ -5415,7 +5642,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setMitreLimit(limit, object, ce);
+               flag = setMitreLimit(limit, object, ce) || flag;
             }
          }
 
@@ -5434,17 +5661,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setMitreLimit(limit, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object instanceof JDRShape
-       && !(object instanceof JDRTextual))
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetMitreLimit((JDRShape)object, limit);
          ce.addEdit(edit);
@@ -5479,16 +5707,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setStartArrow(marker, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          try
          {
@@ -5531,16 +5761,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setMidArrow(marker, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          try
          {
@@ -5583,16 +5815,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setEndArrow(marker, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          try
          {
@@ -5636,16 +5870,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setMarkers(marker, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          try
          {
@@ -5678,7 +5914,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setWindingRule(rule, object, ce);
+               flag = setWindingRule(rule, object, ce) || flag;
             }
          }
 
@@ -5697,7 +5933,7 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -5706,7 +5942,8 @@ public class JDRCanvas extends JPanel
          }
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetWindingRule((JDRShape)object, style);
          ce.addEdit(edit);
@@ -5730,7 +5967,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setHalign(align, object, ce);
+               flag = setHalign(align, object, ce) || flag;
             }
          }
 
@@ -5749,13 +5986,14 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setHalign(align, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object.hasTextual())
@@ -5783,7 +6021,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setValign(align, object, ce);
+               flag = setValign(align, object, ce) || flag;
             }
          }
 
@@ -5802,13 +6040,14 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setValign(align, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object.hasTextual())
@@ -5836,7 +6075,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setAnchor(halign, valign, object, ce);
+               flag = setAnchor(halign, valign, object, ce) || flag;
             }
          }
 
@@ -5855,7 +6094,7 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -5889,7 +6128,7 @@ public class JDRCanvas extends JPanel
 
             if (object.isSelected())
             {
-               flag = setTextOutlineMode(outline, object, ce);
+               flag = setTextOutlineMode(outline, object, ce) || flag;
             }
          }
 
@@ -5908,13 +6147,14 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setTextOutlineMode(outline, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
       else if (object.hasTextual())
@@ -5923,6 +6163,66 @@ public class JDRCanvas extends JPanel
             = new SetTextOutlineMode(object.getTextual(), outline);
          ce.addEdit(edit);
          return true;
+      }
+
+      return false;
+   }
+
+   public void setSelectedTextPathShow(boolean show)
+   {
+      try
+      {
+         JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+         boolean flag = false;
+
+         for (int i = 0, n = paths.size(); i < n; i++)
+         {
+            JDRCompleteObject object = paths.get(i);
+
+            if (object.isSelected())
+            {
+               flag = setTextPathShow(show, object, ce) || flag;
+            }
+         }
+
+         ce.end();
+         if (flag) frame_.postEdit(ce);
+      }
+      catch (Throwable e)
+      {
+         // this shouldn't happen
+         getResources().internalError(this, e);
+      }
+   }
+
+   private boolean setTextPathShow(boolean show, 
+      JDRCompleteObject object, JDRCanvasCompoundEdit ce)
+   {
+      if (object instanceof JDRGroup)
+      {
+         boolean flag = false;
+         JDRGroup grp = (JDRGroup)object;
+
+         for (int i = 0, n = grp.size(); i < n; i++)
+         {
+            flag = setTextPathShow(show, grp.get(i), ce) || flag;
+         }
+
+         return flag;
+      }
+      else if (object.hasTextual())
+      {
+         JDRTextual textual = object.getTextual();
+
+         if (textual instanceof JDRTextPath)
+         {
+            UndoableEdit edit
+               = new SetTextPathShow((JDRTextPath)textual, show);
+            ce.addEdit(edit);
+
+            return true;
+         }
       }
 
       return false;
@@ -5940,7 +6240,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            flag = setStroke(s, object, ce);
+            flag = setStroke(s, object, ce) || flag;
          }
       }
 
@@ -5953,16 +6253,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
+
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setStroke(s, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if (object instanceof JDRShape)
+      else if (object instanceof JDRShape && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetLineStyle((JDRShape)object, s);
          ce.addEdit(edit);
@@ -6584,15 +6886,10 @@ public class JDRCanvas extends JPanel
       {
          JDRCompleteObject object = paths.get(i);
 
-         if (object.isSelected() && object instanceof JDRShape)
+         if (object.isSelected() && object instanceof JDRShape
+              && ((JDRShape)object).hasBasicStroke())
          {
-            JDRShape shape = (JDRShape)object;
-            JDRStroke stroke = shape.getStroke();
-
-            if (stroke instanceof JDRBasicStroke)
-            {
-               return (JDRBasicStroke) stroke;
-            }
+            return ((JDRShape)object).getBasicStroke();
          }
       }
 
@@ -6604,16 +6901,18 @@ public class JDRCanvas extends JPanel
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
          {
             flag = setLinePaint(paint, grp.get(i), ce) || flag;
          }
+
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+      else if (object instanceof JDRShape
+                && ((JDRShape)object).hasBasicStroke())
       {
          UndoableEdit edit = new SetLinePaint((JDRShape)object, paint);
          ce.addEdit(edit);
@@ -6626,7 +6925,7 @@ public class JDRCanvas extends JPanel
    public boolean setTextPaint(JDRPaint paint, JDRCompleteObject object, 
                                JDRCanvasCompoundEdit ce)
    {
-      boolean flag=false;
+      boolean flag = false;
 
       if (object instanceof JDRGroup)
       {
@@ -6648,12 +6947,13 @@ public class JDRCanvas extends JPanel
       return flag;
    }
 
+   @Deprecated
    public boolean setFillPaint(JDRPaint paint, JDRCompleteObject object, 
                                JDRCanvasCompoundEdit ce)
    {
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
+         boolean flag = false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -6665,18 +6965,75 @@ public class JDRCanvas extends JPanel
       }
       else if (object.hasTextual())
       {
-         if (object.getTextual().isOutline())
+         JDRTextual textual = object.getTextual();
+
+         if (textual.isOutline())
          {
-            UndoableEdit edit = new SetFillPaint(object, paint);
+            UndoableEdit edit = new SetOutlineFillPaint(textual, paint);
             ce.addEdit(edit);
             return true;
          }
       }
       else if (object instanceof JDRShape)
       {
-         UndoableEdit edit = new SetFillPaint(object, paint);
+         UndoableEdit edit = new SetShapeFillPaint((JDRShape)object, paint);
          ce.addEdit(edit);
          return true;
+      }
+
+      return false;
+   }
+
+   public boolean setShapeFillPaint(JDRPaint paint, JDRCompleteObject object, 
+                               JDRCanvasCompoundEdit ce)
+   {
+      if (object instanceof JDRGroup)
+      {
+         boolean flag = false;
+         JDRGroup grp = (JDRGroup)object;
+
+         for (int i = 0, n = grp.size(); i < n; i++)
+         {
+            flag = setShapeFillPaint(paint, grp.get(i), ce) || flag;
+         }
+
+         return flag;
+      }
+      else if (object instanceof JDRShape)
+      {
+         UndoableEdit edit = new SetShapeFillPaint((JDRShape)object, paint);
+         ce.addEdit(edit);
+         return true;
+      }
+
+      return false;
+   }
+
+   public boolean setOutlineFillPaint(JDRPaint paint, JDRCompleteObject object, 
+                               JDRCanvasCompoundEdit ce)
+   {
+      if (object instanceof JDRGroup)
+      {
+         boolean flag = false;
+         JDRGroup grp = (JDRGroup)object;
+
+         for (int i = 0, n = grp.size(); i < n; i++)
+         {
+            flag = setOutlineFillPaint(paint, grp.get(i), ce) || flag;
+         }
+
+         return flag;
+      }
+      else if (object.hasTextual())
+      {
+         JDRTextual textual = object.getTextual();
+
+         if (textual.isOutline())
+         {
+            UndoableEdit edit = new SetOutlineFillPaint(textual, paint);
+            ce.addEdit(edit);
+            return true;
+         }
       }
 
       return false;
@@ -6687,13 +7044,14 @@ public class JDRCanvas extends JPanel
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = setLinePaint(paint, object, ce);
+            flag = setLinePaint(paint, object, ce) || flag;
          }
       }
 
@@ -6706,13 +7064,14 @@ public class JDRCanvas extends JPanel
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = setTextPaint(paint, object, ce);
+            flag = setTextPaint(paint, object, ce) || flag;
          }
       }
 
@@ -6744,18 +7103,60 @@ public class JDRCanvas extends JPanel
       return frame_.getCurrentTextPaint();
    }
 
+   @Deprecated
    public void setSelectedFillPaint(JDRPaint paint)
    {
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = setFillPaint(paint, object, ce);
+            flag = setFillPaint(paint, object, ce) || flag;
+         }
+      }
+
+      ce.end();
+      if (flag) frame_.postEdit(ce);
+   }
+
+   public void setSelectedShapeFillPaint(JDRPaint paint)
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+      boolean flag = false;
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            flag = setShapeFillPaint(paint, object, ce) || flag;
+         }
+      }
+
+      ce.end();
+      if (flag) frame_.postEdit(ce);
+   }
+
+   public void setSelectedOutlineFillPaint(JDRPaint paint)
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+      boolean flag = false;
+
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            flag = setOutlineFillPaint(paint, object, ce) || flag;
          }
       }
 
@@ -6768,13 +7169,14 @@ public class JDRCanvas extends JPanel
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = reduceToGrey(object, ce);
+            flag = reduceToGrey(object, ce) || flag;
          }
       }
 
@@ -6785,9 +7187,10 @@ public class JDRCanvas extends JPanel
    public boolean reduceToGrey(JDRCompleteObject object, 
                                JDRCanvasCompoundEdit ce)
    {
+      boolean flag = false;
+
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -6797,7 +7200,8 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+
+      if (object instanceof JDRShape)
       {
          JDRShape path = (JDRShape)object;
 
@@ -6813,7 +7217,7 @@ public class JDRCanvas extends JPanel
             linePaint = linePaint.getJDRGray();
          }
 
-         JDRPaint fillPaint = path.getFillPaint();
+         JDRPaint fillPaint = path.getShapeFillPaint();
 
          if (fillPaint instanceof JDRShading)
          {
@@ -6827,103 +7231,107 @@ public class JDRCanvas extends JPanel
 
          UndoableEdit edit;
 
-         edit = new SetFillPaint(path, fillPaint);
+         edit = new SetShapeFillPaint(path, fillPaint);
          ce.addEdit(edit);
          edit = new SetLinePaint(path, linePaint);
          ce.addEdit(edit);
 
-         JDRBasicStroke stroke = (JDRBasicStroke)path.getStroke();
+         JDRBasicStroke stroke = path.getBasicStroke();
 
-         JDRMarker marker = stroke.getStartArrow();
-
-         if (marker.fillPaint != null)
+         if (stroke != null)
          {
-            marker = (JDRMarker)marker.clone();
+            JDRMarker marker = stroke.getStartArrow();
 
-            if (marker.fillPaint instanceof JDRShading)
+            if (marker.fillPaint != null)
             {
-               // shaded marker fill paint isn't implemented
-               // yet, but add the code in case it is implemented
-               // in future
-               ((JDRShading)marker.fillPaint).reduceToGreyScale();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRGray();
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  // shaded marker fill paint isn't implemented
+                  // yet, but add the code in case it is implemented
+                  // in future
+                  ((JDRShading)marker.fillPaint).reduceToGreyScale();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRGray();
+               }
+
+               try
+               {
+                  edit = new SetStartArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
 
-            try
-            {
-               edit = new SetStartArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
+            marker = stroke.getMidArrow();
 
-               getResources().internalError(this, e);
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  ((JDRShading)marker.fillPaint).reduceToGreyScale();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRGray();
+               }
+
+               try
+               {
+                  edit = new SetMidArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
+            }
+
+            marker = stroke.getEndArrow();
+
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  ((JDRShading)marker.fillPaint).reduceToGreyScale();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRGray();
+               }
+
+               try
+               {
+                  edit = new SetEndArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
          }
 
-         marker = stroke.getMidArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            if (marker.fillPaint instanceof JDRShading)
-            {
-               ((JDRShading)marker.fillPaint).reduceToGreyScale();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRGray();
-            }
-
-            try
-            {
-               edit = new SetMidArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         marker = stroke.getEndArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            if (marker.fillPaint instanceof JDRShading)
-            {
-               ((JDRShading)marker.fillPaint).reduceToGreyScale();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRGray();
-            }
-
-            try
-            {
-               edit = new SetEndArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         return true;
+         flag = true;
       }
-      else if (object.hasTextual())
+
+      if (object.hasTextual())
       {
          JDRTextual text = object.getTextual();
 
@@ -6946,15 +7354,15 @@ public class JDRCanvas extends JPanel
 
          if (text.isOutline())
          {
-            JDRPaint fillPaint = text.getFillPaint().removeTransparency();
-            edit = new SetFillPaint(object, fillPaint);
+            JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
+            edit = new SetOutlineFillPaint(text, fillPaint);
             ce.addEdit(edit);
          }
 
-         return true;
+         flag = true;
       }
 
-      return false;
+      return flag;
    }
 
    public void removeAlpha()
@@ -6962,13 +7370,14 @@ public class JDRCanvas extends JPanel
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = removeAlpha(object, ce);
+            flag = removeAlpha(object, ce) || flag;
          }
       }
 
@@ -6979,9 +7388,10 @@ public class JDRCanvas extends JPanel
    public boolean removeAlpha(JDRCompleteObject object, 
                                JDRCanvasCompoundEdit ce)
    {
+      boolean flag = false;
+
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -6991,89 +7401,94 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+
+      if (object instanceof JDRShape)
       {
          JDRShape path = (JDRShape)object;
 
          JDRPaint linePaint = path.getLinePaint().removeTransparency();
 
-         JDRPaint fillPaint = path.getFillPaint().removeTransparency();
+         JDRPaint fillPaint = path.getShapeFillPaint().removeTransparency();
 
          UndoableEdit edit;
 
-         edit = new SetFillPaint(path, fillPaint);
+         edit = new SetShapeFillPaint(path, fillPaint);
          ce.addEdit(edit);
          edit = new SetLinePaint(path, linePaint);
          ce.addEdit(edit);
 
-         JDRBasicStroke stroke = (JDRBasicStroke)path.getStroke();
+         JDRBasicStroke stroke = path.getBasicStroke();
 
-         JDRMarker marker = stroke.getStartArrow();
-
-         if (marker.fillPaint != null)
+         if (stroke != null)
          {
-            marker = (JDRMarker)marker.clone();
+            JDRMarker marker = stroke.getStartArrow();
 
-            marker.fillPaint = marker.fillPaint.removeTransparency();
-
-            try
+            if (marker.fillPaint != null)
             {
-               edit = new SetStartArrow(path, marker);
-               ce.addEdit(edit);
+               marker = (JDRMarker)marker.clone();
+
+               marker.fillPaint = marker.fillPaint.removeTransparency();
+
+               try
+               {
+                  edit = new SetStartArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
 
-               getResources().internalError(this, e);
+            marker = stroke.getMidArrow();
+
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               marker.fillPaint = marker.fillPaint.removeTransparency();
+
+               try
+               {
+                  edit = new SetMidArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
+            }
+
+            marker = stroke.getEndArrow();
+
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               marker.fillPaint = marker.fillPaint.removeTransparency();
+
+               try
+               {
+                  edit = new SetEndArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
          }
 
-         marker = stroke.getMidArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            marker.fillPaint = marker.fillPaint.removeTransparency();
-
-            try
-            {
-               edit = new SetMidArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         marker = stroke.getEndArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            marker.fillPaint = marker.fillPaint.removeTransparency();
-
-            try
-            {
-               edit = new SetEndArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         return true;
+         flag = true;
       }
-      else if (object.hasTextual())
+
+      if (object.hasTextual())
       {
          JDRTextual text = object.getTextual();
 
@@ -7086,15 +7501,15 @@ public class JDRCanvas extends JPanel
 
          if (text.isOutline())
          {
-            JDRPaint fillPaint = text.getFillPaint().removeTransparency();
-            edit = new SetFillPaint(object, fillPaint);
+            JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
+            edit = new SetOutlineFillPaint(text, fillPaint);
             ce.addEdit(edit);
          }
 
-         return true;
+         flag = true;
       }
 
-      return false;
+      return flag;
    }
 
    public void convertToCMYK()
@@ -7102,13 +7517,14 @@ public class JDRCanvas extends JPanel
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = convertToCMYK(object, ce);
+            flag = convertToCMYK(object, ce) || flag;
          }
       }
 
@@ -7119,9 +7535,10 @@ public class JDRCanvas extends JPanel
    public boolean convertToCMYK(JDRCompleteObject object, 
                                JDRCanvasCompoundEdit ce)
    {
+      boolean flag = false;
+
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -7131,7 +7548,8 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+
+      if (object instanceof JDRShape)
       {
          JDRShape path = (JDRShape)object;
 
@@ -7147,7 +7565,7 @@ public class JDRCanvas extends JPanel
             linePaint = linePaint.getJDRColorCMYK();
          }
 
-         JDRPaint fillPaint = path.getFillPaint();
+         JDRPaint fillPaint = path.getShapeFillPaint();
 
          if (fillPaint instanceof JDRShading)
          {
@@ -7161,103 +7579,107 @@ public class JDRCanvas extends JPanel
 
          UndoableEdit edit;
 
-         edit = new SetFillPaint(path, fillPaint);
+         edit = new SetShapeFillPaint(path, fillPaint);
          ce.addEdit(edit);
          edit = new SetLinePaint(path, linePaint);
          ce.addEdit(edit);
 
-         JDRBasicStroke stroke = (JDRBasicStroke)path.getStroke();
+         JDRBasicStroke stroke = path.getBasicStroke();
 
-         JDRMarker marker = stroke.getStartArrow();
-
-         if (marker.fillPaint != null)
+         if (stroke != null)
          {
-            marker = (JDRMarker)marker.clone();
+            JDRMarker marker = stroke.getStartArrow();
 
-            if (marker.fillPaint instanceof JDRShading)
+            if (marker.fillPaint != null)
             {
-               // shaded marker fill paint isn't implemented
-               // yet, but add the code in case it is implemented
-               // in future
-               ((JDRShading)marker.fillPaint).convertToCMYK();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRColorCMYK();
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  // shaded marker fill paint isn't implemented
+                  // yet, but add the code in case it is implemented
+                  // in future
+                  ((JDRShading)marker.fillPaint).convertToCMYK();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRColorCMYK();
+               }
+
+               try
+               {
+                  edit = new SetStartArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
 
-            try
-            {
-               edit = new SetStartArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
+            marker = stroke.getMidArrow();
 
-               getResources().internalError(this, e);
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  ((JDRShading)marker.fillPaint).convertToCMYK();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRColorCMYK();
+               }
+
+               try
+               {
+                  edit = new SetMidArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
+            }
+
+            marker = stroke.getEndArrow();
+
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  ((JDRShading)marker.fillPaint).convertToCMYK();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRColorCMYK();
+               }
+
+               try
+               {
+                  edit = new SetEndArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
          }
 
-         marker = stroke.getMidArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            if (marker.fillPaint instanceof JDRShading)
-            {
-               ((JDRShading)marker.fillPaint).convertToCMYK();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRColorCMYK();
-            }
-
-            try
-            {
-               edit = new SetMidArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         marker = stroke.getEndArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            if (marker.fillPaint instanceof JDRShading)
-            {
-               ((JDRShading)marker.fillPaint).convertToCMYK();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRColorCMYK();
-            }
-
-            try
-            {
-               edit = new SetEndArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         return true;
+         flag = true;
       }
-      else if (object.hasTextual())
+
+      if (object.hasTextual())
       {
          JDRTextual text = object.getTextual();
 
@@ -7280,15 +7702,15 @@ public class JDRCanvas extends JPanel
 
          if (text.isOutline())
          {
-            JDRPaint fillPaint = text.getFillPaint().removeTransparency();
-            edit = new SetFillPaint(object, fillPaint);
+            JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
+            edit = new SetOutlineFillPaint(text, fillPaint);
             ce.addEdit(edit);
          }
 
-         return true;
+         flag = true;
       }
 
-      return false;
+      return flag;
    }
 
    public void convertToRGB()
@@ -7296,13 +7718,14 @@ public class JDRCanvas extends JPanel
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
       boolean flag = false;
+
       for (int i = 0, n = paths.size(); i < n; i++)
       {
          JDRCompleteObject object = paths.get(i);
 
          if (object.isSelected())
          {
-            flag = convertToRGB(object, ce);
+            flag = convertToRGB(object, ce) || flag;
          }
       }
 
@@ -7313,9 +7736,10 @@ public class JDRCanvas extends JPanel
    public boolean convertToRGB(JDRCompleteObject object, 
                                JDRCanvasCompoundEdit ce)
    {
+      boolean flag = false;
+
       if (object instanceof JDRGroup)
       {
-         boolean flag=false;
          JDRGroup grp = (JDRGroup)object;
 
          for (int i = 0, n = grp.size(); i < n; i++)
@@ -7325,7 +7749,8 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object instanceof JDRShape && !object.hasTextual())
+
+      if (object instanceof JDRShape)
       {
          JDRShape path = (JDRShape)object;
 
@@ -7341,7 +7766,7 @@ public class JDRCanvas extends JPanel
             linePaint = linePaint.getJDRColor();
          }
 
-         JDRPaint fillPaint = path.getFillPaint();
+         JDRPaint fillPaint = path.getShapeFillPaint();
 
          if (fillPaint instanceof JDRShading)
          {
@@ -7355,103 +7780,107 @@ public class JDRCanvas extends JPanel
 
          UndoableEdit edit;
 
-         edit = new SetFillPaint(path, fillPaint);
+         edit = new SetShapeFillPaint(path, fillPaint);
          ce.addEdit(edit);
          edit = new SetLinePaint(path, linePaint);
          ce.addEdit(edit);
 
-         JDRBasicStroke stroke = (JDRBasicStroke)path.getStroke();
+         JDRBasicStroke stroke = path.getBasicStroke();
 
-         JDRMarker marker = stroke.getStartArrow();
-
-         if (marker.fillPaint != null)
+         if (stroke != null)
          {
-            marker = (JDRMarker)marker.clone();
+            JDRMarker marker = stroke.getStartArrow();
 
-            if (marker.fillPaint instanceof JDRShading)
+            if (marker.fillPaint != null)
             {
-               // shaded marker fill paint isn't implemented
-               // yet, but add the code in case it is implemented
-               // in future
-               ((JDRShading)marker.fillPaint).convertToRGB();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRColor();
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  // shaded marker fill paint isn't implemented
+                  // yet, but add the code in case it is implemented
+                  // in future
+                  ((JDRShading)marker.fillPaint).convertToRGB();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRColor();
+               }
+
+               try
+               {
+                  edit = new SetStartArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
 
-            try
-            {
-               edit = new SetStartArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
+            marker = stroke.getMidArrow();
 
-               getResources().internalError(this, e);
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  ((JDRShading)marker.fillPaint).convertToRGB();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRColor();
+               }
+
+               try
+               {
+                  edit = new SetMidArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
+            }
+
+            marker = stroke.getEndArrow();
+
+            if (marker.fillPaint != null)
+            {
+               marker = (JDRMarker)marker.clone();
+
+               if (marker.fillPaint instanceof JDRShading)
+               {
+                  ((JDRShading)marker.fillPaint).convertToRGB();
+               }
+               else
+               {
+                  marker.fillPaint = marker.fillPaint.getJDRColor();
+               }
+
+               try
+               {
+                  edit = new SetEndArrow(path, marker);
+                  ce.addEdit(edit);
+               }
+               catch (Throwable e)
+               {
+                  // This shouldn't happen
+
+                  getResources().internalError(this, e);
+               }
             }
          }
 
-         marker = stroke.getMidArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            if (marker.fillPaint instanceof JDRShading)
-            {
-               ((JDRShading)marker.fillPaint).convertToRGB();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRColor();
-            }
-
-            try
-            {
-               edit = new SetMidArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         marker = stroke.getEndArrow();
-
-         if (marker.fillPaint != null)
-         {
-            marker = (JDRMarker)marker.clone();
-
-            if (marker.fillPaint instanceof JDRShading)
-            {
-               ((JDRShading)marker.fillPaint).convertToRGB();
-            }
-            else
-            {
-               marker.fillPaint = marker.fillPaint.getJDRColor();
-            }
-
-            try
-            {
-               edit = new SetEndArrow(path, marker);
-               ce.addEdit(edit);
-            }
-            catch (Throwable e)
-            {
-               // This shouldn't happen
-
-               getResources().internalError(this, e);
-            }
-         }
-
-         return true;
+         flag = true;
       }
-      else if (object.hasTextual())
+
+      if (object.hasTextual())
       {
          JDRTextual text = object.getTextual();
 
@@ -7474,15 +7903,15 @@ public class JDRCanvas extends JPanel
 
          if (text.isOutline())
          {
-            JDRPaint fillPaint = text.getFillPaint().removeTransparency();
-            edit = new SetFillPaint(object, fillPaint);
+            JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
+            edit = new SetOutlineFillPaint(text, fillPaint);
             ce.addEdit(edit);
          }
 
-         return true;
+         flag = true;
       }
 
-      return false;
+      return flag;
    }
 
    public void fade(double value)
@@ -7505,16 +7934,34 @@ public class JDRCanvas extends JPanel
       frame_.postEdit(ce);
    }
 
+   @Deprecated
    public JDRPaint getSelectedFillPaint()
    {
-      JDRShape shape = getSelectedNonTextShape();
+      return getSelectedShapeFillPaint();
+   }
+
+   public JDRPaint getSelectedShapeFillPaint()
+   {
+      JDRShape shape = getSelectedShape();
 
       if (shape != null)
       {
-         return shape.getFillPaint();
+         return shape.getShapeFillPaint();
       }
 
-      return frame_.getCurrentFillPaint();
+      return frame_.getCurrentShapeFillPaint();
+   }
+
+   public JDRPaint getSelectedOutlineFillPaint()
+   {
+      JDRTextual text = getSelectedTextual();
+
+      if (text != null)
+      {
+         return text.getOutlineFillPaint();
+      }
+
+      return frame_.getCurrentOutlineFillPaint();
    }
 
    public JDRTextual getSelectedFont()
@@ -8173,9 +8620,9 @@ public class JDRCanvas extends JPanel
             done = updateLaTeXFontSize(((JDRGroup)object), 
                       latexFonts, ce);
          }
-         else if (object instanceof JDRText)
+         else if (object.hasTextual())
          {
-            JDRText t = (JDRText)object;
+            JDRTextual t = object.getTextual();
 
             UndoableEdit edit = new SetLaTeXFontSize(
                t, latexFonts.getLaTeXCmd(t.getFontSize()));
@@ -9078,7 +9525,7 @@ public class JDRCanvas extends JPanel
       int tool = frame_.currentTool();
 
       JDRPaint currentLinePaint = frame_.getCurrentLinePaint();
-      JDRPaint currentFillPaint = frame_.getCurrentFillPaint();
+      JDRPaint currentFillPaint = frame_.getCurrentShapeFillPaint();
       JDRBasicStroke currentStroke = 
          (JDRBasicStroke)frame_.getCurrentStroke().clone();
 
@@ -10775,9 +11222,9 @@ public class JDRCanvas extends JPanel
       {
          JDRCompleteObject object = paths.getSelected();
 
-         if (object instanceof JDRTextual)
+         if (object.hasTextual())
          {
-            UndoableEdit edit = new TextReset((JDRTextual)object);
+            UndoableEdit edit = new TextReset(object, object.getTextual());
             frame_.postEdit(edit);
          }
          else if (object instanceof JDRBitmap)
@@ -13457,7 +13904,11 @@ public class JDRCanvas extends JPanel
       private JDRTextPath textPath;
       private JDRStroke oldStroke, newStroke;
       private JDRShape oldPath;
-      private JDRPaint oldLinePaint, oldFillPaint, oldTextPaint;
+      private JDRText oldText;
+      private JDRPaint oldLinePaint, oldFillPaint,
+        oldTextPaint, oldOutlineFillPaint;
+      private JDRPaint newLinePaint, newShapeFillPaint,
+        newTextPaint, newOutlineFillPaint;
 
       public ConvertToTextPath(JDRShape path, JDRText text)
       {
@@ -13484,8 +13935,11 @@ public class JDRCanvas extends JPanel
          oldStroke = path.getStroke();
          oldPath = path;
          oldLinePaint = path.getLinePaint();
-         oldFillPaint = path.getFillPaint();
+         oldFillPaint = path.getShapeFillPaint();
+
+         oldText = text;
          oldTextPaint = text.getTextPaint();
+         oldOutlineFillPaint = text.getOutlineFillPaint();
 
          BBox box = getRefreshBounds(path);
          mergeRefreshBounds((JDRCompleteObject)text, box);
@@ -13494,6 +13948,11 @@ public class JDRCanvas extends JPanel
          textPath.setSelected(true);
 
          newStroke = textPath.getStroke();
+
+         newLinePaint = textPath.getLinePaint();
+         newShapeFillPaint = textPath.getShapeFillPaint();
+         newTextPaint = textPath.getTextPaint();
+         newOutlineFillPaint = textPath.getOutlineFillPaint();
 
          paths.remove(higherIndex);
          paths.set(lowerIndex, textPath);
@@ -13511,7 +13970,10 @@ public class JDRCanvas extends JPanel
 
          oldPath.setStroke(oldStroke);
          oldPath.setLinePaint(oldLinePaint);
-         oldPath.setFillPaint(oldFillPaint);
+         oldPath.setShapeFillPaint(oldFillPaint);
+
+         oldText.setTextPaint(oldTextPaint);
+         oldText.setOutlineFillPaint(oldOutlineFillPaint);
 
          paths.add(higherIndex, higherObject);
          paths.set(lowerIndex, lowerObject);
@@ -13526,7 +13988,10 @@ public class JDRCanvas extends JPanel
          frame_.selectThisFrame();
 
          textPath.setStroke(newStroke);
-         textPath.setTextPaint(oldTextPaint);
+         textPath.setLinePaint(newLinePaint);
+         textPath.setShapeFillPaint(newShapeFillPaint);
+         textPath.setTextPaint(newTextPaint);
+         textPath.setOutlineFillPaint(newOutlineFillPaint);
 
          paths.remove(higherIndex);
          paths.set(lowerIndex, textPath);
@@ -14192,7 +14657,7 @@ public class JDRCanvas extends JPanel
 
          newObject_.setStroke(new JDRBasicStroke(cg));
          newObject_.setLinePaint(new JDRColor(cg));
-         newObject_.setFillPaint(new JDRTransparent(cg));
+         newObject_.setShapeFillPaint(new JDRTransparent(cg));
 
          for (int i = n-1; i >= 0; i--)
          {
@@ -17439,25 +17904,25 @@ public class JDRCanvas extends JPanel
 
    class TextReset extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextual textual_;
       private double[] oldmatrix, newmatrix;
 
-      public TextReset(JDRTextual textual)
+      public TextReset(JDRCompleteObject object, JDRTextual textual)
       {
          super(getFrame());
 
-         object_ = textual;
+         textual_ = textual;
          oldmatrix = new double[6];
          newmatrix = new double[6];
 
          textual.getTransformation(oldmatrix);
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object);
 
-         object_.reset();
+         textual_.reset();
          textual.getTransformation(newmatrix);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object, box);
 
          setRefreshBounds(box);
       }
@@ -17466,7 +17931,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setTransformation(newmatrix);
+         textual_.setTransformation(newmatrix);
 
          repaintRegion();
       }
@@ -17475,7 +17940,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setTransformation(oldmatrix);
+         textual_.setTransformation(oldmatrix);
 
          repaintRegion();
       }
@@ -18523,25 +18988,18 @@ public class JDRCanvas extends JPanel
       }
    }
 
-   class SetFillPaint extends CanvasUndoableEdit
+   class SetShapeFillPaint extends CanvasUndoableEdit
    {
-      private JDRCompleteObject object_;
+      private JDRShape object_;
       private JDRPaint oldpaint_, newpaint_;
 
-      public SetFillPaint(JDRCompleteObject object, JDRPaint paint)
+      public SetShapeFillPaint(JDRShape object, JDRPaint paint)
       {
          super(getFrame());
 
          object_ = object;
 
-         if (object_ instanceof JDRShape)
-         {
-            oldpaint_ = ((JDRShape)object).getFillPaint();
-         }
-         else
-         {
-            oldpaint_ = ((JDRTextual)object).getFillPaint();
-         }
+         oldpaint_ = object.getShapeFillPaint();
 
          newpaint_ = paint;
 
@@ -18552,14 +19010,57 @@ public class JDRCanvas extends JPanel
 
       private void setFillPaint(JDRPaint paint)
       {
-         if (object_ instanceof JDRShape)
-         {
-            ((JDRShape)object_).setFillPaint(paint);
-         }
-         else
-         {
-            ((JDRTextual)object_).setFillPaint(paint);
-         }
+         object_.setShapeFillPaint(paint);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+         setFillPaint(newpaint_);
+
+         repaintRegion();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+         setFillPaint(oldpaint_);
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.fill_colour");
+      }
+   }
+
+   class SetOutlineFillPaint extends CanvasUndoableEdit
+   {
+      private JDRTextual object_;
+      private JDRPaint oldpaint_, newpaint_;
+
+      public SetOutlineFillPaint(JDRTextual object, JDRPaint paint)
+      {
+         super(getFrame());
+
+         object_ = object;
+
+         oldpaint_ = object.getOutlineFillPaint();
+
+         newpaint_ = paint;
+
+         setFillPaint(newpaint_);
+
+         setRefreshBounds(object_);
+      }
+
+      private void setFillPaint(JDRPaint paint)
+      {
+         object_.setOutlineFillPaint(paint);
       }
 
       public void redo() throws CannotRedoException
@@ -18590,19 +19091,19 @@ public class JDRCanvas extends JPanel
    class SetLineStyle extends CanvasUndoableEdit
    {
       private JDRShape object_;
-      private JDRStroke oldstroke_, newstroke_;
+      private JDRBasicStroke oldstroke_, newstroke_;
 
-      public SetLineStyle(JDRShape object, JDRStroke stroke)
+      public SetLineStyle(JDRShape object, JDRBasicStroke stroke)
       {
          super(getFrame());
 
          object_ = object;
-         oldstroke_ = object.getStroke();
+         oldstroke_ = object.getBasicStroke();
          newstroke_ = stroke;
 
          BBox box = getRefreshBounds(object_);
 
-         object_.setStroke(newstroke_);
+         object_.setBasicStroke(newstroke_);
 
          mergeRefreshBounds(object_, box);
 
@@ -18613,7 +19114,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setStroke(newstroke_);
+         object_.setBasicStroke(newstroke_);
 
          repaintRegion();
       }
@@ -18622,7 +19123,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setStroke(oldstroke_);
+         object_.setBasicStroke(oldstroke_);
 
          repaintRegion();
       }
@@ -18646,12 +19147,12 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          object_ = object;
-         oldStyle_ = ((JDRBasicStroke)object.getStroke()).getPenWidth();
+         oldStyle_ = object.getBasicStroke().getPenWidth();
          newStyle_ = (JDRLength)style.clone();
 
          BBox box = getRefreshBounds(object);
 
-         ((JDRBasicStroke)object_.getStroke()).setPenWidth(style);
+         object_.getBasicStroke().setPenWidth(style);
 
          mergeRefreshBounds(object, box);
 
@@ -18662,7 +19163,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setPenWidth(newStyle_);
+         object_.getBasicStroke().setPenWidth(newStyle_);
 
          repaintRegion();
       }
@@ -18671,7 +19172,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setPenWidth(oldStyle_);
+         object_.getBasicStroke().setPenWidth(oldStyle_);
 
          repaintRegion();
       }
@@ -18695,12 +19196,12 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          object_ = object;
-         oldStyle_ = ((JDRBasicStroke)object.getStroke()).getDashPattern();
+         oldStyle_ = object.getBasicStroke().getDashPattern();
          newStyle_ = style;
 
          BBox box = getRefreshBounds(object_);
 
-         ((JDRBasicStroke)object_.getStroke()).setDashPattern(style);
+         object_.getBasicStroke().setDashPattern(style);
 
          mergeRefreshBounds(object_, box);
 
@@ -18711,7 +19212,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setDashPattern(newStyle_);
+         object_.getBasicStroke().setDashPattern(newStyle_);
 
          repaintRegion();
       }
@@ -18720,7 +19221,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setDashPattern(oldStyle_);
+         object_.getBasicStroke().setDashPattern(oldStyle_);
 
          repaintRegion();
       }
@@ -18744,12 +19245,12 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          object_ = object;
-         oldStyle_ = ((JDRBasicStroke)object.getStroke()).getCapStyle();
+         oldStyle_ = object.getBasicStroke().getCapStyle();
          newStyle_ = style;
 
          BBox box = getRefreshBounds(object_);
 
-         ((JDRBasicStroke)object_.getStroke()).setCapStyle(style);
+         object_.getBasicStroke().setCapStyle(style);
 
          mergeRefreshBounds(object_, box);
 
@@ -18760,7 +19261,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setCapStyle(newStyle_);
+         object_.getBasicStroke().setCapStyle(newStyle_);
 
          repaintRegion();
       }
@@ -18769,7 +19270,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setCapStyle(oldStyle_);
+         object_.getBasicStroke().setCapStyle(oldStyle_);
 
          repaintRegion();
       }
@@ -18793,12 +19294,12 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          object_ = object;
-         oldStyle_ = ((JDRBasicStroke)object.getStroke()).getJoinStyle();
+         oldStyle_ = object.getBasicStroke().getJoinStyle();
          newStyle_ = style;
 
          BBox box = getRefreshBounds(object_);
 
-         ((JDRBasicStroke)object_.getStroke()).setJoinStyle(style);
+         object_.getBasicStroke().setJoinStyle(style);
 
          mergeRefreshBounds(object_, box);
          setRefreshBounds(box);
@@ -18810,7 +19311,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setJoinStyle(newStyle_);
+         object_.getBasicStroke().setJoinStyle(newStyle_);
 
          repaintRegion();
       }
@@ -18819,7 +19320,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setJoinStyle(oldStyle_);
+         object_.getBasicStroke().setJoinStyle(oldStyle_);
 
          repaintRegion();
       }
@@ -18843,12 +19344,12 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          object_ = object;
-         oldLimit_ = ((JDRBasicStroke)object.getStroke()).getMitreLimit();
+         oldLimit_ = object.getBasicStroke().getMitreLimit();
          newLimit_ = limit;
 
          BBox box = getRefreshBounds(object_);
 
-         ((JDRBasicStroke)object_.getStroke()).setMitreLimit(limit);
+         object_.getBasicStroke().setMitreLimit(limit);
 
          mergeRefreshBounds(object_, box);
          setRefreshBounds(box);
@@ -18858,7 +19359,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setMitreLimit(newLimit_);
+         object_.getBasicStroke().setMitreLimit(newLimit_);
 
          repaintRegion();
       }
@@ -18867,7 +19368,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setMitreLimit(oldLimit_);
+         object_.getBasicStroke().setMitreLimit(oldLimit_);
 
          repaintRegion();
       }
@@ -18890,7 +19391,7 @@ public class JDRCanvas extends JPanel
       {
          super(getFrame());
 
-         stroke = (JDRBasicStroke)object.getStroke();
+         stroke = object.getBasicStroke();
 
          oldMarker_     = stroke.getStartArrow();
          newMarker_     = (JDRMarker)marker.clone();
@@ -18933,24 +19434,23 @@ public class JDRCanvas extends JPanel
 
    class SetMidArrow extends CanvasUndoableEdit
    {
-      private JDRShape object_;
+      private JDRBasicStroke stroke;
       private JDRMarker oldMarker_, newMarker_;
 
       public SetMidArrow(JDRShape object, JDRMarker marker)
       {
          super(getFrame());
 
-         object_ = object;
-         JDRBasicStroke stroke = (JDRBasicStroke)object.getStroke();
+         stroke = object.getBasicStroke();
 
          oldMarker_     = stroke.getMidArrow();
          newMarker_     = (JDRMarker)marker.clone();
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object);
 
-         ((JDRBasicStroke)object_.getStroke()).setMidArrow(newMarker_);
+         stroke.setMidArrow(newMarker_);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object, box);
 
          setRefreshBounds(box);
       }
@@ -18959,7 +19459,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setMidArrow(newMarker_);
+         stroke.setMidArrow(newMarker_);
 
          repaintRegion();
       }
@@ -18968,7 +19468,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setMidArrow(oldMarker_);
+         stroke.setMidArrow(oldMarker_);
 
          repaintRegion();
       }
@@ -18984,24 +19484,23 @@ public class JDRCanvas extends JPanel
 
    class SetEndArrow extends CanvasUndoableEdit
    {
-      private JDRShape object_;
+      private JDRBasicStroke stroke;
       private JDRMarker oldMarker_, newMarker_;
 
       public SetEndArrow(JDRShape object, JDRMarker marker)
       {
          super(getFrame());
 
-         object_ = object;
-         JDRBasicStroke stroke = (JDRBasicStroke)object.getStroke();
+         stroke = object.getBasicStroke();
 
          oldMarker_      = stroke.getEndArrow();
          newMarker_      = (JDRMarker)marker.clone();
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object);
 
-         ((JDRBasicStroke)object_.getStroke()).setEndArrow(newMarker_);
+         stroke.setEndArrow(newMarker_);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object, box);
 
          setRefreshBounds(box);
       }
@@ -19010,7 +19509,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setEndArrow(newMarker_);
+         stroke.setEndArrow(newMarker_);
 
          repaintRegion();
       }
@@ -19019,7 +19518,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setEndArrow(oldMarker_);
+         stroke.setEndArrow(oldMarker_);
 
          repaintRegion();
       }
@@ -19035,7 +19534,7 @@ public class JDRCanvas extends JPanel
 
    class SetMarkers extends CanvasUndoableEdit
    {
-      private JDRShape object_;
+      private JDRBasicStroke stroke;
       private JDRMarker newStartMarker_, newMidMarker_, newEndMarker_;
       private JDRMarker oldStartMarker_, oldMidMarker_, oldEndMarker_;
 
@@ -19043,8 +19542,7 @@ public class JDRCanvas extends JPanel
       {
          super(getFrame());
 
-         object_ = object;
-         JDRBasicStroke stroke = (JDRBasicStroke)object.getStroke();
+         stroke = object.getBasicStroke();
 
          oldStartMarker_ = stroke.getStartArrow();
          oldMidMarker_   = stroke.getMidArrow();
@@ -19054,13 +19552,13 @@ public class JDRCanvas extends JPanel
          newMidMarker_      = (JDRMarker)marker.clone();
          newEndMarker_      = (JDRMarker)marker.clone();
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object);
 
-         ((JDRBasicStroke)object_.getStroke()).setStartArrow(newStartMarker_);
-         ((JDRBasicStroke)object_.getStroke()).setMidArrow(newMidMarker_);
-         ((JDRBasicStroke)object_.getStroke()).setEndArrow(newEndMarker_);
+         stroke.setStartArrow(newStartMarker_);
+         stroke.setMidArrow(newMidMarker_);
+         stroke.setEndArrow(newEndMarker_);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object, box);
 
          setRefreshBounds(box);
       }
@@ -19069,9 +19567,9 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setStartArrow(newStartMarker_);
-         ((JDRBasicStroke)object_.getStroke()).setMidArrow(newMidMarker_);
-         ((JDRBasicStroke)object_.getStroke()).setEndArrow(newEndMarker_);
+         stroke.setStartArrow(newStartMarker_);
+         stroke.setMidArrow(newMidMarker_);
+         stroke.setEndArrow(newEndMarker_);
 
          repaintRegion();
       }
@@ -19080,9 +19578,9 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setStartArrow(oldStartMarker_);
-         ((JDRBasicStroke)object_.getStroke()).setMidArrow(oldMidMarker_);
-         ((JDRBasicStroke)object_.getStroke()).setEndArrow(oldEndMarker_);
+         stroke.setStartArrow(oldStartMarker_);
+         stroke.setMidArrow(oldMidMarker_);
+         stroke.setEndArrow(oldEndMarker_);
 
          repaintRegion();
       }
@@ -19098,22 +19596,22 @@ public class JDRCanvas extends JPanel
 
    class SetWindingRule extends CanvasUndoableEdit
    {
-      private JDRShape object_;
+      private JDRBasicStroke stroke;
       private int oldStyle_, newStyle_;
 
       public SetWindingRule(JDRShape object, int style)
       {
          super(getFrame());
 
-         object_ = object;
-         oldStyle_ = ((JDRBasicStroke)object.getStroke()).getWindingRule();
+         stroke = object.getBasicStroke();
+         oldStyle_ = stroke.getWindingRule();
          newStyle_ = style;
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object);
 
-         ((JDRBasicStroke)object_.getStroke()).setWindingRule(style);
+         stroke.setWindingRule(style);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object, box);
 
          setRefreshBounds(box);
       }
@@ -19122,7 +19620,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setWindingRule(newStyle_);
+         stroke.setWindingRule(newStyle_);
 
          repaintRegion();
       }
@@ -19131,7 +19629,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         ((JDRBasicStroke)object_.getStroke()).setWindingRule(oldStyle_);
+         stroke.setWindingRule(oldStyle_);
 
          repaintRegion();
       }
@@ -19366,6 +19864,64 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return getResources().getMessage("undo.text.outline");
+      }
+   }
+
+   class SetTextPathShow extends CanvasUndoableEdit
+   {
+      private JDRTextPath textPath_;
+      private boolean oldMode_, newMode_;
+
+      public SetTextPathShow(JDRTextPath object, boolean mode)
+      {
+         super(getFrame());
+
+         textPath_ = object;
+         oldMode_ = textPath_.showPath();
+         newMode_ = mode;
+
+         if (oldMode_)
+         {
+            setRefreshBounds((JDRCompleteObject)textPath_);
+         }
+
+         setMode(newMode_);
+
+         if (!oldMode_)
+         {
+            setRefreshBounds((JDRCompleteObject)textPath_);
+         }
+      }
+
+      private void setMode(boolean mode)
+      {
+         textPath_.setShowPath(mode);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+
+         setMode(newMode_);
+
+         repaintRegion();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+
+         setMode(oldMode_);
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.textpath.show");
       }
    }
 

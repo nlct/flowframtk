@@ -604,7 +604,7 @@ public class FLFSelector extends JDialog
          styleCmdsField.setText("");
 
          if ((object instanceof JDRPath)
-          && (((JDRPath)object).getFillPaint() instanceof JDRTransparent)
+          && (((JDRPath)object).getShapeFillPaint() instanceof JDRTransparent)
             )
          {
             border.setSelectedIndex(BORDER_NONE);

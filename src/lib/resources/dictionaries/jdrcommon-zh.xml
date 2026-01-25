@@ -308,6 +308,9 @@
 
 <entry key="objectinfo.textpath_stroke">Text-Path Stroke:</entry>
 
+<entry key="objectinfo.textpath.show_path_on">Show path on</entry>
+<entry key="objectinfo.textpath.show_path_off">Show path off</entry>
+
 <entry key="objectinfo.textarea">Text area:</entry>
 <entry key="objectinfo.textarea.start">Starting point: {0}</entry>
 <entry key="objectinfo.textarea.anchor">Anchor point: {0}</entry>
@@ -743,6 +746,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_LaTeX-font-family">Invalid LaTeX font family</entry>
 <entry key="error.invalid_LaTeX-font-flag">Invalid LaTeX font flag</entry>
 <entry key="error.invalid_text-outline-flag">Invalid text outline flag</entry>
+<entry key="error.invalid_show-path-flag">Invalid show path flag</entry>
 <entry key="error.invalid_font-transform">Invalid font transformation</entry>
 <entry key="error.invalid_font-size">Invalid font size</entry>
 <entry key="error.invalid_font-shape">Invalid font shape</entry>

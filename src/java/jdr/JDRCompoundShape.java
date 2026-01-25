@@ -275,4 +275,35 @@ public abstract class JDRCompoundShape extends JDRShape
      throws InvalidShapeException;
 
    public abstract JDRGroup splitText() throws InvalidShapeException;
+
+   public void setOutlineFillPaint(JDRPaint paint)
+   {
+      JDRShape shape = getUnderlyingShape();
+
+      if (shape.hasTextual())
+      {
+         shape.getTextual().setOutlineFillPaint(paint);
+      }  
+   }  
+   
+   public JDRPaint getOutlineFillPaint()
+   {
+      JDRShape shape = getUnderlyingShape();
+
+      if (shape.hasTextual())
+      {
+         return shape.getTextual().getOutlineFillPaint();
+      }
+      else
+      {
+         return null;
+      }
+   }
+
+   @Override
+   public void setBasicStroke(JDRBasicStroke basicStroke)
+   {
+      getUnderlyingShape().setBasicStroke(basicStroke);
+   }
+
 }

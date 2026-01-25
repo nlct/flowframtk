@@ -18341,7 +18341,7 @@ class Result
     
       if (isFilled)
       {
-         path.setFillPaint(new JDRColor(cg, foreground));
+         path.setShapeFillPaint(new JDRColor(cg, foreground));
          path.setLinePaint(new JDRTransparent(cg));
          path.setStroke(new JDRBasicStroke(cg, 1.0,
           stroke.getEndCap(), stroke.getLineJoin()));
@@ -18349,7 +18349,7 @@ class Result
       else
       {
          path.setLinePaint(new JDRColor(cg, foreground));
-         path.setFillPaint(new JDRTransparent(cg));
+         path.setShapeFillPaint(new JDRTransparent(cg));
 
          path.setStroke(new JDRBasicStroke(cg, stroke.getLineWidth(),
            stroke.getEndCap(), stroke.getLineJoin()));

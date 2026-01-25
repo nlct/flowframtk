@@ -333,20 +333,56 @@ public class JDRSelector extends JDialog
       return paint;
    }
 
+   @Deprecated
    public JDRPaint getFillPaint()
+   {
+      return getShapeFillPaint();
+   }
+
+   public JDRPaint getShapeFillPaint()
    {
       JDRFrame frame = application_.getCurrentFrame();
 
       if (frame == null)
       {
-         return application_.getCurrentFillPaint();
+         return application_.getCurrentShapeFillPaint();
       }
 
-      JDRPaint paint = frame.getSelectedFillPaint();
+      JDRPaint paint = frame.getSelectedShapeFillPaint();
 
       if (paint == null)
       {
-         return application_.getCurrentFillPaint();
+         return application_.getCurrentShapeFillPaint();
+      }
+
+      return paint;
+   }
+
+   public boolean isTextOutline()
+   {
+      JDRFrame frame = application_.getCurrentFrame();
+
+      if (frame == null) return false;
+
+      JDRTextual text = frame.getSelectedTextual();
+
+      return text == null ? false : text.isOutline();
+   }
+
+   public JDRPaint getOutlineFillPaint()
+   {
+      JDRFrame frame = application_.getCurrentFrame();
+
+      if (frame == null)
+      {
+         return application_.getCurrentOutlineFillPaint();
+      }
+
+      JDRPaint paint = frame.getSelectedOutlineFillPaint();
+
+      if (paint == null)
+      {
+         return application_.getCurrentOutlineFillPaint();
       }
 
       return paint;

@@ -36,7 +36,7 @@ jdrview	: $(LIBDIR)/jdrview.jar
 
 $(LIBDIR)/jdr.jar	: classes/$(CLASSTREE)/jdr/JDRObject.class
 	cd classes ; \
-	jar cvf $(LIBDIR)/jdr.jar \
+	jar cf $(LIBDIR)/jdr.jar \
 	$(CLASSTREE)/jdr/*.class \
 	$(CLASSTREE)/jdr/io/*.class \
 	$(CLASSTREE)/jdr/io/eps/*.class \
@@ -50,7 +50,7 @@ $(LIBDIR)/jdrresources.jar	: jdr classes/$(CLASSTREE)/jdrresources/JDRResources.
 		classes/$(CLASSTREE)/jdrresources/icons \
 		../lib/resources
 		cd classes ; \
-		jar cvf $(LIBDIR)/jdrresources.jar \
+		jar cf $(LIBDIR)/jdrresources.jar \
 		$(CLASSTREE)/jdrresources/*.class \
 		$(CLASSTREE)/jdrresources/filter/*.class \
 		$(CLASSTREE)/jdrresources/numfield/*.class \

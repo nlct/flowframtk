@@ -1361,9 +1361,14 @@ public class FlowframTkInvoker
                   settings.setLinePaint(
                      loadPaintConfig(settings, value, line));
                }
-               else if (key.equals("fillpaint"))
+               else if (key.equals("shapefillpaint") || key.equals("fillpaint"))
                {
-                  settings.setFillPaint(
+                  settings.setShapeFillPaint(
+                     loadPaintConfig(settings, value, line));
+               }
+               else if (key.equals("outlinefillpaint"))
+               {
+                  settings.setOutlineFillPaint(
                      loadPaintConfig(settings, value, line));
                }
                else if (key.equals("textpaint"))
@@ -2480,8 +2485,10 @@ public class FlowframTkInvoker
 
       out.println("linepaint="
          +savePaintConfig(settings.getLinePaint()));
-      out.println("fillpaint="
-         +savePaintConfig(settings.getFillPaint()));
+      out.println("shapefillpaint="
+         +savePaintConfig(settings.getShapeFillPaint()));
+      out.println("outlinefillpaint="
+         +savePaintConfig(settings.getOutlineFillPaint()));
 
       // Start Markers
 

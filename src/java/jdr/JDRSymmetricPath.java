@@ -1592,15 +1592,26 @@ public class JDRSymmetricPath extends JDRCompoundShape
       path_.setLinePaint(paint);
    }
 
-   // May be null if underlying path is a text-path
+   public JDRPaint getShapeFillPaint()
+   {
+      return path_.getShapeFillPaint();
+   }
+
+   @Deprecated
    public JDRPaint getFillPaint()
    {
       return path_.getFillPaint();
    }
 
+   @Deprecated
    public void setFillPaint(JDRPaint paint)
    {
       path_.setFillPaint(paint);
+   }
+
+   public void setShapeFillPaint(JDRPaint paint)
+   {
+      path_.setShapeFillPaint(paint);
    }
 
    /**
@@ -1635,7 +1646,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
       {
          path = new JDRPath(cg);
          path.setLinePaint(getLinePaint());
-         path.setFillPaint(getFillPaint());
+         path.setShapeFillPaint(getShapeFillPaint());
          path.setStroke(getStroke() instanceof JDRBasicStroke ?
             (JDRStroke)getStroke().clone() : new JDRBasicStroke(cg));
 
@@ -1659,7 +1670,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
       {
          path = new JDRPath(cg);
          path.setLinePaint(getLinePaint());
-         path.setFillPaint(getFillPaint());
+         path.setShapeFillPaint(getShapeFillPaint());
          path.setStroke(getStroke() instanceof JDRBasicStroke ?
             (JDRStroke)getStroke().clone() : new JDRBasicStroke(cg));
 
@@ -1670,7 +1681,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       path = new JDRPath(cg);
       path.setLinePaint(getLinePaint());
-      path.setFillPaint(getFillPaint());
+      path.setShapeFillPaint(getShapeFillPaint());
       path.setStroke(new JDRBasicStroke(cg));
       path.add(line_);
 
@@ -2110,7 +2121,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
     public void saveEPS(PrintWriter out) throws IOException
     {
-       JDRPaint paint = getFillPaint();
+       JDRPaint paint = getShapeFillPaint();
 
        Path2D path = getGeneralPath();
 
@@ -2186,7 +2197,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       if (stroke instanceof JDRBasicStroke)
       {
-         JDRPaint paint = getFillPaint();
+         JDRPaint paint = getShapeFillPaint();
 
          ((JDRBasicStroke)getStroke()).savePgf(tex);
 

@@ -53,7 +53,7 @@ public class JDRBasicPathStyleListener implements JDRPathStyleListener
       JDRPaintLoader paintLoader = jdr.getPaintLoader();
 
       paintLoader.save(jdr, shape.getLinePaint());
-      paintLoader.save(jdr, shape.getFillPaint());
+      paintLoader.save(jdr, shape.getShapeFillPaint());
       shape.getStroke().save(jdr);
    }
 
@@ -63,7 +63,7 @@ public class JDRBasicPathStyleListener implements JDRPathStyleListener
       JDRPaintLoader paintLoader = jdr.getPaintLoader();
 
       shape.setLinePaint(paintLoader.load(jdr));
-      shape.setFillPaint(paintLoader.load(jdr));
+      shape.setShapeFillPaint(paintLoader.load(jdr));
       shape.setStroke(JDRBasicStroke.read(jdr));
    }
 }

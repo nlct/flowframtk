@@ -1041,7 +1041,7 @@ public class GraphicsState implements EPSObject
       JDRPaint linePaint = new JDRTransparent(eps_.getCanvasGraphics());
 
       jdrpath.setLinePaint(linePaint);
-      jdrpath.setFillPaint(fillPaint);
+      jdrpath.setShapeFillPaint(fillPaint);
 
       return jdrpath;
    }
@@ -1066,7 +1066,7 @@ public class GraphicsState implements EPSObject
       JDRPaint fillPaint = new JDRTransparent(eps_.getCanvasGraphics());
 
       jdrpath.setLinePaint(linePaint);
-      jdrpath.setFillPaint(fillPaint);
+      jdrpath.setShapeFillPaint(fillPaint);
 
       return jdrpath;
    }
@@ -2291,7 +2291,7 @@ public class GraphicsState implements EPSObject
       if (paint != null)
       {
          jdrpath.setLinePaint(new JDRTransparent(eps_.getCanvasGraphics()));
-         jdrpath.setFillPaint(paint);
+         jdrpath.setShapeFillPaint(paint);
       }
 
       return jdrpath;
@@ -2463,7 +2463,7 @@ public class GraphicsState implements EPSObject
          }
       }
 
-      jdrpath.setFillPaint(new JDRTransparent(eps_.getCanvasGraphics()));
+      jdrpath.setShapeFillPaint(new JDRTransparent(eps_.getCanvasGraphics()));
       jdrpath.setLinePaint(getPaint());
 
       return jdrpath;
@@ -2494,9 +2494,9 @@ public class GraphicsState implements EPSObject
       if (jdrpath == null) return null;
 
       JDRPaint fillPaint = jdrpath.getLinePaint();
-      JDRPaint linePaint = jdrpath.getFillPaint();
+      JDRPaint linePaint = jdrpath.getShapeFillPaint();
       jdrpath.setLinePaint(linePaint);
-      jdrpath.setFillPaint(fillPaint);
+      jdrpath.setShapeFillPaint(fillPaint);
 
       return jdrpath;
    }

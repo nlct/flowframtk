@@ -1046,6 +1046,11 @@ public abstract class JDRCompleteObject extends JDRObject
       description = desc;
    }
 
+   public boolean hasDescription()
+   {
+      return description != null && !description.isEmpty();
+   }
+
    public String getTag()
    {
       return tag;
@@ -1054,6 +1059,11 @@ public abstract class JDRCompleteObject extends JDRObject
    public void setTag(String newTag)
    {
       tag = newTag;
+   }
+
+   public boolean hasTag()
+   {
+      return tag != null && !tag.isEmpty();
    }
 
    public int getIndex()

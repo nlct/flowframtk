@@ -311,7 +311,8 @@ public class CreatePathFromSvgDialog extends JDialog
       {
          okayButton.setEnabled(true);
 
-         shape.setStyle(frame.getCurrentLinePaint(), frame.getCurrentFillPaint(), 
+         shape.setStyle(frame.getCurrentLinePaint(),
+            frame.getCurrentShapeFillPaint(), 
             frame.getCurrentStroke());
       }
 

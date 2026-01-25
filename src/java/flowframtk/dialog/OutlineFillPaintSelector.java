@@ -1,11 +1,5 @@
-// File          : FillPaintSelector.java
-// Description   : Dialog for setting fill paint
-// Creation Date : 6th February 2006
-// Author        : Nicola L.C. Talbot
-//                 http://www.dickimaw-books.com/
-
 /*
-    Copyright (C) 2006 Nicola L.C. Talbot
+    Copyright (C) 2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,24 +31,23 @@ import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.flowframtk.*;
 
 /**
- * Dialog for setting fill paint.
+ * Dialog for setting outline text fill paint.
  * @author Nicola L C Talbot
  */
 
-public class FillPaintSelector extends JDRSelector
+public class OutlineFillPaintSelector extends JDRSelector
 {
-   public FillPaintSelector(FlowframTk application)
+   public OutlineFillPaintSelector(FlowframTk application)
    {
       super(application, 
-         application.getResources().getMessage("fillpaintselector.title"),
-      true, false, "sec:fillpaint");
+            application.getResources().getMessage("textpaintselector.title"),
+            false, true, "sec:textpaint");
 
       paintPanel = new PaintPanel(this);
       paintPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
       setToMain(paintPanel);
 
-/*
       Dimension dim = getSize();
       int width = dim.width;
       pack();
@@ -62,45 +55,76 @@ public class FillPaintSelector extends JDRSelector
       dim.width = width;
       setSize(dim);
       setLocationRelativeTo(application);
-*/
    }
 
    @Override
-   public JDRPaint getFillPaint()
+   public boolean isTextOutline()
+   {
+      return true;
+   }
+
+   @Override
+   public String getSampleText()
+   {
+      if (textual != null && !textual.getText().equals(""))
+      {
+         return textual.getText();
+      }
+
+      return super.getSampleText();
+   }
+
+   @Override
+   public JDRPaint getOutlineFillPaint()
    {
       return paintPanel.getPaint(getCanvasGraphics());
    }
 
+   @Override
    public void initialise()
    {
       JDRFrame mainPanel = application_.getCurrentFrame();
-      paintPanel.setPaint(mainPanel.getSelectedFillPaint());
+      textual = mainPanel.getSelectedTextual();
+
+      JDRPaint paint = mainPanel.getSelectedOutlineFillPaint();
+
+      if (paint == null)
+      {
+         paint = new JDRTransparent(getCanvasGraphics());
+      }
+
+      paintPanel.setPaint(paint);
+
       super.initialise();
    }
 
+   @Override
    public void okay()
    {
       JDRFrame mainPanel = application_.getCurrentFrame();
-      mainPanel.setSelectedFillPaint(getFillPaint());
+      mainPanel.setSelectedOutlineFillPaint(getOutlineFillPaint());
       super.okay();
    }
 
+   @Override
    public void setDefaults()
    {
       paintPanel.setPaint(
-         new JDRTransparent(application_.getDefaultCanvasGraphics()));
+         new JDRColor(getCanvasGraphics(), Color.black));
    }
 
+   @Override
    public String info()
    {
       String eol = System.getProperty("line.separator", "\n");
 
       String str = "";
 
-      str = "FillPaintSelector:"+eol;
+      str = "LinePaintSelector:"+eol;
 
       return str+super.info();
    }
 
    private PaintPanel paintPanel;
+   private JDRTextual textual=null;
 }

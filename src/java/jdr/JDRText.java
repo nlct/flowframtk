@@ -675,7 +675,7 @@ public class JDRText extends JDRCompleteObject
       if (isOutline)
       {
          pathStrokePaint = getTextPaint();
-         pathFillPaint = getFillPaint();
+         pathFillPaint = getOutlineFillPaint();
 
          if (pathFillPaint == null)
          {
@@ -712,7 +712,7 @@ public class JDRText extends JDRCompleteObject
 
          JDRPath path = JDRPath.getPath(bpCG, pi);
          path.setLinePaint(pathStrokePaint);
-         path.setFillPaint(pathFillPaint);
+         path.setShapeFillPaint(pathFillPaint);
          path.setStroke((JDRStroke)stroke.clone());
 
          if (bpCG != cg)
@@ -1328,6 +1328,7 @@ public class JDRText extends JDRCompleteObject
     * {@link #PGF_VALIGN_TOP}, {@link #PGF_VALIGN_CENTRE},
     * {@link #PGF_VALIGN_BASE} or {@link #PGF_VALIGN_BOTTOM}
     */
+   @Override
    public void setVAlign(int valign)
    {
       if (valign < 0 || valign > 3)
@@ -1345,6 +1346,7 @@ public class JDRText extends JDRCompleteObject
     * {@link #PGF_HALIGN_LEFT}, {@link #PGF_HALIGN_CENTRE} or
     * {@link #PGF_HALIGN_RIGHT}
     */
+   @Override
    public void setHAlign(int halign)
    {
       if (halign < 0 || halign > 2)
@@ -1356,6 +1358,7 @@ public class JDRText extends JDRCompleteObject
       pgfHalign = halign;
    }
 
+   @Override
    public void setAlign(int halign, int valign)
    {
       setHAlign(halign);
@@ -1366,6 +1369,7 @@ public class JDRText extends JDRCompleteObject
     * Gets the horizontal alignment for <code>\pgftext</code>.
     * @return horizontal alignment
     */
+   @Override
    public int getHAlign()
    {
       return pgfHalign;
@@ -1375,6 +1379,7 @@ public class JDRText extends JDRCompleteObject
     * Gets the vertical alignment for <code>\pgftext</code>.
     * @return vertical alignment
     */
+   @Override
    public int getVAlign()
    {
       return pgfValign;
@@ -1385,6 +1390,7 @@ public class JDRText extends JDRCompleteObject
     * @return LaTeX font family declaration
     * @see LaTeXFont#getFamily()
     */
+   @Override
    public String getLaTeXFamily()
    {
       return latexFont.getFamily();
@@ -1395,6 +1401,7 @@ public class JDRText extends JDRCompleteObject
     * @return LaTeX font series declaration
     * @see LaTeXFont#getWeight()
     */
+   @Override
    public String getLaTeXSeries()
    {
       return latexFont.getWeight();
@@ -1405,6 +1412,7 @@ public class JDRText extends JDRCompleteObject
     * @return LaTeX font shape declaration
     * @see LaTeXFont#getShape()
     */
+   @Override
    public String getLaTeXShape()
    {
       return latexFont.getShape();
@@ -1415,6 +1423,7 @@ public class JDRText extends JDRCompleteObject
     * @return LaTeX font size declaration
     * @see LaTeXFont#getSize()
     */
+   @Override
    public String getLaTeXSize()
    {
       return latexFont.getSize();
@@ -1468,6 +1477,7 @@ public class JDRText extends JDRCompleteObject
       return new Point2D.Double(x, y);
    }
 
+   @Override
    public void savePgf(TeX tex)
     throws IOException
    {
@@ -1665,6 +1675,7 @@ public class JDRText extends JDRCompleteObject
       jdrtransform.savePgf(tex, x, y, str);
    }
 
+   @Override
    public void saveEPS(PrintWriter out)
       throws IOException
    {
@@ -1844,9 +1855,9 @@ public class JDRText extends JDRCompleteObject
    
       paint.writeSVGdefs(svg);
 
-      if (isOutline && getFillPaint() != null)
+      if (isOutline && getOutlineFillPaint() != null)
       {
-         getFillPaint().writeSVGdefs(svg);
+         getOutlineFillPaint().writeSVGdefs(svg);
       }
    }
 
@@ -1854,11 +1865,13 @@ public class JDRText extends JDRCompleteObject
     * Gets string representation of this text area.
     * @return string representation of this text area
     */
+   @Override
    public String toString()
    {
       return "JDRText:"+text+"@"+jdrtransform;
    }
 
+   @Override
    public JDRObjectLoaderListener getListener()
    {
       return textListener;
@@ -1917,6 +1930,7 @@ public class JDRText extends JDRCompleteObject
       }
    }
 
+   @Override
    public String info(String prefix)
    {
       JDRMessage msgSys = getCanvasGraphics().getMessageSystem();
@@ -2064,41 +2078,49 @@ public class JDRText extends JDRCompleteObject
       return builder.toString();
    }
 
+   @Override
    public JDRTextual getTextual()
    {
       return this;
    }
 
+   @Override
    public boolean hasTextual()
    {
       return true;
    }
 
+   @Override
    public boolean hasShape()
    {
       return false;
    }
 
+   @Override
    public boolean hasSymmetricPath()
    {
       return false;
    }
 
+   @Override
    public JDRSymmetricPath getSymmetricPath()
    {
       return null;
    }
 
+   @Override
    public boolean hasPattern()
    {
       return false;
    }
 
+   @Override
    public JDRPattern getPattern()
    {
       return null;
    }
 
+   @Override
    public int getObjectFlag()
    {
       int flag = super.getObjectFlag() | SELECT_FLAG_TEXT
@@ -2112,17 +2134,20 @@ public class JDRText extends JDRCompleteObject
       return flag;
    }
 
+   @Override
    public Object[] getDescriptionInfo()
    {
       return new Object[] {getText(),
          latexText == null || latexText.isEmpty() ? text : latexText};
    }
 
+   @Override
    public JDRPoint getControlFromStoragePoint(double x, double y, boolean endPoint)
    {
       return null;
    }
 
+   @Override
    public void applyCanvasGraphics(CanvasGraphics cg)
    {
       setCanvasGraphics(cg);
@@ -2130,12 +2155,14 @@ public class JDRText extends JDRCompleteObject
       jdrtransform.applyCanvasGraphics(cg);
    }
 
+   @Override
    public void setOutlineMode(boolean enable)
    {
       isOutline = enable;
       updateBounds();
    }
 
+   @Override
    public boolean isOutline()
    {
       return isOutline;
@@ -2144,11 +2171,25 @@ public class JDRText extends JDRCompleteObject
    /*
     * Fill paint is only used in outline mode.
     */ 
+   @Override
+   public void setOutlineFillPaint(JDRPaint paint)
+   {
+      fillPaint = paint;
+   }
+
+   @Deprecated
    public void setFillPaint(JDRPaint paint)
    {
       fillPaint = paint;
    }
 
+   @Override
+   public JDRPaint getOutlineFillPaint()
+   {
+      return fillPaint;
+   }
+
+   @Deprecated
    public JDRPaint getFillPaint()
    {
       return fillPaint;

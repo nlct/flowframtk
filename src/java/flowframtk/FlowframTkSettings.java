@@ -72,7 +72,8 @@ public class FlowframTkSettings
 
       stroke = new JDRBasicStroke(canvasGraphics);
       linePaint = new JDRColor(canvasGraphics, Color.black);
-      fillPaint = new JDRTransparent(canvasGraphics);
+      shapeFillPaint = new JDRTransparent(canvasGraphics);
+      outlineFillPaint = new JDRTransparent(canvasGraphics);
       textPaint = new JDRColor(canvasGraphics, Color.black);
 
       rulerLocale = Locale.getDefault();
@@ -138,7 +139,8 @@ public class FlowframTkSettings
       canvasGraphics = cg;
       stroke.setCanvasGraphics(cg);
       linePaint.setCanvasGraphics(cg);
-      fillPaint.setCanvasGraphics(cg);
+      shapeFillPaint.setCanvasGraphics(cg);
+      outlineFillPaint.setCanvasGraphics(cg);
       textPaint.setCanvasGraphics(cg);
    }
 
@@ -232,9 +234,21 @@ public class FlowframTkSettings
       linePaint = paint;
    }
 
+   @Deprecated
    public void setFillPaint(JDRPaint paint)
    {
-      fillPaint = paint;
+      setShapeFillPaint(paint);
+      setOutlineFillPaint(paint);
+   }
+
+   public void setShapeFillPaint(JDRPaint paint)
+   {
+      shapeFillPaint = paint;
+   }
+
+   public void setOutlineFillPaint(JDRPaint paint)
+   {
+      outlineFillPaint = paint;
    }
 
    public void setTextPaint(JDRPaint paint)
@@ -247,9 +261,20 @@ public class FlowframTkSettings
       return linePaint;
    }
 
+   @Deprecated
    public JDRPaint getFillPaint()
    {
-      return fillPaint;
+      return getShapeFillPaint();
+   }
+
+   public JDRPaint getShapeFillPaint()
+   {
+      return shapeFillPaint;
+   }
+
+   public JDRPaint getOutlineFillPaint()
+   {
+      return outlineFillPaint;
    }
 
    public JDRPaint getTextPaint()
@@ -1622,7 +1647,7 @@ public class FlowframTkSettings
       INIT_USER=2;
 
    private JDRBasicStroke stroke;
-   private JDRPaint linePaint, fillPaint, textPaint;
+   private JDRPaint linePaint, shapeFillPaint, outlineFillPaint, textPaint;
 
    public String fontFamily="SansSerif";
    private int fontSeries = JDRFont.SERIES_MEDIUM;

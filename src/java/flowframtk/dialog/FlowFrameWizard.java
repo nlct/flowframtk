@@ -1577,14 +1577,15 @@ public class FlowFrameWizard extends JDialog
 
       if (flowframe == null)
       {
-         // If selected object is not an unfilled path with four segments,
+         // If selected object is not an unfilled closed path with four segments,
          // set border setting to on.
 
-         if ((selectedObject instanceof JDRPath)
-           && (((JDRPath)selectedObject).getFillPaint() instanceof JDRTransparent)
-            )
+         if (selectedObject instanceof JDRPath)
          {
-            useObjectAsBorder.setSelected(false);
+            JDRPath path = (JDRPath)selectedObject;
+
+            useObjectAsBorder.setSelected(
+              !(path.size() == 4 && path.isClosed() && path.isFilled()));
          }
          else
          {

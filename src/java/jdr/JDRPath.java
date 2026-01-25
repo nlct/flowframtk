@@ -80,7 +80,7 @@ public class JDRPath extends JDRShape
    public JDRPath(JDRPaint lineColor, JDRPaint fillColor)
    {
       this(lineColor);
-      setFillPaint(fillColor);
+      setShapeFillPaint(fillColor);
    }
 
    /**
@@ -105,7 +105,7 @@ public class JDRPath extends JDRShape
       s.setCanvasGraphics(cg);
 
       setLinePaint(lineColor);
-      setFillPaint(fillColor);
+      setShapeFillPaint(fillColor);
       setStroke(s);
    }
 
@@ -169,7 +169,7 @@ public class JDRPath extends JDRShape
       super(lineColor.getCanvasGraphics());
       init(capacity);
       setLinePaint(lineColor);
-      setFillPaint(fillColor);
+      setShapeFillPaint(fillColor);
    }
 
    /**
@@ -186,7 +186,7 @@ public class JDRPath extends JDRShape
       super(lineColor.getCanvasGraphics());
       init(capacity);
       setLinePaint(lineColor);
-      setFillPaint(fillColor);
+      setShapeFillPaint(fillColor);
       setStroke(s);
    }
 
@@ -219,7 +219,7 @@ public class JDRPath extends JDRShape
 
    public static JDRPath fromShape(JDRShape shape)
    {
-      JDRPath path = new JDRPath(shape.getLinePaint(), shape.getFillPaint());
+      JDRPath path = new JDRPath(shape.getLinePaint(), shape.getShapeFillPaint());
 
       if (shape.getStroke() instanceof JDRBasicStroke)
       {
@@ -324,7 +324,7 @@ public class JDRPath extends JDRShape
                     double mitre_limit, DashPattern pattern)
    {
       setLinePaint(c);
-      setFillPaint(fill_color);
+      setShapeFillPaint(fill_color);
 
       stroke = new JDRBasicStroke(getCanvasGraphics(),
         thickness,cap,join,mitre_limit,pattern);
@@ -340,7 +340,7 @@ public class JDRPath extends JDRShape
                     JDRStroke s)
    {
       setLinePaint(c);
-      setFillPaint(fill_color);
+      setShapeFillPaint(fill_color);
 
       setStroke(s);
    }
@@ -349,7 +349,7 @@ public class JDRPath extends JDRShape
     * Gets the line colour for this path.
     * @return the draw colour for this path
     * @see #setLinePaint(JDRPaint)
-    * @see #getFillPaint()
+    * @see #getShapeFillPaint()
     */
    @Override
    public JDRPaint getLinePaint()
@@ -360,10 +360,16 @@ public class JDRPath extends JDRShape
    /**
     * Gets the fill colour for this path.
     * @return the fill colour for this path
-    * @see #setFillPaint(JDRPaint)
+    * @see #setShapeFillPaint(JDRPaint)
     * @see #getLinePaint()
     */
    @Override
+   public JDRPaint getShapeFillPaint()
+   {
+      return fillPaint;
+   }
+
+   @Deprecated
    public JDRPaint getFillPaint()
    {
       return fillPaint;
@@ -418,9 +424,9 @@ public class JDRPath extends JDRShape
    /**
     * Sets the fill colour for this object.
     * @param paint the new line colour
-    * @see #getFillPaint()
+    * @see #getShapeFillPaint()
     */
-   public void setFillPaint(JDRPaint paint)
+   public void setShapeFillPaint(JDRPaint paint)
    {
       if (paint == null)
       {
@@ -431,6 +437,12 @@ public class JDRPath extends JDRShape
          fillPaint = paint;
          fillPaint.setCanvasGraphics(getCanvasGraphics());
       }
+   }
+
+   @Deprecated
+   public void setFillPaint(JDRPaint paint)
+   {
+      setShapeFillPaint(paint);
    }
 
    /**
@@ -1717,7 +1729,7 @@ public class JDRPath extends JDRShape
 
       JDRPath newPath = new JDRPath(size_,
         (JDRPaint)getLinePaint().clone(),
-        (JDRPaint)getFillPaint().clone(),
+        (JDRPaint)getShapeFillPaint().clone(),
         (JDRStroke)getStroke().clone());
 
       int index = -1;
@@ -2107,7 +2119,7 @@ public class JDRPath extends JDRShape
 
       JDRPath path = new JDRPath(cg, capacity_);
       path.setLinePaint(new JDRTransparent(cg));
-      path.setFillPaint((JDRPaint)getLinePaint().clone());
+      path.setShapeFillPaint((JDRPaint)getLinePaint().clone());
       path.setStroke(new JDRBasicStroke(cg));
       boolean closeflag=false;
       JDRSegment lastPostMoveSeg = null;
@@ -2901,7 +2913,7 @@ public class JDRPath extends JDRShape
       JDRPath path = (JDRPath)obj;
 
       if (!getLinePaint().equals(path.getLinePaint())) return false;
-      if (!getFillPaint().equals(path.getFillPaint())) return false;
+      if (!getShapeFillPaint().equals(path.getShapeFillPaint())) return false;
       if (!getStroke().equals(path.getStroke())) return false;
 
       if (size_ != path.size_) return false;
@@ -2921,13 +2933,13 @@ public class JDRPath extends JDRShape
 
       setLinePaint((JDRPaint)path.getLinePaint().clone());
 
-      if (path.getFillPaint() == null)
+      if (path.getShapeFillPaint() == null)
       {
-         setFillPaint(new JDRTransparent(getCanvasGraphics()));
+         setShapeFillPaint(new JDRTransparent(getCanvasGraphics()));
       }
       else
       {
-         setFillPaint((JDRPaint)path.getFillPaint().clone());
+         setShapeFillPaint((JDRPaint)path.getShapeFillPaint().clone());
       }
 
       setStroke((JDRStroke)path.getStroke().clone());
@@ -3109,7 +3121,7 @@ public class JDRPath extends JDRShape
       CanvasGraphics cg = getCanvasGraphics();
 
       JDRPaint linePaint = getLinePaint();
-      JDRPaint fillPaint = getFillPaint();
+      JDRPaint fillPaint = getShapeFillPaint();
 
       if (fillPaint instanceof JDRTransparent)
       {
@@ -3228,7 +3240,7 @@ public class JDRPath extends JDRShape
          try
          {
             strokedPath = outlineToPath();
-            strokedPath.setFillPaint(linePaint);
+            strokedPath.setShapeFillPaint(linePaint);
          }
          catch (InvalidPathException e)
          {
@@ -3370,7 +3382,7 @@ public class JDRPath extends JDRShape
    {
       int level = 1;
 
-      level = Math.max(level, getFillPaint().psLevel());
+      level = Math.max(level, getShapeFillPaint().psLevel());
       level = Math.max(level, getLinePaint().psLevel());
 
       return level;
@@ -3398,7 +3410,7 @@ public class JDRPath extends JDRShape
 
       svg.println("\"");
       svg.println("      "+getLinePaint().svgLine());
-      svg.println("      "+getFillPaint().svgFill());
+      svg.println("      "+getShapeFillPaint().svgFill());
 
       JDRStroke s = getStroke();
 
@@ -3681,7 +3693,7 @@ public class JDRPath extends JDRShape
    public void fade(double value)
    {
       getLinePaint().fade(value);
-      getFillPaint().fade(value);
+      getShapeFillPaint().fade(value);
       ((JDRBasicStroke)getStroke()).fade(value);
    }
 

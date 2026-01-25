@@ -1385,14 +1385,14 @@ public abstract class SVGAbstractElement implements Cloneable
 
       if (paint != null)
       {
-         shape.setFillPaint(paint);
+         shape.setShapeFillPaint(paint);
       }
 
       numAttr = getNumberAttribute("fill-opacity");
 
       if (numAttr != null && numAttr.getValue() != null)
       {
-         shape.getFillPaint().setAlpha(numAttr.doubleValue(this));
+         shape.getShapeFillPaint().setAlpha(numAttr.doubleValue(this));
       }
 
       paint = getLinePaint();

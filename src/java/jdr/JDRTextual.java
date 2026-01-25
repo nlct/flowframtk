@@ -255,7 +255,12 @@ public interface JDRTextual
 
    public void setOutlineMode(boolean enable);
 
-   public JDRPaint getFillPaint();
+   public void setOutlineFillPaint(JDRPaint paint);
 
-   public void setFillPaint(JDRPaint fillPaint);
+   public JDRPaint getOutlineFillPaint();
+
+   @Deprecated
+   public abstract void setFillPaint(JDRPaint paint);
+   @Deprecated
+   public abstract JDRPaint getFillPaint();
 }

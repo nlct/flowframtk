@@ -783,9 +783,14 @@ public class JDRFrame extends JInternalFrame
       return application_.getCurrentLinePaint();
    }
 
-   public JDRPaint getCurrentFillPaint()
+   public JDRPaint getCurrentShapeFillPaint()
    {
-      return application_.getCurrentFillPaint();
+      return application_.getCurrentShapeFillPaint();
+   }
+
+   public JDRPaint getCurrentOutlineFillPaint()
+   {
+      return application_.getCurrentOutlineFillPaint();
    }
 
    public JDRPaint getCurrentTextPaint()
@@ -878,9 +883,14 @@ public class JDRFrame extends JInternalFrame
       return canvas.getSelectedLinePaint();
    }
 
-   public JDRPaint getSelectedFillPaint()
+   public JDRPaint getSelectedShapeFillPaint()
    {
-      return canvas.getSelectedFillPaint();
+      return canvas.getSelectedShapeFillPaint();
+   }
+
+   public JDRPaint getSelectedOutlineFillPaint()
+   {
+      return canvas.getSelectedOutlineFillPaint();
    }
 
    public JDRPaint getSelectedTextPaint()
@@ -980,10 +990,16 @@ public class JDRFrame extends JInternalFrame
       canvas.setSelectedLinePaint(paint);
    }
 
-   public void setSelectedFillPaint(JDRPaint paint)
+   public void setSelectedShapeFillPaint(JDRPaint paint)
    {
       paint.applyCanvasGraphics(getCanvasGraphics());
-      canvas.setSelectedFillPaint(paint);
+      canvas.setSelectedShapeFillPaint(paint);
+   }
+
+   public void setSelectedOutlineFillPaint(JDRPaint paint)
+   {
+      paint.applyCanvasGraphics(getCanvasGraphics());
+      canvas.setSelectedOutlineFillPaint(paint);
    }
 
    public void setSelectedStroke(JDRBasicStroke stroke)

@@ -61,7 +61,7 @@ public class JDRTextListener implements JDRObjectLoaderListener
 
          if (text.isOutline())
          {
-            JDRPaint paint = text.getFillPaint();
+            JDRPaint paint = text.getOutlineFillPaint();
             JDRPaintLoader paintLoader = jdr.getPaintLoader();
             paintLoader.save(jdr, (paint==null? 
               new JDRTransparent(text.getCanvasGraphics()) :
@@ -182,7 +182,7 @@ public class JDRTextListener implements JDRObjectLoaderListener
       if (ltxText != null) textsegment.setLaTeXText(ltxText);
 
       textsegment.setOutlineMode(isOutline);
-      textsegment.setFillPaint(fillPaint);
+      textsegment.setOutlineFillPaint(fillPaint);
 
       if (cg.getGraphics() == null)
       {

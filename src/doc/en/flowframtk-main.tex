@@ -17910,12 +17910,25 @@ The \meta{modifier specs} are as follows:
 
   For this type of \gls{compositeshape}, the \meta{modifier specs} are only
   present from version 1.8 and relate to the outline option
-  \meta{outline-flag} [\meta{fill paint}], which is
-  the same as for \glspl*{textarea} (\hyperref[jdr:textarea]{\code{T}}). So the
-  \meta{object-specs} are:
-  \begin{jdrversion}{1.8 onwards}
+  \meta{outline-flag} [\meta{outline-fill paint}], which is
+  the same as for \glspl*{textarea} (\hyperref[jdr:textarea]{\code{T}}).
+  Version 2.2 supports the new show path option. The boolean
+  \meta{show-path-flag} indicates whether or not the underlying path
+  should be shown. Regardless of this value, \meta{show-path-flag}
+  is followed by the line paint, fill paint and line style for when
+  the underlying path is shown. (This allows the style to be
+  retained if the setting was temporarily switched off when the image
+  was saved.
+  So the \meta{object-specs} are:
+  \begin{jdrversion}{2.2 onwards}
   \begin{syntaxline}
-  \meta{outline-flag} [\meta{fill paint}] \meta{underlying shape specs}
+  \meta{outline-flag} [\meta{outline-fill paint}] \meta{underlying shape specs}
+  \meta{show-path-flag} \meta{line paint} \meta{fill paint} \meta{line style}
+  \end{syntaxline}
+  \end{jdrversion}
+  \begin{jdrversion}{1.8--2.1}
+  \begin{syntaxline}
+  \meta{outline-flag} [\meta{outline-fill paint}] \meta{underlying shape specs}
   \end{syntaxline}
   \end{jdrversion}
   \begin{jdrversion}{1.6--1.7}

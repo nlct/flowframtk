@@ -69,14 +69,15 @@ public class JDRTextPathListener extends JDRPathListener
 
       JDRTextPath path = (JDRTextPath)object;
 
+      JDRPaintLoader paintLoader = jdr.getPaintLoader();
+
       if (version >= 1.8f)
       {
          jdr.writeBoolean(path.isOutline());
 
          if (path.isOutline())
          {
-            JDRPaint paint = path.getFillPaint();
-            JDRPaintLoader paintLoader = jdr.getPaintLoader();
+            JDRPaint paint = path.getOutlineFillPaint();
             paintLoader.save(jdr, (paint==null? 
               new JDRTransparent(path.getCanvasGraphics()) :
               paint));
@@ -85,7 +86,6 @@ public class JDRTextPathListener extends JDRPathListener
 
       if (version < 1.6f)
       {
-         JDRPaintLoader paintLoader = jdr.getPaintLoader();
          paintLoader.save(jdr, path.getTextPaint());
          path.getStroke().save(jdr);
 
@@ -96,6 +96,15 @@ public class JDRTextPathListener extends JDRPathListener
          JDRObjectLoader loader = jdr.getObjectLoader();
 
          loader.save(jdr, path.getUnderlyingShape());
+
+         if (version >= 2.2f)
+         {
+            jdr.writeBoolean(path.showPath());
+            paintLoader.save(jdr, path.getShowPathLinePaint());
+            paintLoader.save(jdr, path.getShowPathFillPaint());
+
+            path.getBasicStroke().save(jdr);
+         }
       }
    }
 
@@ -108,7 +117,13 @@ public class JDRTextPathListener extends JDRPathListener
       JDRShape shape;
 
       boolean outline = false;
-      JDRPaint fillPaint = null;
+      JDRPaint outlineFillPaint = null;
+
+      boolean showPath = false;
+      JDRPaint pathLinePaint = null;
+      JDRPaint pathFillPaint = null;
+
+      JDRPaintLoader paintLoader = jdr.getPaintLoader();
 
       if (version >= 1.8f)
       {
@@ -116,8 +131,7 @@ public class JDRTextPathListener extends JDRPathListener
 
          if (outline)
          {
-            JDRPaintLoader paintLoader = jdr.getPaintLoader();
-            fillPaint = paintLoader.load(jdr);
+            outlineFillPaint = paintLoader.load(jdr);
          }
       }
 
@@ -131,10 +145,8 @@ public class JDRTextPathListener extends JDRPathListener
       {
          shape = new JDRPath(cg);
 
-         JDRPaintLoader paintLoader = jdr.getPaintLoader();
-
          shape.setLinePaint(paintLoader.load(jdr));
-         shape.setFillPaint(new JDRTransparent(cg));
+         shape.setShapeFillPaint(new JDRTransparent(cg));
          shape.setStroke(JDRTextPathStroke.read(jdr));
 
          readPathSpecs(jdr, shape);
@@ -152,15 +164,26 @@ public class JDRTextPathListener extends JDRPathListener
          }
 
          shape = (JDRShape)object;
+
+         if (version >= 2.2f)
+         {
+            showPath = jdr.readBoolean(InvalidFormatException.SHOW_PATH_FLAG);
+            pathLinePaint = paintLoader.load(jdr);
+            pathFillPaint = paintLoader.load(jdr);
+            shape.setStroke(JDRBasicStroke.read(jdr));
+         }
       }
 
       JDRTextPath textpath = JDRTextPath.createFrom(shape);
 
       textpath.setOutlineMode(outline);
 
-      if (fillPaint != null)
+      if (version >= 2.2f)
       {
-         textpath.setFillPaint(fillPaint);
+         textpath.setOutlineFillPaint(outlineFillPaint);
+         textpath.setShowPathLinePaint(pathLinePaint);
+         textpath.setShowPathFillPaint(pathFillPaint);
+         textpath.setShowPath(showPath);
       }
 
       return textpath;

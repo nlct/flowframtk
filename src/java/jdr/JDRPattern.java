@@ -776,31 +776,49 @@ public abstract class JDRPattern extends JDRCompoundShape
       return fullArea;
    }
 
+   @Override
    public JDRStroke getStroke()
    {
       return path_.getStroke();
    }
 
+   @Override
    public void setStroke(JDRStroke stroke)
    {
       path_.setStroke(stroke);
    }
 
+   @Override
    public JDRPaint getLinePaint()
    {
       return path_.getLinePaint();
    }
 
+   @Override
    public void setLinePaint(JDRPaint paint)
    {
       path_.setLinePaint(paint);
    }
 
+   @Override
+   public JDRPaint getShapeFillPaint()
+   {
+      return path_.getShapeFillPaint();
+   }
+
+   @Deprecated
    public JDRPaint getFillPaint()
    {
       return path_.getFillPaint();
    }
 
+   @Override
+   public void setShapeFillPaint(JDRPaint paint)
+   {
+      path_.setShapeFillPaint(paint);
+   }
+
+   @Deprecated
    public void setFillPaint(JDRPaint paint)
    {
       path_.setFillPaint(paint);
@@ -981,6 +999,7 @@ public abstract class JDRPattern extends JDRCompoundShape
     */
    public abstract void makeParametersEqual(JDRPattern pattern);
 
+   @Override
    public JDRShape reverse()
        throws InvalidShapeException
    {
@@ -999,6 +1018,7 @@ public abstract class JDRPattern extends JDRCompoundShape
       return pattern;
    }
 
+   @Override
    public JDRShape toPolygon(double flatness)
      throws InvalidShapeException
    {
@@ -1017,26 +1037,31 @@ public abstract class JDRPattern extends JDRCompoundShape
       return pattern;
    }
 
+   @Override
    public JDRTextual getTextual()
    {
       return path_.getTextual();
    }
 
+   @Override
    public boolean hasTextual()
    {
       return path_.hasTextual();
    }
 
+   @Override
    public boolean showPath()
    {
       return path_.showPath();
    }
 
+   @Override
    public boolean hasSymmetricPath()
    {
       return path_.hasSymmetricPath();
    }
 
+   @Override
    public JDRSymmetricPath getSymmetricPath()
    {
       return path_.getSymmetricPath();
@@ -1796,7 +1821,7 @@ public abstract class JDRPattern extends JDRCompoundShape
        if (stroke instanceof JDRBasicStroke)
        {
           newPath.setStroke(stroke);
-          newPath.setFillPaint(path_.getFillPaint());
+          newPath.setShapeFillPaint(path_.getShapeFillPaint());
           newPath.setLinePaint(path_.getLinePaint());
 
           return newPath;
@@ -1804,9 +1829,21 @@ public abstract class JDRPattern extends JDRCompoundShape
 
        JDRTextPathStroke tpStroke = (JDRTextPathStroke)stroke;
 
-       newPath.setLinePaint(path_.getLinePaint());
+       JDRTextPath textPath = new JDRTextPath(newPath, tpStroke);
 
-       return new JDRTextPath(newPath, tpStroke);
+       if (path_.hasTextual())
+       {
+          JDRTextual textual = path_.getTextual();
+          textPath.setTextPaint(textual.getTextPaint());
+          textPath.setOutlineMode(textual.isOutline());
+          textPath.setOutlineFillPaint(textual.getOutlineFillPaint());
+       }
+
+       textPath.setLinePaint(path_.getLinePaint());
+       textPath.setShapeFillPaint(path_.getShapeFillPaint());
+       textPath.setShowPath(path_.showPath());
+
+       return textPath;
     }
 
    public JDRCompleteObject getFullObject()

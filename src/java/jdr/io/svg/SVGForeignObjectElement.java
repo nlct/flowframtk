@@ -119,7 +119,7 @@ public class SVGForeignObjectElement extends SVGAbstractElement
 
          path.setStroke(new JDRBasicStroke(cg));
          path.setLinePaint(new JDRColor(cg));
-         path.setFillPaint(new JDRTransparent(cg));
+         path.setShapeFillPaint(new JDRTransparent(cg));
 
          group.add(path);
 

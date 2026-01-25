@@ -475,7 +475,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
                gradients.put(((JDRGradient)p).getID(), (JDRGradient)p);
             }
 
-            p = ((JDRShape)object).getFillPaint();
+            p = ((JDRShape)object).getShapeFillPaint();
 
             if (p instanceof JDRGradient)
             {
@@ -488,6 +488,13 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
             p = ((JDRTextual)object).getTextPaint();
 
             if (p instanceof JDRGradient)
+            {
+               gradients.put(((JDRGradient)p).getID(), (JDRGradient)p);
+            }
+
+            p = ((JDRTextual)object).getOutlineFillPaint();
+
+            if (p != null && p instanceof JDRGradient)
             {
                gradients.put(((JDRGradient)p).getID(), (JDRGradient)p);
             }

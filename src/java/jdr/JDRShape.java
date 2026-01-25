@@ -152,7 +152,7 @@ public abstract class JDRShape extends JDRCompleteObject
 
       JDRPath path = new JDRPath(cg, getCapacity());
       path.setLinePaint(new JDRTransparent(cg));
-      path.setFillPaint((JDRPaint)getLinePaint().clone());
+      path.setShapeFillPaint((JDRPaint)getLinePaint().clone());
       boolean closeflag=false;
       JDRSegment postLastMoveSegment = null;
 
@@ -778,13 +778,13 @@ public abstract class JDRShape extends JDRCompleteObject
 
       Rectangle2D bounds;
 
-      if (getLinePaint() instanceof JDRTransparent && !hasMarkers())
+      if (isStroked())
       {
-         bounds = getGeneralPath().getBounds2D();
+         bounds = getStorageStrokedPath().getBounds2D();
       }
       else
       {
-         bounds = getStorageStrokedPath().getBounds2D();
+         bounds = getGeneralPath().getBounds2D();
       }
 
       if (bounds.getWidth() == 0 && bounds.getHeight() == 0)
@@ -1197,7 +1197,7 @@ public abstract class JDRShape extends JDRCompleteObject
       BBox box = null;
 
       JDRPaint linePaint = getLinePaint();
-      JDRPaint fillPaint = getFillPaint();
+      JDRPaint fillPaint = getShapeFillPaint();
 
       if (fillPaint instanceof JDRShading
         ||linePaint instanceof JDRShading)
@@ -1220,7 +1220,7 @@ public abstract class JDRShape extends JDRCompleteObject
          path = shiftAf.createTransformedShape(path);
       }
 
-      if (!(fillPaint instanceof JDRTransparent) && fillPaint != null)
+      if (isFilled())
       {
          cg.setPaint(fillPaint.getPaint(box));
          cg.fill(path);
@@ -1249,7 +1249,7 @@ public abstract class JDRShape extends JDRCompleteObject
       BBox box = null;
 
       JDRPaint linePaint = getLinePaint();
-      JDRPaint fillPaint = getFillPaint();
+      JDRPaint fillPaint = getShapeFillPaint();
 
       if (fillPaint instanceof JDRShading
         ||linePaint instanceof JDRShading)
@@ -1259,7 +1259,7 @@ public abstract class JDRShape extends JDRCompleteObject
 
       Path2D path = getBpGeneralPath();
 
-      if (!(fillPaint instanceof JDRTransparent) && fillPaint != null)
+      if (isFilled())
       {
          g2.setPaint(fillPaint.getPaint(box));
          g2.fill(path);
@@ -1289,7 +1289,7 @@ public abstract class JDRShape extends JDRCompleteObject
       BBox box = null;
 
       JDRPaint linePaint = getLinePaint();
-      JDRPaint fillPaint = getFillPaint();
+      JDRPaint fillPaint = getShapeFillPaint();
 
       if (fillPaint instanceof JDRShading
         ||linePaint instanceof JDRShading)
@@ -1299,7 +1299,7 @@ public abstract class JDRShape extends JDRCompleteObject
 
       Path2D path = getBpGeneralPath();
 
-      if (!(fillPaint instanceof JDRTransparent) && fillPaint != null)
+      if (isFilled())
       {
          EPS.fillPath(path, fillPaint, out);
       }
@@ -1441,10 +1441,59 @@ public abstract class JDRShape extends JDRCompleteObject
 
    public abstract void setLinePaint(JDRPaint paint);
    public abstract JDRPaint getLinePaint();
+
+   public boolean isStroked()
+   {
+      JDRPaint paint = getLinePaint();
+
+      return !(paint == null || (paint instanceof JDRTransparent))
+        || hasMarkers();
+   }
+
+   public boolean isFilled()
+   {
+      JDRPaint paint = getShapeFillPaint();
+
+      return !(paint == null || (paint instanceof JDRTransparent));
+   }
+
+   @Deprecated
    public abstract void setFillPaint(JDRPaint paint);
+   @Deprecated
    public abstract JDRPaint getFillPaint();
+
+   public void setShapeFillPaint(JDRPaint paint)
+   {
+      setFillPaint(paint);
+   }
+
+   public JDRPaint getShapeFillPaint()
+   {
+      return getShapeFillPaint();
+   }
+
    public abstract void setStroke(JDRStroke stroke);
    public abstract JDRStroke getStroke();
+
+   public boolean hasBasicStroke()
+   {
+      return getBasicStroke() != null;
+   }
+
+   public JDRBasicStroke getBasicStroke()
+   {
+      JDRStroke s = getStroke();
+
+      return (s instanceof JDRBasicStroke) ? (JDRBasicStroke)s : null;
+   }
+
+   public void setBasicStroke(JDRBasicStroke basicStroke)
+   {
+      if (hasBasicStroke())
+      {
+         setStroke(basicStroke);
+      }
+   }
 
    /** Makes this shape have the same attributes as other.
     * Sets the line and fill paint, the stroke and common attributes
@@ -1456,7 +1505,7 @@ public abstract class JDRShape extends JDRCompleteObject
    {
       JDRPaint paint = other.getLinePaint();
       setLinePaint(paint == null ? null : (JDRPaint)paint.clone());
-      paint = other.getFillPaint();
+      paint = other.getShapeFillPaint();
       setFillPaint(paint == null ? null : (JDRPaint)paint.clone());
       JDRStroke stroke = other.getStroke();
       setStroke(stroke == null ? null : (JDRStroke)stroke.clone());
@@ -1951,7 +2000,7 @@ public abstract class JDRShape extends JDRCompleteObject
          linePaint.applyCanvasGraphics(cg);
       }
 
-      JDRPaint fillPaint = getFillPaint();
+      JDRPaint fillPaint = getShapeFillPaint();
 
       if (fillPaint != null)
       {
@@ -1983,6 +2032,11 @@ public abstract class JDRShape extends JDRCompleteObject
       else
       {
          flag = (flag | SELECT_FLAG_NO_CLOSED_SUB_PATHS);
+      }
+
+      if (hasBasicStroke())
+      {
+         flag = (flag | SELECT_FLAG_HAS_BASIC_STROKE);
       }
 
       return flag;

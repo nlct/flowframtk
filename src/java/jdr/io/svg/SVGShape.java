@@ -54,7 +54,7 @@ public abstract class SVGShape extends SVGAbstractElement
       if (jdrShape != null)
       {
          jdrShape.setLinePaint(handler.createDefaultLinePaint());
-         jdrShape.setFillPaint(handler.createDefaultFillPaint());
+         jdrShape.setShapeFillPaint(handler.createDefaultFillPaint());
          jdrShape.setStroke(handler.createDefaultStroke());
 
          String desc = null;

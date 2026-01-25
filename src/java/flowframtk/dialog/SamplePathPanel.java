@@ -286,7 +286,7 @@ public class SamplePathPanel extends JPanel implements SamplePanel
       }
 
       JDRPaint lineColour = (JDRPaint)panel.getLinePaint().clone();
-      JDRPaint fillColour = (JDRPaint)panel.getFillPaint().clone();
+      JDRPaint fillColour = (JDRPaint)panel.getShapeFillPaint().clone();
       JDRStroke stroke    = (JDRStroke)panel.getStroke().clone();
 
       lineColour.applyCanvasGraphics(cg);
@@ -296,7 +296,7 @@ public class SamplePathPanel extends JPanel implements SamplePanel
       for (int i = 0; i < MAX_PATHS; i++)
       {
          path[i].setLinePaint(lineColour);
-         path[i].setFillPaint(fillColour);
+         path[i].setShapeFillPaint(fillColour);
          path[i].setStroke(stroke);
       }
 

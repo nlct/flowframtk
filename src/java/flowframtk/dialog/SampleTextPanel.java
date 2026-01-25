@@ -157,6 +157,20 @@ public class SampleTextPanel extends JPanel implements SamplePanel
       paint.applyCanvasGraphics(cg);
 
       sampleText.setTextPaint(paint);
+
+      if (panel.isTextOutline())
+      {
+         sampleText.setOutlineMode(true);
+         paint = (JDRPaint)panel.getOutlineFillPaint().clone();
+         paint.applyCanvasGraphics(cg);
+
+         sampleText.setOutlineFillPaint(paint);
+      }
+      else
+      {
+         sampleText.setOutlineMode(false);
+      }
+
       sampleText.setFontFamily(panel.getFontName());
       sampleText.setFontSize(panel.getFontSize());
       sampleText.setFontSeries(panel.getFontSeries());

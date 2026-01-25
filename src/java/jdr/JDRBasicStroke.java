@@ -1634,7 +1634,7 @@ public class JDRBasicStroke implements JDRStroke
    public void writeSVGdefs(SVG svg, JDRShape shape) throws IOException
    {
       JDRPaint linePaint = shape.getLinePaint();
-      JDRPaint fillPaint = shape.getFillPaint();
+      JDRPaint fillPaint = shape.getShapeFillPaint();
 
       if (linePaint != null)
       {

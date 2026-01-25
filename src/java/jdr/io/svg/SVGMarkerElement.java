@@ -266,7 +266,7 @@ public class SVGMarkerElement extends SVGAbstractElement
 
             if (fillPaint != null)
             {
-               jdrShape.setFillPaint(fillPaint);
+               jdrShape.setShapeFillPaint(fillPaint);
             }
 
             boolean isFilled = (fillPaint == null

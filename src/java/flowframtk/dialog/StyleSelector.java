@@ -70,7 +70,7 @@ public class StyleSelector extends JDRSelector
 
       tabbedPane.addTab(getResources().getMessage("fillpaintselector.title"),
          null, fillPanel,
-         getResources().getMessage("menu.edit.fill_colour.tooltip"));
+         getResources().getMessage("menu.edit.path.fill_colour.tooltip"));
 
       fillPanel.setBorder(BorderFactory.createLoweredBevelBorder());
       tabbedPane.setMnemonicAt(1,
@@ -126,7 +126,7 @@ public class StyleSelector extends JDRSelector
          application_.getCurrentLaTeXFontBase());
 
       setLinePaint(application_.getCurrentLinePaint());
-      setFillPaint(application_.getCurrentFillPaint());
+      setShapeFillPaint(application_.getCurrentShapeFillPaint());
       setTextPaint(application_.getCurrentTextPaint());
       setStroke(application_.getCurrentStroke());
 
@@ -148,7 +148,7 @@ public class StyleSelector extends JDRSelector
    public void okay()
    {
       application_.setCurrentSettings(getLinePaint(),
-         getFillPaint(), getTextPaint(),
+         getShapeFillPaint(), getTextPaint(),
          getStroke(),
          getFontName(),
          getFontSize(),
@@ -167,7 +167,7 @@ public class StyleSelector extends JDRSelector
    public void set(FlowframTkSettings appSettings)
    {
       setLinePaint(appSettings.getLinePaint());
-      setFillPaint(appSettings.getFillPaint());
+      setShapeFillPaint(appSettings.getShapeFillPaint());
       setTextPaint(appSettings.getTextPaint());
       setFontName(appSettings.getFontFamily());
       setFontSize(appSettings.getFontSize());
@@ -207,12 +207,24 @@ public class StyleSelector extends JDRSelector
       textPanel.setPaint(paint);
    }
 
+   @Deprecated
    public JDRPaint getFillPaint()
+   {
+      return getShapeFillPaint();
+   }
+
+   public JDRPaint getShapeFillPaint()
    {
       return fillPanel.getPaint(getCanvasGraphics());
    }
 
+   @Deprecated
    public void setFillPaint(JDRPaint paint)
+   {
+      setShapeFillPaint(paint);
+   }
+
+   public void setShapeFillPaint(JDRPaint paint)
    {
       fillPanel.setPaint(paint);
    }
@@ -371,7 +383,7 @@ public class StyleSelector extends JDRSelector
 
       setTextPaint(new JDRColor(cg, Color.black));
 
-      setFillPaint(new JDRTransparent(cg));
+      setShapeFillPaint(new JDRTransparent(cg));
 
       linestylePanel.setDefaults();
 
