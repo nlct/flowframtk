@@ -2936,6 +2936,8 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
                "objectinfo.marker.width", "width = {0}", width.info()));
          }
 
+         builder.append(sep);
+
          if (userOffset)
          {
             builder.append(msgSys.getMessageWithFallback(

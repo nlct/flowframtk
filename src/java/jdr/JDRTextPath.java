@@ -335,13 +335,13 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    @Override
    public JDRPaint getLinePaint()
    {
-      return path_.getLinePaint();
+      return getShowPathLinePaint();
    }
 
    @Override
    public void setLinePaint(JDRPaint paint)
    {
-      path_.setLinePaint(paint);
+      setShowPathLinePaint(paint);
    }
 
    /**
@@ -798,15 +798,32 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
             cg.fill(pathShape);
          }
 
-         if ((showPathLinePaint instanceof JDRTransparent))
+         if (isStroked())
          {
-            showPathStroke.drawMarkers(path_);
+            JDRPaint textPaint = path_.getLinePaint();
+            JDRStroke tpStroke = getStroke();
+
+            path_.setLinePaint(showPathLinePaint);
+            path_.setStroke(showPathStroke);
+
+            if (showPathLinePaint instanceof JDRTransparent)
+            {
+               if (showPathStroke.hasMarkers())
+               {
+                  showPathStroke.drawMarkers(path_);
+               }
+            }
+            else
+            {
+               cg.setPaint(showPathLinePaint.getPaint(box));
+
+               showPathStroke.drawStoragePath(path_, path_.getGeneralPath());
+            }
+
+            path_.setLinePaint(textPaint);
+            path_.setStroke(tpStroke);
          }
-         else
-         {
-            cg.setPaint(showPathLinePaint.getPaint(box));
-            showPathStroke.drawStoragePath(path_, path_.getGeneralPath());
-         }
+
       }
 
       if (paint instanceof JDRShading)
@@ -886,14 +903,26 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
             g2.fill(path2d);
          }
 
-         if (showPathLinePaint instanceof JDRTransparent)
+         if (isStroked())
          {
-            showPathStroke.printMarkers(g2, path_);
-         }
-         else
-         {
-            g2.setPaint(showPathLinePaint.getPaint(box));
-            showPathStroke.printPath(g2, path_, path2d);
+            JDRPaint textPaint = path_.getLinePaint();
+            JDRStroke tpStroke = getStroke();
+
+            path_.setLinePaint(showPathLinePaint);
+            path_.setStroke(showPathStroke);
+
+            if (showPathLinePaint instanceof JDRTransparent)
+            {
+               showPathStroke.printMarkers(g2, path_);
+            }
+            else
+            {
+               g2.setPaint(showPathLinePaint.getPaint(box));
+               showPathStroke.printPath(g2, path_, path2d);
+            }
+
+            path_.setLinePaint(textPaint);
+            path_.setStroke(tpStroke);
          }
       }
 

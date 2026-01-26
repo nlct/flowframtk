@@ -103,7 +103,7 @@ public class JDRTextPathListener extends JDRPathListener
             paintLoader.save(jdr, path.getShowPathLinePaint());
             paintLoader.save(jdr, path.getShowPathFillPaint());
 
-            path.getBasicStroke().save(jdr);
+            path.getShowPathStroke().save(jdr);
          }
       }
    }
@@ -122,6 +122,7 @@ public class JDRTextPathListener extends JDRPathListener
       boolean showPath = false;
       JDRPaint pathLinePaint = null;
       JDRPaint pathFillPaint = null;
+      JDRBasicStroke basicStroke = null;
 
       JDRPaintLoader paintLoader = jdr.getPaintLoader();
 
@@ -170,7 +171,7 @@ public class JDRTextPathListener extends JDRPathListener
             showPath = jdr.readBoolean(InvalidFormatException.SHOW_PATH_FLAG);
             pathLinePaint = paintLoader.load(jdr);
             pathFillPaint = paintLoader.load(jdr);
-            shape.setStroke(JDRBasicStroke.read(jdr));
+            basicStroke = JDRBasicStroke.read(jdr);
          }
       }
 
@@ -183,7 +184,7 @@ public class JDRTextPathListener extends JDRPathListener
          textpath.setOutlineFillPaint(outlineFillPaint);
          textpath.setShowPathLinePaint(pathLinePaint);
          textpath.setShowPathFillPaint(pathFillPaint);
-         textpath.setShowPath(showPath);
+         textpath.setShowPath(showPath, basicStroke);
       }
 
       return textpath;
