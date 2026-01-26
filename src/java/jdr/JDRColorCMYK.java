@@ -185,7 +185,7 @@ public class JDRColorCMYK extends JDRPaint implements Serializable
    @Override
    public String toString()
    {
-      return String.format("%s[C=%f,M=%f,Y=%f,Y=%f,K=%f,A=%f]",
+      return String.format("%s[C=%f,M=%f,Y=%f,K=%f,A=%f]",
        getClass().getSimpleName(), cyan, magenta, yellow, key, alpha);
    }
 
