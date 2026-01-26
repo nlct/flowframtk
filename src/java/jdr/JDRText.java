@@ -968,6 +968,7 @@ public class JDRText extends JDRCompleteObject
       return latexText;
    }
 
+   @Override
    public void draw(FlowFrame parentFrame)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -1038,6 +1039,7 @@ public class JDRText extends JDRCompleteObject
       }
    }
 
+   @Override
    public void print(Graphics2D g2)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -1065,10 +1067,16 @@ public class JDRText extends JDRCompleteObject
          box = new BBox(cg, bounds);
       }
 
-      g2.setPaint(getTextPaint().getPaint(box));
-
       if (isOutline)
       {
+         if (fillPaint != null && !(fillPaint instanceof JDRTransparent))
+         {
+            g2.setPaint(fillPaint.getPaint(box));
+            g2.fill(outline);
+         }
+
+         g2.setPaint(getTextPaint().getPaint(box));
+
          Stroke oldStroke = g2.getStroke();
          g2.setStroke(getOutlineStroke(cg));
          g2.draw(outline);
@@ -1077,6 +1085,8 @@ public class JDRText extends JDRCompleteObject
       }
       else
       {
+         g2.setPaint(getTextPaint().getPaint(box));
+
          g2.fill(outline);
       }
 
