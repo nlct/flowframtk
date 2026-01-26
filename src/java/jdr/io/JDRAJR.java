@@ -1326,6 +1326,10 @@ public abstract class JDRAJR
          {
             throw e;
          }
+         catch (InvalidValueException e)
+         {
+            // not AJR
+         }
          catch (IOException e)
          {
             // maybe character encoding if binary file
