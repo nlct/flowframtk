@@ -876,9 +876,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       g2.setPaint(oldPaint);
    }
 
+   @Override
    public void print(Graphics2D g2)
    {
       Paint oldPaint = g2.getPaint();
+      CanvasGraphics cg = getCanvasGraphics();
 
       BBox box = null;
 
@@ -932,11 +934,27 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (paint instanceof JDRShading)
       {
-         box = new BBox(getCanvasGraphics(), shape.getBounds2D());
+         box = new BBox(cg, shape.getBounds2D());
       }
 
-      g2.setPaint(paint.getPaint(box));
-      g2.fill(shape);
+      if (isOutline)
+      {
+         JDRPaint fill = getOutlineFillPaint();
+
+         if (fill != null && !(fill instanceof JDRTransparent))
+         {
+            g2.setPaint(fill.getPaint(box));
+            g2.fill(shape);
+         }
+
+         g2.setPaint(paint.getPaint(box));
+         g2.draw(shape);
+      }
+      else
+      {
+         g2.setPaint(paint.getPaint(box));
+         g2.fill(shape);
+      }
 
       g2.setPaint(oldPaint);
    }
