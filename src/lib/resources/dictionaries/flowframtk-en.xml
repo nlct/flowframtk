@@ -4575,6 +4575,8 @@ You will first have to replace the blocking closing move (segment index {1}, fro
 <entry key="index.path-attribute.join-style.mitre-limit">miter limit</entry>
 <entry key="index.path-attribute.winding-rule">winding rule</entry>
 
+<entry key="index.path-attribute.textpathshow">show path</entry>
+
 <entry key="index.marker">markers</entry>
 <entry key="index.marker.text">marker</entry>
 

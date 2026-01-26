@@ -53,6 +53,8 @@
 \newcommand{\pathattrpl}[1]{\glspl{index.path-attribute.#1}}
 \newcommand{\affinetrans}[1]{\gls{affine-transformation.#1}}
 
+\newcommand{\rendered}{\glslink{rendering}{rendered}}
+
 \newcommand{\filefn}[1]{\menuitem{file.#1}}
 \newcommand{\editfn}[1]{\menuitem{edit.#1}}
 \newcommand{\transformfn}[1]{\menuitem{transform.#1}}
@@ -2286,7 +2288,7 @@ settings.)
 
 The \widget{graphics.title} tab (\figureref{fig:graphics})
 allows you to make adjustments to the way the image is
-\glslink{rendering}{rendered} on the \gls{canvas}.
+\rendered\ on the \gls{canvas}.
 
 \widgetdef{render.anti_alias}
 
@@ -5177,7 +5179,7 @@ into the text field. The available Unicode blocks and symbols are govern by the
 \begin{information}
 The \dialog{symbolselector} dialog uses the same font as the
 \gls{textarea}. Any characters that are not supported by the font
-will be rendered with the missing glyph character (often shown as a
+will be \rendered\ with the missing glyph character (often shown as a
 rectangle). If you need one of those characters, you will have to change the font.
 \end{information}
 
@@ -5709,7 +5711,7 @@ To change the path's \pathattr{line-paint}, use
 
 To change the path's \pathattr{fill-paint}, use
 \menu{selectedpath.fill_colour}. This is the same as using the
-\menu{edit.fill_colour} menu item from the main menu bar.
+\menu{edit.path.fill_colour} menu item from the main menu bar.
 
 \menudef{menu.selectedpath.all_styles}
 
@@ -5817,7 +5819,7 @@ from the main menu bar.
 
 To change the \gls{textarea}['s] \textattr{fill-paint}, use
 \menu{selectedtext.fill_colour}. This is the same as using the
-\menu{edit.fill_colour} menu item from the main menu bar.
+\menu{edit.textarea.fill_colour} menu item from the main menu bar.
 This action is only available if the \textattr{outline} setting is on.
 
 \menudef{menu.selectedtext.all_styles}
@@ -5876,17 +5878,34 @@ This option won't be available if there is more than one
   {Popup Menu when a Text-Path is Selected}
 
 
-If a text-path has been selected then the
-\gls{index.menu.selectedtextpath} is very similar to the
-\gls{index.menu.selectedtext} but additionally has the
-\menu{selectedpath.edit} menu item to switch on edit mode for the
-underlying path.
+If a \gls{textpath} has been selected then the
+\gls{index.menu.selectedtextpath} popup menu will have a 
+\menu{selected.path} sub-menu and a \menu{selected.textarea} 
+sub-menu.
 
 \menudef{menu.selectedtextpath.textpath_description}
 
 To set or edit the \gls{textpath}['s] description, use
 \menu{selectedtextpath.textpath_description}. This is the same as
-the general \menu{selected.object_description} menu item but has a more specific label.
+the general \menu{selected.object_description} menu item 
+but has a more specific label.
+
+\menudef{menu.selectedtextpath.textpath_tag}
+
+To set or edit the \gls{textpath}['s] tag, use
+\menu{selectedtextpath.textpath_tag}. This is the same as
+the general \menu{selected.object_tag} menu item but has a more specific label.
+
+The \menu{selected.path} menu has the same items as the
+\menu{selectedpath} popup menu that govern the \dglspl{path-attribute}
+but additionally has the \inlineglsdef{menu.selectedpath.textpathshow} toggle
+item to toggle the \pathattr{textpathshow} attribute, which 
+is the same as the \menu{edit.path.textpathshow} toggle menu
+item.
+
+The \menu{selected.text} menu has the same items as the
+\menu{selectedtext} popup menu that govern the
+\dglspl{text-attribute}.
 
 % BITMAP POPUP
 
@@ -5970,7 +5989,8 @@ If any \glspl{path} have been selected or if any selected
 \glspl{group} contain any \glspl{path}, then the
 \menu{selected.path} sub menu will be available. This has the same
 menu items as \gls{index.menu.selectedpath} that are specific to
-\glspl{path}.
+\glspl{path}, but additionally has the \menu{selectedpath.textpathshow} toggle
+item to toggle the \pathattr{textpathshow} attribute.
 
 \menudef{menu.selected.textarea}
 
@@ -5979,14 +5999,6 @@ If any \glspl{textarea} have been selected or if any selected
 \menu{selected.textarea} sub menu will be available. This has the same
 menu items as \gls{index.menu.selectedtext} that are specific to
 \glspl{textarea}.
-
-\menudef{menu.selected.fill_colour}
-
-If any \glspl{path} have been selected or if any \glspl*{textarea}
-have been selected with \textattr{outline} mode on, then the
-\menu{selected.fill_colour} menu item will be available. This is the
-same as using the \menu{edit.fill_colour} menu item from the main
-menu bar.
 
 \menudef{menu.selected.bitmap}
 
@@ -7141,12 +7153,25 @@ menu item. The text from the original \gls{textarea} will then follow
 the shape of the original path (which will now be the underlying
 path).
 
-The underlying path will not be visible (except in \editpathmode).
+Initially the underlying path will not be visible (except in \editpathmode).
 If the original \gls*{textarea} was in \textattr{outline} mode, the new
 \gls*{textpath} will also be in \textattr{outline} mode, possibly with a 
 \textattr{fill-paint}, depending on the original \gls*{textarea} and \gls*{path}
 fill paint. (If the original \gls*{textarea} didn't have a
 \textattr{fill-paint}, the \gls*{path} \pathattr{fill-paint} will be applied.)
+
+The \inlineglsdef{index.path-attribute.textpathshow} attribute
+determines whether or not the underlying path is \rendered.
+The underlying path can be made visible by selecting the 
+\menu{edit.path.textpathshow} toggle menu item. Deselecting this
+checkbox will hide the underlying path again.
+
+A \gls{textpath} has two sets of attributes: the text attributes to
+govern the way that the text is drawn, which can be changed via the
+\menu{edit.textarea} sub-menu, and the path attributes that
+govern the way that the underlying path is drawn if the
+\pathattr{textpathshow} setting is on, which can be changed via the 
+\menu{edit.path} sub-menu.
 
 The horizontal \textattr{anchor} determines
 whether the text should start at the first \gls{controlpt} of the
@@ -7186,16 +7211,47 @@ horizontal \textattr{anchor} has been changed to right.
 \subfigref{fig:textpathd} right \textattr{anchor}. 
 (The \glspl{textpath} are in edit mode to show the underlying path.)}
 
-Once a \gls{path} has been combined with a \gls{textarea}, the line
-style \glspl{index.path-attribute} are lost as the path is only used
-as a guide to position the text. The \gls{cag} functions, such as
-\transformfn{union}, are applied to the underlying path and the text
-is adjusted to follow the new path.  Transformations using the
-\transformfn{rotate}, \transformfn{scale} and \transformfn{shear}
-functions are applied to the underlying path not the text. You can
-either transform the text using the transformation functions before
-combining it with a path or transform it after combining by changing
-the text \textattr{transformation-matrix}.
+If the \pathattr{textpathshow} setting is on, the text will still
+follow the path defined by the \gls{underlying-shape} overlapping
+the \rendered\ path. The text position is unaffected by
+\dglspl{path-attribute} such as the \pathattr{line width} or
+\pathattrpl{marker}.
+
+For example, \figureref{fig:textpathshowa}
+has a path with a \pathattr{line-paint}, \pathattr{fill-paint}
+and a \pathattr{line-style} with a thick \pathattr{line-width} and a start marker.
+The \gls{textarea} has the \textattr{outline} mode on with a 
+\textattr{fill-paint} for the interior of each glyph.
+In \figureref{fig:textpathshowb} the \gls{path} and \gls{textarea}
+have been combined to form a \gls{textpath}. This is initialised
+with the \pathattr{textpathshow} attribute off so the text follows
+the \gls{underlying-shape} but the actual shape isn't \rendered.
+In \figureref{fig:textpathshowc} the \pathattr{textpathshow}
+attribute is on so the original path is now showing behind the text.
+
+% TODO: check images
+\FloatSubFigs{fig:textpathshow}
+{
+ {fig:textpathshowa}{\includeimg{textpathshowa}}{},
+ {fig:textpathshowb}{\includeimg{textpathshowb}}{},
+ {fig:textpathshowc}{\includeimg{textpathshowc}}{}
+}
+[Showing or Hiding the Underlying Shape of a Text-Path]
+{Showing or Hiding the Underlying Shape of a Text-Path:
+\subfigref{fig:textpathshowa}:  the original \gls{textarea} and \gls{path};
+\subfigref{fig:textpathshowb}: the resulting \gls{textpath} with the
+\pathattr{textpathshow} attribute off:
+\subfigref{fig:textpathshowb}: the \gls{textpath} with the
+\pathattr{textpathshow} attribute on}
+
+The \gls{cag} functions, such as \transformfn{union}, are applied to
+the underlying path and the text is adjusted to follow the new path.
+Transformations using the \transformfn{rotate}, \transformfn{scale}
+and \transformfn{shear} functions are applied to the underlying path
+not the text. You can either transform the text using the
+transformation functions before combining it with a path or
+transform it after combining them into a \gls{textpath} by changing the text
+\textattr{transformation-matrix}.
 
 Note there is a difference between applying \gls{symmetry} to a
 \gls{textpath} and converting a \gls*{textarea} and
@@ -7252,17 +7308,24 @@ the \manmsg{behaviour} on export via the \dialog{texconfig} dialog.
 
 \menudef{menu.edit.textarea.outline}
 
-A \gls{textarea} or \gls{textpath} can be rendered as an
+A \gls{textarea} or \gls{textpath} can be \rendered\ as an
 \inlineglsdef{index.text-attribute.outline} by
 selecting it and then using the \menu{edit.textarea.outline}
-menu item. For example, \figureref{fig:textoutlinea} shows a
+menu item. This means that instead of drawing the text normally,
+each glyph is treated as a path that should be stroked.
+
+For example, \figureref{fig:textoutlinea} shows a
 standard \gls*{textarea} and \figureref{fig:textoutlineb} shows
-that \gls*{textarea} rendered as an outline. If the outline mode is
-set, you can apply a \gls{index.fill-colour} using
-\menu{edit.fill_colour}.
+that \gls*{textarea} rendered as an outline.
+
+If the outline mode is set, you can apply a \gls{index.fill-colour} using
+\menu{edit.textarea.fill_colour}. This fills in the paths defined by
+the glyphs. Any \gls{textpath} that has the \pathattr{textpathshow}
+attribute set will have a separate \pathattr{line_paint}, \pathattr{fill_paint}
+and \pathattr{line-style} for the underlying shape.
 
 \begin{warning}
-Note that although \glspl*{textpath} can be rendered with an outline in \FlowframTk,
+Note that although \glspl*{textpath} can be \rendered\ with an outline in \FlowframTk,
 the \LaTeX\ \filefn{export} functions can't emulate
 this and will either export the \gls*{textpath} without the outline
 setting or will export it as a path (in which case the alternative
@@ -9757,9 +9820,14 @@ and (if \hyperref[sec:exportimage]{exporting} to a \LaTeX\ file) the
 \textattr{anchor}. The way a \gls{textpath} is displayed is governed
 by the \gls{index.text-colour}, \gls{font}, \textattr{anchor},
 \textattr{transformation-matrix} and the underlying path. (A
-\gls*{textarea} or \gls*{textpath} may also be rendered as an
+\gls*{textarea} or \gls*{textpath} may also be \rendered\ as an
 \textattr{outline} optionally with a \textattr{fill-paint}, see
 \sectionref{sec:textoutline}.)
+
+A \gls{textpath} has both \dglspl{text-attribute} (which govern the
+way the text is styled) and \dglspl{path-attribute} (which govern
+the way the underlying path is styled, if the
+\pathattr{textpathshow} attribute is on).
 
 \menudef{menu.settings.styles}
 
@@ -9854,13 +9922,28 @@ effects of the \pathattr{line-paint} setting that you choose
 
 \section{Fill Paint}\label{sec:fillpaint}
 
-\menudef{menu.edit.fill_colour}
+The fill paint is used to paint the interior of a shape. The
+interior (or \qt{inside}) of a shape is determined by the
+\pathattr{winding-rule}. There are three types of fill paint:
 
-The \menu{edit.fill_colour} menu item opens a dialog with a
+\begin{itemize}
+\item the paint used to fill the interior of a \gls{path} (or a path
+that's the \gls{underlying-shape} for a \gls{compositeshape});
+
+\item the paint used to fill the interior of glyphs for any text
+with the \textattr{outline} setting on; 
+
+\item the paint used to fill \pathattrpl{marker}. For markers, see
+\sectionref{sec:markers}.
+
+\end{itemize}
+
+\menudef{menu.edit.path.fill_colour}
+
+The \menu{edit.path.fill_colour} menu item opens a dialog with a
 \widget{fillpaintselector.title} panel in which you can change the
 \inlineglsdef{index.path-attribute.fill-paint} of all \selected\
-\glspl{shape}. The \pathattr{fill-paint} is also used to fill
-\glspl{textarea} or \glspl{textpath} in \textattr{outline} mode. 
+\glspl{shape}. 
 
 \widgetdef{fillpaintselector.title}
 
@@ -9873,13 +9956,23 @@ The default \pathattr{fill-paint} is \gls{transparent} which indicates
 that \glspl{shape} should not be filled.  (The \pathattr{line-paint}
 will need to be set to something other than
 \widget{paintselector.transparent} in order for the \glspl{shape} to be
-visible.)
+visible, unless there are independently painted \pathattrpl{marker}.)
 
-There is a sample panel along the top (\menu{edit.fill_colour})
+There is a sample panel along the top (\menu{edit.path.fill_colour})
 or the side (\menu{settings.styles}) illustrating the
-effects of the \pathattr{fill-paint} setting that you choose
+effects of the \pathattr{fill-paint} setting that you choose.
 
-\seealsorefs{sec:houseexample}
+\menudef{menu.edit.textarea.fill_colour}
+
+The \menu{edit.textarea.fill_colour} menu item opens a dialog with a
+\widget{fillpaintselector.title} panel in which you can change the
+\inlineglsdef{index.text-attribute.fill-paint} for
+\glspl{textarea} or \glspl{textpath} in \textattr{outline} mode. 
+The sample panel at the top shows text using the style of the
+currently selected \gls{textarea} or \gls{textpath}.
+
+The \gls{menu.edit.textarea.fill_colour} menu item is only available if
+the \menu{edit.textarea.outline} option is selected. 
 
 \section{Line Style}\label{sec:pathstyle}
 
@@ -11122,7 +11215,7 @@ Specifies the \textattr{anchor} (\sectionref{sec:fontanchor}).
 The selected font may not support the chosen attributes.
 For example, if \widget{font.shape} is set to 
 \widget{font.shape.sc} the text on the \gls{canvas} won't be
-rendered in small-caps, but changing the \widget{font.shape}
+\rendered\ in small-caps, but changing the \widget{font.shape}
 will also change the associated \LaTeX\ command (\gls{upshape} for
 small-caps) so the text may be rendered as small-caps if the image
 is exported to a \LaTeX\ file. If it still doesn't show as
@@ -11324,7 +11417,7 @@ will automatically set the \LaTeX\ alternative to \gls{upshape}.
 The \widget{font.shape.em} item indicates emphasized and
 will automatically set the \LaTeX\ alternative to \gls{em}.
 This setting may appear as italic or slanted when the text is
-\glslink{rendering}{rendered} on the \gls{canvas} depending on the
+\rendered\ on the \gls{canvas} depending on the
 font.
 
 \widgetdef{font.shape.italic}
@@ -11332,7 +11425,7 @@ font.
 The \widget{font.shape.italic} item indicates italic and
 will automatically set the \LaTeX\ alternative to \gls{itshape}.
 This setting may appear as slanted rather than italic when the text is
-\glslink{rendering}{rendered} on the \gls{canvas} depending on the
+\rendered\ on the \gls{canvas} depending on the
 font.
 
 \widgetdef{font.shape.slanted}
@@ -11340,7 +11433,7 @@ font.
 The \widget{font.shape.slanted} item indicates slanted (oblique) and
 will automatically set the \LaTeX\ alternative to \gls{slshape}.
 This setting may appear as italic when the text is
-\glslink{rendering}{rendered} on the \gls{canvas} depending on the
+\rendered\ on the \gls{canvas} depending on the
 font.
 
 \widgetdef{font.shape.sc}
@@ -14447,7 +14540,7 @@ rear. To ensure this, select the bus outline and use the
 \editfn{back} function (\sectionref{sec:moveupordown}).
 
 \item Select all paths, and apply \menu{transform.subtract}.  Set
-the \pathattr{fill-paint} to red using the \menu{edit.fill_colour}
+the \pathattr{fill-paint} to red using the \menu{edit.path.fill_colour}
 menu item to open the \dialog{fillpaintselector} dialog box.  The windows
 should appear as holes. See \figureref{fig:bus8}.
 
@@ -14558,7 +14651,7 @@ poster a logo, and move it to the location shown
 
 \item Garish posters are not recommended, but to illustrate how to
 liven up the poster, set the \pathattr{fill-paint} for the rectangles
-using the \menu{edit.fill_colour} menu item to open
+using the \menu{edit.path.fill_colour} menu item to open
 the \dialog{fillpaintselector} dialog box. I also added two
 extra smaller rectangles on top of the right hand rectangles, to
 give a double border effect (\figureref{fig:poster4}).
@@ -15607,7 +15700,7 @@ mouse or via \menu{edit.moveby} or use
 {\includeimg{brochure9}}
 {Brochure Example\dash Move the Arc to the Bottom Right Corner}
 
-\item Use \menu{edit.fill_colour} to change the 
+\item Use \menu{edit.path.fill_colour} to change the 
 \pathattr{fill-paint} to orchid (68\% red, 36\% green, 100\% blue) and use
 \menu{edit.path.line_colour} to change the \pathattr{line-paint}
 to \gls{transparent}. The arc should now appear as shown in
@@ -15948,7 +16041,7 @@ functions in the \menu{navigate} menu, but
 \end{information}
 
 \item To change the \pathattr{fill-paint} use the menu mnemonic
-\mnemonictrail{edit.fill_colour}. This will open up
+\mnemonictrail{edit.path.fill_colour}. This will open up
 the \dialog{fillpaintselector} dialog box shown in \figureref{fig:housenomouse2}.
 
 \FloatFig{fig:housenomouse2}
@@ -16020,7 +16113,7 @@ using either \accelerator{tools.select} or \mnemonictrail{tools.select}.
 \mnemonictrail{navigate.skip}.
 
 \item Open the \dialog{fillpaintselector} dialog box using the menu mnemonic
-\mnemonictrail{edit.fill_colour}.
+\mnemonictrail{edit.path.fill_colour}.
 
 \item Use \mnemonic{paintselector.single} to select the
 \widget{paintselector.single} radio button.
@@ -16074,7 +16167,7 @@ pressing \accelerator{navigate.add_next} four times will select
 these four rectangles.
 
 \item Now use the menu mnemonic
-\mnemonic{edit.fill_colour} to set the \pathattr{fill-paint}
+\mnemonic{edit.path.fill_colour} to set the \pathattr{fill-paint}
 to white, following the same process as before to produce the
 image shown in \figureref{fig:housenomouse7}.
 
@@ -17759,7 +17852,7 @@ If no controls are anchored, the $-1$ is still required.
 
   \begin{enumerate}
   \item\label{jdr:outline} \meta{outline-flag} is a \type{boolean}
-  value that indicates whether or not the text should be rendered as
+  value that indicates whether or not the text should be \rendered\ as
   an \textattr{outline}. If true, \meta{fill paint} follows, which is the
   \type{paint} used to fill the interior. A transparent \type{paint}
   indicates the interior shouldn't be filled.
@@ -17915,10 +18008,10 @@ The \meta{modifier specs} are as follows:
   Version 2.2 supports the new show path option. The boolean
   \meta{show-path-flag} indicates whether or not the underlying path
   should be shown. Regardless of this value, \meta{show-path-flag}
-  is followed by the line paint, fill paint and line style for when
-  the underlying path is shown. (This allows the style to be
-  retained if the setting was temporarily switched off when the image
-  was saved.
+  is followed by the \pathattr{line-paint}, \pathattr{fill-paint}
+  and \gls{line-style} for when the underlying path is shown.
+  (This allows the style to be retained if the setting was temporarily 
+  switched off when the image was saved.
   So the \meta{object-specs} are:
   \begin{jdrversion}{2.2 onwards}
   \begin{syntaxline}
