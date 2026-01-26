@@ -1808,6 +1808,16 @@ public class FlowframTkAction extends AbstractAction implements JDRConstants
       return array;
    }
 
+   @Override
+   public String toString()
+   {
+      return String.format(
+       "%s[command=%s,accelerator=%s,requiresCanvas=%s,validDuringIO=%s,requiresNonEmptyImage=%s,requiresTypeblock=%s,button=%s]",
+       getClass().getSimpleName(), actionCommand, accelerator,
+       requiresCanvas, validDuringIO,
+       requiresNonEmptyImage, requiresTypeblock, actionButton);
+   }
+
    public static final int[] SELECTION_IGNORE_COUNT = null;
 
    public static final int[] SELECTION_NONE

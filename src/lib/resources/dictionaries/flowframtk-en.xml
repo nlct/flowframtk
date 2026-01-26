@@ -1120,13 +1120,13 @@ Nicola Talbot
 
 <!--  Selected Text Along Path Popup Menu -->
 
-<entry key="index.menu.selectedtextpath">Text Along Path Popup Menu</entry>
+<entry key="index.menu.selectedtextpath">Text-Path Popup Menu</entry>
 
-<entry key="menu.selectedtextpath.textpath_description">Text Along Path Description...</entry>
+<entry key="menu.selectedtextpath.textpath_description">Text-Path Description...</entry>
 <entry key="menu.selectedtextpath.textpath_description.mnemonic">I</entry>
 <entry key="menu.selectedtextpath.textpath_description.tooltip">Set or edit the description for the selected text-path</entry>
 
-<entry key="menu.selectedtextpath.textpath_tag">Text Along Path Tag...</entry>
+<entry key="menu.selectedtextpath.textpath_tag">Text-Path Tag...</entry>
 <entry key="menu.selectedtextpath.textpath_tag.tooltip">Set or edit the tag for the selected text-path</entry>
 
 <!--  Selected Text Popup Menu -->

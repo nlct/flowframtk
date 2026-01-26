@@ -2749,7 +2749,8 @@ public class JDRCanvas extends JPanel
                selectTextActionList.add((CanvasSelectAction)action);
             }
          }
-         else if ((selectFlag & (SELECT_FLAG_SHAPE)) != 0)
+         else if ((selectFlag & (SELECT_FLAG_SHAPE)) != 0
+               || (selectFlag & (SELECT_FLAG_TEXTPATH)) != 0)
          {
             selectPathActionList.add((CanvasSelectAction)action);
          }
@@ -3024,7 +3025,7 @@ public class JDRCanvas extends JPanel
                    action.setSelected(
                      stroke.getWindingRule() == GeneralPath.WIND_NON_ZERO);
                 }
-                else if (actionCmd.equals("path.textshowpath"))
+                else if (actionCmd.equals("path.textpathshow"))
                 {
                    action.setSelected(isSelectedTextPathShowOn());
                 }
