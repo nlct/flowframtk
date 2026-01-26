@@ -5897,14 +5897,14 @@ To set or edit the \gls{textpath}['s] tag, use
 the general \menu{selected.object_tag} menu item but has a more specific label.
 
 The \menu{selected.path} menu has the same items as the
-\menu{selectedpath} popup menu that govern the \dglspl{path-attribute}
+\dgls{menu.selectedpath} popup menu that govern the \dglspl{path-attribute}
 but additionally has the \inlineglsdef{menu.selectedpath.textpathshow} toggle
 item to toggle the \pathattr{textpathshow} attribute, which 
 is the same as the \menu{edit.path.textpathshow} toggle menu
 item.
 
-The \menu{selected.text} menu has the same items as the
-\menu{selectedtext} popup menu that govern the
+The \menu{selected.textarea} menu has the same items as the
+\dgls{menu.selectedtext} popup menu that govern the
 \dglspl{text-attribute}.
 
 % BITMAP POPUP
@@ -7214,12 +7214,12 @@ horizontal \textattr{anchor} has been changed to right.
 If the \pathattr{textpathshow} setting is on, the text will still
 follow the path defined by the \gls{underlying-shape} overlapping
 the \rendered\ path. The text position is unaffected by
-\dglspl{path-attribute} such as the \pathattr{line width} or
+\dglspl{path-attribute} such as the \pathattr{line-width} or
 \pathattrpl{marker}.
 
 For example, \figureref{fig:textpathshowa}
 has a path with a \pathattr{line-paint}, \pathattr{fill-paint}
-and a \pathattr{line-style} with a thick \pathattr{line-width} and a start marker.
+and a \dgls{line-style} with a thick \pathattr{line-width} and a start marker.
 The \gls{textarea} has the \textattr{outline} mode on with a 
 \textattr{fill-paint} for the interior of each glyph.
 In \figureref{fig:textpathshowb} the \gls{path} and \gls{textarea}
@@ -7320,8 +7320,8 @@ that \gls*{textarea} rendered as an outline.
 If the outline mode is set, you can apply a \gls{index.fill-colour} using
 \menu{edit.textarea.fill_colour}. This fills in the paths defined by
 the glyphs. Any \gls{textpath} that has the \pathattr{textpathshow}
-attribute set will have a separate \pathattr{line_paint}, \pathattr{fill_paint}
-and \pathattr{line-style} for the underlying shape.
+attribute set will have a separate \pathattr{line-paint}, \pathattr{fill-paint}
+and \dgls{line-style} for the underlying shape.
 
 \begin{warning}
 Note that although \glspl*{textpath} can be \rendered\ with an outline in \FlowframTk,
