@@ -1163,17 +1163,32 @@ settings.
 The rectangular grid matches the left-handed internal co-ordinate
 storage with the horizontal $x$ values increasing to the right and the
 vertical $y$ values increasing downwards
-(\figureref{fig:grid-rect}). This grid has two parameters:
-\widget{grid.major} (which identifies the grid unit) and
-\widget{grid.sub_divisions} which indicates the number of minor tick
-marks between each major tick.
+(\figureref{fig:grid-rect}). This grid has four parameters:
+\widget{grid.major.x} and \widget{grid.major.y} (which identifies the grid unit) and
+\widget{grid.sub_divisions.x} and \widget{grid.sub_divisions.y} which 
+indicate the number of minor tick marks between each major tick.
+
+\begin{important}
+A value of zero for either of the major divisions will be replaced
+with one. The subdivision widget won't go lower than one.
+In general, it's best to avoid very small major divisions and very
+large sub-divisions as it can slow down \gls{rendering} and make it
+hard to see the objects.
+\end{important}
+
+The \includeimg{linked} \slash\ \includeimg{unlinked} button toggles between
+fixing the $y$ parameter to the $x$ or allowing a different $y$
+value to be specified. The separate $y$ settings are only supported
+in \gls{JDR}\slash\gls{AJR} file format 2.2 onwards.
 
 \widgetdef{grid.iso}
 
 The isometric grid is likewise a left-handed co-ordinate system but in this case
-the major divisions indicate the length of each
+the major divisions \widget{grid.major} indicate the length of each
 side of the equilateral triangles forming the grid
-(\figureref{fig:grid-iso}).
+(\figureref{fig:grid-iso}). The \widget{grid.sub_divisions}
+indicates the number of minor tick marks between each major tick. 
+There is no separate $x$ and $y$ value for the parameters.
 
 \widgetdef{grid.radial}
 

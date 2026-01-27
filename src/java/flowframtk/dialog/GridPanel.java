@@ -128,7 +128,7 @@ public abstract class GridPanel extends JPanel
    }
 
 
-   protected void setMajor(int value) { }
+   protected void setMajor(double value) { }
    protected void setSubDivisions(int value) { }
    public abstract void setUnit(JDRUnit unit);
    public abstract JDRUnit getUnit();

@@ -124,15 +124,20 @@ public class RectangularGridPanel extends GridPanel
 
    public double getMajorX()
    {
-      return majorPanel.getValue1();
+      double major = majorPanel.getValue1();
+
+      return major <= 0.0 ? 1.0 : major;
    }
 
    public double getMajorY()
    {
-      return majorPanel.getValue2();
+      double major = majorPanel.getValue2();
+
+      return major <= 0.0 ? 1.0 : major;
    }
 
-   protected void setMajor(int value)
+   @Override
+   protected void setMajor(double value)
    {
       majorPanel.setValue(value, value, getUnit());
       majorPanel.setLinked(true);

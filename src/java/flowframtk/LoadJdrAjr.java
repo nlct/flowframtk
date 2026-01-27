@@ -73,15 +73,27 @@ public abstract class LoadJdrAjr extends IOSwingWorker
 
          image = loadImage(jdr, cg);
 
-         float versionNum = jdr.getVersion();
-
          if (jdrFrame.warnOnOldJdr())
          {
+            float versionNum = jdr.getVersion();
+            int versionId = jdr.getVersionId();
+
+            String verStr;
+
+            if (versionId >= 0 && versionId < JDRAJR.VALID_VERSIONS_STRING.length)
+            {
+               verStr = JDRAJR.VALID_VERSIONS_STRING[versionId];
+            }
+            else
+            {
+               verStr = ""+versionNum;
+            }
+
             if (versionNum < JDRAJR.CURRENT_VERSION)
             {
                publish(MessageInfo.createWarning(
                   getResources().getMessage("warning.load.jdr",
-                     versionNum)));
+                     verStr)));
             }
          }
 

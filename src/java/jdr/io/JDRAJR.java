@@ -98,6 +98,7 @@ public abstract class JDRAJR
          if (version == VALID_VERSIONS[i])
          {
             vers = VALID_VERSIONS_STRING[i];
+            versionId = i;
             break;
          }
       }
@@ -289,6 +290,7 @@ public abstract class JDRAJR
          if (thisFileVersion.equals(VALID_VERSIONS_STRING[i]))
          {
             version = VALID_VERSIONS[i];
+            versionId = i;
             found = true;
             break;
          }
@@ -1134,6 +1136,11 @@ public abstract class JDRAJR
       return this.version;
    }
 
+   public int getVersionId()
+   {
+      return versionId;
+   }
+
    public int getSettingsFlag()
    {
       return settingsFlag;
@@ -1380,6 +1387,7 @@ public abstract class JDRAJR
             if (thisFileVersion.equals(VALID_VERSIONS_STRING[i]))
             {
                jdrAjr.version = VALID_VERSIONS[i];
+               jdrAjr.versionId = i;
                found = true;
                break;
             }
@@ -1521,6 +1529,7 @@ public abstract class JDRAJR
    public abstract void reset() throws IOException;
 
    protected float version;
+   protected int versionId=-1;// index 
 
    private Path basePath;
 

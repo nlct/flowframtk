@@ -63,7 +63,7 @@ public class TschicholdGridPanel extends GridPanel
       row.add(resources.createLabelSpacer());
 
       majorDivisionsModel = new SpinnerNumberModel(
-         Integer.valueOf(100), Integer.valueOf(1), null, Integer.valueOf(1));
+         Double.valueOf(100), Double.valueOf(0), null, Double.valueOf(1));
       majorDivisionsSpinner = new JSpinner(majorDivisionsModel);
       majorLabel.setLabelFor(majorDivisionsSpinner);
       row.add(majorDivisionsSpinner);
@@ -120,10 +120,11 @@ public class TschicholdGridPanel extends GridPanel
    @Override
    public void setGrid(JDRGrid grid)
    {
-      setMajor(
-         (int)((JDRTschicholdGrid)grid).getMajorInterval());
-      setSubDivisions(((JDRTschicholdGrid)grid).getSubDivisions());
-      setUnit(((JDRTschicholdGrid)grid).getUnit());
+      JDRTschicholdGrid tscGrid = (JDRTschicholdGrid)grid;
+
+      setMajor(tscGrid.getMajorInterval());
+      setSubDivisions(tscGrid.getSubDivisions());
+      setUnit(tscGrid.getUnit());
    }
 
    @Override
@@ -144,26 +145,22 @@ public class TschicholdGridPanel extends GridPanel
       return grid;
    }
 
-   public int getMajor()
+   public double getMajor()
    {
-      int d = majorDivisionsModel.getNumber().intValue();
-      if (d == 0) d = 1;
+      double major = majorDivisionsModel.getNumber().doubleValue();
 
-      return d;
+      return major <= 0.0 ? 1.0 : major;
    }
 
    @Override
-   protected void setMajor(int value)
+   protected void setMajor(double value)
    {
-      majorDivisionsModel.setValue(Integer.valueOf(value));
+      majorDivisionsModel.setValue(Double.valueOf(value));
    }
 
    public int getSubDivisions()
    {
-      int d = subDivisionsModel.getNumber().intValue();
-      if (d == 0) d = 1;
-
-      return d;
+      return Math.max(1, subDivisionsModel.getNumber().intValue());
    }
 
    @Override

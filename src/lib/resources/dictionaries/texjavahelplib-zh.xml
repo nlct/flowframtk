@@ -57,6 +57,9 @@
 <entry key="button.copy_all.keystroke">control shift C</entry>
 <entry key="button.copy_all.tooltip">Select all and copy</entry>
 
+<entry key="button.linked">Link</entry>
+<entry key="button.linked.tooltip">Link/unlink</entry>
+
 <!-- TeXJavaHelpLibAppAdapter error reporting -->
 
 <entry key="button.quit_without_saving">Quit Without Saving</entry>

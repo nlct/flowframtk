@@ -63,7 +63,7 @@ public class RadialGridPanel extends GridPanel
       row.add(resources.createLabelSpacer());
 
       majorDivisionsModel = new SpinnerNumberModel(
-       Integer.valueOf(100), Integer.valueOf(1), null, Integer.valueOf(1));
+       Double.valueOf(100), Double.valueOf(0), null, Double.valueOf(1));
       majorDivisionsSpinner = new JSpinner(majorDivisionsModel);
       majorLabel.setLabelFor(majorDivisionsSpinner);
       row.add(majorDivisionsSpinner);
@@ -166,12 +166,14 @@ public class RadialGridPanel extends GridPanel
    @Override
    public void setGrid(JDRGrid grid)
    {
-      setMajor((int)((JDRRadialGrid)grid).getMajorInterval());
-      setSubDivisions(((JDRRadialGrid)grid).getSubDivisions());
-      setUnit(((JDRRadialGrid)grid).getUnit());
-      setSpokes(((JDRRadialGrid)grid).getSpokes());
+      JDRRadialGrid radialGrid = (JDRRadialGrid)grid;
 
-      if (((JDRRadialGrid)grid).isPageCentred())
+      setMajor(radialGrid.getMajorInterval());
+      setSubDivisions(radialGrid.getSubDivisions());
+      setUnit(radialGrid.getUnit());
+      setSpokes(radialGrid.getSpokes());
+
+      if (radialGrid.isPageCentred())
       {
          pageCentredButton.setSelected(true);
       }
@@ -214,35 +216,26 @@ public class RadialGridPanel extends GridPanel
    }
 
    @Override
-   protected void setMajor(int value)
+   protected void setMajor(double value)
    {
-      majorDivisionsModel.setValue(Integer.valueOf(value));
+      majorDivisionsModel.setValue(Double.valueOf(value));
    }
 
    public int getSpokes()
    {
-      int s = spokesModel.getNumber().intValue();
-
-      if (s == 0) s = 1;
-
-      return s;
+      return Math.max(1, spokesModel.getNumber().intValue());
    }
 
-   public int getMajor()
+   public double getMajor()
    {
-      int d = majorDivisionsModel.getNumber().intValue();
+      double major = majorDivisionsModel.getNumber().doubleValue();
 
-      if (d == 0) d = 1;
-
-      return d;
+      return major <= 0.0 ? 1.0 : major;
    }
 
    public int getSubDivisions()
    {
-      int d = subDivisionsModel.getNumber().intValue();
-      if (d == 0) d = 1;
-
-      return d;
+      return Math.max(1, subDivisionsModel.getNumber().intValue());
    }
 
    @Override
