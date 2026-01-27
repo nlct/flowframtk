@@ -147,6 +147,7 @@ public class JDRTschicholdGrid extends JDRGrid
     * Gets the number of sub divisions within a major interval.
     * @return the number of sub divisions.
     */
+   @Override
    public int getSubDivisions()
    {
       return subDivisions;
@@ -1282,6 +1283,15 @@ public class JDRTschicholdGrid extends JDRGrid
    {
       return new JDRRectangularGrid(getCanvasGraphics(),
          unit, majorDivisions, subDivisions);
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format(
+       "%s[major=%f,subdivisions=%d,unit=%s]",
+        getClass().getSimpleName(), 
+        majorDivisions, subDivisions, unit);
    }
 
    private static JDRTschicholdGridListener listener = new JDRTschicholdGridListener();

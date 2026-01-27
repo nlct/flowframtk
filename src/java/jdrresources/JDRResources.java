@@ -106,6 +106,11 @@ public class JDRResources
       helpLib.setDefaultButtonOmitTextIfIcon(true);
    }
 
+   public TeXJavaHelpLib getHelpLib()
+   {
+      return helpLib;
+   }
+
    public String getDictionaryTag()
    {
       return dictLocale.getTag();

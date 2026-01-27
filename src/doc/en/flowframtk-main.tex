@@ -17061,17 +17061,33 @@ If \meta{settings-id} is 2, just \meta{paper} is present.
 
     \begin{enumerate}
     \item\label{jdr:rectgrid} Rectangular Grid. The \meta{grid-specs} are:
+    \begin{jdrversion}{2.2 onwards}
+    \begin{syntaxline}
+    \meta{unit} \meta{major} \meta{major-y} \meta{minor} \meta{minor-y}
+    \end{syntaxline}
+    \end{jdrversion}
+    \begin{jdrversion}{1.6--2.1}
     \begin{syntaxline}
     \meta{unit} \meta{major} \meta{minor}
     \end{syntaxline}
+    \end{jdrversion}
     where
      \begin{enumerate}
      \item \meta{unit} is the \type{unit-id} representing the grid unit.
 
        \item \meta{major} is a \type{double} representing the major
-        grid division (in terms of the grid unit).
+        grid division (in terms of the grid unit). For version 2.2
+        onwards this is just for the horizontal $x$-axis.
+
+       \item \meta{major-y} is a \type{double} representing the major
+        grid division (in terms of the grid unit) for the vertical
+        $y$-axis.
 
        \item \meta{minor} is an \type{integer} representing the grid subdivision.
+        For version 2.2 onwards this is just for the horizontal $x$-axis;
+
+       \item \meta{minor-y} is an \type{integer} representing the grid subdivision
+       for the vertical $y$-axis.
 
      \end{enumerate}
 

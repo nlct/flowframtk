@@ -137,6 +137,7 @@ public abstract class JDRGrid implements Cloneable
       }
       catch (NullPointerException e)
       {
+         canvasGraphics.debugMessage(e);
       }
    }
 
@@ -168,6 +169,7 @@ public abstract class JDRGrid implements Cloneable
       }
       catch (NullPointerException e)
       {
+         canvasGraphics.debugMessage(e);
       }
    }
 
@@ -317,7 +319,64 @@ public abstract class JDRGrid implements Cloneable
     */
    public abstract JDRUnit getMainUnit();
 
+   /**
+    * Gets the number of sub divisions within the major interval.
+    * If the grid supports different x and y sub-divisions then this
+    * method should return the number of x sub-divisions.
+    * @return the number of sub divisions.
+    */
    public abstract int getSubDivisions();
+
+   /**
+    * Sets the number of sub divisions within the major interval.
+    * If the grid supports different x and y sub-divisions then this
+    * method should set both.
+    * @param subDivisions the number of sub divisions.
+    */
+   public abstract void setSubDivisions(int subDivisions);
+
+   /**
+    * Sets the number of sub divisions within the major x interval.
+    * If the grid doesn't support different x and y sub-divisions then this
+    * method should just use setSubDivisions(int).
+    * @param subDivisions the number of x sub divisions.
+    */
+   public void setSubDivisionsX(int subDivisions)
+   {
+      setSubDivisions(subDivisions);
+   }
+
+   /**
+    * Sets the number of sub divisions within the major y interval.
+    * If the grid doesn't support different x and y sub-divisions then this
+    * method should do nothing.
+    * @param subDivisions the number of y sub divisions.
+    */
+   public void setSubDivisionsY(int subDivisions)
+   {
+   }
+
+   /**
+    * Gets the number of sub divisions within the major x interval.
+    * If the grid doesn't support different x and y sub-divisions then this
+    * method should return getSubDivisions().
+    * @return the number of sub divisions.
+    */
+   public int getSubDivisionsX()
+   {
+      return getSubDivisions();
+   }
+
+   /**
+    * Gets the number of sub divisions within the major y interval.
+    * If the grid doesn't support different x and y sub-divisions then this
+    * method should return getSubDivisions().
+    * @return the number of sub divisions.
+    */
+   public int getSubDivisionsY()
+   {
+      return getSubDivisions();
+   }
 
    /**
     * Returns a formatted string representing the given point.

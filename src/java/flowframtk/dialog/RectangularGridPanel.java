@@ -5,7 +5,7 @@
 //                 http://www.dickimaw-books.com/
 
 /*
-    Copyright (C) 2006-2025 Nicola L.C. Talbot
+    Copyright (C) 2006-2026 Nicola L.C. Talbot
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -51,64 +51,26 @@ public class RectangularGridPanel extends GridPanel
 
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-      Box row = Box.createHorizontalBox();
-      add(row);
+      JLabelGroup labelGroup1 = new JLabelGroup();
+      JLabelGroup labelGroup2 = new JLabelGroup();
 
-      JLabelGroup labelGroup = new JLabelGroup();
+      majorPanel = new LinkedLengthsPanel(resources, "grid.major");
+      add(majorPanel);
 
-      JLabel majorLabel = resources.createAppLabel("grid.major");
-      row.add(majorLabel);
-      labelGroup.add(majorLabel);
+      labelGroup1.add(majorPanel.getNumberLabel1());
+      labelGroup2.add(majorPanel.getNumberLabel2());
 
-      row.add(resources.createLabelSpacer());
+      subDivisionsPanel = new LinkedNumbersPanel(resources, 
+        "grid.sub_divisions",
+        Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1));
 
-      majorDivisionsModel = new SpinnerNumberModel(
-         Integer.valueOf(100), Integer.valueOf(1), null, Integer.valueOf(1));
-      majorDivisionsSpinner = new JSpinner(majorDivisionsModel);
-      majorLabel.setLabelFor(majorDivisionsSpinner);
-      row.add(majorDivisionsSpinner);
+      add(subDivisionsPanel);
 
-      unitBox = new JComboBox<String>(JDRUnit.UNIT_LABELS);
-      unitBox.setSelectedIndex(JDRUnit.BP);
-      row.add(unitBox);
+      labelGroup1.add(subDivisionsPanel.getNumberLabel1());
+      labelGroup2.add(subDivisionsPanel.getNumberLabel2());
 
-      row = Box.createHorizontalBox();
-      add(row);
-
-      row.add(Box.createHorizontalGlue());
-
-      JLabel subdivisionsLabel = resources.createAppLabel("grid.sub_divisions");
-
-      row.add(subdivisionsLabel);
-      labelGroup.add(subdivisionsLabel);
-
-      row.add(resources.createLabelSpacer());
-
-      subDivisionsModel = new SpinnerNumberModel(
-         Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1));
-      subDivisionsSpinner = new JSpinner(subDivisionsModel);
-      subdivisionsLabel.setLabelFor(subDivisionsSpinner);
-
-      row.add(subDivisionsSpinner);
-
-      row.add(Box.createHorizontalStrut(
-         (int)unitBox.getPreferredSize().getWidth()));
-
-      row.add(Box.createHorizontalGlue());
-
-      Dimension dim = majorDivisionsSpinner.getPreferredSize();
-      dim.width = Integer.MAX_VALUE;
-      int height = dim.height;
-      majorDivisionsSpinner.setMaximumSize(dim);
-
-      dim = unitBox.getPreferredSize();
-      unitBox.setMaximumSize(dim);
-
-      dim = subDivisionsSpinner.getPreferredSize();
-      dim.width = Integer.MAX_VALUE;
-      subDivisionsSpinner.setMaximumSize(dim);
-
-      add(Box.createVerticalStrut(4*height));
+      resources.clampCompMaxHeight(majorPanel, 10, 10);
+      resources.clampCompMaxHeight(subDivisionsPanel, 10, 10);
 
       add(Box.createVerticalGlue());
    }
@@ -116,83 +78,115 @@ public class RectangularGridPanel extends GridPanel
    @Override
    public void requestDefaultFieldFocus()
    {
-      majorDivisionsSpinner.requestFocusInWindow();
+      majorPanel.getNumberComponent1().getComponent().requestFocusInWindow();
    }
 
    @Override
    public void setGrid(JDRGrid grid)
    {
+      JDRRectangularGrid rectGrid = (JDRRectangularGrid)grid;
+
       setMajor(
-         (int)((JDRRectangularGrid)grid).getMajorInterval());
-      setSubDivisions(((JDRRectangularGrid)grid).getSubDivisions());
-      setUnit(((JDRRectangularGrid)grid).getUnit());
+           rectGrid.getMajorXInterval(),
+           rectGrid.getMajorYInterval(),
+           rectGrid.getUnit()
+         );
+
+      setSubDivisions(
+        rectGrid.getSubDivisionsX(),
+        rectGrid.getSubDivisionsY()
+      );
    }
 
    @Override
    public JDRGrid getGrid(JDRGrid grid)
    {
+      double majorX = getMajorX();
+      double majorY = (majorPanel.isLinked() ? majorX : getMajorY());
+
+      int subDivX = getSubDivisionsX();
+      int subDivY = (subDivisionsPanel.isLinked() ? subDivX : getSubDivisionsY());
+
       if (grid instanceof JDRRectangularGrid)
       {
          JDRRectangularGrid g = (JDRRectangularGrid)grid;
 
-         g.set(getUnit(), getMajor(), getSubDivisions());
+         g.set(getUnit(), majorX, majorY, subDivX, subDivY);
       }
       else
       {
          grid = new JDRRectangularGrid(grid.getCanvasGraphics(),
-            getUnit(), getMajor(), getSubDivisions());
+            getUnit(), majorX, majorY, subDivX, subDivY);
       }
 
       return grid;
    }
 
-   public int getMajor()
+   public double getMajorX()
    {
-      int d = majorDivisionsModel.getNumber().intValue();
-      if (d == 0) d = 1;
-
-      return d;
+      return majorPanel.getValue1();
    }
 
-   @Override
+   public double getMajorY()
+   {
+      return majorPanel.getValue2();
+   }
+
    protected void setMajor(int value)
    {
-      majorDivisionsModel.setValue(Integer.valueOf(value));
+      majorPanel.setValue(value, value, getUnit());
+      majorPanel.setLinked(true);
+   }
+
+   protected void setMajor(double value1, double value2, JDRUnit unit)
+   {
+      majorPanel.setValue(value1, value2, unit);
    }
 
    public int getSubDivisions()
    {
-      int d = subDivisionsModel.getNumber().intValue();
-      if (d == 0) d = 1;
-
-      return d;
+      return getSubDivisionsX();
    }
 
-   @Override
+   public int getSubDivisionsX()
+   {
+      return Math.max(1, subDivisionsPanel.getValue1().intValue());
+   }
+
+   public int getSubDivisionsY()
+   {
+      return Math.max(1, subDivisionsPanel.getValue2().intValue());
+   }
+
    protected void setSubDivisions(int value)
    {
-      subDivisionsModel.setValue(Integer.valueOf(value));
+      setSubDivisions(value, value);
+      subDivisionsPanel.setLinked(true);
+   }
+
+   protected void setSubDivisions(int value1, int value2)
+   {
+      subDivisionsPanel.setValue(value1, value2);
    }
 
    @Override
    public void setUnit(JDRUnit unit)
    {
-      unitBox.setSelectedIndex(unit.getID());
+      majorPanel.setUnit(unit);
    }
 
    @Override
    public JDRUnit getUnit()
    {
-      return JDRUnit.getUnit(unitBox.getSelectedIndex()); 
+      return majorPanel.getUnit(); 
    }
 
    @Override
    public void addUnitChangeListener(ItemListener listener)
    {
-      unitBox.addItemListener(listener);
+      majorPanel.getUnitField().addItemListener(listener);
    }
 
-   private JSpinner majorDivisionsSpinner, subDivisionsSpinner;
-   private SpinnerNumberModel majorDivisionsModel, subDivisionsModel;
-   private JComboBox<String> unitBox;
+   LinkedLengthsPanel majorPanel;
+   LinkedNumbersPanel subDivisionsPanel;
 }

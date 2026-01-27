@@ -664,8 +664,10 @@ public class FlowframTkInvoker
       float[] dashPattern = null;
       float dashOffset = 0f;
 
-      int majorDivisions = 100;
+      double majorDivisions = 100;
+      double majorDivisionsY = 0;
       int subDivisions = 10;
+      int subDivisionsY = 0;
       int spokes = 8;
       int gridType = JDRGrid.GRID_RECTANGULAR;
 
@@ -1408,11 +1410,24 @@ public class FlowframTkInvoker
                }
                else if (key.equals("majordivisions"))
                {
-                  majorDivisions = parseMinInt(1, value, line);
+                  majorDivisions = parseMinDouble(0, value, line);
+
+                  if (majorDivisions == 0)
+                  {
+                     majorDivisions = 1;
+                  }
+               }
+               else if (key.equals("majordivisionsY"))
+               {
+                  majorDivisionsY = parseMinDouble(0, value, line);
                }
                else if (key.equals("subdivisions"))
                {
                   subDivisions = parseNonNegInt(value, line);
+               }
+               else if (key.equals("subdivisionsY"))
+               {
+                  subDivisionsY = parseNonNegInt(value, line);
                }
                else if (key.equals("spokes"))
                {
@@ -1968,12 +1983,23 @@ public class FlowframTkInvoker
 
       settings.setDashPattern(dashPattern, dashOffset);
 
+      if (subDivisionsY <= 0)
+      {
+         subDivisionsY = subDivisions;
+      }
+
+      if (majorDivisionsY <= 0)
+      {
+         majorDivisionsY = majorDivisions;
+      }
+
       switch (gridType)
       {
          case JDRGrid.GRID_RECTANGULAR:
             settings.setGrid(
              new JDRRectangularGrid(settings.getCanvasGraphics(),
-             gridUnit, majorDivisions, subDivisions));
+             gridUnit, majorDivisions, majorDivisionsY, 
+             subDivisions, subDivisionsY));
          break;
          case JDRGrid.GRID_RADIAL:
             settings.setGrid(
@@ -2341,32 +2367,34 @@ public class FlowframTkInvoker
       if (grid instanceof JDRRectangularGrid)
       {
          JDRRectangularGrid g = (JDRRectangularGrid)grid;
-         out.println("majordivisions="+(int)g.getMajorInterval());
-         out.println("subdivisions="+g.getSubDivisions());
+         out.println("majordivisions="+g.getMajorXInterval());
+         out.println("majordivisionsY="+g.getMajorYInterval());
+         out.println("subdivisions="+g.getSubDivisionsX());
+         out.println("subdivisionsY="+g.getSubDivisionsY());
       }
       else if (grid instanceof JDRRadialGrid)
       {
          JDRRadialGrid g = (JDRRadialGrid)grid;
-         out.println("majordivisions="+(int)g.getMajorInterval());
+         out.println("majordivisions="+g.getMajorInterval());
          out.println("subdivisions="+g.getSubDivisions());
          out.println("spokes="+g.getSpokes());
       }
       else if (grid instanceof JDRIsoGrid)
       {
          JDRIsoGrid g = (JDRIsoGrid)grid;
-         out.println("majordivisions="+(int)g.getMajorInterval());
+         out.println("majordivisions="+g.getMajorInterval());
          out.println("subdivisions="+g.getSubDivisions());
       }
       else if (grid instanceof JDRTschicholdGrid)
       {
          JDRTschicholdGrid g = (JDRTschicholdGrid)grid;
-         out.println("majordivisions="+(int)g.getMajorInterval());
+         out.println("majordivisions="+g.getMajorInterval());
          out.println("subdivisions="+g.getSubDivisions());
       }
       else if (grid instanceof JDRPathGrid)
       {
          JDRPathGrid g = (JDRPathGrid)grid;
-         out.println("majordivisions="+(int)g.getMajorInterval());
+         out.println("majordivisions="+g.getMajorInterval());
          out.println("subdivisions="+g.getSubDivisions());
          out.print("grid-path=");
          writePath(out, g.getShape());

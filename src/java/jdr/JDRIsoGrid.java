@@ -147,11 +147,13 @@ public class JDRIsoGrid extends JDRGrid
     * Gets the number of sub divisions within a major interval.
     * @return the number of sub divisions.
     */
+   @Override
    public int getSubDivisions()
    {
       return subDivisions;
    }
 
+   @Override
    public Point2D getMajorTicDistance()
    {
       double length = unit.toBp(majorDivisions);
@@ -161,16 +163,14 @@ public class JDRIsoGrid extends JDRGrid
 
    public Point2D getMinorTicDistance()
    {
-      Point2D p = new Point2D.Double(0, 0);
+      double length = unit.toBp(majorDivisions);
 
       if (subDivisions > 0)
       {
-         double length = unit.toBp(majorDivisions)/subDivisions;
-
-         p.setLocation(JDRConstants.HALF_ROOT_3 * length, length);
+         length = length / subDivisions;
       }
 
-      return p;
+      return new Point2D.Double(JDRConstants.HALF_ROOT_3 * length, length);
    }
 
    public Point2D fromCartesianBp(double x, double y)
@@ -947,6 +947,15 @@ public class JDRIsoGrid extends JDRGrid
    {
       return new JDRRectangularGrid(getCanvasGraphics(),
          unit, majorDivisions, subDivisions);
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format(
+       "%s[major=%f,subdivisions=%d,unit=%s]",
+        getClass().getSimpleName(), 
+        majorDivisions, subDivisions, unit);
    }
 
    private static JDRIsoGridListener listener = new JDRIsoGridListener();

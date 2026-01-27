@@ -460,6 +460,11 @@ public class AcornDrawFile
       gridSpacing = readDouble();
       gridDivisions = readInt();
 
+      if (gridDivisionsY < 0)
+      {
+         gridDivisionsY = gridDivisions;
+      }
+
       isometricGrid = (readInt() != 0);
       autoAdjust = (readInt() != 0);
       showGrid = (readInt() != 0);
@@ -487,7 +492,8 @@ public class AcornDrawFile
       }
       else
       {
-         grid = new JDRRectangularGrid(cg, unit, gridSpacing, gridDivisions);
+         grid = new JDRRectangularGrid(cg, unit,
+            gridSpacing, gridSpacing, gridDivisions, gridDivisionsY);
       }
 
       cg.setGrid(grid);
@@ -529,9 +535,13 @@ public class AcornDrawFile
       int value;
       value = readInt();
       value = readInt();
-      value = readInt();// y-only subdivisions
+      gridDivisionsY = readInt();// y-only subdivisions
       value = readInt();// y-only inch or cm
       value = readInt();// colour id (0-15)
+
+      JDRGrid grid = getCanvasGraphics().getGrid();
+
+      grid.setSubDivisionsY(gridDivisionsY);
    }
 
    protected void readPath()
@@ -1891,7 +1901,7 @@ public class AcornDrawFile
    int lowBoundingX, lowBoundingY, highBoundingX, highBoundingY;
    boolean showLimits=false, isLandscape=false;
    double gridSpacing;
-   int gridDivisions;
+   int gridDivisions, gridDivisionsY=-1;
    boolean isometricGrid=false;
    boolean autoAdjust=false;
    boolean showGrid=false;

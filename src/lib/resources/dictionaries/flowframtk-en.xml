@@ -2437,8 +2437,18 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="grid.title">Grid Settings</entry>
 <entry key="grid.major">Major Divisions</entry>
 <entry key="grid.major.mnemonic">M</entry>
+
+<entry key="grid.major.x">Major Divisions X</entry>
+<entry key="grid.major.x.mnemonic">M</entry>
+<entry key="grid.major.y">Y</entry>
+
 <entry key="grid.sub_divisions">Sub-Divisions</entry>
 <entry key="grid.sub_divisions.mnemonic">S</entry>
+
+<entry key="grid.sub_divisions.x">Sub-Divisions X</entry>
+<entry key="grid.sub_divisions.x.mnemonic">S</entry>
+<entry key="grid.sub_divisions.y">Y</entry>
+
 <entry key="grid.rectangular">Rectangular</entry>
 <entry key="grid.rectangular.mnemonic">G</entry>
 <entry key="grid.radial">Radial</entry>

@@ -62,10 +62,29 @@ public class JDRRectangularGrid extends JDRGrid
       set(gridUnit, majorDiv, subDiv);
    }
 
+   /**
+    * Initialises using the given settings.
+    * @param gridUnit the grid units
+    * @param majorDivX the width of the major x interval in terms of
+    * the grid unit
+    * @param majorDivY the width of the major y interval in terms of
+    * the grid unit
+    * @param subDivX the number of sub-divisions per major x interval
+    * @param subDivY the number of sub-divisions per major y interval
+    */
+   public JDRRectangularGrid(CanvasGraphics cg,
+       JDRUnit gridUnit, double majorDivX, double majorDivY,
+       int subDivX, int subDivY)
+   {
+      super(cg, GRID_RECTANGULAR);
+      set(gridUnit, majorDivX, majorDivY, subDivX, subDivY);
+   }
+
    public Object clone()
    {
       return new JDRRectangularGrid(getCanvasGraphics(),
-         unit, majorDivisions, subDivisions);
+         unit, majorDivisionsX, majorDivisionsY,
+         subDivisionsX, subDivisionsY);
    }
 
    /**
@@ -80,6 +99,24 @@ public class JDRRectangularGrid extends JDRGrid
       setUnit(gridUnit);
       setMajorInterval(majorDiv);
       setSubDivisions(subDiv);
+   }
+
+   /**
+    * Change the grid settings settings.
+    * @param gridUnit the grid units
+    * @param majorDivX the width of the major x interval in terms of
+    * the grid unit
+    * @param majorDivY the width of the major y interval in terms of
+    * the grid unit
+    * @param subDivX the number of sub-divisions per major x interval
+    * @param subDivY the number of sub-divisions per major y interval
+    */
+   public void set(JDRUnit gridUnit, double majorDivX, double majorDivY,
+      int subDivX, int subDivY)
+   {
+      setUnit(gridUnit);
+      setMajorInterval(majorDivX, majorDivY);
+      setSubDivisions(subDivX, subDivY);
    }
 
    /**
@@ -105,11 +142,32 @@ public class JDRRectangularGrid extends JDRGrid
            getCanvasGraphics());
       }
 
-      majorDivisions = majorDiv;
+      majorDivisionsX = majorDiv;
+      majorDivisionsY = majorDiv;
+   }
+
+   public void setMajorInterval(double majorDivX, double majorDivY)
+   {
+      if (majorDivX <= 0.0)
+      {
+         throw new JdrIllegalArgumentException(
+           JdrIllegalArgumentException.GRID_MAJOR, majorDivX,
+           getCanvasGraphics());
+      }
+
+      if (majorDivY <= 0.0)
+      {
+         throw new JdrIllegalArgumentException(
+           JdrIllegalArgumentException.GRID_MAJOR, majorDivY,
+           getCanvasGraphics());
+      }
+
+      majorDivisionsX = majorDivX;
+      majorDivisionsY = majorDivY;
    }
 
    /**
-    * Sets the number of sub divisions within the major interval.
+    * Sets the number of sub divisions within the major x and y interval.
     * @param subDiv the number of sub divisions, which must be &gt;=0.
     */
    public void setSubDivisions(int subDiv)
@@ -121,7 +179,65 @@ public class JDRRectangularGrid extends JDRGrid
           getCanvasGraphics());
       }
 
-      subDivisions = subDiv;
+      subDivisionsX = subDiv;
+      subDivisionsY = subDiv;
+   }
+
+   /**
+    * Sets the number of sub divisions within the major x and y intervals.
+    * @param subDivX the number of x sub divisions, which must be &gt;=0.
+    * @param subDivY the number of y sub divisions, which must be &gt;=0.
+    */
+   public void setSubDivisions(int subDivX, int subDivY)
+   {
+      if (subDivX < 0)
+      {
+         throw new JdrIllegalArgumentException(
+          JdrIllegalArgumentException.GRID_SUBDIVISIONS, subDivX,
+          getCanvasGraphics());
+      }
+
+      if (subDivY < 0)
+      {
+         throw new JdrIllegalArgumentException(
+          JdrIllegalArgumentException.GRID_SUBDIVISIONS, subDivY,
+          getCanvasGraphics());
+      }
+
+      subDivisionsX = subDivX;
+      subDivisionsY = subDivY;
+   }
+
+   /**
+    * Sets the number of sub divisions within the major x interval.
+    * @param subDivX the number of x sub divisions, which must be &gt;=0.
+    */
+   public void setSubDivisionsX(int subDivX)
+   {
+      if (subDivX < 0)
+      {
+         throw new JdrIllegalArgumentException(
+          JdrIllegalArgumentException.GRID_SUBDIVISIONS, subDivX,
+          getCanvasGraphics());
+      }
+
+      subDivisionsX = subDivX;
+   }
+
+   /**
+    * Sets the number of sub divisions within the major y interval.
+    * @param subDivX the number of y sub divisions, which must be &gt;=0.
+    */
+   public void setSubDivisionsY(int subDivY)
+   {
+      if (subDivY < 0)
+      {
+         throw new JdrIllegalArgumentException(
+          JdrIllegalArgumentException.GRID_SUBDIVISIONS, subDivY,
+          getCanvasGraphics());
+      }
+
+      subDivisionsY = subDivY;
    }
 
    /**
@@ -140,50 +256,97 @@ public class JDRRectangularGrid extends JDRGrid
     */
    public double getMajorInterval()
    {
-      return majorDivisions;
+      return getMajorXInterval();
    }
 
    /**
-    * Gets the number of sub divisions within a major interval.
-    * @return the number of sub divisions.
+    * Gets the width of the major x intervals.
+    * @return the width of the major x intervals in terms of the
+    * grid's unit.
     */
+   public double getMajorXInterval()
+   {
+      return majorDivisionsX;
+   }
+
+   /**
+    * Gets the width of the major y intervals.
+    * @return the width of the major y intervals in terms of the
+    * grid's unit.
+    */
+   public double getMajorYInterval()
+   {
+      return majorDivisionsY;
+   }
+
+   @Override
    public int getSubDivisions()
    {
-      return subDivisions;
+      return subDivisionsX;
    }
 
+   /**
+    * Gets the number of sub divisions within a major x interval.
+    * @return the number of x sub divisions.
+    */
+   @Override
+   public int getSubDivisionsX()
+   {
+      return subDivisionsX;
+   }
+
+   /**
+    * Gets the number of sub divisions within a major y interval.
+    * @return the number of y sub divisions.
+    */
+   @Override
+   public int getSubDivisionsY()
+   {
+      return subDivisionsY;
+   }
+
+   @Override
    public Point2D getMajorTicDistance()
    {
-      double major = unit.toBp(majorDivisions);
+      double majorX = unit.toBp(majorDivisionsX);
+      double majorY = unit.toBp(majorDivisionsY);
 
-      return new Point2D.Double(major, major);
+      return new Point2D.Double(majorX, majorY);
    }
 
+   @Override
    public Point2D getMinorTicDistance()
    {
-      Point2D p = new Point2D.Double(0, 0);
+      double x = 0;
+      double y = 0;
 
-      if (subDivisions > 0)
+      if (subDivisionsX > 0)
       {
-         double distance = unit.toBp(majorDivisions)/subDivisions;
-
-         p.setLocation(distance, distance);
+         x = unit.toBp(majorDivisionsX)/subDivisionsX;
       }
 
-      return p;
+      if (subDivisionsY > 0)
+      {
+         y = unit.toBp(majorDivisionsY)/subDivisionsY;
+      }
+
+      return new Point2D.Double(x, y);
    }
 
+   @Override
    public Point2D fromCartesianBp(double x, double y)
    {
       return new Point2D.Double(unit.fromBp(x), unit.fromBp(y));
    }
 
+   @Override
    public void fromCartesianBp(Point2D cartesianPoint, Point2D target)
    {
       target.setLocation(unit.fromBp(cartesianPoint.getX()),
                          unit.fromBp(cartesianPoint.getY()));
    }
 
+   @Override
    public void toCartesianBp(Point2D original, Point2D target)
    {
       target.setLocation(unit.toBp(original.getX()),
@@ -191,96 +354,43 @@ public class JDRRectangularGrid extends JDRGrid
    }
 
    // x, y and return values in bp
+   @Override
    public Point2D getClosestBpTic(double x, double y)
    {
       JDRPaper paper = getCanvasGraphics().getPaper();
 
-      double major = unit.toBp(majorDivisions);
+      double majorX = unit.toBp(majorDivisionsX);
+      double majorY = unit.toBp(majorDivisionsY);
 
       double maxX = paper.getWidth();
       double maxY = paper.getHeight();
 
-      int n = (int)Math.floor(x/major);
-      int m = (int)Math.floor(y/major);
+      int nx = (int)Math.floor(x/majorX);
+      int ny = (int)Math.floor(y/majorY);
 
-      if (subDivisions == 0)
-      {
-         double px1 = n*major;
-         double py1 = m*major;
+      int subDivX = Math.max(1, subDivisionsX);
+      int subDivY = Math.max(1, subDivisionsY);
 
-         double dx = px1-x;
-         double dy = py1-y;
-
-         double distance1 = dx*dx + dy*dy;
-
-         double px2 = px1 + major;
-         double py2 = py1;
-
-         dx = px2-x;
-         dy = py2-y;
-
-         double distance2 = dx*dx + dy*dy;
-
-         double px3 = px1;
-         double py3 = py1+major;
-
-         dx = px3-x;
-         dy = py3-y;
-
-         double distance3 = dx*dx + dy*dy;
-
-         double px4 = px2;
-         double py4 = py3;
-
-         dx = px4-x;
-         dy = py4-y;
-
-         double distance4 = dx*dx + dy*dy;
-
-         if (distance1 <= distance2
-          && distance1 <= distance3 
-          && distance1 <= distance4)
-         {
-            return new Point2D.Double(px1, py1);
-         }
-
-         if (distance2 <= distance1
-          && distance2 <= distance3
-          && distance2 <= distance4)
-         {
-            return new Point2D.Double(px2, py2);
-         }
-
-         if (distance3 <= distance1
-          && distance3 <= distance2
-          && distance3 <= distance4)
-         {
-            return new Point2D.Double(px3, py3);
-         }
-
-         return new Point2D.Double(px4, py4);
-      }
-
-      double minor = major/subDivisions;
-
-      double X = n*major;
-      double Y = m*major;
+      double X = nx * majorX;
+      double Y = ny * majorY;
 
       double x1 = x - X;
       double y1 = y - Y;
 
-      int n1 = (int)Math.floor(x1/minor);
-      int m1 = (int)Math.floor(y1/minor);
+      double minorX = majorX/subDivX;
+      int nx1 = (int)Math.floor(x1/minorX);
+      double px1 = nx1 * minorX;
 
-      double px1 = n1*minor;
-      double py1 = m1*minor;
+      double minorY = majorY/subDivY;
+      int ny1 = (int)Math.floor(y1/minorY);
+      double py1 = ny1 * minorY;
 
       double dx = px1-x1;
       double dy = py1-y1;
 
       double distance1 = dx*dx + dy*dy;
 
-      double px2 = px1 + minor;
+      double px2 = px1 + minorX;
       double py2 = py1;
 
       dx = px2-x1;
@@ -289,7 +399,7 @@ public class JDRRectangularGrid extends JDRGrid
       double distance2 = dx*dx + dy*dy;
 
       double px3 = px1;
-      double py3 = py1+minor;
+      double py3 = py1+minorY;
 
       dx = px3-x1;
       dy = py3-y1;
@@ -328,6 +438,7 @@ public class JDRRectangularGrid extends JDRGrid
       return new Point2D.Double(X+px4, Y+py4);
    }
 
+   @Override
    public Point2D getClosestTic(double x, double y)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -335,92 +446,39 @@ public class JDRRectangularGrid extends JDRGrid
       JDRUnit storageUnit = cg.getStorageUnit();
       JDRPaper paper = cg.getPaper();
 
-      double major = unit.toUnit(majorDivisions, storageUnit);
+      double majorX = unit.toUnit(majorDivisionsX, storageUnit);
+      double majorY = unit.toUnit(majorDivisionsY, storageUnit);
 
       double maxX = storageUnit.fromBp(paper.getWidth());
       double maxY = storageUnit.fromBp(paper.getHeight());
 
-      int n = (int)Math.floor(x/major);
-      int m = (int)Math.floor(y/major);
+      int nx = (int)Math.floor(x/majorX);
+      int ny = (int)Math.floor(y/majorY);
 
-      if (subDivisions == 0)
-      {
-         double px1 = n*major;
-         double py1 = m*major;
+      int subDivX = Math.max(1, subDivisionsX);
+      int subDivY = Math.max(1, subDivisionsY);
 
-         double dx = px1-x;
-         double dy = py1-y;
-
-         double distance1 = dx*dx + dy*dy;
-
-         double px2 = px1 + major;
-         double py2 = py1;
-
-         dx = px2-x;
-         dy = py2-y;
-
-         double distance2 = dx*dx + dy*dy;
-
-         double px3 = px1;
-         double py3 = py1+major;
-
-         dx = px3-x;
-         dy = py3-y;
-
-         double distance3 = dx*dx + dy*dy;
-
-         double px4 = px2;
-         double py4 = py3;
-
-         dx = px4-x;
-         dy = py4-y;
-
-         double distance4 = dx*dx + dy*dy;
-
-         if (distance1 <= distance2
-          && distance1 <= distance3 
-          && distance1 <= distance4)
-         {
-            return new Point2D.Double(px1, py1);
-         }
-
-         if (distance2 <= distance1
-          && distance2 <= distance3
-          && distance2 <= distance4)
-         {
-            return new Point2D.Double(px2, py2);
-         }
-
-         if (distance3 <= distance1
-          && distance3 <= distance2
-          && distance3 <= distance4)
-         {
-            return new Point2D.Double(px3, py3);
-         }
-
-         return new Point2D.Double(px4, py4);
-      }
-
-      double minor = major/subDivisions;
-
-      double X = n*major;
-      double Y = m*major;
+      double X = nx * majorX;
+      double Y = ny * majorY;
 
       double x1 = x - X;
       double y1 = y - Y;
 
-      int n1 = (int)Math.floor(x1/minor);
-      int m1 = (int)Math.floor(y1/minor);
+      double minorX = majorX/subDivX;
+      int nx1 = (int)Math.floor(x1/minorX);
 
-      double px1 = n1*minor;
-      double py1 = m1*minor;
+      double minorY = majorY / subDivY;
+      int ny1 = (int)Math.floor(y1 / minorY);
+
+      double px1 = nx1 * minorX;
+      double py1 = ny1 * minorY;
 
       double dx = px1-x1;
       double dy = py1-y1;
 
       double distance1 = dx*dx + dy*dy;
 
-      double px2 = px1 + minor;
+      double px2 = px1 + minorX;
       double py2 = py1;
 
       dx = px2-x1;
@@ -429,7 +487,7 @@ public class JDRRectangularGrid extends JDRGrid
       double distance2 = dx*dx + dy*dy;
 
       double px3 = px1;
-      double py3 = py1+minor;
+      double py3 = py1+minorY;
 
       dx = px3-x1;
       dy = py3-y1;
@@ -468,6 +526,7 @@ public class JDRRectangularGrid extends JDRGrid
       return new Point2D.Double(X+px4, Y+py4);
    }
 
+   @Override
    public void drawGrid()
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -565,7 +624,7 @@ public class JDRRectangularGrid extends JDRGrid
             {
                currentCompX = -currentCompX;
                currentMajorXidx = -currentMajorXidx;
-               currentMinorXidx = (subDivisions - currentMinorXidx) % subDivisions;
+               currentMinorXidx = (subDivisionsX - currentMinorXidx) % subDivisionsX;
             }
          }
          catch (ArithmeticException e)
@@ -596,7 +655,7 @@ public class JDRRectangularGrid extends JDRGrid
             {
                initialCurrentCompY = -initialCurrentCompY;
                initialMajorYidx = -initialMajorYidx;
-               initialMinorYidx = (subDivisions - initialMinorYidx) % subDivisions;
+               initialMinorYidx = (subDivisionsY - initialMinorYidx) % subDivisionsY;
             }
          }
          catch (ArithmeticException e)
@@ -628,7 +687,7 @@ public class JDRRectangularGrid extends JDRGrid
 
             currentMinorYidx++;
 
-            if (currentMinorYidx >= subDivisions)
+            if (currentMinorYidx >= subDivisionsY)
             {
                currentMinorYidx = 0;
                currentMajorYidx++;
@@ -639,7 +698,7 @@ public class JDRRectangularGrid extends JDRGrid
 
          currentMinorXidx++;
 
-         if (currentMinorXidx >= subDivisions)
+         if (currentMinorXidx >= subDivisionsX)
          {
             currentMinorXidx = 0;
             currentMajorXidx++;
@@ -650,16 +709,19 @@ public class JDRRectangularGrid extends JDRGrid
 
    }
 
+   @Override
    public String getUnitLabel()
    {
       return unit.getLabel();
    }
 
+   @Override
    public JDRUnit getMainUnit()
    {
       return unit;
    }
 
+   @Override
    public String formatLocationFromCartesianBp(double bpX, double bpY)
    {
       if (unit.getID() == JDRUnit.BP)
@@ -677,19 +739,24 @@ public class JDRRectangularGrid extends JDRGrid
             +unit.getLabel();
    }
 
+   @Override
    public JDRGridLoaderListener getListener()
    {
       return listener;
    }
 
+   @Override
    public void makeEqual(JDRGrid grid)
    {
       JDRRectangularGrid rectGrid = (JDRRectangularGrid)grid;
-      majorDivisions = rectGrid.majorDivisions;
-      subDivisions = rectGrid.subDivisions;
+      majorDivisionsX = rectGrid.majorDivisionsX;
+      majorDivisionsY = rectGrid.majorDivisionsY;
+      subDivisionsX = rectGrid.subDivisionsX;
+      subDivisionsY = rectGrid.subDivisionsY;
       unit = rectGrid.unit;
    }
 
+   @Override
    public JDRRectangularGrid getRectangularGrid()
    {
       return this;
@@ -697,17 +764,28 @@ public class JDRRectangularGrid extends JDRGrid
 
    private static JDRRectangularGridListener listener = new JDRRectangularGridListener();
 
+   @Override
+   public String toString()
+   {
+      return String.format(
+       "%s[majorX=%f,majorY=%f,subdivisionsX=%d,subdivisionsY=%d,unit=%s]",
+        getClass().getSimpleName(), 
+        majorDivisionsX, majorDivisionsY,
+        subDivisionsX, subDivisionsY, unit
+      );
+   }
+
    /**
     * Stores the distance between the major tick marks in terms of
     * the unit given by {@link #unit}.
     */
-   private double majorDivisions;
+   private double majorDivisionsX, majorDivisionsY;
 
    /**
     * Stores the number of subdivisions within a major grid
     * interval.
     */
-   private int subDivisions;
+   private int subDivisionsX, subDivisionsY;
 
    private JDRUnit unit;
 }

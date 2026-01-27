@@ -57,14 +57,24 @@ public class JDRRectangularGridListener implements JDRGridLoaderListener
 
       if (version < 1.6f)
       {
-         jdr.writeInt((int)Math.round(grid.getMajorInterval()));
+         jdr.writeInt((int)Math.round(grid.getMajorXInterval()));
       }
       else
       {
-         jdr.writeDouble(grid.getMajorInterval());
+         jdr.writeDouble(grid.getMajorXInterval());
+
+         if (version >= 2.2f)
+         {
+            jdr.writeDouble(grid.getMajorYInterval());
+         }
       }
 
-      jdr.writeInt(grid.getSubDivisions());
+      jdr.writeInt(grid.getSubDivisionsX());
+
+      if (version >= 2.2f)
+      {
+         jdr.writeInt(grid.getSubDivisionsY());
+      }
    }
 
    public JDRGrid read(JDRAJR jdr)
@@ -82,21 +92,36 @@ public class JDRRectangularGridListener implements JDRGridLoaderListener
             InvalidFormatException.UNIT_ID, unitID, jdr);
       }
 
-      double majorDivisions;
+      double majorDivisionsX;
+      double majorDivisionsY;
 
       if (version < 1.6f)
       {
-         majorDivisions = jdr.readIntGt(InvalidFormatException.GRID_MAJOR, 0);
+         majorDivisionsX = jdr.readIntGt(InvalidFormatException.GRID_MAJOR, 0);
+         majorDivisionsY = majorDivisionsX;
       }
       else
       {
-         majorDivisions = jdr.readDoubleGt(InvalidFormatException.GRID_MAJOR, 0);
+         majorDivisionsX = jdr.readDoubleGt(InvalidFormatException.GRID_MAJOR, 0);
+         majorDivisionsY = majorDivisionsX;
+
+         if (version >= 2.2f)
+         {
+            majorDivisionsY = jdr.readDoubleGt(InvalidFormatException.GRID_MAJOR, 0);
+         }
       }
 
-      int subDivisions = jdr.readIntGe(InvalidFormatException.GRID_MINOR, 0);
+      int subDivisionsX = jdr.readIntGe(InvalidFormatException.GRID_MINOR, 0);
+      int subDivisionsY = subDivisionsX;
+
+      if (version >= 2.2f)
+      {
+         subDivisionsY = jdr.readIntGe(InvalidFormatException.GRID_MINOR, 0);
+      }
 
       return new JDRRectangularGrid(jdr.getCanvasGraphics(),
-         unit, majorDivisions, subDivisions);
+         unit, majorDivisionsX, majorDivisionsY,
+         subDivisionsX, subDivisionsY);
    }
 
 }

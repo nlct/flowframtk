@@ -183,6 +183,7 @@ public class JDRRadialGrid extends JDRGrid
     * Gets the number of sub divisions within a major interval.
     * @return the number of sub divisions.
     */
+   @Override
    public int getSubDivisions()
    {
       return subDivisions;
@@ -206,16 +207,14 @@ public class JDRRadialGrid extends JDRGrid
 
    public Point2D getMinorTicDistance()
    {
-      Point2D p = new Point2D.Double(0, 0);
+      double minor = unit.toBp(majorDivisions);
 
       if (subDivisions > 0)
       {
-         double minor = unit.toBp(majorDivisions)/subDivisions;
-
-         p.setLocation(minor, minor);
+         minor = minor / subDivisions;
       }
 
-      return p;
+      return new Point2D.Double(minor, minor);
    }
 
    public Point2D fromCartesianBp(double bpX, double bpY)
@@ -1102,6 +1101,15 @@ public class JDRRadialGrid extends JDRGrid
    {
       return new JDRRectangularGrid(getCanvasGraphics(),
          unit, majorDivisions, subDivisions);
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format(
+       "%s[major=%f,subdivisions=%d,spokes=%d,unit=%s,pagecentred=%s]",
+        getClass().getSimpleName(), 
+        majorDivisions, subDivisions, spokes, unit, pageCentred);
    }
 
    private static JDRRadialGridListener listener = new JDRRadialGridListener();

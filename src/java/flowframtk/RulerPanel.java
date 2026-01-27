@@ -118,7 +118,7 @@ public class RulerPanel extends JPanel
       Point2D majorBp = grid.getMajorTicDistance();
       Point2D minorBp = grid.getMinorTicDistance();
 
-      int subDivisions = grid.getSubDivisions();
+      int subDivisions = grid.getSubDivisionsX();
 
       int minorTicLength = (d.height*4)/10;
       int majorTicLength = (d.height*8)/10;
@@ -198,7 +198,7 @@ public class RulerPanel extends JPanel
       Point2D majorBp = grid.getMajorTicDistance();
       Point2D minorBp = grid.getMinorTicDistance();
 
-      int subDivisions = grid.getSubDivisions();
+      int subDivisions = grid.getSubDivisionsY();
 
       int minorTicLength = (d.width*4)/10;
       int majorTicLength = (d.width*8)/10;

@@ -223,11 +223,13 @@ public class JDRPathGrid extends JDRGrid
     * Gets the number of sub divisions within a major interval.
     * @return the number of sub divisions.
     */
+   @Override
    public int getSubDivisions()
    {
       return subDivisions;
    }
 
+   @Override
    public Point2D getMajorTicDistance()
    {
       double major = unit.toBp(majorDivisions);
@@ -235,6 +237,7 @@ public class JDRPathGrid extends JDRGrid
       return new Point2D.Double(major, major);
    }
 
+   @Override
    public Point2D getMinorTicDistance()
    {
       Point2D p = new Point2D.Double(0, 0);
@@ -249,17 +252,20 @@ public class JDRPathGrid extends JDRGrid
       return p;
    }
 
+   @Override
    public Point2D fromCartesianBp(double x, double y)
    {
       return new Point2D.Double(unit.fromBp(x), unit.fromBp(y));
    }
 
+   @Override
    public void fromCartesianBp(Point2D cartesianPoint, Point2D target)
    {
       target.setLocation(unit.fromBp(cartesianPoint.getX()),
                          unit.fromBp(cartesianPoint.getY()));
    }
 
+   @Override
    public void toCartesianBp(Point2D original, Point2D target)
    {
       target.setLocation(unit.toBp(original.getX()),
@@ -267,6 +273,7 @@ public class JDRPathGrid extends JDRGrid
    }
 
    // x, y and return values in bp
+   @Override
    public Point2D getClosestBpTic(double x, double y)
    {
       if (unit.equals(JDRUnit.bp))
@@ -281,6 +288,7 @@ public class JDRPathGrid extends JDRGrid
       return p;
    }
 
+   @Override
    public Point2D getClosestTic(double x, double y)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -463,6 +471,7 @@ public class JDRPathGrid extends JDRGrid
            + tsq * t * p3;
    }
 
+   @Override
    public void drawGrid()
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -652,6 +661,15 @@ public class JDRPathGrid extends JDRGrid
       CanvasGraphics cg = getCanvasGraphics();
 
       setShape(shape.getGeneralPath(), cg.getStorageUnit());
+   }
+
+   @Override
+   public String toString()
+   {
+      return String.format(
+       "%s[major=%f,subdivisions=%d,unit=%s,path=%s]",
+        getClass().getSimpleName(), 
+        majorDivisions, subDivisions, unit, path);
    }
 
    private static JDRPathGridListener listener = new JDRPathGridListener();

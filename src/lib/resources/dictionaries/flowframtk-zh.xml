@@ -2445,8 +2445,18 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="grid.title">网格线设置</entry>
 <entry key="grid.major">主网格线(M)</entry>
 <entry key="grid.major.mnemonic">M</entry>
+
+<entry key="grid.major.x">主网格线(M) X</entry>
+<entry key="grid.major.x.mnemonic">M</entry>
+<entry key="grid.major.y">Y</entry>
+
 <entry key="grid.sub_divisions">次网格线(S)</entry>
 <entry key="grid.sub_divisions.mnemonic">S</entry>
+
+<entry key="grid.sub_divisions.x">次网格线(S) X</entry>
+<entry key="grid.sub_divisions.x.mnemonic">S</entry>
+<entry key="grid.sub_divisions.y">Y</entry>
+
 <entry key="grid.rectangular">Rectangular</entry>
 <entry key="grid.rectangular.mnemonic">G</entry>
 <entry key="grid.radial">Radial</entry>
