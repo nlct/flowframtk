@@ -6813,14 +6813,19 @@ Selecting the \widget{paintselector.gradient} radio button indicates a
 
 A \gls{index.gradient-paint} is a shading that smoothly transitions
 from a \inlineglsdef{index.gradient-paint.start-colour} to an
-\inlineglsdef{index.gradient-paint.end-colour}.  There is a choice
+\inlineglsdef{index.gradient-paint.end-colour}, optionally
+\manmsg{through} a \inlineglsdef{index.gradient-paint.mid-colour}.  There is a choice
 of \gls{index.gradient-paint.linear} or
 \gls{index.gradient-paint.radial}. Both are a shading that
 transitions from one \dgls{colour} (the
-\inlineglsdef{index.gradient-paint.start-colour}) to another (the
-\inlineglsdef{index.gradient-paint.end-colour}).  The
-\inlineglsdef{paintselector.start} and \inlineglsdef{paintselector.end} selectors
+\gls{index.gradient-paint.start-colour}) to another (the
+\gls{index.gradient-paint.end-colour}). 
+
+The \inlineglsdef{paintselector.start} and \inlineglsdef{paintselector.end} selectors
 each have the same interface as the \widget{paintselector.single} panel.
+The \inlineglsdef{paintselector.mid} checkbox will show or hide
+a similar panel in which you can specify a
+\dgls{gradient-paint.mid-colour}.
 
 \FloatSubFigs{fig:shadingex}
 {
@@ -16832,8 +16837,24 @@ to \gls{index.colour.rgb} or \gls{index.colour.cmyk} or
 
 \itemtitle{\typedef{linear-paint}}
 \begin{itemdesc}
-Linear gradient paint specs are saved as the start \type{paint}, the
-end \type{paint} followed by an \type{integer} indicating the
+Linear gradient paint specs are saved as:
+\begin{jdrversion}{2.2 onwards}
+\begin{syntaxline}
+\meta{start-paint} \meta{mid-flag} [\meta{mid-paint}]
+\meta{end-paint} \meta{direction}
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.0--2.1}
+\begin{syntaxline}
+\meta{start-paint} \meta{end-paint} \meta{direction}
+\end{syntaxline}
+\end{jdrversion}
+where \meta{start-paint} is the start \type{paint},
+\meta{mid-flag} is a \type{boolean} indicating whether or not
+the \meta{mid-paint} is present,
+\meta{mid-paint} is the mid \type{paint} (if \meta{mid-flag} is true),
+\meta{end-paint} is the end \type{paint},
+and \meta{direction} an \type{integer} indicating the
 direction, which may be one of: 0 (North), 1 (North-East), 2 (East),
 3 (South-East), 4 (South), 5 (South-West), 6 (West) or 7 (North-West).
 \FlowframTk\ doesn't support another gradient type as the
@@ -16842,8 +16863,24 @@ start or end paint.
 
 \itemtitle{\typedef{radial-paint}}
 \begin{itemdesc}
-Radial gradient paint specs are saved as the start \type{paint}, the
-end \type{paint} followed by an \type{integer} indicating the
+Radial gradient paint specs are saved as:
+\begin{jdrversion}{2.2 onwards}
+\begin{syntaxline}
+\meta{start-paint} \meta{mid-flag} [\meta{mid-paint}]
+\meta{end-paint} \meta{location}
+\end{syntaxline}
+\end{jdrversion}
+\begin{jdrversion}{1.3--2.1}
+\begin{syntaxline}
+\meta{start-paint} \meta{end-paint} \meta{location}
+\end{syntaxline}
+\end{jdrversion}
+where \meta{start-paint} is the start \type{paint},
+\meta{mid-flag} is a \type{boolean} indicating whether or not
+the \meta{mid-paint} is present,
+\meta{mid-paint} is the mid \type{paint} (if \meta{mid-flag} is true),
+\meta{end-paint} is the end \type{paint},
+and \meta{location} is an \type{integer} indicating the
 starting location, which may be one of: 0 (North), 1 (North-East), 2 (East),
 3 (South-East), 4 (South), 5 (South-West), 6 (West), 7 (North-West)
 or 8 (\Manmsg{centre}).

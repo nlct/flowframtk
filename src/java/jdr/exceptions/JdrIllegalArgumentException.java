@@ -277,6 +277,7 @@ public class JdrIllegalArgumentException extends IllegalArgumentException
    public static final String BRIGHTNESS = "brightness";
    public static final String SHADING_START = "shading-start";
    public static final String SHADING_END = "shading-end";
+   public static final String SHADING_MID = "shading-mid";
    public static final String SHADING_DIRECTION = "shading-direction";
    public static final String SHADING_LOCATION = "shading-location";
    public static final String CONVERT_SHADING = "convert-shading";

@@ -49,12 +49,39 @@ public class JDRGradientListener implements JDRPaintLoaderListener
    public void write(JDRAJR jdr, JDRPaint paint)
       throws IOException
    {
+      float version = jdr.getVersion();
+
       JDRGradient c = (JDRGradient)paint;
       JDRPaint startColor = c.getStartColor();
       JDRPaint endColor = c.getEndColor();
 
       JDRPaintLoader loader = jdr.getPaintLoader();
       loader.save(jdr, startColor);
+
+      if (version < 2.2f)
+      {
+         if (c.hasMidColor())
+         {
+            jdr.warningWithFallback("warning.save_unsupported_gradient_mid_paint",
+             "Gradient mid-paint not supported in JDR/AJR version {0}",
+             version);
+         }
+      }
+      else
+      {
+         if (c.hasMidColor())
+         {
+            JDRPaint midPaint = c.getMidColor();
+
+            jdr.writeBoolean(true);
+            loader.save(jdr, midPaint);
+         }
+         else
+         {
+            jdr.writeBoolean(false);
+         }
+      }
+
       loader.save(jdr, endColor);
 
       jdr.writeInt(c.getDirection());
@@ -63,6 +90,8 @@ public class JDRGradientListener implements JDRPaintLoaderListener
    public JDRPaint read(JDRAJR jdr)
       throws InvalidFormatException
    {
+      float version = jdr.getVersion();
+
       JDRPaintLoader loader = jdr.getPaintLoader();
       JDRPaint startPaint = loader.load(jdr);
 
@@ -71,6 +100,16 @@ public class JDRGradientListener implements JDRPaintLoaderListener
          throw new InvalidValueException(
           InvalidFormatException.GRADIENT_START, 
           startPaint.getClass().getName(), jdr);
+      }
+
+      JDRPaint midPaint = null;
+
+      if (version >= 2.2f)
+      {
+         if (jdr.readBoolean())
+         {
+            midPaint = loader.load(jdr);
+         }
       }
 
       JDRPaint endPaint = loader.load(jdr);
@@ -84,7 +123,7 @@ public class JDRGradientListener implements JDRPaintLoaderListener
 
       int direction = jdr.readInt(InvalidFormatException.GRADIENT_DIRECTION);
 
-      return new JDRGradient(direction, startPaint, endPaint);
+      return new JDRGradient(direction, startPaint, midPaint, endPaint);
    }
 
    public int getConfigId()
@@ -103,13 +142,24 @@ public class JDRGradientListener implements JDRPaintLoaderListener
 
       JDRPaintLoader loader = JDR.getPaintLoader();
 
-      String specs = loader.getConfigString(startColor)
-                   + ","
-                   + loader.getConfigString(endColor)
-                   + ","
-                   + c.getDirection();
+      StringBuilder builder = new StringBuilder();
 
-      return specs;
+      builder.append(loader.getConfigString(startColor));
+      builder.append(',');
+
+      if (c.hasMidColor())
+      {
+         builder.append('[');
+         builder.append(loader.getConfigString(c.getMidColor()));
+         builder.append(']');
+      }
+
+      builder.append(loader.getConfigString(endColor));
+      builder.append(',');
+      builder.append(c.getDirection());
+
+      return builder.toString();
+
    }
 
    public JDRPaint parseConfig(CanvasGraphics cg, String specs)
@@ -117,6 +167,7 @@ public class JDRGradientListener implements JDRPaintLoaderListener
    {
       JDRPaintLoader loader = JDR.getPaintLoader();
       JDRPaint startPaint = loader.parseConfig(cg, specs);
+      JDRPaint midPaint = null;
 
       if (startPaint instanceof JDRShading)
       {
@@ -126,6 +177,19 @@ public class JDRGradientListener implements JDRPaintLoaderListener
       }
 
       specs = loader.getConfigRemainder();
+
+      if (specs.startsWith("["))
+      {
+         int idx = specs.indexOf(']');
+
+         if (idx > -1)
+         {
+            String midSpecs = specs.substring(1, idx);
+            specs = specs.substring(idx+1);
+
+            midPaint = loader.parseConfig(cg, midSpecs);
+         }
+      }
 
       JDRPaint endPaint = loader.parseConfig(cg, specs);
 
@@ -161,7 +225,7 @@ public class JDRGradientListener implements JDRPaintLoaderListener
          remainder = split[1];
       }
 
-      return new JDRGradient(direction, startPaint, endPaint);
+      return new JDRGradient(direction, startPaint, midPaint, endPaint);
    }
 
    /**

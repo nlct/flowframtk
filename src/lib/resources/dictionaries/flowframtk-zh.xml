@@ -2848,6 +2848,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="paintselector.gradient.initvalue">off</entry>
 
 <entry key="paintselector.start">起始颜色</entry>
+<entry key="paintselector.mid">Mid Color</entry>
 <entry key="paintselector.end">结束颜色</entry>
 
 <entry key="paintselector.linear">线性渐变(E)</entry>

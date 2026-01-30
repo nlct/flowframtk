@@ -50,7 +50,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
     */
    public JDRGradient(JDRPaint sColor, JDRPaint eColor)
    {
-      this(NORTH, sColor, eColor);
+      this(NORTH, sColor, null, eColor);
    }
 
    /**
@@ -65,9 +65,15 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
     */
    public JDRGradient(int d, JDRPaint sColor, JDRPaint eColor)
    {
+      this(d, sColor, null, eColor);
+   }
+
+   public JDRGradient(int d, JDRPaint sColor, JDRPaint mColor, JDRPaint eColor)
+   {
       super(sColor.getCanvasGraphics());
 
       setStartColor(sColor);
+      setMidColor(mColor);
       setEndColor(eColor);
       setDirection(d);
    }
@@ -94,7 +100,14 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
    @Override
    public boolean isBlack()
    {
-      return startColor.isBlack() && endColor.isBlack();
+      if (hasMidColor())
+      {
+         return startColor.isBlack() && midColor.isBlack() && endColor.isBlack();
+      }
+      else
+      {
+         return startColor.isBlack() && endColor.isBlack();
+      }
    }
 
    public JDRPaint average(JDRPaint paint)
@@ -118,12 +131,22 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
          gradient.setStartColor(getStartColor().average(gradient.getStartColor()));
          gradient.setEndColor(getEndColor().average(gradient.getEndColor()));
 
+         if (hasMidColor() && gradient.hasMidColor())
+         {
+            gradient.setMidColor(getMidColor().average(gradient.getMidColor()));
+         }
+
          return gradient;
       }
 
       gradient = (JDRGradient)clone();
       gradient.setStartColor(getStartColor().average(paint));
       gradient.setEndColor(getEndColor().average(paint));
+
+      if (hasMidColor())
+      {
+         gradient.setMidColor(getMidColor().average(paint));
+      }
 
       return gradient;
    }
@@ -160,129 +183,264 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
 
    public Paint getPaint(BBox box)
    {
-      Point startPt, endPt;
-      int midX = (int)(box.getMinX() + 0.5*box.getWidth());
-      int midY = (int)(box.getMinY() + 0.5*box.getHeight());
+      Point2D startPt, endPt;
+      double midX = box.getMinX() + 0.5*box.getWidth();
+      double midY = box.getMinY() + 0.5*box.getHeight();
 
       switch (direction)
       {
          case NORTH :
-            startPt  = new Point(midX, (int)box.getMaxY());
-            endPt    = new Point(midX, (int)box.getMinY());
+            startPt  = new Point2D.Double(midX, box.getMaxY());
+            endPt    = new Point2D.Double(midX, box.getMinY());
             break;
          case NORTH_EAST :
-            startPt = new Point((int)box.getMinX(),(int)box.getMaxY());
-            endPt   = new Point((int)box.getMaxX(),(int)box.getMinY());
+            startPt = new Point2D.Double(box.getMinX(),box.getMaxY());
+            endPt   = new Point2D.Double(box.getMaxX(),box.getMinY());
             break;
          case EAST :
-            startPt = new Point((int)box.getMinX(),midY); 
-            endPt   = new Point((int)box.getMaxX(),midY);
+            startPt = new Point2D.Double(box.getMinX(),midY); 
+            endPt   = new Point2D.Double(box.getMaxX(),midY);
             break;
          case SOUTH_EAST :
-            startPt = new Point((int)box.getMinX(),(int)box.getMinY());
-            endPt   = new Point((int)box.getMaxX(),(int)box.getMaxY());
+            startPt = new Point2D.Double(box.getMinX(),box.getMinY());
+            endPt   = new Point2D.Double(box.getMaxX(),box.getMaxY());
             break;
          case SOUTH :
-            startPt = new Point(midX, (int)box.getMinY());
-            endPt   = new Point(midX, (int)box.getMaxY());
+            startPt = new Point2D.Double(midX, box.getMinY());
+            endPt   = new Point2D.Double(midX, box.getMaxY());
             break;
          case SOUTH_WEST :
-            startPt = new Point((int)box.getMaxX(),(int)box.getMinY());
-            endPt   = new Point((int)box.getMinX(),(int)box.getMaxY());
+            startPt = new Point2D.Double(box.getMaxX(),box.getMinY());
+            endPt   = new Point2D.Double(box.getMinX(),box.getMaxY());
             break;
          case WEST :
-            startPt = new Point((int)box.getMaxX(),midY);
-            endPt   = new Point((int)box.getMinX(),midY); 
+            startPt = new Point2D.Double(box.getMaxX(),midY);
+            endPt   = new Point2D.Double(box.getMinX(),midY); 
             break;
          case NORTH_WEST :
-            startPt = new Point((int)box.getMaxX(),(int)box.getMaxY());
-            endPt   = new Point((int)box.getMinX(),(int)box.getMinY());
+            startPt = new Point2D.Double(box.getMaxX(),box.getMaxY());
+            endPt   = new Point2D.Double(box.getMinX(),box.getMinY());
             break;
          default :
-            startPt = new Point(0,0);
-            endPt = new Point(0,0);
+            startPt = new Point2D.Double(0,0);
+            endPt = new Point2D.Double(0,0);
       }
 
-      return new GradientPaint(startPt.x, startPt.y, 
-                               startColor.getColor(),
-                               endPt.x, endPt.y,
-                               endColor.getColor());
+      if (hasMidColor())
+      {
+         return new LinearGradientPaint(
+                        startPt, endPt,
+                        new float[] { 0.0f, 0.5f, 1.0f },
+                        new Color[]
+                         {
+                                  startColor.getColor(),
+                                  midColor.getColor(),
+                                  endColor.getColor()
+                         }
+                    );
+      }
+      else
+      {
+         return new GradientPaint(startPt, startColor.getColor(),
+                                  endPt, endColor.getColor());
+      }
    }
 
    @Override
    public Object clone()
    {
-      return new JDRGradient(direction,
-        (JDRPaint)startColor.clone(),
-        (JDRPaint)endColor.clone());
+      if (midColor == null)
+      {
+         return new JDRGradient(direction,
+           (JDRPaint)startColor.clone(),
+           (JDRPaint)endColor.clone());
+      }
+      else
+      {
+         return new JDRGradient(direction,
+           (JDRPaint)startColor.clone(),
+           (JDRPaint)midColor.clone(),
+           (JDRPaint)endColor.clone());
+      }
    }
 
    @Override
    public String toString()
    {
-      return String.format("%s[D=%d,start=%s,end=%s]",
-       getClass().getSimpleName(), direction, startColor, endColor);
+      return String.format("%s[D=%d,start=%s,mid=%s,end=%s]",
+       getClass().getSimpleName(), direction, startColor, midColor, endColor);
    }
 
    @Override
    public String info()
    {
-      return getCanvasGraphics().getMessageWithFallback(
-        "objectinfo.paint.gradient",
-        "gradient: direction={0} start={1} end={2}",
-         direction, startColor.info(), endColor.info());
+      if (hasMidColor())
+      {
+         return getCanvasGraphics().getMessageWithFallback(
+           "objectinfo.paint.gradientwithmid",
+           "gradient: direction={0} start={1} mid={2} end={3}",
+            direction, startColor.info(), midColor.info(), endColor.info());
+      }
+      else
+      {
+         return getCanvasGraphics().getMessageWithFallback(
+           "objectinfo.paint.gradient",
+           "gradient: direction={0} start={1} end={2}",
+            direction, startColor.info(), endColor.info());
+      }
    }
 
    private String pgfdeclareverticalshading(
-      JDRPaint start, JDRPaint end)
+      JDRPaint start, JDRPaint mid, JDRPaint end)
    {
+      StringBuilder builder = new StringBuilder();
+
       String eol = System.getProperty("line.separator", "\n");
+      boolean hasMid = (mid != null && !(mid instanceof JDRTransparent));
 
       String startPaintID = "jdrlinear-start-"+pgfshadeid;
+      String midPaintID = "jdrlinear-mid-"+pgfshadeid;
       String endPaintID = "jdrlinear-end-"+pgfshadeid;
 
-      String str = "\\definecolor{"+startPaintID+"}{"
-                 + start.pgfmodel()+"}{"+start.pgfspecs()+"}"+eol
-                 + "\\definecolor{"+endPaintID+"}{"
-                 + end.pgfmodel()+"}{"+end.pgfspecs()+"}"+eol
-                 + "\\pgfdeclareverticalshading{jdrlinear"+pgfshadeid+"}{"
-                 +"100bp}{";
+      builder.append("\\definecolor{");
+      builder.append(startPaintID);
+      builder.append("}{");
+      builder.append(start.pgfmodel());
+      builder.append("}{");
+      builder.append(start.pgfspecs());
+      builder.append("}");
+      builder.append(eol);
 
-      str += "color(0bp)=(" + startPaintID+"); ";
-      str += "color(32.5bp)=(" + startPaintID+"); ";
+      if (hasMid)
+      {
+         builder.append("\\definecolor{");
+         builder.append(midPaintID);
+         builder.append("}{");
+         builder.append(mid.pgfmodel());
+         builder.append("}{");
+         builder.append(mid.pgfspecs());
+         builder.append("}");
+         builder.append(eol);
+      }
 
-      str += "color(67.5bp)=("+endPaintID+"); ";
-      str += "color(100bp)=("+endPaintID+")";
+      builder.append("\\definecolor{");
+      builder.append(endPaintID);
+      builder.append("}{");
+      builder.append(end.pgfmodel());
+      builder.append("}{");
+      builder.append(end.pgfspecs());
+      builder.append("}");
+      builder.append(eol);
 
-      str += "}";
+      builder.append("\\pgfdeclareverticalshading{jdrlinear");
+      builder.append(pgfshadeid);
+      builder.append("}{100bp}{");
 
-      return str;
+      builder.append("color(0bp)=(");
+      builder.append(startPaintID);
+      builder.append("); ");
+
+      if (hasMid)
+      {
+         builder.append("color(50bp)=(");
+         builder.append(midPaintID);
+         builder.append("); ");
+      }
+      else
+      {
+         builder.append("color(32.5bp)=(");
+         builder.append(startPaintID);
+         builder.append("); ");
+
+         builder.append("color(67.5bp)=(");
+         builder.append(endPaintID);
+         builder.append("); ");
+      }
+
+      builder.append("color(100bp)=(");
+      builder.append(endPaintID);
+      builder.append(")");
+
+      builder.append("}");
+
+      return builder.toString();
    }
 
    private String pgfdeclarehorizontalshading(
-      JDRPaint start, JDRPaint end)
+      JDRPaint start, JDRPaint mid, JDRPaint end)
    {
+      StringBuilder builder = new StringBuilder();
       String eol = System.getProperty("line.separator", "\n");
 
+      boolean hasMid = (mid != null && !(mid instanceof JDRTransparent));
+
       String startPaintID = "jdrlinear-start-"+pgfshadeid;
+      String midPaintID = "jdrlinear-mid-"+pgfshadeid;
       String endPaintID = "jdrlinear-end-"+pgfshadeid;
 
-      String str = "\\definecolor{"+startPaintID+"}{"
-                 + start.pgfmodel()+"}{"+start.pgfspecs()+"}"+eol
-                 + "\\definecolor{"+endPaintID+"}{"
-                 + end.pgfmodel()+"}{"+end.pgfspecs()+"}"+eol
-                 + "\\pgfdeclarehorizontalshading{jdrlinear"+pgfshadeid+"}{"
-                 + "100bp}{";
+      builder.append("\\definecolor{");
+      builder.append(startPaintID);
+      builder.append("}{");
+      builder.append(start.pgfmodel());
+      builder.append("}{");
+      builder.append(start.pgfspecs());
+      builder.append("}");
+      builder.append(eol);
 
-      str += "color(0bp)=("+startPaintID+"); ";
-      str += "color(32.5bp)=("+startPaintID+"); ";
+      if (hasMid)
+      {
+         builder.append("\\definecolor{");
+         builder.append(midPaintID);
+         builder.append("}{");
+         builder.append(mid.pgfmodel());
+         builder.append("}{");
+         builder.append(mid.pgfspecs());
+         builder.append("}");
+         builder.append(eol);
+      }
 
-      str += "color(67.5bp)=("+endPaintID+"); ";
-      str += "color(100bp)=("+endPaintID+")";
+      builder.append("\\definecolor{");
+      builder.append(endPaintID);
+      builder.append("}{");
+      builder.append(end.pgfmodel());
+      builder.append("}{");
+      builder.append(end.pgfspecs());
+      builder.append("}");
+      builder.append(eol);
 
-      str += "}";
+      builder.append("\\pgfdeclarehorizontalshading{jdrlinear");
+      builder.append(pgfshadeid);
+      builder.append("}{");
+      builder.append("100bp}{");
 
-      return str;
+      builder.append("color(0bp)=(");
+      builder.append(startPaintID);
+      builder.append("); ");
+
+      if (hasMid)
+      {
+         builder.append("color(50bp)=(");
+         builder.append(midPaintID);
+         builder.append("); ");
+      }
+      else
+      {
+         builder.append("color(32.5bp)=(");
+         builder.append(startPaintID);
+         builder.append("); ");
+
+         builder.append("color(67.5bp)=(");
+         builder.append(endPaintID);
+         builder.append("); ");
+      }
+
+      builder.append("color(100bp)=(");
+      builder.append(endPaintID);
+      builder.append(")");
+
+      builder.append("}");
+
+      return builder.toString();
    }
 
 
@@ -303,35 +461,35 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       switch (direction)
       {
          case NORTH:
-           str = pgfdeclareverticalshading(startColor,endColor);
+           str = pgfdeclareverticalshading(startColor,midColor,endColor);
            angle=0;
          break;
          case NORTH_EAST :
-           str = pgfdeclareverticalshading(startColor,endColor);
+           str = pgfdeclareverticalshading(startColor,midColor,endColor);
            angle=45;
          break;
          case EAST :
-           str = pgfdeclarehorizontalshading(startColor,endColor);
+           str = pgfdeclarehorizontalshading(startColor,midColor,endColor);
            angle = 0;
          break;
          case SOUTH_EAST :
-           str = pgfdeclarehorizontalshading(startColor,endColor);
+           str = pgfdeclarehorizontalshading(startColor,midColor,endColor);
            angle = 45;
          break;
          case SOUTH :
-           str = pgfdeclareverticalshading(endColor,startColor);
+           str = pgfdeclareverticalshading(endColor,midColor,startColor);
            angle = 0;
          break;
          case SOUTH_WEST :
-           str = pgfdeclareverticalshading(endColor,startColor);
+           str = pgfdeclareverticalshading(endColor,midColor,startColor);
            angle = 45;
          break;
          case WEST :
-           str = pgfdeclarehorizontalshading(endColor,startColor);
+           str = pgfdeclarehorizontalshading(endColor,midColor,startColor);
            angle = 0;
          break;
          case NORTH_WEST :
-           str = pgfdeclarehorizontalshading(endColor,startColor);
+           str = pgfdeclarehorizontalshading(endColor,midColor,startColor);
            angle = 45;
          break;
       }
@@ -359,7 +517,15 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
 
    public String getID()
    {
-      return "gradient-"+startColor.getID()+"-"+endColor.getID()+"-"+direction;
+      if (hasMidColor())
+      {
+         return "gradient-"+startColor.getID()
+          +"-"+endColor.getID()+"-"+endColor.getID()+"-"+direction;
+      }
+      else
+      {
+         return "gradient-"+startColor.getID()+"-"+endColor.getID()+"-"+direction;
+      }
    }
 
    @Override
@@ -439,9 +605,18 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       svg.println("         <stop offset=\"0%\" stop-color=\""+
          startColor.svg()+"\" stroke-opacity=\""
         +startColor.getAlpha()+"\"/>");
+
+      if (hasMidColor())
+      {
+         svg.println("         <stop offset=\"50%\" stop-color=\""+
+            midColor.svg()+"\" stroke-opacity=\""
+           +midColor.getAlpha()+"\"/>");
+      }
+
       svg.println("         <stop offset=\"100%\" stop-color=\""+
          endColor.svg()+"\" stroke-opacity=\""
         +endColor.getAlpha()+"\"/>");
+
       svg.println("      </linearGradient>");
    }
 
@@ -527,13 +702,25 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
 
    public double getAlpha()
    {
-      return 0.5*(startColor.getAlpha()+endColor.getAlpha());
+      if (hasMidColor())
+      {
+         return (startColor.getAlpha()+midColor.getAlpha()+endColor.getAlpha())/3;
+      }
+      else
+      {
+         return 0.5*(startColor.getAlpha()+endColor.getAlpha());
+      }
    }
 
    public void setAlpha(double alpha)
    {
       startColor.setAlpha(alpha);
       endColor.setAlpha(alpha);
+
+      if (hasMidColor())
+      {
+         midColor.setAlpha(alpha);
+      }
    }
 
    public String pgfmodel()
@@ -564,6 +751,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
    public void saveEPS(PrintWriter out, BBox box)
       throws IOException
    {
+// TODO add mid colour
       if (box == null)
       {
          startColor.saveEPS(out, box);
@@ -673,12 +861,12 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
 
    /**
     * Converts this shading to a radial shading. This creates a
-    * new radial shading with the same start and end colour.
-    * @return a radial shading with the same start and end colour
+    * new radial shading with the same start, mid and end colour.
+    * @return a radial shading with the same start, mid and end colour
     */
    public JDRRadial getJDRRadial()
    {
-      return new JDRRadial(direction, startColor, endColor);
+      return new JDRRadial(direction, startColor, midColor, endColor);
    }
 
    /**
@@ -688,6 +876,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
     * <code>"JDRRadial"</code>, returns {@link #getJDRRadial()}.
     * Otherwise throws {@link InvalidFormatException}.
     */
+   @Override
    public JDRShading convertShading(String label)
    {
       if (label.equals("JDRRadial"))
@@ -713,6 +902,7 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
     * Gets this shading's start colour.
     * @return this shading's start colour
     */
+   @Override
    public JDRPaint getStartColor()
    {
       return startColor;
@@ -722,9 +912,26 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
     * Gets this shading's end colour.
     * @return this shading's end colour
     */
+   @Override
    public JDRPaint getEndColor()
    {
       return endColor;
+   }
+
+   /**
+    * Gets this shading's mid colour.
+    * @return this shading's mid colour
+    */
+   @Override
+   public JDRPaint getMidColor()
+   {
+      return midColor;
+   }
+
+   @Override
+   public boolean hasMidColor()
+   {
+      return midColor != null && !(midColor instanceof JDRTransparent);
    }
 
    /**
@@ -767,6 +974,21 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
    }
 
    /**
+    * Sets this shading's mid colour.
+    */
+   public void setMidColor(JDRPaint mColor)
+   {
+      if (mColor instanceof JDRShading)
+      {
+         throw new JdrIllegalArgumentException(
+            JdrIllegalArgumentException.SHADING_MID, 
+            mColor.getClass().toString(), getCanvasGraphics());
+      }
+
+      midColor = mColor;
+   }
+
+   /**
     * Sets this shading's direction.
     * @param d the gradient, which must be
     * one of: {@link #NORTH}, {@link #NORTH_EAST},
@@ -785,30 +1007,55 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       direction = d;
    }
 
+   @Override
    public void reduceToGreyScale()
    {
       startColor = startColor.getJDRGray();
       endColor = endColor.getJDRGray();
+
+      if (hasMidColor())
+      {
+          midColor = midColor.getJDRGray();
+      }
    }
 
+   @Override
    public void convertToCMYK()
    {
       startColor = startColor.getJDRColorCMYK();
       endColor = endColor.getJDRColorCMYK();
+
+      if (hasMidColor())
+      {
+         midColor = midColor.getJDRColorCMYK();
+      }
    }
 
+   @Override
    public void convertToRGB()
    {
       startColor = startColor.getJDRColor();
       endColor = endColor.getJDRColor();
+
+      if (hasMidColor())
+      {
+         midColor = midColor.getJDRColor();
+      }
    }
 
+   @Override
    public void convertToHSB()
    {
       startColor = startColor.getJDRColorHSB();
       endColor = endColor.getJDRColorHSB();
+
+      if (hasMidColor())
+      {
+         midColor = midColor.getJDRColorHSB();
+      }
    }
 
+   @Override
    public boolean equals(Object obj)
    {
       if (this == obj) return true;
@@ -825,6 +1072,17 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
 
       JDRGradient c = (JDRGradient)obj;
 
+      if ( midColor != c.midColor
+          && 
+           (
+             ( midColor == null && c.midColor != null )
+          || ( c.midColor == null && midColor != null ) )
+          || !midColor.equals(c.midColor)
+           )
+      {
+         return false;
+      }
+
       return (getDirection() == c.getDirection()
            && startColor.equals(c.startColor)
            && endColor.equals(c.endColor));
@@ -834,8 +1092,14 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
    {
       startColor.fade(value);
       endColor.fade(value);
+
+      if (hasMidColor())
+      {
+         midColor.fade(value);
+      }
    }
 
+   @Override
    public void setCanvasGraphics(CanvasGraphics cg)
    {
       super.setCanvasGraphics(cg);
@@ -843,6 +1107,11 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       if (startColor != null)
       {
          startColor.setCanvasGraphics(cg);
+      }
+
+      if (midColor != null)
+      {
+         midColor.setCanvasGraphics(cg);
       }
 
       if (endColor != null)
@@ -860,9 +1129,22 @@ public class JDRGradient extends JDRPaint implements Serializable,JDRShading
       direction = grad.direction;
       startColor.makeEqual(grad.startColor);
       endColor.makeEqual(grad.startColor);
+
+      if (!grad.hasMidColor())
+      {
+         midColor = null;
+      }
+      else if (midColor == null)
+      {
+         midColor = (JDRPaint)grad.midColor.clone();
+      }
+      else
+      {
+         midColor.makeEqual(grad.midColor);
+      }
    }
 
-   private JDRPaint startColor, endColor;
+   private JDRPaint startColor, midColor, endColor;
    private int direction;
 
    /**

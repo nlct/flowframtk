@@ -135,6 +135,7 @@
 <entry key="paintselector.single">Colour</entry>
 <entry key="paintselector.grey">Grey</entry>
 <entry key="paintselector.start">Start Colour</entry>
+<entry key="paintselector.mid">Mid Colour</entry>
 <entry key="paintselector.end">End Colour</entry>
 
 <entry key="textconfig.textualshading.average">Average Colours</entry>
@@ -211,6 +212,7 @@
 <entry key="index.colour.greyscale">greyscale</entry>
 
 <entry key="index.gradient-paint.start-colour">start colour</entry>
+<entry key="index.gradient-paint.mid-colour">middle colour</entry>
 <entry key="index.gradient-paint.end-colour">end colour</entry>
 <entry key="index.gradient-paint.centre">centre</entry>
 

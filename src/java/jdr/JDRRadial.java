@@ -76,10 +76,16 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
     */
    public JDRRadial(int location, JDRPaint sColor, JDRPaint eColor)
    {
+      this(location, sColor, null, eColor);
+   }
+
+   public JDRRadial(int location, JDRPaint sColor, JDRPaint mColor, JDRPaint eColor)
+   {
       super(sColor.getCanvasGraphics());
 
       setStartLocation(location);
       setStartColor(sColor);
+      setMidColor(mColor);
       setEndColor(eColor);
 
       startPtx   = 0;
@@ -110,7 +116,14 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    @Override
    public boolean isBlack()
    {
-      return startColor.isBlack() && endColor.isBlack();
+      if (hasMidColor())
+      {
+         return startColor.isBlack() && midColor.isBlack() && endColor.isBlack();
+      }
+      else
+      {
+         return startColor.isBlack() && endColor.isBlack();
+      }
    }
 
    public JDRPaint average(JDRPaint paint)
@@ -134,12 +147,22 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
          radial.setStartColor(getStartColor().average(radial.getStartColor()));
          radial.setEndColor(getEndColor().average(radial.getEndColor()));
 
+         if (hasMidColor() && radial.hasMidColor())
+         {
+            radial.setMidColor(getMidColor().average(radial.getMidColor()));
+         }
+
          return radial;
       }
 
       radial = (JDRRadial)clone();
       radial.setStartColor(getStartColor().average(paint));
       radial.setEndColor(getEndColor().average(paint));
+
+      if (hasMidColor())
+      {
+         radial.setMidColor(getMidColor().average(paint));
+      }
 
       return radial;
    }
@@ -263,6 +286,21 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    {
       update(box);
 
+      if (hasMidColor())
+      {
+         return new RadialGradientPaint(
+           (float)startPtx, (float)startPty,
+           (float)getRadius(),
+           new float[] { 0.0f, 0.5f, 1.0f },
+           new Color[] 
+            {
+               startColor.getColor(),
+               midColor.getColor(),
+               endColor.getColor()
+            }
+         );
+      }
+
       return this;
    }
 
@@ -297,31 +335,63 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
     */
    public int getTransparency()
    {
-      return (((startColor.getColor().getAlpha()
-              & endColor.getColor().getAlpha()) == 0xff)
-         ? OPAQUE : TRANSLUCENT);
+      if (hasMidColor())
+      {
+         return (((startColor.getColor().getAlpha()
+                 & midColor.getColor().getAlpha()
+                 & endColor.getColor().getAlpha()) == 0xff)
+            ? OPAQUE : TRANSLUCENT);
+      }
+      else
+      {
+         return (((startColor.getColor().getAlpha()
+                 & endColor.getColor().getAlpha()) == 0xff)
+            ? OPAQUE : TRANSLUCENT);
+      }
    }
 
    @Override
    public Object clone()
    {
-      return new JDRRadial(direction,startColor,endColor);
+      if (midColor == null)
+      {
+         return new JDRRadial(direction,
+           (JDRPaint)startColor.clone(),
+           (JDRPaint)endColor.clone());
+      }
+      else
+      {
+         return new JDRRadial(direction,
+           (JDRPaint)startColor.clone(),
+           (JDRPaint)midColor.clone(),
+           (JDRPaint)endColor.clone());
+      }
    }
 
    @Override
    public String toString()
    {
-      return String.format("%s[D=%d,start=%s,end=%s]",
-       getClass().getSimpleName(), direction, startColor, endColor);
+      return String.format("%s[D=%d,start=%s,mid=%s,end=%s]",
+       getClass().getSimpleName(), direction, startColor, midColor, endColor);
    }
 
    @Override
    public String info()
    {
-      return getCanvasGraphics().getMessageWithFallback(
-        "objectinfo.paint.radial",
-        "radial: direction={0} start={1} end={2}",
-         direction, startColor.info(), endColor.info());
+      if (hasMidColor())
+      {
+         return getCanvasGraphics().getMessageWithFallback(
+           "objectinfo.paint.radialwithmid",
+           "radial: direction={0} start={1} mid={2} end={3}",
+            direction, startColor.info(), midColor.info(), endColor.info());
+      }
+      else
+      {
+         return getCanvasGraphics().getMessageWithFallback(
+           "objectinfo.paint.radial",
+           "radial: direction={0} start={1} end={2}",
+            direction, startColor.info(), endColor.info());
+      }
    }
 
    private String pgfdeclareradialshading(BBox box)
@@ -330,46 +400,98 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       update(box);
 
       String startPaintID = "jdrradial-start-"+pgfshadeid;
+      String midPaintID = "jdrradial-mid-"+pgfshadeid;
       String endPaintID = "jdrradial-end-"+pgfshadeid;
 
-      String str = "\\definecolor{"+startPaintID+"}{"
-                 + startColor.pgfmodel()+"}{"+startColor.pgfspecs()+"}"+eol
-                 + "\\definecolor{"+endPaintID+"}{"
-                 + endColor.pgfmodel()+"}{"+endColor.pgfspecs()+"}"+eol
-         + "\\pgfdeclareradialshading{jdrradial"+pgfshadeid+"}{\\pgfpoint{";
+      StringBuilder builder = new StringBuilder();
+
+      builder.append("\\definecolor{");
+      builder.append(startPaintID);
+      builder.append("}{");
+      builder.append(startColor.pgfmodel());
+      builder.append("}{");
+      builder.append(startColor.pgfspecs());
+      builder.append("}");
+      builder.append(eol);
+
+      if (hasMidColor())
+      {
+         builder.append("\\definecolor{");
+         builder.append(midPaintID);
+         builder.append("}{");
+         builder.append(midColor.pgfmodel());
+         builder.append("}{");
+         builder.append(midColor.pgfspecs());
+         builder.append("}");
+         builder.append(eol);
+      }
+
+      builder.append("\\definecolor{");
+      builder.append(endPaintID);
+      builder.append("}{");
+      builder.append(endColor.pgfmodel());
+      builder.append("}{");
+      builder.append(endColor.pgfspecs());
+      builder.append("}");
+      builder.append(eol);
+
+      builder.append("\\pgfdeclareradialshading{jdrradial");
+      builder.append(pgfshadeid);
+      builder.append("}{\\pgfpoint{");
 
       double midX = box.getMidX();
       double midY = box.getMidY();
 
-      str += PGF.format(startPtx-midX)+"bp}{";
-      str += PGF.format(midY-startPty)+"bp}";
+      builder.append(PGF.format(startPtx-midX));
+      builder.append("bp}{");
+      builder.append(PGF.format(midY-startPty));
+      builder.append("bp}");
+      builder.append("}{");
 
-      str += "}{";
+      builder.append("color(0bp)=(");
+      builder.append(startPaintID);
+      builder.append(");");
 
-      str += "color(0bp)=("+startPaintID+");";
+      if (hasMidColor())
+      {
+         builder.append("color(25bp)=(");
+         builder.append(midPaintID);
+         builder.append("); ");
+      }
+      else
+      {
+         builder.append("color(32.5bp)=(");
+         builder.append(endPaintID);
+         builder.append("); ");
+      }
 
-      str += "color(32.5bp)=("+endPaintID+"); ";
-      str += "color(50bp)=("+endPaintID+")";
-
-      str += "}"+eol;
+      builder.append("color(50bp)=(");
+      builder.append(endPaintID);
+      builder.append(")");
+      builder.append("}");
+      builder.append(eol);
 
       double width = box.getWidth();
       double height = box.getHeight();
 
-      str += "\\pgfsetadditionalshadetransform{";
+      builder.append("\\pgfsetadditionalshadetransform{");
 
       if (width < height && width != 0)
       {
-         str += "\\pgftransformxscale{"+PGF.format(height/width)+"}";
+         builder.append("\\pgftransformxscale{");
+         builder.append(PGF.format(height/width));
+         builder.append("}");
       }
       else if (height != 0)
       {
-         str += "\\pgftransformyscale{"+PGF.format(width/height)+"}";
+         builder.append("\\pgftransformyscale{");
+         builder.append(PGF.format(width/height));
+         builder.append("}");
       }
 
-      str += "}";
+      builder.append("}");
 
-      return str;
+      return builder.toString();
    }
 
    public String pgffillcolor(BBox box)
@@ -408,7 +530,15 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
 
    public String getID()
    {
-      return "radial-"+startColor.getID()+"-"+endColor.getID()+"-"+direction;
+      if (hasMidColor())
+      {
+         return "radial-"+startColor.getID()
+           + "-" + midColor.getID() + "-" + endColor.getID()+"-"+direction;
+      }
+      else
+      {
+         return "radial-"+startColor.getID()+"-"+endColor.getID()+"-"+direction;
+      }
    }
 
    @Override
@@ -481,9 +611,18 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       svg.println("         <stop offset=\"0%\" stop-color=\""+
          startColor.svg()+"\" stroke-opacity=\""
         +startColor.getAlpha()+ "\"/>");
+
+      if (hasMidColor())
+      {
+         svg.println("         <stop offset=\"50%\" stop-color=\""+
+            midColor.svg()+"\" stroke-opacity=\""
+           +midColor.getAlpha()+ "\"/>");
+      }
+
       svg.println("         <stop offset=\"100%\" stop-color=\""+
          endColor.svg()+"\" stroke-opacity=\""
         +endColor.getAlpha()+ "\"/>");
+
       svg.println("      </radialGradient>");
    }
 
@@ -554,13 +693,25 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
 
    public double getAlpha()
    {
-      return 0.5*(startColor.getAlpha()+endColor.getAlpha());
+      if (hasMidColor())
+      {
+         return (startColor.getAlpha()+midColor.getAlpha()+endColor.getAlpha())/3;
+      }
+      else
+      {
+         return 0.5*(startColor.getAlpha()+endColor.getAlpha());
+      }
    }
 
    public void setAlpha(double alpha)
    {
       startColor.setAlpha(alpha);
       endColor.setAlpha(alpha);
+
+      if (hasMidColor())
+      {
+         midColor.setAlpha(alpha);
+      }
    }
 
    /**
@@ -579,6 +730,21 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    public JDRPaint getStartColor()
    {
       return startColor;
+   }
+
+   /**
+    * Gets the mid colour for this shading.
+    * @return the mid colour for this shading or null if not set
+    */
+   public JDRPaint getMidColor()
+   {
+      return midColor;
+   }
+
+   @Override
+   public boolean hasMidColor()
+   {
+      return midColor != null && !(midColor instanceof JDRTransparent);
    }
 
    /**
@@ -604,6 +770,22 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       }
 
       startColor = sColor;
+   }
+
+   /**
+    * Sets the mid colour for this shading.
+    * @param mColor the mid colour
+    */
+   public void setMidColor(JDRPaint mColor)
+   {
+      if (mColor instanceof JDRShading)
+      {
+         throw new JdrIllegalArgumentException(
+            JdrIllegalArgumentException.SHADING_MID, 
+            mColor.getClass().toString(), getCanvasGraphics());
+      }
+
+      midColor = mColor;
    }
 
    /**
@@ -646,24 +828,44 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    {
       startColor = startColor.getJDRGray();
       endColor = endColor.getJDRGray();
+
+      if (hasMidColor())
+      {
+          midColor = midColor.getJDRGray();
+      }
    }
 
    public void convertToCMYK()
    {
       startColor = startColor.getJDRColorCMYK();
       endColor = endColor.getJDRColorCMYK();
+
+      if (hasMidColor())
+      {
+         midColor = midColor.getJDRColorCMYK();
+      }
    }
 
    public void convertToRGB()
    {
       startColor = startColor.getJDRColor();
       endColor = endColor.getJDRColor();
+
+      if (hasMidColor())
+      {
+         midColor = midColor.getJDRColor();
+      }
    }
 
    public void convertToHSB()
    {
       startColor = startColor.getJDRColorHSB();
       endColor = endColor.getJDRColorHSB();
+
+      if (hasMidColor())
+      {
+         midColor = midColor.getJDRColorHSB();
+      }
    }
 
    public String pgfmodel()
@@ -694,7 +896,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    {
       return new JDRGradient(
          direction == CENTER ? NORTH : direction,
-         startColor, endColor);
+         startColor, midColor, endColor);
    }
 
    public JDRShading convertShading(String label)
@@ -721,6 +923,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    public void saveEPS(PrintWriter out, BBox box)
       throws IOException
    {
+// TODO add mid color
       if (box == null)
       {
          startColor.saveEPS(out, box);
@@ -800,6 +1003,17 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
 
       JDRRadial c = (JDRRadial)obj;
 
+      if ( midColor != c.midColor
+          &&
+           (
+             ( midColor == null && c.midColor != null ) 
+          || ( c.midColor == null && midColor != null ) )
+          || !midColor.equals(c.midColor)
+           )
+      {
+         return false;
+      }
+
       return (direction == c.direction
            && startColor.equals(c.startColor)
            && endColor.equals(c.endColor));
@@ -814,6 +1028,11 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    {
       startColor.fade(value);
       endColor.fade(value);
+
+      if (hasMidColor())
+      {
+         midColor.fade(value);
+      }
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)
@@ -823,6 +1042,11 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       if (startColor != null)
       {
          startColor.setCanvasGraphics(cg);
+      }
+
+      if (midColor != null)
+      {
+         midColor.setCanvasGraphics(cg);
       }
 
       if (endColor != null)
@@ -840,9 +1064,22 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       direction = rad.direction;
       startColor.makeEqual(rad.startColor);
       endColor.makeEqual(rad.startColor);
+
+      if (!rad.hasMidColor())
+      {
+         midColor = null;
+      }
+      else if (midColor == null)
+      {
+         midColor = (JDRPaint)rad.midColor.clone();
+      }
+      else
+      {
+         midColor.makeEqual(rad.midColor);
+      }
    }
 
-   private JDRPaint startColor, endColor;
+   private JDRPaint startColor, endColor, midColor;
    private int direction;
 
    /**

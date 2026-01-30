@@ -70,6 +70,33 @@ public class GradientPanel extends JPanel
 
       add(startPanel);
 
+      // mid colour
+      hasMidPaintBox = getResources().createAppCheckBox(
+        "paintselector", "mid", false, null);
+      hasMidPaintBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      add(hasMidPaintBox);
+
+      midPanel = new ColorPanel(this, getApplication().getColorChooser());
+
+      midPanel.setMnemonics(
+         getResources().getCodePoint("paintselector.rgb.mnemonic"),
+         getResources().getCodePoint("paintselector.cmyk.mnemonic"));
+      midPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      add(midPanel);
+      midPanel.setVisible(false);
+
+      hasMidPaintBox.addChangeListener(new ChangeListener()
+       {
+          @Override
+          public void stateChanged(ChangeEvent evt)
+          {
+             midPanel.setVisible(hasMidPaintBox.isSelected());
+             selector_.repaintSample();
+          }
+       });
+
       // end colour
       JLabel endLabel = getResources().createAppLabel("paintselector.end");
       endLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -147,11 +174,22 @@ public class GradientPanel extends JPanel
    {
       startPanel.setPaint(paint);
       endPanel.setPaint(paint);
+      midPanel.setPaint(paint);
    }
 
    public void setPaint(JDRPaint paint)
    {
       startPanel.setPaint(((JDRShading)paint).getStartColor());
+
+      if (((JDRShading)paint).hasMidColor())
+      {
+         hasMidPaintBox.setSelected(true);
+         midPanel.setPaint(((JDRShading)paint).getMidColor());
+      }
+      else
+      {
+         hasMidPaintBox.setSelected(false);
+      }
 
       endPanel.setPaint(((JDRShading)paint).getEndColor());
 
@@ -182,17 +220,24 @@ public class GradientPanel extends JPanel
       JDRPaint startPaint = startPanel.getPaint(cg);
       JDRPaint endPaint = endPanel.getPaint(cg);
 
+      JDRPaint midPaint = null;
+
+      if (midPanel.isVisible())
+      {
+         midPaint = midPanel.getPaint(cg);
+      }
+
       if (linearButton.isSelected())
       {
          paint = new JDRGradient(
             linearDirectionPanel.getDirection(),
-            startPaint, endPaint);
+            startPaint, midPaint, endPaint);
       }
       else
       {
          paint = new JDRRadial(
             radialDirectionPanel.getDirection(),
-            startPaint, endPaint);
+            startPaint, midPaint, endPaint);
       }
 
       return paint;
@@ -227,7 +272,8 @@ public class GradientPanel extends JPanel
    }
 
    private JDRSelector selector_;
-   private ColorPanel startPanel, endPanel;
+   private ColorPanel startPanel, midPanel, endPanel;
+   private JCheckBox hasMidPaintBox;
 
    private JDRPaint defaultPaint;
 

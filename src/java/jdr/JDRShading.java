@@ -47,6 +47,13 @@ public interface JDRShading
     */
    public JDRPaint getStartColor();
 
+   /**
+    * Gets the middle colour for this shading.
+    * @return the middle colour for this shading or null if not set
+    */
+   public JDRPaint getMidColor();
+
+   public boolean hasMidColor();
 
    /**
     * Gets the end colour for this shading.

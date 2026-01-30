@@ -427,7 +427,9 @@
 <entry key="objectinfo.paint.cmyka">cmyka({0} {1} {2} {3} {4})</entry>
 <entry key="objectinfo.paint.gray">gray({0} {1})</entry>
 <entry key="objectinfo.paint.radial">radial: direction={0} start={1} end={2}</entry>
+<entry key="objectinfo.paint.radialwithmid">radial: direction={0} start={1} mid={2} end={3}</entry>
 <entry key="objectinfo.paint.gradient">gradient: direction={0} start={1} end={2}</entry>
+<entry key="objectinfo.paint.gradientwithmid">gradient: direction={0} start={1} mid={2} end={3}</entry>
 
 <entry key="objectinfo.distort.object">Distorted Object:</entry>
 <entry key="objectinfo.distort.distortion">Distortion: {0}</entry>
@@ -471,6 +473,8 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 
 <entry key="warning.save_unsupported_object">Object type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_paint">Paint type ''{0}'' not supported in JDR/AJR version {1}</entry>
+<entry key="warning.save_unsupported_gradient_mid_paint">Gradient mid-paint not supported in JDR/AJR version {0}</entry>
+<entry key="warning.save_unsupported_radial_mid_paint">Radial mid-paint not supported in JDR/AJR version {0}</entry>
 <entry key="warning.save_unsupported_segment">Segment type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_grid">Grid type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_radial_origin_grid">Origin-based radial grid type not supported in JDR/AJR version {0}</entry>
@@ -578,7 +582,9 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_gradient-direction">无效的梯度方向</entry>
 <entry key="error.invalid_radial-gradient-location">Invalid radial location</entry>
 <entry key="error.invalid_gradient-end">无效的结束颜色类型</entry>
+<entry key="error.invalid_gradient-mid">Invalid gradient mid color type</entry>
 <entry key="error.invalid_radial-gradient-end">Invalid radial end color type</entry>
+<entry key="error.invalid_radial-gradient-mid">Invalid radial mid color type</entry>
 <entry key="error.invalid_family_length">字体家族长度不能为0或负值</entry>
 <entry key="error.invalid_filename_length">文件名长度不能为0或负值</entry>
 <entry key="error.invalid_format">无效的格式, 行号:</entry>
