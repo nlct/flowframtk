@@ -1254,6 +1254,11 @@ public abstract class JDRAJR
              basePath.resolve(filename);
    }
 
+   public Path resolvePath(Path path)
+   {
+      return basePath == null ? path : basePath.resolve(path);
+   }
+
    public Path relativizePath(String filename)
    {
       Path path = new File(filename).toPath();
@@ -1273,7 +1278,20 @@ public abstract class JDRAJR
          return path;
       }
 
-      return basePath.relativize(path);
+      Path relPath = basePath.relativize(path);
+
+      // check that it can be resolved back
+
+      Path resolved = resolvePath(relPath);
+
+      if (!Files.exists(resolved))
+      {
+         // The base path may be a symlink
+
+         return path;
+      }
+
+      return relPath;
    }
 
    public static class FileInfo
