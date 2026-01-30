@@ -592,6 +592,50 @@ public class TeX
       }
    }
 
+   public void printPath(CanvasGraphics cg, Shape shape)
+     throws IOException
+   {
+      PathIterator pi = shape.getPathIterator(null);
+
+      double[] coords = new double[6];
+
+      for (; !pi.isDone(); pi.next())
+      {
+         switch (pi.currentSegment(coords))
+         {
+            case PathIterator.SEG_CLOSE:
+              println("\\pgfclosepath");
+            break;
+            case PathIterator.SEG_MOVETO:
+              print("\\pgfpathmoveto{");
+              print(point(cg, coords[0], coords[1]));
+              println("}");
+            break;
+            case PathIterator.SEG_LINETO:
+              print("\\pgfpathlineto{");
+              print(point(cg, coords[0], coords[1]));
+              println("}");
+            break;
+            case PathIterator.SEG_QUADTO:
+              print("\\pgfpathquadraticcurveto{");
+              print(point(cg, coords[0], coords[1]));
+              print("}{");
+              print(point(cg, coords[2], coords[3]));
+              println("}");
+            break;
+            case PathIterator.SEG_CUBICTO:
+              println("\\pgfpathcurveto{");
+              print(point(cg, coords[0], coords[1]));
+              print("}{");
+              print(point(cg, coords[2], coords[3]));
+              print("}{");
+              print(point(cg, coords[4], coords[5]));
+              println("}");
+            break;
+         }
+      }
+   }
+
    public Path relativize(String filename)
    {
       return relativize(new File(filename));

@@ -50,7 +50,7 @@ import com.dickimawbooks.jdr.exceptions.*;
  * @author Nicola L C Talbot
  */
 
-public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
+public class JDRRadial extends JDRAbstractShading implements Paint
 {
    /**
     * Creates a new radial shading with the given start and end 
@@ -81,12 +81,9 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
 
    public JDRRadial(int location, JDRPaint sColor, JDRPaint mColor, JDRPaint eColor)
    {
-      super(sColor.getCanvasGraphics());
+      super(sColor, mColor, eColor);
 
       setStartLocation(location);
-      setStartColor(sColor);
-      setMidColor(mColor);
-      setEndColor(eColor);
 
       startPtx   = 0;
       startPty   = 0;
@@ -103,29 +100,12 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       this(CENTER, new JDRColor(cg), new JDRColor(cg));
    }
 
-   public JDRRadial()
+   protected JDRRadial()
    {
       this(null);
    }
 
-   public Color getColor()
-   {
-      return startColor.getColor();
-   }
-
    @Override
-   public boolean isBlack()
-   {
-      if (hasMidColor())
-      {
-         return startColor.isBlack() && midColor.isBlack() && endColor.isBlack();
-      }
-      else
-      {
-         return startColor.isBlack() && endColor.isBlack();
-      }
-   }
-
    public JDRPaint average(JDRPaint paint)
    {
       JDRRadial radial;
@@ -165,36 +145,6 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       }
 
       return radial;
-   }
-
-   public JDRColor getJDRColor()
-   {
-      return startColor.getJDRColor();
-   }
-
-   public JDRColorCMYK getJDRColorCMYK()
-   {
-      return startColor.getJDRColorCMYK();
-   }
-
-   public JDRColorHSB getJDRColorHSB()
-   {
-      return startColor.getJDRColorHSB();
-   }
-
-   public JDRGray getJDRGray()
-   {
-      return startColor.getJDRGray();
-   }
-
-   public String getPdfStrokeSpecs()
-   {
-      return getJDRColor().getPdfStrokeSpecs();
-   }
-
-   public String getPdfFillSpecs()
-   {
-      return getJDRColor().getPdfFillSpecs();
    }
 
    private void setStartPoint(double x, double y)
@@ -282,6 +232,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       return Math.sqrt(dx*dx+dy*dy);
    }
 
+   @Override
    public Paint getPaint(BBox box)
    {
       update(box);
@@ -494,6 +445,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       return builder.toString();
    }
 
+   @Override
    public String pgffillcolor(BBox box)
    {
       if (box == null)
@@ -528,6 +480,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       return str;
    }
 
+   @Override
    public String getID()
    {
       if (hasMidColor())
@@ -542,17 +495,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    }
 
    @Override
-   public void writeSVGdefs(SVG svg) throws IOException
-   {
-      String id = getID();
-      
-      if (svg.addReferenceID(id))
-      {
-         svgDef(svg, id);
-      }
-   }
-
-   private void svgDef(SVG svg, String id) throws IOException
+   protected void svgDef(SVG svg, String id) throws IOException
    {
       svg.println("      <radialGradient id=\""+getID()+"\"");
       svg.println("         gradientUnits=\"objectBoundingBox\"");
@@ -676,44 +619,6 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       }
    }
 
-   public String svgFill()
-   {
-      return "fill=\"url(#"+getID()+")\"";
-   }
-
-   public String svgLine()
-   {
-      return "stroke=\"url(#"+getID()+")\"";
-   }
-
-   public String svg()
-   {
-      return "url(#"+getID()+")";
-   }
-
-   public double getAlpha()
-   {
-      if (hasMidColor())
-      {
-         return (startColor.getAlpha()+midColor.getAlpha()+endColor.getAlpha())/3;
-      }
-      else
-      {
-         return 0.5*(startColor.getAlpha()+endColor.getAlpha());
-      }
-   }
-
-   public void setAlpha(double alpha)
-   {
-      startColor.setAlpha(alpha);
-      endColor.setAlpha(alpha);
-
-      if (hasMidColor())
-      {
-         midColor.setAlpha(alpha);
-      }
-   }
-
    /**
     * Gets the relative starting location of this shading.
     * @return the relative starting location of this shading
@@ -721,87 +626,6 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
    public int getStartLocation()
    {
       return direction;
-   }
-
-   /**
-    * Gets the start colour for this shading.
-    * @return the start colour for this shading
-    */
-   public JDRPaint getStartColor()
-   {
-      return startColor;
-   }
-
-   /**
-    * Gets the mid colour for this shading.
-    * @return the mid colour for this shading or null if not set
-    */
-   public JDRPaint getMidColor()
-   {
-      return midColor;
-   }
-
-   @Override
-   public boolean hasMidColor()
-   {
-      return midColor != null && !(midColor instanceof JDRTransparent);
-   }
-
-   /**
-    * Gets the end colour for this shading.
-    * @return the end colour for this shading
-    */
-   public JDRPaint getEndColor()
-   {
-      return endColor;
-   }
-
-   /**
-    * Sets the start colour for this shading.
-    * @param sColor the start colour
-    */
-   public void setStartColor(JDRPaint sColor)
-   {
-      if (sColor instanceof JDRShading)
-      {
-         throw new JdrIllegalArgumentException(
-            JdrIllegalArgumentException.SHADING_START, 
-            sColor.getClass().toString(), getCanvasGraphics());
-      }
-
-      startColor = sColor;
-   }
-
-   /**
-    * Sets the mid colour for this shading.
-    * @param mColor the mid colour
-    */
-   public void setMidColor(JDRPaint mColor)
-   {
-      if (mColor instanceof JDRShading)
-      {
-         throw new JdrIllegalArgumentException(
-            JdrIllegalArgumentException.SHADING_MID, 
-            mColor.getClass().toString(), getCanvasGraphics());
-      }
-
-      midColor = mColor;
-   }
-
-   /**
-    * Sets the end colour for this shading.
-    * @param eColor the end colour
-    */
-   public void setEndColor(JDRPaint eColor)
-   {
-      if (eColor instanceof JDRShading)
-      {
-         throw new JdrIllegalArgumentException(
-            JdrIllegalArgumentException.SHADING_END, 
-            eColor.getClass().toString(), getCanvasGraphics());
-      }
-
-      endColor = eColor;
    }
 
    /**
@@ -824,70 +648,6 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       direction = location;
    }
 
-   public void reduceToGreyScale()
-   {
-      startColor = startColor.getJDRGray();
-      endColor = endColor.getJDRGray();
-
-      if (hasMidColor())
-      {
-          midColor = midColor.getJDRGray();
-      }
-   }
-
-   public void convertToCMYK()
-   {
-      startColor = startColor.getJDRColorCMYK();
-      endColor = endColor.getJDRColorCMYK();
-
-      if (hasMidColor())
-      {
-         midColor = midColor.getJDRColorCMYK();
-      }
-   }
-
-   public void convertToRGB()
-   {
-      startColor = startColor.getJDRColor();
-      endColor = endColor.getJDRColor();
-
-      if (hasMidColor())
-      {
-         midColor = midColor.getJDRColor();
-      }
-   }
-
-   public void convertToHSB()
-   {
-      startColor = startColor.getJDRColorHSB();
-      endColor = endColor.getJDRColorHSB();
-
-      if (hasMidColor())
-      {
-         midColor = midColor.getJDRColorHSB();
-      }
-   }
-
-   public String pgfmodel()
-   {
-      return startColor.pgfmodel();
-   }
-
-   public String pgfspecs()
-   {
-      return startColor.pgfmodel();
-   }
-
-   public String pgf(BBox box)
-   {
-      return startColor.pgf(box);
-   }
-
-   public String pgfstrokecolor(BBox box)
-   {
-      return startColor.pgfstrokecolor(box);
-   }
-
    /**
     * Gets the closest matching linear gradient paint.
     * @return closest matching linear gradient paint
@@ -899,6 +659,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
          startColor, midColor, endColor);
    }
 
+   @Override
    public JDRShading convertShading(String label)
    {
       if (label.equals("JDRRadial"))
@@ -1024,37 +785,7 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       return listener;
    }
 
-   public void fade(double value)
-   {
-      startColor.fade(value);
-      endColor.fade(value);
-
-      if (hasMidColor())
-      {
-         midColor.fade(value);
-      }
-   }
-
-   public void setCanvasGraphics(CanvasGraphics cg)
-   {
-      super.setCanvasGraphics(cg);
-
-      if (startColor != null)
-      {
-         startColor.setCanvasGraphics(cg);
-      }
-
-      if (midColor != null)
-      {
-         midColor.setCanvasGraphics(cg);
-      }
-
-      if (endColor != null)
-      {
-         endColor.setCanvasGraphics(cg);
-      }
-   }
-
+   @Override
    public void makeEqual(JDRPaint paint)
    {
       super.makeEqual(paint);
@@ -1062,24 +793,8 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
       JDRRadial rad = (JDRRadial)paint;
 
       direction = rad.direction;
-      startColor.makeEqual(rad.startColor);
-      endColor.makeEqual(rad.startColor);
-
-      if (!rad.hasMidColor())
-      {
-         midColor = null;
-      }
-      else if (midColor == null)
-      {
-         midColor = (JDRPaint)rad.midColor.clone();
-      }
-      else
-      {
-         midColor.makeEqual(rad.midColor);
-      }
    }
 
-   private JDRPaint startColor, endColor, midColor;
    private int direction;
 
    /**
@@ -1118,8 +833,6 @@ public class JDRRadial extends JDRPaint implements Serializable,Paint,JDRShading
     * Shading starts in the centre.
     */
    public final static int CENTER=8;
-
-   private static int pgfshadeid=0;
 
    private double startPtx, startPty, endPtx, endPty;
 

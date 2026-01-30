@@ -62,6 +62,11 @@ public interface JDRShading
    public JDRPaint getEndColor();
 
    /**
+    * Gets a solid colour with the shading colours averaged.
+    */
+   public JDRPaint average();
+
+   /**
     * Converts the start and end colours to grey.
     */
    public void reduceToGreyScale();

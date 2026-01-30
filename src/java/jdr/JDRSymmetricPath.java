@@ -2198,61 +2198,103 @@ public class JDRSymmetricPath extends JDRCompoundShape
       if (stroke instanceof JDRBasicStroke)
       {
          JDRPaint paint = getShapeFillPaint();
-
-         ((JDRBasicStroke)getStroke()).savePgf(tex);
+         JDRShape strokedPath = null;
 
          if (linePaint instanceof JDRShading)
          {
-            String msg = getCanvasGraphics().warning(
+            ExportSettings settings = tex.getExportSettings();
+
+            String msg = canvasGraphics.warningMessage(
+               "stroke shading paint can't be exported to pgf: using export setting ''{0}''",
                "warning.pgf-no-stroke-shading",
-               "stroke shading paint can't be exported to pgf");
+               canvasGraphics.getMessageWithFallback(
+                "export.strokeshading."+settings.strokeShading,
+                 settings.strokeShading.toString()));
 
             tex.comment(msg);
+
+            switch (settings.strokeShading)
+            {
+               case AVERAGE:
+                  linePaint = ((JDRShading)linePaint).average();
+               break;
+               case START:
+                  linePaint = ((JDRShading)linePaint).getStartColor();
+               break;
+               case END:
+                  linePaint = ((JDRShading)linePaint).getEndColor();
+               break;
+               case TO_PATH:
+                  try
+                  {
+                     strokedPath = getFullPath().outlineToPath();
+                  }
+                  catch (InvalidShapeException e)
+                  {
+                     canvasGraphics.debugMessage(e);
+                  }
+               break;
+            }
          }
 
-         if (paint instanceof JDRTransparent)
+         if (strokedPath != null)
          {
-            savePgfPath(tex);
-
-            if (!(linePaint instanceof JDRTransparent))
+            if (!(paint instanceof JDRTransparent))
             {
-               tex.println(linePaint.pgfstrokecolor(pathBBox));
-               tex.println("\\pgfusepath{stroke}");
+               savePgfPath(tex);
+
+               tex.println(paint.pgffillcolor(pathBBox));
             }
+
+            strokedPath.savePgf(tex);
          }
          else
          {
-            savePgfPath(tex);
+            ((JDRBasicStroke)getStroke()).savePgf(tex);
 
-            tex.println(paint.pgffillcolor(pathBBox));
-
-            if (getStroke() instanceof JDRBasicStroke)
+            if (paint instanceof JDRTransparent)
             {
-               tex.println(((JDRBasicStroke)getStroke()).windingRule
-                          == Path2D.WIND_EVEN_ODD ? 
-                      "\\pgfseteorule" :
-                      "\\pgfsetnonzerorule");
-            }
-
-            if (paint instanceof JDRGradient
-             || paint instanceof JDRRadial)
-            {
-               tex.println(linePaint.pgfstrokecolor(pathBBox));
+               savePgfPath(tex);
 
                if (!(linePaint instanceof JDRTransparent))
                {
+                  tex.println(linePaint.pgfstrokecolor(pathBBox));
                   tex.println("\\pgfusepath{stroke}");
                }
             }
-            else if (linePaint instanceof JDRTransparent)
-            {
-               tex.println("\\pgfusepath{fill}");
-            }
             else
             {
-               tex.println(linePaint.pgfstrokecolor(pathBBox));
+               savePgfPath(tex);
 
-               tex.println("\\pgfusepath{fill,stroke}");
+               tex.println(paint.pgffillcolor(pathBBox));
+
+               if (getStroke() instanceof JDRBasicStroke)
+               {
+                  tex.println(((JDRBasicStroke)getStroke()).windingRule
+                             == Path2D.WIND_EVEN_ODD ? 
+                         "\\pgfseteorule" :
+                         "\\pgfsetnonzerorule");
+               }
+
+               if (paint instanceof JDRShading)
+               {
+                  tex.println(linePaint.pgfstrokecolor(pathBBox));
+
+                  if (!(linePaint instanceof JDRTransparent))
+                  {
+                     tex.println("\\pgfusepath{stroke}");
+                  }
+               }
+               else if (linePaint instanceof JDRTransparent)
+               {
+                  tex.println("\\pgfusepath{fill}");
+               }
+               else
+               {
+                  tex.println(linePaint.pgfstrokecolor(pathBBox));
+
+                  tex.println("\\pgfusepath{fill,stroke}");
+               }
             }
          }
       }

@@ -458,7 +458,7 @@ you select the "flowframtk ascii file {0} (*.ajr)" file filter</entry>
 
 <entry key="warning.pgf-no-text-shading">Text shading paint can''t be exported to pgf: using export setting ''{0}''</entry>
 <entry key="warning.pgf-no-textpath-outline">Text-path outline can''t be exported to pgf: using export setting ''{0}''</entry>
-<entry key="warning.pgf-no-stroke-shading">stroke shading paint can''t be exported to pgf</entry>
+<entry key="warning.pgf-no-stroke-shading">stroke shading paint can''t be exported to pgf: using export setting ''{0}''</entry>
 <entry key="warning.pgf-shading-mixed-opacity">pgf shading mixed opacity has been averaged</entry>
 <entry key="warning.pgf-no-marker-shading">marker shading paint can''t be exported to pgf</entry>
 
