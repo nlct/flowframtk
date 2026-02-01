@@ -949,7 +949,7 @@ class ClipTask extends SwingWorker<String,Void>
                builder.append(resources.getMessage(
                  "message.clip.replaced",
                  resources.getDefaultDescription(orgObj),
-                 resources.getMessageWithFallback(canonical, name)
+                 resources.getMessageWithFallback("class."+canonical, name)
                ));
             }
             catch (UnableToClipException e)

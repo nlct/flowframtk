@@ -500,6 +500,14 @@ public class JDRLine extends JDRSegment
       return angle;
    }
 
+   public static double getManhattanDistance(JDRPathSegment seg)
+   {
+      JDRPoint start = seg.getStart();
+      JDRPoint end = seg.getEnd();
+
+      return getManhattanDistance(start.x, start.y, end.x, end.y);
+   }
+
    public static double getManhattanDistance(Point2D p1, Point2D p2)
    {
       return getManhattanDistance(p1.getX(), p1.getY(), p2.getX(), p2.getY());

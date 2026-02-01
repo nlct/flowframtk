@@ -450,7 +450,45 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
          grp.description = description;
       }
 
+      if (showPath)
+      {
+         JDRShape path = getJDRShape();
+
+         grp.add(path);
+      }
+
       return grp;
+   }
+
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      try
+      {
+         return splitText().clip(clipBounds);
+      }
+      catch (InvalidShapeException e)
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            ), e
+         );
+      }
+   }
+
+   @Override
+   public void drawClipDraft()
+   {
+      try
+      {
+         splitText().drawClipDraft();
+      }
+      catch (InvalidShapeException e)
+      {
+         canvasGraphics.debugMessage(e);
+      }
    }
 
    /**
@@ -1398,32 +1436,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       return textPath;
    }
 
-   @Override
-   public JDRCompleteObject clip(Rectangle2D clipBounds)
-      throws UnableToClipException
-   {
-      JDRCompleteObject clippedObj = path_.clip(clipBounds);
-
-      if (clippedObj == null || !(clippedObj instanceof JDRShape))
-      {
-         throw new UnableToClipException(
-            canvasGraphics.getMessageWithFallback(
-              "error.clip_failed", "Clip failed"
-            )
-         );
-      }
-
-      JDRTextPath textPath = new JDRTextPath((JDRShape)clippedObj,
-         (JDRTextPathStroke)getStroke().clone());
-
-      textPath.description = description;
-      textPath.tag = tag;
-
-      assignShowPathAttributesToTextPath(textPath);
-
-      return textPath;
-   }
-
    /**
     * Gets string representation of this textpath.
     * @return string representation of this textpath
@@ -1896,7 +1908,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
    private volatile boolean isOutline = false;
 
-   // TODO
    private boolean showPath = false;
    private JDRBasicStroke showPathStroke;
    private JDRPaint showPathFillPaint, showPathLinePaint;

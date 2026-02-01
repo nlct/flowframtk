@@ -1073,7 +1073,17 @@ public class JDRPath extends JDRShape
          {
             JDRPathSegment seg = list.get(i);
 
-            if (!seg.isGap())
+            if (!seg.isCurve()
+                  && JDRLine.getManhattanDistance(seg) < JDRConstants.EPSILON)
+            {
+               if (prevSeg != null)
+               {
+                  prevSeg.setStart(seg.getStart());
+               }
+
+               list.remove(i);
+            }
+            else if (!seg.isGap())
             {
                hasNonGap = true;
             }
@@ -1101,6 +1111,18 @@ public class JDRPath extends JDRShape
          if (list.isEmpty())
          {
             throw new EmptyPathException(canvasGraphics);
+         }
+
+         segment = list.lastElement();
+
+         if (segment.isGap())
+         {
+            list.remove(list.size()-1);
+
+            if (list.isEmpty())
+            {
+               throw new EmptyPathException(canvasGraphics);
+            }
          }
 
          JDRPath newPath = new JDRPath(canvasGraphics,
