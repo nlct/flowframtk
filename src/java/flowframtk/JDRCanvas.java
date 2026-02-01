@@ -395,6 +395,7 @@ public class JDRCanvas extends JPanel
       addAppSelectAction("xor");
       addAppSelectAction("intersect");
       addAppSelectAction("subtract");
+      addAppSelectAction("clip");
       addAppSelectAction("pattern");
       addAppSelectAction("pattern.set");
       addAppSelectAction("pattern.edit");
@@ -11992,6 +11993,13 @@ public class JDRCanvas extends JPanel
          UndoableEdit edit = new XORPaths(list);
          frame_.postEdit(edit);
       }
+      catch (InvalidShapeException e)
+      {
+         getResources().debug(this, e);
+
+         getResources().error(this,
+            getResources().getMessage("error.shape_function_failed"));
+      }
       catch (Throwable e)
       {
          // This shouldn't happen
@@ -12033,6 +12041,13 @@ public class JDRCanvas extends JPanel
       {
          UndoableEdit edit = new PathIntersect(list);
          frame_.postEdit(edit);
+      }
+      catch (InvalidShapeException e)
+      {
+         getResources().debug(this, e);
+
+         getResources().error(this,
+            getResources().getMessage("error.shape_function_failed"));
       }
       catch (Throwable e)
       {
@@ -12076,9 +12091,15 @@ public class JDRCanvas extends JPanel
          UndoableEdit edit = new SubtractPaths(list);
          frame_.postEdit(edit);
       }
+      catch (InvalidShapeException e)
+      {
+         getResources().debug(this, e);
+
+         getResources().error(this,
+            getResources().getMessage("error.shape_function_failed"));
+      }
       catch (Throwable e)
       {
-         // This shouldn't happen
          getResources().internalError(frame_, e);
       }
    }
@@ -12118,10 +12139,51 @@ public class JDRCanvas extends JPanel
          UndoableEdit edit = new PathUnion(list);
          frame_.postEdit(edit);
       }
+      catch (InvalidShapeException e)
+      {
+         getResources().debug(this, e);
+
+         getResources().error(this,
+            getResources().getMessage("error.shape_function_failed"));
+      }
       catch (Throwable e)
       {
          // This shouldn't happen
          getResources().internalError(frame_, e);
+      }
+   }
+
+   public void replace(Vector<OldNewObject> objects, String undoName)
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+      UndoableEdit edit = null;
+
+      for (int i = objects.size()-1; i >= 0; i--)
+      {
+         OldNewObject oldNewObject = objects.get(i);
+
+         JDRCompleteObject oldObj = oldNewObject.getOldObject();
+         JDRCompleteObject newObj = oldNewObject.getNewObject();
+
+         if (oldNewObject.hasChanged())
+         {
+            if (newObj == null)
+            {
+               edit = new RemoveObject(oldObj, oldObj.getIndex(), undoName);
+            }
+            else
+            {
+               edit = new ReplaceObject(oldNewObject, undoName);
+            }
+
+            ce.addEdit(edit);
+         }
+      }
+
+      if (edit != null)
+      {
+         ce.end();
+         frame_.postEdit(ce);
       }
    }
 
@@ -13276,13 +13338,25 @@ public class JDRCanvas extends JPanel
 
    class RemoveObject extends CanvasUndoableEdit
    {
+      private String undoName;
       private int index_;
       private JDRCompleteObject object_;
 
+      public RemoveObject(JDRCompleteObject object)
+      {
+         this(object, object.getIndex());
+      }
+
       public RemoveObject(JDRCompleteObject object, int i)
+      {
+         this(object, i,  getResources().getMessage("undo.delete"));
+      }
+
+      public RemoveObject(JDRCompleteObject object, int i, String undoName)
       {
          super(getFrame());
 
+         this.undoName = undoName;
          object_ = object;
          index_ = i;
          paths.remove(index_);
@@ -13315,7 +13389,7 @@ public class JDRCanvas extends JPanel
 
       public String getPresentationName()
       {
-         return getResources().getMessage("undo.delete");
+         return undoName;
       }
    }
 
@@ -13654,6 +13728,62 @@ public class JDRCanvas extends JPanel
       public String getPresentationName()
       {
          return getResources().getMessage("undo.convert_to_path");
+      }
+   }
+
+   class ReplaceObject extends CanvasUndoableEdit
+   {
+      private String name;
+      private int index_;
+      private JDRCompleteObject oldObject, newObject;
+
+      public ReplaceObject(OldNewObject oldNewObject, String undoName)
+      {
+         super(getFrame());
+
+         name = undoName;
+         oldObject = oldNewObject.getOldObject();
+         index_ = oldNewObject.getIndex();
+
+         newObject = oldNewObject.getNewObject();
+
+         BBox box = oldObject.getStorageBBox();
+
+         paths.set(index_, newObject);
+         enableTools();
+
+         mergeRefreshBounds(newObject, box);
+
+         setRefreshBounds(box);
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+         paths.set(index_, oldObject);
+
+         enableTools();
+
+         repaintRegion();
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+         paths.set(index_, newObject);
+
+         enableTools();
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return name;
       }
    }
 

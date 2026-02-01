@@ -152,6 +152,28 @@ public class JDRPartialSegment extends JDRObject
          new JDRPoint(getCanvasGraphics(), midP), line_);
    }
 
+   @Override
+   public void clip(Vector<JDRPathSegment> list, Rectangle2D clipBounds)
+   {
+      JDRSegment fullSeg = getFullSegment();
+
+      if (fullSeg.isInside(clipBounds))
+      {
+         list.add((JDRPathSegment) clone() );
+      }
+      else
+      {
+         fullSeg.clip(list, clipBounds);
+
+         if (!list.isEmpty())
+         {
+            JDRPathSegment seg = list.lastElement();
+
+            list.add(new JDRPartialSegment(seg.getEnd(), line_));
+         }
+      }
+   }
+
    public Object clone()
    {
       return new JDRPartialSegment(this);

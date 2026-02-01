@@ -753,6 +753,31 @@ implements JDRPathChangeListener
       return segment;
    }
 
+   @Override
+   public void clip(Vector<JDRPathSegment> list, Rectangle2D clipBounds)
+   {
+      if (subPathStart == null)
+      {
+         list.add(new JDRSegment(canvasGraphics, start.x, start.y, end.x, end.y));
+      }
+      else if (clipBounds.contains(start.x, start.y)
+            && clipBounds.contains(subPathStart.x, subPathStart.y)
+            && clipBounds.contains(end.x, end.y)
+             )
+      {
+         list.add((JDRPathSegment)clone());
+      }
+      else
+      {
+         JDRLine line = new JDRLine(canvasGraphics, start.x, start.y,
+           subPathStart.x, subPathStart.y);
+
+         line.clip(list, clipBounds);
+
+         list.add(new JDRSegment(canvasGraphics, subPathStart.x, subPathStart.y,
+           end.x, end.y));
+      }
+   }
 
    public void saveSVG(SVG svg, String attr)
       throws IOException

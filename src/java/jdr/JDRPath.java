@@ -1029,6 +1029,132 @@ public class JDRPath extends JDRShape
    }
 
    /**
+    * Returns a new path created from the segments of this path
+    * clipped within the given bounds.
+    * @return the new clipped path
+    */
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      try
+      {
+         if (isClosed())
+         {
+            Area area1 = new Area(getGeneralPath());
+            Area area2 = new Area(clipBounds);
+
+            area1.intersect(area2);
+
+            JDRPath newPath = getPath(canvasGraphics,
+               area1.getPathIterator(null));
+
+            newPath.setAttributes(this);
+
+            return newPath;
+         }
+
+         Vector<JDRPathSegment> list = new Vector<JDRPathSegment>();
+
+         for (int i = 0; i < size_; i++)
+         {
+            segmentList_[i].clip(list, clipBounds);
+         }
+
+         if (list.isEmpty())
+         {
+            throw new EmptyPathException(canvasGraphics);
+         }
+
+         JDRPathSegment prevSeg = null;
+         boolean hasNonGap = false;
+
+         for (int i = list.size()-1; i >= 0; i--)
+         {
+            JDRPathSegment seg = list.get(i);
+
+            if (!seg.isGap())
+            {
+               hasNonGap = true;
+            }
+            else if (prevSeg != null && prevSeg.isGap())
+            {
+               prevSeg.setStart(seg.getStart());
+               list.remove(i);
+            }
+
+            prevSeg = seg;
+         }
+
+         if (!hasNonGap)
+         {
+            throw new EmptyPathException(canvasGraphics);
+         }
+
+         JDRPathSegment segment = list.firstElement();
+
+         if (segment.isGap())
+         {
+            list.remove(0);
+         }
+
+         if (list.isEmpty())
+         {
+            throw new EmptyPathException(canvasGraphics);
+         }
+
+         JDRPath newPath = new JDRPath(canvasGraphics,
+           (JDRPaint)linePaint.clone(), (JDRPaint)fillPaint.clone(),
+           (JDRStroke)stroke.clone());
+
+         for (int i = 0; i < list.size(); i++)
+         {
+            JDRPathSegment pathSeg = list.get(i);
+
+            // There shouldn't be any partial segments but check anyway
+
+            JDRSegment seg;
+
+            if (pathSeg instanceof JDRPartialSegment)
+            {
+               seg = ((JDRPartialSegment)pathSeg).getFullSegment();
+            }
+            else
+            {
+               seg = (JDRSegment)pathSeg;
+            }
+
+            try
+            {
+               newPath.add(seg);
+            }
+            catch (ClosingMoveException e)
+            {
+               newPath.segmentList_[e.getSegmentIndex()]
+                 = e.getSegment().convertToNonClosingMove();
+            }
+         }
+
+         if (newPath.isEmpty())
+         {
+            throw new EmptyPathException(canvasGraphics);
+         }
+
+         newPath.setAttributes(this);
+
+         return newPath;
+      }
+      catch (InvalidShapeException e)
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            ), e
+         );
+      }
+   }
+
+   /**
     * Returns the number of segments in this path.
     * @return the number of segments in this path
     */

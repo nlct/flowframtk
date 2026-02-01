@@ -1809,6 +1809,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
         closed, markerSymmetry);
    }
 
+   @Override
    public JDRShape reverse() throws InvalidShapeException
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -1834,28 +1835,50 @@ public class JDRSymmetricPath extends JDRCompoundShape
         closed, markerSymmetry);
    }
 
+   @Override
    public JDRShape intersect(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().intersect(shape);
    }
 
+   @Override
    public JDRShape pathUnion(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().pathUnion(shape);
    }
 
+   @Override
    public JDRShape exclusiveOr(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().exclusiveOr(shape);
    }
 
+   @Override
    public JDRShape subtract(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().subtract(shape);
+   }
+
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      try
+      {
+         return getFullPath().clip(clipBounds);
+      }
+      catch (InvalidShapeException e)
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            ), e
+         );
+      }
    }
 
    public JDRObjectLoaderListener getListener()

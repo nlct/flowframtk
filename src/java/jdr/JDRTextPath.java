@@ -1398,6 +1398,32 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       return textPath;
    }
 
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      JDRCompleteObject clippedObj = path_.clip(clipBounds);
+
+      if (clippedObj == null || !(clippedObj instanceof JDRShape))
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            )
+         );
+      }
+
+      JDRTextPath textPath = new JDRTextPath((JDRShape)clippedObj,
+         (JDRTextPathStroke)getStroke().clone());
+
+      textPath.description = description;
+      textPath.tag = tag;
+
+      assignShowPathAttributesToTextPath(textPath);
+
+      return textPath;
+   }
+
    /**
     * Gets string representation of this textpath.
     * @return string representation of this textpath

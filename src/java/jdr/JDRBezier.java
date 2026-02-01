@@ -970,6 +970,69 @@ public class JDRBezier extends JDRSegment
       return newSegment;
    }
 
+   @Override
+   public boolean isInside(Rectangle2D rect)
+   {
+      return rect.contains(start.x, start.y) 
+        && rect.contains(control1.x, control1.y)
+        && rect.contains(control2.x, control2.y)
+        && rect.contains(end.x, end.y);
+   }
+
+   @Override
+   public void clip(Vector<JDRPathSegment> list, Rectangle2D clipBounds)
+   {
+      boolean startInside = clipBounds.contains(start.x, start.y);
+      boolean control1Inside = clipBounds.contains(control1.x, control1.y);
+      boolean control2Inside = clipBounds.contains(control2.x, control2.y);
+      boolean endInside = clipBounds.contains(end.x, end.y);
+
+      if (startInside && control1Inside && control2Inside && endInside)
+      {
+         list.add(new JDRBezier(canvasGraphics, start.x, start.y,
+           control1.x, control1.y, control2.x, control2.y, end.x, end.y));
+      }
+      else if (!startInside && !control1Inside && !control2Inside && !endInside)
+      {
+         list.add(new JDRSegment(canvasGraphics, start.x, start.y, end.x, end.y));
+      }
+      else
+      {
+         double estLength = canvasGraphics.getStorageUnit().toBp(getEstimatedLength());
+
+         if (estLength <= 2)
+         {
+            convertToLine().clip(list, clipBounds);
+         }
+         else
+         {
+            JDRBezier curve1 = new JDRBezier(canvasGraphics, 
+               start.x, start.y, control1.x, control1.y, control2.x, control2.y,
+               end.x, end.y);
+
+            JDRBezier curve2 = (JDRBezier)curve1.split();
+
+            if (curve1.isInside(clipBounds))
+            {
+               list.add(curve1);
+            }
+            else
+            {
+               curve1.clip(list, clipBounds);
+            }
+
+            if (curve2.isInside(clipBounds))
+            {
+               list.add(curve2);
+            }
+            else
+            {
+               curve2.clip(list, clipBounds);
+            }
+         }
+      }
+   }
+
    /**
     * Creates a copy of this object.
     * @return copy of this object

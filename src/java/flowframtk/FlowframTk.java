@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(202);
+      invoker.setStartupDeterminate(203);
 
       // create menu bar, menu and menu item
 
@@ -2000,6 +2000,25 @@ public class FlowframTk extends JFrame
          });
 
       incStartupProgress(transformM, subtractPathsItem);
+
+      // Clip
+
+      clipDialog = new ClipDialog(this);
+
+      JMenuItem clipPathsItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "clip", transformM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_OBJECT,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               clipDialog.display(action.getFrame());
+            }
+         });
+
+      incStartupProgress(transformM, clipPathsItem);
 
       // Convert to polygon
 
@@ -7742,6 +7761,7 @@ public class FlowframTk extends JFrame
    private PatternDialogBox patternBox;
    private VectorizeBitmapDialog vectorizeBitmapDialog;
    private ConvertToPolygonDialog convertToPolygonDialog;
+   private ClipDialog clipDialog;
    private CreatePathFromSvgDialog createPathFromSvgDialog;
    private FadeDialogBox fadeDialog;
    private TeXEditorDialog texEditorDialog;

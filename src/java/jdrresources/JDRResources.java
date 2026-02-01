@@ -478,7 +478,7 @@ public class JDRResources
     * @param parent the dialog box's parent
     * @param message the error message
     */
-   public void error(Component parent, String[] message)
+   public void error(Component parent, String... message)
    {
       error(parent, String.join(String.format("%n"), message));
    }
@@ -488,7 +488,7 @@ public class JDRResources
     * is set to null.
     * @param message the error message
     */
-   public void error(String[] message)
+   public void error(String... message)
    {
       error(null, message);
    }

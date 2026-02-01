@@ -159,6 +159,16 @@ public interface JDRPathSegment extends Cloneable,Serializable
     */
    public Point2D getdP1();
 
+   /**
+    * Clip this segment to the given bounds and add the clip
+    * segment(s) to the list.
+    * If the segment lies completely outside the bounds, add a move
+    * (gap). If the segment lies completely inside the bounds, add a
+    * copy of this segment. Otherwise split the segment up and add
+    * the fragments to the list.
+    */
+   public void clip(Vector<JDRPathSegment> list, Rectangle2D clipBounds);
+
    public JDRMarker getStartMarker();
 
    public JDRMarker getEndMarker();

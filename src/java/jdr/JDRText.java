@@ -53,7 +53,7 @@ import com.dickimawbooks.jdr.exceptions.*;
  */
 
 public class JDRText extends JDRCompleteObject
-   implements JDRTextual,JDRConstants
+   implements JDRTextual,JDRConstants,JDRClippable
 {
    /**
     * Creates an empty text area at the origin.
@@ -742,6 +742,37 @@ public class JDRText extends JDRCompleteObject
 */
 
       return group;
+   }
+
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      try
+      {
+         return convertToPath().clip(clipBounds);
+      }
+      catch (InvalidFormatException e)
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            ), e
+         );
+      }
+   }
+
+   @Override
+   public void drawClipDraft()
+   {
+      try
+      {
+         convertToPath().drawClipDraft();
+      }
+      catch (InvalidFormatException e)
+      {
+         canvasGraphics.debugMessage(e);
+      }
    }
 
    /**

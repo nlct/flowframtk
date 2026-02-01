@@ -23,6 +23,7 @@
 
 package com.dickimawbooks.jdr;
 
+import java.util.Vector;
 import java.io.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -119,6 +120,121 @@ public class JDRLine extends JDRSegment
       end = midPt;
 
       return newSegment;
+   }
+
+   @Override
+   public void clip(Vector<JDRPathSegment> list, Rectangle2D clipBounds)
+   {
+      boolean startInside = clipBounds.contains(start.x, start.y);
+      boolean endInside = clipBounds.contains(end.x, end.y);
+
+      if (startInside && endInside)
+      {
+         list.add(new JDRLine(canvasGraphics, start.x, start.y, end.x, end.y));
+      }
+      else if (!startInside && !endInside)
+      {
+         list.add(new JDRSegment(canvasGraphics, start.x, start.y, end.x, end.y));
+      }
+      else
+      {
+         Point2D intersect = null;
+   
+         double clipMinX = clipBounds.getMinX();
+         double clipMinY = clipBounds.getMinY();
+         double clipMaxX = clipBounds.getMaxX();
+         double clipMaxY = clipBounds.getMaxY();
+   
+         Point2D p2 = null;
+         boolean below, above, left, right;
+   
+         if (startInside)
+         {
+            below = (end.y >= clipMaxY);
+            above = (end.y <= clipMinY);
+            left = (end.x <= clipMinX);
+            right = (end.x >= clipMaxX);
+         }
+         else
+         {
+            below = (start.y >= clipMaxY);
+            above = (start.y <= clipMinY);
+            left = (start.x <= clipMinX);
+            right = (start.x >= clipMaxX);
+         }
+   
+         if (below)
+         {
+            intersect = getIntersection(start.x, start.y, end.x, end.y,
+              clipMinX, clipMaxY, clipMaxX, clipMaxY);
+   
+            if (left)
+            {
+               p2 = getIntersection(start.x, start.y, end.x, end.y,
+                clipMinX, clipMinY, clipMinX, clipMaxY);
+            }
+            else if (right)
+            {
+               p2 = getIntersection(start.x, start.y, end.x, end.y,
+                clipMaxX, clipMaxY, clipMinX, clipMaxY);
+            }
+         }
+         else if (above)
+         {
+            intersect = getIntersection(start.x, start.y, end.x, end.y,
+              clipMinX, clipMinY, clipMaxX, clipMinY);
+   
+            if (left)
+            {
+               p2 = getIntersection(start.x, start.y, end.x, end.y,
+                clipMinX, clipMinY, clipMinX, clipMaxY);
+            }
+            else if (right)
+            {
+               p2 = getIntersection(start.x, start.y, end.x, end.y,
+                clipMaxX, clipMaxY, clipMinX, clipMaxY);
+            }
+         }
+         else if (left)
+         {
+            intersect = getIntersection(start.x, start.y, end.x, end.y,
+             clipMinX, clipMinY, clipMinX, clipMaxY);
+         }
+         else if (right)
+         {
+            intersect = getIntersection(start.x, start.y, end.x, end.y,
+             clipMaxX, clipMaxY, clipMinX, clipMaxY);
+         }
+   
+         if (intersect == null 
+          || (p2 != null
+               && (clipBounds.contains(p2) || !clipBounds.contains(intersect))))
+         {
+            intersect = p2;
+         }
+   
+         if (intersect == null)
+         {
+            list.add(new JDRSegment(canvasGraphics, start.x, start.y, end.x, end.y));
+         }
+         else if (startInside)
+         {
+            list.add(new JDRLine(canvasGraphics, start.x, start.y,
+                            intersect.getX(), intersect.getY()));
+   
+            list.add(new JDRSegment(canvasGraphics,
+                            intersect.getX(), intersect.getY(),
+                            end.x, end.y));
+         }
+         else
+         {
+            list.add(new JDRSegment(canvasGraphics,
+                            start.x, start.y, intersect.getX(), intersect.getY()));
+   
+            list.add(new JDRLine(canvasGraphics,
+                            intersect.getX(), intersect.getY(), end.x, end.y));
+         }
+      }
    }
 
    public Object clone()
@@ -512,11 +628,21 @@ public class JDRLine extends JDRSegment
    public static Point2D getIntersection(Point2D r1, Point2D r2,
      Point2D q1, Point2D q2)
    {
-      double rxdiff = r2.getX() - r1.getX();
-      double rydiff = r2.getY() - r1.getY();
+      return getIntersection(r1.getX(), r1.getY(), r2.getX(), r2.getY(),
+       q1.getX(), q1.getY(), q2.getX(), q2.getY());
+   }
 
-      double qxdiff = q2.getX() - q1.getX();
-      double qydiff = q2.getY() - q1.getY();
+   public static Point2D getIntersection(
+     double r1x, double r1y,
+     double r2x, double r2y,
+     double q1x, double q1y,
+     double q2x, double q2y)
+   {
+      double rxdiff = r2x - r1x;
+      double rydiff = r2y - r1y;
+
+      double qxdiff = q2x - q1x;
+      double qydiff = q2y - q1y;
 
       double one_over_rxdiff = 1.0/rxdiff;
       double one_over_rydiff = 1.0/rydiff;
@@ -536,37 +662,37 @@ public class JDRLine extends JDRSegment
       if (Double.isInfinite(one_over_rxdiff))
       {// r1 -- r2 is vertical
        // intersection must occur when x = r2.getX() = r1.getX()
-         double t = (r1.getX() - q1.getX()) * one_over_qxdiff;
-         double y = q1.getY() + t * qydiff;
+         double t = (r1x - q1x) * one_over_qxdiff;
+         double y = q1y + t * qydiff;
 
-         return new Point2D.Double(r1.getX(), y);
+         return new Point2D.Double(r1x, y);
       }
 
       if (Double.isInfinite(one_over_qxdiff))
       {// q1 -- q2 is vertical
        // intersection must occur when x = q2.getX() = q1.getX()
-         double t = (q1.getX() - r1.getX()) * one_over_rxdiff;
-         double y = r1.getY() + t * rydiff;
+         double t = (q1x - r1x) * one_over_rxdiff;
+         double y = r1y + t * rydiff;
 
-         return new Point2D.Double(q1.getX(), y);
+         return new Point2D.Double(q1x, y);
       }
 
       if (Double.isInfinite(one_over_rydiff))
       {// r1 -- r2 is horizontal
        // intersection must occur when y = r2.getY() = r1.getY()
-         double t = (r1.getY() - q1.getY()) * one_over_qydiff;
-         double x = q1.getX() + t * qxdiff;
+         double t = (r1y - q1y) * one_over_qydiff;
+         double x = q1x + t * qxdiff;
 
-         return new Point2D.Double(x, r1.getY());
+         return new Point2D.Double(x, r1y);
       }
 
       if (Double.isInfinite(one_over_qydiff))
       {// q1 -- q2 is horizontal
        // intersection must occur when y = q2.getY() = q1.getY()
-         double t = (q1.getY() - r1.getY()) * one_over_rydiff;
-         double x = r1.getX() + t * rxdiff;
+         double t = (q1y - r1y) * one_over_rydiff;
+         double x = r1x + t * rxdiff;
 
-         return new Point2D.Double(x, q1.getY());
+         return new Point2D.Double(x, q1y);
       }
 
       double factor = 1.0/(rydiff * qxdiff - qydiff * rxdiff);
@@ -577,9 +703,9 @@ public class JDRLine extends JDRSegment
       }
 
       double t = factor * 
-        ((q1.getY() - r1.getY())*rxdiff - rydiff * (q1.getX() - r1.getX()));
+        ((q1y - r1y)*rxdiff - rydiff * (q1x - r1x));
 
-      return new Point2D.Double(q1.getX() + t * qxdiff, q1.getY() + t * qydiff);
+      return new Point2D.Double(q1x + t * qxdiff, q1y + t * qydiff);
    }
 
    public JDRObjectLoaderListener getListener()

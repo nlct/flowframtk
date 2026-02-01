@@ -670,6 +670,17 @@ public class JDRSegment extends JDRObject
       return newSegment;
    }
 
+   public boolean isInside(Rectangle2D rect)
+   {
+      return rect.contains(start.x, start.y) && rect.contains(end.x, end.y);
+   }
+
+   @Override
+   public void clip(Vector<JDRPathSegment> list, Rectangle2D clipBounds)
+   {
+      list.add(new JDRSegment(canvasGraphics, start.x, start.y, end.x, end.y));
+   }
+
    /**
     * Gets a copy of this segment.
     * @return a copy of this segment

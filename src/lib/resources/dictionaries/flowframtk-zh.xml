@@ -527,6 +527,8 @@
 <entry key="menu.transform.intersect">Path Intersect</entry>
 <entry key="menu.transform.intersect.mnemonic">I</entry>
 
+<entry key="menu.transform.clip">Clip...</entry>
+
 <entry key="menu.transform.split">将文本分解成单字(X)</entry>
 <entry key="menu.transform.split.mnemonic">X</entry>
 <entry key="menu.transform.split.tooltip">Split each selected text area into a group of text areas</entry>
@@ -1526,6 +1528,7 @@
 <entry key="undo.convert_to_textpath">Convert to Text Path</entry>
 <entry key="undo.convert_to_pattern">Convert to Pattern</entry>
 <entry key="undo.convert_to_polygon">Convert to Polygon</entry>
+<entry key="undo.clip">Clip</entry>
 <entry key="undo.distort">Start Distortion</entry>
 <entry key="undo.distort_end">Distortion</entry>
 <entry key="undo.deiconify_child_window">关闭子窗口</entry>
@@ -1776,6 +1779,32 @@
 <entry key="polygon.area">Polygon area: {0} {1}²</entry>
 <entry key="polygon.no_curves">Shape is already a polygon.</entry>
 <entry key="polygon.confirm_discard">Are you sure you want to discard the polygon?</entry>
+
+<!-- Clip Shapes Dialog -->
+
+<entry key="clip.title">Clip</entry>
+
+<entry key="clip.bounds">Clip Bounds</entry>
+
+<entry key="clip.bounds.pos">Location</entry>
+
+<entry key="clip.bounds.pos.x">X:</entry>
+<entry key="clip.bounds.pos.y">Y:</entry>
+
+<entry key="clip.bounds.size">Size</entry>
+
+<entry key="clip.bounds.size.x">Width:</entry>
+<entry key="clip.bounds.size.y">Height:</entry>
+
+<entry key="clip.dotask">Calculate Clipping</entry>
+<entry key="clip.dotask.mnemonic">P</entry>
+<entry key="clip.dotask.iconimage">dotask</entry>
+
+<entry key="clip.reload">Reset</entry>
+<entry key="clip.reload.mnemonic">R</entry>
+<entry key="clip.reload.iconimage">reload</entry>
+
+<entry key="clip.confirm_discard">Are you sure you want to discard the clipped shapes?</entry>
 
 <!-- Create Path from SVG Specs Dialog -->
 
@@ -4418,10 +4447,19 @@ Merge Region: {2}</entry>
 <entry key="message.vectorize_in_progress.confirm_close">Unfinished vectorize bitmap task in progress for image ''{0}'' (bitmap ''{1}''). Are you sure you want to discard it?</entry>
 <entry key="message.please_wait">Please wait.</entry>
 
+<entry key="message.clip.removed">{0}: object will be removed</entry>
+<entry key="message.clip.unchanged">{0}: object will be unchanged</entry>
+<entry key="message.clip.replaced">{0}: object will be replaced with {1}</entry>
+<entry key="message.clip.not_supported">{0}: clipping not supported</entry>
+<entry key="message.clip.info">Adjust the clipping boundary either by dragging the clipping area or use the widgets below. Once the clipping area is in the correct position, click on the {0} button and the results will be shown in the panel. If you are happy with the changes, click {1} to implement them.</entry>
+
 
 <!--  Error Messages -->
 
 <entry key="error.cant_create_intersect">Can't create intersection</entry>
+<entry key="error.clip_failed">Clip failed (maybe completely outside of clipping region)</entry>
+<entry key="error.not_clippable">Clipping not supported for selected object</entry>
+<entry key="error.no_clippable_objects">No clippable objects in selection</entry>
 <entry key="error.conf.bad_paint_format">不适当的绘图格式, 行号: {0}</entry>
 <entry key="error.conf.boolean_value">逻辑值应当取值为0或1, 行号: {0}</entry>
 <entry key="error.conf.color">Color specifier (&lt;rgb&gt; or &lt;rgb,alpha&gt;) expected on line {0}</entry>
@@ -4489,7 +4527,8 @@ i<entry key="error.conf.invalid_path.segment">Invalid path segment specification
 You will first have to replace the blocking closing move (segment index {0}, from ({1},{2}) to ({3},{4})) with a non closing move.</entry>
 <entry key="error.closed_subpath_named_action">Unable to perform action ''{0}'' due to closing move.
 You will first have to replace the blocking closing move (segment index {1}, from ({2},{3}) to ({4},{5})) with a non closing move.</entry>
-
+<entry key="error.shape_function_failed">This function can''t be applied to the current selection.
+This is probably because the result would contain an empty or otherwise invalid shape.</entry>
 
 <!--  Internal Error Messages -->
 

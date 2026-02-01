@@ -40,7 +40,7 @@ import com.dickimawbooks.jdr.exceptions.*;
  */
 
 public abstract class JDRShape extends JDRCompleteObject
-  implements JDRDistortable
+  implements JDRDistortable, JDRClippable
 {
    public JDRShape(CanvasGraphics cg)
    {
@@ -124,6 +124,16 @@ public abstract class JDRShape extends JDRCompleteObject
     */
    public abstract JDRShape subtract(JDRShape shape)
       throws InvalidShapeException;
+
+   /**
+    * Returns a new shape created by clipping this shape
+    * to the given bounds. If closed, this is the same
+    * as intersect(JDRShape) otherwise the new shape is created from 
+    * the segments of this path clipped within the given bounds
+    * @return the new clipped path
+    */
+   public abstract JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException;
 
    /**
     * Creates a new shape from the stroked outline of this shape.
@@ -1389,6 +1399,20 @@ public abstract class JDRShape extends JDRCompleteObject
       {
          g2.setTransform(af);
       }
+   }
+
+   @Override
+   public void drawClipDraft()
+   {
+      Paint orgPaint = canvasGraphics.getPaint();
+
+      canvasGraphics.setPaint(draftColor);
+
+      Path2D p = getComponentGeneralPath();
+
+      canvasGraphics.draw(p);
+
+      canvasGraphics.setPaint(orgPaint);
    }
 
    public void fill()

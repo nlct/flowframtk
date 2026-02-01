@@ -58,7 +58,7 @@ import com.dickimawbooks.jdr.exceptions.*;
  */
 
 public class JDRGroup extends JDRCompleteObject 
-   implements JDRDistortable
+   implements JDRDistortable, JDRClippable
 {
    /**
     * Initialises an empty group.
@@ -2713,6 +2713,64 @@ t
          ((JDRDistortable)objectList_[i]).distort(
              ((JDRDistortable)orgGrp.get(i)),
               area, trans);
+      }
+   }
+
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      JDRGroup group = new JDRGroup(canvasGraphics);
+      boolean changed = false;
+
+      for (int i = 0; i < size(); i++)
+      {
+         JDRCompleteObject obj = get(i);
+
+         if (obj instanceof JDRClippable)
+         {
+            try
+            {
+               JDRCompleteObject newObj = ((JDRClippable)obj).clip(clipBounds);
+
+               group.add(newObj);
+
+               changed = true;
+            }
+            catch (UnableToClipException e)
+            {
+               canvasGraphics.debugMessage(e);
+            }
+         }
+         else
+         {
+            group.add((JDRCompleteObject)obj.clone());
+         }
+      }
+
+      if (!changed || group.isEmpty())
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            )
+         );
+      }
+
+      return group;
+   }
+
+   @Override
+   public void drawClipDraft()
+   {
+      for (int i = 0; i < size(); i++)
+      {
+         JDRCompleteObject obj = get(i);
+
+         if (obj instanceof JDRClippable)
+         {
+            ((JDRClippable)obj).drawClipDraft();
+         }
       }
    }
 

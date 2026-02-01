@@ -198,28 +198,50 @@ public abstract class JDRPattern extends JDRCompoundShape
       return group;
    }
 
+   @Override
    public JDRShape intersect(JDRShape shape)
        throws InvalidShapeException
    {
       return getFullPath().intersect(shape);
    }
 
+   @Override
    public JDRShape pathUnion(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().pathUnion(shape);
    }
 
+   @Override
    public JDRShape exclusiveOr(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().exclusiveOr(shape);
    }
 
+   @Override
    public JDRShape subtract(JDRShape shape)
       throws InvalidShapeException
    {
       return getFullPath().subtract(shape);
+   }
+
+   @Override
+   public JDRCompleteObject clip(Rectangle2D clipBounds)
+      throws UnableToClipException
+   {
+      try
+      {
+         return getFullPath().clip(clipBounds);
+      }
+      catch (InvalidShapeException e)
+      {
+         throw new UnableToClipException(
+            canvasGraphics.getMessageWithFallback(
+              "error.clip_failed", "Clip failed"
+            ), e
+         );
+      }
    }
 
    public BBox getStorageControlBBox()
@@ -1815,6 +1837,9 @@ public abstract class JDRPattern extends JDRCompoundShape
 
        JDRPath newPath = JDRPath.getPath(getCanvasGraphics(), 
              fullPath.getPathIterator(null));
+
+       newPath.description = description;
+       newPath.tag = tag;
 
        JDRStroke stroke = path_.getStroke();
 

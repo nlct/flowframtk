@@ -9279,6 +9279,66 @@ subtracted from the underlying path of the text-path.}
  sec:busexample
 }
 
+\section{Clipping Shapes}\label{sec:clipping}
+
+The \gls{cag} functions such as \transformfn{intersect} work on
+areas. This means that the resulting shape will be closed, even if
+the original was open. If you want a closed shape to be clipped to
+another closed shape, then the \transformfn{intersect} function is
+the best method.
+
+\menudef{menu.transform.clip}
+
+The \menu{transform.clip} menu item can clip selected \glspl{shape}
+to lie within a rectangular clipping area. If a \gls{shape} lies
+entirely within the clipping area then no change is made.
+If a \gls{shape} lies entirely outside the clipping area, then the
+shape will be removed.
+
+If a \gls{shape} straddles the clipping area, then it will be
+replaced by a new \gls{path} that has the same segments except for
+those that lie outside the clipping area, which will be replaced by
+a move (gap), and segments that cross the boundary will be split to
+fit.
+
+\begin{important}
+As with the \gls{cag} functions, the original \glspl{shape} can't be
+recovered (except via the \menu{edit.undo} function).
+The \gls{line-style} is not taken into account by the clipping
+function. The replacement path will be given the same
+\gls{line-style} as the original.
+\end{important}
+
+Any \glspl{compositeshape} that need to be clipped will have the
+clipping applied to the full path. The result will just be a
+\gls{path} not a \gls{compositeshape}. Any selected objects that
+can't be clipped will be ignored.
+
+\widgetdef{clip.title}
+
+The \menu{transform.clip} menu item opens the \dialog{clip} dialog.
+The sample panel shows the selected paths in draft mode as well as the clipping
+area, which has a similar appearance to the selection \gls{bbox}
+but it has three hotspots: the right one will extend the width of
+the clipping area to the right, the lower hotspot will extend the
+height of the clipping area downwards, and the lower right hotspot
+will extend both the width and the height. You can also click inside
+the \gls{bbox} and drag it to reposition it. Alternatively, you can
+enter the desired location and size in the length widgets below the
+sample panel.
+
+\widgetdef{clip.dotask}
+
+Once you have positioned the clipping area, click on the
+\btn{clip.dotask} button and the results will be calculated.
+No change is made to the actual image at this point. If you are
+happy with the results, click the \btn{okay} button otherwise you
+can change the clipping area.
+
+The original shapes are drawn in draft mode (their \gls{line-style}
+attributes are ignored) to make it easier to compare their positions
+with the results.
+
 \section{Distorting Shapes}\label{sec:distort}
 
 \menudef{menu.transform.distort}
