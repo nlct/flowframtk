@@ -59,6 +59,7 @@ public class ImportDialog extends JDialog
        JFileChooser.FILES_ONLY, label);
 
       formatField = new JTextField(resources.getMessage("import.type.ACORN_DRAW"));
+      formatField.setColumns(formatField.getText().length()+2);
       formatField.setEditable(false);
       formatField.setBorder(null);
 
