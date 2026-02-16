@@ -24,7 +24,6 @@ import java.nio.charset.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Vector;
-import java.awt.Color;
 import java.awt.BasicStroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
@@ -614,6 +613,24 @@ public class AcornDrawFile
       grid.setSubDivisionsY(gridDivisionsY);
    }
 
+   protected JDRPaint toPaint(int bgrx)
+   {
+      CanvasGraphics cg = image.getCanvasGraphics();
+
+      if (bgrx == -1)
+      {
+         return new JDRTransparent(cg);
+      }
+      else
+      {
+         int blue  = ((bgrx >> 24) & 0xFF);
+         int green = ((bgrx >> 16) & 0xFF);
+         int red   = ((bgrx >>  8) & 0xFF);
+
+         return new JDRColor(cg, red/255.0, green/255.0, blue/255.0);
+      }
+   }
+
    protected void readPath()
    throws IOException,InvalidFormatException
    {
@@ -625,30 +642,12 @@ public class AcornDrawFile
 
       CanvasGraphics cg = image.getCanvasGraphics();
 
-      int fillCol = readInt();
+      int fillCol = readInt(); // BGRX (blue, green, red, padding)
 
-      JDRPaint fillPaint;
-
-      if (fillCol == -1)
-      {
-         fillPaint = new JDRTransparent(cg);
-      }
-      else
-      {
-         fillPaint = new JDRColor(cg, new Color(fillCol));
-      }
+      JDRPaint fillPaint = toPaint(fillCol);
 
       int lineCol = readInt();
-      JDRPaint linePaint;
-
-      if (lineCol == -1)
-      {
-         linePaint = new JDRTransparent(cg);
-      }
-      else
-      {
-         linePaint = new JDRColor(cg, new Color(lineCol));
-      }
+      JDRPaint linePaint = toPaint(lineCol);
 
       int outlineWidth = readInt();
 
@@ -971,16 +970,7 @@ public class AcornDrawFile
 
       int textCol = readInt();
 
-      JDRPaint textPaint;
-
-      if (textCol == -1)
-      {
-         textPaint = new JDRTransparent(cg);
-      }
-      else
-      {
-         textPaint = new JDRColor(cg, new Color(textCol));
-      }
+      JDRPaint textPaint = toPaint(textCol);
 
       int backCol = readInt();// background hint
 
@@ -1509,7 +1499,7 @@ public class AcornDrawFile
       JDRPath path = JDRPath.constructRectangle(getCanvasGraphics(),
        coords[0], coords[1], coords[2], coords[3]);
 
-      path.setLinePaint(new JDRColor(getCanvasGraphics(), Color.BLACK));
+      path.setLinePaint(new JDRColor(getCanvasGraphics()));// black
 
       path.setStroke(new JDRBasicStroke(getCanvasGraphics(), 1.0,
        BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
