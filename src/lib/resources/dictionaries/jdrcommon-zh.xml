@@ -198,7 +198,8 @@
 <entry key="message.acorn_drawfile.major">Major version: {0}</entry>
 <entry key="message.acorn_drawfile.minor">Minor version: {0}</entry>
 <entry key="message.acorn_drawfile.producer">Producer: {0}</entry>
-<entry key="message.acorn_drawfile.bounding_box">Bounding Box: ({0}, {1}) ({2}, {3})</entry>
+<entry key="message.acorn_drawfile.bounding_box_pt">Bounding Box: ({0}, {1}) ({2}, {3}) Acorn pt</entry>
+<entry key="message.acorn_drawfile.bounding_box_unit">Bounding Box: ({0}, {1}) ({2}, {3}) {4}</entry>
 <entry key="message.acorn_drawfile.object_id">Object identifier: {0}</entry>
 <entry key="message.acorn_drawfile.papersize">Paper size: {0}</entry>
 <entry key="message.acorn_drawfile.ignoring_jpeg">Ignoring embedded JPEG</entry>

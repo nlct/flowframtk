@@ -57,6 +57,7 @@ public class AcornDrawFile
      DataInputStream din, ImportSettings importSettings)
    {
       this(cg);
+      cg.setStorageUnit(JDRUnit.cm);
       image = new JDRGroup(cg);
       currentGroup = image;
       affineTransform = new AffineTransform(
@@ -115,9 +116,44 @@ public class AcornDrawFile
       highBoundingX = readInt();
       highBoundingY = readInt();
 
-      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box", 
-        "Bounding Box: ({0},{1}) ({2},{3})", 
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box_pt", 
+        "Bounding Box: ({0}, {1}) ({2}, {3}) Acorn pt", 
         lowBoundingX, lowBoundingY, highBoundingX, highBoundingY));
+
+      double[] coords = new double[4];
+      coords[0] = lowBoundingX;
+      coords[1] = lowBoundingY;
+      coords[2] = highBoundingX;
+      coords[3] = highBoundingY;
+
+      affineTransform.transform(coords, 0, coords, 0, 2);
+
+      storageLowBoundingX = coords[0];
+      storageLowBoundingY = coords[1];
+      storageHighBoundingX = coords[2];
+      storageHighBoundingY = coords[3];
+
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box_unit", 
+        "Bounding Box: ({0}, {1}) ({2}, {3}) {4}", 
+        storageLowBoundingX, storageLowBoundingY,
+        storageHighBoundingX, storageHighBoundingY,
+        canvasGraphics.getStorageUnit().getLabel()));
+
+      JDRPaper paper = JDRPaper.getClosestEnclosingPredefinedPaper(
+         canvasGraphics.storageToBp(storageHighBoundingX - storageLowBoundingX),
+         canvasGraphics.storageToBp(storageLowBoundingY - storageHighBoundingY),
+         JDRPaper.ID_A5, JDRPaper.ID_A5R,
+         JDRPaper.ID_A4, JDRPaper.ID_A4R,
+         JDRPaper.ID_A3, JDRPaper.ID_A3R,
+         JDRPaper.ID_A2, JDRPaper.ID_A2R,
+         JDRPaper.ID_A1, JDRPaper.ID_A1R,
+         JDRPaper.ID_A0, JDRPaper.ID_A0R
+        );
+
+      if (paper != null)
+      {
+         canvasGraphics.setPaper(paper);
+      }
 
       int objectId;
 
@@ -132,6 +168,27 @@ public class AcornDrawFile
          {
             break;
          }
+      }
+
+      if (storageHighBoundingX < 0
+       || storageLowBoundingX > canvasGraphics.getStoragePaperWidth())
+      {
+         image.pageLeftAlign();
+      }
+
+      double ht = canvasGraphics.getStoragePaperHeight();
+
+      if (storageLowBoundingY < 0)
+      {
+         image.translate(0, ht);
+
+         storageHighBoundingY += ht;
+         storageLowBoundingY += ht;
+      }
+
+      if (storageLowBoundingY < 0 || storageHighBoundingY > ht)
+      {
+         image.pageTopAlign();
       }
 
       if (!styNames.isEmpty())
@@ -301,14 +358,6 @@ public class AcornDrawFile
          flowframe = new FlowFrame(getCanvasGraphics(), FlowFrame.TYPEBLOCK);
          image.setFlowFrame(flowframe);
 
-         double[] coords = new double[4];
-         coords[0] = lowBoundingX;
-         coords[1] = lowBoundingY;
-         coords[2] = highBoundingX;
-         coords[3] = highBoundingY;
-
-         affineTransform.transform(coords, 0, coords, 0, 2);
-
          CanvasGraphics cg = getCanvasGraphics();
 
          JDRPaper paper = cg.getPaper();
@@ -317,23 +366,23 @@ public class AcornDrawFile
 
          double w = cg.bpToStorage(paper.getWidth());
          double h = cg.bpToStorage(paper.getHeight());
-         double right = w - coords[2];
-         double bottom = h - coords[3];
+         double right = w - storageHighBoundingX;
+         double bottom = h - storageHighBoundingY;
 
          // make sure the margins don't overlap or exceed paper
          // bounds
 
-         if (coords[0] >= 0.0 && right >= 0.0
-             && (coords[0] + right < w))
+         if (storageLowBoundingX >= 0.0 && right >= 0.0
+             && (storageLowBoundingX + right < w))
          {
-            flowframe.setLeft(coords[0]);
+            flowframe.setLeft(storageLowBoundingX);
             flowframe.setRight(right);
          }
 
-         if (coords[1] >= 0.0 && bottom >= 0.0
-             && (coords[1] + bottom < h))
+         if (storageLowBoundingY >= 0.0 && bottom >= 0.0
+             && (storageLowBoundingY + bottom < h))
          {
-            flowframe.setTop(coords[1]);
+            flowframe.setTop(storageLowBoundingY);
             flowframe.setBottom(bottom);
          }
       }
@@ -503,6 +552,24 @@ public class AcornDrawFile
       affineTransform.setTransform(
        drawPointToUnit(1), 0, 0, -drawPointToUnit(1), 
        0.0, unit.fromBp(paper.getHeight()));
+
+      double[] coords = new double[4];
+      coords[0] = lowBoundingX;
+      coords[1] = lowBoundingY;
+      coords[2] = highBoundingX;
+      coords[3] = highBoundingY;
+
+      affineTransform.transform(coords, 0, coords, 0, 2);
+
+      storageLowBoundingX = coords[0];
+      storageLowBoundingY = coords[1];
+      storageHighBoundingX = coords[2];
+      storageHighBoundingY = coords[3];
+
+      printlnVerbose(getMessageWithFallback("message.acorn_drawfile.bounding_box_unit", 
+        "Bounding Box: ({0}, {1}) ({2}, {3}) {4}", 
+        storageLowBoundingX, storageLowBoundingY,
+        storageHighBoundingX, storageHighBoundingY, unit.getLabel()));
 
       readInt(); // zoom multiplier (1-8)
       readInt(); // zoom divider (1-8)
@@ -1899,6 +1966,7 @@ public class AcornDrawFile
    int minorVersion;
    String producer;
    int lowBoundingX, lowBoundingY, highBoundingX, highBoundingY;
+   double storageLowBoundingX, storageLowBoundingY, storageHighBoundingX, storageHighBoundingY;
    boolean showLimits=false, isLandscape=false;
    double gridSpacing;
    int gridDivisions, gridDivisionsY=-1;
