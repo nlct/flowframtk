@@ -3853,12 +3853,12 @@ Are you sure you want to ungroup it?</entry>
 <entry key="findbydescription.image_objects">Image Objects:</entry>
 <entry key="findbydescription.image_objects.mnemonic">J</entry>
 
-<entry key="findbydescription.JDRPath">路径: {0}</entry>
+<entry key="findbydescription.JDRPath">路径: {0}; line {1} fill {2}</entry>
 <entry key="findbydescription.JDRText">文本: {0} ({1})</entry>
 <entry key="findbydescription.JDRBitmap">位图: {0} ({1},{2})</entry>
 <entry key="findbydescription.JDRGroup">组合: {0}</entry>
 <entry key="findbydescription.JDRTextPath">TextPath: {0} ({1})</entry>
-<entry key="findbydescription.JDRSymmetricPath">SymmetricPath: {0}</entry>
+<entry key="findbydescription.JDRSymmetricPath">SymmetricPath: {0} -- {1}</entry>
 <entry key="findbydescription.JDRRotationalPattern">RotationalPattern: {0} ({1})</entry>
 <entry key="findbydescription.JDRScaledPattern">ScaledPattern: {0} ({1}, {2})</entry>
 <entry key="findbydescription.JDRSpiralPattern">SpiralPattern: {0} ({1}:{2})</entry>

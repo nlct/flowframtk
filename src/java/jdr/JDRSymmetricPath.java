@@ -2553,7 +2553,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
    public Object[] getDescriptionInfo()
    {
-      return getUnderlyingShape().getDescriptionInfo();
+      return new Object[] {line_.getStart().info(), line_.getEnd().info()};
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)

@@ -1905,7 +1905,12 @@ public abstract class JDRShape extends JDRCompleteObject
 
    public Object[] getDescriptionInfo()
    {
-      return new Object[] {size()};
+      JDRPaint linePaint = getLinePaint();
+      JDRPaint fillPaint = getShapeFillPaint();
+
+      return new Object[] {size(),
+        linePaint == null ? "" : linePaint.info(),
+        fillPaint == null ? "" : fillPaint.info()};
    }
 
    public boolean hasShape()
