@@ -790,6 +790,36 @@ public class JDRPaper
       return match;
    }
 
+   public static JDRPaper getClosestEnclosingPredefinedPaper(
+      double width, double height, byte... paperIDs)
+   {
+      JDRPaper match = null;
+      double dx = 0;
+      double dy = 0;
+      double distance = 0;
+      double minDistance = java.lang.Double.MAX_VALUE;
+
+      for (byte i : paperIDs)
+      {
+         if (i != ID_USER)
+         {
+            JDRPaper paper = getPredefinedPaper(i);
+            dx = paper.getWidth()-width;
+            dy = paper.getHeight()-height;
+            distance = dx*dx + dy*dy;
+
+            if (distance < minDistance && dx >= 0 && dy >= 0)
+            {
+               match = paper;
+               minDistance = distance;
+            }
+         }
+      }
+
+      return match;
+   }
+
+
    /**
     * Saves this paper size in JDR/AJR format.
     * @throws IOException if I/O error occurs
