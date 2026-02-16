@@ -170,6 +170,9 @@ public class AcornDrawFile
          }
       }
 
+      // paper size might not have been provided so shift if out of
+      // bounds
+
       if (storageHighBoundingX < 0
        || storageLowBoundingX > canvasGraphics.getStoragePaperWidth())
       {
