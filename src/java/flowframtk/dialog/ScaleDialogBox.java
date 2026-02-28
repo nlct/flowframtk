@@ -174,6 +174,8 @@ public class ScaleDialogBox extends JDialog
 
       row.add(Box.createHorizontalGlue());
 
+      mainComp.add(Box.createVerticalStrut(10));
+
       row = createRow();
       mainComp.add(row);
 
