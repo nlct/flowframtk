@@ -1139,6 +1139,7 @@ public abstract class JDRShape extends JDRCompleteObject
       }
    }
 
+   @Override
    public void scale(Point2D p, double factorX, double factorY)
    {
       JDRPointIterator pi = getPointIterator();
@@ -1151,6 +1152,7 @@ public abstract class JDRShape extends JDRCompleteObject
       }
    }
 
+   @Override
    public void shear(Point2D p, double factorX, double factorY)
    {
       JDRPointIterator pi = getPointIterator();
@@ -1163,6 +1165,7 @@ public abstract class JDRShape extends JDRCompleteObject
       }
    }
 
+   @Override
    public void rotate(Point2D p, double angle)
    {
       JDRPointIterator pi = getPointIterator();

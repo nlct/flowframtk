@@ -764,13 +764,16 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public void rotate(double angle)
    {
+      rotate(AnchorX.MIDDLE, AnchorY.MIDDLE, angle);
+   }
+
+   public void rotate(AnchorX anchorX, AnchorY anchorY, double angle)
+   {
       BBox box = getStorageBBox();
 
       if (box != null)
       {
-         Point2D p = new Point2D.Double(box.getMidX(), box.getMidY());
-
-         rotate(p, angle);
+         rotate(box.getAnchorPoint(anchorX, anchorY), angle);
       }
    }
 
@@ -789,13 +792,16 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public void scale(double scalex, double scaley)
    {
+      scale(AnchorX.LEFT, AnchorY.TOP, scalex, scaley);
+   }
+
+   public void scale(AnchorX anchorX, AnchorY anchorY, double scalex, double scaley)
+   {
       BBox box = getStorageBBox();
 
       if (box != null)
       {
-         Point2D p = new Point2D.Double(box.getMinX(), box.getMinY());
-
-         scale(p, scalex, scaley);
+         scale(box.getAnchorPoint(anchorX, anchorY), scalex, scaley);
       }
    }
 
@@ -808,19 +814,62 @@ public abstract class JDRCompleteObject extends JDRObject
    public abstract void scale(Point2D p, double scalex, double scaley);
 
    /**
+    * Scales this object horizontally relative to the top left hand corner of its
+    * bounding box.
+    * @param scalex the x scale factor
+    */
+   public void scaleX(double scalex)
+   {
+      scaleX(AnchorX.LEFT, AnchorY.TOP, scalex);
+   }
+
+   public void scaleX(AnchorX anchorX, AnchorY anchorY, double scalex)
+   {
+      BBox box = getStorageBBox();
+
+      if (box != null)
+      {
+         scaleX(box.getAnchorPoint(anchorX, anchorY), scalex);
+      }
+   }
+
+   /**
+    * Scales this object vertically relative to the top left hand corner of its
+    * bounding box.
+    * @param scaley the y scale factor
+    */
+   public void scaleY(double scaley)
+   {
+      scaleY(AnchorX.LEFT, AnchorY.TOP, scaley);
+   }
+
+   public void scaleY(AnchorX anchorX, AnchorY anchorY, double scaley)
+   {
+      BBox box = getStorageBBox();
+
+      if (box != null)
+      {
+         scaleY(box.getAnchorPoint(anchorX, anchorY), scaley);
+      }
+   }
+
+   /**
     * Shears this object relative to the bottom left corner.
     * @param factorX the x shear factor
     * @param factorY the y shear factor
     */
    public void shear(double factorX, double factorY)
    {
+      shear(AnchorX.LEFT, AnchorY.BOTTOM, factorX, factorY);
+   }
+
+   public void shear(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
+   {
       BBox box = getStorageBBox();
 
       if (box != null)
       {
-         Point2D p = new Point2D.Double(box.getMinX(), box.getMaxY());
-
-         shear(p, factorX, factorY);
+         shear(box.getAnchorPoint(anchorX, anchorY), factorX, factorY);
       }
    }
 

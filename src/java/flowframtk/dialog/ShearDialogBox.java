@@ -51,52 +51,109 @@ public class ShearDialogBox extends JDialog
         application.getResources().getMessage("shear.title"), true);
       application_ = application;
 
-      int width  = 300;
-      int height = 150;
-      setSize(width,height);
+      JDRResources resources = application.getResources();
 
-      JPanel panel = new JPanel();
+      JComponent mainComp = Box.createVerticalBox();
+      mainComp.setAlignmentX(0.0f);
 
-      panel.setLayout(new GridLayout(3,2));
+      getContentPane().add(mainComp, "Center");
 
-      JLabel xLabel = getResources().createAppLabel("shear.x");
-      panel.add(xLabel);
+      JComponent row = createRow();
+      mainComp.add(row);
 
-      shearXField = new DoubleField(0.0F);
-      xLabel.setLabelFor(shearXField);
-      panel.add(shearXField);
+      JLabel xLabel = resources.createAppLabel("shear.x");
+      row.add(xLabel);
 
-      JLabel yLabel = getResources().createAppLabel("shear.y");
-      panel.add(yLabel);
+      row.add(resources.createLabelSpacer());
 
-      shearYField = new DoubleField(0.0F);
-      yLabel.setLabelFor(shearYField);
-      panel.add(shearYField);
+      shearXSpinnerModel = new SpinnerNumberModel(
+         Double.valueOf(0.0), null, null, Double.valueOf(0.25));
 
-      getContentPane().add(panel, "Center");
+      shearXSpinner = new JSpinner(shearXSpinnerModel);
+      setSpinnerColumns(shearXSpinner, 6);
 
-      JPanel p2 = new JPanel();
+      xLabel.setLabelFor(shearXSpinner);
+      row.add(shearXSpinner);
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
+      row = createRow();
+      mainComp.add(row);
 
-      try
-      {
-         p2.add(getResources().createHelpDialogButton(this, "sec:shearobjects"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      JLabel yLabel = resources.createAppLabel("shear.y");
+      row.add(yLabel);
 
-      getContentPane().add(p2, "South");
+      row.add(resources.createLabelSpacer());
 
+      shearYSpinnerModel = new SpinnerNumberModel(
+         Double.valueOf(0.0), null, null, Double.valueOf(0.25));
+
+      shearYSpinner = new JSpinner(shearYSpinnerModel);
+      setSpinnerColumns(shearYSpinner, 6);
+
+      yLabel.setLabelFor(shearYSpinner);
+      row.add(shearYSpinner);
+
+      mainComp.add(Box.createVerticalStrut(10));
+
+      row = createRow();
+      mainComp.add(row);
+
+      anchorXComp = new AnchorXPanel(application);
+      anchorXComp.setSelectedAnchor(AnchorX.LEFT);
+      row.add(anchorXComp);
+
+      row.add(resources.createButtonSpacer());
+
+      anchorYComp = new AnchorYPanel(application);
+      anchorYComp.setSelectedAnchor(AnchorY.BOTTOM);
+      row.add(anchorYComp);
+
+      mainComp.add(Box.createVerticalStrut(10));
+
+      JPanel btnPanel = new JPanel();
+
+      resources.createOkayCancelHelpButtons(this, btnPanel, this, "sec:shearobjects");
+
+      getContentPane().add(btnPanel, "South");
+
+      pack();
       setLocationRelativeTo(application);
+   }
+
+   protected JComponent createRow()
+   {
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(0.0f);
+
+      return row;
+   }
+
+   protected void requestSpinnerFocus(JSpinner spinner)
+   {
+      JComponent editor = spinner.getEditor();
+
+      if (editor instanceof JSpinner.DefaultEditor)
+      {
+         ((JSpinner.DefaultEditor)editor).getTextField().requestFocusInWindow();
+      }
+      else
+      {
+         spinner.requestFocusInWindow();
+      }
+   }
+
+   protected void setSpinnerColumns(JSpinner spinner, int cols)
+   {
+      JComponent editor = spinner.getEditor();
+
+      if (editor instanceof JSpinner.DefaultEditor)
+      {
+         ((JSpinner.DefaultEditor)editor).getTextField().setColumns(cols);
+      }
    }
 
    public void display()
    {
-      shearXField.requestFocusInWindow();
+      requestSpinnerFocus(shearXSpinner);
       setVisible(true);
    }
 
@@ -121,7 +178,10 @@ public class ShearDialogBox extends JDialog
       setVisible(false);
 
       application_.getCurrentFrame().shearSelectedPaths(
-          shearXField.getDouble(), shearYField.getDouble());
+          shearXSpinnerModel.getNumber().doubleValue(), 
+          shearYSpinnerModel.getNumber().doubleValue(),
+          anchorXComp.getSelectedAnchor(),
+          anchorYComp.getSelectedAnchor());
    }
 
    public String info()
@@ -132,8 +192,8 @@ public class ShearDialogBox extends JDialog
 
       str += "ShearDialogBox:"+eol;
       str += "has focus: "+hasFocus()+eol;
-      str += "shear x field has focus: "+shearXField.hasFocus()+eol;
-      str += "shear y field has focus: "+shearYField.hasFocus()+eol;
+      str += "shear x field has focus: "+shearXSpinner.hasFocus()+eol;
+      str += "shear y field has focus: "+shearYSpinner.hasFocus()+eol;
 
       ActionMap actionMap = getRootPane().getActionMap();
       str += "action map: "+eol;
@@ -153,7 +213,12 @@ public class ShearDialogBox extends JDialog
       return application_.getResources();
    }
 
-   private DoubleField shearXField, shearYField;
    private FlowframTk application_;
+
+   private SpinnerNumberModel shearXSpinnerModel, shearYSpinnerModel;
+   private JSpinner shearXSpinner, shearYSpinner;
+
+   private AnchorXPanel anchorXComp;
+   private AnchorYPanel anchorYComp;
 }
 

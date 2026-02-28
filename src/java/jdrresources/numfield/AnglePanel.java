@@ -60,6 +60,8 @@ public class AnglePanel extends JPanel
          sizeLabel = new JLabel(label);
          sizeLabel.setLabelFor(numField.getComponent());
          add(sizeLabel);
+
+         add(JDRResources.createLabelSpacer());
       }
 
       unitBox = new JComboBox<String>

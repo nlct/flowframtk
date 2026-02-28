@@ -64,8 +64,7 @@ public class ScaleDialogBox extends JDialog
 
       getContentPane().add(new JScrollPane(mainComp), "Center");
 
-      JComponent row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      JComponent row = createRow();
       mainComp.add(row);
 
       ButtonGroup bg = new ButtonGroup();
@@ -88,8 +87,7 @@ public class ScaleDialogBox extends JDialog
 
       row.add(Box.createHorizontalGlue());
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      row = createRow();
       mainComp.add(row);
 
       scaleYButton = resources.createAppRadioButton("scale", "y",
@@ -109,8 +107,7 @@ public class ScaleDialogBox extends JDialog
 
       row.add(Box.createHorizontalGlue());
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      row = createRow();
       mainComp.add(row);
 
       scaleButton = resources.createAppRadioButton("scale", "both",
@@ -141,8 +138,7 @@ public class ScaleDialogBox extends JDialog
 
       row.add(Box.createHorizontalGlue());
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      row = createRow();
       mainComp.add(row);
 
       keepAspectButton = resources.createAppCheckBox("scale", "keep_aspect", false, null);
@@ -178,17 +174,28 @@ public class ScaleDialogBox extends JDialog
 
       row.add(Box.createHorizontalGlue());
 
+      row = createRow();
+      mainComp.add(row);
+
+      anchorXComp = new AnchorXPanel(application);
+      anchorXComp.setSelectedAnchor(AnchorX.LEFT);
+      row.add(anchorXComp);
+
+      row.add(resources.createButtonSpacer());
+
+      anchorYComp = new AnchorYPanel(application);
+      anchorYComp.setSelectedAnchor(AnchorY.TOP);
+      row.add(anchorYComp);
+
       mainComp.add(Box.createVerticalStrut(10));
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      row = createRow();
       mainComp.add(row);
 
       row.add(resources.createAppLabel("scale.calculate"));
       row.add(Box.createHorizontalGlue());
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      row = createRow();
       mainComp.add(row);
 
       labelGroup = new JLabelGroup();
@@ -237,8 +244,7 @@ public class ScaleDialogBox extends JDialog
 
       resources.clampCompMaxHeight(row, 0, 20);
 
-      row = Box.createHorizontalBox();
-      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      row = createRow();
       mainComp.add(row);
 
       label = resources.createAppLabel("scale.height");
@@ -309,6 +315,14 @@ public class ScaleDialogBox extends JDialog
       scaleYSpinner.setEnabled(false);
       scaleSpinner.setEnabled(true);
       keepAspectButton.setSelected(true);
+   }
+
+   protected JComponent createRow()
+   {
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+
+      return row;
    }
 
    public void display()
@@ -558,21 +572,29 @@ public class ScaleDialogBox extends JDialog
 
       if (scaleXButton.isSelected())
       {
-         frame.scaleXSelectedPaths(scaleXSpinnerModel.getNumber().doubleValue());
+         frame.scaleXSelectedPaths(scaleXSpinnerModel.getNumber().doubleValue(),
+          anchorXComp.getSelectedAnchor(),
+          anchorYComp.getSelectedAnchor());
       }
       else if (scaleYButton.isSelected())
       {
-         frame.scaleYSelectedPaths(scaleYSpinnerModel.getNumber().doubleValue());
+         frame.scaleYSelectedPaths(scaleYSpinnerModel.getNumber().doubleValue(),
+          anchorXComp.getSelectedAnchor(),
+          anchorYComp.getSelectedAnchor());
       }
       else if (keepAspectButton.isSelected())
       {
-         frame.scaleSelectedPaths(scaleSpinnerModel.getNumber().doubleValue());
+         frame.scaleSelectedPaths(scaleSpinnerModel.getNumber().doubleValue(),
+          anchorXComp.getSelectedAnchor(),
+          anchorYComp.getSelectedAnchor());
       }
       else
       {
          frame.scaleSelectedPaths(
            scaleSpinnerModel.getNumber().doubleValue(),
-           nonAspectScaleYSpinnerModel.getNumber().doubleValue());
+           nonAspectScaleYSpinnerModel.getNumber().doubleValue(),
+          anchorXComp.getSelectedAnchor(),
+          anchorYComp.getSelectedAnchor());
       }
    }
 
@@ -615,6 +637,9 @@ public class ScaleDialogBox extends JDialog
     nonAspectScaleYSpinner;
 
    private JRadioButton scaleXButton, scaleYButton, scaleButton;
+
+   private AnchorXPanel anchorXComp;
+   private AnchorYPanel anchorYComp;
 
    SpinnerNumberModel widthNumberModel, heightNumberModel;
    JSpinner widthSpinner, heightSpinner;

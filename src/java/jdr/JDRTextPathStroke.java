@@ -1375,7 +1375,7 @@ public class JDRTextPathStroke implements JDRStroke
    private String text;
    private Font font;
    private JDRFont jdrFont;
-   private int halign, valign;
+   private int halign, valign;// TODO replace with AnchorX and AnchorY
 
    /**
     * Associated LaTeX font

@@ -1415,9 +1415,19 @@ public class JDRFrame extends JInternalFrame
       canvas.rotateSelectedPaths(angle);
    }
 
+   public void rotateSelectedPaths(JDRAngle angle, AnchorX anchorX, AnchorY anchorY)
+   {
+      canvas.rotateSelectedPaths(angle, anchorX, anchorY);
+   }
+
    public void scaleXSelectedPaths(double factor)
    {
       canvas.scaleXSelectedPaths(factor);
+   }
+
+   public void scaleXSelectedPaths(double factor, AnchorX anchorX, AnchorY anchorY)
+   {
+      canvas.scaleXSelectedPaths(factor, anchorX, anchorY);
    }
 
    public void scaleYSelectedPaths(double factor)
@@ -1425,9 +1435,19 @@ public class JDRFrame extends JInternalFrame
       canvas.scaleYSelectedPaths(factor);
    }
 
+   public void scaleYSelectedPaths(double factor, AnchorX anchorX, AnchorY anchorY)
+   {
+      canvas.scaleYSelectedPaths(factor, anchorX, anchorY);
+   }
+
    public void scaleSelectedPaths(double factor)
    {
       canvas.scaleSelectedPaths(factor);
+   }
+
+   public void scaleSelectedPaths(double factor, AnchorX anchorX, AnchorY anchorY)
+   {
+      canvas.scaleSelectedPaths(factor, anchorX, anchorY);
    }
 
    public void scaleSelectedPaths(double scaleX, double scaleY)
@@ -1435,9 +1455,21 @@ public class JDRFrame extends JInternalFrame
       canvas.scaleSelectedPaths(scaleX, scaleY);
    }
 
+   public void scaleSelectedPaths(double scaleX, double scaleY,
+       AnchorX anchorX, AnchorY anchorY)
+   {
+      canvas.scaleSelectedPaths(scaleX, scaleY, anchorX, anchorY);
+   }
+
    public void shearSelectedPaths(double factorX, double factorY)
    {
       canvas.shearSelectedPaths(factorX, factorY);
+   }
+
+   public void shearSelectedPaths(double factorX, double factorY,
+       AnchorX anchorX, AnchorY anchorY)
+   {
+      canvas.shearSelectedPaths(factorX, factorY, anchorX, anchorY);
    }
 
    public void shapepar(boolean useOutline)

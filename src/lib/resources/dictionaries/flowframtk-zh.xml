@@ -1687,6 +1687,25 @@
 
 <entry key="fade.title">Fade Colors</entry>
 
+<!-- Anchor Components for Transformation Dialog Boxes -->
+
+<entry key="anchor.title">Transformation Anchor Point</entry>
+
+<entry key="anchor.x">Anchor X</entry>
+<entry key="anchor.x.mnemonic">A</entry>
+
+<entry key="anchor.x.left">Left</entry>
+<entry key="anchor.x.middle">Center</entry>
+<entry key="anchor.x.right">Right</entry>
+
+<entry key="anchor.y">Anchor Y</entry>
+<entry key="anchor.y.mnemonic">N</entry>
+
+<entry key="anchor.y.top">Top</entry>
+<entry key="anchor.y.middle">Middle</entry>
+<entry key="anchor.y.base">Base</entry>
+<entry key="anchor.y.bottom">Bottom</entry>
+
 <!--  Rotate Dialog Box -->
 
 <entry key="rotate.title">旋转</entry>

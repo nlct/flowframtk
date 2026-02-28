@@ -629,34 +629,37 @@ public class JDRBitmap extends JDRCompleteObject
    }
 
    /**
-    * Rotates this object about its centre.
+    * Rotates this object about the given anchor.
     * @param angle the angle of rotation in radians
     */
-   public void rotate(double angle)
+   @Override
+   public void rotate(AnchorX anchorX, AnchorY anchorY, double angle)
    {
       BBox box = getStorageBBox();
-      double x = box.getMinX()+0.5*box.getWidth();
-      double y = box.getMinY()+0.5*box.getHeight();
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       affineTransform.preConcatenate(
-       AffineTransform.getRotateInstance(angle, x, y));
+       AffineTransform.getRotateInstance(angle, p.getX(), p.getY()));
    }
 
    /**
     * Rotates this object about the given point.
     * @param angle the angle of rotation in radians
     */
+   @Override
    public void rotate(Point2D p, double angle)
    {
       affineTransform.preConcatenate(
        AffineTransform.getRotateInstance(angle, p.getX(), p.getY()));
    }
 
+   @Override
    public void scaleX(Point2D p, double factor)
    {
       scale(p, factor, 1.0);
    }
 
+   @Override
    public void scaleY(Point2D p, double factor)
    {
       scale(p, 1.0, factor);
@@ -665,19 +668,18 @@ public class JDRBitmap extends JDRCompleteObject
    /**
     * Scales this object.
     */
-   public void scale(double factorX, double factorY)
+   @Override
+   public void scale(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
    {
-      //scale relative to top left
       BBox box = getStorageBBox();
-      double x = box.getMinX();
-      double y = box.getMinY();
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       double scaleX = affineTransform.getScaleX() * factorX;
       double scaleY = affineTransform.getScaleY() * factorY;
       double shearX = affineTransform.getShearX() * factorX;
       double shearY = affineTransform.getShearY() * factorY;
-      double tx = (affineTransform.getTranslateX() - x) * factorX + x;
-      double ty = (affineTransform.getTranslateY() - y) * factorY + y;
+      double tx = (affineTransform.getTranslateX() - p.getX()) * factorX + p.getX();
+      double ty = (affineTransform.getTranslateY() - p.getY()) * factorY + p.getY();
 
       affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx, ty);
    }
@@ -685,6 +687,7 @@ public class JDRBitmap extends JDRCompleteObject
    /**
     * Scales this object relative to the given point.
     */
+   @Override
    public void scale(Point2D p, double factorX, double factorY)
    {
       double x = p.getX();
@@ -703,33 +706,33 @@ public class JDRBitmap extends JDRCompleteObject
    /**
     * Shears this object.
     */
-   public void shear(double factorX, double factorY)
+   @Override
+   public void shear(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
    {
-      //shear relative to bottom left
       BBox box = getStorageBBox();
-      double x = box.getMinX();
-      double y = box.getMaxY();
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       double scaleX = affineTransform.getScaleX();
       double scaleY = affineTransform.getScaleY();
       double shearX = affineTransform.getShearX();
       double shearY = affineTransform.getShearY();
-      double tx = affineTransform.getTranslateX() - x;
-      double ty = affineTransform.getTranslateY() - y;
+      double tx = affineTransform.getTranslateX() - p.getX();
+      double ty = affineTransform.getTranslateY() - p.getY();
 
       affineTransform.setTransform(
         scaleX - factorX * shearY,
         shearY - factorY * scaleX,
         shearX - factorX * scaleY,
         scaleY - factorY * shearX,
-        tx - factorX * ty + x,
-        ty - factorY * tx + y
+        tx - factorX * ty + p.getX(),
+        ty - factorY * tx + p.getY()
       );
    }
 
    /**
     * Shears this object relative to the given point.
     */
+   @Override
    public void shear(Point2D p, double factor)
    {
       shear(p, factor, factor);
@@ -738,6 +741,7 @@ public class JDRBitmap extends JDRCompleteObject
    /**
     * Shears this object relative to the given point.
     */
+   @Override
    public void shear(Point2D p, double factorX, double factorY)
    {
       double x = p.getX();

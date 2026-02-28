@@ -299,6 +299,56 @@ public class JDRTransform implements Cloneable,Serializable
          transformedBounds.getY()+0.5*transformedBounds.getHeight());
    }
 
+   public Point2D getAnchorPoint(AnchorX anchorX, AnchorY anchorY)
+   {
+      return getAnchorPoint(anchorX, anchorY, 0);
+   }
+
+   public Point2D getAnchorPoint(AnchorX anchorX, AnchorY anchorY, double baseOffset)
+   {
+      if (transformedBounds == null)
+      {
+         transformChanged();
+      }
+
+      double x, y;
+
+      switch (anchorX)
+      {
+         case LEFT:
+            x = transformedBounds.getX();
+         break;
+         case MIDDLE:
+            x = transformedBounds.getX()+0.5*transformedBounds.getWidth();
+         break;
+         case RIGHT:
+            x = transformedBounds.getX()+transformedBounds.getWidth();
+         break;
+         default:
+            throw new AssertionError(anchorX);
+      }
+
+      switch (anchorY)
+      {
+         case TOP:
+            y = transformedBounds.getY();
+         break;
+         case MIDDLE:
+            y = transformedBounds.getY()+0.5*transformedBounds.getHeight();
+         break;
+         case BASE:
+            y = transformedBounds.getY()+transformedBounds.getHeight() - baseOffset;
+         break;
+         case BOTTOM:
+            y = transformedBounds.getY()+transformedBounds.getHeight();
+         break;
+         default:
+            throw new AssertionError(anchorY);
+      }
+
+      return new Point2D.Double(x, y);
+   }
+
    /**
     * Gets a copy of this transformation.
     * @return copy of this transformation
@@ -433,6 +483,11 @@ public class JDRTransform implements Cloneable,Serializable
       rotate(p.getPoint(), angle);
    }
 
+   public void rotate(AnchorX anchorX, AnchorY anchorY, double angle)
+   {
+      rotate(getAnchorPoint(anchorX, anchorY), angle);
+   }
+
    /**
     * Applies a rotation about the given point by the given angle.
     * @param p the point about which to rotate
@@ -453,20 +508,19 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public void scale(double factorX, double factorY)
    {
-      if (transformedBounds == null)
-      {
-         transformChanged();
-      }
+      scale(AnchorX.LEFT, AnchorY.TOP, factorX, factorY);
+   }
 
-      double x = transformedBounds.getMinX();
-      double y = transformedBounds.getMinY();
+   public void scale(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
+   {
+      Point2D p = getAnchorPoint(anchorX, anchorY);
 
       double scaleX = affineTransform.getScaleX() * factorX;
       double scaleY = affineTransform.getScaleY() * factorY;
       double shearX = affineTransform.getShearX() * factorX;
       double shearY = affineTransform.getShearY() * factorY;
-      double tx = (affineTransform.getTranslateX() - x) * factorX + x;
-      double ty = (affineTransform.getTranslateY() - y) * factorY + y;
+      double tx = (affineTransform.getTranslateX() - p.getX()) * factorX + p.getX();
+      double ty = (affineTransform.getTranslateY() - p.getY()) * factorY + p.getY();
 
       affineTransform.setTransform(scaleX, shearY, shearX, scaleY, tx, ty);
       transformChanged();
@@ -502,28 +556,27 @@ public class JDRTransform implements Cloneable,Serializable
     */
    public void shear(double factorX, double factorY)
    {
-      if (transformedBounds == null)
-      {
-         transformChanged();
-      }
+      shear(AnchorX.LEFT, AnchorY.BOTTOM, factorX, factorY);
+   }
 
-      double x = transformedBounds.getMinX();
-      double y = transformedBounds.getMaxY();
+   public void shear(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
+   {
+      Point2D p = getAnchorPoint(anchorX, anchorY);
 
       double scaleX = affineTransform.getScaleX();
       double scaleY = affineTransform.getScaleY();
       double shearX = affineTransform.getShearX();
       double shearY = affineTransform.getShearY();
-      double tx = affineTransform.getTranslateX() - x;
-      double ty = affineTransform.getTranslateY() - y;
+      double tx = affineTransform.getTranslateX() - p.getX();
+      double ty = affineTransform.getTranslateY() - p.getY();
 
       affineTransform.setTransform(
         scaleX - factorX * shearY,
         shearY - factorY * scaleX,
         shearX - factorX * scaleY,
         scaleY - factorY * shearX,
-        tx - factorX * ty + x,
-        ty - factorY * tx + y
+        tx - factorX * ty + p.getX(),
+        ty - factorY * tx + p.getY()
       );
 
       transformChanged();

@@ -826,6 +826,51 @@ public class BBox implements Cloneable,Serializable
       return new JDRPoint(getCanvasGraphics(), getMidX(), getMidY());
    }
 
+   public Point2D getAnchorPoint(AnchorX anchorX, AnchorY anchorY)
+   {
+      return getAnchorPoint(anchorX, anchorY, 0);
+   }
+
+   public Point2D getAnchorPoint(AnchorX anchorX, AnchorY anchorY, double baseOffset)
+   {
+      double x, y;
+
+      switch (anchorX)
+      {
+         case LEFT:
+            x = getMinX();
+         break;
+         case MIDDLE:
+            x = getMidX();
+         break;
+         case RIGHT:
+            x = getMaxX();
+         break;
+         default:
+            throw new AssertionError(anchorX);
+      }
+
+      switch (anchorY)
+      {
+         case TOP:
+            y = getMinY();
+         break;
+         case MIDDLE:
+            y = getMidY();
+         break;
+         case BASE:
+            y = getMaxY() - baseOffset;
+         break;
+         case BOTTOM:
+            y = getMaxY();
+         break;
+         default:
+            throw new AssertionError(anchorY);
+      }
+
+      return new Point2D.Double(x, y);
+   }
+
    /**
     * Gets number identifying hotspot that contains the given point.
     * Uses {@link JDRPoint#contains(Point2D)} to determine whether

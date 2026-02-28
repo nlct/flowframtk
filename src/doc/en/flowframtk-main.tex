@@ -7433,6 +7433,21 @@ separate \textattr{paint} to each of the new text areas.}
 \affinetrans{scaling} (\sectionref{sec:scaleobjects}) and 
 \affinetrans{shearing} (\sectionref{sec:shearobjects}).
 
+The \affinetrans{rotation}, \affinetrans{scaling} and
+\affinetrans{shearing} functions all have an anchor point.
+This may be changed with the \inlineglsdef{anchor.title} settings:
+\widgetdef{anchor.x}
+The \widget{anchor.x} widget may be set to
+\inlineglsdef{anchor.x.left} (the left edge of the \gls{bbox}),
+\inlineglsdef{anchor.x.middle} (the horizontal middle of the \gls{bbox}), or
+\inlineglsdef{anchor.x.right} (the right edge of the \gls{bbox}).
+
+\widgetdef{anchor.y}
+The \widget{anchor.y} widget may be set to
+\inlineglsdef{anchor.y.top} (the top edge of the \gls{bbox}),
+\inlineglsdef{anchor.y.middle} (the horizontal middle of the \gls{bbox}), or
+\inlineglsdef{anchor.y.bottom} (the bottom edge of the \gls{bbox}).
+
 \Glspl{shape} may also be modified using other functions
 that are not available for certain other types of \gls{object}. Those
 functions are described in \sectionref{sec:modshape}.
@@ -7559,11 +7574,14 @@ you can specify the angle of
 
 Notes:
 \begin{itemize}
+\item The \widget{anchor.title} is initialised to
+\widget{anchor.x.middle}, \widget{anchor.y.middle}.
+
 \item Individual \glspl{object}
-will be rotated relative to the \manmsg{centre} of the \gls{object}'s \gls{bbox}.
+will be rotated relative to the anchor of the \gls{object}'s \gls{bbox}
 
 \item \Glspl*{object} within a
-\gls{group} will be rotated relative to the \manmsg{centre} of the
+\gls{group} will be rotated relative to the anchor for the
 group's \gls{bbox}.
 
 \item A \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
@@ -7703,12 +7721,14 @@ provides a way to calculate the scaling factors. This simply changes
 the values in the upper part of the dialog. No scaling is actually
 applied until the \btn{okay} button is clicked on.
 
+\item The \widget{anchor.title} is initialised to
+\widget{anchor.x.left}, \widget{anchor.y.top}.
+
 \item Individual \glspl*{object} will be
-scaled relative to the top left corner of the
-object's \gls{bbox}.
+scaled relative to the anchor of the object's \gls{bbox}.
 
 \item \Glspl*{object} within a
-\gls{group} will be scaled relative to the top left corner
+\gls{group} will be scaled relative to the anchor
 of the group's \gls*{bbox}.
 
 \item A \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
@@ -7961,13 +7981,15 @@ The shearing transformation is given by:
 
 Notes:
 \begin{itemize}
+\item The \widget{anchor.title} is initialised to
+\widget{anchor.x.left}, \widget{anchor.y.bottom}.
+
 \item Individual \glspl*{object}
-will be sheared relative to the bottom left corner of the
+will be sheared relative to the anchor of the
 object's \gls{bbox}.
 
 \item \Glspl*{object} within a 
-\gls{group} will be sheared relative to the bottom
-left corner of the group's \gls*{bbox}.
+\gls{group} will be sheared relative to the anchor of the group's \gls*{bbox}.
 
 \item A \gls*{shape}['s] \gls{line-style} contributes to the \gls{bbox}. 
 

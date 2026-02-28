@@ -1729,10 +1729,11 @@ t
    }
 
    /**
-    * Rotates all objects in this group relative to the centre of
-    * the group.
+    * Rotates all objects in this group relative to the group's
+    * anchor.
     */
-   public void rotate(double angle)
+   @Override
+   public void rotate(AnchorX anchorX, AnchorY anchorY, double angle)
    {
       BBox box = getStorageBBox();
 
@@ -1741,15 +1742,15 @@ t
          return;
       }
 
-      Point2D p = new Point2D.Double(box.getMinX()+box.getWidth()/2,
-                                     box.getMinY()+box.getHeight()/2);
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       for (int i = 0; i < size_; i++)
       {
-         get(i).rotate(p,angle);
+         get(i).rotate(p, angle);
       }
    }
 
+   @Override
    public void rotate(Point2D p, double angle)
    {
       for (int i = 0; i < size_; i++)
@@ -1759,10 +1760,11 @@ t
    }
 
    /**
-    * Scales all objects in this group relative to the top left
-    * corner of this group's bounding box.
+    * Scales all objects in this group relative to the group's
+    * anchor.
     */
-   public void scale(double factorX, double factorY)
+   @Override
+   public void scale(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
    {
       BBox box = getStorageBBox();
 
@@ -1771,7 +1773,7 @@ t
          return;
       }
 
-      Point2D p = new Point2D.Double(box.getMinX(), box.getMinY());
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       for (int i = 0; i < size_; i++)
       {
@@ -1779,6 +1781,7 @@ t
       }
    }
 
+   @Override
    public void scale(Point2D p, double factorX, double factorY)
    {
       for (int i = 0; i < size_; i++)
@@ -1789,9 +1792,10 @@ t
 
    /**
     * Horizontally scales all objects in this group relative to the 
-    * left edge of this group's bounding box.
+    * group's anchor.
     */
-   public void scaleX(double factor)
+   @Override
+   public void scaleX(AnchorX anchorX, AnchorY anchorY, double factor)
    {
       BBox box = getStorageBBox();
 
@@ -1800,7 +1804,7 @@ t
          return;
       }
 
-      Point2D p = new Point2D.Double(box.getMinX(), box.getMinY());
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       for (int i = 0; i < size_; i++)
       {
@@ -1810,9 +1814,10 @@ t
 
    /**
     * Vertically scales all objects in this group relative to the 
-    * top edge of this group's bounding box.
+    * group's anchor.
     */
-   public void scaleY(double factor)
+   @Override
+   public void scaleY(AnchorX anchorX, AnchorY anchorY, double factor)
    {
       BBox box = getStorageBBox();
 
@@ -1821,7 +1826,7 @@ t
          return;
       }
 
-      Point2D p = new Point2D.Double(box.getMinX(), box.getMinY());
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       for (int i = 0; i < size_; i++)
       {
@@ -1830,10 +1835,11 @@ t
    }
 
    /**
-    * Shears all objects in this group relative to the bottom left
-    * corner of this group's bounding box.
+    * Shears all objects in this group relative to the group's
+    * anchor.
     */
-   public void shear(double factorX, double factorY)
+   @Override
+   public void shear(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
    {
       BBox box = getStorageBBox();
 
@@ -1842,7 +1848,7 @@ t
          return;
       }
 
-      Point2D p = new Point2D.Double(box.getMinX(), box.getMaxY());
+      Point2D p = box.getAnchorPoint(anchorX, anchorY);
 
       for (int i = 0; i < size_; i++)
       {
@@ -1850,6 +1856,7 @@ t
       }
    }
 
+   @Override
    public void shear(Point2D p, double factorX, double factorY)
    {
       for (int i = 0; i < size_; i++)

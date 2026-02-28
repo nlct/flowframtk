@@ -816,49 +816,57 @@ public class JDRText extends JDRCompleteObject
       jdrtransform.concat(af);
    }
 
-   public void rotate(double angle)
+   @Override
+   public void rotate(AnchorX anchorX, AnchorY anchorY, double angle)
    {
-      jdrtransform.rotate(angle);
+      jdrtransform.rotate(anchorX, anchorY, angle);
    }
 
+   @Override
    public void rotate(Point2D p, double angle)
    {
       jdrtransform.rotate(p, angle);
    }
 
-   public void scaleX(double factor)
+   @Override
+   public void scaleX(AnchorX anchorX, AnchorY anchorY, double factor)
    {
-      scale(factor, 1.0);
+      scale(anchorX, anchorY, factor, 1.0);
    }
 
+   @Override
    public void scaleX(Point2D p, double factor)
    {
       scale(p,factor,1.0);
    }
 
-   public void scaleY(double factor)
+   @Override
+   public void scaleY(AnchorX anchorX, AnchorY anchorY, double factor)
    {
-      scale(1.0, factor);
+      scale(anchorX, anchorY, 1.0, factor);
    }
 
+   @Override
    public void scaleY(Point2D p, double factor)
    {
       scale(p,1.0,factor);
    }
 
-   public void scale(double factorX, double factorY)
+   @Override
+   public void scale(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
    {
-      jdrtransform.scale(factorX, factorY);
+      jdrtransform.scale(anchorX, anchorY, factorX, factorY);
    }
 
+   @Override
    public void scale(Point2D p, double factorX, double factorY)
    {
       jdrtransform.scale(p, factorX, factorY);
    }
 
-   public void shearX(double factor)
+   public void shearX(AnchorX anchorX, AnchorY anchorY, double factor)
    {
-      shear(factor, 0.0);
+      shear(anchorX, anchorY, factor, 0.0);
    }
 
    public void shearX(Point2D p, double factor)
@@ -866,9 +874,9 @@ public class JDRText extends JDRCompleteObject
       shear(p,factor,0.0);
    }
 
-   public void shearY(double factor)
+   public void shearY(AnchorX anchorX, AnchorY anchorY, double factor)
    {
-      shear(0.0, factor);
+      shear(anchorX, anchorY, 0.0, factor);
    }
 
    public void shearY(Point2D p, double factor)
@@ -876,21 +884,24 @@ public class JDRText extends JDRCompleteObject
       shear(p,0.0,factor);
    }
 
+   @Override
    public void shear(Point2D p, double factor)
    {
       shear(p,factor,factor);
    }
 
-   public void shear(double factor)
+   public void shear(AnchorX anchorX, AnchorY anchorY, double factor)
    {
-      shear(factor, factor);
+      shear(anchorX, anchorY, factor, factor);
    }
 
-   public void shear(double factorX, double factorY)
+   @Override
+   public void shear(AnchorX anchorX, AnchorY anchorY, double factorX, double factorY)
    {
-      jdrtransform.shear(factorX, factorY);
+      jdrtransform.shear(anchorX, anchorY, factorX, factorY);
    }
 
+   @Override
    public void shear(Point2D p, double factorX, double factorY)
    {
       jdrtransform.shear(p, factorX, factorY);
@@ -2281,11 +2292,11 @@ public class JDRText extends JDRCompleteObject
    /**
     * Vertical alignment for <code>\pgftext</code>.
     */
-   protected int pgfValign;
+   protected int pgfValign;// TODO replace with AnchorY
    /**
     * Horizontal alignment for <code>\pgftext</code>.
     */
-   protected int pgfHalign;
+   protected int pgfHalign;// TODO replace with AnchorX
 
    /**
     * <code>\pgftext</code> horizontal alignment.

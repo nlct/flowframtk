@@ -53,30 +53,51 @@ public class RotateDialogBox extends JDialog
 
       JDRResources resources = application.getResources();
 
+      JComponent mainComp = Box.createVerticalBox();
+      mainComp.setAlignmentX(0.0f);
+
+      getContentPane().add(mainComp, "Center");
+
       anglePanel = resources.createAnglePanel("rotate.rotateby");
+      anglePanel.setAlignmentX(0.0f);
 
       anglePanel.setDegrees(0);
 
-      getContentPane().add(anglePanel, "Center");
+      mainComp.add(anglePanel);
 
-      JPanel p2 = new JPanel();
+      mainComp.add(Box.createVerticalStrut(10));
 
-      p2.add(resources.createOkayButton(getRootPane(), this));
-      p2.add(resources.createCancelButton(this));
+      JComponent row = createRow();
+      mainComp.add(row);
 
-      try
-      {
-         p2.add(resources.createHelpDialogButton(this, "sec:rotateobjects"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         resources.internalError(null, e);
-      }
+      anchorXComp = new AnchorXPanel(application);
+      anchorXComp.setSelectedAnchor(AnchorX.MIDDLE);
+      row.add(anchorXComp);
 
-      getContentPane().add(p2, "South");
+      row.add(resources.createButtonSpacer());
+
+      anchorYComp = new AnchorYPanel(application);
+      anchorYComp.setSelectedAnchor(AnchorY.MIDDLE);
+      row.add(anchorYComp);
+
+      mainComp.add(Box.createVerticalStrut(10));
+
+      JPanel btnPanel = new JPanel();
+
+      resources.createOkayCancelHelpButtons(this, btnPanel, this, "sec:rotateobjects");
+
+      getContentPane().add(btnPanel, "South");
 
       pack();
       setLocationRelativeTo(application);
+   }
+
+   protected JComponent createRow()
+   {
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(0.0f);
+
+      return row;
    }
 
    public void display()
@@ -105,7 +126,9 @@ public class RotateDialogBox extends JDialog
    {
       setVisible(false);
       application_.getCurrentFrame()
-         .rotateSelectedPaths(anglePanel.getValue());
+         .rotateSelectedPaths(anglePanel.getValue(),
+           anchorXComp.getSelectedAnchor(),
+           anchorYComp.getSelectedAnchor());
    }
 
    public String info()
@@ -133,4 +156,7 @@ public class RotateDialogBox extends JDialog
    private FlowframTk application_;
 
    private AnglePanel anglePanel;
+
+   private AnchorXPanel anchorXComp;
+   private AnchorYPanel anchorYComp;
 }

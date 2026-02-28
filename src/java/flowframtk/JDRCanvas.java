@@ -11428,12 +11428,27 @@ public class JDRCanvas extends JPanel
 
    public void rotateSelectedPaths(JDRAngle angle)
    {
-      rotateSelectedPaths(angle.toRadians());
+      rotateSelectedPaths(angle.toRadians(), null, null);
    }
 
-   public void rotateSelectedPaths(double angle)
+   public void rotateSelectedPaths(JDRAngle angle, AnchorX anchorX, AnchorY anchorY)
+   {
+      rotateSelectedPaths(angle.toRadians(), anchorX, anchorY);
+   }
+
+   public void rotateSelectedPaths(double angle, AnchorX anchorX, AnchorY anchorY)
    {
       if (angle == 0.0) return;
+
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.MIDDLE;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.MIDDLE;
+      }
 
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit = null;
@@ -11444,7 +11459,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new Rotate(object, angle, i);
+            edit = new Rotate(object, angle, i, anchorX, anchorY);
             ce.addEdit(edit);
          }
       }
@@ -11455,6 +11470,21 @@ public class JDRCanvas extends JPanel
 
    public void scaleSelectedPaths(double factor)
    {
+      scaleSelectedPaths(factor, null, null);
+   }
+
+   public void scaleSelectedPaths(double factor, AnchorX anchorX, AnchorY anchorY)
+   {
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.LEFT;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.TOP;
+      }
+
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit = null;
 
@@ -11464,7 +11494,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new Scale(object, factor, i);
+            edit = new Scale(object, factor, i, anchorX, anchorY);
             ce.addEdit(edit);
          }
       }
@@ -11475,6 +11505,22 @@ public class JDRCanvas extends JPanel
 
    public void scaleSelectedPaths(double scaleX, double scaleY)
    {
+      scaleSelectedPaths(scaleX, scaleY, null, null);
+   }
+
+   public void scaleSelectedPaths(double scaleX, double scaleY,
+      AnchorX anchorX, AnchorY anchorY)
+   {
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.LEFT;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.TOP;
+      }
+
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit = null;
 
@@ -11484,7 +11530,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new Scale(object, scaleX, scaleY, i);
+            edit = new Scale(object, scaleX, scaleY, i, anchorX, anchorY);
             ce.addEdit(edit);
          }
       }
@@ -11495,6 +11541,21 @@ public class JDRCanvas extends JPanel
 
    public void scaleSelectedToTypeblock()
    {
+      scaleSelectedToTypeblock(null, null);
+   }
+
+   public void scaleSelectedToTypeblock(AnchorX anchorX, AnchorY anchorY)
+   {
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.LEFT;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.TOP;
+      }
+
       FlowFrame typeblock = paths.getFlowFrame();
 
       if (typeblock == null)
@@ -11541,7 +11602,7 @@ public class JDRCanvas extends JPanel
              && !Double.isInfinite(factorY)
              && !Double.isNaN(factorY))
             {
-               edit = new Scale(object, factorX, factorY, i);
+               edit = new Scale(object, factorX, factorY, i, anchorX, anchorY);
                ce.addEdit(edit);
             }
          }
@@ -11553,6 +11614,21 @@ public class JDRCanvas extends JPanel
 
    public void scaleXSelectedPaths(double factor)
    {
+      scaleXSelectedPaths(factor, null, null);
+   }
+
+   public void scaleXSelectedPaths(double factor, AnchorX anchorX, AnchorY anchorY)
+   {
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.LEFT;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.TOP;
+      }
+
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit=null;
 
@@ -11562,7 +11638,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new ScaleX(object, factor, i);
+            edit = new ScaleX(object, factor, i, anchorX, anchorY);
             ce.addEdit(edit);
          }
       }
@@ -11573,6 +11649,22 @@ public class JDRCanvas extends JPanel
 
    public void scaleYSelectedPaths(double factor)
    {
+      scaleYSelectedPaths(factor, null, null);
+   }
+
+   public void scaleYSelectedPaths(double factor,
+         AnchorX anchorX, AnchorY anchorY)
+   {
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.LEFT;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.TOP;
+      }
+
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit = null;
 
@@ -11582,7 +11674,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new ScaleY(object, factor, i);
+            edit = new ScaleY(object, factor, i, anchorX, anchorY);
             ce.addEdit(edit);
          }
       }
@@ -11593,6 +11685,22 @@ public class JDRCanvas extends JPanel
 
    public void shearSelectedPaths(double factorX, double factorY)
    {
+      shearSelectedPaths(factorX, factorY, null, null);
+   }
+
+   public void shearSelectedPaths(double factorX, double factorY,
+      AnchorX anchorX, AnchorY anchorY)
+   {
+      if (anchorX == null)
+      {
+         anchorX = AnchorX.LEFT;
+      }
+
+      if (anchorY == null)
+      {
+         anchorY = AnchorY.BOTTOM;
+      }
+
       JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
       UndoableEdit edit=null;
 
@@ -11602,7 +11710,7 @@ public class JDRCanvas extends JPanel
 
          if (object.isSelected())
          {
-            edit = new Shear(object, factorX, factorY, i);
+            edit = new Shear(object, factorX, factorY, i, anchorX, anchorY);
             ce.addEdit(edit);
          }
       }
@@ -18090,7 +18198,8 @@ public class JDRCanvas extends JPanel
       private JDRCompleteObject object_, oldobject_;
       private int index_;
 
-      public Scale(JDRCompleteObject object, double factor, int index)
+      public Scale(JDRCompleteObject object, double factor, int index,
+         AnchorX anchorX, AnchorY anchorY)
       {
          super(getFrame());
 
@@ -18098,14 +18207,15 @@ public class JDRCanvas extends JPanel
          oldobject_ = object;
          object_ = (JDRCompleteObject)object.clone();
 
-         object_.scale(factor);
+         object_.scale(anchorX, anchorY, factor, factor);
          paths.set(index_, object_);
 
          setRefreshBounds(oldobject_, object_);
       }
 
       public Scale(JDRCompleteObject object, double factorX,
-        double factorY, int index)
+        double factorY, int index,
+         AnchorX anchorX, AnchorY anchorY)
       {
          super(getFrame());
 
@@ -18113,7 +18223,7 @@ public class JDRCanvas extends JPanel
          oldobject_ = object;
          object_ = (JDRCompleteObject)object.clone();
 
-         object_.scale(factorX, factorY);
+         object_.scale(anchorX, anchorY, factorX, factorY);
          paths.set(index_, object_);
 
          setRefreshBounds(oldobject_, object_);
@@ -18168,7 +18278,8 @@ public class JDRCanvas extends JPanel
       private JDRCompleteObject object_, oldobject_;
       private int index_;
 
-      public ScaleX(JDRCompleteObject object, double factor, int index)
+      public ScaleX(JDRCompleteObject object, double factor, int index,
+         AnchorX anchorX, AnchorY anchorY)
       {
          super(getFrame());
 
@@ -18176,7 +18287,7 @@ public class JDRCanvas extends JPanel
          object_ = (JDRCompleteObject)object.clone();
          index_ = index;
 
-         object_.scaleX(factor);
+         object_.scaleX(anchorX, anchorY, factor);
          paths.set(index_, object_);
 
          setRefreshBounds(oldobject_, object_);
@@ -18229,7 +18340,8 @@ public class JDRCanvas extends JPanel
       private JDRCompleteObject object_, oldobject_;
       private int index_;
 
-      public ScaleY(JDRCompleteObject object, double factor, int index)
+      public ScaleY(JDRCompleteObject object, double factor, int index,
+         AnchorX anchorX, AnchorY anchorY)
       {
          super(getFrame());
 
@@ -18237,7 +18349,7 @@ public class JDRCanvas extends JPanel
          object_ = (JDRCompleteObject)object.clone();
          index_ = index;
 
-         object_.scaleY(factor);
+         object_.scaleY(anchorX, anchorY, factor);
          paths.set(index_, object_);
 
          setRefreshBounds(oldobject_, object_);
@@ -18292,7 +18404,7 @@ public class JDRCanvas extends JPanel
       private int index_;
 
       public Shear(JDRCompleteObject object, double factorX, double factorY,
-         int index)
+         int index, AnchorX anchorX, AnchorY anchorY)
       {
          super(getFrame());
 
@@ -18300,7 +18412,7 @@ public class JDRCanvas extends JPanel
          object_ = (JDRCompleteObject)object.clone();
          index_ = index;
 
-         object_.shear(factorX, factorY);
+         object_.shear(anchorX, anchorY, factorX, factorY);
          paths.set(index_, object_);
 
          if (dragScaleObject == oldobject_) dragScaleObject = object_;
@@ -18355,7 +18467,8 @@ public class JDRCanvas extends JPanel
       private JDRCompleteObject object_, oldobject_;
       private int index_;
 
-      public Rotate(JDRCompleteObject object, double angle, int index)
+      public Rotate(JDRCompleteObject object, double angle, int index,
+        AnchorX anchorX, AnchorY anchorY)
       {
          super(getFrame());
 
@@ -18363,7 +18476,7 @@ public class JDRCanvas extends JPanel
          object_ = (JDRCompleteObject)object.clone();
          index_ = index;
 
-         object_.rotate(angle);
+         object_.rotate(anchorX, anchorY, angle);
          paths.set(index_, object_);
 
          setRefreshBounds(oldobject_, object_);
