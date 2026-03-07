@@ -1380,6 +1380,11 @@ public class JDRFrame extends JInternalFrame
       canvas.splitText();
    }
 
+   public void convertToCoordPath()
+   {
+      canvas.convertToCoordPath();
+   }
+
    public void convertToPath()
    {
       canvas.convertToPath();

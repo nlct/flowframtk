@@ -504,6 +504,9 @@
 <entry key="menu.transform.convert_to_polygon.mnemonic">Y</entry>
 <entry key="menu.transform.convert_to_polygon.tooltip">Convert curves in selected shape into a series of straight lines</entry>
 
+<entry key="menu.transform.convert_to_coord_path">Convert To Co-Ordinate Path</entry>
+<entry key="menu.transform.convert_to_coord_path.tooltip">Convert to a line path with vertices at original path''s controls</entry>
+
 <entry key="menu.transform.textpath">Convert To Text Path</entry>
 <entry key="menu.transform.textpath.mnemonic">N</entry>
 <entry key="menu.transform.textpath.tooltip">Replace the selected text area and path with a text-path</entry>
@@ -1521,6 +1524,7 @@
 <entry key="undo.colour">更改颜色</entry>
 <entry key="undo.combine_to_frame">Combine Text to Frame</entry>
 <entry key="undo.continuous">曲线平滑</entry>
+<entry key="undo.convert_to_coord_path">Convert to Coord Path</entry>
 <entry key="undo.convert_to_curve">转换为曲线段</entry>
 <entry key="undo.convert_to_line">转换为直接段</entry>
 <entry key="undo.convert_to_move">转换为间断段</entry>

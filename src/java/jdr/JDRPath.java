@@ -3622,7 +3622,12 @@ public class JDRPath extends JDRShape
     */
    public int getInitCapacity()
    {
-      return ((getCanvasGraphics().getOptimize() == CanvasGraphics.OPTIMIZE_SPEED)?
+      return getInitCapacity(getCanvasGraphics());
+   }
+
+   public static int getInitCapacity(CanvasGraphics cg)
+   {
+      return ((cg.getOptimize() == CanvasGraphics.OPTIMIZE_SPEED)?
                init_capacity_speed
              : init_capacity_memory);
    }

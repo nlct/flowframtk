@@ -11863,6 +11863,98 @@ public class JDRCanvas extends JPanel
       if (done) frame_.postEdit(ce);
    }
 
+   public void convertToCoordPath()
+   {
+      UndoableEdit edit = null;
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+      String undoName = getResources().getMessage("undo.convert_to_coord_path");
+
+      CanvasGraphics cg = getCanvasGraphics();
+
+      DoubleDimension ptSize = cg.getStoragePointSize();
+
+      for (int i = 0, n=paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected() && object instanceof JDRShape)
+         {
+            JDRShape shape = (JDRShape)object;
+
+            int capacity = JDRPath.getInitCapacity(cg);
+            int size = shape.size();
+
+            JDRPointIterator pi = shape.getPointIterator();
+            JDRBasicStroke stroke = new JDRBasicStroke(cg);
+
+            JDRMarker marker = new ArrowIndepCentredRectangle2Open(
+               stroke.getPenWidth(), 1, false,
+               new JDRLength(cg, ptSize.getWidth(), JDRUnit.bp),
+               new JDRLength(cg, ptSize.getHeight(), JDRUnit.bp));
+
+            marker.setOrient(false);
+            marker.setFillPaint(new JDRColor(cg, JDRPoint.controlColor));
+
+            JDRPath path = new JDRPath(
+              size > capacity ? size : capacity,
+              new JDRTransparent(cg),
+              new JDRTransparent(cg),
+              stroke
+            );
+
+            stroke.setStartArrow(marker);
+            stroke.setMidArrow((JDRMarker)marker.clone());
+
+            JDRPoint prevP = null;
+
+            try
+            {
+               while (pi.hasNext())
+               {
+                  JDRPoint point = (JDRPoint)pi.next().clone();
+
+                  if (prevP != null)
+                  {
+                     path.add(new JDRLine(prevP, point));
+                  }
+
+                  prevP = point;
+               }
+
+               if (shape.isClosed())
+               {
+                  path.close(JDRPath.CLOSE_LINE);
+               }
+               else
+               {
+                  stroke.setEndArrow((JDRMarker)marker.clone());
+               }
+
+               path.setSelected(true);
+            }
+            catch (InvalidPathException e)
+            {
+               // shouldn't happen
+               getResources().internalError(this, e);
+            }
+
+            if (!path.isEmpty())
+            {
+               OldNewObject oldNewObject = new OldNewObject(shape, i);
+               oldNewObject.setNewObject(path);
+
+               edit = new ReplaceObject(oldNewObject, undoName);
+
+               ce.addEdit(edit);
+            }
+         }
+      }
+
+      ce.end();
+      if (edit != null) frame_.postEdit(ce);
+   }
+
    public void convertToPath()
    {
       boolean done = false;

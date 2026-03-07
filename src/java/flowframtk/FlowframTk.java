@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(203);
+      invoker.setStartupDeterminate(204);
 
       // create menu bar, menu and menu item
 
@@ -2037,7 +2037,7 @@ public class FlowframTk extends JFrame
             }
          });
 
-      incStartupProgress(transformM, subtractPathsItem);
+      incStartupProgress(transformM, convertToPolygonItem);
 
       transformM.addSeparator();
 
@@ -2103,6 +2103,23 @@ public class FlowframTk extends JFrame
          });
 
       incStartupProgress(transformM, patternM, removePatternItem);
+
+      // Convert to co-ordinate path
+
+      JMenuItem convertToCoordPathItem = FlowframTkAction.createMenuItem(this,
+         "menu.transform", "convert_to_coord_path", transformM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_SHAPE,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, true, false, true,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getFrame().convertToCoordPath();
+            }
+         });
+
+      incStartupProgress(transformM, convertToCoordPathItem);
 
       // Convert to JDRPath
 
