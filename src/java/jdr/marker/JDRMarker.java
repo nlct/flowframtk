@@ -1804,9 +1804,16 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       }
       else
       {
-         if (version < 1.4f && type >= NUM_ARROWS1_1)
+         if (type >= maxMarkers(version))
          {
             jdr.writeByte((byte)ARROW_NONE);
+
+            jdr.warningWithFallback(
+               "warning.save_unsupported_marker",
+               "Marker type {0} not supported in version {1}",
+               type, version
+            );
+
             return;
          }
 
@@ -1958,28 +1965,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
       }
       else
       {
-         int maxType;
-
-         if (version < 1.4f)
-         {
-            maxType = NUM_ARROWS1_1;
-         }
-         else if (version < 1.6f)
-         {
-            maxType = NUM_ARROWS1_4;
-         }
-         else if (version < 2.1f)
-         {
-            maxType = NUM_ARROWS1_6;
-         }
-         else if (version < 2.2f)
-         {
-            maxType = NUM_ARROWS2_1;
-         }
-         else
-         {
-            maxType = NUM_ARROWS2_2;
-         }
+         int maxType = maxMarkers(version);
 
          int arrowType = (int)jdr.readByte(
             InvalidFormatException.MARKER_ID, 0, maxType, true, false);
@@ -2969,6 +2955,35 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
    public static int maxMarkers()
    {
       return NUM_ARROWS2_2;
+   }
+
+   /**
+    * Gets the number of known markers for the given version.
+    * @param version the version number
+    * @return number of known markers for version
+    */
+   public static int maxMarkers(float version)
+   {
+      if (version < 1.4f)
+      {
+         return NUM_ARROWS1_1;
+      }
+      else if (version < 1.6f)
+      {
+         return NUM_ARROWS1_4;
+      }
+      else if (version < 2.1f)
+      {
+         return NUM_ARROWS1_6;
+      }
+      else if (version < 2.2f)
+      {
+         return NUM_ARROWS2_1;
+      }
+      else
+      {
+         return NUM_ARROWS2_2;
+      }
    }
 
    /**
