@@ -11888,10 +11888,9 @@ public class JDRCanvas extends JPanel
             JDRPointIterator pi = shape.getPointIterator();
             JDRBasicStroke stroke = new JDRBasicStroke(cg);
 
-            JDRMarker marker = new ArrowIndepCentredRectangle2Open(
+            JDRMarker marker = new ArrowBoxOpen(
                stroke.getPenWidth(), 1, false,
-               new JDRLength(cg, ptSize.getWidth(), JDRUnit.bp),
-               new JDRLength(cg, ptSize.getHeight(), JDRUnit.bp));
+               new JDRLength(cg, ptSize.getWidth(), JDRUnit.bp));
 
             marker.setOrient(false);
             marker.setFillPaint(new JDRColor(cg, JDRPoint.controlColor));
