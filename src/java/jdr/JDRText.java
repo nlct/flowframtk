@@ -761,11 +761,11 @@ public class JDRText extends JDRCompleteObject
    }
 
    @Override
-   public void drawClipDraft()
+   public void drawClipDraft(boolean useDraftPaint)
    {
       try
       {
-         convertToPath().drawClipDraft();
+         convertToPath().drawClipDraft(useDraftPaint);
       }
       catch (InvalidFormatException e)
       {

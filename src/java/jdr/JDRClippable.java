@@ -39,5 +39,5 @@ public interface JDRClippable extends JDRGraphicObject
    public JDRCompleteObject clip(Rectangle2D clipBounds)
       throws UnableToClipException;
 
-   public void drawClipDraft();
+   public void drawClipDraft(boolean useDraftPaint);
 }

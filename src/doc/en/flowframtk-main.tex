@@ -9309,6 +9309,16 @@ the original was open. If you want a closed shape to be clipped to
 another closed shape, then the \transformfn{intersect} function is
 the best method.
 
+\begin{information}
+The shape clipping function is still a little experimental.
+\end{information}
+
+The shape clipping function alters \glspl{shape} by removing
+segments outside of the desired area. This is intended as a more
+convenient method than using the \menu{editpath.break_path} and
+\menu{editpath.delete_control} functions to extract part
+of an existing shape, which can then be edited.
+
 \menudef{menu.transform.clip}
 
 The \menu{transform.clip} menu item can clip selected \glspl{shape}
@@ -9322,6 +9332,7 @@ replaced by a new \gls{path} that has the same segments except for
 those that lie outside the clipping area, which will be replaced by
 a move (gap), and segments that cross the boundary will be split to
 fit.
+This splitting process doesn't always work correctly.
 
 \begin{important}
 As with the \gls{cag} functions, the original \glspl{shape} can't be
@@ -9359,7 +9370,12 @@ can change the clipping area.
 
 The original shapes are drawn in draft mode (their \gls{line-style}
 attributes are ignored) to make it easier to compare their positions
-with the results.
+with the results. The new shapes are drawn with the best matching
+solid line or fill \manmsg{colour} (shading is ignore), 
+but the line style attributes aren't applied in the sample area.
+The full set of attributes will only be applied once the 
+\btn{okay} button is pressed and the replacement shape is drawn on
+the \gls{canvas}.
 
 \section{Distorting Shapes}\label{sec:distort}
 

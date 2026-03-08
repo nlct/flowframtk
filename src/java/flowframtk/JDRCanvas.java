@@ -405,6 +405,7 @@ public class JDRCanvas extends JPanel
       addAppSelectAction("split");
       addAppSelectAction("textpath");
       addAppSelectAction("separate");
+      addAppSelectAction("convert_to_coord_path");
       addAppAction("navigate.select");
       addAppAction("navigate.add_next");
       addAppAction("navigate.skip");
@@ -13946,7 +13947,7 @@ public class JDRCanvas extends JPanel
 
          newObject = oldNewObject.getNewObject();
 
-         BBox box = oldObject.getStorageBBox();
+         BBox box = getRefreshBounds(oldObject);
 
          paths.set(index_, newObject);
          enableTools();

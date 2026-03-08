@@ -4475,6 +4475,7 @@ Merge Region: {2}</entry>
 <entry key="message.clip.replaced">{0}: object will be replaced with {1}</entry>
 <entry key="message.clip.not_supported">{0}: clipping not supported</entry>
 <entry key="message.clip.info">Adjust the clipping boundary either by dragging the clipping area or use the widgets below. Once the clipping area is in the correct position, click on the {0} button and the results will be shown in the panel. If you are happy with the changes, click {1} to implement them.</entry>
+<entry key="message.clip.draft_mode">Draft mode in sample panel does not use line style or shading.</entry>
 
 
 <!--  Error Messages -->

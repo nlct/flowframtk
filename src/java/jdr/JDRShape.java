@@ -1405,15 +1405,34 @@ public abstract class JDRShape extends JDRCompleteObject
    }
 
    @Override
-   public void drawClipDraft()
+   public void drawClipDraft(boolean useDraftPaint)
    {
       Paint orgPaint = canvasGraphics.getPaint();
 
-      canvasGraphics.setPaint(draftColor);
+      if (useDraftPaint)
+      {
+         canvasGraphics.setPaint(draftColor);
+      }
+      else
+      {
+         canvasGraphics.setPaint(getLinePaint().getColor());
+      }
 
       Path2D p = getComponentGeneralPath();
 
       canvasGraphics.draw(p);
+
+      if (!useDraftPaint)
+      {
+         JDRPaint fillPaint = getShapeFillPaint();
+
+         if (!(fillPaint instanceof JDRTransparent))
+         {
+            canvasGraphics.setPaint(fillPaint.getColor());
+
+            canvasGraphics.fill(p);
+         }
+      }
 
       canvasGraphics.setPaint(orgPaint);
    }

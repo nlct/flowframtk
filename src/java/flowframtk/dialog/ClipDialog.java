@@ -289,7 +289,10 @@ public class ClipDialog extends JDialog
       doTaskButton.setEnabled(true);
 
       objects.clear();
-      infoHeaderText = "";
+
+      infoHeaderText = String.format("%s%n%n",
+         resources.getMessage("message.clip.draft_mode"));
+
       infoArea.setText(infoText);
 
       JDRGroup allObjects = canvas.getAllObjects();
@@ -841,13 +844,13 @@ class ClipSamplePanel extends JPanel
 
       for (OldNewObject oldNewObj : objects)
       {
-         ((JDRClippable)oldNewObj.getOldObject()).drawClipDraft();
+         ((JDRClippable)oldNewObj.getOldObject()).drawClipDraft(true);
 
          JDRCompleteObject newObj = oldNewObj.getNewObject();
 
          if (newObj != null && oldNewObj.hasChanged())
          {
-            newObj.draw();
+            ((JDRClippable)newObj).drawClipDraft(false);
          }
       }
 

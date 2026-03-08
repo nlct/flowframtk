@@ -2768,7 +2768,7 @@ t
    }
 
    @Override
-   public void drawClipDraft()
+   public void drawClipDraft(boolean useDraftPaint)
    {
       for (int i = 0; i < size(); i++)
       {
@@ -2776,7 +2776,7 @@ t
 
          if (obj instanceof JDRClippable)
          {
-            ((JDRClippable)obj).drawClipDraft();
+            ((JDRClippable)obj).drawClipDraft(useDraftPaint);
          }
       }
    }

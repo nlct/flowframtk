@@ -479,11 +479,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    @Override
-   public void drawClipDraft()
+   public void drawClipDraft(boolean useDraftPaint)
    {
       try
       {
-         splitText().drawClipDraft();
+         splitText().drawClipDraft(useDraftPaint);
       }
       catch (InvalidShapeException e)
       {
