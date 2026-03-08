@@ -4808,6 +4808,11 @@ public class JDRCanvas extends JPanel
 
       Point2D p = cg.componentToStorage(dtde.getLocation());
 
+      p.setLocation(
+          p.getX() - cg.getOriginX(),
+          p.getY() - cg.getOriginY()
+        );
+
       double dx = -p.getX();
       double dy = -p.getY();
 
