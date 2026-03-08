@@ -24,6 +24,7 @@
 package com.dickimawbooks.jdrresources;
 
 import java.nio.ByteBuffer;
+import java.util.Vector;
 
 import java.awt.*;
 import java.awt.datatransfer.*;
@@ -44,12 +45,17 @@ import com.dickimawbooks.jdr.exceptions.InvalidFormatException;
 
 public class JDRTransferHandler extends TransferHandler implements Transferable
 {
-   public JDRTransferHandler(CanvasGraphics cg, ExportSettings exportSettings)
+   public JDRTransferHandler(CanvasGraphics cg, ExportSettings exportSettings,
+     ImportSettings importSettings, TextModeMappings textModeMappings,
+     MathModeMappings mathModeMappings)
    {
       super();
       this.canvasGraphics = cg;
       this.jdr = new JDR();
       this.exportSettings = exportSettings;
+      this.importSettings = importSettings;
+      this.textModeMappings = textModeMappings;
+      this.mathModeMappings = mathModeMappings;
    }
 
    /**
@@ -181,7 +187,25 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
             }
             else if (t.isDataFlavorSupported(DATA_FLAVOR_SVG))
             {
-// TODO
+               Object data = t.getTransferData(DATA_FLAVOR_SVG);
+
+               if (data instanceof InputStream)
+               {
+                  InputStream ins = (InputStream)data;
+                  ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+                  int b;
+
+                  while ((b = ins.read()) != -1)
+                  {
+                     buffer.write(b);
+                  }
+
+                  StringReader reader = new StringReader(buffer.toString("UTF-8"));
+
+                  group = SVG.load(canvasGraphics, img.getBaseFile(), reader,
+                    importSettings, textModeMappings, mathModeMappings);
+               }
             }
             else if (t.isDataFlavorSupported(DATA_FLAVOR_TEXT))
             {
@@ -192,7 +216,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                   InputStream ins = (InputStream)data;
 
                   // InputStream.readAllBytes() requires Java 9+
-                  ByteBuffer buffer = ByteBuffer.allocate(256);
+                  ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
                   int b;
                   JDRFont font = img.getCurrentFont();
@@ -201,16 +225,22 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
 
                   while ((b = ins.read()) != -1)
                   {
-                     buffer.put((byte)b);
+                     buffer.write(b);
                   }
 
-                  String text = new String(buffer.array()).trim();
+                  String text = buffer.toString("UTF-8").trim();
+
+                  boolean useMappings = (importSettings != null
+                   && importSettings.useMappings
+                   && (textModeMappings != null || mathModeMappings != null));
 
                   if (!text.isEmpty())
                   {
                      group = new JDRGroup(canvasGraphics);
 
                      String[] split = text.split("\\R");
+
+                     Vector<String> styNames = new Vector<String>();
 
                      for (String s : split)
                      {
@@ -220,10 +250,39 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                         {
                            JDRText jdrText = new JDRText(canvasGraphics,
                              new Point2D.Double(0, offset), font, s);
+
+                           if (useMappings)
+                           {
+                              if (mathModeMappings != null 
+                                   && s.length() > 2
+                                   && s.startsWith("$")
+                                   && s.endsWith("$")
+                                   && !s.substring(1, s.length()-1).contains("$"))
+                              {
+                                 s = s.substring(1, s.length()-1);
+
+                                 jdrText.setText(s);
+                                 jdrText.setLaTeXText(
+                                   "$"
+                                   + mathModeMappings.applyMappings(s, styNames)
+                                   + "$");
+                              }
+                              else if (textModeMappings != null)
+                              {
+                                 jdrText.setLaTeXText(
+                                   textModeMappings.applyMappings(s, styNames));
+                              }
+                           }
+
                            group.add(jdrText);
                         }
 
                         offset += skip;
+                     }
+
+                     if (!styNames.isEmpty())
+                     {
+                        canvasGraphics.addPackagesToPreamble(styNames);
                      }
                   }
 
@@ -266,16 +325,16 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
    {
       try
       {
-         if (f.isMimeTypeEqual(DATA_FLAVOR_JDR))
+         if (f.isMimeTypeEqual(DATA_FLAVOR_JDR) && jdrByteArray != null)
          {
             return jdr.fromByteArray(jdrByteArray, canvasGraphics);
          }
-         else if (f.isMimeTypeEqual(DATA_FLAVOR_SVG))
+         else if (f.isMimeTypeEqual(DATA_FLAVOR_SVG) && svgString != null)
          {
             return new ByteArrayInputStream(
               svgString.getBytes(StandardCharsets.UTF_8));
          }
-         else if (f.isMimeTypeEqual(DATA_FLAVOR_TEXT))
+         else if (f.isMimeTypeEqual(DATA_FLAVOR_TEXT) && textOnly != null)
          {
             return new ByteArrayInputStream(
               textOnly.toString().getBytes(StandardCharsets.UTF_8));
@@ -330,6 +389,9 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
    private CanvasGraphics canvasGraphics;
    private JDR jdr;
    private ExportSettings exportSettings;
+   private ImportSettings importSettings;
+   private TextModeMappings textModeMappings;
+   private MathModeMappings mathModeMappings;
 
    public static final DataFlavor DATA_FLAVOR_JDR
     = new DataFlavor("application/x-flowframtk-jdr", "FlowFramTk Binary Format");

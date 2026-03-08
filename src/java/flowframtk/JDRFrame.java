@@ -81,7 +81,12 @@ public class JDRFrame extends JInternalFrame
       latexCodeEditor = new LaTeXCodeEditor(this);
 
       canvas = new JDRCanvas(this, cg);
-      canvas.setTransferHandler(new JDRTransferHandler(cg, getExportSettings()));
+
+      canvas.setTransferHandler(new JDRTransferHandler(cg, 
+       getExportSettings(),
+       application_.getSettings().getImportSettings(),
+       application_.getTextModeMappings(), 
+       application_.getMathModeMappings()));
 
       int prefWidth = (int)getComponentPaperWidth();
       int prefHeight = (int)getComponentPaperHeight();

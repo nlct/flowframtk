@@ -1,0 +1,3 @@
+Sample #1 text% ¢
+
+$f = x²+y²$

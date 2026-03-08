@@ -7031,6 +7031,11 @@ public class FlowframTk extends JFrame
       return !file.isDirectory() && bitmapFileFilter.accept(file);
    }
 
+   public boolean isTextExtension(File file)
+   {
+      return !file.isDirectory() && file.getName().toLowerCase().endsWith(".txt");
+   }
+
    public void dragEnter(DropTargetDragEvent dtde)
    {
    }

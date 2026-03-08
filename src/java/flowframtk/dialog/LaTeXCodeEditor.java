@@ -110,6 +110,12 @@ public class LaTeXCodeEditor extends JPanel
       magicComments.updateLaTeXCode(magicText);
    }
 
+   public void updateEarlyLaTeXCode(String text)
+   {
+      earlyPreamble.updateLaTeXCode(text);
+      tabbedPane.setSelectedIndex(0);
+   }
+
    public void appendToLaTeXCode(String text)
    {
       earlyPreamble.appendToLaTeXCode(text);

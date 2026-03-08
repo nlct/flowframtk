@@ -33,6 +33,7 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -4843,6 +4844,49 @@ public class JDRCanvas extends JPanel
                      n++;
                      done = true;
                   }
+                  else if (getApplication().isTextExtension(file))
+                  {
+                     BufferedReader reader = null;
+
+                     try
+                     {
+                        reader = Files.newBufferedReader(file.toPath());
+                        String line;
+
+                        while ((line = reader.readLine()) != null)
+                        {
+                           if (line.matches("^\\s*$"))
+                           {
+                              p.setLocation(p.getX(),
+                                 p.getY()
+                                +cg.componentYToStorage(textField.getHeight()));
+                              continue;
+                           }
+
+                           currentText = new JDRText(cg, p);
+                           JDRText text = addText(ce, line);
+
+                           p.setLocation(p.getX(),
+                                 p.getY()
+                                +cg.componentYToStorage(textField.getHeight()));
+
+                           ce.addEdit(new SelectObject(text, true));
+
+                           n++;
+                        }
+                     }
+                     finally
+                     {
+                        if (reader != null)
+                        {
+                           reader.close();
+                           reader = null;
+                        }
+                     }
+   
+                     n++;
+                     done = true;
+                  }
                   else
                   {
                      getMessageSystem().warning(getResources().getMessage(
@@ -8735,6 +8779,14 @@ public class JDRCanvas extends JPanel
       frame_.postEdit(ce);
    }
 
+   @Override
+   public File getBaseFile()
+   {
+      File file = frame_.getFile();
+
+      return file == null ? null : file.getParentFile();
+   }
+
    /* JDRImage method used by transfer handler */
    @Override
    public JDRGroup getSelection()
@@ -8795,6 +8847,25 @@ public class JDRCanvas extends JPanel
       JDRGrid grid = frame_.getGrid();
 
       CanvasGraphics cg = getCanvasGraphics();
+      String orgPreamble = getPreamble();
+
+      String importedPreamble = grp.getCanvasGraphics().getPreamble();
+
+      if (importedPreamble != null || !importedPreamble.isEmpty())
+      {
+         if (orgPreamble == null || orgPreamble.isEmpty()
+             || importedPreamble.contains(orgPreamble))
+         {
+            frame_.getLaTeXCodeEditor().updateEarlyLaTeXCode(importedPreamble);
+         }
+         else
+         {
+            frame_.getLaTeXCodeEditor().appendToLaTeXCode(
+              String.format("%n%s", importedPreamble));
+         }
+
+         cg.setPreamble(getPreamble());
+      }
 
       if (cg != grp.getCanvasGraphics())
       {
@@ -9452,6 +9523,19 @@ public class JDRCanvas extends JPanel
          currentText.setLaTeXText(
          "$"
          + getApplication().applyMathModeMappings(currentText.getText(), styNames)
+         +"$");
+      }
+      else if (getCurrentTool() == ACTION_SELECT
+         && text.length() > 2 && text.startsWith("$") && text.endsWith("$")
+         && !text.substring(1, text.length()-1).contains("$"))
+      {
+         text = text.substring(1, text.length()-1);
+
+         currentText.setText(text);
+
+         currentText.setLaTeXText(
+         "$"
+         + getApplication().applyMathModeMappings(text, styNames)
          +"$");
       }
       else

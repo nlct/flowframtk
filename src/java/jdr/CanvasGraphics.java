@@ -25,6 +25,8 @@
 package com.dickimawbooks.jdr;
 
 import java.io.*;
+import java.util.Vector;
+import java.util.regex.Matcher;
 import java.text.MessageFormat;
 import java.awt.Point;
 import java.awt.Image;
@@ -1147,6 +1149,51 @@ public class CanvasGraphics
    public void setPreamble(String preambleText)
    {
       preamble = preambleText;
+   }
+
+   public void addPackagesToPreamble(Vector<String> styNames)
+   {
+      StringBuffer buffer = new StringBuffer();
+
+      for (String styName : styNames)
+      {
+         Matcher styMatcher = TeXMappings.STY_PATTERN.matcher(styName);
+
+         if (styMatcher.matches())
+         {
+            String opt = styMatcher.group(1);
+            String name = styMatcher.group(2);
+
+            String line;
+
+            if (opt == null)
+            {
+               line = String.format("\\usepackage{%s}", name);
+            }
+            else
+            {
+               line = String.format("\\usepackage[%s]{%s}", opt, name);
+            }
+
+            if (preamble == null || !preamble.contains(line))
+            {
+               buffer.append(line);
+               buffer.append(String.format("%n"));
+            }
+         }
+      }
+
+      if (buffer.length() > 0)
+      {
+         if (preamble == null)
+         {
+            preamble = buffer.toString();
+         }
+         else
+         {
+            preamble += String.format("%n") + buffer.toString();
+         }
+      }
    }
 
    public String getPreamble()

@@ -23,6 +23,8 @@
 */
 package com.dickimawbooks.jdrresources;
 
+import java.io.File;
+
 import com.dickimawbooks.jdr.*;
 
 /**
@@ -48,4 +50,9 @@ public interface JDRImage extends JDRConstants
     * Returns the current font settings.
     */
    public JDRFont getCurrentFont();
+
+   /**
+    * Gets the base file or null if not set.
+    */
+   public File getBaseFile();
 }
