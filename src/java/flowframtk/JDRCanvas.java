@@ -8792,6 +8792,22 @@ public class JDRCanvas extends JPanel
       return file == null ? null : file.getParentFile();
    }
 
+   @Override
+   public boolean isMathModeMappingsOn()
+   {
+      FlowframTkSettings settings = getApplication().getSettings();
+
+      return settings.autoEscapeMathChars;
+   }
+
+   @Override
+   public boolean isTextModeMappingsOn()
+   {
+      FlowframTkSettings settings = getApplication().getSettings();
+
+      return settings.autoEscapeSpChars;
+   }
+
    /* JDRImage method used by transfer handler */
    @Override
    public JDRGroup getSelection()

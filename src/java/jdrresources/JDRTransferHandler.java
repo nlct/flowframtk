@@ -230,10 +230,6 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
 
                   String text = buffer.toString("UTF-8").trim();
 
-                  boolean useMappings = (importSettings != null
-                   && importSettings.useMappings
-                   && (textModeMappings != null || mathModeMappings != null));
-
                   if (!text.isEmpty())
                   {
                      group = new JDRGroup(canvasGraphics);
@@ -251,27 +247,24 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                            JDRText jdrText = new JDRText(canvasGraphics,
                              new Point2D.Double(0, offset), font, s);
 
-                           if (useMappings)
+                           if (mathModeMappings != null && img.isMathModeMappingsOn()
+                                && s.length() > 2
+                                && s.startsWith("$")
+                                && s.endsWith("$")
+                                && !s.substring(1, s.length()-1).contains("$"))
                            {
-                              if (mathModeMappings != null 
-                                   && s.length() > 2
-                                   && s.startsWith("$")
-                                   && s.endsWith("$")
-                                   && !s.substring(1, s.length()-1).contains("$"))
-                              {
-                                 s = s.substring(1, s.length()-1);
+                              s = s.substring(1, s.length()-1);
 
-                                 jdrText.setText(s);
-                                 jdrText.setLaTeXText(
-                                   "$"
-                                   + mathModeMappings.applyMappings(s, styNames)
-                                   + "$");
-                              }
-                              else if (textModeMappings != null)
-                              {
-                                 jdrText.setLaTeXText(
-                                   textModeMappings.applyMappings(s, styNames));
-                              }
+                              jdrText.setText(s);
+                              jdrText.setLaTeXText(
+                                "$"
+                                + mathModeMappings.applyMappings(s, styNames)
+                                + "$");
+                           }
+                           else if (textModeMappings != null && img.isTextModeMappingsOn())
+                           {
+                              jdrText.setLaTeXText(
+                                textModeMappings.applyMappings(s, styNames));
                            }
 
                            group.add(jdrText);
