@@ -343,6 +343,8 @@ public class FLFSelector extends JDialog
          }
       }
 
+      this.object = object;
+
       margins.setReferenceBounds(object.getStorageBBox(),
         object.getCanvasGraphics().getStorageUnit());
 

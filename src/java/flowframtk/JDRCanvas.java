@@ -6411,7 +6411,7 @@ public class JDRCanvas extends JPanel
 
          if (o instanceof JDRGroup)
          {
-            if (!isUniqueLabel((JDRGroup)o,frameType,object,label))
+            if (!isUniqueLabel((JDRGroup)o, frameType, object, label))
             {
                return false;
             }
@@ -15058,11 +15058,11 @@ public class JDRCanvas extends JPanel
 
             if (box == null)
             {
-               box = object.getBpBBox();
+               box = object.getStorageBBox();
             }
             else
             {
-               object.mergeBpBBox(box);
+               object.mergeStorageBBox(box);
             }
          }
 
