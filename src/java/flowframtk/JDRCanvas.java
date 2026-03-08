@@ -15058,17 +15058,21 @@ public class JDRCanvas extends JPanel
 
             if (box == null)
             {
-               box = object.getStorageBBox();
+               box = object.getBpBBox();
             }
             else
             {
-               object.mergeStorageBBox(box);
+               object.mergeBpBBox(box);
             }
          }
 
+         JDRUnit unit = cg.getStorageUnit();
+
          newObject_ = JDRPath.constructRectangle(cg,
-           box.getMinX(), box.getMinY(),
-           box.getMaxX(), box.getMaxY());
+           unit.fromBp(box.getMinX()), 
+           unit.fromBp(box.getMinY()),
+           unit.fromBp(box.getMaxX()), 
+           unit.fromBp(box.getMaxY()));
 
          newObject_.setStroke(new JDRBasicStroke(cg));
          newObject_.setLinePaint(new JDRColor(cg));
