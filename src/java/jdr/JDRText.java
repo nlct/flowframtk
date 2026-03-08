@@ -568,17 +568,16 @@ public class JDRText extends JDRCompleteObject
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      CanvasGraphics bpCg = new CanvasGraphics();
+      JDRUnit unit = cg.getStorageUnit();
 
       Graphics2D g2 = cg.getGraphics();
       FontRenderContext frc = g2.getFontRenderContext();
 
-      JDRGroup group = new JDRGroup(bpCg);
+      JDRGroup group = new JDRGroup(cg);
 
       int n = text.length();
 
-      JDRTransform trans = (JDRTransform)jdrtransform.clone();
-      trans.applyCanvasGraphics(bpCg);
+      AffineTransform af = jdrtransform.copyAffineTransform();
 
       for (int i = 0; i < n;)
       {
@@ -595,26 +594,25 @@ public class JDRText extends JDRCompleteObject
          Rectangle2D rect = fm.getStringBounds(text, 0, i, g2);
          int cw = fm.charWidth(codePoint);
 
-         Point2D p = new Point2D.Double(rect.getWidth()-cw,0);
+         Point2D p = new Point2D.Double(
+           unit.fromBp(rect.getWidth()-cw), 0);
 
-         StringBuilder builder = new StringBuilder(2);
-         builder.appendCodePoint(codePoint);
+         af.transform(p, p);
 
-         JDRText newText = new JDRText(bpCg, p, builder.toString());
+         JDRText newText = new JDRText(cg, 
+           new JDRFont(jdrFont), new String(Character.toChars(codePoint)));
 
          newText.setTextPaint(getTextPaint());
-         newText.jdrFont.makeEqual(jdrFont);
-         newText.font = getFont();
          newText.latexFont.makeEqual(latexFont);
          newText.pgfValign = pgfValign;
          newText.pgfHalign = pgfHalign;
-         newText.transform(trans);
-         newText.updateBounds();
+
+         newText.transform(af);
+         newText.translate(p.getX()-af.getTranslateX(), p.getY()-af.getTranslateY());
 
          group.add(newText);
       }
 
-      group.applyCanvasGraphics(cg);
       group.setSelected(isSelected());
 
       return group;
