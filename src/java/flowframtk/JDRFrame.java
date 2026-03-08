@@ -2141,6 +2141,11 @@ public class JDRFrame extends JInternalFrame
       return latexCodeEditor;
    }
 
+   public void appendToDocBody(boolean insertPar, String text)
+   {
+      latexCodeEditor.appendToDocBody(insertPar, text);
+   }
+
    public void updateLaTeXCode(String newPreamble, 
      String newMidPreamble, String newEndPreamble, 
      String newDocText, String newMagicComments)

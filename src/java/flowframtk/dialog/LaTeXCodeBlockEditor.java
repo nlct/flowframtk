@@ -316,6 +316,16 @@ public class LaTeXCodeBlockEditor extends JPanel
       revalidate();
    }
 
+   public void appendToLaTeXCode(boolean insertPar, String text)
+   {
+      if (insertPar && !getLaTeXCode().isEmpty())
+      {
+         text = String.format("%n%n%s", text);
+      }
+
+      appendToLaTeXCode(text);
+   }
+
    public void appendToLaTeXCode(String text)
    {
       try

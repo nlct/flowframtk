@@ -359,6 +359,8 @@ public class FLFSelector extends JDialog
 
    public void okay()
    {
+      JDRResources resources = getResources();
+
       FlowFrame flowframe=null;
 
       CanvasGraphics cg = mainPanel.getCanvasGraphics();
@@ -370,38 +372,38 @@ public class FLFSelector extends JDialog
          // check label supplied
          if (labelText.getText().equals(""))
          {
-            getResources().error(this,
-               getResources().getMessage("error.no_idl"));
+            resources.error(this,
+               resources.getMessage("error.no_idl"));
             return;
          }
 
          // check unique label
          if (!mainPanel.isUniqueLabel(idx,object,labelText.getText()))
          {
-            getResources().error(this,
-               getResources().getMessage("error.idl_exists"));
+            resources.error(this,
+               resources.getMessage("error.idl_exists"));
             return;
          }
 
          String pages = (String)pageList.getSelectedItem();
 
          if (pages.equals(
-              getResources().getMessage("flowframe.pages_all")))
+              resources.getMessage("flowframe.pages_all")))
          {
             pages = "all";
          }
          else if (pages.equals(
-            getResources().getMessage("flowframe.pages_odd")))
+            resources.getMessage("flowframe.pages_odd")))
          {
             pages = "odd";
          }
          else if (pages.equals(
-            getResources().getMessage("flowframe.pages_even")))
+            resources.getMessage("flowframe.pages_even")))
          {
             pages = "even";
          }
          else if (pages.equals(
-            getResources().getMessage("flowframe.pages_none")))
+            resources.getMessage("flowframe.pages_none")))
          {
             pages = "none";
          }
@@ -409,12 +411,12 @@ public class FLFSelector extends JDialog
          // check page list is valid
          if (!FlowFrame.isValidPageList(pages))
          {
-            getResources().error(this,
-               getResources().getMessage("error.invalid_frame-page-list"));
+            resources.error(this,
+               resources.getMessage("error.invalid_frame-page-list"));
             return;
          }
          
-         flowframe  = new FlowFrame(cg, idx, 
+         flowframe = new FlowFrame(cg, idx, 
             border.getSelectedIndex()== BORDER_AS_SHOWN, labelText.getText(),
             pages);
 
@@ -455,6 +457,27 @@ public class FLFSelector extends JDialog
          }
          else
          {
+            String contents = contentsViewer.getText();
+
+            if (!contents.trim().isEmpty())
+            {
+               int response = resources.confirm(this, 
+                 resources.getMessage("flowframe.confirm.contents_to_doc"),
+                 resources.getMessage("flowframe.confirm.contents_to_doc.title"),
+                 JOptionPane.YES_NO_CANCEL_OPTION
+               );
+
+               switch (response)
+               {
+                  case JOptionPane.YES_OPTION:
+                     mainPanel.appendToDocBody(true, contents);
+                  break;
+                  case JOptionPane.NO_OPTION:
+                  break;
+                  default: return;
+               }
+            }
+
             flowframe.setShape(FlowFrame.STANDARD);
             flowframe.setVAlign(FlowFrame.CENTER);
             flowframe.setContents(null);

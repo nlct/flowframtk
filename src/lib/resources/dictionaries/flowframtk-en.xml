@@ -3565,6 +3565,9 @@ Are you sure you want to assign flowframe data to this group?</entry>
 Are you sure you want to ungroup it?</entry>
 <entry key="flowframe.confirm.ungroup.title">Confirm Ungroup</entry>
 
+<entry key="flowframe.confirm.contents_to_doc.title">Confirm Append</entry>
+<entry key="flowframe.confirm.contents_to_doc">Append old content to document body?</entry>
+
 <!--  Set Typeblock -->
 
 <entry key="typeblock.title">Typeblock</entry>

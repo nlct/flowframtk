@@ -26,21 +26,25 @@ public class LaTeXCodeEditor extends JPanel
       earlyPreamble = new LaTeXCodeBlockEditor(frame,
         "texeditor.latexcodeblock.earlypreamble");
 
+      earlyPreambleTabIndex = tabbedPane.getTabCount();
       addTab(earlyPreamble);
 
       midPreamble = new LaTeXCodeBlockEditor(frame,
        "texeditor.latexcodeblock.midpreamble");
 
+      midPreambleTabIndex = tabbedPane.getTabCount();
       addTab(midPreamble);
 
       latePreamble = new LaTeXCodeBlockEditor(frame,
        "texeditor.latexcodeblock.latepreamble");
 
+      latePreambleTabIndex = tabbedPane.getTabCount();
       addTab(latePreamble);
 
       documentEnv = new LaTeXCodeBlockEditor(frame,
        "texeditor.latexcodeblock.document");
 
+      docTabIndex = tabbedPane.getTabCount();
       addTab(documentEnv);
 
       magicComments = new LaTeXCodeBlockEditor(frame,
@@ -113,13 +117,19 @@ public class LaTeXCodeEditor extends JPanel
    public void updateEarlyLaTeXCode(String text)
    {
       earlyPreamble.updateLaTeXCode(text);
-      tabbedPane.setSelectedIndex(0);
+      tabbedPane.setSelectedIndex(earlyPreambleTabIndex);
    }
 
    public void appendToLaTeXCode(String text)
    {
       earlyPreamble.appendToLaTeXCode(text);
-      tabbedPane.setSelectedIndex(0);
+      tabbedPane.setSelectedIndex(earlyPreambleTabIndex);
+   }
+
+   public void appendToDocBody(boolean insertPar, String text)
+   {
+      documentEnv.appendToLaTeXCode(insertPar, text);
+      tabbedPane.setSelectedIndex(docTabIndex);
    }
 
    public void earlyReplace(int startIdx, int endIdx,
@@ -188,4 +198,7 @@ public class LaTeXCodeEditor extends JPanel
     documentEnv, magicComments;
 
    private JTabbedPane tabbedPane;
+
+   private int earlyPreambleTabIndex, midPreambleTabIndex,
+    latePreambleTabIndex, docTabIndex;
 }

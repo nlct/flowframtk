@@ -1076,6 +1076,8 @@ public class FlowFrameWizard extends JDialog
          }
       }
 
+      docBodyTransfer = null;
+
       CanvasGraphics cg = frame.getCanvasGraphics();
 
       if (cg.useAbsolutePages())
@@ -1357,6 +1359,12 @@ public class FlowFrameWizard extends JDialog
       flowframe.setEvenYShift(evenYShiftLength.getValue(unit));
 
       frame.setFlowFrame(selectedObject, flowframe);
+
+      if (docBodyTransfer != null && !docBodyTransfer.isEmpty())
+      {
+         frame.appendToDocBody(true, docBodyTransfer);
+         docBodyTransfer = null;
+      }
    }
 
    protected String getPageList()
@@ -1526,14 +1534,45 @@ public class FlowFrameWizard extends JDialog
 
    public boolean canMoveNext()
    {
+      JDRResources resources = getResources();
+
       if (currentCard == CARD_FRAME_TYPE)
       {
+         if (flowBox.isSelected() && selectedObject != null)
+         {
+            FlowFrame flowframe = selectedObject.getFlowFrame();
+
+            if (flowframe != null)
+            {
+               String contents = flowframe.getContents();
+
+               if (contents != null && !contents.trim().isEmpty())
+               {
+                  int response = resources.confirm(this,
+                    resources.getMessage("flowframe.confirm.contents_to_doc"),
+                    resources.getMessage("flowframe.confirm.contents_to_doc.title"),
+                    JOptionPane.YES_NO_CANCEL_OPTION
+                  );
+
+                  switch (response)
+                  {
+                     case JOptionPane.YES_OPTION:
+                        docBodyTransfer = contents;
+                     break;
+                     case JOptionPane.NO_OPTION:
+                        docBodyTransfer = null;
+                     break;
+                     default:
+                        return false;
+                  }
+               }
+            }
+         }
+
          updateFlowFrameWidgets();
       }
       else if (currentCard == CARD_LABEL_PAGES)
       {
-         JDRResources resources = getResources();
-
          String label = labelField.getText().trim();
 
          if (label.isEmpty())
@@ -2005,6 +2044,8 @@ public class FlowFrameWizard extends JDialog
    JComponent styleCmdsComp, shapeAlignComp, marginParComp;
    JTextArea contentInfoArea;
    String contentInfoStaticText, contentInfoDynamicText, contentInfoFlowText;
+
+   String docBodyTransfer = null;
 
    JTextArea contentsViewer;
    JScrollPane contentsViewerSp;
