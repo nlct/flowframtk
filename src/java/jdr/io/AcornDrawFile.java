@@ -197,6 +197,11 @@ public class AcornDrawFile
       {
          String preamble = getCanvasGraphics().getPreamble();
 
+         if (preamble == null)
+         {
+            preamble = "";
+         }
+
          resetStringBuffer(preamble.length()+styNames.firstElement().length()+12);
 
          stringBuffer.append(preamble);
@@ -1198,6 +1203,8 @@ public class AcornDrawFile
       boolean alignChanged = false;
       String prevFontDecl = null;
       String fontDecl = null;
+      boolean isul = false;
+      int ulStartOffset = 0;
 
       for (int i = 0; i < dataBuffer.length(); i++)
       {
@@ -1276,16 +1283,34 @@ public class AcornDrawFile
                     i++;
                  }
                break;
+               case 'M':
+                 // Margin
+                 // \M<left> <right><nl>
                case 'B':
                  // background hint
+                 // \B<red> <green> <blue><nl>
                case 'C':
                  // foreground colour
+                 // \C<red> <green> <blue><nl>
                case 'D':
                  // number of columns
+                 // \\D<columns><nl>
                case 'P':
                  // Paragraph leading
+                 // \\P<value><nl>
                case 'L':
                  // Leading
+                 // \\L<value><nl>
+                 while (b != '\r' && b != '\n')
+                 {
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+               break;
+
+               case 'V':
+                 // Vertical move
+                 // \\V<value>[/]
                  do
                  {
                     //skip space
@@ -1293,13 +1318,100 @@ public class AcornDrawFile
                     b = dataBuffer.get(i);
                  }
                  while (Character.isWhitespace((char)b));
-                 // read value (currently ignored)
+                 // read value
                  db.setLength(0);
-                 while (!Character.isWhitespace((char)b))
+                 i++;
+                 b = dataBuffer.get(i);
+                 if (b == '-')
+                 {
+                    i++;
+                    b = dataBuffer.get(i);
+                 }
+                 while (Character.isDigit((char)b))
                  {
                     db.append(b);
                     i++;
                     b = dataBuffer.get(i);
+                 }
+                 if (b != '/')
+                 {
+                    i--;
+                 }
+               break;
+
+               case 'U':
+                 // Underling
+                 // \U<position> <thickness><nl>
+                 // or \U.[/]
+                 int thickness = 0;
+                 i++;
+                 b = dataBuffer.get(i);
+                 if (b == '.')
+                 {
+                    if (dataBuffer.get(i+1) == '/')
+                    {
+                       i++;
+                    }
+                 }
+                 else
+                 {
+                    // read position value (-128 to 127)
+                    db.setLength(0);
+                    if (b == '-')
+                    {
+                       db.append(b);
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+
+                    while (Character.isDigit((char)b))
+                    {
+                       db.append(b);
+                       i++;
+                       b = dataBuffer.get(i);
+                    }
+
+                    // ignore position
+
+                    // read thickness value (0 to 255)
+                    db.setLength(0);
+
+                    do
+                    {
+                       i++;
+                       b = dataBuffer.get(i);
+
+                       if (Character.isDigit((char)b))
+                       {
+                          db.append(b);
+                       }
+                    }
+                    while (!Character.isWhitespace((char)b));
+
+                    str = db.toString(CharacterMap.SYSTEM_FONT);
+
+                    thickness = Integer.parseInt(str);
+                 }
+
+                 if (thickness > 0)
+                 {
+                    isul = true;
+                    ulStartOffset = stringBuffer.length();
+                 }
+                 else
+                 {
+                    if (isul)
+                    {
+                       stringBuffer.insert(ulStartOffset, "\\uline{");
+                       stringBuffer.append("}");
+
+                       if (!styNames.contains("[normalem]ulem"))
+                       {
+                          styNames.add("[normalem]ulem");
+                       }
+                    }
+
+                    isul = false;
                  }
                break;
 

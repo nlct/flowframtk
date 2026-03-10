@@ -53,6 +53,7 @@ public class ImportSettings
       parseMaths = other.parseMaths;
       markers = other.markers;
       paper = other.paper;
+      normalfontsize = other.normalfontsize;
 
       if (other.mathsCssClasses == null)
       {
@@ -91,6 +92,7 @@ public class ImportSettings
    public String bitmapNamePrefix = "";
    public boolean useMappings = true;
    public boolean parseMaths = true;
+   public int normalfontsize = 10;
    public String[] mathsCssClasses = null;
    public Markers markers = Markers.MARKER;
    public Paper paper = Paper.CURRENT;

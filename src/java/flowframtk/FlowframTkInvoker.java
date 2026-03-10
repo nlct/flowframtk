@@ -1725,6 +1725,10 @@ public class FlowframTkInvoker
                {
                   importSettings.extractBitmaps = parseBoolean(value, line);
                }
+               else if (key.equals("import_normalfontsize"))
+               {
+                  importSettings.normalfontsize = parseInt(value, line);
+               }
                // Export Settings
                else if (key.equals("png_alpha"))
                {
@@ -2154,6 +2158,7 @@ public class FlowframTkInvoker
       out.println("import_text_mappings="+(importSettings.useMappings?1:0));
       out.println("import_parse_maths="+(importSettings.parseMaths?1:0));
       out.println("import_extract_bitmaps="+(importSettings.extractBitmaps?1:0));
+      out.println("import_normalfontsize="+importSettings.normalfontsize);
 
       out.println("unicode="+settings.getUnicodeRangesSpec());
       out.println("look_and_feel="+settings.getLookAndFeel());

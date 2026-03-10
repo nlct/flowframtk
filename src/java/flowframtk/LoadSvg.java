@@ -64,6 +64,8 @@ public class LoadSvg extends IOSwingWorker
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
 
+      cg.getLaTeXFontBase().setNormalSize(importSettings.normalfontsize);
+
       BufferedReader in = null;
       Graphics2D orgG2 = cg.getGraphics();
       Graphics2D g2 = (Graphics2D)jdrFrame.getCanvas().getGraphics();

@@ -73,6 +73,33 @@ public class ImportDialog extends JDialog
       JComponent mainComp = Box.createVerticalBox();
       getContentPane().add(new JScrollPane(mainComp), "Center");
 
+      row = createRow();
+      mainComp.add(row);
+
+      label = resources.createAppLabel("import.normalsize");
+      labelGrp.add(label);
+      row.add(label);
+
+      row.add(resources.createLabelSpacer());
+
+      normalSizeBox = new JComboBox<Integer>(new Integer[]
+       {
+          Integer.valueOf(25),
+          Integer.valueOf(20),
+          Integer.valueOf(17),
+          Integer.valueOf(14),
+          Integer.valueOf(12),
+          Integer.valueOf(11),
+          Integer.valueOf(10),
+          Integer.valueOf(9),
+          Integer.valueOf(8)
+       });
+
+      row.add(normalSizeBox);
+      label.setLabelFor(normalSizeBox);
+
+      resources.clampCompMax(row, 0, 0);
+
       useMappingsButton = resources.createAppCheckBox("import", "use_mappings",
          true, null);
       mainComp.add(useMappingsButton);
@@ -227,6 +254,8 @@ public class ImportDialog extends JDialog
             paperPredefinedButton.setSelected(true);
          break;
       }
+
+      normalSizeBox.setSelectedItem(Integer.valueOf(importSettings.normalfontsize));
 
       extractBitmapsButton.setSelected(importSettings.extractBitmaps);
       useMappingsButton.setSelected(importSettings.useMappings);
@@ -425,6 +454,8 @@ public class ImportDialog extends JDialog
          update(file);
       }
 
+      importSettings.normalfontsize = ((Integer)normalSizeBox.getSelectedItem()).intValue();
+
       importSettings.useMappings = useMappingsButton.isSelected();
       importSettings.parseMaths = checkMathsButton.isSelected();
 
@@ -524,6 +555,8 @@ public class ImportDialog extends JDialog
 
    JComponent paperComp;
    JRadioButton paperCurrentButton, paperCustomButton, paperPredefinedButton;
+
+   JComboBox<Integer> normalSizeBox;
 
    JCheckBox rememberBox;
 }

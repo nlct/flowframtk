@@ -63,6 +63,8 @@ public class LoadAcornDrawFile extends IOSwingWorker
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
 
+      cg.getLaTeXFontBase().setNormalSize(importSettings.normalfontsize);
+
       File drawFile = importSettings.currentFile;
 
       DataInputStream din = null;

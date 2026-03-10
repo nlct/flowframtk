@@ -2429,6 +2429,14 @@ public class JDRResources
       comp.setMaximumSize(dim);
    }  
 
+   public void clampCompMax(JComponent comp, int xpad, int ypad)
+   {
+      Dimension dim = comp.getPreferredSize();
+      dim.width += xpad;
+      dim.height += ypad;
+      comp.setMaximumSize(dim);
+   }  
+
    public JDRButton createOkayCancelHelpButtons(JDialog dialog, JComponent comp,
       ActionListener listener, String helpId, boolean bothOkayAccelerators)
    {

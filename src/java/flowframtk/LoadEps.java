@@ -69,6 +69,8 @@ public class LoadEps extends IOSwingWorker
          cg = (CanvasGraphics)app.getDefaultCanvasGraphics().clone();
       }
 
+      cg.getLaTeXFontBase().setNormalSize(importSettings.normalfontsize);
+
       String fileName = file.getAbsolutePath();
 
       BufferedReader in = null;
