@@ -1145,8 +1145,6 @@ public class AcornDrawFile
    // NB the Acorn Draw File "text area" is a multi-line area.
    protected void readTextArea() throws IOException,InvalidFormatException
    {
-      int orgSize = objectSize;
-
       // bounding box
       int lowX = readInt();
       int lowY = readInt();
@@ -1197,6 +1195,10 @@ public class AcornDrawFile
       int textAreaSize = readBytes();
       resetStringBuffer(textAreaSize);
 
+      boolean alignChanged = false;
+      String prevFontDecl = null;
+      String fontDecl = null;
+
       for (int i = 0; i < dataBuffer.length(); i++)
       {
          byte b = dataBuffer.get(i);
@@ -1209,9 +1211,16 @@ public class AcornDrawFile
 
                if (!(stringBuffer.length() == 0 && text.trim().isEmpty()))
                {
-                  if (importSettings.useMappings && textModeMappings != null)
+                  if (importSettings.useMappings)
                   {
-                     text = textModeMappings.applyMappings(text, styNames);
+                     if (map == AcornDrawFile.CharacterMap.SIDNEY && mathModeMappings != null)
+                     {
+                        text = "$ " + mathModeMappings.applyMappings(text, styNames) + " $";
+                     }
+                     else if (textModeMappings != null)
+                     {
+                        text = textModeMappings.applyMappings(text, styNames);
+                     }
                   }
 
                   stringBuffer.append(text);
@@ -1242,14 +1251,24 @@ public class AcornDrawFile
                  if (b == 'L')
                  {
                     stringBuffer.append("\\flushleft ");
+                    alignChanged = true;
                  }
                  else if (b == 'R')
                  {
                     stringBuffer.append("\\flushright ");
+                    alignChanged = true;
                  }
                  else if (b == 'C')
                  {
                     stringBuffer.append("\\centering ");
+                    alignChanged = true;
+                 }
+                 else if (b == 'D')
+                 {
+                    if (alignChanged)
+                    {
+                       stringBuffer.append("\\flowframtkNoRagged ");
+                    }
                  }
 
                  if (dataBuffer.get(i+1) == '/')
@@ -1387,7 +1406,14 @@ public class AcornDrawFile
                        if (ft != null)
                        {
                           map = ft.getMap();
-                          stringBuffer.append(ft.getDeclarations());
+
+                          fontDecl = ft.getDeclarations();
+
+                          if (!fontDecl.equals(prevFontDecl))
+                          {
+                             stringBuffer.append(fontDecl);
+                             prevFontDecl = fontDecl;
+                          }
                        }
                     }
                     catch (NumberFormatException e)
@@ -1473,11 +1499,11 @@ public class AcornDrawFile
          }
       }
 
-      int padding = (orgSize-(32+28*columns.size()+textAreaSize))/4;
+      int remainder = (textAreaSize + 1)%4;
 
-      if (padding > 0)
+      if (remainder > 0)
       {
-         readBytes(padding);
+         byte[] bytes = readBytes(4-remainder);
       }
    }
 
@@ -2221,6 +2247,9 @@ class DataBuffer
          case SELWYN :
             appendSelwynFontChar(offset, n);
          break;
+         case SIDNEY :
+            appendSidneyFontChar(offset, n);
+         break;
 // TODO
          default:
             appendLatinFontChar(offset, n, latin1);
@@ -2239,7 +2268,7 @@ class DataBuffer
 
    private void appendSidneyFontChar(byte c)
    {
-      switch ((char)c)
+      switch ((int)c & 0xff)
       {
          case 0x22: builder.appendCodePoint(0x2200); break;
          case 0x24: builder.appendCodePoint(0x2203); break;
@@ -2438,6 +2467,7 @@ class DataBuffer
              builder.append((char)c);
           }
       }
+System.out.println(">>"+builder);
    }
 
    private void appendSelwynFontChar(int offset, int n)

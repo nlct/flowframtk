@@ -81,14 +81,12 @@ Nicola Talbot
 
 <!-- Syntax error messages -->
 <entry key="error.syntax">Syntax error: {0}</entry>
-<entry key="error.syntax.unknown_option">Unknown option ''{0}''. (Use {1} for help.)</entry>
 <entry key="error.syntax.only_one">Only one {0} permitted</entry>
 <entry key="error.syntax.too_many_files">Unexpected value ''{0}'': only one input and one output file permitted. (Use {1} for help.)</entry>
 <entry key="error.syntax.missing_filename">Filename expected after {0}</entry>
 <entry key="error.syntax.missing_input">File name expected after {0}</entry>
 <entry key="error.syntax.missing_in">Missing input file. (Use {0} for help.)</entry>
 <entry key="error.syntax.missing_out">Missing output file. (Use {0} for help.)</entry>
-<entry key="error.syntax.missing_value">Value expected after {0}</entry>
 
 <entry key="error.syntax.invalid_file_version">Invalid {0} version ''{1}''</entry>
 <entry key="error.syntax.unknown_file_format">Unknown file format ''{0}''</entry>
