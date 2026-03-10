@@ -2467,7 +2467,6 @@ class DataBuffer
              builder.append((char)c);
           }
       }
-System.out.println(">>"+builder);
    }
 
    private void appendSelwynFontChar(int offset, int n)
