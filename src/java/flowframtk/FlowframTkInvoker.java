@@ -3620,7 +3620,7 @@ public class FlowframTkInvoker
             else if (arg.startsWith("-"))
             {
                throw new InvalidSyntaxException(
-                getHelpLib().getMessage("error.syntax.unknown_option", arg));
+                getHelpLib().getMessage("error.clisyntax.unknown.arg", arg, "--help"));
             }
             else if (isArg(arg, "--paper", "-paper", returnVals))
             {
