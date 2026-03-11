@@ -18,7 +18,9 @@
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.io.File;
+import java.util.Vector;
 
+import java.awt.CardLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -46,10 +48,35 @@ public class ImportDialog extends JDialog
 
    private void init()
    {
-      importFC.addActionListener(this);
-
       JDRResources resources = getResources();
       importSettings = new ImportSettings(resources.getMessageDictionary());
+
+      FileFilter[] filters = importFC.getChoosableFileFilters();
+      Vector<ImportFilterItem> formatItems = new Vector<ImportFilterItem>();
+
+      for (FileFilter f : filters)
+      {
+         if (f instanceof AcornDrawFileFilter)
+         {
+            formatItems.add(new ImportFilterItem((AcornDrawFileFilter)f,
+              ImportSettings.Type.ACORN_DRAW,
+              resources.getMessage("import.type.ACORN_DRAW")));
+         }
+         else if (f instanceof SvgFileFilter)
+         {
+            formatItems.add(new ImportFilterItem((SvgFileFilter)f,
+              ImportSettings.Type.SVG,
+              resources.getMessage("import.type.SVG")));
+         }
+         else if (f instanceof EpsFileFilter)
+         {
+            formatItems.add(new ImportFilterItem((EpsFileFilter)f,
+              ImportSettings.Type.EPS,
+              resources.getMessage("import.type.EPS")));
+         }
+      }
+
+      importFC.addActionListener(this);
 
       JComponent row;
 
@@ -58,13 +85,32 @@ public class ImportDialog extends JDialog
       importFileField = new FileField(resources, this, "", importFC,
        JFileChooser.FILES_ONLY, label);
 
-      formatField = new JTextField(resources.getMessage("import.type.ACORN_DRAW"));
-      formatField.setColumns(formatField.getText().length()+2);
-      formatField.setEditable(false);
-      formatField.setBorder(null);
+      formatBox = new JComboBox<ImportFilterItem>(formatItems);
+      formatBox.addItemListener(new ItemListener()
+        {
+           @Override
+           public void itemStateChanged(ItemEvent evt)
+           {
+              if (evt.getStateChange() == ItemEvent.SELECTED)
+              {
+                 ImportFilterItem item = (ImportFilterItem)formatBox.getSelectedItem();
+
+                 importFC.setFileFilter(item.getFilter());
+
+                 ImportSettings.Type type = item.getType();
+
+                 if (isVisible() && type != importSettings.type)
+                 {
+                    update(type, importFileField.getFile());
+
+                    updateWidgets(type);
+                 }
+              }
+           }
+        });
 
       importFileField.getEastComponent().add(resources.createButtonSpacer());
-      importFileField.getEastComponent().add(formatField);
+      importFileField.getEastComponent().add(formatBox);
 
       getContentPane().add(importFileField, "North");
 
@@ -113,8 +159,18 @@ public class ImportDialog extends JDialog
 
       checkMathsButton.addItemListener(this);
 
+      checkMathsLayout = new CardLayout();
+      checkMathsExtraComp = new JPanel(checkMathsLayout);
+      row.add(checkMathsExtraComp);
+
+      checkMathsExtraComp.add(
+       resources.createAppInfoField("import.check_maths.ACORN_DRAW"),
+       ImportSettings.Type.ACORN_DRAW.toString());
+
+      checkMathsExtraComp.add(new JPanel(), ImportSettings.Type.EPS.toString());
+
       cssClassesComp = new JPanel();
-      row.add(cssClassesComp);
+      checkMathsExtraComp.add(cssClassesComp, ImportSettings.Type.SVG.toString());
 
       cssClassesComp.add(resources.createButtonSpacer());
 
@@ -130,7 +186,7 @@ public class ImportDialog extends JDialog
       cssClassesComp.add(cssClassesField);
       cssClassesField.setEnabled(false);
 
-      resources.clampCompMaxHeight(cssClassesComp, 0, 0);
+      resources.clampCompMaxHeight(checkMathsExtraComp, 0, 0);
 
       markerComp = createRow();
       mainComp.add(markerComp);
@@ -187,6 +243,8 @@ public class ImportDialog extends JDialog
       bitmapDirField.setAlignmentX(0f);
       bitmapComp.add(bitmapDirField);
 
+      resources.clampCompMaxHeight(bitmapDirField, 0, 0);
+
       row = createRow();
       bitmapComp.add(row);
 
@@ -194,9 +252,13 @@ public class ImportDialog extends JDialog
       labelGrp.add(label);
       row.add(label);
 
+      row.add(resources.createLabelSpacer());
+
       bitmapNamePrefixField = new JTextField(12);
       label.setLabelFor(bitmapNamePrefixField);
       row.add(bitmapNamePrefixField);
+
+      resources.clampCompMaxHeight(row, 0, 0);
 
       mainComp.add(Box.createVerticalStrut(20));
 
@@ -349,9 +411,32 @@ public class ImportDialog extends JDialog
          update(type, file);
       }
 
+      updateWidgets(type);
+
+      ImportFilterItem item = (ImportFilterItem)formatBox.getSelectedItem();
+      FileFilter filter = importFC.getFileFilter();
+
+      if (filter instanceof AbstractJDRFileFilter
+           && filter != item.getFilter())
+      {
+         for (int i = 0; i < formatBox.getItemCount(); i++)
+         {
+            if (formatBox.getItemAt(i).getType() == type)
+            {
+               formatBox.setSelectedIndex(i);
+               break;
+            }
+         }
+      }
+   }
+
+   protected void updateWidgets(ImportSettings.Type type)
+   {
       boolean isSVG = (type == ImportSettings.Type.SVG);
 
-      cssClassesComp.setVisible(isSVG && checkMathsButton.isSelected());
+      checkMathsLayout.show(checkMathsExtraComp, type.toString());
+      checkMathsExtraComp.setVisible(checkMathsButton.isSelected());
+
       markerComp.setVisible(isSVG);
       paperComp.setVisible(isSVG);
 
@@ -359,8 +444,6 @@ public class ImportDialog extends JDialog
 
       extractBitmapsButton.setVisible(embeddedBitmaps);
       bitmapComp.setVisible(embeddedBitmaps && extractBitmapsButton.isSelected());
-
-      formatField.setText(getResources().getMessage("import.type."+type));
    }
 
    protected void update(ImportSettings.Type type, File file)
@@ -368,7 +451,7 @@ public class ImportDialog extends JDialog
       importSettings.type = type;
       importSettings.currentFile = file;
 
-      if (bitmapNamePrefixField.getText().isEmpty())
+      if (bitmapNamePrefixField.getText().isEmpty() && file != null)
       {
          String base = file.getName();
          int idx;
@@ -433,7 +516,7 @@ public class ImportDialog extends JDialog
       }
       else if (src == checkMathsButton)
       {
-         cssClassesComp.setVisible(checkMathsButton.isSelected());
+         checkMathsExtraComp.setVisible(checkMathsButton.isSelected());
       }
    }
 
@@ -538,6 +621,9 @@ public class ImportDialog extends JDialog
    ImportSettings importSettings;
    FlowframTk application;
 
+   CardLayout checkMathsLayout;
+   JComponent checkMathsExtraComp;
+
    JComponent cssClassesComp;
    JCheckBox onlyCssClassesBox;
    JTextField cssClassesField;
@@ -548,7 +634,7 @@ public class ImportDialog extends JDialog
    JTextField bitmapNamePrefixField;
    JComponent bitmapComp;
    JFileChooser importFC;
-   JTextField formatField;
+   JComboBox<ImportFilterItem> formatBox;
 
    JComponent markerComp;
    JRadioButton markersIgnoreButton, markersShapesButton, markersMarkerButton;
@@ -559,4 +645,34 @@ public class ImportDialog extends JDialog
    JComboBox<Integer> normalSizeBox;
 
    JCheckBox rememberBox;
+}
+
+class ImportFilterItem
+{
+   public ImportFilterItem(AbstractJDRFileFilter filter,
+       ImportSettings.Type type, String name)
+   {
+      this.filter = filter;
+      this.type = type;
+      this.name = name;
+   }
+
+   public String toString()
+   {
+      return name;
+   }
+
+   public AbstractJDRFileFilter getFilter()
+   {
+      return filter;
+   }
+
+   public ImportSettings.Type getType()
+   {
+      return type;
+   }
+
+   AbstractJDRFileFilter filter;
+   String name;
+   ImportSettings.Type type;
 }

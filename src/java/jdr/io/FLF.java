@@ -338,17 +338,13 @@ public class FLF extends TeX
 
       BBox box = group.getStorageBBox();
 
-      String docClass = null;
+      String docClass = exportSettings.docClass;
 
       int normalsize = (int)cg.getLaTeXNormalSize();
 
-      if (cg.hasDocClass())
+      if (docClass == null)
       {
-         docClass = cg.getDocClass();
-      }
-      else
-      {
-         if (normalsize >= 10 || normalsize <= 12)
+         if (normalsize >= 10 && normalsize <= 12)
          {
             docClass = "article";
          }
@@ -362,17 +358,11 @@ public class FLF extends TeX
          }
       }
 
-      if (docClass != null)
-      {
-         if (docClass.equals("a0poster"))
-         {
-            println("\\documentclass{a0poster}");
-         }
-         else
-         {
-            println("\\documentclass[" +normalsize+"pt]{"+docClass+"}");
-         }
-      }
+      print("\\documentclass[");
+
+      printNormalFontSizeOption(cg, normalsize, docClass);
+
+      println("]{"+docClass+"}");
 
       if (extraPreamble != null && !extraPreamble.isEmpty())
       {

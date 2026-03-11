@@ -2820,7 +2820,9 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="import.type.EPS">EPS</entry>
 <entry key="import.type.SVG">SVG</entry>
 
-<entry key="import.normalsize">Normal font size</entry>
+<entry key="import.check_maths.ACORN_DRAW">(text lines only)</entry>
+
+<entry key="import.normalsize">Normal font size:</entry>
 <entry key="import.normalsize.mnemonic">N</entry>
 
 <entry key="import.use_mappings">Use text mappings</entry>

@@ -648,14 +648,14 @@ public class TeX
 
    public Path relativize(Path path)
    {
-      if (basePath == null || !path.isAbsolute())
+      if (basePath == null)
       {
-         return path;
+         return path.toAbsolutePath();
       }
 
       try
       {
-         return basePath.relativize(path).normalize();
+         return basePath.relativize(path.toAbsolutePath()).normalize();
       }
       catch (IllegalArgumentException e)
       {

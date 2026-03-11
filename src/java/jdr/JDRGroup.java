@@ -2413,7 +2413,7 @@ t
 
    /**
     * Recursively checks all objects to determine whether they
-    * contain any flowfram data. Doesn't check if thie group
+    * contain any flowfram data. Doesn't check if this group
     * is assigned flowframe data, but does check subgroups.
     * @return true if there is at least one object in this group
     * that contains flowframe data

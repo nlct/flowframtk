@@ -28,6 +28,7 @@ import java.awt.BasicStroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.exceptions.*;
@@ -224,7 +225,40 @@ public class AcornDrawFile
          getCanvasGraphics().setPreamble(stringBuffer.toString());
       }
 
+      if (image.getFlowFrame() != null)
+      {
+         // make anything that has not already had flowframe data
+         // assigned a static frame
+
+         setStatic(image);
+      }
+
       return image;
+   }
+
+   private void setStatic(JDRGroup grp)
+   {
+      for (int i = 0; i < grp.size(); i++)
+      {
+         JDRCompleteObject obj = grp.get(i);
+
+         if (obj.getFlowFrame() == null)
+         {
+            if (obj instanceof JDRGroup && ((JDRGroup)obj).anyFlowFrameData())
+            {
+               setStatic((JDRGroup)obj);
+            }
+            else
+            {
+               staticCount++;
+
+               FlowFrame flowframe = new FlowFrame(getCanvasGraphics(),
+                FlowFrame.STATIC, true, ""+staticCount, "all");
+
+               obj.setFlowFrame(flowframe);
+            }
+         }
+      }
    }
 
    public void setCanvasGraphics(CanvasGraphics cg)
@@ -1070,6 +1104,8 @@ public class AcornDrawFile
          jdrText.setLaTeXText(latexText);
       }
 
+      jdrText.updateBounds();
+
       return jdrText;
    }
 
@@ -1101,10 +1137,6 @@ public class AcornDrawFile
       affineTransform.transform(matrix, 4, matrix, 4, 1);
 
       CanvasGraphics cg = image.getCanvasGraphics();
-
-      double yShift = cg.getStorageUnit().fromBp(height / 480.0);
-
-      matrix[5] -= yShift;
 
       int dataLength = readInt();
 
@@ -1141,6 +1173,8 @@ public class AcornDrawFile
 
          JDRBitmap bitmap = new JDRBitmap(cg, file);
          bitmap.setTransformation(matrix);
+         Rectangle2D rect = bitmap.getStorageBounds();
+         bitmap.translate(0, -rect.getHeight());
          currentGroup.add(bitmap);
       }
 
@@ -2085,6 +2119,7 @@ public class AcornDrawFile
    int bitmapCount=0;
    TeXMappings textModeMappings=null;
    TeXMappings mathModeMappings=null;
+   int staticCount = 0;
 
    JDRGroup image;
    JDRGroup currentGroup=null;
