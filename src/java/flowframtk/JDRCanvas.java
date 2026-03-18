@@ -8872,7 +8872,7 @@ public class JDRCanvas extends JPanel
 
       String importedPreamble = grp.getCanvasGraphics().getPreamble();
 
-      if (importedPreamble != null || !importedPreamble.isEmpty())
+      if (importedPreamble != null && !importedPreamble.isEmpty())
       {
          if (orgPreamble == null || orgPreamble.isEmpty()
              || importedPreamble.contains(orgPreamble))
