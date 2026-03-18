@@ -1567,6 +1567,10 @@ public class FlowframTkInvoker
                {
                   settings.setTeXEditorHeight(parseInt(value, line));
                }
+               else if (key.equals("codeblockmaxcols"))
+               {
+                  settings.setCodeBlockEditorMaxColumns(parseInt(value, line));
+               }
                else if (key.equals("vectorizenotregion"))
                {
                   settings.setVectorizeNotRegion(parseColor(value, line));
@@ -2202,6 +2206,7 @@ public class FlowframTkInvoker
 
       out.println("texeditorwidth="+settings.getTeXEditorWidth());
       out.println("texeditorheight="+settings.getTeXEditorHeight());
+      out.println("codeblockmaxcols="+settings.getCodeBlockEditorMaxColumns());
 
       writeColor(out, "vectorizenotregion",
        settings.getVectorizeNotRegion());

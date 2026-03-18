@@ -15,7 +15,11 @@
      in texjavahelplib-en.xml
  -->
 
-<entry key="xml.lang">en</entry>
+<entry key="xml.lang">zh</entry>
+
+<!-- This may need updating: -->
+
+<entry key="lang.widest_char">M</entry>
 
 <!-- Command line invocation syntax messages -->
 

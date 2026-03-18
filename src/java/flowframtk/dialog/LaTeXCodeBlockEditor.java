@@ -19,6 +19,7 @@
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.util.regex.*;
+import java.text.BreakIterator;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -65,7 +66,8 @@ public class LaTeXCodeBlockEditor extends JPanel
 
       document = new TeXEditorDocument(this,
          application.getSettings());
-      textPane = new JTextPane(document);
+
+      textPane = new LaTeXEditorPane(document, resources.getMessage("lang.widest_char"));
 
       undoManager = new UndoManager();
 
@@ -108,12 +110,6 @@ public class LaTeXCodeBlockEditor extends JPanel
       {
          getResources().internalError(null, e);
       }
-
-      Font font = application.getTeXEditorFont();
-
-      textPane.setFont(font);
-
-      textPane.setEditable(true);
 
       modified = false;
 
@@ -525,7 +521,7 @@ public class LaTeXCodeBlockEditor extends JPanel
    public void updateStyles(FlowframTkSettings settings)
    {
       document.updateStyles(settings);
-      textPane.setFont(settings.getTeXEditorFont());
+      textPane.updateStyles(settings);
    }
 
    public Dimension getTextPaneSize()
@@ -548,7 +544,7 @@ public class LaTeXCodeBlockEditor extends JPanel
       return displayedMnemonic;
    }
 
-   private JTextPane textPane;
+   private LaTeXEditorPane textPane;
 
    private TeXEditorDocument document;
 
@@ -566,4 +562,287 @@ public class LaTeXCodeBlockEditor extends JPanel
    private UndoManager undoManager;
 
    private int displayedMnemonic = -1;
+}
+
+class LaTeXEditorPane extends JTextPane
+{
+   LaTeXEditorPane(TeXEditorDocument document, String widestChar)
+   {
+      super();
+      this.widestChar = widestChar;
+      setEditable(true);
+      setEditorKit(new WrapEditorKit());
+      setDocument(document);
+
+      updateStyles(document.getSettings());
+   }
+
+   @Override
+   public void setFont(Font font)
+   {
+      super.setFont(font);
+      updateSize();
+   }
+
+   public void updateStyles(FlowframTkSettings settings)
+   {
+      this.prefMaxColumns = settings.getCodeBlockEditorMaxColumns();
+      setFont(settings.getTeXEditorFont());
+   }
+
+   public void setMaxColumns(int prefMaxColumns)
+   {
+      this.prefMaxColumns = prefMaxColumns;
+      updateSize();
+   }
+
+   protected void updateSize()
+   {
+      FontMetrics fm = getFontMetrics(getFont());
+
+      widestCharWidth = fm.stringWidth(widestChar==null?"M":widestChar);
+
+      maxWidth = widestCharWidth * (prefMaxColumns+1);
+
+      Insets insets = getInsets();
+
+      Dimension dim = getPreferredSize();
+      dim.width = maxWidth + insets.left + insets.right;
+      setPreferredSize(dim);
+   }
+
+   public boolean getScrollableTracksViewportWidth() { return false; }
+
+   private class WrapEditorKit extends StyledEditorKit
+   {
+      private final ViewFactory defaultFactory = new WrapColumnFactory();
+
+      @Override
+      public ViewFactory getViewFactory()
+      {
+         return defaultFactory;
+      }
+   }
+
+   private class WrapColumnFactory implements ViewFactory
+   {
+      @Override
+      public View create(final Element element)
+      {
+         final String name = element.getName();
+
+         if (name != null)
+         {
+            switch (name)
+            {
+               case AbstractDocument.ContentElementName:
+                  return new WrapLabelView(element);
+               case AbstractDocument.ParagraphElementName:
+                  return new ParagraphView(element);
+               case AbstractDocument.SectionElementName:
+                  return new BoxView(element, View.Y_AXIS);
+               case StyleConstants.ComponentElementName:
+                  return new ComponentView(element);
+               case StyleConstants.IconElementName:
+                  return new IconView(element);
+            }
+         }
+
+         // Default to text display.
+         return new WrapLabelView(element);
+      }
+   }
+
+   // Adapted from GlyphView
+   private class WrapLabelView extends LabelView
+   {
+      public WrapLabelView(Element element)
+      {
+         super(element);
+      }
+
+      @Override
+      public float getMinimumSpan(int axis)
+      {
+         if (axis == View.X_AXIS)
+         {
+            if (minimumSpan < 0)
+            {
+               minimumSpan = 0;
+
+               int p0 = getStartOffset();
+               int p1 = getEndOffset();
+
+               while (p1 > p0)
+               {
+                  int breakSpot = getBreakSpot(p0, p1);
+
+                  if (breakSpot == BreakIterator.DONE)
+                  {
+                     // the rest of the view is non-breakable
+                     breakSpot = p0;
+                  }
+
+                  minimumSpan = Math.max(minimumSpan,
+                                getPartialSpan(breakSpot, p1));
+
+                  // Note: getBreakSpot returns the *last* breakspot
+                  p1 = breakSpot - 1;
+               }
+            }
+
+            return minimumSpan;
+         }
+
+         return super.getMinimumSpan(axis);
+      }
+
+      @Override
+      public int getBreakWeight(int axis, float pos, float len)
+      {
+         if (axis == View.X_AXIS)
+         {
+            // adapted from GlyphView.getBreakWeight()
+            checkPainter();
+            int p0 = getStartOffset();
+            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+
+            if (p1 == p0)
+            {
+               return View.BadBreakWeight;
+            }
+
+            int breakSpot = getBreakSpot(p0, p1);
+
+            if (breakSpot == BreakIterator.DONE)
+            {
+               return View.GoodBreakWeight;
+            }
+            else
+            {
+               return View.ExcellentBreakWeight;
+            }
+         }
+
+         return super.getBreakWeight(axis, pos, len);
+      }
+
+      @Override
+      public View breakView(int axis, int p0, float pos, float len)
+      {
+         if (axis == View.X_AXIS)
+         {
+            checkPainter();
+            int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+
+            int breakSpot = getBreakSpot(p0, p1);
+
+            if (breakSpot != BreakIterator.DONE)
+            {
+               p1 = breakSpot;
+            }
+
+            if (p0 == getStartOffset() && p1 == getEndOffset())
+            {
+               return this;
+            }
+
+            GlyphView v = (GlyphView) createFragment(p0, p1);
+
+            //v.x = (int)pos;
+            v.getTabbedSpan(pos, v.getTabExpander());
+
+            return v;
+         }
+
+         return this;
+      }
+
+      @Override
+      public void insertUpdate(DocumentEvent e, Shape a, ViewFactory f)
+      {
+         breakSpots = null;
+         minimumSpan = -1;
+         super.insertUpdate(e, a, f);
+      }
+
+      @Override
+      public void removeUpdate(DocumentEvent e, Shape a, ViewFactory f)
+      {
+         breakSpots = null;
+         minimumSpan = -1;
+         super.removeUpdate(e, a, f);
+      }
+
+      public void changedUpdate(DocumentEvent e, Shape a, ViewFactory f)
+      {
+         minimumSpan = -1;
+         breakSpots = null;
+         super.changedUpdate(e, a, f);
+      }
+
+      private int getBreakSpot(int p0, int p1)
+      {
+         if (breakSpots == null)
+         {
+            int start = getStartOffset();
+            int end = getEndOffset();
+            int[] bs = new int[end + 1 - start];
+            int idx = 0;
+
+            Element parent = getElement().getParentElement();
+            int pstart = (parent == null ? start : parent.getStartOffset());
+            int pend = (parent == null ? end : parent.getEndOffset());
+
+            Segment s = getText(pstart, pend);
+
+            BreakIterator breaker = BreakIterator.getWordInstance();
+            breaker.setText(s);
+
+            int startFrom = end + (pend > end ? 1 : 0);
+
+            for (;;)
+            {
+               startFrom = breaker.preceding(s.offset + (startFrom - pstart))
+                         + (pstart - s.offset);
+               if (startFrom > start)
+               {
+                  bs[idx++] = startFrom;
+               }
+               else
+               {
+                  break;
+               }
+            }
+
+            breakSpots = new int[idx];
+            System.arraycopy(bs, 0, breakSpots, 0, idx);
+         }
+
+         int breakSpot = BreakIterator.DONE;
+
+         for (int i = 0; i < breakSpots.length; i++)
+         {
+            int bsp = breakSpots[i];
+
+            if (bsp <= p1)
+            {
+               if (bsp > p0)
+               {
+                  breakSpot = bsp;
+               }
+
+               break;
+            }
+         }
+
+         return breakSpot;
+      }
+
+      private int[] breakSpots = null;
+      private float minimumSpan = -1;
+   }
+
+   int prefMaxColumns, maxWidth, widestCharWidth;
+   String widestChar;
 }

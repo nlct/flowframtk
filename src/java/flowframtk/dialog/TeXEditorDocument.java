@@ -24,6 +24,7 @@ public class TeXEditorDocument extends DefaultStyledDocument
       super();
 
       this.listener = editorListener;
+      this.settings = settings;
       this.highlightOn = settings.isSyntaxHighlightingOn();
 
       StyleContext context = StyleContext.getDefaultStyleContext();
@@ -216,7 +217,13 @@ public class TeXEditorDocument extends DefaultStyledDocument
       }
    }
 
+   public FlowframTkSettings getSettings()
+   {
+      return settings;
+   }
+
    private TeXEditorListener listener;
+   private FlowframTkSettings settings;
 
    private boolean highlightOn;
 

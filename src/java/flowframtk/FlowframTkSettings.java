@@ -1258,6 +1258,16 @@ public class FlowframTkSettings
       setControlSequenceHighlight(new Color(rgb));
    }
 
+   public void setCodeBlockEditorMaxColumns(int maxCols)
+   {
+      codeBlockEditorMaxColumns = maxCols;
+   }
+
+   public int getCodeBlockEditorMaxColumns()
+   {
+      return codeBlockEditorMaxColumns;
+   }
+
    public void setTeXEditorWidth(int width)
    {
       texEditorWidth = width;
@@ -1727,7 +1737,7 @@ public class FlowframTkSettings
    private Color csHighlight = Color.BLUE;
 
    private int texEditorWidth = 8, texEditorHeight = 10;
-   private int preambleEditorWidth = 0, preambleEditorHeight = 0;
+   private int codeBlockEditorMaxColumns = 80;
 
    private Color vectorizeNotRegionColor = new Color(204, 204, 204, 220);
    private Color vectorizeLineColor = Color.RED;

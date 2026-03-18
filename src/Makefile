@@ -76,7 +76,7 @@ lib/jdrconverter.jar   : java/jdrconverter/Manifest.txt \
 clean	:
 	\rm -f lib/jdr.jar lib/jdrresources.jar
 	\rm -f lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar
-	make -C doc/en clean
+	make -C java clean
 
 squeaky	:
-	make -C java clean
+	make -C doc/en clean
