@@ -2929,6 +2929,8 @@ public class FlowframTk extends JFrame
 
       texEditorDialog = new TeXEditorDialog(this);
 
+      texEditorUIDialog = new TeXEditorUIDialog(this);
+
       incStartupProgress(texM, preambleItem);
 
       // Parshape
@@ -4133,6 +4135,11 @@ public class FlowframTk extends JFrame
    public String displayTeXEditorDialog(String text)
    {
       return texEditorDialog.display(text);
+   }
+
+   public void displayTeXEditorUIDialog()
+   {
+      texEditorUIDialog.display();
    }
 
    public int getTeXEditorWidth()
@@ -7787,6 +7794,7 @@ public class FlowframTk extends JFrame
    private CreatePathFromSvgDialog createPathFromSvgDialog;
    private FadeDialogBox fadeDialog;
    private TeXEditorDialog texEditorDialog;
+   private TeXEditorUIDialog texEditorUIDialog;
    private CharacterSelector characterSelector;
    private SegmentInfoDialog segmentInfoDialog;
 

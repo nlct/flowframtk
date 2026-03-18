@@ -102,6 +102,9 @@ public class LaTeXCodeBlockEditor extends JPanel
       replaceItem = createButtonItem("menu.texeditor", "replace",
         toolBar, popupM);
 
+      createButtonItem("menu.texeditor", "settings",
+        toolBar, popupM);
+
       try
       {
          toolBar.add(resources.createHelpDialogButton(application, "sec:preamble"));
@@ -423,6 +426,10 @@ public class LaTeXCodeBlockEditor extends JPanel
       else if (action.equals("replace"))
       {
          replace();
+      }
+      else if (action.equals("settings"))
+      {
+         frame.getApplication().displayTeXEditorUIDialog();
       }
    }
 
