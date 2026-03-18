@@ -3837,7 +3837,7 @@ Are you sure you want to ungroup it?</entry>
 
 <entry key="menu.texeditor.pasteText">Paste</entry>
 <entry key="menu.texeditor.pasteText.mnemonic">P</entry>
-<entry key="menu.texeditor.pasteText.keystroke">V</entry>
+<entry key="menu.texeditor.pasteText.keystroke">control V</entry>
 <entry key="menu.texeditor.pasteText.iconimage">pasteText</entry>
 <entry key="menu.texeditor.pasteText.tooltip">Paste text from clipboard</entry>
 
