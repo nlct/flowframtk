@@ -232,7 +232,7 @@ public class ConfigUISettingsDialog extends JDialog
       rulerFormatPanel.initialise(application);
       normalizePanel.initialise(application);
       langPanel.initialise();
-      texEditorUIPanel.initialise(application);
+      texEditorUIPanel.initialise();
 
       annotationsPanel.initialise(application.getSettings());
 
@@ -274,7 +274,7 @@ public class ConfigUISettingsDialog extends JDialog
       dragScale.okay(application);
       controlPointsPanel.okay(application);
       renderPanel.okay(application);
-      texEditorUIPanel.okay(application);
+      texEditorUIPanel.okay();
       annotationsPanel.okay(application.getSettings());
 
       lookAndFeelPanel.okay();

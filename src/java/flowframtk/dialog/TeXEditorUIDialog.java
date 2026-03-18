@@ -37,7 +37,7 @@ public class TeXEditorUIDialog extends JDialog
 
       texEditorUIPanel = new TeXEditorUIPanel(application);
 
-      getContentPane().add(texEditorUIPanel, "Center");
+      getContentPane().add(new JScrollPane(texEditorUIPanel), "Center");
 
       // OK/Cancel Button panel
 
@@ -68,14 +68,14 @@ public class TeXEditorUIDialog extends JDialog
 
    public void display()
    {
-      texEditorUIPanel.initialise(application_);
+      texEditorUIPanel.initialise();
 
       setVisible(true);
    }
 
    public void okay()
    {
-      texEditorUIPanel.okay(application_);
+      texEditorUIPanel.okay();
 
       setVisible(false);
    }

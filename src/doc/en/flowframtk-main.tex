@@ -2704,13 +2704,27 @@ normalization factors.
   {\includeimg{configureUI-texeditorui}}
   {Configuration UI Dialog Box (TeX Editor Settings)}
 
-\FlowframTk\ has small text editor that's opened when you want to
-edit the contents of a static or dynamic frame.
-The font used by this editor can be changed in the
-\widget{texeditorui.title} tab (\figureref{fig:texeditorui}).
-You can also set the default width (in terms of approximate number
-of characters per line) and the default height (in terms of lines)
-for the editor when it's first created at startup.
+\FlowframTk\ has small text editor (\sectionref{sec:texeditor})
+that's opened when you want to edit the contents of a static or
+dynamic frame.  The font used by this editor can be changed in the
+\widget{texeditorui.title} tab (\figureref{fig:texeditorui}).  You
+can also set the default width (in terms of approximate number of
+characters per line) and the default height (in terms of lines) for
+the editor when it's first created at startup.
+
+The \gls{index.menu.texeditor} popup menu item
+\menu{texeditor.settings} opens a dialog that has just the
+\dialog{texeditorui} panel, without all the other UI configuration
+options.
+
+\widgetdef{texeditorui.num_columns}
+
+The \widget{texeditorui.num_columns} setting controls the line
+wrapping. The line width is calculated according to this value
+multiplied by the width of the widest character (identified by
+\verb|lang.widest_char| in the localisation file) rendered in the specified
+font. If the editor width is narrower than this, scroll
+bars will appear.
 
 \widgetdef{texeditorui.highlight}
 
@@ -2728,10 +2742,16 @@ uses these settings.
 In \FlowframTk\ version 0.7, this editor window was also used for changing the
 preamble text, but as from version~0.8, the preamble editor has been
 switched to a pane attached to the \gls{canvas} that can remain open
-while you're editing the image. This pane uses these settings,
+while you're editing the image. There are now multiple preamble
+panes, and also a pane for the document body and magic comments.
+
+These editor panes also use the \dialog{texeditorui} settings,
 except for the default width and height, which is now governed
-by the size of the \gls{canvas} window and the location of the
-divider. By default, the preamble pane is to the right of the
+by the size of the \gls{canvas} window and the number of columns. 
+You can move the divider between the \gls{canvas} and preamble area 
+to resize the editor panes.
+
+By default, the preamble pane is to the right of the
 \gls{canvas}, but you can change this using the radio buttons in the
 \widget{texeditorui.split} area.
 
@@ -12204,6 +12224,11 @@ The \widget{replace.replace} button will replace the found text.
 
 \widgetdef{replace.replace_all}%
 The \widget{replace.replace_all} button will replace all occurrences.
+
+\menudef{menu.texeditor.settings}
+The \menu{texeditor.settings} function opens the \dialog{texeditorui}
+dialog. This has the same layout as the \dialog{texeditorui} panel
+of the \dialog{configui} (see \sectionref{sec:texeditorui}).
 
 \seealsorefs{
  sec:texconfig,

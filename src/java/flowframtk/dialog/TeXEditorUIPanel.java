@@ -24,6 +24,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.flowframtk.*;
 
@@ -32,128 +33,112 @@ public class TeXEditorUIPanel extends JPanel
 {
    public TeXEditorUIPanel(FlowframTk application)
    {
-      super(new GridBagLayout());
-      GridBagConstraints gbc = new GridBagConstraints();
+      super(null);
 
+      this.application = application;
       resources = application.getResources();
 
-      gbc.gridx=0;
-      gbc.gridy=0;
-      gbc.gridwidth=2;
-      gbc.gridheight=1;
-      gbc.insets=new Insets(2, 2, 2, 2);
-      gbc.fill=GridBagConstraints.HORIZONTAL;
-      gbc.anchor=GridBagConstraints.LINE_START;
+      init();
+   }
 
-      add(resources.createAppInfoArea("texeditorui.info"), gbc);
-      gbc.gridy++;
-      add(Box.createVerticalStrut(10), gbc);
+   protected void init()
+   {
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+      setAlignmentX(0f);
 
-      gbc.gridwidth=1;
-      gbc.fill=GridBagConstraints.NONE;
-      gbc.gridy++;
+      JTextArea infoArea = resources.createAppInfoArea("texeditorui.info");
+      infoArea.setRows(3);
+      infoArea.setAlignmentX(0f);
+      add(infoArea);
+
+      JLabelGroup labelGroup = new JLabelGroup();
+      JComponent row = createRow();
+      add(row);
+
       JLabel fontNameLabel = resources.createAppLabel("texeditorui.font");
-      add(fontNameLabel, gbc);
+      labelGroup.add(fontNameLabel);
+      row.add(fontNameLabel);
 
       fontSelector = new JavaFontSelector(application,
         fontNameLabel, null, null, "texeditorui.fontsize");
 
-      gbc.gridx++;
-      add(fontSelector, gbc);
+      row.add(resources.createLabelSpacer());
+      row.add(fontSelector);
 
-      gbc.gridx=0;
-      gbc.gridy++;
+      row = createRow();
+      add(row);
 
       JLabel colWidthLabel = resources.createAppLabel("texeditorui.num_columns");
-      add(colWidthLabel, gbc);
+      labelGroup.add(colWidthLabel);
+      row.add(colWidthLabel);
 
       colNumModel = new SpinnerNumberModel(80, 1, 10000, 1);
       JSpinner colNumSpinner = new JSpinner(colNumModel);
       colWidthLabel.setLabelFor(colNumSpinner);
 
-      gbc.gridx++;
-      add(colNumSpinner, gbc);
+      row.add(resources.createLabelSpacer());
+      row.add(colNumSpinner);
+
+      row.add(Box.createVerticalStrut(20));
 
       highlightCheckBox = resources.createAppCheckBox("texeditorui",
         "highlight", true, this);
 
-      gbc.gridwidth = 2;
-      gbc.gridx=0;
-      gbc.gridy++;
+      add(highlightCheckBox);
 
-      add(highlightCheckBox, gbc);
-
-      gbc.gridwidth = 1;
-      gbc.gridx=0;
-      gbc.gridy++;
+      row = createRow();
+      add(row);
 
       commentColorLabel = resources.createAppLabel("texeditorui.comment");
+      labelGroup.add(commentColorLabel);
 
-      gbc.gridy++;
-      add(commentColorLabel, gbc);
+      row.add(commentColorLabel);
 
-      JComponent panel = Box.createHorizontalBox();
+      commentColorPanel = createSwatch();
 
-      gbc.gridx++;
-      add(panel, gbc);
+      row.add(resources.createLabelSpacer());
+      row.add(commentColorPanel);
 
-      commentColorPanel = new JPanel();
-      commentColorPanel.setPreferredSize(new Dimension(60, 20));
-      commentColorPanel.setOpaque(true);
-
-      panel.add(commentColorPanel);
-
-      panel.add(Box.createHorizontalStrut(10));
+      row.add(resources.createButtonSpacer());
 
       commentSelectButton = resources.createDialogButton(
          "button.choose_colour", "choose_colour", this, null);
       commentSelectButton.setActionCommand("commentselect");
       commentColorLabel.setLabelFor(commentSelectButton);
 
-      panel.add(commentSelectButton);
+      row.add(commentSelectButton);
+
+      row = createRow();
+      add(row);
 
       csColorLabel = resources.createAppLabel("texeditorui.cs");
+      labelGroup.add(csColorLabel);
 
-      gbc.gridx=0;
-      gbc.gridy++;
-      add(csColorLabel, gbc);
+      row.add(csColorLabel);
 
-      panel = Box.createHorizontalBox();
+      csColorPanel = createSwatch();
 
-      gbc.gridx++;
-      add(panel, gbc);
+      row.add(resources.createLabelSpacer());
+      row.add(csColorPanel);
 
-      csColorPanel = new JPanel();
-      csColorPanel.setPreferredSize(new Dimension(60, 20));
-      csColorPanel.setOpaque(true);
-
-      panel.add(csColorPanel);
-
-      panel.add(Box.createHorizontalStrut(10));
+      row.add(resources.createButtonSpacer());
 
       csSelectButton = resources.createDialogButton(
          "button.choose_colour", "choose_colour", this, null);
       csSelectButton.setActionCommand("csselect");
       csColorLabel.setLabelFor(csSelectButton);
 
-      panel.add(csSelectButton);
+      row.add(csSelectButton);
 
       colorChooser = new JColorChooser();
 
-      gbc.gridx=0;
-      gbc.gridy++;
-      gbc.gridwidth=2;
-      gbc.fill=GridBagConstraints.BOTH;
-      add(Box.createVerticalStrut(20), gbc);
-
-      gbc.gridy++;
-      gbc.gridx=0;
-      gbc.gridwidth=3;
+      add(Box.createVerticalStrut(20));
 
       JComponent prefSizeComp = new JPanel(new GridBagLayout());
+      prefSizeComp.setAlignmentX(0f);
       GridBagConstraints prefSizeGbc = new GridBagConstraints();
 
-      add(prefSizeComp, gbc);
+      add(prefSizeComp);
 
       prefSizeComp.setBorder(BorderFactory.createTitledBorder(
          resources.getMessage("texeditorui.dim")));
@@ -195,15 +180,11 @@ public class TeXEditorUIPanel extends JPanel
       prefSizeGbc.gridx++;
       prefSizeComp.add(heightField, prefSizeGbc);
 
-      gbc.gridy++;
-      gbc.gridx=0;
-      gbc.gridwidth=3;
+      row.add(Box.createVerticalStrut(20));
 
-      add(Box.createVerticalStrut(20), gbc);
-
-      gbc.gridy++;
       JComponent splitComp = new JPanel(new GridBagLayout());
-      add(splitComp, gbc);
+      splitComp.setAlignmentX(0f);
+      add(splitComp);
 
       GridBagConstraints splitGbc = new GridBagConstraints();
       splitGbc.fill=GridBagConstraints.NONE;
@@ -240,6 +221,25 @@ public class TeXEditorUIPanel extends JPanel
       splitComp.add(belowButton, splitGbc);
    }
 
+   protected JComponent createRow()
+   {
+      JComponent row = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      row.setAlignmentX(0f);
+      return row;
+   }
+
+   protected JComponent createSwatch()
+   {
+      JComponent comp = new JPanel();
+      Dimension dim = new Dimension(60, 20);
+      comp.setPreferredSize(dim);
+      comp.setMinimumSize(dim);
+      comp.setMaximumSize(dim);
+      comp.setOpaque(true);
+
+      return comp;
+   }
+
    public void actionPerformed(ActionEvent evt)
    {
       String action = evt.getActionCommand();
@@ -274,7 +274,7 @@ public class TeXEditorUIPanel extends JPanel
       }
    }
 
-   public void initialise(FlowframTk application)
+   public void initialise()
    {
       Color col = application.getCommentHighlight();
       commentColorPanel.setBackground(col);
@@ -317,7 +317,7 @@ public class TeXEditorUIPanel extends JPanel
       }
    }
 
-   public void okay(FlowframTk application)
+   public void okay()
    {
       FlowframTkSettings settings = application.getSettings();
 
@@ -378,7 +378,7 @@ public class TeXEditorUIPanel extends JPanel
    private JavaFontSelector fontSelector;
    private SpinnerNumberModel widthModel, heightModel, colNumModel;
    private JCheckBox highlightCheckBox;
-   private JPanel commentColorPanel, csColorPanel;
+   private JComponent commentColorPanel, csColorPanel;
    private JColorChooser colorChooser;
    private JLabel commentColorLabel, csColorLabel;
    private JButton commentSelectButton, csSelectButton;
@@ -386,4 +386,5 @@ public class TeXEditorUIPanel extends JPanel
    private JRadioButton leftButton, rightButton, aboveButton, belowButton;
 
    private JDRResources resources;
+   private FlowframTk application;
 }

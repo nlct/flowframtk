@@ -102,6 +102,8 @@ public class LaTeXCodeBlockEditor extends JPanel
       replaceItem = createButtonItem("menu.texeditor", "replace",
         toolBar, popupM);
 
+      popupM.addSeparator();
+
       createButtonItem("menu.texeditor", "settings",
         toolBar, popupM);
 
