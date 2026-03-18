@@ -3364,11 +3364,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="texeditorui.title">TeX Editor</entry>
 <entry key="texeditorui.mnemonic">X</entry>
 <entry key="texeditorui.tooltip">Change UI settings for the internal TeX editor</entry>
-<entry key="texeditorui.info">The (La)TeX editor is used by the edit preamble function and the edit frame contents function. Some of these settings require a restart to take effect.</entry>
+<entry key="texeditorui.info">The (La)TeX editor is used by the preamble and document body panels and the edit static/dynamic frame contents dialog. Some of these settings require a restart to take effect.</entry>
 <entry key="texeditorui.font">Font:</entry>
 <entry key="texeditorui.font.mnemonic">F</entry>
 <entry key="texeditorui.fontsize">Font Size:</entry>
 <entry key="texeditorui.fontsize.mnemonic">Z</entry>
+<entry key="texeditorui.num_columns">Number of columns:</entry>
+<entry key="texeditorui.num_columns.mnemonic">N</entry>
 <entry key="texeditorui.dim">Static/Dynamic Frame Contents Editor Preferred Size</entry>
 <entry key="texeditorui.width">Default Width:</entry>
 <entry key="texeditorui.width.mnemonic">W</entry>

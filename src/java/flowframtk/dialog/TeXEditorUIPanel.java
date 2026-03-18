@@ -61,6 +61,19 @@ public class TeXEditorUIPanel extends JPanel
       gbc.gridx++;
       add(fontSelector, gbc);
 
+      gbc.gridx=0;
+      gbc.gridy++;
+
+      JLabel colWidthLabel = resources.createAppLabel("texeditorui.num_columns");
+      add(colWidthLabel, gbc);
+
+      colNumModel = new SpinnerNumberModel(80, 1, 10000, 1);
+      JSpinner colNumSpinner = new JSpinner(colNumModel);
+      colWidthLabel.setLabelFor(colNumSpinner);
+
+      gbc.gridx++;
+      add(colNumSpinner, gbc);
+
       highlightCheckBox = resources.createAppCheckBox("texeditorui",
         "highlight", true, this);
 
@@ -278,6 +291,8 @@ public class TeXEditorUIPanel extends JPanel
 
       FlowframTkSettings settings = application.getSettings();
 
+      colNumModel.setValue(Integer.valueOf(settings.getCodeBlockEditorMaxColumns()));
+
       if (settings.getCanvasSplit() == JSplitPane.HORIZONTAL_SPLIT)
       {
          if (settings.isCanvasFirst())
@@ -304,8 +319,12 @@ public class TeXEditorUIPanel extends JPanel
 
    public void okay(FlowframTk application)
    {
+      FlowframTkSettings settings = application.getSettings();
+
       application.setTeXEditorWidth(widthModel.getNumber().intValue());
       application.setTeXEditorHeight(heightModel.getNumber().intValue());
+
+      settings.setCodeBlockEditorMaxColumns(colNumModel.getNumber().intValue());
 
       boolean enabled = highlightCheckBox.isSelected();
       application.setSyntaxHighlighting(enabled);
@@ -357,7 +376,7 @@ public class TeXEditorUIPanel extends JPanel
    }
 
    private JavaFontSelector fontSelector;
-   private SpinnerNumberModel widthModel, heightModel;
+   private SpinnerNumberModel widthModel, heightModel, colNumModel;
    private JCheckBox highlightCheckBox;
    private JPanel commentColorPanel, csColorPanel;
    private JColorChooser colorChooser;
