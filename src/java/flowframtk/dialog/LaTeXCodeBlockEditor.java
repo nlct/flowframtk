@@ -796,22 +796,63 @@ class LaTeXEditorPane extends JTextPane
 
             Segment s = getText(pstart, pend);
 
-            BreakIterator breaker = BreakIterator.getWordInstance();
+            BreakIterator breaker = BreakIterator.getCharacterInstance();
             breaker.setText(s);
 
             int startFrom = end + (pend > end ? 1 : 0);
+
+            int prev = pend;
+            boolean found = false;
 
             for (;;)
             {
                startFrom = breaker.preceding(s.offset + (startFrom - pstart))
                          + (pstart - s.offset);
-               if (startFrom > start)
+
+               if (startFrom <= start)
                {
-                  bs[idx++] = startFrom;
+                  break;
+               }
+
+               String substr = getText(startFrom, prev).toString();
+
+               if (isWordSeparator(substr))
+               {
+                  bs[idx++] = prev;
+
+                  if (startFrom - pstart <= prefMaxColumns)
+                  {
+                     found = true;
+                  }
+               }
+
+               prev = startFrom;
+            }
+
+            if (!found)
+            {
+               if (idx > 0)
+               {
+                  startFrom = bs[idx-1];
                }
                else
                {
-                  break;
+                  startFrom = end + (pend > end ? 1 : 0);
+               }
+
+               idx = 0;
+
+               for (;;)
+               {
+                  startFrom = breaker.preceding(s.offset + (startFrom - pstart))
+                         + (pstart - s.offset);
+
+                  if (startFrom <= start)
+                  {
+                     break;
+                  }
+
+                  bs[idx++] = startFrom;
                }
             }
 
@@ -837,6 +878,24 @@ class LaTeXEditorPane extends JTextPane
          }
 
          return breakSpot;
+      }
+
+      boolean isWordSeparator(String str)
+      {
+         if (str.isEmpty()) return false;
+
+         for (int i = 0; i < str.length(); )
+         {
+            int cp = str.codePointAt(i);
+            i += Character.charCount(cp);
+
+            if (!Character.isWhitespace(cp))
+            {
+               return false;
+            }
+         }
+
+         return true;
       }
 
       private int[] breakSpots = null;
