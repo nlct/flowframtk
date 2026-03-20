@@ -27,16 +27,24 @@ public class TeXEditorDocument extends DefaultStyledDocument
       this.settings = settings;
       this.highlightOn = settings.isSyntaxHighlightingOn();
 
-      StyleContext context = StyleContext.getDefaultStyleContext();
-      attrPlain = context.addAttribute(context.getEmptySet(),
-         StyleConstants.Foreground, Color.BLACK);
-      attrControlSequence = context.addAttribute(context.getEmptySet(),
-         StyleConstants.Foreground, settings.getControlSequenceHighlight());
+      Style plainStyle = addStyle("plain", null);
 
-      attrComment = new SimpleAttributeSet();
+      StyleConstants.setFontFamily(plainStyle, settings.getTeXEditorFontName());
+      StyleConstants.setFontSize(plainStyle, settings.getTeXEditorFontSize());
+
+      Style csStyle = addStyle("controlsequence", plainStyle);
+
+      StyleConstants.setForeground(csStyle, settings.getControlSequenceHighlight());
+
+      Style commentStyle = addStyle("comment", plainStyle);
+
+      SimpleAttributeSet attrComment = new SimpleAttributeSet();
       StyleConstants.setItalic(attrComment, true);
       StyleConstants.setForeground(attrComment, 
          settings.getCommentHighlight());
+
+      commentStyle.addAttributes(attrComment);
+
 
       addUndoableEditListener(
        new UndoableEditListener()
@@ -70,6 +78,46 @@ public class TeXEditorDocument extends DefaultStyledDocument
 
    public void updateStyles(FlowframTkSettings settings)
    {
+      boolean updateHighlight = (highlightOn != settings.isSyntaxHighlightingOn());
+
+      highlightOn = settings.isSyntaxHighlightingOn();
+
+      Style plainStyle = getStyle("plain");
+
+      Font oldFont = getFont(plainStyle);
+      Font newFont = settings.getTeXEditorFont();
+
+      if (!newFont.equals(oldFont))
+      {
+         StyleConstants.setFontFamily(plainStyle, settings.getTeXEditorFontName());
+         StyleConstants.setFontSize(plainStyle, settings.getTeXEditorFontSize());
+
+         updateHighlight = true;
+      }
+
+      Style csStyle = getStyle("controlsequence");
+
+      Color oldValue = getForeground(csStyle);
+      Color newValue = settings.getControlSequenceHighlight();
+
+      if (!newValue.equals(oldValue))
+      {
+         StyleConstants.setForeground(csStyle, newValue);
+         updateHighlight = true;
+      }
+
+      Style commentStyle = getStyle("comment");
+
+      oldValue = getForeground(commentStyle);
+      newValue = settings.getCommentHighlight();
+
+      if (!newValue.equals(oldValue))
+      {
+         commentStyle.addAttribute(StyleConstants.Foreground, newValue);
+         updateHighlight = true;
+      }
+
+      /*
       StyleContext context = StyleContext.getDefaultStyleContext();
       attrPlain = context.addAttribute(context.getEmptySet(),
          StyleConstants.Foreground, Color.BLACK);
@@ -81,6 +129,21 @@ public class TeXEditorDocument extends DefaultStyledDocument
       StyleConstants.setItalic(attrComment, true);
       StyleConstants.setForeground(attrComment, 
          settings.getCommentHighlight());
+      */
+
+      if (updateHighlight && getLength() > 0)
+      {
+         try
+         {
+            updateHighlight();
+         }
+         catch (BadLocationException e)
+         {
+            settings.getResources().debug(e);
+         }
+      }
+
+      this.settings = settings;
    }
 
    public void remove(int offset, int length)
@@ -104,9 +167,12 @@ public class TeXEditorDocument extends DefaultStyledDocument
    {
       int offset = getLength();
 
-      super.insertString(offset, text, attrPlain);
+      super.insertString(offset, text, getStyle("plain"));
 
       if (!highlightOn) return;
+
+      Style csStyle = getStyle("controlsequence");
+      Style commentStyle = getStyle("comment");
 
       Matcher matcher = PATTERN_CS.matcher(text);
 
@@ -119,11 +185,11 @@ public class TeXEditorDocument extends DefaultStyledDocument
 
          if (group.startsWith("%"))
          {
-            setCharacterAttributes(newOffset, len, attrComment, true);
+            setCharacterAttributes(newOffset, len, commentStyle, true);
          }
          else
          {
-            setCharacterAttributes(newOffset, len, attrControlSequence, false);
+            setCharacterAttributes(newOffset, len, csStyle, false);
          }
       }
    }
@@ -131,12 +197,14 @@ public class TeXEditorDocument extends DefaultStyledDocument
    private void updateHighlight()
    throws BadLocationException
    {
+      setCharacterAttributes(0, getLength(), getStyle("plain"), true);
+
       if (!highlightOn) return;
 
-      String text = getText(0, getLength());
+      Style csStyle = getStyle("controlsequence");
+      Style commentStyle = getStyle("comment");
 
-      setCharacterAttributes(0, getLength(), 
-        attrPlain, true);
+      String text = getText(0, getLength());
 
       Matcher matcher = PATTERN_CS.matcher(text);
 
@@ -149,11 +217,11 @@ public class TeXEditorDocument extends DefaultStyledDocument
 
          if (group.startsWith("%"))
          {
-            setCharacterAttributes(newOffset, len, attrComment, true);
+            setCharacterAttributes(newOffset, len, commentStyle, true);
          }
          else
          {
-            setCharacterAttributes(newOffset, len, attrControlSequence, false);
+            setCharacterAttributes(newOffset, len, csStyle, false);
          }
       }
    }
@@ -170,7 +238,7 @@ public class TeXEditorDocument extends DefaultStyledDocument
    public void replace(int offset, int length, String text)
      throws BadLocationException
    {
-      replace(offset, length, text, attrPlain);
+      replace(offset, length, text, getStyle("plain"));
    }
 
    // This method is for initialising so bypass the undo/redo
@@ -227,9 +295,11 @@ public class TeXEditorDocument extends DefaultStyledDocument
 
    private boolean highlightOn;
 
+/*
    private AttributeSet attrPlain;
    private AttributeSet attrControlSequence;
    private SimpleAttributeSet attrComment;
+*/
 
    private static final Pattern PATTERN_CS = Pattern.compile(
       "((?:\\\\[^a-zA-Z]{1})|(?:\\\\[a-zA-Z]+)|(?:[#~\\{\\}\\^\\$_])|(?:%.*))");
