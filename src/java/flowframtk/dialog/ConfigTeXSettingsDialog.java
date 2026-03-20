@@ -73,46 +73,23 @@ public class ConfigTeXSettingsDialog extends JDialog
       tabbedPane = new JTabbedPane();
       getContentPane().add(tabbedPane, "Center");
 
-      int idx=0;
-
       CanvasGraphics cg = application.getDefaultCanvasGraphics();
 
       texSettings = new TeXSettingsPanel(application);
 
-      tabbedPane.addTab(getResources().getMessage("clssettings.title"),
-         null, new JScrollPane(texSettings),
-         getResources().getMessage("clssettings.tooltip"));
-
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("clssettings.mnemonic"));
+      addTab(texSettings, DOCUMENT_TAB, "clssettings");
 
       flfConfigPanel = new FlfConfigPanel(getResources());
 
-      tabbedPane.addTab(getResources().getMessage("flfsettings.title"),
-         null, new JScrollPane(flfConfigPanel),
-         getResources().getMessage("flfsettings.tooltip"));
-
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("flfsettings.mnemonic"));
+      addTab(flfConfigPanel, FLOWFRAME_TAB, "flfsettings");
 
       textConfigPanel = new TextConfigPanel(this, application);
 
-      tabbedPane.addTab(getResources().getMessage("textconfig.title"),
-         null, new JScrollPane(textConfigPanel),
-         getResources().getMessage("textconfig.tooltip"));
-
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("textconfig.mnemonic"));
+      addTab(textConfigPanel, TEXT_TAB, "textconfig");
 
       preambleConfigPanel = new PreambleConfigPanel(this, application);
 
-      tabbedPane.addTab(getResources().getMessage("preambleconfig.title"),
-         null, new JScrollPane(preambleConfigPanel),
-         getResources().getMessage("preambleconfig.tooltip"));
-
-      tabbedPane.setMnemonicAt(idx++,
-         getResources().getCodePoint("preambleconfig.mnemonic"));
-
+      addTab(preambleConfigPanel, PREAMBLE_TAB, "preambleconfig");
 
       // OK/Cancel Button panel
 
@@ -126,6 +103,16 @@ public class ConfigTeXSettingsDialog extends JDialog
       dim.height = 400;
       setSize(dim);
       setLocationRelativeTo(application_);
+   }
+
+   void addTab(JComponent component, int index, String tag)
+   {
+      JDRResources resources = getResources();
+      tabbedPane.add(new JScrollPane(component), index);
+
+      tabbedPane.setTitleAt(index, resources.getMessage(tag+".title"));
+      tabbedPane.setMnemonicAt(index, resources.getCodePoint(tag+".mnemonic"));
+      tabbedPane.setToolTipTextAt(index, resources.getMessage(tag+".tooltip"));
    }
 
    public void actionPerformed(ActionEvent evt)
@@ -142,6 +129,12 @@ public class ConfigTeXSettingsDialog extends JDialog
       {
          setVisible(false);
       }
+   }
+
+   public void display(JDRFrame frame, int tabIndex)
+   {
+      tabbedPane.setSelectedIndex(tabIndex);
+      display(frame);
    }
 
    public void display(JDRFrame frame)
@@ -212,6 +205,11 @@ public class ConfigTeXSettingsDialog extends JDialog
 
    private FlowframTk application_;
    private JDRFrame frame;
+
+   public static final int DOCUMENT_TAB=0;
+   public static final int FLOWFRAME_TAB=1;
+   public static final int TEXT_TAB=2;
+   public static final int PREAMBLE_TAB=3;
 }
 
 class TeXSettingsPanel extends Box
@@ -221,17 +219,18 @@ class TeXSettingsPanel extends Box
    {
       super(BoxLayout.Y_AXIS);
       this.application_ = application;
+      JDRResources resources = application.getResources();
 
       Box b2 = Box.createHorizontalBox();
       b2.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(b2);
 
-      JLabel label = getResources().createAppLabel("clssettings.normalsize");
+      JLabel label = resources.createAppLabel("clssettings.normalsize");
 
       label.setAlignmentX(Component.LEFT_ALIGNMENT);
       b2.add(label);
 
-      b2.add(getResources().createLabelSpacer());
+      b2.add(resources.createLabelSpacer());
 
       sizeBox = new JComboBox<Integer>(availableSizes);
       sizeBox.addItemListener(this);
@@ -240,7 +239,7 @@ class TeXSettingsPanel extends Box
       sizeBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       sizeBox.setMaximumSize(sizeBox.getPreferredSize());
 
-      useRelativeFontDeclarations = getResources().createAppCheckBox(
+      useRelativeFontDeclarations = resources.createAppCheckBox(
          "clssettings", "relative_fontsize", true, null);
       useRelativeFontDeclarations.setAlignmentX(Component.LEFT_ALIGNMENT);
       b2.add(useRelativeFontDeclarations);
@@ -253,7 +252,7 @@ class TeXSettingsPanel extends Box
 
       add(Box.createVerticalStrut(10));
 
-      JTextArea textarea = getResources().createAppInfoArea("clssettings.note");
+      JTextArea textarea = resources.createAppInfoArea("clssettings.note");
       textarea.setAlignmentX(Component.LEFT_ALIGNMENT);
       textarea.setLineWrap(false);
       Dimension dim = textarea.getMaximumSize();
@@ -269,7 +268,7 @@ class TeXSettingsPanel extends Box
 
       add(Box.createVerticalStrut(10));
 
-      textarea = getResources().createAppInfoArea("clssettings.default_cls.info");
+      textarea = resources.createAppInfoArea("clssettings.default_cls.info");
       textarea.setAlignmentX(Component.LEFT_ALIGNMENT);
       textarea.setLineWrap(false);
       dim = textarea.getMaximumSize();
@@ -284,14 +283,14 @@ class TeXSettingsPanel extends Box
 
       ButtonGroup bg = new ButtonGroup();
 
-      useDefaultCls = getResources().createAppRadioButton("clssettings",
+      useDefaultCls = resources.createAppRadioButton("clssettings",
          "default_cls", bg, true, this);
       useDefaultCls.setAlignmentX(Component.LEFT_ALIGNMENT);
       b2.add(useDefaultCls);
 
       b2.add(Box.createHorizontalStrut(20));
 
-      useCustomCls = getResources().createAppRadioButton("clssettings",
+      useCustomCls = resources.createAppRadioButton("clssettings",
          "custom_cls", bg, false, this);
       useCustomCls.setAlignmentX(Component.LEFT_ALIGNMENT);
       b2.add(useCustomCls);
@@ -302,7 +301,7 @@ class TeXSettingsPanel extends Box
 
       customClsField.setMaximumSize(customClsField.getPreferredSize());
 
-      usePdfInfo = getResources().createAppCheckBox("clssettings",
+      usePdfInfo = resources.createAppCheckBox("clssettings",
         "pdfinfo", false, null);
       usePdfInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
       add(usePdfInfo);
@@ -1476,9 +1475,11 @@ class PreambleConfigPanel extends JPanel
       this.application = application;
       this.parent = parent;
 
+      JDRResources resources = application.getResources();
+
       File file = application.getConfigPreambleFile();
 
-      add(getResources().createAppInfoArea("preambleconfig.info",
+      add(resources.createAppInfoArea("preambleconfig.info",
         file.toString()), BorderLayout.NORTH);
 
       popupM = new JPopupMenu();
@@ -1488,7 +1489,7 @@ class PreambleConfigPanel extends JPanel
 
       popupM.addSeparator();
 
-      JDRButtonItem reloadItem = getResources().createButtonItem(
+      JDRButtonItem reloadItem = resources.createButtonItem(
         "preambleconfig", "reload", this, texEditorPanel.getToolBar(), popupM);
 
       add(texEditorPanel, BorderLayout.CENTER);
@@ -1502,7 +1503,7 @@ class PreambleConfigPanel extends JPanel
       }
       catch (IOException e)
       {
-         getResources().debugMessage(e);
+         resources.debugMessage(e);
       }
    }
 

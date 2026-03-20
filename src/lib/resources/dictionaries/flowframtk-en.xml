@@ -3848,10 +3848,13 @@ Are you sure you want to ungroup it?</entry>
 <entry key="menu.texeditor.selectAllText.keystroke">control A</entry>
 <entry key="menu.texeditor.selectAllText.tooltip">Select all text</entry>
 
-<entry key="menu.texeditor.settings">Settings</entry>
+<entry key="menu.texeditor.settings">Editor Settings...</entry>
 <entry key="menu.texeditor.settings.mnemonic">N</entry>
 <entry key="menu.texeditor.settings.tooltip">Change editor interface settings</entry>
 <entry key="menu.texeditor.settings.iconimage">preferences</entry>
+
+<entry key="menu.texeditor.default_preamble">Default Preamble...</entry>
+<entry key="menu.texeditor.default_preamble.mnemonic">D</entry>
 
 <!--  Preamble Find/Replace Dialog -->
 

@@ -4137,6 +4137,11 @@ public class FlowframTk extends JFrame
       return texEditorDialog.display(text);
    }
 
+   public void displayDefaultPreamble(JDRFrame frame)
+   {
+      configTeXDialog.display(frame, ConfigTeXSettingsDialog.PREAMBLE_TAB);
+   }
+
    public void displayTeXEditorUIDialog()
    {
       texEditorUIDialog.display();

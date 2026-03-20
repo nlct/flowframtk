@@ -108,6 +108,10 @@ public class LaTeXCodeBlockEditor extends JPanel
       createButtonItem("menu.texeditor", "settings",
         toolBar, popupM);
 
+      popupM.add(resources.createAppMenuItem(
+        "menu.texeditor.default_preamble", "defaultpreamble",
+        null, this, getResources().getToolTipText("default_preamble")));
+
       try
       {
          toolBar.add(resources.createHelpDialogButton(application, "sec:preamble"));
@@ -433,6 +437,10 @@ public class LaTeXCodeBlockEditor extends JPanel
       else if (action.equals("settings"))
       {
          frame.getApplication().displayTeXEditorUIDialog();
+      }
+      else if (action.equals("defaultpreamble"))
+      {
+         frame.getApplication().displayDefaultPreamble(frame);
       }
    }
 
