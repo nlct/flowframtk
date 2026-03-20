@@ -117,20 +117,6 @@ public class TeXEditorDocument extends DefaultStyledDocument
          updateHighlight = true;
       }
 
-      /*
-      StyleContext context = StyleContext.getDefaultStyleContext();
-      attrPlain = context.addAttribute(context.getEmptySet(),
-         StyleConstants.Foreground, Color.BLACK);
-
-      attrControlSequence = context.addAttribute(context.getEmptySet(),
-         StyleConstants.Foreground, settings.getControlSequenceHighlight());
-
-      attrComment = new SimpleAttributeSet();
-      StyleConstants.setItalic(attrComment, true);
-      StyleConstants.setForeground(attrComment, 
-         settings.getCommentHighlight());
-      */
-
       if (updateHighlight && getLength() > 0)
       {
          try
@@ -294,12 +280,6 @@ public class TeXEditorDocument extends DefaultStyledDocument
    private FlowframTkSettings settings;
 
    private boolean highlightOn;
-
-/*
-   private AttributeSet attrPlain;
-   private AttributeSet attrControlSequence;
-   private SimpleAttributeSet attrComment;
-*/
 
    private static final Pattern PATTERN_CS = Pattern.compile(
       "((?:\\\\[^a-zA-Z]{1})|(?:\\\\[a-zA-Z]+)|(?:[#~\\{\\}\\^\\$_])|(?:%.*))");
