@@ -19,6 +19,7 @@
 package com.dickimawbooks.flowframtk.dialog;
 
 import java.util.regex.*;
+import java.util.Vector;
 import java.text.BreakIterator;
 import java.awt.*;
 import java.awt.event.*;
@@ -617,6 +618,7 @@ class LaTeXEditorPane extends JTextPane
 
       Dimension dim = getPreferredSize();
       dim.width = maxWidth + insets.left + insets.right;
+
       setPreferredSize(dim);
    }
 
@@ -647,7 +649,7 @@ class LaTeXEditorPane extends JTextPane
                case AbstractDocument.ContentElementName:
                   return new WrapLabelView(element);
                case AbstractDocument.ParagraphElementName:
-                  return new ParagraphView(element);
+                  return new WrapParagraphView(element);
                case AbstractDocument.SectionElementName:
                   return new BoxView(element, View.Y_AXIS);
                case StyleConstants.ComponentElementName:
@@ -659,6 +661,40 @@ class LaTeXEditorPane extends JTextPane
 
          // Default to text display.
          return new WrapLabelView(element);
+      }
+   }
+
+   private class WrapParagraphView extends ParagraphView
+   {
+      public WrapParagraphView(Element element)
+      {
+         super(element);
+      }
+
+      @Override
+      public float getMinimumSpan(int axis)
+      {
+         float span = super.getMinimumSpan(axis);
+
+         if (axis == View.X_AXIS && span > maxWidth)
+         {
+            span = maxWidth;
+         }
+
+         return span;
+      }
+
+      @Override
+      public float getMaximumSpan(int axis)
+      {
+         float span = super.getMaximumSpan(axis);
+
+         if (axis == View.X_AXIS && span > maxWidth)
+         {
+            span = maxWidth;
+         }
+
+         return span;
       }
    }
 
@@ -684,19 +720,24 @@ class LaTeXEditorPane extends JTextPane
 
                while (p1 > p0)
                {
-                  int breakSpot = getBreakSpot(p0, p1);
+                  BreakSpot breakSpot = getBreakSpot(p0, p1);
+                  int bsp;
 
-                  if (breakSpot == BreakIterator.DONE)
+                  if (breakSpot == null)
                   {
                      // the rest of the view is non-breakable
-                     breakSpot = p0;
+                     bsp = p0;
+                  }
+                  else
+                  {
+                     bsp = breakSpot.getIndex();
                   }
 
                   minimumSpan = Math.max(minimumSpan,
-                                getPartialSpan(breakSpot, p1));
+                                getPartialSpan(bsp, p1));
 
                   // Note: getBreakSpot returns the *last* breakspot
-                  p1 = breakSpot - 1;
+                  p1 = bsp - 1;
                }
             }
 
@@ -721,15 +762,15 @@ class LaTeXEditorPane extends JTextPane
                return View.BadBreakWeight;
             }
 
-            int breakSpot = getBreakSpot(p0, p1);
+            BreakSpot breakSpot = getBreakSpot(p0, p1);
 
-            if (breakSpot == BreakIterator.DONE)
+            if (breakSpot == null)
             {
-               return View.GoodBreakWeight;
+               return View.GoodBreakWeight / 2;
             }
             else
             {
-               return View.ExcellentBreakWeight;
+               return breakSpot.getWeight();
             }
          }
 
@@ -744,11 +785,11 @@ class LaTeXEditorPane extends JTextPane
             checkPainter();
             int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
 
-            int breakSpot = getBreakSpot(p0, p1);
+            BreakSpot breakSpot = getBreakSpot(p0, p1);
 
-            if (breakSpot != BreakIterator.DONE)
+            if (breakSpot != null)
             {
-               p1 = breakSpot;
+               p1 = breakSpot.getIndex();
             }
 
             if (p0 == getStartOffset() && p1 == getEndOffset())
@@ -770,7 +811,10 @@ class LaTeXEditorPane extends JTextPane
       @Override
       public void insertUpdate(DocumentEvent e, Shape a, ViewFactory f)
       {
-         breakSpots = null;
+         if (breakSpots != null)
+         {
+            breakSpots.clear();
+         }
          minimumSpan = -1;
          super.insertUpdate(e, a, f);
       }
@@ -778,7 +822,10 @@ class LaTeXEditorPane extends JTextPane
       @Override
       public void removeUpdate(DocumentEvent e, Shape a, ViewFactory f)
       {
-         breakSpots = null;
+         if (breakSpots != null)
+         {
+            breakSpots.clear();
+         }
          minimumSpan = -1;
          super.removeUpdate(e, a, f);
       }
@@ -786,18 +833,24 @@ class LaTeXEditorPane extends JTextPane
       public void changedUpdate(DocumentEvent e, Shape a, ViewFactory f)
       {
          minimumSpan = -1;
-         breakSpots = null;
+         if (breakSpots != null)
+         {
+            breakSpots.clear();
+         }
          super.changedUpdate(e, a, f);
       }
 
-      private int getBreakSpot(int p0, int p1)
+      private BreakSpot getBreakSpot(int p0, int p1)
       {
-         if (breakSpots == null)
+         if (breakSpots == null || breakSpots.isEmpty())
          {
+            if (breakSpots == null)
+            {
+               breakSpots = new Vector<BreakSpot>();
+            }
+
             int start = getStartOffset();
             int end = getEndOffset();
-            int[] bs = new int[end + 1 - start];
-            int idx = 0;
 
             Element parent = getElement().getParentElement();
             int pstart = (parent == null ? start : parent.getStartOffset());
@@ -812,6 +865,7 @@ class LaTeXEditorPane extends JTextPane
 
             int prev = pend;
             boolean found = false;
+            String prevSubStr = "";
 
             for (;;)
             {
@@ -825,9 +879,9 @@ class LaTeXEditorPane extends JTextPane
 
                String substr = getText(startFrom, prev).toString();
 
-               if (isWordSeparator(substr))
+               if (isBreakPoint(substr, prevSubStr))
                {
-                  bs[idx++] = prev;
+                  breakSpots.add(new BreakSpot(prev));
 
                   if (startFrom - pstart <= prefMaxColumns)
                   {
@@ -835,21 +889,20 @@ class LaTeXEditorPane extends JTextPane
                   }
                }
 
+               prevSubStr = substr;
                prev = startFrom;
             }
 
             if (!found)
             {
-               if (idx > 0)
-               {
-                  startFrom = bs[idx-1];
-               }
-               else
+               if (breakSpots.isEmpty())
                {
                   startFrom = end + (pend > end ? 1 : 0);
                }
-
-               idx = 0;
+               else 
+               {
+                  startFrom = breakSpots.lastElement().getIndex();
+               }
 
                for (;;)
                {
@@ -861,25 +914,24 @@ class LaTeXEditorPane extends JTextPane
                      break;
                   }
 
-                  bs[idx++] = startFrom;
+                  breakSpots.add(new BreakSpot(startFrom, View.GoodBreakWeight));
                }
             }
 
-            breakSpots = new int[idx];
-            System.arraycopy(bs, 0, breakSpots, 0, idx);
          }
 
-         int breakSpot = BreakIterator.DONE;
+         BreakSpot breakSpot = null;
 
-         for (int i = 0; i < breakSpots.length; i++)
+         for (int i = 0; i < breakSpots.size(); i++)
          {
-            int bsp = breakSpots[i];
+            BreakSpot bs = breakSpots.get(i);
+            int bsp = bs.getIndex();
 
             if (bsp <= p1)
             {
                if (bsp > p0)
                {
-                  breakSpot = bsp;
+                  breakSpot = bs;
                }
 
                break;
@@ -889,26 +941,63 @@ class LaTeXEditorPane extends JTextPane
          return breakSpot;
       }
 
-      boolean isWordSeparator(String str)
+      boolean isBreakPoint(String substr1, String substr2)
       {
-         if (str.isEmpty()) return false;
+         boolean isSep = false;
 
-         for (int i = 0; i < str.length(); )
+         for (int i = 0; i < substr1.length(); )
          {
-            int cp = str.codePointAt(i);
+            int cp = substr1.codePointAt(i);
             i += Character.charCount(cp);
 
-            if (!Character.isWhitespace(cp))
+            int type = Character.getType(cp);
+
+            if (Character.isWhitespace(cp)
+              || type == Character.DASH_PUNCTUATION
+              || cp == '}' || cp == ']'
+              || substr2.equals("\\")
+              || substr2.equals("{") || substr2.equals("["))
             {
-               return false;
+               isSep = true;
             }
          }
 
-         return true;
+         return isSep;
       }
 
-      private int[] breakSpots = null;
+      private Vector<BreakSpot> breakSpots = null;
       private float minimumSpan = -1;
+   }
+
+   class BreakSpot
+   {
+      public BreakSpot(int index, int weight)
+      {
+         this.index = index;
+         this.weight = weight;
+      }
+
+      public BreakSpot(int index)
+      {
+         this(index, View.ExcellentBreakWeight);
+      }
+
+      public int getIndex()
+      {
+         return index;
+      }
+
+      public int getWeight()
+      {
+         return weight;
+      }
+
+      public String toString()
+      {
+         return String.format("BreakSpot(%d,%d)", index, weight);
+      }
+
+      int index, weight;
    }
 
    int prefMaxColumns, maxWidth, widestCharWidth;
