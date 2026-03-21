@@ -523,7 +523,7 @@ public class JDRBitmap extends JDRCompleteObject
 
       AffineTransform concat = new AffineTransform();
       concat.concatenate(tex.getTransform());
-      concat.concatenate(getAffineTransform());
+      concat.concatenate(affineTransform);
       concat.concatenate(new AffineTransform(1, 0, 0, -1, 0, 0));
 
       tex.println("\\begin{pgfscope}");
@@ -848,8 +848,7 @@ public class JDRBitmap extends JDRCompleteObject
          new Rectangle2D.Double(0, 0,
             unit.fromBp(ic.getIconWidth()), 
             unit.fromBp(ic.getIconHeight())));
-      AffineTransform af = getAffineTransform();
-      outline = af.createTransformedShape(outline);
+      outline = affineTransform.createTransformedShape(outline);
 
       return outline;
    }
@@ -1038,7 +1037,7 @@ public class JDRBitmap extends JDRCompleteObject
          double storageToBp = cg.storageToBp(1.0);
          g2.scale(storageToBp, storageToBp);
 
-         AffineTransform af = getAffineTransform();
+         AffineTransform af = new AffineTransform(affineTransform);
 
          double bpToStorage = cg.bpToStorage(1.0);
 
