@@ -1345,7 +1345,7 @@ class TeXMapDialog extends JDialog
 
       if (success)
       {
-         return new TeXMapRow(new Integer(symbolHexField.getInt()),
+         return new TeXMapRow(Integer.valueOf(symbolHexField.getInt()),
             getCommand(), getStyName());
       }
       else
