@@ -101,6 +101,7 @@ public class ArrowCross extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       double markerSize = size.getValue(JDRUnit.bp);

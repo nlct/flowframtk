@@ -102,6 +102,7 @@ public class ArrowTriangle extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowtriangle{"+PGF.length(size)+"}";

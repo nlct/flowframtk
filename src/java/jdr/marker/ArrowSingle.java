@@ -101,6 +101,7 @@ public class ArrowSingle extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowsingle";

@@ -100,6 +100,7 @@ public class ArrowDiamond extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowdiamond";

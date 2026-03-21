@@ -101,6 +101,7 @@ public class ArrowPlus extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       String sizefmt = PGF.format(size.getValue(JDRUnit.bp));

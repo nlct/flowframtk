@@ -105,6 +105,7 @@ public class ArrowCircleOpen extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowcircle{"+PGF.format(size.getValue(JDRUnit.bp))+"bp}";

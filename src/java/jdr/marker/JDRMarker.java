@@ -1043,6 +1043,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * when saving as a PGF image.
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";
@@ -1054,6 +1055,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * when saving as a PGF image.
     * @deprecated
     */
+   @Deprecated
    private String pgfdoarrow()
    {
       String str = "";
@@ -1087,6 +1089,7 @@ public class JDRMarker implements Serializable,Cloneable,JDRConstants
     * instead of using the PGF arrow commands.
     * @deprecated
     */
+   @Deprecated
    public String pgf(boolean start)
    {
 

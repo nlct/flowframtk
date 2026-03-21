@@ -98,6 +98,7 @@ public class ArrowPointed extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowlargepointed{"+PGF.format(size.getValue(JDRUnit.bp))+"bp}";

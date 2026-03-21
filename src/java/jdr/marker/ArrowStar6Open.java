@@ -119,6 +119,7 @@ public class ArrowStar6Open extends JDRMarker
     * Not implemented (returns empty string).
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";

@@ -99,6 +99,7 @@ public class ArrowEquilateralFilled extends JDRMarker
     * Returns empty string.
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";

@@ -103,6 +103,7 @@ public class ArrowRound extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowround";

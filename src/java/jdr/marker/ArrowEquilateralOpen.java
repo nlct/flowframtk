@@ -101,6 +101,7 @@ public class ArrowEquilateralOpen extends JDRMarker
     * Returns empty string.
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";

@@ -101,6 +101,7 @@ public class ArrowTriangleUpFilled extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       double markerSize = size.getValue(JDRUnit.bp);

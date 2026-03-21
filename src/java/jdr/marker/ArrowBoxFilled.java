@@ -95,6 +95,7 @@ public class ArrowBoxFilled extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       String width = size.getUnit().tex(2*size.getValue());

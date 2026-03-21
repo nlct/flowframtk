@@ -107,6 +107,7 @@ public class ArrowTriangleDownOpen extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       double markerSize = size.getValue(JDRUnit.bp);

@@ -100,6 +100,7 @@ public class ArrowAltSquare extends JDRMarker
     * Not implemented. Returns empty string.
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";

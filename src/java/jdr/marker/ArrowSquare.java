@@ -103,6 +103,7 @@ public class ArrowSquare extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowsquare";

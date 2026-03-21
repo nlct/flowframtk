@@ -96,6 +96,7 @@ public class ArrowTriangleCap extends JDRMarker
     * Not implemented (returns empty string).
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";

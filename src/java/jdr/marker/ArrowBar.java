@@ -99,6 +99,7 @@ public class ArrowBar extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfarrowbar";

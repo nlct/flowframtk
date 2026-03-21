@@ -98,6 +98,7 @@ public class ArrowAltBar extends JDRMarker
     * Not implemented. Returns empty string.
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "";

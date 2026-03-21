@@ -96,6 +96,7 @@ public class ArrowDotFilled extends JDRMarker
    /**
     * @deprecated
     */
+   @Deprecated
    protected String pgfarrow()
    {
       return "\\pgfsetdash{}{0pt}\\pgfsetlinewidth{2bp}"
