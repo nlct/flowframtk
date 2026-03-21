@@ -1878,7 +1878,7 @@ class AcceleratorDialog extends JDialog
    public void keyReleased(KeyEvent evt)
    {
       int keyCode = evt.getKeyCode();
-      int modifiers = evt.getModifiers();
+      int modifiers = evt.getModifiersEx();
 
       if (!evt.isActionKey())
       {
