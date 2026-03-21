@@ -33,8 +33,6 @@ import javax.swing.event.*;
 import javax.swing.border.*;
 import javax.swing.text.*;
 
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
-
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
@@ -55,7 +53,14 @@ public class TextSelector extends JDialog
          true);
       application_ = application;
 
-      symbolSelector = new CharacterSelector(getResources(), this, this,
+      init();
+   }
+
+   void init()
+   {
+      JDRResources resources = getResources();
+
+      symbolSelector = new CharacterSelector(resources, this, this,
         application_.getUnicodeRanges());
 
       Box mainPanel = Box.createVerticalBox();
@@ -88,11 +93,14 @@ public class TextSelector extends JDialog
       textpopupMenu = new JPopupMenu();
 
       copyText = new JMenuItem(
-          getResources().getMessage("menu.edit.copy"),
-          getResources().getCodePoint("menu.edit.copy.mnemonic"));
+          resources.getMessage("menu.edit.copy"),
+          resources.getCodePoint("menu.edit.copy.mnemonic"));
       textpopupMenu.add(copyText);
-      copyText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-         InputEvent.CTRL_MASK));
+
+      copyText.setAccelerator(resources.getAccelerator("menu.edit.copy",
+          KeyStroke.getKeyStroke(KeyEvent.VK_C,
+            InputEvent.CTRL_DOWN_MASK)));
+
       copyText.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -102,11 +110,14 @@ public class TextSelector extends JDialog
          });
 
       cutText = new JMenuItem(
-          getResources().getMessage("menu.edit.cut"),
-          getResources().getCodePoint("menu.edit.cut.mnemonic"));
+          resources.getMessage("menu.edit.cut"),
+          resources.getCodePoint("menu.edit.cut.mnemonic"));
       textpopupMenu.add(cutText);
-      cutText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-         InputEvent.CTRL_MASK));
+
+      cutText.setAccelerator(resources.getAccelerator("menu.edit.cut",
+         KeyStroke.getKeyStroke(KeyEvent.VK_X,
+           InputEvent.CTRL_DOWN_MASK)));
+
       cutText.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -116,11 +127,14 @@ public class TextSelector extends JDialog
          });
 
       JMenuItem pasteText = new JMenuItem(
-          getResources().getMessage("menu.edit.paste"),
-          getResources().getCodePoint("menu.edit.paste.mnemonic"));
+          resources.getMessage("menu.edit.paste"),
+          resources.getCodePoint("menu.edit.paste.mnemonic"));
       textpopupMenu.add(pasteText);
-      pasteText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-         InputEvent.CTRL_MASK));
+
+      pasteText.setAccelerator(resources.getAccelerator("menu.edit.paste",
+         KeyStroke.getKeyStroke(KeyEvent.VK_V,
+           InputEvent.CTRL_DOWN_MASK)));
+
       pasteText.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -130,11 +144,14 @@ public class TextSelector extends JDialog
          });
 
       JMenuItem select_allText = new JMenuItem(
-          getResources().getMessage("menu.edit.select_all"),
-          getResources().getCodePoint("menu.edit.select_all.mnemonic"));
+          resources.getMessage("menu.edit.select_all"),
+          resources.getCodePoint("menu.edit.select_all.mnemonic"));
       textpopupMenu.add(select_allText);
-      select_allText.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-         InputEvent.CTRL_MASK));
+
+      select_allText.setAccelerator(resources.getAccelerator("menu.edit.select_all",
+         KeyStroke.getKeyStroke(KeyEvent.VK_A,
+           InputEvent.CTRL_DOWN_MASK)));
+
       select_allText.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -143,13 +160,14 @@ public class TextSelector extends JDialog
             }
          });
 
-      KeyStroke insertKeyStroke = getResources().getAccelerator(
+      KeyStroke insertKeyStroke = resources.getAccelerator(
          "menu.textarea.insert_symbol");
 
       JMenuItem insertSymbol = new JMenuItem(
-         getResources().getMessage("menu.textarea.insert_symbol"),
-         getResources().getCodePoint("menu.textarea.insert_symbol.mnemonic"));
+         resources.getMessage("menu.textarea.insert_symbol"),
+         resources.getCodePoint("menu.textarea.insert_symbol.mnemonic"));
       textpopupMenu.add(insertSymbol);
+
       insertSymbol.setAccelerator(insertKeyStroke);
 
       insertSymbol.addActionListener(new ActionListener()
@@ -186,7 +204,7 @@ public class TextSelector extends JDialog
          JComponent.WHEN_FOCUSED);
 
       textbox.registerKeyboardAction(this, "popup",
-         getResources().getAccelerator("action.popup"),
+         resources.getAccelerator("action.popup"),
          JComponent.WHEN_FOCUSED);
 
       textbox.registerKeyboardAction(this, "popup",
@@ -198,21 +216,21 @@ public class TextSelector extends JDialog
       JPanel p3 = new JPanel();
 
       p3.add(new JLabel(
-         getResources().getMessage("edittext.latexlabel")));
+         resources.getMessage("edittext.latexlabel")));
 
       ButtonGroup group = new ButtonGroup();
 
-      same = getResources().createAppRadioButton(
+      same = resources.createAppRadioButton(
          "edittext", "same", group, true, this);
 
       p3.add(same);
 
-      different = getResources().createAppRadioButton(
+      different = resources.createAppRadioButton(
          "edittext", "different", group, false, this);
 
       p3.add(different);
 
-      p3.add(getResources().createAppJButton("edittext", "remap", this));
+      p3.add(resources.createAppJButton("edittext", "remap", this));
 
       p1.add(p3);
 
@@ -229,22 +247,12 @@ public class TextSelector extends JDialog
 
       mainPanel.add(Box.createVerticalStrut(10));
 
-      textPathPanel = new TextPathPanel(getResources(), ttFont);
+      textPathPanel = new TextPathPanel(resources, ttFont);
       mainPanel.add(textPathPanel);
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p2.add(getResources().createHelpDialogButton(this, "sec:edittext"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p2, this, "sec:edittext");
 
       getContentPane().add(p2, "South");
 
