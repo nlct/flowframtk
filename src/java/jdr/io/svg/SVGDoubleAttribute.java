@@ -56,7 +56,7 @@ public class SVGDoubleAttribute extends SVGAbstractAttribute
          {
             if (m.matches())
             {
-               value = new Double(m.group(1));
+               value = Double.valueOf(m.group(1));
 
                isPercent = m.group(2).equals("%");
             }

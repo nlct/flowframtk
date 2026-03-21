@@ -34,8 +34,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 import com.dickimawbooks.jdr.*;
@@ -227,12 +232,25 @@ public class SVG
          svg.setMathModeMappings(mathModeMappings);
       }
 
-      return svg.load(reader);
+      try
+      {
+         return svg.load(reader);
+      }
+      catch (ParserConfigurationException e)
+      {
+         throw new SAXException(e);
+      }
    }
 
-   protected JDRGroup load(Reader reader) throws SAXException,IOException
+   protected JDRGroup load(Reader reader)
+    throws SAXException,ParserConfigurationException,IOException
    {
-      XMLReader xr = XMLReaderFactory.createXMLReader();
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      factory.setNamespaceAware(true);
+
+      SAXParser parser = factory.newSAXParser();
+      XMLReader xr = parser.getXMLReader();
+      xr.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
       JDRGroup group = new JDRGroup(canvasGraphics);
 

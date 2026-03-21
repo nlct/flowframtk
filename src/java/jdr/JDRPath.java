@@ -2582,7 +2582,7 @@ public class JDRPath extends JDRShape
       Vector<Double> scanY = new Vector<Double>();
       for (double y = 0; y <= height; y += dy)
       {
-         scanY.add(new Double(y));
+         scanY.add(Double.valueOf(y));
       }
 
       PathIterator pi = shape.getPathIterator(null);
@@ -2609,14 +2609,14 @@ public class JDRPath extends JDRShape
 
             if (y > y0 && y < y1)
             {
-               scanY.add(i, new Double(y));
+               scanY.add(i, Double.valueOf(y));
                skip = true;
                break;
             }
 
             if (i == n-1 && y > y1)
             {
-               scanY.add(new Double(y));
+               scanY.add(Double.valueOf(y));
                skip = true;
                break;
             }
@@ -2640,7 +2640,7 @@ public class JDRPath extends JDRShape
 
                if (y > y0 && y < y1)
                {
-                  scanY.add(i, new Double(y));
+                  scanY.add(i, Double.valueOf(y));
                   break;
                }
 

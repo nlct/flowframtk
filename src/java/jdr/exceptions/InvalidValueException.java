@@ -158,27 +158,27 @@ public class InvalidValueException extends InvalidFormatException
 
    public void setInvalidValue(double value)
    {
-      setInvalidValue(new Double(value));
+      setInvalidValue(Double.valueOf(value));
    }
 
    public void setInvalidValue(float value)
    {
-      setInvalidValue(new Float(value));
+      setInvalidValue(Float.valueOf(value));
    }
 
    public void setInvalidValue(int value)
    {
-      setInvalidValue(new Integer(value));
+      setInvalidValue(Integer.valueOf(value));
    }
 
    public void setInvalidValue(byte value)
    {
-      setInvalidValue(new Byte(value));
+      setInvalidValue(Byte.valueOf(value));
    }
 
    public void setInvalidValue(char value)
    {
-      setInvalidValue(new Character(value));
+      setInvalidValue(Character.valueOf(value));
    }
 
    public void setTag(String tag)
