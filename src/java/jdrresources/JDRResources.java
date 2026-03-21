@@ -875,7 +875,7 @@ public class JDRResources
 
    public KeyStroke getAccelerator(String propName)
    {
-      return getAccelerator(propName, null);
+      return getAccelerator(propName, (KeyStroke)null);
    }
 
    public KeyStroke getAccelerator(String propName, String defValue)
@@ -896,6 +896,35 @@ public class JDRResources
          if (keyStroke == null && defValue != null)
          {
             keyStroke = KeyStroke.getKeyStroke(defValue);
+         }
+
+         if (keyStroke != null)
+         {
+            keyStrokes.put(propName, keyStroke);
+         }
+      }
+
+      return keyStroke;
+   }
+
+   public KeyStroke getAccelerator(String propName, KeyStroke defValue)
+   {
+      KeyStroke keyStroke = null;
+
+      if (keyStrokes == null)
+      {
+         keyStrokes = new HashMap<String,KeyStroke>();
+      }
+
+      keyStroke = keyStrokes.get(propName);
+
+      if (keyStroke == null)
+      {
+         keyStroke = helpLib.getKeyStroke(propName);
+
+         if (keyStroke == null && defValue != null)
+         {
+            keyStroke = defValue;
          }
 
          if (keyStroke != null)
