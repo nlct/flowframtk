@@ -155,7 +155,7 @@ public class JDRCanvas extends JPanel
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
-               moveLeft(evt.getModifiers());
+               moveLeft(evt);
             }
          },
          TOOL_FLAG_ANY,
@@ -170,7 +170,7 @@ public class JDRCanvas extends JPanel
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
-               moveRight(evt.getModifiers());
+               moveRight(evt);
             }
          },
          TOOL_FLAG_ANY,
@@ -185,7 +185,7 @@ public class JDRCanvas extends JPanel
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
-               moveUp(evt.getModifiers());
+               moveUp(evt);
             }
          },
          TOOL_FLAG_ANY,
@@ -200,7 +200,7 @@ public class JDRCanvas extends JPanel
          {
             public void doAction(FlowframTkAction action, ActionEvent evt)
             {
-               moveDown(evt.getModifiers());
+               moveDown(evt);
             }
          },
          TOOL_FLAG_ANY,
@@ -4059,6 +4059,26 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   public void moveLeft(ActionEvent evt)
+   {
+      if (mouseDown)
+      {
+         if (!getApplication().isRobotEnabled()) return;
+
+         Point pt = getMousePosition(true);
+         if (pt == null) return;
+         Point location = getLocationOnScreen();
+
+         getApplication().moveMouse((int)Math.round(pt.x-1+location.getX()),
+                            (int)Math.round(pt.y+location.getY()));
+      }
+      else if (!textField.isVisible())
+      {
+         unitScrollLeft();
+      }
+   }
+
+   @Deprecated
    public void moveLeft(int modifiers)
    {
       if ((modifiers & KeyEvent.BUTTON1_MASK)
@@ -4079,6 +4099,26 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   public void moveRight(ActionEvent evt)
+   {
+      if (mouseDown)
+      {
+         if (!getApplication().isRobotEnabled()) return;
+
+         Point pt = getMousePosition(true);
+         if (pt == null) return;
+         Point location = getLocationOnScreen();
+
+         getApplication().moveMouse((int)Math.round(pt.x+1+location.getX()),
+                            (int)Math.round(pt.y+location.getY()));
+      }
+      else if (!textField.isVisible())
+      {
+         unitScrollRight();
+      }
+   }
+
+   @Deprecated
    public void moveRight(int modifiers)
    {
       if ((modifiers & KeyEvent.BUTTON1_MASK)
@@ -4099,6 +4139,26 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   public void moveUp(ActionEvent evt)
+   {
+      if (mouseDown)
+      {
+         if (!getApplication().isRobotEnabled()) return;
+
+         Point pt = getMousePosition(true);
+         if (pt == null) return;
+         Point location = getLocationOnScreen();
+
+         getApplication().moveMouse((int)Math.round(pt.x+location.getX()),
+                            (int)Math.round(pt.y-1+location.getY()));
+      }
+      else if (!textField.isVisible())
+      {
+         unitScrollUp();
+      }
+   }
+
+   @Deprecated
    public void moveUp(int modifiers)
    {
       if ((modifiers & KeyEvent.BUTTON1_MASK)
@@ -4119,6 +4179,26 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   public void moveDown(ActionEvent evt)
+   {
+      if (mouseDown)
+      {
+         if (!getApplication().isRobotEnabled()) return;
+
+         Point pt = getMousePosition(true);
+         if (pt == null) return;
+         Point location = getLocationOnScreen();
+
+         getApplication().moveMouse((int)Math.round(pt.x+location.getX()),
+                            (int)Math.round(pt.y+1+location.getY()));
+      }
+      else if (!textField.isVisible())
+      {
+         unitScrollDown();
+      }
+   }
+
+   @Deprecated
    public void moveDown(int modifiers)
    {
       if ((modifiers & KeyEvent.BUTTON1_MASK)
@@ -21915,6 +21995,7 @@ class CanvasTextField extends JTextField
 
       try
       {
+         // Java 9+ use modelToView2D(int)
          Rectangle caretArea = modelToView(dot);
          Rectangle bounds = getBounds();
 
@@ -22064,6 +22145,7 @@ class CanvasTextField extends JTextField
          try
          {
             Caret caret = getCaret();
+            // Java 9+ use modelToView2D(int)
             Rectangle caretArea = modelToView(caret.getDot());
             width = caretArea.getWidth();
          }
@@ -22195,6 +22277,7 @@ class CanvasTextField extends JTextField
 
       try
       {
+         // Java 9+ use modelToView2D(int)
          Rectangle startView = modelToView(start);
 
          startX = startView.x;
@@ -22205,6 +22288,7 @@ class CanvasTextField extends JTextField
 
       try
       {
+         // Java 9+ use modelToView2D(int)
          Rectangle endView = modelToView(end);
 
          endX = endView.x+endView.width;
