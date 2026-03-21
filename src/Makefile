@@ -2,13 +2,6 @@ ifeq ($(IZPACKDIR),)
 IZPACKDIR:=/usr/local/IzPack
 endif
 
-# Java 8 extended support until December 2030
-target_version := --release 8 -Xlint:-options
-
-# Java 8 extended support until December 2030
-target_version := --release 8 -Xlint:-options
-
-
 all	: lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar 
 
 test	: lib/flowframtk.jar
