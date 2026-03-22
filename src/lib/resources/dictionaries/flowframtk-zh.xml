@@ -2366,6 +2366,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="edittext.latextext.different.mnemonic">D</entry>
 <entry key="edittext.latextext.remap">Re-Map</entry>
 <entry key="edittext.latextext.remap.mnemonic">M</entry>
+<entry key="edittext.latextext.info">When exporting to a LaTeX file, the text will be placed in the argument of \pgftext so you can''t have paragraph breaks or force a line break.</entry>
 
 <entry key="edittext.textpath.title">Text Path Attributes</entry>
 <entry key="edittext.textpath.mnemonic">P</entry>
@@ -2377,15 +2378,25 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="edittext.transformation.title">Transformation</entry>
 <entry key="edittext.transformation.mnemonic">N</entry>
-<entry key="edittext.transformation.matrix">Transformation</entry>
+<entry key="edittext.transformation.matrix">Transformation Matrix</entry>
 <entry key="edittext.transformation.matrix.mnemonic">M</entry>
-<entry key="edittext.transformation.subset_to_identity">Scale Shear to Identity</entry>
+<entry key="edittext.transformation.subset_to_identity">Set Scale &amp; Shear Sub-Matrix to Identity</entry>
 <entry key="edittext.transformation.subset_to_identity.mnemonic">Y</entry>
 <entry key="edittext.transformation.set_to_identity">Set to Identity</entry>
 <entry key="edittext.transformation.set_to_identity.mnemonic">I</entry>
 <entry key="edittext.transformation.reset">Reset</entry>
 <entry key="edittext.transformation.reset.mnemonic">R</entry>
 <entry key="edittext.transformation.reset.iconimage">reload</entry>
+
+<entry key="edittext.transformation.matrix.m00">Scale X</entry>
+<entry key="edittext.transformation.matrix.m00.mnemonic">X</entry>
+<entry key="edittext.transformation.matrix.m01">Shear X</entry>
+<entry key="edittext.transformation.matrix.m02">Shift X</entry>
+
+<entry key="edittext.transformation.matrix.m10">Shear Y</entry>
+<entry key="edittext.transformation.matrix.m10.mnemonic">Y</entry>
+<entry key="edittext.transformation.matrix.m11">Scale Y</entry>
+<entry key="edittext.transformation.matrix.m12">Shift Y</entry>
 
 <!--  Text Colour Selector -->
 

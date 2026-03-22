@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
+
 import com.dickimawbooks.jdrresources.JDRResources;
 
 /**
@@ -37,10 +39,25 @@ public class TransformationMatrixPanel extends JPanel
 {
    public TransformationMatrixPanel(JDRResources resources, String parentTag)
    {
-      super(new BorderLayout());
+      super(null);
 
-      JComponent matrixComp = new JPanel(new GridLayout(3, 3, 4, 4));
-      add(matrixComp, BorderLayout.CENTER);
+      this.resources = resources;
+      init(parentTag);
+   }
+
+   void init(String parentTag)
+   {
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+      setAlignmentX(0f);
+
+      JLabel label = resources.createAppLabel(parentTag+".matrix");
+      add(label);
+
+      add(Box.createVerticalStrut(10));
+
+      matrixComp = new JPanel(new GridLayout(3, 3, 4, 4));
+      matrixComp.setAlignmentX(0f);
+      add(matrixComp);
 
       models = new SpinnerNumberModel[6];
       spinners = new JSpinner[6];
@@ -52,30 +69,52 @@ public class TransformationMatrixPanel extends JPanel
          resources.clampCompMaxHeight(spinners[i], 0, 0);
       }
 
-      matrixComp.add(spinners[0]);
-      matrixComp.add(spinners[2]);
-      matrixComp.add(spinners[4]);
+      JLabelGroup labelGroup = new JLabelGroup();
 
-      matrixComp.add(spinners[1]);
-      matrixComp.add(spinners[3]);
-      matrixComp.add(spinners[5]);
+      addToMatrixComp(labelGroup, spinners[0], "edittext.transformation.matrix.m00");
+      addToMatrixComp(labelGroup, spinners[2], "edittext.transformation.matrix.m01");
+      addToMatrixComp(labelGroup, spinners[4], "edittext.transformation.matrix.m02");
+
+      addToMatrixComp(labelGroup, spinners[1], "edittext.transformation.matrix.m10");
+      addToMatrixComp(labelGroup, spinners[3], "edittext.transformation.matrix.m11");
+      addToMatrixComp(labelGroup, spinners[5], "edittext.transformation.matrix.m12");
 
       matrixComp.add(createFixedNumber("0"));
       matrixComp.add(createFixedNumber("0"));
       matrixComp.add(createFixedNumber("1"));
 
-      JLabel label = resources.createAppLabel(parentTag+".matrix");
-      label.setLabelFor(spinners[0]);
-      add(label, BorderLayout.NORTH);
+      resources.clampCompMax(matrixComp, 5, 5);
+
+      add(Box.createVerticalStrut(10));
 
       JComponent row = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-      add(row, BorderLayout.SOUTH);
+      row.setAlignmentX(0f);
+      add(row);
 
-      row.add(resources.createJButton(parentTag, "subset_to_identity", this));
+      row.add(resources.createAppButton(parentTag, "subset_to_identity", this));
       row.add(resources.createButtonSpacer());
-      row.add(resources.createJButton(parentTag, "set_to_identity", this));
+      row.add(resources.createAppButton(parentTag, "set_to_identity", this));
       row.add(resources.createButtonSpacer());
       row.add(resources.createAppButton(parentTag, "reset", this));
+
+      add(Box.createVerticalGlue());
+   }
+
+   void addToMatrixComp(JLabelGroup labelGrp, JSpinner element, String tag)
+   {
+      JComponent panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+      matrixComp.add(panel);
+
+      JLabel label = resources.createAppLabel(tag);
+      labelGrp.add(label);
+      label.setLabelFor(element);
+      panel.add(label);
+      panel.add(resources.createLabelSpacer());
+      panel.add(element);
+
+      JSpinner.NumberEditor editor = (JSpinner.NumberEditor)element.getEditor();
+      JFormattedTextField field = editor.getTextField();
+      field.setColumns(6);
    }
 
    JComponent createFixedNumber(String val)
@@ -141,4 +180,6 @@ public class TransformationMatrixPanel extends JPanel
    JSpinner[] spinners;
    SpinnerNumberModel[] models;
    double[] matrix;
+   JComponent matrixComp;
+   JDRResources resources;
 }

@@ -41,17 +41,17 @@ public class LaTeXCodeBlockEditor extends JPanel
 {
    public LaTeXCodeBlockEditor(JDRFrame frame, String id)
    {
-      this(frame, frame.getApplication(), id, true, -1);
+      this(frame, frame.getApplication(), id, true, -1, true);
    }
 
    public LaTeXCodeBlockEditor(FlowframTk application, String id,
-      boolean trackModified, int prefRows)
+      boolean trackModified, int prefRows, boolean incHelpButton)
    {
-      this(null, application, id, trackModified, prefRows);
+      this(null, application, id, trackModified, prefRows, incHelpButton);
    }
 
    public LaTeXCodeBlockEditor(JDRFrame frame, FlowframTk application,
-      String id, boolean trackModified, int prefRows)
+      String id, boolean trackModified, int prefRows, boolean incHelpButton)
    {
       super(new BorderLayout());
 
@@ -125,13 +125,16 @@ public class LaTeXCodeBlockEditor extends JPanel
         "menu.texeditor.default_preamble", "defaultpreamble",
         null, this, getResources().getToolTipText("default_preamble")));
 
-      try
+      if (incHelpButton)
       {
-         toolBar.add(resources.createHelpDialogButton(application, "sec:preamble"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
+         try
+         {
+            toolBar.add(resources.createHelpDialogButton(application, "sec:preamble"));
+         }
+         catch (HelpSetNotInitialisedException e)
+         {
+            getResources().internalError(null, e);
+         }
       }
 
       modified = false;
@@ -465,6 +468,11 @@ public class LaTeXCodeBlockEditor extends JPanel
       {
          application.displayDefaultPreamble(frame);
       }
+   }
+
+   public void requestEditorFocus()
+   {
+      textPane.requestFocusInWindow();
    }
 
    public void selectAllText()

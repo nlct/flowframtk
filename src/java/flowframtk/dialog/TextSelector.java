@@ -264,8 +264,13 @@ public class TextSelector extends JDialog
 
       row.add(resources.createAppJButton("edittext.latextext", "remap", this));
 
+      JTextArea textArea = resources.createAppInfoArea(2,
+        "edittext.latextext.info");
+      textArea.setAlignmentX(0f);
+      latexTextPanel.add(textArea, "South");
+
       latexbox = new LaTeXCodeBlockEditor(application_, "edittext.latextext.codeblock",
-        false, LATEX_CODE_ROWS);
+        false, LATEX_CODE_ROWS, false);
 
       latexTextPanel.add(latexbox, "Center");
 
@@ -359,7 +364,11 @@ public class TextSelector extends JDialog
          latexbox.setLaTeXCode(latexText);
       }
 
-      buttonFont = textual.getFont().deriveFont(12);
+      Font textFont = textual.getFont();
+      float fontSize = application_.getSettings().getTeXEditorFontSize();
+
+      buttonFont = textFont.deriveFont(fontSize);
+
       textbox.setFont(buttonFont);
 
       setVisible(true);
@@ -369,6 +378,11 @@ public class TextSelector extends JDialog
    {
       latexbox.updateStyles(settings);
       textPathPanel.setDelimFont(latexbox.getFont());
+
+      float fontSize = settings.getTeXEditorFontSize();
+
+      buttonFont = textbox.getFont().deriveFont(fontSize);
+      textbox.setFont(buttonFont);
    }
 
    public void setSymbolText(String text)
@@ -459,7 +473,7 @@ public class TextSelector extends JDialog
       else if (action.equals("different"))
       {
          latexbox.setVisible(true);
-         latexbox.requestFocusInWindow();
+         latexbox.requestEditorFocus();
       }
       else if (action.equals("insert"))
       {
@@ -490,6 +504,7 @@ public class TextSelector extends JDialog
          latexbox.setVisible(true);
          latexbox.updateLaTeXCode(ltxText);
          different.setSelected(true);
+         latexbox.requestEditorFocus();
       }
    }
 
@@ -609,12 +624,7 @@ class TextPathPanel extends JPanel
 
       add(Box.createVerticalStrut(10));
 
-      textArea = new JTextArea(
-         resources.getMessage("edittext.textpath.info"));
-      textArea.setEditable(false);
-      textArea.setOpaque(false);
-      textArea.setLineWrap(true);
-      textArea.setWrapStyleWord(true);
+      textArea = resources.createAppInfoArea("edittext.textpath.info");
       textArea.setAlignmentX(0.0f);
 
       add(textArea);
