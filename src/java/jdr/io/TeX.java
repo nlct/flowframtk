@@ -732,35 +732,28 @@ public class TeX
          {
             checkForRequiredSupport((JDRGroup)object);
          }
-         else if (object instanceof JDRText)
+         else
          {
-            if (((JDRText)object).isOutline())
+            JDRTextual textual = object.getTextual();
+
+            if (textual != null)
             {
-               supportOutline = true;
+               if (textual.isOutline())
+               {
+                  supportOutline = true;
+               }
+
+               if (textual instanceof JDRTextPath)
+               {
+                  supportTextPath = true;
+               }
             }
-         }
-         else if (object.hasShape())
-         {
-            checkShapeForRequiredSupport((JDRShape)object);
          }
 
          if (supportOutline && supportTextPath)
          {
             return;
          }
-      }
-   }
-
-   protected void checkShapeForRequiredSupport(JDRShape shape)
-   {
-      if (shape instanceof JDRCompoundShape)
-      {
-         checkShapeForRequiredSupport(((JDRCompoundShape)shape).getUnderlyingShape());
-      }
-      else if (shape instanceof JDRTextPath)
-      {
-         supportTextPath = true;
-         // No support for text path outlines so don't bother checking
       }
    }
 
