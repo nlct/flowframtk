@@ -8165,6 +8165,23 @@ public class JDRCanvas extends JPanel
       return null; 
    }
 
+   public JDRTextualObject getSelectedTextualObject()
+   {
+      for (int i = 0, n = paths.size(); i < n; i++)
+      {
+         JDRCompleteObject object = paths.get(i);
+
+         if (object.isSelected())
+         {
+            JDRTextualObject textObj = object.getTextualObject();
+
+            if (textObj != null) return textObj;
+         }
+      }
+
+      return null; 
+   }
+
    public JDRText getSelectedText()
    {
       for (int i = 0, n = paths.size(); i < n; i++)
@@ -8344,40 +8361,37 @@ public class JDRCanvas extends JPanel
    public void setSelectedText(String text, String ltxText, 
       int leftDelim, int rightDelim, Vector<String> styNames)
    {
-      JDRTextual object = getSelectedTextual();
+      JDRTextualObject object = getSelectedTextualObject();
 
       if (object != null)
       {
-         if (text.isEmpty())
+         setText(object, text, ltxText, leftDelim, rightDelim, styNames, null);
+      }
+   }
+
+   public void setText(JDRTextualObject textObj, String text, String ltxText, 
+      int leftDelim, int rightDelim, Vector<String> styNames,
+      double[] newmatrix)
+   {
+      if (text.isEmpty())
+      {
+          getResources().error(frame_,
+              getResources().getMessage("error.empty_string"));
+      }
+      else
+      {
+         frame_.postEdit(new SetText(textObj, text, ltxText, 
+            leftDelim, rightDelim, newmatrix));
+
+         if (styNames != null && !styNames.isEmpty())
          {
-             getResources().error(frame_,
-                 getResources().getMessage("error.empty_string"));
-         }
-         else
-         {
-            if (styNames == null || styNames.isEmpty())
+            try
             {
-               frame_.postEdit(new SetText(object, text, ltxText, 
-               leftDelim, rightDelim));
+               addPackagesToPreamble(styNames);
             }
-            else
+            catch (BadLocationException e)
             {
-               JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
-               ce.addEdit(new SetText(object, text, ltxText, 
-                  leftDelim, rightDelim));
-
-               ce.end();
-
-               frame_.postEdit(ce);
-
-               try
-               {
-                  addPackagesToPreamble(styNames);
-               }
-               catch (BadLocationException e)
-               {
-                  getResources().internalError(frame_, e);
-               }
+               getResources().internalError(frame_, e);
             }
          }
       }
@@ -11410,21 +11424,26 @@ public class JDRCanvas extends JPanel
       {
          JDRCompleteObject object = paths.getSelected();
 
-         if (object.hasTextual())
-         {
-            UndoableEdit edit = new TextReset(object, object.getTextual());
-            frame_.postEdit(edit);
-         }
-         else if (object instanceof JDRBitmap)
+         if (object instanceof JDRBitmap)
          {
             UndoableEdit edit = new BitmapReset((JDRBitmap)object);
             frame_.postEdit(edit);
          }
-         else
+         else 
          {
-            getResources().internalError(this, 
-             new IllegalArgumentException("Class "+object.getClass().getName()
-               +" doesn't have an associated transformation"));
+            JDRTextual textual = object.getTextual();
+
+            if (textual != null)
+            {
+               UndoableEdit edit = new TextReset(object, textual);
+               frame_.postEdit(edit);
+            }
+            else
+            {
+               getResources().internalError(this, 
+                new IllegalArgumentException("Class "+object.getClass().getName()
+                  +" doesn't have an associated transformation"));
+            }
          }
       }
    }
@@ -18474,6 +18493,58 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   class SetTextMatrix extends CanvasUndoableEdit
+   {
+      private JDRTextual textual_;
+      private double[] oldmatrix, newmatrix;
+
+      public SetTextMatrix(JDRTextualObject textObject, double[] newmatrix)
+      {
+         super(getFrame());
+
+         JDRCompleteObject object = textObject.getObject();
+         textual_ = textObject.getTextual();
+         oldmatrix = new double[6];
+         this.newmatrix = newmatrix;
+
+         textual_.getTransformation(oldmatrix);
+
+         BBox box = getRefreshBounds(object);
+
+         textual_.setTransformation(newmatrix);
+
+         mergeRefreshBounds(object, box);
+
+         setRefreshBounds(box);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+
+         textual_.setTransformation(newmatrix);
+
+         repaintRegion();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+
+         textual_.setTransformation(oldmatrix);
+
+         repaintRegion();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.reset.text");
+      }
+   }
+
    class Scale extends CanvasUndoableEdit
    {
       private JDRCompleteObject object_, oldobject_;
@@ -19230,26 +19301,35 @@ public class JDRCanvas extends JPanel
 
    class SetText extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextual textual_;
       private String oldtext_, newtext_;
       private String oldltxtext_, newltxtext_;
-      private boolean textChanged;
+      private boolean textChanged, matrixChanged;
       private int oldLeftDelim, oldRightDelim, newLeftDelim, newRightDelim;
+      private double[] oldmatrix, newmatrix;
 
-      public SetText(JDRTextual object, String newtext,
+      public SetText(JDRTextualObject textObject, String newtext,
          String newlatexText, int leftDelim, int rightDelim)
+      {
+         this(textObject, newtext, newlatexText, leftDelim, rightDelim, null);
+      }
+
+      public SetText(JDRTextualObject textObject, String newtext,
+         String newlatexText, int leftDelim, int rightDelim, double[] newmatrix)
       {
          super(getFrame());
 
-         object_     = object;
-         oldtext_    = object.getText();
+         textual_    = textObject.getTextual();
+         oldtext_    = textual_.getText();
          newtext_    = newtext;
-         oldltxtext_ = object.getLaTeXText();
+         oldltxtext_ = textual_.getLaTeXText();
          newltxtext_ = newlatexText;
 
-         if (object instanceof JDRTextPath)
+         JDRCompleteObject object = textObject.getObject();
+
+         if (textual_ instanceof JDRTextPath)
          {
-            JDRTextPath textPath = (JDRTextPath)object;
+            JDRTextPath textPath = (JDRTextPath)textual_;
             JDRTextPathStroke stroke = (JDRTextPathStroke)textPath.getStroke();
 
             oldLeftDelim = stroke.getLeftDelim();
@@ -19264,6 +19344,23 @@ public class JDRCanvas extends JPanel
 
          BBox box = getRefreshBounds(object);
 
+         matrixChanged = false;
+
+         if (newmatrix != null)
+         {
+            this.newmatrix = newmatrix;
+
+            oldmatrix = new double[6];
+            textual_.getTransformation(oldmatrix);
+
+            matrixChanged = !Arrays.equals(oldmatrix, newmatrix);
+
+            if (matrixChanged)
+            {
+               textual_.setTransformation(newmatrix);
+            }
+         }
+
          textChanged = (!oldtext_.equals(newtext_));
 
          if (textChanged)
@@ -19275,7 +19372,7 @@ public class JDRCanvas extends JPanel
 
             try
             {
-               object_.setText(newtext_);
+               textual_.setText(newtext_);
             }
             finally
             {
@@ -19283,6 +19380,10 @@ public class JDRCanvas extends JPanel
                g.dispose();
             }
 
+         }
+
+         if (matrixChanged || textChanged)
+         {
             mergeRefreshBounds(object, box);
 
             setRefreshBounds(box);
@@ -19292,12 +19393,17 @@ public class JDRCanvas extends JPanel
             frame_.markAsModified();
          }
 
-         object_.setLaTeXText(newltxtext_);
+         textual_.setLaTeXText(newltxtext_);
       }
 
       public void redo() throws CannotRedoException
       {
          frame_.selectThisFrame();
+
+         if (matrixChanged)
+         {
+            textual_.setTransformation(newmatrix);
+         }
 
          if (textChanged)
          {
@@ -19308,14 +19414,17 @@ public class JDRCanvas extends JPanel
 
             try
             {
-               object_.setText(newtext_);
+               textual_.setText(newtext_);
             }
             finally
             {
                getCanvasGraphics().setGraphicsDevice(null);
                g.dispose();
             }
+         }
 
+         if (matrixChanged || textChanged)
+         {
             repaintRegion();
          }
          else
@@ -19323,11 +19432,11 @@ public class JDRCanvas extends JPanel
             frame_.markAsModified();
          }
 
-         object_.setLaTeXText(newltxtext_);
+         textual_.setLaTeXText(newltxtext_);
 
-         if (object_ instanceof JDRTextPath)
+         if (textual_ instanceof JDRTextPath)
          {
-            JDRTextPath textPath = (JDRTextPath)object_;
+            JDRTextPath textPath = (JDRTextPath)textual_;
             JDRTextPathStroke stroke = (JDRTextPathStroke)textPath.getStroke();
 
             stroke.setLeftDelim(newLeftDelim);
@@ -19339,6 +19448,11 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
+         if (matrixChanged)
+         {
+            textual_.setTransformation(oldmatrix);
+         }
+
          if (textChanged)
          {
             Graphics2D g = (Graphics2D)getGraphics();
@@ -19347,14 +19461,17 @@ public class JDRCanvas extends JPanel
 
             try
             {
-               object_.setText(oldtext_);
+               textual_.setText(oldtext_);
             }
             finally
             {
                getCanvasGraphics().setGraphicsDevice(null);
                g.dispose();
             }
+         }
 
+         if (matrixChanged || textChanged)
+         {
             repaintRegion();
          }
          else
@@ -19362,11 +19479,11 @@ public class JDRCanvas extends JPanel
             frame_.markAsModified();
          }
 
-         object_.setLaTeXText(oldltxtext_);
+         textual_.setLaTeXText(oldltxtext_);
 
-         if (object_ instanceof JDRTextPath)
+         if (textual_ instanceof JDRTextPath)
          {
-            JDRTextPath textPath = (JDRTextPath)object_;
+            JDRTextPath textPath = (JDRTextPath)textual_;
             JDRTextPathStroke stroke = (JDRTextPathStroke)textPath.getStroke();
 
             stroke.setLeftDelim(oldLeftDelim);

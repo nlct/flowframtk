@@ -4139,7 +4139,8 @@ public class FlowframTk extends JFrame
 
    public void displayDefaultPreamble(JDRFrame frame)
    {
-      configTeXDialog.display(frame, ConfigTeXSettingsDialog.PREAMBLE_TAB);
+      configTeXDialog.display(frame == null ? getCurrentFrame() : frame,
+         ConfigTeXSettingsDialog.PREAMBLE_TAB);
    }
 
    public void displayTeXEditorUIDialog()
@@ -4211,6 +4212,7 @@ public class FlowframTk extends JFrame
    public void updateTeXEditorStyles()
    {
       texEditorDialog.updateStyles(getSettings());
+      editTextBox.updateStyles(getSettings());
 
       JInternalFrame[] frames = theDesktop.getAllFrames();
 

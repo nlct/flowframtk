@@ -41,10 +41,22 @@ public class LaTeXCodeBlockEditor extends JPanel
 {
    public LaTeXCodeBlockEditor(JDRFrame frame, String id)
    {
+      this(frame, frame.getApplication(), id, true, -1);
+   }
+
+   public LaTeXCodeBlockEditor(FlowframTk application, String id,
+      boolean trackModified, int prefRows)
+   {
+      this(null, application, id, trackModified, prefRows);
+   }
+
+   public LaTeXCodeBlockEditor(JDRFrame frame, FlowframTk application,
+      String id, boolean trackModified, int prefRows)
+   {
       super(new BorderLayout());
 
       this.frame = frame;
-      FlowframTk application = frame.getApplication();
+      this.application = application;
       JDRResources resources = getResources();
 
       String name = resources.getMessage(id);
@@ -68,7 +80,8 @@ public class LaTeXCodeBlockEditor extends JPanel
       document = new TeXEditorDocument(this,
          application.getSettings());
 
-      textPane = new LaTeXEditorPane(document, resources.getMessage("lang.widest_char"));
+      textPane = new LaTeXEditorPane(document, 
+        resources.getMessageWithFallback("lang.widest_char", ""), prefRows);
 
       undoManager = new UndoManager();
 
@@ -123,23 +136,26 @@ public class LaTeXCodeBlockEditor extends JPanel
 
       modified = false;
 
-      document.addDocumentListener(new DocumentListener()
+      if (trackModified)
       {
-         public void changedUpdate(DocumentEvent e)
+         document.addDocumentListener(new DocumentListener()
          {
-            markAsModified();
-         }
+            public void changedUpdate(DocumentEvent e)
+            {
+               markAsModified();
+            }
 
-         public void insertUpdate(DocumentEvent e)
-         {
-            markAsModified();
-         }
+            public void insertUpdate(DocumentEvent e)
+            {
+               markAsModified();
+            }
 
-         public void removeUpdate(DocumentEvent e)
-         {
-            markAsModified();
-         }
-      });
+            public void removeUpdate(DocumentEvent e)
+            {
+               markAsModified();
+            }
+         });
+      }
 
       textPane.addCaretListener(new CaretListener()
       {
@@ -303,23 +319,26 @@ public class LaTeXCodeBlockEditor extends JPanel
 
    public void updateLaTeXCode(String text)
    {
-      int pos = textPane.getCaretPosition();
-      textPane.selectAll();
-      textPane.replaceSelection(text);
-
-      if (text.isEmpty())
+      if (!text.equals(textPane.getText()))
       {
-         pos = 0;
-      }
-      else if (pos > text.length())
-      {
-         pos = text.length()-1;
-      }
+         int pos = textPane.getCaretPosition();
+         textPane.selectAll();
+         textPane.replaceSelection(text);
 
-      textPane.setCaretPosition(pos);
+         if (text.isEmpty())
+         {
+            pos = 0;
+         }
+         else if (pos > text.length())
+         {
+            pos = text.length()-1;
+         }
 
-      updateEditButtons();
-      revalidate();
+         textPane.setCaretPosition(pos);
+
+         updateEditButtons();
+         revalidate();
+      }
    }
 
    public void appendToLaTeXCode(boolean insertPar, String text)
@@ -355,7 +374,11 @@ public class LaTeXCodeBlockEditor extends JPanel
    public void markAsModified()
    {
       modified = true;
-      frame.markAsModified();
+
+      if (frame != null)
+      {
+         frame.markAsModified();
+      }
    }
 
    public boolean isModified()
@@ -436,11 +459,11 @@ public class LaTeXCodeBlockEditor extends JPanel
       }
       else if (action.equals("settings"))
       {
-         frame.getApplication().displayTeXEditorUIDialog();
+         application.displayTeXEditorUIDialog();
       }
       else if (action.equals("defaultpreamble"))
       {
-         frame.getApplication().displayDefaultPreamble(frame);
+         application.displayDefaultPreamble(frame);
       }
    }
 
@@ -554,7 +577,7 @@ public class LaTeXCodeBlockEditor extends JPanel
 
    public JDRResources getResources()
    {
-      return frame.getResources();
+      return application.getResources();
    }
 
    public int getMnemonic()
@@ -570,6 +593,7 @@ public class LaTeXCodeBlockEditor extends JPanel
    private JDRButtonItem findItem, findAgainItem, replaceItem;
 
    private JDRFrame frame;
+   private FlowframTk application;
 
    private FindDialog findDialog;
 
@@ -586,11 +610,18 @@ class LaTeXEditorPane extends JTextPane
 {
    LaTeXEditorPane(TeXEditorDocument document, String widestChar)
    {
+      this(document, widestChar, -1);
+   }
+
+   LaTeXEditorPane(TeXEditorDocument document, String widestChar, int rows)
+   {
       super();
       this.widestChar = widestChar;
       setEditable(true);
       setEditorKit(new WrapEditorKit());
       setDocument(document);
+
+      prefRows = rows;
 
       updateStyles(document.getSettings());
    }
@@ -608,17 +639,18 @@ class LaTeXEditorPane extends JTextPane
       setFont(settings.getTeXEditorFont());
    }
 
-   public void setMaxColumns(int prefMaxColumns)
-   {
-      this.prefMaxColumns = prefMaxColumns;
-      updateSize();
-   }
-
    protected void updateSize()
    {
       FontMetrics fm = getFontMetrics(getFont());
 
-      widestCharWidth = fm.stringWidth(widestChar==null?"M":widestChar);
+      if (widestChar == null || widestChar.isEmpty())
+      {
+         widestCharWidth = fm.getMaxAdvance();
+      }
+      else
+      {
+         widestCharWidth = fm.stringWidth(widestChar);
+      }
 
       maxWidth = widestCharWidth * (prefMaxColumns+1);
 
@@ -626,6 +658,11 @@ class LaTeXEditorPane extends JTextPane
 
       Dimension dim = getPreferredSize();
       dim.width = maxWidth + insets.left + insets.right;
+
+      if (prefRows > 0)
+      {
+         dim.height = fm.getHeight() * prefRows + insets.top + insets.bottom;
+      }
 
       setPreferredSize(dim);
    }
@@ -1008,6 +1045,6 @@ class LaTeXEditorPane extends JTextPane
       int index, weight;
    }
 
-   int prefMaxColumns, maxWidth, widestCharWidth;
+   int prefMaxColumns, maxWidth, widestCharWidth, prefRows;
    String widestChar;
 }

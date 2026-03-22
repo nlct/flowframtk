@@ -2344,19 +2344,41 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <!--  Edit Text Dialog Box -->
 
 <entry key="edittext.title">Edit Text</entry>
-<entry key="edittext.latexlabel">Text in LaTeX file</entry>
-<entry key="edittext.same">Same</entry>
-<entry key="edittext.same.mnemonic">S</entry>
-<entry key="edittext.different">Different</entry>
-<entry key="edittext.different.mnemonic">D</entry>
-<entry key="edittext.remap">Re-Map</entry>
-<entry key="edittext.remap.mnemonic">M</entry>
-<entry key="edittext.textpath">Text Path attributes</entry>
+<entry key="edittext.canvastext">Canvas Text:</entry>
+<entry key="edittext.canvastext.mnemonic">T</entry>
+
+<entry key="edittext.latextext.title">LaTeX Text</entry>
+<entry key="edittext.latextext.mnemonic">A</entry>
+<entry key="edittext.latextext.textlabel">LaTeX Code for Exports</entry>
+<entry key="edittext.latextext.codeblock">LaTeX Code:</entry>
+<entry key="edittext.latextext.codeblock.mnemonic">X</entry>
+<entry key="edittext.latextext.same">Same</entry>
+<entry key="edittext.latextext.same.mnemonic">S</entry>
+<entry key="edittext.latextext.different">Different</entry>
+<entry key="edittext.latextext.different.mnemonic">D</entry>
+<entry key="edittext.latextext.remap">Re-Map</entry>
+<entry key="edittext.latextext.remap.mnemonic">M</entry>
+
+<entry key="edittext.textpath.title">Text Path Attributes</entry>
+<entry key="edittext.textpath.mnemonic">P</entry>
 <entry key="edittext.textpath.left_delim">Left Delimiter</entry>
 <entry key="edittext.textpath.left_delim.mnemonic">L</entry>
 <entry key="edittext.textpath.right_delim">Right Delimiter</entry>
 <entry key="edittext.textpath.right_delim.mnemonic">R</entry>
 <entry key="edittext.textpath.info">The delimiters can''t be set to \ '{' '}' or + and should not appear in the LaTeX equivalent text except where their use is as a text path decoration delimiter. The delimiters should in general have category codes 11 or 12. See "/pgf/decoration/text format delimiters" in the pgf manual for further details.</entry>
+
+<entry key="edittext.transformation.title">Transformation</entry>
+<entry key="edittext.transformation.mnemonic">N</entry>
+<entry key="edittext.transformation.matrix">Transformation</entry>
+<entry key="edittext.transformation.matrix.mnemonic">M</entry>
+<entry key="edittext.transformation.subset_to_identity">Scale Shear to Identity</entry>
+<entry key="edittext.transformation.subset_to_identity.mnemonic">Y</entry>
+<entry key="edittext.transformation.set_to_identity">Set to Identity</entry>
+<entry key="edittext.transformation.set_to_identity.mnemonic">I</entry>
+<entry key="edittext.transformation.reset">Reset</entry>
+<entry key="edittext.transformation.reset.mnemonic">R</entry>
+<entry key="edittext.transformation.reset.iconimage">reload</entry>
+
 
 <!--  Text Colour Selector -->
 
@@ -3790,7 +3812,7 @@ Are you sure you want to ungroup it?</entry>
 <entry key="texeditor.latexcodeblock.magic_comments.mnemonic">G</entry>
 <entry key="texeditor.latexcodeblock.magic_comments.tooltip">Document build directives (for exporting to complete document)</entry>
 <entry key="texeditor.latexcodeblock.code">LaTeX Code:</entry>
-<entry key="texeditor.latexcodeblock.code.mnemonic">C</entry>
+<entry key="texeditor.latexcodeblock.code.mnemonic">X</entry>
 <entry key="texeditor.frame_contents">Frame Contents</entry>
 
 <entry key="index.menu.texeditor">TeX Editor Popup Menu</entry>

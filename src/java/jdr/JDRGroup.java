@@ -965,6 +965,21 @@ t
       return null;
    }
 
+   @Override
+   public JDRTextualObject getTextualObject()
+   {
+      for (int i = 0; i < size_; i++)
+      {
+         JDRCompleteObject object = get(i);
+
+         JDRTextualObject textObj = object.getTextualObject();
+
+         if (textObj != null) return textObj;
+      }
+
+      return null;
+   }
+
    public boolean hasTextual()
    {
       for (int i = 0; i < size_; i++)

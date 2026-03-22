@@ -933,6 +933,20 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public abstract JDRTextual getTextual();
 
+   public JDRTextualObject getTextualObject()
+   {
+      JDRTextual textual = getTextual();
+
+      if (textual == null)
+      {
+         return null;
+      }
+      else
+      {
+         return new JDRTextualObject(this, textual);
+      }
+   }
+
    public abstract boolean hasShape();
 
    /**

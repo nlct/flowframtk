@@ -67,13 +67,16 @@ public class TextSelector extends JDialog
       mainPanel.setAlignmentX(0.0f);
       getContentPane().add(mainPanel);
 
-      JPanel p1 = new JPanel();
-      p1.setAlignmentX(0.0f);
-      p1.setLayout(new GridLayout(3,1));
+      JComponent row = createRow();
+      mainPanel.add(row);
+
+      JLabel textLabel = resources.createAppLabel("edittext.canvastext");
+      row.add(textLabel);
 
       textbox = new JTextField()
       {
-         public void paintComponent(Graphics g)
+         @Override
+         protected void paintComponent(Graphics g)
          {
             Graphics2D g2 = (Graphics2D)g;
 
@@ -87,8 +90,24 @@ public class TextSelector extends JDialog
                g2.setRenderingHints(oldHints);
             }
          }
+
+         @Override
+         public Dimension getMaximumSize()
+         {
+            Dimension maxSize = super.getMaximumSize();
+            Dimension prefSize = getPreferredSize();
+
+            maxSize.height = prefSize.height;
+
+            return maxSize;
+         }
       };
 
+      textLabel.setLabelFor(textbox);
+
+      row.add(resources.createLabelSpacer());
+
+      row.add(textbox);
 
       textpopupMenu = new JPopupMenu();
 
@@ -211,50 +230,58 @@ public class TextSelector extends JDialog
          getResources().getAccelerator("action.context_menu"),
          JComponent.WHEN_FOCUSED);
 
-      p1.add(textbox);
+      mainPanel.add(Box.createVerticalStrut(10));
+      mainPanel.add(Box.createVerticalGlue());
 
-      JPanel p3 = new JPanel();
+      tabbedPane = new JTabbedPane();
+      tabbedPane.setAlignmentX(0f);
+      mainPanel.add(tabbedPane);
 
-      p3.add(new JLabel(
-         resources.getMessage("edittext.latexlabel")));
+      JComponent latexTextPanel = new JPanel(new BorderLayout());
+      addTab(latexTextPanel, "edittext.latextext");
+
+      row = createRow();
+      latexTextPanel.add(row, "North");
+
+      row.add(new JLabel(
+         resources.getMessage("edittext.latextext.textlabel")));
+
+      row.add(resources.createLabelSpacer());
 
       ButtonGroup group = new ButtonGroup();
 
       same = resources.createAppRadioButton(
-         "edittext", "same", group, true, this);
+         "edittext.latextext", "same", group, true, this);
 
-      p3.add(same);
+      row.add(same);
+
+      row.add(resources.createButtonSpacer());
 
       different = resources.createAppRadioButton(
-         "edittext", "different", group, false, this);
+         "edittext.latextext", "different", group, false, this);
 
-      p3.add(different);
+      row.add(different);
 
-      p3.add(resources.createAppJButton("edittext", "remap", this));
+      row.add(resources.createAppJButton("edittext.latextext", "remap", this));
 
-      p1.add(p3);
+      latexbox = new LaTeXCodeBlockEditor(application_, "edittext.latextext.codeblock",
+        false, LATEX_CODE_ROWS);
 
-      latexbox = new JTextField();
+      latexTextPanel.add(latexbox, "Center");
 
-      int fontSize = latexbox.getFont().getSize();
+      matrixPanel = new TransformationMatrixPanel(resources,
+        "edittext.transformation");
 
-      Font ttFont = new Font("Monospaced", Font.PLAIN, fontSize);
-      latexbox.setFont(ttFont);
+      addTab(matrixPanel, "edittext.transformation");
 
-      p1.add(latexbox);
+      textPathPanel = new TextPathPanel(resources, latexbox.getFont());
+      addTab(textPathPanel, "edittext.textpath");
 
-      mainPanel.add(p1);
+      JPanel buttonPanel = new JPanel();
 
-      mainPanel.add(Box.createVerticalStrut(10));
+      resources.createOkayCancelHelpButtons(this, buttonPanel, this, "sec:edittext");
 
-      textPathPanel = new TextPathPanel(resources, ttFont);
-      mainPanel.add(textPathPanel);
-
-      JPanel p2 = new JPanel();
-
-      resources.createOkayCancelHelpButtons(this, p2, this, "sec:edittext");
-
-      getContentPane().add(p2, "South");
+      getContentPane().add(buttonPanel, "South");
 
       pack();
 
@@ -263,23 +290,41 @@ public class TextSelector extends JDialog
       setLocationRelativeTo(application_);
    }
 
+   JComponent createRow()
+   {
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(0f);
+      return row;
+   }
+
+   void addTab(JComponent comp, String tag)
+   {
+      JDRResources resources = getResources();
+      tabbedPane.add(comp);
+      int idx = tabbedPane.getTabCount()-1;
+      tabbedPane.setMnemonicAt(idx, resources.getMnemonic(tag));
+      tabbedPane.setTitleAt(idx, resources.getMessage(tag+".title"));
+   }
+
    public void display()
    {
       JDRFrame mainPanel = application_.getCurrentFrame();
-      JDRTextual text = mainPanel.getSelectedTextual();
+      textObject = mainPanel.getCanvas().getSelectedTextualObject();
 
-      if (text == null)
+      if (textObject == null)
       {
          getResources().internalError(
             getResources().getMessage("internal_error.cant_find_selected_text"));
          return;
       }
 
-      if (text instanceof JDRTextPath)
-      {
-         textPathPanel.setVisible(true);
+      JDRTextual textual = textObject.getTextual();
 
-         JDRStroke stroke = ((JDRTextPath)text).getStroke();
+      if (textual instanceof JDRTextPath)
+      {
+         tabbedPane.setEnabledAt(TEXTPATH_TAB, true);
+
+         JDRStroke stroke = ((JDRTextPath)textual).getStroke();
 
          textPathPanel.apply((JDRTextPathStroke)stroke);
 
@@ -287,35 +332,43 @@ public class TextSelector extends JDialog
       }
       else
       {
-         textPathPanel.setVisible(false);
+         tabbedPane.setEnabledAt(TEXTPATH_TAB, false);
 
          pack();
       }
 
-      styNames.clear();
-      String latexText = text.getLaTeXText();
+      matrixPanel.setMatrix(textual.getTransformation(new double[6]));
 
-      textbox.setText(text.getText());
+      styNames.clear();
+      String latexText = textual.getLaTeXText();
+
+      textbox.setText(textual.getText());
       textbox.requestFocusInWindow();
-      latexbox.setText(latexText);
 
       if (latexText == null || latexText.isEmpty()
-       || text.getText().equals(latexText))
+       || textual.getText().equals(latexText))
       {
          same.setSelected(true);
-         latexbox.setText(text.getText());
-         latexbox.setEnabled(false);
+         latexbox.setLaTeXCode(textual.getText());
+         latexbox.setVisible(false);
       }
       else
       {
          different.setSelected(true);
-         latexbox.setEnabled(true);
+         latexbox.setVisible(true);
+         latexbox.setLaTeXCode(latexText);
       }
 
-      buttonFont = text.getFont().deriveFont(12);
+      buttonFont = textual.getFont().deriveFont(12);
       textbox.setFont(buttonFont);
 
       setVisible(true);
+   }
+
+   public void updateStyles(FlowframTkSettings settings)
+   {
+      latexbox.updateStyles(settings);
+      textPathPanel.setDelimFont(latexbox.getFont());
    }
 
    public void setSymbolText(String text)
@@ -362,18 +415,22 @@ public class TextSelector extends JDialog
    public void okay()
    {
       JDRFrame mainPanel = application_.getCurrentFrame();
+      JDRCanvas canvas = mainPanel.getCanvas();
+
+      double[] newmatrix = matrixPanel.getMatrix(null);
 
       if (same.isSelected())
       {
-         mainPanel.setSelectedText(textbox.getText(),
-            textPathPanel.getLeftDelim(), textPathPanel.getRightDelim());
+         canvas.setText(textObject, textbox.getText(), "",
+            textPathPanel.getLeftDelim(), textPathPanel.getRightDelim(),
+            null, newmatrix);
       }
       else
       {
-         mainPanel.setSelectedText(textbox.getText(),
-                                   latexbox.getText(),
+         canvas.setText(textObject, textbox.getText(),
+                           latexbox.getLaTeXCode(),
             textPathPanel.getLeftDelim(), textPathPanel.getRightDelim(),
-            styNames);
+            styNames, newmatrix);
       }
 
       setVisible(false);
@@ -395,13 +452,13 @@ public class TextSelector extends JDialog
       }
       else if (action.equals("same"))
       {
-         latexbox.setText(textbox.getText());
-         latexbox.setEnabled(false);
+         latexbox.updateLaTeXCode(textbox.getText());
+         latexbox.setVisible(false);
          textbox.requestFocusInWindow();
       }
       else if (action.equals("different"))
       {
-         latexbox.setEnabled(true);
+         latexbox.setVisible(true);
          latexbox.requestFocusInWindow();
       }
       else if (action.equals("insert"))
@@ -417,7 +474,7 @@ public class TextSelector extends JDialog
       else if (action.equals("remap"))
       {
          styNames.clear();
-         String ltxText = latexbox.getText().trim();
+         String ltxText = latexbox.getLaTeXCode().trim();
 
          if (ltxText.startsWith("$") && ltxText.endsWith("$"))
          {
@@ -430,8 +487,8 @@ public class TextSelector extends JDialog
                 textbox.getText(), styNames);
          }
 
-         latexbox.setEnabled(true);
-         latexbox.setText(ltxText);
+         latexbox.setVisible(true);
+         latexbox.updateLaTeXCode(ltxText);
          different.setSelected(true);
       }
    }
@@ -439,7 +496,7 @@ public class TextSelector extends JDialog
    public void showSymbolSelector()
    {
       symbolSelector.display(
-       latexbox.getText().startsWith("$") ? 
+       latexbox.getLaTeXCode().startsWith("$") ? 
        application_.getMathModeMappings() :
        application_.getTextModeMappings());
    }
@@ -485,14 +542,25 @@ public class TextSelector extends JDialog
    }
 
    private FlowframTk application_;
-   private JTextField textbox, latexbox;
+   private JDRTextualObject textObject;
+
+   private JTextField textbox;
+   private LaTeXCodeBlockEditor latexbox;
    private JPopupMenu textpopupMenu;
    private JRadioButton same, different;
    private Font buttonFont=null;
    private JMenuItem copyText, cutText;
    private CharacterSelector symbolSelector;
 
+   private JTabbedPane tabbedPane;
+
    private TextPathPanel textPathPanel;
+
+   private TransformationMatrixPanel matrixPanel;
+
+   static final int LATEX_TAB=0, MATRIX_TAB=1, TEXTPATH_TAB=2;
+
+   public static final int LATEX_CODE_ROWS=10;
 
    private Vector<String> styNames = new Vector<String>();
 }
@@ -507,38 +575,30 @@ class TextPathPanel extends JPanel
 
       setAlignmentX(0.0f);
 
-      setBorder(BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(),
-        resources.getMessage("edittext.textpath")));
-
       Box box = Box.createHorizontalBox();
       box.setAlignmentX(0.0f);
       add(box);
 
-      box.add(Box.createHorizontalGlue());
-
-      JLabel leftDelimLabel = new JLabel(
-         resources.getMessage("edittext.textpath.left_delim"));
-      leftDelimLabel.setDisplayedMnemonic(
-         resources.getCodePoint("edittext.textpath.left_delim.mnemonic"));
-      leftDelimLabel.setAlignmentX(0.0f);
+      JLabel leftDelimLabel = resources.createAppLabel(
+         "edittext.textpath.left_delim");
 
       box.add(leftDelimLabel);
+
+      box.add(resources.createLabelSpacer());
 
       leftDelimField = new DelimField(fieldFont);
       leftDelimLabel.setLabelFor(leftDelimField);
       leftDelimField.setAlignmentX(0.0f);
       box.add(leftDelimField);
 
-      box.add(Box.createHorizontalStrut(20));
+      box.add(resources.createButtonSpacer());
 
-      JLabel rightDelimLabel = new JLabel(
-         resources.getMessage("edittext.textpath.right_delim"));
-      rightDelimLabel.setDisplayedMnemonic(
-         resources.getCodePoint("edittext.textpath.right_delim.mnemonic"));
-      rightDelimLabel.setAlignmentX(0.0f);
+      JLabel rightDelimLabel = resources.createAppLabel(
+         "edittext.textpath.right_delim");
 
       box.add(rightDelimLabel);
+
+      box.add(resources.createLabelSpacer());
 
       rightDelimField = new DelimField(fieldFont);
       rightDelimLabel.setLabelFor(rightDelimField);
@@ -579,6 +639,12 @@ class TextPathPanel extends JPanel
    public void updateInfoSize()
    {
       textArea.setMinimumSize(textArea.getPreferredSize());
+   }
+
+   public void setDelimFont(Font font)
+   {
+      leftDelimField.setFont(font);
+      rightDelimField.setFont(font);
    }
 
    private DelimField leftDelimField, rightDelimField;
