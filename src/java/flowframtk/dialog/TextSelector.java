@@ -264,10 +264,12 @@ public class TextSelector extends JDialog
 
       row.add(resources.createAppJButton("edittext.latextext", "remap", this));
 
-      JTextArea textArea = resources.createAppInfoArea(2,
-        "edittext.latextext.info");
-      textArea.setAlignmentX(0f);
-      latexTextPanel.add(textArea, "South");
+      latexInfoArea = resources.createAppInfoArea(3);
+      latexInfoArea.setAlignmentX(0f);
+      latexTextPanel.add(latexInfoArea, "South");
+
+      textAreaInfo = resources.getMessage("edittext.latextext.textareainfo");
+      textPathInfo = resources.getMessage("edittext.latextext.textpathinfo"); 
 
       latexbox = new LaTeXCodeBlockEditor(application_, "edittext.latextext.codeblock",
         false, LATEX_CODE_ROWS, false);
@@ -333,11 +335,15 @@ public class TextSelector extends JDialog
 
          textPathPanel.apply((JDRTextPathStroke)stroke);
 
+         latexInfoArea.setText(textPathInfo);
+
          pack();
       }
       else
       {
          tabbedPane.setEnabledAt(TEXTPATH_TAB, false);
+
+         latexInfoArea.setText(textAreaInfo);
 
          pack();
       }
@@ -566,6 +572,9 @@ public class TextSelector extends JDialog
    private Font buttonFont=null;
    private JMenuItem copyText, cutText;
    private CharacterSelector symbolSelector;
+   private JTextArea latexInfoArea;
+
+   private String textAreaInfo, textPathInfo;
 
    private JTabbedPane tabbedPane;
 

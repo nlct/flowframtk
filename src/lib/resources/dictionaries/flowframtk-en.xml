@@ -2358,7 +2358,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="edittext.latextext.different.mnemonic">D</entry>
 <entry key="edittext.latextext.remap">Re-Map</entry>
 <entry key="edittext.latextext.remap.mnemonic">M</entry>
-<entry key="edittext.latextext.info">When exporting to a LaTeX file, the text will be placed in the argument of \pgftext so you can''t have paragraph breaks or force a line break.</entry>
+<entry key="edittext.latextext.textareainfo">When exporting to a LaTeX file, the text will be placed in the argument of \pgftext so you can''t have paragraph breaks or force a line break. The LaTeX alternative text won''t be used if the export option converts the text area to a path.</entry>
+<entry key="edittext.latextext.textpathinfo">There are considerable restrictions on the code permitted with pgf''s text along path decoration. See the Text Decorations section (Decoration Library) of the pgf manual. The LaTeX alternative text won''t be used if the export option converts the text-path to a path.</entry>
 
 <entry key="edittext.textpath.title">Text Path Attributes</entry>
 <entry key="edittext.textpath.mnemonic">P</entry>
