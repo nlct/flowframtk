@@ -14079,9 +14079,21 @@ public class JDRCanvas extends JPanel
 
             for (int j = 0; j < group.size(); j++)
             {
-               JDRGroup grp 
-                  = ((JDRText)group.get(j)).convertToPath();
-               group.set(j, grp.get(0));
+               JDRCompleteObject obj = group.get(j);
+
+               if (obj instanceof JDRText)
+               {
+                  JDRGroup grp = ((JDRText)obj).convertToPath();
+
+                  if (grp.size() == 1)
+                  {
+                     group.set(j, grp.get(0));
+                  }
+                  else
+                  {
+                     group.set(j, grp);
+                  }
+               }
             }
 
             if (group.size() == 1)
