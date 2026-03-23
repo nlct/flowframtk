@@ -212,6 +212,17 @@ public class JDRPartialBezier extends JDRPartialSegment
          new JDRPoint(getCanvasGraphics(), getControl2()), getEnd());
    }
 
+   @Override
+   public Shape toShape()
+   {
+      Point2D c = getControl2();
+      Point2D p = start.getReflection(line_);
+
+      return new CubicCurve2D.Double(start.getX(), start.getY(),
+          control.x, control.y, c.getX(), c.getY(),
+          p.getX(), p.getY());
+   }
+
    public void savePgf(TeX tex)
       throws IOException
    {

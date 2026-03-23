@@ -182,7 +182,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    @Override
    public boolean hasBasicStroke()
    {
-      return showPath();
+      return showPath;
    }
 
    @Override
@@ -251,7 +251,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    @Override
    public boolean showPath()
    {
-      return showPath;
+      return path_.showPath();
    }
 
    public void setShowPathLinePaint(JDRPaint paint)

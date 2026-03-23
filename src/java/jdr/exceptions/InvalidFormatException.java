@@ -340,6 +340,7 @@ public class InvalidFormatException extends Exception
 
    public static final String SYMMETRIC_SHAPE = "symmetric-shape";
    public static final String SYMMETRIC_ANCHORED = "symmetric-anchored";
+   public static final String SYMMETRIC_SINGLE = "symmetric-single";
    public static final String SYMMETRIC_LINE_X0 = "symmetric-line-x0";
    public static final String SYMMETRIC_LINE_X1 = "symmetric-line-x1";
    public static final String SYMMETRIC_LINE_Y0 = "symmetric-line-y0";

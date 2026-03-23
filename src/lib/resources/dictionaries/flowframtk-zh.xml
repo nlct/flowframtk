@@ -1104,6 +1104,11 @@
 <entry key="menu.editpath.symmetry.has_symmetry.initvalue">false</entry>
 <entry key="menu.editpath.symmetry.has_symmetry.tooltip">Add or remove symmetry to the path</entry>
 
+<entry key="menu.editpath.symmetry.symmetry_mode">Single Mode</entry>
+<entry key="menu.editpath.symmetry.symmetry_mode.mnemonic">M</entry>
+<entry key="menu.editpath.symmetry.symmetry_mode.initvalue">true</entry>
+<entry key="menu.editpath.symmetry.symmetry_mode.tooltip">Set whether or not original and reflection form single path</entry>
+
 <entry key="menu.editpath.symmetry.join_anchor">Anchor Join</entry>
 <entry key="menu.editpath.symmetry.join_anchor.mnemonic">J</entry>
 <entry key="menu.editpath.symmetry.join_anchor.initvalue">false</entry>
@@ -1626,6 +1631,7 @@
 <entry key="undo.symmetry">Symmetry</entry>
 <entry key="undo.symmetry.join_anchor">Symmetry Join Anchor</entry>
 <entry key="undo.symmetry.close_anchor">Symmetry Close Anchor</entry>
+<entry key="undo.symmetry_single">Symmetry Single Mode</entry>
 <entry key="undo.text.outline">Set Text Outline Mode</entry>
 <entry key="undo.textpath.show">Set Text-Path Show Mode</entry>
 <entry key="undo.ungroup">取消组合</entry>

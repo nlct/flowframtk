@@ -417,6 +417,9 @@
 <entry key="objectinfo.symmetric_shape">Symmetric shape:</entry>
 <entry key="objectinfo.symmetric_shape.line">Symmetry: {0}</entry>
 
+<entry key="objectinfo.symmetric_shape.single_on">Single</entry>
+<entry key="objectinfo.symmetric_shape.single_off">Not single</entry>
+
 <entry key="objectinfo.symmetric_shape.anchor_on">Anchored</entry>
 <entry key="objectinfo.symmetric_shape.anchor_off">Not anchored</entry>
 
@@ -683,6 +686,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_symmetric-line-y1">Invalid symmetric line y1 setting</entry>
 <entry key="error.invalid_symmetric-anchored">Invalid symmetric anchored setting</entry>
 <entry key="error.invalid_symmetric-shape">Invalid symmetric shape setting</entry>
+<entry key="error.invalid_symmetric-single">Invalid symmetric single setting</entry>
 <entry key="error.invalid_spiral-show-original">Invalid spiral show original setting</entry>
 <entry key="error.invalid_spiral-single">Invalid spiral single setting</entry>
 <entry key="error.invalid_spiral-replicas">Invalid spiral replicas setting</entry>

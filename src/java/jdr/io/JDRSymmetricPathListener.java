@@ -82,6 +82,11 @@ public class JDRSymmetricPathListener extends JDRPathListener
 
       objectLoader.save(jdr, path.getUnderlyingShape());
 
+      if (version >= 2.2f)
+      {
+         jdr.writeBoolean(path.isSingle());
+      }
+
       jdr.writeBoolean(path.isAnchored());
 
       JDRSegmentLoader loader = jdr.getSegmentLoader();
@@ -121,6 +126,8 @@ public class JDRSymmetricPathListener extends JDRPathListener
    public JDRObject read(JDRAJR jdr)
       throws InvalidFormatException
    {
+      float version = jdr.getVersion();
+
       JDRObjectLoader objectLoader = jdr.getObjectLoader();
 
       JDRObject object = objectLoader.load(jdr);
@@ -133,6 +140,12 @@ public class JDRSymmetricPathListener extends JDRPathListener
       }
 
       JDRSymmetricPath sPath = JDRSymmetricPath.createFrom((JDRShape)object);
+
+      if (version >= 2.2f)
+      {
+         sPath.setSingleMode(jdr.readBoolean(
+            InvalidFormatException.SYMMETRIC_SINGLE));
+      }
 
       boolean anchored = jdr.readBoolean(
          InvalidFormatException.SYMMETRIC_ANCHORED);

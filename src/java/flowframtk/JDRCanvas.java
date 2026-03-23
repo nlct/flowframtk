@@ -676,6 +676,21 @@ public class JDRCanvas extends JPanel
          SEGMENT_FLAG_ANY
       ));
 
+      // Toggle symmetry single mode
+
+      symmetryMenu.add(EditPathAction.createCheckBoxMenuItem(this,
+          "menu.editpath.symmetry", "symmetry_mode", false,
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               toggleSymmetrySingleMode();
+            }
+         },
+         SELECT_FLAG_SYMMETRIC | SELECT_FLAG_SYMTEXTPATH,
+         SEGMENT_FLAG_ANY
+      ));
+
       // Toggle join anchor
 
       symmetryMenu.add(EditPathAction.createCheckBoxMenuItem(this,
@@ -2931,6 +2946,23 @@ public class JDRCanvas extends JPanel
                   (selection.getSelectionFlag() & 
                    (SELECT_FLAG_SYMMETRIC | SELECT_FLAG_SYMTEXTPATH)) != 0);
              }
+             else if (actionCmd.equals("symmetry_mode"))
+             {
+                boolean selected = false;
+
+                if ((selection.getSelectionFlag() & 
+                   (SELECT_FLAG_SYMMETRIC | SELECT_FLAG_SYMTEXTPATH)) != 0)
+                {
+                   JDRSymmetricPath symPath = editedPath.getSymmetricPath();
+
+                   if (symPath != null)
+                   {
+                      selected = symPath.isSingle();
+                   }
+                }
+
+                button.setSelected(selected);
+             }
              else if (actionCmd.equals("join_anchor"))
              {
                 button.setSelected(
@@ -3949,7 +3981,7 @@ public class JDRCanvas extends JPanel
 
                if (textual instanceof JDRTextPath)
                {
-                  return ((JDRTextPath)textual).showPath();
+                  return ((JDRTextPath)textual).hasBasicStroke();
                }
             }
             else if (obj instanceof JDRGroup)
@@ -3972,14 +4004,11 @@ public class JDRCanvas extends JPanel
 
          if (obj.isSelected())
          {
-            if (obj.hasTextual())
-            {
-               JDRTextual textual = obj.getTextual();
+            JDRTextual textual = obj.getTextual();
 
-               if (textual instanceof JDRTextPath)
-               {
-                  return Boolean.valueOf(((JDRTextPath)textual).showPath());
-               }
+            if (textual != null && textual instanceof JDRTextPath)
+            {
+               return Boolean.valueOf(((JDRTextPath)textual).hasBasicStroke());
             }
             else if (obj instanceof JDRGroup)
             {
@@ -6343,11 +6372,11 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object.hasTextual())
+      else
       {
          JDRTextual textual = object.getTextual();
 
-         if (textual instanceof JDRTextPath)
+         if (textual != null && textual instanceof JDRTextPath)
          {
             UndoableEdit edit
                = new SetTextPathShow((JDRTextPath)textual, show);
@@ -6990,17 +7019,9 @@ public class JDRCanvas extends JPanel
    {
       try
       {
-         for (int i = 0; i < paths.size(); i++)
-         {
-            if (paths.get(i) == editedPath)
-            {
-               UndoableEdit edit = new SetSymmetricPath(editedPath, addSymmetry);
+         UndoableEdit edit = new SetSymmetricPath(editedPath, addSymmetry);
 
-               frame_.postEdit(edit);
-
-               return;
-            }
-         }
+         frame_.postEdit(edit);
       }
       catch (Throwable e)
       {
@@ -7010,6 +7031,19 @@ public class JDRCanvas extends JPanel
          getResources().debugMessage("setSymmetry("+addSymmetry+") failed.");
          e.printStackTrace();
       }
+   }
+
+   public void toggleSymmetrySingleMode()
+   {
+      JDRSymmetricPath symPath = editedPath.getSymmetricPath();
+
+      if (symPath == null) return;
+
+      boolean mode = !symPath.isSingle();
+
+      UndoableEdit edit = new SetSymmetricSingleMode(symPath, mode);
+
+      frame_.postEdit(edit);
    }
 
    public JDRBasicStroke getSelectedBasicStroke()
@@ -18332,6 +18366,61 @@ public class JDRCanvas extends JPanel
       }
    }
 
+   // Symmetric shape single mode on/off
+   class SetSymmetricSingleMode extends CanvasUndoableEdit
+   {
+      private JDRSymmetricPath symPath_;
+      private boolean mode;
+
+      public SetSymmetricSingleMode(JDRSymmetricPath symPath, boolean mode)
+      {
+         super(getFrame());
+
+         symPath_ = symPath;
+         this.mode = mode;
+
+         BBox box = getRefreshBounds(symPath_);
+
+         symPath_.setSingleMode(mode);
+
+         mergeRefreshBounds(symPath_, box);
+
+         setRefreshBounds(box);
+
+         updateEditPathActions();
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         frame_.selectThisFrame();
+
+         symPath_.setSingleMode(mode);
+
+         repaintRegion();
+
+         updateEditPathActions();
+      }
+
+      public void undo() throws CannotUndoException
+      {
+         frame_.selectThisFrame();
+
+         symPath_.setSingleMode(!mode);
+
+         repaintRegion();
+
+         updateEditPathActions();
+      }
+
+      public boolean canUndo() {return true;}
+      public boolean canRedo() {return true;}
+
+      public String getPresentationName()
+      {
+         return getResources().getMessage("undo.symmetry_single");
+      }
+   }
+
    // edit bitmap properties
    class SetBitmapProperties extends CanvasUndoableEdit
    {
@@ -20531,7 +20620,7 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          textPath_ = object;
-         oldMode_ = textPath_.showPath();
+         oldMode_ = textPath_.hasBasicStroke();
          newMode_ = mode;
 
          if (oldMode_)

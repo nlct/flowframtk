@@ -59,8 +59,16 @@ public class JDRPartialSegment extends JDRObject
    public JDRPartialSegment(JDRPartialSegment segment)
    {
       super(segment);
-      setStartMarker(segment.startMarker);
-      setEndMarker(segment.endMarker);
+
+      if (segment.startMarker != null)
+      {
+         setStartMarker((JDRMarker)segment.startMarker.clone());
+      }
+
+      if (segment.endMarker != null)
+      {
+         setEndMarker((JDRMarker)segment.endMarker.clone());
+      }
 
       if (segment.start != null)
       {
@@ -235,6 +243,11 @@ public class JDRPartialSegment extends JDRObject
    public JDRSegment getFullSegment()
    {
       return new JDRSegment(getStart(), getEnd());
+   }
+
+   public Shape toShape()
+   {
+      return null;
    }
 
    public void savePgf(TeX tex)

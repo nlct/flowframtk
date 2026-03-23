@@ -84,6 +84,15 @@ public class JDRPartialLine extends JDRPartialSegment
       return new JDRLine(getStart(), getEnd());
    }
 
+   @Override
+   public Shape toShape()
+   {
+      Point2D p = start.getReflection(line_);
+
+      return new Line2D.Double(start.getX(), start.getY(),
+          p.getX(), p.getY());
+   }
+
    public void savePgf(TeX tex)
      throws IOException
    {
