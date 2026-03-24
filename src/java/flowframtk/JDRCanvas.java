@@ -2948,20 +2948,9 @@ public class JDRCanvas extends JPanel
              }
              else if (actionCmd.equals("symmetry_mode"))
              {
-                boolean selected = false;
+                JDRSymmetricPath symPath = editedPath.getSymmetricPath();
 
-                if ((selection.getSelectionFlag() & 
-                   (SELECT_FLAG_SYMMETRIC | SELECT_FLAG_SYMTEXTPATH)) != 0)
-                {
-                   JDRSymmetricPath symPath = editedPath.getSymmetricPath();
-
-                   if (symPath != null)
-                   {
-                      selected = symPath.isSingle();
-                   }
-                }
-
-                button.setSelected(selected);
+                button.setSelected(symPath != null && symPath.isSingle());
              }
              else if (actionCmd.equals("join_anchor"))
              {

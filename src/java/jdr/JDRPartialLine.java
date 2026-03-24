@@ -76,7 +76,8 @@ public class JDRPartialLine extends JDRPartialSegment
 
    public JDRPathSegment getReflection(JDRLine line)
    {
-      return new JDRPartialLine(getEnd(), line);
+      return new JDRPartialLine(
+        new JDRPoint(getCanvasGraphics(), start.getReflection(line)), line);
    }
 
    public JDRSegment getFullSegment()

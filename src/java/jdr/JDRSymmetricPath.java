@@ -205,6 +205,8 @@ public class JDRSymmetricPath extends JDRCompoundShape
        markerSymmetry = symPath.markerSymmetry;
        closed = symPath.closed;
        path_ = (JDRShape)symPath.path_.clone();
+       selected = symPath.selected;
+       super.setEditMode(symPath.isEdited());
 
        line_ = new JDRLine(symPath.line_);
 
@@ -393,51 +395,6 @@ public class JDRSymmetricPath extends JDRCompoundShape
     public Object clone()
     {
        return new JDRSymmetricPath(this);
-/*
-       JDRSymmetricPath symPath = new JDRSymmetricPath(
-            (JDRShape)path_.clone(),  
-            join == null ? null : (JDRPartialSegment)join.clone(),
-            (JDRLine)line_.clone(),
-            closingSegment == null ? null : (JDRPartialSegment)closingSegment.clone(),
-            closed, markerSymmetry);
-
-        int segIndex = symPath.getSelectedIndex();
-        JDRPathSegment selectedSeg = symPath.getSelectedSegment();
-
-        int controlIndex = symPath.getSelectedControlIndex();
-        JDRPoint selectedControl = symPath.getSelectedControl();
-
-        if (controlIndex > -1 && selectedControl == null)
-        {
-           selectedControl = selectControl(controlIndex);
-        }
-
-        if (segIndex > -1 && selectedSeg == null)
-        {
-           JDRPathSegment seg = getSelectedSegment();
-
-           if (seg == line_)
-           {
-              selectedSeg = symPath.line_;
-              selectedSeg.setSelected(true);
-           }
-           else if (seg == join)
-           {
-              selectedSeg = symPath.join;
-              selectedSeg.setSelected(true);
-           }
-           else if (seg == closingSegment)
-           {
-              selectedSeg = symPath.closingSegment;
-              selectedSeg.setSelected(true);
-           }
-
-           symPath.setSelectedElements(segIndex, controlIndex,
-             selectedSeg, selectedControl);
-        }
-
-        return symPath;
-*/
     }
 
     public void makeEqual(JDRObject object)
@@ -1902,25 +1859,27 @@ public class JDRSymmetricPath extends JDRCompoundShape
    {
       CanvasGraphics cg = getCanvasGraphics();
 
-      JDRShape newShape = path_.reverse();
+      JDRSymmetricPath symPath = new JDRSymmetricPath(this);
 
-      JDRLine newSymLine = line_.reverse();
+      AffineTransform af = line_.getReflectionTransform(null);
 
-      JDRPartialSegment newJoin = null;
-      JDRPartialSegment newClosing = null;
+      symPath.path_.transform(af);
 
       if (join != null)
       {
-         newClosing = (JDRPartialSegment)join.reverse();
+         symPath.join = (JDRPartialSegment)join.reverse();
+         symPath.join.setSymmetryLine(symPath.line_);
+         symPath.join.setStart(symPath.path_.getLastSegment().getEnd());
       }
 
       if (closingSegment != null)
       {
-         newJoin = (JDRPartialSegment)closingSegment.reverse();
+         symPath.closingSegment = (JDRPartialSegment)closingSegment.reverse();
+         symPath.closingSegment.setSymmetryLine(symPath.line_);
+         symPath.closingSegment.setEnd(symPath.path_.getFirstControl());
       }
 
-      return new JDRSymmetricPath(newShape, newJoin, newSymLine, newClosing,
-        closed, markerSymmetry);
+      return symPath;
    }
 
    @Override

@@ -134,12 +134,13 @@ public class JDRPartialSegment extends JDRObject
 
    public JDRPathSegment getReflection(JDRLine line)
    {
-      return new JDRPartialSegment(getEnd(), line);
+      return new JDRPartialSegment(
+        new JDRPoint(getCanvasGraphics(), start.getReflection(line)), line);
    }
 
    public JDRPathSegment reverse()
    {
-     return getReflection(line_);
+      return getReflection(line_);
    }
 
    public void setSymmetryLine(JDRLine line)

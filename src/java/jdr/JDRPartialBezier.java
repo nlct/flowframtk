@@ -82,9 +82,28 @@ public class JDRPartialBezier extends JDRPartialSegment
     */
    public JDRPartialBezier(JDRPoint point, JDRPoint c, JDRLine line)
    {
-      this(point == null && line == null ? c.getCanvasGraphics()
-        : (point == null ? line.getCanvasGraphics() : point.getCanvasGraphics()),
-      point, line);
+      super(point == null && line == null ? c.getCanvasGraphics()
+        : (point == null ? line.getCanvasGraphics() : point.getCanvasGraphics()));
+
+      line_ = line;
+
+      if (point == null)
+      {
+         start = new JDRPoint(getCanvasGraphics());
+      }
+      else
+      {
+         start = point;
+      }
+
+      if (c == null)
+      {
+         control = new JDRPoint(getCanvasGraphics());
+      }
+      else
+      {
+         control = c;
+      }
    }
 
    public JDRPartialBezier(CanvasGraphics cg, JDRPoint point, JDRPoint c, JDRLine line)
@@ -202,8 +221,17 @@ public class JDRPartialBezier extends JDRPartialSegment
 
    public JDRPathSegment getReflection(JDRLine line)
    {
-      return new JDRPartialBezier(getEnd(),
-        new JDRPoint(getCanvasGraphics(), getControl2()), line);
+      JDRPartialBezier seg = new JDRPartialBezier(getCanvasGraphics());
+
+      seg.line_ = line;
+
+      Point2D p1 = start.getReflection(line);
+      Point2D p2 = control.getReflection(line);
+
+      seg.start = new JDRPoint(getCanvasGraphics(), p1);
+      seg.control = new JDRPoint(getCanvasGraphics(), p2);
+
+      return seg;
    }
 
    public JDRSegment getFullSegment()
