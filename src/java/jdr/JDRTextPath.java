@@ -691,11 +691,11 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (path_ == null)
       {
-         path_ = (JDRShape)textPath.getUnderlyingShape().clone();
+         path_ = (JDRShape)textPath.path_.clone();
       }
       else
       {
-         path_.makeEqual(textPath.getUnderlyingShape());
+         path_.makeEqual(textPath.path_);
       }
 
       isOutline = textPath.isOutline;
@@ -720,27 +720,21 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       {
          textPath.showPathFillPaint = null;
       }
-      else if (textPath.showPathFillPaint == null)
-      {
-         textPath.showPathFillPaint = (JDRPaint)showPathFillPaint.clone();
-      }
       else
       {
-         textPath.showPathFillPaint.makeEqual(showPathFillPaint);
+         textPath.showPathFillPaint = (JDRPaint)showPathFillPaint.clone();
       }
 
       if (showPathLinePaint == null)
       {
          textPath.showPathLinePaint = null;
       }
-      else if (textPath.showPathLinePaint == null)
+      else
       {
          textPath.showPathLinePaint = (JDRPaint)showPathLinePaint.clone();
       }
-      else
-      {
-         textPath.showPathLinePaint.makeEqual(showPathLinePaint);
-      }
+
+      path_.pathChanged();
    }
 
    @Override
@@ -762,6 +756,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       newShape.description = description;
       newShape.tag = tag;
+      newShape.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(newShape);
 
@@ -806,62 +801,19 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (showPath)
       {
-         // ensure variables are initialised
-         getShowPathStroke();
-         getShowPathFillPaint();
-         getShowPathLinePaint();
+         JDRPaint textPaint = path_.getLinePaint();
+         JDRPaint textOutlineFill = path_.getShapeFillPaint();
+         JDRStroke tpStroke = getStroke();
 
-         if (showPathFillPaint instanceof JDRShading
-          || showPathLinePaint instanceof JDRShading)
-         {
-            box = path_.getStorageBBox();
+         path_.setLinePaint(getShowPathLinePaint());
+         path_.setShapeFillPaint(getShowPathFillPaint());
+         path_.setStroke(getShowPathStroke());
 
-            if (doShift)
-            {
-               box.translate(parentFrame.getEvenXShift(),
-                             parentFrame.getEvenYShift());
-            }
-         }
+         path_.draw(parentFrame);
 
-         Shape pathShape = path_.getGeneralPath();
-
-         if (shiftAf != null)
-         {
-            pathShape = shiftAf.createTransformedShape(pathShape);
-         }
-
-         if (!(showPathFillPaint instanceof JDRTransparent))
-         {
-            cg.setPaint(showPathFillPaint.getPaint(box));
-            cg.fill(pathShape);
-         }
-
-         if (isStroked())
-         {
-            JDRPaint textPaint = path_.getLinePaint();
-            JDRStroke tpStroke = getStroke();
-
-            path_.setLinePaint(showPathLinePaint);
-            path_.setStroke(showPathStroke);
-
-            if (showPathLinePaint instanceof JDRTransparent)
-            {
-               if (showPathStroke.hasMarkers())
-               {
-                  showPathStroke.drawMarkers(path_);
-               }
-            }
-            else
-            {
-               cg.setPaint(showPathLinePaint.getPaint(box));
-
-               showPathStroke.drawStoragePath(path_, path_.getGeneralPath());
-            }
-
-            path_.setLinePaint(textPaint);
-            path_.setStroke(tpStroke);
-         }
-
+         path_.setLinePaint(textPaint);
+         path_.setShapeFillPaint(textOutlineFill);
+         path_.setStroke(tpStroke);
       }
 
       if (paint instanceof JDRShading)
@@ -924,46 +876,19 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (showPath)
       {
-         // ensure variables are initialised
-         getShowPathStroke();
-         getShowPathFillPaint();
-         getShowPathLinePaint();
+         JDRPaint textPaint = path_.getLinePaint();
+         JDRPaint textOutlineFill = path_.getShapeFillPaint();
+         JDRStroke tpStroke = getStroke();
 
-         if (showPathFillPaint instanceof JDRShading
-          || showPathLinePaint instanceof JDRShading)
-         {
-            box = path_.getBpBBox();
-         }
+         path_.setLinePaint(getShowPathLinePaint());
+         path_.setShapeFillPaint(getShowPathFillPaint());
+         path_.setStroke(getShowPathStroke());
 
-         Path2D path2d = path_.getBpGeneralPath();
+         path_.print(g2);
 
-         if (!(showPathFillPaint instanceof JDRTransparent))
-         {
-            g2.setPaint(showPathFillPaint.getPaint(box));
-            g2.fill(path2d);
-         }
-
-         if (isStroked())
-         {
-            JDRPaint textPaint = path_.getLinePaint();
-            JDRStroke tpStroke = getStroke();
-
-            path_.setLinePaint(showPathLinePaint);
-            path_.setStroke(showPathStroke);
-
-            if (showPathLinePaint instanceof JDRTransparent)
-            {
-               showPathStroke.printMarkers(g2, path_);
-            }
-            else
-            {
-               g2.setPaint(showPathLinePaint.getPaint(box));
-               showPathStroke.printPath(g2, path_, path2d);
-            }
-
-            path_.setLinePaint(textPaint);
-            path_.setStroke(tpStroke);
-         }
+         path_.setLinePaint(textPaint);
+         path_.setShapeFillPaint(textOutlineFill);
+         path_.setStroke(tpStroke);
       }
 
       JDRPaint paint = getTextPaint();
@@ -1318,6 +1243,8 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       newShape.tag = tag;
 
+      newShape.isOutline = isOutline;
+
       assignShowPathAttributesToTextPath(newShape);
 
       return newShape;
@@ -1355,6 +1282,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       textPath.description = description;
       textPath.tag = tag;
+      textPath.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(textPath);
 
@@ -1370,6 +1298,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       textPath.description = description;
       textPath.tag = tag;
+      textPath.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(textPath);
 
@@ -1385,6 +1314,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       textPath.description = description;
       textPath.tag = tag;
+      textPath.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(textPath);
 
@@ -1400,6 +1330,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       textPath.description = description;
       textPath.tag = tag;
+      textPath.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(textPath);
 
@@ -1415,6 +1346,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       textPath.description = description;
       textPath.tag = tag;
+      textPath.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(textPath);
 
@@ -1430,6 +1362,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       textPath.description = description;
       textPath.tag = tag;
+      textPath.isOutline = isOutline;
 
       assignShowPathAttributesToTextPath(textPath);
 

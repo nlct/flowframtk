@@ -6363,15 +6363,20 @@ public class JDRCanvas extends JPanel
       }
       else
       {
-         JDRTextual textual = object.getTextual();
+         JDRTextualObject textualObject = object.getTextualObject();
 
-         if (textual != null && textual instanceof JDRTextPath)
+         if (textualObject != null)
          {
-            UndoableEdit edit
-               = new SetTextPathShow((JDRTextPath)textual, show);
-            ce.addEdit(edit);
+            JDRTextual textual = textualObject.getTextual();
 
-            return true;
+            if (textual instanceof JDRTextPath)
+            {
+               UndoableEdit edit
+                  = new SetTextPathShow(textualObject, show);
+               ce.addEdit(edit);
+
+               return true;
+            }
          }
       }
 
@@ -7024,13 +7029,13 @@ public class JDRCanvas extends JPanel
 
    public void toggleSymmetrySingleMode()
    {
-      JDRSymmetricPath symPath = editedPath.getSymmetricPath();
+      JDRSymmetricObject symObject = editedPath.getSymmetricObject();
 
-      if (symPath == null) return;
+      if (symObject == null) return;
 
-      boolean mode = !symPath.isSingle();
+      boolean mode = !symObject.getSymmetricPath().isSingle();
 
-      UndoableEdit edit = new SetSymmetricSingleMode(symPath, mode);
+      UndoableEdit edit = new SetSymmetricSingleMode(symObject, mode);
 
       frame_.postEdit(edit);
    }
@@ -7091,12 +7096,17 @@ public class JDRCanvas extends JPanel
             flag = setTextPaint(paint, grp.get(i), ce) || flag;
          }
       }
-      else if (object.hasTextual())
+      else
       {
-         UndoableEdit edit
-            = new SetTextPaint(object.getTextual(), paint);
-         ce.addEdit(edit);
-         return true;
+         JDRTextualObject textualObject = object.getTextualObject();
+
+         if (textualObject != null)
+         {
+            UndoableEdit edit
+               = new SetTextPaint(textualObject, paint);
+            ce.addEdit(edit);
+            return true;
+         }
       }
 
       return flag;
@@ -7120,11 +7130,11 @@ public class JDRCanvas extends JPanel
       }
       else if (object.hasTextual())
       {
-         JDRTextual textual = object.getTextual();
+         JDRTextualObject textualObject = object.getTextualObject();
 
-         if (textual.isOutline())
+         if (textualObject.getTextual().isOutline())
          {
-            UndoableEdit edit = new SetOutlineFillPaint(textual, paint);
+            UndoableEdit edit = new SetOutlineFillPaint(textualObject, paint);
             ce.addEdit(edit);
             return true;
          }
@@ -7179,13 +7189,13 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object.hasTextual())
+      else
       {
-         JDRTextual textual = object.getTextual();
+         JDRTextualObject textualObject = object.getTextualObject();
 
-         if (textual.isOutline())
+         if (textualObject != null && textualObject.getTextual().isOutline())
          {
-            UndoableEdit edit = new SetOutlineFillPaint(textual, paint);
+            UndoableEdit edit = new SetOutlineFillPaint(textualObject, paint);
             ce.addEdit(edit);
             return true;
          }
@@ -7486,9 +7496,11 @@ public class JDRCanvas extends JPanel
          flag = true;
       }
 
-      if (object.hasTextual())
+      JDRTextualObject textualObject = object.getTextualObject();
+
+      if (textualObject != null)
       {
-         JDRTextual text = object.getTextual();
+         JDRTextual text = textualObject.getTextual();
 
          JDRPaint textPaint = text.getTextPaint();
 
@@ -7504,13 +7516,13 @@ public class JDRCanvas extends JPanel
 
          UndoableEdit edit;
 
-         edit = new SetTextPaint(text, textPaint);
+         edit = new SetTextPaint(textualObject, textPaint);
          ce.addEdit(edit);
 
          if (text.isOutline())
          {
             JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
-            edit = new SetOutlineFillPaint(text, fillPaint);
+            edit = new SetOutlineFillPaint(textualObject, fillPaint);
             ce.addEdit(edit);
          }
 
@@ -7643,21 +7655,23 @@ public class JDRCanvas extends JPanel
          flag = true;
       }
 
-      if (object.hasTextual())
+      JDRTextualObject textualObject = object.getTextualObject();
+
+      if (textualObject != null)
       {
-         JDRTextual text = object.getTextual();
+         JDRTextual text = textualObject.getTextual();
 
          JDRPaint textPaint = text.getTextPaint().removeTransparency();
 
          UndoableEdit edit;
 
-         edit = new SetTextPaint(text, textPaint);
+         edit = new SetTextPaint(textualObject, textPaint);
          ce.addEdit(edit);
 
          if (text.isOutline())
          {
             JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
-            edit = new SetOutlineFillPaint(text, fillPaint);
+            edit = new SetOutlineFillPaint(textualObject, fillPaint);
             ce.addEdit(edit);
          }
 
@@ -7834,9 +7848,11 @@ public class JDRCanvas extends JPanel
          flag = true;
       }
 
-      if (object.hasTextual())
+      JDRTextualObject textualObject = object.getTextualObject();
+
+      if (textualObject != null)
       {
-         JDRTextual text = object.getTextual();
+         JDRTextual text = textualObject.getTextual();
 
          JDRPaint textPaint = text.getTextPaint();
 
@@ -7852,13 +7868,13 @@ public class JDRCanvas extends JPanel
 
          UndoableEdit edit;
 
-         edit = new SetTextPaint(text, textPaint);
+         edit = new SetTextPaint(textualObject, textPaint);
          ce.addEdit(edit);
 
          if (text.isOutline())
          {
             JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
-            edit = new SetOutlineFillPaint(text, fillPaint);
+            edit = new SetOutlineFillPaint(textualObject, fillPaint);
             ce.addEdit(edit);
          }
 
@@ -8035,7 +8051,9 @@ public class JDRCanvas extends JPanel
          flag = true;
       }
 
-      if (object.hasTextual())
+      JDRTextualObject textualObject = object.getTextualObject();
+
+      if (textualObject != null)
       {
          JDRTextual text = object.getTextual();
 
@@ -8053,13 +8071,13 @@ public class JDRCanvas extends JPanel
 
          UndoableEdit edit;
 
-         edit = new SetTextPaint(text, textPaint);
+         edit = new SetTextPaint(textualObject, textPaint);
          ce.addEdit(edit);
 
          if (text.isOutline())
          {
             JDRPaint fillPaint = text.getOutlineFillPaint().removeTransparency();
-            edit = new SetOutlineFillPaint(text, fillPaint);
+            edit = new SetOutlineFillPaint(textualObject, fillPaint);
             ce.addEdit(edit);
          }
 
@@ -8458,22 +8476,27 @@ public class JDRCanvas extends JPanel
             {
                done = setSelectedFont(((JDRGroup)object), text, ce);
             }
-            else if (object.hasTextual())
+            else
             {
-               UndoableEdit edit = new SetFont(object.getTextual(),
-                                       text.getFontFamily(),
-                                       text.getFontSeries(),
-                                       text.getFontShape(),
-                                       text.getFontSize(),
-                                       text.getLaTeXFamily(), 
-                                       text.getLaTeXSize(), 
-                                       text.getLaTeXSeries(),
-                                       text.getLaTeXShape(),
-                                       text.getHAlign(),
-                                       text.getVAlign());
+               JDRTextualObject textualObject = object.getTextualObject();
 
-               ce.addEdit(edit);
-               done = true;
+               if (textualObject != null)
+               {
+                  UndoableEdit edit = new SetFont(textualObject,
+                                          text.getFontFamily(),
+                                          text.getFontSeries(),
+                                          text.getFontShape(),
+                                          text.getFontSize(),
+                                          text.getLaTeXFamily(), 
+                                          text.getLaTeXSize(), 
+                                          text.getLaTeXSeries(),
+                                          text.getLaTeXShape(),
+                                          text.getHAlign(),
+                                          text.getVAlign());
+
+                  ce.addEdit(edit);
+                  done = true;
+               }
             }
          }
       }
@@ -8517,14 +8540,19 @@ public class JDRCanvas extends JPanel
                done = setSelectedFontFamily(((JDRGroup)object), 
                   family, latexFam, ce);
             }
-            else if (object.hasTextual())
+            else
             {
-               UndoableEdit edit
-                  = new SetFontFamily(object.getTextual(),
-                                      family, latexFam);
+               JDRTextualObject textualObject = object.getTextualObject();
 
-               ce.addEdit(edit);
-               done = true;
+               if (textualObject != null)
+               {
+                  UndoableEdit edit
+                     = new SetFontFamily(textualObject,
+                                         family, latexFam);
+
+                  ce.addEdit(edit);
+                  done = true;
+               }
             }
          }
       }
@@ -8559,14 +8587,19 @@ public class JDRCanvas extends JPanel
                done = setSelectedFontSize(((JDRGroup)object), size,
                          latexSize, ce);
             }
-            else if (object.hasTextual())
+            else
             {
-               UndoableEdit edit
-                  = new SetFontSize(object.getTextual(),
-                                    size, latexSize);
+               JDRTextualObject textualObject = object.getTextualObject();
 
-               ce.addEdit(edit);
-               done = true;
+               if (textualObject != null)
+               {
+                  UndoableEdit edit
+                     = new SetFontSize(textualObject,
+                                       size, latexSize);
+
+                  ce.addEdit(edit);
+                  done = true;
+               }
             }
          }
       }
@@ -8609,14 +8642,19 @@ public class JDRCanvas extends JPanel
                done = setSelectedFontShape(((JDRGroup)object), shape,
                          latexShape, ce);
             }
-            else if (object.hasTextual())
+            else
             {
-               UndoableEdit edit
-                  = new SetFontShape(object.getTextual(),
-                                     shape, latexShape);
+               JDRTextualObject textualObject = object.getTextualObject();
 
-               ce.addEdit(edit);
-               done = true;
+               if (textualObject != null)
+               {
+                  UndoableEdit edit
+                     = new SetFontShape(textualObject,
+                                        shape, latexShape);
+
+                  ce.addEdit(edit);
+                  done = true;
+               }
             }
          }
       }
@@ -8659,14 +8697,19 @@ public class JDRCanvas extends JPanel
                done = setSelectedFontSeries(((JDRGroup)object), series,
                          latexSeries, ce);
             }
-            else if (object.hasTextual())
+            else
             {
-               UndoableEdit edit
-                  = new SetFontSeries(object.getTextual(),
-                                       series, latexSeries);
+               JDRTextualObject textualObject = object.getTextualObject();
 
-               ce.addEdit(edit);
-               done = true;
+               if (textualObject != null)
+               {
+                  UndoableEdit edit
+                     = new SetFontSeries(textualObject,
+                                          series, latexSeries);
+
+                  ce.addEdit(edit);
+                  done = true;
+               }
             }
          }
       }
@@ -8789,15 +8832,20 @@ public class JDRCanvas extends JPanel
             done = updateLaTeXFontSize(((JDRGroup)object), 
                       latexFonts, ce);
          }
-         else if (object.hasTextual())
+         else
          {
-            JDRTextual t = object.getTextual();
+            JDRTextualObject textualObject = object.getTextualObject();
 
-            UndoableEdit edit = new SetLaTeXFontSize(
-               t, latexFonts.getLaTeXCmd(t.getFontSize()));
+            if (textualObject != null)
+            {
+               JDRTextual t = object.getTextual();
 
-            ce.addEdit(edit);
-            done = true;
+               UndoableEdit edit = new SetLaTeXFontSize(
+                  textualObject, latexFonts.getLaTeXCmd(t.getFontSize()));
+
+               ce.addEdit(edit);
+               done = true;
+            }
          }
       }
 
@@ -18358,21 +18406,22 @@ public class JDRCanvas extends JPanel
    // Symmetric shape single mode on/off
    class SetSymmetricSingleMode extends CanvasUndoableEdit
    {
-      private JDRSymmetricPath symPath_;
+      private JDRSymmetricObject symObject_;
       private boolean mode;
 
-      public SetSymmetricSingleMode(JDRSymmetricPath symPath, boolean mode)
+      public SetSymmetricSingleMode(JDRSymmetricObject symObject, boolean mode)
       {
          super(getFrame());
 
-         symPath_ = symPath;
+         symObject_ = symObject;
          this.mode = mode;
 
-         BBox box = getRefreshBounds(symPath_);
+         BBox box = getRefreshBounds(symObject_.getObject());
 
-         symPath_.setSingleMode(mode);
+         symObject_.getSymmetricPath().setSingleMode(mode);
+         symObject_.getObject().pathChanged();
 
-         mergeRefreshBounds(symPath_, box);
+         mergeRefreshBounds(symObject_.getObject(), box);
 
          setRefreshBounds(box);
 
@@ -18383,7 +18432,8 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         symPath_.setSingleMode(mode);
+         symObject_.getSymmetricPath().setSingleMode(mode);
+         symObject_.getObject().pathChanged();
 
          repaintRegion();
 
@@ -18394,7 +18444,8 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         symPath_.setSingleMode(!mode);
+         symObject_.getSymmetricPath().setSingleMode(!mode);
+         symObject_.getObject().pathChanged();
 
          repaintRegion();
 
@@ -19391,6 +19442,7 @@ public class JDRCanvas extends JPanel
 
    class SetText extends CanvasUndoableEdit
    {
+      private JDRTextualObject textualObject_;
       private JDRTextual textual_;
       private String oldtext_, newtext_;
       private String oldltxtext_, newltxtext_;
@@ -19409,6 +19461,7 @@ public class JDRCanvas extends JPanel
       {
          super(getFrame());
 
+         textualObject_ = textObject;
          textual_    = textObject.getTextual();
          oldtext_    = textual_.getText();
          newtext_    = newtext;
@@ -19484,6 +19537,8 @@ public class JDRCanvas extends JPanel
          }
 
          textual_.setLaTeXText(newltxtext_);
+
+         textualObject_.getObject().pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -19532,6 +19587,8 @@ public class JDRCanvas extends JPanel
             stroke.setLeftDelim(newLeftDelim);
             stroke.setRightDelim(newRightDelim);
          }
+
+         textualObject_.getObject().pathChanged();
       }
 
       public void undo() throws CannotUndoException
@@ -19579,6 +19636,8 @@ public class JDRCanvas extends JPanel
             stroke.setLeftDelim(oldLeftDelim);
             stroke.setRightDelim(oldRightDelim);
          }
+
+         textualObject_.getObject().pathChanged();
       }
 
       public boolean canUndo() {return true;}
@@ -19679,26 +19738,28 @@ public class JDRCanvas extends JPanel
 
    class SetTextPaint extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
       private JDRPaint oldpaint_, newpaint_;
 
-      public SetTextPaint(JDRTextual object, JDRPaint paint)
+      public SetTextPaint(JDRTextualObject object, JDRPaint paint)
       {
          super(getFrame());
 
          object_ = object;
-         oldpaint_ = object.getTextPaint();
+         oldpaint_ = object.getTextual().getTextPaint();
          newpaint_ = paint;
 
-         object_.setTextPaint(newpaint_);
+         object_.getTextual().setTextPaint(newpaint_);
+         object_.getObject().pathChanged();
 
-         setRefreshBounds(object_);
+         setRefreshBounds(object_.getObject());
       }
 
       public void redo() throws CannotRedoException
       {
          frame_.selectThisFrame();
-         object_.setTextPaint(newpaint_);
+         object_.getTextual().setTextPaint(newpaint_);
+         object_.getObject().pathChanged();
 
          repaintRegion();
       }
@@ -19706,7 +19767,8 @@ public class JDRCanvas extends JPanel
       public void undo() throws CannotUndoException
       {
          frame_.selectThisFrame();
-         object_.setTextPaint(oldpaint_);
+         object_.getTextual().setTextPaint(oldpaint_);
+         object_.getObject().pathChanged();
 
          repaintRegion();
       }
@@ -19772,27 +19834,28 @@ public class JDRCanvas extends JPanel
 
    class SetOutlineFillPaint extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
       private JDRPaint oldpaint_, newpaint_;
 
-      public SetOutlineFillPaint(JDRTextual object, JDRPaint paint)
+      public SetOutlineFillPaint(JDRTextualObject object, JDRPaint paint)
       {
          super(getFrame());
 
          object_ = object;
 
-         oldpaint_ = object.getOutlineFillPaint();
+         oldpaint_ = object.getTextual().getOutlineFillPaint();
 
          newpaint_ = paint;
 
          setFillPaint(newpaint_);
 
-         setRefreshBounds(object_);
+         setRefreshBounds(object_.getObject());
       }
 
       private void setFillPaint(JDRPaint paint)
       {
-         object_.setOutlineFillPaint(paint);
+         object_.getTextual().setOutlineFillPaint(paint);
+         object_.getObject().pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -20602,32 +20665,31 @@ public class JDRCanvas extends JPanel
    class SetTextPathShow extends CanvasUndoableEdit
    {
       private JDRTextPath textPath_;
+      private JDRTextualObject textualObject_;
       private boolean oldMode_, newMode_;
 
-      public SetTextPathShow(JDRTextPath object, boolean mode)
+      public SetTextPathShow(JDRTextualObject object, boolean mode)
       {
          super(getFrame());
 
-         textPath_ = object;
+         textualObject_ = object;
+         textPath_ = (JDRTextPath)object.getTextual();
          oldMode_ = textPath_.hasBasicStroke();
          newMode_ = mode;
 
-         if (oldMode_)
-         {
-            setRefreshBounds((JDRCompleteObject)textPath_);
-         }
+         BBox box = getRefreshBounds(textualObject_.getObject());
 
          setMode(newMode_);
 
-         if (!oldMode_)
-         {
-            setRefreshBounds((JDRCompleteObject)textPath_);
-         }
+         mergeRefreshBounds(textualObject_.getObject(), box);
+
+         setRefreshBounds(box);
       }
 
       private void setMode(boolean mode)
       {
          textPath_.setShowPath(mode);
+         textualObject_.getObject().pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -20709,7 +20771,8 @@ public class JDRCanvas extends JPanel
 
    class SetFont extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private String oldfamily, newfamily;
       private int oldseries, oldshape, oldvalign, oldhalign;
       private int newseries, newshape, newvalign, newhalign;
@@ -20720,7 +20783,7 @@ public class JDRCanvas extends JPanel
 
       private JDRLength oldsize, newsize;
 
-      public SetFont(JDRTextual object, String family, int series,
+      public SetFont(JDRTextualObject object, String family, int series,
                      int shape, JDRLength size, String latexfamily,
                      String latexsize, String latexseries,
                      String latexshape, int halign, int valign)
@@ -20728,18 +20791,19 @@ public class JDRCanvas extends JPanel
          super(getFrame());
 
          object_ = object;
+         textual_ = object.getTextual();
 
-         oldfamily = object_.getFontFamily();
-         oldseries = object_.getFontSeries();
-         oldshape  = object_.getFontShape();
-         oldsize   = object_.getFontSize();
+         oldfamily = textual_.getFontFamily();
+         oldseries = textual_.getFontSeries();
+         oldshape  = textual_.getFontShape();
+         oldsize   = textual_.getFontSize();
 
-         oldlatexfamily = object_.getLaTeXFamily();
-         oldlatexsize   = object_.getLaTeXSize();
-         oldlatexseries = object_.getLaTeXSeries();
-         oldlatexshape  = object_.getLaTeXShape();
-         oldhalign = object_.getHAlign();
-         oldvalign = object_.getVAlign();
+         oldlatexfamily = textual_.getLaTeXFamily();
+         oldlatexsize   = textual_.getLaTeXSize();
+         oldlatexseries = textual_.getLaTeXSeries();
+         oldlatexshape  = textual_.getLaTeXShape();
+         oldhalign = textual_.getHAlign();
+         oldvalign = textual_.getVAlign();
 
          newfamily = family;
          newseries = series;
@@ -20758,12 +20822,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = ((JDRObject)object_).getCanvasGraphics();
+         CanvasGraphics cg = object_.getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFont(newfamily,
+            textual_.setFont(newfamily,
                          newseries,
                          newshape,
                          newsize);
@@ -20774,17 +20838,19 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXFont(newlatexfamily, 
+         textual_.setLaTeXFont(newlatexfamily, 
                           newlatexsize, 
                           newlatexseries,
                           newlatexshape);
 
-         object_.setHAlign(newhalign);
-         object_.setVAlign(newvalign);
+         textual_.setHAlign(newhalign);
+         textual_.setVAlign(newvalign);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object_.getObject(), box);
 
          setRefreshBounds(box);
+
+         object_.pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -20794,18 +20860,18 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = ((JDRObject)object_).getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFont(newfamily,
+            textual_.setFont(newfamily,
                             newseries,
                             newshape,
                             newsize);
 
-            object_.setHAlign(newhalign);
-            object_.setVAlign(newvalign);
+            textual_.setHAlign(newhalign);
+            textual_.setVAlign(newvalign);
 
          }
          finally
@@ -20814,12 +20880,14 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXFont(newlatexfamily, 
+         textual_.setLaTeXFont(newlatexfamily, 
                           newlatexsize, 
                           newlatexseries,
                           newlatexshape);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public void undo() throws CannotUndoException
@@ -20829,12 +20897,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = ((JDRObject)object_).getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFont(oldfamily,
+            textual_.setFont(oldfamily,
                             oldseries,
                             oldshape,
                             oldsize);
@@ -20845,15 +20913,17 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setHAlign(oldhalign);
-         object_.setVAlign(oldvalign);
+         textual_.setHAlign(oldhalign);
+         textual_.setVAlign(oldvalign);
 
-         object_.setLaTeXFont(oldlatexfamily, 
+         textual_.setLaTeXFont(oldlatexfamily, 
                           oldlatexsize, 
                           oldlatexseries,
                           oldlatexshape);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public boolean canUndo() {return true;}
@@ -20867,27 +20937,29 @@ public class JDRCanvas extends JPanel
 
    class SetFontFamily extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private String oldfamily, newfamily;
       private String oldlatexfamily;
       private String newlatexfamily;
 
-      public SetFontFamily(JDRTextual object, String family, 
+      public SetFontFamily(JDRTextualObject object, String family, 
                      String latexfamily)
       {
          super(getFrame());
 
          object_ = object;
+         textual_ = object.getTextual();
 
-         oldfamily = object_.getFontFamily();
+         oldfamily = textual_.getFontFamily();
 
-         oldlatexfamily = object_.getLaTeXFamily();
+         oldlatexfamily = textual_.getLaTeXFamily();
 
          newfamily = family;
 
          newlatexfamily = latexfamily;
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object_.getObject());
 
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
@@ -20897,7 +20969,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            object_.setFontFamily(newfamily);
+            textual_.setFontFamily(newfamily);
          }
          finally
          {
@@ -20905,11 +20977,13 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXFamily(newlatexfamily);
+         textual_.setLaTeXFamily(newlatexfamily);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object_.getObject(), box);
 
          setRefreshBounds(box);
+
+         object_.pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -20919,12 +20993,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = object_.getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFontFamily(newfamily);
+            textual_.setFontFamily(newfamily);
          }
          finally
          {
@@ -20932,9 +21006,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXFamily(newlatexfamily);
+         textual_.setLaTeXFamily(newlatexfamily);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public void undo() throws CannotUndoException
@@ -20944,12 +21020,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = object_.getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFontFamily(oldfamily);
+            textual_.setFontFamily(oldfamily);
          }
          finally
          {
@@ -20957,9 +21033,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXFamily(oldlatexfamily);
+         textual_.setLaTeXFamily(oldlatexfamily);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public boolean canUndo() {return true;}
@@ -20973,27 +21051,29 @@ public class JDRCanvas extends JPanel
 
    class SetFontShape extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private int oldShape, newShape;
       private String oldlatexshape;
       private String newlatexshape;
 
-      public SetFontShape(JDRTextual object, int shape, 
+      public SetFontShape(JDRTextualObject object, int shape, 
                      String latexshape)
       {
          super(getFrame());
 
          object_ = object;
+         textual_ = object.getTextual();
 
-         oldShape = object_.getFontShape();
+         oldShape = textual_.getFontShape();
 
-         oldlatexshape = object_.getLaTeXShape();
+         oldlatexshape = textual_.getLaTeXShape();
 
          newShape = shape;
 
          newlatexshape = latexshape;
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object_.getObject());
 
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
@@ -21003,7 +21083,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            object_.setFontShape(newShape);
+            textual_.setFontShape(newShape);
          }
          finally
          {
@@ -21011,11 +21091,13 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXShape(newlatexshape);
+         textual_.setLaTeXShape(newlatexshape);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object_.getObject(), box);
 
          setRefreshBounds(box);
+
+         object_.pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -21025,12 +21107,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = object_.getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFontShape(newShape);
+            textual_.setFontShape(newShape);
          }
          finally
          {
@@ -21038,9 +21120,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXShape(newlatexshape);
+         textual_.setLaTeXShape(newlatexshape);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public void undo() throws CannotUndoException
@@ -21050,12 +21134,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = object_.getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFontShape(oldShape);
+            textual_.setFontShape(oldShape);
          }
          finally
          {
@@ -21063,9 +21147,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXShape(oldlatexshape);
+         textual_.setLaTeXShape(oldlatexshape);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public boolean canUndo() {return true;}
@@ -21079,21 +21165,23 @@ public class JDRCanvas extends JPanel
 
    class SetFontSeries extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private int oldSeries, newSeries;
       private String oldlatexseries;
       private String newlatexseries;
 
-      public SetFontSeries(JDRTextual object, int series, 
+      public SetFontSeries(JDRTextualObject object, int series, 
                      String latexseries)
       {
          super(getFrame());
 
          object_ = object;
+         textual_ = object.getTextual();
 
-         oldSeries = object_.getFontSeries();
+         oldSeries = textual_.getFontSeries();
 
-         oldlatexseries = object_.getLaTeXSeries();
+         oldlatexseries = textual_.getLaTeXSeries();
 
          newSeries = series;
 
@@ -21109,7 +21197,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            object_.setFontSeries(newSeries);
+            textual_.setFontSeries(newSeries);
          }
          finally
          {
@@ -21117,11 +21205,13 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXSeries(newlatexseries);
+         textual_.setLaTeXSeries(newlatexseries);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object_.getObject(), box);
 
          setRefreshBounds(box);
+
+         object_.pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -21131,12 +21221,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = object_.getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFontSeries(newSeries);
+            textual_.setFontSeries(newSeries);
          }
          finally
          {
@@ -21144,9 +21234,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXSeries(newlatexseries);
+         textual_.setLaTeXSeries(newlatexseries);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public void undo() throws CannotUndoException
@@ -21156,12 +21248,12 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         CanvasGraphics cg = object_.getCanvasGraphics();
+         CanvasGraphics cg = object_.getObject().getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
          try
          {
-            object_.setFontSeries(oldSeries);
+            textual_.setFontSeries(oldSeries);
          }
          finally
          {
@@ -21169,9 +21261,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXSeries(oldlatexseries);
+         textual_.setLaTeXSeries(oldlatexseries);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public boolean canUndo() {return true;}
@@ -21185,27 +21279,29 @@ public class JDRCanvas extends JPanel
 
    class SetFontSize extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private JDRLength oldSize, newSize;
       private String oldlatexsize;
       private String newlatexsize;
 
-      public SetFontSize(JDRTextual object, JDRLength size, 
+      public SetFontSize(JDRTextualObject object, JDRLength size, 
                      String latexsize)
       {
          super(getFrame());
 
          object_ = object;
+         textual_ = object.getTextual();
 
-         oldSize = object_.getFontSize();
+         oldSize = textual_.getFontSize();
 
-         oldlatexsize = object_.getLaTeXSize();
+         oldlatexsize = textual_.getLaTeXSize();
 
          newSize = size;
 
          newlatexsize = latexsize;
 
-         BBox box = getRefreshBounds(object_);
+         BBox box = getRefreshBounds(object_.getObject());
 
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
@@ -21215,7 +21311,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            object_.setFontSize(newSize);
+            textual_.setFontSize(newSize);
          }
          finally
          {
@@ -21223,11 +21319,13 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXSize(newlatexsize);
+         textual_.setLaTeXSize(newlatexsize);
 
-         mergeRefreshBounds(object_, box);
+         mergeRefreshBounds(object_.getObject(), box);
 
          setRefreshBounds(box);
+
+         object_.pathChanged();
       }
 
       public void redo() throws CannotRedoException
@@ -21241,7 +21339,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            object_.setFontSize(newSize);
+            textual_.setFontSize(newSize);
          }
          finally
          {
@@ -21249,9 +21347,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXSize(newlatexsize);
+         textual_.setLaTeXSize(newlatexsize);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public void undo() throws CannotUndoException
@@ -21266,7 +21366,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            object_.setFontSize(oldSize);
+            textual_.setFontSize(oldSize);
          }
          finally
          {
@@ -21274,9 +21374,11 @@ public class JDRCanvas extends JPanel
             g2.dispose();
          }
 
-         object_.setLaTeXSize(oldlatexsize);
+         textual_.setLaTeXSize(oldlatexsize);
 
          repaintRegion();
+
+         object_.pathChanged();
       }
 
       public boolean canUndo() {return true;}
@@ -21290,19 +21392,21 @@ public class JDRCanvas extends JPanel
 
    class SetLaTeXFontSize extends AbstractUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private String oldlatexsize;
       private String newlatexsize;
 
-      public SetLaTeXFontSize(JDRTextual object, String latexsize)
+      public SetLaTeXFontSize(JDRTextualObject object, String latexsize)
       {
          object_ = object;
+         textual_ = object.getTextual();
 
-         oldlatexsize = object_.getLaTeXSize();
+         oldlatexsize = textual_.getLaTeXSize();
 
          newlatexsize = latexsize;
 
-         object_.setLaTeXSize(newlatexsize);
+         textual_.setLaTeXSize(newlatexsize);
 
          frame_.markAsModified();
       }
@@ -21311,7 +21415,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setLaTeXSize(newlatexsize);
+         textual_.setLaTeXSize(newlatexsize);
 
          frame_.markAsModified();
       }
@@ -21320,7 +21424,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setLaTeXSize(oldlatexsize);
+         textual_.setLaTeXSize(oldlatexsize);
 
          frame_.markAsModified();
       }

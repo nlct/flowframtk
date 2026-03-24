@@ -287,6 +287,14 @@ t
       return oldObject;
    }
 
+   @Override
+   public void pathChanged()
+   {
+      for (int i = 0; i < size_; i++)
+      {
+         get(i).pathChanged();
+      }
+   }
 
    /**
     * Refreshes each object within this group. This calls
@@ -1018,6 +1026,21 @@ t
       return null;
    }
 
+   @Override
+   public JDRSymmetricObject getSymmetricObject()
+   {
+      for (int i = 0; i < size_; i++)
+      {
+         JDRCompleteObject object = get(i);
+
+         JDRSymmetricObject symObj = object.getSymmetricObject();
+
+         if (symObj != null) return symObj;
+      }
+
+      return null;
+   }
+
    public boolean hasSymmetricPath()
    {
       for (int i = 0; i < size_; i++)
@@ -1049,6 +1072,21 @@ t
          JDRPattern path = object.getPattern();
 
          if (path != null) return path;
+      }
+
+      return null;
+   }
+
+   @Override
+   public JDRPatternObject getPatternObject()
+   {
+      for (int i = 0; i < size_; i++)
+      {
+         JDRCompleteObject object = get(i);
+
+         JDRPatternObject patternObj = object.getPatternObject();
+
+         if (patternObj != null) return patternObj;
       }
 
       return null;

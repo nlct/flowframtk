@@ -109,7 +109,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
     private JDRSymmetricPath(JDRShape path, JDRPartialSegment joinSegment, 
       JDRLine line, JDRPartialSegment closingSeg, 
-      boolean isClosed, boolean markerSym)
+      boolean isClosed, boolean isSingle)
     {
        super(path.getCanvasGraphics());
 
@@ -138,7 +138,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
        closed = isClosed;
 
-       markerSymmetry = markerSym;
+       this.isSingle = isSingle;
 
        super.setEditMode(path_.isEdited());
     }
@@ -202,7 +202,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
        super(symPath);
        initIterators();
 
-       markerSymmetry = symPath.markerSymmetry;
+       isSingle = symPath.isSingle;
        closed = symPath.closed;
        path_ = (JDRShape)symPath.path_.clone();
        selected = symPath.selected;
@@ -349,10 +349,35 @@ public class JDRSymmetricPath extends JDRCompoundShape
        }
     }
 
-    public void add(JDRSegment s) throws InvalidPathException
-    {
-       path_.add(s);
-    }
+   @Override
+   public void pathChanged()
+   {
+      fullPath_ = null;
+      super.pathChanged();
+   }
+
+   protected JDRShape ensureFullPath()
+   {
+      if (fullPath_ == null)
+      {
+         try
+         {
+            fullPath_ = getFullPath();
+         }
+         catch (InvalidShapeException e)
+         {
+            return path_;
+         }
+      }
+
+      return fullPath_;
+   }
+
+   public void add(JDRSegment s) throws InvalidPathException
+   {
+      path_.add(s);
+      pathChanged();
+   }
 
     public JDRShape getFullPath()
       throws InvalidShapeException
@@ -403,6 +428,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
        JDRSymmetricPath symPath = (JDRSymmetricPath)object;
 
+       fullPath_ = null;
        path_.makeEqual(symPath.path_);
 
        line_.makeEqual(symPath.line_);
@@ -460,6 +486,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
     protected void moveToLine(JDRPoint p)
     {
        p.moveToLine(line_);
+       pathChanged();
     }
 
     public void translateControl(JDRPathSegment segment, JDRPoint p, 
@@ -521,6 +548,8 @@ public class JDRSymmetricPath extends JDRCompoundShape
              closingSegment.setEnd(getFirstSegment().getStart());
           }
        }
+
+       pathChanged();
     }
 
    public void setCapacity(int capacity)
@@ -536,7 +565,9 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
    public JDRPoint addPoint()
    {
-      return path_.addPoint();
+      JDRPoint p = path_.addPoint();
+      pathChanged();
+      return p;
    }
 
    public void makeContinuous(boolean atStart, boolean equiDistant)
@@ -693,6 +724,8 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
          curve.setGradient(dP);
       }
+
+      pathChanged();
    }
 
    protected void stopEditing()
@@ -723,39 +756,50 @@ public class JDRSymmetricPath extends JDRCompoundShape
    throws InvalidPathException
    {
       int selectedSegmentIndex = getSelectedIndex();
+      JDRPathSegment segment = null;
 
       if (selectedSegmentIndex < path_.size())
       {
-         return remove(selectedSegmentIndex);
+         segment = remove(selectedSegmentIndex);
+
+         pathChanged();
       }
 
-      return null;
+      return segment;
    }
 
    public JDRPathSegment remove(JDRPathSegment segment)
    throws InvalidPathException
    {
+      JDRPathSegment removedSeg = null;
+
       for (int i = 0, n = path_.size(); i < n; i++)
       {
          if (get(i) == segment)
          {
-            return remove(i);
+            removedSeg = remove(i);
+            pathChanged();
+            break;
          }
       }
 
-      return null;
+      return removedSeg;
    }
 
    public JDRSegment removeSegment(int index)
      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
-      return (JDRSegment)path_.remove(index);
+      JDRSegment segment = (JDRSegment)path_.remove(index);
+      pathChanged();
+      return segment;
    }
 
    public JDRPathSegment setSegment(int index, JDRPathSegment segment)
      throws ArrayIndexOutOfBoundsException,InvalidPathException
    {
       int n = path_.size();
+
+      pathChanged();
 
       if (index < n)
       {
@@ -841,6 +885,8 @@ public class JDRSymmetricPath extends JDRCompoundShape
          selectControl(0);
       }
 
+      pathChanged();
+
       return oldSegment;
    }
 
@@ -892,7 +938,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
    public int size()
    {
-        return getTotalBaseSegments();
+      return getTotalBaseSegments();
    }
 
    /**
@@ -1028,7 +1074,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       if (isSingle())
       {
-         super.draw(parentFrame);
+         ensureFullPath().draw(parentFrame);
       }
       else
       {
@@ -1038,6 +1084,24 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
          if (g2 == null) return;
 
+         BBox box = null;
+
+         JDRPaint linePaint = getLinePaint();
+         JDRPaint fillPaint = getShapeFillPaint();
+
+         if (fillPaint instanceof JDRShading
+           ||linePaint instanceof JDRShading)
+         {
+            box = getStorageBBox();
+
+            if (parentFrame != null && cg.isEvenPage())
+            {
+               box.translate(parentFrame.getEvenXShift(),
+                             parentFrame.getEvenYShift());
+            }
+         }
+
+         Paint oldPaint = g2.getPaint();
          AffineTransform oldAf = g2.getTransform();
 
          path_.draw(parentFrame);
@@ -1055,8 +1119,19 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
             if (joinShape != null)
             {
-               g2.fill(bs.createStrokedShape(joinShape,
-                 getCanvasGraphics().getStorageUnit()));
+               if (!(fillPaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(fillPaint.getPaint(box));
+                  g2.fill(joinShape);
+               }
+
+               if (!(linePaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(linePaint.getPaint(box));
+
+                  g2.fill(bs.createStrokedShape(joinShape,
+                    getCanvasGraphics().getStorageUnit()));
+               }
             }
          }
 
@@ -1076,10 +1151,112 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
             if (closingSegmentShape != null)
             {
-               g2.fill(bs.createStrokedShape(closingSegmentShape,
-                 getCanvasGraphics().getStorageUnit()));
+               if (!(fillPaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(fillPaint.getPaint(box));
+                  g2.fill(closingSegmentShape);
+               }
+
+               if (!(linePaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(linePaint.getPaint(box));
+
+                  g2.fill(bs.createStrokedShape(closingSegmentShape,
+                    getCanvasGraphics().getStorageUnit()));
+               }
             }
          }
+
+         g2.setPaint(oldPaint);
+      }
+   }
+
+   public void print(Graphics2D g2)
+   {
+      if (isSingle())
+      {
+         ensureFullPath().print(g2);
+      }
+      else
+      {
+         BBox box = null;
+
+         JDRPaint linePaint = getLinePaint();
+         JDRPaint fillPaint = getShapeFillPaint();
+
+         if (fillPaint instanceof JDRShading
+           ||linePaint instanceof JDRShading)
+         {
+            box = getStorageBBox();
+         }
+
+         Paint oldPaint = g2.getPaint();
+         AffineTransform oldAf = g2.getTransform();
+
+         path_.print(g2);
+
+         JDRBasicStroke bs = null;
+
+         if (join != null || closingSegment != null)
+         {
+            bs = getBasicStroke();
+         }
+
+         if (join != null && bs != null)
+         {
+            Shape joinShape = join.toShape();
+
+            if (joinShape != null)
+            {
+               if (!(fillPaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(fillPaint.getPaint(box));
+                  g2.fill(joinShape);
+               }
+
+               if (!(linePaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(linePaint.getPaint(box));
+
+                  g2.fill(bs.createStrokedShape(joinShape,
+                    getCanvasGraphics().getStorageUnit()));
+               }
+            }
+         }
+
+         AffineTransform af = line_.getReflectionTransform(null);
+
+         af.preConcatenate(oldAf);
+
+         g2.setTransform(af);
+
+         path_.print(g2);
+
+         g2.setTransform(oldAf);
+
+         if (closingSegment != null)
+         {
+            Shape closingSegmentShape = closingSegment.toShape();
+
+            if (closingSegmentShape != null)
+            {
+               if (!(fillPaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(fillPaint.getPaint(box));
+                  g2.fill(closingSegmentShape);
+               }
+
+               if (!(linePaint instanceof JDRTransparent))
+               {
+                  g2.setPaint(linePaint.getPaint(box));
+
+                  g2.fill(bs.createStrokedShape(closingSegmentShape,
+                    getCanvasGraphics().getStorageUnit()));
+               }
+            }
+         }
+
+         g2.setPaint(oldPaint);
       }
    }
 
@@ -1088,7 +1265,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
    {
       if (isSingle())
       {
-         return getFullPath().getTextual().splitText();
+         return ensureFullPath().getTextual().splitText();
       }
 
       JDRGroup group = path_.getTextual().splitText();
@@ -1227,219 +1404,235 @@ public class JDRSymmetricPath extends JDRCompoundShape
     }
 
 
-    public void convertSegment(int idx, JDRPathSegment segment)
-    throws InvalidPathException
-    {
-       JDRPathSegment orgSegment = get(idx);
+   public void convertSegment(int idx, JDRPathSegment segment)
+   throws InvalidPathException
+   {
+      JDRPathSegment orgSegment = get(idx);
 
-       JDRPoint selectedControl = getSelectedControl();
-       int selectedControlIndex = getSelectedControlIndex();
+      JDRPoint selectedControl = getSelectedControl();
+      int selectedControlIndex = getSelectedControlIndex();
 
-       if (idx < path_.size())
-       {
-          path_.convertSegment(idx, segment);
+      if (idx < path_.size())
+      {
+         path_.convertSegment(idx, segment);
 
-          if (join != null && orgSegment.getEnd() == join.getStart())
-          {
-             join.setStart(segment.getEnd());
-          }
+         if (join != null && orgSegment.getEnd() == join.getStart())
+         {
+            join.setStart(segment.getEnd());
+         }
 
-          return;
-       }
+         return;
+      }
 
-       setSegment(idx, segment);
+      setSegment(idx, segment);
 
-       try
-       {
-          int i = orgSegment.getControlIndex(selectedControl);
+      try
+      {
+         int i = orgSegment.getControlIndex(selectedControl);
 
-          selectedControl = segment.getStart();
+         selectedControl = segment.getStart();
 
-          if (i > 0)
-          {
-             selectedControlIndex -= i;
-          }
+         if (i > 0)
+         {
+            selectedControlIndex -= i;
+         }
 
-          setSelectedElements(idx, selectedControlIndex, segment, 
-             selectedControl);
-       }
-       catch (NoSuchElementException e)
-       {
-       }
-    }
+         setSelectedElements(idx, selectedControlIndex, segment, 
+            selectedControl);
+      }
+      catch (NoSuchElementException e)
+      {
+      }
 
-    public void shearParams(Point2D p, double factorX, double factorY)
-    {
-       if (join != null)
-       {
-          join.shear(p, factorX, factorY);
-       }
+      pathChanged();
+   }
 
-       line_.shear(p, factorX, factorY);
+   public void shearParams(Point2D p, double factorX, double factorY)
+   {
+      if (join != null)
+      {
+         join.shear(p, factorX, factorY);
+      }
 
-       if (closingSegment != null)
-       {
-          closingSegment.shear(p, factorX, factorY);
+      line_.shear(p, factorX, factorY);
 
-          closingSegment.setEnd(getFirstControl());
-       }
-    }
+      if (closingSegment != null)
+      {
+         closingSegment.shear(p, factorX, factorY);
 
-    public void scaleParams(Point2D p, double factorX, double factorY)
-    {
-       if (join != null)
-       {
-          join.scale(p, factorX, factorY);
-       }
+         closingSegment.setEnd(getFirstControl());
+      }
 
-       line_.scale(p, factorX, factorY);
+      pathChanged();
+   }
 
-       if (closingSegment != null)
-       {
-          closingSegment.scale(p, factorX, factorY);
+   public void scaleParams(Point2D p, double factorX, double factorY)
+   {
+      if (join != null)
+      {
+         join.scale(p, factorX, factorY);
+      }
 
-          closingSegment.setEnd(getFirstControl());
-       }
-    }
+      line_.scale(p, factorX, factorY);
 
-    public void rotateParams(Point2D p, double angle)
-    {
-       if (join != null)
-       {
-          join.rotate(p, angle);
-       }
+      if (closingSegment != null)
+      {
+         closingSegment.scale(p, factorX, factorY);
 
-       line_.rotate(p, angle);
+         closingSegment.setEnd(getFirstControl());
+      }
 
-       if (closingSegment != null)
-       {
-          closingSegment.rotate(p, angle);
+      pathChanged();
+   }
 
-          closingSegment.setEnd(getFirstControl());
-       }
-    }
+   public void rotateParams(Point2D p, double angle)
+   {
+      if (join != null)
+      {
+         join.rotate(p, angle);
+      }
 
-    public void translateParams(double shiftX, double shiftY)
-    {
-       if (join != null)
-       {
-          join.translate(shiftX, shiftY);
-       }
+      line_.rotate(p, angle);
 
-       line_.translate(shiftX, shiftY);
+      if (closingSegment != null)
+      {
+         closingSegment.rotate(p, angle);
 
-       if (closingSegment != null)
-       {
-          closingSegment.translate(shiftX, shiftY);
+         closingSegment.setEnd(getFirstControl());
+      }
 
-          closingSegment.setEnd(getFirstControl());
-       }
-    }
+      pathChanged();
+   }
 
-    @Override
-    public void transformParams(double[] matrix)
-    {
-       if (join != null)
-       {
-          join.transform(matrix);
-       }
+   public void translateParams(double shiftX, double shiftY)
+   {
+      if (join != null)
+      {
+         join.translate(shiftX, shiftY);
+      }
 
-       line_.transform(matrix);
+      line_.translate(shiftX, shiftY);
 
-       if (closingSegment != null)
-       {
-          closingSegment.transform(matrix);
+      if (closingSegment != null)
+      {
+         closingSegment.translate(shiftX, shiftY);
 
-          closingSegment.setEnd(getFirstControl());
-       }
-    }
+         closingSegment.setEnd(getFirstControl());
+      }
 
-    @Override
-    public void transformParams(AffineTransform af)
-    {
-       if (join != null)
-       {
-          join.transform(af);
-       }
+      pathChanged();
+   }
 
-       line_.transform(af);
+   @Override
+   public void transformParams(double[] matrix)
+   {
+      if (join != null)
+      {
+         join.transform(matrix);
+      }
 
-       if (closingSegment != null)
-       {
-          closingSegment.transform(af);
+      line_.transform(matrix);
 
-          closingSegment.setEnd(getFirstControl());
-       }
-    }
+      if (closingSegment != null)
+      {
+         closingSegment.transform(matrix);
 
-    public boolean isEmpty()
-    {
-       return size() == 0;
-    }
+         closingSegment.setEnd(getFirstControl());
+      }
 
-    public boolean isClosed()
-    {
-       return closed;
-    }
+      pathChanged();
+   }
 
-    public void open()
-    {
-       closed = false;
-       closingSegment = null;
-    }
+   @Override
+   public void transformParams(AffineTransform af)
+   {
+      if (join != null)
+      {
+         join.transform(af);
+      }
 
-    public void open(boolean removeLastSegment)
-    {
-       open();
-    }
+      line_.transform(af);
 
-    public void close(int type)
-      throws EmptyPathException
-    {
-       if (isEmpty())
-       {
-          throw new EmptyPathException(getCanvasGraphics());
-       }
+      if (closingSegment != null)
+      {
+         closingSegment.transform(af);
 
-       JDRSegment firstSeg = (JDRSegment)path_.getFirstSegment();
+         closingSegment.setEnd(getFirstControl());
+      }
 
-       try
-       {
-          switch (type)
-          {
-             case CLOSE_LINE :
-                close(new JDRPartialLine(getCanvasGraphics()));
-             return;
-             case CLOSE_CONT :
-                JDRPartialBezier seg = new JDRPartialBezier(getCanvasGraphics());
-                close(seg);
+      pathChanged();
+   }
 
-                JDRSegment lastSeg = ((JDRSegment)firstSeg.getReflection(line_)).reverse();
+   public boolean isEmpty()
+   {
+      return size() == 0;
+   }
 
-                Point2D dp = lastSeg.getdP1();
+   public boolean isClosed()
+   {
+      return closed;
+   }
 
-                seg.setGradient(dp);
+   public void open()
+   {
+      closed = false;
+      closingSegment = null;
 
-             return;
-             case CLOSE_MERGE_ENDS :
-                moveToLine(firstSeg.getStart());
-                closed = true;
-                closingSegment = null;
+      pathChanged();
+   }
 
-                if (isEdited())
-                {
-                   selectControl(0);
-                }
-             return;
-             default:
-                throw new IllegalArgumentException("Invalid close path type "
-                   + type);
-          }
-       }
-       catch (IllFittingPathException e)
-       {
-       }
-    }
+   public void open(boolean removeLastSegment)
+   {
+      open();
+   }
+
+   public void close(int type)
+     throws EmptyPathException
+   {
+      if (isEmpty())
+      {
+         throw new EmptyPathException(getCanvasGraphics());
+      }
+
+      JDRSegment firstSeg = (JDRSegment)path_.getFirstSegment();
+
+      try
+      {
+         switch (type)
+         {
+            case CLOSE_LINE :
+               close(new JDRPartialLine(getCanvasGraphics()));
+            return;
+            case CLOSE_CONT :
+               JDRPartialBezier seg = new JDRPartialBezier(getCanvasGraphics());
+               close(seg);
+
+               JDRSegment lastSeg = ((JDRSegment)firstSeg.getReflection(line_)).reverse();
+
+               Point2D dp = lastSeg.getdP1();
+
+               seg.setGradient(dp);
+
+            return;
+            case CLOSE_MERGE_ENDS :
+               moveToLine(firstSeg.getStart());
+               closed = true;
+               closingSegment = null;
+
+               if (isEdited())
+               {
+                  selectControl(0);
+               }
+            return;
+            default:
+               throw new IllegalArgumentException("Invalid close path type "
+                  + type);
+         }
+      }
+      catch (IllFittingPathException e)
+      {
+      }
+   }
 
     /**
      * Closes this symmetric path with the given segment, which must
@@ -1449,65 +1642,69 @@ public class JDRSymmetricPath extends JDRCompoundShape
      * {@link JDRPartialSegment}).
      * @see #close(int)
      */
-    public void close(JDRPathSegment segment)
-      throws EmptyPathException,IllFittingPathException
-    {
-       if (segment == null)
-       {
-          close(CLOSE_MERGE_ENDS);
-          return;
-       }
+   public void close(JDRPathSegment segment)
+     throws EmptyPathException,IllFittingPathException
+   {
+      if (segment == null)
+      {
+         close(CLOSE_MERGE_ENDS);
+         return;
+      }
 
-       if (!(segment instanceof JDRPartialSegment))
-       {
-          throw new IllFittingPathException(getCanvasGraphics());
-       }
+      if (!(segment instanceof JDRPartialSegment))
+      {
+         throw new IllFittingPathException(getCanvasGraphics());
+      }
 
-       closed = true;
+      closed = true;
 
-       closingSegment = (JDRPartialSegment)segment;
+      closingSegment = (JDRPartialSegment)segment;
 
-       closingSegment.setSymmetryLine(line_);
+      closingSegment.setSymmetryLine(line_);
 
-       closingSegment.setEnd(path_.getFirstSegment().getStart());
+      closingSegment.setEnd(path_.getFirstSegment().getStart());
 
-       if (isEdited())
-       {
-          selectControl(0);
-       }
-    }
+      if (isEdited())
+      {
+         selectControl(0);
+      }
 
-    public JDRShape breakPath()
-       throws InvalidShapeException
-    {
-       // Make new path have the same join as this path had before
-       // it gets broken
+      pathChanged();
+   }
 
-       JDRLine line = (JDRLine)line_.clone();
+   public JDRShape breakPath()
+      throws InvalidShapeException
+   {
+      // Make new path have the same join as this path had before
+      // it gets broken
 
-       JDRPartialSegment joinSegment = null;
+      JDRLine line = (JDRLine)line_.clone();
 
-       if (getJoin() != null)
-       {
-          joinSegment = (JDRPartialSegment)getJoin().clone();
-       }
+      JDRPartialSegment joinSegment = null;
 
-       // break this path
+      if (getJoin() != null)
+      {
+         joinSegment = (JDRPartialSegment)getJoin().clone();
+      }
 
-       JDRShape path = path_.breakPath();
+      // break this path
 
-       // make the new path symmetric
+      JDRShape path = path_.breakPath();
 
-       JDRSymmetricPath newPath = new JDRSymmetricPath(path,
-          joinSegment,
-          line);
+      // make the new path symmetric
 
-       // make the join for this path a gap
+      JDRSymmetricPath newPath = new JDRSymmetricPath(path,
+         joinSegment,
+         line);
 
-       setJoin(new JDRPartialSegment(path_.getLastSegment().getEnd(), line_));
+      // make the join for this path a gap
+
+      setJoin(new JDRPartialSegment(path_.getLastSegment().getEnd(), line_));
+
+      pathChanged();
 
       return newPath;
-    }
+   }
 
    public Shape getStorageStrokedPath()
    {
@@ -1515,7 +1712,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       if (isSingle())
       {
-         shape = getStroke().getStorageStrokedPath(this);
+         shape = ensureFullPath().getStorageStrokedPath();
       }
       else
       {
@@ -1567,7 +1764,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       if (isSingle())
       {
-         shape = getStroke().getStorageStrokedArea(this);
+         shape = ensureFullPath().getStorageStrokedArea();
       }
       else
       {
@@ -1620,11 +1817,13 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void setStroke(JDRStroke stroke)
    {
       path_.setStroke(stroke);
+      pathChanged();
    }
 
    public void fade(double value)
    {
       path_.fade(value);
+      pathChanged();
    }
 
    public JDRPaint getLinePaint()
@@ -1635,6 +1834,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void setLinePaint(JDRPaint paint)
    {
       path_.setLinePaint(paint);
+      pathChanged();
    }
 
    public JDRPaint getShapeFillPaint()
@@ -1652,11 +1852,13 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void setFillPaint(JDRPaint paint)
    {
       path_.setFillPaint(paint);
+      pathChanged();
    }
 
    public void setShapeFillPaint(JDRPaint paint)
    {
       path_.setShapeFillPaint(paint);
+      pathChanged();
    }
 
    /**
@@ -1743,89 +1945,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
    {
       if (isEmpty()) return null;
 
-      JDRStroke stroke = getStroke();
-
-      Path2D reflectedPath = new Path2D.Double();
-
-      Path2D path = new Path2D.Double();
-
-      if (stroke != null)
-      {
-         path.setWindingRule(stroke.getWindingRule());
-         reflectedPath.setWindingRule(stroke.getWindingRule());
-      }
-
-      boolean closeSubPath = isClosed() && 
-               ((join != null && join.isGap()) || 
-                (closingSegment != null && closingSegment.isGap()));
-
-      int n = path_.size();
-
-      JDRPathSegment segment = path_.getFirstSegment();
-
-      path.moveTo(segment.getStart().x, segment.getStart().y);
-      segment.appendToGeneralPath(path);
-
-      segment = getReflected(n-1).reverse();
-
-      reflectedPath.moveTo(segment.getStart().x, segment.getStart().y);
-      segment.appendToGeneralPath(reflectedPath);
-
-      boolean done = false;
-
-      boolean appendWithLine = true;
-
-      for (int i = 1; i < n; i++)
-      {
-         segment = path_.get(i);
-         segment.appendToGeneralPath(path);
-
-         appendWithLine = !segment.isGap();
-
-         segment = getReflected(n-i-1).reverse();
-
-         if (segment.isGap() && closeSubPath && !done)
-         {
-            reflectedPath.closePath();
-            done = true;
-         }
-
-         segment.appendToGeneralPath(reflectedPath);
-      }
-
-      if (closeSubPath)
-      {
-         path.closePath();
-
-         JDRPoint p = path_.getLastSegment().getEnd();
-         path.moveTo(p.getX(), p.getY());
-      }
-
-      if (join != null)
-      {
-         join.appendToGeneralPath(path);
-
-         appendWithLine = !join.isGap();
-      }
-
-      if (closeSubPath && !done)
-      {
-         reflectedPath.closePath();
-      }
-
-      path.append(reflectedPath, appendWithLine);
-
-      if (closingSegment != null)
-      {
-         closingSegment.appendToGeneralPath(path);
-      }
-
-      if (isClosed() && !closeSubPath)
-      {
-         path.closePath();
-      }
-
-      return path;
+      return ensureFullPath().getGeneralPath();
    }
 
    public JDRShape toPolygon(double flatness)
@@ -1851,7 +1971,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
       }
 
       return new JDRSymmetricPath(polygon, newJoin, newSymLine, newClosing,
-        closed, markerSymmetry);
+        closed, isSingle);
    }
 
    @Override
@@ -1886,46 +2006,35 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public JDRShape intersect(JDRShape shape)
       throws InvalidShapeException
    {
-      return getFullPath().intersect(shape);
+      return ensureFullPath().intersect(shape);
    }
 
    @Override
    public JDRShape pathUnion(JDRShape shape)
       throws InvalidShapeException
    {
-      return getFullPath().pathUnion(shape);
+      return ensureFullPath().pathUnion(shape);
    }
 
    @Override
    public JDRShape exclusiveOr(JDRShape shape)
       throws InvalidShapeException
    {
-      return getFullPath().exclusiveOr(shape);
+      return ensureFullPath().exclusiveOr(shape);
    }
 
    @Override
    public JDRShape subtract(JDRShape shape)
       throws InvalidShapeException
    {
-      return getFullPath().subtract(shape);
+      return ensureFullPath().subtract(shape);
    }
 
    @Override
    public JDRCompleteObject clip(Rectangle2D clipBounds)
       throws UnableToClipException
    {
-      try
-      {
-         return getFullPath().clip(clipBounds);
-      }
-      catch (InvalidShapeException e)
-      {
-         throw new UnableToClipException(
-            canvasGraphics.getMessageWithFallback(
-              "error.clip_failed", "Clip failed"
-            ), e
-         );
-      }
+      return ensureFullPath().clip(clipBounds);
    }
 
    public JDRObjectLoaderListener getListener()
@@ -1940,7 +2049,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public String toString()
    {
       String str = "SymmetricPath: join="+join+", symmetry: " +line_
-                 + ", marker symmetry="+markerSymmetry
+                 + ", single="+isSingle
                  + ", size="+size()+", segments=[";
 
       for (int i = 0; i < size(); i++)
@@ -1966,32 +2075,34 @@ public class JDRSymmetricPath extends JDRCompoundShape
      * Sets the join.
      * @param segment the join segment (may be null)
      */
-    public void setJoin(JDRPartialSegment segment)
-    {
-       if (join == segment) return;
+   public void setJoin(JDRPartialSegment segment)
+   {
+      if (join == segment) return;
 
-       join = segment;
+      join = segment;
 
-       if (join == null)
-       {
-          moveToLine(path_.getLastSegment().getEnd());
+      if (join == null)
+      {
+         moveToLine(path_.getLastSegment().getEnd());
 
-          if (isEdited())
-          {
-             selectControl(path_.getLastSegment().getEnd());
-          }
-       }
-       else
-       {
-          join.setStart(path_.getLastSegment().getEnd());
-          join.setSymmetryLine(line_);
+         if (isEdited())
+         {
+            selectControl(path_.getLastSegment().getEnd());
+         }
+      }
+      else
+      {
+         join.setStart(path_.getLastSegment().getEnd());
+         join.setSymmetryLine(line_);
 
-          if (isEdited())
-          {
-             selectControl(join.getStart());
-          }
-       }
-    }
+         if (isEdited())
+         {
+            selectControl(join.getStart());
+         }
+      }
+
+      pathChanged();
+   }
 
     public JDRPartialSegment getJoin()
     {
@@ -2072,56 +2183,60 @@ public class JDRSymmetricPath extends JDRCompoundShape
        return (closingSegment instanceof JDRPartialBezier);
     }
 
-    /**
-     * Sets the line of symmetry.
-     * @param x0 x co-ordinate of first point
-     * @param y0 y co-ordinate of first point
-     * @param x1 x co-ordinate of second point
-     * @param y1 y co-ordinate of second point
-     */
-    public void setSymmetry(double x0, double y0, double x1, double y1)
-    {
+   /**
+    * Sets the line of symmetry.
+    * @param x0 x co-ordinate of first point
+    * @param y0 y co-ordinate of first point
+    * @param x1 x co-ordinate of second point
+    * @param y1 y co-ordinate of second point
+    */
+   public void setSymmetry(double x0, double y0, double x1, double y1)
+   {
+     CanvasGraphics cg = getCanvasGraphics();
+
+      if (line_ == null)
+      {
+         line_ = new JDRLine(new JDRSymmetryLinePoint(cg, x0, y0),
+                             new JDRSymmetryLinePoint(cg, x1, y1));
+      }
+      else
+      {
+         line_.setStart(x0, y0);
+         line_.setEnd(x1, y1);
+      }
+
+      if (join != null) join.setSymmetryLine(line_);
+
+      pathChanged();
+   }
+
+   public void setSymmetry(JDRLine line)
+   {
       CanvasGraphics cg = getCanvasGraphics();
 
-       if (line_ == null)
-       {
-          line_ = new JDRLine(new JDRSymmetryLinePoint(cg, x0, y0),
-                              new JDRSymmetryLinePoint(cg, x1, y1));
-       }
-       else
-       {
-          line_.setStart(x0, y0);
-          line_.setEnd(x1, y1);
-       }
+      line_ = line;
 
-       if (join != null) join.setSymmetryLine(line_);
-    }
+      if (line == null)
+      {
+         return;
+      }
 
-    public void setSymmetry(JDRLine line)
-    {
-       CanvasGraphics cg = getCanvasGraphics();
+      JDRPoint p = line_.getStart();
 
-       line_ = line;
+      if (!(p instanceof JDRSymmetryLinePoint))
+      {
+         line_.setStart(new JDRSymmetryLinePoint(cg, p.x, p.y));
+      }
 
-       if (line == null)
-       {
-          return;
-       }
+      p = line_.getEnd();
 
-       JDRPoint p = line_.getStart();
+      if (!(p instanceof JDRSymmetryLinePoint))
+      {
+         line_.setEnd(new JDRSymmetryLinePoint(cg, p.x, p.y));
+      }
 
-       if (!(p instanceof JDRSymmetryLinePoint))
-       {
-          line_.setStart(new JDRSymmetryLinePoint(cg, p.x, p.y));
-       }
-
-       p = line_.getEnd();
-
-       if (!(p instanceof JDRSymmetryLinePoint))
-       {
-          line_.setEnd(new JDRSymmetryLinePoint(cg, p.x, p.y));
-       }
-    }
+      pathChanged();
+   }
 
     /**
      * Gets the line of symmetry.
@@ -2130,27 +2245,6 @@ public class JDRSymmetricPath extends JDRCompoundShape
     public JDRLine getSymmetry()
     {
        return line_;
-    }
-
-    /**
-     * Sets the marker symmetry flag. If true, the markers are
-     * reflected with the path, otherwise the markers follow the
-     * entire path.
-     * @param flag if true, markers are reflected with the path
-     */
-    public void setMarkerSymmetry(boolean flag)
-    {
-       markerSymmetry = flag;
-    }
-
-    /**
-     * Gets the marker symmetry.
-     * @return true if the markers are reflected with the path,
-     * otherwise the markers follow the entire path.
-     */
-    public boolean hasMarkerSymmetry()
-    {
-       return markerSymmetry;
     }
 
     public void selectControl(JDRPoint p, int pointIndex, int segmentIndex)
@@ -2482,6 +2576,19 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void setSingleMode(boolean on)
    {
       isSingle = on;
+      pathChanged();
+   }
+
+   @Deprecated
+   public boolean hasMarkerSymmetry()
+   {
+      return !isSingle();
+   }
+
+   @Deprecated
+   public void setMarkerSymmetry(boolean on)
+   {
+      isSingle = !on;
    }
 
    public boolean hasSymmetricPath()
@@ -2671,15 +2778,13 @@ public class JDRSymmetricPath extends JDRCompoundShape
             join == null ? null : (JDRPartialSegment)join.clone(),
             (JDRLine)line_.clone(),
             closingSegment == null ? null : (JDRPartialSegment)closingSegment.clone(),
-            closed, markerSymmetry);
+            closed, isSingle);
    }
-
-   private boolean markerSymmetry=true;
 
    private boolean closed=false;
    private boolean isSingle=true;
 
-   private JDRShape path_;
+   private JDRShape path_, fullPath_;
    private JDRPartialSegment join;
    private JDRLine line_;
    private JDRPartialSegment closingSegment=null;

@@ -18,38 +18,38 @@
 
 package com.dickimawbooks.jdr;
 
-public class JDRTextualObject extends JDRObjectReference
+public class JDRPatternObject extends JDRObjectReference
 {
-   public JDRTextualObject(JDRCompleteObject object)
+   public JDRPatternObject(JDRCompleteObject object)
     throws NullPointerException
    {
       super(object);
 
-      textual = object.getTextual();
+      pattern = object.getPattern();
 
-      if (textual == null)
+      if (pattern == null)
       {
          throw new NullPointerException();
       }
    }
 
-   public JDRTextualObject(JDRCompleteObject object, JDRTextual textual)
+   public JDRPatternObject(JDRCompleteObject object, JDRPattern pattern)
     throws NullPointerException
    {
       super(object);
 
-      if (textual == null)
+      if (pattern == null)
       {
          throw new NullPointerException();
       }
 
-      this.textual = textual;
+      this.pattern = pattern;
    }
 
-   public JDRTextual getTextual()
+   public JDRPattern getPattern()
    {
-      return textual;
+      return pattern;
    }
 
-   JDRTextual textual;
+   JDRPattern pattern;
 }

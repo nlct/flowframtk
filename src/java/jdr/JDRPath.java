@@ -328,6 +328,8 @@ public class JDRPath extends JDRShape
 
       stroke = new JDRBasicStroke(getCanvasGraphics(),
         thickness,cap,join,mitre_limit,pattern);
+
+      pathChanged();
    }
 
    /**
@@ -400,6 +402,8 @@ public class JDRPath extends JDRShape
       {
          stroke.setCanvasGraphics(getCanvasGraphics());
       }
+
+      pathChanged();
    }
 
    /**
@@ -419,6 +423,8 @@ public class JDRPath extends JDRShape
          linePaint = paint;
          linePaint.setCanvasGraphics(getCanvasGraphics());
       }
+
+      pathChanged();
    }
 
    /**
@@ -437,6 +443,8 @@ public class JDRPath extends JDRShape
          fillPaint = paint;
          fillPaint.setCanvasGraphics(getCanvasGraphics());
       }
+
+      pathChanged();
    }
 
    @Deprecated
@@ -3949,6 +3957,8 @@ public class JDRPath extends JDRShape
             }
          }
       }
+
+      pathChanged();
    }
 
    private boolean closed;

@@ -7059,7 +7059,7 @@ It has the same items as for the text input field used when a \gls{textarea}
 is under construction.
 
 If you want to specify alternative text to appear in a \LaTeX\
-document, click on the button marked \widget{edittext.different},
+document, click on the button marked \widget{edittext.latextext.different},
 and enter the alternative in the bottom field (see
 \figureref{fig:edittextb}). The \gls{index.menu.textarea} is not
 available in this field, but you can still use
@@ -7073,7 +7073,7 @@ does in \FlowframTk, so you may also need to change the
 \textattr{anchor} or set the image \glspl{image.typeblock}
 (see \sectionref{sec:exportdoc}).
 
-You can use the \widget{edittext.remap} button to generate
+You can use the \widget{edittext.latextext.remap} button to generate
 the alternative text in the bottom field by applying
 \glspl{textarea-mapping} to the text in the top field (see
 \sectionref{sec:texconfigtext}). If
@@ -7081,12 +7081,12 @@ the original alternative text starts and ends with a \gls{mshift}
 symbol, the \mathsmode\ mappings will be used, otherwise the
 \textmode\ mappings will be used. If the original alternative text is
 empty, you can just type a \glssymbol{mshift} symbol in it and click on the
-\widget{edittext.remap} button to generate a \mathsmode\
+\widget{edittext.latextext.remap} button to generate a \mathsmode\
 mapping. The original alternative text will be completely replaced by the text
 from the top field with the appropriate mappings applied. You can
 then edit this if necessary.
 
-\widgetdef{edittext.textpath}
+\widgetdef{edittext.textpath.title}
 
 The \LaTeX-related \filefn{export} functions use the \sty{pgf} text
 decoration to implement \glspl*{textpath}. This allows you to insert
@@ -14472,10 +14472,10 @@ and use \menu{edit.textarea.edit}. This will open up the
 If the \texttool\ had been used instead of the \mathstool, then
 the \mathsmode\ mappings would not be applied and the \LaTeX\ text
 will include the Unicode subscript characters. If this has happened,
-make sure that the \widget{edittext.different} button is selected
+make sure that the \widget{edittext.latextext.different} button is selected
 and type in the appropriate \LaTeX\ code or insert \glssymbol{mshift}
 at the start and end of the alternative \LaTeX\ text and click on
-the \widget{edittext.remap} button.
+the \widget{edittext.latextext.remap} button.
 
 \FloatFig{fig:neuron6}
 [\setkeys{Gin}{width=0.4\linewidth}]
@@ -16426,8 +16426,8 @@ a \LaTeX\ file. You can do this as follows:
 \item Press \accelerator{edit.textarea.edit} or
 \mnemonictrail{edit.textarea.edit}
 to display the \dialog{edittext} dialog box. Select the
-\widget{edittext.different} button (either \keys{\keyref{tab}} to it and
-press \keys{\keyref{space}} or use \mnemonic{edittext.different}.) This will enable
+\widget{edittext.latextext.different} button (either \keys{\keyref{tab}} to it and
+press \keys{\keyref{space}} or use \mnemonic{edittext.latextext.different}.) This will enable
 the alternate text field. Change the text to \code{House \gls+{cshash}1}
 (\figureref{fig:housenomouse15}).
 
@@ -18283,12 +18283,23 @@ Both \meta{left delim} and \meta{right delim} are stored as a
   \Glspl{symmetricshape} (\code{S}) are not available for versions
   below 1.6. For newer versions, the \meta{modifier specs} are:
   \begin{syntaxline}
+\begin{jdrversion}{1.6--2.1}
   \meta{join anchored} [\meta{join segment}]
   \meta{symmetry x0} \meta{symmetry y0} \meta{symmetry x1} \meta{symmetry y1}
   \meta{closed} [\meta{close anchored} [\meta{closing segment}]]
+\end{jdrversion}
+\begin{jdrversion}{2.2 onwards}
+  \meta{single}
+  \meta{join anchored} [\meta{join segment}]
+  \meta{symmetry x0} \meta{symmetry y0} \meta{symmetry x1} \meta{symmetry y1}
+  \meta{closed} [\meta{close anchored} [\meta{closing segment}]]
+\end{jdrversion}
   \end{syntaxline}
   where:
   \begin{enumerate}
+  \item The \type{boolean} value \meta{single} indicates that the 
+  shape should be drawn as a single path.
+
   \item The \type{boolean} value \meta{join anchored} indicates
    whether or not the join between the original shape and its
    reflection is anchored.

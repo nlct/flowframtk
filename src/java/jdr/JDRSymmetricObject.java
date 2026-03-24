@@ -18,38 +18,38 @@
 
 package com.dickimawbooks.jdr;
 
-public class JDRTextualObject extends JDRObjectReference
+public class JDRSymmetricObject extends JDRObjectReference
 {
-   public JDRTextualObject(JDRCompleteObject object)
+   public JDRSymmetricObject(JDRCompleteObject object)
     throws NullPointerException
    {
       super(object);
 
-      textual = object.getTextual();
+      symmetric = object.getSymmetricPath();
 
-      if (textual == null)
+      if (symmetric == null)
       {
          throw new NullPointerException();
       }
    }
 
-   public JDRTextualObject(JDRCompleteObject object, JDRTextual textual)
+   public JDRSymmetricObject(JDRCompleteObject object, JDRSymmetricPath symmetric)
     throws NullPointerException
    {
       super(object);
 
-      if (textual == null)
+      if (symmetric == null)
       {
          throw new NullPointerException();
       }
 
-      this.textual = textual;
+      this.symmetric = symmetric;
    }
 
-   public JDRTextual getTextual()
+   public JDRSymmetricPath getSymmetricPath()
    {
-      return textual;
+      return symmetric;
    }
 
-   JDRTextual textual;
+   JDRSymmetricPath symmetric;
 }

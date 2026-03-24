@@ -58,26 +58,30 @@ import com.dickimawbooks.jdr.exceptions.*;
 public abstract class JDRCompleteObject extends JDRObject
   implements JDRConstants
 {
-    public JDRCompleteObject(CanvasGraphics cg)
-    {
-       super(cg);
-    }
+   public JDRCompleteObject(CanvasGraphics cg)
+   {
+      super(cg);
+   }
 
-    public JDRCompleteObject(JDRCompleteObject obj)
-    {
-       super(obj);
+   public JDRCompleteObject(JDRCompleteObject obj)
+   {
+      super(obj);
 
-       if (obj.flowframe != null)
-       {
-          flowframe = new FlowFrame(obj.flowframe);
-       }
+      if (obj.flowframe != null)
+      {
+         flowframe = new FlowFrame(obj.flowframe);
+      }
 
-       description = obj.description;
-       tag = obj.tag;
-       editMode = obj.editMode;
-       parent = obj.parent;
-       index_ = obj.index_;
-    }
+      description = obj.description;
+      tag = obj.tag;
+      editMode = obj.editMode;
+      parent = obj.parent;
+      index_ = obj.index_;
+   }
+
+   public void pathChanged()
+   {
+   }
 
    /**
     * Gets this object's extent including extra visible information
@@ -353,6 +357,7 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public boolean refresh()
    {
+      pathChanged();
       return true;
    }
 
@@ -362,6 +367,7 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public void reset()
    {
+      pathChanged();
    }
 
    /**
@@ -646,6 +652,8 @@ public abstract class JDRCompleteObject extends JDRObject
       {
          flowframe = null;
       }
+
+      obj.pathChanged();
    }
 
    public boolean equals(Object o)
@@ -965,6 +973,20 @@ public abstract class JDRCompleteObject extends JDRObject
     */
    public abstract JDRSymmetricPath getSymmetricPath();
 
+   public JDRSymmetricObject getSymmetricObject()
+   {
+      JDRSymmetricPath symmetric = getSymmetricPath();
+
+      if (symmetric == null)
+      {
+         return null;
+      }
+      else
+      {
+         return new JDRSymmetricObject(this, symmetric);
+      }
+   }
+
    /**
     * Determines if this object has a pattern. 
     */
@@ -977,6 +999,20 @@ public abstract class JDRCompleteObject extends JDRObject
     * object if it has one, or null otherwise
     */
    public abstract JDRPattern getPattern();
+
+   public JDRPatternObject getPatternObject()
+   {
+      JDRPattern pattern = getPattern();
+
+      if (pattern == null)
+      {
+         return null;
+      }
+      else
+      {
+         return new JDRPatternObject(this, pattern);
+      }
+   }
 
    public boolean isDistortable()
    {
@@ -1082,6 +1118,8 @@ public abstract class JDRCompleteObject extends JDRObject
       }
 
       super.setCanvasGraphics(cg);
+
+      pathChanged();
    }
 
    public int getObjectFlag()

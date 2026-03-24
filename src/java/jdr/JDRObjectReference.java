@@ -18,38 +18,38 @@
 
 package com.dickimawbooks.jdr;
 
-public class JDRTextualObject extends JDRObjectReference
+public class JDRObjectReference
 {
-   public JDRTextualObject(JDRCompleteObject object)
+   public JDRObjectReference(JDRCompleteObject object)
     throws NullPointerException
    {
-      super(object);
+      this.object = object;
 
-      textual = object.getTextual();
-
-      if (textual == null)
+      if (object == null)
       {
          throw new NullPointerException();
       }
    }
 
-   public JDRTextualObject(JDRCompleteObject object, JDRTextual textual)
-    throws NullPointerException
+   public JDRCompleteObject getObject()
    {
-      super(object);
-
-      if (textual == null)
-      {
-         throw new NullPointerException();
-      }
-
-      this.textual = textual;
+      return object;
    }
 
-   public JDRTextual getTextual()
+   public CanvasGraphics getCanvasGraphics()
    {
-      return textual;
+      return object.getCanvasGraphics();
    }
 
-   JDRTextual textual;
+   public void pathChanged()
+   {
+      object.pathChanged();
+   }
+
+   public BBox getStorageBBox()
+   {
+      return object.getStorageBBox();
+   }
+
+   protected JDRCompleteObject object;
 }

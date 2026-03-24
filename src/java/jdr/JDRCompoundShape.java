@@ -47,6 +47,12 @@ public abstract class JDRCompoundShape extends JDRShape
       super(shape);
    }
 
+   @Override
+   public void pathChanged()
+   {
+      getUnderlyingShape().pathChanged();
+   }
+
    public abstract JDRShape getUnderlyingShape();
 
    public abstract void setUnderlyingShape(JDRShape shape);
@@ -70,6 +76,12 @@ public abstract class JDRCompoundShape extends JDRShape
       {
          return shape.getBaseUnderlyingPath();
       }
+   }
+
+   @Override
+   public JDRBasicStroke getBasicStroke()
+   {
+      return getUnderlyingShape().getBasicStroke();
    }
 
    public boolean isDistortable()
@@ -97,6 +109,7 @@ public abstract class JDRCompoundShape extends JDRShape
       throws InvalidPathException
    {
       getUnderlyingShape().close(closeType);
+      pathChanged();
    }
 
    public boolean hasShape()
@@ -284,6 +297,8 @@ public abstract class JDRCompoundShape extends JDRShape
       {
          shape.getTextual().setOutlineFillPaint(paint);
       }  
+
+      pathChanged();
    }  
    
    public JDRPaint getOutlineFillPaint()
@@ -304,6 +319,8 @@ public abstract class JDRCompoundShape extends JDRShape
    public void setBasicStroke(JDRBasicStroke basicStroke)
    {
       getUnderlyingShape().setBasicStroke(basicStroke);
+
+      pathChanged();
    }
 
 }

@@ -51,6 +51,11 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
       canvasGraphics = canvas.getCanvasGraphics();
    }
 
+   public BBox getRefreshBounds(JDRObjectReference object)
+   {
+      return getRefreshBounds(object.getObject());
+   }
+
    public BBox getRefreshBounds(JDRTextual object)
    {
       return getRefreshBounds((JDRCompleteObject)object);
@@ -147,6 +152,11 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
       box.translate(-canvasGraphics.getBpOriginX(), -canvasGraphics.getBpOriginY());
 
       return box;
+   }
+
+   public void mergeRefreshBounds(JDRObjectReference object, BBox box)
+   {
+      mergeRefreshBounds(object.getObject(), box);
    }
 
    public void mergeRefreshBounds(JDRTextual textual, BBox box)
