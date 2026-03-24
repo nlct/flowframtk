@@ -1353,6 +1353,35 @@ public class JDRSymmetricPath extends JDRCompoundShape
       g2.setTransform(orgAf);
    }
 
+   @Override
+   public BBox getStorageBBox()
+   {
+      if (isSingle())
+      {
+         return ensureFullPath().getStorageBBox();
+      }
+      else
+      {
+         BBox box = super.getStorageBBox();
+// TODO??
+         return box;
+      }
+   }
+
+   @Override
+   public void mergeStorageBBox(BBox box)
+   {
+      if (isSingle())
+      {
+         ensureFullPath().mergeStorageBBox(box);
+      }
+      else
+      {
+         super.mergeStorageBBox(box);
+// TODO??
+      }
+   }
+
     public BBox getStorageControlBBox()
     {
        BBox bbox = path_.getStorageControlBBox();

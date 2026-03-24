@@ -928,6 +928,54 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       return path_.getStorageControlBBox();
    }
 
+   @Override
+   public BBox getStorageBBox()
+   {
+      BBox box = path_.getStorageBBox();
+
+      if (showPath)
+      {
+         JDRPaint textPaint = path_.getLinePaint();
+         JDRPaint textOutlineFill = path_.getShapeFillPaint();
+         JDRStroke tpStroke = getStroke();
+
+         path_.setLinePaint(getShowPathLinePaint());
+         path_.setShapeFillPaint(getShowPathFillPaint());
+         path_.setStroke(getShowPathStroke());
+
+         path_.mergeStorageBBox(box);
+
+         path_.setLinePaint(textPaint);
+         path_.setShapeFillPaint(textOutlineFill);
+         path_.setStroke(tpStroke);
+      }
+
+      return box;
+   }
+
+   @Override
+   public void mergeStorageBBox(BBox box)
+   {
+      path_.mergeStorageBBox(box);
+
+      if (showPath)
+      {
+         JDRPaint textPaint = path_.getLinePaint();
+         JDRPaint textOutlineFill = path_.getShapeFillPaint();
+         JDRStroke tpStroke = getStroke();
+
+         path_.setLinePaint(getShowPathLinePaint());
+         path_.setShapeFillPaint(getShowPathFillPaint());
+         path_.setStroke(getShowPathStroke());
+
+         path_.mergeStorageBBox(box);
+
+         path_.setLinePaint(textPaint);
+         path_.setShapeFillPaint(textOutlineFill);
+         path_.setStroke(tpStroke);
+      }
+   }
+
    public void savePgf(TeX tex)
     throws IOException
    {
