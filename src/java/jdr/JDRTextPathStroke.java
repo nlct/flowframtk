@@ -1013,9 +1013,12 @@ public class JDRTextPathStroke implements JDRStroke
 
    public JDRGroup split(JDRTextPath textPath)
    {
-      CanvasGraphics cg = getCanvasGraphics();
+      return split(textPath, textPath.getBpGeneralPath());
+   }
 
-      Shape shape = textPath.getBpGeneralPath();
+   public JDRGroup split(JDRTextPath textPath, Shape bpGeneralPath)
+   {
+      CanvasGraphics cg = getCanvasGraphics();
 
       JDRGroup group = new JDRGroup(cg);
 
@@ -1063,7 +1066,7 @@ public class JDRTextPathStroke implements JDRStroke
 
       if (halign != LEFT)
       {
-         double pathLength = measurePathLength(shape);
+         double pathLength = measurePathLength(bpGeneralPath);
 
          if (halign == CENTER)
          {
@@ -1076,8 +1079,7 @@ public class JDRTextPathStroke implements JDRStroke
       }
 
       PathIterator it = new FlatteningPathIterator(
-        shape.getPathIterator(null), FLATNESS);
-
+        bpGeneralPath.getPathIterator(null), FLATNESS);
 
       double points[] = new double[6];
       double moveX = 0;
@@ -1167,7 +1169,10 @@ public class JDRTextPathStroke implements JDRStroke
                         textArea.setLaTeXSize(getLaTeXSize());
                         textArea.setLaTeXSeries(getLaTeXSeries());
                         textArea.setLaTeXShape(getLaTeXShape());
-                        textArea.setTextPaint(textPath.getLinePaint());
+
+                        textArea.setTextPaint(textPath.getTextPaint());
+                        textArea.setOutlineMode(textPath.isOutline());
+                        textArea.setOutlineFillPaint(textPath.getOutlineFillPaint());
 
                         textArea.setFont(getFontFamily(),
                                          getFontSeries(),
@@ -1177,7 +1182,8 @@ public class JDRTextPathStroke implements JDRStroke
                         textArea.setHAlign(getHAlign());
 
                         textArea.applyCanvasGraphics(cg);
-                        textArea.setOutlineMode(textPath.isOutline());
+
+                        textArea.updateBounds();
 
                         group.add(textArea);
                      }

@@ -362,7 +362,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
    protected void assignShowPathAttributesToShape(JDRShape path)
    {
-      if (!(path_ instanceof JDRTextual))
+      if (!(path instanceof JDRTextual))
       {
          if (showPathStroke == null)
          {

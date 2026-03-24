@@ -1260,30 +1260,6 @@ public class JDRSymmetricPath extends JDRCompoundShape
       }
    }
 
-   public JDRGroup splitText()
-     throws InvalidShapeException
-   {
-      if (isSingle())
-      {
-         return ensureFullPath().getTextual().splitText();
-      }
-
-      JDRGroup group = path_.getTextual().splitText();
-
-      AffineTransform af = line_.getReflectionTransform(null);
-
-      for (int i = 0, n = group.size(); i < n; i++)
-      {
-         JDRCompleteObject object = (JDRCompleteObject)group.get(i).clone();
-
-         object.transform(af);
-
-         group.add(object);
-      }
-
-      return group;
-   }
-
    public void drawDraft(FlowFrame parentFrame)
    {
       CanvasGraphics cg = getCanvasGraphics();
@@ -1962,6 +1938,59 @@ public class JDRSymmetricPath extends JDRCompoundShape
       path.add(line_);
 
       group.add(path);
+
+      return group;
+   }
+
+   public JDRGroup splitText() throws InvalidShapeException
+   {
+      JDRTextual textual = getTextual();
+
+      if (textual == null)
+      {
+         throw new InvalidShapeException(getCanvasGraphics().getMessageWithFallback(
+           "error.invalid_text-path-shape", "Invalid text-path shape"));
+      }
+
+      JDRTextPath tp = (JDRTextPath)textual;
+      JDRTextPathStroke tps = (JDRTextPathStroke)tp.getStroke();
+
+      JDRGroup group;
+
+      if (isSingle())
+      {
+         JDRShape shape = getFullPath();
+
+         if (shape instanceof JDRCompoundShape)
+         {
+            group = ((JDRCompoundShape)shape).splitText();
+         }
+         else
+         {
+            group = textual.splitText();
+         }
+      }
+      else
+      {
+         group = ((JDRCompoundShape)path_).splitText();
+// TODO
+/*
+         group = new JDRGroup(getCanvasGraphics());
+
+         JDRGroup subGrp = ((JDRCompoundShape)path_).splitText();
+
+         group.add(subGrp);
+
+         AffineTransform af = line_.getReflectionTransform(null);
+
+         subGrp = (JDRGroup)subGrp.clone();
+         subGrp.transform(af);
+
+         group.add(subGrp);
+*/
+      }
+
+      group.setSelected(isSelected());
 
       return group;
    }

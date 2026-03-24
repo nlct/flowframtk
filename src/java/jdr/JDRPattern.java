@@ -180,7 +180,10 @@ public abstract class JDRPattern extends JDRCompoundShape
 
       JDRGroup group = new JDRGroup(cg);
 
-      group.add((JDRShape)path_.clone());
+      if (showoriginal_)
+      {
+         group.add((JDRShape)path_.clone());
+      }
 
       double[] matrix = new double[6];
 
@@ -193,6 +196,45 @@ public abstract class JDRPattern extends JDRCompoundShape
          shape.transform(matrix);
 
          group.add(shape);
+      }
+
+      return group;
+   }
+
+   @Override
+   public JDRGroup splitText() throws InvalidShapeException
+   {
+      JDRTextual textual = getTextual();
+
+      if (textual == null)
+      {
+         throw new InvalidShapeException(getCanvasGraphics().getMessageWithFallback(
+            "error.invalid_text-path-shape", "Invalid text-path shape"));
+      }
+
+      if (singlemode_)
+      {
+         return getFullPath().getTextual().splitText();
+      }
+
+      JDRGroup group = new JDRGroup(getCanvasGraphics());
+
+      group.setSelected(isSelected());
+
+      JDRGroup replicas = separate();
+
+      for (int i = 0; i < replicas.size(); i++)
+      {
+         JDRCompleteObject obj = replicas.get(i);
+
+         if (obj instanceof JDRTextual)
+         {
+            group.add(((JDRTextual)obj).splitText());
+         }
+         else if (obj instanceof JDRCompoundShape)
+         {
+            group.add(((JDRCompoundShape)obj).splitText());
+         }
       }
 
       return group;
@@ -1245,52 +1287,6 @@ public abstract class JDRPattern extends JDRCompoundShape
    public boolean showOriginal()
    {
       return showoriginal_;
-   }
-
-   public JDRGroup splitText()
-     throws InvalidShapeException
-   {
-      if (singlemode_)
-      {
-         return getFullPath().getTextual().splitText();
-      }
-
-      JDRGroup org;
-
-      if (path_ instanceof JDRCompoundShape)
-      {
-         org = ((JDRCompoundShape)path_).splitText();
-      }
-      else
-      {
-         // this shouldn't happen
-         org = path_.getTextual().splitText();
-      }
-
-      JDRGroup group = new JDRGroup(getCanvasGraphics(), org.size());
-      if (showoriginal_)
-      {
-         for (int i = 0; i < org.size(); i++)
-         {
-            group.add(org.get(i));
-         }
-      }
-
-      double[] matrix = new double[6];
-
-      // replicas
-
-      for (int i = 1; i <= replicas_; i++)
-      {
-         getReplicaTransform(matrix, i);
-
-         JDRGroup g = (JDRGroup)org.clone();
-         g.transform(matrix);
-         group.add(g);
-      }
-
-      group.setSelected(isSelected());
-      return group;
    }
 
    public void draw(FlowFrame parentFrame)
