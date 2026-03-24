@@ -56,6 +56,8 @@ public class FlowframTkSettings
       canvasGraphics = new CanvasGraphics(resources.getMessageSystem());
       dialogButtonStyle = resources.getDialogButtonStyle();
 
+      widestChar = resources.getMessageWithFallback("lang.widest_char", "M");
+
       startDir = ".";
       String home = System.getenv("HOME");
       if (home != null)
@@ -1774,6 +1776,8 @@ public class FlowframTkSettings
    public boolean selectControlIgnoresLock = false;
 
    public long swingWorkerTimeout = 600000L;
+
+   public String widestChar="M";
 
    private JDRResources resources;
 }

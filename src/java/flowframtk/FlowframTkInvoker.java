@@ -1445,10 +1445,6 @@ public class FlowframTkInvoker
                {
                   settings.setScaleControlPoints(parseBoolean(value, line));
                }
-               else if (key.equals("widest_char"))
-               {
-                  CanvasTextField.widestChar = value;
-               }
                else if (key.equals("norm_x"))
                {
                   CanvasGraphics.normTransformX = parseDouble(value, line);
@@ -2336,8 +2332,6 @@ public class FlowframTkInvoker
 
       out.println("norm_x="+CanvasGraphics.normTransformX);
       out.println("norm_y="+CanvasGraphics.normTransformY);
-
-      out.println("widest_char="+CanvasTextField.widestChar);
 
       out.println("show_tools="+(settings.showToolBar?1:0));
       out.println("show_status="+(settings.showStatus?1:0));

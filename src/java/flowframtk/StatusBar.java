@@ -64,9 +64,9 @@ public class StatusBar extends JPanel
       if (posWidth <= 0 || height <= 0)
       {
          tmp = new JLabel("000.00,000.00 "
-           +CanvasTextField.widestChar
-           +CanvasTextField.widestChar
-           +CanvasTextField.widestChar);
+           +application.getWidestChar()
+           +application.getWidestChar()
+           +application.getWidestChar());
          tmp.setFont(statusFont);
          posDim = tmp.getPreferredSize();
 
@@ -96,7 +96,7 @@ public class StatusBar extends JPanel
       if (modWidth <= 0)
       {
          tmp = new JLabel(getResources().getMessage("info.modified")
-           +CanvasTextField.widestChar);
+           +application.getWidestChar());
          tmp.setFont(statusFont);
          modDim = tmp.getPreferredSize();
          modDim.height = height;
@@ -109,9 +109,9 @@ public class StatusBar extends JPanel
 
       if (unitWidth <= 0)
       {
-         tmp = new JLabel(CanvasTextField.widestChar
-          +CanvasTextField.widestChar
-          +CanvasTextField.widestChar);
+         tmp = new JLabel(application.getWidestChar()
+          +application.getWidestChar()
+          +application.getWidestChar());
          tmp.setFont(statusFont);
          unitDim = tmp.getPreferredSize();
          unitDim.height = height;
@@ -393,7 +393,7 @@ public class StatusBar extends JPanel
       Dimension dim;
 
       tmp = new JLabel("000.00,000.00 "
-           +CanvasTextField.widestChar);
+           +application.getWidestChar());
       tmp.setFont(statusFont);
       dim = tmp.getPreferredSize();
 
@@ -404,7 +404,7 @@ public class StatusBar extends JPanel
       height = posDim.height;
 
       tmp = new JLabel(getResources().getMessage("info.modified")
-           +CanvasTextField.widestChar);
+           +application.getWidestChar());
       tmp.setFont(statusFont);
       dim = tmp.getPreferredSize();
 
@@ -412,9 +412,9 @@ public class StatusBar extends JPanel
       modDim.height = height;
       application.setStatusModifiedWidth(modWidth);
 
-      tmp = new JLabel(CanvasTextField.widestChar
-           +CanvasTextField.widestChar
-           +CanvasTextField.widestChar);
+      tmp = new JLabel(application.getWidestChar()
+           +application.getWidestChar()
+           +application.getWidestChar());
       tmp.setFont(statusFont);
       dim = tmp.getPreferredSize();
 

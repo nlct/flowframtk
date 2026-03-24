@@ -4078,6 +4078,11 @@ public class FlowframTk extends JFrame
       return invoker.getSettings();
    }
 
+   public String getWidestChar()
+   {
+      return getSettings().widestChar;
+   }
+
    public boolean useAbsolutePages()
    {
       return getSettings().useAbsolutePages();

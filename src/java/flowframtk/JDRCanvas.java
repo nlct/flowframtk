@@ -22366,13 +22366,13 @@ class CanvasTextField extends JTextField
          String text = getText();
          int n = text.length();
    
-         text += widestChar;
+         text += getWidestChar();
    
          if (!text.isEmpty())
          {
             if (Character.isSpaceChar(text.charAt(0)))
             {
-               text = widestChar+text.substring(1);
+               text = getWidestChar()+text.substring(1);
             }
    
             TextLayout layout = new TextLayout(text, font, frc);
@@ -22535,6 +22535,11 @@ class CanvasTextField extends JTextField
       return maxDescent;
    }
 
+   public String getWidestChar()
+   {
+      return canvas.getApplication().getWidestChar();
+   }
+
    public JDRResources getResources()
    {
       return canvas.getResources();
@@ -22551,9 +22556,5 @@ class CanvasTextField extends JTextField
    private JDRPaint foreground;
 
    private UndoableEditListener el=null;
-
-   // I initially used char, but using a String allows
-   // extra flexibility.
-   public static String widestChar="M";
 }
 
