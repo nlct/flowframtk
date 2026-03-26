@@ -1414,8 +1414,6 @@ public class JDRTextPathStroke implements JDRStroke
    private int delimL = (int)'|';
    private int delimR = (int)'|';
 
-   //private AffineTransform af = new AffineTransform();
-
    /**
     * Horizontal alignment. (Before transformation)
     */
