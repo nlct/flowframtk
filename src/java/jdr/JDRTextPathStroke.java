@@ -823,15 +823,15 @@ public class JDRTextPathStroke implements JDRStroke
       switch (valign)
       {
          case TOP:
-            yoffset = -ascent;
+            yoffset += -ascent;
          break;
 
          case MIDDLE:
-            yoffset = descent-(double)bounds.getHeight()*0.5f;
+            yoffset += descent-(double)bounds.getHeight()*0.5f;
          break;
 
          case BOTTOM:
-           yoffset = descent;
+           yoffset += descent;
          break;
       }
 
@@ -850,11 +850,11 @@ public class JDRTextPathStroke implements JDRStroke
 
          if (halign == CENTER)
          {
-            xoffset = (double)(pathLength-bounds.getWidth())*0.5f;
+            xoffset += (double)(pathLength-bounds.getWidth())*0.5f;
          }
          else
          {
-            xoffset = (double)(pathLength-bounds.getWidth());
+            xoffset += (double)(pathLength-bounds.getWidth());
          }
       }
 
