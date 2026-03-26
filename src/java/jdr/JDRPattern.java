@@ -23,6 +23,7 @@
 
 package com.dickimawbooks.jdr;
 
+import java.util.Vector;
 import java.io.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -202,7 +203,9 @@ public abstract class JDRPattern extends JDRCompoundShape
    }
 
    @Override
-   public JDRGroup splitText() throws InvalidShapeException
+   public JDRGroup splitText(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
+    throws InvalidShapeException
    {
       JDRTextual textual = getTextual();
 
@@ -214,7 +217,8 @@ public abstract class JDRPattern extends JDRCompoundShape
 
       if (singlemode_)
       {
-         return getFullPath().getTextual().splitText();
+         return getFullPath().getTextual().splitText(textMappings,
+          mathMappings, styNames);
       }
 
       JDRGroup group = new JDRGroup(getCanvasGraphics());
@@ -229,11 +233,13 @@ public abstract class JDRPattern extends JDRCompoundShape
 
          if (obj instanceof JDRTextual)
          {
-            group.add(((JDRTextual)obj).splitText());
+            group.add(((JDRTextual)obj).splitText(textMappings,
+          mathMappings, styNames));
          }
          else if (obj instanceof JDRCompoundShape)
          {
-            group.add(((JDRCompoundShape)obj).splitText());
+            group.add(((JDRCompoundShape)obj).splitText(textMappings,
+          mathMappings, styNames));
          }
       }
 

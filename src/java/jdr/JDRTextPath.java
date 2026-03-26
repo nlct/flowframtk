@@ -5,6 +5,7 @@
 
 package com.dickimawbooks.jdr;
 
+import java.util.Vector;
 import java.io.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -436,10 +437,12 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
 
-   public JDRGroup splitText()
+   public JDRGroup splitText(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
      throws InvalidShapeException
    {
-      JDRGroup grp = ((JDRTextPathStroke)getStroke()).split(this);
+      JDRGroup grp = ((JDRTextPathStroke)getStroke()).split(this,
+        textMappings, mathMappings, styNames);
 
       if (description.isEmpty())
       {

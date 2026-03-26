@@ -23,6 +23,7 @@
 
 package com.dickimawbooks.jdr;
 
+import java.util.Vector;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.geom.*;
@@ -287,7 +288,14 @@ public abstract class JDRCompoundShape extends JDRShape
    public abstract JDRCompleteObject getFullObject()
      throws InvalidShapeException;
 
-   public abstract JDRGroup splitText() throws InvalidShapeException;
+   public JDRGroup splitText() throws InvalidShapeException
+   {
+      return splitText(null, null, null);
+   }
+
+   public abstract JDRGroup splitText(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
+    throws InvalidShapeException;
 
    public void setOutlineFillPaint(JDRPaint paint)
    {

@@ -5,6 +5,7 @@
 
 package com.dickimawbooks.jdr;
 
+import java.util.Vector;
 import java.io.*;
 import java.awt.*;
 import java.awt.font.*;
@@ -1012,12 +1013,17 @@ public class JDRTextPathStroke implements JDRStroke
       return total;
    }
 
-   public JDRGroup split(JDRTextPath textPath)
+   public JDRGroup split(JDRTextPath textPath,
+     TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
    {
-      return split(textPath, textPath.getBpGeneralPath());
+      return split(textPath, textPath.getBpGeneralPath(),
+        textMappings, mathMappings, styNames);
    }
 
-   public JDRGroup split(JDRTextPath textPath, Shape bpGeneralPath)
+   public JDRGroup split(JDRTextPath textPath, Shape bpGeneralPath,
+     TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
    {
       CanvasGraphics cg = getCanvasGraphics();
 
@@ -1032,7 +1038,18 @@ public class JDRTextPathStroke implements JDRStroke
          group.description = textPath.description;
       }
 
-      double[] mtx = new double[6];
+      boolean useMathMappings = false;
+         
+      if (mathMappings != null && styNames != null && latexText != null
+          && latexText.length() > 2
+          && latexText.startsWith("$") && latexText.endsWith("$")
+          && !latexText.substring(1, latexText.length()-1).contains("$"))
+      {     
+         useMathMappings = true;
+      }      
+
+      boolean useTextMappings
+        = (!useMathMappings && textMappings != null && styNames != null);
 
       FontRenderContext frc = new FontRenderContext(null, true, true);
 
@@ -1159,6 +1176,19 @@ public class JDRTextPathStroke implements JDRStroke
                      {
                         JDRText textArea
                            = new JDRText(cg, builder.toString());
+
+                        if (useMathMappings)
+                        {
+                           textArea.setLaTeXText("$"
+                            + mathMappings.applyMappings(textArea.getText(), styNames)
+                            + "$");
+                        }
+                        else if (useTextMappings)
+                        {
+                           textArea.setLaTeXText(
+                              textMappings.applyMappings(textArea.getText(), styNames)
+                            );
+                        }
 
                         textArea.setLaTeXFamily(getLaTeXFamily());
                         textArea.setLaTeXSize(getLaTeXSize());

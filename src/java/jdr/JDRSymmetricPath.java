@@ -1942,7 +1942,9 @@ public class JDRSymmetricPath extends JDRCompoundShape
       return group;
    }
 
-   public JDRGroup splitText() throws InvalidShapeException
+   public JDRGroup splitText(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
+    throws InvalidShapeException
    {
       JDRTextual textual = getTextual();
 
@@ -1963,11 +1965,13 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
          if (shape instanceof JDRCompoundShape)
          {
-            group = ((JDRCompoundShape)shape).splitText();
+            group = ((JDRCompoundShape)shape).splitText(textMappings,
+              mathMappings, styNames);
          }
          else
          {
-            group = textual.splitText();
+            group = textual.splitText(textMappings,
+              mathMappings, styNames);
          }
       }
       else

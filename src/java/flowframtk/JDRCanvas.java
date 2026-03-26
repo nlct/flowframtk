@@ -13887,15 +13887,37 @@ public class JDRCanvas extends JPanel
 
          JDRGroup group_ = null;
 
+         Vector<String> styNames = null;
+         TextModeMappings textModeMappings = null;
+         MathModeMappings mathModeMappings = null;
+
+         if (getApplication().isAutoEscapeSpCharsEnabled())
+         {
+            textModeMappings = getApplication().getTextModeMappings();
+            styNames = new Vector<String>();
+         }
+
+         if (getApplication().isAutoEscapeMathCharsEnabled())
+         {
+            mathModeMappings = getApplication().getMathModeMappings();
+
+            if (styNames == null)
+            {
+               styNames = new Vector<String>();
+            }
+         }
+
          try
          {
             if (object instanceof JDRCompoundShape)
             {
-                group_ = ((JDRCompoundShape)object).splitText();
+                group_ = ((JDRCompoundShape)object).splitText(
+                  textModeMappings, mathModeMappings, styNames);
             }
             else
             {
-                group_ = object.getTextual().splitText();
+                group_ = object.getTextual().splitText(
+                  textModeMappings, mathModeMappings, styNames);
             }
          }
          finally
@@ -13916,6 +13938,18 @@ public class JDRCanvas extends JPanel
          if (group_.size() == 0)
          {
             throw new EmptyGroupException(getResources().getMessageDictionary());
+         }
+
+         if (styNames != null && !styNames.isEmpty())
+         {
+            try
+            {
+               addPackagesToPreamble(styNames);
+            }
+            catch (BadLocationException e)
+            {
+               getResources().debugMessage(e);
+            }
          }
 
          paths.set(index_, newObject_);

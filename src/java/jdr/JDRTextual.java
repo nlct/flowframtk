@@ -23,6 +23,7 @@
 
 package com.dickimawbooks.jdr;
 
+import java.util.Vector;
 import java.awt.*;
 
 import com.dickimawbooks.jdr.exceptions.*;
@@ -232,7 +233,9 @@ public interface JDRTextual
     * @return group containing new text 
     */
 
-   public JDRGroup splitText() throws InvalidShapeException;
+   public abstract JDRGroup splitText(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
+    throws InvalidShapeException;
 
    /**
     * Sets this text area's LaTeX font.

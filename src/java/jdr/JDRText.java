@@ -563,12 +563,26 @@ public class JDRText extends JDRCompleteObject
     * consisting of a single character from this text area.
     * @return group containing new text areas
     */
-   public JDRGroup splitText() 
-     throws InvalidShapeException
+   public JDRGroup splitText(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
+    throws InvalidShapeException
    {
       CanvasGraphics cg = getCanvasGraphics();
 
       JDRUnit unit = cg.getStorageUnit();
+
+      boolean useMathMappings = false;
+
+      if (mathMappings != null && styNames != null && latexText != null
+          && latexText.length() > 2
+          && latexText.startsWith("$") && latexText.endsWith("$")
+          && !latexText.substring(1, latexText.length()-1).contains("$"))
+      {
+         useMathMappings = true;
+      }
+
+      boolean useTextMappings
+        = (!useMathMappings && textMappings != null && styNames != null);
 
       Graphics2D g2 = cg.getGraphics();
       FontRenderContext frc = g2.getFontRenderContext();
@@ -601,6 +615,19 @@ public class JDRText extends JDRCompleteObject
 
          JDRText newText = new JDRText(cg, 
            new JDRFont(jdrFont), new String(Character.toChars(codePoint)));
+
+         if (useMathMappings)
+         {
+            newText.setLaTeXText("$"
+             + mathMappings.applyMappings(newText.getText(), styNames)
+             + "$");
+         }
+         else if (useTextMappings)
+         {
+            newText.setLaTeXText(
+               textMappings.applyMappings(newText.getText(), styNames)
+             );
+         }
 
          newText.setTextPaint(getTextPaint());
          newText.latexFont.makeEqual(latexFont);
