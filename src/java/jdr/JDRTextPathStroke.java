@@ -860,6 +860,7 @@ public class JDRTextPathStroke implements JDRStroke
 
       Path2D result = new Path2D.Double();
 
+      AffineTransform af = new AffineTransform();
       double points[] = new double[6];
       double moveX = 0;
       double moveY = 0;
@@ -1035,8 +1036,13 @@ public class JDRTextPathStroke implements JDRStroke
 
       FontRenderContext frc = new FontRenderContext(null, true, true);
 
-      Font transformedFont = getFont().deriveFont(
-         new AffineTransform(matrix));
+      double storageToBp = canvasGraphics.storageToBp(1.0);
+      double bpToStorage = canvasGraphics.bpToStorage(1.0);
+
+      AffineTransform bpAf = new AffineTransform(matrix);
+      bpAf.scale(storageToBp, storageToBp);
+
+      Font transformedFont = getFont().deriveFont(bpAf);
       GlyphVector glyphVector
          = transformedFont.createGlyphVector(frc, text);
 
@@ -1046,21 +1052,21 @@ public class JDRTextPathStroke implements JDRStroke
       double ascent = layout.getAscent();
       Rectangle2D bounds = layout.getBounds();
 
-      double yoffset = (double)matrix[5];
-      double xoffset = (double)matrix[4];
+      double xoffset = 0;
+      double yoffset = 0;
 
       switch (valign)
       {
          case TOP:
-            yoffset = -ascent;
+            yoffset -= ascent;
          break;
 
          case MIDDLE:
-            yoffset = descent-(double)bounds.getHeight()*0.5f;
+            yoffset += descent - bounds.getHeight()*0.5;
          break;
 
          case BOTTOM:
-           yoffset = descent;
+           yoffset += descent;
          break;
       }
 
@@ -1070,17 +1076,19 @@ public class JDRTextPathStroke implements JDRStroke
 
          if (halign == CENTER)
          {
-            xoffset = (double)(pathLength-bounds.getWidth())*0.5f;
+            xoffset += (pathLength-bounds.getWidth())*0.5;
          }
          else
          {
-            xoffset = (double)(pathLength-bounds.getWidth());
+            xoffset += (pathLength-bounds.getWidth());
          }
       }
 
       PathIterator it = new FlatteningPathIterator(
         bpGeneralPath.getPathIterator(null), FLATNESS);
 
+      Point2D p = new Point2D.Double();
+      AffineTransform af = new AffineTransform();
       double points[] = new double[6];
       double moveX = 0;
       double moveY = 0;
@@ -1099,7 +1107,6 @@ public class JDRTextPathStroke implements JDRStroke
 
       double nextAdvance = 0;
 
-      CanvasGraphics bpCG = new CanvasGraphics();
       StringBuilder builder = new StringBuilder();
 
       while (currentChar < length && !it.isDone())
@@ -1115,6 +1122,7 @@ public class JDRTextPathStroke implements JDRStroke
                nextAdvance = glyphVector.getGlyphMetrics(currentChar)
                  .getAdvance() * 0.5f;
                next = nextAdvance+xoffset;
+               next = nextAdvance;
             break;
 
             case PathIterator.SEG_CLOSE:
@@ -1134,8 +1142,6 @@ public class JDRTextPathStroke implements JDRStroke
 
                   while (currentChar < length && distance >= next)
                   {
-                     Shape glyph = glyphVector.getGlyphOutline(currentChar);
-                     Point2D p = glyphVector.getGlyphPosition(currentChar);
                      double x = lastX + next*dx*r;
                      double y = lastY + next*dy*r;
 
@@ -1152,18 +1158,7 @@ public class JDRTextPathStroke implements JDRStroke
                                     .isStandard())
                      {
                         JDRText textArea
-                           = new JDRText(bpCG, builder.toString());
-
-                        af.setToIdentity();
-                        af.translate(x, y-yoffset);
-                        af.rotate(angle);
-                        af.translate(-advance, 0);
-                        af.concatenate(
-                           new AffineTransform(matrix[0], matrix[1],
-                              matrix[2], matrix[3], 0, 0));
-
-                        af.getMatrix(mtx);
-                        textArea.setTransformation(mtx);
+                           = new JDRText(cg, builder.toString());
 
                         textArea.setLaTeXFamily(getLaTeXFamily());
                         textArea.setLaTeXSize(getLaTeXSize());
@@ -1181,7 +1176,27 @@ public class JDRTextPathStroke implements JDRStroke
                         textArea.setVAlign(getVAlign());
                         textArea.setHAlign(getHAlign());
 
-                        textArea.applyCanvasGraphics(cg);
+
+                        af.setToIdentity();
+                        double x1 = bpToStorage * x;
+                        double y1 = bpToStorage * y;
+                        af.translate(x1, y1);
+                        af.rotate(angle);
+                        af.translate(-bpToStorage*advance, 0);
+
+                        textArea.transform(af);
+
+                        x1 = af.getTranslateX();
+                        y1 = af.getTranslateY();
+                        textArea.translate(x1, y1);
+                        textArea.transform(
+                         new AffineTransform(matrix[0], matrix[1], matrix[2], matrix[3], 0, 0));
+                        textArea.translate(-x1, -y1);
+
+                        p.setLocation(matrix[4]-xoffset, matrix[5]+yoffset);
+
+                        p = af.deltaTransform(p, p);
+                        textArea.translate(-p.getX(), -p.getY());
 
                         textArea.updateBounds();
 
@@ -1399,7 +1414,7 @@ public class JDRTextPathStroke implements JDRStroke
    private int delimL = (int)'|';
    private int delimR = (int)'|';
 
-   private AffineTransform af = new AffineTransform();
+   //private AffineTransform af = new AffineTransform();
 
    /**
     * Horizontal alignment. (Before transformation)
