@@ -1935,63 +1935,88 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
       Graphics2D g2 = cg.getGraphics();
 
+      JDRBasicStroke bs = null;
+
+      if (join != null || closingSegment != null)
+      {
+         bs = getBasicStroke();
+      }
+         
       JDRGroup group = new JDRGroup(cg);
 
       JDRShape shape = getUnderlyingShape();
 
-      if (shape instanceof JDRTextPath)
-      {
-         return ((JDRTextPath)shape).separate();
-      }
-
       group.add(shape);
 
-      JDRPath path;
-
-      if (join != null)
+      if (join != null && bs != null)
       {
-         path = new JDRPath(cg);
-         path.setLinePaint(getLinePaint());
-         path.setShapeFillPaint(getShapeFillPaint());
-         path.setStroke(getStroke() instanceof JDRBasicStroke ?
-            (JDRStroke)getStroke().clone() : new JDRBasicStroke(cg));
-
-         if (join.isGap())
+         try
          {
-            path.add(new JDRLine(join.getStart(), join.getEnd()));
-         }
-         else
-         {
-            path.add(join.getFullSegment());
-         }
+            JDRBasicStroke stroke = new JDRBasicStroke(bs);
+            stroke.setStartArrow(JDRMarker.ARROW_NONE);
+            stroke.setEndArrow(JDRMarker.ARROW_NONE);
 
-         group.add(path);
+            JDRPath path = new JDRPath(
+              (JDRPaint)getLinePaint().clone(), 
+              (JDRPaint)getShapeFillPaint().clone(), 
+              stroke);
+
+            path.add(joinToFullSegment());
+
+            group.add(path);
+         }
+         catch (InvalidPathException e)
+         {
+            getCanvasGraphics().debugMessage(e);
+         }
       }
 
       JDRShape reflectedShape = shape.reflection(line_);
 
       group.add(reflectedShape);
 
-      if (closingSegment != null)
+      if (closingSegment != null && bs != null)
       {
-         path = new JDRPath(cg);
-         path.setLinePaint(getLinePaint());
-         path.setShapeFillPaint(getShapeFillPaint());
-         path.setStroke(getStroke() instanceof JDRBasicStroke ?
-            (JDRStroke)getStroke().clone() : new JDRBasicStroke(cg));
+         try
+         {
+            JDRBasicStroke stroke = new JDRBasicStroke(bs);
+            stroke.setStartArrow(JDRMarker.ARROW_NONE);
+            stroke.setEndArrow(JDRMarker.ARROW_NONE);
 
-         path.add(closingSegment.getFullSegment());
+            JDRPath path = new JDRPath(
+              (JDRPaint)getLinePaint().clone(), 
+              (JDRPaint)getShapeFillPaint().clone(),
+              stroke);
 
-         group.add(path);
+            path.add(closingToFullSegment());
+
+            group.add(path);
+         }
+         catch (InvalidPathException e)
+         {
+            getCanvasGraphics().debugMessage(e);
+         }
       }
 
-      path = new JDRPath(cg);
-      path.setLinePaint(getLinePaint());
-      path.setShapeFillPaint(getShapeFillPaint());
-      path.setStroke(new JDRBasicStroke(cg));
-      path.add(line_);
+      try
+      {
+         JDRPath path = new JDRPath(
+           (JDRPaint)getLinePaint().clone(), 
+           (JDRPaint)getShapeFillPaint().clone(),
+           new JDRBasicStroke(getCanvasGraphics()));
 
-      group.add(path);
+         path.add(new JDRLine(line_));
+         group.add(path);
+      }
+      catch (InvalidPathException e)
+      {
+         getCanvasGraphics().debugMessage(e);
+      }
+
+      group.setSelected(isSelected());
+
+      group.setDescription(getDescription());
+      group.setTag(getTag());
 
       return group;
    }
@@ -2064,7 +2089,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
                  (JDRPaint)getShapeFillPaint().clone(), 
                  stroke);
 
-               path.add(join.getFullSegment());
+               path.add(joinToFullSegment());
 
                group.add(path);
             }
@@ -2101,7 +2126,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
                  (JDRPaint)getShapeFillPaint().clone(),
                  stroke);
 
-               path.add(closingSegment.getFullSegment());
+               path.add(closingToFullSegment());
                group.add(path);
             }
             catch (InvalidPathException e)
@@ -2112,6 +2137,9 @@ public class JDRSymmetricPath extends JDRCompoundShape
       }
 
       group.setSelected(isSelected());
+
+      group.setDescription(getDescription());
+      group.setTag(getTag());
 
       return group;
    }
@@ -2288,6 +2316,19 @@ public class JDRSymmetricPath extends JDRCompoundShape
        return join;
     }
 
+    public JDRSegment joinToFullSegment()
+    {
+       if (join == null)
+       {
+          return null;
+       }
+
+       JDRSegment seg = join.getFullSegment();
+       seg.setStart(new JDRPoint(seg.start));
+
+       return seg;
+    }
+
     /**
      * Gets the closing segment.
      * @return the closing segment or null if this path is open or if
@@ -2297,6 +2338,20 @@ public class JDRSymmetricPath extends JDRCompoundShape
     public JDRPartialSegment getClosingSegment()
     {
        return closingSegment;
+    }
+
+    public JDRSegment closingToFullSegment()
+    {
+       if (closingSegment == null)
+       {
+          return null;
+       }
+
+       JDRSegment seg = closingSegment.getFullSegment();
+       seg.setStart(new JDRPoint(seg.start));
+       seg.setEnd(new JDRPoint(seg.end));
+
+       return seg.reverse();
     }
 
    public boolean isPolygon()
