@@ -2813,8 +2813,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="export.textpath">Text-Path:</entry>
 
-<entry key="export.textpath.pgf">PGF decoration</entry>
-<entry key="export.textpath.pgf.tooltip">Export the text-path using pgf decoration</entry>
+<entry key="export.textpath.pgf">Decoration</entry>
+<entry key="export.textpath.pgf.tooltip">Export the text-path using path decoration</entry>
 
 <entry key="export.textpath.split">Split</entry>
 <entry key="export.textpath.split.tooltip">Export the text-path as separate text areas</entry>

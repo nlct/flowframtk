@@ -1211,7 +1211,36 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    public void saveSVG(SVG svg, String attr)
    throws IOException
    {
+      ExportSettings exportSettings = svg.getExportSettings();
+
+      try
+      {
+         switch (exportSettings.textPath)
+         {
+            case SPLIT:
+               splitText().saveSVG(svg, attr);
+               return;
+            case TO_PATH:
+               convertToPath().saveSVG(svg, attr);
+               return;
+         }
+      }
+      catch (InvalidShapeException | EmptyGroupException e)
+      {
+         getCanvasGraphics().warning(e);
+      }
+
       JDRPaint paint = getTextPaint();
+
+      if (showPath)
+      {
+         // ensure variables are initialised
+         getShowPathStroke();
+         getShowPathFillPaint();
+         getShowPathLinePaint();
+
+         getJDRShape().saveSVG(svg, attr);
+      }
 
       JDRTextPathStroke stroke = (JDRTextPathStroke)getStroke();
 
@@ -1219,16 +1248,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
             && svg.getExportSettings().textPathOutline
                  == ExportSettings.TextPathOutline.TO_PATH)
       {
-         if (showPath)
-         {
-            // ensure variables are initialised
-            getShowPathStroke();
-            getShowPathFillPaint();
-            getShowPathLinePaint();
-
-            getJDRShape().saveSVG(svg, attr);
-         }
-
          Shape shape = getStorageStrokedArea();
 
          svg.print("   <path "+attr+" d=\"");
@@ -1263,7 +1282,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
          svg.print(stroke.getJDRFont().svg());
          svg.println(">");
 
-         svg.println("      <textPath href=\"#"+stroke.getPathID());
+         svg.println("      <textPath href=\"#"+stroke.getPathID()+"\"");
 
          if (showPath)
          {
@@ -1285,7 +1304,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
             }
          }
 
-         svg.println("\">");
+         svg.println(">");
 
          if (description != null && !description.isEmpty())
          {
