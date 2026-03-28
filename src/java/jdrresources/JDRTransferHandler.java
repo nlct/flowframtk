@@ -46,16 +46,15 @@ import com.dickimawbooks.jdr.exceptions.InvalidFormatException;
 public class JDRTransferHandler extends TransferHandler implements Transferable
 {
    public JDRTransferHandler(CanvasGraphics cg, ExportSettings exportSettings,
-     ImportSettings importSettings, TextModeMappings textModeMappings,
-     MathModeMappings mathModeMappings)
+     ImportSettings importSettings)
    {
       super();
       this.canvasGraphics = cg;
       this.jdr = new JDR();
       this.exportSettings = exportSettings;
       this.importSettings = importSettings;
-      this.textModeMappings = textModeMappings;
-      this.mathModeMappings = mathModeMappings;
+      this.textModeMappings = cg.getTextModeMappings();
+      this.mathModeMappings = cg.getMathModeMappings();
    }
 
    /**
@@ -247,7 +246,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                            JDRText jdrText = new JDRText(canvasGraphics,
                              new Point2D.Double(0, offset), font, s);
 
-                           if (mathModeMappings != null && img.isMathModeMappingsOn()
+                           if (mathModeMappings != null
                                 && s.length() > 2
                                 && s.startsWith("$")
                                 && s.endsWith("$")
@@ -261,7 +260,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                                 + mathModeMappings.applyMappings(s, styNames)
                                 + "$");
                            }
-                           else if (textModeMappings != null && img.isTextModeMappingsOn())
+                           else if (textModeMappings != null)
                            {
                               jdrText.setLaTeXText(
                                 textModeMappings.applyMappings(s, styNames));

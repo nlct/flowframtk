@@ -5416,14 +5416,54 @@ public class FlowframTk extends JFrame
       return getSettings().autoUpdateAnchors;
    }
 
-   public void setAutoEscapeSpChars(boolean enabled)
+   public void setMappings(boolean textOn, boolean mathOn)
    {
-      getSettings().autoEscapeSpChars = enabled;
+      FlowframTkSettings settings = getSettings();
+
+      settings.setTextModeMapping(textOn);
+      settings.setMathModeMapping(mathOn);
+
+      JInternalFrame[] allFrames = theDesktop.getAllFrames();
+
+      for (int i = 0; i < allFrames.length; i++)
+      {
+         JDRFrame frame = (JDRFrame)allFrames[i];
+
+         settings.applyToCanvas(frame.getCanvasGraphics());
+      }
    }
 
+   @Deprecated
+   public void setAutoEscapeSpChars(boolean enabled)
+   {
+      setTextModeMapping(enabled);
+   }
+
+   public void setTextModeMapping(boolean enabled)
+   {
+      FlowframTkSettings settings = getSettings();
+
+      settings.setTextModeMapping(enabled);
+
+      JInternalFrame[] allFrames = theDesktop.getAllFrames();
+
+      for (int i = 0; i < allFrames.length; i++)
+      {
+         JDRFrame frame = (JDRFrame)allFrames[i];
+
+         settings.applyToCanvas(frame.getCanvasGraphics());
+      }
+   }
+
+   @Deprecated
    public boolean isAutoEscapeSpCharsEnabled()
    {
-      return getSettings().autoEscapeSpChars;
+      return isTextModeMappingOn();
+   }
+
+   public boolean isTextModeMappingOn()
+   {
+      return getSettings().isTextModeMappingOn();
    }
 
    public String applyTextModeMappings(String original, Vector<String> styNames)
@@ -5431,14 +5471,37 @@ public class FlowframTk extends JFrame
       return getSettings().applyTextModeMappings(original, styNames);
    }
 
+   @Deprecated
    public void setAutoEscapeMathChars(boolean enabled)
    {
-      getSettings().autoEscapeMathChars = enabled;
+      setMathModeMapping(enabled);
    }
 
+   public void setMathModeMapping(boolean enabled)
+   {
+      FlowframTkSettings settings = getSettings();
+
+      settings.setMathModeMapping(enabled);
+
+      JInternalFrame[] allFrames = theDesktop.getAllFrames();
+
+      for (int i = 0; i < allFrames.length; i++)
+      {
+         JDRFrame frame = (JDRFrame)allFrames[i];
+
+         settings.applyToCanvas(frame.getCanvasGraphics());
+      }
+   }
+
+   @Deprecated
    public boolean isAutoEscapeMathCharsEnabled()
    {
-      return getSettings().autoEscapeMathChars;
+      return isMathModeMappingOn();
+   }
+
+   public boolean isMathModeMappingOn()
+   {
+      return getSettings().isMathModeMappingOn();
    }
 
    public String applyMathModeMappings(String original, Vector<String> styNames)

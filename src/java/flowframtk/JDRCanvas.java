@@ -6673,6 +6673,8 @@ public class JDRCanvas extends JPanel
    public void addPackagesToPreamble(Vector<String> styNames)
      throws BadLocationException
    {
+      if (styNames == null || styNames.isEmpty()) return;
+
       String preamble = getPreamble();
 
       StringBuffer append = new StringBuffer();
@@ -8965,20 +8967,18 @@ public class JDRCanvas extends JPanel
       return file == null ? null : file.getParentFile();
    }
 
-   @Override
-   public boolean isMathModeMappingsOn()
+   public boolean isMathModeMappingOn()
    {
       FlowframTkSettings settings = getApplication().getSettings();
 
-      return settings.autoEscapeMathChars;
+      return settings.isMathModeMappingOn();
    }
 
-   @Override
-   public boolean isTextModeMappingsOn()
+   public boolean isTextModeMappingOn()
    {
       FlowframTkSettings settings = getApplication().getSettings();
 
-      return settings.autoEscapeSpChars;
+      return settings.isTextModeMappingOn();
    }
 
    /* JDRImage method used by transfer handler */
@@ -13891,28 +13891,19 @@ public class JDRCanvas extends JPanel
 
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
-         getCanvasGraphics().setGraphicsDevice(g2);
+
+         CanvasGraphics cg = getCanvasGraphics();
+         cg.setGraphicsDevice(g2);
 
          JDRGroup group_ = null;
 
          Vector<String> styNames = null;
-         TextModeMappings textModeMappings = null;
-         MathModeMappings mathModeMappings = null;
+         TextModeMappings textModeMappings = cg.getTextModeMappings();
+         MathModeMappings mathModeMappings = cg.getMathModeMappings();
 
-         if (getApplication().isAutoEscapeSpCharsEnabled())
+         if (textModeMappings != null || mathModeMappings != null)
          {
-            textModeMappings = getApplication().getTextModeMappings();
             styNames = new Vector<String>();
-         }
-
-         if (getApplication().isAutoEscapeMathCharsEnabled())
-         {
-            mathModeMappings = getApplication().getMathModeMappings();
-
-            if (styNames == null)
-            {
-               styNames = new Vector<String>();
-            }
          }
 
          try
@@ -13948,16 +13939,13 @@ public class JDRCanvas extends JPanel
             throw new EmptyGroupException(getResources().getMessageDictionary());
          }
 
-         if (styNames != null && !styNames.isEmpty())
+         try
          {
-            try
-            {
-               addPackagesToPreamble(styNames);
-            }
-            catch (BadLocationException e)
-            {
-               getResources().debugMessage(e);
-            }
+            addPackagesToPreamble(styNames);
+         }
+         catch (BadLocationException e)
+         {
+            getResources().debugMessage(e);
          }
 
          paths.set(index_, newObject_);
@@ -14184,44 +14172,36 @@ public class JDRCanvas extends JPanel
          Graphics2D g2 = (Graphics2D)getGraphics();
          g2.setRenderingHints(frame_.getRenderingHints());
 
-         getCanvasGraphics().setGraphicsDevice(g2);
+         CanvasGraphics cg = getCanvasGraphics();
+         cg.setGraphicsDevice(g2);
+
+         Vector<String> styNames = null;
+         TextModeMappings textModeMappings = cg.getTextModeMappings();
+         MathModeMappings mathModeMappings = cg.getMathModeMappings();
+
+         if (textModeMappings != null || mathModeMappings != null)
+         {
+            styNames = new Vector<String>();
+         }
 
          try
          {
-            JDRGroup group = textPath.splitText();
-
-            for (int j = 0; j < group.size(); j++)
-            {
-               JDRCompleteObject obj = group.get(j);
-
-               if (obj instanceof JDRText)
-               {
-                  JDRGroup grp = ((JDRText)obj).convertToPath();
-
-                  if (grp.size() == 1)
-                  {
-                     group.set(j, grp.get(0));
-                  }
-                  else
-                  {
-                     group.set(j, grp);
-                  }
-               }
-            }
-
-            if (group.size() == 1)
-            {
-               object_ = group.get(0);
-            }
-            else
-            {
-               object_ = group;
-            }
+            object_ = textPath.convertToPath(
+                  textModeMappings, mathModeMappings, styNames);
          }
          finally
          {
             getCanvasGraphics().setGraphicsDevice(null);
             g2.dispose();
+         }
+
+         try
+         {
+            addPackagesToPreamble(styNames);
+         }
+         catch (BadLocationException e)
+         {
+            getResources().debugMessage(e);
          }
 
          paths.set(index_, object_);

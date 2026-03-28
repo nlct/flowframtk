@@ -1407,11 +1407,11 @@ public class JDRConverter
             }
             else if (arg.equals("--apply-mappings"))
             {
-               importSettings.useMappings = true;
+               useMappings = true;
             }
             else if (arg.equals("--no-apply-mappings"))
             {
-               importSettings.useMappings = false;
+               useMappings = false;
             }
             else if (arg.equals("--use-latex"))
             {
@@ -1590,7 +1590,9 @@ public class JDRConverter
          }
       }
 
-      if (importSettings.useMappings)
+      importSettings.useMappings = useMappings;
+
+      if (useMappings)
       {
          File file = new File(userConfigDir, "textmappings.prop");
 
@@ -1682,6 +1684,16 @@ public class JDRConverter
 
       verbosenoln(getMessageWithFallback("info.loading", "Loading {0}", inFile));
 
+      if (textModeMappings != null)
+      {
+         canvasGraphics.setTextModeMapping(true, textModeMappings);
+      }
+
+      if (mathModeMappings != null)
+      {
+         canvasGraphics.setMathModeMapping(true, mathModeMappings);
+      }
+
       try
       {
          switch (inFormat)
@@ -1712,8 +1724,7 @@ public class JDRConverter
                paths = loadEps(canvasGraphics, in);
             break;
             case SVG:
-               paths = SVG.load(canvasGraphics, inDir, in, importSettings,
-                textModeMappings, mathModeMappings);
+               paths = SVG.load(canvasGraphics, inDir, in, importSettings);
             break;
             case ACORN_DRAWFILE:
                paths = loadAcornDrawFile(din, canvasGraphics);
@@ -2334,6 +2345,7 @@ public class JDRConverter
 
    protected TextModeMappings textModeMappings;
    protected MathModeMappings mathModeMappings;
+   protected boolean useMappings = true;
 
    // --settings --nosettings
    protected SaveSettingsType saveSettingsType = SaveSettingsType.MATCH_INPUT;

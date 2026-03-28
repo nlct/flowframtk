@@ -79,8 +79,7 @@ public class LoadSvg extends IOSwingWorker
 
          in = new BufferedReader(new FileReader(file));
 
-         image = SVG.load(cg, file.getParentFile(), in, importSettings,
-           app.getTextModeMappings(), app.getMathModeMappings());
+         image = SVG.load(cg, file.getParentFile(), in, importSettings);
       }
       finally
       {

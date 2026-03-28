@@ -833,7 +833,10 @@ class TextConfigPanel extends JPanel
       }
 
       autoEscapeTextSpCharBox.setSelected(
-         application.isAutoEscapeSpCharsEnabled());
+         application.isTextModeMappingOn());
+
+      autoEscapeMathSymBox.setSelected(
+         application.isMathModeMappingOn());
 
       updateEnableTextMappings();
       updateEnableMathMappings();
@@ -851,7 +854,11 @@ class TextConfigPanel extends JPanel
    public void okay()
    {
       application.setAutoAnchor(autoAdjustAnchorBox.isSelected());
-      application.setAutoEscapeSpChars(autoEscapeTextSpCharBox.isSelected());
+
+      application.setMappings(
+         autoEscapeTextSpCharBox.isSelected(),
+         autoEscapeMathSymBox.isSelected()
+      );
 
       ExportSettings exportSettings = application.getExportSettings();
 

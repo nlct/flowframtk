@@ -185,8 +185,7 @@ public class SVG
    }
 
    public static JDRGroup load(CanvasGraphics cg, File file,
-      ImportSettings importSettings,
-      TeXMappings textModeMappings, TeXMappings mathModeMappings)
+      ImportSettings importSettings)
      throws SAXException,IOException
    {
       JDRMessage msgSys = cg.getMessageSystem();
@@ -200,12 +199,11 @@ public class SVG
           "Loading ''{0}''",
           file.getAbsolutePath())));
 
-      return load(cg, file.getParentFile(), r, importSettings, textModeMappings, mathModeMappings);
+      return load(cg, file.getParentFile(), r, importSettings);
    }
 
    public static JDRGroup load(CanvasGraphics cg, File baseFile, Reader reader,
-      ImportSettings importSettings, TeXMappings textModeMappings,
-      TeXMappings mathModeMappings)
+      ImportSettings importSettings)
      throws SAXException,IOException
    {
       if (importSettings == null)
@@ -222,14 +220,16 @@ public class SVG
          svg.basePath = baseFile.toPath().normalize();
       }
 
-      if (textModeMappings != null)
-      {
-         svg.setTextModeMappings(textModeMappings);
-      }
+      boolean orgUseTextModeMappings = cg.isTextModeMappingOn();
+      boolean orgUseMathModeMappings = cg.isMathModeMappingOn();
 
-      if (mathModeMappings != null)
+      if (importSettings.useMappings)
       {
-         svg.setMathModeMappings(mathModeMappings);
+         cg.setTextModeMapping(true);
+         cg.setMathModeMapping(true);
+
+         svg.setTextModeMappings(cg.getTextModeMappings());
+         svg.setMathModeMappings(cg.getMathModeMappings());
       }
 
       try
@@ -239,6 +239,11 @@ public class SVG
       catch (ParserConfigurationException e)
       {
          throw new SAXException(e);
+      }
+      finally
+      {
+         cg.setTextModeMapping(orgUseTextModeMappings);
+         cg.setMathModeMapping(orgUseMathModeMappings);
       }
    }
 

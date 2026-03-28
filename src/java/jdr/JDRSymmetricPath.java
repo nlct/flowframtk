@@ -1931,6 +1931,12 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public JDRGroup separate()
       throws InvalidShapeException
    {
+      return separate(true);
+   }
+
+   public JDRGroup separate(boolean incSymmetryLine)
+      throws InvalidShapeException
+   {
       CanvasGraphics cg = getCanvasGraphics();
 
       Graphics2D g2 = cg.getGraphics();
@@ -1944,7 +1950,7 @@ public class JDRSymmetricPath extends JDRCompoundShape
          
       JDRGroup group = new JDRGroup(cg);
 
-      JDRShape shape = getUnderlyingShape();
+      JDRShape shape = (JDRShape)getUnderlyingShape().clone();
 
       group.add(shape);
 
@@ -1998,19 +2004,22 @@ public class JDRSymmetricPath extends JDRCompoundShape
          }
       }
 
-      try
+      if (incSymmetryLine)
       {
-         JDRPath path = new JDRPath(
-           (JDRPaint)getLinePaint().clone(), 
-           (JDRPaint)getShapeFillPaint().clone(),
-           new JDRBasicStroke(getCanvasGraphics()));
+         try
+         {
+            JDRPath path = new JDRPath(
+              (JDRPaint)getLinePaint().clone(), 
+              (JDRPaint)getShapeFillPaint().clone(),
+              new JDRBasicStroke(getCanvasGraphics()));
 
-         path.add(new JDRLine(line_));
-         group.add(path);
-      }
-      catch (InvalidPathException e)
-      {
-         getCanvasGraphics().debugMessage(e);
+            path.add(new JDRLine(line_));
+            group.add(path);
+         }
+         catch (InvalidPathException e)
+         {
+            getCanvasGraphics().debugMessage(e);
+         }
       }
 
       group.setSelected(isSelected());
@@ -2535,187 +2544,41 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void saveSVG(SVG svg, String attr)
       throws IOException
    {
-      if (isEmpty()) return;
-
-      if (isSingle())
+      try
       {
-         try
+         if (isSingle())
          {
             getFullPath().saveSVG(svg, attr);
          }
-         catch (InvalidShapeException e)
+         else
          {
-            getCanvasGraphics().debugMessage(e);
-
-            getUnderlyingShape().saveSVG(svg, attr);
+            separate(false).saveSVG(svg, attr);
          }
       }
-      else
+      catch (InvalidShapeException e)
       {
-         svg.print("<g>");
-
-         if (description != null && !description.isEmpty())
-         {
-            svg.print("<title>");
-            svg.print(svg.encodeContent(description));
-            svg.println("</title>");
-         }
-
-         JDRShape shape = getUnderlyingShape();
-         shape.saveSVG(svg, attr);
-
-         AffineTransform af = line_.getReflectionTransform(null);
-
-         svg.print("  <g ");
-         svg.print(svg.transform(af));
-         svg.println(">");
-
-         shape.saveSVG(svg, attr);
-
-         svg.println("  </g>");
-         svg.println("</g>");
+         canvasGraphics.warning(e);
       }
    } 
 
    public void savePgf(TeX tex)
     throws IOException
    {
-      BBox pathBBox = getStorageBBox();
-
-      if (pathBBox == null)
+      try
       {
-         return;
-      }
-
-      tex.println("\\begin{pgfscope}");
-
-      JDRStroke stroke = getStroke();
-
-      JDRPaint linePaint = getLinePaint();
-
-      if (stroke instanceof JDRBasicStroke)
-      {
-         JDRPaint paint = getShapeFillPaint();
-         JDRShape strokedPath = null;
-
-         if (linePaint instanceof JDRShading)
+         if (isSingle())
          {
-            ExportSettings settings = tex.getExportSettings();
-
-            String msg = canvasGraphics.warningMessage(
-               "stroke shading paint can't be exported to pgf: using export setting ''{0}''",
-               "warning.pgf-no-stroke-shading",
-               canvasGraphics.getMessageWithFallback(
-                "export.strokeshading."+settings.strokeShading,
-                 settings.strokeShading.toString()));
-
-            tex.comment(msg);
-
-            switch (settings.strokeShading)
-            {
-               case AVERAGE:
-                  linePaint = ((JDRShading)linePaint).average();
-               break;
-               case START:
-                  linePaint = ((JDRShading)linePaint).getStartColor();
-               break;
-               case END:
-                  linePaint = ((JDRShading)linePaint).getEndColor();
-               break;
-               case TO_PATH:
-                  try
-                  {
-                     strokedPath = getFullPath().outlineToPath();
-                  }
-                  catch (InvalidShapeException e)
-                  {
-                     canvasGraphics.debugMessage(e);
-                  }
-               break;
-            }
-         }
-
-         if (strokedPath != null)
-         {
-            if (!(paint instanceof JDRTransparent))
-            {
-               savePgfPath(tex);
-
-               tex.println(paint.pgffillcolor(pathBBox));
-            }
-
-            strokedPath.savePgf(tex);
+            getFullPath().savePgf(tex);
          }
          else
          {
-            ((JDRBasicStroke)getStroke()).savePgf(tex);
-
-            if (paint instanceof JDRTransparent)
-            {
-               savePgfPath(tex);
-
-               if (!(linePaint instanceof JDRTransparent))
-               {
-                  tex.println(linePaint.pgfstrokecolor(pathBBox));
-                  tex.println("\\pgfusepath{stroke}");
-               }
-            }
-            else
-            {
-               savePgfPath(tex);
-
-               tex.println(paint.pgffillcolor(pathBBox));
-
-               if (getStroke() instanceof JDRBasicStroke)
-               {
-                  tex.println(((JDRBasicStroke)getStroke()).windingRule
-                             == Path2D.WIND_EVEN_ODD ? 
-                         "\\pgfseteorule" :
-                         "\\pgfsetnonzerorule");
-               }
-
-               if (paint instanceof JDRShading)
-               {
-                  tex.println(linePaint.pgfstrokecolor(pathBBox));
-
-                  if (!(linePaint instanceof JDRTransparent))
-                  {
-                     tex.println("\\pgfusepath{stroke}");
-                  }
-               }
-               else if (linePaint instanceof JDRTransparent)
-               {
-                  tex.println("\\pgfusepath{fill}");
-               }
-               else
-               {
-                  tex.println(linePaint.pgfstrokecolor(pathBBox));
-
-                  tex.println("\\pgfusepath{fill,stroke}");
-               }
-            }
+            separate(false).savePgf(tex);
          }
       }
-      else
+      catch (InvalidShapeException e)
       {
-         // Text path
-
-         JDRTextPathStroke textPathStroke = (JDRTextPathStroke)stroke;
-
-         textPathStroke.savePgf(tex, linePaint, this);
-
-         AffineTransform af = line_.getReflectionTransform(null);
-
-         tex.comment("Reflection");
-         tex.println("\\pgflowlevel{"
-                    +tex.transform(getCanvasGraphics(), af)+"}");
-
-         textPathStroke.savePgf(tex, linePaint, this);
+         canvasGraphics.warning(e);
       }
-
-      tex.println("\\end{pgfscope}");
-
-      pgfMarkers(tex, pathBBox);
    }
 
    /** 

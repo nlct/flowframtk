@@ -719,7 +719,9 @@ public class TeX
 
    protected void checkForRequiredSupport(JDRGroup group)
    {
-      if (supportOutline && supportTextPath)
+      if (supportOutline
+           && (supportTextPath
+               || exportSettings.textPath != ExportSettings.TextPath.PGF_DECORATION))
       {
          return;
       }
@@ -743,14 +745,17 @@ public class TeX
                   supportOutline = true;
                }
 
-               if (textual instanceof JDRTextPath)
+               if (textual instanceof JDRTextPath
+                    && exportSettings.textPath == ExportSettings.TextPath.PGF_DECORATION)
                {
                   supportTextPath = true;
                }
             }
          }
 
-         if (supportOutline && supportTextPath)
+         if (supportOutline
+           && (supportTextPath
+                || exportSettings.textPath != ExportSettings.TextPath.PGF_DECORATION))
          {
             return;
          }

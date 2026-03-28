@@ -1040,7 +1040,7 @@ public class JDRTextPathStroke implements JDRStroke
 
       boolean useMathMappings = false;
          
-      if (mathMappings != null && styNames != null && latexText != null
+      if (mathMappings != null && latexText != null
           && latexText.length() > 2
           && latexText.startsWith("$") && latexText.endsWith("$")
           && !latexText.substring(1, latexText.length()-1).contains("$"))
@@ -1049,7 +1049,7 @@ public class JDRTextPathStroke implements JDRStroke
       }      
 
       boolean useTextMappings
-        = (!useMathMappings && textMappings != null && styNames != null);
+        = (!useMathMappings && textMappings != null);
 
       FontRenderContext frc = new FontRenderContext(null, true, true);
 

@@ -436,6 +436,20 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       return group;
    }
 
+   public JDRGroup splitText() throws InvalidShapeException
+   {
+      TextModeMappings textModeMappings = canvasGraphics.getTextModeMappings();
+      MathModeMappings mathModeMappings = canvasGraphics.getMathModeMappings();
+
+      JDRGroup group = splitText(textModeMappings, mathModeMappings, null);
+
+      // If any mappings require packages then they would likely
+      // already have been added when the text path text was set.
+      // (Too late to add to preamble if this method is used by
+      // export function.)
+
+      return group;
+   }
 
    public JDRGroup splitText(TextModeMappings textMappings,
      MathModeMappings mathMappings, Vector<String> styNames)
@@ -979,9 +993,72 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       }
    }
 
+   public JDRCompleteObject convertToPath()
+     throws InvalidShapeException,EmptyGroupException
+   {
+      TextModeMappings textModeMappings = canvasGraphics.getTextModeMappings();
+      MathModeMappings mathModeMappings = canvasGraphics.getMathModeMappings();
+
+      return convertToPath(textModeMappings, mathModeMappings, null);
+   }
+
+   public JDRCompleteObject convertToPath(TextModeMappings textMappings,
+     MathModeMappings mathMappings, Vector<String> styNames)
+     throws InvalidShapeException,EmptyGroupException
+   {
+      JDRGroup group = splitText(textMappings, mathMappings, styNames);
+
+      for (int j = 0; j < group.size(); j++)
+      {
+         JDRCompleteObject obj = group.get(j);
+
+         if (obj instanceof JDRText)
+         {
+            JDRGroup grp = ((JDRText)obj).convertToPath();
+
+            if (grp.size() == 1)
+            {
+               group.set(j, grp.get(0));
+            }
+            else
+            {
+               group.set(j, grp);
+            }
+         }
+      }
+
+      if (group.size() == 1)
+      {
+         return group.firstElement();
+      }
+      else
+      {
+         return group;
+      }
+   }
+
    public void savePgf(TeX tex)
     throws IOException
    {
+      ExportSettings exportSettings = tex.getExportSettings();
+
+      try
+      {
+         switch (exportSettings.textPath)
+         {
+            case SPLIT:
+               splitText().savePgf(tex);
+               return;
+            case TO_PATH:
+               convertToPath().savePgf(tex);
+               return;
+         }
+      }
+      catch (InvalidShapeException | EmptyGroupException e)
+      {
+         getCanvasGraphics().warning(e);
+      }
+
       if (showPath)
       {
          // ensure variables are initialised
@@ -995,8 +1072,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       BBox pathBBox = getStorageBBox();
 
       if (pathBBox == null) return;
-
-      ExportSettings exportSettings = tex.getExportSettings();
 
       CanvasGraphics cg = getCanvasGraphics();
 

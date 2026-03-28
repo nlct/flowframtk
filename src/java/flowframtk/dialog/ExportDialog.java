@@ -546,6 +546,47 @@ public class ExportDialog extends JDialog
 
       adjustMaxHeight(textAreaOutlineWidgets);
 
+      // Text-Paths
+
+      textPathComp = createRigidRow();
+      settingsPanel.add(textPathComp);
+
+      JLabel textPathLabel = resources.createAppLabel("export.textpath");
+      labelGrp.add(textPathLabel);
+      textPathComp.add(textPathLabel);
+
+      bg = new ButtonGroup();
+
+      JComponent textPathWidgets = createBevelledRow();
+      textPathComp.add(textPathWidgets);
+
+      textPathPgfBox = resources.createAppRadioButton("export",
+        "textpath.pgf", bg, true, null);
+      textPathWidgets.add(textPathPgfBox);
+
+      textPathPgfBox.addChangeListener(new ChangeListener()
+       {
+          @Override
+          public void stateChanged(ChangeEvent evt)
+          {
+             if (textPathOutlineComp != null)
+             {
+                textPathOutlineComp.setVisible(
+                  textPathComp.isVisible() && textPathPgfBox.isSelected());
+             }
+          }
+       });
+
+      textPathSplitBox = resources.createAppRadioButton("export",
+        "textpath.split", bg, false, null);
+      textPathWidgets.add(textPathSplitBox);
+
+      textPathToPathBox = resources.createAppRadioButton("export",
+        "textpath.to_path", bg, false, null);
+      textPathWidgets.add(textPathToPathBox);
+
+      adjustMaxHeight(textPathWidgets);
+
       // Text-Path Outlines
 
       textPathOutlineComp = createRigidRow();
@@ -1019,6 +1060,21 @@ public class ExportDialog extends JDialog
          break;
       }
 
+      switch (exportSettings.textPath)
+      {
+         case PGF_DECORATION:
+            textPathPgfBox.setSelected(true);
+         break;
+         case SPLIT:
+            textPathSplitBox.setSelected(true);
+         break;
+         case TO_PATH:
+            textPathToPathBox.setSelected(true);
+         break;
+      }
+
+      textPathOutlineComp.setVisible(textPathPgfBox.isSelected());
+
       switch (exportSettings.textPathOutline)
       {
          case TO_PATH:
@@ -1300,6 +1356,22 @@ public class ExportDialog extends JDialog
          }
       }
 
+      if (textPathComp.isVisible())
+      {
+         if (textPathPgfBox.isSelected())
+         {
+            exportSettings.textPath = ExportSettings.TextPath.PGF_DECORATION;
+         }
+         else if (textPathSplitBox.isSelected())
+         {
+            exportSettings.textPath = ExportSettings.TextPath.SPLIT;
+         }
+         else if (textPathToPathBox.isSelected())
+         {
+            exportSettings.textPath = ExportSettings.TextPath.TO_PATH;
+         }
+      }
+
       if (textPathOutlineComp.isVisible())
       {
          if (textPathOutlineToPathBox.isSelected())
@@ -1528,7 +1600,7 @@ public class ExportDialog extends JDialog
       boolean showStrokeShading = true;
       boolean showStrokeMarkers = true;
       boolean showTextualShading = true;
-      boolean showPathOutline = true;
+      boolean showTextPath = true;
       boolean showTextAreaOutline = false;
 
       if (useExternalProcessBox.isVisible() && useExternalProcessBox.isSelected())
@@ -1577,7 +1649,7 @@ public class ExportDialog extends JDialog
                showStrokeShading = true;
                showStrokeMarkers = true;
                showTextualShading = true;
-               showPathOutline = true;
+               showTextPath = true;
             }
             else
             {
@@ -1585,7 +1657,7 @@ public class ExportDialog extends JDialog
                showStrokeShading = false;
                showStrokeMarkers = false;
                showTextualShading = false;
-               showPathOutline = false;
+               showTextPath = false;
             }
          break;
          case PGF:
@@ -1615,7 +1687,8 @@ public class ExportDialog extends JDialog
       strokeMarkersComp.setVisible(showStrokeMarkers);
       strokeShadingComp.setVisible(showStrokeShading);
       textualShadingComp.setVisible(showTextualShading);
-      textPathOutlineComp.setVisible(showPathOutline);
+      textPathComp.setVisible(showTextPath);
+      textPathOutlineComp.setVisible(showTextPath && textPathPgfBox.isSelected());
       textAreaOutlineComp.setVisible(showTextAreaOutline);
    }
 
@@ -1715,6 +1788,9 @@ public class ExportDialog extends JDialog
    private JComponent textualShadingComp;
    private JRadioButton textualShadingAverageBox, textualShadingStartBox,
      textualShadingEndBox, textualShadingToPathBox;
+
+   private JComponent textPathComp;
+   private JRadioButton textPathPgfBox, textPathSplitBox, textPathToPathBox;
 
    private JComponent textPathOutlineComp;
    private JRadioButton textPathOutlineToPathBox, textPathOutlineIgnoreBox;

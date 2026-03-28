@@ -55,7 +55,4 @@ public interface JDRImage extends JDRConstants
     * Gets the base file or null if not set.
     */
    public File getBaseFile();
-
-   public boolean isMathModeMappingsOn();
-   public boolean isTextModeMappingsOn();
 }

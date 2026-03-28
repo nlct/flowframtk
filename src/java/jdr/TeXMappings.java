@@ -126,7 +126,7 @@ public class TeXMappings extends HashMap<Integer,TeXLookup>
 
             String styName = map.getStyName();
 
-            if (!styName.isEmpty() && !styName.equals("none"))
+            if (styNames != null && !styName.isEmpty() && !styName.equals("none"))
             {
                Matcher m = STY_PATTERN.matcher(styName);
 

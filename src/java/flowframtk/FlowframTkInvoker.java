@@ -836,9 +836,19 @@ public class FlowframTkInvoker
                {
                   settings.autoUpdateAnchors = parseBoolean(value, line);
                }
-               else if (key.equals("autoescapespchars"))
+               else if (key.equals("maptext"))
                {
-                  settings.autoEscapeSpChars = parseBoolean(value, line);
+                  settings.setTextModeMapping(parseBoolean(value, line));
+               }
+               else if (key.equals("mapmath"))
+               {
+                  settings.setTextModeMapping(parseBoolean(value, line));
+               }
+               else if (key.equals("autoescapespchars"))
+               {// deprecated
+                  boolean autoEsc = parseBoolean(value, line);
+                  settings.setTextModeMapping(autoEsc);
+                  settings.setMathModeMapping(autoEsc);
                }
                else if (key.equals("save_jdrsettings"))
                {
@@ -2430,8 +2440,11 @@ public class FlowframTkInvoker
          +(settings.updateLaTeXFonts?1:0));
       out.println("autoupdateanchors="
          +(settings.autoUpdateAnchors?1:0));
-      out.println("autoescapespchars="
-         +(settings.autoEscapeSpChars?1:0));
+
+      out.println("maptext="
+         +(settings.isTextModeMappingOn()?1:0));
+      out.println("mapmath="
+         +(settings.isMathModeMappingOn()?1:0));
 
       out.println("tool="+cg.getToolString());
 

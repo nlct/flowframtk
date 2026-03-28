@@ -45,6 +45,11 @@ public class ExportSettings
       NONE, PAIRED, ENCAP;
    }
 
+   public static enum TextPath
+   {
+      PGF_DECORATION, SPLIT, TO_PATH;
+   }
+
    public static enum TextualShading
    {
       AVERAGE, START, END, TO_PATH;
@@ -75,6 +80,7 @@ public class ExportSettings
       type = other.type;
       bounds = other.bounds;
       objectMarkup = other.objectMarkup;
+      textPath = other.textPath;
       textualShading = other.textualShading;
       textPathOutline = other.textPathOutline;
       textAreaOutline = other.textAreaOutline;
@@ -322,6 +328,7 @@ public class ExportSettings
    public Type type = Type.PGF;
    public Bounds bounds = Bounds.IMAGE;
    public ObjectMarkup objectMarkup = ObjectMarkup.NONE;
+   public TextPath textPath = TextPath.PGF_DECORATION;
    public TextualShading textualShading = TextualShading.TO_PATH;
    public TextPathOutline textPathOutline = TextPathOutline.TO_PATH;
    public TextAreaOutline textAreaOutline = TextAreaOutline.TO_PATH;

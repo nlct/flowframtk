@@ -820,6 +820,17 @@ public class FlowframTkSettings
       swingWorkerTimeout = millisecs;
    }
 
+   public boolean isTextModeMappingOn()
+   {
+      return autoEscapeSpChars;
+   }
+
+   public void setTextModeMapping(boolean on)
+   {
+      autoEscapeSpChars = on;
+      canvasGraphics.setTextModeMapping(on, textModeMappings);
+   }
+
    public String applyTextModeMappings(String original, Vector<String> styNames)
    {
       if (!autoEscapeSpChars)
@@ -828,6 +839,16 @@ public class FlowframTkSettings
       }
 
       return textModeMappings.applyMappings(original, styNames);
+   }
+
+   public boolean isMathModeMappingOn()
+   {
+      return autoEscapeMathChars;
+   }
+
+   public void setMathModeMapping(boolean on)
+   {
+      canvasGraphics.setMathModeMapping(on, mathModeMappings);
    }
 
    public String applyMathModeMappings(String original, Vector<String> styNames)
@@ -857,6 +878,8 @@ public class FlowframTkSettings
       {
          createDefaultTextModeMappings();
       }
+
+      canvasGraphics.setTextModeMapping(autoEscapeSpChars, textModeMappings);
    }
 
    public void createDefaultTextModeMappings()
@@ -881,6 +904,8 @@ public class FlowframTkSettings
       {
          createDefaultMathModeMappings();
       }
+
+      canvasGraphics.setMathModeMapping(autoEscapeMathChars, mathModeMappings);
    }
 
    public void createDefaultMathModeMappings()
@@ -896,6 +921,12 @@ public class FlowframTkSettings
    public MathModeMappings getMathModeMappings()
    {
       return mathModeMappings;
+   }
+
+   public void applyToCanvas(CanvasGraphics cg)
+   {
+      cg.setTextModeMapping(autoEscapeSpChars, textModeMappings);
+      cg.setMathModeMapping(autoEscapeMathChars, mathModeMappings);
    }
 
    public int[][] getUnicodeRanges()
@@ -1673,8 +1704,8 @@ public class FlowframTkSettings
 
    public boolean updateLaTeXFonts=true;
    public boolean autoUpdateAnchors=true;
-   public boolean autoEscapeSpChars=true;
-   public boolean autoEscapeMathChars=true;
+   private boolean autoEscapeSpChars=true;
+   private boolean autoEscapeMathChars=true;
 
    public int pgfHalign = JDRText.PGF_HALIGN_LEFT;
    public int pgfValign = JDRText.PGF_VALIGN_BASE;

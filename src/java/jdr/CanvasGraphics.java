@@ -1153,6 +1153,8 @@ public class CanvasGraphics
 
    public void addPackagesToPreamble(Vector<String> styNames)
    {
+      if (styNames == null || styNames.isEmpty()) return;
+
       StringBuffer buffer = new StringBuffer();
 
       for (String styName : styNames)
@@ -1194,6 +1196,48 @@ public class CanvasGraphics
             preamble += String.format("%n") + buffer.toString();
          }
       }
+   }
+
+   public void setTextModeMapping(boolean on)
+   {
+      textModeMappingsOn = on;
+   }
+
+   public void setTextModeMapping(boolean on, TextModeMappings mappings)
+   {
+      textModeMappings = mappings;
+      textModeMappingsOn = on;
+   }
+
+   public boolean isTextModeMappingOn()
+   {
+      return textModeMappingsOn;
+   }
+
+   public TextModeMappings getTextModeMappings()
+   {
+      return textModeMappingsOn ? textModeMappings : null;
+   }
+
+   public void setMathModeMapping(boolean on)
+   {
+      mathModeMappingsOn = on;
+   }
+
+   public void setMathModeMapping(boolean on, MathModeMappings mappings)
+   {
+      mathModeMappings = mappings;
+      mathModeMappingsOn = on;
+   }
+
+   public boolean isMathModeMappingOn()
+   {
+      return mathModeMappingsOn;
+   }
+
+   public MathModeMappings getMathModeMappings()
+   {
+      return mathModeMappingsOn ? mathModeMappings : null;
    }
 
    public String getPreamble()
@@ -1318,6 +1362,11 @@ public class CanvasGraphics
       setGrid((JDRGrid)cg.grid.clone());
       originX = cg.originX;
       originY = cg.originY;
+
+      textModeMappings = cg.textModeMappings;
+      mathModeMappings = cg.mathModeMappings;
+      textModeMappingsOn = cg.textModeMappingsOn;
+      mathModeMappingsOn = cg.mathModeMappingsOn;
    }
 
    /**
@@ -1764,6 +1813,12 @@ public class CanvasGraphics
 
    private String footerlabel = "footer";
    private String evenfooterlabel = "evenfooter";
+
+   // for use with JDRTextPath.splitText()
+   private TextModeMappings textModeMappings = null;
+   private MathModeMappings mathModeMappings = null;
+   private boolean textModeMappingsOn = true;
+   private boolean mathModeMappingsOn = true;
 
    JDRTeXApp jdrTeXApp;
 }
