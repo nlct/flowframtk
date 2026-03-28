@@ -587,7 +587,7 @@ public class JDRCanvas extends JPanel
             }
          },
          SELECT_FLAG_SHAPE,
-         SEGMENT_FLAG_ANY_FULL,
+         SEGMENT_FLAG_ANY_FULL | SEGMENT_FLAG_ANY_PARTIAL,
          CONTROL_FLAG_REGULAR
          ));
 
@@ -3333,8 +3333,15 @@ public class JDRCanvas extends JPanel
    {
       if (editedPath == null) return;
 
-      UndoableEdit edit = new AddPoint(editedPath);
-      frame_.postEdit(edit);
+      try
+      {
+         UndoableEdit edit = new AddPoint(editedPath);
+         frame_.postEdit(edit);
+      }
+      catch (InvalidPathException e)
+      {
+         getResources().internalError(frame_, e);
+      }
    }
 
    public void segmentInfo()
@@ -16590,7 +16597,7 @@ public class JDRCanvas extends JPanel
       private JDRShape path_, oldPath_;
       private JDRPoint oldPt=null, newPt=null;
 
-      public AddPoint(JDRShape path)
+      public AddPoint(JDRShape path) throws InvalidPathException
       {
          super(getFrame());
 
@@ -16606,6 +16613,12 @@ public class JDRCanvas extends JPanel
          editedPath.selectControl(ctrIdx);
 
          newPt = path_.addPoint();
+
+         if (newPt == null)
+         {
+            throw new InvalidPathException(
+               getResources().getMessage("error.cant_split_segment"));
+         }
 
          editedPath.selectControl(newPt);
 

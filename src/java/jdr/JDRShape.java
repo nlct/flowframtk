@@ -1029,9 +1029,20 @@ public abstract class JDRShape extends JDRCompleteObject
    throws InvalidPathException;
 
    /**
+    * Inserts the given segment at the given index, enlarging the
+    * capacity if necessary.
+    * @param index the index which must be &gt;= 0 and &lt;= size
+    * @param segment the segment to insert into to this shape
+    */
+   public abstract void insert(int index, JDRSegment segment)
+      throws ArrayIndexOutOfBoundsException,
+        NullPointerException,
+        ClosingMoveException;
+
+   /**
     * Adds a new point midway along the currently edited segment.
     * @return the newly added point or null if this shape is not
-    * being edited
+    * being edited or currently edited segment can't be split
     */
    public abstract JDRPoint addPoint();
 

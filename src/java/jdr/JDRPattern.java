@@ -141,6 +141,15 @@ public abstract class JDRPattern extends JDRCompoundShape
       path_.add(s);
    }
 
+   @Override
+   public void insert(int index, JDRSegment segment)
+      throws ArrayIndexOutOfBoundsException,
+        NullPointerException,
+        ClosingMoveException
+   {
+      path_.insert(index, segment);
+   }
+
    /**
     * Returns number of replicas. (Doesn't include original shape.)
     * @see #setNumReplicas(int)

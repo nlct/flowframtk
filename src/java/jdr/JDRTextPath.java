@@ -1648,6 +1648,15 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    @Override
+   public void insert(int index, JDRSegment segment)
+      throws ArrayIndexOutOfBoundsException,
+        NullPointerException,
+        ClosingMoveException
+   {
+      path_.insert(index, segment);
+   }
+
+   @Override
    public JDRPoint addPoint()
    {
       return path_.addPoint();

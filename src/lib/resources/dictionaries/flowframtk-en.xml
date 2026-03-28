@@ -4561,7 +4561,8 @@ Merge Region: {2}</entry>
 
 <!--  Error Messages -->
 
-<entry key="error.cant_create_intersect">Can't create intersection</entry>
+<entry key="error.cant_create_intersect">Can''t create intersection</entry>
+<entry key="error.cant_split_segment">Can''t split current segment</entry>
 <entry key="error.clip_failed">Clip failed</entry>
 <entry key="error.not_clippable">Clipping not supported for selected object</entry>
 <entry key="error.no_clippable_objects">No clippable objects in selection</entry>

@@ -1482,6 +1482,55 @@ public class JDRPath extends JDRShape
       addSegmentToList(s);
    }
 
+   @Override
+   public void insert(int index, JDRSegment segment)
+      throws ArrayIndexOutOfBoundsException,
+        NullPointerException,
+        ClosingMoveException
+   {
+      if (index < 0 || index > size_)
+      {
+         throw new ArrayIndexOutOfBoundsException(index);
+      }
+
+      if (segment == null)
+      {
+         throw new NullPointerException();
+      }
+
+      int controlIndex = -1;
+
+      if (selectedSegmentIndex >= index && selectedSegmentIndex < size_)
+      {
+         controlIndex = selectedControlIndex + segment.controlCount();
+      }
+
+      JDRSegment nextSeg = null;
+
+      if (index > 0 && size_ > 0)
+      {
+         JDRSegment prevSeg = (JDRSegment)get(index-1);
+         segment.start = prevSeg.getEnd();
+      }
+
+      if (index < size_)
+      {
+         nextSeg = (JDRSegment)get(index);
+      }
+
+      addSegmentToList(index, segment);
+
+      if (nextSeg != null)
+      {
+         nextSeg.start = segment.getEnd();
+      }
+
+      if (controlIndex > -1)
+      {
+         selectControl(controlIndex);
+      }
+   }
+
    /**
     * Adds a new point midway along the currently edited segment.
     * To be more precise, it replaces the edited segment with two 

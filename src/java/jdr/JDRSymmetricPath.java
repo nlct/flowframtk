@@ -379,6 +379,16 @@ public class JDRSymmetricPath extends JDRCompoundShape
       pathChanged();
    }
 
+   @Override
+   public void insert(int index, JDRSegment segment)
+      throws ArrayIndexOutOfBoundsException,
+        NullPointerException,
+        ClosingMoveException
+   {
+      path_.insert(index, segment);
+      pathChanged();
+   }
+
     public JDRShape getFullPath()
       throws InvalidShapeException
     {
@@ -565,7 +575,51 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
    public JDRPoint addPoint()
    {
-      JDRPoint p = path_.addPoint();
+      JDRPoint p = null;
+      JDRPathSegment selectedSegment = getSelectedSegment();
+
+      if (selectedSegment instanceof JDRPartialSegment)
+      {
+         JDRSegment seg = ((JDRPartialSegment)selectedSegment).getFullSegment();
+
+         int currentPointIndex = getSelectedControlIndex();
+
+         try
+         {
+            if (selectedSegment == join)
+            {
+               seg.split();
+               path_.add(seg);
+               join = null;
+            }
+            else if (selectedSegment == closingSegment)
+            {
+               currentPointIndex = 0;
+
+               seg = (JDRSegment)seg.split();
+
+               path_.insert(0, seg);
+
+               closingSegment = null;
+            }
+            else
+            {
+               return null;
+            }
+         }
+         catch (InvalidPathException e)
+         {
+            // shouldn't happen as segment should only be a move, line or curve
+            return null;
+         }
+
+         p = path_.selectControl(currentPointIndex);
+      }
+      else
+      {
+         p = path_.addPoint();
+      }
+
       pathChanged();
       return p;
    }
