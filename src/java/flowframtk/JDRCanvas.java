@@ -2767,8 +2767,9 @@ public class JDRCanvas extends JPanel
                selectTextActionList.add((CanvasSelectAction)action);
             }
          }
-         else if ((selectFlag & (SELECT_FLAG_SHAPE)) != 0
-               || (selectFlag & (SELECT_FLAG_TEXTPATH)) != 0)
+         else if ((selectFlag & SELECT_FLAG_SHAPE) != 0
+               || (selectFlag & SELECT_FLAG_TEXTPATH) != 0
+               || (selectFlag & SELECT_FLAG_HAS_BASIC_STROKE) != 0)
          {
             selectPathActionList.add((CanvasSelectAction)action);
          }

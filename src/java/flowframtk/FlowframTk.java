@@ -900,7 +900,7 @@ public class FlowframTk extends JFrame
       linePaintItem = FlowframTkAction.createMenuItem(this,
          "menu.edit.path", "line_colour", pathM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
@@ -919,7 +919,7 @@ public class FlowframTk extends JFrame
       JMenuItem fillPaintItem = FlowframTkAction.createMenuItem(this,
          "menu.edit", "path.fill_colour", pathM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
-         SELECT_FLAG_SHAPE,
+         SELECT_FLAG_HAS_BASIC_STROKE,
          FlowframTkAction.SELECTION_IGNORE_COUNT, true, false,
          new FlowframTkActionListener()
          {
