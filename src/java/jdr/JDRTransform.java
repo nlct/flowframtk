@@ -438,6 +438,16 @@ public class JDRTransform implements Cloneable,Serializable
    }
 
    /**
+    * Preconcatenate this transformation with another transformation.
+    * @param trans the other transformation
+    */
+   public void preConcatenate(JDRTransform trans)
+   {
+      affineTransform.preConcatenate(trans.affineTransform);
+      transformChanged();
+   }
+
+   /**
     * Sets the position. This sets the last two elements of the
     * transformation matrix.
     * @param x the x position

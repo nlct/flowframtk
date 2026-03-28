@@ -1976,22 +1976,85 @@ public class JDRSymmetricPath extends JDRCompoundShape
       }
       else
       {
-         group = ((JDRCompoundShape)path_).splitText();
-// TODO
-/*
          group = new JDRGroup(getCanvasGraphics());
 
-         JDRGroup subGrp = ((JDRCompoundShape)path_).splitText();
+         JDRGroup subGrp = ((JDRCompoundShape)path_).splitText(textMappings,
+              mathMappings, styNames);
 
-         group.add(subGrp);
+         if (subGrp.size() == 1)
+         {
+            group.add(subGrp.firstElement());
+         }
+         else
+         {
+            group.add(subGrp);
+         }
+
+         JDRBasicStroke bs = null;
+
+         if (join != null || closingSegment != null)
+         {
+            bs = getBasicStroke();
+         }
+         
+         if (join != null && bs != null)
+         {
+            try
+            {
+               JDRBasicStroke stroke = new JDRBasicStroke(bs);
+               stroke.setStartArrow(JDRMarker.ARROW_NONE);
+               stroke.setEndArrow(JDRMarker.ARROW_NONE);
+
+               JDRPath path = new JDRPath(
+                 (JDRPaint)getLinePaint().clone(), 
+                 (JDRPaint)getShapeFillPaint().clone(), 
+                 stroke);
+
+               path.add(join.getFullSegment());
+
+               group.add(path);
+            }
+            catch (InvalidPathException e)
+            {
+               getCanvasGraphics().debugMessage(e);
+            }
+         }
 
          AffineTransform af = line_.getReflectionTransform(null);
 
          subGrp = (JDRGroup)subGrp.clone();
          subGrp.transform(af);
 
-         group.add(subGrp);
-*/
+         if (subGrp.size() == 1)
+         {
+            group.add(subGrp.firstElement());
+         }
+         else
+         {
+            group.add(subGrp);
+         }
+
+         if (closingSegment != null && bs != null)
+         {
+            try
+            {
+               JDRBasicStroke stroke = new JDRBasicStroke(bs);
+               stroke.setStartArrow(JDRMarker.ARROW_NONE);
+               stroke.setEndArrow(JDRMarker.ARROW_NONE);
+
+               JDRPath path = new JDRPath(
+                 (JDRPaint)getLinePaint().clone(), 
+                 (JDRPaint)getShapeFillPaint().clone(),
+                 stroke);
+
+               path.add(closingSegment.getFullSegment());
+               group.add(path);
+            }
+            catch (InvalidPathException e)
+            {
+               getCanvasGraphics().debugMessage(e);
+            }
+         }
       }
 
       group.setSelected(isSelected());

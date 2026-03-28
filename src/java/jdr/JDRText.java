@@ -810,6 +810,11 @@ public class JDRText extends JDRCompleteObject
       jdrtransform.preConcatenate(trans);
    }
 
+   public void concatenate(AffineTransform trans)
+   {
+      jdrtransform.concat(trans);
+   }
+
    /**
     * Transforms this text area by concatenation a transformation
     * with this text area's transformation matrix.
@@ -817,7 +822,7 @@ public class JDRText extends JDRCompleteObject
    @Override
    public void transform(double[] matrix)
    {
-      jdrtransform.concat(matrix);
+      transform(new AffineTransform(matrix));
    }
 
    /**
@@ -827,7 +832,7 @@ public class JDRText extends JDRCompleteObject
     */
    public void transform(JDRTransform jdrt)
    {
-      jdrtransform.concat(jdrt);
+      jdrtransform.preConcatenate(jdrt);
    }
 
    /**
@@ -838,7 +843,7 @@ public class JDRText extends JDRCompleteObject
    @Override
    public void transform(AffineTransform af)
    {
-      jdrtransform.concat(af);
+      jdrtransform.preConcatenate(af);
    }
 
    @Override
