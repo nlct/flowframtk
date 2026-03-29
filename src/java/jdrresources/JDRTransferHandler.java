@@ -53,8 +53,6 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
       this.jdr = new JDR();
       this.exportSettings = exportSettings;
       this.importSettings = importSettings;
-      this.textModeMappings = cg.getTextModeMappings();
-      this.mathModeMappings = cg.getMathModeMappings();
    }
 
    /**
@@ -203,7 +201,7 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
                   StringReader reader = new StringReader(buffer.toString("UTF-8"));
 
                   group = SVG.load(canvasGraphics, img.getBaseFile(), reader,
-                    importSettings, textModeMappings, mathModeMappings);
+                    importSettings);
                }
             }
             else if (t.isDataFlavorSupported(DATA_FLAVOR_TEXT))
@@ -212,6 +210,9 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
 
                if (data instanceof InputStream)
                {
+                  TextModeMappings textModeMappings = canvasGraphics.getTextModeMappings();
+                  MathModeMappings mathModeMappings = canvasGraphics.getMathModeMappings();
+
                   InputStream ins = (InputStream)data;
 
                   // InputStream.readAllBytes() requires Java 9+
@@ -382,8 +383,6 @@ public class JDRTransferHandler extends TransferHandler implements Transferable
    private JDR jdr;
    private ExportSettings exportSettings;
    private ImportSettings importSettings;
-   private TextModeMappings textModeMappings;
-   private MathModeMappings mathModeMappings;
 
    public static final DataFlavor DATA_FLAVOR_JDR
     = new DataFlavor("application/x-flowframtk-jdr", "FlowFramTk Binary Format");
