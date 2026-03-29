@@ -1691,6 +1691,24 @@ Nicola Talbot
 <entry key="bitmap_properties.matrix">Transformation Matrix</entry>
 <entry key="bitmap_properties.matrix.mnemonic">T</entry>
 
+<entry key="bitmap_properties.matrix.m00">Scale X</entry>
+<entry key="bitmap_properties.matrix.m00.mnemonic">X</entry>
+<entry key="bitmap_properties.matrix.m01">Shear X</entry>
+<entry key="bitmap_properties.matrix.m02">Shift X</entry>
+
+<entry key="bitmap_properties.matrix.m10">Shear Y</entry>
+<entry key="bitmap_properties.matrix.m10.mnemonic">Y</entry>
+<entry key="bitmap_properties.matrix.m11">Scale Y</entry>
+<entry key="bitmap_properties.matrix.m12">Shift Y</entry>
+
+<entry key="bitmap_properties.matrix.subset_to_identity">Set Scale &amp; Shear Sub-Matrix to Identity</entry>
+<entry key="bitmap_properties.matrix.subset_to_identity.mnemonic">Y</entry>
+<entry key="bitmap_properties.matrix.set_to_identity">Set to Identity</entry>
+<entry key="bitmap_properties.matrix.set_to_identity.mnemonic">I</entry>
+<entry key="bitmap_properties.matrix.reset">Reset</entry>
+<entry key="bitmap_properties.matrix.reset.mnemonic">R</entry>
+<entry key="bitmap_properties.matrix.reset.iconimage">reload</entry>
+
 <entry key="bitmap_properties.path_note">JDR/AJR versions 1.8 and above can now store the bitmap location either as an absolute path or a path relative to the saved file.</entry>
 
 <entry key="bitmap_properties.path.absolute">Your current application settings will use the path as specified in the ''{0}'' box.</entry>
@@ -2387,13 +2405,13 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="edittext.transformation.mnemonic">N</entry>
 <entry key="edittext.transformation.matrix">Transformation Matrix</entry>
 <entry key="edittext.transformation.matrix.mnemonic">M</entry>
-<entry key="edittext.transformation.subset_to_identity">Set Scale &amp; Shear Sub-Matrix to Identity</entry>
-<entry key="edittext.transformation.subset_to_identity.mnemonic">Y</entry>
-<entry key="edittext.transformation.set_to_identity">Set to Identity</entry>
-<entry key="edittext.transformation.set_to_identity.mnemonic">I</entry>
-<entry key="edittext.transformation.reset">Reset</entry>
-<entry key="edittext.transformation.reset.mnemonic">R</entry>
-<entry key="edittext.transformation.reset.iconimage">reload</entry>
+<entry key="edittext.transformation.matrix.subset_to_identity">Set Scale &amp; Shear Sub-Matrix to Identity</entry>
+<entry key="edittext.transformation.matrix.subset_to_identity.mnemonic">Y</entry>
+<entry key="edittext.transformation.matrix.set_to_identity">Set to Identity</entry>
+<entry key="edittext.transformation.matrix.set_to_identity.mnemonic">I</entry>
+<entry key="edittext.transformation.matrix.reset">Reset</entry>
+<entry key="edittext.transformation.matrix.reset.mnemonic">R</entry>
+<entry key="edittext.transformation.matrix.reset.iconimage">reload</entry>
 
 <entry key="edittext.transformation.matrix.m00">Scale X</entry>
 <entry key="edittext.transformation.matrix.m00.mnemonic">X</entry>

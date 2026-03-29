@@ -33,13 +33,12 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.dickimawbooks.texjavahelplib.HelpSetNotInitialisedException;
+import com.dickimawbooks.texjavahelplib.JLabelGroup;
 
 import com.dickimawbooks.jdr.*;
 
 import com.dickimawbooks.jdrresources.*;
 import com.dickimawbooks.jdrresources.filter.*;
-import com.dickimawbooks.jdrresources.numfield.*;
 
 import com.dickimawbooks.flowframtk.*;
 
@@ -59,157 +58,127 @@ public class BitmapProperties extends JDialog
       application_ = application;
       fc_ = fc;
 
+      init();
+   }
+
+   protected void init()
+   {
+      JDRResources resources = getResources();
+
+      JLabelGroup labelGroup = new JLabelGroup();
       Box mainPanel = Box.createVerticalBox();
+      mainPanel.setAlignmentX(0.0f);
 
       getContentPane().add(mainPanel, "Center");
 
-      mainPanel.add(Box.createVerticalStrut(10));
+      mainPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-      Box rowBox = Box.createHorizontalBox();
+      JComponent rowBox = createRow();
       mainPanel.add(rowBox);
 
-      JLabel filenameLabel = getResources().createAppLabel("label.filename");
+      JLabel filenameLabel = resources.createAppLabel("label.filename");
+      labelGroup.add(filenameLabel);
       rowBox.add(filenameLabel);
 
-      filename = new JTextField(getResources().getMessage("error.no_filename"));
+      rowBox.add(resources.createLabelSpacer());
+
+      filename = new JTextField(TEXTFIELD_COLUMNS);
       filenameLabel.setLabelFor(filename);
       rowBox.add(filename);
 
-      browse = getResources().createDialogButton("browsebitmap", "browse",
+      browse = resources.createDialogButton("browsebitmap", "browse",
          this, null);
 
       rowBox.add(browse);
+      rowBox.add(Box.createHorizontalGlue());
+
+      resources.clampCompMaxHeight(rowBox, 0, 0);
 
       mainPanel.add(Box.createVerticalStrut(10));
 
-      rowBox = Box.createHorizontalBox();
+      rowBox = createRow();
       mainPanel.add(rowBox);
 
       JLabel latexlinkLabel = 
-         getResources().createAppLabel("bitmap_properties.latexfilename");
+         resources.createAppLabel("bitmap_properties.latexfilename");
+      labelGroup.add(latexlinkLabel);
       rowBox.add(latexlinkLabel);
 
-      autoBox = getResources().createAppCheckBox(
+      rowBox.add(resources.createLabelSpacer());
+
+      autoBox = resources.createAppCheckBox(
         "bitmap_properties", "auto_latexfilename", true, this);
       rowBox.add(autoBox);
 
-      latexlinkText = new JTextField("");
+      latexlinkText = new JTextField(TEXTFIELD_COLUMNS);
       latexlinkLabel.setLabelFor(latexlinkText);
       latexlinkText.setEnabled(false);
       rowBox.add(latexlinkText);
+      rowBox.add(Box.createHorizontalGlue());
+
+      resources.clampCompMaxHeight(rowBox, 0, 0);
 
       mainPanel.add(Box.createVerticalStrut(10));
 
-      JTextArea infoArea = new JTextArea(getResources().getMessage(
+      JTextArea infoArea = resources.createAppInfoArea(TEXTFIELD_COLUMNS);
+      infoArea.setAlignmentX(0.0f);
+
+      infoArea.setText(resources.getMessage(
          "bitmap_properties.path_note") + " "
-        + (application.useRelativeBitmaps() ?
-           getResources().getMessage("bitmap_properties.path.relative") :
-           getResources().getMessage("bitmap_properties.path.absolute",
+        + (application_.useRelativeBitmaps() ?
+           resources.getMessage("bitmap_properties.path.relative") :
+           resources.getMessage("bitmap_properties.path.absolute",
               filenameLabel.getText())));
-      infoArea.setEditable(false);
-      infoArea.setLineWrap(true);
-      infoArea.setWrapStyleWord(true);
-      infoArea.setOpaque(false);
 
       mainPanel.add(infoArea);
 
       mainPanel.add(Box.createVerticalStrut(10));
 
-      rowBox = Box.createHorizontalBox();
+      rowBox = createRow();
       mainPanel.add(rowBox);
 
       JLabel commandLabel =
          getResources().createAppLabel("bitmap_properties.command");
+      labelGroup.add(commandLabel);
       rowBox.add(commandLabel);
 
-      latexCommand = new JTextField("\\pgfimage");
+      rowBox.add(resources.createLabelSpacer());
+
+      latexCommand = new JTextField(TEXTFIELD_COLUMNS);
       rowBox.add(latexCommand);
+      rowBox.add(Box.createHorizontalGlue());
 
       commandLabel.setLabelFor(latexCommand);
 
+      resources.clampCompMaxHeight(rowBox, 0, 0);
+
       mainPanel.add(Box.createVerticalStrut(10));
 
-      rowBox = Box.createHorizontalBox();
-      mainPanel.add(rowBox);
+      matrixPanel = new TransformationMatrixPanel(resources, "bitmap_properties.matrix");
+      matrixPanel.setBorder(BorderFactory.createLoweredSoftBevelBorder());
 
-      JLabel matrixLabel = 
-         getResources().createAppLabel("bitmap_properties.matrix");
-      rowBox.add(matrixLabel);
+      matrixPanel.setAlignmentX(0.0f);
+      mainPanel.add(matrixPanel);
 
-      JPanel matrixPanel = new JPanel();
-      matrixPanel.setAlignmentY(0.0f);
-
-      matrixPanel.setLayout(new GridLayout(3,3));
-
-      field = new DoubleField[6];
-      int[] indexes = new int[] {0, 2, 4, 1, 3, 5};
-
-      for (int i = 0; i < field.length; i++)
-      {
-         int j = indexes[i];
-
-         field[j] = new DoubleField(0);
-         field[j].setAlignmentY(0.0f);
-         field[j].setHorizontalAlignment(JTextField.LEFT);
-         matrixPanel.add(field[j]);
-      }
-
-      matrixLabel.setLabelFor(field[0]);
-
-      for (int i = 0; i < 3; i++)
-      {
-         JLabel label = new JLabel(i == 2 ? "1" : "0");
-         label.setAlignmentY(0.0f);
-         matrixPanel.add(label);
-      }
-
-      rowBox.add(matrixPanel);
-
-      Dimension filenameLabelDim = filenameLabel.getPreferredSize();
-      Dimension latexlinkLabelDim = latexlinkLabel.getPreferredSize();
-      Dimension commandLabelDim = commandLabel.getPreferredSize();
-      Dimension matrixLabelDim = matrixLabel.getPreferredSize();
-
-      int maxWidth = (int)Math.max
-                     (Math.max(filenameLabelDim.getWidth(),
-                               latexlinkLabelDim.getWidth()),
-                      Math.max(commandLabelDim.getWidth(),
-                               matrixLabelDim.getWidth())
-                     ) + 10;
-
-      filenameLabelDim.width = maxWidth;
-      latexlinkLabelDim.width = maxWidth;
-      commandLabelDim.width = maxWidth;
-      matrixLabelDim.width = maxWidth;
-
-      filenameLabel.setPreferredSize(filenameLabelDim);
-      latexlinkLabel.setPreferredSize(latexlinkLabelDim);
-      commandLabel.setPreferredSize(commandLabelDim);
-      matrixLabel.setPreferredSize(matrixLabelDim);
+      mainPanel.add(Box.createVerticalGlue());
 
       JPanel p2 = new JPanel();
 
-      p2.add(getResources().createOkayButton(getRootPane(), this));
-      p2.add(getResources().createCancelButton(this));
-
-      try
-      {
-         p2.add(getResources().createHelpDialogButton(this, "sec:bitmapprops"));
-      }
-      catch (HelpSetNotInitialisedException e)
-      {
-         getResources().internalError(null, e);
-      }
+      resources.createOkayCancelHelpButtons(this, p2, this, "sec:bitmapprops");
 
       getContentPane().add(p2, "South");
 
       pack();
 
-      infoArea.setMinimumSize(infoArea.getPreferredSize());
+      setLocationRelativeTo(application_);
+   }
 
-      pack();
+   protected JComponent createRow()
+   {
+      JComponent comp = Box.createHorizontalBox();
+      comp.setAlignmentX(0.0f);
 
-      setLocationRelativeTo(application);
+      return comp;
    }
 
    public void initialise()
@@ -266,11 +235,7 @@ public class BitmapProperties extends JDialog
 
       db.getTransformation(matrix);
 
-      for (int i = 0; i < 6; i++)
-      {
-         field[i].setValue(matrix[i]);
-         field[i].setCaretPosition(0);
-      }
+      matrixPanel.setMatrix(matrix);
    }
 
    public void okay()
@@ -282,10 +247,7 @@ public class BitmapProperties extends JDialog
 
       double[] matrix = new double[6];
 
-      for (int i = 0; i < 6; i++)
-      {
-         matrix[i] = field[i].getDouble();
-      }
+      matrixPanel.getMatrix(matrix);
 
       File file = new File(newfilename);
 
@@ -342,11 +304,13 @@ public class BitmapProperties extends JDialog
    }
 
    private FlowframTk application_;
-   private DoubleField[] field;
    private JButton browse;
    private JTextField filename, latexlinkText, latexCommand;
    private JDRBitmap bitmap=null;
    private JFileChooser fc_;
+   private TransformationMatrixPanel matrixPanel;
 
    private JCheckBox autoBox;
+
+   static final int TEXTFIELD_COLUMNS=32;
 }

@@ -50,7 +50,7 @@ public class TransformationMatrixPanel extends JPanel
       setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
       setAlignmentX(0f);
 
-      JLabel label = resources.createAppLabel(parentTag+".matrix");
+      JLabel label = resources.createAppLabel(parentTag);
       add(label);
 
       add(Box.createVerticalStrut(10));
@@ -71,13 +71,13 @@ public class TransformationMatrixPanel extends JPanel
 
       JLabelGroup labelGroup = new JLabelGroup();
 
-      addToMatrixComp(labelGroup, spinners[0], "edittext.transformation.matrix.m00");
-      addToMatrixComp(labelGroup, spinners[2], "edittext.transformation.matrix.m01");
-      addToMatrixComp(labelGroup, spinners[4], "edittext.transformation.matrix.m02");
+      addToMatrixComp(labelGroup, spinners[0], parentTag+".m00");
+      addToMatrixComp(labelGroup, spinners[2], parentTag+".m01");
+      addToMatrixComp(labelGroup, spinners[4], parentTag+".m02");
 
-      addToMatrixComp(labelGroup, spinners[1], "edittext.transformation.matrix.m10");
-      addToMatrixComp(labelGroup, spinners[3], "edittext.transformation.matrix.m11");
-      addToMatrixComp(labelGroup, spinners[5], "edittext.transformation.matrix.m12");
+      addToMatrixComp(labelGroup, spinners[1], parentTag+".m10");
+      addToMatrixComp(labelGroup, spinners[3], parentTag+".m11");
+      addToMatrixComp(labelGroup, spinners[5], parentTag+".m12");
 
       matrixComp.add(createFixedNumber("0"));
       matrixComp.add(createFixedNumber("0"));

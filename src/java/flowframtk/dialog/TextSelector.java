@@ -277,7 +277,7 @@ public class TextSelector extends JDialog
       latexTextPanel.add(latexbox, "Center");
 
       matrixPanel = new TransformationMatrixPanel(resources,
-        "edittext.transformation");
+        "edittext.transformation.matrix");
 
       addTab(matrixPanel, "edittext.transformation");
 
