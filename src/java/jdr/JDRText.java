@@ -1338,6 +1338,15 @@ public class JDRText extends JDRCompleteObject
    }
 
    /**
+    * Sets this text area's transformation matrix.
+    * @param matrix flat matrix storing transformation
+    */
+   public void setTransformation(AffineTransform affineTransform)
+   {
+      jdrtransform.setTransformation(affineTransform);
+   }
+
+   /**
     * Sets the LaTeX font family declaration for this text area.
     * @param family LaTeX font family declaration
     * @see LaTeXFont#setFamily(String)

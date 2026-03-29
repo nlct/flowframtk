@@ -188,6 +188,12 @@ public class JDRTransform implements Cloneable,Serializable
       transformChanged();
    }
 
+   public void setTransformation(AffineTransform af)
+   {
+      affineTransform.setTransform(af);
+      transformChanged();
+   }
+
    @Deprecated
    public AffineTransform getAffineTransform()
    {

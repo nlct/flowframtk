@@ -1977,7 +1977,26 @@ public class JDRSymmetricPath extends JDRCompoundShape
          }
       }
 
-      JDRShape reflectedShape = shape.reflection(line_);
+      JDRShape reflectedShape = path_.reflection(line_);
+
+      if (isSingle())
+      {
+         reflectedShape = reflectedShape.reverse();
+
+         JDRTextual textual = getTextual();
+
+         if (textual != null && textual instanceof JDRTextPath)
+         {
+            double[] matrix = ((JDRTextPath)textual).getTransformation(null);
+
+            textual = reflectedShape.getTextual();
+
+            if (textual != null && textual instanceof JDRTextPath)
+            {
+               ((JDRTextPath)textual).setTransformation(matrix);
+            }
+         }
+      }
 
       group.add(reflectedShape);
 

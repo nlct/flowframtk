@@ -1835,6 +1835,36 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    }
 
    @Override
+   public JDRShape reflection(JDRLine symmetryLine)
+     throws InvalidPathException
+   {
+      JDRTextPath reflection = (JDRTextPath)clone();
+
+      AffineTransform reflectTr = symmetryLine.getReflectionTransform(null);
+
+      reflection.transform(reflectTr);
+
+      JDRTextPathStroke tps = (JDRTextPathStroke)getStroke();
+
+      Rectangle2D bounds = tps.getTextBounds();
+
+      double[] matrix = tps.getTransformation(null);
+
+      double m00 = - matrix[0] * reflectTr.getScaleX();
+      double m10 = - matrix[1] * reflectTr.getShearY();
+      double m01 = - matrix[2] * reflectTr.getShearX();
+      double m11 = - matrix[3] * reflectTr.getScaleY();
+
+      double m02 = matrix[4]; 
+      double m12 = matrix[5] + bounds.getHeight(); 
+
+      ((JDRTextPathStroke)reflection.getStroke()).setTransformation(m00, m10, m01, m11,
+        m02, m12);
+
+      return reflection;
+   }
+
+   @Override
    public boolean hasSymmetricPath()
    {
       return path_.hasSymmetricPath();
