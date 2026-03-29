@@ -330,6 +330,10 @@ Nicola Talbot
 <entry key="menu.edit.textarea.matrix.mnemonic">M</entry>
 <entry key="menu.edit.textarea.matrix.tooltip">Change the transformation matrix for the selected text area</entry>
 
+<entry key="menu.edit.textarea.reset">Reset Matrix</entry>
+<entry key="menu.edit.textarea.reset.mnemonic">R</entry>
+<entry key="menu.edit.textarea.reset.tooltip">Reset the transformation matrix for the selected text areas</entry>
+
 <entry key="menu.edit.textarea.font">Font Style</entry>
 <entry key="menu.edit.textarea.font.mnemonic">F</entry>
 <entry key="menu.edit.textarea.font.tooltip">Set font attributes for the selected text areas</entry>
@@ -760,6 +764,10 @@ Nicola Talbot
 <entry key="menu.bitmap.properties.mnemonic">P</entry>
 <entry key="menu.bitmap.properties.tooltip">Change the bitmap source file, the LaTeX path to the source file or the bitmap's transformation matrix</entry>
 
+<entry key="menu.bitmap.reset">Reset Matrix</entry>
+<entry key="menu.bitmap.reset.mnemonic">M</entry>
+<entry key="menu.bitmap.reset.tooltip">Reset the transformation matrix for the selected bitmaps</entry>
+
 <entry key="menu.bitmap.vectorize">Vectorize...</entry>
 <entry key="menu.bitmap.vectorize.mnemonic">V</entry>
 <entry key="menu.bitmap.vectorize.tooltip">Trace paths in the bitmap</entry>
@@ -1154,8 +1162,8 @@ Nicola Talbot
 <entry key="menu.selectedtext.edit.mnemonic">X</entry>
 <entry key="menu.selectedtext.edit.keystroke">control shift I</entry>
 
-<entry key="menu.selectedtext.reset">Reset Matrix</entry>
-<entry key="menu.selectedtext.reset.mnemonic">M</entry>
+<entry key="menu.selectedtext.reset_textmatrix">Reset Matrix</entry>
+<entry key="menu.selectedtext.reset_textmatrix.mnemonic">M</entry>
 
 <entry key="menu.selectedtext.colour">Text Color...</entry>
 <entry key="menu.selectedtext.colour.mnemonic">L</entry>
@@ -1264,8 +1272,8 @@ Nicola Talbot
 <entry key="menu.selectedbitmap.properties">Bitmap Properties...</entry>
 <entry key="menu.selectedbitmap.properties.mnemonic">R</entry>
 
-<entry key="menu.selectedbitmap.reset">Reset Matrix</entry>
-<entry key="menu.selectedbitmap.reset.mnemonic">X</entry>
+<entry key="menu.selectedbitmap.reset_bitmapmatrix">Reset Matrix</entry>
+<entry key="menu.selectedbitmap.reset_bitmapmatrix.mnemonic">X</entry>
 
 <entry key="menu.selectedbitmap.insert">Insert Bitmap...</entry>
 <entry key="menu.selectedbitmap.insert.mnemonic">B</entry>

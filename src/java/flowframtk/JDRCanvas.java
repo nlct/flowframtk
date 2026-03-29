@@ -1007,6 +1007,10 @@ public class JDRCanvas extends JPanel
          = addCanvasSelectAction("group");
       CanvasSelectAction resetAction
          = addCanvasSelectAction("reset");
+      CanvasSelectAction resetTextAction
+         = addCanvasSelectAction("textarea.reset");
+      CanvasSelectAction resetBitmapAction
+         = addCanvasSelectAction("bitmap.reset");
       CanvasSelectAction wizardAction
          = addCanvasSelectAction("flowframe.wizard");
       CanvasSelectAction setFrameAction
@@ -1354,9 +1358,9 @@ public class JDRCanvas extends JPanel
 
       // Reset Matrix
 
-      selectTextPopupMenu.add(resetAction.createMenuItem(
-         "menu.selectedtext.reset",
-         "menu.transform.reset.tooltip"));
+      selectTextPopupMenu.add(resetTextAction.createMenuItem(
+         "menu.selectedtext.reset_textmatrix",
+         "menu.transform.reset_textmatrix.tooltip"));
 
       // Only path selected popup menu
 
@@ -1860,8 +1864,8 @@ public class JDRCanvas extends JPanel
 
       // Reset Matrix
 
-      tpTextMenu.add(resetAction.createMenuItem(
-         "menu.selectedtext.reset",
+      tpTextMenu.add(resetTextAction.createMenuItem(
+         "menu.selectedtext.reset_textmatrix",
          "menu.transform.reset.tooltip"));
 
 
@@ -2019,8 +2023,8 @@ public class JDRCanvas extends JPanel
 
       // Reset
 
-      selectBitmapPopupMenu.add(resetAction.createMenuItem(
-         "menu.selectedbitmap.reset", 
+      selectBitmapPopupMenu.add(resetBitmapAction.createMenuItem(
+         "menu.selectedbitmap.reset_bitmapmatrix", 
          "menu.transform.reset.tooltip"));
 
       // Insert
@@ -2575,8 +2579,8 @@ public class JDRCanvas extends JPanel
 
       // Reset
 
-      textMenu.add(resetAction.createMenuItem(
-         "menu.selectedtext.reset", "menu.transform.reset"));
+      textMenu.add(resetTextAction.createMenuItem(
+         "menu.selectedtext.reset_textmatrix", "menu.transform.reset"));
 
       // bitmap sub menu
 
@@ -2595,8 +2599,8 @@ public class JDRCanvas extends JPanel
          "menu.selectedbitmap.properties",
          "menu.bitmap.properties.tooltip"));
 
-      bitmapMenu.add(resetAction.createMenuItem(
-         "menu.selectedbitmap.reset",
+      bitmapMenu.add(resetBitmapAction.createMenuItem(
+         "menu.selectedbitmap.reset_bitmapmatrix",
          "menu.transform.reset.tooltip"));
 
       // none selected popup menu
@@ -6154,12 +6158,18 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object.hasTextual())
+      else
       {
-         UndoableEdit edit
-            = new SetHAlign(object.getTextual(), align);
-         ce.addEdit(edit);
-         return true;
+         JDRTextualObject textualObject = object.getTextualObject();
+
+         if (textualObject != null)
+         {
+            UndoableEdit edit
+               = new SetHAlign(textualObject, align);
+
+            ce.addEdit(edit);
+            return true;
+         }
       }
 
       return false;
@@ -6208,12 +6218,19 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object.hasTextual())
+      else
       {
-         UndoableEdit edit
-            = new SetVAlign(object.getTextual(), align);
-         ce.addEdit(edit);
-         return true;
+         JDRTextualObject textualObject = object.getTextualObject();
+
+         if (textualObject != null)
+         {
+            UndoableEdit edit
+               = new SetVAlign(textualObject, align);
+
+            ce.addEdit(edit);
+
+            return true;
+         }
       }
 
       return false;
@@ -6261,12 +6278,19 @@ public class JDRCanvas extends JPanel
          }
          return flag;
       }
-      else if (object.hasTextual())
+      else
       {
-         UndoableEdit edit
-            = new SetAnchor(object.getTextual(), halign, valign);
-         ce.addEdit(edit);
-         return true;
+         JDRTextualObject textualObject = object.getTextualObject();
+
+         if (textualObject != null)
+         {
+            UndoableEdit edit
+               = new SetAnchor(textualObject, halign, valign);
+
+            ce.addEdit(edit);
+
+            return true;
+         }
       }
 
       return false;
@@ -6315,12 +6339,19 @@ public class JDRCanvas extends JPanel
 
          return flag;
       }
-      else if (object.hasTextual())
+      else
       {
-         UndoableEdit edit
-            = new SetTextOutlineMode(object.getTextual(), outline);
-         ce.addEdit(edit);
-         return true;
+         JDRTextualObject textualObject = object.getTextualObject();
+
+         if (textualObject != null)
+         {
+            UndoableEdit edit
+               = new SetTextOutlineMode(textualObject, outline);
+
+            ce.addEdit(edit);
+
+            return true;
+         }
       }
 
       return false;
@@ -8762,13 +8793,18 @@ public class JDRCanvas extends JPanel
                done = setSelectedTextTransform(((JDRGroup)object), 
                   matrix, ce);
             }
-            else if (object.hasTextual())
+            else
             {
-               UndoableEdit edit
-                  = new SetTextTransform(object.getTextual(), matrix);
+               JDRTextualObject textualObject = object.getTextualObject();
 
-               ce.addEdit(edit);
-               done = true;
+               if (textualObject != null)
+               {
+                  UndoableEdit edit
+                     = new SetTextTransform(textualObject, matrix);
+
+                  ce.addEdit(edit);
+                  done = true;
+               }
             }
          }
       }
@@ -11501,30 +11537,136 @@ public class JDRCanvas extends JPanel
       }
       else
       {
-         JDRCompleteObject object = paths.getSelected();
+         JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
 
-         if (object instanceof JDRBitmap)
-         {
-            UndoableEdit edit = new BitmapReset((JDRBitmap)object);
-            frame_.postEdit(edit);
-         }
-         else 
-         {
-            JDRTextual textual = object.getTextual();
+         boolean done = resetTransform(paths, ce);
 
-            if (textual != null)
+         ce.end();
+         if (done) frame_.postEdit(ce);
+      }
+   }
+
+   protected boolean resetTransform(JDRGroup group,
+      JDRCanvasCompoundEdit ce)
+   {
+      boolean done = false;
+
+      for (int i = 0, n = group.size(); i < n; i++)
+      {
+         JDRCompleteObject object = group.get(i);
+
+         if (object.isSelected())
+         {
+            if (object instanceof JDRGroup)
             {
-               UndoableEdit edit = new TextReset(object, textual);
-               frame_.postEdit(edit);
+               done = resetTransform(((JDRGroup)object), ce);
+            }
+            else if (object instanceof JDRBitmap)
+            {
+               UndoableEdit edit = new BitmapReset((JDRBitmap)object);
+               ce.addEdit(edit);
+
+               done = true;
             }
             else
             {
-               getResources().internalError(this, 
-                new IllegalArgumentException("Class "+object.getClass().getName()
-                  +" doesn't have an associated transformation"));
+               JDRTextualObject textualObject = object.getTextualObject();
+
+               if (textualObject != null)
+               {
+                  UndoableEdit edit = new TextReset(textualObject);
+
+                  ce.addEdit(edit);
+
+                  done = true;
+               }
             }
          }
       }
+
+      return done;
+   }
+
+   public void resetTextTransform()
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+      boolean done = resetTextTransform(paths, ce);
+
+      ce.end();
+      if (done) frame_.postEdit(ce);
+   }
+
+   protected boolean resetTextTransform(JDRGroup group,
+      JDRCanvasCompoundEdit ce)
+   {
+      boolean done = false;
+
+      for (int i = 0, n = group.size(); i < n; i++)
+      {
+         JDRCompleteObject object = group.get(i);
+
+         if (object.isSelected())
+         {
+            if (object instanceof JDRGroup)
+            {
+               done = resetTextTransform(((JDRGroup)object), ce);
+            }
+            else
+            {
+               JDRTextualObject textualObject = object.getTextualObject();
+
+               if (textualObject != null)
+               {
+                  UndoableEdit edit = new TextReset(textualObject);
+
+                  ce.addEdit(edit);
+
+                  done = true;
+               }
+            }
+         }
+      }
+
+      return done;
+   }
+
+   public void resetBitmapTransform()
+   {
+      JDRCanvasCompoundEdit ce = new JDRCanvasCompoundEdit(this);
+
+      boolean done = resetBitmapTransform(paths, ce);
+
+      ce.end();
+      if (done) frame_.postEdit(ce);
+   }
+
+   protected boolean resetBitmapTransform(JDRGroup group,
+      JDRCanvasCompoundEdit ce)
+   {
+      boolean done = false;
+
+      for (int i = 0, n = group.size(); i < n; i++)
+      {
+         JDRCompleteObject object = group.get(i);
+
+         if (object.isSelected())
+         {
+            if (object instanceof JDRGroup)
+            {
+               done = resetTransform(((JDRGroup)object), ce);
+            }
+            else if (object instanceof JDRBitmap)
+            {
+               UndoableEdit edit = new BitmapReset((JDRBitmap)object);
+               ce.addEdit(edit);
+
+               done = true;
+            }
+         }
+      }
+
+      return done;
    }
 
    public void setDistortState(boolean state)
@@ -18615,20 +18757,20 @@ public class JDRCanvas extends JPanel
       private JDRTextual textual_;
       private double[] oldmatrix, newmatrix;
 
-      public TextReset(JDRCompleteObject object, JDRTextual textual)
+      public TextReset(JDRTextualObject object)
       {
          super(getFrame());
 
-         textual_ = textual;
+         textual_ = object.getTextual();
          oldmatrix = new double[6];
          newmatrix = new double[6];
 
-         textual.getTransformation(oldmatrix);
+         textual_.getTransformation(oldmatrix);
 
          BBox box = getRefreshBounds(object);
 
          textual_.reset();
-         textual.getTransformation(newmatrix);
+         textual_.getTransformation(newmatrix);
 
          mergeRefreshBounds(object, box);
 
@@ -20468,20 +20610,23 @@ public class JDRCanvas extends JPanel
 
    class SetHAlign extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private int oldAlign_, newAlign_;
 
-      public SetHAlign(JDRTextual object, int align)
+      public SetHAlign(JDRTextualObject object, int align)
       {
          super(getFrame());
 
+         textual_ = object.getTextual();
+
          object_ = object;
-         oldAlign_ = object.getHAlign();
+         oldAlign_ = textual_.getHAlign();
          newAlign_ = align;
 
          BBox box = getRefreshBounds(object_);
 
-         object_.setHAlign(align);
+         textual_.setHAlign(align);
 
          mergeRefreshBounds(object_, box);
 
@@ -20492,7 +20637,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setHAlign(newAlign_);
+         textual_.setHAlign(newAlign_);
 
          repaintRegion();
       }
@@ -20501,7 +20646,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setHAlign(oldAlign_);
+         textual_.setHAlign(oldAlign_);
 
          repaintRegion();
       }
@@ -20517,20 +20662,22 @@ public class JDRCanvas extends JPanel
 
    class SetVAlign extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private int oldAlign_, newAlign_;
 
-      public SetVAlign(JDRTextual object, int align)
+      public SetVAlign(JDRTextualObject object, int align)
       {
          super(getFrame());
 
+         textual_ = object.getTextual();
          object_ = object;
-         oldAlign_ = object.getVAlign();
+         oldAlign_ = textual_.getVAlign();
          newAlign_ = align;
 
          BBox box = getRefreshBounds(object_);
 
-         object_.setVAlign(align);
+         textual_.setVAlign(align);
 
          mergeRefreshBounds(object_, box);
 
@@ -20541,7 +20688,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setVAlign(newAlign_);
+         textual_.setVAlign(newAlign_);
 
          repaintRegion();
       }
@@ -20550,7 +20697,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setVAlign(oldAlign_);
+         textual_.setVAlign(oldAlign_);
 
          repaintRegion();
       }
@@ -20566,24 +20713,26 @@ public class JDRCanvas extends JPanel
 
    class SetAnchor extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private int oldHAlign_, newHAlign_;
       private int oldVAlign_, newVAlign_;
 
-      public SetAnchor(JDRTextual object, int halign, int valign)
+      public SetAnchor(JDRTextualObject object, int halign, int valign)
       {
          super(getFrame());
 
+         textual_ = object.getTextual();
          object_ = object;
-         oldHAlign_ = object.getHAlign();
+         oldHAlign_ = textual_.getHAlign();
          newHAlign_ = halign;
-         oldVAlign_ = object.getVAlign();
+         oldVAlign_ = textual_.getVAlign();
          newVAlign_ = valign;
 
          BBox box = getRefreshBounds(object_);
 
-         object_.setHAlign(halign);
-         object_.setVAlign(valign);
+         textual_.setHAlign(halign);
+         textual_.setVAlign(valign);
 
          mergeRefreshBounds(object_, box);
 
@@ -20594,8 +20743,8 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setHAlign(newHAlign_);
-         object_.setVAlign(newVAlign_);
+         textual_.setHAlign(newHAlign_);
+         textual_.setVAlign(newVAlign_);
 
          repaintRegion();
       }
@@ -20604,8 +20753,8 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setHAlign(oldHAlign_);
-         object_.setVAlign(oldVAlign_);
+         textual_.setHAlign(oldHAlign_);
+         textual_.setVAlign(oldVAlign_);
 
          repaintRegion();
       }
@@ -20621,27 +20770,29 @@ public class JDRCanvas extends JPanel
 
    class SetTextOutlineMode extends CanvasUndoableEdit
    {
-      private JDRTextual text_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private boolean oldMode_, newMode_;
 
-      public SetTextOutlineMode(JDRTextual object, boolean mode)
+      public SetTextOutlineMode(JDRTextualObject object, boolean mode)
       {
          super(getFrame());
 
-         text_ = object;
-         oldMode_ = text_.isOutline();
+         object_ = object;
+         textual_ = object.getTextual();
+         oldMode_ = textual_.isOutline();
          newMode_ = mode;
 
          if (oldMode_)
          {
-            setRefreshBounds(text_);
+            setRefreshBounds(object_);
          }
 
          setOutlineMode(newMode_);
 
          if (!oldMode_)
          {
-            setRefreshBounds(text_);
+            setRefreshBounds(object_);
          }
       }
 
@@ -20654,7 +20805,7 @@ public class JDRCanvas extends JPanel
 
          try
          {
-            text_.setOutlineMode(mode);
+            textual_.setOutlineMode(mode);
          }
          finally
          {
@@ -20749,21 +20900,23 @@ public class JDRCanvas extends JPanel
 
    class SetTextTransform extends CanvasUndoableEdit
    {
-      private JDRTextual object_;
+      private JDRTextualObject object_;
+      private JDRTextual textual_;
       private double[] oldmatrix, newmatrix;
 
-      public SetTextTransform(JDRTextual object, double[] matrix)
+      public SetTextTransform(JDRTextualObject object, double[] matrix)
       {
          super(getFrame());
 
+         textual_ = object.getTextual();
          object_ = object;
 
-         oldmatrix = object.getTransformation(null);
+         oldmatrix = textual_.getTransformation(null);
          newmatrix = matrix;
 
          BBox box = getRefreshBounds(object_);
 
-         object_.setTransformation(matrix);
+         textual_.setTransformation(matrix);
 
          mergeRefreshBounds(object_, box);
 
@@ -20774,7 +20927,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setTransformation(newmatrix);
+         textual_.setTransformation(newmatrix);
 
          repaintRegion();
       }
@@ -20783,7 +20936,7 @@ public class JDRCanvas extends JPanel
       {
          frame_.selectThisFrame();
 
-         object_.setTransformation(oldmatrix);
+         textual_.setTransformation(oldmatrix);
 
          repaintRegion();
       }

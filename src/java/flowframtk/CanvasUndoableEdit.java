@@ -260,6 +260,11 @@ public abstract class CanvasUndoableEdit extends AbstractUndoableEdit
       setRefreshBounds(getRefreshBounds(object, flowframe));
    }
 
+   public void setRefreshBounds(JDRObjectReference objectRef)
+   {
+      setRefreshBounds(objectRef.getObject(), objectRef.getObject().getFlowFrame());
+   }
+
    public void setRefreshBounds(JDRTextual object)
    {
       setRefreshBounds((JDRCompleteObject)object);

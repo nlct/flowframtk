@@ -241,7 +241,7 @@ public class FlowframTk extends JFrame
 
       invoker.setStartupInfo(resources.getMessage("message.init_menus"));
 
-      invoker.setStartupDeterminate(204);
+      invoker.setStartupDeterminate(206);
 
       // create menu bar, menu and menu item
 
@@ -1463,6 +1463,24 @@ public class FlowframTk extends JFrame
 
       incStartupProgress(editM, textM, textMatrixItem);
 
+      // Reset text transformation matrix
+
+      JMenuItem resetTextItem = FlowframTkAction.createMenuItem(this,
+         "menu.edit", "textarea.reset", textM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_TEXTUAL,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, 
+         true, false, 
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getCanvas().resetTextTransform();
+            }
+         });
+
+      incStartupProgress(editM, textM, resetTextItem);
+
       // Change Font
 
       fontStyleM = FlowframTkAction.createMenu(this,
@@ -1867,7 +1885,7 @@ public class FlowframTk extends JFrame
          "menu.transform", "reset", transformM,
          TOOL_FLAG_SELECT, EDIT_FLAG_NONE_OR_DISTORT,
          SELECT_FLAG_BITMAP | SELECT_FLAG_TEXTUAL | SELECT_FLAG_DISTORTED,
-         FlowframTkAction.SELECTION_SINGLE_OBJECT_NO_GROUP, 
+         FlowframTkAction.SELECTION_IGNORE_COUNT, 
          true, false, true,
          new FlowframTkActionListener()
          {
@@ -2876,6 +2894,24 @@ public class FlowframTk extends JFrame
       bitmapPropChooserBox = new BitmapProperties(this, bitmapFC);
 
       incStartupProgress(bitmapM, bitmapPropItem);
+
+      // Reset bitmap transformation matrix
+
+      JMenuItem resetBitmapItem = FlowframTkAction.createMenuItem(this,
+         "menu", "bitmap.reset", bitmapM,
+         TOOL_FLAG_SELECT, EDIT_FLAG_NONE,
+         SELECT_FLAG_BITMAP,
+         FlowframTkAction.SELECTION_IGNORE_COUNT, 
+         true, false, 
+         new FlowframTkActionListener()
+         {
+            public void doAction(FlowframTkAction action, ActionEvent evt)
+            {
+               action.getCanvas().resetBitmapTransform();
+            }
+         });
+
+      incStartupProgress(bitmapM, resetBitmapItem);
 
       // Vectorize
 
