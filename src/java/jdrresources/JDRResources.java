@@ -2458,6 +2458,14 @@ public class JDRResources
       comp.setMaximumSize(dim);
    }  
 
+   public void clampCompMaxWidth(JComponent comp, int xpad, int ypad)
+   {
+      Dimension dim = comp.getPreferredSize();
+      dim.width += xpad;
+      dim.height = (int)comp.getMaximumSize().getHeight() + ypad;
+      comp.setMaximumSize(dim);
+   }  
+
    public void clampCompMax(JComponent comp, int xpad, int ypad)
    {
       Dimension dim = comp.getPreferredSize();
