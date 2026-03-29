@@ -78,13 +78,9 @@ public abstract class JDRShape extends JDRCompleteObject
    {
       JDRShape reflection = (JDRShape)clone();
 
-      JDRPointIterator pi = getPointIterator();
+      AffineTransform reflectTr = symmetryLine.getReflectionTransform(null);
 
-      while (pi.hasNext())
-      {
-         JDRPoint point = pi.next();
-         point.reflect2D(symmetryLine);
-      }
+      reflection.transform(reflectTr);
 
       return reflection;
    }
