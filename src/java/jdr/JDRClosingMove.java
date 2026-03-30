@@ -52,6 +52,16 @@ implements JDRPathChangeListener
    }
 
    /**
+    * Creates a copy of a segment but for another path. 
+    */ 
+   public JDRClosingMove(JDRClosingMove segment, JDRPath otherPath)
+   {
+      super(segment);
+      path = otherPath;
+      path.addPathChangeListener(this);
+   }
+
+   /**
     * Creates a new segment with given start and end locations.
     * The start of the sub path can't be found until this segment is
     * added to a path.
@@ -852,12 +862,30 @@ implements JDRPathChangeListener
       return getCanvasGraphics().getMessageWithFallback(
         "objectinfo.segment.closing_move",
         "Closing move: start {0} closing {1} move to {2}",
-         start.info(), subPathStart.info(), end.info());
+         start == null ? "null" : start.info(),
+         subPathStart == null ? "null" : subPathStart.info(),
+         end == null ? "null" : end.info());
    }
 
    public int getSegmentFlag()
    {
       return SEGMENT_FLAG_CLOSING_MOVE;
+   }
+
+   public JDRPath getPath()
+   {
+      return path;
+   }
+
+   public void setPath(JDRPath newPath)
+   {
+      if (path != null)
+      {
+         path.removePathChangeListener(this);
+      }
+
+      path = newPath;
+      path.addPathChangeListener(this);
    }
 
    /**

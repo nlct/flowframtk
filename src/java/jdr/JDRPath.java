@@ -1270,6 +1270,13 @@ public class JDRPath extends JDRShape
       if (s instanceof JDRClosingMove)
       {
          numClosedSubPaths++;
+
+         JDRClosingMove move = (JDRClosingMove)s;
+
+         if (move.getPath() != this)
+         {
+            move.setPath(this);
+         }
       }
 
       firePathChangeEvent(size_-1, JDRPathChangeEvent.Type.SEGMENT_ADDED,
@@ -1309,6 +1316,13 @@ public class JDRPath extends JDRShape
       if (s instanceof JDRClosingMove)
       {
          numClosedSubPaths++;
+
+         JDRClosingMove move = (JDRClosingMove)s;
+
+         if (move.getPath() != this)
+         {
+            move.setPath(this);
+         }
       }
 
       firePathChangeEvent(index, JDRPathChangeEvent.Type.SEGMENT_INSERTED,
