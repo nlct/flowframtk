@@ -401,7 +401,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       JDRPoint p = getFirstSegment().getStart();
 
-      text.setPosition(p.x, p.y);
+      text.translate(p.x, p.y);
 
       text.setTextPaint(getLinePaint());
 
