@@ -99,7 +99,7 @@ public class JDRTextPathListener extends JDRPathListener
 
          if (version >= 2.2f)
          {
-            jdr.writeBoolean(path.showPath());
+            jdr.writeBoolean(path.hasBasicStroke());
             paintLoader.save(jdr, path.getShowPathLinePaint());
             paintLoader.save(jdr, path.getShowPathFillPaint());
 
