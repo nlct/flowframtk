@@ -564,19 +564,6 @@ public class ExportDialog extends JDialog
         "textpath.pgf", bg, true, null);
       textPathWidgets.add(textPathPgfBox);
 
-      textPathPgfBox.addChangeListener(new ChangeListener()
-       {
-          @Override
-          public void stateChanged(ChangeEvent evt)
-          {
-             if (textPathOutlineComp != null)
-             {
-                textPathOutlineComp.setVisible(
-                  textPathComp.isVisible() && textPathPgfBox.isSelected());
-             }
-          }
-       });
-
       textPathSplitBox = resources.createAppRadioButton("export",
         "textpath.split", bg, false, null);
       textPathWidgets.add(textPathSplitBox);
@@ -1072,8 +1059,6 @@ public class ExportDialog extends JDialog
             textPathToPathBox.setSelected(true);
          break;
       }
-
-      textPathOutlineComp.setVisible(textPathPgfBox.isSelected());
 
       switch (exportSettings.textPathOutline)
       {
@@ -1688,7 +1673,7 @@ public class ExportDialog extends JDialog
       strokeShadingComp.setVisible(showStrokeShading);
       textualShadingComp.setVisible(showTextualShading);
       textPathComp.setVisible(showTextPath);
-      textPathOutlineComp.setVisible(showTextPath && textPathPgfBox.isSelected());
+      textPathOutlineComp.setVisible(showTextPath);
       textAreaOutlineComp.setVisible(showTextAreaOutline);
    }
 

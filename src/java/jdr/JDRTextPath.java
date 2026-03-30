@@ -1108,21 +1108,40 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    {
       ExportSettings exportSettings = tex.getExportSettings();
 
+      JDRPaint textPaint = getTextPaint();
+
+      boolean isShaded = (textPaint instanceof JDRShading);
+
+      boolean toPath = (exportSettings.textPath == ExportSettings.TextPath.TO_PATH);
+
+      if ((isOutline
+             && exportSettings.textPathOutline == ExportSettings.TextPathOutline.TO_PATH)
+         ||
+           (isShaded
+             && exportSettings.textualShading == ExportSettings.TextualShading.TO_PATH)
+         )
+      {
+         toPath = true;
+      }
+
       try
       {
-         switch (exportSettings.textPath)
+         if (toPath)
          {
-            case SPLIT:
-               splitText().savePgf(tex);
-               return;
-            case TO_PATH:
-               convertToPath().savePgf(tex);
-               return;
+            convertToPath().savePgf(tex);
+            return;
+         }
+
+         if (exportSettings.textPath == ExportSettings.TextPath.SPLIT)
+         {
+            splitText().savePgf(tex);
+            return;
          }
       }
-      catch (InvalidShapeException | EmptyGroupException e)
+      catch (Exception e)
       {
-         getCanvasGraphics().warning(e);
+         canvasGraphics.getMessageSystem().getPublisher().publishMessages(
+            MessageInfo.createWarning(e));
       }
 
       if (showPath)
@@ -1139,22 +1158,18 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       if (pathBBox == null) return;
 
-      CanvasGraphics cg = getCanvasGraphics();
-
-      JDRPaint textPaint = getTextPaint();
-
-      if (textPaint instanceof JDRShading)
+      if (isShaded)
       {
          String setting = exportSettings.textualShading.toString().toLowerCase();
 
-         String msg = cg.getMessageWithFallback(
+         String msg = canvasGraphics.getMessageWithFallback(
             "warning.pgf-no-text-shading",
             "Text shading paint can''t be exported to pgf: using export setting {0}",
-            cg.getMessageDictionary().getMessageWithFallback(
+            canvasGraphics.getMessageDictionary().getMessageWithFallback(
              "export.textualshading."+setting,
              setting));
 
-         cg.getMessageSystem().getPublisher().publishMessages(
+         canvasGraphics.getMessageSystem().getPublisher().publishMessages(
              MessageInfo.createMessage(msg));
 
          tex.comment(msg);
@@ -1164,54 +1179,17 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       {
          String setting = exportSettings.textPathOutline.toString().toLowerCase();
 
-         String msg = cg.getMessageWithFallback(
+         String msg = canvasGraphics.getMessageWithFallback(
             "warning.pgf-no-textpath-outline",
             "Text-path outline can't be exported to pgf: using export setting {0}",
-            cg.getMessageDictionary().getMessageWithFallback(
+            canvasGraphics.getMessageDictionary().getMessageWithFallback(
              "export.textualshading."+setting,
              setting));
 
-         cg.getMessageSystem().getPublisher().publishMessages(
+         canvasGraphics.getMessageSystem().getPublisher().publishMessages(
              MessageInfo.createMessage(msg));
 
          tex.comment(msg);
-      }
-
-      if (((textPaint instanceof JDRShading)
-           && (exportSettings.textualShading == 
-               ExportSettings.TextualShading.TO_PATH))
-       || (isOutline()
-           && (exportSettings.textPathOutline ==
-               ExportSettings.TextPathOutline.TO_PATH)))
-      {
-         JDRShape shape = null;
-
-         try
-         {
-            JDRGroup group = splitText();
-
-            for (int j = 0; j < group.size(); j++)
-            {
-               JDRGroup grp
-                  = ((JDRText)group.get(j)).convertToPath();
-               group.set(j, grp.get(0));
-            }
-
-            shape = group.mergePaths(null);
-            shape.setDescription(getDescription());
-            shape.setTag(getTag());
-         }
-         catch (Exception e)
-         {
-            cg.getMessageSystem().getPublisher().publishMessages(
-               MessageInfo.createWarning(e));
-         }
-
-         if (shape != null)
-         {
-            shape.savePgf(tex);
-            return;
-         }
       }
 
       if (textPaint instanceof JDRShading)
@@ -1244,7 +1222,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       catch (InvalidShapeException e)
       {
          s.savePgf(tex, textPaint, this);
-         cg.getMessageSystem().getPublisher().publishMessages(
+         canvasGraphics.getMessageSystem().getPublisher().publishMessages(
            MessageInfo.createWarning(e));
       }
 
