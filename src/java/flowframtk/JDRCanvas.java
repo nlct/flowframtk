@@ -14317,33 +14317,14 @@ public class JDRCanvas extends JPanel
          CanvasGraphics cg = getCanvasGraphics();
          cg.setGraphicsDevice(g2);
 
-         Vector<String> styNames = null;
-         TextModeMappings textModeMappings = cg.getTextModeMappings();
-         MathModeMappings mathModeMappings = cg.getMathModeMappings();
-
-         if (textModeMappings != null || mathModeMappings != null)
-         {
-            styNames = new Vector<String>();
-         }
-
          try
          {
-            object_ = textPath.convertToPath(
-                  textModeMappings, mathModeMappings, styNames);
+            object_ = textPath.convertToPath();
          }
          finally
          {
             getCanvasGraphics().setGraphicsDevice(null);
             g2.dispose();
-         }
-
-         try
-         {
-            addPackagesToPreamble(styNames);
-         }
-         catch (BadLocationException e)
-         {
-            getResources().debugMessage(e);
          }
 
          paths.set(index_, object_);

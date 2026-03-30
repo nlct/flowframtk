@@ -996,79 +996,71 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    public JDRCompleteObject convertToPath()
      throws InvalidShapeException,EmptyGroupException
    {
-      TextModeMappings textModeMappings = canvasGraphics.getTextModeMappings();
-      MathModeMappings mathModeMappings = canvasGraphics.getMathModeMappings();
+      Shape shape = ((JDRTextPathStroke)getStroke()).getStorageStrokedPath(path_);
 
-      return convertToPath(textModeMappings, mathModeMappings, null);
-   }
+      JDRPath textOutline = JDRPath.getPath(canvasGraphics, shape.getPathIterator(null));
 
-   public JDRCompleteObject convertToPath(TextModeMappings textMappings,
-     MathModeMappings mathMappings, Vector<String> styNames)
-     throws InvalidShapeException,EmptyGroupException
-   {
-      JDRGroup splitGroup = splitText(textMappings, mathMappings, styNames);
-
-      JDRGroup group = new JDRGroup(canvasGraphics);
-      group.description = splitGroup.description;
-      group.setSelected(isSelected());
-
-      JDRGroup pathGrp = new JDRGroup(canvasGraphics);
-
-      for (int i = 0; i < splitGroup.size(); i++)
+      if (description == null || description.isEmpty())
       {
-         JDRCompleteObject obj = splitGroup.get(i);
-
-         if (obj instanceof JDRText)
-         {
-            JDRGroup subGrp = ((JDRText)obj).convertToPath();
-
-            for (int j = 0; j < subGrp.size(); j++)
-            {
-               JDRCompleteObject o = subGrp.get(j);
-
-               if (o instanceof JDRPath)
-               {
-                  pathGrp.add(o);
-               }
-               else
-               {
-                  group.add(o);
-               }
-            }
-         }
-         else
-         {
-            group.add(obj);
-         }
-      }
-
-      if (pathGrp.isEmpty())
-      {
-         if (splitGroup.size() == 1)
-         {
-            return splitGroup.firstElement();
-         }
-         else
-         {
-            return splitGroup;
-         }
-      }
-
-      JDRShape merged = pathGrp.mergePaths(null);
-      merged.description = splitGroup.description;
-
-      if (group.isEmpty())
-      {
-         merged.setSelected(isSelected());
-
-         return merged;
+         textOutline.description = getText();
       }
       else
       {
-         group.add(merged);
-
-         return group;
+         textOutline.description = description;
       }
+
+      if (tag != null && !tag.isEmpty())
+      {
+         textOutline.tag = tag;
+      }
+
+      textOutline.setStroke(new JDRBasicStroke(canvasGraphics));
+
+      if (isOutline)
+      {
+         JDRPaint textOutlinePaint = getOutlineFillPaint();
+
+         textOutline.setLinePaint(getTextPaint());
+
+         if (textOutlinePaint == null)
+         {
+            textOutline.setShapeFillPaint(new JDRTransparent(canvasGraphics));
+         }
+         else
+         {
+            textOutline.setShapeFillPaint(textOutlinePaint);
+         }
+      }
+      else
+      {
+         textOutline.setLinePaint(new JDRTransparent());
+         textOutline.setShapeFillPaint(getTextPaint());
+      }
+
+      if (showPath)
+      {
+         getShowPathStroke();
+         getShowPathFillPaint();
+         getShowPathLinePaint();
+
+         JDRShape underlyingPath = getJDRShape();
+
+         JDRGroup grp = new JDRGroup(canvasGraphics);
+
+         grp.description = textOutline.description;
+         grp.tag = textOutline.tag;
+
+         grp.add(underlyingPath);
+         grp.add(textOutline);
+
+         grp.setSelected(isSelected());
+
+         return grp;
+      }
+
+      textOutline.setSelected(isSelected());
+
+      return textOutline;
    }
 
    public void savePgf(TeX tex)
