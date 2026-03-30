@@ -1006,33 +1006,67 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
      MathModeMappings mathMappings, Vector<String> styNames)
      throws InvalidShapeException,EmptyGroupException
    {
-      JDRGroup group = splitText(textMappings, mathMappings, styNames);
+      JDRGroup splitGroup = splitText(textMappings, mathMappings, styNames);
 
-      for (int j = 0; j < group.size(); j++)
+      JDRGroup group = new JDRGroup(canvasGraphics);
+      group.description = splitGroup.description;
+      group.setSelected(isSelected());
+
+      JDRGroup pathGrp = new JDRGroup(canvasGraphics);
+
+      for (int i = 0; i < splitGroup.size(); i++)
       {
-         JDRCompleteObject obj = group.get(j);
+         JDRCompleteObject obj = splitGroup.get(i);
 
          if (obj instanceof JDRText)
          {
-            JDRGroup grp = ((JDRText)obj).convertToPath();
+            JDRGroup subGrp = ((JDRText)obj).convertToPath();
 
-            if (grp.size() == 1)
+            for (int j = 0; j < subGrp.size(); j++)
             {
-               group.set(j, grp.get(0));
+               JDRCompleteObject o = subGrp.get(j);
+
+               if (o instanceof JDRPath)
+               {
+                  pathGrp.add(o);
+               }
+               else
+               {
+                  group.add(o);
+               }
             }
-            else
-            {
-               group.set(j, grp);
-            }
+         }
+         else
+         {
+            group.add(obj);
          }
       }
 
-      if (group.size() == 1)
+      if (pathGrp.isEmpty())
       {
-         return group.firstElement();
+         if (splitGroup.size() == 1)
+         {
+            return splitGroup.firstElement();
+         }
+         else
+         {
+            return splitGroup;
+         }
+      }
+
+      JDRShape merged = pathGrp.mergePaths(null);
+      merged.description = splitGroup.description;
+
+      if (group.isEmpty())
+      {
+         merged.setSelected(isSelected());
+
+         return merged;
       }
       else
       {
+         group.add(merged);
+
          return group;
       }
    }
