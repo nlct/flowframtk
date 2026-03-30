@@ -1649,7 +1649,7 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
    @Override
    public JDRPathSegment getFirstSegment()
    {
-      return path_.getLastSegment();
+      return path_.getFirstSegment();
    }
 
    @Override
