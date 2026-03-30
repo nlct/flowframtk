@@ -76,6 +76,17 @@ public class JDRTextPathStroke implements JDRStroke
       matrix[5]=0;
 
       affineTransform = new AffineTransform(matrix);
+
+      if (Math.abs(matrix[0]) < JDRConstants.EPSILON)
+      {
+         affineTransform.preConcatenate(AffineTransform.getQuadrantRotateInstance(1));
+
+         if (affineTransform.getScaleX() < 0)
+         {
+            affineTransform.preConcatenate(AffineTransform.getQuadrantRotateInstance(2));
+         }
+      }
+
    }
 
    public JDRTextPathStroke(CanvasGraphics cg)
