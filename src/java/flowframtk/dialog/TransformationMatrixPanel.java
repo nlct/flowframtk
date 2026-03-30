@@ -64,7 +64,8 @@ public class TransformationMatrixPanel extends JPanel
 
       for (int i = 0; i < models.length; i++)
       {
-         models[i] = new SpinnerNumberModel();
+         models[i] = new SpinnerNumberModel(
+            Double.valueOf(0), null, null, Double.valueOf(1));
          spinners[i] = new JSpinner(models[i]);
          resources.clampCompMaxHeight(spinners[i], 0, 0);
       }
