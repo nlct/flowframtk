@@ -194,10 +194,9 @@ public class JDRTransform implements Cloneable,Serializable
       transformChanged();
    }
 
-   @Deprecated
    public AffineTransform getAffineTransform()
    {
-      return copyAffineTransform();
+      return affineTransform;
    }
 
    /**
