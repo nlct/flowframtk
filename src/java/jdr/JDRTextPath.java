@@ -993,6 +993,46 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       }
    }
 
+   @Override
+   public JDRShape outlineToPath()
+      throws InvalidShapeException
+   {
+      Shape shape = ((JDRTextPathStroke)getStroke()).getStorageStrokedPath(path_);
+
+      if (showPath)
+      {
+         JDRStroke s = getStroke();
+         path_.setStroke(getBasicStroke());
+         Shape underlyingShape = path_.outlineToPath().getGeneralPath();
+         path_.setStroke(s);
+
+         Path2D merged = new Path2D.Double(underlyingShape);
+
+         merged.append(shape.getPathIterator(null), false);
+
+         shape = merged;
+      }
+
+      JDRShape result = JDRPath.getPath(canvasGraphics, shape.getPathIterator(null));
+
+      result.setLinePaint(getLinePaint());
+      result.setShapeFillPaint(getShapeFillPaint());
+      result.setStroke(new JDRBasicStroke(canvasGraphics));
+
+      result.setSelected(isSelected());
+
+      if (description == null || description.isEmpty())
+      {
+         result.description = getText();
+      }
+      else
+      {
+         result.description = description;
+      }
+
+      return result;
+   }
+
    public JDRCompleteObject convertToPath()
      throws InvalidShapeException,EmptyGroupException
    {
@@ -1366,30 +1406,6 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       Shape shape = getBpStrokedArea();
 
       EPS.fillPath(shape, paint, out);
-   }
-
-   @Override
-   public JDRShape outlineToPath()
-      throws InvalidShapeException
-   {
-      // ignore showPath setting?
-
-      JDRShape shape = super.outlineToPath();
-
-      shape.setStroke(new JDRBasicStroke(getCanvasGraphics()));
-
-      if (hasDescription())
-      {
-         shape.description = description;
-      }
-      else
-      {
-         shape.description = getText();
-      }
-
-      shape.tag = tag;
-
-      return shape;
    }
 
    /**

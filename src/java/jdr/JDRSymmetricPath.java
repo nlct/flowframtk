@@ -2889,12 +2889,74 @@ public class JDRSymmetricPath extends JDRCompoundShape
 
    public JDRShape outlineToPath() throws InvalidShapeException
    {
-       return new JDRSymmetricPath(
-            path_.outlineToPath(),  
-            join == null ? null : (JDRPartialSegment)join.clone(),
-            (JDRLine)line_.clone(),
-            closingSegment == null ? null : (JDRPartialSegment)closingSegment.clone(),
-            closed, isSingle);
+      JDRShape result;
+
+      if (isSingle)
+      {
+         result = (JDRShape)ensureFullPath().clone();
+
+         result = result.outlineToPath();
+      }
+      else
+      {
+         JDRShape shape = path_.outlineToPath();
+
+         Path2D path2d = shape.getGeneralPath();
+
+         AffineTransform af = line_.getReflectionTransform(null);
+
+         Shape reflected = af.createTransformedShape(path2d);
+
+         JDRBasicStroke bs = null;
+
+         if (join != null && !join.isGap())
+         {
+            JDRSegment seg = join.getFullSegment();
+
+            Path2D p2 = new Path2D.Double();
+            seg.appendToGeneralPath(p2);
+
+            bs = getBasicStroke();
+
+            path2d.append(
+              bs.createStrokedShape(p2, canvasGraphics.getStorageUnit())
+                   .getPathIterator(null),
+              false);
+         }
+
+         path2d.append(reflected, false);
+
+         if (closingSegment != null && !closingSegment.isGap())
+         {
+            JDRSegment seg = closingSegment.getFullSegment();
+
+            Path2D p2 = new Path2D.Double();
+            seg.appendToGeneralPath(p2);
+
+            if (bs == null)
+            {
+               bs = getBasicStroke();
+            }
+
+            path2d.append(
+              bs.createStrokedShape(p2, canvasGraphics.getStorageUnit())
+                   .getPathIterator(null),
+              false);
+         }
+
+         result = JDRPath.getPath(canvasGraphics, path2d.getPathIterator(null));
+
+         result.setLinePaint(getLinePaint());
+         result.setShapeFillPaint(getShapeFillPaint());
+         result.setStroke(new JDRBasicStroke(canvasGraphics));
+      }
+
+      result.setSelected(isSelected());
+    
+      result.description = description;
+      result.tag = tag;
+
+      return result;
    }
 
    private boolean closed=false;
