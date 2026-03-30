@@ -15649,6 +15649,7 @@ public class JDRCanvas extends JPanel
          for (int i = 0; i < n; i++)
          {
             JDRCompleteObject object = group_.get(i);
+            object.setSelected(true);
             list_.add(i, object);
             indices[i] = grpIndex_+i;
             paths.add(indices[i], object);
