@@ -370,6 +370,33 @@ public class JDRTextPathStroke implements JDRStroke
       return latexFont.getShape();
    }
 
+   public void applyAttributesTo(JDRText textArea)
+   {
+      applyAttributesTo(textArea, null);
+   }
+
+   public void applyAttributesTo(JDRText textArea, JDRTextPath textPath)
+   {
+      textArea.setLaTeXFamily(getLaTeXFamily());
+      textArea.setLaTeXSize(getLaTeXSize());
+      textArea.setLaTeXSeries(getLaTeXSeries());
+      textArea.setLaTeXShape(getLaTeXShape());
+
+      if (textPath != null)
+      {
+         textArea.setTextPaint(textPath.getTextPaint());
+         textArea.setOutlineMode(textPath.isOutline());
+         textArea.setOutlineFillPaint(textPath.getOutlineFillPaint());
+      }
+
+      textArea.setFont(getFontFamily(),
+                       getFontSeries(),
+                       getFontShape(),
+                       getFontSize());
+      textArea.setVAlign(getVAlign());
+      textArea.setHAlign(getHAlign());
+   }
+
    /**
     * Sets the text.
     * @param newText the new text
@@ -1080,9 +1107,7 @@ public class JDRTextPathStroke implements JDRStroke
    {
       ensureUpdated();
 
-      CanvasGraphics cg = getCanvasGraphics();
-
-      JDRGroup group = new JDRGroup(cg);
+      JDRGroup group = new JDRGroup(canvasGraphics);
 
       if (textPath.description.isEmpty())
       {
@@ -1092,6 +1117,8 @@ public class JDRTextPathStroke implements JDRStroke
       {
          group.description = textPath.description;
       }
+
+      group.setSelected(textPath.isSelected());
 
       boolean useMathMappings = false;
          
@@ -1109,24 +1136,25 @@ public class JDRTextPathStroke implements JDRStroke
       double storageToBp = canvasGraphics.storageToBp(1.0);
       double bpToStorage = canvasGraphics.bpToStorage(1.0);
 
-      AffineTransform bpAf = new AffineTransform(affineTransform);
-      bpAf.scale(storageToBp, storageToBp);
+      // Convert to bp to perform calculations since font size is in
+      // PostScript points
 
-      double descent = bpLayout.getDescent();
-      double ascent = bpLayout.getAscent();
-      Rectangle2D bounds = bpLayout.getBounds();
+      double descent = (double)storageLayout.getDescent();
+      double ascent = (double)storageLayout.getAscent();
 
-      double xoffset = 0;
-      double yoffset = 0;
+      Rectangle2D bounds = storageLayout.getBounds();
+
+      double xoffset = (double)(storageToBp*affineTransform.getTranslateX());
+      double yoffset = (double)(storageToBp*affineTransform.getTranslateY());
 
       switch (valign)
       {
          case TOP:
-            yoffset -= ascent;
+            yoffset += -ascent;
          break;
 
          case MIDDLE:
-            yoffset += descent - bounds.getHeight()*0.5;
+            yoffset += descent-(double)bounds.getHeight()*0.5f;
          break;
 
          case BOTTOM:
@@ -1134,24 +1162,29 @@ public class JDRTextPathStroke implements JDRStroke
          break;
       }
 
-      if (halign != LEFT)
-      {
-         double pathLength = measurePathLength(bpGeneralPath);
-
-         if (halign == CENTER)
-         {
-            xoffset += (pathLength-bounds.getWidth())*0.5;
-         }
-         else
-         {
-            xoffset += (pathLength-bounds.getWidth());
-         }
-      }
+      AffineTransform bpToStorageAf 
+        = AffineTransform.getScaleInstance(bpToStorage, bpToStorage);
 
       PathIterator it = new FlatteningPathIterator(
         bpGeneralPath.getPathIterator(null), FLATNESS);
 
-      Point2D p = new Point2D.Double();
+      if (halign != LEFT)
+      {
+         double pathLength = measurePathLength(it);
+
+         it = new FlatteningPathIterator(
+            bpGeneralPath.getPathIterator(null), FLATNESS);
+
+         if (halign == CENTER)
+         {
+            xoffset += (double)(pathLength-bounds.getWidth())*0.5f;
+         }
+         else
+         {
+            xoffset += (double)(pathLength-bounds.getWidth());
+         }
+      }
+
       AffineTransform af = new AffineTransform();
       double points[] = new double[6];
       double moveX = 0;
@@ -1165,13 +1198,13 @@ public class JDRTextPathStroke implements JDRStroke
       boolean first = false;
       double next = 0;
       int currentChar = 0;
-      int length = bpGlyphVector.getNumGlyphs();
+      int length = storageGlyphVector.getNumGlyphs();
 
       if (length == 0) return group;
 
-      double nextAdvance = 0;
+      Point2D dist = new Point2D.Double();
 
-      StringBuilder builder = new StringBuilder();
+      double nextAdvance = 0;
 
       while (currentChar < length && !it.isDone())
       {
@@ -1183,10 +1216,9 @@ public class JDRTextPathStroke implements JDRStroke
                moveX = lastX = points[0];
                moveY = lastY = points[1];
                first = true;
-               nextAdvance = bpGlyphVector.getGlyphMetrics(currentChar)
+               nextAdvance = storageGlyphVector.getGlyphMetrics(currentChar)
                  .getAdvance() * 0.5f;
                next = nextAdvance+xoffset;
-               next = nextAdvance;
             break;
 
             case PathIterator.SEG_CLOSE:
@@ -1206,23 +1238,50 @@ public class JDRTextPathStroke implements JDRStroke
 
                   while (currentChar < length && distance >= next)
                   {
+                     Point2D p = storageGlyphVector.getGlyphPosition(currentChar);
+                     double px = p.getX();
+                     double py = p.getY()+yoffset;
                      double x = lastX + next*dx*r;
                      double y = lastY + next*dy*r;
 
                      double advance = nextAdvance;
                      nextAdvance = currentChar < length-1 ?
-                        bpGlyphVector.getGlyphMetrics(currentChar+1).getAdvance() * 0.5f :
+                        storageGlyphVector.getGlyphMetrics(currentChar+1).getAdvance() * 0.5f :
                         0.0f;
 
-                     int thisChar = text.codePointAt(currentChar);
-                     builder.appendCodePoint(thisChar);
+                     int cp = text.codePointAt(
+                          storageGlyphVector.getGlyphCharIndex(currentChar));
 
-                     if (!Character.isWhitespace(thisChar)
-                      && bpGlyphVector.getGlyphMetrics(currentChar)
-                                    .isStandard())
+                     if (!Character.isWhitespace(cp))
                      {
-                        JDRText textArea
-                           = new JDRText(cg, builder.toString());
+                        af.setToIdentity();
+
+                        af.rotate(angle);
+
+                        dist.setLocation(-advance, -yoffset);
+                        dist = af.deltaTransform(dist, dist);
+
+                        af.concatenate(new AffineTransform(
+                          affineTransform.getScaleX(),
+                          affineTransform.getShearY(),
+                          affineTransform.getShearX(),
+                          affineTransform.getScaleY(),
+                          0.0, 0.0)
+                        );
+
+                        dist.setLocation(dist.getX()+x, dist.getY()+y);
+                        dist = bpToStorageAf.transform(dist, dist);
+
+                        af.preConcatenate(
+                          AffineTransform.getTranslateInstance
+                             (dist.getX(), dist.getY()));
+
+                        JDRText textArea = new JDRText(canvasGraphics,
+                          new String(Character.toChars(cp)));
+
+                        applyAttributesTo(textArea, textPath);
+
+                        textArea.transform(af);
 
                         if (useMathMappings)
                         {
@@ -1237,56 +1296,10 @@ public class JDRTextPathStroke implements JDRStroke
                             );
                         }
 
-                        textArea.setLaTeXFamily(getLaTeXFamily());
-                        textArea.setLaTeXSize(getLaTeXSize());
-                        textArea.setLaTeXSeries(getLaTeXSeries());
-                        textArea.setLaTeXShape(getLaTeXShape());
-
-                        textArea.setTextPaint(textPath.getTextPaint());
-                        textArea.setOutlineMode(textPath.isOutline());
-                        textArea.setOutlineFillPaint(textPath.getOutlineFillPaint());
-
-                        textArea.setFont(getFontFamily(),
-                                         getFontSeries(),
-                                         getFontShape(),
-                                         getFontSize());
-                        textArea.setVAlign(getVAlign());
-                        textArea.setHAlign(getHAlign());
-
-
-                        af.setToIdentity();
-                        double x1 = bpToStorage * x;
-                        double y1 = bpToStorage * y;
-                        af.translate(x1, y1);
-                        af.rotate(angle);
-                        af.translate(-bpToStorage*advance, 0);
-
-                        textArea.transform(af);
-
-                        x1 = af.getTranslateX();
-                        y1 = af.getTranslateY();
-
-                        textArea.translate(x1, y1);
-                        textArea.transform(
-                           affineTransform);
-
-                        textArea.translate(-x1, -y1);
-
-                        p.setLocation(
-                          affineTransform.getTranslateX()-xoffset,
-                          affineTransform.getTranslateY()+yoffset
-                        );
-
-                        p = af.deltaTransform(p, p);
-                        textArea.translate(-p.getX(), -p.getY());
-
-                        textArea.updateBounds();
-
                         group.add(textArea);
                      }
 
-                     currentChar += Character.charCount(thisChar);
-                     builder.setLength(0);
+                     currentChar++;
 
                      next += advance+nextAdvance;
                   }
@@ -1302,7 +1315,6 @@ public class JDRTextPathStroke implements JDRStroke
          it.next();
       }
 
-      group.setSelected(textPath.isSelected());
       return group;
    }
 
