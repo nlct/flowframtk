@@ -2858,6 +2858,8 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.textpath.to_path_if_transformed">To Path if Transformed</entry>
 <entry key="export.textpath.to_path_if_transformed.tooltip">Export the text-path as separate text areas if affine transformation applied</entry>
 
+<entry key="export.textpath.note">If a text-path is split into text areas when exported, the text area settings will then apply. The Text-Path outline settings override the Text-Path Decoration setting (except for Ignore).</entry>
+
 <entry key="export.textpathoutline">Text-Path Outlines:</entry>
 
 <entry key="export.textpathoutline.ignore">Ignore for Decoration</entry>
