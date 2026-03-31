@@ -1656,6 +1656,45 @@ You can also use this tab to specify
 your preferred default image command, which may be either
 \gls{pgfimage} or \gls{includegraphics}.
 
+\subsubsection{Clip Tag}\label{sec:cliptag}
+
+\widgetdef{clipping.title}
+
+You can specify a tag that identifies \glspl{path} that should clip rather
+than be stroked or filled when exporting to a file that contains
+\sty{pgf} drawing code. The path will show normally on the
+\gls{canvas}.
+
+Supply your preferred tag in the \widget{clipping.tag} text box (no
+spaces). When you export your image, any \gls{path} with a
+(space-separated) tag list that contains this tag will be written to
+the exported file as a clipping path rather than a normal path.
+
+Bear in mind that all \glspl{object} are written to the exported file 
+according to the \gls{stackingorder}, so the \glsdisp{backobject}{backmost} 
+object is written first. This means that any
+objects behind the clipping path will not be clipped.
+
+Clipping is performed with \code{\gls{pgfusepath}\marg{clip}}. If you have
+multiple paths with the designated clip tag, the clipping area won't
+be enlarged. The \sty{pgf} manual provides further information.
+
+If you want to scope the effects of the clipping, you will need to
+insert a \env{pgfscope} environment. The simplest way to do this is
+to group all the objects that need to be within the scope and export
+with one of the object markup settings 
+(\widget{export.markup.paired} or \widget{export.markup.encap}).
+You will then need to provide a definition of the applicable
+commands that introduce scoping around groups.
+For example:
+\begin{codebox}
+\cmd{usepackage}\marg{etoolbox}
+\cmd{renewcommand}\gls{flowframtkencapobject}\oarg{8}\marg{\comment{}
+ \cmd{ifstrequal}\marg{\#2}\marg{JDRGroup}
+  \marg{\cbeg{pgfscope}\#8\cend{pgfscope}}\comment{}
+  \marg{\#8}\comment{}
+}
+\end{codebox}
 
 \subsubsection{External Processes (Application Paths)}\label{sec:processes}
 
@@ -4547,7 +4586,7 @@ edit the path style.
 The \widget{import.paper} row is only available with imports from
 \gls{svg}. The \gls{Acorn-DrawFile-format} includes the paper \gls{paper.size}
 but \gls{svg} files typically have the \xmlattr{viewBox} attribute
-set to the image bounds. Clipping isn't supported by \FlowframTk,
+set to the image bounds. Clipping isn't automatically implemented by \FlowframTk,
 but you can choose how the paper \gls{paper.size} for the imported image is
 determined.
 
@@ -6735,6 +6774,10 @@ or \menu{navigate.by_description}.
 If you assign a tag to a \gls{group},
 you will lose the information if you later ungroup it.
 \end{important}
+
+You can designate a particular tag as a clip tag (see
+\sectionref{sec:cliptag}). Any \gls{path} with this tag will be
+exported as a clipping path instead of a normal path.
 
 \chapter{Paint (\Glsentrytext{manual.colour} and Shading)}
 \label{sec:paintcolourandshading}
@@ -9338,6 +9381,9 @@ segments outside of the desired area. This is intended as a more
 convenient method than using the \menu{editpath.break_path} and
 \menu{editpath.delete_control} functions to extract part
 of an existing shape, which can then be edited.
+
+If you want to retain the original shapes, then set up a clipping
+tag instead (see \sectionref{sec:cliptag}).
 
 \menudef{menu.transform.clip}
 
@@ -17426,6 +17472,16 @@ where true indicates \sty{flowfram}'s \optval{pages}{absolute}
 option and false indicates \sty{flowfram}'s
 \optval{pages}{relative} option.
 \end{enumerate}
+
+\item\label{jdr:cliptag}From v2.2 onwards the clip tag comes
+after the \TeX\ settings.
+\begin{jdrversion}{2.2 onwards}
+\begin{syntaxline}
+\meta{clip-tag}
+\end{syntaxline}
+\end{jdrversion}
+The \meta{clip-tag} is stored as a \type{string} and may be empty or
+null.
 
 \item\label{jdr:object} The \glspl{object} that constitute the
 image are now stored.  When saving to a file, an outer grouping is

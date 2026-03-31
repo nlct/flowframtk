@@ -1533,6 +1533,16 @@ public class FlowframTkSettings
       canvasGraphics.setUseAbsolutePages(flag);
    }
 
+   public void setClipTag(String cliptag)
+   {
+      canvasGraphics.setClipTag(cliptag);
+   }
+
+   public String getClipTag()
+   {
+      return canvasGraphics.getClipTag();
+   }
+
    public String getLookAndFeel()
    {
       return lookAndFeel; 

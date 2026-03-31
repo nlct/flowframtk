@@ -401,6 +401,7 @@ public class InvalidFormatException extends Exception
    public static final String SETTING_MAGIC_COMMENTS = "setting-magic-comments";
    public static final String SETTING_DOCCLASS = "setting-cls";
    public static final String SETTING_ABS_PAGES = "setting-absolute-pages";
+   public static final String SETTING_CLIPTAG = "setting-cliptag";
 
    public static final String ANGLE_VALUE = "angle-value";
    public static final String ANGLE_ID = "angle-id";

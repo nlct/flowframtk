@@ -481,6 +481,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="warning.pgf-no-marker-shading">marker shading paint can''t be exported to pgf</entry>
 <entry key="warning.pgf-textpath-contains-markup">pgf text path decoration may have a problem with LaTeX code: {0}</entry>
 
+<entry key="warning.save_unsupported_cliptag">Clip tag not supported in JDR/AJR version {0}</entry>
 <entry key="warning.save_unsupported_object">Object type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_paint">Paint type ''{0}'' not supported in JDR/AJR version {1}</entry>
 <entry key="warning.save_unsupported_gradient_mid_paint">Gradient mid-paint not supported in JDR/AJR version {0}</entry>
@@ -638,6 +639,7 @@ ascii 文件 1.0 (*.ajr)"格式.</entry>
 <entry key="error.invalid_angle_id">Invalid angle ID</entry>
 <entry key="error.invalid_angle_value">Invalid angle value</entry>
 <entry key="error.invalid_setting-absolute-pages">Invalid absolute pages setting</entry>
+<entry key="error.invalid_setting-cliptag">Invalid clip tag setting</entry>
 <entry key="error.invalid_setting-cls">Invalid document class setting</entry>
 <entry key="error.invalid_setting-preamble">Invalid early preamble setting</entry>
 <entry key="error.invalid_setting-mid-preamble">Invalid mid preamble setting</entry>

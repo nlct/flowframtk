@@ -476,7 +476,7 @@ public class CanvasGraphics
    {
       float version = jdr.getVersion();
 
-      // Storage unit, preamble, docClass and useAbsolute
+      // Storage unit, preamble, docClass, clipTag and useAbsolute
       // are explicitly saved by JDR.save
 
       jdr.writeBoolean(isGridDisplayed());
@@ -1325,6 +1325,37 @@ public class CanvasGraphics
       return docClass != null && !docClass.isEmpty();
    }
 
+   public void setClipTag(String tag)
+   {
+      clipTag = tag;
+   }
+
+   public String getClipTag()
+   {
+      return clipTag;
+   }
+
+   public boolean hasClipTag(JDRCompleteObject obj)
+   {
+      if (clipTag == null || clipTag.isEmpty()) return false;
+
+      String tag = obj.getTag();
+
+      if (tag == null || tag.isEmpty()) return false;
+
+      String[] tagList = tag.trim().split(" +");
+
+      for (String t: tagList)
+      {
+         if (t.equals(clipTag))
+         {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
    public AffineTransform getResetTransform()
    {
       return resetTransform;
@@ -1350,6 +1381,7 @@ public class CanvasGraphics
       magicComments = cg.magicComments;
       docClass = cg.docClass;
       absolutePages = cg.absolutePages;
+      clipTag = cg.clipTag;
       display_grid = cg.display_grid;
       grid_lock = cg.grid_lock;
       showRulers = cg.showRulers();
@@ -1798,6 +1830,9 @@ public class CanvasGraphics
    private String magicComments = null;
 
    private String docClass = null;
+
+   // If a path has this tag, it should be used to clip
+   private String clipTag = null;
 
    private boolean bitmapReplaced = false;
 

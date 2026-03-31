@@ -229,6 +229,23 @@ public abstract class JDRAJR
 
          writeString(cg.getDocClass());
          writeBoolean(cg.useAbsolutePages());
+
+         String clipTag = cg.getClipTag();
+
+         if (clipTag == null)
+         {
+            clipTag = "";
+         }
+
+         if (version >= 2.2f)
+         {
+            writeString(clipTag);
+         }
+         else if (!clipTag.isEmpty())
+         {
+            warningMessage("Clip tag not supported in JDR/AJR version {0}",
+              "warning.save_unsupported_cliptag", version);
+         }
       }
       else
       {
@@ -410,6 +427,12 @@ public abstract class JDRAJR
 
          canvasGraphics.setUseAbsolutePages(
            readBoolean(InvalidFormatException.SETTING_ABS_PAGES));
+
+         if (version >= 2.2f)
+         {
+            canvasGraphics.setClipTag(
+              readString(InvalidFormatException.SETTING_CLIPTAG));
+         }
       }
    }
 

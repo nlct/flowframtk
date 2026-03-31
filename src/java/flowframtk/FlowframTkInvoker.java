@@ -1714,6 +1714,10 @@ public class FlowframTkInvoker
                {
                   settings.setDefaultBitmapCommand(value);
                }
+               else if (key.equals("cliptag"))
+               {
+                  settings.setClipTag(value);
+               }
                // Import Settings
                else if (key.equals("import_markers"))
                {
@@ -2372,6 +2376,7 @@ public class FlowframTkInvoker
 
       out.println("relative_bitmaps="+(settings.useRelativeBitmaps()? 1: 0));
       out.println("bitmap_default_cs="+settings.getDefaultBitmapCommand());
+      out.println("cliptag="+settings.getClipTag());
 
       out.println("storageunit="+cg.getStorageUnitID());
 

@@ -1434,7 +1434,7 @@ public class JDRTextPathStroke implements JDRStroke
          break;
       }
 
-      tex.println("definecolor{textpaint}{"+paint.pgfmodel()+"}{"+paint.pgfspecs()+"}");
+      tex.println("\\definecolor{textpaint}{"+paint.pgfmodel()+"}{"+paint.pgfspecs()+"}");
       tex.println("\\pgfset{decoration/text color=textpaint}");
 
       if (align != null)

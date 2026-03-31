@@ -3337,7 +3337,19 @@ public class JDRPath extends JDRShape
 
       ExportSettings exportSettings = tex.getExportSettings();
 
-      CanvasGraphics cg = getCanvasGraphics();
+      JDRBasicStroke stroke = (JDRBasicStroke)getStroke();
+
+      if (canvasGraphics.hasClipTag(this))
+      {
+         savePgfPath(tex);
+         tex.println(stroke.windingRule==Path2D.WIND_EVEN_ODD ? 
+                "\\pgfseteorule " :
+                "\\pgfsetnonzerorule ");
+
+         tex.println("\\pgfusepath{clip}");
+
+         return;
+      }
 
       JDRPaint linePaint = getLinePaint();
       JDRPaint fillPaint = getShapeFillPaint();
@@ -3346,8 +3358,6 @@ public class JDRPath extends JDRShape
       {
          fillPaint = null;
       }
-
-      JDRBasicStroke stroke = (JDRBasicStroke)getStroke();
 
       boolean fillStroke = false;
       boolean drawStroke = !(linePaint instanceof JDRTransparent);
@@ -3437,21 +3447,21 @@ public class JDRPath extends JDRShape
            && stroke.getStartArrow().getType() != JDRMarker.ARROW_NONE)
          {
             stroke.setStartArrow(
-              JDRMarker.getPredefinedMarker(cg, JDRMarker.ARROW_NONE));
+              JDRMarker.getPredefinedMarker(canvasGraphics, JDRMarker.ARROW_NONE));
          }
 
          if (mid != null
            && stroke.getMidArrow().getType() != JDRMarker.ARROW_NONE)
          {
             stroke.setMidArrow(
-              JDRMarker.getPredefinedMarker(cg, JDRMarker.ARROW_NONE));
+              JDRMarker.getPredefinedMarker(canvasGraphics, JDRMarker.ARROW_NONE));
          }
 
          if (end != null
            && stroke.getEndArrow().getType() != JDRMarker.ARROW_NONE)
          {
             stroke.setEndArrow(
-              JDRMarker.getPredefinedMarker(cg, JDRMarker.ARROW_NONE));
+              JDRMarker.getPredefinedMarker(canvasGraphics, JDRMarker.ARROW_NONE));
          }
 
          setStroke(stroke);
@@ -3463,7 +3473,7 @@ public class JDRPath extends JDRShape
          }
          catch (InvalidPathException e)
          {
-            cg.warning(e);
+            canvasGraphics.warning(e);
          }
          finally
          {

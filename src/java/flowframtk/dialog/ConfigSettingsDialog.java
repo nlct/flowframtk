@@ -122,6 +122,13 @@ public class ConfigSettingsDialog extends JDialog
       tabbedPane.setMnemonicAt(idx++,
         resources.getCodePoint("bitmapconfig.mnemonic"));
 
+      clippingPanel = new ClippingPanel(application);
+
+      tabbedPane.addTab(resources.getMessage("clipping.title"), null,
+        new JScrollPane(clippingPanel), resources.getMessage("clipping.tooltip"));
+      tabbedPane.setMnemonicAt(idx++,
+        resources.getCodePoint("clipping.mnemonic"));
+
       processesPanel = new ProcessesPanel(application, appSelector);
 
       tabbedPane.addTab(resources.getMessage("processes.title"), null,
@@ -181,6 +188,7 @@ public class ConfigSettingsDialog extends JDialog
       initAppSettingsPanel.initialise(application_, cg);
       bitmapPanel.initialise(application_, cg);
       processesPanel.initialise(application_);
+      clippingPanel.initialise(cg);
 
       setVisible(true);
    }
@@ -194,6 +202,8 @@ public class ConfigSettingsDialog extends JDialog
       initAppSettingsPanel.okay(application_);
       bitmapPanel.okay(application_);
       processesPanel.okay(application_);
+
+      clippingPanel.okay(application_);
 
       application_.repaint();
 
@@ -224,6 +234,7 @@ public class ConfigSettingsDialog extends JDialog
    private StorageUnitPanel storageUnitPanel;
    private BitmapPanel bitmapPanel;
    private ProcessesPanel processesPanel;
+   private ClippingPanel clippingPanel;
 
    private FlowframTk application_;
 }
@@ -878,3 +889,87 @@ class ProcessesPanel extends JPanel implements ItemListener
    private SpinnerNumberModel timeoutModel;
 }
 
+class ClippingPanel extends JPanel
+{
+   public ClippingPanel(FlowframTk application)
+   {
+      super(null);
+
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+      setAlignmentX(Component.LEFT_ALIGNMENT);
+
+      JDRResources resources = application.getResources();
+
+      JLabelGroup grp = new JLabelGroup();
+      JLabel label;
+
+      JComponent row = Box.createHorizontalBox();
+      row.setAlignmentX(Component.LEFT_ALIGNMENT);
+      add(row);
+
+      label = resources.createAppLabel("clipping.tag");
+      grp.add(label);
+      row.add(label);
+
+      row.add(resources.createLabelSpacer());
+
+      clipTagField = new JTextField(12);
+      label.setLabelFor(clipTagField);
+      row.add(clipTagField);
+
+      row.add(resources.createLabelSpacer());
+
+      row.add(resources.createAppInfoField("clipping.tag.note"));
+
+      resources.clampCompMaxHeight(row, 0, 0);
+
+      setDefaultBox = resources.createAppCheckBox("clipping", "set_as_default", false, null);
+      setDefaultBox.setAlignmentX(0f);
+      add(setDefaultBox);
+   }
+
+   public void initialise(CanvasGraphics cg)
+   {
+      String clipTag = cg.getClipTag();
+
+      if (clipTag == null)
+      {
+         clipTag = "";
+      }
+
+      clipTagField.setText(clipTag);
+   }
+
+   public void okay(FlowframTk application)
+   {
+      String clipTag = clipTagField.getText();
+
+      JDRFrame frame = application.getCurrentFrame();
+
+      if (frame != null)
+      {
+         CanvasGraphics cg = frame.getCanvasGraphics();
+         String orgClipTag = cg.getClipTag();
+
+         if (orgClipTag == null)
+         {
+            orgClipTag = "";
+         }
+
+         if (!orgClipTag.equals(clipTag))
+         {
+            cg.setClipTag(clipTag);
+            frame.markAsModified();
+         }
+      }
+
+      if (setDefaultBox.isSelected())
+      {
+         application.getDefaultCanvasGraphics().setClipTag(clipTag);
+      }
+   }
+
+   JTextField clipTagField;
+   JCheckBox setDefaultBox;
+}
