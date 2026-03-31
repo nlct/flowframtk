@@ -1500,6 +1500,11 @@ public class JDRTextPathStroke implements JDRStroke
       return delimR;
    }
 
+   public boolean isTransformed()
+   {
+      return valign != BASE || !affineTransform.isIdentity();
+   }
+
    public String toString()
    {
       return String.format("%s[text=%s,font=%s,jdrfont=%s,halign=%d,valign=%d]", getClass().getSimpleName(),

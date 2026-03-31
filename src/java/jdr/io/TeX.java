@@ -717,11 +717,33 @@ public class TeX
       println("% "+string);
    }
 
+   protected boolean checkTextPathSupport()
+   {
+      switch (exportSettings.textPath)
+      {
+         case SPLIT:
+         case TO_PATH:
+         return false;
+      }
+
+      return true;
+   }
+
+   protected boolean checkOutlineSupport()
+   {
+      switch (exportSettings.textAreaOutline)
+      {
+         case USE_CMD:
+         return true;
+      }
+
+      return false;
+   }
+
    protected void checkForRequiredSupport(JDRGroup group)
    {
-      if (supportOutline
-           && (supportTextPath
-               || exportSettings.textPath != ExportSettings.TextPath.PGF_DECORATION))
+      if ((supportOutline || !checkOutlineSupport())
+           && (supportTextPath || !checkTextPathSupport()))
       {
          return;
       }
@@ -740,22 +762,20 @@ public class TeX
 
             if (textual != null)
             {
-               if (textual.isOutline())
+               if (textual.isOutline() && checkOutlineSupport())
                {
                   supportOutline = true;
                }
 
-               if (textual instanceof JDRTextPath
-                    && exportSettings.textPath == ExportSettings.TextPath.PGF_DECORATION)
+               if (textual instanceof JDRTextPath && checkTextPathSupport())
                {
                   supportTextPath = true;
                }
             }
          }
 
-         if (supportOutline
-           && (supportTextPath
-                || exportSettings.textPath != ExportSettings.TextPath.PGF_DECORATION))
+         if ( (supportOutline || !checkOutlineSupport())
+           && (supportTextPath || !checkTextPathSupport()))
          {
             return;
          }

@@ -1103,6 +1103,67 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
       return textOutline;
    }
 
+   public ExportSettings.TextPath getExportSetting(ExportSettings exportSettings)
+   {
+      if (((JDRTextPathStroke)getStroke()).isTransformed())
+      {
+         switch (exportSettings.textPath)
+         {
+            case TO_PATH_IF_TRANSFORMED:
+              return ExportSettings.TextPath.TO_PATH;
+            case SPLIT_IF_TRANSFORMED:
+              return ExportSettings.TextPath.SPLIT;
+         }
+      }
+
+      boolean split = false;
+      boolean toPath = false;
+
+      if ( (getTextPaint() instanceof JDRShading)
+           && exportSettings.textualShading == ExportSettings.TextualShading.TO_PATH)
+      {
+         toPath = true;
+      }
+
+      if (isOutline())
+      {
+         switch (exportSettings.textPathOutline)
+         {
+            case SPLIT:
+              split = true;
+            break;
+            case TO_PATH:
+              toPath = true;
+            break;
+         }
+
+         if ((getOutlineFillPaint() instanceof JDRShading)
+             && exportSettings.textualShading == ExportSettings.TextualShading.TO_PATH)
+         {
+            toPath = true;
+         }
+      }
+
+      if (!split && !toPath)
+      {
+         switch (exportSettings.textPath)
+         {
+            case SPLIT:
+             split = true;
+            break;
+            case TO_PATH:
+              toPath = true;
+            break;
+         }
+      }
+
+      if (toPath) return ExportSettings.TextPath.TO_PATH;
+
+      if (split) return ExportSettings.TextPath.SPLIT;
+
+      return ExportSettings.TextPath.PGF_DECORATION;
+   }
+
    public void savePgf(TeX tex)
     throws IOException
    {
@@ -1112,29 +1173,17 @@ public class JDRTextPath extends JDRCompoundShape implements JDRTextual
 
       boolean isShaded = (textPaint instanceof JDRShading);
 
-      boolean toPath = (exportSettings.textPath == ExportSettings.TextPath.TO_PATH);
-
-      if ((isOutline
-             && exportSettings.textPathOutline == ExportSettings.TextPathOutline.TO_PATH)
-         ||
-           (isShaded
-             && exportSettings.textualShading == ExportSettings.TextualShading.TO_PATH)
-         )
-      {
-         toPath = true;
-      }
+      ExportSettings.TextPath textPathSetting = getExportSetting(exportSettings);
 
       try
       {
-         if (toPath)
+         switch (textPathSetting)
          {
-            convertToPath().savePgf(tex);
+            case TO_PATH:
+              convertToPath().savePgf(tex);
             return;
-         }
-
-         if (exportSettings.textPath == ExportSettings.TextPath.SPLIT)
-         {
-            splitText().savePgf(tex);
+            case SPLIT:
+              splitText().savePgf(tex);
             return;
          }
       }

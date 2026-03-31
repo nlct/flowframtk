@@ -106,15 +106,14 @@ public class ExportDialog extends JDialog
       rememberSettingsBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       bottomPanel.add(rememberSettingsBox, "West");
 
-      // balance
+      JComponent rightComp = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-      bottomPanel.add(
-       new Box.Filler(
-           rememberSettingsBox.getMinimumSize(),
-           rememberSettingsBox.getPreferredSize(),
-           rememberSettingsBox.getMaximumSize()
-          ),
-       "East");
+      // balance
+      rightComp.setPreferredSize(rememberSettingsBox.getPreferredSize());
+
+      rightComp.add(resources.createAppButton("export", "reset", this));
+
+      bottomPanel.add(rightComp, "East");
 
       JPanel buttonPanel = new JPanel();
 
@@ -572,9 +571,17 @@ public class ExportDialog extends JDialog
         "textpath.split", bg, false, null);
       textPathWidgets.add(textPathSplitBox);
 
+      textPathSplitIfTransformedBox = resources.createAppRadioButton("export",
+        "textpath.split_if_transformed", bg, false, null);
+      textPathWidgets.add(textPathSplitIfTransformedBox);
+
       textPathToPathBox = resources.createAppRadioButton("export",
         "textpath.to_path", bg, false, null);
       textPathWidgets.add(textPathToPathBox);
+
+      textPathToPathIfTransformedBox = resources.createAppRadioButton("export",
+        "textpath.to_path_if_transformed", bg, false, null);
+      textPathWidgets.add(textPathToPathIfTransformedBox);
 
       adjustMaxHeight(textPathWidgets);
 
@@ -598,6 +605,10 @@ public class ExportDialog extends JDialog
       textPathOutlineToPathBox = resources.createAppRadioButton("export",
         "textpathoutline.to_path", bg, false, null);
       textPathOutlineWidgets.add(textPathOutlineToPathBox);
+
+      textPathOutlineSplitBox = resources.createAppRadioButton("export",
+        "textpathoutline.split", bg, false, null);
+      textPathOutlineWidgets.add(textPathOutlineSplitBox);
 
       adjustMaxHeight(textPathOutlineWidgets);
 
@@ -979,6 +990,20 @@ public class ExportDialog extends JDialog
          fileTypeBtn = fileTypeButtons[TYPE_PGF];
       }
 
+      updateSettings();
+
+      if (fileTypeBtn != currentFileTypeButton)
+      {
+         fileTypeBtn.setSelected(true);
+      }
+
+      fileField.requestFocusInWindow();
+
+      setVisible(true);
+   }
+
+   protected void updateSettings()
+   {
       switch (exportSettings.bounds)
       {
          case PAPER:
@@ -1065,8 +1090,14 @@ public class ExportDialog extends JDialog
          case SPLIT:
             textPathSplitBox.setSelected(true);
          break;
+         case SPLIT_IF_TRANSFORMED:
+            textPathSplitIfTransformedBox.setSelected(true);
+         break;
          case TO_PATH:
             textPathToPathBox.setSelected(true);
+         break;
+         case TO_PATH_IF_TRANSFORMED:
+            textPathToPathIfTransformedBox.setSelected(true);
          break;
       }
 
@@ -1074,6 +1105,9 @@ public class ExportDialog extends JDialog
       {
          case TO_PATH:
             textPathOutlineToPathBox.setSelected(true);
+         break;
+         case SPLIT:
+            textPathOutlineSplitBox.setSelected(true);
          break;
          case IGNORE:
             textPathOutlineIgnoreBox.setSelected(true);
@@ -1140,15 +1174,6 @@ public class ExportDialog extends JDialog
       }
 
       timeoutSpinner.setValue(Long.valueOf(exportSettings.timeout));
-
-      if (fileTypeBtn != currentFileTypeButton)
-      {
-         fileTypeBtn.setSelected(true);
-      }
-
-      fileField.requestFocusInWindow();
-
-      setVisible(true);
    }
 
    protected void okay()
@@ -1372,9 +1397,17 @@ public class ExportDialog extends JDialog
          {
             exportSettings.textPath = ExportSettings.TextPath.SPLIT;
          }
+         else if (textPathSplitIfTransformedBox.isSelected())
+         {
+            exportSettings.textPath = ExportSettings.TextPath.SPLIT_IF_TRANSFORMED;
+         }
          else if (textPathToPathBox.isSelected())
          {
             exportSettings.textPath = ExportSettings.TextPath.TO_PATH;
+         }
+         else if (textPathToPathIfTransformedBox.isSelected())
+         {
+            exportSettings.textPath = ExportSettings.TextPath.TO_PATH_IF_TRANSFORMED;
          }
       }
 
@@ -1383,6 +1416,10 @@ public class ExportDialog extends JDialog
          if (textPathOutlineToPathBox.isSelected())
          {
             exportSettings.textPathOutline = ExportSettings.TextPathOutline.TO_PATH;
+         }
+         else if (textPathOutlineSplitBox.isSelected())
+         {
+            exportSettings.textPathOutline = ExportSettings.TextPathOutline.SPLIT;
          }
          else if (textPathOutlineIgnoreBox.isSelected())
          {
@@ -1611,6 +1648,7 @@ public class ExportDialog extends JDialog
       boolean showStrokeMarkers = true;
       boolean showTextualShading = true;
       boolean showTextPath = true;
+      boolean showTextPathDecoration = true;
       boolean showTextAreaOutline = true;
       boolean showTextAreaOutlineUseCmd = true;
 
@@ -1629,8 +1667,6 @@ public class ExportDialog extends JDialog
             showStrokeShading = false;
             showStrokeMarkers = false;
             showTextualShading = false;
-            // fall through
-         case EPS:
             if (useExternalProcessBox.isSelected())
             {
                showBitmapsToEps = true;
@@ -1640,6 +1676,23 @@ public class ExportDialog extends JDialog
             else
             {
                showTextAreaOutlineUseCmd = false;
+            }
+         break;
+         case EPS:
+            if (useExternalProcessBox.isSelected())
+            {
+               showBitmapsToEps = true;
+               showStrokeShading = true;
+               showStrokeMarkers = true;
+            }
+            else
+            {// very limited support
+               showStrokeShading = false;
+               showStrokeMarkers = false;
+               showTextualShading = false;
+               showTextPath = false;
+               showTextAreaOutline = false;
+               showTextPathDecoration = false;
             }
          break;
          case IMAGE_PDF:
@@ -1702,7 +1755,15 @@ public class ExportDialog extends JDialog
       strokeMarkersComp.setVisible(showStrokeMarkers);
       strokeShadingComp.setVisible(showStrokeShading);
       textualShadingComp.setVisible(showTextualShading);
+
       textPathComp.setVisible(showTextPath);
+      textPathPgfBox.setEnabled(showTextPathDecoration);
+
+      if (!textPathPgfBox.isEnabled() && textPathPgfBox.isSelected())
+      {
+         textPathSplitBox.setSelected(true);
+      }
+
       textPathOutlineComp.setVisible(showTextPath);
       textAreaOutlineComp.setVisible(showTextAreaOutline);
       textAreaOutlineUseCmdBox.setEnabled(showTextAreaOutlineUseCmd);
@@ -1763,6 +1824,11 @@ public class ExportDialog extends JDialog
             }
          }
       }
+      else if (action.equals("reset"))
+      {
+         exportSettings.reset();
+         updateSettings();
+      }
    }
 
    public boolean isUseExternalProcessOn()
@@ -1813,10 +1879,11 @@ public class ExportDialog extends JDialog
      textualShadingEndBox, textualShadingToPathBox;
 
    private JComponent textPathComp;
-   private JRadioButton textPathPgfBox, textPathSplitBox, textPathToPathBox;
+   private JRadioButton textPathPgfBox, textPathSplitBox, textPathToPathBox,
+     textPathSplitIfTransformedBox, textPathToPathIfTransformedBox;
 
    private JComponent textPathOutlineComp;
-   private JRadioButton textPathOutlineToPathBox, textPathOutlineIgnoreBox;
+   private JRadioButton textPathOutlineToPathBox, textPathOutlineIgnoreBox, textPathOutlineSplitBox;
 
    private JComponent textAreaOutlineComp;
    private JRadioButton textAreaOutlineToPathBox, textAreaOutlineIgnoreBox, textAreaOutlineUseCmdBox;

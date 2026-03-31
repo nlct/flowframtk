@@ -2772,6 +2772,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.remember.mnemonic">R</entry>
 <entry key="export.remember.initvalue">true</entry>
 
+<entry key="export.reset">Reset</entry>
+<entry key="export.reset.tooltip">Reset non-processor options to default</entry>
+<entry key="export.reset.iconimage">reload</entry>
+
 <entry key="export.bounds">Bounding Box:</entry>
 
 <entry key="export.bounds.papersize">Paper Size</entry>
@@ -2849,10 +2853,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.textpath.to_path.tooltip">Export the text-path as a path</entry>
 
 <entry key="export.textpath.split_if_transformed">Split if Transformed</entry>
-<entry key="export.textpath.split_if_transformed.tooltip">Export the text-path as separate text areas if affine transformation applied</entry>
+<entry key="export.textpath.split_if_transformed.tooltip">Export the text-path as separate text areas if transformation applied</entry>
 
 <entry key="export.textpath.to_path_if_transformed">To Path if Transformed</entry>
-<entry key="export.textpath.to_path_if_transformed.tooltip">Export the text-path as separate text areas if affine transformation applied</entry>
+<entry key="export.textpath.to_path_if_transformed.tooltip">Export the text-path as separate text areas if transformation applied</entry>
 
 <entry key="export.textpath.note">If a text-path is split into text areas when exported, the text area settings will then apply. The Text-Path outline settings override the Text-Path Decoration setting (except for Ignore).</entry>
 

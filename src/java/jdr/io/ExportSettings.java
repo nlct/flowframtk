@@ -324,11 +324,30 @@ public class ExportSettings
       }
    }
 
+   // reset non-processor settings
+   public void reset()
+   {
+      bounds = Bounds.IMAGE;
+      objectMarkup = ObjectMarkup.NONE;
+      textPath = TextPath.SPLIT_IF_TRANSFORMED;
+      textualShading = TextualShading.TO_PATH;
+      textPathOutline = TextPathOutline.TO_PATH;
+      textAreaOutline = TextAreaOutline.TO_PATH;
+      markers = Markers.SEPARATE_OR_STROKED;
+      strokeShading = StrokeShading.TO_PATH;
+
+      pngUseAlpha=false;
+      usePdfInfo = false;
+      writeSrcFilename = false;
+      writeDateComment = false;
+      bitmapsToEps = false;
+      docClass = null;
+   }
 
    public Type type = Type.PGF;
    public Bounds bounds = Bounds.IMAGE;
    public ObjectMarkup objectMarkup = ObjectMarkup.NONE;
-   public TextPath textPath = TextPath.PGF_DECORATION;
+   public TextPath textPath = TextPath.SPLIT_IF_TRANSFORMED;
    public TextualShading textualShading = TextualShading.TO_PATH;
    public TextPathOutline textPathOutline = TextPathOutline.TO_PATH;
    public TextAreaOutline textAreaOutline = TextAreaOutline.TO_PATH;

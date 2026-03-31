@@ -2563,6 +2563,44 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void saveSVG(SVG svg, String attr)
       throws IOException
    {
+      ExportSettings exportSettings = svg.getExportSettings();
+
+      JDRTextual textual = getTextual();
+
+      if (textual != null && (textual instanceof JDRTextPath))
+      {
+         try
+         {
+            switch (exportSettings.textPath)
+            {
+               case TO_PATH_IF_TRANSFORMED:
+                 outlineToPath().saveSVG(svg, attr);
+               return;
+               case SPLIT_IF_TRANSFORMED:
+                 splitText().saveSVG(svg, attr);
+               return;
+            }
+
+            ExportSettings.TextPath textPathOpt
+              = ((JDRTextPath)textual).getExportSetting(exportSettings);
+
+            switch (textPathOpt)
+            {
+               case TO_PATH:
+                 outlineToPath().saveSVG(svg, attr);
+               return;
+               case SPLIT:
+                 splitText().saveSVG(svg, attr);
+               return;
+            }
+         }
+         catch (Exception e)
+         {
+            canvasGraphics.getMessageSystem().getPublisher().publishMessages(
+               MessageInfo.createWarning(e));
+         }
+      }
+
       try
       {
          if (isSingle())
@@ -2583,6 +2621,44 @@ public class JDRSymmetricPath extends JDRCompoundShape
    public void savePgf(TeX tex)
     throws IOException
    {
+      ExportSettings exportSettings = tex.getExportSettings();
+
+      JDRTextual textual = getTextual();
+
+      if (textual != null && (textual instanceof JDRTextPath))
+      {
+         try
+         {
+            switch (exportSettings.textPath)
+            {
+               case TO_PATH_IF_TRANSFORMED:
+                 outlineToPath().savePgf(tex);
+               return;
+               case SPLIT_IF_TRANSFORMED:
+                 splitText().savePgf(tex);
+               return;
+            }
+
+            ExportSettings.TextPath textPathOpt
+              = ((JDRTextPath)textual).getExportSetting(exportSettings);
+
+            switch (textPathOpt)
+            {
+               case TO_PATH:
+                 outlineToPath().savePgf(tex);
+               return;
+               case SPLIT:
+                 splitText().savePgf(tex);
+               return;
+            }
+         }
+         catch (Exception e)
+         {
+            canvasGraphics.getMessageSystem().getPublisher().publishMessages(
+               MessageInfo.createWarning(e));
+         }
+      }
+
       try
       {
          if (isSingle())
