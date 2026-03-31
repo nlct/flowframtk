@@ -1811,7 +1811,19 @@ public abstract class JDRPattern extends JDRCompoundShape
              group.add(shape);
           }
 
-          return group.mergePaths(null);
+          JDRShape merged = group.mergePaths(null);
+
+          if (isClosed())
+          {
+             JDRPathSegment seg = merged.getLastSegment();
+
+             if ((seg.getSegmentFlag() & SEGMENT_FLAG_MOVE) == SEGMENT_FLAG_MOVE)
+             {
+                merged.open(true);
+             }
+          }
+
+          return merged;
        }
 
        JDRShape shape = null;
@@ -2140,6 +2152,22 @@ public abstract class JDRPattern extends JDRCompoundShape
         "objectinfo.pattern.replicas", "Number of replicas: {0}",
          getNumReplicas())
       );
+
+      builder.append(eol);
+      builder.append(prefix);
+
+      if (singlemode_)
+      {
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.pattern.singlemode", "Single mode")
+         );
+      }
+      else
+      {
+         builder.append(msgSys.getMessageWithFallback(
+           "objectinfo.pattern.multimode", "Multi mode")
+         );
+      }
 
       builder.append(eol);
       builder.append(super.info(prefix));

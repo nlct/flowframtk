@@ -390,6 +390,8 @@ Nicola Talbot
 
 <entry key="objectinfo.pattern.replicas">Number of replicas: {0}</entry>
 <entry key="objectinfo.pattern.anchor">Anchor: {0}</entry>
+<entry key="objectinfo.pattern.singlemode">Single mode</entry>
+<entry key="objectinfo.pattern.multimode">Multi mode</entry>
 
 <entry key="objectinfo.rotational_pattern">Rotational pattern:</entry>
 <entry key="objectinfo.rotational_pattern.angle">Angle of rotation: {0}</entry>
