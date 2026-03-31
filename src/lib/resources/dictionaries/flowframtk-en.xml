@@ -2848,13 +2848,25 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.textpath.to_path">To Path</entry>
 <entry key="export.textpath.to_path.tooltip">Export the text-path as a path</entry>
 
+<entry key="export.textpath.split_if_transformed">Split if Transformed</entry>
+<entry key="export.textpath.split_if_transformed.tooltip">Export the text-path as separate text areas if affine transformation applied</entry>
+
+<entry key="export.textpath.to_path_if_transformed">To Path if Transformed</entry>
+<entry key="export.textpath.to_path_if_transformed.tooltip">Export the text-path as separate text areas if affine transformation applied</entry>
+
+<entry key="export.textpath.note">If a text-path is split into text areas when exported, the text area settings will then apply. The Text-Path outline settings override the Text-Path Decoration setting (except for Ignore).</entry>
+
 <entry key="export.textpathoutline">Text-Path Outlines:</entry>
 
-<entry key="export.textpathoutline.ignore">Ignore</entry>
-<entry key="export.textpathoutline.ignore.tooltip">Ignore the text-path outline setting</entry>
+<entry key="export.textpathoutline.ignore">Ignore for Decoration</entry>
+<entry key="export.textpathoutline.ignore.tooltip">Ignore the text-path outline setting if Decoration setting on</entry>
+
+<entry key="export.textpathoutline.split">Split</entry>
+<entry key="export.textpathoutline.split.tooltip">Export the text-path as separate text areas if text outlined (overrides Text-Path setting)</entry>
 
 <entry key="export.textpathoutline.to_path">To Path</entry>
-<entry key="export.textpathoutline.to_path.tooltip">Export the text-path as a path if text outlined</entry>
+<entry key="export.textpathoutline.to_path.tooltip">Export the text-path as a path if text outlined (overrides Text-Path setting)</entry>
+
 
 <entry key="export.textareaoutline">Text Area Outlines:</entry>
 
@@ -2863,6 +2875,9 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="export.textareaoutline.to_path">To Path</entry>
 <entry key="export.textareaoutline.to_path.tooltip">Export the text area as a path</entry>
+
+<entry key="export.textareaoutline.use_cmd">Use \jdroutline</entry>
+<entry key="export.textareaoutline.use_cmd.tooltip">Export the text area so that text is encapsulated with \jdroutline'{'pdf'}{'ps'}{'text'}'</entry>
 
 <entry key="export.shapeparcs">shapepar command: </entry>
 

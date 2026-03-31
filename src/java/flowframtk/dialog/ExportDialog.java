@@ -536,13 +536,17 @@ public class ExportDialog extends JDialog
       JComponent textAreaOutlineWidgets = createBevelledRow();
       textAreaOutlineComp.add(textAreaOutlineWidgets);
 
-      textAreaOutlineIgnoreBox = resources.createAppRadioButton("export",
-        "textareaoutline.ignore", bg, true, null);
-      textAreaOutlineWidgets.add(textAreaOutlineIgnoreBox);
+      textAreaOutlineUseCmdBox = resources.createAppRadioButton("export",
+        "textareaoutline.use_cmd", bg, true, null);
+      textAreaOutlineWidgets.add(textAreaOutlineUseCmdBox);
 
       textAreaOutlineToPathBox = resources.createAppRadioButton("export",
         "textareaoutline.to_path", bg, false, null);
       textAreaOutlineWidgets.add(textAreaOutlineToPathBox);
+
+      textAreaOutlineIgnoreBox = resources.createAppRadioButton("export",
+        "textareaoutline.ignore", bg, false, null);
+      textAreaOutlineWidgets.add(textAreaOutlineIgnoreBox);
 
       adjustMaxHeight(textAreaOutlineWidgets);
 
@@ -596,6 +600,12 @@ public class ExportDialog extends JDialog
       textPathOutlineWidgets.add(textPathOutlineToPathBox);
 
       adjustMaxHeight(textPathOutlineWidgets);
+
+      textPathNote = resources.createAppInfoArea("export.textpath.note");
+      textPathNote.setAlignmentX(0f);
+      adjustMaxHeight(textPathNote);
+
+      settingsPanel.add(textPathNote);
 
       // \Shapepar or \shapepar
 
@@ -1078,6 +1088,17 @@ public class ExportDialog extends JDialog
          case IGNORE:
             textAreaOutlineIgnoreBox.setSelected(true);
          break;
+         case USE_CMD:
+            textAreaOutlineUseCmdBox.setSelected(true);
+         break;
+      }
+
+      if (textAreaOutlineComp.isVisible()
+          && textAreaOutlineUseCmdBox.isSelected()
+          && !textAreaOutlineUseCmdBox.isEnabled())
+      {
+         exportSettings.textAreaOutline = ExportSettings.TextAreaOutline.IGNORE;
+         textAreaOutlineIgnoreBox.setSelected(true);
       }
 
       useExternalProcessBox.setSelected(exportSettings.useExternalProcess);
@@ -1379,6 +1400,10 @@ public class ExportDialog extends JDialog
          {
             exportSettings.textAreaOutline = ExportSettings.TextAreaOutline.IGNORE;
          }
+         else if (textAreaOutlineUseCmdBox.isSelected())
+         {
+            exportSettings.textAreaOutline = ExportSettings.TextAreaOutline.USE_CMD;
+         }
       }
 
       if (useExternalProcessBox.isVisible())
@@ -1586,7 +1611,8 @@ public class ExportDialog extends JDialog
       boolean showStrokeMarkers = true;
       boolean showTextualShading = true;
       boolean showTextPath = true;
-      boolean showTextAreaOutline = false;
+      boolean showTextAreaOutline = true;
+      boolean showTextAreaOutlineUseCmd = true;
 
       if (useExternalProcessBox.isVisible() && useExternalProcessBox.isSelected())
       {
@@ -1603,7 +1629,6 @@ public class ExportDialog extends JDialog
             showStrokeShading = false;
             showStrokeMarkers = false;
             showTextualShading = false;
-            showTextAreaOutline = true;
             // fall through
          case EPS:
             if (useExternalProcessBox.isSelected())
@@ -1611,6 +1636,10 @@ public class ExportDialog extends JDialog
                showBitmapsToEps = true;
                showStrokeShading = true;
                showStrokeMarkers = true;
+            }
+            else
+            {
+               showTextAreaOutlineUseCmd = false;
             }
          break;
          case IMAGE_PDF:
@@ -1643,6 +1672,7 @@ public class ExportDialog extends JDialog
                showStrokeMarkers = false;
                showTextualShading = false;
                showTextPath = false;
+               showTextAreaOutline = false;
             }
          break;
          case PGF:
@@ -1675,6 +1705,14 @@ public class ExportDialog extends JDialog
       textPathComp.setVisible(showTextPath);
       textPathOutlineComp.setVisible(showTextPath);
       textAreaOutlineComp.setVisible(showTextAreaOutline);
+      textAreaOutlineUseCmdBox.setEnabled(showTextAreaOutlineUseCmd);
+
+      if (!textAreaOutlineUseCmdBox.isEnabled() && textAreaOutlineUseCmdBox.isSelected())
+      {
+         textAreaOutlineIgnoreBox.setSelected(true);
+      }
+
+      textPathNote.setVisible(showTextPath);
    }
 
    @Override
@@ -1781,7 +1819,9 @@ public class ExportDialog extends JDialog
    private JRadioButton textPathOutlineToPathBox, textPathOutlineIgnoreBox;
 
    private JComponent textAreaOutlineComp;
-   private JRadioButton textAreaOutlineToPathBox, textAreaOutlineIgnoreBox;
+   private JRadioButton textAreaOutlineToPathBox, textAreaOutlineIgnoreBox, textAreaOutlineUseCmdBox;
+
+   private javax.swing.text.JTextComponent textPathNote;
 
    private JComponent shapeparUseHPaddingComp;
    private JRadioButton shapeparUseHPaddingOnBox, shapeparUseHPaddingOffBox;

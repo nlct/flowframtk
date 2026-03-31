@@ -47,7 +47,7 @@ public class ExportSettings
 
    public static enum TextPath
    {
-      PGF_DECORATION, SPLIT, TO_PATH;
+      PGF_DECORATION, SPLIT, TO_PATH, SPLIT_IF_TRANSFORMED, TO_PATH_IF_TRANSFORMED;
    }
 
    public static enum TextualShading
@@ -57,12 +57,12 @@ public class ExportSettings
 
    public static enum TextPathOutline
    {
-      TO_PATH, IGNORE;
+      TO_PATH, IGNORE, SPLIT;
    }
 
    public static enum TextAreaOutline
    {
-      TO_PATH, IGNORE;
+      TO_PATH, IGNORE, USE_CMD;
    }
 
    public static enum StrokeShading

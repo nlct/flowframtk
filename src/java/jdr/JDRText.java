@@ -1574,6 +1574,42 @@ public class JDRText extends JDRCompleteObject
    {
       CanvasGraphics cg = getCanvasGraphics();
 
+      ExportSettings exportSettings = tex.getExportSettings();
+
+      ExportSettings.TextAreaOutline textAreaOutline = exportSettings.textAreaOutline;
+      ExportSettings.TextualShading textualShading = exportSettings.textualShading;
+
+      if (
+          (
+            isOutline()
+            && textAreaOutline == ExportSettings.TextAreaOutline.TO_PATH
+          )
+       || (
+            (
+                (textPaint instanceof JDRShading)
+             || (isOutline() && fillPaint instanceof JDRShading)
+            )
+            && textualShading == ExportSettings.TextualShading.TO_PATH
+          )
+         )
+      {
+         try
+         {
+            JDRGroup g = convertToPath();
+            g.mergePaths(null).savePgf(tex);
+
+            return;
+         }
+         catch (Exception e)
+         {
+            cg.getMessageSystem().getPublisher().publishMessages(
+               MessageInfo.createWarning(e));
+
+            textAreaOutline = ExportSettings.TextAreaOutline.IGNORE;
+            textualShading = ExportSettings.TextualShading.AVERAGE;
+         }
+      }
+
       String valign="";
       String halign="";
 
@@ -1618,8 +1654,6 @@ public class JDRText extends JDRCompleteObject
          break;
       }
 
-      ExportSettings exportSettings = tex.getExportSettings();
-
       JDRPaint p = getTextPaint();
       JDRPaint fill = fillPaint;
 
@@ -1637,7 +1671,7 @@ public class JDRText extends JDRCompleteObject
       {
          if (p instanceof JDRShading)
          {
-            String shadingSetting = exportSettings.textualShading.toString().toLowerCase();
+            String shadingSetting = textualShading.toString().toLowerCase();
 
             String msg = cg.getMessageWithFallback(
                "warning.pgf-no-text-shading",
@@ -1653,8 +1687,11 @@ public class JDRText extends JDRCompleteObject
 
             JDRShading shading = (JDRShading)p;
 
-            switch (exportSettings.textualShading)
+            switch (textualShading)
             {
+               case TO_PATH:
+                 // should already have been detected earlier
+                 // unless an exception occurred
                case AVERAGE:
                   p = shading.getStartColor().average(shading.getEndColor());
                break;
@@ -1664,30 +1701,18 @@ public class JDRText extends JDRCompleteObject
                case END:
                   p = shading.getEndColor();
                break;
-               case TO_PATH:
-                  try
-                  {
-                     JDRGroup g = convertToPath();
-                     g.mergePaths(null).savePgf(tex);
-                  }
-                  catch (Exception e)
-                  {
-                     cg.getMessageSystem().getPublisher().publishMessages(
-                        MessageInfo.createWarning(e));
-                  }
-
-                  return;
             }
          }
 
          String exportText =
            (latexText == null || latexText.isEmpty() ? text : latexText);
 
-         if (isOutline())
+         if (isOutline()
+               && textAreaOutline == ExportSettings.TextAreaOutline.USE_CMD)
          {
             if (fill instanceof JDRShading)
             {
-               String shadingSetting = exportSettings.textualShading.toString().toLowerCase();
+               String shadingSetting = textualShading.toString().toLowerCase();
 
                String msg = cg.getMessageWithFallback(
                   "warning.pgf-no-text-shading",
@@ -1703,8 +1728,12 @@ public class JDRText extends JDRCompleteObject
 
                JDRShading shading = (JDRShading)fill;
 
-               switch (exportSettings.textualShading)
+               switch (textualShading)
                {
+                  case TO_PATH:
+                    // should already have been detected earlier
+                    // unless an exception occurred, in which case
+                    // average
                   case AVERAGE:
                      fill = shading.getStartColor().average(shading.getEndColor());
                   break;
@@ -1714,19 +1743,6 @@ public class JDRText extends JDRCompleteObject
                   case END:
                      fill = shading.getEndColor();
                   break;
-                  case TO_PATH:
-                     try
-                     {
-                        JDRGroup g = convertToPath();
-                        g.mergePaths(null).savePgf(tex);
-                     }
-                     catch (Exception e)
-                     {
-                        cg.getMessageSystem().getPublisher().publishMessages(
-                           MessageInfo.createWarning(e));
-                     }
-
-                   return;
                }
             }
 
