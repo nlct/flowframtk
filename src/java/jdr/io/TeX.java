@@ -25,6 +25,8 @@ package com.dickimawbooks.jdr.io;
 
 import java.io.*;
 import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.nio.file.Path;
 import java.awt.*;
 import java.awt.geom.*;
@@ -1003,6 +1005,13 @@ public class TeX
       return exportSettings;
    }
 
+   public boolean mayContainLaTeXMarkup(String text)
+   {
+      Matcher m = PATTERN_ANY_TEX_SPCHARS.matcher(text);
+
+      return m.find();
+   }
+
    /**
     * Number format to use to print decimal numbers in LaTeX file.
     * @see #format(double)
@@ -1033,4 +1042,7 @@ public class TeX
    ExportSettings exportSettings;
 
    public static final String FLOWFRAME_STY = "flowframtkutils";
+
+   public static final Pattern PATTERN_ANY_TEX_SPCHARS
+    = Pattern.compile("\\\\|\\$|\\#|\\&|\\{|\\}|\\^|\\_|\\~|\\%");
 }

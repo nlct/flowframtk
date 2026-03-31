@@ -1411,6 +1411,14 @@ public class JDRTextPathStroke implements JDRStroke
          latexText = getText();
       }
 
+      if (tex.mayContainLaTeXMarkup(latexText))
+      {
+         canvasGraphics.warningMessage(
+          "pgf text path decoration may have a problem with LaTeX code: {0}",
+          "warning.pgf-textpath-contains-markup",
+          latexText);
+      }
+
       String align = null;
 
       switch (getHAlign())
@@ -1425,6 +1433,9 @@ public class JDRTextPathStroke implements JDRStroke
            align = "right";
          break;
       }
+
+      tex.println("definecolor{textpaint}{"+paint.pgfmodel()+"}{"+paint.pgfspecs()+"}");
+      tex.println("\\pgfset{decoration/text color=textpaint}");
 
       if (align != null)
       {
@@ -1466,11 +1477,7 @@ public class JDRTextPathStroke implements JDRStroke
       tex.println("\\pgfset{decoration/text format delimiters={"
         +leftDelimStr+"}{"+rightDelimStr+"}}");
 
-      tex.println("\\pgfset{decoration/text={"+leftDelimStr
-
-           + paint.pgf(null)+rightDelimStr
-
-           + latexText+"}}");
+      tex.println("\\pgfset{decoration/text={" + latexText+"}}");
 
       tex.print("\\pgfdecoratepath{text along path}{");
 
