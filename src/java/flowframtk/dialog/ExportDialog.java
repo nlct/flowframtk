@@ -703,6 +703,18 @@ public class ExportDialog extends JDialog
       writeDateCommentBox.setAlignmentX(Component.LEFT_ALIGNMENT);
       settingsPanel.add(writeDateCommentBox);
 
+      // Use default preamble
+
+      File preambleFile = application.getConfigPreambleFile();
+
+      useDefaultPreambleBox = resources.createAppCheckBox(
+         "export", "use_default_preamble", preambleFile.exists(), null);
+      useDefaultPreambleBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+      settingsPanel.add(useDefaultPreambleBox);
+
+      useDefaultPreambleBox.setToolTipText(resources.getMessage(
+       "export.use_default_preamble.tooltip", preambleFile));
+
       // Convert Bitmaps to EPS (EPS and SVG only, which use DVI)
 
       bitmapsToEpsBox = resources.createAppCheckBox(
@@ -1140,6 +1152,7 @@ public class ExportDialog extends JDialog
       pngUseAlphaBox.setSelected(exportSettings.pngUseAlpha);
 
       usePdfInfoBox.setSelected(exportSettings.usePdfInfo);
+      useDefaultPreambleBox.setSelected(exportSettings.useDefaultPreamble);
 
       writeSrcFilenameBox.setSelected(exportSettings.writeSrcFilename);
       writeDateCommentBox.setSelected(exportSettings.writeDateComment);
@@ -1463,6 +1476,11 @@ public class ExportDialog extends JDialog
          exportSettings.usePdfInfo = usePdfInfoBox.isSelected();
       }
 
+      if (useDefaultPreambleBox.isVisible())
+      {
+         exportSettings.useDefaultPreamble = useDefaultPreambleBox.isSelected();
+      }
+
       if (writeSrcFilenameBox.isVisible())
       {
          exportSettings.writeSrcFilename = writeSrcFilenameBox.isSelected();
@@ -1748,6 +1766,7 @@ public class ExportDialog extends JDialog
       usePdfInfoBox.setVisible(showDocClassComp 
         && !(type == ExportSettings.Type.CLS
           || type == ExportSettings.Type.PNG));
+      useDefaultPreambleBox.setVisible(usePdfInfoBox.isVisible());
       writeSrcFilenameBox.setVisible(texExport);
       writeDateCommentBox.setVisible(texExport);
       bitmapsToEpsBox.setVisible(showBitmapsToEps);
@@ -1857,7 +1876,8 @@ public class ExportDialog extends JDialog
    private SpinnerNumberModel timeoutModel;
 
    private JCheckBox useExternalProcessBox, rememberSettingsBox, pngUseAlphaBox,
-     usePdfInfoBox, bitmapsToEpsBox, writeSrcFilenameBox, writeDateCommentBox;
+     usePdfInfoBox, bitmapsToEpsBox, writeSrcFilenameBox, writeDateCommentBox,
+     useDefaultPreambleBox;
 
    private JComponent boundsComp;
    private JRadioButton usePaperSizeBoundsBox, useImageBoundsBox, useTypeblockBoundsBox;

@@ -2902,6 +2902,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="export.write_date_comment">Add creation date as a comment</entry>
 <entry key="export.write_date_comment.initvalue">false</entry>
 
+<entry key="export.use_default_preamble">Use default preamble</entry>
+<entry key="export.use_default_preamble.initvalue">true</entry>
+<entry key="export.use_default_preamble.tooltip">Use the code from the file {0} (if it exists)</entry>
+
 <entry key="export.bitmaps_to_eps">Convert bitmaps to EPS</entry>
 <entry key="export.bitmaps_to_eps.initvalue">false</entry>
 
@@ -3349,7 +3353,10 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="preambleconfig.title">Default Preamble</entry>
 <entry key="preambleconfig.tooltip">Modify contents of preamble.tex file</entry>
 <entry key="preambleconfig.mnemonic">P</entry>
-<entry key="preambleconfig.info">This is the contents of the file "{0}". If you have modified it outside of this application whilst this application is running, click on the reload button to refresh the contents. This code is used when exporting to LaTeX documents, PDF, PostScript and SVG formats, but is not used when exporting to other formats, including export to .cls or .sty files.</entry>
+
+<entry key="preambleconfig.use_default_preamble">Use default preamble</entry>
+
+<entry key="preambleconfig.info">This is the contents of the file "{0}". If you have modified it outside of this application whilst this application is running, click on the reload button to refresh the contents. This code is used when exporting to LaTeX documents, or exports that use external processes, but is not used when exporting to other formats, including export to .cls or .sty files.</entry>
 <entry key="preambleconfig.reload">Reload</entry>
 <entry key="preambleconfig.reload.mnemonic">R</entry>
 <entry key="preambleconfig.reload.tooltip">Reload preamble file</entry>

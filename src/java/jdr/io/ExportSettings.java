@@ -105,6 +105,7 @@ public class ExportSettings
       bitmapsToEps = other.bitmapsToEps;
       shapeparUseHpadding = other.shapeparUseHpadding;
       docClass = other.docClass;
+      useDefaultPreamble = other.useDefaultPreamble;
    }
 
    protected String getMissingAppMessage(String name)
@@ -342,6 +343,7 @@ public class ExportSettings
       writeDateComment = false;
       bitmapsToEps = false;
       docClass = null;
+      useDefaultPreamble = true;
    }
 
    public Type type = Type.PGF;
@@ -382,6 +384,7 @@ public class ExportSettings
    public boolean bitmapsToEps = false;
 
    public boolean shapeparUseHpadding = true; // use \Shapepar instead of \shapepar
+   public boolean useDefaultPreamble=true;
 
    public String docClass = null;
 

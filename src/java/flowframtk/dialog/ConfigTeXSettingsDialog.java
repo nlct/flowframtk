@@ -1478,16 +1478,33 @@ class PreambleConfigPanel extends JPanel
 {
    public PreambleConfigPanel(JDialog parent, FlowframTk application)
    {
-      super(new BorderLayout());
+      super(null);
       this.application = application;
       this.parent = parent;
+
+      init();
+   }
+
+   protected void init()
+   {
+      setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
       JDRResources resources = application.getResources();
 
       File file = application.getConfigPreambleFile();
 
-      add(resources.createAppInfoArea("preambleconfig.info",
-        file.toString()), BorderLayout.NORTH);
+      useDefaultPreambleBox = resources.createAppCheckBox(
+       "preambleconfig", "use_default_preamble", true, null);
+      useDefaultPreambleBox.setAlignmentX(0f);
+
+      add(useDefaultPreambleBox);
+
+      JTextArea infoArea = resources.createAppInfoArea("preambleconfig.info",
+        file.toString());
+
+      infoArea.setAlignmentX(0f);
+
+      add(infoArea);
 
       popupM = new JPopupMenu();
 
@@ -1499,7 +1516,9 @@ class PreambleConfigPanel extends JPanel
       JDRButtonItem reloadItem = resources.createButtonItem(
         "preambleconfig", "reload", this, texEditorPanel.getToolBar(), popupM);
 
-      add(texEditorPanel, BorderLayout.CENTER);
+      texEditorPanel.setAlignmentX(0f);
+
+      add(texEditorPanel);
 
       texEditorPanel.addMouseListener(this);
       texEditorPanel.getTextPane().addMouseListener(this);
@@ -1521,12 +1540,20 @@ class PreambleConfigPanel extends JPanel
 
    public void initialise()
    {
+      ExportSettings exportSettings = application.getExportSettings();
+
+      useDefaultPreambleBox.setSelected(exportSettings.useDefaultPreamble);
+
       texEditorPanel.setModified(false);
       texEditorPanel.getTextPane().requestFocusInWindow();
    }
 
    public void okay() throws IOException
    {
+      ExportSettings exportSettings = application.getExportSettings();
+
+      exportSettings.useDefaultPreamble = useDefaultPreambleBox.isSelected();
+
       if (texEditorPanel.isModified())
       {
          File file = application.getConfigPreambleFile();
@@ -1599,6 +1626,8 @@ class PreambleConfigPanel extends JPanel
    }
 
    private FlowframTk application;
+
+   private JCheckBox useDefaultPreambleBox;
 
    private TeXEditorPanel texEditorPanel;
 

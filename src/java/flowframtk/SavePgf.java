@@ -64,13 +64,16 @@ public class SavePgf extends ExportImage
          {
             String preamble = null;
 
-            try
+            if (exportSettings.useDefaultPreamble)
             {
-               preamble = app.getConfigPreamble();
-            }
-            catch (IOException e)
-            {
-               publish(MessageInfo.createWarning(e));
+               try
+               {
+                  preamble = app.getConfigPreamble();
+               }
+               catch (IOException e)
+               {
+                  publish(MessageInfo.createWarning(e));
+               }
             }
 
             pgf.saveDoc(image, preamble);

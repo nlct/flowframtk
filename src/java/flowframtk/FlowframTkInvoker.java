@@ -1775,6 +1775,10 @@ public class FlowframTkInvoker
                {
                   exportSettings.shapeparUseHpadding = parseBoolean(value, line);
                }
+               else if (key.equals("usedefaultpreamble"))
+               {
+                  exportSettings.useDefaultPreamble = parseBoolean(value, line);
+               }
                else if (key.equals("pdfinfo"))
                {
                   exportSettings.usePdfInfo = parseBoolean(value, line);
@@ -2470,6 +2474,7 @@ public class FlowframTkInvoker
       ExportSettings exportSettings = settings.exportSettings;
 
       out.println("shapeparhpadding=" + (exportSettings.shapeparUseHpadding ? 1 : 0));
+      out.println("usedefaultpreamble="+(exportSettings.useDefaultPreamble ? 1 : 0));
       out.println("pdfinfo="+(exportSettings.usePdfInfo ? 1 : 0));
       out.println("srcfilecomment="+(exportSettings.writeSrcFilename ? 1 : 0));
       out.println("datecomment="+(exportSettings.writeDateComment ? 1 : 0));
