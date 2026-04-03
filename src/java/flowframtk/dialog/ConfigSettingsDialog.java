@@ -494,22 +494,20 @@ class DirPanel extends JPanel
 
       panel.add(named);
 
-      directory = new JTextField(10);
-      panel.add(directory);
-
-      browse = resources.createAppJButton("startdir", "browse", this);
-
-      panel.add(browse);
-
-      box.add(panel);
-
-      add(box);
-
       fc = new JFileChooser();
       fc.setCurrentDirectory(new File("."));
       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
       fc.setApproveButtonText(resources.getMessage("button.okay"));
       fc.setApproveButtonMnemonic(resources.getCodePoint("button.okay.mnemonic"));
+
+      directory = new FileField(resources, this, "", fc,
+        JFileChooser.DIRECTORIES_ONLY);
+
+      panel.add(directory);
+
+      box.add(panel);
+
+      add(box);
    }
 
    public void actionPerformed(ActionEvent evt)
@@ -519,21 +517,10 @@ class DirPanel extends JPanel
       if (source == cwd || source == lastDir)
       {
          directory.setEnabled(false);
-         browse.setEnabled(false);
       }
       else if (source == named)
       {
          directory.setEnabled(true);
-         browse.setEnabled(true);
-      }
-      else if (source == browse)
-      {
-         int result = fc.showOpenDialog(this);
-
-         if (result == JFileChooser.APPROVE_OPTION)
-         {
-            directory.setText(fc.getSelectedFile().getAbsolutePath());
-         }
       }
    }
 
@@ -546,18 +533,15 @@ class DirPanel extends JPanel
          case FlowframTkSettings.STARTDIR_CWD:
             cwd.setSelected(true);
             directory.setEnabled(false);
-            browse.setEnabled(false);
          break;
          case FlowframTkSettings.STARTDIR_LAST:
             lastDir.setSelected(true);
             directory.setEnabled(false);
-            browse.setEnabled(false);
          break;
          case FlowframTkSettings.STARTDIR_NAMED:
             named.setSelected(true);
-            directory.setText(application.getStartDirectory());
+            directory.setFileName(application.getStartDirectory());
             directory.setEnabled(true);
-            browse.setEnabled(true);
          break;
          default :
             application.getResources().internalError(this,
@@ -583,12 +567,11 @@ class DirPanel extends JPanel
          type = FlowframTkSettings.STARTDIR_NAMED;
       }
 
-      application.setStartDirectory(type, directory.getText());
+      application.setStartDirectory(type, directory.getFileName());
    }
 
    private JRadioButton cwd, lastDir, named;
-   private JButton browse;
-   private JTextField directory;
+   private FileField directory;
    private JFileChooser fc;
 }
 
