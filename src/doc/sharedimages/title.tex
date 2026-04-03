@@ -1,50 +1,30 @@
-% Created by FlowframTk version 0.8.7
-% 30 Jul 2025, 13:28:06
+% Created by FlowframTk version 0.9
 \iffalse
 % This image may require the following commands in the preamble:
-\usepackage{ifpdf}
-\makeatletter
-\newcommand*{\jdroutline}[3]{%
-  \GenericWarning{}{text outline can't be implemented}#3%
-}%
-\ifpdf
- \let\jdrorgmod\mod
- \InputIfFileExists{pdf-trans}%
- {%
-   \renewcommand*{\jdroutline}[3]{%
-     {\def\mod{\expandtwonumexprafter \modulo}%
-     \setbox\@tempboxa\hbox{##3}%
-     \boxgs{##1}{}\copy\@tempboxa
-     }%
-   }%
- }{}
- \let\mod\jdrorgmod
-\else
- \IfFileExists{pst-char.sty}%
- {%
-   \usepackage{pst-char}
-   \renewcommand*{\jdroutline}[3]{%
-     \begin{pspicture}(0,0)
-     \pscharpath[##2]{##3}
-     \end{pspicture}
-   }
- }{}
-\fi
-\makeatother
-\usepackage{pgf}
-\usepgflibrary{decorations.text}
+\usepackage{flowframtkutils}
 % The normal size font is assumed to be 10pt
 % End of preamble information
 \fi
 \begin{pgfpicture}
-\pgfpathmoveto{\pgfpoint{111.0bp}{557.402307bp}}
+\flowframtkencapobject{0}{JDRGroup}{}{}{\pgfpoint{111.0bp}{558.075524bp}}{327.34986bp}{191.46438bp}{%
+\pgfpathmoveto{\pgfpoint{111.0bp}{558.075524bp}}
 \pgfpathlineto{\pgfpoint{438.34986bp}{749.539904bp}}
 \pgfusepath{use as bounding box}
+\flowframtkencapobject{1}{JDRBitmap}{}{}{\pgfpoint{111.0bp}{636.889764bp}}{80.0bp}{80.0bp}{%
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{111.0bp}{716.889764bp}}
 \pgflowlevelsynccm
-\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\includegraphics{flowframtklogolarge}}}
+\pgfputat{\pgfpoint{0pt}{0pt}}{\pgftext[top,left]{\pgfimage[width=80.0bp,height=80.0bp]{flowframtklogolarge}}}
 \end{pgfscope}
+}%
+\flowframtkencapobject{2}{JDRPath}{}{}{\pgfpoint{178.94841bp}{630.838174bp}}{176.371658bp}{116.346725bp}{%
+\begin{pgfscope}
+\pgfsetlinewidth{10.0bp}
+\pgfsetroundcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{184.0bp}{635.889764bp}}
+\pgfpathcurveto{\pgfpoint{271.666667bp}{637.55643bp}}{\pgfpoint{265.333333bp}{730.223097bp}}{\pgfpoint{336.0bp}{739.889764bp}}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
 \pgfsetrectcap
@@ -72,7 +52,17 @@
 \pgfdeclarehorizontalshading{jdrlinear0}{100bp}{color(0bp)=(jdrlinear-start-0); color(32.5bp)=(jdrlinear-start-0); color(67.5bp)=(jdrlinear-end-0); color(100bp)=(jdrlinear-end-0)}
 \pgfshadepath{jdrlinear0}{0.0}
 \pgfseteorule 
-\relax \end{pgfscope}
+\end{pgfscope}
+\end{pgfscope}
+}%
+\flowframtkencapobject{3}{JDRPath}{}{}{\pgfpoint{175.356995bp}{615.578179bp}}{185.139862bp}{71.861557bp}{%
+\begin{pgfscope}
+\pgfsetlinewidth{10.0bp}
+\pgfsetroundcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{181.0bp}{635.889764bp}}
+\pgfpathcurveto{\pgfpoint{249.666667bp}{610.889764bp}}{\pgfpoint{285.333333bp}{677.889764bp}}{\pgfpoint{341.0bp}{678.889764bp}}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
 \pgfsetrectcap
@@ -101,7 +91,17 @@
 \pgfdeclarehorizontalshading{jdrlinear1}{100bp}{color(0bp)=(jdrlinear-start-1); color(32.5bp)=(jdrlinear-start-1); color(67.5bp)=(jdrlinear-end-1); color(100bp)=(jdrlinear-end-1)}
 \pgfshadepath{jdrlinear1}{0.0}
 \pgfseteorule 
-\relax \end{pgfscope}
+\end{pgfscope}
+\end{pgfscope}
+}%
+\flowframtkencapobject{4}{JDRPath}{}{}{\pgfpoint{179.519058bp}{601.215356bp}}{180.737534bp}{35.625488bp}{%
+\begin{pgfscope}
+\pgfsetlinewidth{10.0bp}
+\pgfsetroundcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{185.194835bp}{631.165074bp}}
+\pgfpathcurveto{\pgfpoint{238.525346bp}{593.326863bp}}{\pgfpoint{266.568873bp}{623.156097bp}}{\pgfpoint{340.757914bp}{622.29179bp}}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
 \pgfsetrectcap
@@ -130,7 +130,17 @@
 \pgfdeclarehorizontalshading{jdrlinear2}{100bp}{color(0bp)=(jdrlinear-start-2); color(32.5bp)=(jdrlinear-start-2); color(67.5bp)=(jdrlinear-end-2); color(100bp)=(jdrlinear-end-2)}
 \pgfshadepath{jdrlinear2}{0.0}
 \pgfseteorule 
-\relax \end{pgfscope}
+\end{pgfscope}
+\end{pgfscope}
+}%
+\flowframtkencapobject{5}{JDRPath}{}{}{\pgfpoint{179.725494bp}{558.075524bp}}{180.967804bp}{78.480606bp}{%
+\begin{pgfscope}
+\pgfsetlinewidth{10.0bp}
+\pgfsetroundcap
+\pgfsetmiterjoin
+\pgfsetmiterlimit{10.0}
+\pgfpathmoveto{\pgfpoint{185.383549bp}{630.898085bp}}
+\pgfpathcurveto{\pgfpoint{226.209983bp}{576.290311bp}}{\pgfpoint{258.324808bp}{566.251071bp}}{\pgfpoint{341.193869bp}{566.882461bp}}
 \begin{pgfscope}
 \pgfsetlinewidth{1.0bp}
 \pgfsetrectcap
@@ -155,21 +165,32 @@
 \pgfdeclarehorizontalshading{jdrlinear3}{100bp}{color(0bp)=(jdrlinear-start-3); color(32.5bp)=(jdrlinear-start-3); color(67.5bp)=(jdrlinear-end-3); color(100bp)=(jdrlinear-end-3)}
 \pgfshadepath{jdrlinear3}{0.0}
 \pgfseteorule 
-\relax \end{pgfscope}
+\end{pgfscope}
+\end{pgfscope}
+}%
+\flowframtkencapobject{6}{JDRText}{}{}{\pgfpoint{375.052985bp}{740.727404bp}}{21.96875bp}{8.8125bp}{%
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{374.03736bp}{740.852404bp}}
-\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\hyperref[sec:exportpgf]{PGF}}
+\pgftext[left,base]{\rmfamily \mdseries \upshape \normalsize \color[rgb]{0.0,0.0,0.0}\hyperref[sec:exportpgf]{PGF}}
 \end{pgfscope}
+}%
+\flowframtkencapobject{7}{JDRText}{}{}{\pgfpoint{373.896735bp}{673.977404bp}}{61.53125bp}{12.0bp}{%
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{373.81861bp}{676.852404bp}}
-\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\hyperref[sec:parshape]{\csfmt{parshape}}}
+\pgftext[left,base]{\rmfamily \mdseries \upshape \normalsize \color[rgb]{0.0,0.0,0.0}\hyperref[sec:parshape]{\csfmt{parshape}}}
 \end{pgfscope}
+}%
+\flowframtkencapobject{8}{JDRText}{}{}{\pgfpoint{373.896735bp}{617.977404bp}}{62.140625bp}{12.0bp}{%
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{373.81861bp}{620.852404bp}}
-\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\hyperref[sec:shapepar]{\csfmt{shapepar}}}
+\pgftext[left,base]{\rmfamily \mdseries \upshape \normalsize \color[rgb]{0.0,0.0,0.0}\hyperref[sec:shapepar]{\csfmt{shapepar}}}
 \end{pgfscope}
+}%
+\flowframtkencapobject{9}{JDRText}{}{}{\pgfpoint{374.97486bp}{560.727404bp}}{63.375bp}{9.3125bp}{%
 \begin{pgfscope}
 \pgftransformcm{1.0}{0.0}{0.0}{1.0}{\pgfpoint{374.740485bp}{560.852404bp}}
-\pgftext[left,base]{\rmfamily\mdseries\upshape\normalsize\color[rgb]{0.0,0.0,0.0}\hyperref[sec:flowframe]{flowframe}}
+\pgftext[left,base]{\rmfamily \mdseries \upshape \normalsize \color[rgb]{0.0,0.0,0.0}\hyperref[sec:flowframe]{flowframe}}
 \end{pgfscope}
+}%
+}%
 \end{pgfpicture}

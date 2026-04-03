@@ -1562,7 +1562,7 @@ up \FlowframTk;
 \item the directory you were using when you last used \FlowframTk;
 \item a specific directory. In this case, type in the path in the
 \widget{startdir.named} box or use the
-\widget{startdir.browse} button to select the required
+\widget{button.selectfile} button to select the required
 directory.
 \end{itemize}
 
@@ -1656,7 +1656,12 @@ You can also use this tab to specify
 your preferred default image command, which may be either
 \gls{pgfimage} or \gls{includegraphics}.
 
-\subsubsection{Clip Tag}\label{sec:cliptag}
+\subsubsection{Clipping Tag}\label{sec:cliptag}
+
+\FloatFig
+  {fig:configdialog-clipping}
+  {\includeimg{configureDialog-clipping}}
+  {Configuration Dialog Box (Clipping Tag)}
 
 \widgetdef{clipping.title}
 
@@ -1665,36 +1670,107 @@ than be stroked or filled when exporting to a file that contains
 \sty{pgf} drawing code. The path will show normally on the
 \gls{canvas}.
 
+\widgetdef{clipping.tag}
+
 Supply your preferred tag in the \widget{clipping.tag} text box (no
 spaces). When you export your image, any \gls{path} with a
 (space-separated) tag list that contains this tag will be written to
 the exported file as a clipping path rather than a normal path.
+That is, instead of writing \code{\gls{pgfusepath}\marg{stroke,fill}}
+\FlowframTk\ will write \code{\gls{pgfusepath}\marg{clip}}.
+
+The clip tag is saved in the image file, so existing images will use
+whatever tag was set in the file. If you want to prevent clipping,
+you can simply set the \widget{clipping.tag} field to empty if you don't
+want to remove the tag from all the \glspl{path} in the current
+image.
+
+\widgetdef{clipping.set_as_default}
+If the \widget{clipping.set_as_default} checkbox is selected, then
+this tag will be set as the default for new images. Otherwise, the
+setting will only be applied to the current image.
 
 Bear in mind that all \glspl{object} are written to the exported file 
 according to the \gls{stackingorder}, so the \glsdisp{backobject}{backmost} 
 object is written first. This means that any
 objects behind the clipping path will not be clipped.
 
-Clipping is performed with \code{\gls{pgfusepath}\marg{clip}}. If you have
-multiple paths with the designated clip tag, the clipping area won't
-be enlarged. The \sty{pgf} manual provides further information.
+\begin{information}
+If you have multiple paths with the designated clip tag, the clipping area won't
+be enlarged but may be reduced. The \sty{pgf} manual provides further information.
+\end{information}
 
 If you want to scope the effects of the clipping, you will need to
-insert a \env{pgfscope} environment. The simplest way to do this is
+insert a \env{pgfscope} environment during export. The simplest way to do this is
 to group all the objects that need to be within the scope and export
 with one of the object markup settings 
 (\widget{export.markup.paired} or \widget{export.markup.encap}).
 You will then need to provide a definition of the applicable
 commands that introduce scoping around groups.
-For example:
+For example, with the \widget{export.markup.encap} setting:
 \begin{codebox}
 \cmd{usepackage}\marg{etoolbox}
 \cmd{renewcommand}\gls{flowframtkencapobject}\oarg{8}\marg{\comment{}
  \cmd{ifstrequal}\marg{\#2}\marg{JDRGroup}
-  \marg{\cbeg{pgfscope}\#8\cend{pgfscope}}\comment{}
-  \marg{\#8}\comment{}
-}
+  \marg{\cbeg{pgfscope}\#8\cend{pgfscope}}\marg{\#8}}
 \end{codebox}
+
+The tag will have no effect on \glspl{object} that are not written
+as \glspl{path} when exported. For example, if the designated tag is
+added to a \gls{bitmap} then no clipping path will be created.  With
+\glspl{textarea}, it will depend on whether or not the
+\gls{textarea} is converted to a path during export. Setting the tag
+on a \gls{compositeshape} may or may not have an effect, depending on how
+the \gls{compositeshape} is exported and whether or not the tag was
+added to the underlying path before the \gls{compositeshape} was
+created.
+
+\FloatSubFigs*{fig:cliptag}
+{
+ {fig:cliptaga}{\includegraphics[scale=0.5]{cliptaga}}{},
+ {fig:cliptagb}{\includegraphics[scale=0.4]{cliptagb}}{},
+ {fig:cliptagc}{\includegraphics[scale=0.4]{cliptagc}}{}
+}
+[Clipping Tag]
+{Clipping Tag: 
+ \subfigref{fig:cliptaga} image showing on the \gls{canvas};
+ \subfigref{fig:cliptagb} image in \LaTeX\ document (no scoping);
+ \subfigref{fig:cliptagc} image in \LaTeX\ document (with scoping)
+}
+
+For example, in \figureref{fig:cliptag} the image consists of a
+red square (\glsdisp{backobject}{backmost}), a \gls{group}
+containing an unfilled circle, a green ellipse and a cyan ellipse,
+a purple square, an unfilled rectangle and a yellow ellipse.
+The unfilled circle and unfilled rectangle were both given the tag
+\qt{clip}. (This had to be done before the circle was added to the
+group.) The clipping tag has been set to \qt{clip} (as shown in
+\figureref{fig:configdialog-clipping}).
+
+No clipping is applied on the \gls{canvas} (\figureref{fig:cliptaga})
+but clipping is applied when the image is exported to a file
+where it is rendered with \env{pgfpicture}. The export had the
+\widget{export.markup.encap} setting on.
+
+In \figureref{fig:cliptagb}, no adjustment was made to the encap
+command, which means the clipping isn't scoped. The clipping area
+isn't expanded by the unfilled rectangle clipping. The top left
+corner of the purple square is within the circle's clipping area
+even though it's in front of the group. The yellow ellipse is
+omitted as it's completely outside of the clipping area.
+
+In \figureref{fig:cliptagc}, \gls{flowframtkencapobject} was redefined as
+shown earlier, so clipping within the group is now scoped.
+The unfilled rectangle can now set up a new clipping area as it's
+outside of the scope. The purple square isn't clipped as it's now
+outside of any clipping. (It's rendered after the end of the scope
+when the circle clipping was reset and it's before the unfilled
+rectangle sets up a new clipping area. The yellow ellipse (the
+\gls{frontobject}) is now clipped by the rectangle.
+
+Note that in both cases, the \glsdisp{backobject}{backmost} red
+square has not been clipped as it's rendered before any clipping
+path is set.
 
 \subsubsection{External Processes (Application Paths)}\label{sec:processes}
 
@@ -5878,7 +5954,8 @@ if a \gls{textarea} is selected then the following options will be available
 \menudef{menu.selectedtext.edit}
 
 To edit the \gls{textarea}['s] displayed text or \LaTeX\
-alternative, use \menu{selectedtext.edit}. This is the same as using
+alternative, use \menu{selectedtext.edit} to open the
+\dialog{edittext} dialog. This is the same as using
 the \menu{edit.textarea.edit} menu item from the main menu bar.
 This option won't be available if there is more than one
 \gls{textarea} selected.
@@ -5940,13 +6017,13 @@ sub-menu. This is the same as using the
 \menu{edit.textarea.font.anchor.both} sub-menu from the main menu
 bar.
 
-\menudef{menu.selectedtext.reset}
+\menudef{menu.selectedtext.reset_textmatrix}
 
-To reset the \gls{textarea}['s] transformation matrix, use 
-\menu{selectedtext.reset}. This is the same as using the 
-\menu{transform.reset} menu item from the main menu bar.
-This option won't be available if there is more than one
-\gls{textarea} selected.
+To reset the \gls{textarea}['s] transformation matrix for all
+selected \gls{textarea}, use \menu{selectedtext.reset_textmatrix}.
+This is the same as using the \menu{transform.reset} menu item from
+the main menu bar. The matrix can also be changed in the
+\dialog{edittext} dialog.
 
 % TEXT-PATH POPUP
 
@@ -6014,10 +6091,10 @@ the \menu{bitmap.properties} menu item from the main menu bar.
 This option won't be available if there is more than one
 \gls{bitmap} selected.
 
-\menudef{menu.selectedbitmap.reset}
+\menudef{menu.selectedbitmap.reset_bitmapmatrix}
 
 To reset the \gls{bitmap}['s]
-transformation matrix, use \menu{selectedbitmap.reset}. This is the
+transformation matrix, use \menu{selectedbitmap.reset_bitmapmatrix}. This is the
 same as using the \menu{transform.reset} menu item from the main menu
 bar.
 
@@ -7184,6 +7261,7 @@ The \menu{edit.textarea.matrix} menu item will open the \dialog{settransform}
 dialog.
 Note that if you want to reset a \textattr{transformation-matrix}, 
 it's quicker to use \menu{transform.reset}.
+The matrix can also be changed in the \dialog{edittext} dialog.
 
 \widgetdef{settransform.title}
 
@@ -8187,6 +8265,10 @@ and \glspl{bitmap} can be reset via the
 \menu{transform.reset} menu item. This will reset the scale
 and shear factors (but not the translation) for \glspl{textarea},
 and will reset all elements for \glspl{textpath} and \glspl{bitmap}.
+
+The matrix for a \gls{textarea} or \gls{textpath} can also be reset
+in the \dialog{edittext} dialog, and the matrix for a \gls{bitmap}
+can also be reset in the \dialog{bitmap_properties} dialog.
 
 \chapter{Modifying Shapes}\label{sec:modshape}
 
