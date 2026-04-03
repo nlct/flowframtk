@@ -117,24 +117,3 @@ public class TagDialogBox extends JDialog
    private JDRFrame mainPanel = null;
 }
 
-class TagDocument extends PlainDocument
-{
-   public TagDocument()
-   {
-      super();
-   }
-
-   public void insertString(int offs, String str, AttributeSet a)
-      throws BadLocationException
-   {
-      if (str == null) return;
-
-      str = str.replaceAll("[^\\+\\-\\|\\./\\p{IsAlphabetic}\\p{IsDigit} ]", "");
-
-      if (!str.isEmpty())
-      {
-         super.insertString(offs, str, a);
-      }
-   }
-
-}

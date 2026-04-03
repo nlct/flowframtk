@@ -897,7 +897,7 @@ class ClippingPanel extends JPanel
 
       row.add(resources.createLabelSpacer());
 
-      clipTagField = new JTextField(12);
+      clipTagField = new JTextField(new TagDocument(false), "", 12);
       label.setLabelFor(clipTagField);
       row.add(clipTagField);
 
