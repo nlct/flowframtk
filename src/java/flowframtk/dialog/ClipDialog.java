@@ -109,7 +109,7 @@ public class ClipDialog extends JDialog
       bottomPanel.add(buttonPanel, "Center");
 
       okayButton = resources.createOkayCancelHelpButtons(this, buttonPanel,
-        this, "sec:clipping", false);
+        this, "sec:clippingshapes", false);
 
       getRootPane().setDefaultButton(doTaskButton);
 

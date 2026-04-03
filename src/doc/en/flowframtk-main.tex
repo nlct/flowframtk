@@ -1658,6 +1658,25 @@ your preferred default image command, which may be either
 
 \subsubsection{Clipping Tag}\label{sec:cliptag}
 
+There are several ways of clipping paths. If you want to actually
+modify a \gls{shape}, then you can either use the
+\gls{clipping.intersection} function (see
+\sectionref{sec:pathintersect}) or the clipping shapes function (see
+\sectionref{sec:clippingshapes}). If you don't want to lose the
+original \gls{path} but just want it clipped when you export the
+image to PGF code, then set up a \inlineglstextdef{clippingtag}
+instead.
+
+Usually, when \FlowframTk\ writes a \gls{path} to a \LaTeX\ file, it
+will write the line:
+\begin{codebox}
+\gls{pgfusepath}\marg{stroke,fill}
+\end{codebox}
+(omitting either stroke or fill, if applicable), to stroke and fill
+the path. However, if a clipping tag is set and the \gls{path} has
+that tag in its \gls{taglist}, then \FlowframTk\ will write
+\code{\gls{pgfusepath}\marg{clip}} instead.
+
 \FloatFig
   {fig:configdialog-clipping}
   {\includeimg{configureDialog-clipping}}
@@ -1665,10 +1684,10 @@ your preferred default image command, which may be either
 
 \widgetdef{clipping.title}
 
-You can specify a tag that identifies \glspl{path} that should clip rather
-than be stroked or filled when exporting to a file that contains
-\sty{pgf} drawing code. The path will show normally on the
-\gls{canvas}.
+The \gls{clippingtag} is specified in the \dialog{clipping} tab of the
+\dialog{config} dialog. You will then need to assign this tag to the
+required \gls{path} (see \sectionref{sec:objecttag}).
+\strong{The path and all other \glspl{object} will show normally on the \gls{canvas}.}
 
 \widgetdef{clipping.tag}
 
@@ -1676,14 +1695,12 @@ Supply your preferred tag in the \widget{clipping.tag} text box (no
 spaces). When you export your image, any \gls{path} with a
 (space-separated) tag list that contains this tag will be written to
 the exported file as a clipping path rather than a normal path.
-That is, instead of writing \code{\gls{pgfusepath}\marg{stroke,fill}}
-\FlowframTk\ will write \code{\gls{pgfusepath}\marg{clip}}.
 
-The clip tag is saved in the image file, so existing images will use
-whatever tag was set in the file. If you want to prevent clipping,
-you can simply set the \widget{clipping.tag} field to empty if you don't
-want to remove the tag from all the \glspl{path} in the current
-image.
+The \gls{clippingtag} is saved in the image file (\gls{JDR}\slash\gls{AJR}
+v2.2+), so existing images will use whatever tag was set in the
+file. If you want to prevent clipping, you can simply set the
+\widget{clipping.tag} field to empty if you don't want to remove the
+tag from all the \glspl{path} in the current image.
 
 \widgetdef{clipping.set_as_default}
 If the \widget{clipping.set_as_default} checkbox is selected, then
@@ -1696,7 +1713,7 @@ object is written first. This means that any
 objects behind the clipping path will not be clipped.
 
 \begin{information}
-If you have multiple paths with the designated clip tag, the clipping area won't
+If you have multiple paths with the designated \gls{clippingtag}, the clipping area won't
 be enlarged but may be reduced. The \sty{pgf} manual provides further information.
 \end{information}
 
@@ -1712,7 +1729,8 @@ For example, with the \widget{export.markup.encap} setting:
 \cmd{usepackage}\marg{etoolbox}
 \cmd{renewcommand}\gls{flowframtkencapobject}\oarg{8}\marg{\comment{}
  \cmd{ifstrequal}\marg{\#2}\marg{JDRGroup}
-  \marg{\cbeg{pgfscope}\#8\cend{pgfscope}}\marg{\#8}}
+  \marg{\cbeg{pgfscope}\#8\cend{pgfscope}}\marg{\#8}\comment{}
+}
 \end{codebox}
 
 The tag will have no effect on \glspl{object} that are not written
@@ -1744,7 +1762,7 @@ containing an unfilled circle, a green ellipse and a cyan ellipse,
 a purple square, an unfilled rectangle and a yellow ellipse.
 The unfilled circle and unfilled rectangle were both given the tag
 \qt{clip}. (This had to be done before the circle was added to the
-group.) The clipping tag has been set to \qt{clip} (as shown in
+group.) The \gls{clippingtag} has been set to \qt{clip} (as shown in
 \figureref{fig:configdialog-clipping}).
 
 No clipping is applied on the \gls{canvas} (\figureref{fig:cliptaga})
@@ -1770,7 +1788,12 @@ rectangle sets up a new clipping area. The yellow ellipse (the
 
 Note that in both cases, the \glsdisp{backobject}{backmost} red
 square has not been clipped as it's rendered before any clipping
-path is set.
+path is set. Also, the image \gls{bbox} doesn't take the clipping
+into account. If you want to crop the image, the best solution is to
+create a rectangle at the \gls{back} and both set the tag and set
+the \gls{image.typeblock} to the rectangle's \gls{bbox} (see
+\sectionref{sec:typeblock}).  Make sure to then select the
+\widget{export.bounds.typeblock} export option.
 
 \subsubsection{External Processes (Application Paths)}\label{sec:processes}
 
@@ -3763,7 +3786,8 @@ it's the \gls{object}['s] description
 (\sectionref{sec:objectdescription}). This argument will be empty if
 no description has been set.
 
-The \meta{tag} is the object's tag (\sectionref{sec:objecttag}).
+The \meta{tag} is the object's tag or space-separated \gls{taglist} 
+(\sectionref{sec:objecttag}).
 This argument will be empty if no tag has been set.
 
 The \meta{pgf point} argument is the lower left point of the object's bounding
@@ -5702,7 +5726,7 @@ This option will only be available if there is exactly one
 \menudef{menu.selected.object_tag}
 
 The \menu{selected.object_tag} menu item opens the \dialog{tag}
-dialog from which you assign a tag to all
+dialog from which you assign a tag or space-separated \gls{taglist} to all
 \selected\ objects. This is the same as using the 
 \menu{edit.object_tag} menu item from the main menu bar (see \sectionref{sec:objecttag}).
 
@@ -6817,9 +6841,12 @@ you will lose the description if you later ungroup it.
 
 \section{Object Tag}\label{sec:objecttag}
 
+An \inlineglsdef{objecttaglist} is a space-separated list of tags
+that may be assigned to an object.
+
 \menudef{menu.edit.object_tag}
 
-You can assign a tag to \selected\ \glspl*{object} using the
+You can assign a tag or \gls{taglist} to \selected\ \glspl*{object} using the
 \menu{edit.object_tag} menu item.  This will display the
 \dialog{tag} dialog box. Type the tag into the text field and click
 on \btn{okay} or press \keys{\keyref{return}}. The tag will
@@ -6844,7 +6871,8 @@ representing windows have been selected and assigned the tag
 \begin{information}
 If you have selected more than one \gls{object} with different tags,
 the tags will be combined in the text field. You may then edit the
-field as required.
+field as required. Each selected \gls{object} will then have its
+tag list set to the combined list.
 \end{information}
 
 The tag will not appear in the image but may be included in
@@ -6858,7 +6886,7 @@ If you assign a tag to a \gls{group},
 you will lose the information if you later ungroup it.
 \end{important}
 
-You can designate a particular tag as a clip tag (see
+You can designate a particular tag as a \gls{clippingtag} (see
 \sectionref{sec:cliptag}). Any \gls{path} with this tag will be
 exported as a clipping path instead of a normal path.
 
@@ -9383,6 +9411,12 @@ an orchid fill \manmsg{colour} and round join style);
 in \subfigref{fig:pathintersecta} have been
 replaced by a single path using the path intersect function.}
 
+Path \gls{clipping.intersection} can be used to clip a closed
+\gls{shape}. For open shapes, you may prefer to use the
+\gls{shapeclipping} function (see \sectionref{sec:clippingshapes}).
+If you want to set up a clipping path, assign a \gls{clippingtag}
+(see \sectionref{sec:cliptag}).
+
 \seealsorefs{
  sec:mergepaths,
  sec:pathunion,
@@ -9452,7 +9486,13 @@ subtracted from the underlying path of the text-path.}
  sec:busexample
 }
 
-\section{Clipping Shapes}\label{sec:clipping}
+\section{Clipping Shapes}\label{sec:clippingshapes}
+
+This section deals with altering the definition of a \gls{shape}
+(either a \gls{path} or a \gls{compositeshape} or \gls{textarea}
+that will be converted into a path).  If you want a
+clipping path that will retain the original \glspl{object}, then set up a
+\gls{clippingtag} instead (see \sectionref{sec:cliptag}).
 
 The \gls{cag} functions such as \transformfn{intersect} work on
 areas. This means that the resulting shape will be closed, even if
@@ -9464,14 +9504,11 @@ the best method.
 The shape clipping function is still a little experimental.
 \end{information}
 
-The shape clipping function alters \glspl{shape} by removing
+The \inlineglsdef{shapeclipping} function alters \glspl{shape} by removing
 segments outside of the desired area. This is intended as a more
 convenient method than using the \menu{editpath.break_path} and
 \menu{editpath.delete_control} functions to extract part
 of an existing shape, which can then be edited.
-
-If you want to retain the original shapes, then set up a clipping
-tag instead (see \sectionref{sec:cliptag}).
 
 \menudef{menu.transform.clip}
 
@@ -9486,7 +9523,8 @@ replaced by a new \gls{path} that has the same segments except for
 those that lie outside the clipping area, which will be replaced by
 a move (gap), and segments that cross the boundary will be split to
 fit.
-This splitting process doesn't always work correctly.
+This splitting process doesn't always work correctly so you may need
+to edit the path afterwards.
 
 \begin{important}
 As with the \gls{cag} functions, the original \glspl{shape} can't be
@@ -17561,7 +17599,7 @@ option and false indicates \sty{flowfram}'s
 \optval{pages}{relative} option.
 \end{enumerate}
 
-\item\label{jdr:cliptag}From v2.2 onwards the clip tag comes
+\item\label{jdr:cliptag}From v2.2 onwards the \gls{clippingtag} comes
 after the \TeX\ settings.
 \begin{jdrversion}{2.2 onwards}
 \begin{syntaxline}
