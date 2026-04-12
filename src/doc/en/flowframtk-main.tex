@@ -1660,22 +1660,38 @@ your preferred default image command, which may be either
 
 There are several ways of clipping paths. If you want to actually
 modify a \gls{shape}, then you can either use the
-\gls{clipping.intersection} function (see
-\sectionref{sec:pathintersect}) or the clipping shapes function (see
+\gls{cag.intersection} function (see
+\sectionref{sec:pathintersect}) or the \gls{shapeclipping} function (see
 \sectionref{sec:clippingshapes}). If you don't want to lose the
 original \gls{path} but just want it clipped when you export the
 image to PGF code, then set up a \inlineglstextdef{clippingtag}
 instead.
 
+\begin{important}
+No clipping is applied on the \gls{canvas}, but clipping is applied
+when the image is exported to a \LaTeX\ file where it is rendered
+with \env{pgfpicture}.  Bear in mind that the image \gls{bbox} (used
+for the \widget{export.bounds} \widget{export.bounds.image} setting)
+is calculated as normal, without any clipping. This is because the
+actual clipping is done by the \sty{pgf} package not by
+\FlowframTk. (See \figureref{fig:cliptag}.)
+\end{important}
+
 Usually, when \FlowframTk\ writes a \gls{path} to a \LaTeX\ file, it
 will write the line:
-\begin{codebox}
+\begin{codebox*}
 \gls{pgfusepath}\marg{stroke,fill}
-\end{codebox}
+\end{codebox*}
 (omitting either stroke or fill, if applicable), to stroke and fill
 the path. However, if a clipping tag is set and the \gls{path} has
-that tag in its \gls{taglist}, then \FlowframTk\ will write
-\code{\gls{pgfusepath}\marg{clip}} instead.
+that tag in its \gls{taglist}, then \FlowframTk\ will instead write:
+\begin{codebox}
+\gls{pgfusepath}\marg{clip}
+\end{codebox}
+
+The \gls{clippingtag} was designed specifically for use with export
+to PGF. It's not supported in export formats that don't export to 
+a \LaTeX\ file or use \LaTeX\ as an intermediate step.
 
 \FloatFig
   {fig:configdialog-clipping}
@@ -1693,7 +1709,7 @@ required \gls{path} (see \sectionref{sec:objecttag}).
 
 Supply your preferred tag in the \widget{clipping.tag} text box (no
 spaces). When you export your image, any \gls{path} with a
-(space-separated) tag list that contains this tag will be written to
+(space-separated) \gls{taglist} that contains this tag will be written to
 the exported file as a clipping path rather than a normal path.
 
 The \gls{clippingtag} is saved in the image file (\gls{JDR}\slash\gls{AJR}
@@ -1763,15 +1779,15 @@ a purple square, an unfilled rectangle and a yellow ellipse.
 The unfilled circle and unfilled rectangle were both given the tag
 \qt{clip}. (This had to be done before the circle was added to the
 group.) The \gls{clippingtag} has been set to \qt{clip} (as shown in
-\figureref{fig:configdialog-clipping}).
+\figureref{fig:configdialog-clipping}). 
+All shapes are \rendered\ normally on the \gls{canvas}
+(\figureref{fig:cliptaga}).
 
-No clipping is applied on the \gls{canvas} (\figureref{fig:cliptaga})
-but clipping is applied when the image is exported to a file
-where it is rendered with \env{pgfpicture}. The export had the
-\widget{export.markup.encap} setting on.
-
-In \figureref{fig:cliptagb}, no adjustment was made to the encap
+For both \figuresref{fig:cliptagb,fig:cliptagc},
+the PGF export had the \widget{export.markup.encap} setting on.
+However, in \figureref{fig:cliptagb}, no adjustment was made to the encap
 command, which means the clipping isn't scoped. The clipping area
+established by the unfilled circle
 isn't expanded by the unfilled rectangle clipping. The top left
 corner of the purple square is within the circle's clipping area
 even though it's in front of the group. The yellow ellipse is
@@ -1781,7 +1797,7 @@ In \figureref{fig:cliptagc}, \gls{flowframtkencapobject} was redefined as
 shown earlier, so clipping within the group is now scoped.
 The unfilled rectangle can now set up a new clipping area as it's
 outside of the scope. The purple square isn't clipped as it's now
-outside of any clipping. (It's rendered after the end of the scope
+outside of any clipping as it's rendered after the end of the scope
 when the circle clipping was reset and it's before the unfilled
 rectangle sets up a new clipping area. The yellow ellipse (the
 \gls{frontobject}) is now clipped by the rectangle.
@@ -1789,11 +1805,9 @@ rectangle sets up a new clipping area. The yellow ellipse (the
 Note that in both cases, the \glsdisp{backobject}{backmost} red
 square has not been clipped as it's rendered before any clipping
 path is set. Also, the image \gls{bbox} doesn't take the clipping
-into account. If you want to crop the image, the best solution is to
-create a rectangle at the \gls{back} and both set the tag and set
-the \gls{image.typeblock} to the rectangle's \gls{bbox} (see
-\sectionref{sec:typeblock}).  Make sure to then select the
-\widget{export.bounds.typeblock} export option.
+into account. (You might want to
+set up the \gls{image.typeblock} and use the
+\widget{export.bounds.typeblock} export option.)
 
 \subsubsection{External Processes (Application Paths)}\label{sec:processes}
 
@@ -1824,7 +1838,7 @@ in the \widget{processes.timeout} box.
 The DVI format was still widely in use when \gls{JpgfDraw} was first
 created (around 2005) so it was useful to be able to export to \gls{eps}.
 However, the DVI format has mostly fallen out of use so, to reduce
-clutter in the \dialog{export} dialog, the export to \gls{eps} is no
+clutter in the \dialog{export} dialog, the export to \gls{eps} is not
 supported by default.  (The non-processor export to \gls{eps} is limited
 and still a bit experimental.)
 
@@ -1837,7 +1851,7 @@ format) and \app{dvips}.
 The \code{-E} switch for \app{dvips} can be problematic with
 graphical content. If you want \pgls{eps} file, 
 it's simpler to just select the \widget{export.bounds.image} option 
-in the \dialog{export} dialog.
+for the \widget{export.bounds} setting in the \dialog{export} dialog.
 \end{warning}
 
 \widgetdef{processes.support_svg}
@@ -1963,7 +1977,7 @@ option).
 
 The \gls{document-class} is also used as the base class with the export to
 document class function (see \sectionref{sec:exportsty}) and is used
-for all \filefn{export} functions that use the export to encapsulated \LaTeX\
+for all \filefn{export} functions that use the export to complete \LaTeX\
 document function as an intermediate step.
 
 \widgetdef{clssettings.relative_fontsize}
@@ -2224,8 +2238,8 @@ To delete a \mathsmode\ mapping or mappings, select the appropriate row or rows 
 \widget{textconfig.mathmappings.remove} button
 to the side of the table. 
 
-To restore all the original mappings, quit \FlowframTk\ and then delete
-or rename the files \file{mathmappings.prop} and
+To restore all the original mappings, quit \FlowframTk\ and then
+either delete or rename the mapping files \file{mathmappings.prop} and
 \file{textmappings.prop} in the \gls{config_dir}.
 
 To edit an existing mapping, \gls{doubleclick} on the second and
@@ -2398,8 +2412,8 @@ The \widget{preambleconfig.title} tab
 (\figureref{fig:texconfig-preamble}) allows you to set the
 \inlineglsdef{preamble.default} code that
 should always be added to the preamble when exporting images to
-complete \LaTeX\ documents or formats that use the encapsulated
-\LaTeX\ document function as an intermediate step (see
+complete \LaTeX\ documents or formats that use the export to
+complete \LaTeX\ document function as an intermediate step (see
 \sectionref{sec:exportdoc}). This code isn't used for the export to
 class (\ext{cls}) or package (\ext{sty}) functions.
 
@@ -2410,7 +2424,7 @@ class (\ext{cls}) or package (\ext{sty}) functions.
 
 The \gls{preamble.default} code is stored in a file called
 \file{preamble.tex} located in \FlowframTk's \gls{config_dir}. If you edit
-this file outside of \FlowframTk, you'll need to use the reload
+this file outside of \FlowframTk\ while it's running, you'll need to use the reload
 button to refresh this panel. The other buttons are the same as for
 the \TeX\ editor described in \sectionref{sec:texeditor}.  You can
 also access these button actions through the
@@ -3469,14 +3483,19 @@ directory.
 
 \menudef{menu.file.image_description}
 
-You can use the \menu{file.image_description} dialog box to give the
-image a description. The description is not visible in the image,
+You can use the \menu{file.image_description} dialog box to set the
+\inlineglsdef{imagedescription}. The description is not visible in the image,
 but may be saved as a comment if you \filefn{export} the image. If
 you have the \widget{clssettings.pdfinfo} option selected,
 the image description will be added to an exported \LaTeX\ document
 using \gls{flowframtkimageinfo} (if \sty{flowframtkutils} is
 detected) or in the \gls{pdfinfo/Title} attribute of the
 \gls{pdfinfo} argument (otherwise).
+
+The \gls{imagedescription} will also be used in the applicable
+markup command if \widget{export.markup} is set to
+\widget{export.markup.paired} or \widget{export.markup.encap}.
+
 
 \section{Save and Save As}\label{sec:saveimage}
 
@@ -3495,11 +3514,6 @@ higher precision values than the \gls{AJR} format.
 
 \menudef{menu.file.export}
 
-\FloatFig
- {fig:export-pgfpicture-dialog}
- {\includeimg{export-pgfpicture-dialog}}
- {Export Dialog}
-
 The \menu{file.export} menu item allows you to export your image
 as a \inlineglsdef{ext.tex}, \inlineglsdef{ext.sty},
 \inlineglsdef{ext.cls}, \inlineglsdef{ext.pdf} or
@@ -3508,7 +3522,7 @@ as a \inlineglsdef{ext.tex}, \inlineglsdef{ext.sty},
 \inlineglsdef{ext.svg} file, but you will need to enable export support for
 \gls{eps} or \gls{svg} (as applicable) first.
 The default setting enables support for \gls{svg} but not for
-\gls{eps}.
+\gls{eps} (see \sectionref{sec:processes}). 
 
 \begin{warning}
 \FlowframTk\ only has very limited import capability, so I
@@ -3517,10 +3531,11 @@ strongly recommend that you first save the picture as a
 wish to edit it later.
 \end{warning}
 
-The \menu{file.export} menu item will open the \dialog{export} dialog box
-(\figureref{fig:export-pgfpicture-dialog}), which provides a way to
-specify the name and location of the file as well as what format to
-export to and what settings to apply. 
+The \menu{file.export} menu item will open the \dialog{export}
+dialog box, which provides a way to specify the name and location of
+the file as well as what format to export to and what settings to
+apply.  The available widgets in the dialog vary depending on the chosen export
+type.
 
 \begin{information}
 \FlowframTk\ is designed to produce files suitable for inclusion in
@@ -3531,15 +3546,27 @@ process.
 
 \widgetdef{export.title}
 
+\FloatFig
+ {fig:export-row-file}
+ {\includeimg[scale=0.6]{export-row-file}}
+ {Export Dialog: File}
+
 At the top of the \dialog{export} dialog is the
-\inlineglsdef{export.file} field for the path to
-the desired export file. You can either type in the full path or use
-the \widget{selectfile} button at the side to open the file chooser.
+\inlineglsdef{export.file} field for the path to the desired export
+file (\figureref{fig:export-row-file}). You can either type in the
+full path or use the \btn{selectfile} button at the side to open
+the file chooser.
 
 \widgetdef{export.format}
 
+\FloatFig
+ {fig:export-row-format}
+ {\includeimg[scale=0.6]{export-row-format}}
+ [Export Dialog: Format]
+ {Export Dialog: Format (SVG or EPS may not be present)}
+
 Below the \widget{export.file} field is the \widget{export.format} area where you
-can select the required export format.
+can select the required export format (\figureref{fig:export-row-format}).
 There are two different types of data to export: the actual image as
 shown on the \gls{canvas} (or as close as can be obtained given the
 export format) or the \gls{flowframe} data associated with the
@@ -3590,8 +3617,11 @@ A convenient shortcut that creates a temporary directory,
 exports a complete single-paged \LaTeX\
 document, as per the \widget{export.imagedoc} method, to that
 temporary location, compiles the document, and copies the resulting
-PDF file to the location specified in the file field. The temporary
-directory will then be deleted.
+PDF file to the location specified in the file field. Since the
+temporary files aren't deleted until you quit \FlowframTk, if any
+errors occur, you can view the \LaTeX\ transcript file as long as \FlowframTk\ is
+still running. (The \dialog{message} window will show the process
+command and the directory in which it ran.)
 \end{itemdesc}
 
 \itemtitle{\widget{export.png}}
@@ -3604,6 +3634,7 @@ the way the image is \glslink{painting}{drawn} on the \gls{canvas}
 \glspl{selection-bbox}), optionally cropped either to the image's
 bounding box or (if set) the \gls{typeblock}. You can choose whether
 or not to include the alpha channel (which provides transparency).
+The \gls{clippingtag} is ignored, just as it is on the \gls{canvas}.
 
 The second method is for \FlowframTk\ to create the PNG using a PDF
 file as an intermediate step. This basically works in much the same
@@ -3641,7 +3672,8 @@ is used instead of \app{dvips}. Unless you need to use \LaTeX\
 features, such as fonts or the \LaTeX\ alternative text, the
 non-processor export to \gls{svg} produces neater code and any
 \glspl{object} that have descriptions will have the description included
-in a \xmlelem{title} element.
+in a \xmlelem{title} element. However, the non-processor export
+doesn't support the \gls{clippingtag}.
 \end{itemdesc}
 
 \end{deflist}
@@ -3684,13 +3716,17 @@ A convenient shortcut that creates a temporary directory,
 exports a complete document, as per the \widget{export.flfdoc} method, to that
 temporary location, compiles the document, and copies the resulting
 PDF file to the location specified in the file field. The temporary
-directory will then be deleted.
+directory will be deleted when you quit \FlowframTk.
 The PDF may only be a single page if all page lists are set to
 \qt{all} or if the \gls{document-body} is less than a page long but, 
 unlike the \widget{export.imagepdf} option,
 the resulting PDF may have multiple pages.
 \end{itemdesc}
 \end{deflist}
+
+\subsection{Export Settings}\label{sec:exportsettings}
+
+This section describes common settings shared by the different export functions.
 
 \widgetdef{export.remember}
 
@@ -3700,17 +3736,31 @@ selected, the currently available settings will be updated when the
 image or \gls{flowframe} data is exported. Any settings that are
 currently hidden won't be changed.
 
-There are common settings shared by the different export functions.
-These are described below.
-
 \widgetdef{export.bounds}
 
+\FloatFig[hbp]
+ {fig:export-row-bbox}
+ {\includeimg[scale=0.6]{export-row-bbox}}
+ {Export Dialog: Bounding Box}
+
 The \widget{export.bounds} panel isn't always available, but when it
-is, it may be used to specify the bounds of the exported image (the
-page size for \widget{export.imagedoc} and any export settings that
-that's based on that function).
+is, it may be used to specify the bounds of the exported image
+(\figureref{fig:export-row-bbox}).
 It's not available for any of the \widget{export.format.flf_type}
-functions.
+functions. 
+
+For export to PNG (non-processor), this establishes the image size.
+For export to \LaTeX, this setting just establishes the \env{pgfpicture}
+bounds with:
+\begin{codebox*}
+\gls{pgfusepath}\marg{use as bounding box}
+\end{codebox*}
+This doesn't automatically clip the content so anything outside of the designated
+bounds will overflow the PGF bounding box. If you need to clip the
+image, set up a \gls{clippingtag} (see \sectionref{sec:cliptag}).
+However, when exporting to a complete \LaTeX\ document, this setting
+will also govern the page geometry which will naturally clip
+anything outside of the page boundary.
 
 \widgetdef{export.bounds.papersize}
 
@@ -3719,25 +3769,38 @@ option is not available for the \widget{export.pgfpicture} function.
 
 \widgetdef{export.bounds.image}
 
-The bounds should be set to the image's bounding box.
+The bounds should be set to the image's \gls{bbox}.
 Note that this may not be correct if different fonts or alternative
 text in \glspl{textarea} are wider in the \LaTeX\ document than they
-are when drawn on the \gls{canvas}.
+are when drawn on the \gls{canvas}. The image \gls{bbox} doesn't
+take the \gls{clippingtag} into account.
 
 \widgetdef{export.bounds.typeblock}
 
 The bounds should be set to the image's \gls{typeblock}.
 This option is not available if the image doesn't have a
-\gls{typeblock} set.
+\gls{typeblock} set. This setting may be used with a
+\gls{clippingtag} to both clip and set the bounds. For example,
+create a rectangle at the \glsdisp{backobject}{back} of the image,
+add the \gls{clippingtag} to its \gls{taglist} and set the
+\gls{typeblock} to the same area (with
+\widget{typeblock.compute_from_objects} in the \dialog{typeblock}
+dialog).
 
 \widgetdef{export.markup}
 
-The \widget{export.markup} options are only applicable for the
+\FloatFig[hbp]
+ {fig:export-row-markup}
+ {\includeimg[scale=0.6]{export-row-markup}}
+ {Export Dialog: Markup}
+
+The \widget{export.markup} options
+(\figureref{fig:export-row-markup}) are only applicable for the
 \widget{export.format.image_type} functions that either create a
 \LaTeX\ file or use a complete \LaTeX\ document as an intermediate
-step. The markup is a command or pair of commands inserted into
-the code in the body of the \env{pgfpicture} environment.
-The following settings are available:
+step. The markup is a command or a pair of commands inserted into
+the code in the body of the \env{pgfpicture} environment.  The
+following settings are available:
 
 \widgetdef{export.markup.none}
 
@@ -3750,7 +3813,7 @@ Each object in the \env{pgfpicture} environment is book-ended by
 and
 \cmddef{flowframtkendobject}
 These commands are defined by \sty{flowframtkutils}. They initially
-do nothing but may be redefined in conjunction with the
+do nothing but may be redefined in conjunction with 
 the \widget{export.markup.paired} option.
 For example, suppose you want to export an image to a file that can
 be input in a \cls{beamer} presentation. If this option is set, then each object can be
@@ -3764,31 +3827,32 @@ incremented for every \gls{object}, descending down the
 \glspl{group}, so that each \gls{object} has a unique value.
 The value of \meta{n} will match the start and end pair.
 
-The \meta{Java class name} is the Java class name of the \gls{object}:
-\code{JDRGroup} for a \gls{group}, \code{JDRPath} for a \gls{path},
-\code{JDRText} for a \gls{textarea},
-\code{JDRTextPath} for a \gls{textpath},
-\code{JDRRotationalPattern} for a rotational \gls{pattern},
-\code{JDRScaledPattern} for a scaled \gls{pattern},
-\code{JDRSpiralPattern} for a spiral \gls{pattern}, and
-\code{JDRSymmetricPath} for a symmetric shape.
+The \meta{Java class name} is the \gls{javaclass} simple name of the \gls{object}:
+\inlineglsdef{JDRGroup} for a \gls{group}, \inlineglsdef{JDRPath} for a \gls{path},
+\inlineglsdef{JDRBitmap} for a \gls{bitmap},
+\inlineglsdef{JDRText} for a \gls{textarea},
+\inlineglsdef{JDRTextPath} for a \gls{textpath},
+\inlineglsdef{JDRRotationalPattern} for a rotational \gls{pattern},
+\inlineglsdef{JDRScaledPattern} for a scaled \gls{pattern},
+\inlineglsdef{JDRSpiralPattern} for a spiral \gls{pattern}, and
+\inlineglsdef{JDRSymmetricPath} for a symmetric shape.
 
 \begin{information}
 Even if an export setting causes a \gls{textarea} or \gls{textpath}
 to be converted into a path, the class name will still be
-\code{JDRText} or \code{JDRTextPath}, as applicable, not
-\code{JDRPath}.
+\gls{JDRText} or \gls{JDRTextPath}, as applicable, not
+\gls{JDRPath}.
 \end{information}
 
-The \meta{description} is the image's description
+The \meta{description} is the \gls{imagedescription}
 (\sectionref{sec:imagedescription}) when \meta{n} is 0 otherwise
-it's the \gls{object}['s] description
+it's the \gls{objectdescription}
 (\sectionref{sec:objectdescription}). This argument will be empty if
 no description has been set.
 
-The \meta{tag} is the object's tag or space-separated \gls{taglist} 
-(\sectionref{sec:objecttag}).
-This argument will be empty if no tag has been set.
+The \meta{tag} is the space-separated \gls{taglist} (\sectionref{sec:objecttag}).
+This argument will be empty if no \gls{taglist} has been set.
+(The \gls{imagetag} will always be empty.)
 
 The \meta{pgf point} argument is the lower left point of the object's bounding
 box in \sty{pgf} point notation (\gls{pgfpoint}\margm{x}\margm{y}).
@@ -3809,7 +3873,91 @@ with:
 \cmddef{FlowFramTkUtilsSetOverlayEncap}
 See the \sty{flowfram} documentation (v2.0+) for further details.
 
+\begin{information}
+The following settings indicate what to do if the export option
+doesn't support a particular feature. This may result in the
+\gls{object} being written to the exported file as a different type
+of object. For example, a \gls{textarea} may be written as a filled
+path. These settings don't change the image itself but just
+determine how the object is exported. Note that if an object is
+converted in this way, this may change how other settings affect it.
+For example, if a \gls{textpath} is exported as a filled (glyph) path, then
+the text gradient paint setting will no longer be applicable.
+\end{information}
+
+\widgetdef{export.markers}
+
+\FloatFig[hbp]
+ {fig:export-row-markers}
+ {\includeimg[scale=0.6]{export-row-markers}}
+ {Export Dialog: Markers}
+
+The \widget{export.markers} setting (\figureref{fig:export-row-markers}) indicates how
+\hyperref[sec:markers]{markers} should be exported.
+
+\widgetdef{export.markers.separate}
+
+If \widget{export.markers.separate} is selected, then any markers
+will be drawn as separate path (after the actual shape's outline is
+drawn).
+
+\widgetdef{export.markers.stroked}
+
+If \widget{export.markers.stroked} is selected, then the stroked
+path will be converted to a filled outline and the markers will be
+merged into it.
+
+\widgetdef{export.markers.separate_or_stroked}
+
+If \widget{export.markers.separate_or_stroked} is selected, then it
+will behave like \widget{export.markers.separate} unless the shape's
+\pathattr{line-paint} is a gradient paint, in which case it will
+behave like \widget{export.markers.stroked}.
+
+\widgetdef{export.strokeshading}
+
+\FloatFig[hbp]
+ {fig:export-row-stroke-gradient}
+ {\includeimg[scale=0.6]{export-row-stroke-gradient}}
+ {Export Dialog: Stroke Gradient Paint}
+
+If the export format doesn't support stroke \dgls{gradient-paint}, 
+the \widget{export.strokeshading} panel
+(\figureref{fig:export-row-stroke-gradient}) provides options to indicate
+what should be done if the image contains any gradient
+\pathattr{line-paint}.
+
+\widgetdef{export.strokeshading.average}
+
+If \widget{export.strokeshading.average} is selected, any gradient
+\pathattr{line-paint} will be exported with the paint set to the
+average \manmsg{colour}.
+
+\widgetdef{export.strokeshading.start}
+
+If \widget{export.strokeshading.start} is selected, any gradient
+\pathattr{line-paint} will be exported with the paint set to
+the start \manmsg{colour}.
+
+\widgetdef{export.strokeshading.end}
+
+If \widget{export.strokeshading.end} is selected, any gradient
+\pathattr{line-paint} will be exported with the paint set to
+the end \manmsg{colour}.
+
+\widgetdef{export.strokeshading.to_path}
+
+If \widget{export.strokeshading.to_path} is selected, any
+\glspl{shape} with a gradient \pathattr{line-paint} will be exported
+with the stroke outline converted to a path.
+(This won't affect the \gls{shape}['s] actual \pathattr{fill-paint} setting.)
+
 \widgetdef{export.textualshading}
+
+\FloatFig[hbp]
+ {fig:export-row-text-gradient}
+ {\includeimg[scale=0.6]{export-row-text-gradient}}
+ {Export Dialog: Text Gradient Paint}
 
 If the export format doesn't support text \dgls{gradient-paint}, the
 \widget{export.textualshading} panel provides options to indicate
@@ -3822,7 +3970,7 @@ file.
 
 If \widget{export.textualshading.average} is selected, any text
 with a \dgls{gradient-paint} will be exported with the paint set to
-the average of the start and end \manmsgpl{colour}.
+the average \manmsgpl{colour}.
 
 \widgetdef{export.textualshading.start}
 
@@ -3841,52 +3989,159 @@ the end \manmsg{colour}.
 If \widget{export.textualshading.to_path} is selected, any text
 with a \dgls{gradient-paint} will be exported as though the
 \gls{textarea} had been converted to a path (except that the 
-\meta{Java class name} will be \code{JDRText} or \code{JDRTextPath}).
+\meta{Java class name} will be \gls{JDRText} or \gls{JDRTextPath}).
+
+\widgetdef{export.textareaoutline}
+
+\FloatFig[hbp]
+ {fig:export-row-textarea-outlines}
+ {\includeimg[scale=0.6]{export-row-textarea-outlines}}
+ {Export Dialog: Text Area Outline}
+
+The \widget{export.textareaoutline} panel
+(\figureref{fig:export-row-textarea-outlines}) governs the way that
+\glspl{textarea} with the \textattr{outline} attribute on are
+exported.  Any \glspl{textarea} that don't have the
+\textattr{outline} attribute on are unaffected by this export
+setting.
+
+\widgetdef{export.textareaoutline.ignore}
+
+If \widget{export.textareaoutline.ignore} is selected, the
+\textattr{outline} text attribute will be ignored for all
+\glspl{textarea}.
+
+\widgetdef{export.textareaoutline.to_path}
+
+If \widget{export.textareaoutline.to_path} is selected, then any
+\gls{textarea} with the \textattr{outline} setting on will be
+exported as a path. This means that the \LaTeX\ alternative text
+won't be used.
+
+\widgetdef{export.textareaoutline.use_cmd}
+
+If \widget{export.textareaoutline.use_cmd} is selected, any
+\glspl{textarea} with the \textattr{outline} setting on will be
+encapsulated with \gls{jdroutline} (which is defined by
+\sty{flowframtkutils}). This option is unavailable for export
+functions that don't require \LaTeX.
+
+If you are using the \widget{export.pgfpicture} setting 
+then you will need to remember to load \sty{flowframtkutils},
+but be sure to pass the \opt{flowframtkutils.outline} option to enable support.
+This will be done automatically if the export function creates a
+complete \LaTeX\ document or a class or package.
+
+\widgetdef{export.textpath}
+
+\FloatFig[hbp]
+ {fig:export-row-textpath}
+ {\includeimg[scale=0.6]{export-row-textpath}}
+ {Export Dialog: Text-Path}
+
+The \widget{export.textpath} panel
+(\figureref{fig:export-row-textpath}) indicates how \glspl{textpath}
+should be exported. A \gls{textpath} with transformed text means
+that the text transformation matrix is not the identity matrix or
+that there is a shift introduced by the vertical \textattr{anchor}.
+
+\widgetdef{export.textpath.pgf}
+
+If \widget{export.textpath.pgf} is selected, the export function
+will write code to decorate a path with text, as far as
+any limitations of the export format allow. This will require the
+\sty{decorations.text} PGF library. 
+If you are using the \widget{export.pgfpicture} setting, you will
+need to ensure the library is loaded in your document. This can
+easily be done by loading \sty{flowframtkutils} with the 
+\opt{flowframtkutils.textpath} 
+package option, but you can also simply load it as any other PGF
+library:
+\begin{codebox*}
+\gls{usepgflibrary}\marg{decorations.text}
+\end{codebox*}
+The text decoration is quite restricted. In particular, take care if
+you have alternative \LaTeX\ text set that contains commands as they
+may trigger errors. See the PGF manual for further details.
+
+This export option doesn't support transformed text or outline text.
+The horizontal \textattr{anchor} is supported, but not the vertical
+anchor.
+
+\widgetdef{export.textpath.split}
+
+If \widget{export.textpath.split} is selected, the export function
+will export any \gls{textpath} as though it had been split into
+separate \glspl{textarea}. Bear in mind that if you set alternative
+\LaTeX\ text, that will be ignored but mapping will be applied as
+usual for the \gls{menu.transform.split} function.
+
+\widgetdef{export.textpath.to_path}
+
+If \widget{export.textpath.to_path} is selected, the export function
+will export \glspl{textarea} as though they had been converted to
+paths.
+
+\widgetdef{export.textpath.split_if_transformed}
+
+If \widget{export.textpath.split_if_transformed} is selected, then 
+any \glspl{textpath} that have transformed text will be treated as
+for \widget{export.textpath.split} otherwise they will be exported
+as for \widget{export.textpath.pgf}.
+
+\widgetdef{export.textpath.to_path_if_transformed}
+
+If \widget{export.textpath.to_path_if_transformed} is selected, then 
+any \glspl{textpath} that have transformed text will be treated as
+for \widget{export.textpath.to_path} otherwise they will be exported
+as for \widget{export.textpath.pgf}.
 
 \widgetdef{export.textpathoutline}
 
+\FloatFig[hbp]
+ {fig:export-row-textpath-outlines}
+ {\includeimg[scale=0.6]{export-row-textpath-outlines}}
+ {Export Dialog: Text-Path Outlines}
+
 If the export format doesn't support \gls{textpath} outlines, the
-\widget{export.textpathoutline} panel provides options to indicate
-what should be done if the image contains any \glspl{textpath} with 
-the \textattr{outline} mode on. Note that this option doesn't change
-the image itself but just governs the way the image is saved in the export
-file.
+\widget{export.textpathoutline} panel
+(\figureref{fig:export-row-textpath-outlines}) provides options to
+indicate what should be done if the image contains any
+\glspl{textpath} with the \textattr{outline} mode on.
 
 \widgetdef{export.textpathoutline.ignore}
 
-If \widget{export.textpathoutline.ignore} is selected, all
+If \widget{export.textpathoutline.ignore} is selected, each
 \glspl{textpath} will be exported as though the \textattr{outline} mode
-was off.
+was off if the \gls{textpath} is exported as a decoration.
+This will be ignored if the \widget{export.textpath} setting results in
+the \gls{textpath} being exported as \glspl{textarea} (in which case
+the \widget{export.textareaoutline} setting will apply) or as
+a path.
+
+\widgetdef{export.textpathoutline.split}
+
+If \widget{export.textpathoutline.split} is selected, all
+\glspl{textpath} with the \textattr{outline} mode attribute set 
+will be exported as though they had been split into separate
+\glspl{textarea}. Bear in mind that if you set alternative
+\LaTeX\ text, that will be ignored but mapping will be applied as
+usual for the \gls{menu.transform.split} function.
+This overrides the \widget{export.textpath} settings.
 
 \widgetdef{export.textpathoutline.to_path}
 
 If \widget{export.textpathoutline.to_path} is selected, all
 \glspl{textpath} with the \textattr{outline} mode attribute set 
-will be exported as though they had been converted to a path (except that the 
-\meta{Java class name} will be \code{JDRTextPath}).
-
-\widgetdef{export.textareaoutline}
-
-If the export format doesn't support \gls{textarea} outlines, the
-\widget{export.textareaoutline} panel provides options to indicate
-what should be done if the image contains any \glspl{textarea} with 
-the \textattr{outline} mode on. Note that this option doesn't change
-the image itself but just governs the way the image is saved in the export
-file.
-
-\widgetdef{export.textareaoutline.ignore}
-
-If \widget{export.textareaoutline.ignore} is selected, all
-\glspl{textarea} will be exported as though the \textattr{outline} mode
-was off.
-
-\widgetdef{export.textareaoutline.to_path}
-
-If \widget{export.textareaoutline.to_path} is selected, all
-\glspl{textarea} with the \textattr{outline} mode attribute set 
 will be exported as though they had been converted to a path.
+This overrides the \widget{export.textpath} settings.
 
 \widgetdef{export.load_doc_class}
+
+\FloatFig[hbp]
+ {fig:export-row-doc-class}
+ {\includeimg[scale=0.6]{export-row-doc-class}}
+ {Export Dialog: Document Class}
 
 The export to class and export to complete \LaTeX\ document options will
 need to load a document class.  In the case of \widget{export.cls},
@@ -3918,6 +4173,13 @@ Note that this option isn't available for \widget{export.png} even
 if \widget{export.use_process} is on as the information will be lost
 when the PDF is converted to PNG, so the setting in this case would
 be superfluous.
+
+\widgetdef{export.use_default_preamble}
+
+This setting is the same as the
+\widget{preambleconfig.use_default_preamble} setting in the
+\widget{preambleconfig.title} tab of the \dialog{texconfig} dialog
+(see \sectionref{sec:texconfigpreamble}).
 
 \widgetdef{export.write_src_path}
 
@@ -3957,14 +4219,16 @@ Each processor panel has the same format. The file field may be used
 to set the path to the required command line tool. You can use the
 \btn{selectfile} button to navigate your way to it. Below this, is
 a list of command line options to pass to the application. Each
-option should be on a separate line. The following placeholders are
-available:
+option should be on a separate line. Any option that contains one or
+more spaces will automatically be delimited, so don't include
+double-quotes. The following placeholders are available:
 \begin{deflist}
 \itemtitle{\inlineglsdef{placeholder-inputfile}}
 
 \begin{itemdesc}
 The name of the input file. This is a file in the temporary
-directory, not the current image file.
+directory, not the current image file. It won't have the same
+basename as the designated export file.
 \end{itemdesc}
 
 \itemtitle{\inlineglsdef{placeholder-outputfile}}
@@ -3998,26 +4262,28 @@ in the \widget{processes.timeout} box.
 \widgetdef{processes.pdflatex}
 
 \FloatFig{fig:pdfprocessor}
- {\includeimg{pdfprocessor}}
+ {\includeimg[scale=0.6]{pdfprocessor}}
  {The \pdfLaTeX\ Processor Panel (Default Setting)}
 
 The default is to use the \app{pdflatex} application to create a PDF
-file (\figureref{fig:pdfprocessor}). You can change this, for example to \app{lualatex}.
+file (\figureref{fig:pdfprocessor}). You can change this, for
+example to \app{lualatex}, but don't change it to an application that
+doesn't create a PDF file from \LaTeX\ source.
+
 This setting is not only used for exports to PDF but also for any
 exports that use PDF as an intermediate step (such as
 \widget{export.png} with the \widget{export.use_process} checkbox
 selected).
 
-Any \LaTeX\ engine that creates a PDF file should be sufficient for
-the image exports, but the \widget{export.flfpdf} function may
+The \widget{export.flfpdf} function may
 require a more complicated build if there are any cross-references.
 In that case, you can use an automation tool. For example, in
 \figureref{fig:pdfprocessor-latexmk} the application has been set to
-\app{latexmk}. Note the need to add \code{-pdf} to the list of
+\app{latexmk}. Note the need in this case to add \code{-pdf} to the list of
 options to ensure that a PDF file is created.
 
 \FloatFig{fig:pdfprocessor-latexmk}
- {\includeimg{pdfprocessor-latexmk}}
+ {\includeimg[scale=0.6]{pdfprocessor-latexmk}}
  {The \pdfLaTeX\ Processor Panel (LaTeXMk)}
 
 If you want to use an automation tool that requires \glspl{directive}
@@ -4237,6 +4503,11 @@ sec:newstutorial}
 \subsection{Export to PGF}\label{sec:exportpgf}
 
 \widgetdef{export.pgfpicture}
+
+\FloatFig
+ {fig:export-pgfpicture-dialog}
+ {\includeimg{export-pgfpicture-dialog}}
+ {Export Dialog}
 
 To create a file that just contains the \env{pgfpicture} environment, 
 specify the target \ext+{tex}
@@ -4793,14 +5064,15 @@ as the \LaTeX-related settings won't be used by the printer.
 \menudef{menu.file.messages}
 
 You can display the \inlineglsdef{message.title} window using the
-\menu{file.messages} item. This usually just lists the
-files that have been opened, saved or exported, but warnings are
-sometimes written there as well. This window is opened during a read
-or write operation. When an external application is spawned, the
-abort button becomes enabled, which you can use to kill the spawned
-process if required. The window will usually close after the
-operation has been completed but will remain open if any warnings or
-errors were reported.
+\menu{file.messages} item. This usually just lists the files that
+have been opened, saved or exported, but warnings are sometimes
+written there as well. This window will automatically open following a process
+if any warnings or errors were reported.
+
+Information about any processes will be included. The command echoed
+in the window is just a simple concatenation of options for the
+purpose of the message window. The actual process is created using
+Java's ProcessBuilder.
 
 \section{Close}\label{sec:closeimage}
 
@@ -7521,10 +7793,10 @@ and \dgls{line-style} for the underlying shape.
 \begin{warning}
 Note that although \glspl*{textpath} can be \rendered\ with an outline in \FlowframTk,
 the \LaTeX\ \filefn{export} functions can't emulate
-this and will either export the \gls*{textpath} without the outline
-setting or will export it as a path (in which case the alternative
-text will be ignored) depending on your
-\hyperref[sec:texconfig]{\TeX\ Configuration Setting}.
+this and you will need to choose the appropriate \widget{export.textpathoutline}
+setting in the \dialog{export} dialog.
+The \widget{export.textareaoutline} setting can be used to adjust
+the way that \gls{textarea} outlines are exported.
 \end{warning}
 
 \FloatSubFigs{fig:textoutline}
@@ -7535,13 +7807,6 @@ text will be ignored) depending on your
 [Text Outline]
 {Text Outline: \subfigref{fig:textoutlinea} original text area;
   \subfigref{fig:textoutlineb} outline.}
-
-When exporting to a document class, package or a complete document,
-the custom command \gls{jdroutline} will automatically be defined.
-This is used to create the outlined effect. If you 
-\hyperref[sec:exportpgf]{export} to a file containing \sty{pgf}
-code to be input by another document, you will need to inspect the 
-created \ext{tex} file for further information.
 
 \seealsorefs{sec:outlinetopath}
 
@@ -9411,7 +9676,7 @@ an orchid fill \manmsg{colour} and round join style);
 in \subfigref{fig:pathintersecta} have been
 replaced by a single path using the path intersect function.}
 
-Path \gls{clipping.intersection} can be used to clip a closed
+Path \gls{cag.intersection} can be used to clip a closed
 \gls{shape}. For open shapes, you may prefer to use the
 \gls{shapeclipping} function (see \sectionref{sec:clippingshapes}).
 If you want to set up a clipping path, assign a \gls{clippingtag}
@@ -12143,7 +12408,7 @@ title, this will be set with:
 \cmddef{flowframtkimageinfo}
 How this is implemented depends on whether or not \sty{hyperref} has
 is loaded or of \gls{pdfinfo} is available.
-(The document title is obtained from the image description, see
+(The document title is obtained from the \gls{imagedescription}, see
 \sectionref{sec:imagedescription}.)
 
 In the older second case, the \sty{ifpdf} package is also loaded
@@ -17677,13 +17942,13 @@ or \gls{AJR} file.
 
 Recall from \hyperref[jdr:object]{above} that the image is stored with an implied outer grouping. The
 \meta{flowframe-specs} for this implicit group represents the image
-\gls+{typeblock} and the \meta{description} represents the image description.
+\gls+{typeblock} and the \meta{description} represents the \gls{imagedescription}.
 The \meta{tag} is also included for version 2.1 and above which
-represents the image's tag. This tag should be empty except for any
+represents the \inlineglsdef{imagetag}. This tag should be empty except for any
 image stored in the clipboard. In which case, the image tag is set
 to the filename that was current when the data was copied to the
 clipboard. (This filename may simply be \widget{label.untitled}
-for a new unsaved image.) The image tag in the clipboard is
+for a new unsaved image.) The \gls{imagetag} in the clipboard is simply
 used to determine whether or not to offset the content when pasted
 into a \gls{canvas}.
 

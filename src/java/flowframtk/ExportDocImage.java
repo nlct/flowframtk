@@ -77,7 +77,7 @@ public abstract class ExportDocImage extends ExportImage
       String cmdListString = helpLib.cmdListToString(cmdList);
 
       publish(MessageInfo.createMessage(getResources().getMessage(
-         "process.running", cmdListString)));
+         "process.running_in_dir", cmdListString, dir)));
 
       int exitCode = -1;
 

@@ -122,6 +122,49 @@ objects.}
 @class{cls.a0poster}
 @class{cls.beamer}
 
+% JAVA CLASS NAMES
+
+@index{javaclass,
+ name={Java class},
+ plural={Java classes}
+}
+@index{JDRGroup,
+ parent={javaclass},
+ name={\code{JDR\-Group}}
+}
+@index{JDRPath,
+ parent={javaclass},
+ name={\code{JDR\-Path}}
+}
+@index{JDRText,
+ parent={javaclass},
+ name={\code{JDR\-Text}}
+}
+@index{JDRBitmap,
+ parent={javaclass},
+ name={\code{JDR\-Bitmap}}
+}
+@index{JDRTextPath,
+ parent={javaclass},
+ name={\code{JDR\-Text\-Path}}
+}
+@index{JDRSymmetricPath,
+ parent={javaclass},
+ name={\code{JDR\-Sym\-met\-ric\-Path}}
+}
+@index{JDRRotationalPattern,
+ parent={javaclass},
+ name={\code{JDR\-Ro\-ta\-tional\-Pat\-tern}}
+}
+@index{JDRScaledPattern,
+ parent={javaclass},
+ name={\code{JDR\-Scaled\-Pat\-tern}}
+}
+@index{JDRSpiralPattern,
+ parent={javaclass},
+ name={\code{JDR\-Spi\-ral\-Pat\-tern}}
+}
+
 % COMMON OPTIONS
 
 @option{opt.twoside}
@@ -193,6 +236,10 @@ objects.}
 @command{parindent}
 
 @command{pgfpoint}
+@command{usepgflibrary,
+ name={\csfmt{use\-pgf\-library}}
+}
+
 @command{textheight}
 @command{textwidth}
 @command{typeblockwidth}
@@ -747,7 +794,8 @@ single entity.},
 @term{bbox,
   name="bounding box",
   plural="bounding boxes",
-  description = {The smallest rectangle that encompasses the \gls{object}.}
+  description = {The smallest rectangle that encompasses the
+\gls{object} or \glspl{object}.}
 }
 
 @term{stack,
@@ -1524,11 +1572,37 @@ interpreted as tapping the appropriate side of the pad.}
  name={object description}
 }
 
+@index{imagedescription,
+ name={image description}
+}
+
+@index{imagetag,
+ name={image tag}
+}
+
+@index{tag}
+@index{tagobject,
+  parent={tag},
+  name={object},
+  alias={objecttaglist}
+}
+@index{tagclipping,
+  parent={tag},
+  name={clipping path},
+  alias={clippingtag}
+}
+@index{tagimage,
+  parent={tag},
+  name={image},
+  alias={imagetag}
+}
+
 @index{clipping}
 
 @index{clipping.intersection,
  parent={clipping},
- name={intersection}
+ name={intersection},
+ alias={cag.intersection}
 }
 
 @index{shapeclipping,
@@ -1538,7 +1612,7 @@ interpreted as tapping the appropriate side of the pad.}
 @index{clipping.pathedit,
  parent={clipping},
  name={path editing},
- see={shapeclipping}
+ alias={shapeclipping}
 }
 
 @index{clippingtag,

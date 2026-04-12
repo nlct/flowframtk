@@ -777,7 +777,7 @@ Nicola Talbot
 <entry key="menu.tex">TeX/LaTeX</entry>
 <entry key="menu.tex.mnemonic">L</entry>
 
-<entry key="menu.tex.set_preamble">Preamble Editor</entry>
+<entry key="menu.tex.set_preamble">Show Preamble Panel</entry>
 <entry key="menu.tex.set_preamble.mnemonic">M</entry>
 
 <entry key="menu.tex.parshape">Parshape...</entry>
@@ -2780,15 +2780,15 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="export.bounds.papersize">Paper Size</entry>
 <entry key="export.bounds.papersize.mnemonic">Z</entry>
-<entry key="export.bounds.papersize.tooltip">Don''t crop image</entry>
+<entry key="export.bounds.papersize.tooltip">Bounding box same as paper size</entry>
 
 <entry key="export.bounds.image">Image</entry>
 <entry key="export.bounds.image.mnemonic">I</entry>
-<entry key="export.bounds.image.tooltip">Crop to image</entry>
+<entry key="export.bounds.image.tooltip">Bounding box as image bounding box</entry>
 
 <entry key="export.bounds.typeblock">Typeblock</entry>
 <entry key="export.bounds.typeblock.mnemonic">Y</entry>
-<entry key="export.bounds.typeblock.tooltip">Crop to Typeblock</entry>
+<entry key="export.bounds.typeblock.tooltip">Bounding box same as typeblock</entry>
 
 
 <entry key="export.markup">Object Markup:</entry>
@@ -3197,6 +3197,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="clipping.set_as_default">Set as default</entry>
 <entry key="clipping.set_as_default.mnemonic">D</entry>
+<entry key="clipping.set_as_default.initvalue">false</entry>
 
 <entry key="processes.title">Export Processes</entry>
 <entry key="processes.mnemonic">X</entry>
@@ -3357,6 +3358,7 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 <entry key="preambleconfig.mnemonic">P</entry>
 
 <entry key="preambleconfig.use_default_preamble">Use default preamble</entry>
+<entry key="preambleconfig.use_default_preamble.initvalue">true</entry>
 
 <entry key="preambleconfig.info">This is the contents of the file "{0}". If you have modified it outside of this application whilst this application is running, click on the reload button to refresh the contents. This code is used when exporting to LaTeX documents, or exports that use external processes, but is not used when exporting to other formats, including export to .cls or .sty files.</entry>
 <entry key="preambleconfig.reload">Reload</entry>
@@ -3588,7 +3590,6 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="process.confirm.abort">Are you sure you want to abort this operation?</entry>
 <entry key="process.confirm">Confirm</entry>
-<entry key="process.running">Running {0}</entry>
 <entry key="process.aborted">Task aborted.</entry>
 <entry key="process.cancelling">Canceling task.</entry>
 

@@ -783,7 +783,7 @@
 <entry key="menu.tex">TeX/LaTeX</entry>
 <entry key="menu.tex.mnemonic">L</entry>
 
-<entry key="menu.tex.set_preamble">Preamble Editor</entry>
+<entry key="menu.tex.set_preamble">Show Preamble Panel</entry>
 <entry key="menu.tex.set_preamble.mnemonic">M</entry>
 
 <entry key="menu.tex.parshape">文本区域形状(Parshape命令)...</entry>
@@ -2786,15 +2786,15 @@ Select ''Yes'' to add the current working path to the canvas.</entry>
 
 <entry key="export.bounds.papersize">Paper Size</entry>
 <entry key="export.bounds.papersize.mnemonic">Z</entry>
-<entry key="export.bounds.papersize.tooltip">Don''t crop image</entry>
+<entry key="export.bounds.papersize.tooltip">Bounding box same as paper size</entry>
 
 <entry key="export.bounds.image">Image</entry>
 <entry key="export.bounds.image.mnemonic">I</entry>
-<entry key="export.bounds.image.tooltip">Crop to image</entry>
+<entry key="export.bounds.image.tooltip">Bounding box as image bounding box</entry>
 
 <entry key="export.bounds.typeblock">Typeblock</entry>
 <entry key="export.bounds.typeblock.mnemonic">Y</entry>
-<entry key="export.bounds.typeblock.tooltip">Crop to Typeblock</entry>
+<entry key="export.bounds.typeblock.tooltip">Bounding box same as typeblock</entry>
 
 
 <entry key="export.markup">Object Markup:</entry>
