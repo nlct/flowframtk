@@ -1742,12 +1742,11 @@ You will then need to provide a definition of the applicable
 commands that introduce scoping around groups.
 For example, with the \widget{export.markup.encap} setting:
 \begin{codebox}
-\cmd{usepackage}\marg{etoolbox}
 \cmd{renewcommand}\gls{flowframtkencapobject}\oarg{8}\marg{\comment{}
- \cmd{ifstrequal}\marg{\#2}\marg{JDRGroup}
-  \marg{\cbeg{pgfscope}\#8\cend{pgfscope}}\marg{\#8}\comment{}
+ \gls{FlowframTkScopeIfGroup}\marg{\#2}\marg{\#8}\comment{}
 }
 \end{codebox}
+(This will require \sty{flowframtkutils} v2.2+.)
 
 The tag will have no effect on \glspl{object} that are not written
 as \glspl{path} when exported. For example, if the designated tag is
