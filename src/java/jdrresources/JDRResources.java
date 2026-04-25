@@ -1888,7 +1888,7 @@ public class JDRResources
         START_COPYRIGHT_YEAR, COPYRIGHT_YEAR,
         helpLib.getInfoUrl(html, "www.dickimaw-books.com")),
         TeXJavaHelpLib.LICENSE_GPL3,
-        false, null
+        true, null
       );
    }
 
@@ -3423,8 +3423,8 @@ public class JDRResources
    public static final int LABEL_SPACER=5;
    public static final int BUTTON_SPACER=10;
 
-   public static final String APP_VERSION = "0.9";
-   public static final String APP_DATE = "2026-04-01";
+   public static final String APP_VERSION = "0.9.1";
+   public static final String APP_DATE = "2026-04-25";
    public static final String START_COPYRIGHT_YEAR = "2005";
    public static final String COPYRIGHT_YEAR
     = APP_DATE.substring(0,4);

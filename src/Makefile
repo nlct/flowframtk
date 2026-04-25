@@ -47,11 +47,11 @@ lib/jdrview.jar   : lib/jdr.jar lib/jdrresources.jar \
 	java/jdrview/*.java
 	make -C java ../lib/jdrview.jar
 
-lib/jdrinfo.jar   : lib/jdr.jar java/jdrinfo/*.java
+lib/jdrinfo.jar   : lib/jdr.jar lib/jdrresources.jar java/jdrinfo/*.java
 	make -C java ../lib/jdrinfo.jar
 
 lib/jdrconverter.jar   : java/jdrconverter/Manifest.txt \
-			lib/jdr.jar java/jdrconverter/*.java 
+			lib/jdr.jar lib/jdrresources.jar java/jdrconverter/*.java 
 	make -C java ../lib/jdrconverter.jar
 
 ../unstable/flowframtk-installer.jar	: ../unstable \
