@@ -597,7 +597,7 @@ public abstract class SVGAbstractElement implements Cloneable
          element = this;
       }
 
-      CSS_IGNORED.matcher(ruleList).replaceAll("");
+      ruleList = CSS_IGNORED.matcher(ruleList).replaceAll("");
 
       if (element.styles == null)
       {
@@ -614,6 +614,18 @@ public abstract class SVGAbstractElement implements Cloneable
          SVGAttributeSet atSet = createAttributeSet(attrList);
 
          element.styles.addRules(selectorRules, atSet);
+      }
+   }
+
+   public void addStyles(SVGStyles otherStyles)
+   {
+      if (styles == null)
+      {
+         styles = otherStyles;
+      }
+      else
+      {
+         styles.putAll(otherStyles);
       }
    }
 

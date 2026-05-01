@@ -30,6 +30,15 @@ public class SVGDefsElement extends SVGAbstractElement
       return null;
    }
 
+   @Override
+   public void endElement() throws InvalidFormatException
+   {
+      if (styles != null)
+      {
+         parent.addStyles(styles);
+      }
+   }
+
    public Object clone()
    {
       SVGDefsElement element = new SVGDefsElement(handler, null);
