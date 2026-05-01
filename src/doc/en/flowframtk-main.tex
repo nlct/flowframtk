@@ -17,11 +17,18 @@
  [
     novref,
     fnsymleft,
-%   debug=showwrgloss
+   %debug=showwrgloss
  ]{texjavahelp}
 
 \hypersetup{colorlinks,linkcolor=blue}
 \setcounter{secnumdepth}{3}
+
+\DeclareTOCStyleEntry[numwidth=2.5em]{tocline}{section}
+\DeclareTOCStyleEntry[numwidth=3.5em]{tocline}{figure}
+
+\AfterTOCHead[lof]{%
+ \label{listoffigures}%
+}
 
 \renewcommand\TeXJavaHelpExtraAssignFields{
   description =[o] \TITLE { long } + ". " + description 
@@ -103,6 +110,7 @@
 \begin{document}
 \maketitle
 
+\begin{prefrontmatterblock}{notes}{Notes}
 \FlowframTk\ is licensed under the terms of the GNU General Public License
 (\url{http://gnu.org/licenses/gpl.html"}).
 See \sectionref{sec:licence}.
@@ -133,9 +141,11 @@ The source code is in the GitHub repository
 Occasionally the canvas doesn't get redrawn correctly. To force a
 redraw, use \accelerator{menu.debug.revalidate}.
 
+\end{prefrontmatterblock}
+
 \frontmatter
 \tableofcontents
-%\listoffigures
+\listoffigures
 
 \mainmatter
 \chapter{Introduction}
@@ -2205,7 +2215,7 @@ characters and these are listed in the table shown in the
 \FloatFig
   {fig:configdialog-mathsettings}
   {\includeimg{configureDialog-mathsettings}}
-  {LaTeX-Related Text Settings\dash \Manmsg{maths}-Mode Mappings}
+  {LaTeX-Related Text Settings\dash \Glsentrytext{manual.maths}-Mode Mappings}
 
 The mapping tables can be sorted by \glslink{click}{clicking} on
 their column headers. You can add, delete or modify any of these
@@ -7208,7 +7218,7 @@ the other \dgls{paint} options and adjust the alpha channel.
 
 \FloatFig{fig:paint-solid}
 {\includeimg{paint-solid}}
-{Solid \Manmsg{colour} Selector}
+{Solid \Glsentrytext{manual.colour} Selector}
 
 Selecting the \widget{paintselector.single} radio button indicates a
 \inlineglsdef{index.colour.solid} \dgls{colour} and enables the
@@ -11689,7 +11699,8 @@ markers.
 
 \FloatFig{fig:sampleplot}
 {\includeimg{sampleplot}}
-[Marker \Manmsg{colour} May Be Independent of the Line \Manmsg{colour}]
+[Marker \Glsentrytext{manual.colour} May Be Independent of the Line
+\Glsentrytext{manual.colour}]
 {Marker \manmsg{colour} may be independent of the line
 \manmsg{colour}:
 this path has a transparent line paint and blue
@@ -13882,7 +13893,7 @@ the adjustments made.
  {fig:typeblockshown-verso}{\includeimg{typeblockshown-verso}}{},
  {fig:typeblockshown-recto}{\includeimg{typeblockshown-recto}}{}
 }
-[The typeblock is shown as a light \manmsg{grey} rectangle]
+[The typeblock is shown as a light \glsentrytext{manual.grey} rectangle]
 {The typeblock is shown as a light \manmsg{grey} rectangle:
 \subfigref{fig:typeblockshown-verso} verso;
 \subfigref{fig:typeblockshown-recto} recto}
@@ -16396,6 +16407,7 @@ displayed in that location in the document.
 \FloatFig{fig:brochure18}
 [\setkeys{Gin}{width=\linewidth}]
 {\includeimg{brochure18}}
+[Brochure Example\dash \glsentrytext{displaypage.all}]
 {Brochure Example\dash \widget{displaypage.all} display mode shows all objects in
 their odd-page location.}
 
@@ -16923,7 +16935,7 @@ position relative to each other.
 \FloatFig{fig:housenomouse16}
 [\setkeys{Gin}{width=0.6\linewidth}]
 {\includeimg{housenomouse16}}
-{No Mouse Example\dash Text is Now \Manmsg{centred}}
+{No Mouse Example\dash Text is Now \Glsentrytext{manual.centred}}
 
 \item If you want to save your image as a \env{pgfpicture}
 environment, you will need to change the \textattr{anchor}
