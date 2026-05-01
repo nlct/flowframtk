@@ -52,7 +52,9 @@ public abstract class IOSwingWorker extends SwingWorker<JDRGroup,MessageInfo>
    {
       FlowframTk app = jdrFrame.getApplication();
 
-      JDRMessage msgSys = app.getMessageSystem();
+      JDRGuiMessage msgSys = getMessageSystem();
+
+      msgSys.reset();
 
       if (msgSys instanceof PropertyChangeListener)
       {
@@ -103,6 +105,13 @@ public abstract class IOSwingWorker extends SwingWorker<JDRGroup,MessageInfo>
    protected void finish(JDRGroup image)
    {
       jdrFrame.setIoInProgress(false);
+
+      JDRGuiMessage msgSys = getMessageSystem();
+
+      if (msgSys.warningFlagged() || msgSys.hasErrors())
+      {
+         msgSys.displayMessages();
+      }
    }
 
    public JDRResources getResources()
