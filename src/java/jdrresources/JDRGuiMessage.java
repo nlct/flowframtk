@@ -169,7 +169,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
 */
    }
 
-   private void reset()
+   public void reset()
    {
       warningFlag = false;
       errorBuffer.setLength(0);
@@ -308,6 +308,13 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
    protected void addToErrorBuffer(String text)
    {
+      String eol = String.format("%n");
+
+      if (!text.endsWith(eol))
+      {
+         text += eol;
+      }
+
       errorBuffer.append(text);
    }
 
@@ -317,6 +324,13 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
       try
       {
+         String eol = String.format("%n");
+
+         if (!text.endsWith(eol))
+         {
+            text += eol;
+         }
+
          document.insertString(document.getLength(), text, attrs);
       }
       catch (BadLocationException e)
@@ -442,6 +456,11 @@ public class JDRGuiMessage extends JDRMessagePublisher
    public boolean warningFlagged()
    {
       return warningFlag;
+   }
+
+   public boolean hasErrors()
+   {
+      return errorBuffer.length() > 0;
    }
 
    public void enableAbort(boolean enabled)
