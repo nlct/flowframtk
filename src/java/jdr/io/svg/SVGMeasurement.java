@@ -141,6 +141,11 @@ public class SVGMeasurement
       return valueString;
    }
 
+   public String toString()
+   {
+      return valueString;
+   }
+
    public static final Pattern PATTERN
       = Pattern.compile("((?:[+\\-]?\\d*)(?:\\.\\d+)?(?:[eE][=\\-]?\\d+)?)\\s*([a-zA-Z%]*)");
 
