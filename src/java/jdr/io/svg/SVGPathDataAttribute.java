@@ -80,6 +80,7 @@ public class SVGPathDataAttribute implements SVGAttribute
             case 'L':
             case 'l':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute x = getCoordinate(data, it, true);
@@ -124,6 +125,12 @@ public class SVGPathDataAttribute implements SVGAttribute
                     }
                  }
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
               prevC = null;
             break;
             case 'H':
@@ -131,6 +138,7 @@ public class SVGPathDataAttribute implements SVGAttribute
             case 'V':
             case 'v':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute coord = getCoordinate(data, it,
@@ -164,11 +172,18 @@ public class SVGPathDataAttribute implements SVGAttribute
                                 p.getY()+coord.getStorageValue(element, false));
                  }
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
               prevC = null;
             break;
             case 'C':
             case 'c':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute x1 = getCoordinate(data, it, true);
@@ -230,10 +245,17 @@ public class SVGPathDataAttribute implements SVGAttribute
                  }
 
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
             break;
             case 'S':
             case 's':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute x2 = getCoordinate(data, it, true);
@@ -299,10 +321,17 @@ public class SVGPathDataAttribute implements SVGAttribute
                     prevC.setLocation(c2x, c2y);
                  }
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
             break;
             case 'Q':
             case 'q':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute x1 = getCoordinate(data, it, true);
@@ -355,10 +384,17 @@ public class SVGPathDataAttribute implements SVGAttribute
                     prevC.setLocation(cx, cy);
                  }
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
             break;
             case 'T':
             case 't':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute x = getCoordinate(data, it, true);
@@ -414,10 +450,17 @@ public class SVGPathDataAttribute implements SVGAttribute
                     prevC.setLocation(cx, cy);
                  }
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
             break;
             case 'A':
             case 'a':
               it.next();
+
               while (hasNextCoord(data, it))
               {
                  SVGLengthAttribute rx = getCoordinate(data, it, true);
@@ -457,6 +500,12 @@ public class SVGPathDataAttribute implements SVGAttribute
                        sweepFlag.booleanValue(),
                        x1, y1);
               }
+
+              if (!Character.isWhitespace(it.current()))
+              {
+                 it.previous();
+              }
+
               prevC = null;
             break;
             case 'Z':
@@ -621,7 +670,7 @@ public class SVGPathDataAttribute implements SVGAttribute
 
       SVGLengthAttribute coord = null;
 
-      if (m.matches())
+      if (m.find())
       {
          String group1 = m.group(1);
          String group2 = m.group(2);
@@ -645,7 +694,7 @@ public class SVGPathDataAttribute implements SVGAttribute
 
       SVGAngleAttribute angle = null;
 
-      if (m.matches())
+      if (m.find())
       {
          String group1 = m.group(1);
          String group2 = m.group(2);
@@ -667,7 +716,7 @@ public class SVGPathDataAttribute implements SVGAttribute
 
       Boolean flag = null;
 
-      if (m.matches())
+      if (m.find())
       {
          String group1 = m.group(1);
          String group2 = m.group(2);
@@ -701,7 +750,7 @@ public class SVGPathDataAttribute implements SVGAttribute
 
       Matcher m = NUMERIC_PATTERN.matcher(text.substring(idx));
 
-      return m.matches();
+      return m.find();
    }
 
    @Override
@@ -735,5 +784,5 @@ public class SVGPathDataAttribute implements SVGAttribute
    String valueString;
 
    private static final Pattern NUMERIC_PATTERN = 
-     Pattern.compile("([\\s,]*)((?:[+\\-]?\\d*)(?:\\.?\\d+)(?:[eE][=\\-]?\\d+)?[a-zA-Z]*)([,\\s].*)?");
+     Pattern.compile("^([\\s,]*)((?:[+\\-]?\\d*)(?:\\.?\\d+)(?:[eE][=\\-]?\\d+)?)([,\\s].*)?");
 }
