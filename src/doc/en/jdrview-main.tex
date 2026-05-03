@@ -1,7 +1,6 @@
 
 \usepackage{fontspec}
 \setmainfont{Linux Libertine O}
-\usepackage{verbatim}
 \usepackage
  [
     novref,
@@ -11,6 +10,9 @@
 \hypersetup{colorlinks,linkcolor=blue}
 \DeclareGraphicsExtensions{.png,.pdf,.tex}
 
+\AfterTOCHead[lof]{%
+ \label{listoffigures}%
+}
 
 \InputIfFileExists{version}{}{}
 
@@ -66,9 +68,9 @@ variable \gls{JDR_JVMOPTS} to pass options to the \gls{jvm}.
 For example, if you want to run \JDRView\ with a maximum size
 of 128Mb for the memory allocation pool, you can set
 \gls{JDR_JVMOPTS} to \code{-Xmx128m}:
-\begin{verbatim}
-setenv JDR_JVMOPTS -Xmx128m
-\end{verbatim}
+\begin{terminal}
+setenv JDR\_JVMOPTS -Xmx128m
+\end{terminal}
 Note that \FlowframTk\ also uses this environment variable.
 
 If you can't use the \app{jdrview} script, you can invoke
