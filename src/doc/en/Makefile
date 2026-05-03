@@ -68,8 +68,8 @@ flowframtk-en-GB.pdf	: flowframtk-en-GB.glstex
 flowframtk-en-GB.glstex	: flowframtk.bib shared.bib flowframtk-props-en-GB.bib \
 			 flowframtk-en-GB.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en-GB/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex \
-			../en-sharedimages/*.png
+			../../sharedimages/*.png ../../sharedimages/*.tex \
+			../../en-sharedimages/*.png
 	lualatex flowframtk-en-GB
 	bibtex flowframtk-en-GB
 	bib2gls -g --no-warn-unknown-entry-types flowframtk-en-GB
@@ -84,8 +84,8 @@ flowframtk-en.pdf	: flowframtk-en.glstex
 flowframtk-en.glstex	: flowframtk.bib shared.bib flowframtk-props-en.bib \
 			 flowframtk-en.tex flowframtk-main.tex version.tex \
 			 helpinterface.tex images-en/*.png \
-			../sharedimages/*.png ../sharedimages/*.tex \
-			../en-sharedimages/*.png
+			../../sharedimages/*.png ../../sharedimages/*.tex \
+			../../en-sharedimages/*.png
 	lualatex flowframtk-en
 	bibtex flowframtk-en
 	bib2gls -g --no-warn-unknown-entry-types flowframtk-en
@@ -100,7 +100,7 @@ jdrview-en.pdf	: jdrview-en.glstex
 jdrview-en.glstex	: jdrview.bib shared.bib jdrview-props-en.bib \
 		jdrview-en.tex jdrview-main.tex version.tex \
 		helpinterface.tex \
-		../sharedimages/*.png ../sharedimages/*.tex
+		../../sharedimages/*.png ../../sharedimages/*.tex
 	lualatex jdrview-en
 	bib2gls -g --no-warn-unknown-entry-types jdrview-en
 
@@ -111,7 +111,7 @@ jdrview-en-GB.pdf	: jdrview-en-GB.glstex
 jdrview-en-GB.glstex	: jdrview.bib shared.bib jdrview-props-en-GB.bib \
 			jdrview-en-GB.tex jdrview-main.tex version.tex \
 			helpinterface.tex \
-			../sharedimages/*.png ../sharedimages/*.tex
+			../../sharedimages/*.png ../../sharedimages/*.tex
 	lualatex jdrview-en-GB
 	bib2gls -g --no-warn-unknown-entry-types jdrview-en-GB
 	lualatex jdrview-en-GB
