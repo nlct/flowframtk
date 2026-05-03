@@ -12,4 +12,11 @@ if echo "$kernel" | grep CYGWIN >/dev/null; then
   jarpath=`cygpath -w "$jarpath"`
 fi
 
-exec java $JDR_JVMOPTS -jar "$jarpath" $JPGFDRAW_OPTS $FLOWFRAMTK_OPTS "$@"
+splashimage=`dirname "${jarpath}"`
+splashimage+="/icons/flowframtklogolarge.png"
+
+if [ -f $splashimage ]; then
+  exec java $JDR_JVMOPTS "-splash:$splashimage" -jar "$jarpath" "$@"
+else
+  exec java $JDR_JVMOPTS -jar "$jarpath" "$@"
+fi
