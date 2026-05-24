@@ -26,9 +26,15 @@
 \DeclareTOCStyleEntry[numwidth=2.5em]{tocline}{section}
 \DeclareTOCStyleEntry[numwidth=3.5em]{tocline}{figure}
 
-\AfterTOCHead[lof]{%
- \label{listoffigures}%
-}
+% Filenames are obtained from the label following to TOC entry
+% If no label provided, a generic filename is used.
+% This is automatically done for the table of contents and
+% glossaries/index.
+
+% Adding a label for the other unnumbered chapters:
+
+\AfterTOCHead[lof]{\label{listoffigures}}
+\setbibpreamble{\label{references}}
 
 \renewcommand\TeXJavaHelpExtraAssignFields{
   description =[o] \TITLE { long } + ". " + description 
@@ -2280,7 +2286,7 @@ a comma-separated list of packages in the
 \widget{textconfig.mapping.package} box. If the replacement command is
 available in the \LaTeX\ kernel, you can leave this box blank.
 (These packages will be automatically added to the
-image's \gls{early-preamble} code (\sectionref{sec:preamble}), whenever the
+image's \gls{early-preamble} code (\sectionref{sec:preamblepanels}), whenever the
 mapping is applied.)
 
 The package name may be preceded by optional arguments in square
@@ -3138,7 +3144,7 @@ file \file{accelerators.prop}
 \file{mathmappings.prop} and \file{textmappings.prop}
 (written by \FlowframTk\ when it quits normally);
 
-\item the \hyperref[sec:preamble]{preamble} file \file{preamble.tex}
+\item the \hyperref[sec:preamblepanels]{preamble} file \file{preamble.tex}
 (created by you, if you want it, in any text editor) used by some of
 the \filefn{export} functions
 (see \sectionref{sec:texconfigpreamble});
@@ -3222,7 +3228,7 @@ some of them completely hide the editor area (such as the GTK+
 Look and Feel).  You can also use the \menu{tex.set_preamble} menu
 item to show the editor area.
 
-See \sectionref{sec:preamble} for further details on how this
+See \sectionref{sec:preamblepanels} for further details on how this
 code is added during the export process, and
 see \sectionref{sec:configureuidialog} to set a default preamble
 for all images and to reposition the \gls{preamble-and-document-text-editor-area}.
@@ -4475,7 +4481,7 @@ If the \widget{flowframe.border} option was set to \widget{flowframe.border_as_s
 then the command definition for the border will be written to the
 file. The frame attributes will be set.
 
-The \gls{early-preamble} text (\sectionref{sec:preamble}) is added before the
+The \gls{early-preamble} text (\sectionref{sec:preamblepanels}) is added before the
 start of the package option declarations, which provides a means to
 add extra package options, if required.  The \gls{mid-preamble} text will
 be placed after the class or packages are loaded and the
@@ -4502,7 +4508,7 @@ export to package function), will have the
 \widget{export.load_doc_class} panel available.
 
 \seealsorefs{sec:texconfig,
-sec:preamble,
+sec:preamblepanels,
 sec:flowframe,
 sec:houseexample,
 sec:neuronexample,
@@ -4545,7 +4551,7 @@ class and document environment, you will need the
 \nameref{sec:exportdoc} function instead.
 
 \seealsorefs{sec:texconfig,
-sec:preamble,
+sec:preamblepanels,
 sec:houseexample,
 sec:neuronexample}
 
@@ -4604,7 +4610,7 @@ has been set (see \sectionref{sec:texconfigpreamble}) the code will
 be included in the \ext{tex} file's preamble.  This is in addition
 to the contents of the image's \glsname{preamble.early}-,
 \glsname{preamble.mid}- and \gls{preamble.late} (see
-\sectionref{sec:preamble}). For example, the default preamble shown in
+\sectionref{sec:preamblepanels}). For example, the default preamble shown in
 \figureref{fig:texconfig-preamble} in \sectionref{sec:texconfigpreamble} has:
 \begin{verbatim}
 \usepackage[utf8]{inputenc}
@@ -4620,10 +4626,10 @@ If you prefer to use \sty{fontspec} and you are using the
 
 If your image includes \LaTeX\ commands that require a particular
 package, you will need to add these packages to the
-\hyperref[sec:preamble]{image preamble}. This is done automatically
+\hyperref[sec:preamblepanels]{image preamble}. This is done automatically
 by the \gls{textarea-mapping} function, if it has been
 \hyperref[mi:texmappings]{enabled}.  See
-\sectionsref{sec:texconfigtext,sec:preamble} for further details.
+\sectionsref{sec:texconfigtext,sec:preamblepanels} for further details.
 
 \FlowframTk\ will automatically add
 the code to load the \sty{flowframtkutils} package (if detected),
@@ -4701,7 +4707,7 @@ manually building the document, as the issue may be due to the
 conversion process or it may be due to an unrecognised command or
 syntax error in a \gls{textarea} or \gls{textpath}.
 
-\seealsorefs{sec:texconfig,sec:preamble,sec:fontanchor}
+\seealsorefs{sec:texconfig,sec:preamblepanels,sec:fontanchor}
 
 \subsection{Export to SVG}\label{sec:exportsvg}
 
@@ -5502,7 +5508,7 @@ the \gls*{textarea}.) An empty \gls{textarea} will be discarded.
 
 If a mapping is performed that has an associated package, then the
 package will be automatically add to the image's
-\hyperref[sec:preamble]{early-preamble}. The mapping function will
+\hyperref[sec:preamblepanels]{early-preamble}. The mapping function will
 first search the early-preamble code to check if the package is
 already present, but it doesn't check the mid- or late-preamble code
 or the code in the \hyperref[sec:texconfigpreamble]{default
@@ -5648,7 +5654,7 @@ Once the \gls{textarea} has been finished (by clicking on the
 \gls{menu.tools.finish} button or by pressing
 \accelerator{menu.tools.finish} or by switching to a non-text
 tool) any packages that are required by the mappings will be added
-to the \hyperref[sec:preamble]{early-preamble pane}, as shown in
+to the \hyperref[sec:preamblepanels]{early-preamble pane}, as shown in
 \figureref{fig:addpackage}.  Note that the \gls{canvas} and the
 preamble panes have separate undo\slash redo managers so if you undo
 a new text area it will remove the new text area but won't remove
@@ -5670,7 +5676,7 @@ well as the translation of \LaTeX\ commands.
 sec:edittext,
 sec:fontanchor,
 sec:texconfig,
-sec:preamble,
+sec:preamblepanels,
 sec:textpaint,
 sec:textstyle,
 sec:outlinetopath,
@@ -5910,7 +5916,7 @@ This chapter describes how to select one or more \glspl{object},
 move \glspl{object} up and down the \gls{stackingorder} (that is, in
 front or behind other \glspl{object}), how to perform basic editing
 such as grouping, alignment, cut, copy and paste, and how to set an \gls{object}['s]
-description and tag. See \sectionref{sec:text} to edit
+description and tag. See \sectionref{sec:textareas} to edit
 \glspl{textarea}, \sectionref{sec:affinetrans} to shift, rotate,
 scale or shear an \gls{object},
 \sectionref{sec:modshape} to modify \glspl{shape},
@@ -7027,7 +7033,7 @@ as per \menu{edit.copy} and then removes the selection from the
 \gls{canvas}.
 
 \begin{information}
-The \hyperref[sec:preamble]{preamble panes} have
+The \hyperref[sec:preamblepanels]{preamble panes} have
 their own cut button.
 \end{information}
 
@@ -7064,7 +7070,7 @@ applicable field (select the text, for example with
 \accelerator{menu.textarea.copy}).
 
 \begin{information}
-The \hyperref[sec:preamble]{preamble panes} have
+The \hyperref[sec:preamblepanels]{preamble panes} have
 their own copy button.
 \end{information}
 
@@ -7088,7 +7094,7 @@ If you want to paste plain text into an existing
 \hyperref[sec:edittext]{edit text area} function.  
 
 \begin{information}
-The \hyperref[sec:preamble]{preamble panes} have their own paste button.
+The \hyperref[sec:preamblepanels]{preamble panes} have their own paste button.
 \end{information}
 
 \section{Object Description}\label{sec:objectdescription}
@@ -7331,7 +7337,7 @@ in all directions (clipped by the shape).
  sec:textpaint,
  sec:convertcolspace,
  sec:fade,
- sec:removetrans
+ sec:removetranslucency
 }
 
 \section{\Glsentrytext{manual.colour} Space Conversions}\label{sec:convertcolspace}
@@ -7380,7 +7386,7 @@ during the export process.
 
 \seealsorefs{
  sec:fade,
- sec:removetrans,
+ sec:removetranslucency,
  sec:linepaint,
  sec:fillpaint,
  sec:textpaint
@@ -7399,13 +7405,13 @@ provides that function.
 
 \seealsorefs{
  sec:convertcolspace,
- sec:removetrans,
+ sec:removetranslucency,
  sec:linepaint,
  sec:fillpaint,
  sec:textpaint
 }
 
-\section{Removing Translucency}\label{sec:removetrans}
+\section{Removing Translucency}\label{sec:removetranslucency}
 
 \menudef{menu.edit.adjustcol.removetrans}
 
@@ -7445,7 +7451,7 @@ alpha channel will be ignored if you \filefn{export} to \pgls{eps}.
  sec:textpaint
 }
 
-\chapter{Text}\label{sec:text}
+\chapter{Text}\label{sec:textareas}
 
 \Glspl{textarea} consist of a single line of text. Alternative
 \LaTeX\ code may be provided to use instead when the image
@@ -8777,7 +8783,7 @@ If the selected segment is a \gls{Bezier-curve}, the
 the curvature \gls*{controlpt} to ensure that the gradient at the
 nearest join is continuous. This sub menu isn't available if it's not
 possible to do this (for example, if the nearest join is an end
-point). See \sectionref{sec:continous} for further details.
+point). See \sectionref{sec:continuity} for further details.
 
 \menudef{menu.editpath.open_path}
 
@@ -8953,7 +8959,7 @@ changes (after prompting for confirmation). Use the
 \widget{segmentinfo.default} button to revert the working segment
 back to its current state in the actual path.
 
-\subsection{Gradient Continuity}\label{sec:continous}
+\subsection{Gradient Continuity}\label{sec:continuity}
 
 Joins between \gls{path} segments, where one of both segments is a
 \gls{Bezier-curve}, can be made continuous (a smooth join)
@@ -12310,7 +12316,7 @@ anchor:
  sec:accesstutorial
 }
 
-\chapter{\TeX/\LaTeX}\label{sec:tex}
+\chapter{\TeX/\LaTeX}\label{sec:latexfunctions}
 
 \menudef{menu.tex}
 
@@ -12323,7 +12329,8 @@ package. Although the \sty{pgf} package is available for
 \TeX\ formats other than \LaTeX, \FlowframTk\ currently only exports
 images using \LaTeX\ syntax.
 
-\section{Adding Commands to the Preamble and Providing Document Text}\label{sec:preamble}
+\section{Adding Commands to the Preamble and Providing Document Text}
+\label{sec:preamblepanels}
 
 The \hyperref[sec:exportdoc]{export to single-paged document}
 functions create a complete \LaTeX\ document, including the document
@@ -14897,7 +14904,7 @@ add in the arrows as illustrated in \figureref{fig:neuron4}.
     \item Use \menu{settings.styles} to open the \dialog{styles}
     selector, and set the font family to \qt{Serif} and the font
     size to 10pt, and then press \dgls{okay}. Select the
-    \mathstool\ (\sectionref{sec:text}), and add
+    \mathstool\ (\sectionref{sec:textareas}), and add
     in the text, as illustrated in \figureref{fig:neuron5}.
     (I've used the
     \widget{unicode.SUPERSCRIPTS_AND_SUBSCRIPTS} block in the
@@ -14935,7 +14942,7 @@ Now select all of the text on the left (\qt{x\textsubscript{1}},
 \textattr{anchor} parameter to \widget{font.anchor.right}. (Note
 that you will not see any difference to the image in \FlowframTk.)
 
-\item Select the \mathstool\ (\sectionref{sec:text}) and start a
+\item Select the \mathstool\ (\sectionref{sec:textareas}) and start a
 \gls{textarea} in the rectangle.  I want to use a capital sigma to
 indicate a summation, and as I don't know the magic combination of
 characters to access that symbol, I used the
@@ -19444,11 +19451,12 @@ classes throw a NullPointerException.
 \FlowframTk\ is licensed under the terms of the 
 \href{https://www.gnu.org/licenses/gpl-3.0.html}{GNU General
 Public License version 3 (GPLv3)}.
-\FlowframTk\ depends on the following third party library whose
-jar file is in the \filefmt{lib} directory:
+\FlowframTk\ depends on the following third party libraries:
 \begin{itemize}
-   \item TeX Java Help \filefmt{texjavahelplib.jar}
+   \item \TeX\ Java Help \filefmt{texjavahelplib.jar}
    (GPL, \url{https://github.com/nlct/texjavahelp}).
+   \item \TeX\ Java Parser \filefmt{texparserlib.jar}
+   (GPL, \url{https://github.com/nlct/texparser}).
 \end{itemize}
 
 \bibliographystyle{plain}
@@ -19457,6 +19465,10 @@ jar file is in the \filefmt{lib} directory:
 \listentrydescendents
  [title={Summary of \apptext{flowframtk} Switches}]
  {app.flowframtk}
+
+\appto\printmaininit{%
+ \glssetcategoryattribute{term}{glossname}{firstuc}%
+}
 
 \printmain
 \printindex 

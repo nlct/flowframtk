@@ -589,6 +589,20 @@ code should appear in the PDF</entry>
 <entry key="manual.idxmenu">menu</entry>
 <entry key="manual.idxbutton">button</entry>
 
+<!-- Messages -->
+
+<entry key="process.running">Running {0}</entry>
+<entry key="process.running_in_dir">Running {0} in directory {1}</entry>
+
+<entry key="message.extracting">Extracting {0}...</entry>
+
+<entry key="message.helpset.search">Searching for helpset file {0} (subdir={1}, prefix={2}, hs locale={3})</entry>
+<entry key="message.helpset.search_try_path">Trying path {0}</entry>
+<entry key="message.helpset.search_try_path_for_locale">Trying path {0} (locale: {1})</entry>
+<entry key="message.helpset.search_not_found">No helpset file found</entry>
+<entry key="message.helpset.search_found">Found helpset file {0}</entry>
+<entry key="message.helpset.filtered_locales">{0} helpset {0,choice,0#locales|1#locale|1&lt;locales} established</entry>
+
 <!--  Errors -->
 <entry key="error.xml.more_than_one_tag">More than 1 &lt;{0}&gt; found</entry>
 <entry key="error.xml.missing_attr_in_tag">Missing ''{0}'' attribute in &lt;{1}&gt;</entry>
@@ -602,6 +616,20 @@ code should appear in the PDF</entry>
 <entry key="error.xml.unexpected_chars">Unexpected content ''{0}'' found</entry>
 <entry key="error.xml.unknown_context">No context found for ID {0} referenced by entry ''{1}''</entry>
 
+<entry key="error.invalid_mime_type">Invalid mime type: {0}</entry>
+<entry key="error.invalid_uri_for_ref">Invalid URI for reference: {0}</entry>
+
+<entry key="error.zip_io_file">{0}: {1}</entry>
+<entry key="error.zip_io_file_entry">{0}!{1}: {2}</entry>
+
+<entry key="error.zip_missing_entry">Missing entry {0}</entry>
+
+<entry key="error.content_type_not_textual">{0}: Content type {1} is not textual</entry>
+<entry key="error.content_type_not_image">{0}: Content type {1} is not an image</entry>
+<entry key="error.content_type_not_stylesheet">{0}: Content type {1} is not a style sheet</entry>
+
+<entry key="error.image_not_found">Image ''{0}'' not found</entry>
+
 <entry key="error.resource_not_found">Resource file ''{0}'' not found</entry>
 <entry key="error.resource_not_found_for_node">Resource file ''{0}'' not found for node ''{1}''</entry>
 <entry key="error.no_helpset">Helpset has not been initialised</entry>
@@ -612,13 +640,42 @@ Unable to open URL {0}</entry>
 <entry key="error.missing_search_term">Missing search term</entry>
 <entry key="error.image_load_failed">Failed to load image ''{0}''</entry>
 
+<entry key="error.index_item_file_not_exists">Index item filename ''{0}'' for key ''{1}'' doesn''t exist (check all sections have a label)</entry>
+<entry key="error.timedout">Process timed-out (process time limit: {0}ms)</entry>
+
 <!-- CLI syntax parsing -->
 
 <entry key="clisyntax.usage">Usage: {0}</entry>
+
+<entry key="clisyntax.other.options">Other Options</entry>
+
 <entry key="clisyntax.help">{0}	Display help and exit.</entry>
 <entry key="clisyntax.help2">{0} (or {1})	Display help and exit.</entry>
 <entry key="clisyntax.version">{0}	Display version information and exit.</entry>
 <entry key="clisyntax.version2">{0} (or {1})	Display version information and exit.</entry>
+
+<entry key="clisyntax.verbose">{0}      Switch on verbose mode.</entry>
+<entry key="clisyntax.debug">{0} [&lt;level&gt;]        Switch on debug mode.</entry>
+<entry key="clisyntax.nodebug">{0}      Switch off debug mode. (Default.)</entry>
+<entry key="clisyntax.debug-mode">{0} &lt;value&gt;     Debug verbosity. The value may be an integer or a comma-separated list of keywords:
+        all     Extremely verbose!
+        io      I/O operations
+        popped  Object popped from a stack
+        decl    Declarations
+        sty-data        Package data
+        expansion       Whenever an object is expanded
+        expansion-list  Whenever a list is expanded
+        expansion-once  Whenever an object is expanded once
+        expansion-once-list     Whenever a list is expanded once
+        process Whenever an object is processed
+        process-stack   Whenever a stack is processed
+        cs      Control sequence
+        process-generic-cs      Whenever a GenericCommand is processed
+        catcode Whenever a category code changes
+        read    Whenever a codepoint is read from a file
+</entry>
+<entry key="clisyntax.log">{0} &lt;file&gt;     Set log file.</entry>
+<entry key="clisyntax.nolog">{0}        Don''t log (default).</entry>
 
 <entry key="clisyntax.bugreport">Report bugs to: {0}</entry>
 <entry key="clisyntax.homepage">{0} home page: {1}</entry>
@@ -631,6 +688,5 @@ Unable to open URL {0}</entry>
 Use {1} for help.</entry>
 <entry key="error.clisyntax.toomany.arg">Too many arguments.
 Use {0} for help.</entry>
-
 
 </properties>

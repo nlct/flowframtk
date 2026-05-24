@@ -1,3 +1,4 @@
+resourcesdir=../../lib/resources
 targetdir=../../lib/resources/helpsets
 dictdir=../../lib/resources/dictionaries
 baseclass=../../java/jdrresources/JDRResources.java
@@ -6,8 +7,12 @@ arara=arara --verbose
 #texjavahelpmk=texjavahelpmk --debug-mode all --log texjavahelpmk.log
 texjavahelpmk=texjavahelpmk
 tjhxml2bib=tjhxml2bib --copy-overwrite-xml
+tjhziphelpset=tjhziphelpset
 
-all	: en-GB en flowframtk.1 jdrutils-en.pdf
+all	: en-GB en \
+	  flowframtk.1 \
+	  jdrutils-en.pdf \
+	  $(resourcesdir)/jdrresources-helpsets.zip
 
 flowframtk.1	: flowframtk.pod
 		pod2man -c flowframtk flowframtk.pod flowframtk.1
@@ -131,6 +136,15 @@ en-GB	: $(targetdir)/flowframtk/en-GB/index.xml \
 
 en	: $(targetdir)/flowframtk/en/index.xml \
 	$(targetdir)/jdrview/en/index.xml
+
+$(resourcesdir)/jdrresources-helpsets.zip	: $(targetdir)/flowframtk/en/index.xml \
+	$(targetdir)/jdrview/en/index.xml \
+	$(targetdir)/flowframtk/en-GB/index.xml \
+	$(targetdir)/jdrview/en-GB/index.xml
+	$(tjhziphelpset) --lib $(resourcesdir) \
+	--helpset helpsets \
+	--locales 'en,en-GB' \
+	--output $(resourcesdir)/jdrresources-helpsets.zip
 
 $(targetdir)/flowframtk/en-GB/index.xml	: $(targetdir)/flowframtk/en-GB \
 	  flowframtk-en-GB.pdf  

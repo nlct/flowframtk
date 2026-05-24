@@ -129,7 +129,7 @@ public class LaTeXCodeBlockEditor extends JPanel
       {
          try
          {
-            toolBar.add(resources.createHelpDialogButton(application, "sec:preamble"));
+            toolBar.add(resources.createHelpDialogButton(application, "sec:preamblepanels"));
          }
          catch (HelpSetNotInitialisedException e)
          {

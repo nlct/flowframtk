@@ -103,6 +103,8 @@ public class JDRResources
        appname, "/resources", "/resources/dictionaries",
        dictLocale, helpSetLocale, dictPrefixes);
 
+      helpLib.setHelpSetZipName("jdrresources-helpsets.zip");
+
       helpLib.setDefaultButtonOmitTextIfIcon(true);
    }
 
@@ -1538,6 +1540,27 @@ public class JDRResources
 
    public String[] getAvailableHelpLanguages(String dirBase)
    {
+      Helpset hs = helpLib.getHelpset();
+
+      if (hs != null)
+      {
+         Vector<Locale> list = hs.getSupportedLocales();
+
+         if (list != null)
+         {
+            String[] array = new String[list.size()];
+
+            for (int i = 0; i < array.length; i++)
+            {
+               array[i] = list.get(i).toLanguageTag();
+            }
+
+            Arrays.parallelSort(array);
+
+            return array;
+         }
+      }
+
       URL url = getClass().getResource("/resources/helpsets/"+dirBase);
 
       if (url == null)
