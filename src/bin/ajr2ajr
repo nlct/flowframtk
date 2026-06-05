@@ -1,4 +1,6 @@
 #!/bin/sh
 
+# This now just uses jdrconverter and may be removed in future
+
 bindir=`dirname $0`
 java -jar "$bindir/../lib/jdrconverter.jar" --from AJR --to AJR "$@"
