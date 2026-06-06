@@ -32,6 +32,13 @@ public class StartupProgress
    public StartupProgress(JDRResources resources)
    {
       this.resources = resources;
+      splash = SplashScreen.getSplashScreen();
+
+      if (splash == null)
+      {
+         resources.debug("No splash screen");
+      }
+
       renderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                                RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -52,7 +59,7 @@ public class StartupProgress
    {
       Graphics2D g = getGraphics();
 
-      if (g != null && splash.isVisible())
+      if (g != null && isVisible())
       {
          g.setRenderingHints(renderHints);
 
@@ -69,7 +76,7 @@ public class StartupProgress
    {
       Graphics2D g = getGraphics();
 
-      if (g != null && splash.isVisible())
+      if (g != null && isVisible())
       {
          g.setRenderingHints(renderHints);
 
@@ -85,7 +92,7 @@ public class StartupProgress
    {
       Graphics2D g = getGraphics();
 
-      if (g != null && splash.isVisible())
+      if (g != null && isVisible())
       {
          g.setRenderingHints(renderHints);
 
@@ -173,7 +180,7 @@ public class StartupProgress
 
    public void drawInfo(Graphics2D g) throws IllegalStateException
    {
-      if (info == null) return;
+      if (info == null || !isVisible()) return;
 
       Dimension size = splash.getSize();
 
@@ -199,6 +206,8 @@ public class StartupProgress
 
    public void drawProgress(Graphics2D g) throws IllegalStateException
    {
+      if (!isVisible()) return;
+
       Dimension size = splash.getSize();
 
       int y = size.height-margin-progressHeight;
@@ -254,7 +263,7 @@ public class StartupProgress
    {
       Graphics2D g = getGraphics();
 
-      if (g != null && splash.isVisible())
+      if (g != null && isVisible())
       {
          g.setRenderingHints(renderHints);
 
@@ -278,10 +287,10 @@ public class StartupProgress
 
    public boolean isVisible()
    {
-      return splash.isVisible();
+      return splash != null && splash.isVisible();
    }
 
-   private final SplashScreen splash = SplashScreen.getSplashScreen();
+   private SplashScreen splash;
 
    private int progress = 0;
 

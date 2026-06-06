@@ -73,7 +73,17 @@ public class JDRViewInvoker
     */
    public void appVersion()
    {
-      System.out.println(resources.getAppInfo(false));
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
+
+      System.out.println(helpLib.getAboutInfo(false,
+       JDRResources.APP_VERSION, JDRResources.APP_DATE,
+       String.format(
+        "Copyright (C) %s-%s Nicola L. C. Talbot (%s)",
+        JDRResources.START_COPYRIGHT_YEAR, JDRResources.COPYRIGHT_YEAR,
+        helpLib.getInfoUrl(false, "www.dickimaw-books.com")),
+        TeXJavaHelpLib.LICENSE_GPL3,
+        true, null
+      ));
    }
 
    /**
@@ -124,6 +134,7 @@ public class JDRViewInvoker
    {
       resources = new JDRResources(APP_NAME);
       resources.initialise();
+      resources.loadDictionary("/com/dickimawbooks/jdrview/dictionaries/", "jdrview");
 
       messageSystem = JDRGuiMessage.create(resources);
 

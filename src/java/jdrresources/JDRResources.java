@@ -71,20 +71,14 @@ public class JDRResources
    public void initialise()
    throws IOException,URISyntaxException,InvalidFormatException
    {
-      initialise("jdrcommon", appname.toLowerCase().replaceAll(" ", ""));
-   }
-
-   public void initialise(String... dictPrefixes)
-   throws IOException,URISyntaxException,InvalidFormatException
-   {
       this.fatalErrorExitCode = EXIT_INTERNAL_ERROR;
       initUserConfigDir();
-      initLocalisation(dictPrefixes);
+      initLocalisation();
       initStackTracePane();
       createIconNameMap();
    }
 
-   protected void initLocalisation(String... dictPrefixes)
+   protected void initLocalisation()
      throws IOException, InvalidFormatException
    {
       loadLanguageSettings();
@@ -99,13 +93,23 @@ public class JDRResources
          helpSetLocale = new HelpSetLocale(Locale.getDefault());
       }
 
-      helpLib = new TeXJavaHelpLib(this,
-       appname, "/resources", "/resources/dictionaries",
-       dictLocale, helpSetLocale, dictPrefixes);
+      helpLib = new TeXJavaHelpLib(this, dictLocale, helpSetLocale);
 
-      helpLib.setHelpSetZipName("jdrresources-helpsets.zip");
+      loadDictionary(
+        "/com/dickimawbooks/texparserlib/dictionaries/", "texjavaparserlib");
+
+      loadDictionary(
+        "/com/dickimawbooks/jdrresources/dictionaries/", "jdrcommon");
+
+      helpLib.setHelpSetZipName(
+       getApplicationName().toLowerCase()+"-helpset.zip");
 
       helpLib.setDefaultButtonOmitTextIfIcon(true);
+   }
+
+   public void loadDictionary(String path, String prefix) throws IOException
+   {
+      helpLib.getMessageSystem().loadDictionary(path, prefix);
    }
 
    public TeXJavaHelpLib getHelpLib()
@@ -172,14 +176,24 @@ public class JDRResources
       return true;
    }
 
-   public static String getIconDir()
+   public void setIconDir(String resourcePath)
    {
-      return "icons";
+      iconDir = resourcePath;
+   }
+
+   public String getIconDir()
+   {
+      return iconDir;
    }
 
    public ImageIcon getLargeAppIcon()
    {
-      String filename = getIconDir()+"/flowframtklogolarge.png";
+      return getLargeAppIcon(getIconDir(), getApplicationName().toLowerCase()+"-80.png");
+   }
+
+   public ImageIcon getLargeAppIcon(String path, String name)
+   {
+      String filename = path + "/" + name;
 
       java.net.URL imgURL = getClass().getResource(filename);
 
@@ -201,9 +215,58 @@ public class JDRResources
       return null;
    }
 
+   public java.util.List<Image> getAppIcons()
+   {
+      java.util.List<Image> list = new Vector<Image>();
+
+      String base = getApplicationName().toLowerCase();
+
+      ImageIcon ic = getAppIcon(getIconDir(), base+"-16.png");
+
+      if (ic != null)
+      {
+         list.add(ic.getImage());
+      }
+
+      ic = getAppIcon(getIconDir(), base+"-32.png");
+
+      if (ic != null)
+      {
+         list.add(ic.getImage());
+      }
+
+      ic = getAppIcon(getIconDir(), base+"-48.png");
+
+      if (ic != null)
+      {
+         list.add(ic.getImage());
+      }
+
+      ic = getAppIcon(getIconDir(), base+"-64.png");
+
+      if (ic != null)
+      {
+         list.add(ic.getImage());
+      }
+
+      ic = getAppIcon(getIconDir(), base+"-80.png");
+
+      if (ic != null)
+      {
+         list.add(ic.getImage());
+      }
+
+      return list;
+   }
+
    public ImageIcon getSmallAppIcon()
    {
-      String filename = getIconDir() + "/flowframtklogosmall.png";
+      return getAppIcon(getIconDir(), getApplicationName().toLowerCase()+"-16.png");
+   }
+
+   public ImageIcon getAppIcon(String path, String name)
+   {
+      String filename = path + "/" + name;
 
       java.net.URL imgURL = getClass().getResource(filename);
 
@@ -389,7 +452,7 @@ public class JDRResources
     * @param name the name of the icon
     * @return the icon as an Image
     */
-   public static Image getImage(String name)
+   public Image getImage(String name)
    {
       String filename = getIconDir()+"/"+name;
 
@@ -1495,6 +1558,7 @@ public class JDRResources
       return debugMode;
    }
 
+   @Deprecated
    public String[] getAvailableDictLanguages()
    {
       URL url = getClass().getResource("/resources/dictionaries/");
@@ -1538,13 +1602,42 @@ public class JDRResources
       return lang.toArray(new String[lang.size()]);
    }
 
+   public Vector<HelpSetLocale> getAvailableDictionaryLocales(String pathStr)
+   {
+      Vector<HelpSetLocale> list = null;
+
+      try
+      {
+         list = helpLib.getMessageSystem().getDictionaries(pathStr);
+      }
+      catch (Exception e)
+      {
+         debugMessage(e);
+      }
+
+      if (list == null)
+      {
+         list = new Vector<HelpSetLocale>();
+
+         list.add(new HelpSetLocale("en", Locale.ENGLISH));
+      }
+
+      return list;
+   }
+
+   public Vector<HelpSetLocale> getAvailableHelpLocales()
+   {
+      return helpLib.getHelpset().getSupportedLocales();
+   }
+
+   @Deprecated
    public String[] getAvailableHelpLanguages(String dirBase)
    {
       Helpset hs = helpLib.getHelpset();
 
       if (hs != null)
       {
-         Vector<Locale> list = hs.getSupportedLocales();
+         Vector<HelpSetLocale> list = hs.getSupportedLocales();
 
          if (list != null)
          {
@@ -1552,7 +1645,7 @@ public class JDRResources
 
             for (int i = 0; i < array.length; i++)
             {
-               array[i] = list.get(i).toLanguageTag();
+               array[i] = list.get(i).getTag();
             }
 
             Arrays.parallelSort(array);
@@ -1607,7 +1700,7 @@ public class JDRResources
    public void initialiseHelp(JFrame parent) throws IOException,SAXException
    {
       initialiseHelp(parent,
-        "helpsets/"+appname.toLowerCase().replaceAll(" ", ""));
+        appname.toLowerCase().replaceAll(" ", "")+"-helpset");
    }
 
    public void initialiseHelp(JFrame parent, String helpSetBase)
@@ -1616,11 +1709,11 @@ public class JDRResources
       helpLib.initHelpSet(helpSetBase, "navigation");
       HelpFrame helpFrame = helpLib.getHelpFrame();
 
-      Image img = parent.getIconImage();
+      java.util.List<Image> imgList = parent.getIconImages();
 
-      if (img != null)
+      if (imgList != null)
       {
-         helpFrame.setIconImage(img);
+         helpFrame.setIconImages(imgList);
       }
 
       helpFrame.setLocationRelativeTo(parent);
@@ -1813,17 +1906,8 @@ public class JDRResources
       {
          try
          {
-            URL url = getClass().getResource(LICENSE_PATH);
-
-            if (url == null)
-            {
-               throw new FileNotFoundException(helpLib.getMessage(
-                 "error.resource_not_found", LICENSE_PATH));
-            }
-
-            licenseDialog = new MessageDialog(parent,
-              helpLib.getMessage("license.title"), true,
-              helpLib, url);
+            licenseDialog = helpLib.createLicenseDialog(parent,
+               helpLib.getMessage("license.title"));
 
             if (parent != null)
             {
@@ -1844,7 +1928,7 @@ public class JDRResources
            {
               if (licenseDialog == null)
               {
-                 error("Failed to open resource " + LICENSE_PATH);
+                 error("Failed to create dialog");
               }
               else
               {
@@ -1869,13 +1953,13 @@ public class JDRResources
     * @param menu the menu to which the item should be added (may be
     * null if not required)
     */ 
-   public JMenuItem createAboutItem(JFrame parent, JMenu menu)
+   public JMenuItem createAboutItem(JFrame parent, JMenu menu, String info)
    {
       if (aboutDialog == null)
       {
          aboutDialog = new MessageDialog(parent,
           helpLib.getMessage("about.title", getApplicationName()),
-          true, helpLib, getAppInfo(true));
+          true, helpLib, info);
       }
 
       JMenuItem item = helpLib.createJMenuItem("menu.help", "about", 
@@ -1895,24 +1979,6 @@ public class JDRResources
       }
 
       return item;
-   }
-
-   /**
-    * Gets formatted information about the application for the about
-    * dialog or to print to STDOUT.
-    * @param html true if HTML output required otherwise returns
-    * plain text
-    */
-   public String getAppInfo(boolean html)
-   {
-      return helpLib.getAboutInfo(html, APP_VERSION, APP_DATE,
-       String.format(
-        "Copyright (C) %s-%s Nicola L. C. Talbot (%s)",
-        START_COPYRIGHT_YEAR, COPYRIGHT_YEAR,
-        helpLib.getInfoUrl(html, "www.dickimaw-books.com")),
-        TeXJavaHelpLib.LICENSE_GPL3,
-        true, null
-      );
    }
 
    /**
@@ -3421,8 +3487,6 @@ public class JDRResources
    {
    }
 
-   public static final String LICENSE_PATH = "/gpl-3.0-standalone.html";
-
    private String appname="jdrresources";
    private HelpSetLocale dictLocale, helpSetLocale;
    private MessageDialog licenseDialog, aboutDialog;
@@ -3432,6 +3496,7 @@ public class JDRResources
    public HashMap<String,KeyStroke> keyStrokes = null;
 
    public Properties iconnamemap;
+   public String iconDir = "icons";
 
    public boolean debugMode = false;
 

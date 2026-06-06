@@ -1,11 +1,12 @@
 % arara: lualatex
-% arara: bib2gls: { group: on, options: [ --no-warn-unknown-entry-types ] }
+% arara: bib2gls
 % arara: lualatex
+% arara: bib2gls
 % arara: lualatex
 \documentclass[toc=listof]{scrreport}
 \newcommand{\langbibsrcs}{jdrview-props-en-GB}
 \usepackage[english]{tracklang}
 \usepackage{graphicx}
-\graphicspath{{../../en-sharedimages/}{../../sharedimages/}{images-en-GB/}}
+\graphicspath{{../en-sharedimages/}{../sharedimages/}{images-en-GB/}}
 \input{jdrview-main}
 

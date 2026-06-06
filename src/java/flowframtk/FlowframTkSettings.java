@@ -35,6 +35,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JSplitPane;
 
 import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
+import com.dickimawbooks.texjavahelplib.HelpSetLocale;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.io.*;
@@ -1578,9 +1579,19 @@ public class FlowframTkSettings
       return resources.getDictionaryTag();
    }
 
+   public HelpSetLocale getDictLocale()
+   {
+      return resources.getDictionaryLocale();
+   }
+
    public void setDictId(String id)
    {
       resources.setDictionary(id);
+   }
+
+   public void setDictLocale(HelpSetLocale hsl)
+   {
+      resources.setDictionary(hsl);
    }
 
    public String getHelpId()
@@ -1588,9 +1599,19 @@ public class FlowframTkSettings
       return resources.getHelpSetTag();
    }
 
+   public HelpSetLocale getHelpSetLocale()
+   {
+      return resources.getHelpSetLocale();
+   }
+
    public void setHelpId(String id)
    {
       resources.setHelpSet(id);
+   }
+
+   public void setHelpLocale(HelpSetLocale hsl)
+   {
+      resources.setHelpSet(hsl);
    }
 
    public int getCanvasSplit()

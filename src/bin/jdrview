@@ -1,4 +1,4 @@
 #!/bin/sh
 
 bindir=`dirname $0`
-java -splash:"$bindir/../lib/icons/flowframtklogolarge.png" $JDR_JVMOPTS -jar "$bindir/../lib/jdrview.jar" "$@"
+java -splash:"$bindir/../lib/icons/flowframtk-80.png" $JDR_JVMOPTS -jar "$bindir/../lib/jdrview.jar" "$@"

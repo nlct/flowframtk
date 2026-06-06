@@ -46,6 +46,7 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 import com.dickimawbooks.texjavahelplib.JLabelGroup;
+import com.dickimawbooks.texjavahelplib.HelpSetLocale;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -828,18 +829,21 @@ class LanguagePanel extends JPanel
 
       add(dictLabel, gbc);
 
-      dictLangBox = new JComboBox<String>(getResources().getAvailableDictLanguages());
+      dictLangBox = new JComboBox<HelpSetLocale>(
+        getResources().getAvailableDictionaryLocales(
+          "/com/dickimawbooks/flowframtk/dictionaries"));
+
       dictLabel.setLabelFor(dictLangBox);
       dictLangBox.setToolTipText(dictLabel.getToolTipText());
 
       gbc.gridx++;
       add(dictLangBox, gbc);
 
-      String id = getResources().getDictionaryTag();
+      HelpSetLocale hsl = getResources().getDictionaryLocale();
 
-      if (id != null)
+      if (hsl != null)
       {
-         dictLangBox.setSelectedItem(id);
+         dictLangBox.setSelectedItem(hsl);
       }
 
       JLabel helpLabel = getResources().createAppLabel("lang.help");
@@ -848,10 +852,7 @@ class LanguagePanel extends JPanel
       gbc.gridy++;
       add(helpLabel, gbc);
 
-      String[] helpLangs = getResources().getAvailableHelpLanguages(
-           application.getInvoker().getName().toLowerCase());
-
-      helpLangBox = new JComboBox<String>(helpLangs);
+      helpLangBox = new JComboBox<HelpSetLocale>(getResources().getAvailableHelpLocales());
       helpLabel.setLabelFor(helpLangBox);
 
       helpLangBox.setToolTipText(helpLabel.getToolTipText());
@@ -859,11 +860,11 @@ class LanguagePanel extends JPanel
       gbc.gridx++;
       add(helpLangBox, gbc);
 
-      id = getResources().getHelpSetTag();
+      hsl = getResources().getHelpSetLocale();
 
-      if (id != null)
+      if (hsl != null)
       {
-         helpLangBox.setSelectedItem(id);
+         helpLangBox.setSelectedItem(hsl);
       }
 
       gbc.gridwidth=2;
@@ -931,8 +932,8 @@ class LanguagePanel extends JPanel
 
    public void initialise()
    {
-      dictLangBox.setSelectedItem(application.getDictId());
-      helpLangBox.setSelectedItem(application.getHelpId());
+      dictLangBox.setSelectedItem(application.getDictLocale());
+      helpLangBox.setSelectedItem(application.getHelpSetLocale());
 
       if (changed)
       {
@@ -1030,8 +1031,8 @@ class LanguagePanel extends JPanel
 
       application.setUnicodeRanges(ranges);
 
-      application.setDictId((String)dictLangBox.getSelectedItem());
-      application.setHelpId((String)helpLangBox.getSelectedItem());
+      application.setDictLocale((HelpSetLocale)dictLangBox.getSelectedItem());
+      application.setHelpLocale((HelpSetLocale)helpLangBox.getSelectedItem());
 
       changed = false;
    }
@@ -1041,7 +1042,7 @@ class LanguagePanel extends JPanel
       return application.getResources();
    }
 
-   private JComboBox<String> dictLangBox, helpLangBox;
+   private JComboBox<HelpSetLocale> dictLangBox, helpLangBox;
 
    private JTable unicodeTable;
 

@@ -11,8 +11,10 @@
 </comment>
 
 <!-- 
-     Messages relating to TeXJavaHelpLib are
-     in texjavahelplib-en.xml
+     Messages for jdr applications.
+     These have been split from flowframtk-zh.xml
+
+     New entries need translating.
  -->
 
 <entry key="xml.lang">zh</entry>
@@ -96,7 +98,8 @@
 
 <!-- Help Menu -->
 
-<entry key="menu.help.manual.iconimage">help</entry>
+<entry key="menu.help">帮助(H)</entry>
+<entry key="menu.help.mnemonic">H</entry>
 
 <entry key="menu.help.license">许可协议(L)...</entry>
 <entry key="menu.help.license.mnemonic">L</entry>
@@ -104,6 +107,48 @@
 <entry key="menu.help.about">关于(A)...</entry>
 <entry key="menu.help.about.mnemonic">A</entry>
 
+<entry key="menu.help.manual">手册文档(M)</entry>
+<entry key="menu.help.manual.mnemonic">M</entry>
+<entry key="menu.help.manual.keystroke">F1</entry>
+<entry key="menu.help.manual.tooltip">Open manual</entry>
+<entry key="menu.help.manual.iconimage">help</entry>
+
+<entry key="button.help">帮助</entry>
+<entry key="button.help.mnemonic">H</entry>
+<entry key="button.help.tooltip">Open relevant section of the manual</entry>
+<entry key="button.help.keystroke">shift F1</entry>
+<entry key="button.help.defaultkeys">format=glsignore</entry>
+
+<!-- Common Buttons -->
+
+<entry key="button.okay">确定(O)</entry>
+<entry key="button.okay.mnemonic">O</entry>
+<entry key="button.okay.keystroke">shift ENTER</entry>
+<entry key="button.okay.defaultkeys">format=glsignore</entry>
+<entry key="button.okay.tooltip">Accept changes and close window</entry>
+
+<entry key="button.cancel">取消(C)</entry>
+<entry key="button.cancel.mnemonic">C</entry>
+<entry key="button.cancel.keystroke">ESCAPE</entry>
+<entry key="button.cancel.defaultkeys">format=glsignore</entry>
+<entry key="button.cancel.tooltip">Discard changes and close window</entry>
+
+<entry key="button.apply">Apply</entry>
+<entry key="button.apply.mnemonic">A</entry>
+<entry key="button.apply.defaultkeys">format=glsignore</entry>
+<entry key="button.apply.tooltip">Apply changes</entry>
+
+<entry key="button.close">关闭(C)</entry>
+<entry key="button.close.mnemonic">C</entry>
+<entry key="button.close.keystroke">ENTER</entry>
+<entry key="button.close.defaultkeys">format=glsignore</entry>
+<entry key="button.close.tooltip">Close window</entry>
+
+<entry key="button.copy">复制</entry>
+<entry key="button.copy.mnemonic">C</entry>
+<entry key="button.copy.keystroke">control C</entry>
+<entry key="button.copy.defaultkeys">format=glsignore</entry>
+<entry key="button.copy.tooltip">Copy selected</entry>
 
 
 <!-- Open Dialog -->

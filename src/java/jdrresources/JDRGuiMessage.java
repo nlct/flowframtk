@@ -70,7 +70,7 @@ public class JDRGuiMessage extends JDRMessagePublisher
 
       TeXJavaHelpLib helpLib = resources.getHelpLib();
 
-      frame.setIconImage(resources.getSmallAppIcon().getImage());
+      frame.setIconImages(resources.getAppIcons());
 
       document = new DefaultStyledDocument();
 

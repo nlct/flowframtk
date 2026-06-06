@@ -109,7 +109,7 @@ public class JDRView extends JFrame
       setSize(width,height);
       setLocation((screenWidth-width)/2, (screenHeight-height)/2);
 
-      setIconImage(getResources().getSmallAppIcon().getImage());
+      setIconImages(getResources().getAppIcons());
 
       JDRResources resources = getResources();
       TeXJavaHelpLib helpLib = resources.getHelpLib();
@@ -301,7 +301,16 @@ public class JDRView extends JFrame
 
       // About dialog
 
-      getResources().createAboutItem(this, helpM);
+      getResources().createAboutItem(this, helpM,
+        helpLib.getAboutInfo(true,
+          JDRResources.APP_VERSION, JDRResources.APP_DATE,
+          String.format(
+          "Copyright (C) %s-%s Nicola L. C. Talbot (%s)",
+          JDRResources.START_COPYRIGHT_YEAR, JDRResources.COPYRIGHT_YEAR,
+          helpLib.getInfoUrl(true, "www.dickimaw-books.com")),
+          TeXJavaHelpLib.LICENSE_GPL3,
+          true, null
+      ));
 
       // set up print request attribute set
       printRequestAttributeSet = new HashPrintRequestAttributeSet();

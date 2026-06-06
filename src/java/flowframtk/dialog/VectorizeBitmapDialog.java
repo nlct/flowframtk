@@ -68,7 +68,7 @@ public class VectorizeBitmapDialog extends JFrame
    {
       JDRResources resources = getResources();
 
-      setIconImage(resources.getSmallAppIcon().getImage());
+      setIconImages(application.getIconImages());
 
       setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 

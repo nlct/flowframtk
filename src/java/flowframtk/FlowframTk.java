@@ -51,7 +51,9 @@ import javax.imageio.*;
 
 import java.beans.*;
 
+import com.dickimawbooks.texjavahelplib.TeXJavaHelpLib;
 import com.dickimawbooks.texjavahelplib.TJHAbstractAction;
+import com.dickimawbooks.texjavahelplib.HelpSetLocale;
 
 import com.dickimawbooks.jdr.*;
 import com.dickimawbooks.jdr.marker.*;
@@ -114,7 +116,7 @@ public class FlowframTk extends JFrame
 
       JDRResources resources = invoker.getResources();
 
-      setIconImage(resources.getSmallAppIcon().getImage());
+      setIconImages(resources.getAppIcons());
 
       // set up the desktop
 
@@ -3810,7 +3812,18 @@ public class FlowframTk extends JFrame
 
       // About dialog
 
-      incStartupProgress(helpM, resources.createAboutItem(this, helpM));
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
+
+      incStartupProgress(helpM, resources.createAboutItem(this, helpM,
+        helpLib.getAboutInfo(true,
+          JDRResources.APP_VERSION, JDRResources.APP_DATE,
+          String.format(
+          "Copyright (C) %s-%s Nicola L. C. Talbot (%s)",
+          JDRResources.START_COPYRIGHT_YEAR, JDRResources.COPYRIGHT_YEAR,
+          helpLib.getInfoUrl(true, "www.dickimaw-books.com")),
+          TeXJavaHelpLib.LICENSE_GPL3,
+          true, null
+      )));
 
       FlowframTkAction objectInfo = new FlowframTkAction(this,
         "objectinfo", 
@@ -4828,9 +4841,19 @@ public class FlowframTk extends JFrame
       return getSettings().getDictId();
    }
 
+   public HelpSetLocale getDictLocale()
+   {
+      return getSettings().getDictLocale();
+   }
+
    public String getHelpId()
    {
       return getSettings().getHelpId();
+   }
+
+   public HelpSetLocale getHelpSetLocale()
+   {
+      return getSettings().getHelpSetLocale();
    }
 
    public void setDictId(String value)
@@ -4838,9 +4861,19 @@ public class FlowframTk extends JFrame
       getSettings().setDictId(value);
    }
 
+   public void setDictLocale(HelpSetLocale hsl)
+   {
+      getSettings().setDictLocale(hsl);
+   }
+
    public void setHelpId(String value)
    {
       getSettings().setHelpId(value);
+   }
+
+   public void setHelpLocale(HelpSetLocale hsl)
+   {
+      getSettings().setHelpLocale(hsl);
    }
 
    public CharacterSelector getCharacterSelector()

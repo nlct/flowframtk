@@ -68,7 +68,8 @@ public class ConfigTeXSettingsDialog extends JDialog
       super(application,
          application.getResources().getMessage("texconfig.title"), true);
       application_ = application;
-      setIconImage(getResources().getSmallAppIcon().getImage());
+
+      setIconImages(application.getIconImages());
 
       tabbedPane = new JTabbedPane();
       getContentPane().add(tabbedPane, "Center");
@@ -1265,7 +1266,7 @@ class TeXMapDialog extends JDialog
       super(parent, resources.getMessage("textconfig.mapping.title"), true);
 
       this.resources = resources;
-      setIconImage(resources.getSmallAppIcon().getImage());
+      setIconImages(parent.getIconImages());
 
       JPanel mainPanel = new JPanel();
       getContentPane().add(mainPanel, "Center");

@@ -4,6 +4,18 @@ endif
 LIBDIR=$(JDRSRC)/lib
 CLASSTREE=com/dickimawbooks
 
+texjavaparserlib=$(shell kpsewhich --format=texmfscripts texjavaparserlib.jar)
+
+ifeq ($(texjavaparserlib),)
+  texjavaparserlib = $(HOME)/programming/java/texparser/src/lib/texjavaparserlib.jar
+endif
+
+texjavahelplib=$(shell kpsewhich --format=texmfscripts texjavahelplib.jar)
+
+ifeq ($(texjavahelplib),)
+  texjavahelplib = $(HOME)/programming/java/texjavahelp/src/lib/texjavahelplib.jar
+endif
+
 # Java 8 extended support until December 2030
 target_version := --release 8 -Xlint:-options
 
@@ -18,9 +30,6 @@ jdrresources	: $(LIBDIR)/jdrresources.jar
 flowframtk	: $(LIBDIR)/flowframtk.jar
 
 jdrview	: $(LIBDIR)/jdrview.jar
-
-../lib/resources	:
-	cd ../lib ; ln -f -s ../resources
 
 ../lib/jdr.jar	: $(LIBDIR)/jdr.jar
 
@@ -47,49 +56,69 @@ $(LIBDIR)/jdr.jar	: classes/$(CLASSTREE)/jdr/JDRObject.class
 
 $(LIBDIR)/jdrresources.jar	: jdr classes/$(CLASSTREE)/jdrresources/JDRResources.class \
 		jdrresources/icons/*.png jdrresources/icons/*/*.png \
-		classes/$(CLASSTREE)/jdrresources/icons \
-		../lib/resources
+		classes/$(CLASSTREE)/jdrresources/dictionaries/ \
+		classes/$(CLASSTREE)/jdrresources/icons 
+		cp ../dictionaries/jdrcommon-*.xml classes/$(CLASSTREE)/jdrresources/dictionaries/
 		cd classes ; \
 		jar cf $(LIBDIR)/jdrresources.jar \
 		$(CLASSTREE)/jdrresources/*.class \
 		$(CLASSTREE)/jdrresources/filter/*.class \
 		$(CLASSTREE)/jdrresources/numfield/*.class \
+		$(CLASSTREE)/jdrresources/dictionaries \
+		$(CLASSTREE)/jdrresources/dictionaries/*.xml \
 		$(CLASSTREE)/jdrresources/icons/*.png \
 		$(CLASSTREE)/jdrresources/icons/*/*.png
 
+classes/$(CLASSTREE)/jdrresources/dictionaries/	:
+		mkdir -p classes/$(CLASSTREE)/jdrresources/dictionaries/
+
 $(LIBDIR)/flowframtk.jar	: jdr jdrresources classes/$(CLASSTREE)/flowframtk/FlowframTk.class \
+		  classes/$(CLASSTREE)/flowframtk/dictionaries/ \
 		  flowframtk/Manifest.txt \
-		  ../images/splashimage.png \
-		../lib/resources
+		  ../images/splashimage.png 
 		cp -u ../images/splashimage.png classes/
+		cp ../dictionaries/flowframtk-*.xml classes/$(CLASSTREE)/flowframtk/dictionaries/
 		cd classes ; \
 		jar cmf ../flowframtk/Manifest.txt \
 	          $(LIBDIR)/flowframtk.jar \
 		  splashimage.png \
 		  $(CLASSTREE)/flowframtk/*.class \
-		  $(CLASSTREE)/flowframtk/dialog/*.class
+		  $(CLASSTREE)/flowframtk/dialog/*.class \
+		  $(CLASSTREE)/flowframtk/dictionaries \
+		  $(CLASSTREE)/flowframtk/dictionaries/*.xml
 
 $(LIBDIR)/jdrview.jar	: jdr jdrresources classes/$(CLASSTREE)/jdrview/JDRView.class \
-	jdrview/Manifest.txt \
-	../lib/resources
+	classes/$(CLASSTREE)/jdrview/dictionaries/ \
+	jdrview/Manifest.txt 
+	cp ../dictionaries/jdrview-*.xml classes/$(CLASSTREE)/jdrview/dictionaries/
 	cd classes ; \
 	jar cmf ../jdrview/Manifest.txt \
 	   $(LIBDIR)/jdrview.jar \
-	   $(CLASSTREE)/jdrview/*.class
+	   $(CLASSTREE)/jdrview/*.class \
+	   $(CLASSTREE)/jdrview/dictionaries \
+	   $(CLASSTREE)/jdrview/dictionaries/*.xml
 
 $(LIBDIR)/jdrconverter.jar	: classes/$(CLASSTREE)/jdrconverter/JDRConverter.class \
+		  classes/$(CLASSTREE)/jdrconverter/dictionaries/ \
 		  jdrconverter/Manifest.txt
+		cp ../dictionaries/jdrconverter-*.xml classes/$(CLASSTREE)/jdrconverter/dictionaries/
 		cd classes ; \
 		jar cmf ../jdrconverter/Manifest.txt \
 	          $(LIBDIR)/jdrconverter.jar \
-		  $(CLASSTREE)/jdrconverter/*.class
+		  $(CLASSTREE)/jdrconverter/*.class \
+		  $(CLASSTREE)/jdrconverter/dictionaries \
+		  $(CLASSTREE)/jdrconverter/dictionaries/*.xml
 
 $(LIBDIR)/jdrinfo.jar	: classes/$(CLASSTREE)/jdrinfo/JdrInfo.class \
+		  classes/$(CLASSTREE)/jdrinfo/dictionaries/ \
 		  jdrinfo/Manifest.txt
+		cp ../dictionaries/jdrinfo-*.xml classes/$(CLASSTREE)/jdrinfo/dictionaries/
 		cd classes ; \
 		jar cmf ../jdrinfo/Manifest.txt \
 	          $(LIBDIR)/jdrinfo.jar \
-		  $(CLASSTREE)/jdrinfo/*.class
+		  $(CLASSTREE)/jdrinfo/*.class \
+		  $(CLASSTREE)/jdrinfo/dictionaries \
+		  $(CLASSTREE)/jdrinfo/dictionaries/*.xml
 
 classes/$(CLASSTREE)/jdr/JDRObject.class : \
 	classes \
@@ -102,7 +131,7 @@ classes/$(CLASSTREE)/jdr/JDRObject.class : \
 	jdr/io/svg/*.java  
 	cd jdr ; \
 	javac $(target_version) -d ../classes -Xlint:unchecked -Xlint:deprecation \
-	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/texparserlib.jar \
+	  -cp $(texjavahelplib):$(texjavaparserlib) \
 	  *.java */*.java */*/*.java */*/*/*.java
 
 
@@ -112,7 +141,7 @@ classes/$(CLASSTREE)/jdrresources/JDRResources.class : \
 	jdrresources/*/*.java 
 	cd jdrresources ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	  -cp $(LIBDIR)/jdr.jar:$(LIBDIR)/texjavahelplib.jar \
+	  -cp $(LIBDIR)/jdr.jar:$(texjavahelplib) \
 	  *.java */*.java
 
 classes/$(CLASSTREE)/flowframtk/FlowframTk.class : \
@@ -121,7 +150,7 @@ classes/$(CLASSTREE)/flowframtk/FlowframTk.class : \
 	flowframtk/*/*.java
 	cd flowframtk ; \
 	javac $(target_version) -d ../classes -Xlint:unchecked -Xlint:deprecation \
-	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
+	  -cp $(texjavahelplib):$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java */*.java
 
 
@@ -130,7 +159,7 @@ classes/$(CLASSTREE)/jdrview/JDRView.class : \
 	jdrview/*.java
 	cd jdrview ; \
 	javac $(target_version) -d ../classes -Xlint:unchecked  -Xlint:deprecation \
-	  -cp $(LIBDIR)/texjavahelplib.jar:$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
+	  -cp $(texjavahelplib):$(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar \
 	  *.java
 
 classes/$(CLASSTREE)/jdrconverter/JDRConverter.class : \
@@ -138,7 +167,7 @@ classes/$(CLASSTREE)/jdrconverter/JDRConverter.class : \
 	jdrconverter/*.java
 	cd jdrconverter ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
+	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(texjavahelplib) \
 	*.java
 
 classes/$(CLASSTREE)/jdrinfo/JdrInfo.class : \
@@ -146,7 +175,7 @@ classes/$(CLASSTREE)/jdrinfo/JdrInfo.class : \
 	jdrinfo/*.java
 	cd jdrinfo ; \
 	javac $(target_version) -d ../classes -Xlint:deprecation -Xlint:unchecked \
-	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(LIBDIR)/texjavahelplib.jar \
+	-cp $(LIBDIR)/jdr.jar:$(LIBDIR)/jdrresources.jar:$(texjavahelplib) \
 	*.java
 
 classes	:
@@ -160,8 +189,20 @@ classes/$(CLASSTREE)/jdrresources/icons	:
 classes/$(CLASSTREE)/jdrview	:
 	mkdir -p classes/$(CLASSTREE)/jdrview
 
+classes/$(CLASSTREE)/jdrview/dictionaries/	:
+	mkdir -p classes/$(CLASSTREE)/jdrview/dictionaries
+
 classes/$(CLASSTREE)/flowframtk	:
 	mkdir -p classes/$(CLASSTREE)/flowframtk
+
+classes/$(CLASSTREE)/flowframtk/dictionaries/	:
+	mkdir -p classes/$(CLASSTREE)/flowframtk/dictionaries
+
+classes/$(CLASSTREE)/jdrconverter/dictionaries/	:
+	mkdir -p classes/$(CLASSTREE)/jdrconverter/dictionaries
+
+classes/$(CLASSTREE)/jdrinfo/dictionaries/	:
+	mkdir -p classes/$(CLASSTREE)/jdrinfo/dictionaries
 
 clean	:
 	\rm -f $(LIBDIR)/jdr.jar $(LIBDIR)/jdrresources.jar $(LIBDIR)/jdrview.jar

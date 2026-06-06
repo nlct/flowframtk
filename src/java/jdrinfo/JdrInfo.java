@@ -126,11 +126,12 @@ public class JdrInfo implements FileFilter
          helpSetLocale = new HelpSetLocale(Locale.getDefault());
       }
 
-      helpLib = new TeXJavaHelpLib(helpLibApp, NAME,
-       "/resources", "/resources/dictionaries",
-       helpSetLocale, helpSetLocale, "jdrcommon", "jdrinfo");
+      helpLib = new TeXJavaHelpLib(helpLibApp, helpSetLocale, helpSetLocale);
 
       helpLibApp.setHelpLib(helpLib);
+
+      helpLib.getMessageSystem().loadDictionary(
+       "/com/dickimawbooks/jdrinfo/dictionaries/", "jdrinfo");
 
       if (exitCode != 0)
       {

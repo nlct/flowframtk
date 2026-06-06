@@ -55,6 +55,8 @@ public class FlowframTkInvoker
       this.args = args;
       this.resources = new JDRResources(APP_NAME);
       this.resources.initialise();
+      this.resources.loadDictionary(
+        "/com/dickimawbooks/flowframtk/dictionaries/", "flowframtk");
       this.filenames = new Vector<String>();
    }
 
@@ -73,7 +75,17 @@ public class FlowframTkInvoker
     */
    public void versionInfo()
    {
-      System.out.println(resources.getAppInfo(false));
+      TeXJavaHelpLib helpLib = resources.getHelpLib();
+
+      System.out.println(helpLib.getAboutInfo(false, 
+       JDRResources.APP_VERSION, JDRResources.APP_DATE,
+       String.format(
+        "Copyright (C) %s-%s Nicola L. C. Talbot (%s)",
+        JDRResources.START_COPYRIGHT_YEAR, JDRResources.COPYRIGHT_YEAR,
+        helpLib.getInfoUrl(false, "www.dickimaw-books.com")),
+        TeXJavaHelpLib.LICENSE_GPL3,
+        true, null
+      ));
 
       System.exit(0);
    }

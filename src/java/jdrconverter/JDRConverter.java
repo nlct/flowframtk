@@ -412,11 +412,12 @@ public class JDRConverter
          }
       }
 
-      helpLib = new TeXJavaHelpLib(helpLibApp, NAME, 
-       "/resources", "/resources/dictionaries",
-       helpSetLocale, helpSetLocale, "jdrcommon", "jdrconverter");
+      helpLib = new TeXJavaHelpLib(helpLibApp, helpSetLocale, helpSetLocale);
 
       helpLibApp.setHelpLib(helpLib);
+
+      helpLib.getMessageSystem().loadDictionary(
+       "/com/dickimawbooks/jdrconverter/dictionaries/", "jdrconverter");
    }
 
    public TeXJavaHelpLib getHelpLib()

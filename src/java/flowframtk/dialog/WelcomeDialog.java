@@ -27,7 +27,7 @@ public class WelcomeDialog extends JDialog
 
       JDRResources resources = invoker.getResources();
 
-      setIconImage(resources.getSmallAppIcon().getImage());
+      setIconImages(resources.getAppIcons());
 
       JEditorPane editorPane = new JEditorPane("text/html",
         resources.getMessage("welcome.text",

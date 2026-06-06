@@ -1,14 +1,14 @@
 % arara: lualatex
-% arara: bib2gls: { group: on, options: [ --no-warn-unknown-entry-types ] } if missing("glstex")
-% arara: lualatex if changed("glstex")
-% arara: bib2gls: { group: on, options: [ --no-warn-unknown-entry-types ] }
+% arara: bib2gls
 % arara: bibtex
+% arara: lualatex
+% arara: bib2gls
 % arara: lualatex
 % arara: lualatex
 \documentclass[toc=listof,bibliography=totoc,fontsize=11pt]{scrreport}
 \newcommand{\langbibsrcs}{flowframtk-props-en}
 \usepackage[english]{tracklang}
 \usepackage{graphicx}
-\graphicspath{{images-en/}{../../en-sharedimages/}{../../sharedimages/}}
+\graphicspath{{images-en/}{../en-sharedimages/}{../sharedimages/}}
 \input{flowframtk-main}
 
