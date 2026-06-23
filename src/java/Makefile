@@ -75,13 +75,13 @@ classes/$(CLASSTREE)/jdrresources/dictionaries/	:
 $(LIBDIR)/flowframtk.jar	: jdr jdrresources classes/$(CLASSTREE)/flowframtk/FlowframTk.class \
 		  classes/$(CLASSTREE)/flowframtk/dictionaries/ \
 		  flowframtk/Manifest.txt \
-		  ../images/splashimage.png 
-		cp -u ../images/splashimage.png classes/
+		  ../lib/flowframtk-splashimage.png 
+		cp -u ../lib/flowframtk-splashimage.png classes/
 		cp ../dictionaries/flowframtk-*.xml classes/$(CLASSTREE)/flowframtk/dictionaries/
 		cd classes ; \
 		jar cmf ../flowframtk/Manifest.txt \
 	          $(LIBDIR)/flowframtk.jar \
-		  splashimage.png \
+		  flowframtk-splashimage.png \
 		  $(CLASSTREE)/flowframtk/*.class \
 		  $(CLASSTREE)/flowframtk/dialog/*.class \
 		  $(CLASSTREE)/flowframtk/dictionaries \
@@ -89,11 +89,14 @@ $(LIBDIR)/flowframtk.jar	: jdr jdrresources classes/$(CLASSTREE)/flowframtk/Flow
 
 $(LIBDIR)/jdrview.jar	: jdr jdrresources classes/$(CLASSTREE)/jdrview/JDRView.class \
 	classes/$(CLASSTREE)/jdrview/dictionaries/ \
-	jdrview/Manifest.txt 
+	jdrview/Manifest.txt \
+	../lib/jdrview-splashimage.png 
+	cp -u ../lib/jdrview-splashimage.png classes/
 	cp ../dictionaries/jdrview-*.xml classes/$(CLASSTREE)/jdrview/dictionaries/
 	cd classes ; \
 	jar cmf ../jdrview/Manifest.txt \
 	   $(LIBDIR)/jdrview.jar \
+	   jdrview-splashimage.png \
 	   $(CLASSTREE)/jdrview/*.class \
 	   $(CLASSTREE)/jdrview/dictionaries \
 	   $(CLASSTREE)/jdrview/dictionaries/*.xml

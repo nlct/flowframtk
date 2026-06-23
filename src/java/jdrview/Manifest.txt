@@ -1,2 +1,3 @@
 Main-Class: com/dickimawbooks/jdrview/JDRViewInvoker
 Class-Path: jdr.jar jdrresources.jar texjavahelplib.jar .
+SplashScreen-Image: jdrview-splashimage.png
