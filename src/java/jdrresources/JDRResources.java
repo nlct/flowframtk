@@ -102,7 +102,7 @@ public class JDRResources
         "/com/dickimawbooks/jdrresources/dictionaries/", "jdrcommon");
 
       helpLib.setHelpSetZipName(
-       getApplicationName().toLowerCase()+"-helpset.zip");
+       getApplicationName().toLowerCase()+"-helpset.tjh");
 
       helpLib.setDefaultButtonOmitTextIfIcon(true);
    }

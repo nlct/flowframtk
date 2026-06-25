@@ -29,7 +29,7 @@ lib/flowframtk.jar	: java/flowframtk/Manifest.txt \
 	java/flowframtk/*/*.java
 	make -C java ../lib/flowframtk.jar
 
-lib/flowframtk-helpset.zip	: doc/en/flowframtk-main.tex \
+lib/flowframtk-helpset.tjh	: doc/en/flowframtk-main.tex \
 			doc/en/flowframtk-en.tex \
 			doc/en/flowframtk-en-GB.tex \
 			doc/en/flowframtk.bib \
@@ -39,7 +39,7 @@ lib/flowframtk-helpset.zip	: doc/en/flowframtk-main.tex \
 			doc/sharedimages/*.png 
 			make -C doc/en
 
-lib/jdrview-helpset.zip	: doc/en/jdrview-main.tex \
+lib/jdrview-helpset.tjh	: doc/en/jdrview-main.tex \
 			doc/en/jdrview-en.tex \
 			doc/en/jdrview-en-GB.tex \
 			doc/en/jdrview.bib \
@@ -62,8 +62,8 @@ lib/jdrconverter.jar   : java/jdrconverter/Manifest.txt \
 
 ../unstable/flowframtk-installer.jar	: ../unstable \
 	lib/flowframtk.jar lib/jdrview.jar lib/jdrinfo.jar lib/jdrconverter.jar \
-        lib/flowframtk-helpset.zip \
-        lib/jdrview-helpset.zip \
+        lib/flowframtk-helpset.tjh \
+        lib/jdrview-helpset.tjh \
 	installer/install.xml
 	"$(IZPACKDIR)/bin/compile" installer/install.xml -b . \
 	-h "$(IZPACKDIR)" \

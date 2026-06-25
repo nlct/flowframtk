@@ -9,8 +9,8 @@ tjhxml2bib=tjhxml2bib --copy-overwrite-xml
 tjhziphelpset=tjhziphelpset
 
 all	: flowframtk.1 \
-	  $(resourcesdir)/flowframtk-helpset.zip \
-	  $(resourcesdir)/jdrview-helpset.zip \
+	  $(resourcesdir)/flowframtk-helpset.tjh \
+	  $(resourcesdir)/jdrview-helpset.tjh \
 	  jdrutils-en.pdf
 	@grep -E '(Package glossaries-extra Warning:|unreferenced destination)' *.log || true
 
@@ -134,17 +134,17 @@ jdrutils-en.glstex	: jdrutils.bib shared.bib flowframtk-props-en.bib \
 	lualatex jdrutils-en
 	bib2gls jdrutils-en
 
-$(resourcesdir)/flowframtk-helpset.zip	: flowframtk-helpset/en/index.xml flowframtk-helpset/en-GB/index.xml 
+$(resourcesdir)/flowframtk-helpset.tjh	: flowframtk-helpset/en/index.xml flowframtk-helpset/en-GB/index.xml 
 	$(tjhziphelpset) --in-dir . --helpset flowframtk-helpset \
 	--locales 'en,en-GB' \
 	-L ../gpl-3.0-standalone.html en \
-	--output $(resourcesdir)/flowframtk-helpset.zip
+	--output $(resourcesdir)/flowframtk-helpset.tjh
 
-$(resourcesdir)/jdrview-helpset.zip	: jdrview-helpset/en/index.xml jdrview-helpset/en-GB/index.xml 
+$(resourcesdir)/jdrview-helpset.tjh	: jdrview-helpset/en/index.xml jdrview-helpset/en-GB/index.xml 
 	$(tjhziphelpset) -i . --helpset jdrview-helpset \
 	--locales 'en,en-GB' \
 	-L ../gpl-3.0-standalone.html en \
-	--output $(resourcesdir)/jdrview-helpset.zip
+	--output $(resourcesdir)/jdrview-helpset.tjh
 
 flowframtk-helpset/en-GB/index.xml	: flowframtk-en-GB.pdf  
 	$(texjavahelpmk) flowframtk-en-GB.tex flowframtk-helpset/en-GB
@@ -166,8 +166,8 @@ clean	:
 	\rm -f jdrutils-en*.{aux,log,pdf,glg,glstex,out,toc,lof,lot}
 	\rm -rf flowframtk-helpset
 	\rm -rf jdrview-helpset
-	\rm -f $(resourcesdir)/flowframtk-helpset.zip
-	\rm -f $(resourcesdir)/jdrview-helpset.zip
+	\rm -f $(resourcesdir)/flowframtk-helpset.tjh
+	\rm -f $(resourcesdir)/jdrview-helpset.tjh
 	\rm -f flowframtk-props-en*.bib
 	\rm -f jdrview-props-en*.bib
 	\rm -f *.1
