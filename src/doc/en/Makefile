@@ -135,13 +135,13 @@ jdrutils-en.glstex	: jdrutils.bib shared.bib flowframtk-props-en.bib \
 	bib2gls jdrutils-en
 
 $(resourcesdir)/flowframtk-helpset.tjh	: flowframtk-helpset/en/index.xml flowframtk-helpset/en-GB/index.xml 
-	$(tjhziphelpset) --in-dir . --helpset flowframtk-helpset \
+	$(tjhziphelpset) --in-dir .  \
 	--locales 'en,en-GB' \
 	-L ../gpl-3.0-standalone.html en \
 	--output $(resourcesdir)/flowframtk-helpset.tjh
 
 $(resourcesdir)/jdrview-helpset.tjh	: jdrview-helpset/en/index.xml jdrview-helpset/en-GB/index.xml 
-	$(tjhziphelpset) -i . --helpset jdrview-helpset \
+	$(tjhziphelpset) -i .  \
 	--locales 'en,en-GB' \
 	-L ../gpl-3.0-standalone.html en \
 	--output $(resourcesdir)/jdrview-helpset.tjh

@@ -1699,8 +1699,7 @@ public class JDRResources
     */
    public void initialiseHelp(JFrame parent) throws IOException,SAXException
    {
-      initialiseHelp(parent,
-        appname.toLowerCase().replaceAll(" ", "")+"-helpset");
+      initialiseHelp(parent, "helpset");
    }
 
    public void initialiseHelp(JFrame parent, String helpSetBase)
